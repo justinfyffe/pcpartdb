@@ -17,12 +17,13 @@
     "simple computer",
     "easy computer specs",
     "simple pc specs",
-    "simple computer specs",
+    "simple computer specs"
   ],
   "author": "Justin Fyffe <test@example.com>",
   "license": "UNLICENSED",
   "bugs": {
     "url": "https://github.com/justinfyffe/easypcspecs/issues"
   },
-  "homepage": "https://easypcspecs.com"
+  "homepage": "https://easypcspecs.com",
+  "workspaces": ["packages/*"]
 }
