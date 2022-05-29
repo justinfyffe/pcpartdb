@@ -1,7 +1,7 @@
 import { Model, PartialModelObject } from 'objection';
 import { ProductBenchmarkKey } from '../../product';
 
-export class ProductBenchmarkModel extends Model {
+export class ProductBenchmarkModel<T = unknown> extends Model {
   static tableName = 'product_benchmarks';
 
   // Fields
@@ -10,8 +10,7 @@ export class ProductBenchmarkModel extends Model {
 
   source?: string;
   key!: ProductBenchmarkKey;
-  value!: string;
-  overwrittenValue?: string;
+  value?: T;
 }
 
 export type ProductBenchmarkModelPojo =

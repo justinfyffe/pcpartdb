@@ -7,8 +7,7 @@ export async function up(knex: Knex): Promise<void> {
 
     table.string('source');
     table.string('key').notNullable();
-    table.string('value').notNullable();
-    table.string('overwritten_value');
+    table.jsonb('value');
 
     table.timestamps(true, true);
 

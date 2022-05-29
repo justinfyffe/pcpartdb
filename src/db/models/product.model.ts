@@ -8,6 +8,7 @@ export class ProductModel extends Model {
 
   // Fields
   id!: number;
+  slug!: string;
   type!: ProductType;
   name!: string;
 

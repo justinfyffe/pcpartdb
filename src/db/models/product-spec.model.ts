@@ -1,7 +1,7 @@
 import { Model, PartialModelObject } from 'objection';
 import { ProductSpecKey } from '../../product';
 
-export class ProductSpecModel extends Model {
+export class ProductSpecModel<T = unknown> extends Model {
   static tableName = 'product_specs';
 
   // Fields
@@ -10,8 +10,7 @@ export class ProductSpecModel extends Model {
 
   source?: string;
   key!: ProductSpecKey;
-  value!: string;
-  overwrittenValue?: string;
+  value?: T;
 }
 
 export type ProductSpecModelPojo = PartialModelObject<ProductSpecModel>;

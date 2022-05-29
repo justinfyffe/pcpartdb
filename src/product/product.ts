@@ -8,6 +8,7 @@ export enum ProductType {
 
 export interface Product {
   id?: number;
+  slug: string;
 
   type: ProductType;
   name: string;

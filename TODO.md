@@ -1,7 +1,7 @@
 - Launch basic website (viewing and comparing cpus/gpus)
   - Design database
   - Collect Data
-  - Implement API
+  - Implement Backend
   - Design and build UI
   - Build basic admin panel
   - Launch
