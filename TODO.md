@@ -1,0 +1,41 @@
+- Launch basic website (viewing and comparing cpus/gpus)
+  - Design database
+  - Collect Data
+  - Implement API
+  - Design and build UI
+  - Build basic admin panel
+  - Launch
+
+- Improve SEO
+  - On-site:
+    - Improve performance
+    - Create sitemap
+  - Off-site:
+    - Create backlinks
+      - Github repos, couple legitimate directories, write articles
+    - Post to Reddit and other similar social media
+
+- Add more features to site
+  - More parts: motherboard, ram, storage
+  - Articles/Blog
+  - Build guides
+  - Advanced admin panel
+
+- products
+  - id
+  - type
+  - name
+- product_specs
+  - id
+  - product_id
+  - source
+  - key
+  - value
+  - overwritten_value
+- product_benchmarks
+  - id
+  - product_id
+  - source
+  - key
+  - value
+  - overwritten_value

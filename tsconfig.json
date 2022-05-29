@@ -5,7 +5,6 @@
       "experimentalDecorators": true,
       "esModuleInterop": true,
       "forceConsistentCasingInFileNames": true,
-      "incremental": true,
       "module": "commonjs",
       "moduleResolution": "node",
       "resolveJsonModule": true,
