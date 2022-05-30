@@ -36,6 +36,10 @@ Thumbs.db
 
 # Ignore built ts files
 dist/**/*
+.next
+
+# TypeScript cache
+*.tsbuildinfo
 
 # ignore yarn.lock
 yarn.lock
