@@ -1,3 +1,4 @@
+import '../assets/styles/global.css';
 import 'reflect-metadata';
 import axios from 'axios';
 import App, { AppContext, AppProps } from 'next/app';
