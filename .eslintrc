@@ -1,15 +1,4 @@
 {
-  "settings": {
-    "import/parsers": {
-      "@typescript-eslint/parser": [".ts"]
-    },
-    "import/resolver": {
-      "typescript": {
-        "alwaysTryTypes": true,
-        "directory": ["./*/tsconfig.json", "./*/tsconfig.*.json"]
-      }
-    }
-  },
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "sourceType": "module"
@@ -27,6 +16,8 @@
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
     "plugin:import/errors",
     "plugin:import/warnings",
     "plugin:import/typescript",
@@ -43,14 +34,14 @@
       "warn",
       {
         "argsIgnorePattern": "^_",
-        "varsIgnorePattern": "^_"
+        "varsIgnorePattern": "^_",
+        "ignoreRestSiblings": true
         }
       ],
     "@typescript-eslint/no-use-before-define": "off",
     "import/no-named-as-default": "off",
     "import/order": "off",
     "max-classes-per-file": "off",
-    "no-console": "off",
     "no-constant-condition": "off",
     "no-dupe-class-members": "off",
     "no-unused-vars": [
@@ -62,9 +53,23 @@
     ],
     "prettier/prettier": "warn",
     "quotes": ["error", "single", { "avoidEscape": true }],
+    "react/prop-types": "off",
     "simple-import-sort/imports": ["warn", {
       "groups": [["^\\u0000", "^@?\\w", "^[^.]", "^\\."]]
-    }],
-    "sort-imports": "off"
+    }]
+  },
+  "settings": {
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts"]
+    },
+    "import/resolver": {
+      "typescript": {
+        "alwaysTryTypes": true,
+        "directory": ["./*/tsconfig.json", "./*/tsconfig.*.json"]
+      }
+    },
+    "react": {
+      "version": "detect"
+    }
   }
 }

@@ -1,11 +1,32 @@
 import 'reflect-metadata';
 import { NextPageContext } from 'next';
 import React from 'react';
+import { Button, ButtonStyle } from '../web/shared/ui/button';
+import { Toolbar, ToolbarNav, ToolbarTitle } from '../web/shared/ui/toolbar';
 
 interface HomePageProps {}
 
 const HomePage = (_props: HomePageProps) => {
-  return <h1 className="text-3xl font-bold underline">Hello World!</h1>;
+  return (
+    <Toolbar>
+      <ToolbarTitle>Easy PC Specs</ToolbarTitle>
+
+      <ToolbarNav>
+        <Button href="#" style={ButtonStyle.Toolbar}>
+          Home
+        </Button>
+        <Button href="#" style={ButtonStyle.Toolbar}>
+          Processors
+        </Button>
+        <Button href="#" style={ButtonStyle.Toolbar}>
+          Graphics Cards
+        </Button>
+        <Button href="#" style={ButtonStyle.Toolbar}>
+          PC Builds
+        </Button>
+      </ToolbarNav>
+    </Toolbar>
+  );
 };
 
 HomePage.getInitialProps = async (_ctx: NextPageContext) => {

@@ -3,8 +3,8 @@ import { Api } from '../../api/main';
 
 export const config = {
   api: {
-    bodyParser: false
-  }
+    bodyParser: false,
+  },
 };
 
 export default (req: NextApiRequest, res: NextApiResponse) =>
