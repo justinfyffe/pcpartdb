@@ -9,7 +9,7 @@ interface HomePageProps {}
 const HomePage = (_props: HomePageProps) => {
   return (
     <Toolbar>
-      <ToolbarTitle>Easy PC Specs</ToolbarTitle>
+      <ToolbarTitle>Website Name</ToolbarTitle>
 
       <ToolbarNav>
         <Button href="#" style={ButtonStyle.Toolbar}>
