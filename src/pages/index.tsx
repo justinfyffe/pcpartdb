@@ -1,31 +1,26 @@
 import 'reflect-metadata';
+import classNames from 'classnames';
 import { NextPageContext } from 'next';
 import React from 'react';
-import { Button, ButtonStyle } from '../web/shared/ui/button';
-import { Toolbar, ToolbarNav, ToolbarTitle } from '../web/shared/ui/toolbar';
+import { Jumbotron } from '../web/shared/components/jumbotron';
+import { WebsiteLayout } from '../web/shared/layouts/website';
 
 interface HomePageProps {}
 
 const HomePage = (_props: HomePageProps) => {
   return (
-    <Toolbar>
-      <ToolbarTitle>Website Name</ToolbarTitle>
-
-      <ToolbarNav>
-        <Button href="#" style={ButtonStyle.Toolbar}>
-          Home
-        </Button>
-        <Button href="#" style={ButtonStyle.Toolbar}>
-          Processors
-        </Button>
-        <Button href="#" style={ButtonStyle.Toolbar}>
-          Graphics Cards
-        </Button>
-        <Button href="#" style={ButtonStyle.Toolbar}>
-          PC Builds
-        </Button>
-      </ToolbarNav>
-    </Toolbar>
+    <WebsiteLayout>
+      <main>
+        <section
+          className={classNames(
+            'grid grid-cols-1 sm:grid-cols-[1fr_300px] grid-rows-2 sm:grid-rows-1 gap-6',
+          )}
+        >
+          <Jumbotron className={classNames()}>Main</Jumbotron>
+          <aside className={classNames()}>Side</aside>
+        </section>
+      </main>
+    </WebsiteLayout>
   );
 };
 

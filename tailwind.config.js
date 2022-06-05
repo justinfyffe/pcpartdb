@@ -11,8 +11,17 @@ module.exports = {
       borderWidth: {
         'button-default': '1px',
       },
+      height: {
+        120: '28rem',
+      },
       textColor: {
         'button-toolbar': '#ececec',
+      },
+    },
+    container: {
+      center: true,
+      screens: {
+        '2xl': '1280px',
       },
     },
   },
