@@ -11,7 +11,7 @@ import {
   CardImage,
   CardTitle,
 } from '../web/shared/components/card';
-import { Jumbotron } from '../web/shared/components/jumbotron';
+import { Input } from '../web/shared/components/input';
 import { SectionHeader } from '../web/shared/components/section-header';
 import { WebsiteLayout } from '../web/shared/layouts/website';
 
@@ -26,7 +26,21 @@ const HomePage = (_props: HomePageProps) => {
             'grid grid-cols-1 sm:grid-cols-[1fr_300px] grid-rows-2 sm:grid-rows-1 gap-6',
           )}
         >
-          <Jumbotron className={classNames()}>Main</Jumbotron>
+          <Card
+            className={classNames(
+              'gap-4 flex flex-col items-center justify-center p-16',
+            )}
+          >
+            <Input />
+            <div>VS</div>
+            <Input />
+            <Button
+              style={ButtonStyle.Primary}
+              className={classNames('w-full')}
+            >
+              Compare
+            </Button>
+          </Card>
           <aside className={classNames()}>Side</aside>
         </section>
 

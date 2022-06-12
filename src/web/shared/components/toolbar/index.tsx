@@ -28,8 +28,8 @@ export const Toolbar: FunctionComponent<ToolbarProps> = (props) => {
   return (
     <Element
       className={classNames(
-        'block bg-indigo-900 h-16 static text-gray-50',
         props.className,
+        'block bg-indigo-900 h-16 static text-gray-50',
       )}
     >
       <div className="container flex h-full items-center justify-between px-4">
@@ -45,8 +45,8 @@ export const ToolbarTitle: FunctionComponent<ToolbarTitleProps> = (props) => {
   return (
     <Element
       className={classNames(
-        'flex font-medium items-center text-3xl',
         props.className,
+        'flex font-medium items-center text-3xl',
       )}
     >
       {props.children}
@@ -60,8 +60,8 @@ export const ToolbarNav: FunctionComponent<ToolbarNavProps> = (props) => {
   return (
     <Element
       className={classNames(
-        'font-medium rounded-none text-base',
         props.className,
+        'font-medium rounded-none text-base',
       )}
     >
       {props.children}

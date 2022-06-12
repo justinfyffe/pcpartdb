@@ -23,7 +23,7 @@ export const SectionHeader: FunctionComponent<SectionHeaderProps> = (props) => {
 
   return (
     <Element
-      className={classNames('flex items-center mb-6 w-full', props.className)}
+      className={classNames(props.className, 'flex items-center mb-6 w-full')}
     >
       <SectionHeaderLine small={!center} />
       <SectionHeaderTitle>{props.children}</SectionHeaderTitle>

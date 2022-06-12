@@ -1,5 +1,5 @@
-import classNames from 'classnames';
 import React, { FunctionComponent, HTMLProps } from 'react';
+import { classNames } from '../../ui/ui.utils';
 
 export enum ButtonStyle {
   None = 'none',
@@ -43,10 +43,10 @@ export const Button: FunctionComponent<ButtonProps> = (props) => {
       type={isButton ? type ?? 'button' : undefined}
       href={url}
       className={classNames(
+        className,
         'cursor-pointer font-medium inline-block no-underline',
         'px-4 py-2 relative rounded text-center',
         BUTTON_STYLES[style ?? ButtonStyle.None],
-        className,
       )}
     >
       {props.children}

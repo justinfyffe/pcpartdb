@@ -1,5 +1,5 @@
-import classNames from 'classnames';
 import React, { FunctionComponent } from 'react';
+import { classNames } from '../../ui/ui.utils';
 import { Image, ImageProps } from '../image';
 
 interface CardProps {
@@ -38,8 +38,8 @@ export const Card: FunctionComponent<CardProps> = (props) => {
   return (
     <Element
       className={classNames(
-        'flex flex-col items-stretch justify-between p-6 rounded shadow',
         props.className,
+        'flex flex-col items-stretch justify-between p-6 rounded shadow',
       )}
     >
       {props.children}
