@@ -43,7 +43,7 @@ export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
           <nav className={classNames('flex-1 m-4')}>
             <div className={classNames('border-b mb-3')}>Pages</div>
 
-            <ul className={classNames('font-normal list-name m-0 p-0')}>
+            <ul className={classNames('font-normal list-none m-0 p-0')}>
               <li className={classNames('my-1')}>
                 <a href="#" className={classNames('text-indigo-200')}>
                   Home
@@ -89,7 +89,7 @@ export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
           </div>
 
           <div className={classNames('mb-4 text-center w-full')}>
-            Copyright &copy; Finest PC {new Date().getFullYear()}
+            Copyright &copy; Finest PC
             <br />
             Made with{' '}
             <HeartIcon className={classNames('inline-block h-3 w-3 mb-1')} /> in

@@ -16,7 +16,7 @@ interface ButtonProps
 }
 
 const BUTTON_STYLES = {
-  [ButtonStyle.None]: 'bg-transparent text-slate-700',
+  [ButtonStyle.None]: 'bg-transparent shadow-none text-slate-700',
   [ButtonStyle.Default]:
     'bg-button-default border-button-default text-slate-800',
   [ButtonStyle.Primary]: 'bg-button-primary text-button-primary',

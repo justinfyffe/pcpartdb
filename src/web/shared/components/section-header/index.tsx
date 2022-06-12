@@ -5,6 +5,7 @@ interface SectionHeaderProps {
   as?: React.ElementType;
   className?: string;
   center?: boolean;
+  lines?: boolean;
 
   children?: React.ReactNode;
 }
@@ -18,16 +19,16 @@ interface SectionHeaderLineProps {
 }
 
 export const SectionHeader: FunctionComponent<SectionHeaderProps> = (props) => {
-  const { center = false } = props;
+  const { center = false, lines = true } = props;
   const Element = props.as ?? 'div';
 
   return (
     <Element
       className={classNames('flex items-center mb-6 w-full', props.className)}
     >
-      <SectionHeaderLine small={!center} />
+      {lines && <SectionHeaderLine small={!center} />}
       <SectionHeaderTitle>{props.children}</SectionHeaderTitle>
-      <SectionHeaderLine small={false} />
+      {lines && <SectionHeaderLine small={false} />}
     </Element>
   );
 };

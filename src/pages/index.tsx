@@ -2,8 +2,7 @@ import 'reflect-metadata';
 import {
   ChipIcon,
   DesktopComputerIcon,
-  PlusIcon,
-  XIcon,
+  PlusCircleIcon,
 } from '@heroicons/react/outline';
 import { NextPageContext } from 'next';
 import React from 'react';
@@ -17,10 +16,7 @@ import {
 } from '../web/shared/components/card';
 import { Image } from '../web/shared/components/image';
 import { Input } from '../web/shared/components/input';
-import {
-  SectionHeader,
-  SectionHeaderLine,
-} from '../web/shared/components/section-header';
+import { SectionHeader } from '../web/shared/components/section-header';
 import { WebsiteLayout } from '../web/shared/layouts/website';
 import { classNames } from '../web/shared/ui/ui.utils';
 
@@ -41,52 +37,52 @@ const HomePage = (_props: HomePageProps) => {
             )}
           >
             <h1 className={classNames('font-medium text-2xl text-slate-700')}>
-              Compare PC Parts
+              Compare CPUs and GPUs
             </h1>
 
-            <div className={classNames('flex gap-6 w-full')}>
-              <Input
-                placeholder="Processor or Graphics Card..."
-                className={classNames('flex-1')}
-              />
-              <Button
-                style={ButtonStyle.Default}
-                className={classNames('flex-0')}
-              >
-                <XIcon className={classNames('h-4')} />
-              </Button>
-            </div>
             <div
               className={classNames(
-                'self-center font-medium text-2xl text-slate-700',
+                'flex flex-1 flex-col gap-6 items-center justify-center',
               )}
             >
-              VS
-            </div>
-            <div className={classNames('flex gap-6 w-full')}>
-              <Input
-                placeholder="Processor or Graphics Card..."
-                className={classNames('flex-1')}
-              />
-              <Button
-                style={ButtonStyle.Default}
-                className={classNames('flex-0')}
+              <div
+                className={classNames(
+                  'grid grid-cols-[minmax(200px,_1fr)_auto] lg:grid-cols-[repeat(2,_1fr_auto)] lg:grid-flow-col gap-6 items-center justify-center w-full',
+                )}
               >
-                <PlusIcon className={classNames('h-4')} />
-              </Button>
+                <Input
+                  placeholder="Processor or Graphics Card..."
+                  className={classNames()}
+                />
+
+                <div
+                  className={classNames(
+                    'font-medium text-center text-md text-slate-700',
+                  )}
+                >
+                  VS
+                </div>
+
+                <Input
+                  placeholder="Processor or Graphics Card..."
+                  className={classNames()}
+                />
+
+                <Button
+                  style={ButtonStyle.None}
+                  className={classNames('h-full px-2')}
+                >
+                  <PlusCircleIcon className={classNames('h-6 mx-auto')} />
+                </Button>
+              </div>
+
               <Button
-                style={ButtonStyle.Default}
-                className={classNames('flex-0')}
+                style={ButtonStyle.Primary}
+                className={classNames('block min-w-full')}
               >
-                <XIcon className={classNames('h-4')} />
+                Compare
               </Button>
             </div>
-            <Button
-              style={ButtonStyle.Primary}
-              className={classNames('w-full')}
-            >
-              Compare
-            </Button>
           </Card>
 
           <aside className={classNames()}>
@@ -97,6 +93,7 @@ const HomePage = (_props: HomePageProps) => {
             >
               <SectionHeader
                 center
+                lines={false}
                 className={classNames('mb-0 text-slate-700')}
               >
                 Featured Builds: June
@@ -114,11 +111,15 @@ const HomePage = (_props: HomePageProps) => {
                       'font-medium mb-2 text-center text-indigo-500',
                     )}
                   >
-                    Top-Shelf AMD Gaming Build
+                    Elite AMD Gaming Build
                   </h2>
                   <Image
                     src="https://preview.redd.it/8siyqldph2x21.jpg?auto=webp&s=eeaa2cdf9c4e01746f4f46cc08c66e5eff77c630"
-                    className={classNames('h-32 mx-auto mb-2')}
+                    className={classNames(
+                      'h-auto w-auto max-h-32 max-w-full mx-auto mb-2 object-cover',
+                    )}
+                    width="360"
+                    height="200"
                   />
                 </a>
 
@@ -157,12 +158,12 @@ const HomePage = (_props: HomePageProps) => {
           </SectionHeader>
 
           <div
-            className={classNames(
-              'flex flex-wrap justify-center md:justify-start mx-[-16px]',
-            )}
+            className={classNames('flex flex-wrap justify-center mx-[-16px]')}
           >
             <Card
-              className={classNames('flex-1 mx-4 mb-6 max-w-sm min-w-[280px]')}
+              className={classNames(
+                'flex-1 mx-4 mb-6 max-w-[360px] min-w-[280px]',
+              )}
             >
               <CardImage
                 src="https://preview.redd.it/8siyqldph2x21.jpg?auto=webp&s=eeaa2cdf9c4e01746f4f46cc08c66e5eff77c630"
@@ -180,7 +181,9 @@ const HomePage = (_props: HomePageProps) => {
             </Card>
 
             <Card
-              className={classNames('flex-1 mx-4 mb-6 max-w-sm min-w-[280px]')}
+              className={classNames(
+                'flex-1 mx-4 mb-6 max-w-[360px] min-w-[280px]',
+              )}
             >
               <CardImage
                 src="https://preview.redd.it/8siyqldph2x21.jpg?auto=webp&s=eeaa2cdf9c4e01746f4f46cc08c66e5eff77c630"
@@ -198,7 +201,9 @@ const HomePage = (_props: HomePageProps) => {
             </Card>
 
             <Card
-              className={classNames('flex-1 mx-4 mb-6 max-w-sm min-w-[280px]')}
+              className={classNames(
+                'flex-1 mx-4 mb-6 max-w-[360px] min-w-[280px]',
+              )}
             >
               <CardImage
                 src="https://preview.redd.it/8siyqldph2x21.jpg?auto=webp&s=eeaa2cdf9c4e01746f4f46cc08c66e5eff77c630"
@@ -215,6 +220,24 @@ const HomePage = (_props: HomePageProps) => {
               </CardActions>
             </Card>
           </div>
+
+          <ul className={classNames('list-none text-center font-medium')}>
+            <li className={classNames('inline-block mx-4')}>
+              <a href="#" className={classNames('text-indigo-500')}>
+                All GPUs
+              </a>
+            </li>
+            <li className={classNames('inline-block mx-4')}>
+              <a href="#" className={classNames('text-indigo-500')}>
+                Nvidia GPUs
+              </a>
+            </li>
+            <li className={classNames('inline-block mx-4')}>
+              <a href="#" className={classNames('text-indigo-500')}>
+                AMD GPUs
+              </a>
+            </li>
+          </ul>
         </section>
 
         <section className={classNames('my-4')}>
@@ -226,12 +249,12 @@ const HomePage = (_props: HomePageProps) => {
           </SectionHeader>
 
           <div
-            className={classNames(
-              'flex flex-wrap justify-center md:justify-start mx-[-16px]',
-            )}
+            className={classNames('flex flex-wrap justify-center mx-[-16px]')}
           >
             <Card
-              className={classNames('flex-1 mx-4 mb-6 max-w-sm min-w-[280px]')}
+              className={classNames(
+                'flex-1 mx-4 mb-6 max-w-[360px] min-w-[280px]',
+              )}
             >
               <CardImage
                 src="https://preview.redd.it/8siyqldph2x21.jpg?auto=webp&s=eeaa2cdf9c4e01746f4f46cc08c66e5eff77c630"
@@ -249,7 +272,9 @@ const HomePage = (_props: HomePageProps) => {
             </Card>
 
             <Card
-              className={classNames('flex-1 mx-4 mb-6 max-w-sm min-w-[280px]')}
+              className={classNames(
+                'flex-1 mx-4 mb-6 max-w-[360px] min-w-[280px]',
+              )}
             >
               <CardImage
                 src="https://preview.redd.it/8siyqldph2x21.jpg?auto=webp&s=eeaa2cdf9c4e01746f4f46cc08c66e5eff77c630"
@@ -267,7 +292,9 @@ const HomePage = (_props: HomePageProps) => {
             </Card>
 
             <Card
-              className={classNames('flex-1 mx-4 mb-6 max-w-sm min-w-[280px]')}
+              className={classNames(
+                'flex-1 mx-4 mb-6 max-w-[360px] min-w-[280px]',
+              )}
             >
               <CardImage
                 src="https://preview.redd.it/8siyqldph2x21.jpg?auto=webp&s=eeaa2cdf9c4e01746f4f46cc08c66e5eff77c630"
@@ -284,6 +311,24 @@ const HomePage = (_props: HomePageProps) => {
               </CardActions>
             </Card>
           </div>
+
+          <ul className={classNames('list-none text-center font-medium')}>
+            <li className={classNames('inline-block mx-4')}>
+              <a href="#" className={classNames('text-indigo-500')}>
+                All CPUs
+              </a>
+            </li>
+            <li className={classNames('inline-block mx-4')}>
+              <a href="#" className={classNames('text-indigo-500')}>
+                Intel CPUs
+              </a>
+            </li>
+            <li className={classNames('inline-block mx-4')}>
+              <a href="#" className={classNames('text-indigo-500')}>
+                AMD CPUs
+              </a>
+            </li>
+          </ul>
         </section>
 
         <section className={classNames('my-4')}>
@@ -295,12 +340,12 @@ const HomePage = (_props: HomePageProps) => {
           </SectionHeader>
 
           <div
-            className={classNames(
-              'flex flex-wrap justify-center md:justify-start mx-[-16px]',
-            )}
+            className={classNames('flex flex-wrap justify-center mx-[-16px]')}
           >
             <Card
-              className={classNames('flex-1 mx-4 mb-6 max-w-sm min-w-[280px]')}
+              className={classNames(
+                'flex-1 mx-4 mb-6 max-w-[360px] min-w-[280px]',
+              )}
             >
               <CardImage
                 src="https://preview.redd.it/8siyqldph2x21.jpg?auto=webp&s=eeaa2cdf9c4e01746f4f46cc08c66e5eff77c630"
@@ -320,9 +365,15 @@ const HomePage = (_props: HomePageProps) => {
             </Card>
 
             <Card
-              className={classNames('flex-1 mx-4 mb-6 max-w-sm min-w-[280px]')}
+              className={classNames(
+                'flex-1 mx-4 mb-6 max-w-[360px] min-w-[280px]',
+              )}
             >
-              <CardImage src="https://preview.redd.it/8siyqldph2x21.jpg?auto=webp&s=eeaa2cdf9c4e01746f4f46cc08c66e5eff77c630"></CardImage>
+              <CardImage
+                src="https://preview.redd.it/8siyqldph2x21.jpg?auto=webp&s=eeaa2cdf9c4e01746f4f46cc08c66e5eff77c630"
+                width="360"
+                height="200"
+              ></CardImage>
 
               <CardTitle as="h3">
                 June 2022: Excellent AMD Gaming Build
@@ -336,9 +387,15 @@ const HomePage = (_props: HomePageProps) => {
             </Card>
 
             <Card
-              className={classNames('flex-1 mx-4 mb-6 max-w-sm min-w-[280px]')}
+              className={classNames(
+                'flex-1 mx-4 mb-6 max-w-[360px] min-w-[280px]',
+              )}
             >
-              <CardImage src="https://preview.redd.it/8siyqldph2x21.jpg?auto=webp&s=eeaa2cdf9c4e01746f4f46cc08c66e5eff77c630"></CardImage>
+              <CardImage
+                src="https://preview.redd.it/8siyqldph2x21.jpg?auto=webp&s=eeaa2cdf9c4e01746f4f46cc08c66e5eff77c630"
+                width="360"
+                height="200"
+              ></CardImage>
 
               <CardTitle as="h3">June 2022: Budget AMD Gaming Build</CardTitle>
 
@@ -349,6 +406,29 @@ const HomePage = (_props: HomePageProps) => {
               </CardActions>
             </Card>
           </div>
+
+          <ul className={classNames('list-none text-center font-medium')}>
+            <li className={classNames('inline-block mx-4')}>
+              <a href="#" className={classNames('text-indigo-500')}>
+                All PC Builds
+              </a>
+            </li>
+            <li className={classNames('inline-block mx-4')}>
+              <a href="#" className={classNames('text-indigo-500')}>
+                Gaming PC Builds
+              </a>
+            </li>
+            <li className={classNames('inline-block mx-4')}>
+              <a href="#" className={classNames('text-indigo-500')}>
+                Crypto Mining PC Builds
+              </a>
+            </li>
+            <li className={classNames('inline-block mx-4')}>
+              <a href="#" className={classNames('text-indigo-500')}>
+                Office PC Builds
+              </a>
+            </li>
+          </ul>
         </section>
       </main>
     </WebsiteLayout>
