@@ -2,30 +2,30 @@ import React, { FunctionComponent } from 'react';
 import { classNames } from '../../ui/ui.utils';
 import { Image, ImageProps } from '../image';
 
-interface CardProps {
+export interface CardProps {
   as?: React.ElementType;
   className?: string;
 
   children?: React.ReactNode;
 }
 
-interface CardImageProps extends ImageProps {}
+export interface CardImageProps extends ImageProps {}
 
-interface CardTitleProps {
+export interface CardTitleProps {
   as?: React.ElementType;
   className?: string;
 
   children?: React.ReactNode;
 }
 
-interface CardContentProps {
+export interface CardContentProps {
   as?: React.ElementType;
   className?: string;
 
   children?: React.ReactNode;
 }
 
-interface CardActionsProps {
+export interface CardActionsProps {
   as?: React.ElementType;
   className?: string;
 
