@@ -36,7 +36,7 @@ const HomePage = (_props: HomePageProps) => {
               'gap-4 flex flex-col justify-center px-16 py-8',
             )}
           >
-            <h1 className={classNames('font-medium text-2xl text-slate-700')}>
+            <h1 className={classNames('font-medium text-3xl text-slate-700')}>
               Compare CPUs and GPUs
             </h1>
 
