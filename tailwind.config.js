@@ -6,6 +6,7 @@ module.exports = {
   theme: {
     extend: {
       backgroundColor: {
+        'button-primary': '#3f51b5',
         'button-default': colors.white,
       },
       borderWidth: {
@@ -15,6 +16,7 @@ module.exports = {
         120: '28rem',
       },
       textColor: {
+        'button-primary': '#ececec',
         'button-toolbar': '#ececec',
       },
     },

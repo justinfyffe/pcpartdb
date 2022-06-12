@@ -32,7 +32,7 @@ export const Toolbar: FunctionComponent<ToolbarProps> = (props) => {
         props.className,
       )}
     >
-      <div className="container flex h-full items-center justify-between">
+      <div className="container flex h-full items-center justify-between px-4">
         {props.children}
       </div>
     </Element>

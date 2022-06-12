@@ -4,6 +4,7 @@ import React, { FunctionComponent, HTMLProps } from 'react';
 export enum ButtonStyle {
   None = 'none',
   Default = 'default',
+  Primary = 'primary',
   Toolbar = 'toolbar',
 }
 
@@ -15,8 +16,9 @@ interface ButtonProps
 }
 
 const BUTTON_STYLES = {
-  [ButtonStyle.None]: '',
+  [ButtonStyle.None]: 'bg-transparent',
   [ButtonStyle.Default]: 'bg-button-default border-button-default',
+  [ButtonStyle.Primary]: 'bg-button-primary text-button-primary',
   [ButtonStyle.Toolbar]: 'text-button-toolbar',
 };
 
@@ -41,7 +43,7 @@ export const Button: FunctionComponent<ButtonProps> = (props) => {
       type={isButton ? type ?? 'button' : undefined}
       href={url}
       className={classNames(
-        'bg-transparent cursor-pointer font-medium inline-block no-underline',
+        'cursor-pointer font-medium inline-block no-underline',
         'px-4 py-2 relative rounded text-center',
         BUTTON_STYLES[style ?? ButtonStyle.None],
         className,
