@@ -1,6 +1,10 @@
 import 'reflect-metadata';
-import { DesktopComputerIcon } from '@heroicons/react/outline';
-import classNames from 'classnames';
+import {
+  ChipIcon,
+  DesktopComputerIcon,
+  PlusIcon,
+  XIcon,
+} from '@heroicons/react/outline';
 import { NextPageContext } from 'next';
 import React from 'react';
 import { Button, ButtonStyle } from '../web/shared/components/button';
@@ -11,9 +15,14 @@ import {
   CardImage,
   CardTitle,
 } from '../web/shared/components/card';
+import { Image } from '../web/shared/components/image';
 import { Input } from '../web/shared/components/input';
-import { SectionHeader } from '../web/shared/components/section-header';
+import {
+  SectionHeader,
+  SectionHeaderLine,
+} from '../web/shared/components/section-header';
 import { WebsiteLayout } from '../web/shared/layouts/website';
+import { classNames } from '../web/shared/ui/ui.utils';
 
 interface HomePageProps {}
 
@@ -28,12 +37,50 @@ const HomePage = (_props: HomePageProps) => {
         >
           <Card
             className={classNames(
-              'gap-4 flex flex-col items-center justify-center p-16',
+              'gap-4 flex flex-col justify-center px-16 py-8',
             )}
           >
-            <Input />
-            <div>VS</div>
-            <Input />
+            <h1 className={classNames('font-medium text-2xl text-slate-700')}>
+              Compare PC Parts
+            </h1>
+
+            <div className={classNames('flex gap-6 w-full')}>
+              <Input
+                placeholder="Processor or Graphics Card..."
+                className={classNames('flex-1')}
+              />
+              <Button
+                style={ButtonStyle.Default}
+                className={classNames('flex-0')}
+              >
+                <XIcon className={classNames('h-4')} />
+              </Button>
+            </div>
+            <div
+              className={classNames(
+                'self-center font-medium text-2xl text-slate-700',
+              )}
+            >
+              VS
+            </div>
+            <div className={classNames('flex gap-6 w-full')}>
+              <Input
+                placeholder="Processor or Graphics Card..."
+                className={classNames('flex-1')}
+              />
+              <Button
+                style={ButtonStyle.Default}
+                className={classNames('flex-0')}
+              >
+                <PlusIcon className={classNames('h-4')} />
+              </Button>
+              <Button
+                style={ButtonStyle.Default}
+                className={classNames('flex-0')}
+              >
+                <XIcon className={classNames('h-4')} />
+              </Button>
+            </div>
             <Button
               style={ButtonStyle.Primary}
               className={classNames('w-full')}
@@ -41,7 +88,64 @@ const HomePage = (_props: HomePageProps) => {
               Compare
             </Button>
           </Card>
-          <aside className={classNames()}>Side</aside>
+
+          <aside className={classNames()}>
+            <Card
+              className={classNames(
+                'items-start flex flex-col flex-wrap gap-2 h-full justify-center',
+              )}
+            >
+              <SectionHeader
+                center
+                className={classNames('mb-0 text-slate-700')}
+              >
+                Featured Builds: June
+              </SectionHeader>
+
+              {/* TODO: make this into a slideshow of builds */}
+              <div
+                className={classNames(
+                  'flex flex-col flex-1 justify-center w-full',
+                )}
+              >
+                <a href="#">
+                  <h2
+                    className={classNames(
+                      'font-medium mb-2 text-center text-indigo-500',
+                    )}
+                  >
+                    Top-Shelf AMD Gaming Build
+                  </h2>
+                  <Image
+                    src="https://preview.redd.it/8siyqldph2x21.jpg?auto=webp&s=eeaa2cdf9c4e01746f4f46cc08c66e5eff77c630"
+                    className={classNames('h-32 mx-auto mb-2')}
+                  />
+                </a>
+
+                <div className={classNames('text-center text-sm font-medium')}>
+                  $2,389
+                  <ChipIcon
+                    className={classNames('inline-block h-4 w-4 mx-2')}
+                  />
+                  <a
+                    href="#"
+                    className={classNames('font-normal text-indigo-500')}
+                  >
+                    View Parts
+                  </a>
+                </div>
+              </div>
+
+              <footer className={classNames('self-center')}>
+                <div className={classNames('text-xs text-center')}>
+                  Check out more{' '}
+                  <a href="#" className={classNames('text-indigo-500')}>
+                    PC builds
+                  </a>
+                </div>
+              </footer>
+            </Card>
+          </aside>
         </section>
 
         <section className={classNames('my-4')}>

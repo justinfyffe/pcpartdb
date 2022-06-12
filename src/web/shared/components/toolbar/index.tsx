@@ -1,5 +1,5 @@
-import classNames from 'classnames';
 import React, { FunctionComponent } from 'react';
+import { classNames } from '../../ui/ui.utils';
 
 interface ToolbarProps {
   as?: React.ElementType;
@@ -28,8 +28,8 @@ export const Toolbar: FunctionComponent<ToolbarProps> = (props) => {
   return (
     <Element
       className={classNames(
-        props.className,
         'block bg-indigo-900 h-16 static text-gray-50',
+        props.className,
       )}
     >
       <div className="container flex h-full items-center justify-between px-4">
@@ -45,8 +45,8 @@ export const ToolbarTitle: FunctionComponent<ToolbarTitleProps> = (props) => {
   return (
     <Element
       className={classNames(
-        props.className,
         'flex font-medium items-center text-3xl',
+        props.className,
       )}
     >
       {props.children}
@@ -60,8 +60,8 @@ export const ToolbarNav: FunctionComponent<ToolbarNavProps> = (props) => {
   return (
     <Element
       className={classNames(
-        props.className,
         'font-medium rounded-none text-base',
+        props.className,
       )}
     >
       {props.children}

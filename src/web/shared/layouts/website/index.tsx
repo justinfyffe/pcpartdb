@@ -1,8 +1,9 @@
+import { DesktopComputerIcon } from '@heroicons/react/outline';
 import { HeartIcon } from '@heroicons/react/solid';
-import classNames from 'classnames';
 import React, { FunctionComponent } from 'react';
 import { Button, ButtonStyle } from '../../components/button';
 import { Toolbar, ToolbarNav, ToolbarTitle } from '../../components/toolbar';
+import { classNames } from '../../ui/ui.utils';
 
 interface WebsiteLayoutProps {
   className?: string;
@@ -13,7 +14,12 @@ export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
   return (
     <>
       <Toolbar>
-        <ToolbarTitle>Website Name</ToolbarTitle>
+        <ToolbarTitle>
+          <DesktopComputerIcon
+            className={classNames('inline-block h-8 w-8 m-2')}
+          />{' '}
+          Finest PC
+        </ToolbarTitle>
 
         <ToolbarNav>
           <Button href="#" style={ButtonStyle.Toolbar}>
@@ -32,12 +38,8 @@ export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
         {props.children}
       </div>
 
-      <footer className={classNames('bg-indigo-900')}>
-        <div
-          className={classNames(
-            'container flex flex-wrap text-gray-50 text-sm',
-          )}
-        >
+      <footer className={classNames('bg-indigo-900 text-slate-100')}>
+        <div className={classNames('container flex flex-wrap text-sm')}>
           <nav className={classNames('flex-1 m-4')}>
             <div className={classNames('border-b mb-3')}>Pages</div>
 
@@ -76,18 +78,18 @@ export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
             </div>
 
             <p className={classNames('mb-3')}>
-              Website Name provides accurate specs and benchmarks based on
-              various sources. If you discover an error, please contact us.
+              Finest PC provides accurate specs and benchmarks based on various
+              sources. If you discover an error, please contact us.
             </p>
 
             <p className={classNames('mb-3')}>
-              Website Name is a participant of affiliate programs and earns
+              Finest PC is a participant of affiliate programs and earns
               commission from qualifying purchases.
             </p>
           </div>
 
           <div className={classNames('mb-4 text-center w-full')}>
-            Copyright &copy; Website Name {new Date().getFullYear()}
+            Copyright &copy; Finest PC {new Date().getFullYear()}
             <br />
             Made with{' '}
             <HeartIcon className={classNames('inline-block h-3 w-3 mb-1')} /> in

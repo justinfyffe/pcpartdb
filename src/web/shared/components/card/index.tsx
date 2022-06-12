@@ -38,8 +38,8 @@ export const Card: FunctionComponent<CardProps> = (props) => {
   return (
     <Element
       className={classNames(
+        'bg-gray-50 flex flex-col items-stretch justify-between p-6 rounded shadow text-slate-700',
         props.className,
-        'flex flex-col items-stretch justify-between p-6 rounded shadow',
       )}
     >
       {props.children}
@@ -65,7 +65,7 @@ export const CardTitle: FunctionComponent<CardTitleProps> = (props) => {
   return (
     <Element
       className={classNames(
-        'font-medium text-xl text-indigo-800',
+        'font-medium text-xl text-indigo-500',
         props.className,
       )}
     >

@@ -1,5 +1,5 @@
-import classNames from 'classnames';
 import React, { FunctionComponent } from 'react';
+import { classNames } from '../../ui/ui.utils';
 
 interface SectionHeaderProps {
   as?: React.ElementType;
@@ -23,7 +23,7 @@ export const SectionHeader: FunctionComponent<SectionHeaderProps> = (props) => {
 
   return (
     <Element
-      className={classNames(props.className, 'flex items-center mb-6 w-full')}
+      className={classNames('flex items-center mb-6 w-full', props.className)}
     >
       <SectionHeaderLine small={!center} />
       <SectionHeaderTitle>{props.children}</SectionHeaderTitle>

@@ -17,7 +17,6 @@ module.exports = {
       },
       textColor: {
         'button-primary': '#ececec',
-        'button-toolbar': '#ececec',
       },
     },
     container: {

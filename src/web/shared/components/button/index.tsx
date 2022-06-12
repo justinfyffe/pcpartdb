@@ -16,10 +16,11 @@ interface ButtonProps
 }
 
 const BUTTON_STYLES = {
-  [ButtonStyle.None]: 'bg-transparent',
-  [ButtonStyle.Default]: 'bg-button-default border-button-default',
+  [ButtonStyle.None]: 'bg-transparent text-slate-700',
+  [ButtonStyle.Default]:
+    'bg-button-default border-button-default text-slate-800',
   [ButtonStyle.Primary]: 'bg-button-primary text-button-primary',
-  [ButtonStyle.Toolbar]: 'text-button-toolbar',
+  [ButtonStyle.Toolbar]: 'shadow-none text-slate-100',
 };
 
 export const Button: FunctionComponent<ButtonProps> = (props) => {
@@ -43,10 +44,10 @@ export const Button: FunctionComponent<ButtonProps> = (props) => {
       type={isButton ? type ?? 'button' : undefined}
       href={url}
       className={classNames(
-        className,
         'cursor-pointer font-medium inline-block no-underline',
-        'px-4 py-2 relative rounded text-center',
+        'px-4 py-2 relative rounded text-center shadow',
         BUTTON_STYLES[style ?? ButtonStyle.None],
+        className,
       )}
     >
       {props.children}
