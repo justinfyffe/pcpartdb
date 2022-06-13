@@ -1,9 +1,16 @@
-import { PlusCircleIcon } from '@heroicons/react/outline';
+import { DesktopComputerIcon, PlusCircleIcon } from '@heroicons/react/outline';
 import { NextPageContext } from 'next';
 import React from 'react';
 import { Button, ButtonVariant } from '../../web/shared/components/button';
-import { Card } from '../../web/shared/components/card';
+import {
+  Card,
+  CardActions,
+  CardContent,
+  CardImage,
+  CardTitle,
+} from '../../web/shared/components/card';
 import { Input } from '../../web/shared/components/input';
+import { SectionHeader } from '../../web/shared/components/section-header';
 import { WebsiteLayout } from '../../web/shared/layouts/website';
 import { classNames } from '../../web/shared/ui/ui.utils';
 
@@ -70,7 +77,9 @@ const GpuPage = (_props: GpuPageProps) => {
         </section>
 
         <section
-          className={classNames('grid grid-cols-2 grid-rows-[auto_auto] gap-6')}
+          className={classNames(
+            'grid grid-cols-2 grid-rows-[auto_auto] gap-6 mb-8',
+          )}
         >
           <Card>
             <h2
@@ -691,6 +700,79 @@ const GpuPage = (_props: GpuPageProps) => {
               </a>
             </div>
           </Card>
+        </section>
+
+        <section className={classNames('my-4')}>
+          <SectionHeader>
+            <DesktopComputerIcon
+              className={classNames('inline-block h-6 w-6 mr-2 mb-1')}
+            />
+            <h2 className={classNames('inline-block')}>Popular Comparisons</h2>
+          </SectionHeader>
+
+          <div
+            className={classNames('flex flex-wrap justify-center mx-[-16px]')}
+          >
+            <Card
+              className={classNames(
+                'flex-1 mx-4 mb-6 max-w-[360px] min-w-[280px]',
+              )}
+            >
+              <CardImage
+                src="https://preview.redd.it/8siyqldph2x21.jpg?auto=webp&s=eeaa2cdf9c4e01746f4f46cc08c66e5eff77c630"
+                width="360"
+                height="200"
+              ></CardImage>
+
+              <CardTitle as="h3">Ryzen 9 5900X vs Core i7-12700KF</CardTitle>
+
+              <CardContent>Is the 3070 better bang for your buck?</CardContent>
+
+              <CardActions>
+                <Button variant={ButtonVariant.Primary}>Compare</Button>
+              </CardActions>
+            </Card>
+
+            <Card
+              className={classNames(
+                'flex-1 mx-4 mb-6 max-w-[360px] min-w-[280px]',
+              )}
+            >
+              <CardImage
+                src="https://preview.redd.it/8siyqldph2x21.jpg?auto=webp&s=eeaa2cdf9c4e01746f4f46cc08c66e5eff77c630"
+                width="360"
+                height="200"
+              ></CardImage>
+
+              <CardTitle as="h3">Ryzen 9 5900X vs Core i7-12700KF</CardTitle>
+
+              <CardContent>Is the 3070 better bang for your buck?</CardContent>
+
+              <CardActions>
+                <Button variant={ButtonVariant.Primary}>Compare</Button>
+              </CardActions>
+            </Card>
+
+            <Card
+              className={classNames(
+                'flex-1 mx-4 mb-6 max-w-[360px] min-w-[280px]',
+              )}
+            >
+              <CardImage
+                src="https://preview.redd.it/8siyqldph2x21.jpg?auto=webp&s=eeaa2cdf9c4e01746f4f46cc08c66e5eff77c630"
+                width="360"
+                height="200"
+              ></CardImage>
+
+              <CardTitle as="h3">Ryzen 9 5900X vs Core i7-12700KF</CardTitle>
+
+              <CardContent>Is the 3070 better bang for your buck?</CardContent>
+
+              <CardActions>
+                <Button variant={ButtonVariant.Primary}>Compare</Button>
+              </CardActions>
+            </Card>
+          </div>
         </section>
       </main>
     </WebsiteLayout>
