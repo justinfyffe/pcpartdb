@@ -6,7 +6,7 @@ import {
 } from '@heroicons/react/outline';
 import { NextPageContext } from 'next';
 import React from 'react';
-import { Button, ButtonStyle } from '../../web/shared/components/button';
+import { Button, ButtonVariant } from '../../web/shared/components/button';
 import {
   Card,
   CardActions,
@@ -69,7 +69,7 @@ export const HomePage = (_props: HomePageProps) => {
                 />
 
                 <Button
-                  style={ButtonStyle.None}
+                  variant={ButtonVariant.None}
                   className={classNames('h-full px-2')}
                 >
                   <PlusCircleIcon className={classNames('h-6 mx-auto')} />
@@ -77,7 +77,7 @@ export const HomePage = (_props: HomePageProps) => {
               </div>
 
               <Button
-                style={ButtonStyle.Primary}
+                variant={ButtonVariant.Primary}
                 className={classNames('block min-w-full')}
               >
                 Compare
@@ -176,7 +176,7 @@ export const HomePage = (_props: HomePageProps) => {
               <CardContent>Is the 3070 better bang for your buck?</CardContent>
 
               <CardActions>
-                <Button style={ButtonStyle.Primary}>Compare</Button>
+                <Button variant={ButtonVariant.Primary}>Compare</Button>
               </CardActions>
             </Card>
 
@@ -196,7 +196,7 @@ export const HomePage = (_props: HomePageProps) => {
               <CardContent>Is the 3070 better bang for your buck?</CardContent>
 
               <CardActions>
-                <Button style={ButtonStyle.Primary}>Compare</Button>
+                <Button variant={ButtonVariant.Primary}>Compare</Button>
               </CardActions>
             </Card>
 
@@ -216,7 +216,7 @@ export const HomePage = (_props: HomePageProps) => {
               <CardContent>Is the 3070 better bang for your buck?</CardContent>
 
               <CardActions>
-                <Button style={ButtonStyle.Primary}>Compare</Button>
+                <Button variant={ButtonVariant.Primary}>Compare</Button>
               </CardActions>
             </Card>
           </div>
@@ -229,7 +229,7 @@ export const HomePage = (_props: HomePageProps) => {
             </li>
             <li className={classNames('inline-block mx-4')}>
               <a href="#" className={classNames('text-indigo-500')}>
-                Nvidia GPUs
+                NVIDIA GPUs
               </a>
             </li>
             <li className={classNames('inline-block mx-4')}>
@@ -267,7 +267,7 @@ export const HomePage = (_props: HomePageProps) => {
               <CardContent>Is the 3070 better bang for your buck?</CardContent>
 
               <CardActions>
-                <Button style={ButtonStyle.Primary}>Compare</Button>
+                <Button variant={ButtonVariant.Primary}>Compare</Button>
               </CardActions>
             </Card>
 
@@ -287,7 +287,7 @@ export const HomePage = (_props: HomePageProps) => {
               <CardContent>Is the 3070 better bang for your buck?</CardContent>
 
               <CardActions>
-                <Button style={ButtonStyle.Primary}>Compare</Button>
+                <Button variant={ButtonVariant.Primary}>Compare</Button>
               </CardActions>
             </Card>
 
@@ -307,7 +307,7 @@ export const HomePage = (_props: HomePageProps) => {
               <CardContent>Is the 3070 better bang for your buck?</CardContent>
 
               <CardActions>
-                <Button style={ButtonStyle.Primary}>Compare</Button>
+                <Button variant={ButtonVariant.Primary}>Compare</Button>
               </CardActions>
             </Card>
           </div>
@@ -360,7 +360,7 @@ export const HomePage = (_props: HomePageProps) => {
               <CardContent>Is the 3070 better bang for your buck?</CardContent>
 
               <CardActions>
-                <Button style={ButtonStyle.Primary}>View Build</Button>
+                <Button variant={ButtonVariant.Primary}>View Build</Button>
               </CardActions>
             </Card>
 
@@ -382,7 +382,7 @@ export const HomePage = (_props: HomePageProps) => {
               <CardContent>Is the 3070 better bang for your buck?</CardContent>
 
               <CardActions>
-                <Button style={ButtonStyle.Primary}>View Build</Button>
+                <Button variant={ButtonVariant.Primary}>View Build</Button>
               </CardActions>
             </Card>
 
@@ -402,7 +402,7 @@ export const HomePage = (_props: HomePageProps) => {
               <CardContent>Is the 3070 better bang for your buck?</CardContent>
 
               <CardActions>
-                <Button style={ButtonStyle.Primary}>View Build</Button>
+                <Button variant={ButtonVariant.Primary}>View Build</Button>
               </CardActions>
             </Card>
           </div>

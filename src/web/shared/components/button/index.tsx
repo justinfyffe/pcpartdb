@@ -1,7 +1,7 @@
 import React, { FunctionComponent, HTMLProps } from 'react';
 import { classNames } from '../../ui/ui.utils';
 
-export enum ButtonStyle {
+export enum ButtonVariant {
   None = 'none',
   Default = 'default',
   Primary = 'primary',
@@ -12,19 +12,19 @@ interface ButtonProps
   extends Omit<HTMLProps<HTMLButtonElement>, 'as' | 'style'> {
   as?: React.ElementType;
 
-  style?: ButtonStyle;
+  variant?: ButtonVariant;
 }
 
-const BUTTON_STYLES = {
-  [ButtonStyle.None]: 'bg-transparent shadow-none text-slate-700',
-  [ButtonStyle.Default]:
+const BUTTON_VARIANTS = {
+  [ButtonVariant.None]: 'bg-transparent shadow-none text-slate-700',
+  [ButtonVariant.Default]:
     'bg-button-default border-button-default text-slate-800',
-  [ButtonStyle.Primary]: 'bg-button-primary text-button-primary',
-  [ButtonStyle.Toolbar]: 'shadow-none text-slate-100',
+  [ButtonVariant.Primary]: 'bg-button-primary text-button-primary',
+  [ButtonVariant.Toolbar]: 'shadow-none text-slate-100',
 };
 
 export const Button: FunctionComponent<ButtonProps> = (props) => {
-  const { as, href, style, className, type, ...htmlProps } = props;
+  const { as, href, variant, className, type, ...htmlProps } = props;
 
   let url;
   if (href) {
@@ -46,7 +46,7 @@ export const Button: FunctionComponent<ButtonProps> = (props) => {
       className={classNames(
         'cursor-pointer font-medium inline-block no-underline',
         'px-4 py-2 relative rounded text-center shadow',
-        BUTTON_STYLES[style ?? ButtonStyle.None],
+        BUTTON_VARIANTS[variant ?? ButtonVariant.None],
         className,
       )}
     >

@@ -1,7 +1,7 @@
 import { DesktopComputerIcon } from '@heroicons/react/outline';
 import { HeartIcon } from '@heroicons/react/solid';
 import React, { FunctionComponent } from 'react';
-import { Button, ButtonStyle } from '../../components/button';
+import { Button, ButtonVariant } from '../../components/button';
 import { Toolbar, ToolbarNav, ToolbarTitle } from '../../components/toolbar';
 import { classNames } from '../../ui/ui.utils';
 
@@ -22,13 +22,13 @@ export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
         </ToolbarTitle>
 
         <ToolbarNav>
-          <Button href="#" style={ButtonStyle.Toolbar}>
+          <Button href="#" variant={ButtonVariant.Toolbar}>
             Graphics Cards
           </Button>
-          <Button href="#" style={ButtonStyle.Toolbar}>
+          <Button href="#" variant={ButtonVariant.Toolbar}>
             Processors
           </Button>
-          <Button href="#" style={ButtonStyle.Toolbar}>
+          <Button href="#" variant={ButtonVariant.Toolbar}>
             PC Builds
           </Button>
         </ToolbarNav>
