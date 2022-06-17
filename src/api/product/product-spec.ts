@@ -1,7 +1,7 @@
 export enum CpuSpecKey {
   // General
   Company = 'COMPANY',
-  Codename = 'CODENAME',
+  Architecture = 'ARCHITECTURE',
   Generation = 'GENERATION',
   MarketSegment = 'MARKET_SEGMENT',
   MSRP = 'MSRP',
