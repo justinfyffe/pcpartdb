@@ -1,4 +1,4 @@
-import { DesktopComputerIcon } from '@heroicons/react/outline';
+import { DesktopComputerIcon, SearchIcon } from '@heroicons/react/outline';
 import { HeartIcon } from '@heroicons/react/solid';
 import React, { FunctionComponent } from 'react';
 import { Button, ButtonVariant } from '../../components/button';
@@ -30,6 +30,10 @@ export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
           </Button>
           <Button href="#" variant={ButtonVariant.Toolbar}>
             PC Builds
+          </Button>
+
+          <Button variant={ButtonVariant.Toolbar}>
+            <SearchIcon className="w-[20px]" />
           </Button>
         </ToolbarNav>
       </Toolbar>

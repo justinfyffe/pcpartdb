@@ -1,8 +1,21 @@
-import { ChipIcon } from '@heroicons/react/outline';
+import {
+  CalendarIcon,
+  ChipIcon,
+  ClockIcon,
+  CurrencyDollarIcon,
+  InformationCircleIcon,
+  PlusCircleIcon,
+  SearchIcon,
+  ShoppingCartIcon,
+  StarIcon,
+  TableIcon,
+} from '@heroicons/react/outline';
 import { NextPageContext } from 'next';
 import React from 'react';
+import { Button, ButtonVariant } from '../../../web/shared/components/button';
 import { Card } from '../../../web/shared/components/card';
 import { Image } from '../../../web/shared/components/image';
+import { Input } from '../../../web/shared/components/input';
 import { Table, TBody, Td, Tr } from '../../../web/shared/components/table';
 import { WebsiteLayout } from '../../../web/shared/layouts/website';
 import { classNames } from '../../../web/shared/ui/ui.utils';
@@ -10,27 +23,35 @@ import { classNames } from '../../../web/shared/ui/ui.utils';
 interface ViewGpuPageProps {}
 
 const ViewGpuPage = (_props: ViewGpuPageProps) => {
-  // TODO: add sidebar to layout
   return (
     <WebsiteLayout className="flex flex-wrap gap-6 lg:gap-8 text-slate-700 justify-center">
-      <div className="w-full">
-        <ul className="flex gap-3">
-          <li className="text-indigo-500">
-            <a href="#">Finest PC</a>
-          </li>
-          <li>&bull;</li>
-          <li className="text-indigo-500">
-            <a href="#">GPUs</a>
-          </li>
-          <li>&bull;</li>
-          <li>NVIDIA GeForce RTX 3090</li>
-        </ul>
-      </div>
+      <div className="flex flex-wrap w-full items-center justify-between gap-2">
+        <div className="w-full">
+          <ul className="flex gap-3 text-sm">
+            <li className="text-indigo-500">
+              <a href="#">Finest PC</a>
+            </li>
+            <li>&bull;</li>
+            <li className="text-indigo-500">
+              <a href="#">GPUs</a>
+            </li>
+            <li>&bull;</li>
+            <li>NVIDIA GeForce RTX 3090</li>
+          </ul>
+        </div>
 
-      <h1 className="text-3xl font-medium w-full">
-        <span className="text-2xl font-normal mr-2">NVIDIA</span>
-        <span>GeForce RTX 3090</span>
-      </h1>
+        <h1 className="text-3xl font-medium">
+          <span className="text-2xl font-normal mr-2">NVIDIA</span>
+          <span>GeForce RTX 3090</span>
+        </h1>
+
+        <div className="flex w-full max-w-[500px] gap-4">
+          <Input placeholder="Search GPUs..." className="flex-1" />
+          <Button variant={ButtonVariant.Primary}>
+            <SearchIcon className="w-[20px]" />
+          </Button>
+        </div>
+      </div>
 
       <main className="flex-1 flex flex-col gap-6">
         <section className="flex flex-wrap justify-start gap-6 lg:gap-8">
@@ -69,15 +90,42 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
           </div>
 
           <div className="flex-1">
-            <ul className={classNames('flex flex-col gap-3')}>
+            <ul className={classNames('flex flex-col gap-3 lg:gap-4')}>
               <li
                 className={classNames(
-                  'bg-slate-200 flex items-center justify-center px-4 py-1 rounded shadow',
+                  'bg-slate-200 flex items-center justify-center px-4 py-2 rounded shadow',
                 )}
               >
                 <div className={classNames('flex-1 flex gap-2 items-center')}>
                   <div className="mr-1">
-                    <ChipIcon className="w-[20px] lg:w-[30px]"></ChipIcon>
+                    <ShoppingCartIcon className="w-[20px] lg:w-[30px]"></ShoppingCartIcon>
+                  </div>
+
+                  <div
+                    className={classNames('font-medium text-xl lg:text-2xl')}
+                  >
+                    Shop
+                  </div>
+                </div>
+
+                <Button
+                  variant={ButtonVariant.Primary}
+                  className={classNames(
+                    'self-stretch lg:text-lg text-right py-[4px]',
+                  )}
+                >
+                  Buy
+                </Button>
+              </li>
+
+              <li
+                className={classNames(
+                  'bg-slate-200 flex items-center justify-center px-4 py-2 rounded shadow',
+                )}
+              >
+                <div className={classNames('flex-1 flex gap-2 items-center')}>
+                  <div className="mr-1">
+                    <CalendarIcon className="w-[20px] lg:w-[30px]"></CalendarIcon>
                   </div>
 
                   <div
@@ -89,7 +137,7 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
 
                 <div
                   className={classNames(
-                    'text-md lg:text-lg text-slate-600 p-2 text-right',
+                    'text-md lg:text-lg text-slate-600 text-right',
                   )}
                 >
                   Q4 2022
@@ -98,7 +146,7 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
 
               <li
                 className={classNames(
-                  'bg-slate-200 flex items-center justify-center px-4 py-1 rounded shadow',
+                  'bg-slate-200 flex items-center justify-center px-4 py-2 rounded shadow',
                 )}
               >
                 <div className={classNames('flex-1 flex gap-2 items-center')}>
@@ -115,7 +163,7 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
 
                 <div
                   className={classNames(
-                    'text-md lg:text-lg text-slate-600 p-2 text-right',
+                    'text-md lg:text-lg text-slate-600 text-right',
                   )}
                 >
                   9704 CUDA Cores
@@ -124,12 +172,12 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
 
               <li
                 className={classNames(
-                  'bg-slate-200 flex items-center justify-center px-4 py-1 rounded shadow',
+                  'bg-slate-200 flex items-center justify-center px-4 py-2 rounded shadow',
                 )}
               >
                 <div className={classNames('flex-1 flex gap-2 items-center')}>
                   <div className="mr-1">
-                    <ChipIcon className="w-[20px] lg:w-[30px]"></ChipIcon>
+                    <ClockIcon className="w-[20px] lg:w-[30px]"></ClockIcon>
                   </div>
 
                   <div
@@ -141,7 +189,7 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
 
                 <div
                   className={classNames(
-                    'text-md lg:text-lg text-slate-600 p-2 text-right',
+                    'text-md lg:text-lg text-slate-600 text-right',
                   )}
                 >
                   1440 MHz / 1845 MHz
@@ -150,12 +198,12 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
 
               <li
                 className={classNames(
-                  'bg-slate-200 flex items-center justify-center px-4 py-1 rounded shadow',
+                  'bg-slate-200 flex items-center justify-center px-4 py-2 rounded shadow',
                 )}
               >
                 <div className={classNames('flex-1 flex gap-2 items-center')}>
                   <div className="mr-1">
-                    <ChipIcon className="w-[20px] lg:w-[30px]"></ChipIcon>
+                    <TableIcon className="w-[20px] lg:w-[30px]"></TableIcon>
                   </div>
 
                   <div
@@ -167,7 +215,7 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
 
                 <div
                   className={classNames(
-                    'text-md lg:text-lg text-slate-600 p-2 text-right',
+                    'text-md lg:text-lg text-slate-600 text-right',
                   )}
                 >
                   24 GB GDDR6X
@@ -176,12 +224,12 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
 
               <li
                 className={classNames(
-                  'bg-slate-200 flex items-center justify-center px-4 py-1 rounded shadow',
+                  'bg-slate-200 flex items-center justify-center px-4 py-2 rounded shadow',
                 )}
               >
                 <div className={classNames('flex-1 flex gap-2 items-center')}>
                   <div className="mr-1">
-                    <ChipIcon className="w-[20px] lg:w-[30px]"></ChipIcon>
+                    <StarIcon className="w-[20px] lg:w-[30px]"></StarIcon>
                   </div>
 
                   <div
@@ -193,7 +241,7 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
 
                 <div
                   className={classNames(
-                    'text-md lg:text-lg text-slate-600 p-2 text-right',
+                    'text-md lg:text-lg text-slate-600 text-right',
                   )}
                 >
                   82.23
@@ -202,12 +250,12 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
 
               <li
                 className={classNames(
-                  'bg-slate-200 flex items-center justify-center px-4 py-1 rounded shadow',
+                  'bg-slate-200 flex items-center justify-center px-4 py-2 rounded shadow',
                 )}
               >
                 <div className={classNames('flex-1 flex gap-2 items-center')}>
                   <div className="mr-1">
-                    <ChipIcon className="w-[20px] lg:w-[30px]"></ChipIcon>
+                    <CurrencyDollarIcon className="w-[20px] lg:w-[30px]"></CurrencyDollarIcon>
                   </div>
 
                   <div
@@ -219,7 +267,7 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
 
                 <div
                   className={classNames(
-                    'text-md lg:text-lg text-slate-600 p-2 text-right',
+                    'text-md lg:text-lg text-slate-600 text-right',
                   )}
                 >
                   58.32
@@ -369,6 +417,10 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
                     <Td>Height</Td>
                     <Td>61mm</Td>
                   </Tr>
+                  <Tr>
+                    <Td>Weight</Td>
+                    <Td>2.92 kg</Td>
+                  </Tr>
                 </TBody>
               </Table>
 
@@ -403,12 +455,90 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
               eiusmod tempor incididunt ut labore et dolore magna aliqua.
             </p>
 
-            <h3 className="text-xl font-medium mb-3">Performance</h3>
+            <div className="flex flex-wrap items-start mb-3">
+              <Table className="flex-1 mb-0">
+                <TBody>
+                  <Tr>
+                    <Td className="min-w-[100px]">CUDA Cores</Td>
+                    <Td className="min-w-[80px]">9,704</Td>
+                  </Tr>
+                  <Tr>
+                    <Td>TMUs</Td>
+                    <Td>328</Td>
+                  </Tr>
+                  <Tr>
+                    <Td>ROPs</Td>
+                    <Td>112</Td>
+                  </Tr>
+                  <Tr>
+                    <Td>Tensor Cores</Td>
+                    <Td>576</Td>
+                  </Tr>
+                  <Tr>
+                    <Td>RT Cores</Td>
+                    <Td>72</Td>
+                  </Tr>
+                </TBody>
+              </Table>
+
+              <Table className="flex-1 mb-0">
+                <TBody>
+                  <Tr>
+                    <Td className="min-w-[100px]">Base Clock</Td>
+                    <Td className="min-w-[80px]">1,440 MHz</Td>
+                  </Tr>
+                  <Tr>
+                    <Td>Boost Clock</Td>
+                    <Td>1,845 MHz</Td>
+                  </Tr>
+                  <Tr>
+                    <Td>L1 Cache</Td>
+                    <Td>128 KB</Td>
+                  </Tr>
+                  <Tr>
+                    <Td>L2 Cache</Td>
+                    <Td>6 MB</Td>
+                  </Tr>
+                </TBody>
+              </Table>
+            </div>
+
+            <h3 className="text-xl font-medium mb-3">
+              Theoretical Performance
+            </h3>
 
             <p className={classNames('text-gray-400 mb-4')}>
               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
               eiusmod tempor incididunt ut labore et dolore magna aliqua.
             </p>
+
+            <div className="flex flex-wrap items-start mb-3">
+              <Table className="flex-1 mb-0">
+                <TBody>
+                  <Tr>
+                    <Td className="min-w-[100px]">Pixel Rate</Td>
+                    <Td className="min-w-[80px]">189.8 GPixel/s</Td>
+                  </Tr>
+                  <Tr>
+                    <Td>Texture Rate</Td>
+                    <Td>556.0 GTexel/s</Td>
+                  </Tr>
+                </TBody>
+              </Table>
+
+              <Table className="flex-1 mb-0">
+                <TBody>
+                  <Tr>
+                    <Td className="min-w-[100px]">FP32 Performance</Td>
+                    <Td className="min-w-[80px]">35.58 TFLOPS</Td>
+                  </Tr>
+                  <Tr>
+                    <Td>FP64 Performance</Td>
+                    <Td>556.0 GFLOPS</Td>
+                  </Tr>
+                </TBody>
+              </Table>
+            </div>
 
             <h3 className="text-xl font-medium mb-3">Memory</h3>
 
@@ -417,12 +547,127 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
               eiusmod tempor incididunt ut labore et dolore magna aliqua.
             </p>
 
+            <div className="flex flex-wrap items-start mb-3">
+              <Table className="flex-1 mb-0">
+                <TBody>
+                  <Tr>
+                    <Td className="min-w-[100px]">Memory Size</Td>
+                    <Td className="min-w-[80px]">24 GB GDDR6X</Td>
+                  </Tr>
+                  <Tr>
+                    <Td>Memory Clock</Td>
+                    <Td>9,750 MHz</Td>
+                  </Tr>
+                </TBody>
+              </Table>
+
+              <Table className="flex-1 mb-0">
+                <TBody>
+                  <Tr>
+                    <Td className="min-w-[100px]">Memory Interface</Td>
+                    <Td className="min-w-[80px]">384-bit</Td>
+                  </Tr>
+                  <Tr>
+                    <Td>Memory Bandwidth</Td>
+                    <Td>936 GB/s</Td>
+                  </Tr>
+                </TBody>
+              </Table>
+            </div>
+
+            <h3 className="text-xl font-medium mb-3">Display Connectivity</h3>
+
+            <p className={classNames('text-gray-400 mb-4')}>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+              eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            </p>
+
+            <div className="flex flex-wrap items-start mb-3">
+              <Table className="flex-1 mb-0">
+                <TBody>
+                  <Tr>
+                    <Td className="min-w-[100px]">Max Resolution</Td>
+                    <Td className="min-w-[80px]">7680x4320</Td>
+                  </Tr>
+                  <Tr>
+                    <Td>Display Ports</Td>
+                    <Td>3x 1.4a</Td>
+                  </Tr>
+                  <Tr>
+                    <Td>HDMI Ports</Td>
+                    <Td>2x 2.1, 1x 2.0</Td>
+                  </Tr>
+                  <Tr>
+                    <Td className="min-w-[100px]">USB-C</Td>
+                    <Td className="min-w-[80px]">No</Td>
+                  </Tr>
+                </TBody>
+              </Table>
+
+              <Table className="flex-1 mb-0">
+                <TBody>
+                  <Tr>
+                    <Td>Dual Link DVI</Td>
+                    <Td>No</Td>
+                  </Tr>
+                  <Tr>
+                    <Td>Single Link DVI</Td>
+                    <Td>No</Td>
+                  </Tr>
+                  <Tr>
+                    <Td>VGA</Td>
+                    <Td>No</Td>
+                  </Tr>
+                </TBody>
+              </Table>
+            </div>
+
             <h3 className="text-xl font-medium mb-3">API Support</h3>
 
             <p className={classNames('text-gray-400 mb-4')}>
               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
               eiusmod tempor incididunt ut labore et dolore magna aliqua.
             </p>
+
+            <div className="flex flex-wrap items-start mb-3">
+              <Table className="flex-1 mb-0">
+                <TBody>
+                  <Tr>
+                    <Td className="min-w-[100px]">DirextX</Td>
+                    <Td className="min-w-[80px]">12</Td>
+                  </Tr>
+                  <Tr>
+                    <Td>G-Sync / FreeSync</Td>
+                    <Td>Yes</Td>
+                  </Tr>
+                  <Tr>
+                    <Td>SLI / Crossfire</Td>
+                    <Td>No</Td>
+                  </Tr>
+                  <Tr>
+                    <Td>VR Ready</Td>
+                    <Td>Yes</Td>
+                  </Tr>
+                </TBody>
+              </Table>
+
+              <Table className="flex-1 mb-0">
+                <TBody>
+                  <Tr>
+                    <Td className="min-w-[100px]">OpenCL</Td>
+                    <Td className="min-w-[80px]">2.0</Td>
+                  </Tr>
+                  <Tr>
+                    <Td>OpenGL</Td>
+                    <Td>4.6</Td>
+                  </Tr>
+                  <Tr>
+                    <Td>Shader Model</Td>
+                    <Td>6.5</Td>
+                  </Tr>
+                </TBody>
+              </Table>
+            </div>
           </Card>
 
           <Card>
@@ -432,15 +677,211 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
               eiusmod tempor incididunt ut labore et dolore magna aliqua.
             </p>
+
+            <div className="flex flex-wrap items-start mb-3">
+              <Table className="flex-1 mb-0">
+                <TBody>
+                  <Tr>
+                    <Td className="min-w-[100px]">Performance Rating</Td>
+                    <Td className="min-w-[80px]">82.23</Td>
+                  </Tr>
+                  <Tr>
+                    <Td>Value for Money</Td>
+                    <Td>58.32</Td>
+                  </Tr>
+                  <Tr>
+                    <Td>Passmark</Td>
+                    <Td>26479</Td>
+                  </Tr>
+                  <Tr>
+                    <Td>3DMark Time Spy</Td>
+                    <Td>19931</Td>
+                  </Tr>
+                </TBody>
+              </Table>
+
+              <Table className="flex-1 mb-0">
+                <TBody>
+                  <Tr>
+                    <Td className="min-w-[100px]">GeekBench 5 CUDA</Td>
+                    <Td className="min-w-[80px]">238123</Td>
+                  </Tr>
+                  <Tr>
+                    <Td>GeekBench 5 OpenCL</Td>
+                    <Td>204921</Td>
+                  </Tr>
+                  <Tr>
+                    <Td>GeekBench 5 Vulkan</Td>
+                    <Td>138637</Td>
+                  </Tr>
+                </TBody>
+              </Table>
+            </div>
+          </Card>
+
+          <Card>
+            <h2 className="text-2xl font-medium mb-3">Reviews</h2>
+
+            <p className={classNames('text-gray-400 mb-4')}>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+              eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            </p>
+
+            <Table className="mb-0">
+              <TBody>
+                <Tr>
+                  <Td className="min-w-[100px]">
+                    <a href="#" className="text-indigo-500">
+                      Average Rating
+                    </a>
+                  </Td>
+                  <Td className="min-w-[80px]">4.0 / 5</Td>
+                </Tr>
+                <Tr>
+                  <Td>
+                    <a href="#" className="text-indigo-500">
+                      Amazon
+                    </a>
+                  </Td>
+                  <Td>4.6 / 5</Td>
+                </Tr>
+                <Tr>
+                  <Td>
+                    <a href="#" className="text-indigo-500">
+                      TechRadar
+                    </a>
+                  </Td>
+                  <Td>4.0 / 5</Td>
+                </Tr>
+                <Tr>
+                  <Td>
+                    <a href="#" className="text-indigo-500">
+                      Tom&apos;s Hardware
+                    </a>
+                  </Td>
+                  <Td>4.0 / 5</Td>
+                </Tr>
+                <Tr>
+                  <Td>
+                    <a href="#" className="text-indigo-500">
+                      TechSpot
+                    </a>
+                  </Td>
+                  <Td>3.5 / 5</Td>
+                </Tr>
+                <Tr>
+                  <Td>
+                    <a href="#" className="text-indigo-500">
+                      PC Gamer
+                    </a>
+                  </Td>
+                  <Td>3.5 / 5</Td>
+                </Tr>
+              </TBody>
+            </Table>
           </Card>
         </section>
       </main>
 
-      <aside className="border w-[300px]">
+      <aside className="w-[300px] flex flex-col gap-6">
         <section>
-          <header className="text-xl font-medium">Popular GPUs</header>
+          <div className="flex flex-col gap-3">
+            <header className="flex text-lg font-medium w-full">
+              Notify me of stock updates{' '}
+              <InformationCircleIcon className="ml-2 w-[20px]" />
+            </header>
 
-          <div className="flex flex-wrap">GPUs here</div>
+            <div className="flex gap-3">
+              <Input placeholder="Email address..." />
+              <Button variant={ButtonVariant.Primary} className="px-3 py-2">
+                Save
+              </Button>
+            </div>
+          </div>
+        </section>
+
+        <section className="flex flex-col gap-4">
+          <header className="text-lg font-medium">Popular GPUs</header>
+
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center gap-3 px-2 py-3 border rounded text-sm">
+              <Image
+                className="w-auto h-auto mx-auto max-h-[60px] max-w-[60px]"
+                src="https://www.nvidia.com/content/dam/en-zz/Solutions/geforce/ampere/rtx-3090/geforce-rtx-3090-shop-630-d@2x.png"
+              />
+              <div className="flex-1">
+                <a href="#" className="text-indigo-500">
+                  NVIDIA GeForce RTX 3080
+                </a>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3 border px-2 py-3 rounded text-sm">
+              <Image
+                className="w-auto h-auto mx-auto max-h-[60px] max-w-[60px]"
+                src="https://www.nvidia.com/content/dam/en-zz/Solutions/geforce/ampere/rtx-3090/geforce-rtx-3090-shop-630-d@2x.png"
+              />
+              <div className="flex-1">
+                <a href="#" className="text-indigo-500">
+                  NVIDIA GeForce RTX 3070
+                </a>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3 border px-2 py-3 rounded text-sm">
+              <Image
+                className="w-auto h-auto mx-auto max-h-[60px] max-w-[60px]"
+                src="https://www.nvidia.com/content/dam/en-zz/Solutions/geforce/ampere/rtx-3090/geforce-rtx-3090-shop-630-d@2x.png"
+              />
+              <div className="flex-1">
+                <a href="#" className="text-indigo-500">
+                  NVIDIA GeForce RTX 3060
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="flex flex-col gap-4">
+          <header className="text-lg font-medium">Popular Comparisons</header>
+
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center gap-3 border px-2 py-3 rounded text-sm">
+              <Image
+                className="w-auto h-auto mx-auto max-h-[60px] max-w-[60px]"
+                src="https://www.nvidia.com/content/dam/en-zz/Solutions/geforce/ampere/rtx-3090/geforce-rtx-3090-shop-630-d@2x.png"
+              />
+              <div className="flex-1">
+                <a href="#" className="text-indigo-500">
+                  NVIDIA GeForce RTX 3080 vs NVIDIA GeForce RTX 3070
+                </a>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3 border px-2 py-3 rounded text-sm">
+              <Image
+                className="w-auto h-auto mx-auto max-h-[60px] max-w-[60px]"
+                src="https://www.nvidia.com/content/dam/en-zz/Solutions/geforce/ampere/rtx-3090/geforce-rtx-3090-shop-630-d@2x.png"
+              />
+              <div className="flex-1">
+                <a href="#" className="text-indigo-500">
+                  NVIDIA GeForce RTX 3070 vs NVIDIA GeForce RTX 3060
+                </a>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3 border px-2 py-3 rounded text-sm">
+              <Image
+                className="w-auto h-auto mx-auto max-h-[60px] max-w-[60px]"
+                src="https://www.nvidia.com/content/dam/en-zz/Solutions/geforce/ampere/rtx-3090/geforce-rtx-3090-shop-630-d@2x.png"
+              />
+              <div className="flex-1">
+                <a href="#" className="text-indigo-500">
+                  NVIDIA GeForce RTX 3090 vs NVIDIA GeForce RTX 3070
+                </a>
+              </div>
+            </div>
+          </div>
         </section>
       </aside>
     </WebsiteLayout>

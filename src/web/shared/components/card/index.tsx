@@ -38,7 +38,7 @@ export const Card: FunctionComponent<CardProps> = (props) => {
   return (
     <Element
       className={classNames(
-        'bg-gray-50 flex flex-col items-stretch justify-start p-6 rounded shadow text-slate-700',
+        'bg-gray-50 flex flex-col items-stretch justify-start p-4 rounded shadow text-slate-700',
         props.className,
       )}
     >

@@ -60,7 +60,7 @@ export const ToolbarNav: FunctionComponent<ToolbarNavProps> = (props) => {
   return (
     <Element
       className={classNames(
-        'font-medium rounded-none text-base',
+        'flex items-center font-medium rounded-none text-base',
         props.className,
       )}
     >
