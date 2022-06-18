@@ -39,3 +39,6 @@
   - key
   - value
   - overwritten_value
+
+- improve html semantics
+- clean up html

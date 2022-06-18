@@ -23,7 +23,7 @@ const GpuPage = (_props: GpuPageProps) => {
         <section className={classNames('mb-6')}>
           <Card
             className={classNames(
-              'gap-4 flex flex-col justify-center px-16 py-8',
+              'gap-4 flex flex-col justify-center px-8 py-8',
             )}
           >
             <h1 className={classNames('font-medium text-3xl text-slate-700')}>
@@ -32,44 +32,32 @@ const GpuPage = (_props: GpuPageProps) => {
 
             <div
               className={classNames(
-                'flex flex-1 flex-col gap-6 items-center justify-center',
+                'flex flex-1 gap-6 items-stretch justify-center',
               )}
             >
+              <Input
+                placeholder="Graphics Card..."
+                className={classNames('flex-1')}
+              />
+
               <div
                 className={classNames(
-                  'grid grid-cols-[minmax(200px,_1fr)_auto] lg:grid-cols-[repeat(2,_1fr_auto)] lg:grid-flow-col gap-6 items-center justify-center w-full',
+                  'self-center font-medium text-center text-slate-700',
                 )}
               >
-                <Input
-                  placeholder="Graphics Card..."
-                  className={classNames()}
-                />
-
-                <div
-                  className={classNames(
-                    'font-medium text-center text-md text-slate-700',
-                  )}
-                >
-                  VS
-                </div>
-
-                <Input
-                  placeholder="Graphics Card..."
-                  className={classNames()}
-                />
-
-                <Button
-                  variant={ButtonVariant.None}
-                  className={classNames('h-full px-2')}
-                >
-                  <PlusCircleIcon className={classNames('h-6 mx-auto')} />
-                </Button>
+                VS
               </div>
 
-              <Button
-                variant={ButtonVariant.Primary}
-                className={classNames('block min-w-full')}
-              >
+              <Input
+                placeholder="Graphics Card..."
+                className={classNames('flex-1')}
+              />
+
+              <Button variant={ButtonVariant.Default} className={classNames()}>
+                <PlusCircleIcon className={classNames('h-6 mx-auto')} />
+              </Button>
+
+              <Button variant={ButtonVariant.Primary} className={classNames()}>
                 Compare
               </Button>
             </div>

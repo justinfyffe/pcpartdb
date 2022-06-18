@@ -25,7 +25,7 @@ interface ViewGpuPageProps {}
 const ViewGpuPage = (_props: ViewGpuPageProps) => {
   return (
     <WebsiteLayout className="flex flex-wrap gap-6 lg:gap-8 text-slate-700 justify-center">
-      <div className="flex flex-wrap w-full items-center justify-between gap-2">
+      <div className="flex flex-wrap w-full items-center justify-between gap-3">
         <div className="w-full">
           <ul className="flex gap-3 text-sm">
             <li className="text-indigo-500">
@@ -40,17 +40,31 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
           </ul>
         </div>
 
-        <h1 className="text-3xl font-medium">
-          <span className="text-2xl font-normal mr-2">NVIDIA</span>
-          <span>GeForce RTX 3090</span>
-        </h1>
+        <h1 className="text-3xl font-medium mb-3">NVIDIA GeForce RTX 3090</h1>
 
-        <div className="flex w-full max-w-[500px] gap-4">
-          <Input placeholder="Search GPUs..." className="flex-1" />
-          <Button variant={ButtonVariant.Primary}>
-            <SearchIcon className="w-[20px]" />
-          </Button>
-        </div>
+        <section className={classNames('w-full')}>
+          <div className={classNames('gap-4 flex flex-col justify-center')}>
+            <div
+              className={classNames(
+                'flex flex-1 gap-6 items-stretch justify-center',
+              )}
+            >
+              <Input
+                placeholder="Graphics Card..."
+                value="NVIDIA GeForce RTX 3090"
+                className={classNames('flex-1')}
+              />
+
+              <Button variant={ButtonVariant.Default} className={classNames()}>
+                <PlusCircleIcon className={classNames('w-[20px]')} />
+              </Button>
+
+              <Button variant={ButtonVariant.Primary} className={classNames()}>
+                Search
+              </Button>
+            </div>
+          </div>
+        </section>
       </div>
 
       <main className="flex-1 flex flex-col gap-6">
@@ -598,8 +612,8 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
                     <Td>2x 2.1, 1x 2.0</Td>
                   </Tr>
                   <Tr>
-                    <Td className="min-w-[100px]">USB-C</Td>
-                    <Td className="min-w-[80px]">No</Td>
+                    <Td>USB-C</Td>
+                    <Td>No</Td>
                   </Tr>
                 </TBody>
               </Table>
@@ -607,8 +621,8 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
               <Table className="flex-1 mb-0">
                 <TBody>
                   <Tr>
-                    <Td>Dual Link DVI</Td>
-                    <Td>No</Td>
+                    <Td className="min-w-[100px]">Dual Link DVI</Td>
+                    <Td className="min-w-[80px]">No</Td>
                   </Tr>
                   <Tr>
                     <Td>Single Link DVI</Td>
