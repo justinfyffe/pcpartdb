@@ -38,17 +38,33 @@ export const Table: FunctionComponent<TableProps> = (props) => {
   );
 };
 
-interface TableRowProps extends HTMLProps<HTMLTableRowElement> {}
+interface THeadProps extends HTMLProps<HTMLTableRowElement> {}
 
-export const TableRow: FunctionComponent<TableRowProps> = (props) => {
+export const THead: FunctionComponent<THeadProps> = (props) => {
+  const { children, ...htmlProps } = props;
+
+  return <thead {...htmlProps}>{children}</thead>;
+};
+
+interface TBodyProps extends HTMLProps<HTMLTableRowElement> {}
+
+export const TBody: FunctionComponent<TBodyProps> = (props) => {
+  const { children, ...htmlProps } = props;
+
+  return <tbody {...htmlProps}>{children}</tbody>;
+};
+
+interface TrProps extends HTMLProps<HTMLTableRowElement> {}
+
+export const Tr: FunctionComponent<TrProps> = (props) => {
   const { children, ...htmlProps } = props;
 
   return <tr {...htmlProps}>{children}</tr>;
 };
 
-interface TableCellProps extends HTMLProps<HTMLTableCellElement> {}
+interface TdProps extends HTMLProps<HTMLTableCellElement> {}
 
-export const TableCell: FunctionComponent<TableCellProps> = (props) => {
+export const Td: FunctionComponent<TdProps> = (props) => {
   const { children, className, ...htmlProps } = props;
 
   return (
@@ -60,5 +76,3 @@ export const TableCell: FunctionComponent<TableCellProps> = (props) => {
     </td>
   );
 };
-
-export const TableHeaderCell = TableCell;
