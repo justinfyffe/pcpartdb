@@ -2,6 +2,12 @@ import { DesktopComputerIcon, SearchIcon } from '@heroicons/react/outline';
 import { HeartIcon } from '@heroicons/react/solid';
 import React, { FunctionComponent } from 'react';
 import { Button, ButtonVariant } from '../../components/button';
+import {
+  Footer,
+  FooterSection,
+  FooterSectionTitle,
+} from '../../components/footer';
+import { List, ListItem } from '../../components/list';
 import { Toolbar, ToolbarNav, ToolbarTitle } from '../../components/toolbar';
 import { classNames } from '../../ui/ui.utils';
 
@@ -15,10 +21,7 @@ export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
     <>
       <Toolbar>
         <ToolbarTitle>
-          <DesktopComputerIcon
-            className={classNames('inline-block h-8 w-8 m-2')}
-          />{' '}
-          Finest PC
+          <DesktopComputerIcon className={classNames('h-8 w-8')} /> Finest PC
         </ToolbarTitle>
 
         <ToolbarNav>
@@ -38,69 +41,72 @@ export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
         </ToolbarNav>
       </Toolbar>
 
-      <div className={classNames('container my-6 px-4', props.className)}>
+      <main
+        className={classNames(
+          'container px-8 py-6 text-content-primary',
+          props.className,
+        )}
+      >
         {props.children}
-      </div>
+      </main>
 
-      <footer className={classNames('bg-indigo-900 text-slate-100')}>
-        <div className={classNames('container flex flex-wrap text-sm')}>
-          <nav className={classNames('flex-1 m-4')}>
-            <div className={classNames('border-b mb-3')}>Pages</div>
+      <Footer>
+        <FooterSection as="nav">
+          <FooterSectionTitle>Pages</FooterSectionTitle>
 
-            <ul className={classNames('font-normal list-none m-0 p-0')}>
-              <li className={classNames('my-1')}>
-                <a href="#" className={classNames('text-indigo-200')}>
-                  Home
-                </a>
-              </li>
-              <li className={classNames('my-1')}>
-                <a href="#" className={classNames('text-indigo-200')}>
-                  About Us
-                </a>
-              </li>
-              <li className={classNames('my-1')}>
-                <a href="#" className={classNames('text-indigo-200')}>
-                  Contact Us
-                </a>
-              </li>
-              <li className={classNames('my-1')}>
-                <a href="#" className={classNames('text-indigo-200')}>
-                  Disclaimer
-                </a>
-              </li>
-              <li className={classNames('my-1')}>
-                <a href="#" className={classNames('text-indigo-200')}>
-                  Privacy Policy
-                </a>
-              </li>
-            </ul>
-          </nav>
+          <List direction="vertical">
+            <ListItem>
+              <a href="/" className="text-footer-link">
+                Home
+              </a>
+            </ListItem>
+            <ListItem>
+              <a href="/about" className="text-footer-link">
+                About Us
+              </a>
+            </ListItem>
+            <ListItem>
+              <a href="/contact" className="text-footer-link">
+                Contact Us
+              </a>
+            </ListItem>
+            <ListItem>
+              <a href="/disclaimer" className="text-footer-link">
+                Disclaimer
+              </a>
+            </ListItem>
+            <ListItem>
+              <a href="/privacy" className="text-footer-link">
+                Privacy
+              </a>
+            </ListItem>
+          </List>
+        </FooterSection>
 
-          <div className={classNames('flex-1 m-4')}>
-            <div className={classNames('border-b mb-3')}>
-              Disclaimer &amp; Disclosure
-            </div>
+        <FooterSection>
+          <FooterSectionTitle>Disclaimer &amp; Disclosure</FooterSectionTitle>
 
-            <p className={classNames('mb-3')}>
-              Finest PC provides accurate specs and benchmarks based on various
-              sources. If you discover an error, please contact us.
-            </p>
+          <p>
+            Finest PC provides accurate specs and benchmarks based on various
+            sources. If you discover an error, please contact us.
+          </p>
 
-            <p className={classNames('mb-3')}>
-              Finest PC is a participant of affiliate programs and earns
-              commission from qualifying purchases.
-            </p>
-          </div>
+          <p>
+            Finest PC is a participant of affiliate programs and earns
+            commission from qualifying purchases.
+          </p>
+        </FooterSection>
 
-          <div className={classNames('mb-4 text-center w-full')}>
-            Copyright &copy; Finest PC
-            <br />
-            Made with{' '}
-            <HeartIcon className={classNames('inline-block h-3 w-3 mb-1')} /> in
-            New York
-          </div>
-        </div>
-      </footer>
+        <FooterSection className={classNames('flex-none text-center w-full')}>
+          Copyright &copy; Finest PC
+          <br />
+          Made with{' '}
+          <HeartIcon
+            className={classNames('inline-block h-[16px] w-[16px] mb-[2px]')}
+          />{' '}
+          in New York
+        </FooterSection>
+      </Footer>
     </>
   );
 };

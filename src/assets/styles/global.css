@@ -5,3 +5,17 @@
 * {
   font-family: Roboto, 'Helvetica Neue', sans-serif;
 }
+
+a {
+  color: #6365f1;
+}
+
+h1 {
+  font-size: 1.875rem;
+  font-weight: 500;
+  line-height: 2.25rem;
+}
+
+p {
+  margin-bottom: 1rem;
+}

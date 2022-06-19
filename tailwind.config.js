@@ -6,8 +6,10 @@ module.exports = {
   theme: {
     extend: {
       backgroundColor: {
-        'button-primary': '#3f51b5',
         'button-default': colors.white,
+        'button-primary': '#3f51b5',
+        'footer-primary': '#312e81',
+        'toolbar-primary': '#312e81',
       },
       borderWidth: {
         'button-default': '1px',
@@ -16,7 +18,13 @@ module.exports = {
         120: '28rem',
       },
       textColor: {
+        'button-default': '#334155',
         'button-primary': '#ececec',
+        'content-link': '#6365f1',
+        'content-primary': '#334155',
+        'footer-link': '#c7d2fe',
+        'footer-primary': '#f9fafb',
+        'toolbar-primary': '#f9fafb',
       },
     },
     container: {

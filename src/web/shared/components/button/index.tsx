@@ -16,11 +16,11 @@ interface ButtonProps
 }
 
 const BUTTON_VARIANTS = {
-  [ButtonVariant.None]: 'bg-transparent shadow-none text-slate-700',
+  [ButtonVariant.None]: 'bg-transparent shadow-none text-content-primary',
   [ButtonVariant.Default]:
-    'bg-button-default border-button-default text-slate-800',
+    'bg-button-default border-button-default text-button-default',
   [ButtonVariant.Primary]: 'bg-button-primary text-button-primary',
-  [ButtonVariant.Toolbar]: 'shadow-none text-slate-100',
+  [ButtonVariant.Toolbar]: 'shadow-none text-toolbar-primary',
 };
 
 export const Button: FunctionComponent<ButtonProps> = (props) => {
@@ -45,7 +45,7 @@ export const Button: FunctionComponent<ButtonProps> = (props) => {
       href={url}
       className={classNames(
         'cursor-pointer font-medium inline-block no-underline',
-        'px-4 py-2 relative rounded text-center shadow',
+        'px-4 py-2 relative rounded shadow text-center',
         BUTTON_VARIANTS[variant ?? ButtonVariant.None],
         className,
       )}

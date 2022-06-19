@@ -9,14 +9,14 @@ interface ToolbarProps {
 }
 
 interface ToolbarTitleProps {
-  element?: React.ElementType;
+  as?: React.ElementType;
   className?: string;
 
   children?: React.ReactNode;
 }
 
 interface ToolbarNavProps {
-  element?: React.ElementType;
+  as?: React.ElementType;
   className?: string;
 
   children?: React.ReactNode;
@@ -28,11 +28,15 @@ export const Toolbar: FunctionComponent<ToolbarProps> = (props) => {
   return (
     <Element
       className={classNames(
-        'block bg-indigo-900 h-16 static text-gray-50',
+        'bg-toolbar-primary block static text-toolbar-primary',
         props.className,
       )}
     >
-      <div className="container flex h-full items-center justify-between px-4">
+      <div
+        className={classNames(
+          'container flex h-16 items-center justify-between px-8',
+        )}
+      >
         {props.children}
       </div>
     </Element>
@@ -40,12 +44,12 @@ export const Toolbar: FunctionComponent<ToolbarProps> = (props) => {
 };
 
 export const ToolbarTitle: FunctionComponent<ToolbarTitleProps> = (props) => {
-  const Element = props.element || 'div';
+  const Element = props.as || 'div';
 
   return (
     <Element
       className={classNames(
-        'flex font-medium items-center text-3xl',
+        'flex font-medium gap-2 items-center text-3xl',
         props.className,
       )}
     >
@@ -55,7 +59,7 @@ export const ToolbarTitle: FunctionComponent<ToolbarTitleProps> = (props) => {
 };
 
 export const ToolbarNav: FunctionComponent<ToolbarNavProps> = (props) => {
-  const Element = props.element || 'nav';
+  const Element = props.as || 'nav';
 
   return (
     <Element
