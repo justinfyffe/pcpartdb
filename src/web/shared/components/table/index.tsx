@@ -38,7 +38,7 @@ export const Table: FunctionComponent<TableProps> = (props) => {
   );
 };
 
-interface THeadProps extends HTMLProps<HTMLTableRowElement> {}
+interface THeadProps extends HTMLProps<HTMLTableSectionElement> {}
 
 export const THead: FunctionComponent<THeadProps> = (props) => {
   const { children, ...htmlProps } = props;
@@ -46,7 +46,7 @@ export const THead: FunctionComponent<THeadProps> = (props) => {
   return <thead {...htmlProps}>{children}</thead>;
 };
 
-interface TBodyProps extends HTMLProps<HTMLTableRowElement> {}
+interface TBodyProps extends HTMLProps<HTMLTableSectionElement> {}
 
 export const TBody: FunctionComponent<TBodyProps> = (props) => {
   const { children, ...htmlProps } = props;

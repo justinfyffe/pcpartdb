@@ -24,7 +24,7 @@ export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
           <DesktopComputerIcon className={classNames('h-8 w-8')} /> Finest PC
         </ToolbarTitle>
 
-        <ToolbarNav>
+        <ToolbarNav className="hidden md:block">
           <Button href="#" variant={ButtonVariant.Toolbar}>
             Graphics Cards
           </Button>
@@ -43,7 +43,7 @@ export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
 
       <main
         className={classNames(
-          'container px-8 py-6 text-content-primary',
+          'container px-8 py-6 text-content-primary max-w-100%',
           props.className,
         )}
       >

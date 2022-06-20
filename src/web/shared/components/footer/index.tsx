@@ -43,7 +43,7 @@ export const FooterSection: FunctionComponent<FooterSectionProps> = (props) => {
   const Element = props.as || 'section';
 
   return (
-    <Element className={classNames('flex-1', props.className)}>
+    <Element className={classNames('flex-1 min-w-[200px]', props.className)}>
       {props.children}
     </Element>
   );

@@ -27,7 +27,10 @@ export const Sidenav: FunctionComponent<SidenavProps> = (props) => {
 
   return (
     <Element
-      className={classNames('flex flex-col gap-6 w-[300px]', props.className)}
+      className={classNames(
+        'flex flex-col gap-6 max-w-[300px] w-full',
+        props.className,
+      )}
     >
       {props.children}
     </Element>

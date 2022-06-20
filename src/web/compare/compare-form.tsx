@@ -27,11 +27,7 @@ export const CompareForm: FunctionComponent<CompareFormProps> = (props) => {
     <section
       className={classNames(
         'flex flex-col gap-4 w-full',
-        values.length > 2
-          ? 'lg:flex-row'
-          : values.length > 1
-          ? 'md:flex-row'
-          : 'flex-row',
+        values.length > 2 ? 'lg:flex-row' : 'md:flex-row',
         className,
       )}
     >
@@ -49,7 +45,7 @@ export const CompareForm: FunctionComponent<CompareFormProps> = (props) => {
           placeholder="Graphics Card..."
           value="NVIDIA GeForce RTX 3090"
           closeable={values.length > 1}
-          className={classNames('flex-1 min-w-[200px]')}
+          className={classNames('flex-1 min-w-[150px]')}
           onClose={onDelete}
         />
 
@@ -67,7 +63,7 @@ export const CompareForm: FunctionComponent<CompareFormProps> = (props) => {
               placeholder="Graphics Card..."
               value="NVIDIA GeForce RTX 3080"
               closeable
-              className={classNames('flex-1 min-w-[200px]')}
+              className={classNames('flex-1 min-w-[150px]')}
               onClose={onDelete}
             />
           </>
@@ -87,7 +83,7 @@ export const CompareForm: FunctionComponent<CompareFormProps> = (props) => {
               placeholder="Graphics Card..."
               value="NVIDIA GeForce RTX 3080"
               closeable
-              className={classNames('flex-1 min-w-[200px]')}
+              className={classNames('flex-1 min-w-[150px]')}
               onClose={onDelete}
             />
           </>

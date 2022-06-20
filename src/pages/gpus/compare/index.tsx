@@ -1,13 +1,9 @@
-import { PlusCircleIcon } from '@heroicons/react/outline';
 import { NextPageContext } from 'next';
 import React from 'react';
 import { CompareForm } from '../../../web/compare';
 import { ProductImage } from '../../../web/product';
 import { Breadcrumbs } from '../../../web/shared/components/breadcrumbs';
-import { Button, ButtonVariant } from '../../../web/shared/components/button';
 import { Card } from '../../../web/shared/components/card';
-import { Image } from '../../../web/shared/components/image';
-import { Input } from '../../../web/shared/components/input';
 import {
   Table,
   TBody,
@@ -29,7 +25,7 @@ interface ViewGpuPageProps {}
 const ViewGpuPage = (_props: ViewGpuPageProps) => {
   return (
     <WebsiteLayout>
-      <article className="flex flex-wrap gap-6 lg:gap-8 text-slate-700 justify-center">
+      <article className="flex flex-wrap gap-6 lg:gap-8 justify-center">
         <header className="flex flex-wrap w-full items-center justify-start gap-3">
           <Breadcrumbs
             items={[
@@ -47,9 +43,9 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
           <CompareForm values={[1, 1]} />
         </header>
 
-        <article className="flex-1 flex flex-col gap-6">
-          <section className="flex flex-wrap justify-start gap-4">
-            <div className="flex flex-col gap-3 flex-1 min-w-[300px]">
+        <article className="flex-1 flex flex-col gap-6 max-w-full">
+          <section className="flex flex-wrap gap-4 md:flex-nowrap justify-evenly">
+            <div className="flex flex-col gap-3 flex-1 min-w-[220px] max-w-[350px]">
               <h2 className="self-start text-2xl font-medium">
                 NVIDIA GeForce RTX 3090
               </h2>
@@ -57,7 +53,15 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
               <ProductImage />
             </div>
 
-            <div className="flex flex-col gap-3 flex-1 min-w-[300px]">
+            <div className="flex flex-col gap-3 flex-1 min-w-[220px] max-w-[350px]">
+              <h2 className="self-start text-2xl font-medium">
+                NVIDIA GeForce RTX 3080
+              </h2>
+
+              <ProductImage />
+            </div>
+
+            <div className="flex flex-col gap-3 flex-1 min-w-[220px] max-w-[350px]">
               <h2 className="self-start text-2xl font-medium">
                 NVIDIA GeForce RTX 3080
               </h2>
@@ -87,12 +91,13 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
                 eiusmod tempor incididunt ut labore et dolore magna aliqua.
               </p>
 
-              <Table className="mb-0">
+              <Table responsive className="mb-0">
                 <THead>
                   <Tr>
                     <Td className="min-w-[200px]">GPU</Td>
                     <Td className="min-w-[80px]">GeForce RTX 3090</Td>
                     <Td className="min-w-[80px]">GeForce RTX 3080</Td>
+                    <Td className="min-w-[80px]">GeForce RTX 3070</Td>
                   </Tr>
                 </THead>
                 <TBody>
@@ -100,14 +105,17 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
                     <Td>Performance Rating</Td>
                     <Td>82.23</Td>
                     <Td>72.23</Td>
+                    <Td>72.23</Td>
                   </Tr>
                   <Tr>
                     <Td>Value for Money</Td>
                     <Td>58.32</Td>
                     <Td>48.32</Td>
+                    <Td>48.32</Td>
                   </Tr>
                   <Tr>
                     <Td>Company</Td>
+                    <Td>NVIDIA</Td>
                     <Td>NVIDIA</Td>
                     <Td>NVIDIA</Td>
                   </Tr>
@@ -115,9 +123,11 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
                     <Td>Generation</Td>
                     <Td>GeForce 30</Td>
                     <Td>GeForce 30</Td>
+                    <Td>GeForce 30</Td>
                   </Tr>
                   <Tr>
                     <Td>Market Segment</Td>
+                    <Td>Desktop</Td>
                     <Td>Desktop</Td>
                     <Td>Desktop</Td>
                   </Tr>
@@ -125,14 +135,17 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
                     <Td>Launch Price</Td>
                     <Td>$1,499</Td>
                     <Td>$999</Td>
+                    <Td>$999</Td>
                   </Tr>
                   <Tr>
                     <Td>Release Date</Td>
                     <Td>Q4 2022</Td>
                     <Td>Q3 2022</Td>
+                    <Td>Q3 2022</Td>
                   </Tr>
                   <Tr>
                     <Td>Production Status</Td>
+                    <Td>Active</Td>
                     <Td>Active</Td>
                     <Td>Active</Td>
                   </Tr>
@@ -150,7 +163,7 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
                 eiusmod tempor incididunt ut labore et dolore magna aliqua.
               </p>
 
-              <Table className="mb-0">
+              <Table responsive className="mb-0">
                 <THead>
                   <Tr>
                     <Td className="min-w-[200px]">GPU</Td>
@@ -201,7 +214,7 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
                 eiusmod tempor incididunt ut labore et dolore magna aliqua.
               </p>
 
-              <Table className="mb-0">
+              <Table responsive className="mb-0">
                 <THead>
                   <Tr>
                     <Td className="min-w-[200px]">GPU</Td>
@@ -267,7 +280,7 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
                 eiusmod tempor incididunt ut labore et dolore magna aliqua.
               </p>
 
-              <Table className="mb-0">
+              <Table responsive className="mb-0">
                 <THead>
                   <Tr>
                     <Td className="min-w-[200px]">GPU</Td>
@@ -333,7 +346,7 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
                 eiusmod tempor incididunt ut labore et dolore magna aliqua.
               </p>
 
-              <Table className="mb-0">
+              <Table responsive className="mb-0">
                 <THead>
                   <Tr>
                     <Td className="min-w-[200px]">GPU</Td>
@@ -372,7 +385,7 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
                 eiusmod tempor incididunt ut labore et dolore magna aliqua.
               </p>
 
-              <Table className="mb-0">
+              <Table responsive className="mb-0">
                 <THead>
                   <Tr>
                     <Td className="min-w-[200px]">GPU</Td>
@@ -411,7 +424,7 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
                 eiusmod tempor incididunt ut labore et dolore magna aliqua.
               </p>
 
-              <Table className="mb-0">
+              <Table responsive className="mb-0">
                 <THead>
                   <Tr>
                     <Td className="min-w-[200px]">GPU</Td>
@@ -465,7 +478,7 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
                 eiusmod tempor incididunt ut labore et dolore magna aliqua.
               </p>
 
-              <Table className="mb-0">
+              <Table responsive className="mb-0">
                 <THead>
                   <Tr>
                     <Td className="min-w-[200px]">GPU</Td>
@@ -521,7 +534,7 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
                 eiusmod tempor incididunt ut labore et dolore magna aliqua.
               </p>
 
-              <Table className="mb-0">
+              <Table responsive className="mb-0">
                 <THead>
                   <Tr>
                     <Td className="min-w-[200px]">GPU</Td>
@@ -577,7 +590,7 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
                 eiusmod tempor incididunt ut labore et dolore magna aliqua.
               </p>
 
-              <Table className="mb-0">
+              <Table responsive className="mb-0">
                 <THead>
                   <Tr>
                     <Td className="min-w-[200px]">GPU</Td>
