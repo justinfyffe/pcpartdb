@@ -10,6 +10,8 @@ import {
 } from '@heroicons/react/outline';
 import { NextPageContext } from 'next';
 import React from 'react';
+import { CompareForm } from '../../../web/compare';
+import { ProductImage } from '../../../web/product';
 import { Breadcrumbs } from '../../../web/shared/components/breadcrumbs';
 import { Button, ButtonVariant } from '../../../web/shared/components/button';
 import { Card } from '../../../web/shared/components/card';
@@ -43,71 +45,13 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
 
           <h1 className="mb-3">NVIDIA GeForce RTX 3090</h1>
 
-          <section className={classNames('w-full')}>
-            <div className={classNames('gap-4 flex flex-col justify-center')}>
-              <div
-                className={classNames(
-                  'flex flex-1 gap-6 items-stretch justify-center',
-                )}
-              >
-                <Input
-                  placeholder="Graphics Card..."
-                  value="NVIDIA GeForce RTX 3090"
-                  className={classNames('flex-1')}
-                />
-
-                <Button
-                  variant={ButtonVariant.Default}
-                  className={classNames()}
-                >
-                  <PlusCircleIcon className={classNames('w-[20px]')} />
-                </Button>
-
-                <Button
-                  variant={ButtonVariant.Primary}
-                  className={classNames()}
-                >
-                  Search
-                </Button>
-              </div>
-            </div>
-          </section>
+          <CompareForm values={[1]} />
         </header>
 
         <section className="flex-1 flex flex-col gap-6">
           <section className="flex flex-wrap justify-start gap-6 lg:gap-8">
             <div className="flex-1 min-w-[300px]">
-              <div className="flex flex-col flex-wrap gap-6 mb-6 mx-auto items-center justify-center w-full max-w-[300px] lg:max-w-full">
-                <div className="bg-gray-50 border border-gray-200 flex items-center justify-center rounded aspect-square h-full w-full max-h-[350px] lg:max-h-full">
-                  <Image
-                    className="w-auto h-auto mx-auto"
-                    src="https://www.nvidia.com/content/dam/en-zz/Solutions/geforce/ampere/rtx-3090/geforce-rtx-3090-shop-630-d@2x.png"
-                  />
-                </div>
-
-                <div className="flex flex-wrap w-full gap-6">
-                  <div className="bg-gray-50 border border-gray-200 h-20 w-20 flex items-center">
-                    <Image
-                      className="rounded w-auto h-auto mx-auto"
-                      src="https://www.nvidia.com/content/dam/en-zz/Solutions/geforce/ampere/rtx-3090/geforce-rtx-3090-shop-630-d@2x.png"
-                    />
-                  </div>
-
-                  <div className="bg-gray-50 border border-gray-200 h-20 w-20 flex items-center">
-                    <Image
-                      className="bg-gray-50 rounded w-auto h-auto mx-auto"
-                      src="https://www.nvidia.com/content/dam/en-zz/Solutions/geforce/ampere/rtx-3090/geforce-rtx-3090-shop-630-d@2x.png"
-                    />
-                  </div>
-
-                  <div className="bg-gray-50 border border-gray-200 h-20 w-20 flex items-center">
-                    <Image
-                      className="bg-gray-50 rounded w-auto h-auto mx-auto"
-                      src="https://www.nvidia.com/content/dam/en-zz/Solutions/geforce/ampere/rtx-3090/geforce-rtx-3090-shop-630-d@2x.png"
-                    />
-                  </div>
-                </div>
-              </div>
+              <ProductImage />
             </div>
 
             <div className="flex-1">

@@ -19,10 +19,10 @@ export const Breadcrumbs: FunctionComponent<BreadcrumbsProps> = (props) => {
       {items &&
         items.map((item, i) => {
           return (
-            <>
+            <React.Fragment key={i}>
               {i > 0 && <li>/</li>}
               <BreadcrumbItem {...item} />
-            </>
+            </React.Fragment>
           );
         })}
     </ul>

@@ -1,6 +1,8 @@
 import { PlusCircleIcon } from '@heroicons/react/outline';
 import { NextPageContext } from 'next';
 import React from 'react';
+import { CompareForm } from '../../../web/compare';
+import { ProductImage } from '../../../web/product';
 import { Breadcrumbs } from '../../../web/shared/components/breadcrumbs';
 import { Button, ButtonVariant } from '../../../web/shared/components/button';
 import { Card } from '../../../web/shared/components/card';
@@ -42,76 +44,25 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
             NVIDIA GeForce RTX 3090 vs NVIDIA GeForce RTX 3080
           </h1>
 
-          <section className={classNames('w-full')}>
-            <div className={classNames('gap-4 flex justify-center')}>
-              <div
-                className={classNames(
-                  'flex flex-1 gap-6 items-stretch justify-center',
-                )}
-              >
-                <Input
-                  placeholder="Graphics Card..."
-                  value="NVIDIA GeForce RTX 3090"
-                  className={classNames('flex-1')}
-                />
-
-                <div
-                  className={classNames(
-                    'self-center font-medium text-center text-slate-700',
-                  )}
-                >
-                  VS
-                </div>
-
-                <Input
-                  placeholder="Graphics Card..."
-                  value="NVIDIA GeForce RTX 3080"
-                  className={classNames('flex-1')}
-                />
-
-                <Button
-                  variant={ButtonVariant.Default}
-                  className={classNames('h-full')}
-                >
-                  <PlusCircleIcon className={classNames('h-6 mx-auto')} />
-                </Button>
-              </div>
-
-              <Button variant={ButtonVariant.Primary} className={classNames()}>
-                Compare
-              </Button>
-            </div>
-          </section>
+          <CompareForm values={[1, 1]} />
         </header>
 
-        <section className="flex-1 flex flex-col gap-6">
-          <section className="flex flex-wrap justify-start gap-6 lg:gap-8">
+        <article className="flex-1 flex flex-col gap-6">
+          <section className="flex flex-wrap justify-start gap-4">
             <div className="flex flex-col gap-3 flex-1 min-w-[300px]">
               <h2 className="self-start text-2xl font-medium">
                 NVIDIA GeForce RTX 3090
               </h2>
-              <div className="flex flex-col flex-wrap gap-6 mx-auto items-center justify-center w-full max-w-[300px] lg:max-w-full">
-                <div className="bg-gray-50 border border-gray-200 flex items-center justify-center rounded aspect-square h-full w-full max-h-[350px] lg:max-h-full">
-                  <Image
-                    className="w-auto h-auto mx-auto"
-                    src="https://www.nvidia.com/content/dam/en-zz/Solutions/geforce/ampere/rtx-3090/geforce-rtx-3090-shop-630-d@2x.png"
-                  />
-                </div>
-              </div>
+
+              <ProductImage />
             </div>
 
             <div className="flex flex-col gap-3 flex-1 min-w-[300px]">
               <h2 className="self-start text-2xl font-medium">
                 NVIDIA GeForce RTX 3080
               </h2>
-              <div className="flex flex-col flex-wrap gap-6 mx-auto items-center justify-center w-full max-w-[300px] lg:max-w-full">
-                <div className="bg-gray-50 border border-gray-200 flex items-center justify-center rounded aspect-square h-full w-full max-h-[350px] lg:max-h-full">
-                  <Image
-                    className="w-auto h-auto mx-auto"
-                    src="https://www.nvidia.com/content/dam/en-zz/Solutions/geforce/ampere/rtx-3090/geforce-rtx-3090-shop-630-d@2x.png"
-                  />
-                </div>
-              </div>
+
+              <ProductImage />
             </div>
           </section>
 
@@ -693,7 +644,7 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
               </Table>
             </Card>
           </section>
-        </section>
+        </article>
 
         <Sidenav>
           <SidenavStockUpdates />

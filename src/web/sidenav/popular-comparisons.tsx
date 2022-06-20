@@ -3,15 +3,19 @@ import { Image } from '../shared/components/image';
 import { classNames } from '../shared/ui/ui.utils';
 import { SidenavSection, SidenavSectionTitle } from './sidenav';
 
-interface SidenavPopularComparisonsProps {}
+interface SidenavPopularComparisonsProps {
+  className?: string;
+}
 
 interface ComparisonListingProps {}
 
 export const SidenavPopularComparisons: FunctionComponent<
   SidenavPopularComparisonsProps
-> = (_props) => {
+> = (props) => {
   return (
-    <SidenavSection className="flex flex-col gap-3">
+    <SidenavSection
+      className={classNames('flex flex-col gap-3', props.className)}
+    >
       <SidenavSectionTitle>Popular Comparisons</SidenavSectionTitle>
 
       <div className="flex flex-col gap-4">

@@ -47,6 +47,7 @@ export const Button: FunctionComponent<ButtonProps> = (props) => {
         'cursor-pointer font-medium inline-block no-underline',
         'px-4 py-2 relative rounded shadow text-center',
         BUTTON_VARIANTS[variant ?? ButtonVariant.None],
+        props.disabled ? 'bg-[#ddd] border-[#ddd] text-[#aaa]' : '',
         className,
       )}
     >
