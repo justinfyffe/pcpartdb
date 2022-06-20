@@ -83,8 +83,8 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
           </section>
 
           <section className="flex flex-col gap-6">
-            <Card>
-              <h2 className="text-2xl font-medium mb-3">General Info</h2>
+            <article>
+              <h2 className="mb-3">General Info</h2>
 
               <p className={classNames('text-gray-400 mb-4')}>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
@@ -151,383 +151,399 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
                   </Tr>
                 </TBody>
               </Table>
-            </Card>
+            </article>
 
-            <Card>
-              <h2 className="text-2xl font-medium mb-6">Technical Specs</h2>
+            <article>
+              <h2 className="mb-6">Technical Specs</h2>
 
-              <h3 className="text-xl font-medium mb-3">Processor</h3>
+              <article>
+                <h3 className="text-xl font-medium mb-3">Processor</h3>
 
-              <p className={classNames('text-gray-400 mb-4')}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua.
-              </p>
+                <p className={classNames('text-gray-400 mb-4')}>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
+                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                </p>
 
-              <Table responsive className="mb-0">
-                <THead>
-                  <Tr>
-                    <Td className="min-w-[200px]">GPU</Td>
-                    <Td className="min-w-[80px]">GeForce RTX 3090</Td>
-                    <Td className="min-w-[80px]">GeForce RTX 3080</Td>
-                  </Tr>
-                </THead>
-                <TBody>
-                  <Tr>
-                    <Td>GPU Name</Td>
-                    <Td>GA102</Td>
-                    <Td>GA102</Td>
-                  </Tr>
-                  <Tr>
-                    <Td>Architecture</Td>
-                    <Td>Ampere</Td>
-                    <Td>Ampere</Td>
-                  </Tr>
-                  <Tr>
-                    <Td>Foundry</Td>
-                    <Td>Samsung</Td>
-                    <Td>Samsung</Td>
-                  </Tr>
-                  <Tr>
-                    <Td>Process Size</Td>
-                    <Td>8nm</Td>
-                    <Td>8nm</Td>
-                  </Tr>
-                  <Tr>
-                    <Td>Transistors</Td>
-                    <Td>28,300 million</Td>
-                    <Td>28,300 million</Td>
-                  </Tr>
-                  <Tr>
-                    <Td>Die Size</Td>
-                    <Td>628</Td>
-                    <Td>628</Td>
-                  </Tr>
-                </TBody>
-              </Table>
+                <Table responsive className="mb-0">
+                  <THead>
+                    <Tr>
+                      <Td className="min-w-[200px]">GPU</Td>
+                      <Td className="min-w-[80px]">GeForce RTX 3090</Td>
+                      <Td className="min-w-[80px]">GeForce RTX 3080</Td>
+                    </Tr>
+                  </THead>
+                  <TBody>
+                    <Tr>
+                      <Td>GPU Name</Td>
+                      <Td>GA102</Td>
+                      <Td>GA102</Td>
+                    </Tr>
+                    <Tr>
+                      <Td>Architecture</Td>
+                      <Td>Ampere</Td>
+                      <Td>Ampere</Td>
+                    </Tr>
+                    <Tr>
+                      <Td>Foundry</Td>
+                      <Td>Samsung</Td>
+                      <Td>Samsung</Td>
+                    </Tr>
+                    <Tr>
+                      <Td>Process Size</Td>
+                      <Td>8nm</Td>
+                      <Td>8nm</Td>
+                    </Tr>
+                    <Tr>
+                      <Td>Transistors</Td>
+                      <Td>28,300 million</Td>
+                      <Td>28,300 million</Td>
+                    </Tr>
+                    <Tr>
+                      <Td>Die Size</Td>
+                      <Td>628</Td>
+                      <Td>628</Td>
+                    </Tr>
+                  </TBody>
+                </Table>
+              </article>
 
-              <h3 className="text-xl font-medium mb-3">
-                Board Compatibility &amp; Dimensions
-              </h3>
+              <article>
+                <h3 className="text-xl font-medium mb-3">
+                  Board Compatibility &amp; Dimensions
+                </h3>
 
-              <p className={classNames('text-gray-400 mb-4')}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua.
-              </p>
+                <p className={classNames('text-gray-400 mb-4')}>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
+                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                </p>
 
-              <Table responsive className="mb-0">
-                <THead>
-                  <Tr>
-                    <Td className="min-w-[200px]">GPU</Td>
-                    <Td className="min-w-[80px]">GeForce RTX 3090</Td>
-                    <Td className="min-w-[80px]">GeForce RTX 3080</Td>
-                  </Tr>
-                </THead>
-                <TBody>
-                  <Tr>
-                    <Td>Slot Width</Td>
-                    <Td>Triple-slot</Td>
-                    <Td>Double-slot</Td>
-                  </Tr>
-                  <Tr>
-                    <Td>Length</Td>
-                    <Td>336mm</Td>
-                    <Td>336mm</Td>
-                  </Tr>
-                  <Tr>
-                    <Td>Width</Td>
-                    <Td>140mm</Td>
-                    <Td>140mm</Td>
-                  </Tr>
-                  <Tr>
-                    <Td>Height</Td>
-                    <Td>61mm</Td>
-                    <Td>41mm</Td>
-                  </Tr>
-                  <Tr>
-                    <Td>Weight</Td>
-                    <Td>2.92 kg</Td>
-                    <Td>2.92 kg</Td>
-                  </Tr>
-                  <Tr>
-                    <Td>Bus Interface</Td>
-                    <Td>PCIe 4.0 x16</Td>
-                    <Td>PCIe 4.0 x16</Td>
-                  </Tr>
-                  <Tr>
-                    <Td>TDP</Td>
-                    <Td>350 W</Td>
-                    <Td>350 W</Td>
-                  </Tr>
-                  <Tr>
-                    <Td>Suggested PSU</Td>
-                    <Td>750 W</Td>
-                    <Td>750 W</Td>
-                  </Tr>
-                  <Tr>
-                    <Td>Power Connectors</Td>
-                    <Td>1x 12-pin</Td>
-                    <Td>1x 12-pin</Td>
-                  </Tr>
-                </TBody>
-              </Table>
+                <Table responsive className="mb-0">
+                  <THead>
+                    <Tr>
+                      <Td className="min-w-[200px]">GPU</Td>
+                      <Td className="min-w-[80px]">GeForce RTX 3090</Td>
+                      <Td className="min-w-[80px]">GeForce RTX 3080</Td>
+                    </Tr>
+                  </THead>
+                  <TBody>
+                    <Tr>
+                      <Td>Slot Width</Td>
+                      <Td>Triple-slot</Td>
+                      <Td>Double-slot</Td>
+                    </Tr>
+                    <Tr>
+                      <Td>Length</Td>
+                      <Td>336mm</Td>
+                      <Td>336mm</Td>
+                    </Tr>
+                    <Tr>
+                      <Td>Width</Td>
+                      <Td>140mm</Td>
+                      <Td>140mm</Td>
+                    </Tr>
+                    <Tr>
+                      <Td>Height</Td>
+                      <Td>61mm</Td>
+                      <Td>41mm</Td>
+                    </Tr>
+                    <Tr>
+                      <Td>Weight</Td>
+                      <Td>2.92 kg</Td>
+                      <Td>2.92 kg</Td>
+                    </Tr>
+                    <Tr>
+                      <Td>Bus Interface</Td>
+                      <Td>PCIe 4.0 x16</Td>
+                      <Td>PCIe 4.0 x16</Td>
+                    </Tr>
+                    <Tr>
+                      <Td>TDP</Td>
+                      <Td>350 W</Td>
+                      <Td>350 W</Td>
+                    </Tr>
+                    <Tr>
+                      <Td>Suggested PSU</Td>
+                      <Td>750 W</Td>
+                      <Td>750 W</Td>
+                    </Tr>
+                    <Tr>
+                      <Td>Power Connectors</Td>
+                      <Td>1x 12-pin</Td>
+                      <Td>1x 12-pin</Td>
+                    </Tr>
+                  </TBody>
+                </Table>
+              </article>
 
-              <h3 className="text-xl font-medium mb-3">
-                Cores &amp; Clock Speeds
-              </h3>
+              <article>
+                <h3 className="text-xl font-medium mb-3">
+                  Cores &amp; Clock Speeds
+                </h3>
 
-              <p className={classNames('text-gray-400 mb-4')}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua.
-              </p>
+                <p className={classNames('text-gray-400 mb-4')}>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
+                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                </p>
 
-              <Table responsive className="mb-0">
-                <THead>
-                  <Tr>
-                    <Td className="min-w-[200px]">GPU</Td>
-                    <Td className="min-w-[80px]">GeForce RTX 3090</Td>
-                    <Td className="min-w-[80px]">GeForce RTX 3080</Td>
-                  </Tr>
-                </THead>
-                <TBody>
-                  <Tr>
-                    <Td>CUDA Cores</Td>
-                    <Td>9,704</Td>
-                    <Td>9,704</Td>
-                  </Tr>
-                  <Tr>
-                    <Td>TMUs</Td>
-                    <Td>328</Td>
-                    <Td>328</Td>
-                  </Tr>
-                  <Tr>
-                    <Td>ROPs</Td>
-                    <Td>112</Td>
-                    <Td>112</Td>
-                  </Tr>
-                  <Tr>
-                    <Td>Tensor Cores</Td>
-                    <Td>576</Td>
-                    <Td>576</Td>
-                  </Tr>
-                  <Tr>
-                    <Td>RT Cores</Td>
-                    <Td>72</Td>
-                    <Td>72</Td>
-                  </Tr>
-                  <Tr>
-                    <Td>Base Clock</Td>
-                    <Td>1,440 MHz</Td>
-                    <Td>1,440 MHz</Td>
-                  </Tr>
-                  <Tr>
-                    <Td>Boost Clock</Td>
-                    <Td>1,845 MHz</Td>
-                    <Td>1,845 MHz</Td>
-                  </Tr>
-                  <Tr>
-                    <Td>L1 Cache</Td>
-                    <Td>128 KB</Td>
-                    <Td>128 KB</Td>
-                  </Tr>
-                  <Tr>
-                    <Td>L2 Cache</Td>
-                    <Td>6 MB</Td>
-                    <Td>6 MB</Td>
-                  </Tr>
-                </TBody>
-              </Table>
+                <Table responsive className="mb-0">
+                  <THead>
+                    <Tr>
+                      <Td className="min-w-[200px]">GPU</Td>
+                      <Td className="min-w-[80px]">GeForce RTX 3090</Td>
+                      <Td className="min-w-[80px]">GeForce RTX 3080</Td>
+                    </Tr>
+                  </THead>
+                  <TBody>
+                    <Tr>
+                      <Td>CUDA Cores</Td>
+                      <Td>9,704</Td>
+                      <Td>9,704</Td>
+                    </Tr>
+                    <Tr>
+                      <Td>TMUs</Td>
+                      <Td>328</Td>
+                      <Td>328</Td>
+                    </Tr>
+                    <Tr>
+                      <Td>ROPs</Td>
+                      <Td>112</Td>
+                      <Td>112</Td>
+                    </Tr>
+                    <Tr>
+                      <Td>Tensor Cores</Td>
+                      <Td>576</Td>
+                      <Td>576</Td>
+                    </Tr>
+                    <Tr>
+                      <Td>RT Cores</Td>
+                      <Td>72</Td>
+                      <Td>72</Td>
+                    </Tr>
+                    <Tr>
+                      <Td>Base Clock</Td>
+                      <Td>1,440 MHz</Td>
+                      <Td>1,440 MHz</Td>
+                    </Tr>
+                    <Tr>
+                      <Td>Boost Clock</Td>
+                      <Td>1,845 MHz</Td>
+                      <Td>1,845 MHz</Td>
+                    </Tr>
+                    <Tr>
+                      <Td>L1 Cache</Td>
+                      <Td>128 KB</Td>
+                      <Td>128 KB</Td>
+                    </Tr>
+                    <Tr>
+                      <Td>L2 Cache</Td>
+                      <Td>6 MB</Td>
+                      <Td>6 MB</Td>
+                    </Tr>
+                  </TBody>
+                </Table>
+              </article>
 
-              <h3 className="text-xl font-medium mb-3">
-                Theoretical Performance
-              </h3>
+              <article>
+                <h3 className="text-xl font-medium mb-3">
+                  Theoretical Performance
+                </h3>
 
-              <p className={classNames('text-gray-400 mb-4')}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua.
-              </p>
+                <p className={classNames('text-gray-400 mb-4')}>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
+                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                </p>
 
-              <Table responsive className="mb-0">
-                <THead>
-                  <Tr>
-                    <Td className="min-w-[200px]">GPU</Td>
-                    <Td className="min-w-[80px]">GeForce RTX 3090</Td>
-                    <Td className="min-w-[80px]">GeForce RTX 3080</Td>
-                  </Tr>
-                </THead>
-                <TBody>
-                  <Tr>
-                    <Td>Pixel Rate</Td>
-                    <Td>189.8 GPixel/s</Td>
-                    <Td>189.8 GPixel/s</Td>
-                  </Tr>
-                  <Tr>
-                    <Td>Texture Rate</Td>
-                    <Td>556.0 GTexel/s</Td>
-                    <Td>556.0 GTexel/s</Td>
-                  </Tr>
-                  <Tr>
-                    <Td>FP32 Performance</Td>
-                    <Td>35.58 TFLOPS</Td>
-                    <Td>35.58 TFLOPS</Td>
-                  </Tr>
-                  <Tr>
-                    <Td>FP64 Performance</Td>
-                    <Td>556.0 GFLOPS</Td>
-                    <Td>556.0 GFLOPS</Td>
-                  </Tr>
-                </TBody>
-              </Table>
+                <Table responsive className="mb-0">
+                  <THead>
+                    <Tr>
+                      <Td className="min-w-[200px]">GPU</Td>
+                      <Td className="min-w-[80px]">GeForce RTX 3090</Td>
+                      <Td className="min-w-[80px]">GeForce RTX 3080</Td>
+                    </Tr>
+                  </THead>
+                  <TBody>
+                    <Tr>
+                      <Td>Pixel Rate</Td>
+                      <Td>189.8 GPixel/s</Td>
+                      <Td>189.8 GPixel/s</Td>
+                    </Tr>
+                    <Tr>
+                      <Td>Texture Rate</Td>
+                      <Td>556.0 GTexel/s</Td>
+                      <Td>556.0 GTexel/s</Td>
+                    </Tr>
+                    <Tr>
+                      <Td>FP32 Performance</Td>
+                      <Td>35.58 TFLOPS</Td>
+                      <Td>35.58 TFLOPS</Td>
+                    </Tr>
+                    <Tr>
+                      <Td>FP64 Performance</Td>
+                      <Td>556.0 GFLOPS</Td>
+                      <Td>556.0 GFLOPS</Td>
+                    </Tr>
+                  </TBody>
+                </Table>
+              </article>
 
-              <h3 className="text-xl font-medium mb-3">Memory</h3>
+              <article>
+                <h3 className="text-xl font-medium mb-3">Memory</h3>
 
-              <p className={classNames('text-gray-400 mb-4')}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua.
-              </p>
+                <p className={classNames('text-gray-400 mb-4')}>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
+                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                </p>
 
-              <Table responsive className="mb-0">
-                <THead>
-                  <Tr>
-                    <Td className="min-w-[200px]">GPU</Td>
-                    <Td className="min-w-[80px]">GeForce RTX 3090</Td>
-                    <Td className="min-w-[80px]">GeForce RTX 3080</Td>
-                  </Tr>
-                </THead>
-                <TBody>
-                  <Tr>
-                    <Td>Memory Size</Td>
-                    <Td>24 GB GDDR6X</Td>
-                    <Td>24 GB GDDR6X</Td>
-                  </Tr>
-                  <Tr>
-                    <Td>Memory Clock</Td>
-                    <Td>9,750 MHz</Td>
-                    <Td>9,750 MHz</Td>
-                  </Tr>
-                  <Tr>
-                    <Td>Memory Interface</Td>
-                    <Td>384-bit</Td>
-                    <Td>384-bit</Td>
-                  </Tr>
-                  <Tr>
-                    <Td>Memory Bandwidth</Td>
-                    <Td>936 GB/s</Td>
-                    <Td>936 GB/s</Td>
-                  </Tr>
-                </TBody>
-              </Table>
+                <Table responsive className="mb-0">
+                  <THead>
+                    <Tr>
+                      <Td className="min-w-[200px]">GPU</Td>
+                      <Td className="min-w-[80px]">GeForce RTX 3090</Td>
+                      <Td className="min-w-[80px]">GeForce RTX 3080</Td>
+                    </Tr>
+                  </THead>
+                  <TBody>
+                    <Tr>
+                      <Td>Memory Size</Td>
+                      <Td>24 GB GDDR6X</Td>
+                      <Td>24 GB GDDR6X</Td>
+                    </Tr>
+                    <Tr>
+                      <Td>Memory Clock</Td>
+                      <Td>9,750 MHz</Td>
+                      <Td>9,750 MHz</Td>
+                    </Tr>
+                    <Tr>
+                      <Td>Memory Interface</Td>
+                      <Td>384-bit</Td>
+                      <Td>384-bit</Td>
+                    </Tr>
+                    <Tr>
+                      <Td>Memory Bandwidth</Td>
+                      <Td>936 GB/s</Td>
+                      <Td>936 GB/s</Td>
+                    </Tr>
+                  </TBody>
+                </Table>
+              </article>
 
-              <h3 className="text-xl font-medium mb-3">Display Connectivity</h3>
+              <article>
+                <h3 className="text-xl font-medium mb-3">
+                  Display Connectivity
+                </h3>
 
-              <p className={classNames('text-gray-400 mb-4')}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua.
-              </p>
+                <p className={classNames('text-gray-400 mb-4')}>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
+                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                </p>
 
-              <Table responsive className="mb-0">
-                <THead>
-                  <Tr>
-                    <Td className="min-w-[200px]">GPU</Td>
-                    <Td className="min-w-[80px]">GeForce RTX 3090</Td>
-                    <Td className="min-w-[80px]">GeForce RTX 3080</Td>
-                  </Tr>
-                </THead>
-                <TBody>
-                  <Tr>
-                    <Td>Max Resolution</Td>
-                    <Td>7680x4320</Td>
-                    <Td>7680x4320</Td>
-                  </Tr>
-                  <Tr>
-                    <Td>Display Ports</Td>
-                    <Td>3x 1.4a</Td>
-                    <Td>3x 1.4a</Td>
-                  </Tr>
-                  <Tr>
-                    <Td>HDMI Ports</Td>
-                    <Td>2x 2.1, 1x 2.0</Td>
-                    <Td>2x 2.1, 1x 2.0</Td>
-                  </Tr>
-                  <Tr>
-                    <Td>USB-C</Td>
-                    <Td>No</Td>
-                    <Td>No</Td>
-                  </Tr>
-                  <Tr>
-                    <Td>Dual Link DVI</Td>
-                    <Td>No</Td>
-                    <Td>No</Td>
-                  </Tr>
-                  <Tr>
-                    <Td>Single Link DVI</Td>
-                    <Td>No</Td>
-                    <Td>No</Td>
-                  </Tr>
-                  <Tr>
-                    <Td>VGA</Td>
-                    <Td>No</Td>
-                    <Td>No</Td>
-                  </Tr>
-                </TBody>
-              </Table>
+                <Table responsive className="mb-0">
+                  <THead>
+                    <Tr>
+                      <Td className="min-w-[200px]">GPU</Td>
+                      <Td className="min-w-[80px]">GeForce RTX 3090</Td>
+                      <Td className="min-w-[80px]">GeForce RTX 3080</Td>
+                    </Tr>
+                  </THead>
+                  <TBody>
+                    <Tr>
+                      <Td>Max Resolution</Td>
+                      <Td>7680x4320</Td>
+                      <Td>7680x4320</Td>
+                    </Tr>
+                    <Tr>
+                      <Td>Display Ports</Td>
+                      <Td>3x 1.4a</Td>
+                      <Td>3x 1.4a</Td>
+                    </Tr>
+                    <Tr>
+                      <Td>HDMI Ports</Td>
+                      <Td>2x 2.1, 1x 2.0</Td>
+                      <Td>2x 2.1, 1x 2.0</Td>
+                    </Tr>
+                    <Tr>
+                      <Td>USB-C</Td>
+                      <Td>No</Td>
+                      <Td>No</Td>
+                    </Tr>
+                    <Tr>
+                      <Td>Dual Link DVI</Td>
+                      <Td>No</Td>
+                      <Td>No</Td>
+                    </Tr>
+                    <Tr>
+                      <Td>Single Link DVI</Td>
+                      <Td>No</Td>
+                      <Td>No</Td>
+                    </Tr>
+                    <Tr>
+                      <Td>VGA</Td>
+                      <Td>No</Td>
+                      <Td>No</Td>
+                    </Tr>
+                  </TBody>
+                </Table>
+              </article>
 
-              <h3 className="text-xl font-medium mb-3">API Support</h3>
+              <article>
+                <h3 className="text-xl font-medium mb-3">API Support</h3>
 
-              <p className={classNames('text-gray-400 mb-4')}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua.
-              </p>
+                <p className={classNames('text-gray-400 mb-4')}>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
+                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                </p>
 
-              <Table responsive className="mb-0">
-                <THead>
-                  <Tr>
-                    <Td className="min-w-[200px]">GPU</Td>
-                    <Td className="min-w-[80px]">GeForce RTX 3090</Td>
-                    <Td className="min-w-[80px]">GeForce RTX 3080</Td>
-                  </Tr>
-                </THead>
-                <TBody>
-                  <Tr>
-                    <Td>DirextX</Td>
-                    <Td>12</Td>
-                    <Td>12</Td>
-                  </Tr>
-                  <Tr>
-                    <Td>G-Sync / FreeSync</Td>
-                    <Td>Yes</Td>
-                    <Td>Yes</Td>
-                  </Tr>
-                  <Tr>
-                    <Td>SLI / Crossfire</Td>
-                    <Td>No</Td>
-                    <Td>No</Td>
-                  </Tr>
-                  <Tr>
-                    <Td>VR Ready</Td>
-                    <Td>Yes</Td>
-                    <Td>Yes</Td>
-                  </Tr>
-                  <Tr>
-                    <Td>OpenCL</Td>
-                    <Td>2.0</Td>
-                    <Td>2.0</Td>
-                  </Tr>
-                  <Tr>
-                    <Td>OpenGL</Td>
-                    <Td>4.6</Td>
-                    <Td>4.6</Td>
-                  </Tr>
-                  <Tr>
-                    <Td>Shader Model</Td>
-                    <Td>6.5</Td>
-                    <Td>6.5</Td>
-                  </Tr>
-                </TBody>
-              </Table>
-            </Card>
+                <Table responsive className="mb-0">
+                  <THead>
+                    <Tr>
+                      <Td className="min-w-[200px]">GPU</Td>
+                      <Td className="min-w-[80px]">GeForce RTX 3090</Td>
+                      <Td className="min-w-[80px]">GeForce RTX 3080</Td>
+                    </Tr>
+                  </THead>
+                  <TBody>
+                    <Tr>
+                      <Td>DirextX</Td>
+                      <Td>12</Td>
+                      <Td>12</Td>
+                    </Tr>
+                    <Tr>
+                      <Td>G-Sync / FreeSync</Td>
+                      <Td>Yes</Td>
+                      <Td>Yes</Td>
+                    </Tr>
+                    <Tr>
+                      <Td>SLI / Crossfire</Td>
+                      <Td>No</Td>
+                      <Td>No</Td>
+                    </Tr>
+                    <Tr>
+                      <Td>VR Ready</Td>
+                      <Td>Yes</Td>
+                      <Td>Yes</Td>
+                    </Tr>
+                    <Tr>
+                      <Td>OpenCL</Td>
+                      <Td>2.0</Td>
+                      <Td>2.0</Td>
+                    </Tr>
+                    <Tr>
+                      <Td>OpenGL</Td>
+                      <Td>4.6</Td>
+                      <Td>4.6</Td>
+                    </Tr>
+                    <Tr>
+                      <Td>Shader Model</Td>
+                      <Td>6.5</Td>
+                      <Td>6.5</Td>
+                    </Tr>
+                  </TBody>
+                </Table>
+              </article>
+            </article>
 
-            <Card>
-              <h2 className="text-2xl font-medium mb-3">Benchmarks</h2>
+            <article>
+              <h2 className="mb-3">Benchmarks</h2>
 
               <p className={classNames('text-gray-400 mb-4')}>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
@@ -580,10 +596,10 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
                   </Tr>
                 </TBody>
               </Table>
-            </Card>
+            </article>
 
-            <Card>
-              <h2 className="text-2xl font-medium mb-3">Reviews</h2>
+            <article>
+              <h2 className="mb-3">Reviews</h2>
 
               <p className={classNames('text-gray-400 mb-4')}>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
@@ -655,7 +671,7 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
                   </Tr>
                 </TBody>
               </Table>
-            </Card>
+            </article>
           </section>
         </article>
 
