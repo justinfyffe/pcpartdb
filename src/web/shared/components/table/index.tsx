@@ -1,17 +1,46 @@
-import React, { FunctionComponent, HTMLProps } from 'react';
+import React, {
+  createContext,
+  FunctionComponent,
+  HTMLProps,
+  useContext,
+  useState,
+} from 'react';
 import { classNames } from '../../ui/ui.utils';
+
+interface TableState {
+  border: boolean;
+}
+
+const TableContext = createContext<TableState>({
+  border: false,
+});
 
 interface TableProps extends HTMLProps<HTMLTableElement> {
   responsive?: boolean;
+  border?: boolean;
 }
 
 export const Table: FunctionComponent<TableProps> = (props) => {
-  const { children, responsive = false, ...htmlProps } = props;
+  const { children, border = false, responsive = false, ...htmlProps } = props;
+  const [context] = useState<TableState>({ border });
 
   return (
     <React.Fragment>
-      {responsive && (
-        <div className="block overflow-x-auto w-full">
+      <TableContext.Provider value={context}>
+        {responsive && (
+          <div className="block overflow-x-auto w-full">
+            <table
+              {...htmlProps}
+              className={classNames(
+                'border-collapse mb-4 w-full max-w-full',
+                props.className,
+              )}
+            >
+              {children}
+            </table>
+          </div>
+        )}
+        {!responsive && (
           <table
             {...htmlProps}
             className={classNames(
@@ -21,19 +50,8 @@ export const Table: FunctionComponent<TableProps> = (props) => {
           >
             {children}
           </table>
-        </div>
-      )}
-      {!responsive && (
-        <table
-          {...htmlProps}
-          className={classNames(
-            'border-collapse mb-4 w-full max-w-full',
-            props.className,
-          )}
-        >
-          {children}
-        </table>
-      )}
+        )}
+      </TableContext.Provider>
     </React.Fragment>
   );
 };
@@ -66,11 +84,16 @@ interface TdProps extends HTMLProps<HTMLTableCellElement> {}
 
 export const Td: FunctionComponent<TdProps> = (props) => {
   const { children, className, ...htmlProps } = props;
+  const context = useContext(TableContext);
 
   return (
     <td
       {...htmlProps}
-      className={classNames('text-left p-2 md:px-2 md:py-4', className)}
+      className={classNames(
+        'text-left p-2 md:px-2 md:py-4',
+        context.border ? 'border' : '',
+        className,
+      )}
     >
       {children}
     </td>

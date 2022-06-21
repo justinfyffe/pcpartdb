@@ -3,7 +3,6 @@ import React from 'react';
 import { CompareForm } from '../../../web/compare';
 import { ProductImage } from '../../../web/product';
 import { Breadcrumbs } from '../../../web/shared/components/breadcrumbs';
-import { Card } from '../../../web/shared/components/card';
 import {
   Table,
   TBody,
@@ -44,8 +43,8 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
         </header>
 
         <article className="flex-1 flex flex-col gap-6 max-w-full">
-          <section className="flex flex-wrap gap-4 md:flex-nowrap justify-evenly">
-            <div className="flex flex-col gap-3 flex-1 min-w-[220px] max-w-[350px]">
+          <section className="flex flex-wrap gap-4 md:flex-nowrap justify-start">
+            <div className="flex flex-col gap-3 flex-1 min-w-[210px] max-w-[350px]">
               <h2 className="self-start text-2xl font-medium">
                 NVIDIA GeForce RTX 3090
               </h2>
@@ -53,15 +52,7 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
               <ProductImage />
             </div>
 
-            <div className="flex flex-col gap-3 flex-1 min-w-[220px] max-w-[350px]">
-              <h2 className="self-start text-2xl font-medium">
-                NVIDIA GeForce RTX 3080
-              </h2>
-
-              <ProductImage />
-            </div>
-
-            <div className="flex flex-col gap-3 flex-1 min-w-[220px] max-w-[350px]">
+            <div className="flex flex-col gap-3 flex-1 min-w-[210px] max-w-[350px]">
               <h2 className="self-start text-2xl font-medium">
                 NVIDIA GeForce RTX 3080
               </h2>
@@ -84,122 +75,113 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
 
           <section className="flex flex-col gap-6">
             <article>
-              <h2 className="mb-3">General Info</h2>
+              <h2 className="mb-4">General Info</h2>
 
-              <p className={classNames('text-gray-400 mb-4')}>
+              <p className={classNames('text-content-secondary')}>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
                 eiusmod tempor incididunt ut labore et dolore magna aliqua.
               </p>
 
-              <Table responsive className="mb-0">
-                <THead>
+              <Table responsive>
+                <THead className="font-medium">
                   <Tr>
-                    <Td className="min-w-[200px]">GPU</Td>
-                    <Td className="min-w-[80px]">GeForce RTX 3090</Td>
-                    <Td className="min-w-[80px]">GeForce RTX 3080</Td>
-                    <Td className="min-w-[80px]">GeForce RTX 3070</Td>
+                    <Td className="min-w-[180px] border">GPU</Td>
+                    <Td className="min-w-[80px] border">GeForce RTX 3090</Td>
+                    <Td className="min-w-[80px] border">GeForce RTX 3080</Td>
                   </Tr>
                 </THead>
                 <TBody>
                   <Tr>
-                    <Td>Performance Rating</Td>
-                    <Td>82.23</Td>
-                    <Td>72.23</Td>
-                    <Td>72.23</Td>
+                    <Td className="border font-medium">Performance Rating</Td>
+                    <Td className="border">82.23</Td>
+                    <Td className="border">72.23</Td>
                   </Tr>
                   <Tr>
-                    <Td>Value for Money</Td>
-                    <Td>58.32</Td>
-                    <Td>48.32</Td>
-                    <Td>48.32</Td>
+                    <Td className="border font-medium">Value for Money</Td>
+                    <Td className="border">58.32</Td>
+                    <Td className="border">48.32</Td>
                   </Tr>
                   <Tr>
-                    <Td>Company</Td>
-                    <Td>NVIDIA</Td>
-                    <Td>NVIDIA</Td>
-                    <Td>NVIDIA</Td>
+                    <Td className="border font-medium">Company</Td>
+                    <Td className="border">NVIDIA</Td>
+                    <Td className="border">NVIDIA</Td>
                   </Tr>
                   <Tr>
-                    <Td>Generation</Td>
-                    <Td>GeForce 30</Td>
-                    <Td>GeForce 30</Td>
-                    <Td>GeForce 30</Td>
+                    <Td className="border font-medium">Generation</Td>
+                    <Td className="border">GeForce 30</Td>
+                    <Td className="border">GeForce 30</Td>
                   </Tr>
                   <Tr>
-                    <Td>Market Segment</Td>
-                    <Td>Desktop</Td>
-                    <Td>Desktop</Td>
-                    <Td>Desktop</Td>
+                    <Td className="border font-medium">Market Segment</Td>
+                    <Td className="border">Desktop</Td>
+                    <Td className="border">Desktop</Td>
                   </Tr>
                   <Tr>
-                    <Td>Launch Price</Td>
-                    <Td>$1,499</Td>
-                    <Td>$999</Td>
-                    <Td>$999</Td>
+                    <Td className="border font-medium">Launch Price</Td>
+                    <Td className="border">$1,499</Td>
+                    <Td className="border">$999</Td>
                   </Tr>
                   <Tr>
-                    <Td>Release Date</Td>
-                    <Td>Q4 2022</Td>
-                    <Td>Q3 2022</Td>
-                    <Td>Q3 2022</Td>
+                    <Td className="border font-medium">Release Date</Td>
+                    <Td className="border">Q4 2022</Td>
+                    <Td className="border">Q3 2022</Td>
                   </Tr>
                   <Tr>
-                    <Td>Production Status</Td>
-                    <Td>Active</Td>
-                    <Td>Active</Td>
-                    <Td>Active</Td>
+                    <Td className="border font-medium">Production Status</Td>
+                    <Td className="border">Active</Td>
+                    <Td className="border">Active</Td>
                   </Tr>
                 </TBody>
               </Table>
             </article>
 
-            <article>
-              <h2 className="mb-6">Technical Specs</h2>
+            <article className="flex flex-col gap-6">
+              <h2 className="mb-4">Technical Specs</h2>
 
               <article>
-                <h3 className="text-xl font-medium mb-3">Processor</h3>
+                <h3 className="mb-4">Processor</h3>
 
-                <p className={classNames('text-gray-400 mb-4')}>
+                <p className={classNames('text-content-secondary')}>
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
                   do eiusmod tempor incididunt ut labore et dolore magna aliqua.
                 </p>
 
-                <Table responsive className="mb-0">
-                  <THead>
+                <Table border responsive>
+                  <THead className="font-medium">
                     <Tr>
-                      <Td className="min-w-[200px]">GPU</Td>
+                      <Td className="min-w-[180px]">GPU</Td>
                       <Td className="min-w-[80px]">GeForce RTX 3090</Td>
                       <Td className="min-w-[80px]">GeForce RTX 3080</Td>
                     </Tr>
                   </THead>
                   <TBody>
                     <Tr>
-                      <Td>GPU Name</Td>
+                      <Td className="font-medium">GPU Name</Td>
                       <Td>GA102</Td>
                       <Td>GA102</Td>
                     </Tr>
                     <Tr>
-                      <Td>Architecture</Td>
+                      <Td className="font-medium">Architecture</Td>
                       <Td>Ampere</Td>
                       <Td>Ampere</Td>
                     </Tr>
                     <Tr>
-                      <Td>Foundry</Td>
+                      <Td className="font-medium">Foundry</Td>
                       <Td>Samsung</Td>
                       <Td>Samsung</Td>
                     </Tr>
                     <Tr>
-                      <Td>Process Size</Td>
+                      <Td className="font-medium">Process Size</Td>
                       <Td>8nm</Td>
                       <Td>8nm</Td>
                     </Tr>
                     <Tr>
-                      <Td>Transistors</Td>
+                      <Td className="font-medium">Transistors</Td>
                       <Td>28,300 million</Td>
                       <Td>28,300 million</Td>
                     </Tr>
                     <Tr>
-                      <Td>Die Size</Td>
+                      <Td className="font-medium">Die Size</Td>
                       <Td>628</Td>
                       <Td>628</Td>
                     </Tr>
@@ -208,16 +190,14 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
               </article>
 
               <article>
-                <h3 className="text-xl font-medium mb-3">
-                  Board Compatibility &amp; Dimensions
-                </h3>
+                <h3 className="mb-4">Board Compatibility &amp; Dimensions</h3>
 
-                <p className={classNames('text-gray-400 mb-4')}>
+                <p className={classNames('text-content-secondary')}>
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
                   do eiusmod tempor incididunt ut labore et dolore magna aliqua.
                 </p>
 
-                <Table responsive className="mb-0">
+                <Table responsive border>
                   <THead>
                     <Tr>
                       <Td className="min-w-[200px]">GPU</Td>
@@ -276,16 +256,14 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
               </article>
 
               <article>
-                <h3 className="text-xl font-medium mb-3">
-                  Cores &amp; Clock Speeds
-                </h3>
+                <h3 className="mb-4">Cores &amp; Clock Speeds</h3>
 
-                <p className={classNames('text-gray-400 mb-4')}>
+                <p className={classNames('text-content-secondary')}>
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
                   do eiusmod tempor incididunt ut labore et dolore magna aliqua.
                 </p>
 
-                <Table responsive className="mb-0">
+                <Table responsive>
                   <THead>
                     <Tr>
                       <Td className="min-w-[200px]">GPU</Td>
@@ -344,16 +322,14 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
               </article>
 
               <article>
-                <h3 className="text-xl font-medium mb-3">
-                  Theoretical Performance
-                </h3>
+                <h3 className="mb-4">Theoretical Performance</h3>
 
-                <p className={classNames('text-gray-400 mb-4')}>
+                <p className={classNames('text-content-secondary')}>
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
                   do eiusmod tempor incididunt ut labore et dolore magna aliqua.
                 </p>
 
-                <Table responsive className="mb-0">
+                <Table responsive>
                   <THead>
                     <Tr>
                       <Td className="min-w-[200px]">GPU</Td>
@@ -387,14 +363,14 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
               </article>
 
               <article>
-                <h3 className="text-xl font-medium mb-3">Memory</h3>
+                <h3 className="mb-4">Memory</h3>
 
-                <p className={classNames('text-gray-400 mb-4')}>
+                <p className={classNames('text-content-secondary')}>
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
                   do eiusmod tempor incididunt ut labore et dolore magna aliqua.
                 </p>
 
-                <Table responsive className="mb-0">
+                <Table responsive>
                   <THead>
                     <Tr>
                       <Td className="min-w-[200px]">GPU</Td>
@@ -428,16 +404,14 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
               </article>
 
               <article>
-                <h3 className="text-xl font-medium mb-3">
-                  Display Connectivity
-                </h3>
+                <h3 className="mb-4">Display Connectivity</h3>
 
-                <p className={classNames('text-gray-400 mb-4')}>
+                <p className={classNames('text-content-secondary')}>
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
                   do eiusmod tempor incididunt ut labore et dolore magna aliqua.
                 </p>
 
-                <Table responsive className="mb-0">
+                <Table responsive>
                   <THead>
                     <Tr>
                       <Td className="min-w-[200px]">GPU</Td>
@@ -486,14 +460,14 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
               </article>
 
               <article>
-                <h3 className="text-xl font-medium mb-3">API Support</h3>
+                <h3 className="mb-4">API Support</h3>
 
-                <p className={classNames('text-gray-400 mb-4')}>
+                <p className={classNames('text-content-secondary')}>
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
                   do eiusmod tempor incididunt ut labore et dolore magna aliqua.
                 </p>
 
-                <Table responsive className="mb-0">
+                <Table responsive>
                   <THead>
                     <Tr>
                       <Td className="min-w-[200px]">GPU</Td>
@@ -543,14 +517,14 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
             </article>
 
             <article>
-              <h2 className="mb-3">Benchmarks</h2>
+              <h2 className="mb-4">Benchmarks</h2>
 
-              <p className={classNames('text-gray-400 mb-4')}>
+              <p className={classNames('text-content-secondary')}>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
                 eiusmod tempor incididunt ut labore et dolore magna aliqua.
               </p>
 
-              <Table responsive className="mb-0">
+              <Table responsive>
                 <THead>
                   <Tr>
                     <Td className="min-w-[200px]">GPU</Td>
@@ -599,14 +573,14 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
             </article>
 
             <article>
-              <h2 className="mb-3">Reviews</h2>
+              <h2 className="mb-4">Reviews</h2>
 
-              <p className={classNames('text-gray-400 mb-4')}>
+              <p className={classNames('text-content-secondary')}>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
                 eiusmod tempor incididunt ut labore et dolore magna aliqua.
               </p>
 
-              <Table responsive className="mb-0">
+              <Table responsive>
                 <THead>
                   <Tr>
                     <Td className="min-w-[200px]">GPU</Td>
@@ -617,54 +591,42 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
                 <TBody>
                   <Tr>
                     <Td>
-                      <a href="#" className="text-indigo-500">
-                        Average Rating
-                      </a>
+                      <a href="#">Average Rating</a>
                     </Td>
                     <Td>4.0 / 5</Td>
                     <Td>4.0 / 5</Td>
                   </Tr>
                   <Tr>
                     <Td>
-                      <a href="#" className="text-indigo-500">
-                        Amazon
-                      </a>
+                      <a href="#">Amazon</a>
                     </Td>
                     <Td>4.6 / 5</Td>
                     <Td>4.6 / 5</Td>
                   </Tr>
                   <Tr>
                     <Td>
-                      <a href="#" className="text-indigo-500">
-                        TechRadar
-                      </a>
+                      <a href="#">TechRadar</a>
                     </Td>
                     <Td>4.0 / 5</Td>
                     <Td>4.0 / 5</Td>
                   </Tr>
                   <Tr>
                     <Td>
-                      <a href="#" className="text-indigo-500">
-                        Tom&apos;s Hardware
-                      </a>
+                      <a href="#">Tom&apos;s Hardware</a>
                     </Td>
                     <Td>4.0 / 5</Td>
                     <Td>4.0 / 5</Td>
                   </Tr>
                   <Tr>
                     <Td>
-                      <a href="#" className="text-indigo-500">
-                        TechSpot
-                      </a>
+                      <a href="#">TechSpot</a>
                     </Td>
                     <Td>3.5 / 5</Td>
                     <Td>3.5 / 5</Td>
                   </Tr>
                   <Tr>
                     <Td>
-                      <a href="#" className="text-indigo-500">
-                        PC Gamer
-                      </a>
+                      <a href="#">PC Gamer</a>
                     </Td>
                     <Td>3.5 / 5</Td>
                     <Td>3.5 / 5</Td>

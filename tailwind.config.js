@@ -22,6 +22,7 @@ module.exports = {
         'button-primary': '#ececec',
         'content-link': '#6365f1',
         'content-primary': '#334155',
+        'content-secondary': '#9ca3af',
         'footer-link': '#c7d2fe',
         'footer-primary': '#f9fafb',
         'toolbar-primary': '#f9fafb',

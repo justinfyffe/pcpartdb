@@ -12,7 +12,7 @@ export const ProductImage: FunctionComponent<ProductImageProps> = (props) => {
   return (
     <div
       className={classNames(
-        'flex flex-wrap gap-4 mx-auto items-center justify-start w-full',
+        'flex flex-wrap gap-3 mx-auto items-center justify-start w-full',
         className,
       )}
     >
