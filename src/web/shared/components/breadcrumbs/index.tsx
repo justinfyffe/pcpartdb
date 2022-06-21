@@ -1,14 +1,14 @@
 import React, { FunctionComponent } from 'react';
 import { classNames } from '../../ui/ui.utils';
 
-interface BreadcrumbItemProps {
+interface BreadcrumbProps {
   link?: string;
   text: string;
 }
 
 interface BreadcrumbsProps {
   className?: string;
-  items?: BreadcrumbItemProps[];
+  items?: BreadcrumbProps[];
 }
 
 export const Breadcrumbs: FunctionComponent<BreadcrumbsProps> = (props) => {
@@ -21,7 +21,7 @@ export const Breadcrumbs: FunctionComponent<BreadcrumbsProps> = (props) => {
           return (
             <React.Fragment key={i}>
               {i > 0 && <li>/</li>}
-              <BreadcrumbItem {...item} />
+              <Breadcrumb {...item} />
             </React.Fragment>
           );
         })}
@@ -29,7 +29,7 @@ export const Breadcrumbs: FunctionComponent<BreadcrumbsProps> = (props) => {
   );
 };
 
-const BreadcrumbItem: FunctionComponent<BreadcrumbItemProps> = (props) => {
+const Breadcrumb: FunctionComponent<BreadcrumbProps> = (props) => {
   const { link, text } = props;
   return <li>{link ? <a href={link}>{text}</a> : text}</li>;
 };

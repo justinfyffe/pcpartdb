@@ -75,6 +75,69 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
 
           <section className="flex flex-col gap-6">
             <article>
+              <h2 className="mb-4">Reviews</h2>
+
+              <p className={classNames('text-content-secondary')}>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                eiusmod tempor incididunt ut labore et dolore magna aliqua.
+              </p>
+
+              <Table border responsive>
+                <THead>
+                  <Tr>
+                    <Td className="min-w-[180px]">GPU</Td>
+                    <Td className="min-w-[80px]">GeForce RTX 3090</Td>
+                    <Td className="min-w-[80px]">GeForce RTX 3080</Td>
+                  </Tr>
+                </THead>
+                <TBody>
+                  <Tr>
+                    <Td>
+                      <a href="#">Average Rating</a>
+                    </Td>
+                    <Td>4.0 / 5</Td>
+                    <Td>4.0 / 5</Td>
+                  </Tr>
+                  <Tr>
+                    <Td>
+                      <a href="#">Amazon</a>
+                    </Td>
+                    <Td>4.6 / 5</Td>
+                    <Td>4.6 / 5</Td>
+                  </Tr>
+                  <Tr>
+                    <Td>
+                      <a href="#">TechRadar</a>
+                    </Td>
+                    <Td>4.0 / 5</Td>
+                    <Td>4.0 / 5</Td>
+                  </Tr>
+                  <Tr>
+                    <Td>
+                      <a href="#">Tom&apos;s Hardware</a>
+                    </Td>
+                    <Td>4.0 / 5</Td>
+                    <Td>4.0 / 5</Td>
+                  </Tr>
+                  <Tr>
+                    <Td>
+                      <a href="#">TechSpot</a>
+                    </Td>
+                    <Td>3.5 / 5</Td>
+                    <Td>3.5 / 5</Td>
+                  </Tr>
+                  <Tr>
+                    <Td>
+                      <a href="#">PC Gamer</a>
+                    </Td>
+                    <Td>3.5 / 5</Td>
+                    <Td>3.5 / 5</Td>
+                  </Tr>
+                </TBody>
+              </Table>
+            </article>
+
+            <article>
               <h2 className="mb-4">General Info</h2>
 
               <p className={classNames('text-content-secondary')}>
@@ -82,54 +145,54 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
                 eiusmod tempor incididunt ut labore et dolore magna aliqua.
               </p>
 
-              <Table responsive>
-                <THead className="font-medium">
+              <Table border responsive>
+                <THead>
                   <Tr>
-                    <Td className="min-w-[180px] border">GPU</Td>
-                    <Td className="min-w-[80px] border">GeForce RTX 3090</Td>
-                    <Td className="min-w-[80px] border">GeForce RTX 3080</Td>
+                    <Td className="min-w-[180px]">GPU</Td>
+                    <Td className="min-w-[80px]">GeForce RTX 3090</Td>
+                    <Td className="min-w-[80px]">GeForce RTX 3080</Td>
                   </Tr>
                 </THead>
                 <TBody>
                   <Tr>
-                    <Td className="border font-medium">Performance Rating</Td>
-                    <Td className="border">82.23</Td>
-                    <Td className="border">72.23</Td>
+                    <Td>Performance Rating</Td>
+                    <Td>82.23</Td>
+                    <Td>72.23</Td>
                   </Tr>
                   <Tr>
-                    <Td className="border font-medium">Value for Money</Td>
-                    <Td className="border">58.32</Td>
-                    <Td className="border">48.32</Td>
+                    <Td>Value for Money</Td>
+                    <Td>58.32</Td>
+                    <Td>48.32</Td>
                   </Tr>
                   <Tr>
-                    <Td className="border font-medium">Company</Td>
-                    <Td className="border">NVIDIA</Td>
-                    <Td className="border">NVIDIA</Td>
+                    <Td>Company</Td>
+                    <Td>NVIDIA</Td>
+                    <Td>NVIDIA</Td>
                   </Tr>
                   <Tr>
-                    <Td className="border font-medium">Generation</Td>
-                    <Td className="border">GeForce 30</Td>
-                    <Td className="border">GeForce 30</Td>
+                    <Td>Generation</Td>
+                    <Td>GeForce 30</Td>
+                    <Td>GeForce 30</Td>
                   </Tr>
                   <Tr>
-                    <Td className="border font-medium">Market Segment</Td>
-                    <Td className="border">Desktop</Td>
-                    <Td className="border">Desktop</Td>
+                    <Td>Market Segment</Td>
+                    <Td>Desktop</Td>
+                    <Td>Desktop</Td>
                   </Tr>
                   <Tr>
-                    <Td className="border font-medium">Launch Price</Td>
-                    <Td className="border">$1,499</Td>
-                    <Td className="border">$999</Td>
+                    <Td>Launch Price</Td>
+                    <Td>$1,499</Td>
+                    <Td>$999</Td>
                   </Tr>
                   <Tr>
-                    <Td className="border font-medium">Release Date</Td>
-                    <Td className="border">Q4 2022</Td>
-                    <Td className="border">Q3 2022</Td>
+                    <Td>Release Date</Td>
+                    <Td>Q4 2022</Td>
+                    <Td>Q3 2022</Td>
                   </Tr>
                   <Tr>
-                    <Td className="border font-medium">Production Status</Td>
-                    <Td className="border">Active</Td>
-                    <Td className="border">Active</Td>
+                    <Td>Production Status</Td>
+                    <Td>Active</Td>
+                    <Td>Active</Td>
                   </Tr>
                 </TBody>
               </Table>
@@ -147,7 +210,7 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
                 </p>
 
                 <Table border responsive>
-                  <THead className="font-medium">
+                  <THead>
                     <Tr>
                       <Td className="min-w-[180px]">GPU</Td>
                       <Td className="min-w-[80px]">GeForce RTX 3090</Td>
@@ -156,32 +219,32 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
                   </THead>
                   <TBody>
                     <Tr>
-                      <Td className="font-medium">GPU Name</Td>
+                      <Td>GPU Name</Td>
                       <Td>GA102</Td>
                       <Td>GA102</Td>
                     </Tr>
                     <Tr>
-                      <Td className="font-medium">Architecture</Td>
+                      <Td>Architecture</Td>
                       <Td>Ampere</Td>
                       <Td>Ampere</Td>
                     </Tr>
                     <Tr>
-                      <Td className="font-medium">Foundry</Td>
+                      <Td>Foundry</Td>
                       <Td>Samsung</Td>
                       <Td>Samsung</Td>
                     </Tr>
                     <Tr>
-                      <Td className="font-medium">Process Size</Td>
+                      <Td>Process Size</Td>
                       <Td>8nm</Td>
                       <Td>8nm</Td>
                     </Tr>
                     <Tr>
-                      <Td className="font-medium">Transistors</Td>
+                      <Td>Transistors</Td>
                       <Td>28,300 million</Td>
                       <Td>28,300 million</Td>
                     </Tr>
                     <Tr>
-                      <Td className="font-medium">Die Size</Td>
+                      <Td>Die Size</Td>
                       <Td>628</Td>
                       <Td>628</Td>
                     </Tr>
@@ -197,10 +260,10 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
                   do eiusmod tempor incididunt ut labore et dolore magna aliqua.
                 </p>
 
-                <Table responsive border>
+                <Table border responsive>
                   <THead>
                     <Tr>
-                      <Td className="min-w-[200px]">GPU</Td>
+                      <Td className="min-w-[180px]">GPU</Td>
                       <Td className="min-w-[80px]">GeForce RTX 3090</Td>
                       <Td className="min-w-[80px]">GeForce RTX 3080</Td>
                     </Tr>
@@ -263,10 +326,10 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
                   do eiusmod tempor incididunt ut labore et dolore magna aliqua.
                 </p>
 
-                <Table responsive>
+                <Table border responsive>
                   <THead>
                     <Tr>
-                      <Td className="min-w-[200px]">GPU</Td>
+                      <Td className="min-w-[180px]">GPU</Td>
                       <Td className="min-w-[80px]">GeForce RTX 3090</Td>
                       <Td className="min-w-[80px]">GeForce RTX 3080</Td>
                     </Tr>
@@ -329,7 +392,7 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
                   do eiusmod tempor incididunt ut labore et dolore magna aliqua.
                 </p>
 
-                <Table responsive>
+                <Table border responsive>
                   <THead>
                     <Tr>
                       <Td className="min-w-[200px]">GPU</Td>
@@ -370,10 +433,10 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
                   do eiusmod tempor incididunt ut labore et dolore magna aliqua.
                 </p>
 
-                <Table responsive>
+                <Table border responsive>
                   <THead>
                     <Tr>
-                      <Td className="min-w-[200px]">GPU</Td>
+                      <Td className="min-w-[180px]">GPU</Td>
                       <Td className="min-w-[80px]">GeForce RTX 3090</Td>
                       <Td className="min-w-[80px]">GeForce RTX 3080</Td>
                     </Tr>
@@ -411,10 +474,10 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
                   do eiusmod tempor incididunt ut labore et dolore magna aliqua.
                 </p>
 
-                <Table responsive>
+                <Table border responsive>
                   <THead>
                     <Tr>
-                      <Td className="min-w-[200px]">GPU</Td>
+                      <Td className="min-w-[180px]">GPU</Td>
                       <Td className="min-w-[80px]">GeForce RTX 3090</Td>
                       <Td className="min-w-[80px]">GeForce RTX 3080</Td>
                     </Tr>
@@ -467,10 +530,10 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
                   do eiusmod tempor incididunt ut labore et dolore magna aliqua.
                 </p>
 
-                <Table responsive>
+                <Table border responsive>
                   <THead>
                     <Tr>
-                      <Td className="min-w-[200px]">GPU</Td>
+                      <Td className="min-w-[180px]">GPU</Td>
                       <Td className="min-w-[80px]">GeForce RTX 3090</Td>
                       <Td className="min-w-[80px]">GeForce RTX 3080</Td>
                     </Tr>
@@ -524,10 +587,10 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
                 eiusmod tempor incididunt ut labore et dolore magna aliqua.
               </p>
 
-              <Table responsive>
+              <Table border responsive>
                 <THead>
                   <Tr>
-                    <Td className="min-w-[200px]">GPU</Td>
+                    <Td className="min-w-[180px]">GPU</Td>
                     <Td className="min-w-[80px]">GeForce RTX 3090</Td>
                     <Td className="min-w-[80px]">GeForce RTX 3080</Td>
                   </Tr>
@@ -567,69 +630,6 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
                     <Td>GeekBench 5 Vulkan</Td>
                     <Td>138637</Td>
                     <Td>138637</Td>
-                  </Tr>
-                </TBody>
-              </Table>
-            </article>
-
-            <article>
-              <h2 className="mb-4">Reviews</h2>
-
-              <p className={classNames('text-content-secondary')}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua.
-              </p>
-
-              <Table responsive>
-                <THead>
-                  <Tr>
-                    <Td className="min-w-[200px]">GPU</Td>
-                    <Td className="min-w-[80px]">GeForce RTX 3090</Td>
-                    <Td className="min-w-[80px]">GeForce RTX 3080</Td>
-                  </Tr>
-                </THead>
-                <TBody>
-                  <Tr>
-                    <Td>
-                      <a href="#">Average Rating</a>
-                    </Td>
-                    <Td>4.0 / 5</Td>
-                    <Td>4.0 / 5</Td>
-                  </Tr>
-                  <Tr>
-                    <Td>
-                      <a href="#">Amazon</a>
-                    </Td>
-                    <Td>4.6 / 5</Td>
-                    <Td>4.6 / 5</Td>
-                  </Tr>
-                  <Tr>
-                    <Td>
-                      <a href="#">TechRadar</a>
-                    </Td>
-                    <Td>4.0 / 5</Td>
-                    <Td>4.0 / 5</Td>
-                  </Tr>
-                  <Tr>
-                    <Td>
-                      <a href="#">Tom&apos;s Hardware</a>
-                    </Td>
-                    <Td>4.0 / 5</Td>
-                    <Td>4.0 / 5</Td>
-                  </Tr>
-                  <Tr>
-                    <Td>
-                      <a href="#">TechSpot</a>
-                    </Td>
-                    <Td>3.5 / 5</Td>
-                    <Td>3.5 / 5</Td>
-                  </Tr>
-                  <Tr>
-                    <Td>
-                      <a href="#">PC Gamer</a>
-                    </Td>
-                    <Td>3.5 / 5</Td>
-                    <Td>3.5 / 5</Td>
                   </Tr>
                 </TBody>
               </Table>
