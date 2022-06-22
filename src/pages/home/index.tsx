@@ -1,11 +1,8 @@
 import 'reflect-metadata';
-import {
-  ChipIcon,
-  DesktopComputerIcon,
-  PlusCircleIcon,
-} from '@heroicons/react/outline';
+import { ChipIcon, DesktopComputerIcon } from '@heroicons/react/outline';
 import { NextPageContext } from 'next';
 import React from 'react';
+import { CompareForm } from '../../web/compare';
 import { Button, ButtonVariant } from '../../web/shared/components/button';
 import {
   Card,
@@ -15,7 +12,6 @@ import {
   CardTitle,
 } from '../../web/shared/components/card';
 import { Image } from '../../web/shared/components/image';
-import { Input } from '../../web/shared/components/input';
 import { SectionHeader } from '../../web/shared/components/section-header';
 import { WebsiteLayout } from '../../web/shared/layouts/website';
 import { classNames } from '../../web/shared/ui/ui.utils';
@@ -31,58 +27,15 @@ export const HomePage = (_props: HomePageProps) => {
             'grid grid-cols-1 sm:grid-cols-[1fr_300px] grid-rows-2 sm:grid-rows-1 gap-6',
           )}
         >
-          <Card
-            className={classNames(
-              'gap-4 flex flex-col justify-center px-16 py-8',
-            )}
-          >
-            <h1 className={classNames('font-medium text-3xl text-slate-700')}>
-              Compare CPUs and GPUs
-            </h1>
+          <Card className={classNames('gap-4 flex flex-col justify-center')}>
+            <h1 className={classNames('mb-3')}>Compare CPUs and GPUs</h1>
 
-            <div
-              className={classNames(
-                'flex flex-1 flex-col gap-6 items-center justify-center',
-              )}
-            >
-              <div
-                className={classNames(
-                  'grid grid-cols-[minmax(200px,_1fr)_auto] lg:grid-cols-[repeat(2,_1fr_auto)] lg:grid-flow-col gap-6 items-center justify-center w-full',
-                )}
-              >
-                <Input
-                  placeholder="Processor or Graphics Card..."
-                  className={classNames()}
-                />
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+              eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            </p>
 
-                <div
-                  className={classNames(
-                    'font-medium text-center text-md text-slate-700',
-                  )}
-                >
-                  VS
-                </div>
-
-                <Input
-                  placeholder="Processor or Graphics Card..."
-                  className={classNames()}
-                />
-
-                <Button
-                  variant={ButtonVariant.None}
-                  className={classNames('h-full px-2')}
-                >
-                  <PlusCircleIcon className={classNames('h-6 mx-auto')} />
-                </Button>
-              </div>
-
-              <Button
-                variant={ButtonVariant.Primary}
-                className={classNames('block min-w-full')}
-              >
-                Compare
-              </Button>
-            </div>
+            <CompareForm values={[1, 1]} />
           </Card>
 
           <aside className={classNames()}>
