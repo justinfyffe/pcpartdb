@@ -75,6 +75,67 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
 
           <section className="flex flex-col gap-6">
             <article>
+              <h2 className="mb-4">General Info</h2>
+
+              <p className={classNames('text-content-secondary')}>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                eiusmod tempor incididunt ut labore et dolore magna aliqua.
+              </p>
+
+              <Table border responsive>
+                <THead>
+                  <Tr>
+                    <Td className="min-w-[180px]">GPU</Td>
+                    <Td className="min-w-[80px]">GeForce RTX 3090</Td>
+                    <Td className="min-w-[80px]">GeForce RTX 3080</Td>
+                  </Tr>
+                </THead>
+                <TBody>
+                  <Tr>
+                    <Td>Performance Rating</Td>
+                    <Td>82.23</Td>
+                    <Td>72.23</Td>
+                  </Tr>
+                  <Tr>
+                    <Td>Value for Money</Td>
+                    <Td>58.32</Td>
+                    <Td>48.32</Td>
+                  </Tr>
+                  <Tr>
+                    <Td>Company</Td>
+                    <Td>NVIDIA</Td>
+                    <Td>NVIDIA</Td>
+                  </Tr>
+                  <Tr>
+                    <Td>Generation</Td>
+                    <Td>GeForce 30</Td>
+                    <Td>GeForce 30</Td>
+                  </Tr>
+                  <Tr>
+                    <Td>Market Segment</Td>
+                    <Td>Desktop</Td>
+                    <Td>Desktop</Td>
+                  </Tr>
+                  <Tr>
+                    <Td>Launch Price</Td>
+                    <Td>$1,499</Td>
+                    <Td>$999</Td>
+                  </Tr>
+                  <Tr>
+                    <Td>Release Date</Td>
+                    <Td>Q4 2022</Td>
+                    <Td>Q3 2022</Td>
+                  </Tr>
+                  <Tr>
+                    <Td>Production Status</Td>
+                    <Td>Active</Td>
+                    <Td>Active</Td>
+                  </Tr>
+                </TBody>
+              </Table>
+            </article>
+
+            <article>
               <h2 className="mb-4">Reviews</h2>
 
               <p className={classNames('text-content-secondary')}>
@@ -132,67 +193,6 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
                     </Td>
                     <Td>3.5 / 5</Td>
                     <Td>3.5 / 5</Td>
-                  </Tr>
-                </TBody>
-              </Table>
-            </article>
-
-            <article>
-              <h2 className="mb-4">General Info</h2>
-
-              <p className={classNames('text-content-secondary')}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua.
-              </p>
-
-              <Table border responsive>
-                <THead>
-                  <Tr>
-                    <Td className="min-w-[180px]">GPU</Td>
-                    <Td className="min-w-[80px]">GeForce RTX 3090</Td>
-                    <Td className="min-w-[80px]">GeForce RTX 3080</Td>
-                  </Tr>
-                </THead>
-                <TBody>
-                  <Tr>
-                    <Td>Performance Rating</Td>
-                    <Td>82.23</Td>
-                    <Td>72.23</Td>
-                  </Tr>
-                  <Tr>
-                    <Td>Value for Money</Td>
-                    <Td>58.32</Td>
-                    <Td>48.32</Td>
-                  </Tr>
-                  <Tr>
-                    <Td>Company</Td>
-                    <Td>NVIDIA</Td>
-                    <Td>NVIDIA</Td>
-                  </Tr>
-                  <Tr>
-                    <Td>Generation</Td>
-                    <Td>GeForce 30</Td>
-                    <Td>GeForce 30</Td>
-                  </Tr>
-                  <Tr>
-                    <Td>Market Segment</Td>
-                    <Td>Desktop</Td>
-                    <Td>Desktop</Td>
-                  </Tr>
-                  <Tr>
-                    <Td>Launch Price</Td>
-                    <Td>$1,499</Td>
-                    <Td>$999</Td>
-                  </Tr>
-                  <Tr>
-                    <Td>Release Date</Td>
-                    <Td>Q4 2022</Td>
-                    <Td>Q3 2022</Td>
-                  </Tr>
-                  <Tr>
-                    <Td>Production Status</Td>
-                    <Td>Active</Td>
-                    <Td>Active</Td>
                   </Tr>
                 </TBody>
               </Table>
