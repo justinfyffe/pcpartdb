@@ -3,9 +3,9 @@ import React from 'react';
 import { WebsiteLayout } from '../../web/shared/layouts/website';
 import { classNames } from '../../web/shared/ui/ui.utils';
 
-interface GpuSlugPageProps {}
+interface GpusSlugPageProps {}
 
-const GpuSlugPage = (_props: GpuSlugPageProps) => {
+const GpusSlugPage = (_props: GpusSlugPageProps) => {
   return (
     <WebsiteLayout>
       <main></main>
@@ -13,8 +13,8 @@ const GpuSlugPage = (_props: GpuSlugPageProps) => {
   );
 };
 
-GpuSlugPage.getInitialProps = async (_ctx: NextPageContext) => {
+GpusSlugPage.getInitialProps = async (_ctx: NextPageContext) => {
   return {};
 };
 
-export default GpuSlugPage;
+export default GpusSlugPage;

@@ -14,9 +14,9 @@ import { SectionHeader } from '../../web/shared/components/section-header';
 import { WebsiteLayout } from '../../web/shared/layouts/website';
 import { classNames } from '../../web/shared/ui/ui.utils';
 
-interface CpuPageProps {}
+interface CpusPageProps {}
 
-const CpuPage = (_props: CpuPageProps) => {
+const CpusPage = (_props: CpusPageProps) => {
   return (
     <WebsiteLayout>
       <main>
@@ -779,8 +779,8 @@ const CpuPage = (_props: CpuPageProps) => {
   );
 };
 
-CpuPage.getInitialProps = async (_ctx: NextPageContext) => {
+CpusPage.getInitialProps = async (_ctx: NextPageContext) => {
   return {};
 };
 
-export default CpuPage;
+export default CpusPage;

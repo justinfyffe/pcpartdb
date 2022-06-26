@@ -14,9 +14,9 @@ import { SectionHeader } from '../../web/shared/components/section-header';
 import { WebsiteLayout } from '../../web/shared/layouts/website';
 import { classNames } from '../../web/shared/ui/ui.utils';
 
-interface GpuPageProps {}
+interface GpusPageProps {}
 
-const GpuPage = (_props: GpuPageProps) => {
+const GpusPage = (_props: GpusPageProps) => {
   return (
     <WebsiteLayout>
       <main>
@@ -767,8 +767,8 @@ const GpuPage = (_props: GpuPageProps) => {
   );
 };
 
-GpuPage.getInitialProps = async (_ctx: NextPageContext) => {
+GpusPage.getInitialProps = async (_ctx: NextPageContext) => {
   return {};
 };
 
-export default GpuPage;
+export default GpusPage;
