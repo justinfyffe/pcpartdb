@@ -3,14 +3,15 @@ import { ChipIcon, DesktopComputerIcon } from '@heroicons/react/outline';
 import { NextPageContext } from 'next';
 import React from 'react';
 import { CompareForm } from '../../web/compare';
-import { Button, ButtonVariant } from '../../web/shared/components/button';
+import { Card } from '../../web/shared/components/card';
 import {
-  Card,
-  CardActions,
-  CardContent,
-  CardImage,
-  CardTitle,
-} from '../../web/shared/components/card';
+  Feed,
+  FeedItem,
+  FeedItems,
+  FeedLink,
+  FeedLinks,
+  FeedTitle,
+} from '../../web/shared/components/feed';
 import { Image } from '../../web/shared/components/image';
 import { SectionHeader } from '../../web/shared/components/section-header';
 import { WebsiteLayout } from '../../web/shared/layouts/website';
@@ -99,279 +100,54 @@ export const HomePage = (_props: HomePageProps) => {
         </aside>
       </section>
 
-      <section className={classNames('my-4')}>
-        <SectionHeader>
-          <DesktopComputerIcon
-            className={classNames('inline-block h-6 w-6 mr-2 mb-1')}
-          />
-          <h2 className={classNames('inline-block')}>Which GPU is Better?</h2>
-        </SectionHeader>
+      <Feed className="my-4">
+        <FeedTitle icon={DesktopComputerIcon}>Which GPU is Better?</FeedTitle>
 
-        <div className={classNames('flex flex-wrap justify-center mx-[-16px]')}>
-          <Card
-            className={classNames(
-              'flex-1 mx-4 mb-6 max-w-[360px] min-w-[280px]',
-            )}
-          >
-            <CardImage
-              src="https://preview.redd.it/8siyqldph2x21.jpg?auto=webp&s=eeaa2cdf9c4e01746f4f46cc08c66e5eff77c630"
-              width="360"
-              height="200"
-            ></CardImage>
+        <FeedItems>
+          <FeedItem />
+          <FeedItem />
+          <FeedItem />
+        </FeedItems>
 
-            <CardTitle as="h3">RTX 3070 vs RTX 3060</CardTitle>
+        <FeedLinks>
+          <FeedLink>All GPUs</FeedLink>
+          <FeedLink>NVIDIA GPUs</FeedLink>
+          <FeedLink>AMD GPUs</FeedLink>
+        </FeedLinks>
+      </Feed>
 
-            <CardContent>Is the 3070 better bang for your buck?</CardContent>
+      <Feed className="my-4">
+        <FeedTitle icon={DesktopComputerIcon}>Which CPU is Better?</FeedTitle>
 
-            <CardActions>
-              <Button variant={ButtonVariant.Primary}>Compare</Button>
-            </CardActions>
-          </Card>
+        <FeedItems>
+          <FeedItem />
+          <FeedItem />
+          <FeedItem />
+        </FeedItems>
 
-          <Card
-            className={classNames(
-              'flex-1 mx-4 mb-6 max-w-[360px] min-w-[280px]',
-            )}
-          >
-            <CardImage
-              src="https://preview.redd.it/8siyqldph2x21.jpg?auto=webp&s=eeaa2cdf9c4e01746f4f46cc08c66e5eff77c630"
-              width="360"
-              height="200"
-            ></CardImage>
+        <FeedLinks>
+          <FeedLink>All CPUs</FeedLink>
+          <FeedLink>Intel CPUs</FeedLink>
+          <FeedLink>AMD CPUs</FeedLink>
+        </FeedLinks>
+      </Feed>
 
-            <CardTitle as="h3">RTX 3070 vs RTX 3060</CardTitle>
+      <Feed className="my-4">
+        <FeedTitle icon={DesktopComputerIcon}>PC Builds</FeedTitle>
 
-            <CardContent>Is the 3070 better bang for your buck?</CardContent>
+        <FeedItems>
+          <FeedItem />
+          <FeedItem />
+          <FeedItem />
+        </FeedItems>
 
-            <CardActions>
-              <Button variant={ButtonVariant.Primary}>Compare</Button>
-            </CardActions>
-          </Card>
-
-          <Card
-            className={classNames(
-              'flex-1 mx-4 mb-6 max-w-[360px] min-w-[280px]',
-            )}
-          >
-            <CardImage
-              src="https://preview.redd.it/8siyqldph2x21.jpg?auto=webp&s=eeaa2cdf9c4e01746f4f46cc08c66e5eff77c630"
-              width="360"
-              height="200"
-            ></CardImage>
-
-            <CardTitle as="h3">RTX 3070 vs RTX 3060</CardTitle>
-
-            <CardContent>Is the 3070 better bang for your buck?</CardContent>
-
-            <CardActions>
-              <Button variant={ButtonVariant.Primary}>Compare</Button>
-            </CardActions>
-          </Card>
-        </div>
-
-        <ul className={classNames('list-none text-right font-medium')}>
-          <li className={classNames('inline-block mx-4')}>
-            <a href="#" className={classNames('text-indigo-500')}>
-              All GPUs
-            </a>
-          </li>
-          <li className={classNames('inline-block mx-4')}>
-            <a href="#" className={classNames('text-indigo-500')}>
-              NVIDIA GPUs
-            </a>
-          </li>
-          <li className={classNames('inline-block mx-4')}>
-            <a href="#" className={classNames('text-indigo-500')}>
-              AMD GPUs
-            </a>
-          </li>
-        </ul>
-      </section>
-
-      <section className={classNames('my-4')}>
-        <SectionHeader>
-          <DesktopComputerIcon
-            className={classNames('inline-block h-6 w-6 mr-2 mb-1')}
-          />
-          <h2 className={classNames('inline-block')}>Which CPU is Better?</h2>
-        </SectionHeader>
-
-        <div className={classNames('flex flex-wrap justify-center mx-[-16px]')}>
-          <Card
-            className={classNames(
-              'flex-1 mx-4 mb-6 max-w-[360px] min-w-[280px]',
-            )}
-          >
-            <CardImage
-              src="https://preview.redd.it/8siyqldph2x21.jpg?auto=webp&s=eeaa2cdf9c4e01746f4f46cc08c66e5eff77c630"
-              width="360"
-              height="200"
-            ></CardImage>
-
-            <CardTitle as="h3">Ryzen 9 5900X vs Core i7-12700KF</CardTitle>
-
-            <CardContent>Is the 3070 better bang for your buck?</CardContent>
-
-            <CardActions>
-              <Button variant={ButtonVariant.Primary}>Compare</Button>
-            </CardActions>
-          </Card>
-
-          <Card
-            className={classNames(
-              'flex-1 mx-4 mb-6 max-w-[360px] min-w-[280px]',
-            )}
-          >
-            <CardImage
-              src="https://preview.redd.it/8siyqldph2x21.jpg?auto=webp&s=eeaa2cdf9c4e01746f4f46cc08c66e5eff77c630"
-              width="360"
-              height="200"
-            ></CardImage>
-
-            <CardTitle as="h3">Ryzen 9 5900X vs Core i7-12700KF</CardTitle>
-
-            <CardContent>Is the 3070 better bang for your buck?</CardContent>
-
-            <CardActions>
-              <Button variant={ButtonVariant.Primary}>Compare</Button>
-            </CardActions>
-          </Card>
-
-          <Card
-            className={classNames(
-              'flex-1 mx-4 mb-6 max-w-[360px] min-w-[280px]',
-            )}
-          >
-            <CardImage
-              src="https://preview.redd.it/8siyqldph2x21.jpg?auto=webp&s=eeaa2cdf9c4e01746f4f46cc08c66e5eff77c630"
-              width="360"
-              height="200"
-            ></CardImage>
-
-            <CardTitle as="h3">Ryzen 9 5900X vs Core i7-12700KF</CardTitle>
-
-            <CardContent>Is the 3070 better bang for your buck?</CardContent>
-
-            <CardActions>
-              <Button variant={ButtonVariant.Primary}>Compare</Button>
-            </CardActions>
-          </Card>
-        </div>
-
-        <ul className={classNames('list-none text-right font-medium')}>
-          <li className={classNames('inline-block mx-4')}>
-            <a href="#" className={classNames('text-indigo-500')}>
-              All CPUs
-            </a>
-          </li>
-          <li className={classNames('inline-block mx-4')}>
-            <a href="#" className={classNames('text-indigo-500')}>
-              Intel CPUs
-            </a>
-          </li>
-          <li className={classNames('inline-block mx-4')}>
-            <a href="#" className={classNames('text-indigo-500')}>
-              AMD CPUs
-            </a>
-          </li>
-        </ul>
-      </section>
-
-      <section className={classNames('my-4')}>
-        <SectionHeader>
-          <DesktopComputerIcon
-            className={classNames('inline-block h-6 w-6 mr-2 mb-1')}
-          />
-          <h2 className={classNames('inline-block')}>PC Builds</h2>
-        </SectionHeader>
-
-        <div className={classNames('flex flex-wrap justify-center mx-[-16px]')}>
-          <Card
-            className={classNames(
-              'flex-1 mx-4 mb-6 max-w-[360px] min-w-[280px]',
-            )}
-          >
-            <CardImage
-              src="https://preview.redd.it/8siyqldph2x21.jpg?auto=webp&s=eeaa2cdf9c4e01746f4f46cc08c66e5eff77c630"
-              width="360"
-              height="200"
-            ></CardImage>
-
-            <CardTitle as="h3">
-              June 2022: Excellent Intel Gaming Build
-            </CardTitle>
-
-            <CardContent>Is the 3070 better bang for your buck?</CardContent>
-
-            <CardActions>
-              <Button variant={ButtonVariant.Primary}>View Build</Button>
-            </CardActions>
-          </Card>
-
-          <Card
-            className={classNames(
-              'flex-1 mx-4 mb-6 max-w-[360px] min-w-[280px]',
-            )}
-          >
-            <CardImage
-              src="https://preview.redd.it/8siyqldph2x21.jpg?auto=webp&s=eeaa2cdf9c4e01746f4f46cc08c66e5eff77c630"
-              width="360"
-              height="200"
-            ></CardImage>
-
-            <CardTitle as="h3">June 2022: Excellent AMD Gaming Build</CardTitle>
-
-            <CardContent>Is the 3070 better bang for your buck?</CardContent>
-
-            <CardActions>
-              <Button variant={ButtonVariant.Primary}>View Build</Button>
-            </CardActions>
-          </Card>
-
-          <Card
-            className={classNames(
-              'flex-1 mx-4 mb-6 max-w-[360px] min-w-[280px]',
-            )}
-          >
-            <CardImage
-              src="https://preview.redd.it/8siyqldph2x21.jpg?auto=webp&s=eeaa2cdf9c4e01746f4f46cc08c66e5eff77c630"
-              width="360"
-              height="200"
-            ></CardImage>
-
-            <CardTitle as="h3">June 2022: Budget AMD Gaming Build</CardTitle>
-
-            <CardContent>Is the 3070 better bang for your buck?</CardContent>
-
-            <CardActions>
-              <Button variant={ButtonVariant.Primary}>View Build</Button>
-            </CardActions>
-          </Card>
-        </div>
-
-        <ul className={classNames('list-none text-right font-medium')}>
-          <li className={classNames('inline-block mx-4')}>
-            <a href="#" className={classNames('text-indigo-500')}>
-              All PC Builds
-            </a>
-          </li>
-          <li className={classNames('inline-block mx-4')}>
-            <a href="#" className={classNames('text-indigo-500')}>
-              Gaming PC Builds
-            </a>
-          </li>
-          <li className={classNames('inline-block mx-4')}>
-            <a href="#" className={classNames('text-indigo-500')}>
-              Crypto Mining PC Builds
-            </a>
-          </li>
-          <li className={classNames('inline-block mx-4')}>
-            <a href="#" className={classNames('text-indigo-500')}>
-              Office PC Builds
-            </a>
-          </li>
-        </ul>
-      </section>
+        <FeedLinks>
+          <FeedLink>All PC Builds</FeedLink>
+          <FeedLink>Gaming PC Builds</FeedLink>
+          <FeedLink>Crypto Mining PC Builds</FeedLink>
+          <FeedLink>Office PC Builds</FeedLink>
+        </FeedLinks>
+      </Feed>
     </WebsiteLayout>
   );
 };

@@ -1,10 +1,4 @@
-import { Controller, Get, Render } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 
 @Controller()
-export class HomeController {
-  @Get()
-  @Render('pages/home')
-  public home() {
-    return {};
-  }
-}
+export class HomeController {}
