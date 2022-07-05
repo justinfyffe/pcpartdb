@@ -70,8 +70,8 @@ export function openDatabase() {
   return db;
 }
 
-export function transaction(
-  callback: (t: Knex.Transaction) => Promise<void>,
+export function transaction<T>(
+  callback: (t: Knex.Transaction) => Promise<T>,
   isolationLevel?: IsolationLevel,
 ) {
   const db = openDatabase();

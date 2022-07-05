@@ -1,7 +1,7 @@
 import { Model, PartialModelObject } from 'objection';
-import { ProductType } from '../../product/product';
-import { ProductBenchmarkModel } from './product-benchmark.model';
-import { ProductSpecModel } from './product-spec.model';
+import { ProductBenchmarkModel } from './benchmark/product-benchmark.model';
+import { ProductType } from './product';
+import { ProductSpecModel } from './spec/product-spec.model';
 
 export class ProductModel extends Model {
   static tableName = 'products';

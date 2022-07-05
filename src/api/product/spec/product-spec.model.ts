@@ -1,5 +1,5 @@
 import { Model, PartialModelObject } from 'objection';
-import { ProductSpecKey } from '../../product/spec/product-spec';
+import { ProductSpecKey } from './product-spec';
 
 export class ProductSpecModel<T = unknown> extends Model {
   static tableName = 'product_specs';

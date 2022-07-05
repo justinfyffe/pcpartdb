@@ -1,4 +1,13 @@
-import { Controller, Delete, Get, Patch, Post, Put } from '@nestjs/common';
+import {
+  Controller,
+  Delete,
+  Get,
+  Patch,
+  Post,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
+import { StaffGuard } from '../auth/staff.guard';
 
 @Controller('products')
 export class ProductController {
@@ -8,12 +17,15 @@ export class ProductController {
   }
 
   @Post()
+  @UseGuards(StaffGuard)
   createProduct() {}
 
   @Put(':id')
   @Patch(':id')
+  @UseGuards(StaffGuard)
   updateProduct() {}
 
   @Delete(':id')
+  @UseGuards(StaffGuard)
   deleteProduct() {}
 }

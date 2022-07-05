@@ -40,8 +40,9 @@ export class AccessTokenController {
     @Body() body: auth.LoginFormData,
     @Res() response: express.Response,
   ) {
-    await transaction(async (db) => {
-      const token = await this.service.login(body, { db, response });
+    await transaction(async (trx) => {
+      const token = await this.service.login(body, { trx, response });
+
       response.status(HttpStatus.OK).send(token);
     });
   }
@@ -52,9 +53,14 @@ export class AccessTokenController {
     @Req() request: express.Request & { user: User },
     @Res() response: express.Response,
   ) {
-    await transaction((db) =>
-      this.service.logout(request.user, { db, request, response }),
-    );
-    response.status(204).send({});
+    await transaction(async (trx) => {
+      await this.service.logout(request.user, {
+        trx,
+        request,
+        response,
+      });
+
+      response.status(204).send({});
+    });
   }
 }

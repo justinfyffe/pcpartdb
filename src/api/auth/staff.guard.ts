@@ -4,7 +4,7 @@ import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 export class StaffGuard implements CanActivate {
   async canActivate(context: ExecutionContext) {
     const request = context.switchToHttp().getRequest();
-    const user: UserEntity = request.user;
+    const user = request.user;
     return user != null && user.isStaff;
   }
 }
