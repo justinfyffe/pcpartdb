@@ -1,5 +1,5 @@
 import { Model, PartialModelObject } from 'objection';
-import { ProductType } from '../../product';
+import { ProductType } from '../../product/product';
 import { ProductBenchmarkModel } from './product-benchmark.model';
 import { ProductSpecModel } from './product-spec.model';
 
