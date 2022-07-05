@@ -8,6 +8,6 @@ export interface RepositoryConfig {
 export abstract class Repository<TModel extends Model, TEntity> {
   protected db = openDatabase();
 
-  protected abstract mapFromRow(row: TModel): TEntity;
-  protected abstract mapToRow(entity: TEntity): PartialModelObject<TModel>;
+  abstract mapFromRow(row: TModel): TEntity;
+  abstract mapToRow(entity: TEntity): PartialModelObject<TModel>;
 }

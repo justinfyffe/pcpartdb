@@ -23,7 +23,7 @@ export class ProductBenchmarkRepository extends Repository<
     return this.mapFromRow(row);
   }
 
-  protected mapFromRow(row: ProductBenchmarkModel): ProductBenchmark {
+  mapFromRow(row: ProductBenchmarkModel): ProductBenchmark {
     return {
       id: row.id,
       productId: row.productId,
@@ -34,7 +34,7 @@ export class ProductBenchmarkRepository extends Repository<
     };
   }
 
-  protected mapToRow(
+  mapToRow(
     entity: ProductBenchmark,
   ): PartialModelObject<ProductBenchmarkModel> {
     return {

@@ -23,7 +23,7 @@ export class ProductSpecRepository extends Repository<
     return this.mapFromRow(row);
   }
 
-  protected mapFromRow(row: ProductSpecModel): ProductSpec {
+  mapFromRow(row: ProductSpecModel): ProductSpec {
     return {
       id: row.id,
       productId: row.productId,
@@ -34,9 +34,7 @@ export class ProductSpecRepository extends Repository<
     };
   }
 
-  protected mapToRow(
-    entity: ProductSpec,
-  ): PartialModelObject<ProductSpecModel> {
+  mapToRow(entity: ProductSpec): PartialModelObject<ProductSpecModel> {
     return {
       id: entity.id,
       productId: entity.productId,
