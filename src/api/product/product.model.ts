@@ -1,9 +1,12 @@
 import { Model, PartialModelObject } from 'objection';
+import { Product, productSchema, ProductType } from '../../types/product';
+import { CanDto } from '../shared/types/normalize';
 import { ProductBenchmarkModel } from './benchmark/product-benchmark.model';
-import { ProductType } from './product';
 import { ProductSpecModel } from './spec/product-spec.model';
 
-export class ProductModel extends Model {
+export class ProductModel extends Model implements CanDto<Product> {
+  dtoSchema = productSchema;
+
   static tableName = 'products';
 
   // Fields
@@ -34,6 +37,18 @@ export class ProductModel extends Model {
       },
     },
   };
+
+  toDto(): Product {
+    return {
+      id: this.id,
+      slug: this.slug,
+      type: this.type,
+      name: this.name,
+
+      specs: this.specs?.map((spec) => spec.toDto()) ?? [],
+      benchmarks: this.benchmarks?.map((benchmark) => benchmark.toDto()) ?? [],
+    };
+  }
 }
 
 export type ProductModelPojo = PartialModelObject<ProductModel>;

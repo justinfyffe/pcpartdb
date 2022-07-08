@@ -7,7 +7,7 @@ export interface CanDto<T = unknown> {
 }
 
 export function normalize<T>(
-  entities: CanDto<T> | CanDto<T>[] | Map<number, CanDto<T>>
+  entities: CanDto<T> | CanDto<T>[] | Map<number, CanDto<T>>,
 ) {
   if (Array.isArray(entities)) {
     return normalizeArray(entities);

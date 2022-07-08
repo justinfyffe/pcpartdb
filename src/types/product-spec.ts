@@ -1,3 +1,5 @@
+import { schema } from 'normalizr';
+
 export enum CpuSpecKey {
   // General
   Company = 'COMPANY',
@@ -47,3 +49,5 @@ export interface ProductSpec<T = unknown> {
   key: ProductSpecKey;
   value?: T;
 }
+
+export const productSpecSchema = new schema.Entity('productSpecs');

@@ -1,7 +1,7 @@
 import * as jwt from 'jsonwebtoken';
 
 export enum JwtType {
-  ResetPassword = 'RESET_PASSWORD'
+  ResetPassword = 'RESET_PASSWORD',
 }
 
 function getSecret(type: JwtType) {
@@ -16,7 +16,7 @@ function getSecret(type: JwtType) {
 export function generateJwt<T extends string | Record<string, unknown>>(
   type: JwtType,
   payload: T,
-  options?: jwt.SignOptions
+  options?: jwt.SignOptions,
 ) {
   return jwt.sign(payload, getSecret(type), options);
 }

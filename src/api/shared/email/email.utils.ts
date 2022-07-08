@@ -18,7 +18,7 @@ export async function sendEmail(options: EmailOptions) {
       replyTo: options.replyTo,
       to: options.to,
       subject: options.subject,
-      text: options.text
+      text: options.text,
     });
   } catch (e) {
     console.error('Error occurred while sending email', e);

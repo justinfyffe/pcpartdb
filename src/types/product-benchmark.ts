@@ -1,3 +1,5 @@
+import { schema } from 'normalizr';
+
 export enum CpuBenchmarkKey {}
 
 export enum GpuBenchmarkKey {}
@@ -12,3 +14,5 @@ export interface ProductBenchmark<T = unknown> {
   key: ProductBenchmarkKey;
   value?: T;
 }
+
+export const productBenchmarkSchema = new schema.Entity('productBenchmarks');

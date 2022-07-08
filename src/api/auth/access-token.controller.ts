@@ -9,8 +9,8 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import express from 'express';
-import * as auth from '../../types/auth';
+import type { Request, Response } from 'express';
+import type { AccessToken, LoginFormData } from '../../types/auth';
 import { User } from '../../types/user';
 import { transaction } from '../db/database';
 import { AccessTokenService } from './access-token.service';
@@ -22,24 +22,21 @@ export class AccessTokenController {
 
   @Get()
   async checkAuthentication(
-    @Req() request: express.Request & { token?: string; user: User },
-    @Res() response: express.Response,
+    @Req() request: Request & { token?: string; user: User },
+    @Res() response: Response,
   ) {
     if (request.token && request.user) {
       response.status(HttpStatus.OK).send({
         token: request.token,
         user: request.user,
-      } as auth.AccessToken);
+      } as AccessToken);
     } else {
       response.status(HttpStatus.OK).send({});
     }
   }
 
   @Post()
-  async login(
-    @Body() body: auth.LoginFormData,
-    @Res() response: express.Response,
-  ) {
+  async login(@Body() body: LoginFormData, @Res() response: Response) {
     await transaction(async (trx) => {
       const token = await this.service.login(body, { trx, response });
 
@@ -50,8 +47,8 @@ export class AccessTokenController {
   @Delete()
   @UseGuards(UserGuard)
   async logout(
-    @Req() request: express.Request & { user: User },
-    @Res() response: express.Response,
+    @Req() request: Request & { user: User },
+    @Res() response: Response,
   ) {
     await transaction(async (trx) => {
       await this.service.logout(request.user, {

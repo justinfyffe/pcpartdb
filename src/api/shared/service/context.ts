@@ -1,8 +1,8 @@
-import express from 'express';
+import type { Request, Response } from 'express';
 import { Transaction } from 'objection';
 
 export interface ServiceContext {
   trx?: Transaction;
-  request?: express.Request;
-  response?: express.Response;
+  request?: Request;
+  response?: Response;
 }

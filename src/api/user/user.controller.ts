@@ -8,7 +8,7 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import express from 'express';
+import type { Response } from 'express';
 import type {
   RequestPasswordResetFormData,
   ResetPasswordFormData,
@@ -59,20 +59,24 @@ export class UserController {
   @Post('request-password-reset')
   async requestPasswordReset(
     @Body() body: RequestPasswordResetFormData,
-    @Res() response: express.Response,
+    @Res() response: Response,
   ) {
-    await transaction((trx) =>
-      this.service.requestPasswordReset(body, { trx }),
-    );
+    await transaction(async (trx) => {
+      await this.service.requestPasswordReset(body, { trx });
+    });
+
     response.status(204).send({});
   }
 
   @Post('reset-password')
   async resetPassword(
     @Body() body: ResetPasswordFormData,
-    @Res() response: express.Response,
+    @Res() response: Response,
   ) {
-    await transaction((trx) => this.service.resetPassword(body, { trx }));
-    response.status(204).send({});
+    await transaction(async (trx) => {
+      await this.service.resetPassword(body, { trx });
+
+      response.status(204).send({});
+    });
   }
 }

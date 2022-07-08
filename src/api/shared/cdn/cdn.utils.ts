@@ -3,7 +3,7 @@ import AWS from 'aws-sdk';
 export const s3 = new AWS.S3({
   endpoint: process.env.S3_ENDPOINT,
   accessKeyId: process.env.S3_ACCESS_KEY_ID,
-  secretAccessKey: process.env.S3_SECRET_ACCESS_KEY
+  secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
 });
 const bucket = process.env.S3_BUCKET;
 
@@ -20,7 +20,7 @@ export const hasObject = (path: string) => {
     s3.headObject(
       {
         Bucket: bucket,
-        Key: path
+        Key: path,
       },
       (err) => {
         if (err) {
@@ -28,7 +28,7 @@ export const hasObject = (path: string) => {
         } else {
           resolve(true);
         }
-      }
+      },
     );
   });
 };
@@ -38,7 +38,7 @@ export const getObject = (path: string) => {
     s3.getObject(
       {
         Bucket: bucket,
-        Key: path
+        Key: path,
       },
       (err, data) => {
         if (err) {
@@ -46,7 +46,7 @@ export const getObject = (path: string) => {
         } else {
           resolve(data);
         }
-      }
+      },
     );
   });
 };
@@ -58,7 +58,7 @@ export const copyObject = (oldPath: string, newPath: string) => {
         Bucket: bucket,
         Key: newPath,
         CopySource: `${bucket}/${oldPath}`,
-        ACL: 'public-read'
+        ACL: 'public-read',
       },
       (err, data) => {
         if (err) {
@@ -66,7 +66,7 @@ export const copyObject = (oldPath: string, newPath: string) => {
         } else {
           resolve(data);
         }
-      }
+      },
     );
   });
 };
@@ -81,7 +81,7 @@ export const deleteObject = (path: string) => {
     s3.deleteObject(
       {
         Bucket: bucket,
-        Key: path
+        Key: path,
       },
       (err, data) => {
         if (err) {
@@ -89,7 +89,7 @@ export const deleteObject = (path: string) => {
         } else {
           resolve(data);
         }
-      }
+      },
     );
   });
 };

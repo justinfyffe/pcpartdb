@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import express from 'express';
+import type { Request, Response } from 'express';
 
 interface CookieOptions {
   expires?: number;
@@ -7,12 +7,12 @@ interface CookieOptions {
 
 @Injectable()
 export class CookieService {
-  get(request: express.Request, name: string) {
+  get(request: Request, name: string) {
     return request['cookies'][name];
   }
 
   save(
-    response: express.Response,
+    response: Response,
     name: string,
     value: unknown,
     options?: CookieOptions,
@@ -30,7 +30,7 @@ export class CookieService {
     response.cookie(name, value, cookieOptions);
   }
 
-  clear(response: express.Response, name: string) {
+  clear(response: Response, name: string) {
     response.clearCookie(name);
   }
 }

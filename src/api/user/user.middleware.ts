@@ -1,5 +1,5 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
-import express from 'express';
+import type { Request, Response } from 'express';
 import { AccessTokenRepository } from '../auth/access-token.repository';
 import { CookieService } from '../shared/cookie/cookie.service';
 import { SESSION_COOKIE } from '../shared/cookie/cookies';
@@ -14,8 +14,8 @@ export class UserMiddleware implements NestMiddleware {
   ) {}
 
   async use(
-    request: express.Request & { token: string; user: UserModel },
-    _response: express.Response,
+    request: Request & { token: string; user: UserModel },
+    _response: Response,
     next: (error?: Error) => void,
   ) {
     await this.parseRequest(request);
@@ -23,7 +23,7 @@ export class UserMiddleware implements NestMiddleware {
   }
 
   private async parseRequest(
-    request: express.Request & { token: string; user: UserModel },
+    request: Request & { token: string; user: UserModel },
   ) {
     const token = this.cookies.get(request, SESSION_COOKIE);
     if (!token) {

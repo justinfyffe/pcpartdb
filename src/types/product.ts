@@ -1,5 +1,6 @@
-import { ProductBenchmark } from './benchmark/product-benchmark';
-import { ProductSpec } from './spec/product-spec';
+import { schema } from 'normalizr';
+import { ProductBenchmark } from './product-benchmark';
+import { ProductSpec } from './product-spec';
 
 export enum ProductType {
   CPU = 'CPU',
@@ -16,3 +17,5 @@ export interface Product {
   specs?: ProductSpec[];
   benchmarks?: ProductBenchmark[];
 }
+
+export const productSchema = new schema.Entity('products');

@@ -1,3 +1,6 @@
+Immediate Tasks:
+- migrations for auth and users
+
 - Launch basic website (viewing and comparing cpus/gpus)
   - Design database
   - Collect Data
