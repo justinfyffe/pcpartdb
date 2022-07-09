@@ -12,16 +12,20 @@ import { Alert, AlertVariant } from '../web/shared/components/alert';
 import { Button, ButtonVariant } from '../web/shared/components/button';
 import { Checkbox } from '../web/shared/components/checkbox';
 import { Field, FieldError } from '../web/shared/components/field';
+import { Form, FormActions } from '../web/shared/components/form';
 import { Input } from '../web/shared/components/input';
 import { Spinner } from '../web/shared/components/spinner';
-import { isForbiddenError } from '../web/shared/error/error.utils';
+import {
+  isForbiddenError,
+  setValidationErrors,
+} from '../web/shared/error/error.utils';
 import { WebsiteLayout } from '../web/shared/layouts/website';
-import { Form, FormActions } from '../web/shared/ui/form';
-import { Sidenav } from '../web/sidenav/sidenav';
 
 interface LoginPageProps {}
 
-const LoginPage: FunctionComponent<LoginPageProps> = () => {
+const LoginPage: FunctionComponent<LoginPageProps> = (
+  _props: LoginPageProps,
+) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [requestError, setRequestError] = useState<ApiError>(null);
@@ -35,6 +39,7 @@ const LoginPage: FunctionComponent<LoginPageProps> = () => {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm<LoginFormData>({
     resolver: joiResolver(loginValidator),
@@ -53,11 +58,12 @@ const LoginPage: FunctionComponent<LoginPageProps> = () => {
         router.push('/admin');
       } catch (err) {
         setRequestError(err as ApiError);
+        setValidationErrors(err as ApiError, setError);
       } finally {
         setLoading(false);
       }
     },
-    [router],
+    [router, setError],
   );
 
   return (
@@ -96,37 +102,33 @@ const LoginPage: FunctionComponent<LoginPageProps> = () => {
 
           <Form onSubmit={handleSubmit(handleLogin)}>
             <Field>
-              <label>
-                Email
-                <Input
-                  name="email"
-                  maxLength={EMAIL_MAX_LENGTH}
-                  innerRef={register}
-                />
-                {errors.email?.type ===
-                  ValidationErrorType.MissingStringValue && (
-                  <FieldError>Required</FieldError>
-                )}
-                {errors.email?.type === ValidationErrorType.InvalidEmail && (
-                  <FieldError>Not a valid email</FieldError>
-                )}
-              </label>
+              Email
+              <Input
+                name="email"
+                maxLength={EMAIL_MAX_LENGTH}
+                innerRef={register}
+              />
+              {errors.email?.type ===
+                ValidationErrorType.MissingStringValue && (
+                <FieldError>Required</FieldError>
+              )}
+              {errors.email?.type === ValidationErrorType.InvalidEmail && (
+                <FieldError>Not a valid email</FieldError>
+              )}
             </Field>
 
             <Field>
-              <label>
-                Password
-                <Input
-                  type="password"
-                  name="password"
-                  maxLength={PASSWORD_MAX_LENGTH}
-                  innerRef={register}
-                />
-                {errors.password?.type ===
-                  ValidationErrorType.MissingStringValue && (
-                  <FieldError>Required</FieldError>
-                )}
-              </label>
+              Password
+              <Input
+                type="password"
+                name="password"
+                maxLength={PASSWORD_MAX_LENGTH}
+                innerRef={register}
+              />
+              {errors.password?.type ===
+                ValidationErrorType.MissingStringValue && (
+                <FieldError>Required</FieldError>
+              )}
             </Field>
 
             <Checkbox name="remember" innerRef={register}>
@@ -155,8 +157,6 @@ const LoginPage: FunctionComponent<LoginPageProps> = () => {
           </div>
         </section>
       </article>
-
-      <Sidenav />
     </WebsiteLayout>
   );
 };

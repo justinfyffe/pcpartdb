@@ -8,13 +8,6 @@ interface FieldProps {
   children?: React.ReactNode;
 }
 
-interface FieldLabelProps {
-  as?: React.ElementType;
-  className?: string;
-
-  children?: React.ReactNode;
-}
-
 interface FieldHintProps {
   as?: React.ElementType;
   className?: string;
@@ -43,17 +36,7 @@ export const Field: FunctionComponent<FieldProps> = (props) => {
     <Element
       className={classNames('block leading-6 mb-0 pb-6', props.className)}
     >
-      {props.children}
-    </Element>
-  );
-};
-
-export const FieldLabel: FunctionComponent<FieldLabelProps> = (props) => {
-  const Element = props.as || 'label';
-
-  return (
-    <Element className={classNames('block', props.className)}>
-      {props.children}
+      <label className="block">{props.children}</label>
     </Element>
   );
 };

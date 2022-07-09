@@ -1,4 +1,4 @@
-import { ErrorOption } from 'react-hook-form';
+import { UseFormSetError } from 'react-hook-form';
 import {
   ApiError,
   ApiErrorType,
@@ -33,15 +33,17 @@ export function isNotFoundError(error: ApiError): error is NotFoundError {
   return error.type === ApiErrorType.NotFoundError;
 }
 
-export function setValidationErrors(
+export function setValidationErrors<T>(
   error: ApiError,
-  setError: (name: string, error: ErrorOption) => void,
+  setError: UseFormSetError<T>,
 ) {
   if (!isBadRequestError(error)) {
     return;
   }
 
   error.data?.forEach((validationError) => {
-    setError(validationError.property, { type: validationError.constraint });
+    setError(validationError.property as any, {
+      type: validationError.constraint,
+    });
   });
 }
