@@ -147,13 +147,20 @@ const LoginPage: FunctionComponent<LoginPageProps> = (
             </FormActions>
           </Form>
 
-          <div className="register">
-            Don&apos;t have an account? <a href="/register">Register</a>.
+          <div className="mt-4 leading-[24px] text-[12px] text-center">
+            Don&apos;t have an account?{' '}
+            <a href="/register" className="no-underline">
+              Register
+            </a>
+            .
           </div>
 
-          <div className="forgot-password">
+          <div className="leading-[24px] text-[12px] text-center">
             Forgot your password?{' '}
-            <a href="/forgot-password">Reset your password</a>.
+            <a href="/forgot-password" className="no-underline">
+              Reset your password
+            </a>
+            .
           </div>
         </section>
       </article>

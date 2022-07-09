@@ -132,8 +132,12 @@ const RegisterPage = (_props: RegisterPageProps) => {
             </FormActions>
           </Form>
 
-          <div className="login">
-            Already have an account? <a href="/login">Sign in here</a>.
+          <div className="mt-4 leading-[24px] text-[12px] text-center">
+            Already have an account?{' '}
+            <a href="/login" className="no-underline">
+              Sign in here
+            </a>
+            .
           </div>
         </section>
       </article>
