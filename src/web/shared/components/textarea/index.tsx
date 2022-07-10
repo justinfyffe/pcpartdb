@@ -1,0 +1,24 @@
+import classNames from 'classnames';
+import React, { FunctionComponent, HTMLProps } from 'react';
+
+interface TextareaProps extends HTMLProps<HTMLTextAreaElement> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  innerRef?: any;
+}
+
+export const Textarea: FunctionComponent<TextareaProps> = (props) => {
+  const { children, innerRef, className, ...htmlProps } = props;
+
+  return (
+    <textarea
+      {...htmlProps}
+      className={classNames(
+        'border m-0 p-3 rounded text-sm w-full shadow',
+        className,
+      )}
+      ref={innerRef}
+    >
+      {children}
+    </textarea>
+  );
+};
