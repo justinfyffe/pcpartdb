@@ -1,7 +1,6 @@
 import { NextPageContext } from 'next';
 import React from 'react';
 import { WebsiteLayout } from '../../web/shared/layouts/website';
-import { classNames } from '../../web/shared/ui/ui.utils';
 
 interface GpusSlugPageProps {}
 

@@ -55,7 +55,7 @@ const ForgotPasswordPage = (_props: ForgotPasswordPageProps) => {
         setLoading(false);
       }
     },
-    [],
+    [setError],
   );
 
   return (

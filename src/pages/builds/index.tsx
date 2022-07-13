@@ -1,8 +1,7 @@
 import 'reflect-metadata';
-import { ChipIcon, DesktopComputerIcon } from '@heroicons/react/outline';
+import { DesktopComputerIcon } from '@heroicons/react/outline';
 import { NextPageContext } from 'next';
 import React from 'react';
-import { CompareForm } from '../../web/compare';
 import { Button, ButtonVariant } from '../../web/shared/components/button';
 import {
   Card,
@@ -11,7 +10,6 @@ import {
   CardImage,
   CardTitle,
 } from '../../web/shared/components/card';
-import { Image } from '../../web/shared/components/image';
 import { SectionHeader } from '../../web/shared/components/section-header';
 import { WebsiteLayout } from '../../web/shared/layouts/website';
 import { classNames } from '../../web/shared/ui/ui.utils';
