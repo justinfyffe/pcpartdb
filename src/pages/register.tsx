@@ -86,8 +86,7 @@ const RegisterPage = (_props: RegisterPageProps) => {
               Email
               <Input
                 name="email"
-                maxLength={EMAIL_MAX_LENGTH}
-                innerRef={register}
+                {...register('email', { maxLength: EMAIL_MAX_LENGTH })}
               />
               {errors.email?.type ===
                 ValidationErrorType.MissingStringValue && (
@@ -108,8 +107,7 @@ const RegisterPage = (_props: RegisterPageProps) => {
               <Input
                 type="password"
                 name="password"
-                maxLength={PASSWORD_MAX_LENGTH}
-                innerRef={register}
+                {...register('password', { maxLength: PASSWORD_MAX_LENGTH })}
               />
               {errors.password?.type ===
                 ValidationErrorType.MissingStringValue && (

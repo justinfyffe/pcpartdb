@@ -105,8 +105,7 @@ const LoginPage: FunctionComponent<LoginPageProps> = (
               Email
               <Input
                 name="email"
-                maxLength={EMAIL_MAX_LENGTH}
-                innerRef={register}
+                {...register('email', { maxLength: EMAIL_MAX_LENGTH })}
               />
               {errors.email?.type ===
                 ValidationErrorType.MissingStringValue && (
@@ -122,8 +121,7 @@ const LoginPage: FunctionComponent<LoginPageProps> = (
               <Input
                 type="password"
                 name="password"
-                maxLength={PASSWORD_MAX_LENGTH}
-                innerRef={register}
+                {...register('password', { maxLength: PASSWORD_MAX_LENGTH })}
               />
               {errors.password?.type ===
                 ValidationErrorType.MissingStringValue && (
@@ -131,7 +129,7 @@ const LoginPage: FunctionComponent<LoginPageProps> = (
               )}
             </Field>
 
-            <Checkbox name="remember" innerRef={register}>
+            <Checkbox name="remember" {...register('remember')}>
               Remember me
             </Checkbox>
 

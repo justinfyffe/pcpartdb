@@ -98,8 +98,7 @@ const ContactPage = (_props: ContactPageProps) => {
               Your Name
               <Input
                 name="name"
-                maxLength={NAME_MAX_LENGTH}
-                innerRef={register}
+                {...register('name', { maxLength: NAME_MAX_LENGTH })}
               />
               {errors.name?.type === ValidationErrorType.MissingStringValue && (
                 <FieldError>Required</FieldError>
@@ -110,8 +109,7 @@ const ContactPage = (_props: ContactPageProps) => {
               Your Email
               <Input
                 name="email"
-                maxLength={EMAIL_MAX_LENGTH}
-                innerRef={register}
+                {...register('email', { maxLength: EMAIL_MAX_LENGTH })}
               />
               {errors.email?.type ===
                 ValidationErrorType.MissingStringValue && (
@@ -126,8 +124,7 @@ const ContactPage = (_props: ContactPageProps) => {
               Subject <FieldOptional>(Optional)</FieldOptional>
               <Input
                 name="subject"
-                maxLength={SUBJECT_MAX_LENGTH}
-                innerRef={register}
+                {...register('subject', { maxLength: SUBJECT_MAX_LENGTH })}
               />
             </Field>
 
@@ -135,8 +132,7 @@ const ContactPage = (_props: ContactPageProps) => {
               Your Message
               <Textarea
                 name="message"
-                maxLength={MESSAGE_MAX_LENGTH}
-                innerRef={register}
+                {...register('message', { maxLength: MESSAGE_MAX_LENGTH })}
               />
               {errors.message?.type ===
                 ValidationErrorType.MissingStringValue && (

@@ -7,7 +7,7 @@ interface TextareaProps extends HTMLProps<HTMLTextAreaElement> {
 }
 
 export const Textarea: FunctionComponent<TextareaProps> = (props) => {
-  const { children, innerRef, className, ...htmlProps } = props;
+  const { children, className, ...htmlProps } = props;
 
   return (
     <textarea
@@ -16,7 +16,6 @@ export const Textarea: FunctionComponent<TextareaProps> = (props) => {
         'border m-0 p-3 rounded text-sm w-full shadow',
         className,
       )}
-      ref={innerRef}
     >
       {children}
     </textarea>

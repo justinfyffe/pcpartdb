@@ -6,14 +6,11 @@ import { Button } from '../button';
 interface InputProps extends HTMLProps<HTMLInputElement> {
   closeable?: boolean;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  innerRef?: any;
-
   onClose?: () => void;
 }
 
 export const Input: FunctionComponent<InputProps> = (props) => {
-  const { closeable, className, innerRef, onClose, type, ...htmlProps } = props;
+  const { closeable, className, onClose, type, ...htmlProps } = props;
 
   return (
     <div className={classNames('relative', className)}>
@@ -24,7 +21,6 @@ export const Input: FunctionComponent<InputProps> = (props) => {
           closeable ? 'pr-12' : '',
           className,
         )}
-        ref={innerRef}
         {...htmlProps}
       />
       {closeable && (
