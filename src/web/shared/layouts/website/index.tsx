@@ -41,14 +41,16 @@ export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
         </ToolbarNav>
       </Toolbar>
 
-      <main
-        className={classNames(
-          'container px-8 py-6 text-content-primary max-w-100%',
-          props.className,
-        )}
-      >
-        {props.children}
-      </main>
+      <div className="bg-white">
+        <main
+          className={classNames(
+            'container px-8 py-6 text-content-primary max-w-100%',
+            props.className,
+          )}
+        >
+          {props.children}
+        </main>
+      </div>
 
       <Footer>
         <FooterSection as="nav">

@@ -9,6 +9,7 @@ module.exports = {
         'button-default': colors.white,
         'button-primary': '#3f51b5',
         'footer-primary': '#312e81',
+        'html-primary': '#312e81',
         'toolbar-primary': '#312e81',
       },
       borderWidth: {

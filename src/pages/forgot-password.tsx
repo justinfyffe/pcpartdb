@@ -90,8 +90,7 @@ const ForgotPasswordPage = (_props: ForgotPasswordPageProps) => {
               Email
               <Input
                 name="email"
-                maxLength={EMAIL_MAX_LENGTH}
-                innerRef={register}
+                {...register('email', { maxLength: EMAIL_MAX_LENGTH })}
               />
               {errors.email?.type ===
                 ValidationErrorType.MissingStringValue && (

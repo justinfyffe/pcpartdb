@@ -4,18 +4,21 @@ import { knexSnakeCaseMappers, Model } from 'objection';
 
 dotenv.config();
 
-const DB_HOST = process.env.DB_HOST ?? '';
-const DB_PORT = process.env.DB_PORT != null ? Number(process.env.DB_PORT) : -1;
+const POSTGRES_HOST = process.env.POSTGRES_HOST ?? '';
+const POSTGRES_PORT =
+  process.env.POSTGRES_PORT != null
+    ? Number(process.env.DB_POPOSTGRES_PORTRT)
+    : -1;
 const POSTGRES_DB = process.env.POSTGRES_DB ?? '';
 const POSTGRES_USER = process.env.POSTGRES_USER ?? '';
 const POSTGRES_PASSWORD = process.env.POSTGRES_PASSWORD ?? '';
 
-if (DB_HOST === '') {
-  throw new Error('Missing DB_HOST. Please add it to .env');
+if (POSTGRES_HOST === '') {
+  throw new Error('Missing POSTGRES_HOST. Please add it to .env');
 }
 
-if (DB_PORT === -1) {
-  throw new Error('Missing DB_PORT. Please add it to .env');
+if (POSTGRES_PORT === -1) {
+  throw new Error('Missing POSTGRES_PORT. Please add it to .env');
 }
 
 if (POSTGRES_DB === '') {
@@ -53,8 +56,8 @@ export function openDatabase() {
     return db;
   }
 
-  const host = DB_HOST;
-  const port = DB_PORT;
+  const host = POSTGRES_HOST;
+  const port = POSTGRES_PORT;
   const database = POSTGRES_DB;
   const user = POSTGRES_USER;
   const password = POSTGRES_PASSWORD;

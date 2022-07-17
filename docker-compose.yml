@@ -3,7 +3,7 @@ version: '2.1'
 services:
   db:
     image: timescale/timescaledb:latest-pg12
-    container_name: easypcspecs-db
+    container_name: finestpc-db
     ports:
       - "5432:5432"
     volumes:

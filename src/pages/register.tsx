@@ -1,15 +1,10 @@
 import 'reflect-metadata';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { useRouter } from 'next/router';
-import React, { useCallback, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import React, { useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { ApiError, ValidationErrorType } from '../types/error';
-import {
-  createUserValidator,
-  EMAIL_MAX_LENGTH,
-  PASSWORD_MAX_LENGTH,
-  UserFormData,
-} from '../types/user';
+import { createUserValidator, UserFormData } from '../types/user';
 import { authService } from '../web/auth/auth.service';
 import { withGuestGuard } from '../web/auth/with-guest-guard';
 import { Alert, AlertVariant } from '../web/shared/components/alert';
@@ -32,32 +27,34 @@ const RegisterPage = (_props: RegisterPageProps) => {
   const router = useRouter();
 
   const {
-    register,
+    control,
     handleSubmit,
     setError,
     formState: { errors },
   } = useForm<UserFormData>({
     resolver: joiResolver(createUserValidator),
-    mode: 'onTouched',
-    reValidateMode: 'onChange',
+    mode: 'onBlur',
+    defaultValues: {
+      email: '',
+      password: '',
+    },
   });
 
-  const handleRegister = useCallback(
-    async (formData: UserFormData) => {
-      setLoading(true);
+  console.log(errors);
 
-      try {
-        await authService.register(formData);
-        router.push('/login?registered=true');
-      } catch (err) {
-        setRequestError(err);
-        setValidationErrors(err as ApiError, setError);
-      } finally {
-        setLoading(false);
-      }
-    },
-    [router, setError],
-  );
+  const handleRegister = async (data: UserFormData) => {
+    setLoading(true);
+
+    try {
+      await authService.register(data);
+      router.push('/login?registered=true');
+    } catch (err) {
+      setRequestError(err);
+      setValidationErrors(err as ApiError, setError);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <WebsiteLayout>
@@ -84,9 +81,10 @@ const RegisterPage = (_props: RegisterPageProps) => {
           <Form onSubmit={handleSubmit(handleRegister)}>
             <Field>
               Email
-              <Input
+              <Controller
                 name="email"
-                {...register('email', { maxLength: EMAIL_MAX_LENGTH })}
+                control={control}
+                render={({ field }) => <Input {...field} ref={null} />}
               />
               {errors.email?.type ===
                 ValidationErrorType.MissingStringValue && (
@@ -104,10 +102,10 @@ const RegisterPage = (_props: RegisterPageProps) => {
 
             <Field>
               Password
-              <Input
-                type="password"
+              <Controller
                 name="password"
-                {...register('password', { maxLength: PASSWORD_MAX_LENGTH })}
+                control={control}
+                render={({ field }) => <Input {...field} ref={null} />}
               />
               {errors.password?.type ===
                 ValidationErrorType.MissingStringValue && (
