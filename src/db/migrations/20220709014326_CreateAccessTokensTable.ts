@@ -1,18 +1,18 @@
 import { Knex } from 'knex';
 
 export async function up(knex: Knex): Promise<void> {
-  await knex.schema.createTable('users', (table: Knex.TableBuilder) => {
+  await knex.schema.createTable('access_tokens', (table: Knex.TableBuilder) => {
     table.increments('id');
     table.integer('user_id').notNullable();
 
     table.string('token_hash').notNullable();
-    table.timestamp('date_expired', { useTz: true });
+    table.timestamp('expires_at', { useTz: true });
 
     table.timestamps(true, true);
 
     table.unique(['token_hash']);
 
-    table.index('date_expired');
+    table.index('expires_at');
 
     table
       .foreign('user_id')

@@ -1,16 +1,31 @@
-import React, { FunctionComponent, HTMLProps } from 'react';
+import React, { FunctionComponent, HTMLProps, useCallback } from 'react';
 
-interface CheckboxProps extends HTMLProps<HTMLInputElement> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  innerRef?: any;
+interface CheckboxProps
+  extends Omit<HTMLProps<HTMLInputElement>, 'onChange' | 'value'> {
+  onChange: (value: boolean) => void;
+  value: boolean;
+
+  children?: React.ReactNode;
 }
 
 export const Checkbox: FunctionComponent<CheckboxProps> = (props) => {
-  const { children, innerRef, ...htmlProps } = props;
+  const { children, onChange, value, ...htmlProps } = props;
+
+  const handleChange = useCallback(
+    (evt: React.ChangeEvent<HTMLInputElement>) => {
+      onChange(evt.target.value != 'true');
+    },
+    [onChange],
+  );
 
   return (
     <label>
-      <input {...htmlProps} type="checkbox" ref={innerRef} />
+      <input
+        {...htmlProps}
+        type="checkbox"
+        value={value + ''}
+        onChange={handleChange}
+      />
       {children}
     </label>
   );

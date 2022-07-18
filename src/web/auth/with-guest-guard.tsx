@@ -3,7 +3,9 @@ import Router from 'next/router';
 import React, { useCallback, useEffect } from 'react';
 import { authService } from './auth.service';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const withGuestGuard = (Component: any) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const Wrapper = (props: any) => {
     const checkUser = useCallback(async () => {
       const auth = await authService.loadCurrentUser();

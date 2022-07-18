@@ -1,9 +1,8 @@
 import * as normalizr from 'normalizr';
 
 export interface CanDto<T = unknown> {
-  dtoSchema: normalizr.Schema;
-
   toDto(): T;
+  getSchema(): normalizr.Schema;
 }
 
 export function normalize<T>(
@@ -14,7 +13,7 @@ export function normalize<T>(
   } else if (entities instanceof Map) {
     return normalizeMap(entities);
   } else {
-    return normalizr.normalize(entities.toDto(), entities.dtoSchema);
+    return normalizr.normalize(entities.toDto(), entities.getSchema());
   }
 }
 
@@ -24,7 +23,7 @@ function normalizeArray<T>(entities: CanDto<T>[]) {
   }
 
   const dtos = entities.map((entity) => entity.toDto());
-  return normalizr.normalize(dtos, [entities[0].dtoSchema]);
+  return normalizr.normalize(dtos, [entities[0].getSchema()]);
 }
 
 function normalizeMap<T>(entities: Map<number, CanDto<T>>) {

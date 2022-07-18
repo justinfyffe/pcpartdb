@@ -1,4 +1,3 @@
-import { DesktopComputerIcon } from '@heroicons/react/outline';
 import React, { FunctionComponent } from 'react';
 import { classNames } from '../../ui/ui.utils';
 import { Button, ButtonVariant } from '../button';

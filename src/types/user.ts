@@ -9,7 +9,7 @@ export interface User {
   id: number;
   email: string;
   isStaff: boolean;
-  dateRegistered: number;
+  registeredAt: number;
 }
 
 export interface UserFormData {

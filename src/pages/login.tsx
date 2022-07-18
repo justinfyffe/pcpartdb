@@ -2,10 +2,9 @@ import 'reflect-metadata';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { useRouter } from 'next/dist/client/router';
 import React, { FunctionComponent, useCallback, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { LoginFormData, loginValidator } from '../types/auth';
 import { ApiError, ValidationErrorType } from '../types/error';
-import { EMAIL_MAX_LENGTH, PASSWORD_MAX_LENGTH } from '../types/user';
 import { authService } from '../web/auth/auth.service';
 import { withGuestGuard } from '../web/auth/with-guest-guard';
 import { Alert, AlertVariant } from '../web/shared/components/alert';
@@ -37,14 +36,18 @@ const LoginPage: FunctionComponent<LoginPageProps> = (
   );
 
   const {
-    register,
+    control,
     handleSubmit,
     setError,
     formState: { errors },
   } = useForm<LoginFormData>({
     resolver: joiResolver(loginValidator),
-    mode: 'onTouched',
-    reValidateMode: 'onChange',
+    mode: 'onBlur',
+    defaultValues: {
+      email: '',
+      password: '',
+      remember: false,
+    },
   });
 
   const handleLogin = useCallback(
@@ -103,9 +106,10 @@ const LoginPage: FunctionComponent<LoginPageProps> = (
           <Form onSubmit={handleSubmit(handleLogin)}>
             <Field>
               Email
-              <Input
+              <Controller
                 name="email"
-                {...register('email', { maxLength: EMAIL_MAX_LENGTH })}
+                control={control}
+                render={({ field }) => <Input {...field} ref={null} />}
               />
               {errors.email?.type ===
                 ValidationErrorType.MissingStringValue && (
@@ -118,10 +122,12 @@ const LoginPage: FunctionComponent<LoginPageProps> = (
 
             <Field>
               Password
-              <Input
-                type="password"
+              <Controller
                 name="password"
-                {...register('password', { maxLength: PASSWORD_MAX_LENGTH })}
+                control={control}
+                render={({ field }) => (
+                  <Input type="password" {...field} ref={null} />
+                )}
               />
               {errors.password?.type ===
                 ValidationErrorType.MissingStringValue && (
@@ -129,9 +135,15 @@ const LoginPage: FunctionComponent<LoginPageProps> = (
               )}
             </Field>
 
-            <Checkbox name="remember" {...register('remember')}>
-              Remember me
-            </Checkbox>
+            <Controller
+              name="remember"
+              control={control}
+              render={({ field }) => (
+                <Checkbox {...field} ref={null}>
+                  Remember me
+                </Checkbox>
+              )}
+            />
 
             <FormActions>
               <Button

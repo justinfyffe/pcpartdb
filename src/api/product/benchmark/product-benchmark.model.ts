@@ -10,8 +10,6 @@ export class ProductBenchmarkModel<T = unknown>
   extends Model
   implements CanDto<ProductBenchmark>
 {
-  dtoSchema = productBenchmarkSchema;
-
   static tableName = 'product_benchmarks';
 
   // Fields
@@ -30,6 +28,10 @@ export class ProductBenchmarkModel<T = unknown>
       key: this.key,
       value: this.value,
     };
+  }
+
+  getSchema() {
+    return productBenchmarkSchema;
   }
 }
 

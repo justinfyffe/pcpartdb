@@ -33,19 +33,20 @@ export class AccessTokenService {
     }
 
     const token = generateToken();
-    const dateExpired = new Date(
+    const expiresAt = new Date(
       Date.now() + (formData.remember ? COOKIE_EXPIRES : SESSION_EXPIRES),
     );
 
     await this.accessTokenRepository.save(
       {
+        userId: user.id,
         tokenHash: hashToken(token),
-        dateExpired,
+        expiresAt,
       },
       ctx,
     );
     this.cookieService.save(ctx.response, SESSION_COOKIE, token, {
-      expires: formData.remember ? dateExpired.getTime() : undefined,
+      expires: formData.remember ? expiresAt.getTime() : undefined,
     });
 
     return { token, user: user.toDto() } as AccessToken;

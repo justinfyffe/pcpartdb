@@ -1,14 +1,18 @@
 {
-  "name": "easypcspecs",
+  "name": "finestpc",
   "version": "1.0.0",
   "description": "Website for viewing and comparing pc specs in an easy format",
   "main": "index.js",
   "scripts": {
-    "clean": "rimraf dist",
+    "clean": "npm run clean:app & npm run clean:migrations",
+    "clean:app": "rm -rf .next",
+    "clean:migrations": "rm -rf dist/db",
+    "build": "npm run build:app & npm run build:migrations",
+    "build:app": "next build",
+    "build:migrations": "tsc --project tsconfig.migrations.json",
     "dev": "next dev",
-    "build": "next build",
     "start": "next start",
-    "db:migrate": "knex migrate:latest --knexfile=./knexfile.dist.js",
+    "db:migrate": "npm run clean:migrations && npm run build:migrations && knex migrate:latest --knexfile=./knexfile.dist.js",
     "db:migrate:make": "knex migrate:make -x ts --knexfile=./knexfile.src.js",
     "db:rollback": "knex migrate:rollback --knexfile=./knexfile.dist.js"
   },
@@ -30,7 +34,7 @@
   "bugs": {
     "url": "https://github.com/justinfyffe/easypcspecs/issues"
   },
-  "homepage": "https://easypcspecs.com",
+  "homepage": "https://finestpc.com",
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
     "@types/classnames": "^2.3.1",

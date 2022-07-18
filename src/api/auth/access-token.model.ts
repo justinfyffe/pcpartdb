@@ -8,7 +8,7 @@ export class AccessTokenModel extends Model {
   id!: number;
   userId!: number;
   tokenHash!: string;
-  dateExpired!: Date;
+  expiresAt!: Date;
 
   // Relations
   user?: UserModel;

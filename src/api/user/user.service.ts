@@ -65,7 +65,7 @@ export class UserService {
 
     return await this.userRepository.save(
       {
-        ...data,
+        email: data.email,
         passwordHash,
         isStaff,
       },

@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "downlevelIteration": true,
+    "emitDecoratorMetadata": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "outDir": "./dist/db/migrations",
+    "skipLibCheck": true,
+    "sourceMap": true
+  },
+  "include": ["./src/db/migrations/*.ts"],
+}

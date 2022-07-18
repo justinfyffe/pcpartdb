@@ -7,9 +7,7 @@ export async function up(knex: Knex): Promise<void> {
 
     table.string('password_hash').notNullable();
     table.boolean('is_staff').defaultTo(false);
-    table
-      .timestamp('date_registered', { useTz: true })
-      .defaultTo(knex.fn.now());
+    table.timestamp('registered_at', { useTz: true }).defaultTo(knex.fn.now());
 
     table.timestamps(true, true);
 

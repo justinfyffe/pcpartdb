@@ -5,8 +5,6 @@ import { ProductBenchmarkModel } from './benchmark/product-benchmark.model';
 import { ProductSpecModel } from './spec/product-spec.model';
 
 export class ProductModel extends Model implements CanDto<Product> {
-  dtoSchema = productSchema;
-
   static tableName = 'products';
 
   // Fields
@@ -48,6 +46,10 @@ export class ProductModel extends Model implements CanDto<Product> {
       specs: this.specs?.map((spec) => spec.toDto()) ?? [],
       benchmarks: this.benchmarks?.map((benchmark) => benchmark.toDto()) ?? [],
     };
+  }
+
+  getSchema() {
+    return productSchema;
   }
 }
 

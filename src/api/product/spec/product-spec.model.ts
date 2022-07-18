@@ -10,8 +10,6 @@ export class ProductSpecModel<T = unknown>
   extends Model
   implements CanDto<ProductSpec>
 {
-  dtoSchema = productSpecSchema;
-
   static tableName = 'product_specs';
 
   // Fields
@@ -30,6 +28,10 @@ export class ProductSpecModel<T = unknown>
       key: this.key,
       value: this.value,
     };
+  }
+
+  getSchema() {
+    return productSpecSchema;
   }
 }
 

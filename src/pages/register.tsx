@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { useRouter } from 'next/router';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { ApiError, ValidationErrorType } from '../types/error';
 import { createUserValidator, UserFormData } from '../types/user';
@@ -40,21 +40,22 @@ const RegisterPage = (_props: RegisterPageProps) => {
     },
   });
 
-  console.log(errors);
+  const handleRegister = useCallback(
+    async (data: UserFormData) => {
+      setLoading(true);
 
-  const handleRegister = async (data: UserFormData) => {
-    setLoading(true);
-
-    try {
-      await authService.register(data);
-      router.push('/login?registered=true');
-    } catch (err) {
-      setRequestError(err);
-      setValidationErrors(err as ApiError, setError);
-    } finally {
-      setLoading(false);
-    }
-  };
+      try {
+        await authService.register(data);
+        router.push('/login?registered=true');
+      } catch (err) {
+        setRequestError(err);
+        setValidationErrors(err as ApiError, setError);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [router, setError],
+  );
 
   return (
     <WebsiteLayout>
@@ -105,7 +106,9 @@ const RegisterPage = (_props: RegisterPageProps) => {
               <Controller
                 name="password"
                 control={control}
-                render={({ field }) => <Input {...field} ref={null} />}
+                render={({ field }) => (
+                  <Input type="password" {...field} ref={null} />
+                )}
               />
               {errors.password?.type ===
                 ValidationErrorType.MissingStringValue && (
