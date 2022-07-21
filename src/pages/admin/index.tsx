@@ -10,7 +10,7 @@ const AdminIndexPage = (_props: AdminIndexPageProps) => {
     <AdminLayout>
       <article>
         <header>
-          <h1>Admin PAnel</h1>
+          <h1>Overview</h1>
         </header>
       </article>
     </AdminLayout>
