@@ -80,6 +80,26 @@ export const Tr: FunctionComponent<TrProps> = (props) => {
   return <tr {...htmlProps}>{children}</tr>;
 };
 
+interface ThProps extends HTMLProps<HTMLTableCellElement> {}
+
+export const Th: FunctionComponent<ThProps> = (props) => {
+  const { children, className, ...htmlProps } = props;
+  const context = useContext(TableContext);
+
+  return (
+    <th
+      {...htmlProps}
+      className={classNames(
+        'text-left p-2 md:px-2 md:py-4',
+        context.border ? 'border' : '',
+        className,
+      )}
+    >
+      {children}
+    </th>
+  );
+};
+
 interface TdProps extends HTMLProps<HTMLTableCellElement> {}
 
 export const Td: FunctionComponent<TdProps> = (props) => {
