@@ -87,7 +87,10 @@ export class UserService {
       passwordHash = await bcrypt.hash(data.password, salt);
     }
 
-    return await this.userRepository.save({ ...data, passwordHash }, ctx);
+    return await this.userRepository.save(
+      { email: data.email, passwordHash, isStaff: data.isStaff ?? false },
+      ctx,
+    );
   }
 
   async requestPasswordReset(

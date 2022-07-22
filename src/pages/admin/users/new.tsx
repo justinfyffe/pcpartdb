@@ -4,6 +4,7 @@ import { withStaffGuard } from '../../../web/auth/with-staff-guard';
 import { Article, ArticleHeader } from '../../../web/shared/components/article';
 import { Button, ButtonVariant } from '../../../web/shared/components/button';
 import { AdminLayout } from '../../../web/shared/layouts/admin';
+import { UserForm } from '../../../web/user/components/user-form';
 
 export interface NewUserPageProps {}
 

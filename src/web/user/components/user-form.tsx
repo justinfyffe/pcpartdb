@@ -38,8 +38,8 @@ const formOptions = (user?: User): UseFormProps<UserFormData> => ({
   mode: 'onTouched',
   reValidateMode: 'onChange',
   defaultValues: {
-    email: user?.email ?? null,
-    password: null,
+    email: user?.email ?? '',
+    password: '',
     isStaff: user?.isStaff ?? false,
   },
 });
@@ -162,6 +162,7 @@ export const UserForm: FunctionComponent<UserFormProps> = (props) => {
             variant={ButtonVariant.Secondary}
             onClick={handleDelete}
             disabled={saving || deleting}
+            className="mr-4"
           >
             {deleting && <Spinner />}
             <span>Delete</span>
