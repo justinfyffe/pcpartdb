@@ -1,5 +1,5 @@
 Immediate Tasks:
-- migrations for auth and users
+- images
 
 - Launch basic website (viewing and comparing cpus/gpus)
   - Design database

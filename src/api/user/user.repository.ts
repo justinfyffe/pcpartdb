@@ -14,6 +14,10 @@ export class UserRepository {
       .returning('*');
   }
 
+  async delete(id: number, config?: RepositoryConfig) {
+    return await UserModel.query(config?.trx).deleteById(id);
+  }
+
   async findById(id: number, config?: RepositoryConfig) {
     return await UserModel.query(config?.trx).findById(id);
   }

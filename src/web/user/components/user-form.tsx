@@ -96,7 +96,7 @@ export const UserForm: FunctionComponent<UserFormProps> = (props) => {
   }, [user, router, setError]);
 
   return (
-    <Form onSubmit={handleSubmit(handleSave)} className="admin-user-form">
+    <Form onSubmit={handleSubmit(handleSave)}>
       {requestError && isBadRequestError(requestError) && (
         <Alert variant={AlertVariant.Error}>
           Please fix the form errors and try again.

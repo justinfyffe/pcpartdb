@@ -73,6 +73,7 @@ export class UserService {
     );
   }
 
+  // TODO: don't allow removing last staff user
   async update(id: number, data: UserFormData, ctx: ServiceContext) {
     validate(data, updateUserValidator);
 
@@ -91,6 +92,17 @@ export class UserService {
       { email: data.email, passwordHash, isStaff: data.isStaff ?? false },
       ctx,
     );
+  }
+
+  // TODO: don't allow deleting last staff user
+  async delete(id: number, ctx: ServiceContext) {
+    const user = await this.userRepository.findById(id, ctx);
+    if (user == null) {
+      throw notFoundError({ user: id });
+    }
+
+    await this.userRepository.delete(id, ctx);
+    return id;
   }
 
   async requestPasswordReset(

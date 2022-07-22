@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { PartialModelObject } from 'objection';
 import { RepositoryConfig } from '../db/repository';
-import { AccessTokenModel } from './access-token.model';
+import { AccessTokenModel, AccessTokenModelPojo } from './access-token.model';
 
 @Injectable()
 export class AccessTokenRepository {
@@ -29,5 +28,3 @@ export class AccessTokenRepository {
       .delete();
   }
 }
-
-export type AccessTokenModelPojo = PartialModelObject<AccessTokenModel>;

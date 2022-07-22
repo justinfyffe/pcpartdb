@@ -1,11 +1,15 @@
-import AWS from 'aws-sdk';
+import {
+  CopyObjectCommand,
+  DeleteObjectCommand,
+  GetObjectCommand,
+  HeadObjectCommand,
+  S3Client,
+} from '@aws-sdk/client-s3';
 
-export const s3 = new AWS.S3({
-  endpoint: process.env.S3_ENDPOINT,
-  accessKeyId: process.env.S3_ACCESS_KEY_ID,
-  secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+export const s3 = new S3Client({
+  endpoint: process.env.AWS_S3_ENDPOINT,
 });
-const bucket = process.env.S3_BUCKET;
+const bucket = process.env.AWS_S3_BUCKET;
 
 export const getTempPath = (fileName: string) => {
   return `tmp/${fileName}`;
@@ -15,81 +19,45 @@ export const getImagesPath = (fileName: string) => {
   return `images/${fileName}`;
 };
 
-export const hasObject = (path: string) => {
-  return new Promise<boolean>((resolve) => {
-    s3.headObject(
-      {
-        Bucket: bucket,
-        Key: path,
-      },
-      (err) => {
-        if (err) {
-          resolve(false);
-        } else {
-          resolve(true);
-        }
-      },
-    );
-  });
-};
+export async function hasObject(path: string) {
+  return await s3.send(
+    new HeadObjectCommand({
+      Bucket: bucket,
+      Key: path,
+    }),
+  );
+}
 
-export const getObject = (path: string) => {
-  return new Promise<AWS.S3.GetObjectOutput>((resolve, reject) => {
-    s3.getObject(
-      {
-        Bucket: bucket,
-        Key: path,
-      },
-      (err, data) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(data);
-        }
-      },
-    );
-  });
-};
+export async function getObject(path: string) {
+  return await s3.send(
+    new GetObjectCommand({
+      Bucket: bucket,
+      Key: path,
+    }),
+  );
+}
 
-export const copyObject = (oldPath: string, newPath: string) => {
-  return new Promise<AWS.S3.CopyObjectOutput>((resolve, reject) => {
-    s3.copyObject(
-      {
-        Bucket: bucket,
-        Key: newPath,
-        CopySource: `${bucket}/${oldPath}`,
-        ACL: 'public-read',
-      },
-      (err, data) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(data);
-        }
-      },
-    );
-  });
-};
+export async function copyObject(oldPath: string, newPath: string) {
+  return await s3.send(
+    new CopyObjectCommand({
+      Bucket: bucket,
+      Key: newPath,
+      CopySource: `${bucket}/${oldPath}`,
+      ACL: 'public-read',
+    }),
+  );
+}
 
-export const moveObject = async (oldPath: string, newPath: string) => {
+export async function moveObject(oldPath: string, newPath: string) {
   await copyObject(oldPath, newPath);
   await deleteObject(oldPath);
-};
+}
 
-export const deleteObject = (path: string) => {
-  return new Promise<AWS.S3.DeleteObjectOutput>((resolve, reject) => {
-    s3.deleteObject(
-      {
-        Bucket: bucket,
-        Key: path,
-      },
-      (err, data) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(data);
-        }
-      },
-    );
-  });
-};
+export async function deleteObject(path: string) {
+  return await s3.send(
+    new DeleteObjectCommand({
+      Bucket: bucket,
+      Key: path,
+    }),
+  );
+}
