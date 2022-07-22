@@ -1,8 +1,8 @@
 import { PlusCircleIcon } from '@heroicons/react/outline';
 import React, { FunctionComponent, useCallback, useState } from 'react';
-import { Button, ButtonVariant } from '../shared/components/button';
-import { Input } from '../shared/components/input';
-import { classNames } from '../shared/ui/ui.utils';
+import { Button, ButtonVariant } from '../../shared/components/button';
+import { Input } from '../../shared/components/input';
+import { classNames } from '../../shared/ui/ui.utils';
 
 interface CompareFormProps {
   className?: string;

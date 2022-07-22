@@ -12,6 +12,7 @@ import {
 import { ValidationErrorType } from '../types/error';
 import { contactService } from '../web/contact/contact.service';
 import { Alert, AlertVariant } from '../web/shared/components/alert';
+import { Article, ArticleHeader } from '../web/shared/components/article';
 import { Button, ButtonVariant } from '../web/shared/components/button';
 import {
   Field,
@@ -72,10 +73,10 @@ const ContactPage = (_props: ContactPageProps) => {
 
   return (
     <WebsiteLayout>
-      <article>
-        <header>
+      <Article>
+        <ArticleHeader>
           <h1>Contact Us</h1>
-        </header>
+        </ArticleHeader>
 
         {success && (
           <Alert variant={AlertVariant.Success}>
@@ -90,69 +91,66 @@ const ContactPage = (_props: ContactPageProps) => {
           </Alert>
         )}
 
-        <section>
-          <p>Please fill in the following details to contact us.</p>
+        <p>Please fill in the following details to contact us.</p>
 
-          <Form onSubmit={handleSubmit(handleSend)}>
-            <Field>
-              Your Name
-              <Input
-                name="name"
-                {...register('name', { maxLength: NAME_MAX_LENGTH })}
-              />
-              {errors.name?.type === ValidationErrorType.MissingStringValue && (
-                <FieldError>Required</FieldError>
-              )}
-            </Field>
+        <Form onSubmit={handleSubmit(handleSend)}>
+          <Field>
+            Your Name
+            <Input
+              name="name"
+              {...register('name', { maxLength: NAME_MAX_LENGTH })}
+            />
+            {errors.name?.type === ValidationErrorType.MissingStringValue && (
+              <FieldError>Required</FieldError>
+            )}
+          </Field>
 
-            <Field>
-              Your Email
-              <Input
-                name="email"
-                {...register('email', { maxLength: EMAIL_MAX_LENGTH })}
-              />
-              {errors.email?.type ===
-                ValidationErrorType.MissingStringValue && (
-                <FieldError>Required</FieldError>
-              )}
-              {errors.email?.type === ValidationErrorType.InvalidEmail && (
-                <FieldError>Please enter a valid email</FieldError>
-              )}
-            </Field>
+          <Field>
+            Your Email
+            <Input
+              name="email"
+              {...register('email', { maxLength: EMAIL_MAX_LENGTH })}
+            />
+            {errors.email?.type === ValidationErrorType.MissingStringValue && (
+              <FieldError>Required</FieldError>
+            )}
+            {errors.email?.type === ValidationErrorType.InvalidEmail && (
+              <FieldError>Please enter a valid email</FieldError>
+            )}
+          </Field>
 
-            <Field>
-              Subject <FieldOptional>(Optional)</FieldOptional>
-              <Input
-                name="subject"
-                {...register('subject', { maxLength: SUBJECT_MAX_LENGTH })}
-              />
-            </Field>
+          <Field>
+            Subject <FieldOptional>(Optional)</FieldOptional>
+            <Input
+              name="subject"
+              {...register('subject', { maxLength: SUBJECT_MAX_LENGTH })}
+            />
+          </Field>
 
-            <Field>
-              Your Message
-              <Textarea
-                name="message"
-                {...register('message', { maxLength: MESSAGE_MAX_LENGTH })}
-              />
-              {errors.message?.type ===
-                ValidationErrorType.MissingStringValue && (
-                <FieldError>Required</FieldError>
-              )}
-            </Field>
+          <Field>
+            Your Message
+            <Textarea
+              name="message"
+              {...register('message', { maxLength: MESSAGE_MAX_LENGTH })}
+            />
+            {errors.message?.type ===
+              ValidationErrorType.MissingStringValue && (
+              <FieldError>Required</FieldError>
+            )}
+          </Field>
 
-            <FormActions>
-              <Button
-                type="submit"
-                variant={ButtonVariant.Primary}
-                disabled={sending}
-              >
-                {sending && <Spinner />}
-                <span>Send</span>
-              </Button>
-            </FormActions>
-          </Form>
-        </section>
-      </article>
+          <FormActions>
+            <Button
+              type="submit"
+              variant={ButtonVariant.Primary}
+              disabled={sending}
+            >
+              {sending && <Spinner />}
+              <span>Send</span>
+            </Button>
+          </FormActions>
+        </Form>
+      </Article>
     </WebsiteLayout>
   );
 };

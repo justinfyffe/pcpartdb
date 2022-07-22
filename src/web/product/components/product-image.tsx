@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react';
-import { Image } from '../shared/components/image';
-import { classNames } from '../shared/ui/ui.utils';
+import { Image } from '../../shared/components/image';
+import { classNames } from '../../shared/ui/ui.utils';
 
 interface ProductImageProps {
   className?: string;

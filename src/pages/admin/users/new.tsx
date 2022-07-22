@@ -2,20 +2,27 @@ import 'reflect-metadata';
 import React from 'react';
 import { withStaffGuard } from '../../../web/auth/with-staff-guard';
 import { Article, ArticleHeader } from '../../../web/shared/components/article';
+import { Button, ButtonVariant } from '../../../web/shared/components/button';
 import { AdminLayout } from '../../../web/shared/layouts/admin';
 
-interface AdminImagesPageProps {}
+export interface NewUserPageProps {}
 
-const AdminImagesPage = (_props: AdminImagesPageProps) => {
+const AdminNewUserPage = (_props: NewUserPageProps) => {
   return (
     <AdminLayout>
       <Article>
         <ArticleHeader>
-          <h1>Images</h1>
+          <h1>Users - New User</h1>
+
+          <Button variant={ButtonVariant.Default} href="/admin/users">
+            Back
+          </Button>
         </ArticleHeader>
+
+        <UserForm />
       </Article>
     </AdminLayout>
   );
 };
 
-export default withStaffGuard(AdminImagesPage);
+export default withStaffGuard(AdminNewUserPage);

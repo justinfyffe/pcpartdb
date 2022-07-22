@@ -6,6 +6,7 @@ import React, { useState } from 'react';
 import { User } from '../../../types/user';
 import { withStaffGuard } from '../../../web/auth/with-staff-guard';
 import { Alert, AlertVariant } from '../../../web/shared/components/alert';
+import { Article, ArticleHeader } from '../../../web/shared/components/article';
 import { Button, ButtonVariant } from '../../../web/shared/components/button';
 import {
   Table,
@@ -31,7 +32,7 @@ const AdminUsersPage = (props: AdminUsersPageProps) => {
 
   return (
     <AdminLayout>
-      <article className="w-full">
+      <Article>
         {saved && (
           <Alert variant={AlertVariant.Success}>The user has been saved.</Alert>
         )}
@@ -42,13 +43,13 @@ const AdminUsersPage = (props: AdminUsersPageProps) => {
           </Alert>
         )}
 
-        <header className="flex justify-between">
+        <ArticleHeader>
           <h1>Users</h1>
 
           <Button variant={ButtonVariant.Primary} href="/admin/users/new">
             Add
           </Button>
-        </header>
+        </ArticleHeader>
 
         {users.length > 0 && (
           <Table border responsive>
@@ -78,7 +79,7 @@ const AdminUsersPage = (props: AdminUsersPageProps) => {
         {users.length === 0 && (
           <Alert variant={AlertVariant.Info}>There are no users.</Alert>
         )}
-      </article>
+      </Article>
     </AdminLayout>
   );
 };

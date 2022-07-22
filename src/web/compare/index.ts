@@ -1,1 +1,1 @@
-export * from './compare-form';
+export * from './components/compare-form';

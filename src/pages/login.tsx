@@ -8,6 +8,7 @@ import { ApiError, ValidationErrorType } from '../types/error';
 import { authService } from '../web/auth/auth.service';
 import { withGuestGuard } from '../web/auth/with-guest-guard';
 import { Alert, AlertVariant } from '../web/shared/components/alert';
+import { Article, ArticleHeader } from '../web/shared/components/article';
 import { Button, ButtonVariant } from '../web/shared/components/button';
 import { Checkbox } from '../web/shared/components/checkbox';
 import { Field, FieldError } from '../web/shared/components/field';
@@ -71,10 +72,10 @@ const LoginPage: FunctionComponent<LoginPageProps> = (
 
   return (
     <WebsiteLayout>
-      <article>
-        <header>
+      <Article>
+        <ArticleHeader>
           <h1>Sign in to your Account</h1>
-        </header>
+        </ArticleHeader>
 
         {requestError && isForbiddenError(requestError) && (
           <Alert variant={AlertVariant.Error}>
@@ -100,80 +101,77 @@ const LoginPage: FunctionComponent<LoginPageProps> = (
           </Alert>
         )}
 
-        <section>
-          <p>Enter the following credentials to sign in.</p>
+        <p>Enter the following credentials to sign in.</p>
 
-          <Form onSubmit={handleSubmit(handleLogin)}>
-            <Field>
-              Email
-              <Controller
-                name="email"
-                control={control}
-                render={({ field }) => <Input {...field} ref={null} />}
-              />
-              {errors.email?.type ===
-                ValidationErrorType.MissingStringValue && (
-                <FieldError>Required</FieldError>
-              )}
-              {errors.email?.type === ValidationErrorType.InvalidEmail && (
-                <FieldError>Not a valid email</FieldError>
-              )}
-            </Field>
-
-            <Field>
-              Password
-              <Controller
-                name="password"
-                control={control}
-                render={({ field }) => (
-                  <Input type="password" {...field} ref={null} />
-                )}
-              />
-              {errors.password?.type ===
-                ValidationErrorType.MissingStringValue && (
-                <FieldError>Required</FieldError>
-              )}
-            </Field>
-
+        <Form onSubmit={handleSubmit(handleLogin)}>
+          <Field>
+            Email
             <Controller
-              name="remember"
+              name="email"
+              control={control}
+              render={({ field }) => <Input {...field} ref={null} />}
+            />
+            {errors.email?.type === ValidationErrorType.MissingStringValue && (
+              <FieldError>Required</FieldError>
+            )}
+            {errors.email?.type === ValidationErrorType.InvalidEmail && (
+              <FieldError>Not a valid email</FieldError>
+            )}
+          </Field>
+
+          <Field>
+            Password
+            <Controller
+              name="password"
               control={control}
               render={({ field }) => (
-                <Checkbox {...field} ref={null}>
-                  Remember me
-                </Checkbox>
+                <Input type="password" {...field} ref={null} />
               )}
             />
+            {errors.password?.type ===
+              ValidationErrorType.MissingStringValue && (
+              <FieldError>Required</FieldError>
+            )}
+          </Field>
 
-            <FormActions>
-              <Button
-                type="submit"
-                variant={ButtonVariant.Primary}
-                disabled={loading}
-              >
-                {loading && <Spinner />}
-                <span>Sign in</span>
-              </Button>
-            </FormActions>
-          </Form>
+          <Controller
+            name="remember"
+            control={control}
+            render={({ field }) => (
+              <Checkbox {...field} ref={null}>
+                Remember me
+              </Checkbox>
+            )}
+          />
 
-          <div className="mt-4 leading-[24px] text-[12px] text-center">
-            Don&apos;t have an account?{' '}
-            <a href="/register" className="no-underline">
-              Register
-            </a>
-            .
-          </div>
+          <FormActions>
+            <Button
+              type="submit"
+              variant={ButtonVariant.Primary}
+              disabled={loading}
+            >
+              {loading && <Spinner />}
+              <span>Sign in</span>
+            </Button>
+          </FormActions>
+        </Form>
 
-          <div className="leading-[24px] text-[12px] text-center">
-            Forgot your password?{' '}
-            <a href="/forgot-password" className="no-underline">
-              Reset your password
-            </a>
-            .
-          </div>
-        </section>
-      </article>
+        <div className="mt-4 leading-[24px] text-[12px] text-center">
+          Don&apos;t have an account?{' '}
+          <a href="/register" className="no-underline">
+            Register
+          </a>
+          .
+        </div>
+
+        <div className="leading-[24px] text-[12px] text-center">
+          Forgot your password?{' '}
+          <a href="/forgot-password" className="no-underline">
+            Reset your password
+          </a>
+          .
+        </div>
+      </Article>
     </WebsiteLayout>
   );
 };

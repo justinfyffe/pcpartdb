@@ -1,5 +1,5 @@
-import classNames from 'classnames';
 import React, { FunctionComponent } from 'react';
+import { classNames } from '../../ui/ui.utils';
 
 interface SpinnerProps {
   as?: React.ElementType;

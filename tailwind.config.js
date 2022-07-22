@@ -8,6 +8,7 @@ module.exports = {
       backgroundColor: {
         'button-default': colors.white,
         'button-primary': '#3f51b5',
+        'button-secondary': '#ff4081',
         'footer-primary': '#312e81',
         'html-primary': '#312e81',
         'toolbar-primary': '#312e81',
@@ -21,6 +22,7 @@ module.exports = {
       textColor: {
         'button-default': '#334155',
         'button-primary': '#ececec',
+        'button-secondary': '#ececec',
         'content-link': '#6365f1',
         'content-primary': '#334155',
         'content-secondary': '#9ca3af',

@@ -5,6 +5,7 @@ export enum ButtonVariant {
   None = 'none',
   Default = 'default',
   Primary = 'primary',
+  Secondary = 'secondary',
   Toolbar = 'toolbar',
 }
 
@@ -20,6 +21,7 @@ const BUTTON_VARIANTS = {
   [ButtonVariant.Default]:
     'bg-button-default border-button-default text-button-default',
   [ButtonVariant.Primary]: 'bg-button-primary text-button-primary',
+  [ButtonVariant.Secondary]: 'bg-button-secondary text-button-secondary',
   [ButtonVariant.Toolbar]: 'shadow-none text-toolbar-primary',
 };
 

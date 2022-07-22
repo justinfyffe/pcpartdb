@@ -10,6 +10,7 @@ import {
 } from '../types/user';
 import { withGuestGuard } from '../web/auth/with-guest-guard';
 import { Alert, AlertVariant } from '../web/shared/components/alert';
+import { Article, ArticleHeader } from '../web/shared/components/article';
 import { Button, ButtonVariant } from '../web/shared/components/button';
 import { Field, FieldError } from '../web/shared/components/field';
 import { Form, FormActions } from '../web/shared/components/form';
@@ -60,10 +61,10 @@ const ForgotPasswordPage = (_props: ForgotPasswordPageProps) => {
 
   return (
     <WebsiteLayout>
-      <article>
-        <header>
+      <Article>
+        <ArticleHeader>
           <h1>Forgot your Password?</h1>
-        </header>
+        </ArticleHeader>
 
         {requestError && isInternalServerError(requestError) && (
           <Alert variant={AlertVariant.Error}>
@@ -79,49 +80,46 @@ const ForgotPasswordPage = (_props: ForgotPasswordPageProps) => {
           </Alert>
         )}
 
-        <section>
-          <p>
-            Please enter your email to receive instructions on how to reset your
-            password.
-          </p>
+        <p>
+          Please enter your email to receive instructions on how to reset your
+          password.
+        </p>
 
-          <Form onSubmit={handleSubmit(handleRequest)}>
-            <Field>
-              Email
-              <Input
-                name="email"
-                {...register('email', { maxLength: EMAIL_MAX_LENGTH })}
-              />
-              {errors.email?.type ===
-                ValidationErrorType.MissingStringValue && (
-                <FieldError>Required</FieldError>
-              )}
-              {errors.email?.type === ValidationErrorType.InvalidEmail && (
-                <FieldError>Not a valid email</FieldError>
-              )}
-            </Field>
+        <Form onSubmit={handleSubmit(handleRequest)}>
+          <Field>
+            Email
+            <Input
+              name="email"
+              {...register('email', { maxLength: EMAIL_MAX_LENGTH })}
+            />
+            {errors.email?.type === ValidationErrorType.MissingStringValue && (
+              <FieldError>Required</FieldError>
+            )}
+            {errors.email?.type === ValidationErrorType.InvalidEmail && (
+              <FieldError>Not a valid email</FieldError>
+            )}
+          </Field>
 
-            <FormActions>
-              <Button
-                type="submit"
-                variant={ButtonVariant.Primary}
-                disabled={loading}
-              >
-                {loading && <Spinner />}
-                <span>Submit</span>
-              </Button>
-            </FormActions>
-          </Form>
+          <FormActions>
+            <Button
+              type="submit"
+              variant={ButtonVariant.Primary}
+              disabled={loading}
+            >
+              {loading && <Spinner />}
+              <span>Submit</span>
+            </Button>
+          </FormActions>
+        </Form>
 
-          <div className="mt-4 leading-[24px] text-[12px] text-center">
-            Remember your password?{' '}
-            <a href="/login" className="no-underline">
-              Sign in
-            </a>
-            .
-          </div>
-        </section>
-      </article>
+        <div className="mt-4 leading-[24px] text-[12px] text-center">
+          Remember your password?{' '}
+          <a href="/login" className="no-underline">
+            Sign in
+          </a>
+          .
+        </div>
+      </Article>
     </WebsiteLayout>
   );
 };

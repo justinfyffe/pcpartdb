@@ -1,1 +1,1 @@
-export * from './product-image';
+export * from './components/product-image';

@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 import React from 'react';
+import { Article, ArticleHeader } from '../web/shared/components/article';
 import { WebsiteLayout } from '../web/shared/layouts/website';
 
 interface PrivacyPageProps {}
@@ -7,11 +8,11 @@ interface PrivacyPageProps {}
 const PrivacyPage = (_props: PrivacyPageProps) => {
   return (
     <WebsiteLayout>
-      <article>
-        <header>
-          <h1>About Us</h1>
-        </header>
-      </article>
+      <Article>
+        <ArticleHeader>
+          <h1>Privacy Policy</h1>
+        </ArticleHeader>
+      </Article>
     </WebsiteLayout>
   );
 };
