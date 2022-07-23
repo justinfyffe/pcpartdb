@@ -1,3 +1,4 @@
+import React from 'react';
 import * as ReactDOM from 'react-dom';
 
 interface DialogOptions {
@@ -11,8 +12,10 @@ const OVERLAY_CLASS =
 const CONTENT_CLASS =
   'items-center b-0 flex justify-center l-0 absolute r-0 t-0 z-[1000]';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const showDialog = (content: any, options?: DialogOptions) => {
+export const showDialog = (
+  content: React.ReactNode,
+  options?: DialogOptions,
+) => {
   const { dialogElement, contentElement } = createElements();
 
   document.body.appendChild(dialogElement);
