@@ -12,7 +12,7 @@ import {
   FeedLinks,
   FeedTitle,
 } from '../../web/shared/components/feed';
-import { Image } from '../../web/shared/components/image';
+import { Img } from '../../web/shared/components/image';
 import { SectionHeader } from '../../web/shared/components/section-header';
 import { WebsiteLayout } from '../../web/shared/layouts/website';
 import { classNames } from '../../web/shared/ui/ui.utils';
@@ -66,7 +66,7 @@ export const HomePage = (_props: HomePageProps) => {
                 >
                   Elite AMD Gaming Build
                 </h2>
-                <Image
+                <Img
                   src="https://preview.redd.it/8siyqldph2x21.jpg?auto=webp&s=eeaa2cdf9c4e01746f4f46cc08c66e5eff77c630"
                   className={classNames(
                     'h-auto w-auto max-h-32 max-w-full mx-auto mb-2 object-cover',

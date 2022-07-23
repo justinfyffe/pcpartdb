@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import { classNames } from '../../ui/ui.utils';
-import { Image, ImageProps } from '../image';
+import { ImageProps, Img } from '../image';
 
 export interface CardProps {
   as?: React.ElementType;
@@ -49,7 +49,7 @@ export const Card: FunctionComponent<CardProps> = (props) => {
 
 export const CardImage: FunctionComponent<CardImageProps> = (props) => {
   return (
-    <Image
+    <Img
       {...props}
       className={classNames(
         'h-auto m-[-24px_-24px_24px] rounded-t rounded-b-none max-h-[200px] w-[calc(100%_+_48px)] max-w-[calc(100%_+_48px)] object-cover',

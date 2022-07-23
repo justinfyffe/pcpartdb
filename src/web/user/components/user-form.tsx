@@ -35,8 +35,7 @@ const formOptions = (user?: User): UseFormProps<UserFormData> => ({
   resolver: joiResolver(
     user != null ? updateUserValidator : createUserValidator,
   ),
-  mode: 'onTouched',
-  reValidateMode: 'onChange',
+  mode: 'onBlur',
   defaultValues: {
     email: user?.email ?? '',
     password: '',
