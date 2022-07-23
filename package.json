@@ -46,6 +46,7 @@
     "@types/nodemailer": "^6.4.4",
     "@types/pg": "^8.6.5",
     "@types/react": "^18.0.9",
+    "@types/react-dom": "^18.0.6",
     "@typescript-eslint/eslint-plugin": "^5.26.0",
     "@typescript-eslint/parser": "^5.26.0",
     "autoprefixer": "^10.4.7",
@@ -89,7 +90,7 @@
     "objection": "^3.0.1",
     "pg": "^8.7.3",
     "react": "^18.1.0",
-    "react-dom": "^18.1.0",
+    "react-dom": "^18.2.0",
     "react-hook-form": "^7.31.3",
     "reflect-metadata": "^0.1.13",
     "tailwind-override": "^0.6.1"

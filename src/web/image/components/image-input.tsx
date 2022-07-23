@@ -2,8 +2,10 @@ import { PhotographIcon } from '@heroicons/react/outline';
 import React, { FunctionComponent, useCallback, useState } from 'react';
 import { Image } from '../../../types/image';
 import { Button, ButtonVariant } from '../../shared/components/button';
+import { showDialog } from '../../shared/components/dialog';
 import { Img } from '../../shared/components/image';
 import { formatDimensions, formatFileSize } from '../image.utils';
+import { ImageDialog } from './image-dialog';
 
 interface ImageInputProps {
   recommendedHeight?: number;
@@ -31,7 +33,7 @@ export const ImageInput: FunctionComponent<ImageInputProps> = (props) => {
   }, [onChange]);
 
   return (
-    <div className="border-[1px] border-[#ccc] border-solid rounded-[5px] block">
+    <div className="border-[1px] border-[#ccc] border-solid rounded block">
       {value != null ? (
         <SelectedImageInput {...props} value={value} onClear={handleClear} />
       ) : (
