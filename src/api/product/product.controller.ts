@@ -12,20 +12,25 @@ import { StaffGuard } from '../auth/staff.guard';
 @Controller('products')
 export class ProductController {
   @Get()
-  getProduct() {
+  list() {
+    return {};
+  }
+
+  @Get(':id')
+  get() {
     return {};
   }
 
   @Post()
   @UseGuards(StaffGuard)
-  createProduct() {}
+  create() {}
 
   @Put(':id')
   @Patch(':id')
   @UseGuards(StaffGuard)
-  updateProduct() {}
+  update() {}
 
   @Delete(':id')
   @UseGuards(StaffGuard)
-  deleteProduct() {}
+  delete() {}
 }
