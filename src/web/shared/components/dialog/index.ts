@@ -6,11 +6,11 @@ interface DialogOptions {
 }
 
 const DIALOG_CLASS =
-  'items-center b-0 flex justify-center l-0 fixed r-0 t-0 z-[998]';
+  'items-center bottom-0 flex justify-center left-0 fixed right-0 top-0 z-[998]';
 const OVERLAY_CLASS =
-  'bg-[#373a47] b-0 l-0 absolute opacity-[0.8] r-0 t-0 z-[999]';
+  'bg-[#373a47] bottom-0 left-0 absolute opacity-[0.8] right-0 top-0 z-[999]';
 const CONTENT_CLASS =
-  'items-center b-0 flex justify-center l-0 absolute r-0 t-0 z-[1000]';
+  'items-center bottom-0 flex justify-center left-0 absolute right-0 top-0 z-[1000]';
 
 export const showDialog = (
   content: React.ReactNode,

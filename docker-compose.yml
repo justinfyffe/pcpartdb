@@ -1,4 +1,4 @@
-version: '2.1'
+version: "3.8"
 
 services:
   db:
@@ -14,3 +14,4 @@ services:
 volumes:
   db-data:
     driver: local
+

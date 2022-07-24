@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { Image } from '../../../types/image';
 import { withStaffGuard } from '../../../web/auth/with-staff-guard';
+import { imageService } from '../../../web/image/image.service';
 import {
   formatDimensions,
   formatFileSize,
@@ -96,6 +97,11 @@ const AdminImagesPage = (props: AdminImagesPageProps) => {
       </Article>
     </AdminLayout>
   );
+};
+
+AdminImagesPage.getInitialProps = async () => {
+  const images = await imageService.list();
+  return { images: images || [] };
 };
 
 export default withStaffGuard(AdminImagesPage);

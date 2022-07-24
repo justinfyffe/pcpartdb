@@ -5,10 +5,10 @@ import {
   ImageFormData,
   updateImageValidator,
 } from '../../types/image';
-import * as cdn from '../shared/cdn/cdn.utils';
 import { badRequestError, notFoundError } from '../shared/errors/errors';
 import { ServiceContext } from '../shared/service/context';
 import { validate } from '../shared/types/validate';
+import * as uploads from '../shared/uploads/uploads.utils';
 import { ImageRepository } from './image.repository';
 
 @Injectable()
@@ -31,9 +31,23 @@ export class ImageService {
   async create(data: ImageFormData, ctx: ServiceContext) {
     validate(data, createImageValidator);
 
-    await cdn.moveObject(`tmp/${data.tempPath}`, `images/${data.path}`);
+    await uploads.move(
+      uploads.tmpPath(data.tempPath),
+      uploads.imagePath(data.path),
+    );
 
-    return await this.imageRepository.save(data, ctx);
+    return await this.imageRepository.save(
+      {
+        name: data.name,
+        path: data.path,
+        sourceName: data.sourceName,
+        sourceUrl: data.sourceUrl,
+        fileSize: data.fileSize,
+        height: data.height,
+        width: data.width,
+      },
+      ctx,
+    );
   }
 
   async update(id: number, data: ImageFormData, ctx: ServiceContext) {
@@ -48,7 +62,7 @@ export class ImageService {
 
     // Check if the path has changed. If it did, we should move the image
     if (previousPath !== data.path) {
-      if (await cdn.hasObject(`images/${data.path}`)) {
+      if (await uploads.exists(uploads.imagePath(data.path))) {
         // A different image exists at this path. Abort
         throw badRequestError({
           property: 'path',
@@ -57,19 +71,33 @@ export class ImageService {
       }
 
       // All good to move
-      if (await cdn.hasObject(`images/${previousPath}`)) {
-        await cdn.moveObject(`images/${previousPath}`, `images/${data.path}`);
+      if (await uploads.exists(uploads.imagePath(previousPath))) {
+        await uploads.move(
+          uploads.imagePath(previousPath),
+          uploads.imagePath(data.path),
+        );
       }
     }
 
     // Check if we uploaded a new image, move it if we did
     if (data.file) {
-      await cdn.moveObject(`tmp/${data.tempPath}`, `images/${data.path}`);
+      await uploads.move(
+        uploads.tmpPath(data.tempPath),
+        uploads.imagePath(data.path),
+      );
     }
 
-    image.uploadedAt = (
-      await cdn.getObject(`images/${data.path}`)
-    ).LastModified;
+    const stats = await uploads.stats(uploads.imagePath(data.path));
+
+    // Update image data
+    image.name = data.name ?? image.name;
+    image.path = data.path ?? image.path;
+    image.sourceName = data.sourceName ?? image.sourceName;
+    image.sourceUrl = data.sourceUrl ?? image.sourceUrl;
+    image.fileSize = data.fileSize ?? image.fileSize;
+    image.height = data.height ?? image.height;
+    image.width = data.width ?? image.width;
+    image.uploadedAt = stats.mtime;
 
     return await this.imageRepository.save(image, ctx);
   }
@@ -81,7 +109,7 @@ export class ImageService {
     }
 
     await this.imageRepository.delete(id, ctx);
-    await cdn.deleteObject(`images/${image.path}`);
+    await uploads.remove(uploads.imagePath(image.path));
     return id;
   }
 }

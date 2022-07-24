@@ -26,14 +26,15 @@ export interface FileLabelProps {
 export const File: FunctionComponent<FileProps> = (props) => {
   const { name, onChange } = props;
   const [file, setFile] = useState(null);
+  const [inputId] = useState(fileUploadId);
 
   useEffect(() => {
     ++fileUploadId;
-  });
+  }, []);
 
   const handleInputClick = useCallback(() => {
-    document.getElementById('file-upload').click();
-  }, []);
+    document.getElementById(`file-upload-${inputId}`).click();
+  }, [inputId]);
 
   const handleFileChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
@@ -49,13 +50,13 @@ export const File: FunctionComponent<FileProps> = (props) => {
     <div className="block relative">
       <input
         type="file"
-        id={`file-upload-${fileUploadId}`}
+        id={`file-upload-${inputId}`}
         name={name}
         onChange={handleFileChange}
         className="h-[0.1px] opacity-0 overflow-hidden pr-[120px] absolute w-[0.1px] z-[-1]"
       />
       <Input value={file?.name || ''} onClick={handleInputClick} readOnly />
-      <FileLabel for={`file-upload-${fileUploadId}`}>Select File</FileLabel>
+      <FileLabel for={`file-upload-${inputId}`}>Select File</FileLabel>
     </div>
   );
 };
@@ -65,7 +66,7 @@ export const FileLabel: FunctionComponent<FileLabelProps> = (props) => {
     <Button
       as="label"
       htmlFor={props.for}
-      className="b-0 flex flex-col justify-center mb-0 absolute r-0 t-0"
+      className="bottom-0 flex flex-col justify-center mb-0 absolute right-0 top-0"
       variant={ButtonVariant.Primary}
     >
       {props.children}

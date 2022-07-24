@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { MulterOptions } from '@nestjs/platform-express/multer/interfaces/multer-options.interface';
-import multerS3 from 'multer-s3';
+import { diskStorage } from 'multer';
 import type {
   CreateImageBody,
   ImageFormData,
@@ -21,23 +21,18 @@ import type {
 } from '../../types/image';
 import { StaffGuard } from '../auth/staff.guard';
 import { transaction } from '../db/database';
-import * as cdn from '../shared/cdn/cdn.utils';
 import { normalize } from '../shared/types/normalize';
+import * as uploads from '../shared/uploads/uploads.utils';
 import { ImageService } from './image.service';
 
 const multerOptions: MulterOptions = {
-  storage: multerS3({
-    s3: cdn.s3,
-    bucket: process.env.S3_BUCKET,
-    contentType: multerS3.AUTO_CONTENT_TYPE,
+  storage: diskStorage({
+    destination: uploads.tmpPath(),
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    key: (req: any, _file: any, cb: any) => {
-      const tempPath = `${Math.floor(
-        Math.random() * 10000000,
-      )}-${new Date().getTime()}`;
+    filename: (req: any, file: any, cb: any) => {
+      const tempPath = uploads.generateTmpFilename(file);
       req.body.tempPath = tempPath;
-
-      cb(null, cdn.getTempPath(tempPath));
+      cb(null, tempPath);
     },
   }),
 };
