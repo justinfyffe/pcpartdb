@@ -14,7 +14,7 @@ export class ImageService {
 
   async list() {
     const response = await this.api.get<ImagesResponse>(PATH);
-    return denormalize(response.result, imageSchema, response.entities);
+    return denormalize(response.result, [imageSchema], response.entities);
   }
 
   async get(id: number) {

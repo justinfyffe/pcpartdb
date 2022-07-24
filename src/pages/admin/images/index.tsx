@@ -59,10 +59,10 @@ const AdminImagesPage = (props: AdminImagesPageProps) => {
         </ArticleHeader>
 
         {images.length > 0 && (
-          <Table>
+          <Table border>
             <THead>
               <Tr>
-                <Th>Preview</Th>
+                <Th className="max-w-[200px]">Preview</Th>
                 <Th className="text-center">ID</Th>
                 <Th>Name</Th>
                 <Th>Path</Th>
@@ -73,7 +73,7 @@ const AdminImagesPage = (props: AdminImagesPageProps) => {
             <TBody>
               {images.map((image) => (
                 <Tr key={image.id}>
-                  <Td className="text-center preview-image">
+                  <Td className="max-w-[200px]">
                     <Img src={image} alt={image.name} />
                   </Td>
                   <Td className="text-center">{image.id}</Td>

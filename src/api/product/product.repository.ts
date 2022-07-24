@@ -7,7 +7,7 @@ export class ProductRepository {
   async save(product: ProductModelPojo, config?: RepositoryConfig) {
     return await ProductModel.query(config?.trx)
       .insert(product)
-      .onConflict('slug')
+      .onConflict('id')
       .merge()
       .returning('*');
   }

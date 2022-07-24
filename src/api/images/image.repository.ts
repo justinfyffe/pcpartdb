@@ -9,7 +9,11 @@ export class ImageRepository {
   }
 
   async save(image: ImageModelPojo, config?: RepositoryConfig) {
-    return await ImageModel.query(config?.trx).insert(image).returning('*');
+    return await ImageModel.query(config?.trx)
+      .insert(image)
+      .onConflict('id')
+      .merge()
+      .returning('*');
   }
 
   async delete(id: number, config?: RepositoryConfig) {

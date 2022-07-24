@@ -1,9 +1,7 @@
 import { Image as ImageDto, ImageMeta } from '../../types/image';
 
-const CDN_URL = process.env.CDN_URL;
-
 export function getImageUrl(image: ImageDto) {
-  return `${CDN_URL}/images/${image.path}`;
+  return `/u/images/${image.path}`;
 }
 
 export function formatFileSize(fileSize: number) {

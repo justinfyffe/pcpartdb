@@ -1,13 +1,9 @@
 import * as fs from 'fs';
 import path from 'path';
 
-const UPLOADS_PATH = path.join(__dirname, '../../../..', 'uploads');
-const TMP_PATH = path.join(UPLOADS_PATH, 'tmp');
-const IMAGES_PATH = path.join(UPLOADS_PATH, 'images');
+const TMP_PATH = path.join(__dirname, '../../../..', 'tmp/uploads');
+const IMAGES_PATH = path.join(__dirname, '../../../..', 'public/u/images');
 
-if (!fs.existsSync(UPLOADS_PATH)) {
-  fs.mkdirSync(UPLOADS_PATH);
-}
 if (!fs.existsSync(TMP_PATH)) {
   fs.mkdirSync(TMP_PATH);
 }

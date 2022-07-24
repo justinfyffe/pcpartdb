@@ -45,4 +45,4 @@ dist/**/*
 yarn.lock
 
 # Ignore uploaded files
-/uploads
+public/u

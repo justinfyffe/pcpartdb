@@ -27,7 +27,7 @@ export const FormActions: FunctionComponent<FormActionsProps> = (props) => {
   const Element = props.as || 'div';
 
   return (
-    <Element className={classNames('flex space-between', props.className)}>
+    <Element className={classNames('flex justify-between', props.className)}>
       {props.children}
     </Element>
   );

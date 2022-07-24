@@ -9,7 +9,7 @@ export class UserRepository {
   async save(user: UserModelPojo, config?: RepositoryConfig) {
     return await UserModel.query(config?.trx)
       .insert(user)
-      .onConflict('email')
+      .onConflict('id')
       .merge()
       .returning('*');
   }
