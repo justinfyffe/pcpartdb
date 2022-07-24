@@ -9,7 +9,7 @@ lib-cov
 *.swp
 
 pids
-./logs
+/logs
 results
 tmp
 
@@ -45,4 +45,4 @@ dist/**/*
 yarn.lock
 
 # Ignore uploaded files
-uploads
+/uploads
