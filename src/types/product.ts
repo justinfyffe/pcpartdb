@@ -1,7 +1,17 @@
 import Joi from '@hapi/joi';
 import { NormalizedSchema, schema } from 'normalizr';
-import { ProductBenchmark, productBenchmarkSchema } from './product-benchmark';
-import { ProductSpec, productSpecSchema } from './product-spec';
+import {
+  createProductBenchmarkValidator,
+  ProductBenchmark,
+  productBenchmarkSchema,
+  updateProductBenchmarkValidator,
+} from './product-benchmark';
+import {
+  createProductSpecValidator,
+  ProductSpec,
+  productSpecSchema,
+  updateProductSpecValidator,
+} from './product-spec';
 
 export enum ProductType {
   CPU = 'CPU',
@@ -43,10 +53,20 @@ export const createProductValidator = Joi.object({
   slug: Joi.string().required(),
   type: Joi.string().valid(ProductType.CPU, ProductType.GPU),
   name: Joi.string().required(),
+  specs: Joi.array().items(createProductSpecValidator),
+  benchmarks: Joi.array().items(createProductBenchmarkValidator),
 }).options({ abortEarly: false });
 
 export const updateProductValidator = Joi.object({
   slug: Joi.string().required(),
   type: Joi.string().valid(ProductType.CPU, ProductType.GPU),
   name: Joi.string().required(),
+  specs: Joi.array().items(
+    createProductSpecValidator,
+    updateProductSpecValidator,
+  ),
+  benchmarks: Joi.array().items(
+    createProductBenchmarkValidator,
+    updateProductBenchmarkValidator,
+  ),
 }).options({ abortEarly: false });
