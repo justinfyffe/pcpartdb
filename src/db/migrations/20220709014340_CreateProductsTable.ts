@@ -10,7 +10,7 @@ export async function up(knex: Knex): Promise<void> {
 
     table.timestamps(true, true);
 
-    table.unique(['type', 'slug']);
+    table.unique(['slug']);
     table.unique(['type', 'name']);
   });
 

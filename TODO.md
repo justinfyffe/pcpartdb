@@ -1,5 +1,7 @@
 Immediate Tasks:
-- images
+- rename *FormData -> *Request
+- create *FormData which has front-end form structure. Can move outside of "types"
+- product forms
 
 - Launch basic website (viewing and comparing cpus/gpus)
   - Design database

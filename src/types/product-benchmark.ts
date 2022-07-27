@@ -16,6 +16,13 @@ export interface ProductBenchmark<T = unknown> {
   value?: T;
 }
 
+export interface CpuProductBenchmark<T = unknown> extends ProductBenchmark<T> {
+  key: CpuBenchmarkKey;
+}
+export interface GpuProductBenchmark<T = unknown> extends ProductBenchmark<T> {
+  key: GpuBenchmarkKey;
+}
+
 export interface ProductBenchmarkFormData {
   key: ProductBenchmarkKey;
   value?: unknown;

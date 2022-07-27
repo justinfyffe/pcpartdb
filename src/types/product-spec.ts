@@ -38,9 +38,9 @@ export enum CpuSpecKey {
   // Expansion Specs
 }
 
-export enum GpuSpeckey {}
+export enum GpuSpecKey {}
 
-export type ProductSpecKey = CpuSpecKey | GpuSpeckey;
+export type ProductSpecKey = CpuSpecKey | GpuSpecKey;
 
 export interface ProductSpec<T = unknown> {
   id?: number;
@@ -49,6 +49,14 @@ export interface ProductSpec<T = unknown> {
   source?: string;
   key: ProductSpecKey;
   value?: T;
+}
+
+export interface CpuProductSpec<T = unknown> extends ProductSpec<T> {
+  key: CpuSpecKey;
+}
+
+export interface GpuProductSpec<T = unknown> extends ProductSpec<T> {
+  key: GpuSpecKey;
 }
 
 export interface ProductSpecFormData {

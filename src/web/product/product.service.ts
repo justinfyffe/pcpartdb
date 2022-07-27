@@ -37,4 +37,4 @@ export class UserService {
   }
 }
 
-export const userService = new UserService(apiClient);
+export const productService = new UserService(apiClient);

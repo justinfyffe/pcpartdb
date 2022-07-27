@@ -2,12 +2,14 @@ import Joi from '@hapi/joi';
 import { NormalizedSchema, schema } from 'normalizr';
 import {
   createProductBenchmarkValidator,
+  GpuProductBenchmark,
   ProductBenchmark,
   productBenchmarkSchema,
   updateProductBenchmarkValidator,
 } from './product-benchmark';
 import {
   createProductSpecValidator,
+  GpuProductSpec,
   ProductSpec,
   productSpecSchema,
   updateProductSpecValidator,
@@ -18,21 +20,30 @@ export enum ProductType {
   GPU = 'GPU',
 }
 
-export interface Product {
+export interface Product<
+  TSpec extends ProductSpec = ProductSpec,
+  TBenchmark extends ProductBenchmark = ProductBenchmark,
+> {
   id?: number;
   slug: string;
 
   type: ProductType;
   name: string;
 
-  specs?: ProductSpec[];
-  benchmarks?: ProductBenchmark[];
+  specs?: TSpec[];
+  benchmarks?: TBenchmark[];
 }
+
+export interface GpuProduct
+  extends Product<GpuProductSpec, GpuProductBenchmark> {}
 
 export interface ProductFormData {
   slug: string;
   type: ProductType;
   name: string;
+
+  specs: ProductSpec[];
+  benchmarks: ProductBenchmark[];
 }
 
 interface ProductEntities {
