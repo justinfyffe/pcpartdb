@@ -5,10 +5,10 @@ const TMP_PATH = path.join(__dirname, '../../../..', 'tmp/uploads');
 const IMAGES_PATH = path.join(__dirname, '../../../..', 'public/u/images');
 
 if (!fs.existsSync(TMP_PATH)) {
-  fs.mkdirSync(TMP_PATH);
+  fs.mkdirSync(TMP_PATH, { recursive: true });
 }
 if (!fs.existsSync(IMAGES_PATH)) {
-  fs.mkdirSync(IMAGES_PATH);
+  fs.mkdirSync(IMAGES_PATH, { recursive: true });
 }
 
 export function tmpPath(file?: string) {

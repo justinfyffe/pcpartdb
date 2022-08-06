@@ -5,6 +5,7 @@ import {
   productBenchmarkSchema,
 } from './product-benchmark';
 import { ProductMeta, productMetaSchema } from './product-meta';
+import { ProductReview, productReviewSchema } from './product-review';
 import { GpuProductSpec, ProductSpec, productSpecSchema } from './product-spec';
 
 export enum ProductType {
@@ -25,6 +26,7 @@ export interface Product<
   meta?: ProductMeta[];
   specs?: TSpec[];
   benchmarks?: TBenchmark[];
+  reviews?: ProductReview[];
 }
 
 export interface GpuProduct
@@ -38,6 +40,7 @@ export interface ProductRequest {
   meta: ProductMeta[];
   specs: ProductSpec[];
   benchmarks: ProductBenchmark[];
+  reviews: ProductReview[];
 }
 
 interface ProductEntities {
@@ -45,6 +48,7 @@ interface ProductEntities {
   meta: Record<string, ProductMeta>;
   specs: Record<string, ProductSpec>;
   benchmarks: Record<string, ProductBenchmark>;
+  reviews: Record<string, ProductReview>;
 }
 
 export type ProductResponse = NormalizedSchema<ProductEntities, number>;
@@ -54,4 +58,5 @@ export const productSchema = new schema.Entity('products', {
   meta: [productMetaSchema],
   specs: [productSpecSchema],
   benchmarks: [productBenchmarkSchema],
+  reviews: [productReviewSchema],
 });

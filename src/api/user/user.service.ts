@@ -97,7 +97,7 @@ export class UserService {
     const salt = await bcrypt.genSalt();
     const passwordHash = await bcrypt.hash(data.password, salt);
 
-    let isStaff = false;
+    let isStaff = data.isStaff ?? false;
     if ((await this.userRepository.count()) === 0) {
       // First user, let's make them an admin
       isStaff = true;

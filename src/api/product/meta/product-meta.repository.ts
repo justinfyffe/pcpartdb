@@ -4,9 +4,9 @@ import { ProductMetaModel, ProductMetaModelPojo } from './product-meta.model';
 
 @Injectable()
 export class ProductMetaRepository {
-  async save(spec: ProductMetaModelPojo, config?: RepositoryConfig) {
+  async save(meta: ProductMetaModelPojo, config?: RepositoryConfig) {
     return await ProductMetaModel.query(config?.trx)
-      .insert(spec)
+      .insert(meta)
       .onConflict(['productId', 'key'])
       .merge()
       .returning('*');
