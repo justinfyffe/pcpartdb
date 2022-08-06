@@ -69,6 +69,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
 
       const request: ProductRequest = {
         ...formData,
+        meta: [],
         specs: [],
         benchmarks: [],
       };

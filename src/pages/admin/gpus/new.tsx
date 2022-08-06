@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 import React from 'react';
 import { withStaffGuard } from '../../../web/auth/with-staff-guard';
+import { GpuForm } from '../../../web/product/components/gpu-form';
 import { Article, ArticleHeader } from '../../../web/shared/components/article';
 import { Button, ButtonVariant } from '../../../web/shared/components/button';
 import { AdminLayout } from '../../../web/shared/layouts/admin';
@@ -18,6 +19,8 @@ const AdminNewGpuPage = (_props: AdminNewGpuPageProps) => {
             Back
           </Button>
         </ArticleHeader>
+
+        <GpuForm />
       </Article>
     </AdminLayout>
   );

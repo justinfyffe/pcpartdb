@@ -2,6 +2,7 @@ import { Model, PartialModelObject } from 'objection';
 import { Product, productSchema, ProductType } from '../../types/product';
 import { CanDto } from '../shared/types/normalize';
 import { ProductBenchmarkModel } from './benchmark/product-benchmark.model';
+import { ProductMetaModel } from './meta/product-meta.model';
 import { ProductSpecModel } from './spec/product-spec.model';
 
 export class ProductModel extends Model implements CanDto<Product> {
@@ -14,10 +15,19 @@ export class ProductModel extends Model implements CanDto<Product> {
   name!: string;
 
   // Relations
+  meta?: ProductMetaModel[];
   specs?: ProductSpecModel[];
   benchmarks?: ProductBenchmarkModel[];
 
   static relationMappings = {
+    meta: {
+      relation: Model.HasManyRelation,
+      modelClass: ProductMetaModel,
+      join: {
+        from: 'products.id',
+        to: 'product_meta.productId',
+      },
+    },
     specs: {
       relation: Model.HasManyRelation,
       modelClass: ProductSpecModel,
@@ -43,6 +53,7 @@ export class ProductModel extends Model implements CanDto<Product> {
       type: this.type,
       name: this.name,
 
+      meta: this.meta?.map((meta) => meta.toDto()) ?? [],
       specs: this.specs?.map((spec) => spec.toDto()) ?? [],
       benchmarks: this.benchmarks?.map((benchmark) => benchmark.toDto()) ?? [],
     };
