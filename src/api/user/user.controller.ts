@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import type { Response } from 'express';
 import type {
+  RegisterRequest,
   RequestPasswordResetRequest,
   ResetPasswordRequest,
   UserRequest,
@@ -42,6 +43,7 @@ export class UserController {
   }
 
   @Post()
+  @UseGuards(StaffGuard)
   async create(@Body() body: UserRequest) {
     return normalize(
       await transaction((trx) => this.service.create(body, { trx })),
@@ -53,6 +55,15 @@ export class UserController {
   async update(@Param('id') id: number, @Body() body: UserRequest) {
     return normalize(
       await transaction((trx) => this.service.update(id, body, { trx })),
+    ) as UserResponse;
+  }
+
+  @Post('register')
+  async register(@Body() body: RegisterRequest) {
+    return normalize(
+      await transaction((trx) =>
+        this.service.create({ ...body, isStaff: false }, { trx }),
+      ),
     ) as UserResponse;
   }
 

@@ -27,7 +27,7 @@ import { WebsiteLayout } from '../web/shared/layouts/website';
 
 interface RegisterFormData {
   email: string;
-  password?: string;
+  password: string;
 }
 
 const registerValidator = Joi.object({

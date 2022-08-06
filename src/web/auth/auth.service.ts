@@ -1,5 +1,5 @@
 import { AccessToken, LoginRequest } from '../../types/auth';
-import { UserRequest } from '../../types/user';
+import { RegisterRequest } from '../../types/user';
 import { ApiClient, apiClient } from '../shared/api/api-client';
 
 export class AuthService {
@@ -13,8 +13,8 @@ export class AuthService {
     return await this.api.post<AccessToken>('access-tokens', data);
   }
 
-  async register(data: UserRequest) {
-    return await this.api.post('users', data);
+  async register(data: RegisterRequest) {
+    return await this.api.post('users/register', data);
   }
 
   async logout() {

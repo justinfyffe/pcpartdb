@@ -17,6 +17,11 @@ export interface UserRequest {
   isStaff?: boolean;
 }
 
+export interface RegisterRequest {
+  email: string;
+  password: string;
+}
+
 export interface RequestPasswordResetRequest {
   email: string;
 }
