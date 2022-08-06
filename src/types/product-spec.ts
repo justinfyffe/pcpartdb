@@ -42,9 +42,6 @@ export enum GpuSpecKey {}
 export type ProductSpecKey = CpuSpecKey | GpuSpecKey;
 
 export interface ProductSpec<T = unknown> {
-  id?: number;
-  productId: number;
-
   source?: string;
   key: ProductSpecKey;
   value?: T;

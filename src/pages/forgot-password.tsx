@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import Joi from '@hapi/joi';
 import { joiResolver } from '@hookform/resolvers/joi';
 import React, { useCallback, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { ApiError, ValidationErrorType } from '../types/error';
 import { EMAIL_MAX_LENGTH } from '../types/user';
 import { withGuestGuard } from '../web/auth/with-guest-guard';
@@ -39,7 +39,7 @@ const ForgotPasswordPage = (_props: ForgotPasswordPageProps) => {
   const [success, setSuccess] = useState(false);
 
   const {
-    register,
+    control,
     handleSubmit,
     setError,
     formState: { errors },
@@ -96,9 +96,10 @@ const ForgotPasswordPage = (_props: ForgotPasswordPageProps) => {
         <Form onSubmit={handleSubmit(handleRequest)}>
           <Field>
             Email
-            <Input
+            <Controller
               name="email"
-              {...register('email', { maxLength: EMAIL_MAX_LENGTH })}
+              control={control}
+              render={({ field }) => <Input {...field} ref={null} />}
             />
             {errors.email?.type === ValidationErrorType.MissingStringValue && (
               <FieldError>Required</FieldError>

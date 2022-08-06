@@ -140,51 +140,47 @@ export const UserForm: FunctionComponent<UserFormProps> = (props) => {
         </Alert>
       )}
 
-      <section>
-        <Field>
-          Email
-          <Controller
-            name="email"
-            control={control}
-            render={({ field }) => <Input {...field} ref={null} />}
-          />
-          {errors.email?.type === ValidationErrorType.MissingStringValue && (
-            <FieldError>Required</FieldError>
-          )}
-          {errors.email?.type === ValidationErrorType.InvalidEmail && (
-            <FieldError>Please enter a valid email</FieldError>
-          )}
-        </Field>
+      <Field>
+        Email
+        <Controller
+          name="email"
+          control={control}
+          render={({ field }) => <Input {...field} ref={null} />}
+        />
+        {errors.email?.type === ValidationErrorType.MissingStringValue && (
+          <FieldError>Required</FieldError>
+        )}
+        {errors.email?.type === ValidationErrorType.InvalidEmail && (
+          <FieldError>Please enter a valid email</FieldError>
+        )}
+      </Field>
 
-        <Field>
-          Password {isUpdate && <FieldOptional>(Optional)</FieldOptional>}
-          <Controller
-            name="password"
-            control={control}
-            render={({ field }) => (
-              <Input type="password" {...field} ref={null} />
-            )}
-          />
-          {isUpdate && (
-            <FieldHint>Leave blank to not change password</FieldHint>
+      <Field>
+        Password {isUpdate && <FieldOptional>(Optional)</FieldOptional>}
+        <Controller
+          name="password"
+          control={control}
+          render={({ field }) => (
+            <Input type="password" {...field} ref={null} />
           )}
-          {errors.password?.type === ValidationErrorType.MissingStringValue && (
-            <FieldError>Required</FieldError>
-          )}
-        </Field>
+        />
+        {isUpdate && <FieldHint>Leave blank to not change password</FieldHint>}
+        {errors.password?.type === ValidationErrorType.MissingStringValue && (
+          <FieldError>Required</FieldError>
+        )}
+      </Field>
 
-        <Field>
-          <Controller
-            name="isStaff"
-            control={control}
-            render={({ field }) => (
-              <Checkbox {...field} ref={null}>
-                Staff
-              </Checkbox>
-            )}
-          />
-        </Field>
-      </section>
+      <Field>
+        <Controller
+          name="isStaff"
+          control={control}
+          render={({ field }) => (
+            <Checkbox {...field} ref={null}>
+              Staff
+            </Checkbox>
+          )}
+        />
+      </Field>
 
       <FormActions>
         {isUpdate && (

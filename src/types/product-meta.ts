@@ -5,9 +5,6 @@ export enum ProductMetaKey {
 }
 
 export interface ProductMeta<T = unknown> {
-  id?: number;
-  productId: number;
-
   source?: string;
   key: ProductMetaKey;
   value?: T;

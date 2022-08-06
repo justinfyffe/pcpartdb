@@ -172,88 +172,82 @@ export const ImageForm: FunctionComponent<ImageFormProps> = (props) => {
         </Alert>
       )}
 
-      <section>
-        <div className="flex mx-[-8px]">
-          <Field className="flex-[1_0_0] mx-2">
-            File {isUpdate && <FieldOptional>(Optional)</FieldOptional>}
-            <File name="file" onChange={handleFileChange} />
-            {(errors.file as unknown as FormFieldError)?.type ===
-              ValidationErrorType.MissingRequiredAny && (
-              <FieldError>Required</FieldError>
-            )}
-            {imageMeta == null && isUpdate && (
-              <FieldHint>
-                Uploading a new file will replace the previous file.
-              </FieldHint>
-            )}
-            {imageMeta != null && (
-              <FieldHint className="flex justify-between">
-                <span>Size: {formatFileSize(imageMeta.fileSize)}</span>
-                <span>
-                  Dimensions:{' '}
-                  {formatDimensions(imageMeta.width, imageMeta.height)}
-                </span>
-              </FieldHint>
-            )}
-          </Field>
-
-          <Field className="flex-[1_0_0] mx-2">
-            Path
-            <Controller
-              name="path"
-              control={control}
-              render={({ field }) => (
-                <Input name="path" {...field} ref={null} />
-              )}
-            />
-            {errors.path?.type === ValidationErrorType.MissingStringValue && (
-              <FieldError>Required</FieldError>
-            )}
-          </Field>
-        </div>
-
-        <Field>
-          Name
-          <Controller
-            name="name"
-            control={control}
-            render={({ field }) => <Input name="name" {...field} ref={null} />}
-          />
-          {errors.name?.type === ValidationErrorType.MissingStringValue && (
+      <div className="flex mx-[-8px]">
+        <Field className="flex-[1_0_0] mx-2">
+          File {isUpdate && <FieldOptional>(Optional)</FieldOptional>}
+          <File name="file" onChange={handleFileChange} />
+          {(errors.file as unknown as FormFieldError)?.type ===
+            ValidationErrorType.MissingRequiredAny && (
             <FieldError>Required</FieldError>
+          )}
+          {imageMeta == null && isUpdate && (
+            <FieldHint>
+              Uploading a new file will replace the previous file.
+            </FieldHint>
+          )}
+          {imageMeta != null && (
+            <FieldHint className="flex justify-between">
+              <span>Size: {formatFileSize(imageMeta.fileSize)}</span>
+              <span>
+                Dimensions:{' '}
+                {formatDimensions(imageMeta.width, imageMeta.height)}
+              </span>
+            </FieldHint>
           )}
         </Field>
 
-        <Field>
-          Source Name
+        <Field className="flex-[1_0_0] mx-2">
+          Path
           <Controller
-            name="sourceName"
+            name="path"
             control={control}
-            render={({ field }) => (
-              <Input name="sourceName" {...field} ref={null} />
-            )}
+            render={({ field }) => <Input name="path" {...field} ref={null} />}
           />
-          {errors.sourceName?.type ===
-            ValidationErrorType.MissingStringValue && (
+          {errors.path?.type === ValidationErrorType.MissingStringValue && (
             <FieldError>Required</FieldError>
           )}
         </Field>
+      </div>
 
-        <Field>
-          Source Url
-          <Controller
-            name="sourceUrl"
-            control={control}
-            render={({ field }) => (
-              <Input name="sourceUrl" {...field} ref={null} />
-            )}
-          />
-          {errors.sourceUrl?.type ===
-            ValidationErrorType.MissingStringValue && (
-            <FieldError>Required</FieldError>
+      <Field>
+        Name
+        <Controller
+          name="name"
+          control={control}
+          render={({ field }) => <Input name="name" {...field} ref={null} />}
+        />
+        {errors.name?.type === ValidationErrorType.MissingStringValue && (
+          <FieldError>Required</FieldError>
+        )}
+      </Field>
+
+      <Field>
+        Source Name
+        <Controller
+          name="sourceName"
+          control={control}
+          render={({ field }) => (
+            <Input name="sourceName" {...field} ref={null} />
           )}
-        </Field>
-      </section>
+        />
+        {errors.sourceName?.type === ValidationErrorType.MissingStringValue && (
+          <FieldError>Required</FieldError>
+        )}
+      </Field>
+
+      <Field>
+        Source Url
+        <Controller
+          name="sourceUrl"
+          control={control}
+          render={({ field }) => (
+            <Input name="sourceUrl" {...field} ref={null} />
+          )}
+        />
+        {errors.sourceUrl?.type === ValidationErrorType.MissingStringValue && (
+          <FieldError>Required</FieldError>
+        )}
+      </Field>
 
       <FormActions>
         {isUpdate && (

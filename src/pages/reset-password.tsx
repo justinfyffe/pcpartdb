@@ -4,7 +4,7 @@ import { joiResolver } from '@hookform/resolvers/joi';
 import { NextPageContext } from 'next';
 import { useRouter } from 'next/router';
 import React, { useCallback, useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { ApiError, ValidationErrorType } from '../types/error';
 import { PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH } from '../types/user';
 import { withGuestGuard } from '../web/auth/with-guest-guard';
@@ -52,7 +52,7 @@ const ResetPasswordPage = (props: ResetPasswordPageProps) => {
   }, [router, token]);
 
   const {
-    register,
+    control,
     handleSubmit,
     setError,
     formState: { errors },
@@ -108,25 +108,30 @@ const ResetPasswordPage = (props: ResetPasswordPageProps) => {
         </p>
 
         <Form onSubmit={handleSubmit(handleReset)}>
-          <Input type="hidden" name="token" {...register('token')} />
+          <Controller
+            name="token"
+            control={control}
+            render={({ field }) => (
+              <Input type="hidden" {...field} ref={null} />
+            )}
+          />
 
           <Field>
-            <label>
-              New Password
-              <Input
-                type="password"
-                name="password"
-                maxLength={PASSWORD_MAX_LENGTH}
-                {...register('password', { maxLength: PASSWORD_MAX_LENGTH })}
-              />
-              {errors.password?.type ===
-                ValidationErrorType.MissingStringValue && (
-                <FieldError>Required</FieldError>
+            New Password
+            <Controller
+              name="password"
+              control={control}
+              render={({ field }) => (
+                <Input type="password" {...field} ref={null} />
               )}
-              {errors.password?.type === ValidationErrorType.MinLength && (
-                <FieldError>Must be at least 5 characters</FieldError>
-              )}
-            </label>
+            />
+            {errors.password?.type ===
+              ValidationErrorType.MissingStringValue && (
+              <FieldError>Required</FieldError>
+            )}
+            {errors.password?.type === ValidationErrorType.MinLength && (
+              <FieldError>Must be at least 5 characters</FieldError>
+            )}
           </Field>
 
           <FormActions>
