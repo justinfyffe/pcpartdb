@@ -1,9 +1,9 @@
 import 'reflect-metadata';
+import Joi from '@hapi/joi';
 import { joiResolver } from '@hookform/resolvers/joi';
 import React, { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import {
-  contactValidator,
   EMAIL_MAX_LENGTH,
   MESSAGE_MAX_LENGTH,
   NAME_MAX_LENGTH,
@@ -25,14 +25,24 @@ import { Spinner } from '../web/shared/components/spinner';
 import { Textarea } from '../web/shared/components/textarea';
 import { WebsiteLayout } from '../web/shared/layouts/website';
 
-interface ContactPageProps {}
-
-interface FormData {
+interface ContactFormData {
   name: string;
   email: string;
   subject?: string;
   message: string;
 }
+
+const contactValidator = Joi.object({
+  name: Joi.string().max(NAME_MAX_LENGTH).required(),
+  email: Joi.string()
+    .email({ tlds: { allow: false } })
+    .max(EMAIL_MAX_LENGTH)
+    .required(),
+  subject: Joi.string().max(SUBJECT_MAX_LENGTH).allow('', null),
+  message: Joi.string().max(MESSAGE_MAX_LENGTH).required(),
+}).options({ abortEarly: false });
+
+interface ContactPageProps {}
 
 const ContactPage = (_props: ContactPageProps) => {
   const [sending, setSending] = useState(false);
@@ -43,13 +53,13 @@ const ContactPage = (_props: ContactPageProps) => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormData>({
+  } = useForm<ContactFormData>({
     resolver: joiResolver(contactValidator),
     mode: 'onTouched',
     reValidateMode: 'onChange',
   });
 
-  const handleSend = useCallback(async (formData: FormData) => {
+  const handleSend = useCallback(async (formData: ContactFormData) => {
     setSuccess(false);
     setFailed(false);
     setSending(true);

@@ -1,3 +1,4 @@
+import Joi from '@hapi/joi';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { useRouter } from 'next/router';
 import React, {
@@ -13,13 +14,7 @@ import {
   UseFormProps,
 } from 'react-hook-form';
 import { ApiError, ValidationErrorType } from '../../../types/error';
-import {
-  createImageValidator,
-  Image,
-  ImageFormData,
-  ImageMeta,
-  updateImageValidator,
-} from '../../../types/image';
+import { Image, ImageMeta, ImageRequest } from '../../../types/image';
 import { Alert, AlertVariant } from '../../shared/components/alert';
 import { Button, ButtonVariant } from '../../shared/components/button';
 import {
@@ -39,6 +34,24 @@ import {
 import { imageService } from '../image.service';
 import { formatDimensions, formatFileSize, getImageMeta } from '../image.utils';
 
+interface ImageFormData {
+  path: string;
+  name: string;
+
+  sourceName?: string;
+  sourceUrl?: string;
+
+  file?: File;
+}
+
+const imageValidator = Joi.object({
+  name: Joi.string().required(),
+  path: Joi.string().required(),
+  sourceName: Joi.string().allow('', null),
+  sourceUrl: Joi.string().allow('', null),
+  file: Joi.any(),
+}).options({ abortEarly: false });
+
 interface ImageFormProps {
   image?: Image;
   redirectOnSuccess?: boolean;
@@ -46,9 +59,7 @@ interface ImageFormProps {
 }
 
 const formOptions = (image?: Image): UseFormProps<ImageFormData> => ({
-  resolver: joiResolver(
-    image != null ? updateImageValidator : createImageValidator,
-  ),
+  resolver: joiResolver(imageValidator),
   mode: 'onBlur',
   defaultValues: {
     path: image?.path ?? '',
@@ -75,7 +86,7 @@ export const ImageForm: FunctionComponent<ImageFormProps> = (props) => {
     setValue,
     setError,
     formState: { errors },
-  } = useForm<ImageFormData>(formOptions(image));
+  } = useForm<ImageRequest>(formOptions(image));
 
   // https://github.com/react-hook-form/react-hook-form/issues/127
   useEffect(() => {
@@ -89,7 +100,7 @@ export const ImageForm: FunctionComponent<ImageFormProps> = (props) => {
       const fileSize = imageMeta?.fileSize ?? image?.fileSize;
       const width = imageMeta?.width ?? image?.width;
       const height = imageMeta?.height ?? image?.height;
-      const data = { ...formData, fileSize, width, height } as ImageFormData;
+      const data: ImageRequest = { ...formData, fileSize, width, height };
 
       try {
         const savedImage = isUpdate

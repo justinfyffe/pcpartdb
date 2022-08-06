@@ -1,10 +1,11 @@
 import 'reflect-metadata';
+import Joi from '@hapi/joi';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { useRouter } from 'next/dist/client/router';
 import React, { FunctionComponent, useCallback, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { LoginFormData, loginValidator } from '../types/auth';
 import { ApiError, ValidationErrorType } from '../types/error';
+import { EMAIL_MAX_LENGTH, PASSWORD_MAX_LENGTH } from '../types/user';
 import { authService } from '../web/auth/auth.service';
 import { withGuestGuard } from '../web/auth/with-guest-guard';
 import { Alert, AlertVariant } from '../web/shared/components/alert';
@@ -20,6 +21,21 @@ import {
   setValidationErrors,
 } from '../web/shared/error/error.utils';
 import { WebsiteLayout } from '../web/shared/layouts/website';
+
+interface LoginFormData {
+  email: string;
+  password: string;
+  remember: boolean;
+}
+
+const loginFormValidator = Joi.object({
+  email: Joi.string()
+    .email({ tlds: { allow: false } })
+    .max(EMAIL_MAX_LENGTH)
+    .required(),
+  password: Joi.string().max(PASSWORD_MAX_LENGTH).required(),
+  remember: Joi.boolean(),
+}).options({ abortEarly: false });
 
 interface LoginPageProps {}
 
@@ -42,7 +58,7 @@ const LoginPage: FunctionComponent<LoginPageProps> = (
     setError,
     formState: { errors },
   } = useForm<LoginFormData>({
-    resolver: joiResolver(loginValidator),
+    resolver: joiResolver(loginFormValidator),
     mode: 'onBlur',
     defaultValues: {
       email: '',

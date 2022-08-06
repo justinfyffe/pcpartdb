@@ -1,13 +1,10 @@
 import 'reflect-metadata';
+import Joi from '@hapi/joi';
 import { joiResolver } from '@hookform/resolvers/joi';
 import React, { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { ApiError, ValidationErrorType } from '../types/error';
-import {
-  EMAIL_MAX_LENGTH,
-  RequestPasswordResetFormData,
-  requestPasswordResetValidator,
-} from '../types/user';
+import { EMAIL_MAX_LENGTH } from '../types/user';
 import { withGuestGuard } from '../web/auth/with-guest-guard';
 import { Alert, AlertVariant } from '../web/shared/components/alert';
 import { Article, ArticleHeader } from '../web/shared/components/article';
@@ -22,6 +19,17 @@ import {
 } from '../web/shared/error/error.utils';
 import { WebsiteLayout } from '../web/shared/layouts/website';
 import { userService } from '../web/user/user.service';
+
+interface RequestPasswordResetFormData {
+  email: string;
+}
+
+const requestPasswordResetValidator = Joi.object({
+  email: Joi.string()
+    .email({ tlds: { allow: false } })
+    .max(EMAIL_MAX_LENGTH)
+    .required(),
+}).options({ abortEarly: false });
 
 interface ForgotPasswordPageProps {}
 

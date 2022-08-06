@@ -1,6 +1,6 @@
 import { denormalize } from 'normalizr';
 import {
-  ProductFormData,
+  ProductRequest,
   ProductResponse,
   productSchema,
   ProductsResponse,
@@ -22,12 +22,12 @@ export class UserService {
     return denormalize(response.result, productSchema, response.entities);
   }
 
-  async create(data: ProductFormData) {
+  async create(data: ProductRequest) {
     const response = await this.api.post<ProductResponse>(PATH, data);
     return denormalize(response.result, productSchema, response.entities);
   }
 
-  async update(id: number, data: ProductFormData) {
+  async update(id: number, data: ProductRequest) {
     const response = await this.api.put<ProductResponse>(`${PATH}/${id}`, data);
     return denormalize(response.result, productSchema, response.entities);
   }

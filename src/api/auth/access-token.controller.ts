@@ -10,7 +10,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import type { Request, Response } from 'express';
-import type { AccessToken, LoginFormData } from '../../types/auth';
+import type { AccessToken, LoginRequest } from '../../types/auth';
 import { User } from '../../types/user';
 import { transaction } from '../db/database';
 import { AccessTokenService } from './access-token.service';
@@ -36,7 +36,7 @@ export class AccessTokenController {
   }
 
   @Post()
-  async login(@Body() body: LoginFormData, @Res() response: Response) {
+  async login(@Body() body: LoginRequest, @Res() response: Response) {
     await transaction(async (trx) => {
       const token = await this.service.login(body, { trx, response });
 

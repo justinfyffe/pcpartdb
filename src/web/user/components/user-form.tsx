@@ -1,13 +1,14 @@
+import Joi from '@hapi/joi';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { useRouter } from 'next/router';
 import React, { FunctionComponent, useCallback, useState } from 'react';
 import { Controller, useForm, UseFormProps } from 'react-hook-form';
 import { ApiError, ValidationErrorType } from '../../../types/error';
 import {
-  createUserValidator,
-  updateUserValidator,
+  EMAIL_MAX_LENGTH,
+  PASSWORD_MAX_LENGTH,
+  PASSWORD_MIN_LENGTH,
   User,
-  UserFormData,
 } from '../../../types/user';
 import { Alert, AlertVariant } from '../../shared/components/alert';
 import { Button, ButtonVariant } from '../../shared/components/button';
@@ -26,6 +27,37 @@ import {
   setValidationErrors,
 } from '../../shared/error/error.utils';
 import { userService } from '../user.service';
+
+interface UserFormData {
+  email: string;
+  password?: string;
+  isStaff?: boolean;
+}
+
+const createUserValidator = Joi.object({
+  email: Joi.string()
+    .email({ tlds: { allow: false } })
+    .max(EMAIL_MAX_LENGTH)
+    .required(),
+  password: Joi.string()
+    .min(PASSWORD_MIN_LENGTH)
+    .max(PASSWORD_MAX_LENGTH)
+    .required(),
+  isStaff: Joi.boolean(),
+}).options({ abortEarly: false });
+
+const updateUserValidator = Joi.object({
+  email: Joi.string()
+    .email({ tlds: { allow: false } })
+    .max(EMAIL_MAX_LENGTH)
+    .required(),
+  password: Joi.string()
+    .min(PASSWORD_MIN_LENGTH)
+    .max(PASSWORD_MAX_LENGTH)
+    .allow(null, '')
+    .optional(),
+  isStaff: Joi.boolean(),
+}).options({ abortEarly: false });
 
 interface UserFormProps {
   user?: User;

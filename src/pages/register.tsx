@@ -1,10 +1,15 @@
 import 'reflect-metadata';
+import Joi from '@hapi/joi';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { useRouter } from 'next/router';
 import React, { useCallback, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { ApiError, ValidationErrorType } from '../types/error';
-import { createUserValidator, UserFormData } from '../types/user';
+import {
+  EMAIL_MAX_LENGTH,
+  PASSWORD_MAX_LENGTH,
+  PASSWORD_MIN_LENGTH,
+} from '../types/user';
 import { authService } from '../web/auth/auth.service';
 import { withGuestGuard } from '../web/auth/with-guest-guard';
 import { Alert, AlertVariant } from '../web/shared/components/alert';
@@ -20,6 +25,22 @@ import {
 } from '../web/shared/error/error.utils';
 import { WebsiteLayout } from '../web/shared/layouts/website';
 
+interface RegisterFormData {
+  email: string;
+  password?: string;
+}
+
+const registerValidator = Joi.object({
+  email: Joi.string()
+    .email({ tlds: { allow: false } })
+    .max(EMAIL_MAX_LENGTH)
+    .required(),
+  password: Joi.string()
+    .min(PASSWORD_MIN_LENGTH)
+    .max(PASSWORD_MAX_LENGTH)
+    .required(),
+}).options({ abortEarly: false });
+
 interface RegisterPageProps {}
 
 const RegisterPage = (_props: RegisterPageProps) => {
@@ -32,8 +53,8 @@ const RegisterPage = (_props: RegisterPageProps) => {
     handleSubmit,
     setError,
     formState: { errors },
-  } = useForm<UserFormData>({
-    resolver: joiResolver(createUserValidator),
+  } = useForm<RegisterFormData>({
+    resolver: joiResolver(registerValidator),
     mode: 'onBlur',
     defaultValues: {
       email: '',
@@ -42,7 +63,7 @@ const RegisterPage = (_props: RegisterPageProps) => {
   });
 
   const handleRegister = useCallback(
-    async (data: UserFormData) => {
+    async (data: RegisterFormData) => {
       setLoading(true);
 
       try {

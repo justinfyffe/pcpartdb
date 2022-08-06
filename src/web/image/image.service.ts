@@ -1,6 +1,6 @@
 import { denormalize } from 'normalizr';
 import {
-  ImageFormData,
+  ImageRequest,
   ImageResponse,
   imageSchema,
   ImagesResponse,
@@ -22,7 +22,7 @@ export class ImageService {
     return denormalize(response.result, imageSchema, response.entities);
   }
 
-  async create(formData: ImageFormData) {
+  async create(formData: ImageRequest) {
     const data = new FormData();
     data.append('formData', JSON.stringify(formData));
     data.append('file', formData.file);
@@ -34,7 +34,7 @@ export class ImageService {
     return denormalize(response.result, imageSchema, response.entities);
   }
 
-  async update(id: number, formData: ImageFormData) {
+  async update(id: number, formData: ImageRequest) {
     const data = new FormData();
     data.append('formData', JSON.stringify(formData));
     if (formData.file) {

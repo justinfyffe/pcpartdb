@@ -1,4 +1,3 @@
-import Joi from '@hapi/joi';
 import { schema } from 'normalizr';
 
 export enum CpuBenchmarkKey {}
@@ -23,22 +22,4 @@ export interface GpuProductBenchmark<T = unknown> extends ProductBenchmark<T> {
   key: GpuBenchmarkKey;
 }
 
-export interface ProductBenchmarkFormData {
-  key: ProductBenchmarkKey;
-  value?: unknown;
-  source?: string;
-}
-
 export const productBenchmarkSchema = new schema.Entity('productBenchmarks');
-
-export const createProductBenchmarkValidator = Joi.object({
-  key: Joi.string().required(),
-  value: Joi.any(),
-  source: Joi.string(),
-}).options({ abortEarly: false });
-
-export const updateProductBenchmarkValidator = Joi.object({
-  key: Joi.string().required(),
-  value: Joi.any(),
-  source: Joi.string(),
-}).options({ abortEarly: false });

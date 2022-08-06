@@ -1,4 +1,3 @@
-import Joi from '@hapi/joi';
 import { schema } from 'normalizr';
 
 export enum CpuSpecKey {
@@ -59,22 +58,4 @@ export interface GpuProductSpec<T = unknown> extends ProductSpec<T> {
   key: GpuSpecKey;
 }
 
-export interface ProductSpecFormData {
-  key: ProductSpecKey;
-  value?: unknown;
-  source?: string;
-}
-
 export const productSpecSchema = new schema.Entity('productSpecs');
-
-export const createProductSpecValidator = Joi.object({
-  key: Joi.string().required(),
-  value: Joi.any(),
-  source: Joi.string(),
-}).options({ abortEarly: false });
-
-export const updateProductSpecValidator = Joi.object({
-  key: Joi.string().required(),
-  value: Joi.any(),
-  source: Joi.string(),
-}).options({ abortEarly: false });

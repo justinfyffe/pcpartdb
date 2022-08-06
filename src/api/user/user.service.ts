@@ -1,13 +1,13 @@
+import Joi from '@hapi/joi';
 import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
 import {
-  createUserValidator,
-  RequestPasswordResetFormData,
-  requestPasswordResetValidator,
-  ResetPasswordFormData,
-  resetPasswordValidator,
-  updateUserValidator,
-  UserFormData,
+  EMAIL_MAX_LENGTH,
+  PASSWORD_MAX_LENGTH,
+  PASSWORD_MIN_LENGTH,
+  RequestPasswordResetRequest,
+  ResetPasswordRequest,
+  UserRequest,
 } from '../../types/user';
 import { generateToken } from '../shared/crypto/crypto.utils';
 import { sendEmail } from '../shared/email/email.utils';
@@ -26,6 +26,46 @@ import { ServiceContext } from '../shared/service/context';
 import { validate } from '../shared/types/validate';
 import { UserRepository } from './user.repository';
 
+const createUserValidator = Joi.object({
+  email: Joi.string()
+    .email({ tlds: { allow: false } })
+    .max(EMAIL_MAX_LENGTH)
+    .required(),
+  password: Joi.string()
+    .min(PASSWORD_MIN_LENGTH)
+    .max(PASSWORD_MAX_LENGTH)
+    .required(),
+  isStaff: Joi.boolean(),
+}).options({ abortEarly: false });
+
+const updateUserValidator = Joi.object({
+  email: Joi.string()
+    .email({ tlds: { allow: false } })
+    .max(EMAIL_MAX_LENGTH)
+    .required(),
+  password: Joi.string()
+    .min(PASSWORD_MIN_LENGTH)
+    .max(PASSWORD_MAX_LENGTH)
+    .allow(null, '')
+    .optional(),
+  isStaff: Joi.boolean(),
+}).options({ abortEarly: false });
+
+const requestPasswordResetValidator = Joi.object({
+  email: Joi.string()
+    .email({ tlds: { allow: false } })
+    .max(EMAIL_MAX_LENGTH)
+    .required(),
+}).options({ abortEarly: false });
+
+const resetPasswordValidator = Joi.object({
+  token: Joi.string().required(),
+  password: Joi.string()
+    .min(PASSWORD_MIN_LENGTH)
+    .max(PASSWORD_MAX_LENGTH)
+    .required(),
+}).options({ abortEarly: false });
+
 @Injectable()
 export class UserService {
   constructor(private userRepository: UserRepository) {}
@@ -43,7 +83,7 @@ export class UserService {
     return user;
   }
 
-  async create(data: UserFormData, ctx: ServiceContext) {
+  async create(data: UserRequest, ctx: ServiceContext) {
     validate(data, createUserValidator);
 
     const existingUser = await this.userRepository.findByEmail(data.email);
@@ -74,7 +114,7 @@ export class UserService {
   }
 
   // TODO: don't allow removing last staff user
-  async update(id: number, data: UserFormData, ctx: ServiceContext) {
+  async update(id: number, data: UserRequest, ctx: ServiceContext) {
     validate(data, updateUserValidator);
 
     const user = await this.userRepository.findById(id, ctx);
@@ -106,7 +146,7 @@ export class UserService {
   }
 
   async requestPasswordReset(
-    data: RequestPasswordResetFormData,
+    data: RequestPasswordResetRequest,
     ctx: ServiceContext,
   ) {
     validate(data, requestPasswordResetValidator);
@@ -139,7 +179,7 @@ export class UserService {
     });
   }
 
-  async resetPassword(data: ResetPasswordFormData, ctx: ServiceContext) {
+  async resetPassword(data: ResetPasswordRequest, ctx: ServiceContext) {
     validate(data, resetPasswordValidator);
 
     if (!verifyJwt(JwtType.ResetPassword, data.token)) {

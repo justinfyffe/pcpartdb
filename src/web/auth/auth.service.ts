@@ -1,5 +1,5 @@
-import { AccessToken, LoginFormData } from '../../types/auth';
-import { UserFormData } from '../../types/user';
+import { AccessToken, LoginRequest } from '../../types/auth';
+import { UserRequest } from '../../types/user';
 import { ApiClient, apiClient } from '../shared/api/api-client';
 
 export class AuthService {
@@ -9,11 +9,11 @@ export class AuthService {
     return await this.api.get<AccessToken>('access-tokens');
   }
 
-  async login(data: LoginFormData) {
+  async login(data: LoginRequest) {
     return await this.api.post<AccessToken>('access-tokens', data);
   }
 
-  async register(data: UserFormData) {
+  async register(data: UserRequest) {
     return await this.api.post('users', data);
   }
 

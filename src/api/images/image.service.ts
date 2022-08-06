@@ -1,15 +1,24 @@
+import Joi from '@hapi/joi';
 import { Injectable } from '@nestjs/common';
 import { ValidationErrorType } from '../../types/error';
-import {
-  createImageValidator,
-  ImageFormData,
-  updateImageValidator,
-} from '../../types/image';
+import { ImageRequest } from '../../types/image';
 import { badRequestError, notFoundError } from '../shared/errors/errors';
 import { ServiceContext } from '../shared/service/context';
 import { validate } from '../shared/types/validate';
 import * as uploads from '../shared/uploads/uploads.utils';
 import { ImageRepository } from './image.repository';
+
+const imageValidator = Joi.object({
+  name: Joi.string().required(),
+  path: Joi.string().required(),
+  fileSize: Joi.number(),
+  height: Joi.number(),
+  width: Joi.number(),
+  sourceName: Joi.string().allow('', null),
+  sourceUrl: Joi.string().allow('', null),
+  file: Joi.any().required(),
+  tempPath: Joi.string().allow('', null),
+}).options({ abortEarly: false });
 
 @Injectable()
 export class ImageService {
@@ -28,8 +37,8 @@ export class ImageService {
     return image;
   }
 
-  async create(data: ImageFormData, ctx: ServiceContext) {
-    validate(data, createImageValidator);
+  async create(data: ImageRequest, ctx: ServiceContext) {
+    validate(data, imageValidator);
 
     await uploads.move(
       uploads.tmpPath(data.tempPath),
@@ -50,8 +59,8 @@ export class ImageService {
     );
   }
 
-  async update(id: number, data: ImageFormData, ctx: ServiceContext) {
-    validate(data, updateImageValidator);
+  async update(id: number, data: ImageRequest, ctx: ServiceContext) {
+    validate(data, imageValidator);
 
     const image = await this.imageRepository.findById(id, ctx);
     if (image == null) {

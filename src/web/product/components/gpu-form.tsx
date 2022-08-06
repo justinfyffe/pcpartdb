@@ -1,14 +1,13 @@
+import Joi from '@hapi/joi';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { useRouter } from 'next/router';
 import React, { FunctionComponent, useCallback, useState } from 'react';
 import { Controller, useForm, UseFormProps } from 'react-hook-form';
 import { ApiError, ValidationErrorType } from '../../../types/error';
 import {
-  createProductValidator,
   GpuProduct,
-  ProductFormData,
+  ProductRequest,
   ProductType,
-  updateProductValidator,
 } from '../../../types/product';
 import { Alert, AlertVariant } from '../../shared/components/alert';
 import { Button, ButtonVariant } from '../../shared/components/button';
@@ -22,21 +21,29 @@ import {
 } from '../../shared/error/error.utils';
 import { productService } from '../product.service';
 
+interface ProductFormData {
+  slug: string;
+  type: ProductType;
+  name: string;
+}
+
+const productValidator = Joi.object({
+  slug: Joi.string().required(),
+  type: Joi.string().valid(ProductType.CPU, ProductType.GPU),
+  name: Joi.string().required(),
+}).options({ abortEarly: false });
+
 interface GpuFormProps {
   gpu?: GpuProduct;
 }
 
 const formOptions = (gpu?: GpuProduct): UseFormProps<ProductFormData> => ({
-  resolver: joiResolver(
-    gpu != null ? updateProductValidator : createProductValidator,
-  ),
+  resolver: joiResolver(productValidator),
   mode: 'onBlur',
   defaultValues: {
     slug: gpu?.slug ?? '',
     type: ProductType.GPU,
     name: gpu?.name ?? '',
-    specs: gpu?.specs ?? [],
-    benchmarks: gpu?.benchmarks ?? [],
   },
 });
 
@@ -60,11 +67,17 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
     async (formData: ProductFormData) => {
       setSaving(true);
 
+      const request: ProductRequest = {
+        ...formData,
+        specs: [],
+        benchmarks: [],
+      };
+
       try {
         if (isUpdate) {
-          await productService.update(gpu.id, formData);
+          await productService.update(gpu.id, request);
         } else {
-          await productService.create(formData);
+          await productService.create(request);
         }
         router.push('/admin/users');
       } catch (err) {

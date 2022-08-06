@@ -1,7 +1,8 @@
+import Joi from '@hapi/joi';
 import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
-import { AccessToken, LoginFormData, loginValidator } from '../../types/auth';
-import { User } from '../../types/user';
+import { AccessToken, LoginRequest } from '../../types/auth';
+import { EMAIL_MAX_LENGTH, PASSWORD_MAX_LENGTH, User } from '../../types/user';
 import { CookieService } from '../shared/cookie/cookie.service';
 import { SESSION_COOKIE } from '../shared/cookie/cookies';
 import { generateToken, hashToken } from '../shared/crypto/crypto.utils';
@@ -14,6 +15,15 @@ import { AccessTokenRepository } from './access-token.repository';
 const SESSION_EXPIRES = 1000 * 60 * 60 * 24; // 1 day
 const COOKIE_EXPIRES = 1000 * 60 * 60 * 24 * 30; // 30 days
 
+const loginRequestValidator = Joi.object({
+  email: Joi.string()
+    .email({ tlds: { allow: false } })
+    .max(EMAIL_MAX_LENGTH)
+    .required(),
+  password: Joi.string().max(PASSWORD_MAX_LENGTH).required(),
+  remember: Joi.boolean(),
+}).options({ abortEarly: false });
+
 @Injectable()
 export class AccessTokenService {
   constructor(
@@ -22,19 +32,17 @@ export class AccessTokenService {
     private userRepository: UserRepository,
   ) {}
 
-  async login(formData: LoginFormData, ctx: ServiceContext) {
-    validate(formData, loginValidator);
+  async login(data: LoginRequest, ctx: ServiceContext) {
+    validate(data, loginRequestValidator);
 
-    const user = await this.userRepository.findByEmail(formData.email, ctx);
-    if (
-      !(user && (await bcrypt.compare(formData.password, user.passwordHash)))
-    ) {
+    const user = await this.userRepository.findByEmail(data.email, ctx);
+    if (!(user && (await bcrypt.compare(data.password, user.passwordHash)))) {
       throw forbiddenError();
     }
 
     const token = generateToken();
     const expiresAt = new Date(
-      Date.now() + (formData.remember ? COOKIE_EXPIRES : SESSION_EXPIRES),
+      Date.now() + (data.remember ? COOKIE_EXPIRES : SESSION_EXPIRES),
     );
 
     await this.accessTokenRepository.save(
@@ -46,7 +54,7 @@ export class AccessTokenService {
       ctx,
     );
     this.cookieService.save(ctx.response, SESSION_COOKIE, token, {
-      expires: formData.remember ? expiresAt.getTime() : undefined,
+      expires: data.remember ? expiresAt.getTime() : undefined,
     });
 
     return { token, user: user.toDto() } as AccessToken;

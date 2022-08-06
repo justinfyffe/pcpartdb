@@ -1,8 +1,8 @@
 import { denormalize } from 'normalizr';
 import {
-  RequestPasswordResetFormData,
-  ResetPasswordFormData,
-  UserFormData,
+  RequestPasswordResetRequest,
+  ResetPasswordRequest,
+  UserRequest,
   UserResponse,
   userSchema,
   UsersResponse,
@@ -24,12 +24,12 @@ export class UserService {
     return denormalize(response.result, userSchema, response.entities);
   }
 
-  async create(data: UserFormData) {
+  async create(data: UserRequest) {
     const response = await this.api.post<UserResponse>(PATH, data);
     return denormalize(response.result, userSchema, response.entities);
   }
 
-  async update(id: number, data: UserFormData) {
+  async update(id: number, data: UserRequest) {
     const response = await this.api.put<UserResponse>(`${PATH}/${id}`, data);
     return denormalize(response.result, userSchema, response.entities);
   }
@@ -38,11 +38,11 @@ export class UserService {
     await this.api.delete(`${PATH}/${id}`);
   }
 
-  async requestPasswordReset(data: RequestPasswordResetFormData) {
+  async requestPasswordReset(data: RequestPasswordResetRequest) {
     await this.api.post(`${PATH}/request-password-reset`, data);
   }
 
-  async resetPassword(data: ResetPasswordFormData) {
+  async resetPassword(data: ResetPasswordRequest) {
     await this.api.post(`${PATH}/reset-password`, data);
   }
 }

@@ -13,17 +13,27 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { MulterOptions } from '@nestjs/platform-express/multer/interfaces/multer-options.interface';
 import { diskStorage } from 'multer';
 import type {
-  CreateImageBody,
-  ImageFormData,
+  ImageRequest,
   ImageResponse,
   ImagesResponse,
-  UpdateImageBody,
 } from '../../types/image';
 import { StaffGuard } from '../auth/staff.guard';
 import { transaction } from '../db/database';
 import { normalize } from '../shared/types/normalize';
 import * as uploads from '../shared/uploads/uploads.utils';
 import { ImageService } from './image.service';
+
+interface CreateImageBody {
+  file: File;
+  formData: string;
+  tempPath?: string;
+}
+
+interface UpdateImageBody {
+  file?: File;
+  formData: string;
+  tempPath?: string;
+}
 
 const multerOptions: MulterOptions = {
   storage: diskStorage({
@@ -60,7 +70,7 @@ export class ImageController {
   @UseGuards(StaffGuard)
   @UseInterceptors(FileInterceptor('file', multerOptions))
   async create(@Body() body: CreateImageBody) {
-    const data = JSON.parse(body.formData) as ImageFormData;
+    const data = JSON.parse(body.formData) as ImageRequest;
     const tempPath = body.tempPath;
 
     return normalize(
@@ -74,7 +84,7 @@ export class ImageController {
   @UseGuards(StaffGuard)
   @UseInterceptors(FileInterceptor('file', multerOptions))
   async update(@Param('id') id: number, @Body() body: UpdateImageBody) {
-    const data = JSON.parse(body.formData) as ImageFormData;
+    const data = JSON.parse(body.formData) as ImageRequest;
     const tempPath = body.tempPath;
 
     return normalize(

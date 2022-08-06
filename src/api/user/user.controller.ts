@@ -10,9 +10,9 @@ import {
 } from '@nestjs/common';
 import type { Response } from 'express';
 import type {
-  RequestPasswordResetFormData,
-  ResetPasswordFormData,
-  UserFormData,
+  RequestPasswordResetRequest,
+  ResetPasswordRequest,
+  UserRequest,
   UserResponse,
   UsersResponse,
 } from '../../types/user';
@@ -42,7 +42,7 @@ export class UserController {
   }
 
   @Post()
-  async create(@Body() body: UserFormData) {
+  async create(@Body() body: UserRequest) {
     return normalize(
       await transaction((trx) => this.service.create(body, { trx })),
     ) as UserResponse;
@@ -50,7 +50,7 @@ export class UserController {
 
   @Put(':id')
   @UseGuards(StaffGuard)
-  async update(@Param('id') id: number, @Body() body: UserFormData) {
+  async update(@Param('id') id: number, @Body() body: UserRequest) {
     return normalize(
       await transaction((trx) => this.service.update(id, body, { trx })),
     ) as UserResponse;
@@ -58,7 +58,7 @@ export class UserController {
 
   @Post('request-password-reset')
   async requestPasswordReset(
-    @Body() body: RequestPasswordResetFormData,
+    @Body() body: RequestPasswordResetRequest,
     @Res() response: Response,
   ) {
     await transaction(async (trx) => {
@@ -70,7 +70,7 @@ export class UserController {
 
   @Post('reset-password')
   async resetPassword(
-    @Body() body: ResetPasswordFormData,
+    @Body() body: ResetPasswordRequest,
     @Res() response: Response,
   ) {
     await transaction(async (trx) => {
