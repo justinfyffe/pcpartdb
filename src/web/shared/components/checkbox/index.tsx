@@ -22,11 +22,11 @@ export const Checkbox: FunctionComponent<CheckboxProps> = (props) => {
   return (
     <label className={classNames('block pb-6')}>
       <input
-        {...htmlProps}
         type="checkbox"
         value={value + ''}
         onChange={handleChange}
         className={classNames('mr-2')}
+        {...htmlProps}
       />
       {children}
     </label>

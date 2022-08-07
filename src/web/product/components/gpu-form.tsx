@@ -33,6 +33,7 @@ import {
   setValidationErrors,
 } from '../../shared/error/error.utils';
 import { productService } from '../product.service';
+import { BenchmarkFields } from './benchmark-fields';
 
 interface ProductReviewFormData {
   key: ProductReviewKey;
@@ -153,7 +154,7 @@ function formOptions(gpu?: GpuProduct): UseFormProps<ProductFormData> {
   const benchmarks = getBenchmarksMap(gpu);
 
   return {
-    resolver: joiResolver(productValidator),
+    // resolver: joiResolver(productValidator),
     mode: 'onBlur',
     defaultValues: {
       slug: gpu?.slug ?? '',
@@ -175,6 +176,8 @@ function formOptions(gpu?: GpuProduct): UseFormProps<ProductFormData> {
       processSize: undefined,
       transistors: undefined,
       dieSize: undefined,
+
+      benchmarks: [],
     },
   };
 }
@@ -195,11 +198,13 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
     formState: { errors },
   } = useForm<ProductFormData>(formOptions(gpu));
 
-  const { fields } = useFieldArray({ control, name: 'benchmarks' });
+  const { append } = useFieldArray({ control, name: 'benchmarks' });
 
   const handleSave = useCallback(
     async (formData: ProductFormData) => {
       setSaving(true);
+
+      console.log(formData);
 
       const request: ProductRequest = {
         ...formData,
@@ -211,11 +216,11 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
 
       try {
         if (isUpdate) {
-          await productService.update(gpu.id, request);
+          // await productService.update(gpu.id, request);
         } else {
-          await productService.create(request);
+          // await productService.create(request);
         }
-        router.push('/admin/users');
+        //router.push('/admin/gpus');
       } catch (err) {
         setRequestError(err as ApiError);
         setValidationErrors(err as ApiError, setError);
@@ -435,6 +440,18 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
 
       <section>
         <h2>Benchmarks</h2>
+
+        <Controller
+          name="benchmarks"
+          control={control}
+          render={({ field }) => (
+            <BenchmarkFields
+              onAppend={() => append({})}
+              {...field}
+              ref={null}
+            />
+          )}
+        />
       </section>
 
       <section>
