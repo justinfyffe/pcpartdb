@@ -2,7 +2,12 @@ import Joi from '@hapi/joi';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { useRouter } from 'next/router';
 import React, { FunctionComponent, useCallback, useState } from 'react';
-import { Controller, useForm, UseFormProps } from 'react-hook-form';
+import {
+  Controller,
+  useFieldArray,
+  useForm,
+  UseFormProps,
+} from 'react-hook-form';
 import { ApiError, ValidationErrorType } from '../../../types/error';
 import {
   GpuProduct,
@@ -189,6 +194,8 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
     setError,
     formState: { errors },
   } = useForm<ProductFormData>(formOptions(gpu));
+
+  const { fields } = useFieldArray({ control, name: 'benchmarks' });
 
   const handleSave = useCallback(
     async (formData: ProductFormData) => {
