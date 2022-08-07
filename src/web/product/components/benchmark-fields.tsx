@@ -4,6 +4,11 @@ import { ProductBenchmarkKey } from '../../../types/product-benchmark';
 import { Button, ButtonVariant } from '../../shared/components/button';
 import { Field } from '../../shared/components/field';
 import { Input } from '../../shared/components/input';
+import {
+  Select,
+  SelectOption,
+  SelectValue,
+} from '../../shared/components/select';
 
 interface BenchmarkValue {
   key: ProductBenchmarkKey;
@@ -70,8 +75,8 @@ export const BenchmarkField: FunctionComponent<BenchmarkFieldProps> = (
   const { value, onChange, onRemove } = props;
 
   const handleKeyChange = useCallback(
-    (evt: React.ChangeEvent<HTMLInputElement>) => {
-      value.key = evt.target.value as unknown as ProductBenchmarkKey;
+    (key: SelectValue) => {
+      value.key = key as unknown as ProductBenchmarkKey;
       onChange(value);
     },
     [onChange, value],
@@ -97,7 +102,14 @@ export const BenchmarkField: FunctionComponent<BenchmarkFieldProps> = (
     <div className="flex gap-6 items-center">
       <Field className="flex-1">
         Benchmark
-        <Input onChange={handleKeyChange} />
+        <Select onChange={handleKeyChange} clearable>
+          <SelectOption label="Passmark" value={ProductBenchmarkKey.Passmark}>
+            Passmark
+          </SelectOption>
+          <SelectOption label="TimeSpy" value={ProductBenchmarkKey.TimeSpy}>
+            3D Mark Time Spy
+          </SelectOption>
+        </Select>
       </Field>
 
       <Field className="flex-1">

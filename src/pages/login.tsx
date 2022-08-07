@@ -154,7 +154,7 @@ const LoginPage: FunctionComponent<LoginPageProps> = (
             name="remember"
             control={control}
             render={({ field }) => (
-              <Checkbox {...field} ref={null}>
+              <Checkbox className="pb-6" {...field} ref={null}>
                 Remember me
               </Checkbox>
             )}

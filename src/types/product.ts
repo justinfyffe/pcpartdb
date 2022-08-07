@@ -1,9 +1,5 @@
 import { NormalizedSchema, schema } from 'normalizr';
-import {
-  GpuProductBenchmark,
-  ProductBenchmark,
-  productBenchmarkSchema,
-} from './product-benchmark';
+import { ProductBenchmark, productBenchmarkSchema } from './product-benchmark';
 import { ProductMeta, productMetaSchema } from './product-meta';
 import { ProductReview, productReviewSchema } from './product-review';
 import { GpuProductSpec, ProductSpec, productSpecSchema } from './product-spec';
@@ -13,10 +9,7 @@ export enum ProductType {
   GPU = 'GPU',
 }
 
-export interface Product<
-  TSpec extends ProductSpec = ProductSpec,
-  TBenchmark extends ProductBenchmark = ProductBenchmark,
-> {
+export interface Product<TSpec extends ProductSpec = ProductSpec> {
   id?: number;
   slug: string;
 
@@ -25,12 +18,11 @@ export interface Product<
 
   meta?: ProductMeta[];
   specs?: TSpec[];
-  benchmarks?: TBenchmark[];
+  benchmarks?: ProductBenchmark[];
   reviews?: ProductReview[];
 }
 
-export interface GpuProduct
-  extends Product<GpuProductSpec, GpuProductBenchmark> {}
+export interface GpuProduct extends Product<GpuProductSpec> {}
 
 export interface ProductRequest {
   slug: string;
