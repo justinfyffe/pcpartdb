@@ -198,7 +198,10 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
     formState: { errors },
   } = useForm<ProductFormData>(formOptions(gpu));
 
-  const { append } = useFieldArray({ control, name: 'benchmarks' });
+  const { append: appendBenchmark, remove: removeBenchmark } = useFieldArray({
+    control,
+    name: 'benchmarks',
+  });
 
   const handleSave = useCallback(
     async (formData: ProductFormData) => {
@@ -446,7 +449,8 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           control={control}
           render={({ field }) => (
             <BenchmarkFields
-              onAppend={() => append({})}
+              onAppend={() => appendBenchmark({})}
+              onRemove={(i) => removeBenchmark(i)}
               {...field}
               ref={null}
             />

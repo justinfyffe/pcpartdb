@@ -1,6 +1,7 @@
+import { XIcon } from '@heroicons/react/outline';
 import React, { FunctionComponent, useCallback } from 'react';
 import { ProductBenchmarkKey } from '../../../types/product-benchmark';
-import { Button } from '../../shared/components/button';
+import { Button, ButtonVariant } from '../../shared/components/button';
 import { Field } from '../../shared/components/field';
 import { Input } from '../../shared/components/input';
 
@@ -15,8 +16,8 @@ interface BenchmarkFieldsProps {
   value: BenchmarkValue[];
 
   onChange: (values: BenchmarkValue[]) => void;
-  onAppend?: () => void;
-  onRemove?: (index: number) => void;
+  onAppend: () => void;
+  onRemove: (index: number) => void;
 
   ref?: any;
 }
@@ -24,7 +25,7 @@ interface BenchmarkFieldsProps {
 export const BenchmarkFields: FunctionComponent<BenchmarkFieldsProps> = (
   props,
 ) => {
-  const { value, onAppend, onChange } = props;
+  const { value, onAppend, onChange, onRemove } = props;
 
   const handleFieldChange = useCallback(
     (i: number, benchmark: BenchmarkValue) => {
@@ -35,17 +36,24 @@ export const BenchmarkFields: FunctionComponent<BenchmarkFieldsProps> = (
   );
 
   return (
-    <>
+    <div className="flex flex-col w-full">
       {value.map((benchmark, i) => (
         <BenchmarkField
           key={i}
           value={benchmark}
           onChange={(value) => handleFieldChange(i, value)}
+          onRemove={() => onRemove(i)}
         />
       ))}
 
-      <Button onClick={() => onAppend && onAppend()}>Add</Button>
-    </>
+      <Button
+        className="self-end"
+        variant={ButtonVariant.Secondary}
+        onClick={() => onAppend && onAppend()}
+      >
+        Add
+      </Button>
+    </div>
   );
 };
 
@@ -53,13 +61,13 @@ interface BenchmarkFieldProps {
   value: BenchmarkValue;
 
   onChange: (benchmark: BenchmarkValue) => void;
-  onRemove?: () => void;
+  onRemove: () => void;
 }
 
 export const BenchmarkField: FunctionComponent<BenchmarkFieldProps> = (
   props,
 ) => {
-  const { value, onChange } = props;
+  const { value, onChange, onRemove } = props;
 
   const handleKeyChange = useCallback(
     (evt: React.ChangeEvent<HTMLInputElement>) => {
@@ -86,23 +94,29 @@ export const BenchmarkField: FunctionComponent<BenchmarkFieldProps> = (
   );
 
   return (
-    <div className="flex">
-      <Field>
+    <div className="flex gap-6 items-center">
+      <Field className="flex-1">
         Benchmark
         <Input onChange={handleKeyChange} />
       </Field>
 
-      <Field>
+      <Field className="flex-1">
         Value
         <Input type="number" step="0.01" onChange={handleValueChange} />
       </Field>
 
-      <Field>
+      <Field className="flex-1">
         Source
         <Input onChange={handleSourceChange} />
       </Field>
 
-      <Button>X</Button>
+      <Button
+        className="w-[46px] h-[46px]"
+        variant={ButtonVariant.Default}
+        onClick={onRemove}
+      >
+        <XIcon className="w-[16px]" />
+      </Button>
     </div>
   );
 };
