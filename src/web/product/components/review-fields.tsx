@@ -1,6 +1,6 @@
 import { XIcon } from '@heroicons/react/outline';
 import React, { FunctionComponent, useCallback } from 'react';
-import { ProductBenchmarkKey } from '../../../types/product-benchmark';
+import { ProductReviewKey } from '../../../types/product-review';
 import { Button, ButtonVariant } from '../../shared/components/button';
 import { Field } from '../../shared/components/field';
 import { Input } from '../../shared/components/input';
@@ -10,31 +10,29 @@ import {
   SelectValue,
 } from '../../shared/components/select';
 
-interface BenchmarkValue {
-  key: ProductBenchmarkKey;
+interface ReviewValue {
+  key: ProductReviewKey;
   value: number;
   source?: string;
 }
 
-interface BenchmarkFieldsProps {
+interface ReviewFieldsProps {
   name: string;
-  value: BenchmarkValue[];
-  fields: (BenchmarkValue & { id: string })[];
+  value: ReviewValue[];
+  fields: (ReviewValue & { id: string })[];
 
-  onChange: (values: BenchmarkValue[]) => void;
+  onChange: (values: ReviewValue[]) => void;
   onAppend: () => void;
   onRemove: (index: number) => void;
 
   ref?: unknown;
 }
 
-export const BenchmarkFields: FunctionComponent<BenchmarkFieldsProps> = (
-  props,
-) => {
+export const ReviewFields: FunctionComponent<ReviewFieldsProps> = (props) => {
   const { fields, value, onAppend, onChange, onRemove } = props;
 
   const handleFieldChange = useCallback(
-    (i: number, benchmark: BenchmarkValue) => {
+    (i: number, benchmark: ReviewValue) => {
       value[i] = benchmark;
       onChange(value);
     },
@@ -44,7 +42,7 @@ export const BenchmarkFields: FunctionComponent<BenchmarkFieldsProps> = (
   return (
     <div className="flex flex-col w-full">
       {fields.map((benchmark, i) => (
-        <BenchmarkField
+        <ReviewField
           key={benchmark.id}
           value={benchmark}
           onChange={(value) => handleFieldChange(i, value)}
@@ -63,19 +61,19 @@ export const BenchmarkFields: FunctionComponent<BenchmarkFieldsProps> = (
   );
 };
 
-interface BenchmarkFieldProps {
-  value: BenchmarkValue;
+interface ReviewFieldProps {
+  value: ReviewValue;
 
-  onChange: (benchmark: BenchmarkValue) => void;
+  onChange: (benchmark: ReviewValue) => void;
   onRemove: () => void;
 }
 
-const BenchmarkField: FunctionComponent<BenchmarkFieldProps> = (props) => {
+const ReviewField: FunctionComponent<ReviewFieldProps> = (props) => {
   const { value, onChange, onRemove } = props;
 
   const handleKeyChange = useCallback(
     (key: SelectValue) => {
-      value.key = key as unknown as ProductBenchmarkKey;
+      value.key = key as unknown as ProductReviewKey;
       onChange(value);
     },
     [onChange, value],
@@ -100,19 +98,19 @@ const BenchmarkField: FunctionComponent<BenchmarkFieldProps> = (props) => {
   return (
     <div className="flex gap-6 items-center">
       <Field className="flex-1">
-        Benchmark
+        Review
         <Select onChange={handleKeyChange} clearable>
-          <SelectOption label="Passmark" value={ProductBenchmarkKey.Passmark}>
-            Passmark
-          </SelectOption>
-          <SelectOption label="TimeSpy" value={ProductBenchmarkKey.TimeSpy}>
-            3D Mark Time Spy
+          <SelectOption
+            label="Tom's Hardware"
+            value={ProductReviewKey.TomsHardware}
+          >
+            Tom&apos;s Hardware
           </SelectOption>
         </Select>
       </Field>
 
       <Field className="flex-1">
-        Value
+        Rating
         <Input type="number" step="0.01" onChange={handleValueChange} />
       </Field>
 

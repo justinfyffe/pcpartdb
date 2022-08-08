@@ -1,6 +1,8 @@
 import { schema } from 'normalizr';
 
-export enum ProductReviewKey {}
+export enum ProductReviewKey {
+  TomsHardware = 'TOMS_HARDWARE',
+}
 
 export interface ProductReview<T = unknown> {
   source?: string;

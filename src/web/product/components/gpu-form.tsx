@@ -34,6 +34,7 @@ import {
 } from '../../shared/error/error.utils';
 import { productService } from '../product.service';
 import { BenchmarkFields } from './benchmark-fields';
+import { ReviewFields } from './review-fields';
 
 interface ProductReviewFormData {
   key: ProductReviewKey;
@@ -178,6 +179,7 @@ function formOptions(gpu?: GpuProduct): UseFormProps<ProductFormData> {
       dieSize: undefined,
 
       benchmarks: [],
+      reviews: [],
     },
   };
 }
@@ -205,6 +207,15 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
   } = useFieldArray({
     control,
     name: 'benchmarks',
+  });
+
+  const {
+    fields: reviewFields,
+    append: appendReview,
+    remove: removeReview,
+  } = useFieldArray({
+    control,
+    name: 'reviews',
   });
 
   const handleSave = useCallback(
@@ -465,6 +476,20 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
 
       <section>
         <h2>Reviews</h2>
+
+        <Controller
+          name="reviews"
+          control={control}
+          render={({ field }) => (
+            <ReviewFields
+              fields={reviewFields}
+              onAppend={() => appendReview({})}
+              onRemove={(i) => removeReview(i)}
+              {...field}
+              ref={null}
+            />
+          )}
+        />
       </section>
 
       <FormActions>
