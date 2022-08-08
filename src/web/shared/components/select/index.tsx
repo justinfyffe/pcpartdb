@@ -125,7 +125,7 @@ export const Select: FunctionComponent<SelectProps> = (props) => {
         {getSelectedText(options, selected) || placeholder}
         {clearable && selected != null && (
           <div
-            className="items-center rounded-r-md flex font-medium h-[calc(100%_-_2px)] m-[1px] p-[0_16px] absolute right-0 top-0"
+            className="items-center rounded-r-md flex font-medium h-[calc(100%_-_2px)] m-[1px] p-[0_16px] absolute right-0 top-0 hover:bg-[#fafafa]"
             onClick={handleClear}
           >
             <XIcon className="w-[16px]" />
@@ -151,6 +151,7 @@ export const Select: FunctionComponent<SelectProps> = (props) => {
             onClick={(ev) => handleOptionClick(ev, option)}
             className={classNames(
               'items-center pointer flex p-[8px_16px]',
+              !isSelected(selected, option) ? 'hover:bg-[#fafafa]' : '',
               !multiple && isSelected(selected, option)
                 ? 'bg-[#3f51b5] text-[#ececec]'
                 : '',
