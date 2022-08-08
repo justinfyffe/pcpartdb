@@ -140,7 +140,7 @@ export const Select: FunctionComponent<SelectProps> = (props) => {
 
       <div
         className={classNames(
-          'absolute bg-white border-[1px_solid_#ccc] shadow left-0 right-0 z-1',
+          'absolute bg-white border-[1px_solid_#ccc] shadow left-0 right-0 z-10',
           direction === 'top' ? 'bottom-[100%]' : 'top-[100%]',
           isOpen ? 'block' : 'hidden',
         )}

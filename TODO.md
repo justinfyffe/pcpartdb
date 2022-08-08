@@ -1,6 +1,4 @@
 Immediate Tasks:
-- fix select z-index
-- fix append/remove
 - product forms
 
 Roadmap:

@@ -19,6 +19,7 @@ interface BenchmarkValue {
 interface BenchmarkFieldsProps {
   name: string;
   value: BenchmarkValue[];
+  fields: (BenchmarkValue & { id: string })[];
 
   onChange: (values: BenchmarkValue[]) => void;
   onAppend: () => void;
@@ -30,7 +31,7 @@ interface BenchmarkFieldsProps {
 export const BenchmarkFields: FunctionComponent<BenchmarkFieldsProps> = (
   props,
 ) => {
-  const { value, onAppend, onChange, onRemove } = props;
+  const { fields, value, onAppend, onChange, onRemove } = props;
 
   const handleFieldChange = useCallback(
     (i: number, benchmark: BenchmarkValue) => {
@@ -42,9 +43,9 @@ export const BenchmarkFields: FunctionComponent<BenchmarkFieldsProps> = (
 
   return (
     <div className="flex flex-col w-full">
-      {value.map((benchmark, i) => (
+      {fields.map((benchmark, i) => (
         <BenchmarkField
-          key={i}
+          key={benchmark.id}
           value={benchmark}
           onChange={(value) => handleFieldChange(i, value)}
           onRemove={() => onRemove(i)}
