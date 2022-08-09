@@ -12,7 +12,7 @@ import {
 
 interface ReviewValue {
   key: ProductReviewKey;
-  value: number;
+  value: number | string;
   source?: string;
 }
 

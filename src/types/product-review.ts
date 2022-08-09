@@ -4,10 +4,10 @@ export enum ProductReviewKey {
   TomsHardware = 'TOMS_HARDWARE',
 }
 
-export interface ProductReview<T = unknown> {
+export interface ProductReview {
   source?: string;
   key: ProductReviewKey;
-  value?: T;
+  value?: number | string;
 }
 
 export const productReviewSchema = new schema.Entity('productReview');

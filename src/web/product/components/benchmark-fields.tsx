@@ -10,9 +10,9 @@ import {
   SelectValue,
 } from '../../shared/components/select';
 
-interface BenchmarkValue {
+export interface BenchmarkValue {
   key: ProductBenchmarkKey;
-  value: number;
+  value: number | string;
   source?: string;
 }
 

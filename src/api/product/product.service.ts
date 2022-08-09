@@ -11,7 +11,7 @@ const productSpecValidator = Joi.object({
 
 const productBenchmarkValidator = Joi.object({
   key: Joi.string().required(),
-  value: Joi.any(),
+  value: Joi.alternatives().try(Joi.number(), Joi.string()).required(),
   source: Joi.string(),
 }).options({ abortEarly: false });
 

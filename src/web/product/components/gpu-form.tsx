@@ -14,10 +14,7 @@ import {
   ProductRequest,
   ProductType,
 } from '../../../types/product';
-import {
-  ProductBenchmark,
-  ProductBenchmarkKey,
-} from '../../../types/product-benchmark';
+import { ProductBenchmark } from '../../../types/product-benchmark';
 import { ProductMeta, ProductMetaKey } from '../../../types/product-meta';
 import { ProductReview, ProductReviewKey } from '../../../types/product-review';
 import { ProductSpec, ProductSpecKey } from '../../../types/product-spec';
@@ -33,18 +30,12 @@ import {
   setValidationErrors,
 } from '../../shared/error/error.utils';
 import { productService } from '../product.service';
-import { BenchmarkFields } from './benchmark-fields';
+import { BenchmarkFields, BenchmarkValue } from './benchmark-fields';
 import { ReviewFields } from './review-fields';
 
 interface ProductReviewFormData {
   key: ProductReviewKey;
-  value: number;
-  source?: string;
-}
-
-interface ProductBenchmarkFormData {
-  key: ProductBenchmarkKey;
-  value: number;
+  value: number | string;
   source?: string;
 }
 
@@ -121,8 +112,20 @@ interface ProductFormData {
   shaderModel?: number;
 
   reviews?: ProductReviewFormData[];
-  benchmarks?: ProductBenchmarkFormData[];
+  benchmarks?: BenchmarkValue[];
 }
+
+const benchmarkValidator = Joi.object({
+  key: Joi.string().required(),
+  value: Joi.alternatives().try(Joi.number(), Joi.string()).required(),
+  source: Joi.string().optional(),
+}).options({ abortEarly: false });
+
+const reviewValidator = Joi.object({
+  key: Joi.string().required(),
+  value: Joi.alternatives().try(Joi.number(), Joi.string()).required(),
+  source: Joi.string().optional(),
+}).options({ abortEarly: false });
 
 const productValidator = Joi.object({
   slug: Joi.string().required(),
@@ -143,6 +146,9 @@ const productValidator = Joi.object({
   processSize: Joi.number().optional(),
   transistors: Joi.number().optional(),
   dieSize: Joi.number().optional(),
+
+  benchmarks: Joi.array().items(benchmarkValidator),
+  reviews: Joi.array().items(reviewValidator),
 }).options({ abortEarly: false });
 
 interface GpuFormProps {
@@ -152,10 +158,9 @@ interface GpuFormProps {
 function formOptions(gpu?: GpuProduct): UseFormProps<ProductFormData> {
   const meta = getMetaMap(gpu);
   const specs = getSpecsMap(gpu);
-  const benchmarks = getBenchmarksMap(gpu);
 
   return {
-    // resolver: joiResolver(productValidator),
+    resolver: joiResolver(productValidator),
     mode: 'onBlur',
     defaultValues: {
       slug: gpu?.slug ?? '',
@@ -178,8 +183,8 @@ function formOptions(gpu?: GpuProduct): UseFormProps<ProductFormData> {
       transistors: undefined,
       dieSize: undefined,
 
-      benchmarks: [],
-      reviews: [],
+      benchmarks: toFormBenchmarks(gpu),
+      reviews: toFormReviews(gpu),
     },
   };
 }
@@ -228,8 +233,8 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
         ...formData,
         meta: toMetaArray(formData),
         specs: toSpecsArray(formData),
-        benchmarks: toBenchmarksArray(formData),
-        reviews: toReviewsArray(formData),
+        benchmarks: toRequestBenchmarks(formData),
+        reviews: toRequestReviews(formData),
       };
 
       try {
@@ -552,30 +557,18 @@ function toSpecsArray(_formData: ProductFormData): ProductSpec[] {
   return [];
 }
 
-function getBenchmarksMap(gpu?: GpuProduct) {
-  const map = new Map<ProductBenchmarkKey, ProductBenchmark>();
-
-  gpu?.benchmarks?.forEach((benchmark) => {
-    map.set(benchmark.key, benchmark);
-  });
-
-  return map;
+function toFormBenchmarks(gpu?: GpuProduct) {
+  return gpu?.benchmarks?.map((benchmark) => ({ ...benchmark })) ?? [];
 }
 
-function toBenchmarksArray(_formData: ProductFormData): ProductBenchmark[] {
-  return [];
+function toRequestBenchmarks(formData: ProductFormData): ProductBenchmark[] {
+  return formData.benchmarks?.map((benchmark) => benchmark) ?? [];
 }
 
-function getReviewsMap(gpu?: GpuProduct) {
-  const map = new Map<ProductReviewKey, ProductReview>();
-
-  gpu?.reviews?.forEach((review) => {
-    map.set(review.key, review);
-  });
-
-  return map;
+function toFormReviews(gpu?: GpuProduct): ProductReview[] {
+  return gpu?.reviews?.map((review) => ({ ...review })) ?? [];
 }
 
-function toReviewsArray(_formData: ProductFormData): ProductReview[] {
-  return [];
+function toRequestReviews(formData: ProductFormData): ProductReview[] {
+  return formData.reviews?.map((review) => review) ?? [];
 }
