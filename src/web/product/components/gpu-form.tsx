@@ -20,6 +20,7 @@ import { ProductReview, ProductReviewKey } from '../../../types/product-review';
 import { ProductSpec, ProductSpecKey } from '../../../types/product-spec';
 import { Alert, AlertVariant } from '../../shared/components/alert';
 import { Button, ButtonVariant } from '../../shared/components/button';
+import { Checkbox } from '../../shared/components/checkbox';
 import { Field, FieldError } from '../../shared/components/field';
 import { Form, FormActions } from '../../shared/components/form';
 import { Input } from '../../shared/components/input';
@@ -318,7 +319,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
       </section>
 
       <section>
-        <h2>General Info</h2>
+        <h2 className="mb-4">General Info</h2>
 
         <Field>
           Company
@@ -376,10 +377,10 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
       </section>
 
       <section>
-        <h2>Technical Specs</h2>
+        <h2 className="mb-4">Technical Specs</h2>
 
         <section>
-          <h3>Processor</h3>
+          <h3 className="mb-4">Processor</h3>
 
           <Field>
             GPU Name
@@ -437,32 +438,392 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
         </section>
 
         <section>
-          <h3>Board Compatibility &amp; Dimensions</h3>
+          <h3 className="mb-4">Board Compatibility &amp; Dimensions</h3>
+
+          <Field>
+            Slot Width
+            <Controller
+              name="slotWidth"
+              control={control}
+              render={({ field }) => <Input {...field} ref={null} />}
+            />
+          </Field>
+
+          <Field>
+            Length
+            <Controller
+              name="length"
+              control={control}
+              render={({ field }) => <Input {...field} ref={null} />}
+            />
+          </Field>
+
+          <Field>
+            Width
+            <Controller
+              name="width"
+              control={control}
+              render={({ field }) => <Input {...field} ref={null} />}
+            />
+          </Field>
+
+          <Field>
+            Height
+            <Controller
+              name="height"
+              control={control}
+              render={({ field }) => <Input {...field} ref={null} />}
+            />
+          </Field>
+
+          <Field>
+            Weight
+            <Controller
+              name="weight"
+              control={control}
+              render={({ field }) => <Input {...field} ref={null} />}
+            />
+          </Field>
+
+          <Field>
+            Bus Interface
+            <Controller
+              name="busInterface"
+              control={control}
+              render={({ field }) => <Input {...field} ref={null} />}
+            />
+          </Field>
+
+          <Field>
+            TDP
+            <Controller
+              name="tdp"
+              control={control}
+              render={({ field }) => <Input {...field} ref={null} />}
+            />
+          </Field>
+
+          <Field>
+            Suggested PSU
+            <Controller
+              name="suggestedPsu"
+              control={control}
+              render={({ field }) => <Input {...field} ref={null} />}
+            />
+          </Field>
+
+          <Field>
+            Power Connecters
+            <Controller
+              name="powerConnectors"
+              control={control}
+              render={({ field }) => <Input {...field} ref={null} />}
+            />
+          </Field>
         </section>
 
         <section>
-          <h3>Cores &amp; Clock Speeds</h3>
+          <h3 className="mb-4">Cores &amp; Clock Speeds</h3>
+
+          <Field>
+            CUDA Cores
+            <Controller
+              name="cudaCores"
+              control={control}
+              render={({ field }) => <Input {...field} ref={null} />}
+            />
+          </Field>
+
+          <Field>
+            TMUs
+            <Controller
+              name="tmus"
+              control={control}
+              render={({ field }) => <Input {...field} ref={null} />}
+            />
+          </Field>
+
+          <Field>
+            ROPs
+            <Controller
+              name="rops"
+              control={control}
+              render={({ field }) => <Input {...field} ref={null} />}
+            />
+          </Field>
+
+          <Field>
+            Tensor Cores
+            <Controller
+              name="tensorCores"
+              control={control}
+              render={({ field }) => <Input {...field} ref={null} />}
+            />
+          </Field>
+
+          <Field>
+            RT Cores
+            <Controller
+              name="rtCores"
+              control={control}
+              render={({ field }) => <Input {...field} ref={null} />}
+            />
+          </Field>
+
+          <Field>
+            Base Clock
+            <Controller
+              name="rtCores"
+              control={control}
+              render={({ field }) => <Input {...field} ref={null} />}
+            />
+          </Field>
+
+          <Field>
+            Boost Clock
+            <Controller
+              name="boostClock"
+              control={control}
+              render={({ field }) => <Input {...field} ref={null} />}
+            />
+          </Field>
+
+          <Field>
+            L1 Cache
+            <Controller
+              name="l1Cache"
+              control={control}
+              render={({ field }) => <Input {...field} ref={null} />}
+            />
+          </Field>
+
+          <Field>
+            L2 Cache
+            <Controller
+              name="l2Cache"
+              control={control}
+              render={({ field }) => <Input {...field} ref={null} />}
+            />
+          </Field>
         </section>
 
         <section>
-          <h3>Theoretical Performance</h3>
+          <h3 className="mb-4">Theoretical Performance</h3>
+
+          <Field>
+            Pixel Rate
+            <Controller
+              name="pixelRate"
+              control={control}
+              render={({ field }) => <Input {...field} ref={null} />}
+            />
+          </Field>
+
+          <Field>
+            Texture Rate
+            <Controller
+              name="textureRate"
+              control={control}
+              render={({ field }) => <Input {...field} ref={null} />}
+            />
+          </Field>
+
+          <Field>
+            FP32 Performance
+            <Controller
+              name="fp32Performance"
+              control={control}
+              render={({ field }) => <Input {...field} ref={null} />}
+            />
+          </Field>
+
+          <Field>
+            FP64 Performance
+            <Controller
+              name="fp64Performance"
+              control={control}
+              render={({ field }) => <Input {...field} ref={null} />}
+            />
+          </Field>
         </section>
 
         <section>
-          <h3>Memory</h3>
+          <h3 className="mb-4">Memory</h3>
+
+          <Field>
+            Memory Size
+            <Controller
+              name="memorySize"
+              control={control}
+              render={({ field }) => <Input {...field} ref={null} />}
+            />
+          </Field>
+
+          <Field>
+            Memory Type
+            <Controller
+              name="memoryType"
+              control={control}
+              render={({ field }) => <Input {...field} ref={null} />}
+            />
+          </Field>
+
+          <Field>
+            Memory Interface
+            <Controller
+              name="memoryInterface"
+              control={control}
+              render={({ field }) => <Input {...field} ref={null} />}
+            />
+          </Field>
+
+          <Field>
+            Memory Bandwidth
+            <Controller
+              name="memoryBandwidth"
+              control={control}
+              render={({ field }) => <Input {...field} ref={null} />}
+            />
+          </Field>
         </section>
 
         <section>
-          <h3>Display Connectivity</h3>
+          <h3 className="mb-4">Display Connectivity</h3>
+
+          <Field>
+            Max Resolution
+            <Controller
+              name="maxResolution"
+              control={control}
+              render={({ field }) => <Input {...field} ref={null} />}
+            />
+          </Field>
+
+          <Field>
+            Display Ports
+            <Controller
+              name="displayPorts"
+              control={control}
+              render={({ field }) => <Input {...field} ref={null} />}
+            />
+          </Field>
+
+          <Field>
+            HDMI Ports
+            <Controller
+              name="hdmiPorts"
+              control={control}
+              render={({ field }) => <Input {...field} ref={null} />}
+            />
+          </Field>
+
+          <Field>
+            USB-C
+            <Controller
+              name="usbC"
+              control={control}
+              render={({ field }) => <Input {...field} ref={null} />}
+            />
+          </Field>
+
+          <Field>
+            Dual Link DVI
+            <Controller
+              name="dualLinkDvi"
+              control={control}
+              render={({ field }) => <Input {...field} ref={null} />}
+            />
+          </Field>
+
+          <Field>
+            Single Link DVI
+            <Controller
+              name="singleLinkDvi"
+              control={control}
+              render={({ field }) => <Input {...field} ref={null} />}
+            />
+          </Field>
+
+          <Field>
+            VGA
+            <Controller
+              name="vga"
+              control={control}
+              render={({ field }) => <Input {...field} ref={null} />}
+            />
+          </Field>
         </section>
 
         <section>
-          <h3>API Support</h3>
+          <h3 className="mb-4">API Support</h3>
+
+          <Field>
+            Direct X
+            <Controller
+              name="directX"
+              control={control}
+              render={({ field }) => <Input {...field} ref={null} />}
+            />
+          </Field>
+
+          <Field>
+            G-Sync / Free-Sync
+            <Controller
+              name="gSyncFreeSync"
+              control={control}
+              render={({ field }) => <Checkbox {...field} ref={null} />}
+            />
+          </Field>
+
+          <Field>
+            SLI / Crossfire
+            <Controller
+              name="sliCrossfire"
+              control={control}
+              render={({ field }) => <Checkbox {...field} ref={null} />}
+            />
+          </Field>
+
+          <Field>
+            VR Ready
+            <Controller
+              name="vrReady"
+              control={control}
+              render={({ field }) => <Checkbox {...field} ref={null} />}
+            />
+          </Field>
+
+          <Field>
+            Open CL
+            <Controller
+              name="openCl"
+              control={control}
+              render={({ field }) => <Input {...field} ref={null} />}
+            />
+          </Field>
+
+          <Field>
+            Open GL
+            <Controller
+              name="openGl"
+              control={control}
+              render={({ field }) => <Input {...field} ref={null} />}
+            />
+          </Field>
+
+          <Field>
+            Shader Model
+            <Controller
+              name="shaderModel"
+              control={control}
+              render={({ field }) => <Input {...field} ref={null} />}
+            />
+          </Field>
         </section>
       </section>
 
       <section>
-        <h2>Benchmarks</h2>
+        <h2 className="mb-4">Benchmarks</h2>
 
         <Controller
           name="benchmarks"
@@ -480,7 +841,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
       </section>
 
       <section>
-        <h2>Reviews</h2>
+        <h2 className="mb-4">Reviews</h2>
 
         <Controller
           name="reviews"

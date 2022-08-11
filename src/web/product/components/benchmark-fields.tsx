@@ -57,7 +57,7 @@ export const BenchmarkFields: FunctionComponent<BenchmarkFieldsProps> = (
         variant={ButtonVariant.Secondary}
         onClick={() => onAppend && onAppend()}
       >
-        Add
+        Add Benchmark
       </Button>
     </div>
   );

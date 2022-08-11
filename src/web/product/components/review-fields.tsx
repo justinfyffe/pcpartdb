@@ -55,7 +55,7 @@ export const ReviewFields: FunctionComponent<ReviewFieldsProps> = (props) => {
         variant={ButtonVariant.Secondary}
         onClick={() => onAppend && onAppend()}
       >
-        Add
+        Add Review
       </Button>
     </div>
   );
