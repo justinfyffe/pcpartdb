@@ -2,6 +2,7 @@ import { XIcon } from '@heroicons/react/outline';
 import React, {
   ChangeEvent,
   FunctionComponent,
+  KeyboardEvent,
   useCallback,
   useEffect,
   useState,
@@ -28,6 +29,7 @@ export const Autocomplete: FunctionComponent<AutocompleteProps> = (props) => {
   const [isOpen, setOpen] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const [options, setOptions] = useState<AutocompleteValue[]>([]);
+  const [hoveredIndex, setHoveredIndex] = useState<number>(-1);
 
   useEffect(() => {
     document.addEventListener('click', () => {
@@ -42,13 +44,32 @@ export const Autocomplete: FunctionComponent<AutocompleteProps> = (props) => {
   const handleQuery = useCallback(
     async (event: ChangeEvent<HTMLInputElement>) => {
       setLoading(true);
+      setHoveredIndex(-1);
       const query = event.target.value;
       const values = await onQuery(query);
       setOptions(values);
       setLoading(false);
       setOpen(true);
     },
-    [onQuery, setOptions, setLoading],
+    [onQuery],
+  );
+
+  const handleKeyDown = useCallback(
+    (event: KeyboardEvent) => {
+      if (event.code === 'ArrowUp') {
+        // up
+        setHoveredIndex(hoveredIndex === -1 ? hoveredIndex : hoveredIndex - 1);
+      } else if (event.code === 'ArrowDown') {
+        // down
+        setHoveredIndex(
+          hoveredIndex >= options.length ? hoveredIndex : hoveredIndex + 1,
+        );
+      } else if (event.code === 'Enter') {
+        onChange(options[hoveredIndex]);
+        setOpen(false);
+      }
+    },
+    [onChange, options, hoveredIndex],
   );
 
   const handleOptionClick = useCallback(
@@ -70,9 +91,11 @@ export const Autocomplete: FunctionComponent<AutocompleteProps> = (props) => {
         closeable
         onClose={handleClear}
         onChange={handleQuery}
+        onKeyDown={handleKeyDown}
         className={classNames(className)}
+        ref={null}
       />
-      {isLoading && (
+      {!isLoading && value && (
         <div className="items-center rounded-r-md flex font-medium h-[calc(100%_-_2px)] m-[1px] p-[0_16px] absolute right-0 top-0 hover:bg-[#fafafa]">
           <XIcon className="w-[16px]" />
         </div>
@@ -95,10 +118,11 @@ export const Autocomplete: FunctionComponent<AutocompleteProps> = (props) => {
       >
         {options.map((option, i) => (
           <div
-            key={i}
+            key={option}
             onClick={() => handleOptionClick(option)}
             className={classNames(
               'items-center pointer flex p-[8px_16px] hover:bg-[#fafafa]',
+              hoveredIndex === i ? 'bg-[#fafafa]' : '',
             )}
           >
             {option}

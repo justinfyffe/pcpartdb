@@ -17,14 +17,18 @@ interface ProductAutocompleteProps {
 
   value?: AutocompleteValue;
   onChange?: (value: AutocompleteValue) => void;
+
+  ref?: unknown;
 }
 
 export const ProductAutocomplete: FunctionComponent<
   ProductAutocompleteProps
-> = (_props) => {
+> = (props) => {
+  const { type, key, ...restProps } = props;
+
   const handleQuery = useCallback((query: string) => {
-    return [];
+    return ['Foo', 'Bar', 'Test'];
   }, []);
 
-  return <Autocomplete onQuery={handleQuery} />;
+  return <Autocomplete onQuery={handleQuery} {...restProps} />;
 };

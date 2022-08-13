@@ -32,6 +32,10 @@ import {
 } from '../../shared/error/error.utils';
 import { productService } from '../product.service';
 import { BenchmarkFields, BenchmarkValue } from './benchmark-fields';
+import {
+  ProductAutocomplete,
+  ProductAutocompleteType,
+} from './product-autocomplete';
 import { ReviewFields } from './review-fields';
 
 interface ProductReviewFormData {
@@ -169,20 +173,20 @@ function formOptions(gpu?: GpuProduct): UseFormProps<ProductFormData> {
       name: gpu?.name ?? '',
       description:
         (meta.get(ProductMetaKey.Description)?.value as string) ?? undefined,
-      company: undefined,
-      generation: undefined,
-      marketSegment: undefined,
-      launchPrice: undefined,
-      releaseDate: undefined,
-      productionStatus: undefined,
+      company: '',
+      generation: '',
+      marketSegment: '',
+      launchPrice: 0,
+      releaseDate: '',
+      productionStatus: '',
 
       // Processor
-      gpuName: undefined,
-      architecture: undefined,
-      foundry: undefined,
-      processSize: undefined,
-      transistors: undefined,
-      dieSize: undefined,
+      gpuName: '',
+      architecture: '',
+      foundry: '',
+      processSize: 0,
+      transistors: 0,
+      dieSize: 0,
 
       benchmarks: toFormBenchmarks(gpu),
       reviews: toFormReviews(gpu),
@@ -326,7 +330,13 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           <Controller
             name="company"
             control={control}
-            render={({ field }) => <Input {...field} ref={null} />}
+            render={({ field }) => (
+              <ProductAutocomplete
+                type={ProductAutocompleteType.Meta}
+                {...field}
+                ref={null}
+              />
+            )}
           />
         </Field>
 
