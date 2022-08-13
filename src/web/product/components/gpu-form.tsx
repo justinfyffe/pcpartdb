@@ -165,7 +165,7 @@ function formOptions(gpu?: GpuProduct): UseFormProps<ProductFormData> {
   const specs = getSpecsMap(gpu);
 
   return {
-    resolver: joiResolver(productValidator),
+    // resolver: joiResolver(productValidator),
     mode: 'onBlur',
     defaultValues: {
       slug: gpu?.slug ?? '',
