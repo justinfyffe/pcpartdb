@@ -35,6 +35,11 @@ export class UserService {
   async delete(id: number) {
     await this.api.delete(`${PATH}/${id}`);
   }
+
+  async autocomplete(query: string) {
+    const response = await this.api.get<unknown>(`${PATH}/autocomplete`);
+    // return denormalize(response.result, [productSchema], response.entities);
+  }
 }
 
 export const productService = new UserService(apiClient);
