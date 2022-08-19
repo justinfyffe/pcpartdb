@@ -1,13 +1,24 @@
-import { schema } from 'normalizr';
+import { NormalizedSchema, schema } from 'normalizr';
 
 export enum ProductMetaKey {
   Description = 'DESCRIPTION',
 }
 
-export interface ProductMeta<T = unknown> {
+export type ProductMetaValue = number | string | object;
+
+export interface ProductMeta {
   source?: string;
   key: ProductMetaKey;
-  value?: T;
+  value?: ProductMetaValue;
 }
+
+interface ProductMetaEntities {
+  productMeta: Record<string, ProductMeta>;
+}
+
+export type ProductMetaResponse = NormalizedSchema<
+  ProductMetaEntities,
+  number[]
+>;
 
 export const productMetaSchema = new schema.Entity('productMeta');

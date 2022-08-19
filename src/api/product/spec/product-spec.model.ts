@@ -3,13 +3,11 @@ import {
   ProductSpec,
   ProductSpecKey,
   productSpecSchema,
+  ProductSpecValue,
 } from '../../../types/product-spec';
 import { CanDto } from '../../shared/types/normalize';
 
-export class ProductSpecModel<T = unknown>
-  extends Model
-  implements CanDto<ProductSpec>
-{
+export class ProductSpecModel extends Model implements CanDto<ProductSpec> {
   static tableName = 'product_specs';
 
   // Fields
@@ -18,7 +16,7 @@ export class ProductSpecModel<T = unknown>
 
   source?: string;
   key!: ProductSpecKey;
-  value?: T;
+  value?: ProductSpecValue;
 
   toDto(): ProductSpec {
     return {

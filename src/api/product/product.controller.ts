@@ -33,10 +33,4 @@ export class ProductController {
   @Delete(':id')
   @UseGuards(StaffGuard)
   delete() {}
-
-  @Get('autocomplete')
-  @UseGuards(StaffGuard)
-  autocomplete() {
-    return {};
-  }
 }

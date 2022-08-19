@@ -3,13 +3,11 @@ import {
   ProductReview,
   ProductReviewKey,
   productReviewSchema,
+  ProductReviewValue,
 } from '../../../types/product-review';
 import { CanDto } from '../../shared/types/normalize';
 
-export class ProductReviewModel<T = unknown>
-  extends Model
-  implements CanDto<ProductReview>
-{
+export class ProductReviewModel extends Model implements CanDto<ProductReview> {
   static tableName = 'product_reviews';
 
   // Fields
@@ -18,7 +16,7 @@ export class ProductReviewModel<T = unknown>
 
   source?: string;
   key!: ProductReviewKey;
-  value?: T;
+  value?: ProductReviewValue;
 
   toDto(): ProductReview {
     return {

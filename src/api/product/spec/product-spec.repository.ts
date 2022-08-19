@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { ProductSpecKey } from '../../../types/product-spec';
 import { RepositoryConfig } from '../../db/repository';
 import { ProductSpecModel, ProductSpecModelPojo } from './product-spec.model';
 
@@ -10,5 +11,15 @@ export class ProductSpecRepository {
       .onConflict(['productId', 'key'])
       .merge()
       .returning('*');
+  }
+
+  async findSimilarValue(
+    key: ProductSpecKey,
+    value: string | number,
+    config?: RepositoryConfig,
+  ) {
+    return await ProductSpecModel.query(config?.trx)
+      .where('key', key)
+      .andWhere('value', 'ILIKE', value);
   }
 }

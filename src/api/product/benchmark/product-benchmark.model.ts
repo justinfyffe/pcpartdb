@@ -3,10 +3,11 @@ import {
   ProductBenchmark,
   ProductBenchmarkKey,
   productBenchmarkSchema,
+  ProductBenchmarkValue,
 } from '../../../types/product-benchmark';
 import { CanDto } from '../../shared/types/normalize';
 
-export class ProductBenchmarkModel<T = unknown>
+export class ProductBenchmarkModel
   extends Model
   implements CanDto<ProductBenchmark>
 {
@@ -18,7 +19,7 @@ export class ProductBenchmarkModel<T = unknown>
 
   source?: string;
   key!: ProductBenchmarkKey;
-  value?: T;
+  value?: ProductBenchmarkValue;
 
   toDto(): ProductBenchmark {
     return {

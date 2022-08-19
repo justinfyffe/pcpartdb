@@ -1,4 +1,4 @@
-import { schema } from 'normalizr';
+import { NormalizedSchema, schema } from 'normalizr';
 
 export enum CpuSpecKey {
   // General
@@ -40,19 +40,29 @@ export enum CpuSpecKey {
 export enum GpuSpecKey {}
 
 export type ProductSpecKey = CpuSpecKey | GpuSpecKey;
+export type ProductSpecValue = number | string | object;
 
-export interface ProductSpec<T = unknown> {
+export interface ProductSpec {
   source?: string;
   key: ProductSpecKey;
-  value?: T;
+  value?: ProductSpecValue;
 }
 
-export interface CpuProductSpec<T = unknown> extends ProductSpec<T> {
+export interface CpuProductSpec extends ProductSpec {
   key: CpuSpecKey;
 }
 
-export interface GpuProductSpec<T = unknown> extends ProductSpec<T> {
+export interface GpuProductSpec extends ProductSpec {
   key: GpuSpecKey;
 }
+
+interface ProductSpecEntities {
+  productSpecs: Record<string, ProductSpec>;
+}
+
+export type ProductSpecsResponse = NormalizedSchema<
+  ProductSpecEntities,
+  number[]
+>;
 
 export const productSpecSchema = new schema.Entity('productSpecs');

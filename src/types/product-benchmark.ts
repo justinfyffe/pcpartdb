@@ -5,10 +5,12 @@ export enum ProductBenchmarkKey {
   TimeSpy = '3DMARK_TIME_SPY',
 }
 
+export type ProductBenchmarkValue = string;
+
 export interface ProductBenchmark {
   key: ProductBenchmarkKey;
   value: number | string;
-  source?: string;
+  source?: ProductBenchmarkValue;
 }
 
 export const productBenchmarkSchema = new schema.Entity('productBenchmarks');
