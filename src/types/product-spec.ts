@@ -85,9 +85,9 @@ export enum GpuSpecKey {
 
   // Memory
 
-  // Render Config
+  // Display Connectivity
 
-  // Graphics Features
+  // API Support
 }
 
 export type ProductSpecKey = CpuSpecKey | GpuSpecKey;
