@@ -55,10 +55,16 @@ export enum GpuSpecKey {
   Transistors = 'TRANSISTORS',
   DieSize = 'DIE_SIZE',
 
-  // Clock Speeds
-  ClockSpeed = 'CLOCK_SPEED',
-  ClockSpeedTurbo = 'CLOCK_SPEED_TURBO',
-  MemoryClock = 'MEMORY_CLOCK',
+  // Cores & Clock Speeds
+  CudaCores = 'CUDA_CORES',
+  Tmus = 'TMUS',
+  Rops = 'ROPS',
+  TensorCores = 'TENSOR_CORES',
+  RtCores = 'RT_CORES',
+  ClockSpeedBase = 'CLOCK_SPEED_BASE',
+  ClockSpeedBoost = 'CLOCK_SPEED_BOOST',
+  L1Cache = 'L1_CACHE',
+  L2Cache = 'L2_CACHE',
 
   // Board Design
   SlotWidth = 'SLOT_WIDTH',
@@ -67,11 +73,15 @@ export enum GpuSpecKey {
   Height = 'HEIGHT',
   Tdp = 'TDP',
   SuggestedPsu = 'SUGGESTED_PSU',
-  Outputs = 'OUTPUTS',
+  BusInterface = 'BUS_INTERFACE',
   PowerConnectors = 'POWER_CONNECTORS',
   BoardNumber = 'BOARD_NUMBER',
 
   // Theoretical Performance
+  PixelRate = 'PIXEL_RATE',
+  TextureRate = 'TEXTURE_RATE',
+  Fp32Performance = 'FP32_PERFORMANCE',
+  Fp64Performance = 'FP64_PERFORMANCE',
 
   // Memory
 

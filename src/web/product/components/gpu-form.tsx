@@ -200,9 +200,15 @@ function formOptions(gpu?: GpuProduct): UseFormProps<ProductFormData> {
       architecture:
         (specs.get(GpuSpecKey.Architecture)?.value as string) ?? undefined,
       foundry: (specs.get(GpuSpecKey.Foundry)?.value as string) ?? undefined,
-      processSize: 0,
-      transistors: 0,
-      dieSize: 0,
+      processSize: specs.has(GpuSpecKey.Lithography)
+        ? Number(specs.get(GpuSpecKey.Lithography))
+        : undefined,
+      transistors: specs.has(GpuSpecKey.Transistors)
+        ? Number(specs.get(GpuSpecKey.Transistors))
+        : undefined,
+      dieSize: specs.has(GpuSpecKey.DieSize)
+        ? Number(specs.get(GpuSpecKey.DieSize))
+        : undefined,
 
       benchmarks: toFormBenchmarks(gpu),
       reviews: toFormReviews(gpu),
@@ -515,7 +521,14 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
             <Controller
               name="processSize"
               control={control}
-              render={({ field }) => <Input {...field} ref={null} />}
+              render={({ field }) => (
+                <ProductAutocomplete
+                  type={ProductAutocompleteType.Spec}
+                  key={GpuSpecKey.Lithography}
+                  {...field}
+                  ref={null}
+                />
+              )}
             />
           </Field>
 
@@ -524,7 +537,14 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
             <Controller
               name="transistors"
               control={control}
-              render={({ field }) => <Input {...field} ref={null} />}
+              render={({ field }) => (
+                <ProductAutocomplete
+                  type={ProductAutocompleteType.Spec}
+                  key={GpuSpecKey.Transistors}
+                  {...field}
+                  ref={null}
+                />
+              )}
             />
           </Field>
 
@@ -533,7 +553,14 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
             <Controller
               name="dieSize"
               control={control}
-              render={({ field }) => <Input {...field} ref={null} />}
+              render={({ field }) => (
+                <ProductAutocomplete
+                  type={ProductAutocompleteType.Spec}
+                  key={GpuSpecKey.DieSize}
+                  {...field}
+                  ref={null}
+                />
+              )}
             />
           </Field>
         </section>
@@ -1056,6 +1083,18 @@ function toSpecsArray(formData: ProductFormData): ProductSpec[] {
     {
       key: GpuSpecKey.Foundry,
       value: formData.foundry,
+    },
+    {
+      key: GpuSpecKey.Lithography,
+      value: formData.processSize,
+    },
+    {
+      key: GpuSpecKey.Transistors,
+      value: formData.transistors,
+    },
+    {
+      key: GpuSpecKey.DieSize,
+      value: formData.dieSize,
     },
   ];
 }
