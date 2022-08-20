@@ -1,5 +1,9 @@
 import { NormalizedSchema, schema } from 'normalizr';
 
+export enum ProductType {
+  GpuModel = 'GPU_MODEL',
+}
+
 export enum ProductMetaKey {
   Description = 'DESCRIPTION',
 }

@@ -12,10 +12,12 @@ export enum ProductType {
 export interface Product<TSpec extends ProductSpec = ProductSpec> {
   id?: number;
   slug: string;
+  parentId?: number;
 
   type: ProductType;
   name: string;
 
+  product?: Product;
   meta?: ProductMeta[];
   specs?: TSpec[];
   benchmarks?: ProductBenchmark[];
@@ -25,7 +27,9 @@ export interface Product<TSpec extends ProductSpec = ProductSpec> {
 export interface GpuProduct extends Product<GpuProductSpec> {}
 
 export interface ProductRequest {
+  parentId?: number;
   slug: string;
+
   type: ProductType;
   name: string;
 

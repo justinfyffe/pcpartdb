@@ -24,16 +24,30 @@ export class ProductModel extends Model implements CanDto<Product> {
   // Fields
   id!: number;
   slug!: string;
+
+  // Parent = Main Model (e.g. RTX 3070)
+  // Child = Variant of model (e.g. RTX 3070 Gaming OC)
+  parentId?: number;
+
   type!: ProductType;
   name!: string;
 
   // Relations
+  parent?: ProductModel;
   meta?: ProductMetaModel[];
   specs?: ProductSpecModel[];
   benchmarks?: ProductBenchmarkModel[];
   reviews?: ProductReviewModel[];
 
   static relationMappings = {
+    parent: {
+      relation: Model.BelongsToOneRelation,
+      modelClass: ProductModel,
+      join: {
+        from: 'products.parentId',
+        to: 'products.id',
+      },
+    },
     meta: {
       relation: Model.HasManyRelation,
       modelClass: ProductMetaModel,

@@ -71,6 +71,7 @@ export enum GpuSpecKey {
   Length = 'LENGTH',
   Width = 'WIDTH',
   Height = 'HEIGHT',
+  Weight = 'WEIGHT',
   Tdp = 'TDP',
   SuggestedPsu = 'SUGGESTED_PSU',
   BusInterface = 'BUS_INTERFACE',
@@ -84,10 +85,25 @@ export enum GpuSpecKey {
   Fp64Performance = 'FP64_PERFORMANCE',
 
   // Memory
+  MemorySize = 'MEMORY_SIZE',
+  MemoryType = 'MEMORY_TYPE',
+  MemoryInterface = 'MEMORY_INTERFACE',
+  MemoryBandwidth = 'MEMORY_BANDWIDTH',
 
   // Display Connectivity
+  MaxResolution = 'MAX_RESOLUTION',
+  DisplayPorts = 'DISPLAY_PORTS',
+  HdmiPorts = 'HDMI_PORTS',
 
   // API Support
+  DirectX = 'DIRECT_X',
+  OpenCl = 'OPEN_CL',
+  OpenGl = 'OPEN_GL',
+  Cuda = 'CUDA',
+  ShaderModel = 'SHADER_MODEL',
+  GSyncFreeSync = 'G_SYNC_FREE_SYNC',
+  SliCrossfire = 'SLI_CROSSFIRE',
+  VrReady = 'VR_READY',
 }
 
 export type ProductSpecKey = CpuSpecKey | GpuSpecKey;

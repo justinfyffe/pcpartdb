@@ -81,6 +81,7 @@ interface ProductFormData {
   tdp?: number;
   suggestedPsu?: number;
   powerConnectors?: string;
+  boardNumber?: string;
 
   // Cores & Clock Speeds
   cudaCores?: number;
@@ -109,19 +110,16 @@ interface ProductFormData {
   maxResolution?: string;
   displayPorts?: string;
   hdmiPorts?: string;
-  usbC?: string;
-  dualLinkDvi?: string;
-  singleLinkDvi?: string;
-  vga?: string;
 
   // API Support
   directX?: number;
+  openCl?: number;
+  openGl?: number;
+  cuda?: number;
+  shaderModel?: number;
   gSyncFreeSync?: boolean;
   sliCrossfire?: boolean;
   vrReady?: boolean;
-  openCl?: number;
-  openGl?: number;
-  shaderModel?: number;
 
   reviews?: ProductReviewFormData[];
   benchmarks?: BenchmarkValue[];
@@ -144,6 +142,8 @@ const productValidator = Joi.object({
   type: Joi.string().valid(ProductType.CPU, ProductType.GPU),
   name: Joi.string().required(),
   description: Joi.string().optional(),
+
+  // General
   company: Joi.string().optional(),
   generation: Joi.string().optional(),
   marketSegment: Joi.string().optional(),
@@ -158,6 +158,56 @@ const productValidator = Joi.object({
   processSize: Joi.number().optional(),
   transistors: Joi.number().optional(),
   dieSize: Joi.number().optional(),
+
+  // Board Compatibility & Dimensions
+  slotWidth: Joi.string().optional(),
+  length: Joi.number().optional(),
+  width: Joi.number().optional(),
+  height: Joi.number().optional(),
+  weight: Joi.number().optional(),
+  busInterface: Joi.string().optional(),
+  tdp: Joi.number().optional(),
+  suggestedPsu: Joi.number().optional(),
+  powerConnectors: Joi.string().optional(),
+  boardNumber: Joi.string().optional(),
+
+  // Cores & Clock Speed
+  cudaCores: Joi.number().optional(),
+  tmus: Joi.number().optional(),
+  rops: Joi.number().optional(),
+  tensorCores: Joi.number().optional(),
+  rtCores: Joi.number().optional(),
+  baseClock: Joi.number().optional(),
+  boostClock: Joi.number().optional(),
+  l1Cache: Joi.number().optional(),
+  l2Cache: Joi.number().optional(),
+
+  // Theoretical Performance
+  pixelRate: Joi.number().optional(),
+  textureRate: Joi.number().optional(),
+  fp32Performance: Joi.number().optional(),
+  fp64Performance: Joi.number().optional(),
+
+  // Memory
+  memorySize: Joi.number().optional(),
+  memoryType: Joi.string().optional(),
+  memoryInterface: Joi.number().optional(),
+  memoryBandwidth: Joi.number().optional(),
+
+  // Display Connectivity
+  maxResolution: Joi.string().optional(),
+  displayPorts: Joi.string().optional(),
+  hdmiPorts: Joi.string().optional(),
+
+  // API Support
+  directX: Joi.number().optional(),
+  openCl: Joi.number().optional(),
+  openGl: Joi.number().optional(),
+  cuda: Joi.number().optional(),
+  shaderModel: Joi.number().optional(),
+  gSyncFreeSync: Joi.boolean().optional(),
+  sliCrossfire: Joi.boolean().optional(),
+  vrReady: Joi.boolean().optional(),
 
   benchmarks: Joi.array().items(benchmarkValidator),
   reviews: Joi.array().items(reviewValidator),
@@ -180,6 +230,8 @@ function formOptions(gpu?: GpuProduct): UseFormProps<ProductFormData> {
       name: gpu?.name ?? '',
       description:
         (meta.get(ProductMetaKey.Description)?.value as string) ?? undefined,
+
+      // General
       company: (specs.get(GpuSpecKey.Company)?.value as string) ?? undefined,
       generation:
         (specs.get(GpuSpecKey.Generation)?.value as string) ?? undefined,
@@ -208,6 +260,122 @@ function formOptions(gpu?: GpuProduct): UseFormProps<ProductFormData> {
         : undefined,
       dieSize: specs.has(GpuSpecKey.DieSize)
         ? Number(specs.get(GpuSpecKey.DieSize))
+        : undefined,
+
+      // Board Compatibility & Dimensions
+      slotWidth:
+        (specs.get(GpuSpecKey.SlotWidth)?.value as string) ?? undefined,
+      length: specs.has(GpuSpecKey.Length)
+        ? Number(specs.get(GpuSpecKey.Length))
+        : undefined,
+      width: specs.has(GpuSpecKey.Width)
+        ? Number(specs.get(GpuSpecKey.Width))
+        : undefined,
+      height: specs.has(GpuSpecKey.Height)
+        ? Number(specs.get(GpuSpecKey.Height))
+        : undefined,
+      weight: specs.has(GpuSpecKey.Weight)
+        ? Number(specs.get(GpuSpecKey.Weight))
+        : undefined,
+      busInterface:
+        (specs.get(GpuSpecKey.BusInterface)?.value as string) ?? undefined,
+      tdp: specs.has(GpuSpecKey.Tdp)
+        ? Number(specs.get(GpuSpecKey.Tdp))
+        : undefined,
+      suggestedPsu: specs.has(GpuSpecKey.SuggestedPsu)
+        ? Number(specs.get(GpuSpecKey.SuggestedPsu))
+        : undefined,
+      powerConnectors:
+        (specs.get(GpuSpecKey.PowerConnectors)?.value as string) ?? undefined,
+
+      // Cores & Clock Speeds
+      cudaCores: specs.has(GpuSpecKey.CudaCores)
+        ? Number(specs.get(GpuSpecKey.CudaCores))
+        : undefined,
+      tmus: specs.has(GpuSpecKey.Tmus)
+        ? Number(specs.get(GpuSpecKey.Tmus))
+        : undefined,
+      rops: specs.has(GpuSpecKey.Rops)
+        ? Number(specs.get(GpuSpecKey.Rops))
+        : undefined,
+      tensorCores: specs.has(GpuSpecKey.TensorCores)
+        ? Number(specs.get(GpuSpecKey.TensorCores))
+        : undefined,
+      rtCores: specs.has(GpuSpecKey.RtCores)
+        ? Number(specs.get(GpuSpecKey.RtCores))
+        : undefined,
+      baseClock: specs.has(GpuSpecKey.ClockSpeedBase)
+        ? Number(specs.get(GpuSpecKey.ClockSpeedBase))
+        : undefined,
+      boostClock: specs.has(GpuSpecKey.ClockSpeedBoost)
+        ? Number(specs.get(GpuSpecKey.ClockSpeedBoost))
+        : undefined,
+      l1Cache: specs.has(GpuSpecKey.L1Cache)
+        ? Number(specs.get(GpuSpecKey.L1Cache))
+        : undefined,
+      l2Cache: specs.has(GpuSpecKey.L2Cache)
+        ? Number(specs.get(GpuSpecKey.L2Cache))
+        : undefined,
+
+      // Theoretical Performance
+      pixelRate: specs.has(GpuSpecKey.PixelRate)
+        ? Number(specs.get(GpuSpecKey.PixelRate))
+        : undefined,
+      textureRate: specs.has(GpuSpecKey.TextureRate)
+        ? Number(specs.get(GpuSpecKey.TextureRate))
+        : undefined,
+      fp32Performance: specs.has(GpuSpecKey.Fp32Performance)
+        ? Number(specs.get(GpuSpecKey.Fp32Performance))
+        : undefined,
+      fp64Performance: specs.has(GpuSpecKey.Fp64Performance)
+        ? Number(specs.get(GpuSpecKey.Fp64Performance))
+        : undefined,
+
+      // Memory
+      memorySize: specs.has(GpuSpecKey.MemorySize)
+        ? Number(specs.get(GpuSpecKey.MemorySize))
+        : undefined,
+      memoryType:
+        (specs.get(GpuSpecKey.MemoryType)?.value as string) ?? undefined,
+      memoryInterface: specs.has(GpuSpecKey.MemoryInterface)
+        ? Number(specs.get(GpuSpecKey.MemoryInterface))
+        : undefined,
+      memoryBandwidth: specs.has(GpuSpecKey.MemoryBandwidth)
+        ? Number(specs.get(GpuSpecKey.MemoryBandwidth))
+        : undefined,
+
+      // Display Connectivity
+      maxResolution:
+        (specs.get(GpuSpecKey.MaxResolution)?.value as string) ?? undefined,
+      displayPorts:
+        (specs.get(GpuSpecKey.DisplayPorts)?.value as string) ?? undefined,
+      hdmiPorts:
+        (specs.get(GpuSpecKey.HdmiPorts)?.value as string) ?? undefined,
+
+      // API Support
+      directX: specs.has(GpuSpecKey.DirectX)
+        ? Number(specs.get(GpuSpecKey.DirectX))
+        : undefined,
+      openCl: specs.has(GpuSpecKey.OpenCl)
+        ? Number(specs.get(GpuSpecKey.OpenCl))
+        : undefined,
+      openGl: specs.has(GpuSpecKey.OpenGl)
+        ? Number(specs.get(GpuSpecKey.OpenGl))
+        : undefined,
+      cuda: specs.has(GpuSpecKey.Cuda)
+        ? Number(specs.get(GpuSpecKey.Cuda))
+        : undefined,
+      shaderModel: specs.has(GpuSpecKey.ShaderModel)
+        ? Number(specs.get(GpuSpecKey.ShaderModel))
+        : undefined,
+      gSyncFreeSync: specs.has(GpuSpecKey.GSyncFreeSync)
+        ? Boolean(specs.get(GpuSpecKey.GSyncFreeSync))
+        : undefined,
+      sliCrossfire: specs.has(GpuSpecKey.SliCrossfire)
+        ? Boolean(specs.get(GpuSpecKey.SliCrossfire))
+        : undefined,
+      vrReady: specs.has(GpuSpecKey.VrReady)
+        ? Boolean(specs.get(GpuSpecKey.VrReady))
         : undefined,
 
       benchmarks: toFormBenchmarks(gpu),
@@ -844,42 +1012,6 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               render={({ field }) => <Input {...field} ref={null} />}
             />
           </Field>
-
-          <Field>
-            USB-C
-            <Controller
-              name="usbC"
-              control={control}
-              render={({ field }) => <Input {...field} ref={null} />}
-            />
-          </Field>
-
-          <Field>
-            Dual Link DVI
-            <Controller
-              name="dualLinkDvi"
-              control={control}
-              render={({ field }) => <Input {...field} ref={null} />}
-            />
-          </Field>
-
-          <Field>
-            Single Link DVI
-            <Controller
-              name="singleLinkDvi"
-              control={control}
-              render={({ field }) => <Input {...field} ref={null} />}
-            />
-          </Field>
-
-          <Field>
-            VGA
-            <Controller
-              name="vga"
-              control={control}
-              render={({ field }) => <Input {...field} ref={null} />}
-            />
-          </Field>
         </section>
 
         <section>
@@ -1044,6 +1176,7 @@ function getSpecsMap(gpu?: GpuProduct) {
 
 function toSpecsArray(formData: ProductFormData): ProductSpec[] {
   return [
+    // General
     {
       key: GpuSpecKey.Company,
       value: formData.company,
@@ -1068,6 +1201,8 @@ function toSpecsArray(formData: ProductFormData): ProductSpec[] {
       key: GpuSpecKey.ProductionStatus,
       value: formData.productionStatus,
     },
+
+    // Processor
     {
       key: GpuSpecKey.GpuName,
       value: formData.gpuName,
@@ -1096,6 +1231,18 @@ function toSpecsArray(formData: ProductFormData): ProductSpec[] {
       key: GpuSpecKey.DieSize,
       value: formData.dieSize,
     },
+
+    // Board Compatibility & Dimensions
+
+    // Cores & Clock Speeds
+
+    // Theoretical Performance
+
+    // Memory
+
+    // Display Connectivity
+
+    // API Support
   ];
 }
 

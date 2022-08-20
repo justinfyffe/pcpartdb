@@ -5,6 +5,10 @@ export async function up(knex: Knex): Promise<void> {
     table.increments('id');
     table.string('slug').notNullable();
 
+    // Parent = Main Model (e.g. RTX 3070)
+    // Child = Variant of model (e.g. RTX 3070 Gaming OC)
+    table.integer('parent_id');
+
     table.string('type').notNullable();
     table.string('name').notNullable();
 
@@ -12,6 +16,12 @@ export async function up(knex: Knex): Promise<void> {
 
     table.unique(['slug']);
     table.unique(['type', 'name']);
+
+    table
+      .foreign('parent_id')
+      .references('id')
+      .inTable('products')
+      .onDelete('cascade');
   });
 
   await knex.raw(`
