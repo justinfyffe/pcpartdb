@@ -44,9 +44,9 @@ export const CompareForm: FunctionComponent<CompareFormProps> = (props) => {
         <Input
           placeholder="Graphics Card..."
           value="NVIDIA GeForce RTX 3090"
-          closeable={values.length > 1}
+          clearable={values.length > 1}
           className={classNames('flex-1 min-w-[150px]')}
-          onClose={onDelete}
+          onClear={onDelete}
         />
 
         {values.length > 1 && (
@@ -62,9 +62,9 @@ export const CompareForm: FunctionComponent<CompareFormProps> = (props) => {
             <Input
               placeholder="Graphics Card..."
               value="NVIDIA GeForce RTX 3080"
-              closeable
+              clearable
               className={classNames('flex-1 min-w-[150px]')}
-              onClose={onDelete}
+              onClear={onDelete}
             />
           </>
         )}
@@ -82,9 +82,9 @@ export const CompareForm: FunctionComponent<CompareFormProps> = (props) => {
             <Input
               placeholder="Graphics Card..."
               value="NVIDIA GeForce RTX 3080"
-              closeable
+              clearable
               className={classNames('flex-1 min-w-[150px]')}
-              onClose={onDelete}
+              onClear={onDelete}
             />
           </>
         )}

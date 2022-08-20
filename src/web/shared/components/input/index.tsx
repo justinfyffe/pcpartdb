@@ -1,16 +1,38 @@
 import { XIcon } from '@heroicons/react/outline';
-import React, { FunctionComponent, HTMLProps } from 'react';
+import React, {
+  FunctionComponent,
+  HTMLProps,
+  useCallback,
+  useRef,
+  useState,
+} from 'react';
 import { classNames } from '../../ui/ui.utils';
 import { Button } from '../button';
 
 interface InputProps extends HTMLProps<HTMLInputElement> {
-  closeable?: boolean;
+  clearable?: boolean;
+  suffix?: string;
 
-  onClose?: () => void;
+  onClear?: () => void;
 }
 
 export const Input: FunctionComponent<InputProps> = (props) => {
-  const { closeable, className, onClose, type, ...htmlProps } = props;
+  const {
+    prefix,
+    suffix,
+    clearable: closeable,
+    className,
+    onClear,
+    type,
+    ...htmlProps
+  } = props;
+
+  const inputRef = useRef(null);
+
+  const handleClear = useCallback(() => {
+    inputRef.current.value = '';
+    onClear && onClear();
+  }, [onClear]);
 
   return (
     <div className={classNames('relative', className)}>
@@ -19,15 +41,28 @@ export const Input: FunctionComponent<InputProps> = (props) => {
         className={classNames(
           'border m-0 p-3 rounded text-sm w-full shadow',
           closeable ? 'pr-12' : '',
+          prefix ? 'pl-12' : '',
           className,
         )}
+        ref={inputRef}
         {...htmlProps}
       />
-      {closeable && (
-        <Button className="absolute right-0 inset-y-0" onClick={onClose}>
-          <XIcon className="w-[16px]" />
-        </Button>
+
+      {prefix && (
+        <div className="absolute flex items-center p-[0_16px] left-0 inset-y-0">
+          {prefix}
+        </div>
       )}
+
+      <div className="absolute flex items-stretch right-0 inset-y-0">
+        {suffix && <div className="flex items-center p-[0_16px]">{suffix}</div>}
+
+        {closeable && (
+          <Button className="hover:bg-[#eee]" onClick={handleClear}>
+            <XIcon className="w-[16px]" />
+          </Button>
+        )}
+      </div>
     </div>
   );
 };

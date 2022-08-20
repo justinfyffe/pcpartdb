@@ -1,5 +1,12 @@
 import { NormalizedSchema, schema } from 'normalizr';
 
+export enum MarketSegment {
+  Unknown = 'UNKNOWN',
+  Desktop = 'DESKTOP',
+  Laptop = 'LAPTOP',
+  Server = 'SERVER',
+}
+
 export enum ProductionStatus {
   Unknown = 'UNKNOWN',
   Active = 'ACTIVE',

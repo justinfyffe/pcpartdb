@@ -26,6 +26,8 @@ interface SelectProps {
   onChange?: (value: SelectValue) => void;
 
   children?: React.ReactNode;
+
+  ref?: unknown;
 }
 
 interface SelectOptionProps {
@@ -45,6 +47,7 @@ export const Select: FunctionComponent<SelectProps> = (props) => {
     value,
     onChange,
     children,
+    ref,
   } = props;
   const options = getOptions(children);
 

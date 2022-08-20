@@ -14,7 +14,7 @@ export enum ProductAutocompleteType {
 
 interface ProductAutocompleteProps {
   type: ProductAutocompleteType;
-  key?: ProductMetaKey | ProductSpecKey;
+  field?: ProductMetaKey | ProductSpecKey;
 
   value?: AutocompleteValue;
   onChange?: (value: AutocompleteValue) => void;
@@ -25,14 +25,14 @@ interface ProductAutocompleteProps {
 export const ProductAutocomplete: FunctionComponent<
   ProductAutocompleteProps
 > = (props) => {
-  const { type, key, ...restProps } = props;
+  const { type, field, ...restProps } = props;
 
   const handleQuery = useCallback(
     async (query: string) => {
       if (type === ProductAutocompleteType.Meta) {
         const results = await productService.autocompleteMeta(
           query,
-          key as ProductMetaKey,
+          field as ProductMetaKey,
         );
         return results
           .filter((value) => value != null)
@@ -40,7 +40,7 @@ export const ProductAutocomplete: FunctionComponent<
       } else if (type === ProductAutocompleteType.Spec) {
         const results = await productService.autocompleteSpec(
           query,
-          key as ProductSpecKey,
+          field as ProductSpecKey,
         );
         return results
           .filter((value) => value != null)
@@ -48,7 +48,7 @@ export const ProductAutocomplete: FunctionComponent<
       }
       return [];
     },
-    [type, key],
+    [type, field],
   );
 
   return <Autocomplete onQuery={handleQuery} {...restProps} />;

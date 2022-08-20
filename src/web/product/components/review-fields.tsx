@@ -111,7 +111,7 @@ const ReviewField: FunctionComponent<ReviewFieldProps> = (props) => {
 
       <Field className="flex-1">
         Rating
-        <Input type="number" step="0.01" onChange={handleValueChange} />
+        <Input onChange={handleValueChange} />
       </Field>
 
       <Field className="flex-1">

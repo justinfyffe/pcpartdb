@@ -118,7 +118,7 @@ const BenchmarkField: FunctionComponent<BenchmarkFieldProps> = (props) => {
 
       <Field className="flex-1">
         Value
-        <Input type="number" step="0.01" onChange={handleValueChange} />
+        <Input onChange={handleValueChange} />
       </Field>
 
       <Field className="flex-1">
