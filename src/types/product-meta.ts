@@ -8,7 +8,7 @@ export enum ProductMetaKey {
   Description = 'DESCRIPTION',
 }
 
-export type ProductMetaValue = number | string;
+export type ProductMetaValue = number | string | boolean;
 
 export interface ProductMeta {
   id?: number;

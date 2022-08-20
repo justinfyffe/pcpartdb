@@ -107,7 +107,7 @@ export enum GpuSpecKey {
 }
 
 export type ProductSpecKey = CpuSpecKey | GpuSpecKey;
-export type ProductSpecValue = number | string;
+export type ProductSpecValue = number | string | boolean;
 
 export interface ProductSpec {
   id?: number;
