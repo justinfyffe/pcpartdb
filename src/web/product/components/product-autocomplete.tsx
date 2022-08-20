@@ -36,7 +36,7 @@ export const ProductAutocomplete: FunctionComponent<
         );
         return results
           .filter((value) => value != null)
-          .map((result) => result.value!);
+          .map((result) => result.value! as string | number);
       } else if (type === ProductAutocompleteType.Spec) {
         const results = await productService.autocompleteSpec(
           query,
@@ -44,7 +44,7 @@ export const ProductAutocomplete: FunctionComponent<
         );
         return results
           .filter((value) => value != null)
-          .map((result) => result.value!);
+          .map((result) => result.value! as string | number);
       }
       return [];
     },

@@ -88,23 +88,21 @@ export const Autocomplete: FunctionComponent<AutocompleteProps> = (props) => {
     <div className={classNames('block relative', className)}>
       <Input
         value={value}
-        closeable
-        onClose={handleClear}
         onChange={handleQuery}
         onKeyDown={handleKeyDown}
         className={classNames(className)}
         ref={null}
       />
       {!isLoading && value && (
-        <div className="items-center rounded-r-md flex font-medium h-[calc(100%_-_2px)] m-[1px] p-[0_16px] absolute right-0 top-0 hover:bg-[#fafafa]">
-          <XIcon className="w-[16px]" />
-        </div>
-      )}
-      {isLoading && (
         <div
           className="items-center rounded-r-md flex font-medium h-[calc(100%_-_2px)] m-[1px] p-[0_16px] absolute right-0 top-0 hover:bg-[#fafafa]"
           onClick={handleClear}
         >
+          <XIcon className="w-[16px]" />
+        </div>
+      )}
+      {isLoading && (
+        <div className="items-center rounded-r-md flex font-medium h-[calc(100%_-_2px)] m-[1px] p-[0_16px] absolute right-0 top-0 hover:bg-[#fafafa]">
           <Spinner />
         </div>
       )}

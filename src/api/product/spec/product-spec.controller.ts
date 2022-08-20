@@ -20,7 +20,7 @@ export class ProductSpecController {
   ) {
     return normalize(
       await transaction((trx) =>
-        this.service.autocomplete(key, value, { trx }),
+        this.service.autocomplete(key, value ?? '', { trx }),
       ),
     ) as ProductSpecsResponse;
   }

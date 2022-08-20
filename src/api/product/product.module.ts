@@ -6,6 +6,7 @@ import { ProductMetaService } from './meta/product-meta.service';
 import { ProductController } from './product.controller';
 import { ProductRepository } from './product.repository';
 import { ProductService } from './product.service';
+import { ProductReviewRepository } from './review/product-review.repository';
 import { ProductSpecController } from './spec/product-spec.controller';
 import { ProductSpecRepository } from './spec/product-spec.repository';
 import { ProductSpecService } from './spec/product-spec.service';
@@ -24,6 +25,7 @@ import { ProductSpecService } from './spec/product-spec.service';
     ProductMetaRepository,
     ProductSpecRepository,
     ProductBenchmarkRepository,
+    ProductReviewRepository,
   ],
 })
 export class ProductModule {}

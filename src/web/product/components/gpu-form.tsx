@@ -229,29 +229,25 @@ function formOptions(gpu?: GpuProduct): UseFormProps<ProductFormData> {
       type: ProductType.GPU,
       name: gpu?.name ?? '',
       description:
-        (meta.get(ProductMetaKey.Description)?.value as string) ?? undefined,
+        (meta.get(ProductMetaKey.Description)?.value as string) ?? '',
 
       // General
-      company: (specs.get(GpuSpecKey.Company)?.value as string) ?? undefined,
-      generation:
-        (specs.get(GpuSpecKey.Generation)?.value as string) ?? undefined,
+      company: (specs.get(GpuSpecKey.Company)?.value as string) ?? '',
+      generation: (specs.get(GpuSpecKey.Generation)?.value as string) ?? '',
       marketSegment:
-        (specs.get(GpuSpecKey.MarketSegment)?.value as string) ?? undefined,
+        (specs.get(GpuSpecKey.MarketSegment)?.value as string) ?? '',
       launchPrice: specs.has(GpuSpecKey.MSRP)
         ? Number(specs.get(GpuSpecKey.MSRP))
         : undefined,
-      releaseDate:
-        (specs.get(GpuSpecKey.ReleaseDate)?.value as string) ?? undefined,
+      releaseDate: (specs.get(GpuSpecKey.ReleaseDate)?.value as string) ?? '',
       productionStatus:
-        (specs.get(GpuSpecKey.ProductionStatus)?.value as string) ?? undefined,
+        (specs.get(GpuSpecKey.ProductionStatus)?.value as string) ?? '',
 
       // Processor
-      gpuName: (specs.get(GpuSpecKey.GpuName)?.value as string) ?? undefined,
-      gpuVariant:
-        (specs.get(GpuSpecKey.GpuVariant)?.value as string) ?? undefined,
-      architecture:
-        (specs.get(GpuSpecKey.Architecture)?.value as string) ?? undefined,
-      foundry: (specs.get(GpuSpecKey.Foundry)?.value as string) ?? undefined,
+      gpuName: (specs.get(GpuSpecKey.GpuName)?.value as string) ?? '',
+      gpuVariant: (specs.get(GpuSpecKey.GpuVariant)?.value as string) ?? '',
+      architecture: (specs.get(GpuSpecKey.Architecture)?.value as string) ?? '',
+      foundry: (specs.get(GpuSpecKey.Foundry)?.value as string) ?? '',
       processSize: specs.has(GpuSpecKey.Lithography)
         ? Number(specs.get(GpuSpecKey.Lithography))
         : undefined,
@@ -278,8 +274,7 @@ function formOptions(gpu?: GpuProduct): UseFormProps<ProductFormData> {
       weight: specs.has(GpuSpecKey.Weight)
         ? Number(specs.get(GpuSpecKey.Weight))
         : undefined,
-      busInterface:
-        (specs.get(GpuSpecKey.BusInterface)?.value as string) ?? undefined,
+      busInterface: (specs.get(GpuSpecKey.BusInterface)?.value as string) ?? '',
       tdp: specs.has(GpuSpecKey.Tdp)
         ? Number(specs.get(GpuSpecKey.Tdp))
         : undefined,
@@ -287,7 +282,7 @@ function formOptions(gpu?: GpuProduct): UseFormProps<ProductFormData> {
         ? Number(specs.get(GpuSpecKey.SuggestedPsu))
         : undefined,
       powerConnectors:
-        (specs.get(GpuSpecKey.PowerConnectors)?.value as string) ?? undefined,
+        (specs.get(GpuSpecKey.PowerConnectors)?.value as string) ?? '',
 
       // Cores & Clock Speeds
       cudaCores: specs.has(GpuSpecKey.CudaCores)
@@ -336,8 +331,7 @@ function formOptions(gpu?: GpuProduct): UseFormProps<ProductFormData> {
       memorySize: specs.has(GpuSpecKey.MemorySize)
         ? Number(specs.get(GpuSpecKey.MemorySize))
         : undefined,
-      memoryType:
-        (specs.get(GpuSpecKey.MemoryType)?.value as string) ?? undefined,
+      memoryType: (specs.get(GpuSpecKey.MemoryType)?.value as string) ?? '',
       memoryInterface: specs.has(GpuSpecKey.MemoryInterface)
         ? Number(specs.get(GpuSpecKey.MemoryInterface))
         : undefined,
@@ -347,11 +341,9 @@ function formOptions(gpu?: GpuProduct): UseFormProps<ProductFormData> {
 
       // Display Connectivity
       maxResolution:
-        (specs.get(GpuSpecKey.MaxResolution)?.value as string) ?? undefined,
-      displayPorts:
-        (specs.get(GpuSpecKey.DisplayPorts)?.value as string) ?? undefined,
-      hdmiPorts:
-        (specs.get(GpuSpecKey.HdmiPorts)?.value as string) ?? undefined,
+        (specs.get(GpuSpecKey.MaxResolution)?.value as string) ?? '',
+      displayPorts: (specs.get(GpuSpecKey.DisplayPorts)?.value as string) ?? '',
+      hdmiPorts: (specs.get(GpuSpecKey.HdmiPorts)?.value as string) ?? '',
 
       // API Support
       directX: specs.has(GpuSpecKey.DirectX)
@@ -570,7 +562,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
             name="launchPrice"
             control={control}
             render={({ field }) => (
-              <Input type="number" {...field} ref={null} />
+              <Input type="number" step="0.01" {...field} ref={null} />
             )}
           />
         </Field>
@@ -691,12 +683,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="processSize"
               control={control}
               render={({ field }) => (
-                <ProductAutocomplete
-                  type={ProductAutocompleteType.Spec}
-                  key={GpuSpecKey.Lithography}
-                  {...field}
-                  ref={null}
-                />
+                <Input type="number" {...field} ref={null} />
               )}
             />
           </Field>
@@ -707,12 +694,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="transistors"
               control={control}
               render={({ field }) => (
-                <ProductAutocomplete
-                  type={ProductAutocompleteType.Spec}
-                  key={GpuSpecKey.Transistors}
-                  {...field}
-                  ref={null}
-                />
+                <Input type="number" {...field} ref={null} />
               )}
             />
           </Field>
@@ -723,12 +705,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="dieSize"
               control={control}
               render={({ field }) => (
-                <ProductAutocomplete
-                  type={ProductAutocompleteType.Spec}
-                  key={GpuSpecKey.DieSize}
-                  {...field}
-                  ref={null}
-                />
+                <Input type="number" {...field} ref={null} />
               )}
             />
           </Field>
@@ -743,7 +720,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="slotWidth"
               control={control}
               render={({ field }) => (
-                <Input type="number" {...field} ref={null} />
+                <Input type="number" step="0.01" {...field} ref={null} />
               )}
             />
           </Field>
@@ -754,7 +731,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="length"
               control={control}
               render={({ field }) => (
-                <Input type="number" {...field} ref={null} />
+                <Input type="number" step="0.01" {...field} ref={null} />
               )}
             />
           </Field>
@@ -765,7 +742,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="width"
               control={control}
               render={({ field }) => (
-                <Input type="number" {...field} ref={null} />
+                <Input type="number" step="0.01" {...field} ref={null} />
               )}
             />
           </Field>
@@ -776,7 +753,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="height"
               control={control}
               render={({ field }) => (
-                <Input type="number" {...field} ref={null} />
+                <Input type="number" step="0.01" {...field} ref={null} />
               )}
             />
           </Field>
@@ -787,7 +764,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="weight"
               control={control}
               render={({ field }) => (
-                <Input type="number" {...field} ref={null} />
+                <Input type="number" step="0.01" {...field} ref={null} />
               )}
             />
           </Field>
@@ -814,7 +791,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="tdp"
               control={control}
               render={({ field }) => (
-                <Input type="number" {...field} ref={null} />
+                <Input type="number" step="0.01" {...field} ref={null} />
               )}
             />
           </Field>
@@ -825,7 +802,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="suggestedPsu"
               control={control}
               render={({ field }) => (
-                <Input type="number" {...field} ref={null} />
+                <Input type="number" step="0.01" {...field} ref={null} />
               )}
             />
           </Field>
@@ -856,7 +833,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="cudaCores"
               control={control}
               render={({ field }) => (
-                <Input type="number" {...field} ref={null} />
+                <Input type="number" step="0.01" {...field} ref={null} />
               )}
             />
           </Field>
@@ -867,7 +844,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="tmus"
               control={control}
               render={({ field }) => (
-                <Input type="number" {...field} ref={null} />
+                <Input type="number" step="0.01" {...field} ref={null} />
               )}
             />
           </Field>
@@ -878,7 +855,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="rops"
               control={control}
               render={({ field }) => (
-                <Input type="number" {...field} ref={null} />
+                <Input type="number" step="0.01" {...field} ref={null} />
               )}
             />
           </Field>
@@ -889,7 +866,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="tensorCores"
               control={control}
               render={({ field }) => (
-                <Input type="number" {...field} ref={null} />
+                <Input type="number" step="0.01" {...field} ref={null} />
               )}
             />
           </Field>
@@ -900,7 +877,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="rtCores"
               control={control}
               render={({ field }) => (
-                <Input type="number" {...field} ref={null} />
+                <Input type="number" step="0.01" {...field} ref={null} />
               )}
             />
           </Field>
@@ -908,10 +885,10 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           <Field>
             Base Clock
             <Controller
-              name="rtCores"
+              name="baseClock"
               control={control}
               render={({ field }) => (
-                <Input type="number" {...field} ref={null} />
+                <Input type="number" step="0.01" {...field} ref={null} />
               )}
             />
           </Field>
@@ -922,7 +899,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="boostClock"
               control={control}
               render={({ field }) => (
-                <Input type="number" {...field} ref={null} />
+                <Input type="number" step="0.01" {...field} ref={null} />
               )}
             />
           </Field>
@@ -933,7 +910,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="l1Cache"
               control={control}
               render={({ field }) => (
-                <Input type="number" {...field} ref={null} />
+                <Input type="number" step="0.01" {...field} ref={null} />
               )}
             />
           </Field>
@@ -944,7 +921,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="l2Cache"
               control={control}
               render={({ field }) => (
-                <Input type="number" {...field} ref={null} />
+                <Input type="number" step="0.01" {...field} ref={null} />
               )}
             />
           </Field>
@@ -959,7 +936,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="pixelRate"
               control={control}
               render={({ field }) => (
-                <Input type="number" {...field} ref={null} />
+                <Input type="number" step="0.01" {...field} ref={null} />
               )}
             />
           </Field>
@@ -970,7 +947,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="textureRate"
               control={control}
               render={({ field }) => (
-                <Input type="number" {...field} ref={null} />
+                <Input type="number" step="0.01" {...field} ref={null} />
               )}
             />
           </Field>
@@ -981,7 +958,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="fp32Performance"
               control={control}
               render={({ field }) => (
-                <Input type="number" {...field} ref={null} />
+                <Input type="number" step="0.01" {...field} ref={null} />
               )}
             />
           </Field>
@@ -992,7 +969,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="fp64Performance"
               control={control}
               render={({ field }) => (
-                <Input type="number" {...field} ref={null} />
+                <Input type="number" step="0.01" {...field} ref={null} />
               )}
             />
           </Field>
@@ -1007,7 +984,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="memorySize"
               control={control}
               render={({ field }) => (
-                <Input type="number" {...field} ref={null} />
+                <Input type="number" step="0.01" {...field} ref={null} />
               )}
             />
           </Field>
@@ -1034,7 +1011,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="memoryInterface"
               control={control}
               render={({ field }) => (
-                <Input type="number" {...field} ref={null} />
+                <Input type="number" step="0.01" {...field} ref={null} />
               )}
             />
           </Field>
@@ -1045,7 +1022,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="memoryBandwidth"
               control={control}
               render={({ field }) => (
-                <Input type="number" {...field} ref={null} />
+                <Input type="number" step="0.01" {...field} ref={null} />
               )}
             />
           </Field>
@@ -1112,7 +1089,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="directX"
               control={control}
               render={({ field }) => (
-                <Input type="number" {...field} ref={null} />
+                <Input type="number" step="0.01" {...field} ref={null} />
               )}
             />
           </Field>
@@ -1150,7 +1127,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="openCl"
               control={control}
               render={({ field }) => (
-                <Input type="number" {...field} ref={null} />
+                <Input type="number" step="0.01" {...field} ref={null} />
               )}
             />
           </Field>
@@ -1161,7 +1138,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="openGl"
               control={control}
               render={({ field }) => (
-                <Input type="number" {...field} ref={null} />
+                <Input type="number" step="0.01" {...field} ref={null} />
               )}
             />
           </Field>
@@ -1172,7 +1149,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="shaderModel"
               control={control}
               render={({ field }) => (
-                <Input type="number" {...field} ref={null} />
+                <Input type="number" step="0.01" {...field} ref={null} />
               )}
             />
           </Field>
