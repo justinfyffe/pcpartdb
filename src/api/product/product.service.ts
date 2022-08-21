@@ -58,6 +58,20 @@ const updateProductValidator = Joi.object({
 export class ProductService {
   constructor(private productRepository: ProductRepository) {}
 
+  async list(ctx: ServiceContext) {
+    return await this.productRepository.list(ctx);
+  }
+
+  async get(idOrSlug: string | number, ctx: ServiceContext) {
+    return typeof idOrSlug === 'number'
+      ? await this.getProductById(idOrSlug, ctx)
+      : await this.getProductBySlug(idOrSlug, ctx);
+  }
+
+  async getProductById(id: number, ctx: ServiceContext) {
+    return await this.productRepository.findById(id, ctx);
+  }
+
   async getProductBySlug(slug: string, ctx: ServiceContext) {
     return await this.productRepository.findBySlug(slug, ctx);
   }
@@ -89,5 +103,9 @@ export class ProductService {
 
     await this.productRepository.delete(id, ctx);
     return id;
+  }
+
+  async autocomplete(query: string, ctx: ServiceContext) {
+    return await this.productRepository.findSimilarValue(query, ctx);
   }
 }

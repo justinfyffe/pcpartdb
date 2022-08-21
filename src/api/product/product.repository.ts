@@ -68,4 +68,12 @@ export class ProductRepository {
   async delete(id: number, config?: RepositoryConfig) {
     return await ProductModel.query(config?.trx).deleteById(id);
   }
+
+  async findSimilarValue(query: string, config?: RepositoryConfig) {
+    return await ProductModel.query(config?.trx).andWhere(
+      'name',
+      'ILIKE',
+      query,
+    );
+  }
 }
