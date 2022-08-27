@@ -5,6 +5,7 @@ import {
   Autocomplete,
   AutocompleteValue,
 } from '../../shared/components/autocomplete';
+import { productService } from '../product.service';
 
 export enum ProductAutocompleteType {
   Meta = 'meta',
@@ -26,9 +27,29 @@ export const ProductAutocomplete: FunctionComponent<
 > = (props) => {
   const { type, key, ...restProps } = props;
 
-  const handleQuery = useCallback((query: string) => {
-    return ['Foo', 'Bar', 'Test'];
-  }, []);
+  const handleQuery = useCallback(
+    async (query: string) => {
+      if (type === ProductAutocompleteType.Meta) {
+        const results = await productService.autocompleteMeta(
+          query,
+          key as ProductMetaKey,
+        );
+        return results
+          .filter((value) => value != null)
+          .map((result) => result.value!);
+      } else if (type === ProductAutocompleteType.Spec) {
+        const results = await productService.autocompleteSpec(
+          query,
+          key as ProductSpecKey,
+        );
+        return results
+          .filter((value) => value != null)
+          .map((result) => result.value!);
+      }
+      return [];
+    },
+    [type, key],
+  );
 
   return <Autocomplete onQuery={handleQuery} {...restProps} />;
 };

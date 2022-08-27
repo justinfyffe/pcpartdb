@@ -1,15 +1,6 @@
 import { NormalizedSchema, schema } from 'normalizr';
 
 export enum CpuSpecKey {
-  // General
-  Company = 'COMPANY',
-  Architecture = 'ARCHITECTURE',
-  Generation = 'GENERATION',
-  MarketSegment = 'MARKET_SEGMENT',
-  MSRP = 'MSRP',
-  ReleaseDate = 'RELEASE_DATE',
-  Status = 'STATUS',
-
   // CPU Specs
   ClockMultiplier = 'CLOCK_MULTIPLIER',
   ClockMultiplierUnlocked = 'CLOCK_MULTIPLIER_UNLOCKED',
@@ -37,10 +28,43 @@ export enum CpuSpecKey {
   // Expansion Specs
 }
 
-export enum GpuSpecKey {}
+export enum GpuSpecKey {
+  // Processor
+  GpuName = 'GPU_NAME',
+  GpuVariant = 'GPU_VARIANT',
+  Architecture = 'ARCHITECTURE',
+  Foundry = 'FOUNDRY',
+  Lithography = 'LITHOGRAPHY',
+  Transistors = 'TRANSISTORS',
+  DieSize = 'DIE_SIZE',
+
+  // Clock Speeds
+  ClockSpeed = 'CLOCK_SPEED',
+  ClockSpeedTurbo = 'CLOCK_SPEED_TURBO',
+  MemoryClock = 'MEMORY_CLOCK',
+
+  // Board Design
+  SlotWidth = 'SLOT_WIDTH',
+  Length = 'LENGTH',
+  Width = 'WIDTH',
+  Height = 'HEIGHT',
+  Tdp = 'TDP',
+  SuggestedPsu = 'SUGGESTED_PSU',
+  Outputs = 'OUTPUTS',
+  PowerConnectors = 'POWER_CONNECTORS',
+  BoardNumber = 'BOARD_NUMBER',
+
+  // Theoretical Performance
+
+  // Memory
+
+  // Render Config
+
+  // Graphics Features
+}
 
 export type ProductSpecKey = CpuSpecKey | GpuSpecKey;
-export type ProductSpecValue = number | string | object;
+export type ProductSpecValue = number | string;
 
 export interface ProductSpec {
   id?: number;

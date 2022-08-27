@@ -5,11 +5,23 @@ import {
   productSchema,
   ProductsResponse,
 } from '../../types/product';
+import {
+  ProductMeta,
+  ProductMetaKey,
+  ProductMetaResponse,
+  productMetaSchema,
+} from '../../types/product-meta';
+import {
+  ProductSpec,
+  ProductSpecKey,
+  productSpecSchema,
+  ProductSpecsResponse,
+} from '../../types/product-spec';
 import { ApiClient, apiClient } from '../shared/api/api-client';
 
 const PATH = 'products';
 
-export class UserService {
+export class ProductService {
   constructor(private api: ApiClient) {}
 
   async list() {
@@ -36,10 +48,31 @@ export class UserService {
     await this.api.delete(`${PATH}/${id}`);
   }
 
-  async autocomplete(query: string) {
-    const response = await this.api.get<unknown>(`${PATH}/autocomplete`);
-    // return denormalize(response.result, [productSchema], response.entities);
+  async autocompleteMeta(
+    query: string,
+    key?: ProductMetaKey,
+  ): Promise<ProductMeta[]> {
+    const response = await this.api.get<ProductMetaResponse>(
+      `${PATH}/meta/autocomplete`,
+      {
+        params: { key, value: query },
+      },
+    );
+    return denormalize(response.result, [productMetaSchema], response.entities);
+  }
+
+  async autocompleteSpec(
+    query: string,
+    key?: ProductSpecKey,
+  ): Promise<ProductSpec[]> {
+    const response = await this.api.get<ProductSpecsResponse>(
+      `${PATH}/specs/autocomplete`,
+      {
+        params: { key, value: query },
+      },
+    );
+    return denormalize(response.result, [productSpecSchema], response.entities);
   }
 }
 
-export const productService = new UserService(apiClient);
+export const productService = new ProductService(apiClient);

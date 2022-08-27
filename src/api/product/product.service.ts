@@ -66,18 +66,7 @@ export class ProductService {
   async create(data: ProductRequest, ctx: ServiceContext) {
     validate(data, createProductValidator);
 
-    return await this.productRepository.save(
-      {
-        type: data.type,
-        slug: data.slug,
-        name: data.name,
-        meta: data.meta,
-        specs: data.specs,
-        benchmarks: data.benchmarks,
-        reviews: data.reviews,
-      },
-      ctx,
-    );
+    return await this.productRepository.save({ ...data }, ctx);
   }
 
   // TODO: check slug uniqueness
@@ -89,25 +78,7 @@ export class ProductService {
       throw notFoundError({ product: id });
     }
 
-    return await this.productRepository.save(
-      {
-        id,
-        type: data.type,
-        slug: data.slug,
-        name: data.name,
-        meta: data.meta.map((meta) => ({ ...meta, productId: id })),
-        specs: data.specs.map((spec) => ({ ...spec, productId: id })),
-        benchmarks: data.benchmarks.map((benchmark) => ({
-          ...benchmark,
-          productId: id,
-        })),
-        reviews: data.reviews.map((review) => ({
-          ...review,
-          productId: id,
-        })),
-      },
-      ctx,
-    );
+    return await this.productRepository.save({ ...data, id }, ctx);
   }
 
   async delete(id: number, ctx: ServiceContext) {

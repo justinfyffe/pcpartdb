@@ -58,6 +58,7 @@ interface ProductFormData {
 
   // Processor
   gpuName?: string;
+  gpuVariant?: string;
   architecture?: string;
   foundry?: string;
   processSize?: number;
@@ -173,9 +174,11 @@ function formOptions(gpu?: GpuProduct): UseFormProps<ProductFormData> {
       name: gpu?.name ?? '',
       description:
         (meta.get(ProductMetaKey.Description)?.value as string) ?? undefined,
-      company: '',
-      generation: '',
-      marketSegment: '',
+      company: (meta.get(ProductMetaKey.Company)?.value as string) ?? undefined,
+      generation:
+        (meta.get(ProductMetaKey.Generation)?.value as string) ?? undefined,
+      marketSegment:
+        (meta.get(ProductMetaKey.MarketSegment)?.value as string) ?? undefined,
       launchPrice: 0,
       releaseDate: '',
       productionStatus: '',
@@ -333,6 +336,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
             render={({ field }) => (
               <ProductAutocomplete
                 type={ProductAutocompleteType.Meta}
+                key={ProductMetaKey.Company}
                 {...field}
                 ref={null}
               />
@@ -345,7 +349,14 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           <Controller
             name="generation"
             control={control}
-            render={({ field }) => <Input {...field} ref={null} />}
+            render={({ field }) => (
+              <ProductAutocomplete
+                type={ProductAutocompleteType.Meta}
+                key={ProductMetaKey.Generation}
+                {...field}
+                ref={null}
+              />
+            )}
           />
         </Field>
 
@@ -354,7 +365,14 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           <Controller
             name="marketSegment"
             control={control}
-            render={({ field }) => <Input {...field} ref={null} />}
+            render={({ field }) => (
+              <ProductAutocomplete
+                type={ProductAutocompleteType.Meta}
+                key={ProductMetaKey.MarketSegment}
+                {...field}
+                ref={null}
+              />
+            )}
           />
         </Field>
 
@@ -910,6 +928,18 @@ function toMetaArray(formData: ProductFormData): ProductMeta[] {
     {
       key: ProductMetaKey.Description,
       value: formData.description,
+    },
+    {
+      key: ProductMetaKey.Company,
+      value: formData.company,
+    },
+    {
+      key: ProductMetaKey.Generation,
+      value: formData.generation,
+    },
+    {
+      key: ProductMetaKey.MarketSegment,
+      value: formData.marketSegment,
     },
   ];
 }

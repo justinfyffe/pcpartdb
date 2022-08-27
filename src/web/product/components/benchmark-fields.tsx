@@ -1,6 +1,9 @@
 import { XIcon } from '@heroicons/react/outline';
 import React, { FunctionComponent, useCallback } from 'react';
-import { ProductBenchmarkKey } from '../../../types/product-benchmark';
+import {
+  ProductBenchmarkKey,
+  ProductBenchmarkValue,
+} from '../../../types/product-benchmark';
 import { Button, ButtonVariant } from '../../shared/components/button';
 import { Field } from '../../shared/components/field';
 import { Input } from '../../shared/components/input';
@@ -12,7 +15,7 @@ import {
 
 export interface BenchmarkValue {
   key: ProductBenchmarkKey;
-  value: number | string;
+  value: ProductBenchmarkValue;
   source?: string;
 }
 
@@ -83,7 +86,9 @@ const BenchmarkField: FunctionComponent<BenchmarkFieldProps> = (props) => {
 
   const handleValueChange = useCallback(
     (evt: React.ChangeEvent<HTMLInputElement>) => {
-      value.value = Number(evt.target.value);
+      value.value = isNaN(Number(evt.target.value))
+        ? evt.target.value
+        : Number(evt.target.value);
       onChange(value);
     },
     [onChange, value],

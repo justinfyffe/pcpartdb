@@ -15,7 +15,7 @@ export type AutocompleteValue = string | number;
 
 interface AutocompleteProps {
   direction?: 'top' | 'bottom';
-  onQuery: (query: string) => AutocompleteValue[];
+  onQuery: (query: string) => Promise<AutocompleteValue[]>;
 
   value?: AutocompleteValue;
   onChange?: (value: AutocompleteValue) => void;

@@ -29,19 +29,19 @@ export class ProductRepository {
       .returning('*');
 
     for (const value of meta) {
-      await this.metaRepoistory.save(value, config);
+      await this.metaRepoistory.save({ ...value, productId: id }, config);
     }
 
     for (const value of specs) {
-      await this.specRepository.save(value, config);
+      await this.specRepository.save({ ...value, productId: id }, config);
     }
 
     for (const value of benchmarks) {
-      await this.benchmarkRepository.save(value, config);
+      await this.benchmarkRepository.save({ ...value, productId: id }, config);
     }
 
     for (const value of reviews) {
-      await this.reviewRepository.save(value, config);
+      await this.reviewRepository.save({ ...value, productId: id }, config);
     }
 
     return this.findById(id, config);
