@@ -8,9 +8,12 @@ export enum ProductBenchmarkKey {
 export type ProductBenchmarkValue = string;
 
 export interface ProductBenchmark {
+  id?: number;
+  productId?: number;
+
   key: ProductBenchmarkKey;
-  value: number | string;
-  source?: ProductBenchmarkValue;
+  value: ProductBenchmarkValue;
+  source?: string;
 }
 
 export const productBenchmarkSchema = new schema.Entity('productBenchmarks');

@@ -20,6 +20,8 @@ export class ProductMetaModel extends Model implements CanDto<ProductMeta> {
 
   toDto(): ProductMeta {
     return {
+      id: this.id,
+      productId: this.productId,
       source: this.source,
       key: this.key,
       value: this.value,

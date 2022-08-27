@@ -7,6 +7,9 @@ export enum ProductReviewKey {
 export type ProductReviewValue = number | string;
 
 export interface ProductReview {
+  id?: number;
+  productId?: number;
+
   source?: string;
   key: ProductReviewKey;
   value?: ProductReviewValue;

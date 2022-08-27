@@ -20,6 +20,8 @@ export class ProductReviewModel extends Model implements CanDto<ProductReview> {
 
   toDto(): ProductReview {
     return {
+      id: this.id,
+      productId: this.productId,
       source: this.source,
       key: this.key,
       value: this.value,

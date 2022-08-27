@@ -43,6 +43,9 @@ export type ProductSpecKey = CpuSpecKey | GpuSpecKey;
 export type ProductSpecValue = number | string | object;
 
 export interface ProductSpec {
+  id?: number;
+  productId?: number;
+
   source?: string;
   key: ProductSpecKey;
   value?: ProductSpecValue;

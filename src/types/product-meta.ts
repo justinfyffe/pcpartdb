@@ -7,6 +7,9 @@ export enum ProductMetaKey {
 export type ProductMetaValue = number | string | object;
 
 export interface ProductMeta {
+  id?: number;
+  productId?: number;
+
   source?: string;
   key: ProductMetaKey;
   value?: ProductMetaValue;

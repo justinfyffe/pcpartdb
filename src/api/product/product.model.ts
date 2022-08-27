@@ -1,10 +1,22 @@
 import { Model, PartialModelObject } from 'objection';
 import { Product, productSchema, ProductType } from '../../types/product';
 import { CanDto } from '../shared/types/normalize';
-import { ProductBenchmarkModel } from './benchmark/product-benchmark.model';
-import { ProductMetaModel } from './meta/product-meta.model';
-import { ProductReviewModel } from './review/product-review.model';
-import { ProductSpecModel } from './spec/product-spec.model';
+import {
+  ProductBenchmarkModel,
+  ProductBenchmarkModelPojo,
+} from './benchmark/product-benchmark.model';
+import {
+  ProductMetaModel,
+  ProductMetaModelPojo,
+} from './meta/product-meta.model';
+import {
+  ProductReviewModel,
+  ProductReviewModelPojo,
+} from './review/product-review.model';
+import {
+  ProductSpecModel,
+  ProductSpecModelPojo,
+} from './spec/product-spec.model';
 
 export class ProductModel extends Model implements CanDto<Product> {
   static tableName = 'products';
@@ -75,4 +87,12 @@ export class ProductModel extends Model implements CanDto<Product> {
   }
 }
 
-export type ProductModelPojo = PartialModelObject<ProductModel>;
+export type ProductModelPojo = Omit<
+  PartialModelObject<ProductModel>,
+  'meta' | 'specs' | 'reviews' | 'benchmarks'
+> & {
+  meta: ProductMetaModelPojo[];
+  reviews: ProductReviewModelPojo[];
+  specs: ProductSpecModelPojo[];
+  benchmarks: ProductBenchmarkModelPojo[];
+};
