@@ -2,16 +2,6 @@ import { NormalizedSchema, schema } from 'normalizr';
 
 export enum ProductMetaKey {
   Description = 'DESCRIPTION',
-
-  // TODO: move these to specs?
-  Company = 'COMPANY',
-  Generation = 'GENERATION',
-  Predecessor = 'PREDECESSOR',
-  Successor = 'SUCCESSOR',
-  MarketSegment = 'MARKET_SEGMENT',
-  MSRP = 'MSRP',
-  ReleaseDate = 'RELEASE_DATE',
-  Status = 'STATUS',
 }
 
 export type ProductMetaValue = number | string;

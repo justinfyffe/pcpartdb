@@ -1,5 +1,12 @@
 import { NormalizedSchema, schema } from 'normalizr';
 
+export enum ProductionStatus {
+  Unknown = 'UNKNOWN',
+  Active = 'ACTIVE',
+  EndOfLife = 'END_OF_LIFE',
+  Unreleased = 'UNRELEASED',
+}
+
 export enum CpuSpecKey {
   // CPU Specs
   ClockMultiplier = 'CLOCK_MULTIPLIER',
@@ -29,6 +36,16 @@ export enum CpuSpecKey {
 }
 
 export enum GpuSpecKey {
+  // General
+  Company = 'COMPANY',
+  Generation = 'GENERATION',
+  Predecessor = 'PREDECESSOR',
+  Successor = 'SUCCESSOR',
+  MarketSegment = 'MARKET_SEGMENT',
+  MSRP = 'MSRP',
+  ReleaseDate = 'RELEASE_DATE',
+  ProductionStatus = 'PRODUCTION_STATUS',
+
   // Processor
   GpuName = 'GPU_NAME',
   GpuVariant = 'GPU_VARIANT',

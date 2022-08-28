@@ -17,13 +17,19 @@ import {
 import { ProductBenchmark } from '../../../types/product-benchmark';
 import { ProductMeta, ProductMetaKey } from '../../../types/product-meta';
 import { ProductReview, ProductReviewKey } from '../../../types/product-review';
-import { ProductSpec, ProductSpecKey } from '../../../types/product-spec';
+import {
+  GpuSpecKey,
+  ProductionStatus,
+  ProductSpec,
+  ProductSpecKey,
+} from '../../../types/product-spec';
 import { Alert, AlertVariant } from '../../shared/components/alert';
 import { Button, ButtonVariant } from '../../shared/components/button';
 import { Checkbox } from '../../shared/components/checkbox';
 import { Field, FieldError } from '../../shared/components/field';
 import { Form, FormActions } from '../../shared/components/form';
 import { Input } from '../../shared/components/input';
+import { Select, SelectOption } from '../../shared/components/select';
 import { Spinner } from '../../shared/components/spinner';
 import { Textarea } from '../../shared/components/textarea';
 import {
@@ -174,17 +180,23 @@ function formOptions(gpu?: GpuProduct): UseFormProps<ProductFormData> {
       name: gpu?.name ?? '',
       description:
         (meta.get(ProductMetaKey.Description)?.value as string) ?? undefined,
-      company: (meta.get(ProductMetaKey.Company)?.value as string) ?? undefined,
+      company: (specs.get(GpuSpecKey.Company)?.value as string) ?? undefined,
       generation:
-        (meta.get(ProductMetaKey.Generation)?.value as string) ?? undefined,
+        (specs.get(GpuSpecKey.Generation)?.value as string) ?? undefined,
       marketSegment:
-        (meta.get(ProductMetaKey.MarketSegment)?.value as string) ?? undefined,
-      launchPrice: 0,
-      releaseDate: '',
-      productionStatus: '',
+        (specs.get(GpuSpecKey.MarketSegment)?.value as string) ?? undefined,
+      launchPrice: specs.has(GpuSpecKey.MSRP)
+        ? Number(specs.get(GpuSpecKey.MSRP))
+        : undefined,
+      releaseDate:
+        (specs.get(GpuSpecKey.ReleaseDate)?.value as string) ?? undefined,
+      productionStatus:
+        (specs.get(GpuSpecKey.ProductionStatus)?.value as string) ?? undefined,
 
       // Processor
-      gpuName: '',
+      gpuName: (specs.get(GpuSpecKey.GpuName)?.value as string) ?? undefined,
+      gpuVariant:
+        (specs.get(GpuSpecKey.GpuVariant)?.value as string) ?? undefined,
       architecture: '',
       foundry: '',
       processSize: 0,
@@ -335,8 +347,8 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
             control={control}
             render={({ field }) => (
               <ProductAutocomplete
-                type={ProductAutocompleteType.Meta}
-                key={ProductMetaKey.Company}
+                type={ProductAutocompleteType.Spec}
+                key={GpuSpecKey.Company}
                 {...field}
                 ref={null}
               />
@@ -351,8 +363,8 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
             control={control}
             render={({ field }) => (
               <ProductAutocomplete
-                type={ProductAutocompleteType.Meta}
-                key={ProductMetaKey.Generation}
+                type={ProductAutocompleteType.Spec}
+                key={GpuSpecKey.Generation}
                 {...field}
                 ref={null}
               />
@@ -367,8 +379,8 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
             control={control}
             render={({ field }) => (
               <ProductAutocomplete
-                type={ProductAutocompleteType.Meta}
-                key={ProductMetaKey.MarketSegment}
+                type={ProductAutocompleteType.Spec}
+                key={GpuSpecKey.MarketSegment}
                 {...field}
                 ref={null}
               />
@@ -381,7 +393,9 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           <Controller
             name="launchPrice"
             control={control}
-            render={({ field }) => <Input {...field} ref={null} />}
+            render={({ field }) => (
+              <Input type="number" {...field} ref={null} />
+            )}
           />
         </Field>
 
@@ -390,7 +404,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           <Controller
             name="releaseDate"
             control={control}
-            render={({ field }) => <Input {...field} ref={null} />}
+            render={({ field }) => <Input type="date" {...field} ref={null} />}
           />
         </Field>
 
@@ -399,7 +413,28 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           <Controller
             name="productionStatus"
             control={control}
-            render={({ field }) => <Input {...field} ref={null} />}
+            render={({ field }) => (
+              <Select {...field}>
+                <SelectOption label="Unknown" value={ProductionStatus.Unknown}>
+                  Unknown
+                </SelectOption>
+                <SelectOption label="Active" value={ProductionStatus.Active}>
+                  Active
+                </SelectOption>
+                <SelectOption
+                  label="End-Of-Life"
+                  value={ProductionStatus.EndOfLife}
+                >
+                  End-Of-Life
+                </SelectOption>
+                <SelectOption
+                  label="Unreleased"
+                  value={ProductionStatus.Unreleased}
+                >
+                  Unreleased
+                </SelectOption>
+              </Select>
+            )}
           />
         </Field>
       </section>
@@ -415,7 +450,30 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
             <Controller
               name="gpuName"
               control={control}
-              render={({ field }) => <Input {...field} ref={null} />}
+              render={({ field }) => (
+                <ProductAutocomplete
+                  type={ProductAutocompleteType.Spec}
+                  key={GpuSpecKey.GpuName}
+                  {...field}
+                  ref={null}
+                />
+              )}
+            />
+          </Field>
+
+          <Field>
+            GPU Variant
+            <Controller
+              name="gpuVariant"
+              control={control}
+              render={({ field }) => (
+                <ProductAutocomplete
+                  type={ProductAutocompleteType.Spec}
+                  key={GpuSpecKey.GpuVariant}
+                  {...field}
+                  ref={null}
+                />
+              )}
             />
           </Field>
 
@@ -929,18 +987,6 @@ function toMetaArray(formData: ProductFormData): ProductMeta[] {
       key: ProductMetaKey.Description,
       value: formData.description,
     },
-    {
-      key: ProductMetaKey.Company,
-      value: formData.company,
-    },
-    {
-      key: ProductMetaKey.Generation,
-      value: formData.generation,
-    },
-    {
-      key: ProductMetaKey.MarketSegment,
-      value: formData.marketSegment,
-    },
   ];
 }
 
@@ -954,8 +1000,41 @@ function getSpecsMap(gpu?: GpuProduct) {
   return map;
 }
 
-function toSpecsArray(_formData: ProductFormData): ProductSpec[] {
-  return [];
+function toSpecsArray(formData: ProductFormData): ProductSpec[] {
+  return [
+    {
+      key: GpuSpecKey.Company,
+      value: formData.company,
+    },
+    {
+      key: GpuSpecKey.Generation,
+      value: formData.generation,
+    },
+    {
+      key: GpuSpecKey.MarketSegment,
+      value: formData.marketSegment,
+    },
+    {
+      key: GpuSpecKey.MSRP,
+      value: formData.launchPrice,
+    },
+    {
+      key: GpuSpecKey.ReleaseDate,
+      value: formData.releaseDate,
+    },
+    {
+      key: GpuSpecKey.ProductionStatus,
+      value: formData.productionStatus,
+    },
+    {
+      key: GpuSpecKey.GpuName,
+      value: formData.gpuName,
+    },
+    {
+      key: GpuSpecKey.GpuVariant,
+      value: formData.gpuVariant,
+    },
+  ];
 }
 
 function toFormBenchmarks(gpu?: GpuProduct) {
