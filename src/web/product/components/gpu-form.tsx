@@ -197,8 +197,9 @@ function formOptions(gpu?: GpuProduct): UseFormProps<ProductFormData> {
       gpuName: (specs.get(GpuSpecKey.GpuName)?.value as string) ?? undefined,
       gpuVariant:
         (specs.get(GpuSpecKey.GpuVariant)?.value as string) ?? undefined,
-      architecture: '',
-      foundry: '',
+      architecture:
+        (specs.get(GpuSpecKey.Architecture)?.value as string) ?? undefined,
+      foundry: (specs.get(GpuSpecKey.Foundry)?.value as string) ?? undefined,
       processSize: 0,
       transistors: 0,
       dieSize: 0,
@@ -482,7 +483,14 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
             <Controller
               name="architecture"
               control={control}
-              render={({ field }) => <Input {...field} ref={null} />}
+              render={({ field }) => (
+                <ProductAutocomplete
+                  type={ProductAutocompleteType.Spec}
+                  key={GpuSpecKey.Architecture}
+                  {...field}
+                  ref={null}
+                />
+              )}
             />
           </Field>
 
@@ -491,7 +499,14 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
             <Controller
               name="foundry"
               control={control}
-              render={({ field }) => <Input {...field} ref={null} />}
+              render={({ field }) => (
+                <ProductAutocomplete
+                  type={ProductAutocompleteType.Spec}
+                  key={GpuSpecKey.Foundry}
+                  {...field}
+                  ref={null}
+                />
+              )}
             />
           </Field>
 
@@ -1033,6 +1048,14 @@ function toSpecsArray(formData: ProductFormData): ProductSpec[] {
     {
       key: GpuSpecKey.GpuVariant,
       value: formData.gpuVariant,
+    },
+    {
+      key: GpuSpecKey.Architecture,
+      value: formData.architecture,
+    },
+    {
+      key: GpuSpecKey.Foundry,
+      value: formData.foundry,
     },
   ];
 }
