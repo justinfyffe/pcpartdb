@@ -10,7 +10,7 @@ import { Button } from '../button';
 
 interface InputProps extends HTMLProps<HTMLInputElement> {
   clearable?: boolean;
-  suffix?: string;
+  suffix?: string | React.ReactElement;
 
   onClear?: () => void;
 }
