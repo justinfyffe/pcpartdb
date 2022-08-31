@@ -4,7 +4,6 @@ import React, {
   HTMLProps,
   useCallback,
   useRef,
-  useState,
 } from 'react';
 import { classNames } from '../../ui/ui.utils';
 import { Button } from '../button';
