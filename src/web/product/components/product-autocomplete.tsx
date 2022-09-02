@@ -8,7 +8,7 @@ import {
 } from '../../shared/components/autocomplete';
 import { productService } from '../product.service';
 
-interface ProductAutocompleteProps {
+interface ProductPropertyAutocompleteProps {
   propertyType: ProductPropertyType;
   field?: ProductMetaKey | ProductSpecKey;
 
@@ -18,8 +18,8 @@ interface ProductAutocompleteProps {
   ref?: unknown;
 }
 
-export const ProductAutocomplete: FunctionComponent<
-  ProductAutocompleteProps
+export const ProductPropertyAutocomplete: FunctionComponent<
+  ProductPropertyAutocompleteProps
 > = (props) => {
   const { propertyType: type, field, ...restProps } = props;
 

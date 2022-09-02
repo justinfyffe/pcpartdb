@@ -10,7 +10,7 @@ import { ProductMetaKey } from '../../../types/product-meta';
 import { GpuSpecKey, ProductSpecKey } from '../../../types/product-spec';
 import { AutocompleteValue } from '../../shared/components/autocomplete';
 import { Input } from '../../shared/components/input';
-import { ProductAutocomplete } from './product-autocomplete';
+import { ProductPropertyAutocomplete } from './product-autocomplete';
 
 interface ParsedValue {
   baseValue: string | number;
@@ -99,7 +99,7 @@ export const ProductPropertyField: FunctionComponent<
 
   if (autocomplete) {
     return (
-      <ProductAutocomplete
+      <ProductPropertyAutocomplete
         propertyType={propertyType}
         field={field}
         value={baseValue}
