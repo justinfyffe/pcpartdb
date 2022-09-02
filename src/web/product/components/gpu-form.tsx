@@ -1010,7 +1010,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           <h3 className="mb-4">Theoretical Performance</h3>
 
           <Field>
-            Pixel Rate
+            Pixel Fill Rate
             <Controller
               name="pixelRate"
               control={control}
@@ -1026,7 +1026,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           </Field>
 
           <Field>
-            Texture Rate
+            Texture Fill Rate
             <Controller
               name="textureRate"
               control={control}
@@ -1202,7 +1202,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           <h3 className="mb-4">API Support</h3>
 
           <Field>
-            Direct X
+            Direct X Version
             <Controller
               name="directXVersion"
               control={control}
@@ -1219,7 +1219,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           </Field>
 
           <Field>
-            G-Sync / Free-Sync
+            G-Sync / Free-Sync Support
             <Controller
               name="gSyncFreeSyncSupport"
               control={control}
@@ -1228,7 +1228,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           </Field>
 
           <Field>
-            SLI / Crossfire
+            SLI / Crossfire Support
             <Controller
               name="sliCrossfireSupport"
               control={control}
@@ -1246,7 +1246,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           </Field>
 
           <Field>
-            Open CL
+            Open CL Version
             <Controller
               name="openClVersion"
               control={control}
@@ -1263,7 +1263,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           </Field>
 
           <Field>
-            Open GL
+            Open GL Version
             <Controller
               name="openGlVersion"
               control={control}
@@ -1280,7 +1280,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           </Field>
 
           <Field>
-            Shader Model
+            Shader Model Version
             <Controller
               name="shaderModelVersion"
               control={control}
