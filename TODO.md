@@ -1,5 +1,10 @@
 Immediate Tasks:
 - product forms
+  - Handle storing values for specs and meta
+    - Store the suffix with it
+      - Is suffix shown as placeholder, or is always on the field
+      - If it's always on field, then need to have custom code to strip it and add it for value
+        - Maybe input can handle that and support selection of suffixes
 - form autocomplete
 
 Roadmap:

@@ -8,11 +8,15 @@ import React, {
 import { classNames } from '../../ui/ui.utils';
 import { Button } from '../button';
 
-interface InputProps extends HTMLProps<HTMLInputElement> {
+interface InputProps extends Omit<HTMLProps<HTMLInputElement>, 'ref'> {
   clearable?: boolean;
   suffix?: string | React.ReactElement;
 
+  onPrefixClick?: () => void;
+  onSuffixClick?: () => void;
   onClear?: () => void;
+
+  ref?: unknown;
 }
 
 export const Input: FunctionComponent<InputProps> = (props) => {
@@ -22,6 +26,8 @@ export const Input: FunctionComponent<InputProps> = (props) => {
     clearable: closeable,
     className,
     onClear,
+    onPrefixClick,
+    onSuffixClick,
     type,
     ...htmlProps
   } = props;
@@ -43,18 +49,25 @@ export const Input: FunctionComponent<InputProps> = (props) => {
           prefix ? 'pl-12' : '',
           className,
         )}
-        ref={inputRef}
         {...htmlProps}
+        ref={null}
       />
 
       {prefix && (
-        <div className="absolute flex items-center p-[0_16px] left-0 inset-y-0">
+        <div
+          className="absolute flex items-center p-[0_16px] left-0 inset-y-0"
+          onClick={onPrefixClick}
+        >
           {prefix}
         </div>
       )}
 
       <div className="absolute flex items-stretch right-0 inset-y-0">
-        {suffix && <div className="flex items-center p-[0_16px]">{suffix}</div>}
+        {suffix && (
+          <div className="flex items-center p-[0_16px]" onClick={onSuffixClick}>
+            {suffix}
+          </div>
+        )}
 
         {closeable && (
           <Button className="hover:bg-[#eee]" onClick={handleClear}>

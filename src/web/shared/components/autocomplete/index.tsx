@@ -21,6 +21,8 @@ interface AutocompleteProps {
   onChange?: (value: AutocompleteValue) => void;
 
   className?: string;
+
+  ref?: unknown;
 }
 
 export const Autocomplete: FunctionComponent<AutocompleteProps> = (props) => {
@@ -91,7 +93,6 @@ export const Autocomplete: FunctionComponent<AutocompleteProps> = (props) => {
         onChange={handleQuery}
         onKeyDown={handleKeyDown}
         className={classNames(className)}
-        ref={null}
       />
       {!isLoading && value && (
         <div

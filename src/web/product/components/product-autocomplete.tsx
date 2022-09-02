@@ -1,4 +1,5 @@
 import React, { FunctionComponent, useCallback } from 'react';
+import { ProductPropertyType } from '../../../types/product';
 import { ProductMetaKey } from '../../../types/product-meta';
 import { ProductSpecKey } from '../../../types/product-spec';
 import {
@@ -7,13 +8,8 @@ import {
 } from '../../shared/components/autocomplete';
 import { productService } from '../product.service';
 
-export enum ProductAutocompleteType {
-  Meta = 'meta',
-  Spec = 'spec',
-}
-
 interface ProductAutocompleteProps {
-  type: ProductAutocompleteType;
+  propertyType: ProductPropertyType;
   field?: ProductMetaKey | ProductSpecKey;
 
   value?: AutocompleteValue;
@@ -25,11 +21,11 @@ interface ProductAutocompleteProps {
 export const ProductAutocomplete: FunctionComponent<
   ProductAutocompleteProps
 > = (props) => {
-  const { type, field, ...restProps } = props;
+  const { propertyType: type, field, ...restProps } = props;
 
   const handleQuery = useCallback(
     async (query: string) => {
-      if (type === ProductAutocompleteType.Meta) {
+      if (type === ProductPropertyType.Meta) {
         const results = await productService.autocompleteMeta(
           query,
           field as ProductMetaKey,
@@ -37,7 +33,7 @@ export const ProductAutocomplete: FunctionComponent<
         return results
           .filter((value) => value != null)
           .map((result) => result.value! as string | number);
-      } else if (type === ProductAutocompleteType.Spec) {
+      } else if (type === ProductPropertyType.Spec) {
         const results = await productService.autocompleteSpec(
           query,
           field as ProductSpecKey,

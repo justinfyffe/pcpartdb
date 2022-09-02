@@ -9,6 +9,11 @@ export enum ProductType {
   GPU = 'GPU',
 }
 
+export enum ProductPropertyType {
+  Meta = 'meta',
+  Spec = 'spec',
+}
+
 export interface Product<TSpec extends ProductSpec = ProductSpec> {
   id?: number;
   slug: string;
