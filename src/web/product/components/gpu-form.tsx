@@ -40,7 +40,6 @@ import {
 } from '../../shared/error/error.utils';
 import { productService } from '../product.service';
 import { BenchmarkFields, BenchmarkValue } from './benchmark-fields';
-import { ProductPropertyAutocomplete } from './product-property-autocomplete';
 import { ProductPropertyField } from './product-property-field';
 import { ReviewFields } from './review-fields';
 
@@ -112,13 +111,13 @@ interface ProductFormData {
   hdmiPorts?: string;
 
   // API Support
-  directX?: number;
-  openCl?: number;
-  openGl?: number;
-  cuda?: number;
-  shaderModel?: number;
-  gSyncFreeSync?: boolean;
-  sliCrossfire?: boolean;
+  directXVersion?: string;
+  openClVersion?: string;
+  openGlVersion?: string;
+  cudaVersion?: string;
+  shaderModelVersion?: string;
+  gSyncFreeSyncSupport?: boolean;
+  sliCrossfireSupport?: boolean;
   vrReady?: boolean;
 
   reviews?: ProductReviewFormData[];
@@ -200,13 +199,13 @@ const productValidator = Joi.object({
   hdmiPorts: Joi.string().optional(),
 
   // API Support
-  directX: Joi.number().optional(),
-  openCl: Joi.number().optional(),
-  openGl: Joi.number().optional(),
-  cuda: Joi.number().optional(),
-  shaderModel: Joi.number().optional(),
-  gSyncFreeSync: Joi.boolean().optional(),
-  sliCrossfire: Joi.boolean().optional(),
+  directXVersion: Joi.string().optional(),
+  openClVersion: Joi.string().optional(),
+  openGlVersion: Joi.string().optional(),
+  cudaVersion: Joi.string().optional(),
+  shaderModelVersion: Joi.string().optional(),
+  gSyncFreeSyncSupport: Joi.boolean().optional(),
+  sliCrossfireSupport: Joi.boolean().optional(),
   vrReady: Joi.boolean().optional(),
 
   benchmarks: Joi.array().items(benchmarkValidator),
@@ -236,7 +235,7 @@ function formOptions(gpu?: GpuProduct): UseFormProps<ProductFormData> {
       generation: (specs.get(GpuSpecKey.Generation)?.value as string) ?? '',
       marketSegment:
         (specs.get(GpuSpecKey.MarketSegment)?.value as string) ?? '',
-      launchPrice: (specs.get(GpuSpecKey.MSRP)?.value as string) ?? '',
+      launchPrice: (specs.get(GpuSpecKey.LaunchPrice)?.value as string) ?? '',
       releaseDate: (specs.get(GpuSpecKey.ReleaseDate)?.value as string) ?? '',
       productionStatus:
         (specs.get(GpuSpecKey.ProductionStatus)?.value as string) ?? '',
@@ -285,7 +284,7 @@ function formOptions(gpu?: GpuProduct): UseFormProps<ProductFormData> {
       l2Cache: (specs.get(GpuSpecKey.L2Cache)?.value as string) ?? '',
 
       // Theoretical Performance
-      pixelRate: (specs.get(GpuSpecKey.PixelRate)?.value as string) ?? '',
+      pixelRate: (specs.get(GpuSpecKey.PixelFillRate)?.value as string) ?? '',
       textureRate: (specs.get(GpuSpecKey.TextureRate)?.value as string) ?? '',
       fp32Performance:
         (specs.get(GpuSpecKey.Fp32Performance)?.value as string) ?? '',
@@ -301,31 +300,26 @@ function formOptions(gpu?: GpuProduct): UseFormProps<ProductFormData> {
         (specs.get(GpuSpecKey.MemoryBandwidth)?.value as string) ?? '',
 
       // Display Connectivity
-      maxResolution: (specs.get(GpuSpecKey.Foundry)?.value as string) ?? '',
+      maxResolution:
+        (specs.get(GpuSpecKey.MaxResolution)?.value as string) ?? '',
       displayPorts: (specs.get(GpuSpecKey.DisplayPorts)?.value as string) ?? '',
       hdmiPorts: (specs.get(GpuSpecKey.HdmiPorts)?.value as string) ?? '',
 
       // API Support
-      directX: specs.has(GpuSpecKey.DirectX)
-        ? Number(specs.get(GpuSpecKey.DirectX))
+      directXVersion:
+        (specs.get(GpuSpecKey.DirectXVersion)?.value as string) ?? '',
+      openClVersion:
+        (specs.get(GpuSpecKey.OpenClVersion)?.value as string) ?? '',
+      openGlVersion:
+        (specs.get(GpuSpecKey.OpenGlVersion)?.value as string) ?? '',
+      cudaVersion: (specs.get(GpuSpecKey.CudaVersion)?.value as string) ?? '',
+      shaderModelVersion:
+        (specs.get(GpuSpecKey.ShaderModelVersion)?.value as string) ?? '',
+      gSyncFreeSyncSupport: specs.has(GpuSpecKey.GSyncFreeSyncSupport)
+        ? Boolean(specs.get(GpuSpecKey.GSyncFreeSyncSupport))
         : undefined,
-      openCl: specs.has(GpuSpecKey.OpenCl)
-        ? Number(specs.get(GpuSpecKey.OpenCl))
-        : undefined,
-      openGl: specs.has(GpuSpecKey.OpenGl)
-        ? Number(specs.get(GpuSpecKey.OpenGl))
-        : undefined,
-      cuda: specs.has(GpuSpecKey.Cuda)
-        ? Number(specs.get(GpuSpecKey.Cuda))
-        : undefined,
-      shaderModel: specs.has(GpuSpecKey.ShaderModel)
-        ? Number(specs.get(GpuSpecKey.ShaderModel))
-        : undefined,
-      gSyncFreeSync: specs.has(GpuSpecKey.GSyncFreeSync)
-        ? Boolean(specs.get(GpuSpecKey.GSyncFreeSync))
-        : undefined,
-      sliCrossfire: specs.has(GpuSpecKey.SliCrossfire)
-        ? Boolean(specs.get(GpuSpecKey.SliCrossfire))
+      sliCrossfireSupport: specs.has(GpuSpecKey.SliCrossfireSupport)
+        ? Boolean(specs.get(GpuSpecKey.SliCrossfireSupport))
         : undefined,
       vrReady: specs.has(GpuSpecKey.VrReady)
         ? Boolean(specs.get(GpuSpecKey.VrReady))
@@ -534,7 +528,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
             render={({ field }) => (
               <ProductPropertyField
                 propertyType={ProductPropertyType.Spec}
-                field={GpuSpecKey.MSRP}
+                field={GpuSpecKey.LaunchPrice}
                 {...field}
                 ref={null}
               />
@@ -1023,7 +1017,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               render={({ field }) => (
                 <ProductPropertyField
                   propertyType={ProductPropertyType.Spec}
-                  field={GpuSpecKey.PixelRate}
+                  field={GpuSpecKey.PixelFillRate}
                   {...field}
                   ref={null}
                 />
@@ -1210,12 +1204,12 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           <Field>
             Direct X
             <Controller
-              name="directX"
+              name="directXVersion"
               control={control}
               render={({ field }) => (
                 <ProductPropertyField
                   propertyType={ProductPropertyType.Spec}
-                  field={GpuSpecKey.DirectX}
+                  field={GpuSpecKey.DirectXVersion}
                   autocomplete
                   {...field}
                   ref={null}
@@ -1227,7 +1221,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           <Field>
             G-Sync / Free-Sync
             <Controller
-              name="gSyncFreeSync"
+              name="gSyncFreeSyncSupport"
               control={control}
               render={({ field }) => <Checkbox {...field} ref={null} />}
             />
@@ -1236,7 +1230,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           <Field>
             SLI / Crossfire
             <Controller
-              name="sliCrossfire"
+              name="sliCrossfireSupport"
               control={control}
               render={({ field }) => <Checkbox {...field} ref={null} />}
             />
@@ -1254,12 +1248,12 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           <Field>
             Open CL
             <Controller
-              name="openCl"
+              name="openClVersion"
               control={control}
               render={({ field }) => (
                 <ProductPropertyField
                   propertyType={ProductPropertyType.Spec}
-                  field={GpuSpecKey.OpenCl}
+                  field={GpuSpecKey.OpenClVersion}
                   autocomplete
                   {...field}
                   ref={null}
@@ -1271,12 +1265,12 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           <Field>
             Open GL
             <Controller
-              name="openGl"
+              name="openGlVersion"
               control={control}
               render={({ field }) => (
                 <ProductPropertyField
                   propertyType={ProductPropertyType.Spec}
-                  field={GpuSpecKey.OpenGl}
+                  field={GpuSpecKey.OpenGlVersion}
                   autocomplete
                   {...field}
                   ref={null}
@@ -1288,12 +1282,12 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           <Field>
             Shader Model
             <Controller
-              name="shaderModel"
+              name="shaderModelVersion"
               control={control}
               render={({ field }) => (
                 <ProductPropertyField
                   propertyType={ProductPropertyType.Spec}
-                  field={GpuSpecKey.ShaderModel}
+                  field={GpuSpecKey.ShaderModelVersion}
                   autocomplete
                   {...field}
                   ref={null}
@@ -1402,7 +1396,10 @@ function toSpecsArray(formData: ProductFormData): ProductSpec[] {
     { key: GpuSpecKey.Company, value: formData.company },
     { key: GpuSpecKey.Generation, value: formData.generation },
     { key: GpuSpecKey.MarketSegment, value: formData.marketSegment },
-    { key: GpuSpecKey.MSRP, value: Number(formData.launchPrice) || undefined },
+    {
+      key: GpuSpecKey.LaunchPrice,
+      value: Number(formData.launchPrice) || undefined,
+    },
     { key: GpuSpecKey.ReleaseDate, value: formData.releaseDate },
     { key: GpuSpecKey.ProductionStatus, value: formData.productionStatus },
 
@@ -1438,7 +1435,7 @@ function toSpecsArray(formData: ProductFormData): ProductSpec[] {
     { key: GpuSpecKey.L2Cache, value: formData.l2Cache },
 
     // Theoretical Performance
-    { key: GpuSpecKey.PixelRate, value: formData.pixelRate },
+    { key: GpuSpecKey.PixelFillRate, value: formData.pixelRate },
     { key: GpuSpecKey.TextureRate, value: formData.textureRate },
     { key: GpuSpecKey.Fp32Performance, value: formData.fp32Performance },
     { key: GpuSpecKey.Fp64Performance, value: formData.fp64Performance },
@@ -1455,13 +1452,19 @@ function toSpecsArray(formData: ProductFormData): ProductSpec[] {
     { key: GpuSpecKey.HdmiPorts, value: formData.hdmiPorts },
 
     // API Support
-    { key: GpuSpecKey.DirectX, value: formData.directX },
-    { key: GpuSpecKey.OpenCl, value: formData.openCl },
-    { key: GpuSpecKey.OpenGl, value: formData.openGl },
-    { key: GpuSpecKey.Cuda, value: formData.cuda },
-    { key: GpuSpecKey.ShaderModel, value: formData.shaderModel },
-    { key: GpuSpecKey.GSyncFreeSync, value: formData.gSyncFreeSync },
-    { key: GpuSpecKey.SliCrossfire, value: formData.sliCrossfire },
+    { key: GpuSpecKey.DirectXVersion, value: formData.directXVersion },
+    { key: GpuSpecKey.OpenClVersion, value: formData.openClVersion },
+    { key: GpuSpecKey.OpenGlVersion, value: formData.openGlVersion },
+    { key: GpuSpecKey.CudaVersion, value: formData.cudaVersion },
+    { key: GpuSpecKey.ShaderModelVersion, value: formData.shaderModelVersion },
+    {
+      key: GpuSpecKey.GSyncFreeSyncSupport,
+      value: formData.gSyncFreeSyncSupport,
+    },
+    {
+      key: GpuSpecKey.SliCrossfireSupport,
+      value: formData.sliCrossfireSupport,
+    },
     { key: GpuSpecKey.VrReady, value: formData.vrReady },
   ];
 }

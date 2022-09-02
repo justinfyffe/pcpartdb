@@ -18,7 +18,7 @@ interface ParsedValue {
 }
 
 const SUFFIXES: { [key: string]: string[] } = {
-  [GpuSpecKey.MSRP]: ['USD'],
+  [GpuSpecKey.LaunchPrice]: ['USD'],
   [GpuSpecKey.Lithography]: ['nm', 'μm'],
   [GpuSpecKey.Transistors]: ['millions'],
   [GpuSpecKey.DieSize]: ['mm^2'],
@@ -32,7 +32,7 @@ const SUFFIXES: { [key: string]: string[] } = {
   [GpuSpecKey.ClockSpeedBoost]: ['MHz', 'GHz'],
   [GpuSpecKey.L1Cache]: ['KB', 'MB'],
   [GpuSpecKey.L2Cache]: ['MB', 'KB'],
-  [GpuSpecKey.PixelRate]: ['GPixel/s'],
+  [GpuSpecKey.PixelFillRate]: ['GPixel/s'],
   [GpuSpecKey.TextureRate]: ['GTexel/s'],
   [GpuSpecKey.Fp32Performance]: ['TFLOPS', 'GFLOPS'],
   [GpuSpecKey.Fp64Performance]: ['GFLOPS', 'TFLOPS'],

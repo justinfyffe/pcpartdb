@@ -49,7 +49,7 @@ export enum GpuSpecKey {
   Predecessor = 'PREDECESSOR',
   Successor = 'SUCCESSOR',
   MarketSegment = 'MARKET_SEGMENT',
-  MSRP = 'MSRP',
+  LaunchPrice = 'LAUNCH_PRICE',
   ReleaseDate = 'RELEASE_DATE',
   ProductionStatus = 'PRODUCTION_STATUS',
 
@@ -86,8 +86,8 @@ export enum GpuSpecKey {
   BoardNumber = 'BOARD_NUMBER',
 
   // Theoretical Performance
-  PixelRate = 'PIXEL_RATE',
-  TextureRate = 'TEXTURE_RATE',
+  PixelFillRate = 'PIXEL_FILL_RATE',
+  TextureRate = 'TEXTURE_FILL_RATE',
   Fp32Performance = 'FP32_PERFORMANCE',
   Fp64Performance = 'FP64_PERFORMANCE',
 
@@ -103,13 +103,13 @@ export enum GpuSpecKey {
   HdmiPorts = 'HDMI_PORTS',
 
   // API Support
-  DirectX = 'DIRECT_X',
-  OpenCl = 'OPEN_CL',
-  OpenGl = 'OPEN_GL',
-  Cuda = 'CUDA',
-  ShaderModel = 'SHADER_MODEL',
-  GSyncFreeSync = 'G_SYNC_FREE_SYNC',
-  SliCrossfire = 'SLI_CROSSFIRE',
+  DirectXVersion = 'DIRECT_X_VERSION',
+  OpenClVersion = 'OPEN_CL_VERSION',
+  OpenGlVersion = 'OPEN_GL_VERSION',
+  CudaVersion = 'CUDA_VERSION',
+  ShaderModelVersion = 'SHADER_MODEL_VERSION',
+  GSyncFreeSyncSupport = 'G_SYNC_FREE_SYNC_SUPPORT',
+  SliCrossfireSupport = 'SLI_CROSSFIRE_SUPPORT',
   VrReady = 'VR_READY',
 }
 
