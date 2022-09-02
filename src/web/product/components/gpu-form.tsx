@@ -40,7 +40,7 @@ import {
 } from '../../shared/error/error.utils';
 import { productService } from '../product.service';
 import { BenchmarkFields, BenchmarkValue } from './benchmark-fields';
-import { ProductPropertyAutocomplete } from './product-autocomplete';
+import { ProductPropertyAutocomplete } from './product-property-autocomplete';
 import { ProductPropertyField } from './product-property-field';
 import { ReviewFields } from './review-fields';
 

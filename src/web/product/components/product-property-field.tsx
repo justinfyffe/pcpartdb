@@ -10,7 +10,7 @@ import { ProductMetaKey } from '../../../types/product-meta';
 import { GpuSpecKey, ProductSpecKey } from '../../../types/product-spec';
 import { AutocompleteValue } from '../../shared/components/autocomplete';
 import { Input } from '../../shared/components/input';
-import { ProductPropertyAutocomplete } from './product-autocomplete';
+import { ProductPropertyAutocomplete } from './product-property-autocomplete';
 
 interface ParsedValue {
   baseValue: string | number;
