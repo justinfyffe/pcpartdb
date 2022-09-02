@@ -474,9 +474,10 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
             name="company"
             control={control}
             render={({ field }) => (
-              <ProductPropertyAutocomplete
+              <ProductPropertyField
                 propertyType={ProductPropertyType.Spec}
                 field={GpuSpecKey.Company}
+                autocomplete
                 {...field}
                 ref={null}
               />
@@ -490,9 +491,10 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
             name="generation"
             control={control}
             render={({ field }) => (
-              <ProductPropertyAutocomplete
+              <ProductPropertyField
                 propertyType={ProductPropertyType.Spec}
                 field={GpuSpecKey.Generation}
+                autocomplete
                 {...field}
                 ref={null}
               />
@@ -529,7 +531,14 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           <Controller
             name="launchPrice"
             control={control}
-            render={({ field }) => <Input suffix="USD" {...field} ref={null} />}
+            render={({ field }) => (
+              <ProductPropertyField
+                propertyType={ProductPropertyType.Spec}
+                field={GpuSpecKey.MSRP}
+                {...field}
+                ref={null}
+              />
+            )}
           />
         </Field>
 
@@ -538,7 +547,15 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           <Controller
             name="releaseDate"
             control={control}
-            render={({ field }) => <Input type="date" {...field} ref={null} />}
+            render={({ field }) => (
+              <ProductPropertyField
+                type="date"
+                propertyType={ProductPropertyType.Spec}
+                field={GpuSpecKey.ReleaseDate}
+                {...field}
+                ref={null}
+              />
+            )}
           />
         </Field>
 

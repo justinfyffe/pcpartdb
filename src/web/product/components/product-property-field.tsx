@@ -42,6 +42,7 @@ const SUFFIXES: { [key: string]: string[] } = {
 };
 
 interface ProductPropertyFieldProps {
+  type?: string;
   propertyType: ProductPropertyType;
   field: ProductMetaKey | ProductSpecKey;
 
