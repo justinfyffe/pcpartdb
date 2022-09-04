@@ -18,8 +18,11 @@ export class ProductSpecRepository {
     value: string,
     config?: RepositoryConfig,
   ) {
-    return await ProductSpecModel.query(config?.trx)
+    const results = await ProductSpecModel.query(config?.trx)
+      .distinct('value')
       .where('key', key)
       .andWhere('value', 'ILIKE', `%${value}%`);
+
+    return results.map((spec) => spec.value);
   }
 }

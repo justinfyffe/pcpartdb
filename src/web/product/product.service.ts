@@ -65,34 +65,16 @@ export class ProductService {
     );
   }
 
-  async autocompleteMeta(
-    query: string,
-    key?: ProductMetaKey,
-  ): Promise<ProductMeta[]> {
-    const response = await this.api.get<ProductMetaResponse>(
-      `${PATH}/meta/autocomplete`,
-      {
-        params: { key, value: query },
-      },
-    );
-    return (
-      denormalize(response.result, [productMetaSchema], response.entities) ?? []
-    );
+  async autocompleteMeta(query: string, key?: ProductMetaKey) {
+    return await this.api.get<string[]>(`${PATH}/meta/autocomplete`, {
+      params: { key, value: query },
+    });
   }
 
-  async autocompleteSpec(
-    query: string,
-    key?: ProductSpecKey,
-  ): Promise<ProductSpec[]> {
-    const response = await this.api.get<ProductSpecsResponse>(
-      `${PATH}/specs/autocomplete`,
-      {
-        params: { key, value: query },
-      },
-    );
-    return (
-      denormalize(response.result, [productSpecSchema], response.entities) ?? []
-    );
+  async autocompleteSpec(query: string, key?: ProductSpecKey) {
+    return await this.api.get<string[]>(`${PATH}/specs/autocomplete`, {
+      params: { key, value: query },
+    });
   }
 }
 

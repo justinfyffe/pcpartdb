@@ -27,7 +27,6 @@ import {
 } from '../../../types/product-spec';
 import { Alert, AlertVariant } from '../../shared/components/alert';
 import { Button, ButtonVariant } from '../../shared/components/button';
-import { Checkbox } from '../../shared/components/checkbox';
 import { Field, FieldError } from '../../shared/components/field';
 import { Form, FormActions } from '../../shared/components/form';
 import { Input } from '../../shared/components/input';
@@ -156,8 +155,10 @@ const productValidator = Joi.object({
 
   // Processor
   gpuName: Joi.string().allow(''),
+  gpuVariant: Joi.string().allow(''),
   architecture: Joi.string().allow(''),
   foundry: Joi.string().allow(''),
+  lithography: Joi.string().allow(''),
   processSize: Joi.string().allow(''),
   transistors: Joi.string().allow(''),
   dieSize: Joi.string().allow(''),
@@ -225,7 +226,7 @@ function formOptions(gpu?: Product): UseFormProps<ProductFormData> {
   const specs = getSpecsMap(gpu);
 
   return {
-    //resolver: joiResolver(productValidator),
+    resolver: joiResolver(productValidator),
     mode: 'onBlur',
     defaultValues: {
       parentId: undefined,
@@ -329,6 +330,8 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
     formState: { errors },
   } = useForm<ProductFormData>(formOptions(gpu));
 
+  console.log(errors);
+
   const {
     fields: benchmarkFields,
     append: appendBenchmark,
@@ -351,9 +354,8 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
     async (formData: ProductFormData) => {
       setSaving(true);
 
-      console.log(formData);
-
       const request: ProductRequest = {
+        parentId: formData.parentId,
         slug: formData.slug,
         type: formData.type,
         name: formData.name,

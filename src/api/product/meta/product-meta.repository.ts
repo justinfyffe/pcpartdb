@@ -18,8 +18,11 @@ export class ProductMetaRepository {
     value: string,
     config?: RepositoryConfig,
   ) {
-    return await ProductMetaModel.query(config?.trx)
+    const results = await ProductMetaModel.query(config?.trx)
+      .distinct('value')
       .where('key', key)
       .andWhere('value', 'ILIKE', `%${value}%`);
+
+    return results.map((meta) => meta.value);
   }
 }

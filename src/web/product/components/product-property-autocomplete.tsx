@@ -28,18 +28,14 @@ export const ProductPropertyAutocomplete: FunctionComponent<
           field as ProductMetaKey,
         );
 
-        return results
-          .filter((value) => value != null)
-          .map((result) => result.value!);
+        return results.filter((value) => value != null);
       } else if (type === ProductPropertyType.Spec) {
         const results = await productService.autocompleteSpec(
           query,
           field as ProductSpecKey,
         );
 
-        return results
-          .filter((value) => value != null)
-          .map((result) => result.value!);
+        return results.filter((value) => value != null);
       }
       return [];
     },
