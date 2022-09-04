@@ -14,35 +14,7 @@ export enum ProductionStatus {
   Unreleased = 'UNRELEASED',
 }
 
-export enum CpuSpecKey {
-  // CPU Specs
-  ClockMultiplier = 'CLOCK_MULTIPLIER',
-  ClockMultiplierUnlocked = 'CLOCK_MULTIPLIER_UNLOCKED',
-  ClockSpeed = 'CLOCK_SPEED',
-  ClockSpeedTurbo = 'CLOCK_SPEED_TURBO',
-  Cores = 'CORES',
-  L1Cache = 'L1_CACHE',
-  L2Cache = 'L2_CACHE',
-  L3Cache = 'L3_CACHE',
-  Lithography = 'LITHOGRAPHY',
-  Socket = 'SOCKET',
-  TDP = 'TDP',
-  Threads = 'THREADS',
-
-  // Graphic Specs
-  IntegratedGpu = 'INTEGRATED_GPU',
-
-  // Memory Specs
-  MaxMemoryBandwidth = 'MAX_MEMORY_BANDWIDTH',
-  MaxMemoryChannels = 'MAX_MEMORY_CHANNELS',
-  MaxMemorySize = 'MAX_MEMORY_SIZE',
-  MemorySpeedDdr4 = 'MEMORY_SPEED_DDR4',
-  MemorySpeedDdr5 = 'MEMORY_SPEED_DDR5',
-
-  // Expansion Specs
-}
-
-export enum GpuSpecKey {
+export enum ProductSpecKey {
   // General
   Company = 'COMPANY',
   Generation = 'GENERATION',
@@ -63,17 +35,24 @@ export enum GpuSpecKey {
   DieSize = 'DIE_SIZE',
 
   // Cores & Clock Speeds
+  CpuCores = 'CPU_CORES',
+  Threads = 'THREADS',
   CudaCores = 'CUDA_CORES',
   Tmus = 'TMUS',
   Rops = 'ROPS',
   TensorCores = 'TENSOR_CORES',
   RtCores = 'RT_CORES',
+  ClockMultiplier = 'CLOCK_MULTIPLIER',
+  ClockMultiplierUnlocked = 'CLOCK_MULTIPLIER_UNLOCKED',
   ClockSpeedBase = 'CLOCK_SPEED_BASE',
   ClockSpeedBoost = 'CLOCK_SPEED_BOOST',
   L1Cache = 'L1_CACHE',
   L2Cache = 'L2_CACHE',
+  L3Cache = 'L3_CACHE',
+  IntegratedGpu = 'INTEGRATED_GPU',
 
   // Board Design
+  CpuSocket = 'CPU_SOCKET',
   SlotWidth = 'SLOT_WIDTH',
   Length = 'LENGTH',
   Width = 'WIDTH',
@@ -96,6 +75,9 @@ export enum GpuSpecKey {
   MemoryType = 'MEMORY_TYPE',
   MemoryInterface = 'MEMORY_INTERFACE',
   MemoryBandwidth = 'MEMORY_BANDWIDTH',
+  MaxMemoryBandwidth = 'MAX_MEMORY_BANDWIDTH',
+  MaxMemoryChannels = 'MAX_MEMORY_CHANNELS',
+  MaxMemorySize = 'MAX_MEMORY_SIZE',
 
   // Display Connectivity
   MaxResolution = 'MAX_RESOLUTION',
@@ -113,7 +95,6 @@ export enum GpuSpecKey {
   VrReady = 'VR_READY',
 }
 
-export type ProductSpecKey = CpuSpecKey | GpuSpecKey;
 export type ProductSpecValue = number | string | boolean;
 
 export interface ProductSpec {
@@ -123,14 +104,6 @@ export interface ProductSpec {
   source?: string;
   key: ProductSpecKey;
   value?: ProductSpecValue;
-}
-
-export interface CpuProductSpec extends ProductSpec {
-  key: CpuSpecKey;
-}
-
-export interface GpuProductSpec extends ProductSpec {
-  key: GpuSpecKey;
 }
 
 interface ProductSpecEntities {

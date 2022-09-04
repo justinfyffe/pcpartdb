@@ -1,6 +1,5 @@
 Immediate Tasks:
 - product forms
-  - Move GpuSpecKey enum to ProductSpecKey
   - Parent product input
   - Edit gpu form
 - form autocomplete

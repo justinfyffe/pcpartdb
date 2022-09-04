@@ -7,7 +7,7 @@ import React, {
 } from 'react';
 import { ProductPropertyType } from '../../../types/product';
 import { ProductMetaKey } from '../../../types/product-meta';
-import { GpuSpecKey, ProductSpecKey } from '../../../types/product-spec';
+import { ProductSpecKey } from '../../../types/product-spec';
 import { AutocompleteValue } from '../../shared/components/autocomplete';
 import { Input } from '../../shared/components/input';
 import { ProductPropertyAutocomplete } from './product-property-autocomplete';
@@ -18,27 +18,29 @@ interface ParsedValue {
 }
 
 const SUFFIXES: { [key: string]: string[] } = {
-  [GpuSpecKey.LaunchPrice]: ['USD'],
-  [GpuSpecKey.Lithography]: ['nm', 'μm'],
-  [GpuSpecKey.Transistors]: ['millions'],
-  [GpuSpecKey.DieSize]: ['mm^2'],
-  [GpuSpecKey.Length]: ['mm'],
-  [GpuSpecKey.Width]: ['mm'],
-  [GpuSpecKey.Height]: ['mm'],
-  [GpuSpecKey.Weight]: ['kg'],
-  [GpuSpecKey.Tdp]: ['W'],
-  [GpuSpecKey.SuggestedPsu]: ['W'],
-  [GpuSpecKey.ClockSpeedBase]: ['MHz', 'GHz'],
-  [GpuSpecKey.ClockSpeedBoost]: ['MHz', 'GHz'],
-  [GpuSpecKey.L1Cache]: ['KB', 'MB'],
-  [GpuSpecKey.L2Cache]: ['MB', 'KB'],
-  [GpuSpecKey.PixelFillRate]: ['GPixel/s'],
-  [GpuSpecKey.TextureRate]: ['GTexel/s'],
-  [GpuSpecKey.Fp32Performance]: ['TFLOPS', 'GFLOPS'],
-  [GpuSpecKey.Fp64Performance]: ['GFLOPS', 'TFLOPS'],
-  [GpuSpecKey.MemorySize]: ['GB', 'MB', 'KB'],
-  [GpuSpecKey.MemoryInterface]: ['bit'],
-  [GpuSpecKey.MemoryBandwidth]: ['GB/s', 'MB/s'],
+  [ProductSpecKey.LaunchPrice]: ['USD'],
+  [ProductSpecKey.Lithography]: ['nm', 'μm'],
+  [ProductSpecKey.Transistors]: ['millions'],
+  [ProductSpecKey.DieSize]: ['mm^2'],
+  [ProductSpecKey.Length]: ['mm'],
+  [ProductSpecKey.Width]: ['mm'],
+  [ProductSpecKey.Height]: ['mm'],
+  [ProductSpecKey.Weight]: ['kg'],
+  [ProductSpecKey.Tdp]: ['W'],
+  [ProductSpecKey.SuggestedPsu]: ['W'],
+  [ProductSpecKey.ClockSpeedBase]: ['MHz', 'GHz'],
+  [ProductSpecKey.ClockSpeedBoost]: ['MHz', 'GHz'],
+  [ProductSpecKey.L1Cache]: ['KB', 'MB'],
+  [ProductSpecKey.L2Cache]: ['MB', 'KB'],
+  [ProductSpecKey.PixelFillRate]: ['GPixel/s'],
+  [ProductSpecKey.TextureRate]: ['GTexel/s'],
+  [ProductSpecKey.Fp32Performance]: ['TFLOPS', 'GFLOPS'],
+  [ProductSpecKey.Fp64Performance]: ['GFLOPS', 'TFLOPS'],
+  [ProductSpecKey.MemorySize]: ['GB', 'MB', 'KB'],
+  [ProductSpecKey.MaxMemorySize]: ['GB', 'MB', 'KB'],
+  [ProductSpecKey.MemoryInterface]: ['bit'],
+  [ProductSpecKey.MemoryBandwidth]: ['GB/s', 'MB/s'],
+  [ProductSpecKey.MaxMemoryBandwidth]: ['GB/s', 'MB/s'],
 };
 
 interface ProductPropertyFieldProps {
