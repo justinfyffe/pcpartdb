@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { NextPageContext } from 'next';
 import React from 'react';
-import { GpuProduct } from '../../../types/product';
+import { Product } from '../../../types/product';
 import { withStaffGuard } from '../../../web/auth/with-staff-guard';
 import { GpuForm } from '../../../web/product/components/gpu-form';
 import { productService } from '../../../web/product/product.service';
@@ -10,7 +10,7 @@ import { Button, ButtonVariant } from '../../../web/shared/components/button';
 import { AdminLayout } from '../../../web/shared/layouts/admin';
 
 interface AdminEditGpuPageProps {
-  gpu: GpuProduct;
+  gpu: Product;
 }
 
 const AdminEditGpuPage = (props: AdminEditGpuPageProps) => {

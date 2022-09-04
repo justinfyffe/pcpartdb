@@ -2,7 +2,7 @@ import { NormalizedSchema, schema } from 'normalizr';
 import { ProductBenchmark, productBenchmarkSchema } from './product-benchmark';
 import { ProductMeta, productMetaSchema } from './product-meta';
 import { ProductReview, productReviewSchema } from './product-review';
-import { GpuProductSpec, ProductSpec, productSpecSchema } from './product-spec';
+import { ProductSpec, productSpecSchema } from './product-spec';
 
 export enum ProductType {
   CPU = 'CPU',
@@ -14,7 +14,7 @@ export enum ProductPropertyType {
   Spec = 'spec',
 }
 
-export interface Product<TSpec extends ProductSpec = ProductSpec> {
+export interface Product {
   id?: number;
   slug: string;
   parentId?: number;
@@ -24,12 +24,10 @@ export interface Product<TSpec extends ProductSpec = ProductSpec> {
 
   product?: Product;
   meta?: ProductMeta[];
-  specs?: TSpec[];
+  specs?: ProductSpec[];
   benchmarks?: ProductBenchmark[];
   reviews?: ProductReview[];
 }
-
-export interface GpuProduct extends Product<GpuProductSpec> {}
 
 export interface ProductRequest {
   parentId?: number;

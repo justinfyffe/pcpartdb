@@ -10,7 +10,7 @@ import {
 } from 'react-hook-form';
 import { ApiError, ValidationErrorType } from '../../../types/error';
 import {
-  GpuProduct,
+  Product,
   ProductPropertyType,
   ProductRequest,
   ProductType,
@@ -212,10 +212,10 @@ const productValidator = Joi.object({
 }).options({ abortEarly: false });
 
 interface GpuFormProps {
-  gpu?: GpuProduct;
+  gpu?: Product;
 }
 
-function formOptions(gpu?: GpuProduct): UseFormProps<ProductFormData> {
+function formOptions(gpu?: Product): UseFormProps<ProductFormData> {
   const meta = getMetaMap(gpu);
   const specs = getSpecsMap(gpu);
 
@@ -1373,7 +1373,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
   );
 };
 
-function getMetaMap(gpu?: GpuProduct) {
+function getMetaMap(gpu?: Product) {
   const map = new Map<ProductMetaKey, ProductMeta>();
 
   gpu?.meta?.forEach((meta) => {
@@ -1392,7 +1392,7 @@ function toMetaArray(formData: ProductFormData): ProductMeta[] {
   ];
 }
 
-function getSpecsMap(gpu?: GpuProduct) {
+function getSpecsMap(gpu?: Product) {
   const map = new Map<ProductSpecKey, ProductSpec>();
 
   gpu?.specs?.forEach((spec) => {
@@ -1481,7 +1481,7 @@ function toSpecsArray(formData: ProductFormData): ProductSpec[] {
   ];
 }
 
-function toFormBenchmarks(gpu?: GpuProduct) {
+function toFormBenchmarks(gpu?: Product) {
   return gpu?.benchmarks?.map((benchmark) => ({ ...benchmark })) ?? [];
 }
 
@@ -1489,7 +1489,7 @@ function toRequestBenchmarks(formData: ProductFormData): ProductBenchmark[] {
   return formData.benchmarks?.map((benchmark) => benchmark) ?? [];
 }
 
-function toFormReviews(gpu?: GpuProduct): ProductReview[] {
+function toFormReviews(gpu?: Product): ProductReview[] {
   return gpu?.reviews?.map((review) => ({ ...review })) ?? [];
 }
 

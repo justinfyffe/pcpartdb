@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
-import { GpuProduct } from '../../../types/product';
+import { Product } from '../../../types/product';
 import { withStaffGuard } from '../../../web/auth/with-staff-guard';
 import { productService } from '../../../web/product/product.service';
 import { Alert, AlertVariant } from '../../../web/shared/components/alert';
@@ -18,7 +18,7 @@ import {
 import { AdminLayout } from '../../../web/shared/layouts/admin';
 
 interface AdminGpusPageProps {
-  gpus: GpuProduct[];
+  gpus: Product[];
 }
 
 const AdminGpusPage = (props: AdminGpusPageProps) => {
