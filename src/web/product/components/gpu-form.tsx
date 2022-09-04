@@ -220,7 +220,7 @@ function formOptions(gpu?: GpuProduct): UseFormProps<ProductFormData> {
   const specs = getSpecsMap(gpu);
 
   return {
-    // resolver: joiResolver(productValidator),
+    resolver: joiResolver(productValidator),
     mode: 'onBlur',
     defaultValues: {
       slug: gpu?.slug ?? '',
@@ -392,11 +392,12 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
 
       try {
         if (isUpdate) {
-          // await productService.update(gpu.id, request);
+          await productService.update(gpu.id, request);
         } else {
-          // await productService.create(request);
+          await productService.create(request);
         }
-        //router.push('/admin/gpus');
+
+        router.push('/admin/gpus');
       } catch (err) {
         setRequestError(err as ApiError);
         setValidationErrors(err as ApiError, setError);
@@ -1407,10 +1408,7 @@ function toSpecsArray(formData: ProductFormData): ProductSpec[] {
     { key: ProductSpecKey.Company, value: formData.company },
     { key: ProductSpecKey.Generation, value: formData.generation },
     { key: ProductSpecKey.MarketSegment, value: formData.marketSegment },
-    {
-      key: ProductSpecKey.LaunchPrice,
-      value: Number(formData.launchPrice) || undefined,
-    },
+    { key: ProductSpecKey.LaunchPrice, value: formData.launchPrice },
     { key: ProductSpecKey.ReleaseDate, value: formData.releaseDate },
     { key: ProductSpecKey.ProductionStatus, value: formData.productionStatus },
 

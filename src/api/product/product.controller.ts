@@ -1,36 +1,73 @@
 import {
+  Body,
   Controller,
   Delete,
   Get,
+  Param,
   Patch,
   Post,
   Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
+import type {
+  ProductRequest,
+  ProductResponse,
+  ProductsResponse,
+} from '../../types/product';
 import { StaffGuard } from '../auth/staff.guard';
+import { transaction } from '../db/database';
+import { normalize } from '../shared/types/normalize';
+import { ProductService } from './product.service';
 
 @Controller('products')
 export class ProductController {
+  constructor(private service: ProductService) {}
+
   @Get()
-  list() {
-    return {};
+  async list() {
+    return normalize(
+      await transaction((trx) => this.service.list({ trx })),
+    ) as ProductsResponse;
   }
 
-  @Get(':id')
-  get() {
-    return {};
+  @Get(':idOrSlug')
+  async get(@Param('idOrSlug') idOrSlug: number | string) {
+    return normalize(
+      await transaction((trx) => this.service.get(idOrSlug, { trx })),
+    ) as ProductResponse;
   }
 
   @Post()
   @UseGuards(StaffGuard)
-  create() {}
+  async create(@Body() body: ProductRequest) {
+    return normalize(
+      await transaction((trx) => this.service.create(body, { trx })),
+    ) as ProductResponse;
+  }
 
   @Put(':id')
   @Patch(':id')
   @UseGuards(StaffGuard)
-  update() {}
+  async update(@Param('id') id: number, @Body() body: ProductRequest) {
+    return normalize(
+      await transaction((trx) => this.service.update(id, body, { trx })),
+    ) as ProductResponse;
+  }
 
   @Delete(':id')
   @UseGuards(StaffGuard)
-  delete() {}
+  async delete(@Param('id') id: number) {
+    return await transaction((trx) => this.service.delete(id, { trx }));
+  }
+
+  @Get('autocomplete')
+  @UseGuards(StaffGuard)
+  async autocomplete(@Query('query') query: string) {
+    return normalize(
+      await transaction((trx) =>
+        this.service.autocomplete(query ?? '', { trx }),
+      ),
+    ) as ProductsResponse;
+  }
 }
