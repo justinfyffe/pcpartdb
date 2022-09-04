@@ -1,9 +1,11 @@
 import { denormalize } from 'normalizr';
 import {
+  Product,
   ProductRequest,
   ProductResponse,
   productSchema,
   ProductsResponse,
+  ProductType,
 } from '../../types/product';
 import {
   ProductMeta,
@@ -48,6 +50,21 @@ export class ProductService {
     await this.api.delete(`${PATH}/${id}`);
   }
 
+  async autocompleteProduct(
+    query: string,
+    type: ProductType,
+  ): Promise<Product[]> {
+    const response = await this.api.get<ProductsResponse>(
+      `${PATH}/autocomplete`,
+      {
+        params: { type, value: query },
+      },
+    );
+    return (
+      denormalize(response.result, [productSchema], response.entities) ?? []
+    );
+  }
+
   async autocompleteMeta(
     query: string,
     key?: ProductMetaKey,
@@ -58,7 +75,9 @@ export class ProductService {
         params: { key, value: query },
       },
     );
-    return denormalize(response.result, [productMetaSchema], response.entities);
+    return (
+      denormalize(response.result, [productMetaSchema], response.entities) ?? []
+    );
   }
 
   async autocompleteSpec(
@@ -71,7 +90,9 @@ export class ProductService {
         params: { key, value: query },
       },
     );
-    return denormalize(response.result, [productSpecSchema], response.entities);
+    return (
+      denormalize(response.result, [productSpecSchema], response.entities) ?? []
+    );
   }
 }
 

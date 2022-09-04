@@ -14,6 +14,7 @@ import type {
   ProductRequest,
   ProductResponse,
   ProductsResponse,
+  ProductType,
 } from '../../types/product';
 import { StaffGuard } from '../auth/staff.guard';
 import { transaction } from '../db/database';
@@ -63,10 +64,13 @@ export class ProductController {
 
   @Get('autocomplete')
   @UseGuards(StaffGuard)
-  async autocomplete(@Query('query') query: string) {
+  async autocomplete(
+    @Query('type') type: ProductType,
+    @Query('query') query: string,
+  ) {
     return normalize(
       await transaction((trx) =>
-        this.service.autocomplete(query ?? '', { trx }),
+        this.service.autocomplete(type, query ?? '', { trx }),
       ),
     ) as ProductsResponse;
   }

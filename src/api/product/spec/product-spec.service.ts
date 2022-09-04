@@ -7,11 +7,7 @@ import { ProductSpecRepository } from './product-spec.repository';
 export class ProductSpecService {
   constructor(private specRepository: ProductSpecRepository) {}
 
-  async autocomplete(
-    key: ProductSpecKey,
-    value: string | number,
-    ctx: ServiceContext,
-  ) {
+  async autocomplete(key: ProductSpecKey, value: string, ctx: ServiceContext) {
     return await this.specRepository.findSimilarValue(key, value, ctx);
   }
 }

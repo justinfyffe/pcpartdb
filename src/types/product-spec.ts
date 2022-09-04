@@ -14,6 +14,12 @@ export enum ProductionStatus {
   Unreleased = 'UNRELEASED',
 }
 
+export enum ProductSpecBoolean {
+  Unknown = 'UNKNOWN',
+  True = 'TRUE',
+  False = 'FALSE',
+}
+
 export enum ProductSpecKey {
   // General
   Company = 'COMPANY',
@@ -95,15 +101,13 @@ export enum ProductSpecKey {
   VrReady = 'VR_READY',
 }
 
-export type ProductSpecValue = number | string | boolean;
-
 export interface ProductSpec {
   id?: number;
   productId?: number;
 
   source?: string;
   key: ProductSpecKey;
-  value?: ProductSpecValue;
+  value?: string;
 }
 
 interface ProductSpecEntities {

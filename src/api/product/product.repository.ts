@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { ProductType } from '../../types/product';
 import { RepositoryConfig } from '../db/repository';
 import { ProductBenchmarkRepository } from './benchmark/product-benchmark.repository';
 import { ProductMetaRepository } from './meta/product-meta.repository';
@@ -69,11 +70,13 @@ export class ProductRepository {
     return await ProductModel.query(config?.trx).deleteById(id);
   }
 
-  async findSimilarValue(query: string, config?: RepositoryConfig) {
-    return await ProductModel.query(config?.trx).andWhere(
-      'name',
-      'ILIKE',
-      query,
-    );
+  async findSimilarValue(
+    type: ProductType,
+    query: string,
+    config?: RepositoryConfig,
+  ) {
+    return await ProductModel.query(config?.trx)
+      .where('type', type)
+      .andWhere('name', 'ILIKE', query);
   }
 }

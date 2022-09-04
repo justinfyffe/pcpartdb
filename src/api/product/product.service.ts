@@ -8,30 +8,26 @@ import { ProductRepository } from './product.repository';
 
 const productMetaValidator = Joi.object({
   key: Joi.string().required(),
-  value: Joi.alternatives()
-    .try(Joi.number(), Joi.string(), Joi.object())
-    .required(),
-  source: Joi.string(),
+  value: Joi.string().allow(''),
+  source: Joi.string().allow(''),
 }).options({ abortEarly: false });
 
 const productSpecValidator = Joi.object({
   key: Joi.string().required(),
-  value: Joi.alternatives()
-    .try(Joi.number(), Joi.string(), Joi.object())
-    .required(),
-  source: Joi.string(),
+  value: Joi.string().allow(''),
+  source: Joi.string().allow(''),
 }).options({ abortEarly: false });
 
 const productBenchmarkValidator = Joi.object({
   key: Joi.string().required(),
-  value: Joi.alternatives().try(Joi.number(), Joi.string()).required(),
-  source: Joi.string(),
+  value: Joi.string().allow(''),
+  source: Joi.string().allow(''),
 }).options({ abortEarly: false });
 
 const productReviewValidator = Joi.object({
   key: Joi.string().required(),
-  value: Joi.alternatives().try(Joi.number(), Joi.string()).required(),
-  source: Joi.string(),
+  value: Joi.string().allow(''),
+  source: Joi.string().allow(''),
 }).options({ abortEarly: false });
 
 const createProductValidator = Joi.object({
@@ -63,9 +59,9 @@ export class ProductService {
   }
 
   async get(idOrSlug: string | number, ctx: ServiceContext) {
-    return typeof idOrSlug === 'number'
-      ? await this.getProductById(idOrSlug, ctx)
-      : await this.getProductBySlug(idOrSlug, ctx);
+    return isNaN(Number(idOrSlug))
+      ? await this.getProductBySlug(idOrSlug as string, ctx)
+      : await this.getProductById(Number(idOrSlug), ctx);
   }
 
   async getProductById(id: number, ctx: ServiceContext) {
@@ -105,7 +101,7 @@ export class ProductService {
     return id;
   }
 
-  async autocomplete(query: string, ctx: ServiceContext) {
-    return await this.productRepository.findSimilarValue(query, ctx);
+  async autocomplete(type: ProductType, query: string, ctx: ServiceContext) {
+    return await this.productRepository.findSimilarValue(type, query, ctx);
   }
 }

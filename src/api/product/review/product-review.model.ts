@@ -3,7 +3,6 @@ import {
   ProductReview,
   ProductReviewKey,
   productReviewSchema,
-  ProductReviewValue,
 } from '../../../types/product-review';
 import { CanDto } from '../../shared/types/normalize';
 
@@ -16,7 +15,7 @@ export class ProductReviewModel extends Model implements CanDto<ProductReview> {
 
   source?: string;
   key!: ProductReviewKey;
-  value?: ProductReviewValue;
+  value?: string;
 
   toDto(): ProductReview {
     return {

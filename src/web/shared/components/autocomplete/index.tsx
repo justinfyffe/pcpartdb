@@ -11,14 +11,12 @@ import { classNames } from '../../ui/ui.utils';
 import { Input } from '../input';
 import { Spinner } from '../spinner';
 
-export type AutocompleteValue = string | number;
-
 interface AutocompleteProps {
   direction?: 'top' | 'bottom';
-  onQuery: (query: string) => Promise<AutocompleteValue[]>;
+  onQuery: (query: string) => Promise<string[]>;
 
-  value?: AutocompleteValue;
-  onChange?: (value: AutocompleteValue) => void;
+  value?: string;
+  onChange?: (value: string) => void;
 
   className?: string;
 
@@ -30,7 +28,7 @@ export const Autocomplete: FunctionComponent<AutocompleteProps> = (props) => {
 
   const [isOpen, setOpen] = useState(false);
   const [isLoading, setLoading] = useState(false);
-  const [options, setOptions] = useState<AutocompleteValue[]>([]);
+  const [options, setOptions] = useState<string[]>([]);
   const [hoveredIndex, setHoveredIndex] = useState<number>(-1);
 
   useEffect(() => {
@@ -45,15 +43,17 @@ export const Autocomplete: FunctionComponent<AutocompleteProps> = (props) => {
 
   const handleQuery = useCallback(
     async (event: ChangeEvent<HTMLInputElement>) => {
+      const value = event.target.value;
+      onChange(value);
+
       setLoading(true);
       setHoveredIndex(-1);
-      const query = event.target.value;
-      const values = await onQuery(query);
-      setOptions(values);
+      const options = await onQuery(value);
+      setOptions(options);
       setLoading(false);
-      setOpen(true);
+      setOpen(options.length > 0);
     },
-    [onQuery],
+    [onChange, onQuery],
   );
 
   const handleKeyDown = useCallback(
@@ -66,16 +66,19 @@ export const Autocomplete: FunctionComponent<AutocompleteProps> = (props) => {
         setHoveredIndex(
           hoveredIndex >= options.length ? hoveredIndex : hoveredIndex + 1,
         );
-      } else if (event.code === 'Enter') {
+      } else if (event.code === 'Enter' && isOpen && hoveredIndex >= 0) {
+        event.preventDefault();
+        event.stopPropagation();
+
         onChange(options[hoveredIndex]);
         setOpen(false);
       }
     },
-    [onChange, options, hoveredIndex],
+    [onChange, options, hoveredIndex, isOpen],
   );
 
   const handleOptionClick = useCallback(
-    (value: AutocompleteValue) => {
+    (value: string) => {
       onChange(value);
       setOpen(false);
     },
@@ -83,7 +86,7 @@ export const Autocomplete: FunctionComponent<AutocompleteProps> = (props) => {
   );
 
   const handleClear = useCallback(() => {
-    onChange(null);
+    onChange('');
   }, [onChange]);
 
   return (

@@ -7,11 +7,7 @@ import { ProductMetaRepository } from './product-meta.repository';
 export class ProductMetaService {
   constructor(private metaRepository: ProductMetaRepository) {}
 
-  async autocomplete(
-    key: ProductMetaKey,
-    value: string | number,
-    ctx: ServiceContext,
-  ) {
+  async autocomplete(key: ProductMetaKey, value: string, ctx: ServiceContext) {
     return await this.metaRepository.findSimilarValue(key, value, ctx);
   }
 }

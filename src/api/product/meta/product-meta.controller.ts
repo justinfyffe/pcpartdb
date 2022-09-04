@@ -16,7 +16,7 @@ export class ProductMetaController {
   @UseGuards(StaffGuard)
   async autocomplete(
     @Query('key') key: ProductMetaKey,
-    @Query('value') value: string | number,
+    @Query('value') value: string,
   ) {
     return normalize(
       await transaction((trx) =>

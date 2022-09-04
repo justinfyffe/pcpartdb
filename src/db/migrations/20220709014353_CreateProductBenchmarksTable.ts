@@ -9,7 +9,7 @@ export async function up(knex: Knex): Promise<void> {
 
       table.string('source');
       table.string('key').notNullable();
-      table.jsonb('value');
+      table.string('value');
 
       table.timestamps(true, true);
 

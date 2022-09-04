@@ -26,9 +26,9 @@ const AdminEditGpuPage = (props: AdminEditGpuPageProps) => {
             Back
           </Button>
         </ArticleHeader>
-      </Article>
 
-      <GpuForm gpu={gpu} />
+        <GpuForm gpu={gpu} />
+      </Article>
     </AdminLayout>
   );
 };

@@ -15,11 +15,11 @@ export class ProductSpecRepository {
 
   async findSimilarValue(
     key: ProductSpecKey,
-    value: string | number,
+    value: string,
     config?: RepositoryConfig,
   ) {
     return await ProductSpecModel.query(config?.trx)
       .where('key', key)
-      .andWhere('value', 'ILIKE', value);
+      .andWhere('value', 'ILIKE', `%${value}%`);
   }
 }

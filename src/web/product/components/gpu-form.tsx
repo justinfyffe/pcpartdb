@@ -22,6 +22,7 @@ import {
   MarketSegment,
   ProductionStatus,
   ProductSpec,
+  ProductSpecBoolean,
   ProductSpecKey,
 } from '../../../types/product-spec';
 import { Alert, AlertVariant } from '../../shared/components/alert';
@@ -44,11 +45,13 @@ import { ReviewFields } from './review-fields';
 
 interface ProductReviewFormData {
   key: ProductReviewKey;
-  value: number | string;
+  value: string;
   source?: string;
 }
 
 interface ProductFormData {
+  parentId?: number;
+
   slug: string;
   type: ProductType;
   name: string;
@@ -82,11 +85,11 @@ interface ProductFormData {
   boardNumber?: string;
 
   // Cores & Clock Speeds
-  cudaCores?: number;
-  tmus?: number;
-  rops?: number;
-  tensorCores?: number;
-  rtCores?: number;
+  cudaCores?: string;
+  tmus?: string;
+  rops?: string;
+  tensorCores?: string;
+  rtCores?: string;
   baseClock?: string;
   boostClock?: string;
   l1Cache?: string;
@@ -115,9 +118,9 @@ interface ProductFormData {
   openGlVersion?: string;
   cudaVersion?: string;
   shaderModelVersion?: string;
-  gSyncFreeSyncSupport?: boolean;
-  sliCrossfireSupport?: boolean;
-  vrReady?: boolean;
+  gSyncFreeSyncSupport?: string;
+  sliCrossfireSupport?: string;
+  vrReady?: string;
 
   reviews?: ProductReviewFormData[];
   benchmarks?: BenchmarkValue[];
@@ -125,87 +128,89 @@ interface ProductFormData {
 
 const benchmarkValidator = Joi.object({
   key: Joi.string().required(),
-  value: Joi.alternatives().try(Joi.number(), Joi.string()).required(),
-  source: Joi.string().optional(),
+  value: Joi.string().allow(''),
+  source: Joi.string().allow(''),
 }).options({ abortEarly: false });
 
 const reviewValidator = Joi.object({
   key: Joi.string().required(),
-  value: Joi.alternatives().try(Joi.number(), Joi.string()).required(),
-  source: Joi.string().optional(),
+  value: Joi.string().allow(''),
+  source: Joi.string().allow(''),
 }).options({ abortEarly: false });
 
 const productValidator = Joi.object({
+  parentId: Joi.number().optional(),
+
   slug: Joi.string().required(),
   type: Joi.string().valid(ProductType.CPU, ProductType.GPU),
   name: Joi.string().required(),
-  description: Joi.string().optional(),
+  description: Joi.string().allow(''),
 
   // General
-  company: Joi.string().optional(),
-  generation: Joi.string().optional(),
-  marketSegment: Joi.string().optional(),
-  launchPrice: Joi.string().optional(),
-  releaseDate: Joi.string().optional(),
-  productionStatus: Joi.string().optional(),
+  company: Joi.string().allow(''),
+  generation: Joi.string().allow(''),
+  marketSegment: Joi.string().allow(''),
+  launchPrice: Joi.string().allow(''),
+  releaseDate: Joi.string().allow(''),
+  productionStatus: Joi.string().allow(''),
 
   // Processor
-  gpuName: Joi.string().optional(),
-  architecture: Joi.string().optional(),
-  foundry: Joi.string().optional(),
-  processSize: Joi.string().optional(),
-  transistors: Joi.string().optional(),
-  dieSize: Joi.string().optional(),
+  gpuName: Joi.string().allow(''),
+  architecture: Joi.string().allow(''),
+  foundry: Joi.string().allow(''),
+  processSize: Joi.string().allow(''),
+  transistors: Joi.string().allow(''),
+  dieSize: Joi.string().allow(''),
 
   // Board Compatibility & Dimensions
-  slotWidth: Joi.string().optional(),
-  length: Joi.string().optional(),
-  width: Joi.string().optional(),
-  height: Joi.string().optional(),
-  weight: Joi.string().optional(),
-  busInterface: Joi.string().optional(),
-  tdp: Joi.string().optional(),
-  suggestedPsu: Joi.string().optional(),
-  powerConnectors: Joi.string().optional(),
-  boardNumber: Joi.string().optional(),
+  slotWidth: Joi.string().allow(''),
+  length: Joi.string().allow(''),
+  width: Joi.string().allow(''),
+  height: Joi.string().allow(''),
+  weight: Joi.string().allow(''),
+  busInterface: Joi.string().allow(''),
+  tdp: Joi.string().allow(''),
+  suggestedPsu: Joi.string().allow(''),
+  powerConnectors: Joi.string().allow(''),
+  boardNumber: Joi.string().allow(''),
 
   // Cores & Clock Speed
-  cudaCores: Joi.number().optional(),
-  tmus: Joi.number().optional(),
-  rops: Joi.number().optional(),
-  tensorCores: Joi.number().optional(),
-  rtCores: Joi.number().optional(),
-  baseClock: Joi.string().optional(),
-  boostClock: Joi.string().optional(),
-  l1Cache: Joi.string().optional(),
-  l2Cache: Joi.string().optional(),
+  cudaCores: Joi.string().allow(''),
+  tmus: Joi.string().allow(''),
+  rops: Joi.string().allow(''),
+  tensorCores: Joi.string().allow(''),
+  rtCores: Joi.string().allow(''),
+  baseClock: Joi.string().allow(''),
+  boostClock: Joi.string().allow(''),
+  l1Cache: Joi.string().allow(''),
+  l2Cache: Joi.string().allow(''),
 
   // Theoretical Performance
-  pixelRate: Joi.string().optional(),
-  textureRate: Joi.string().optional(),
-  fp32Performance: Joi.string().optional(),
-  fp64Performance: Joi.string().optional(),
+  pixelRate: Joi.string().allow(''),
+  textureRate: Joi.string().allow(''),
+  fp32Performance: Joi.string().allow(''),
+  fp64Performance: Joi.string().allow(''),
 
   // Memory
-  memorySize: Joi.string().optional(),
-  memoryType: Joi.string().optional(),
-  memoryInterface: Joi.string().optional(),
-  memoryBandwidth: Joi.string().optional(),
+  memorySize: Joi.string().allow(''),
+  memoryType: Joi.string().allow(''),
+  memoryInterface: Joi.string().allow(''),
+  memoryBandwidth: Joi.string().allow(''),
 
   // Display Connectivity
-  maxResolution: Joi.string().optional(),
-  displayPorts: Joi.string().optional(),
-  hdmiPorts: Joi.string().optional(),
+  maxResolution: Joi.string().allow(''),
+  displayPorts: Joi.string().allow(''),
+  hdmiPorts: Joi.string().allow(''),
 
   // API Support
-  directXVersion: Joi.string().optional(),
-  openClVersion: Joi.string().optional(),
-  openGlVersion: Joi.string().optional(),
-  cudaVersion: Joi.string().optional(),
-  shaderModelVersion: Joi.string().optional(),
-  gSyncFreeSyncSupport: Joi.boolean().optional(),
-  sliCrossfireSupport: Joi.boolean().optional(),
-  vrReady: Joi.boolean().optional(),
+  directXVersion: Joi.string().allow(''),
+  openClVersion: Joi.string().allow(''),
+  openGlVersion: Joi.string().allow(''),
+  cudaVersion: Joi.string().allow(''),
+  shaderModelVersion: Joi.string().allow(''),
+  gSyncFreeSyncSupport: Joi.string().allow(''),
+  sliCrossfireSupport: Joi.boolean().allow(''),
+  vrReady: Joi.boolean().allow(''),
 
   benchmarks: Joi.array().items(benchmarkValidator),
   reviews: Joi.array().items(reviewValidator),
@@ -220,121 +225,87 @@ function formOptions(gpu?: Product): UseFormProps<ProductFormData> {
   const specs = getSpecsMap(gpu);
 
   return {
-    resolver: joiResolver(productValidator),
+    //resolver: joiResolver(productValidator),
     mode: 'onBlur',
     defaultValues: {
+      parentId: undefined,
+
       slug: gpu?.slug ?? '',
       type: ProductType.GPU,
       name: gpu?.name ?? '',
-      description:
-        (meta.get(ProductMetaKey.Description)?.value as string) ?? '',
+      description: meta.get(ProductMetaKey.Description)?.value ?? '',
 
       // General
-      company: (specs.get(ProductSpecKey.Company)?.value as string) ?? '',
-      generation: (specs.get(ProductSpecKey.Generation)?.value as string) ?? '',
-      marketSegment:
-        (specs.get(ProductSpecKey.MarketSegment)?.value as string) ?? '',
-      launchPrice:
-        (specs.get(ProductSpecKey.LaunchPrice)?.value as string) ?? '',
-      releaseDate:
-        (specs.get(ProductSpecKey.ReleaseDate)?.value as string) ?? '',
-      productionStatus:
-        (specs.get(ProductSpecKey.ProductionStatus)?.value as string) ?? '',
+      company: specs.get(ProductSpecKey.Company)?.value ?? '',
+      generation: specs.get(ProductSpecKey.Generation)?.value ?? '',
+      marketSegment: specs.get(ProductSpecKey.MarketSegment)?.value ?? '',
+      launchPrice: specs.get(ProductSpecKey.LaunchPrice)?.value ?? '',
+      releaseDate: specs.get(ProductSpecKey.ReleaseDate)?.value ?? '',
+      productionStatus: specs.get(ProductSpecKey.ProductionStatus)?.value ?? '',
 
       // Processor
-      gpuName: (specs.get(ProductSpecKey.GpuName)?.value as string) ?? '',
-      gpuVariant: (specs.get(ProductSpecKey.GpuVariant)?.value as string) ?? '',
-      architecture:
-        (specs.get(ProductSpecKey.Architecture)?.value as string) ?? '',
-      foundry: (specs.get(ProductSpecKey.Foundry)?.value as string) ?? '',
-      lithography:
-        (specs.get(ProductSpecKey.Lithography)?.value as string) ?? '',
-      transistors:
-        (specs.get(ProductSpecKey.Transistors)?.value as string) ?? '',
-      dieSize: (specs.get(ProductSpecKey.DieSize)?.value as string) ?? '',
+      gpuName: specs.get(ProductSpecKey.GpuName)?.value ?? '',
+      gpuVariant: specs.get(ProductSpecKey.GpuVariant)?.value ?? '',
+      architecture: specs.get(ProductSpecKey.Architecture)?.value ?? '',
+      foundry: specs.get(ProductSpecKey.Foundry)?.value ?? '',
+      lithography: specs.get(ProductSpecKey.Lithography)?.value ?? '',
+      transistors: specs.get(ProductSpecKey.Transistors)?.value ?? '',
+      dieSize: specs.get(ProductSpecKey.DieSize)?.value ?? '',
 
       // Board Compatibility & Dimensions
-      slotWidth: (specs.get(ProductSpecKey.SlotWidth)?.value as string) ?? '',
-      length: (specs.get(ProductSpecKey.Length)?.value as string) ?? '',
-      width: (specs.get(ProductSpecKey.Width)?.value as string) ?? '',
-      height: (specs.get(ProductSpecKey.Height)?.value as string) ?? '',
-      weight: (specs.get(ProductSpecKey.Weight)?.value as string) ?? '',
-      busInterface:
-        (specs.get(ProductSpecKey.BusInterface)?.value as string) ?? '',
-      tdp: (specs.get(ProductSpecKey.Tdp)?.value as string) ?? '',
-      suggestedPsu:
-        (specs.get(ProductSpecKey.SuggestedPsu)?.value as string) ?? '',
-      powerConnectors:
-        (specs.get(ProductSpecKey.PowerConnectors)?.value as string) ?? '',
+      slotWidth: specs.get(ProductSpecKey.SlotWidth)?.value ?? '',
+      length: specs.get(ProductSpecKey.Length)?.value ?? '',
+      width: specs.get(ProductSpecKey.Width)?.value ?? '',
+      height: specs.get(ProductSpecKey.Height)?.value ?? '',
+      weight: specs.get(ProductSpecKey.Weight)?.value ?? '',
+      busInterface: specs.get(ProductSpecKey.BusInterface)?.value ?? '',
+      tdp: specs.get(ProductSpecKey.Tdp)?.value ?? '',
+      suggestedPsu: specs.get(ProductSpecKey.SuggestedPsu)?.value ?? '',
+      powerConnectors: specs.get(ProductSpecKey.PowerConnectors)?.value ?? '',
 
       // Cores & Clock Speeds
-      cudaCores: specs.has(ProductSpecKey.CudaCores)
-        ? Number(specs.get(ProductSpecKey.CudaCores))
-        : undefined,
-      tmus: specs.has(ProductSpecKey.Tmus)
-        ? Number(specs.get(ProductSpecKey.Tmus))
-        : undefined,
-      rops: specs.has(ProductSpecKey.Rops)
-        ? Number(specs.get(ProductSpecKey.Rops))
-        : undefined,
-      tensorCores: specs.has(ProductSpecKey.TensorCores)
-        ? Number(specs.get(ProductSpecKey.TensorCores))
-        : undefined,
-      rtCores: specs.has(ProductSpecKey.RtCores)
-        ? Number(specs.get(ProductSpecKey.RtCores))
-        : undefined,
-      baseClock:
-        (specs.get(ProductSpecKey.ClockSpeedBase)?.value as string) ?? '',
-      boostClock:
-        (specs.get(ProductSpecKey.ClockSpeedBoost)?.value as string) ?? '',
-      l1Cache: (specs.get(ProductSpecKey.L1Cache)?.value as string) ?? '',
-      l2Cache: (specs.get(ProductSpecKey.L2Cache)?.value as string) ?? '',
+      cudaCores: specs.get(ProductSpecKey.CudaCores)?.value ?? '',
+      tmus: specs.get(ProductSpecKey.Tmus)?.value ?? '',
+      rops: specs.get(ProductSpecKey.Rops)?.value ?? '',
+      tensorCores: specs.get(ProductSpecKey.TensorCores)?.value ?? '',
+      rtCores: specs.get(ProductSpecKey.RtCores)?.value ?? '',
+      baseClock: specs.get(ProductSpecKey.ClockSpeedBase)?.value ?? '',
+      boostClock: specs.get(ProductSpecKey.ClockSpeedBoost)?.value ?? '',
+      l1Cache: specs.get(ProductSpecKey.L1Cache)?.value ?? '',
+      l2Cache: specs.get(ProductSpecKey.L2Cache)?.value ?? '',
 
       // Theoretical Performance
-      pixelRate:
-        (specs.get(ProductSpecKey.PixelFillRate)?.value as string) ?? '',
-      textureRate:
-        (specs.get(ProductSpecKey.TextureRate)?.value as string) ?? '',
-      fp32Performance:
-        (specs.get(ProductSpecKey.Fp32Performance)?.value as string) ?? '',
-      fp64Performance:
-        (specs.get(ProductSpecKey.Fp64Performance)?.value as string) ?? '',
+      pixelRate: specs.get(ProductSpecKey.PixelFillRate)?.value ?? '',
+      textureRate: specs.get(ProductSpecKey.TextureRate)?.value ?? '',
+      fp32Performance: specs.get(ProductSpecKey.Fp32Performance)?.value ?? '',
+      fp64Performance: specs.get(ProductSpecKey.Fp64Performance)?.value ?? '',
 
       // Memory
-      memorySize: (specs.get(ProductSpecKey.MemorySize)?.value as string) ?? '',
-      memoryType: (specs.get(ProductSpecKey.MemoryType)?.value as string) ?? '',
-      memoryInterface:
-        (specs.get(ProductSpecKey.MemoryInterface)?.value as string) ?? '',
-      memoryBandwidth:
-        (specs.get(ProductSpecKey.MemoryBandwidth)?.value as string) ?? '',
+      memorySize: specs.get(ProductSpecKey.MemorySize)?.value ?? '',
+      memoryType: specs.get(ProductSpecKey.MemoryType)?.value ?? '',
+      memoryInterface: specs.get(ProductSpecKey.MemoryInterface)?.value ?? '',
+      memoryBandwidth: specs.get(ProductSpecKey.MemoryBandwidth)?.value ?? '',
 
       // Display Connectivity
-      maxResolution:
-        (specs.get(ProductSpecKey.MaxResolution)?.value as string) ?? '',
-      displayPorts:
-        (specs.get(ProductSpecKey.DisplayPorts)?.value as string) ?? '',
-      hdmiPorts: (specs.get(ProductSpecKey.HdmiPorts)?.value as string) ?? '',
+      maxResolution: specs.get(ProductSpecKey.MaxResolution)?.value ?? '',
+      displayPorts: specs.get(ProductSpecKey.DisplayPorts)?.value ?? '',
+      hdmiPorts: specs.get(ProductSpecKey.HdmiPorts)?.value ?? '',
 
       // API Support
-      directXVersion:
-        (specs.get(ProductSpecKey.DirectXVersion)?.value as string) ?? '',
-      openClVersion:
-        (specs.get(ProductSpecKey.OpenClVersion)?.value as string) ?? '',
-      openGlVersion:
-        (specs.get(ProductSpecKey.OpenGlVersion)?.value as string) ?? '',
-      cudaVersion:
-        (specs.get(ProductSpecKey.CudaVersion)?.value as string) ?? '',
+      directXVersion: specs.get(ProductSpecKey.DirectXVersion)?.value ?? '',
+      openClVersion: specs.get(ProductSpecKey.OpenClVersion)?.value ?? '',
+      openGlVersion: specs.get(ProductSpecKey.OpenGlVersion)?.value ?? '',
+      cudaVersion: specs.get(ProductSpecKey.CudaVersion)?.value ?? '',
       shaderModelVersion:
-        (specs.get(ProductSpecKey.ShaderModelVersion)?.value as string) ?? '',
-      gSyncFreeSyncSupport: specs.has(ProductSpecKey.GSyncFreeSyncSupport)
-        ? Boolean(specs.get(ProductSpecKey.GSyncFreeSyncSupport))
-        : undefined,
-      sliCrossfireSupport: specs.has(ProductSpecKey.SliCrossfireSupport)
-        ? Boolean(specs.get(ProductSpecKey.SliCrossfireSupport))
-        : undefined,
-      vrReady: specs.has(ProductSpecKey.VrReady)
-        ? Boolean(specs.get(ProductSpecKey.VrReady))
-        : undefined,
+        specs.get(ProductSpecKey.ShaderModelVersion)?.value ?? '',
+      gSyncFreeSyncSupport:
+        specs.get(ProductSpecKey.GSyncFreeSyncSupport)?.value ??
+        ProductSpecBoolean.Unknown,
+      sliCrossfireSupport:
+        specs.get(ProductSpecKey.SliCrossfireSupport)?.value ??
+        ProductSpecBoolean.Unknown,
+      vrReady:
+        specs.get(ProductSpecKey.VrReady)?.value ?? ProductSpecBoolean.Unknown,
 
       benchmarks: toFormBenchmarks(gpu),
       reviews: toFormReviews(gpu),
@@ -383,7 +354,9 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
       console.log(formData);
 
       const request: ProductRequest = {
-        ...formData,
+        slug: formData.slug,
+        type: formData.type,
+        name: formData.name,
         meta: toMetaArray(formData),
         specs: toSpecsArray(formData),
         benchmarks: toRequestBenchmarks(formData),
@@ -1235,7 +1208,22 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
             <Controller
               name="gSyncFreeSyncSupport"
               control={control}
-              render={({ field }) => <Checkbox {...field} ref={null} />}
+              render={({ field }) => (
+                <Select {...field} ref={null}>
+                  <SelectOption
+                    label="Unknown"
+                    value={ProductSpecBoolean.Unknown}
+                  >
+                    Unknown
+                  </SelectOption>
+                  <SelectOption label="True" value={ProductSpecBoolean.True}>
+                    True
+                  </SelectOption>
+                  <SelectOption label="False" value={ProductSpecBoolean.False}>
+                    False
+                  </SelectOption>
+                </Select>
+              )}
             />
           </Field>
 
@@ -1244,7 +1232,22 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
             <Controller
               name="sliCrossfireSupport"
               control={control}
-              render={({ field }) => <Checkbox {...field} ref={null} />}
+              render={({ field }) => (
+                <Select {...field} ref={null}>
+                  <SelectOption
+                    label="Unknown"
+                    value={ProductSpecBoolean.Unknown}
+                  >
+                    Unknown
+                  </SelectOption>
+                  <SelectOption label="True" value={ProductSpecBoolean.True}>
+                    True
+                  </SelectOption>
+                  <SelectOption label="False" value={ProductSpecBoolean.False}>
+                    False
+                  </SelectOption>
+                </Select>
+              )}
             />
           </Field>
 
@@ -1253,7 +1256,22 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
             <Controller
               name="vrReady"
               control={control}
-              render={({ field }) => <Checkbox {...field} ref={null} />}
+              render={({ field }) => (
+                <Select {...field} ref={null}>
+                  <SelectOption
+                    label="Unknown"
+                    value={ProductSpecBoolean.Unknown}
+                  >
+                    Unknown
+                  </SelectOption>
+                  <SelectOption label="True" value={ProductSpecBoolean.True}>
+                    True
+                  </SelectOption>
+                  <SelectOption label="False" value={ProductSpecBoolean.False}>
+                    False
+                  </SelectOption>
+                </Select>
+              )}
             />
           </Field>
 
@@ -1471,13 +1489,13 @@ function toSpecsArray(formData: ProductFormData): ProductSpec[] {
     },
     {
       key: ProductSpecKey.GSyncFreeSyncSupport,
-      value: formData.gSyncFreeSyncSupport,
+      value: formData.gSyncFreeSyncSupport ? 'true' : 'false',
     },
     {
       key: ProductSpecKey.SliCrossfireSupport,
-      value: formData.sliCrossfireSupport,
+      value: formData.sliCrossfireSupport ? 'true' : 'false',
     },
-    { key: ProductSpecKey.VrReady, value: formData.vrReady },
+    { key: ProductSpecKey.VrReady, value: formData.vrReady ? 'true' : 'false' },
   ];
 }
 

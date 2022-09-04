@@ -8,19 +8,18 @@ import React, {
 import { ProductPropertyType } from '../../../types/product';
 import { ProductMetaKey } from '../../../types/product-meta';
 import { ProductSpecKey } from '../../../types/product-spec';
-import { AutocompleteValue } from '../../shared/components/autocomplete';
 import { Input } from '../../shared/components/input';
 import { ProductPropertyAutocomplete } from './product-property-autocomplete';
 
 interface ParsedValue {
-  baseValue: string | number;
+  baseValue: string;
   suffixValue?: string;
 }
 
 const SUFFIXES: { [key: string]: string[] } = {
   [ProductSpecKey.LaunchPrice]: ['USD'],
   [ProductSpecKey.Lithography]: ['nm', 'μm'],
-  [ProductSpecKey.Transistors]: ['millions'],
+  [ProductSpecKey.Transistors]: ['million'],
   [ProductSpecKey.DieSize]: ['mm^2'],
   [ProductSpecKey.Length]: ['mm'],
   [ProductSpecKey.Width]: ['mm'],
@@ -48,8 +47,8 @@ interface ProductPropertyFieldProps {
   propertyType: ProductPropertyType;
   field: ProductMetaKey | ProductSpecKey;
 
-  value?: string | number;
-  onChange?: (value: string | number) => void;
+  value?: string;
+  onChange?: (value: string) => void;
 
   autocomplete?: boolean;
 
@@ -63,8 +62,8 @@ export const ProductPropertyField: FunctionComponent<
     props;
 
   const { baseValue, suffixValue } = useMemo(
-    () => parsePropertyValue(value),
-    [value],
+    () => parsePropertyValue(field, value),
+    [field, value],
   );
   const suffixes = useMemo(() => SUFFIXES[field] ?? [], [field]);
   const [suffixIndex, setSuffixIndex] = useState(() =>
@@ -78,7 +77,7 @@ export const ProductPropertyField: FunctionComponent<
   );
 
   const handleAutocompleteChange = useCallback(
-    (value: AutocompleteValue) => {
+    (value: string) => {
       const newValue = suffix != null ? `${value} ${suffix}` : value;
       onChange(newValue);
     },
@@ -123,22 +122,33 @@ export const ProductPropertyField: FunctionComponent<
   }
 };
 
-function getPropertyValue(base: string | number, suffix?: string) {
+function getPropertyValue(base: string, suffix?: string) {
   return suffix != null ? `${base} ${suffix}` : base;
 }
 
-function parsePropertyValue(value?: string | number): ParsedValue {
+function parsePropertyValue(
+  field: ProductMetaKey | ProductSpecKey,
+  value?: string,
+): ParsedValue {
   if (value == null) {
     return { baseValue: '' };
-  } else if (typeof value === 'number') {
-    return { baseValue: value };
   }
 
-  const suffixIndex = value.lastIndexOf(' ');
-  const baseValue =
-    suffixIndex >= 0 ? value.substring(0, suffixIndex) : undefined;
-  const suffixValue =
-    suffixIndex >= 0 ? value.substring(suffixIndex + 1) : undefined;
+  let baseValue = value;
+  let suffixValue: string | undefined = undefined;
+
+  if (SUFFIXES[field]) {
+    // Try to guess the base value and suffix
+    const suffixIndex = value.lastIndexOf(' ');
+    const possibleSuffix =
+      suffixIndex >= 0 ? value.substring(suffixIndex + 1) : undefined;
+
+    // Check if the predicted suffix is a valid suffix
+    if (suffixIndex >= 0 && SUFFIXES[field].includes(possibleSuffix)) {
+      baseValue = value.substring(0, suffixIndex);
+      suffixValue = possibleSuffix;
+    }
+  }
 
   return { baseValue, suffixValue };
 }

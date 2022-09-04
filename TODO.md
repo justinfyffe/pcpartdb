@@ -1,5 +1,6 @@
 Immediate Tasks:
 - product forms
+  - fix autocomplete
   - Parent product input
   - Edit gpu form
 - form autocomplete

@@ -3,7 +3,6 @@ import {
   ProductSpec,
   ProductSpecKey,
   productSpecSchema,
-  ProductSpecValue,
 } from '../../../types/product-spec';
 import { CanDto } from '../../shared/types/normalize';
 
@@ -16,7 +15,7 @@ export class ProductSpecModel extends Model implements CanDto<ProductSpec> {
 
   source?: string;
   key!: ProductSpecKey;
-  value?: ProductSpecValue;
+  value?: string;
 
   toDto(): ProductSpec {
     return {

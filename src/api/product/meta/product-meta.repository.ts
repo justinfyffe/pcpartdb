@@ -15,11 +15,11 @@ export class ProductMetaRepository {
 
   async findSimilarValue(
     key: ProductMetaKey,
-    value: number | string,
+    value: string,
     config?: RepositoryConfig,
   ) {
     return await ProductMetaModel.query(config?.trx)
       .where('key', key)
-      .andWhere('value', 'ILIKE', value);
+      .andWhere('value', 'ILIKE', `%${value}%`);
   }
 }

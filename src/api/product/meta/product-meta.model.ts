@@ -3,7 +3,6 @@ import {
   ProductMeta,
   ProductMetaKey,
   productMetaSchema,
-  ProductMetaValue,
 } from '../../../types/product-meta';
 import { CanDto } from '../../shared/types/normalize';
 
@@ -16,7 +15,7 @@ export class ProductMetaModel extends Model implements CanDto<ProductMeta> {
 
   source?: string;
   key!: ProductMetaKey;
-  value?: ProductMetaValue;
+  value?: string;
 
   toDto(): ProductMeta {
     return {
