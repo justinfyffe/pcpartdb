@@ -26,22 +26,22 @@ const PATH = 'products';
 export class ProductService {
   constructor(private api: ApiClient) {}
 
-  async list() {
+  async list(): Promise<Product[]> {
     const response = await this.api.get<ProductsResponse>(PATH);
     return denormalize(response.result, [productSchema], response.entities);
   }
 
-  async get(id: number) {
+  async get(id: number): Promise<Product> {
     const response = await this.api.get<ProductResponse>(`${PATH}/${id}`);
     return denormalize(response.result, productSchema, response.entities);
   }
 
-  async create(data: ProductRequest) {
+  async create(data: ProductRequest): Promise<Product> {
     const response = await this.api.post<ProductResponse>(PATH, data);
     return denormalize(response.result, productSchema, response.entities);
   }
 
-  async update(id: number, data: ProductRequest) {
+  async update(id: number, data: ProductRequest): Promise<Product> {
     const response = await this.api.put<ProductResponse>(`${PATH}/${id}`, data);
     return denormalize(response.result, productSchema, response.entities);
   }

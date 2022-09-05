@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useCallback } from 'react';
+import React, { FunctionComponent, useCallback, useMemo } from 'react';
 import { ProductType } from '../../../types/product';
 import { Autocomplete } from '../../shared/components/autocomplete';
 import { productService } from '../product.service';
@@ -12,10 +12,12 @@ interface ProductAutocompleteProps {
   ref?: unknown;
 }
 
-export const ProductPropertyAutocomplete: FunctionComponent<
+export const ProductAutocomplete: FunctionComponent<
   ProductAutocompleteProps
 > = (props) => {
   const { productType: type, onChange, value, ...restProps } = props;
+
+  const product = useMemo(async () => await productService.get(value), [value]);
 
   const handleQuery = useCallback(
     async (query: string) => {
@@ -35,9 +37,9 @@ export const ProductPropertyAutocomplete: FunctionComponent<
     [onChange],
   );
 
+  // TODO: how to pass label/value?
   return (
     <Autocomplete
-      freeSolo
       value={`${value}`}
       onQuery={handleQuery}
       onChange={handleChange}
