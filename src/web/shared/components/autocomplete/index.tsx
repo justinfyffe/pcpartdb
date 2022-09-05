@@ -17,6 +17,9 @@ export interface AutocompleteOption {
 }
 
 interface AutocompleteProps {
+  // Allow arbitrary values
+  freeSolo?: boolean;
+
   direction?: 'top' | 'bottom';
   onQuery: (query: string) => Promise<AutocompleteOption[]>;
 
@@ -29,7 +32,7 @@ interface AutocompleteProps {
 }
 
 export const Autocomplete: FunctionComponent<AutocompleteProps> = (props) => {
-  const { className, direction, value, onChange, onQuery } = props;
+  const { className, direction, value, freeSolo, onChange, onQuery } = props;
 
   const [isOpen, setOpen] = useState(false);
   const [isLoading, setLoading] = useState(false);
@@ -49,7 +52,9 @@ export const Autocomplete: FunctionComponent<AutocompleteProps> = (props) => {
   const handleQuery = useCallback(
     async (event: ChangeEvent<HTMLInputElement>) => {
       const value = event.target.value;
-      onChange(value);
+      if (freeSolo) {
+        onChange(value);
+      }
 
       setLoading(true);
       setHoveredIndex(-1);
@@ -58,7 +63,7 @@ export const Autocomplete: FunctionComponent<AutocompleteProps> = (props) => {
       setLoading(false);
       setOpen(options.length > 0);
     },
-    [onChange, onQuery],
+    [freeSolo, onChange, onQuery],
   );
 
   const handleKeyDown = useCallback(
