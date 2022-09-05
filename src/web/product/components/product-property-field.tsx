@@ -138,7 +138,7 @@ function parsePropertyValue(
   let suffixValue: string | undefined = undefined;
 
   if (SUFFIXES[field]) {
-    // Try to guess the base value and suffix
+    // Guess the base value and suffix
     const suffixIndex = value.lastIndexOf(' ');
     const possibleSuffix =
       suffixIndex >= 0 ? value.substring(suffixIndex + 1) : undefined;

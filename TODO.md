@@ -3,6 +3,7 @@ Immediate Tasks:
   - fix autocomplete
   - Parent product input
   - Edit gpu form
+  - code cleanup
 - form autocomplete
 
 Roadmap:

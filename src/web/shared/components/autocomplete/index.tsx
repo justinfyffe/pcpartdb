@@ -11,6 +11,11 @@ import { classNames } from '../../ui/ui.utils';
 import { Input } from '../input';
 import { Spinner } from '../spinner';
 
+interface AutocompleteOption {
+  label: string;
+  value: string | number;
+}
+
 interface AutocompleteProps {
   direction?: 'top' | 'bottom';
   onQuery: (query: string) => Promise<string[]>;
