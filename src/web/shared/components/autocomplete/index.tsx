@@ -11,14 +11,14 @@ import { classNames } from '../../ui/ui.utils';
 import { Input } from '../input';
 import { Spinner } from '../spinner';
 
-interface AutocompleteOption {
+export interface AutocompleteOption {
   label: string;
-  value: string | number;
+  value: string;
 }
 
 interface AutocompleteProps {
   direction?: 'top' | 'bottom';
-  onQuery: (query: string) => Promise<string[]>;
+  onQuery: (query: string) => Promise<AutocompleteOption[]>;
 
   value?: string;
   onChange?: (value: string) => void;
@@ -33,7 +33,7 @@ export const Autocomplete: FunctionComponent<AutocompleteProps> = (props) => {
 
   const [isOpen, setOpen] = useState(false);
   const [isLoading, setLoading] = useState(false);
-  const [options, setOptions] = useState<string[]>([]);
+  const [options, setOptions] = useState<AutocompleteOption[]>([]);
   const [hoveredIndex, setHoveredIndex] = useState<number>(-1);
 
   useEffect(() => {
@@ -75,7 +75,7 @@ export const Autocomplete: FunctionComponent<AutocompleteProps> = (props) => {
         event.preventDefault();
         event.stopPropagation();
 
-        onChange(options[hoveredIndex]);
+        onChange(options[hoveredIndex].value);
         setOpen(false);
       }
     },
@@ -83,8 +83,8 @@ export const Autocomplete: FunctionComponent<AutocompleteProps> = (props) => {
   );
 
   const handleOptionClick = useCallback(
-    (value: string) => {
-      onChange(value);
+    (option: AutocompleteOption) => {
+      onChange(option.value);
       setOpen(false);
     },
     [onChange],
@@ -125,14 +125,14 @@ export const Autocomplete: FunctionComponent<AutocompleteProps> = (props) => {
       >
         {options.map((option, i) => (
           <div
-            key={option}
+            key={option.value}
             onClick={() => handleOptionClick(option)}
             className={classNames(
               'items-center pointer flex p-[8px_16px] hover:bg-[#fafafa]',
               hoveredIndex === i ? 'bg-[#fafafa]' : '',
             )}
           >
-            {option}
+            {option.label}
           </div>
         ))}
       </div>
