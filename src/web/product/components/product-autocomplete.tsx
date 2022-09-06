@@ -2,10 +2,9 @@ import React, {
   FunctionComponent,
   useCallback,
   useEffect,
-  useMemo,
   useState,
 } from 'react';
-import { ProductType } from '../../../types/product';
+import { Product, ProductType } from '../../../types/product';
 import { Autocomplete } from '../../shared/components/autocomplete';
 import { productService } from '../product.service';
 
@@ -14,6 +13,7 @@ interface ProductAutocompleteProps {
 
   value?: number;
   onChange?: (value: number) => void;
+  onProduct?: (product: Product) => void;
 
   ref?: unknown;
 }
@@ -21,7 +21,7 @@ interface ProductAutocompleteProps {
 export const ProductAutocomplete: FunctionComponent<
   ProductAutocompleteProps
 > = (props) => {
-  const { productType: type, onChange, value, ...restProps } = props;
+  const { productType: type, onChange, onProduct, value, ...restProps } = props;
 
   const [product, setProduct] = useState(null);
 
@@ -29,9 +29,10 @@ export const ProductAutocomplete: FunctionComponent<
     async function fetchProduct() {
       const result = await productService.get(value);
       setProduct(result);
+      onProduct(result);
     }
     fetchProduct();
-  }, [value]);
+  }, [value, onProduct]);
 
   const handleQuery = useCallback(
     async (query: string) => {

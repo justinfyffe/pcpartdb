@@ -39,6 +39,7 @@ import {
 } from '../../shared/error/error.utils';
 import { productService } from '../product.service';
 import { BenchmarkFields, BenchmarkValue } from './benchmark-fields';
+import { ProductAutocomplete } from './product-autocomplete';
 import { ProductPropertyField } from './product-property-field';
 import { ReviewFields } from './review-fields';
 
@@ -410,6 +411,23 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           An unknown error has occurred. Please try again later.
         </Alert>
       )}
+
+      <section>
+        <Field>
+          Parent Product
+          <Controller
+            name="parentId"
+            control={control}
+            render={({ field }) => (
+              <ProductAutocomplete
+                productType={ProductType.GPU}
+                {...field}
+                ref={null}
+              />
+            )}
+          />
+        </Field>
+      </section>
 
       <section>
         <Field>
