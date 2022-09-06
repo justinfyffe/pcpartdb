@@ -23,6 +23,7 @@ interface AutocompleteProps {
   direction?: 'top' | 'bottom';
   onQuery: (query: string) => Promise<AutocompleteOption[]>;
 
+  label?: string;
   value?: string;
   onChange?: (value: string) => void;
 
@@ -32,12 +33,21 @@ interface AutocompleteProps {
 }
 
 export const Autocomplete: FunctionComponent<AutocompleteProps> = (props) => {
-  const { className, direction, value, freeSolo, onChange, onQuery } = props;
+  const {
+    className,
+    direction,
+    label: initialLabel,
+    value,
+    freeSolo,
+    onChange,
+    onQuery,
+  } = props;
 
   const [isOpen, setOpen] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const [options, setOptions] = useState<AutocompleteOption[]>([]);
   const [hoveredIndex, setHoveredIndex] = useState<number>(-1);
+  const [label, setLabel] = useState(initialLabel);
 
   useEffect(() => {
     document.addEventListener('click', () => {
@@ -54,6 +64,7 @@ export const Autocomplete: FunctionComponent<AutocompleteProps> = (props) => {
       const value = event.target.value;
       if (freeSolo) {
         onChange(value);
+        setLabel(value);
       }
 
       setLoading(true);
@@ -81,6 +92,7 @@ export const Autocomplete: FunctionComponent<AutocompleteProps> = (props) => {
         event.stopPropagation();
 
         onChange(options[hoveredIndex].value);
+        setLabel(options[hoveredIndex].label);
         setOpen(false);
       }
     },
@@ -90,6 +102,7 @@ export const Autocomplete: FunctionComponent<AutocompleteProps> = (props) => {
   const handleOptionClick = useCallback(
     (option: AutocompleteOption) => {
       onChange(option.value);
+      setLabel(option.label);
       setOpen(false);
     },
     [onChange],
@@ -97,12 +110,13 @@ export const Autocomplete: FunctionComponent<AutocompleteProps> = (props) => {
 
   const handleClear = useCallback(() => {
     onChange('');
+    setLabel('');
   }, [onChange]);
 
   return (
     <div className={classNames('block relative', className)}>
       <Input
-        value={value}
+        value={label || value}
         onChange={handleQuery}
         onKeyDown={handleKeyDown}
         className={classNames(className)}

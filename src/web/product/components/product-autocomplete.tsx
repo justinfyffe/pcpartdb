@@ -1,4 +1,10 @@
-import React, { FunctionComponent, useCallback, useMemo } from 'react';
+import React, {
+  FunctionComponent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { ProductType } from '../../../types/product';
 import { Autocomplete } from '../../shared/components/autocomplete';
 import { productService } from '../product.service';
@@ -17,7 +23,15 @@ export const ProductAutocomplete: FunctionComponent<
 > = (props) => {
   const { productType: type, onChange, value, ...restProps } = props;
 
-  const product = useMemo(async () => await productService.get(value), [value]);
+  const [product, setProduct] = useState(null);
+
+  useEffect(() => {
+    async function fetchProduct() {
+      const result = await productService.get(value);
+      setProduct(result);
+    }
+    fetchProduct();
+  }, [value]);
 
   const handleQuery = useCallback(
     async (query: string) => {
@@ -40,6 +54,7 @@ export const ProductAutocomplete: FunctionComponent<
   // TODO: how to pass label/value?
   return (
     <Autocomplete
+      label={product?.name}
       value={`${value}`}
       onQuery={handleQuery}
       onChange={handleChange}
