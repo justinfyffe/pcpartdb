@@ -7,18 +7,8 @@ import {
   ProductsResponse,
   ProductType,
 } from '../../types/product';
-import {
-  ProductMeta,
-  ProductMetaKey,
-  ProductMetaResponse,
-  productMetaSchema,
-} from '../../types/product-meta';
-import {
-  ProductSpec,
-  ProductSpecKey,
-  productSpecSchema,
-  ProductSpecsResponse,
-} from '../../types/product-spec';
+import { ProductMetaKey } from '../../types/product-meta';
+import { ProductSpecKey } from '../../types/product-spec';
 import { ApiClient, apiClient } from '../shared/api/api-client';
 
 const PATH = 'products';
