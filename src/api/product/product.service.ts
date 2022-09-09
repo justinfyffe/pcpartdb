@@ -33,6 +33,7 @@ const productReviewValidator = Joi.object({
 const productImageValidator = Joi.object({
   imageId: Joi.number().required(),
   type: Joi.string().required(),
+  metadata: Joi.any(),
 }).options({ abortEarly: false });
 
 const createProductValidator = Joi.object({

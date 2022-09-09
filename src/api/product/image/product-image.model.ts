@@ -1,6 +1,7 @@
 import { Model, PartialModelObject } from 'objection';
 import {
   ProductImage,
+  ProductImageMetadata,
   productImageSchema,
   ProductImageType,
 } from '../../../types/product-image';
@@ -12,9 +13,12 @@ export class ProductImageModel extends Model implements CanDto<ProductImage> {
 
   // Fields
   id!: number;
-  type!: ProductImageType;
+
   productId!: number;
+  type!: ProductImageType;
   imageId!: number;
+
+  metadata: ProductImageMetadata;
 
   // Relations
   image?: ImageModel;
@@ -33,9 +37,10 @@ export class ProductImageModel extends Model implements CanDto<ProductImage> {
   toDto(): ProductImage {
     return {
       id: this.id,
-      type: this.type,
       productId: this.productId,
+      type: this.type,
       imageId: this.imageId,
+      metadata: this.metadata,
 
       image: this.image?.toDto(),
     };

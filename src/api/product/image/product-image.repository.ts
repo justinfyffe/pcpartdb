@@ -9,9 +9,11 @@ import {
 @Injectable()
 export class ProductImageRepository {
   async saveOne(image: ProductImageModelPojo, config?: RepositoryConfig) {
+    const imageToSave = { ...image, metadata: image.metadata ?? {} };
+
     return await ProductImageModel.query(config?.trx)
-      .insert(image)
-      .onConflict(['type', 'product_id', 'image_id'])
+      .insert(imageToSave)
+      .onConflict(['product_id', 'type', 'image_id'])
       .merge()
       .returning('*');
   }
@@ -25,11 +27,12 @@ export class ProductImageRepository {
     const imagesToSave = images.map((image) => ({
       ...image,
       productId,
+      metadata: image.metadata ?? {},
     }));
     if (imagesToSave.length > 0) {
       await ProductImageModel.query(config?.trx)
         .insert(imagesToSave)
-        .onConflict(['type', 'product_id', 'image_id'])
+        .onConflict(['product_id', 'type', 'image_id'])
         .merge()
         .returning('*');
     }
@@ -66,8 +69,8 @@ export class ProductImageRepository {
       .map((image) => image.imageId!);
 
     await ProductImageModel.query(config?.trx)
-      .where('type', type)
       .where('productId', productId)
+      .where('type', type)
       .whereNotIn('imageId', usedImages)
       .delete();
   }

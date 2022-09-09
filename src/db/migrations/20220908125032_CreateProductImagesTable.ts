@@ -6,13 +6,15 @@ export async function up(knex: Knex): Promise<void> {
     (table: Knex.TableBuilder) => {
       table.increments('id');
 
-      table.string('type').notNullable();
       table.integer('product_id').notNullable();
+      table.string('type').notNullable();
       table.integer('image_id').notNullable();
+
+      table.jsonb('metadata');
 
       table.timestamps(true, true);
 
-      table.unique(['type', 'product_id', 'image_id']);
+      table.unique(['product_id', 'type', 'image_id']);
 
       table
         .foreign('product_id')

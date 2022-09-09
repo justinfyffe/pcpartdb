@@ -7,6 +7,10 @@ export enum ProductImageType {
   Details = 'DETAILS',
 }
 
+export interface ProductImageMetadata {
+  order?: number;
+}
+
 export interface ProductImage {
   id?: number;
 
@@ -14,12 +18,16 @@ export interface ProductImage {
   productId?: number;
   imageId: number;
 
+  metadata: ProductImageMetadata;
+
   image?: Image;
 }
 
 export interface ProductImageRequest {
   imageId: number;
   type: ProductImageType;
+
+  metadata?: ProductImageMetadata;
 }
 
 export const productImageSchema = new schema.Entity('productImages', {

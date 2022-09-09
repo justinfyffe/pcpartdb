@@ -1676,7 +1676,10 @@ function getFormImages(gpu?: Product) {
   };
   const detailsImages: ProductImageFormData[] = [];
 
-  gpu?.images?.forEach((value) => {
+  const images =
+    gpu?.images?.sort((a, b) => a.metadata.order - b.metadata.order) ?? [];
+
+  images.forEach((value) => {
     if (value.type === ProductImageType.Autocomplete) {
       autocompleteImage = { type: value.type, image: value.image };
     } else if (value.type === ProductImageType.Thumbnail) {
@@ -1696,6 +1699,7 @@ function toRequestImages(formData: ProductFormData): ProductImage[] {
     images.push({
       type: formData.autocompleteImage.type,
       imageId: formData.autocompleteImage.image.id,
+      metadata: {},
     });
   }
 
@@ -1703,14 +1707,16 @@ function toRequestImages(formData: ProductFormData): ProductImage[] {
     images.push({
       type: formData.thumbnailImage.type,
       imageId: formData.thumbnailImage.image.id,
+      metadata: {},
     });
   }
 
   if (formData.detailsImages) {
     images.push(
-      ...formData.detailsImages.map((value) => ({
+      ...formData.detailsImages.map((value, i) => ({
         type: value.type,
         imageId: value.image.id,
+        metadata: { order: i },
       })),
     );
   }
