@@ -5,7 +5,7 @@ interface FieldState {
   fieldId: string;
 }
 
-const FieldContext = createContext<FieldState>({
+export const FieldContext = createContext<FieldState>({
   fieldId: '',
 });
 

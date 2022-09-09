@@ -3,10 +3,12 @@ import React, {
   FunctionComponent,
   HTMLProps,
   useCallback,
+  useContext,
   useRef,
 } from 'react';
 import { classNames } from '../../ui/ui.utils';
 import { Button } from '../button';
+import { FieldContext } from '../field';
 
 interface InputProps extends Omit<HTMLProps<HTMLInputElement>, 'ref'> {
   clearable?: boolean;
@@ -33,6 +35,7 @@ export const Input: FunctionComponent<InputProps> = (props) => {
   } = props;
 
   const inputRef = useRef(null);
+  const context = useContext(FieldContext);
 
   const handleClear = useCallback(() => {
     inputRef.current.value = '';
@@ -43,6 +46,7 @@ export const Input: FunctionComponent<InputProps> = (props) => {
     <div className={classNames('relative', className)}>
       <input
         type={type ?? 'text'}
+        id={context.fieldId}
         className={classNames(
           'border m-0 p-3 rounded text-sm w-full shadow',
           closeable ? 'pr-12' : '',
