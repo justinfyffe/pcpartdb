@@ -32,14 +32,15 @@ export const ProductImagesField: FunctionComponent<ProductImagesFieldProps> = (
     <div className="flex flex-col w-full mb-6">
       {fields.map((value, i) => (
         <>
-          <div className="flex">
-            <div>{i + 1}</div>
+          <div className="flex items-center">
+            <div className="mx-6">{i + 1}</div>
 
             <ProductImageField
               key={value.id}
               type={type}
               value={value}
               onChange={(value) => handleImageChange(i, value)}
+              className="flex-1"
             />
 
             <div className="flex flex-col">

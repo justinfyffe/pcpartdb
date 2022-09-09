@@ -4,6 +4,7 @@ import { Image } from '../../../types/image';
 import { Button, ButtonVariant } from '../../shared/components/button';
 import { showDialog } from '../../shared/components/dialog';
 import { Img } from '../../shared/components/image';
+import { classNames } from '../../shared/ui/ui.utils';
 import { formatDimensions, formatFileSize } from '../image.utils';
 import { ImageDialog } from './image-dialog';
 
@@ -13,10 +14,12 @@ interface ImageInputProps {
 
   value?: Image;
   onChange?: (image: Image) => void;
+
+  className?: string;
 }
 
 export const ImageInput: FunctionComponent<ImageInputProps> = (props) => {
-  const { onChange } = props;
+  const { onChange, className, ...restOfProps } = props;
   const [value, setValue] = useState<Image>(props.value);
 
   const handleSelect = useCallback(
@@ -33,11 +36,20 @@ export const ImageInput: FunctionComponent<ImageInputProps> = (props) => {
   }, [onChange]);
 
   return (
-    <div className="border-[1px] border-[#ccc] border-solid rounded block">
+    <div
+      className={classNames(
+        'border-[1px] border-slate-300 border-solid rounded block',
+        className,
+      )}
+    >
       {value != null ? (
-        <SelectedImageInput {...props} value={value} onClear={handleClear} />
+        <SelectedImageInput
+          {...restOfProps}
+          value={value}
+          onClear={handleClear}
+        />
       ) : (
-        <EmptyImageInput {...props} onSelect={handleSelect} />
+        <EmptyImageInput {...restOfProps} onSelect={handleSelect} />
       )}
     </div>
   );
@@ -51,8 +63,10 @@ const SelectedImageInput = (
   return (
     <div className="items-start flex flex-wrap h-full justify-center p-4">
       <Img src={value} className="max-h-[250px] max-w-[calc(100%_+_32px)]" />
+
       <div className="mx-4">
         <div className="font-medium">{value.name}</div>
+
         <div className="text-[#aaa] text-[12px] my-1">
           {formatFileSize(value.fileSize)} &bull;
           {formatDimensions(value.width, value.height)}
@@ -63,6 +77,7 @@ const SelectedImageInput = (
             </div>
           )}
         </div>
+
         <Button
           type="button"
           variant={ButtonVariant.Default}

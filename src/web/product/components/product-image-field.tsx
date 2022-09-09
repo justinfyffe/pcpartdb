@@ -2,6 +2,7 @@ import React, { FunctionComponent, useCallback } from 'react';
 import { Image } from '../../../types/image';
 import { ProductImageType } from '../../../types/product-image';
 import { ImageInput } from '../../image/components/image-input';
+import { classNames } from '../../shared/ui/ui.utils';
 
 export interface ProductImageValue {
   type: ProductImageType;
@@ -14,13 +15,14 @@ interface ProductImageFieldProps {
 
   onChange: (value: ProductImageValue) => void;
 
+  className?: string;
   ref?: unknown;
 }
 
 export const ProductImageField: FunctionComponent<ProductImageFieldProps> = (
   props,
 ) => {
-  const { type, value, onChange } = props;
+  const { type, value, onChange, className } = props;
 
   const handleChange = useCallback(
     (image: Image) => {
@@ -32,13 +34,12 @@ export const ProductImageField: FunctionComponent<ProductImageFieldProps> = (
   );
 
   return (
-    <div className="mb-6">
-      <ImageInput
-        value={value.image}
-        recommendedHeight={300}
-        recommendedWidth={300}
-        onChange={handleChange}
-      />
-    </div>
+    <ImageInput
+      value={value.image}
+      recommendedHeight={300}
+      recommendedWidth={300}
+      onChange={handleChange}
+      className={classNames('mb-6', className)}
+    />
   );
 };
