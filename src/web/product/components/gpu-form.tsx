@@ -399,6 +399,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
     fields: detailsImagesFields,
     append: appendImage,
     remove: removeImage,
+    swap: swapImage,
   } = useFieldArray({
     control,
     name: 'detailsImages',
@@ -1479,6 +1480,8 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               fields={detailsImagesFields}
               type={ProductImageType.Details}
               onAppend={() => appendImage({ type: null, image: null })}
+              onRemove={removeImage}
+              onSwap={swapImage}
               {...field}
               ref={null}
             />
