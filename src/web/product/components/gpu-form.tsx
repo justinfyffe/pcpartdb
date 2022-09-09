@@ -1446,29 +1446,35 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
       <section>
         <h2 className="mb-4">Images</h2>
 
-        <Controller
-          name="autocompleteImage"
-          control={control}
-          render={({ field }) => (
-            <ProductImageField
-              type={ProductImageType.Autocomplete}
-              {...field}
-              ref={null}
-            />
-          )}
-        />
+        <Field>
+          Autocomplete Image
+          <Controller
+            name="autocompleteImage"
+            control={control}
+            render={({ field }) => (
+              <ProductImageField
+                type={ProductImageType.Autocomplete}
+                {...field}
+                ref={null}
+              />
+            )}
+          />
+        </Field>
 
-        <Controller
-          name="thumbnailImage"
-          control={control}
-          render={({ field }) => (
-            <ProductImageField
-              type={ProductImageType.Thumbnail}
-              {...field}
-              ref={null}
-            />
-          )}
-        />
+        <Field>
+          Thumbnail Image
+          <Controller
+            name="thumbnailImage"
+            control={control}
+            render={({ field }) => (
+              <ProductImageField
+                type={ProductImageType.Thumbnail}
+                {...field}
+                ref={null}
+              />
+            )}
+          />
+        </Field>
 
         <h3 className="mb-4">Product Images</h3>
 

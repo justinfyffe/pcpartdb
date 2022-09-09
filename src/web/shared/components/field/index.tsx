@@ -1,5 +1,13 @@
-import React, { FunctionComponent } from 'react';
+import React, { createContext, FunctionComponent, useState } from 'react';
 import { classNames } from '../../ui/ui.utils';
+
+interface FieldState {
+  fieldId: string;
+}
+
+const FieldContext = createContext<FieldState>({
+  fieldId: '',
+});
 
 interface FieldProps {
   as?: React.ElementType;
@@ -29,15 +37,24 @@ interface FieldErrorProps {
   children?: React.ReactNode;
 }
 
+let fieldCounter = 0;
 export const Field: FunctionComponent<FieldProps> = (props) => {
   const Element = props.as || 'div';
 
+  const [context] = useState(() => ({
+    fieldId: `field-id-${fieldCounter++}`,
+  }));
+
   return (
-    <Element
-      className={classNames('block leading-6 mb-0 pb-6', props.className)}
-    >
-      <label className="block">{props.children}</label>
-    </Element>
+    <FieldContext.Provider value={context}>
+      <Element
+        className={classNames('block leading-6 mb-0 pb-6', props.className)}
+      >
+        <label htmlFor={context.fieldId} className="block leading-6 mb-0 pb-6">
+          {props.children}
+        </label>
+      </Element>
+    </FieldContext.Provider>
   );
 };
 
