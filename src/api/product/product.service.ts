@@ -31,6 +31,7 @@ const productReviewValidator = Joi.object({
 }).options({ abortEarly: false });
 
 const createProductValidator = Joi.object({
+  parentId: Joi.number(),
   slug: Joi.string().required(),
   type: Joi.string().valid(ProductType.CPU, ProductType.GPU),
   name: Joi.string().required(),
@@ -41,6 +42,7 @@ const createProductValidator = Joi.object({
 }).options({ abortEarly: false });
 
 const updateProductValidator = Joi.object({
+  parentId: Joi.number(),
   slug: Joi.string().required(),
   type: Joi.string().valid(ProductType.CPU, ProductType.GPU),
   name: Joi.string().required(),
@@ -79,6 +81,7 @@ export class ProductService {
     return await this.productRepository.save({ ...data }, ctx);
   }
 
+  // TODO: verify that parentId isn't current product
   // TODO: check slug uniqueness
   async update(id: number, data: ProductRequest, ctx: ServiceContext) {
     validate(data, updateProductValidator);
@@ -88,7 +91,10 @@ export class ProductService {
       throw notFoundError({ product: id });
     }
 
-    return await this.productRepository.save({ ...data, id }, ctx);
+    return await this.productRepository.save(
+      { ...data, id, parentId: data.parentId ?? null },
+      ctx,
+    );
   }
 
   async delete(id: number, ctx: ServiceContext) {

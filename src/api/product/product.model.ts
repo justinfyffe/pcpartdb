@@ -85,6 +85,7 @@ export class ProductModel extends Model implements CanDto<Product> {
   toDto(): Product {
     return {
       id: this.id,
+      parentId: this.parentId,
       slug: this.slug,
       type: this.type,
       name: this.name,

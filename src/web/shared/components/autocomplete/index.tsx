@@ -36,7 +36,7 @@ export const Autocomplete: FunctionComponent<AutocompleteProps> = (props) => {
   const {
     className,
     direction,
-    label: initialLabel,
+    label: propsLabel,
     value,
     freeSolo,
     onChange,
@@ -47,7 +47,11 @@ export const Autocomplete: FunctionComponent<AutocompleteProps> = (props) => {
   const [isLoading, setLoading] = useState(false);
   const [options, setOptions] = useState<AutocompleteOption[]>([]);
   const [hoveredIndex, setHoveredIndex] = useState<number>(-1);
-  const [label, setLabel] = useState(initialLabel);
+  const [label, setLabel] = useState(propsLabel);
+
+  useEffect(() => {
+    setLabel(propsLabel);
+  }, [propsLabel]);
 
   useEffect(() => {
     document.addEventListener('click', () => {
@@ -64,9 +68,9 @@ export const Autocomplete: FunctionComponent<AutocompleteProps> = (props) => {
       const value = event.target.value;
       if (freeSolo) {
         onChange(value);
-        setLabel(value);
       }
 
+      setLabel(value);
       setLoading(true);
       setHoveredIndex(-1);
       const options = await onQuery(value);

@@ -1,10 +1,12 @@
 Immediate Tasks:
 - product forms
-  - fix autocomplete
-  - Parent product input
-  - Edit gpu form
-  - code cleanup
-- form autocomplete
+  - test gpu form
+  - delete gpu
+  - cpu form
+- seo
+- launch
+- compare page description
+- builds
 
 Roadmap:
 - MVP

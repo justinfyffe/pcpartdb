@@ -15,13 +15,22 @@ interface ProductAutocompleteProps {
   onChange?: (value: number) => void;
   onProduct?: (product: Product) => void;
 
+  excludeProductId?: number;
+
   ref?: unknown;
 }
 
 export const ProductAutocomplete: FunctionComponent<
   ProductAutocompleteProps
 > = (props) => {
-  const { productType: type, onChange, onProduct, value, ...restProps } = props;
+  const {
+    productType: type,
+    onChange,
+    onProduct,
+    value,
+    excludeProductId,
+    ...restProps
+  } = props;
 
   const [product, setProduct] = useState(null);
 
@@ -29,9 +38,12 @@ export const ProductAutocomplete: FunctionComponent<
     async function fetchProduct() {
       const result = await productService.get(value);
       setProduct(result);
-      onProduct(result);
+      onProduct?.(result);
     }
-    fetchProduct();
+
+    if (value != null && value != 0) {
+      fetchProduct();
+    }
   }, [value, onProduct]);
 
   const handleQuery = useCallback(
@@ -39,24 +51,24 @@ export const ProductAutocomplete: FunctionComponent<
       const results = await productService.autocompleteProduct(query, type);
 
       return results
-        .filter((product) => product != null)
+        .filter((product) => product != null && product.id !== excludeProductId)
         .map((product) => ({ label: product.name, value: `${product.id}` }));
     },
-    [type],
+    [type, excludeProductId],
   );
 
   const handleChange = useCallback(
     (value: string) => {
-      onChange(Number(value));
+      onChange(value ? Number(value) : Number(0));
     },
     [onChange],
   );
 
-  // TODO: how to pass label/value?
+  // TODO: better way to pass label/value?
   return (
     <Autocomplete
-      label={product?.name}
-      value={`${value}`}
+      label={product?.name ?? ''}
+      value={value != null && value != 0 ? `${value}` : ''}
       onQuery={handleQuery}
       onChange={handleChange}
       {...restProps}

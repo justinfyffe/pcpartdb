@@ -77,6 +77,6 @@ export class ProductRepository {
   ) {
     return await ProductModel.query(config?.trx)
       .where('type', type)
-      .andWhere('name', 'ILIKE', query);
+      .andWhere('name', 'ILIKE', `%${query}%`);
   }
 }

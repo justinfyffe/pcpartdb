@@ -47,7 +47,6 @@ export const Select: FunctionComponent<SelectProps> = (props) => {
     value,
     onChange,
     children,
-    ref,
   } = props;
   const options = getOptions(children);
 

@@ -25,6 +25,19 @@ import { ProductService } from './product.service';
 export class ProductController {
   constructor(private service: ProductService) {}
 
+  @Get('autocomplete')
+  @UseGuards(StaffGuard)
+  async autocomplete(
+    @Query('type') type: ProductType,
+    @Query('query') query: string,
+  ) {
+    return normalize(
+      await transaction((trx) =>
+        this.service.autocomplete(type, query ?? '', { trx }),
+      ),
+    ) as ProductsResponse;
+  }
+
   @Get()
   async list() {
     return normalize(
@@ -60,18 +73,5 @@ export class ProductController {
   @UseGuards(StaffGuard)
   async delete(@Param('id') id: number) {
     return await transaction((trx) => this.service.delete(id, { trx }));
-  }
-
-  @Get('autocomplete')
-  @UseGuards(StaffGuard)
-  async autocomplete(
-    @Query('type') type: ProductType,
-    @Query('query') query: string,
-  ) {
-    return normalize(
-      await transaction((trx) =>
-        this.service.autocomplete(type, query ?? '', { trx }),
-      ),
-    ) as ProductsResponse;
   }
 }

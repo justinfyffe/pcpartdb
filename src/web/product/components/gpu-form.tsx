@@ -139,7 +139,7 @@ const reviewValidator = Joi.object({
 }).options({ abortEarly: false });
 
 const productValidator = Joi.object({
-  parentId: Joi.number().optional(),
+  parentId: Joi.number(),
 
   slug: Joi.string().required(),
   type: Joi.string().valid(ProductType.CPU, ProductType.GPU),
@@ -230,7 +230,7 @@ function formOptions(gpu?: Product): UseFormProps<ProductFormData> {
     resolver: joiResolver(productValidator),
     mode: 'onBlur',
     defaultValues: {
-      parentId: undefined,
+      parentId: gpu?.parentId ?? 0,
 
       slug: gpu?.slug ?? '',
       type: ProductType.GPU,
@@ -356,7 +356,10 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
       setSaving(true);
 
       const request: ProductRequest = {
-        parentId: formData.parentId,
+        parentId:
+          formData.parentId != null && formData.parentId != 0
+            ? formData.parentId
+            : undefined,
         slug: formData.slug,
         type: formData.type,
         name: formData.name,
@@ -421,6 +424,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
             render={({ field }) => (
               <ProductAutocomplete
                 productType={ProductType.GPU}
+                excludeProductId={gpu?.id}
                 {...field}
                 ref={null}
               />
