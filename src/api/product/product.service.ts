@@ -35,6 +35,7 @@ const createProductValidator = Joi.object({
   slug: Joi.string().required(),
   type: Joi.string().valid(ProductType.CPU, ProductType.GPU),
   name: Joi.string().required(),
+  // TODO: add validator for unique keys
   meta: Joi.array().items(productMetaValidator),
   specs: Joi.array().items(productSpecValidator),
   benchmarks: Joi.array().items(productBenchmarkValidator),
@@ -46,6 +47,7 @@ const updateProductValidator = Joi.object({
   slug: Joi.string().required(),
   type: Joi.string().valid(ProductType.CPU, ProductType.GPU),
   name: Joi.string().required(),
+  // TODO: add validator for unique keys
   meta: Joi.array().items(productMetaValidator),
   specs: Joi.array().items(productSpecValidator),
   benchmarks: Joi.array().items(productBenchmarkValidator),

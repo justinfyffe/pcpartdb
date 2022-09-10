@@ -7,9 +7,9 @@ export async function up(knex: Knex): Promise<void> {
       table.increments('id');
       table.integer('product_id').notNullable();
 
-      table.string('source');
       table.string('key').notNullable();
       table.string('value');
+      table.string('source');
 
       table.timestamps(true, true);
 

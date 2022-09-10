@@ -12,7 +12,7 @@ import {
 
 interface ReviewValue {
   key: ProductReviewKey;
-  value: number | string;
+  value: string;
   source?: string;
 }
 
@@ -40,7 +40,7 @@ export const ReviewFields: FunctionComponent<ReviewFieldsProps> = (props) => {
   );
 
   return (
-    <div className="flex flex-col w-full">
+    <div className="flex flex-col w-full mb-6">
       {fields.map((benchmark, i) => (
         <ReviewField
           key={benchmark.id}
@@ -81,7 +81,7 @@ const ReviewField: FunctionComponent<ReviewFieldProps> = (props) => {
 
   const handleValueChange = useCallback(
     (evt: React.ChangeEvent<HTMLInputElement>) => {
-      value.value = Number(evt.target.value);
+      value.value = evt.target.value;
       onChange(value);
     },
     [onChange, value],

@@ -10,8 +10,32 @@ export class ProductBenchmarkRepository {
   async save(benchmark: ProductBenchmarkModelPojo, config?: RepositoryConfig) {
     return await ProductBenchmarkModel.query(config?.trx)
       .insert(benchmark)
-      .onConflict(['productId', 'key'])
+      .onConflict(['product_id', 'key'])
       .merge()
       .returning('*');
+  }
+
+  async saveProductBenchmarks(
+    productId: number,
+    benchmarks: ProductBenchmarkModelPojo[],
+    config?: RepositoryConfig,
+  ) {
+    // Save the benchmarks
+    const benchmarksToSave = benchmarks.map((benchmark) => ({
+      ...benchmark,
+      productId,
+    }));
+    await ProductBenchmarkModel.query(config?.trx)
+      .insert(benchmarksToSave)
+      .onConflict(['product_id', 'key'])
+      .merge()
+      .returning('*');
+
+    // Remove benchmarks that weren't in the list
+    const usedKeys = benchmarks.map((benchmark) => benchmark.key!);
+    await ProductBenchmarkModel.query(config?.trx)
+      .where('productId', productId)
+      .whereNotIn('key', usedKeys)
+      .delete();
   }
 }

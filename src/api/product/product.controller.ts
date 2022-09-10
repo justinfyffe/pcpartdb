@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   Param,
-  Patch,
   Post,
   Put,
   Query,
@@ -61,7 +60,6 @@ export class ProductController {
   }
 
   @Put(':id')
-  @Patch(':id')
   @UseGuards(StaffGuard)
   async update(@Param('id') id: number, @Body() body: ProductRequest) {
     return normalize(

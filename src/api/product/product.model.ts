@@ -104,7 +104,7 @@ export class ProductModel extends Model implements CanDto<Product> {
 
 export type ProductModelPojo = Omit<
   PartialModelObject<ProductModel>,
-  'meta' | 'specs' | 'reviews' | 'benchmarks'
+  'parent' | 'meta' | 'specs' | 'reviews' | 'benchmarks'
 > & {
   meta: ProductMetaModelPojo[];
   reviews: ProductReviewModelPojo[];

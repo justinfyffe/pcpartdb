@@ -1,9 +1,6 @@
 import { XIcon } from '@heroicons/react/outline';
 import React, { FunctionComponent, useCallback } from 'react';
-import {
-  ProductBenchmarkKey,
-  ProductBenchmarkValue,
-} from '../../../types/product-benchmark';
+import { ProductBenchmarkKey } from '../../../types/product-benchmark';
 import { Button, ButtonVariant } from '../../shared/components/button';
 import { Field } from '../../shared/components/field';
 import { Input } from '../../shared/components/input';
@@ -15,8 +12,8 @@ import {
 
 export interface BenchmarkValue {
   key: ProductBenchmarkKey;
-  value: ProductBenchmarkValue;
-  source?: string;
+  value: string;
+  source: string;
 }
 
 interface BenchmarkFieldsProps {
@@ -45,7 +42,7 @@ export const BenchmarkFields: FunctionComponent<BenchmarkFieldsProps> = (
   );
 
   return (
-    <div className="flex flex-col w-full">
+    <div className="flex flex-col w-full mb-6">
       {fields.map((benchmark, i) => (
         <BenchmarkField
           key={benchmark.id}
@@ -86,9 +83,7 @@ const BenchmarkField: FunctionComponent<BenchmarkFieldProps> = (props) => {
 
   const handleValueChange = useCallback(
     (evt: React.ChangeEvent<HTMLInputElement>) => {
-      value.value = isNaN(Number(evt.target.value))
-        ? evt.target.value
-        : Number(evt.target.value);
+      value.value = evt.target.value;
       onChange(value);
     },
     [onChange, value],
@@ -106,7 +101,7 @@ const BenchmarkField: FunctionComponent<BenchmarkFieldProps> = (props) => {
     <div className="flex gap-6 items-center">
       <Field className="flex-1">
         Benchmark
-        <Select onChange={handleKeyChange} clearable>
+        <Select value={value.key} onChange={handleKeyChange} clearable>
           <SelectOption label="Passmark" value={ProductBenchmarkKey.Passmark}>
             Passmark
           </SelectOption>
@@ -118,12 +113,12 @@ const BenchmarkField: FunctionComponent<BenchmarkFieldProps> = (props) => {
 
       <Field className="flex-1">
         Value
-        <Input onChange={handleValueChange} />
+        <Input value={value.value} onChange={handleValueChange} ref={null} />
       </Field>
 
       <Field className="flex-1">
         Source
-        <Input onChange={handleSourceChange} />
+        <Input value={value.source} onChange={handleSourceChange} ref={null} />
       </Field>
 
       <Button

@@ -37,9 +37,11 @@ export class ProductRepository {
       await this.specRepository.save({ ...value, productId: id }, config);
     }
 
-    for (const value of benchmarks) {
-      await this.benchmarkRepository.save({ ...value, productId: id }, config);
-    }
+    await this.benchmarkRepository.saveProductBenchmarks(
+      id,
+      benchmarks,
+      config,
+    );
 
     for (const value of reviews) {
       await this.reviewRepository.save({ ...value, productId: id }, config);

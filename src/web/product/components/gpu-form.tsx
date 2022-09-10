@@ -127,12 +127,16 @@ interface ProductFormData {
 }
 
 const benchmarkValidator = Joi.object({
+  id: Joi.any(),
+  productId: Joi.any(),
   key: Joi.string().required(),
   value: Joi.string().allow(''),
   source: Joi.string().allow(''),
 }).options({ abortEarly: false });
 
 const reviewValidator = Joi.object({
+  id: Joi.any(),
+  productId: Joi.any(),
   key: Joi.string().required(),
   value: Joi.string().allow(''),
   source: Joi.string().allow(''),
@@ -211,9 +215,10 @@ const productValidator = Joi.object({
   cudaVersion: Joi.string().allow(''),
   shaderModelVersion: Joi.string().allow(''),
   gSyncFreeSyncSupport: Joi.string().allow(''),
-  sliCrossfireSupport: Joi.boolean().allow(''),
-  vrReady: Joi.boolean().allow(''),
+  sliCrossfireSupport: Joi.string().allow(''),
+  vrReady: Joi.string().allow(''),
 
+  // TODO: add validator for unique keys
   benchmarks: Joi.array().items(benchmarkValidator),
   reviews: Joi.array().items(reviewValidator),
 }).options({ abortEarly: false });
@@ -1361,7 +1366,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           render={({ field }) => (
             <BenchmarkFields
               fields={benchmarkFields}
-              onAppend={() => appendBenchmark({})}
+              onAppend={() => appendBenchmark({ value: '', source: '' })}
               onRemove={(i) => removeBenchmark(i)}
               {...field}
               ref={null}
@@ -1379,7 +1384,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           render={({ field }) => (
             <ReviewFields
               fields={reviewFields}
-              onAppend={() => appendReview({})}
+              onAppend={() => appendReview({ value: '', source: '' })}
               onRemove={(i) => removeReview(i)}
               {...field}
               ref={null}
@@ -1513,28 +1518,52 @@ function toSpecsArray(formData: ProductFormData): ProductSpec[] {
     },
     {
       key: ProductSpecKey.GSyncFreeSyncSupport,
-      value: formData.gSyncFreeSyncSupport ? 'true' : 'false',
+      value: formData.gSyncFreeSyncSupport,
     },
     {
       key: ProductSpecKey.SliCrossfireSupport,
-      value: formData.sliCrossfireSupport ? 'true' : 'false',
+      value: formData.sliCrossfireSupport,
     },
-    { key: ProductSpecKey.VrReady, value: formData.vrReady ? 'true' : 'false' },
+    { key: ProductSpecKey.VrReady, value: formData.vrReady },
   ];
 }
 
 function toFormBenchmarks(gpu?: Product) {
-  return gpu?.benchmarks?.map((benchmark) => ({ ...benchmark })) ?? [];
+  return (
+    gpu?.benchmarks?.map((benchmark) => ({
+      ...benchmark,
+      id: undefined,
+      productId: undefined,
+    })) ?? []
+  );
 }
 
 function toRequestBenchmarks(formData: ProductFormData): ProductBenchmark[] {
-  return formData.benchmarks?.map((benchmark) => benchmark) ?? [];
+  return (
+    formData.benchmarks?.map((benchmark) => ({
+      ...benchmark,
+      id: undefined,
+      productId: undefined,
+    })) ?? []
+  );
 }
 
 function toFormReviews(gpu?: Product): ProductReview[] {
-  return gpu?.reviews?.map((review) => ({ ...review })) ?? [];
+  return (
+    gpu?.reviews?.map((review) => ({
+      ...review,
+      id: undefined,
+      productId: undefined,
+    })) ?? []
+  );
 }
 
 function toRequestReviews(formData: ProductFormData): ProductReview[] {
-  return formData.reviews?.map((review) => review) ?? [];
+  return (
+    formData.reviews?.map((review) => ({
+      ...review,
+      id: undefined,
+      productId: undefined,
+    })) ?? []
+  );
 }

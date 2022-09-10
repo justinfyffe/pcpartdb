@@ -1,8 +1,8 @@
 Immediate Tasks:
 - product forms
   - test gpu form
-  - delete gpu
   - cpu form
+  - images (new db table)
 - seo
 - launch
 - compare page description

@@ -21,7 +21,7 @@ export async function up(knex: Knex): Promise<void> {
       .foreign('parent_id')
       .references('id')
       .inTable('products')
-      .onDelete('cascade');
+      .onDelete('SET NULL');
   });
 
   await knex.raw(`

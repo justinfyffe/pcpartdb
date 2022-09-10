@@ -3,7 +3,6 @@ import {
   ProductBenchmark,
   ProductBenchmarkKey,
   productBenchmarkSchema,
-  ProductBenchmarkValue,
 } from '../../../types/product-benchmark';
 import { CanDto } from '../../shared/types/normalize';
 
@@ -19,7 +18,7 @@ export class ProductBenchmarkModel
 
   source?: string;
   key!: ProductBenchmarkKey;
-  value?: ProductBenchmarkValue;
+  value?: string;
 
   toDto(): ProductBenchmark {
     return {

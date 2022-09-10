@@ -5,14 +5,12 @@ export enum ProductBenchmarkKey {
   TimeSpy = '3DMARK_TIME_SPY',
 }
 
-export type ProductBenchmarkValue = string | number;
-
 export interface ProductBenchmark {
   id?: number;
   productId?: number;
 
   key: ProductBenchmarkKey;
-  value: ProductBenchmarkValue;
+  value: string;
   source?: string;
 }
 
