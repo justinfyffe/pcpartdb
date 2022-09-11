@@ -46,5 +46,5 @@ export const ProductPropertyAutocomplete: FunctionComponent<
     [type, field],
   );
 
-  return <Autocomplete onQuery={handleQuery} {...restProps} />;
+  return <Autocomplete freeSolo onQuery={handleQuery} {...restProps} />;
 };

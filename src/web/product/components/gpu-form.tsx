@@ -269,6 +269,7 @@ function formOptions(gpu?: Product): UseFormProps<ProductFormData> {
       tdp: specs.get(ProductSpecKey.Tdp)?.value ?? '',
       suggestedPsu: specs.get(ProductSpecKey.SuggestedPsu)?.value ?? '',
       powerConnectors: specs.get(ProductSpecKey.PowerConnectors)?.value ?? '',
+      boardNumber: specs.get(ProductSpecKey.BoardNumber)?.value ?? '',
 
       // Cores & Clock Speeds
       cudaCores: specs.get(ProductSpecKey.CudaCores)?.value ?? '',
@@ -1478,6 +1479,7 @@ function toSpecsArray(formData: ProductFormData): ProductSpec[] {
     { key: ProductSpecKey.BusInterface, value: formData.busInterface },
     { key: ProductSpecKey.Tdp, value: formData.tdp },
     { key: ProductSpecKey.SuggestedPsu, value: formData.suggestedPsu },
+    { key: ProductSpecKey.PowerConnectors, value: formData.powerConnectors },
     { key: ProductSpecKey.BoardNumber, value: formData.boardNumber },
 
     // Cores & Clock Speeds

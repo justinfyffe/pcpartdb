@@ -78,8 +78,7 @@ export const ProductPropertyField: FunctionComponent<
 
   const handleAutocompleteChange = useCallback(
     (value: string) => {
-      const newValue = suffix != null ? `${value} ${suffix}` : value;
-      onChange(newValue);
+      onChange(getPropertyValue(value, suffix));
     },
     [suffix, onChange],
   );
@@ -87,7 +86,6 @@ export const ProductPropertyField: FunctionComponent<
   const handleInputChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
       const value = event.target.value;
-
       onChange(getPropertyValue(value, suffix));
     },
     [suffix, onChange],

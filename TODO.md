@@ -1,8 +1,11 @@
 Immediate Tasks:
 - product forms
-  - test gpu form
-  - cpu form
   - images (new db table)
+  - cpu form
+  - pre-fill data (from parent product)
+  - pre-fill data (from external source)
+- home page
+  - comparison form
 - seo
 - launch
 - compare page description

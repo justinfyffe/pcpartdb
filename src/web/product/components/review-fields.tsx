@@ -99,7 +99,7 @@ const ReviewField: FunctionComponent<ReviewFieldProps> = (props) => {
     <div className="flex gap-6 items-center">
       <Field className="flex-1">
         Review
-        <Select onChange={handleKeyChange} clearable>
+        <Select value={value.key} onChange={handleKeyChange} clearable>
           <SelectOption
             label="Tom's Hardware"
             value={ProductReviewKey.TomsHardware}
@@ -111,12 +111,12 @@ const ReviewField: FunctionComponent<ReviewFieldProps> = (props) => {
 
       <Field className="flex-1">
         Rating
-        <Input onChange={handleValueChange} />
+        <Input value={value.value} onChange={handleValueChange} ref={null} />
       </Field>
 
       <Field className="flex-1">
         Source
-        <Input onChange={handleSourceChange} />
+        <Input value={value.source} onChange={handleSourceChange} ref={null} />
       </Field>
 
       <Button
