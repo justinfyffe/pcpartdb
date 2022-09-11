@@ -10,7 +10,7 @@ import { ProductSpecRepository } from './spec/product-spec.repository';
 @Injectable()
 export class ProductRepository {
   constructor(
-    private metaRepoistory: ProductMetaRepository,
+    private metaRepository: ProductMetaRepository,
     private specRepository: ProductSpecRepository,
     private benchmarkRepository: ProductBenchmarkRepository,
     private reviewRepository: ProductReviewRepository,
@@ -29,14 +29,8 @@ export class ProductRepository {
       .merge()
       .returning('*');
 
-    for (const value of meta) {
-      await this.metaRepoistory.save({ ...value, productId: id }, config);
-    }
-
-    for (const value of specs) {
-      await this.specRepository.save({ ...value, productId: id }, config);
-    }
-
+    await this.metaRepository.saveMultiple(id, meta, config);
+    await this.specRepository.saveMultiple(id, specs, config);
     await this.benchmarkRepository.saveMultiple(id, benchmarks, config);
     await this.reviewRepository.saveMultiple(id, reviews, config);
 

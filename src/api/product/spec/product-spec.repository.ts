@@ -5,7 +5,7 @@ import { ProductSpecModel, ProductSpecModelPojo } from './product-spec.model';
 
 @Injectable()
 export class ProductSpecRepository {
-  async save(spec: ProductSpecModelPojo, config?: RepositoryConfig) {
+  async saveOne(spec: ProductSpecModelPojo, config?: RepositoryConfig) {
     return await ProductSpecModel.query(config?.trx)
       .insert(spec)
       .onConflict(['productId', 'key'])
@@ -20,14 +20,15 @@ export class ProductSpecRepository {
   ) {
     // Save the specs
     const specsToSave = specs.map((spec) => ({ ...spec, productId }));
-    await ProductSpecModel.query(config?.trx)
-      .insert(specsToSave)
-      .onConflict(['product_id', 'key'])
-      .merge()
-      .returning('*');
+    if (specsToSave.length > 0) {
+      await ProductSpecModel.query(config?.trx)
+        .insert(specsToSave)
+        .onConflict(['product_id', 'key'])
+        .merge()
+        .returning('*');
+    }
 
     // Remove specs that weren't in the list
-
     const usedKeys = specsToSave.map((review) => review.key!);
     await ProductSpecModel.query(config?.trx)
       .where('productId', productId)

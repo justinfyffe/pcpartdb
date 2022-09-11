@@ -1431,12 +1431,13 @@ function getMetaMap(gpu?: Product) {
 }
 
 function toMetaArray(formData: ProductFormData): ProductMeta[] {
-  return [
+  const metas = [
     {
       key: ProductMetaKey.Description,
       value: formData.description,
     },
   ];
+  return metas.filter((meta) => meta.value != null && meta.value !== '');
 }
 
 function getSpecsMap(gpu?: Product) {
@@ -1450,7 +1451,7 @@ function getSpecsMap(gpu?: Product) {
 }
 
 function toSpecsArray(formData: ProductFormData): ProductSpec[] {
-  return [
+  const specs = [
     // General
     { key: ProductSpecKey.Company, value: formData.company },
     { key: ProductSpecKey.Generation, value: formData.generation },
@@ -1526,6 +1527,8 @@ function toSpecsArray(formData: ProductFormData): ProductSpec[] {
     },
     { key: ProductSpecKey.VrReady, value: formData.vrReady },
   ];
+
+  return specs.filter((spec) => spec.value != null && spec.value !== '');
 }
 
 function toFormBenchmarks(gpu?: Product) {

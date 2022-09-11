@@ -7,7 +7,10 @@ import {
 
 @Injectable()
 export class ProductBenchmarkRepository {
-  async save(benchmark: ProductBenchmarkModelPojo, config?: RepositoryConfig) {
+  async saveOne(
+    benchmark: ProductBenchmarkModelPojo,
+    config?: RepositoryConfig,
+  ) {
     return await ProductBenchmarkModel.query(config?.trx)
       .insert(benchmark)
       .onConflict(['product_id', 'key'])
@@ -25,14 +28,15 @@ export class ProductBenchmarkRepository {
       ...benchmark,
       productId,
     }));
-    await ProductBenchmarkModel.query(config?.trx)
-      .insert(benchmarksToSave)
-      .onConflict(['product_id', 'key'])
-      .merge()
-      .returning('*');
+    if (benchmarksToSave.length > 0) {
+      await ProductBenchmarkModel.query(config?.trx)
+        .insert(benchmarksToSave)
+        .onConflict(['product_id', 'key'])
+        .merge()
+        .returning('*');
+    }
 
     // Remove benchmarks that weren't in the list
-
     const usedKeys = benchmarksToSave.map((benchmark) => benchmark.key!);
     await ProductBenchmarkModel.query(config?.trx)
       .where('productId', productId)

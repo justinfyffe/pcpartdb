@@ -5,7 +5,7 @@ import { ProductMetaModel, ProductMetaModelPojo } from './product-meta.model';
 
 @Injectable()
 export class ProductMetaRepository {
-  async save(meta: ProductMetaModelPojo, config?: RepositoryConfig) {
+  async saveOne(meta: ProductMetaModelPojo, config?: RepositoryConfig) {
     return await ProductMetaModel.query(config?.trx)
       .insert(meta)
       .onConflict(['productId', 'key'])
@@ -20,14 +20,15 @@ export class ProductMetaRepository {
   ) {
     // Save the metas
     const metasToSave = metas.map((meta) => ({ ...meta, productId }));
-    await ProductMetaModel.query(config?.trx)
-      .insert(metasToSave)
-      .onConflict(['product_id', 'key'])
-      .merge()
-      .returning('*');
+    if (metasToSave.length > 0) {
+      await ProductMetaModel.query(config?.trx)
+        .insert(metasToSave)
+        .onConflict(['product_id', 'key'])
+        .merge()
+        .returning('*');
+    }
 
     // Remove metas that weren't in the list
-
     const usedKeys = metasToSave.map((meta) => meta.key!);
     await ProductMetaModel.query(config?.trx)
       .where('productId', productId)

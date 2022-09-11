@@ -7,7 +7,7 @@ import {
 
 @Injectable()
 export class ProductReviewRepository {
-  async save(review: ProductReviewModelPojo, config?: RepositoryConfig) {
+  async saveOne(review: ProductReviewModelPojo, config?: RepositoryConfig) {
     return await ProductReviewModel.query(config?.trx)
       .insert(review)
       .onConflict(['productId', 'key'])
@@ -22,11 +22,13 @@ export class ProductReviewRepository {
   ) {
     // Save the reviews
     const reviewsToSave = reviews.map((review) => ({ ...review, productId }));
-    await ProductReviewModel.query(config?.trx)
-      .insert(reviewsToSave)
-      .onConflict(['product_id', 'key'])
-      .merge()
-      .returning('*');
+    if (reviewsToSave.length > 0) {
+      await ProductReviewModel.query(config?.trx)
+        .insert(reviewsToSave)
+        .onConflict(['product_id', 'key'])
+        .merge()
+        .returning('*');
+    }
 
     // Remove reviews that weren't in the list
 
