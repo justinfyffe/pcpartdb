@@ -37,15 +37,8 @@ export class ProductRepository {
       await this.specRepository.save({ ...value, productId: id }, config);
     }
 
-    await this.benchmarkRepository.saveProductBenchmarks(
-      id,
-      benchmarks,
-      config,
-    );
-
-    for (const value of reviews) {
-      await this.reviewRepository.save({ ...value, productId: id }, config);
-    }
+    await this.benchmarkRepository.saveMultiple(id, benchmarks, config);
+    await this.reviewRepository.saveMultiple(id, reviews, config);
 
     return this.findById(id, config);
   }

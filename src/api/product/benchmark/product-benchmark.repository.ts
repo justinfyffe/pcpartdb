@@ -15,7 +15,7 @@ export class ProductBenchmarkRepository {
       .returning('*');
   }
 
-  async saveProductBenchmarks(
+  async saveMultiple(
     productId: number,
     benchmarks: ProductBenchmarkModelPojo[],
     config?: RepositoryConfig,
@@ -32,7 +32,8 @@ export class ProductBenchmarkRepository {
       .returning('*');
 
     // Remove benchmarks that weren't in the list
-    const usedKeys = benchmarks.map((benchmark) => benchmark.key!);
+
+    const usedKeys = benchmarksToSave.map((benchmark) => benchmark.key!);
     await ProductBenchmarkModel.query(config?.trx)
       .where('productId', productId)
       .whereNotIn('key', usedKeys)

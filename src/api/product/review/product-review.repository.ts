@@ -14,4 +14,26 @@ export class ProductReviewRepository {
       .merge()
       .returning('*');
   }
+
+  async saveMultiple(
+    productId: number,
+    reviews: ProductReviewModelPojo[],
+    config?: RepositoryConfig,
+  ) {
+    // Save the reviews
+    const reviewsToSave = reviews.map((review) => ({ ...review, productId }));
+    await ProductReviewModel.query(config?.trx)
+      .insert(reviewsToSave)
+      .onConflict(['product_id', 'key'])
+      .merge()
+      .returning('*');
+
+    // Remove reviews that weren't in the list
+
+    const usedKeys = reviewsToSave.map((review) => review.key!);
+    await ProductReviewModel.query(config?.trx)
+      .where('productId', productId)
+      .whereNotIn('key', usedKeys)
+      .delete();
+  }
 }

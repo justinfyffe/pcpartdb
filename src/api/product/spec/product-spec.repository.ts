@@ -13,6 +13,28 @@ export class ProductSpecRepository {
       .returning('*');
   }
 
+  async saveMultiple(
+    productId: number,
+    specs: ProductSpecModelPojo[],
+    config?: RepositoryConfig,
+  ) {
+    // Save the specs
+    const specsToSave = specs.map((spec) => ({ ...spec, productId }));
+    await ProductSpecModel.query(config?.trx)
+      .insert(specsToSave)
+      .onConflict(['product_id', 'key'])
+      .merge()
+      .returning('*');
+
+    // Remove specs that weren't in the list
+
+    const usedKeys = specsToSave.map((review) => review.key!);
+    await ProductSpecModel.query(config?.trx)
+      .where('productId', productId)
+      .whereNotIn('key', usedKeys)
+      .delete();
+  }
+
   async findSimilarValue(
     key: ProductSpecKey,
     value: string,
