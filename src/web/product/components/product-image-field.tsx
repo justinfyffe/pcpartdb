@@ -13,6 +13,8 @@ interface ProductImageFieldProps {
   value: ProductImageValue;
 
   onChange: (value: ProductImageValue) => void;
+
+  ref?: unknown;
 }
 
 export const ProductImageField: FunctionComponent<ProductImageFieldProps> = (

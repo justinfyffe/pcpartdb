@@ -4,13 +4,15 @@ export async function up(knex: Knex): Promise<void> {
   await knex.schema.createTable(
     'product_images',
     (table: Knex.TableBuilder) => {
+      table.increments('id');
+
+      table.string('type').notNullable();
       table.integer('product_id').notNullable();
       table.integer('image_id').notNullable();
-      table.string('type').notNullable();
 
       table.timestamps(true, true);
 
-      table.primary(['product_id', 'image_id']);
+      table.unique(['type', 'product_id', 'image_id']);
 
       table
         .foreign('product_id')

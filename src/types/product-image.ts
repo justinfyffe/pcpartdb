@@ -8,9 +8,11 @@ export enum ProductImageType {
 }
 
 export interface ProductImage {
+  id?: number;
+
+  type: ProductImageType;
   productId?: number;
   imageId: number;
-  type: ProductImageType;
 
   image?: Image;
 }

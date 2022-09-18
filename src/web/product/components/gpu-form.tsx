@@ -45,6 +45,7 @@ import {
 import { productService } from '../product.service';
 import { BenchmarksField } from './benchmarks-field';
 import { ProductAutocomplete } from './product-autocomplete';
+import { ProductImageField } from './product-image-field';
 import { ProductImagesField } from './product-images-field';
 import { ProductPropertyField } from './product-property-field';
 import { ReviewsField } from './reviews-field';
@@ -141,7 +142,10 @@ interface ProductFormData {
 
   reviews?: ProductReviewFormData[];
   benchmarks?: ProductBenchmarkFormData[];
-  images?: ProductImageFormData[];
+
+  autocompleteImage?: ProductImageFormData;
+  thumbnailImage?: ProductImageFormData;
+  detailsImages?: ProductImageFormData[];
 }
 
 const benchmarkValidator = Joi.object({
@@ -245,7 +249,10 @@ const productValidator = Joi.object({
   // TODO: add validator for unique keys
   benchmarks: Joi.array().items(benchmarkValidator),
   reviews: Joi.array().items(reviewValidator),
-  images: Joi.array().items(imageValidator),
+
+  autocompleteImage: imageValidator,
+  thumbnailImage: imageValidator,
+  detailsImages: Joi.array().items(imageValidator),
 }).options({ abortEarly: false });
 
 interface GpuFormProps {
@@ -255,6 +262,8 @@ interface GpuFormProps {
 function formOptions(gpu?: Product): UseFormProps<ProductFormData> {
   const meta = getMetaMap(gpu);
   const specs = getSpecsMap(gpu);
+  const { autocompleteImage, thumbnailImage, detailsImages } =
+    getFormImages(gpu);
 
   return {
     resolver: joiResolver(productValidator),
@@ -342,7 +351,10 @@ function formOptions(gpu?: Product): UseFormProps<ProductFormData> {
 
       benchmarks: toFormBenchmarks(gpu),
       reviews: toFormReviews(gpu),
-      images: toFormImages(gpu),
+
+      autocompleteImage,
+      thumbnailImage,
+      detailsImages,
     },
   };
 }
@@ -384,12 +396,12 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
   });
 
   const {
-    fields: imageFields,
+    fields: detailsImagesFields,
     append: appendImage,
     remove: removeImage,
   } = useFieldArray({
     control,
-    name: 'images',
+    name: 'detailsImages',
   });
 
   const handleSave = useCallback(
@@ -1434,11 +1446,37 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
         <h2 className="mb-4">Images</h2>
 
         <Controller
-          name="images"
+          name="autocompleteImage"
+          control={control}
+          render={({ field }) => (
+            <ProductImageField
+              type={ProductImageType.Autocomplete}
+              {...field}
+              ref={null}
+            />
+          )}
+        />
+
+        <Controller
+          name="thumbnailImage"
+          control={control}
+          render={({ field }) => (
+            <ProductImageField
+              type={ProductImageType.Thumbnail}
+              {...field}
+              ref={null}
+            />
+          )}
+        />
+
+        <h3 className="mb-4">Product Images</h3>
+
+        <Controller
+          name="detailsImages"
           control={control}
           render={({ field }) => (
             <ProductImagesField
-              fields={imageFields}
+              fields={detailsImagesFields}
               type={ProductImageType.Details}
               onAppend={() => appendImage({ type: null, image: null })}
               {...field}
@@ -1627,20 +1665,55 @@ function toRequestReviews(formData: ProductFormData): ProductReview[] {
   );
 }
 
-function toFormImages(gpu?: Product): ProductImageFormData[] {
-  return (
-    gpu?.images?.map((value) => ({
-      image: value.image,
-      type: value.type,
-    })) ?? []
-  );
+function getFormImages(gpu?: Product) {
+  let autocompleteImage: ProductImageFormData = {
+    type: ProductImageType.Autocomplete,
+    image: null,
+  };
+  let thumbnailImage: ProductImageFormData = {
+    type: ProductImageType.Thumbnail,
+    image: null,
+  };
+  const detailsImages: ProductImageFormData[] = [];
+
+  gpu?.images?.forEach((value) => {
+    if (value.type === ProductImageType.Autocomplete) {
+      autocompleteImage = { type: value.type, image: value.image };
+    } else if (value.type === ProductImageType.Thumbnail) {
+      thumbnailImage = { type: value.type, image: value.image };
+    } else {
+      detailsImages.push({ type: value.type, image: value.image });
+    }
+  });
+
+  return { autocompleteImage, thumbnailImage, detailsImages };
 }
 
 function toRequestImages(formData: ProductFormData): ProductImage[] {
-  return (
-    formData.images?.map((value) => ({
-      imageId: value.image.id,
-      type: value.type,
-    })) ?? []
-  );
+  const images: ProductImage[] = [];
+
+  if (formData.autocompleteImage) {
+    images.push({
+      type: formData.autocompleteImage.type,
+      imageId: formData.autocompleteImage.image.id,
+    });
+  }
+
+  if (formData.thumbnailImage) {
+    images.push({
+      type: formData.thumbnailImage.type,
+      imageId: formData.thumbnailImage.image.id,
+    });
+  }
+
+  if (formData.detailsImages) {
+    images.push(
+      ...formData.detailsImages.map((value) => ({
+        type: value.type,
+        imageId: value.image.id,
+      })),
+    );
+  }
+
+  return images;
 }

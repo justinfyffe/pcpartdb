@@ -47,7 +47,7 @@ export class ProductRepository {
       .withGraphFetched('specs')
       .withGraphFetched('reviews')
       .withGraphFetched('benchmarks')
-      .withGraphFetched('images');
+      .withGraphFetched('images.[image]');
   }
 
   async findBySlug(slug: string, config?: RepositoryConfig) {
@@ -57,7 +57,7 @@ export class ProductRepository {
       .withGraphFetched('specs')
       .withGraphFetched('reviews')
       .withGraphFetched('benchmarks')
-      .withGraphFetched('images');
+      .withGraphFetched('images.[image]');
   }
 
   async delete(id: number, config?: RepositoryConfig) {
