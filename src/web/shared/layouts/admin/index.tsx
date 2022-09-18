@@ -60,6 +60,24 @@ export const AdminLayout: FunctionComponent<AdminLayoutProps> = (props) => {
               <Button variant={ButtonVariant.Default} href="/admin/users">
                 Users
               </Button>
+              <Button variant={ButtonVariant.Default} href="#">
+                Products
+              </Button>
+              <Button variant={ButtonVariant.Default} href="#">
+                Comparisons
+              </Button>
+              <Button variant={ButtonVariant.Default} href="#">
+                Articles
+              </Button>
+              <Button variant={ButtonVariant.Default} href="#">
+                Monetization
+              </Button>
+              <Button variant={ButtonVariant.Default} href="#">
+                SEO
+              </Button>
+              <Button variant={ButtonVariant.Default} href="#">
+                Accounts
+              </Button>
             </nav>
           </aside>
           {props.children}

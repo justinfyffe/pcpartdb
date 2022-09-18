@@ -22,13 +22,15 @@ export const ProductImageField: FunctionComponent<ProductImageFieldProps> = (
 
   const handleChange = useCallback(
     (image: Image) => {
-      onChange({ type, image });
+      value.type = type;
+      value.image = image;
+      onChange(value);
     },
-    [onChange, type],
+    [onChange, type, value],
   );
 
   return (
-    <div>
+    <div className="mb-6">
       <ImageInput
         value={value.image}
         recommendedHeight={300}

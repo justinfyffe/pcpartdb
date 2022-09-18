@@ -18,14 +18,14 @@ interface ProductImagesFieldProps {
 export const ProductImagesField: FunctionComponent<ProductImagesFieldProps> = (
   props,
 ) => {
-  const { fields, type, value: values, onAppend, onChange } = props;
+  const { fields, type, value, onAppend, onChange } = props;
 
   const handleImageChange = useCallback(
-    (i: number, value: ProductImageValue) => {
-      values[i] = value;
-      onChange(values);
+    (i: number, productImage: ProductImageValue) => {
+      value[i] = productImage;
+      onChange(value);
     },
-    [onChange, values],
+    [onChange, value],
   );
 
   return (

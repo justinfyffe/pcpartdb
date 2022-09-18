@@ -50,7 +50,7 @@ const SelectedImageInput = (
 
   return (
     <div className="items-start flex flex-wrap h-full justify-center p-4">
-      <Img src={value} />
+      <Img src={value} className="max-h-[250px] max-w-[calc(100%_+_32px)]" />
       <div className="mx-4">
         <div className="font-medium">{value.name}</div>
         <div className="text-[#aaa] text-[12px] my-1">
