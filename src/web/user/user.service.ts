@@ -2,6 +2,7 @@ import { denormalize } from 'normalizr';
 import {
   RequestPasswordResetRequest,
   ResetPasswordRequest,
+  User,
   UserRequest,
   UserResponse,
   userSchema,
@@ -14,22 +15,22 @@ const PATH = 'users';
 export class UserService {
   constructor(private api: ApiClient) {}
 
-  async list() {
+  async list(): Promise<User[]> {
     const response = await this.api.get<UsersResponse>(PATH);
     return denormalize(response.result, [userSchema], response.entities);
   }
 
-  async get(id: number) {
+  async get(id: number): Promise<User> {
     const response = await this.api.get<UserResponse>(`${PATH}/${id}`);
     return denormalize(response.result, userSchema, response.entities);
   }
 
-  async create(data: UserRequest) {
+  async create(data: UserRequest): Promise<User> {
     const response = await this.api.post<UserResponse>(PATH, data);
     return denormalize(response.result, userSchema, response.entities);
   }
 
-  async update(id: number, data: UserRequest) {
+  async update(id: number, data: UserRequest): Promise<User> {
     const response = await this.api.put<UserResponse>(`${PATH}/${id}`, data);
     return denormalize(response.result, userSchema, response.entities);
   }

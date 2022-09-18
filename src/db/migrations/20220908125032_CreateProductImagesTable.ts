@@ -6,8 +6,7 @@ export async function up(knex: Knex): Promise<void> {
     (table: Knex.TableBuilder) => {
       table.integer('product_id').notNullable();
       table.integer('image_id').notNullable();
-
-      table.jsonb('metadata');
+      table.string('type').notNullable();
 
       table.timestamps(true, true);
 

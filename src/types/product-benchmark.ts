@@ -14,4 +14,10 @@ export interface ProductBenchmark {
   source?: string;
 }
 
+export interface ProductBenchmarkRequest {
+  key: ProductBenchmarkKey;
+  value: string;
+  source?: string;
+}
+
 export const productBenchmarkSchema = new schema.Entity('productBenchmarks');

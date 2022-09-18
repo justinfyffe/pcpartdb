@@ -1,5 +1,6 @@
 import { denormalize } from 'normalizr';
 import {
+  Image,
   ImageRequest,
   ImageResponse,
   imageSchema,
@@ -12,17 +13,17 @@ const PATH = 'images';
 export class ImageService {
   constructor(private api: ApiClient) {}
 
-  async list() {
+  async list(): Promise<Image[]> {
     const response = await this.api.get<ImagesResponse>(PATH);
-    return denormalize(response.result, [imageSchema], response.entities);
+    return denormalize(response.result, [imageSchema], response.entities) ?? [];
   }
 
-  async get(id: number) {
+  async get(id: number): Promise<Image> {
     const response = await this.api.get<ImageResponse>(`${PATH}/${id}`);
     return denormalize(response.result, imageSchema, response.entities);
   }
 
-  async create(formData: ImageRequest) {
+  async create(formData: ImageRequest): Promise<Image> {
     const data = new FormData();
     data.append('formData', JSON.stringify(formData));
     data.append('file', formData.file);
@@ -34,7 +35,7 @@ export class ImageService {
     return denormalize(response.result, imageSchema, response.entities);
   }
 
-  async update(id: number, formData: ImageRequest) {
+  async update(id: number, formData: ImageRequest): Promise<Image> {
     const data = new FormData();
     data.append('formData', JSON.stringify(formData));
     if (formData.file) {

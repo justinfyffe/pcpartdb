@@ -16,7 +16,7 @@ export interface BenchmarkValue {
   source: string;
 }
 
-interface BenchmarkFieldsProps {
+interface BenchmarksFieldProps {
   name: string;
   value: BenchmarkValue[];
   fields: (BenchmarkValue & { id: string })[];
@@ -28,7 +28,7 @@ interface BenchmarkFieldsProps {
   ref?: unknown;
 }
 
-export const BenchmarkFields: FunctionComponent<BenchmarkFieldsProps> = (
+export const BenchmarksField: FunctionComponent<BenchmarksFieldProps> = (
   props,
 ) => {
   const { fields, value, onAppend, onChange, onRemove } = props;

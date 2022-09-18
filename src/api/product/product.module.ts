@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ProductBenchmarkRepository } from './benchmark/product-benchmark.repository';
+import { ProductImageRepository } from './image/product-image.repository';
 import { ProductMetaController } from './meta/product-meta.controller';
 import { ProductMetaRepository } from './meta/product-meta.repository';
 import { ProductMetaService } from './meta/product-meta.service';
@@ -22,6 +23,7 @@ import { ProductSpecService } from './spec/product-spec.service';
     ProductMetaService,
     ProductSpecService,
     ProductRepository,
+    ProductImageRepository,
     ProductMetaRepository,
     ProductSpecRepository,
     ProductBenchmarkRepository,

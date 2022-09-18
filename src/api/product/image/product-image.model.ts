@@ -1,5 +1,10 @@
 import { Model, PartialModelObject } from 'objection';
-import { ProductImage, productImageSchema } from '../../../types/product-image';
+import {
+  ProductImage,
+  productImageSchema,
+  ProductImageType,
+} from '../../../types/product-image';
+import { ImageModel } from '../../images/image.model';
 import { CanDto } from '../../shared/types/normalize';
 
 export class ProductImageModel extends Model implements CanDto<ProductImage> {
@@ -8,14 +13,29 @@ export class ProductImageModel extends Model implements CanDto<ProductImage> {
   // Fields
   productId!: number;
   imageId!: number;
+  type!: ProductImageType;
 
-  metadata?: unknown;
+  // Relations
+  image?: ImageModel;
+
+  static relationMappings = {
+    image: {
+      relation: Model.BelongsToOneRelation,
+      modelClass: ImageModel,
+      join: {
+        from: 'productImages.imageId',
+        to: 'images.id',
+      },
+    },
+  };
 
   toDto(): ProductImage {
     return {
       productId: this.productId,
       imageId: this.imageId,
-      metadata: this.metadata,
+      type: this.type,
+
+      image: this.image?.toDto(),
     };
   }
 

@@ -12,9 +12,15 @@ export interface ProductMeta {
   id?: number;
   productId?: number;
 
-  source?: string;
   key: ProductMetaKey;
-  value?: string;
+  value: string;
+  source?: string;
+}
+
+export interface ProductMetaRequest {
+  key: ProductMetaKey;
+  value: string;
+  source?: string;
 }
 
 interface ProductMetaEntities {

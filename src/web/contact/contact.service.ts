@@ -7,7 +7,7 @@ export class ContactService {
   constructor(private api: ApiClient) {}
 
   async send(data: ContactRequest) {
-    return await this.api.post(PATH, data);
+    await this.api.post(PATH, data);
   }
 }
 

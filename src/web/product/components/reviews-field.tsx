@@ -13,10 +13,10 @@ import {
 interface ReviewValue {
   key: ProductReviewKey;
   value: string;
-  source?: string;
+  source: string;
 }
 
-interface ReviewFieldsProps {
+interface ReviewsFieldProps {
   name: string;
   value: ReviewValue[];
   fields: (ReviewValue & { id: string })[];
@@ -28,7 +28,7 @@ interface ReviewFieldsProps {
   ref?: unknown;
 }
 
-export const ReviewFields: FunctionComponent<ReviewFieldsProps> = (props) => {
+export const ReviewsField: FunctionComponent<ReviewsFieldProps> = (props) => {
   const { fields, value, onAppend, onChange, onRemove } = props;
 
   const handleFieldChange = useCallback(

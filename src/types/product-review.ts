@@ -8,9 +8,15 @@ export interface ProductReview {
   id?: number;
   productId?: number;
 
-  source?: string;
   key: ProductReviewKey;
-  value?: string;
+  value: string;
+  source?: string;
+}
+
+export interface ProductReviewRequest {
+  key: ProductReviewKey;
+  value: string;
+  source?: string;
 }
 
 export const productReviewSchema = new schema.Entity('productReview');

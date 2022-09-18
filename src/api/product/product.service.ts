@@ -30,6 +30,11 @@ const productReviewValidator = Joi.object({
   source: Joi.string().allow(''),
 }).options({ abortEarly: false });
 
+const productImageValidator = Joi.object({
+  imageId: Joi.number().required(),
+  type: Joi.string().required(),
+}).options({ abortEarly: false });
+
 const createProductValidator = Joi.object({
   parentId: Joi.number(),
   slug: Joi.string().required(),
@@ -40,6 +45,7 @@ const createProductValidator = Joi.object({
   specs: Joi.array().items(productSpecValidator),
   benchmarks: Joi.array().items(productBenchmarkValidator),
   reviews: Joi.array().items(productReviewValidator),
+  images: Joi.array().items(productImageValidator),
 }).options({ abortEarly: false });
 
 const updateProductValidator = Joi.object({
@@ -52,6 +58,7 @@ const updateProductValidator = Joi.object({
   specs: Joi.array().items(productSpecValidator),
   benchmarks: Joi.array().items(productBenchmarkValidator),
   reviews: Joi.array().items(productReviewValidator),
+  images: Joi.array().items(productImageValidator),
 }).options({ abortEarly: false });
 
 @Injectable()

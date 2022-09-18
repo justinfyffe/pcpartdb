@@ -45,3 +45,38 @@ p {
   width: 1px;
   white-space: nowrap;
 }
+
+.dialog {
+  align-items: center;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  left: 0;
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: 998;
+}
+
+.dialog .dialog-overlay {
+  background: #373a47;
+  bottom: 0;
+  left: 0;
+  opacity: 0.8;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 999;
+}
+
+.dialog .dialog-content {
+  align-items: center;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 1000;
+}

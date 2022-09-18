@@ -105,9 +105,15 @@ export interface ProductSpec {
   id?: number;
   productId?: number;
 
-  source?: string;
   key: ProductSpecKey;
-  value?: string;
+  value: string;
+  source?: string;
+}
+
+export interface ProductSpecRequest {
+  key: ProductSpecKey;
+  value: string;
+  source?: string;
 }
 
 interface ProductSpecEntities {

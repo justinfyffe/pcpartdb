@@ -6,6 +6,10 @@ import {
   ProductBenchmarkModelPojo,
 } from './benchmark/product-benchmark.model';
 import {
+  ProductImageModel,
+  ProductImageModelPojo,
+} from './image/product-image.model';
+import {
   ProductMetaModel,
   ProductMetaModelPojo,
 } from './meta/product-meta.model';
@@ -38,6 +42,7 @@ export class ProductModel extends Model implements CanDto<Product> {
   specs?: ProductSpecModel[];
   benchmarks?: ProductBenchmarkModel[];
   reviews?: ProductReviewModel[];
+  images?: ProductImageModel[];
 
   static relationMappings = {
     parent: {
@@ -80,6 +85,14 @@ export class ProductModel extends Model implements CanDto<Product> {
         to: 'product_reviews.productId',
       },
     },
+    images: {
+      relation: Model.HasManyRelation,
+      modelClass: ProductImageModel,
+      join: {
+        from: 'products.id',
+        to: 'product_images.productId',
+      },
+    },
   };
 
   toDto(): Product {
@@ -94,6 +107,7 @@ export class ProductModel extends Model implements CanDto<Product> {
       specs: this.specs?.map((spec) => spec.toDto()) ?? [],
       benchmarks: this.benchmarks?.map((benchmark) => benchmark.toDto()) ?? [],
       reviews: this.reviews?.map((review) => review.toDto()) ?? [],
+      images: this.images?.map((image) => image.toDto()) ?? [],
     };
   }
 
@@ -104,10 +118,11 @@ export class ProductModel extends Model implements CanDto<Product> {
 
 export type ProductModelPojo = Omit<
   PartialModelObject<ProductModel>,
-  'parent' | 'meta' | 'specs' | 'reviews' | 'benchmarks'
+  'parent' | 'meta' | 'specs' | 'reviews' | 'benchmarks' | 'images'
 > & {
   meta: ProductMetaModelPojo[];
   reviews: ProductReviewModelPojo[];
   specs: ProductSpecModelPojo[];
   benchmarks: ProductBenchmarkModelPojo[];
+  images: ProductImageModelPojo[];
 };

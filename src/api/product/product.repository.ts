@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ProductType } from '../../types/product';
 import { RepositoryConfig } from '../db/repository';
 import { ProductBenchmarkRepository } from './benchmark/product-benchmark.repository';
+import { ProductImageRepository } from './image/product-image.repository';
 import { ProductMetaRepository } from './meta/product-meta.repository';
 import { ProductModel, ProductModelPojo } from './product.model';
 import { ProductReviewRepository } from './review/product-review.repository';
@@ -14,6 +15,7 @@ export class ProductRepository {
     private specRepository: ProductSpecRepository,
     private benchmarkRepository: ProductBenchmarkRepository,
     private reviewRepository: ProductReviewRepository,
+    private imageRepository: ProductImageRepository,
   ) {}
 
   async list(config?: RepositoryConfig) {
@@ -21,7 +23,7 @@ export class ProductRepository {
   }
 
   async save(product: ProductModelPojo, config?: RepositoryConfig) {
-    const { meta, specs, benchmarks, reviews, ...rest } = product;
+    const { meta, specs, benchmarks, reviews, images, ...rest } = product;
 
     const { id } = await ProductModel.query(config?.trx)
       .insert(rest)
@@ -33,6 +35,7 @@ export class ProductRepository {
     await this.specRepository.saveMultiple(id, specs, config);
     await this.benchmarkRepository.saveMultiple(id, benchmarks, config);
     await this.reviewRepository.saveMultiple(id, reviews, config);
+    await this.imageRepository.saveMultiple(id, images, config);
 
     return this.findById(id, config);
   }
@@ -43,7 +46,8 @@ export class ProductRepository {
       .withGraphFetched('meta')
       .withGraphFetched('specs')
       .withGraphFetched('reviews')
-      .withGraphFetched('benchmarks');
+      .withGraphFetched('benchmarks')
+      .withGraphFetched('images');
   }
 
   async findBySlug(slug: string, config?: RepositoryConfig) {
@@ -52,7 +56,8 @@ export class ProductRepository {
       .withGraphFetched('meta')
       .withGraphFetched('specs')
       .withGraphFetched('reviews')
-      .withGraphFetched('benchmarks');
+      .withGraphFetched('benchmarks')
+      .withGraphFetched('images');
   }
 
   async delete(id: number, config?: RepositoryConfig) {
