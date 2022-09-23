@@ -1,7 +1,8 @@
 import { XIcon } from '@heroicons/react/outline';
 import React, {
+  ChangeEvent,
   FunctionComponent,
-  HTMLProps,
+  KeyboardEvent,
   useCallback,
   useContext,
   useRef,
@@ -10,14 +11,24 @@ import { classNames } from '../../ui/ui.utils';
 import { Button } from '../button';
 import { FieldContext } from '../field';
 
-interface InputProps extends Omit<HTMLProps<HTMLInputElement>, 'ref'> {
+export interface InputProps {
+  type?: string;
+
+  placeholder?: string;
+
   clearable?: boolean;
+  prefix?: string | React.ReactElement;
   suffix?: string | React.ReactElement;
 
   onPrefixClick?: () => void;
   onSuffixClick?: () => void;
   onClear?: () => void;
+  onKeyDown?: (e: KeyboardEvent) => void;
 
+  value?: string;
+  onChange?: (value: string) => void;
+
+  className?: string;
   ref?: unknown;
 }
 
@@ -25,42 +36,54 @@ export const Input: FunctionComponent<InputProps> = (props) => {
   const {
     prefix,
     suffix,
-    clearable: closeable,
+    clearable,
+    placeholder,
     className,
-    onClear,
-    onPrefixClick,
-    onSuffixClick,
+    onChange: triggerOnChange,
+    onClear: triggerOnClear,
+    onPrefixClick: triggerOnPrefixClick,
+    onSuffixClick: triggerOnSuffixClick,
+    onKeyDown: triggerOnKeyDown,
     type,
-    ...htmlProps
   } = props;
 
   const inputRef = useRef(null);
   const context = useContext(FieldContext);
 
-  const handleClear = useCallback(() => {
+  const onChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      const value = e.currentTarget.value;
+      triggerOnChange(value);
+    },
+    [triggerOnChange],
+  );
+
+  const onClear = useCallback(() => {
     inputRef.current.value = '';
-    onClear && onClear();
-  }, [onClear]);
+    triggerOnClear && triggerOnClear();
+  }, [triggerOnClear]);
 
   return (
     <div className={classNames('relative', className)}>
       <input
         type={type ?? 'text'}
         id={context.fieldId}
+        placeholder={placeholder}
         className={classNames(
           'border m-0 p-3 rounded text-sm w-full shadow',
-          closeable ? 'pr-12' : '',
+          clearable ? 'pr-12' : '',
           prefix ? 'pl-12' : '',
           className,
         )}
-        {...htmlProps}
+        onChange={onChange}
+        onKeyDown={triggerOnKeyDown}
         ref={null}
       />
 
       {prefix && (
         <div
           className="absolute flex items-center p-[0_16px] left-0 inset-y-0"
-          onClick={onPrefixClick}
+          onClick={triggerOnPrefixClick}
         >
           {prefix}
         </div>
@@ -68,13 +91,16 @@ export const Input: FunctionComponent<InputProps> = (props) => {
 
       <div className="absolute flex items-stretch right-0 inset-y-0">
         {suffix && (
-          <div className="flex items-center p-[0_16px]" onClick={onSuffixClick}>
+          <div
+            className="flex items-center p-[0_16px]"
+            onClick={triggerOnSuffixClick}
+          >
             {suffix}
           </div>
         )}
 
-        {closeable && (
-          <Button className="hover:bg-[#eee]" onClick={handleClear}>
+        {clearable && (
+          <Button className="hover:bg-[#eee]" onClick={onClear}>
             <XIcon className="w-[16px]" />
           </Button>
         )}

@@ -1,5 +1,7 @@
 import { PlusCircleIcon } from '@heroicons/react/outline';
 import React, { FunctionComponent, useCallback, useState } from 'react';
+import { ProductType } from '../../../types/product';
+import { ProductAutocomplete } from '../../product/components/product-autocomplete';
 import { Button, ButtonVariant } from '../../shared/components/button';
 import { Input } from '../../shared/components/input';
 import { classNames } from '../../shared/ui/ui.utils';
@@ -13,7 +15,15 @@ interface CompareFormProps {
 export const CompareForm: FunctionComponent<CompareFormProps> = (props) => {
   const { className } = props;
 
-  const [values, setValues] = useState(props.values ?? []);
+  const [values, setValues] = useState(props.values ?? [0]);
+
+  const onProductChange = useCallback(
+    (i: number, value: number) => {
+      values[i] = value;
+      setValues([...values]);
+    },
+    [values],
+  );
 
   const onAdd = useCallback(() => {
     setValues([...values, 0]);
@@ -41,12 +51,10 @@ export const CompareForm: FunctionComponent<CompareFormProps> = (props) => {
             : 'flex',
         )}
       >
-        <Input
-          placeholder="Graphics Card..."
-          value="NVIDIA GeForce RTX 3090"
-          clearable={values.length > 1}
+        <ProductAutocomplete
+          productType={ProductType.GPU}
           className={classNames('flex-1 min-w-[150px]')}
-          onClear={onDelete}
+          onChange={(value) => onProductChange(0, value)}
         />
 
         {values.length > 1 && (

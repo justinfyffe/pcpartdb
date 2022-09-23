@@ -61,7 +61,7 @@ export const AdminLayout: FunctionComponent<AdminLayoutProps> = (props) => {
                 Images
               </Button>
               <Button variant={ButtonVariant.Default} href="/admin/users">
-                Users
+                Accounts
               </Button>
               <Button variant={ButtonVariant.Default} href="#">
                 Monetization

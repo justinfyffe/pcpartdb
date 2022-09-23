@@ -1,11 +1,13 @@
 Immediate Tasks:
+- home page
+  - compare widget
+- populate pages
+- rename "user" to "account"
+- launch
 - product forms
   - pre-fill data (from parent product)
   - pre-fill data (from external source)
-- home page
-  - comparison form
-- rename "user" to "account"
-- launch
+- look into using useController
 - improve html semantics
 - clean up html
 - seo
@@ -21,6 +23,7 @@ Roadmap:
   - [LEGL] Disclaimer / Privacy
   - [EFFY] Basic admin panel
 - 1.1
+  - [CTNT] Comparison blurb
   - [CTNT] CPUs
 - 1.2
   - [EFFY] Admin Task Queue
