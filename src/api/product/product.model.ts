@@ -103,6 +103,7 @@ export class ProductModel extends Model implements CanDto<Product> {
       type: this.type,
       name: this.name,
 
+      parent: this.parent?.toDto(),
       meta: this.meta?.map((meta) => meta.toDto()) ?? [],
       specs: this.specs?.map((spec) => spec.toDto()) ?? [],
       benchmarks: this.benchmarks?.map((benchmark) => benchmark.toDto()) ?? [],

@@ -45,6 +45,7 @@ export const Input: FunctionComponent<InputProps> = (props) => {
     onSuffixClick: triggerOnSuffixClick,
     onKeyDown: triggerOnKeyDown,
     type,
+    value,
   } = props;
 
   const inputRef = useRef(null);
@@ -67,7 +68,8 @@ export const Input: FunctionComponent<InputProps> = (props) => {
     <div className={classNames('relative', className)}>
       <input
         type={type ?? 'text'}
-        id={context.fieldId}
+        value={value}
+        id={context?.fieldId}
         placeholder={placeholder}
         className={classNames(
           'border m-0 p-3 rounded text-sm w-full shadow',

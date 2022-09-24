@@ -43,7 +43,7 @@ export interface Product {
   type: ProductType;
   name: string;
 
-  product?: Product;
+  parent?: Product;
   meta?: ProductMeta[];
   specs?: ProductSpec[];
   benchmarks?: ProductBenchmark[];

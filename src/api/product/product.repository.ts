@@ -43,6 +43,7 @@ export class ProductRepository {
   async findById(id: number, config?: RepositoryConfig) {
     return await ProductModel.query(config?.trx)
       .findById(id)
+      .withGraphFetched('parent')
       .withGraphFetched('meta')
       .withGraphFetched('specs')
       .withGraphFetched('reviews')
@@ -53,6 +54,7 @@ export class ProductRepository {
   async findBySlug(slug: string, config?: RepositoryConfig) {
     return await ProductModel.query(config?.trx)
       .findOne({ slug })
+      .withGraphFetched('parent')
       .withGraphFetched('meta')
       .withGraphFetched('specs')
       .withGraphFetched('reviews')

@@ -1,4 +1,5 @@
 import React, { createContext, FunctionComponent, useState } from 'react';
+import { useGon } from '../../gon';
 import { classNames } from '../../ui/ui.utils';
 
 interface FieldState {
@@ -37,13 +38,15 @@ interface FieldErrorProps {
   children?: React.ReactNode;
 }
 
-let fieldCounter = 0;
 export const Field: FunctionComponent<FieldProps> = (props) => {
   const Element = props.as || 'div';
 
-  const [context] = useState(() => ({
-    fieldId: `field-id-${fieldCounter++}`,
-  }));
+  const gon = useGon();
+
+  const [context] = useState(() => {
+    const counter = gon.fieldCounter++;
+    return { fieldId: `field-id-${counter}` };
+  });
 
   return (
     <FieldContext.Provider value={context}>

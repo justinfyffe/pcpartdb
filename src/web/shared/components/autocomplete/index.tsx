@@ -1,6 +1,5 @@
 import { XIcon } from '@heroicons/react/outline';
 import React, {
-  ChangeEvent,
   Children,
   createContext,
   FunctionComponent,
@@ -22,7 +21,7 @@ const AutocompleteContext = createContext<AutocompleteState>({
   hoveredIndex: -1,
 });
 
-export interface AutocompleteOption {
+interface AutocompleteItem {
   label: string;
   value: string;
 }
@@ -32,7 +31,7 @@ export interface AutocompleteProps extends InputProps {
   freeSolo?: boolean;
 
   direction?: 'top' | 'bottom';
-  onQuery: (query: string) => void;
+  onQuery: (query: string) => boolean | Promise<boolean>;
 
   label?: string;
   value?: string;
@@ -40,7 +39,9 @@ export interface AutocompleteProps extends InputProps {
 
   className?: string;
 
-  children?: React.ReactNode;
+  children?:
+    | React.ReactElement<AutocompleteOptionProps>[]
+    | React.ReactElement<AutocompleteOptionProps>;
   ref?: unknown;
 }
 
@@ -60,6 +61,7 @@ export const Autocomplete: FunctionComponent<AutocompleteProps> = (props) => {
     hoveredIndex: -1,
   });
 
+  const [items, setItems] = useState<AutocompleteItem[]>([]);
   const [isOpen, setOpen] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const [label, setLabel] = useState(propsLabel);
@@ -81,6 +83,14 @@ export const Autocomplete: FunctionComponent<AutocompleteProps> = (props) => {
     });
   }, []);
 
+  useEffect(() => {
+    const items = Children.map(children, (child) => ({
+      label: child.props.label,
+      value: child.props.value,
+    }));
+    setItems(items);
+  }, [children]);
+
   const onQuery = useCallback(
     async (value: string) => {
       if (freeSolo) {
@@ -90,47 +100,50 @@ export const Autocomplete: FunctionComponent<AutocompleteProps> = (props) => {
       setLabel(value);
       setLoading(true);
       setContext({ ...context, hoveredIndex: -1 });
-      await triggerOnQuery(value);
+      const hasResults = await triggerOnQuery(value);
       setLoading(false);
-      setOpen(totalChildren > 0);
+      setOpen(hasResults);
     },
-    [freeSolo, context, totalChildren, triggerOnChange, triggerOnQuery],
+    [freeSolo, context, triggerOnChange, triggerOnQuery],
   );
 
   const onKeyDown = useCallback(
     (event: KeyboardEvent) => {
       if (event.code === 'ArrowUp') {
         // up
+        const index = hoveredIndex === -1 ? hoveredIndex : hoveredIndex - 1;
         setContext({
           ...context,
-          hoveredIndex: hoveredIndex === -1 ? hoveredIndex : hoveredIndex - 1,
+          hoveredIndex: index,
         });
       } else if (event.code === 'ArrowDown') {
         // down
+        const index =
+          hoveredIndex >= totalChildren ? hoveredIndex : hoveredIndex + 1;
         setContext({
           ...context,
-          hoveredIndex:
-            hoveredIndex >= totalChildren ? hoveredIndex : hoveredIndex + 1,
+          hoveredIndex: index,
         });
       } else if (event.code === 'Enter' && isOpen && hoveredIndex >= 0) {
         event.preventDefault();
         event.stopPropagation();
 
-        triggerOnChange(options[hoveredIndex].value);
-        setLabel(options[hoveredIndex].label);
+        triggerOnChange(items[hoveredIndex].value);
+        setLabel(items[hoveredIndex].label);
         setOpen(false);
       }
     },
-    [triggerOnChange, isOpen, context, hoveredIndex, totalChildren],
+    [triggerOnChange, isOpen, context, items, hoveredIndex, totalChildren],
   );
 
-  const onOptionClick = useCallback(
-    (option: AutocompleteOption) => {
-      triggerOnChange(option.value);
-      setLabel(option.label);
+  const onChildClck = useCallback(
+    (index: number) => {
+      const item = items[index];
+      triggerOnChange(item.value);
+      setLabel(item.label);
       setOpen(false);
     },
-    [triggerOnChange],
+    [triggerOnChange, items],
   );
 
   const onClear = useCallback(() => {
@@ -168,27 +181,35 @@ export const Autocomplete: FunctionComponent<AutocompleteProps> = (props) => {
             isOpen ? 'block' : 'hidden',
           )}
         >
-          {children}
+          {Children.map(children, (child, i) => (
+            <AutocompleteChild
+              key={child.props.value}
+              index={i}
+              onClick={() => onChildClck(i)}
+              className={child.props.className}
+              hoveredClassName={child.props.hoveredClassName}
+            >
+              {child}
+            </AutocompleteChild>
+          ))}
         </div>
       </div>
     </AutocompleteContext.Provider>
   );
 };
 
-interface AutocompleteItemProps {
+interface AutocompleteChildProps {
   index: number;
   onClick?: () => void;
   children?: React.ReactNode;
   className?: string;
   hoveredClassName?: string;
-  value?: unknown;
 }
 
-export const AutocompleteItem: FunctionComponent<AutocompleteItemProps> = (
+const AutocompleteChild: FunctionComponent<AutocompleteChildProps> = (
   props,
 ) => {
-  const { index, onClick, children, className, hoveredClassName, value } =
-    props;
+  const { index, onClick, children, className, hoveredClassName } = props;
 
   const { hoveredIndex } = useContext(AutocompleteContext);
 
@@ -205,3 +226,12 @@ export const AutocompleteItem: FunctionComponent<AutocompleteItemProps> = (
     </div>
   );
 };
+
+export interface AutocompleteOptionProps {
+  label: string;
+  value: string;
+
+  className?: string;
+  hoveredClassName?: string;
+  children?: React.ReactNode;
+}

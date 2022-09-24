@@ -7,16 +7,16 @@ import React, {
 import { Product, ProductType } from '../../../types/product';
 import {
   Autocomplete,
-  AutocompleteItem,
+  AutocompleteOptionProps,
 } from '../../shared/components/autocomplete';
 import { productService } from '../product.service';
 
 interface ProductAutocompleteProps {
   productType: ProductType;
 
+  initialProduct?: Product;
   value?: number;
   onChange?: (value: number) => void;
-  onProduct?: (product: Product) => void;
 
   excludeProductId?: number;
 
@@ -28,46 +28,55 @@ export const ProductAutocomplete: FunctionComponent<
   ProductAutocompleteProps
 > = (props) => {
   const {
+    value,
+    initialProduct,
     productType: type,
     onChange: triggerOnChange,
-    onProduct: triggerOnProduct,
-    value,
     excludeProductId,
     className,
     ...restProps
   } = props;
 
-  const [product, setProduct] = useState(null);
+  const [product, setProduct] = useState(initialProduct ?? null);
   const [results, setResults] = useState<Product[]>([]);
 
   useEffect(() => {
     async function fetchProduct() {
+      if (product != null && value !== 0) {
+        return;
+      }
+
       const result = await productService.get(value);
       setProduct(result);
-      triggerOnProduct?.(result);
     }
 
-    if (value != null && value != 0) {
+    if (value != null && value !== 0) {
       fetchProduct();
     }
-  }, [value, triggerOnProduct]);
+  }, [product, value]);
 
   const onQuery = useCallback(
     async (query: string) => {
       const results = await productService.autocompleteProduct(query, type);
-
-      setResults(
-        results.filter(
-          (product) => product != null && product.id !== excludeProductId,
-        ),
+      const filtered = results.filter(
+        (product) => product != null && product.id !== excludeProductId,
       );
+
+      setResults(filtered);
+
+      return filtered.length > 0;
     },
     [type, excludeProductId, setResults],
   );
 
   const onChange = useCallback(
-    (value: string) => {
-      triggerOnChange(value ? Number(value) : Number(0));
+    async (value: string) => {
+      if (!value) {
+        triggerOnChange(null);
+      }
+
+      const productId = Number(value);
+      triggerOnChange(productId);
     },
     [triggerOnChange],
   );
@@ -75,37 +84,34 @@ export const ProductAutocomplete: FunctionComponent<
   return (
     <Autocomplete
       label={product?.name ?? ''}
-      value={value != null && value != 0 ? `${value}` : ''}
+      value={value != null && value !== 0 ? `${value}` : ''}
       onQuery={onQuery}
       onChange={onChange}
       className={className}
       {...restProps}
     >
-      {results.map((result, i) => (
-        <ProductAutocompleteItem key={result.id} index={i} product={result} />
+      {results.map((result) => (
+        <ProductAutocompleteOption
+          key={result.id}
+          product={result}
+          label={result.name}
+          value={`${result.id}`}
+          className="hover:bg-[#fafafa]"
+          hoveredClassName="bg-[#fafafa]"
+        />
       ))}
     </Autocomplete>
   );
 };
 
-interface ProductAutocompleteItemProps {
-  index: number;
+interface ProductAutocompleteOptionProps extends AutocompleteOptionProps {
   product: Product;
 }
 
-const ProductAutocompleteItem: FunctionComponent<
-  ProductAutocompleteItemProps
+const ProductAutocompleteOption: FunctionComponent<
+  ProductAutocompleteOptionProps
 > = (props) => {
-  const { index, product } = props;
+  const { product } = props;
 
-  return (
-    <AutocompleteItem
-      index={index}
-      className="hover:bg-[#fafafa]"
-      hoveredClassName="bg-[#fafafa]"
-      value={product}
-    >
-      {product.name}
-    </AutocompleteItem>
-  );
+  return <div>{product.name}</div>;
 };

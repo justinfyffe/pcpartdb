@@ -1,4 +1,7 @@
 Immediate Tasks:
+- convert all form fields to strings
+- finish improving product autocomplete and autocomplete 
+  - create product cache instead of using initialProduct
 - home page
   - compare widget
 - populate pages

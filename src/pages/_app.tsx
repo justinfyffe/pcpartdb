@@ -4,16 +4,18 @@ import axios from 'axios';
 import App, { AppContext, AppProps } from 'next/app';
 import Head from 'next/head';
 import React from 'react';
+import { GonContext } from '../web/shared/gon';
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   const { error } = pageProps;
+
   return (
-    <React.Fragment>
+    <GonContext.Provider value={{ fieldCounter: 0 }}>
       <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       {!error && <Component {...pageProps}></Component>}
-    </React.Fragment>
+    </GonContext.Provider>
   );
 };
 

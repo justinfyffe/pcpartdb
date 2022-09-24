@@ -480,6 +480,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               <ProductAutocomplete
                 productType={ProductType.GPU}
                 excludeProductId={gpu?.id}
+                initialProduct={gpu?.parent} // TODO: create product cache
                 {...field}
                 ref={null}
               />
@@ -1639,7 +1640,7 @@ function toFormBenchmarks(gpu?: Product): ProductBenchmarkFormData[] {
     gpu?.benchmarks?.map((benchmark) => ({
       key: benchmark.key,
       value: benchmark.value,
-      source: benchmark.source,
+      source: benchmark.source ?? '',
     })) ?? []
   );
 }
@@ -1649,7 +1650,7 @@ function toRequestBenchmarks(formData: ProductFormData): ProductBenchmark[] {
     formData.benchmarks?.map((benchmark) => ({
       key: benchmark.key,
       value: benchmark.value,
-      source: benchmark.source,
+      source: benchmark.source ?? '',
     })) ?? []
   );
 }
@@ -1659,7 +1660,7 @@ function toFormReviews(gpu?: Product): ProductReviewFormData[] {
     gpu?.reviews?.map((review) => ({
       key: review.key,
       value: review.value,
-      source: review.source,
+      source: review.source ?? '',
     })) ?? []
   );
 }
@@ -1669,7 +1670,7 @@ function toRequestReviews(formData: ProductFormData): ProductReview[] {
     formData.reviews?.map((review) => ({
       key: review.key,
       value: review.value,
-      source: review.source,
+      source: review.source ?? '',
     })) ?? []
   );
 }
@@ -1704,7 +1705,7 @@ function getFormImages(gpu?: Product) {
 function toRequestImages(formData: ProductFormData): ProductImage[] {
   const images: ProductImage[] = [];
 
-  if (formData.autocompleteImage) {
+  if (formData.autocompleteImage?.image) {
     images.push({
       type: formData.autocompleteImage.type,
       imageId: formData.autocompleteImage.image.id,
@@ -1712,7 +1713,7 @@ function toRequestImages(formData: ProductFormData): ProductImage[] {
     });
   }
 
-  if (formData.thumbnailImage) {
+  if (formData.thumbnailImage?.image) {
     images.push({
       type: formData.thumbnailImage.type,
       imageId: formData.thumbnailImage.image.id,
@@ -1721,8 +1722,11 @@ function toRequestImages(formData: ProductFormData): ProductImage[] {
   }
 
   if (formData.detailsImages) {
+    const detailsImages = formData.detailsImages.filter(
+      (detailsImage) => detailsImage.image,
+    );
     images.push(
-      ...formData.detailsImages.map((value, i) => ({
+      ...detailsImages.map((value, i) => ({
         type: value.type,
         imageId: value.image.id,
         metadata: { order: i },
