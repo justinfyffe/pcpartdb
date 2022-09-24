@@ -1,14 +1,8 @@
-import React, {
-  ChangeEvent,
-  FunctionComponent,
-  useCallback,
-  useMemo,
-  useState,
-} from 'react';
+import React, { forwardRef, useCallback, useMemo, useState } from 'react';
 import { ProductPropertyType } from '../../../types/product';
 import { ProductMetaKey } from '../../../types/product-meta';
 import { ProductSpecKey } from '../../../types/product-spec';
-import { Input } from '../../shared/components/input';
+import { TextInput } from '../../shared/components/input';
 import { ProductPropertyAutocomplete } from './product-property-autocomplete';
 
 interface ParsedValue {
@@ -51,13 +45,12 @@ interface ProductPropertyFieldProps {
   onChange?: (value: string) => void;
 
   autocomplete?: boolean;
-
-  ref?: unknown;
 }
 
-export const ProductPropertyField: FunctionComponent<
+export const ProductPropertyField = forwardRef<
+  HTMLInputElement,
   ProductPropertyFieldProps
-> = (props) => {
+>((props, ref) => {
   const { propertyType, field, autocomplete, value, onChange, ...restProps } =
     props;
 
@@ -78,22 +71,21 @@ export const ProductPropertyField: FunctionComponent<
 
   const handleAutocompleteChange = useCallback(
     (value: string) => {
-      onChange(getPropertyValue(value, suffix));
+      onChange?.(getPropertyValue(value, suffix));
     },
     [suffix, onChange],
   );
 
   const handleInputChange = useCallback(
-    (event: ChangeEvent<HTMLInputElement>) => {
-      const value = event.target.value;
-      onChange(getPropertyValue(value, suffix));
+    (value: string) => {
+      onChange?.(getPropertyValue(value, suffix));
     },
     [suffix, onChange],
   );
 
   const handleSuffixClick = useCallback(() => {
     const newIndex = suffixIndex < suffixes.length - 1 ? suffixIndex + 1 : 0;
-    onChange(getPropertyValue(baseValue, suffixes[newIndex]));
+    onChange?.(getPropertyValue(baseValue, suffixes[newIndex]));
     setSuffixIndex(newIndex);
   }, [baseValue, suffixes, suffixIndex, onChange]);
 
@@ -109,16 +101,17 @@ export const ProductPropertyField: FunctionComponent<
     );
   } else {
     return (
-      <Input
+      <TextInput
         value={baseValue}
         suffix={suffixes.length > 0 ? suffixes[suffixIndex] : undefined}
         onChange={handleInputChange}
         onSuffixClick={handleSuffixClick}
-        {...restProps}
+        ref={ref}
       />
     );
   }
-};
+});
+ProductPropertyField.displayName = 'ProductPropertyField';
 
 function getPropertyValue(base: string, suffix?: string) {
   return suffix != null ? `${base} ${suffix}` : base;

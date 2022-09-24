@@ -34,7 +34,7 @@ import { Alert, AlertVariant } from '../../shared/components/alert';
 import { Button, ButtonVariant } from '../../shared/components/button';
 import { Field, FieldError } from '../../shared/components/field';
 import { Form, FormActions } from '../../shared/components/form';
-import { Input } from '../../shared/components/input';
+import { TextInput } from '../../shared/components/input';
 import { Select, SelectOption } from '../../shared/components/select';
 import { Spinner } from '../../shared/components/spinner';
 import { Textarea } from '../../shared/components/textarea';
@@ -68,7 +68,7 @@ interface ProductImageFormData {
 }
 
 interface ProductFormData {
-  parentId?: number;
+  parentId: number;
 
   slug: string;
   type: ProductType;
@@ -171,12 +171,12 @@ const imageValidator = Joi.object({
 }).options({ abortEarly: false });
 
 const productValidator = Joi.object({
-  parentId: Joi.number(),
+  parentId: Joi.number().allow(null),
 
   slug: Joi.string().required(),
   type: Joi.string().valid(ProductType.CPU, ProductType.GPU),
   name: Joi.string().required(),
-  description: Joi.string().allow(''),
+  description: Joi.string().allow(null),
 
   // General
   company: Joi.string().allow(''),
@@ -269,12 +269,12 @@ function formOptions(gpu?: Product): UseFormProps<ProductFormData> {
     resolver: joiResolver(productValidator),
     mode: 'onBlur',
     defaultValues: {
-      parentId: gpu?.parentId ?? 0,
+      parentId: gpu?.parentId ?? null,
 
       slug: gpu?.slug ?? '',
       type: ProductType.GPU,
       name: gpu?.name ?? '',
-      description: meta.get(ProductMetaKey.Description)?.value ?? '',
+      description: meta.get(ProductMetaKey.Description)?.value ?? null,
 
       // General
       company: specs.get(ProductSpecKey.Company)?.value ?? '',
@@ -495,7 +495,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           <Controller
             name="name"
             control={control}
-            render={({ field }) => <Input {...field} ref={null} />}
+            render={({ field }) => <TextInput {...field} ref={null} />}
           />
           {errors.name?.type === ValidationErrorType.MissingStringValue && (
             <FieldError>Required</FieldError>
@@ -507,7 +507,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           <Controller
             name="slug"
             control={control}
-            render={({ field }) => <Input {...field} ref={null} />}
+            render={({ field }) => <TextInput {...field} ref={null} />}
           />
           {errors.name?.type === ValidationErrorType.MissingStringValue && (
             <FieldError>Required</FieldError>

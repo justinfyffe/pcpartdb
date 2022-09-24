@@ -1,40 +1,22 @@
-import React, {
-  FunctionComponent,
-  useCallback,
-  useEffect,
-  useState,
-} from 'react';
+import React, { forwardRef, useCallback, useEffect, useState } from 'react';
 import { Product, ProductType } from '../../../types/product';
 import {
   Autocomplete,
-  AutocompleteOptionProps,
+  AutocompleteOption,
 } from '../../shared/components/autocomplete';
 import { productService } from '../product.service';
 
-interface ProductAutocompleteProps {
-  productType: ProductType;
-
-  initialProduct?: Product;
-  value?: number;
-  onChange?: (value: number) => void;
-
-  excludeProductId?: number;
-
-  className?: string;
-  ref?: unknown;
-}
-
-export const ProductAutocomplete: FunctionComponent<
+export const ProductAutocomplete = forwardRef<
+  HTMLInputElement,
   ProductAutocompleteProps
-> = (props) => {
+>((props, ref) => {
   const {
     value,
     initialProduct,
     productType: type,
-    onChange: triggerOnChange,
+    onChange,
     excludeProductId,
     className,
-    ...restProps
   } = props;
 
   const [product, setProduct] = useState(initialProduct ?? null);
@@ -55,7 +37,7 @@ export const ProductAutocomplete: FunctionComponent<
     }
   }, [product, value]);
 
-  const onQuery = useCallback(
+  const handleQuery = useCallback(
     async (query: string) => {
       const results = await productService.autocompleteProduct(query, type);
       const filtered = results.filter(
@@ -69,49 +51,51 @@ export const ProductAutocomplete: FunctionComponent<
     [type, excludeProductId, setResults],
   );
 
-  const onChange = useCallback(
+  const handleChange = useCallback(
     async (value: string) => {
-      if (!value) {
-        triggerOnChange(null);
+      if (value == null) {
+        onChange?.(null);
+        return;
       }
 
-      const productId = Number(value);
-      triggerOnChange(productId);
+      onChange?.(Number(value));
     },
-    [triggerOnChange],
+    [onChange],
   );
 
   return (
     <Autocomplete
       label={product?.name ?? ''}
       value={value != null && value !== 0 ? `${value}` : ''}
-      onQuery={onQuery}
-      onChange={onChange}
+      onQuery={handleQuery}
+      onChange={handleChange}
       className={className}
-      {...restProps}
+      ref={ref}
     >
       {results.map((result) => (
-        <ProductAutocompleteOption
+        <AutocompleteOption
           key={result.id}
-          product={result}
           label={result.name}
           value={`${result.id}`}
           className="hover:bg-[#fafafa]"
           hoveredClassName="bg-[#fafafa]"
-        />
+        >
+          {result.name}
+        </AutocompleteOption>
       ))}
     </Autocomplete>
   );
-};
+});
+ProductAutocomplete.displayName = 'ProductAutocomplete';
 
-interface ProductAutocompleteOptionProps extends AutocompleteOptionProps {
-  product: Product;
+interface ProductAutocompleteProps {
+  productType: ProductType;
+
+  initialProduct?: Product;
+  value?: number;
+  onChange?: (value: number) => void;
+
+  excludeProductId?: number;
+
+  className?: string;
 }
-
-const ProductAutocompleteOption: FunctionComponent<
-  ProductAutocompleteOptionProps
-> = (props) => {
-  const { product } = props;
-
-  return <div>{product.name}</div>;
-};

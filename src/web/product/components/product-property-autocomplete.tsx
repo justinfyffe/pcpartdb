@@ -1,24 +1,20 @@
-import React, { FunctionComponent, useCallback } from 'react';
+import React, { forwardRef, useCallback, useState } from 'react';
 import { ProductPropertyType } from '../../../types/product';
 import { ProductMetaKey } from '../../../types/product-meta';
 import { ProductSpecKey } from '../../../types/product-spec';
-import { Autocomplete } from '../../shared/components/autocomplete';
+import {
+  Autocomplete,
+  AutocompleteOption,
+} from '../../shared/components/autocomplete';
 import { productService } from '../product.service';
 
-interface ProductPropertyAutocompleteProps {
-  propertyType: ProductPropertyType;
-  field?: ProductMetaKey | ProductSpecKey;
-
-  value?: string;
-  onChange?: (value: string) => void;
-
-  ref?: unknown;
-}
-
-export const ProductPropertyAutocomplete: FunctionComponent<
+export const ProductPropertyAutocomplete = forwardRef<
+  HTMLInputElement,
   ProductPropertyAutocompleteProps
-> = (props) => {
+>((props, ref) => {
   const { propertyType: type, field, ...restProps } = props;
+
+  const [results, setResults] = useState<string[]>([]);
 
   const handleQuery = useCallback(
     async (query: string) => {
@@ -27,24 +23,46 @@ export const ProductPropertyAutocomplete: FunctionComponent<
           query,
           field as ProductMetaKey,
         );
-
-        return results
-          .filter((value) => value != null)
-          .map((value) => ({ label: value, value }));
+        const filtered = results.filter((value) => value != null);
+        setResults(filtered);
+        return filtered.length > 0;
       } else if (type === ProductPropertyType.Spec) {
         const results = await productService.autocompleteSpec(
           query,
           field as ProductSpecKey,
         );
-
-        return results
-          .filter((value) => value != null)
-          .map((value) => ({ label: value, value }));
+        const filtered = results.filter((value) => value != null);
+        setResults(filtered);
+        return filtered.length > 0;
       }
-      return [];
+
+      return false;
     },
     [type, field],
   );
 
-  return <Autocomplete freeSolo onQuery={handleQuery} {...restProps} />;
-};
+  return (
+    <Autocomplete freeSolo onQuery={handleQuery} {...restProps} ref={ref}>
+      {results.map((result) => (
+        <AutocompleteOption
+          key={result}
+          label={result}
+          value={result}
+          className="hover:bg-[#fafafa]"
+          hoveredClassName="bg-[#fafafa]"
+        >
+          {result}
+        </AutocompleteOption>
+      ))}
+    </Autocomplete>
+  );
+});
+ProductPropertyAutocomplete.displayName = 'ProductPropertyAutocomplete';
+
+interface ProductPropertyAutocompleteProps {
+  propertyType: ProductPropertyType;
+  field?: ProductMetaKey | ProductSpecKey;
+
+  value?: string;
+  onChange?: (value: string) => void;
+}

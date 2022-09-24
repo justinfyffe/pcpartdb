@@ -1,23 +1,41 @@
-import React, { FunctionComponent, HTMLProps } from 'react';
+import React, { ChangeEvent, forwardRef, useCallback, useState } from 'react';
 import { classNames } from '../../ui/ui.utils';
 
-interface TextareaProps extends HTMLProps<HTMLTextAreaElement> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  innerRef?: any;
+interface TextareaProps {
+  value?: string;
+
+  onChange?: (value: string) => void;
+
+  className?: string;
 }
 
-export const Textarea: FunctionComponent<TextareaProps> = (props) => {
-  const { children, className, ...htmlProps } = props;
+export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
+  (props, ref) => {
+    const { className, onChange } = props;
 
-  return (
-    <textarea
-      {...htmlProps}
-      className={classNames(
-        'border m-0 p-3 rounded text-sm w-full shadow',
-        className,
-      )}
-    >
-      {children}
-    </textarea>
-  );
-};
+    const [value, setValue] = useState<string>(props.value ?? null);
+
+    const handleChange = useCallback(
+      (e: ChangeEvent<HTMLTextAreaElement>) => {
+        const inputValue = e.target.value;
+        const newValue = inputValue !== '' ? inputValue : null;
+        setValue(newValue);
+        onChange?.(newValue);
+      },
+      [onChange],
+    );
+
+    return (
+      <textarea
+        value={value || ''}
+        className={classNames(
+          'border m-0 p-3 rounded text-sm w-full shadow',
+          className,
+        )}
+        onChange={handleChange}
+        ref={ref}
+      />
+    );
+  },
+);
+Textarea.displayName = 'Textarea';
