@@ -35,10 +35,6 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
     [onKeyDown],
   );
 
-  const handleBlur = useCallback(() => {
-    onBlur?.();
-  }, [onBlur]);
-
   const handleChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       const inputValue = e.target.value;
@@ -48,6 +44,10 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
     },
     [onChange],
   );
+
+  const handleBlur = useCallback(() => {
+    onBlur?.();
+  }, [onBlur]);
 
   const context = useContext(FieldContext);
 

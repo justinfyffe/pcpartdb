@@ -3,7 +3,7 @@ import React, { FunctionComponent, useCallback } from 'react';
 import { ProductBenchmarkKey } from '../../../types/product-benchmark';
 import { Button, ButtonVariant } from '../../shared/components/button';
 import { Field } from '../../shared/components/field';
-import { Input } from '../../shared/components/input';
+import { TextInput } from '../../shared/components/input';
 import {
   Select,
   SelectOption,
@@ -35,10 +35,11 @@ export const BenchmarksField: FunctionComponent<BenchmarksFieldProps> = (
 
   const handleFieldChange = useCallback(
     (i: number, benchmark: BenchmarkValue) => {
-      value[i] = benchmark;
+      fields[i] = { ...fields[i], ...benchmark };
+      value[i] = { ...benchmark };
       onChange(value);
     },
-    [onChange, value],
+    [fields, value, onChange],
   );
 
   return (
@@ -75,24 +76,21 @@ const BenchmarkField: FunctionComponent<BenchmarkFieldProps> = (props) => {
 
   const handleKeyChange = useCallback(
     (key: SelectValue) => {
-      value.key = key as unknown as ProductBenchmarkKey;
-      onChange(value);
+      onChange({ ...value, key: key as unknown as ProductBenchmarkKey });
     },
     [onChange, value],
   );
 
-  const handleValueChange = useCallback(
-    (evt: React.ChangeEvent<HTMLInputElement>) => {
-      value.value = evt.target.value;
-      onChange(value);
+  const handleScoreChange = useCallback(
+    (score: string) => {
+      onChange({ ...value, value: score });
     },
     [onChange, value],
   );
 
   const handleSourceChange = useCallback(
-    (evt: React.ChangeEvent<HTMLInputElement>) => {
-      value.source = evt.target.value;
-      onChange(value);
+    (source: string) => {
+      onChange({ ...value, source });
     },
     [onChange, value],
   );
@@ -112,17 +110,25 @@ const BenchmarkField: FunctionComponent<BenchmarkFieldProps> = (props) => {
       </Field>
 
       <Field className="flex-1">
-        Value
-        <Input value={value.value} onChange={handleValueChange} ref={null} />
+        Score
+        <TextInput
+          value={value.value}
+          onChange={handleScoreChange}
+          ref={null}
+        />
       </Field>
 
       <Field className="flex-1">
         Source
-        <Input value={value.source} onChange={handleSourceChange} ref={null} />
+        <TextInput
+          value={value.source}
+          onChange={handleSourceChange}
+          ref={null}
+        />
       </Field>
 
       <Button
-        className="w-[46px] h-[46px]"
+        className="w-[46px] h-[46px] mb-6"
         variant={ButtonVariant.Default}
         onClick={onRemove}
       >

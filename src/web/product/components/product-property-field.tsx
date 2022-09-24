@@ -36,38 +36,25 @@ const SUFFIXES: { [key: string]: string[] } = {
   [ProductSpecKey.MaxMemoryBandwidth]: ['GB/s', 'MB/s'],
 };
 
-interface ProductPropertyFieldProps {
-  type?: string;
-  propertyType: ProductPropertyType;
-  field: ProductMetaKey | ProductSpecKey;
-
-  value?: string;
-  onChange?: (value: string) => void;
-
-  autocomplete?: boolean;
-}
-
 export const ProductPropertyField = forwardRef<
   HTMLInputElement,
   ProductPropertyFieldProps
 >((props, ref) => {
-  const { propertyType, field, autocomplete, value, onChange, ...restProps } =
-    props;
+  const { propertyType, field, autocomplete, value, onChange } = props;
 
   const { baseValue, suffixValue } = useMemo(
     () => parsePropertyValue(field, value),
     [field, value],
   );
   const suffixes = useMemo(() => SUFFIXES[field] ?? [], [field]);
+
   const [suffixIndex, setSuffixIndex] = useState(() =>
     suffixes.length > 0 && suffixValue != null
       ? suffixes.indexOf(suffixValue)
       : 0,
   );
-  const suffix = useMemo(
-    () => suffixes?.[suffixIndex],
-    [suffixes, suffixIndex],
-  );
+
+  const suffix = suffixes?.[suffixIndex];
 
   const handleAutocompleteChange = useCallback(
     (value: string) => {
@@ -85,8 +72,9 @@ export const ProductPropertyField = forwardRef<
 
   const handleSuffixClick = useCallback(() => {
     const newIndex = suffixIndex < suffixes.length - 1 ? suffixIndex + 1 : 0;
-    onChange?.(getPropertyValue(baseValue, suffixes[newIndex]));
     setSuffixIndex(newIndex);
+
+    onChange?.(getPropertyValue(baseValue, suffixes[newIndex]));
   }, [baseValue, suffixes, suffixIndex, onChange]);
 
   if (autocomplete) {
@@ -96,7 +84,7 @@ export const ProductPropertyField = forwardRef<
         field={field}
         value={baseValue}
         onChange={handleAutocompleteChange}
-        {...restProps}
+        ref={ref}
       />
     );
   } else {
@@ -113,7 +101,22 @@ export const ProductPropertyField = forwardRef<
 });
 ProductPropertyField.displayName = 'ProductPropertyField';
 
+interface ProductPropertyFieldProps {
+  type?: string;
+  propertyType: ProductPropertyType;
+  field: ProductMetaKey | ProductSpecKey;
+
+  value?: string;
+  onChange?: (value: string) => void;
+
+  autocomplete?: boolean;
+}
+
 function getPropertyValue(base: string, suffix?: string) {
+  if (base == null) {
+    return null;
+  }
+
   return suffix != null ? `${base} ${suffix}` : base;
 }
 
@@ -122,7 +125,7 @@ function parsePropertyValue(
   value?: string,
 ): ParsedValue {
   if (value == null) {
-    return { baseValue: '' };
+    return { baseValue: null };
   }
 
   let baseValue = value;

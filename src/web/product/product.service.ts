@@ -47,7 +47,7 @@ export class ProductService {
     const response = await this.api.get<ProductsResponse>(
       `${PATH}/autocomplete`,
       {
-        params: { type, value: query },
+        params: { type, query },
       },
     );
     return (

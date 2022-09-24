@@ -12,13 +12,17 @@ export const ProductPropertyAutocomplete = forwardRef<
   HTMLInputElement,
   ProductPropertyAutocompleteProps
 >((props, ref) => {
-  const { propertyType: type, field, ...restProps } = props;
+  const { propertyType, field, value, onChange } = props;
 
   const [results, setResults] = useState<string[]>([]);
 
   const handleQuery = useCallback(
     async (query: string) => {
-      if (type === ProductPropertyType.Meta) {
+      if (query == null) {
+        return false;
+      }
+
+      if (propertyType === ProductPropertyType.Meta) {
         const results = await productService.autocompleteMeta(
           query,
           field as ProductMetaKey,
@@ -26,7 +30,7 @@ export const ProductPropertyAutocomplete = forwardRef<
         const filtered = results.filter((value) => value != null);
         setResults(filtered);
         return filtered.length > 0;
-      } else if (type === ProductPropertyType.Spec) {
+      } else if (propertyType === ProductPropertyType.Spec) {
         const results = await productService.autocompleteSpec(
           query,
           field as ProductSpecKey,
@@ -38,11 +42,18 @@ export const ProductPropertyAutocomplete = forwardRef<
 
       return false;
     },
-    [type, field],
+    [propertyType, field],
   );
 
   return (
-    <Autocomplete freeSolo onQuery={handleQuery} {...restProps} ref={ref}>
+    <Autocomplete
+      freeSolo
+      onQuery={handleQuery}
+      label={value}
+      value={value}
+      onChange={onChange}
+      ref={ref}
+    >
       {results.map((result) => (
         <AutocompleteOption
           key={result}

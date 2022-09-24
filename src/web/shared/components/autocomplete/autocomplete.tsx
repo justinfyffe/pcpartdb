@@ -28,28 +28,23 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
       className,
       direction,
       label: propsLabel,
-      value,
+      value: propsValue,
       freeSolo,
       onChange,
       onQuery,
       children,
     } = props;
 
-    const [context, setContext] = useState<AutocompleteState>({
-      hoveredIndex: -1,
-    });
-
-    const [items, setItems] = useState<{ label: string; value: string }[]>([]);
+    const [query, setQuery] = useState(propsLabel);
+    const [value, setValue] = useState(propsValue);
     const [isOpen, setOpen] = useState(false);
     const [isLoading, setLoading] = useState(false);
-    const [label, setLabel] = useState(propsLabel);
-
-    const hoveredIndex = context.hoveredIndex;
+    const [hoveredIndex, setHoveredIndex] = useState(-1);
+    const [items, setItems] = useState<{ label: string; value: string }[]>([]);
     const totalChildren = Children.count(children);
 
-    useEffect(() => {
-      setLabel(propsLabel);
-    }, [propsLabel]);
+    useEffect(() => setQuery(propsLabel), [propsLabel]);
+    useEffect(() => setValue(propsValue), [propsValue]);
 
     useEffect(() => {
       document.addEventListener('click', () => {
@@ -62,92 +57,91 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
     }, []);
 
     useEffect(() => {
-      const items = Children.map(children, (child) => ({
-        label: child.props.label,
-        value: child.props.value,
-      }));
-      setItems(items);
+      setItems(
+        Children.map(children, ({ props: { label, value } }) => ({
+          label,
+          value,
+        })),
+      );
     }, [children]);
 
     const handleQuery = useCallback(
       async (query: string) => {
         if (freeSolo) {
-          onChange(query != null ? query : null);
+          onChange?.(query != null ? query : null);
         } else if (query == null) {
-          onChange(null);
+          onChange?.(null);
         }
 
-        setLabel(query);
+        setQuery(query);
         setLoading(true);
-        setContext({ ...context, hoveredIndex: -1 });
+        setHoveredIndex(-1);
         const hasResults = await onQuery(query);
         setLoading(false);
         setOpen(hasResults);
       },
-      [freeSolo, context, onChange, onQuery],
+      [freeSolo, onChange, onQuery],
     );
 
     const handleKeyDown = useCallback(
-      (event: KeyboardEvent) => {
-        if (event.code === 'ArrowUp') {
-          // up
+      (e: KeyboardEvent) => {
+        if (e.code === 'ArrowUp') {
           const index = hoveredIndex === -1 ? hoveredIndex : hoveredIndex - 1;
-          setContext({
-            ...context,
-            hoveredIndex: index,
-          });
-        } else if (event.code === 'ArrowDown') {
-          // down
+          setHoveredIndex(index);
+        } else if (e.code === 'ArrowDown') {
           const index =
             hoveredIndex >= totalChildren ? hoveredIndex : hoveredIndex + 1;
-          setContext({
-            ...context,
-            hoveredIndex: index,
-          });
-        } else if (event.code === 'Enter' && isOpen && hoveredIndex >= 0) {
-          event.preventDefault();
-          event.stopPropagation();
+          setHoveredIndex(index);
+        } else if (e.code === 'Enter' && isOpen && hoveredIndex >= 0) {
+          e.preventDefault();
+          e.stopPropagation();
 
-          onChange(items[hoveredIndex].value);
-          setLabel(items[hoveredIndex].label);
+          const { label, value } = items[hoveredIndex];
+          setValue(value);
+          setQuery(label);
           setOpen(false);
+          onChange?.(value);
         }
       },
-      [onChange, isOpen, context, items, hoveredIndex, totalChildren],
+      [onChange, isOpen, items, hoveredIndex, totalChildren],
     );
 
     const handleChildClick = useCallback(
       (index: number) => {
         const item = items[index];
-        onChange(item.value);
-        setLabel(item.label);
+        setValue(item.value);
+        setQuery(item.label);
         setOpen(false);
+        onChange?.(item.value);
       },
       [onChange, items],
     );
+
+    const handleClear = useCallback(() => {
+      setValue(null);
+      setQuery(null);
+      onChange?.(null);
+    }, [onChange]);
 
     const handleBlur = useCallback(() => {
       if (freeSolo) {
         return;
       }
 
-      if (label == null) {
+      if (query == null) {
+        setValue(null);
+        setQuery(null);
         onChange?.(null);
       } else {
-        setLabel(propsLabel);
+        setQuery(propsLabel);
       }
-    }, [freeSolo, propsLabel, label, onChange]);
-
-    const handleClear = useCallback(() => {
-      onChange(null);
-      setLabel(null);
-    }, [onChange]);
+    }, [freeSolo, propsLabel, query, onChange]);
 
     return (
-      <AutocompleteContext.Provider value={context}>
+      <AutocompleteContext.Provider value={{ hoveredIndex }}>
         <div className={classNames('block relative', className)}>
           <TextInput
-            value={label || ''}
+            value={query || ''}
             onChange={handleQuery}
             onKeyDown={handleKeyDown}
             onBlur={handleBlur}

@@ -8,26 +8,26 @@ import { ProductRepository } from './product.repository';
 
 const productMetaValidator = Joi.object({
   key: Joi.string().required(),
-  value: Joi.string().allow(''),
-  source: Joi.string().allow(''),
+  value: Joi.string().allow(null),
+  source: Joi.string().allow(null),
 }).options({ abortEarly: false });
 
 const productSpecValidator = Joi.object({
   key: Joi.string().required(),
-  value: Joi.string().allow(''),
-  source: Joi.string().allow(''),
+  value: Joi.string().allow(null),
+  source: Joi.string().allow(null),
 }).options({ abortEarly: false });
 
 const productBenchmarkValidator = Joi.object({
   key: Joi.string().required(),
-  value: Joi.string().allow(''),
-  source: Joi.string().allow(''),
+  value: Joi.string().allow(null),
+  source: Joi.string().allow(null),
 }).options({ abortEarly: false });
 
 const productReviewValidator = Joi.object({
   key: Joi.string().required(),
-  value: Joi.string().allow(''),
-  source: Joi.string().allow(''),
+  value: Joi.string().allow(null),
+  source: Joi.string().allow(null),
 }).options({ abortEarly: false });
 
 const productImageValidator = Joi.object({

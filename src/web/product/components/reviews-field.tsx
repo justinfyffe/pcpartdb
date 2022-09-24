@@ -3,7 +3,7 @@ import React, { FunctionComponent, useCallback } from 'react';
 import { ProductReviewKey } from '../../../types/product-review';
 import { Button, ButtonVariant } from '../../shared/components/button';
 import { Field } from '../../shared/components/field';
-import { Input } from '../../shared/components/input';
+import { TextInput } from '../../shared/components/input';
 import {
   Select,
   SelectOption,
@@ -32,11 +32,12 @@ export const ReviewsField: FunctionComponent<ReviewsFieldProps> = (props) => {
   const { fields, value, onAppend, onChange, onRemove } = props;
 
   const handleFieldChange = useCallback(
-    (i: number, benchmark: ReviewValue) => {
-      value[i] = benchmark;
+    (i: number, review: ReviewValue) => {
+      fields[i] = { ...fields[i], ...review };
+      value[i] = { ...review };
       onChange(value);
     },
-    [onChange, value],
+    [fields, value, onChange],
   );
 
   return (
@@ -73,24 +74,21 @@ const ReviewField: FunctionComponent<ReviewFieldProps> = (props) => {
 
   const handleKeyChange = useCallback(
     (key: SelectValue) => {
-      value.key = key as unknown as ProductReviewKey;
-      onChange(value);
+      onChange({ ...value, key: key as unknown as ProductReviewKey });
     },
     [onChange, value],
   );
 
-  const handleValueChange = useCallback(
-    (evt: React.ChangeEvent<HTMLInputElement>) => {
-      value.value = evt.target.value;
-      onChange(value);
+  const handleRatingChange = useCallback(
+    (rating: string) => {
+      onChange({ ...value, value: rating });
     },
     [onChange, value],
   );
 
   const handleSourceChange = useCallback(
-    (evt: React.ChangeEvent<HTMLInputElement>) => {
-      value.source = evt.target.value;
-      onChange(value);
+    (source: string) => {
+      onChange({ ...value, source });
     },
     [onChange, value],
   );
@@ -99,7 +97,7 @@ const ReviewField: FunctionComponent<ReviewFieldProps> = (props) => {
     <div className="flex gap-6 items-center">
       <Field className="flex-1">
         Review
-        <Select value={value.key} onChange={handleKeyChange} clearable>
+        <Select value={value.key} onChange={handleKeyChange}>
           <SelectOption
             label="Tom's Hardware"
             value={ProductReviewKey.TomsHardware}
@@ -111,16 +109,24 @@ const ReviewField: FunctionComponent<ReviewFieldProps> = (props) => {
 
       <Field className="flex-1">
         Rating
-        <Input value={value.value} onChange={handleValueChange} ref={null} />
+        <TextInput
+          value={value.value}
+          onChange={handleRatingChange}
+          ref={null}
+        />
       </Field>
 
       <Field className="flex-1">
         Source
-        <Input value={value.source} onChange={handleSourceChange} ref={null} />
+        <TextInput
+          value={value.source}
+          onChange={handleSourceChange}
+          ref={null}
+        />
       </Field>
 
       <Button
-        className="w-[46px] h-[46px]"
+        className="w-[46px] h-[46px] mb-6"
         variant={ButtonVariant.Default}
         onClick={onRemove}
       >

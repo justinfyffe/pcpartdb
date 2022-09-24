@@ -152,16 +152,16 @@ const benchmarkValidator = Joi.object({
   id: Joi.any(),
   productId: Joi.any(),
   key: Joi.string().required(),
-  value: Joi.string().allow(''),
-  source: Joi.string().allow(''),
+  value: Joi.string().allow(null),
+  source: Joi.string().allow(null),
 }).options({ abortEarly: false });
 
 const reviewValidator = Joi.object({
   id: Joi.any(),
   productId: Joi.any(),
   key: Joi.string().required(),
-  value: Joi.string().allow(''),
-  source: Joi.string().allow(''),
+  value: Joi.string().allow(null),
+  source: Joi.string().allow(null),
 }).options({ abortEarly: false });
 
 const imageValidator = Joi.object({
@@ -179,72 +179,72 @@ const productValidator = Joi.object({
   description: Joi.string().allow(null),
 
   // General
-  company: Joi.string().allow(''),
-  generation: Joi.string().allow(''),
-  marketSegment: Joi.string().allow(''),
-  launchPrice: Joi.string().allow(''),
-  releaseDate: Joi.string().allow(''),
-  productionStatus: Joi.string().allow(''),
+  company: Joi.string().allow(null),
+  generation: Joi.string().allow(null),
+  marketSegment: Joi.string().allow(null),
+  launchPrice: Joi.string().allow(null),
+  releaseDate: Joi.string().allow(null),
+  productionStatus: Joi.string().allow(null),
 
   // Processor
-  gpuName: Joi.string().allow(''),
-  gpuVariant: Joi.string().allow(''),
-  architecture: Joi.string().allow(''),
-  foundry: Joi.string().allow(''),
-  lithography: Joi.string().allow(''),
-  processSize: Joi.string().allow(''),
-  transistors: Joi.string().allow(''),
-  dieSize: Joi.string().allow(''),
+  gpuName: Joi.string().allow(null),
+  gpuVariant: Joi.string().allow(null),
+  architecture: Joi.string().allow(null),
+  foundry: Joi.string().allow(null),
+  lithography: Joi.string().allow(null),
+  processSize: Joi.string().allow(null),
+  transistors: Joi.string().allow(null),
+  dieSize: Joi.string().allow(null),
 
   // Board Compatibility & Dimensions
-  slotWidth: Joi.string().allow(''),
-  length: Joi.string().allow(''),
-  width: Joi.string().allow(''),
-  height: Joi.string().allow(''),
-  weight: Joi.string().allow(''),
-  busInterface: Joi.string().allow(''),
-  tdp: Joi.string().allow(''),
-  suggestedPsu: Joi.string().allow(''),
-  powerConnectors: Joi.string().allow(''),
-  boardNumber: Joi.string().allow(''),
+  slotWidth: Joi.string().allow(null),
+  length: Joi.string().allow(null),
+  width: Joi.string().allow(null),
+  height: Joi.string().allow(null),
+  weight: Joi.string().allow(null),
+  busInterface: Joi.string().allow(null),
+  tdp: Joi.string().allow(null),
+  suggestedPsu: Joi.string().allow(null),
+  powerConnectors: Joi.string().allow(null),
+  boardNumber: Joi.string().allow(null),
 
   // Cores & Clock Speed
-  cudaCores: Joi.string().allow(''),
-  tmus: Joi.string().allow(''),
-  rops: Joi.string().allow(''),
-  tensorCores: Joi.string().allow(''),
-  rtCores: Joi.string().allow(''),
-  baseClock: Joi.string().allow(''),
-  boostClock: Joi.string().allow(''),
-  l1Cache: Joi.string().allow(''),
-  l2Cache: Joi.string().allow(''),
+  cudaCores: Joi.string().allow(null),
+  tmus: Joi.string().allow(null),
+  rops: Joi.string().allow(null),
+  tensorCores: Joi.string().allow(null),
+  rtCores: Joi.string().allow(null),
+  baseClock: Joi.string().allow(null),
+  boostClock: Joi.string().allow(null),
+  l1Cache: Joi.string().allow(null),
+  l2Cache: Joi.string().allow(null),
 
   // Theoretical Performance
-  pixelRate: Joi.string().allow(''),
-  textureRate: Joi.string().allow(''),
-  fp32Performance: Joi.string().allow(''),
-  fp64Performance: Joi.string().allow(''),
+  pixelRate: Joi.string().allow(null),
+  textureRate: Joi.string().allow(null),
+  fp32Performance: Joi.string().allow(null),
+  fp64Performance: Joi.string().allow(null),
 
   // Memory
-  memorySize: Joi.string().allow(''),
-  memoryType: Joi.string().allow(''),
-  memoryInterface: Joi.string().allow(''),
-  memoryBandwidth: Joi.string().allow(''),
+  memorySize: Joi.string().allow(null),
+  memoryType: Joi.string().allow(null),
+  memoryInterface: Joi.string().allow(null),
+  memoryBandwidth: Joi.string().allow(null),
 
   // Display Connectivity
-  maxResolution: Joi.string().allow(''),
-  displayPorts: Joi.string().allow(''),
-  hdmiPorts: Joi.string().allow(''),
+  maxResolution: Joi.string().allow(null),
+  displayPorts: Joi.string().allow(null),
+  hdmiPorts: Joi.string().allow(null),
 
   // API Support
-  directXVersion: Joi.string().allow(''),
-  openClVersion: Joi.string().allow(''),
-  openGlVersion: Joi.string().allow(''),
-  cudaVersion: Joi.string().allow(''),
-  shaderModelVersion: Joi.string().allow(''),
-  gSyncFreeSyncSupport: Joi.string().allow(''),
-  sliCrossfireSupport: Joi.string().allow(''),
-  vrReady: Joi.string().allow(''),
+  directXVersion: Joi.string().allow(null),
+  openClVersion: Joi.string().allow(null),
+  openGlVersion: Joi.string().allow(null),
+  cudaVersion: Joi.string().allow(null),
+  shaderModelVersion: Joi.string().allow(null),
+  gSyncFreeSyncSupport: Joi.string().allow(null),
+  sliCrossfireSupport: Joi.string().allow(null),
+  vrReady: Joi.string().allow(null),
 
   // TODO: add validator for unique keys
   benchmarks: Joi.array().items(benchmarkValidator),
@@ -271,75 +271,77 @@ function formOptions(gpu?: Product): UseFormProps<ProductFormData> {
     defaultValues: {
       parentId: gpu?.parentId ?? null,
 
-      slug: gpu?.slug ?? '',
+      slug: gpu?.slug ?? null,
       type: ProductType.GPU,
-      name: gpu?.name ?? '',
+      name: gpu?.name ?? null,
       description: meta.get(ProductMetaKey.Description)?.value ?? null,
 
       // General
-      company: specs.get(ProductSpecKey.Company)?.value ?? '',
-      generation: specs.get(ProductSpecKey.Generation)?.value ?? '',
-      marketSegment: specs.get(ProductSpecKey.MarketSegment)?.value ?? '',
-      launchPrice: specs.get(ProductSpecKey.LaunchPrice)?.value ?? '',
-      releaseDate: specs.get(ProductSpecKey.ReleaseDate)?.value ?? '',
-      productionStatus: specs.get(ProductSpecKey.ProductionStatus)?.value ?? '',
+      company: specs.get(ProductSpecKey.Company)?.value ?? null,
+      generation: specs.get(ProductSpecKey.Generation)?.value ?? null,
+      marketSegment:
+        specs.get(ProductSpecKey.MarketSegment)?.value ?? MarketSegment.Unknown,
+      launchPrice: specs.get(ProductSpecKey.LaunchPrice)?.value ?? null,
+      releaseDate: specs.get(ProductSpecKey.ReleaseDate)?.value ?? null,
+      productionStatus:
+        specs.get(ProductSpecKey.ProductionStatus)?.value ?? null,
 
       // Processor
-      gpuName: specs.get(ProductSpecKey.GpuName)?.value ?? '',
-      gpuVariant: specs.get(ProductSpecKey.GpuVariant)?.value ?? '',
-      architecture: specs.get(ProductSpecKey.Architecture)?.value ?? '',
-      foundry: specs.get(ProductSpecKey.Foundry)?.value ?? '',
-      lithography: specs.get(ProductSpecKey.Lithography)?.value ?? '',
-      transistors: specs.get(ProductSpecKey.Transistors)?.value ?? '',
-      dieSize: specs.get(ProductSpecKey.DieSize)?.value ?? '',
+      gpuName: specs.get(ProductSpecKey.GpuName)?.value ?? null,
+      gpuVariant: specs.get(ProductSpecKey.GpuVariant)?.value ?? null,
+      architecture: specs.get(ProductSpecKey.Architecture)?.value ?? null,
+      foundry: specs.get(ProductSpecKey.Foundry)?.value ?? null,
+      lithography: specs.get(ProductSpecKey.Lithography)?.value ?? null,
+      transistors: specs.get(ProductSpecKey.Transistors)?.value ?? null,
+      dieSize: specs.get(ProductSpecKey.DieSize)?.value ?? null,
 
       // Board Compatibility & Dimensions
-      slotWidth: specs.get(ProductSpecKey.SlotWidth)?.value ?? '',
-      length: specs.get(ProductSpecKey.Length)?.value ?? '',
-      width: specs.get(ProductSpecKey.Width)?.value ?? '',
-      height: specs.get(ProductSpecKey.Height)?.value ?? '',
-      weight: specs.get(ProductSpecKey.Weight)?.value ?? '',
-      busInterface: specs.get(ProductSpecKey.BusInterface)?.value ?? '',
-      tdp: specs.get(ProductSpecKey.Tdp)?.value ?? '',
-      suggestedPsu: specs.get(ProductSpecKey.SuggestedPsu)?.value ?? '',
-      powerConnectors: specs.get(ProductSpecKey.PowerConnectors)?.value ?? '',
-      boardNumber: specs.get(ProductSpecKey.BoardNumber)?.value ?? '',
+      slotWidth: specs.get(ProductSpecKey.SlotWidth)?.value ?? null,
+      length: specs.get(ProductSpecKey.Length)?.value ?? null,
+      width: specs.get(ProductSpecKey.Width)?.value ?? null,
+      height: specs.get(ProductSpecKey.Height)?.value ?? null,
+      weight: specs.get(ProductSpecKey.Weight)?.value ?? null,
+      busInterface: specs.get(ProductSpecKey.BusInterface)?.value ?? null,
+      tdp: specs.get(ProductSpecKey.Tdp)?.value ?? null,
+      suggestedPsu: specs.get(ProductSpecKey.SuggestedPsu)?.value ?? null,
+      powerConnectors: specs.get(ProductSpecKey.PowerConnectors)?.value ?? null,
+      boardNumber: specs.get(ProductSpecKey.BoardNumber)?.value ?? null,
 
       // Cores & Clock Speeds
-      cudaCores: specs.get(ProductSpecKey.CudaCores)?.value ?? '',
-      tmus: specs.get(ProductSpecKey.Tmus)?.value ?? '',
-      rops: specs.get(ProductSpecKey.Rops)?.value ?? '',
-      tensorCores: specs.get(ProductSpecKey.TensorCores)?.value ?? '',
-      rtCores: specs.get(ProductSpecKey.RtCores)?.value ?? '',
-      baseClock: specs.get(ProductSpecKey.ClockSpeedBase)?.value ?? '',
-      boostClock: specs.get(ProductSpecKey.ClockSpeedBoost)?.value ?? '',
-      l1Cache: specs.get(ProductSpecKey.L1Cache)?.value ?? '',
-      l2Cache: specs.get(ProductSpecKey.L2Cache)?.value ?? '',
+      cudaCores: specs.get(ProductSpecKey.CudaCores)?.value ?? null,
+      tmus: specs.get(ProductSpecKey.Tmus)?.value ?? null,
+      rops: specs.get(ProductSpecKey.Rops)?.value ?? null,
+      tensorCores: specs.get(ProductSpecKey.TensorCores)?.value ?? null,
+      rtCores: specs.get(ProductSpecKey.RtCores)?.value ?? null,
+      baseClock: specs.get(ProductSpecKey.ClockSpeedBase)?.value ?? null,
+      boostClock: specs.get(ProductSpecKey.ClockSpeedBoost)?.value ?? null,
+      l1Cache: specs.get(ProductSpecKey.L1Cache)?.value ?? null,
+      l2Cache: specs.get(ProductSpecKey.L2Cache)?.value ?? null,
 
       // Theoretical Performance
-      pixelRate: specs.get(ProductSpecKey.PixelFillRate)?.value ?? '',
-      textureRate: specs.get(ProductSpecKey.TextureRate)?.value ?? '',
-      fp32Performance: specs.get(ProductSpecKey.Fp32Performance)?.value ?? '',
-      fp64Performance: specs.get(ProductSpecKey.Fp64Performance)?.value ?? '',
+      pixelRate: specs.get(ProductSpecKey.PixelFillRate)?.value ?? null,
+      textureRate: specs.get(ProductSpecKey.TextureRate)?.value ?? null,
+      fp32Performance: specs.get(ProductSpecKey.Fp32Performance)?.value ?? null,
+      fp64Performance: specs.get(ProductSpecKey.Fp64Performance)?.value ?? null,
 
       // Memory
-      memorySize: specs.get(ProductSpecKey.MemorySize)?.value ?? '',
-      memoryType: specs.get(ProductSpecKey.MemoryType)?.value ?? '',
-      memoryInterface: specs.get(ProductSpecKey.MemoryInterface)?.value ?? '',
-      memoryBandwidth: specs.get(ProductSpecKey.MemoryBandwidth)?.value ?? '',
+      memorySize: specs.get(ProductSpecKey.MemorySize)?.value ?? null,
+      memoryType: specs.get(ProductSpecKey.MemoryType)?.value ?? null,
+      memoryInterface: specs.get(ProductSpecKey.MemoryInterface)?.value ?? null,
+      memoryBandwidth: specs.get(ProductSpecKey.MemoryBandwidth)?.value ?? null,
 
       // Display Connectivity
-      maxResolution: specs.get(ProductSpecKey.MaxResolution)?.value ?? '',
-      displayPorts: specs.get(ProductSpecKey.DisplayPorts)?.value ?? '',
-      hdmiPorts: specs.get(ProductSpecKey.HdmiPorts)?.value ?? '',
+      maxResolution: specs.get(ProductSpecKey.MaxResolution)?.value ?? null,
+      displayPorts: specs.get(ProductSpecKey.DisplayPorts)?.value ?? null,
+      hdmiPorts: specs.get(ProductSpecKey.HdmiPorts)?.value ?? null,
 
       // API Support
-      directXVersion: specs.get(ProductSpecKey.DirectXVersion)?.value ?? '',
-      openClVersion: specs.get(ProductSpecKey.OpenClVersion)?.value ?? '',
-      openGlVersion: specs.get(ProductSpecKey.OpenGlVersion)?.value ?? '',
-      cudaVersion: specs.get(ProductSpecKey.CudaVersion)?.value ?? '',
+      directXVersion: specs.get(ProductSpecKey.DirectXVersion)?.value ?? null,
+      openClVersion: specs.get(ProductSpecKey.OpenClVersion)?.value ?? null,
+      openGlVersion: specs.get(ProductSpecKey.OpenGlVersion)?.value ?? null,
+      cudaVersion: specs.get(ProductSpecKey.CudaVersion)?.value ?? null,
       shaderModelVersion:
-        specs.get(ProductSpecKey.ShaderModelVersion)?.value ?? '',
+        specs.get(ProductSpecKey.ShaderModelVersion)?.value ?? null,
       gSyncFreeSyncSupport:
         specs.get(ProductSpecKey.GSyncFreeSyncSupport)?.value ??
         ProductSpecBoolean.Unknown,
@@ -1417,7 +1419,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           render={({ field }) => (
             <BenchmarksField
               fields={benchmarkFields}
-              onAppend={() => appendBenchmark({ value: '', source: '' })}
+              onAppend={() => appendBenchmark({ value: null, source: null })}
               onRemove={(i) => removeBenchmark(i)}
               {...field}
               ref={null}
@@ -1435,7 +1437,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           render={({ field }) => (
             <ReviewsField
               fields={reviewFields}
-              onAppend={() => appendReview({ value: '', source: '' })}
+              onAppend={() => appendReview({ value: null, source: null })}
               onRemove={(i) => removeReview(i)}
               {...field}
               ref={null}
@@ -1640,7 +1642,7 @@ function toFormBenchmarks(gpu?: Product): ProductBenchmarkFormData[] {
     gpu?.benchmarks?.map((benchmark) => ({
       key: benchmark.key,
       value: benchmark.value,
-      source: benchmark.source ?? '',
+      source: benchmark.source ?? null,
     })) ?? []
   );
 }
@@ -1650,7 +1652,7 @@ function toRequestBenchmarks(formData: ProductFormData): ProductBenchmark[] {
     formData.benchmarks?.map((benchmark) => ({
       key: benchmark.key,
       value: benchmark.value,
-      source: benchmark.source ?? '',
+      source: benchmark.source ?? null,
     })) ?? []
   );
 }
@@ -1660,7 +1662,7 @@ function toFormReviews(gpu?: Product): ProductReviewFormData[] {
     gpu?.reviews?.map((review) => ({
       key: review.key,
       value: review.value,
-      source: review.source ?? '',
+      source: review.source ?? null,
     })) ?? []
   );
 }
@@ -1670,7 +1672,7 @@ function toRequestReviews(formData: ProductFormData): ProductReview[] {
     formData.reviews?.map((review) => ({
       key: review.key,
       value: review.value,
-      source: review.source ?? '',
+      source: review.source ?? null,
     })) ?? []
   );
 }
