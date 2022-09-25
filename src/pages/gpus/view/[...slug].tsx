@@ -8,10 +8,23 @@ import {
   TableIcon,
 } from '@heroicons/react/outline';
 import { NextPageContext } from 'next';
-import React from 'react';
+import React, { useMemo } from 'react';
+import {
+  getProductBenchmarks,
+  getProductReviews,
+  getProductSpecs,
+  Product,
+} from '../../../types/product';
+import { ProductBenchmarkKey } from '../../../types/product-benchmark';
+import { ProductReviewKey } from '../../../types/product-review';
+import { ProductSpecKey } from '../../../types/product-spec';
 import { CompareForm } from '../../../web/compare';
 import { ProductImage } from '../../../web/product';
-import { Breadcrumbs } from '../../../web/shared/components/breadcrumbs';
+import { productService } from '../../../web/product/product.service';
+import {
+  Breadcrumb,
+  Breadcrumbs,
+} from '../../../web/shared/components/breadcrumbs';
 import { Button, ButtonVariant } from '../../../web/shared/components/button';
 import { Table, TBody, Td, Tr } from '../../../web/shared/components/table';
 import { WebsiteLayout } from '../../../web/shared/layouts/website';
@@ -23,23 +36,33 @@ import {
   SidenavStockUpdates,
 } from '../../../web/sidenav';
 
-interface ViewGpuPageProps {}
+interface ViewGpuPageProps {
+  gpu: Product;
+}
 
-const ViewGpuPage = (_props: ViewGpuPageProps) => {
+const ViewGpuPage = (props: ViewGpuPageProps) => {
+  const { gpu } = props;
+
+  const specs = useMemo(() => getProductSpecs(gpu), [gpu]);
+  const reviews = useMemo(() => getProductReviews(gpu), [gpu]);
+  const benchmarks = useMemo(() => getProductBenchmarks(gpu), [gpu]);
+
   return (
     <WebsiteLayout>
       <article className="flex flex-wrap gap-6 lg:gap-8 justify-center">
         <header className="flex flex-wrap w-full items-center justify-between gap-3">
-          <Breadcrumbs
-            items={[
-              { link: '#', text: 'Finest PC' },
-              { link: '#', text: 'GPUs' },
-              { text: 'NVIDIA GeForce RTX 3090' },
-            ]}
-            className="w-full"
-          />
+          <Breadcrumbs>
+            <Breadcrumb href="#">Finest PC</Breadcrumb>
+            <Breadcrumb href="#">GPUs</Breadcrumb>
+            {gpu.parent != null ? (
+              <Breadcrumb href="#">{gpu.parent.name}</Breadcrumb>
+            ) : (
+              <></>
+            )}
+            <Breadcrumb>{gpu.name}</Breadcrumb>
+          </Breadcrumbs>
 
-          <h1 className="mb-3">NVIDIA GeForce RTX 3090</h1>
+          <h1 className="mb-3">{gpu.name}</h1>
 
           <CompareForm values={[1]} />
         </header>
@@ -101,7 +124,8 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
                       'text-md lg:text-lg text-slate-600 text-right',
                     )}
                   >
-                    82.23
+                    {benchmarks[ProductBenchmarkKey.PerformanceRating]?.value ??
+                      '--'}
                   </div>
                 </li>
 
@@ -127,7 +151,8 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
                       'text-md lg:text-lg text-slate-600 text-right',
                     )}
                   >
-                    58.32
+                    {benchmarks[ProductBenchmarkKey.ValueForMoney]?.value ??
+                      '--'}
                   </div>
                 </li>
 
@@ -153,7 +178,9 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
                       'text-md lg:text-lg text-slate-600 text-right',
                     )}
                   >
-                    9704 CUDA Cores
+                    {specs[ProductSpecKey.CudaCores] != null
+                      ? `${specs[ProductSpecKey.CudaCores].value} CUDA Cores`
+                      : '--'}
                   </div>
                 </li>
 
@@ -179,7 +206,8 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
                       'text-md lg:text-lg text-slate-600 text-right',
                     )}
                   >
-                    1440 MHz / 1845 MHz
+                    {specs[ProductSpecKey.ClockSpeedBase]?.value} /{' '}
+                    {specs[ProductSpecKey.ClockSpeedBoost]?.value}
                   </div>
                 </li>
 
@@ -205,7 +233,8 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
                       'text-md lg:text-lg text-slate-600 text-right',
                     )}
                   >
-                    24 GB GDDR6X
+                    {specs[ProductSpecKey.MemorySize]?.value ?? '--'}{' '}
+                    {specs[ProductSpecKey.MemoryType]?.value ?? '--'}
                   </div>
                 </li>
 
@@ -231,7 +260,7 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
                       'text-md lg:text-lg text-slate-600 text-right',
                     )}
                   >
-                    Q4 2022
+                    {specs[ProductSpecKey.ReleaseDate]?.value ?? '--'}
                   </div>
                 </li>
               </ul>
@@ -271,27 +300,31 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
                   </Tr>
                   <Tr>
                     <Td>Company</Td>
-                    <Td>NVIDIA</Td>
+                    <Td>{specs[ProductSpecKey.Company]?.value ?? '--'}</Td>
                   </Tr>
                   <Tr>
-                    <Td>Generation</Td>
-                    <Td>GeForce 30</Td>
+                    <Td>Generation</Td>{' '}
+                    <Td>{specs[ProductSpecKey.Generation]?.value ?? '--'}</Td>
                   </Tr>
                   <Tr>
                     <Td>Market Segment</Td>
-                    <Td>Desktop</Td>
+                    <Td>
+                      {specs[ProductSpecKey.MarketSegment]?.value ?? '--'}
+                    </Td>
                   </Tr>
                   <Tr>
                     <Td>Launch Price</Td>
-                    <Td>$1,499</Td>
+                    <Td>{specs[ProductSpecKey.LaunchPrice]?.value ?? '--'}</Td>
                   </Tr>
                   <Tr>
                     <Td>Release Date</Td>
-                    <Td>Q4 2022</Td>
+                    <Td>{specs[ProductSpecKey.ReleaseDate]?.value ?? '--'}</Td>
                   </Tr>
                   <Tr>
                     <Td>Production Status</Td>
-                    <Td>Active</Td>
+                    <Td>
+                      {specs[ProductSpecKey.ProductionStatus]?.value ?? '--'}
+                    </Td>
                   </Tr>
                 </TBody>
               </Table>
@@ -308,40 +341,71 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
               <Table border responsive>
                 <TBody>
                   <Tr>
-                    <Td className="min-w-[180px]">
-                      <a href="#">Average Rating</a>
+                    <Td className="min-w-[100px]">
+                      {reviews[ProductReviewKey.Amazon]?.source != null ? (
+                        <a href={reviews[ProductReviewKey.Amazon].source}>
+                          Amazon
+                        </a>
+                      ) : (
+                        <>Amazon</>
+                      )}
                     </Td>
-                    <Td className="min-w-[80px]">4.0 / 5</Td>
+                    <Td className="min-w-[80px]">
+                      {reviews[ProductReviewKey.Amazon]?.value ?? '--'}
+                    </Td>
                   </Tr>
                   <Tr>
                     <Td>
-                      <a href="#">Amazon</a>
+                      {reviews[ProductReviewKey.TechRadar]?.source != null ? (
+                        <a href={reviews[ProductReviewKey.TechRadar].source}>
+                          TechRadar
+                        </a>
+                      ) : (
+                        <>TechRadar</>
+                      )}
                     </Td>
-                    <Td>4.6 / 5</Td>
+                    <Td>
+                      {reviews[ProductReviewKey.TechRadar]?.value ?? '--'}
+                    </Td>
                   </Tr>
                   <Tr>
                     <Td>
-                      <a href="#">TechRadar</a>
+                      {reviews[ProductReviewKey.TomsHardware]?.source !=
+                      null ? (
+                        <a href={reviews[ProductReviewKey.TomsHardware].source}>
+                          Tom&apos;s Hardware
+                        </a>
+                      ) : (
+                        <>Tom&apos;s Hardware</>
+                      )}
                     </Td>
-                    <Td>4.0 / 5</Td>
+                    <Td>
+                      {reviews[ProductReviewKey.TomsHardware]?.value ?? '--'}
+                    </Td>
                   </Tr>
                   <Tr>
                     <Td>
-                      <a href="#">Tom&apos;s Hardware</a>
+                      {reviews[ProductReviewKey.TechSpot]?.source != null ? (
+                        <a href={reviews[ProductReviewKey.TechSpot].source}>
+                          TechSpot
+                        </a>
+                      ) : (
+                        <>TechSpot</>
+                      )}
                     </Td>
-                    <Td>4.0 / 5</Td>
+                    <Td>{reviews[ProductReviewKey.TechSpot]?.value ?? '--'}</Td>
                   </Tr>
                   <Tr>
                     <Td>
-                      <a href="#">TechSpot</a>
+                      {reviews[ProductReviewKey.PcGamer]?.source != null ? (
+                        <a href={reviews[ProductReviewKey.PcGamer].source}>
+                          PC Gamer
+                        </a>
+                      ) : (
+                        <>PC Gamer</>
+                      )}
                     </Td>
-                    <Td>3.5 / 5</Td>
-                  </Tr>
-                  <Tr>
-                    <Td>
-                      <a href="#">PC Gamer</a>
-                    </Td>
-                    <Td>3.5 / 5</Td>
+                    <Td>{reviews[ProductReviewKey.PcGamer]?.value ?? '--'}</Td>
                   </Tr>
                 </TBody>
               </Table>
@@ -362,27 +426,35 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
                   <TBody>
                     <Tr>
                       <Td className="min-w-[180px]">GPU Name</Td>
-                      <Td className="min-w-[80px]">GA102</Td>
+                      <Td className="min-w-[80px]">
+                        {specs[ProductSpecKey.GpuName]?.value ?? '--'}
+                      </Td>
                     </Tr>
                     <Tr>
                       <Td>Architecture</Td>
-                      <Td>Ampere</Td>
+                      <Td>
+                        {specs[ProductSpecKey.Architecture]?.value ?? '--'}
+                      </Td>
                     </Tr>
                     <Tr>
                       <Td>Foundry</Td>
-                      <Td>Samsung</Td>
+                      <Td>{specs[ProductSpecKey.Foundry]?.value ?? '--'}</Td>
                     </Tr>
                     <Tr>
                       <Td>Process Size</Td>
-                      <Td>8nm</Td>
+                      <Td>
+                        {specs[ProductSpecKey.Lithography]?.value ?? '--'}
+                      </Td>
                     </Tr>
                     <Tr>
                       <Td>Transistors</Td>
-                      <Td>28,300 million</Td>
+                      <Td>
+                        {specs[ProductSpecKey.Transistors]?.value ?? '--'}
+                      </Td>
                     </Tr>
                     <Tr>
                       <Td>Die Size</Td>
-                      <Td>628</Td>
+                      <Td>{specs[ProductSpecKey.DieSize]?.value ?? '--'}</Td>
                     </Tr>
                   </TBody>
                 </Table>
@@ -400,39 +472,47 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
                   <TBody>
                     <Tr>
                       <Td className="min-w-[180px]">Slot Width</Td>
-                      <Td className="min-w-[80px]">Triple-slot</Td>
+                      <Td className="min-w-[80px]">
+                        {specs[ProductSpecKey.SlotWidth]?.value ?? '--'}
+                      </Td>
                     </Tr>
                     <Tr>
                       <Td>Length</Td>
-                      <Td>336mm</Td>
+                      <Td>{specs[ProductSpecKey.Length]?.value ?? '--'}</Td>
                     </Tr>
                     <Tr>
                       <Td>Width</Td>
-                      <Td>140mm</Td>
+                      <Td>{specs[ProductSpecKey.Width]?.value ?? '--'}</Td>
                     </Tr>
                     <Tr>
                       <Td>Height</Td>
-                      <Td>61mm</Td>
+                      <Td>{specs[ProductSpecKey.Height]?.value ?? '--'}</Td>
                     </Tr>
                     <Tr>
                       <Td>Weight</Td>
-                      <Td>2.92 kg</Td>
+                      <Td>{specs[ProductSpecKey.Weight]?.value ?? '--'}</Td>
                     </Tr>
                     <Tr>
                       <Td>Bus Interface</Td>
-                      <Td>PCIe 4.0 x16</Td>
+                      <Td>
+                        {specs[ProductSpecKey.BusInterface]?.value ?? '--'}
+                      </Td>
                     </Tr>
                     <Tr>
                       <Td>TDP</Td>
-                      <Td>350 W</Td>
+                      <Td>{specs[ProductSpecKey.Tdp]?.value ?? '--'}</Td>
                     </Tr>
                     <Tr>
                       <Td>Suggested PSU</Td>
-                      <Td>750 W</Td>
+                      <Td>
+                        {specs[ProductSpecKey.SuggestedPsu]?.value ?? '--'}
+                      </Td>
                     </Tr>
                     <Tr>
                       <Td>Power Connectors</Td>
-                      <Td>1x 12-pin</Td>
+                      <Td>
+                        {specs[ProductSpecKey.PowerConnectors]?.value ?? '--'}
+                      </Td>
                     </Tr>
                   </TBody>
                 </Table>
@@ -450,39 +530,47 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
                   <TBody>
                     <Tr>
                       <Td className="min-w-[180px]">CUDA Cores</Td>
-                      <Td className="min-w-[80px]">9,704</Td>
+                      <Td className="min-w-[80px]">
+                        {specs[ProductSpecKey.CudaCores]?.value ?? '--'}
+                      </Td>
                     </Tr>
                     <Tr>
                       <Td>TMUs</Td>
-                      <Td>328</Td>
+                      <Td>{specs[ProductSpecKey.Tmus]?.value ?? '--'}</Td>
                     </Tr>
                     <Tr>
                       <Td>ROPs</Td>
-                      <Td>112</Td>
+                      <Td>{specs[ProductSpecKey.Rops]?.value ?? '--'}</Td>
                     </Tr>
                     <Tr>
                       <Td>Tensor Cores</Td>
-                      <Td>576</Td>
+                      <Td>
+                        {specs[ProductSpecKey.TensorCores]?.value ?? '--'}
+                      </Td>
                     </Tr>
                     <Tr>
                       <Td>RT Cores</Td>
-                      <Td>72</Td>
+                      <Td>{specs[ProductSpecKey.RtCores]?.value ?? '--'}</Td>
                     </Tr>
                     <Tr>
                       <Td>Base Clock</Td>
-                      <Td>1,440 MHz</Td>
+                      <Td>
+                        {specs[ProductSpecKey.ClockSpeedBase]?.value ?? '--'}
+                      </Td>
                     </Tr>
                     <Tr>
                       <Td>Boost Clock</Td>
-                      <Td>1,845 MHz</Td>
+                      <Td>
+                        {specs[ProductSpecKey.ClockSpeedBoost]?.value ?? '--'}
+                      </Td>
                     </Tr>
                     <Tr>
                       <Td>L1 Cache</Td>
-                      <Td>128 KB</Td>
+                      <Td>{specs[ProductSpecKey.L1Cache]?.value ?? '--'}</Td>
                     </Tr>
                     <Tr>
                       <Td>L2 Cache</Td>
-                      <Td>6 MB</Td>
+                      <Td>{specs[ProductSpecKey.L2Cache]?.value ?? '--'}</Td>
                     </Tr>
                   </TBody>
                 </Table>
@@ -499,20 +587,28 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
                 <Table border responsive>
                   <TBody>
                     <Tr>
-                      <Td className="min-w-[180px]">Pixel Rate</Td>
-                      <Td className="min-w-[80px]">189.8 GPixel/s</Td>
+                      <Td className="min-w-[180px]">Pixel Fill Rate</Td>
+                      <Td className="min-w-[80px]">
+                        {specs[ProductSpecKey.PixelFillRate]?.value ?? '--'}
+                      </Td>
                     </Tr>
                     <Tr>
-                      <Td>Texture Rate</Td>
-                      <Td>556.0 GTexel/s</Td>
+                      <Td>Texture Fill Rate</Td>
+                      <Td>
+                        {specs[ProductSpecKey.TextureRate]?.value ?? '--'}
+                      </Td>
                     </Tr>
                     <Tr>
                       <Td>FP32 Performance</Td>
-                      <Td>35.58 TFLOPS</Td>
+                      <Td>
+                        {specs[ProductSpecKey.Fp32Performance]?.value ?? '--'}
+                      </Td>
                     </Tr>
                     <Tr>
                       <Td>FP64 Performance</Td>
-                      <Td>556.0 GFLOPS</Td>
+                      <Td>
+                        {specs[ProductSpecKey.Fp64Performance]?.value ?? '--'}
+                      </Td>
                     </Tr>
                   </TBody>
                 </Table>
@@ -530,19 +626,31 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
                   <TBody>
                     <Tr>
                       <Td className="min-w-[180px]">Memory Size</Td>
-                      <Td className="min-w-[80px]">24 GB GDDR6X</Td>
+                      <Td className="min-w-[80px]">
+                        {specs[ProductSpecKey.MemorySize]?.value ?? '--'}
+                      </Td>
+                    </Tr>
+                    <Tr>
+                      <Td className="min-w-[180px]">Memory Type</Td>
+                      <Td className="min-w-[80px]">
+                        {specs[ProductSpecKey.MemoryType]?.value ?? '--'}
+                      </Td>
                     </Tr>
                     <Tr>
                       <Td>Memory Clock</Td>
-                      <Td>9,750 MHz</Td>
+                      <Td>--</Td>
                     </Tr>
                     <Tr>
                       <Td>Memory Interface</Td>
-                      <Td>384-bit</Td>
+                      <Td>
+                        {specs[ProductSpecKey.MemoryInterface]?.value ?? '--'}
+                      </Td>
                     </Tr>
                     <Tr>
                       <Td>Memory Bandwidth</Td>
-                      <Td>936 GB/s</Td>
+                      <Td>
+                        {specs[ProductSpecKey.MemoryBandwidth]?.value ?? '--'}
+                      </Td>
                     </Tr>
                   </TBody>
                 </Table>
@@ -560,31 +668,35 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
                   <TBody>
                     <Tr>
                       <Td className="min-w-[180px]">Max Resolution</Td>
-                      <Td className="min-w-[80px]">7680x4320</Td>
+                      <Td className="min-w-[80px]">
+                        {specs[ProductSpecKey.MaxResolution]?.value ?? '--'}
+                      </Td>
                     </Tr>
                     <Tr>
                       <Td>Display Ports</Td>
-                      <Td>3x 1.4a</Td>
+                      <Td>
+                        {specs[ProductSpecKey.DisplayPorts]?.value ?? '--'}
+                      </Td>
                     </Tr>
                     <Tr>
                       <Td>HDMI Ports</Td>
-                      <Td>2x 2.1, 1x 2.0</Td>
+                      <Td>{specs[ProductSpecKey.HdmiPorts]?.value ?? '--'}</Td>
                     </Tr>
                     <Tr>
                       <Td>USB-C</Td>
-                      <Td>No</Td>
+                      <Td>--</Td>
                     </Tr>
                     <Tr>
                       <Td>Dual Link DVI</Td>
-                      <Td>No</Td>
+                      <Td>--</Td>
                     </Tr>
                     <Tr>
                       <Td>Single Link DVI</Td>
-                      <Td>No</Td>
+                      <Td>--</Td>
                     </Tr>
                     <Tr>
                       <Td>VGA</Td>
-                      <Td>No</Td>
+                      <Td>--</Td>
                     </Tr>
                   </TBody>
                 </Table>
@@ -602,31 +714,46 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
                   <TBody>
                     <Tr>
                       <Td className="min-w-[180px]">DirextX</Td>
-                      <Td className="min-w-[80px]">12</Td>
+                      <Td className="min-w-[80px]">
+                        {specs[ProductSpecKey.DirectXVersion]?.value ?? '--'}
+                      </Td>
                     </Tr>
                     <Tr>
                       <Td>G-Sync / FreeSync</Td>
-                      <Td>Yes</Td>
+                      <Td>
+                        {specs[ProductSpecKey.GSyncFreeSyncSupport]?.value ??
+                          '--'}
+                      </Td>
                     </Tr>
                     <Tr>
                       <Td>SLI / Crossfire</Td>
-                      <Td>No</Td>
+                      <Td>
+                        {specs[ProductSpecKey.SliCrossfireSupport]?.value ??
+                          '--'}
+                      </Td>
                     </Tr>
                     <Tr>
                       <Td>VR Ready</Td>
-                      <Td>Yes</Td>
+                      <Td>{specs[ProductSpecKey.VrReady]?.value ?? '--'}</Td>
                     </Tr>
                     <Tr>
                       <Td>OpenCL</Td>
-                      <Td>2.0</Td>
+                      <Td>
+                        {specs[ProductSpecKey.OpenClVersion]?.value ?? '--'}
+                      </Td>
                     </Tr>
                     <Tr>
                       <Td>OpenGL</Td>
-                      <Td>4.6</Td>
+                      <Td>
+                        {specs[ProductSpecKey.OpenGlVersion]?.value ?? '--'}
+                      </Td>
                     </Tr>
                     <Tr>
                       <Td>Shader Model</Td>
-                      <Td>6.5</Td>
+                      <Td>
+                        {specs[ProductSpecKey.ShaderModelVersion]?.value ??
+                          '--'}
+                      </Td>
                     </Tr>
                   </TBody>
                 </Table>
@@ -645,31 +772,34 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
                 <TBody>
                   <Tr>
                     <Td className="min-w-[100px]">Performance Rating</Td>
-                    <Td className="min-w-[80px]">82.23</Td>
+                    <Td className="min-w-[80px]">
+                      {benchmarks[ProductBenchmarkKey.PerformanceRating]
+                        ?.value ?? '--'}
+                    </Td>
                   </Tr>
                   <Tr>
                     <Td>Value for Money</Td>
-                    <Td>58.32</Td>
+                    <Td>
+                      {benchmarks[ProductBenchmarkKey.ValueForMoney]?.value ??
+                        '--'}
+                    </Td>
                   </Tr>
                   <Tr>
-                    <Td>Passmark</Td>
-                    <Td>26479</Td>
-                  </Tr>
-                  <Tr>
-                    <Td>3DMark Time Spy</Td>
-                    <Td>19931</Td>
-                  </Tr>
-                  <Tr>
-                    <Td>GeekBench 5 CUDA</Td>
-                    <Td>238123</Td>
-                  </Tr>
-                  <Tr>
-                    <Td>GeekBench 5 OpenCL</Td>
-                    <Td>204921</Td>
-                  </Tr>
-                  <Tr>
-                    <Td>GeekBench 5 Vulkan</Td>
-                    <Td>138637</Td>
+                    <Td>
+                      {benchmarks[ProductBenchmarkKey.TimeSpy]?.source !=
+                      null ? (
+                        <a
+                          href={benchmarks[ProductBenchmarkKey.TimeSpy].source}
+                        >
+                          3DMark Time Spy
+                        </a>
+                      ) : (
+                        <>3DMark Time Spy</>
+                      )}
+                    </Td>
+                    <Td>
+                      {benchmarks[ProductBenchmarkKey.TimeSpy]?.value ?? '--'}
+                    </Td>
                   </Tr>
                 </TBody>
               </Table>
@@ -687,8 +817,11 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
   );
 };
 
-ViewGpuPage.getInitialProps = async (_ctx: NextPageContext) => {
-  return {};
+ViewGpuPage.getInitialProps = async (ctx: NextPageContext) => {
+  const { slug } = ctx.query as { slug: string };
+  const gpu = await productService.get(slug);
+
+  return { gpu };
 };
 
 export default ViewGpuPage;

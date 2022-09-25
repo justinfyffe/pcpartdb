@@ -2,8 +2,11 @@ import React, { forwardRef, useCallback, useMemo, useState } from 'react';
 import { ProductPropertyType } from '../../../types/product';
 import { ProductMetaKey } from '../../../types/product-meta';
 import { ProductSpecKey } from '../../../types/product-spec';
-import { NumberInput, TextInput } from '../../shared/components/input';
-import { DateInput } from '../../shared/components/input/date-input';
+import {
+  DateInput,
+  NumberInput,
+  TextInput,
+} from '../../shared/components/input';
 import { ProductPropertyAutocomplete } from './product-property-autocomplete';
 
 type InputType = 'autocomplete' | 'text' | 'number' | 'date';

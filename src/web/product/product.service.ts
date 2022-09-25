@@ -21,8 +21,8 @@ export class ProductService {
     return denormalize(response.result, [productSchema], response.entities);
   }
 
-  async get(id: number): Promise<Product> {
-    const response = await this.api.get<ProductResponse>(`${PATH}/${id}`);
+  async get(idOrSlug: number | string): Promise<Product> {
+    const response = await this.api.get<ProductResponse>(`${PATH}/${idOrSlug}`);
     return denormalize(response.result, productSchema, response.entities);
   }
 

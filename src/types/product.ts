@@ -21,6 +21,7 @@ import {
 } from './product-review';
 import {
   ProductSpec,
+  ProductSpecKey,
   ProductSpecRequest,
   productSpecSchema,
 } from './product-spec';
@@ -84,3 +85,39 @@ export const productSchema = new schema.Entity('products', {
   reviews: [productReviewSchema],
   images: [productImageSchema],
 });
+
+export function getProductMeta(product: Product) {
+  const meta: Record<string, ProductMeta> = {};
+  product.meta.forEach((value) => {
+    meta[value.key] = value;
+  });
+
+  return meta;
+}
+
+export function getProductSpecs(product: Product) {
+  const specs: Record<string, ProductSpec> = {};
+  product.specs.forEach((spec) => {
+    specs[spec.key] = spec;
+  });
+
+  return specs;
+}
+
+export function getProductBenchmarks(product: Product) {
+  const benchmarks: Record<string, ProductBenchmark> = {};
+  product.benchmarks.forEach((benchmark) => {
+    benchmarks[benchmark.key] = benchmark;
+  });
+
+  return benchmarks;
+}
+
+export function getProductReviews(product: Product) {
+  const reviews: Record<string, ProductReview> = {};
+  product.reviews.forEach((review) => {
+    reviews[review.key] = review;
+  });
+
+  return reviews;
+}

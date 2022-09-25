@@ -1,6 +1,12 @@
 import React, { forwardRef } from 'react';
 import { Input, InputProps } from './input';
 
+export interface DateInputProps
+  extends Omit<InputProps, 'type' | 'value' | 'onChange'> {
+  value?: string; // YYYY-MM-DD
+  onChange?: (value: string) => void;
+}
+
 export const DateInput = forwardRef<HTMLInputElement, DateInputProps>(
   (props, ref) => {
     const { value, onChange, ...restProps } = props;
@@ -17,9 +23,3 @@ export const DateInput = forwardRef<HTMLInputElement, DateInputProps>(
   },
 );
 DateInput.displayName = 'DateInput';
-
-export interface DateInputProps
-  extends Omit<InputProps, 'type' | 'value' | 'onChange'> {
-  value?: string; // YYYY-MM-DD
-  onChange?: (value: string) => void;
-}

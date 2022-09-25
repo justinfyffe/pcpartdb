@@ -1,6 +1,8 @@
 import { schema } from 'normalizr';
 
 export enum ProductBenchmarkKey {
+  PerformanceRating = 'PERFORMANCE_RATING',
+  ValueForMoney = 'VALUE_FOR_MONEY',
   Passmark = 'PASSMARK',
   TimeSpy = '3DMARK_TIME_SPY',
 }

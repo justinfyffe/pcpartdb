@@ -1,6 +1,10 @@
 import { schema } from 'normalizr';
 
 export enum ProductReviewKey {
+  Amazon = 'AMAZON',
+  PcGamer = 'PC_GAMER',
+  TechRadar = 'TECH_RADAR',
+  TechSpot = 'TECH_SPOT',
   TomsHardware = 'TOMS_HARDWARE',
 }
 
