@@ -1,23 +1,16 @@
+import Joi from '@hapi/joi';
 import { NormalizedSchema, schema } from 'normalizr';
 
 export enum MarketSegment {
-  Unknown = 'UNKNOWN',
   Desktop = 'DESKTOP',
   Laptop = 'LAPTOP',
   Server = 'SERVER',
 }
 
 export enum ProductionStatus {
-  Unknown = 'UNKNOWN',
   Active = 'ACTIVE',
   EndOfLife = 'END_OF_LIFE',
   Unreleased = 'UNRELEASED',
-}
-
-export enum ProductSpecBoolean {
-  Unknown = 'UNKNOWN',
-  True = 'TRUE',
-  False = 'FALSE',
 }
 
 export enum ProductSpecKey {
@@ -101,18 +94,39 @@ export enum ProductSpecKey {
   VrReady = 'VR_READY',
 }
 
+export interface ProductSpecMetadata {
+  prefix?: string;
+  suffix?: string;
+}
+
 export interface ProductSpec {
   id?: number;
   productId?: number;
 
   key: ProductSpecKey;
-  value: string;
+
+  integerValue?: number;
+  floatValue?: number;
+  booleanValue?: boolean;
+  stringValue?: string;
+  textValue?: string;
+  jsonValue?: unknown;
+
   source?: string;
+  metadata?: ProductSpecMetadata;
 }
 
 export interface ProductSpecRequest {
   key: ProductSpecKey;
-  value: string;
+
+  integerValue?: number;
+  floatValue?: number;
+  booleanValue?: boolean;
+  stringValue?: string;
+  textValue?: string;
+  jsonValue?: unknown;
+
+  metadata?: ProductSpecMetadata;
   source?: string;
 }
 
@@ -126,3 +140,19 @@ export type ProductSpecsResponse = NormalizedSchema<
 >;
 
 export const productSpecSchema = new schema.Entity('productSpecs');
+
+export const productSpecValidator = Joi.object({
+  id: Joi.number().allow(null),
+  productId: Joi.number().allow(null),
+
+  key: Joi.string().required(),
+
+  integerValue: Joi.number().allow(null),
+  floatValue: Joi.number().allow(null),
+  booleanValue: Joi.boolean().allow(null),
+  stringValue: Joi.string().allow(null),
+  textValue: Joi.string().allow(null),
+
+  source: Joi.string().allow(null),
+  metadata: Joi.any().allow(null),
+}).options({ abortEarly: false });

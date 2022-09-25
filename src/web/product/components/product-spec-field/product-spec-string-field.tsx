@@ -1,0 +1,41 @@
+import React, { forwardRef, useCallback } from 'react';
+import {
+  ProductSpecKey,
+  ProductSpecMetadata,
+} from '../../../../types/product-spec';
+import { TextInput } from '../../../shared/components/input';
+
+interface ProductSpecStringValue {
+  key: ProductSpecKey;
+
+  stringValue?: string;
+
+  metadata?: ProductSpecMetadata;
+  source?: string;
+}
+
+interface ProductSpecStringFieldProps {
+  field: ProductSpecKey;
+
+  value?: ProductSpecStringValue;
+  onChange?: (value: ProductSpecStringValue) => void;
+}
+
+export const ProductSpecStringField = forwardRef<
+  HTMLInputElement,
+  ProductSpecStringFieldProps
+>((props, ref) => {
+  const { field, value, onChange } = props;
+
+  const baseValue = value.stringValue ?? null;
+
+  const handleChange = useCallback(
+    (value: string) => {
+      onChange?.(value != null ? { key: field, stringValue: value } : null);
+    },
+    [field, onChange],
+  );
+
+  return <TextInput value={baseValue} onChange={handleChange} ref={ref} />;
+});
+ProductSpecStringField.displayName = 'ProductSpecStringField';

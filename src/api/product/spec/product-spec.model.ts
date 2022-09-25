@@ -2,6 +2,7 @@ import { Model, PartialModelObject } from 'objection';
 import {
   ProductSpec,
   ProductSpecKey,
+  ProductSpecMetadata,
   productSpecSchema,
 } from '../../../types/product-spec';
 import { CanDto } from '../../shared/types/normalize';
@@ -13,17 +14,31 @@ export class ProductSpecModel extends Model implements CanDto<ProductSpec> {
   id!: number;
   productId!: number;
 
-  source?: string;
   key!: ProductSpecKey;
-  value?: string;
+
+  integerValue?: number;
+  floatValue?: number;
+  booleanValue?: boolean;
+  stringValue?: string;
+  textValue?: string;
+  jsonValue?: unknown;
+
+  metadata?: ProductSpecMetadata;
+  source?: string;
 
   toDto(): ProductSpec {
     return {
       id: this.id,
       productId: this.productId,
-      source: this.source,
       key: this.key,
-      value: this.value,
+      integerValue: this.integerValue,
+      floatValue: this.floatValue,
+      booleanValue: this.booleanValue,
+      stringValue: this.stringValue,
+      textValue: this.textValue,
+      jsonValue: this.jsonValue,
+      metadata: this.metadata,
+      source: this.source,
     };
   }
 

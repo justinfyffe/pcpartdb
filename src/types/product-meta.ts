@@ -1,3 +1,4 @@
+import Joi from '@hapi/joi';
 import { NormalizedSchema, schema } from 'normalizr';
 
 export enum ProductType {
@@ -8,19 +9,37 @@ export enum ProductMetaKey {
   Description = 'DESCRIPTION',
 }
 
+export interface ProductMetaMetadata {}
+
 export interface ProductMeta {
   id?: number;
   productId?: number;
 
   key: ProductMetaKey;
-  value: string;
+
+  integerValue?: number;
+  floatValue?: number;
+  booleanValue?: boolean;
+  stringValue?: string;
+  textValue?: string;
+  jsonValue?: unknown;
+
   source?: string;
+  metadata?: ProductMetaMetadata;
 }
 
 export interface ProductMetaRequest {
   key: ProductMetaKey;
-  value: string;
+
+  integerValue?: number;
+  floatValue?: number;
+  booleanValue?: boolean;
+  stringValue?: string;
+  textValue?: string;
+  jsonValue?: unknown;
+
   source?: string;
+  metadata?: ProductMetaMetadata;
 }
 
 interface ProductMetaEntities {
@@ -33,3 +52,19 @@ export type ProductMetaResponse = NormalizedSchema<
 >;
 
 export const productMetaSchema = new schema.Entity('productMeta');
+
+export const productMetaValidator = Joi.object({
+  id: Joi.number().allow(null),
+  productId: Joi.number().allow(null),
+
+  key: Joi.string().required(),
+
+  integerValue: Joi.number().allow(null),
+  floatValue: Joi.number().allow(null),
+  booleanValue: Joi.boolean().allow(null),
+  stringValue: Joi.string().allow(null),
+  textValue: Joi.string().allow(null),
+
+  source: Joi.string().allow(null),
+  metadata: Joi.any().allow(null),
+}).options({ abortEarly: false });

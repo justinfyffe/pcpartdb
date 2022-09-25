@@ -1,21 +1,29 @@
 Immediate Tasks:
-- DateInput
-- finish improving product autocomplete and autocomplete 
+- gpu form improvements
+  - improve benchmarks and ratings fields (something similar to spec fields)
+  - improve image fields?
+- finish improving product autocomplete 
   - create product cache instead of using initialProduct
+- view gpu page
 - home page
-  - compare widget
-- populate pages
+- gpus list page
+- contact page
+- about page
+- disclaimer page
 - rename "user" to "account"
+- clean up html
+- initial on-page seo
+  - canonical links
+  - alt tags
 - launch
+- performance rating
+- value rating
+- compare functionality
 - product forms
   - pre-fill data (from parent product)
   - pre-fill data (from external source)
 - look into using useController
 - improve html semantics
-- clean up html
-- seo
-- compare page description
-- builds
 
 Roadmap:
 - MVP
