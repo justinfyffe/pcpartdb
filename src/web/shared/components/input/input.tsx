@@ -13,9 +13,16 @@ import { Button } from '../button';
 import { FieldContext } from '../field';
 
 export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
-  const { value: propsValue, prefix, suffix } = props;
-  const { onPrefixClick, onSuffixClick, onClear, onKeyDown, onBlur, onChange } =
-    props;
+  const { value: propsValue, prefix, suffix, disabled, readOnly } = props;
+  const {
+    onPrefixClick,
+    onSuffixClick,
+    onClear,
+    onKeyDown,
+    onClick,
+    onBlur,
+    onChange,
+  } = props;
 
   const [value, setValue] = useState(propsValue ?? null);
 
@@ -34,6 +41,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
     (e: KeyboardEvent) => onKeyDown?.(e),
     [onKeyDown],
   );
+
+  const handleClick = useCallback(() => onClick?.(), [onClick]);
 
   const handleChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
@@ -58,6 +67,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
         value={value || ''}
         id={context?.fieldId}
         placeholder={props.placeholder}
+        disabled={disabled}
+        readOnly={readOnly}
         className={classNames(
           'border m-0 p-3 rounded text-sm w-full shadow',
           props.clearable ? 'pr-12' : '',
@@ -65,6 +76,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
         )}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
+        onClick={handleClick}
         onBlur={handleBlur}
         ref={ref}
       />
@@ -103,6 +115,8 @@ export interface InputProps {
   type: string;
 
   placeholder?: string;
+  disabled?: boolean;
+  readOnly?: boolean;
 
   clearable?: boolean;
   prefix?: string | React.ReactElement;
@@ -110,6 +124,7 @@ export interface InputProps {
 
   onPrefixClick?: () => void;
   onSuffixClick?: () => void;
+  onClick?: () => void;
   onClear?: () => void;
   onKeyDown?: (e: KeyboardEvent) => void;
   onBlur?: () => void;

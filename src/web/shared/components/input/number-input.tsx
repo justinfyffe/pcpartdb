@@ -23,7 +23,7 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
     );
   },
 );
-NumberInput.displayName = 'TextInput';
+NumberInput.displayName = 'NumberInput';
 
 export interface NumberInputProps
   extends Omit<InputProps, 'type' | 'value' | 'onChange'> {

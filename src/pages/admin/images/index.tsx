@@ -13,7 +13,7 @@ import { Alert, AlertVariant } from '../../../web/shared/components/alert';
 import { Article, ArticleHeader } from '../../../web/shared/components/article';
 import { Button, ButtonVariant } from '../../../web/shared/components/button';
 import { Img } from '../../../web/shared/components/image';
-import { Input } from '../../../web/shared/components/input';
+import { TextInput } from '../../../web/shared/components/input';
 import {
   Table,
   TBody,
@@ -81,7 +81,7 @@ const AdminImagesPage = (props: AdminImagesPageProps) => {
                     <a href={`/admin/images/${image.id}`}>{image.name}</a>
                   </Td>
                   <Td>
-                    <Input value={getImageUrl(image)} disabled />
+                    <TextInput value={getImageUrl(image)} disabled />
                   </Td>
                   <Td>{formatFileSize(image.fileSize)}</Td>
                   <Td>{formatDimensions(image.width, image.height)}</Td>

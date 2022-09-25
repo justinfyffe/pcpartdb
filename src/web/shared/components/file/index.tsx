@@ -2,13 +2,14 @@ import React, {
   ChangeEvent,
   FunctionComponent,
   useCallback,
-  useEffect,
+  useContext,
   useState,
 } from 'react';
 import { Button, ButtonVariant } from '../button';
-import { Input } from '../input';
+import { FieldContext } from '../field';
+import { TextInput } from '../input';
 
-let fileUploadId = 0;
+const fileUploadId = 0;
 
 export interface FileProps {
   name?: string;
@@ -28,17 +29,15 @@ export const File: FunctionComponent<FileProps> = (props) => {
   const [file, setFile] = useState(null);
   const [inputId] = useState(fileUploadId);
 
-  useEffect(() => {
-    ++fileUploadId;
-  }, []);
+  const context = useContext(FieldContext);
 
   const handleInputClick = useCallback(() => {
     document.getElementById(`file-upload-${inputId}`).click();
   }, [inputId]);
 
   const handleFileChange = useCallback(
-    (event: ChangeEvent<HTMLInputElement>) => {
-      const element = event.target as HTMLInputElement;
+    (e: ChangeEvent<HTMLInputElement>) => {
+      const element = e.target as HTMLInputElement;
       const file = element.files[0];
       setFile(file);
       onChange?.(file);
@@ -50,13 +49,13 @@ export const File: FunctionComponent<FileProps> = (props) => {
     <div className="block relative">
       <input
         type="file"
-        id={`file-upload-${inputId}`}
+        id={context?.fieldId}
         name={name}
         onChange={handleFileChange}
         className="h-[0.1px] opacity-0 overflow-hidden pr-[120px] absolute w-[0.1px] z-[-1]"
       />
-      <Input value={file?.name || ''} onClick={handleInputClick} readOnly />
-      <FileLabel for={`file-upload-${inputId}`}>Select File</FileLabel>
+      <TextInput value={file?.name} onClick={handleInputClick} readOnly />
+      <FileLabel for={context?.fieldId}>Select File</FileLabel>
     </div>
   );
 };

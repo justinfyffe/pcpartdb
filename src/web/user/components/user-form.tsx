@@ -20,7 +20,7 @@ import {
   FieldOptional,
 } from '../../shared/components/field';
 import { Form, FormActions } from '../../shared/components/form';
-import { Input } from '../../shared/components/input';
+import { PasswordInput, TextInput } from '../../shared/components/input';
 import { Spinner } from '../../shared/components/spinner';
 import {
   isBadRequestError,
@@ -145,7 +145,7 @@ export const UserForm: FunctionComponent<UserFormProps> = (props) => {
         <Controller
           name="email"
           control={control}
-          render={({ field }) => <Input {...field} ref={null} />}
+          render={({ field }) => <TextInput {...field} ref={null} />}
         />
         {errors.email?.type === ValidationErrorType.MissingStringValue && (
           <FieldError>Required</FieldError>
@@ -160,9 +160,7 @@ export const UserForm: FunctionComponent<UserFormProps> = (props) => {
         <Controller
           name="password"
           control={control}
-          render={({ field }) => (
-            <Input type="password" {...field} ref={null} />
-          )}
+          render={({ field }) => <PasswordInput {...field} ref={null} />}
         />
         {isUpdate && <FieldHint>Leave blank to not change password</FieldHint>}
         {errors.password?.type === ValidationErrorType.MissingStringValue && (

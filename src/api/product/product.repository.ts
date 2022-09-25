@@ -71,7 +71,6 @@ export class ProductRepository {
     query: string,
     config?: RepositoryConfig,
   ) {
-    console.log(query);
     return await ProductModel.query(config?.trx)
       .where('type', type)
       .andWhere('name', 'ILIKE', `%${query}%`);

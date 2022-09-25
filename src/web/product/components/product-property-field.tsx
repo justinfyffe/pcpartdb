@@ -2,8 +2,11 @@ import React, { forwardRef, useCallback, useMemo, useState } from 'react';
 import { ProductPropertyType } from '../../../types/product';
 import { ProductMetaKey } from '../../../types/product-meta';
 import { ProductSpecKey } from '../../../types/product-spec';
-import { TextInput } from '../../shared/components/input';
+import { NumberInput, TextInput } from '../../shared/components/input';
+import { DateInput } from '../../shared/components/input/date-input';
 import { ProductPropertyAutocomplete } from './product-property-autocomplete';
+
+type InputType = 'autocomplete' | 'text' | 'number' | 'date';
 
 interface ParsedValue {
   baseValue: string;
@@ -36,11 +39,69 @@ const SUFFIXES: { [key: string]: string[] } = {
   [ProductSpecKey.MaxMemoryBandwidth]: ['GB/s', 'MB/s'],
 };
 
+const INPUT_TYPES: { [key: string]: InputType } = {
+  [ProductSpecKey.Architecture]: 'autocomplete',
+  [ProductSpecKey.BusInterface]: 'autocomplete',
+  [ProductSpecKey.ClockSpeedBase]: 'number',
+  [ProductSpecKey.ClockSpeedBoost]: 'number',
+  [ProductSpecKey.Company]: 'autocomplete',
+  [ProductSpecKey.CudaCores]: 'number',
+  [ProductSpecKey.DieSize]: 'number',
+  [ProductSpecKey.DirectXVersion]: 'number',
+  [ProductSpecKey.DisplayPorts]: 'autocomplete',
+  [ProductSpecKey.Foundry]: 'autocomplete',
+  [ProductSpecKey.Fp32Performance]: 'number',
+  [ProductSpecKey.Fp64Performance]: 'number',
+  [ProductSpecKey.Generation]: 'autocomplete',
+  [ProductSpecKey.GpuName]: 'autocomplete',
+  [ProductSpecKey.GpuVariant]: 'autocomplete',
+  [ProductSpecKey.HdmiPorts]: 'autocomplete',
+  [ProductSpecKey.Height]: 'number',
+  [ProductSpecKey.L1Cache]: 'number',
+  [ProductSpecKey.L2Cache]: 'number',
+  [ProductSpecKey.LaunchPrice]: 'number',
+  [ProductSpecKey.Length]: 'number',
+  [ProductSpecKey.Lithography]: 'number',
+  [ProductSpecKey.MaxMemoryBandwidth]: 'number',
+  [ProductSpecKey.MaxMemorySize]: 'number',
+  [ProductSpecKey.MaxResolution]: 'autocomplete',
+  [ProductSpecKey.MemoryBandwidth]: 'number',
+  [ProductSpecKey.MemoryInterface]: 'number',
+  [ProductSpecKey.MemorySize]: 'number',
+  [ProductSpecKey.MemoryType]: 'autocomplete',
+  [ProductSpecKey.OpenClVersion]: 'number',
+  [ProductSpecKey.OpenGlVersion]: 'number',
+  [ProductSpecKey.PixelFillRate]: 'number',
+  [ProductSpecKey.PowerConnectors]: 'autocomplete',
+  [ProductSpecKey.ReleaseDate]: 'date',
+  [ProductSpecKey.Rops]: 'number',
+  [ProductSpecKey.RtCores]: 'number',
+  [ProductSpecKey.ShaderModelVersion]: 'number',
+  [ProductSpecKey.SlotWidth]: 'autocomplete',
+  [ProductSpecKey.SuggestedPsu]: 'number',
+  [ProductSpecKey.Tdp]: 'number',
+  [ProductSpecKey.TensorCores]: 'number',
+  [ProductSpecKey.TextureRate]: 'number',
+  [ProductSpecKey.Tmus]: 'number',
+  [ProductSpecKey.Transistors]: 'number',
+  [ProductSpecKey.Weight]: 'number',
+  [ProductSpecKey.Width]: 'number',
+};
+
+interface ProductPropertyFieldProps {
+  type?: InputType;
+  propertyType: ProductPropertyType;
+  field: ProductMetaKey | ProductSpecKey;
+
+  value?: string;
+  onChange?: (value: string) => void;
+}
+
 export const ProductPropertyField = forwardRef<
   HTMLInputElement,
   ProductPropertyFieldProps
 >((props, ref) => {
-  const { propertyType, field, autocomplete, value, onChange } = props;
+  const { type, propertyType, field, value, onChange } = props;
 
   const { baseValue, suffixValue } = useMemo(
     () => parsePropertyValue(field, value),
@@ -54,11 +115,19 @@ export const ProductPropertyField = forwardRef<
       : 0,
   );
 
+  const inputType = type ?? INPUT_TYPES[field];
   const suffix = suffixes?.[suffixIndex];
 
   const handleAutocompleteChange = useCallback(
     (value: string) => {
       onChange?.(getPropertyValue(value, suffix));
+    },
+    [suffix, onChange],
+  );
+
+  const handleNumberChange = useCallback(
+    (value: number) => {
+      onChange?.(getPropertyValue(`${value}`, suffix));
     },
     [suffix, onChange],
   );
@@ -77,13 +146,33 @@ export const ProductPropertyField = forwardRef<
     onChange?.(getPropertyValue(baseValue, suffixes[newIndex]));
   }, [baseValue, suffixes, suffixIndex, onChange]);
 
-  if (autocomplete) {
+  if (inputType === 'autocomplete') {
     return (
       <ProductPropertyAutocomplete
         propertyType={propertyType}
         field={field}
         value={baseValue}
         onChange={handleAutocompleteChange}
+        ref={ref}
+      />
+    );
+  } else if (inputType === 'date') {
+    return (
+      <DateInput
+        value={baseValue}
+        suffix={suffixes.length > 0 ? suffixes[suffixIndex] : undefined}
+        onChange={handleInputChange}
+        onSuffixClick={handleSuffixClick}
+        ref={ref}
+      />
+    );
+  } else if (inputType === 'number') {
+    return (
+      <NumberInput
+        value={Number(baseValue)}
+        suffix={suffixes.length > 0 ? suffixes[suffixIndex] : undefined}
+        onChange={handleNumberChange}
+        onSuffixClick={handleSuffixClick}
         ref={ref}
       />
     );
@@ -100,17 +189,6 @@ export const ProductPropertyField = forwardRef<
   }
 });
 ProductPropertyField.displayName = 'ProductPropertyField';
-
-interface ProductPropertyFieldProps {
-  type?: string;
-  propertyType: ProductPropertyType;
-  field: ProductMetaKey | ProductSpecKey;
-
-  value?: string;
-  onChange?: (value: string) => void;
-
-  autocomplete?: boolean;
-}
 
 function getPropertyValue(base: string, suffix?: string) {
   if (base == null) {

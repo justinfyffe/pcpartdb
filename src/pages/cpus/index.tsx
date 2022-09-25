@@ -9,7 +9,7 @@ import {
   CardImage,
   CardTitle,
 } from '../../web/shared/components/card';
-import { Input } from '../../web/shared/components/input';
+import { TextInput } from '../../web/shared/components/input';
 import { SectionHeader } from '../../web/shared/components/section-header';
 import { WebsiteLayout } from '../../web/shared/layouts/website';
 import { classNames } from '../../web/shared/ui/ui.utils';
@@ -40,7 +40,7 @@ const CpusPage = (_props: CpusPageProps) => {
                   'grid grid-cols-[minmax(200px,_1fr)_auto] lg:grid-cols-[repeat(2,_1fr_auto)] lg:grid-flow-col gap-6 items-center justify-center w-full',
                 )}
               >
-                <Input
+                <TextInput
                   placeholder="Graphics Card..."
                   className={classNames()}
                 />
@@ -53,7 +53,7 @@ const CpusPage = (_props: CpusPageProps) => {
                   VS
                 </div>
 
-                <Input
+                <TextInput
                   placeholder="Graphics Card..."
                   className={classNames()}
                 />

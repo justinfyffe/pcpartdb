@@ -13,7 +13,7 @@ import { Article, ArticleHeader } from '../web/shared/components/article';
 import { Button, ButtonVariant } from '../web/shared/components/button';
 import { Field, FieldError } from '../web/shared/components/field';
 import { Form, FormActions } from '../web/shared/components/form';
-import { Input } from '../web/shared/components/input';
+import { HiddenInput, PasswordInput } from '../web/shared/components/input';
 import { Spinner } from '../web/shared/components/spinner';
 import {
   isInternalServerError,
@@ -111,9 +111,7 @@ const ResetPasswordPage = (props: ResetPasswordPageProps) => {
           <Controller
             name="token"
             control={control}
-            render={({ field }) => (
-              <Input type="hidden" {...field} ref={null} />
-            )}
+            render={({ field }) => <HiddenInput {...field} ref={null} />}
           />
 
           <Field>
@@ -121,9 +119,7 @@ const ResetPasswordPage = (props: ResetPasswordPageProps) => {
             <Controller
               name="password"
               control={control}
-              render={({ field }) => (
-                <Input type="password" {...field} ref={null} />
-              )}
+              render={({ field }) => <PasswordInput {...field} ref={null} />}
             />
             {errors.password?.type ===
               ValidationErrorType.MissingStringValue && (

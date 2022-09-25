@@ -14,7 +14,7 @@ import { Button, ButtonVariant } from '../web/shared/components/button';
 import { Checkbox } from '../web/shared/components/checkbox';
 import { Field, FieldError } from '../web/shared/components/field';
 import { Form, FormActions } from '../web/shared/components/form';
-import { Input } from '../web/shared/components/input';
+import { PasswordInput, TextInput } from '../web/shared/components/input';
 import { Spinner } from '../web/shared/components/spinner';
 import {
   isForbiddenError,
@@ -125,7 +125,7 @@ const LoginPage: FunctionComponent<LoginPageProps> = (
             <Controller
               name="email"
               control={control}
-              render={({ field }) => <Input {...field} ref={null} />}
+              render={({ field }) => <TextInput {...field} ref={null} />}
             />
             {errors.email?.type === ValidationErrorType.MissingStringValue && (
               <FieldError>Required</FieldError>
@@ -140,9 +140,7 @@ const LoginPage: FunctionComponent<LoginPageProps> = (
             <Controller
               name="password"
               control={control}
-              render={({ field }) => (
-                <Input type="password" {...field} ref={null} />
-              )}
+              render={({ field }) => <PasswordInput {...field} ref={null} />}
             />
             {errors.password?.type ===
               ValidationErrorType.MissingStringValue && (

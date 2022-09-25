@@ -3,7 +3,7 @@ import React, { FunctionComponent, useCallback, useState } from 'react';
 import { ProductType } from '../../../types/product';
 import { ProductAutocomplete } from '../../product/components/product-autocomplete';
 import { Button, ButtonVariant } from '../../shared/components/button';
-import { Input } from '../../shared/components/input';
+import { TextInput } from '../../shared/components/input';
 import { classNames } from '../../shared/ui/ui.utils';
 
 interface CompareFormProps {
@@ -67,7 +67,7 @@ export const CompareForm: FunctionComponent<CompareFormProps> = (props) => {
               VS
             </div>
 
-            <Input
+            <TextInput
               placeholder="Graphics Card..."
               value="NVIDIA GeForce RTX 3080"
               clearable
@@ -87,7 +87,7 @@ export const CompareForm: FunctionComponent<CompareFormProps> = (props) => {
               VS
             </div>
 
-            <Input
+            <TextInput
               placeholder="Graphics Card..."
               value="NVIDIA GeForce RTX 3080"
               clearable

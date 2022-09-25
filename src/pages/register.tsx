@@ -17,7 +17,7 @@ import { Article, ArticleHeader } from '../web/shared/components/article';
 import { Button, ButtonVariant } from '../web/shared/components/button';
 import { Field, FieldError } from '../web/shared/components/field';
 import { Form, FormActions } from '../web/shared/components/form';
-import { Input } from '../web/shared/components/input';
+import { PasswordInput, TextInput } from '../web/shared/components/input';
 import { Spinner } from '../web/shared/components/spinner';
 import {
   isBadRequestError,
@@ -106,7 +106,7 @@ const RegisterPage = (_props: RegisterPageProps) => {
             <Controller
               name="email"
               control={control}
-              render={({ field }) => <Input {...field} ref={null} />}
+              render={({ field }) => <TextInput {...field} ref={null} />}
             />
             {errors.email?.type === ValidationErrorType.MissingStringValue && (
               <FieldError>Required</FieldError>
@@ -126,9 +126,7 @@ const RegisterPage = (_props: RegisterPageProps) => {
             <Controller
               name="password"
               control={control}
-              render={({ field }) => (
-                <Input type="password" {...field} ref={null} />
-              )}
+              render={({ field }) => <PasswordInput {...field} ref={null} />}
             />
             {errors.password?.type ===
               ValidationErrorType.MissingStringValue && (

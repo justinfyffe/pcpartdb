@@ -2,7 +2,7 @@ import React, { FunctionComponent, useCallback } from 'react';
 import { Image } from '../../../types/image';
 import { Card, CardContent } from '../../shared/components/card';
 import { Img } from '../../shared/components/image';
-import { Input } from '../../shared/components/input';
+import { TextInput } from '../../shared/components/input';
 import { formatDimensions, formatFileSize } from '../image.utils';
 
 interface ImageDialogListCardProps {
@@ -35,7 +35,7 @@ export const ImageDialogListCard: FunctionComponent<
         <CardContent className="m-[8px_0_0]">
           <div className="text-center">{image.name}</div>
           {!hidePath && (
-            <Input value={image.path} className="m-[8px_0]" disabled />
+            <TextInput value={image.path} className="m-[8px_0]" disabled />
           )}
 
           <div className="text-[#aaa] flex text-[12px] justify-between m-[12px_-12px_-12px]">

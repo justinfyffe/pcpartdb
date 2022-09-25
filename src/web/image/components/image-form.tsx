@@ -25,7 +25,7 @@ import {
 } from '../../shared/components/field';
 import { File } from '../../shared/components/file';
 import { Form, FormActions } from '../../shared/components/form';
-import { Input } from '../../shared/components/input';
+import { TextInput } from '../../shared/components/input';
 import { Spinner } from '../../shared/components/spinner';
 import {
   isBadRequestError,
@@ -201,7 +201,9 @@ export const ImageForm: FunctionComponent<ImageFormProps> = (props) => {
           <Controller
             name="path"
             control={control}
-            render={({ field }) => <Input name="path" {...field} ref={null} />}
+            render={({ field }) => (
+              <TextInput name="path" {...field} ref={null} />
+            )}
           />
           {errors.path?.type === ValidationErrorType.MissingStringValue && (
             <FieldError>Required</FieldError>
@@ -214,7 +216,9 @@ export const ImageForm: FunctionComponent<ImageFormProps> = (props) => {
         <Controller
           name="name"
           control={control}
-          render={({ field }) => <Input name="name" {...field} ref={null} />}
+          render={({ field }) => (
+            <TextInput name="name" {...field} ref={null} />
+          )}
         />
         {errors.name?.type === ValidationErrorType.MissingStringValue && (
           <FieldError>Required</FieldError>
@@ -227,7 +231,7 @@ export const ImageForm: FunctionComponent<ImageFormProps> = (props) => {
           name="sourceName"
           control={control}
           render={({ field }) => (
-            <Input name="sourceName" {...field} ref={null} />
+            <TextInput name="sourceName" {...field} ref={null} />
           )}
         />
         {errors.sourceName?.type === ValidationErrorType.MissingStringValue && (
@@ -241,7 +245,7 @@ export const ImageForm: FunctionComponent<ImageFormProps> = (props) => {
           name="sourceUrl"
           control={control}
           render={({ field }) => (
-            <Input name="sourceUrl" {...field} ref={null} />
+            <TextInput name="sourceUrl" {...field} ref={null} />
           )}
         />
         {errors.sourceUrl?.type === ValidationErrorType.MissingStringValue && (

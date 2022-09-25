@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import Joi from '@hapi/joi';
 import { joiResolver } from '@hookform/resolvers/joi';
 import React, { useCallback, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import {
   EMAIL_MAX_LENGTH,
   MESSAGE_MAX_LENGTH,
@@ -20,7 +20,7 @@ import {
   FieldOptional,
 } from '../web/shared/components/field';
 import { Form, FormActions } from '../web/shared/components/form';
-import { Input } from '../web/shared/components/input';
+import { TextInput } from '../web/shared/components/input';
 import { Spinner } from '../web/shared/components/spinner';
 import { Textarea } from '../web/shared/components/textarea';
 import { WebsiteLayout } from '../web/shared/layouts/website';
@@ -50,7 +50,7 @@ const ContactPage = (_props: ContactPageProps) => {
   const [failed, setFailed] = useState(false);
 
   const {
-    register,
+    control,
     handleSubmit,
     formState: { errors },
   } = useForm<ContactFormData>({
@@ -106,9 +106,10 @@ const ContactPage = (_props: ContactPageProps) => {
         <Form onSubmit={handleSubmit(handleSend)}>
           <Field>
             Your Name
-            <Input
+            <Controller
               name="name"
-              {...register('name', { maxLength: NAME_MAX_LENGTH })}
+              control={control}
+              render={({ field }) => <TextInput {...field} ref={null} />}
             />
             {errors.name?.type === ValidationErrorType.MissingStringValue && (
               <FieldError>Required</FieldError>
@@ -117,9 +118,10 @@ const ContactPage = (_props: ContactPageProps) => {
 
           <Field>
             Your Email
-            <Input
+            <Controller
               name="email"
-              {...register('email', { maxLength: EMAIL_MAX_LENGTH })}
+              control={control}
+              render={({ field }) => <TextInput {...field} ref={null} />}
             />
             {errors.email?.type === ValidationErrorType.MissingStringValue && (
               <FieldError>Required</FieldError>
@@ -131,17 +133,19 @@ const ContactPage = (_props: ContactPageProps) => {
 
           <Field>
             Subject <FieldOptional>(Optional)</FieldOptional>
-            <Input
+            <Controller
               name="subject"
-              {...register('subject', { maxLength: SUBJECT_MAX_LENGTH })}
+              control={control}
+              render={({ field }) => <TextInput {...field} ref={null} />}
             />
           </Field>
 
           <Field>
             Your Message
-            <Textarea
+            <Controller
               name="message"
-              {...register('message', { maxLength: MESSAGE_MAX_LENGTH })}
+              control={control}
+              render={({ field }) => <Textarea {...field} ref={null} />}
             />
             {errors.message?.type ===
               ValidationErrorType.MissingStringValue && (

@@ -9,7 +9,7 @@ import {
   CardImage,
   CardTitle,
 } from '../../web/shared/components/card';
-import { Input } from '../../web/shared/components/input';
+import { TextInput } from '../../web/shared/components/input';
 import { SectionHeader } from '../../web/shared/components/section-header';
 import { WebsiteLayout } from '../../web/shared/layouts/website';
 import { classNames } from '../../web/shared/ui/ui.utils';
@@ -35,7 +35,7 @@ const GpusPage = (_props: GpusPageProps) => {
                 'flex flex-1 gap-6 items-stretch justify-center',
               )}
             >
-              <Input
+              <TextInput
                 placeholder="Graphics Card..."
                 className={classNames('flex-1')}
               />
@@ -48,7 +48,7 @@ const GpusPage = (_props: GpusPageProps) => {
                 VS
               </div>
 
-              <Input
+              <TextInput
                 placeholder="Graphics Card..."
                 className={classNames('flex-1')}
               />

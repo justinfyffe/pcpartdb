@@ -11,7 +11,7 @@ import { Article, ArticleHeader } from '../web/shared/components/article';
 import { Button, ButtonVariant } from '../web/shared/components/button';
 import { Field, FieldError } from '../web/shared/components/field';
 import { Form, FormActions } from '../web/shared/components/form';
-import { Input } from '../web/shared/components/input';
+import { TextInput } from '../web/shared/components/input';
 import { Spinner } from '../web/shared/components/spinner';
 import {
   isInternalServerError,
@@ -99,7 +99,7 @@ const ForgotPasswordPage = (_props: ForgotPasswordPageProps) => {
             <Controller
               name="email"
               control={control}
-              render={({ field }) => <Input {...field} ref={null} />}
+              render={({ field }) => <TextInput {...field} ref={null} />}
             />
             {errors.email?.type === ValidationErrorType.MissingStringValue && (
               <FieldError>Required</FieldError>
