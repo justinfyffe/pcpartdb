@@ -2,6 +2,7 @@ import { Model, PartialModelObject } from 'objection';
 import {
   ProductBenchmark,
   ProductBenchmarkKey,
+  ProductBenchmarkMetadata,
   productBenchmarkSchema,
 } from '../../../types/product-benchmark';
 import { CanDto } from '../../shared/types/normalize';
@@ -16,17 +17,31 @@ export class ProductBenchmarkModel
   id!: number;
   productId!: number;
 
-  source?: string;
   key!: ProductBenchmarkKey;
-  value?: string;
+
+  integerValue?: number;
+  floatValue?: number;
+  booleanValue?: boolean;
+  stringValue?: string;
+  textValue?: string;
+  jsonValue?: unknown;
+
+  metadata?: ProductBenchmarkMetadata;
+  source?: string;
 
   toDto(): ProductBenchmark {
     return {
       id: this.id,
       productId: this.productId,
-      source: this.source,
       key: this.key,
-      value: this.value,
+      integerValue: this.integerValue,
+      floatValue: this.floatValue,
+      booleanValue: this.booleanValue,
+      stringValue: this.stringValue,
+      textValue: this.textValue,
+      jsonValue: this.jsonValue,
+      metadata: this.metadata,
+      source: this.source,
     };
   }
 

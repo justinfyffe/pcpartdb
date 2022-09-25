@@ -2,6 +2,7 @@ import { Model, PartialModelObject } from 'objection';
 import {
   ProductReview,
   ProductReviewKey,
+  ProductReviewMetadata,
   productReviewSchema,
 } from '../../../types/product-review';
 import { CanDto } from '../../shared/types/normalize';
@@ -14,7 +15,15 @@ export class ProductReviewModel extends Model implements CanDto<ProductReview> {
   productId!: number;
 
   key!: ProductReviewKey;
-  value?: string;
+
+  integerValue?: number;
+  floatValue?: number;
+  booleanValue?: boolean;
+  stringValue?: string;
+  textValue?: string;
+  jsonValue?: unknown;
+
+  metadata?: ProductReviewMetadata;
   source?: string;
 
   toDto(): ProductReview {

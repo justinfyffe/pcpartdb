@@ -1,24 +1,14 @@
 import Joi from '@hapi/joi';
 import { Injectable } from '@nestjs/common';
 import { ProductRequest, ProductType } from '../../types/product';
+import { productBenchmarkValidator } from '../../types/product-benchmark';
 import { productMetaValidator } from '../../types/product-meta';
+import { productReviewValidator } from '../../types/product-review';
 import { productSpecValidator } from '../../types/product-spec';
 import { notFoundError } from '../shared/errors/errors';
 import { ServiceContext } from '../shared/service/context';
 import { validate } from '../shared/types/validate';
 import { ProductRepository } from './product.repository';
-
-const productBenchmarkValidator = Joi.object({
-  key: Joi.string().required(),
-  value: Joi.string().allow(null),
-  source: Joi.string().allow(null),
-}).options({ abortEarly: false });
-
-const productReviewValidator = Joi.object({
-  key: Joi.string().required(),
-  value: Joi.string().allow(null),
-  source: Joi.string().allow(null),
-}).options({ abortEarly: false });
 
 const productImageValidator = Joi.object({
   imageId: Joi.number().required(),

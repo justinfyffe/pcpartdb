@@ -20,6 +20,7 @@ import {
 import {
   ProductBenchmark,
   ProductBenchmarkKey,
+  productBenchmarkValidator,
 } from '../../../types/product-benchmark';
 import { ProductImage, ProductImageType } from '../../../types/product-image';
 import {
@@ -27,7 +28,11 @@ import {
   ProductMetaKey,
   productMetaValidator,
 } from '../../../types/product-meta';
-import { ProductReview, ProductReviewKey } from '../../../types/product-review';
+import {
+  ProductReview,
+  ProductReviewKey,
+  productReviewValidator,
+} from '../../../types/product-review';
 import {
   ProductSpec,
   ProductSpecKey,
@@ -144,29 +149,13 @@ interface ProductFormData {
   sliCrossfireSupport?: ProductSpec;
   vrReady?: ProductSpec;
 
-  reviews?: ProductReviewFormData[];
-  benchmarks?: ProductBenchmarkFormData[];
+  reviews?: ProductReview[];
+  benchmarks?: ProductBenchmark[];
 
   autocompleteImage?: ProductImageFormData;
   thumbnailImage?: ProductImageFormData;
   detailsImages?: ProductImageFormData[];
 }
-
-const benchmarkValidator = Joi.object({
-  id: Joi.any(),
-  productId: Joi.any(),
-  key: Joi.string().required(),
-  value: Joi.string().allow(null),
-  source: Joi.string().allow(null),
-}).options({ abortEarly: false });
-
-const reviewValidator = Joi.object({
-  id: Joi.any(),
-  productId: Joi.any(),
-  key: Joi.string().required(),
-  value: Joi.string().allow(null),
-  source: Joi.string().allow(null),
-}).options({ abortEarly: false });
 
 const imageValidator = Joi.object({
   id: Joi.any(),
@@ -252,8 +241,8 @@ const productValidator = Joi.object({
   vrReady: productSpecValidator,
 
   // TODO: add validator for unique keys
-  benchmarks: Joi.array().items(benchmarkValidator),
-  reviews: Joi.array().items(reviewValidator),
+  benchmarks: Joi.array().items(productBenchmarkValidator),
+  reviews: Joi.array().items(productReviewValidator),
 
   autocompleteImage: imageValidator,
   thumbnailImage: imageValidator,
@@ -348,8 +337,8 @@ function formOptions(gpu?: Product): UseFormProps<ProductFormData> {
       sliCrossfireSupport: specs[ProductSpecKey.SliCrossfireSupport] ?? null,
       vrReady: specs[ProductSpecKey.VrReady] ?? null,
 
-      benchmarks: toFormBenchmarks(gpu),
-      reviews: toFormReviews(gpu),
+      benchmarks: gpu?.benchmarks ?? [],
+      reviews: gpu?.reviews ?? [],
 
       autocompleteImage,
       thumbnailImage,
@@ -418,8 +407,8 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
         name: formData.name,
         meta: toMetaArray(formData),
         specs: toSpecsArray(formData),
-        benchmarks: toRequestBenchmarks(formData),
-        reviews: toRequestReviews(formData),
+        benchmarks: formData.benchmarks,
+        reviews: formData.reviews,
         images: toRequestImages(formData),
       };
 
@@ -1309,7 +1298,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           render={({ field }) => (
             <BenchmarksField
               fields={benchmarkFields}
-              onAppend={() => appendBenchmark({ value: null, source: null })}
+              onAppend={() => appendBenchmark(null)}
               onRemove={(i) => removeBenchmark(i)}
               {...field}
               ref={null}
@@ -1327,7 +1316,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           render={({ field }) => (
             <ReviewsField
               fields={reviewFields}
-              onAppend={() => appendReview({ value: null, source: null })}
+              onAppend={() => appendReview(null)}
               onRemove={(i) => removeReview(i)}
               {...field}
               ref={null}
@@ -1476,46 +1465,6 @@ function toSpecsArray(formData: ProductFormData): ProductSpec[] {
   ];
 
   return specs.filter((spec) => spec != null);
-}
-
-function toFormBenchmarks(gpu?: Product): ProductBenchmarkFormData[] {
-  return (
-    gpu?.benchmarks?.map((benchmark) => ({
-      key: benchmark.key,
-      value: benchmark.value,
-      source: benchmark.source ?? null,
-    })) ?? []
-  );
-}
-
-function toRequestBenchmarks(formData: ProductFormData): ProductBenchmark[] {
-  return (
-    formData.benchmarks?.map((benchmark) => ({
-      key: benchmark.key,
-      value: benchmark.value,
-      source: benchmark.source ?? null,
-    })) ?? []
-  );
-}
-
-function toFormReviews(gpu?: Product): ProductReviewFormData[] {
-  return (
-    gpu?.reviews?.map((review) => ({
-      key: review.key,
-      value: review.value,
-      source: review.source ?? null,
-    })) ?? []
-  );
-}
-
-function toRequestReviews(formData: ProductFormData): ProductReview[] {
-  return (
-    formData.reviews?.map((review) => ({
-      key: review.key,
-      value: review.value,
-      source: review.source ?? null,
-    })) ?? []
-  );
 }
 
 function getFormImages(gpu?: Product) {

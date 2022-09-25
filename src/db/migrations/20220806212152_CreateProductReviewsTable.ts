@@ -8,7 +8,15 @@ export async function up(knex: Knex): Promise<void> {
       table.integer('product_id').notNullable();
 
       table.string('key').notNullable();
-      table.string('value');
+
+      table.integer('integer_value');
+      table.float('float_value');
+      table.boolean('boolean_value');
+      table.string('string_value');
+      table.text('text_value');
+      table.jsonb('json_value');
+
+      table.jsonb('metadata');
       table.string('source');
 
       table.timestamps(true, true);

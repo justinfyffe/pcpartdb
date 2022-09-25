@@ -1,3 +1,4 @@
+import Joi from '@hapi/joi';
 import { schema } from 'normalizr';
 
 export enum ProductReviewKey {
@@ -8,19 +9,53 @@ export enum ProductReviewKey {
   TomsHardware = 'TOMS_HARDWARE',
 }
 
+export interface ProductReviewMetadata {}
+
 export interface ProductReview {
   id?: number;
   productId?: number;
 
   key: ProductReviewKey;
-  value: string;
+
+  integerValue?: number;
+  floatValue?: number;
+  booleanValue?: boolean;
+  stringValue?: string;
+  textValue?: string;
+  jsonValue?: unknown;
+
+  metadata?: ProductReviewMetadata;
   source?: string;
 }
 
 export interface ProductReviewRequest {
   key: ProductReviewKey;
-  value: string;
+
+  integerValue?: number;
+  floatValue?: number;
+  booleanValue?: boolean;
+  stringValue?: string;
+  textValue?: string;
+  jsonValue?: unknown;
+
+  metadata?: ProductReviewMetadata;
   source?: string;
 }
 
 export const productReviewSchema = new schema.Entity('productReview');
+
+export const productReviewValidator = Joi.object({
+  id: Joi.number().allow(null),
+  productId: Joi.number().allow(null),
+
+  key: Joi.string().required(),
+
+  integerValue: Joi.number().allow(null),
+  floatValue: Joi.number().allow(null),
+  booleanValue: Joi.boolean().allow(null),
+  stringValue: Joi.string().allow(null),
+  textValue: Joi.string().allow(null),
+
+  source: Joi.string().allow(null),
+  metadata: Joi.any().allow(null),
+}).options({ abortEarly: false });
