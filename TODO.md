@@ -1,5 +1,5 @@
 Immediate Tasks:
-- convert all form fields to strings
+- DateInput
 - finish improving product autocomplete and autocomplete 
   - create product cache instead of using initialProduct
 - home page
