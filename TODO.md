@@ -1,6 +1,7 @@
 Immediate Tasks:
 - gpu form improvements
   - improve benchmarks and ratings fields (something similar to spec fields)
+  - test new product spec, meta, benchmark and review fields
   - improve image fields?
 - finish improving product autocomplete 
   - create product cache instead of using initialProduct
