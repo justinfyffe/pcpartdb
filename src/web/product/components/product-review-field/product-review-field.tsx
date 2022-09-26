@@ -5,9 +5,9 @@ import React, {
   useState,
 } from 'react';
 import {
-  ProductBenchmarkKey,
-  ProductBenchmarkMetadata,
-} from '../../../../types/product-benchmark';
+  ProductReviewKey,
+  ProductReviewMetadata,
+} from '../../../../types/product-review';
 import { Field } from '../../../shared/components/field';
 import { TextInput } from '../../../shared/components/input';
 import {
@@ -16,8 +16,8 @@ import {
   SelectValue,
 } from '../../../shared/components/select';
 
-export interface ProductBenchmarkValue {
-  key: ProductBenchmarkKey;
+export interface ProductReviewValue {
+  key: ProductReviewKey;
 
   integerValue?: number;
   floatValue?: number;
@@ -26,20 +26,20 @@ export interface ProductBenchmarkValue {
   textValue?: string;
   jsonValue?: unknown;
 
-  metadata?: ProductBenchmarkMetadata;
+  metadata?: ProductReviewMetadata;
   source?: string;
 }
 
-interface ProductBenchmarkFieldProps {
-  value?: ProductBenchmarkValue;
-  onChange?: (value: ProductBenchmarkValue) => void;
+interface ProductReviewFieldProps {
+  value?: ProductReviewValue;
+  onChange?: (value: ProductReviewValue) => void;
 
   ref?: unknown;
 }
 
-export const ProductBenchmarkField: FunctionComponent<
-  ProductBenchmarkFieldProps
-> = (props) => {
+export const ProductReviewField: FunctionComponent<ProductReviewFieldProps> = (
+  props,
+) => {
   const { value: propsValue, onChange } = props;
 
   const [value, setValue] = useState(propsValue ?? null);
@@ -47,7 +47,7 @@ export const ProductBenchmarkField: FunctionComponent<
 
   const handleKeyChange = useCallback(
     (key: SelectValue) => {
-      const newValue = { ...value, key: key as unknown as ProductBenchmarkKey };
+      const newValue = { ...value, key: key as unknown as ProductReviewKey };
       setValue(newValue);
       onChange(newValue);
     },
@@ -75,13 +75,25 @@ export const ProductBenchmarkField: FunctionComponent<
   return (
     <div className="flex gap-6 items-center">
       <Field className="flex-1">
-        Benchmark
+        Key
         <Select value={value.key} onChange={handleKeyChange} clearable>
-          <SelectOption label="Passmark" value={ProductBenchmarkKey.Passmark}>
-            Passmark
+          <SelectOption label="Amazon" value={ProductReviewKey.Amazon}>
+            Amazon
           </SelectOption>
-          <SelectOption label="TimeSpy" value={ProductBenchmarkKey.TimeSpy}>
-            3D Mark Time Spy
+          <SelectOption label="PC Gamer" value={ProductReviewKey.PcGamer}>
+            PC Gamer
+          </SelectOption>
+          <SelectOption label="TechRadar" value={ProductReviewKey.TechRadar}>
+            TechRadar
+          </SelectOption>
+          <SelectOption label="TechSpot" value={ProductReviewKey.TechSpot}>
+            TechSpot
+          </SelectOption>
+          <SelectOption
+            label="Tom's Hardware"
+            value={ProductReviewKey.TomsHardware}
+          >
+            Tom&apos;s Hardware
           </SelectOption>
         </Select>
       </Field>

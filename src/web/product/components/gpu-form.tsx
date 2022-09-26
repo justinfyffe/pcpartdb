@@ -19,7 +19,6 @@ import {
 } from '../../../types/product';
 import {
   ProductBenchmark,
-  ProductBenchmarkKey,
   productBenchmarkValidator,
 } from '../../../types/product-benchmark';
 import { ProductImage, ProductImageType } from '../../../types/product-image';
@@ -30,7 +29,6 @@ import {
 } from '../../../types/product-meta';
 import {
   ProductReview,
-  ProductReviewKey,
   productReviewValidator,
 } from '../../../types/product-review';
 import {
@@ -49,25 +47,13 @@ import {
   setValidationErrors,
 } from '../../shared/error/error.utils';
 import { productService } from '../product.service';
-import { BenchmarksField } from './benchmarks-field';
 import { ProductAutocomplete } from './product-autocomplete';
+import { ProductBenchmarkFields } from './product-benchmark-field';
 import { ProductImageField } from './product-image-field';
 import { ProductImagesField } from './product-images-field';
 import { ProductMetaField } from './product-meta-field';
+import { ProductReviewFields } from './product-review-field';
 import { ProductSpecField } from './product-spec-field';
-import { ReviewsField } from './reviews-field';
-
-interface ProductReviewFormData {
-  key: ProductReviewKey;
-  value: string;
-  source: string;
-}
-
-interface ProductBenchmarkFormData {
-  key: ProductBenchmarkKey;
-  value: string;
-  source: string;
-}
 
 interface ProductImageFormData {
   type: ProductImageType;
@@ -1296,7 +1282,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           name="benchmarks"
           control={control}
           render={({ field }) => (
-            <BenchmarksField
+            <ProductBenchmarkFields
               fields={benchmarkFields}
               onAppend={() => appendBenchmark(null)}
               onRemove={(i) => removeBenchmark(i)}
@@ -1314,7 +1300,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           name="reviews"
           control={control}
           render={({ field }) => (
-            <ReviewsField
+            <ProductReviewFields
               fields={reviewFields}
               onAppend={() => appendReview(null)}
               onRemove={(i) => removeReview(i)}
