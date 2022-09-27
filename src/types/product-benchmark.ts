@@ -2,8 +2,8 @@ import Joi from '@hapi/joi';
 import { schema } from 'normalizr';
 
 export enum ProductBenchmarkKey {
-  PerformanceRating = 'PERFORMANCE_RATING',
-  ValueForMoney = 'VALUE_FOR_MONEY',
+  PerformanceScore = 'PERFORMANCE_SCORE',
+  ValueScore = 'VALUE_SCORE',
   Passmark = 'PASSMARK',
   TimeSpy = '3DMARK_TIME_SPY',
 }
