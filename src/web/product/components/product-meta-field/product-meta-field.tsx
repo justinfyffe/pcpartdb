@@ -1,4 +1,10 @@
-import React, { forwardRef, useCallback, useEffect, useState } from 'react';
+import React, {
+  forwardRef,
+  Ref,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import {
   ProductMetaKey,
   ProductMetaMetadata,
@@ -34,51 +40,50 @@ interface ProductMetaFieldProps {
   onChange?: (value: ProductMetaValue) => void;
 }
 
-export const ProductMetaField = forwardRef<
-  HTMLInputElement,
-  ProductMetaFieldProps
->((props, ref) => {
-  const { type, field, value: propsValue, onChange } = props;
+export const ProductMetaField = forwardRef<unknown, ProductMetaFieldProps>(
+  (props, ref) => {
+    const { type, field, value: propsValue, onChange } = props;
 
-  const [value, setValue] = useState(propsValue ?? null);
-  useEffect(() => setValue(propsValue), [propsValue]);
+    const [value, setValue] = useState(propsValue ?? null);
+    useEffect(() => setValue(propsValue), [propsValue]);
 
-  const handleChange = useCallback(
-    (value: ProductMetaValue) => {
-      setValue(value);
-      onChange?.(value);
-    },
-    [onChange],
-  );
+    const handleChange = useCallback(
+      (value: ProductMetaValue) => {
+        setValue(value);
+        onChange?.(value);
+      },
+      [onChange],
+    );
 
-  const inputType = type ?? INPUT_TYPES[field];
-  if (inputType === 'text') {
-    return (
-      <ProductMetaTextField
-        field={field}
-        value={value}
-        onChange={handleChange}
-        ref={ref}
-      />
-    );
-  } else if (inputType === 'string') {
-    return (
-      <ProductMetaStringField
-        field={field}
-        value={value}
-        onChange={handleChange}
-        ref={ref}
-      />
-    );
-  } else {
-    return (
-      <ProductMetaStringField
-        field={field}
-        value={value}
-        onChange={handleChange}
-        ref={ref}
-      />
-    );
-  }
-});
+    const inputType = type ?? INPUT_TYPES[field];
+    if (inputType === 'text') {
+      return (
+        <ProductMetaTextField
+          field={field}
+          value={value}
+          onChange={handleChange}
+          ref={ref as Ref<HTMLTextAreaElement>}
+        />
+      );
+    } else if (inputType === 'string') {
+      return (
+        <ProductMetaStringField
+          field={field}
+          value={value}
+          onChange={handleChange}
+          ref={ref as Ref<HTMLInputElement>}
+        />
+      );
+    } else {
+      return (
+        <ProductMetaStringField
+          field={field}
+          value={value}
+          onChange={handleChange}
+          ref={ref as Ref<HTMLInputElement>}
+        />
+      );
+    }
+  },
+);
 ProductMetaField.displayName = 'ProductMetaField';

@@ -3,7 +3,7 @@ import {
   ProductMetaKey,
   ProductMetaMetadata,
 } from '../../../../types/product-meta';
-import { TextInput } from '../../../shared/components/input';
+import { Textarea } from '../../../shared/components/textarea';
 
 interface ProductMetaTextValue {
   key: ProductMetaKey;
@@ -22,12 +22,12 @@ interface ProductMetaTextFieldProps {
 }
 
 export const ProductMetaTextField = forwardRef<
-  HTMLInputElement,
+  HTMLTextAreaElement,
   ProductMetaTextFieldProps
 >((props, ref) => {
   const { field, value, onChange } = props;
 
-  const baseValue = value.textValue ?? null;
+  const baseValue = value?.textValue ?? null;
 
   const handleChange = useCallback(
     (value: string) => {
@@ -36,6 +36,6 @@ export const ProductMetaTextField = forwardRef<
     [field, onChange],
   );
 
-  return <TextInput value={baseValue} onChange={handleChange} ref={ref} />;
+  return <Textarea value={baseValue} onChange={handleChange} ref={ref} />;
 });
 ProductMetaTextField.displayName = 'ProductMetaTextField';

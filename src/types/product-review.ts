@@ -12,9 +12,6 @@ export enum ProductReviewKey {
 export interface ProductReviewMetadata {}
 
 export interface ProductReview {
-  id?: number;
-  productId?: number;
-
   key: ProductReviewKey;
 
   integerValue?: number;
@@ -45,9 +42,6 @@ export interface ProductReviewRequest {
 export const productReviewSchema = new schema.Entity('productReview');
 
 export const productReviewValidator = Joi.object({
-  id: Joi.number().allow(null),
-  productId: Joi.number().allow(null),
-
   key: Joi.string().required(),
 
   integerValue: Joi.number().allow(null),
@@ -55,6 +49,7 @@ export const productReviewValidator = Joi.object({
   booleanValue: Joi.boolean().allow(null),
   stringValue: Joi.string().allow(null),
   textValue: Joi.string().allow(null),
+  jsonValue: Joi.any().allow(null),
 
   source: Joi.string().allow(null),
   metadata: Joi.any().allow(null),

@@ -1,3 +1,4 @@
+import { XIcon } from '@heroicons/react/outline';
 import React, { FunctionComponent, useCallback } from 'react';
 import { Button, ButtonVariant } from '../../../shared/components/button';
 import {
@@ -34,11 +35,15 @@ export const ProductBenchmarkFields: FunctionComponent<
   return (
     <div className="flex flex-col w-full mb-6">
       {fields.map((benchmark, i) => (
-        <ProductBenchmarkField
-          key={benchmark.id}
-          value={benchmark}
-          onChange={(value) => handleFieldChange(i, value)}
-        />
+        <div key={benchmark.id} className="flex gap-6">
+          <ProductBenchmarkField
+            value={value[i]}
+            onChange={(value) => handleFieldChange(i, value)}
+          />
+          <Button variant={ButtonVariant.Default} onClick={() => onRemove(i)}>
+            <XIcon className="w-4" />
+          </Button>
+        </div>
       ))}
 
       <Button

@@ -21,7 +21,6 @@ import {
 } from './product-review';
 import {
   ProductSpec,
-  ProductSpecKey,
   ProductSpecRequest,
   productSpecSchema,
 } from './product-spec';
@@ -68,10 +67,6 @@ export interface ProductRequest {
 
 interface ProductEntities {
   products: Record<string, Product>;
-  meta: Record<string, ProductMeta>;
-  specs: Record<string, ProductSpec>;
-  benchmarks: Record<string, ProductBenchmark>;
-  reviews: Record<string, ProductReview>;
   images: Record<string, ProductImage>;
 }
 
@@ -79,10 +74,6 @@ export type ProductResponse = NormalizedSchema<ProductEntities, number>;
 export type ProductsResponse = NormalizedSchema<ProductEntities, number[]>;
 
 export const productSchema = new schema.Entity('products', {
-  meta: [productMetaSchema],
-  specs: [productSpecSchema],
-  benchmarks: [productBenchmarkSchema],
-  reviews: [productReviewSchema],
   images: [productImageSchema],
 });
 

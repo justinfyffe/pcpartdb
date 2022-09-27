@@ -48,15 +48,17 @@ export const ProductSpecEnumField = forwardRef<
 
   const items = useMemo(() => ITEMS[field] ?? [], [field]);
 
-  const baseValue = value.stringValue ?? null;
+  const baseValue = value?.stringValue ?? null;
 
   const handleChange = useCallback(
     (value: SelectValue) => {
-      if (typeof value != 'string') {
-        throw new Error('Invalid select value for ProductSpecBooleanField');
+      if (value != null && typeof value != 'string') {
+        throw new Error('Invalid select value for ProductSpecEnumField');
       }
 
-      onChange?.(value != null ? { key: field, stringValue: value } : null);
+      onChange?.(
+        value != null ? { key: field, stringValue: value as string } : null,
+      );
     },
     [field, onChange],
   );

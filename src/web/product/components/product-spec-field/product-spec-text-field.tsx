@@ -3,7 +3,7 @@ import {
   ProductSpecKey,
   ProductSpecMetadata,
 } from '../../../../types/product-spec';
-import { TextInput } from '../../../shared/components/input';
+import { Textarea } from '../../../shared/components/textarea';
 
 interface ProductSpecTextValue {
   key: ProductSpecKey;
@@ -22,12 +22,12 @@ interface ProductSpecTextFieldProps {
 }
 
 export const ProductSpecTextField = forwardRef<
-  HTMLInputElement,
+  HTMLTextAreaElement,
   ProductSpecTextFieldProps
 >((props, ref) => {
   const { field, value, onChange } = props;
 
-  const baseValue = value.textValue ?? null;
+  const baseValue = value?.textValue ?? null;
 
   const handleChange = useCallback(
     (value: string) => {
@@ -36,6 +36,6 @@ export const ProductSpecTextField = forwardRef<
     [field, onChange],
   );
 
-  return <TextInput value={baseValue} onChange={handleChange} ref={ref} />;
+  return <Textarea value={baseValue} onChange={handleChange} ref={ref} />;
 });
 ProductSpecTextField.displayName = 'ProductSpecTextField';

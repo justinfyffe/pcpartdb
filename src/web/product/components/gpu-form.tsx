@@ -95,7 +95,6 @@ interface ProductFormData {
   tdp?: ProductSpec;
   suggestedPsu?: ProductSpec;
   powerConnectors?: ProductSpec;
-  boardNumber?: ProductSpec;
 
   // Cores & Clock Speeds
   cudaCores?: ProductSpec;
@@ -129,7 +128,6 @@ interface ProductFormData {
   directXVersion?: ProductSpec;
   openClVersion?: ProductSpec;
   openGlVersion?: ProductSpec;
-  cudaVersion?: ProductSpec;
   shaderModelVersion?: ProductSpec;
   gSyncFreeSyncSupport?: ProductSpec;
   sliCrossfireSupport?: ProductSpec;
@@ -156,82 +154,80 @@ const productValidator = Joi.object({
   type: Joi.string().valid(ProductType.CPU, ProductType.GPU),
   name: Joi.string().required(),
 
-  description: productMetaValidator,
+  description: productMetaValidator.allow(null),
 
   // General
-  company: productSpecValidator,
-  generation: productSpecValidator,
-  marketSegment: productSpecValidator,
-  launchPrice: productSpecValidator,
-  releaseDate: productSpecValidator,
-  productionStatus: productSpecValidator,
+  company: productSpecValidator.allow(null),
+  generation: productSpecValidator.allow(null),
+  marketSegment: productSpecValidator.allow(null),
+  launchPrice: productSpecValidator.allow(null),
+  releaseDate: productSpecValidator.allow(null),
+  productionStatus: productSpecValidator.allow(null),
 
   // Processor
-  gpuName: productSpecValidator,
-  gpuVariant: productSpecValidator,
-  architecture: productSpecValidator,
-  foundry: productSpecValidator,
-  lithography: productSpecValidator,
-  processSize: productSpecValidator,
-  transistors: productSpecValidator,
-  dieSize: productSpecValidator,
+  gpuName: productSpecValidator.allow(null),
+  gpuVariant: productSpecValidator.allow(null),
+  architecture: productSpecValidator.allow(null),
+  foundry: productSpecValidator.allow(null),
+  lithography: productSpecValidator.allow(null),
+  processSize: productSpecValidator.allow(null),
+  transistors: productSpecValidator.allow(null),
+  dieSize: productSpecValidator.allow(null),
 
   // Board Compatibility & Dimensions
-  slotWidth: productSpecValidator,
-  length: productSpecValidator,
-  width: productSpecValidator,
-  height: productSpecValidator,
-  weight: productSpecValidator,
-  busInterface: productSpecValidator,
-  tdp: productSpecValidator,
-  suggestedPsu: productSpecValidator,
-  powerConnectors: productSpecValidator,
-  boardNumber: productSpecValidator,
+  slotWidth: productSpecValidator.allow(null),
+  length: productSpecValidator.allow(null),
+  width: productSpecValidator.allow(null),
+  height: productSpecValidator.allow(null),
+  weight: productSpecValidator.allow(null),
+  busInterface: productSpecValidator.allow(null),
+  tdp: productSpecValidator.allow(null),
+  suggestedPsu: productSpecValidator.allow(null),
+  powerConnectors: productSpecValidator.allow(null),
 
   // Cores & Clock Speed
-  cudaCores: productSpecValidator,
-  tmus: productSpecValidator,
-  rops: productSpecValidator,
-  tensorCores: productSpecValidator,
-  rtCores: productSpecValidator,
-  baseClock: productSpecValidator,
-  boostClock: productSpecValidator,
-  l1Cache: productSpecValidator,
-  l2Cache: productSpecValidator,
+  cudaCores: productSpecValidator.allow(null),
+  tmus: productSpecValidator.allow(null),
+  rops: productSpecValidator.allow(null),
+  tensorCores: productSpecValidator.allow(null),
+  rtCores: productSpecValidator.allow(null),
+  baseClock: productSpecValidator.allow(null),
+  boostClock: productSpecValidator.allow(null),
+  l1Cache: productSpecValidator.allow(null),
+  l2Cache: productSpecValidator.allow(null),
 
   // Theoretical Performance
-  pixelRate: productSpecValidator,
-  textureRate: productSpecValidator,
-  fp32Performance: productSpecValidator,
-  fp64Performance: productSpecValidator,
+  pixelRate: productSpecValidator.allow(null),
+  textureRate: productSpecValidator.allow(null),
+  fp32Performance: productSpecValidator.allow(null),
+  fp64Performance: productSpecValidator.allow(null),
 
   // Memory
-  memorySize: productSpecValidator,
-  memoryType: productSpecValidator,
-  memoryInterface: productSpecValidator,
-  memoryBandwidth: productSpecValidator,
+  memorySize: productSpecValidator.allow(null),
+  memoryType: productSpecValidator.allow(null),
+  memoryInterface: productSpecValidator.allow(null),
+  memoryBandwidth: productSpecValidator.allow(null),
 
   // Display Connectivity
-  maxResolution: productSpecValidator,
-  displayPorts: productSpecValidator,
-  hdmiPorts: productSpecValidator,
+  maxResolution: productSpecValidator.allow(null),
+  displayPorts: productSpecValidator.allow(null),
+  hdmiPorts: productSpecValidator.allow(null),
 
   // API Support
-  directXVersion: productSpecValidator,
-  openClVersion: productSpecValidator,
-  openGlVersion: productSpecValidator,
-  cudaVersion: productSpecValidator,
-  shaderModelVersion: productSpecValidator,
-  gSyncFreeSyncSupport: productSpecValidator,
-  sliCrossfireSupport: productSpecValidator,
-  vrReady: productSpecValidator,
+  directXVersion: productSpecValidator.allow(null),
+  openClVersion: productSpecValidator.allow(null),
+  openGlVersion: productSpecValidator.allow(null),
+  shaderModelVersion: productSpecValidator.allow(null),
+  gSyncFreeSyncSupport: productSpecValidator.allow(null),
+  sliCrossfireSupport: productSpecValidator.allow(null),
+  vrReady: productSpecValidator.allow(null),
 
   // TODO: add validator for unique keys
   benchmarks: Joi.array().items(productBenchmarkValidator),
   reviews: Joi.array().items(productReviewValidator),
 
-  autocompleteImage: imageValidator,
-  thumbnailImage: imageValidator,
+  autocompleteImage: imageValidator.allow(null),
+  thumbnailImage: imageValidator.allow(null),
   detailsImages: Joi.array().items(imageValidator),
 }).options({ abortEarly: false });
 
@@ -240,8 +236,8 @@ interface GpuFormProps {
 }
 
 function formOptions(gpu?: Product): UseFormProps<ProductFormData> {
-  const meta = getProductMeta(gpu);
-  const specs = getProductSpecs(gpu);
+  const meta = gpu != null ? getProductMeta(gpu) : {};
+  const specs = gpu != null ? getProductSpecs(gpu) : {};
   const { autocompleteImage, thumbnailImage, detailsImages } =
     getFormImages(gpu);
 
@@ -283,7 +279,6 @@ function formOptions(gpu?: Product): UseFormProps<ProductFormData> {
       tdp: specs[ProductSpecKey.Tdp] ?? null,
       suggestedPsu: specs[ProductSpecKey.SuggestedPsu] ?? null,
       powerConnectors: specs[ProductSpecKey.PowerConnectors] ?? null,
-      boardNumber: specs[ProductSpecKey.BoardNumber] ?? null,
 
       // Cores & Clock Speeds
       cudaCores: specs[ProductSpecKey.CudaCores] ?? null,
@@ -317,7 +312,6 @@ function formOptions(gpu?: Product): UseFormProps<ProductFormData> {
       directXVersion: specs[ProductSpecKey.DirectXVersion] ?? null,
       openClVersion: specs[ProductSpecKey.OpenClVersion] ?? null,
       openGlVersion: specs[ProductSpecKey.OpenGlVersion] ?? null,
-      cudaVersion: specs[ProductSpecKey.CudaVersion] ?? null,
       shaderModelVersion: specs[ProductSpecKey.ShaderModelVersion] ?? null,
       gSyncFreeSyncSupport: specs[ProductSpecKey.GSyncFreeSyncSupport] ?? null,
       sliCrossfireSupport: specs[ProductSpecKey.SliCrossfireSupport] ?? null,
@@ -1399,12 +1393,10 @@ function toSpecsArray(formData: ProductFormData): ProductSpec[] {
   const specs = [
     formData.architecture,
     formData.baseClock,
-    formData.boardNumber,
     formData.boostClock,
     formData.busInterface,
     formData.company,
     formData.cudaCores,
-    formData.cudaVersion,
     formData.dieSize,
     formData.directXVersion,
     formData.displayPorts,

@@ -32,8 +32,8 @@ export const ProductSpecBooleanField = forwardRef<
   const { field, value, onChange } = props;
 
   let baseValue: string = null;
-  if (value.booleanValue != null) {
-    baseValue = value.booleanValue ? 'true' : 'false';
+  if (value?.booleanValue != null) {
+    baseValue = value?.booleanValue ? 'true' : 'false';
   }
 
   const handleChange = useCallback(

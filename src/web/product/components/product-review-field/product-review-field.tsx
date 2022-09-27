@@ -31,6 +31,8 @@ export interface ProductReviewValue {
 }
 
 interface ProductReviewFieldProps {
+  reviewKey?: ProductReviewKey;
+
   value?: ProductReviewValue;
   onChange?: (value: ProductReviewValue) => void;
 
@@ -40,7 +42,7 @@ interface ProductReviewFieldProps {
 export const ProductReviewField: FunctionComponent<ProductReviewFieldProps> = (
   props,
 ) => {
-  const { value: propsValue, onChange } = props;
+  const { reviewKey, value: propsValue, onChange } = props;
 
   const [value, setValue] = useState(propsValue ?? null);
   useEffect(() => setValue(propsValue), [propsValue]);
@@ -75,33 +77,41 @@ export const ProductReviewField: FunctionComponent<ProductReviewFieldProps> = (
   return (
     <div className="flex gap-6 items-center">
       <Field className="flex-1">
-        Key
-        <Select value={value.key} onChange={handleKeyChange} clearable>
-          <SelectOption label="Amazon" value={ProductReviewKey.Amazon}>
-            Amazon
-          </SelectOption>
-          <SelectOption label="PC Gamer" value={ProductReviewKey.PcGamer}>
-            PC Gamer
-          </SelectOption>
-          <SelectOption label="TechRadar" value={ProductReviewKey.TechRadar}>
-            TechRadar
-          </SelectOption>
-          <SelectOption label="TechSpot" value={ProductReviewKey.TechSpot}>
-            TechSpot
-          </SelectOption>
-          <SelectOption
-            label="Tom's Hardware"
-            value={ProductReviewKey.TomsHardware}
+        Review
+        {reviewKey != null ? (
+          <div>{reviewKey}</div>
+        ) : (
+          <Select
+            value={value?.key ?? null}
+            onChange={handleKeyChange}
+            clearable
           >
-            Tom&apos;s Hardware
-          </SelectOption>
-        </Select>
+            <SelectOption label="Amazon" value={ProductReviewKey.Amazon}>
+              Amazon
+            </SelectOption>
+            <SelectOption label="PC Gamer" value={ProductReviewKey.PcGamer}>
+              PC Gamer
+            </SelectOption>
+            <SelectOption label="TechRadar" value={ProductReviewKey.TechRadar}>
+              TechRadar
+            </SelectOption>
+            <SelectOption label="TechSpot" value={ProductReviewKey.TechSpot}>
+              TechSpot
+            </SelectOption>
+            <SelectOption
+              label="Tom's Hardware"
+              value={ProductReviewKey.TomsHardware}
+            >
+              Tom&apos;s Hardware
+            </SelectOption>
+          </Select>
+        )}
       </Field>
 
       <Field className="flex-1">
         Score
         <TextInput
-          value={value.stringValue}
+          value={value?.stringValue ?? null}
           onChange={handleScoreChange}
           ref={null}
         />
@@ -110,7 +120,7 @@ export const ProductReviewField: FunctionComponent<ProductReviewFieldProps> = (
       <Field className="flex-1">
         Source
         <TextInput
-          value={value.source}
+          value={value?.source ?? null}
           onChange={handleSourceChange}
           ref={null}
         />

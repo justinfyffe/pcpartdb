@@ -3,11 +3,9 @@ import {
   ProductSpec,
   ProductSpecKey,
   ProductSpecMetadata,
-  productSpecSchema,
 } from '../../../types/product-spec';
-import { CanDto } from '../../shared/types/normalize';
 
-export class ProductSpecModel extends Model implements CanDto<ProductSpec> {
+export class ProductSpecModel extends Model {
   static tableName = 'product_specs';
 
   // Fields
@@ -28,8 +26,6 @@ export class ProductSpecModel extends Model implements CanDto<ProductSpec> {
 
   toDto(): ProductSpec {
     return {
-      id: this.id,
-      productId: this.productId,
       key: this.key,
       integerValue: this.integerValue,
       floatValue: this.floatValue,
@@ -40,10 +36,6 @@ export class ProductSpecModel extends Model implements CanDto<ProductSpec> {
       metadata: this.metadata,
       source: this.source,
     };
-  }
-
-  getSchema() {
-    return productSpecSchema;
   }
 }
 

@@ -3,11 +3,9 @@ import {
   ProductReview,
   ProductReviewKey,
   ProductReviewMetadata,
-  productReviewSchema,
 } from '../../../types/product-review';
-import { CanDto } from '../../shared/types/normalize';
 
-export class ProductReviewModel extends Model implements CanDto<ProductReview> {
+export class ProductReviewModel extends Model {
   static tableName = 'product_reviews';
 
   // Fields
@@ -28,16 +26,16 @@ export class ProductReviewModel extends Model implements CanDto<ProductReview> {
 
   toDto(): ProductReview {
     return {
-      id: this.id,
-      productId: this.productId,
-      source: this.source,
       key: this.key,
-      value: this.value,
+      integerValue: this.integerValue,
+      floatValue: this.floatValue,
+      booleanValue: this.booleanValue,
+      stringValue: this.stringValue,
+      textValue: this.textValue,
+      jsonValue: this.jsonValue,
+      metadata: this.metadata,
+      source: this.source,
     };
-  }
-
-  getSchema() {
-    return productReviewSchema;
   }
 }
 

@@ -28,7 +28,7 @@ export const ProductSpecAutocompleteField = forwardRef<
 >((props, ref) => {
   const { field, value, onChange } = props;
 
-  const baseValue = value.stringValue ?? null;
+  const baseValue = value?.stringValue ?? null;
 
   const handleChange = useCallback(
     (value: string) => {

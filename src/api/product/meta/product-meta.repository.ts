@@ -42,10 +42,10 @@ export class ProductMetaRepository {
     config?: RepositoryConfig,
   ) {
     const results = await ProductMetaModel.query(config?.trx)
-      .distinct('value')
+      .distinct('stringValue')
       .where('key', key)
-      .andWhere('value', 'ILIKE', `%${value}%`);
+      .andWhere('stringValue', 'ILIKE', `%${value}%`);
 
-    return results.map((meta) => meta.value);
+    return results.map((meta) => meta.stringValue);
   }
 }

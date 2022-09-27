@@ -31,6 +31,8 @@ export interface ProductBenchmarkValue {
 }
 
 interface ProductBenchmarkFieldProps {
+  benchmarkKey?: ProductBenchmarkKey;
+
   value?: ProductBenchmarkValue;
   onChange?: (value: ProductBenchmarkValue) => void;
 
@@ -40,7 +42,7 @@ interface ProductBenchmarkFieldProps {
 export const ProductBenchmarkField: FunctionComponent<
   ProductBenchmarkFieldProps
 > = (props) => {
-  const { value: propsValue, onChange } = props;
+  const { benchmarkKey, value: propsValue, onChange } = props;
 
   const [value, setValue] = useState(propsValue ?? null);
   useEffect(() => setValue(propsValue), [propsValue]);
@@ -76,20 +78,28 @@ export const ProductBenchmarkField: FunctionComponent<
     <div className="flex gap-6 items-center">
       <Field className="flex-1">
         Benchmark
-        <Select value={value.key} onChange={handleKeyChange} clearable>
-          <SelectOption label="Passmark" value={ProductBenchmarkKey.Passmark}>
-            Passmark
-          </SelectOption>
-          <SelectOption label="TimeSpy" value={ProductBenchmarkKey.TimeSpy}>
-            3D Mark Time Spy
-          </SelectOption>
-        </Select>
+        {benchmarkKey != null ? (
+          <div className="block">{benchmarkKey}</div>
+        ) : (
+          <Select
+            value={value?.key ?? null}
+            onChange={handleKeyChange}
+            clearable
+          >
+            <SelectOption label="Passmark" value={ProductBenchmarkKey.Passmark}>
+              Passmark
+            </SelectOption>
+            <SelectOption label="TimeSpy" value={ProductBenchmarkKey.TimeSpy}>
+              3D Mark Time Spy
+            </SelectOption>
+          </Select>
+        )}
       </Field>
 
       <Field className="flex-1">
         Score
         <TextInput
-          value={value.stringValue}
+          value={value?.stringValue ?? null}
           onChange={handleScoreChange}
           ref={null}
         />
@@ -98,7 +108,7 @@ export const ProductBenchmarkField: FunctionComponent<
       <Field className="flex-1">
         Source
         <TextInput
-          value={value.source}
+          value={value?.source ?? null}
           onChange={handleSourceChange}
           ref={null}
         />

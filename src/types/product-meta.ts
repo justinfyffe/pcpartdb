@@ -12,9 +12,6 @@ export enum ProductMetaKey {
 export interface ProductMetaMetadata {}
 
 export interface ProductMeta {
-  id?: number;
-  productId?: number;
-
   key: ProductMetaKey;
 
   integerValue?: number;
@@ -54,9 +51,6 @@ export type ProductMetaResponse = NormalizedSchema<
 export const productMetaSchema = new schema.Entity('productMeta');
 
 export const productMetaValidator = Joi.object({
-  id: Joi.number().allow(null),
-  productId: Joi.number().allow(null),
-
   key: Joi.string().required(),
 
   integerValue: Joi.number().allow(null),
@@ -64,6 +58,7 @@ export const productMetaValidator = Joi.object({
   booleanValue: Joi.boolean().allow(null),
   stringValue: Joi.string().allow(null),
   textValue: Joi.string().allow(null),
+  jsonValue: Joi.any().allow(null),
 
   source: Joi.string().allow(null),
   metadata: Joi.any().allow(null),

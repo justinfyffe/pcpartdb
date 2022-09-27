@@ -53,10 +53,11 @@ export const ProductSpecFloatField = forwardRef<
 >((props, ref) => {
   const { field, value, onChange } = props;
 
-  const baseValue = value.floatValue ?? null;
-  const suffix = value?.metadata?.suffix ?? null;
-
   const suffixes = useMemo(() => SUFFIXES[field] ?? [], [field]);
+
+  const baseValue = value?.floatValue ?? null;
+  const suffix = value?.metadata?.suffix ?? suffixes[0] ?? null;
+
   const [suffixIndex, setSuffixIndex] = useState(() =>
     suffixes.length > 0 && suffix != null ? suffixes.indexOf(suffix) : 0,
   );

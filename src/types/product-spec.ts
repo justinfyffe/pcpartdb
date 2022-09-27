@@ -100,9 +100,6 @@ export interface ProductSpecMetadata {
 }
 
 export interface ProductSpec {
-  id?: number;
-  productId?: number;
-
   key: ProductSpecKey;
 
   integerValue?: number;
@@ -142,9 +139,6 @@ export type ProductSpecsResponse = NormalizedSchema<
 export const productSpecSchema = new schema.Entity('productSpecs');
 
 export const productSpecValidator = Joi.object({
-  id: Joi.number().allow(null),
-  productId: Joi.number().allow(null),
-
   key: Joi.string().required(),
 
   integerValue: Joi.number().allow(null),
@@ -152,6 +146,7 @@ export const productSpecValidator = Joi.object({
   booleanValue: Joi.boolean().allow(null),
   stringValue: Joi.string().allow(null),
   textValue: Joi.string().allow(null),
+  jsonValue: Joi.any().allow(null),
 
   source: Joi.string().allow(null),
   metadata: Joi.any().allow(null),

@@ -3,14 +3,9 @@ import {
   ProductBenchmark,
   ProductBenchmarkKey,
   ProductBenchmarkMetadata,
-  productBenchmarkSchema,
 } from '../../../types/product-benchmark';
-import { CanDto } from '../../shared/types/normalize';
 
-export class ProductBenchmarkModel
-  extends Model
-  implements CanDto<ProductBenchmark>
-{
+export class ProductBenchmarkModel extends Model {
   static tableName = 'product_benchmarks';
 
   // Fields
@@ -31,8 +26,6 @@ export class ProductBenchmarkModel
 
   toDto(): ProductBenchmark {
     return {
-      id: this.id,
-      productId: this.productId,
       key: this.key,
       integerValue: this.integerValue,
       floatValue: this.floatValue,
@@ -43,10 +36,6 @@ export class ProductBenchmarkModel
       metadata: this.metadata,
       source: this.source,
     };
-  }
-
-  getSchema() {
-    return productBenchmarkSchema;
   }
 }
 

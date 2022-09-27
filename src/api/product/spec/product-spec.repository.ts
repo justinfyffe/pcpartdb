@@ -42,9 +42,9 @@ export class ProductSpecRepository {
     config?: RepositoryConfig,
   ) {
     const results = await ProductSpecModel.query(config?.trx)
-      .distinct('value')
+      .distinct('stringValue')
       .where('key', key)
-      .andWhere('string_value', 'ILIKE', `%${value}%`);
+      .andWhere('stringValue', 'ILIKE', `%${value}%`);
 
     return results.map((spec) => spec.stringValue);
   }

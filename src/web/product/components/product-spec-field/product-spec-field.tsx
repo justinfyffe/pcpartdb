@@ -142,7 +142,7 @@ export const ProductSpecField = forwardRef<unknown, ProductSpecFieldProps>(
           field={field}
           value={value}
           onChange={handleChange}
-          ref={ref as Ref<HTMLInputElement>}
+          ref={ref as Ref<HTMLTextAreaElement>}
         />
       );
     } else if (inputType === 'float') {
