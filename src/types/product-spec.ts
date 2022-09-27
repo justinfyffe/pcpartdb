@@ -127,17 +127,6 @@ export interface ProductSpecRequest {
   source?: string;
 }
 
-interface ProductSpecEntities {
-  productSpecs: Record<string, ProductSpec>;
-}
-
-export type ProductSpecsResponse = NormalizedSchema<
-  ProductSpecEntities,
-  number[]
->;
-
-export const productSpecSchema = new schema.Entity('productSpecs');
-
 export const productSpecValidator = Joi.object({
   key: Joi.string().required(),
 

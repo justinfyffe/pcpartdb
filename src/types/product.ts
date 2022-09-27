@@ -1,29 +1,13 @@
 import { NormalizedSchema, schema } from 'normalizr';
-import {
-  ProductBenchmark,
-  ProductBenchmarkRequest,
-  productBenchmarkSchema,
-} from './product-benchmark';
+import { ProductBenchmark, ProductBenchmarkRequest } from './product-benchmark';
 import {
   ProductImage,
   ProductImageRequest,
   productImageSchema,
 } from './product-image';
-import {
-  ProductMeta,
-  ProductMetaRequest,
-  productMetaSchema,
-} from './product-meta';
-import {
-  ProductReview,
-  ProductReviewRequest,
-  productReviewSchema,
-} from './product-review';
-import {
-  ProductSpec,
-  ProductSpecRequest,
-  productSpecSchema,
-} from './product-spec';
+import { ProductMeta, ProductMetaRequest } from './product-meta';
+import { ProductReview, ProductReviewRequest } from './product-review';
+import { ProductSpec, ProductSpecRequest } from './product-spec';
 
 export enum ProductType {
   CPU = 'CPU',
@@ -104,6 +88,15 @@ export function getProductBenchmarks(product: Product) {
   return benchmarks;
 }
 
+export function getOrderedBenchmarks(product: Product) {
+  const benchmarks =
+    product.benchmarks?.filter(
+      (benchmark) => benchmark.metadata?.order != null,
+    ) ?? [];
+
+  return benchmarks.sort((a, b) => a.metadata.order - b.metadata.order);
+}
+
 export function getProductReviews(product: Product) {
   const reviews: Record<string, ProductReview> = {};
   product.reviews.forEach((review) => {
@@ -111,4 +104,12 @@ export function getProductReviews(product: Product) {
   });
 
   return reviews;
+}
+
+export function getOrderedReviews(product: Product) {
+  const reviews =
+    product.reviews?.filter((benchmark) => benchmark.metadata?.order != null) ??
+    [];
+
+  return reviews.sort((a, b) => a.metadata.order - b.metadata.order);
 }

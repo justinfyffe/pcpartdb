@@ -1,7 +1,12 @@
 import Joi from '@hapi/joi';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { useRouter } from 'next/router';
-import React, { FunctionComponent, useCallback, useState } from 'react';
+import React, {
+  FunctionComponent,
+  useCallback,
+  useMemo,
+  useState,
+} from 'react';
 import {
   Controller,
   useFieldArray,
@@ -11,6 +16,8 @@ import {
 import { ApiError, ValidationErrorType } from '../../../types/error';
 import { Image } from '../../../types/image';
 import {
+  getOrderedBenchmarks,
+  getOrderedReviews,
   getProductMeta,
   getProductSpecs,
   Product,
@@ -238,6 +245,8 @@ interface GpuFormProps {
 function formOptions(gpu?: Product): UseFormProps<ProductFormData> {
   const meta = gpu != null ? getProductMeta(gpu) : {};
   const specs = gpu != null ? getProductSpecs(gpu) : {};
+  const benchmarks = gpu != null ? getOrderedBenchmarks(gpu) : [];
+  const reviews = gpu != null ? getOrderedReviews(gpu) : [];
   const { autocompleteImage, thumbnailImage, detailsImages } =
     getFormImages(gpu);
 
@@ -317,8 +326,8 @@ function formOptions(gpu?: Product): UseFormProps<ProductFormData> {
       sliCrossfireSupport: specs[ProductSpecKey.SliCrossfireSupport] ?? null,
       vrReady: specs[ProductSpecKey.VrReady] ?? null,
 
-      benchmarks: gpu?.benchmarks ?? [],
-      reviews: gpu?.reviews ?? [],
+      benchmarks,
+      reviews,
 
       autocompleteImage,
       thumbnailImage,
@@ -336,12 +345,14 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
   const [deleting, setDeleting] = useState(false);
   const [requestError, setRequestError] = useState<ApiError>(null);
 
+  const form = useMemo(() => formOptions(gpu), [gpu]);
+
   const {
     control,
     handleSubmit,
     setError,
     formState: { errors },
-  } = useForm<ProductFormData>(formOptions(gpu));
+  } = useForm<ProductFormData>(form);
 
   console.log(errors);
 
@@ -1278,7 +1289,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           render={({ field }) => (
             <ProductBenchmarkFields
               fields={benchmarkFields}
-              onAppend={() => appendBenchmark(null)}
+              onAppend={() => appendBenchmark({})}
               onRemove={(i) => removeBenchmark(i)}
               {...field}
               ref={null}
@@ -1296,7 +1307,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           render={({ field }) => (
             <ProductReviewFields
               fields={reviewFields}
-              onAppend={() => appendReview(null)}
+              onAppend={() => appendReview({})}
               onRemove={(i) => removeReview(i)}
               {...field}
               ref={null}

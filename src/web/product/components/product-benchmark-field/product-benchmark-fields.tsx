@@ -26,7 +26,7 @@ export const ProductBenchmarkFields: FunctionComponent<
   const handleFieldChange = useCallback(
     (i: number, benchmark: ProductBenchmarkValue) => {
       fields[i] = { ...fields[i], ...benchmark };
-      value[i] = { ...benchmark };
+      value[i] = { ...benchmark, metadata: { order: i } };
       onChange(value);
     },
     [fields, value, onChange],
@@ -39,8 +39,13 @@ export const ProductBenchmarkFields: FunctionComponent<
           <ProductBenchmarkField
             value={value[i]}
             onChange={(value) => handleFieldChange(i, value)}
+            className="flex-1"
           />
-          <Button variant={ButtonVariant.Default} onClick={() => onRemove(i)}>
+          <Button
+            variant={ButtonVariant.Default}
+            onClick={() => onRemove(i)}
+            className="self-start px-3 py-3 mt-6"
+          >
             <XIcon className="w-4" />
           </Button>
         </div>

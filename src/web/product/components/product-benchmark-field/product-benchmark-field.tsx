@@ -15,6 +15,7 @@ import {
   SelectOption,
   SelectValue,
 } from '../../../shared/components/select';
+import { classNames } from '../../../shared/ui/ui.utils';
 
 export interface ProductBenchmarkValue {
   key: ProductBenchmarkKey;
@@ -36,13 +37,14 @@ interface ProductBenchmarkFieldProps {
   value?: ProductBenchmarkValue;
   onChange?: (value: ProductBenchmarkValue) => void;
 
+  className?: string;
   ref?: unknown;
 }
 
 export const ProductBenchmarkField: FunctionComponent<
   ProductBenchmarkFieldProps
 > = (props) => {
-  const { benchmarkKey, value: propsValue, onChange } = props;
+  const { benchmarkKey, value: propsValue, onChange, className } = props;
 
   const [value, setValue] = useState(propsValue ?? null);
   useEffect(() => setValue(propsValue), [propsValue]);
@@ -75,7 +77,7 @@ export const ProductBenchmarkField: FunctionComponent<
   );
 
   return (
-    <div className="flex gap-6 items-center">
+    <div className={classNames('flex gap-6 items-center', className)}>
       <Field className="flex-1">
         Benchmark
         {benchmarkKey != null ? (

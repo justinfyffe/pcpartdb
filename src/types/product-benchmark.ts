@@ -1,5 +1,4 @@
 import Joi from '@hapi/joi';
-import { schema } from 'normalizr';
 
 export enum ProductBenchmarkKey {
   PerformanceScore = 'PERFORMANCE_SCORE',
@@ -8,7 +7,9 @@ export enum ProductBenchmarkKey {
   TimeSpy = '3DMARK_TIME_SPY',
 }
 
-export interface ProductBenchmarkMetadata {}
+export interface ProductBenchmarkMetadata {
+  order?: number;
+}
 
 export interface ProductBenchmark {
   key: ProductBenchmarkKey;
@@ -37,8 +38,6 @@ export interface ProductBenchmarkRequest {
   source?: string;
   metadata?: ProductBenchmarkMetadata;
 }
-
-export const productBenchmarkSchema = new schema.Entity('productBenchmarks');
 
 export const productBenchmarkValidator = Joi.object({
   key: Joi.string().required(),

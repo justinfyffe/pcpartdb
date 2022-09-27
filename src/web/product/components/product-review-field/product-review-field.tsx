@@ -15,6 +15,7 @@ import {
   SelectOption,
   SelectValue,
 } from '../../../shared/components/select';
+import { classNames } from '../../../shared/ui/ui.utils';
 
 export interface ProductReviewValue {
   key: ProductReviewKey;
@@ -36,13 +37,14 @@ interface ProductReviewFieldProps {
   value?: ProductReviewValue;
   onChange?: (value: ProductReviewValue) => void;
 
+  className?: string;
   ref?: unknown;
 }
 
 export const ProductReviewField: FunctionComponent<ProductReviewFieldProps> = (
   props,
 ) => {
-  const { reviewKey, value: propsValue, onChange } = props;
+  const { reviewKey, value: propsValue, onChange, className } = props;
 
   const [value, setValue] = useState(propsValue ?? null);
   useEffect(() => setValue(propsValue), [propsValue]);
@@ -75,7 +77,7 @@ export const ProductReviewField: FunctionComponent<ProductReviewFieldProps> = (
   );
 
   return (
-    <div className="flex gap-6 items-center">
+    <div className={classNames('flex gap-6 items-center', className)}>
       <Field className="flex-1">
         Review
         {reviewKey != null ? (

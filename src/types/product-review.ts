@@ -9,7 +9,9 @@ export enum ProductReviewKey {
   TomsHardware = 'TOMS_HARDWARE',
 }
 
-export interface ProductReviewMetadata {}
+export interface ProductReviewMetadata {
+  order?: number;
+}
 
 export interface ProductReview {
   key: ProductReviewKey;
@@ -38,8 +40,6 @@ export interface ProductReviewRequest {
   metadata?: ProductReviewMetadata;
   source?: string;
 }
-
-export const productReviewSchema = new schema.Entity('productReview');
 
 export const productReviewValidator = Joi.object({
   key: Joi.string().required(),

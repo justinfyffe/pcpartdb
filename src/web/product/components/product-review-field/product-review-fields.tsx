@@ -23,7 +23,7 @@ export const ProductReviewFields: FunctionComponent<
   const handleFieldChange = useCallback(
     (i: number, review: ProductReviewValue) => {
       fields[i] = { ...fields[i], ...review };
-      value[i] = { ...review };
+      value[i] = { ...review, metadata: { order: i } };
       onChange(value);
     },
     [fields, value, onChange],
@@ -37,8 +37,13 @@ export const ProductReviewFields: FunctionComponent<
             key={field.id}
             value={value[i]}
             onChange={(value) => handleFieldChange(i, value)}
+            className="flex-1"
           />
-          <Button variant={ButtonVariant.Default} onClick={() => onRemove(i)}>
+          <Button
+            variant={ButtonVariant.Default}
+            onClick={() => onRemove(i)}
+            className="self-start px-3 py-3 mt-6"
+          >
             <XIcon className="w-4" />
           </Button>
         </div>

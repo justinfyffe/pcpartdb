@@ -39,17 +39,6 @@ export interface ProductMetaRequest {
   metadata?: ProductMetaMetadata;
 }
 
-interface ProductMetaEntities {
-  productMeta: Record<string, ProductMeta>;
-}
-
-export type ProductMetaResponse = NormalizedSchema<
-  ProductMetaEntities,
-  number[]
->;
-
-export const productMetaSchema = new schema.Entity('productMeta');
-
 export const productMetaValidator = Joi.object({
   key: Joi.string().required(),
 
