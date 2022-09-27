@@ -5,6 +5,7 @@ import React, {
   FunctionComponent,
   useCallback,
   useEffect,
+  useMemo,
   useState,
 } from 'react';
 import {
@@ -79,6 +80,8 @@ export const ImageForm: FunctionComponent<ImageFormProps> = (props) => {
   const [deleting, setDeleting] = useState(false);
   const [requestError, setRequestError] = useState<ApiError>(null);
 
+  const form = useMemo(() => formOptions(image), [image]);
+
   const {
     register,
     control,
@@ -86,7 +89,7 @@ export const ImageForm: FunctionComponent<ImageFormProps> = (props) => {
     setValue,
     setError,
     formState: { errors },
-  } = useForm<ImageRequest>(formOptions(image));
+  } = useForm<ImageRequest>(form);
 
   // https://github.com/react-hook-form/react-hook-form/issues/127
   useEffect(() => {

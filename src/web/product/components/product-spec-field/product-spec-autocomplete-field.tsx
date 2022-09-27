@@ -1,10 +1,13 @@
-import React, { forwardRef, useCallback } from 'react';
-import { ProductPropertyType } from '../../../../types/product';
+import React, { forwardRef, useCallback, useState } from 'react';
 import {
   ProductSpecKey,
   ProductSpecMetadata,
 } from '../../../../types/product-spec';
-import { ProductPropertyAutocomplete } from '../product-property-autocomplete';
+import {
+  Autocomplete,
+  AutocompleteOption,
+} from '../../../shared/components/autocomplete';
+import { productService } from '../../product.service';
 
 interface ProductSpecAutocompleteValue {
   key: ProductSpecKey;
@@ -29,6 +32,24 @@ export const ProductSpecAutocompleteField = forwardRef<
   const { field, value, onChange } = props;
 
   const baseValue = value?.stringValue ?? null;
+  const [results, setResults] = useState<string[]>([]);
+
+  const handleQuery = useCallback(
+    async (query: string) => {
+      if (query == null) {
+        return false;
+      }
+
+      const results = await productService.autocompleteSpec(
+        query,
+        field as ProductSpecKey,
+      );
+      const filtered = results.filter((value) => value != null);
+      setResults(filtered);
+      return filtered.length > 0;
+    },
+    [field],
+  );
 
   const handleChange = useCallback(
     (value: string) => {
@@ -38,13 +59,26 @@ export const ProductSpecAutocompleteField = forwardRef<
   );
 
   return (
-    <ProductPropertyAutocomplete
-      propertyType={ProductPropertyType.Spec}
-      field={field}
+    <Autocomplete
+      freeSolo
+      onQuery={handleQuery}
+      label={baseValue}
       value={baseValue}
       onChange={handleChange}
       ref={ref}
-    />
+    >
+      {results.map((result) => (
+        <AutocompleteOption
+          key={result}
+          label={result}
+          value={result}
+          className="hover:bg-[#fafafa]"
+          hoveredClassName="bg-[#fafafa]"
+        >
+          {result}
+        </AutocompleteOption>
+      ))}
+    </Autocomplete>
   );
 });
 ProductSpecAutocompleteField.displayName = 'ProductSpecAutocompleteField';

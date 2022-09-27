@@ -1,7 +1,12 @@
 import Joi from '@hapi/joi';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { useRouter } from 'next/router';
-import React, { FunctionComponent, useCallback, useState } from 'react';
+import React, {
+  FunctionComponent,
+  useCallback,
+  useMemo,
+  useState,
+} from 'react';
 import { Controller, useForm, UseFormProps } from 'react-hook-form';
 import { ApiError, ValidationErrorType } from '../../../types/error';
 import {
@@ -84,12 +89,14 @@ export const UserForm: FunctionComponent<UserFormProps> = (props) => {
   const [deleting, setDeleting] = useState(false);
   const [requestError, setRequestError] = useState<ApiError>(null);
 
+  const form = useMemo(() => formOptions(user), [user]);
+
   const {
     control,
     handleSubmit,
     setError,
     formState: { errors },
-  } = useForm<UserFormData>(formOptions(user));
+  } = useForm<UserFormData>(form);
 
   const handleSave = useCallback(
     async (formData: UserFormData) => {
