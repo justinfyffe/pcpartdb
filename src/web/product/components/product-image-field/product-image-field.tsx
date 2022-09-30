@@ -1,4 +1,9 @@
-import React, { FunctionComponent, useCallback, useState } from 'react';
+import React, {
+  FunctionComponent,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import { Image } from '../../../../types/image';
 import {
   ProductImage,
@@ -21,6 +26,19 @@ export const ProductImageField: FunctionComponent<ProductImageFieldProps> = (
   props,
 ) => {
   const { type, value: propsValue, onChange, className } = props;
+
+  // Remove the image property from the value
+  useEffect(() => {
+    if (propsValue?.image == null) {
+      return;
+    }
+
+    onChange?.(
+      propsValue
+        ? { type: propsValue.type, imageId: propsValue.imageId }
+        : null,
+    );
+  }, [propsValue, onChange]);
 
   const [image, setImage] = useState<Image>(() => propsValue?.image ?? null);
 

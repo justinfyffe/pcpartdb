@@ -1352,7 +1352,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
             <ProductImageFields
               fields={detailsImagesFields}
               type={ProductImageType.Details}
-              onAppend={() => appendImage({ type: null, image: null })}
+              onAppend={() => appendImage({})}
               onRemove={removeImage}
               onSwap={swapImage}
               {...field}
@@ -1472,18 +1472,20 @@ function getFormImages(gpu?: Product) {
 }
 
 function toRequestImages(formData: ProductFormData): ProductImage[] {
+  const { autocompleteImage, thumbnailImage, detailsImages } = formData;
+
   const images: ProductImage[] = [];
 
-  if (formData.autocompleteImage) {
-    images.push(formData.autocompleteImage);
+  if (autocompleteImage) {
+    images.push(autocompleteImage);
   }
 
-  if (formData.thumbnailImage) {
-    images.push(formData.thumbnailImage);
+  if (thumbnailImage) {
+    images.push(thumbnailImage);
   }
 
-  if (formData.detailsImages) {
-    images.push(...formData.detailsImages);
+  if (detailsImages) {
+    images.push(...detailsImages);
   }
 
   return images;
