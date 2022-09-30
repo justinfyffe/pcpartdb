@@ -1,10 +1,22 @@
 import React, { forwardRef, useCallback, useEffect, useState } from 'react';
-import { Product, ProductType } from '../../../types/product';
+import { Product, ProductType } from '../../../../types/product';
 import {
   Autocomplete,
   AutocompleteOption,
-} from '../../shared/components/autocomplete';
-import { productService } from '../product.service';
+} from '../../../shared/components/autocomplete';
+import { productService } from '../../product.service';
+
+interface ProductAutocompleteProps {
+  productType: ProductType;
+
+  initialProduct?: Product;
+  value?: number;
+  onChange?: (value: number) => void;
+
+  excludeProductId?: number;
+
+  className?: string;
+}
 
 export const ProductAutocomplete = forwardRef<
   HTMLInputElement,
@@ -87,15 +99,3 @@ export const ProductAutocomplete = forwardRef<
   );
 });
 ProductAutocomplete.displayName = 'ProductAutocomplete';
-
-interface ProductAutocompleteProps {
-  productType: ProductType;
-
-  initialProduct?: Product;
-  value?: number;
-  onChange?: (value: number) => void;
-
-  excludeProductId?: number;
-
-  className?: string;
-}

@@ -1,6 +1,5 @@
 import { Model, PartialModelObject } from 'objection';
-import { Product, productSchema, ProductType } from '../../types/product';
-import { CanDto } from '../shared/types/normalize';
+import { Product, ProductType } from '../../types/product';
 import {
   ProductBenchmarkModel,
   ProductBenchmarkModelPojo,
@@ -22,7 +21,7 @@ import {
   ProductSpecModelPojo,
 } from './spec/product-spec.model';
 
-export class ProductModel extends Model implements CanDto<Product> {
+export class ProductModel extends Model {
   static tableName = 'products';
 
   // Fields
@@ -110,10 +109,6 @@ export class ProductModel extends Model implements CanDto<Product> {
       reviews: this.reviews?.map((review) => review.toDto()) ?? [],
       images: this.images?.map((image) => image.toDto()) ?? [],
     };
-  }
-
-  getSchema() {
-    return productSchema;
   }
 }
 

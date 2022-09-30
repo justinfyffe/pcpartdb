@@ -4,17 +4,20 @@ import {
   XIcon,
 } from '@heroicons/react/outline';
 import React, { FunctionComponent, useCallback } from 'react';
-import { ProductImageType } from '../../../types/product-image';
-import { Button, ButtonVariant } from '../../shared/components/button';
-import { ProductImageField, ProductImageValue } from './product-image-field';
+import {
+  ProductImage,
+  ProductImageType,
+} from '../../../../types/product-image';
+import { Button, ButtonVariant } from '../../../shared/components/button';
+import { ProductImageField } from './product-image-field';
 
-interface ProductImagesFieldProps {
+interface ProductImageFieldsProps {
   name: string;
   type: ProductImageType;
-  value: ProductImageValue[];
-  fields: (ProductImageValue & { id: string })[];
+  value: ProductImage[];
+  fields: (ProductImage & { id: string })[];
 
-  onChange: (values: ProductImageValue[]) => void;
+  onChange: (values: ProductImage[]) => void;
   onAppend: () => void;
   onRemove: (index: number) => void;
   onSwap: (from: number, to: number) => void;
@@ -22,17 +25,18 @@ interface ProductImagesFieldProps {
   ref?: unknown;
 }
 
-export const ProductImagesField: FunctionComponent<ProductImagesFieldProps> = (
+export const ProductImageFields: FunctionComponent<ProductImageFieldsProps> = (
   props,
 ) => {
   const { fields, type, value, onAppend, onRemove, onSwap, onChange } = props;
 
   const handleImageChange = useCallback(
-    (i: number, productImage: ProductImageValue) => {
-      value[i] = productImage;
+    (i: number, productImage: ProductImage) => {
+      fields[i] = { ...fields[i], ...productImage };
+      value[i] = { ...productImage, metadata: { order: i } };
       onChange(value);
     },
-    [onChange, value],
+    [fields, value, onChange],
   );
 
   const handleShiftUp = useCallback(

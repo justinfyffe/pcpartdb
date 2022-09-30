@@ -2,14 +2,12 @@ import React, {
   ChangeEvent,
   FunctionComponent,
   useCallback,
-  useContext,
+  useRef,
   useState,
 } from 'react';
+import { useGon } from '../../gon';
 import { Button, ButtonVariant } from '../button';
-import { FieldContext } from '../field';
 import { TextInput } from '../input';
-
-const fileUploadId = 0;
 
 export interface FileProps {
   name?: string;
@@ -27,13 +25,16 @@ export interface FileLabelProps {
 export const File: FunctionComponent<FileProps> = (props) => {
   const { name, onChange } = props;
   const [file, setFile] = useState(null);
-  const [inputId] = useState(fileUploadId);
 
-  const context = useContext(FieldContext);
+  const gon = useGon();
+  const [fileId] = useState(() => gon.fieldCounter++);
+
+  const fileRef = useRef<HTMLInputElement>();
+  const inputId = `file-upload-${fileId}`;
 
   const handleInputClick = useCallback(() => {
-    document.getElementById(`file-upload-${inputId}`).click();
-  }, [inputId]);
+    fileRef.current.click();
+  }, []);
 
   const handleFileChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
@@ -49,13 +50,14 @@ export const File: FunctionComponent<FileProps> = (props) => {
     <div className="block relative">
       <input
         type="file"
-        id={context?.fieldId}
+        id={inputId}
         name={name}
         onChange={handleFileChange}
         className="h-[0.1px] opacity-0 overflow-hidden pr-[120px] absolute w-[0.1px] z-[-1]"
+        ref={fileRef}
       />
       <TextInput value={file?.name} onClick={handleInputClick} readOnly />
-      <FileLabel for={context?.fieldId}>Select File</FileLabel>
+      <FileLabel for={inputId}>Select File</FileLabel>
     </div>
   );
 };

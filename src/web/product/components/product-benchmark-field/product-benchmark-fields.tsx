@@ -1,17 +1,15 @@
 import { XIcon } from '@heroicons/react/outline';
 import React, { FunctionComponent, useCallback } from 'react';
+import { ProductBenchmark } from '../../../../types/product-benchmark';
 import { Button, ButtonVariant } from '../../../shared/components/button';
-import {
-  ProductBenchmarkField,
-  ProductBenchmarkValue,
-} from './product-benchmark-field';
+import { ProductBenchmarkField } from './product-benchmark-field';
 
 interface ProductBenchmarkFieldsProps {
   name: string;
-  value: ProductBenchmarkValue[];
-  fields: (ProductBenchmarkValue & { id: string })[];
+  value: ProductBenchmark[];
+  fields: (ProductBenchmark & { id: string })[];
 
-  onChange: (values: ProductBenchmarkValue[]) => void;
+  onChange: (values: ProductBenchmark[]) => void;
   onAppend: () => void;
   onRemove: (index: number) => void;
 
@@ -24,7 +22,7 @@ export const ProductBenchmarkFields: FunctionComponent<
   const { fields, value, onAppend, onChange, onRemove } = props;
 
   const handleFieldChange = useCallback(
-    (i: number, benchmark: ProductBenchmarkValue) => {
+    (i: number, benchmark: ProductBenchmark) => {
       fields[i] = { ...fields[i], ...benchmark };
       value[i] = { ...benchmark, metadata: { order: i } };
       onChange(value);

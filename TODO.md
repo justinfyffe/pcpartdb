@@ -1,8 +1,10 @@
 Immediate Tasks:
-- gpu form improvements
-  - create folders for gpu form, image fields, autocompletes
-  - improve image fields?
-- finish improving product autocomplete 
+- get rid of normalizr?
+  - need better handling of dtos
+- fix product image inputs (not working)
+- product image input improvements
+  - image cache
+- product autocomplete improvements
   - create product cache instead of using initialProduct
 - view gpu page
 - home page

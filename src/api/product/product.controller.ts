@@ -9,15 +9,10 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import type {
-  ProductRequest,
-  ProductResponse,
-  ProductsResponse,
-  ProductType,
-} from '../../types/product';
+import type { ProductRequest, ProductType } from '../../types/product';
 import { StaffGuard } from '../auth/staff.guard';
 import { transaction } from '../db/database';
-import { normalize } from '../shared/types/normalize';
+import { dto } from '../shared/types/dto';
 import { ProductService } from './product.service';
 
 @Controller('products')
@@ -30,41 +25,46 @@ export class ProductController {
     @Query('type') type: ProductType,
     @Query('query') query: string,
   ) {
-    return normalize(
-      await transaction((trx) =>
-        this.service.autocomplete(type, query ?? '', { trx }),
-      ),
-    ) as ProductsResponse;
+    return await transaction(async (trx) => {
+      const results = await this.service.autocomplete(type, query ?? '', {
+        trx,
+      });
+      return dto(results);
+    });
   }
 
   @Get()
   async list() {
-    return normalize(
-      await transaction((trx) => this.service.list({ trx })),
-    ) as ProductsResponse;
+    return await transaction(async (trx) => {
+      const results = await this.service.list({ trx });
+      return dto(results);
+    });
   }
 
   @Get(':idOrSlug')
   async get(@Param('idOrSlug') idOrSlug: number | string) {
-    return normalize(
-      await transaction((trx) => this.service.get(idOrSlug, { trx })),
-    ) as ProductResponse;
+    return await transaction(async (trx) => {
+      const product = await this.service.get(idOrSlug, { trx });
+      return dto(product);
+    });
   }
 
   @Post()
   @UseGuards(StaffGuard)
   async create(@Body() body: ProductRequest) {
-    return normalize(
-      await transaction((trx) => this.service.create(body, { trx })),
-    ) as ProductResponse;
+    return await transaction(async (trx) => {
+      const product = await this.service.create(body, { trx });
+      return dto(product);
+    });
   }
 
   @Put(':id')
   @UseGuards(StaffGuard)
   async update(@Param('id') id: number, @Body() body: ProductRequest) {
-    return normalize(
-      await transaction((trx) => this.service.update(id, body, { trx })),
-    ) as ProductResponse;
+    return await transaction(async (trx) => {
+      const product = await this.service.update(id, body, { trx });
+      return dto(product);
+    });
   }
 
   @Delete(':id')

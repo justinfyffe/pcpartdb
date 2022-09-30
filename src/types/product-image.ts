@@ -1,4 +1,4 @@
-import { schema } from 'normalizr';
+import Joi from '@hapi/joi';
 import { Image, imageSchema } from './image';
 
 export enum ProductImageType {
@@ -12,13 +12,10 @@ export interface ProductImageMetadata {
 }
 
 export interface ProductImage {
-  id?: number;
-
   type: ProductImageType;
-  productId?: number;
   imageId: number;
 
-  metadata: ProductImageMetadata;
+  metadata?: ProductImageMetadata;
 
   image?: Image;
 }
@@ -30,6 +27,9 @@ export interface ProductImageRequest {
   metadata?: ProductImageMetadata;
 }
 
-export const productImageSchema = new schema.Entity('productImages', {
-  image: imageSchema,
-});
+export const productImageValidator = Joi.object({
+  type: Joi.string().required(),
+  imageId: Joi.number().required(),
+
+  metadata: Joi.any(),
+}).options({ abortEarly: false });

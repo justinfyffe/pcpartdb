@@ -2,13 +2,11 @@ import { Model, PartialModelObject } from 'objection';
 import {
   ProductImage,
   ProductImageMetadata,
-  productImageSchema,
   ProductImageType,
 } from '../../../types/product-image';
 import { ImageModel } from '../../images/image.model';
-import { CanDto } from '../../shared/types/normalize';
 
-export class ProductImageModel extends Model implements CanDto<ProductImage> {
+export class ProductImageModel extends Model {
   static tableName = 'product_images';
 
   // Fields
@@ -36,18 +34,12 @@ export class ProductImageModel extends Model implements CanDto<ProductImage> {
 
   toDto(): ProductImage {
     return {
-      id: this.id,
-      productId: this.productId,
       type: this.type,
       imageId: this.imageId,
       metadata: this.metadata,
 
       image: this.image?.toDto(),
     };
-  }
-
-  getSchema() {
-    return productImageSchema;
   }
 }
 

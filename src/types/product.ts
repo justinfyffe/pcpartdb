@@ -1,10 +1,6 @@
 import { NormalizedSchema, schema } from 'normalizr';
 import { ProductBenchmark, ProductBenchmarkRequest } from './product-benchmark';
-import {
-  ProductImage,
-  ProductImageRequest,
-  productImageSchema,
-} from './product-image';
+import { ProductImage, ProductImageRequest } from './product-image';
 import { ProductMeta, ProductMetaRequest } from './product-meta';
 import { ProductReview, ProductReviewRequest } from './product-review';
 import { ProductSpec, ProductSpecRequest } from './product-spec';
@@ -36,8 +32,8 @@ export interface Product {
 }
 
 export interface ProductRequest {
-  parentId?: number;
   slug: string;
+  parentId?: number;
 
   type: ProductType;
   name: string;
@@ -48,18 +44,6 @@ export interface ProductRequest {
   reviews: ProductReviewRequest[];
   images: ProductImageRequest[];
 }
-
-interface ProductEntities {
-  products: Record<string, Product>;
-  images: Record<string, ProductImage>;
-}
-
-export type ProductResponse = NormalizedSchema<ProductEntities, number>;
-export type ProductsResponse = NormalizedSchema<ProductEntities, number[]>;
-
-export const productSchema = new schema.Entity('products', {
-  images: [productImageSchema],
-});
 
 export function getProductMeta(product: Product) {
   const meta: Record<string, ProductMeta> = {};

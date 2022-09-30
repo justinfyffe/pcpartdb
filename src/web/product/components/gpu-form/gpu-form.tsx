@@ -13,8 +13,7 @@ import {
   useForm,
   UseFormProps,
 } from 'react-hook-form';
-import { ApiError, ValidationErrorType } from '../../../types/error';
-import { Image } from '../../../types/image';
+import { ApiError, ValidationErrorType } from '../../../../types/error';
 import {
   getOrderedBenchmarks,
   getOrderedReviews,
@@ -23,49 +22,47 @@ import {
   Product,
   ProductRequest,
   ProductType,
-} from '../../../types/product';
+} from '../../../../types/product';
 import {
   ProductBenchmark,
   productBenchmarkValidator,
-} from '../../../types/product-benchmark';
-import { ProductImage, ProductImageType } from '../../../types/product-image';
+} from '../../../../types/product-benchmark';
+import {
+  ProductImage,
+  ProductImageType,
+  productImageValidator,
+} from '../../../../types/product-image';
 import {
   ProductMeta,
   ProductMetaKey,
   productMetaValidator,
-} from '../../../types/product-meta';
+} from '../../../../types/product-meta';
 import {
   ProductReview,
   productReviewValidator,
-} from '../../../types/product-review';
+} from '../../../../types/product-review';
 import {
   ProductSpec,
   ProductSpecKey,
   productSpecValidator,
-} from '../../../types/product-spec';
-import { Alert, AlertVariant } from '../../shared/components/alert';
-import { Button, ButtonVariant } from '../../shared/components/button';
-import { Field, FieldError } from '../../shared/components/field';
-import { Form, FormActions } from '../../shared/components/form';
-import { TextInput } from '../../shared/components/input';
-import { Spinner } from '../../shared/components/spinner';
+} from '../../../../types/product-spec';
+import { Alert, AlertVariant } from '../../../shared/components/alert';
+import { Button, ButtonVariant } from '../../../shared/components/button';
+import { Field, FieldError } from '../../../shared/components/field';
+import { Form, FormActions } from '../../../shared/components/form';
+import { TextInput } from '../../../shared/components/input';
+import { Spinner } from '../../../shared/components/spinner';
 import {
   isBadRequestError,
   setValidationErrors,
-} from '../../shared/error/error.utils';
-import { productService } from '../product.service';
-import { ProductAutocomplete } from './product-autocomplete';
-import { ProductBenchmarkFields } from './product-benchmark-field';
-import { ProductImageField } from './product-image-field';
-import { ProductImagesField } from './product-images-field';
-import { ProductMetaField } from './product-meta-field';
-import { ProductReviewFields } from './product-review-field';
-import { ProductSpecField } from './product-spec-field';
-
-interface ProductImageFormData {
-  type: ProductImageType;
-  image: Image;
-}
+} from '../../../shared/error/error.utils';
+import { productService } from '../../product.service';
+import { ProductImageField, ProductImageFields } from '../product-image-field';
+import { ProductMetaField } from '../product-meta-field';
+import { ProductReviewFields } from '../product-review-field';
+import { ProductSpecField } from '../product-spec-field';
+import { ProductAutocomplete } from './../product-autocomplete';
+import { ProductBenchmarkFields } from './../product-benchmark-field';
 
 interface ProductFormData {
   parentId: number;
@@ -143,16 +140,10 @@ interface ProductFormData {
   reviews?: ProductReview[];
   benchmarks?: ProductBenchmark[];
 
-  autocompleteImage?: ProductImageFormData;
-  thumbnailImage?: ProductImageFormData;
-  detailsImages?: ProductImageFormData[];
+  autocompleteImage?: ProductImage;
+  thumbnailImage?: ProductImage;
+  detailsImages?: ProductImage[];
 }
-
-const imageValidator = Joi.object({
-  id: Joi.any(),
-  type: Joi.string().required(),
-  image: Joi.any().required(),
-}).options({ abortEarly: false });
 
 const productValidator = Joi.object({
   parentId: Joi.number().allow(null),
@@ -233,9 +224,9 @@ const productValidator = Joi.object({
   benchmarks: Joi.array().items(productBenchmarkValidator),
   reviews: Joi.array().items(productReviewValidator),
 
-  autocompleteImage: imageValidator.allow(null),
-  thumbnailImage: imageValidator.allow(null),
-  detailsImages: Joi.array().items(imageValidator),
+  autocompleteImage: productImageValidator.allow(null),
+  thumbnailImage: productImageValidator.allow(null),
+  detailsImages: Joi.array().items(productImageValidator),
 }).options({ abortEarly: false });
 
 interface GpuFormProps {
@@ -243,6 +234,7 @@ interface GpuFormProps {
 }
 
 function formOptions(gpu?: Product): UseFormProps<ProductFormData> {
+  console.log(gpu);
   const meta = gpu != null ? getProductMeta(gpu) : {};
   const specs = gpu != null ? getProductSpecs(gpu) : {};
   const benchmarks = gpu != null ? getOrderedBenchmarks(gpu) : [];
@@ -402,6 +394,8 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
         reviews: formData.reviews,
         images: toRequestImages(formData),
       };
+
+      console.log(request);
 
       try {
         if (isUpdate) {
@@ -1355,7 +1349,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           name="detailsImages"
           control={control}
           render={({ field }) => (
-            <ProductImagesField
+            <ProductImageFields
               fields={detailsImagesFields}
               type={ProductImageType.Details}
               onAppend={() => appendImage({ type: null, image: null })}
@@ -1457,26 +1451,20 @@ function toSpecsArray(formData: ProductFormData): ProductSpec[] {
 }
 
 function getFormImages(gpu?: Product) {
-  let autocompleteImage: ProductImageFormData = {
-    type: ProductImageType.Autocomplete,
-    image: null,
-  };
-  let thumbnailImage: ProductImageFormData = {
-    type: ProductImageType.Thumbnail,
-    image: null,
-  };
-  const detailsImages: ProductImageFormData[] = [];
+  let autocompleteImage: ProductImage = null;
+  let thumbnailImage: ProductImage = null;
+  const detailsImages: ProductImage[] = [];
 
   const images =
     gpu?.images?.sort((a, b) => a.metadata.order - b.metadata.order) ?? [];
 
   images.forEach((value) => {
     if (value.type === ProductImageType.Autocomplete) {
-      autocompleteImage = { type: value.type, image: value.image };
+      autocompleteImage = value;
     } else if (value.type === ProductImageType.Thumbnail) {
-      thumbnailImage = { type: value.type, image: value.image };
+      thumbnailImage = value;
     } else {
-      detailsImages.push({ type: value.type, image: value.image });
+      detailsImages.push(value);
     }
   });
 
@@ -1486,33 +1474,16 @@ function getFormImages(gpu?: Product) {
 function toRequestImages(formData: ProductFormData): ProductImage[] {
   const images: ProductImage[] = [];
 
-  if (formData.autocompleteImage?.image) {
-    images.push({
-      type: formData.autocompleteImage.type,
-      imageId: formData.autocompleteImage.image.id,
-      metadata: {},
-    });
+  if (formData.autocompleteImage) {
+    images.push(formData.autocompleteImage);
   }
 
-  if (formData.thumbnailImage?.image) {
-    images.push({
-      type: formData.thumbnailImage.type,
-      imageId: formData.thumbnailImage.image.id,
-      metadata: {},
-    });
+  if (formData.thumbnailImage) {
+    images.push(formData.thumbnailImage);
   }
 
   if (formData.detailsImages) {
-    const detailsImages = formData.detailsImages.filter(
-      (detailsImage) => detailsImage.image,
-    );
-    images.push(
-      ...detailsImages.map((value, i) => ({
-        type: value.type,
-        imageId: value.image.id,
-        metadata: { order: i },
-      })),
-    );
+    images.push(...formData.detailsImages);
   }
 
   return images;

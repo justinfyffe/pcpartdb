@@ -5,8 +5,8 @@ import React, {
   useState,
 } from 'react';
 import {
+  ProductBenchmark,
   ProductBenchmarkKey,
-  ProductBenchmarkMetadata,
 } from '../../../../types/product-benchmark';
 import { Field } from '../../../shared/components/field';
 import { TextInput } from '../../../shared/components/input';
@@ -17,25 +17,11 @@ import {
 } from '../../../shared/components/select';
 import { classNames } from '../../../shared/ui/ui.utils';
 
-export interface ProductBenchmarkValue {
-  key: ProductBenchmarkKey;
-
-  integerValue?: number;
-  floatValue?: number;
-  booleanValue?: boolean;
-  stringValue?: string;
-  textValue?: string;
-  jsonValue?: unknown;
-
-  metadata?: ProductBenchmarkMetadata;
-  source?: string;
-}
-
 interface ProductBenchmarkFieldProps {
   benchmarkKey?: ProductBenchmarkKey;
 
-  value?: ProductBenchmarkValue;
-  onChange?: (value: ProductBenchmarkValue) => void;
+  value?: ProductBenchmark;
+  onChange?: (value: ProductBenchmark) => void;
 
   className?: string;
   ref?: unknown;
