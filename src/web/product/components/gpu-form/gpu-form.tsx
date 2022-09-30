@@ -234,7 +234,6 @@ interface GpuFormProps {
 }
 
 function formOptions(gpu?: Product): UseFormProps<ProductFormData> {
-  console.log(gpu);
   const meta = gpu != null ? getProductMeta(gpu) : {};
   const specs = gpu != null ? getProductSpecs(gpu) : {};
   const benchmarks = gpu != null ? getOrderedBenchmarks(gpu) : [];
@@ -394,8 +393,6 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
         reviews: formData.reviews,
         images: toRequestImages(formData),
       };
-
-      console.log(request);
 
       try {
         if (isUpdate) {

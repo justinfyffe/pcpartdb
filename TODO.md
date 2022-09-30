@@ -1,7 +1,13 @@
 Immediate Tasks:
 - get rid of normalizr?
   - need better handling of dtos
-- fix product image inputs (not working)
+    - but don't need to normalize, can normalize when we need it.
+  - done for products, need to do for images, users, etc.
+- create caches
+  - ImageCache
+    - ImageCache.saveImages();
+  - ProductCache
+    - ProductCache.saveProducts()
 - product image input improvements
   - image cache
 - product autocomplete improvements
