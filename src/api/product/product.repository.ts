@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ProductType } from '../../types/product';
+import { ProductImageType } from '../../types/product-image';
 import { RepositoryConfig } from '../db/repository';
 import { ProductBenchmarkRepository } from './benchmark/product-benchmark.repository';
 import { ProductImageRepository } from './image/product-image.repository';
@@ -73,6 +74,20 @@ export class ProductRepository {
   ) {
     return await ProductModel.query(config?.trx)
       .where('type', type)
-      .andWhere('name', 'ILIKE', `%${query}%`);
+      .andWhere('name', 'ILIKE', `%${query}%`)
+      .withGraphFetched('meta(autocompleteMeta)')
+      .withGraphFetched('specs(autocompleteSpecs)')
+      .withGraphFetched('images(autocompleteImages).[image]')
+      .modifiers({
+        autocompleteMeta(_builder) {
+          _builder.whereIn('key', []);
+        },
+        autocompleteSpecs(_builder) {
+          _builder.whereIn('key', []);
+        },
+        autocompleteImages(builder) {
+          builder.where('type', ProductImageType.Autocomplete);
+        },
+      });
   }
 }

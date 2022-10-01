@@ -39,9 +39,11 @@ export class ProductService {
   }
 
   async autocompleteProduct(query: string, type: ProductType) {
-    return await this.api.get<Product[]>(`${PATH}/autocomplete`, {
+    const products = await this.api.get<Product[]>(`${PATH}/autocomplete`, {
       params: { type, query },
     });
+    ProductCache.save(products);
+    return products;
   }
 
   async autocompleteMeta(query: string, key?: ProductMetaKey) {

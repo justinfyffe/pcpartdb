@@ -43,7 +43,10 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
     const [items, setItems] = useState<{ label: string; value: string }[]>([]);
     const totalChildren = Children.count(children);
 
-    useEffect(() => setQuery(propsLabel), [propsLabel]);
+    useEffect(() => {
+      console.log(propsLabel);
+      setQuery(propsLabel);
+    }, [propsLabel]);
     useEffect(() => setValue(propsValue), [propsValue]);
 
     useEffect(() => {
@@ -99,8 +102,9 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
           const { label, value } = items[hoveredIndex];
           setValue(value);
           setQuery(label);
-          setOpen(false);
           onChange?.(value);
+          setOpen(false);
+          console.log('handleKeydown', label);
         }
       },
       [onChange, isOpen, items, hoveredIndex, totalChildren],
@@ -111,8 +115,9 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
         const item = items[index];
         setValue(item.value);
         setQuery(item.label);
-        setOpen(false);
         onChange?.(item.value);
+        setOpen(false);
+        console.log('handleChildClick', item.label);
       },
       [onChange, items],
     );
@@ -133,6 +138,7 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
         setQuery(null);
         onChange?.(null);
       } else {
+        console.log('here', propsLabel);
         setQuery(propsLabel);
       }
     }, [freeSolo, propsLabel, query, onChange]);
