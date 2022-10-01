@@ -7,7 +7,7 @@ import React, {
 } from 'react';
 import {
   ProductSpecKey,
-  ProductSpecMetadata,
+  ProductSpecRequest,
 } from '../../../../types/product-spec';
 import { ProductSpecAutocompleteField } from './product-spec-autocomplete-field';
 import { ProductSpecBooleanField } from './product-spec-boolean-field';
@@ -25,20 +25,6 @@ type InputType =
   | 'date'
   | 'boolean'
   | 'enum';
-
-interface ProductSpecValue {
-  key: ProductSpecKey;
-
-  integerValue?: number;
-  floatValue?: number;
-  booleanValue?: boolean;
-  stringValue?: string;
-  textValue?: string;
-  jsonValue?: unknown;
-
-  metadata?: ProductSpecMetadata;
-  source?: string;
-}
 
 const INPUT_TYPES: { [key: string]: InputType } = {
   [ProductSpecKey.Architecture]: 'autocomplete',
@@ -98,8 +84,8 @@ interface ProductSpecFieldProps {
   type?: InputType;
   field: ProductSpecKey;
 
-  value?: ProductSpecValue;
-  onChange?: (value: ProductSpecValue) => void;
+  value?: ProductSpecRequest;
+  onChange?: (value: ProductSpecRequest) => void;
 }
 
 export const ProductSpecField = forwardRef<unknown, ProductSpecFieldProps>(
@@ -110,7 +96,7 @@ export const ProductSpecField = forwardRef<unknown, ProductSpecFieldProps>(
     useEffect(() => setValue(propsValue), [propsValue]);
 
     const handleChange = useCallback(
-      (value: ProductSpecValue) => {
+      (value: ProductSpecRequest) => {
         setValue(value);
         onChange?.(value);
       },

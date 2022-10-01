@@ -1,5 +1,4 @@
 import Joi from '@hapi/joi';
-import { NormalizedSchema, schema } from 'normalizr';
 
 export enum ProductType {
   GpuModel = 'GPU_MODEL',
@@ -25,19 +24,7 @@ export interface ProductMeta {
   metadata?: ProductMetaMetadata;
 }
 
-export interface ProductMetaRequest {
-  key: ProductMetaKey;
-
-  integerValue?: number;
-  floatValue?: number;
-  booleanValue?: boolean;
-  stringValue?: string;
-  textValue?: string;
-  jsonValue?: unknown;
-
-  source?: string;
-  metadata?: ProductMetaMetadata;
-}
+export type ProductMetaRequest = ProductMeta;
 
 export const productMetaValidator = Joi.object({
   key: Joi.string().required(),

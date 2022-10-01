@@ -1,24 +1,15 @@
 import React, { forwardRef, useCallback } from 'react';
 import {
   ProductSpecKey,
-  ProductSpecMetadata,
+  ProductSpecRequest,
 } from '../../../../types/product-spec';
 import { TextInput } from '../../../shared/components/input';
-
-interface ProductSpecStringValue {
-  key: ProductSpecKey;
-
-  stringValue?: string;
-
-  metadata?: ProductSpecMetadata;
-  source?: string;
-}
 
 interface ProductSpecStringFieldProps {
   field: ProductSpecKey;
 
-  value?: ProductSpecStringValue;
-  onChange?: (value: ProductSpecStringValue) => void;
+  value?: ProductSpecRequest;
+  onChange?: (value: ProductSpecRequest) => void;
 }
 
 export const ProductSpecStringField = forwardRef<

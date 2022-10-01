@@ -3,7 +3,7 @@ import {
   MarketSegment,
   ProductionStatus,
   ProductSpecKey,
-  ProductSpecMetadata,
+  ProductSpecRequest,
 } from '../../../../types/product-spec';
 import {
   Select,
@@ -24,20 +24,11 @@ const ITEMS: { [key: string]: { label: string; value: string }[] } = {
   ],
 };
 
-interface ProductSpecEnumValue {
-  key: ProductSpecKey;
-
-  stringValue?: string;
-
-  metadata?: ProductSpecMetadata;
-  source?: string;
-}
-
 interface ProductSpecEnumFieldProps {
   field: ProductSpecKey;
 
-  value?: ProductSpecEnumValue;
-  onChange?: (value: ProductSpecEnumValue) => void;
+  value?: ProductSpecRequest;
+  onChange?: (value: ProductSpecRequest) => void;
 }
 
 export const ProductSpecEnumField = forwardRef<

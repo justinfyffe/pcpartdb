@@ -1,7 +1,7 @@
 import React, { forwardRef, useCallback, useState } from 'react';
 import {
   ProductSpecKey,
-  ProductSpecMetadata,
+  ProductSpecRequest,
 } from '../../../../types/product-spec';
 import {
   Autocomplete,
@@ -9,20 +9,11 @@ import {
 } from '../../../shared/components/autocomplete';
 import { productService } from '../../product.service';
 
-interface ProductSpecAutocompleteValue {
-  key: ProductSpecKey;
-
-  stringValue?: string;
-
-  metadata?: ProductSpecMetadata;
-  source?: string;
-}
-
 interface ProductSpecAutocompleteFieldProps {
   field: ProductSpecKey;
 
-  value?: ProductSpecAutocompleteValue;
-  onChange?: (value: ProductSpecAutocompleteValue) => void;
+  value?: ProductSpecRequest;
+  onChange?: (value: ProductSpecRequest) => void;
 }
 
 export const ProductSpecAutocompleteField = forwardRef<

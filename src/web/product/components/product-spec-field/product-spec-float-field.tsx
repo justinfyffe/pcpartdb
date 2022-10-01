@@ -1,18 +1,9 @@
 import React, { forwardRef, useCallback, useMemo, useState } from 'react';
 import {
   ProductSpecKey,
-  ProductSpecMetadata,
+  ProductSpecRequest,
 } from '../../../../types/product-spec';
 import { NumberInput } from '../../../shared/components/input';
-
-interface ProductSpecFloatValue {
-  key: ProductSpecKey;
-
-  floatValue?: number;
-
-  metadata?: ProductSpecMetadata;
-  source?: string;
-}
 
 const SUFFIXES: { [key: string]: string[] } = {
   [ProductSpecKey.LaunchPrice]: ['USD'],
@@ -43,8 +34,8 @@ const SUFFIXES: { [key: string]: string[] } = {
 interface ProductSpecFloatFieldProps {
   field: ProductSpecKey;
 
-  value?: ProductSpecFloatValue;
-  onChange?: (value: ProductSpecFloatValue) => void;
+  value?: ProductSpecRequest;
+  onChange?: (value: ProductSpecRequest) => void;
 }
 
 export const ProductSpecFloatField = forwardRef<
@@ -76,7 +67,7 @@ export const ProductSpecFloatField = forwardRef<
   const handleSuffixClick = useCallback(() => {
     const newIndex = suffixIndex < suffixes.length - 1 ? suffixIndex + 1 : 0;
     setSuffixIndex(newIndex);
-    const newValue: ProductSpecFloatValue = {
+    const newValue: ProductSpecRequest = {
       key: field,
       floatValue: baseValue,
       metadata: { suffix: suffixes[suffixIndex] },

@@ -1,22 +1,18 @@
-import React, {
-  FunctionComponent,
-  useCallback,
-  useEffect,
-  useState,
-} from 'react';
+import React, { FunctionComponent, useCallback, useState } from 'react';
 import { Image } from '../../../../types/image';
 import {
-  ProductImage,
+  ProductImageRequest,
   ProductImageType,
 } from '../../../../types/product-image';
 import { ImageInput } from '../../../image/components/image-input';
+import { ImageCache } from '../../../shared/cache';
 import { classNames } from '../../../shared/ui/ui.utils';
 
 interface ProductImageFieldProps {
   type: ProductImageType;
 
-  value?: ProductImage;
-  onChange?: (value: ProductImage) => void;
+  value?: ProductImageRequest;
+  onChange?: (value: ProductImageRequest) => void;
 
   className?: string;
   ref?: unknown;
@@ -25,31 +21,31 @@ interface ProductImageFieldProps {
 export const ProductImageField: FunctionComponent<ProductImageFieldProps> = (
   props,
 ) => {
-  const { type, value: propsValue, onChange, className } = props;
+  const { type, value, onChange, className } = props;
 
-  // Remove the image property from the value
-  useEffect(() => {
-    if (propsValue?.image == null) {
-      return;
+  const [image, setImage] = useState<Image>(() => {
+    if (value == null) {
+      return null;
     }
 
-    onChange?.(
-      propsValue
-        ? { type: propsValue.type, imageId: propsValue.imageId }
-        : null,
-    );
-  }, [propsValue, onChange]);
-
-  const [image, setImage] = useState<Image>(() => propsValue?.image ?? null);
+    return ImageCache.get(value.imageId);
+  });
 
   const handleChange = useCallback(
     (image: Image) => {
-      const newValue = { type, imageId: image?.id };
+      const newValue: ProductImageRequest =
+        image != null
+          ? {
+              type,
+              imageId: image.id,
+              metadata: value?.metadata,
+            }
+          : null;
 
       onChange?.(newValue);
       setImage(image);
     },
-    [onChange, type],
+    [type, value, onChange],
   );
 
   return (

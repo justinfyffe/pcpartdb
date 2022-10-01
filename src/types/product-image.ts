@@ -1,5 +1,5 @@
 import Joi from '@hapi/joi';
-import { Image, imageSchema } from './image';
+import { Image } from './image';
 
 export enum ProductImageType {
   Thumbnail = 'THUMBNAIL',
@@ -20,12 +20,7 @@ export interface ProductImage {
   image?: Image;
 }
 
-export interface ProductImageRequest {
-  imageId: number;
-  type: ProductImageType;
-
-  metadata?: ProductImageMetadata;
-}
+export type ProductImageRequest = Omit<ProductImage, 'image'>;
 
 export const productImageValidator = Joi.object({
   type: Joi.string().required(),

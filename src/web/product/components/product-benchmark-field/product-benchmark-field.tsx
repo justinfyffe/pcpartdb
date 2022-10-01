@@ -5,8 +5,8 @@ import React, {
   useState,
 } from 'react';
 import {
-  ProductBenchmark,
   ProductBenchmarkKey,
+  ProductBenchmarkRequest,
 } from '../../../../types/product-benchmark';
 import { Field } from '../../../shared/components/field';
 import { TextInput } from '../../../shared/components/input';
@@ -20,8 +20,8 @@ import { classNames } from '../../../shared/ui/ui.utils';
 interface ProductBenchmarkFieldProps {
   benchmarkKey?: ProductBenchmarkKey;
 
-  value?: ProductBenchmark;
-  onChange?: (value: ProductBenchmark) => void;
+  value?: ProductBenchmarkRequest;
+  onChange?: (value: ProductBenchmarkRequest) => void;
 
   className?: string;
   ref?: unknown;

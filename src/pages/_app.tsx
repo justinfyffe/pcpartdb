@@ -4,6 +4,7 @@ import axios from 'axios';
 import App, { AppContext, AppProps } from 'next/app';
 import Head from 'next/head';
 import React from 'react';
+import { CacheHydration } from '../web/shared/cache';
 import { GonContext } from '../web/shared/gon';
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
@@ -14,6 +15,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
       <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
+      <CacheHydration />
       {!error && <Component {...pageProps}></Component>}
     </GonContext.Provider>
   );

@@ -1,14 +1,15 @@
 import { XIcon } from '@heroicons/react/outline';
 import React, { FunctionComponent, useCallback } from 'react';
+import { ProductReviewRequest } from '../../../../types/product-review';
 import { Button, ButtonVariant } from '../../../shared/components/button';
-import { ProductReviewField, ProductReviewValue } from './product-review-field';
+import { ProductReviewField } from './product-review-field';
 
 interface ProductReviewFieldsProps {
   name: string;
-  value: ProductReviewValue[];
-  fields: (ProductReviewValue & { id: string })[];
+  value: ProductReviewRequest[];
+  fields: (ProductReviewRequest & { id: string })[];
 
-  onChange: (values: ProductReviewValue[]) => void;
+  onChange: (values: ProductReviewRequest[]) => void;
   onAppend: () => void;
   onRemove: (index: number) => void;
 
@@ -21,7 +22,7 @@ export const ProductReviewFields: FunctionComponent<
   const { fields, value, onAppend, onChange, onRemove } = props;
 
   const handleFieldChange = useCallback(
-    (i: number, review: ProductReviewValue) => {
+    (i: number, review: ProductReviewRequest) => {
       fields[i] = { ...fields[i], ...review };
       value[i] = { ...review, metadata: { order: i } };
       onChange(value);

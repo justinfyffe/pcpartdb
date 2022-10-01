@@ -1,8 +1,7 @@
 Immediate Tasks:
-- product image input improvements
-  - image cache
-- product autocomplete improvements
-  - product cache
+- add meta to specify if model or actual product
+- add product image fields to gpu form
+- improve look of product autocomplete
 - view gpu page
 - home page
 - gpus list page

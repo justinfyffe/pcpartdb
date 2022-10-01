@@ -33,6 +33,14 @@ class ProductCacheImpl {
   delete(id: number) {
     this.cache.delete(id);
   }
+
+  hydrate(products: Record<number, Product>) {
+    this.save(Object.values(products));
+  }
+
+  toObject() {
+    return Object.fromEntries(this.cache);
+  }
 }
 
 export const ProductCache = new ProductCacheImpl();

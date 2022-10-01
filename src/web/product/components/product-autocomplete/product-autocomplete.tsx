@@ -1,5 +1,6 @@
 import React, { forwardRef, useCallback, useEffect, useState } from 'react';
 import { Product, ProductType } from '../../../../types/product';
+import { ProductCache } from '../../../shared/cache';
 import {
   Autocomplete,
   AutocompleteOption,
@@ -9,7 +10,6 @@ import { productService } from '../../product.service';
 interface ProductAutocompleteProps {
   productType: ProductType;
 
-  initialProduct?: Product;
   value?: number;
   onChange?: (value: number) => void;
 
@@ -24,27 +24,33 @@ export const ProductAutocomplete = forwardRef<
 >((props, ref) => {
   const {
     value,
-    initialProduct,
     productType: type,
     onChange,
     excludeProductId,
     className,
   } = props;
 
-  const [product, setProduct] = useState(initialProduct ?? null);
   const [results, setResults] = useState<Product[]>([]);
+  const [product, setProduct] = useState(() => {
+    if (value == null) {
+      return null;
+    }
+
+    return ProductCache.get(value);
+  });
 
   useEffect(() => {
     async function fetchProduct() {
-      if (product != null && value !== 0) {
+      if (product != null && value != null) {
         return;
       }
 
-      const result = await productService.get(value);
+      const result =
+        ProductCache.get(value) || (await productService.get(value));
       setProduct(result);
     }
 
-    if (value != null && value !== 0) {
+    if (value != null) {
       fetchProduct();
     }
   }, [product, value]);

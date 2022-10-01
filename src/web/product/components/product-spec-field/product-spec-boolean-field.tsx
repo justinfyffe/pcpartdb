@@ -1,7 +1,7 @@
 import React, { forwardRef, useCallback } from 'react';
 import {
   ProductSpecKey,
-  ProductSpecMetadata,
+  ProductSpecRequest,
 } from '../../../../types/product-spec';
 import {
   Select,
@@ -9,20 +9,11 @@ import {
   SelectValue,
 } from '../../../shared/components/select';
 
-interface ProductSpecBooleanValue {
-  key: ProductSpecKey;
-
-  booleanValue?: boolean;
-
-  metadata?: ProductSpecMetadata;
-  source?: string;
-}
-
 interface ProductSpecStringFieldProps {
   field: ProductSpecKey;
 
-  value?: ProductSpecBooleanValue;
-  onChange?: (value: ProductSpecBooleanValue) => void;
+  value?: ProductSpecRequest;
+  onChange?: (value: ProductSpecRequest) => void;
 }
 
 export const ProductSpecBooleanField = forwardRef<

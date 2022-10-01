@@ -25,19 +25,7 @@ export interface ProductBenchmark {
   metadata?: ProductBenchmarkMetadata;
 }
 
-export interface ProductBenchmarkRequest {
-  key: ProductBenchmarkKey;
-
-  integerValue?: number;
-  floatValue?: number;
-  booleanValue?: boolean;
-  stringValue?: string;
-  textValue?: string;
-  jsonValue?: unknown;
-
-  source?: string;
-  metadata?: ProductBenchmarkMetadata;
-}
+export type ProductBenchmarkRequest = ProductBenchmark;
 
 export const productBenchmarkValidator = Joi.object({
   key: Joi.string().required(),

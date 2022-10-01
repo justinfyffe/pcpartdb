@@ -21,6 +21,14 @@ class ImageCacheImpl {
   delete(id: number) {
     this.cache.delete(id);
   }
+
+  hydrate(images: Record<number, Image>) {
+    this.save(Object.values(images));
+  }
+
+  toObject() {
+    return Object.fromEntries(this.cache);
+  }
 }
 
 export const ImageCache = new ImageCacheImpl();

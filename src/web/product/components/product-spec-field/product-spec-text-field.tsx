@@ -1,24 +1,15 @@
 import React, { forwardRef, useCallback } from 'react';
 import {
   ProductSpecKey,
-  ProductSpecMetadata,
+  ProductSpecRequest,
 } from '../../../../types/product-spec';
 import { Textarea } from '../../../shared/components/textarea';
-
-interface ProductSpecTextValue {
-  key: ProductSpecKey;
-
-  textValue?: string;
-
-  metadata?: ProductSpecMetadata;
-  source?: string;
-}
 
 interface ProductSpecTextFieldProps {
   field: ProductSpecKey;
 
-  value?: ProductSpecTextValue;
-  onChange?: (value: ProductSpecTextValue) => void;
+  value?: ProductSpecRequest;
+  onChange?: (value: ProductSpecRequest) => void;
 }
 
 export const ProductSpecTextField = forwardRef<

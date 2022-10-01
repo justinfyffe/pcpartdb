@@ -6,7 +6,7 @@ import React, {
 } from 'react';
 import {
   ProductReviewKey,
-  ProductReviewMetadata,
+  ProductReviewRequest,
 } from '../../../../types/product-review';
 import { Field } from '../../../shared/components/field';
 import { TextInput } from '../../../shared/components/input';
@@ -17,25 +17,11 @@ import {
 } from '../../../shared/components/select';
 import { classNames } from '../../../shared/ui/ui.utils';
 
-export interface ProductReviewValue {
-  key: ProductReviewKey;
-
-  integerValue?: number;
-  floatValue?: number;
-  booleanValue?: boolean;
-  stringValue?: string;
-  textValue?: string;
-  jsonValue?: unknown;
-
-  metadata?: ProductReviewMetadata;
-  source?: string;
-}
-
 interface ProductReviewFieldProps {
   reviewKey?: ProductReviewKey;
 
-  value?: ProductReviewValue;
-  onChange?: (value: ProductReviewValue) => void;
+  value?: ProductReviewRequest;
+  onChange?: (value: ProductReviewRequest) => void;
 
   className?: string;
   ref?: unknown;

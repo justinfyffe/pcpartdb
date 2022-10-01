@@ -1,5 +1,4 @@
 import Joi from '@hapi/joi';
-import { schema } from 'normalizr';
 
 export enum ProductReviewKey {
   Amazon = 'AMAZON',
@@ -27,19 +26,7 @@ export interface ProductReview {
   source?: string;
 }
 
-export interface ProductReviewRequest {
-  key: ProductReviewKey;
-
-  integerValue?: number;
-  floatValue?: number;
-  booleanValue?: boolean;
-  stringValue?: string;
-  textValue?: string;
-  jsonValue?: unknown;
-
-  metadata?: ProductReviewMetadata;
-  source?: string;
-}
+export type ProductReviewRequest = ProductReview;
 
 export const productReviewValidator = Joi.object({
   key: Joi.string().required(),

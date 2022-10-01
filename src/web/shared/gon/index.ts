@@ -1,10 +1,10 @@
 import { createContext, useContext } from 'react';
 
-export interface GonState {
+export interface Gon {
   fieldCounter: number;
 }
 
-export const GonContext = createContext<GonState>({
+export const GonContext = createContext<Gon>({
   fieldCounter: 0,
 });
 

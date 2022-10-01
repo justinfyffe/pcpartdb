@@ -1,5 +1,4 @@
 import Joi from '@hapi/joi';
-import { NormalizedSchema, schema } from 'normalizr';
 
 export enum MarketSegment {
   Desktop = 'DESKTOP',
@@ -113,19 +112,7 @@ export interface ProductSpec {
   metadata?: ProductSpecMetadata;
 }
 
-export interface ProductSpecRequest {
-  key: ProductSpecKey;
-
-  integerValue?: number;
-  floatValue?: number;
-  booleanValue?: boolean;
-  stringValue?: string;
-  textValue?: string;
-  jsonValue?: unknown;
-
-  metadata?: ProductSpecMetadata;
-  source?: string;
-}
+export type ProductSpecRequest = ProductSpec;
 
 export const productSpecValidator = Joi.object({
   key: Joi.string().required(),

@@ -57,7 +57,7 @@ export class AccessTokenService {
       expires: data.remember ? expiresAt.getTime() : undefined,
     });
 
-    return { token, user: user.toDto() } as AccessToken;
+    return { token, user: user.serialize() } as AccessToken;
   }
 
   async logout(user: User, ctx: ServiceContext) {

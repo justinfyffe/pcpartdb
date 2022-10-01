@@ -24,26 +24,26 @@ import {
   ProductType,
 } from '../../../../types/product';
 import {
-  ProductBenchmark,
+  ProductBenchmarkRequest,
   productBenchmarkValidator,
 } from '../../../../types/product-benchmark';
 import {
-  ProductImage,
+  ProductImageRequest,
   ProductImageType,
   productImageValidator,
 } from '../../../../types/product-image';
 import {
-  ProductMeta,
   ProductMetaKey,
+  ProductMetaRequest,
   productMetaValidator,
 } from '../../../../types/product-meta';
 import {
-  ProductReview,
+  ProductReviewRequest,
   productReviewValidator,
 } from '../../../../types/product-review';
 import {
-  ProductSpec,
   ProductSpecKey,
+  ProductSpecRequest,
   productSpecValidator,
 } from '../../../../types/product-spec';
 import { Alert, AlertVariant } from '../../../shared/components/alert';
@@ -65,84 +65,84 @@ import { ProductAutocomplete } from './../product-autocomplete';
 import { ProductBenchmarkFields } from './../product-benchmark-field';
 
 interface ProductFormData {
-  parentId: number;
+  parentId?: number;
 
   slug: string;
   type: ProductType;
   name: string;
-  description?: ProductMeta;
+  description?: ProductMetaRequest;
 
   // General
-  company?: ProductSpec;
-  generation?: ProductSpec;
-  marketSegment?: ProductSpec;
-  launchPrice?: ProductSpec;
-  releaseDate?: ProductSpec;
-  productionStatus?: ProductSpec;
+  company?: ProductSpecRequest;
+  generation?: ProductSpecRequest;
+  marketSegment?: ProductSpecRequest;
+  launchPrice?: ProductSpecRequest;
+  releaseDate?: ProductSpecRequest;
+  productionStatus?: ProductSpecRequest;
 
   // Processor
-  gpuName?: ProductSpec;
-  gpuVariant?: ProductSpec;
-  architecture?: ProductSpec;
-  foundry?: ProductSpec;
-  lithography?: ProductSpec;
-  transistors?: ProductSpec;
-  dieSize?: ProductSpec;
+  gpuName?: ProductSpecRequest;
+  gpuVariant?: ProductSpecRequest;
+  architecture?: ProductSpecRequest;
+  foundry?: ProductSpecRequest;
+  lithography?: ProductSpecRequest;
+  transistors?: ProductSpecRequest;
+  dieSize?: ProductSpecRequest;
 
   // Board Compatibility & Dimensions
-  slotWidth?: ProductSpec;
-  length?: ProductSpec;
-  width?: ProductSpec;
-  height?: ProductSpec;
-  weight?: ProductSpec;
-  busInterface?: ProductSpec;
-  tdp?: ProductSpec;
-  suggestedPsu?: ProductSpec;
-  powerConnectors?: ProductSpec;
+  slotWidth?: ProductSpecRequest;
+  length?: ProductSpecRequest;
+  width?: ProductSpecRequest;
+  height?: ProductSpecRequest;
+  weight?: ProductSpecRequest;
+  busInterface?: ProductSpecRequest;
+  tdp?: ProductSpecRequest;
+  suggestedPsu?: ProductSpecRequest;
+  powerConnectors?: ProductSpecRequest;
 
   // Cores & Clock Speeds
-  cudaCores?: ProductSpec;
-  tmus?: ProductSpec;
-  rops?: ProductSpec;
-  tensorCores?: ProductSpec;
-  rtCores?: ProductSpec;
-  baseClock?: ProductSpec;
-  boostClock?: ProductSpec;
-  l1Cache?: ProductSpec;
-  l2Cache?: ProductSpec;
+  cudaCores?: ProductSpecRequest;
+  tmus?: ProductSpecRequest;
+  rops?: ProductSpecRequest;
+  tensorCores?: ProductSpecRequest;
+  rtCores?: ProductSpecRequest;
+  baseClock?: ProductSpecRequest;
+  boostClock?: ProductSpecRequest;
+  l1Cache?: ProductSpecRequest;
+  l2Cache?: ProductSpecRequest;
 
   // Theoretical Performance
-  pixelRate?: ProductSpec;
-  textureRate?: ProductSpec;
-  fp32Performance?: ProductSpec;
-  fp64Performance?: ProductSpec;
+  pixelRate?: ProductSpecRequest;
+  textureRate?: ProductSpecRequest;
+  fp32Performance?: ProductSpecRequest;
+  fp64Performance?: ProductSpecRequest;
 
   // Memory
-  memorySize?: ProductSpec;
-  memoryType?: ProductSpec;
-  memoryInterface?: ProductSpec;
-  memoryBandwidth?: ProductSpec;
+  memorySize?: ProductSpecRequest;
+  memoryType?: ProductSpecRequest;
+  memoryInterface?: ProductSpecRequest;
+  memoryBandwidth?: ProductSpecRequest;
 
   // Display Connectivity
-  maxResolution?: ProductSpec;
-  displayPorts?: ProductSpec;
-  hdmiPorts?: ProductSpec;
+  maxResolution?: ProductSpecRequest;
+  displayPorts?: ProductSpecRequest;
+  hdmiPorts?: ProductSpecRequest;
 
   // API Support
-  directXVersion?: ProductSpec;
-  openClVersion?: ProductSpec;
-  openGlVersion?: ProductSpec;
-  shaderModelVersion?: ProductSpec;
-  gSyncFreeSyncSupport?: ProductSpec;
-  sliCrossfireSupport?: ProductSpec;
-  vrReady?: ProductSpec;
+  directXVersion?: ProductSpecRequest;
+  openClVersion?: ProductSpecRequest;
+  openGlVersion?: ProductSpecRequest;
+  shaderModelVersion?: ProductSpecRequest;
+  gSyncFreeSyncSupport?: ProductSpecRequest;
+  sliCrossfireSupport?: ProductSpecRequest;
+  vrReady?: ProductSpecRequest;
 
-  reviews?: ProductReview[];
-  benchmarks?: ProductBenchmark[];
+  reviews?: ProductReviewRequest[];
+  benchmarks?: ProductBenchmarkRequest[];
 
-  autocompleteImage?: ProductImage;
-  thumbnailImage?: ProductImage;
-  detailsImages?: ProductImage[];
+  autocompleteImage?: ProductImageRequest;
+  thumbnailImage?: ProductImageRequest;
+  detailsImages?: ProductImageRequest[];
 }
 
 const productValidator = Joi.object({
@@ -450,7 +450,6 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               <ProductAutocomplete
                 productType={ProductType.GPU}
                 excludeProductId={gpu?.id}
-                initialProduct={gpu?.parent} // TODO: create product cache
                 {...field}
                 ref={null}
               />
@@ -1359,7 +1358,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
         />
       </section>
 
-      <FormActions>
+      <FormActions className={isUpdate ? 'justify-between' : 'justify-end'}>
         {isUpdate && (
           <Button
             type="button"
@@ -1379,19 +1378,19 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           disabled={saving || deleting}
         >
           {saving && <Spinner />}
-          <span>Save</span>
+          {!saving && <span>Save</span>}
         </Button>
       </FormActions>
     </Form>
   );
 };
 
-function toMetaArray(formData: ProductFormData): ProductMeta[] {
+function toMetaArray(formData: ProductFormData): ProductMetaRequest[] {
   const metas = [formData.description];
   return metas.filter((meta) => meta != null);
 }
 
-function toSpecsArray(formData: ProductFormData): ProductSpec[] {
+function toSpecsArray(formData: ProductFormData): ProductSpecRequest[] {
   const specs = [
     formData.architecture,
     formData.baseClock,
@@ -1448,30 +1447,42 @@ function toSpecsArray(formData: ProductFormData): ProductSpec[] {
 }
 
 function getFormImages(gpu?: Product) {
-  let autocompleteImage: ProductImage = null;
-  let thumbnailImage: ProductImage = null;
-  const detailsImages: ProductImage[] = [];
+  let autocompleteImage: ProductImageRequest = null;
+  let thumbnailImage: ProductImageRequest = null;
+  const detailsImages: ProductImageRequest[] = [];
 
   const images =
     gpu?.images?.sort((a, b) => a.metadata.order - b.metadata.order) ?? [];
 
   images.forEach((value) => {
     if (value.type === ProductImageType.Autocomplete) {
-      autocompleteImage = value;
+      autocompleteImage = {
+        type: value.type,
+        imageId: value.imageId,
+        metadata: value.metadata,
+      };
     } else if (value.type === ProductImageType.Thumbnail) {
-      thumbnailImage = value;
+      thumbnailImage = {
+        type: value.type,
+        imageId: value.imageId,
+        metadata: value.metadata,
+      };
     } else {
-      detailsImages.push(value);
+      detailsImages.push({
+        type: value.type,
+        imageId: value.imageId,
+        metadata: value.metadata,
+      });
     }
   });
 
   return { autocompleteImage, thumbnailImage, detailsImages };
 }
 
-function toRequestImages(formData: ProductFormData): ProductImage[] {
+function toRequestImages(formData: ProductFormData): ProductImageRequest[] {
   const { autocompleteImage, thumbnailImage, detailsImages } = formData;
 
-  const images: ProductImage[] = [];
+  const images: ProductImageRequest[] = [];
 
   if (autocompleteImage) {
     images.push(autocompleteImage);
