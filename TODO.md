@@ -1,17 +1,8 @@
 Immediate Tasks:
-- get rid of normalizr?
-  - need better handling of dtos
-    - but don't need to normalize, can normalize when we need it.
-  - done for products, need to do for images, users, etc.
-- create caches
-  - ImageCache
-    - ImageCache.saveImages();
-  - ProductCache
-    - ProductCache.saveProducts()
 - product image input improvements
   - image cache
 - product autocomplete improvements
-  - create product cache instead of using initialProduct
+  - product cache
 - view gpu page
 - home page
 - gpus list page

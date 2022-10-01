@@ -1,0 +1,26 @@
+import { Image } from '../../../types/image';
+
+class ImageCacheImpl {
+  private cache = new Map<number, Image>();
+
+  get(id: number) {
+    return this.cache.get(id) ?? null;
+  }
+
+  save(images: Image | Image[]) {
+    if (Array.isArray(images)) {
+      images.forEach((image) => {
+        this.cache.set(image.id, image);
+      });
+      return;
+    }
+
+    this.cache.set(images.id, images);
+  }
+
+  delete(id: number) {
+    this.cache.delete(id);
+  }
+}
+
+export const ImageCache = new ImageCacheImpl();
