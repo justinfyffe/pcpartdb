@@ -3,7 +3,13 @@ import { Image } from '../../../../types/image';
 import { getImageUrl } from '../../../image/image.utils';
 import { classNames } from '../../ui/ui.utils';
 
-export const Img: FunctionComponent<ImageProps> = (props) => {
+export interface ImgProps
+  extends Omit<HTMLProps<HTMLImageElement>, 'src' | 'crossOrigin'> {
+  src: string | Image;
+  crossOrigin?: '' | 'anonymous' | 'use-credentials';
+}
+
+export const Img: FunctionComponent<ImgProps> = (props) => {
   const { src, className, ...htmlProps } = props;
 
   const url = typeof src === 'string' ? src : getImageUrl(src);
@@ -16,9 +22,3 @@ export const Img: FunctionComponent<ImageProps> = (props) => {
     />
   );
 };
-
-export interface ImageProps
-  extends Omit<HTMLProps<HTMLImageElement>, 'src' | 'crossOrigin'> {
-  src: string | Image;
-  crossOrigin?: '' | 'anonymous' | 'use-credentials';
-}

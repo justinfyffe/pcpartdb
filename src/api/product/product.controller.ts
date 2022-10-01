@@ -20,7 +20,6 @@ export class ProductController {
   constructor(private service: ProductService) {}
 
   @Get('autocomplete')
-  @UseGuards(StaffGuard)
   async autocomplete(
     @Query('type') type: ProductType,
     @Query('query') query: string,

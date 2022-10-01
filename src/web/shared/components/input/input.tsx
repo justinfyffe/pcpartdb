@@ -12,6 +12,30 @@ import { classNames } from '../../ui/ui.utils';
 import { Button } from '../button';
 import { FieldContext } from '../field';
 
+export interface InputProps {
+  type: string;
+
+  placeholder?: string;
+  disabled?: boolean;
+  readOnly?: boolean;
+
+  clearable?: boolean;
+  prefix?: string | React.ReactElement;
+  suffix?: string | React.ReactElement;
+
+  onPrefixClick?: () => void;
+  onSuffixClick?: () => void;
+  onClick?: () => void;
+  onClear?: () => void;
+  onKeyDown?: (e: KeyboardEvent) => void;
+  onBlur?: () => void;
+
+  value?: string;
+  onChange?: (value: string) => void;
+
+  className?: string;
+}
+
 export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
   const { value: propsValue, prefix, suffix, disabled, readOnly } = props;
   const {
@@ -110,27 +134,3 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
   );
 });
 Input.displayName = 'Input';
-
-export interface InputProps {
-  type: string;
-
-  placeholder?: string;
-  disabled?: boolean;
-  readOnly?: boolean;
-
-  clearable?: boolean;
-  prefix?: string | React.ReactElement;
-  suffix?: string | React.ReactElement;
-
-  onPrefixClick?: () => void;
-  onSuffixClick?: () => void;
-  onClick?: () => void;
-  onClear?: () => void;
-  onKeyDown?: (e: KeyboardEvent) => void;
-  onBlur?: () => void;
-
-  value?: string;
-  onChange?: (value: string) => void;
-
-  className?: string;
-}

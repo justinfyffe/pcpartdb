@@ -22,6 +22,21 @@ export const AutocompleteContext = createContext<AutocompleteState>({
   hoveredIndex: -1,
 });
 
+export interface AutocompleteProps extends TextInputProps {
+  // Allow arbitrary values
+  freeSolo?: boolean;
+
+  direction?: 'top' | 'bottom';
+  onQuery: (query: string) => boolean | Promise<boolean>;
+
+  label?: string;
+  prefix?: string | React.ReactElement;
+
+  children?:
+    | React.ReactElement<AutocompleteOptionProps>[]
+    | React.ReactElement<AutocompleteOptionProps>;
+}
+
 export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
   (props, ref) => {
     const {
@@ -29,6 +44,7 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
       direction,
       label: propsLabel,
       value: propsValue,
+      prefix,
       freeSolo,
       onChange,
       onQuery,
@@ -147,6 +163,7 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
       <AutocompleteContext.Provider value={{ hoveredIndex }}>
         <div className={classNames('block relative', className)}>
           <TextInput
+            prefix={prefix}
             value={query || ''}
             onChange={handleQuery}
             onKeyDown={handleKeyDown}
@@ -192,17 +209,3 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
   },
 );
 Autocomplete.displayName = 'Autocomplete';
-
-export interface AutocompleteProps extends TextInputProps {
-  // Allow arbitrary values
-  freeSolo?: boolean;
-
-  direction?: 'top' | 'bottom';
-  onQuery: (query: string) => boolean | Promise<boolean>;
-
-  label?: string;
-
-  children?:
-    | React.ReactElement<AutocompleteOptionProps>[]
-    | React.ReactElement<AutocompleteOptionProps>;
-}
