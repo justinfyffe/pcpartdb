@@ -5,6 +5,7 @@ import {
   Autocomplete,
   AutocompleteOption,
 } from '../../../shared/components/autocomplete';
+import { Img } from '../../../shared/components/image';
 import { productService } from '../../product.service';
 
 interface ProductAutocompleteProps {
@@ -103,6 +104,9 @@ export const ProductAutocomplete = forwardRef<
           className="hover:bg-[#fafafa]"
           hoveredClassName="bg-[#fafafa]"
         >
+          {result?.images?.[0]?.image != null && (
+            <Img src={result?.images?.[0]?.image} className="w-4 h-4" />
+          )}
           {result.name}
         </AutocompleteOption>
       ))}
