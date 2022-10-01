@@ -1,4 +1,3 @@
-import { NormalizedSchema, schema } from 'normalizr';
 import { ProductBenchmark, ProductBenchmarkRequest } from './product-benchmark';
 import { ProductImage, ProductImageRequest } from './product-image';
 import { ProductMeta, ProductMetaRequest } from './product-meta';

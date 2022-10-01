@@ -1,8 +1,8 @@
 import { Model, PartialModelObject } from 'objection';
-import { Image, imageSchema } from '../../types/image';
-import { CanDto } from '../shared/types/normalize';
+import { Image } from '../../types/image';
+import { Serializable } from '../shared/types/serialize';
 
-export class ImageModel extends Model implements CanDto<Image> {
+export class ImageModel extends Model implements Serializable<Image> {
   static tableName = 'images';
 
   // Fields
@@ -19,11 +19,7 @@ export class ImageModel extends Model implements CanDto<Image> {
 
   uploadedAt!: Date;
 
-  getSchema() {
-    return imageSchema;
-  }
-
-  toDto(): Image {
+  serialize(): Image {
     return {
       id: this.id,
       path: this.path,

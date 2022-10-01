@@ -12,14 +12,10 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { MulterOptions } from '@nestjs/platform-express/multer/interfaces/multer-options.interface';
 import { diskStorage } from 'multer';
-import type {
-  ImageRequest,
-  ImageResponse,
-  ImagesResponse,
-} from '../../types/image';
+import type { ImageRequest } from '../../types/image';
 import { StaffGuard } from '../auth/staff.guard';
 import { transaction } from '../db/database';
-import { normalize } from '../shared/types/normalize';
+import { serializeAsync } from '../shared/types/serialize';
 import * as uploads from '../shared/uploads/uploads.utils';
 import { ImageService } from './image.service';
 
@@ -54,16 +50,12 @@ export class ImageController {
   @Get()
   @UseGuards(StaffGuard)
   async list() {
-    return normalize(
-      await transaction((trx) => this.service.list({ trx })),
-    ) as ImagesResponse;
+    return transaction((trx) => serializeAsync(this.service.list({ trx })));
   }
 
   @Get(':id')
   async get(@Param('id') id: number) {
-    return normalize(
-      await transaction((trx) => this.service.get(id, { trx })),
-    ) as ImageResponse;
+    return transaction((trx) => serializeAsync(this.service.get(id, { trx })));
   }
 
   @Post()
@@ -73,11 +65,9 @@ export class ImageController {
     const data = JSON.parse(body.formData) as ImageRequest;
     const tempPath = body.tempPath;
 
-    return normalize(
-      await transaction((trx) =>
-        this.service.create({ ...data, tempPath }, { trx }),
-      ),
-    ) as ImageResponse;
+    return transaction((trx) =>
+      serializeAsync(this.service.create({ ...data, tempPath }, { trx })),
+    );
   }
 
   @Put(':id')
@@ -87,16 +77,14 @@ export class ImageController {
     const data = JSON.parse(body.formData) as ImageRequest;
     const tempPath = body.tempPath;
 
-    return normalize(
-      await transaction((trx) =>
-        this.service.update(id, { ...data, tempPath }, { trx }),
-      ),
-    ) as ImageResponse;
+    return transaction((trx) =>
+      serializeAsync(this.service.update(id, { ...data, tempPath }, { trx })),
+    );
   }
 
   @Delete(':id')
   @UseGuards(StaffGuard)
   async delete(@Param('id') id: number) {
-    return await transaction((trx) => this.service.delete(id, { trx }));
+    return transaction((trx) => this.service.delete(id, { trx }));
   }
 }

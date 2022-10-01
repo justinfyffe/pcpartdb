@@ -4,8 +4,12 @@ import {
   ProductSpecKey,
   ProductSpecMetadata,
 } from '../../../types/product-spec';
+import { Serializable } from '../../shared/types/serialize';
 
-export class ProductSpecModel extends Model {
+export class ProductSpecModel
+  extends Model
+  implements Serializable<ProductSpec>
+{
   static tableName = 'product_specs';
 
   // Fields
@@ -24,7 +28,7 @@ export class ProductSpecModel extends Model {
   metadata?: ProductSpecMetadata;
   source?: string;
 
-  toDto(): ProductSpec {
+  serialize(): ProductSpec {
     return {
       key: this.key,
       integerValue: this.integerValue,

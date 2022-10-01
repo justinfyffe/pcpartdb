@@ -1,5 +1,6 @@
 import { Model, PartialModelObject } from 'objection';
 import { Product, ProductType } from '../../types/product';
+import { Serializable } from '../shared/types/serialize';
 import {
   ProductBenchmarkModel,
   ProductBenchmarkModelPojo,
@@ -21,7 +22,7 @@ import {
   ProductSpecModelPojo,
 } from './spec/product-spec.model';
 
-export class ProductModel extends Model {
+export class ProductModel extends Model implements Serializable<Product> {
   static tableName = 'products';
 
   // Fields
@@ -94,7 +95,7 @@ export class ProductModel extends Model {
     },
   };
 
-  toDto(): Product {
+  serialize(): Product {
     return {
       id: this.id,
       parentId: this.parentId,
@@ -102,12 +103,13 @@ export class ProductModel extends Model {
       type: this.type,
       name: this.name,
 
-      parent: this.parent?.toDto(),
-      meta: this.meta?.map((meta) => meta.toDto()) ?? [],
-      specs: this.specs?.map((spec) => spec.toDto()) ?? [],
-      benchmarks: this.benchmarks?.map((benchmark) => benchmark.toDto()) ?? [],
-      reviews: this.reviews?.map((review) => review.toDto()) ?? [],
-      images: this.images?.map((image) => image.toDto()) ?? [],
+      parent: this.parent?.serialize(),
+      meta: this.meta?.map((meta) => meta.serialize()) ?? [],
+      specs: this.specs?.map((spec) => spec.serialize()) ?? [],
+      benchmarks:
+        this.benchmarks?.map((benchmark) => benchmark.serialize()) ?? [],
+      reviews: this.reviews?.map((review) => review.serialize()) ?? [],
+      images: this.images?.map((image) => image.serialize()) ?? [],
     };
   }
 }

@@ -1,11 +1,4 @@
-import { denormalize } from 'normalizr';
-import {
-  Image,
-  ImageRequest,
-  ImageResponse,
-  imageSchema,
-  ImagesResponse,
-} from '../../types/image';
+import { Image, ImageRequest } from '../../types/image';
 import { ApiClient, apiClient } from '../shared/api/api-client';
 
 const PATH = 'images';
@@ -13,40 +6,34 @@ const PATH = 'images';
 export class ImageService {
   constructor(private api: ApiClient) {}
 
-  async list(): Promise<Image[]> {
-    const response = await this.api.get<ImagesResponse>(PATH);
-    return denormalize(response.result, [imageSchema], response.entities) ?? [];
+  async list() {
+    return await this.api.get<Image[]>(PATH);
   }
 
-  async get(id: number): Promise<Image> {
-    const response = await this.api.get<ImageResponse>(`${PATH}/${id}`);
-    return denormalize(response.result, imageSchema, response.entities);
+  async get(id: number) {
+    return await this.api.get<Image>(`${PATH}/${id}`);
   }
 
-  async create(formData: ImageRequest): Promise<Image> {
+  async create(formData: ImageRequest) {
     const data = new FormData();
     data.append('formData', JSON.stringify(formData));
     data.append('file', formData.file);
 
-    const response = await this.api.post<ImageResponse>(`${PATH}`, data, {
+    return await this.api.post<Image>(`${PATH}`, data, {
       headers: { 'content-type': 'multipart/form-data' },
     });
-
-    return denormalize(response.result, imageSchema, response.entities);
   }
 
-  async update(id: number, formData: ImageRequest): Promise<Image> {
+  async update(id: number, formData: ImageRequest) {
     const data = new FormData();
     data.append('formData', JSON.stringify(formData));
     if (formData.file) {
       data.append('file', formData.file);
     }
 
-    const response = await this.api.put<ImageResponse>(`${PATH}/${id}`, data, {
+    return await this.api.put<Image>(`${PATH}/${id}`, data, {
       headers: { 'content-type': 'multipart/form-data' },
     });
-
-    return denormalize(response.result, imageSchema, response.entities);
   }
 
   async delete(id: number) {

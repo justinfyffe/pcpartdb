@@ -5,7 +5,7 @@ import {
 } from '@heroicons/react/outline';
 import React, { FunctionComponent, useCallback } from 'react';
 import {
-  ProductImage,
+  ProductImageRequest,
   ProductImageType,
 } from '../../../../types/product-image';
 import { Button, ButtonVariant } from '../../../shared/components/button';
@@ -14,10 +14,10 @@ import { ProductImageField } from './product-image-field';
 interface ProductImageFieldsProps {
   name: string;
   type: ProductImageType;
-  value: ProductImage[];
-  fields: (ProductImage & { id: string })[];
+  value: ProductImageRequest[];
+  fields: (ProductImageRequest & { id: string })[];
 
-  onChange: (values: ProductImage[]) => void;
+  onChange: (values: ProductImageRequest[]) => void;
   onAppend: () => void;
   onRemove: (index: number) => void;
   onSwap: (from: number, to: number) => void;
@@ -31,7 +31,7 @@ export const ProductImageFields: FunctionComponent<ProductImageFieldsProps> = (
   const { fields, type, value, onAppend, onRemove, onSwap, onChange } = props;
 
   const handleImageChange = useCallback(
-    (i: number, productImage: ProductImage) => {
+    (i: number, productImage: ProductImageRequest) => {
       fields[i] = { ...fields[i], ...productImage };
       value[i] = { ...productImage, metadata: { order: i } };
       onChange(value);

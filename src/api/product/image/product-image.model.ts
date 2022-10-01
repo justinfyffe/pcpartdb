@@ -5,8 +5,12 @@ import {
   ProductImageType,
 } from '../../../types/product-image';
 import { ImageModel } from '../../images/image.model';
+import { Serializable } from '../../shared/types/serialize';
 
-export class ProductImageModel extends Model {
+export class ProductImageModel
+  extends Model
+  implements Serializable<ProductImage>
+{
   static tableName = 'product_images';
 
   // Fields
@@ -32,13 +36,13 @@ export class ProductImageModel extends Model {
     },
   };
 
-  toDto(): ProductImage {
+  serialize(): ProductImage {
     return {
       type: this.type,
       imageId: this.imageId,
       metadata: this.metadata,
 
-      image: this.image?.toDto(),
+      image: this.image?.serialize(),
     };
   }
 }

@@ -4,8 +4,12 @@ import {
   ProductReviewKey,
   ProductReviewMetadata,
 } from '../../../types/product-review';
+import { Serializable } from '../../shared/types/serialize';
 
-export class ProductReviewModel extends Model {
+export class ProductReviewModel
+  extends Model
+  implements Serializable<ProductReview>
+{
   static tableName = 'product_reviews';
 
   // Fields
@@ -24,7 +28,7 @@ export class ProductReviewModel extends Model {
   metadata?: ProductReviewMetadata;
   source?: string;
 
-  toDto(): ProductReview {
+  serialize(): ProductReview {
     return {
       key: this.key,
       integerValue: this.integerValue,

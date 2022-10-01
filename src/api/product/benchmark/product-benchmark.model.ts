@@ -4,8 +4,12 @@ import {
   ProductBenchmarkKey,
   ProductBenchmarkMetadata,
 } from '../../../types/product-benchmark';
+import { Serializable } from '../../shared/types/serialize';
 
-export class ProductBenchmarkModel extends Model {
+export class ProductBenchmarkModel
+  extends Model
+  implements Serializable<ProductBenchmark>
+{
   static tableName = 'product_benchmarks';
 
   // Fields
@@ -24,7 +28,7 @@ export class ProductBenchmarkModel extends Model {
   metadata?: ProductBenchmarkMetadata;
   source?: string;
 
-  toDto(): ProductBenchmark {
+  serialize(): ProductBenchmark {
     return {
       key: this.key,
       integerValue: this.integerValue,
