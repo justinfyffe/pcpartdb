@@ -6,6 +6,7 @@ import {
   AutocompleteOption,
 } from '../../../shared/components/autocomplete';
 import { Img } from '../../../shared/components/image';
+import { classNames } from '../../../shared/ui/ui.utils';
 import { productService } from '../../product.service';
 
 interface ProductAutocompleteProps {
@@ -98,7 +99,7 @@ export const ProductAutocomplete = forwardRef<
       value={value != null && value !== 0 ? `${value}` : ''}
       onQuery={handleQuery}
       onChange={handleChange}
-      className={className}
+      className={classNames('flex flex-1 items-center', className)}
       ref={ref}
     >
       {results.map((result) => (
@@ -109,8 +110,14 @@ export const ProductAutocomplete = forwardRef<
           className="hover:bg-[#fafafa]"
           hoveredClassName="bg-[#fafafa]"
         >
-          <Img src="/images/logos/nvidia.svg" className="h-5" />
-          <span className="ml-2">{result.name}</span>
+          <div className="flex flex-1 items-center gap-4">
+            <Img src="/images/logos/nvidia.svg" className="h-5" />
+            <span className="flex-1">{result.name}</span>
+            <div className="flex flex-col gap-1 items-end text-[12px]">
+              <div className="text-[#aaa]">2022</div>
+              <div className="text-[#aaa]">$399.99</div>
+            </div>
+          </div>
         </AutocompleteOption>
       ))}
     </Autocomplete>

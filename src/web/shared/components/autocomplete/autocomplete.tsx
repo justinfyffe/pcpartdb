@@ -2,8 +2,10 @@ import { XIcon } from '@heroicons/react/outline';
 import React, {
   Children,
   createContext,
+  FocusEvent,
   forwardRef,
   KeyboardEvent,
+  MouseEvent,
   useCallback,
   useEffect,
   useState,
@@ -133,7 +135,6 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
         setQuery(item.label);
         onChange?.(item.value);
         setOpen(false);
-        console.log('handleChildClick', item.label);
       },
       [onChange, items],
     );
@@ -154,20 +155,42 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
         setQuery(null);
         onChange?.(null);
       } else {
-        console.log('here', propsLabel);
         setQuery(propsLabel);
       }
     }, [freeSolo, propsLabel, query, onChange]);
 
+    const handleFocus = useCallback(
+      (e: FocusEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        setOpen(totalChildren > 0);
+      },
+      [totalChildren],
+    );
+
+    const handleClick = useCallback(
+      (e: MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        setOpen(totalChildren > 0);
+      },
+      [totalChildren],
+    );
+
     return (
       <AutocompleteContext.Provider value={{ hoveredIndex }}>
-        <div className={classNames('block relative', className)}>
+        <div className={classNames('block relative w-full', className)}>
           <TextInput
             prefix={prefix}
             value={query || ''}
             onChange={handleQuery}
             onKeyDown={handleKeyDown}
             onBlur={handleBlur}
+            onFocus={handleFocus}
+            onClick={handleClick}
+            className="w-full"
             ref={ref}
           />
           {!isLoading && value && (

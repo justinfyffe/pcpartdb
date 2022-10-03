@@ -1,8 +1,10 @@
 import { XIcon } from '@heroicons/react/outline';
 import React, {
   ChangeEvent,
+  FocusEvent,
   forwardRef,
   KeyboardEvent,
+  MouseEvent,
   useCallback,
   useContext,
   useEffect,
@@ -25,10 +27,11 @@ export interface InputProps {
 
   onPrefixClick?: () => void;
   onSuffixClick?: () => void;
-  onClick?: () => void;
+  onClick?: (e?: MouseEvent) => void;
   onClear?: () => void;
   onKeyDown?: (e: KeyboardEvent) => void;
   onBlur?: () => void;
+  onFocus?: (e: FocusEvent) => void;
 
   value?: string;
   onChange?: (value: string) => void;
@@ -46,6 +49,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
     onClick,
     onBlur,
     onChange,
+    onFocus,
   } = props;
 
   const [value, setValue] = useState(propsValue ?? null);
@@ -66,7 +70,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
     [onKeyDown],
   );
 
-  const handleClick = useCallback(() => onClick?.(), [onClick]);
+  const handleClick = useCallback((e: MouseEvent) => onClick?.(e), [onClick]);
 
   const handleChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
@@ -81,6 +85,13 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
   const handleBlur = useCallback(() => {
     onBlur?.();
   }, [onBlur]);
+
+  const handleFocus = useCallback(
+    (e: FocusEvent) => {
+      onFocus?.(e);
+    },
+    [onFocus],
+  );
 
   const context = useContext(FieldContext);
 
@@ -102,6 +113,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
         onKeyDown={handleKeyDown}
         onClick={handleClick}
         onBlur={handleBlur}
+        onFocus={handleFocus}
         ref={ref}
       />
 
