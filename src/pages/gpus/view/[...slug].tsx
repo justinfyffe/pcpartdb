@@ -307,7 +307,7 @@ const ViewGpuPage = (props: ViewGpuPageProps) => {
                     </Td>
                   </Tr>
                   <Tr>
-                    <Td>Generation</Td>{' '}
+                    <Td>Generation</Td>
                     <Td>
                       {specs[ProductSpecKey.Generation]?.stringValue ?? '--'}
                     </Td>
