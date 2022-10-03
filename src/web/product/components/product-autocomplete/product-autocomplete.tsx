@@ -109,10 +109,8 @@ export const ProductAutocomplete = forwardRef<
           className="hover:bg-[#fafafa]"
           hoveredClassName="bg-[#fafafa]"
         >
-          {result?.images?.[0]?.image != null && (
-            <Img src={result?.images?.[0]?.image} className="w-4 h-4" />
-          )}
-          {result.name}
+          <Img src="/images/logos/nvidia.svg" className="h-5" />
+          <span className="ml-2">{result.name}</span>
         </AutocompleteOption>
       ))}
     </Autocomplete>
