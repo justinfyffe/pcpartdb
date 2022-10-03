@@ -2,6 +2,14 @@ import React, { FunctionComponent, useContext } from 'react';
 import { classNames } from '../../ui/ui.utils';
 import { AutocompleteContext } from '.';
 
+interface AutocompleteChildProps {
+  index: number;
+  onClick?: () => void;
+  children?: React.ReactNode;
+  className?: string;
+  hoveredClassName?: string;
+}
+
 export const AutocompleteChild: FunctionComponent<AutocompleteChildProps> = (
   props,
 ) => {
@@ -22,11 +30,3 @@ export const AutocompleteChild: FunctionComponent<AutocompleteChildProps> = (
     </div>
   );
 };
-
-interface AutocompleteChildProps {
-  index: number;
-  onClick?: () => void;
-  children?: React.ReactNode;
-  className?: string;
-  hoveredClassName?: string;
-}

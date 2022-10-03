@@ -8,6 +8,7 @@ import React, {
   MouseEvent,
   useCallback,
   useEffect,
+  useRef,
   useState,
 } from 'react';
 import { classNames } from '../../ui/ui.utils';
@@ -61,21 +62,10 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
     const [items, setItems] = useState<{ label: string; value: string }[]>([]);
     const totalChildren = Children.count(children);
 
-    useEffect(() => {
-      console.log(propsLabel);
-      setQuery(propsLabel);
-    }, [propsLabel]);
+    const containerRef = useRef<HTMLDivElement>();
+
+    useEffect(() => setQuery(propsLabel), [propsLabel]);
     useEffect(() => setValue(propsValue), [propsValue]);
-
-    useEffect(() => {
-      document.addEventListener('click', () => {
-        setOpen(false);
-      });
-
-      window.addEventListener('resize', () => {
-        setOpen(false);
-      });
-    }, []);
 
     useEffect(() => {
       setItems(
@@ -128,8 +118,14 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
       [onChange, isOpen, items, hoveredIndex, totalChildren],
     );
 
+    const handleChildrenMouseDown = useCallback((e: MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+    }, []);
+
     const handleChildClick = useCallback(
       (index: number) => {
+        console.log('handleChildClick');
         const item = items[index];
         setValue(item.value);
         setQuery(item.label);
@@ -146,6 +142,8 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
     }, [onChange]);
 
     const handleBlur = useCallback(() => {
+      setOpen(false);
+
       if (freeSolo) {
         return;
       }
@@ -159,25 +157,13 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
       }
     }, [freeSolo, propsLabel, query, onChange]);
 
-    const handleFocus = useCallback(
-      (e: FocusEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
-
-        setOpen(totalChildren > 0);
-      },
-      [totalChildren],
-    );
-
-    const handleClick = useCallback(
-      (e: MouseEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
-
-        setOpen(totalChildren > 0);
-      },
-      [totalChildren],
-    );
+    const handleFocus = useCallback(async () => {
+      setLoading(true);
+      setHoveredIndex(-1);
+      const hasResults = await onQuery(query);
+      setLoading(false);
+      setOpen(hasResults);
+    }, [query, onQuery]);
 
     return (
       <AutocompleteContext.Provider value={{ hoveredIndex }}>
@@ -189,7 +175,6 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
             onKeyDown={handleKeyDown}
             onBlur={handleBlur}
             onFocus={handleFocus}
-            onClick={handleClick}
             className="w-full"
             ref={ref}
           />
@@ -208,8 +193,9 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
           )}
 
           <div
+            onMouseDown={handleChildrenMouseDown}
             className={classNames(
-              'absolute bg-white border-[1px_solid_#ccc] shadow left-0 right-0 z-10',
+              'absolute bg-white border-[1px_solid_#ccc] shadow-md left-0 right-0 z-10 mt-[1px]',
               direction === 'top' ? 'bottom-[100%]' : 'top-[100%]',
               isOpen ? 'block' : 'hidden',
             )}

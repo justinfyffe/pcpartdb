@@ -67,12 +67,10 @@ export const CompareForm: FunctionComponent<CompareFormProps> = (props) => {
               VS
             </div>
 
-            <TextInput
-              placeholder="Graphics Card..."
-              value="NVIDIA GeForce RTX 3080"
-              clearable
+            <ProductAutocomplete
+              productType={ProductType.GPU}
               className={classNames('flex-1 min-w-[150px]')}
-              onClear={onDelete}
+              onChange={(value) => onProductChange(1, value)}
             />
           </>
         )}
@@ -87,12 +85,10 @@ export const CompareForm: FunctionComponent<CompareFormProps> = (props) => {
               VS
             </div>
 
-            <TextInput
-              placeholder="Graphics Card..."
-              value="NVIDIA GeForce RTX 3080"
-              clearable
+            <ProductAutocomplete
+              productType={ProductType.GPU}
               className={classNames('flex-1 min-w-[150px]')}
-              onClear={onDelete}
+              onChange={(value) => onProductChange(2, value)}
             />
           </>
         )}

@@ -29,9 +29,9 @@ export interface InputProps {
   onSuffixClick?: () => void;
   onClick?: (e?: MouseEvent) => void;
   onClear?: () => void;
-  onKeyDown?: (e: KeyboardEvent) => void;
-  onBlur?: () => void;
-  onFocus?: (e: FocusEvent) => void;
+  onKeyDown?: (e?: KeyboardEvent) => void;
+  onBlur?: (e?: FocusEvent) => void;
+  onFocus?: (e?: FocusEvent) => void;
 
   value?: string;
   onChange?: (value: string) => void;
@@ -56,8 +56,14 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 
   useEffect(() => setValue(propsValue), [propsValue]);
 
-  const handlePrefixClick = useCallback(() => onPrefixClick(), [onPrefixClick]);
-  const handleSuffixClick = useCallback(() => onSuffixClick(), [onSuffixClick]);
+  const handlePrefixClick = useCallback(
+    () => onPrefixClick?.(),
+    [onPrefixClick],
+  );
+  const handleSuffixClick = useCallback(
+    () => onSuffixClick?.(),
+    [onSuffixClick],
+  );
 
   const handleClear = useCallback(() => {
     setValue(null);
@@ -82,9 +88,12 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
     [onChange],
   );
 
-  const handleBlur = useCallback(() => {
-    onBlur?.();
-  }, [onBlur]);
+  const handleBlur = useCallback(
+    (e: FocusEvent) => {
+      onBlur?.(e);
+    },
+    [onBlur],
+  );
 
   const handleFocus = useCallback(
     (e: FocusEvent) => {
@@ -105,7 +114,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
         disabled={disabled}
         readOnly={readOnly}
         className={classNames(
-          'border m-0 p-3 rounded text-sm w-full shadow',
+          'border m-0 p-3 rounded text-sm w-full shadow focus:outline-offset-1',
           props.clearable ? 'pr-12' : '',
           props.prefix ? 'pl-12' : '',
         )}
