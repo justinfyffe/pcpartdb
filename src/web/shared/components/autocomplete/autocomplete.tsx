@@ -2,13 +2,11 @@ import { XIcon } from '@heroicons/react/outline';
 import React, {
   Children,
   createContext,
-  FocusEvent,
   forwardRef,
   KeyboardEvent,
   MouseEvent,
   useCallback,
   useEffect,
-  useRef,
   useState,
 } from 'react';
 import { classNames } from '../../ui/ui.utils';
@@ -61,8 +59,6 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
     const [hoveredIndex, setHoveredIndex] = useState(-1);
     const [items, setItems] = useState<{ label: string; value: string }[]>([]);
     const totalChildren = Children.count(children);
-
-    const containerRef = useRef<HTMLDivElement>();
 
     useEffect(() => setQuery(propsLabel), [propsLabel]);
     useEffect(() => setValue(propsValue), [propsValue]);
@@ -125,7 +121,6 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
 
     const handleChildClick = useCallback(
       (index: number) => {
-        console.log('handleChildClick');
         const item = items[index];
         setValue(item.value);
         setQuery(item.label);

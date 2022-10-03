@@ -56,18 +56,24 @@ export function openDatabase() {
     return db;
   }
 
-  const host = POSTGRES_HOST;
-  const port = POSTGRES_PORT;
-  const database = POSTGRES_DB;
-  const user = POSTGRES_USER;
-  const password = POSTGRES_PASSWORD;
+  if (process.env.NODE_ENV === 'development' && (global as any).db != null) {
+    // Prevent hotloading from causing too many clients error.
+    db = (global as any).db;
+  } else {
+    const host = POSTGRES_HOST;
+    const port = POSTGRES_PORT;
+    const database = POSTGRES_DB;
+    const user = POSTGRES_USER;
+    const password = POSTGRES_PASSWORD;
 
-  db = initKnex({
-    client: 'pg',
-    useNullAsDefault: true,
-    connection: { host, port, user, password, database },
-    ...knexSnakeCaseMappers(),
-  });
+    db = initKnex({
+      client: 'pg',
+      useNullAsDefault: true,
+      connection: { host, port, user, password, database },
+      ...knexSnakeCaseMappers(),
+    });
+    (global as any).db = db;
+  }
 
   Model.knex(db);
   return db;

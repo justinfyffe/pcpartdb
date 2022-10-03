@@ -2,7 +2,10 @@ import { NextPageContext } from 'next';
 import React from 'react';
 import { CompareForm } from '../../../web/compare';
 import { ProductImage } from '../../../web/product';
-import { Breadcrumbs } from '../../../web/shared/components/breadcrumbs';
+import {
+  Breadcrumb,
+  Breadcrumbs,
+} from '../../../web/shared/components/breadcrumbs';
 import {
   Table,
   TBody,
@@ -26,14 +29,11 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
     <WebsiteLayout>
       <article className="flex flex-wrap gap-6 lg:gap-8 justify-center">
         <header className="flex flex-wrap w-full items-center justify-start gap-3">
-          <Breadcrumbs
-            items={[
-              { link: '#', text: 'Finest PC' },
-              { link: '#', text: 'GPUs' },
-              { text: 'NVIDIA GeForce RTX 3090 vs NVIDIA GeForce RTX 3080' },
-            ]}
-            className="w-full"
-          />
+          <Breadcrumbs>
+            <Breadcrumb href="#">Finest PC</Breadcrumb>
+            <Breadcrumb href="#">GPUs</Breadcrumb>
+            <Breadcrumb>A vs B</Breadcrumb>
+          </Breadcrumbs>
 
           <h1 className="mb-3">
             NVIDIA GeForce RTX 3090 vs NVIDIA GeForce RTX 3080

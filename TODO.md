@@ -1,5 +1,4 @@
 Immediate Tasks:
-- improve look of product autocomplete
 - add product image fields to gpu form
 - add meta and form field to specify if model or actual product
 - view gpu page

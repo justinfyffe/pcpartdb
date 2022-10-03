@@ -1,9 +1,15 @@
-import { PlusCircleIcon } from '@heroicons/react/outline';
-import React, { FunctionComponent, useCallback, useState } from 'react';
+import { useRouter } from 'next/router';
+import React, {
+  FormEvent,
+  FunctionComponent,
+  useCallback,
+  useState,
+} from 'react';
 import { ProductType } from '../../../types/product';
 import { ProductAutocomplete } from '../../product/components/product-autocomplete';
+import { ProductCache } from '../../shared/cache';
 import { Button, ButtonVariant } from '../../shared/components/button';
-import { TextInput } from '../../shared/components/input';
+import { Form } from '../../shared/components/form';
 import { classNames } from '../../shared/ui/ui.utils';
 
 interface CompareFormProps {
@@ -15,26 +21,43 @@ interface CompareFormProps {
 export const CompareForm: FunctionComponent<CompareFormProps> = (props) => {
   const { className } = props;
 
-  const [values, setValues] = useState(props.values ?? [0]);
+  const router = useRouter();
+  const [values, setValues] = useState(props.values ?? [null, null]);
 
   const onProductChange = useCallback(
     (i: number, value: number) => {
-      values[i] = value;
-      setValues([...values]);
+      const newValues = [...values];
+      newValues[i] = value;
+      setValues(newValues);
     },
     [values],
   );
 
-  const onAdd = useCallback(() => {
-    setValues([...values, 0]);
-  }, [values]);
+  const handleSubmit = useCallback(
+    (e: FormEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
 
-  const onDelete = useCallback(() => {
-    setValues(values.slice(1));
-  }, [values]);
+      const products = values
+        .filter((value) => value != null)
+        .map((value) => ProductCache.get(value));
+
+      if (products.length === 2) {
+        router.push(`/gpus/compare/${products[0].slug}-vs-${products[1].slug}`);
+        return;
+      } else if (products.length === 1) {
+        router.push(`/gpus/view/${products[0].slug}`);
+        return;
+      } else {
+        return;
+      }
+    },
+    [values, router],
+  );
 
   return (
-    <section
+    <Form
+      onSubmit={handleSubmit}
       className={classNames(
         'flex flex-col gap-4 w-full',
         values.length > 2 ? 'lg:flex-row' : 'md:flex-row',
@@ -55,57 +78,30 @@ export const CompareForm: FunctionComponent<CompareFormProps> = (props) => {
           productType={ProductType.GPU}
           className={classNames('flex-1 min-w-[150px]')}
           onChange={(value) => onProductChange(0, value)}
+          value={values[0]}
         />
 
-        {values.length > 1 && (
-          <>
-            <div
-              className={classNames(
-                'font-medium self-center text-center w-[50px]',
-              )}
-            >
-              VS
-            </div>
-
-            <ProductAutocomplete
-              productType={ProductType.GPU}
-              className={classNames('flex-1 min-w-[150px]')}
-              onChange={(value) => onProductChange(1, value)}
-            />
-          </>
-        )}
-
-        {values.length > 2 && (
-          <>
-            <div
-              className={classNames(
-                'font-medium self-center text-center w-[50px]',
-              )}
-            >
-              VS
-            </div>
-
-            <ProductAutocomplete
-              productType={ProductType.GPU}
-              className={classNames('flex-1 min-w-[150px]')}
-              onChange={(value) => onProductChange(2, value)}
-            />
-          </>
-        )}
-
-        <Button
-          disabled={values.length === 3}
-          variant={ButtonVariant.Default}
-          className={classNames('flex-none px-0 py-0 w-[50px]')}
-          onClick={onAdd}
+        <div
+          className={classNames('font-medium self-center text-center w-[50px]')}
         >
-          <PlusCircleIcon className={classNames('h-[24px] mx-auto')} />
-        </Button>
+          VS
+        </div>
+
+        <ProductAutocomplete
+          productType={ProductType.GPU}
+          className={classNames('flex-1 min-w-[150px]')}
+          onChange={(value) => onProductChange(1, value)}
+          value={values[1]}
+        />
       </div>
 
-      <Button variant={ButtonVariant.Primary} className="min-w-[100px]">
+      <Button
+        type="submit"
+        variant={ButtonVariant.Primary}
+        className="min-w-[100px]"
+      >
         {values.length > 1 ? 'Compare' : 'Search'}
       </Button>
-    </section>
+    </Form>
   );
 };

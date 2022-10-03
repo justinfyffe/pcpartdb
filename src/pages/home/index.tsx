@@ -28,14 +28,14 @@ export const HomePage = (_props: HomePageProps) => {
         )}
       >
         <Card className={classNames('gap-4 flex flex-col justify-center')}>
-          <h1 className={classNames('mb-3')}>Compare CPUs and GPUs</h1>
+          <h1 className={classNames('mb-3')}>Compare GPUs</h1>
 
           <p>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
             eiusmod tempor incididunt ut labore et dolore magna aliqua.
           </p>
 
-          <CompareForm values={[1, 1]} />
+          <CompareForm values={[null, null]} />
         </Card>
 
         <aside className={classNames()}>
