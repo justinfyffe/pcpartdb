@@ -2,6 +2,7 @@ Immediate Tasks:
 - add product image fields to gpu form
 - add meta and form field to specify if model or actual product
 - view gpu page
+  - default image for nvidia and amd is their logo
 - home page
 - gpus list page
 - contact page
