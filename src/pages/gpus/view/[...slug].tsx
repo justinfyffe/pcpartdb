@@ -21,6 +21,7 @@ import { ProductSpecKey } from '../../../types/product-spec';
 import { CompareForm } from '../../../web/compare';
 import { ProductImage } from '../../../web/product';
 import { productService } from '../../../web/product/product.service';
+import { Article, ArticleHeader } from '../../../web/shared/components/article';
 import {
   Breadcrumb,
   Breadcrumbs,
@@ -33,7 +34,6 @@ import {
   Sidenav,
   SidenavPopularComparisons,
   SidenavPopularProducts,
-  SidenavStockUpdates,
 } from '../../../web/sidenav';
 
 interface ViewGpuPageProps {
@@ -49,9 +49,9 @@ const ViewGpuPage = (props: ViewGpuPageProps) => {
 
   return (
     <WebsiteLayout>
-      <article className="flex flex-wrap gap-6 lg:gap-8 justify-center">
-        <header className="flex flex-wrap w-full items-center justify-between gap-3">
-          <Breadcrumbs>
+      <Article className="flex flex-wrap gap-6 lg:gap-8 justify-center">
+        <ArticleHeader className="flex flex-wrap w-full items-center justify-between gap-3 lg:gap-4">
+          <Breadcrumbs className="mb-3">
             <Breadcrumb href="#">Finest PC</Breadcrumb>
             <Breadcrumb href="#">GPUs</Breadcrumb>
             {gpu.parent != null ? (
@@ -62,10 +62,10 @@ const ViewGpuPage = (props: ViewGpuPageProps) => {
             <Breadcrumb>{gpu.name}</Breadcrumb>
           </Breadcrumbs>
 
-          <h1 className="mb-3">{gpu.name}</h1>
+          <h1>{gpu.name}</h1>
 
-          <CompareForm values={[1]} />
-        </header>
+          <CompareForm values={[gpu.id]} />
+        </ArticleHeader>
 
         <section className="flex-1 flex flex-col gap-6">
           <section className="flex flex-wrap justify-start gap-6 lg:gap-8">
@@ -859,11 +859,10 @@ const ViewGpuPage = (props: ViewGpuPageProps) => {
         </section>
 
         <Sidenav>
-          <SidenavStockUpdates />
           <SidenavPopularProducts />
           <SidenavPopularComparisons />
         </Sidenav>
-      </article>
+      </Article>
     </WebsiteLayout>
   );
 };

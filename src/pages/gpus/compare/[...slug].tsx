@@ -4,6 +4,7 @@ import { Product } from '../../../types/product';
 import { CompareForm } from '../../../web/compare';
 import { ProductImage } from '../../../web/product';
 import { productService } from '../../../web/product/product.service';
+import { Article, ArticleHeader } from '../../../web/shared/components/article';
 import {
   Breadcrumb,
   Breadcrumbs,
@@ -21,7 +22,6 @@ import {
   Sidenav,
   SidenavPopularComparisons,
   SidenavPopularProducts,
-  SidenavStockUpdates,
 } from '../../../web/sidenav';
 
 interface CompareGpuPageProps {
@@ -29,39 +29,38 @@ interface CompareGpuPageProps {
 }
 
 const CompareGpuPage = (props: CompareGpuPageProps) => {
-  console.log(props.gpus);
+  const { gpus } = props;
+
+  const gpu1 = gpus[0];
+  const gpu2 = gpus[1];
+
+  const pageTitle = `${gpu1.name} vs ${gpu2.name}`;
 
   return (
     <WebsiteLayout>
-      <article className="flex flex-wrap gap-6 lg:gap-8 justify-center">
-        <header className="flex flex-wrap w-full items-center justify-start gap-3">
-          <Breadcrumbs>
+      <Article className="flex flex-wrap gap-6 lg:gap-8 justify-center">
+        <ArticleHeader className="flex flex-wrap w-full items-center justify-between gap-3 lg:gap-4">
+          <Breadcrumbs className="mb-3">
             <Breadcrumb href="#">Finest PC</Breadcrumb>
             <Breadcrumb href="#">GPUs</Breadcrumb>
-            <Breadcrumb>A vs B</Breadcrumb>
+            <Breadcrumb>{pageTitle}</Breadcrumb>
           </Breadcrumbs>
 
-          <h1 className="mb-3">
-            NVIDIA GeForce RTX 3090 vs NVIDIA GeForce RTX 3080
-          </h1>
+          <h1>{pageTitle}</h1>
 
-          <CompareForm values={[1, 1]} />
-        </header>
+          <CompareForm values={[gpu1.id, gpu2.id]} />
+        </ArticleHeader>
 
         <article className="flex-1 flex flex-col gap-6 max-w-full">
           <section className="flex flex-wrap gap-4 md:flex-nowrap justify-start">
             <div className="flex flex-col gap-3 flex-1 min-w-[210px] max-w-[350px]">
-              <h2 className="self-start text-2xl font-medium">
-                NVIDIA GeForce RTX 3090
-              </h2>
+              <h2 className="self-start text-2xl font-medium">{gpu1.name}</h2>
 
               <ProductImage />
             </div>
 
             <div className="flex flex-col gap-3 flex-1 min-w-[210px] max-w-[350px]">
-              <h2 className="self-start text-2xl font-medium">
-                NVIDIA GeForce RTX 3080
-              </h2>
+              <h2 className="self-start text-2xl font-medium">{gpu2.name}</h2>
 
               <ProductImage />
             </div>
@@ -92,8 +91,8 @@ const CompareGpuPage = (props: CompareGpuPageProps) => {
                 <THead>
                   <Tr>
                     <Td className="min-w-[180px]">GPU</Td>
-                    <Td className="min-w-[80px]">GeForce RTX 3090</Td>
-                    <Td className="min-w-[80px]">GeForce RTX 3080</Td>
+                    <Td className="min-w-[80px]">{gpu1.name}</Td>
+                    <Td className="min-w-[80px]">{gpu2.name}</Td>
                   </Tr>
                 </THead>
                 <TBody>
@@ -153,8 +152,8 @@ const CompareGpuPage = (props: CompareGpuPageProps) => {
                 <THead>
                   <Tr>
                     <Td className="min-w-[180px]">GPU</Td>
-                    <Td className="min-w-[80px]">GeForce RTX 3090</Td>
-                    <Td className="min-w-[80px]">GeForce RTX 3080</Td>
+                    <Td className="min-w-[80px]">{gpu1.name}</Td>
+                    <Td className="min-w-[80px]">{gpu2.name}</Td>
                   </Tr>
                 </THead>
                 <TBody>
@@ -219,8 +218,8 @@ const CompareGpuPage = (props: CompareGpuPageProps) => {
                   <THead>
                     <Tr>
                       <Td className="min-w-[180px]">GPU</Td>
-                      <Td className="min-w-[80px]">GeForce RTX 3090</Td>
-                      <Td className="min-w-[80px]">GeForce RTX 3080</Td>
+                      <Td className="min-w-[80px]">{gpu1.name}</Td>
+                      <Td className="min-w-[80px]">{gpu2.name}</Td>
                     </Tr>
                   </THead>
                   <TBody>
@@ -270,8 +269,8 @@ const CompareGpuPage = (props: CompareGpuPageProps) => {
                   <THead>
                     <Tr>
                       <Td className="min-w-[180px]">GPU</Td>
-                      <Td className="min-w-[80px]">GeForce RTX 3090</Td>
-                      <Td className="min-w-[80px]">GeForce RTX 3080</Td>
+                      <Td className="min-w-[80px]">{gpu1.name}</Td>
+                      <Td className="min-w-[80px]">{gpu2.name}</Td>
                     </Tr>
                   </THead>
                   <TBody>
@@ -336,8 +335,8 @@ const CompareGpuPage = (props: CompareGpuPageProps) => {
                   <THead>
                     <Tr>
                       <Td className="min-w-[180px]">GPU</Td>
-                      <Td className="min-w-[80px]">GeForce RTX 3090</Td>
-                      <Td className="min-w-[80px]">GeForce RTX 3080</Td>
+                      <Td className="min-w-[80px]">{gpu1.name}</Td>
+                      <Td className="min-w-[80px]">{gpu2.name}</Td>
                     </Tr>
                   </THead>
                   <TBody>
@@ -402,8 +401,8 @@ const CompareGpuPage = (props: CompareGpuPageProps) => {
                   <THead>
                     <Tr>
                       <Td className="min-w-[200px]">GPU</Td>
-                      <Td className="min-w-[80px]">GeForce RTX 3090</Td>
-                      <Td className="min-w-[80px]">GeForce RTX 3080</Td>
+                      <Td className="min-w-[80px]">{gpu1.name}</Td>
+                      <Td className="min-w-[80px]">{gpu2.name}</Td>
                     </Tr>
                   </THead>
                   <TBody>
@@ -443,8 +442,8 @@ const CompareGpuPage = (props: CompareGpuPageProps) => {
                   <THead>
                     <Tr>
                       <Td className="min-w-[180px]">GPU</Td>
-                      <Td className="min-w-[80px]">GeForce RTX 3090</Td>
-                      <Td className="min-w-[80px]">GeForce RTX 3080</Td>
+                      <Td className="min-w-[80px]">{gpu1.name}</Td>
+                      <Td className="min-w-[80px]">{gpu2.name}</Td>
                     </Tr>
                   </THead>
                   <TBody>
@@ -484,8 +483,8 @@ const CompareGpuPage = (props: CompareGpuPageProps) => {
                   <THead>
                     <Tr>
                       <Td className="min-w-[180px]">GPU</Td>
-                      <Td className="min-w-[80px]">GeForce RTX 3090</Td>
-                      <Td className="min-w-[80px]">GeForce RTX 3080</Td>
+                      <Td className="min-w-[80px]">{gpu1.name}</Td>
+                      <Td className="min-w-[80px]">{gpu2.name}</Td>
                     </Tr>
                   </THead>
                   <TBody>
@@ -540,8 +539,8 @@ const CompareGpuPage = (props: CompareGpuPageProps) => {
                   <THead>
                     <Tr>
                       <Td className="min-w-[180px]">GPU</Td>
-                      <Td className="min-w-[80px]">GeForce RTX 3090</Td>
-                      <Td className="min-w-[80px]">GeForce RTX 3080</Td>
+                      <Td className="min-w-[80px]">{gpu1.name}</Td>
+                      <Td className="min-w-[80px]">{gpu2.name}</Td>
                     </Tr>
                   </THead>
                   <TBody>
@@ -597,8 +596,8 @@ const CompareGpuPage = (props: CompareGpuPageProps) => {
                 <THead>
                   <Tr>
                     <Td className="min-w-[180px]">GPU</Td>
-                    <Td className="min-w-[80px]">GeForce RTX 3090</Td>
-                    <Td className="min-w-[80px]">GeForce RTX 3080</Td>
+                    <Td className="min-w-[80px]">{gpu1.name}</Td>
+                    <Td className="min-w-[80px]">{gpu2.name}</Td>
                   </Tr>
                 </THead>
                 <TBody>
@@ -644,11 +643,10 @@ const CompareGpuPage = (props: CompareGpuPageProps) => {
         </article>
 
         <Sidenav>
-          <SidenavStockUpdates />
-          <SidenavPopularProducts />
           <SidenavPopularComparisons />
+          <SidenavPopularProducts />
         </Sidenav>
-      </article>
+      </Article>
     </WebsiteLayout>
   );
 };
