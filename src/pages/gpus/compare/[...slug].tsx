@@ -1,7 +1,9 @@
 import { NextPageContext } from 'next';
 import React from 'react';
+import { Product } from '../../../types/product';
 import { CompareForm } from '../../../web/compare';
 import { ProductImage } from '../../../web/product';
+import { productService } from '../../../web/product/product.service';
 import {
   Breadcrumb,
   Breadcrumbs,
@@ -22,9 +24,13 @@ import {
   SidenavStockUpdates,
 } from '../../../web/sidenav';
 
-interface ViewGpuPageProps {}
+interface CompareGpuPageProps {
+  gpus: Product[];
+}
 
-const ViewGpuPage = (_props: ViewGpuPageProps) => {
+const CompareGpuPage = (props: CompareGpuPageProps) => {
+  console.log(props.gpus);
+
   return (
     <WebsiteLayout>
       <article className="flex flex-wrap gap-6 lg:gap-8 justify-center">
@@ -647,8 +653,11 @@ const ViewGpuPage = (_props: ViewGpuPageProps) => {
   );
 };
 
-ViewGpuPage.getInitialProps = async (_ctx: NextPageContext) => {
-  return {};
+CompareGpuPage.getInitialProps = async (ctx: NextPageContext) => {
+  const { slug } = ctx.query as { slug: string };
+  const gpus = await productService.getComparison(slug);
+
+  return { gpus };
 };
 
-export default ViewGpuPage;
+export default CompareGpuPage;

@@ -41,6 +41,13 @@ export class ProductController {
     );
   }
 
+  @Get('comparison/:idsOrSlugs')
+  async getComparison(@Param('idsOrSlugs') idsOrSlugs: string) {
+    return transaction((trx) =>
+      serializeAsync(this.service.getComparison(idsOrSlugs, { trx })),
+    );
+  }
+
   @Post()
   @UseGuards(StaffGuard)
   async create(@Body() body: ProductRequest) {

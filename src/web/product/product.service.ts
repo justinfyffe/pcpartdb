@@ -21,6 +21,14 @@ export class ProductService {
     return product;
   }
 
+  async getComparison(idsOrSlugs: number | string) {
+    const products = await this.api.get<Product[]>(
+      `${PATH}/comparison/${idsOrSlugs}`,
+    );
+    ProductCache.save(products);
+    return products;
+  }
+
   async create(data: ProductRequest) {
     const product = await this.api.post<Product>(PATH, data);
     ProductCache.save(product);

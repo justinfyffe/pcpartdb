@@ -5,7 +5,7 @@ import { productBenchmarkValidator } from '../../types/product-benchmark';
 import { productMetaValidator } from '../../types/product-meta';
 import { productReviewValidator } from '../../types/product-review';
 import { productSpecValidator } from '../../types/product-spec';
-import { notFoundError } from '../shared/errors/errors';
+import { badRequestError, notFoundError } from '../shared/errors/errors';
 import { ServiceContext } from '../shared/service/context';
 import { validate } from '../shared/types/validate';
 import { ProductRepository } from './product.repository';
@@ -54,6 +54,27 @@ export class ProductService {
     return isNaN(Number(idOrSlug))
       ? await this.getProductBySlug(idOrSlug as string, ctx)
       : await this.getProductById(Number(idOrSlug), ctx);
+  }
+
+  async getComparison(idsOrSlugs: string, ctx: ServiceContext) {
+    const parts = idsOrSlugs.split('--vs--');
+
+    if (parts.length === 0) {
+      throw badRequestError();
+    }
+
+    const promises = [];
+    for (const part of parts) {
+      promises.push(this.get(part, ctx));
+    }
+    const products = await Promise.all(promises);
+    const filteredProducts = products.filter((product) => product != null);
+
+    if (filteredProducts.length !== parts.length) {
+      throw notFoundError({});
+    }
+
+    return products;
   }
 
   async getProductById(id: number, ctx: ServiceContext) {

@@ -43,7 +43,9 @@ export const CompareForm: FunctionComponent<CompareFormProps> = (props) => {
         .map((value) => ProductCache.get(value));
 
       if (products.length === 2) {
-        router.push(`/gpus/compare/${products[0].slug}-vs-${products[1].slug}`);
+        router.push(
+          `/gpus/compare/${products[0].slug}--vs--${products[1].slug}`,
+        );
         return;
       } else if (products.length === 1) {
         router.push(`/gpus/view/${products[0].slug}`);
