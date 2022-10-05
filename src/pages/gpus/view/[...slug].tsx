@@ -52,13 +52,8 @@ const ViewGpuPage = (props: ViewGpuPageProps) => {
       <Article className="flex flex-wrap gap-6 lg:gap-8 justify-center">
         <ArticleHeader className="flex flex-wrap w-full items-center justify-between gap-3 lg:gap-4">
           <Breadcrumbs className="mb-3">
-            <Breadcrumb href="#">Finest PC</Breadcrumb>
-            <Breadcrumb href="#">GPUs</Breadcrumb>
-            {gpu.parent != null ? (
-              <Breadcrumb href="#">{gpu.parent.name}</Breadcrumb>
-            ) : (
-              <></>
-            )}
+            <Breadcrumb href="/">Finest PC</Breadcrumb>
+            <Breadcrumb href="/gpus">GPUs</Breadcrumb>
             <Breadcrumb>{gpu.name}</Breadcrumb>
           </Breadcrumbs>
 
