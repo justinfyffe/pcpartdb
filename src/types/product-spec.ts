@@ -12,6 +12,11 @@ export enum ProductionStatus {
   Unreleased = 'UNRELEASED',
 }
 
+export enum ProductSpecBooleanFormatter {
+  TrueFalse = 'TRUE_FALSE',
+  YesNo = 'YES_NO',
+}
+
 export enum ProductSpecKey {
   // General
   Company = 'COMPANY',
@@ -127,3 +132,125 @@ export const productSpecValidator = Joi.object({
   source: Joi.string().allow(null),
   metadata: Joi.any().allow(null),
 }).options({ abortEarly: false });
+
+export function productSpecValue(spec: ProductSpec) {
+  return (
+    spec.booleanValue ??
+    spec.floatValue ??
+    spec.integerValue ??
+    spec.jsonValue ??
+    spec.stringValue ??
+    spec.textValue ??
+    null
+  );
+}
+
+export function compareProductSpecs(spec1: ProductSpec, spec2: ProductSpec) {}
+
+export interface FormatProductSpecOptions {
+  decimals?: number;
+  booleanFormatter?: ProductSpecBooleanFormatter;
+}
+
+export function formatProductSpec(
+  spec: ProductSpec,
+  options?: FormatProductSpecOptions,
+) {
+  if (spec == null) {
+    return '--';
+  }
+
+  const {
+    key,
+    booleanValue,
+    floatValue,
+    integerValue,
+    jsonValue,
+    stringValue,
+    textValue,
+    metadata,
+  } = spec;
+
+  // Handle special cases
+  if (key === ProductSpecKey.MarketSegment) {
+    return formatMarketSegment(stringValue);
+  }
+  if (key === ProductSpecKey.ProductionStatus) {
+    return formatProductionStatus(stringValue);
+  }
+
+  // Handle cases that we cannot output.
+  if (jsonValue != null) {
+    throw new Error('Cannot format a json value');
+  }
+
+  // Compute string to return
+  let returnValue = '';
+  if (booleanValue != null) {
+    returnValue = formatBooleanValue(
+      booleanValue,
+      options?.booleanFormatter ?? ProductSpecBooleanFormatter.TrueFalse,
+    );
+  } else if (floatValue != null) {
+    returnValue = floatValue.toFixed(options?.decimals ?? 2);
+  } else if (integerValue != null) {
+    returnValue = `${integerValue}`;
+  } else if (stringValue != null) {
+    returnValue = stringValue;
+  } else if (textValue != null) {
+    returnValue = textValue;
+  }
+
+  // Apply modifiers
+  const prefix = metadata?.prefix ?? null;
+  const suffix = metadata?.suffix ?? null;
+
+  if (prefix != null) {
+    returnValue = `${prefix}${returnValue}`;
+  }
+
+  if (suffix != null) {
+    returnValue = `${returnValue} ${suffix}`;
+  }
+
+  return returnValue;
+}
+
+function formatBooleanValue(
+  value: boolean,
+  formatter: ProductSpecBooleanFormatter,
+) {
+  if (formatter === ProductSpecBooleanFormatter.TrueFalse) {
+    return value ? 'True' : 'False';
+  } else if (formatter === ProductSpecBooleanFormatter.YesNo) {
+    return value ? 'Yes' : 'No';
+  } else {
+    throw new Error(`Invalid boolean formatter: ${formatter}`);
+  }
+}
+
+function formatMarketSegment(value: string) {
+  switch (value) {
+    case MarketSegment.Desktop:
+      return 'Desktop';
+    case MarketSegment.Laptop:
+      return 'Laptop';
+    case MarketSegment.Server:
+      return 'Server';
+    default:
+      throw new Error(`Invalid market segment value: ${value}`);
+  }
+}
+
+function formatProductionStatus(value: string) {
+  switch (value) {
+    case ProductionStatus.Active:
+      return 'Active';
+    case ProductionStatus.EndOfLife:
+      return 'End of Life';
+    case ProductionStatus.Unreleased:
+      return 'Unreleased';
+    default:
+      throw new Error(`Invalid market segment value: ${value}`);
+  }
+}

@@ -17,7 +17,7 @@ import {
 } from '../../../types/product';
 import { ProductBenchmarkKey } from '../../../types/product-benchmark';
 import { ProductReviewKey } from '../../../types/product-review';
-import { ProductSpecKey } from '../../../types/product-spec';
+import { formatProductSpec, ProductSpecKey } from '../../../types/product-spec';
 import { CompareForm } from '../../../web/compare';
 import { ProductImage } from '../../../web/product';
 import { productService } from '../../../web/product/product.service';
@@ -203,8 +203,8 @@ const ViewGpuPage = (props: ViewGpuPageProps) => {
                       'text-md lg:text-lg text-slate-600 text-right',
                     )}
                   >
-                    {specs[ProductSpecKey.ClockSpeedBase]?.floatValue} /{' '}
-                    {specs[ProductSpecKey.ClockSpeedBoost]?.floatValue}
+                    {formatProductSpec(specs[ProductSpecKey.ClockSpeedBase])} /{' '}
+                    {formatProductSpec(specs[ProductSpecKey.ClockSpeedBoost])}
                   </div>
                 </li>
 
@@ -257,7 +257,7 @@ const ViewGpuPage = (props: ViewGpuPageProps) => {
                       'text-md lg:text-lg text-slate-600 text-right',
                     )}
                   >
-                    {specs[ProductSpecKey.ReleaseDate]?.stringValue ?? '--'}
+                    {formatProductSpec(specs[ProductSpecKey.ReleaseDate])}
                   </div>
                 </li>
               </ul>
@@ -304,32 +304,33 @@ const ViewGpuPage = (props: ViewGpuPageProps) => {
                   <Tr>
                     <Td>Generation</Td>
                     <Td>
-                      {specs[ProductSpecKey.Generation]?.stringValue ?? '--'}
+                      {formatProductSpec(specs[ProductSpecKey.Generation])}
                     </Td>
                   </Tr>
                   <Tr>
                     <Td>Market Segment</Td>
                     <Td>
-                      {specs[ProductSpecKey.MarketSegment]?.stringValue ?? '--'}
+                      {formatProductSpec(specs[ProductSpecKey.MarketSegment])}
                     </Td>
                   </Tr>
                   <Tr>
                     <Td>Launch Price</Td>
                     <Td>
-                      {specs[ProductSpecKey.LaunchPrice]?.floatValue ?? '--'}
+                      {formatProductSpec(specs[ProductSpecKey.LaunchPrice])}
                     </Td>
                   </Tr>
                   <Tr>
                     <Td>Release Date</Td>
                     <Td>
-                      {specs[ProductSpecKey.ReleaseDate]?.stringValue ?? '--'}
+                      {formatProductSpec(specs[ProductSpecKey.ReleaseDate])}
                     </Td>
                   </Tr>
                   <Tr>
                     <Td>Production Status</Td>
                     <Td>
-                      {specs[ProductSpecKey.ProductionStatus]?.stringValue ??
-                        '--'}
+                      {formatProductSpec(
+                        specs[ProductSpecKey.ProductionStatus],
+                      )}
                     </Td>
                   </Tr>
                 </TBody>
@@ -495,24 +496,30 @@ const ViewGpuPage = (props: ViewGpuPageProps) => {
                     <Tr>
                       <Td>Length</Td>
                       <Td>
-                        {specs[ProductSpecKey.Length]?.floatValue ?? '--'}
+                        {formatProductSpec(specs[ProductSpecKey.Length], {
+                          decimals: 0,
+                        })}
                       </Td>
                     </Tr>
                     <Tr>
                       <Td>Width</Td>
-                      <Td>{specs[ProductSpecKey.Width]?.floatValue ?? '--'}</Td>
+                      <Td>
+                        {formatProductSpec(specs[ProductSpecKey.Width], {
+                          decimals: 0,
+                        })}
+                      </Td>
                     </Tr>
                     <Tr>
                       <Td>Height</Td>
                       <Td>
-                        {specs[ProductSpecKey.Height]?.floatValue ?? '--'}
+                        {formatProductSpec(specs[ProductSpecKey.Height], {
+                          decimals: 0,
+                        })}
                       </Td>
                     </Tr>
                     <Tr>
                       <Td>Weight</Td>
-                      <Td>
-                        {specs[ProductSpecKey.Weight]?.floatValue ?? '--'}
-                      </Td>
+                      <Td>{formatProductSpec(specs[ProductSpecKey.Weight])}</Td>
                     </Tr>
                     <Tr>
                       <Td>Bus Interface</Td>
@@ -522,12 +529,18 @@ const ViewGpuPage = (props: ViewGpuPageProps) => {
                     </Tr>
                     <Tr>
                       <Td>TDP</Td>
-                      <Td>{specs[ProductSpecKey.Tdp]?.floatValue ?? '--'}</Td>
+                      <Td>
+                        {formatProductSpec(specs[ProductSpecKey.Tdp], {
+                          decimals: 0,
+                        })}
+                      </Td>
                     </Tr>
                     <Tr>
                       <Td>Suggested PSU</Td>
                       <Td>
-                        {specs[ProductSpecKey.SuggestedPsu]?.floatValue ?? '--'}
+                        {formatProductSpec(specs[ProductSpecKey.SuggestedPsu], {
+                          decimals: 0,
+                        })}
                       </Td>
                     </Tr>
                     <Tr>
