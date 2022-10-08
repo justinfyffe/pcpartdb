@@ -1,3 +1,3 @@
-import { HomePage } from '../client/home';
+import { HomePage } from '@client/home';
 
 export default HomePage;

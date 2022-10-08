@@ -1,9 +1,11 @@
 Immediate Tasks:
+- use @shared, @client, @server
+- home page
+  - remove most to it. just a search and small text of popular gpus and comparisons
 - add product image fields to gpu form
 - add product models as a json meta type on the product
 - view gpu page
   - default image for nvidia and amd is their logo
-- home page
 - gpus list page
 - contact page
 - about page

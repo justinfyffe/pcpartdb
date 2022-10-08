@@ -2,6 +2,7 @@
     "compilerOptions": {
       "allowJs": true,
       "allowSyntheticDefaultImports": true,
+      "baseUrl": ".",
       "downlevelIteration": true,
       "emitDecoratorMetadata": true,
       "esModuleInterop": true,
@@ -17,6 +18,11 @@
       "noImplicitReturns": true,
       "noImplicitThis": true,
       "outDir": ".next",
+      "paths": {
+        "@client/*": ["src/client/*"],
+        "@shared/*": ["src/shared/*"],
+        "@server/*": ["src/server/*"],
+      },
       "pretty": true,
       "removeComments": true,
       "resolveJsonModule": true,
