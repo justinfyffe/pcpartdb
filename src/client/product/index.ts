@@ -1,1 +1,3 @@
-export * from './components/product-image';
+export * from './components';
+export * from './pages';
+export * from './product.service';
