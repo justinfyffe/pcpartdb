@@ -1,8 +1,8 @@
 import 'reflect-metadata';
 import React from 'react';
-import { withStaffGuard } from '../../web/auth/with-staff-guard';
-import { Article, ArticleHeader } from '../../web/shared/components/article';
-import { AdminLayout } from '../../web/shared/layouts/admin';
+import { withStaffGuard } from '../../client/auth/with-staff-guard';
+import { Article, ArticleHeader } from '../../client/shared/components/article';
+import { AdminLayout } from '../../client/shared/layouts/admin';
 
 interface AdminIndexPageProps {}
 

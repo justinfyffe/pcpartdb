@@ -3,11 +3,16 @@ import { format } from 'date-fns';
 import { NextPageContext } from 'next';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
-import { User } from '../../../types/user';
-import { withStaffGuard } from '../../../web/auth/with-staff-guard';
-import { Alert, AlertVariant } from '../../../web/shared/components/alert';
-import { Article, ArticleHeader } from '../../../web/shared/components/article';
-import { Button, ButtonVariant } from '../../../web/shared/components/button';
+import { withStaffGuard } from '../../../client/auth/with-staff-guard';
+import { Alert, AlertVariant } from '../../../client/shared/components/alert';
+import {
+  Article,
+  ArticleHeader,
+} from '../../../client/shared/components/article';
+import {
+  Button,
+  ButtonVariant,
+} from '../../../client/shared/components/button';
 import {
   Table,
   TBody,
@@ -15,9 +20,10 @@ import {
   Th,
   THead,
   Tr,
-} from '../../../web/shared/components/table';
-import { AdminLayout } from '../../../web/shared/layouts/admin';
-import { userService } from '../../../web/user/user.service';
+} from '../../../client/shared/components/table';
+import { AdminLayout } from '../../../client/shared/layouts/admin';
+import { userService } from '../../../client/user/user.service';
+import { User } from '../../../shared/user';
 
 interface AdminUsersPageProps {
   users: User[];

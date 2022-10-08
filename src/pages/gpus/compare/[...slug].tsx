@@ -1,28 +1,31 @@
 import { NextPageContext } from 'next';
 import React from 'react';
-import { Product } from '../../../types/product';
-import { CompareForm } from '../../../web/compare';
-import { ProductImage } from '../../../web/product';
-import { productService } from '../../../web/product/product.service';
-import { Article, ArticleHeader } from '../../../web/shared/components/article';
+import { CompareForm } from '../../../client/compare';
+import { ProductImage } from '../../../client/product';
+import { productService } from '../../../client/product/product.service';
+import {
+  Article,
+  ArticleHeader,
+} from '../../../client/shared/components/article';
 import {
   Breadcrumb,
   Breadcrumbs,
-} from '../../../web/shared/components/breadcrumbs';
+} from '../../../client/shared/components/breadcrumbs';
 import {
   Table,
   TBody,
   Td,
   THead,
   Tr,
-} from '../../../web/shared/components/table';
-import { WebsiteLayout } from '../../../web/shared/layouts/website';
-import { classNames } from '../../../web/shared/ui/ui.utils';
+} from '../../../client/shared/components/table';
+import { WebsiteLayout } from '../../../client/shared/layouts/website';
+import { classNames } from '../../../client/shared/ui/ui.utils';
 import {
   Sidenav,
   SidenavPopularComparisons,
   SidenavPopularProducts,
-} from '../../../web/sidenav';
+} from '../../../client/sidenav';
+import { Product } from '../../../shared/product';
 
 interface CompareGpuPageProps {
   gpus: Product[];

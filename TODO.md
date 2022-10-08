@@ -1,7 +1,6 @@
 Immediate Tasks:
-- create helper methods for getting product spec values and comparing product specs
 - add product image fields to gpu form
-- add meta and form field to specify if model or actual product
+- add product models as a json meta type on the product
 - view gpu page
   - default image for nvidia and amd is their logo
 - home page
@@ -9,6 +8,7 @@ Immediate Tasks:
 - contact page
 - about page
 - disclaimer page
+- move pages to client folder
 - rename "user" to "account"
 - clean up html
 - initial on-page seo
@@ -19,7 +19,6 @@ Immediate Tasks:
 - value rating
 - compare functionality
 - product forms
-  - pre-fill data (from parent product)
   - pre-fill data (from external source)
 - look into using useController
 - improve html semantics

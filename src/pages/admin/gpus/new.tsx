@@ -1,10 +1,16 @@
 import 'reflect-metadata';
 import React from 'react';
-import { withStaffGuard } from '../../../web/auth/with-staff-guard';
-import { GpuForm } from '../../../web/product/components/gpu-form';
-import { Article, ArticleHeader } from '../../../web/shared/components/article';
-import { Button, ButtonVariant } from '../../../web/shared/components/button';
-import { AdminLayout } from '../../../web/shared/layouts/admin';
+import { withStaffGuard } from '../../../client/auth/with-staff-guard';
+import { GpuForm } from '../../../client/product/components/gpu-form';
+import {
+  Article,
+  ArticleHeader,
+} from '../../../client/shared/components/article';
+import {
+  Button,
+  ButtonVariant,
+} from '../../../client/shared/components/button';
+import { AdminLayout } from '../../../client/shared/layouts/admin';
 
 interface AdminNewGpuPageProps {}
 

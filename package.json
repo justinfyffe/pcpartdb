@@ -37,6 +37,7 @@
   "homepage": "https://finestpc.com",
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
+    "@types/big.js": "^6.1.6",
     "@types/classnames": "^2.3.1",
     "@types/express": "^4.17.13",
     "@types/hapi__joi": "^17.1.8",
@@ -76,6 +77,7 @@
     "@nestjs/platform-express": "^8.4.5",
     "axios": "^0.27.2",
     "bcryptjs": "^2.4.3",
+    "big.js": "^6.2.1",
     "classnames": "^2.3.1",
     "date-fns": "^2.28.0",
     "dotenv": "^16.0.1",

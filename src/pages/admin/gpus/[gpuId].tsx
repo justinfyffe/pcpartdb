@@ -1,13 +1,19 @@
 import 'reflect-metadata';
 import { NextPageContext } from 'next';
 import React from 'react';
-import { Product } from '../../../types/product';
-import { withStaffGuard } from '../../../web/auth/with-staff-guard';
-import { GpuForm } from '../../../web/product/components/gpu-form';
-import { productService } from '../../../web/product/product.service';
-import { Article, ArticleHeader } from '../../../web/shared/components/article';
-import { Button, ButtonVariant } from '../../../web/shared/components/button';
-import { AdminLayout } from '../../../web/shared/layouts/admin';
+import { withStaffGuard } from '../../../client/auth/with-staff-guard';
+import { GpuForm } from '../../../client/product/components/gpu-form';
+import { productService } from '../../../client/product/product.service';
+import {
+  Article,
+  ArticleHeader,
+} from '../../../client/shared/components/article';
+import {
+  Button,
+  ButtonVariant,
+} from '../../../client/shared/components/button';
+import { AdminLayout } from '../../../client/shared/layouts/admin';
+import { Product } from '../../../shared/product';
 
 interface AdminEditGpuPageProps {
   gpu: Product;

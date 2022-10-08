@@ -4,8 +4,8 @@ import axios from 'axios';
 import App, { AppContext, AppProps } from 'next/app';
 import Head from 'next/head';
 import React from 'react';
-import { CacheHydration } from '../web/shared/cache';
-import { GonContext } from '../web/shared/gon';
+import { CacheHydration } from '../client/shared/cache';
+import { GonContext } from '../client/shared/gon';
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   const { error } = pageProps;

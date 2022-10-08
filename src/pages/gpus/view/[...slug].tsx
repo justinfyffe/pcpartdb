@@ -9,32 +9,41 @@ import {
 } from '@heroicons/react/outline';
 import { NextPageContext } from 'next';
 import React, { useMemo } from 'react';
+import { CompareForm } from '../../../client/compare';
+import { ProductImage } from '../../../client/product';
+import { productService } from '../../../client/product/product.service';
+import {
+  Article,
+  ArticleHeader,
+} from '../../../client/shared/components/article';
+import {
+  Breadcrumb,
+  Breadcrumbs,
+} from '../../../client/shared/components/breadcrumbs';
+import {
+  Button,
+  ButtonVariant,
+} from '../../../client/shared/components/button';
+import { Table, TBody, Td, Tr } from '../../../client/shared/components/table';
+import { WebsiteLayout } from '../../../client/shared/layouts/website';
+import { classNames } from '../../../client/shared/ui/ui.utils';
+import {
+  Sidenav,
+  SidenavPopularComparisons,
+  SidenavPopularProducts,
+} from '../../../client/sidenav';
 import {
   getProductBenchmarks,
   getProductReviews,
   getProductSpecs,
   Product,
-} from '../../../types/product';
-import { ProductBenchmarkKey } from '../../../types/product-benchmark';
-import { ProductReviewKey } from '../../../types/product-review';
-import { formatProductSpec, ProductSpecKey } from '../../../types/product-spec';
-import { CompareForm } from '../../../web/compare';
-import { ProductImage } from '../../../web/product';
-import { productService } from '../../../web/product/product.service';
-import { Article, ArticleHeader } from '../../../web/shared/components/article';
+} from '../../../shared/product';
+import { ProductBenchmarkKey } from '../../../shared/product-benchmark';
+import { ProductReviewKey } from '../../../shared/product-review';
 import {
-  Breadcrumb,
-  Breadcrumbs,
-} from '../../../web/shared/components/breadcrumbs';
-import { Button, ButtonVariant } from '../../../web/shared/components/button';
-import { Table, TBody, Td, Tr } from '../../../web/shared/components/table';
-import { WebsiteLayout } from '../../../web/shared/layouts/website';
-import { classNames } from '../../../web/shared/ui/ui.utils';
-import {
-  Sidenav,
-  SidenavPopularComparisons,
-  SidenavPopularProducts,
-} from '../../../web/sidenav';
+  formatProductSpec,
+  ProductSpecKey,
+} from '../../../shared/product-spec';
 
 interface ViewGpuPageProps {
   gpu: Product;

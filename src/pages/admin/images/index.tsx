@@ -1,19 +1,24 @@
 import 'reflect-metadata';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
-import { Image } from '../../../types/image';
-import { withStaffGuard } from '../../../web/auth/with-staff-guard';
-import { imageService } from '../../../web/image/image.service';
+import { withStaffGuard } from '../../../client/auth/with-staff-guard';
+import { imageService } from '../../../client/image/image.service';
 import {
   formatDimensions,
   formatFileSize,
   getImageUrl,
-} from '../../../web/image/image.utils';
-import { Alert, AlertVariant } from '../../../web/shared/components/alert';
-import { Article, ArticleHeader } from '../../../web/shared/components/article';
-import { Button, ButtonVariant } from '../../../web/shared/components/button';
-import { Img } from '../../../web/shared/components/image';
-import { TextInput } from '../../../web/shared/components/input';
+} from '../../../client/image/image.utils';
+import { Alert, AlertVariant } from '../../../client/shared/components/alert';
+import {
+  Article,
+  ArticleHeader,
+} from '../../../client/shared/components/article';
+import {
+  Button,
+  ButtonVariant,
+} from '../../../client/shared/components/button';
+import { Img } from '../../../client/shared/components/image';
+import { TextInput } from '../../../client/shared/components/input';
 import {
   Table,
   TBody,
@@ -21,8 +26,9 @@ import {
   Th,
   THead,
   Tr,
-} from '../../../web/shared/components/table';
-import { AdminLayout } from '../../../web/shared/layouts/admin';
+} from '../../../client/shared/components/table';
+import { AdminLayout } from '../../../client/shared/layouts/admin';
+import { Image } from '../../../shared/image';
 
 interface AdminImagesPageProps {
   images: Image[];

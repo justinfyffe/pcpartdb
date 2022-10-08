@@ -27,6 +27,6 @@
       "target": "esnext"
     },
     "include": ["./src/**/*.ts", "./src/**/*.tsx", "next-env.d.ts"],
-    "exclude": ["node_modules", "src/api/db/**/*.ts"]
+    "exclude": ["node_modules", "src/server/db/**/*.ts"]
   }
   

@@ -3,27 +3,27 @@ import Joi from '@hapi/joi';
 import { joiResolver } from '@hookform/resolvers/joi';
 import React, { useCallback, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { contactService } from '../client/contact/contact.service';
+import { Alert, AlertVariant } from '../client/shared/components/alert';
+import { Article, ArticleHeader } from '../client/shared/components/article';
+import { Button, ButtonVariant } from '../client/shared/components/button';
+import {
+  Field,
+  FieldError,
+  FieldOptional,
+} from '../client/shared/components/field';
+import { Form, FormActions } from '../client/shared/components/form';
+import { TextInput } from '../client/shared/components/input';
+import { Spinner } from '../client/shared/components/spinner';
+import { Textarea } from '../client/shared/components/textarea';
+import { WebsiteLayout } from '../client/shared/layouts/website';
 import {
   EMAIL_MAX_LENGTH,
   MESSAGE_MAX_LENGTH,
   NAME_MAX_LENGTH,
   SUBJECT_MAX_LENGTH,
-} from '../types/contact';
-import { ValidationErrorType } from '../types/error';
-import { contactService } from '../web/contact/contact.service';
-import { Alert, AlertVariant } from '../web/shared/components/alert';
-import { Article, ArticleHeader } from '../web/shared/components/article';
-import { Button, ButtonVariant } from '../web/shared/components/button';
-import {
-  Field,
-  FieldError,
-  FieldOptional,
-} from '../web/shared/components/field';
-import { Form, FormActions } from '../web/shared/components/form';
-import { TextInput } from '../web/shared/components/input';
-import { Spinner } from '../web/shared/components/spinner';
-import { Textarea } from '../web/shared/components/textarea';
-import { WebsiteLayout } from '../web/shared/layouts/website';
+} from '../shared/contact';
+import { ValidationErrorType } from '../shared/error';
 
 interface ContactFormData {
   name: string;

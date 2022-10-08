@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import React from 'react';
-import { Article, ArticleHeader } from '../web/shared/components/article';
-import { WebsiteLayout } from '../web/shared/layouts/website';
+import { Article, ArticleHeader } from '../client/shared/components/article';
+import { WebsiteLayout } from '../client/shared/layouts/website';
 
 interface DisclaimerPageProps {}
 

@@ -2,8 +2,8 @@ import 'reflect-metadata';
 import { ChipIcon, DesktopComputerIcon } from '@heroicons/react/outline';
 import { NextPageContext } from 'next';
 import React from 'react';
-import { CompareForm } from '../../web/compare';
-import { Card } from '../../web/shared/components/card';
+import { CompareForm } from '../../client/compare';
+import { Card } from '../../client/shared/components/card';
 import {
   Feed,
   FeedItem,
@@ -11,11 +11,11 @@ import {
   FeedLink,
   FeedLinks,
   FeedTitle,
-} from '../../web/shared/components/feed';
-import { Img } from '../../web/shared/components/image';
-import { SectionHeader } from '../../web/shared/components/section-header';
-import { WebsiteLayout } from '../../web/shared/layouts/website';
-import { classNames } from '../../web/shared/ui/ui.utils';
+} from '../../client/shared/components/feed';
+import { Img } from '../../client/shared/components/image';
+import { SectionHeader } from '../../client/shared/components/section-header';
+import { WebsiteLayout } from '../../client/shared/layouts/website';
+import { classNames } from '../../client/shared/ui/ui.utils';
 
 interface HomePageProps {}
 

@@ -1,18 +1,18 @@
 import { DesktopComputerIcon, PlusCircleIcon } from '@heroicons/react/outline';
 import { NextPageContext } from 'next';
 import React from 'react';
-import { Button, ButtonVariant } from '../../web/shared/components/button';
+import { Button, ButtonVariant } from '../../client/shared/components/button';
 import {
   Card,
   CardActions,
   CardContent,
   CardImage,
   CardTitle,
-} from '../../web/shared/components/card';
-import { TextInput } from '../../web/shared/components/input';
-import { SectionHeader } from '../../web/shared/components/section-header';
-import { WebsiteLayout } from '../../web/shared/layouts/website';
-import { classNames } from '../../web/shared/ui/ui.utils';
+} from '../../client/shared/components/card';
+import { TextInput } from '../../client/shared/components/input';
+import { SectionHeader } from '../../client/shared/components/section-header';
+import { WebsiteLayout } from '../../client/shared/layouts/website';
+import { classNames } from '../../client/shared/ui/ui.utils';
 
 interface GpusPageProps {}
 
