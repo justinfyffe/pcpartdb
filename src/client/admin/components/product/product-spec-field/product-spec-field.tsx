@@ -1,3 +1,4 @@
+import { ProductSpecKey, ProductSpecRequest } from '@shared/product-spec';
 import React, {
   forwardRef,
   Ref,
@@ -5,10 +6,6 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import {
-  ProductSpecKey,
-  ProductSpecRequest,
-} from '../../../../../shared/product-spec';
 import { ProductSpecAutocompleteField } from './product-spec-autocomplete-field';
 import { ProductSpecBooleanField } from './product-spec-boolean-field';
 import { ProductSpecDateField } from './product-spec-date-field';

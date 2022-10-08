@@ -1,15 +1,11 @@
-import React, { forwardRef, useCallback, useMemo } from 'react';
+import { Select, SelectOption, SelectValue } from '@client/shared/components';
 import {
   MarketSegment,
   ProductionStatus,
   ProductSpecKey,
   ProductSpecRequest,
-} from '../../../../../shared/product-spec';
-import {
-  Select,
-  SelectOption,
-  SelectValue,
-} from '../../../../shared/components/select';
+} from '@shared/product-spec';
+import React, { forwardRef, useCallback, useMemo } from 'react';
 
 const ITEMS: { [key: string]: { label: string; value: string }[] } = {
   [ProductSpecKey.MarketSegment]: [

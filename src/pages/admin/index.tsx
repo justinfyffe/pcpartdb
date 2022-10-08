@@ -1,3 +1,3 @@
-import { AdminOverviewPage } from '../../client/admin';
+import { AdminOverviewPage } from '@client/admin';
 
 export default AdminOverviewPage;

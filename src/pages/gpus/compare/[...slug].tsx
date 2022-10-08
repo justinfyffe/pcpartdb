@@ -1,3 +1,3 @@
-import { CompareGpuPage } from '../../../client/product';
+import { CompareGpuPage } from '@client/product';
 
 export default CompareGpuPage;

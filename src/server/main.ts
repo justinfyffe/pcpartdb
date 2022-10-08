@@ -1,10 +1,10 @@
 import 'reflect-metadata';
 import { NestFactory } from '@nestjs/core';
+import { AllExceptionsFilter } from '@server/shared/errors/error-filter';
 import * as dotenv from 'dotenv';
 import * as http from 'http';
 import { NextApiHandler } from 'next';
-import { AppModule } from './app.module';
-import { AllExceptionsFilter } from './shared/errors/error.filter';
+import { AppModule } from './app-module';
 
 dotenv.config();
 

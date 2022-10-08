@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from 'react';
-import { classNames } from '../../ui/ui.utils';
+import { classNames } from '../../ui';
 import { Button, ButtonVariant } from '../button';
 import { Card, CardActions, CardContent, CardImage, CardTitle } from '../card';
 import { SectionHeader } from '../section-header';

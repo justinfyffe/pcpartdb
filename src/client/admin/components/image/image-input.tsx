@@ -1,11 +1,14 @@
+import { formatDimensions, formatFileSize } from '@client/image';
+import {
+  Button,
+  ButtonVariant,
+  Img,
+  showDialog,
+} from '@client/shared/components';
+import { classNames } from '@client/shared/ui';
 import { PhotographIcon } from '@heroicons/react/outline';
+import { Image } from '@shared/image';
 import React, { FunctionComponent, useCallback, useState } from 'react';
-import { Image } from '../../../../shared/image';
-import { formatDimensions, formatFileSize } from '../../../image/image.utils';
-import { Button, ButtonVariant } from '../../../shared/components/button';
-import { showDialog } from '../../../shared/components/dialog';
-import { Img } from '../../../shared/components/image';
-import { classNames } from '../../../shared/ui/ui.utils';
 import { ImageDialog } from './image-dialog';
 
 interface ImageInputProps {

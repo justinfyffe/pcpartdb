@@ -1,7 +1,7 @@
+import { Image } from '@shared/image';
+import { Product } from '@shared/product';
 import Head from 'next/head';
 import React, { FunctionComponent } from 'react';
-import { Image } from '../../../shared/image';
-import { Product } from '../../../shared/product';
 import { ImageCache } from './image-cache';
 import { ProductCache } from './product-cache';
 

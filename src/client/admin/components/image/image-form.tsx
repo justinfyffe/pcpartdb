@@ -1,5 +1,29 @@
+import {
+  formatDimensions,
+  formatFileSize,
+  getImageMeta,
+  imageService,
+} from '@client/image';
+import {
+  Alert,
+  AlertVariant,
+  Button,
+  ButtonVariant,
+  Field,
+  FieldError,
+  FieldHint,
+  FieldOptional,
+  File,
+  Form,
+  FormActions,
+  Spinner,
+  TextInput,
+} from '@client/shared/components';
+import { isBadRequestError, setValidationErrors } from '@client/shared/error';
 import Joi from '@hapi/joi';
 import { joiResolver } from '@hookform/resolvers/joi';
+import { ApiError, ValidationErrorType } from '@shared/error';
+import { Image, ImageMeta, ImageRequest } from '@shared/image';
 import { useRouter } from 'next/router';
 import React, {
   FunctionComponent,
@@ -14,30 +38,6 @@ import {
   useForm,
   UseFormProps,
 } from 'react-hook-form';
-import { ApiError, ValidationErrorType } from '../../../../shared/error';
-import { Image, ImageMeta, ImageRequest } from '../../../../shared/image';
-import { imageService } from '../../../image/image.service';
-import {
-  formatDimensions,
-  formatFileSize,
-  getImageMeta,
-} from '../../../image/image.utils';
-import { Alert, AlertVariant } from '../../../shared/components/alert';
-import { Button, ButtonVariant } from '../../../shared/components/button';
-import {
-  Field,
-  FieldError,
-  FieldHint,
-  FieldOptional,
-} from '../../../shared/components/field';
-import { File } from '../../../shared/components/file';
-import { Form, FormActions } from '../../../shared/components/form';
-import { TextInput } from '../../../shared/components/input';
-import { Spinner } from '../../../shared/components/spinner';
-import {
-  isBadRequestError,
-  setValidationErrors,
-} from '../../../shared/error/error.utils';
 
 interface ImageFormData {
   path: string;

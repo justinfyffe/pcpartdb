@@ -1,15 +1,19 @@
 import { DesktopComputerIcon, SearchIcon } from '@heroicons/react/outline';
 import { HeartIcon } from '@heroicons/react/solid';
 import React, { FunctionComponent } from 'react';
-import { Button, ButtonVariant } from '../../components/button';
 import {
+  Button,
+  ButtonVariant,
   Footer,
   FooterSection,
   FooterSectionTitle,
-} from '../../components/footer';
-import { List, ListItem } from '../../components/list';
-import { Toolbar, ToolbarNav, ToolbarTitle } from '../../components/toolbar';
-import { classNames } from '../../ui/ui.utils';
+  List,
+  ListItem,
+  Toolbar,
+  ToolbarNav,
+  ToolbarTitle,
+} from '../../components';
+import { classNames } from '../../ui';
 
 interface WebsiteLayoutProps {
   className?: string;

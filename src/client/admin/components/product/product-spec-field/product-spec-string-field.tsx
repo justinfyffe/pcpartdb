@@ -1,9 +1,6 @@
+import { TextInput } from '@client/shared/components';
+import { ProductSpecKey, ProductSpecRequest } from '@shared/product-spec';
 import React, { forwardRef, useCallback } from 'react';
-import {
-  ProductSpecKey,
-  ProductSpecRequest,
-} from '../../../../../shared/product-spec';
-import { TextInput } from '../../../../shared/components/input';
 
 interface ProductSpecStringFieldProps {
   field: ProductSpecKey;

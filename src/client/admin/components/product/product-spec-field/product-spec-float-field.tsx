@@ -1,9 +1,6 @@
+import { NumberInput } from '@client/shared/components';
+import { ProductSpecKey, ProductSpecRequest } from '@shared/product-spec';
 import React, { forwardRef, useCallback, useMemo, useState } from 'react';
-import {
-  ProductSpecKey,
-  ProductSpecRequest,
-} from '../../../../../shared/product-spec';
-import { NumberInput } from '../../../../shared/components/input';
 
 const SUFFIXES: { [key: string]: string[] } = {
   [ProductSpecKey.LaunchPrice]: ['USD'],

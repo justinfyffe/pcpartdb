@@ -1,7 +1,7 @@
+import { Button, ButtonVariant } from '@client/shared/components';
 import { XIcon } from '@heroicons/react/outline';
+import { ProductBenchmarkRequest } from '@shared/product-benchmark';
 import React, { FunctionComponent, useCallback } from 'react';
-import { ProductBenchmarkRequest } from '../../../../../shared/product-benchmark';
-import { Button, ButtonVariant } from '../../../../shared/components/button';
 import { ProductBenchmarkField } from './product-benchmark-field';
 
 interface ProductBenchmarkFieldsProps {

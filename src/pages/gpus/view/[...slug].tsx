@@ -1,3 +1,3 @@
-import { ViewGpuPage } from '../../../client/product';
+import { ViewGpuPage } from '@client/product';
 
 export default ViewGpuPage;

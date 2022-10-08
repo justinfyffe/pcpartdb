@@ -1,9 +1,6 @@
+import { DateInput } from '@client/shared/components';
+import { ProductSpecKey, ProductSpecRequest } from '@shared/product-spec';
 import React, { forwardRef, useCallback } from 'react';
-import {
-  ProductSpecKey,
-  ProductSpecRequest,
-} from '../../../../../shared/product-spec';
-import { DateInput } from '../../../../shared/components/input';
 
 interface ProductSpecDateFieldProps {
   field: ProductSpecKey;

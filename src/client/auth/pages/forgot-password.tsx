@@ -1,23 +1,30 @@
 import 'reflect-metadata';
-import Joi from '@hapi/joi';
-import { joiResolver } from '@hookform/resolvers/joi';
-import React, { useCallback, useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
-import { ApiError, ValidationErrorType } from '../../../shared/error';
-import { EMAIL_MAX_LENGTH } from '../../../shared/user';
-import { Alert, AlertVariant } from '../../shared/components/alert';
-import { Article, ArticleHeader } from '../../shared/components/article';
-import { Button, ButtonVariant } from '../../shared/components/button';
-import { Field, FieldError } from '../../shared/components/field';
-import { Form, FormActions } from '../../shared/components/form';
-import { TextInput } from '../../shared/components/input';
-import { Spinner } from '../../shared/components/spinner';
+import {
+  Alert,
+  AlertVariant,
+  Article,
+  ArticleHeader,
+  Button,
+  ButtonVariant,
+  Field,
+  FieldError,
+  Form,
+  FormActions,
+  Spinner,
+  TextInput,
+} from '@client/shared/components';
 import {
   isInternalServerError,
   setValidationErrors,
-} from '../../shared/error/error.utils';
-import { WebsiteLayout } from '../../shared/layouts/website';
-import { userService } from '../../user/user.service';
+} from '@client/shared/error';
+import { WebsiteLayout } from '@client/shared/layouts';
+import { userService } from '@client/user';
+import Joi from '@hapi/joi';
+import { joiResolver } from '@hookform/resolvers/joi';
+import { ApiError, ValidationErrorType } from '@shared/error';
+import { EMAIL_MAX_LENGTH } from '@shared/user';
+import React, { useCallback, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { withGuestGuard } from '../with-guest-guard';
 
 interface RequestPasswordResetFormData {

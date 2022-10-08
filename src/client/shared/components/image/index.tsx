@@ -1,7 +1,7 @@
+import { getImageUrl } from '@client/image';
+import { Image } from '@shared/image';
 import React, { FunctionComponent, HTMLProps } from 'react';
-import { Image } from '../../../../shared/image';
-import { getImageUrl } from '../../../image/image.utils';
-import { classNames } from '../../ui/ui.utils';
+import { classNames } from '../../ui';
 
 export interface ImgProps
   extends Omit<HTMLProps<HTMLImageElement>, 'src' | 'crossOrigin'> {

@@ -1,3 +1,3 @@
-import { AdminNewCpuPage } from '../../../client/admin';
+import { AdminNewCpuPage } from '@client/admin';
 
 export default AdminNewCpuPage;

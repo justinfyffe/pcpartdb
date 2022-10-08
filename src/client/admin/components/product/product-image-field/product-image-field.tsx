@@ -1,11 +1,8 @@
+import { ImageCache } from '@client/shared/cache';
+import { classNames } from '@client/shared/ui';
+import { Image } from '@shared/image';
+import { ProductImageRequest, ProductImageType } from '@shared/product-image';
 import React, { FunctionComponent, useCallback, useState } from 'react';
-import { Image } from '../../../../../shared/image';
-import {
-  ProductImageRequest,
-  ProductImageType,
-} from '../../../../../shared/product-image';
-import { ImageCache } from '../../../../shared/cache';
-import { classNames } from '../../../../shared/ui/ui.utils';
 import { ImageInput } from '../../image';
 
 interface ProductImageFieldProps {

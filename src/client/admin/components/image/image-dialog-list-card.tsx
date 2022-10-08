@@ -1,9 +1,7 @@
+import { formatDimensions, formatFileSize } from '@client/image';
+import { Card, CardContent, Img, TextInput } from '@client/shared/components';
+import { Image } from '@shared/image';
 import React, { FunctionComponent, useCallback } from 'react';
-import { Image } from '../../../../shared/image';
-import { formatDimensions, formatFileSize } from '../../../image/image.utils';
-import { Card, CardContent } from '../../../shared/components/card';
-import { Img } from '../../../shared/components/image';
-import { TextInput } from '../../../shared/components/input';
 
 interface ImageDialogListCardProps {
   image: Image;

@@ -1,7 +1,7 @@
+import { Button, ButtonVariant } from '@client/shared/components';
 import { XIcon } from '@heroicons/react/outline';
+import { ProductReviewRequest } from '@shared/product-review';
 import React, { FunctionComponent, useCallback } from 'react';
-import { ProductReviewRequest } from '../../../../../shared/product-review';
-import { Button, ButtonVariant } from '../../../../shared/components/button';
 import { ProductReviewField } from './product-review-field';
 
 interface ProductReviewFieldsProps {

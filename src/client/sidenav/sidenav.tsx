@@ -1,5 +1,5 @@
+import { classNames } from '@client/shared/ui';
 import React, { FunctionComponent } from 'react';
-import { classNames } from '../shared/ui/ui.utils';
 
 interface SidenavProps {
   as?: React.ElementType;

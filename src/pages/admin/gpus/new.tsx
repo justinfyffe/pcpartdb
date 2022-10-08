@@ -1,3 +1,3 @@
-import { AdminNewGpuPage } from '../../../client/admin';
+import { AdminNewGpuPage } from '@client/admin';
 
 export default AdminNewGpuPage;

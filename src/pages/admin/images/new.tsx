@@ -1,3 +1,3 @@
-import { AdminNewImagePage } from '../../../client/admin';
+import { AdminNewImagePage } from '@client/admin';
 
 export default AdminNewImagePage;

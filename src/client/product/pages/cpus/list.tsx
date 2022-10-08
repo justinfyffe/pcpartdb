@@ -1,18 +1,19 @@
-import { DesktopComputerIcon, PlusCircleIcon } from '@heroicons/react/outline';
-import { NextPageContext } from 'next';
-import React from 'react';
-import { Button, ButtonVariant } from '../../../shared/components/button';
 import {
+  Button,
+  ButtonVariant,
   Card,
   CardActions,
   CardContent,
   CardImage,
   CardTitle,
-} from '../../../shared/components/card';
-import { TextInput } from '../../../shared/components/input';
-import { SectionHeader } from '../../../shared/components/section-header';
-import { WebsiteLayout } from '../../../shared/layouts/website';
-import { classNames } from '../../../shared/ui/ui.utils';
+  SectionHeader,
+  TextInput,
+} from '@client/shared/components';
+import { WebsiteLayout } from '@client/shared/layouts';
+import { classNames } from '@client/shared/ui';
+import { DesktopComputerIcon, PlusCircleIcon } from '@heroicons/react/outline';
+import { NextPageContext } from 'next';
+import React from 'react';
 
 interface ListCpusPageProps {}
 

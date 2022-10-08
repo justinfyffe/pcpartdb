@@ -1,9 +1,6 @@
+import { Textarea } from '@client/shared/components';
+import { ProductSpecKey, ProductSpecRequest } from '@shared/product-spec';
 import React, { forwardRef, useCallback } from 'react';
-import {
-  ProductSpecKey,
-  ProductSpecRequest,
-} from '../../../../../shared/product-spec';
-import { Textarea } from '../../../../shared/components/textarea';
 
 interface ProductSpecTextFieldProps {
   field: ProductSpecKey;

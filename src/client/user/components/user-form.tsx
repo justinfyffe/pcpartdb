@@ -1,5 +1,29 @@
+import {
+  Alert,
+  AlertVariant,
+  Button,
+  ButtonVariant,
+  Checkbox,
+  Field,
+  FieldError,
+  FieldHint,
+  FieldOptional,
+  Form,
+  FormActions,
+  PasswordInput,
+  Spinner,
+  TextInput,
+} from '@client/shared/components';
+import { isBadRequestError, setValidationErrors } from '@client/shared/error';
 import Joi from '@hapi/joi';
 import { joiResolver } from '@hookform/resolvers/joi';
+import { ApiError, ValidationErrorType } from '@shared/error';
+import {
+  EMAIL_MAX_LENGTH,
+  PASSWORD_MAX_LENGTH,
+  PASSWORD_MIN_LENGTH,
+  User,
+} from '@shared/user';
 import { useRouter } from 'next/router';
 import React, {
   FunctionComponent,
@@ -8,30 +32,7 @@ import React, {
   useState,
 } from 'react';
 import { Controller, useForm, UseFormProps } from 'react-hook-form';
-import { ApiError, ValidationErrorType } from '../../../shared/error';
-import {
-  EMAIL_MAX_LENGTH,
-  PASSWORD_MAX_LENGTH,
-  PASSWORD_MIN_LENGTH,
-  User,
-} from '../../../shared/user';
-import { Alert, AlertVariant } from '../../shared/components/alert';
-import { Button, ButtonVariant } from '../../shared/components/button';
-import { Checkbox } from '../../shared/components/checkbox';
-import {
-  Field,
-  FieldError,
-  FieldHint,
-  FieldOptional,
-} from '../../shared/components/field';
-import { Form, FormActions } from '../../shared/components/form';
-import { PasswordInput, TextInput } from '../../shared/components/input';
-import { Spinner } from '../../shared/components/spinner';
-import {
-  isBadRequestError,
-  setValidationErrors,
-} from '../../shared/error/error.utils';
-import { userService } from '../user.service';
+import { userService } from '../user-service';
 
 interface UserFormData {
   email: string;

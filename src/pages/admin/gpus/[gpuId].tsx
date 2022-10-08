@@ -1,2 +1,3 @@
-import { AdminEditGpuPage } from '../../../client/admin';
+import { AdminEditGpuPage } from '@client/admin';
+
 export default AdminEditGpuPage;

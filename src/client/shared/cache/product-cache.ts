@@ -1,5 +1,5 @@
-import { Product } from '../../../shared/product';
-import { ProductImage } from '../../../shared/product-image';
+import { Product } from '@shared/product';
+import { ProductImage } from '@shared/product-image';
 import { ImageCache } from './image-cache';
 
 class ProductCacheImpl {

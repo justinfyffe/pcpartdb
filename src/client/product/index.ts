@@ -1,3 +1,3 @@
 export * from './components';
 export * from './pages';
-export * from './product.service';
+export * from './product-service';

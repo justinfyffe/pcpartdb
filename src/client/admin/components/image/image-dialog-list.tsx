@@ -1,12 +1,12 @@
+import { imageService } from '@client/image';
+import { Spinner } from '@client/shared/components';
+import { Image } from '@shared/image';
 import React, {
   FunctionComponent,
   useCallback,
   useEffect,
   useState,
 } from 'react';
-import { Image } from '../../../../shared/image';
-import { imageService } from '../../../image/image.service';
-import { Spinner } from '../../../shared/components/spinner';
 import { ImageDialogListCard } from './image-dialog-list-card';
 
 interface ImageDialogListProps {

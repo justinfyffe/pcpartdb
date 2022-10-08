@@ -1,12 +1,16 @@
 import 'reflect-metadata';
+import { withStaffGuard } from '@client/auth';
+import { imageService } from '@client/image';
+import {
+  Article,
+  ArticleHeader,
+  Button,
+  ButtonVariant,
+} from '@client/shared/components';
+import { AdminLayout } from '@client/shared/layouts';
+import { Image } from '@shared/image';
 import { NextPageContext } from 'next';
 import React from 'react';
-import { Image } from '../../../../shared/image';
-import { withStaffGuard } from '../../../auth/with-staff-guard';
-import { imageService } from '../../../image/image.service';
-import { Article, ArticleHeader } from '../../../shared/components/article';
-import { Button, ButtonVariant } from '../../../shared/components/button';
-import { AdminLayout } from '../../../shared/layouts/admin';
 import { ImageForm } from '../../components';
 
 interface EditImagePageProps {

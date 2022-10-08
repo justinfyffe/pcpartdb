@@ -1,13 +1,16 @@
 import 'reflect-metadata';
+import { withStaffGuard } from '@client/auth';
+import {
+  Article,
+  ArticleHeader,
+  Button,
+  ButtonVariant,
+} from '@client/shared/components';
+import { AdminLayout } from '@client/shared/layouts';
+import { UserForm, userService } from '@client/user';
+import { User } from '@shared/user';
 import { NextPageContext } from 'next';
 import React from 'react';
-import { User } from '../../../../shared/user';
-import { withStaffGuard } from '../../../auth/with-staff-guard';
-import { Article, ArticleHeader } from '../../../shared/components/article';
-import { Button, ButtonVariant } from '../../../shared/components/button';
-import { AdminLayout } from '../../../shared/layouts/admin';
-import { UserForm } from '../../../user/components/user-form';
-import { userService } from '../../../user/user.service';
 
 export interface EditUserPageProps {
   user: User;

@@ -1,29 +1,33 @@
 import 'reflect-metadata';
+import {
+  Alert,
+  AlertVariant,
+  Article,
+  ArticleHeader,
+  Button,
+  ButtonVariant,
+  Field,
+  FieldError,
+  FieldOptional,
+  Form,
+  FormActions,
+  Spinner,
+  Textarea,
+  TextInput,
+} from '@client/shared/components';
+import { WebsiteLayout } from '@client/shared/layouts';
 import Joi from '@hapi/joi';
 import { joiResolver } from '@hookform/resolvers/joi';
-import React, { useCallback, useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
 import {
   EMAIL_MAX_LENGTH,
   MESSAGE_MAX_LENGTH,
   NAME_MAX_LENGTH,
   SUBJECT_MAX_LENGTH,
-} from '../../../shared/contact';
-import { ValidationErrorType } from '../../../shared/error';
-import { Alert, AlertVariant } from '../../shared/components/alert';
-import { Article, ArticleHeader } from '../../shared/components/article';
-import { Button, ButtonVariant } from '../../shared/components/button';
-import {
-  Field,
-  FieldError,
-  FieldOptional,
-} from '../../shared/components/field';
-import { Form, FormActions } from '../../shared/components/form';
-import { TextInput } from '../../shared/components/input';
-import { Spinner } from '../../shared/components/spinner';
-import { Textarea } from '../../shared/components/textarea';
-import { WebsiteLayout } from '../../shared/layouts/website';
-import { contactService } from '../contact.service';
+} from '@shared/contact';
+import { ValidationErrorType } from '@shared/error';
+import React, { useCallback, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { contactService } from '../contact-service';
 
 interface ContactFormData {
   name: string;

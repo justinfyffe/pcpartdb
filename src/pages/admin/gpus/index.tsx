@@ -1,3 +1,3 @@
-import { AdminListGpusPage } from '../../../client/admin';
+import { AdminListGpusPage } from '@client/admin';
 
 export default AdminListGpusPage;

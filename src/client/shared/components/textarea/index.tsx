@@ -1,5 +1,5 @@
 import React, { ChangeEvent, forwardRef, useCallback, useState } from 'react';
-import { classNames } from '../../ui/ui.utils';
+import { classNames } from '../../ui';
 
 interface TextareaProps {
   value?: string;

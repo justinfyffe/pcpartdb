@@ -1,3 +1,7 @@
+import { ProductCache } from '@client/shared/cache';
+import { Button, ButtonVariant, Form } from '@client/shared/components';
+import { classNames } from '@client/shared/ui';
+import { ProductType } from '@shared/product';
 import { useRouter } from 'next/router';
 import React, {
   FormEvent,
@@ -5,11 +9,6 @@ import React, {
   useCallback,
   useState,
 } from 'react';
-import { ProductType } from '../../../../shared/product';
-import { ProductCache } from '../../../shared/cache';
-import { Button, ButtonVariant } from '../../../shared/components/button';
-import { Form } from '../../../shared/components/form';
-import { classNames } from '../../../shared/ui/ui.utils';
 import { ProductAutocomplete } from '../product-autocomplete';
 
 interface CompareProductsFormProps {

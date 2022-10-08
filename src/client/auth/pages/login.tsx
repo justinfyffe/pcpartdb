@@ -1,26 +1,31 @@
 import 'reflect-metadata';
+import {
+  Alert,
+  AlertVariant,
+  Article,
+  ArticleHeader,
+  Button,
+  ButtonVariant,
+  Checkbox,
+  Field,
+  FieldError,
+  Form,
+  FormActions,
+  PasswordInput,
+  Spinner,
+  TextInput,
+} from '@client/shared/components';
+import { isForbiddenError, setValidationErrors } from '@client/shared/error';
+import { WebsiteLayout } from '@client/shared/layouts';
 import Joi from '@hapi/joi';
 import { joiResolver } from '@hookform/resolvers/joi';
+import { ApiError, ValidationErrorType } from '@shared/error';
+import { EMAIL_MAX_LENGTH, PASSWORD_MAX_LENGTH } from '@shared/user';
 import { useRouter } from 'next/dist/client/router';
 import React, { FunctionComponent, useCallback, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { ApiError, ValidationErrorType } from '../../../shared/error';
-import { EMAIL_MAX_LENGTH, PASSWORD_MAX_LENGTH } from '../../../shared/user';
-import { authService } from '../../auth/auth.service';
-import { withGuestGuard } from '../../auth/with-guest-guard';
-import { Alert, AlertVariant } from '../../shared/components/alert';
-import { Article, ArticleHeader } from '../../shared/components/article';
-import { Button, ButtonVariant } from '../../shared/components/button';
-import { Checkbox } from '../../shared/components/checkbox';
-import { Field, FieldError } from '../../shared/components/field';
-import { Form, FormActions } from '../../shared/components/form';
-import { PasswordInput, TextInput } from '../../shared/components/input';
-import { Spinner } from '../../shared/components/spinner';
-import {
-  isForbiddenError,
-  setValidationErrors,
-} from '../../shared/error/error.utils';
-import { WebsiteLayout } from '../../shared/layouts/website';
+import { authService } from '../auth-service';
+import { withGuestGuard } from '../with-guest-guard';
 
 interface LoginFormData {
   email: string;

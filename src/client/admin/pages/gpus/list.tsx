@@ -1,21 +1,24 @@
 import 'reflect-metadata';
-import { useRouter } from 'next/router';
-import React, { useState } from 'react';
-import { Product } from '../../../../shared/product';
-import { withStaffGuard } from '../../../auth/with-staff-guard';
-import { productService } from '../../../product/product.service';
-import { Alert, AlertVariant } from '../../../shared/components/alert';
-import { Article, ArticleHeader } from '../../../shared/components/article';
-import { Button, ButtonVariant } from '../../../shared/components/button';
+import { withStaffGuard } from '@client/auth';
+import { productService } from '@client/product';
 import {
+  Alert,
+  AlertVariant,
+  Article,
+  ArticleHeader,
+  Button,
+  ButtonVariant,
   Table,
   TBody,
   Td,
   Th,
   THead,
   Tr,
-} from '../../../shared/components/table';
-import { AdminLayout } from '../../../shared/layouts/admin';
+} from '@client/shared/components';
+import { AdminLayout } from '@client/shared/layouts';
+import { Product } from '@shared/product';
+import { useRouter } from 'next/router';
+import React, { useState } from 'react';
 
 interface ListGpusPageProps {
   gpus: Product[];

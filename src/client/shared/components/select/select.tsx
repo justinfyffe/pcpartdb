@@ -8,7 +8,7 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import { classNames } from '../../ui/ui.utils';
+import { classNames } from '../../ui';
 import { Checkbox } from '../checkbox';
 import { SelectOptionProps } from './select-option';
 

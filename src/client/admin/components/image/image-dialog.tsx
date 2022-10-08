@@ -1,7 +1,6 @@
+import { Button, ButtonVariant, closeDialog } from '@client/shared/components';
+import { Image } from '@shared/image';
 import React, { FunctionComponent, useCallback, useState } from 'react';
-import { Image } from '../../../../shared/image';
-import { Button, ButtonVariant } from '../../../shared/components/button';
-import { closeDialog } from '../../../shared/components/dialog';
 import { ImageDialogList } from './image-dialog-list';
 import { ImageForm } from './image-form';
 

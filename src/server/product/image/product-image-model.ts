@@ -1,0 +1,53 @@
+import { ImageModel } from '@server/images/image-model';
+import { Serializable } from '@server/shared/types/serialize';
+import {
+  ProductImage,
+  ProductImageMetadata,
+  ProductImageType,
+} from '@shared/product-image';
+import { Model, PartialModelObject } from 'objection';
+
+export class ProductImageModel
+  extends Model
+  implements Serializable<ProductImage>
+{
+  static tableName = 'product_images';
+
+  // Fields
+  id!: number;
+
+  productId!: number;
+  type!: ProductImageType;
+  imageId!: number;
+
+  metadata: ProductImageMetadata;
+
+  // Relations
+  image?: ImageModel;
+
+  static relationMappings = {
+    image: {
+      relation: Model.BelongsToOneRelation,
+      modelClass: ImageModel,
+      join: {
+        from: 'product_images.imageId',
+        to: 'images.id',
+      },
+    },
+  };
+
+  serialize(): ProductImage {
+    return {
+      type: this.type,
+      imageId: this.imageId,
+      metadata: this.metadata,
+
+      image: this.image?.serialize(),
+    };
+  }
+}
+
+export type ProductImageModelPojo = Omit<
+  PartialModelObject<ProductImageModel>,
+  'image'
+>;

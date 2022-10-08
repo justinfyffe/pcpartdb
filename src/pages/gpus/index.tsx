@@ -1,3 +1,3 @@
-import { ListGpusPage } from '../../client/product';
+import { ListGpusPage } from '@client/product';
 
 export default ListGpusPage;

@@ -1,3 +1,3 @@
-import { AdminListUsersPage } from '../../../client/admin';
+import { AdminListUsersPage } from '@client/admin';
 
 export default AdminListUsersPage;

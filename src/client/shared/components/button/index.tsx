@@ -1,5 +1,5 @@
 import React, { FunctionComponent, HTMLProps } from 'react';
-import { classNames } from '../../ui/ui.utils';
+import { classNames } from '../../ui';
 
 export enum ButtonVariant {
   None = 'none',

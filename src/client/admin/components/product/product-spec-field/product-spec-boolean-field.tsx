@@ -1,13 +1,6 @@
+import { Select, SelectOption, SelectValue } from '@client/shared/components';
+import { ProductSpecKey, ProductSpecRequest } from '@shared/product-spec';
 import React, { forwardRef, useCallback } from 'react';
-import {
-  ProductSpecKey,
-  ProductSpecRequest,
-} from '../../../../../shared/product-spec';
-import {
-  Select,
-  SelectOption,
-  SelectValue,
-} from '../../../../shared/components/select';
 
 interface ProductSpecStringFieldProps {
   field: ProductSpecKey;

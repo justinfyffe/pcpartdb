@@ -1,14 +1,11 @@
+import { Button, ButtonVariant } from '@client/shared/components';
 import {
   ChevronDownIcon,
   ChevronUpIcon,
   XIcon,
 } from '@heroicons/react/outline';
+import { ProductImageRequest, ProductImageType } from '@shared/product-image';
 import React, { FunctionComponent, useCallback } from 'react';
-import {
-  ProductImageRequest,
-  ProductImageType,
-} from '../../../../../shared/product-image';
-import { Button, ButtonVariant } from '../../../../shared/components/button';
 import { ProductImageField } from './product-image-field';
 
 interface ProductImageFieldsProps {

@@ -1,4 +1,23 @@
 import {
+  Article,
+  ArticleHeader,
+  Breadcrumb,
+  Breadcrumbs,
+  Button,
+  ButtonVariant,
+  Table,
+  TBody,
+  Td,
+  Tr,
+} from '@client/shared/components';
+import { WebsiteLayout } from '@client/shared/layouts';
+import { classNames } from '@client/shared/ui';
+import {
+  Sidenav,
+  SidenavPopularComparisons,
+  SidenavPopularProducts,
+} from '@client/sidenav';
+import {
   CalendarIcon,
   ChipIcon,
   ClockIcon,
@@ -7,37 +26,19 @@ import {
   StarIcon,
   TableIcon,
 } from '@heroicons/react/outline';
-import { NextPageContext } from 'next';
-import React, { useMemo } from 'react';
 import {
   getProductBenchmarks,
   getProductReviews,
   getProductSpecs,
   Product,
-} from '../../../../shared/product';
-import { ProductBenchmarkKey } from '../../../../shared/product-benchmark';
-import { ProductReviewKey } from '../../../../shared/product-review';
-import {
-  formatProductSpec,
-  ProductSpecKey,
-} from '../../../../shared/product-spec';
-import { CompareProductsForm } from '../../../product/components/compare-products-form';
-import { productService } from '../../../product/product.service';
-import { Article, ArticleHeader } from '../../../shared/components/article';
-import {
-  Breadcrumb,
-  Breadcrumbs,
-} from '../../../shared/components/breadcrumbs';
-import { Button, ButtonVariant } from '../../../shared/components/button';
-import { Table, TBody, Td, Tr } from '../../../shared/components/table';
-import { WebsiteLayout } from '../../../shared/layouts/website';
-import { classNames } from '../../../shared/ui/ui.utils';
-import {
-  Sidenav,
-  SidenavPopularComparisons,
-  SidenavPopularProducts,
-} from '../../../sidenav';
-import { ProductImage } from '../../components';
+} from '@shared/product';
+import { ProductBenchmarkKey } from '@shared/product-benchmark';
+import { ProductReviewKey } from '@shared/product-review';
+import { formatProductSpec, ProductSpecKey } from '@shared/product-spec';
+import { NextPageContext } from 'next';
+import React, { useMemo } from 'react';
+import { CompareProductsForm, ProductImage } from '../../components';
+import { productService } from '../../product-service';
 
 interface ViewGpuPageProps {
   gpu: Product;

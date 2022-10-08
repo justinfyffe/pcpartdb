@@ -6,7 +6,7 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { ApiErrorType, ValidationPropertyError } from '../../../shared/error';
+import { ApiErrorType, ValidationPropertyError } from '@shared/error';
 
 export function joiValidationError(error: ValidationError) {
   const errors: ValidationPropertyError[] = [];

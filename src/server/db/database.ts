@@ -56,8 +56,10 @@ export function openDatabase() {
     return db;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   if (process.env.NODE_ENV === 'development' && (global as any).db != null) {
     // Prevent hotloading from causing too many clients error.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     db = (global as any).db;
   } else {
     const host = POSTGRES_HOST;
@@ -72,6 +74,7 @@ export function openDatabase() {
       connection: { host, port, user, password, database },
       ...knexSnakeCaseMappers(),
     });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (global as any).db = db;
   }
 

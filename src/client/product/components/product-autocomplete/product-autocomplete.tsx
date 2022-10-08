@@ -1,13 +1,13 @@
-import React, { forwardRef, useCallback, useEffect, useState } from 'react';
-import { Product, ProductType } from '../../../../shared/product';
-import { ProductCache } from '../../../shared/cache';
+import { ProductCache } from '@client/shared/cache';
 import {
   Autocomplete,
   AutocompleteOption,
-} from '../../../shared/components/autocomplete';
-import { Img } from '../../../shared/components/image';
-import { classNames } from '../../../shared/ui/ui.utils';
-import { productService } from '../../product.service';
+  Img,
+} from '@client/shared/components';
+import { classNames } from '@client/shared/ui';
+import { Product, ProductType } from '@shared/product';
+import React, { forwardRef, useCallback, useEffect, useState } from 'react';
+import { productService } from '../../product-service';
 
 interface ProductAutocompleteProps {
   productType: ProductType;

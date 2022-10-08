@@ -1,6 +1,6 @@
+import { Img } from '@client/shared/components';
+import { classNames } from '@client/shared/ui';
 import React, { FunctionComponent } from 'react';
-import { Img } from '../shared/components/image';
-import { classNames } from '../shared/ui/ui.utils';
 import { SidenavSection, SidenavSectionTitle } from './sidenav';
 
 interface SidenavPopularProductsProps {

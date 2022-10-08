@@ -1,3 +1,3 @@
-import { AdminListImagesPage } from '../../../client/admin';
+import { AdminListImagesPage } from '@client/admin';
 
 export default AdminListImagesPage;

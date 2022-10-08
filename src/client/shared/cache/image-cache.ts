@@ -1,4 +1,4 @@
-import { Image } from '../../../shared/image';
+import { Image } from '@shared/image';
 
 class ImageCacheImpl {
   private cache = new Map<number, Image>();

@@ -1,21 +1,21 @@
+import {
+  Field,
+  Select,
+  SelectOption,
+  SelectValue,
+  TextInput,
+} from '@client/shared/components';
+import { classNames } from '@client/shared/ui';
+import {
+  ProductBenchmarkKey,
+  ProductBenchmarkRequest,
+} from '@shared/product-benchmark';
 import React, {
   FunctionComponent,
   useCallback,
   useEffect,
   useState,
 } from 'react';
-import {
-  ProductBenchmarkKey,
-  ProductBenchmarkRequest,
-} from '../../../../../shared/product-benchmark';
-import { Field } from '../../../../shared/components/field';
-import { TextInput } from '../../../../shared/components/input';
-import {
-  Select,
-  SelectOption,
-  SelectValue,
-} from '../../../../shared/components/select';
-import { classNames } from '../../../../shared/ui/ui.utils';
 
 interface ProductBenchmarkFieldProps {
   benchmarkKey?: ProductBenchmarkKey;

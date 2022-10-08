@@ -1,6 +1,6 @@
+import { Seo as SeoDto } from '@shared/seo';
 import Head from 'next/head';
 import React, { FunctionComponent } from 'react';
-import { Seo as SeoDto } from '../../../../shared/seo';
 
 export interface SeoProps {
   seo?: SeoDto;

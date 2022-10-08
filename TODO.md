@@ -1,5 +1,6 @@
 Immediate Tasks:
-- use @shared, @client, @server
+- cleanup pages/components
+  - place relevant ones next to each other?
 - home page
   - remove most to it. just a search and small text of popular gpus and comparisons
 - add product image fields to gpu form

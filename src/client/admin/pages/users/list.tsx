@@ -1,23 +1,26 @@
 import 'reflect-metadata';
-import { format } from 'date-fns';
-import { NextPageContext } from 'next';
-import { useRouter } from 'next/router';
-import React, { useState } from 'react';
-import { User } from '../../../../shared/user';
-import { withStaffGuard } from '../../../auth/with-staff-guard';
-import { Alert, AlertVariant } from '../../../shared/components/alert';
-import { Article, ArticleHeader } from '../../../shared/components/article';
-import { Button, ButtonVariant } from '../../../shared/components/button';
+import { withStaffGuard } from '@client/auth';
 import {
+  Alert,
+  AlertVariant,
+  Article,
+  ArticleHeader,
+  Button,
+  ButtonVariant,
   Table,
   TBody,
   Td,
   Th,
   THead,
   Tr,
-} from '../../../shared/components/table';
-import { AdminLayout } from '../../../shared/layouts/admin';
-import { userService } from '../../../user/user.service';
+} from '@client/shared/components';
+import { AdminLayout } from '@client/shared/layouts';
+import { userService } from '@client/user';
+import { User } from '@shared/user';
+import { format } from 'date-fns';
+import { NextPageContext } from 'next';
+import { useRouter } from 'next/router';
+import React, { useState } from 'react';
 
 interface ListUsersPageProps {
   users: User[];

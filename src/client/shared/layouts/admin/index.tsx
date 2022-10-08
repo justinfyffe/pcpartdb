@@ -1,10 +1,15 @@
+import { authService } from '@client/auth';
 import { DesktopComputerIcon } from '@heroicons/react/outline';
 import { useRouter } from 'next/router';
 import React, { FunctionComponent, useCallback } from 'react';
-import { authService } from '../../../auth/auth.service';
-import { Button, ButtonVariant } from '../../components/button';
-import { Toolbar, ToolbarNav, ToolbarTitle } from '../../components/toolbar';
-import { classNames } from '../../ui/ui.utils';
+import {
+  Button,
+  ButtonVariant,
+  Toolbar,
+  ToolbarNav,
+  ToolbarTitle,
+} from '../../components';
+import { classNames } from '../../ui';
 
 interface AdminLayoutProps {
   className?: string;

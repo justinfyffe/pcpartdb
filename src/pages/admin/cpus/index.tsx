@@ -1,3 +1,3 @@
-import { AdminListCpusPage } from '../../../client/admin';
+import { AdminListCpusPage } from '@client/admin';
 
 export default AdminListCpusPage;

@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useContext } from 'react';
-import { classNames } from '../../ui/ui.utils';
+import { classNames } from '../../ui';
 import { AutocompleteContext } from '.';
 
 interface AutocompleteChildProps {

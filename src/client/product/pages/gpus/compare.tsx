@@ -1,22 +1,26 @@
-import { NextPageContext } from 'next';
-import React from 'react';
-import { Product } from '../../../../shared/product';
-import { Article, ArticleHeader } from '../../../shared/components/article';
 import {
+  Article,
+  ArticleHeader,
   Breadcrumb,
   Breadcrumbs,
-} from '../../../shared/components/breadcrumbs';
-import { Table, TBody, Td, THead, Tr } from '../../../shared/components/table';
-import { WebsiteLayout } from '../../../shared/layouts/website';
-import { classNames } from '../../../shared/ui/ui.utils';
+  Table,
+  TBody,
+  Td,
+  THead,
+  Tr,
+} from '@client/shared/components';
+import { WebsiteLayout } from '@client/shared/layouts';
+import { classNames } from '@client/shared/ui';
 import {
   Sidenav,
   SidenavPopularComparisons,
   SidenavPopularProducts,
-} from '../../../sidenav';
-import { ProductImage } from '../../components';
-import { CompareProductsForm } from '../../components/compare-products-form';
-import { productService } from '../../product.service';
+} from '@client/sidenav';
+import { Product } from '@shared/product';
+import { NextPageContext } from 'next';
+import React from 'react';
+import { CompareProductsForm, ProductImage } from '../../components';
+import { productService } from '../../product-service';
 
 interface CompareGpuPageProps {
   gpus: Product[];

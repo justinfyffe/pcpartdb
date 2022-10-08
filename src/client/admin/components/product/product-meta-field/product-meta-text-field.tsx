@@ -1,9 +1,6 @@
+import { Textarea } from '@client/shared/components';
+import { ProductMetaKey, ProductMetaMetadata } from '@shared/product-meta';
 import React, { forwardRef, useCallback } from 'react';
-import {
-  ProductMetaKey,
-  ProductMetaMetadata,
-} from '../../../../../shared/product-meta';
-import { Textarea } from '../../../../shared/components/textarea';
 
 interface ProductMetaTextValue {
   key: ProductMetaKey;

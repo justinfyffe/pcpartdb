@@ -1,28 +1,31 @@
 import 'reflect-metadata';
-import { useRouter } from 'next/router';
-import React, { useState } from 'react';
-import { Image } from '../../../../shared/image';
-import { withStaffGuard } from '../../../auth/with-staff-guard';
-import { imageService } from '../../../image/image.service';
+import { withStaffGuard } from '@client/auth';
 import {
   formatDimensions,
   formatFileSize,
   getImageUrl,
-} from '../../../image/image.utils';
-import { Alert, AlertVariant } from '../../../shared/components/alert';
-import { Article, ArticleHeader } from '../../../shared/components/article';
-import { Button, ButtonVariant } from '../../../shared/components/button';
-import { Img } from '../../../shared/components/image';
-import { TextInput } from '../../../shared/components/input';
+  imageService,
+} from '@client/image';
 import {
+  Alert,
+  AlertVariant,
+  Article,
+  ArticleHeader,
+  Button,
+  ButtonVariant,
+  Img,
   Table,
   TBody,
   Td,
+  TextInput,
   Th,
   THead,
   Tr,
-} from '../../../shared/components/table';
-import { AdminLayout } from '../../../shared/layouts/admin';
+} from '@client/shared/components';
+import { AdminLayout } from '@client/shared/layouts';
+import { Image } from '@shared/image';
+import { useRouter } from 'next/router';
+import React, { useState } from 'react';
 
 interface ListImagesPageProps {
   images: Image[];

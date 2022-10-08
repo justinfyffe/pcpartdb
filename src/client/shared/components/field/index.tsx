@@ -1,6 +1,6 @@
 import React, { createContext, FunctionComponent, useState } from 'react';
 import { useGon } from '../../gon';
-import { classNames } from '../../ui/ui.utils';
+import { classNames } from '../../ui';
 
 interface FieldState {
   fieldId: string;

@@ -1,3 +1,3 @@
-import { AdminNewUserPage } from '../../../client/admin';
+import { AdminNewUserPage } from '@client/admin';
 
 export default AdminNewUserPage;

@@ -1,29 +1,34 @@
 import 'reflect-metadata';
+import {
+  Alert,
+  AlertVariant,
+  Article,
+  ArticleHeader,
+  Button,
+  ButtonVariant,
+  Field,
+  FieldError,
+  Form,
+  FormActions,
+  PasswordInput,
+  Spinner,
+  TextInput,
+} from '@client/shared/components';
+import { isBadRequestError, setValidationErrors } from '@client/shared/error';
+import { WebsiteLayout } from '@client/shared/layouts';
 import Joi from '@hapi/joi';
 import { joiResolver } from '@hookform/resolvers/joi';
-import { useRouter } from 'next/router';
-import React, { useCallback, useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
-import { ApiError, ValidationErrorType } from '../../../shared/error';
+import { ApiError, ValidationErrorType } from '@shared/error';
 import {
   EMAIL_MAX_LENGTH,
   PASSWORD_MAX_LENGTH,
   PASSWORD_MIN_LENGTH,
-} from '../../../shared/user';
-import { authService } from '../../auth/auth.service';
-import { withGuestGuard } from '../../auth/with-guest-guard';
-import { Alert, AlertVariant } from '../../shared/components/alert';
-import { Article, ArticleHeader } from '../../shared/components/article';
-import { Button, ButtonVariant } from '../../shared/components/button';
-import { Field, FieldError } from '../../shared/components/field';
-import { Form, FormActions } from '../../shared/components/form';
-import { PasswordInput, TextInput } from '../../shared/components/input';
-import { Spinner } from '../../shared/components/spinner';
-import {
-  isBadRequestError,
-  setValidationErrors,
-} from '../../shared/error/error.utils';
-import { WebsiteLayout } from '../../shared/layouts/website';
+} from '@shared/user';
+import { useRouter } from 'next/router';
+import React, { useCallback, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { authService } from '../auth-service';
+import { withGuestGuard } from '../with-guest-guard';
 
 interface RegisterFormData {
   email: string;

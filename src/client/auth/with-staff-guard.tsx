@@ -1,7 +1,7 @@
 import { NextPageContext } from 'next';
 import Router from 'next/router';
 import React, { useCallback, useEffect } from 'react';
-import { authService } from './auth.service';
+import { authService } from './auth-service';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const withStaffGuard = (Component: any) => {

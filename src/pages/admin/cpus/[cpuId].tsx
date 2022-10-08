@@ -1,3 +1,3 @@
-import { AdminEditCpuPage } from '../../../client/admin';
+import { AdminEditCpuPage } from '@client/admin';
 
 export default AdminEditCpuPage;

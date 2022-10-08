@@ -1,3 +1,4 @@
+import { ProductMetaKey, ProductMetaMetadata } from '@shared/product-meta';
 import React, {
   forwardRef,
   Ref,
@@ -5,10 +6,6 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import {
-  ProductMetaKey,
-  ProductMetaMetadata,
-} from '../../../../../shared/product-meta';
 import { ProductMetaStringField } from './product-meta-string-field';
 import { ProductMetaTextField } from './product-meta-text-field';
 

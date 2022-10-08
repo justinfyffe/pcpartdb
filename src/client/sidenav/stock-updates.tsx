@@ -1,8 +1,7 @@
+import { Button, ButtonVariant, TextInput } from '@client/shared/components';
+import { classNames } from '@client/shared/ui';
 import { InformationCircleIcon } from '@heroicons/react/outline';
 import React, { FunctionComponent } from 'react';
-import { Button, ButtonVariant } from '../shared/components/button';
-import { TextInput } from '../shared/components/input';
-import { classNames } from '../shared/ui/ui.utils';
 import { SidenavSection, SidenavSectionTitle } from './sidenav';
 
 interface SidenavStockUpdatesProps {

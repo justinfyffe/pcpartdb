@@ -5,7 +5,7 @@ import React, {
   useContext,
   useState,
 } from 'react';
-import { classNames } from '../../ui/ui.utils';
+import { classNames } from '../../ui';
 
 interface TableState {
   border: boolean;

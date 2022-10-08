@@ -1,13 +1,7 @@
+import { productService } from '@client/product';
+import { Autocomplete, AutocompleteOption } from '@client/shared/components';
+import { ProductSpecKey, ProductSpecRequest } from '@shared/product-spec';
 import React, { forwardRef, useCallback, useState } from 'react';
-import {
-  ProductSpecKey,
-  ProductSpecRequest,
-} from '../../../../../shared/product-spec';
-import { productService } from '../../../../product/product.service';
-import {
-  Autocomplete,
-  AutocompleteOption,
-} from '../../../../shared/components/autocomplete';
 
 interface ProductSpecAutocompleteFieldProps {
   field: ProductSpecKey;

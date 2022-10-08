@@ -1,3 +1,3 @@
-import { ListBuildsPage } from '../../client/build';
+import { ListBuildsPage } from '@client/build';
 
 export default ListBuildsPage;

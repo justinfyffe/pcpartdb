@@ -1,21 +1,18 @@
+import {
+  Field,
+  Select,
+  SelectOption,
+  SelectValue,
+  TextInput,
+} from '@client/shared/components';
+import { classNames } from '@client/shared/ui';
+import { ProductReviewKey, ProductReviewRequest } from '@shared/product-review';
 import React, {
   FunctionComponent,
   useCallback,
   useEffect,
   useState,
 } from 'react';
-import {
-  ProductReviewKey,
-  ProductReviewRequest,
-} from '../../../../../shared/product-review';
-import { Field } from '../../../../shared/components/field';
-import { TextInput } from '../../../../shared/components/input';
-import {
-  Select,
-  SelectOption,
-  SelectValue,
-} from '../../../../shared/components/select';
-import { classNames } from '../../../../shared/ui/ui.utils';
 
 interface ProductReviewFieldProps {
   reviewKey?: ProductReviewKey;
