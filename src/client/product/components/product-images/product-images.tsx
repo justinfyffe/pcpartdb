@@ -1,0 +1,83 @@
+import { getImageUrl } from '@client/image';
+import { Img } from '@client/shared/components';
+import { classNames } from '@client/shared/ui';
+import { getProductImages, getProductSpecs, Product } from '@shared/product';
+import { ProductImageType } from '@shared/product-image';
+import { ProductSpecKey } from '@shared/product-spec';
+import React, { FunctionComponent, useMemo, useState } from 'react';
+import { ProductImageOption } from './product-image-option';
+
+interface ProductImagesProps {
+  product: Product;
+
+  className?: string;
+}
+
+function getCompanyLogoImage(product: Product) {
+  const specs = getProductSpecs(product);
+  const company = specs[ProductSpecKey.Company]?.stringValue;
+
+  if (company == null) {
+    return null;
+  }
+
+  switch (company) {
+    case 'AMD':
+      return '/images/logos/amd.svg';
+    case 'NVIDIA':
+      return '/images/logos/nvidia.svg';
+    default:
+      return null;
+  }
+}
+
+export const ProductImages: FunctionComponent<ProductImagesProps> = (props) => {
+  const { product, className } = props;
+
+  const [selected, setSelected] = useState(0);
+
+  const images = useMemo(() => {
+    const productImages =
+      getProductImages(product)[ProductImageType.Details] ?? [];
+    const companyImage = getCompanyLogoImage(product);
+    const images = productImages
+      .filter((image) => image.image != null)
+      .map((image) => getImageUrl(image.image));
+
+    if (companyImage != null) {
+      images.push(companyImage);
+    }
+
+    return images;
+  }, [product]);
+
+  if (images.length === 0) {
+    return <></>;
+  }
+
+  console.log(images[selected]);
+
+  return (
+    <div
+      className={classNames(
+        'flex flex-wrap gap-3 mx-auto items-center justify-start w-full',
+        className,
+      )}
+    >
+      <div className="aspect-square bg-gray-50 border border-gray-200 flex items-center justify-center rounded w-full">
+        <Img className="h-auto mx-auto w-full" src={images[selected]} />
+      </div>
+
+      <div className="flex flex-wrap w-full gap-4">
+        {images.map((image, i) => (
+          <ProductImageOption
+            key={i}
+            src={image}
+            onClick={() => setSelected(i)}
+            className={selected === i ? 'border-black' : ''}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};

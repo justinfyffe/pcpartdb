@@ -28,17 +28,26 @@ import {
 } from '@heroicons/react/outline';
 import {
   getProductBenchmarks,
+  getProductMeta,
   getProductReviews,
   getProductSpecs,
   Product,
 } from '@shared/product';
 import { ProductBenchmarkKey } from '@shared/product-benchmark';
+import { ProductMetaKey, productMetaValue } from '@shared/product-meta';
 import { ProductReviewKey } from '@shared/product-review';
-import { formatProductSpec, ProductSpecKey } from '@shared/product-spec';
+import {
+  formatProductSpec,
+  MarketSegment,
+  ProductSpecKey,
+  productSpecValue,
+} from '@shared/product-spec';
 import { NextPageContext } from 'next';
 import React, { useMemo } from 'react';
-import { CompareProductsForm, ProductImage } from '../../components';
+import ReactMarkdown from 'react-markdown';
 import { productService } from '../../product-service';
+import { CompareProductsForm } from '../compare-products-form';
+import { ProductImages } from '../product-images';
 
 interface ViewGpuPageProps {
   gpu: Product;
@@ -48,6 +57,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
   const { gpu } = props;
 
   const specs = useMemo(() => getProductSpecs(gpu), [gpu]);
+  const meta = useMemo(() => getProductMeta(gpu), [gpu]);
   const reviews = useMemo(() => getProductReviews(gpu), [gpu]);
   const benchmarks = useMemo(() => getProductBenchmarks(gpu), [gpu]);
 
@@ -56,7 +66,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
       <Article className="flex flex-wrap gap-6 lg:gap-8 justify-center">
         <ArticleHeader className="flex flex-wrap w-full items-center justify-between gap-3 lg:gap-4">
           <Breadcrumbs className="mb-3">
-            <Breadcrumb href="/">Finest PC</Breadcrumb>
+            <Breadcrumb href="/">Home</Breadcrumb>
             <Breadcrumb href="/gpus">GPUs</Breadcrumb>
             <Breadcrumb>{gpu.name}</Breadcrumb>
           </Breadcrumbs>
@@ -69,7 +79,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
         <section className="flex-1 flex flex-col gap-6">
           <section className="flex flex-wrap justify-start gap-6 lg:gap-8">
             <div className="flex-1 min-w-[300px]">
-              <ProductImage />
+              <ProductImages product={gpu} />
             </div>
 
             <div className="flex-1">
@@ -269,15 +279,9 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
           </section>
 
           <section>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. A
-              iaculis at erat pellentesque adipiscing commodo elit at. Maecenas
-              sed enim ut sem viverra. Elementum sagittis vitae et leo duis ut
-              diam. In mollis nunc sed id semper risus in hendrerit. Eget sit
-              amet tellus cras adipiscing enim. Sit amet consectetur adipiscing
-              elit. Interdum velit euismod in pellentesque massa.
-            </p>
+            <ReactMarkdown>
+              {productMetaValue(meta[ProductMetaKey.Description]) as string}
+            </ReactMarkdown>
           </section>
 
           <section className="flex flex-col gap-6">
@@ -285,8 +289,8 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
               <h2 className="mb-3">General Info</h2>
 
               <p className={classNames('text-content-secondary')}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                {`${gpu.name}'s`} architecture, market segment, release date,
+                and price.
               </p>
 
               <Table border responsive>
@@ -345,8 +349,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
               <h2 className="mb-3">Reviews</h2>
 
               <p className={classNames('text-content-secondary')}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                What others are saying about {gpu.name}.
               </p>
 
               <Table border responsive>
@@ -434,8 +437,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                 <h3 className="mb-3">Processor</h3>
 
                 <p className={classNames('text-content-secondary')}>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                  {`${gpu.name}'s`} processor chip details.
                 </p>
 
                 <Table border responsive>
@@ -485,8 +487,8 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                 <h3 className="mb-3">Board Compatibility &amp; Dimensions</h3>
 
                 <p className={classNames('text-content-secondary')}>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                  {`${gpu.name}'s`} dimensions, bus interface, and power
+                  consumption.
                 </p>
 
                 <Table border responsive>
@@ -562,8 +564,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                 <h3 className="mb-3">Cores &amp; Clock Speeds</h3>
 
                 <p className={classNames('text-content-secondary')}>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                  {`${gpu.name}'s`} cores, clock speed, and cache.
                 </p>
 
                 <Table border responsive>
@@ -628,8 +629,9 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                 <h3 className="mb-3">Theoretical Performance</h3>
 
                 <p className={classNames('text-content-secondary')}>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                  {`${gpu.name}'s`} computational performance like pixel fill
+                  rate, texture fill rate, and floating-point operations per
+                  second.
                 </p>
 
                 <Table border responsive>
@@ -669,8 +671,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                 <h3 className="mb-3">Memory</h3>
 
                 <p className={classNames('text-content-secondary')}>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                  {`${gpu.name}'s`} memory size, bandwidth, and clock speeds.
                 </p>
 
                 <Table border responsive>
@@ -713,8 +714,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                 <h3 className="mb-3">Display Connectivity</h3>
 
                 <p className={classNames('text-content-secondary')}>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                  {`${gpu.name}'s`} resolution and output ports.
                 </p>
 
                 <Table border responsive>
@@ -726,46 +726,47 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                           '--'}
                       </Td>
                     </Tr>
-                    <Tr>
-                      <Td>Display Ports</Td>
-                      <Td>
-                        {specs[ProductSpecKey.DisplayPorts]?.stringValue ??
-                          '--'}
-                      </Td>
-                    </Tr>
-                    <Tr>
-                      <Td>HDMI Ports</Td>
-                      <Td>
-                        {specs[ProductSpecKey.HdmiPorts]?.stringValue ?? '--'}
-                      </Td>
-                    </Tr>
-                    <Tr>
-                      <Td>USB-C</Td>
-                      <Td>--</Td>
-                    </Tr>
-                    <Tr>
-                      <Td>Dual Link DVI</Td>
-                      <Td>--</Td>
-                    </Tr>
-                    <Tr>
-                      <Td>Single Link DVI</Td>
-                      <Td>--</Td>
-                    </Tr>
-                    <Tr>
-                      <Td>VGA</Td>
-                      <Td>--</Td>
-                    </Tr>
+                    {productSpecValue(specs[ProductSpecKey.MarketSegment]) ===
+                      MarketSegment.Desktop && (
+                      <>
+                        <Tr>
+                          <Td>Display Ports</Td>
+                          <Td>
+                            {specs[ProductSpecKey.DisplayPorts]?.stringValue ??
+                              '--'}
+                          </Td>
+                        </Tr>
+                        <Tr>
+                          <Td>HDMI Ports</Td>
+                          <Td>
+                            {specs[ProductSpecKey.HdmiPorts]?.stringValue ??
+                              '--'}
+                          </Td>
+                        </Tr>
+                        <Tr>
+                          <Td>USB-C</Td>
+                          <Td>--</Td>
+                        </Tr>
+                        <Tr>
+                          <Td>Dual Link DVI</Td>
+                          <Td>--</Td>
+                        </Tr>
+                        <Tr>
+                          <Td>Single Link DVI</Td>
+                          <Td>--</Td>
+                        </Tr>
+                        <Tr>
+                          <Td>VGA</Td>
+                          <Td>--</Td>
+                        </Tr>
+                      </>
+                    )}
                   </TBody>
                 </Table>
               </article>
 
               <article>
                 <h3 className="mb-3">API Support</h3>
-
-                <p className={classNames('text-content-secondary')}>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                </p>
 
                 <Table border responsive>
                   <TBody>
@@ -826,8 +827,8 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
               <h2 className="mb-3">Benchmarks</h2>
 
               <p className={classNames('text-content-secondary')}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                {`${gpu.name}'s`} performance and rating metrics. These identify
+                how strong the GPU performs compared to its peers.
               </p>
 
               <Table border responsive>
@@ -848,19 +849,19 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                   </Tr>
                   <Tr>
                     <Td>
-                      {benchmarks[ProductBenchmarkKey.TimeSpy]?.source !=
+                      {benchmarks[ProductBenchmarkKey.G3dMark]?.source !=
                       null ? (
                         <a
-                          href={benchmarks[ProductBenchmarkKey.TimeSpy].source}
+                          href={benchmarks[ProductBenchmarkKey.G3dMark].source}
                         >
-                          3DMark Time Spy
+                          G3D Mark
                         </a>
                       ) : (
-                        <>3DMark Time Spy</>
+                        <>G3D Mark</>
                       )}
                     </Td>
                     <Td>
-                      {benchmarks[ProductBenchmarkKey.TimeSpy]?.floatValue ??
+                      {benchmarks[ProductBenchmarkKey.G3dMark]?.floatValue ??
                         '--'}
                     </Td>
                   </Tr>

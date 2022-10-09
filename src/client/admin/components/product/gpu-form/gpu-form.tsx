@@ -1252,6 +1252,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           control={control}
           render={({ field }) => (
             <ProductBenchmarkFields
+              type={ProductType.GPU}
               fields={benchmarkFields}
               onAppend={() => appendBenchmark({})}
               onRemove={(i) => removeBenchmark(i)}

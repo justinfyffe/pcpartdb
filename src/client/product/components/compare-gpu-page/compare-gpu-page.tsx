@@ -19,8 +19,9 @@ import {
 import { Product } from '@shared/product';
 import { NextPageContext } from 'next';
 import React from 'react';
-import { CompareProductsForm, ProductImage } from '../../components';
 import { productService } from '../../product-service';
+import { CompareProductsForm } from '../compare-products-form';
+import { ProductImages } from '../product-images';
 
 interface CompareGpuPageProps {
   gpus: Product[];
@@ -54,13 +55,13 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
             <div className="flex flex-col gap-3 flex-1 min-w-[210px] max-w-[350px]">
               <h2 className="self-start text-2xl font-medium">{gpu1.name}</h2>
 
-              <ProductImage />
+              <ProductImages product={gpu1} />
             </div>
 
             <div className="flex flex-col gap-3 flex-1 min-w-[210px] max-w-[350px]">
               <h2 className="self-start text-2xl font-medium">{gpu2.name}</h2>
 
-              <ProductImage />
+              <ProductImages product={gpu2} />
             </div>
           </section>
 

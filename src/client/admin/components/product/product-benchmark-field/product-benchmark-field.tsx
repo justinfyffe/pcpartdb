@@ -6,6 +6,7 @@ import {
   TextInput,
 } from '@client/shared/components';
 import { classNames } from '@client/shared/ui';
+import { ProductType } from '@shared/product';
 import {
   ProductBenchmarkKey,
   ProductBenchmarkRequest,
@@ -14,10 +15,29 @@ import React, {
   FunctionComponent,
   useCallback,
   useEffect,
+  useMemo,
   useState,
 } from 'react';
 
+const GPU_OPTIONS = [
+  { label: 'G3D Mark', value: ProductBenchmarkKey.G3dMark },
+  { label: 'G2D Mark', value: ProductBenchmarkKey.G2dMark },
+  {
+    label: '3DMark Time Spy Graphics',
+    value: ProductBenchmarkKey.TimeSpyGraphics,
+  },
+];
+const CPU_OPTIONS = [
+  { label: 'CPU Mark', value: ProductBenchmarkKey.CpuMark },
+  { label: 'Thread Mark', value: ProductBenchmarkKey.ThreadMark },
+  {
+    label: '3D Mark Time Spy Physics',
+    value: ProductBenchmarkKey.TimeSpyPhysics,
+  },
+];
+
 interface ProductBenchmarkFieldProps {
+  type: ProductType;
   benchmarkKey?: ProductBenchmarkKey;
 
   value?: ProductBenchmarkRequest;
@@ -30,10 +50,15 @@ interface ProductBenchmarkFieldProps {
 export const ProductBenchmarkField: FunctionComponent<
   ProductBenchmarkFieldProps
 > = (props) => {
-  const { benchmarkKey, value: propsValue, onChange, className } = props;
+  const { type, benchmarkKey, value: propsValue, onChange, className } = props;
 
   const [value, setValue] = useState(propsValue ?? null);
   useEffect(() => setValue(propsValue), [propsValue]);
+
+  const options = useMemo(
+    () => (type === ProductType.GPU ? GPU_OPTIONS : CPU_OPTIONS),
+    [type],
+  );
 
   const handleKeyChange = useCallback(
     (key: SelectValue) => {
@@ -74,12 +99,15 @@ export const ProductBenchmarkField: FunctionComponent<
             onChange={handleKeyChange}
             clearable
           >
-            <SelectOption label="Passmark" value={ProductBenchmarkKey.Passmark}>
-              Passmark
-            </SelectOption>
-            <SelectOption label="TimeSpy" value={ProductBenchmarkKey.TimeSpy}>
-              3D Mark Time Spy
-            </SelectOption>
+            {options.map((option) => (
+              <SelectOption
+                key={option.value}
+                label={option.label}
+                value={option.value}
+              >
+                {option.label}
+              </SelectOption>
+            ))}
           </Select>
         )}
       </Field>

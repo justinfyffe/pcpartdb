@@ -1,5 +1,9 @@
 import { ProductBenchmark, ProductBenchmarkRequest } from './product-benchmark';
-import { ProductImage, ProductImageRequest } from './product-image';
+import {
+  ProductImage,
+  ProductImageRequest,
+  ProductImageType,
+} from './product-image';
 import { ProductMeta, ProductMetaRequest } from './product-meta';
 import { ProductReview, ProductReviewRequest } from './product-review';
 import { ProductSpec, ProductSpecRequest } from './product-spec';
@@ -92,4 +96,20 @@ export function getOrderedReviews(product: Product) {
     [];
 
   return reviews.sort((a, b) => a.metadata.order - b.metadata.order);
+}
+
+export function getProductImages(product: Product) {
+  const images: Record<string, ProductImage[]> = {};
+
+  product.images?.forEach((image) => {
+    images[image.type] = images[image.type] ?? [];
+    images[image.type].push(image);
+  });
+
+  // Details has a metadata with order
+  images[ProductImageType.Details]?.sort(
+    (image1, image2) => image1.metadata.order - image2.metadata.order,
+  );
+
+  return images;
 }

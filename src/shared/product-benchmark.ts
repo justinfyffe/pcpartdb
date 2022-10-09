@@ -3,12 +3,24 @@ import Joi from '@hapi/joi';
 export enum ProductBenchmarkKey {
   PerformanceScore = 'PERFORMANCE_SCORE',
   ValueScore = 'VALUE_SCORE',
-  Passmark = 'PASSMARK',
-  TimeSpy = '3DMARK_TIME_SPY',
+
+  // GPU
+  G3dMark = 'PASSMARK_G3D_MARK',
+  G2dMark = 'PASSMARK_G2D_MARK',
+  TimeSpyGraphics = '3DMARK_TIME_SPY_GRAPHICS',
+
+  // CPU
+  CpuMark = 'PASSMARK_CPU_MARK',
+  ThreadMark = 'PASSMARK_THREAD_MARK',
+  TimeSpyPhysics = '3DMARK_TIME_SPY_PHYSICS',
 }
 
 export interface ProductBenchmarkMetadata {
   order?: number;
+  samples?: number;
+  median?: number;
+  min?: number;
+  max?: number;
 }
 
 export interface ProductBenchmark {

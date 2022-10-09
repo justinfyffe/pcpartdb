@@ -36,3 +36,15 @@ export const productMetaValidator = Joi.object({
   source: Joi.string().allow(null),
   metadata: Joi.any().allow(null),
 }).options({ abortEarly: false });
+
+export function productMetaValue(meta: ProductMeta) {
+  return (
+    meta?.booleanValue ??
+    meta?.floatValue ??
+    meta?.integerValue ??
+    meta?.jsonValue ??
+    meta?.stringValue ??
+    meta?.textValue ??
+    null
+  );
+}

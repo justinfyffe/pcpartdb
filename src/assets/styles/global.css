@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 * {
-  font-family: Roboto, 'Helvetica Neue', sans-serif;
+  font-family: Segoe UI, Helvetica, sans-serif;
 }
 
 a {

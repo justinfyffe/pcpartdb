@@ -1,10 +1,12 @@
 import { Button, ButtonVariant } from '@client/shared/components';
 import { XIcon } from '@heroicons/react/outline';
+import { ProductType } from '@shared/product';
 import { ProductBenchmarkRequest } from '@shared/product-benchmark';
 import React, { FunctionComponent, useCallback } from 'react';
 import { ProductBenchmarkField } from './product-benchmark-field';
 
 interface ProductBenchmarkFieldsProps {
+  type: ProductType;
   name: string;
   value: ProductBenchmarkRequest[];
   fields: (ProductBenchmarkRequest & { id: string })[];
@@ -19,7 +21,7 @@ interface ProductBenchmarkFieldsProps {
 export const ProductBenchmarkFields: FunctionComponent<
   ProductBenchmarkFieldsProps
 > = (props) => {
-  const { fields, value, onAppend, onChange, onRemove } = props;
+  const { type, fields, value, onAppend, onChange, onRemove } = props;
 
   const handleFieldChange = useCallback(
     (i: number, benchmark: ProductBenchmarkRequest) => {
@@ -35,6 +37,7 @@ export const ProductBenchmarkFields: FunctionComponent<
       {fields.map((benchmark, i) => (
         <div key={benchmark.id} className="flex gap-6">
           <ProductBenchmarkField
+            type={type}
             value={value[i]}
             onChange={(value) => handleFieldChange(i, value)}
             className="flex-1"

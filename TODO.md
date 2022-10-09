@@ -1,12 +1,16 @@
 Immediate Tasks:
+- description - markdown to html
+- performance score formula:
+  - GPU Benchmarks to gather: G3D Mark, G2D Mark, Time Spy, Port Royal, Fire Strike
+  - CPU Benchmarks to gather: CPU Mark, Thread Mark, Geekbench 5 Single-Core, Geekbench 5 Multi-Core
+  - GPU Score = G3D Mark
+  - CPU Score = CPU Mark
+  - Performance Rating = GPU Score / Max(GPU Score)
+  - Value Rating =
 - cleanup pages/components
   - place relevant ones next to each other?
-- home page
-  - remove most to it. just a search and small text of popular gpus and comparisons
-- add product image fields to gpu form
 - add product models as a json meta type on the product
 - view gpu page
-  - default image for nvidia and amd is their logo
 - gpus list page
 - contact page
 - about page

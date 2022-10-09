@@ -16,7 +16,7 @@ export const SidenavPopularComparisons: FunctionComponent<
     <SidenavSection
       className={classNames('flex flex-col gap-3', props.className)}
     >
-      <SidenavSectionTitle>Popular Comparisons</SidenavSectionTitle>
+      <SidenavSectionTitle>Popular GPU Comparisons</SidenavSectionTitle>
 
       <div className="flex flex-col gap-4">
         <ComparisonListing />
