@@ -3,10 +3,11 @@ Immediate Tasks:
 - performance score formula:
   - GPU Benchmarks to gather: G3D Mark, G2D Mark, Time Spy, Port Royal, Fire Strike
   - CPU Benchmarks to gather: CPU Mark, Thread Mark, Geekbench 5 Single-Core, Geekbench 5 Multi-Core
-  - GPU Score = G3D Mark
-  - CPU Score = CPU Mark
+  - Performance Score (GPU) = G3D Mark
+  - Performance Score (CPU) = CPU Mark
+  - Value Score = Performance Score / Launch Price
   - Performance Rating = GPU Score / Max(GPU Score)
-  - Value Rating =
+  - Value Rating = Value Score / Max(Value Score)
 - cleanup pages/components
   - place relevant ones next to each other?
 - add product models as a json meta type on the product
