@@ -165,12 +165,12 @@ export const productSpecValidator = Joi.object({
 
 export function productSpecValue(spec: ProductSpec) {
   return (
-    spec.booleanValue ??
-    spec.floatValue ??
-    spec.integerValue ??
-    spec.jsonValue ??
-    spec.stringValue ??
-    spec.textValue ??
+    spec?.booleanValue ??
+    spec?.floatValue ??
+    spec?.integerValue ??
+    spec?.jsonValue ??
+    spec?.stringValue ??
+    spec?.textValue ??
     null
   );
 }

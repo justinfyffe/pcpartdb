@@ -8,6 +8,7 @@ import { productBenchmarkValidator } from '@shared/product-benchmark';
 import { productMetaValidator } from '@shared/product-meta';
 import { productReviewValidator } from '@shared/product-review';
 import { productSpecValidator } from '@shared/product-spec';
+import { calculatePerformanceBenchmarks } from './benchmark/product-benchmark-utils';
 import { ProductRepository } from './product-repository';
 
 const productImageValidator = Joi.object({
@@ -87,19 +88,33 @@ export class ProductService {
   async create(data: ProductRequest, ctx: ServiceContext) {
     validate(data, createProductValidator);
 
-    return await this.productRepository.save({ ...data }, ctx);
+    const performanceBenchmarks = calculatePerformanceBenchmarks(data);
+
+    return await this.productRepository.save(
+      { ...data, benchmarks: [...data.benchmarks, ...performanceBenchmarks] },
+      ctx,
+    );
   }
 
   // TODO: check slug uniqueness
   async update(id: number, data: ProductRequest, ctx: ServiceContext) {
     validate(data, updateProductValidator);
 
+    const performanceBenchmarks = calculatePerformanceBenchmarks(data);
+
     const product = await this.productRepository.findById(id, ctx);
     if (product == null) {
       throw notFoundError({ product: id });
     }
 
-    return await this.productRepository.save({ ...data, id }, ctx);
+    return await this.productRepository.save(
+      {
+        ...data,
+        id,
+        benchmarks: [...data.benchmarks, ...performanceBenchmarks],
+      },
+      ctx,
+    );
   }
 
   async delete(id: number, ctx: ServiceContext) {

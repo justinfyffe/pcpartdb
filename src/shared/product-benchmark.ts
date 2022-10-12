@@ -52,3 +52,15 @@ export const productBenchmarkValidator = Joi.object({
   source: Joi.string().allow(null),
   metadata: Joi.any().allow(null),
 }).options({ abortEarly: false });
+
+export function productBenchmarkValue(benchmark: ProductBenchmark) {
+  return (
+    benchmark?.booleanValue ??
+    benchmark?.floatValue ??
+    benchmark?.integerValue ??
+    benchmark?.jsonValue ??
+    benchmark?.stringValue ??
+    benchmark?.textValue ??
+    null
+  );
+}
