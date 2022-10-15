@@ -16,7 +16,6 @@ export enum ProductBenchmarkKey {
 }
 
 export interface ProductBenchmarkMetadata {
-  order?: number;
   samples?: number;
   median?: number;
   min?: number;

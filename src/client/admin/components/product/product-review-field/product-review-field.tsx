@@ -1,10 +1,4 @@
-import {
-  Field,
-  Select,
-  SelectOption,
-  SelectValue,
-  TextInput,
-} from '@client/shared/components';
+import { Field, NumberInput, TextInput } from '@client/shared/components';
 import { classNames } from '@client/shared/ui';
 import { ProductReviewKey, ProductReviewRequest } from '@shared/product-review';
 import React, {
@@ -14,8 +8,16 @@ import React, {
   useState,
 } from 'react';
 
+const LABELS: Record<ProductReviewKey, string> = {
+  [ProductReviewKey.Amazon]: 'Amazon',
+  [ProductReviewKey.PcGamer]: 'PC Gamer',
+  [ProductReviewKey.TechRadar]: 'Tech Radar',
+  [ProductReviewKey.TechSpot]: 'Tech Spot',
+  [ProductReviewKey.TomsHardware]: "Tom's Hardware",
+};
+
 interface ProductReviewFieldProps {
-  reviewKey?: ProductReviewKey;
+  reviewKey: ProductReviewKey;
 
   value?: ProductReviewRequest;
   onChange?: (value: ProductReviewRequest) => void;
@@ -32,18 +34,9 @@ export const ProductReviewField: FunctionComponent<ProductReviewFieldProps> = (
   const [value, setValue] = useState(propsValue ?? null);
   useEffect(() => setValue(propsValue), [propsValue]);
 
-  const handleKeyChange = useCallback(
-    (key: SelectValue) => {
-      const newValue = { ...value, key: key as unknown as ProductReviewKey };
-      setValue(newValue);
-      onChange(newValue);
-    },
-    [onChange, value],
-  );
-
   const handleScoreChange = useCallback(
-    (score: string) => {
-      const newValue = { ...value, stringValue: score };
+    (score: number) => {
+      const newValue = { ...value, floatValue: score };
       setValue(newValue);
       onChange(newValue);
     },
@@ -63,40 +56,13 @@ export const ProductReviewField: FunctionComponent<ProductReviewFieldProps> = (
     <div className={classNames('flex gap-6 items-center', className)}>
       <Field className="flex-1">
         Review
-        {reviewKey != null ? (
-          <div>{reviewKey}</div>
-        ) : (
-          <Select
-            value={value?.key ?? null}
-            onChange={handleKeyChange}
-            clearable
-          >
-            <SelectOption label="Amazon" value={ProductReviewKey.Amazon}>
-              Amazon
-            </SelectOption>
-            <SelectOption label="PC Gamer" value={ProductReviewKey.PcGamer}>
-              PC Gamer
-            </SelectOption>
-            <SelectOption label="TechRadar" value={ProductReviewKey.TechRadar}>
-              TechRadar
-            </SelectOption>
-            <SelectOption label="TechSpot" value={ProductReviewKey.TechSpot}>
-              TechSpot
-            </SelectOption>
-            <SelectOption
-              label="Tom's Hardware"
-              value={ProductReviewKey.TomsHardware}
-            >
-              Tom&apos;s Hardware
-            </SelectOption>
-          </Select>
-        )}
+        <div className="block">{LABELS[reviewKey] ?? '--'}</div>
       </Field>
 
       <Field className="flex-1">
         Score
-        <TextInput
-          value={value?.stringValue ?? null}
+        <NumberInput
+          value={value?.floatValue ?? null}
           onChange={handleScoreChange}
           ref={null}
         />

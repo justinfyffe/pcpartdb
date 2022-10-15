@@ -16,15 +16,16 @@ import Joi from '@hapi/joi';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { ApiError, ValidationErrorType } from '@shared/error';
 import {
-  getOrderedBenchmarks,
-  getOrderedReviews,
+  getProductBenchmarks,
   getProductMeta,
+  getProductReviews,
   getProductSpecs,
   Product,
   ProductRequest,
   ProductType,
 } from '@shared/product';
 import {
+  ProductBenchmarkKey,
   ProductBenchmarkRequest,
   productBenchmarkValidator,
 } from '@shared/product-benchmark';
@@ -39,6 +40,7 @@ import {
   productMetaValidator,
 } from '@shared/product-meta';
 import {
+  ProductReviewKey,
   ProductReviewRequest,
   productReviewValidator,
 } from '@shared/product-review';
@@ -62,9 +64,9 @@ import {
 } from 'react-hook-form';
 import { ProductImageField, ProductImageFields } from '../product-image-field';
 import { ProductMetaField } from '../product-meta-field';
-import { ProductReviewFields } from '../product-review-field';
+import { ProductReviewField } from '../product-review-field';
 import { ProductSpecField } from '../product-spec-field';
-import { ProductBenchmarkFields } from './../product-benchmark-field';
+import { ProductBenchmarkField } from './../product-benchmark-field';
 
 interface ProductFormData {
   slug: string;
@@ -137,9 +139,19 @@ interface ProductFormData {
   sliCrossfireSupport?: ProductSpecRequest;
   vrReady?: ProductSpecRequest;
 
-  reviews?: ProductReviewRequest[];
-  benchmarks?: ProductBenchmarkRequest[];
+  // Benchmarks
+  g2dMarkBenchmark?: ProductBenchmarkRequest;
+  g3dMarkBenchmark?: ProductBenchmarkRequest;
+  timeSpyGraphicsBenchmark?: ProductBenchmarkRequest;
 
+  // Reviews
+  amazonReview?: ProductReviewRequest;
+  pcGamerReview?: ProductReviewRequest;
+  techRadarReview?: ProductReviewRequest;
+  techSpotReview?: ProductReviewRequest;
+  tomsHardwareReview?: ProductReviewRequest;
+
+  // Images
   autocompleteImage?: ProductImageRequest;
   thumbnailImage?: ProductImageRequest;
   detailsImages?: ProductImageRequest[];
@@ -218,10 +230,19 @@ const productValidator = Joi.object({
   sliCrossfireSupport: productSpecValidator.allow(null),
   vrReady: productSpecValidator.allow(null),
 
-  // TODO: add validator for unique keys
-  benchmarks: Joi.array().items(productBenchmarkValidator),
-  reviews: Joi.array().items(productReviewValidator),
+  // Benchmarks
+  g2dMarkBenchmark: productBenchmarkValidator.allow(null),
+  g3dMarkBenchmark: productBenchmarkValidator.allow(null),
+  timeSpyGraphicsBenchmark: productBenchmarkValidator.allow(null),
 
+  // Reviews
+  amazonReview: productReviewValidator.allow(null),
+  pcGamerReview: productReviewValidator.allow(null),
+  techRadarReview: productReviewValidator.allow(null),
+  techSpotReview: productReviewValidator.allow(null),
+  tomsHardwareReview: productReviewValidator.allow(null),
+
+  // Images
   autocompleteImage: productImageValidator.allow(null),
   thumbnailImage: productImageValidator.allow(null),
   detailsImages: Joi.array().items(productImageValidator),
@@ -234,8 +255,8 @@ interface GpuFormProps {
 function formOptions(gpu?: Product): UseFormProps<ProductFormData> {
   const meta = gpu != null ? getProductMeta(gpu) : {};
   const specs = gpu != null ? getProductSpecs(gpu) : {};
-  const benchmarks = gpu != null ? getOrderedBenchmarks(gpu) : [];
-  const reviews = gpu != null ? getOrderedReviews(gpu) : [];
+  const benchmarks = gpu != null ? getProductBenchmarks(gpu) : {};
+  const reviews = gpu != null ? getProductReviews(gpu) : {};
   const { autocompleteImage, thumbnailImage, detailsImages } =
     getFormImages(gpu);
 
@@ -313,9 +334,20 @@ function formOptions(gpu?: Product): UseFormProps<ProductFormData> {
       sliCrossfireSupport: specs[ProductSpecKey.SliCrossfireSupport] ?? null,
       vrReady: specs[ProductSpecKey.VrReady] ?? null,
 
-      benchmarks,
-      reviews,
+      // Benchmarks
+      g2dMarkBenchmark: benchmarks[ProductBenchmarkKey.G2dMark] ?? null,
+      g3dMarkBenchmark: benchmarks[ProductBenchmarkKey.G3dMark] ?? null,
+      timeSpyGraphicsBenchmark:
+        benchmarks[ProductBenchmarkKey.TimeSpyGraphics] ?? null,
 
+      // Reviews
+      amazonReview: reviews[ProductReviewKey.Amazon] ?? null,
+      pcGamerReview: reviews[ProductReviewKey.PcGamer] ?? null,
+      techRadarReview: reviews[ProductReviewKey.TechRadar] ?? null,
+      techSpotReview: reviews[ProductReviewKey.TechSpot] ?? null,
+      tomsHardwareReview: reviews[ProductReviewKey.TomsHardware] ?? null,
+
+      // Images
       autocompleteImage,
       thumbnailImage,
       detailsImages,
@@ -344,24 +376,6 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
   console.log(errors);
 
   const {
-    fields: benchmarkFields,
-    append: appendBenchmark,
-    remove: removeBenchmark,
-  } = useFieldArray({
-    control,
-    name: 'benchmarks',
-  });
-
-  const {
-    fields: reviewFields,
-    append: appendReview,
-    remove: removeReview,
-  } = useFieldArray({
-    control,
-    name: 'reviews',
-  });
-
-  const {
     fields: detailsImagesFields,
     append: appendImage,
     remove: removeImage,
@@ -381,8 +395,8 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
         name: formData.name,
         meta: toMetaArray(formData),
         specs: toSpecsArray(formData),
-        benchmarks: formData.benchmarks,
-        reviews: formData.reviews,
+        benchmarks: toBenchmarksArray(formData),
+        reviews: toReviewsArray(formData),
         images: toRequestImages(formData),
       };
 
@@ -1248,14 +1262,35 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
         <h2 className="mb-4">Benchmarks</h2>
 
         <Controller
-          name="benchmarks"
+          name="g3dMarkBenchmark"
           control={control}
           render={({ field }) => (
-            <ProductBenchmarkFields
-              type={ProductType.GPU}
-              fields={benchmarkFields}
-              onAppend={() => appendBenchmark({})}
-              onRemove={(i) => removeBenchmark(i)}
+            <ProductBenchmarkField
+              benchmarkKey={ProductBenchmarkKey.G3dMark}
+              {...field}
+              ref={null}
+            />
+          )}
+        />
+
+        <Controller
+          name="g2dMarkBenchmark"
+          control={control}
+          render={({ field }) => (
+            <ProductBenchmarkField
+              benchmarkKey={ProductBenchmarkKey.G2dMark}
+              {...field}
+              ref={null}
+            />
+          )}
+        />
+
+        <Controller
+          name="timeSpyGraphicsBenchmark"
+          control={control}
+          render={({ field }) => (
+            <ProductBenchmarkField
+              benchmarkKey={ProductBenchmarkKey.TimeSpyGraphics}
               {...field}
               ref={null}
             />
@@ -1267,13 +1302,59 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
         <h2 className="mb-4">Reviews</h2>
 
         <Controller
-          name="reviews"
+          name="amazonReview"
           control={control}
           render={({ field }) => (
-            <ProductReviewFields
-              fields={reviewFields}
-              onAppend={() => appendReview({})}
-              onRemove={(i) => removeReview(i)}
+            <ProductReviewField
+              reviewKey={ProductReviewKey.Amazon}
+              {...field}
+              ref={null}
+            />
+          )}
+        />
+
+        <Controller
+          name="pcGamerReview"
+          control={control}
+          render={({ field }) => (
+            <ProductReviewField
+              reviewKey={ProductReviewKey.PcGamer}
+              {...field}
+              ref={null}
+            />
+          )}
+        />
+
+        <Controller
+          name="techRadarReview"
+          control={control}
+          render={({ field }) => (
+            <ProductReviewField
+              reviewKey={ProductReviewKey.TechRadar}
+              {...field}
+              ref={null}
+            />
+          )}
+        />
+
+        <Controller
+          name="techSpotReview"
+          control={control}
+          render={({ field }) => (
+            <ProductReviewField
+              reviewKey={ProductReviewKey.TechSpot}
+              {...field}
+              ref={null}
+            />
+          )}
+        />
+
+        <Controller
+          name="tomsHardwareReview"
+          control={control}
+          render={({ field }) => (
+            <ProductReviewField
+              reviewKey={ProductReviewKey.TomsHardware}
               {...field}
               ref={null}
             />
@@ -1419,6 +1500,30 @@ function toSpecsArray(formData: ProductFormData): ProductSpecRequest[] {
   ];
 
   return specs.filter((spec) => spec != null);
+}
+
+function toBenchmarksArray(
+  formData: ProductFormData,
+): ProductBenchmarkRequest[] {
+  const benchmarks = [
+    formData.g2dMarkBenchmark,
+    formData.g3dMarkBenchmark,
+    formData.timeSpyGraphicsBenchmark,
+  ];
+
+  return benchmarks.filter((benchmark) => benchmark != null);
+}
+
+function toReviewsArray(formData: ProductFormData): ProductReviewRequest[] {
+  const reviews = [
+    formData.amazonReview,
+    formData.pcGamerReview,
+    formData.techRadarReview,
+    formData.techSpotReview,
+    formData.tomsHardwareReview,
+  ];
+
+  return reviews.filter((review) => review != null);
 }
 
 function getFormImages(gpu?: Product) {

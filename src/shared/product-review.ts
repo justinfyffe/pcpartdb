@@ -8,9 +8,7 @@ export enum ProductReviewKey {
   TomsHardware = 'TOMS_HARDWARE',
 }
 
-export interface ProductReviewMetadata {
-  order?: number;
-}
+export interface ProductReviewMetadata {}
 
 export interface ProductReview {
   key: ProductReviewKey;

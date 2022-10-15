@@ -7,8 +7,6 @@ Immediate Tasks:
   - Value Score = Performance Score / Launch Price
   - Performance Rating = GPU Score / Max(GPU Score)
   - Value Rating = Value Score / Max(Value Score)
-- remove dynamicism of benchmark and review fields
-  - use pre-set list of benchmarks and reviews
 - auto-generate summary
 - cleanup pages/components
   - place relevant ones next to each other?
