@@ -96,12 +96,12 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
                 </THead>
                 <TBody>
                   <Tr>
-                    <Td>Performance Rating</Td>
+                    <Td>Performance Rank</Td>
                     <Td>82.23</Td>
                     <Td>72.23</Td>
                   </Tr>
                   <Tr>
-                    <Td>Value for Money</Td>
+                    <Td>Value Rank</Td>
                     <Td>58.32</Td>
                     <Td>48.32</Td>
                   </Tr>

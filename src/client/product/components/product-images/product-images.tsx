@@ -55,8 +55,6 @@ export const ProductImages: FunctionComponent<ProductImagesProps> = (props) => {
     return <></>;
   }
 
-  console.log(images[selected]);
-
   return (
     <div
       className={classNames(

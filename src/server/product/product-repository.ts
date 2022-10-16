@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { RepositoryConfig } from '@server/db/repository';
 import { ProductType } from '@shared/product';
+import { ProductBenchmarkKey } from '@shared/product-benchmark';
 import { ProductImageType } from '@shared/product-image';
+import { Model, raw } from 'objection';
 import { ProductBenchmarkRepository } from './benchmark/product-benchmark-repository';
 import { ProductImageRepository } from './image/product-image-repository';
 import { ProductMetaRepository } from './meta/product-meta-repository';
@@ -87,5 +89,47 @@ export class ProductRepository {
           builder.where('type', ProductImageType.Autocomplete);
         },
       });
+  }
+
+  async getPerformanceRank(
+    id: number,
+    type: ProductType,
+    config?: RepositoryConfig,
+  ) {
+    const ranksQuery = ProductModel.relatedQuery('benchmarks')
+      .for(ProductModel.query().where('type', type))
+      .where('key', ProductBenchmarkKey.PerformanceScore)
+      .select(
+        'productId',
+        raw(
+          'CAST(RANK() OVER ( ORDER BY float_value DESC ) AS INTEGER) AS rank',
+        ),
+      );
+
+    const [{ rank }] = (await Model.query(config?.trx)
+      .select('rank')
+      .from(ranksQuery.as('ranks'))
+      .where('productId', id)) as unknown as { rank: number }[];
+
+    return rank;
+  }
+
+  async getValueRank(id: number, type: ProductType, config?: RepositoryConfig) {
+    const ranksQuery = ProductModel.relatedQuery('benchmarks')
+      .for(ProductModel.query().where('type', type))
+      .where('key', ProductBenchmarkKey.ValueScore)
+      .select(
+        'productId',
+        raw(
+          'CAST(RANK() OVER ( ORDER BY float_value DESC ) AS INTEGER) AS rank',
+        ),
+      );
+
+    const [{ rank }] = (await Model.query(config?.trx)
+      .select('rank')
+      .from(ranksQuery.as('ranks'))
+      .where('productId', id)) as unknown as { rank: number }[];
+
+    return rank;
   }
 }

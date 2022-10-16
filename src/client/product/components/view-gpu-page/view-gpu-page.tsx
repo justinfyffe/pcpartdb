@@ -33,8 +33,11 @@ import {
   getProductSpecs,
   Product,
 } from '@shared/product';
-import { ProductBenchmarkKey } from '@shared/product-benchmark';
-import { ProductMetaKey, productMetaValue } from '@shared/product-meta';
+import {
+  formatProductBenchmark,
+  ProductBenchmarkKey,
+} from '@shared/product-benchmark';
+import { formatProductMeta, ProductMetaKey } from '@shared/product-meta';
 import { ProductReviewKey } from '@shared/product-review';
 import {
   formatProductSpec,
@@ -124,7 +127,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                     <div
                       className={classNames('font-medium text-xl lg:text-2xl')}
                     >
-                      Performance Rating
+                      Performance Rank
                     </div>
                   </div>
 
@@ -133,8 +136,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                       'text-md lg:text-lg text-slate-600 text-right',
                     )}
                   >
-                    {benchmarks[ProductBenchmarkKey.PerformanceScore]
-                      ?.floatValue ?? '--'}
+                    {formatProductMeta(meta[ProductMetaKey.PerformanceRank])}
                   </div>
                 </li>
 
@@ -151,7 +153,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                     <div
                       className={classNames('font-medium text-xl lg:text-2xl')}
                     >
-                      Value for Money
+                      Value Rank
                     </div>
                   </div>
 
@@ -160,8 +162,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                       'text-md lg:text-lg text-slate-600 text-right',
                     )}
                   >
-                    {benchmarks[ProductBenchmarkKey.ValueScore]?.floatValue ??
-                      '--'}
+                    {formatProductMeta(meta[ProductMetaKey.ValueRank])}
                   </div>
                 </li>
 
@@ -280,7 +281,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
 
           <section>
             <ReactMarkdown>
-              {productMetaValue(meta[ProductMetaKey.Description]) as string}
+              {formatProductMeta(meta[ProductMetaKey.Description]) as string}
             </ReactMarkdown>
           </section>
 
@@ -296,18 +297,27 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
               <Table border responsive>
                 <TBody>
                   <Tr>
-                    <Td className="min-w-[180px]">Performance Rating</Td>
-                    <Td className="min-w-[80px]">82.23</Td>
+                    <Td className="min-w-[180px]">Performance Rating (Rank)</Td>
+                    <Td className="min-w-[80px]">
+                      {formatProductBenchmark(
+                        benchmarks[ProductBenchmarkKey.PerformanceScore],
+                        { decimals: 0 },
+                      )}{' '}
+                      ({meta[ProductMetaKey.PerformanceRank]?.integerValue})
+                    </Td>
                   </Tr>
                   <Tr>
-                    <Td>Value for Money</Td>
-                    <Td>58.32</Td>
+                    <Td>Performance Per Dollar (Rank)</Td>
+                    <Td>
+                      {formatProductBenchmark(
+                        benchmarks[ProductBenchmarkKey.ValueScore],
+                      )}{' '}
+                      ({formatProductMeta(meta[ProductMetaKey.ValueRank])})
+                    </Td>
                   </Tr>
                   <Tr>
                     <Td>Company</Td>
-                    <Td>
-                      {specs[ProductSpecKey.Company]?.stringValue ?? '--'}
-                    </Td>
+                    <Td>{formatProductSpec(specs[ProductSpecKey.Company])}</Td>
                   </Tr>
                   <Tr>
                     <Td>Generation</Td>
@@ -445,38 +455,37 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                     <Tr>
                       <Td className="min-w-[180px]">GPU Name</Td>
                       <Td className="min-w-[80px]">
-                        {specs[ProductSpecKey.GpuName]?.stringValue ?? '--'}
+                        {formatProductSpec(specs[ProductSpecKey.GpuName])}
                       </Td>
                     </Tr>
                     <Tr>
                       <Td>Architecture</Td>
                       <Td>
-                        {specs[ProductSpecKey.Architecture]?.stringValue ??
-                          '--'}
+                        {formatProductSpec(specs[ProductSpecKey.Architecture])}
                       </Td>
                     </Tr>
                     <Tr>
                       <Td>Foundry</Td>
                       <Td>
-                        {specs[ProductSpecKey.Foundry]?.stringValue ?? '--'}
+                        {formatProductSpec(specs[ProductSpecKey.Foundry])}
                       </Td>
                     </Tr>
                     <Tr>
                       <Td>Process Size</Td>
                       <Td>
-                        {specs[ProductSpecKey.Lithography]?.floatValue ?? '--'}
+                        {formatProductSpec(specs[ProductSpecKey.Lithography])}
                       </Td>
                     </Tr>
                     <Tr>
                       <Td>Transistors</Td>
                       <Td>
-                        {specs[ProductSpecKey.Transistors]?.floatValue ?? '--'}
+                        {formatProductSpec(specs[ProductSpecKey.Transistors])}
                       </Td>
                     </Tr>
                     <Tr>
                       <Td>Die Size</Td>
                       <Td>
-                        {specs[ProductSpecKey.DieSize]?.floatValue ?? '--'}
+                        {formatProductSpec(specs[ProductSpecKey.DieSize])}
                       </Td>
                     </Tr>
                   </TBody>
@@ -496,7 +505,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                     <Tr>
                       <Td className="min-w-[180px]">Slot Width</Td>
                       <Td className="min-w-[80px]">
-                        {specs[ProductSpecKey.SlotWidth]?.stringValue ?? '--'}
+                        {formatProductSpec(specs[ProductSpecKey.SlotWidth])}
                       </Td>
                     </Tr>
                     <Tr>
@@ -552,8 +561,9 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                     <Tr>
                       <Td>Power Connectors</Td>
                       <Td>
-                        {specs[ProductSpecKey.PowerConnectors]?.stringValue ??
-                          '--'}
+                        {formatProductSpec(
+                          specs[ProductSpecKey.PowerConnectors],
+                        )}
                       </Td>
                     </Tr>
                   </TBody>
@@ -572,53 +582,55 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                     <Tr>
                       <Td className="min-w-[180px]">CUDA Cores</Td>
                       <Td className="min-w-[80px]">
-                        {specs[ProductSpecKey.CudaCores]?.floatValue ?? '--'}
+                        {formatProductSpec(specs[ProductSpecKey.CudaCores])}
                       </Td>
                     </Tr>
                     <Tr>
                       <Td>TMUs</Td>
-                      <Td>{specs[ProductSpecKey.Tmus]?.floatValue ?? '--'}</Td>
+                      <Td>{formatProductSpec(specs[ProductSpecKey.Tmus])}</Td>
                     </Tr>
                     <Tr>
                       <Td>ROPs</Td>
-                      <Td>{specs[ProductSpecKey.Rops]?.floatValue ?? '--'}</Td>
+                      <Td>{formatProductSpec(specs[ProductSpecKey.Rops])}</Td>
                     </Tr>
                     <Tr>
                       <Td>Tensor Cores</Td>
                       <Td>
-                        {specs[ProductSpecKey.TensorCores]?.floatValue ?? '--'}
+                        {formatProductSpec(specs[ProductSpecKey.TensorCores])}
                       </Td>
                     </Tr>
                     <Tr>
                       <Td>RT Cores</Td>
                       <Td>
-                        {specs[ProductSpecKey.RtCores]?.floatValue ?? '--'}
+                        {formatProductSpec(specs[ProductSpecKey.RtCores])}
                       </Td>
                     </Tr>
                     <Tr>
                       <Td>Base Clock</Td>
                       <Td>
-                        {specs[ProductSpecKey.ClockSpeedBase]?.floatValue ??
-                          '--'}
+                        {formatProductSpec(
+                          specs[ProductSpecKey.ClockSpeedBase],
+                        )}
                       </Td>
                     </Tr>
                     <Tr>
                       <Td>Boost Clock</Td>
                       <Td>
-                        {specs[ProductSpecKey.ClockSpeedBoost]?.floatValue ??
-                          '--'}
+                        {formatProductSpec(
+                          specs[ProductSpecKey.ClockSpeedBoost],
+                        )}
                       </Td>
                     </Tr>
                     <Tr>
                       <Td>L1 Cache</Td>
                       <Td>
-                        {specs[ProductSpecKey.L1Cache]?.floatValue ?? '--'}
+                        {formatProductSpec(specs[ProductSpecKey.L1Cache])}
                       </Td>
                     </Tr>
                     <Tr>
                       <Td>L2 Cache</Td>
                       <Td>
-                        {specs[ProductSpecKey.L2Cache]?.floatValue ?? '--'}
+                        {formatProductSpec(specs[ProductSpecKey.L2Cache])}
                       </Td>
                     </Tr>
                   </TBody>
@@ -639,28 +651,29 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                     <Tr>
                       <Td className="min-w-[180px]">Pixel Fill Rate</Td>
                       <Td className="min-w-[80px]">
-                        {specs[ProductSpecKey.PixelFillRate]?.floatValue ??
-                          '--'}
+                        {formatProductSpec(specs[ProductSpecKey.PixelFillRate])}
                       </Td>
                     </Tr>
                     <Tr>
                       <Td>Texture Fill Rate</Td>
                       <Td>
-                        {specs[ProductSpecKey.TextureRate]?.floatValue ?? '--'}
+                        {formatProductSpec(specs[ProductSpecKey.TextureRate])}
                       </Td>
                     </Tr>
                     <Tr>
                       <Td>FP32 Performance</Td>
                       <Td>
-                        {specs[ProductSpecKey.Fp32Performance]?.floatValue ??
-                          '--'}
+                        {formatProductSpec(
+                          specs[ProductSpecKey.Fp32Performance],
+                        )}
                       </Td>
                     </Tr>
                     <Tr>
                       <Td>FP64 Performance</Td>
                       <Td>
-                        {specs[ProductSpecKey.Fp64Performance]?.floatValue ??
-                          '--'}
+                        {formatProductSpec(
+                          specs[ProductSpecKey.Fp64Performance],
+                        )}
                       </Td>
                     </Tr>
                   </TBody>
@@ -679,13 +692,13 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                     <Tr>
                       <Td className="min-w-[180px]">Memory Size</Td>
                       <Td className="min-w-[80px]">
-                        {specs[ProductSpecKey.MemorySize]?.floatValue ?? '--'}
+                        {formatProductSpec(specs[ProductSpecKey.MemorySize])}
                       </Td>
                     </Tr>
                     <Tr>
                       <Td className="min-w-[180px]">Memory Type</Td>
                       <Td className="min-w-[80px]">
-                        {specs[ProductSpecKey.MemoryType]?.stringValue ?? '--'}
+                        {formatProductSpec(specs[ProductSpecKey.MemoryType])}
                       </Td>
                     </Tr>
                     <Tr>
@@ -695,15 +708,17 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                     <Tr>
                       <Td>Memory Interface</Td>
                       <Td>
-                        {specs[ProductSpecKey.MemoryInterface]?.floatValue ??
-                          '--'}
+                        {formatProductSpec(
+                          specs[ProductSpecKey.MemoryInterface],
+                        )}
                       </Td>
                     </Tr>
                     <Tr>
                       <Td>Memory Bandwidth</Td>
                       <Td>
-                        {specs[ProductSpecKey.MemoryBandwidth]?.floatValue ??
-                          '--'}
+                        {formatProductSpec(
+                          specs[ProductSpecKey.MemoryBandwidth],
+                        )}
                       </Td>
                     </Tr>
                   </TBody>
@@ -722,8 +737,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                     <Tr>
                       <Td className="min-w-[180px]">Max Resolution</Td>
                       <Td className="min-w-[80px]">
-                        {specs[ProductSpecKey.MaxResolution]?.stringValue ??
-                          '--'}
+                        {formatProductSpec(specs[ProductSpecKey.MaxResolution])}
                       </Td>
                     </Tr>
                     {productSpecValue(specs[ProductSpecKey.MarketSegment]) ===
@@ -732,15 +746,15 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                         <Tr>
                           <Td>Display Ports</Td>
                           <Td>
-                            {specs[ProductSpecKey.DisplayPorts]?.stringValue ??
-                              '--'}
+                            {formatProductSpec(
+                              specs[ProductSpecKey.DisplayPorts],
+                            )}
                           </Td>
                         </Tr>
                         <Tr>
                           <Td>HDMI Ports</Td>
                           <Td>
-                            {specs[ProductSpecKey.HdmiPorts]?.stringValue ??
-                              '--'}
+                            {formatProductSpec(specs[ProductSpecKey.HdmiPorts])}
                           </Td>
                         </Tr>
                         <Tr>
@@ -773,49 +787,51 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                     <Tr>
                       <Td className="min-w-[180px]">DirextX</Td>
                       <Td className="min-w-[80px]">
-                        {specs[ProductSpecKey.DirectXVersion]?.floatValue ??
-                          '--'}
+                        {formatProductSpec(
+                          specs[ProductSpecKey.DirectXVersion],
+                        )}
                       </Td>
                     </Tr>
                     <Tr>
                       <Td>G-Sync / FreeSync</Td>
                       <Td>
-                        {specs[ProductSpecKey.GSyncFreeSyncSupport]
-                          ?.booleanValue ?? '--'}
+                        {formatProductSpec(
+                          specs[ProductSpecKey.GSyncFreeSyncSupport],
+                        )}
                       </Td>
                     </Tr>
                     <Tr>
                       <Td>SLI / Crossfire</Td>
                       <Td>
-                        {specs[ProductSpecKey.SliCrossfireSupport]
-                          ?.booleanValue ?? '--'}
+                        {formatProductSpec(
+                          specs[ProductSpecKey.SliCrossfireSupport],
+                        )}
                       </Td>
                     </Tr>
                     <Tr>
                       <Td>VR Ready</Td>
                       <Td>
-                        {specs[ProductSpecKey.VrReady]?.booleanValue ?? '--'}
+                        {formatProductSpec(specs[ProductSpecKey.VrReady])}
                       </Td>
                     </Tr>
                     <Tr>
                       <Td>OpenCL</Td>
                       <Td>
-                        {specs[ProductSpecKey.OpenClVersion]?.floatValue ??
-                          '--'}
+                        {formatProductSpec(specs[ProductSpecKey.OpenClVersion])}
                       </Td>
                     </Tr>
                     <Tr>
                       <Td>OpenGL</Td>
                       <Td>
-                        {specs[ProductSpecKey.OpenGlVersion]?.floatValue ??
-                          '--'}
+                        {formatProductSpec(specs[ProductSpecKey.OpenGlVersion])}
                       </Td>
                     </Tr>
                     <Tr>
                       <Td>Shader Model</Td>
                       <Td>
-                        {specs[ProductSpecKey.ShaderModelVersion]?.floatValue ??
-                          '--'}
+                        {formatProductSpec(
+                          specs[ProductSpecKey.ShaderModelVersion],
+                        )}
                       </Td>
                     </Tr>
                   </TBody>
@@ -834,20 +850,6 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
               <Table border responsive>
                 <TBody>
                   <Tr>
-                    <Td className="min-w-[100px]">Performance Rating</Td>
-                    <Td className="min-w-[80px]">
-                      {benchmarks[ProductBenchmarkKey.PerformanceScore]
-                        ?.floatValue ?? '--'}
-                    </Td>
-                  </Tr>
-                  <Tr>
-                    <Td>Value for Money</Td>
-                    <Td>
-                      {benchmarks[ProductBenchmarkKey.ValueScore]?.floatValue ??
-                        '--'}
-                    </Td>
-                  </Tr>
-                  <Tr>
                     <Td>
                       {benchmarks[ProductBenchmarkKey.G3dMark]?.source !=
                       null ? (
@@ -861,8 +863,10 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                       )}
                     </Td>
                     <Td>
-                      {benchmarks[ProductBenchmarkKey.G3dMark]?.floatValue ??
-                        '--'}
+                      {formatProductBenchmark(
+                        benchmarks[ProductBenchmarkKey.G3dMark],
+                        { decimals: 0 },
+                      )}
                     </Td>
                   </Tr>
                 </TBody>

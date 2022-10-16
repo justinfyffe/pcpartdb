@@ -13,8 +13,8 @@ import React, {
 
 const LABELS: Record<ProductBenchmarkKey, string> = {
   [ProductBenchmarkKey.CpuMark]: 'CPU Mark',
-  [ProductBenchmarkKey.G3dMark]: 'G2D Mark',
-  [ProductBenchmarkKey.G2dMark]: 'G3D Mark',
+  [ProductBenchmarkKey.G2dMark]: 'G2D Mark',
+  [ProductBenchmarkKey.G3dMark]: 'G3D Mark',
   [ProductBenchmarkKey.PerformanceScore]: 'Performance Score',
   [ProductBenchmarkKey.ThreadMark]: 'Thread Mark',
   [ProductBenchmarkKey.TimeSpyGraphics]: '3DMark Time Spy Graphics',

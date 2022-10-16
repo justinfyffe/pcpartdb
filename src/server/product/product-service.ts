@@ -5,10 +5,11 @@ import { ServiceContext } from '@server/shared/service/context';
 import { validate } from '@server/shared/types/validate';
 import { ProductRequest, ProductType } from '@shared/product';
 import { productBenchmarkValidator } from '@shared/product-benchmark';
-import { productMetaValidator } from '@shared/product-meta';
+import { ProductMetaKey, productMetaValidator } from '@shared/product-meta';
 import { productReviewValidator } from '@shared/product-review';
 import { productSpecValidator } from '@shared/product-spec';
 import { calculatePerformanceBenchmarks } from './benchmark/product-benchmark-utils';
+import { ProductMetaModel } from './meta/product-meta-model';
 import { ProductRepository } from './product-repository';
 
 const productImageValidator = Joi.object({
@@ -50,9 +51,40 @@ export class ProductService {
   }
 
   async get(idOrSlug: string | number, ctx: ServiceContext) {
-    return isNaN(Number(idOrSlug))
+    const product = isNaN(Number(idOrSlug))
       ? await this.getProductBySlug(idOrSlug as string, ctx)
       : await this.getProductById(Number(idOrSlug), ctx);
+
+    if (product == null) {
+      throw notFoundError({});
+    }
+
+    const performanceRank = await this.productRepository.getPerformanceRank(
+      product.id,
+      product.type,
+      ctx,
+    );
+    const valueRank = await this.productRepository.getValueRank(
+      product.id,
+      product.type,
+      ctx,
+    );
+
+    product.meta?.push(
+      ProductMetaModel.fromJson({
+        key: ProductMetaKey.PerformanceRank,
+        integerValue: performanceRank,
+      }),
+    );
+
+    product.meta?.push(
+      ProductMetaModel.fromJson({
+        key: ProductMetaKey.ValueRank,
+        integerValue: valueRank,
+      }),
+    );
+
+    return product;
   }
 
   async getComparison(idsOrSlugs: string, ctx: ServiceContext) {

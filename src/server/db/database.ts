@@ -82,7 +82,7 @@ export function openDatabase() {
   return db;
 }
 
-export function transaction<T>(
+export function transaction<T = void>(
   callback: (t: Knex.Transaction) => Promise<T>,
   isolationLevel?: IsolationLevel,
 ) {

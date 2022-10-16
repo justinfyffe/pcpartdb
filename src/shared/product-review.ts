@@ -1,5 +1,10 @@
 import Joi from '@hapi/joi';
 
+export enum ProductReviewBooleanFormatter {
+  TrueFalse = 'TRUE_FALSE',
+  YesNo = 'YES_NO',
+}
+
 export enum ProductReviewKey {
   Amazon = 'AMAZON',
   PcGamer = 'PC_GAMER',
@@ -39,3 +44,67 @@ export const productReviewValidator = Joi.object({
   source: Joi.string().allow(null),
   metadata: Joi.any().allow(null),
 }).options({ abortEarly: false });
+
+export interface FormatProductBenchmarkOptions {
+  decimals?: number;
+  booleanFormatter?: ProductReviewBooleanFormatter;
+}
+
+export function formatProductReview(
+  review: ProductReview,
+  options?: FormatProductBenchmarkOptions,
+) {
+  if (review == null) {
+    return '--';
+  }
+
+  const {
+    booleanValue,
+    floatValue,
+    integerValue,
+    jsonValue,
+    stringValue,
+    textValue,
+  } = review;
+
+  // Handle special cases
+
+  // Handle cases that we cannot output.
+  if (jsonValue != null) {
+    throw new Error('Cannot format a json value');
+  }
+
+  // Compute string to return
+  let returnValue = '';
+  if (booleanValue != null) {
+    returnValue = formatBooleanValue(
+      booleanValue,
+      options?.booleanFormatter ?? ProductReviewBooleanFormatter.TrueFalse,
+    );
+  } else if (floatValue != null) {
+    returnValue = floatValue.toFixed(options?.decimals ?? 2);
+  } else if (integerValue != null) {
+    returnValue = `${integerValue}`;
+  } else if (stringValue != null) {
+    returnValue = stringValue;
+  } else if (textValue != null) {
+    returnValue = textValue;
+  }
+
+  // Apply modifiers
+
+  return returnValue;
+}
+
+function formatBooleanValue(
+  value: boolean,
+  formatter: ProductReviewBooleanFormatter,
+) {
+  if (formatter === ProductReviewBooleanFormatter.TrueFalse) {
+    return value ? 'True' : 'False';
+  } else if (formatter === ProductReviewBooleanFormatter.YesNo) {
+    return value ? 'Yes' : 'No';
+  } else {
+    throw new Error(`Invalid boolean formatter: ${formatter}`);
+  }
+}

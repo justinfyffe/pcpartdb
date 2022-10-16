@@ -1,5 +1,10 @@
 import Joi from '@hapi/joi';
 
+export enum ProductBenchmarkBooleanFormatter {
+  TrueFalse = 'TRUE_FALSE',
+  YesNo = 'YES_NO',
+}
+
 export enum ProductBenchmarkKey {
   PerformanceScore = 'PERFORMANCE_SCORE',
   ValueScore = 'VALUE_SCORE',
@@ -62,4 +67,68 @@ export function productBenchmarkValue(benchmark: ProductBenchmark) {
     benchmark?.textValue ??
     null
   );
+}
+
+export interface FormatProductBenchmarkOptions {
+  decimals?: number;
+  booleanFormatter?: ProductBenchmarkBooleanFormatter;
+}
+
+export function formatProductBenchmark(
+  benchmark: ProductBenchmark,
+  options?: FormatProductBenchmarkOptions,
+) {
+  if (benchmark == null) {
+    return '--';
+  }
+
+  const {
+    booleanValue,
+    floatValue,
+    integerValue,
+    jsonValue,
+    stringValue,
+    textValue,
+  } = benchmark;
+
+  // Handle special cases
+
+  // Handle cases that we cannot output.
+  if (jsonValue != null) {
+    throw new Error('Cannot format a json value');
+  }
+
+  // Compute string to return
+  let returnValue = '';
+  if (booleanValue != null) {
+    returnValue = formatBooleanValue(
+      booleanValue,
+      options?.booleanFormatter ?? ProductBenchmarkBooleanFormatter.TrueFalse,
+    );
+  } else if (floatValue != null) {
+    returnValue = floatValue.toFixed(options?.decimals ?? 2);
+  } else if (integerValue != null) {
+    returnValue = `${integerValue}`;
+  } else if (stringValue != null) {
+    returnValue = stringValue;
+  } else if (textValue != null) {
+    returnValue = textValue;
+  }
+
+  // Apply modifiers
+
+  return returnValue;
+}
+
+function formatBooleanValue(
+  value: boolean,
+  formatter: ProductBenchmarkBooleanFormatter,
+) {
+  if (formatter === ProductBenchmarkBooleanFormatter.TrueFalse) {
+    return value ? 'True' : 'False';
+  } else if (formatter === ProductBenchmarkBooleanFormatter.YesNo) {
+    return value ? 'Yes' : 'No';
+  } else {
+    throw new Error(`Invalid boolean formatter: ${formatter}`);
+  }
 }

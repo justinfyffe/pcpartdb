@@ -108,7 +108,6 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
           setQuery(label);
           onChange?.(value);
           setOpen(false);
-          console.log('handleKeydown', label);
         }
       },
       [onChange, isOpen, items, hoveredIndex, totalChildren],
