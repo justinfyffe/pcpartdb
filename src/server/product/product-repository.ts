@@ -106,12 +106,12 @@ export class ProductRepository {
         ),
       );
 
-    const [{ rank }] = (await Model.query(config?.trx)
+    const ranks = (await Model.query(config?.trx)
       .select('rank')
       .from(ranksQuery.as('ranks'))
       .where('productId', id)) as unknown as { rank: number }[];
 
-    return rank;
+    return ranks != null && ranks.length === 1 ? ranks[0].rank : null;
   }
 
   async getValueRank(id: number, type: ProductType, config?: RepositoryConfig) {
@@ -125,11 +125,11 @@ export class ProductRepository {
         ),
       );
 
-    const [{ rank }] = (await Model.query(config?.trx)
+    const ranks = (await Model.query(config?.trx)
       .select('rank')
       .from(ranksQuery.as('ranks'))
       .where('productId', id)) as unknown as { rank: number }[];
 
-    return rank;
+    return ranks != null && ranks.length === 1 ? ranks[0].rank : null;
   }
 }

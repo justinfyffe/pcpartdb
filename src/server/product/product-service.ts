@@ -70,19 +70,23 @@ export class ProductService {
       ctx,
     );
 
-    product.meta?.push(
-      ProductMetaModel.fromJson({
-        key: ProductMetaKey.PerformanceRank,
-        integerValue: performanceRank,
-      }),
-    );
+    if (performanceRank != null) {
+      product.meta?.push(
+        ProductMetaModel.fromJson({
+          key: ProductMetaKey.PerformanceRank,
+          integerValue: performanceRank,
+        }),
+      );
+    }
 
-    product.meta?.push(
-      ProductMetaModel.fromJson({
-        key: ProductMetaKey.ValueRank,
-        integerValue: valueRank,
-      }),
-    );
+    if (valueRank != null) {
+      product.meta?.push(
+        ProductMetaModel.fromJson({
+          key: ProductMetaKey.ValueRank,
+          integerValue: valueRank,
+        }),
+      );
+    }
 
     return product;
   }

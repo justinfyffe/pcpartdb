@@ -7,6 +7,14 @@ Immediate Tasks:
   - Value Score = Performance Score / Launch Price
   - Performance Rating = GPU Score / Max(GPU Score)
   - Value Rating = Value Score / Max(Value Score)
+- Split tech specs into tabs for desktop, accordians for mobile
+  - Processor
+  - Board Compatibility
+  - Cores & Clock Speeds
+  - Computational Performance
+  - Memory
+  - Display Connectivity
+  - API Support
 - auto-generate summary
 - cleanup pages/components
   - place relevant ones next to each other?
