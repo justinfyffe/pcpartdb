@@ -7,19 +7,12 @@ Immediate Tasks:
   - Value Score = Performance Score / Launch Price
   - Performance Rating = GPU Score / Max(GPU Score)
   - Value Rating = Value Score / Max(Value Score)
-- Split tech specs into tabs for desktop, accordians for mobile
-  - Processor
-  - Board Compatibility
-  - Cores & Clock Speeds
-  - Computational Performance
-  - Memory
-  - Display Connectivity
-  - API Support
+- add product models as a json meta type on the product
 - auto-generate summary
 - cleanup pages/components
   - place relevant ones next to each other?
-- add product models as a json meta type on the product
 - view gpu page
+- compare gpus page
 - gpus list page
 - contact page
 - about page
@@ -31,9 +24,14 @@ Immediate Tasks:
   - canonical links
   - alt tags
 - launch
-- performance rating
-- value rating
-- compare functionality
+- Split tech specs into tabs for desktop, accordians for mobile
+  - Processor
+  - Board Compatibility
+  - Cores & Clock Speeds
+  - Computational Performance
+  - Memory
+  - Display Connectivity
+  - API Support
 - product forms
   - pre-fill data (from external source)
 - look into using useController
