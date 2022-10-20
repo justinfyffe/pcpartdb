@@ -1,5 +1,4 @@
 import { ImageCache } from '@client/shared/cache';
-import { classNames } from '@client/shared/ui';
 import { Image } from '@shared/image';
 import { ProductImageRequest, ProductImageType } from '@shared/product-image';
 import React, { FunctionComponent, useCallback, useState } from 'react';
@@ -51,7 +50,7 @@ export const ProductImageField: FunctionComponent<ProductImageFieldProps> = (
       recommendedHeight={300}
       recommendedWidth={300}
       onChange={handleChange}
-      className={classNames('mb-6', className)}
+      className={className}
     />
   );
 };

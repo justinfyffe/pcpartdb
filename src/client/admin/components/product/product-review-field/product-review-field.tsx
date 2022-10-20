@@ -54,10 +54,7 @@ export const ProductReviewField: FunctionComponent<ProductReviewFieldProps> = (
 
   return (
     <div className={classNames('flex gap-6 items-center', className)}>
-      <Field className="flex-1">
-        Review
-        <div className="block">{LABELS[reviewKey] ?? '--'}</div>
-      </Field>
+      <div className="flex-1 max-w-[200px]">{LABELS[reviewKey] ?? '--'}</div>
 
       <Field className="flex-1">
         Score

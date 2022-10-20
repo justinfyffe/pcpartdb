@@ -50,9 +50,7 @@ export const Field: FunctionComponent<FieldProps> = (props) => {
 
   return (
     <FieldContext.Provider value={context}>
-      <Element
-        className={classNames('block leading-6 mb-0 pb-6', props.className)}
-      >
+      <Element className={classNames('block leading-6 mb-0', props.className)}>
         <label htmlFor={context.fieldId} className="block leading-6 mb-0 pb-6">
           {props.children}
         </label>

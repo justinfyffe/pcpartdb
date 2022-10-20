@@ -61,7 +61,7 @@ export const ProductRetailModelFields: FunctionComponent<
   return (
     <div className="flex flex-col w-full mb-6">
       {fields.map((field, i) => (
-        <div key={field.id} className="flex items-stretch mb-6">
+        <div key={field.id} className="flex items-stretch">
           <div className="mx-6 text-3xl self-center">{i + 1}</div>
 
           <ProductRetailModelField
@@ -70,32 +70,31 @@ export const ProductRetailModelFields: FunctionComponent<
             className="flex-1 mb-0"
           />
 
-          <div className="flex flex-col gap-2 mx-2 justify-between">
-            <div className="flex flex-col gap-2">
-              <Button
-                variant={ButtonVariant.Default}
-                disabled={i === 0}
-                onClick={() => handleShiftUp(i)}
-              >
-                <ChevronUpIcon className="w-[16px]" />
-              </Button>
-              <Button
-                variant={ButtonVariant.Default}
-                disabled={i === fields.length - 1}
-                onClick={() => handleShiftDown(i)}
-              >
-                {' '}
-                <ChevronDownIcon className="w-[16px]" />
-              </Button>
-            </div>
-            <div>
-              <Button
-                variant={ButtonVariant.Default}
-                onClick={() => handleRemove(i)}
-              >
-                <XIcon className="w-[16px]" />
-              </Button>
-            </div>
+          <div className="flex gap-3 mx-6 items-center">
+            <Button
+              variant={ButtonVariant.Default}
+              disabled={i === 0}
+              onClick={() => handleShiftUp(i)}
+              className="h-[46px]"
+            >
+              <ChevronUpIcon className="w-[16px]" />
+            </Button>
+            <Button
+              variant={ButtonVariant.Default}
+              disabled={i === fields.length - 1}
+              onClick={() => handleShiftDown(i)}
+              className="h-[46px]"
+            >
+              {' '}
+              <ChevronDownIcon className="w-[16px]" />
+            </Button>
+            <Button
+              variant={ButtonVariant.Default}
+              onClick={() => handleRemove(i)}
+              className="h-[46px]"
+            >
+              <XIcon className="w-[16px]" />
+            </Button>
           </div>
         </div>
       ))}

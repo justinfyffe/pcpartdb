@@ -44,7 +44,7 @@ export const ProductRetailModelField: FunctionComponent<
   );
 
   return (
-    <div className="flex gap-3">
+    <div className="flex gap-6">
       <Field className="flex-1">
         Name
         <TextInput
