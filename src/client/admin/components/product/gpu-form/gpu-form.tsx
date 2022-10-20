@@ -40,6 +40,10 @@ import {
   productMetaValidator,
 } from '@shared/product-meta';
 import {
+  ProductRetailModel,
+  productRetailModelValidator,
+} from '@shared/product-retail-model';
+import {
   ProductReviewKey,
   ProductReviewRequest,
   productReviewValidator,
@@ -64,6 +68,7 @@ import {
 } from 'react-hook-form';
 import { ProductImageField, ProductImageFields } from '../product-image-field';
 import { ProductMetaField } from '../product-meta-field';
+import { ProductRetailModelFields } from '../product-retail-model-field';
 import { ProductReviewField } from '../product-review-field';
 import { ProductSpecField } from '../product-spec-field';
 import { ProductBenchmarkField } from './../product-benchmark-field';
@@ -155,6 +160,9 @@ interface ProductFormData {
   autocompleteImage?: ProductImageRequest;
   thumbnailImage?: ProductImageRequest;
   detailsImages?: ProductImageRequest[];
+
+  // Retail Models
+  retailModels?: ProductRetailModel[];
 }
 
 const productValidator = Joi.object({
@@ -246,6 +254,9 @@ const productValidator = Joi.object({
   autocompleteImage: productImageValidator.allow(null),
   thumbnailImage: productImageValidator.allow(null),
   detailsImages: Joi.array().items(productImageValidator),
+
+  // Retail Models
+  retailModels: Joi.array().items(productRetailModelValidator),
 }).options({ abortEarly: false });
 
 interface GpuFormProps {
@@ -351,6 +362,11 @@ function formOptions(gpu?: Product): UseFormProps<ProductFormData> {
       autocompleteImage,
       thumbnailImage,
       detailsImages,
+
+      // RetailModels,
+      retailModels:
+        (meta[ProductMetaKey.RetailModels]
+          ?.jsonValue as ProductRetailModel[]) ?? [],
     },
   };
 }
@@ -383,6 +399,16 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
   } = useFieldArray({
     control,
     name: 'detailsImages',
+  });
+
+  const {
+    fields: retailModelsFields,
+    append: appendRetailModel,
+    remove: removeRetailModel,
+    swap: swapRetailModel,
+  } = useFieldArray({
+    control,
+    name: 'retailModels',
   });
 
   const handleSave = useCallback(
@@ -1414,6 +1440,25 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
         />
       </section>
 
+      <section>
+        <h2 className="mb-4">Retail Models</h2>
+
+        <Controller
+          name="retailModels"
+          control={control}
+          render={({ field }) => (
+            <ProductRetailModelFields
+              fields={retailModelsFields}
+              onAppend={() => appendRetailModel({})}
+              onRemove={removeRetailModel}
+              onSwap={swapRetailModel}
+              {...field}
+              ref={null}
+            />
+          )}
+        />
+      </section>
+
       <FormActions className={isUpdate ? 'justify-between' : 'justify-end'}>
         {isUpdate && (
           <Button
@@ -1442,7 +1487,15 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
 };
 
 function toMetaArray(formData: ProductFormData): ProductMetaRequest[] {
-  const metas = [formData.description];
+  const metas: ProductMetaRequest[] = [
+    formData.description,
+    formData.retailModels?.length > 0
+      ? {
+          key: ProductMetaKey.RetailModels,
+          jsonValue: JSON.stringify(formData.retailModels),
+        }
+      : null,
+  ];
   return metas.filter((meta) => meta != null);
 }
 

@@ -12,7 +12,7 @@ export enum ProductMetaKey {
 
   // Persisted Meta Values
   Description = 'DESCRIPTION',
-  Models = 'MODELS',
+  RetailModels = 'RETAIL_MODELS',
 }
 
 export interface ProductMetaMetadata {}

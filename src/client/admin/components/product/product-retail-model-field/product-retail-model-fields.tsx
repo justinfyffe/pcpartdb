@@ -4,33 +4,34 @@ import {
   ChevronUpIcon,
   XIcon,
 } from '@heroicons/react/outline';
-import { ProductImageRequest, ProductImageType } from '@shared/product-image';
+import { ProductRetailModel } from '@shared/product-retail-model';
 import React, { FunctionComponent, useCallback } from 'react';
-import { ProductImageField } from './product-image-field';
+import { ProductRetailModelField } from './product-retail-model-field';
 
-interface ProductImageFieldsProps {
+interface ProductRetailModelFieldsProps {
   name: string;
-  type: ProductImageType;
-  value: ProductImageRequest[];
-  fields: (ProductImageRequest & { id: string })[];
+  value?: ProductRetailModel[];
+  fields: (ProductRetailModel & { id: string })[];
 
-  onChange: (values: ProductImageRequest[]) => void;
+  onChange?: (value: ProductRetailModel[]) => void;
   onAppend: () => void;
   onRemove: (index: number) => void;
   onSwap: (from: number, to: number) => void;
 
+  className?: string;
   ref?: unknown;
 }
 
-export const ProductImageFields: FunctionComponent<ProductImageFieldsProps> = (
-  props,
-) => {
-  const { fields, type, value, onAppend, onRemove, onSwap, onChange } = props;
+export const ProductRetailModelFields: FunctionComponent<
+  ProductRetailModelFieldsProps
+> = (props) => {
+  const { value, fields, onChange, onAppend, onRemove, onSwap } = props;
 
-  const handleImageChange = useCallback(
-    (i: number, productImage: ProductImageRequest) => {
-      fields[i] = { ...fields[i], ...productImage };
-      value[i] = { ...productImage, metadata: { order: i } };
+  const handleChange = useCallback(
+    (i: number, retailModel: ProductRetailModel) => {
+      fields[i] = { ...fields[i], ...retailModel };
+      value[i] = { ...retailModel };
+      console.log(value[i]);
       onChange(value);
     },
     [fields, value, onChange],
@@ -63,10 +64,9 @@ export const ProductImageFields: FunctionComponent<ProductImageFieldsProps> = (
         <div key={field.id} className="flex items-stretch mb-6">
           <div className="mx-6 text-3xl self-center">{i + 1}</div>
 
-          <ProductImageField
-            type={type}
+          <ProductRetailModelField
             value={value[i]}
-            onChange={(value) => handleImageChange(i, value)}
+            onChange={(value) => handleChange(i, value)}
             className="flex-1 mb-0"
           />
 
@@ -105,7 +105,7 @@ export const ProductImageFields: FunctionComponent<ProductImageFieldsProps> = (
         variant={ButtonVariant.Secondary}
         onClick={() => onAppend && onAppend()}
       >
-        Add Image
+        Add Retail Model
       </Button>
     </div>
   );
