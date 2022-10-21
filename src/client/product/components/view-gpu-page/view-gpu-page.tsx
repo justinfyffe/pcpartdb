@@ -110,7 +110,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                       'self-stretch lg:text-lg text-right py-[4px]',
                     )}
                   >
-                    Buy
+                    Check Price
                   </Button>
                 </li>
 
