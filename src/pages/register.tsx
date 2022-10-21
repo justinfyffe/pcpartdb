@@ -1,3 +1,3 @@
-import { RegisterPage } from '@client/auth/pages';
+import { RegisterPage } from '@client/auth/components';
 
 export default RegisterPage;

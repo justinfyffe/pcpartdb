@@ -78,7 +78,7 @@ export function formatProductBenchmark(
   benchmark: ProductBenchmark,
   options?: FormatProductBenchmarkOptions,
 ) {
-  if (benchmark == null) {
+  if (productBenchmarkValue(benchmark) == null) {
     return '--';
   }
 

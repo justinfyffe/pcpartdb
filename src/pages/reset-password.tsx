@@ -1,3 +1,3 @@
-import { ResetPasswordPage } from '@client/auth/pages';
+import { ResetPasswordPage } from '@client/auth/components';
 
 export default ResetPasswordPage;

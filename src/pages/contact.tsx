@@ -1,3 +1,3 @@
-import { ContactPage } from '@client/contact/pages';
+import { ContactPage } from '@client/contact/components';
 
 export default ContactPage;

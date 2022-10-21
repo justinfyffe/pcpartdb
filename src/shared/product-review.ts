@@ -45,6 +45,18 @@ export const productReviewValidator = Joi.object({
   metadata: Joi.any().allow(null),
 }).options({ abortEarly: false });
 
+export function productReviewValue(review: ProductReview) {
+  return (
+    review?.booleanValue ??
+    review?.floatValue ??
+    review?.integerValue ??
+    review?.jsonValue ??
+    review?.stringValue ??
+    review?.textValue ??
+    null
+  );
+}
+
 export interface FormatProductBenchmarkOptions {
   decimals?: number;
   booleanFormatter?: ProductReviewBooleanFormatter;
@@ -54,7 +66,7 @@ export function formatProductReview(
   review: ProductReview,
   options?: FormatProductBenchmarkOptions,
 ) {
-  if (review == null) {
+  if (productReviewValue(review) == null) {
     return '--';
   }
 

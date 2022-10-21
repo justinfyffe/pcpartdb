@@ -304,7 +304,7 @@ export function formatProductSpec(
   spec: ProductSpec,
   options?: FormatProductSpecOptions,
 ) {
-  if (spec == null) {
+  if (productSpecValue(spec) == null) {
     return '--';
   }
 

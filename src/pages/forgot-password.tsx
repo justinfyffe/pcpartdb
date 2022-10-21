@@ -1,3 +1,3 @@
-import { ForgotPasswordPage } from '@client/auth/pages';
+import { ForgotPasswordPage } from '@client/auth/components';
 
 export default ForgotPasswordPage;

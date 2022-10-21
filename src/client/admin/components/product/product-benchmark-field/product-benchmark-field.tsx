@@ -42,7 +42,11 @@ export const ProductBenchmarkField: FunctionComponent<
 
   const handleScoreChange = useCallback(
     (score: number) => {
-      const newValue = { ...value, key: benchmarkKey, floatValue: score };
+      const newValue = {
+        ...value,
+        key: benchmarkKey,
+        floatValue: score,
+      };
       setValue(newValue);
       onChange(newValue);
     },

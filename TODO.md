@@ -7,12 +7,18 @@ Immediate Tasks:
   - Value Score = Performance Score / Launch Price
   - Performance Rating = GPU Score / Max(GPU Score)
   - Value Rating = Value Score / Max(Value Score)
-- add product models as a json meta type on the product
-- auto-generate summary
-- cleanup pages/components
-  - place relevant ones next to each other?
+
 - view gpu page
+  - format data
+  - auto-generate summary
+  - buy button
+  - product models
 - compare gpus page
+  - copytext from view gpu page
+  - copy data shown from view gpu page
+  - format data
+  - auto-generate summary
+  - buy buttons
 - gpus list page
 - contact page
 - about page

@@ -68,7 +68,7 @@ export function formatProductMeta(
   meta: ProductMeta,
   options?: FormatProductMetaOptions,
 ) {
-  if (meta == null) {
+  if (productMetaValue(meta) == null) {
     return '--';
   }
 

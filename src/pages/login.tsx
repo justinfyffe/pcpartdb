@@ -1,3 +1,3 @@
-import { LoginPage } from '@client/auth/pages';
+import { LoginPage } from '@client/auth/components';
 
 export default LoginPage;

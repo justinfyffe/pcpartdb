@@ -7,6 +7,14 @@ import React, {
 } from 'react';
 import { classNames } from '../../ui';
 
+interface CheckboxProps
+  extends Omit<HTMLProps<HTMLInputElement>, 'onChange' | 'value'> {
+  onChange?: (value: boolean) => void;
+  value?: boolean;
+
+  children?: React.ReactNode;
+}
+
 export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
   (props, ref) => {
     const { children, className, onChange, value: propsValue } = props;
@@ -17,7 +25,7 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
 
     const handleChange = useCallback(
       (e: React.ChangeEvent<HTMLInputElement>) => {
-        const newValue = e.target.value === 'true';
+        const newValue = e.target.checked;
         setValue(newValue);
         onChange?.(newValue);
       },
@@ -28,7 +36,7 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
       <label className={classNames('block', className)}>
         <input
           type="checkbox"
-          value={value + ''}
+          checked={value}
           onChange={handleChange}
           className={classNames('mr-2')}
           ref={ref}
@@ -39,11 +47,3 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
   },
 );
 Checkbox.displayName = 'Checkbox';
-
-interface CheckboxProps
-  extends Omit<HTMLProps<HTMLInputElement>, 'onChange' | 'value'> {
-  onChange?: (value: boolean) => void;
-  value?: boolean;
-
-  children?: React.ReactNode;
-}

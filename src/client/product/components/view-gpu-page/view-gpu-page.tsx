@@ -869,6 +869,49 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                       )}
                     </Td>
                   </Tr>
+                  <Tr>
+                    <Td>
+                      {benchmarks[ProductBenchmarkKey.G2dMark]?.source !=
+                      null ? (
+                        <a
+                          href={benchmarks[ProductBenchmarkKey.G2dMark].source}
+                        >
+                          G2D Mark
+                        </a>
+                      ) : (
+                        <>G2D Mark</>
+                      )}
+                    </Td>
+                    <Td>
+                      {formatProductBenchmark(
+                        benchmarks[ProductBenchmarkKey.G2dMark],
+                        { decimals: 0 },
+                      )}
+                    </Td>
+                  </Tr>
+                  <Tr>
+                    <Td>
+                      {benchmarks[ProductBenchmarkKey.TimeSpyGraphics]
+                        ?.source != null ? (
+                        <a
+                          href={
+                            benchmarks[ProductBenchmarkKey.TimeSpyGraphics]
+                              .source
+                          }
+                        >
+                          3DMark Time Spy Graphics
+                        </a>
+                      ) : (
+                        <>3DMark Time Spy Graphics</>
+                      )}
+                    </Td>
+                    <Td>
+                      {formatProductBenchmark(
+                        benchmarks[ProductBenchmarkKey.TimeSpyGraphics],
+                        { decimals: 0 },
+                      )}
+                    </Td>
+                  </Tr>
                 </TBody>
               </Table>
             </article>
