@@ -1,5 +1,8 @@
-import { DesktopComputerIcon, SearchIcon } from '@heroicons/react/outline';
-import { HeartIcon } from '@heroicons/react/solid';
+import {
+  ComputerDesktopIcon,
+  MagnifyingGlassIcon,
+} from '@heroicons/react/24/outline';
+import { HeartIcon } from '@heroicons/react/24/solid';
 import React, { FunctionComponent } from 'react';
 import {
   Button,
@@ -25,7 +28,7 @@ export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
     <>
       <Toolbar>
         <ToolbarTitle>
-          <DesktopComputerIcon className={classNames('h-8 w-8')} /> Finest PC
+          <ComputerDesktopIcon className={classNames('h-8 w-8')} /> Finest PC
         </ToolbarTitle>
 
         <ToolbarNav className="hidden md:block">
@@ -40,7 +43,7 @@ export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
           </Button>
 
           <Button variant={ButtonVariant.Toolbar}>
-            <SearchIcon className="w-[20px]" />
+            <MagnifyingGlassIcon className="w-[20px]" />
           </Button>
         </ToolbarNav>
       </Toolbar>

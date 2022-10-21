@@ -298,6 +298,8 @@ export function compareProductSpecs(spec1: ProductSpec, spec2: ProductSpec) {
 export interface FormatProductSpecOptions {
   decimals?: number;
   booleanFormatter?: ProductSpecBooleanFormatter;
+  prefix?: boolean;
+  suffix?: boolean;
 }
 
 export function formatProductSpec(
@@ -353,11 +355,11 @@ export function formatProductSpec(
   const prefix = metadata?.prefix ?? null;
   const suffix = metadata?.suffix ?? null;
 
-  if (prefix != null) {
+  if ((options?.prefix ?? true) && prefix != null) {
     returnValue = `${prefix}${returnValue}`;
   }
 
-  if (suffix != null) {
+  if ((options?.suffix ?? true) && suffix != null) {
     returnValue = `${returnValue} ${suffix}`;
   }
 

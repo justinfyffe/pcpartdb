@@ -1,4 +1,4 @@
-import { XIcon } from '@heroicons/react/outline';
+import { XMarkIcon } from '@heroicons/react/24/outline';
 import React, {
   Children,
   createContext,
@@ -177,7 +177,7 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
               className="items-center rounded-r-md flex font-medium h-[calc(100%_-_2px)] m-[1px] p-[0_16px] absolute right-0 top-0 hover:bg-[#fafafa]"
               onClick={handleClear}
             >
-              <XIcon className="w-[16px]" />
+              <XMarkIcon className="w-[16px]" />
             </div>
           )}
           {isLoading && (

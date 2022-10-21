@@ -18,14 +18,17 @@ import {
   SidenavPopularProducts,
 } from '@client/sidenav';
 import {
-  CalendarIcon,
-  ChipIcon,
+  BoltIcon,
+  CalendarDaysIcon,
+  CircleStackIcon,
   ClockIcon,
+  CpuChipIcon,
+  CubeTransparentIcon,
   CurrencyDollarIcon,
   ShoppingCartIcon,
   StarIcon,
-  TableIcon,
-} from '@heroicons/react/outline';
+  TableCellsIcon,
+} from '@heroicons/react/24/outline';
 import {
   getProductBenchmarks,
   getProductMeta,
@@ -173,7 +176,76 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                 >
                   <div className={classNames('flex-1 flex gap-2 items-center')}>
                     <div className="mr-1">
-                      <ChipIcon className="w-[20px] lg:w-[30px]"></ChipIcon>
+                      <CircleStackIcon className="w-[20px] lg:w-[30px]"></CircleStackIcon>
+                    </div>
+
+                    <div
+                      className={classNames('font-medium text-xl lg:text-2xl')}
+                    >
+                      Memory
+                    </div>
+                  </div>
+
+                  <div
+                    className={classNames(
+                      'text-md lg:text-lg text-slate-600 text-right',
+                    )}
+                  >
+                    {formatProductSpec(specs[ProductSpecKey.MemorySize], {
+                      decimals: 0,
+                    })}{' '}
+                    {formatProductSpec(specs[ProductSpecKey.MemoryType])}
+                  </div>
+                </li>
+
+                <li
+                  className={classNames(
+                    'bg-slate-200 flex items-center justify-center px-4 py-2 rounded shadow',
+                  )}
+                >
+                  <div className={classNames('flex-1 flex gap-2 items-center')}>
+                    <div className="mr-1">
+                      <CubeTransparentIcon className="w-[20px] lg:w-[30px]"></CubeTransparentIcon>
+                    </div>
+
+                    <div
+                      className={classNames('font-medium text-xl lg:text-2xl')}
+                    >
+                      Dimensions
+                    </div>
+                  </div>
+
+                  <div
+                    className={classNames(
+                      'text-md lg:text-lg text-slate-600 text-right',
+                    )}
+                  >
+                    {formatProductSpec(specs[ProductSpecKey.Length], {
+                      decimals: 0,
+                      suffix: false,
+                    })}
+                    {' x '}
+                    {formatProductSpec(specs[ProductSpecKey.Width], {
+                      decimals: 0,
+                      suffix: false,
+                    })}
+                    {' x '}
+                    {formatProductSpec(specs[ProductSpecKey.Height], {
+                      decimals: 0,
+                      suffix: false,
+                    })}{' '}
+                    mm
+                  </div>
+                </li>
+
+                <li
+                  className={classNames(
+                    'bg-slate-200 flex items-center justify-center px-4 py-2 rounded shadow',
+                  )}
+                >
+                  <div className={classNames('flex-1 flex gap-2 items-center')}>
+                    <div className="mr-1">
+                      <CpuChipIcon className="w-[20px] lg:w-[30px]"></CpuChipIcon>
                     </div>
 
                     <div
@@ -218,8 +290,13 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                       'text-md lg:text-lg text-slate-600 text-right',
                     )}
                   >
-                    {formatProductSpec(specs[ProductSpecKey.ClockSpeedBase])} /{' '}
-                    {formatProductSpec(specs[ProductSpecKey.ClockSpeedBoost])}
+                    {formatProductSpec(specs[ProductSpecKey.ClockSpeedBase], {
+                      decimals: 0,
+                    })}{' '}
+                    /{' '}
+                    {formatProductSpec(specs[ProductSpecKey.ClockSpeedBoost], {
+                      decimals: 0,
+                    })}
                   </div>
                 </li>
 
@@ -230,13 +307,13 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                 >
                   <div className={classNames('flex-1 flex gap-2 items-center')}>
                     <div className="mr-1">
-                      <TableIcon className="w-[20px] lg:w-[30px]"></TableIcon>
+                      <BoltIcon className="w-[20px] lg:w-[30px]"></BoltIcon>
                     </div>
 
                     <div
                       className={classNames('font-medium text-xl lg:text-2xl')}
                     >
-                      Memory
+                      TDP
                     </div>
                   </div>
 
@@ -245,8 +322,9 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                       'text-md lg:text-lg text-slate-600 text-right',
                     )}
                   >
-                    {specs[ProductSpecKey.MemorySize]?.floatValue ?? '--'}{' '}
-                    {specs[ProductSpecKey.MemoryType]?.stringValue ?? '--'}
+                    {formatProductSpec(specs[ProductSpecKey.Tdp], {
+                      decimals: 0,
+                    })}
                   </div>
                 </li>
 
@@ -257,7 +335,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                 >
                   <div className={classNames('flex-1 flex gap-2 items-center')}>
                     <div className="mr-1">
-                      <CalendarIcon className="w-[20px] lg:w-[30px]"></CalendarIcon>
+                      <CalendarDaysIcon className="w-[20px] lg:w-[30px]"></CalendarDaysIcon>
                     </div>
 
                     <div
@@ -734,18 +812,12 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
 
                 <Table border responsive>
                   <TBody>
-                    <Tr>
-                      <Td className="min-w-[180px]">Max Resolution</Td>
-                      <Td className="min-w-[80px]">
-                        {formatProductSpec(specs[ProductSpecKey.MaxResolution])}
-                      </Td>
-                    </Tr>
                     {productSpecValue(specs[ProductSpecKey.MarketSegment]) ===
                       MarketSegment.Desktop && (
                       <>
                         <Tr>
-                          <Td>Display Ports</Td>
-                          <Td>
+                          <Td className="min-w-[180px]">Display Ports</Td>
+                          <Td className="min-w-[80px]">
                             {formatProductSpec(
                               specs[ProductSpecKey.DisplayPorts],
                             )}

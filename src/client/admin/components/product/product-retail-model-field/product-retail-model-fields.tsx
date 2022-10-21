@@ -2,8 +2,8 @@ import { Button, ButtonVariant } from '@client/shared/components';
 import {
   ChevronDownIcon,
   ChevronUpIcon,
-  XIcon,
-} from '@heroicons/react/outline';
+  XMarkIcon,
+} from '@heroicons/react/24/outline';
 import { ProductRetailModel } from '@shared/product-retail-model';
 import React, { FunctionComponent, useCallback } from 'react';
 import { ProductRetailModelField } from './product-retail-model-field';
@@ -93,7 +93,7 @@ export const ProductRetailModelFields: FunctionComponent<
               onClick={() => handleRemove(i)}
               className="h-[46px]"
             >
-              <XIcon className="w-[16px]" />
+              <XMarkIcon className="w-[16px]" />
             </Button>
           </div>
         </div>

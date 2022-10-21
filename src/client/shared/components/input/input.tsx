@@ -1,4 +1,4 @@
-import { XIcon } from '@heroicons/react/outline';
+import { XMarkIcon } from '@heroicons/react/24/outline';
 import React, {
   ChangeEvent,
   FocusEvent,
@@ -147,7 +147,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 
         {props.clearable && (
           <Button className="hover:bg-[#eee]" onClick={handleClear}>
-            <XIcon className="w-[16px]" />
+            <XMarkIcon className="w-[16px]" />
           </Button>
         )}
       </div>

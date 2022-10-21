@@ -6,7 +6,7 @@ import {
   showDialog,
 } from '@client/shared/components';
 import { classNames } from '@client/shared/ui';
-import { PhotographIcon } from '@heroicons/react/outline';
+import { PhotoIcon } from '@heroicons/react/24/outline';
 import { Image } from '@shared/image';
 import React, { FunctionComponent, useCallback, useState } from 'react';
 import { ImageDialog } from '../image-dialog';
@@ -108,7 +108,7 @@ const EmptyImageInput = (
       className="items-center text-[#ccc] cursor-pointer flex flex-col text-[36px] h-full justify-center p-4 w-full"
       onClick={handleClick}
     >
-      <PhotographIcon className="w-[72px] h-[72px] mb-2" />
+      <PhotoIcon className="w-[72px] h-[72px] mb-2" />
       No Image
       {recommendedHeight && recommendedWidth && (
         <div className="text-[12px] mt-2">

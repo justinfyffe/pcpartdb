@@ -8,7 +8,8 @@ import Head from 'next/head';
 import React from 'react';
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
-  const { error } = pageProps;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { error } = pageProps as any;
 
   return (
     <GonContext.Provider value={{ fieldCounter: 0 }}>

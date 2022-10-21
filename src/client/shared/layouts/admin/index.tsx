@@ -1,5 +1,5 @@
 import { authService } from '@client/auth';
-import { DesktopComputerIcon } from '@heroicons/react/outline';
+import { ComputerDesktopIcon } from '@heroicons/react/24/outline';
 import { useRouter } from 'next/router';
 import React, { FunctionComponent, useCallback } from 'react';
 import {
@@ -28,7 +28,7 @@ export const AdminLayout: FunctionComponent<AdminLayoutProps> = (props) => {
     <>
       <Toolbar>
         <ToolbarTitle>
-          <DesktopComputerIcon className={classNames('h-8 w-8')} /> Finest PC
+          <ComputerDesktopIcon className={classNames('h-8 w-8')} /> Finest PC
         </ToolbarTitle>
 
         <ToolbarNav className="hidden md:block">

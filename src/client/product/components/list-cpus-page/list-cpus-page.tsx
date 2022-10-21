@@ -11,7 +11,10 @@ import {
 } from '@client/shared/components';
 import { WebsiteLayout } from '@client/shared/layouts';
 import { classNames } from '@client/shared/ui';
-import { DesktopComputerIcon, PlusCircleIcon } from '@heroicons/react/outline';
+import {
+  ComputerDesktopIcon,
+  PlusCircleIcon,
+} from '@heroicons/react/24/outline';
 import { NextPageContext } from 'next';
 import React from 'react';
 
@@ -705,7 +708,7 @@ export const ListCpusPage = (_props: ListCpusPageProps) => {
 
         <section className={classNames('my-4')}>
           <SectionHeader>
-            <DesktopComputerIcon
+            <ComputerDesktopIcon
               className={classNames('inline-block h-6 w-6 mr-2 mb-1')}
             />
             <h2 className={classNames('inline-block')}>Popular Comparisons</h2>

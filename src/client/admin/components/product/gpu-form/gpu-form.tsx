@@ -131,7 +131,6 @@ interface ProductFormData {
   memoryBandwidth?: ProductSpecRequest;
 
   // Display Connectivity
-  maxResolution?: ProductSpecRequest;
   displayPorts?: ProductSpecRequest;
   hdmiPorts?: ProductSpecRequest;
 
@@ -225,7 +224,6 @@ const productValidator = Joi.object({
   memoryBandwidth: productSpecValidator.allow(null),
 
   // Display Connectivity
-  maxResolution: productSpecValidator.allow(null),
   displayPorts: productSpecValidator.allow(null),
   hdmiPorts: productSpecValidator.allow(null),
 
@@ -332,7 +330,6 @@ function formOptions(gpu?: Product): UseFormProps<ProductFormData> {
       memoryBandwidth: specs[ProductSpecKey.MemoryBandwidth] ?? null,
 
       // Display Connectivity
-      maxResolution: specs[ProductSpecKey.MaxResolution] ?? null,
       displayPorts: specs[ProductSpecKey.DisplayPorts] ?? null,
       hdmiPorts: specs[ProductSpecKey.HdmiPorts] ?? null,
 
@@ -1129,21 +1126,6 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           <h3 className="mb-4">Display Connectivity</h3>
 
           <Field>
-            Max Resolution
-            <Controller
-              name="maxResolution"
-              control={control}
-              render={({ field }) => (
-                <ProductSpecField
-                  field={ProductSpecKey.MaxResolution}
-                  {...field}
-                  ref={null}
-                />
-              )}
-            />
-          </Field>
-
-          <Field>
             Display Ports
             <Controller
               name="displayPorts"
@@ -1430,7 +1412,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
             <ProductImageFields
               fields={detailsImagesFields}
               type={ProductImageType.Details}
-              onAppend={() => appendImage({})}
+              onAppend={() => appendImage(null)}
               onRemove={removeImage}
               onSwap={swapImage}
               {...field}
@@ -1449,7 +1431,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           render={({ field }) => (
             <ProductRetailModelFields
               fields={retailModelsFields}
-              onAppend={() => appendRetailModel({})}
+              onAppend={() => appendRetailModel(null)}
               onRemove={removeRetailModel}
               onSwap={swapRetailModel}
               {...field}
@@ -1525,7 +1507,6 @@ function toSpecsArray(formData: ProductFormData): ProductSpecRequest[] {
     formData.length,
     formData.lithography,
     formData.marketSegment,
-    formData.maxResolution,
     formData.memoryBandwidth,
     formData.memoryInterface,
     formData.memorySize,
