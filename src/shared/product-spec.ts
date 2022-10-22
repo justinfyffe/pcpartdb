@@ -8,12 +8,6 @@ export enum MarketSegment {
   Server = 'SERVER',
 }
 
-export enum ProductionStatus {
-  Active = 'ACTIVE',
-  EndOfLife = 'END_OF_LIFE',
-  Unreleased = 'UNRELEASED',
-}
-
 export enum ProductSpecBooleanFormatter {
   TrueFalse = 'TRUE_FALSE',
   YesNo = 'YES_NO',
@@ -55,42 +49,25 @@ export enum TextureFillRate {
 export enum ProductSpecKey {
   // General
   Company = 'COMPANY',
-  Generation = 'GENERATION',
-  Predecessor = 'PREDECESSOR',
-  Successor = 'SUCCESSOR',
   MarketSegment = 'MARKET_SEGMENT',
   LaunchPrice = 'LAUNCH_PRICE',
   ReleaseDate = 'RELEASE_DATE',
-  ProductionStatus = 'PRODUCTION_STATUS',
 
   // Processor
   GpuName = 'GPU_NAME',
-  GpuVariant = 'GPU_VARIANT',
   Architecture = 'ARCHITECTURE',
   Foundry = 'FOUNDRY',
   Lithography = 'LITHOGRAPHY',
   Transistors = 'TRANSISTORS',
-  DieSize = 'DIE_SIZE',
 
-  // Cores & Clock Speeds
-  CpuCores = 'CPU_CORES',
-  Threads = 'THREADS',
-  CudaCores = 'CUDA_CORES',
-  Tmus = 'TMUS',
-  Rops = 'ROPS',
-  TensorCores = 'TENSOR_CORES',
-  RtCores = 'RT_CORES',
-  ClockMultiplier = 'CLOCK_MULTIPLIER',
-  ClockMultiplierUnlocked = 'CLOCK_MULTIPLIER_UNLOCKED',
-  ClockSpeedBase = 'CLOCK_SPEED_BASE',
-  ClockSpeedBoost = 'CLOCK_SPEED_BOOST',
-  L1Cache = 'L1_CACHE',
-  L2Cache = 'L2_CACHE',
-  L3Cache = 'L3_CACHE',
-  IntegratedGpu = 'INTEGRATED_GPU',
+  // Memory
+  MemorySize = 'MEMORY_SIZE',
+  MemoryType = 'MEMORY_TYPE',
+  MemoryClock = 'MEMORY_CLOCK',
+  MemoryInterface = 'MEMORY_INTERFACE',
+  MemoryBandwidth = 'MEMORY_BANDWIDTH',
 
   // Board Design
-  CpuSocket = 'CPU_SOCKET',
   SlotWidth = 'SLOT_WIDTH',
   Length = 'LENGTH',
   Width = 'WIDTH',
@@ -100,7 +77,18 @@ export enum ProductSpecKey {
   SuggestedPsu = 'SUGGESTED_PSU',
   BusInterface = 'BUS_INTERFACE',
   PowerConnectors = 'POWER_CONNECTORS',
-  BoardNumber = 'BOARD_NUMBER',
+  Outputs = 'OUTPUTS',
+
+  // Cores & Clock Speeds
+  CudaCores = 'CUDA_CORES',
+  Tmus = 'TMUS',
+  Rops = 'ROPS',
+  TensorCores = 'TENSOR_CORES',
+  RtCores = 'RT_CORES',
+  ClockSpeedBase = 'CLOCK_SPEED_BASE',
+  ClockSpeedBoost = 'CLOCK_SPEED_BOOST',
+  L1Cache = 'L1_CACHE',
+  L2Cache = 'L2_CACHE',
 
   // Theoretical Performance
   PixelFillRate = 'PIXEL_FILL_RATE',
@@ -108,29 +96,14 @@ export enum ProductSpecKey {
   Fp32Performance = 'FP32_PERFORMANCE',
   Fp64Performance = 'FP64_PERFORMANCE',
 
-  // Memory
-  MemorySize = 'MEMORY_SIZE',
-  MemoryType = 'MEMORY_TYPE',
-  MemoryInterface = 'MEMORY_INTERFACE',
-  MemoryBandwidth = 'MEMORY_BANDWIDTH',
-  MaxMemoryBandwidth = 'MAX_MEMORY_BANDWIDTH',
-  MaxMemoryChannels = 'MAX_MEMORY_CHANNELS',
-  MaxMemorySize = 'MAX_MEMORY_SIZE',
-
-  // Display Connectivity
-  MaxResolution = 'MAX_RESOLUTION',
-  DisplayPorts = 'DISPLAY_PORTS',
-  HdmiPorts = 'HDMI_PORTS',
-
   // API Support
+
+  GSyncFreeSyncSupport = 'G_SYNC_FREE_SYNC_SUPPORT',
+  SliCrossfireSupport = 'SLI_CROSSFIRE_SUPPORT',
   DirectXVersion = 'DIRECT_X_VERSION',
   OpenClVersion = 'OPEN_CL_VERSION',
   OpenGlVersion = 'OPEN_GL_VERSION',
-  CudaVersion = 'CUDA_VERSION',
   ShaderModelVersion = 'SHADER_MODEL_VERSION',
-  GSyncFreeSyncSupport = 'G_SYNC_FREE_SYNC_SUPPORT',
-  SliCrossfireSupport = 'SLI_CROSSFIRE_SUPPORT',
-  VrReady = 'VR_READY',
 }
 
 export interface ProductSpecMetadata {
@@ -333,9 +306,6 @@ export function formatProductSpec(
   if (key === ProductSpecKey.MarketSegment) {
     return formatMarketSegment(stringValue);
   }
-  if (key === ProductSpecKey.ProductionStatus) {
-    return formatProductionStatus(stringValue);
-  }
   if (key === ProductSpecKey.ReleaseDate) {
     return formatReleaseDate(
       stringValue,
@@ -404,19 +374,6 @@ function formatMarketSegment(value: string) {
       return 'Laptop';
     case MarketSegment.Server:
       return 'Server';
-    default:
-      throw new Error(`Invalid market segment value: ${value}`);
-  }
-}
-
-function formatProductionStatus(value: string) {
-  switch (value) {
-    case ProductionStatus.Active:
-      return 'Active';
-    case ProductionStatus.EndOfLife:
-      return 'End of Life';
-    case ProductionStatus.Unreleased:
-      return 'Unreleased';
     default:
       throw new Error(`Invalid market segment value: ${value}`);
   }

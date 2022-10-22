@@ -1,3 +1,5 @@
+import React from 'react';
+
 interface SummaryProps {
   specs?: any;
   meta?: any;
@@ -5,4 +7,6 @@ interface SummaryProps {
   reviews?: any;
 }
 
-export const Summary = (props: SummaryProps) => {};
+export const Summary = (props: SummaryProps) => {
+  return <></>;
+};

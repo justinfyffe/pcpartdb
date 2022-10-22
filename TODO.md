@@ -8,6 +8,14 @@ Immediate Tasks:
   - Performance Rating = GPU Score / Max(GPU Score)
   - Value Rating = Value Score / Max(Value Score)
 
+- specs
+  - update gpu form
+  - rename specs
+  - add memory clock?
+  - usb-c?
+  - dvi?
+  - vga?
+
 - view gpu page
   - format data
   - auto-generate summary

@@ -1,7 +1,6 @@
 import { Select, SelectOption, SelectValue } from '@client/shared/components';
 import {
   MarketSegment,
-  ProductionStatus,
   ProductSpecKey,
   ProductSpecRequest,
 } from '@shared/product-spec';
@@ -12,11 +11,6 @@ const ITEMS: { [key: string]: { label: string; value: string }[] } = {
     { label: 'Desktop', value: MarketSegment.Desktop },
     { label: 'Laptop', value: MarketSegment.Laptop },
     { label: 'Server', value: MarketSegment.Server },
-  ],
-  [ProductSpecKey.ProductionStatus]: [
-    { label: 'Active', value: ProductionStatus.Active },
-    { label: 'End-Of-Life', value: ProductionStatus.EndOfLife },
-    { label: 'Unreleased', value: ProductionStatus.Unreleased },
   ],
 };
 

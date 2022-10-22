@@ -6,7 +6,6 @@ const SUFFIXES: { [key: string]: string[] } = {
   [ProductSpecKey.LaunchPrice]: ['USD'],
   [ProductSpecKey.Lithography]: ['nm', 'μm'],
   [ProductSpecKey.Transistors]: ['million'],
-  [ProductSpecKey.DieSize]: ['mm^2'],
   [ProductSpecKey.Length]: ['mm'],
   [ProductSpecKey.Width]: ['mm'],
   [ProductSpecKey.Height]: ['mm'],
@@ -22,10 +21,9 @@ const SUFFIXES: { [key: string]: string[] } = {
   [ProductSpecKey.Fp32Performance]: ['TFLOPS', 'GFLOPS'],
   [ProductSpecKey.Fp64Performance]: ['GFLOPS', 'TFLOPS'],
   [ProductSpecKey.MemorySize]: ['GB', 'MB', 'KB'],
-  [ProductSpecKey.MaxMemorySize]: ['GB', 'MB', 'KB'],
   [ProductSpecKey.MemoryInterface]: ['bit'],
   [ProductSpecKey.MemoryBandwidth]: ['GB/s', 'MB/s'],
-  [ProductSpecKey.MaxMemoryBandwidth]: ['GB/s', 'MB/s'],
+  [ProductSpecKey.MemoryClock]: ['MHz'],
 };
 
 interface ProductSpecFloatFieldProps {

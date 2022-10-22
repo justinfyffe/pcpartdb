@@ -3,12 +3,8 @@ import {
   ArticleHeader,
   Breadcrumb,
   Breadcrumbs,
-  Button,
-  ButtonVariant,
   Table,
   TBody,
-  Td,
-  Tr,
 } from '@client/shared/components';
 import { WebsiteLayout } from '@client/shared/layouts';
 import { classNames } from '@client/shared/ui';
@@ -36,15 +32,22 @@ import { ProductReviewKey } from '@shared/product-review';
 import { formatProductSpec, ProductSpecKey } from '@shared/product-spec';
 import { NextPageContext } from 'next';
 import React, { useMemo } from 'react';
-import ReactMarkdown from 'react-markdown';
 import { productService } from '../../product-service';
 import { CompareProductsForm } from '../compare-products-form';
 import { createProductContextState, ProductContext } from '../product-context';
 import { ProductImages } from '../product-images';
 import { BenchmarkRow } from './benchmark-row';
-import { CustomRow } from './custom-row';
+import { CustomRow, CustomRowLabel, CustomRowValue } from './custom-row';
+import {
+  HighlightButton,
+  HighlightLabel,
+  HighlightList,
+  HighlightListItem,
+  HighlightValue,
+} from './highlight-list';
 import { ReviewRow } from './review-row';
 import { SpecRow } from './spec-row';
+import { Summary } from './summary';
 
 interface ViewGpuPageProps {
   gpu: Product;
@@ -81,155 +84,54 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
               </div>
 
               <div className="flex-1">
-                <ul className={classNames('flex flex-col gap-3 lg:gap-4')}>
-                  <li
-                    className={classNames(
-                      'bg-slate-200 flex items-center justify-center px-4 py-2 rounded shadow',
-                    )}
-                  >
-                    <div
-                      className={classNames('flex-1 flex gap-2 items-center')}
-                    >
-                      <div className="mr-1">
-                        <ShoppingCartIcon className="w-[20px] lg:w-[30px]"></ShoppingCartIcon>
-                      </div>
+                <HighlightList>
+                  <HighlightListItem>
+                    <HighlightLabel icon={<ShoppingCartIcon />}>
+                      Shop
+                    </HighlightLabel>
 
-                      <div
-                        className={classNames(
-                          'font-medium text-xl lg:text-2xl',
-                        )}
-                      >
-                        Shop
-                      </div>
-                    </div>
+                    <HighlightValue>
+                      <HighlightButton>Check Price</HighlightButton>
+                    </HighlightValue>
+                  </HighlightListItem>
 
-                    <Button
-                      variant={ButtonVariant.Primary}
-                      className={classNames(
-                        'self-stretch lg:text-lg text-right py-[4px]',
-                      )}
-                    >
-                      Check Price
-                    </Button>
-                  </li>
+                  <HighlightListItem>
+                    <HighlightLabel icon={<StarIcon />}>
+                      Performance Rank
+                    </HighlightLabel>
 
-                  <li
-                    className={classNames(
-                      'bg-slate-200 flex items-center justify-center px-4 py-2 rounded shadow',
-                    )}
-                  >
-                    <div
-                      className={classNames('flex-1 flex gap-2 items-center')}
-                    >
-                      <div className="mr-1">
-                        <StarIcon className="w-[20px] lg:w-[30px]"></StarIcon>
-                      </div>
-
-                      <div
-                        className={classNames(
-                          'font-medium text-xl lg:text-2xl',
-                        )}
-                      >
-                        Performance Rank
-                      </div>
-                    </div>
-
-                    <div
-                      className={classNames(
-                        'text-md lg:text-lg text-slate-600 text-right',
-                      )}
-                    >
+                    <HighlightValue>
                       {formatProductMeta(meta[ProductMetaKey.PerformanceRank])}
-                    </div>
-                  </li>
+                    </HighlightValue>
+                  </HighlightListItem>
 
-                  <li
-                    className={classNames(
-                      'bg-slate-200 flex items-center justify-center px-4 py-2 rounded shadow',
-                    )}
-                  >
-                    <div
-                      className={classNames('flex-1 flex gap-2 items-center')}
-                    >
-                      <div className="mr-1">
-                        <CurrencyDollarIcon className="w-[20px] lg:w-[30px]"></CurrencyDollarIcon>
-                      </div>
+                  <HighlightListItem>
+                    <HighlightLabel icon={<CurrencyDollarIcon />}>
+                      Value Rank
+                    </HighlightLabel>
 
-                      <div
-                        className={classNames(
-                          'font-medium text-xl lg:text-2xl',
-                        )}
-                      >
-                        Value Rank
-                      </div>
-                    </div>
-
-                    <div
-                      className={classNames(
-                        'text-md lg:text-lg text-slate-600 text-right',
-                      )}
-                    >
+                    <HighlightValue>
                       {formatProductMeta(meta[ProductMetaKey.ValueRank])}
-                    </div>
-                  </li>
+                    </HighlightValue>
+                  </HighlightListItem>
 
-                  <li
-                    className={classNames(
-                      'bg-slate-200 flex items-center justify-center px-4 py-2 rounded shadow',
-                    )}
-                  >
-                    <div
-                      className={classNames('flex-1 flex gap-2 items-center')}
-                    >
-                      <div className="mr-1">
-                        <CircleStackIcon className="w-[20px] lg:w-[30px]"></CircleStackIcon>
-                      </div>
+                  <HighlightListItem>
+                    <HighlightLabel icon={<CircleStackIcon />}>
+                      Memory
+                    </HighlightLabel>
 
-                      <div
-                        className={classNames(
-                          'font-medium text-xl lg:text-2xl',
-                        )}
-                      >
-                        Memory
-                      </div>
-                    </div>
-
-                    <div
-                      className={classNames(
-                        'text-md lg:text-lg text-slate-600 text-right',
-                      )}
-                    >
+                    <HighlightValue>
                       {formatProductSpec(specs[ProductSpecKey.MemorySize])}{' '}
                       {formatProductSpec(specs[ProductSpecKey.MemoryType])}
-                    </div>
-                  </li>
+                    </HighlightValue>
+                  </HighlightListItem>
 
-                  <li
-                    className={classNames(
-                      'bg-slate-200 flex items-center justify-center px-4 py-2 rounded shadow',
-                    )}
-                  >
-                    <div
-                      className={classNames('flex-1 flex gap-2 items-center')}
-                    >
-                      <div className="mr-1">
-                        <CubeTransparentIcon className="w-[20px] lg:w-[30px]"></CubeTransparentIcon>
-                      </div>
+                  <HighlightListItem>
+                    <HighlightLabel icon={<CubeTransparentIcon />}>
+                      Dimensions
+                    </HighlightLabel>
 
-                      <div
-                        className={classNames(
-                          'font-medium text-xl lg:text-2xl',
-                        )}
-                      >
-                        Dimensions
-                      </div>
-                    </div>
-
-                    <div
-                      className={classNames(
-                        'text-md lg:text-lg text-slate-600 text-right',
-                      )}
-                    >
+                    <HighlightValue>
                       {formatProductSpec(specs[ProductSpecKey.Length], {
                         suffix: false,
                       })}
@@ -242,76 +144,32 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                         suffix: false,
                       })}{' '}
                       mm
-                    </div>
-                  </li>
+                    </HighlightValue>
+                  </HighlightListItem>
 
-                  <li
-                    className={classNames(
-                      'bg-slate-200 flex items-center justify-center px-4 py-2 rounded shadow',
-                    )}
-                  >
-                    <div
-                      className={classNames('flex-1 flex gap-2 items-center')}
-                    >
-                      <div className="mr-1">
-                        <BoltIcon className="w-[20px] lg:w-[30px]"></BoltIcon>
-                      </div>
+                  <HighlightListItem>
+                    <HighlightLabel icon={<BoltIcon />}>TDP</HighlightLabel>
 
-                      <div
-                        className={classNames(
-                          'font-medium text-xl lg:text-2xl',
-                        )}
-                      >
-                        TDP
-                      </div>
-                    </div>
-
-                    <div
-                      className={classNames(
-                        'text-md lg:text-lg text-slate-600 text-right',
-                      )}
-                    >
+                    <HighlightValue>
                       {formatProductSpec(specs[ProductSpecKey.Tdp])}
-                    </div>
-                  </li>
+                    </HighlightValue>
+                  </HighlightListItem>
 
-                  <li
-                    className={classNames(
-                      'bg-slate-200 flex items-center justify-center px-4 py-2 rounded shadow',
-                    )}
-                  >
-                    <div
-                      className={classNames('flex-1 flex gap-2 items-center')}
-                    >
-                      <div className="mr-1">
-                        <CalendarDaysIcon className="w-[20px] lg:w-[30px]"></CalendarDaysIcon>
-                      </div>
+                  <HighlightListItem>
+                    <HighlightLabel icon={<CalendarDaysIcon />}>
+                      Release Date
+                    </HighlightLabel>
 
-                      <div
-                        className={classNames(
-                          'font-medium text-xl lg:text-2xl',
-                        )}
-                      >
-                        Release Date
-                      </div>
-                    </div>
-
-                    <div
-                      className={classNames(
-                        'text-md lg:text-lg text-slate-600 text-right',
-                      )}
-                    >
+                    <HighlightValue>
                       {formatProductSpec(specs[ProductSpecKey.ReleaseDate])}
-                    </div>
-                  </li>
-                </ul>
+                    </HighlightValue>
+                  </HighlightListItem>
+                </HighlightList>
               </div>
             </section>
 
             <section>
-              <ReactMarkdown>
-                {formatProductMeta(meta[ProductMetaKey.Description]) as string}
-              </ReactMarkdown>
+              <Summary />
             </section>
 
             <section className="flex flex-col gap-6">
@@ -325,18 +183,29 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
 
                 <Table border responsive>
                   <TBody>
-                    <CustomRow label="Performance Rating (Rank)">
-                      {formatProductBenchmark(
-                        benchmarks[ProductBenchmarkKey.PerformanceScore],
-                      )}{' '}
-                      ({formatProductMeta(meta[ProductMetaKey.PerformanceRank])}
-                      )
+                    <CustomRow>
+                      <CustomRowLabel>Performance Rating (Rank)</CustomRowLabel>
+                      <CustomRowValue>
+                        {formatProductBenchmark(
+                          benchmarks[ProductBenchmarkKey.PerformanceScore],
+                        )}{' '}
+                        (
+                        {formatProductMeta(
+                          meta[ProductMetaKey.PerformanceRank],
+                        )}
+                        )
+                      </CustomRowValue>
                     </CustomRow>
-                    <CustomRow label="Performance Per Dollar (Rank)">
-                      {formatProductBenchmark(
-                        benchmarks[ProductBenchmarkKey.ValueScore],
-                      )}{' '}
-                      ({formatProductMeta(meta[ProductMetaKey.ValueRank])})
+                    <CustomRow>
+                      <CustomRowLabel>
+                        Performance Per Dollar (Rank)
+                      </CustomRowLabel>
+                      <CustomRowValue>
+                        {formatProductBenchmark(
+                          benchmarks[ProductBenchmarkKey.ValueScore],
+                        )}{' '}
+                        ({formatProductMeta(meta[ProductMetaKey.ValueRank])})
+                      </CustomRowValue>
                     </CustomRow>
                     <SpecRow spec={ProductSpecKey.Company} />
                     <SpecRow spec={ProductSpecKey.MarketSegment} />
@@ -396,10 +265,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                       <SpecRow spec={ProductSpecKey.MemorySize} />
                       <SpecRow spec={ProductSpecKey.MemoryType} />
                       <SpecRow spec={ProductSpecKey.MemoryBandwidth} />
-                      <Tr>
-                        <Td>Memory Clock</Td>
-                        <Td>--</Td>
-                      </Tr>
+                      <SpecRow spec={ProductSpecKey.MemoryClock} />
                       <SpecRow spec={ProductSpecKey.MemoryInterface} />
                     </TBody>
                   </Table>
@@ -409,8 +275,8 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                   <h3 className="mb-3">Board Compatibility &amp; Dimensions</h3>
 
                   <p className={classNames('text-content-secondary')}>
-                    {`${gpu.name}'s`} dimensions, bus interface, and power
-                    consumption.
+                    {`${gpu.name}'s`} dimensions, bus interface, power
+                    consumption, and output ports.
                   </p>
 
                   <Table border responsive>
@@ -424,37 +290,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                       <SpecRow spec={ProductSpecKey.Tdp} />
                       <SpecRow spec={ProductSpecKey.SuggestedPsu} />
                       <SpecRow spec={ProductSpecKey.PowerConnectors} />
-                    </TBody>
-                  </Table>
-                </section>
-
-                <section>
-                  <h3 className="mb-3">Display Connectivity</h3>
-
-                  <p className={classNames('text-content-secondary')}>
-                    {`${gpu.name}'s`} resolution and output ports.
-                  </p>
-
-                  <Table border responsive>
-                    <TBody>
-                      <SpecRow spec={ProductSpecKey.DisplayPorts} />
-                      <SpecRow spec={ProductSpecKey.HdmiPorts} />
-                      <Tr>
-                        <Td>USB-C</Td>
-                        <Td>--</Td>
-                      </Tr>
-                      <Tr>
-                        <Td>Dual Link DVI</Td>
-                        <Td>--</Td>
-                      </Tr>
-                      <Tr>
-                        <Td>Single Link DVI</Td>
-                        <Td>--</Td>
-                      </Tr>
-                      <Tr>
-                        <Td>VGA</Td>
-                        <Td>--</Td>
-                      </Tr>
+                      <SpecRow spec={ProductSpecKey.Outputs} />
                     </TBody>
                   </Table>
                 </section>

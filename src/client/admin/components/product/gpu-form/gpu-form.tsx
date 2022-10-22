@@ -34,11 +34,7 @@ import {
   ProductImageType,
   productImageValidator,
 } from '@shared/product-image';
-import {
-  ProductMetaKey,
-  ProductMetaRequest,
-  productMetaValidator,
-} from '@shared/product-meta';
+import { ProductMetaKey, ProductMetaRequest } from '@shared/product-meta';
 import {
   ProductRetailModel,
   productRetailModelValidator,
@@ -67,7 +63,6 @@ import {
   UseFormProps,
 } from 'react-hook-form';
 import { ProductImageField, ProductImageFields } from '../product-image-field';
-import { ProductMetaField } from '../product-meta-field';
 import { ProductRetailModelFields } from '../product-retail-model-field';
 import { ProductReviewField } from '../product-review-field';
 import { ProductSpecField } from '../product-spec-field';
@@ -77,14 +72,12 @@ interface ProductFormData {
   slug: string;
   type: ProductType;
   name: string;
-  description?: ProductMetaRequest;
 
   // General
   company?: ProductSpecRequest;
   marketSegment?: ProductSpecRequest;
   launchPrice?: ProductSpecRequest;
   releaseDate?: ProductSpecRequest;
-  productionStatus?: ProductSpecRequest;
 
   // Processor
   gpuName?: ProductSpecRequest;
@@ -93,7 +86,6 @@ interface ProductFormData {
   foundry?: ProductSpecRequest;
   lithography?: ProductSpecRequest;
   transistors?: ProductSpecRequest;
-  dieSize?: ProductSpecRequest;
 
   // Board Compatibility & Dimensions
   slotWidth?: ProductSpecRequest;
@@ -105,6 +97,7 @@ interface ProductFormData {
   tdp?: ProductSpecRequest;
   suggestedPsu?: ProductSpecRequest;
   powerConnectors?: ProductSpecRequest;
+  outputs?: ProductSpecRequest;
 
   // Cores & Clock Speeds
   cudaCores?: ProductSpecRequest;
@@ -126,21 +119,17 @@ interface ProductFormData {
   // Memory
   memorySize?: ProductSpecRequest;
   memoryType?: ProductSpecRequest;
+  memoryClock?: ProductSpecRequest;
   memoryInterface?: ProductSpecRequest;
   memoryBandwidth?: ProductSpecRequest;
 
-  // Display Connectivity
-  displayPorts?: ProductSpecRequest;
-  hdmiPorts?: ProductSpecRequest;
-
   // API Support
+  gSyncFreeSyncSupport?: ProductSpecRequest;
+  sliCrossfireSupport?: ProductSpecRequest;
   directXVersion?: ProductSpecRequest;
   openClVersion?: ProductSpecRequest;
   openGlVersion?: ProductSpecRequest;
   shaderModelVersion?: ProductSpecRequest;
-  gSyncFreeSyncSupport?: ProductSpecRequest;
-  sliCrossfireSupport?: ProductSpecRequest;
-  vrReady?: ProductSpecRequest;
 
   // Benchmarks
   g2dMarkBenchmark?: ProductBenchmarkRequest;
@@ -168,14 +157,11 @@ const productValidator = Joi.object({
   type: Joi.string().valid(ProductType.CPU, ProductType.GPU),
   name: Joi.string().required(),
 
-  description: productMetaValidator.allow(null),
-
   // General
   company: productSpecValidator.allow(null),
   marketSegment: productSpecValidator.allow(null),
   launchPrice: productSpecValidator.allow(null),
   releaseDate: productSpecValidator.allow(null),
-  productionStatus: productSpecValidator.allow(null),
 
   // Processor
   gpuName: productSpecValidator.allow(null),
@@ -185,7 +171,6 @@ const productValidator = Joi.object({
   lithography: productSpecValidator.allow(null),
   processSize: productSpecValidator.allow(null),
   transistors: productSpecValidator.allow(null),
-  dieSize: productSpecValidator.allow(null),
 
   // Board Compatibility & Dimensions
   slotWidth: productSpecValidator.allow(null),
@@ -197,6 +182,7 @@ const productValidator = Joi.object({
   tdp: productSpecValidator.allow(null),
   suggestedPsu: productSpecValidator.allow(null),
   powerConnectors: productSpecValidator.allow(null),
+  outputs: productSpecValidator.allow(null),
 
   // Cores & Clock Speed
   cudaCores: productSpecValidator.allow(null),
@@ -218,21 +204,17 @@ const productValidator = Joi.object({
   // Memory
   memorySize: productSpecValidator.allow(null),
   memoryType: productSpecValidator.allow(null),
+  memoryClock: productSpecValidator.allow(null),
   memoryInterface: productSpecValidator.allow(null),
   memoryBandwidth: productSpecValidator.allow(null),
 
-  // Display Connectivity
-  displayPorts: productSpecValidator.allow(null),
-  hdmiPorts: productSpecValidator.allow(null),
-
   // API Support
+  gSyncFreeSyncSupport: productSpecValidator.allow(null),
+  sliCrossfireSupport: productSpecValidator.allow(null),
   directXVersion: productSpecValidator.allow(null),
   openClVersion: productSpecValidator.allow(null),
   openGlVersion: productSpecValidator.allow(null),
   shaderModelVersion: productSpecValidator.allow(null),
-  gSyncFreeSyncSupport: productSpecValidator.allow(null),
-  sliCrossfireSupport: productSpecValidator.allow(null),
-  vrReady: productSpecValidator.allow(null),
 
   // Benchmarks
   g2dMarkBenchmark: productBenchmarkValidator.allow(null),
@@ -274,14 +256,12 @@ function formOptions(gpu?: Product): UseFormProps<ProductFormData> {
       slug: gpu?.slug ?? null,
       type: ProductType.GPU,
       name: gpu?.name ?? null,
-      description: meta[ProductMetaKey.Description] ?? null,
 
       // General
       company: specs[ProductSpecKey.Company] ?? null,
       marketSegment: specs[ProductSpecKey.MarketSegment] ?? null,
       launchPrice: specs[ProductSpecKey.LaunchPrice] ?? null,
       releaseDate: specs[ProductSpecKey.ReleaseDate] ?? null,
-      productionStatus: specs[ProductSpecKey.ProductionStatus] ?? null,
 
       // Processor
       gpuName: specs[ProductSpecKey.GpuName] ?? null,
@@ -289,7 +269,6 @@ function formOptions(gpu?: Product): UseFormProps<ProductFormData> {
       foundry: specs[ProductSpecKey.Foundry] ?? null,
       lithography: specs[ProductSpecKey.Lithography] ?? null,
       transistors: specs[ProductSpecKey.Transistors] ?? null,
-      dieSize: specs[ProductSpecKey.DieSize] ?? null,
 
       // Board Compatibility & Dimensions
       slotWidth: specs[ProductSpecKey.SlotWidth] ?? null,
@@ -301,6 +280,7 @@ function formOptions(gpu?: Product): UseFormProps<ProductFormData> {
       tdp: specs[ProductSpecKey.Tdp] ?? null,
       suggestedPsu: specs[ProductSpecKey.SuggestedPsu] ?? null,
       powerConnectors: specs[ProductSpecKey.PowerConnectors] ?? null,
+      outputs: specs[ProductSpecKey.Outputs] ?? null,
 
       // Cores & Clock Speeds
       cudaCores: specs[ProductSpecKey.CudaCores] ?? null,
@@ -322,21 +302,17 @@ function formOptions(gpu?: Product): UseFormProps<ProductFormData> {
       // Memory
       memorySize: specs[ProductSpecKey.MemorySize] ?? null,
       memoryType: specs[ProductSpecKey.MemoryType] ?? null,
+      memoryClock: specs[ProductSpecKey.MemoryClock] ?? null,
       memoryInterface: specs[ProductSpecKey.MemoryInterface] ?? null,
       memoryBandwidth: specs[ProductSpecKey.MemoryBandwidth] ?? null,
 
-      // Display Connectivity
-      displayPorts: specs[ProductSpecKey.DisplayPorts] ?? null,
-      hdmiPorts: specs[ProductSpecKey.HdmiPorts] ?? null,
-
       // API Support
+      gSyncFreeSyncSupport: specs[ProductSpecKey.GSyncFreeSyncSupport] ?? null,
+      sliCrossfireSupport: specs[ProductSpecKey.SliCrossfireSupport] ?? null,
       directXVersion: specs[ProductSpecKey.DirectXVersion] ?? null,
       openClVersion: specs[ProductSpecKey.OpenClVersion] ?? null,
       openGlVersion: specs[ProductSpecKey.OpenGlVersion] ?? null,
       shaderModelVersion: specs[ProductSpecKey.ShaderModelVersion] ?? null,
-      gSyncFreeSyncSupport: specs[ProductSpecKey.GSyncFreeSyncSupport] ?? null,
-      sliCrossfireSupport: specs[ProductSpecKey.SliCrossfireSupport] ?? null,
-      vrReady: specs[ProductSpecKey.VrReady] ?? null,
 
       // Benchmarks
       g2dMarkBenchmark: benchmarks[ProductBenchmarkKey.G2dMark] ?? null,
@@ -489,21 +465,6 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
             <FieldError>Required</FieldError>
           )}
         </Field>
-
-        <Field>
-          Description
-          <Controller
-            name="description"
-            control={control}
-            render={({ field }) => (
-              <ProductMetaField
-                field={ProductMetaKey.Description}
-                {...field}
-                ref={null}
-              />
-            )}
-          />
-        </Field>
       </section>
 
       <section>
@@ -568,21 +529,6 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
             )}
           />
         </Field>
-
-        <Field>
-          Production Status
-          <Controller
-            name="productionStatus"
-            control={control}
-            render={({ field }) => (
-              <ProductSpecField
-                field={ProductSpecKey.ProductionStatus}
-                {...field}
-                ref={null}
-              />
-            )}
-          />
-        </Field>
       </section>
 
       <section>
@@ -592,28 +538,13 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           <h3 className="mb-4">Processor</h3>
 
           <Field>
-            GPU Name
+            GPU Code Name
             <Controller
               name="gpuName"
               control={control}
               render={({ field }) => (
                 <ProductSpecField
                   field={ProductSpecKey.GpuName}
-                  {...field}
-                  ref={null}
-                />
-              )}
-            />
-          </Field>
-
-          <Field>
-            GPU Variant
-            <Controller
-              name="gpuVariant"
-              control={control}
-              render={({ field }) => (
-                <ProductSpecField
-                  field={ProductSpecKey.GpuVariant}
                   {...field}
                   ref={null}
                 />
@@ -637,22 +568,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           </Field>
 
           <Field>
-            Foundry
-            <Controller
-              name="foundry"
-              control={control}
-              render={({ field }) => (
-                <ProductSpecField
-                  field={ProductSpecKey.Foundry}
-                  {...field}
-                  ref={null}
-                />
-              )}
-            />
-          </Field>
-
-          <Field>
-            Lithography
+            Process Size
             <Controller
               name="lithography"
               control={control}
@@ -680,15 +596,79 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               )}
             />
           </Field>
+        </section>
+
+        <section>
+          <h3 className="mb-4">Memory</h3>
 
           <Field>
-            Die Size
+            Memory Size
             <Controller
-              name="dieSize"
+              name="memorySize"
               control={control}
               render={({ field }) => (
                 <ProductSpecField
-                  field={ProductSpecKey.DieSize}
+                  field={ProductSpecKey.MemorySize}
+                  {...field}
+                  ref={null}
+                />
+              )}
+            />
+          </Field>
+
+          <Field>
+            Memory Type
+            <Controller
+              name="memoryType"
+              control={control}
+              render={({ field }) => (
+                <ProductSpecField
+                  field={ProductSpecKey.MemoryType}
+                  {...field}
+                  ref={null}
+                />
+              )}
+            />
+          </Field>
+
+          <Field>
+            Memory Clock
+            <Controller
+              name="memoryClock"
+              control={control}
+              render={({ field }) => (
+                <ProductSpecField
+                  field={ProductSpecKey.MemoryClock}
+                  {...field}
+                  ref={null}
+                />
+              )}
+            />
+          </Field>
+
+          <Field>
+            Memory Interface
+            <Controller
+              name="memoryInterface"
+              control={control}
+              render={({ field }) => (
+                <ProductSpecField
+                  field={ProductSpecKey.MemoryInterface}
+                  {...field}
+                  ref={null}
+                />
+              )}
+            />
+          </Field>
+
+          <Field>
+            Memory Bandwidth
+            <Controller
+              name="memoryBandwidth"
+              control={control}
+              render={({ field }) => (
+                <ProductSpecField
+                  field={ProductSpecKey.MemoryBandwidth}
                   {...field}
                   ref={null}
                 />
@@ -828,6 +808,21 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               render={({ field }) => (
                 <ProductSpecField
                   field={ProductSpecKey.PowerConnectors}
+                  {...field}
+                  ref={null}
+                />
+              )}
+            />
+          </Field>
+
+          <Field>
+            Outputs
+            <Controller
+              name="outputs"
+              control={control}
+              render={({ field }) => (
+                <ProductSpecField
+                  field={ProductSpecKey.Outputs}
                   {...field}
                   ref={null}
                 />
@@ -1040,104 +1035,6 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
         </section>
 
         <section>
-          <h3 className="mb-4">Memory</h3>
-
-          <Field>
-            Memory Size
-            <Controller
-              name="memorySize"
-              control={control}
-              render={({ field }) => (
-                <ProductSpecField
-                  field={ProductSpecKey.MemorySize}
-                  {...field}
-                  ref={null}
-                />
-              )}
-            />
-          </Field>
-
-          <Field>
-            Memory Type
-            <Controller
-              name="memoryType"
-              control={control}
-              render={({ field }) => (
-                <ProductSpecField
-                  field={ProductSpecKey.MemoryType}
-                  {...field}
-                  ref={null}
-                />
-              )}
-            />
-          </Field>
-
-          <Field>
-            Memory Interface
-            <Controller
-              name="memoryInterface"
-              control={control}
-              render={({ field }) => (
-                <ProductSpecField
-                  field={ProductSpecKey.MemoryInterface}
-                  {...field}
-                  ref={null}
-                />
-              )}
-            />
-          </Field>
-
-          <Field>
-            Memory Bandwidth
-            <Controller
-              name="memoryBandwidth"
-              control={control}
-              render={({ field }) => (
-                <ProductSpecField
-                  field={ProductSpecKey.MemoryBandwidth}
-                  {...field}
-                  ref={null}
-                />
-              )}
-            />
-          </Field>
-        </section>
-
-        <section>
-          <h3 className="mb-4">Display Connectivity</h3>
-
-          <Field>
-            Display Ports
-            <Controller
-              name="displayPorts"
-              control={control}
-              render={({ field }) => (
-                <ProductSpecField
-                  field={ProductSpecKey.DisplayPorts}
-                  {...field}
-                  ref={null}
-                />
-              )}
-            />
-          </Field>
-
-          <Field>
-            HDMI Ports
-            <Controller
-              name="hdmiPorts"
-              control={control}
-              render={({ field }) => (
-                <ProductSpecField
-                  field={ProductSpecKey.HdmiPorts}
-                  {...field}
-                  ref={null}
-                />
-              )}
-            />
-          </Field>
-        </section>
-
-        <section>
           <h3 className="mb-4">API Support</h3>
 
           <Field>
@@ -1178,21 +1075,6 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               render={({ field }) => (
                 <ProductSpecField
                   field={ProductSpecKey.SliCrossfireSupport}
-                  {...field}
-                  ref={null}
-                />
-              )}
-            />
-          </Field>
-
-          <Field>
-            VR Ready
-            <Controller
-              name="vrReady"
-              control={control}
-              render={({ field }) => (
-                <ProductSpecField
-                  field={ProductSpecKey.VrReady}
                   {...field}
                   ref={null}
                 />
@@ -1451,7 +1333,6 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
 
 function toMetaArray(formData: ProductFormData): ProductMetaRequest[] {
   const metas: ProductMetaRequest[] = [
-    formData.description,
     formData.retailModels?.length > 0
       ? {
           key: ProductMetaKey.RetailModels,
@@ -1470,16 +1351,13 @@ function toSpecsArray(formData: ProductFormData): ProductSpecRequest[] {
     formData.busInterface,
     formData.company,
     formData.cudaCores,
-    formData.dieSize,
     formData.directXVersion,
-    formData.displayPorts,
     formData.foundry,
     formData.fp32Performance,
     formData.fp64Performance,
     formData.gpuName,
     formData.gpuVariant,
     formData.gSyncFreeSyncSupport,
-    formData.hdmiPorts,
     formData.height,
     formData.l1Cache,
     formData.l2Cache,
@@ -1489,13 +1367,13 @@ function toSpecsArray(formData: ProductFormData): ProductSpecRequest[] {
     formData.marketSegment,
     formData.memoryBandwidth,
     formData.memoryInterface,
+    formData.memoryClock,
     formData.memorySize,
     formData.memoryType,
     formData.openClVersion,
     formData.openGlVersion,
     formData.pixelRate,
     formData.powerConnectors,
-    formData.productionStatus,
     formData.releaseDate,
     formData.rtCores,
     formData.rops,
@@ -1508,7 +1386,6 @@ function toSpecsArray(formData: ProductFormData): ProductSpecRequest[] {
     formData.textureRate,
     formData.tmus,
     formData.transistors,
-    formData.vrReady,
     formData.weight,
     formData.width,
   ];
