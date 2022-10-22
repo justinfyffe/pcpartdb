@@ -210,7 +210,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                     <SpecRow spec={ProductSpecKey.Company} />
                     <SpecRow spec={ProductSpecKey.MarketSegment} />
                     <SpecRow spec={ProductSpecKey.ReleaseDate} />
-                    <SpecRow spec={ProductSpecKey.LaunchPrice} />
+                    <SpecRow spec={ProductSpecKey.LaunchPriceMsrp} />
                   </TBody>
                 </Table>
               </section>
@@ -247,7 +247,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                     <TBody>
                       <SpecRow spec={ProductSpecKey.GpuName} />
                       <SpecRow spec={ProductSpecKey.Architecture} />
-                      <SpecRow spec={ProductSpecKey.Lithography} />
+                      <SpecRow spec={ProductSpecKey.ProcessSize} />
                       <SpecRow spec={ProductSpecKey.Transistors} />
                     </TBody>
                   </Table>
@@ -304,13 +304,13 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
 
                   <Table border responsive>
                     <TBody>
-                      <SpecRow spec={ProductSpecKey.CudaCores} />
-                      <SpecRow spec={ProductSpecKey.Tmus} />
-                      <SpecRow spec={ProductSpecKey.Rops} />
+                      <SpecRow spec={ProductSpecKey.ShaderUnitsCudaCores} />
+                      <SpecRow spec={ProductSpecKey.TextureMappingUnits} />
+                      <SpecRow spec={ProductSpecKey.RenderOutputUnits} />
                       <SpecRow spec={ProductSpecKey.TensorCores} />
-                      <SpecRow spec={ProductSpecKey.RtCores} />
-                      <SpecRow spec={ProductSpecKey.ClockSpeedBase} />
-                      <SpecRow spec={ProductSpecKey.ClockSpeedBoost} />
+                      <SpecRow spec={ProductSpecKey.RayTracingCores} />
+                      <SpecRow spec={ProductSpecKey.CoreClockSpeedBase} />
+                      <SpecRow spec={ProductSpecKey.CoreClockSpeedBoost} />
                       <SpecRow spec={ProductSpecKey.L1Cache} />
                       <SpecRow spec={ProductSpecKey.L2Cache} />
                     </TBody>
@@ -329,7 +329,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                   <Table border responsive>
                     <TBody>
                       <SpecRow spec={ProductSpecKey.PixelFillRate} />
-                      <SpecRow spec={ProductSpecKey.TextureRate} />
+                      <SpecRow spec={ProductSpecKey.TextureFillRate} />
                       <SpecRow spec={ProductSpecKey.Fp32Performance} />
                       <SpecRow spec={ProductSpecKey.Fp64Performance} />
                     </TBody>

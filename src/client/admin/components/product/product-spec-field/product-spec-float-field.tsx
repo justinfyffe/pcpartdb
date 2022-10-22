@@ -3,8 +3,8 @@ import { ProductSpecKey, ProductSpecRequest } from '@shared/product-spec';
 import React, { forwardRef, useCallback, useMemo, useState } from 'react';
 
 const SUFFIXES: { [key: string]: string[] } = {
-  [ProductSpecKey.LaunchPrice]: ['USD'],
-  [ProductSpecKey.Lithography]: ['nm', 'μm'],
+  [ProductSpecKey.LaunchPriceMsrp]: ['USD'],
+  [ProductSpecKey.ProcessSize]: ['nm', 'μm'],
   [ProductSpecKey.Transistors]: ['million'],
   [ProductSpecKey.Length]: ['mm'],
   [ProductSpecKey.Width]: ['mm'],
@@ -12,12 +12,12 @@ const SUFFIXES: { [key: string]: string[] } = {
   [ProductSpecKey.Weight]: ['kg'],
   [ProductSpecKey.Tdp]: ['W'],
   [ProductSpecKey.SuggestedPsu]: ['W'],
-  [ProductSpecKey.ClockSpeedBase]: ['MHz', 'GHz'],
-  [ProductSpecKey.ClockSpeedBoost]: ['MHz', 'GHz'],
+  [ProductSpecKey.CoreClockSpeedBase]: ['MHz', 'GHz'],
+  [ProductSpecKey.CoreClockSpeedBoost]: ['MHz', 'GHz'],
   [ProductSpecKey.L1Cache]: ['KB', 'MB'],
   [ProductSpecKey.L2Cache]: ['MB', 'KB'],
   [ProductSpecKey.PixelFillRate]: ['GPixel/s'],
-  [ProductSpecKey.TextureRate]: ['GTexel/s'],
+  [ProductSpecKey.TextureFillRate]: ['GTexel/s'],
   [ProductSpecKey.Fp32Performance]: ['TFLOPS', 'GFLOPS'],
   [ProductSpecKey.Fp64Performance]: ['GFLOPS', 'TFLOPS'],
   [ProductSpecKey.MemorySize]: ['GB', 'MB', 'KB'],

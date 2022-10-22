@@ -50,14 +50,13 @@ export enum ProductSpecKey {
   // General
   Company = 'COMPANY',
   MarketSegment = 'MARKET_SEGMENT',
-  LaunchPrice = 'LAUNCH_PRICE',
+  LaunchPriceMsrp = 'LAUNCH_PRICE_MSRP',
   ReleaseDate = 'RELEASE_DATE',
 
   // Processor
   GpuName = 'GPU_NAME',
   Architecture = 'ARCHITECTURE',
-  Foundry = 'FOUNDRY',
-  Lithography = 'LITHOGRAPHY',
+  ProcessSize = 'PROCESS_SIZE',
   Transistors = 'TRANSISTORS',
 
   // Memory
@@ -80,24 +79,23 @@ export enum ProductSpecKey {
   Outputs = 'OUTPUTS',
 
   // Cores & Clock Speeds
-  CudaCores = 'CUDA_CORES',
-  Tmus = 'TMUS',
-  Rops = 'ROPS',
+  ShaderUnitsCudaCores = 'SHADER_UNITS_CUDA_CORES',
+  TextureMappingUnits = 'TEXTURE_MAPPING_UNIT',
+  RenderOutputUnits = 'RENDER_OUTPUT_UNITS',
   TensorCores = 'TENSOR_CORES',
-  RtCores = 'RT_CORES',
-  ClockSpeedBase = 'CLOCK_SPEED_BASE',
-  ClockSpeedBoost = 'CLOCK_SPEED_BOOST',
+  RayTracingCores = 'RAY_TRACING_CORES',
+  CoreClockSpeedBase = 'CORE_CLOCK_SPEED_BASE',
+  CoreClockSpeedBoost = 'CORE_CLOCK_SPEED_BOOST',
   L1Cache = 'L1_CACHE',
   L2Cache = 'L2_CACHE',
 
   // Theoretical Performance
   PixelFillRate = 'PIXEL_FILL_RATE',
-  TextureRate = 'TEXTURE_FILL_RATE',
+  TextureFillRate = 'TEXTURE_FILL_RATE',
   Fp32Performance = 'FP32_PERFORMANCE',
   Fp64Performance = 'FP64_PERFORMANCE',
 
   // API Support
-
   GSyncFreeSyncSupport = 'G_SYNC_FREE_SYNC_SUPPORT',
   SliCrossfireSupport = 'SLI_CROSSFIRE_SUPPORT',
   DirectXVersion = 'DIRECT_X_VERSION',

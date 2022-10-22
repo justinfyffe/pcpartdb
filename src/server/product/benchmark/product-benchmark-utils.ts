@@ -51,7 +51,7 @@ function calculateValueScore(product: Product, performance: number) {
 
   // Get inputs
   const performanceScore = performance;
-  const launchPrice = productSpecValue(specs[ProductSpecKey.LaunchPrice]);
+  const launchPrice = productSpecValue(specs[ProductSpecKey.LaunchPriceMsrp]);
 
   // Validate inputs
   if (performanceScore == null) {

@@ -9,12 +9,7 @@ Immediate Tasks:
   - Value Rating = Value Score / Max(Value Score)
 
 - specs
-  - update gpu form
-  - rename specs
-  - add memory clock?
-  - usb-c?
-  - dvi?
-  - vga?
+  - update gpu form labels
 
 - view gpu page
   - format data

@@ -83,7 +83,6 @@ interface ProductFormData {
   gpuName?: ProductSpecRequest;
   gpuVariant?: ProductSpecRequest;
   architecture?: ProductSpecRequest;
-  foundry?: ProductSpecRequest;
   lithography?: ProductSpecRequest;
   transistors?: ProductSpecRequest;
 
@@ -167,7 +166,6 @@ const productValidator = Joi.object({
   gpuName: productSpecValidator.allow(null),
   gpuVariant: productSpecValidator.allow(null),
   architecture: productSpecValidator.allow(null),
-  foundry: productSpecValidator.allow(null),
   lithography: productSpecValidator.allow(null),
   processSize: productSpecValidator.allow(null),
   transistors: productSpecValidator.allow(null),
@@ -260,14 +258,13 @@ function formOptions(gpu?: Product): UseFormProps<ProductFormData> {
       // General
       company: specs[ProductSpecKey.Company] ?? null,
       marketSegment: specs[ProductSpecKey.MarketSegment] ?? null,
-      launchPrice: specs[ProductSpecKey.LaunchPrice] ?? null,
+      launchPrice: specs[ProductSpecKey.LaunchPriceMsrp] ?? null,
       releaseDate: specs[ProductSpecKey.ReleaseDate] ?? null,
 
       // Processor
       gpuName: specs[ProductSpecKey.GpuName] ?? null,
       architecture: specs[ProductSpecKey.Architecture] ?? null,
-      foundry: specs[ProductSpecKey.Foundry] ?? null,
-      lithography: specs[ProductSpecKey.Lithography] ?? null,
+      lithography: specs[ProductSpecKey.ProcessSize] ?? null,
       transistors: specs[ProductSpecKey.Transistors] ?? null,
 
       // Board Compatibility & Dimensions
@@ -283,19 +280,19 @@ function formOptions(gpu?: Product): UseFormProps<ProductFormData> {
       outputs: specs[ProductSpecKey.Outputs] ?? null,
 
       // Cores & Clock Speeds
-      cudaCores: specs[ProductSpecKey.CudaCores] ?? null,
-      tmus: specs[ProductSpecKey.Tmus] ?? null,
-      rops: specs[ProductSpecKey.Rops] ?? null,
+      cudaCores: specs[ProductSpecKey.ShaderUnitsCudaCores] ?? null,
+      tmus: specs[ProductSpecKey.TextureMappingUnits] ?? null,
+      rops: specs[ProductSpecKey.RenderOutputUnits] ?? null,
       tensorCores: specs[ProductSpecKey.TensorCores] ?? null,
-      rtCores: specs[ProductSpecKey.RtCores] ?? null,
-      baseClock: specs[ProductSpecKey.ClockSpeedBase] ?? null,
-      boostClock: specs[ProductSpecKey.ClockSpeedBoost] ?? null,
+      rtCores: specs[ProductSpecKey.RayTracingCores] ?? null,
+      baseClock: specs[ProductSpecKey.CoreClockSpeedBase] ?? null,
+      boostClock: specs[ProductSpecKey.CoreClockSpeedBoost] ?? null,
       l1Cache: specs[ProductSpecKey.L1Cache] ?? null,
       l2Cache: specs[ProductSpecKey.L2Cache] ?? null,
 
       // Theoretical Performance
       pixelRate: specs[ProductSpecKey.PixelFillRate] ?? null,
-      textureRate: specs[ProductSpecKey.TextureRate] ?? null,
+      textureRate: specs[ProductSpecKey.TextureFillRate] ?? null,
       fp32Performance: specs[ProductSpecKey.Fp32Performance] ?? null,
       fp64Performance: specs[ProductSpecKey.Fp64Performance] ?? null,
 
@@ -507,7 +504,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
             control={control}
             render={({ field }) => (
               <ProductSpecField
-                field={ProductSpecKey.LaunchPrice}
+                field={ProductSpecKey.LaunchPriceMsrp}
                 {...field}
                 ref={null}
               />
@@ -574,7 +571,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               control={control}
               render={({ field }) => (
                 <ProductSpecField
-                  field={ProductSpecKey.Lithography}
+                  field={ProductSpecKey.ProcessSize}
                   {...field}
                   ref={null}
                 />
@@ -841,7 +838,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               control={control}
               render={({ field }) => (
                 <ProductSpecField
-                  field={ProductSpecKey.CudaCores}
+                  field={ProductSpecKey.ShaderUnitsCudaCores}
                   {...field}
                   ref={null}
                 />
@@ -856,7 +853,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               control={control}
               render={({ field }) => (
                 <ProductSpecField
-                  field={ProductSpecKey.Tmus}
+                  field={ProductSpecKey.TextureMappingUnits}
                   {...field}
                   ref={null}
                 />
@@ -871,7 +868,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               control={control}
               render={({ field }) => (
                 <ProductSpecField
-                  field={ProductSpecKey.Rops}
+                  field={ProductSpecKey.RenderOutputUnits}
                   {...field}
                   ref={null}
                 />
@@ -901,7 +898,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               control={control}
               render={({ field }) => (
                 <ProductSpecField
-                  field={ProductSpecKey.RtCores}
+                  field={ProductSpecKey.RayTracingCores}
                   {...field}
                   ref={null}
                 />
@@ -916,7 +913,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               control={control}
               render={({ field }) => (
                 <ProductSpecField
-                  field={ProductSpecKey.ClockSpeedBase}
+                  field={ProductSpecKey.CoreClockSpeedBase}
                   {...field}
                   ref={null}
                 />
@@ -931,7 +928,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               control={control}
               render={({ field }) => (
                 <ProductSpecField
-                  field={ProductSpecKey.ClockSpeedBoost}
+                  field={ProductSpecKey.CoreClockSpeedBoost}
                   {...field}
                   ref={null}
                 />
@@ -995,7 +992,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               control={control}
               render={({ field }) => (
                 <ProductSpecField
-                  field={ProductSpecKey.TextureRate}
+                  field={ProductSpecKey.TextureFillRate}
                   {...field}
                   ref={null}
                 />
@@ -1352,7 +1349,6 @@ function toSpecsArray(formData: ProductFormData): ProductSpecRequest[] {
     formData.company,
     formData.cudaCores,
     formData.directXVersion,
-    formData.foundry,
     formData.fp32Performance,
     formData.fp64Performance,
     formData.gpuName,
