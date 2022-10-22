@@ -22,6 +22,8 @@ export interface ProductImage {
 
 export type ProductImageRequest = Omit<ProductImage, 'image'>;
 
+export type ProductImageMap = Partial<Record<ProductImageType, ProductImage[]>>;
+
 export const productImageValidator = Joi.object({
   type: Joi.string().required(),
   imageId: Joi.number().required(),

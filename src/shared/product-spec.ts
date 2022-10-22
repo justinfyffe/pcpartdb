@@ -1,5 +1,6 @@
 import Joi from '@hapi/joi';
 import Big from 'big.js';
+import { format, parse } from 'date-fns';
 
 export enum MarketSegment {
   Desktop = 'DESKTOP',
@@ -16,6 +17,10 @@ export enum ProductionStatus {
 export enum ProductSpecBooleanFormatter {
   TrueFalse = 'TRUE_FALSE',
   YesNo = 'YES_NO',
+}
+
+export enum ProductSpecDateFormatter {
+  QuarterYear = 'QQQ yyyy',
 }
 
 export enum ClockSpeed {
@@ -148,6 +153,8 @@ export interface ProductSpec {
 }
 
 export type ProductSpecRequest = ProductSpec;
+
+export type ProductSpecMap = Partial<Record<ProductSpecKey, ProductSpec>>;
 
 export const productSpecValidator = Joi.object({
   key: Joi.string().required(),
@@ -298,6 +305,7 @@ export function compareProductSpecs(spec1: ProductSpec, spec2: ProductSpec) {
 export interface FormatProductSpecOptions {
   decimals?: number;
   booleanFormatter?: ProductSpecBooleanFormatter;
+  dateFormatter?: ProductSpecDateFormatter;
   prefix?: boolean;
   suffix?: boolean;
 }
@@ -328,6 +336,12 @@ export function formatProductSpec(
   if (key === ProductSpecKey.ProductionStatus) {
     return formatProductionStatus(stringValue);
   }
+  if (key === ProductSpecKey.ReleaseDate) {
+    return formatReleaseDate(
+      stringValue,
+      options?.dateFormatter ?? ProductSpecDateFormatter.QuarterYear,
+    );
+  }
 
   // Handle cases that we cannot output.
   if (jsonValue != null) {
@@ -342,9 +356,12 @@ export function formatProductSpec(
       options?.booleanFormatter ?? ProductSpecBooleanFormatter.TrueFalse,
     );
   } else if (floatValue != null) {
-    returnValue = floatValue.toFixed(options?.decimals ?? 2);
+    returnValue = floatValue.toLocaleString(undefined, {
+      minimumFractionDigits: options?.decimals ?? 0,
+      maximumFractionDigits: options?.decimals ?? 0,
+    });
   } else if (integerValue != null) {
-    returnValue = `${integerValue}`;
+    returnValue = integerValue.toLocaleString();
   } else if (stringValue != null) {
     returnValue = stringValue;
   } else if (textValue != null) {
@@ -403,4 +420,9 @@ function formatProductionStatus(value: string) {
     default:
       throw new Error(`Invalid market segment value: ${value}`);
   }
+}
+
+function formatReleaseDate(value: string, formatter: ProductSpecDateFormatter) {
+  const date = parse(value, 'yyyy-MM-dd', new Date());
+  return format(date, formatter);
 }

@@ -16,10 +16,10 @@ import Joi from '@hapi/joi';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { ApiError, ValidationErrorType } from '@shared/error';
 import {
-  getProductBenchmarks,
-  getProductMeta,
-  getProductReviews,
-  getProductSpecs,
+  getProductBenchmarkMap,
+  getProductMetaMap,
+  getProductReviewMap,
+  getProductSpecMap,
   Product,
   ProductRequest,
   ProductType,
@@ -81,7 +81,6 @@ interface ProductFormData {
 
   // General
   company?: ProductSpecRequest;
-  generation?: ProductSpecRequest;
   marketSegment?: ProductSpecRequest;
   launchPrice?: ProductSpecRequest;
   releaseDate?: ProductSpecRequest;
@@ -173,7 +172,6 @@ const productValidator = Joi.object({
 
   // General
   company: productSpecValidator.allow(null),
-  generation: productSpecValidator.allow(null),
   marketSegment: productSpecValidator.allow(null),
   launchPrice: productSpecValidator.allow(null),
   releaseDate: productSpecValidator.allow(null),
@@ -262,10 +260,10 @@ interface GpuFormProps {
 }
 
 function formOptions(gpu?: Product): UseFormProps<ProductFormData> {
-  const meta = gpu != null ? getProductMeta(gpu) : {};
-  const specs = gpu != null ? getProductSpecs(gpu) : {};
-  const benchmarks = gpu != null ? getProductBenchmarks(gpu) : {};
-  const reviews = gpu != null ? getProductReviews(gpu) : {};
+  const meta = gpu != null ? getProductMetaMap(gpu) : {};
+  const specs = gpu != null ? getProductSpecMap(gpu) : {};
+  const benchmarks = gpu != null ? getProductBenchmarkMap(gpu) : {};
+  const reviews = gpu != null ? getProductReviewMap(gpu) : {};
   const { autocompleteImage, thumbnailImage, detailsImages } =
     getFormImages(gpu);
 
@@ -280,7 +278,6 @@ function formOptions(gpu?: Product): UseFormProps<ProductFormData> {
 
       // General
       company: specs[ProductSpecKey.Company] ?? null,
-      generation: specs[ProductSpecKey.Generation] ?? null,
       marketSegment: specs[ProductSpecKey.MarketSegment] ?? null,
       launchPrice: specs[ProductSpecKey.LaunchPrice] ?? null,
       releaseDate: specs[ProductSpecKey.ReleaseDate] ?? null,
@@ -288,7 +285,6 @@ function formOptions(gpu?: Product): UseFormProps<ProductFormData> {
 
       // Processor
       gpuName: specs[ProductSpecKey.GpuName] ?? null,
-      gpuVariant: specs[ProductSpecKey.GpuVariant] ?? null,
       architecture: specs[ProductSpecKey.Architecture] ?? null,
       foundry: specs[ProductSpecKey.Foundry] ?? null,
       lithography: specs[ProductSpecKey.Lithography] ?? null,
@@ -521,21 +517,6 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
             render={({ field }) => (
               <ProductSpecField
                 field={ProductSpecKey.Company}
-                {...field}
-                ref={null}
-              />
-            )}
-          />
-        </Field>
-
-        <Field>
-          Generation
-          <Controller
-            name="generation"
-            control={control}
-            render={({ field }) => (
-              <ProductSpecField
-                field={ProductSpecKey.Generation}
                 {...field}
                 ref={null}
               />
@@ -1495,7 +1476,6 @@ function toSpecsArray(formData: ProductFormData): ProductSpecRequest[] {
     formData.foundry,
     formData.fp32Performance,
     formData.fp64Performance,
-    formData.generation,
     formData.gpuName,
     formData.gpuVariant,
     formData.gSyncFreeSyncSupport,

@@ -1,6 +1,6 @@
 import {
-  getProductBenchmarks,
-  getProductSpecs,
+  getProductBenchmarkMap,
+  getProductSpecMap,
   Product,
 } from '@shared/product';
 import {
@@ -30,7 +30,7 @@ export function calculatePerformanceBenchmarks(product: Product) {
 }
 
 function calculatePerformanceScore(product: Product) {
-  const benchmarks = getProductBenchmarks(product);
+  const benchmarks = getProductBenchmarkMap(product);
 
   // Get inputs
   const g3dMark = productBenchmarkValue(
@@ -47,7 +47,7 @@ function calculatePerformanceScore(product: Product) {
 }
 
 function calculateValueScore(product: Product, performance: number) {
-  const specs = getProductSpecs(product);
+  const specs = getProductSpecMap(product);
 
   // Get inputs
   const performanceScore = performance;

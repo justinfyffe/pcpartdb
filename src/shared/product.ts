@@ -1,12 +1,29 @@
-import { ProductBenchmark, ProductBenchmarkRequest } from './product-benchmark';
+import {
+  ProductBenchmark,
+  ProductBenchmarkMap,
+  ProductBenchmarkRequest,
+} from './product-benchmark';
 import {
   ProductImage,
+  ProductImageMap,
   ProductImageRequest,
   ProductImageType,
 } from './product-image';
-import { ProductMeta, ProductMetaRequest } from './product-meta';
-import { ProductReview, ProductReviewRequest } from './product-review';
-import { ProductSpec, ProductSpecRequest } from './product-spec';
+import {
+  ProductMeta,
+  ProductMetaMap,
+  ProductMetaRequest,
+} from './product-meta';
+import {
+  ProductReview,
+  ProductReviewMap,
+  ProductReviewRequest,
+} from './product-review';
+import {
+  ProductSpec,
+  ProductSpecMap,
+  ProductSpecRequest,
+} from './product-spec';
 
 export enum ProductType {
   CPU = 'CPU',
@@ -45,8 +62,8 @@ export interface ProductRequest {
   images: ProductImageRequest[];
 }
 
-export function getProductMeta(product: Product) {
-  const meta: Record<string, ProductMeta> = {};
+export function getProductMetaMap(product: Product) {
+  const meta: ProductMetaMap = {};
   product.meta.forEach((value) => {
     meta[value.key] = value;
   });
@@ -54,8 +71,8 @@ export function getProductMeta(product: Product) {
   return meta;
 }
 
-export function getProductSpecs(product: Product) {
-  const specs: Record<string, ProductSpec> = {};
+export function getProductSpecMap(product: Product) {
+  const specs: ProductSpecMap = {};
   product.specs.forEach((spec) => {
     specs[spec.key] = spec;
   });
@@ -63,8 +80,8 @@ export function getProductSpecs(product: Product) {
   return specs;
 }
 
-export function getProductBenchmarks(product: Product) {
-  const benchmarks: Record<string, ProductBenchmark> = {};
+export function getProductBenchmarkMap(product: Product) {
+  const benchmarks: ProductBenchmarkMap = {};
   product.benchmarks.forEach((benchmark) => {
     benchmarks[benchmark.key] = benchmark;
   });
@@ -72,8 +89,8 @@ export function getProductBenchmarks(product: Product) {
   return benchmarks;
 }
 
-export function getProductReviews(product: Product) {
-  const reviews: Record<string, ProductReview> = {};
+export function getProductReviewMap(product: Product) {
+  const reviews: ProductReviewMap = {};
   product.reviews.forEach((review) => {
     reviews[review.key] = review;
   });
@@ -81,8 +98,8 @@ export function getProductReviews(product: Product) {
   return reviews;
 }
 
-export function getProductImages(product: Product) {
-  const images: Record<string, ProductImage[]> = {};
+export function getProductImageMap(product: Product) {
+  const images: ProductImageMap = {};
 
   product.images?.forEach((image) => {
     images[image.type] = images[image.type] ?? [];

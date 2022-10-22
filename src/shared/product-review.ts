@@ -31,6 +31,8 @@ export interface ProductReview {
 
 export type ProductReviewRequest = ProductReview;
 
+export type ProductReviewMap = Partial<Record<ProductReviewKey, ProductReview>>;
+
 export const productReviewValidator = Joi.object({
   key: Joi.string().required(),
 
@@ -94,9 +96,12 @@ export function formatProductReview(
       options?.booleanFormatter ?? ProductReviewBooleanFormatter.TrueFalse,
     );
   } else if (floatValue != null) {
-    returnValue = floatValue.toFixed(options?.decimals ?? 2);
+    returnValue = floatValue.toLocaleString(undefined, {
+      minimumFractionDigits: options?.decimals ?? 2,
+      maximumFractionDigits: options?.decimals ?? 2,
+    });
   } else if (integerValue != null) {
-    returnValue = `${integerValue}`;
+    returnValue = integerValue.toLocaleString();
   } else if (stringValue != null) {
     returnValue = stringValue;
   } else if (textValue != null) {

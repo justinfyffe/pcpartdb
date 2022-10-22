@@ -33,6 +33,8 @@ export interface ProductMeta {
 
 export type ProductMetaRequest = ProductMeta;
 
+export type ProductMetaMap = Partial<Record<ProductMetaKey, ProductMeta>>;
+
 export const productMetaValidator = Joi.object({
   key: Joi.string().required(),
 
@@ -96,9 +98,12 @@ export function formatProductMeta(
       options?.booleanFormatter ?? ProductMetaBooleanFormatter.TrueFalse,
     );
   } else if (floatValue != null) {
-    returnValue = floatValue.toFixed(options?.decimals ?? 2);
+    returnValue = floatValue.toLocaleString(undefined, {
+      minimumFractionDigits: options?.decimals ?? 0,
+      maximumFractionDigits: options?.decimals ?? 0,
+    });
   } else if (integerValue != null) {
-    returnValue = `${integerValue}`;
+    returnValue = integerValue.toLocaleString();
   } else if (stringValue != null) {
     returnValue = stringValue;
   } else if (textValue != null) {

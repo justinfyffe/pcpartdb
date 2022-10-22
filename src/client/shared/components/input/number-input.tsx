@@ -1,4 +1,4 @@
-import React, { forwardRef, useCallback } from 'react';
+import React, { forwardRef, useCallback, WheelEvent } from 'react';
 import { Input, InputProps } from './input';
 
 export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
@@ -12,11 +12,16 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
       [onChange],
     );
 
+    const handleWheel = useCallback((e: WheelEvent) => {
+      e.preventDefault();
+    }, []);
+
     return (
       <Input
         type="number"
         value={value != null ? `${value}` : ''}
         onChange={handleChange}
+        onWheel={handleWheel}
         {...restProps}
         ref={ref}
       />

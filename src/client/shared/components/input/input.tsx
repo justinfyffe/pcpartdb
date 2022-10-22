@@ -9,6 +9,7 @@ import React, {
   useContext,
   useEffect,
   useState,
+  WheelEvent,
 } from 'react';
 import { classNames } from '../../ui';
 import { Button } from '../button';
@@ -32,6 +33,7 @@ export interface InputProps {
   onKeyDown?: (e?: KeyboardEvent) => void;
   onBlur?: (e?: FocusEvent) => void;
   onFocus?: (e?: FocusEvent) => void;
+  onWheel?: (e?: WheelEvent) => void;
 
   value?: string;
   onChange?: (value: string) => void;
@@ -50,6 +52,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
     onBlur,
     onChange,
     onFocus,
+    onWheel,
   } = props;
 
   const [value, setValue] = useState(propsValue ?? null);
@@ -102,6 +105,13 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
     [onFocus],
   );
 
+  const handleWheel = useCallback(
+    (e: WheelEvent) => {
+      onWheel?.(e);
+    },
+    [onWheel],
+  );
+
   const context = useContext(FieldContext);
 
   return (
@@ -123,6 +133,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
         onClick={handleClick}
         onBlur={handleBlur}
         onFocus={handleFocus}
+        onWheel={handleWheel}
         ref={ref}
       />
 

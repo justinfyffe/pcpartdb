@@ -1,7 +1,11 @@
 import { getImageUrl } from '@client/image';
 import { Img } from '@client/shared/components';
 import { classNames } from '@client/shared/ui';
-import { getProductImages, getProductSpecs, Product } from '@shared/product';
+import {
+  getProductImageMap,
+  getProductSpecMap,
+  Product,
+} from '@shared/product';
 import { ProductImageType } from '@shared/product-image';
 import { ProductSpecKey } from '@shared/product-spec';
 import React, { FunctionComponent, useMemo, useState } from 'react';
@@ -14,7 +18,7 @@ interface ProductImagesProps {
 }
 
 function getCompanyLogoImage(product: Product) {
-  const specs = getProductSpecs(product);
+  const specs = getProductSpecMap(product);
   const company = specs[ProductSpecKey.Company]?.stringValue;
 
   if (company == null) {
@@ -38,7 +42,7 @@ export const ProductImages: FunctionComponent<ProductImagesProps> = (props) => {
 
   const images = useMemo(() => {
     const productImages =
-      getProductImages(product)[ProductImageType.Details] ?? [];
+      getProductImageMap(product)[ProductImageType.Details] ?? [];
     const companyImage = getCompanyLogoImage(product);
     const images = productImages
       .filter((image) => image.image != null)
