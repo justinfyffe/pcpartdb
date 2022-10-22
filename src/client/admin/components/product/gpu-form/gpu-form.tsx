@@ -76,14 +76,13 @@ interface ProductFormData {
   // General
   company?: ProductSpecRequest;
   marketSegment?: ProductSpecRequest;
-  launchPrice?: ProductSpecRequest;
+  launchPriceMsrp?: ProductSpecRequest;
   releaseDate?: ProductSpecRequest;
 
   // Processor
   gpuName?: ProductSpecRequest;
-  gpuVariant?: ProductSpecRequest;
   architecture?: ProductSpecRequest;
-  lithography?: ProductSpecRequest;
+  processSize?: ProductSpecRequest;
   transistors?: ProductSpecRequest;
 
   // Board Compatibility & Dimensions
@@ -93,25 +92,25 @@ interface ProductFormData {
   height?: ProductSpecRequest;
   weight?: ProductSpecRequest;
   busInterface?: ProductSpecRequest;
-  tdp?: ProductSpecRequest;
+  thermalDesignPower?: ProductSpecRequest;
   suggestedPsu?: ProductSpecRequest;
   powerConnectors?: ProductSpecRequest;
   outputs?: ProductSpecRequest;
 
   // Cores & Clock Speeds
-  cudaCores?: ProductSpecRequest;
-  tmus?: ProductSpecRequest;
-  rops?: ProductSpecRequest;
+  shaderUnitsCudaCores?: ProductSpecRequest;
+  textureMappingUnits?: ProductSpecRequest;
+  renderOutputUnits?: ProductSpecRequest;
   tensorCores?: ProductSpecRequest;
-  rtCores?: ProductSpecRequest;
-  baseClock?: ProductSpecRequest;
-  boostClock?: ProductSpecRequest;
+  rayTracingCores?: ProductSpecRequest;
+  coreClockSpeedBase?: ProductSpecRequest;
+  coreClockSpeedBoost?: ProductSpecRequest;
   l1Cache?: ProductSpecRequest;
   l2Cache?: ProductSpecRequest;
 
   // Theoretical Performance
-  pixelRate?: ProductSpecRequest;
-  textureRate?: ProductSpecRequest;
+  pixelFillRate?: ProductSpecRequest;
+  textureFillRate?: ProductSpecRequest;
   fp32Performance?: ProductSpecRequest;
   fp64Performance?: ProductSpecRequest;
 
@@ -159,14 +158,12 @@ const productValidator = Joi.object({
   // General
   company: productSpecValidator.allow(null),
   marketSegment: productSpecValidator.allow(null),
-  launchPrice: productSpecValidator.allow(null),
+  launchPriceMsrp: productSpecValidator.allow(null),
   releaseDate: productSpecValidator.allow(null),
 
   // Processor
   gpuName: productSpecValidator.allow(null),
-  gpuVariant: productSpecValidator.allow(null),
   architecture: productSpecValidator.allow(null),
-  lithography: productSpecValidator.allow(null),
   processSize: productSpecValidator.allow(null),
   transistors: productSpecValidator.allow(null),
 
@@ -177,25 +174,25 @@ const productValidator = Joi.object({
   height: productSpecValidator.allow(null),
   weight: productSpecValidator.allow(null),
   busInterface: productSpecValidator.allow(null),
-  tdp: productSpecValidator.allow(null),
+  thermalDesignPower: productSpecValidator.allow(null),
   suggestedPsu: productSpecValidator.allow(null),
   powerConnectors: productSpecValidator.allow(null),
   outputs: productSpecValidator.allow(null),
 
   // Cores & Clock Speed
-  cudaCores: productSpecValidator.allow(null),
-  tmus: productSpecValidator.allow(null),
-  rops: productSpecValidator.allow(null),
+  shaderUnitsCudaCores: productSpecValidator.allow(null),
+  textureMappingUnits: productSpecValidator.allow(null),
+  renderOutputUnits: productSpecValidator.allow(null),
   tensorCores: productSpecValidator.allow(null),
-  rtCores: productSpecValidator.allow(null),
-  baseClock: productSpecValidator.allow(null),
-  boostClock: productSpecValidator.allow(null),
+  rayTracingCores: productSpecValidator.allow(null),
+  coreClockSpeedBase: productSpecValidator.allow(null),
+  coreClockSpeedBoost: productSpecValidator.allow(null),
   l1Cache: productSpecValidator.allow(null),
   l2Cache: productSpecValidator.allow(null),
 
   // Theoretical Performance
-  pixelRate: productSpecValidator.allow(null),
-  textureRate: productSpecValidator.allow(null),
+  pixelFillRate: productSpecValidator.allow(null),
+  textureFillRate: productSpecValidator.allow(null),
   fp32Performance: productSpecValidator.allow(null),
   fp64Performance: productSpecValidator.allow(null),
 
@@ -258,13 +255,13 @@ function formOptions(gpu?: Product): UseFormProps<ProductFormData> {
       // General
       company: specs[ProductSpecKey.Company] ?? null,
       marketSegment: specs[ProductSpecKey.MarketSegment] ?? null,
-      launchPrice: specs[ProductSpecKey.LaunchPriceMsrp] ?? null,
+      launchPriceMsrp: specs[ProductSpecKey.LaunchPriceMsrp] ?? null,
       releaseDate: specs[ProductSpecKey.ReleaseDate] ?? null,
 
       // Processor
       gpuName: specs[ProductSpecKey.GpuName] ?? null,
       architecture: specs[ProductSpecKey.Architecture] ?? null,
-      lithography: specs[ProductSpecKey.ProcessSize] ?? null,
+      processSize: specs[ProductSpecKey.ProcessSize] ?? null,
       transistors: specs[ProductSpecKey.Transistors] ?? null,
 
       // Board Compatibility & Dimensions
@@ -274,25 +271,25 @@ function formOptions(gpu?: Product): UseFormProps<ProductFormData> {
       height: specs[ProductSpecKey.Height] ?? null,
       weight: specs[ProductSpecKey.Weight] ?? null,
       busInterface: specs[ProductSpecKey.BusInterface] ?? null,
-      tdp: specs[ProductSpecKey.Tdp] ?? null,
+      thermalDesignPower: specs[ProductSpecKey.ThermalDesignPower] ?? null,
       suggestedPsu: specs[ProductSpecKey.SuggestedPsu] ?? null,
       powerConnectors: specs[ProductSpecKey.PowerConnectors] ?? null,
       outputs: specs[ProductSpecKey.Outputs] ?? null,
 
       // Cores & Clock Speeds
-      cudaCores: specs[ProductSpecKey.ShaderUnitsCudaCores] ?? null,
-      tmus: specs[ProductSpecKey.TextureMappingUnits] ?? null,
-      rops: specs[ProductSpecKey.RenderOutputUnits] ?? null,
+      shaderUnitsCudaCores: specs[ProductSpecKey.ShaderUnitsCudaCores] ?? null,
+      textureMappingUnits: specs[ProductSpecKey.TextureMappingUnits] ?? null,
+      renderOutputUnits: specs[ProductSpecKey.RenderOutputUnits] ?? null,
       tensorCores: specs[ProductSpecKey.TensorCores] ?? null,
-      rtCores: specs[ProductSpecKey.RayTracingCores] ?? null,
-      baseClock: specs[ProductSpecKey.CoreClockSpeedBase] ?? null,
-      boostClock: specs[ProductSpecKey.CoreClockSpeedBoost] ?? null,
+      rayTracingCores: specs[ProductSpecKey.RayTracingCores] ?? null,
+      coreClockSpeedBase: specs[ProductSpecKey.CoreClockSpeedBase] ?? null,
+      coreClockSpeedBoost: specs[ProductSpecKey.CoreClockSpeedBoost] ?? null,
       l1Cache: specs[ProductSpecKey.L1Cache] ?? null,
       l2Cache: specs[ProductSpecKey.L2Cache] ?? null,
 
       // Theoretical Performance
-      pixelRate: specs[ProductSpecKey.PixelFillRate] ?? null,
-      textureRate: specs[ProductSpecKey.TextureFillRate] ?? null,
+      pixelFillRate: specs[ProductSpecKey.PixelFillRate] ?? null,
+      textureFillRate: specs[ProductSpecKey.TextureFillRate] ?? null,
       fp32Performance: specs[ProductSpecKey.Fp32Performance] ?? null,
       fp64Performance: specs[ProductSpecKey.Fp64Performance] ?? null,
 
@@ -498,9 +495,9 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
         </Field>
 
         <Field>
-          Launch Price
+          Launch Price (MSRP)
           <Controller
-            name="launchPrice"
+            name="launchPriceMsrp"
             control={control}
             render={({ field }) => (
               <ProductSpecField
@@ -535,7 +532,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           <h3 className="mb-4">Processor</h3>
 
           <Field>
-            GPU Code Name
+            GPU Name
             <Controller
               name="gpuName"
               control={control}
@@ -567,7 +564,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           <Field>
             Process Size
             <Controller
-              name="lithography"
+              name="processSize"
               control={control}
               render={({ field }) => (
                 <ProductSpecField
@@ -770,11 +767,11 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           <Field>
             TDP
             <Controller
-              name="tdp"
+              name="thermalDesignPower"
               control={control}
               render={({ field }) => (
                 <ProductSpecField
-                  field={ProductSpecKey.Tdp}
+                  field={ProductSpecKey.ThermalDesignPower}
                   {...field}
                   ref={null}
                 />
@@ -834,7 +831,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           <Field>
             CUDA Cores
             <Controller
-              name="cudaCores"
+              name="shaderUnitsCudaCores"
               control={control}
               render={({ field }) => (
                 <ProductSpecField
@@ -849,7 +846,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           <Field>
             TMUs
             <Controller
-              name="tmus"
+              name="textureMappingUnits"
               control={control}
               render={({ field }) => (
                 <ProductSpecField
@@ -864,7 +861,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           <Field>
             ROPs
             <Controller
-              name="rops"
+              name="renderOutputUnits"
               control={control}
               render={({ field }) => (
                 <ProductSpecField
@@ -894,7 +891,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           <Field>
             RT Cores
             <Controller
-              name="rtCores"
+              name="rayTracingCores"
               control={control}
               render={({ field }) => (
                 <ProductSpecField
@@ -909,7 +906,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           <Field>
             Base Clock
             <Controller
-              name="baseClock"
+              name="coreClockSpeedBase"
               control={control}
               render={({ field }) => (
                 <ProductSpecField
@@ -924,7 +921,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           <Field>
             Boost Clock
             <Controller
-              name="boostClock"
+              name="coreClockSpeedBoost"
               control={control}
               render={({ field }) => (
                 <ProductSpecField
@@ -973,7 +970,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           <Field>
             Pixel Fill Rate
             <Controller
-              name="pixelRate"
+              name="pixelFillRate"
               control={control}
               render={({ field }) => (
                 <ProductSpecField
@@ -988,7 +985,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           <Field>
             Texture Fill Rate
             <Controller
-              name="textureRate"
+              name="textureFillRate"
               control={control}
               render={({ field }) => (
                 <ProductSpecField
@@ -1343,23 +1340,22 @@ function toMetaArray(formData: ProductFormData): ProductMetaRequest[] {
 function toSpecsArray(formData: ProductFormData): ProductSpecRequest[] {
   const specs = [
     formData.architecture,
-    formData.baseClock,
-    formData.boostClock,
+    formData.coreClockSpeedBase,
+    formData.coreClockSpeedBoost,
     formData.busInterface,
     formData.company,
-    formData.cudaCores,
+    formData.shaderUnitsCudaCores,
     formData.directXVersion,
     formData.fp32Performance,
     formData.fp64Performance,
     formData.gpuName,
-    formData.gpuVariant,
     formData.gSyncFreeSyncSupport,
     formData.height,
     formData.l1Cache,
     formData.l2Cache,
-    formData.launchPrice,
+    formData.launchPriceMsrp,
     formData.length,
-    formData.lithography,
+    formData.processSize,
     formData.marketSegment,
     formData.memoryBandwidth,
     formData.memoryInterface,
@@ -1368,19 +1364,19 @@ function toSpecsArray(formData: ProductFormData): ProductSpecRequest[] {
     formData.memoryType,
     formData.openClVersion,
     formData.openGlVersion,
-    formData.pixelRate,
+    formData.pixelFillRate,
     formData.powerConnectors,
     formData.releaseDate,
-    formData.rtCores,
-    formData.rops,
+    formData.rayTracingCores,
+    formData.renderOutputUnits,
     formData.shaderModelVersion,
     formData.sliCrossfireSupport,
     formData.slotWidth,
     formData.suggestedPsu,
-    formData.tdp,
+    formData.thermalDesignPower,
     formData.tensorCores,
-    formData.textureRate,
-    formData.tmus,
+    formData.textureFillRate,
+    formData.textureMappingUnits,
     formData.transistors,
     formData.weight,
     formData.width,

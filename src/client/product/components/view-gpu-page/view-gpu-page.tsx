@@ -151,7 +151,9 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                     <HighlightLabel icon={<BoltIcon />}>TDP</HighlightLabel>
 
                     <HighlightValue>
-                      {formatProductSpec(specs[ProductSpecKey.Tdp])}
+                      {formatProductSpec(
+                        specs[ProductSpecKey.ThermalDesignPower],
+                      )}
                     </HighlightValue>
                   </HighlightListItem>
 
@@ -287,7 +289,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                       <SpecRow spec={ProductSpecKey.Height} />
                       <SpecRow spec={ProductSpecKey.Weight} />
                       <SpecRow spec={ProductSpecKey.BusInterface} />
-                      <SpecRow spec={ProductSpecKey.Tdp} />
+                      <SpecRow spec={ProductSpecKey.ThermalDesignPower} />
                       <SpecRow spec={ProductSpecKey.SuggestedPsu} />
                       <SpecRow spec={ProductSpecKey.PowerConnectors} />
                       <SpecRow spec={ProductSpecKey.Outputs} />

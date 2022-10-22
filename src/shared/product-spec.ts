@@ -72,7 +72,7 @@ export enum ProductSpecKey {
   Width = 'WIDTH',
   Height = 'HEIGHT',
   Weight = 'WEIGHT',
-  Tdp = 'TDP',
+  ThermalDesignPower = 'THERMAL_DESIGN_POWER',
   SuggestedPsu = 'SUGGESTED_PSU',
   BusInterface = 'BUS_INTERFACE',
   PowerConnectors = 'POWER_CONNECTORS',

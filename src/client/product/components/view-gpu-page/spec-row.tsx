@@ -43,7 +43,7 @@ const LABELS: Record<string, string> = {
   [ProductSpecKey.SliCrossfireSupport]: 'SLI / Crossfire',
   [ProductSpecKey.SlotWidth]: 'Slot Width',
   [ProductSpecKey.SuggestedPsu]: 'Suggested PSU',
-  [ProductSpecKey.Tdp]: 'Thermal Design Power (TDP)',
+  [ProductSpecKey.ThermalDesignPower]: 'Thermal Design Power (TDP)',
   [ProductSpecKey.TensorCores]: 'Tensor Cores',
   [ProductSpecKey.TextureFillRate]: 'Texture Fill Rate',
   [ProductSpecKey.TextureMappingUnits]: 'Texture Mapping Units (TMUs)',

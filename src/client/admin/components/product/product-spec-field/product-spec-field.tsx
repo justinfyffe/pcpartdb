@@ -24,48 +24,61 @@ type InputType =
   | 'enum';
 
 const INPUT_TYPES: { [key: string]: InputType } = {
-  [ProductSpecKey.Architecture]: 'autocomplete',
-  [ProductSpecKey.BusInterface]: 'autocomplete',
-  [ProductSpecKey.CoreClockSpeedBase]: 'float',
-  [ProductSpecKey.CoreClockSpeedBoost]: 'float',
+  // General
   [ProductSpecKey.Company]: 'autocomplete',
-  [ProductSpecKey.ShaderUnitsCudaCores]: 'float',
-  [ProductSpecKey.DirectXVersion]: 'float',
-  [ProductSpecKey.Fp32Performance]: 'float',
-  [ProductSpecKey.Fp64Performance]: 'float',
-  [ProductSpecKey.GpuName]: 'autocomplete',
-  [ProductSpecKey.GSyncFreeSyncSupport]: 'boolean',
-  [ProductSpecKey.Height]: 'float',
-  [ProductSpecKey.L1Cache]: 'float',
-  [ProductSpecKey.L2Cache]: 'float',
-  [ProductSpecKey.LaunchPriceMsrp]: 'float',
-  [ProductSpecKey.Length]: 'float',
-  [ProductSpecKey.ProcessSize]: 'float',
   [ProductSpecKey.MarketSegment]: 'enum',
-  [ProductSpecKey.MemoryBandwidth]: 'float',
-  [ProductSpecKey.MemoryInterface]: 'float',
-  [ProductSpecKey.MemoryClock]: 'float',
+  [ProductSpecKey.LaunchPriceMsrp]: 'float',
+  [ProductSpecKey.ReleaseDate]: 'date',
+
+  // Processor
+  [ProductSpecKey.GpuName]: 'autocomplete',
+  [ProductSpecKey.Architecture]: 'autocomplete',
+  [ProductSpecKey.ProcessSize]: 'float',
+  [ProductSpecKey.Transistors]: 'float',
+
+  // Memory
   [ProductSpecKey.MemorySize]: 'float',
   [ProductSpecKey.MemoryType]: 'autocomplete',
+  [ProductSpecKey.MemoryClock]: 'float',
+  [ProductSpecKey.MemoryInterface]: 'float',
+  [ProductSpecKey.MemoryBandwidth]: 'float',
+
+  // Board Design
+  [ProductSpecKey.SlotWidth]: 'autocomplete',
+  [ProductSpecKey.Length]: 'float',
+  [ProductSpecKey.Width]: 'float',
+  [ProductSpecKey.Height]: 'float',
+  [ProductSpecKey.Weight]: 'float',
+  [ProductSpecKey.SuggestedPsu]: 'float',
+  [ProductSpecKey.ThermalDesignPower]: 'float',
+  [ProductSpecKey.BusInterface]: 'autocomplete',
+  [ProductSpecKey.PowerConnectors]: 'autocomplete',
+  [ProductSpecKey.Outputs]: 'autocomplete',
+
+  // Cores & Clock Speeds
+  [ProductSpecKey.ShaderUnitsCudaCores]: 'float',
+  [ProductSpecKey.TextureMappingUnits]: 'float',
+  [ProductSpecKey.RenderOutputUnits]: 'float',
+  [ProductSpecKey.TensorCores]: 'float',
+  [ProductSpecKey.RayTracingCores]: 'float',
+  [ProductSpecKey.CoreClockSpeedBase]: 'float',
+  [ProductSpecKey.CoreClockSpeedBoost]: 'float',
+  [ProductSpecKey.L1Cache]: 'float',
+  [ProductSpecKey.L2Cache]: 'float',
+
+  // Theoretical Performance
+  [ProductSpecKey.PixelFillRate]: 'float',
+  [ProductSpecKey.TextureFillRate]: 'float',
+  [ProductSpecKey.Fp32Performance]: 'float',
+  [ProductSpecKey.Fp64Performance]: 'float',
+
+  // API Support
+  [ProductSpecKey.GSyncFreeSyncSupport]: 'boolean',
+  [ProductSpecKey.SliCrossfireSupport]: 'boolean',
+  [ProductSpecKey.DirectXVersion]: 'float',
   [ProductSpecKey.OpenClVersion]: 'float',
   [ProductSpecKey.OpenGlVersion]: 'float',
-  [ProductSpecKey.Outputs]: 'autocomplete',
-  [ProductSpecKey.PixelFillRate]: 'float',
-  [ProductSpecKey.PowerConnectors]: 'autocomplete',
-  [ProductSpecKey.ReleaseDate]: 'date',
-  [ProductSpecKey.RenderOutputUnits]: 'float',
-  [ProductSpecKey.RayTracingCores]: 'float',
   [ProductSpecKey.ShaderModelVersion]: 'float',
-  [ProductSpecKey.SliCrossfireSupport]: 'boolean',
-  [ProductSpecKey.SlotWidth]: 'autocomplete',
-  [ProductSpecKey.SuggestedPsu]: 'float',
-  [ProductSpecKey.Tdp]: 'float',
-  [ProductSpecKey.TensorCores]: 'float',
-  [ProductSpecKey.TextureFillRate]: 'float',
-  [ProductSpecKey.TextureMappingUnits]: 'float',
-  [ProductSpecKey.Transistors]: 'float',
-  [ProductSpecKey.Weight]: 'float',
-  [ProductSpecKey.Width]: 'float',
 };
 
 interface ProductSpecFieldProps {

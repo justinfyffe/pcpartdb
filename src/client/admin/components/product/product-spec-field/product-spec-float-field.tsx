@@ -10,7 +10,7 @@ const SUFFIXES: { [key: string]: string[] } = {
   [ProductSpecKey.Width]: ['mm'],
   [ProductSpecKey.Height]: ['mm'],
   [ProductSpecKey.Weight]: ['kg'],
-  [ProductSpecKey.Tdp]: ['W'],
+  [ProductSpecKey.ThermalDesignPower]: ['W'],
   [ProductSpecKey.SuggestedPsu]: ['W'],
   [ProductSpecKey.CoreClockSpeedBase]: ['MHz', 'GHz'],
   [ProductSpecKey.CoreClockSpeedBoost]: ['MHz', 'GHz'],
