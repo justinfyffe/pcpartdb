@@ -28,7 +28,7 @@ export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
     <>
       <Toolbar>
         <ToolbarTitle>
-          <ComputerDesktopIcon className={classNames('h-8 w-8')} /> Finest PC
+          <ComputerDesktopIcon className={classNames('h-8 w-8')} /> PC Parts DB
         </ToolbarTitle>
 
         <ToolbarNav className="hidden md:block">
@@ -96,18 +96,18 @@ export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
           <FooterSectionTitle>Disclaimer &amp; Disclosure</FooterSectionTitle>
 
           <p>
-            Finest PC provides accurate specs and benchmarks based on various
+            PC Parts DB provides accurate specs and benchmarks based on various
             sources. If you discover an error, please contact us.
           </p>
 
           <p>
-            Finest PC is a participant of affiliate programs and earns
+            PC Parts DB is a participant of affiliate programs and earns
             commission from qualifying purchases.
           </p>
         </FooterSection>
 
         <FooterSection className={classNames('flex-none text-center w-full')}>
-          Copyright &copy; Finest PC
+          Copyright &copy; PC Parts DB
           <br />
           Made with{' '}
           <HeartIcon

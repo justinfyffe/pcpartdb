@@ -172,10 +172,10 @@ export class UserService {
     }
 
     await sendEmail({
-      from: `Finest PC <${websiteEmail}>`,
+      from: `PC Parts DB <${websiteEmail}>`,
       to: data.email,
-      subject: 'Finest PC Password Reset Request',
-      text: `There has been a request to reset your password at Finest PC. You can reset your password at the following location:\n\n${process.env.WEBSITE_URL}/reset-password?token=${jwt}.\n\nIf you did not make this request, then ignore this email.`,
+      subject: 'PC Parts DB Password Reset Request',
+      text: `There has been a request to reset your password at PC Parts DB. You can reset your password at the following location:\n\n${process.env.WEBSITE_URL}/reset-password?token=${jwt}.\n\nIf you did not make this request, then ignore this email.`,
     });
   }
 

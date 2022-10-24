@@ -35,7 +35,7 @@ export class ContactService {
     }
 
     await sendEmail({
-      from: 'Finest PC <hello@finestpc.com>',
+      from: 'PC Parts DB <hello@pcpartsdb.com>',
       replyTo: data.email,
       to: websiteEmail,
       subject: data.subject,

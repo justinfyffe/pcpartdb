@@ -28,7 +28,7 @@ export const AdminLayout: FunctionComponent<AdminLayoutProps> = (props) => {
     <>
       <Toolbar>
         <ToolbarTitle>
-          <ComputerDesktopIcon className={classNames('h-8 w-8')} /> Finest PC
+          <ComputerDesktopIcon className={classNames('h-8 w-8')} /> PC Parts DB
         </ToolbarTitle>
 
         <ToolbarNav className="hidden md:block">
