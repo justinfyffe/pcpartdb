@@ -3,12 +3,12 @@ import { Injectable } from '@nestjs/common';
 import { badRequestError, notFoundError } from '@server/shared/errors/errors';
 import { ServiceContext } from '@server/shared/service/context';
 import { validate } from '@server/shared/types/validate';
+import { benchmarkValidator } from '@shared/benchmark';
 import { ProductRequest, ProductType } from '@shared/product';
-import { productBenchmarkValidator } from '@shared/product-benchmark';
 import { ProductMetaKey, productMetaValidator } from '@shared/product-meta';
-import { productReviewValidator } from '@shared/product-review';
-import { productSpecValidator } from '@shared/product-spec';
-import { calculatePerformanceBenchmarks } from './benchmark/product-benchmark-utils';
+import { reviewValidator } from '@shared/review';
+import { specValidator } from '@shared/spec';
+import { calculatePerformanceBenchmarks } from './benchmark/benchmark-utils';
 import { ProductMetaModel } from './meta/product-meta-model';
 import { ProductRepository } from './product-repository';
 
@@ -24,9 +24,9 @@ const createProductValidator = Joi.object({
   name: Joi.string().required(),
   // TODO: add validator for unique keys
   meta: Joi.array().items(productMetaValidator),
-  specs: Joi.array().items(productSpecValidator),
-  benchmarks: Joi.array().items(productBenchmarkValidator),
-  reviews: Joi.array().items(productReviewValidator),
+  specs: Joi.array().items(specValidator),
+  benchmarks: Joi.array().items(benchmarkValidator),
+  reviews: Joi.array().items(reviewValidator),
   images: Joi.array().items(productImageValidator),
 }).options({ abortEarly: false });
 
@@ -36,9 +36,9 @@ const updateProductValidator = Joi.object({
   name: Joi.string().required(),
   // TODO: add validator for unique keys
   meta: Joi.array().items(productMetaValidator),
-  specs: Joi.array().items(productSpecValidator),
-  benchmarks: Joi.array().items(productBenchmarkValidator),
-  reviews: Joi.array().items(productReviewValidator),
+  specs: Joi.array().items(specValidator),
+  benchmarks: Joi.array().items(benchmarkValidator),
+  reviews: Joi.array().items(reviewValidator),
   images: Joi.array().items(productImageValidator),
 }).options({ abortEarly: false });
 

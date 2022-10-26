@@ -1,8 +1,4 @@
-import {
-  ProductBenchmark,
-  ProductBenchmarkMap,
-  ProductBenchmarkRequest,
-} from './product-benchmark';
+import { Benchmark, BenchmarkMap, BenchmarkRequest } from './benchmark';
 import {
   ProductImage,
   ProductImageMap,
@@ -14,25 +10,12 @@ import {
   ProductMetaMap,
   ProductMetaRequest,
 } from './product-meta';
-import {
-  ProductReview,
-  ProductReviewMap,
-  ProductReviewRequest,
-} from './product-review';
-import {
-  ProductSpec,
-  ProductSpecMap,
-  ProductSpecRequest,
-} from './product-spec';
+import { Review, ReviewMap, ReviewRequest } from './review';
+import { Spec, SpecMap, SpecRequest } from './spec';
 
 export enum ProductType {
   CPU = 'CPU',
   GPU = 'GPU',
-}
-
-export enum ProductPropertyType {
-  Meta = 'meta',
-  Spec = 'spec',
 }
 
 export interface Product {
@@ -42,10 +25,11 @@ export interface Product {
   type: ProductType;
   name: string;
 
+  specs?: Spec[];
+  benchmarks?: Benchmark[];
+  reviews?: Review[];
+
   meta?: ProductMeta[];
-  specs?: ProductSpec[];
-  benchmarks?: ProductBenchmark[];
-  reviews?: ProductReview[];
   images?: ProductImage[];
 }
 
@@ -55,11 +39,39 @@ export interface ProductRequest {
   type: ProductType;
   name: string;
 
+  specs: SpecRequest[];
+  benchmarks: BenchmarkRequest[];
+  reviews: ReviewRequest[];
+
   meta: ProductMetaRequest[];
-  specs: ProductSpecRequest[];
-  benchmarks: ProductBenchmarkRequest[];
-  reviews: ProductReviewRequest[];
   images: ProductImageRequest[];
+}
+
+export function getSpecMap(product: Product) {
+  const specs: SpecMap = {};
+  product.specs.forEach((spec) => {
+    specs[spec.key] = spec;
+  });
+
+  return specs;
+}
+
+export function getBenchmarkMap(product: Product) {
+  const benchmarks: BenchmarkMap = {};
+  product.benchmarks.forEach((benchmark) => {
+    benchmarks[benchmark.key] = benchmark;
+  });
+
+  return benchmarks;
+}
+
+export function getReviewMap(product: Product) {
+  const reviews: ReviewMap = {};
+  product.reviews.forEach((review) => {
+    reviews[review.key] = review;
+  });
+
+  return reviews;
 }
 
 export function getProductMetaMap(product: Product) {
@@ -69,33 +81,6 @@ export function getProductMetaMap(product: Product) {
   });
 
   return meta;
-}
-
-export function getSpecMap(product: Product) {
-  const specs: ProductSpecMap = {};
-  product.specs.forEach((spec) => {
-    specs[spec.key] = spec;
-  });
-
-  return specs;
-}
-
-export function getBenchmarkMap(product: Product) {
-  const benchmarks: ProductBenchmarkMap = {};
-  product.benchmarks.forEach((benchmark) => {
-    benchmarks[benchmark.key] = benchmark;
-  });
-
-  return benchmarks;
-}
-
-export function getReviewMap(product: Product) {
-  const reviews: ProductReviewMap = {};
-  product.reviews.forEach((review) => {
-    reviews[review.key] = review;
-  });
-
-  return reviews;
 }
 
 export function getProductImageMap(product: Product) {

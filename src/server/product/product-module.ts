@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ProductBenchmarkRepository } from './benchmark/product-benchmark-repository';
+import { BenchmarkRepository } from './benchmark/benchmark-repository';
 import { ProductImageRepository } from './image/product-image-repository';
 import { ProductMetaController } from './meta/product-meta-controller';
 import { ProductMetaRepository } from './meta/product-meta-repository';
@@ -7,27 +7,23 @@ import { ProductMetaService } from './meta/product-meta-service';
 import { ProductController } from './product-controller';
 import { ProductRepository } from './product-repository';
 import { ProductService } from './product-service';
-import { ProductReviewRepository } from './review/product-review-repository';
-import { ProductSpecController } from './spec/product-spec-controller';
-import { ProductSpecRepository } from './spec/product-spec-repository';
-import { ProductSpecService } from './spec/product-spec-service';
+import { ReviewRepository } from './review/review-repository';
+import { SpecRepository } from './spec/spec-repository';
+import { SpecService } from './spec/spec-service';
+import { SpecController } from './spec/spec-controller';
 
 @Module({
-  controllers: [
-    ProductController,
-    ProductMetaController,
-    ProductSpecController,
-  ],
+  controllers: [ProductController, ProductMetaController, SpecController],
   providers: [
     ProductService,
     ProductMetaService,
-    ProductSpecService,
+    SpecService,
     ProductRepository,
     ProductImageRepository,
     ProductMetaRepository,
-    ProductSpecRepository,
-    ProductBenchmarkRepository,
-    ProductReviewRepository,
+    SpecRepository,
+    BenchmarkRepository,
+    ReviewRepository,
   ],
 })
 export class ProductModule {}

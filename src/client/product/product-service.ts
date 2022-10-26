@@ -2,7 +2,7 @@ import { ApiClient, apiClient } from '@client/shared/api';
 import { ProductCache } from '@client/shared/cache';
 import { Product, ProductRequest, ProductType } from '@shared/product';
 import { ProductMetaKey } from '@shared/product-meta';
-import { ProductSpecKey } from '@shared/product-spec';
+import { SpecKey } from '@shared/spec';
 
 const PATH = 'products';
 
@@ -60,7 +60,7 @@ export class ProductService {
     });
   }
 
-  async autocompleteSpec(query: string, key?: ProductSpecKey) {
+  async autocompleteSpec(query: string, key?: SpecKey) {
     return await this.api.get<string[]>(`${PATH}/specs/autocomplete`, {
       params: { key, value: query },
     });

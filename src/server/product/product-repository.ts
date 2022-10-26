@@ -1,23 +1,23 @@
 import { Injectable } from '@nestjs/common';
 import { RepositoryConfig } from '@server/db/repository';
+import { BenchmarkKey } from '@shared/benchmark';
 import { ProductType } from '@shared/product';
-import { ProductBenchmarkKey } from '@shared/product-benchmark';
 import { ProductImageType } from '@shared/product-image';
 import { Model, raw } from 'objection';
-import { ProductBenchmarkRepository } from './benchmark/product-benchmark-repository';
+import { BenchmarkRepository } from './benchmark/benchmark-repository';
 import { ProductImageRepository } from './image/product-image-repository';
 import { ProductMetaRepository } from './meta/product-meta-repository';
 import { ProductModel, ProductModelPojo } from './product-model';
-import { ProductReviewRepository } from './review/product-review-repository';
-import { ProductSpecRepository } from './spec/product-spec-repository';
+import { ReviewRepository } from './review/review-repository';
+import { SpecRepository } from './spec/spec-repository';
 
 @Injectable()
 export class ProductRepository {
   constructor(
     private metaRepository: ProductMetaRepository,
-    private specRepository: ProductSpecRepository,
-    private benchmarkRepository: ProductBenchmarkRepository,
-    private reviewRepository: ProductReviewRepository,
+    private specRepository: SpecRepository,
+    private benchmarkRepository: BenchmarkRepository,
+    private reviewRepository: ReviewRepository,
     private imageRepository: ProductImageRepository,
   ) {}
 
@@ -34,10 +34,11 @@ export class ProductRepository {
       .merge()
       .returning('*');
 
-    await this.metaRepository.saveMultiple(id, meta, config);
     await this.specRepository.saveMultiple(id, specs, config);
     await this.benchmarkRepository.saveMultiple(id, benchmarks, config);
     await this.reviewRepository.saveMultiple(id, reviews, config);
+
+    await this.metaRepository.saveMultiple(id, meta, config);
     await this.imageRepository.saveMultiple(id, images, config);
 
     return this.findById(id, config);
@@ -46,20 +47,20 @@ export class ProductRepository {
   async findById(id: number, config?: RepositoryConfig) {
     return await ProductModel.query(config?.trx)
       .findById(id)
-      .withGraphFetched('meta')
       .withGraphFetched('specs')
       .withGraphFetched('reviews')
       .withGraphFetched('benchmarks')
+      .withGraphFetched('meta')
       .withGraphFetched('images.[image]');
   }
 
   async findBySlug(slug: string, config?: RepositoryConfig) {
     return await ProductModel.query(config?.trx)
       .findOne({ slug })
-      .withGraphFetched('meta')
       .withGraphFetched('specs')
       .withGraphFetched('reviews')
       .withGraphFetched('benchmarks')
+      .withGraphFetched('meta')
       .withGraphFetched('images.[image]');
   }
 
@@ -75,8 +76,8 @@ export class ProductRepository {
     return await ProductModel.query(config?.trx)
       .where('type', type)
       .andWhere('name', 'ILIKE', `%${query}%`)
-      .withGraphFetched('meta(autocompleteMeta)')
       .withGraphFetched('specs(autocompleteSpecs)')
+      .withGraphFetched('meta(autocompleteMeta)')
       .withGraphFetched('images(autocompleteImages).[image]')
       .modifiers({
         autocompleteMeta(builder) {
@@ -98,7 +99,7 @@ export class ProductRepository {
   ) {
     const ranksQuery = ProductModel.relatedQuery('benchmarks')
       .for(ProductModel.query().where('type', type))
-      .where('key', ProductBenchmarkKey.PerformanceScore)
+      .where('key', BenchmarkKey.PerformanceScore)
       .select(
         'productId',
         raw(
@@ -117,7 +118,7 @@ export class ProductRepository {
   async getValueRank(id: number, type: ProductType, config?: RepositoryConfig) {
     const ranksQuery = ProductModel.relatedQuery('benchmarks')
       .for(ProductModel.query().where('type', type))
-      .where('key', ProductBenchmarkKey.ValueScore)
+      .where('key', BenchmarkKey.ValueScore)
       .select(
         'productId',
         raw(

@@ -1,19 +1,16 @@
 import { Td, Tr } from '@client/shared/components';
-import {
-  formatBenchmark,
-  ProductBenchmarkKey,
-} from '@shared/product-benchmark';
+import { BenchmarkKey, formatBenchmark } from '@shared/benchmark';
 import React, { useContext } from 'react';
 import { ProductContext } from '../product-context';
 
 const LABELS: Record<string, string> = {
-  [ProductBenchmarkKey.G2dMark]: 'G2D Mark',
-  [ProductBenchmarkKey.G3dMark]: 'G3D Mark',
-  [ProductBenchmarkKey.TimeSpyGraphics]: '3DMark Time Spy Graphics',
+  [BenchmarkKey.G2dMark]: 'G2D Mark',
+  [BenchmarkKey.G3dMark]: 'G3D Mark',
+  [BenchmarkKey.TimeSpyGraphics]: '3DMark Time Spy Graphics',
 };
 
 interface BenchmarkRowProps {
-  benchmark: ProductBenchmarkKey;
+  benchmark: BenchmarkKey;
 }
 
 export const BenchmarkRow = (props: BenchmarkRowProps) => {

@@ -2,9 +2,9 @@ import { Serializable } from '@server/shared/types/serialize';
 import { Product, ProductType } from '@shared/product';
 import { Model, PartialModelObject } from 'objection';
 import {
-  ProductBenchmarkModel,
-  ProductBenchmarkModelPojo,
-} from './benchmark/product-benchmark-model';
+  BenchmarkModel,
+  BenchmarkModelPojo,
+} from './benchmark/benchmark-model';
 import {
   ProductImageModel,
   ProductImageModelPojo,
@@ -13,14 +13,8 @@ import {
   ProductMetaModel,
   ProductMetaModelPojo,
 } from './meta/product-meta-model';
-import {
-  ProductReviewModel,
-  ProductReviewModelPojo,
-} from './review/product-review-model';
-import {
-  ProductSpecModel,
-  ProductSpecModelPojo,
-} from './spec/product-spec-model';
+import { ReviewModel, ReviewModelPojo } from './review/review-model';
+import { SpecModel, SpecModelPojo } from './spec/spec-model';
 
 export class ProductModel extends Model implements Serializable<Product> {
   static tableName = 'products';
@@ -33,24 +27,16 @@ export class ProductModel extends Model implements Serializable<Product> {
   name!: string;
 
   // Relations
+  specs?: SpecModel[];
+  benchmarks?: BenchmarkModel[];
+  reviews?: ReviewModel[];
   meta?: ProductMetaModel[];
-  specs?: ProductSpecModel[];
-  benchmarks?: ProductBenchmarkModel[];
-  reviews?: ProductReviewModel[];
   images?: ProductImageModel[];
 
   static relationMappings = {
-    meta: {
-      relation: Model.HasManyRelation,
-      modelClass: ProductMetaModel,
-      join: {
-        from: 'products.id',
-        to: 'product_meta.productId',
-      },
-    },
     specs: {
       relation: Model.HasManyRelation,
-      modelClass: ProductSpecModel,
+      modelClass: SpecModel,
       join: {
         from: 'products.id',
         to: 'product_specs.productId',
@@ -58,7 +44,7 @@ export class ProductModel extends Model implements Serializable<Product> {
     },
     benchmarks: {
       relation: Model.HasManyRelation,
-      modelClass: ProductBenchmarkModel,
+      modelClass: BenchmarkModel,
       join: {
         from: 'products.id',
         to: 'product_benchmarks.productId',
@@ -66,10 +52,18 @@ export class ProductModel extends Model implements Serializable<Product> {
     },
     reviews: {
       relation: Model.HasManyRelation,
-      modelClass: ProductReviewModel,
+      modelClass: ReviewModel,
       join: {
         from: 'products.id',
         to: 'product_reviews.productId',
+      },
+    },
+    meta: {
+      relation: Model.HasManyRelation,
+      modelClass: ProductMetaModel,
+      join: {
+        from: 'products.id',
+        to: 'product_meta.productId',
       },
     },
     images: {
@@ -89,11 +83,12 @@ export class ProductModel extends Model implements Serializable<Product> {
       type: this.type,
       name: this.name,
 
-      meta: this.meta?.map((meta) => meta.serialize()) ?? [],
       specs: this.specs?.map((spec) => spec.serialize()) ?? [],
       benchmarks:
         this.benchmarks?.map((benchmark) => benchmark.serialize()) ?? [],
       reviews: this.reviews?.map((review) => review.serialize()) ?? [],
+
+      meta: this.meta?.map((meta) => meta.serialize()) ?? [],
       images: this.images?.map((image) => image.serialize()) ?? [],
     };
   }
@@ -104,8 +99,8 @@ export type ProductModelPojo = Omit<
   'meta' | 'specs' | 'reviews' | 'benchmarks' | 'images'
 > & {
   meta: ProductMetaModelPojo[];
-  reviews: ProductReviewModelPojo[];
-  specs: ProductSpecModelPojo[];
-  benchmarks: ProductBenchmarkModelPojo[];
+  reviews: ReviewModelPojo[];
+  specs: SpecModelPojo[];
+  benchmarks: BenchmarkModelPojo[];
   images: ProductImageModelPojo[];
 };
