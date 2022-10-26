@@ -1,6 +1,6 @@
 import Joi from '@hapi/joi';
 
-export enum ProductReviewBooleanFormatter {
+export enum ReviewBooleanFormatter {
   TrueFalse = 'TRUE_FALSE',
   YesNo = 'YES_NO',
 }
@@ -47,7 +47,7 @@ export const productReviewValidator = Joi.object({
   metadata: Joi.any().allow(null),
 }).options({ abortEarly: false });
 
-export function productReviewValue(review: ProductReview) {
+export function getReviewRawValue(review: ProductReview) {
   return (
     review?.booleanValue ??
     review?.floatValue ??
@@ -59,16 +59,16 @@ export function productReviewValue(review: ProductReview) {
   );
 }
 
-export interface FormatProductBenchmarkOptions {
+export interface FormatBenchmarkOptions {
   decimals?: number;
-  booleanFormatter?: ProductReviewBooleanFormatter;
+  booleanFormatter?: ReviewBooleanFormatter;
 }
 
-export function formatProductReview(
+export function formatReview(
   review: ProductReview,
-  options?: FormatProductBenchmarkOptions,
+  options?: FormatBenchmarkOptions,
 ) {
-  if (productReviewValue(review) == null) {
+  if (getReviewRawValue(review) == null) {
     return '--';
   }
 
@@ -93,7 +93,7 @@ export function formatProductReview(
   if (booleanValue != null) {
     returnValue = formatBooleanValue(
       booleanValue,
-      options?.booleanFormatter ?? ProductReviewBooleanFormatter.TrueFalse,
+      options?.booleanFormatter ?? ReviewBooleanFormatter.TrueFalse,
     );
   } else if (floatValue != null) {
     returnValue = floatValue.toLocaleString(undefined, {
@@ -113,13 +113,10 @@ export function formatProductReview(
   return returnValue;
 }
 
-function formatBooleanValue(
-  value: boolean,
-  formatter: ProductReviewBooleanFormatter,
-) {
-  if (formatter === ProductReviewBooleanFormatter.TrueFalse) {
+function formatBooleanValue(value: boolean, formatter: ReviewBooleanFormatter) {
+  if (formatter === ReviewBooleanFormatter.TrueFalse) {
     return value ? 'True' : 'False';
-  } else if (formatter === ProductReviewBooleanFormatter.YesNo) {
+  } else if (formatter === ReviewBooleanFormatter.YesNo) {
     return value ? 'Yes' : 'No';
   } else {
     throw new Error(`Invalid boolean formatter: ${formatter}`);

@@ -71,7 +71,7 @@ export function getProductMetaMap(product: Product) {
   return meta;
 }
 
-export function getProductSpecMap(product: Product) {
+export function getSpecMap(product: Product) {
   const specs: ProductSpecMap = {};
   product.specs.forEach((spec) => {
     specs[spec.key] = spec;
@@ -80,7 +80,7 @@ export function getProductSpecMap(product: Product) {
   return specs;
 }
 
-export function getProductBenchmarkMap(product: Product) {
+export function getBenchmarkMap(product: Product) {
   const benchmarks: ProductBenchmarkMap = {};
   product.benchmarks.forEach((benchmark) => {
     benchmarks[benchmark.key] = benchmark;
@@ -89,7 +89,7 @@ export function getProductBenchmarkMap(product: Product) {
   return benchmarks;
 }
 
-export function getProductReviewMap(product: Product) {
+export function getReviewMap(product: Product) {
   const reviews: ProductReviewMap = {};
   product.reviews.forEach((review) => {
     reviews[review.key] = review;

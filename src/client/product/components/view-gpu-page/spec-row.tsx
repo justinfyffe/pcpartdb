@@ -1,8 +1,8 @@
 import { Td, Tr } from '@client/shared/components';
 import {
-  formatProductSpec,
-  ProductSpecBooleanFormatter,
+  formatSpec,
   ProductSpecKey,
+  SpecBooleanFormatter,
 } from '@shared/product-spec';
 import React, { useContext } from 'react';
 import { ProductContext } from '../product-context';
@@ -66,8 +66,8 @@ export const SpecRow = (props: SpecRowProps) => {
     <Tr>
       <Td className="border-r-0 text-left">{LABELS[key]}</Td>
       <Td className="border-l-0 text-right">
-        {formatProductSpec(spec, {
-          booleanFormatter: ProductSpecBooleanFormatter.YesNo,
+        {formatSpec(spec, {
+          booleanFormatter: SpecBooleanFormatter.YesNo,
         })}
       </Td>
     </Tr>

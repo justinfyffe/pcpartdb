@@ -8,14 +8,11 @@ Immediate Tasks:
   - Performance Rating = GPU Score / Max(GPU Score)
   - Value Rating = Value Score / Max(Value Score)
 
-- specs
-  - update gpu form labels
-
 - view gpu page
   - format data
   - auto-generate summary
   - buy button
-  - product models
+  - product retail models
 - compare gpus page
   - copytext from view gpu page
   - copy data shown from view gpu page

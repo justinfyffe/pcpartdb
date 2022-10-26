@@ -1,8 +1,8 @@
 import {
-  getProductBenchmarkMap,
+  getBenchmarkMap,
   getProductMetaMap,
-  getProductReviewMap,
-  getProductSpecMap,
+  getReviewMap,
+  getSpecMap,
   Product,
 } from '@shared/product';
 import { ProductBenchmarkMap } from '@shared/product-benchmark';
@@ -30,9 +30,9 @@ export const ProductContext = createContext<ProductContextState>({
 export function createProductContextState(product: Product) {
   return {
     product,
-    specs: getProductSpecMap(product),
+    specs: getSpecMap(product),
     meta: getProductMetaMap(product),
-    benchmarks: getProductBenchmarkMap(product),
-    reviews: getProductReviewMap(product),
+    benchmarks: getBenchmarkMap(product),
+    reviews: getReviewMap(product),
   } as ProductContextState;
 }

@@ -1,14 +1,10 @@
-import {
-  getProductBenchmarkMap,
-  getProductSpecMap,
-  Product,
-} from '@shared/product';
+import { getBenchmarkMap, getSpecMap, Product } from '@shared/product';
 import {
   ProductBenchmark,
   ProductBenchmarkKey,
-  productBenchmarkValue,
+  getBenchmarkRawValue,
 } from '@shared/product-benchmark';
-import { ProductSpecKey, productSpecValue } from '@shared/product-spec';
+import { ProductSpecKey, getSpecRawValue } from '@shared/product-spec';
 
 export function calculatePerformanceBenchmarks(product: Product) {
   const benchmarks: ProductBenchmark[] = [];
@@ -30,10 +26,10 @@ export function calculatePerformanceBenchmarks(product: Product) {
 }
 
 function calculatePerformanceScore(product: Product) {
-  const benchmarks = getProductBenchmarkMap(product);
+  const benchmarks = getBenchmarkMap(product);
 
   // Get inputs
-  const g3dMark = productBenchmarkValue(
+  const g3dMark = getBenchmarkRawValue(
     benchmarks[ProductBenchmarkKey.G3dMark],
   ) as number;
 
@@ -47,11 +43,11 @@ function calculatePerformanceScore(product: Product) {
 }
 
 function calculateValueScore(product: Product, performance: number) {
-  const specs = getProductSpecMap(product);
+  const specs = getSpecMap(product);
 
   // Get inputs
   const performanceScore = performance;
-  const launchPrice = productSpecValue(specs[ProductSpecKey.LaunchPriceMsrp]);
+  const launchPrice = getSpecRawValue(specs[ProductSpecKey.LaunchPriceMsrp]);
 
   // Validate inputs
   if (performanceScore == null) {

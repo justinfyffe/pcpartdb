@@ -1,6 +1,6 @@
 import Joi from '@hapi/joi';
 
-export enum ProductBenchmarkBooleanFormatter {
+export enum BenchmarkBooleanFormatter {
   TrueFalse = 'TRUE_FALSE',
   YesNo = 'YES_NO',
 }
@@ -61,7 +61,7 @@ export const productBenchmarkValidator = Joi.object({
   metadata: Joi.any().allow(null),
 }).options({ abortEarly: false });
 
-export function productBenchmarkValue(benchmark: ProductBenchmark) {
+export function getBenchmarkRawValue(benchmark: ProductBenchmark) {
   return (
     benchmark?.booleanValue ??
     benchmark?.floatValue ??
@@ -73,16 +73,16 @@ export function productBenchmarkValue(benchmark: ProductBenchmark) {
   );
 }
 
-export interface FormatProductBenchmarkOptions {
+export interface FormatBenchmarkOptions {
   decimals?: number;
-  booleanFormatter?: ProductBenchmarkBooleanFormatter;
+  booleanFormatter?: BenchmarkBooleanFormatter;
 }
 
-export function formatProductBenchmark(
+export function formatBenchmark(
   benchmark: ProductBenchmark,
-  options?: FormatProductBenchmarkOptions,
+  options?: FormatBenchmarkOptions,
 ) {
-  if (productBenchmarkValue(benchmark) == null) {
+  if (getBenchmarkRawValue(benchmark) == null) {
     return '--';
   }
 
@@ -107,7 +107,7 @@ export function formatProductBenchmark(
   if (booleanValue != null) {
     returnValue = formatBooleanValue(
       booleanValue,
-      options?.booleanFormatter ?? ProductBenchmarkBooleanFormatter.TrueFalse,
+      options?.booleanFormatter ?? BenchmarkBooleanFormatter.TrueFalse,
     );
   } else if (floatValue != null) {
     returnValue = floatValue.toLocaleString(undefined, {
@@ -129,11 +129,11 @@ export function formatProductBenchmark(
 
 function formatBooleanValue(
   value: boolean,
-  formatter: ProductBenchmarkBooleanFormatter,
+  formatter: BenchmarkBooleanFormatter,
 ) {
-  if (formatter === ProductBenchmarkBooleanFormatter.TrueFalse) {
+  if (formatter === BenchmarkBooleanFormatter.TrueFalse) {
     return value ? 'True' : 'False';
-  } else if (formatter === ProductBenchmarkBooleanFormatter.YesNo) {
+  } else if (formatter === BenchmarkBooleanFormatter.YesNo) {
     return value ? 'Yes' : 'No';
   } else {
     throw new Error(`Invalid boolean formatter: ${formatter}`);

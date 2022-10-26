@@ -24,12 +24,12 @@ import {
 } from '@heroicons/react/24/outline';
 import { Product } from '@shared/product';
 import {
-  formatProductBenchmark,
+  formatBenchmark,
   ProductBenchmarkKey,
 } from '@shared/product-benchmark';
 import { formatProductMeta, ProductMetaKey } from '@shared/product-meta';
 import { ProductReviewKey } from '@shared/product-review';
-import { formatProductSpec, ProductSpecKey } from '@shared/product-spec';
+import { formatSpec, ProductSpecKey } from '@shared/product-spec';
 import { NextPageContext } from 'next';
 import React, { useMemo } from 'react';
 import { productService } from '../../product-service';
@@ -121,8 +121,8 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                     </HighlightLabel>
 
                     <HighlightValue>
-                      {formatProductSpec(specs[ProductSpecKey.MemorySize])}{' '}
-                      {formatProductSpec(specs[ProductSpecKey.MemoryType])}
+                      {formatSpec(specs[ProductSpecKey.MemorySize])}{' '}
+                      {formatSpec(specs[ProductSpecKey.MemoryType])}
                     </HighlightValue>
                   </HighlightListItem>
 
@@ -132,15 +132,15 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                     </HighlightLabel>
 
                     <HighlightValue>
-                      {formatProductSpec(specs[ProductSpecKey.Length], {
+                      {formatSpec(specs[ProductSpecKey.Length], {
                         suffix: false,
                       })}
                       {' x '}
-                      {formatProductSpec(specs[ProductSpecKey.Width], {
+                      {formatSpec(specs[ProductSpecKey.Width], {
                         suffix: false,
                       })}
                       {' x '}
-                      {formatProductSpec(specs[ProductSpecKey.Height], {
+                      {formatSpec(specs[ProductSpecKey.Height], {
                         suffix: false,
                       })}{' '}
                       mm
@@ -151,9 +151,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                     <HighlightLabel icon={<BoltIcon />}>TDP</HighlightLabel>
 
                     <HighlightValue>
-                      {formatProductSpec(
-                        specs[ProductSpecKey.ThermalDesignPower],
-                      )}
+                      {formatSpec(specs[ProductSpecKey.ThermalDesignPower])}
                     </HighlightValue>
                   </HighlightListItem>
 
@@ -163,7 +161,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                     </HighlightLabel>
 
                     <HighlightValue>
-                      {formatProductSpec(specs[ProductSpecKey.ReleaseDate])}
+                      {formatSpec(specs[ProductSpecKey.ReleaseDate])}
                     </HighlightValue>
                   </HighlightListItem>
                 </HighlightList>
@@ -188,7 +186,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                     <CustomRow>
                       <CustomRowLabel>Performance Rating (Rank)</CustomRowLabel>
                       <CustomRowValue>
-                        {formatProductBenchmark(
+                        {formatBenchmark(
                           benchmarks[ProductBenchmarkKey.PerformanceScore],
                         )}{' '}
                         (
@@ -203,7 +201,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                         Performance Per Dollar (Rank)
                       </CustomRowLabel>
                       <CustomRowValue>
-                        {formatProductBenchmark(
+                        {formatBenchmark(
                           benchmarks[ProductBenchmarkKey.ValueScore],
                         )}{' '}
                         ({formatProductMeta(meta[ProductMetaKey.ValueRank])})

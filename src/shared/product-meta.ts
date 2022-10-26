@@ -49,7 +49,7 @@ export const productMetaValidator = Joi.object({
   metadata: Joi.any().allow(null),
 }).options({ abortEarly: false });
 
-export function productMetaValue(meta: ProductMeta) {
+export function getProductMetaRawValue(meta: ProductMeta) {
   return (
     meta?.booleanValue ??
     meta?.floatValue ??
@@ -61,16 +61,16 @@ export function productMetaValue(meta: ProductMeta) {
   );
 }
 
-export interface FormatProductMetaOptions {
+export interface FormatMetaOptions {
   decimals?: number;
   booleanFormatter?: ProductMetaBooleanFormatter;
 }
 
 export function formatProductMeta(
   meta: ProductMeta,
-  options?: FormatProductMetaOptions,
+  options?: FormatMetaOptions,
 ) {
-  if (productMetaValue(meta) == null) {
+  if (getProductMetaRawValue(meta) == null) {
     return '--';
   }
 

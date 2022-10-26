@@ -1,6 +1,6 @@
 import { Select, SelectOption, SelectValue } from '@client/shared/components';
 import {
-  MarketSegment,
+  MarketSegmentValue,
   ProductSpecKey,
   ProductSpecRequest,
 } from '@shared/product-spec';
@@ -8,9 +8,9 @@ import React, { forwardRef, useCallback, useMemo } from 'react';
 
 const ITEMS: { [key: string]: { label: string; value: string }[] } = {
   [ProductSpecKey.MarketSegment]: [
-    { label: 'Desktop', value: MarketSegment.Desktop },
-    { label: 'Laptop', value: MarketSegment.Laptop },
-    { label: 'Server', value: MarketSegment.Server },
+    { label: 'Desktop', value: MarketSegmentValue.Desktop },
+    { label: 'Laptop', value: MarketSegmentValue.Laptop },
+    { label: 'Server', value: MarketSegmentValue.Server },
   ],
 };
 

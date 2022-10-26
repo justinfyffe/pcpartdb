@@ -1,6 +1,6 @@
 import { Td, Tr } from '@client/shared/components';
 import {
-  formatProductBenchmark,
+  formatBenchmark,
   ProductBenchmarkKey,
 } from '@shared/product-benchmark';
 import React, { useContext } from 'react';
@@ -31,9 +31,7 @@ export const BenchmarkRow = (props: BenchmarkRowProps) => {
           <>{LABELS[key]}</>
         )}
       </Td>
-      <Td className="border-l-0 text-right">
-        {formatProductBenchmark(benchmark)}
-      </Td>
+      <Td className="border-l-0 text-right">{formatBenchmark(benchmark)}</Td>
     </Tr>
   );
 };

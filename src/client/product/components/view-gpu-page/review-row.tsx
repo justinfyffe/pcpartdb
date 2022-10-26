@@ -1,5 +1,5 @@
 import { Td, Tr } from '@client/shared/components';
-import { formatProductReview, ProductReviewKey } from '@shared/product-review';
+import { formatReview, ProductReviewKey } from '@shared/product-review';
 import React, { useContext } from 'react';
 import { ProductContext } from '../product-context';
 
@@ -30,7 +30,7 @@ export const ReviewRow = (props: ReviewRowProps) => {
           <>{LABELS[key]}</>
         )}
       </Td>
-      <Td className="border-l-0 text-right">{formatProductReview(review)}</Td>
+      <Td className="border-l-0 text-right">{formatReview(review)}</Td>
     </Tr>
   );
 };

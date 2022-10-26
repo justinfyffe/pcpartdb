@@ -16,10 +16,10 @@ import Joi from '@hapi/joi';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { ApiError, ValidationErrorType } from '@shared/error';
 import {
-  getProductBenchmarkMap,
+  getBenchmarkMap,
   getProductMetaMap,
-  getProductReviewMap,
-  getProductSpecMap,
+  getReviewMap,
+  getSpecMap,
   Product,
   ProductRequest,
   ProductType,
@@ -238,9 +238,9 @@ interface GpuFormProps {
 
 function formOptions(gpu?: Product): UseFormProps<ProductFormData> {
   const meta = gpu != null ? getProductMetaMap(gpu) : {};
-  const specs = gpu != null ? getProductSpecMap(gpu) : {};
-  const benchmarks = gpu != null ? getProductBenchmarkMap(gpu) : {};
-  const reviews = gpu != null ? getProductReviewMap(gpu) : {};
+  const specs = gpu != null ? getSpecMap(gpu) : {};
+  const benchmarks = gpu != null ? getBenchmarkMap(gpu) : {};
+  const reviews = gpu != null ? getReviewMap(gpu) : {};
   const { autocompleteImage, thumbnailImage, detailsImages } =
     getFormImages(gpu);
 
@@ -765,7 +765,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           </Field>
 
           <Field>
-            TDP
+            Thermal Design Power (TDP)
             <Controller
               name="thermalDesignPower"
               control={control}
@@ -829,7 +829,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           <h3 className="mb-4">Cores &amp; Clock Speeds</h3>
 
           <Field>
-            CUDA Cores
+            Shader Units / CUDA Cores
             <Controller
               name="shaderUnitsCudaCores"
               control={control}
@@ -844,7 +844,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           </Field>
 
           <Field>
-            TMUs
+            Texture Mapping Units (TMUs)
             <Controller
               name="textureMappingUnits"
               control={control}
@@ -859,7 +859,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           </Field>
 
           <Field>
-            ROPs
+            Render Output Units (ROPs)
             <Controller
               name="renderOutputUnits"
               control={control}
@@ -889,7 +889,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           </Field>
 
           <Field>
-            RT Cores
+            Ray Tracing Cores (RT Cores)
             <Controller
               name="rayTracingCores"
               control={control}
@@ -904,7 +904,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           </Field>
 
           <Field>
-            Base Clock
+            Clock Speed (Base)
             <Controller
               name="coreClockSpeedBase"
               control={control}
@@ -919,7 +919,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           </Field>
 
           <Field>
-            Boost Clock
+            Clock Speed (Boost)
             <Controller
               name="coreClockSpeedBoost"
               control={control}
