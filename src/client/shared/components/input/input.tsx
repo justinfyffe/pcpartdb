@@ -33,7 +33,7 @@ export interface InputProps {
   onKeyDown?: (e?: KeyboardEvent) => void;
   onBlur?: (e?: FocusEvent) => void;
   onFocus?: (e?: FocusEvent) => void;
-  onWheel?: (e?: WheelEvent) => void;
+  onWheel?: (e?: WheelEvent<HTMLInputElement>) => void;
 
   value?: string;
   onChange?: (value: string) => void;
@@ -106,7 +106,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
   );
 
   const handleWheel = useCallback(
-    (e: WheelEvent) => {
+    (e: WheelEvent<HTMLInputElement>) => {
       onWheel?.(e);
     },
     [onWheel],

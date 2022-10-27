@@ -2,8 +2,11 @@ import { NumberInput } from '@client/shared/components';
 import { SpecKey, SpecRequest } from '@shared/spec';
 import React, { forwardRef, useCallback, useMemo, useState } from 'react';
 
+const PREFIXES: { [key: string]: string[] } = {
+  [SpecKey.LaunchPriceMsrp]: ['$'],
+};
+
 const SUFFIXES: { [key: string]: string[] } = {
-  [SpecKey.LaunchPriceMsrp]: ['USD'],
   [SpecKey.ProcessSize]: ['nm', 'μm'],
   [SpecKey.Transistors]: ['million'],
   [SpecKey.Length]: ['mm'],
@@ -37,11 +40,16 @@ export const SpecFloatField = forwardRef<HTMLInputElement, SpecFloatFieldProps>(
   (props, ref) => {
     const { field, value, onChange } = props;
 
+    const prefixes = useMemo(() => PREFIXES[field] ?? [], [field]);
     const suffixes = useMemo(() => SUFFIXES[field] ?? [], [field]);
 
     const baseValue = value?.floatValue ?? null;
+    const prefix = value?.metadata?.prefix ?? prefixes[0] ?? null;
     const suffix = value?.metadata?.suffix ?? suffixes[0] ?? null;
 
+    const [prefixIndex, setPrefixIndex] = useState(() =>
+      prefixes.length > 0 && prefix != null ? prefixes.indexOf(prefix) : 0,
+    );
     const [suffixIndex, setSuffixIndex] = useState(() =>
       suffixes.length > 0 && suffix != null ? suffixes.indexOf(suffix) : 0,
     );
@@ -56,6 +64,18 @@ export const SpecFloatField = forwardRef<HTMLInputElement, SpecFloatFieldProps>(
       },
       [field, suffix, onChange],
     );
+
+    const handlePrefixClick = useCallback(() => {
+      const newIndex = prefixIndex < prefixes.length - 1 ? prefixIndex + 1 : 0;
+      setPrefixIndex(newIndex);
+      const newValue: SpecRequest = {
+        key: field,
+        floatValue: baseValue,
+        metadata: { prefix: prefixes[prefixIndex] },
+      };
+
+      onChange?.(newValue);
+    }, [field, baseValue, prefixes, prefixIndex, onChange]);
 
     const handleSuffixClick = useCallback(() => {
       const newIndex = suffixIndex < suffixes.length - 1 ? suffixIndex + 1 : 0;
@@ -72,8 +92,10 @@ export const SpecFloatField = forwardRef<HTMLInputElement, SpecFloatFieldProps>(
     return (
       <NumberInput
         value={baseValue}
+        prefix={prefix}
         suffix={suffix}
         onChange={handleChange}
+        onPrefixClick={handlePrefixClick}
         onSuffixClick={handleSuffixClick}
         ref={ref}
       />
