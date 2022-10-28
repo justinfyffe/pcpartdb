@@ -1,4 +1,5 @@
 import { Button, ButtonVariant } from '@client/shared/components';
+import { classNames } from '@client/shared/ui';
 import React, { cloneElement } from 'react';
 
 interface HighlightListProps {
@@ -60,15 +61,20 @@ export const HighlightValue = (props: HighlightValueProps) => {
 
 interface HighlightButtonProps {
   children?: React.ReactNode;
+
+  className?: string;
 }
 
 export const HighlightButton = (props: HighlightButtonProps) => {
-  const { children } = props;
+  const { children, className } = props;
 
   return (
     <Button
-      variant={ButtonVariant.Primary}
-      className="self-stretch lg:text-lg text-right py-[4px]"
+      variant={ButtonVariant.None}
+      className={classNames(
+        'self-stretch lg:text-lg text-right py-[4px]',
+        className,
+      )}
     >
       {children}
     </Button>

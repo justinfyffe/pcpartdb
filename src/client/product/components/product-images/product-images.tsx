@@ -62,7 +62,7 @@ export const ProductImages: FunctionComponent<ProductImagesProps> = (props) => {
         className,
       )}
     >
-      <div className="aspect-square bg-gray-50 border border-gray-200 flex items-center justify-center rounded w-full">
+      <div className="aspect-square bg-slate-50 flex items-center justify-center rounded w-full">
         <Img className="h-auto mx-auto w-full" src={images[selected]} />
       </div>
 
@@ -72,7 +72,7 @@ export const ProductImages: FunctionComponent<ProductImagesProps> = (props) => {
             key={i}
             src={image}
             onClick={() => setSelected(i)}
-            className={selected === i ? 'border-black' : ''}
+            className={selected === i ? 'border border-black' : ''}
           />
         ))}
       </div>

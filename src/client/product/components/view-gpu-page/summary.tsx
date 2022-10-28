@@ -1,12 +1,10 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { ProductContext } from '../product-context';
 
-interface SummaryProps {
-  specs?: any;
-  meta?: any;
-  benchmarks?: any;
-  reviews?: any;
-}
+export const Summary = () => {
+  const context = useContext(ProductContext);
 
-export const Summary = (props: SummaryProps) => {
-  return <></>;
+  const { product } = context;
+
+  return <>Summary for {product.name}</>;
 };

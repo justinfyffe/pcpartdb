@@ -42,10 +42,17 @@ export const SpecFloatField = forwardRef<HTMLInputElement, SpecFloatFieldProps>(
 
     const prefixes = useMemo(() => PREFIXES[field] ?? [], [field]);
     const suffixes = useMemo(() => SUFFIXES[field] ?? [], [field]);
+    const prefix = useMemo(() => {
+      return prefixes.includes(value?.metadata?.prefix)
+        ? value?.metadata?.prefix
+        : prefixes[0] ?? null;
+    }, [prefixes, value]);
 
-    const baseValue = value?.floatValue ?? null;
-    const prefix = value?.metadata?.prefix ?? prefixes[0] ?? null;
-    const suffix = value?.metadata?.suffix ?? suffixes[0] ?? null;
+    const suffix = useMemo(() => {
+      return suffixes.includes(value?.metadata?.suffix)
+        ? value?.metadata?.suffix
+        : suffixes[0] ?? null;
+    }, [suffixes, value]);
 
     const [prefixIndex, setPrefixIndex] = useState(() =>
       prefixes.length > 0 && prefix != null ? prefixes.indexOf(prefix) : 0,
@@ -54,15 +61,17 @@ export const SpecFloatField = forwardRef<HTMLInputElement, SpecFloatFieldProps>(
       suffixes.length > 0 && suffix != null ? suffixes.indexOf(suffix) : 0,
     );
 
+    const baseValue = value?.floatValue ?? null;
+
     const handleChange = useCallback(
       (value: number) => {
         onChange?.(
           value != null
-            ? { key: field, floatValue: value, metadata: { suffix } }
+            ? { key: field, floatValue: value, metadata: { prefix, suffix } }
             : null,
         );
       },
-      [field, suffix, onChange],
+      [field, prefix, suffix, onChange],
     );
 
     const handlePrefixClick = useCallback(() => {

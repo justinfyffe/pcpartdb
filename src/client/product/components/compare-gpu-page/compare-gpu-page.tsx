@@ -6,6 +6,7 @@ import {
   Table,
   TBody,
   Td,
+  Th,
   THead,
   Tr,
 } from '@client/shared/components';
@@ -51,7 +52,7 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
         </ArticleHeader>
 
         <article className="flex-1 flex flex-col gap-6 max-w-full">
-          <section className="flex flex-wrap gap-4 md:flex-nowrap justify-start">
+          <section className="flex flex-wrap gap-4 md:flex-nowrap justify-between">
             <div className="flex flex-col gap-3 flex-1 min-w-[210px] max-w-[350px]">
               <h2 className="self-start text-2xl font-medium">{gpu1.name}</h2>
 
@@ -86,12 +87,12 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
                 eiusmod tempor incididunt ut labore et dolore magna aliqua.
               </p>
 
-              <Table border responsive>
+              <Table responsive>
                 <THead>
                   <Tr>
-                    <Td className="min-w-[180px]">GPU</Td>
-                    <Td className="min-w-[80px]">{gpu1.name}</Td>
-                    <Td className="min-w-[80px]">{gpu2.name}</Td>
+                    <Th className="min-w-[180px]">GPU</Th>
+                    <Th className="min-w-[80px]">{gpu1.name}</Th>
+                    <Th className="min-w-[80px]">{gpu2.name}</Th>
                   </Tr>
                 </THead>
                 <TBody>
@@ -147,12 +148,12 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
                 eiusmod tempor incididunt ut labore et dolore magna aliqua.
               </p>
 
-              <Table border responsive>
+              <Table responsive>
                 <THead>
                   <Tr>
-                    <Td className="min-w-[180px]">GPU</Td>
-                    <Td className="min-w-[80px]">{gpu1.name}</Td>
-                    <Td className="min-w-[80px]">{gpu2.name}</Td>
+                    <Th className="min-w-[180px]">GPU</Th>
+                    <Th className="min-w-[80px]">{gpu1.name}</Th>
+                    <Th className="min-w-[80px]">{gpu2.name}</Th>
                   </Tr>
                 </THead>
                 <TBody>
@@ -213,12 +214,12 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
                   do eiusmod tempor incididunt ut labore et dolore magna aliqua.
                 </p>
 
-                <Table border responsive>
+                <Table responsive>
                   <THead>
                     <Tr>
-                      <Td className="min-w-[180px]">GPU</Td>
-                      <Td className="min-w-[80px]">{gpu1.name}</Td>
-                      <Td className="min-w-[80px]">{gpu2.name}</Td>
+                      <Th className="min-w-[180px]">GPU</Th>
+                      <Th className="min-w-[80px]">{gpu1.name}</Th>
+                      <Th className="min-w-[80px]">{gpu2.name}</Th>
                     </Tr>
                   </THead>
                   <TBody>
@@ -264,12 +265,12 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
                   do eiusmod tempor incididunt ut labore et dolore magna aliqua.
                 </p>
 
-                <Table border responsive>
+                <Table responsive>
                   <THead>
                     <Tr>
-                      <Td className="min-w-[180px]">GPU</Td>
-                      <Td className="min-w-[80px]">{gpu1.name}</Td>
-                      <Td className="min-w-[80px]">{gpu2.name}</Td>
+                      <Th className="min-w-[180px]">GPU</Th>
+                      <Th className="min-w-[80px]">{gpu1.name}</Th>
+                      <Th className="min-w-[80px]">{gpu2.name}</Th>
                     </Tr>
                   </THead>
                   <TBody>
@@ -330,12 +331,12 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
                   do eiusmod tempor incididunt ut labore et dolore magna aliqua.
                 </p>
 
-                <Table border responsive>
+                <Table responsive>
                   <THead>
                     <Tr>
-                      <Td className="min-w-[180px]">GPU</Td>
-                      <Td className="min-w-[80px]">{gpu1.name}</Td>
-                      <Td className="min-w-[80px]">{gpu2.name}</Td>
+                      <Th className="min-w-[180px]">GPU</Th>
+                      <Th className="min-w-[80px]">{gpu1.name}</Th>
+                      <Th className="min-w-[80px]">{gpu2.name}</Th>
                     </Tr>
                   </THead>
                   <TBody>
@@ -396,12 +397,12 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
                   do eiusmod tempor incididunt ut labore et dolore magna aliqua.
                 </p>
 
-                <Table border responsive>
+                <Table responsive>
                   <THead>
                     <Tr>
-                      <Td className="min-w-[200px]">GPU</Td>
-                      <Td className="min-w-[80px]">{gpu1.name}</Td>
-                      <Td className="min-w-[80px]">{gpu2.name}</Td>
+                      <Th className="min-w-[200px]">GPU</Th>
+                      <Th className="min-w-[80px]">{gpu1.name}</Th>
+                      <Th className="min-w-[80px]">{gpu2.name}</Th>
                     </Tr>
                   </THead>
                   <TBody>
@@ -437,12 +438,12 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
                   do eiusmod tempor incididunt ut labore et dolore magna aliqua.
                 </p>
 
-                <Table border responsive>
+                <Table responsive>
                   <THead>
                     <Tr>
-                      <Td className="min-w-[180px]">GPU</Td>
-                      <Td className="min-w-[80px]">{gpu1.name}</Td>
-                      <Td className="min-w-[80px]">{gpu2.name}</Td>
+                      <Th className="min-w-[180px]">GPU</Th>
+                      <Th className="min-w-[80px]">{gpu1.name}</Th>
+                      <Th className="min-w-[80px]">{gpu2.name}</Th>
                     </Tr>
                   </THead>
                   <TBody>
@@ -478,12 +479,12 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
                   do eiusmod tempor incididunt ut labore et dolore magna aliqua.
                 </p>
 
-                <Table border responsive>
+                <Table responsive>
                   <THead>
                     <Tr>
-                      <Td className="min-w-[180px]">GPU</Td>
-                      <Td className="min-w-[80px]">{gpu1.name}</Td>
-                      <Td className="min-w-[80px]">{gpu2.name}</Td>
+                      <Th className="min-w-[180px]">GPU</Th>
+                      <Th className="min-w-[80px]">{gpu1.name}</Th>
+                      <Th className="min-w-[80px]">{gpu2.name}</Th>
                     </Tr>
                   </THead>
                   <TBody>
@@ -534,30 +535,21 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
                   do eiusmod tempor incididunt ut labore et dolore magna aliqua.
                 </p>
 
-                <Table border responsive>
+                <Table responsive>
                   <THead>
                     <Tr>
-                      <Td className="min-w-[180px]">GPU</Td>
-                      <Td className="min-w-[80px]">{gpu1.name}</Td>
-                      <Td className="min-w-[80px]">{gpu2.name}</Td>
+                      <Th className="min-w-[180px]">GPU</Th>
+                      <Th className="min-w-[80px]">{gpu1.name}</Th>
+                      <Th className="min-w-[80px]">{gpu2.name}</Th>
                     </Tr>
                   </THead>
                   <TBody>
                     <Tr>
-                      <Td>DirextX</Td>
+                      <Td>DirectX</Td>
                       <Td>12</Td>
                       <Td>12</Td>
                     </Tr>
-                    <Tr>
-                      <Td>G-Sync / FreeSync</Td>
-                      <Td>Yes</Td>
-                      <Td>Yes</Td>
-                    </Tr>
-                    <Tr>
-                      <Td>SLI / Crossfire</Td>
-                      <Td>No</Td>
-                      <Td>No</Td>
-                    </Tr>
+
                     <Tr>
                       <Td>VR Ready</Td>
                       <Td>Yes</Td>
@@ -578,6 +570,16 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
                       <Td>6.5</Td>
                       <Td>6.5</Td>
                     </Tr>
+                    <Tr>
+                      <Td>G-Sync / FreeSync</Td>
+                      <Td>Yes</Td>
+                      <Td>Yes</Td>
+                    </Tr>
+                    <Tr>
+                      <Td>SLI / Crossfire</Td>
+                      <Td>No</Td>
+                      <Td>No</Td>
+                    </Tr>
                   </TBody>
                 </Table>
               </article>
@@ -591,12 +593,12 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
                 eiusmod tempor incididunt ut labore et dolore magna aliqua.
               </p>
 
-              <Table border responsive>
+              <Table responsive>
                 <THead>
                   <Tr>
-                    <Td className="min-w-[180px]">GPU</Td>
-                    <Td className="min-w-[80px]">{gpu1.name}</Td>
-                    <Td className="min-w-[80px]">{gpu2.name}</Td>
+                    <Th className="min-w-[180px]">GPU</Th>
+                    <Th className="min-w-[80px]">{gpu1.name}</Th>
+                    <Th className="min-w-[80px]">{gpu2.name}</Th>
                   </Tr>
                 </THead>
                 <TBody>

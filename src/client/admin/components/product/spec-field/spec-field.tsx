@@ -73,12 +73,12 @@ const INPUT_TYPES: { [key: string]: InputType } = {
   [SpecKey.Fp64Performance]: 'float',
 
   // API Support
-  [SpecKey.GSyncFreeSyncSupport]: 'boolean',
-  [SpecKey.SliCrossfireSupport]: 'boolean',
   [SpecKey.DirectXVersion]: 'float',
   [SpecKey.OpenClVersion]: 'float',
   [SpecKey.OpenGlVersion]: 'float',
   [SpecKey.ShaderModelVersion]: 'float',
+  [SpecKey.GSyncFreeSyncSupport]: 'boolean',
+  [SpecKey.SliCrossfireSupport]: 'boolean',
 };
 
 interface SpecFieldProps {

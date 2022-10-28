@@ -951,36 +951,6 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           </Field>
 
           <Field>
-            G-Sync / Free-Sync Support
-            <Controller
-              name="gSyncFreeSyncSupport"
-              control={control}
-              render={({ field }) => (
-                <SpecField
-                  field={SpecKey.GSyncFreeSyncSupport}
-                  {...field}
-                  ref={null}
-                />
-              )}
-            />
-          </Field>
-
-          <Field>
-            SLI / Crossfire Support
-            <Controller
-              name="sliCrossfireSupport"
-              control={control}
-              render={({ field }) => (
-                <SpecField
-                  field={SpecKey.SliCrossfireSupport}
-                  {...field}
-                  ref={null}
-                />
-              )}
-            />
-          </Field>
-
-          <Field>
             Open CL Version
             <Controller
               name="openClVersion"
@@ -1018,6 +988,36 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               render={({ field }) => (
                 <SpecField
                   field={SpecKey.ShaderModelVersion}
+                  {...field}
+                  ref={null}
+                />
+              )}
+            />
+          </Field>
+
+          <Field>
+            G-Sync / Free-Sync Support
+            <Controller
+              name="gSyncFreeSyncSupport"
+              control={control}
+              render={({ field }) => (
+                <SpecField
+                  field={SpecKey.GSyncFreeSyncSupport}
+                  {...field}
+                  ref={null}
+                />
+              )}
+            />
+          </Field>
+
+          <Field>
+            SLI / Crossfire Support
+            <Controller
+              name="sliCrossfireSupport"
+              control={control}
+              render={({ field }) => (
+                <SpecField
+                  field={SpecKey.SliCrossfireSupport}
                   {...field}
                   ref={null}
                 />

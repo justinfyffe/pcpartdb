@@ -16,7 +16,7 @@ export const ProductImageOption: FunctionComponent<ProductImageOptionProps> = (
   return (
     <div
       className={classNames(
-        'bg-gray-50 border border-gray-200 flex items-center h-[60px] w-[60px] cursor-pointer',
+        'bg-gray-50 border border-transparent flex items-center h-[60px] w-[60px] cursor-pointer',
         className,
       )}
       onClick={onClick}

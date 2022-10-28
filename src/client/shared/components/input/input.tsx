@@ -8,6 +8,8 @@ import React, {
   useCallback,
   useContext,
   useEffect,
+  useLayoutEffect,
+  useRef,
   useState,
   WheelEvent,
 } from 'react';
@@ -112,6 +114,15 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
     [onWheel],
   );
 
+  const [prefixWidth, setPrefixWidth] = useState();
+  const prefixRef = useRef(null);
+  useLayoutEffect(() => {
+    if (prefixRef == null || prefixRef.current == null) {
+      return;
+    }
+    setPrefixWidth(prefixRef?.current?.offsetWidth ?? 0);
+  }, [value, prefixRef]);
+
   const context = useContext(FieldContext);
 
   return (
@@ -126,8 +137,10 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
         className={classNames(
           'border m-0 p-3 rounded text-sm w-full shadow focus:outline-offset-1',
           props.clearable ? 'pr-12' : '',
-          props.prefix ? 'pl-12' : '',
         )}
+        style={{
+          paddingLeft: props.prefix ? prefixWidth : undefined,
+        }}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
         onClick={handleClick}
@@ -141,6 +154,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
         <div
           className="absolute flex items-center p-[0_16px] left-0 inset-y-0"
           onClick={handlePrefixClick}
+          ref={prefixRef}
         >
           {prefix}
         </div>

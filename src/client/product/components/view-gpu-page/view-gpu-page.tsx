@@ -88,7 +88,9 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                     </HighlightLabel>
 
                     <HighlightValue>
-                      <HighlightButton>Check Price</HighlightButton>
+                      <HighlightButton className="bg-green-500 text-white">
+                        Check Price
+                      </HighlightButton>
                     </HighlightValue>
                   </HighlightListItem>
 
@@ -178,7 +180,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                   date, and price.
                 </p>
 
-                <Table border responsive>
+                <Table responsive>
                   <TBody>
                     <CustomRow>
                       <CustomRowLabel>Performance Rating (Rank)</CustomRowLabel>
@@ -217,7 +219,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                   What others are saying about {gpu.name}.
                 </p>
 
-                <Table border responsive>
+                <Table responsive>
                   <TBody>
                     <ReviewRow review={ReviewKey.Amazon} />
                     <ReviewRow review={ReviewKey.PcGamer} />
@@ -238,7 +240,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                     {`${gpu.name}'s`} processor chip details.
                   </p>
 
-                  <Table border responsive>
+                  <Table responsive>
                     <TBody>
                       <SpecRow spec={SpecKey.GpuName} />
                       <SpecRow spec={SpecKey.Architecture} />
@@ -255,7 +257,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                     {`${gpu.name}'s`} memory size, bandwidth, and clock speeds.
                   </p>
 
-                  <Table border responsive>
+                  <Table responsive>
                     <TBody>
                       <SpecRow spec={SpecKey.MemorySize} />
                       <SpecRow spec={SpecKey.MemoryType} />
@@ -274,7 +276,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                     consumption, and output ports.
                   </p>
 
-                  <Table border responsive>
+                  <Table responsive>
                     <TBody>
                       <SpecRow spec={SpecKey.SlotWidth} />
                       <SpecRow spec={SpecKey.Length} />
@@ -297,7 +299,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                     {`${gpu.name}'s`} cores, clock speed, and cache.
                   </p>
 
-                  <Table border responsive>
+                  <Table responsive>
                     <TBody>
                       <SpecRow spec={SpecKey.ShaderUnitsCudaCores} />
                       <SpecRow spec={SpecKey.TextureMappingUnits} />
@@ -321,7 +323,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                     second.
                   </p>
 
-                  <Table border responsive>
+                  <Table responsive>
                     <TBody>
                       <SpecRow spec={SpecKey.PixelFillRate} />
                       <SpecRow spec={SpecKey.TextureFillRate} />
@@ -334,14 +336,14 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                 <section>
                   <h3 className="mb-3">API Support</h3>
 
-                  <Table border responsive>
+                  <Table responsive>
                     <TBody>
                       <SpecRow spec={SpecKey.DirectXVersion} />
-                      <SpecRow spec={SpecKey.GSyncFreeSyncSupport} />
-                      <SpecRow spec={SpecKey.SliCrossfireSupport} />
                       <SpecRow spec={SpecKey.OpenClVersion} />
                       <SpecRow spec={SpecKey.OpenGlVersion} />
                       <SpecRow spec={SpecKey.ShaderModelVersion} />
+                      <SpecRow spec={SpecKey.GSyncFreeSyncSupport} />
+                      <SpecRow spec={SpecKey.SliCrossfireSupport} />
                     </TBody>
                   </Table>
                 </section>
@@ -355,7 +357,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                   identify how strong the GPU performs compared to its peers.
                 </p>
 
-                <Table border responsive>
+                <Table responsive>
                   <TBody>
                     <BenchmarkRow benchmark={BenchmarkKey.G3dMark} />
                     <BenchmarkRow benchmark={BenchmarkKey.G2dMark} />

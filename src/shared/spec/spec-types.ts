@@ -50,12 +50,12 @@ export enum SpecKey {
   Fp64Performance = 'FP64_PERFORMANCE',
 
   // API Support
-  GSyncFreeSyncSupport = 'G_SYNC_FREE_SYNC_SUPPORT',
-  SliCrossfireSupport = 'SLI_CROSSFIRE_SUPPORT',
   DirectXVersion = 'DIRECT_X_VERSION',
   OpenClVersion = 'OPEN_CL_VERSION',
   OpenGlVersion = 'OPEN_GL_VERSION',
   ShaderModelVersion = 'SHADER_MODEL_VERSION',
+  GSyncFreeSyncSupport = 'G_SYNC_FREE_SYNC_SUPPORT',
+  SliCrossfireSupport = 'SLI_CROSSFIRE_SUPPORT',
 }
 
 export interface SpecMetadata {

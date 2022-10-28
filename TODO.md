@@ -14,10 +14,8 @@ Immediate Tasks:
   - rename product-review to review (db)
 
 - view gpu page
-  - format data
   - auto-generate summary
-  - buy button
-  - product retail models
+  - buy button functionality
 - compare gpus page
   - copytext from view gpu page
   - copy data shown from view gpu page
@@ -34,7 +32,10 @@ Immediate Tasks:
 - initial on-page seo
   - canonical links
   - alt tags
+- product forms
+  - pre-fill data (from external source)
 - launch
+- product retail models
 - Split tech specs into tabs for desktop, accordians for mobile
   - Processor
   - Board Compatibility
@@ -43,8 +44,6 @@ Immediate Tasks:
   - Memory
   - Display Connectivity
   - API Support
-- product forms
-  - pre-fill data (from external source)
 - look into using useController
 - improve html semantics
 

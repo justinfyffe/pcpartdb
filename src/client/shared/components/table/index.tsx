@@ -90,7 +90,7 @@ export const Th: FunctionComponent<ThProps> = (props) => {
     <th
       {...htmlProps}
       className={classNames(
-        'text-left p-2 md:px-2 md:py-4',
+        'text-left p-2 font-medium',
         context.border ? 'border' : '',
         className,
       )}
@@ -110,7 +110,7 @@ export const Td: FunctionComponent<TdProps> = (props) => {
     <td
       {...htmlProps}
       className={classNames(
-        'text-left p-2 md:px-2 md:py-4',
+        'p-2 text-left',
         context.border ? 'border' : '',
         className,
       )}
