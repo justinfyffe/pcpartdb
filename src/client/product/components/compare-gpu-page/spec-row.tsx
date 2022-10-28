@@ -1,7 +1,7 @@
 import { Td, Tr } from '@client/shared/components';
 import { formatSpec, SpecBooleanFormatter, SpecKey } from '@shared/spec';
 import React, { useContext } from 'react';
-import { ProductContext } from './product-context';
+import { ProductsContext } from './products-context';
 
 const LABELS: Record<string, string> = {
   [SpecKey.Architecture]: 'Architecture',
@@ -55,14 +55,20 @@ interface SpecRowProps {
 export const SpecRow = (props: SpecRowProps) => {
   const { spec: key } = props;
 
-  const context = useContext(ProductContext);
-  const spec = context.specs[key];
+  const context = useContext(ProductsContext);
+  const spec1 = context.specs[0][key];
+  const spec2 = context.specs[0][key];
 
   return (
     <Tr>
-      <Td className="border-r-0 text-left">{LABELS[key]}</Td>
-      <Td className="border-l-0 text-right">
-        {formatSpec(spec, {
+      <Td className="border-r-0 text-left min-w-[180px]">{LABELS[key]}</Td>
+      <Td className="border-x-0 text-left min-w-[80px]">
+        {formatSpec(spec1, {
+          booleanFormatter: SpecBooleanFormatter.YesNo,
+        })}
+      </Td>
+      <Td className="border-l-0 text-left min-w-[80px]">
+        {formatSpec(spec2, {
           booleanFormatter: SpecBooleanFormatter.YesNo,
         })}
       </Td>

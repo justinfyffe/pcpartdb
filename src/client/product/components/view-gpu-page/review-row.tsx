@@ -1,7 +1,7 @@
 import { Td, Tr } from '@client/shared/components';
 import { formatReview, ReviewKey } from '@shared/review';
 import React, { useContext } from 'react';
-import { ProductContext } from '../product-context';
+import { ProductContext } from './product-context';
 
 const LABELS: Record<string, string> = {
   [ReviewKey.Amazon]: 'Amazon',
@@ -23,14 +23,14 @@ export const ReviewRow = (props: ReviewRowProps) => {
 
   return (
     <Tr>
-      <Td className="border-r-0 text-left">
+      <Td className="border-r-0 text-left">{LABELS[key]}</Td>
+      <Td className="border-l-0 text-right">
         {review?.source != null ? (
-          <a href={review.source}>{LABELS[key]}</a>
+          <a href={review.source}>{formatReview(review)}</a>
         ) : (
-          <>{LABELS[key]}</>
+          <>{formatReview(review)}</>
         )}
       </Td>
-      <Td className="border-l-0 text-right">{formatReview(review)}</Td>
     </Tr>
   );
 };

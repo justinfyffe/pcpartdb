@@ -31,7 +31,6 @@ import { NextPageContext } from 'next';
 import React, { useMemo } from 'react';
 import { productService } from '../../product-service';
 import { CompareProductsForm } from '../compare-products-form';
-import { createProductContextState, ProductContext } from '../product-context';
 import { ProductImages } from '../product-images';
 import { BenchmarkRow } from './benchmark-row';
 import { CustomRow, CustomRowLabel, CustomRowValue } from './custom-row';
@@ -42,6 +41,7 @@ import {
   HighlightListItem,
   HighlightValue,
 } from './highlight-list';
+import { createProductContextState, ProductContext } from './product-context';
 import { ReviewRow } from './review-row';
 import { SpecRow } from './spec-row';
 import { Summary } from './summary';
