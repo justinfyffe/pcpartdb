@@ -25,7 +25,7 @@ export const ListGpusPage = (_props: ListGpusPageProps) => {
           <Breadcrumbs className="mb-3">
             <Breadcrumb href="/">PC Parts DB</Breadcrumb>
             <Breadcrumb href="/gpus">GPUs</Breadcrumb>
-            <Breadcrumb>List GPUS</Breadcrumb>
+            <Breadcrumb>All GPUS</Breadcrumb>
           </Breadcrumbs>
 
           <h2>Compare GPU Specifications, Benchmarks, and Comparisons</h2>
