@@ -21,8 +21,13 @@ export class ProductRepository {
     private imageRepository: ProductImageRepository,
   ) {}
 
-  async list(config?: RepositoryConfig) {
-    return await ProductModel.query(config?.trx).orderBy('id', 'DESC');
+  async list(type: ProductType, config?: RepositoryConfig) {
+    return await ProductModel.query(config?.trx)
+      .where('type', type)
+      .orderBy('id', 'DESC')
+      .withGraphFetched('specs')
+      .withGraphFetched('benchmarks')
+      .withGraphFetched('meta');
   }
 
   async save(product: ProductModelPojo, config?: RepositoryConfig) {
@@ -92,8 +97,8 @@ export class ProductRepository {
       });
   }
 
-  async getPerformanceRank(
-    id: number,
+  async getPerformanceRanks(
+    ids: number[],
     type: ProductType,
     config?: RepositoryConfig,
   ) {
@@ -108,14 +113,34 @@ export class ProductRepository {
       );
 
     const ranks = (await Model.query(config?.trx)
-      .select('rank')
+      .select('productId', 'rank')
       .from(ranksQuery.as('ranks'))
-      .where('productId', id)) as unknown as { rank: number }[];
+      .whereIn('productId', ids)) as unknown as {
+      productId: number;
+      rank: number;
+    }[];
+    const ranksMap = ranks.reduce((acc, value) => {
+      acc[value.productId] = value.rank;
+      return acc;
+    }, {} as Record<number, number>);
 
-    return ranks != null && ranks.length === 1 ? ranks[0].rank : null;
+    return ids.map((id) => ranksMap[id] ?? null);
   }
 
-  async getValueRank(id: number, type: ProductType, config?: RepositoryConfig) {
+  async getPerformanceRank(
+    id: number,
+    type: ProductType,
+    config?: RepositoryConfig,
+  ) {
+    const ranks = await this.getPerformanceRanks([id], type, config);
+    return ranks[0] ?? null;
+  }
+
+  async getValueRanks(
+    ids: number[],
+    type: ProductType,
+    config?: RepositoryConfig,
+  ) {
     const ranksQuery = ProductModel.relatedQuery('benchmarks')
       .for(ProductModel.query().where('type', type))
       .where('key', BenchmarkKey.ValueScore)
@@ -127,10 +152,22 @@ export class ProductRepository {
       );
 
     const ranks = (await Model.query(config?.trx)
-      .select('rank')
+      .select('productId', 'rank')
       .from(ranksQuery.as('ranks'))
-      .where('productId', id)) as unknown as { rank: number }[];
+      .whereIn('productId', ids)) as unknown as {
+      productId: number;
+      rank: number;
+    }[];
+    const ranksMap = ranks.reduce((acc, value) => {
+      acc[value.productId] = value.rank;
+      return acc;
+    }, {} as Record<number, number>);
 
-    return ranks != null && ranks.length === 1 ? ranks[0].rank : null;
+    return ids.map((id) => ranksMap[id] ?? null);
+  }
+
+  async getValueRank(id: number, type: ProductType, config?: RepositoryConfig) {
+    const ranks = await this.getValueRanks([id], type, config);
+    return ranks[0] ?? null;
   }
 }

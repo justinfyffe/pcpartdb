@@ -9,8 +9,8 @@ const PATH = 'products';
 export class ProductService {
   constructor(private api: ApiClient) {}
 
-  async list() {
-    const products = await this.api.get<Product[]>(PATH);
+  async list(type: ProductType) {
+    const products = await this.api.get<Product[]>(PATH, { params: { type } });
     ProductCache.save(products);
     return products;
   }

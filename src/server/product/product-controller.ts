@@ -30,8 +30,10 @@ export class ProductController {
   }
 
   @Get()
-  async list() {
-    return transaction((trx) => serializeAsync(this.service.list({ trx })));
+  async list(@Query('type') type: ProductType) {
+    return transaction((trx) =>
+      serializeAsync(this.service.list(type, { trx })),
+    );
   }
 
   @Get(':idOrSlug')

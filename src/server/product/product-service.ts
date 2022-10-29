@@ -46,8 +46,38 @@ const updateProductValidator = Joi.object({
 export class ProductService {
   constructor(private productRepository: ProductRepository) {}
 
-  async list(ctx: ServiceContext) {
-    return await this.productRepository.list(ctx);
+  async list(type: ProductType, ctx: ServiceContext) {
+    const products = await this.productRepository.list(type, ctx);
+
+    const ids = products.map((product) => product.id);
+    const performanceRanks = await this.productRepository.getPerformanceRanks(
+      ids,
+      type,
+      ctx,
+    );
+    const valueRanks = await this.productRepository.getValueRanks(
+      ids,
+      type,
+      ctx,
+    );
+
+    products.forEach((product, i) => {
+      products[i].meta = products[i].meta ?? [];
+      products[i].meta?.push(
+        ProductMetaModel.fromJson({
+          key: ProductMetaKey.PerformanceRank,
+          integerValue: performanceRanks[i],
+        }),
+      );
+      products[i].meta?.push(
+        ProductMetaModel.fromJson({
+          key: ProductMetaKey.ValueRank,
+          integerValue: valueRanks[i],
+        }),
+      );
+    });
+
+    return products;
   }
 
   async get(idOrSlug: string | number, ctx: ServiceContext) {

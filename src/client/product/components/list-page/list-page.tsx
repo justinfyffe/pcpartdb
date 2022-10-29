@@ -1,3 +1,4 @@
+import { productService } from '@client/product/product-service';
 import {
   Article,
   ArticleHeader,
@@ -11,19 +12,34 @@ import {
   Tr,
 } from '@client/shared/components';
 import { WebsiteLayout } from '@client/shared/layouts';
+import {
+  getProductMetaMap,
+  getSpecMap,
+  Product,
+  ProductType,
+} from '@shared/product';
+import { formatProductMeta } from '@shared/product-meta';
+import { formatSpec } from '@shared/spec';
 import { NextPageContext } from 'next';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { CompareProductsForm } from '../compare-products-form';
 
-interface ListGpusPageProps {}
+interface ListGpusPageProps {
+  gpus: Product[];
+}
 
-export const ListGpusPage = (_props: ListGpusPageProps) => {
+export const ListGpusPage = (props: ListGpusPageProps) => {
+  const { gpus } = props;
+
+  const specs = useMemo(() => gpus.map((gpu) => getSpecMap(gpu)), [gpus]);
+  const meta = useMemo(() => gpus.map((gpu) => getProductMetaMap(gpu)), [gpus]);
+
   return (
     <WebsiteLayout>
       <Article className="flex flex-wrap gap-6 lg:gap-8 justify-center">
         <ArticleHeader className="flex flex-wrap w-full items-center justify-between gap-3 lg:gap-4">
           <Breadcrumbs className="mb-3">
-            <Breadcrumb href="/">PC Parts DB</Breadcrumb>
+            <Breadcrumb href="/">Home</Breadcrumb>
             <Breadcrumb href="/gpus">GPUs</Breadcrumb>
             <Breadcrumb>All GPUS</Breadcrumb>
           </Breadcrumbs>
@@ -59,166 +75,18 @@ export const ListGpusPage = (_props: ListGpusPageProps) => {
                 </THead>
 
                 <TBody>
-                  <Tr className="cursor-pointer">
-                    <Td>
-                      <a href="#">NVIDIA RTX 3090 Ti</a>
-                    </Td>
-                    <Td>1</Td>
-                    <Td>2</Td>
-                    <Td>Q3 2022</Td>
-                  </Tr>
-                  <Tr className="cursor-pointer">
-                    <Td>
-                      <a href="#">NVIDIA RTX 3090</a>
-                    </Td>
-                    <Td>2</Td>
-                    <Td>1</Td>
-                    <Td>Q3 2022</Td>
-                  </Tr>
-                  <Tr className="cursor-pointer">
-                    <Td>
-                      <a href="#">NVIDIA RTX 3090 Ti</a>
-                    </Td>
-                    <Td>1</Td>
-                    <Td>2</Td>
-                    <Td>Q3 2022</Td>
-                  </Tr>
-                  <Tr className="cursor-pointer">
-                    <Td>
-                      <a href="#">NVIDIA RTX 3090</a>
-                    </Td>
-                    <Td>2</Td>
-                    <Td>1</Td>
-                    <Td>Q3 2022</Td>
-                  </Tr>
-                  <Tr className="cursor-pointer">
-                    <Td>
-                      <a href="#">NVIDIA RTX 3090 Ti</a>
-                    </Td>
-                    <Td>1</Td>
-                    <Td>2</Td>
-                    <Td>Q3 2022</Td>
-                  </Tr>
-                  <Tr className="cursor-pointer">
-                    <Td>
-                      <a href="#">NVIDIA RTX 3090</a>
-                    </Td>
-                    <Td>2</Td>
-                    <Td>1</Td>
-                    <Td>Q3 2022</Td>
-                  </Tr>
-                  <Tr className="cursor-pointer">
-                    <Td>
-                      <a href="#">NVIDIA RTX 3090 Ti</a>
-                    </Td>
-                    <Td>1</Td>
-                    <Td>2</Td>
-                    <Td>Q3 2022</Td>
-                  </Tr>
-                  <Tr className="cursor-pointer">
-                    <Td>
-                      <a href="#">NVIDIA RTX 3090</a>
-                    </Td>
-                    <Td>2</Td>
-                    <Td>1</Td>
-                    <Td>Q3 2022</Td>
-                  </Tr>
-                  <Tr className="cursor-pointer">
-                    <Td>
-                      <a href="#">NVIDIA RTX 3090 Ti</a>
-                    </Td>
-                    <Td>1</Td>
-                    <Td>2</Td>
-                    <Td>Q3 2022</Td>
-                  </Tr>
-                  <Tr className="cursor-pointer">
-                    <Td>
-                      <a href="#">NVIDIA RTX 3090</a>
-                    </Td>
-                    <Td>2</Td>
-                    <Td>1</Td>
-                    <Td>Q3 2022</Td>
-                  </Tr>
-                  <Tr className="cursor-pointer">
-                    <Td>
-                      <a href="#">NVIDIA RTX 3090 Ti</a>
-                    </Td>
-                    <Td>1</Td>
-                    <Td>2</Td>
-                    <Td>Q3 2022</Td>
-                  </Tr>
-                  <Tr className="cursor-pointer">
-                    <Td>
-                      <a href="#">NVIDIA RTX 3090</a>
-                    </Td>
-                    <Td>2</Td>
-                    <Td>1</Td>
-                    <Td>Q3 2022</Td>
-                  </Tr>
-                  <Tr className="cursor-pointer">
-                    <Td>
-                      <a href="#">NVIDIA RTX 3090 Ti</a>
-                    </Td>
-                    <Td>1</Td>
-                    <Td>2</Td>
-                    <Td>Q3 2022</Td>
-                  </Tr>
-                  <Tr className="cursor-pointer">
-                    <Td>
-                      <a href="#">NVIDIA RTX 3090</a>
-                    </Td>
-                    <Td>2</Td>
-                    <Td>1</Td>
-                    <Td>Q3 2022</Td>
-                  </Tr>
-                  <Tr className="cursor-pointer">
-                    <Td>
-                      <a href="#">NVIDIA RTX 3090 Ti</a>
-                    </Td>
-                    <Td>1</Td>
-                    <Td>2</Td>
-                    <Td>Q3 2022</Td>
-                  </Tr>
-                  <Tr className="cursor-pointer">
-                    <Td>
-                      <a href="#">NVIDIA RTX 3090</a>
-                    </Td>
-                    <Td>2</Td>
-                    <Td>1</Td>
-                    <Td>Q3 2022</Td>
-                  </Tr>
-                  <Tr className="cursor-pointer">
-                    <Td>
-                      <a href="#">NVIDIA RTX 3090 Ti</a>
-                    </Td>
-                    <Td>1</Td>
-                    <Td>2</Td>
-                    <Td>Q3 2022</Td>
-                  </Tr>
-                  <Tr className="cursor-pointer">
-                    <Td>
-                      <a href="#">NVIDIA RTX 3090</a>
-                    </Td>
-                    <Td>2</Td>
-                    <Td>1</Td>
-                    <Td>Q3 2022</Td>
-                  </Tr>
-                  <Tr className="cursor-pointer">
-                    <Td>
-                      <a href="#">NVIDIA RTX 3090 Ti</a>
-                    </Td>
-                    <Td>1</Td>
-                    <Td>2</Td>
-                    <Td>Q3 2022</Td>
-                  </Tr>
-                  <Tr className="cursor-pointer">
-                    <Td>
-                      <a href="#">NVIDIA RTX 3090</a>
-                    </Td>
-                    <Td>2</Td>
-                    <Td>1</Td>
-                    <Td>Q3 2022</Td>
-                  </Tr>
+                  {gpus.map((gpu, i) => (
+                    <Tr key={i} className="cursor-pointer">
+                      <Td>
+                        <a href={`/gpus/view/${gpu.slug}`}>
+                          {formatSpec(specs[i].COMPANY)} {gpu.name}
+                        </a>
+                      </Td>
+                      <Td>{formatProductMeta(meta[i].PERFORMANCE_RANK)}</Td>
+                      <Td>{formatProductMeta(meta[i].VALUE_RANK)}</Td>
+                      <Td>{formatSpec(specs[i].RELEASE_DATE)}</Td>
+                    </Tr>
+                  ))}
                 </TBody>
               </Table>
             </div>
@@ -230,5 +98,7 @@ export const ListGpusPage = (_props: ListGpusPageProps) => {
 };
 
 ListGpusPage.getInitialProps = async (_ctx: NextPageContext) => {
-  return {};
+  const gpus = await productService.list(ProductType.GPU);
+
+  return { gpus };
 };

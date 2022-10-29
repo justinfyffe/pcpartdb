@@ -16,7 +16,7 @@ import {
   Tr,
 } from '@client/shared/components';
 import { AdminLayout } from '@client/shared/layouts';
-import { Product } from '@shared/product';
+import { Product, ProductType } from '@shared/product';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 
@@ -81,7 +81,7 @@ const ListGpusPage = (props: ListGpusPageProps) => {
 };
 
 ListGpusPage.getInitialProps = async () => {
-  const gpus = await productService.list();
+  const gpus = await productService.list(ProductType.GPU);
   return { gpus: gpus || [] };
 };
 
