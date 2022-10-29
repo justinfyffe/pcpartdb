@@ -35,6 +35,7 @@ import {
 } from './products-context';
 import { ReviewRow } from './review-row';
 import { SpecRow } from './spec-row';
+import { Summary } from './summary';
 
 interface CompareGpuPageProps {
   gpus: Product[];
@@ -88,16 +89,7 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
             </section>
 
             <section>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. A
-                iaculis at erat pellentesque adipiscing commodo elit at.
-                Maecenas sed enim ut sem viverra. Elementum sagittis vitae et
-                leo duis ut diam. In mollis nunc sed id semper risus in
-                hendrerit. Eget sit amet tellus cras adipiscing enim. Sit amet
-                consectetur adipiscing elit. Interdum velit euismod in
-                pellentesque massa.
-              </p>
+              <Summary />
             </section>
 
             <section className="flex flex-col gap-6">
@@ -105,8 +97,8 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
                 <h2 className="mb-4">General Info</h2>
 
                 <p className={classNames('text-content-secondary')}>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                  Performance rating, market segment, release date, and launch
+                  price for {gpu1.name} and {gpu2.name}.
                 </p>
 
                 <Table responsive>
@@ -182,8 +174,7 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
                 <h2 className="mb-4">Reviews</h2>
 
                 <p className={classNames('text-content-secondary')}>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                  What others are saying about {gpu1.name} and {gpu2.name}.
                 </p>
 
                 <Table responsive>
@@ -211,9 +202,7 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
                   <h3 className="mb-4">Processor</h3>
 
                   <p className={classNames('text-content-secondary')}>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                    do eiusmod tempor incididunt ut labore et dolore magna
-                    aliqua.
+                    Processor chip details for {gpu1.name} and {gpu2.name}
                   </p>
 
                   <Table responsive>
@@ -237,9 +226,8 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
                   <h3 className="mb-4">Memory</h3>
 
                   <p className={classNames('text-content-secondary')}>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                    do eiusmod tempor incididunt ut labore et dolore magna
-                    aliqua.
+                    Memory size, bandwidth, and clock speeds for {gpu1.name} and{' '}
+                    {gpu2.name}.
                   </p>
 
                   <Table responsive>
@@ -264,9 +252,8 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
                   <h3 className="mb-4">Board Compatibility &amp; Dimensions</h3>
 
                   <p className={classNames('text-content-secondary')}>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                    do eiusmod tempor incididunt ut labore et dolore magna
-                    aliqua.
+                    Dimensions, bus interface, power consumption, and output
+                    ports for {gpu1.name} and {gpu2.name}
                   </p>
 
                   <Table responsive>
@@ -296,9 +283,8 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
                   <h3 className="mb-4">Cores &amp; Clock Speeds</h3>
 
                   <p className={classNames('text-content-secondary')}>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                    do eiusmod tempor incididunt ut labore et dolore magna
-                    aliqua.
+                    Cores, clock speed, and cache for {gpu1.name} and{' '}
+                    {gpu2.name}
                   </p>
 
                   <Table responsive>
@@ -327,9 +313,9 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
                   <h3 className="mb-4">Theoretical Performance</h3>
 
                   <p className={classNames('text-content-secondary')}>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                    do eiusmod tempor incididunt ut labore et dolore magna
-                    aliqua.
+                    Computational performance like pixel fill rate, texture fill
+                    rate, and floating-point operations per second for the{' '}
+                    {gpu1.name} and {gpu2.name}.
                   </p>
 
                   <Table responsive>
@@ -351,12 +337,6 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
 
                 <article>
                   <h3 className="mb-4">API Support</h3>
-
-                  <p className={classNames('text-content-secondary')}>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                    do eiusmod tempor incididunt ut labore et dolore magna
-                    aliqua.
-                  </p>
 
                   <Table responsive>
                     <THead>
@@ -382,8 +362,9 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
                 <h2 className="mb-4">Benchmarks</h2>
 
                 <p className={classNames('text-content-secondary')}>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                  Performance and rating metrics for {gpu1.name} and {gpu2.name}
+                  . These identify how strong the GPU performs compared to its
+                  peers.
                 </p>
 
                 <Table responsive>

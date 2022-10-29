@@ -17,12 +17,10 @@ Immediate Tasks:
   - auto-generate summary
   - buy button functionality
 - compare gpus page
-  - copytext from view gpu page
-  - copy data shown from view gpu page
-  - format data
   - auto-generate summary
   - buy buttons
 - gpus list page
+- gpus overview page
 - contact page
 - about page
 - disclaimer page

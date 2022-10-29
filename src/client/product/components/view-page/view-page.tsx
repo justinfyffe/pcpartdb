@@ -177,7 +177,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
 
                 <p className={classNames('text-content-secondary')}>
                   {`${gpu.name}'s`} performance rating, market segment, release
-                  date, and price.
+                  date, and launch price.
                 </p>
 
                 <Table responsive>

@@ -18,9 +18,9 @@ import {
 import { NextPageContext } from 'next';
 import React from 'react';
 
-interface ListGpusPageProps {}
+interface OverviewGpusPageProps {}
 
-export const ListGpusPage = (_props: ListGpusPageProps) => {
+export const OverviewGpusPage = (_props: OverviewGpusPageProps) => {
   return (
     <WebsiteLayout>
       <main>
@@ -771,6 +771,6 @@ export const ListGpusPage = (_props: ListGpusPageProps) => {
   );
 };
 
-ListGpusPage.getInitialProps = async (_ctx: NextPageContext) => {
+OverviewGpusPage.getInitialProps = async (_ctx: NextPageContext) => {
   return {};
 };

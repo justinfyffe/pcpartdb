@@ -1,7 +1,8 @@
-export * from './compare-gpu-page';
-export * from './list-gpus-page';
-export * from './view-gpu-page';
+export * from './compare-page';
+export * from './list-page';
+export * from './view-page';
 
 export * from './compare-products-form';
+export * from './overview-page';
 export * from './product-autocomplete';
 export * from './product-images';

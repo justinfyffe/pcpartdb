@@ -8,7 +8,6 @@ import React, {
   useCallback,
   useContext,
   useEffect,
-  useLayoutEffect,
   useRef,
   useState,
   WheelEvent,
@@ -116,7 +115,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 
   const [prefixWidth, setPrefixWidth] = useState();
   const prefixRef = useRef(null);
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (prefixRef == null || prefixRef.current == null) {
       return;
     }
