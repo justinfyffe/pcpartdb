@@ -8,6 +8,13 @@ Immediate Tasks:
   - Performance Rating = GPU Score / Max(GPU Score)
   - Value Rating = Value Score / Max(Value Score)
 
+- Do we even need nextjs? Or use nestjs + react ssr?
+- separate controller for views?
+  - and thus, separate types for gpus and other parts?
+  - or use getServerSideProps for the views, and only use api for stuff fetched during the client run (e.g. autocomplete and crud)
+- restructure data?
+  - Should specs, benchmarks, meta, reviews, retail models be jsonb fields? or separate table?
+  - separate tables for each pc part? or same table? e.g. a gpus table, a cpus table, a motherboard table
 - renaming:
   - rename product-spec to spec (db)
   - rename product-benchmark to benchmark (db)
