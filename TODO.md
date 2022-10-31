@@ -8,7 +8,7 @@ Immediate Tasks:
   - Performance Rating = GPU Score / Max(GPU Score)
   - Value Rating = Value Score / Max(Value Score)
 
-- Do we even need nextjs? Or use nestjs + react ssr?
+- Do we even need nestjs? just use nextjs?
 - separate controller for views?
   - and thus, separate types for gpus and other parts?
   - or use getServerSideProps for the views, and only use api for stuff fetched during the client run (e.g. autocomplete and crud)
