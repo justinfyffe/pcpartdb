@@ -1,74 +1,99 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Put,
-  Query,
-  UseGuards,
-} from '@nestjs/common';
-import { StaffGuard } from '@server/auth/staff-guard';
 import { transaction } from '@server/db/database';
 import { serializeAsync } from '@server/shared/types/serialize';
 import type { ProductRequest, ProductType } from '@shared/product';
+import { NextApiRequest, NextApiResponse } from 'next';
 import { productService } from './product-service';
 
-@Controller('products')
 export class ProductController {
-  constructor() {}
+  async autocomplete(req: NextApiRequest, res: NextApiResponse) {
+    return transaction(async (trx) => {
+      const type = req.query['type'] as ProductType;
+      const query = req.query['query'] as string;
 
-  @Get('autocomplete')
-  async autocomplete(
-    @Query('type') type: ProductType,
-    @Query('query') query: string,
-  ) {
-    return transaction((trx) =>
-      serializeAsync(productService.autocomplete(type, query ?? '', { trx })),
-    );
+      const products = await serializeAsync(
+        productService.autocomplete(type, query ?? '', {
+          trx,
+          api: { req, res },
+        }),
+      );
+
+      res.status(200).json(products);
+    });
   }
 
-  @Get()
-  async list(@Query('type') type: ProductType) {
-    return transaction((trx) =>
-      serializeAsync(productService.list(type, { trx })),
-    );
+  async list(req: NextApiRequest, res: NextApiResponse) {
+    return transaction(async (trx) => {
+      const type = req.query['type'] as ProductType;
+
+      const products = await serializeAsync(
+        productService.list(type, { trx, api: { req, res } }),
+      );
+
+      res.status(200).json(products);
+    });
   }
 
-  @Get(':idOrSlug')
-  async get(@Param('idOrSlug') idOrSlug: number | string) {
-    return transaction((trx) =>
-      serializeAsync(productService.get(idOrSlug, { trx })),
-    );
+  async get(req: NextApiRequest, res: NextApiResponse) {
+    return transaction(async (trx) => {
+      const idOrSlug = req.query['id'] as string;
+
+      const product = await serializeAsync(
+        productService.get(idOrSlug, { trx, api: { req, res } }),
+      );
+
+      res.status(200).json(product);
+    });
   }
 
-  @Get('comparison/:idsOrSlugs')
-  async getComparison(@Param('idsOrSlugs') idsOrSlugs: string) {
-    return transaction((trx) =>
-      serializeAsync(productService.getComparison(idsOrSlugs, { trx })),
-    );
+  async getComparison(req: NextApiRequest, res: NextApiResponse) {
+    return transaction(async (trx) => {
+      const idsOrSlugs = req.query['id'] as string;
+
+      const comparison = await serializeAsync(
+        productService.getComparison(idsOrSlugs, { trx }),
+      );
+
+      res.status(200).json(comparison);
+    });
   }
 
-  @Post()
-  @UseGuards(StaffGuard)
-  async create(@Body() body: ProductRequest) {
-    return transaction((trx) =>
-      serializeAsync(productService.create(body, { trx })),
-    );
+  // TODO: handle guards
+  async create(req: NextApiRequest, res: NextApiResponse) {
+    return transaction(async (trx) => {
+      const body = req.body as ProductRequest;
+
+      const product = serializeAsync(
+        productService.create(body, { trx, api: { req, res } }),
+      );
+
+      res.status(200).json(product);
+    });
   }
 
-  @Put(':id')
-  @UseGuards(StaffGuard)
-  async update(@Param('id') id: number, @Body() body: ProductRequest) {
-    return transaction((trx) =>
-      serializeAsync(productService.update(id, body, { trx })),
-    );
+  // TODO: handle guards
+  async update(req: NextApiRequest, res: NextApiResponse) {
+    return transaction(async (trx) => {
+      const id = Number(req.query['id'] as string);
+      const body = req.body as ProductRequest;
+
+      const product = serializeAsync(
+        productService.update(id, body, { trx, api: { req, res } }),
+      );
+
+      res.status(200).json(product);
+    });
   }
 
-  @Delete(':id')
-  @UseGuards(StaffGuard)
-  async delete(@Param('id') id: number) {
-    return transaction((trx) => productService.delete(id, { trx }));
+  // TODO: handle guards
+  async delete(req: NextApiRequest, res: NextApiResponse) {
+    return transaction(async (trx) => {
+      const id = Number(req.query['id'] as string);
+
+      const deleted = productService.delete(id, { trx, api: { req, res } });
+
+      res.status(200).json(deleted);
+    });
   }
 }
+
+export const productController = new ProductController();

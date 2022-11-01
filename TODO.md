@@ -10,9 +10,10 @@ Immediate Tasks:
 
 - Do we even need nestjs? just use nextjs?
   - Get rid of nestjs and use nextjs 13
-- separate controller for views?
-  - and thus, separate types for gpus and other parts?
-  - or use getServerSideProps for the views, and only use api for stuff fetched during the client run (e.g. autocomplete and crud)
+  - handle guards
+  - migrate controllers
+  - cleanup unused methods from controllers
+  - annotations
 - restructure data?
   - Should specs, benchmarks, meta, reviews, retail models be jsonb fields? or separate table?
   - separate tables for each pc part? or same table? e.g. a gpus table, a cpus table, a motherboard table
