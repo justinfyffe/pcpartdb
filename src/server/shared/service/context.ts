@@ -1,8 +1,10 @@
-import type { Request, Response } from 'express';
+import { NextApiRequest, NextApiResponse } from 'next';
 import { Transaction } from 'objection';
 
 export interface ServiceContext {
   trx?: Transaction;
-  request?: Request;
-  response?: Response;
+  api?: {
+    req?: NextApiRequest;
+    res?: NextApiResponse;
+  };
 }

@@ -1,11 +1,4 @@
 import { ValidationError } from '@hapi/joi';
-import {
-  BadRequestException,
-  ForbiddenException,
-  InternalServerErrorException,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
 import { ApiErrorType, ValidationPropertyError } from '@shared/error';
 
 export function joiValidationError(error: ValidationError) {
@@ -20,16 +13,26 @@ export function joiValidationError(error: ValidationError) {
   return badRequestError(errors);
 }
 
+export class ServerError extends Error {
+  readonly data: unknown;
+
+  constructor(data: unknown) {
+    super();
+
+    this.data = data;
+  }
+}
+
 export function notFoundError(data: unknown) {
-  throw new NotFoundException({ type: ApiErrorType.NotFoundError, data });
+  throw new ServerError({ type: ApiErrorType.NotFoundError, data });
 }
 
 export function forbiddenError() {
-  throw new ForbiddenException({ type: ApiErrorType.ForbiddenError });
+  throw new ServerError({ type: ApiErrorType.ForbiddenError });
 }
 
 export function unauthorizedError() {
-  throw new UnauthorizedException({ type: ApiErrorType.UnauthorizedError });
+  throw new ServerError({ type: ApiErrorType.UnauthorizedError });
 }
 
 export function badRequestError(
@@ -40,14 +43,14 @@ export function badRequestError(
     dataArray = Array.isArray(data) ? data : [data];
   }
 
-  throw new BadRequestException({
+  throw new ServerError({
     type: ApiErrorType.BadRequestError,
     data: dataArray,
   });
 }
 
 export function internalServerError() {
-  throw new InternalServerErrorException({
+  throw new ServerError({
     type: ApiErrorType.InternalServerError,
   });
 }

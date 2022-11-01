@@ -1,26 +1,16 @@
-import { Injectable } from '@nestjs/common';
 import { RepositoryConfig } from '@server/db/repository';
 import { BenchmarkKey } from '@shared/benchmark';
 import { ProductType } from '@shared/product';
 import { ProductImageType } from '@shared/product-image';
 import { Model, raw } from 'objection';
-import { BenchmarkRepository } from './benchmark/benchmark-repository';
-import { ProductImageRepository } from './image/product-image-repository';
-import { ProductMetaRepository } from './meta/product-meta-repository';
+import { benchmarkRepository } from './benchmark/benchmark-repository';
+import { productImageRepository } from './image/product-image-repository';
+import { productMetaRepository } from './meta/product-meta-repository';
 import { ProductModel, ProductModelPojo } from './product-model';
-import { ReviewRepository } from './review/review-repository';
-import { SpecRepository } from './spec/spec-repository';
+import { reviewRepository } from './review/review-repository';
+import { specRepository } from './spec/spec-repository';
 
-@Injectable()
 export class ProductRepository {
-  constructor(
-    private metaRepository: ProductMetaRepository,
-    private specRepository: SpecRepository,
-    private benchmarkRepository: BenchmarkRepository,
-    private reviewRepository: ReviewRepository,
-    private imageRepository: ProductImageRepository,
-  ) {}
-
   async list(type: ProductType, config?: RepositoryConfig) {
     return await ProductModel.query(config?.trx)
       .where('type', type)
@@ -39,12 +29,12 @@ export class ProductRepository {
       .merge()
       .returning('*');
 
-    await this.specRepository.saveMultiple(id, specs, config);
-    await this.benchmarkRepository.saveMultiple(id, benchmarks, config);
-    await this.reviewRepository.saveMultiple(id, reviews, config);
+    await specRepository.saveMultiple(id, specs, config);
+    await benchmarkRepository.saveMultiple(id, benchmarks, config);
+    await reviewRepository.saveMultiple(id, reviews, config);
 
-    await this.metaRepository.saveMultiple(id, meta, config);
-    await this.imageRepository.saveMultiple(id, images, config);
+    await productMetaRepository.saveMultiple(id, meta, config);
+    await productImageRepository.saveMultiple(id, images, config);
 
     return this.findById(id, config);
   }
@@ -171,3 +161,5 @@ export class ProductRepository {
     return ranks[0] ?? null;
   }
 }
+
+export const productRepository = new ProductRepository();

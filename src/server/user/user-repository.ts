@@ -30,3 +30,5 @@ export class UserRepository {
     return await UserModel.query(config?.trx).resultSize();
   }
 }
+
+export const userRepository = new UserRepository();

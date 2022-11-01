@@ -1,8 +1,6 @@
-import { Injectable } from '@nestjs/common';
 import { RepositoryConfig } from '@server/db/repository';
 import { ImageModel, ImageModelPojo } from './image-model';
 
-@Injectable()
 export class ImageRepository {
   async list(config?: RepositoryConfig) {
     return await ImageModel.query(config?.trx).orderBy('id', 'DESC');
@@ -24,3 +22,5 @@ export class ImageRepository {
     return await ImageModel.query(config?.trx).findById(id);
   }
 }
+
+export const imageRepository = new ImageRepository();

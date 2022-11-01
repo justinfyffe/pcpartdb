@@ -1,8 +1,6 @@
-import { Injectable } from '@nestjs/common';
 import { RepositoryConfig } from '@server/db/repository';
 import { ReviewModel, ReviewModelPojo } from './review-model';
 
-@Injectable()
 export class ReviewRepository {
   async saveOne(review: ReviewModelPojo, config?: RepositoryConfig) {
     return await ReviewModel.query(config?.trx)
@@ -36,3 +34,5 @@ export class ReviewRepository {
       .delete();
   }
 }
+
+export const reviewRepository = new ReviewRepository();

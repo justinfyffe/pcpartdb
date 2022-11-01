@@ -1,5 +1,4 @@
 import Joi from '@hapi/joi';
-import { Injectable } from '@nestjs/common';
 import { badRequestError, notFoundError } from '@server/shared/errors/errors';
 import { ServiceContext } from '@server/shared/service/context';
 import { validate } from '@server/shared/types/validate';
@@ -10,7 +9,7 @@ import { reviewValidator } from '@shared/review';
 import { specValidator } from '@shared/spec';
 import { calculatePerformanceBenchmarks } from './benchmark/benchmark-utils';
 import { ProductMetaModel } from './meta/product-meta-model';
-import { ProductRepository } from './product-repository';
+import { productRepository } from './product-repository';
 
 const productImageValidator = Joi.object({
   imageId: Joi.number().required(),
@@ -42,24 +41,17 @@ const updateProductValidator = Joi.object({
   images: Joi.array().items(productImageValidator),
 }).options({ abortEarly: false });
 
-@Injectable()
 export class ProductService {
-  constructor(private productRepository: ProductRepository) {}
-
   async list(type: ProductType, ctx: ServiceContext) {
-    const products = await this.productRepository.list(type, ctx);
+    const products = await productRepository.list(type, ctx);
 
     const ids = products.map((product) => product.id);
-    const performanceRanks = await this.productRepository.getPerformanceRanks(
+    const performanceRanks = await productRepository.getPerformanceRanks(
       ids,
       type,
       ctx,
     );
-    const valueRanks = await this.productRepository.getValueRanks(
-      ids,
-      type,
-      ctx,
-    );
+    const valueRanks = await productRepository.getValueRanks(ids, type, ctx);
 
     products.forEach((product, i) => {
       products[i].meta = products[i].meta ?? [];
@@ -86,15 +78,15 @@ export class ProductService {
       : await this.getProductById(Number(idOrSlug), ctx);
 
     if (product == null) {
-      throw notFoundError({});
+      throw notFoundError(null);
     }
 
-    const performanceRank = await this.productRepository.getPerformanceRank(
+    const performanceRank = await productRepository.getPerformanceRank(
       product.id,
       product.type,
       ctx,
     );
-    const valueRank = await this.productRepository.getValueRank(
+    const valueRank = await productRepository.getValueRank(
       product.id,
       product.type,
       ctx,
@@ -125,7 +117,7 @@ export class ProductService {
     const parts = idsOrSlugs.split('--vs--');
 
     if (parts.length === 0) {
-      throw badRequestError();
+      throw badRequestError(null);
     }
 
     const promises = [];
@@ -136,18 +128,18 @@ export class ProductService {
     const filteredProducts = products.filter((product) => product != null);
 
     if (filteredProducts.length !== parts.length) {
-      throw notFoundError({});
+      throw notFoundError(null);
     }
 
     return products;
   }
 
   async getProductById(id: number, ctx: ServiceContext) {
-    return await this.productRepository.findById(id, ctx);
+    return await productRepository.findById(id, ctx);
   }
 
   async getProductBySlug(slug: string, ctx: ServiceContext) {
-    return await this.productRepository.findBySlug(slug, ctx);
+    return await productRepository.findBySlug(slug, ctx);
   }
 
   // TODO: check slug uniqueness
@@ -156,7 +148,7 @@ export class ProductService {
 
     const performanceBenchmarks = calculatePerformanceBenchmarks(data);
 
-    return await this.productRepository.save(
+    return await productRepository.save(
       { ...data, benchmarks: [...data.benchmarks, ...performanceBenchmarks] },
       ctx,
     );
@@ -168,12 +160,12 @@ export class ProductService {
 
     const performanceBenchmarks = calculatePerformanceBenchmarks(data);
 
-    const product = await this.productRepository.findById(id, ctx);
+    const product = await productRepository.findById(id, ctx);
     if (product == null) {
       throw notFoundError({ product: id });
     }
 
-    return await this.productRepository.save(
+    return await productRepository.save(
       {
         ...data,
         id,
@@ -184,16 +176,18 @@ export class ProductService {
   }
 
   async delete(id: number, ctx: ServiceContext) {
-    const product = await this.productRepository.findById(id, ctx);
+    const product = await productRepository.findById(id, ctx);
     if (product == null) {
       throw notFoundError({ product: id });
     }
 
-    await this.productRepository.delete(id, ctx);
+    await productRepository.delete(id, ctx);
     return id;
   }
 
   async autocomplete(type: ProductType, query: string, ctx: ServiceContext) {
-    return await this.productRepository.findSimilarValue(type, query, ctx);
+    return await productRepository.findSimilarValue(type, query, ctx);
   }
 }
+
+export const productService = new ProductService();

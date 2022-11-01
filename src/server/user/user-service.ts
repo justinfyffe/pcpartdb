@@ -1,5 +1,4 @@
 import Joi from '@hapi/joi';
-import { Injectable } from '@nestjs/common';
 import { generateToken } from '@server/shared/crypto/crypto-utils';
 import { sendEmail } from '@server/shared/email/email-utils';
 import {
@@ -24,7 +23,7 @@ import {
   UserRequest,
 } from '@shared/user';
 import * as bcrypt from 'bcryptjs';
-import { UserRepository } from './user-repository';
+import { userRepository } from './user-repository';
 
 const createUserValidator = Joi.object({
   email: Joi.string()
@@ -66,16 +65,15 @@ const resetPasswordValidator = Joi.object({
     .required(),
 }).options({ abortEarly: false });
 
-@Injectable()
 export class UserService {
-  constructor(private userRepository: UserRepository) {}
+  constructor() {}
 
   async list(ctx: ServiceContext) {
-    return await this.userRepository.list(ctx);
+    return await userRepository.list(ctx);
   }
 
   async get(id: number, ctx: ServiceContext) {
-    const user = await this.userRepository.findById(id, ctx);
+    const user = await userRepository.findById(id, ctx);
     if (user == null) {
       throw notFoundError({ user: id });
     }
@@ -86,7 +84,7 @@ export class UserService {
   async create(data: UserRequest, ctx: ServiceContext) {
     validate(data, createUserValidator);
 
-    const existingUser = await this.userRepository.findByEmail(data.email);
+    const existingUser = await userRepository.findByEmail(data.email);
     if (existingUser != null) {
       throw badRequestError({
         property: 'email',
@@ -98,12 +96,12 @@ export class UserService {
     const passwordHash = await bcrypt.hash(data.password, salt);
 
     let isStaff = data.isStaff ?? false;
-    if ((await this.userRepository.count()) === 0) {
+    if ((await userRepository.count()) === 0) {
       // First user, let's make them an admin
       isStaff = true;
     }
 
-    return await this.userRepository.save(
+    return await userRepository.save(
       {
         email: data.email,
         passwordHash,
@@ -117,7 +115,7 @@ export class UserService {
   async update(id: number, data: UserRequest, ctx: ServiceContext) {
     validate(data, updateUserValidator);
 
-    const user = await this.userRepository.findById(id, ctx);
+    const user = await userRepository.findById(id, ctx);
     if (user == null) {
       throw notFoundError({ user: id });
     }
@@ -128,7 +126,7 @@ export class UserService {
       passwordHash = await bcrypt.hash(data.password, salt);
     }
 
-    return await this.userRepository.save(
+    return await userRepository.save(
       { email: data.email, passwordHash, isStaff: data.isStaff ?? false },
       ctx,
     );
@@ -136,12 +134,12 @@ export class UserService {
 
   // TODO: don't allow deleting last staff user
   async delete(id: number, ctx: ServiceContext) {
-    const user = await this.userRepository.findById(id, ctx);
+    const user = await userRepository.findById(id, ctx);
     if (user == null) {
       throw notFoundError({ user: id });
     }
 
-    await this.userRepository.delete(id, ctx);
+    await userRepository.delete(id, ctx);
     return id;
   }
 
@@ -151,7 +149,7 @@ export class UserService {
   ) {
     validate(data, requestPasswordResetValidator);
 
-    const user = await this.userRepository.findByEmail(data.email, ctx);
+    const user = await userRepository.findByEmail(data.email, ctx);
     if (user == null) {
       // Don't error out so users cannot detect which accounts exist on the website.
       return;
@@ -187,7 +185,7 @@ export class UserService {
     }
 
     const { id } = decodeJwt<{ id: number }>(data.token);
-    const user = await this.userRepository.findById(id, ctx);
+    const user = await userRepository.findById(id, ctx);
     if (user == null) {
       throw notFoundError({ user: id });
     }
@@ -195,6 +193,6 @@ export class UserService {
     const salt = await bcrypt.genSalt();
     const passwordHash = await bcrypt.hash(data.password, salt);
 
-    await this.userRepository.save({ ...user, passwordHash });
+    await userRepository.save({ ...user, passwordHash });
   }
 }

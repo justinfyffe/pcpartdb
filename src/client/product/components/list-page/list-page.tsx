@@ -1,4 +1,3 @@
-import { productService } from '@client/product/product-service';
 import {
   Article,
   ArticleHeader,
@@ -12,15 +11,9 @@ import {
   Tr,
 } from '@client/shared/components';
 import { WebsiteLayout } from '@client/shared/layouts';
-import {
-  getProductMetaMap,
-  getSpecMap,
-  Product,
-  ProductType,
-} from '@shared/product';
+import { getProductMetaMap, getSpecMap, Product } from '@shared/product';
 import { formatProductMeta } from '@shared/product-meta';
 import { formatSpec } from '@shared/spec';
-import { NextPageContext } from 'next';
 import React, { useMemo } from 'react';
 import { CompareProductsForm } from '../compare-products-form';
 
@@ -95,10 +88,4 @@ export const ListGpusPage = (props: ListGpusPageProps) => {
       </Article>
     </WebsiteLayout>
   );
-};
-
-ListGpusPage.getInitialProps = async (_ctx: NextPageContext) => {
-  const gpus = await productService.list(ProductType.GPU);
-
-  return { gpus };
 };

@@ -1,8 +1,6 @@
-import { Injectable } from '@nestjs/common';
 import { RepositoryConfig } from '@server/db/repository';
 import { AccessTokenModel, AccessTokenModelPojo } from './access-token-model';
 
-@Injectable()
 export class AccessTokenRepository {
   async save(accessToken: AccessTokenModelPojo, config?: RepositoryConfig) {
     return await AccessTokenModel.query(config?.trx)
@@ -28,3 +26,5 @@ export class AccessTokenRepository {
       .delete();
   }
 }
+
+export const accessTokenRepository = new AccessTokenRepository();

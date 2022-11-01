@@ -1,4 +1,3 @@
-import { Injectable } from '@nestjs/common';
 import { RepositoryConfig } from '@server/db/repository';
 import { ProductImageType } from '@shared/product-image';
 import {
@@ -6,7 +5,6 @@ import {
   ProductImageModelPojo,
 } from './product-image-model';
 
-@Injectable()
 export class ProductImageRepository {
   async saveOne(image: ProductImageModelPojo, config?: RepositoryConfig) {
     const imageToSave = { ...image, metadata: image.metadata ?? {} };
@@ -75,3 +73,5 @@ export class ProductImageRepository {
       .delete();
   }
 }
+
+export const productImageRepository = new ProductImageRepository();

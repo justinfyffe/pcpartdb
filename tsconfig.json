@@ -30,9 +30,9 @@
       "sourceMap": true,
       "strict": true,
       "strictNullChecks": false,
-      "target": "esnext"
+      "target": "es5"
     },
-    "include": ["./src/**/*.ts", "./src/**/*.tsx", "next-env.d.ts"],
+    "include": ["./src/**/*.ts", "./src/**/*.tsx", "next-env.d.ts", "src/pages/index.tss"],
     "exclude": ["node_modules", "src/server/db/**/*.ts"]
   }
   

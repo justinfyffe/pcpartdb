@@ -1,9 +1,7 @@
-import { Injectable } from '@nestjs/common';
 import { RepositoryConfig } from '@server/db/repository';
 import { SpecKey } from '@shared/spec';
 import { SpecModel, SpecModelPojo } from './spec-model';
 
-@Injectable()
 export class SpecRepository {
   async saveOne(spec: SpecModelPojo, config?: RepositoryConfig) {
     return await SpecModel.query(config?.trx)
@@ -49,3 +47,5 @@ export class SpecRepository {
     return results.map((spec) => spec.stringValue);
   }
 }
+
+export const specRepository = new SpecRepository();

@@ -1,9 +1,7 @@
-import { Injectable } from '@nestjs/common';
 import { RepositoryConfig } from '@server/db/repository';
 import { ProductMetaKey } from '@shared/product-meta';
 import { ProductMetaModel, ProductMetaModelPojo } from './product-meta-model';
 
-@Injectable()
 export class ProductMetaRepository {
   async saveOne(meta: ProductMetaModelPojo, config?: RepositoryConfig) {
     return await ProductMetaModel.query(config?.trx)
@@ -49,3 +47,5 @@ export class ProductMetaRepository {
     return results.map((meta) => meta.stringValue);
   }
 }
+
+export const productMetaRepository = new ProductMetaRepository();

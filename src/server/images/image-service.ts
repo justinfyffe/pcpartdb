@@ -1,12 +1,11 @@
 import Joi from '@hapi/joi';
-import { Injectable } from '@nestjs/common';
 import { badRequestError, notFoundError } from '@server/shared/errors/errors';
 import { ServiceContext } from '@server/shared/service/context';
 import { validate } from '@server/shared/types/validate';
 import * as uploads from '@server/shared/uploads/uploads-utils';
 import { ValidationErrorType } from '@shared/error';
 import { ImageRequest } from '@shared/image';
-import { ImageRepository } from './image-repository';
+import { imageRepository } from './image-repository';
 
 const imageValidator = Joi.object({
   name: Joi.string().required(),
@@ -20,16 +19,13 @@ const imageValidator = Joi.object({
   tempPath: Joi.string().allow('', null),
 }).options({ abortEarly: false });
 
-@Injectable()
 export class ImageService {
-  constructor(private imageRepository: ImageRepository) {}
-
   async list(ctx: ServiceContext) {
-    return await this.imageRepository.list(ctx);
+    return await imageRepository.list(ctx);
   }
 
   async get(id: number, ctx: ServiceContext) {
-    const image = await this.imageRepository.findById(id, ctx);
+    const image = await imageRepository.findById(id, ctx);
     if (image == null) {
       throw notFoundError({ user: id });
     }
@@ -45,7 +41,7 @@ export class ImageService {
       uploads.imagePath(data.path),
     );
 
-    return await this.imageRepository.save(
+    return await imageRepository.save(
       {
         name: data.name,
         path: data.path,
@@ -62,7 +58,7 @@ export class ImageService {
   async update(id: number, data: ImageRequest, ctx: ServiceContext) {
     validate(data, imageValidator);
 
-    const image = await this.imageRepository.findById(id, ctx);
+    const image = await imageRepository.findById(id, ctx);
     if (image == null) {
       throw notFoundError({ user: id });
     }
@@ -108,16 +104,16 @@ export class ImageService {
     image.width = data.width ?? image.width;
     image.uploadedAt = stats.mtime;
 
-    return await this.imageRepository.save(image, ctx);
+    return await imageRepository.save(image, ctx);
   }
 
   async delete(id: number, ctx: ServiceContext) {
-    const image = await this.imageRepository.findById(id, ctx);
+    const image = await imageRepository.findById(id, ctx);
     if (image == null) {
       throw notFoundError({ user: id });
     }
 
-    await this.imageRepository.delete(id, ctx);
+    await imageRepository.delete(id, ctx);
     await uploads.remove(uploads.imagePath(image.path));
     return id;
   }

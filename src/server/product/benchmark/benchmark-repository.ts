@@ -1,8 +1,6 @@
-import { Injectable } from '@nestjs/common';
 import { RepositoryConfig } from '@server/db/repository';
 import { BenchmarkModel, BenchmarkModelPojo } from './benchmark-model';
 
-@Injectable()
 export class BenchmarkRepository {
   async saveOne(benchmark: BenchmarkModelPojo, config?: RepositoryConfig) {
     return await BenchmarkModel.query(config?.trx)
@@ -38,3 +36,5 @@ export class BenchmarkRepository {
       .delete();
   }
 }
+
+export const benchmarkRepository = new BenchmarkRepository();

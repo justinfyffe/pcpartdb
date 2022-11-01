@@ -1,16 +1,15 @@
 import Joi from '@hapi/joi';
-import { Injectable } from '@nestjs/common';
-import { CookieService } from '@server/shared/cookie/cookie-service';
+import { cookieService } from '@server/shared/cookie/cookie-service';
 import { SESSION_COOKIE } from '@server/shared/cookie/cookies';
 import { generateToken, hashToken } from '@server/shared/crypto/crypto-utils';
 import { ServiceContext } from '@server/shared/service/context';
 import { validate } from '@server/shared/types/validate';
-import { UserRepository } from '@server/user/user-repository';
+import { userRepository } from '@server/user/user-repository';
 import { AccessToken, LoginRequest } from '@shared/auth';
 import { EMAIL_MAX_LENGTH, PASSWORD_MAX_LENGTH, User } from '@shared/user';
 import * as bcrypt from 'bcryptjs';
 import { forbiddenError, unauthorizedError } from '../shared/errors/errors';
-import { AccessTokenRepository } from './access-token-repository';
+import { accessTokenRepository } from './access-token-repository';
 
 const SESSION_EXPIRES = 1000 * 60 * 60 * 24; // 1 day
 const COOKIE_EXPIRES = 1000 * 60 * 60 * 24 * 30; // 30 days
@@ -24,18 +23,11 @@ const loginRequestValidator = Joi.object({
   remember: Joi.boolean(),
 }).options({ abortEarly: false });
 
-@Injectable()
 export class AccessTokenService {
-  constructor(
-    private cookieService: CookieService,
-    private accessTokenRepository: AccessTokenRepository,
-    private userRepository: UserRepository,
-  ) {}
-
   async login(data: LoginRequest, ctx: ServiceContext) {
     validate(data, loginRequestValidator);
 
-    const user = await this.userRepository.findByEmail(data.email, ctx);
+    const user = await userRepository.findByEmail(data.email, ctx);
     if (!(user && (await bcrypt.compare(data.password, user.passwordHash)))) {
       throw forbiddenError();
     }
@@ -45,7 +37,7 @@ export class AccessTokenService {
       Date.now() + (data.remember ? COOKIE_EXPIRES : SESSION_EXPIRES),
     );
 
-    await this.accessTokenRepository.save(
+    await accessTokenRepository.save(
       {
         userId: user.id,
         tokenHash: hashToken(token),
@@ -53,7 +45,7 @@ export class AccessTokenService {
       },
       ctx,
     );
-    this.cookieService.save(ctx.response, SESSION_COOKIE, token, {
+    cookieService.save(ctx.response, SESSION_COOKIE, token, {
       expires: data.remember ? expiresAt.getTime() : undefined,
     });
 
@@ -61,15 +53,15 @@ export class AccessTokenService {
   }
 
   async logout(user: User, ctx: ServiceContext) {
-    const token = this.cookieService.get(ctx.request, SESSION_COOKIE);
+    const token = cookieService.get(ctx.request, SESSION_COOKIE);
 
     const hash = hashToken(token);
-    const entity = await this.accessTokenRepository.findByTokenHash(hash, ctx);
+    const entity = await accessTokenRepository.findByTokenHash(hash, ctx);
     if (entity == null || entity.user.id !== user.id) {
       throw unauthorizedError();
     }
 
-    await this.accessTokenRepository.delete(entity.id, ctx);
-    this.cookieService.clear(ctx.response, SESSION_COOKIE);
+    await accessTokenRepository.delete(entity.id, ctx);
+    cookieService.clear(ctx.response, SESSION_COOKIE);
   }
 }

@@ -1,5 +1,4 @@
 import Joi from '@hapi/joi';
-import { Injectable } from '@nestjs/common';
 import { sendEmail } from '@server/shared/email/email-utils';
 import { internalServerError } from '@server/shared/errors/errors';
 import { ServiceContext } from '@server/shared/service/context';
@@ -22,10 +21,7 @@ const contactValidator = Joi.object({
   message: Joi.string().max(MESSAGE_MAX_LENGTH).required(),
 }).options({ abortEarly: false });
 
-@Injectable()
 export class ContactService {
-  constructor() {}
-
   async send(data: ContactRequest, _ctx: ServiceContext) {
     validate(data, contactValidator);
 
@@ -43,3 +39,5 @@ export class ContactService {
     });
   }
 }
+
+export const contactService = new ContactService();

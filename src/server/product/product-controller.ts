@@ -13,11 +13,11 @@ import { StaffGuard } from '@server/auth/staff-guard';
 import { transaction } from '@server/db/database';
 import { serializeAsync } from '@server/shared/types/serialize';
 import type { ProductRequest, ProductType } from '@shared/product';
-import { ProductService } from './product-service';
+import { productService } from './product-service';
 
 @Controller('products')
 export class ProductController {
-  constructor(private service: ProductService) {}
+  constructor() {}
 
   @Get('autocomplete')
   async autocomplete(
@@ -25,28 +25,28 @@ export class ProductController {
     @Query('query') query: string,
   ) {
     return transaction((trx) =>
-      serializeAsync(this.service.autocomplete(type, query ?? '', { trx })),
+      serializeAsync(productService.autocomplete(type, query ?? '', { trx })),
     );
   }
 
   @Get()
   async list(@Query('type') type: ProductType) {
     return transaction((trx) =>
-      serializeAsync(this.service.list(type, { trx })),
+      serializeAsync(productService.list(type, { trx })),
     );
   }
 
   @Get(':idOrSlug')
   async get(@Param('idOrSlug') idOrSlug: number | string) {
     return transaction((trx) =>
-      serializeAsync(this.service.get(idOrSlug, { trx })),
+      serializeAsync(productService.get(idOrSlug, { trx })),
     );
   }
 
   @Get('comparison/:idsOrSlugs')
   async getComparison(@Param('idsOrSlugs') idsOrSlugs: string) {
     return transaction((trx) =>
-      serializeAsync(this.service.getComparison(idsOrSlugs, { trx })),
+      serializeAsync(productService.getComparison(idsOrSlugs, { trx })),
     );
   }
 
@@ -54,7 +54,7 @@ export class ProductController {
   @UseGuards(StaffGuard)
   async create(@Body() body: ProductRequest) {
     return transaction((trx) =>
-      serializeAsync(this.service.create(body, { trx })),
+      serializeAsync(productService.create(body, { trx })),
     );
   }
 
@@ -62,13 +62,13 @@ export class ProductController {
   @UseGuards(StaffGuard)
   async update(@Param('id') id: number, @Body() body: ProductRequest) {
     return transaction((trx) =>
-      serializeAsync(this.service.update(id, body, { trx })),
+      serializeAsync(productService.update(id, body, { trx })),
     );
   }
 
   @Delete(':id')
   @UseGuards(StaffGuard)
   async delete(@Param('id') id: number) {
-    return transaction((trx) => this.service.delete(id, { trx }));
+    return transaction((trx) => productService.delete(id, { trx }));
   }
 }
