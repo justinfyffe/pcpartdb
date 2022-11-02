@@ -17,7 +17,7 @@ import { formatSpec } from '@shared/spec';
 import React, { useMemo } from 'react';
 import { CompareProductsForm } from '../compare-products-form';
 
-interface ListGpusPageProps {
+export interface ListGpusPageProps {
   gpus: Product[];
 }
 

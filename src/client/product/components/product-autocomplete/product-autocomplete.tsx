@@ -5,8 +5,14 @@ import {
   Img,
 } from '@client/shared/components';
 import { classNames } from '@client/shared/ui';
-import { Product, ProductType } from '@shared/product';
-import React, { forwardRef, useCallback, useEffect, useState } from 'react';
+import { getSpecMap, Product, ProductType } from '@shared/product';
+import React, {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { productService } from '../../product-service';
 
 interface ProductAutocompleteProps {
@@ -88,13 +94,25 @@ export const ProductAutocomplete = forwardRef<
     [onChange],
   );
 
+  const prefixImage = useMemo(() => {
+    if (product == null) {
+      return null;
+    }
+
+    const specs = getSpecMap(product);
+
+    if (specs.COMPANY?.stringValue === 'NVIDIA') {
+      return '/images/logos/nvidia.svg';
+    } else if (specs.COMPANY?.stringValue === 'AMD') {
+      return '/images/logos/amd.svg';
+    } else {
+      return null;
+    }
+  }, [product]);
+
   return (
     <Autocomplete
-      prefix={
-        product ? (
-          <Img src="/images/logos/nvidia.svg" className="h-5" />
-        ) : undefined
-      }
+      prefix={prefixImage}
       label={product?.name ?? ''}
       value={value != null && value !== 0 ? `${value}` : ''}
       onQuery={handleQuery}
@@ -111,7 +129,7 @@ export const ProductAutocomplete = forwardRef<
           hoveredClassName="bg-[#fafafa]"
         >
           <div className="flex flex-1 items-center gap-4">
-            <Img src="/images/logos/nvidia.svg" className="h-5" />
+            {prefixImage ? <Img src={prefixImage} className="h-5" /> : <></>}
             <span className="flex-1">{result.name}</span>
             <div className="flex flex-col gap-1 items-end text-[12px]">
               <div className="text-[#aaa]">2022</div>

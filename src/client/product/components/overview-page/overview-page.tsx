@@ -15,7 +15,6 @@ import {
   ComputerDesktopIcon,
   PlusCircleIcon,
 } from '@heroicons/react/24/outline';
-import { NextPageContext } from 'next';
 import React from 'react';
 
 interface OverviewGpusPageProps {}
@@ -459,8 +458,4 @@ export const OverviewGpusPage = (_props: OverviewGpusPageProps) => {
       </main>
     </WebsiteLayout>
   );
-};
-
-OverviewGpusPage.getInitialProps = async (_ctx: NextPageContext) => {
-  return {};
 };

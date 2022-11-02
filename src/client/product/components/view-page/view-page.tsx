@@ -27,9 +27,7 @@ import { Product } from '@shared/product';
 import { formatProductMeta, ProductMetaKey } from '@shared/product-meta';
 import { ReviewKey } from '@shared/review';
 import { formatSpec, SpecKey } from '@shared/spec';
-import { NextPageContext } from 'next';
 import React, { useMemo } from 'react';
-import { productService } from '../../product-service';
 import { CompareProductsForm } from '../compare-products-form';
 import { ProductImages } from '../product-images';
 import { BenchmarkRow } from './benchmark-row';
@@ -46,7 +44,7 @@ import { ReviewRow } from './review-row';
 import { SpecRow } from './spec-row';
 import { Summary } from './summary';
 
-interface ViewGpuPageProps {
+export interface ViewGpuPageProps {
   gpu: Product;
 }
 
@@ -376,11 +374,4 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
       </WebsiteLayout>
     </ProductContext.Provider>
   );
-};
-
-ViewGpuPage.getInitialProps = async (ctx: NextPageContext) => {
-  const { slug } = ctx.query as { slug: string };
-  const gpu = await productService.get(slug);
-
-  return { gpu };
 };
