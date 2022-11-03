@@ -13,6 +13,7 @@ Immediate Tasks:
   - add guards to controllers
   - add higher-order-functions to controllers
   - clean up higher-order-functions
+  - getServerSideProps 
   - migrate controllers
   - cleanup unused methods from controllers
   - annotations? or higher-order-functions?
