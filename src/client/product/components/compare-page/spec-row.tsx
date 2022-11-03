@@ -4,48 +4,61 @@ import React, { useContext } from 'react';
 import { ProductsContext } from './products-context';
 
 const LABELS: Record<string, string> = {
-  [SpecKey.Architecture]: 'Architecture',
-  [SpecKey.BusInterface]: 'Bus Interface',
-  [SpecKey.CoreClockSpeedBase]: 'Clock Speed (Base)',
-  [SpecKey.CoreClockSpeedBoost]: 'Clock Speed (Boost)',
-  [SpecKey.Company]: 'Company',
-  [SpecKey.ShaderUnitsCudaCores]: 'Shader Units / CUDA Cores',
-  [SpecKey.DirectXVersion]: 'DirectX',
-  [SpecKey.Fp32Performance]: 'FP32 Performance',
-  [SpecKey.Fp64Performance]: 'FP64 Performance',
-  [SpecKey.GpuName]: 'GPU Name',
-  [SpecKey.GSyncFreeSyncSupport]: 'G-Sync / FreeSync',
-  [SpecKey.Height]: 'Height',
-  [SpecKey.L1Cache]: 'L1 Cache',
-  [SpecKey.L2Cache]: 'L2 Cache',
-  [SpecKey.LaunchPriceMsrp]: 'Launch Price (MSRP)',
-  [SpecKey.Length]: 'Length',
-  [SpecKey.ProcessSize]: 'Process Size',
-  [SpecKey.MarketSegment]: 'Market Segment',
-  [SpecKey.MemoryClock]: 'Memory Clock',
-  [SpecKey.MemoryBandwidth]: 'Memory Bandwidth',
-  [SpecKey.MemoryInterface]: 'Memory Interface',
-  [SpecKey.MemorySize]: 'Memory Size',
-  [SpecKey.MemoryType]: 'Memory Type',
-  [SpecKey.OpenClVersion]: 'OpenCL',
-  [SpecKey.OpenGlVersion]: 'OpenGL',
-  [SpecKey.Outputs]: 'Outputs',
-  [SpecKey.PixelFillRate]: 'Pixel Fill Rate',
-  [SpecKey.PowerConnectors]: 'Power Connectors',
-  [SpecKey.ReleaseDate]: 'Release Date',
-  [SpecKey.RenderOutputUnits]: 'Render Output Units (ROPs)',
-  [SpecKey.RayTracingCores]: 'Ray Tracing Cores (RT Cores)',
-  [SpecKey.ShaderModelVersion]: 'Shader Model',
-  [SpecKey.SliCrossfireSupport]: 'SLI / Crossfire',
-  [SpecKey.SlotWidth]: 'Slot Width',
-  [SpecKey.SuggestedPsu]: 'Suggested PSU',
-  [SpecKey.ThermalDesignPower]: 'Thermal Design Power (TDP)',
-  [SpecKey.TensorCores]: 'Tensor Cores',
-  [SpecKey.TextureFillRate]: 'Texture Fill Rate',
-  [SpecKey.TextureMappingUnits]: 'Texture Mapping Units (TMUs)',
-  [SpecKey.Transistors]: 'Transistors',
-  [SpecKey.Weight]: 'Weight',
-  [SpecKey.Width]: 'Width',
+  // General
+  company: 'Company',
+  marketSegment: 'Market Segment',
+  launchPrice: 'Launch Price (MSRP)',
+  releaseDate: 'Release Date',
+
+  // Processor
+  gpuName: 'GPU Name',
+  architecture: 'Architecture',
+  processSize: 'Process Size',
+  transistors: 'Transistors',
+
+  // Memory
+  memorySize: 'Memory Size',
+  memoryType: 'Memory Type',
+  memoryClock: 'Memory Clock',
+  memoryInterface: 'Memory Interface',
+  memoryBandwidth: 'Memory Bandwidth',
+
+  // Board Design
+  slotWidth: 'Slot Width',
+  length: 'Length',
+  width: 'Width',
+  height: 'Height',
+  weight: 'Weight',
+  thermalDesignPower: 'Thermal Design Power (TDP)',
+  suggestedPsu: 'Suggested PSU',
+  busInterface: 'Bus Interface',
+  powerConnectors: 'Power Connectors',
+  outputs: 'Outputs',
+
+  // Cores & Clock Speeds
+  shaderUnitsCudaCores: 'Shader Units / CUDA Cores',
+  textureMappingUnits: 'Texture Mapping Units (TMUs)',
+  renderOutputUnits: 'Render Output Units (ROPs)',
+  tensorCores: 'Tensor Cores',
+  rayTracingCores: 'Ray Tracing Cores',
+  coreClockSpeedBase: 'Clock Speed (Base)',
+  coreClockSpeedBoost: 'Clock Speed (Boost)',
+  l1Cache: 'L1 Cache',
+  l2Cache: 'L2 Cache',
+
+  // Theoretical Performance
+  pixelFillRate: 'Pixel Fill Rate',
+  textureFillRate: 'Texture Fill Rate',
+  fp32Performance: 'FP32 Performance',
+  fp64Performance: 'FP64 Performance',
+
+  // API Support
+  directXVersion: 'DirectX',
+  openClVersion: 'OpenCL',
+  openGlVersion: 'OpenGL',
+  shaderModelVersion: 'Shader Model',
+  gSyncFreeSyncSupport: 'G-Sync / FreeSync',
+  sliCrossfireSupport: 'SLI / Crossfire',
 };
 
 interface SpecRowProps {

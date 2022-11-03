@@ -5,7 +5,6 @@ import {
   Breadcrumbs,
   Table,
   TBody,
-  Td,
   Th,
   THead,
   Tr,
@@ -17,11 +16,9 @@ import {
   SidenavPopularComparisons,
   SidenavPopularProducts,
 } from '@client/sidenav';
-import { BenchmarkKey, formatBenchmark } from '@shared/benchmark';
+import { formatBenchmark } from '@shared/benchmark';
 import { Product } from '@shared/product';
-import { formatProductMeta, ProductMetaKey } from '@shared/product-meta';
-import { ReviewKey } from '@shared/review';
-import { SpecKey } from '@shared/spec';
+import { formatProductMeta } from '@shared/product-meta';
 import React, { useMemo } from 'react';
 import { CompareProductsForm } from '../compare-products-form';
 import { ProductImages } from '../product-images';
@@ -111,24 +108,12 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
                     <CustomRow>
                       <CustomRowLabel>Performance Rating (Rank)</CustomRowLabel>
                       <CustomRowValue>
-                        {formatBenchmark(
-                          benchmarks1[BenchmarkKey.PerformanceScore],
-                        )}{' '}
-                        (
-                        {formatProductMeta(
-                          meta1[ProductMetaKey.PerformanceRank],
-                        )}
-                        )
+                        {formatBenchmark(benchmarks1.performanceScore)} (
+                        {formatProductMeta(meta1.performanceRank)})
                       </CustomRowValue>
                       <CustomRowValue>
-                        {formatBenchmark(
-                          benchmarks2[BenchmarkKey.PerformanceScore],
-                        )}{' '}
-                        (
-                        {formatProductMeta(
-                          meta2[ProductMetaKey.PerformanceRank],
-                        )}
-                        )
+                        {formatBenchmark(benchmarks2.performanceScore)} (
+                        {formatProductMeta(meta2.performanceRank)})
                       </CustomRowValue>
                     </CustomRow>
                     <CustomRow>
@@ -136,34 +121,18 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
                         Performance Per Dollar (Rank)
                       </CustomRowLabel>
                       <CustomRowValue>
-                        {formatBenchmark(benchmarks1[BenchmarkKey.ValueScore])}{' '}
-                        ({formatProductMeta(meta1[ProductMetaKey.ValueRank])})
+                        {formatBenchmark(benchmarks1.valueScore)} (
+                        {formatProductMeta(meta1.valueRank)})
                       </CustomRowValue>
                       <CustomRowValue>
-                        {formatBenchmark(benchmarks2[BenchmarkKey.ValueScore])}{' '}
-                        ({formatProductMeta(meta2[ProductMetaKey.ValueRank])})
+                        {formatBenchmark(benchmarks2.valueScore)} (
+                        {formatProductMeta(meta2.valueRank)})
                       </CustomRowValue>
                     </CustomRow>
-                    <Tr>
-                      <Td>Company</Td>
-                      <Td>NVIDIA</Td>
-                      <Td>NVIDIA</Td>
-                    </Tr>
-                    <Tr>
-                      <Td>Market Segment</Td>
-                      <Td>Desktop</Td>
-                      <Td>Desktop</Td>
-                    </Tr>
-                    <Tr>
-                      <Td>Release Date</Td>
-                      <Td>Q4 2022</Td>
-                      <Td>Q3 2022</Td>
-                    </Tr>
-                    <Tr>
-                      <Td>Launch Price (MSRP)</Td>
-                      <Td>$1,499</Td>
-                      <Td>$999</Td>
-                    </Tr>
+                    <SpecRow spec="company" />
+                    <SpecRow spec="marketSegment" />
+                    <SpecRow spec="releaseDate" />
+                    <SpecRow spec="launchPrice" />
                   </TBody>
                 </Table>
               </article>
@@ -184,11 +153,11 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
                     </Tr>
                   </THead>
                   <TBody>
-                    <ReviewRow review={ReviewKey.Amazon} />
-                    <ReviewRow review={ReviewKey.PcGamer} />
-                    <ReviewRow review={ReviewKey.TechRadar} />
-                    <ReviewRow review={ReviewKey.TechSpot} />
-                    <ReviewRow review={ReviewKey.TomsHardware} />
+                    <ReviewRow review="amazon" />
+                    <ReviewRow review="pcGamer" />
+                    <ReviewRow review="techRadar" />
+                    <ReviewRow review="techSpot" />
+                    <ReviewRow review="tomsHardware" />
                   </TBody>
                 </Table>
               </article>
@@ -212,10 +181,10 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
                       </Tr>
                     </THead>
                     <TBody>
-                      <SpecRow spec={SpecKey.GpuName} />
-                      <SpecRow spec={SpecKey.Architecture} />
-                      <SpecRow spec={SpecKey.ProcessSize} />
-                      <SpecRow spec={SpecKey.Transistors} />
+                      <SpecRow spec="gpuName" />
+                      <SpecRow spec="architecture" />
+                      <SpecRow spec="processSize" />
+                      <SpecRow spec="transistors" />
                     </TBody>
                   </Table>
                 </article>
@@ -237,11 +206,11 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
                       </Tr>
                     </THead>
                     <TBody>
-                      <SpecRow spec={SpecKey.MemorySize} />
-                      <SpecRow spec={SpecKey.MemoryType} />
-                      <SpecRow spec={SpecKey.MemoryBandwidth} />
-                      <SpecRow spec={SpecKey.MemoryClock} />
-                      <SpecRow spec={SpecKey.MemoryInterface} />
+                      <SpecRow spec="memorySize" />
+                      <SpecRow spec="memoryType" />
+                      <SpecRow spec="memoryBandwidth" />
+                      <SpecRow spec="memoryClock" />
+                      <SpecRow spec="memoryInterface" />
                     </TBody>
                   </Table>
                 </article>
@@ -263,16 +232,16 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
                       </Tr>
                     </THead>
                     <TBody>
-                      <SpecRow spec={SpecKey.SlotWidth} />
-                      <SpecRow spec={SpecKey.Length} />
-                      <SpecRow spec={SpecKey.Width} />
-                      <SpecRow spec={SpecKey.Height} />
-                      <SpecRow spec={SpecKey.Weight} />
-                      <SpecRow spec={SpecKey.BusInterface} />
-                      <SpecRow spec={SpecKey.ThermalDesignPower} />
-                      <SpecRow spec={SpecKey.SuggestedPsu} />
-                      <SpecRow spec={SpecKey.PowerConnectors} />
-                      <SpecRow spec={SpecKey.Outputs} />
+                      <SpecRow spec="slotWidth" />
+                      <SpecRow spec="length" />
+                      <SpecRow spec="width" />
+                      <SpecRow spec="height" />
+                      <SpecRow spec="weight" />
+                      <SpecRow spec="busInterface" />
+                      <SpecRow spec="thermalDesignPower" />
+                      <SpecRow spec="suggestedPsu" />
+                      <SpecRow spec="powerConnectors" />
+                      <SpecRow spec="outputs" />
                     </TBody>
                   </Table>
                 </article>
@@ -294,15 +263,15 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
                       </Tr>
                     </THead>
                     <TBody>
-                      <SpecRow spec={SpecKey.ShaderUnitsCudaCores} />
-                      <SpecRow spec={SpecKey.TextureMappingUnits} />
-                      <SpecRow spec={SpecKey.RenderOutputUnits} />
-                      <SpecRow spec={SpecKey.TensorCores} />
-                      <SpecRow spec={SpecKey.RayTracingCores} />
-                      <SpecRow spec={SpecKey.CoreClockSpeedBase} />
-                      <SpecRow spec={SpecKey.CoreClockSpeedBoost} />
-                      <SpecRow spec={SpecKey.L1Cache} />
-                      <SpecRow spec={SpecKey.L2Cache} />
+                      <SpecRow spec="shaderUnitsCudaCores" />
+                      <SpecRow spec="textureMappingUnits" />
+                      <SpecRow spec="renderOutputUnits" />
+                      <SpecRow spec="tensorCores" />
+                      <SpecRow spec="rayTracingCores" />
+                      <SpecRow spec="coreClockSpeedBase" />
+                      <SpecRow spec="coreClockSpeedBoost" />
+                      <SpecRow spec="l1Cache" />
+                      <SpecRow spec="l2Cache" />
                     </TBody>
                   </Table>
                 </article>
@@ -325,10 +294,10 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
                       </Tr>
                     </THead>
                     <TBody>
-                      <SpecRow spec={SpecKey.PixelFillRate} />
-                      <SpecRow spec={SpecKey.TextureFillRate} />
-                      <SpecRow spec={SpecKey.Fp32Performance} />
-                      <SpecRow spec={SpecKey.Fp64Performance} />
+                      <SpecRow spec="pixelFillRate" />
+                      <SpecRow spec="textureFillRate" />
+                      <SpecRow spec="fp32Performance" />
+                      <SpecRow spec="fp64Performance" />
                     </TBody>
                   </Table>
                 </article>
@@ -345,12 +314,12 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
                       </Tr>
                     </THead>
                     <TBody>
-                      <SpecRow spec={SpecKey.DirectXVersion} />
-                      <SpecRow spec={SpecKey.OpenClVersion} />
-                      <SpecRow spec={SpecKey.OpenGlVersion} />
-                      <SpecRow spec={SpecKey.ShaderModelVersion} />
-                      <SpecRow spec={SpecKey.GSyncFreeSyncSupport} />
-                      <SpecRow spec={SpecKey.SliCrossfireSupport} />
+                      <SpecRow spec="directXVersion" />
+                      <SpecRow spec="openClVersion" />
+                      <SpecRow spec="openGlVersion" />
+                      <SpecRow spec="shaderModelVersion" />
+                      <SpecRow spec="gSyncFreeSyncSupport" />
+                      <SpecRow spec="sliCrossfireSupport" />
                     </TBody>
                   </Table>
                 </article>
@@ -374,9 +343,9 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
                     </Tr>
                   </THead>
                   <TBody>
-                    <BenchmarkRow benchmark={BenchmarkKey.G3dMark} />
-                    <BenchmarkRow benchmark={BenchmarkKey.G2dMark} />
-                    <BenchmarkRow benchmark={BenchmarkKey.TimeSpyGraphics} />
+                    <BenchmarkRow benchmark="g3dMark" />
+                    <BenchmarkRow benchmark="g2dMark" />
+                    <BenchmarkRow benchmark="timeSpyGraphics" />
                   </TBody>
                 </Table>
               </article>

@@ -1,12 +1,22 @@
 Immediate Tasks:
 - Make specs, benchmarks, meta, reviews a jsonb field and use psql to query and order on that.
-  - add keys to the specs, meta, etc.
+  - update services and validators
 - compare gpus page
   - auto-generate summary
   - buy buttons
 - gpus list page
+  - sort by
 - gpus overview page
+  - best by performance
+  - best by value
+  - popular comparisons
+  - popular gpus
 - side navs
+  - popular comparisons
+  - popular gpus
+- home page
+- product forms
+  - pre-fill data (from external source)
 - contact page
 - about page
 - disclaimer page
@@ -15,8 +25,6 @@ Immediate Tasks:
 - initial on-page seo
   - canonical links
   - alt tags
-- product forms
-  - pre-fill data (from external source)
 - launch
 - product retail models
 - Split tech specs into tabs for desktop, accordians for mobile

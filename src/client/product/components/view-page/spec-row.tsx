@@ -1,5 +1,5 @@
 import { Td, Tr } from '@client/shared/components';
-import { formatSpec, SpecBooleanFormatter, Specs } from '@shared/spec';
+import { formatSpec, SpecBooleanFormatter, SpecKey } from '@shared/spec';
 import React, { useContext } from 'react';
 import { ProductContext } from './product-context';
 
@@ -62,7 +62,7 @@ const LABELS: Record<string, string> = {
 };
 
 interface SpecRowProps {
-  spec: keyof Specs;
+  spec: SpecKey;
 }
 
 export const SpecRow = (props: SpecRowProps) => {

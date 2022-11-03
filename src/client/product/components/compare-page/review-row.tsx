@@ -4,11 +4,11 @@ import React, { useContext } from 'react';
 import { ProductsContext } from './products-context';
 
 const LABELS: Record<string, string> = {
-  [ReviewKey.Amazon]: 'Amazon',
-  [ReviewKey.PcGamer]: 'PC Gamer',
-  [ReviewKey.TechRadar]: 'TechRadar',
-  [ReviewKey.TomsHardware]: "Tom's Hardware",
-  [ReviewKey.TechSpot]: 'TechSpot',
+  amazon: 'Amazon',
+  pcGamer: 'PC Gamer',
+  techRadar: 'TechRadar',
+  tomsHardware: "Tom's Hardware",
+  techSpot: 'TechSpot',
 };
 
 interface ReviewRowProps {

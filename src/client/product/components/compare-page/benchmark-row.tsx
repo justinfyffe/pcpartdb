@@ -4,9 +4,9 @@ import React, { useContext } from 'react';
 import { ProductsContext } from './products-context';
 
 const LABELS: Record<string, string> = {
-  [BenchmarkKey.G2dMark]: 'G2D Mark',
-  [BenchmarkKey.G3dMark]: 'G3D Mark',
-  [BenchmarkKey.TimeSpyGraphics]: '3DMark Time Spy Graphics',
+  g2dMark: 'G2D Mark',
+  g3dMark: 'G3D Mark',
+  timeSpyGraphics: '3DMark Time Spy Graphics',
 };
 
 interface BenchmarkRowProps {

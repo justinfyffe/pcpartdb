@@ -1,22 +1,16 @@
-import { BenchmarkMap } from '@shared/benchmark';
-import {
-  getBenchmarkMap,
-  getProductMetaMap,
-  getReviewMap,
-  getSpecMap,
-  Product,
-} from '@shared/product';
-import { ProductMetaMap } from '@shared/product-meta';
-import { ReviewMap } from '@shared/review';
-import { SpecMap } from '@shared/spec';
+import { Benchmarks } from '@shared/benchmark';
+import { Product } from '@shared/product';
+import { ProductMetas } from '@shared/product-meta';
+import { Reviews } from '@shared/review';
+import { Specs } from '@shared/spec';
 import { createContext } from 'react';
 
 interface ProductsContextState {
   products: [Product, Product];
-  specs: [SpecMap, SpecMap];
-  meta: [ProductMetaMap, ProductMetaMap];
-  benchmarks: [BenchmarkMap, BenchmarkMap];
-  reviews: [ReviewMap, ReviewMap];
+  specs: [Specs, Specs];
+  meta: [ProductMetas, ProductMetas];
+  benchmarks: [Benchmarks, Benchmarks];
+  reviews: [Reviews, Reviews];
 }
 
 export const ProductsContext = createContext<ProductsContextState>({
@@ -30,9 +24,9 @@ export const ProductsContext = createContext<ProductsContextState>({
 export function createProductsContextState(products: [Product, Product]) {
   return {
     products,
-    specs: [getSpecMap(products[0]), getSpecMap(products[1])],
-    meta: [getProductMetaMap(products[0]), getProductMetaMap(products[1])],
-    benchmarks: [getBenchmarkMap(products[0]), getBenchmarkMap(products[1])],
-    reviews: [getReviewMap(products[0]), getReviewMap(products[1])],
+    specs: [products[0].specs, products[1].specs],
+    meta: [products[0].metas, products[1].metas],
+    benchmarks: [products[0].benchmarks, products[1].benchmarks],
+    reviews: [products[0].reviews, products[1].reviews],
   } as ProductsContextState;
 }
