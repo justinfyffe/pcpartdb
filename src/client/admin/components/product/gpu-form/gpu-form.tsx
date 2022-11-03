@@ -26,8 +26,12 @@ import {
   ProductImagesRequest,
   productImageValidator,
 } from '@shared/product-image';
-import { ProductMeta, ProductMetasRequest } from '@shared/product-meta';
-import { RetailModel, retailModelValidator } from '@shared/retail-model';
+import {
+  ProductMeta,
+  ProductMetasRequest,
+  productMetaValidator,
+} from '@shared/product-meta';
+import { RetailModel } from '@shared/retail-model';
 import { Review, ReviewsRequest, reviewValidator } from '@shared/review';
 import {
   MarketSegmentValue,
@@ -207,10 +211,10 @@ const productValidator = Joi.object({
   // Images
   autocompleteImage: productImageValidator.allow(null),
   thumbnailImage: productImageValidator.allow(null),
-  detailsImages: Joi.array().items(productImageValidator),
+  detailsImages: Joi.array().items(productImageValidator.allow(null)),
 
   // Retail Models
-  retailModels: Joi.array().items(retailModelValidator),
+  retailModels: productMetaValidator.allow(null),
 }).options({ abortEarly: false });
 
 interface GpuFormProps {

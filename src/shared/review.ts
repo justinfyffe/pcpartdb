@@ -32,6 +32,14 @@ export const reviewValidator = Joi.object({
   metadata: Joi.any().allow(null),
 }).options({ abortEarly: false });
 
+export const reviewsValidator = Joi.object({
+  amazon: reviewValidator.allow(null),
+  pcGamer: reviewValidator.allow(null),
+  techRadar: reviewValidator.allow(null),
+  techSpot: reviewValidator.allow(null),
+  tomsHardware: reviewValidator.allow(null),
+}).options({ abortEarly: false });
+
 export interface FormatReviewOptions {
   decimals?: number;
   booleanFormatter?: ReviewBooleanFormatter;

@@ -90,3 +90,61 @@ export const specValidator = Joi.object({
   source: Joi.string().allow(null),
   metadata: Joi.any().allow(null),
 }).options({ abortEarly: false });
+
+export const specsValidator = Joi.object({
+  // General
+  company: specValidator.allow(null),
+  marketSegment: specValidator.allow(null),
+  launchPrice: specValidator.allow(null),
+  releaseDate: specValidator.allow(null),
+
+  // Processor
+  gpuName: specValidator.allow(null),
+  architecture: specValidator.allow(null),
+  processSize: specValidator.allow(null),
+  transistors: specValidator.allow(null),
+
+  // Memory
+  memorySize: specValidator.allow(null),
+  memoryType: specValidator.allow(null),
+  memoryClock: specValidator.allow(null),
+  memoryInterface: specValidator.allow(null),
+  memoryBandwidth: specValidator.allow(null),
+
+  // Board Design
+  slotWidth: specValidator.allow(null),
+  length: specValidator.allow(null),
+  width: specValidator.allow(null),
+  height: specValidator.allow(null),
+  weight: specValidator.allow(null),
+  thermalDesignPower: specValidator.allow(null),
+  suggestedPsu: specValidator.allow(null),
+  busInterface: specValidator.allow(null),
+  powerConnectors: specValidator.allow(null),
+  outputs: specValidator.allow(null),
+
+  // Cores & Clock Speeds
+  shaderUnitsCudaCores: specValidator.allow(null),
+  textureMappingUnits: specValidator.allow(null),
+  renderOutputUnits: specValidator.allow(null),
+  tensorCores: specValidator.allow(null),
+  rayTracingCores: specValidator.allow(null),
+  coreClockSpeedBase: specValidator.allow(null),
+  coreClockSpeedBoost: specValidator.allow(null),
+  l1Cache: specValidator.allow(null),
+  l2Cache: specValidator.allow(null),
+
+  // Theoretical Performance
+  pixelFillRate: specValidator.allow(null),
+  textureFillRate: specValidator.allow(null),
+  fp32Performance: specValidator.allow(null),
+  fp64Performance: specValidator.allow(null),
+
+  // API Support
+  directXVersion: specValidator.allow(null),
+  openClVersion: specValidator.allow(null),
+  openGlVersion: specValidator.allow(null),
+  shaderModelVersion: specValidator.allow(null),
+  gSyncFreeSyncSupport: specValidator.allow(null),
+  sliCrossfireSupport: specValidator.allow(null),
+}).options({ abortEarly: false });

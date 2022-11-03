@@ -35,6 +35,14 @@ export const productMetaValidator = Joi.object({
   metadata: Joi.any().allow(null),
 }).options({ abortEarly: false });
 
+export const productMetasValidator = Joi.object({
+  performanceRank: productMetaValidator.allow(null),
+  valueRank: productMetaValidator.allow(null),
+
+  description: productMetaValidator.allow(null),
+  retailModels: productMetaValidator.allow(null),
+});
+
 export interface FormatMetaOptions {
   decimals?: number;
   booleanFormatter?: ProductMetaBooleanFormatter;

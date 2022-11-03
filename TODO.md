@@ -1,6 +1,4 @@
 Immediate Tasks:
-- Make specs, benchmarks, meta, reviews a jsonb field and use psql to query and order on that.
-  - update services and validators
 - compare gpus page
   - auto-generate summary
   - buy buttons

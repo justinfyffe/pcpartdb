@@ -43,6 +43,21 @@ export const benchmarkValidator = Joi.object({
   metadata: Joi.any().allow(null),
 }).options({ abortEarly: false });
 
+export const benchmarksValidator = Joi.object({
+  performanceScore: benchmarkValidator.allow(null),
+  valueScore: benchmarkValidator.allow(null),
+
+  // GPU
+  g3dMark: benchmarkValidator.allow(null),
+  g2dMark: benchmarkValidator.allow(null),
+  timeSpyGraphics: benchmarkValidator.allow(null),
+
+  // CPU
+  cpuMark: benchmarkValidator.allow(null),
+  threadMark: benchmarkValidator.allow(null),
+  timeSpyPhysics: benchmarkValidator.allow(null),
+}).options({ abortEarly: false });
+
 export interface FormatBenchmarkOptions {
   decimals?: number;
   booleanFormatter?: BenchmarkBooleanFormatter;

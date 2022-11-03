@@ -2,30 +2,25 @@ import Joi from '@hapi/joi';
 import { badRequestError, notFoundError } from '@server/shared/api/status';
 import { Context } from '@server/shared/context';
 import { validate } from '@server/shared/types/validate';
-import { benchmarkValidator } from '@shared/benchmark';
+import { benchmarksValidator } from '@shared/benchmark';
 import { ProductRequest, ProductType } from '@shared/product';
-import { ProductMetas, productMetaValidator } from '@shared/product-meta';
-import { reviewValidator } from '@shared/review';
-import { Specs, specValidator } from '@shared/spec';
+import { productImagesValidator } from '@shared/product-image';
+import { ProductMetas, productMetasValidator } from '@shared/product-meta';
+import { reviewsValidator } from '@shared/review';
+import { Specs, specsValidator } from '@shared/spec';
 import { addPerformanceBenchmarks } from './benchmark-utils';
 import { productRepository } from './product-repository';
-
-const productImageValidator = Joi.object({
-  imageId: Joi.number().required(),
-  type: Joi.string().required(),
-  metadata: Joi.any(),
-}).options({ abortEarly: false });
 
 const createProductValidator = Joi.object({
   slug: Joi.string().required(),
   type: Joi.string().valid(ProductType.CPU, ProductType.GPU),
   name: Joi.string().required(),
   // TODO: add validator for unique keys
-  meta: Joi.array().items(productMetaValidator),
-  specs: Joi.array().items(specValidator),
-  benchmarks: Joi.array().items(benchmarkValidator),
-  reviews: Joi.array().items(reviewValidator),
-  images: Joi.array().items(productImageValidator),
+  metas: productMetasValidator,
+  specs: specsValidator,
+  benchmarks: benchmarksValidator,
+  reviews: reviewsValidator,
+  images: productImagesValidator,
 }).options({ abortEarly: false });
 
 const updateProductValidator = Joi.object({
@@ -33,11 +28,11 @@ const updateProductValidator = Joi.object({
   type: Joi.string().valid(ProductType.CPU, ProductType.GPU),
   name: Joi.string().required(),
   // TODO: add validator for unique keys
-  meta: Joi.array().items(productMetaValidator),
-  specs: Joi.array().items(specValidator),
-  benchmarks: Joi.array().items(benchmarkValidator),
-  reviews: Joi.array().items(reviewValidator),
-  images: Joi.array().items(productImageValidator),
+  metas: productMetasValidator,
+  specs: specsValidator,
+  benchmarks: benchmarksValidator,
+  reviews: reviewsValidator,
+  images: productImagesValidator,
 }).options({ abortEarly: false });
 
 export enum OrderBy {
