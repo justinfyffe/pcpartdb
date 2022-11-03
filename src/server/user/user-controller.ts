@@ -1,15 +1,9 @@
+import { withStaffGuard } from '@server/auth/staff-guard';
+import { withErrorFilter } from '@server/shared/errors/error-filter';
 import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  Post,
-  Put,
-  Res,
-  UseGuards,
-} from '@nestjs/common';
-import { StaffGuard } from '@server/auth/staff-guard';
-import { transaction } from '@server/db/database';
+  ServiceContext,
+  withServiceContext,
+} from '@server/shared/service/context';
 import { serializeAsync } from '@server/shared/types/serialize';
 import type {
   RegisterRequest,
@@ -17,64 +11,128 @@ import type {
   ResetPasswordRequest,
   UserRequest,
 } from '@shared/user';
-import type { Response } from 'express';
-import { UserService } from './user-service';
+import { NextApiRequest, NextApiResponse } from 'next';
+import { userService } from './user-service';
 
-@Controller('users')
-export class UserController {
-  constructor(private service: UserService) {}
+export const listUsers = withErrorFilter(
+  withStaffGuard(
+    withServiceContext(
+      async (
+        req: NextApiRequest,
+        res: NextApiResponse,
+        ctx: ServiceContext,
+      ) => {
+        const users = await serializeAsync(userService.list(ctx));
+        res.status(200).json(users);
+      },
+    ),
+  ),
+);
 
-  @Get()
-  @UseGuards(StaffGuard)
-  list() {
-    return transaction((trx) => serializeAsync(this.service.list({ trx })));
-  }
+export const getUser = withErrorFilter(
+  withStaffGuard(
+    withServiceContext(
+      async (
+        req: NextApiRequest,
+        res: NextApiResponse,
+        ctx: ServiceContext,
+      ) => {
+        const id = Number(req.query['id'] as string);
 
-  @Get(':id')
-  @UseGuards(StaffGuard)
-  get(@Param('id') id: number) {
-    return transaction((trx) => serializeAsync(this.service.get(id, { trx })));
-  }
+        const user = await serializeAsync(userService.get(id, ctx));
 
-  @Post()
-  @UseGuards(StaffGuard)
-  create(@Body() body: UserRequest) {
-    return transaction((trx) =>
-      serializeAsync(this.service.create(body, { trx })),
-    );
-  }
+        res.status(200).json(user);
+      },
+    ),
+  ),
+);
 
-  @Put(':id')
-  @UseGuards(StaffGuard)
-  update(@Param('id') id: number, @Body() body: UserRequest) {
-    return transaction((trx) =>
-      serializeAsync(this.service.update(id, body, { trx })),
-    );
-  }
+export const createUser = withErrorFilter(
+  withStaffGuard(
+    withServiceContext(
+      async (
+        req: NextApiRequest,
+        res: NextApiResponse,
+        ctx: ServiceContext,
+      ) => {
+        const body: UserRequest = req.body;
 
-  @Post('register')
-  register(@Body() body: RegisterRequest) {
-    return transaction((trx) =>
-      serializeAsync(this.service.create({ ...body, isStaff: false }, { trx })),
-    );
-  }
+        const user = await serializeAsync(userService.create(body, ctx));
 
-  @Post('request-password-reset')
-  requestPasswordReset(
-    @Body() body: RequestPasswordResetRequest,
-    @Res() response: Response,
-  ) {
-    return transaction(async (trx) => {
-      await this.service.requestPasswordReset(body, { trx });
-      response.status(204).send({});
-    });
-  }
+        res.status(200).json(user);
+      },
+    ),
+  ),
+);
 
-  @Post('reset-password')
-  resetPassword(@Body() body: ResetPasswordRequest, @Res() response: Response) {
-    return transaction(async (trx) => {
-      await this.service.resetPassword(body, { trx });
-      response.status(204).send({});
-    });
-  }
-}
+export const updateUser = withErrorFilter(
+  withStaffGuard(
+    withServiceContext(
+      async (
+        req: NextApiRequest,
+        res: NextApiResponse,
+        ctx: ServiceContext,
+      ) => {
+        const id = Number(req.query['id'] as string);
+        const body = req.body as UserRequest;
+
+        const user = await serializeAsync(userService.update(id, body, ctx));
+
+        res.status(200).json(user);
+      },
+    ),
+  ),
+);
+
+export const registerUser = withErrorFilter(
+  withStaffGuard(
+    withServiceContext(
+      async (
+        req: NextApiRequest,
+        res: NextApiResponse,
+        ctx: ServiceContext,
+      ) => {
+        const body = req.body as RegisterRequest;
+
+        const user = await serializeAsync(
+          userService.create({ ...body, isStaff: false }, ctx),
+        );
+
+        res.status(200).json(user);
+      },
+    ),
+  ),
+);
+
+export const requestPasswordReset = withErrorFilter(
+  withStaffGuard(
+    withServiceContext(
+      async (
+        req: NextApiRequest,
+        res: NextApiResponse,
+        ctx: ServiceContext,
+      ) => {
+        const body = req.body as RequestPasswordResetRequest;
+
+        await userService.requestPasswordReset(body, ctx);
+        res.status(204).send({});
+      },
+    ),
+  ),
+);
+
+export const resetPassword = withErrorFilter(
+  withStaffGuard(
+    withServiceContext(
+      async (
+        req: NextApiRequest,
+        res: NextApiResponse,
+        ctx: ServiceContext,
+      ) => {
+        const body = req.body as ResetPasswordRequest;
+        await userService.resetPassword(body, ctx);
+        res.status(204).send({});
+      },
+    ),
+  ),
+);

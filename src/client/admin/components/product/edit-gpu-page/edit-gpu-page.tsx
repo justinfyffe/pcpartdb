@@ -13,11 +13,11 @@ import { NextPageContext } from 'next';
 import React from 'react';
 import { GpuForm } from '../gpu-form';
 
-interface EditGpuPageProps {
+export interface AdminEditGpuPageProps {
   gpu: Product;
 }
 
-const EditGpuPage = (props: EditGpuPageProps) => {
+const EditGpuPage = (props: AdminEditGpuPageProps) => {
   const { gpu } = props;
 
   return (

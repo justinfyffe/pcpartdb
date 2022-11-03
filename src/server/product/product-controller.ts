@@ -62,7 +62,7 @@ export class ProductController {
     return transaction(async (trx) => {
       const body = req.body as ProductRequest;
 
-      const product = serializeAsync(
+      const product = await serializeAsync(
         productService.create(body, { trx, api: { req, res } }),
       );
 
@@ -76,7 +76,7 @@ export class ProductController {
       const id = Number(req.query['id'] as string);
       const body = req.body as ProductRequest;
 
-      const product = serializeAsync(
+      const product = await serializeAsync(
         productService.update(id, body, { trx, api: { req, res } }),
       );
 

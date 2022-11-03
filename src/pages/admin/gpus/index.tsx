@@ -1,3 +1,22 @@
-import { AdminListGpusPage } from '@client/admin';
+import { AdminListGpusPage, AdminListGpusPageProps } from '@client/admin';
+import { transaction } from '@server/db/database';
+import { productService } from '@server/product/product-service';
+import { serializeAsync } from '@server/shared/types/serialize';
+import { ProductType } from '@shared/product';
+import { NextPageContext } from 'next';
+
+export async function getServerSideProps(_ctx: NextPageContext) {
+  return transaction(async (trx) => {
+    const gpus = await serializeAsync(
+      productService.list(ProductType.GPU, { trx }),
+    );
+
+    const pageProps: AdminListGpusPageProps = {
+      gpus: JSON.parse(JSON.stringify(gpus)),
+    };
+
+    return { props: pageProps };
+  });
+}
 
 export default AdminListGpusPage;

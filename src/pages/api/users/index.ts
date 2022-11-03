@@ -1,10 +1,10 @@
-import { productController } from '@server/product/product-controller';
+import { createUser, listUsers } from '@server/user/user-controller';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
-    return productController.create(req, res);
+    return createUser(req, res);
   } else {
-    return productController.list(req, res);
+    return listUsers(req, res);
   }
 }

@@ -10,9 +10,9 @@ import { AdminLayout } from '@client/shared/layouts';
 import React from 'react';
 import { GpuForm } from '../gpu-form';
 
-interface NewGpuPageProps {}
+interface AdminNewGpuPageProps {}
 
-const NewGpuPage = (_props: NewGpuPageProps) => {
+const NewGpuPage = (_props: AdminNewGpuPageProps) => {
   return (
     <AdminLayout>
       <Article>

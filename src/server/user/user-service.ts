@@ -66,8 +66,6 @@ const resetPasswordValidator = Joi.object({
 }).options({ abortEarly: false });
 
 export class UserService {
-  constructor() {}
-
   async list(ctx: ServiceContext) {
     return await userRepository.list(ctx);
   }
@@ -196,3 +194,5 @@ export class UserService {
     await userRepository.save({ ...user, passwordHash });
   }
 }
+
+export const userService = new UserService();

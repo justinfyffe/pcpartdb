@@ -1,19 +1,20 @@
-import type { Request, Response } from 'express';
+import { getCookie, removeCookies, setCookie } from 'cookies-next';
+import { ServiceContext } from '../service/context';
 
 interface CookieOptions {
   expires?: number;
 }
 
 export class CookieService {
-  get(request: Request, name: string) {
-    return request['cookies'][name];
+  get(name: string, ctx: ServiceContext) {
+    return getCookie(name, { req: ctx.api.req, res: ctx.api.res });
   }
 
   save(
-    response: Response,
     name: string,
     value: unknown,
-    options?: CookieOptions,
+    options: CookieOptions,
+    ctx: ServiceContext,
   ) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const cookieOptions: any = {
@@ -25,11 +26,19 @@ export class CookieService {
       cookieOptions.expires = new Date(options?.expires);
     }
 
-    response.cookie(name, value, cookieOptions);
+    setCookie(name, value, {
+      ...cookieOptions,
+      req: ctx.api.req,
+      res: ctx.api.res,
+    });
   }
 
-  clear(response: Response, name: string) {
-    response.clearCookie(name);
+  clear(name: string, ctx: ServiceContext) {
+    removeCookies(name, {
+      req: ctx.api.req,
+      res: ctx.api.res,
+      expires: new Date(Date.now() - 3600),
+    });
   }
 }
 

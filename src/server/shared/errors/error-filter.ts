@@ -1,55 +1,49 @@
-import {
-  ArgumentsHost,
-  BadRequestException,
-  Catch,
-  ExceptionFilter,
-  ForbiddenException,
-  HttpException,
-  HttpStatus,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
 import { ApiError, ApiErrorType } from '@shared/error';
+import { NextApiRequest, NextApiResponse } from 'next';
+import { ServerError } from './errors';
 
-interface HttpErrorData {
-  type: ApiErrorType;
-  data: unknown;
+export function withErrorFilter(
+  controller: (req: NextApiRequest, res: NextApiResponse) => unknown,
+) {
+  const func = async (req: NextApiRequest, res: NextApiResponse) => {
+    try {
+      await controller(req, res);
+    } catch (e) {
+      if (e instanceof ServerError) {
+        console.log(e.stack);
+
+        res.status(getStatusCode(e.type)).json({
+          type: e?.type,
+          statusCode: getStatusCode(e.type),
+          timestamp: new Date().toISOString(),
+          data: e?.data,
+          stack: e.stack,
+        } as ApiError);
+      } else if (e instanceof Error) {
+        console.log(e.stack);
+        res.status(500);
+      } else {
+        res.status(500);
+      }
+    }
+  };
+
+  return func;
 }
 
-@Catch()
-export class AllExceptionsFilter implements ExceptionFilter {
-  catch(exception: Error, host: ArgumentsHost) {
-    console.log(exception.stack);
-    const ctx = host.switchToHttp();
-    const response = ctx.getResponse();
-
-    let status = HttpStatus.INTERNAL_SERVER_ERROR;
-    let error: HttpErrorData | null = null;
-    if (exception instanceof HttpException) {
-      status = exception.getStatus();
-      error = exception.getResponse() as HttpErrorData;
-    }
-
-    response.status(status).json({
-      type: error?.type || this.getDefaultType(exception as HttpException),
-      statusCode: status,
-      timestamp: new Date().toISOString(),
-      data: error?.data,
-      stack: exception.stack,
-    } as ApiError);
-  }
-
-  private getDefaultType(exception: HttpException) {
-    if (exception instanceof BadRequestException) {
-      return ApiErrorType.BadRequestError;
-    } else if (exception instanceof ForbiddenException) {
-      return ApiErrorType.ForbiddenError;
-    } else if (exception instanceof NotFoundException) {
-      return ApiErrorType.NotFoundError;
-    } else if (exception instanceof UnauthorizedException) {
-      return ApiErrorType.UnauthorizedError;
-    } else {
-      return ApiErrorType.InternalServerError;
-    }
+function getStatusCode(type: ApiErrorType) {
+  switch (type) {
+    case ApiErrorType.BadRequestError:
+      return 400;
+    case ApiErrorType.ForbiddenError:
+      return 403;
+    case ApiErrorType.InternalServerError:
+      return 500;
+    case ApiErrorType.NotFoundError:
+      return 404;
+    case ApiErrorType.UnauthorizedError:
+      return 401;
+    default:
+      return 500;
   }
 }

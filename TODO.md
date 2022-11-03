@@ -10,10 +10,12 @@ Immediate Tasks:
 
 - Do we even need nestjs? just use nextjs?
   - Get rid of nestjs and use nextjs 13
-  - handle guards
+  - add guards to controllers
+  - add higher-order-functions to controllers
+  - clean up higher-order-functions
   - migrate controllers
   - cleanup unused methods from controllers
-  - annotations
+  - annotations? or higher-order-functions?
 - restructure data?
   - Should specs, benchmarks, meta, reviews, retail models be jsonb fields? or separate table?
   - separate tables for each pc part? or same table? e.g. a gpus table, a cpus table, a motherboard table

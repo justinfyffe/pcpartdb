@@ -45,15 +45,20 @@ export class AccessTokenService {
       },
       ctx,
     );
-    cookieService.save(ctx.response, SESSION_COOKIE, token, {
-      expires: data.remember ? expiresAt.getTime() : undefined,
-    });
+    cookieService.save(
+      SESSION_COOKIE,
+      token,
+      {
+        expires: data.remember ? expiresAt.getTime() : undefined,
+      },
+      ctx,
+    );
 
     return { token, user: user.serialize() } as AccessToken;
   }
 
   async logout(user: User, ctx: ServiceContext) {
-    const token = cookieService.get(ctx.request, SESSION_COOKIE);
+    const token = cookieService.get(SESSION_COOKIE, ctx) as string;
 
     const hash = hashToken(token);
     const entity = await accessTokenRepository.findByTokenHash(hash, ctx);
@@ -62,6 +67,8 @@ export class AccessTokenService {
     }
 
     await accessTokenRepository.delete(entity.id, ctx);
-    cookieService.clear(ctx.response, SESSION_COOKIE);
+    cookieService.clear(SESSION_COOKIE, ctx);
   }
 }
+
+export const accessTokenService = new AccessTokenService();

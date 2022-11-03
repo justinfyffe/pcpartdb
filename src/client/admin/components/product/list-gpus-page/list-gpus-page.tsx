@@ -1,6 +1,5 @@
 import 'reflect-metadata';
 import { withStaffGuard } from '@client/auth';
-import { productService } from '@client/product';
 import {
   Alert,
   AlertVariant,
@@ -16,15 +15,15 @@ import {
   Tr,
 } from '@client/shared/components';
 import { AdminLayout } from '@client/shared/layouts';
-import { Product, ProductType } from '@shared/product';
+import { Product } from '@shared/product';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 
-interface ListGpusPageProps {
+export interface AdminListGpusPageProps {
   gpus: Product[];
 }
 
-const ListGpusPage = (props: ListGpusPageProps) => {
+const ListGpusPage = (props: AdminListGpusPageProps) => {
   const { gpus } = props;
   const router = useRouter();
   const [saved] = useState(router.query.saved === 'true');
@@ -78,11 +77,6 @@ const ListGpusPage = (props: ListGpusPageProps) => {
       </Article>
     </AdminLayout>
   );
-};
-
-ListGpusPage.getInitialProps = async () => {
-  const gpus = await productService.list(ProductType.GPU);
-  return { gpus: gpus || [] };
 };
 
 export const AdminListGpusPage = withStaffGuard(ListGpusPage);

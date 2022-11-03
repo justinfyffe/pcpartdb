@@ -14,25 +14,27 @@ export function joiValidationError(error: ValidationError) {
 }
 
 export class ServerError extends Error {
-  readonly data: unknown;
+  readonly type: ApiErrorType;
+  readonly data?: unknown;
 
-  constructor(data: unknown) {
+  constructor(type: ApiErrorType, data?: unknown) {
     super();
 
+    this.type = type;
     this.data = data;
   }
 }
 
 export function notFoundError(data: unknown) {
-  throw new ServerError({ type: ApiErrorType.NotFoundError, data });
+  throw new ServerError(ApiErrorType.NotFoundError, data);
 }
 
 export function forbiddenError() {
-  throw new ServerError({ type: ApiErrorType.ForbiddenError });
+  throw new ServerError(ApiErrorType.ForbiddenError);
 }
 
 export function unauthorizedError() {
-  throw new ServerError({ type: ApiErrorType.UnauthorizedError });
+  throw new ServerError(ApiErrorType.UnauthorizedError);
 }
 
 export function badRequestError(
@@ -43,16 +45,11 @@ export function badRequestError(
     dataArray = Array.isArray(data) ? data : [data];
   }
 
-  throw new ServerError({
-    type: ApiErrorType.BadRequestError,
-    data: dataArray,
-  });
+  throw new ServerError(ApiErrorType.BadRequestError, dataArray);
 }
 
 export function internalServerError() {
-  throw new ServerError({
-    type: ApiErrorType.InternalServerError,
-  });
+  throw new ServerError(ApiErrorType.InternalServerError);
 }
 
 function convertJoiToCamelCase(type: string) {

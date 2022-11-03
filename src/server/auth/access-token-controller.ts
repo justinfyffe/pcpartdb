@@ -1,63 +1,65 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  HttpStatus,
-  Post,
-  Req,
-  Res,
-  UseGuards,
-} from '@nestjs/common';
 import { transaction } from '@server/db/database';
+import { cookieService } from '@server/shared/cookie/cookie-service';
+import { SESSION_COOKIE } from '@server/shared/cookie/cookies';
+import { hashToken } from '@server/shared/crypto/crypto-utils';
+import { serialize } from '@server/shared/types/serialize';
 import type { AccessToken, LoginRequest } from '@shared/auth';
 import { User } from '@shared/user';
-import type { Request, Response } from 'express';
-import { AccessTokenService } from './access-token-service';
-import { UserGuard } from './user-guard';
+import { NextApiRequest, NextApiResponse } from 'next';
+import { accessTokenRepository } from './access-token-repository';
+import { accessTokenService } from './access-token-service';
 
-@Controller('access-tokens')
 export class AccessTokenController {
-  constructor(private service: AccessTokenService) {}
+  async checkAuthentication(req: NextApiRequest, res: NextApiResponse) {
+    const token = cookieService.get(SESSION_COOKIE, {
+      api: { req, res },
+    }) as string;
 
-  @Get()
-  async checkAuthentication(
-    @Req() request: Request & { token?: string; user: User },
-    @Res() response: Response,
-  ) {
-    if (request.token && request.user) {
-      response.status(HttpStatus.OK).send({
-        token: request.token,
-        user: request.user,
+    if (token != null) {
+      const accessToken = await accessTokenRepository.findByTokenHash(
+        hashToken(token),
+      );
+
+      res.status(200).send({
+        user: serialize(accessToken.user) as User,
       } as AccessToken);
     } else {
-      response.status(HttpStatus.OK).send({});
+      res.status(200).send({});
     }
   }
 
-  @Post()
-  async login(@Body() body: LoginRequest, @Res() response: Response) {
+  async login(req: NextApiRequest, res: NextApiResponse) {
+    const body: LoginRequest = req.body;
     await transaction(async (trx) => {
-      const token = await this.service.login(body, { trx, response });
+      await accessTokenService.login(body, {
+        trx,
+        api: { req, res },
+      });
 
-      response.status(HttpStatus.OK).send(token);
+      res.status(200).send({});
     });
   }
 
-  @Delete()
-  @UseGuards(UserGuard)
-  async logout(
-    @Req() request: Request & { user: User },
-    @Res() response: Response,
-  ) {
+  async logout(req: NextApiRequest, res: NextApiResponse) {
+    const token = cookieService.get(SESSION_COOKIE, {
+      api: { req, res },
+    }) as string;
+
+    const accessToken = await accessTokenRepository.findByTokenHash(
+      hashToken(token),
+    );
+
+    const user = serialize(accessToken.user) as User;
+
     await transaction(async (trx) => {
-      await this.service.logout(request.user, {
+      await accessTokenService.logout(user, {
         trx,
-        request,
-        response,
+        api: { req, res },
       });
 
-      response.status(204).send({});
+      res.status(204).send({});
     });
   }
 }
+
+export const accessTokenController = new AccessTokenController();
