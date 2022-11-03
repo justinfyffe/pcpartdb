@@ -1,6 +1,6 @@
 import { Field, NumberInput, TextInput } from '@client/shared/components';
 import { classNames } from '@client/shared/ui';
-import { Review, Reviews } from '@shared/review';
+import { Review, ReviewKey } from '@shared/review';
 import React, {
   FunctionComponent,
   useCallback,
@@ -17,7 +17,7 @@ const LABELS: Record<string, string> = {
 };
 
 interface ReviewFieldProps {
-  field: keyof Reviews;
+  field: ReviewKey;
 
   value?: Review<number>;
   onChange?: (value: Review<number>) => void;
@@ -29,25 +29,33 @@ interface ReviewFieldProps {
 export const ReviewField: FunctionComponent<ReviewFieldProps> = (props) => {
   const { field, value: propsValue, onChange, className } = props;
 
-  const [value, setValue] = useState(propsValue ?? null);
+  const [value, setValue] = useState(propsValue || null);
   useEffect(() => setValue(propsValue), [propsValue]);
 
   const handleScoreChange = useCallback(
     (score: number) => {
-      const newValue = { ...value, value: score };
+      const newValue: Review<number> = {
+        ...value,
+        value: score,
+        metadata: { reviewKey: field },
+      };
       setValue(newValue);
       onChange(newValue);
     },
-    [onChange, value],
+    [field, onChange, value],
   );
 
   const handleSourceChange = useCallback(
     (source: string) => {
-      const newValue = { ...value, source };
+      const newValue: Review<number> = {
+        ...value,
+        source,
+        metadata: { reviewKey: field },
+      };
       setValue(newValue);
       onChange(newValue);
     },
-    [onChange, value],
+    [field, onChange, value],
   );
 
   return (

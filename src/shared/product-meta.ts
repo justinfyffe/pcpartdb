@@ -17,8 +17,11 @@ export interface ProductMetas {
 }
 
 export type ProductMetasRequest = ProductMetas;
+export type ProductMetaKey = keyof ProductMetas;
 
-export interface ProductMetaMetadata {}
+export interface ProductMetaMetadata {
+  metaKey?: ProductMetaKey;
+}
 
 export interface ProductMeta<T = unknown> {
   value?: T;

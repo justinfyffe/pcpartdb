@@ -22,9 +22,8 @@ import {
 import { ApiError, ValidationErrorType } from '@shared/error';
 import { Product, ProductRequest, ProductType } from '@shared/product';
 import {
-  ProductImageRequest,
+  ProductImage,
   ProductImagesRequest,
-  ProductImageType,
   productImageValidator,
 } from '@shared/product-image';
 import { ProductMeta, ProductMetasRequest } from '@shared/product-meta';
@@ -43,15 +42,10 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import {
-  Controller,
-  useFieldArray,
-  useForm,
-  UseFormProps,
-} from 'react-hook-form';
+import { Controller, useForm, UseFormProps } from 'react-hook-form';
 import { BenchmarkField } from '../benchmark-field';
-import { ProductImageField, ProductImageFields } from '../product-image-field';
-import { RetailModelFields } from '../retail-model-field';
+import { ProductImageField, ProductImagesField } from '../product-image-field';
+import { RetailModelsField } from '../retail-model-field';
 import { ReviewField } from '../review-field';
 import { SpecField } from '../spec-field';
 
@@ -129,9 +123,9 @@ interface ProductFormData {
   tomsHardwareReview?: Review<number>;
 
   // Images
-  autocompleteImage?: ProductImageRequest;
-  thumbnailImage?: ProductImageRequest;
-  detailsImages?: ProductImageRequest[];
+  autocompleteImage?: ProductImage;
+  thumbnailImage?: ProductImage;
+  detailsImages?: ProductImage[];
 
   // Retail Models
   retailModels?: ProductMeta<RetailModel[]>;
@@ -224,95 +218,95 @@ interface GpuFormProps {
 }
 
 function formOptions(gpu?: Product): UseFormProps<ProductFormData> {
-  const meta = gpu?.metas ?? {};
-  const specs = gpu?.specs ?? {};
-  const benchmarks = gpu?.benchmarks ?? {};
-  const reviews = gpu?.reviews ?? {};
-  const images = gpu?.images ?? {};
+  const meta = gpu?.metas || {};
+  const specs = gpu?.specs || {};
+  const benchmarks = gpu?.benchmarks || {};
+  const reviews = gpu?.reviews || {};
+  const images = gpu?.images || {};
 
   return {
     resolver: joiResolver(productValidator),
     mode: 'onBlur',
     defaultValues: {
-      slug: gpu?.slug ?? null,
+      slug: gpu?.slug || null,
       type: ProductType.GPU,
-      name: gpu?.name ?? null,
+      name: gpu?.name || null,
 
       // General
-      company: specs.company ?? null,
-      marketSegment: specs.marketSegment ?? null,
-      launchPriceMsrp: specs.launchPrice ?? null,
-      releaseDate: specs.releaseDate ?? null,
+      company: specs.company || null,
+      marketSegment: specs.marketSegment || null,
+      launchPriceMsrp: specs.launchPrice || null,
+      releaseDate: specs.releaseDate || null,
 
       // Processor
-      gpuName: specs.gpuName ?? null,
-      architecture: specs.architecture ?? null,
-      processSize: specs.processSize ?? null,
-      transistors: specs.transistors ?? null,
+      gpuName: specs.gpuName || null,
+      architecture: specs.architecture || null,
+      processSize: specs.processSize || null,
+      transistors: specs.transistors || null,
 
       // Board Compatibility & Dimensions
-      slotWidth: specs.slotWidth ?? null,
-      length: specs.length ?? null,
-      width: specs.width ?? null,
-      height: specs.height ?? null,
-      weight: specs.weight ?? null,
-      busInterface: specs.busInterface ?? null,
-      thermalDesignPower: specs.thermalDesignPower ?? null,
-      suggestedPsu: specs.suggestedPsu ?? null,
-      powerConnectors: specs.powerConnectors ?? null,
-      outputs: specs.outputs ?? null,
+      slotWidth: specs.slotWidth || null,
+      length: specs.length || null,
+      width: specs.width || null,
+      height: specs.height || null,
+      weight: specs.weight || null,
+      busInterface: specs.busInterface || null,
+      thermalDesignPower: specs.thermalDesignPower || null,
+      suggestedPsu: specs.suggestedPsu || null,
+      powerConnectors: specs.powerConnectors || null,
+      outputs: specs.outputs || null,
 
       // Cores & Clock Speeds
-      shaderUnitsCudaCores: specs.shaderUnitsCudaCores ?? null,
-      textureMappingUnits: specs.textureMappingUnits ?? null,
-      renderOutputUnits: specs.renderOutputUnits ?? null,
-      tensorCores: specs.tensorCores ?? null,
-      rayTracingCores: specs.rayTracingCores ?? null,
-      coreClockSpeedBase: specs.coreClockSpeedBase ?? null,
-      coreClockSpeedBoost: specs.coreClockSpeedBoost ?? null,
-      l1Cache: specs.l1Cache ?? null,
-      l2Cache: specs.l2Cache ?? null,
+      shaderUnitsCudaCores: specs.shaderUnitsCudaCores || null,
+      textureMappingUnits: specs.textureMappingUnits || null,
+      renderOutputUnits: specs.renderOutputUnits || null,
+      tensorCores: specs.tensorCores || null,
+      rayTracingCores: specs.rayTracingCores || null,
+      coreClockSpeedBase: specs.coreClockSpeedBase || null,
+      coreClockSpeedBoost: specs.coreClockSpeedBoost || null,
+      l1Cache: specs.l1Cache || null,
+      l2Cache: specs.l2Cache || null,
 
       // Theoretical Performance
-      pixelFillRate: specs.pixelFillRate ?? null,
-      textureFillRate: specs.textureFillRate ?? null,
-      fp32Performance: specs.fp32Performance ?? null,
-      fp64Performance: specs.fp64Performance ?? null,
+      pixelFillRate: specs.pixelFillRate || null,
+      textureFillRate: specs.textureFillRate || null,
+      fp32Performance: specs.fp32Performance || null,
+      fp64Performance: specs.fp64Performance || null,
 
       // Memory
-      memorySize: specs.memorySize ?? null,
-      memoryType: specs.memoryType ?? null,
-      memoryClock: specs.memoryClock ?? null,
-      memoryInterface: specs.memoryInterface ?? null,
-      memoryBandwidth: specs.memoryBandwidth ?? null,
+      memorySize: specs.memorySize || null,
+      memoryType: specs.memoryType || null,
+      memoryClock: specs.memoryClock || null,
+      memoryInterface: specs.memoryInterface || null,
+      memoryBandwidth: specs.memoryBandwidth || null,
 
       // API Support
-      gSyncFreeSyncSupport: specs.gSyncFreeSyncSupport ?? null,
-      sliCrossfireSupport: specs.sliCrossfireSupport ?? null,
-      directXVersion: specs.directXVersion ?? null,
-      openClVersion: specs.openClVersion ?? null,
-      openGlVersion: specs.openGlVersion ?? null,
-      shaderModelVersion: specs.shaderModelVersion ?? null,
+      gSyncFreeSyncSupport: specs.gSyncFreeSyncSupport || null,
+      sliCrossfireSupport: specs.sliCrossfireSupport || null,
+      directXVersion: specs.directXVersion || null,
+      openClVersion: specs.openClVersion || null,
+      openGlVersion: specs.openGlVersion || null,
+      shaderModelVersion: specs.shaderModelVersion || null,
 
       // Benchmarks
-      g2dMarkBenchmark: benchmarks.g2dMark ?? null,
-      g3dMarkBenchmark: benchmarks.g3dMark ?? null,
-      timeSpyGraphicsBenchmark: benchmarks.timeSpyGraphics ?? null,
+      g2dMarkBenchmark: benchmarks.g2dMark || null,
+      g3dMarkBenchmark: benchmarks.g3dMark || null,
+      timeSpyGraphicsBenchmark: benchmarks.timeSpyGraphics || null,
 
       // Reviews
-      amazonReview: reviews.amazon ?? null,
-      pcGamerReview: reviews.pcGamer ?? null,
-      techRadarReview: reviews.techRadar ?? null,
-      techSpotReview: reviews.techSpot ?? null,
-      tomsHardwareReview: reviews.tomsHardware ?? null,
+      amazonReview: reviews.amazon || null,
+      pcGamerReview: reviews.pcGamer || null,
+      techRadarReview: reviews.techRadar || null,
+      techSpotReview: reviews.techSpot || null,
+      tomsHardwareReview: reviews.tomsHardware || null,
 
       // Images
-      autocompleteImage: images.autocomplete ?? null,
-      thumbnailImage: images.thumbnail ?? null,
-      detailsImages: images.details ?? null,
+      autocompleteImage: images.autocomplete || null,
+      thumbnailImage: images.thumbnail || null,
+      detailsImages: images.details || null,
 
       // RetailModels,
-      retailModels: meta.retailModels ?? null,
+      retailModels: meta.retailModels || null,
     },
   };
 }
@@ -336,26 +330,6 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
   } = useForm<ProductFormData>(form);
 
   console.log(errors);
-
-  const {
-    fields: detailsImagesFields,
-    append: appendImage,
-    remove: removeImage,
-    swap: swapImage,
-  } = useFieldArray({
-    control,
-    name: 'detailsImages',
-  });
-
-  const {
-    fields: retailModelsFields,
-    append: appendRetailModel,
-    remove: removeRetailModel,
-    swap: swapRetailModel,
-  } = useFieldArray({
-    control,
-    name: 'retailModels',
-  });
 
   const handleSave = useCallback(
     async (formData: ProductFormData) => {
@@ -1018,13 +992,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           <Controller
             name="autocompleteImage"
             control={control}
-            render={({ field }) => (
-              <ProductImageField
-                type={ProductImageType.Autocomplete}
-                {...field}
-                ref={null}
-              />
-            )}
+            render={({ field }) => <ProductImageField {...field} ref={null} />}
           />
         </Field>
 
@@ -1033,13 +1001,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           <Controller
             name="thumbnailImage"
             control={control}
-            render={({ field }) => (
-              <ProductImageField
-                type={ProductImageType.Thumbnail}
-                {...field}
-                ref={null}
-              />
-            )}
+            render={({ field }) => <ProductImageField {...field} ref={null} />}
           />
         </Field>
 
@@ -1048,17 +1010,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
         <Controller
           name="detailsImages"
           control={control}
-          render={({ field }) => (
-            <ProductImageFields
-              fields={detailsImagesFields}
-              type={ProductImageType.Details}
-              onAppend={() => appendImage(null)}
-              onRemove={removeImage}
-              onSwap={swapImage}
-              {...field}
-              ref={null}
-            />
-          )}
+          render={({ field }) => <ProductImagesField {...field} ref={null} />}
         />
       </section>
 
@@ -1068,16 +1020,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
         <Controller
           name="retailModels"
           control={control}
-          render={({ field }) => (
-            <RetailModelFields
-              fields={retailModelsFields}
-              onAppend={() => appendRetailModel(null)}
-              onRemove={removeRetailModel}
-              onSwap={swapRetailModel}
-              {...field}
-              ref={null}
-            />
-          )}
+          render={({ field }) => <RetailModelsField {...field} ref={null} />}
         />
       </section>
 
@@ -1110,92 +1053,92 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
 
 function toMetaRequest(formData: ProductFormData): ProductMetasRequest {
   return {
-    retailModels: formData.retailModels ?? null,
+    retailModels: formData.retailModels || null,
   };
 }
 
 function toSpecsRequest(formData: ProductFormData): SpecsRequest {
   return {
     // General
-    company: formData.company ?? null,
-    marketSegment: formData.marketSegment ?? null,
-    launchPrice: formData.launchPriceMsrp ?? null,
-    releaseDate: formData.releaseDate ?? null,
+    company: formData.company || null,
+    marketSegment: formData.marketSegment || null,
+    launchPrice: formData.launchPriceMsrp || null,
+    releaseDate: formData.releaseDate || null,
 
     // Processor
-    gpuName: formData.gpuName ?? null,
-    architecture: formData.architecture ?? null,
-    processSize: formData.processSize ?? null,
-    transistors: formData.transistors ?? null,
+    gpuName: formData.gpuName || null,
+    architecture: formData.architecture || null,
+    processSize: formData.processSize || null,
+    transistors: formData.transistors || null,
 
     // Board Compatibility & Dimensions
-    slotWidth: formData.slotWidth ?? null,
-    length: formData.length ?? null,
-    width: formData.width ?? null,
-    height: formData.height ?? null,
-    weight: formData.weight ?? null,
-    busInterface: formData.busInterface ?? null,
-    thermalDesignPower: formData.thermalDesignPower ?? null,
-    suggestedPsu: formData.suggestedPsu ?? null,
-    powerConnectors: formData.powerConnectors ?? null,
-    outputs: formData.outputs ?? null,
+    slotWidth: formData.slotWidth || null,
+    length: formData.length || null,
+    width: formData.width || null,
+    height: formData.height || null,
+    weight: formData.weight || null,
+    busInterface: formData.busInterface || null,
+    thermalDesignPower: formData.thermalDesignPower || null,
+    suggestedPsu: formData.suggestedPsu || null,
+    powerConnectors: formData.powerConnectors || null,
+    outputs: formData.outputs || null,
 
     // Cores & Clock Speeds
-    shaderUnitsCudaCores: formData.shaderUnitsCudaCores ?? null,
-    textureMappingUnits: formData.textureMappingUnits ?? null,
-    renderOutputUnits: formData.renderOutputUnits ?? null,
-    tensorCores: formData.tensorCores ?? null,
-    rayTracingCores: formData.rayTracingCores ?? null,
-    coreClockSpeedBase: formData.coreClockSpeedBase ?? null,
-    coreClockSpeedBoost: formData.coreClockSpeedBoost ?? null,
-    l1Cache: formData.l1Cache ?? null,
-    l2Cache: formData.l2Cache ?? null,
+    shaderUnitsCudaCores: formData.shaderUnitsCudaCores || null,
+    textureMappingUnits: formData.textureMappingUnits || null,
+    renderOutputUnits: formData.renderOutputUnits || null,
+    tensorCores: formData.tensorCores || null,
+    rayTracingCores: formData.rayTracingCores || null,
+    coreClockSpeedBase: formData.coreClockSpeedBase || null,
+    coreClockSpeedBoost: formData.coreClockSpeedBoost || null,
+    l1Cache: formData.l1Cache || null,
+    l2Cache: formData.l2Cache || null,
 
     // Theoretical Performance
-    pixelFillRate: formData.pixelFillRate ?? null,
-    textureFillRate: formData.textureFillRate ?? null,
-    fp32Performance: formData.fp32Performance ?? null,
-    fp64Performance: formData.fp64Performance ?? null,
+    pixelFillRate: formData.pixelFillRate || null,
+    textureFillRate: formData.textureFillRate || null,
+    fp32Performance: formData.fp32Performance || null,
+    fp64Performance: formData.fp64Performance || null,
 
     // Memory
-    memorySize: formData.memorySize ?? null,
-    memoryType: formData.memoryType ?? null,
-    memoryClock: formData.memoryClock ?? null,
-    memoryInterface: formData.memoryInterface ?? null,
-    memoryBandwidth: formData.memoryBandwidth ?? null,
+    memorySize: formData.memorySize || null,
+    memoryType: formData.memoryType || null,
+    memoryClock: formData.memoryClock || null,
+    memoryInterface: formData.memoryInterface || null,
+    memoryBandwidth: formData.memoryBandwidth || null,
 
     // API Support
-    gSyncFreeSyncSupport: formData.gSyncFreeSyncSupport ?? null,
-    sliCrossfireSupport: formData.sliCrossfireSupport ?? null,
-    directXVersion: formData.directXVersion ?? null,
-    openClVersion: formData.openClVersion ?? null,
-    openGlVersion: formData.openGlVersion ?? null,
-    shaderModelVersion: formData.shaderModelVersion ?? null,
+    gSyncFreeSyncSupport: formData.gSyncFreeSyncSupport || null,
+    sliCrossfireSupport: formData.sliCrossfireSupport || null,
+    directXVersion: formData.directXVersion || null,
+    openClVersion: formData.openClVersion || null,
+    openGlVersion: formData.openGlVersion || null,
+    shaderModelVersion: formData.shaderModelVersion || null,
   };
 }
 
 function toBenchmarksRequest(formData: ProductFormData): BenchmarksRequest {
   return {
-    g2dMark: formData.g2dMarkBenchmark ?? null,
-    g3dMark: formData.g3dMarkBenchmark ?? null,
-    timeSpyGraphics: formData.timeSpyGraphicsBenchmark ?? null,
+    g2dMark: formData.g2dMarkBenchmark || null,
+    g3dMark: formData.g3dMarkBenchmark || null,
+    timeSpyGraphics: formData.timeSpyGraphicsBenchmark || null,
   };
 }
 
 function toReviewsRequest(formData: ProductFormData): ReviewsRequest {
   return {
-    amazon: formData.amazonReview ?? null,
-    pcGamer: formData.pcGamerReview ?? null,
-    techRadar: formData.techRadarReview ?? null,
-    techSpot: formData.techSpotReview ?? null,
-    tomsHardware: formData.tomsHardwareReview ?? null,
+    amazon: formData.amazonReview || null,
+    pcGamer: formData.pcGamerReview || null,
+    techRadar: formData.techRadarReview || null,
+    techSpot: formData.techSpotReview || null,
+    tomsHardware: formData.tomsHardwareReview || null,
   };
 }
 
 function toRequestImages(formData: ProductFormData): ProductImagesRequest {
   return {
-    autocomplete: formData.autocompleteImage ?? null,
-    thumbnail: formData.thumbnailImage ?? null,
-    details: formData.detailsImages ?? [],
+    autocomplete: formData.autocompleteImage || null,
+    thumbnail: formData.thumbnailImage || null,
+    details: formData.detailsImages || [],
   };
 }

@@ -14,8 +14,11 @@ export interface Reviews {
 }
 
 export type ReviewsRequest = Reviews;
+export type ReviewKey = keyof Reviews;
 
-export interface ReviewMetadata {}
+export interface ReviewMetadata {
+  reviewKey?: ReviewKey;
+}
 
 export interface Review<T = unknown> {
   value?: T;

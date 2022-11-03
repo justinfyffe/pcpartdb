@@ -7,9 +7,7 @@ export interface ProductImages {
   details?: ProductImage[];
 }
 
-export interface ProductImageMetadata {
-  order?: number;
-}
+export interface ProductImageMetadata {}
 
 export interface ProductImage {
   imageId: number;

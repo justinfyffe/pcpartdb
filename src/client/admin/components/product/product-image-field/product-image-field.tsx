@@ -1,14 +1,12 @@
 import { ImageCache } from '@client/shared/cache';
 import { Image } from '@shared/image';
-import { ProductImageRequest, ProductImageType } from '@shared/product-image';
+import { ProductImage } from '@shared/product-image';
 import React, { FunctionComponent, useCallback, useState } from 'react';
 import { ImageInput } from '../../image';
 
 interface ProductImageFieldProps {
-  type: ProductImageType;
-
-  value?: ProductImageRequest;
-  onChange?: (value: ProductImageRequest) => void;
+  value?: ProductImage;
+  onChange?: (value: ProductImage) => void;
 
   className?: string;
   ref?: unknown;
@@ -17,7 +15,7 @@ interface ProductImageFieldProps {
 export const ProductImageField: FunctionComponent<ProductImageFieldProps> = (
   props,
 ) => {
-  const { type, value, onChange, className } = props;
+  const { value, onChange, className } = props;
 
   const [image, setImage] = useState<Image>(() => {
     if (value == null) {
@@ -29,19 +27,13 @@ export const ProductImageField: FunctionComponent<ProductImageFieldProps> = (
 
   const handleChange = useCallback(
     (image: Image) => {
-      const newValue: ProductImageRequest =
-        image != null
-          ? {
-              type,
-              imageId: image.id,
-              metadata: value?.metadata,
-            }
-          : null;
+      const newValue: ProductImage =
+        image != null ? { imageId: image.id, metadata: value?.metadata } : null;
 
       onChange?.(newValue);
       setImage(image);
     },
-    [type, value, onChange],
+    [value, onChange],
   );
 
   return (

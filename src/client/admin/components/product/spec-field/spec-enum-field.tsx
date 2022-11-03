@@ -1,5 +1,5 @@
 import { Select, SelectOption, SelectValue } from '@client/shared/components';
-import { MarketSegmentValue, Spec, Specs } from '@shared/spec';
+import { MarketSegmentValue, Spec, SpecKey } from '@shared/spec';
 import React, { forwardRef, useCallback, useMemo } from 'react';
 
 const ITEMS: { [key: string]: { label: string; value: string }[] } = {
@@ -11,7 +11,7 @@ const ITEMS: { [key: string]: { label: string; value: string }[] } = {
 };
 
 interface SpecEnumFieldProps {
-  field: keyof Specs;
+  field: SpecKey;
 
   value?: Spec<string>;
   onChange?: (value: Spec<string>) => void;
@@ -31,9 +31,13 @@ export const SpecEnumField = forwardRef<HTMLSelectElement, SpecEnumFieldProps>(
           throw new Error('Invalid select value for SpecEnumField');
         }
 
-        onChange?.(value != null ? { value: value as string } : null);
+        onChange?.(
+          value != null
+            ? { value: value as string, metadata: { specKey: field } }
+            : null,
+        );
       },
-      [onChange],
+      [field, onChange],
     );
 
     return (

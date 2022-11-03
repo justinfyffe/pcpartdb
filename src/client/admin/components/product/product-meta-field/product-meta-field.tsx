@@ -1,4 +1,4 @@
-import { ProductMeta, ProductMetas } from '@shared/product-meta';
+import { ProductMeta, ProductMetaKey } from '@shared/product-meta';
 import React, {
   forwardRef,
   Ref,
@@ -17,7 +17,7 @@ const INPUT_TYPES: Record<string, InputType> = {
 
 interface ProductMetaFieldProps {
   type?: InputType;
-  field: keyof ProductMetas;
+  field: ProductMetaKey;
 
   value?: ProductMeta;
   onChange?: (value: ProductMeta) => void;
@@ -42,6 +42,7 @@ export const ProductMetaField = forwardRef<unknown, ProductMetaFieldProps>(
     if (inputType === 'text') {
       return (
         <ProductMetaTextField
+          field={field}
           value={value as ProductMeta<string>}
           onChange={handleChange}
           ref={ref as Ref<HTMLTextAreaElement>}
@@ -50,6 +51,7 @@ export const ProductMetaField = forwardRef<unknown, ProductMetaFieldProps>(
     } else if (inputType === 'string') {
       return (
         <ProductMetaStringField
+          field={field}
           value={value as ProductMeta<string>}
           onChange={handleChange}
           ref={ref as Ref<HTMLInputElement>}
@@ -58,6 +60,7 @@ export const ProductMetaField = forwardRef<unknown, ProductMetaFieldProps>(
     } else {
       return (
         <ProductMetaStringField
+          field={field}
           value={value as ProductMeta<string>}
           onChange={handleChange}
           ref={ref as Ref<HTMLInputElement>}

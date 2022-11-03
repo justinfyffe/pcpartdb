@@ -1,5 +1,5 @@
 import { NumberInput } from '@client/shared/components';
-import { Spec, Specs } from '@shared/spec';
+import { Spec, SpecKey } from '@shared/spec';
 import React, { forwardRef, useCallback, useMemo, useState } from 'react';
 
 const PREFIXES: { [key: string]: string[] } = {
@@ -30,7 +30,7 @@ const SUFFIXES: Record<string, string[]> = {
 };
 
 interface SpecFloatFieldProps {
-  field: keyof Specs;
+  field: SpecKey;
 
   value?: Spec<number>;
   onChange?: (value: Spec<number>) => void;
@@ -66,10 +66,12 @@ export const SpecFloatField = forwardRef<HTMLInputElement, SpecFloatFieldProps>(
     const handleChange = useCallback(
       (value: number) => {
         onChange?.(
-          value != null ? { value, metadata: { prefix, suffix } } : null,
+          value != null
+            ? { value, metadata: { specKey: field, prefix, suffix } }
+            : null,
         );
       },
-      [prefix, suffix, onChange],
+      [field, prefix, suffix, onChange],
     );
 
     const handlePrefixClick = useCallback(() => {
@@ -77,22 +79,22 @@ export const SpecFloatField = forwardRef<HTMLInputElement, SpecFloatFieldProps>(
       setPrefixIndex(newIndex);
       const newValue: Spec<number> = {
         value: baseValue,
-        metadata: { prefix: prefixes[prefixIndex] },
+        metadata: { specKey: field, prefix: prefixes[prefixIndex] },
       };
 
       onChange?.(newValue);
-    }, [baseValue, prefixes, prefixIndex, onChange]);
+    }, [baseValue, field, prefixes, prefixIndex, onChange]);
 
     const handleSuffixClick = useCallback(() => {
       const newIndex = suffixIndex < suffixes.length - 1 ? suffixIndex + 1 : 0;
       setSuffixIndex(newIndex);
       const newValue: Spec<number> = {
         value: baseValue,
-        metadata: { suffix: suffixes[suffixIndex] },
+        metadata: { specKey: field, suffix: suffixes[suffixIndex] },
       };
 
       onChange?.(newValue);
-    }, [baseValue, suffixes, suffixIndex, onChange]);
+    }, [baseValue, field, suffixes, suffixIndex, onChange]);
 
     return (
       <NumberInput

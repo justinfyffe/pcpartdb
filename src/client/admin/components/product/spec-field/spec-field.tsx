@@ -1,4 +1,4 @@
-import { Spec, Specs } from '@shared/spec';
+import { Spec, SpecKey } from '@shared/spec';
 import React, {
   forwardRef,
   Ref,
@@ -83,7 +83,7 @@ const INPUT_TYPES: Record<string, InputType> = {
 
 interface SpecFieldProps {
   type?: InputType;
-  field: keyof Specs;
+  field: SpecKey;
 
   value?: Spec;
   onChange?: (value: Spec) => void;
@@ -92,7 +92,7 @@ interface SpecFieldProps {
 export const SpecField = forwardRef<unknown, SpecFieldProps>((props, ref) => {
   const { type, field, value: propsValue, onChange } = props;
 
-  const [value, setValue] = useState(propsValue ?? null);
+  const [value, setValue] = useState(propsValue || null);
   useEffect(() => setValue(propsValue), [propsValue]);
 
   const handleChange = useCallback(
@@ -116,6 +116,7 @@ export const SpecField = forwardRef<unknown, SpecFieldProps>((props, ref) => {
   } else if (inputType === 'string') {
     return (
       <SpecStringField
+        field={field}
         value={value as Spec<string>}
         onChange={handleChange}
         ref={ref as Ref<HTMLInputElement>}
@@ -124,6 +125,7 @@ export const SpecField = forwardRef<unknown, SpecFieldProps>((props, ref) => {
   } else if (inputType === 'text') {
     return (
       <SpecTextField
+        field={field}
         value={value as Spec<string>}
         onChange={handleChange}
         ref={ref as Ref<HTMLTextAreaElement>}
@@ -141,6 +143,7 @@ export const SpecField = forwardRef<unknown, SpecFieldProps>((props, ref) => {
   } else if (inputType === 'date') {
     return (
       <SpecDateField
+        field={field}
         value={value as Spec<string>}
         onChange={handleChange}
         ref={ref as Ref<HTMLInputElement>}
@@ -149,6 +152,7 @@ export const SpecField = forwardRef<unknown, SpecFieldProps>((props, ref) => {
   } else if (inputType === 'boolean') {
     return (
       <SpecBooleanField
+        field={field}
         value={value as Spec<boolean>}
         onChange={handleChange}
         ref={ref as Ref<HTMLSelectElement>}
@@ -166,6 +170,7 @@ export const SpecField = forwardRef<unknown, SpecFieldProps>((props, ref) => {
   } else {
     return (
       <SpecStringField
+        field={field}
         value={value as Spec<string>}
         onChange={handleChange}
         ref={ref as Ref<HTMLInputElement>}

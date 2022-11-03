@@ -1,6 +1,6 @@
 import { Field, NumberInput, TextInput } from '@client/shared/components';
 import { classNames } from '@client/shared/ui';
-import { Benchmark, Benchmarks } from '@shared/benchmark';
+import { Benchmark, BenchmarkKey } from '@shared/benchmark';
 import React, {
   FunctionComponent,
   useCallback,
@@ -15,7 +15,7 @@ const LABELS: Record<string, string> = {
 };
 
 interface BenchmarkFieldProps {
-  field: keyof Benchmarks;
+  field: BenchmarkKey;
 
   value?: Benchmark<number>;
   onChange?: (value: Benchmark<number>) => void;
@@ -34,23 +34,28 @@ export const BenchmarkField: FunctionComponent<BenchmarkFieldProps> = (
 
   const handleScoreChange = useCallback(
     (score: number) => {
-      const newValue = {
+      const newValue: Benchmark<number> = {
         ...value,
         value: score,
+        metadata: { benchmarkKey: field },
       };
       setValue(newValue);
       onChange(newValue);
     },
-    [onChange, value],
+    [field, onChange, value],
   );
 
   const handleSourceChange = useCallback(
     (source: string) => {
-      const newValue = { ...value, source };
+      const newValue: Benchmark<number> = {
+        ...value,
+        source,
+        metadata: { benchmarkKey: field },
+      };
       setValue(newValue);
       onChange(newValue);
     },
-    [onChange, value],
+    [field, onChange, value],
   );
 
   return (

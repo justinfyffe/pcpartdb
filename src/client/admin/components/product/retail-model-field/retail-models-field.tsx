@@ -4,68 +4,82 @@ import {
   ChevronUpIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline';
+import { ProductMeta } from '@shared/product-meta';
 import { RetailModel } from '@shared/retail-model';
-import React, { FunctionComponent, useCallback } from 'react';
+import React, {
+  FunctionComponent,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import { RetailModelField } from './retail-model-field';
 
-interface RetailModelFieldsProps {
-  name: string;
-  value?: RetailModel[];
-  fields: (RetailModel & { id: string })[];
+interface RetailModelsFieldProps {
+  value?: ProductMeta<RetailModel[]>;
 
-  onChange?: (value: RetailModel[]) => void;
-  onAppend: () => void;
-  onRemove: (index: number) => void;
-  onSwap: (from: number, to: number) => void;
+  onChange?: (value: ProductMeta<RetailModel[]>) => void;
 
   className?: string;
   ref?: unknown;
 }
 
-export const RetailModelFields: FunctionComponent<RetailModelFieldsProps> = (
+export const RetailModelsField: FunctionComponent<RetailModelsFieldProps> = (
   props,
 ) => {
-  const { value, fields, onChange, onAppend, onRemove, onSwap } = props;
+  const { value: propsValue, onChange } = props;
+
+  const [value, setValue] = useState(propsValue || { value: [] });
+  useEffect(() => setValue(propsValue), [propsValue]);
 
   const handleChange = useCallback(
     (i: number, retailModel: RetailModel) => {
-      fields[i] = { ...fields[i], ...retailModel };
-      value[i] = { ...retailModel };
-      console.log(value[i]);
+      value.value[i] = retailModel;
       onChange(value);
     },
-    [fields, value, onChange],
+    [value, onChange],
   );
+
+  const handleAppend = useCallback(() => {
+    value.value.push(null);
+    onChange(value);
+  }, [value, onChange]);
 
   const handleShiftUp = useCallback(
     (i: number) => {
-      onSwap(i, i - 1);
+      const tmp = value.value[i];
+      value.value[i] = value.value[i - 1];
+      value.value[i - 1] = tmp;
+      onChange(value);
     },
-    [onSwap],
+    [value, onChange],
   );
 
   const handleShiftDown = useCallback(
     (i: number) => {
-      onSwap(i, i + 1);
+      const tmp = value.value[i];
+      value.value[i] = value.value[i + 1];
+      value.value[i + 1] = tmp;
+      onChange(value);
     },
-    [onSwap],
+    [value, onChange],
   );
 
   const handleRemove = useCallback(
     (i: number) => {
-      onRemove(i);
+      value.value.splice(i, 1);
+      onChange(value);
     },
-    [onRemove],
+    [value, onChange],
   );
 
   return (
     <div className="flex flex-col w-full mb-6">
-      {fields.map((field, i) => (
-        <div key={field.id} className="flex items-stretch">
+      {value.value.map((retailModel, i) => (
+        <div key={i} className="flex items-stretch">
           <div className="mx-6 text-3xl self-center">{i + 1}</div>
 
           <RetailModelField
-            value={value[i]}
+            value={retailModel}
             onChange={(value) => handleChange(i, value)}
             className="flex-1 mb-0"
           />
@@ -81,7 +95,7 @@ export const RetailModelFields: FunctionComponent<RetailModelFieldsProps> = (
             </Button>
             <Button
               variant={ButtonVariant.Default}
-              disabled={i === fields.length - 1}
+              disabled={i === value.value.length - 1}
               onClick={() => handleShiftDown(i)}
               className="h-[46px]"
             >
@@ -102,7 +116,7 @@ export const RetailModelFields: FunctionComponent<RetailModelFieldsProps> = (
       <Button
         className="self-end"
         variant={ButtonVariant.Secondary}
-        onClick={() => onAppend && onAppend()}
+        onClick={() => handleAppend()}
       >
         Add Retail Model
       </Button>

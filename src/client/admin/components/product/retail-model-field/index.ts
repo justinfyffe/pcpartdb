@@ -1,1 +1,1 @@
-export * from './retail-model-fields';
+export * from './retail-models-field';

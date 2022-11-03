@@ -4,68 +4,84 @@ import {
   ChevronUpIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline';
-import { ProductImageRequest, ProductImageType } from '@shared/product-image';
-import React, { FunctionComponent, useCallback } from 'react';
+import { ProductImage } from '@shared/product-image';
+import React, {
+  FunctionComponent,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import { ProductImageField } from './product-image-field';
 
-interface ProductImageFieldsProps {
+interface ProductImagesFieldProps {
   name: string;
-  type: ProductImageType;
-  value: ProductImageRequest[];
-  fields: (ProductImageRequest & { id: string })[];
+  value: ProductImage[];
 
-  onChange: (values: ProductImageRequest[]) => void;
-  onAppend: () => void;
-  onRemove: (index: number) => void;
-  onSwap: (from: number, to: number) => void;
+  onChange: (values: ProductImage[]) => void;
 
   ref?: unknown;
 }
 
-export const ProductImageFields: FunctionComponent<ProductImageFieldsProps> = (
+export const ProductImagesField: FunctionComponent<ProductImagesFieldProps> = (
   props,
 ) => {
-  const { fields, type, value, onAppend, onRemove, onSwap, onChange } = props;
+  const { value: propsValue, onChange } = props;
+
+  const [value, setValue] = useState(propsValue || []);
+  useEffect(() => setValue(propsValue), [propsValue]);
 
   const handleImageChange = useCallback(
-    (i: number, productImage: ProductImageRequest) => {
-      fields[i] = { ...fields[i], ...productImage };
-      value[i] = { ...productImage, metadata: { order: i } };
+    (i: number, productImage: ProductImage) => {
+      value[i] = {
+        imageId: productImage.imageId,
+        metadata: productImage.metadata,
+      };
       onChange(value);
     },
-    [fields, value, onChange],
+    [value, onChange],
   );
+
+  const handleAppend = useCallback(() => {
+    value.push(null);
+    onChange(value);
+  }, [value, onChange]);
 
   const handleShiftUp = useCallback(
     (i: number) => {
-      onSwap(i, i - 1);
+      const tmp = value[i];
+      value[i] = value[i - 1];
+      value[i - 1] = tmp;
+      onChange(value);
     },
-    [onSwap],
+    [value, onChange],
   );
 
   const handleShiftDown = useCallback(
     (i: number) => {
-      onSwap(i, i + 1);
+      const tmp = value[i];
+      value[i] = value[i + 1];
+      value[i + 1] = tmp;
+      onChange(value);
     },
-    [onSwap],
+    [value, onChange],
   );
 
   const handleRemove = useCallback(
     (i: number) => {
-      onRemove(i);
+      value.splice(i, 1);
+      onChange(value);
     },
-    [onRemove],
+    [value, onChange],
   );
 
   return (
     <div className="flex flex-col w-full mb-6">
-      {fields.map((field, i) => (
-        <div key={field.id} className="flex items-stretch mb-6">
+      {value.map((image, i) => (
+        <div key={i} className="flex items-stretch mb-6">
           <div className="mx-6 text-3xl self-center">{i + 1}</div>
 
           <ProductImageField
-            type={type}
-            value={value[i]}
+            value={image}
             onChange={(value) => handleImageChange(i, value)}
             className="flex-1 mb-0"
           />
@@ -81,7 +97,7 @@ export const ProductImageFields: FunctionComponent<ProductImageFieldsProps> = (
               </Button>
               <Button
                 variant={ButtonVariant.Default}
-                disabled={i === fields.length - 1}
+                disabled={i === value.length - 1}
                 onClick={() => handleShiftDown(i)}
               >
                 {' '}
@@ -103,7 +119,7 @@ export const ProductImageFields: FunctionComponent<ProductImageFieldsProps> = (
       <Button
         className="self-end"
         variant={ButtonVariant.Secondary}
-        onClick={() => onAppend && onAppend()}
+        onClick={() => handleAppend()}
       >
         Add Image
       </Button>

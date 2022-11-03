@@ -1,10 +1,10 @@
 import { productService } from '@client/product';
 import { Autocomplete, AutocompleteOption } from '@client/shared/components';
-import { Spec, Specs } from '@shared/spec';
+import { Spec, SpecKey } from '@shared/spec';
 import React, { forwardRef, useCallback, useState } from 'react';
 
 interface SpecAutocompleteFieldProps {
-  field: keyof Specs;
+  field: SpecKey;
 
   value?: Spec<string>;
   onChange?: (value: Spec<string>) => void;
@@ -35,9 +35,11 @@ export const SpecAutocompleteField = forwardRef<
 
   const handleChange = useCallback(
     (value: string) => {
-      onChange?.(value != null ? { value } : null);
+      onChange?.(
+        value != null ? { value, metadata: { specKey: field } } : null,
+      );
     },
-    [onChange],
+    [field, onChange],
   );
 
   return (

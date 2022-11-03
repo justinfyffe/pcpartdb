@@ -65,6 +65,7 @@ export interface Specs {
 }
 
 export type SpecsRequest = Specs;
+export type SpecKey = keyof Specs;
 
 export enum SpecFormat {
   MarketSegment = 'MARKET_SEGMENT',
@@ -72,6 +73,7 @@ export enum SpecFormat {
 }
 
 export interface SpecMetadata {
+  specKey?: SpecKey;
   format?: SpecFormat;
   prefix?: string;
   suffix?: string;

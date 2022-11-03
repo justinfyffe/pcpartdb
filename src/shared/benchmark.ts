@@ -21,8 +21,10 @@ export interface Benchmarks {
 }
 
 export type BenchmarksRequest = Benchmarks;
+export type BenchmarkKey = keyof Benchmarks;
 
 export interface BenchmarkMetadata {
+  benchmarkKey?: BenchmarkKey;
   samples?: number;
   median?: number;
   min?: number;

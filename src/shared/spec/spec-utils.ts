@@ -100,6 +100,10 @@ function specValueMultiplier(spec: Spec) {
 
 export function compareSpecs(spec1: Spec, spec2: Spec) {
   // Check unsupported types
+  if (spec1.metadata?.specKey !== spec2.metadata?.specKey) {
+    throw new Error('Cannot compare different specs');
+  }
+
   if (typeof spec1.value !== typeof spec2.value) {
     throw new Error('Cannot compare specs of different values');
   }
