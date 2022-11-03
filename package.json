@@ -1,5 +1,5 @@
 {
-  "name": "finestpc",
+  "name": "pcpartsdb",
   "version": "1.0.0",
   "description": "Website for viewing and comparing pc specs in an easy format",
   "main": "index.js",
@@ -34,7 +34,7 @@
   "bugs": {
     "url": "https://github.com/justinfyffe/easypcspecs/issues"
   },
-  "homepage": "https://finestpc.com",
+  "homepage": "https://pcpartsdb.com",
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
     "@types/big.js": "^6.1.6",

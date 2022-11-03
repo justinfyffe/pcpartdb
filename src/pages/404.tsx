@@ -15,7 +15,7 @@ const Error404Page = (_props: Error404PageProps) => {
 
         <p>
           The page you are looking for may not exist. Please go to our{' '}
-          <a href="https://finestpc.com">home page</a> and try again.
+          <a href="https://pcpartsdb.com">home page</a> and try again.
         </p>
       </Article>
     </WebsiteLayout>
