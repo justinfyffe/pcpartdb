@@ -1,5 +1,5 @@
 import { Product } from '@shared/product';
-import { ProductImage } from '@shared/product-image';
+import { ProductImages } from '@shared/product-image';
 import { ImageCache } from './image-cache';
 
 class ProductCacheImpl {
@@ -13,18 +13,24 @@ class ProductCacheImpl {
     if (Array.isArray(products)) {
       products.forEach((product) => {
         this.cache.set(product.id, product);
-        this.saveImages(product.images ?? []);
+        this.saveImages(product.images || null);
       });
       return;
     }
 
     this.cache.set(products.id, products);
-    this.saveImages(products.images ?? []);
+    this.saveImages(products.images);
   }
 
-  private saveImages(productImages: ProductImage[]) {
-    const images = productImages
-      .filter((productImage) => productImage.image != null)
+  private saveImages(productImages: ProductImages) {
+    const images = [
+      productImages?.autocomplete,
+      productImages?.thumbnail,
+      ...(productImages?.details ?? []),
+    ]
+      .filter(
+        (productImage) => productImage != null && productImage.image != null,
+      )
       .map((productImage) => productImage.image!);
 
     ImageCache.save(images);
