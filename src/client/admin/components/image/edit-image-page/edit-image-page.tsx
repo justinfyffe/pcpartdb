@@ -1,6 +1,4 @@
 import 'reflect-metadata';
-import { withStaffGuard } from '@client/auth';
-import { imageService } from '@client/image';
 import {
   Article,
   ArticleHeader,
@@ -9,15 +7,14 @@ import {
 } from '@client/shared/components';
 import { AdminLayout } from '@client/shared/layouts';
 import { Image } from '@shared/image';
-import { NextPageContext } from 'next';
 import React from 'react';
 import { ImageForm } from '../image-form';
 
-interface EditImagePageProps {
+export interface AdminEditImagePageProps {
   image: Image;
 }
 
-const EditImagePage = (props: EditImagePageProps) => {
+export const AdminEditImagePage = (props: AdminEditImagePageProps) => {
   return (
     <AdminLayout>
       <Article>
@@ -34,14 +31,3 @@ const EditImagePage = (props: EditImagePageProps) => {
     </AdminLayout>
   );
 };
-
-EditImagePage.getInitialProps = async (ctx: NextPageContext) => {
-  const query = ctx.query as { imageId: string };
-  const imageId = parseInt(query.imageId, 10);
-
-  return {
-    image: await imageService.get(imageId),
-  };
-};
-
-export const AdminEditImagePage = withStaffGuard(EditImagePage);

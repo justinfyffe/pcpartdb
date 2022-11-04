@@ -8,9 +8,7 @@ import { ProductType } from '@shared/product';
 export const getServerSideProps = staffSsrPageProps(async (ctx: SsrContext) => {
   const gpus = await serializeAsync(productService.list(ProductType.GPU, ctx));
 
-  return {
-    gpus: JSON.parse(JSON.stringify(gpus)),
-  } as AdminListGpusPageProps;
+  return { gpus } as AdminListGpusPageProps;
 });
 
 export default AdminListGpusPage;

@@ -38,8 +38,8 @@ export function ssrPageProps(
         }
 
         // Run getServerSideProps
-        const props = await func(ctx);
-        return { props };
+        const props = (await func(ctx)) ?? {};
+        return { props: JSON.parse(JSON.stringify(props)) };
       });
     } catch (e) {
       console.log(e);

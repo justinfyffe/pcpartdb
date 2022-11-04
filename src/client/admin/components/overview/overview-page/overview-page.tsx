@@ -1,12 +1,11 @@
 import 'reflect-metadata';
-import { withStaffGuard } from '@client/auth';
 import { Article, ArticleHeader } from '@client/shared/components';
 import { AdminLayout } from '@client/shared/layouts';
 import React from 'react';
 
-interface OverviewPageProps {}
+interface AdminOverviewPageProps {}
 
-const OverviewPage = (_props: OverviewPageProps) => {
+export const AdminOverviewPage = (_props: AdminOverviewPageProps) => {
   return (
     <AdminLayout>
       <Article>
@@ -17,5 +16,3 @@ const OverviewPage = (_props: OverviewPageProps) => {
     </AdminLayout>
   );
 };
-
-export const AdminOverviewPage = withStaffGuard(OverviewPage);

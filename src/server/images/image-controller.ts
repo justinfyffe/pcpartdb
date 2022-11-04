@@ -29,6 +29,7 @@ const multerOptions: MulterOptions = {
     },
   }),
 };
+const uploader = multer(multerOptions);
 
 export const listImages = staffController(async (ctx: ApiContext) => {
   return await imageService.list(ctx);
@@ -40,26 +41,40 @@ export const getImage = staffController(async (ctx: ApiContext) => {
 });
 
 export const createImage = staffController(async (ctx: ApiContext) => {
-  const upload = multer(multerOptions);
-  await upload.single('file');
+  return new Promise((resolve, reject) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    uploader.single('file')(ctx.req as any, ctx.res as any, async (err) => {
+      if (err) {
+        reject();
+        return;
+      }
 
-  const body = ctx.req.body as CreateImageBody;
-  const data = JSON.parse(body.formData) as ImageRequest;
-  const tempPath = body.tempPath;
+      const body = ctx.req.body as CreateImageBody;
+      const data = JSON.parse(body.formData) as ImageRequest;
+      const tempPath = body.tempPath;
 
-  return await imageService.create({ ...data, tempPath }, ctx);
+      resolve(await imageService.create({ ...data, tempPath }, ctx));
+    });
+  });
 });
 
 export const updateImage = staffController(async (ctx: ApiContext) => {
-  const upload = multer(multerOptions);
-  await upload.single('file');
+  return new Promise((resolve, reject) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    uploader.single('file')(ctx.req as any, ctx.res as any, async (err) => {
+      if (err) {
+        reject();
+        return;
+      }
 
-  const id = Number(ctx.req.query['id'] as string);
-  const body = ctx.req.body as UpdateImageBody;
-  const data = JSON.parse(body.formData) as ImageRequest;
-  const tempPath = body.tempPath;
+      const id = Number(ctx.req.query['id'] as string);
+      const body = ctx.req.body as UpdateImageBody;
+      const data = JSON.parse(body.formData) as ImageRequest;
+      const tempPath = body.tempPath;
 
-  return await imageService.update(id, { ...data, tempPath }, ctx);
+      resolve(await imageService.update(id, { ...data, tempPath }, ctx));
+    });
+  });
 });
 
 export const deleteImage = staffController(async (ctx: ApiContext) => {

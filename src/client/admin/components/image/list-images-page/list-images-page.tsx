@@ -1,11 +1,5 @@
 import 'reflect-metadata';
-import { withStaffGuard } from '@client/auth';
-import {
-  formatDimensions,
-  formatFileSize,
-  getImageUrl,
-  imageService,
-} from '@client/image';
+import { formatDimensions, formatFileSize, getImageUrl } from '@client/image';
 import {
   Alert,
   AlertVariant,
@@ -27,11 +21,11 @@ import { Image } from '@shared/image';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 
-interface ListImagesPageProps {
+export interface AdminListImagesPageProps {
   images: Image[];
 }
 
-const ListImagesPage = (props: ListImagesPageProps) => {
+export const AdminListImagesPage = (props: AdminListImagesPageProps) => {
   const { images } = props;
 
   const router = useRouter();
@@ -101,10 +95,3 @@ const ListImagesPage = (props: ListImagesPageProps) => {
     </AdminLayout>
   );
 };
-
-ListImagesPage.getInitialProps = async () => {
-  const images = await imageService.list();
-  return { images: images || [] };
-};
-
-export const AdminListImagesPage = withStaffGuard(ListImagesPage);

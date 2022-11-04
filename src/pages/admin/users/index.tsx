@@ -7,9 +7,7 @@ import { userService } from '@server/user/user-service';
 export const getServerSideProps = staffSsrPageProps(async (ctx: SsrContext) => {
   const users = await serializeAsync(userService.list(ctx));
 
-  return {
-    users: JSON.parse(JSON.stringify(users)),
-  } as AdminListUsersPageProps;
+  return { users } as AdminListUsersPageProps;
 });
 
 export default AdminListUsersPage;

@@ -10,9 +10,7 @@ export const getServerSideProps = staffSsrPageProps(async (ctx: SsrContext) => {
 
   const user = await serializeAsync(userService.get(userId, ctx));
 
-  return {
-    user: JSON.parse(JSON.stringify(user)),
-  } as AdminEditUserPageProps;
+  return { user } as AdminEditUserPageProps;
 });
 
 export default AdminEditUserPage;

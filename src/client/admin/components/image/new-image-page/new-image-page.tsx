@@ -1,5 +1,4 @@
 import 'reflect-metadata';
-import { withStaffGuard } from '@client/auth';
 import {
   Article,
   ArticleHeader,
@@ -10,9 +9,9 @@ import { AdminLayout } from '@client/shared/layouts';
 import React from 'react';
 import { ImageForm } from '../image-form';
 
-interface NewImagePageProps {}
+interface AdminNewImagePageProps {}
 
-const NewImagePage = (_props: NewImagePageProps) => {
+export const AdminNewImagePage = (_props: AdminNewImagePageProps) => {
   return (
     <AdminLayout>
       <Article>
@@ -29,5 +28,3 @@ const NewImagePage = (_props: NewImagePageProps) => {
     </AdminLayout>
   );
 };
-
-export const AdminNewImagePage = withStaffGuard(NewImagePage);
