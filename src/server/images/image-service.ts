@@ -1,6 +1,6 @@
 import Joi from '@hapi/joi';
-import { badRequestError, notFoundError } from '@server/shared/errors/errors';
-import { ServiceContext } from '@server/shared/service/context';
+import { badRequestError, notFoundError } from '@server/shared/api/status';
+import { Context } from '@server/shared/context';
 import { validate } from '@server/shared/types/validate';
 import * as uploads from '@server/shared/uploads/uploads-utils';
 import { ValidationErrorType } from '@shared/error';
@@ -20,11 +20,11 @@ const imageValidator = Joi.object({
 }).options({ abortEarly: false });
 
 export class ImageService {
-  async list(ctx: ServiceContext) {
+  async list(ctx: Context) {
     return await imageRepository.list(ctx);
   }
 
-  async get(id: number, ctx: ServiceContext) {
+  async get(id: number, ctx: Context) {
     const image = await imageRepository.findById(id, ctx);
     if (image == null) {
       throw notFoundError({ user: id });
@@ -33,7 +33,7 @@ export class ImageService {
     return image;
   }
 
-  async create(data: ImageRequest, ctx: ServiceContext) {
+  async create(data: ImageRequest, ctx: Context) {
     validate(data, imageValidator);
 
     await uploads.move(
@@ -55,7 +55,7 @@ export class ImageService {
     );
   }
 
-  async update(id: number, data: ImageRequest, ctx: ServiceContext) {
+  async update(id: number, data: ImageRequest, ctx: Context) {
     validate(data, imageValidator);
 
     const image = await imageRepository.findById(id, ctx);
@@ -107,7 +107,7 @@ export class ImageService {
     return await imageRepository.save(image, ctx);
   }
 
-  async delete(id: number, ctx: ServiceContext) {
+  async delete(id: number, ctx: Context) {
     const image = await imageRepository.findById(id, ctx);
     if (image == null) {
       throw notFoundError({ user: id });
@@ -118,3 +118,5 @@ export class ImageService {
     return id;
   }
 }
+
+export const imageService = new ImageService();

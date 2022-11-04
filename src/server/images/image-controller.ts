@@ -1,23 +1,10 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Put,
-  UseGuards,
-  UseInterceptors,
-} from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
 import { MulterOptions } from '@nestjs/platform-express/multer/interfaces/multer-options.interface';
-import { StaffGuard } from '@server/auth/staff-guard';
-import { transaction } from '@server/db/database';
-import { serializeAsync } from '@server/shared/types/serialize';
+import { ApiContext } from '@server/shared/api/context';
+import { staffController } from '@server/shared/api/controller';
 import * as uploads from '@server/shared/uploads/uploads-utils';
 import type { ImageRequest } from '@shared/image';
-import { diskStorage } from 'multer';
-import { ImageService } from './image-service';
+import multer, { diskStorage } from 'multer';
+import { imageService } from './image-service';
 
 interface CreateImageBody {
   file: File;
@@ -43,48 +30,39 @@ const multerOptions: MulterOptions = {
   }),
 };
 
-@Controller('images')
-export class ImageController {
-  constructor(private service: ImageService) {}
+export const listImages = staffController(async (ctx: ApiContext) => {
+  return await imageService.list(ctx);
+});
 
-  @Get()
-  @UseGuards(StaffGuard)
-  async list() {
-    return transaction((trx) => serializeAsync(this.service.list({ trx })));
-  }
+export const getImage = staffController(async (ctx: ApiContext) => {
+  const id = Number(ctx.req.query['id'] as string);
+  return await imageService.get(id, ctx);
+});
 
-  @Get(':id')
-  async get(@Param('id') id: number) {
-    return transaction((trx) => serializeAsync(this.service.get(id, { trx })));
-  }
+export const createImage = staffController(async (ctx: ApiContext) => {
+  const upload = multer(multerOptions);
+  await upload.single('file');
 
-  @Post()
-  @UseGuards(StaffGuard)
-  @UseInterceptors(FileInterceptor('file', multerOptions))
-  async create(@Body() body: CreateImageBody) {
-    const data = JSON.parse(body.formData) as ImageRequest;
-    const tempPath = body.tempPath;
+  const body = ctx.req.body as CreateImageBody;
+  const data = JSON.parse(body.formData) as ImageRequest;
+  const tempPath = body.tempPath;
 
-    return transaction((trx) =>
-      serializeAsync(this.service.create({ ...data, tempPath }, { trx })),
-    );
-  }
+  return await imageService.create({ ...data, tempPath }, ctx);
+});
 
-  @Put(':id')
-  @UseGuards(StaffGuard)
-  @UseInterceptors(FileInterceptor('file', multerOptions))
-  async update(@Param('id') id: number, @Body() body: UpdateImageBody) {
-    const data = JSON.parse(body.formData) as ImageRequest;
-    const tempPath = body.tempPath;
+export const updateImage = staffController(async (ctx: ApiContext) => {
+  const upload = multer(multerOptions);
+  await upload.single('file');
 
-    return transaction((trx) =>
-      serializeAsync(this.service.update(id, { ...data, tempPath }, { trx })),
-    );
-  }
+  const id = Number(ctx.req.query['id'] as string);
+  const body = ctx.req.body as UpdateImageBody;
+  const data = JSON.parse(body.formData) as ImageRequest;
+  const tempPath = body.tempPath;
 
-  @Delete(':id')
-  @UseGuards(StaffGuard)
-  async delete(@Param('id') id: number) {
-    return transaction((trx) => this.service.delete(id, { trx }));
-  }
-}
+  return await imageService.update(id, { ...data, tempPath }, ctx);
+});
+
+export const deleteImage = staffController(async (ctx: ApiContext) => {
+  const id = Number(ctx.req.query['id'] as string);
+  return await imageService.delete(id, ctx);
+});
