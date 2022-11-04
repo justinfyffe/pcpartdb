@@ -1,3 +1,3 @@
-import { productController } from '@server/product/product-controller';
+import { autocompleteProducts } from '@server/product/product-controller';
 
-export default productController.autocomplete;
+export default autocompleteProducts;

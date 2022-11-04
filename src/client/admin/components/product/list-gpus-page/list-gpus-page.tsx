@@ -1,5 +1,4 @@
 import 'reflect-metadata';
-import { withStaffGuard } from '@client/auth';
 import {
   Alert,
   AlertVariant,
@@ -23,7 +22,7 @@ export interface AdminListGpusPageProps {
   gpus: Product[];
 }
 
-const ListGpusPage = (props: AdminListGpusPageProps) => {
+export const AdminListGpusPage = (props: AdminListGpusPageProps) => {
   const { gpus } = props;
   const router = useRouter();
   const [saved] = useState(router.query.saved === 'true');
@@ -78,5 +77,3 @@ const ListGpusPage = (props: AdminListGpusPageProps) => {
     </AdminLayout>
   );
 };
-
-export const AdminListGpusPage = withStaffGuard(ListGpusPage);

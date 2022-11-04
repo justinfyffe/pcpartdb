@@ -1,5 +1,4 @@
 import 'reflect-metadata';
-import { withStaffGuard } from '@client/auth';
 import {
   Alert,
   AlertVariant,
@@ -15,18 +14,16 @@ import {
   Tr,
 } from '@client/shared/components';
 import { AdminLayout } from '@client/shared/layouts';
-import { userService } from '@client/user';
 import { User } from '@shared/user';
 import { format } from 'date-fns';
-import { NextPageContext } from 'next';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 
-interface ListUsersPageProps {
+export interface AdminListUsersPageProps {
   users: User[];
 }
 
-const ListUsersPage = (props: ListUsersPageProps) => {
+export const AdminListUsersPage = (props: AdminListUsersPageProps) => {
   const { users } = props;
 
   const router = useRouter();
@@ -86,10 +83,3 @@ const ListUsersPage = (props: ListUsersPageProps) => {
     </AdminLayout>
   );
 };
-
-ListUsersPage.getInitialProps = async (_ctx: NextPageContext) => {
-  const usersList = await userService.list();
-  return { users: usersList || [] };
-};
-
-export const AdminListUsersPage = withStaffGuard(ListUsersPage);

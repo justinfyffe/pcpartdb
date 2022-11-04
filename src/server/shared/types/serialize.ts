@@ -7,13 +7,16 @@ export interface Serializable<T = unknown> {
   serialize(): T;
 }
 
-export function serialize<T>(model: SerializeInput<T>) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function serialize<T>(model: SerializeInput<T> | any) {
   if (Array.isArray(model)) {
     return serializeArray(model);
   } else if (model instanceof Map) {
     return serializeMap(model);
-  } else {
+  } else if (model != null && typeof model.serialize === 'function') {
     return model.serialize();
+  } else {
+    return model;
   }
 }
 
@@ -21,11 +24,11 @@ export async function serializeAsync<T>(model: Promise<SerializeInput<T>>) {
   return serialize(await model);
 }
 
-function serializeArray<T>(models: Serializable<T>[]) {
+export function serializeArray<T>(models: Serializable<T>[]) {
   return models.map((model) => model.serialize());
 }
 
-function serializeMap<T>(models: Map<number, Serializable<T>>) {
+export function serializeMap<T>(models: Map<number, Serializable<T>>) {
   const map = new Map<number, T>();
   models.forEach((model, key) => {
     map.set(key, model.serialize());

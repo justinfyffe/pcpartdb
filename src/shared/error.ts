@@ -1,4 +1,4 @@
-export enum ApiErrorType {
+export enum HttpErrorType {
   BadRequestError = 'BAD_REQUEST_ERROR',
   ForbiddenError = 'FORBIDDEN_ERROR',
   InternalServerError = 'INTERNAL_SERVER_ERROR',
@@ -12,7 +12,15 @@ export interface ValidationPropertyError {
 }
 
 export interface ApiError<T = unknown> {
-  type: ApiErrorType;
+  type: HttpErrorType;
+  statusCode: number;
+  timestamp: string;
+  data?: T;
+  stack?: string;
+}
+
+export interface SsrError<T = unknown> {
+  type: HttpErrorType;
   statusCode: number;
   timestamp: string;
   data?: T;
@@ -21,23 +29,23 @@ export interface ApiError<T = unknown> {
 
 export interface BadRequestError
   extends ApiError<ValidationPropertyError[] | undefined> {
-  type: ApiErrorType.BadRequestError;
+  type: HttpErrorType.BadRequestError;
 }
 
 export interface NotFoundError extends ApiError<{ [key: string]: unknown }> {
-  type: ApiErrorType.NotFoundError;
+  type: HttpErrorType.NotFoundError;
 }
 
 export interface InternalServerError extends ApiError {
-  type: ApiErrorType.InternalServerError;
+  type: HttpErrorType.InternalServerError;
 }
 
 export interface ForbiddenError extends ApiError {
-  type: ApiErrorType.ForbiddenError;
+  type: HttpErrorType.ForbiddenError;
 }
 
 export interface UnauthorizedError extends ApiError {
-  type: ApiErrorType.UnauthorizedError;
+  type: HttpErrorType.UnauthorizedError;
 }
 
 export enum ValidationErrorType {

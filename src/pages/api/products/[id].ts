@@ -1,12 +1,16 @@
-import { productController } from '@server/product/product-controller';
+import {
+  deleteProduct,
+  getProduct,
+  updateProduct,
+} from '@server/product/product-controller';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'PUT') {
-    return productController.update(req, res);
+    return updateProduct(req, res);
   } else if (req.method === 'DELETE') {
-    return productController.delete(req, res);
+    return deleteProduct(req, res);
   } else {
-    return productController.get(req, res);
+    return getProduct(req, res);
   }
 }

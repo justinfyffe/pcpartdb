@@ -1,6 +1,6 @@
 import Joi from '@hapi/joi';
-import { badRequestError, notFoundError } from '@server/shared/errors/errors';
-import { ServiceContext } from '@server/shared/service/context';
+import { badRequestError, notFoundError } from '@server/shared/api/status';
+import { Context } from '@server/shared/context';
 import { validate } from '@server/shared/types/validate';
 import { benchmarkValidator } from '@shared/benchmark';
 import { ProductRequest, ProductType } from '@shared/product';
@@ -42,7 +42,7 @@ const updateProductValidator = Joi.object({
 }).options({ abortEarly: false });
 
 export class ProductService {
-  async list(type: ProductType, ctx: ServiceContext) {
+  async list(type: ProductType, ctx: Context) {
     const products = await productRepository.list(type, ctx);
 
     const ids = products.map((product) => product.id);
@@ -72,7 +72,7 @@ export class ProductService {
     return products;
   }
 
-  async get(idOrSlug: string | number, ctx: ServiceContext) {
+  async get(idOrSlug: string | number, ctx: Context) {
     const product = isNaN(Number(idOrSlug))
       ? await this.getProductBySlug(idOrSlug as string, ctx)
       : await this.getProductById(Number(idOrSlug), ctx);
@@ -113,7 +113,7 @@ export class ProductService {
     return product;
   }
 
-  async getComparison(idsOrSlugs: string, ctx: ServiceContext) {
+  async getComparison(idsOrSlugs: string, ctx: Context) {
     const parts = idsOrSlugs.split('--vs--');
 
     if (parts.length === 0) {
@@ -134,16 +134,16 @@ export class ProductService {
     return products;
   }
 
-  async getProductById(id: number, ctx: ServiceContext) {
+  async getProductById(id: number, ctx: Context) {
     return await productRepository.findById(id, ctx);
   }
 
-  async getProductBySlug(slug: string, ctx: ServiceContext) {
+  async getProductBySlug(slug: string, ctx: Context) {
     return await productRepository.findBySlug(slug, ctx);
   }
 
   // TODO: check slug uniqueness
-  async create(data: ProductRequest, ctx: ServiceContext) {
+  async create(data: ProductRequest, ctx: Context) {
     validate(data, createProductValidator);
 
     const performanceBenchmarks = calculatePerformanceBenchmarks(data);
@@ -155,7 +155,7 @@ export class ProductService {
   }
 
   // TODO: check slug uniqueness
-  async update(id: number, data: ProductRequest, ctx: ServiceContext) {
+  async update(id: number, data: ProductRequest, ctx: Context) {
     validate(data, updateProductValidator);
 
     const performanceBenchmarks = calculatePerformanceBenchmarks(data);
@@ -175,7 +175,7 @@ export class ProductService {
     );
   }
 
-  async delete(id: number, ctx: ServiceContext) {
+  async delete(id: number, ctx: Context) {
     const product = await productRepository.findById(id, ctx);
     if (product == null) {
       throw notFoundError({ product: id });
@@ -185,7 +185,7 @@ export class ProductService {
     return id;
   }
 
-  async autocomplete(type: ProductType, query: string, ctx: ServiceContext) {
+  async autocomplete(type: ProductType, query: string, ctx: Context) {
     return await productRepository.findSimilarValue(type, query, ctx);
   }
 }

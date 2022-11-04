@@ -1,18 +1,18 @@
 import Joi from '@hapi/joi';
-import { generateToken } from '@server/shared/crypto/crypto-utils';
-import { sendEmail } from '@server/shared/email/email-utils';
 import {
   badRequestError,
   internalServerError,
   notFoundError,
-} from '@server/shared/errors/errors';
+} from '@server/shared/api/status';
+import { Context } from '@server/shared/context';
+import { generateToken } from '@server/shared/crypto/crypto-utils';
+import { sendEmail } from '@server/shared/email/email-utils';
 import {
   decodeJwt,
   generateJwt,
   JwtType,
   verifyJwt,
 } from '@server/shared/jwt/jwt-utils';
-import { ServiceContext } from '@server/shared/service/context';
 import { validate } from '@server/shared/types/validate';
 import {
   EMAIL_MAX_LENGTH,
@@ -65,12 +65,12 @@ const resetPasswordValidator = Joi.object({
     .required(),
 }).options({ abortEarly: false });
 
-export class UserService {
-  async list(ctx: ServiceContext) {
+class UserService {
+  async list(ctx: Context) {
     return await userRepository.list(ctx);
   }
 
-  async get(id: number, ctx: ServiceContext) {
+  async get(id: number, ctx: Context) {
     const user = await userRepository.findById(id, ctx);
     if (user == null) {
       throw notFoundError({ user: id });
@@ -79,7 +79,7 @@ export class UserService {
     return user;
   }
 
-  async create(data: UserRequest, ctx: ServiceContext) {
+  async create(data: UserRequest, ctx: Context) {
     validate(data, createUserValidator);
 
     const existingUser = await userRepository.findByEmail(data.email);
@@ -110,7 +110,7 @@ export class UserService {
   }
 
   // TODO: don't allow removing last staff user
-  async update(id: number, data: UserRequest, ctx: ServiceContext) {
+  async update(id: number, data: UserRequest, ctx: Context) {
     validate(data, updateUserValidator);
 
     const user = await userRepository.findById(id, ctx);
@@ -131,7 +131,7 @@ export class UserService {
   }
 
   // TODO: don't allow deleting last staff user
-  async delete(id: number, ctx: ServiceContext) {
+  async delete(id: number, ctx: Context) {
     const user = await userRepository.findById(id, ctx);
     if (user == null) {
       throw notFoundError({ user: id });
@@ -141,10 +141,7 @@ export class UserService {
     return id;
   }
 
-  async requestPasswordReset(
-    data: RequestPasswordResetRequest,
-    ctx: ServiceContext,
-  ) {
+  async requestPasswordReset(data: RequestPasswordResetRequest, ctx: Context) {
     validate(data, requestPasswordResetValidator);
 
     const user = await userRepository.findByEmail(data.email, ctx);
@@ -175,7 +172,7 @@ export class UserService {
     });
   }
 
-  async resetPassword(data: ResetPasswordRequest, ctx: ServiceContext) {
+  async resetPassword(data: ResetPasswordRequest, ctx: Context) {
     validate(data, resetPasswordValidator);
 
     if (!verifyJwt(JwtType.ResetPassword, data.token)) {

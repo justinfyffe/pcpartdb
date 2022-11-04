@@ -1,5 +1,4 @@
 import 'reflect-metadata';
-import { withStaffGuard } from '@client/auth';
 import {
   Article,
   ArticleHeader,
@@ -12,7 +11,7 @@ import { GpuForm } from '../gpu-form';
 
 interface AdminNewGpuPageProps {}
 
-const NewGpuPage = (_props: AdminNewGpuPageProps) => {
+export const AdminNewGpuPage = (_props: AdminNewGpuPageProps) => {
   return (
     <AdminLayout>
       <Article>
@@ -29,5 +28,3 @@ const NewGpuPage = (_props: AdminNewGpuPageProps) => {
     </AdminLayout>
   );
 };
-
-export const AdminNewGpuPage = withStaffGuard(NewGpuPage);

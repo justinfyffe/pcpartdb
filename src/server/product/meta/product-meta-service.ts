@@ -1,9 +1,9 @@
-import { ServiceContext } from '@server/shared/service/context';
+import { Context } from '@server/shared/context';
 import { ProductMetaKey } from '@shared/product-meta';
 import { productMetaRepository } from './product-meta-repository';
 
 export class ProductMetaService {
-  async autocomplete(key: ProductMetaKey, value: string, ctx: ServiceContext) {
+  async autocomplete(key: ProductMetaKey, value: string, ctx: Context) {
     return await productMetaRepository.findSimilarValue(key, value, ctx);
   }
 }

@@ -1,10 +1,13 @@
-import { productController } from '@server/product/product-controller';
+import {
+  createProduct,
+  listProducts,
+} from '@server/product/product-controller';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
-    return productController.create(req, res);
+    return createProduct(req, res);
   } else {
-    return productController.list(req, res);
+    return listProducts(req, res);
   }
 }

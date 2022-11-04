@@ -1,14 +1,15 @@
 import Joi from '@hapi/joi';
+import { forbiddenError, unauthorizedError } from '@server/shared/api/status';
+import { Context } from '@server/shared/context';
 import { cookieService } from '@server/shared/cookie/cookie-service';
 import { SESSION_COOKIE } from '@server/shared/cookie/cookies';
 import { generateToken, hashToken } from '@server/shared/crypto/crypto-utils';
-import { ServiceContext } from '@server/shared/service/context';
 import { validate } from '@server/shared/types/validate';
+import { UserModel } from '@server/user/user-model';
 import { userRepository } from '@server/user/user-repository';
 import { AccessToken, LoginRequest } from '@shared/auth';
-import { EMAIL_MAX_LENGTH, PASSWORD_MAX_LENGTH, User } from '@shared/user';
+import { EMAIL_MAX_LENGTH, PASSWORD_MAX_LENGTH } from '@shared/user';
 import * as bcrypt from 'bcryptjs';
-import { forbiddenError, unauthorizedError } from '../shared/errors/errors';
 import { accessTokenRepository } from './access-token-repository';
 
 const SESSION_EXPIRES = 1000 * 60 * 60 * 24; // 1 day
@@ -24,7 +25,7 @@ const loginRequestValidator = Joi.object({
 }).options({ abortEarly: false });
 
 export class AccessTokenService {
-  async login(data: LoginRequest, ctx: ServiceContext) {
+  async login(data: LoginRequest, ctx: Context) {
     validate(data, loginRequestValidator);
 
     const user = await userRepository.findByEmail(data.email, ctx);
@@ -57,10 +58,8 @@ export class AccessTokenService {
     return { token, user: user.serialize() } as AccessToken;
   }
 
-  async logout(user: User, ctx: ServiceContext) {
-    const token = cookieService.get(SESSION_COOKIE, ctx) as string;
-
-    const hash = hashToken(token);
+  async logout(user: UserModel, ctx: Context) {
+    const hash = hashToken(ctx.token);
     const entity = await accessTokenRepository.findByTokenHash(hash, ctx);
     if (entity == null || entity.user.id !== user.id) {
       throw unauthorizedError();

@@ -1,21 +1,25 @@
 import { getCookie, removeCookies, setCookie } from 'cookies-next';
-import { ServiceContext } from '../service/context';
+import { ApiContext } from '../api/context';
+import { SsrContext } from '../ssr/context';
 
 interface CookieOptions {
   expires?: number;
 }
 
 export class CookieService {
-  get(name: string, ctx: ServiceContext) {
-    return getCookie(name, { req: ctx.api.req, res: ctx.api.res });
+  get(name: string, ctx: ApiContext | SsrContext) {
+    const { req, res } = ctx;
+    return getCookie(name, { req, res });
   }
 
   save(
     name: string,
     value: unknown,
     options: CookieOptions,
-    ctx: ServiceContext,
+    ctx: ApiContext | SsrContext,
   ) {
+    const { req, res } = ctx;
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const cookieOptions: any = {
       httpOnly: true,
@@ -26,19 +30,12 @@ export class CookieService {
       cookieOptions.expires = new Date(options?.expires);
     }
 
-    setCookie(name, value, {
-      ...cookieOptions,
-      req: ctx.api.req,
-      res: ctx.api.res,
-    });
+    setCookie(name, value, { ...cookieOptions, req, res });
   }
 
-  clear(name: string, ctx: ServiceContext) {
-    removeCookies(name, {
-      req: ctx.api.req,
-      res: ctx.api.res,
-      expires: new Date(Date.now() - 3600),
-    });
+  clear(name: string, ctx: ApiContext | SsrContext) {
+    const { req, res } = ctx;
+    removeCookies(name, { req, res, expires: new Date(Date.now() - 3600) });
   }
 }
 

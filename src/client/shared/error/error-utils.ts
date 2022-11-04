@@ -1,8 +1,8 @@
 import {
   ApiError,
-  ApiErrorType,
   BadRequestError,
   ForbiddenError,
+  HttpErrorType,
   InternalServerError,
   NotFoundError,
   UnauthorizedError,
@@ -12,25 +12,25 @@ import { UseFormSetError } from 'react-hook-form';
 export function isInternalServerError(
   error: ApiError,
 ): error is InternalServerError {
-  return error.type === ApiErrorType.InternalServerError;
+  return error.type === HttpErrorType.InternalServerError;
 }
 
 export function isBadRequestError(error: ApiError): error is BadRequestError {
-  return error.type === ApiErrorType.BadRequestError;
+  return error.type === HttpErrorType.BadRequestError;
 }
 
 export function isForbiddenError(error: ApiError): error is ForbiddenError {
-  return error.type === ApiErrorType.ForbiddenError;
+  return error.type === HttpErrorType.ForbiddenError;
 }
 
 export function isUnauthorizedError(
   error: ApiError,
 ): error is UnauthorizedError {
-  return error.type === ApiErrorType.UnauthorizedError;
+  return error.type === HttpErrorType.UnauthorizedError;
 }
 
 export function isNotFoundError(error: ApiError): error is NotFoundError {
-  return error.type === ApiErrorType.NotFoundError;
+  return error.type === HttpErrorType.NotFoundError;
 }
 
 export function setValidationErrors<T>(

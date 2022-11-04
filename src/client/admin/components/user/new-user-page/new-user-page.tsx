@@ -1,5 +1,4 @@
 import 'reflect-metadata';
-import { withStaffGuard } from '@client/auth';
 import {
   Article,
   ArticleHeader,
@@ -12,7 +11,7 @@ import { UserForm } from '../user-form';
 
 export interface NewUserPageProps {}
 
-const NewUserPage = (_props: NewUserPageProps) => {
+export const AdminNewUserPage = (_props: NewUserPageProps) => {
   return (
     <AdminLayout>
       <Article>
@@ -29,5 +28,3 @@ const NewUserPage = (_props: NewUserPageProps) => {
     </AdminLayout>
   );
 };
-
-export const AdminNewUserPage = withStaffGuard(NewUserPage);

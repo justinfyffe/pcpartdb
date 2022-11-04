@@ -1,22 +1,18 @@
 import { AdminEditGpuPage, AdminEditGpuPageProps } from '@client/admin';
-import { transaction } from '@server/db/database';
 import { productService } from '@server/product/product-service';
+import { SsrContext } from '@server/shared/ssr/context';
+import { staffSsrPageProps } from '@server/shared/ssr/props';
 import { serializeAsync } from '@server/shared/types/serialize';
-import { NextPageContext } from 'next';
 
-export async function getServerSideProps(ctx: NextPageContext) {
-  return transaction(async (trx) => {
-    const query = ctx.query as { gpuId: string };
-    const gpuId = parseInt(query.gpuId, 10);
+export const getServerSideProps = staffSsrPageProps(async (ctx: SsrContext) => {
+  const query = ctx.page.query as { gpuId: string };
+  const gpuId = parseInt(query.gpuId, 10);
 
-    const gpu = await serializeAsync(productService.get(gpuId, { trx }));
+  const gpu = await serializeAsync(productService.get(gpuId, ctx));
 
-    const pageProps: AdminEditGpuPageProps = {
-      gpu: JSON.parse(JSON.stringify(gpu)),
-    };
-
-    return { props: pageProps };
-  });
-}
+  return {
+    gpu: JSON.parse(JSON.stringify(gpu)),
+  } as AdminEditGpuPageProps;
+});
 
 export default AdminEditGpuPage;

@@ -1,99 +1,41 @@
-import { transaction } from '@server/db/database';
-import { serializeAsync } from '@server/shared/types/serialize';
+import { ApiContext } from '@server/shared/api/context';
+import { controller, staffController } from '@server/shared/api/controller';
 import type { ProductRequest, ProductType } from '@shared/product';
-import { NextApiRequest, NextApiResponse } from 'next';
 import { productService } from './product-service';
 
-export class ProductController {
-  async autocomplete(req: NextApiRequest, res: NextApiResponse) {
-    return transaction(async (trx) => {
-      const type = req.query['type'] as ProductType;
-      const query = req.query['query'] as string;
+export const autocompleteProducts = controller(async (ctx: ApiContext) => {
+  const type = ctx.req.query['type'] as ProductType;
+  const query = ctx.req.query['query'] as string;
+  return await productService.autocomplete(type, query ?? '', ctx);
+});
 
-      const products = await serializeAsync(
-        productService.autocomplete(type, query ?? '', {
-          trx,
-          api: { req, res },
-        }),
-      );
+export const listProducts = controller(async (ctx: ApiContext) => {
+  const type = ctx.req.query['type'] as ProductType;
+  return await productService.list(type, ctx);
+});
 
-      res.status(200).json(products);
-    });
-  }
+export const getProduct = controller(async (ctx: ApiContext) => {
+  const idOrSlug = ctx.req.query['id'] as string;
+  return await productService.get(idOrSlug, ctx);
+});
 
-  async list(req: NextApiRequest, res: NextApiResponse) {
-    return transaction(async (trx) => {
-      const type = req.query['type'] as ProductType;
+export const getProductComparison = controller(async (ctx: ApiContext) => {
+  const idsOrSlugs = ctx.req.query['id'] as string;
+  return await productService.getComparison(idsOrSlugs, ctx);
+});
 
-      const products = await serializeAsync(
-        productService.list(type, { trx, api: { req, res } }),
-      );
+export const createProduct = staffController(async (ctx: ApiContext) => {
+  const body = ctx.req.body as ProductRequest;
+  return await productService.create(body, ctx);
+});
 
-      res.status(200).json(products);
-    });
-  }
+export const updateProduct = staffController(async (ctx: ApiContext) => {
+  const id = Number(ctx.req.query['id'] as string);
+  const body = ctx.req.body as ProductRequest;
+  return await productService.update(id, body, ctx);
+});
 
-  async get(req: NextApiRequest, res: NextApiResponse) {
-    return transaction(async (trx) => {
-      const idOrSlug = req.query['id'] as string;
-
-      const product = await serializeAsync(
-        productService.get(idOrSlug, { trx, api: { req, res } }),
-      );
-
-      res.status(200).json(product);
-    });
-  }
-
-  async getComparison(req: NextApiRequest, res: NextApiResponse) {
-    return transaction(async (trx) => {
-      const idsOrSlugs = req.query['id'] as string;
-
-      const comparison = await serializeAsync(
-        productService.getComparison(idsOrSlugs, { trx }),
-      );
-
-      res.status(200).json(comparison);
-    });
-  }
-
-  // TODO: handle guards
-  async create(req: NextApiRequest, res: NextApiResponse) {
-    return transaction(async (trx) => {
-      const body = req.body as ProductRequest;
-
-      const product = await serializeAsync(
-        productService.create(body, { trx, api: { req, res } }),
-      );
-
-      res.status(200).json(product);
-    });
-  }
-
-  // TODO: handle guards
-  async update(req: NextApiRequest, res: NextApiResponse) {
-    return transaction(async (trx) => {
-      const id = Number(req.query['id'] as string);
-      const body = req.body as ProductRequest;
-
-      const product = await serializeAsync(
-        productService.update(id, body, { trx, api: { req, res } }),
-      );
-
-      res.status(200).json(product);
-    });
-  }
-
-  // TODO: handle guards
-  async delete(req: NextApiRequest, res: NextApiResponse) {
-    return transaction(async (trx) => {
-      const id = Number(req.query['id'] as string);
-
-      const deleted = productService.delete(id, { trx, api: { req, res } });
-
-      res.status(200).json(deleted);
-    });
-  }
-}
-
-export const productController = new ProductController();
+export const deleteProduct = staffController(async (ctx: ApiContext) => {
+  const id = Number(ctx.req.query['id'] as string);
+  return await productService.delete(id, ctx);
+});
