@@ -1,7 +1,7 @@
 import Joi from '@hapi/joi';
+import { internalServerError } from '@server/shared/api/status';
+import { Context } from '@server/shared/context';
 import { sendEmail } from '@server/shared/email/email-utils';
-import { internalServerError } from '@server/shared/errors/errors';
-import { ServiceContext } from '@server/shared/service/context';
 import { validate } from '@server/shared/types/validate';
 import {
   ContactRequest,
@@ -22,7 +22,7 @@ const contactValidator = Joi.object({
 }).options({ abortEarly: false });
 
 export class ContactService {
-  async send(data: ContactRequest, _ctx: ServiceContext) {
+  async send(data: ContactRequest, _ctx: Context) {
     validate(data, contactValidator);
 
     const websiteEmail = process.env.WEBSITE_EMAIL;
