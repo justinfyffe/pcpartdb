@@ -28,7 +28,6 @@ import { useRouter } from 'next/router';
 import React, { useCallback, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { authService } from '../../auth-service';
-import { withGuestGuard } from '../../with-guest-guard';
 
 interface RegisterFormData {
   email: string;
@@ -48,7 +47,7 @@ const registerValidator = Joi.object({
 
 interface RegisterPageProps {}
 
-const RegisterPageImpl = (_props: RegisterPageProps) => {
+export const RegisterPage = (_props: RegisterPageProps) => {
   const [loading, setLoading] = useState(false);
   const [requestError, setRequestError] = useState(null);
   const router = useRouter();
@@ -165,5 +164,3 @@ const RegisterPageImpl = (_props: RegisterPageProps) => {
     </WebsiteLayout>
   );
 };
-
-export const RegisterPage = withGuestGuard(RegisterPageImpl);

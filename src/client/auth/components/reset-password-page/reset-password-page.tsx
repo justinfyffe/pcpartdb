@@ -24,11 +24,9 @@ import Joi from '@hapi/joi';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { ApiError, ValidationErrorType } from '@shared/error';
 import { PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH } from '@shared/user';
-import { NextPageContext } from 'next';
 import { useRouter } from 'next/router';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { withGuestGuard } from '../../with-guest-guard';
 
 interface ResetPasswordFormData {
   token: string;
@@ -47,7 +45,7 @@ interface ResetPasswordPageProps {
   token: string;
 }
 
-const ResetPasswordPageImpl = (props: ResetPasswordPageProps) => {
+export const ResetPasswordPage = (props: ResetPasswordPageProps) => {
   const { token } = props;
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -157,11 +155,3 @@ const ResetPasswordPageImpl = (props: ResetPasswordPageProps) => {
     </WebsiteLayout>
   );
 };
-
-ResetPasswordPageImpl.getInitialProps = (ctx: NextPageContext) => {
-  const { token } = ctx.query as { token: string };
-
-  return { token };
-};
-
-export const ResetPasswordPage = withGuestGuard(ResetPasswordPageImpl);

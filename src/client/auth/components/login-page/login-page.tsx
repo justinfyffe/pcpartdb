@@ -25,7 +25,6 @@ import { useRouter } from 'next/dist/client/router';
 import React, { FunctionComponent, useCallback, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { authService } from '../../auth-service';
-import { withGuestGuard } from '../../with-guest-guard';
 
 interface LoginFormData {
   email: string;
@@ -44,7 +43,7 @@ const loginFormValidator = Joi.object({
 
 interface LoginPageProps {}
 
-const LoginPageImpl: FunctionComponent<LoginPageProps> = (
+export const LoginPage: FunctionComponent<LoginPageProps> = (
   _props: LoginPageProps,
 ) => {
   const router = useRouter();
@@ -194,5 +193,3 @@ const LoginPageImpl: FunctionComponent<LoginPageProps> = (
     </WebsiteLayout>
   );
 };
-
-export const LoginPage = withGuestGuard(LoginPageImpl);

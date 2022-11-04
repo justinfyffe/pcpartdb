@@ -25,7 +25,6 @@ import { ApiError, ValidationErrorType } from '@shared/error';
 import { EMAIL_MAX_LENGTH } from '@shared/user';
 import React, { useCallback, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { withGuestGuard } from '../../with-guest-guard';
 
 interface RequestPasswordResetFormData {
   email: string;
@@ -40,7 +39,7 @@ const requestPasswordResetValidator = Joi.object({
 
 interface ForgotPasswordPageProps {}
 
-const ForgotPasswordPageImpl = (_props: ForgotPasswordPageProps) => {
+export const ForgotPasswordPage = (_props: ForgotPasswordPageProps) => {
   const [loading, setLoading] = useState(false);
   const [requestError, setRequestError] = useState<ApiError>(null);
   const [success, setSuccess] = useState(false);
@@ -139,5 +138,3 @@ const ForgotPasswordPageImpl = (_props: ForgotPasswordPageProps) => {
     </WebsiteLayout>
   );
 };
-
-export const ForgotPasswordPage = withGuestGuard(ForgotPasswordPageImpl);
