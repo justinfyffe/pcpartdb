@@ -64,7 +64,7 @@ export const SpecRow = (props: SpecRowProps) => {
       <Td className="border-l-0 text-right">
         {formatSpec(spec, {
           booleanFormatter: SpecBooleanFormatter.YesNo,
-        })}
+        }) || '--'}
       </Td>
     </Tr>
   );

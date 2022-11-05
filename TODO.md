@@ -1,21 +1,10 @@
 Immediate Tasks:
-- performance score formula:
-  - GPU Benchmarks to gather: G3D Mark, G2D Mark, Time Spy, Port Royal, Fire Strike
-  - CPU Benchmarks to gather: CPU Mark, Thread Mark, Geekbench 5 Single-Core, Geekbench 5 Multi-Core
-  - Performance Score (GPU) = G3D Mark
-  - Performance Score (CPU) = CPU Mark
-  - Value Score = Performance Score / Launch Price
-  - Performance Rating = GPU Score / Max(GPU Score)
-  - Value Rating = Value Score / Max(Value Score)
-
-- view gpu page
-  - auto-generate summary
-  - buy button functionality
 - compare gpus page
   - auto-generate summary
   - buy buttons
 - gpus list page
 - gpus overview page
+- side navs
 - contact page
 - about page
 - disclaimer page
@@ -40,6 +29,13 @@ Immediate Tasks:
 - improve html semantics
 
 Roadmap:
+Legend:
+- CTNT = Content
+- LEGL = Legal
+- EFFY = Efficiency
+- MRKT = Marketing
+- LYLT = Loyalty
+- DIFF = Differentiator
 - MVP
   - [CTNT] GPUs
   - [CTNT] Compare
@@ -48,7 +44,6 @@ Roadmap:
   - [LEGL] Disclaimer / Privacy
   - [EFFY] Basic admin panel
 - 1.1
-  - [CTNT] Comparison blurb
   - [CTNT] CPUs
 - 1.2
   - [EFFY] Admin Task Queue

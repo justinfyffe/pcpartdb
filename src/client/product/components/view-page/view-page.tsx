@@ -24,7 +24,12 @@ import {
 } from '@heroicons/react/24/outline';
 import { BenchmarkKey, formatBenchmark } from '@shared/benchmark';
 import { Product } from '@shared/product';
-import { formatProductMeta, ProductMetaKey } from '@shared/product-meta';
+import {
+  formatProductMeta,
+  getProductMetaValue,
+  ProductMetaKey,
+} from '@shared/product-meta';
+import { RetailModel } from '@shared/retail-model';
 import { ReviewKey } from '@shared/review';
 import { formatSpec, SpecKey } from '@shared/spec';
 import React, { useMemo } from 'react';
@@ -55,6 +60,9 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
   const specs = context.specs;
   const meta = context.meta;
   const benchmarks = context.benchmarks;
+  const retailModels = getProductMetaValue(
+    context.meta.RETAIL_MODELS,
+  ) as RetailModel[];
 
   return (
     <ProductContext.Provider value={context}>
@@ -86,9 +94,18 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                     </HighlightLabel>
 
                     <HighlightValue>
-                      <HighlightButton className="bg-green-500 text-white">
-                        Check Price
-                      </HighlightButton>
+                      {retailModels != null && retailModels.length > 0 ? (
+                        <HighlightButton
+                          href={retailModels[0].amazonUrl}
+                          target="_blank"
+                          rel="noreferrer noopener"
+                          className="bg-green-500 text-white"
+                        >
+                          Check Price
+                        </HighlightButton>
+                      ) : (
+                        <>--</>
+                      )}
                     </HighlightValue>
                   </HighlightListItem>
 
@@ -98,7 +115,9 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                     </HighlightLabel>
 
                     <HighlightValue>
-                      {formatProductMeta(meta[ProductMetaKey.PerformanceRank])}
+                      {formatProductMeta(
+                        meta[ProductMetaKey.PerformanceRank],
+                      ) || '--'}
                     </HighlightValue>
                   </HighlightListItem>
 
@@ -108,7 +127,8 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                     </HighlightLabel>
 
                     <HighlightValue>
-                      {formatProductMeta(meta[ProductMetaKey.ValueRank])}
+                      {formatProductMeta(meta[ProductMetaKey.ValueRank]) ||
+                        '--'}
                     </HighlightValue>
                   </HighlightListItem>
 
@@ -148,7 +168,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                     <HighlightLabel icon={<BoltIcon />}>TDP</HighlightLabel>
 
                     <HighlightValue>
-                      {formatSpec(specs[SpecKey.ThermalDesignPower])}
+                      {formatSpec(specs[SpecKey.ThermalDesignPower]) || '--'}
                     </HighlightValue>
                   </HighlightListItem>
 
@@ -158,16 +178,14 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                     </HighlightLabel>
 
                     <HighlightValue>
-                      {formatSpec(specs[SpecKey.ReleaseDate])}
+                      {formatSpec(specs[SpecKey.ReleaseDate]) || '--'}
                     </HighlightValue>
                   </HighlightListItem>
                 </HighlightList>
               </div>
             </section>
 
-            <section>
-              <Summary />
-            </section>
+            <Summary />
 
             <section className="flex flex-col gap-6">
               <section>

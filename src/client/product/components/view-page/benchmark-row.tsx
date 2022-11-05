@@ -28,7 +28,7 @@ export const BenchmarkRow = (props: BenchmarkRowProps) => {
         {benchmark?.source != null ? (
           <a href={benchmark.source}>{formatBenchmark(benchmark)}</a>
         ) : (
-          <>{formatBenchmark(benchmark)}</>
+          <>{formatBenchmark(benchmark) || '--'}</>
         )}
       </Td>
     </Tr>

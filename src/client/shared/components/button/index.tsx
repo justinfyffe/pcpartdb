@@ -9,7 +9,7 @@ export enum ButtonVariant {
   Toolbar = 'toolbar',
 }
 
-interface ButtonProps
+export interface ButtonProps
   extends Omit<HTMLProps<HTMLButtonElement>, 'as' | 'style'> {
   as?: React.ElementType;
 

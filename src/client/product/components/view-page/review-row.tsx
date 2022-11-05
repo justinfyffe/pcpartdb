@@ -28,7 +28,7 @@ export const ReviewRow = (props: ReviewRowProps) => {
         {review?.source != null ? (
           <a href={review.source}>{formatReview(review)}</a>
         ) : (
-          <>{formatReview(review)}</>
+          <>{formatReview(review) || '--'}</>
         )}
       </Td>
     </Tr>

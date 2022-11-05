@@ -65,12 +65,12 @@ export const SpecRow = (props: SpecRowProps) => {
       <Td className="border-x-0 text-left min-w-[80px]">
         {formatSpec(spec1, {
           booleanFormatter: SpecBooleanFormatter.YesNo,
-        })}
+        }) || '--'}
       </Td>
       <Td className="border-l-0 text-left min-w-[80px]">
         {formatSpec(spec2, {
           booleanFormatter: SpecBooleanFormatter.YesNo,
-        })}
+        }) || '--'}
       </Td>
     </Tr>
   );

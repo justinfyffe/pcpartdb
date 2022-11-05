@@ -49,7 +49,7 @@ export const productMetaValidator = Joi.object({
   metadata: Joi.any().allow(null),
 }).options({ abortEarly: false });
 
-export function getProductMetaRawValue(meta: ProductMeta) {
+export function getProductMetaValue(meta: ProductMeta) {
   return (
     meta?.booleanValue ??
     meta?.floatValue ??
@@ -64,14 +64,15 @@ export function getProductMetaRawValue(meta: ProductMeta) {
 export interface FormatMetaOptions {
   decimals?: number;
   booleanFormatter?: ProductMetaBooleanFormatter;
+  ordinalSuffix?: boolean;
 }
 
 export function formatProductMeta(
   meta: ProductMeta,
   options?: FormatMetaOptions,
 ) {
-  if (getProductMetaRawValue(meta) == null) {
-    return '--';
+  if (getProductMetaValue(meta) == null) {
+    return null;
   }
 
   const {
@@ -91,7 +92,7 @@ export function formatProductMeta(
   }
 
   // Compute string to return
-  let returnValue = '';
+  let returnValue = null;
   if (booleanValue != null) {
     returnValue = formatBooleanValue(
       booleanValue,
@@ -110,7 +111,15 @@ export function formatProductMeta(
     returnValue = textValue;
   }
 
+  if (returnValue == null) {
+    return null;
+  }
+
   // Apply modifiers
+  if (options?.ordinalSuffix && integerValue != null) {
+    const ordinalSuffix = getOrdinalSuffix(integerValue);
+    returnValue = `${returnValue}${ordinalSuffix}`;
+  }
 
   return returnValue;
 }
@@ -125,5 +134,19 @@ function formatBooleanValue(
     return value ? 'Yes' : 'No';
   } else {
     throw new Error(`Invalid boolean formatter: ${formatter}`);
+  }
+}
+
+function getOrdinalSuffix(value: number) {
+  const ones = value % 10;
+  const tens = value % 100;
+  if (ones == 1 && tens != 11) {
+    return 'st';
+  } else if (ones == 2 && tens != 12) {
+    return 'nd';
+  } else if (ones == 3 && tens != 13) {
+    return 'rd';
+  } else {
+    return 'th';
   }
 }

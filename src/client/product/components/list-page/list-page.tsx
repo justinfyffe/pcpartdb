@@ -52,18 +52,10 @@ export const ListGpusPage = (props: ListGpusPageProps) => {
               <Table responsive className="flex-1">
                 <THead>
                   <Tr>
-                    <Th>
-                      <a href="#">GPU</a>
-                    </Th>
-                    <Th>
-                      <a href="#">Performance Rank</a>
-                    </Th>
-                    <Th>
-                      <a href="#">Value Rank</a>
-                    </Th>
-                    <Th>
-                      <a href="#">Release Date</a>
-                    </Th>
+                    <Th>GPU</Th>
+                    <Th>Performance Rank</Th>
+                    <Th>Value Rank</Th>
+                    <Th>Release Date</Th>
                   </Tr>
                 </THead>
 
@@ -72,12 +64,14 @@ export const ListGpusPage = (props: ListGpusPageProps) => {
                     <Tr key={i} className="cursor-pointer">
                       <Td>
                         <a href={`/gpus/view/${gpu.slug}`}>
-                          {formatSpec(specs[i].COMPANY)} {gpu.name}
+                          {formatSpec(specs[i].COMPANY) || ''} {gpu.name}
                         </a>
                       </Td>
-                      <Td>{formatProductMeta(meta[i].PERFORMANCE_RANK)}</Td>
-                      <Td>{formatProductMeta(meta[i].VALUE_RANK)}</Td>
-                      <Td>{formatSpec(specs[i].RELEASE_DATE)}</Td>
+                      <Td>
+                        {formatProductMeta(meta[i].PERFORMANCE_RANK) || '--'}
+                      </Td>
+                      <Td>{formatProductMeta(meta[i].VALUE_RANK) || '--'}</Td>
+                      <Td>{formatSpec(specs[i].RELEASE_DATE) || '--'}</Td>
                     </Tr>
                   ))}
                 </TBody>

@@ -1,4 +1,4 @@
-import { Button, ButtonVariant } from '@client/shared/components';
+import { Button, ButtonProps, ButtonVariant } from '@client/shared/components';
 import { classNames } from '@client/shared/ui';
 import React, { cloneElement } from 'react';
 
@@ -59,17 +59,18 @@ export const HighlightValue = (props: HighlightValueProps) => {
   );
 };
 
-interface HighlightButtonProps {
+interface HighlightButtonProps extends ButtonProps {
   children?: React.ReactNode;
 
   className?: string;
 }
 
 export const HighlightButton = (props: HighlightButtonProps) => {
-  const { children, className } = props;
+  const { children, className, ...restProps } = props;
 
   return (
     <Button
+      {...restProps}
       variant={ButtonVariant.None}
       className={classNames(
         'self-stretch lg:text-lg text-right py-[4px]',

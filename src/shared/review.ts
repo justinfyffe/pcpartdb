@@ -66,7 +66,7 @@ export interface FormatReviewOptions {
 
 export function formatReview(review: Review, options?: FormatReviewOptions) {
   if (getReviewValue(review) == null) {
-    return '--';
+    return null;
   }
 
   const {
@@ -86,7 +86,7 @@ export function formatReview(review: Review, options?: FormatReviewOptions) {
   }
 
   // Compute string to return
-  let returnValue = '';
+  let returnValue = null;
   if (booleanValue != null) {
     returnValue = formatBooleanValue(
       booleanValue,
@@ -103,6 +103,10 @@ export function formatReview(review: Review, options?: FormatReviewOptions) {
     returnValue = stringValue;
   } else if (textValue != null) {
     returnValue = textValue;
+  }
+
+  if (returnValue == null) {
+    return null;
   }
 
   // Apply modifiers

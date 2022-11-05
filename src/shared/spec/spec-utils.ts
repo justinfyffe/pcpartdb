@@ -188,7 +188,7 @@ export interface FormatSpecOptions {
 
 export function formatSpec(spec: Spec, options?: FormatSpecOptions) {
   if (getSpecValue(spec) == null) {
-    return '--';
+    return null;
   }
 
   const {
@@ -219,7 +219,7 @@ export function formatSpec(spec: Spec, options?: FormatSpecOptions) {
   }
 
   // Compute string to return
-  let returnValue = '';
+  let returnValue = null;
   if (booleanValue != null) {
     returnValue = formatBooleanValue(
       booleanValue,
@@ -236,6 +236,10 @@ export function formatSpec(spec: Spec, options?: FormatSpecOptions) {
     returnValue = stringValue;
   } else if (textValue != null) {
     returnValue = textValue;
+  }
+
+  if (returnValue == null) {
+    return null;
   }
 
   // Apply modifiers

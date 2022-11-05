@@ -96,13 +96,17 @@ export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
           <FooterSectionTitle>Disclaimer &amp; Disclosure</FooterSectionTitle>
 
           <p>
-            PC Parts DB provides accurate specs and benchmarks based on various
+            PC Parts DB provides specs, benchmarks, and reviews based on various
             sources. If you discover an error, please contact us.
           </p>
 
           <p>
             PC Parts DB is a participant of affiliate programs and earns
-            commission from qualifying purchases.
+            commission from qualifying purchases. Please read our{' '}
+            <a href="/disclaimer" className="text-footer-link">
+              Disclaimer
+            </a>
+            .
           </p>
         </FooterSection>
 

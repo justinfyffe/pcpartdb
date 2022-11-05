@@ -63,7 +63,7 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
         <Article className="flex flex-wrap gap-6 lg:gap-8 justify-center">
           <ArticleHeader className="flex flex-wrap w-full items-center justify-between gap-3 lg:gap-4">
             <Breadcrumbs className="mb-3">
-              <Breadcrumb href="/">PC Parts DB</Breadcrumb>
+              <Breadcrumb href="/">Home</Breadcrumb>
               <Breadcrumb href="/gpus">GPUs</Breadcrumb>
               <Breadcrumb>{pageTitle}</Breadcrumb>
             </Breadcrumbs>

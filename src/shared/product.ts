@@ -48,7 +48,6 @@ export interface ProductRequest {
 }
 
 export function getSpecMap(product: Product) {
-  console.log('here', product);
   const specs: SpecMap = {};
   product.specs.forEach((spec) => {
     specs[spec.key] = spec;

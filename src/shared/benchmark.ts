@@ -81,7 +81,7 @@ export function formatBenchmark(
   options?: FormatBenchmarkOptions,
 ) {
   if (getBenchmarkValue(benchmark) == null) {
-    return '--';
+    return null;
   }
 
   const {
@@ -101,7 +101,7 @@ export function formatBenchmark(
   }
 
   // Compute string to return
-  let returnValue = '';
+  let returnValue = null;
   if (booleanValue != null) {
     returnValue = formatBooleanValue(
       booleanValue,
@@ -118,6 +118,10 @@ export function formatBenchmark(
     returnValue = stringValue;
   } else if (textValue != null) {
     returnValue = textValue;
+  }
+
+  if (returnValue == null) {
+    return null;
   }
 
   // Apply modifiers
