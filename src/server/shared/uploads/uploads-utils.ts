@@ -1,5 +1,7 @@
 import * as fs from 'fs';
+import multer, { diskStorage } from 'multer';
 import path from 'path';
+import { Context } from '../context';
 
 const TMP_PATH = path.join(__dirname, '../../../..', 'tmp/uploads');
 const IMAGES_PATH = path.join(__dirname, '../../../..', 'public/u/images');
@@ -9,6 +11,33 @@ if (!fs.existsSync(TMP_PATH)) {
 }
 if (!fs.existsSync(IMAGES_PATH)) {
   fs.mkdirSync(IMAGES_PATH, { recursive: true });
+}
+
+const multerOptions: multer.Options = {
+  storage: diskStorage({
+    destination: tmpPath(),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    filename: (req: any, file: any, cb: any) => {
+      const tempPath = generateTmpFilename(file);
+      req.body.tempPath = tempPath;
+      cb(null, tempPath);
+    },
+  }),
+};
+const uploader = multer(multerOptions);
+
+export function uploadFile(field: string, ctx: Context) {
+  return new Promise((resolve, reject) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    uploader.single(field)(ctx.req as any, ctx.res as any, async (err) => {
+      if (err) {
+        reject();
+        return;
+      }
+
+      resolve(null);
+    });
+  });
 }
 
 export function tmpPath(file?: string) {

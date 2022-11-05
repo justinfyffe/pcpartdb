@@ -8,14 +8,6 @@ Immediate Tasks:
   - Performance Rating = GPU Score / Max(GPU Score)
   - Value Rating = Value Score / Max(Value Score)
 
-- restructure data?
-  - Should specs, benchmarks, meta, reviews, retail models be jsonb fields? or separate table?
-  - separate tables for each pc part? or same table? e.g. a gpus table, a cpus table, a motherboard table
-- renaming:
-  - rename product-spec to spec (db)
-  - rename product-benchmark to benchmark (db)
-  - rename product-review to review (db)
-
 - view gpu page
   - auto-generate summary
   - buy button functionality
@@ -28,7 +20,6 @@ Immediate Tasks:
 - about page
 - disclaimer page
 - move pages to client folder
-- rename "user" to "account"
 - clean up html
 - initial on-page seo
   - canonical links
