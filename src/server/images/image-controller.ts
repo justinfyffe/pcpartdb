@@ -1,4 +1,3 @@
-import { MulterOptions } from '@nestjs/platform-express/multer/interfaces/multer-options.interface';
 import { ApiContext } from '@server/shared/api/context';
 import { staffController } from '@server/shared/api/controller';
 import * as uploads from '@server/shared/uploads/uploads-utils';
@@ -18,7 +17,7 @@ interface UpdateImageBody {
   tempPath?: string;
 }
 
-const multerOptions: MulterOptions = {
+const multerOptions: multer.Options = {
   storage: diskStorage({
     destination: uploads.tmpPath(),
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

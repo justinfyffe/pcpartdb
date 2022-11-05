@@ -2,6 +2,7 @@ import { RepositoryConfig } from '@server/db/repository';
 import { BenchmarkKey } from '@shared/benchmark';
 import { ProductType } from '@shared/product';
 import { ProductImageType } from '@shared/product-image';
+import { SpecKey } from '@shared/spec';
 import { Model, raw } from 'objection';
 import { benchmarkRepository } from './benchmark/benchmark-repository';
 import { productImageRepository } from './image/product-image-repository';
@@ -79,7 +80,7 @@ export class ProductRepository {
           builder.whereIn('key', []);
         },
         autocompleteSpecs(builder) {
-          builder.whereIn('key', []);
+          builder.whereIn('key', [SpecKey.Company]);
         },
         autocompleteImages(builder) {
           builder.where('type', ProductImageType.Autocomplete);

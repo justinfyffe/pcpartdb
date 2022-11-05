@@ -1,5 +1,5 @@
 import * as nodemailer from 'nodemailer';
-import { internalServerError } from '../errors/errors';
+import { internalServerError } from '../api/status';
 
 export interface EmailOptions {
   from: string;

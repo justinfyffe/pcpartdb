@@ -110,9 +110,27 @@ export const ProductAutocomplete = forwardRef<
     }
   }, [product]);
 
+  const resultsImages = useMemo(() => {
+    if (results.length === 0) {
+      return null;
+    }
+
+    return results.map((product) => {
+      const specs = getSpecMap(product);
+
+      if (specs.COMPANY?.stringValue === 'NVIDIA') {
+        return '/images/logos/nvidia.svg';
+      } else if (specs.COMPANY?.stringValue === 'AMD') {
+        return '/images/logos/amd.svg';
+      } else {
+        return null;
+      }
+    });
+  }, [results]);
+
   return (
     <Autocomplete
-      prefix={prefixImage}
+      prefix={prefixImage ? <Img src={prefixImage} className="h-5" /> : <></>}
       label={product?.name ?? ''}
       value={value != null && value !== 0 ? `${value}` : ''}
       onQuery={handleQuery}
@@ -120,7 +138,7 @@ export const ProductAutocomplete = forwardRef<
       className={classNames('flex flex-1 items-center', className)}
       ref={ref}
     >
-      {results.map((result) => (
+      {results.map((result, i) => (
         <AutocompleteOption
           key={result.id}
           label={result.name}
@@ -129,7 +147,11 @@ export const ProductAutocomplete = forwardRef<
           hoveredClassName="bg-[#fafafa]"
         >
           <div className="flex flex-1 items-center gap-4">
-            {prefixImage ? <Img src={prefixImage} className="h-5" /> : <></>}
+            {resultsImages[i] ? (
+              <Img src={resultsImages[i]} className="h-5" />
+            ) : (
+              <></>
+            )}
             <span className="flex-1">{result.name}</span>
             <div className="flex flex-col gap-1 items-end text-[12px]">
               <div className="text-[#aaa]">2022</div>

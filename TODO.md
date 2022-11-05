@@ -8,10 +8,6 @@ Immediate Tasks:
   - Performance Rating = GPU Score / Max(GPU Score)
   - Value Rating = Value Score / Max(Value Score)
 
-- Do we even need nestjs? just use nextjs?
-  - Get rid of nestjs and use nextjs 13
-  - cleanup unused methods from controllers
-  - cleanup modules, catchAll and nestjs
 - restructure data?
   - Should specs, benchmarks, meta, reviews, retail models be jsonb fields? or separate table?
   - separate tables for each pc part? or same table? e.g. a gpus table, a cpus table, a motherboard table

@@ -10,7 +10,6 @@ import {
 } from '@client/shared/components';
 import { WebsiteLayout } from '@client/shared/layouts';
 import { classNames } from '@client/shared/ui';
-import { NextPageContext } from 'next';
 import React from 'react';
 
 interface HomePageProps {}
@@ -102,10 +101,6 @@ export const HomePage = (_props: HomePageProps) => {
       </Feed>
     </WebsiteLayout>
   );
-};
-
-HomePage.getInitialProps = async (_ctx: NextPageContext) => {
-  return {};
 };
 
 export default HomePage;
