@@ -1,6 +1,6 @@
 import { Field, NumberInput, TextInput } from '@client/shared/components';
 import { classNames } from '@client/shared/ui';
-import { BenchmarkKey, BenchmarkRequest } from '@shared/benchmark';
+import { Benchmark, Benchmarks } from '@shared/benchmark';
 import React, {
   FunctionComponent,
   useCallback,
@@ -8,22 +8,17 @@ import React, {
   useState,
 } from 'react';
 
-const LABELS: Record<BenchmarkKey, string> = {
-  [BenchmarkKey.CpuMark]: 'CPU Mark',
-  [BenchmarkKey.G2dMark]: 'G2D Mark',
-  [BenchmarkKey.G3dMark]: 'G3D Mark',
-  [BenchmarkKey.PerformanceScore]: 'Performance Score',
-  [BenchmarkKey.ThreadMark]: 'Thread Mark',
-  [BenchmarkKey.TimeSpyGraphics]: '3DMark Time Spy Graphics',
-  [BenchmarkKey.TimeSpyPhysics]: '3DMark Time Spy Physics',
-  [BenchmarkKey.ValueScore]: 'Value Score',
+const LABELS: Record<string, string> = {
+  g2dMark: 'G2D Mark',
+  g3dMark: 'G3D Mark',
+  timeSpyGraphics: '3DMark Time Spy Graphics',
 };
 
 interface BenchmarkFieldProps {
-  benchmarkKey: BenchmarkKey;
+  field: keyof Benchmarks;
 
-  value?: BenchmarkRequest;
-  onChange?: (value: BenchmarkRequest) => void;
+  value?: Benchmark<number>;
+  onChange?: (value: Benchmark<number>) => void;
 
   className?: string;
   ref?: unknown;
@@ -32,7 +27,7 @@ interface BenchmarkFieldProps {
 export const BenchmarkField: FunctionComponent<BenchmarkFieldProps> = (
   props,
 ) => {
-  const { benchmarkKey, value: propsValue, onChange, className } = props;
+  const { field, value: propsValue, onChange, className } = props;
 
   const [value, setValue] = useState(propsValue ?? null);
   useEffect(() => setValue(propsValue), [propsValue]);
@@ -41,32 +36,31 @@ export const BenchmarkField: FunctionComponent<BenchmarkFieldProps> = (
     (score: number) => {
       const newValue = {
         ...value,
-        key: benchmarkKey,
-        floatValue: score,
+        value: score,
       };
       setValue(newValue);
       onChange(newValue);
     },
-    [onChange, benchmarkKey, value],
+    [onChange, value],
   );
 
   const handleSourceChange = useCallback(
     (source: string) => {
-      const newValue = { ...value, key: benchmarkKey, source };
+      const newValue = { ...value, source };
       setValue(newValue);
       onChange(newValue);
     },
-    [onChange, benchmarkKey, value],
+    [onChange, value],
   );
 
   return (
     <div className={classNames('flex gap-6 items-center', className)}>
-      <div className="flex-1 max-w-[200px]">{LABELS[benchmarkKey] ?? '--'}</div>
+      <div className="flex-1 max-w-[200px]">{LABELS[field] ?? '--'}</div>
 
       <Field className="flex-1">
         Score
         <NumberInput
-          value={value?.floatValue ?? null}
+          value={value?.value ?? null}
           onChange={handleScoreChange}
           ref={null}
         />

@@ -16,41 +16,20 @@ import Joi from '@hapi/joi';
 import { joiResolver } from '@hookform/resolvers/joi';
 import {
   Benchmark,
-  BenchmarkKey,
-  BenchmarkRequest,
   BenchmarksRequest,
   benchmarkValidator,
 } from '@shared/benchmark';
 import { ApiError, ValidationErrorType } from '@shared/error';
-import {
-  getBenchmarkMap,
-  getProductMetaMap,
-  getReviewMap,
-  getSpecMap,
-  Product,
-  ProductRequest,
-  ProductType,
-} from '@shared/product';
+import { Product, ProductRequest, ProductType } from '@shared/product';
 import {
   ProductImageRequest,
   ProductImagesRequest,
   ProductImageType,
   productImageValidator,
 } from '@shared/product-image';
-import {
-  ProductMeta,
-  ProductMetaKey,
-  ProductMetaRequest,
-  ProductMetasRequest,
-} from '@shared/product-meta';
+import { ProductMeta, ProductMetasRequest } from '@shared/product-meta';
 import { RetailModel, retailModelValidator } from '@shared/retail-model';
-import {
-  Review,
-  ReviewKey,
-  ReviewRequest,
-  ReviewsRequest,
-  reviewValidator,
-} from '@shared/review';
+import { Review, ReviewsRequest, reviewValidator } from '@shared/review';
 import {
   MarketSegmentValue,
   Spec,
@@ -966,11 +945,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           name="g3dMarkBenchmark"
           control={control}
           render={({ field }) => (
-            <BenchmarkField
-              benchmarkKey={BenchmarkKey.G3dMark}
-              {...field}
-              ref={null}
-            />
+            <BenchmarkField field="g3dMark" {...field} ref={null} />
           )}
         />
 
@@ -978,11 +953,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           name="g2dMarkBenchmark"
           control={control}
           render={({ field }) => (
-            <BenchmarkField
-              benchmarkKey={BenchmarkKey.G2dMark}
-              {...field}
-              ref={null}
-            />
+            <BenchmarkField field="g2dMark" {...field} ref={null} />
           )}
         />
 
@@ -990,11 +961,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           name="timeSpyGraphicsBenchmark"
           control={control}
           render={({ field }) => (
-            <BenchmarkField
-              benchmarkKey={BenchmarkKey.TimeSpyGraphics}
-              {...field}
-              ref={null}
-            />
+            <BenchmarkField field="timeSpyGraphics" {...field} ref={null} />
           )}
         />
       </section>
@@ -1006,7 +973,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           name="amazonReview"
           control={control}
           render={({ field }) => (
-            <ReviewField reviewKey={ReviewKey.Amazon} {...field} ref={null} />
+            <ReviewField field="amazon" {...field} ref={null} />
           )}
         />
 
@@ -1014,7 +981,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           name="pcGamerReview"
           control={control}
           render={({ field }) => (
-            <ReviewField reviewKey={ReviewKey.PcGamer} {...field} ref={null} />
+            <ReviewField field="pcGamer" {...field} ref={null} />
           )}
         />
 
@@ -1022,11 +989,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           name="techRadarReview"
           control={control}
           render={({ field }) => (
-            <ReviewField
-              reviewKey={ReviewKey.TechRadar}
-              {...field}
-              ref={null}
-            />
+            <ReviewField field="techRadar" {...field} ref={null} />
           )}
         />
 
@@ -1034,7 +997,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           name="techSpotReview"
           control={control}
           render={({ field }) => (
-            <ReviewField reviewKey={ReviewKey.TechSpot} {...field} ref={null} />
+            <ReviewField field="techSpot" {...field} ref={null} />
           )}
         />
 
@@ -1042,11 +1005,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           name="tomsHardwareReview"
           control={control}
           render={({ field }) => (
-            <ReviewField
-              reviewKey={ReviewKey.TomsHardware}
-              {...field}
-              ref={null}
-            />
+            <ReviewField field="tomsHardware" {...field} ref={null} />
           )}
         />
       </section>
@@ -1231,39 +1190,6 @@ function toReviewsRequest(formData: ProductFormData): ReviewsRequest {
     techSpot: formData.techSpotReview ?? null,
     tomsHardware: formData.tomsHardwareReview ?? null,
   };
-}
-
-function getFormImages(gpu?: Product) {
-  let autocompleteImage: ProductImageRequest = null;
-  let thumbnailImage: ProductImageRequest = null;
-  const detailsImages: ProductImageRequest[] = [];
-
-  const images =
-    gpu?.images?.sort((a, b) => a.metadata.order - b.metadata.order) ?? [];
-
-  images.forEach((value) => {
-    if (value.type === ProductImageType.Autocomplete) {
-      autocompleteImage = {
-        type: value.type,
-        imageId: value.imageId,
-        metadata: value.metadata,
-      };
-    } else if (value.type === ProductImageType.Thumbnail) {
-      thumbnailImage = {
-        type: value.type,
-        imageId: value.imageId,
-        metadata: value.metadata,
-      };
-    } else {
-      detailsImages.push({
-        type: value.type,
-        imageId: value.imageId,
-        metadata: value.metadata,
-      });
-    }
-  });
-
-  return { autocompleteImage, thumbnailImage, detailsImages };
 }
 
 function toRequestImages(formData: ProductFormData): ProductImagesRequest {

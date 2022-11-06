@@ -1,4 +1,4 @@
-import { ProductMetaKey, ProductMetaMetadata } from '@shared/product-meta';
+import { ProductMeta, ProductMetas } from '@shared/product-meta';
 import React, {
   forwardRef,
   Ref,
@@ -11,30 +11,16 @@ import { ProductMetaTextField } from './product-meta-text-field';
 
 type InputType = 'string' | 'text';
 
-interface ProductMetaValue {
-  key: ProductMetaKey;
-
-  integerValue?: number;
-  floatValue?: number;
-  booleanValue?: boolean;
-  stringValue?: string;
-  textValue?: string;
-  jsonValue?: unknown;
-
-  metadata?: ProductMetaMetadata;
-  source?: string;
-}
-
-const INPUT_TYPES: { [key: string]: InputType } = {
-  [ProductMetaKey.Description]: 'text',
+const INPUT_TYPES: Record<string, InputType> = {
+  description: 'text',
 };
 
 interface ProductMetaFieldProps {
   type?: InputType;
-  field: ProductMetaKey;
+  field: keyof ProductMetas;
 
-  value?: ProductMetaValue;
-  onChange?: (value: ProductMetaValue) => void;
+  value?: ProductMeta;
+  onChange?: (value: ProductMeta) => void;
 }
 
 export const ProductMetaField = forwardRef<unknown, ProductMetaFieldProps>(
@@ -45,7 +31,7 @@ export const ProductMetaField = forwardRef<unknown, ProductMetaFieldProps>(
     useEffect(() => setValue(propsValue), [propsValue]);
 
     const handleChange = useCallback(
-      (value: ProductMetaValue) => {
+      (value: ProductMeta) => {
         setValue(value);
         onChange?.(value);
       },
@@ -56,8 +42,7 @@ export const ProductMetaField = forwardRef<unknown, ProductMetaFieldProps>(
     if (inputType === 'text') {
       return (
         <ProductMetaTextField
-          field={field}
-          value={value}
+          value={value as ProductMeta<string>}
           onChange={handleChange}
           ref={ref as Ref<HTMLTextAreaElement>}
         />
@@ -65,8 +50,7 @@ export const ProductMetaField = forwardRef<unknown, ProductMetaFieldProps>(
     } else if (inputType === 'string') {
       return (
         <ProductMetaStringField
-          field={field}
-          value={value}
+          value={value as ProductMeta<string>}
           onChange={handleChange}
           ref={ref as Ref<HTMLInputElement>}
         />
@@ -74,8 +58,7 @@ export const ProductMetaField = forwardRef<unknown, ProductMetaFieldProps>(
     } else {
       return (
         <ProductMetaStringField
-          field={field}
-          value={value}
+          value={value as ProductMeta<string>}
           onChange={handleChange}
           ref={ref as Ref<HTMLInputElement>}
         />

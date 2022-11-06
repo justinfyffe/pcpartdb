@@ -1,36 +1,25 @@
 import { Textarea } from '@client/shared/components';
-import { ProductMetaKey, ProductMetaMetadata } from '@shared/product-meta';
+import { ProductMeta } from '@shared/product-meta';
 import React, { forwardRef, useCallback } from 'react';
 
-interface ProductMetaTextValue {
-  key: ProductMetaKey;
-
-  textValue?: string;
-
-  metadata?: ProductMetaMetadata;
-  source?: string;
-}
-
 interface ProductMetaTextFieldProps {
-  field: ProductMetaKey;
-
-  value?: ProductMetaTextValue;
-  onChange?: (value: ProductMetaTextValue) => void;
+  value?: ProductMeta<string>;
+  onChange?: (value: ProductMeta<string>) => void;
 }
 
 export const ProductMetaTextField = forwardRef<
   HTMLTextAreaElement,
   ProductMetaTextFieldProps
 >((props, ref) => {
-  const { field, value, onChange } = props;
+  const { value, onChange } = props;
 
-  const baseValue = value?.textValue ?? null;
+  const baseValue = value?.value ?? null;
 
   const handleChange = useCallback(
     (value: string) => {
-      onChange?.(value != null ? { key: field, textValue: value } : null);
+      onChange?.(value != null ? { value } : null);
     },
-    [field, onChange],
+    [onChange],
   );
 
   return <Textarea value={baseValue} onChange={handleChange} ref={ref} />;
