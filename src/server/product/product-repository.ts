@@ -1,63 +1,44 @@
 import { RepositoryConfig } from '@server/db/repository';
-import { BenchmarkKey } from '@shared/benchmark';
+import { imageRepository } from '@server/images/image-repository';
+import { serialize } from '@server/shared/types/serialize';
+import { Image } from '@shared/image';
 import { ProductType } from '@shared/product';
-import { ProductImageType } from '@shared/product-image';
-import { SpecKey } from '@shared/spec';
-import { Model, raw } from 'objection';
-import { benchmarkRepository } from './benchmark/benchmark-repository';
-import { productImageRepository } from './image/product-image-repository';
-import { productMetaRepository } from './meta/product-meta-repository';
+import { ProductMetas } from '@shared/product-meta';
+import { Specs } from '@shared/spec';
+import { Model, raw, ref } from 'objection';
 import { ProductModel, ProductModelPojo } from './product-model';
-import { reviewRepository } from './review/review-repository';
-import { specRepository } from './spec/spec-repository';
 
 export class ProductRepository {
   async list(type: ProductType, config?: RepositoryConfig) {
-    return await ProductModel.query(config?.trx)
+    const products = await ProductModel.query(config?.trx)
       .where('type', type)
-      .orderBy('id', 'DESC')
-      .withGraphFetched('specs')
-      .withGraphFetched('benchmarks')
-      .withGraphFetched('meta');
+      .orderBy('id', 'DESC');
+
+    await this.populateImages(products);
+
+    return products;
   }
 
   async save(product: ProductModelPojo, config?: RepositoryConfig) {
-    const { meta, specs, benchmarks, reviews, images, ...rest } = product;
-
     const { id } = await ProductModel.query(config?.trx)
-      .insert(rest)
+      .insert(product)
       .onConflict('id')
       .merge()
       .returning('*');
-
-    await specRepository.saveMultiple(id, specs, config);
-    await benchmarkRepository.saveMultiple(id, benchmarks, config);
-    await reviewRepository.saveMultiple(id, reviews, config);
-
-    await productMetaRepository.saveMultiple(id, meta, config);
-    await productImageRepository.saveMultiple(id, images, config);
 
     return this.findById(id, config);
   }
 
   async findById(id: number, config?: RepositoryConfig) {
-    return await ProductModel.query(config?.trx)
-      .findById(id)
-      .withGraphFetched('specs')
-      .withGraphFetched('reviews')
-      .withGraphFetched('benchmarks')
-      .withGraphFetched('meta')
-      .withGraphFetched('images.[image]');
+    const product = await ProductModel.query(config?.trx).findById(id);
+    await this.populateImages([product]);
+    return product;
   }
 
   async findBySlug(slug: string, config?: RepositoryConfig) {
-    return await ProductModel.query(config?.trx)
-      .findOne({ slug })
-      .withGraphFetched('specs')
-      .withGraphFetched('reviews')
-      .withGraphFetched('benchmarks')
-      .withGraphFetched('meta')
-      .withGraphFetched('images.[image]');
+    const product = await ProductModel.query(config?.trx).findOne({ slug });
+    await this.populateImages([product]);
+    return product;
   }
 
   async delete(id: number, config?: RepositoryConfig) {
@@ -71,21 +52,31 @@ export class ProductRepository {
   ) {
     return await ProductModel.query(config?.trx)
       .where('type', type)
-      .andWhere('name', 'ILIKE', `%${query}%`)
-      .withGraphFetched('specs(autocompleteSpecs)')
-      .withGraphFetched('meta(autocompleteMeta)')
-      .withGraphFetched('images(autocompleteImages).[image]')
-      .modifiers({
-        autocompleteMeta(builder) {
-          builder.whereIn('key', []);
-        },
-        autocompleteSpecs(builder) {
-          builder.whereIn('key', [SpecKey.Company]);
-        },
-        autocompleteImages(builder) {
-          builder.where('type', ProductImageType.Autocomplete);
-        },
-      });
+      .andWhere('name', 'ILIKE', `%${query}%`);
+  }
+
+  async findSimilarSpecValue(
+    key: keyof Specs,
+    query: string,
+    config?: RepositoryConfig,
+  ) {
+    return await ProductModel.query(config?.trx).where(
+      ref(`specs:${key}.value`),
+      'ILIKE',
+      `%${query}%`,
+    );
+  }
+
+  async findSimilarMetaValue(
+    key: keyof ProductMetas,
+    query: string,
+    config?: RepositoryConfig,
+  ) {
+    return await ProductModel.query(config?.trx).where(
+      ref(`metas:${key}.value`),
+      'ILIKE',
+      `%${query}%`,
+    );
   }
 
   async getPerformanceRanks(
@@ -93,13 +84,12 @@ export class ProductRepository {
     type: ProductType,
     config?: RepositoryConfig,
   ) {
-    const ranksQuery = ProductModel.relatedQuery('benchmarks')
-      .for(ProductModel.query().where('type', type))
-      .where('key', BenchmarkKey.PerformanceScore)
+    const ranksQuery = ProductModel.query(config?.trx)
+      .where('type', type)
       .select(
         'productId',
         raw(
-          'CAST(RANK() OVER ( ORDER BY float_value DESC ) AS INTEGER) AS rank',
+          'CAST(RANK() OVER ( ORDER BY benchmarks->performanceScore->>value DESC ) AS INTEGER) AS rank',
         ),
       );
 
@@ -132,13 +122,12 @@ export class ProductRepository {
     type: ProductType,
     config?: RepositoryConfig,
   ) {
-    const ranksQuery = ProductModel.relatedQuery('benchmarks')
-      .for(ProductModel.query().where('type', type))
-      .where('key', BenchmarkKey.ValueScore)
+    const ranksQuery = ProductModel.query(config?.trx)
+      .where('type', type)
       .select(
         'productId',
         raw(
-          'CAST(RANK() OVER ( ORDER BY float_value DESC ) AS INTEGER) AS rank',
+          'CAST(RANK() OVER ( ORDER BY benchmarks->valueScore->>value DESC ) AS INTEGER) AS rank',
         ),
       );
 
@@ -160,6 +149,42 @@ export class ProductRepository {
   async getValueRank(id: number, type: ProductType, config?: RepositoryConfig) {
     const ranks = await this.getValueRanks([id], type, config);
     return ranks[0] ?? null;
+  }
+
+  private async populateImages(
+    products: ProductModel[],
+    config?: RepositoryConfig,
+  ) {
+    const imageIds = products
+      .reduce((acc, product) => {
+        acc.push(product.images?.autocomplete?.imageId);
+        acc.push(product.images?.thumbnail?.imageId);
+        product?.images?.details?.forEach((image) => acc.push(image.imageId));
+        return acc;
+      }, [] as number[])
+      .filter((id) => id != null);
+
+    const images = await imageRepository.findByIds(imageIds, config);
+    const imagesMap = images.reduce((acc, image) => {
+      acc[image.id] = serialize(image);
+      return acc;
+    }, {} as Record<number, Image>);
+
+    products.forEach((product) => {
+      const thumbnail = product?.images?.thumbnail;
+      if (thumbnail != null) {
+        thumbnail.image = imagesMap[thumbnail.imageId];
+      }
+
+      const autocomplete = product?.images?.autocomplete;
+      if (autocomplete != null) {
+        autocomplete.image = imagesMap[autocomplete.imageId];
+      }
+
+      product?.images?.details.forEach((detailImage) => {
+        detailImage.image = imagesMap[detailImage.imageId];
+      });
+    });
   }
 }
 

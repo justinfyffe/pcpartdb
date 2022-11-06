@@ -1,6 +1,5 @@
-import { formatProductMeta, getProductMetaValue } from '@shared/product-meta';
-import { RetailModel } from '@shared/retail-model';
-import { formatSpec, getSpecValue } from '@shared/spec';
+import { formatProductMeta } from '@shared/product-meta';
+import { formatSpec } from '@shared/spec';
 import React, { useContext, useMemo } from 'react';
 import { ProductContext } from './product-context';
 
@@ -30,9 +29,9 @@ const IntroParagraph = () => {
 
   const sentence1 = useMemo(() => {
     const name = product.name;
-    const company = formatSpec(specs.COMPANY);
-    const releaseDate = formatSpec(specs.RELEASE_DATE);
-    const msrp = formatSpec(specs.LAUNCH_PRICE_MSRP);
+    const company = formatSpec(specs.company);
+    const releaseDate = formatSpec(specs.releaseDate);
+    const msrp = formatSpec(specs.launchPrice);
 
     if (company && releaseDate && msrp) {
       return `The ${name} by ${company} has a release date of ${releaseDate} with a MSRP of ${msrp}. `;
@@ -54,8 +53,8 @@ const IntroParagraph = () => {
   }, [product, specs]);
 
   const sentence2 = useMemo(() => {
-    const msrpValue = getSpecValue(specs.LAUNCH_PRICE_MSRP);
-    const segment = formatSpec(specs.MARKET_SEGMENT);
+    const msrpValue = specs.launchPrice.value;
+    const segment = formatSpec(specs.marketSegment);
 
     let msrpMarket = null;
     if (msrpValue != null) {
@@ -91,9 +90,9 @@ const MemoryParagraph = () => {
   const { specs } = useContext(ProductContext);
 
   const sentence1 = useMemo(() => {
-    const architecture = formatSpec(specs.ARCHITECTURE);
-    const memorySize = formatSpec(specs.MEMORY_SIZE);
-    const memoryType = formatSpec(specs.MEMORY_TYPE);
+    const architecture = formatSpec(specs.architecture);
+    const memorySize = formatSpec(specs.memorySize);
+    const memoryType = formatSpec(specs.memoryType);
 
     if (architecture && memorySize && memoryType) {
       return `The ${architecture} architecture GPU has ${memorySize} of ${memoryType} memory. `;
@@ -111,9 +110,9 @@ const MemoryParagraph = () => {
   }, [specs]);
 
   const sentence2 = useMemo(() => {
-    const memoryClock = formatSpec(specs.MEMORY_CLOCK);
-    const memoryBandwidth = formatSpec(specs.MEMORY_BANDWIDTH);
-    const memoryInterface = formatSpec(specs.MEMORY_INTERFACE);
+    const memoryClock = formatSpec(specs.memoryClock);
+    const memoryBandwidth = formatSpec(specs.memoryBandwidth);
+    const memoryInterface = formatSpec(specs.memoryInterface);
 
     if (memoryClock && memoryBandwidth && memoryInterface) {
       return `The memory is clocked at ${memoryClock} and has a bandwidth of ${memoryBandwidth} with a ${memoryInterface} interface. `;
@@ -144,10 +143,10 @@ const CompatibilityParagraph = () => {
   const { specs } = useContext(ProductContext);
 
   const sentence1 = useMemo(() => {
-    const slots = getSpecValue(specs.SLOT_WIDTH);
-    const length = getSpecValue(specs.LENGTH);
-    const width = getSpecValue(specs.WIDTH);
-    const height = getSpecValue(specs.HEIGHT);
+    const slots = formatSpec(specs.slotWidth);
+    const length = formatSpec(specs.length);
+    const width = formatSpec(specs.width);
+    const height = formatSpec(specs.height);
 
     if (slots && length && width && height) {
       return `This ${slots}-slot graphics card has dimensions of ${length} x ${width} x ${height} mm. `;
@@ -161,8 +160,8 @@ const CompatibilityParagraph = () => {
   }, [specs]);
 
   const sentence2 = useMemo(() => {
-    const tdp = getSpecValue(specs.THERMAL_DESIGN_POWER);
-    const suggestedPsu = getSpecValue(specs.SUGGESTED_PSU);
+    const tdp = formatSpec(specs.thermalDesignPower);
+    const suggestedPsu = formatSpec(specs.suggestedPsu);
 
     if (tdp && suggestedPsu) {
       return `It has a Thermal Design Power (TDP) of ${tdp} and it is recommended to be used with a minimum ${suggestedPsu} PSU. `;
@@ -187,7 +186,7 @@ const CoresParagraph = () => {
   const { specs } = useContext(ProductContext);
 
   const sentence1 = useMemo(() => {
-    const clockSpeed = formatSpec(specs.CORE_CLOCK_SPEED_BASE);
+    const clockSpeed = formatSpec(specs.coreClockSpeedBase);
 
     if (clockSpeed) {
       return `The card operates at a base clock speed of ${clockSpeed}. `;
@@ -197,11 +196,11 @@ const CoresParagraph = () => {
   }, [specs]);
 
   const sentence2 = useMemo(() => {
-    const cores = formatSpec(specs.SHADER_UNITS_CUDA_CORES);
-    const fp32 = formatSpec(specs.FP32_PERFORMANCE);
-    const fp64 = formatSpec(specs.FP64_PERFORMANCE);
+    const cores = formatSpec(specs.shaderUnitsCudaCores);
+    const fp32 = formatSpec(specs.fp32Performance);
+    const fp64 = formatSpec(specs.fp64Performance);
 
-    const company = getSpecValue(specs.COMPANY);
+    const company = formatSpec(specs.company);
     let coresName = company === 'NVIDIA' ? 'CUDA Cores' : 'Cores';
     coresName = company === 'AMD' ? 'Shader Units' : 'Cores';
 
@@ -225,8 +224,8 @@ const CoresParagraph = () => {
   }, [specs]);
 
   const sentence3 = useMemo(() => {
-    const rops = formatSpec(specs.RENDER_OUTPUT_UNITS);
-    const pixelFillRate = formatSpec(specs.PIXEL_FILL_RATE);
+    const rops = formatSpec(specs.renderOutputUnits);
+    const pixelFillRate = formatSpec(specs.pixelFillRate);
 
     if (rops && pixelFillRate) {
       return `The ${rops} Render Output Units (ROPs) gives it a pixel fill rate of ${pixelFillRate}. `;
@@ -240,8 +239,8 @@ const CoresParagraph = () => {
   }, [specs]);
 
   const sentence4 = useMemo(() => {
-    const tmus = formatSpec(specs.TEXTURE_MAPPING_UNIT);
-    const textureFillRate = formatSpec(specs.TEXTURE_FILL_RATE);
+    const tmus = formatSpec(specs.textureMappingUnits);
+    const textureFillRate = formatSpec(specs.textureFillRate);
 
     if (tmus && textureFillRate) {
       return `The ${tmus} Texture Mapping Units (TMUs) gives it a texture fill rate of ${textureFillRate}. `;
@@ -265,16 +264,16 @@ const CoresParagraph = () => {
 };
 
 const ConclusionParagraph = () => {
-  const { product, specs, meta } = useContext(ProductContext);
+  const { product, specs, metas } = useContext(ProductContext);
 
   const sentence1 = useMemo(() => {
     const name = product.name;
-    const company = formatSpec(specs.COMPANY);
+    const company = formatSpec(specs.company);
 
-    const performanceRank = formatProductMeta(meta.PERFORMANCE_RANK, {
+    const performanceRank = formatProductMeta(metas.performanceRank, {
       ordinalSuffix: true,
     });
-    const valueRank = formatProductMeta(meta.VALUE_RANK, {
+    const valueRank = formatProductMeta(metas.valueRank, {
       ordinalSuffix: true,
     });
 
@@ -290,15 +289,13 @@ const ConclusionParagraph = () => {
     } else {
       return '';
     }
-  }, [product, specs, meta]);
+  }, [product, specs, metas]);
 
   const sentence2 = useMemo(() => {
     const name = product.name;
-    const company = formatSpec(specs.COMPANY);
+    const company = formatSpec(specs.company);
 
-    const retailModels = getProductMetaValue(
-      meta.RETAIL_MODELS,
-    ) as RetailModel[];
+    const retailModels = metas.retailModels.value;
 
     if (retailModels == null || retailModels.length == 0) {
       return <></>;
@@ -316,7 +313,7 @@ const ConclusionParagraph = () => {
         to check the current availability and price of the {company} {name}.
       </>
     );
-  }, [product, specs, meta]);
+  }, [product, specs, metas]);
 
   return (
     <p>

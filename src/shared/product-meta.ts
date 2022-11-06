@@ -1,65 +1,36 @@
 import Joi from '@hapi/joi';
+import { RetailModel } from './retail-model';
 
 export enum ProductMetaBooleanFormatter {
   TrueFalse = 'TRUE_FALSE',
   YesNo = 'YES_NO',
 }
 
-export enum ProductMetaKey {
+export interface ProductMetas {
   // Generated Meta Values
-  PerformanceRank = 'PERFORMANCE_RANK',
-  ValueRank = 'VALUE_RANK',
+  performanceRank?: ProductMeta<number>;
+  valueRank?: ProductMeta<number>;
 
   // Persisted Meta Values
-  Description = 'DESCRIPTION',
-  RetailModels = 'RETAIL_MODELS',
+  description?: ProductMeta<string>;
+  retailModels?: ProductMeta<RetailModel[]>;
 }
+
+export type ProductMetasRequest = ProductMetas;
 
 export interface ProductMetaMetadata {}
 
-export interface ProductMeta {
-  key: ProductMetaKey;
-
-  integerValue?: number;
-  floatValue?: number;
-  booleanValue?: boolean;
-  stringValue?: string;
-  textValue?: string;
-  jsonValue?: unknown;
-
+export interface ProductMeta<T = unknown> {
+  value?: T;
   source?: string;
   metadata?: ProductMetaMetadata;
 }
 
-export type ProductMetaRequest = ProductMeta;
-
-export type ProductMetaMap = Partial<Record<ProductMetaKey, ProductMeta>>;
-
 export const productMetaValidator = Joi.object({
-  key: Joi.string().required(),
-
-  integerValue: Joi.number().allow(null),
-  floatValue: Joi.number().allow(null),
-  booleanValue: Joi.boolean().allow(null),
-  stringValue: Joi.string().allow(null),
-  textValue: Joi.string().allow(null),
-  jsonValue: Joi.any().allow(null),
-
+  value: Joi.any().allow(null),
   source: Joi.string().allow(null),
   metadata: Joi.any().allow(null),
 }).options({ abortEarly: false });
-
-export function getProductMetaValue(meta: ProductMeta) {
-  return (
-    meta?.booleanValue ??
-    meta?.floatValue ??
-    meta?.integerValue ??
-    meta?.jsonValue ??
-    meta?.stringValue ??
-    meta?.textValue ??
-    null
-  );
-}
 
 export interface FormatMetaOptions {
   decimals?: number;
@@ -71,44 +42,31 @@ export function formatProductMeta(
   meta: ProductMeta,
   options?: FormatMetaOptions,
 ) {
-  if (getProductMetaValue(meta) == null) {
+  const { value } = meta;
+  if (value == null) {
     return null;
   }
 
-  const {
-    booleanValue,
-    floatValue,
-    integerValue,
-    jsonValue,
-    stringValue,
-    textValue,
-  } = meta;
-
   // Handle special cases
 
-  // Handle cases that we cannot output.
-  if (jsonValue != null) {
-    throw new Error('Cannot format a json value');
-  }
-
   // Compute string to return
-  let returnValue = null;
-  if (booleanValue != null) {
+  let returnValue: string = null;
+  if (typeof value === 'boolean') {
     returnValue = formatBooleanValue(
-      booleanValue,
+      value,
       options?.booleanFormatter ?? ProductMetaBooleanFormatter.TrueFalse,
     );
-  } else if (floatValue != null) {
-    returnValue = floatValue.toLocaleString(undefined, {
+  } else if (typeof value === 'number' && Number.isInteger(value)) {
+    returnValue = value.toLocaleString();
+  } else if (typeof value === 'number' && !Number.isInteger(value)) {
+    returnValue = value.toLocaleString(undefined, {
       minimumFractionDigits: options?.decimals ?? 0,
       maximumFractionDigits: options?.decimals ?? 0,
     });
-  } else if (integerValue != null) {
-    returnValue = integerValue.toLocaleString();
-  } else if (stringValue != null) {
-    returnValue = stringValue;
-  } else if (textValue != null) {
-    returnValue = textValue;
+  } else if (typeof value === 'string') {
+    returnValue = value;
+  } else {
+    return null;
   }
 
   if (returnValue == null) {
@@ -116,8 +74,8 @@ export function formatProductMeta(
   }
 
   // Apply modifiers
-  if (options?.ordinalSuffix && integerValue != null) {
-    const ordinalSuffix = getOrdinalSuffix(integerValue);
+  if (options?.ordinalSuffix && typeof value === 'number') {
+    const ordinalSuffix = getOrdinalSuffix(value as number);
     returnValue = `${returnValue}${ordinalSuffix}`;
   }
 

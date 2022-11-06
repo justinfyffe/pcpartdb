@@ -11,10 +11,10 @@ import {
   Tr,
 } from '@client/shared/components';
 import { WebsiteLayout } from '@client/shared/layouts';
-import { getProductMetaMap, getSpecMap, Product } from '@shared/product';
+import { Product } from '@shared/product';
 import { formatProductMeta } from '@shared/product-meta';
 import { formatSpec } from '@shared/spec';
-import React, { useMemo } from 'react';
+import React from 'react';
 import { CompareProductsForm } from '../compare-products-form';
 
 export interface ListGpusPageProps {
@@ -23,9 +23,6 @@ export interface ListGpusPageProps {
 
 export const ListGpusPage = (props: ListGpusPageProps) => {
   const { gpus } = props;
-
-  const specs = useMemo(() => gpus.map((gpu) => getSpecMap(gpu)), [gpus]);
-  const meta = useMemo(() => gpus.map((gpu) => getProductMetaMap(gpu)), [gpus]);
 
   return (
     <WebsiteLayout>
@@ -64,14 +61,14 @@ export const ListGpusPage = (props: ListGpusPageProps) => {
                     <Tr key={i} className="cursor-pointer">
                       <Td>
                         <a href={`/gpus/view/${gpu.slug}`}>
-                          {formatSpec(specs[i].COMPANY) || ''} {gpu.name}
+                          {formatSpec(gpu.specs.company) || ''} {gpu.name}
                         </a>
                       </Td>
                       <Td>
-                        {formatProductMeta(meta[i].PERFORMANCE_RANK) || '--'}
+                        {formatProductMeta(gpu.metas.performanceRank) || '--'}
                       </Td>
-                      <Td>{formatProductMeta(meta[i].VALUE_RANK) || '--'}</Td>
-                      <Td>{formatSpec(specs[i].RELEASE_DATE) || '--'}</Td>
+                      <Td>{formatProductMeta(gpu.metas.valueRank) || '--'}</Td>
+                      <Td>{formatSpec(gpu.specs.releaseDate) || '--'}</Td>
                     </Tr>
                   ))}
                 </TBody>

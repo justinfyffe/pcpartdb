@@ -1,9 +1,7 @@
 import { getImageUrl } from '@client/image';
 import { Img } from '@client/shared/components';
 import { classNames } from '@client/shared/ui';
-import { getProductImageMap, getSpecMap, Product } from '@shared/product';
-import { ProductImageType } from '@shared/product-image';
-import { SpecKey } from '@shared/spec';
+import { Product } from '@shared/product';
 import React, { FunctionComponent, useMemo, useState } from 'react';
 import { ProductImageOption } from './product-image-option';
 
@@ -14,8 +12,8 @@ interface ProductImagesProps {
 }
 
 function getCompanyLogoImage(product: Product) {
-  const specs = getSpecMap(product);
-  const company = specs[SpecKey.Company]?.stringValue;
+  const specs = product.specs;
+  const company = specs.company?.value;
 
   if (company == null) {
     return null;
@@ -37,8 +35,7 @@ export const ProductImages: FunctionComponent<ProductImagesProps> = (props) => {
   const [selected, setSelected] = useState(0);
 
   const images = useMemo(() => {
-    const productImages =
-      getProductImageMap(product)[ProductImageType.Details] ?? [];
+    const productImages = product.images?.details ?? [];
     const companyImage = getCompanyLogoImage(product);
     const images = productImages
       .filter((image) => image.image != null)

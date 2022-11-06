@@ -4,11 +4,10 @@ import { Context } from '@server/shared/context';
 import { validate } from '@server/shared/types/validate';
 import { benchmarkValidator } from '@shared/benchmark';
 import { ProductRequest, ProductType } from '@shared/product';
-import { ProductMetaKey, productMetaValidator } from '@shared/product-meta';
+import { ProductMetas, productMetaValidator } from '@shared/product-meta';
 import { reviewValidator } from '@shared/review';
-import { specValidator } from '@shared/spec';
-import { calculatePerformanceBenchmarks } from './benchmark/benchmark-utils';
-import { ProductMetaModel } from './meta/product-meta-model';
+import { Specs, specValidator } from '@shared/spec';
+import { addPerformanceBenchmarks } from './benchmark-utils';
 import { productRepository } from './product-repository';
 
 const productImageValidator = Joi.object({
@@ -58,7 +57,7 @@ interface ListOptions {
 
 export class ProductService {
   async list(options: ListOptions, ctx: Context) {
-    const { type, limit, orderBy } = options;
+    const { type, limit } = options;
 
     // Fetch all products
     const products = await productRepository.list(type, ctx);
@@ -79,19 +78,11 @@ export class ProductService {
     const valueRanks = await productRepository.getValueRanks(ids, type, ctx);
 
     products.forEach((product, i) => {
-      product.meta = product.meta ?? [];
-      product.meta?.push(
-        ProductMetaModel.fromJson({
-          key: ProductMetaKey.PerformanceRank,
-          integerValue: performanceRanks[i],
-        }),
-      );
-      product.meta?.push(
-        ProductMetaModel.fromJson({
-          key: ProductMetaKey.ValueRank,
-          integerValue: valueRanks[i],
-        }),
-      );
+      product.metas = {
+        ...product.metas,
+        performanceRank: { value: performanceRanks[i] },
+        valueRank: { value: valueRanks[i] },
+      };
     });
 
     return products;
@@ -117,23 +108,11 @@ export class ProductService {
       ctx,
     );
 
-    if (performanceRank != null) {
-      product.meta?.push(
-        ProductMetaModel.fromJson({
-          key: ProductMetaKey.PerformanceRank,
-          integerValue: performanceRank,
-        }),
-      );
-    }
-
-    if (valueRank != null) {
-      product.meta?.push(
-        ProductMetaModel.fromJson({
-          key: ProductMetaKey.ValueRank,
-          integerValue: valueRank,
-        }),
-      );
-    }
+    product.metas = {
+      ...product.metas,
+      performanceRank: { value: performanceRank },
+      valueRank: { value: valueRank },
+    };
 
     return product;
   }
@@ -171,33 +150,23 @@ export class ProductService {
   async create(data: ProductRequest, ctx: Context) {
     validate(data, createProductValidator);
 
-    const performanceBenchmarks = calculatePerformanceBenchmarks(data);
+    addPerformanceBenchmarks(data);
 
-    return await productRepository.save(
-      { ...data, benchmarks: [...data.benchmarks, ...performanceBenchmarks] },
-      ctx,
-    );
+    return await productRepository.save(data, ctx);
   }
 
   // TODO: check slug uniqueness
   async update(id: number, data: ProductRequest, ctx: Context) {
     validate(data, updateProductValidator);
 
-    const performanceBenchmarks = calculatePerformanceBenchmarks(data);
+    addPerformanceBenchmarks(data);
 
     const product = await productRepository.findById(id, ctx);
     if (product == null) {
       throw notFoundError({ product: id });
     }
 
-    return await productRepository.save(
-      {
-        ...data,
-        id,
-        benchmarks: [...data.benchmarks, ...performanceBenchmarks],
-      },
-      ctx,
-    );
+    return await productRepository.save({ ...data, id }, ctx);
   }
 
   async delete(id: number, ctx: Context) {
@@ -212,6 +181,14 @@ export class ProductService {
 
   async autocomplete(type: ProductType, query: string, ctx: Context) {
     return await productRepository.findSimilarValue(type, query, ctx);
+  }
+
+  async autocompleteSpec(key: keyof Specs, query: string, ctx: Context) {
+    return await productRepository.findSimilarSpecValue(key, query, ctx);
+  }
+
+  async autocompleteMeta(key: keyof ProductMetas, query: string, ctx: Context) {
+    return await productRepository.findSimilarMetaValue(key, query, ctx);
   }
 }
 

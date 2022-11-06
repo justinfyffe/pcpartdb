@@ -226,10 +226,10 @@ interface GpuFormProps {
 }
 
 function formOptions(gpu?: Product): UseFormProps<ProductFormData> {
-  const meta = gpu != null ? getProductMetaMap(gpu) : {};
-  const specs = gpu != null ? getSpecMap(gpu) : {};
-  const benchmarks = gpu != null ? getBenchmarkMap(gpu) : {};
-  const reviews = gpu != null ? getReviewMap(gpu) : {};
+  const meta = gpu?.metas ?? {};
+  const specs = gpu?.specs ?? {};
+  const benchmarks = gpu?.benchmarks ?? {};
+  const reviews = gpu?.reviews ?? {};
   const { autocompleteImage, thumbnailImage, detailsImages } =
     getFormImages(gpu);
 
@@ -242,73 +242,72 @@ function formOptions(gpu?: Product): UseFormProps<ProductFormData> {
       name: gpu?.name ?? null,
 
       // General
-      company: specs[SpecKey.Company] ?? null,
-      marketSegment: specs[SpecKey.MarketSegment] ?? null,
-      launchPriceMsrp: specs[SpecKey.LaunchPriceMsrp] ?? null,
-      releaseDate: specs[SpecKey.ReleaseDate] ?? null,
+      company: specs.company ?? null,
+      marketSegment: specs.marketSegment ?? null,
+      launchPriceMsrp: specs.launchPrice ?? null,
+      releaseDate: specs.releaseDate ?? null,
 
       // Processor
-      gpuName: specs[SpecKey.GpuName] ?? null,
-      architecture: specs[SpecKey.Architecture] ?? null,
-      processSize: specs[SpecKey.ProcessSize] ?? null,
-      transistors: specs[SpecKey.Transistors] ?? null,
+      gpuName: specs.gpuName ?? null,
+      architecture: specs.architecture ?? null,
+      processSize: specs.processSize ?? null,
+      transistors: specs.transistors ?? null,
 
       // Board Compatibility & Dimensions
-      slotWidth: specs[SpecKey.SlotWidth] ?? null,
-      length: specs[SpecKey.Length] ?? null,
-      width: specs[SpecKey.Width] ?? null,
-      height: specs[SpecKey.Height] ?? null,
-      weight: specs[SpecKey.Weight] ?? null,
-      busInterface: specs[SpecKey.BusInterface] ?? null,
-      thermalDesignPower: specs[SpecKey.ThermalDesignPower] ?? null,
-      suggestedPsu: specs[SpecKey.SuggestedPsu] ?? null,
-      powerConnectors: specs[SpecKey.PowerConnectors] ?? null,
-      outputs: specs[SpecKey.Outputs] ?? null,
+      slotWidth: specs.slotWidth ?? null,
+      length: specs.length ?? null,
+      width: specs.width ?? null,
+      height: specs.height ?? null,
+      weight: specs.weight ?? null,
+      busInterface: specs.busInterface ?? null,
+      thermalDesignPower: specs.thermalDesignPower ?? null,
+      suggestedPsu: specs.suggestedPsu ?? null,
+      powerConnectors: specs.powerConnectors ?? null,
+      outputs: specs.outputs ?? null,
 
       // Cores & Clock Speeds
-      shaderUnitsCudaCores: specs[SpecKey.ShaderUnitsCudaCores] ?? null,
-      textureMappingUnits: specs[SpecKey.TextureMappingUnits] ?? null,
-      renderOutputUnits: specs[SpecKey.RenderOutputUnits] ?? null,
-      tensorCores: specs[SpecKey.TensorCores] ?? null,
-      rayTracingCores: specs[SpecKey.RayTracingCores] ?? null,
-      coreClockSpeedBase: specs[SpecKey.CoreClockSpeedBase] ?? null,
-      coreClockSpeedBoost: specs[SpecKey.CoreClockSpeedBoost] ?? null,
-      l1Cache: specs[SpecKey.L1Cache] ?? null,
-      l2Cache: specs[SpecKey.L2Cache] ?? null,
+      shaderUnitsCudaCores: specs.shaderUnitsCudaCores ?? null,
+      textureMappingUnits: specs.textureMappingUnits ?? null,
+      renderOutputUnits: specs.renderOutputUnits ?? null,
+      tensorCores: specs.tensorCores ?? null,
+      rayTracingCores: specs.rayTracingCores ?? null,
+      coreClockSpeedBase: specs.coreClockSpeedBase ?? null,
+      coreClockSpeedBoost: specs.coreClockSpeedBoost ?? null,
+      l1Cache: specs.l1Cache ?? null,
+      l2Cache: specs.l2Cache ?? null,
 
       // Theoretical Performance
-      pixelFillRate: specs[SpecKey.PixelFillRate] ?? null,
-      textureFillRate: specs[SpecKey.TextureFillRate] ?? null,
-      fp32Performance: specs[SpecKey.Fp32Performance] ?? null,
-      fp64Performance: specs[SpecKey.Fp64Performance] ?? null,
+      pixelFillRate: specs.pixelFillRate ?? null,
+      textureFillRate: specs.textureFillRate ?? null,
+      fp32Performance: specs.fp32Performance ?? null,
+      fp64Performance: specs.fp64Performance ?? null,
 
       // Memory
-      memorySize: specs[SpecKey.MemorySize] ?? null,
-      memoryType: specs[SpecKey.MemoryType] ?? null,
-      memoryClock: specs[SpecKey.MemoryClock] ?? null,
-      memoryInterface: specs[SpecKey.MemoryInterface] ?? null,
-      memoryBandwidth: specs[SpecKey.MemoryBandwidth] ?? null,
+      memorySize: specs.memorySize ?? null,
+      memoryType: specs.memoryType ?? null,
+      memoryClock: specs.memoryClock ?? null,
+      memoryInterface: specs.memoryInterface ?? null,
+      memoryBandwidth: specs.memoryBandwidth ?? null,
 
       // API Support
-      gSyncFreeSyncSupport: specs[SpecKey.GSyncFreeSyncSupport] ?? null,
-      sliCrossfireSupport: specs[SpecKey.SliCrossfireSupport] ?? null,
-      directXVersion: specs[SpecKey.DirectXVersion] ?? null,
-      openClVersion: specs[SpecKey.OpenClVersion] ?? null,
-      openGlVersion: specs[SpecKey.OpenGlVersion] ?? null,
-      shaderModelVersion: specs[SpecKey.ShaderModelVersion] ?? null,
+      gSyncFreeSyncSupport: specs.gSyncFreeSyncSupport ?? null,
+      sliCrossfireSupport: specs.sliCrossfireSupport ?? null,
+      directXVersion: specs.directXVersion ?? null,
+      openClVersion: specs.openClVersion ?? null,
+      openGlVersion: specs.openGlVersion ?? null,
+      shaderModelVersion: specs.shaderModelVersion ?? null,
 
       // Benchmarks
-      g2dMarkBenchmark: benchmarks[BenchmarkKey.G2dMark] ?? null,
-      g3dMarkBenchmark: benchmarks[BenchmarkKey.G3dMark] ?? null,
-      timeSpyGraphicsBenchmark:
-        benchmarks[BenchmarkKey.TimeSpyGraphics] ?? null,
+      g2dMarkBenchmark: benchmarks.g2dMark ?? null,
+      g3dMarkBenchmark: benchmarks.g3dMark ?? null,
+      timeSpyGraphicsBenchmark: benchmarks.timeSpyGraphics ?? null,
 
       // Reviews
-      amazonReview: reviews[ReviewKey.Amazon] ?? null,
-      pcGamerReview: reviews[ReviewKey.PcGamer] ?? null,
-      techRadarReview: reviews[ReviewKey.TechRadar] ?? null,
-      techSpotReview: reviews[ReviewKey.TechSpot] ?? null,
-      tomsHardwareReview: reviews[ReviewKey.TomsHardware] ?? null,
+      amazonReview: reviews.amazon ?? null,
+      pcGamerReview: reviews.pcGamer ?? null,
+      techRadarReview: reviews.techRadar ?? null,
+      techSpotReview: reviews.techSpot ?? null,
+      tomsHardwareReview: reviews.tomsHardware ?? null,
 
       // Images
       autocompleteImage,

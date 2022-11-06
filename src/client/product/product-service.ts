@@ -1,8 +1,8 @@
 import { ApiClient, apiClient } from '@client/shared/api';
 import { ProductCache } from '@client/shared/cache';
 import { Product, ProductRequest, ProductType } from '@shared/product';
-import { ProductMetaKey } from '@shared/product-meta';
-import { SpecKey } from '@shared/spec';
+import { ProductMetas } from '@shared/product-meta';
+import { Specs } from '@shared/spec';
 
 const PATH = 'products';
 
@@ -54,13 +54,13 @@ export class ProductService {
     return products;
   }
 
-  async autocompleteMeta(query: string, key?: ProductMetaKey) {
+  async autocompleteMeta(query: string, key?: keyof ProductMetas) {
     return await this.api.get<string[]>(`${PATH}/meta/autocomplete`, {
       params: { key, value: query },
     });
   }
 
-  async autocompleteSpec(query: string, key?: SpecKey) {
+  async autocompleteSpec(query: string, key?: keyof Specs) {
     return await this.api.get<string[]>(`${PATH}/specs/autocomplete`, {
       params: { key, value: query },
     });

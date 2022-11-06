@@ -1,12 +1,6 @@
 import Big from 'big.js';
 import { format, parse } from 'date-fns';
-import { Spec, SpecKey } from './spec-types';
-
-export enum MarketSegmentValue {
-  Desktop = 'DESKTOP',
-  Laptop = 'LAPTOP',
-  Server = 'SERVER',
-}
+import { MarketSegmentValue, Spec, SpecFormat } from './spec-types';
 
 export enum SpecBooleanFormatter {
   TrueFalse = 'TRUE_FALSE',
@@ -45,19 +39,6 @@ export enum PixelFillRateUnit {
 export enum TextureFillRate {
   GTexelps = 'GTexel/s',
 }
-
-export function getSpecValue(spec: Spec) {
-  return (
-    spec?.booleanValue ??
-    spec?.floatValue ??
-    spec?.integerValue ??
-    spec?.jsonValue ??
-    spec?.stringValue ??
-    spec?.textValue ??
-    null
-  );
-}
-
 const clockSpeedMultiplier: Record<ClockSpeedUnit, number> = {
   [ClockSpeedUnit.KHz]: 1_000,
   [ClockSpeedUnit.MHz]: 1_000_000,
@@ -118,64 +99,25 @@ function specValueMultiplier(spec: Spec) {
 }
 
 export function compareSpecs(spec1: Spec, spec2: Spec) {
-  const {
-    key: key1,
-    booleanValue: booleanValue1,
-    floatValue: floatValue1,
-    integerValue: integerValue1,
-    jsonValue: jsonValue1,
-    stringValue: stringValue1,
-    textValue: textValue1,
-  } = spec1;
-
-  const {
-    key: key2,
-    booleanValue: booleanValue2,
-    floatValue: floatValue2,
-    integerValue: integerValue2,
-    jsonValue: jsonValue2,
-    stringValue: stringValue2,
-    textValue: textValue2,
-  } = spec2;
-
   // Check unsupported types
-  if (key1 !== key2) {
-    throw new Error('Cannot compare different types of specs');
-  }
-
-  if (booleanValue1 != null || booleanValue2 != null) {
-    throw new Error('Cannot compare boolean specs');
-  }
-
-  if (jsonValue1 != null || jsonValue2 != null) {
-    throw new Error('Cannot compare json specs');
+  if (typeof spec1.value !== typeof spec2.value) {
+    throw new Error('Cannot compare specs of different values');
   }
 
   // Handle text-based comparisons
-  if (stringValue1 != null && stringValue2 != null) {
-    return stringValue1.localeCompare(stringValue2);
-  }
-
-  if (textValue1 != null && textValue2 != null) {
-    return textValue1.localeCompare(textValue2);
+  if (typeof spec1.value === 'string' && typeof spec2.value === 'string') {
+    return spec1.value.localeCompare(spec2.value);
   }
 
   // Handle numberic-based comparisons
-  if (integerValue1 != null && integerValue2 != null) {
-    const value1 = Big(integerValue1).mul(specValueMultiplier(spec1));
-    const value2 = Big(integerValue2).mul(specValueMultiplier(spec2));
+  if (typeof spec1.value === 'number' && typeof spec2.value === 'number') {
+    const value1 = Big(spec1.value).mul(specValueMultiplier(spec1));
+    const value2 = Big(spec2.value).mul(specValueMultiplier(spec2));
 
     return value1.cmp(value2);
   }
 
-  if (floatValue1 != null && floatValue2) {
-    const value1 = Big(floatValue1).mul(specValueMultiplier(spec1));
-    const value2 = Big(floatValue2).mul(specValueMultiplier(spec2));
-
-    return value1.cmp(value2);
-  }
-
-  throw new Error('Cannot compare unknown speecs');
+  throw new Error(`Cannot compare specs of type '${typeof spec1.value}'`);
 }
 
 export interface FormatSpecOptions {
@@ -187,55 +129,40 @@ export interface FormatSpecOptions {
 }
 
 export function formatSpec(spec: Spec, options?: FormatSpecOptions) {
-  if (getSpecValue(spec) == null) {
+  const { value, metadata } = spec;
+  if (value == null) {
     return null;
   }
 
-  const {
-    key,
-    booleanValue,
-    floatValue,
-    integerValue,
-    jsonValue,
-    stringValue,
-    textValue,
-    metadata,
-  } = spec;
-
   // Handle special cases
-  if (key === SpecKey.MarketSegment) {
-    return formatMarketSegment(stringValue);
+  if (metadata.format === SpecFormat.MarketSegment) {
+    return formatMarketSegment(value as MarketSegmentValue);
   }
-  if (key === SpecKey.ReleaseDate) {
-    return formatReleaseDate(
-      stringValue,
+  if (metadata.format === SpecFormat.Date) {
+    return formatDate(
+      value as string,
       options?.dateFormatter ?? SpecDateFormatter.QuarterYear,
     );
   }
 
-  // Handle cases that we cannot output.
-  if (jsonValue != null) {
-    throw new Error('Cannot format a json value');
-  }
-
   // Compute string to return
-  let returnValue = null;
-  if (booleanValue != null) {
+  let returnValue: string = null;
+  if (typeof value === 'boolean') {
     returnValue = formatBooleanValue(
-      booleanValue,
-      options?.booleanFormatter ?? SpecBooleanFormatter.TrueFalse,
+      value,
+      options?.booleanFormatter ?? SpecBooleanFormatter.YesNo,
     );
-  } else if (floatValue != null) {
-    returnValue = floatValue.toLocaleString(undefined, {
+  } else if (typeof value === 'number' && Number.isInteger(value)) {
+    returnValue = value.toLocaleString();
+  } else if (typeof value === 'number' && !Number.isInteger(value)) {
+    returnValue = value.toLocaleString(undefined, {
       minimumFractionDigits: options?.decimals ?? 0,
       maximumFractionDigits: options?.decimals ?? 0,
     });
-  } else if (integerValue != null) {
-    returnValue = integerValue.toLocaleString();
-  } else if (stringValue != null) {
-    returnValue = stringValue;
-  } else if (textValue != null) {
-    returnValue = textValue;
+  } else if (typeof value === 'string') {
+    returnValue = value;
+  } else {
+    return null;
   }
 
   if (returnValue == null) {
@@ -267,7 +194,7 @@ function formatBooleanValue(value: boolean, formatter: SpecBooleanFormatter) {
   }
 }
 
-function formatMarketSegment(value: string) {
+function formatMarketSegment(value: MarketSegmentValue) {
   switch (value) {
     case MarketSegmentValue.Desktop:
       return 'Desktop';
@@ -280,7 +207,7 @@ function formatMarketSegment(value: string) {
   }
 }
 
-function formatReleaseDate(value: string, formatter: SpecDateFormatter) {
+function formatDate(value: string, formatter: SpecDateFormatter) {
   const date = parse(value, 'yyyy-MM-dd', new Date());
   return format(date, formatter);
 }

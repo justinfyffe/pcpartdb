@@ -5,59 +5,29 @@ export enum ReviewBooleanFormatter {
   YesNo = 'YES_NO',
 }
 
-export enum ReviewKey {
-  Amazon = 'AMAZON',
-  PcGamer = 'PC_GAMER',
-  TechRadar = 'TECH_RADAR',
-  TechSpot = 'TECH_SPOT',
-  TomsHardware = 'TOMS_HARDWARE',
+export interface Reviews {
+  amazon?: Review<number>;
+  pcGamer?: Review<number>;
+  techRadar?: Review<number>;
+  techSpot?: Review<number>;
+  tomsHardware?: Review<number>;
 }
+
+export type ReviewsRequest = Reviews;
 
 export interface ReviewMetadata {}
 
-export interface Review {
-  key: ReviewKey;
-
-  integerValue?: number;
-  floatValue?: number;
-  booleanValue?: boolean;
-  stringValue?: string;
-  textValue?: string;
-  jsonValue?: unknown;
-
-  metadata?: ReviewMetadata;
+export interface Review<T = unknown> {
+  value?: T;
   source?: string;
+  metadata?: ReviewMetadata;
 }
 
-export type ReviewRequest = Review;
-
-export type ReviewMap = Partial<Record<ReviewKey, Review>>;
-
 export const reviewValidator = Joi.object({
-  key: Joi.string().required(),
-
-  integerValue: Joi.number().allow(null),
-  floatValue: Joi.number().allow(null),
-  booleanValue: Joi.boolean().allow(null),
-  stringValue: Joi.string().allow(null),
-  textValue: Joi.string().allow(null),
-  jsonValue: Joi.any().allow(null),
-
+  value: Joi.any().allow(null),
   source: Joi.string().allow(null),
   metadata: Joi.any().allow(null),
 }).options({ abortEarly: false });
-
-export function getReviewValue(review: Review) {
-  return (
-    review?.booleanValue ??
-    review?.floatValue ??
-    review?.integerValue ??
-    review?.jsonValue ??
-    review?.stringValue ??
-    review?.textValue ??
-    null
-  );
-}
 
 export interface FormatReviewOptions {
   decimals?: number;
@@ -65,44 +35,31 @@ export interface FormatReviewOptions {
 }
 
 export function formatReview(review: Review, options?: FormatReviewOptions) {
-  if (getReviewValue(review) == null) {
+  const { value } = review;
+  if (value == null) {
     return null;
   }
 
-  const {
-    booleanValue,
-    floatValue,
-    integerValue,
-    jsonValue,
-    stringValue,
-    textValue,
-  } = review;
-
   // Handle special cases
 
-  // Handle cases that we cannot output.
-  if (jsonValue != null) {
-    throw new Error('Cannot format a json value');
-  }
-
   // Compute string to return
-  let returnValue = null;
-  if (booleanValue != null) {
+  let returnValue: string = null;
+  if (typeof value === 'boolean') {
     returnValue = formatBooleanValue(
-      booleanValue,
+      value,
       options?.booleanFormatter ?? ReviewBooleanFormatter.TrueFalse,
     );
-  } else if (floatValue != null) {
-    returnValue = floatValue.toLocaleString(undefined, {
-      minimumFractionDigits: options?.decimals ?? 2,
-      maximumFractionDigits: options?.decimals ?? 2,
+  } else if (typeof value === 'number' && Number.isInteger(value)) {
+    returnValue = value.toLocaleString();
+  } else if (typeof value === 'number' && !Number.isInteger(value)) {
+    returnValue = value.toLocaleString(undefined, {
+      minimumFractionDigits: options?.decimals ?? 0,
+      maximumFractionDigits: options?.decimals ?? 0,
     });
-  } else if (integerValue != null) {
-    returnValue = integerValue.toLocaleString();
-  } else if (stringValue != null) {
-    returnValue = stringValue;
-  } else if (textValue != null) {
-    returnValue = textValue;
+  } else if (typeof value === 'string') {
+    returnValue = value;
+  } else {
+    return null;
   }
 
   if (returnValue == null) {

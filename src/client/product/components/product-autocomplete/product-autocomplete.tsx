@@ -5,7 +5,7 @@ import {
   Img,
 } from '@client/shared/components';
 import { classNames } from '@client/shared/ui';
-import { getSpecMap, Product, ProductType } from '@shared/product';
+import { Product, ProductType } from '@shared/product';
 import React, {
   forwardRef,
   useCallback,
@@ -99,11 +99,11 @@ export const ProductAutocomplete = forwardRef<
       return null;
     }
 
-    const specs = getSpecMap(product);
+    const specs = product.specs;
 
-    if (specs.COMPANY?.stringValue === 'NVIDIA') {
+    if (specs.company?.value === 'NVIDIA') {
       return '/images/logos/nvidia.svg';
-    } else if (specs.COMPANY?.stringValue === 'AMD') {
+    } else if (specs.company?.value === 'AMD') {
       return '/images/logos/amd.svg';
     } else {
       return null;
@@ -116,11 +116,11 @@ export const ProductAutocomplete = forwardRef<
     }
 
     return results.map((product) => {
-      const specs = getSpecMap(product);
+      const specs = product.specs;
 
-      if (specs.COMPANY?.stringValue === 'NVIDIA') {
+      if (specs.company?.value === 'NVIDIA') {
         return '/images/logos/nvidia.svg';
-      } else if (specs.COMPANY?.stringValue === 'AMD') {
+      } else if (specs.company?.value === 'AMD') {
         return '/images/logos/amd.svg';
       } else {
         return null;

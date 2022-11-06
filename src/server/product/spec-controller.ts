@@ -1,10 +1,10 @@
 import { ApiContext } from '@server/shared/api/context';
 import { staffController } from '@server/shared/api/controller';
-import type { SpecKey } from '@shared/spec';
-import { specService } from './spec-service';
+import { Specs } from '@shared/spec';
+import { productService } from './product-service';
 
 export const autocompleteSpecs = staffController(async (ctx: ApiContext) => {
-  const key = ctx.req.query['key'] as SpecKey;
+  const key = ctx.req.query['key'] as keyof Specs;
   const query = ctx.req.query['value'] as string;
-  return await specService.autocomplete(key, query ?? '', ctx);
+  return await productService.autocompleteSpec(key, query ?? '', ctx);
 });

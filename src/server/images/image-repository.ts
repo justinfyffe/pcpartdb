@@ -21,6 +21,10 @@ export class ImageRepository {
   async findById(id: number, config?: RepositoryConfig) {
     return await ImageModel.query(config?.trx).findById(id);
   }
+
+  async findByIds(ids: number[], config?: RepositoryConfig) {
+    return await ImageModel.query(config?.trx).whereIn('id', ids);
+  }
 }
 
 export const imageRepository = new ImageRepository();

@@ -22,16 +22,10 @@ import {
   ShoppingCartIcon,
   StarIcon,
 } from '@heroicons/react/24/outline';
-import { BenchmarkKey, formatBenchmark } from '@shared/benchmark';
+import { formatBenchmark } from '@shared/benchmark';
 import { Product } from '@shared/product';
-import {
-  formatProductMeta,
-  getProductMetaValue,
-  ProductMetaKey,
-} from '@shared/product-meta';
-import { RetailModel } from '@shared/retail-model';
-import { ReviewKey } from '@shared/review';
-import { formatSpec, SpecKey } from '@shared/spec';
+import { formatProductMeta } from '@shared/product-meta';
+import { formatSpec } from '@shared/spec';
 import React, { useMemo } from 'react';
 import { CompareProductsForm } from '../compare-products-form';
 import { ProductImages } from '../product-images';
@@ -58,11 +52,9 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
 
   const context = useMemo(() => createProductContextState(gpu), [gpu]);
   const specs = context.specs;
-  const meta = context.meta;
+  const meta = context.metas;
   const benchmarks = context.benchmarks;
-  const retailModels = getProductMetaValue(
-    context.meta.RETAIL_MODELS,
-  ) as RetailModel[];
+  const retailModels = context.metas.retailModels.value;
 
   return (
     <ProductContext.Provider value={context}>
@@ -115,9 +107,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                     </HighlightLabel>
 
                     <HighlightValue>
-                      {formatProductMeta(
-                        meta[ProductMetaKey.PerformanceRank],
-                      ) || '--'}
+                      {formatProductMeta(meta.performanceRank) || '--'}
                     </HighlightValue>
                   </HighlightListItem>
 
@@ -127,8 +117,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                     </HighlightLabel>
 
                     <HighlightValue>
-                      {formatProductMeta(meta[ProductMetaKey.ValueRank]) ||
-                        '--'}
+                      {formatProductMeta(meta.valueRank) || '--'}
                     </HighlightValue>
                   </HighlightListItem>
 
@@ -138,8 +127,8 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                     </HighlightLabel>
 
                     <HighlightValue>
-                      {formatSpec(specs[SpecKey.MemorySize])}{' '}
-                      {formatSpec(specs[SpecKey.MemoryType])}
+                      {formatSpec(specs.memorySize)}{' '}
+                      {formatSpec(specs.memoryType)}
                     </HighlightValue>
                   </HighlightListItem>
 
@@ -149,15 +138,15 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                     </HighlightLabel>
 
                     <HighlightValue>
-                      {formatSpec(specs[SpecKey.Length], {
+                      {formatSpec(specs.length, {
                         suffix: false,
                       })}
                       {' x '}
-                      {formatSpec(specs[SpecKey.Width], {
+                      {formatSpec(specs.width, {
                         suffix: false,
                       })}
                       {' x '}
-                      {formatSpec(specs[SpecKey.Height], {
+                      {formatSpec(specs.height, {
                         suffix: false,
                       })}{' '}
                       mm
@@ -168,7 +157,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                     <HighlightLabel icon={<BoltIcon />}>TDP</HighlightLabel>
 
                     <HighlightValue>
-                      {formatSpec(specs[SpecKey.ThermalDesignPower]) || '--'}
+                      {formatSpec(specs.thermalDesignPower) || '--'}
                     </HighlightValue>
                   </HighlightListItem>
 
@@ -178,7 +167,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                     </HighlightLabel>
 
                     <HighlightValue>
-                      {formatSpec(specs[SpecKey.ReleaseDate]) || '--'}
+                      {formatSpec(specs.releaseDate) || '--'}
                     </HighlightValue>
                   </HighlightListItem>
                 </HighlightList>
@@ -201,14 +190,10 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                     <CustomRow>
                       <CustomRowLabel>Performance Rating (Rank)</CustomRowLabel>
                       <CustomRowValue>
-                        {formatBenchmark(
-                          benchmarks[BenchmarkKey.PerformanceScore],
-                        )}{' '}
-                        (
-                        {formatProductMeta(
-                          meta[ProductMetaKey.PerformanceRank],
-                        )}
-                        )
+                        <>
+                          {formatBenchmark(benchmarks.performanceScore)} (
+                          {formatProductMeta(meta.performanceRank)})
+                        </>
                       </CustomRowValue>
                     </CustomRow>
                     <CustomRow>
@@ -216,14 +201,16 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                         Performance Per Dollar (Rank)
                       </CustomRowLabel>
                       <CustomRowValue>
-                        {formatBenchmark(benchmarks[BenchmarkKey.ValueScore])} (
-                        {formatProductMeta(meta[ProductMetaKey.ValueRank])})
+                        <>
+                          {formatBenchmark(benchmarks.valueScore)} (
+                          {formatProductMeta(meta.valueRank)})
+                        </>
                       </CustomRowValue>
                     </CustomRow>
-                    <SpecRow spec={SpecKey.Company} />
-                    <SpecRow spec={SpecKey.MarketSegment} />
-                    <SpecRow spec={SpecKey.ReleaseDate} />
-                    <SpecRow spec={SpecKey.LaunchPriceMsrp} />
+                    <SpecRow spec="company" />
+                    <SpecRow spec="marketSegment" />
+                    <SpecRow spec="releaseDate" />
+                    <SpecRow spec="launchPrice" />
                   </TBody>
                 </Table>
               </section>
@@ -237,11 +224,11 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
 
                 <Table responsive>
                   <TBody>
-                    <ReviewRow review={ReviewKey.Amazon} />
-                    <ReviewRow review={ReviewKey.PcGamer} />
-                    <ReviewRow review={ReviewKey.TechRadar} />
-                    <ReviewRow review={ReviewKey.TechSpot} />
-                    <ReviewRow review={ReviewKey.TomsHardware} />
+                    <ReviewRow review="amazon" />
+                    <ReviewRow review="pcGamer" />
+                    <ReviewRow review="techRadar" />
+                    <ReviewRow review="techSpot" />
+                    <ReviewRow review="tomsHardware" />
                   </TBody>
                 </Table>
               </section>
@@ -258,10 +245,10 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
 
                   <Table responsive>
                     <TBody>
-                      <SpecRow spec={SpecKey.GpuName} />
-                      <SpecRow spec={SpecKey.Architecture} />
-                      <SpecRow spec={SpecKey.ProcessSize} />
-                      <SpecRow spec={SpecKey.Transistors} />
+                      <SpecRow spec="gpuName" />
+                      <SpecRow spec="architecture" />
+                      <SpecRow spec="processSize" />
+                      <SpecRow spec="transistors" />
                     </TBody>
                   </Table>
                 </section>
@@ -275,11 +262,11 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
 
                   <Table responsive>
                     <TBody>
-                      <SpecRow spec={SpecKey.MemorySize} />
-                      <SpecRow spec={SpecKey.MemoryType} />
-                      <SpecRow spec={SpecKey.MemoryBandwidth} />
-                      <SpecRow spec={SpecKey.MemoryClock} />
-                      <SpecRow spec={SpecKey.MemoryInterface} />
+                      <SpecRow spec="memorySize" />
+                      <SpecRow spec="memoryType" />
+                      <SpecRow spec="memoryBandwidth" />
+                      <SpecRow spec="memoryClock" />
+                      <SpecRow spec="memoryInterface" />
                     </TBody>
                   </Table>
                 </section>
@@ -294,16 +281,16 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
 
                   <Table responsive>
                     <TBody>
-                      <SpecRow spec={SpecKey.SlotWidth} />
-                      <SpecRow spec={SpecKey.Length} />
-                      <SpecRow spec={SpecKey.Width} />
-                      <SpecRow spec={SpecKey.Height} />
-                      <SpecRow spec={SpecKey.Weight} />
-                      <SpecRow spec={SpecKey.BusInterface} />
-                      <SpecRow spec={SpecKey.ThermalDesignPower} />
-                      <SpecRow spec={SpecKey.SuggestedPsu} />
-                      <SpecRow spec={SpecKey.PowerConnectors} />
-                      <SpecRow spec={SpecKey.Outputs} />
+                      <SpecRow spec="slotWidth" />
+                      <SpecRow spec="length" />
+                      <SpecRow spec="width" />
+                      <SpecRow spec="height" />
+                      <SpecRow spec="weight" />
+                      <SpecRow spec="busInterface" />
+                      <SpecRow spec="thermalDesignPower" />
+                      <SpecRow spec="suggestedPsu" />
+                      <SpecRow spec="powerConnectors" />
+                      <SpecRow spec="outputs" />
                     </TBody>
                   </Table>
                 </section>
@@ -317,15 +304,15 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
 
                   <Table responsive>
                     <TBody>
-                      <SpecRow spec={SpecKey.ShaderUnitsCudaCores} />
-                      <SpecRow spec={SpecKey.TextureMappingUnits} />
-                      <SpecRow spec={SpecKey.RenderOutputUnits} />
-                      <SpecRow spec={SpecKey.TensorCores} />
-                      <SpecRow spec={SpecKey.RayTracingCores} />
-                      <SpecRow spec={SpecKey.CoreClockSpeedBase} />
-                      <SpecRow spec={SpecKey.CoreClockSpeedBoost} />
-                      <SpecRow spec={SpecKey.L1Cache} />
-                      <SpecRow spec={SpecKey.L2Cache} />
+                      <SpecRow spec="shaderUnitsCudaCores" />
+                      <SpecRow spec="textureMappingUnits" />
+                      <SpecRow spec="renderOutputUnits" />
+                      <SpecRow spec="tensorCores" />
+                      <SpecRow spec="rayTracingCores" />
+                      <SpecRow spec="coreClockSpeedBase" />
+                      <SpecRow spec="coreClockSpeedBoost" />
+                      <SpecRow spec="l1Cache" />
+                      <SpecRow spec="l2Cache" />
                     </TBody>
                   </Table>
                 </section>
@@ -341,10 +328,10 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
 
                   <Table responsive>
                     <TBody>
-                      <SpecRow spec={SpecKey.PixelFillRate} />
-                      <SpecRow spec={SpecKey.TextureFillRate} />
-                      <SpecRow spec={SpecKey.Fp32Performance} />
-                      <SpecRow spec={SpecKey.Fp64Performance} />
+                      <SpecRow spec="pixelFillRate" />
+                      <SpecRow spec="textureFillRate" />
+                      <SpecRow spec="fp32Performance" />
+                      <SpecRow spec="fp64Performance" />
                     </TBody>
                   </Table>
                 </section>
@@ -354,12 +341,12 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
 
                   <Table responsive>
                     <TBody>
-                      <SpecRow spec={SpecKey.DirectXVersion} />
-                      <SpecRow spec={SpecKey.OpenClVersion} />
-                      <SpecRow spec={SpecKey.OpenGlVersion} />
-                      <SpecRow spec={SpecKey.ShaderModelVersion} />
-                      <SpecRow spec={SpecKey.GSyncFreeSyncSupport} />
-                      <SpecRow spec={SpecKey.SliCrossfireSupport} />
+                      <SpecRow spec="directXVersion" />
+                      <SpecRow spec="openClVersion" />
+                      <SpecRow spec="openGlVersion" />
+                      <SpecRow spec="shaderModelVersion" />
+                      <SpecRow spec="gSyncFreeSyncSupport" />
+                      <SpecRow spec="sliCrossfireSupport" />
                     </TBody>
                   </Table>
                 </section>
@@ -375,9 +362,9 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
 
                 <Table responsive>
                   <TBody>
-                    <BenchmarkRow benchmark={BenchmarkKey.G3dMark} />
-                    <BenchmarkRow benchmark={BenchmarkKey.G2dMark} />
-                    <BenchmarkRow benchmark={BenchmarkKey.TimeSpyGraphics} />
+                    <BenchmarkRow benchmark="g3dMark" />
+                    <BenchmarkRow benchmark="g2dMark" />
+                    <BenchmarkRow benchmark="timeSpyGraphics" />
                   </TBody>
                 </Table>
               </section>

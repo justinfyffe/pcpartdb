@@ -1,18 +1,18 @@
 import { Td, Tr } from '@client/shared/components';
-import { formatReview, ReviewKey } from '@shared/review';
+import { formatReview, Reviews } from '@shared/review';
 import React, { useContext } from 'react';
 import { ProductContext } from './product-context';
 
 const LABELS: Record<string, string> = {
-  [ReviewKey.Amazon]: 'Amazon',
-  [ReviewKey.PcGamer]: 'PC Gamer',
-  [ReviewKey.TechRadar]: 'TechRadar',
-  [ReviewKey.TomsHardware]: "Tom's Hardware",
-  [ReviewKey.TechSpot]: 'TechSpot',
+  amazon: 'Amazon',
+  pcGamer: 'PC Gamer',
+  techRadar: 'TechRadar',
+  tomsHardware: "Tom's Hardware",
+  techSpot: 'TechSpot',
 };
 
 interface ReviewRowProps {
-  review: ReviewKey;
+  review: keyof Reviews;
 }
 
 export const ReviewRow = (props: ReviewRowProps) => {
