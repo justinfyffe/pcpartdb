@@ -6,7 +6,9 @@ import { serializeAsync } from '@server/shared/types/serialize';
 import { ProductType } from '@shared/product';
 
 export const getServerSideProps = staffSsrPageProps(async (ctx: SsrContext) => {
-  const gpus = await serializeAsync(productService.list(ProductType.GPU, ctx));
+  const gpus = await serializeAsync(
+    productService.list({ type: ProductType.GPU }, ctx),
+  );
 
   return { gpus } as AdminListGpusPageProps;
 });

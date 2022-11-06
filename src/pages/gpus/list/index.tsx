@@ -8,7 +8,7 @@ import { NextPageContext } from 'next';
 export async function getServerSideProps(_ctx: NextPageContext) {
   return transaction(async (trx) => {
     const gpus = await serializeAsync(
-      productService.list(ProductType.GPU, { trx }),
+      productService.list({ type: ProductType.GPU }, { trx }),
     );
 
     const pageProps: ListGpusPageProps = {

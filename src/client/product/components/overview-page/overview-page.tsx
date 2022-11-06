@@ -1,4 +1,8 @@
 import {
+  Article,
+  ArticleHeader,
+  Breadcrumb,
+  Breadcrumbs,
   Button,
   ButtonVariant,
   Card,
@@ -7,65 +11,29 @@ import {
   CardImage,
   CardTitle,
   SectionHeader,
-  TextInput,
 } from '@client/shared/components';
 import { WebsiteLayout } from '@client/shared/layouts';
 import { classNames } from '@client/shared/ui';
-import {
-  ComputerDesktopIcon,
-  PlusCircleIcon,
-} from '@heroicons/react/24/outline';
+import { ComputerDesktopIcon } from '@heroicons/react/24/outline';
 import React from 'react';
+import { CompareProductsForm } from '../compare-products-form';
 
-interface OverviewGpusPageProps {}
+export interface OverviewGpusPageProps {}
 
 export const OverviewGpusPage = (_props: OverviewGpusPageProps) => {
   return (
     <WebsiteLayout>
-      <main>
-        <section className={classNames('mb-6')}>
-          <Card
-            className={classNames(
-              'gap-4 flex flex-col justify-center px-8 py-8',
-            )}
-          >
-            <h1 className={classNames('font-medium text-3xl text-slate-700')}>
-              Compare GPUs
-            </h1>
+      <Article className="flex flex-wrap gap-6 lg:gap-8 justify-center">
+        <ArticleHeader className="flex flex-wrap w-full items-center justify-between gap-3 lg:gap-4">
+          <Breadcrumbs className="mb-3">
+            <Breadcrumb href="/">Home</Breadcrumb>
+            <Breadcrumb>GPUs</Breadcrumb>
+          </Breadcrumbs>
 
-            <div
-              className={classNames(
-                'flex flex-1 gap-6 items-stretch justify-center',
-              )}
-            >
-              <TextInput
-                placeholder="Graphics Card..."
-                className={classNames('flex-1')}
-              />
+          <h2>Compare GPU Specifications, Benchmarks, and Comparisons</h2>
 
-              <div
-                className={classNames(
-                  'self-center font-medium text-center text-slate-700',
-                )}
-              >
-                VS
-              </div>
-
-              <TextInput
-                placeholder="Graphics Card..."
-                className={classNames('flex-1')}
-              />
-
-              <Button variant={ButtonVariant.Default} className={classNames()}>
-                <PlusCircleIcon className={classNames('h-6 mx-auto')} />
-              </Button>
-
-              <Button variant={ButtonVariant.Primary} className={classNames()}>
-                Compare
-              </Button>
-            </div>
-          </Card>
-        </section>
+          <CompareProductsForm values={[null, null]} />
+        </ArticleHeader>
 
         <section
           className={classNames(
@@ -455,7 +423,7 @@ export const OverviewGpusPage = (_props: OverviewGpusPageProps) => {
             </Card>
           </div>
         </section>
-      </main>
+      </Article>
     </WebsiteLayout>
   );
 };

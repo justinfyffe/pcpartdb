@@ -1,8 +1,10 @@
-import { OverviewGpusPage } from '@client/product';
+import { OverviewGpusPage, OverviewGpusPageProps } from '@client/product';
 import { NextPageContext } from 'next';
 
 export async function getServerSideProps(_ctx: NextPageContext) {
-  return { props: {} };
+  const pageProps = {} as OverviewGpusPageProps;
+
+  return { props: pageProps };
 }
 
 export default OverviewGpusPage;

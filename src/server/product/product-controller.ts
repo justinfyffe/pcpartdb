@@ -11,7 +11,7 @@ export const autocompleteProducts = controller(async (ctx: ApiContext) => {
 
 export const listProducts = controller(async (ctx: ApiContext) => {
   const type = ctx.req.query['type'] as ProductType;
-  return await productService.list(type, ctx);
+  return await productService.list({ type }, ctx);
 });
 
 export const getProduct = controller(async (ctx: ApiContext) => {

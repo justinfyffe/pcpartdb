@@ -41,9 +41,34 @@ const updateProductValidator = Joi.object({
   images: Joi.array().items(productImageValidator),
 }).options({ abortEarly: false });
 
+export enum OrderBy {
+  Id = 'id',
+  Name = 'name',
+  PerformanceRating = 'performance_rating',
+  ValueRating = 'value_rating',
+  ReleaseDate = 'release_date',
+}
+
+interface ListOptions {
+  type: ProductType;
+
+  orderBy?: OrderBy;
+  limit?: number;
+}
+
 export class ProductService {
-  async list(type: ProductType, ctx: Context) {
+  async list(options: ListOptions, ctx: Context) {
+    const { type, limit, orderBy } = options;
+
+    // Fetch all products
     const products = await productRepository.list(type, ctx);
+
+    // Apply Order By
+
+    // Apply Limit
+    if (limit != null) {
+      products.splice(0, limit);
+    }
 
     const ids = products.map((product) => product.id);
     const performanceRanks = await productRepository.getPerformanceRanks(
@@ -54,14 +79,14 @@ export class ProductService {
     const valueRanks = await productRepository.getValueRanks(ids, type, ctx);
 
     products.forEach((product, i) => {
-      products[i].meta = products[i].meta ?? [];
-      products[i].meta?.push(
+      product.meta = product.meta ?? [];
+      product.meta?.push(
         ProductMetaModel.fromJson({
           key: ProductMetaKey.PerformanceRank,
           integerValue: performanceRanks[i],
         }),
       );
-      products[i].meta?.push(
+      product.meta?.push(
         ProductMetaModel.fromJson({
           key: ProductMetaKey.ValueRank,
           integerValue: valueRanks[i],
