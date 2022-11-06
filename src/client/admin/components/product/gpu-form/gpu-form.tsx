@@ -15,8 +15,10 @@ import { isBadRequestError, setValidationErrors } from '@client/shared/error';
 import Joi from '@hapi/joi';
 import { joiResolver } from '@hookform/resolvers/joi';
 import {
+  Benchmark,
   BenchmarkKey,
   BenchmarkRequest,
+  BenchmarksRequest,
   benchmarkValidator,
 } from '@shared/benchmark';
 import { ApiError, ValidationErrorType } from '@shared/error';
@@ -31,13 +33,30 @@ import {
 } from '@shared/product';
 import {
   ProductImageRequest,
+  ProductImagesRequest,
   ProductImageType,
   productImageValidator,
 } from '@shared/product-image';
-import { ProductMetaKey, ProductMetaRequest } from '@shared/product-meta';
+import {
+  ProductMeta,
+  ProductMetaKey,
+  ProductMetaRequest,
+  ProductMetasRequest,
+} from '@shared/product-meta';
 import { RetailModel, retailModelValidator } from '@shared/retail-model';
-import { ReviewKey, ReviewRequest, reviewValidator } from '@shared/review';
-import { SpecKey, SpecRequest, specValidator } from '@shared/spec';
+import {
+  Review,
+  ReviewKey,
+  ReviewRequest,
+  ReviewsRequest,
+  reviewValidator,
+} from '@shared/review';
+import {
+  MarketSegmentValue,
+  Spec,
+  SpecsRequest,
+  specValidator,
+} from '@shared/spec';
 import { useRouter } from 'next/router';
 import React, {
   FunctionComponent,
@@ -63,72 +82,72 @@ interface ProductFormData {
   name: string;
 
   // General
-  company?: SpecRequest;
-  marketSegment?: SpecRequest;
-  launchPriceMsrp?: SpecRequest;
-  releaseDate?: SpecRequest;
+  company?: Spec<string>;
+  marketSegment?: Spec<MarketSegmentValue>;
+  launchPriceMsrp?: Spec<number>;
+  releaseDate?: Spec<string>;
 
   // Processor
-  gpuName?: SpecRequest;
-  architecture?: SpecRequest;
-  processSize?: SpecRequest;
-  transistors?: SpecRequest;
+  gpuName?: Spec<string>;
+  architecture?: Spec<string>;
+  processSize?: Spec<number>;
+  transistors?: Spec<number>;
 
   // Board Compatibility & Dimensions
-  slotWidth?: SpecRequest;
-  length?: SpecRequest;
-  width?: SpecRequest;
-  height?: SpecRequest;
-  weight?: SpecRequest;
-  busInterface?: SpecRequest;
-  thermalDesignPower?: SpecRequest;
-  suggestedPsu?: SpecRequest;
-  powerConnectors?: SpecRequest;
-  outputs?: SpecRequest;
+  slotWidth?: Spec<string | number>;
+  length?: Spec<number>;
+  width?: Spec<number>;
+  height?: Spec<number>;
+  weight?: Spec<number>;
+  busInterface?: Spec<string>;
+  thermalDesignPower?: Spec<number>;
+  suggestedPsu?: Spec<number>;
+  powerConnectors?: Spec<string>;
+  outputs?: Spec<string>;
 
   // Cores & Clock Speeds
-  shaderUnitsCudaCores?: SpecRequest;
-  textureMappingUnits?: SpecRequest;
-  renderOutputUnits?: SpecRequest;
-  tensorCores?: SpecRequest;
-  rayTracingCores?: SpecRequest;
-  coreClockSpeedBase?: SpecRequest;
-  coreClockSpeedBoost?: SpecRequest;
-  l1Cache?: SpecRequest;
-  l2Cache?: SpecRequest;
+  shaderUnitsCudaCores?: Spec<number>;
+  textureMappingUnits?: Spec<number>;
+  renderOutputUnits?: Spec<number>;
+  tensorCores?: Spec<number>;
+  rayTracingCores?: Spec<number>;
+  coreClockSpeedBase?: Spec<number>;
+  coreClockSpeedBoost?: Spec<number>;
+  l1Cache?: Spec<number>;
+  l2Cache?: Spec<number>;
 
   // Theoretical Performance
-  pixelFillRate?: SpecRequest;
-  textureFillRate?: SpecRequest;
-  fp32Performance?: SpecRequest;
-  fp64Performance?: SpecRequest;
+  pixelFillRate?: Spec<number>;
+  textureFillRate?: Spec<number>;
+  fp32Performance?: Spec<number>;
+  fp64Performance?: Spec<number>;
 
   // Memory
-  memorySize?: SpecRequest;
-  memoryType?: SpecRequest;
-  memoryClock?: SpecRequest;
-  memoryInterface?: SpecRequest;
-  memoryBandwidth?: SpecRequest;
+  memorySize?: Spec<number>;
+  memoryType?: Spec<string>;
+  memoryClock?: Spec<number>;
+  memoryInterface?: Spec<number>;
+  memoryBandwidth?: Spec<number>;
 
   // API Support
-  gSyncFreeSyncSupport?: SpecRequest;
-  sliCrossfireSupport?: SpecRequest;
-  directXVersion?: SpecRequest;
-  openClVersion?: SpecRequest;
-  openGlVersion?: SpecRequest;
-  shaderModelVersion?: SpecRequest;
+  gSyncFreeSyncSupport?: Spec<boolean>;
+  sliCrossfireSupport?: Spec<boolean>;
+  directXVersion?: Spec<number>;
+  openClVersion?: Spec<number>;
+  openGlVersion?: Spec<number>;
+  shaderModelVersion?: Spec<number>;
 
   // Benchmarks
-  g2dMarkBenchmark?: BenchmarkRequest;
-  g3dMarkBenchmark?: BenchmarkRequest;
-  timeSpyGraphicsBenchmark?: BenchmarkRequest;
+  g2dMarkBenchmark?: Benchmark<number>;
+  g3dMarkBenchmark?: Benchmark<number>;
+  timeSpyGraphicsBenchmark?: Benchmark<number>;
 
   // Reviews
-  amazonReview?: ReviewRequest;
-  pcGamerReview?: ReviewRequest;
-  techRadarReview?: ReviewRequest;
-  techSpotReview?: ReviewRequest;
-  tomsHardwareReview?: ReviewRequest;
+  amazonReview?: Review<number>;
+  pcGamerReview?: Review<number>;
+  techRadarReview?: Review<number>;
+  techSpotReview?: Review<number>;
+  tomsHardwareReview?: Review<number>;
 
   // Images
   autocompleteImage?: ProductImageRequest;
@@ -136,7 +155,7 @@ interface ProductFormData {
   detailsImages?: ProductImageRequest[];
 
   // Retail Models
-  retailModels?: RetailModel[];
+  retailModels?: ProductMeta<RetailModel[]>;
 }
 
 const productValidator = Joi.object({
@@ -230,8 +249,7 @@ function formOptions(gpu?: Product): UseFormProps<ProductFormData> {
   const specs = gpu?.specs ?? {};
   const benchmarks = gpu?.benchmarks ?? {};
   const reviews = gpu?.reviews ?? {};
-  const { autocompleteImage, thumbnailImage, detailsImages } =
-    getFormImages(gpu);
+  const images = gpu?.images ?? {};
 
   return {
     resolver: joiResolver(productValidator),
@@ -310,13 +328,12 @@ function formOptions(gpu?: Product): UseFormProps<ProductFormData> {
       tomsHardwareReview: reviews.tomsHardware ?? null,
 
       // Images
-      autocompleteImage,
-      thumbnailImage,
-      detailsImages,
+      autocompleteImage: images.autocomplete ?? null,
+      thumbnailImage: images.thumbnail ?? null,
+      detailsImages: images.details ?? null,
 
       // RetailModels,
-      retailModels:
-        (meta[ProductMetaKey.RetailModels]?.jsonValue as RetailModel[]) ?? [],
+      retailModels: meta.retailModels ?? null,
     },
   };
 }
@@ -369,10 +386,10 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
         slug: formData.slug,
         type: formData.type,
         name: formData.name,
-        meta: toMetaArray(formData),
-        specs: toSpecsArray(formData),
-        benchmarks: toBenchmarksArray(formData),
-        reviews: toReviewsArray(formData),
+        metas: toMetaRequest(formData),
+        specs: toSpecsRequest(formData),
+        benchmarks: toBenchmarksRequest(formData),
+        reviews: toReviewsRequest(formData),
         images: toRequestImages(formData),
       };
 
@@ -457,7 +474,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
             name="company"
             control={control}
             render={({ field }) => (
-              <SpecField field={SpecKey.Company} {...field} ref={null} />
+              <SpecField field="company" {...field} ref={null} />
             )}
           />
         </Field>
@@ -468,7 +485,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
             name="marketSegment"
             control={control}
             render={({ field }) => (
-              <SpecField field={SpecKey.MarketSegment} {...field} ref={null} />
+              <SpecField field="marketSegment" {...field} ref={null} />
             )}
           />
         </Field>
@@ -479,11 +496,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
             name="launchPriceMsrp"
             control={control}
             render={({ field }) => (
-              <SpecField
-                field={SpecKey.LaunchPriceMsrp}
-                {...field}
-                ref={null}
-              />
+              <SpecField field="launchPrice" {...field} ref={null} />
             )}
           />
         </Field>
@@ -494,7 +507,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
             name="releaseDate"
             control={control}
             render={({ field }) => (
-              <SpecField field={SpecKey.ReleaseDate} {...field} ref={null} />
+              <SpecField field="releaseDate" {...field} ref={null} />
             )}
           />
         </Field>
@@ -512,7 +525,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="gpuName"
               control={control}
               render={({ field }) => (
-                <SpecField field={SpecKey.GpuName} {...field} ref={null} />
+                <SpecField field="gpuName" {...field} ref={null} />
               )}
             />
           </Field>
@@ -523,7 +536,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="architecture"
               control={control}
               render={({ field }) => (
-                <SpecField field={SpecKey.Architecture} {...field} ref={null} />
+                <SpecField field="architecture" {...field} ref={null} />
               )}
             />
           </Field>
@@ -534,7 +547,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="processSize"
               control={control}
               render={({ field }) => (
-                <SpecField field={SpecKey.ProcessSize} {...field} ref={null} />
+                <SpecField field="processSize" {...field} ref={null} />
               )}
             />
           </Field>
@@ -545,7 +558,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="transistors"
               control={control}
               render={({ field }) => (
-                <SpecField field={SpecKey.Transistors} {...field} ref={null} />
+                <SpecField field="transistors" {...field} ref={null} />
               )}
             />
           </Field>
@@ -560,7 +573,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="memorySize"
               control={control}
               render={({ field }) => (
-                <SpecField field={SpecKey.MemorySize} {...field} ref={null} />
+                <SpecField field="memorySize" {...field} ref={null} />
               )}
             />
           </Field>
@@ -571,7 +584,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="memoryType"
               control={control}
               render={({ field }) => (
-                <SpecField field={SpecKey.MemoryType} {...field} ref={null} />
+                <SpecField field="memoryType" {...field} ref={null} />
               )}
             />
           </Field>
@@ -582,7 +595,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="memoryClock"
               control={control}
               render={({ field }) => (
-                <SpecField field={SpecKey.MemoryClock} {...field} ref={null} />
+                <SpecField field="memoryClock" {...field} ref={null} />
               )}
             />
           </Field>
@@ -593,11 +606,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="memoryInterface"
               control={control}
               render={({ field }) => (
-                <SpecField
-                  field={SpecKey.MemoryInterface}
-                  {...field}
-                  ref={null}
-                />
+                <SpecField field="memoryInterface" {...field} ref={null} />
               )}
             />
           </Field>
@@ -608,11 +617,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="memoryBandwidth"
               control={control}
               render={({ field }) => (
-                <SpecField
-                  field={SpecKey.MemoryBandwidth}
-                  {...field}
-                  ref={null}
-                />
+                <SpecField field="memoryBandwidth" {...field} ref={null} />
               )}
             />
           </Field>
@@ -627,7 +632,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="slotWidth"
               control={control}
               render={({ field }) => (
-                <SpecField field={SpecKey.SlotWidth} {...field} ref={null} />
+                <SpecField field="slotWidth" {...field} ref={null} />
               )}
             />
           </Field>
@@ -638,7 +643,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="length"
               control={control}
               render={({ field }) => (
-                <SpecField field={SpecKey.Length} {...field} ref={null} />
+                <SpecField field="length" {...field} ref={null} />
               )}
             />
           </Field>
@@ -649,7 +654,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="width"
               control={control}
               render={({ field }) => (
-                <SpecField field={SpecKey.Width} {...field} ref={null} />
+                <SpecField field="width" {...field} ref={null} />
               )}
             />
           </Field>
@@ -660,7 +665,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="height"
               control={control}
               render={({ field }) => (
-                <SpecField field={SpecKey.Height} {...field} ref={null} />
+                <SpecField field="height" {...field} ref={null} />
               )}
             />
           </Field>
@@ -671,7 +676,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="weight"
               control={control}
               render={({ field }) => (
-                <SpecField field={SpecKey.Weight} {...field} ref={null} />
+                <SpecField field="weight" {...field} ref={null} />
               )}
             />
           </Field>
@@ -682,7 +687,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="busInterface"
               control={control}
               render={({ field }) => (
-                <SpecField field={SpecKey.BusInterface} {...field} ref={null} />
+                <SpecField field="busInterface" {...field} ref={null} />
               )}
             />
           </Field>
@@ -693,11 +698,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="thermalDesignPower"
               control={control}
               render={({ field }) => (
-                <SpecField
-                  field={SpecKey.ThermalDesignPower}
-                  {...field}
-                  ref={null}
-                />
+                <SpecField field="thermalDesignPower" {...field} ref={null} />
               )}
             />
           </Field>
@@ -708,7 +709,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="suggestedPsu"
               control={control}
               render={({ field }) => (
-                <SpecField field={SpecKey.SuggestedPsu} {...field} ref={null} />
+                <SpecField field="suggestedPsu" {...field} ref={null} />
               )}
             />
           </Field>
@@ -719,11 +720,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="powerConnectors"
               control={control}
               render={({ field }) => (
-                <SpecField
-                  field={SpecKey.PowerConnectors}
-                  {...field}
-                  ref={null}
-                />
+                <SpecField field="powerConnectors" {...field} ref={null} />
               )}
             />
           </Field>
@@ -734,7 +731,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="outputs"
               control={control}
               render={({ field }) => (
-                <SpecField field={SpecKey.Outputs} {...field} ref={null} />
+                <SpecField field="outputs" {...field} ref={null} />
               )}
             />
           </Field>
@@ -749,11 +746,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="shaderUnitsCudaCores"
               control={control}
               render={({ field }) => (
-                <SpecField
-                  field={SpecKey.ShaderUnitsCudaCores}
-                  {...field}
-                  ref={null}
-                />
+                <SpecField field="shaderUnitsCudaCores" {...field} ref={null} />
               )}
             />
           </Field>
@@ -764,11 +757,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="textureMappingUnits"
               control={control}
               render={({ field }) => (
-                <SpecField
-                  field={SpecKey.TextureMappingUnits}
-                  {...field}
-                  ref={null}
-                />
+                <SpecField field="textureMappingUnits" {...field} ref={null} />
               )}
             />
           </Field>
@@ -779,11 +768,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="renderOutputUnits"
               control={control}
               render={({ field }) => (
-                <SpecField
-                  field={SpecKey.RenderOutputUnits}
-                  {...field}
-                  ref={null}
-                />
+                <SpecField field="renderOutputUnits" {...field} ref={null} />
               )}
             />
           </Field>
@@ -794,7 +779,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="tensorCores"
               control={control}
               render={({ field }) => (
-                <SpecField field={SpecKey.TensorCores} {...field} ref={null} />
+                <SpecField field="tensorCores" {...field} ref={null} />
               )}
             />
           </Field>
@@ -805,11 +790,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="rayTracingCores"
               control={control}
               render={({ field }) => (
-                <SpecField
-                  field={SpecKey.RayTracingCores}
-                  {...field}
-                  ref={null}
-                />
+                <SpecField field="rayTracingCores" {...field} ref={null} />
               )}
             />
           </Field>
@@ -820,11 +801,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="coreClockSpeedBase"
               control={control}
               render={({ field }) => (
-                <SpecField
-                  field={SpecKey.CoreClockSpeedBase}
-                  {...field}
-                  ref={null}
-                />
+                <SpecField field="coreClockSpeedBase" {...field} ref={null} />
               )}
             />
           </Field>
@@ -835,11 +812,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="coreClockSpeedBoost"
               control={control}
               render={({ field }) => (
-                <SpecField
-                  field={SpecKey.CoreClockSpeedBoost}
-                  {...field}
-                  ref={null}
-                />
+                <SpecField field="coreClockSpeedBoost" {...field} ref={null} />
               )}
             />
           </Field>
@@ -850,7 +823,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="l1Cache"
               control={control}
               render={({ field }) => (
-                <SpecField field={SpecKey.L1Cache} {...field} ref={null} />
+                <SpecField field="l1Cache" {...field} ref={null} />
               )}
             />
           </Field>
@@ -861,7 +834,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="l2Cache"
               control={control}
               render={({ field }) => (
-                <SpecField field={SpecKey.L2Cache} {...field} ref={null} />
+                <SpecField field="l2Cache" {...field} ref={null} />
               )}
             />
           </Field>
@@ -876,11 +849,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="pixelFillRate"
               control={control}
               render={({ field }) => (
-                <SpecField
-                  field={SpecKey.PixelFillRate}
-                  {...field}
-                  ref={null}
-                />
+                <SpecField field="pixelFillRate" {...field} ref={null} />
               )}
             />
           </Field>
@@ -891,11 +860,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="textureFillRate"
               control={control}
               render={({ field }) => (
-                <SpecField
-                  field={SpecKey.TextureFillRate}
-                  {...field}
-                  ref={null}
-                />
+                <SpecField field="textureFillRate" {...field} ref={null} />
               )}
             />
           </Field>
@@ -906,11 +871,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="fp32Performance"
               control={control}
               render={({ field }) => (
-                <SpecField
-                  field={SpecKey.Fp32Performance}
-                  {...field}
-                  ref={null}
-                />
+                <SpecField field="fp32Performance" {...field} ref={null} />
               )}
             />
           </Field>
@@ -921,11 +882,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="fp64Performance"
               control={control}
               render={({ field }) => (
-                <SpecField
-                  field={SpecKey.Fp64Performance}
-                  {...field}
-                  ref={null}
-                />
+                <SpecField field="fp64Performance" {...field} ref={null} />
               )}
             />
           </Field>
@@ -940,11 +897,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="directXVersion"
               control={control}
               render={({ field }) => (
-                <SpecField
-                  field={SpecKey.DirectXVersion}
-                  {...field}
-                  ref={null}
-                />
+                <SpecField field="directXVersion" {...field} ref={null} />
               )}
             />
           </Field>
@@ -955,11 +908,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="openClVersion"
               control={control}
               render={({ field }) => (
-                <SpecField
-                  field={SpecKey.OpenClVersion}
-                  {...field}
-                  ref={null}
-                />
+                <SpecField field="openClVersion" {...field} ref={null} />
               )}
             />
           </Field>
@@ -970,11 +919,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="openGlVersion"
               control={control}
               render={({ field }) => (
-                <SpecField
-                  field={SpecKey.OpenGlVersion}
-                  {...field}
-                  ref={null}
-                />
+                <SpecField field="openGlVersion" {...field} ref={null} />
               )}
             />
           </Field>
@@ -985,11 +930,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="shaderModelVersion"
               control={control}
               render={({ field }) => (
-                <SpecField
-                  field={SpecKey.ShaderModelVersion}
-                  {...field}
-                  ref={null}
-                />
+                <SpecField field="shaderModelVersion" {...field} ref={null} />
               )}
             />
           </Field>
@@ -1000,11 +941,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="gSyncFreeSyncSupport"
               control={control}
               render={({ field }) => (
-                <SpecField
-                  field={SpecKey.GSyncFreeSyncSupport}
-                  {...field}
-                  ref={null}
-                />
+                <SpecField field="gSyncFreeSyncSupport" {...field} ref={null} />
               )}
             />
           </Field>
@@ -1015,11 +952,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="sliCrossfireSupport"
               control={control}
               render={({ field }) => (
-                <SpecField
-                  field={SpecKey.SliCrossfireSupport}
-                  {...field}
-                  ref={null}
-                />
+                <SpecField field="sliCrossfireSupport" {...field} ref={null} />
               )}
             />
           </Field>
@@ -1216,86 +1149,88 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
   );
 };
 
-function toMetaArray(formData: ProductFormData): ProductMetaRequest[] {
-  const metas: ProductMetaRequest[] = [
-    formData.retailModels?.length > 0
-      ? {
-          key: ProductMetaKey.RetailModels,
-          jsonValue: JSON.stringify(formData.retailModels),
-        }
-      : null,
-  ];
-  return metas.filter((meta) => meta != null);
+function toMetaRequest(formData: ProductFormData): ProductMetasRequest {
+  return {
+    retailModels: formData.retailModels ?? null,
+  };
 }
 
-function toSpecsArray(formData: ProductFormData): SpecRequest[] {
-  const specs = [
-    formData.architecture,
-    formData.coreClockSpeedBase,
-    formData.coreClockSpeedBoost,
-    formData.busInterface,
-    formData.company,
-    formData.shaderUnitsCudaCores,
-    formData.directXVersion,
-    formData.fp32Performance,
-    formData.fp64Performance,
-    formData.gpuName,
-    formData.gSyncFreeSyncSupport,
-    formData.height,
-    formData.l1Cache,
-    formData.l2Cache,
-    formData.launchPriceMsrp,
-    formData.length,
-    formData.processSize,
-    formData.marketSegment,
-    formData.memoryBandwidth,
-    formData.memoryInterface,
-    formData.memoryClock,
-    formData.memorySize,
-    formData.memoryType,
-    formData.openClVersion,
-    formData.openGlVersion,
-    formData.pixelFillRate,
-    formData.powerConnectors,
-    formData.releaseDate,
-    formData.rayTracingCores,
-    formData.renderOutputUnits,
-    formData.shaderModelVersion,
-    formData.sliCrossfireSupport,
-    formData.slotWidth,
-    formData.suggestedPsu,
-    formData.thermalDesignPower,
-    formData.tensorCores,
-    formData.textureFillRate,
-    formData.textureMappingUnits,
-    formData.transistors,
-    formData.weight,
-    formData.width,
-  ];
+function toSpecsRequest(formData: ProductFormData): SpecsRequest {
+  return {
+    // General
+    company: formData.company ?? null,
+    marketSegment: formData.marketSegment ?? null,
+    launchPrice: formData.launchPriceMsrp ?? null,
+    releaseDate: formData.releaseDate ?? null,
 
-  return specs.filter((spec) => spec != null);
+    // Processor
+    gpuName: formData.gpuName ?? null,
+    architecture: formData.architecture ?? null,
+    processSize: formData.processSize ?? null,
+    transistors: formData.transistors ?? null,
+
+    // Board Compatibility & Dimensions
+    slotWidth: formData.slotWidth ?? null,
+    length: formData.length ?? null,
+    width: formData.width ?? null,
+    height: formData.height ?? null,
+    weight: formData.weight ?? null,
+    busInterface: formData.busInterface ?? null,
+    thermalDesignPower: formData.thermalDesignPower ?? null,
+    suggestedPsu: formData.suggestedPsu ?? null,
+    powerConnectors: formData.powerConnectors ?? null,
+    outputs: formData.outputs ?? null,
+
+    // Cores & Clock Speeds
+    shaderUnitsCudaCores: formData.shaderUnitsCudaCores ?? null,
+    textureMappingUnits: formData.textureMappingUnits ?? null,
+    renderOutputUnits: formData.renderOutputUnits ?? null,
+    tensorCores: formData.tensorCores ?? null,
+    rayTracingCores: formData.rayTracingCores ?? null,
+    coreClockSpeedBase: formData.coreClockSpeedBase ?? null,
+    coreClockSpeedBoost: formData.coreClockSpeedBoost ?? null,
+    l1Cache: formData.l1Cache ?? null,
+    l2Cache: formData.l2Cache ?? null,
+
+    // Theoretical Performance
+    pixelFillRate: formData.pixelFillRate ?? null,
+    textureFillRate: formData.textureFillRate ?? null,
+    fp32Performance: formData.fp32Performance ?? null,
+    fp64Performance: formData.fp64Performance ?? null,
+
+    // Memory
+    memorySize: formData.memorySize ?? null,
+    memoryType: formData.memoryType ?? null,
+    memoryClock: formData.memoryClock ?? null,
+    memoryInterface: formData.memoryInterface ?? null,
+    memoryBandwidth: formData.memoryBandwidth ?? null,
+
+    // API Support
+    gSyncFreeSyncSupport: formData.gSyncFreeSyncSupport ?? null,
+    sliCrossfireSupport: formData.sliCrossfireSupport ?? null,
+    directXVersion: formData.directXVersion ?? null,
+    openClVersion: formData.openClVersion ?? null,
+    openGlVersion: formData.openGlVersion ?? null,
+    shaderModelVersion: formData.shaderModelVersion ?? null,
+  };
 }
 
-function toBenchmarksArray(formData: ProductFormData): BenchmarkRequest[] {
-  const benchmarks = [
-    formData.g2dMarkBenchmark,
-    formData.g3dMarkBenchmark,
-    formData.timeSpyGraphicsBenchmark,
-  ];
-
-  return benchmarks.filter((benchmark) => benchmark != null);
+function toBenchmarksRequest(formData: ProductFormData): BenchmarksRequest {
+  return {
+    g2dMark: formData.g2dMarkBenchmark ?? null,
+    g3dMark: formData.g3dMarkBenchmark ?? null,
+    timeSpyGraphics: formData.timeSpyGraphicsBenchmark ?? null,
+  };
 }
 
-function toReviewsArray(formData: ProductFormData): ReviewRequest[] {
-  const reviews = [
-    formData.amazonReview,
-    formData.pcGamerReview,
-    formData.techRadarReview,
-    formData.techSpotReview,
-    formData.tomsHardwareReview,
-  ];
-
-  return reviews.filter((review) => review != null);
+function toReviewsRequest(formData: ProductFormData): ReviewsRequest {
+  return {
+    amazon: formData.amazonReview ?? null,
+    pcGamer: formData.pcGamerReview ?? null,
+    techRadar: formData.techRadarReview ?? null,
+    techSpot: formData.techSpotReview ?? null,
+    tomsHardware: formData.tomsHardwareReview ?? null,
+  };
 }
 
 function getFormImages(gpu?: Product) {
@@ -1331,22 +1266,10 @@ function getFormImages(gpu?: Product) {
   return { autocompleteImage, thumbnailImage, detailsImages };
 }
 
-function toRequestImages(formData: ProductFormData): ProductImageRequest[] {
-  const { autocompleteImage, thumbnailImage, detailsImages } = formData;
-
-  const images: ProductImageRequest[] = [];
-
-  if (autocompleteImage) {
-    images.push(autocompleteImage);
-  }
-
-  if (thumbnailImage) {
-    images.push(thumbnailImage);
-  }
-
-  if (detailsImages) {
-    images.push(...detailsImages);
-  }
-
-  return images;
+function toRequestImages(formData: ProductFormData): ProductImagesRequest {
+  return {
+    autocomplete: formData.autocompleteImage ?? null,
+    thumbnail: formData.thumbnailImage ?? null,
+    details: formData.detailsImages ?? [],
+  };
 }

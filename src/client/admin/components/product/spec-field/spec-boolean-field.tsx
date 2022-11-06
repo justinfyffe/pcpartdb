@@ -1,23 +1,21 @@
 import { Select, SelectOption, SelectValue } from '@client/shared/components';
-import { SpecKey, SpecRequest } from '@shared/spec';
+import { Spec } from '@shared/spec';
 import React, { forwardRef, useCallback } from 'react';
 
 interface SpecStringFieldProps {
-  field: SpecKey;
-
-  value?: SpecRequest;
-  onChange?: (value: SpecRequest) => void;
+  value?: Spec<boolean>;
+  onChange?: (value: Spec<boolean>) => void;
 }
 
 export const SpecBooleanField = forwardRef<
   HTMLSelectElement,
   SpecStringFieldProps
 >((props, ref) => {
-  const { field, value, onChange } = props;
+  const { value, onChange } = props;
 
   let baseValue: string = null;
-  if (value?.booleanValue != null) {
-    baseValue = value?.booleanValue ? 'true' : 'false';
+  if (value?.value != null) {
+    baseValue = value?.value ? 'true' : 'false';
   }
 
   const handleChange = useCallback(
@@ -26,11 +24,9 @@ export const SpecBooleanField = forwardRef<
         throw new Error('Invalid select value for SpecBooleanField');
       }
 
-      onChange?.(
-        value != null ? { key: field, booleanValue: value === 'true' } : null,
-      );
+      onChange?.(value != null ? { value: value === 'true' } : null);
     },
-    [field, onChange],
+    [onChange],
   );
 
   return (

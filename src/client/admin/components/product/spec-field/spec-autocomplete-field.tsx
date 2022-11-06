@@ -1,13 +1,13 @@
 import { productService } from '@client/product';
 import { Autocomplete, AutocompleteOption } from '@client/shared/components';
-import { SpecKey, SpecRequest } from '@shared/spec';
+import { Spec, Specs } from '@shared/spec';
 import React, { forwardRef, useCallback, useState } from 'react';
 
 interface SpecAutocompleteFieldProps {
-  field: SpecKey;
+  field: keyof Specs;
 
-  value?: SpecRequest;
-  onChange?: (value: SpecRequest) => void;
+  value?: Spec<string>;
+  onChange?: (value: Spec<string>) => void;
 }
 
 export const SpecAutocompleteField = forwardRef<
@@ -16,7 +16,7 @@ export const SpecAutocompleteField = forwardRef<
 >((props, ref) => {
   const { field, value, onChange } = props;
 
-  const baseValue = value?.stringValue ?? null;
+  const baseValue = (value?.value as string) ?? null;
   const [results, setResults] = useState<string[]>([]);
 
   const handleQuery = useCallback(
@@ -25,10 +25,7 @@ export const SpecAutocompleteField = forwardRef<
         return false;
       }
 
-      const results = await productService.autocompleteSpec(
-        query,
-        field as SpecKey,
-      );
+      const results = await productService.autocompleteSpec(query, field);
       const filtered = results.filter((value) => value != null);
       setResults(filtered);
       return filtered.length > 0;
@@ -38,9 +35,9 @@ export const SpecAutocompleteField = forwardRef<
 
   const handleChange = useCallback(
     (value: string) => {
-      onChange?.(value != null ? { key: field, stringValue: value } : null);
+      onChange?.(value != null ? { value } : null);
     },
-    [field, onChange],
+    [onChange],
   );
 
   return (

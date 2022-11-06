@@ -1,4 +1,4 @@
-import { SpecKey, SpecRequest } from '@shared/spec';
+import { Spec, Specs } from '@shared/spec';
 import React, {
   forwardRef,
   Ref,
@@ -23,70 +23,70 @@ type InputType =
   | 'boolean'
   | 'enum';
 
-const INPUT_TYPES: { [key: string]: InputType } = {
+const INPUT_TYPES: Record<string, InputType> = {
   // General
-  [SpecKey.Company]: 'autocomplete',
-  [SpecKey.MarketSegment]: 'enum',
-  [SpecKey.LaunchPriceMsrp]: 'float',
-  [SpecKey.ReleaseDate]: 'date',
+  company: 'autocomplete',
+  marketSegment: 'enum',
+  launchPrice: 'float',
+  releaseDate: 'date',
 
   // Processor
-  [SpecKey.GpuName]: 'autocomplete',
-  [SpecKey.Architecture]: 'autocomplete',
-  [SpecKey.ProcessSize]: 'float',
-  [SpecKey.Transistors]: 'float',
+  gpuName: 'autocomplete',
+  architecture: 'autocomplete',
+  processSize: 'float',
+  transistors: 'float',
 
   // Memory
-  [SpecKey.MemorySize]: 'float',
-  [SpecKey.MemoryType]: 'autocomplete',
-  [SpecKey.MemoryClock]: 'float',
-  [SpecKey.MemoryInterface]: 'float',
-  [SpecKey.MemoryBandwidth]: 'float',
+  memorySize: 'float',
+  memoryType: 'autocomplete',
+  memoryClock: 'float',
+  memoryInterface: 'float',
+  memoryBandwidth: 'float',
 
   // Board Design
-  [SpecKey.SlotWidth]: 'autocomplete',
-  [SpecKey.Length]: 'float',
-  [SpecKey.Width]: 'float',
-  [SpecKey.Height]: 'float',
-  [SpecKey.Weight]: 'float',
-  [SpecKey.SuggestedPsu]: 'float',
-  [SpecKey.ThermalDesignPower]: 'float',
-  [SpecKey.BusInterface]: 'autocomplete',
-  [SpecKey.PowerConnectors]: 'autocomplete',
-  [SpecKey.Outputs]: 'autocomplete',
+  slotWidth: 'autocomplete',
+  length: 'float',
+  width: 'float',
+  height: 'float',
+  weight: 'float',
+  suggestedPsu: 'float',
+  thermalDesignPower: 'float',
+  busInterface: 'autocomplete',
+  powerConnectors: 'autocomplete',
+  outputs: 'autocomplete',
 
   // Cores & Clock Speeds
-  [SpecKey.ShaderUnitsCudaCores]: 'float',
-  [SpecKey.TextureMappingUnits]: 'float',
-  [SpecKey.RenderOutputUnits]: 'float',
-  [SpecKey.TensorCores]: 'float',
-  [SpecKey.RayTracingCores]: 'float',
-  [SpecKey.CoreClockSpeedBase]: 'float',
-  [SpecKey.CoreClockSpeedBoost]: 'float',
-  [SpecKey.L1Cache]: 'float',
-  [SpecKey.L2Cache]: 'float',
+  shaderUnitsCudaCores: 'float',
+  textureMappingUnits: 'float',
+  renderOutputUnits: 'float',
+  tensorCores: 'float',
+  rayTracingCores: 'float',
+  coreClockSpeedBase: 'float',
+  coreClockSpeedBoost: 'float',
+  l1Cache: 'float',
+  l2Cache: 'float',
 
   // Theoretical Performance
-  [SpecKey.PixelFillRate]: 'float',
-  [SpecKey.TextureFillRate]: 'float',
-  [SpecKey.Fp32Performance]: 'float',
-  [SpecKey.Fp64Performance]: 'float',
+  pixelFillRate: 'float',
+  textureFillRate: 'float',
+  fp32Performance: 'float',
+  fp64Performance: 'float',
 
   // API Support
-  [SpecKey.DirectXVersion]: 'float',
-  [SpecKey.OpenClVersion]: 'float',
-  [SpecKey.OpenGlVersion]: 'float',
-  [SpecKey.ShaderModelVersion]: 'float',
-  [SpecKey.GSyncFreeSyncSupport]: 'boolean',
-  [SpecKey.SliCrossfireSupport]: 'boolean',
+  directXVersion: 'float',
+  openClVersion: 'float',
+  openGlVersion: 'float',
+  shaderModelVersion: 'float',
+  gSyncFreeSyncSupport: 'boolean',
+  sliCrossfireSupport: 'boolean',
 };
 
 interface SpecFieldProps {
   type?: InputType;
-  field: SpecKey;
+  field: keyof Specs;
 
-  value?: SpecRequest;
-  onChange?: (value: SpecRequest) => void;
+  value?: Spec;
+  onChange?: (value: Spec) => void;
 }
 
 export const SpecField = forwardRef<unknown, SpecFieldProps>((props, ref) => {
@@ -96,7 +96,7 @@ export const SpecField = forwardRef<unknown, SpecFieldProps>((props, ref) => {
   useEffect(() => setValue(propsValue), [propsValue]);
 
   const handleChange = useCallback(
-    (value: SpecRequest) => {
+    (value: Spec) => {
       setValue(value);
       onChange?.(value);
     },
@@ -108,7 +108,7 @@ export const SpecField = forwardRef<unknown, SpecFieldProps>((props, ref) => {
     return (
       <SpecAutocompleteField
         field={field}
-        value={value}
+        value={value as Spec<string>}
         onChange={handleChange}
         ref={ref as Ref<HTMLInputElement>}
       />
@@ -116,8 +116,7 @@ export const SpecField = forwardRef<unknown, SpecFieldProps>((props, ref) => {
   } else if (inputType === 'string') {
     return (
       <SpecStringField
-        field={field}
-        value={value}
+        value={value as Spec<string>}
         onChange={handleChange}
         ref={ref as Ref<HTMLInputElement>}
       />
@@ -125,8 +124,7 @@ export const SpecField = forwardRef<unknown, SpecFieldProps>((props, ref) => {
   } else if (inputType === 'text') {
     return (
       <SpecTextField
-        field={field}
-        value={value}
+        value={value as Spec<string>}
         onChange={handleChange}
         ref={ref as Ref<HTMLTextAreaElement>}
       />
@@ -135,7 +133,7 @@ export const SpecField = forwardRef<unknown, SpecFieldProps>((props, ref) => {
     return (
       <SpecFloatField
         field={field}
-        value={value}
+        value={value as Spec<number>}
         onChange={handleChange}
         ref={ref as Ref<HTMLInputElement>}
       />
@@ -143,8 +141,7 @@ export const SpecField = forwardRef<unknown, SpecFieldProps>((props, ref) => {
   } else if (inputType === 'date') {
     return (
       <SpecDateField
-        field={field}
-        value={value}
+        value={value as Spec<string>}
         onChange={handleChange}
         ref={ref as Ref<HTMLInputElement>}
       />
@@ -152,8 +149,7 @@ export const SpecField = forwardRef<unknown, SpecFieldProps>((props, ref) => {
   } else if (inputType === 'boolean') {
     return (
       <SpecBooleanField
-        field={field}
-        value={value}
+        value={value as Spec<boolean>}
         onChange={handleChange}
         ref={ref as Ref<HTMLSelectElement>}
       />
@@ -162,7 +158,7 @@ export const SpecField = forwardRef<unknown, SpecFieldProps>((props, ref) => {
     return (
       <SpecEnumField
         field={field}
-        value={value}
+        value={value as Spec<string>}
         onChange={handleChange}
         ref={ref as Ref<HTMLSelectElement>}
       />
@@ -170,8 +166,7 @@ export const SpecField = forwardRef<unknown, SpecFieldProps>((props, ref) => {
   } else {
     return (
       <SpecStringField
-        field={field}
-        value={value}
+        value={value as Spec<string>}
         onChange={handleChange}
         ref={ref as Ref<HTMLInputElement>}
       />

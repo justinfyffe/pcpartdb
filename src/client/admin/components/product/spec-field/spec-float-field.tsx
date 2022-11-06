@@ -1,39 +1,39 @@
 import { NumberInput } from '@client/shared/components';
-import { SpecKey, SpecRequest } from '@shared/spec';
+import { Spec, Specs } from '@shared/spec';
 import React, { forwardRef, useCallback, useMemo, useState } from 'react';
 
 const PREFIXES: { [key: string]: string[] } = {
-  [SpecKey.LaunchPriceMsrp]: ['$'],
+  launchPrice: ['$'],
 };
 
-const SUFFIXES: { [key: string]: string[] } = {
-  [SpecKey.ProcessSize]: ['nm', 'μm'],
-  [SpecKey.Transistors]: ['million'],
-  [SpecKey.Length]: ['mm'],
-  [SpecKey.Width]: ['mm'],
-  [SpecKey.Height]: ['mm'],
-  [SpecKey.Weight]: ['kg'],
-  [SpecKey.ThermalDesignPower]: ['W'],
-  [SpecKey.SuggestedPsu]: ['W'],
-  [SpecKey.CoreClockSpeedBase]: ['MHz', 'GHz'],
-  [SpecKey.CoreClockSpeedBoost]: ['MHz', 'GHz'],
-  [SpecKey.L1Cache]: ['KB', 'MB'],
-  [SpecKey.L2Cache]: ['MB', 'KB'],
-  [SpecKey.PixelFillRate]: ['GPixel/s'],
-  [SpecKey.TextureFillRate]: ['GTexel/s'],
-  [SpecKey.Fp32Performance]: ['TFLOPS', 'GFLOPS'],
-  [SpecKey.Fp64Performance]: ['GFLOPS', 'TFLOPS'],
-  [SpecKey.MemorySize]: ['GB', 'MB', 'KB'],
-  [SpecKey.MemoryInterface]: ['bit'],
-  [SpecKey.MemoryBandwidth]: ['GB/s', 'MB/s'],
-  [SpecKey.MemoryClock]: ['MHz'],
+const SUFFIXES: Record<string, string[]> = {
+  processSize: ['nm', 'μm'],
+  transistors: ['million'],
+  length: ['mm'],
+  width: ['mm'],
+  height: ['mm'],
+  weight: ['kg'],
+  thermalDesignPower: ['W'],
+  suggestedPsu: ['W'],
+  coreClockSpeedBase: ['MHz', 'GHz'],
+  coreClockSpeedBoost: ['MHz', 'GHz'],
+  l1Cache: ['KB', 'MB'],
+  l2Cache: ['MB', 'KB'],
+  pixelFillRate: ['GPixel/s'],
+  textureFillRate: ['GTexel/s'],
+  fp32Performance: ['TFLOPS', 'GFLOPS'],
+  fp64Performance: ['GFLOPS', 'TFLOPS'],
+  memorySize: ['GB', 'MB', 'KB'],
+  memoryInterface: ['bit'],
+  memoryBandwidth: ['GB/s', 'MB/s'],
+  memoryClock: ['MHz'],
 };
 
 interface SpecFloatFieldProps {
-  field: SpecKey;
+  field: keyof Specs;
 
-  value?: SpecRequest;
-  onChange?: (value: SpecRequest) => void;
+  value?: Spec<number>;
+  onChange?: (value: Spec<number>) => void;
 }
 
 export const SpecFloatField = forwardRef<HTMLInputElement, SpecFloatFieldProps>(
@@ -61,42 +61,38 @@ export const SpecFloatField = forwardRef<HTMLInputElement, SpecFloatFieldProps>(
       suffixes.length > 0 && suffix != null ? suffixes.indexOf(suffix) : 0,
     );
 
-    const baseValue = value?.floatValue ?? null;
+    const baseValue = value?.value ?? null;
 
     const handleChange = useCallback(
       (value: number) => {
         onChange?.(
-          value != null
-            ? { key: field, floatValue: value, metadata: { prefix, suffix } }
-            : null,
+          value != null ? { value, metadata: { prefix, suffix } } : null,
         );
       },
-      [field, prefix, suffix, onChange],
+      [prefix, suffix, onChange],
     );
 
     const handlePrefixClick = useCallback(() => {
       const newIndex = prefixIndex < prefixes.length - 1 ? prefixIndex + 1 : 0;
       setPrefixIndex(newIndex);
-      const newValue: SpecRequest = {
-        key: field,
-        floatValue: baseValue,
+      const newValue: Spec<number> = {
+        value: baseValue,
         metadata: { prefix: prefixes[prefixIndex] },
       };
 
       onChange?.(newValue);
-    }, [field, baseValue, prefixes, prefixIndex, onChange]);
+    }, [baseValue, prefixes, prefixIndex, onChange]);
 
     const handleSuffixClick = useCallback(() => {
       const newIndex = suffixIndex < suffixes.length - 1 ? suffixIndex + 1 : 0;
       setSuffixIndex(newIndex);
-      const newValue: SpecRequest = {
-        key: field,
-        floatValue: baseValue,
+      const newValue: Spec<number> = {
+        value: baseValue,
         metadata: { suffix: suffixes[suffixIndex] },
       };
 
       onChange?.(newValue);
-    }, [field, baseValue, suffixes, suffixIndex, onChange]);
+    }, [baseValue, suffixes, suffixIndex, onChange]);
 
     return (
       <NumberInput
