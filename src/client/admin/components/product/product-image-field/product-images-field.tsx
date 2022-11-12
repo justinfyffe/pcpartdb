@@ -28,7 +28,7 @@ export const ProductImagesField: FunctionComponent<ProductImagesFieldProps> = (
   const { value: propsValue, onChange } = props;
 
   const [value, setValue] = useState(propsValue || []);
-  useEffect(() => setValue(propsValue), [propsValue]);
+  useEffect(() => setValue(propsValue || []), [propsValue]);
 
   const handleImageChange = useCallback(
     (i: number, productImage: ProductImage) => {

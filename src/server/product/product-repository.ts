@@ -61,7 +61,7 @@ export class ProductRepository {
     config?: RepositoryConfig,
   ) {
     return await ProductModel.query(config?.trx).where(
-      ref(`specs:${key}.value`),
+      ref(`specs:${key}.value`).castText(),
       'ILIKE',
       `%${query}%`,
     );
@@ -73,7 +73,7 @@ export class ProductRepository {
     config?: RepositoryConfig,
   ) {
     return await ProductModel.query(config?.trx).where(
-      ref(`metas:${key}.value`),
+      ref(`metas:${key}.value`).castText(),
       'ILIKE',
       `%${query}%`,
     );
@@ -87,21 +87,21 @@ export class ProductRepository {
     const ranksQuery = ProductModel.query(config?.trx)
       .where('type', type)
       .select(
-        'productId',
+        'id',
         raw(
-          'CAST(RANK() OVER ( ORDER BY benchmarks->performanceScore->>value DESC ) AS INTEGER) AS rank',
+          "CAST(RANK() OVER ( ORDER BY benchmarks->'performanceScore'->>'value' DESC ) AS INTEGER) AS rank",
         ),
       );
 
     const ranks = (await Model.query(config?.trx)
-      .select('productId', 'rank')
+      .select('id', 'rank')
       .from(ranksQuery.as('ranks'))
-      .whereIn('productId', ids)) as unknown as {
-      productId: number;
+      .whereIn('id', ids)) as unknown as {
+      id: number;
       rank: number;
     }[];
     const ranksMap = ranks.reduce((acc, value) => {
-      acc[value.productId] = value.rank;
+      acc[value.id] = value.rank;
       return acc;
     }, {} as Record<number, number>);
 
@@ -125,21 +125,21 @@ export class ProductRepository {
     const ranksQuery = ProductModel.query(config?.trx)
       .where('type', type)
       .select(
-        'productId',
+        'id',
         raw(
-          'CAST(RANK() OVER ( ORDER BY benchmarks->valueScore->>value DESC ) AS INTEGER) AS rank',
+          "CAST(RANK() OVER ( ORDER BY benchmarks->'valueScore'->>'value' DESC ) AS INTEGER) AS rank",
         ),
       );
 
     const ranks = (await Model.query(config?.trx)
-      .select('productId', 'rank')
+      .select('id', 'rank')
       .from(ranksQuery.as('ranks'))
-      .whereIn('productId', ids)) as unknown as {
-      productId: number;
+      .whereIn('id', ids)) as unknown as {
+      id: number;
       rank: number;
     }[];
     const ranksMap = ranks.reduce((acc, value) => {
-      acc[value.productId] = value.rank;
+      acc[value.id] = value.rank;
       return acc;
     }, {} as Record<number, number>);
 

@@ -307,7 +307,7 @@ function formOptions(gpu?: Product): UseFormProps<ProductFormData> {
       // Images
       autocompleteImage: images.autocomplete || null,
       thumbnailImage: images.thumbnail || null,
-      detailsImages: images.details || null,
+      detailsImages: images.details || [],
 
       // RetailModels,
       retailModels: meta.retailModels || null,

@@ -29,7 +29,7 @@ export const RetailModelsField: FunctionComponent<RetailModelsFieldProps> = (
   const { value: propsValue, onChange } = props;
 
   const [value, setValue] = useState(propsValue || { value: [] });
-  useEffect(() => setValue(propsValue), [propsValue]);
+  useEffect(() => setValue(propsValue || { value: [] }), [propsValue]);
 
   const handleChange = useCallback(
     (i: number, retailModel: RetailModel) => {

@@ -1,4 +1,9 @@
-import React, { createContext, FunctionComponent, useState } from 'react';
+import React, {
+  createContext,
+  FunctionComponent,
+  useMemo,
+  useState,
+} from 'react';
 import { useGon } from '../../gon';
 import { classNames } from '../../ui';
 
@@ -43,10 +48,12 @@ export const Field: FunctionComponent<FieldProps> = (props) => {
 
   const gon = useGon();
 
-  const [context] = useState(() => {
-    const counter = gon.fieldCounter++;
-    return { fieldId: `field-id-${counter}` };
-  });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const fieldId = useMemo(() => gon.fieldCounter++, []);
+  const context = useMemo(
+    () => ({ fieldId: `field-id-${fieldId}` }),
+    [fieldId],
+  );
 
   return (
     <FieldContext.Provider value={context}>

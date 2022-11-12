@@ -9,7 +9,7 @@ export async function up(knex: Knex): Promise<void> {
     table.string('name').notNullable();
 
     table.jsonb('specs');
-    table.jsonb('meta');
+    table.jsonb('metas');
     table.jsonb('benchmarks');
     table.jsonb('reviews');
     table.jsonb('images');
