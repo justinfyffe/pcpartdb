@@ -3,15 +3,13 @@ import { Card, CardContent, Img, TextInput } from '@client/shared/components';
 import { Image } from '@shared/image';
 import React, { FunctionComponent, useCallback } from 'react';
 
-interface ImageDialogListCardProps {
+interface ImageListCardProps {
   image: Image;
   hidePath?: boolean;
   onClick?: (image: Image) => void;
 }
 
-export const ImageDialogListCard: FunctionComponent<
-  ImageDialogListCardProps
-> = (props) => {
+export const ImageListCard: FunctionComponent<ImageListCardProps> = (props) => {
   const { image, hidePath = false, onClick } = props;
 
   const handleClick = useCallback(

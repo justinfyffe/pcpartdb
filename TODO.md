@@ -1,4 +1,13 @@
 Immediate Tasks:
+- Import Data
+  - GPU Specs:
+    - TechPowerup
+    - gpuspecs
+    - videocardz.net
+- dimensions
+  - height and width should be swapped?
+  - just use slot-width plus length?
+  - is slot-width the same as "width" or as "height"
 - compare gpus page
   - auto-generate summary
   - buy buttons

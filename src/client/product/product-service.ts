@@ -1,6 +1,12 @@
 import { ApiClient, apiClient } from '@client/shared/api';
 import { ProductCache } from '@client/shared/cache';
-import { Product, ProductRequest, ProductType } from '@shared/product';
+import {
+  ImportProductRequest,
+  ImportProductResults,
+  Product,
+  ProductRequest,
+  ProductType,
+} from '@shared/product';
 import { ProductMetas } from '@shared/product-meta';
 import { Specs } from '@shared/spec';
 
@@ -64,6 +70,10 @@ export class ProductService {
     return await this.api.get<string[]>(`${PATH}/specs/autocomplete`, {
       params: { key, value: query },
     });
+  }
+
+  async import(data: ImportProductRequest) {
+    return await this.api.post<ImportProductResults>(`${PATH}/import`, data);
   }
 }
 

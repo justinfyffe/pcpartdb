@@ -1,3 +1,3 @@
-import { autocompleteProductMeta } from '@server/product/product-meta-controller';
+import { autocompleteProductMetas } from '@server/product/product-controller';
 
-export default autocompleteProductMeta;
+export default autocompleteProductMetas;

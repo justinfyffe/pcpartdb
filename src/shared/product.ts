@@ -17,10 +17,9 @@ export interface Product {
   name: string;
 
   specs?: Specs;
+  metas?: ProductMetas;
   benchmarks?: Benchmarks;
   reviews?: Reviews;
-
-  metas?: ProductMetas;
   images?: ProductImages;
 }
 
@@ -31,9 +30,19 @@ export interface ProductRequest {
   name: string;
 
   specs: SpecsRequest;
+  metas: ProductMetasRequest;
   benchmarks: BenchmarksRequest;
   reviews: ReviewsRequest;
-
-  metas: ProductMetasRequest;
   images: ProductImagesRequest;
+}
+
+export interface ImportProductRequest {
+  url: string;
+}
+
+export interface ImportProductResults {
+  specs: Specs;
+  metas: ProductMetas;
+  benchmarks: Benchmarks;
+  reviews: Reviews;
 }

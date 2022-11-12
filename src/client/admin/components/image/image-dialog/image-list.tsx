@@ -7,15 +7,13 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import { ImageDialogListCard } from './image-dialog-list-card';
+import { ImageListCard } from './image-list-card';
 
-interface ImageDialogListProps {
+interface ImageListProps {
   onSelect?: (image: Image) => void;
 }
 
-export const ImageDialogList: FunctionComponent<ImageDialogListProps> = (
-  props,
-) => {
+export const ImageList: FunctionComponent<ImageListProps> = (props) => {
   const [loading, setLoading] = useState(false);
   const [images, setImages] = useState<Image[]>([]);
 
@@ -34,7 +32,7 @@ export const ImageDialogList: FunctionComponent<ImageDialogListProps> = (
       {!loading &&
         images.map((image) => (
           <div key={image.id} className="cursor-pointer m-2 w-[300px]">
-            <ImageDialogListCard
+            <ImageListCard
               image={image}
               hidePath={true}
               onClick={props.onSelect}

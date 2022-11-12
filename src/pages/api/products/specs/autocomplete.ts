@@ -1,3 +1,3 @@
-import { autocompleteSpecs } from '@server/product/spec-controller';
+import { autocompleteSpecs } from '@server/product/product-controller';
 
 export default autocompleteSpecs;

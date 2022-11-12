@@ -2,7 +2,7 @@ import { Button, ButtonVariant, closeDialog } from '@client/shared/components';
 import { Image } from '@shared/image';
 import React, { FunctionComponent, useCallback, useState } from 'react';
 import { ImageForm } from '../image-form';
-import { ImageDialogList } from './image-dialog-list';
+import { ImageList } from './image-list';
 
 enum Tabs {
   List,
@@ -64,7 +64,7 @@ export const ImageDialog: FunctionComponent<ImageDialogProps> = (props) => {
       </div>
 
       <div className="mt-4 overflow-x-hidden overflow-y-auto">
-        {tab === Tabs.List && <ImageDialogList onSelect={handleSelect} />}
+        {tab === Tabs.List && <ImageList onSelect={handleSelect} />}
         {tab === Tabs.Upload && <ImageForm onSuccess={handleUpload} />}
       </div>
     </div>

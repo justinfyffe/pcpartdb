@@ -8,6 +8,7 @@ import {
   FieldError,
   Form,
   FormActions,
+  showDialog,
   Spinner,
   TextInput,
 } from '@client/shared/components';
@@ -44,10 +45,12 @@ import React, {
   FunctionComponent,
   useCallback,
   useMemo,
+  useRef,
   useState,
 } from 'react';
 import { Controller, useForm, UseFormProps } from 'react-hook-form';
 import { BenchmarkField } from '../benchmark-field';
+import { ImportProductDialog } from '../import-product-dialog';
 import { ProductImageField, ProductImagesField } from '../product-image-field';
 import { RetailModelsField } from '../retail-model-field';
 import { ReviewField } from '../review-field';
@@ -323,6 +326,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [requestError, setRequestError] = useState<ApiError>(null);
+  const importRef = useRef(null);
 
   const form = useMemo(() => formOptions(gpu), [gpu]);
 
@@ -382,6 +386,11 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
     }
   }, [gpu, router, setError]);
 
+  const handleImportClick = useCallback(() => {
+    const url: string = importRef.current.value;
+    showDialog(<ImportProductDialog url={url} />, { disableClose: true });
+  }, []);
+
   return (
     <Form onSubmit={handleSubmit(handleSave)}>
       {requestError && isBadRequestError(requestError) && (
@@ -395,6 +404,21 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           An unknown error has occurred. Please try again later.
         </Alert>
       )}
+
+      <section className="border-b border-b-slate-300 mb-6">
+        <Field>
+          Import Data
+          <div className="flex gap-4">
+            <TextInput ref={importRef} className="flex-1" />
+            <Button
+              variant={ButtonVariant.Secondary}
+              onClick={handleImportClick}
+            >
+              Import
+            </Button>
+          </div>
+        </Field>
+      </section>
 
       <section>
         <Field>
