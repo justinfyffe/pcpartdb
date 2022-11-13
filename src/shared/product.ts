@@ -41,8 +41,8 @@ export interface ImportProductRequest {
 }
 
 export interface ImportProductResults {
-  specs: Specs;
-  metas: ProductMetas;
-  benchmarks: Benchmarks;
-  reviews: Reviews;
+  specs?: Specs;
+  metas?: ProductMetas;
+  benchmarks?: Benchmarks;
+  reviews?: Reviews;
 }

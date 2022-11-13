@@ -139,10 +139,10 @@ export function formatSpec(spec: Spec, options?: FormatSpecOptions) {
   }
 
   // Handle special cases
-  if (metadata.format === SpecFormat.MarketSegment) {
+  if (metadata?.specKey === 'marketSegment') {
     return formatMarketSegment(value as MarketSegmentValue);
   }
-  if (metadata.format === SpecFormat.Date) {
+  if (metadata?.specKey === 'releaseDate') {
     return formatDate(
       value as string,
       options?.dateFormatter ?? SpecDateFormatter.QuarterYear,

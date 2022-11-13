@@ -12,6 +12,7 @@ import {
   THead,
   Tr,
 } from '@client/shared/components';
+import { ImportProductResults } from '@shared/product';
 import React, {
   FunctionComponent,
   useCallback,
@@ -28,11 +29,13 @@ export const ImportProductDialog: FunctionComponent<
 > = (props) => {
   const { url } = props;
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [results, setResults] = useState<ImportProductResults>(null);
 
   useEffect(() => {
     async function importProduct() {
-      await productService.import({ url });
+      const results = await productService.import({ url });
+      setResults(results);
       setLoading(false);
     }
     importProduct();
@@ -65,20 +68,24 @@ export const ImportProductDialog: FunctionComponent<
               </Tr>
             </THead>
             <TBody>
-              <Tr onClick={null} className="hover:bg-gray-200 cursor-pointer">
-                <Td>Company</Td>
-                <Td>NVIDIA</Td>
-                <Td className="text-right">
-                  <Checkbox />
-                </Td>
-              </Tr>
-              <Tr onClick={null} className="hover:bg-gray-200 cursor-pointer">
-                <Td>Market Segment</Td>
-                <Td>Desktop</Td>
-                <Td className="text-right">
-                  <Checkbox />
-                </Td>
-              </Tr>
+              {results.specs?.architecture?.value != null && (
+                <Tr onClick={null} className="hover:bg-gray-200 cursor-pointer">
+                  <Td>Architecture</Td>
+                  <Td>{results.specs.architecture.value}</Td>
+                  <Td className="text-right">
+                    <Checkbox />
+                  </Td>
+                </Tr>
+              )}
+              {results.specs?.busInterface?.value != null && (
+                <Tr onClick={null} className="hover:bg-gray-200 cursor-pointer">
+                  <Td>Bus Interface</Td>
+                  <Td>{results.specs.busInterface.value}</Td>
+                  <Td className="text-right">
+                    <Checkbox />
+                  </Td>
+                </Tr>
+              )}
             </TBody>
           </Table>
         </div>

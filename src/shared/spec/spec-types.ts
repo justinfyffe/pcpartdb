@@ -62,19 +62,15 @@ export interface Specs {
   shaderModelVersion?: Spec<number>;
   gSyncFreeSyncSupport?: Spec<boolean>;
   sliCrossfireSupport?: Spec<boolean>;
+
+  [key: string]: Spec;
 }
 
 export type SpecsRequest = Specs;
 export type SpecKey = keyof Specs;
 
-export enum SpecFormat {
-  MarketSegment = 'MARKET_SEGMENT',
-  Date = 'Date',
-}
-
 export interface SpecMetadata {
   specKey?: SpecKey;
-  format?: SpecFormat;
   prefix?: string;
   suffix?: string;
 }

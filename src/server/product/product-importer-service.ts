@@ -1,3 +1,4 @@
+import { badRequestError } from '@server/shared/api/status';
 import { ImportProductRequest } from '@shared/product';
 import { importFromTechPowerUp } from './importers/techpowerup-importer';
 
@@ -10,7 +11,9 @@ export class ProductImporterService {
     const parsedUrl = new URL(request.url);
 
     if (parsedUrl.hostname === Importers.TechPowerUp) {
-      importFromTechPowerUp(request.url);
+      return importFromTechPowerUp(request.url);
+    } else {
+      throw badRequestError();
     }
   }
 }
