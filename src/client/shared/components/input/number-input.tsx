@@ -14,7 +14,6 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
 
     const handleWheel = useCallback((e: WheelEvent<HTMLInputElement>) => {
       e.currentTarget.blur();
-      e.preventDefault();
     }, []);
 
     return (

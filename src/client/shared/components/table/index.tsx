@@ -72,12 +72,21 @@ export const TBody: FunctionComponent<TBodyProps> = (props) => {
   return <tbody {...htmlProps}>{children}</tbody>;
 };
 
-interface TrProps extends HTMLProps<HTMLTableRowElement> {}
+interface TrProps extends HTMLProps<HTMLTableRowElement> {
+  sticky?: boolean;
+}
 
 export const Tr: FunctionComponent<TrProps> = (props) => {
-  const { children, ...htmlProps } = props;
+  const { children, className, sticky, ...htmlProps } = props;
 
-  return <tr {...htmlProps}>{children}</tr>;
+  return (
+    <tr
+      className={classNames(className, sticky ? 'sticky top-0' : '')}
+      {...htmlProps}
+    >
+      {children}
+    </tr>
+  );
 };
 
 interface ThProps extends HTMLProps<HTMLTableCellElement> {}

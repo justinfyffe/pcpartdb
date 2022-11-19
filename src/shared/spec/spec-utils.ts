@@ -133,6 +133,10 @@ export interface FormatSpecOptions {
 }
 
 export function formatSpec(spec: Spec, options?: FormatSpecOptions) {
+  if (spec == null) {
+    return null;
+  }
+
   const { value, metadata } = spec;
   if (value == null) {
     return null;

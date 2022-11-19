@@ -17,7 +17,13 @@ interface CheckboxProps
 
 export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
   (props, ref) => {
-    const { children, className, onChange, value: propsValue } = props;
+    const {
+      children,
+      className,
+      onChange,
+      value: propsValue,
+      disabled,
+    } = props;
 
     const [value, setValue] = useState(propsValue);
 
@@ -37,6 +43,7 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
         <input
           type="checkbox"
           checked={value}
+          disabled={disabled}
           onChange={handleChange}
           className={classNames('mr-2')}
           ref={ref}

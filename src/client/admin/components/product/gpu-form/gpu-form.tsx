@@ -21,7 +21,12 @@ import {
   benchmarkValidator,
 } from '@shared/benchmark';
 import { ApiError, ValidationErrorType } from '@shared/error';
-import { Product, ProductRequest, ProductType } from '@shared/product';
+import {
+  ImportProductResults,
+  Product,
+  ProductRequest,
+  ProductType,
+} from '@shared/product';
 import {
   ProductImage,
   ProductImagesRequest,
@@ -332,6 +337,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
 
   const {
     control,
+    setValue,
     handleSubmit,
     setError,
     formState: { errors },
@@ -386,10 +392,22 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
     }
   }, [gpu, router, setError]);
 
+  const handleImport = useCallback(
+    (data: ImportProductResults) => {
+      Object.keys(data.specs).forEach((specKey) => {
+        console.log(data.specs[specKey]);
+        setValue(specKey as any, data.specs[specKey]);
+      });
+    },
+    [setValue],
+  );
+
   const handleImportClick = useCallback(() => {
     const url: string = importRef.current.value;
-    showDialog(<ImportProductDialog url={url} />, { disableClose: true });
-  }, []);
+    showDialog(<ImportProductDialog url={url} onImport={handleImport} />, {
+      disableClose: true,
+    });
+  }, [handleImport]);
 
   return (
     <Form onSubmit={handleSubmit(handleSave)}>
