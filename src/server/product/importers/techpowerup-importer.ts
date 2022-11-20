@@ -42,22 +42,36 @@ export async function importFromTechPowerUp(url: string) {
   const response = await axios.get(url);
   const $ = cheerio.load(response.data);
 
-  const specs: Specs = {
-    architecture: getArchitecture($),
-    busInterface: getBusInterface($),
-  };
+  const specs: Specs = {};
+  Object.keys(SPECS_MAP).forEach((key) => {
+    specs[key] = getGeneralValue($, key);
+  });
+  specs.processSize = getProcessSizeValue($);
 
   return { specs } as ImportProductResults;
 }
 
-function getArchitecture($: cheerio.CheerioAPI): Spec<string> {
-  const values = getSpecValues($, 'architecture');
+function getGeneralValue(
+  $: cheerio.CheerioAPI,
+  specKey: SpecKey,
+): Spec<unknown> {
+  const values = getSpecValues($, specKey);
   return { value: values[0] || null };
 }
 
-function getBusInterface($: cheerio.CheerioAPI): Spec<string> {
-  const values = getSpecValues($, 'busInterface');
-  return { value: values[0] || null };
+function getProcessSizeValue($: cheerio.CheerioAPI): Spec<number> {
+  const values = getSpecValues($, 'processSize');
+  const rawValue = values[0] || null;
+  if (rawValue == null) {
+    return { value: null };
+  }
+
+  const [base, suffix] = rawValue.split(' ');
+
+  return {
+    value: Number(base) || null,
+    metadata: { specKey: 'processSize', suffix },
+  };
 }
 
 function getSpecValues($: cheerio.CheerioAPI, specKey: SpecKey) {
