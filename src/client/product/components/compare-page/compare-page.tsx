@@ -38,6 +38,7 @@ export interface CompareGpuPageProps {
 
 export const CompareGpuPage = (props: CompareGpuPageProps) => {
   const { gpus } = props;
+  console.log(gpus);
 
   const gpu1 = gpus[0];
   const gpu2 = gpus[1];
@@ -108,12 +109,26 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
                     <CustomRow>
                       <CustomRowLabel>Performance Rating (Rank)</CustomRowLabel>
                       <CustomRowValue>
-                        {formatBenchmark(benchmarks1.performanceScore)} (
-                        {formatProductMeta(meta1.performanceRank)})
+                        {benchmarks1.performanceScore != null &&
+                        meta1.performanceRank != null ? (
+                          <>
+                            {formatBenchmark(benchmarks1.performanceScore)} (
+                            {formatProductMeta(meta1.performanceRank)})
+                          </>
+                        ) : (
+                          <>--</>
+                        )}
                       </CustomRowValue>
                       <CustomRowValue>
-                        {formatBenchmark(benchmarks2.performanceScore)} (
-                        {formatProductMeta(meta2.performanceRank)})
+                        {benchmarks2.performanceScore != null &&
+                        meta2.performanceRank != null ? (
+                          <>
+                            {formatBenchmark(benchmarks2.performanceScore)} (
+                            {formatProductMeta(meta2.performanceRank)})
+                          </>
+                        ) : (
+                          <>--</>
+                        )}
                       </CustomRowValue>
                     </CustomRow>
                     <CustomRow>
@@ -121,12 +136,26 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
                         Performance Per Dollar (Rank)
                       </CustomRowLabel>
                       <CustomRowValue>
-                        {formatBenchmark(benchmarks1.valueScore)} (
-                        {formatProductMeta(meta1.valueRank)})
+                        {benchmarks1.valueScore != null &&
+                        meta1.valueRank != null ? (
+                          <>
+                            {formatBenchmark(benchmarks1.valueScore)} (
+                            {formatProductMeta(meta1.valueRank)})
+                          </>
+                        ) : (
+                          <>--</>
+                        )}
                       </CustomRowValue>
                       <CustomRowValue>
-                        {formatBenchmark(benchmarks2.valueScore)} (
-                        {formatProductMeta(meta2.valueRank)})
+                        {benchmarks2.valueScore != null &&
+                        meta2.valueRank != null ? (
+                          <>
+                            {formatBenchmark(benchmarks2.valueScore)} (
+                            {formatProductMeta(meta2.valueRank)})
+                          </>
+                        ) : (
+                          <>--</>
+                        )}
                       </CustomRowValue>
                     </CustomRow>
                     <SpecRow spec="company" />

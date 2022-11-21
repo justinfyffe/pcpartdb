@@ -190,10 +190,15 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                     <CustomRow>
                       <CustomRowLabel>Performance Rating (Rank)</CustomRowLabel>
                       <CustomRowValue>
-                        <>
-                          {formatBenchmark(benchmarks.performanceScore)} (
-                          {formatProductMeta(meta.performanceRank)})
-                        </>
+                        {benchmarks.performanceScore != null &&
+                        meta.performanceRank != null ? (
+                          <>
+                            {formatBenchmark(benchmarks.performanceScore)} (
+                            {formatProductMeta(meta.performanceRank)})
+                          </>
+                        ) : (
+                          <>--</>
+                        )}
                       </CustomRowValue>
                     </CustomRow>
                     <CustomRow>
@@ -201,10 +206,15 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                         Performance Per Dollar (Rank)
                       </CustomRowLabel>
                       <CustomRowValue>
-                        <>
-                          {formatBenchmark(benchmarks.valueScore)} (
-                          {formatProductMeta(meta.valueRank)})
-                        </>
+                        {benchmarks.valueScore != null &&
+                        meta.valueRank != null ? (
+                          <>
+                            {formatBenchmark(benchmarks.valueScore)} (
+                            {formatProductMeta(meta.valueRank)})
+                          </>
+                        ) : (
+                          <>--</>
+                        )}
                       </CustomRowValue>
                     </CustomRow>
                     <SpecRow spec="company" />

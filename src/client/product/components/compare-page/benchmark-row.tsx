@@ -29,14 +29,14 @@ export const BenchmarkRow = (props: BenchmarkRowProps) => {
         {benchmark1?.source != null ? (
           <a href={benchmark1.source}>{formatBenchmark(benchmark1)}</a>
         ) : (
-          <>{formatBenchmark(benchmark1)}</>
+          <>{formatBenchmark(benchmark1) || '--'}</>
         )}
       </Td>
       <Td className="border-l-0 text-left min-w-[80px]">
         {benchmark2?.source != null ? (
           <a href={benchmark2.source}>{formatBenchmark(benchmark2)}</a>
         ) : (
-          <>{formatBenchmark(benchmark2)}</>
+          <>{formatBenchmark(benchmark2) || '--'}</>
         )}
       </Td>
     </Tr>

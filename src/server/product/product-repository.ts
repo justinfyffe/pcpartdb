@@ -90,10 +90,11 @@ export class ProductRepository {
   ) {
     const ranksQuery = ProductModel.query(config?.trx)
       .where('type', type)
+      .whereNotNull(ref('benchmarks:performanceScore.value'))
       .select(
         'id',
         raw(
-          "CAST(RANK() OVER ( ORDER BY benchmarks->'performanceScore'->>'value' DESC ) AS INTEGER) AS rank",
+          "CAST(RANK() OVER ( ORDER BY (benchmarks->'performanceScore'->>'value')::float DESC ) AS INTEGER) AS rank",
         ),
       );
 
@@ -128,10 +129,11 @@ export class ProductRepository {
   ) {
     const ranksQuery = ProductModel.query(config?.trx)
       .where('type', type)
+      .whereNotNull(ref('benchmarks:valueScore.value'))
       .select(
         'id',
         raw(
-          "CAST(RANK() OVER ( ORDER BY benchmarks->'valueScore'->>'value' DESC ) AS INTEGER) AS rank",
+          "CAST(RANK() OVER ( ORDER BY (benchmarks->'valueScore'->>'value')::float DESC ) AS INTEGER) AS rank",
         ),
       );
 

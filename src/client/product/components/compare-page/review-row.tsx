@@ -29,14 +29,14 @@ export const ReviewRow = (props: ReviewRowProps) => {
         {review1?.source != null ? (
           <a href={review1.source}>{formatReview(review1)}</a>
         ) : (
-          <>{LABELS[key]}</>
+          <>{formatReview(review1) || '--'}</>
         )}
       </Td>
       <Td className="border-l-0 text-left min-w-[80px]">
         {review2?.source != null ? (
           <a href={review2.source}>{formatReview(review2)}</a>
         ) : (
-          <>{LABELS[key]}</>
+          <>{formatReview(review2) || '--'}</>
         )}
       </Td>
     </Tr>
