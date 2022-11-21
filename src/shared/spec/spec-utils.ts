@@ -1,6 +1,6 @@
 import Big from 'big.js';
 import { format, parse } from 'date-fns';
-import { MarketSegmentValue, Spec, SpecFormat } from './spec-types';
+import { MarketSegmentValue, Spec } from './spec-types';
 
 export enum SpecBooleanFormatter {
   TrueFalse = 'TRUE_FALSE',

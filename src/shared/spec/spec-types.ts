@@ -27,7 +27,7 @@ export interface Specs {
   memoryBandwidth?: Spec<number>;
 
   // Board Design
-  slotWidth?: Spec<number | string>;
+  slotWidth?: Spec<number>;
   length?: Spec<number>;
   width?: Spec<number>;
   height?: Spec<number>;

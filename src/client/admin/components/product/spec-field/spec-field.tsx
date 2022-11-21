@@ -44,7 +44,7 @@ const INPUT_TYPES: Record<string, InputType> = {
   memoryBandwidth: 'float',
 
   // Board Design
-  slotWidth: 'autocomplete',
+  slotWidth: 'float',
   length: 'float',
   width: 'float',
   height: 'float',

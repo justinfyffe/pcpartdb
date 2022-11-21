@@ -79,7 +79,7 @@ interface ProductFormData {
   transistors?: Spec<number>;
 
   // Board Compatibility & Dimensions
-  slotWidth?: Spec<string | number>;
+  slotWidth?: Spec<number>;
   length?: Spec<number>;
   width?: Spec<number>;
   height?: Spec<number>;
@@ -396,6 +396,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
     (data: ImportProductResults) => {
       Object.keys(data.specs).forEach((specKey) => {
         console.log(data.specs[specKey]);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         setValue(specKey as any, data.specs[specKey]);
       });
     },
