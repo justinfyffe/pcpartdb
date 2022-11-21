@@ -295,7 +295,7 @@ const ConclusionParagraph = () => {
     const name = product.name;
     const company = formatSpec(specs.company);
 
-    const retailModels = metas.retailModels.value;
+    const retailModels = metas.retailModels?.value;
 
     if (retailModels == null || retailModels.length == 0) {
       return <></>;

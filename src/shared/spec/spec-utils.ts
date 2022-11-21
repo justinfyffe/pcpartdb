@@ -138,19 +138,29 @@ export function formatSpec(spec: Spec, options?: FormatSpecOptions) {
   }
 
   const { value, metadata } = spec;
+  const specKey = metadata?.specKey;
   if (value == null) {
     return null;
   }
 
   // Handle special cases
-  if (metadata?.specKey === 'marketSegment') {
+  if (specKey === 'marketSegment') {
     return formatMarketSegment(value as MarketSegmentValue);
   }
-  if (metadata?.specKey === 'releaseDate') {
+  if (specKey === 'releaseDate') {
     return formatDate(
       value as string,
       options?.dateFormatter ?? SpecDateFormatter.QuarterYear,
     );
+  }
+  if (specKey === 'openClVersion' && typeof spec.value === 'number') {
+    return spec.value.toFixed(1);
+  }
+  if (specKey === 'openGlVersion' && typeof spec.value === 'number') {
+    return spec.value.toFixed(1);
+  }
+  if (specKey === 'shaderModelVersion' && typeof spec.value === 'number') {
+    return spec.value.toFixed(1);
   }
 
   // Compute string to return

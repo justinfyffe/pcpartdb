@@ -70,7 +70,7 @@ export const SpecRow = (props: SpecRowProps) => {
 
   const context = useContext(ProductsContext);
   const spec1 = context.specs[0][key];
-  const spec2 = context.specs[0][key];
+  const spec2 = context.specs[1][key];
 
   return (
     <Tr>

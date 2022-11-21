@@ -22,12 +22,8 @@ export const SpecBooleanField = forwardRef<
 
   const handleChange = useCallback(
     (value: SelectValue) => {
-      if (typeof value != 'string') {
-        throw new Error('Invalid select value for SpecBooleanField');
-      }
-
       onChange?.(
-        value != null
+        value != null && typeof value == 'string'
           ? { value: value === 'true', metadata: { specKey: field } }
           : null,
       );

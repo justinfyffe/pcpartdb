@@ -4,7 +4,6 @@ import React, {
   FunctionComponent,
   useCallback,
   useContext,
-  useMemo,
   useState,
 } from 'react';
 import { ImportProductContext } from './import-product-context';

@@ -9,6 +9,7 @@ const SPECS_MAP: Partial<Record<SpecKey, string>> = {
   busInterface: 'Bus Interface',
   coreClockSpeedBase: 'Base Clock',
   coreClockSpeedBoost: 'Boost Clock',
+  directXVersion: 'DirectX',
   fp32Performance: 'FP32 (float) performance',
   fp64Performance: 'FP64 (double) performance',
   gpuName: 'GPU Name',
@@ -22,6 +23,8 @@ const SPECS_MAP: Partial<Record<SpecKey, string>> = {
   memoryInterface: 'Memory Bus',
   memorySize: 'Memory Size',
   memoryType: 'Memory Type',
+  openClVersion: 'OpenCL',
+  openGlVersion: 'OpenGL',
   outputs: 'Outputs',
   pixelFillRate: 'Pixel Rate',
   powerConnectors: 'Power Connectors',
@@ -29,6 +32,7 @@ const SPECS_MAP: Partial<Record<SpecKey, string>> = {
   rayTracingCores: 'RT Cores',
   releaseDate: 'Availability',
   renderOutputUnits: 'ROPs',
+  shaderModelVersion: 'Shader Model',
   shaderUnitsCudaCores: 'Shading Units',
   slotWidth: 'Slot Width',
   suggestedPsu: 'Suggested PSU',
@@ -48,8 +52,10 @@ export async function importFromTechPowerUp(url: string) {
   const specs: Specs = {
     architecture: getStringValue($, 'architecture'),
     busInterface: getStringValue($, 'busInterface'),
+    company: getCompanyValue($, 'company'),
     coreClockSpeedBase: getNumberValue($, 'coreClockSpeedBase'),
     coreClockSpeedBoost: getNumberValue($, 'coreClockSpeedBoost'),
+    directXVersion: getStringValue($, 'directXVersion'),
     fp32Performance: getNumberValue($, 'fp32Performance'),
     fp64Performance: getNumberValue($, 'fp64Performance'),
     gpuName: getStringValue($, 'gpuName'),
@@ -63,6 +69,8 @@ export async function importFromTechPowerUp(url: string) {
     memoryInterface: getNumberValue($, 'memoryInterface'),
     memorySize: getNumberValue($, 'memorySize'),
     memoryType: getStringValue($, 'memoryType'),
+    openClVersion: getNumberValue($, 'openClVersion'),
+    openGlVersion: getNumberValue($, 'openGlVersion'),
     outputs: getStringValue($, 'outputs'),
     pixelFillRate: getNumberValue($, 'pixelFillRate'),
     powerConnectors: getStringValue($, 'powerConnectors'),
@@ -70,6 +78,7 @@ export async function importFromTechPowerUp(url: string) {
     rayTracingCores: getNumberValue($, 'rayTracingCores'),
     releaseDate: getDateValue($, 'releaseDate'),
     renderOutputUnits: getNumberValue($, 'renderOutputUnits'),
+    shaderModelVersion: getNumberValue($, 'shaderModelVersion'),
     shaderUnitsCudaCores: getNumberValue($, 'shaderUnitsCudaCores'),
     slotWidth: getSlotWidthValue($, 'slotWidth'),
     suggestedPsu: getNumberValue($, 'suggestedPsu'),
@@ -81,7 +90,13 @@ export async function importFromTechPowerUp(url: string) {
     width: getNumberValue($, 'width'),
   };
 
-  return { specs } as ImportProductResults;
+  return { name: getName($), specs } as ImportProductResults;
+}
+
+function getName($: cheerio.CheerioAPI) {
+  const fullName = $('.gpudb-name').text();
+  const [_company, ...name] = fullName.split(' ');
+  return name.join(' ');
 }
 
 function getDateValue($: cheerio.CheerioAPI, specKey: SpecKey): Spec<string> {
@@ -108,6 +123,32 @@ function getSlotWidthValue(
   $: cheerio.CheerioAPI,
   specKey: SpecKey,
 ): Spec<number> {
+  const stringValue = getStringValue($, specKey)?.value;
+
+  let value = null;
+  if (stringValue === 'Quad-slot') {
+    value = 4;
+  } else if (stringValue === 'Triple-slot') {
+    value = 3;
+  } else if (stringValue === 'Dual-slot') {
+    value = 2;
+  } else if (stringValue === 'Single-slot') {
+    value = 1;
+  }
+
+  return { value, metadata: { specKey } };
+}
+
+function getCompanyValue(
+  $: cheerio.CheerioAPI,
+  specKey: SpecKey,
+): Spec<string> {
+  const fullName = $('.gpudb-name').text();
+  const [company] = fullName.split(' ');
+  if (company === 'NVIDIA' || company === 'AMD') {
+    return { value: company, metadata: { specKey } };
+  }
+
   return { value: null, metadata: { specKey } };
 }
 

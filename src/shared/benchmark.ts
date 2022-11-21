@@ -67,6 +67,10 @@ export function formatBenchmark(
   benchmark: Benchmark,
   options?: FormatBenchmarkOptions,
 ) {
+  if (benchmark == null) {
+    return null;
+  }
+
   const { value } = benchmark;
   if (value == null) {
     return null;

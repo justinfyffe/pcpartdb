@@ -24,14 +24,15 @@ export async function serializeAsync<T>(model: Promise<SerializeInput<T>>) {
   return serialize(await model);
 }
 
-export function serializeArray<T>(models: Serializable<T>[]) {
-  return models.map((model) => model.serialize());
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function serializeArray<T>(models: (Serializable<T> | any)[]): any[] {
+  return models.map((model) => serialize(model));
 }
 
 export function serializeMap<T>(models: Map<number, Serializable<T>>) {
   const map = new Map<number, T>();
   models.forEach((model, key) => {
-    map.set(key, model.serialize());
+    map.set(key, serialize(model));
   });
   return map;
 }

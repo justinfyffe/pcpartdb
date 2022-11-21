@@ -17,6 +17,7 @@ import React, {
   useEffect,
   useState,
 } from 'react';
+import { ImportName } from './import-name';
 import { ImportProductContext } from './import-product-context';
 import { ImportSpec } from './import-spec';
 
@@ -69,12 +70,13 @@ export const ImportProductDialog: FunctionComponent<
             <Table>
               <THead>
                 <Tr sticky>
-                  <Th>Spec</Th>
+                  <Th>Field</Th>
                   <Th>Value</Th>
                   <Th className="text-right">Import?</Th>
                 </Tr>
               </THead>
               <TBody>
+                <ImportName />
                 <ImportSpec spec="company" />
                 <ImportSpec spec="marketSegment" />
                 <ImportSpec spec="launchPrice" />

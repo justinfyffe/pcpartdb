@@ -53,6 +53,10 @@ export function formatProductMeta(
   meta: ProductMeta,
   options?: FormatMetaOptions,
 ) {
+  if (meta == null) {
+    return null;
+  }
+
   const { value } = meta;
   if (value == null) {
     return null;

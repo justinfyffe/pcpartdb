@@ -46,6 +46,10 @@ export interface FormatReviewOptions {
 }
 
 export function formatReview(review: Review, options?: FormatReviewOptions) {
+  if (review == null) {
+    return null;
+  }
+
   const { value } = review;
   if (value == null) {
     return null;

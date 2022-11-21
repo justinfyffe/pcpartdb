@@ -56,10 +56,10 @@ export interface Specs {
   fp64Performance?: Spec<number>;
 
   // API Support
-  directXVersion?: Spec<number>;
-  openClVersion?: Spec<number>;
-  openGlVersion?: Spec<number>;
-  shaderModelVersion?: Spec<number>;
+  directXVersion?: Spec<number | string>;
+  openClVersion?: Spec<number | string>;
+  openGlVersion?: Spec<number | string>;
+  shaderModelVersion?: Spec<number | string>;
   gSyncFreeSyncSupport?: Spec<boolean>;
   sliCrossfireSupport?: Spec<boolean>;
 

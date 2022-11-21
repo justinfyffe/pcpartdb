@@ -59,6 +59,7 @@ import { ImportProductDialog } from '../import-product-dialog';
 import { ProductImageField, ProductImagesField } from '../product-image-field';
 import { RetailModelsField } from '../retail-model-field';
 import { ReviewField } from '../review-field';
+import { SlugField } from '../slug-field';
 import { SpecField } from '../spec-field';
 
 interface ProductFormData {
@@ -69,7 +70,7 @@ interface ProductFormData {
   // General
   company?: Spec<string>;
   marketSegment?: Spec<MarketSegmentValue>;
-  launchPriceMsrp?: Spec<number>;
+  launchPrice?: Spec<number>;
   releaseDate?: Spec<string>;
 
   // Processor
@@ -117,10 +118,10 @@ interface ProductFormData {
   // API Support
   gSyncFreeSyncSupport?: Spec<boolean>;
   sliCrossfireSupport?: Spec<boolean>;
-  directXVersion?: Spec<number>;
-  openClVersion?: Spec<number>;
-  openGlVersion?: Spec<number>;
-  shaderModelVersion?: Spec<number>;
+  directXVersion?: Spec<number | string>;
+  openClVersion?: Spec<number | string>;
+  openGlVersion?: Spec<number | string>;
+  shaderModelVersion?: Spec<number | string>;
 
   // Benchmarks
   g2dMarkBenchmark?: Benchmark<number>;
@@ -151,7 +152,7 @@ const productValidator = Joi.object({
   // General
   company: specValidator.allow(null),
   marketSegment: specValidator.allow(null),
-  launchPriceMsrp: specValidator.allow(null),
+  launchPrice: specValidator.allow(null),
   releaseDate: specValidator.allow(null),
 
   // Processor
@@ -247,7 +248,7 @@ function formOptions(gpu?: Product): UseFormProps<ProductFormData> {
       // General
       company: specs.company || null,
       marketSegment: specs.marketSegment || null,
-      launchPriceMsrp: specs.launchPrice || null,
+      launchPrice: specs.launchPrice || null,
       releaseDate: specs.releaseDate || null,
 
       // Processor
@@ -394,8 +395,8 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
 
   const handleImport = useCallback(
     (data: ImportProductResults) => {
+      setValue('name', data.name);
       Object.keys(data.specs).forEach((specKey) => {
-        console.log(data.specs[specKey]);
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         setValue(specKey as any, data.specs[specKey]);
       });
@@ -457,9 +458,11 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           <Controller
             name="slug"
             control={control}
-            render={({ field }) => <TextInput {...field} ref={null} />}
+            render={({ field }) => (
+              <SlugField control={control} {...field} ref={null} />
+            )}
           />
-          {errors.name?.type === ValidationErrorType.MissingStringValue && (
+          {errors.slug?.type === ValidationErrorType.MissingStringValue && (
             <FieldError>Required</FieldError>
           )}
         </Field>
@@ -493,7 +496,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
         <Field>
           Launch Price (MSRP)
           <Controller
-            name="launchPriceMsrp"
+            name="launchPrice"
             control={control}
             render={({ field }) => (
               <SpecField field="launchPrice" {...field} ref={null} />
@@ -1109,7 +1112,7 @@ function toSpecsRequest(formData: ProductFormData): SpecsRequest {
     // General
     company: formData.company || null,
     marketSegment: formData.marketSegment || null,
-    launchPrice: formData.launchPriceMsrp || null,
+    launchPrice: formData.launchPrice || null,
     releaseDate: formData.releaseDate || null,
 
     // Processor

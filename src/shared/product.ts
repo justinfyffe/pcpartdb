@@ -41,6 +41,7 @@ export interface ImportProductRequest {
 }
 
 export interface ImportProductResults {
+  name?: string;
   specs?: Specs;
   metas?: ProductMetas;
   benchmarks?: Benchmarks;

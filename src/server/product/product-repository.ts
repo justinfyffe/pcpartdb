@@ -60,10 +60,12 @@ export class ProductRepository {
     query: string,
     config?: RepositoryConfig,
   ) {
-    return await ProductModel.query(config?.trx).where(
-      ref(`specs:${key}.value`).castText(),
-      'ILIKE',
-      `%${query}%`,
+    const results = await ProductModel.query(config?.trx)
+      .select(ref(`specs:${key}.value`).as('value'))
+      .where(ref(`specs:${key}.value`).castText(), 'ILIKE', `%${query}%`);
+
+    return results.map(
+      (result) => (result as unknown as { value: string }).value,
     );
   }
 
@@ -72,10 +74,12 @@ export class ProductRepository {
     query: string,
     config?: RepositoryConfig,
   ) {
-    return await ProductModel.query(config?.trx).where(
-      ref(`metas:${key}.value`).castText(),
-      'ILIKE',
-      `%${query}%`,
+    const results = await ProductModel.query(config?.trx)
+      .select(ref(`metas:${key}.value`).as('value'))
+      .where(ref(`metas:${key}.value`).castText(), 'ILIKE', `%${query}%`);
+
+    return results.map(
+      (result) => (result as unknown as { value: string }).value,
     );
   }
 

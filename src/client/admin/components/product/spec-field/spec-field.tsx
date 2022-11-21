@@ -73,7 +73,7 @@ const INPUT_TYPES: Record<string, InputType> = {
   fp64Performance: 'float',
 
   // API Support
-  directXVersion: 'float',
+  directXVersion: 'autocomplete',
   openClVersion: 'float',
   openGlVersion: 'float',
   shaderModelVersion: 'float',
