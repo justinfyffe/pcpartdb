@@ -29,7 +29,7 @@ const LABELS: Record<string, string> = {
   memoryBandwidth: 'Memory Bandwidth',
 
   // Board Design
-  slotWidth: 'Slot Width',
+  slotWidth: 'Slots',
   length: 'Length',
   width: 'Width',
   height: 'Height',

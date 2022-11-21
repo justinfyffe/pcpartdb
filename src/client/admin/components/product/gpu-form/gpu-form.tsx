@@ -630,7 +630,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           <h3 className="mb-4">Board Compatibility &amp; Dimensions</h3>
 
           <Field>
-            Slot Width
+            Slots
             <Controller
               name="slotWidth"
               control={control}

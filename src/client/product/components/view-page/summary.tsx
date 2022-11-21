@@ -144,9 +144,9 @@ const CompatibilityParagraph = () => {
 
   const sentence1 = useMemo(() => {
     const slots = formatSpec(specs.slotWidth);
-    const length = formatSpec(specs.length);
-    const width = formatSpec(specs.width);
-    const height = formatSpec(specs.height);
+    const length = formatSpec(specs.length, { suffix: false });
+    const width = formatSpec(specs.width, { suffix: false });
+    const height = formatSpec(specs.height, { suffix: false });
 
     if (slots && length && width && height) {
       return `This ${slots}-slot graphics card has dimensions of ${length} x ${width} x ${height} mm. `;

@@ -3,6 +3,7 @@ import {
   ArticleHeader,
   Breadcrumb,
   Breadcrumbs,
+  Button,
   Table,
   TBody,
   Th,
@@ -74,12 +75,36 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
           <article className="flex-1 flex flex-col gap-6 max-w-full">
             <section className="flex flex-wrap gap-4 md:flex-nowrap justify-between">
               <div className="flex flex-col gap-3 flex-1 min-w-[210px] max-w-[350px]">
-                <h2 className="self-start text-2xl font-medium">{gpu1.name}</h2>
+                <div className="flex items-center justify-between">
+                  <h2 className="self-start text-2xl font-medium">
+                    {gpu1.name}
+                  </h2>
+                  <Button
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="bg-green-500 text-white text-sm"
+                  >
+                    Buy
+                  </Button>
+                </div>
+
                 <ProductImages product={gpu1} />
               </div>
 
               <div className="flex flex-col gap-3 flex-1 min-w-[210px] max-w-[350px]">
-                <h2 className="self-start text-2xl font-medium">{gpu2.name}</h2>
+                <div className="flex items-center justify-between">
+                  <h2 className="self-start text-2xl font-medium">
+                    {gpu2.name}
+                  </h2>
+                  <Button
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="bg-green-500 text-white text-sm"
+                  >
+                    Buy
+                  </Button>
+                </div>
+
                 <ProductImages product={gpu2} />
               </div>
             </section>
@@ -106,6 +131,27 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
                     </Tr>
                   </THead>
                   <TBody>
+                    <CustomRow>
+                      <CustomRowLabel>Shop</CustomRowLabel>
+                      <CustomRowValue>
+                        <a
+                          target="_blank"
+                          rel="noreferrer noopener"
+                          className="text-green-600 font-bold"
+                        >
+                          Check Price
+                        </a>
+                      </CustomRowValue>
+                      <CustomRowValue>
+                        <a
+                          target="_blank"
+                          rel="noreferrer noopener"
+                          className="text-green-600 font-bold"
+                        >
+                          Check Price
+                        </a>
+                      </CustomRowValue>
+                    </CustomRow>
                     <CustomRow>
                       <CustomRowLabel>Performance Rating (Rank)</CustomRowLabel>
                       <CustomRowValue>

@@ -56,6 +56,18 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
   const benchmarks = context.benchmarks;
   const retailModels = context.metas.retailModels?.value;
 
+  const highlightMemory = useMemo(() => {
+    const memorySize = formatSpec(specs.memorySize);
+    const memoryType = formatSpec(specs.memoryType);
+    return [memorySize, memoryType].filter((value) => value != null).join(' ');
+  }, [specs]);
+
+  const highlightSlots = useMemo(() => {
+    const slotWidth = formatSpec(specs.slotWidth);
+    const height = formatSpec(specs.height);
+    return [slotWidth, height].filter((value) => value != null).join(', ');
+  }, [specs]);
+
   return (
     <ProductContext.Provider value={context}>
       <WebsiteLayout>
@@ -126,31 +138,15 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                       Memory
                     </HighlightLabel>
 
-                    <HighlightValue>
-                      {formatSpec(specs.memorySize)}{' '}
-                      {formatSpec(specs.memoryType)}
-                    </HighlightValue>
+                    <HighlightValue>{highlightMemory}</HighlightValue>
                   </HighlightListItem>
 
                   <HighlightListItem>
                     <HighlightLabel icon={<CubeTransparentIcon />}>
-                      Dimensions
+                      Slots
                     </HighlightLabel>
 
-                    <HighlightValue>
-                      {formatSpec(specs.length, {
-                        suffix: false,
-                      })}
-                      {' x '}
-                      {formatSpec(specs.width, {
-                        suffix: false,
-                      })}
-                      {' x '}
-                      {formatSpec(specs.height, {
-                        suffix: false,
-                      })}{' '}
-                      mm
-                    </HighlightValue>
+                    <HighlightValue>{highlightSlots}</HighlightValue>
                   </HighlightListItem>
 
                   <HighlightListItem>

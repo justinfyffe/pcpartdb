@@ -144,6 +144,9 @@ export function formatSpec(spec: Spec, options?: FormatSpecOptions) {
   }
 
   // Handle special cases
+  if (specKey === 'slotWidth' && typeof spec.value === 'number') {
+    return `${spec.value}-slot`;
+  }
   if (specKey === 'marketSegment') {
     return formatMarketSegment(value as MarketSegmentValue);
   }

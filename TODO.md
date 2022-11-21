@@ -1,16 +1,7 @@
 Immediate Tasks:
-- Import Data
-  - GPU Specs:
-    - TechPowerup
-    - gpuspecs
-    - videocardz.net
-- dimensions
-  - height and width should be swapped?
-  - just use slot-width plus length?
-  - is slot-width the same as "width" or as "height"
 - compare gpus page
   - auto-generate summary
-  - buy buttons
+  - finish buy buttons (hook them up to a link)
 - gpus list page
   - sort by
 - gpus overview page
@@ -22,12 +13,9 @@ Immediate Tasks:
   - popular comparisons
   - popular gpus
 - home page
-- product forms
-  - pre-fill data (from external source)
 - contact page
 - about page
 - disclaimer page
-- move pages to client folder
 - clean up html
 - initial on-page seo
   - canonical links

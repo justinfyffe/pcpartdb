@@ -37,7 +37,7 @@ export const OverviewGpusPage = (_props: OverviewGpusPageProps) => {
 
         <section
           className={classNames(
-            'grid grid-cols-2 grid-rows-[auto_auto] gap-6 mb-8',
+            'grid grid-cols-2 grid-rows-[auto_auto] gap-6 mb-8 w-full',
           )}
         >
           <Card>

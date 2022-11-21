@@ -100,9 +100,9 @@ function getName($: cheerio.CheerioAPI) {
 }
 
 function getDateValue($: cheerio.CheerioAPI, specKey: SpecKey): Spec<string> {
-  const rawValue = getSpecValues($, specKey);
+  const values = getSpecValues($, specKey);
   const value = format(
-    parse(rawValue, 'MMM do, yyyy', new Date()),
+    parse(values[0], 'MMM do, yyyy', new Date()),
     'yyyy-MM-dd',
   );
 
@@ -153,12 +153,14 @@ function getCompanyValue(
 }
 
 function getStringValue($: cheerio.CheerioAPI, specKey: SpecKey): Spec<string> {
-  const value = getSpecValues($, specKey);
+  const values = getSpecValues($, specKey);
+  const value = values.join(', ');
   return { value: value || null, metadata: { specKey } };
 }
 
 function getNumberValue($: cheerio.CheerioAPI, specKey: SpecKey): Spec<number> {
-  const value = getSpecValues($, specKey);
+  const values = getSpecValues($, specKey);
+  const value = values[0];
   const [base, suffix] = parseNumberValue(value || null);
 
   return {
@@ -168,7 +170,11 @@ function getNumberValue($: cheerio.CheerioAPI, specKey: SpecKey): Spec<number> {
 }
 
 function getSpecValues($: cheerio.CheerioAPI, specKey: SpecKey) {
-  const el = $(`dt:contains("${SPECS_MAP[specKey]}")`).siblings('dd').first();
+  const el = $('dt')
+    .filter((i, dt) => $(dt).text().trim() === SPECS_MAP[specKey])
+    .siblings('dd')
+    .first();
+
   if (el.has('br')) {
     el.find('br').replaceWith(';;');
   }
@@ -176,8 +182,7 @@ function getSpecValues($: cheerio.CheerioAPI, specKey: SpecKey) {
   const values = el
     .text()
     .split(';;')
-    .map((val) => val.trim())
-    .join(', ');
+    .map((val) => val.trim());
 
   return values;
 }
