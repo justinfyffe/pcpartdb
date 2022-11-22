@@ -13,9 +13,7 @@ Immediate Tasks:
   - popular comparisons
   - popular gpus
 - home page
-- contact page
 - about page
-- disclaimer page
 - clean up html
 - initial on-page seo
   - canonical links
@@ -37,8 +35,8 @@ Legend:
   - [CTNT] GPUs
   - [CTNT] Compare
   - [CTNT] Home Page
-  - [LEGL] Contact
-  - [LEGL] Disclaimer / Privacy
+  - [LEGL] About
+  - [LEGL] Privacy
   - [EFFY] Basic admin panel
 - 1.1
   - [CTNT] CPUs

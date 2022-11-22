@@ -75,16 +75,6 @@ export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
               </a>
             </ListItem>
             <ListItem>
-              <a href="/contact" className="text-footer-link">
-                Contact Us
-              </a>
-            </ListItem>
-            <ListItem>
-              <a href="/disclaimer" className="text-footer-link">
-                Disclaimer
-              </a>
-            </ListItem>
-            <ListItem>
               <a href="/privacy" className="text-footer-link">
                 Privacy
               </a>
@@ -97,16 +87,13 @@ export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
 
           <p>
             PC Parts DB provides specs, benchmarks, and reviews based on various
-            sources. If you discover an error, please contact us.
+            sources. If you discover an error, please{' '}
+            <a href="/about">contact us</a>.
           </p>
 
           <p>
             PC Parts DB is a participant of affiliate programs and earns
-            commission from qualifying purchases. Please read our{' '}
-            <a href="/disclaimer" className="text-footer-link">
-              Disclaimer
-            </a>
-            .
+            commission from qualifying purchases.
           </p>
         </FooterSection>
 
