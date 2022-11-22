@@ -22,14 +22,6 @@ Immediate Tasks:
   - alt tags
 - launch
 - product retail models
-- Split tech specs into tabs for desktop, accordians for mobile
-  - Processor
-  - Board Compatibility
-  - Cores & Clock Speeds
-  - Computational Performance
-  - Memory
-  - Display Connectivity
-  - API Support
 - look into using useController
 - improve html semantics
 
