@@ -17,23 +17,38 @@ export const AboutPage = (_props: AboutPageProps) => {
         <ArticleHeader className="flex flex-wrap w-full items-center justify-between gap-3 lg:gap-4">
           <Breadcrumbs className="mb-3">
             <Breadcrumb href="/">Home</Breadcrumb>
-            <Breadcrumb>About PC Parts DB</Breadcrumb>
+            <Breadcrumb>About us</Breadcrumb>
           </Breadcrumbs>
 
-          <h1>About Us</h1>
+          <h1>About PC Parts DB</h1>
         </ArticleHeader>
 
         <section>
-          <p></p>
-
           <p>
-            <h3 className="font-bold">For advertising inquiries:</h3>
-            advertise@pcpartsdb.com
+            PC Parts DB was created to provide a better experience for anyone
+            researching PC hardware. Our website&apos;s tools and comprehensive
+            database of parts will help you make an informed choice of which
+            part you should add to your PC build.
           </p>
 
           <p>
-            <h3 className="font-bold">For other inquiries:</h3>
-            hello@pcpartsdb.com
+            We have an exciting roadmap with plans for more content and tools
+            that will further help the PC community. If you have any feedback,
+            questions, or requests, please reach out to our emails listed below.
+            We thank you for your support.
+          </p>
+
+          <h3 className="font-medium">For advertising inquiries</h3>
+          <p>advertise@pcpartsdb.com</p>
+
+          <h3 className="font-medium">For other inquiries</h3>
+          <p>hello@pcpartsdb.com</p>
+
+          <h3 className="font-medium">Affiliate Disclaimer</h3>
+          <p>
+            We are a participant of affiliate advertising programs which allow
+            us to earn from qualifying purchases. We do not buy or sell the
+            products listed on this website.
           </p>
         </section>
       </Article>

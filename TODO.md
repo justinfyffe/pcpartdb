@@ -14,6 +14,8 @@ Immediate Tasks:
   - popular gpus
 - home page
 - about page
+  - fix layout
+- privacy policy page
 - clean up html
 - initial on-page seo
   - canonical links
