@@ -61,7 +61,7 @@ export const CardImage: FunctionComponent<CardImageProps> = (props) => {
 
 export const CardSplitImage: FunctionComponent<CardImageProps> = (props) => {
   return (
-    <div className="relative flex gap-[1px] m-[-24px_-16px_24px] rounded-t rounded-b-none h-[200px] w-[calc(100%_+_32px)] max-w-[calc(100%_+_48px)] overflow-hidden">
+    <div className="relative flex gap-[2px] m-[-24px_-16px_24px] rounded-t rounded-b-none h-[200px] w-[calc(100%_+_32px)] max-w-[calc(100%_+_48px)] overflow-hidden">
       <Img
         src="https://preview.redd.it/8siyqldph2x21.jpg?auto=webp&s=eeaa2cdf9c4e01746f4f46cc08c66e5eff77c630"
         className={classNames(
@@ -77,8 +77,18 @@ export const CardSplitImage: FunctionComponent<CardImageProps> = (props) => {
           props.className,
         )}
       />
-      <div className="flex w-full h-full items-center justify-center absolute">
-        <div className="text-[#ececec] font-bold p-2 text-3xl rounded-full bg-button-primary border border-gray-50">
+
+      <div className="flex gap-4 w-full h-full absolute items-end justify-around pb-6">
+        <div className="flex-1 text-[#ececec] font-bold px-1 py-1 text-md bg-[rgba(63,81,181,0.7)] border-y border-gray-50 text-center">
+          RTX 3070
+        </div>
+        <div className="flex-1 text-[#ececec] font-bold px-1 py-1 text-md bg-[rgba(63,81,181,0.7)] border-y border-gray-50 text-center">
+          RTX 3060
+        </div>
+      </div>
+
+      <div className="flex w-full h-full items-end justify-center absolute pb-4">
+        <div className="text-[#ececec] font-bold py-2 px-3 text-2xl rounded-full bg-[rgba(63,81,181,1)] border-2 border-gray-50">
           VS
         </div>
       </div>
