@@ -59,6 +59,33 @@ export const CardImage: FunctionComponent<CardImageProps> = (props) => {
   );
 };
 
+export const CardSplitImage: FunctionComponent<CardImageProps> = (props) => {
+  return (
+    <div className="relative flex gap-[1px] m-[-24px_-16px_24px] rounded-t rounded-b-none h-[200px] w-[calc(100%_+_32px)] max-w-[calc(100%_+_48px)] overflow-hidden">
+      <Img
+        src="https://preview.redd.it/8siyqldph2x21.jpg?auto=webp&s=eeaa2cdf9c4e01746f4f46cc08c66e5eff77c630"
+        className={classNames(
+          'flex-1 h-full relative overflow-hidden',
+          props.className,
+        )}
+      />
+
+      <Img
+        src="https://preview.redd.it/8siyqldph2x21.jpg?auto=webp&s=eeaa2cdf9c4e01746f4f46cc08c66e5eff77c630"
+        className={classNames(
+          'flex-1 h-full relative overflow-hidden',
+          props.className,
+        )}
+      />
+      <div className="flex w-full h-full items-center justify-center absolute">
+        <div className="text-white font-bold p-2 text-3xl rounded-full bg-[rgba(49,46,129,1)] border border-gray-50">
+          VS
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export const CardTitle: FunctionComponent<CardTitleProps> = (props) => {
   const Element = props.as || 'h1';
 

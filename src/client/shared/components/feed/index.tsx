@@ -1,7 +1,14 @@
 import React, { FunctionComponent } from 'react';
 import { classNames } from '../../ui';
 import { Button, ButtonVariant } from '../button';
-import { Card, CardActions, CardContent, CardImage, CardTitle } from '../card';
+import {
+  Card,
+  CardActions,
+  CardContent,
+  CardImage,
+  CardSplitImage,
+  CardTitle,
+} from '../card';
 import { SectionHeader } from '../section-header';
 
 interface FeedProps {
@@ -87,11 +94,11 @@ export const FeedItem: FunctionComponent<FeedItemProps> = (props) => {
         props.className,
       )}
     >
-      <CardImage
+      <CardSplitImage
         src="https://preview.redd.it/8siyqldph2x21.jpg?auto=webp&s=eeaa2cdf9c4e01746f4f46cc08c66e5eff77c630"
         width="360"
         height="200"
-      ></CardImage>
+      ></CardSplitImage>
 
       <CardTitle as="h3">
         <a href="#">RTX 3070 vs RTX 3060</a>
