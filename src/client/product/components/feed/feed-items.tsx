@@ -75,7 +75,7 @@ export const ComparisonFeedItem: FunctionComponent<ComparisonFeedItemProps> = (
         props.className,
       )}
     >
-      <div className="relative flex gap-[2px] m-[-24px_-16px_24px] rounded-t rounded-b-none h-[200px] w-[calc(100%_+_32px)] max-w-[calc(100%_+_48px)] overflow-hidden">
+      <div className="relative flex gap-[2px] m-[-16px_-16px_0] rounded-t rounded-b-none h-[200px] w-[calc(100%_+_32px)] max-w-[calc(100%_+_48px)] overflow-hidden">
         <Img
           src="https://preview.redd.it/8siyqldph2x21.jpg?auto=webp&s=eeaa2cdf9c4e01746f4f46cc08c66e5eff77c630"
           className={classNames(
@@ -93,19 +93,19 @@ export const ComparisonFeedItem: FunctionComponent<ComparisonFeedItemProps> = (
         />
 
         <div className="flex gap-4 w-full h-full absolute items-end justify-around pb-6">
-          <div className="flex-1 text-[#ececec] font-bold px-1 py-1 text-md bg-[rgba(118,185,0,0.7)] border-y border-gray-50 text-center">
+          <div className="flex-1 text-[#ececec] font-bold px-1 py-1 text-md bg-[#558501] border-y border-gray-50 text-center">
             RTX 3070
           </div>
-          <div className="flex-1 text-[#ececec] font-bold px-1 py-1 text-md bg-[rgba(239,7,7,0.7)] border-y border-gray-50 text-center">
+          <div className="flex-1 text-[#ececec] font-bold px-1 py-1 text-md bg-[#850101] border-y border-gray-50 text-center">
             RTX 3060
           </div>
         </div>
 
-        <div className="flex w-full h-full absolute items-start justify-between rounded">
-          <div className="text-[#ececec] font-bold px-2 text-sm bg-[rgba(118,185,0,0.7)] border-y border-r border-gray-50">
+        <div className="flex w-full h-full absolute items-start justify-between rounded-t">
+          <div className="text-[#ececec] font-bold px-2 text-sm bg-[#558501] border-b border-r border-gray-50 rounded-tl">
             NVIDIA
           </div>
-          <div className="text-[#ececec] font-bold px-2 text-sm bg-[rgba(239,7,7,0.7)]  border-y border-l border-gray-50">
+          <div className="text-[#ececec] font-bold px-2 text-sm bg-[#850101]  border-b border-l border-gray-50 rounded-tr">
             AMD
           </div>
         </div>
@@ -119,7 +119,7 @@ export const ComparisonFeedItem: FunctionComponent<ComparisonFeedItemProps> = (
 
       <div className="flex flex-col gap-1">
         <h3 className="font-medium text-xl text-indigo-500">
-          <a href="#">RTX 3070 vs RTX 3060</a>
+          <a href="#">NVIDIA RTX 3070 vs AMD RTX 3060</a>
         </h3>
         Is the 3070 better bang for your buck?
       </div>
