@@ -79,16 +79,16 @@ export const CardSplitImage: FunctionComponent<CardImageProps> = (props) => {
       />
 
       <div className="flex gap-4 w-full h-full absolute items-end justify-around pb-6">
-        <div className="flex-1 text-[#ececec] font-bold px-1 py-1 text-md bg-[rgba(63,81,181,0.7)] border-y border-gray-50 text-center">
+        <div className="flex-1 text-[#ececec] font-bold px-1 py-1 text-md bg-[rgba(118,185,0,0.7)] border-y border-gray-50 text-center">
           RTX 3070
         </div>
-        <div className="flex-1 text-[#ececec] font-bold px-1 py-1 text-md bg-[rgba(63,81,181,0.7)] border-y border-gray-50 text-center">
+        <div className="flex-1 text-[#ececec] font-bold px-1 py-1 text-md bg-[rgba(239,7,7,0.7)] border-y border-gray-50 text-center">
           RTX 3060
         </div>
       </div>
 
       <div className="flex w-full h-full items-end justify-center absolute pb-4">
-        <div className="text-[#ececec] font-bold py-2 px-3 text-2xl rounded bg-[rgba(63,81,181,1)] border-2 border-gray-50">
+        <div className="text-[#ececec] font-bold py-2 px-3 text-2xl rounded bg-[rgba(51,65,85,1)] border-2 border-gray-50">
           VS
         </div>
       </div>
