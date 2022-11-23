@@ -88,7 +88,7 @@ export const CardSplitImage: FunctionComponent<CardImageProps> = (props) => {
       </div>
 
       <div className="flex w-full h-full items-end justify-center absolute pb-4">
-        <div className="text-[#ececec] font-bold py-2 px-3 text-2xl rounded-full bg-[rgba(63,81,181,1)] border-2 border-gray-50">
+        <div className="text-[#ececec] font-bold py-2 px-3 text-2xl rounded bg-[rgba(63,81,181,1)] border-2 border-gray-50">
           VS
         </div>
       </div>
