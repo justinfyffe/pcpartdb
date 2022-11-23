@@ -87,8 +87,17 @@ export const CardSplitImage: FunctionComponent<CardImageProps> = (props) => {
         </div>
       </div>
 
-      <div className="flex w-full h-full items-end justify-center absolute pb-4">
-        <div className="text-[#ececec] font-bold py-2 px-3 text-2xl rounded bg-[rgba(51,65,85,1)] border-2 border-gray-50">
+      <div className="flex w-full h-full absolute items-start justify-between rounded">
+        <div className="text-[#ececec] font-bold px-2 text-sm bg-[rgba(118,185,0,0.7)] border-y border-r border-gray-50">
+          NVIDIA
+        </div>
+        <div className="text-[#ececec] font-bold px-2 text-sm bg-[rgba(239,7,7,0.7)]  border-y border-l border-gray-50">
+          AMD
+        </div>
+      </div>
+
+      <div className="flex w-full h-full items-end justify-center absolute pb-[17px]">
+        <div className="text-[#ececec] font-bold py-2 px-3 text-xl rounded bg-[rgba(51,65,85,1)] border-2 border-gray-50">
           VS
         </div>
       </div>
