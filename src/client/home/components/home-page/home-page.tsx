@@ -1,13 +1,14 @@
 import 'reflect-metadata';
-import { CompareProductsForm } from '@client/product';
 import {
+  CompareProductsForm,
+  ComparisonFeedItem,
   Feed,
-  FeedItem,
   FeedItems,
   FeedLink,
   FeedLinks,
   FeedTitle,
-} from '@client/shared/components';
+  ProductFeedItem,
+} from '@client/product';
 import { WebsiteLayout } from '@client/shared/layouts';
 import { classNames } from '@client/shared/ui';
 import React from 'react';
@@ -56,9 +57,9 @@ export const HomePage = (_props: HomePageProps) => {
         <FeedTitle>NVIDIA vs AMD</FeedTitle>
 
         <FeedItems>
-          <FeedItem />
-          <FeedItem />
-          <FeedItem />
+          <ComparisonFeedItem />
+          <ComparisonFeedItem />
+          <ComparisonFeedItem />
         </FeedItems>
 
         <FeedLinks>
@@ -72,9 +73,9 @@ export const HomePage = (_props: HomePageProps) => {
         <FeedTitle>NVIDIA GPUs</FeedTitle>
 
         <FeedItems>
-          <FeedItem />
-          <FeedItem />
-          <FeedItem />
+          <ProductFeedItem />
+          <ProductFeedItem />
+          <ProductFeedItem />
         </FeedItems>
 
         <FeedLinks>
@@ -88,9 +89,9 @@ export const HomePage = (_props: HomePageProps) => {
         <FeedTitle>AMD GPUs</FeedTitle>
 
         <FeedItems>
-          <FeedItem />
-          <FeedItem />
-          <FeedItem />
+          <ProductFeedItem />
+          <ProductFeedItem />
+          <ProductFeedItem />
         </FeedItems>
 
         <FeedLinks>

@@ -38,7 +38,7 @@ export const Card: FunctionComponent<CardProps> = (props) => {
   return (
     <Element
       className={classNames(
-        'bg-gray-50 flex flex-col items-stretch justify-start p-4 rounded shadow text-slate-700',
+        'bg-gray-50 flex flex-col gap-4 items-stretch justify-start p-4 rounded shadow text-slate-700',
         props.className,
       )}
     >
@@ -52,7 +52,7 @@ export const CardImage: FunctionComponent<CardImageProps> = (props) => {
     <Img
       {...props}
       className={classNames(
-        'h-auto m-[-24px_-16px_24px] rounded-t rounded-b-none max-h-[200px] w-[calc(100%_+_32px)] max-w-[calc(100%_+_48px)] object-cover',
+        'h-auto m-[-16px_-16px_0] rounded-t rounded-b-none max-h-[200px] w-[calc(100%_+_32px)] max-w-[calc(100%_+_48px)] object-cover',
         props.className,
       )}
     />
@@ -106,7 +106,7 @@ export const CardSplitImage: FunctionComponent<CardImageProps> = (props) => {
 };
 
 export const CardTitle: FunctionComponent<CardTitleProps> = (props) => {
-  const Element = props.as || 'h1';
+  const Element = props.as || 'h3';
 
   return (
     <Element
@@ -124,9 +124,7 @@ export const CardContent: FunctionComponent<CardContentProps> = (props) => {
   const Element = props.as || 'div';
 
   return (
-    <Element className={classNames('my-6', props.className)}>
-      {props.children}
-    </Element>
+    <Element className={classNames(props.className)}>{props.children}</Element>
   );
 };
 

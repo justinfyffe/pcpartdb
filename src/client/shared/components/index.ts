@@ -6,7 +6,6 @@ export * from './button';
 export * from './card';
 export * from './checkbox';
 export * from './dialog';
-export * from './feed';
 export * from './field';
 export * from './file';
 export * from './footer';
