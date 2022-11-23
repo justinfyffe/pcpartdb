@@ -15,10 +15,14 @@ import {
 import { WebsiteLayout } from '@client/shared/layouts';
 import { classNames } from '@client/shared/ui';
 import { ComputerDesktopIcon } from '@heroicons/react/24/outline';
+import { Product, ProductsOrderBy } from '@shared/product';
 import React from 'react';
 import { CompareProductsForm } from '../compare-products-form';
 
-export interface OverviewGpusPageProps {}
+export interface OverviewGpusPageProps {
+  gpusByPerformance: Product[];
+  gpusByValue: Product[];
+}
 
 export const OverviewGpusPage = (_props: OverviewGpusPageProps) => {
   return (
@@ -189,7 +193,10 @@ export const OverviewGpusPage = (_props: OverviewGpusPageProps) => {
             </ul>
 
             <div className={classNames('self-end')}>
-              <a href="/gpus/list" className={classNames('text-indigo-400')}>
+              <a
+                href={`/gpus/list?sort=${ProductsOrderBy.PerformanceRating}`}
+                className={classNames('text-indigo-400')}
+              >
                 View all GPUs by performance
               </a>
             </div>
@@ -344,7 +351,10 @@ export const OverviewGpusPage = (_props: OverviewGpusPageProps) => {
             </ul>
 
             <div className={classNames('self-end')}>
-              <a href="/gpus/list" className={classNames('text-indigo-400')}>
+              <a
+                href={`/gpus/list?sort=${ProductsOrderBy.ValueRating}`}
+                className={classNames('text-indigo-400')}
+              >
                 View all GPUs by performance per dollar
               </a>
             </div>

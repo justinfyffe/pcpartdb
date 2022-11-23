@@ -9,6 +9,14 @@ export enum ProductType {
   GPU = 'GPU',
 }
 
+export enum ProductsOrderBy {
+  Id = 'id',
+  Name = 'name',
+  PerformanceRating = 'performance_rating',
+  ValueRating = 'value_rating',
+  ReleaseDate = 'release_date',
+}
+
 export interface Product {
   id?: number;
   slug: string;
@@ -46,4 +54,15 @@ export interface ImportProductResults {
   metas?: ProductMetas;
   benchmarks?: Benchmarks;
   reviews?: Reviews;
+}
+
+export interface ListProductsRequest {
+  type: ProductType;
+
+  filter?: {
+    company?: string;
+  };
+
+  orderBy?: ProductsOrderBy;
+  limit?: number;
 }

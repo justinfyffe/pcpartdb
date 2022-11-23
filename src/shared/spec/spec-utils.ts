@@ -99,6 +99,15 @@ function specValueMultiplier(spec: Spec) {
 }
 
 export function compareSpecs(spec1: Spec, spec2: Spec) {
+  // Handle edge cases (nulls)
+  if (spec1?.value == null && spec2?.value == null) {
+    return 0;
+  } else if (spec1?.value == null) {
+    return -1;
+  } else if (spec2?.value == null) {
+    return 1;
+  }
+
   // Check unsupported types
   if (spec1.metadata?.specKey !== spec2.metadata?.specKey) {
     throw new Error('Cannot compare different specs');

@@ -3,19 +3,21 @@ Immediate Tasks:
   - auto-generate summary
   - finish buy buttons (hook them up to a link)
 - gpus list page
-  - sort by
+  - title based on sorting and filter
 - gpus overview page
   - best by performance
   - best by value
   - popular comparisons
-  - popular gpus
 - side navs
   - popular comparisons
   - popular gpus
 - home page
 - about page
   - fix layout
+  - side bar?
 - privacy policy page
+  - fix layout
+  - side bar?
 - clean up html
 - initial on-page seo
   - canonical links

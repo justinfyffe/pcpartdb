@@ -42,15 +42,8 @@ export const PrivacyPage = (_props: PrivacyPageProps) => {
           </p>
 
           <p>
-            When you access our website, we collect essential information that
-            can be used to help optimize, prioritize, and debug various
-            features. This data may be included in analytics software and server
-            log files.
-          </p>
-
-          <p>
-            We do not sell your personal information to third parties, and will
-            not use
+            When you access our website, we automatically collect information
+            that can help us analyze and optimize the features of our website.
           </p>
 
           <h2>How do we protect your information?</h2>
@@ -72,6 +65,23 @@ export const PrivacyPage = (_props: PrivacyPageProps) => {
             information confidential.
           </p>
 
+          <h2>Do we share your personal information?</h2>
+
+          <p>
+            We do not sell or trade your personal information. Your personal
+            information may be accessible to third parties that assist us in
+            operating our website. For example, we use Google Analytics to help
+            us understand how the website is used. Information may also be
+            provided to third parties for advertising that may be of interest to
+            you.
+          </p>
+
+          <p>
+            We may also share your personal information to comply with
+            applicable laws and regulations, subpoenas, search warrants, or
+            other lawful requests.
+          </p>
+
           <h2>Do we use cookies?</h2>
 
           <p>
@@ -91,10 +101,6 @@ export const PrivacyPage = (_props: PrivacyPageProps) => {
             although our apps won&apos;t work and other aspects of our website
             may not function properly if you turn cookies off.
           </p>
-
-          <h2>Third-party disclosure</h2>
-
-          <p>test</p>
 
           <h2>Links to other sites</h2>
 
@@ -123,8 +129,9 @@ export const PrivacyPage = (_props: PrivacyPageProps) => {
           <p>
             Have any questions, comments, or concerns about this privacy policy,
             your data, or your rights with respect to your information? Please
-            get in touch by emailing us at hello@pcpartsdb.com and we&apos;ll be
-            happy to try to answer them!
+            get in touch by emailing us at{' '}
+            <a href="mailto:hello@pcpartsdb.com">hello@pcpartsdb.com</a> and
+            we&apos;ll be happy to try to answer them!
           </p>
         </section>
       </Article>
