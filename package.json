@@ -97,6 +97,6 @@
     "react-hook-form": "^7.31.3",
     "react-markdown": "^8.0.3",
     "reflect-metadata": "^0.1.13",
-    "tailwind-override": "^0.6.1"
+    "tailwind-merge": "^1.8.0"
   }
 }

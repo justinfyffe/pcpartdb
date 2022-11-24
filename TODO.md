@@ -3,6 +3,9 @@ Immediate Tasks:
   - react components
   - consistent styling
   - finalize layout design
+- rename product data structure to:
+  - pc parts?
+  - hardware?
 - compare gpus page
   - auto-generate summary
   - finish buy buttons (hook them up to a link)
@@ -28,7 +31,8 @@ Immediate Tasks:
   - canonical links
   - alt tags
 - launch
-- product retail models
+- retail models
+  - override specs
 - look into using useController
 - improve html semantics
 
@@ -50,8 +54,8 @@ Legend:
 - 1.1
   - [CTNT] CPUs
 - 1.2
-  - [EFFY] Admin Task Queue
-  - [EFFY] Pseudo-automation (parse websites given URL)
+  - [EFFY] Admin Task Queue & Simple Flows
+  - [EFFY] Pseudo-automation
   - [CTNT] Articles / Blog
   - [MRKT] Start offsite SEO
 - 1.3 
