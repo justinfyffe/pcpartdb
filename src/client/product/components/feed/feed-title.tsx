@@ -18,7 +18,9 @@ export const FeedTitle: FunctionComponent<FeedTitleProps> = (props) => {
       {Icon && (
         <Icon className={classNames('inline-block h-6 w-6 mr-2 mb-1')} />
       )}
-      <Element className={classNames('inline-block')}>{props.children}</Element>
+      <Element className={classNames('inline-block text-3xl')}>
+        {props.children}
+      </Element>
     </SectionHeader>
   );
 };

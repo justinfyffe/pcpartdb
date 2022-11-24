@@ -13,7 +13,7 @@ export const ComparisonFeedItem: FunctionComponent<ComparisonFeedItemProps> = (
   return (
     <Card
       className={classNames(
-        'flex-1 mx-4 mb-6 max-w-[420px] min-w-[280px]',
+        'flex-1 mx-4 mb-6 max-w-[420px] min-w-[280px] cursor-pointer',
         props.className,
       )}
     >

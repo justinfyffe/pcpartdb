@@ -18,6 +18,15 @@ import { ComputerDesktopIcon } from '@heroicons/react/24/outline';
 import { Product, ProductsOrderBy } from '@shared/product';
 import React from 'react';
 import { CompareProductsForm } from '../compare-products-form';
+import {
+  ComparisonFeedItem,
+  Feed,
+  FeedItems,
+  FeedLink,
+  FeedLinks,
+  FeedTitle,
+  ProductFeedItem,
+} from '../feed';
 
 export interface OverviewGpusPageProps {
   gpusByPerformance: Product[];
@@ -361,78 +370,31 @@ export const OverviewGpusPage = (_props: OverviewGpusPageProps) => {
           </Card>
         </section>
 
-        <section className={classNames('my-4')}>
-          <SectionHeader>
-            <ComputerDesktopIcon
-              className={classNames('inline-block h-6 w-6 mr-2 mb-1')}
-            />
-            <h2 className={classNames('inline-block')}>Popular Comparisons</h2>
-          </SectionHeader>
+        <Feed>
+          <FeedTitle>Popular Comparisons</FeedTitle>
 
-          <div
-            className={classNames('flex flex-wrap justify-center mx-[-16px]')}
-          >
-            <Card
-              className={classNames(
-                'flex-1 mx-4 mb-6 max-w-[360px] min-w-[280px]',
-              )}
-            >
-              <CardImage
-                src="https://preview.redd.it/8siyqldph2x21.jpg?auto=webp&s=eeaa2cdf9c4e01746f4f46cc08c66e5eff77c630"
-                width="360"
-                height="200"
-              ></CardImage>
+          <FeedItems>
+            <ComparisonFeedItem />
+            <ComparisonFeedItem />
+            <ComparisonFeedItem />
+          </FeedItems>
+        </Feed>
 
-              <CardTitle as="h3">Ryzen 9 5900X vs Core i7-12700KF</CardTitle>
+        <Feed>
+          <FeedTitle>Popular GPUs</FeedTitle>
 
-              <CardContent>Is the 3070 better bang for your buck?</CardContent>
+          <FeedItems>
+            <ProductFeedItem />
+            <ProductFeedItem />
+            <ProductFeedItem />
+          </FeedItems>
 
-              <CardActions>
-                <Button variant={ButtonVariant.Primary}>Compare</Button>
-              </CardActions>
-            </Card>
-
-            <Card
-              className={classNames(
-                'flex-1 mx-4 mb-6 max-w-[360px] min-w-[280px]',
-              )}
-            >
-              <CardImage
-                src="https://preview.redd.it/8siyqldph2x21.jpg?auto=webp&s=eeaa2cdf9c4e01746f4f46cc08c66e5eff77c630"
-                width="360"
-                height="200"
-              ></CardImage>
-
-              <CardTitle as="h3">Ryzen 9 5900X vs Core i7-12700KF</CardTitle>
-
-              <CardContent>Is the 3070 better bang for your buck?</CardContent>
-
-              <CardActions>
-                <Button variant={ButtonVariant.Primary}>Compare</Button>
-              </CardActions>
-            </Card>
-
-            <Card
-              className={classNames(
-                'flex-1 mx-4 mb-6 max-w-[360px] min-w-[280px]',
-              )}
-            >
-              <CardImage
-                src="https://preview.redd.it/8siyqldph2x21.jpg?auto=webp&s=eeaa2cdf9c4e01746f4f46cc08c66e5eff77c630"
-                width="360"
-                height="200"
-              ></CardImage>
-
-              <CardTitle as="h3">Ryzen 9 5900X vs Core i7-12700KF</CardTitle>
-
-              <CardContent>Is the 3070 better bang for your buck?</CardContent>
-
-              <CardActions>
-                <Button variant={ButtonVariant.Primary}>Compare</Button>
-              </CardActions>
-            </Card>
-          </div>
-        </section>
+          <FeedLinks>
+            <FeedLink>All GPUs</FeedLink>
+            <FeedLink>Best Performing GPUs</FeedLink>
+            <FeedLink>Best Value GPUs</FeedLink>
+          </FeedLinks>
+        </Feed>
       </Article>
     </WebsiteLayout>
   );

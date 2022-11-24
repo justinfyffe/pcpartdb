@@ -26,9 +26,7 @@ export const SectionHeader: FunctionComponent<SectionHeaderProps> = (props) => {
     <Element
       className={classNames('flex items-center mb-6 w-full', props.className)}
     >
-      {lines && <SectionHeaderLine small={!center} />}
       <SectionHeaderTitle>{props.children}</SectionHeaderTitle>
-      {lines && <SectionHeaderLine small={false} />}
     </Element>
   );
 };
@@ -37,11 +35,7 @@ export const SectionHeaderTitle: FunctionComponent<SectionHeaderTitleProps> = (
   props,
 ) => {
   return (
-    <div
-      className={classNames(
-        'font-normal inline-block px-2 text-xl md:text-2xl text-neutral-900',
-      )}
-    >
+    <div className={classNames('inline-block text-xl md:text-2xl')}>
       {props.children}
     </div>
   );

@@ -13,7 +13,7 @@ export const ProductFeedItem: FunctionComponent<ProductFeedItemProps> = (
   return (
     <Card
       className={classNames(
-        'flex-1 mx-4 mb-6 max-w-[420px] min-w-[280px]',
+        'flex-1 mx-4 mb-6 max-w-[420px] min-w-[280px]  cursor-pointer',
         props.className,
       )}
     >
@@ -39,16 +39,16 @@ export const ProductFeedItem: FunctionComponent<ProductFeedItemProps> = (
             $499
           </div>
           <div className="text-[#ececec] font-normal px-[6px] py-[2px] text-xs bg-[rgba(51,65,85,1)]  border-b border-l border-gray-50 rounded-tr rounded-bl">
-            Q4 2022
+            Best Performance
           </div>
         </div>
       </div>
 
       <div className="flex flex-col gap-2 text-md">
         <h3 className="font-medium text-xl text-indigo-500">
-          <a href="#">RTX 3070 vs RTX 3060</a>
+          <a href="#">NVIDIA RTX 3070</a>
         </h3>
-        Is the 3070 better bang for your buck?
+        The RTX 3070 is the best performing NVIDIA GPU in our database.
       </div>
     </Card>
   );

@@ -54,7 +54,7 @@ export const HomePage = (_props: HomePageProps) => {
       </section>
 
       <Feed className="my-4">
-        <FeedTitle>NVIDIA vs AMD</FeedTitle>
+        <FeedTitle>NVIDIA vs AMD GPUs</FeedTitle>
 
         <FeedItems>
           <ComparisonFeedItem />
@@ -64,13 +64,13 @@ export const HomePage = (_props: HomePageProps) => {
 
         <FeedLinks>
           <FeedLink>All GPUs</FeedLink>
-          <FeedLink>NVIDIA GPUs</FeedLink>
-          <FeedLink>AMD GPUs</FeedLink>
+          <FeedLink>Best Performing GPUs</FeedLink>
+          <FeedLink>Best Value GPUs</FeedLink>
         </FeedLinks>
       </Feed>
 
       <Feed className="my-4">
-        <FeedTitle>NVIDIA GPUs</FeedTitle>
+        <FeedTitle>Popular NVIDIA GPUs</FeedTitle>
 
         <FeedItems>
           <ProductFeedItem />
@@ -79,14 +79,14 @@ export const HomePage = (_props: HomePageProps) => {
         </FeedItems>
 
         <FeedLinks>
-          <FeedLink>All GPUs</FeedLink>
-          <FeedLink>NVIDIA GPUs</FeedLink>
-          <FeedLink>AMD GPUs</FeedLink>
+          <FeedLink>All NVIDIA GPUs</FeedLink>
+          <FeedLink>Best Performing NVIDIA GPUs</FeedLink>
+          <FeedLink>Best Value NVIDIA GPUs</FeedLink>
         </FeedLinks>
       </Feed>
 
       <Feed className="my-4">
-        <FeedTitle>AMD GPUs</FeedTitle>
+        <FeedTitle>Popular AMD GPUs</FeedTitle>
 
         <FeedItems>
           <ProductFeedItem />
@@ -95,9 +95,9 @@ export const HomePage = (_props: HomePageProps) => {
         </FeedItems>
 
         <FeedLinks>
-          <FeedLink>All GPUs</FeedLink>
-          <FeedLink>NVIDIA GPUs</FeedLink>
-          <FeedLink>AMD GPUs</FeedLink>
+          <FeedLink>All AMD GPUs</FeedLink>
+          <FeedLink>Best Performing AMD GPUs</FeedLink>
+          <FeedLink>Best Value AMD GPUs</FeedLink>
         </FeedLinks>
       </Feed>
     </WebsiteLayout>
