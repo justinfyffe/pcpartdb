@@ -18,9 +18,9 @@ export const ProductFeedItem: FunctionComponent<ProductFeedItemProps> = (
       )}
     >
       <Img
-        src="https://preview.redd.it/8siyqldph2x21.jpg?auto=webp&s=eeaa2cdf9c4e01746f4f46cc08c66e5eff77c630"
+        src="https://www.pcgamesn.com/wp-content/sites/pcgamesn/2022/04/Nvidia-RTX-4070-price-release-date-spec-benchmarks-1.jpg"
         width="360"
-        height="200"
+        height="160"
         className="h-auto m-[-16px_-16px_0] rounded-t rounded-b-none max-h-[160px] w-[calc(100%_+_32px)] max-w-[calc(100%_+_48px)] object-cover"
       />
 
