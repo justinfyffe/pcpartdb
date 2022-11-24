@@ -1,4 +1,8 @@
 Immediate Tasks:
+- cleanup layout
+  - react components
+  - consistent styling
+  - finalize layout design
 - compare gpus page
   - auto-generate summary
   - finish buy buttons (hook them up to a link)
@@ -8,6 +12,7 @@ Immediate Tasks:
   - best by performance
   - best by value
   - popular comparisons
+  - popular gpus
 - side navs
   - popular comparisons
   - popular gpus
