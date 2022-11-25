@@ -20,13 +20,14 @@ export const ComparisonFeedItem: FunctionComponent<ComparisonFeedItemProps> = (
   const [product1, product2] = props.products;
 
   return (
-    <a href={getProductComparisonPath(product1, product2)}>
-      <Card
-        className={classNames(
-          'flex-1 mx-4 mb-6 max-w-[384px] min-w-[280px]',
-          props.className,
-        )}
-      >
+    <a
+      href={getProductComparisonPath(product1, product2)}
+      className={classNames(
+        'flex-1 mx-4 mb-6 max-w-[384px] min-w-[280px]',
+        props.className,
+      )}
+    >
+      <Card>
         <div className="relative flex gap-[2px] m-[-16px_-16px_0] rounded-t rounded-b-none h-[160px] w-[calc(100%_+_32px)] max-w-[calc(100%_+_48px)] overflow-hidden border-b">
           <Img
             src="https://www.pcgamesn.com/wp-content/sites/pcgamesn/2022/04/Nvidia-RTX-4070-price-release-date-spec-benchmarks-1.jpg"

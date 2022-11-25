@@ -35,15 +35,16 @@ export const ProductFeedItem: FunctionComponent<ProductFeedItemProps> = (
   }, [product]);
 
   return (
-    <a href={getProductDetailsPath(product)}>
-      <Card
-        className={classNames(
-          'flex-1',
-          'mx-4 mb-6',
-          'max-w-[384px] min-w-[280px]',
-          props.className,
-        )}
-      >
+    <a
+      href={getProductDetailsPath(product)}
+      className={classNames(
+        'flex-1',
+        'mx-4 mb-6',
+        'max-w-[384px] min-w-[280px]',
+        props.className,
+      )}
+    >
+      <Card>
         <div
           className={classNames(
             'relative',
