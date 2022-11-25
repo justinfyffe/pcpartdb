@@ -1,5 +1,6 @@
 Immediate Tasks:
 - cleanup layout
+  - utility functions (get name, get url)
   - react components
   - consistent styling
     - links

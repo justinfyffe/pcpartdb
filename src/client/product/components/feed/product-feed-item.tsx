@@ -7,13 +7,7 @@ import {
   Product,
 } from '@shared/product';
 import { formatSpec } from '@shared/spec';
-import { useRouter } from 'next/router';
-import React, {
-  FunctionComponent,
-  MouseEvent,
-  useCallback,
-  useMemo,
-} from 'react';
+import React, { FunctionComponent, useMemo } from 'react';
 
 interface ProductFeedItemProps {
   product: Product;
@@ -26,7 +20,6 @@ export const ProductFeedItem: FunctionComponent<ProductFeedItemProps> = (
   props,
 ) => {
   const { product } = props;
-  const router = useRouter();
 
   const price = useMemo(
     () => formatSpec(product.specs?.launchPrice),
@@ -41,59 +34,94 @@ export const ProductFeedItem: FunctionComponent<ProductFeedItemProps> = (
     return ret.filter((image) => image != null);
   }, [product]);
 
-  const handleClick = useCallback(
-    (e: MouseEvent) => {
-      e.preventDefault();
-      router.push(getProductDetailsPath(product));
-    },
-    [router, product],
-  );
-
   return (
-    <Card
-      onClick={handleClick}
-      className={classNames(
-        'flex-1 mx-4 mb-6 max-w-[420px] min-w-[280px] cursor-pointer',
-        props.className,
-      )}
-    >
-      <div className="relative flex gap-[2px] m-[-16px_-16px_0] rounded-t rounded-b-none h-[160px] w-[calc(100%_+_32px)] max-w-[calc(100%_+_48px)] overflow-hidden border-b">
-        {images.map((image, i) => (
-          <Img
-            key={i}
-            src={image}
-            className={classNames(
-              'flex-1 h-[160px] object-cover overflow-hidden bg-white',
-              props.className,
-            )}
-          />
-        ))}
-        {images.length === 0 && (
-          <div className="flex-1 h-[160px] flex flex-col items-center justify-center">
-            <PhotoIcon className="w-[92px] h-[92px] mb-[-12px]" />
-            <span className="font-semibold">No Image</span>
-          </div>
+    <a href={getProductDetailsPath(product)}>
+      <Card
+        className={classNames(
+          'flex-1',
+          'mx-4 mb-6',
+          'max-w-[384px] min-w-[280px]',
+          props.className,
         )}
-
-        <div className="flex w-full h-full absolute items-start justify-between rounded-t">
-          {price != null && (
-            <div className="text-[#ececec] font-normal px-[6px] py-[2px] text-sm bg-[rgba(51,65,85,1)] border-b border-r border-gray-50 rounded-tl rounded-br">
-              {price}
+      >
+        <div
+          className={classNames(
+            'relative',
+            'flex gap-[2px]',
+            'm-[-16px_-16px_0]',
+            'h-[160px] w-[calc(100%_+_32px)] max-w-[calc(100%_+_48px)]',
+            'border-b rounded-t',
+            'overflow-hidden',
+          )}
+        >
+          {images.map((image, i) => (
+            <Img
+              key={i}
+              src={image}
+              className={classNames(
+                'bg-white',
+                'flex-1',
+                'h-[160px]',
+                'object-cover overflow-hidden',
+                props.className,
+              )}
+            />
+          ))}
+          {images.length === 0 && (
+            <div
+              className={classNames(
+                'flex-1 flex flex-col items-center justify-center',
+                'h-[160px]',
+              )}
+            >
+              <PhotoIcon
+                className={classNames('mb-[-12px]', 'h-[92px] w-[92px]')}
+              />
+              <span className="font-semibold">No Image</span>
             </div>
           )}
 
-          <div className="text-[#ececec] font-normal px-[6px] py-[2px] text-sm bg-[rgba(51,65,85,1)]  border-b border-l border-gray-50 rounded-tr rounded-bl">
-            Best Performance
+          <div
+            className={classNames(
+              'absolute',
+              'flex items-start justify-between',
+              'rounded-t',
+              'h-full w-full',
+            )}
+          >
+            {price != null && (
+              <div
+                className={classNames(
+                  'bg-[rgba(51,65,85,1)]',
+                  'font-normal text-sm text-[#ececec]',
+                  'px-[6px] py-[2px]',
+                  'border-b border-r border-gray-50 rounded-br rounded-tl',
+                )}
+              >
+                {price}
+              </div>
+            )}
+
+            <div
+              className={classNames(
+                'bg-[rgba(51,65,85,1)]',
+                'font-normal text-sm text-[#ececec]',
+                'px-[6px] py-[2px]',
+                'border-b border-l border-gray-50 rounded-bl rounded-tr',
+              )}
+            >
+              Best Performance
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className="flex flex-col gap-2 text-md">
-        <h3 className="font-medium text-xl text-indigo-500">
-          <a href={getProductDetailsPath(product)}>{getProductName(product)}</a>
-        </h3>
-        The RTX 3070 is the best performing NVIDIA GPU in our database.
-      </div>
-    </Card>
+        <div className={classNames('flex flex-col gap-2', 'text-md')}>
+          <h3 className="font-medium text-xl text-indigo-500">
+            {getProductName(product)}
+          </h3>
+          The RTX 3070 is the best performing NVIDIA GPU in our database.
+        </div>
+      </Card>
+    </a>
   );
 };

@@ -63,9 +63,9 @@ export const HomePage = (props: HomePageProps) => {
         <FeedTitle>NVIDIA vs AMD GPUs</FeedTitle>
 
         <FeedItems>
-          <ComparisonFeedItem />
-          <ComparisonFeedItem />
-          <ComparisonFeedItem />
+          <ComparisonFeedItem products={[nvidiaGpus[0], nvidiaGpus[1]]} />
+          <ComparisonFeedItem products={[nvidiaGpus[0], nvidiaGpus[1]]} />
+          <ComparisonFeedItem products={[nvidiaGpus[0], nvidiaGpus[1]]} />
         </FeedItems>
 
         <FeedLinks>
