@@ -2,7 +2,10 @@ Immediate Tasks:
 - cleanup layout
   - react components
   - consistent styling
+    - links
+    - spacing
   - finalize layout design
+  - finalize font
 - rename product data structure to:
   - pc parts?
   - hardware?

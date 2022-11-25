@@ -1,8 +1,8 @@
-import { Benchmarks, BenchmarksRequest } from './benchmark';
-import { ProductImages, ProductImagesRequest } from './product-image';
-import { ProductMetas, ProductMetasRequest } from './product-meta';
-import { Reviews, ReviewsRequest } from './review';
-import { Specs, SpecsRequest } from './spec';
+import { Benchmarks, BenchmarksRequest } from '../benchmark';
+import { ProductImages, ProductImagesRequest } from '../product-image';
+import { ProductMetas, ProductMetasRequest } from '../product-meta';
+import { Reviews, ReviewsRequest } from '../review';
+import { Specs, SpecsRequest } from '../spec';
 
 export enum ProductType {
   CPU = 'CPU',

@@ -1,6 +1,6 @@
 import classnames from 'classnames';
-import { overrideTailwindClasses } from 'tailwind-override';
+import { twMerge } from 'tailwind-merge';
 
 export function classNames(...args: Parameters<typeof classnames>) {
-  return overrideTailwindClasses(classnames(args));
+  return twMerge(classnames(args));
 }

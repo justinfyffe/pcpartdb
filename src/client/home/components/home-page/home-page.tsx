@@ -11,11 +11,17 @@ import {
 } from '@client/product';
 import { WebsiteLayout } from '@client/shared/layouts';
 import { classNames } from '@client/shared/ui';
+import { Product } from '@shared/product';
 import React from 'react';
 
-interface HomePageProps {}
+export interface HomePageProps {
+  nvidiaGpus: Product[];
+  amdGpus: Product[];
+}
 
-export const HomePage = (_props: HomePageProps) => {
+export const HomePage = (props: HomePageProps) => {
+  const { nvidiaGpus, amdGpus } = props;
+
   return (
     <WebsiteLayout>
       <section className={classNames('flex flex-col justify-center mt-2 mb-8')}>
@@ -73,9 +79,9 @@ export const HomePage = (_props: HomePageProps) => {
         <FeedTitle>Popular NVIDIA GPUs</FeedTitle>
 
         <FeedItems>
-          <ProductFeedItem />
-          <ProductFeedItem />
-          <ProductFeedItem />
+          {nvidiaGpus.map((gpu, i) => (
+            <ProductFeedItem key={i} product={gpu} />
+          ))}
         </FeedItems>
 
         <FeedLinks>
@@ -89,9 +95,9 @@ export const HomePage = (_props: HomePageProps) => {
         <FeedTitle>Popular AMD GPUs</FeedTitle>
 
         <FeedItems>
-          <ProductFeedItem />
-          <ProductFeedItem />
-          <ProductFeedItem />
+          {amdGpus.map((gpu, i) => (
+            <ProductFeedItem key={i} product={gpu} />
+          ))}
         </FeedItems>
 
         <FeedLinks>

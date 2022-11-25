@@ -22,7 +22,7 @@ export const ProductImageField: FunctionComponent<ProductImageFieldProps> = (
       return null;
     }
 
-    return ImageCache.get(value.imageId);
+    return value.image ?? ImageCache.get(value.imageId);
   });
 
   const handleChange = useCallback(

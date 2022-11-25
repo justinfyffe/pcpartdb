@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, MouseEvent } from 'react';
 import { classNames } from '../../ui';
 import { Img, ImgProps } from '../image';
 
@@ -7,6 +7,8 @@ export interface CardProps {
   className?: string;
 
   children?: React.ReactNode;
+
+  onClick?: (e?: MouseEvent) => void;
 }
 
 export interface CardImageProps extends ImgProps {}
@@ -37,6 +39,7 @@ export const Card: FunctionComponent<CardProps> = (props) => {
 
   return (
     <Element
+      onClick={props.onClick}
       className={classNames(
         'bg-gray-50 flex flex-col gap-4 items-stretch justify-start p-4 rounded shadow text-slate-700',
         props.className,

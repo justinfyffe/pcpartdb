@@ -44,10 +44,10 @@ export const ComparisonFeedItem: FunctionComponent<ComparisonFeedItemProps> = (
         </div>
 
         <div className="flex w-full h-full absolute items-start justify-between rounded-t">
-          <div className="text-[#ececec] font-normal px-[6px] py-[2px] text-xs bg-[rgba(51,65,85,1)] border-b border-r border-gray-50 rounded-tl rounded-br">
+          <div className="text-[#ececec] font-normal px-[6px] py-[2px] text-sm bg-[rgba(51,65,85,1)] border-b border-r border-gray-50 rounded-tl rounded-br">
             $499
           </div>
-          <div className="text-[#ececec] font-normal px-[6px] py-[2px] text-xs bg-[rgba(51,65,85,1)]  border-b border-l border-gray-50 rounded-tr rounded-bl">
+          <div className="text-[#ececec] font-normal px-[6px] py-[2px] text-sm bg-[rgba(51,65,85,1)]  border-b border-l border-gray-50 rounded-tr rounded-bl">
             $399
           </div>
         </div>

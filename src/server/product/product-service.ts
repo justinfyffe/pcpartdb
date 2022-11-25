@@ -97,7 +97,7 @@ export class ProductService {
 
     // Apply Limit
     if (limit != null) {
-      products.splice(0, limit);
+      products.splice(limit - 1);
     }
 
     const ids = products.map((product) => product.id);
