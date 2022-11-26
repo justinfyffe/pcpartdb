@@ -23,6 +23,7 @@ import {
 import { formatBenchmark } from '@shared/benchmark';
 import { Product } from '@shared/product';
 import { formatProductMeta } from '@shared/product-meta';
+import { getShoppingUrl } from '@shared/retail-model';
 import { formatSpec } from '@shared/spec';
 import React, { useMemo } from 'react';
 import { CompareProductsForm } from '../compare-products-form';
@@ -66,6 +67,8 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
     return [slotWidth, height].filter((value) => value != null).join(', ');
   }, [specs]);
 
+  const shoppingUrl = useMemo(() => getShoppingUrl(gpu), [gpu]);
+
   return (
     <ProductContext.Provider value={context}>
       <WebsiteLayout>
@@ -93,9 +96,9 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                   </HighlightLabel>
 
                   <HighlightValue>
-                    {retailModels != null && retailModels.length > 0 ? (
+                    {shoppingUrl != null ? (
                       <HighlightButton
-                        href={retailModels[0].amazonUrl}
+                        href={shoppingUrl}
                         target="_blank"
                         rel="noreferrer noopener"
                         className="bg-green-500 text-white"
@@ -176,6 +179,23 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
 
               <Table responsive>
                 <TBody>
+                  <CustomRow>
+                    <CustomRowLabel>Shop</CustomRowLabel>
+                    <CustomRowValue>
+                      {shoppingUrl != null ? (
+                        <a
+                          href={shoppingUrl}
+                          target="_blank"
+                          rel="noreferrer noopener"
+                          className="text-green-600 font-bold"
+                        >
+                          Check Price
+                        </a>
+                      ) : (
+                        <>--</>
+                      )}
+                    </CustomRowValue>
+                  </CustomRow>
                   <CustomRow>
                     <CustomRowLabel>Performance Rating (Rank)</CustomRowLabel>
                     <CustomRowValue>
