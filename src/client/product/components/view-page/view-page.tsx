@@ -53,7 +53,6 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
   const specs = context.specs;
   const meta = context.metas;
   const benchmarks = context.benchmarks;
-  const retailModels = context.metas.retailModels?.value;
 
   const highlightMemory = useMemo(() => {
     const memorySize = formatSpec(specs.memorySize);
