@@ -2,8 +2,6 @@ import 'reflect-metadata';
 import {
   Alert,
   AlertVariant,
-  Article,
-  ArticleHeader,
   Button,
   ButtonVariant,
   Field,
@@ -85,82 +83,87 @@ export const RegisterPage = (_props: RegisterPageProps) => {
 
   return (
     <WebsiteLayout>
-      <Article>
-        <ArticleHeader>
-          <h1>Create Account</h1>
-        </ArticleHeader>
+      <article>
+        <h1 className="font-semibold mb-4">Create Account</h1>
 
-        {requestError && isBadRequestError(requestError) && (
-          <Alert variant={AlertVariant.Error}>
-            Please correct the errors and try again.
-          </Alert>
-        )}
+        <section>
+          {requestError && isBadRequestError(requestError) && (
+            <Alert variant={AlertVariant.Error}>
+              Please correct the errors and try again.
+            </Alert>
+          )}
 
-        {requestError && !isBadRequestError(requestError) && (
-          <Alert variant={AlertVariant.Error}>
-            An unknown error has occurred. Please try again later.
-          </Alert>
-        )}
+          {requestError && !isBadRequestError(requestError) && (
+            <Alert variant={AlertVariant.Error}>
+              An unknown error has occurred. Please try again later.
+            </Alert>
+          )}
+        </section>
 
-        <p>Enter the following information to create an account.</p>
+        <section>
+          <p>Enter the following information to create an account.</p>
 
-        <Form onSubmit={handleSubmit(handleRegister)}>
-          <Field>
-            Email
-            <Controller
-              name="email"
-              control={control}
-              render={({ field }) => <TextInput {...field} ref={null} />}
-            />
-            {errors.email?.type === ValidationErrorType.MissingStringValue && (
-              <FieldError>Required</FieldError>
-            )}
-            {errors.email?.type === ValidationErrorType.InvalidEmail && (
-              <FieldError>Not a valid email</FieldError>
-            )}
-            {errors.email?.type === ValidationErrorType.EmailExists && (
-              <FieldError>
-                An account associated with this email already exists
-              </FieldError>
-            )}
-          </Field>
+          <Form onSubmit={handleSubmit(handleRegister)}>
+            <Field>
+              Email
+              <Controller
+                name="email"
+                control={control}
+                render={({ field }) => <TextInput {...field} ref={null} />}
+              />
+              {errors.email?.type ===
+                ValidationErrorType.MissingStringValue && (
+                <FieldError>Required</FieldError>
+              )}
+              {errors.email?.type === ValidationErrorType.InvalidEmail && (
+                <FieldError>Not a valid email</FieldError>
+              )}
+              {errors.email?.type === ValidationErrorType.EmailExists && (
+                <FieldError>
+                  An account associated with this email already exists
+                </FieldError>
+              )}
+            </Field>
 
-          <Field>
-            Password
-            <Controller
-              name="password"
-              control={control}
-              render={({ field }) => <PasswordInput {...field} ref={null} />}
-            />
-            {errors.password?.type ===
-              ValidationErrorType.MissingStringValue && (
-              <FieldError>Required</FieldError>
-            )}
-            {errors.password?.type === ValidationErrorType.MinLength && (
-              <FieldError>Must be at least 5 characters</FieldError>
-            )}
-          </Field>
+            <Field>
+              Password
+              <Controller
+                name="password"
+                control={control}
+                render={({ field }) => <PasswordInput {...field} ref={null} />}
+              />
+              {errors.password?.type ===
+                ValidationErrorType.MissingStringValue && (
+                <FieldError>Required</FieldError>
+              )}
+              {errors.password?.type === ValidationErrorType.MinLength && (
+                <FieldError>Must be at least 5 characters</FieldError>
+              )}
+            </Field>
 
-          <FormActions>
-            <Button
-              type="submit"
-              variant={ButtonVariant.Primary}
-              disabled={loading}
-            >
-              {loading && <Spinner />}
-              <span>Create account</span>
-            </Button>
-          </FormActions>
-        </Form>
+            <FormActions>
+              <Button
+                type="submit"
+                variant={ButtonVariant.Primary}
+                disabled={loading}
+              >
+                {loading && <Spinner />}
+                <span>Create account</span>
+              </Button>
+            </FormActions>
+          </Form>
+        </section>
 
-        <div className="mt-4 leading-[24px] text-[12px] text-center">
-          Already have an account?{' '}
-          <a href="/login" className="no-underline">
-            Sign in here
-          </a>
-          .
-        </div>
-      </Article>
+        <section>
+          <div className="mt-4 leading-[24px] text-[12px] text-center">
+            Already have an account?{' '}
+            <a href="/login" className="no-underline">
+              Sign in here
+            </a>
+            .
+          </div>
+        </section>
+      </article>
     </WebsiteLayout>
   );
 };
