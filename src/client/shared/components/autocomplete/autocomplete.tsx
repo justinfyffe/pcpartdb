@@ -1,4 +1,3 @@
-import { XMarkIcon } from '@heroicons/react/24/outline';
 import React, {
   Children,
   createContext,
@@ -164,27 +163,17 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
         <div className={classNames('block relative w-full', className)}>
           <TextInput
             prefix={prefix}
+            suffix={isLoading && <Spinner />}
             value={query || ''}
             onChange={handleQuery}
             onKeyDown={handleKeyDown}
             onBlur={handleBlur}
             onFocus={handleFocus}
+            onClear={handleClear}
             className="w-full"
             ref={ref}
+            clearable={!!value}
           />
-          {!isLoading && value && (
-            <div
-              className="absolute right-0 top-0 flex items-center font-medium h-[calc(100%_-_2px)] m-[1px] px-4 rounded-r-md hover:bg-mouse-hover"
-              onClick={handleClear}
-            >
-              <XMarkIcon className="w-[16px]" />
-            </div>
-          )}
-          {isLoading && (
-            <div className="absolute flex items-center rounded-r-md font-medium h-[calc(100%_-_2px)] m-[1px] px-4 right-0 top-0 hover:bg-mouse-hover">
-              <Spinner />
-            </div>
-          )}
 
           <div
             onMouseDown={handleChildrenMouseDown}

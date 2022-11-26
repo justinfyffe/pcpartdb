@@ -151,7 +151,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 
       {props.prefix && (
         <div
-          className="absolute flex items-center p-[0_16px] left-0 inset-y-0"
+          className="absolute flex items-center px-4 left-0 inset-y-0"
           onClick={handlePrefixClick}
           ref={prefixRef}
         >
@@ -161,10 +161,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 
       <div className="absolute flex items-stretch right-0 inset-y-0">
         {props.suffix && (
-          <div
-            className="flex items-center p-[0_16px]"
-            onClick={handleSuffixClick}
-          >
+          <div className="flex items-center px-4" onClick={handleSuffixClick}>
             {suffix}
           </div>
         )}
