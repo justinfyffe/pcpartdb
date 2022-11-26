@@ -9,7 +9,6 @@ Immediate Tasks:
     - links
     - spacing
   - finalize layout design
-  - finalize font
   - improve usage of "article" tag
 - rename product data structure to:
   - pc parts?

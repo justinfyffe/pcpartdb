@@ -18,6 +18,7 @@ import {
 import { formatBenchmark } from '@shared/benchmark';
 import { Product } from '@shared/product';
 import { formatProductMeta } from '@shared/product-meta';
+import { getShoppingUrl } from '@shared/retail-model';
 import React, { useMemo } from 'react';
 import { CompareProductsForm } from '../compare-products-form';
 import { ProductImages } from '../product-images';
@@ -51,6 +52,8 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
   const benchmarks1 = context.benchmarks[0];
   const meta2 = context.meta[1];
   const benchmarks2 = context.benchmarks[1];
+  const shoppingUrl1 = useMemo(() => getShoppingUrl(gpu1), [gpu1]);
+  const shoppingUrl2 = useMemo(() => getShoppingUrl(gpu2), [gpu2]);
 
   const pageTitle = `${gpu1.name} vs ${gpu2.name}`;
 
@@ -76,13 +79,16 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
                 <div className="flex gap-2 items-center justify-between">
                   <h2 className="md:text-2xl text-3xl mb-0">{gpu1.name}</h2>
 
-                  <Button
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    className="bg-green-500 text-white text-sm"
-                  >
-                    Buy
-                  </Button>
+                  {shoppingUrl1 != null && (
+                    <Button
+                      href={shoppingUrl1}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      className="bg-green-500 text-white text-sm"
+                    >
+                      Buy
+                    </Button>
+                  )}
                 </div>
 
                 <ProductImages product={gpu1} />
@@ -92,13 +98,16 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
                 <div className="flex gap-2 items-center justify-between">
                   <h2 className="md:text-2xl text-3xl mb-0">{gpu2.name}</h2>
 
-                  <Button
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    className="bg-green-500 text-white text-sm"
-                  >
-                    Buy
-                  </Button>
+                  {shoppingUrl2 && (
+                    <Button
+                      href={shoppingUrl2}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      className="bg-green-500 text-white text-sm"
+                    >
+                      Buy
+                    </Button>
+                  )}
                 </div>
 
                 <ProductImages product={gpu2} />
@@ -130,22 +139,32 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
                     <CustomRow>
                       <CustomRowLabel>Shop</CustomRowLabel>
                       <CustomRowValue>
-                        <a
-                          target="_blank"
-                          rel="noreferrer noopener"
-                          className="text-green-600 font-bold"
-                        >
-                          Check Price
-                        </a>
+                        {shoppingUrl1 != null ? (
+                          <a
+                            href={shoppingUrl1}
+                            target="_blank"
+                            rel="noreferrer noopener"
+                            className="text-green-600 font-bold"
+                          >
+                            Check Price
+                          </a>
+                        ) : (
+                          <>--</>
+                        )}
                       </CustomRowValue>
                       <CustomRowValue>
-                        <a
-                          target="_blank"
-                          rel="noreferrer noopener"
-                          className="text-green-600 font-bold"
-                        >
-                          Check Price
-                        </a>
+                        {shoppingUrl2 != null ? (
+                          <a
+                            href={shoppingUrl2}
+                            target="_blank"
+                            rel="noreferrer noopener"
+                            className="text-green-600 font-bold"
+                          >
+                            Check Price
+                          </a>
+                        ) : (
+                          <>--</>
+                        )}
                       </CustomRowValue>
                     </CustomRow>
                     <CustomRow>
