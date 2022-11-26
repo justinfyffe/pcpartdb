@@ -126,21 +126,21 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
         </select>
 
         <div
-          className="pointer border m-0 p-3 rounded text-sm w-full shadow min-h-[46px]"
+          className="pointer border m-0 p-3 rounded text-sm w-full shadow min-h-11.5"
           onClick={handleShowOptions}
         >
           {getSelectedText(options, selected) || placeholder}
           {clearable && selected != null && (
             <div
-              className="items-center rounded-r-md flex font-medium h-[calc(100%_-_2px)] m-[1px] p-[0_16px] absolute right-0 top-0 hover:bg-[#fafafa]"
+              className="items-center rounded-r-md flex font-medium h-[calc(100%_-_2px)] m-px px-4 absolute right-0 top-0 hover:bg-[#fafafa]"
               onClick={handleClear}
             >
-              <XMarkIcon className="w-[16px]" />
+              <XMarkIcon className="w-4" />
             </div>
           )}
           {(!clearable || selected == null) && (
-            <div className="items-center rounded-r-md flex font-medium h-[calc(100%_-_2px)] m-[1px] p-[0_16px] absolute right-0 top-0">
-              <ChevronDownIcon className="w-[16px]" />
+            <div className="items-center rounded-r-md flex font-medium h-[calc(100%_-_2px)] m-px px-4 absolute right-0 top-0">
+              <ChevronDownIcon className="w-4" />
             </div>
           )}
         </div>
@@ -157,7 +157,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
               key={i}
               onClick={(ev) => handleOptionClick(ev, child.props)}
               className={classNames(
-                'items-center pointer flex p-[8px_16px]',
+                'items-center pointer flex py-2 px-4',
                 !isSelected(selected, child.props) ? 'hover:bg-[#fafafa]' : '',
                 !multiple && isSelected(selected, child.props)
                   ? 'bg-[#3f51b5] text-[#ececec]'
@@ -166,7 +166,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
             >
               {multiple && (
                 <Checkbox
-                  className="h-[16px] mr-[16px] w-[16px]"
+                  className="h-4 mr-4 w-4"
                   checked={isSelected(selected, child.props)}
                   readOnly
                 />

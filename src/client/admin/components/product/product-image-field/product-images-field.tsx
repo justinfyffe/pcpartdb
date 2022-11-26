@@ -93,7 +93,7 @@ export const ProductImagesField: FunctionComponent<ProductImagesFieldProps> = (
                 disabled={i === 0}
                 onClick={() => handleShiftUp(i)}
               >
-                <ChevronUpIcon className="w-[16px]" />
+                <ChevronUpIcon className="w-4" />
               </Button>
               <Button
                 variant={ButtonVariant.Default}
@@ -101,7 +101,7 @@ export const ProductImagesField: FunctionComponent<ProductImagesFieldProps> = (
                 onClick={() => handleShiftDown(i)}
               >
                 {' '}
-                <ChevronDownIcon className="w-[16px]" />
+                <ChevronDownIcon className="w-4" />
               </Button>
             </div>
             <div>
@@ -109,7 +109,7 @@ export const ProductImagesField: FunctionComponent<ProductImagesFieldProps> = (
                 variant={ButtonVariant.Default}
                 onClick={() => handleRemove(i)}
               >
-                <XMarkIcon className="w-[16px]" />
+                <XMarkIcon className="w-4" />
               </Button>
             </div>
           </div>

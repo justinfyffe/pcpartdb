@@ -28,7 +28,7 @@ export const ImageList: FunctionComponent<ImageListProps> = (props) => {
   }, [fetchImages]);
 
   return (
-    <div className="flex flex-wrap justify-center m-[0px_-8px]">
+    <div className="flex flex-wrap justify-center -mx-2">
       {!loading &&
         images.map((image) => (
           <div key={image.id} className="cursor-pointer m-2 w-75">

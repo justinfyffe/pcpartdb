@@ -52,7 +52,7 @@ export const CardImage: FunctionComponent<CardImageProps> = (props) => {
     <Img
       {...props}
       className={classNames(
-        'h-auto m-[-16px_-16px_0] rounded-t rounded-b-none max-h-[200px] w-[calc(100%_+_32px)] max-w-[calc(100%_+_48px)] object-cover',
+        'h-auto m-[-16px_-16px_0] rounded-t rounded-b-none max-h-50 w-[calc(100%_+_32px)] max-w-[calc(100%_+_48px)] object-cover',
         props.className,
       )}
     />
@@ -61,11 +61,11 @@ export const CardImage: FunctionComponent<CardImageProps> = (props) => {
 
 export const CardSplitImage: FunctionComponent<CardImageProps> = (props) => {
   return (
-    <div className="relative flex gap-[2px] m-[-24px_-16px_24px] rounded-t rounded-b-none h-[200px] w-[calc(100%_+_32px)] max-w-[calc(100%_+_48px)] overflow-hidden">
+    <div className="relative flex gap-0.5 -mt-6 mb-6 -mx-4 rounded-t rounded-b-none h-50 w-[calc(100%_+_32px)] max-w-[calc(100%_+_48px)] overflow-hidden">
       <Img
         src="https://preview.redd.it/8siyqldph2x21.jpg?auto=webp&s=eeaa2cdf9c4e01746f4f46cc08c66e5eff77c630"
         className={classNames(
-          'h-[200px] object-cover overflow-hidden',
+          'h-50 object-cover overflow-hidden',
           props.className,
         )}
       />
@@ -73,7 +73,7 @@ export const CardSplitImage: FunctionComponent<CardImageProps> = (props) => {
       <Img
         src="https://preview.redd.it/8siyqldph2x21.jpg?auto=webp&s=eeaa2cdf9c4e01746f4f46cc08c66e5eff77c630"
         className={classNames(
-          'h-[200px] object-cover overflow-hidden',
+          'h-50 object-cover overflow-hidden',
           props.className,
         )}
       />
@@ -96,7 +96,7 @@ export const CardSplitImage: FunctionComponent<CardImageProps> = (props) => {
         </div>
       </div>
 
-      <div className="flex w-full h-full items-end justify-center absolute pb-[17px]">
+      <div className="flex w-full h-full items-end justify-center absolute pb-4.25">
         <div className="text-[#ececec] font-bold py-2 px-3 text-xl rounded bg-[rgba(51,65,85,1)] border-2 border-gray-50">
           VS
         </div>

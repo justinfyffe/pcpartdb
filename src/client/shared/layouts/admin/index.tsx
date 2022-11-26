@@ -48,7 +48,7 @@ export const AdminLayout: FunctionComponent<AdminLayoutProps> = (props) => {
             props.className,
           )}
         >
-          <aside className="w-[200px]">
+          <aside className="w-50">
             <nav className="flex flex-col gap-2">
               <Button variant={ButtonVariant.Default} href="/admin">
                 Overview

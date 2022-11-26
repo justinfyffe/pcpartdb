@@ -155,7 +155,7 @@ export const RegisterPage = (_props: RegisterPageProps) => {
         </section>
 
         <section>
-          <div className="mt-4 leading-[24px] text-[12px] text-center">
+          <div className="mt-4 leading-6 text-2xs text-center">
             Already have an account?{' '}
             <a href="/login" className="no-underline">
               Sign in here

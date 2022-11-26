@@ -14,7 +14,7 @@ export const FeedItems: FunctionComponent<FeedItemsProps> = (props) => {
   return (
     <Element
       className={classNames(
-        'flex flex-wrap justify-center mx-[-16px]',
+        'flex flex-wrap justify-center -mx-4',
         props.className,
       )}
     >

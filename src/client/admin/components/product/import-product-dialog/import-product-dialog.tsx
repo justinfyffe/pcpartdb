@@ -53,10 +53,10 @@ export const ImportProductDialog: FunctionComponent<
   }, []);
 
   return (
-    <div className="bg-white flex flex-col gap-4 h-[80%] w-[80%] p-4 overflow-auto max-w-[990px] rounded shadow">
+    <div className="bg-white flex flex-col gap-4 h-[80%] w-[80%] p-4 overflow-auto max-w-247 rounded shadow">
       {loading && (
         <div className="flex flex-col items-center justify-center h-full w-full gap-6">
-          <Spinner className="w-24 h-24 border-[12px]" />
+          <Spinner className="w-24 h-24 border-3" />
           <div className="flex flex-col gap-2">
             <h3 className="text-2xl text-center">Importing data.</h3>
             <div className="text-lg">This may take a moment.</div>

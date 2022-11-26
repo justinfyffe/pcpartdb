@@ -60,7 +60,7 @@ export const AdminListImagesPage = (props: AdminListImagesPageProps) => {
             <Table border>
               <THead>
                 <Tr>
-                  <Th className="max-w-[200px]">Preview</Th>
+                  <Th className="max-w-50">Preview</Th>
                   <Th className="text-center">ID</Th>
                   <Th>Name</Th>
                   <Th>Path</Th>
@@ -71,7 +71,7 @@ export const AdminListImagesPage = (props: AdminListImagesPageProps) => {
               <TBody>
                 {images.map((image) => (
                   <Tr key={image.id}>
-                    <Td className="max-w-[200px]">
+                    <Td className="max-w-50">
                       <Img src={image} alt={image.name} />
                     </Td>
                     <Td className="text-center">{image.id}</Td>

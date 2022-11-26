@@ -89,25 +89,25 @@ export const RetailModelsField: FunctionComponent<RetailModelsFieldProps> = (
               variant={ButtonVariant.Default}
               disabled={i === 0}
               onClick={() => handleShiftUp(i)}
-              className="h-[46px]"
+              className="h-11.5"
             >
-              <ChevronUpIcon className="w-[16px]" />
+              <ChevronUpIcon className="w-4" />
             </Button>
             <Button
               variant={ButtonVariant.Default}
               disabled={i === value.value.length - 1}
               onClick={() => handleShiftDown(i)}
-              className="h-[46px]"
+              className="h-11.5"
             >
               {' '}
-              <ChevronDownIcon className="w-[16px]" />
+              <ChevronDownIcon className="w-4" />
             </Button>
             <Button
               variant={ButtonVariant.Default}
               onClick={() => handleRemove(i)}
-              className="h-[46px]"
+              className="h-11.5"
             >
-              <XMarkIcon className="w-[16px]" />
+              <XMarkIcon className="w-4" />
             </Button>
           </div>
         </div>

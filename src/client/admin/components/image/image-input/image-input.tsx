@@ -39,12 +39,7 @@ export const ImageInput: FunctionComponent<ImageInputProps> = (props) => {
   }, [onChange]);
 
   return (
-    <div
-      className={classNames(
-        'border-[1px] border-slate-300 border-solid rounded block',
-        className,
-      )}
-    >
+    <div className={classNames('border rounded block', className)}>
       {value != null ? (
         <SelectedImageInput
           {...restOfProps}
@@ -65,12 +60,12 @@ const SelectedImageInput = (
 
   return (
     <div className="items-start flex flex-wrap h-full justify-center p-4">
-      <Img src={value} className="max-h-[250px] max-w-[calc(100%_+_32px)]" />
+      <Img src={value} className="max-h-62.5 max-w-[calc(100%_+_32px)]" />
 
       <div className="mx-4">
         <div className="font-medium">{value.name}</div>
 
-        <div className="text-[#aaa] text-[12px] my-1">
+        <div className="text-[#aaa] text-2xs my-1">
           {formatFileSize(value.fileSize)} &bull;
           {formatDimensions(value.width, value.height)}
           {recommendedHeight && recommendedWidth && (
@@ -85,7 +80,7 @@ const SelectedImageInput = (
           type="button"
           variant={ButtonVariant.Default}
           onClick={onClear}
-          className="mt-[20px]"
+          className="mt-5"
         >
           Remove
         </Button>
@@ -105,13 +100,13 @@ const EmptyImageInput = (
 
   return (
     <div
-      className="items-center text-[#ccc] cursor-pointer flex flex-col text-[36px] h-full justify-center p-4 w-full"
+      className="items-center text-[#ccc] cursor-pointer flex flex-col text-5xl h-full justify-center p-4 w-full"
       onClick={handleClick}
     >
-      <PhotoIcon className="w-[72px] h-[72px] mb-2" />
+      <PhotoIcon className="w-18 h-18 mb-2" />
       No Image
       {recommendedHeight && recommendedWidth && (
-        <div className="text-[12px] mt-2">
+        <div className="text-2xs mt-2">
           Recommended: {formatDimensions(recommendedWidth, recommendedHeight)}
         </div>
       )}

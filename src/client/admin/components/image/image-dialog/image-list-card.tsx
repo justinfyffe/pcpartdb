@@ -33,7 +33,7 @@ export const ImageListCard: FunctionComponent<ImageListCardProps> = (props) => {
           <TextInput value={image.path} className="my-2" disabled />
         )}
 
-        <div className="text-[#aaa] flex text-2xs justify-between m-[0_-12px_-12px]">
+        <div className="text-[#aaa] flex text-2xs justify-between -mx-3 -mb-3">
           <span>{formatFileSize(image.fileSize)}</span>
           <span>{formatDimensions(image.width, image.height)}</span>
         </div>

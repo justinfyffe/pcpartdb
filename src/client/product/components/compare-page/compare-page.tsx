@@ -72,7 +72,7 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
 
           <section className="flex-1 flex flex-col gap-6 max-w-full">
             <section className="flex flex-wrap gap-4 md:flex-nowrap justify-between">
-              <div className="flex flex-col gap-3 flex-1 min-w-[210px] max-w-[350px]">
+              <div className="flex flex-col gap-3 flex-1 min-w-52.5 max-w-87.5">
                 <div className="flex items-center justify-between">
                   <h2 className="self-start text-2xl font-medium">
                     {gpu1.name}
@@ -89,7 +89,7 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
                 <ProductImages product={gpu1} />
               </div>
 
-              <div className="flex flex-col gap-3 flex-1 min-w-[210px] max-w-[350px]">
+              <div className="flex flex-col gap-3 flex-1 min-w-52.5 max-w-87.5">
                 <div className="flex items-center justify-between">
                   <h2 className="self-start text-2xl font-medium">
                     {gpu2.name}

@@ -53,7 +53,7 @@ export const File: FunctionComponent<FileProps> = (props) => {
         id={inputId}
         name={name}
         onChange={handleFileChange}
-        className="h-[0.1px] opacity-0 overflow-hidden pr-[120px] absolute w-[0.1px] z-[-1]"
+        className="h-[0.1px] opacity-0 overflow-hidden pr-30 absolute w-[0.1px] z-[-1]"
         ref={fileRef}
       />
       <TextInput value={file?.name} onClick={handleInputClick} readOnly />

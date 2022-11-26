@@ -60,7 +60,7 @@ export const BenchmarkField: FunctionComponent<BenchmarkFieldProps> = (
 
   return (
     <div className={classNames('flex gap-6 items-center', className)}>
-      <div className="flex-1 max-w-[200px]">{LABELS[field] ?? '--'}</div>
+      <div className="flex-1 max-w-50">{LABELS[field] ?? '--'}</div>
 
       <Field className="flex-1">
         Score

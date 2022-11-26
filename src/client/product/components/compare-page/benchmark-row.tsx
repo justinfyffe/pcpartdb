@@ -22,17 +22,17 @@ export const BenchmarkRow = (props: BenchmarkRowProps) => {
 
   return (
     <Tr>
-      <Td className="border-r-0 text-left min-w-[180px]">
+      <Td className="border-r-0 text-left min-w-45">
         <>{LABELS[key]}</>
       </Td>
-      <Td className="border-l-0 text-left min-w-[80px]">
+      <Td className="border-l-0 text-left min-w-20">
         {benchmark1?.source != null ? (
           <a href={benchmark1.source}>{formatBenchmark(benchmark1)}</a>
         ) : (
           <>{formatBenchmark(benchmark1) || '--'}</>
         )}
       </Td>
-      <Td className="border-l-0 text-left min-w-[80px]">
+      <Td className="border-l-0 text-left min-w-20">
         {benchmark2?.source != null ? (
           <a href={benchmark2.source}>{formatBenchmark(benchmark2)}</a>
         ) : (

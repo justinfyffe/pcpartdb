@@ -179,8 +179,8 @@ export const ImageForm: FunctionComponent<ImageFormProps> = (props) => {
         </Alert>
       )}
 
-      <div className="flex mx-[-8px]">
-        <Field className="flex-[1_0_0] mx-2">
+      <div className="flex -mx-2">
+        <Field className="flex-1 mx-2">
           File {isUpdate && <FieldOptional>(Optional)</FieldOptional>}
           <File name="file" onChange={handleFileChange} />
           {(errors.file as unknown as FormFieldError)?.type ===
@@ -203,7 +203,7 @@ export const ImageForm: FunctionComponent<ImageFormProps> = (props) => {
           )}
         </Field>
 
-        <Field className="flex-[1_0_0] mx-2">
+        <Field className="flex-1 mx-2">
           Path
           <Controller
             name="path"

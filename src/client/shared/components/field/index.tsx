@@ -72,7 +72,7 @@ export const FieldHint: FunctionComponent<FieldHintProps> = (props) => {
   return (
     <Element
       className={classNames(
-        'text-[#666] block text-[12px] leading-6 mb-[-24px]',
+        'text-[#666] block text-xs leading-6 -mb-6',
         props.className,
       )}
     >
@@ -87,7 +87,7 @@ export const FieldOptional: FunctionComponent<FieldOptionalProps> = (props) => {
   return (
     <Element
       className={classNames(
-        'hover:underline text-[#aaa] text-[14px]',
+        'hover:underline text-[#aaa] text-xs',
         props.className,
       )}
     >
@@ -102,7 +102,7 @@ export const FieldError: FunctionComponent<FieldErrorProps> = (props) => {
   return (
     <Element
       className={classNames(
-        'text-[#f00] block text-[12px] leading-6 mb-[-24px]',
+        'text-[#f00] block text-2xs leading-6 -mb-6',
         props.className,
       )}
     >

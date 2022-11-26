@@ -75,7 +75,7 @@ export const ProductFeedItem: FunctionComponent<ProductFeedItemProps> = (
                 'h-40',
               )}
             >
-              <PhotoIcon className={classNames('mb-[-12px]', 'w-23')} />
+              <PhotoIcon className={classNames('-mb-3', 'w-23')} />
               <span className="font-semibold">No Image</span>
             </div>
           )}

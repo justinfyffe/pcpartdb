@@ -149,7 +149,7 @@ export const ResetPasswordPage = (props: ResetPasswordPageProps) => {
         </section>
 
         <section>
-          <div className="mt-4 leading-[24px] text-[12px] text-center">
+          <div className="mt-4 leading-6 text-2xs text-center">
             Remember your password? <a href="/login">Sign in</a>. .
           </div>
         </section>

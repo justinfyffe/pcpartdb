@@ -74,13 +74,13 @@ export const SpecRow = (props: SpecRowProps) => {
 
   return (
     <Tr>
-      <Td className="border-r-0 text-left min-w-[180px]">{LABELS[key]}</Td>
-      <Td className="border-x-0 text-left min-w-[80px]">
+      <Td className="border-r-0 text-left min-w-45">{LABELS[key]}</Td>
+      <Td className="border-x-0 text-left min-w-20">
         {formatSpec(spec1, {
           booleanFormatter: SpecBooleanFormatter.YesNo,
         }) || '--'}
       </Td>
-      <Td className="border-l-0 text-left min-w-[80px]">
+      <Td className="border-l-0 text-left min-w-20">
         {formatSpec(spec2, {
           booleanFormatter: SpecBooleanFormatter.YesNo,
         }) || '--'}

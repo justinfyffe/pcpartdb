@@ -183,7 +183,7 @@ export const LoginPage: FunctionComponent<LoginPageProps> = (
         </section>
 
         <section>
-          <div className="mt-4 leading-[24px] text-[12px] text-center">
+          <div className="mt-4 leading-6 text-2xs text-center">
             Don&apos;t have an account?{' '}
             <a href="/register" className="no-underline">
               Register
@@ -191,7 +191,7 @@ export const LoginPage: FunctionComponent<LoginPageProps> = (
             .
           </div>
 
-          <div className="leading-[24px] text-[12px] text-center">
+          <div className="leading-6 text-2xs text-center">
             Forgot your password?{' '}
             <a href="/forgot-password" className="no-underline">
               Reset your password
