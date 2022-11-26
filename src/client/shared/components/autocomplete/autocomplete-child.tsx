@@ -21,7 +21,7 @@ export const AutocompleteChild: FunctionComponent<AutocompleteChildProps> = (
     <div
       onClick={onClick}
       className={classNames(
-        'items-center pointer flex p-[8px_16px]',
+        'flex items-center  px-2 py-4 pointer',
         hoveredIndex === index ? hoveredClassName : '',
         className,
       )}

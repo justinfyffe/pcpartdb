@@ -1,5 +1,23 @@
 Immediate Tasks:
 - cleanup layout
+  - coloring
+    - Toolbar
+      - background
+      - Title text
+      - Text
+      - Links text
+    - Content
+      - background
+      - cards
+      - table
+      - Primary button
+      - Secondary button
+      - link
+      - text
+    - Footer
+      - background
+      - text
+      - links
   - utility functions (get name, get url)
   - react components
   - consistent styling

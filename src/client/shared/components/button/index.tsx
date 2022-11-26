@@ -17,12 +17,12 @@ export interface ButtonProps
 }
 
 const BUTTON_VARIANTS = {
-  [ButtonVariant.None]: 'bg-transparent shadow-none text-content-primary',
+  [ButtonVariant.None]: 'bg-transparent text-content shadow-none',
   [ButtonVariant.Default]:
     'bg-button-default border-button-default text-button-default',
   [ButtonVariant.Primary]: 'bg-button-primary text-button-primary',
   [ButtonVariant.Secondary]: 'bg-button-secondary text-button-secondary',
-  [ButtonVariant.Toolbar]: 'shadow-none text-toolbar-primary',
+  [ButtonVariant.Toolbar]: 'bg-toolbar, text-toolbar shadow-none',
 };
 
 export const Button: FunctionComponent<ButtonProps> = (props) => {
@@ -46,8 +46,7 @@ export const Button: FunctionComponent<ButtonProps> = (props) => {
       type={isButton ? type ?? 'button' : undefined}
       href={url}
       className={classNames(
-        'cursor-pointer font-medium inline-block no-underline',
-        'px-4 py-2 relative rounded shadow text-center',
+        'relative font-medium no-underline text-center cursor-pointer inline-block px-4 py-2 relative rounded shadow',
         BUTTON_VARIANTS[variant ?? ButtonVariant.None],
         props.disabled ? 'bg-[#ddd] border-[#ddd] text-[#aaa]' : '',
         className,

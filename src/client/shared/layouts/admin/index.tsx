@@ -44,7 +44,7 @@ export const AdminLayout: FunctionComponent<AdminLayoutProps> = (props) => {
       <div className="bg-white">
         <main
           className={classNames(
-            'container flex gap-8 px-8 py-6 text-content-primary max-w-100%',
+            'container flex gap-8 px-8 py-6 text-content max-w-100%',
             props.className,
           )}
         >

@@ -1,8 +1,5 @@
-import {
-  ComputerDesktopIcon,
-  MagnifyingGlassIcon,
-} from '@heroicons/react/24/outline';
-import { HeartIcon } from '@heroicons/react/24/solid';
+import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
+import { ComputerDesktopIcon, HeartIcon } from '@heroicons/react/24/solid';
 import React, { FunctionComponent } from 'react';
 import {
   Button,
@@ -28,7 +25,8 @@ export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
     <>
       <Toolbar>
         <ToolbarTitle>
-          <ComputerDesktopIcon className={classNames('h-8 w-8')} /> PC Parts DB
+          <ComputerDesktopIcon className={classNames('h-8 w-8 mt-[2px]')} /> PC
+          Parts DB
         </ToolbarTitle>
 
         <ToolbarNav className="hidden md:block">
@@ -51,7 +49,7 @@ export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
       <div className="bg-white">
         <main
           className={classNames(
-            'container px-8 py-3 text-content-primary max-w-100%',
+            'container px-8 py-3 text-content max-w-100%',
             props.className,
           )}
         >
@@ -88,7 +86,10 @@ export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
           <p>
             PC Parts DB provides specs, benchmarks, and reviews based on various
             sources. If you discover an error, please{' '}
-            <a href="/about">contact us</a>.
+            <a href="/about" className="text-footer-link">
+              contact us
+            </a>
+            .
           </p>
 
           <p>

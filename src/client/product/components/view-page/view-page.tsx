@@ -176,7 +176,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
               <section>
                 <h2 className="mb-3">General Info</h2>
 
-                <p className={classNames('text-content-secondary')}>
+                <p className={classNames('text-content-dimmed')}>
                   {`${gpu.name}'s`} performance rating, market segment, release
                   date, and launch price.
                 </p>
@@ -224,7 +224,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
               <section>
                 <h2 className="mb-3">Reviews</h2>
 
-                <p className={classNames('text-content-secondary')}>
+                <p className={classNames('text-content-dimmed')}>
                   What others are saying about {gpu.name}.
                 </p>
 
@@ -245,7 +245,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                 <section>
                   <h3 className="mb-3">Processor</h3>
 
-                  <p className={classNames('text-content-secondary')}>
+                  <p className={classNames('text-content-dimmed')}>
                     {`${gpu.name}'s`} processor chip details.
                   </p>
 
@@ -262,7 +262,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                 <section>
                   <h3 className="mb-3">Memory</h3>
 
-                  <p className={classNames('text-content-secondary')}>
+                  <p className={classNames('text-content-dimmed')}>
                     {`${gpu.name}'s`} memory size, bandwidth, and clock speeds.
                   </p>
 
@@ -280,7 +280,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                 <section>
                   <h3 className="mb-3">Board Compatibility &amp; Dimensions</h3>
 
-                  <p className={classNames('text-content-secondary')}>
+                  <p className={classNames('text-content-dimmed')}>
                     {`${gpu.name}'s`} dimensions, bus interface, power
                     consumption, and output ports.
                   </p>
@@ -304,7 +304,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                 <section>
                   <h3 className="mb-3">Cores &amp; Clock Speeds</h3>
 
-                  <p className={classNames('text-content-secondary')}>
+                  <p className={classNames('text-content-dimmed')}>
                     {`${gpu.name}'s`} cores, clock speed, and cache.
                   </p>
 
@@ -326,7 +326,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                 <section>
                   <h3 className="mb-3">Theoretical Performance</h3>
 
-                  <p className={classNames('text-content-secondary')}>
+                  <p className={classNames('text-content-dimmed')}>
                     {`${gpu.name}'s`} computational performance like pixel fill
                     rate, texture fill rate, and floating-point operations per
                     second.
@@ -361,7 +361,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
               <section>
                 <h2 className="mb-3">Benchmarks</h2>
 
-                <p className={classNames('text-content-secondary')}>
+                <p className={classNames('text-content-dimmed')}>
                   {`${gpu.name}'s`} performance and rating metrics. These
                   identify how strong the GPU performs compared to its peers.
                 </p>

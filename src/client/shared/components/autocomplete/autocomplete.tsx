@@ -174,14 +174,14 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
           />
           {!isLoading && value && (
             <div
-              className="items-center rounded-r-md flex font-medium h-[calc(100%_-_2px)] m-[1px] p-[0_16px] absolute right-0 top-0 hover:bg-[#fafafa]"
+              className="absolute right-0 top-0 flex items-center font-medium h-[calc(100%_-_2px)] m-[1px] px-4 rounded-r-md hover:bg-mouse-hover"
               onClick={handleClear}
             >
               <XMarkIcon className="w-[16px]" />
             </div>
           )}
           {isLoading && (
-            <div className="items-center rounded-r-md flex font-medium h-[calc(100%_-_2px)] m-[1px] p-[0_16px] absolute right-0 top-0 hover:bg-[#fafafa]">
+            <div className="absolute flex items-center rounded-r-md font-medium h-[calc(100%_-_2px)] m-[1px] px-4 right-0 top-0 hover:bg-mouse-hover">
               <Spinner />
             </div>
           )}

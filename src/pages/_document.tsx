@@ -15,7 +15,7 @@ class MyDocument extends Document {
 
   render() {
     return (
-      <Html lang="en" className="bg-html-primary">
+      <Html lang="en" className="bg-html">
         <Head>
           {/* <script
             async

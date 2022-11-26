@@ -26,15 +26,13 @@ export const Footer: FunctionComponent<FooterProps> = (props) => {
   const Element = props.as || 'footer';
 
   return (
-    <Element className="bg-footer-primary text-footer-primary">
-      <div
-        className={classNames(
-          'container flex flex-wrap gap-8 px-8 py-4',
-          props.className,
-        )}
-      >
-        {props.children}
-      </div>
+    <Element
+      className={classNames(
+        'bg-footer text-footer container flex flex-wrap gap-8 px-8 py-4',
+        props.className,
+      )}
+    >
+      {props.children}
     </Element>
   );
 };

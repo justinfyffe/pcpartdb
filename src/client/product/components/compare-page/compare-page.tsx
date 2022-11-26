@@ -117,7 +117,7 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
               <article>
                 <h2 className="mb-4">General Info</h2>
 
-                <p className={classNames('text-content-secondary')}>
+                <p className={classNames('text-content-dimmed')}>
                   Performance rating, market segment, release date, and launch
                   price for {gpu1.name} and {gpu2.name}.
                 </p>
@@ -215,7 +215,7 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
               <article>
                 <h2 className="mb-4">Reviews</h2>
 
-                <p className={classNames('text-content-secondary')}>
+                <p className={classNames('text-content-dimmed')}>
                   What others are saying about {gpu1.name} and {gpu2.name}.
                 </p>
 
@@ -243,7 +243,7 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
                 <article>
                   <h3 className="mb-4">Processor</h3>
 
-                  <p className={classNames('text-content-secondary')}>
+                  <p className={classNames('text-content-dimmed')}>
                     Processor chip details for {gpu1.name} and {gpu2.name}
                   </p>
 
@@ -267,7 +267,7 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
                 <article>
                   <h3 className="mb-4">Memory</h3>
 
-                  <p className={classNames('text-content-secondary')}>
+                  <p className={classNames('text-content-dimmed')}>
                     Memory size, bandwidth, and clock speeds for {gpu1.name} and{' '}
                     {gpu2.name}.
                   </p>
@@ -293,7 +293,7 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
                 <article>
                   <h3 className="mb-4">Board Compatibility &amp; Dimensions</h3>
 
-                  <p className={classNames('text-content-secondary')}>
+                  <p className={classNames('text-content-dimmed')}>
                     Dimensions, bus interface, power consumption, and output
                     ports for {gpu1.name} and {gpu2.name}
                   </p>
@@ -324,7 +324,7 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
                 <article>
                   <h3 className="mb-4">Cores &amp; Clock Speeds</h3>
 
-                  <p className={classNames('text-content-secondary')}>
+                  <p className={classNames('text-content-dimmed')}>
                     Cores, clock speed, and cache for {gpu1.name} and{' '}
                     {gpu2.name}
                   </p>
@@ -354,7 +354,7 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
                 <article>
                   <h3 className="mb-4">Theoretical Performance</h3>
 
-                  <p className={classNames('text-content-secondary')}>
+                  <p className={classNames('text-content-dimmed')}>
                     Computational performance like pixel fill rate, texture fill
                     rate, and floating-point operations per second for the{' '}
                     {gpu1.name} and {gpu2.name}.
@@ -403,7 +403,7 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
               <article>
                 <h2 className="mb-4">Benchmarks</h2>
 
-                <p className={classNames('text-content-secondary')}>
+                <p className={classNames('text-content-dimmed')}>
                   Performance and rating metrics for {gpu1.name} and {gpu2.name}
                   . These identify how strong the GPU performs compared to its
                   peers.

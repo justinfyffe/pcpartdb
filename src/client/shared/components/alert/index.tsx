@@ -16,9 +16,9 @@ interface AlertProps {
 }
 
 const ALERT_VARIANTS = {
-  [AlertVariant.Info]: 'bg-[#f0f0f0] text-black',
-  [AlertVariant.Error]: 'bg-[#b00020] text-white',
-  [AlertVariant.Success]: 'bg-[#007e33] text-white',
+  [AlertVariant.Error]: 'bg-alert-error text-alert-error',
+  [AlertVariant.Info]: 'bg-alert-info text-alert-info',
+  [AlertVariant.Success]: 'bg-alert-success text-alert-success',
 };
 
 export const Alert: FunctionComponent<AlertProps> = (props) => {
@@ -28,7 +28,7 @@ export const Alert: FunctionComponent<AlertProps> = (props) => {
   return (
     <Element
       className={classNames(
-        'block mb-4 no-underline px-6 py-4 rounded',
+        'block mb-4 px-6 py-4 rounded no-underline',
         ALERT_VARIANTS[variant],
         props.className,
       )}

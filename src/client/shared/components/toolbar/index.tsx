@@ -28,7 +28,7 @@ export const Toolbar: FunctionComponent<ToolbarProps> = (props) => {
   return (
     <Element
       className={classNames(
-        'bg-toolbar-primary block static text-toolbar-primary',
+        'bg-toolbar block static text-toolbar',
         props.className,
       )}
     >
