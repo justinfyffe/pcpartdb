@@ -1,7 +1,9 @@
 Immediate Tasks:
 - cleanup layout
+  - use pixels instead of rem
   - cleanup component code
     - input prefix and suffix
+    - replace <Article> with <article>
   - utility functions (get name, get url)
   - react components
   - consistent styling

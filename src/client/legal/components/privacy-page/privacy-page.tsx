@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { Article, ArticleHeader } from '@client/shared/components';
+import { Breadcrumb, Breadcrumbs } from '@client/shared/components';
 import { WebsiteLayout } from '@client/shared/layouts';
 import React from 'react';
 
@@ -8,10 +8,13 @@ interface PrivacyPageProps {}
 export const PrivacyPage = (_props: PrivacyPageProps) => {
   return (
     <WebsiteLayout>
-      <Article>
-        <ArticleHeader>
-          <h1>Privacy Policy</h1>
-        </ArticleHeader>
+      <Breadcrumbs className="mb-4">
+        <Breadcrumb href="/">Home</Breadcrumb>
+        <Breadcrumb>Privacy Policy</Breadcrumb>
+      </Breadcrumbs>
+
+      <article>
+        <h1 className="font-semibold">Privacy Policy</h1>
 
         <section>
           <p>
@@ -134,7 +137,7 @@ export const PrivacyPage = (_props: PrivacyPageProps) => {
             we&apos;ll be happy to try to answer them!
           </p>
         </section>
-      </Article>
+      </article>
     </WebsiteLayout>
   );
 };

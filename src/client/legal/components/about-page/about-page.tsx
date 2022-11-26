@@ -1,10 +1,5 @@
 import 'reflect-metadata';
-import {
-  Article,
-  ArticleHeader,
-  Breadcrumb,
-  Breadcrumbs,
-} from '@client/shared/components';
+import { Breadcrumb, Breadcrumbs } from '@client/shared/components';
 import { WebsiteLayout } from '@client/shared/layouts';
 import React from 'react';
 
@@ -13,15 +8,13 @@ interface AboutPageProps {}
 export const AboutPage = (_props: AboutPageProps) => {
   return (
     <WebsiteLayout>
-      <Article className="flex flex-wrap gap-6 lg:gap-8">
-        <ArticleHeader className="flex flex-wrap w-full items-center justify-between gap-3 lg:gap-4">
-          <Breadcrumbs className="mb-3">
-            <Breadcrumb href="/">Home</Breadcrumb>
-            <Breadcrumb>About us</Breadcrumb>
-          </Breadcrumbs>
+      <Breadcrumbs className="mb-4">
+        <Breadcrumb href="/">Home</Breadcrumb>
+        <Breadcrumb>About us</Breadcrumb>
+      </Breadcrumbs>
 
-          <h1>About PC Parts DB</h1>
-        </ArticleHeader>
+      <article>
+        <h1 className="font-semibold mb-4">About PC Parts DB</h1>
 
         <section>
           <p>
@@ -37,21 +30,27 @@ export const AboutPage = (_props: AboutPageProps) => {
             questions, or requests, please reach out to our emails listed below.
             We thank you for your support.
           </p>
+        </section>
 
-          <h3 className="font-medium">For advertising inquiries</h3>
+        <section>
+          <h2 className="font-semibold">For advertising inquiries</h2>
           <p>advertise@pcpartsdb.com</p>
+        </section>
 
-          <h3 className="font-medium">For other inquiries</h3>
+        <section>
+          <h2 className="font-semibold">For other inquiries</h2>
           <p>hello@pcpartsdb.com</p>
+        </section>
 
-          <h3 className="font-medium">Affiliate Disclaimer</h3>
+        <section>
+          <h2 className="font-semibold">Affiliate Disclaimer</h2>
           <p>
             We are a participant of affiliate advertising programs which allow
             us to earn from qualifying purchases. We do not buy or sell the
             products listed on this website.
           </p>
         </section>
-      </Article>
+      </article>
     </WebsiteLayout>
   );
 };

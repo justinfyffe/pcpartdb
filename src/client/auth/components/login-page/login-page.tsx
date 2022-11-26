@@ -2,8 +2,8 @@ import 'reflect-metadata';
 import {
   Alert,
   AlertVariant,
-  Article,
-  ArticleHeader,
+  Breadcrumb,
+  Breadcrumbs,
   Button,
   ButtonVariant,
   Checkbox,
@@ -92,104 +92,114 @@ export const LoginPage: FunctionComponent<LoginPageProps> = (
 
   return (
     <WebsiteLayout>
-      <Article>
-        <ArticleHeader>
-          <h1>Sign in to your Account</h1>
-        </ArticleHeader>
+      <Breadcrumbs className="mb-4">
+        <Breadcrumb href="/">Home</Breadcrumb>
+        <Breadcrumb>Sign in</Breadcrumb>
+      </Breadcrumbs>
 
-        {requestError && isForbiddenError(requestError) && (
-          <Alert variant={AlertVariant.Error}>
-            Your credentials are incorrect.
-          </Alert>
-        )}
+      <article>
+        <h1 className="font-semibold mb-4">Sign in to your Account</h1>
 
-        {requestError && !isForbiddenError(requestError) && (
-          <Alert variant={AlertVariant.Error}>
-            An unknown error has occurred. Please try again later.
-          </Alert>
-        )}
+        <section>
+          {requestError && isForbiddenError(requestError) && (
+            <Alert variant={AlertVariant.Error}>
+              Your credentials are incorrect.
+            </Alert>
+          )}
 
-        {!requestError && registered && (
-          <Alert variant={AlertVariant.Success}>
-            You have successfully created an account. You can sign in below.
-          </Alert>
-        )}
+          {requestError && !isForbiddenError(requestError) && (
+            <Alert variant={AlertVariant.Error}>
+              An unknown error has occurred. Please try again later.
+            </Alert>
+          )}
 
-        {!requestError && resetPassword && (
-          <Alert variant={AlertVariant.Success}>
-            Your password has changed. You can sign in below.
-          </Alert>
-        )}
+          {!requestError && registered && (
+            <Alert variant={AlertVariant.Success}>
+              You have successfully created an account. You can sign in below.
+            </Alert>
+          )}
 
-        <p>Enter the following credentials to sign in.</p>
+          {!requestError && resetPassword && (
+            <Alert variant={AlertVariant.Success}>
+              Your password has changed. You can sign in below.
+            </Alert>
+          )}
+        </section>
 
-        <Form onSubmit={handleSubmit(handleLogin)}>
-          <Field>
-            Email
+        <section>
+          <p>Enter the following credentials to sign in.</p>
+
+          <Form onSubmit={handleSubmit(handleLogin)}>
+            <Field>
+              Email
+              <Controller
+                name="email"
+                control={control}
+                render={({ field }) => <TextInput {...field} ref={null} />}
+              />
+              {errors.email?.type ===
+                ValidationErrorType.MissingStringValue && (
+                <FieldError>Required</FieldError>
+              )}
+              {errors.email?.type === ValidationErrorType.InvalidEmail && (
+                <FieldError>Not a valid email</FieldError>
+              )}
+            </Field>
+
+            <Field>
+              Password
+              <Controller
+                name="password"
+                control={control}
+                render={({ field }) => <PasswordInput {...field} ref={null} />}
+              />
+              {errors.password?.type ===
+                ValidationErrorType.MissingStringValue && (
+                <FieldError>Required</FieldError>
+              )}
+            </Field>
+
             <Controller
-              name="email"
+              name="remember"
               control={control}
-              render={({ field }) => <TextInput {...field} ref={null} />}
+              render={({ field }) => (
+                <Checkbox className="pb-6" {...field} ref={null}>
+                  Remember me
+                </Checkbox>
+              )}
             />
-            {errors.email?.type === ValidationErrorType.MissingStringValue && (
-              <FieldError>Required</FieldError>
-            )}
-            {errors.email?.type === ValidationErrorType.InvalidEmail && (
-              <FieldError>Not a valid email</FieldError>
-            )}
-          </Field>
 
-          <Field>
-            Password
-            <Controller
-              name="password"
-              control={control}
-              render={({ field }) => <PasswordInput {...field} ref={null} />}
-            />
-            {errors.password?.type ===
-              ValidationErrorType.MissingStringValue && (
-              <FieldError>Required</FieldError>
-            )}
-          </Field>
+            <FormActions>
+              <Button
+                type="submit"
+                variant={ButtonVariant.Primary}
+                disabled={loading}
+              >
+                {loading && <Spinner />}
+                <span>Sign in</span>
+              </Button>
+            </FormActions>
+          </Form>
+        </section>
 
-          <Controller
-            name="remember"
-            control={control}
-            render={({ field }) => (
-              <Checkbox className="pb-6" {...field} ref={null}>
-                Remember me
-              </Checkbox>
-            )}
-          />
+        <section>
+          <div className="mt-4 leading-[24px] text-[12px] text-center">
+            Don&apos;t have an account?{' '}
+            <a href="/register" className="no-underline">
+              Register
+            </a>
+            .
+          </div>
 
-          <FormActions>
-            <Button
-              type="submit"
-              variant={ButtonVariant.Primary}
-              disabled={loading}
-            >
-              {loading && <Spinner />}
-              <span>Sign in</span>
-            </Button>
-          </FormActions>
-        </Form>
-
-        <div className="mt-4 leading-[24px] text-[12px] text-center">
-          Don&apos;t have an account?{' '}
-          <a href="/register" className="no-underline">
-            Register
-          </a>
-          .
-        </div>
-
-        <div className="leading-[24px] text-[12px] text-center">
-          Forgot your password?{' '}
-          <a href="/forgot-password" className="no-underline">
-            Reset your password
-          </a>
-          .
-        </div>
-      </Article>
+          <div className="leading-[24px] text-[12px] text-center">
+            Forgot your password?{' '}
+            <a href="/forgot-password" className="no-underline">
+              Reset your password
+            </a>
+            .
+          </div>
+        </section>
+      </article>
     </WebsiteLayout>
   );
 };
