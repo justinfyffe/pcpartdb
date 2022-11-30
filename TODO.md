@@ -3,7 +3,7 @@ Immediate Tasks:
   - use pixels instead of rem
   - cleanup component code
     - input prefix and suffix
-    - replace <Article> with <article>
+    - common styling
   - utility functions (get name, get url)
   - react components
   - consistent styling
@@ -11,6 +11,7 @@ Immediate Tasks:
     - spacing
   - finalize layout design
   - finalize font
+  - improve usage of "article" tag
 - rename product data structure to:
   - pc parts?
   - hardware?

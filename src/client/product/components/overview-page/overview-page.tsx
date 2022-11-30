@@ -1,32 +1,10 @@
-import {
-  Article,
-  ArticleHeader,
-  Breadcrumb,
-  Breadcrumbs,
-  Button,
-  ButtonVariant,
-  Card,
-  CardActions,
-  CardContent,
-  CardImage,
-  CardTitle,
-  SectionHeader,
-} from '@client/shared/components';
+import { Breadcrumb, Breadcrumbs, Card } from '@client/shared/components';
 import { WebsiteLayout } from '@client/shared/layouts';
 import { classNames } from '@client/shared/ui';
-import { ComputerDesktopIcon } from '@heroicons/react/24/outline';
 import { Product, ProductsOrderBy } from '@shared/product';
 import React from 'react';
 import { CompareProductsForm } from '../compare-products-form';
-import {
-  ComparisonFeedItem,
-  Feed,
-  FeedItems,
-  FeedLink,
-  FeedLinks,
-  FeedTitle,
-  ProductFeedItem,
-} from '../feed';
+import { Feed, FeedItems, FeedLink, FeedLinks, FeedTitle } from '../feed';
 
 export interface OverviewGpusPageProps {
   gpusByPerformance: Product[];
@@ -36,17 +14,17 @@ export interface OverviewGpusPageProps {
 export const OverviewGpusPage = (_props: OverviewGpusPageProps) => {
   return (
     <WebsiteLayout>
-      <Article className="flex flex-wrap gap-6 lg:gap-8 justify-center">
-        <ArticleHeader className="flex flex-wrap w-full items-center justify-between gap-3 lg:gap-4">
-          <Breadcrumbs className="mb-3">
-            <Breadcrumb href="/">Home</Breadcrumb>
-            <Breadcrumb>GPUs</Breadcrumb>
-          </Breadcrumbs>
+      <Breadcrumbs className="mb-4">
+        <Breadcrumb href="/">Home</Breadcrumb>
+        <Breadcrumb>GPUs</Breadcrumb>
+      </Breadcrumbs>
 
+      <article className="flex flex-wrap gap-6 lg:gap-8 justify-center">
+        <section className="flex flex-wrap w-full items-center justify-between gap-3 lg:gap-4">
           <h2>Compare GPU Specifications, Benchmarks, and Comparisons</h2>
 
           <CompareProductsForm values={[null, null]} />
-        </ArticleHeader>
+        </section>
 
         <section
           className={classNames(
@@ -373,21 +351,13 @@ export const OverviewGpusPage = (_props: OverviewGpusPageProps) => {
         <Feed>
           <FeedTitle>Popular Comparisons</FeedTitle>
 
-          <FeedItems>
-            <ComparisonFeedItem />
-            <ComparisonFeedItem />
-            <ComparisonFeedItem />
-          </FeedItems>
+          <FeedItems></FeedItems>
         </Feed>
 
         <Feed>
           <FeedTitle>Popular GPUs</FeedTitle>
 
-          <FeedItems>
-            <ProductFeedItem />
-            <ProductFeedItem />
-            <ProductFeedItem />
-          </FeedItems>
+          <FeedItems></FeedItems>
 
           <FeedLinks>
             <FeedLink>All GPUs</FeedLink>
@@ -395,7 +365,7 @@ export const OverviewGpusPage = (_props: OverviewGpusPageProps) => {
             <FeedLink>Best Value GPUs</FeedLink>
           </FeedLinks>
         </Feed>
-      </Article>
+      </article>
     </WebsiteLayout>
   );
 };

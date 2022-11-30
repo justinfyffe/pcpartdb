@@ -20,7 +20,7 @@ module.exports = {
         'button-default': '1px',
       },
       height: {
-        120: '28rem',
+        120: '448px',
       },
       textColor: {
         'alert-error': '#ffffff',

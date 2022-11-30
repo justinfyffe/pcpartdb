@@ -1,10 +1,5 @@
 import 'reflect-metadata';
-import {
-  Article,
-  ArticleHeader,
-  Button,
-  ButtonVariant,
-} from '@client/shared/components';
+import { Button, ButtonVariant } from '@client/shared/components';
 import { AdminLayout } from '@client/shared/layouts';
 import { User } from '@shared/user';
 import React from 'react';
@@ -19,17 +14,17 @@ export const AdminEditUserPage = (props: AdminEditUserPageProps) => {
 
   return (
     <AdminLayout>
-      <Article>
-        <ArticleHeader>
-          <h1>Users - Edit User</h1>
+      <article>
+        <div className="flex items-center justify-between mb-4">
+          <h1 className="font-semibold">Users - Edit User</h1>
 
           <Button href="/admin/users" variant={ButtonVariant.Default}>
             Back
           </Button>
-        </ArticleHeader>
+        </div>
 
         <UserForm user={user} />
-      </Article>
+      </article>
     </AdminLayout>
   );
 };

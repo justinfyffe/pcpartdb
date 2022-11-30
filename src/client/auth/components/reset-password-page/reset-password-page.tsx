@@ -2,8 +2,6 @@ import 'reflect-metadata';
 import {
   Alert,
   AlertVariant,
-  Article,
-  ArticleHeader,
   Button,
   ButtonVariant,
   Field,
@@ -91,67 +89,71 @@ export const ResetPasswordPage = (props: ResetPasswordPageProps) => {
 
   return (
     <WebsiteLayout>
-      <Article>
-        <ArticleHeader>
-          <h1>Reset Password</h1>
-        </ArticleHeader>
+      <article>
+        <h1 className="font-semibold mb-4">Reset Password</h1>
 
-        {errors.token?.type === ValidationErrorType.InvalidToken && (
-          <Alert variant={AlertVariant.Error}>
-            The reset token is either invalid or has expired.
-          </Alert>
-        )}
+        <section>
+          {errors.token?.type === ValidationErrorType.InvalidToken && (
+            <Alert variant={AlertVariant.Error}>
+              The reset token is either invalid or has expired.
+            </Alert>
+          )}
 
-        {requestError && isInternalServerError(requestError) && (
-          <Alert variant={AlertVariant.Error}>
-            An unknown error has occurred. Please try again later.
-          </Alert>
-        )}
+          {requestError && isInternalServerError(requestError) && (
+            <Alert variant={AlertVariant.Error}>
+              An unknown error has occurred. Please try again later.
+            </Alert>
+          )}
+        </section>
 
-        <p>
-          Please enter the following information to change your account&apos;s
-          password.
-        </p>
+        <section>
+          <p>
+            Please enter the following information to change your account&apos;s
+            password.
+          </p>
 
-        <Form onSubmit={handleSubmit(handleReset)}>
-          <Controller
-            name="token"
-            control={control}
-            render={({ field }) => <HiddenInput {...field} ref={null} />}
-          />
-
-          <Field>
-            New Password
+          <Form onSubmit={handleSubmit(handleReset)}>
             <Controller
-              name="password"
+              name="token"
               control={control}
-              render={({ field }) => <PasswordInput {...field} ref={null} />}
+              render={({ field }) => <HiddenInput {...field} ref={null} />}
             />
-            {errors.password?.type ===
-              ValidationErrorType.MissingStringValue && (
-              <FieldError>Required</FieldError>
-            )}
-            {errors.password?.type === ValidationErrorType.MinLength && (
-              <FieldError>Must be at least 5 characters</FieldError>
-            )}
-          </Field>
 
-          <FormActions>
-            <Button
-              type="submit"
-              variant={ButtonVariant.Primary}
-              disabled={loading}
-            >
-              {loading && <Spinner />}
-              <span>Change Password</span>
-            </Button>
-          </FormActions>
-        </Form>
+            <Field>
+              New Password
+              <Controller
+                name="password"
+                control={control}
+                render={({ field }) => <PasswordInput {...field} ref={null} />}
+              />
+              {errors.password?.type ===
+                ValidationErrorType.MissingStringValue && (
+                <FieldError>Required</FieldError>
+              )}
+              {errors.password?.type === ValidationErrorType.MinLength && (
+                <FieldError>Must be at least 5 characters</FieldError>
+              )}
+            </Field>
 
-        <div className="mt-4 leading-[24px] text-[12px] text-center">
-          Remember your password? <a href="/login">Sign in</a>. .
-        </div>
-      </Article>
+            <FormActions>
+              <Button
+                type="submit"
+                variant={ButtonVariant.Primary}
+                disabled={loading}
+              >
+                {loading && <Spinner />}
+                <span>Change Password</span>
+              </Button>
+            </FormActions>
+          </Form>
+        </section>
+
+        <section>
+          <div className="mt-4 leading-[24px] text-[12px] text-center">
+            Remember your password? <a href="/login">Sign in</a>. .
+          </div>
+        </section>
+      </article>
     </WebsiteLayout>
   );
 };

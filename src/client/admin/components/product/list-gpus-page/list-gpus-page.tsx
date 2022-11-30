@@ -2,8 +2,6 @@ import 'reflect-metadata';
 import {
   Alert,
   AlertVariant,
-  Article,
-  ArticleHeader,
   Button,
   ButtonVariant,
   Table,
@@ -30,50 +28,56 @@ export const AdminListGpusPage = (props: AdminListGpusPageProps) => {
 
   return (
     <AdminLayout>
-      <Article>
-        {saved && (
-          <Alert variant={AlertVariant.Success}>The GPU has been saved.</Alert>
-        )}
+      <article>
+        <section>
+          {saved && (
+            <Alert variant={AlertVariant.Success}>
+              The GPU has been saved.
+            </Alert>
+          )}
 
-        {deleted && (
-          <Alert variant={AlertVariant.Success}>
-            The GPU has been deleted.
-          </Alert>
-        )}
+          {deleted && (
+            <Alert variant={AlertVariant.Success}>
+              The GPU has been deleted.
+            </Alert>
+          )}
+        </section>
 
-        <ArticleHeader>
-          <h1>GPUs</h1>
+        <div className="flex items-center justify-between mb-4">
+          <h1 className="font-semibold">GPUs</h1>
 
           <Button href="/admin/gpus/new" variant={ButtonVariant.Default}>
             Add
           </Button>
-        </ArticleHeader>
+        </div>
 
-        {gpus.length > 0 && (
-          <Table border responsive>
-            <THead>
-              <Tr className="font-medium">
-                <Th className="text-center">ID</Th>
-                <Th>Name</Th>
-              </Tr>
-            </THead>
-            <TBody>
-              {gpus.map((gpu) => (
-                <Tr key={gpu.id}>
-                  <Td className="text-center">{gpu.id}</Td>
-                  <Td>
-                    <a href={`/admin/gpus/${gpu.id}`}>{gpu.name}</a>
-                  </Td>
+        <section>
+          {gpus.length > 0 && (
+            <Table border responsive>
+              <THead>
+                <Tr className="font-medium">
+                  <Th className="text-center">ID</Th>
+                  <Th>Name</Th>
                 </Tr>
-              ))}
-            </TBody>
-          </Table>
-        )}
+              </THead>
+              <TBody>
+                {gpus.map((gpu) => (
+                  <Tr key={gpu.id}>
+                    <Td className="text-center">{gpu.id}</Td>
+                    <Td>
+                      <a href={`/admin/gpus/${gpu.id}`}>{gpu.name}</a>
+                    </Td>
+                  </Tr>
+                ))}
+              </TBody>
+            </Table>
+          )}
 
-        {gpus.length === 0 && (
-          <Alert variant={AlertVariant.Info}>There are no GPUs.</Alert>
-        )}
-      </Article>
+          {gpus.length === 0 && (
+            <Alert variant={AlertVariant.Info}>There are no GPUs.</Alert>
+          )}
+        </section>
+      </article>
     </AdminLayout>
   );
 };

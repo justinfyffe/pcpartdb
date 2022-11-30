@@ -3,8 +3,6 @@ import { formatDimensions, formatFileSize, getImageUrl } from '@client/image';
 import {
   Alert,
   AlertVariant,
-  Article,
-  ArticleHeader,
   Button,
   ButtonVariant,
   Img,
@@ -34,64 +32,68 @@ export const AdminListImagesPage = (props: AdminListImagesPageProps) => {
 
   return (
     <AdminLayout>
-      <Article>
-        {saved && (
-          <Alert variant={AlertVariant.Success}>
-            The image has been saved.
-          </Alert>
-        )}
+      <article>
+        <section>
+          {saved && (
+            <Alert variant={AlertVariant.Success}>
+              The image has been saved.
+            </Alert>
+          )}
 
-        {deleted && (
-          <Alert variant={AlertVariant.Success}>
-            The image has been deleted.
-          </Alert>
-        )}
+          {deleted && (
+            <Alert variant={AlertVariant.Success}>
+              The image has been deleted.
+            </Alert>
+          )}
+        </section>
 
-        <ArticleHeader>
-          <h1>Images</h1>
+        <div className="flex items-center justify-between mb-4">
+          <h1 className="font-semibold">Images</h1>
 
           <Button href="/admin/images/new" variant={ButtonVariant.Default}>
             Add
           </Button>
-        </ArticleHeader>
+        </div>
 
-        {images.length > 0 && (
-          <Table border>
-            <THead>
-              <Tr>
-                <Th className="max-w-[200px]">Preview</Th>
-                <Th className="text-center">ID</Th>
-                <Th>Name</Th>
-                <Th>Path</Th>
-                <Th>Size</Th>
-                <Th>Dimensions</Th>
-              </Tr>
-            </THead>
-            <TBody>
-              {images.map((image) => (
-                <Tr key={image.id}>
-                  <Td className="max-w-[200px]">
-                    <Img src={image} alt={image.name} />
-                  </Td>
-                  <Td className="text-center">{image.id}</Td>
-                  <Td>
-                    <a href={`/admin/images/${image.id}`}>{image.name}</a>
-                  </Td>
-                  <Td>
-                    <TextInput value={getImageUrl(image)} disabled />
-                  </Td>
-                  <Td>{formatFileSize(image.fileSize)}</Td>
-                  <Td>{formatDimensions(image.width, image.height)}</Td>
+        <section>
+          {images.length > 0 && (
+            <Table border>
+              <THead>
+                <Tr>
+                  <Th className="max-w-[200px]">Preview</Th>
+                  <Th className="text-center">ID</Th>
+                  <Th>Name</Th>
+                  <Th>Path</Th>
+                  <Th>Size</Th>
+                  <Th>Dimensions</Th>
                 </Tr>
-              ))}
-            </TBody>
-          </Table>
-        )}
+              </THead>
+              <TBody>
+                {images.map((image) => (
+                  <Tr key={image.id}>
+                    <Td className="max-w-[200px]">
+                      <Img src={image} alt={image.name} />
+                    </Td>
+                    <Td className="text-center">{image.id}</Td>
+                    <Td>
+                      <a href={`/admin/images/${image.id}`}>{image.name}</a>
+                    </Td>
+                    <Td>
+                      <TextInput value={getImageUrl(image)} disabled />
+                    </Td>
+                    <Td>{formatFileSize(image.fileSize)}</Td>
+                    <Td>{formatDimensions(image.width, image.height)}</Td>
+                  </Tr>
+                ))}
+              </TBody>
+            </Table>
+          )}
 
-        {images.length === 0 && (
-          <Alert variant={AlertVariant.Info}>There are no images.</Alert>
-        )}
-      </Article>
+          {images.length === 0 && (
+            <Alert variant={AlertVariant.Info}>There are no images.</Alert>
+          )}
+        </section>
+      </article>
     </AdminLayout>
   );
 };

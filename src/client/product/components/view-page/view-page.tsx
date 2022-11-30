@@ -1,6 +1,4 @@
 import {
-  Article,
-  ArticleHeader,
   Breadcrumb,
   Breadcrumbs,
   Table,
@@ -71,18 +69,18 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
   return (
     <ProductContext.Provider value={context}>
       <WebsiteLayout>
-        <Article className="flex flex-wrap gap-6 lg:gap-8 justify-center">
-          <ArticleHeader className="flex flex-wrap w-full items-center justify-between gap-3 lg:gap-4">
-            <Breadcrumbs className="mb-3">
-              <Breadcrumb href="/">Home</Breadcrumb>
-              <Breadcrumb href="/gpus">GPUs</Breadcrumb>
-              <Breadcrumb>{gpu.name}</Breadcrumb>
-            </Breadcrumbs>
+        <Breadcrumbs className="mb-4">
+          <Breadcrumb href="/">Home</Breadcrumb>
+          <Breadcrumb href="/gpus">GPUs</Breadcrumb>
+          <Breadcrumb>{gpu.name}</Breadcrumb>
+        </Breadcrumbs>
 
-            <h1>{gpu.name}</h1>
+        <article className="flex flex-wrap gap-6 lg:gap-8 justify-center">
+          <section className="flex flex-wrap w-full items-center justify-between gap-3 lg:gap-4">
+            <h1 className="font-semibold">{gpu.name}</h1>
 
             <CompareProductsForm values={[gpu.id]} />
-          </ArticleHeader>
+          </section>
 
           <section className="flex-1 flex flex-col gap-6">
             <section className="flex flex-wrap justify-start gap-6 lg:gap-8">
@@ -381,7 +379,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
             <SidenavPopularProducts />
             <SidenavPopularComparisons />
           </Sidenav>
-        </Article>
+        </article>
       </WebsiteLayout>
     </ProductContext.Provider>
   );

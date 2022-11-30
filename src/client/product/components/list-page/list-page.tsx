@@ -1,6 +1,4 @@
 import {
-  Article,
-  ArticleHeader,
   Breadcrumb,
   Breadcrumbs,
   Table,
@@ -26,18 +24,18 @@ export const ListGpusPage = (props: ListGpusPageProps) => {
 
   return (
     <WebsiteLayout>
-      <Article className="flex flex-wrap gap-6 lg:gap-8 justify-center">
-        <ArticleHeader className="flex flex-wrap w-full items-center justify-between gap-3 lg:gap-4">
-          <Breadcrumbs className="mb-3">
-            <Breadcrumb href="/">Home</Breadcrumb>
-            <Breadcrumb href="/gpus">GPUs</Breadcrumb>
-            <Breadcrumb>All GPUS</Breadcrumb>
-          </Breadcrumbs>
+      <Breadcrumbs className="mb-4">
+        <Breadcrumb href="/">Home</Breadcrumb>
+        <Breadcrumb href="/gpus">GPUs</Breadcrumb>
+        <Breadcrumb>All GPUS</Breadcrumb>
+      </Breadcrumbs>
 
+      <article className="flex flex-wrap gap-6 lg:gap-8 justify-center">
+        <section className="flex flex-wrap w-full items-center justify-between gap-3 lg:gap-4">
           <h2>Compare GPU Specifications, Benchmarks, and Comparisons</h2>
 
           <CompareProductsForm values={[null, null]} />
-        </ArticleHeader>
+        </section>
 
         <section className="flex-1 flex flex-col gap-6">
           <section>
@@ -76,7 +74,7 @@ export const ListGpusPage = (props: ListGpusPageProps) => {
             </div>
           </section>
         </section>
-      </Article>
+      </article>
     </WebsiteLayout>
   );
 };

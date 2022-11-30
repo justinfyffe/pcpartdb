@@ -1,5 +1,4 @@
 export * from './alert';
-export * from './article';
 export * from './autocomplete';
 export * from './breadcrumbs';
 export * from './button';

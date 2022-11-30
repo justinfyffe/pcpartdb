@@ -1,6 +1,4 @@
 import {
-  Article,
-  ArticleHeader,
   Breadcrumb,
   Breadcrumbs,
   Button,
@@ -59,20 +57,20 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
   return (
     <ProductsContext.Provider value={context}>
       <WebsiteLayout>
-        <Article className="flex flex-wrap gap-6 lg:gap-8 justify-center">
-          <ArticleHeader className="flex flex-wrap w-full items-center justify-between gap-3 lg:gap-4">
-            <Breadcrumbs className="mb-3">
-              <Breadcrumb href="/">Home</Breadcrumb>
-              <Breadcrumb href="/gpus">GPUs</Breadcrumb>
-              <Breadcrumb>{pageTitle}</Breadcrumb>
-            </Breadcrumbs>
+        <Breadcrumbs className="mb-4">
+          <Breadcrumb href="/">Home</Breadcrumb>
+          <Breadcrumb href="/gpus">GPUs</Breadcrumb>
+          <Breadcrumb>{pageTitle}</Breadcrumb>
+        </Breadcrumbs>
 
-            <h1>{pageTitle}</h1>
+        <article className="flex flex-wrap gap-6 lg:gap-8 justify-center">
+          <section className="flex flex-wrap w-full items-center justify-between gap-3 lg:gap-4">
+            <h1 className="font-semibold">{pageTitle}</h1>
 
             <CompareProductsForm values={[gpu1.id, gpu2.id]} />
-          </ArticleHeader>
+          </section>
 
-          <article className="flex-1 flex flex-col gap-6 max-w-full">
+          <section className="flex-1 flex flex-col gap-6 max-w-full">
             <section className="flex flex-wrap gap-4 md:flex-nowrap justify-between">
               <div className="flex flex-col gap-3 flex-1 min-w-[210px] max-w-[350px]">
                 <div className="flex items-center justify-between">
@@ -114,7 +112,7 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
             </section>
 
             <section className="flex flex-col gap-6">
-              <article>
+              <section>
                 <h2 className="mb-4">General Info</h2>
 
                 <p className={classNames('text-content-dimmed')}>
@@ -210,9 +208,9 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
                     <SpecRow spec="launchPrice" />
                   </TBody>
                 </Table>
-              </article>
+              </section>
 
-              <article>
+              <section>
                 <h2 className="mb-4">Reviews</h2>
 
                 <p className={classNames('text-content-dimmed')}>
@@ -235,12 +233,12 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
                     <ReviewRow review="tomsHardware" />
                   </TBody>
                 </Table>
-              </article>
+              </section>
 
-              <article className="flex flex-col gap-6">
+              <section className="flex flex-col gap-6">
                 <h2 className="mb-4">Technical Specs</h2>
 
-                <article>
+                <section>
                   <h3 className="mb-4">Processor</h3>
 
                   <p className={classNames('text-content-dimmed')}>
@@ -262,9 +260,9 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
                       <SpecRow spec="transistors" />
                     </TBody>
                   </Table>
-                </article>
+                </section>
 
-                <article>
+                <section>
                   <h3 className="mb-4">Memory</h3>
 
                   <p className={classNames('text-content-dimmed')}>
@@ -288,9 +286,9 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
                       <SpecRow spec="memoryInterface" />
                     </TBody>
                   </Table>
-                </article>
+                </section>
 
-                <article>
+                <section>
                   <h3 className="mb-4">Board Compatibility &amp; Dimensions</h3>
 
                   <p className={classNames('text-content-dimmed')}>
@@ -319,9 +317,9 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
                       <SpecRow spec="outputs" />
                     </TBody>
                   </Table>
-                </article>
+                </section>
 
-                <article>
+                <section>
                   <h3 className="mb-4">Cores &amp; Clock Speeds</h3>
 
                   <p className={classNames('text-content-dimmed')}>
@@ -349,9 +347,9 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
                       <SpecRow spec="l2Cache" />
                     </TBody>
                   </Table>
-                </article>
+                </section>
 
-                <article>
+                <section>
                   <h3 className="mb-4">Theoretical Performance</h3>
 
                   <p className={classNames('text-content-dimmed')}>
@@ -375,9 +373,9 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
                       <SpecRow spec="fp64Performance" />
                     </TBody>
                   </Table>
-                </article>
+                </section>
 
-                <article>
+                <section>
                   <h3 className="mb-4">API Support</h3>
 
                   <Table responsive>
@@ -397,10 +395,10 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
                       <SpecRow spec="sliCrossfireSupport" />
                     </TBody>
                   </Table>
-                </article>
-              </article>
+                </section>
+              </section>
 
-              <article>
+              <section>
                 <h2 className="mb-4">Benchmarks</h2>
 
                 <p className={classNames('text-content-dimmed')}>
@@ -423,15 +421,15 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
                     <BenchmarkRow benchmark="timeSpyGraphics" />
                   </TBody>
                 </Table>
-              </article>
+              </section>
             </section>
-          </article>
+          </section>
 
           <Sidenav>
             <SidenavPopularComparisons />
             <SidenavPopularProducts />
           </Sidenav>
-        </Article>
+        </article>
       </WebsiteLayout>
     </ProductsContext.Provider>
   );
