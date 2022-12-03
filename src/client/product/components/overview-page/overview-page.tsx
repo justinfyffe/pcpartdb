@@ -4,7 +4,7 @@ import { classNames } from '@client/shared/ui';
 import { Product, ProductsOrderBy } from '@shared/product';
 import React from 'react';
 import { CompareProductsForm } from '../compare-products-form';
-import { Feed, FeedItems, FeedLink, FeedLinks, FeedTitle } from '../feed';
+import { Feed, FeedItems, FeedLink, FeedLinks } from '../feed';
 
 export interface OverviewGpusPageProps {
   gpusByPerformance: Product[];
@@ -349,13 +349,13 @@ export const OverviewGpusPage = (_props: OverviewGpusPageProps) => {
         </section>
 
         <Feed>
-          <FeedTitle>Popular Comparisons</FeedTitle>
+          <h2>Popular Comparisons</h2>
 
           <FeedItems></FeedItems>
         </Feed>
 
         <Feed>
-          <FeedTitle>Popular GPUs</FeedTitle>
+          <h2>Popular GPUs</h2>
 
           <FeedItems></FeedItems>
 

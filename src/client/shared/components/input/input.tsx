@@ -30,7 +30,7 @@ export interface InputProps {
   onPrefixClick?: () => void;
   onSuffixClick?: () => void;
   onClick?: (e?: MouseEvent) => void;
-  onClear?: () => void;
+  onClearing?: (clearing: boolean) => void;
   onKeyDown?: (e?: KeyboardEvent) => void;
   onBlur?: (e?: FocusEvent) => void;
   onFocus?: (e?: FocusEvent) => void;
@@ -47,7 +47,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
   const {
     onPrefixClick,
     onSuffixClick,
-    onClear,
+    onClearing,
     onKeyDown,
     onClick,
     onBlur,
@@ -61,26 +61,43 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
   useEffect(() => setValue(propsValue), [propsValue]);
 
   const handlePrefixClick = useCallback(
-    () => onPrefixClick?.(),
+    (e: MouseEvent) => {
+      e.preventDefault();
+      onPrefixClick?.();
+    },
     [onPrefixClick],
   );
   const handleSuffixClick = useCallback(
-    () => onSuffixClick?.(),
+    (e: MouseEvent) => {
+      e.preventDefault();
+      onSuffixClick?.();
+    },
     [onSuffixClick],
   );
 
-  const handleClear = useCallback(() => {
-    setValue(null);
-    onChange?.(null);
-    onClear?.();
-  }, [onChange, onClear]);
+  const handleClear = useCallback(
+    (e: MouseEvent) => {
+      e.preventDefault();
+      onClearing?.(true);
+      setValue(null);
+      onChange?.(null);
+      onClearing?.(false);
+    },
+    [onChange, onClearing],
+  );
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => onKeyDown?.(e),
     [onKeyDown],
   );
 
-  const handleClick = useCallback((e: MouseEvent) => onClick?.(e), [onClick]);
+  const handleClick = useCallback(
+    (e: MouseEvent) => {
+      e.preventDefault();
+      onClick?.(e);
+    },
+    [onClick],
+  );
 
   const handleChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
@@ -94,6 +111,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 
   const handleBlur = useCallback(
     (e: FocusEvent) => {
+      e.preventDefault();
       onBlur?.(e);
     },
     [onBlur],
@@ -101,6 +119,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 
   const handleFocus = useCallback(
     (e: FocusEvent) => {
+      e.preventDefault();
       onFocus?.(e);
     },
     [onFocus],
@@ -108,6 +127,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 
   const handleWheel = useCallback(
     (e: WheelEvent<HTMLInputElement>) => {
+      e.preventDefault();
       onWheel?.(e);
     },
     [onWheel],
@@ -120,7 +140,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
       return;
     }
     setPrefixWidth(prefixRef?.current?.offsetWidth ?? 0);
-  }, [value, prefixRef]);
+  }, [value, prefixRef?.current?.offsetWidth]);
 
   const context = useContext(FieldContext);
 
@@ -134,7 +154,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
         disabled={disabled}
         readOnly={readOnly}
         className={classNames(
-          'border m-0 p-3 rounded text-sm w-full shadow focus:outline-offset-1',
+          'border m-0 p-3 rounded text-sm w-full shadow focus:outline-offset-2',
           props.clearable ? 'pr-12' : '',
         )}
         style={{
@@ -159,7 +179,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
         </div>
       )}
 
-      <div className="absolute flex items-stretch right-0 inset-y-0">
+      <div className="absolute flex items-stretch right-0 inset-y-0 z-10">
         {props.suffix && (
           <div className="flex items-center px-4" onClick={handleSuffixClick}>
             {suffix}
@@ -168,7 +188,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 
         {props.clearable && (
           <Button className="hover:bg-[#eee]" onClick={handleClear}>
-            <XMarkIcon className="w-[16px]" />
+            <XMarkIcon className="w-4" />
           </Button>
         )}
       </div>

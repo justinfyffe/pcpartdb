@@ -1,6 +1,5 @@
 Immediate Tasks:
 - cleanup layout
-  - use pixels instead of rem
   - cleanup component code
     - input prefix and suffix
     - common styling

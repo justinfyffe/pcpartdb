@@ -40,17 +40,17 @@ export const ProductFeedItem: FunctionComponent<ProductFeedItemProps> = (
       className={classNames(
         'flex-1',
         'mx-4 mb-6',
-        'max-w-[384px] min-w-[280px]',
+        'max-w-96 min-w-70',
         props.className,
       )}
     >
-      <Card>
+      <Card as="article">
         <div
           className={classNames(
             'relative',
-            'flex gap-[2px]',
+            'flex gap-0.5',
             'm-[-16px_-16px_0]',
-            'h-[160px] w-[calc(100%_+_32px)] max-w-[calc(100%_+_48px)]',
+            'h-40 w-[calc(100%_+_32px)] max-w-[calc(100%_+_48px)]',
             'border-b rounded-t',
             'overflow-hidden',
           )}
@@ -62,7 +62,7 @@ export const ProductFeedItem: FunctionComponent<ProductFeedItemProps> = (
               className={classNames(
                 'bg-white',
                 'flex-1',
-                'h-[160px]',
+                'h-40',
                 'object-cover overflow-hidden',
                 props.className,
               )}
@@ -72,12 +72,10 @@ export const ProductFeedItem: FunctionComponent<ProductFeedItemProps> = (
             <div
               className={classNames(
                 'flex-1 flex flex-col items-center justify-center',
-                'h-[160px]',
+                'h-40',
               )}
             >
-              <PhotoIcon
-                className={classNames('mb-[-12px]', 'h-[92px] w-[92px]')}
-              />
+              <PhotoIcon className={classNames('mb-[-12px]', 'w-23')} />
               <span className="font-semibold">No Image</span>
             </div>
           )}
@@ -94,8 +92,8 @@ export const ProductFeedItem: FunctionComponent<ProductFeedItemProps> = (
               <div
                 className={classNames(
                   'bg-[rgba(51,65,85,1)]',
-                  'font-normal text-sm text-[#ececec]',
-                  'px-[6px] py-[2px]',
+                  'font-normal text-2xs text-[#ececec]',
+                  'px-1.5 py-0.5',
                   'border-b border-r border-gray-50 rounded-br rounded-tl',
                 )}
               >
@@ -106,8 +104,8 @@ export const ProductFeedItem: FunctionComponent<ProductFeedItemProps> = (
             <div
               className={classNames(
                 'bg-[rgba(51,65,85,1)]',
-                'font-normal text-sm text-[#ececec]',
-                'px-[6px] py-[2px]',
+                'font-normal text-2xs text-[#ececec]',
+                'px-1.5 py-0.5',
                 'border-b border-l border-gray-50 rounded-bl rounded-tr',
               )}
             >
@@ -116,8 +114,8 @@ export const ProductFeedItem: FunctionComponent<ProductFeedItemProps> = (
           </div>
         </div>
 
-        <div className={classNames('flex flex-col gap-2', 'text-md')}>
-          <h3 className="font-medium text-xl text-indigo-500">
+        <div className={classNames('flex flex-col gap-2 text-sm')}>
+          <h3 className="font-medium text-base text-indigo-500">
             {getProductName(product)}
           </h3>
           The RTX 3070 is the best performing NVIDIA GPU in our database.

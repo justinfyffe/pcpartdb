@@ -6,7 +6,6 @@ import {
   FeedItems,
   FeedLink,
   FeedLinks,
-  FeedTitle,
   ProductFeedItem,
 } from '@client/product';
 import { WebsiteLayout } from '@client/shared/layouts';
@@ -24,16 +23,14 @@ export const HomePage = (props: HomePageProps) => {
 
   return (
     <WebsiteLayout>
-      <section className={classNames('flex flex-col justify-center mt-2 mb-8')}>
-        <h1 className={classNames('mb-8')}>
+      <section className={classNames('flex flex-col justify-center', 'mb-8')}>
+        <h1 className="md:text-2xl text-3xl">
           GPU Specifications, Benchmarks, and Comparisons
         </h1>
 
-        <section className="mb-2">
-          <CompareProductsForm values={[null, null]} />
-        </section>
+        <CompareProductsForm values={[null, null]} className="mb-4" />
 
-        <section className="flex flex-col gap-1 text-sm">
+        <section className="flex flex-col gap-1 text-xs">
           <div className="flex gap-2">
             Popular Comparisons:
             <ul className="flex gap-3">
@@ -60,7 +57,7 @@ export const HomePage = (props: HomePageProps) => {
       </section>
 
       <Feed className="my-4">
-        <FeedTitle>NVIDIA vs AMD GPUs</FeedTitle>
+        <h2>NVIDIA vs AMD GPUs</h2>
 
         <FeedItems>
           <ComparisonFeedItem products={[nvidiaGpus[0], nvidiaGpus[1]]} />
@@ -76,7 +73,7 @@ export const HomePage = (props: HomePageProps) => {
       </Feed>
 
       <Feed className="my-4">
-        <FeedTitle>Popular NVIDIA GPUs</FeedTitle>
+        <h2>Popular NVIDIA GPUs</h2>
 
         <FeedItems>
           {nvidiaGpus.map((gpu, i) => (
@@ -92,7 +89,7 @@ export const HomePage = (props: HomePageProps) => {
       </Feed>
 
       <Feed className="my-4">
-        <FeedTitle>Popular AMD GPUs</FeedTitle>
+        <h2>Popular AMD GPUs</h2>
 
         <FeedItems>
           {amdGpus.map((gpu, i) => (

@@ -7,6 +7,7 @@ import React, {
   FormEvent,
   FunctionComponent,
   useCallback,
+  useMemo,
   useState,
 } from 'react';
 import { ProductAutocomplete } from '../product-autocomplete';
@@ -24,6 +25,11 @@ export const CompareProductsForm: FunctionComponent<
 
   const router = useRouter();
   const [values, setValues] = useState(props.values ?? [null, null]);
+
+  const filteredValues = useMemo(
+    () => values.filter((value) => value != null),
+    [values],
+  );
 
   const onProductChange = useCallback(
     (i: number, value: number) => {
@@ -62,37 +68,32 @@ export const CompareProductsForm: FunctionComponent<
     <Form
       onSubmit={handleSubmit}
       className={classNames(
-        'flex flex-col gap-4 w-full',
-        values.length > 2 ? 'lg:flex-row' : 'md:flex-row',
+        'flex flex-row gap-4 w-full',
+        'md:flex-col',
         className,
       )}
     >
       <div
-        className={classNames(
-          'flex-1 gap-4 grid grid-cols-[1fr_auto]',
-          values.length > 2
-            ? 'lg:flex'
-            : values.length > 1
-            ? 'md:flex'
-            : 'flex',
-        )}
+        className={classNames('flex flex-1 gap-4 md:grid grid-cols-[1fr_auto]')}
       >
         <ProductAutocomplete
           productType={ProductType.GPU}
-          className={classNames('flex-1 min-w-[150px]')}
+          className={classNames('flex-1 min-w-38')}
           onChange={(value) => onProductChange(0, value)}
           value={values[0]}
         />
 
         <div
-          className={classNames('font-medium self-center text-center w-[50px]')}
+          className={classNames(
+            'font-medium self-center row-span-2 text-center w-12.5',
+          )}
         >
           VS
         </div>
 
         <ProductAutocomplete
           productType={ProductType.GPU}
-          className={classNames('flex-1 min-w-[150px]')}
+          className={classNames('flex-1 min-w-38')}
           onChange={(value) => onProductChange(1, value)}
           value={values[1]}
         />
@@ -101,9 +102,10 @@ export const CompareProductsForm: FunctionComponent<
       <Button
         type="submit"
         variant={ButtonVariant.Primary}
-        className="min-w-[100px]"
+        disabled={filteredValues.length === 0}
+        className="min-w-25"
       >
-        {values.length > 1 ? 'Compare' : 'Search'}
+        {filteredValues.length === 1 ? 'Search' : 'Compare'}
       </Button>
     </Form>
   );

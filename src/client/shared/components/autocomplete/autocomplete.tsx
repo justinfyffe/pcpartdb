@@ -45,6 +45,7 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
       label: propsLabel,
       value: propsValue,
       prefix,
+      suffix,
       freeSolo,
       onChange,
       onQuery,
@@ -77,6 +78,10 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
           onChange?.(query != null ? query : null);
         } else if (query == null) {
           onChange?.(null);
+        }
+
+        if (query == null) {
+          return;
         }
 
         setQuery(query);
@@ -128,12 +133,6 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
       [onChange, items],
     );
 
-    const handleClear = useCallback(() => {
-      setValue(null);
-      setQuery(null);
-      onChange?.(null);
-    }, [onChange]);
-
     const handleBlur = useCallback(() => {
       setOpen(false);
 
@@ -163,13 +162,12 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
         <div className={classNames('block relative w-full', className)}>
           <TextInput
             prefix={prefix}
-            suffix={isLoading && <Spinner />}
+            suffix={isLoading ? <Spinner /> : suffix}
             value={query || ''}
             onChange={handleQuery}
             onKeyDown={handleKeyDown}
             onBlur={handleBlur}
             onFocus={handleFocus}
-            onClear={handleClear}
             className="w-full"
             ref={ref}
             clearable={!!value}
@@ -178,8 +176,8 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
           <div
             onMouseDown={handleChildrenMouseDown}
             className={classNames(
-              'absolute bg-white border-[1px_solid_#ccc] shadow-md left-0 right-0 z-10 mt-[1px]',
-              direction === 'top' ? 'bottom-[100%]' : 'top-[100%]',
+              'absolute bg-white border-[1px_solid_#ccc] shadow-md left-0 right-0 z-10 mt-px',
+              direction === 'top' ? 'bottom-full' : 'top-full',
               isOpen ? 'block' : 'hidden',
             )}
           >

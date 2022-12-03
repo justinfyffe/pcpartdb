@@ -34,7 +34,7 @@ export const Toolbar: FunctionComponent<ToolbarProps> = (props) => {
     >
       <div
         className={classNames(
-          'container flex h-16 items-center justify-between px-8',
+          'container flex h-16 items-center justify-between px-4',
         )}
       >
         {props.children}
@@ -64,7 +64,7 @@ export const ToolbarNav: FunctionComponent<ToolbarNavProps> = (props) => {
   return (
     <Element
       className={classNames(
-        'flex items-center font-medium rounded-none text-base',
+        'flex items-center font-medium rounded-none text-sm',
         props.className,
       )}
     >

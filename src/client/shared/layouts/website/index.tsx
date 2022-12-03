@@ -25,11 +25,11 @@ export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
     <>
       <Toolbar>
         <ToolbarTitle>
-          <ComputerDesktopIcon className={classNames('h-8 w-8 mt-[2px]')} /> PC
+          <ComputerDesktopIcon className={classNames('h-8 w-8 mt-0.5')} /> PC
           Parts DB
         </ToolbarTitle>
 
-        <ToolbarNav className="hidden md:block">
+        <ToolbarNav className="md:hidden">
           <Button href="#" variant={ButtonVariant.Toolbar}>
             Graphics Cards
           </Button>
@@ -41,7 +41,7 @@ export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
           </Button>
 
           <Button variant={ButtonVariant.Toolbar}>
-            <MagnifyingGlassIcon className="w-[20px]" />
+            <MagnifyingGlassIcon className="w-5" />
           </Button>
         </ToolbarNav>
       </Toolbar>
@@ -49,7 +49,7 @@ export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
       <div className="bg-white">
         <main
           className={classNames(
-            'container px-8 py-3 text-content max-w-100%',
+            'container px-4 py-4 text-content max-w-100%',
             props.className,
           )}
         >
@@ -102,10 +102,8 @@ export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
           Copyright &copy; PC Parts DB
           <br />
           Made with{' '}
-          <HeartIcon
-            className={classNames('inline-block h-[16px] w-[16px] mb-[2px]')}
-          />{' '}
-          in New York
+          <HeartIcon className={classNames('inline-block h-4 w-4 mb-0.5')} /> in
+          New York
         </FooterSection>
       </Footer>
     </>

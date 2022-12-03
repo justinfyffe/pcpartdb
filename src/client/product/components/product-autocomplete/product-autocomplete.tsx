@@ -5,6 +5,7 @@ import {
   Img,
 } from '@client/shared/components';
 import { classNames } from '@client/shared/ui';
+import { ChevronDownIcon } from '@heroicons/react/24/outline';
 import { Product, ProductType } from '@shared/product';
 import React, {
   forwardRef,
@@ -136,6 +137,7 @@ export const ProductAutocomplete = forwardRef<
       onQuery={handleQuery}
       onChange={handleChange}
       className={classNames('flex flex-1 items-center', className)}
+      suffix={value == null ? <ChevronDownIcon className="w-4" /> : null}
       ref={ref}
     >
       {results.map((result, i) => (
@@ -153,7 +155,7 @@ export const ProductAutocomplete = forwardRef<
               <></>
             )}
             <span className="flex-1">{result.name}</span>
-            <div className="flex flex-col gap-1 items-end text-[12px]">
+            <div className="flex flex-col gap-1 items-end text-2xs">
               <div className="text-[#aaa]">2022</div>
               <div className="text-[#aaa]">$399.99</div>
             </div>

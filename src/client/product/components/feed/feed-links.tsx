@@ -15,21 +15,21 @@ interface FeedLinkProps {
 
 export const FeedLinks: FunctionComponent<FeedLinksProps> = (props) => {
   return (
-    <ul
+    <div
       className={classNames(
-        'list-none text-right font-medium',
+        'flex flex-wrap justify-end gap-4 font-medium',
         props.className,
       )}
     >
       {props.children}
-    </ul>
+    </div>
   );
 };
 
 export const FeedLink: FunctionComponent<FeedLinkProps> = (props) => {
   return (
-    <li className={classNames('inline-block mx-4', props.className)}>
-      <a href="#">{props.children}</a>
-    </li>
+    <a href="#" className={classNames('text-sm', props.className)}>
+      {props.children}
+    </a>
   );
 };
