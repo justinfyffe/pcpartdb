@@ -9,10 +9,16 @@ import {
   Tr,
 } from '@client/shared/components';
 import { WebsiteLayout } from '@client/shared/layouts';
-import { Product } from '@shared/product';
+import { classNames } from '@client/shared/ui';
+import {
+  getProductDetailsPath,
+  getProductName,
+  Product,
+} from '@shared/product';
 import { formatProductMeta } from '@shared/product-meta';
 import { formatSpec } from '@shared/spec';
-import React from 'react';
+import { useRouter } from 'next/router';
+import React, { useCallback } from 'react';
 import { CompareProductsForm } from '../compare-products-form';
 
 export interface ListGpusPageProps {
@@ -21,6 +27,14 @@ export interface ListGpusPageProps {
 
 export const ListGpusPage = (props: ListGpusPageProps) => {
   const { gpus } = props;
+  const router = useRouter();
+
+  const handleGpuRowClick = useCallback(
+    (url: string) => {
+      router.push(url);
+    },
+    [router],
+  );
 
   return (
     <WebsiteLayout>
@@ -30,51 +44,80 @@ export const ListGpusPage = (props: ListGpusPageProps) => {
         <Breadcrumb>All GPUS</Breadcrumb>
       </Breadcrumbs>
 
-      <article className="flex flex-wrap gap-6 lg:gap-8 justify-center">
-        <section className="flex flex-wrap w-full items-center justify-between gap-3 lg:gap-4">
-          <h2>Compare GPU Specifications, Benchmarks, and Comparisons</h2>
+      <section className="flex flex-col">
+        <section className={classNames('flex flex-col justify-center', 'mb-8')}>
+          <h2 className="text-2xl">
+            Compare GPU Specifications, Benchmarks, and Comparisons
+          </h2>
 
           <CompareProductsForm values={[null, null]} />
-        </section>
 
-        <section className="flex-1 flex flex-col gap-6">
-          <section>
-            <h1 className="mb-6">All GPUs</h1>
-
-            <div className="flex">
-              <aside className="w-200px"></aside>
-
-              <Table responsive className="flex-1">
-                <THead>
-                  <Tr>
-                    <Th>GPU</Th>
-                    <Th>Performance Rank</Th>
-                    <Th>Value Rank</Th>
-                    <Th>Release Date</Th>
-                  </Tr>
-                </THead>
-
-                <TBody>
-                  {gpus.map((gpu, i) => (
-                    <Tr key={i} className="cursor-pointer">
-                      <Td>
-                        <a href={`/gpus/view/${gpu.slug}`}>
-                          {formatSpec(gpu.specs.company) || ''} {gpu.name}
-                        </a>
-                      </Td>
-                      <Td>
-                        {formatProductMeta(gpu.metas.performanceRank) || '--'}
-                      </Td>
-                      <Td>{formatProductMeta(gpu.metas.valueRank) || '--'}</Td>
-                      <Td>{formatSpec(gpu.specs.releaseDate) || '--'}</Td>
-                    </Tr>
-                  ))}
-                </TBody>
-              </Table>
+          <section className="flex flex-col gap-1 text-xs">
+            <div className="flex gap-2">
+              Popular Comparisons:
+              <ul className="flex gap-3">
+                <li>
+                  <a href="#">NVIDIA RTX 3090 vs NVIDIA RTX 3080</a>,
+                </li>
+                <li>
+                  <a href="#">NVIDIA RTX 3080 vs NVIDIA RTX 3070</a>
+                </li>
+              </ul>
+            </div>
+            <div className="flex gap-2">
+              Popular GPUs:
+              <ul className="flex gap-3">
+                <li>
+                  <a href="#">NVIDIA RTX 3090</a>,
+                </li>
+                <li>
+                  <a href="#">NVIDIA RTX 3080</a>
+                </li>
+              </ul>
             </div>
           </section>
         </section>
-      </article>
+
+        <article className="flex-1 flex flex-col">
+          <h1 className="md:text-2xl text-3xl">All GPUs</h1>
+
+          <div className="flex">
+            <Table responsive className="flex-1">
+              <THead>
+                <Tr>
+                  <Th>GPU</Th>
+                  <Th>Performance Rank</Th>
+                  <Th>Value Rank</Th>
+                  <Th>Release Date</Th>
+                </Tr>
+              </THead>
+
+              <TBody>
+                {gpus.map((gpu, i) => (
+                  <Tr
+                    key={i}
+                    className="cursor-pointer"
+                    onClick={() =>
+                      handleGpuRowClick(getProductDetailsPath(gpu))
+                    }
+                  >
+                    <Td>
+                      <a href={getProductDetailsPath(gpu)}>
+                        {getProductName(gpu)}
+                      </a>
+                    </Td>
+                    <Td>
+                      {formatProductMeta(gpu.metas.performanceRank) || '--'}
+                    </Td>
+                    <Td>{formatProductMeta(gpu.metas.valueRank) || '--'}</Td>
+                    <Td>{formatSpec(gpu.specs.releaseDate) || '--'}</Td>
+                  </Tr>
+                ))}
+              </TBody>
+            </Table>
+          </div>
+        </article>
+      </section>
     </WebsiteLayout>
   );
 };

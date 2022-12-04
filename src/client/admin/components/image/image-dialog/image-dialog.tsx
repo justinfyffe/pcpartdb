@@ -42,13 +42,13 @@ export const ImageDialog: FunctionComponent<ImageDialogProps> = (props) => {
   );
 
   return (
-    <div className="bg-white flex flex-col h-[80%] w-[80%] p-4 overflow-auto max-w-[990px] rounded shadow">
+    <div className="bg-white flex flex-col h-[80%] w-[80%] p-4 overflow-auto max-w-247 rounded shadow">
       <div className="items-center flex justify-center m-[8px_-8px]">
         <Button
           type="button"
           variant={tab === Tabs.List ? ButtonVariant.Primary : undefined}
           onClick={handleListClick}
-          className="border-[1px] border-solid border-[#ccc] flex-[1_0_0] mx-2"
+          className="border flex-[1_0_0] mx-2"
         >
           Select Image
         </Button>
@@ -57,7 +57,7 @@ export const ImageDialog: FunctionComponent<ImageDialogProps> = (props) => {
           type="button"
           variant={tab === Tabs.Upload ? ButtonVariant.Primary : undefined}
           onClick={handleUploadClick}
-          className="border-[1px] border-solid border-[#ccc] flex-[1_0_0] mx-2"
+          className="border flex-[1_0_0] mx-2"
         >
           Upload Image
         </Button>

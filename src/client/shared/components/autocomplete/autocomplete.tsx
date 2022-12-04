@@ -31,6 +31,7 @@ export interface AutocompleteProps extends TextInputProps {
 
   label?: string;
   prefix?: string | React.ReactElement;
+  placeholder?: string;
 
   children?:
     | React.ReactElement<AutocompleteOptionProps>[]
@@ -46,6 +47,7 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
       value: propsValue,
       prefix,
       suffix,
+      placeholder,
       freeSolo,
       onChange,
       onQuery,
@@ -163,6 +165,7 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
           <TextInput
             prefix={prefix}
             suffix={isLoading ? <Spinner /> : suffix}
+            placeholder={placeholder}
             value={query || ''}
             onChange={handleQuery}
             onKeyDown={handleKeyDown}

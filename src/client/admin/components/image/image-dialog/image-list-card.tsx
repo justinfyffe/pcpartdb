@@ -21,19 +21,19 @@ export const ImageListCard: FunctionComponent<ImageListCardProps> = (props) => {
 
   return (
     <div className="h-full" onClick={() => handleClick(image)}>
-      <Card className="h-full gap-2">
+      <Card className="h-full gap-2 justify-end">
         <Img
           src={image}
           alt={image.name}
-          className="self-center max-h-[250px] max-w-[calc(100%_+_32px)]"
+          className="self-center max-h-64 max-w-[calc(100%_+_32px)]"
         />
 
         <div className="text-center">{image.name}</div>
         {!hidePath && (
-          <TextInput value={image.path} className="m-[8px_0]" disabled />
+          <TextInput value={image.path} className="my-2" disabled />
         )}
 
-        <div className="text-[#aaa] flex text-[12px] justify-between m-[0_-12px_-12px]">
+        <div className="text-[#aaa] flex text-2xs justify-between m-[0_-12px_-12px]">
           <span>{formatFileSize(image.fileSize)}</span>
           <span>{formatDimensions(image.width, image.height)}</span>
         </div>

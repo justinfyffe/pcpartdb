@@ -4,11 +4,17 @@ import React, { cloneElement } from 'react';
 
 interface HighlightListProps {
   children?: React.ReactNode;
+
+  className?: string;
 }
 
 export const HighlightList = (props: HighlightListProps) => {
-  const { children } = props;
-  return <ul className="flex flex-col gap-3 lg:gap-4">{children}</ul>;
+  const { children, className } = props;
+  return (
+    <ul className={classNames('flex flex-col md:gap-3 gap-4', className)}>
+      {children}
+    </ul>
+  );
 };
 
 interface HighlightListItemProps {

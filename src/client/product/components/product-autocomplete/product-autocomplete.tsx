@@ -138,6 +138,7 @@ export const ProductAutocomplete = forwardRef<
       onChange={handleChange}
       className={classNames('flex flex-1 items-center', className)}
       suffix={value == null ? <ChevronDownIcon className="w-4" /> : null}
+      placeholder="Select GPU"
       ref={ref}
     >
       {results.map((result, i) => (
@@ -154,7 +155,7 @@ export const ProductAutocomplete = forwardRef<
             ) : (
               <></>
             )}
-            <span className="flex-1">{result.name}</span>
+            <span className="flex-1 text-sm">{result.name}</span>
             <div className="flex flex-col gap-1 items-end text-2xs">
               <div className="text-[#aaa]">2022</div>
               <div className="text-[#aaa]">$399.99</div>

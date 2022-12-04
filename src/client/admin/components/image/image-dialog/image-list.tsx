@@ -31,7 +31,7 @@ export const ImageList: FunctionComponent<ImageListProps> = (props) => {
     <div className="flex flex-wrap justify-center m-[0px_-8px]">
       {!loading &&
         images.map((image) => (
-          <div key={image.id} className="cursor-pointer m-2 w-[300px]">
+          <div key={image.id} className="cursor-pointer m-2 w-75">
             <ImageListCard
               image={image}
               hidePath={true}
