@@ -39,7 +39,7 @@ export const ImageInput: FunctionComponent<ImageInputProps> = (props) => {
   }, [onChange]);
 
   return (
-    <div className={classNames('border rounded block', className)}>
+    <div className={classNames('border-px rounded block', className)}>
       {value != null ? (
         <SelectedImageInput
           {...restOfProps}

@@ -69,7 +69,7 @@ export const ProductImages: FunctionComponent<ProductImagesProps> = (props) => {
             key={i}
             src={image}
             onClick={() => setSelected(i)}
-            className={selected === i ? 'border border-black' : ''}
+            className={selected === i ? 'border-px border-black' : ''}
           />
         ))}
       </div>

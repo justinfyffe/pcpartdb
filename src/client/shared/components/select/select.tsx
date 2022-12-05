@@ -126,7 +126,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
         </select>
 
         <div
-          className="pointer border m-0 p-3 rounded text-sm w-full shadow min-h-11.5"
+          className="pointer border-px m-0 p-3 rounded text-sm w-full shadow min-h-11.5"
           onClick={handleShowOptions}
         >
           {getSelectedText(options, selected) || placeholder}

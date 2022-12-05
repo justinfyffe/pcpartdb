@@ -425,7 +425,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
         </Alert>
       )}
 
-      <section className="border-b border-b-slate-300 mb-6">
+      <section className="border-b-px border-b-slate-300 mb-6">
         <Field>
           Import Data
           <div className="flex gap-4">

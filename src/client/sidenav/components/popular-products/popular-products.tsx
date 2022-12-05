@@ -32,7 +32,7 @@ const ProductListing: FunctionComponent<ProductListingProps> = () => {
   return (
     <a
       href="#"
-      className="flex items-center gap-3 px-2 py-3 border rounded text-sm"
+      className="flex items-center gap-3 px-2 py-3 border-px rounded text-sm"
     >
       <Img
         className="max-h-15 max-w-15 mx-auto"

@@ -53,7 +53,9 @@ export const FooterSectionTitle: FunctionComponent<FooterSectionTitleProps> = (
   const Element = props.as || 'header';
 
   return (
-    <Element className={classNames('border-b mb-3 text-sm', props.className)}>
+    <Element
+      className={classNames('border-b-px mb-3 text-sm', props.className)}
+    >
       {props.children}
     </Element>
   );

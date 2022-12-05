@@ -19,19 +19,46 @@ export const OverviewGpusPage = (_props: OverviewGpusPageProps) => {
         <Breadcrumb>GPUs</Breadcrumb>
       </Breadcrumbs>
 
-      <article className="flex flex-wrap gap-6 lg:gap-8 justify-center">
-        <section className="flex flex-wrap w-full items-center justify-between gap-3 lg:gap-4">
-          <h2>Compare GPU Specifications, Benchmarks, and Comparisons</h2>
+      <section className="flex flex-col gap-8 justify-center">
+        <section className={classNames('flex flex-col justify-center gap-4')}>
+          <h2 className="md:text-2xl text-3xl mb-0">
+            Compare GPU Specifications, Benchmarks, and Comparisons
+          </h2>
 
           <CompareProductsForm values={[null, null]} />
+
+          <section className="flex flex-col gap-1 text-xs">
+            <div className="flex gap-2">
+              Popular Comparisons:
+              <ul className="flex gap-3">
+                <li>
+                  <a href="#">NVIDIA RTX 3090 vs NVIDIA RTX 3080</a>,
+                </li>
+                <li>
+                  <a href="#">NVIDIA RTX 3080 vs NVIDIA RTX 3070</a>
+                </li>
+              </ul>
+            </div>
+            <div className="flex gap-2">
+              Popular GPUs:
+              <ul className="flex gap-3">
+                <li>
+                  <a href="#">NVIDIA RTX 3090</a>,
+                </li>
+                <li>
+                  <a href="#">NVIDIA RTX 3080</a>
+                </li>
+              </ul>
+            </div>
+          </section>
         </section>
 
         <section
           className={classNames(
-            'grid grid-cols-2 grid-rows-[auto_auto] gap-6 mb-8 w-full',
+            'grid grid-cols-2 grid-rows-[auto] gap-6 w-full',
           )}
         >
-          <Card>
+          <Card as="article">
             <h2
               className={classNames('font-medium mb-3 text-2xl text-slate-700')}
             >
@@ -63,7 +90,7 @@ export const OverviewGpusPage = (_props: OverviewGpusPageProps) => {
                 </div>
                 <div
                   className={classNames(
-                    'bg-[#3f51b5] border rounded flex items-center justify-center text-xl text-slate-100 w-20 h-full',
+                    'bg-[#3f51b5] border-px rounded flex items-center justify-center text-xl text-slate-100 w-20 h-full',
                   )}
                 >
                   100.0
@@ -90,7 +117,7 @@ export const OverviewGpusPage = (_props: OverviewGpusPageProps) => {
                 </div>
                 <div
                   className={classNames(
-                    'bg-[#3f51b5] border rounded flex items-center justify-center text-xl text-slate-100 w-20 h-full',
+                    'bg-[#3f51b5] border-px rounded flex items-center justify-center text-xl text-slate-100 w-20 h-full',
                   )}
                 >
                   93.34
@@ -117,7 +144,7 @@ export const OverviewGpusPage = (_props: OverviewGpusPageProps) => {
                 </div>
                 <div
                   className={classNames(
-                    'bg-[#3f51b5] border rounded flex items-center justify-center text-xl text-slate-100 w-20 h-full',
+                    'bg-[#3f51b5] border-px rounded flex items-center justify-center text-xl text-slate-100 w-20 h-full',
                   )}
                 >
                   92.23
@@ -144,7 +171,7 @@ export const OverviewGpusPage = (_props: OverviewGpusPageProps) => {
                 </div>
                 <div
                   className={classNames(
-                    'bg-[#3f51b5] border rounded flex items-center justify-center text-xl text-slate-100 w-20 h-full',
+                    'bg-[#3f51b5] border-px rounded flex items-center justify-center text-xl text-slate-100 w-20 h-full',
                   )}
                 >
                   82.23
@@ -171,7 +198,7 @@ export const OverviewGpusPage = (_props: OverviewGpusPageProps) => {
                 </div>
                 <div
                   className={classNames(
-                    'bg-[#3f51b5] border rounded flex items-center justify-center text-xl text-slate-100 w-20 h-full',
+                    'bg-[#3f51b5] border-px rounded flex items-center justify-center text-xl text-slate-100 w-20 h-full',
                   )}
                 >
                   81.23
@@ -189,7 +216,7 @@ export const OverviewGpusPage = (_props: OverviewGpusPageProps) => {
             </div>
           </Card>
 
-          <Card>
+          <Card as="article">
             <h2
               className={classNames('font-medium mb-3 text-2xl text-slate-700')}
             >
@@ -221,7 +248,7 @@ export const OverviewGpusPage = (_props: OverviewGpusPageProps) => {
                 </div>
                 <div
                   className={classNames(
-                    'bg-[#3f51b5] border rounded flex items-center justify-center text-xl text-slate-100 w-20 h-full',
+                    'bg-[#3f51b5] border-px rounded flex items-center justify-center text-xl text-slate-100 w-20 h-full',
                   )}
                 >
                   100.0
@@ -248,7 +275,7 @@ export const OverviewGpusPage = (_props: OverviewGpusPageProps) => {
                 </div>
                 <div
                   className={classNames(
-                    'bg-[#3f51b5] border rounded flex items-center justify-center text-xl text-slate-100 w-20 h-full',
+                    'bg-[#3f51b5] border-px rounded flex items-center justify-center text-xl text-slate-100 w-20 h-full',
                   )}
                 >
                   93.34
@@ -275,7 +302,7 @@ export const OverviewGpusPage = (_props: OverviewGpusPageProps) => {
                 </div>
                 <div
                   className={classNames(
-                    'bg-[#3f51b5] border rounded flex items-center justify-center text-xl text-slate-100 w-20 h-full',
+                    'bg-[#3f51b5] border-px rounded flex items-center justify-center text-xl text-slate-100 w-20 h-full',
                   )}
                 >
                   92.23
@@ -302,7 +329,7 @@ export const OverviewGpusPage = (_props: OverviewGpusPageProps) => {
                 </div>
                 <div
                   className={classNames(
-                    'bg-[#3f51b5] border rounded flex items-center justify-center text-xl text-slate-100 w-20 h-full',
+                    'bg-[#3f51b5] border-px rounded flex items-center justify-center text-xl text-slate-100 w-20 h-full',
                   )}
                 >
                   82.23
@@ -329,7 +356,7 @@ export const OverviewGpusPage = (_props: OverviewGpusPageProps) => {
                 </div>
                 <div
                   className={classNames(
-                    'bg-[#3f51b5] border rounded flex items-center justify-center text-xl text-slate-100 w-20 h-full',
+                    'bg-[#3f51b5] border-px rounded flex items-center justify-center text-xl text-slate-100 w-20 h-full',
                   )}
                 >
                   81.23
@@ -365,7 +392,7 @@ export const OverviewGpusPage = (_props: OverviewGpusPageProps) => {
             <FeedLink>Best Value GPUs</FeedLink>
           </FeedLinks>
         </Feed>
-      </article>
+      </section>
     </WebsiteLayout>
   );
 };

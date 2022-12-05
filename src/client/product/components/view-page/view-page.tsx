@@ -75,15 +75,15 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
           <Breadcrumb>{gpu.name}</Breadcrumb>
         </Breadcrumbs>
 
-        <div className="flex flex-wrap justify-center gap-6">
+        <div className="flex flex-wrap justify-center gap-8">
           <section className="flex flex-col w-full">
             <h1 className="md:text-2xl text-3xl">{gpu.name}</h1>
 
             <CompareProductsForm values={[gpu.id]} />
           </section>
 
-          <article className="flex-1 flex flex-col gap-6">
-            <section className="flex flex-wrap justify-start gap-6">
+          <article className="flex-1 flex flex-col gap-8">
+            <section className="flex flex-wrap justify-start gap-8">
               <ProductImages product={gpu} className="flex-1 min-w-80" />
 
               <HighlightList className="flex-1">

@@ -154,7 +154,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
         disabled={disabled}
         readOnly={readOnly}
         className={classNames(
-          'border m-0 p-3 rounded text-sm w-full shadow focus:outline-offset-2',
+          'border-px m-0 p-3 rounded text-sm w-full shadow focus:outline-offset-2',
           props.clearable ? 'pr-12' : '',
         )}
         style={{

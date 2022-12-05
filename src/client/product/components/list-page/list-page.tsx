@@ -44,9 +44,9 @@ export const ListGpusPage = (props: ListGpusPageProps) => {
         <Breadcrumb>All GPUS</Breadcrumb>
       </Breadcrumbs>
 
-      <section className="flex flex-col">
-        <section className={classNames('flex flex-col justify-center', 'mb-8')}>
-          <h2 className="text-2xl">
+      <section className="flex flex-col gap-8 justify-center">
+        <section className={classNames('flex flex-col justify-center gap-4')}>
+          <h2 className="md:text-2xl text-3xl mb-0">
             Compare GPU Specifications, Benchmarks, and Comparisons
           </h2>
 

@@ -29,7 +29,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
       <textarea
         value={value || ''}
         className={classNames(
-          'border m-0 p-3 rounded text-sm w-full shadow',
+          'border-px m-0 p-3 rounded text-sm w-full shadow',
           className,
         )}
         onChange={handleChange}

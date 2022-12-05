@@ -51,7 +51,7 @@ export const ProductFeedItem: FunctionComponent<ProductFeedItemProps> = (
             'flex gap-0.5',
             'm-[-16px_-16px_0]',
             'h-40 w-[calc(100%_+_32px)] max-w-[calc(100%_+_48px)]',
-            'border-b rounded-t',
+            'border-b-px rounded-t',
             'overflow-hidden',
           )}
         >
@@ -94,7 +94,7 @@ export const ProductFeedItem: FunctionComponent<ProductFeedItemProps> = (
                   'bg-[rgba(51,65,85,1)]',
                   'font-normal text-2xs text-[#ececec]',
                   'px-1.5 py-0.5',
-                  'border-b border-r border-gray-50 rounded-br rounded-tl',
+                  'border-b-px border-r-px border-gray-50 rounded-br rounded-tl',
                 )}
               >
                 {price}
@@ -106,7 +106,7 @@ export const ProductFeedItem: FunctionComponent<ProductFeedItemProps> = (
                 'bg-[rgba(51,65,85,1)]',
                 'font-normal text-2xs text-[#ececec]',
                 'px-1.5 py-0.5',
-                'border-b border-l border-gray-50 rounded-bl rounded-tr',
+                'border-b-px border-l-px border-gray-50 rounded-bl rounded-tr',
               )}
             >
               Best Performance
