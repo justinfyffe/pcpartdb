@@ -232,7 +232,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
               </Table>
             </section>
 
-            <section>
+            <section className="flex flex-col gap-6">
               <h2>Technical Specs</h2>
 
               <section>

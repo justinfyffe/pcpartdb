@@ -71,9 +71,9 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
           </section>
 
           <article className="flex-1 flex flex-col gap-8">
-            <section className="flex md:flex-wrap gap-8 justify-between">
+            <section className="flex md:flex-wrap gap-8 justify-evenly">
               <div className="flex-1 flex flex-col gap-4 min-w-52.5 max-w-87.5">
-                <div className="flex items-center justify-between">
+                <div className="flex gap-2 items-center justify-between">
                   <h2 className="md:text-2xl text-3xl mb-0">{gpu1.name}</h2>
 
                   <Button
@@ -89,7 +89,7 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
               </div>
 
               <div className="flex-1 flex flex-col gap-4 min-w-52.5 max-w-87.5">
-                <div className="flex items-center justify-between">
+                <div className="flex gap-2 items-center justify-between">
                   <h2 className="md:text-2xl text-3xl mb-0">{gpu2.name}</h2>
 
                   <Button

@@ -32,7 +32,7 @@ export const Table: FunctionComponent<TableProps> = (props) => {
             <table
               {...htmlProps}
               className={classNames(
-                'border-collapse mb-4 w-full max-w-full',
+                'border-collapse w-full max-w-full',
                 props.className,
               )}
             >
@@ -44,7 +44,7 @@ export const Table: FunctionComponent<TableProps> = (props) => {
           <table
             {...htmlProps}
             className={classNames(
-              'border-collapse mb-4 w-full max-w-full',
+              'border-collapse w-full max-w-full',
               props.className,
             )}
           >
