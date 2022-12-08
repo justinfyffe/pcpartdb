@@ -63,20 +63,19 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
           <Breadcrumb>{pageTitle}</Breadcrumb>
         </Breadcrumbs>
 
-        <article className="flex flex-wrap gap-6 lg:gap-8 justify-center">
-          <section className="flex flex-wrap w-full items-center justify-between gap-3 lg:gap-4">
+        <div className="flex flex-wrap gap-8 justify-center">
+          <section className="flex flex-wrap w-full">
             <h1 className="font-semibold">{pageTitle}</h1>
 
             <CompareProductsForm values={[gpu1.id, gpu2.id]} />
           </section>
 
-          <section className="flex-1 flex flex-col gap-6 max-w-full">
-            <section className="flex flex-wrap gap-4 md:flex-nowrap justify-between">
-              <div className="flex flex-col gap-3 flex-1 min-w-52.5 max-w-87.5">
+          <article className="flex-1 flex flex-col gap-8">
+            <section className="flex md:flex-wrap gap-8 justify-between">
+              <div className="flex-1 flex flex-col gap-4 min-w-52.5 max-w-87.5">
                 <div className="flex items-center justify-between">
-                  <h2 className="self-start text-2xl font-medium">
-                    {gpu1.name}
-                  </h2>
+                  <h2 className="md:text-2xl text-3xl mb-0">{gpu1.name}</h2>
+
                   <Button
                     target="_blank"
                     rel="noreferrer noopener"
@@ -89,11 +88,10 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
                 <ProductImages product={gpu1} />
               </div>
 
-              <div className="flex flex-col gap-3 flex-1 min-w-52.5 max-w-87.5">
+              <div className="flex-1 flex flex-col gap-4 min-w-52.5 max-w-87.5">
                 <div className="flex items-center justify-between">
-                  <h2 className="self-start text-2xl font-medium">
-                    {gpu2.name}
-                  </h2>
+                  <h2 className="md:text-2xl text-3xl mb-0">{gpu2.name}</h2>
+
                   <Button
                     target="_blank"
                     rel="noreferrer noopener"
@@ -113,7 +111,7 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
 
             <section className="flex flex-col gap-6">
               <section>
-                <h2 className="mb-4">General Info</h2>
+                <h2>General Info</h2>
 
                 <p className={classNames('text-content-dimmed')}>
                   Performance rating, market segment, release date, and launch
@@ -211,7 +209,7 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
               </section>
 
               <section>
-                <h2 className="mb-4">Reviews</h2>
+                <h2>Reviews</h2>
 
                 <p className={classNames('text-content-dimmed')}>
                   What others are saying about {gpu1.name} and {gpu2.name}.
@@ -236,10 +234,10 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
               </section>
 
               <section className="flex flex-col gap-6">
-                <h2 className="mb-4">Technical Specs</h2>
+                <h2>Technical Specs</h2>
 
                 <section>
-                  <h3 className="mb-4">Processor</h3>
+                  <h3>Processor</h3>
 
                   <p className={classNames('text-content-dimmed')}>
                     Processor chip details for {gpu1.name} and {gpu2.name}
@@ -263,7 +261,7 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
                 </section>
 
                 <section>
-                  <h3 className="mb-4">Memory</h3>
+                  <h3>Memory</h3>
 
                   <p className={classNames('text-content-dimmed')}>
                     Memory size, bandwidth, and clock speeds for {gpu1.name} and{' '}
@@ -289,7 +287,7 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
                 </section>
 
                 <section>
-                  <h3 className="mb-4">Board Compatibility &amp; Dimensions</h3>
+                  <h3>Board Compatibility &amp; Dimensions</h3>
 
                   <p className={classNames('text-content-dimmed')}>
                     Dimensions, bus interface, power consumption, and output
@@ -320,7 +318,7 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
                 </section>
 
                 <section>
-                  <h3 className="mb-4">Cores &amp; Clock Speeds</h3>
+                  <h3>Cores &amp; Clock Speeds</h3>
 
                   <p className={classNames('text-content-dimmed')}>
                     Cores, clock speed, and cache for {gpu1.name} and{' '}
@@ -350,7 +348,7 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
                 </section>
 
                 <section>
-                  <h3 className="mb-4">Theoretical Performance</h3>
+                  <h3>Theoretical Performance</h3>
 
                   <p className={classNames('text-content-dimmed')}>
                     Computational performance like pixel fill rate, texture fill
@@ -376,7 +374,7 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
                 </section>
 
                 <section>
-                  <h3 className="mb-4">API Support</h3>
+                  <h3>API Support</h3>
 
                   <Table responsive>
                     <THead>
@@ -399,7 +397,7 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
               </section>
 
               <section>
-                <h2 className="mb-4">Benchmarks</h2>
+                <h2>Benchmarks</h2>
 
                 <p className={classNames('text-content-dimmed')}>
                   Performance and rating metrics for {gpu1.name} and {gpu2.name}
@@ -423,13 +421,13 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
                 </Table>
               </section>
             </section>
-          </section>
+          </article>
 
           <Sidenav>
             <SidenavPopularComparisons />
             <SidenavPopularProducts />
           </Sidenav>
-        </article>
+        </div>
       </WebsiteLayout>
     </ProductsContext.Provider>
   );
