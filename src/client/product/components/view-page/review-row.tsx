@@ -23,8 +23,8 @@ export const ReviewRow = (props: ReviewRowProps) => {
 
   return (
     <Tr>
-      <Td className="border-r-0 text-left">{LABELS[key]}</Td>
-      <Td className="border-l-0 text-right">
+      <Td className="border-r-0 text-left w-[50%]">{LABELS[key]}</Td>
+      <Td className="border-l-0 text-left w-[50%]">
         {review?.source != null ? (
           <a href={review.source}>{formatReview(review)}</a>
         ) : (
