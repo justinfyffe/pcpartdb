@@ -1,3 +1,4 @@
+import { useProductCache } from '@client/shared/cache';
 import {
   Breadcrumb,
   Breadcrumbs,
@@ -27,6 +28,8 @@ export interface ListGpusPageProps {
 
 export const ListGpusPage = (props: ListGpusPageProps) => {
   const { gpus } = props;
+  useProductCache(gpus);
+
   const router = useRouter();
 
   const handleGpuRowClick = useCallback(

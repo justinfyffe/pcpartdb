@@ -20,11 +20,6 @@ export const listImages = staffController(async (ctx: ApiContext) => {
   return await imageService.list(ctx);
 });
 
-export const getImage = staffController(async (ctx: ApiContext) => {
-  const id = Number(ctx.req.query['id'] as string);
-  return await imageService.get(id, ctx);
-});
-
 export const createImage = staffController(async (ctx: ApiContext) => {
   await uploads.uploadFile('file', ctx);
 

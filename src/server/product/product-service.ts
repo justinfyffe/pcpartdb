@@ -2,19 +2,20 @@ import Joi from '@hapi/joi';
 import { badRequestError, notFoundError } from '@server/shared/api/status';
 import { Context } from '@server/shared/context';
 import { validate } from '@server/shared/types/validate';
-import { benchmarksValidator, compareBenchmarks } from '@shared/benchmark';
+import { benchmarksValidator } from '@shared/benchmark';
 import {
   ListProductsRequest,
+  Product,
   ProductRequest,
-  ProductsOrderBy,
   ProductType,
 } from '@shared/product';
 import { productImagesValidator } from '@shared/product-image';
 import { ProductMetas, productMetasValidator } from '@shared/product-meta';
 import { reviewsValidator } from '@shared/review';
-import { compareSpecs, Specs, specsValidator } from '@shared/spec';
+import { Specs, specsValidator } from '@shared/spec';
 import { addPerformanceBenchmarks } from './benchmark-utils';
 import { productRepository } from './product-repository';
+import { filterProducts, limitProducts, sortProducts } from './product-utils';
 
 const createProductValidator = Joi.object({
   slug: Joi.string().required(),
@@ -47,74 +48,9 @@ export class ProductService {
     // Fetch all products
     let products = await productRepository.list(type, ctx);
 
-    // Apply filters
-    if (filter != null) {
-      products = products.filter((product) => {
-        let result = true;
-        if (filter.company != null) {
-          result =
-            result &&
-            filter.company.toLowerCase() ===
-              product.specs?.company?.value?.toLowerCase();
-        }
-        return result;
-      });
-    }
-
-    // Apply ordering
-    if (orderBy === ProductsOrderBy.Id) {
-      products.sort((p1, p2) => p1.id - p2.id);
-    } else if (orderBy === ProductsOrderBy.Name) {
-      products.sort((p1, p2) => p1.name.localeCompare(p2.name));
-    } else if (orderBy === ProductsOrderBy.ReleaseDate) {
-      // DESC
-      products.sort((p1, p2) =>
-        compareSpecs(p2.specs?.releaseDate, p1.specs?.releaseDate),
-      );
-    } else if (orderBy === ProductsOrderBy.PerformanceRating) {
-      // DESC
-      products.sort((p1, p2) =>
-        compareBenchmarks(
-          p2.benchmarks?.performanceScore,
-          p1.benchmarks?.performanceScore,
-        ),
-      );
-    } else if (orderBy === ProductsOrderBy.ValueRating) {
-      // DESC
-      products.sort((p1, p2) =>
-        compareBenchmarks(p2.benchmarks?.valueScore, p1.benchmarks?.valueScore),
-      );
-    } else {
-      // Default sort - performance
-      // DESC
-      products.sort((p1, p2) =>
-        compareBenchmarks(
-          p2.benchmarks?.performanceScore,
-          p1.benchmarks?.performanceScore,
-        ),
-      );
-    }
-
-    // Apply Limit
-    if (limit != null) {
-      products.splice(limit - 1);
-    }
-
-    const ids = products.map((product) => product.id);
-    const performanceRanks = await productRepository.getPerformanceRanks(
-      ids,
-      type,
-      ctx,
-    );
-    const valueRanks = await productRepository.getValueRanks(ids, type, ctx);
-
-    products.forEach((product, i) => {
-      product.metas = {
-        ...product.metas,
-        performanceRank: { value: performanceRanks[i] },
-        valueRank: { value: valueRanks[i] },
-      };
-    });
+    products = filterProducts(products, filter);
+    products = sortProducts(products, orderBy);
+    products = limitProducts(products, limit);
 
     return products;
   }
@@ -128,30 +64,13 @@ export class ProductService {
       throw notFoundError(null);
     }
 
-    const performanceRank = await productRepository.getPerformanceRank(
-      product.id,
-      product.type,
-      ctx,
-    );
-    const valueRank = await productRepository.getValueRank(
-      product.id,
-      product.type,
-      ctx,
-    );
-
-    product.metas = {
-      ...product.metas,
-      performanceRank: { value: performanceRank },
-      valueRank: { value: valueRank },
-    };
-
     return product;
   }
 
   async getComparison(idsOrSlugs: string, ctx: Context) {
     const parts = idsOrSlugs.split('--vs--');
 
-    if (parts.length === 0) {
+    if (parts.length !== 2) {
       throw badRequestError(null);
     }
 
@@ -220,6 +139,35 @@ export class ProductService {
 
   async autocompleteMeta(key: keyof ProductMetas, query: string, ctx: Context) {
     return await productRepository.findSimilarMetaValue(key, query, ctx);
+  }
+
+  async populateRanks(products: Product | Product[], ctx: Context) {
+    const productsArr = Array.isArray(products) ? products : [products];
+
+    if (productsArr.length === 0) {
+      return;
+    }
+
+    const type = productsArr[0].type;
+    if (productsArr.some((product) => product.type !== type)) {
+      throw new Error('Products must be of the same type when applying ranks');
+    }
+
+    const ids = productsArr.map((product) => product.id);
+    const performanceRanks = await productRepository.getPerformanceRanks(
+      ids,
+      type,
+      ctx,
+    );
+    const valueRanks = await productRepository.getValueRanks(ids, type, ctx);
+
+    productsArr.forEach((product, i) => {
+      product.metas = {
+        ...product.metas,
+        performanceRank: { value: performanceRanks[i] },
+        valueRank: { value: valueRanks[i] },
+      };
+    });
   }
 }
 

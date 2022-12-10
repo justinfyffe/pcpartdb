@@ -30,21 +30,6 @@ export const autocompleteProductMetas = staffController(
   },
 );
 
-export const listProducts = controller(async (ctx: ApiContext) => {
-  const type = ctx.req.query['type'] as ProductType;
-  return await productService.list({ type }, ctx);
-});
-
-export const getProduct = controller(async (ctx: ApiContext) => {
-  const idOrSlug = ctx.req.query['id'] as string;
-  return await productService.get(idOrSlug, ctx);
-});
-
-export const getProductComparison = controller(async (ctx: ApiContext) => {
-  const idsOrSlugs = ctx.req.query['id'] as string;
-  return await productService.getComparison(idsOrSlugs, ctx);
-});
-
 export const createProduct = staffController(async (ctx: ApiContext) => {
   const body = ctx.req.body as ProductRequest;
   return await productService.create(body, ctx);

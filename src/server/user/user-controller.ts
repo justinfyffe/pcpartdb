@@ -11,15 +11,6 @@ import type {
 } from '@shared/user';
 import { userService } from './user-service';
 
-export const listUsers = staffController(async (ctx: ApiContext) => {
-  return await userService.list(ctx);
-});
-
-export const getUser = staffController(async (ctx: ApiContext) => {
-  const id = Number(ctx.req.query['id'] as string);
-  return await userService.get(id, ctx);
-});
-
 export const createUser = staffController(async (ctx: ApiContext) => {
   const body = ctx.req.body;
   return await userService.create(body, ctx);

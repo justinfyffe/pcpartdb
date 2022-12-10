@@ -1,9 +1,8 @@
+import { useImageCache, useProductCache } from '@client/shared/cache';
 import { Image } from '@shared/image';
 import { Product } from '@shared/product';
 import Head from 'next/head';
 import React, { FunctionComponent } from 'react';
-import { ImageCache } from './image-cache';
-import { ProductCache } from './product-cache';
 
 interface CacheState {
   images: Record<number, Image>;
@@ -11,19 +10,22 @@ interface CacheState {
 }
 
 export const CacheHydration: FunctionComponent = () => {
+  const productCache = useProductCache();
+  const imageCache = useImageCache();
+
   if (typeof document !== 'undefined') {
     const el = document.getElementById('cache');
     if (el != null) {
       const state: CacheState = JSON.parse(el.textContent);
-      ImageCache.hydrate(state.images);
-      ProductCache.hydrate(state.products);
+      imageCache.hydrate(state.images);
+      productCache.hydrate(state.products);
     }
 
     return <React.Fragment />;
   } else {
     const state: CacheState = {
-      images: ImageCache.toObject(),
-      products: ProductCache.toObject(),
+      images: imageCache.toObject(),
+      products: productCache.toObject(),
     };
     return (
       <Head>

@@ -1,8 +1,4 @@
-import {
-  checkAuthentication,
-  login,
-  logout,
-} from '@server/auth/access-token-controller';
+import { login, logout } from '@server/auth/access-token-controller';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -11,6 +7,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   } else if (req.method === 'DELETE') {
     return logout(req, res);
   } else {
-    return checkAuthentication(req, res);
+    res.status(404);
+    return null;
   }
 }

@@ -1,4 +1,4 @@
-import { ProductCache } from '@client/shared/cache';
+import { useProductCache } from '@client/shared/cache';
 import {
   Autocomplete,
   AutocompleteOption,
@@ -39,13 +39,15 @@ export const ProductAutocomplete = forwardRef<
     className,
   } = props;
 
+  const productCache = useProductCache();
+
   const [results, setResults] = useState<Product[]>([]);
   const [product, setProduct] = useState(() => {
     if (value == null) {
       return null;
     }
 
-    return ProductCache.get(value);
+    return productCache.get(value);
   });
 
   useEffect(() => {
@@ -54,15 +56,14 @@ export const ProductAutocomplete = forwardRef<
         return;
       }
 
-      const result =
-        ProductCache.get(value) || (await productService.get(value));
+      const result = productCache.get(value);
       setProduct(result);
     }
 
     if (value != null) {
       fetchProduct();
     }
-  }, [product, value]);
+  }, [productCache, product, value]);
 
   const handleQuery = useCallback(
     async (query: string) => {
@@ -87,12 +88,11 @@ export const ProductAutocomplete = forwardRef<
       }
 
       const productId = Number(value);
-      const selectedProduct =
-        ProductCache.get(productId) || (await productService.get(productId));
+      const selectedProduct = productCache.get(productId);
       setProduct(selectedProduct);
       onChange?.(productId);
     },
-    [onChange],
+    [productCache, onChange],
   );
 
   const prefixImage = useMemo(() => {

@@ -1,3 +1,4 @@
+import { useProductCache } from '@client/shared/cache';
 import { Breadcrumb, Breadcrumbs, Card } from '@client/shared/components';
 import { WebsiteLayout } from '@client/shared/layouts';
 import { classNames } from '@client/shared/ui';
@@ -11,7 +12,10 @@ export interface OverviewGpusPageProps {
   gpusByValue: Product[];
 }
 
-export const OverviewGpusPage = (_props: OverviewGpusPageProps) => {
+export const OverviewGpusPage = (props: OverviewGpusPageProps) => {
+  const { gpusByPerformance, gpusByValue } = props;
+  useProductCache(gpusByPerformance, gpusByValue);
+
   return (
     <WebsiteLayout>
       <Breadcrumbs className="mb-4">
@@ -55,21 +59,21 @@ export const OverviewGpusPage = (_props: OverviewGpusPageProps) => {
 
         <section
           className={classNames(
-            'grid grid-cols-2 grid-rows-[auto] gap-6 w-full',
+            'grid grid-cols-2 grid-rows-[auto] gap-8 w-full',
           )}
         >
-          <Card as="article">
+          <Card as="article" className="gap-0">
             <h2
-              className={classNames('font-medium mb-3 text-2xl text-slate-700')}
+              className={classNames('font-medium text-2xl text-slate-700 mb-0')}
             >
               Best Gaming GPUs by Performance
             </h2>
 
-            <p className={classNames('text-gray-400 mb-4')}>
+            <p className={classNames('text-gray-400')}>
               Sorted by highest performance benchmarks
             </p>
 
-            <ul className={classNames('flex flex-col gap-6 mb-4')}>
+            <ul className={classNames('flex flex-col gap-4 mb-4')}>
               <li
                 className={classNames(
                   'bg-slate-200 flex items-center justify-center px-4 py-2 rounded shadow',
@@ -216,18 +220,18 @@ export const OverviewGpusPage = (_props: OverviewGpusPageProps) => {
             </div>
           </Card>
 
-          <Card as="article">
+          <Card as="article" className="gap-0">
             <h2
-              className={classNames('font-medium mb-3 text-2xl text-slate-700')}
+              className={classNames('font-medium text-2xl text-slate-700 mb-0')}
             >
               Best Gaming GPUs by Value
             </h2>
 
-            <p className={classNames('text-gray-400 mb-4')}>
+            <p className={classNames('text-gray-400')}>
               Sorted by performance benchmark per dollar
             </p>
 
-            <ul className={classNames('flex flex-col gap-6 mb-4')}>
+            <ul className={classNames('flex flex-col gap-4 mb-4')}>
               <li
                 className={classNames(
                   'bg-slate-200 flex items-center justify-center px-4 py-2 rounded shadow',

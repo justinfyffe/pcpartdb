@@ -15,26 +15,6 @@ const PATH = 'products';
 export class ProductService {
   constructor(private api: ApiClient) {}
 
-  async list(type: ProductType) {
-    const products = await this.api.get<Product[]>(PATH, { params: { type } });
-    ProductCache.save(products);
-    return products;
-  }
-
-  async get(idOrSlug: number | string) {
-    const product = await this.api.get<Product>(`${PATH}/${idOrSlug}`);
-    ProductCache.save(product);
-    return product;
-  }
-
-  async getComparison(idsOrSlugs: number | string) {
-    const products = await this.api.get<Product[]>(
-      `${PATH}/comparison/${idsOrSlugs}`,
-    );
-    ProductCache.save(products);
-    return products;
-  }
-
   async create(data: ProductRequest) {
     const product = await this.api.post<Product>(PATH, data);
     ProductCache.save(product);

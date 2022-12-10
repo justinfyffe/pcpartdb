@@ -18,6 +18,7 @@ export async function getServerSideProps(ctx: NextPageContext) {
         { trx },
       ),
     );
+    productService.populateRanks(gpus, { trx });
 
     const pageProps: ListGpusPageProps = {
       gpus: JSON.parse(JSON.stringify(gpus)),

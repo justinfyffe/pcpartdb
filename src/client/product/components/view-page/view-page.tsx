@@ -1,3 +1,4 @@
+import { useProductCache } from '@client/shared/cache';
 import {
   Breadcrumb,
   Breadcrumbs,
@@ -48,6 +49,7 @@ export interface ViewGpuPageProps {
 
 export const ViewGpuPage = (props: ViewGpuPageProps) => {
   const { gpu } = props;
+  useProductCache(gpu);
 
   const context = useMemo(() => createProductContextState(gpu), [gpu]);
   const specs = context.specs;

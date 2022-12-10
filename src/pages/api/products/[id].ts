@@ -1,6 +1,5 @@
 import {
   deleteProduct,
-  getProduct,
   updateProduct,
 } from '@server/product/product-controller';
 import { NextApiRequest, NextApiResponse } from 'next';
@@ -11,6 +10,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   } else if (req.method === 'DELETE') {
     return deleteProduct(req, res);
   } else {
-    return getProduct(req, res);
+    res.status(404);
+    return null;
   }
 }

@@ -8,18 +8,21 @@ import {
   FeedLinks,
   ProductFeedItem,
 } from '@client/product';
+import { useProductCache } from '@client/shared/cache';
 import { WebsiteLayout } from '@client/shared/layouts';
 import { classNames } from '@client/shared/ui';
 import { Product } from '@shared/product';
 import React from 'react';
 
 export interface HomePageProps {
+  nvidiaVsAmdGpus: [Product, Product][];
   nvidiaGpus: Product[];
   amdGpus: Product[];
 }
 
 export const HomePage = (props: HomePageProps) => {
   const { nvidiaGpus, amdGpus } = props;
+  useProductCache(nvidiaGpus, amdGpus);
 
   return (
     <WebsiteLayout>

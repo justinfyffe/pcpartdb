@@ -11,14 +11,6 @@ const PATH = 'users';
 export class UserService {
   constructor(private api: ApiClient) {}
 
-  async list() {
-    return await this.api.get<User[]>(PATH);
-  }
-
-  async get(id: number) {
-    return await this.api.get<User>(`${PATH}/${id}`);
-  }
-
   async create(data: UserRequest) {
     return await this.api.post<User>(PATH, data);
   }

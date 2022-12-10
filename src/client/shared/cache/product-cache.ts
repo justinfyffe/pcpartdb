@@ -1,6 +1,7 @@
+import { CacheContext, ImageCache } from '@client/shared/cache';
 import { Product } from '@shared/product';
 import { ProductImages } from '@shared/product-image';
-import { ImageCache } from './image-cache';
+import { useContext } from 'react';
 
 class ProductCacheImpl {
   private cache = new Map<number, Product>();
@@ -9,17 +10,18 @@ class ProductCacheImpl {
     return this.cache.get(id) ?? null;
   }
 
-  save(products: Product | Product[]) {
-    if (Array.isArray(products)) {
-      products.forEach((product) => {
-        this.cache.set(product.id, product);
-        this.saveImages(product.images || null);
-      });
-      return;
-    }
-
-    this.cache.set(products.id, products);
-    this.saveImages(products.images);
+  save(...productsToSave: (Product | Product[])[]) {
+    productsToSave.forEach((products) => {
+      if (Array.isArray(products)) {
+        products.forEach((product) => {
+          this.cache.set(product.id, product);
+          this.saveImages(product.images || null);
+        });
+      } else {
+        this.cache.set(products.id, products);
+        this.saveImages(products.images);
+      }
+    });
   }
 
   private saveImages(productImages: ProductImages) {
@@ -28,9 +30,7 @@ class ProductCacheImpl {
       productImages?.thumbnail,
       ...(productImages?.details ?? []),
     ]
-      .filter(
-        (productImage) => productImage != null && productImage.image != null,
-      )
+      .filter((productImage) => productImage?.image != null)
       .map((productImage) => productImage.image!);
 
     ImageCache.save(images);
@@ -50,3 +50,12 @@ class ProductCacheImpl {
 }
 
 export const ProductCache = new ProductCacheImpl();
+
+export function useProductCache(...products: (Product | Product[])[]) {
+  const { productCache } = useContext(CacheContext);
+  if (products.length > 0) {
+    productCache.save(...products);
+  }
+
+  return productCache;
+}

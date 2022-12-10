@@ -1,3 +1,4 @@
+import { useProductCache } from '@client/shared/cache';
 import {
   Breadcrumb,
   Breadcrumbs,
@@ -38,7 +39,7 @@ export interface CompareGpuPageProps {
 
 export const CompareGpuPage = (props: CompareGpuPageProps) => {
   const { gpus } = props;
-  console.log(gpus);
+  useProductCache(gpus);
 
   const gpu1 = gpus[0];
   const gpu2 = gpus[1];

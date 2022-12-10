@@ -13,12 +13,6 @@ export class ImageService {
     return images;
   }
 
-  async get(id: number) {
-    const image = await this.api.get<Image>(`${PATH}/${id}`);
-    ImageCache.save(image);
-    return image;
-  }
-
   async create(formData: ImageRequest) {
     const data = new FormData();
     data.append('formData', JSON.stringify(formData));

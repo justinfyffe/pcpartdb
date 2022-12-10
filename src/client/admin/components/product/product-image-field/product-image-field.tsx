@@ -1,4 +1,4 @@
-import { ImageCache } from '@client/shared/cache';
+import { useImageCache } from '@client/shared/cache';
 import { Image } from '@shared/image';
 import { ProductImage } from '@shared/product-image';
 import React, { FunctionComponent, useCallback, useState } from 'react';
@@ -16,13 +16,14 @@ export const ProductImageField: FunctionComponent<ProductImageFieldProps> = (
   props,
 ) => {
   const { value, onChange, className } = props;
+  const imageCache = useImageCache();
 
   const [image, setImage] = useState<Image>(() => {
     if (value == null) {
       return null;
     }
 
-    return value.image ?? ImageCache.get(value.imageId);
+    return value.image ?? imageCache.get(value.imageId);
   });
 
   const handleChange = useCallback(

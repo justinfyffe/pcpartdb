@@ -17,6 +17,10 @@ export enum ProductsOrderBy {
   ReleaseDate = 'release_date',
 }
 
+export interface ProductsFilter {
+  company?: string;
+}
+
 export interface Product {
   id?: number;
   slug: string;
@@ -59,9 +63,7 @@ export interface ImportProductResults {
 export interface ListProductsRequest {
   type: ProductType;
 
-  filter?: {
-    company?: string;
-  };
+  filter?: ProductsFilter;
 
   orderBy?: ProductsOrderBy;
   limit?: number;
