@@ -9,6 +9,7 @@ interface FeedLinksProps {
 
 interface FeedLinkProps {
   className?: string;
+  href?: string;
 
   children?: React.ReactNode;
 }
@@ -27,8 +28,9 @@ export const FeedLinks: FunctionComponent<FeedLinksProps> = (props) => {
 };
 
 export const FeedLink: FunctionComponent<FeedLinkProps> = (props) => {
+  const { href } = props;
   return (
-    <a href="#" className={classNames('text-sm', props.className)}>
+    <a href={href} className={classNames('text-sm', props.className)}>
       {props.children}
     </a>
   );
