@@ -8,6 +8,7 @@ export async function getServerSideProps(ctx: NextPageContext) {
   return transaction(async (trx) => {
     const slug = ctx.query.slug as string;
     const gpu = await serializeAsync(productService.get(slug, { trx }));
+    await productService.populateRanks(gpu, { trx });
 
     const pageProps: ViewGpuPageProps = {
       gpu: JSON.parse(JSON.stringify(gpu)),

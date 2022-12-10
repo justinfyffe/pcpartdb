@@ -10,6 +10,7 @@ export async function getServerSideProps(ctx: NextPageContext) {
     const gpus = await serializeAsync(
       productService.getComparison(slug, { trx }),
     );
+    await productService.populateRanks(gpus, { trx });
 
     const pageProps: CompareGpuPageProps = {
       gpus: JSON.parse(JSON.stringify(gpus)),

@@ -34,6 +34,14 @@ export async function getServerSideProps(_ctx: NextPageContext) {
     const bestValueAmdGpu =
       sortProducts(amdGpus, ProductsOrderBy.ValueRating)[0] ?? null;
 
+    const nvidiaVsAmdGpus = [];
+    if (bestPerformingNvidiaGpu != null && bestPerformingAmdGpu != null) {
+      nvidiaVsAmdGpus.push([bestPerformingNvidiaGpu, bestPerformingAmdGpu]);
+    }
+    if (bestValueNvidiaGpu != null && bestValueAmdGpu != null) {
+      nvidiaVsAmdGpus.push([bestValueNvidiaGpu, bestValueAmdGpu]);
+    }
+
     const nvidia = await serializeAsync(
       productService.list(
         { type: ProductType.GPU, filter: { company: 'nvidia' }, limit: 3 },
@@ -49,7 +57,7 @@ export async function getServerSideProps(_ctx: NextPageContext) {
     );
 
     const pageProps: HomePageProps = {
-      nvidiaVsAmdGpus: [],
+      nvidiaVsAmdGpus: JSON.parse(JSON.stringify(nvidiaVsAmdGpus)),
       nvidiaGpus: JSON.parse(JSON.stringify(nvidia)),
       amdGpus: JSON.parse(JSON.stringify(amd)),
     };

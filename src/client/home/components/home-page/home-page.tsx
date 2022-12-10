@@ -12,7 +12,7 @@ import { useProductCache } from '@client/shared/cache';
 import { WebsiteLayout } from '@client/shared/layouts';
 import { classNames } from '@client/shared/ui';
 import { Product } from '@shared/product';
-import React from 'react';
+import React, { useMemo } from 'react';
 
 export interface HomePageProps {
   nvidiaVsAmdGpus: [Product, Product][];
@@ -21,8 +21,12 @@ export interface HomePageProps {
 }
 
 export const HomePage = (props: HomePageProps) => {
-  const { nvidiaGpus, amdGpus } = props;
-  useProductCache(nvidiaGpus, amdGpus);
+  const { nvidiaVsAmdGpus, nvidiaGpus, amdGpus } = props;
+  const comparisonGpus = useMemo(
+    () => nvidiaVsAmdGpus.flat(),
+    [nvidiaVsAmdGpus],
+  );
+  useProductCache(comparisonGpus, nvidiaGpus, amdGpus);
 
   return (
     <WebsiteLayout>
@@ -64,9 +68,9 @@ export const HomePage = (props: HomePageProps) => {
           <h2>NVIDIA vs AMD GPUs</h2>
 
           <FeedItems>
-            <ComparisonFeedItem products={[nvidiaGpus[0], nvidiaGpus[1]]} />
-            <ComparisonFeedItem products={[nvidiaGpus[0], nvidiaGpus[1]]} />
-            <ComparisonFeedItem products={[nvidiaGpus[0], nvidiaGpus[1]]} />
+            {nvidiaVsAmdGpus.map(([nvidiaGpu, amdGpu], i) => (
+              <ComparisonFeedItem key={i} products={[nvidiaGpu, amdGpu]} />
+            ))}
           </FeedItems>
 
           <FeedLinks>

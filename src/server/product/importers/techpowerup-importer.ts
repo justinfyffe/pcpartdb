@@ -4,6 +4,7 @@ import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { format, parse } from 'date-fns';
 
+// TODO: swap - label -> key
 const SPECS_MAP: Partial<Record<SpecKey, string>> = {
   architecture: 'Architecture',
   busInterface: 'Bus Interface',
@@ -30,7 +31,7 @@ const SPECS_MAP: Partial<Record<SpecKey, string>> = {
   powerConnectors: 'Power Connectors',
   processSize: 'Process Size',
   rayTracingCores: 'RT Cores',
-  releaseDate: 'Availability',
+  releaseDate: 'Availability', // Can also be Release Date
   renderOutputUnits: 'ROPs',
   shaderModelVersion: 'Shader Model',
   shaderUnitsCudaCores: 'Shading Units',
@@ -101,12 +102,16 @@ function getName($: cheerio.CheerioAPI) {
 
 function getDateValue($: cheerio.CheerioAPI, specKey: SpecKey): Spec<string> {
   const values = getSpecValues($, specKey);
-  const value = format(
-    parse(values[0], 'MMM do, yyyy', new Date()),
-    'yyyy-MM-dd',
-  );
+  try {
+    const value = format(
+      parse(values[0], 'MMM do, yyyy', new Date()),
+      'yyyy-MM-dd',
+    );
 
-  return { value, metadata: { specKey } };
+    return { value, metadata: { specKey } };
+  } catch (e) {
+    return { value: null, metadata: { specKey } };
+  }
 }
 
 function getDollarValue($: cheerio.CheerioAPI, specKey: SpecKey): Spec<number> {
@@ -171,7 +176,7 @@ function getNumberValue($: cheerio.CheerioAPI, specKey: SpecKey): Spec<number> {
 
 function getSpecValues($: cheerio.CheerioAPI, specKey: SpecKey) {
   const el = $('dt')
-    .filter((i, dt) => $(dt).text().trim() === SPECS_MAP[specKey])
+    .filter((_i, dt) => $(dt).text().trim() === SPECS_MAP[specKey])
     .siblings('dd')
     .first();
 
