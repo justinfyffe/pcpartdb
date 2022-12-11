@@ -44,7 +44,7 @@ export const AdminLayout: FunctionComponent<AdminLayoutProps> = (props) => {
       <div className="bg-white">
         <main
           className={classNames(
-            'container flex gap-8 px-8 py-6 text-content max-w-100%',
+            'container flex gap-4 px-4 py-4 max-w-full w-full',
             props.className,
           )}
         >
@@ -79,7 +79,9 @@ export const AdminLayout: FunctionComponent<AdminLayoutProps> = (props) => {
               </Button>
             </nav>
           </aside>
-          {props.children}
+          <div className={classNames('flex-1 text-content', props.className)}>
+            {props.children}
+          </div>
         </main>
       </div>
     </>
