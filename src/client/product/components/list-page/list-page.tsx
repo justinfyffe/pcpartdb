@@ -15,19 +15,25 @@ import {
   getProductDetailsPath,
   getProductName,
   Product,
+  RelevantProducts,
 } from '@shared/product';
 import { formatProductMeta } from '@shared/product-meta';
 import { formatSpec } from '@shared/spec';
 import { useRouter } from 'next/router';
 import React, { useCallback } from 'react';
-import { CompareProductsForm } from '../compare-products-form';
+import {
+  CompareProductsForm,
+  CompareProductsFormLinks,
+} from '../compare-products-form';
 
 export interface ListGpusPageProps {
   gpus: Product[];
+
+  relevantProducts: RelevantProducts;
 }
 
 export const ListGpusPage = (props: ListGpusPageProps) => {
-  const { gpus } = props;
+  const { gpus, relevantProducts } = props;
   useProductCache(gpus);
 
   const router = useRouter();
@@ -54,31 +60,7 @@ export const ListGpusPage = (props: ListGpusPageProps) => {
           </h2>
 
           <CompareProductsForm values={[null, null]} />
-
-          <section className="flex flex-col gap-1 text-xs">
-            <div className="flex gap-2">
-              Popular Comparisons:
-              <ul className="flex gap-3">
-                <li>
-                  <a href="#">NVIDIA RTX 3090 vs NVIDIA RTX 3080</a>,
-                </li>
-                <li>
-                  <a href="#">NVIDIA RTX 3080 vs NVIDIA RTX 3070</a>
-                </li>
-              </ul>
-            </div>
-            <div className="flex gap-2">
-              Popular GPUs:
-              <ul className="flex gap-3">
-                <li>
-                  <a href="#">NVIDIA RTX 3090</a>,
-                </li>
-                <li>
-                  <a href="#">NVIDIA RTX 3080</a>
-                </li>
-              </ul>
-            </div>
-          </section>
+          <CompareProductsFormLinks relevantProducts={relevantProducts} />
         </section>
 
         <article className="flex-1 flex flex-col">

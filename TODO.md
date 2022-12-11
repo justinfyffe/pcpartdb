@@ -1,13 +1,13 @@
 Immediate Tasks:
+- handle popular products and comparisons
+  - db table that tracks analytics / stats
+    - one row per comparison, one row per individual product
 - cleanup layout
   - cleanup component code
     - input prefix and suffix
     - common styling
   - utility functions (get name, get url)
   - react components
-- rename product data structure to:
-  - pc parts?
-  - hardware?
 - compare gpus page
   - auto-generate summary
 - gpus list page
@@ -29,6 +29,7 @@ Immediate Tasks:
 - initial on-page seo
   - canonical links
   - alt tags
+- consistent naming of comparisons (order by id?)
 - launch
 - retail models
   - override specs

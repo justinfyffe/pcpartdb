@@ -35,6 +35,13 @@ export interface Product {
   images?: ProductImages;
 }
 
+export type ProductComparison = [Product, Product];
+
+export interface RelevantProducts {
+  comparisons?: ProductComparison[];
+  gpus?: Product[];
+}
+
 export interface ProductRequest {
   slug: string;
 

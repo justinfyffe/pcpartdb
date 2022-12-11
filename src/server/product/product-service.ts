@@ -6,6 +6,7 @@ import { benchmarksValidator } from '@shared/benchmark';
 import {
   ListProductsRequest,
   Product,
+  ProductComparison,
   ProductRequest,
   ProductType,
 } from '@shared/product';
@@ -86,6 +87,16 @@ export class ProductService {
     }
 
     return products;
+  }
+
+  async getRelevantProducts(
+    seed: Product | ProductComparison | null,
+    ctx: Context,
+  ) {
+    const comparisons: ProductComparison[] = [];
+    const gpus: Product[] = [];
+
+    return { comparisons, gpus };
   }
 
   async getProductById(id: number, ctx: Context) {

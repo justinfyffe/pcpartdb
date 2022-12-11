@@ -1,5 +1,5 @@
 import Joi from '@hapi/joi';
-import { Image } from './image';
+import { Image } from '../image';
 
 export interface ProductImages {
   thumbnail?: ProductImage;

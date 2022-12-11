@@ -26,6 +26,11 @@ export async function getServerSideProps(_ctx: NextPageContext) {
     const pageProps = {
       gpusByPerformance: bestPerforming,
       gpusByValue: bestValue,
+
+      relevantProducts: {
+        comparisons: [],
+        gpus: [],
+      },
     } as OverviewGpusPageProps;
 
     return { props: pageProps };

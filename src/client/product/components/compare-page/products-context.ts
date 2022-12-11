@@ -1,12 +1,12 @@
 import { Benchmarks } from '@shared/benchmark';
-import { Product } from '@shared/product';
+import { ProductComparison } from '@shared/product';
 import { ProductMetas } from '@shared/product-meta';
 import { Reviews } from '@shared/review';
 import { Specs } from '@shared/spec';
 import { createContext } from 'react';
 
 interface ProductsContextState {
-  products: [Product, Product];
+  products: ProductComparison;
   specs: [Specs, Specs];
   meta: [ProductMetas, ProductMetas];
   benchmarks: [Benchmarks, Benchmarks];
@@ -21,7 +21,7 @@ export const ProductsContext = createContext<ProductsContextState>({
   reviews: [null, null],
 });
 
-export function createProductsContextState(products: [Product, Product]) {
+export function createProductsContextState(products: ProductComparison) {
   return {
     products,
     specs: [products[0].specs, products[1].specs],

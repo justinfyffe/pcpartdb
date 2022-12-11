@@ -49,6 +49,11 @@ export async function getServerSideProps(_ctx: NextPageContext) {
       nvidiaVsAmdGpus: JSON.parse(JSON.stringify(nvidiaVsAmdGpus)),
       nvidiaGpus: JSON.parse(JSON.stringify(nvidiaGpus)),
       amdGpus: JSON.parse(JSON.stringify(amdGpus)),
+
+      relevantProducts: {
+        comparisons: [],
+        gpus: [],
+      },
     };
 
     return { props: pageProps };

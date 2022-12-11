@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 import {
   CompareProductsForm,
+  CompareProductsFormLinks,
   ComparisonFeedItem,
   Feed,
   FeedItems,
@@ -12,17 +13,24 @@ import {
 import { useProductCache } from '@client/shared/cache';
 import { WebsiteLayout } from '@client/shared/layouts';
 import { classNames } from '@client/shared/ui';
-import { Product, ProductsOrderBy } from '@shared/product';
+import {
+  Product,
+  ProductComparison,
+  ProductsOrderBy,
+  RelevantProducts,
+} from '@shared/product';
 import React, { useMemo } from 'react';
 
 export interface HomePageProps {
-  nvidiaVsAmdGpus: [Product, Product][];
+  nvidiaVsAmdGpus: ProductComparison[];
   nvidiaGpus: Product[];
   amdGpus: Product[];
+
+  relevantProducts: RelevantProducts;
 }
 
 export const HomePage = (props: HomePageProps) => {
-  const { nvidiaVsAmdGpus, nvidiaGpus, amdGpus } = props;
+  const { nvidiaVsAmdGpus, nvidiaGpus, amdGpus, relevantProducts } = props;
   const comparisonGpus = useMemo(
     () => nvidiaVsAmdGpus.flat(),
     [nvidiaVsAmdGpus],
@@ -41,31 +49,7 @@ export const HomePage = (props: HomePageProps) => {
           </h1>
 
           <CompareProductsForm values={[null, null]} />
-
-          <section className="flex flex-col gap-1 text-xs">
-            <div className="flex gap-2">
-              Popular Comparisons:
-              <ul className="flex gap-3">
-                <li>
-                  <a href="#">NVIDIA RTX 3090 vs NVIDIA RTX 3080</a>,
-                </li>
-                <li>
-                  <a href="#">NVIDIA RTX 3080 vs NVIDIA RTX 3070</a>
-                </li>
-              </ul>
-            </div>
-            <div className="flex gap-2">
-              Popular GPUs:
-              <ul className="flex gap-3">
-                <li>
-                  <a href="#">NVIDIA RTX 3090</a>,
-                </li>
-                <li>
-                  <a href="#">NVIDIA RTX 3080</a>
-                </li>
-              </ul>
-            </div>
-          </section>
+          <CompareProductsFormLinks relevantProducts={relevantProducts} />
         </section>
 
         <Feed>

@@ -5,12 +5,13 @@ import {
   getProductComparisonPath,
   getProductName,
   Product,
+  ProductComparison,
 } from '@shared/product';
 import { formatSpec } from '@shared/spec';
 import React, { FunctionComponent, useMemo } from 'react';
 
 interface ComparisonFeedItemProps {
-  products: [Product, Product];
+  products: ProductComparison;
 
   as?: React.ElementType;
   className?: string;

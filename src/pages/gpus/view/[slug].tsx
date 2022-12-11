@@ -12,6 +12,11 @@ export async function getServerSideProps(ctx: NextPageContext) {
 
     const pageProps: ViewGpuPageProps = {
       gpu: JSON.parse(JSON.stringify(gpu)),
+
+      relevantProducts: {
+        comparisons: [],
+        gpus: [],
+      },
     };
 
     return { props: pageProps };

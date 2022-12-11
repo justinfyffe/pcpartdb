@@ -6,11 +6,16 @@ import {
   getProductDetailsPath,
   getProductName,
   Product,
+  ProductComparison,
   ProductsOrderBy,
+  RelevantProducts,
 } from '@shared/product';
 import { formatSpec } from '@shared/spec';
 import React, { useMemo } from 'react';
-import { CompareProductsForm } from '../compare-products-form';
+import {
+  CompareProductsForm,
+  CompareProductsFormLinks,
+} from '../compare-products-form';
 import {
   ComparisonFeedItem,
   Feed,
@@ -23,10 +28,12 @@ import {
 export interface OverviewGpusPageProps {
   gpusByPerformance: Product[];
   gpusByValue: Product[];
+
+  relevantProducts: RelevantProducts;
 }
 
 export const OverviewGpusPage = (props: OverviewGpusPageProps) => {
-  const { gpusByPerformance, gpusByValue } = props;
+  const { gpusByPerformance, gpusByValue, relevantProducts } = props;
   useProductCache(gpusByPerformance, gpusByValue);
 
   const popularComparisons = useMemo(() => {
@@ -34,7 +41,7 @@ export const OverviewGpusPage = (props: OverviewGpusPageProps) => {
       [gpusByPerformance[0], gpusByPerformance[1]],
       [gpusByValue[0], gpusByValue[1]],
       [gpusByPerformance[1], gpusByPerformance[2]],
-    ] as [Product, Product][];
+    ] as ProductComparison[];
   }, [gpusByPerformance, gpusByValue]);
 
   const popularGpus = useMemo(() => {
@@ -55,31 +62,7 @@ export const OverviewGpusPage = (props: OverviewGpusPageProps) => {
           </h2>
 
           <CompareProductsForm values={[null, null]} />
-
-          <section className="flex flex-col gap-1 text-xs">
-            <div className="flex gap-2">
-              Popular Comparisons:
-              <ul className="flex gap-3">
-                <li>
-                  <a href="#">NVIDIA RTX 3090 vs NVIDIA RTX 3080</a>,
-                </li>
-                <li>
-                  <a href="#">NVIDIA RTX 3080 vs NVIDIA RTX 3070</a>
-                </li>
-              </ul>
-            </div>
-            <div className="flex gap-2">
-              Popular GPUs:
-              <ul className="flex gap-3">
-                <li>
-                  <a href="#">NVIDIA RTX 3090</a>,
-                </li>
-                <li>
-                  <a href="#">NVIDIA RTX 3080</a>
-                </li>
-              </ul>
-            </div>
-          </section>
+          <CompareProductsFormLinks relevantProducts={relevantProducts} />
         </section>
 
         <section
