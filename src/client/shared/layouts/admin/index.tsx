@@ -1,5 +1,5 @@
 import { authService } from '@client/auth';
-import { ComputerDesktopIcon } from '@heroicons/react/24/outline';
+import { ComputerDesktopIcon } from '@heroicons/react/24/solid';
 import { useRouter } from 'next/router';
 import React, { FunctionComponent, useCallback } from 'react';
 import {

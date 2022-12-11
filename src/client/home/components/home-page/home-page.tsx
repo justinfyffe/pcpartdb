@@ -78,9 +78,15 @@ export const HomePage = (props: HomePageProps) => {
           </FeedItems>
 
           <FeedLinks>
-            <FeedLink>All GPUs</FeedLink>
-            <FeedLink>Best Performing GPUs</FeedLink>
-            <FeedLink>Best Value GPUs</FeedLink>
+            <FeedLink href="/gpus/list">All GPUs</FeedLink>
+            <FeedLink
+              href={`/gpus/list?sort=${ProductsOrderBy.PerformanceRating}`}
+            >
+              Best Performing GPUs
+            </FeedLink>
+            <FeedLink href={`/gpus/list?sort=${ProductsOrderBy.ValueRating}`}>
+              Best Value GPUs
+            </FeedLink>
           </FeedLinks>
         </Feed>
 

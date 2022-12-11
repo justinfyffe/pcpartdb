@@ -49,7 +49,7 @@ export const ToolbarTitle: FunctionComponent<ToolbarTitleProps> = (props) => {
   return (
     <Element
       className={classNames(
-        'flex font-medium gap-2 items-center text-3xl',
+        'flex font-medium gap-2 items-center text-3xl md:text-2xl sm:text-xl',
         props.className,
       )}
     >

@@ -1,4 +1,3 @@
-import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { ComputerDesktopIcon, HeartIcon } from '@heroicons/react/24/solid';
 import React, { FunctionComponent } from 'react';
 import {
@@ -29,19 +28,9 @@ export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
           Parts DB
         </ToolbarTitle>
 
-        <ToolbarNav className="md:hidden">
-          <Button href="#" variant={ButtonVariant.Toolbar}>
-            Graphics Cards
-          </Button>
-          <Button href="#" variant={ButtonVariant.Toolbar}>
-            Processors
-          </Button>
-          <Button href="#" variant={ButtonVariant.Toolbar}>
-            PC Builds
-          </Button>
-
-          <Button variant={ButtonVariant.Toolbar}>
-            <MagnifyingGlassIcon className="w-5" />
+        <ToolbarNav>
+          <Button href="/gpus" variant={ButtonVariant.Toolbar}>
+            Browse Graphics Cards
           </Button>
         </ToolbarNav>
       </Toolbar>
