@@ -7,11 +7,12 @@ import {
   FeedLink,
   FeedLinks,
   ProductFeedItem,
+  ProductFeedTag,
 } from '@client/product';
 import { useProductCache } from '@client/shared/cache';
 import { WebsiteLayout } from '@client/shared/layouts';
 import { classNames } from '@client/shared/ui';
-import { Product } from '@shared/product';
+import { Product, ProductsOrderBy } from '@shared/product';
 import React, { useMemo } from 'react';
 
 export interface HomePageProps {
@@ -27,6 +28,9 @@ export const HomePage = (props: HomePageProps) => {
     [nvidiaVsAmdGpus],
   );
   useProductCache(comparisonGpus, nvidiaGpus, amdGpus);
+
+  const [bestPerformanceNvidia, bestValueNvidia] = nvidiaGpus;
+  const [bestPerformanceAmd, bestValueAmd] = amdGpus;
 
   return (
     <WebsiteLayout>
@@ -84,15 +88,34 @@ export const HomePage = (props: HomePageProps) => {
           <h2>Popular NVIDIA GPUs</h2>
 
           <FeedItems>
-            {nvidiaGpus.map((gpu, i) => (
-              <ProductFeedItem key={i} product={gpu} />
-            ))}
+            {bestPerformanceNvidia != null && (
+              <ProductFeedItem
+                product={bestPerformanceNvidia}
+                tag={ProductFeedTag.GreatPerformance}
+              />
+            )}
+            {bestValueNvidia != null && (
+              <ProductFeedItem
+                product={bestValueNvidia}
+                tag={ProductFeedTag.GreatValue}
+              />
+            )}
           </FeedItems>
 
           <FeedLinks>
-            <FeedLink>All NVIDIA GPUs</FeedLink>
-            <FeedLink>Best Performing NVIDIA GPUs</FeedLink>
-            <FeedLink>Best Value NVIDIA GPUs</FeedLink>
+            <FeedLink href="/gpus/list?company=nvidia">
+              All NVIDIA GPUs
+            </FeedLink>
+            <FeedLink
+              href={`/gpus/list?company=nvidia&sort=${ProductsOrderBy.PerformanceRating}`}
+            >
+              Best Performing NVIDIA GPUs
+            </FeedLink>
+            <FeedLink
+              href={`/gpus/list?company=nvidia&sort=${ProductsOrderBy.ValueRating}`}
+            >
+              Best Value NVIDIA GPUs
+            </FeedLink>
           </FeedLinks>
         </Feed>
 
@@ -100,15 +123,32 @@ export const HomePage = (props: HomePageProps) => {
           <h2>Popular AMD GPUs</h2>
 
           <FeedItems>
-            {amdGpus.map((gpu, i) => (
-              <ProductFeedItem key={i} product={gpu} />
-            ))}
+            {bestPerformanceAmd != null && (
+              <ProductFeedItem
+                product={bestPerformanceAmd}
+                tag={ProductFeedTag.GreatPerformance}
+              />
+            )}
+            {bestValueAmd != null && (
+              <ProductFeedItem
+                product={bestValueAmd}
+                tag={ProductFeedTag.GreatValue}
+              />
+            )}
           </FeedItems>
 
           <FeedLinks>
-            <FeedLink>All AMD GPUs</FeedLink>
-            <FeedLink>Best Performing AMD GPUs</FeedLink>
-            <FeedLink>Best Value AMD GPUs</FeedLink>
+            <FeedLink href="/gpus/list?company=amd">All AMD GPUs</FeedLink>
+            <FeedLink
+              href={`/gpus/list?company=amd&sort=${ProductsOrderBy.PerformanceRating}`}
+            >
+              Best Performing AMD GPUs
+            </FeedLink>
+            <FeedLink
+              href={`/gpus/list?company=amd&sort=${ProductsOrderBy.ValueRating}`}
+            >
+              Best Value AMD GPUs
+            </FeedLink>
           </FeedLinks>
         </Feed>
       </section>

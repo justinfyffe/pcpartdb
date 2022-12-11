@@ -2,10 +2,23 @@ import { useProductCache } from '@client/shared/cache';
 import { Breadcrumb, Breadcrumbs, Card } from '@client/shared/components';
 import { WebsiteLayout } from '@client/shared/layouts';
 import { classNames } from '@client/shared/ui';
-import { Product, ProductsOrderBy } from '@shared/product';
-import React from 'react';
+import {
+  getProductDetailsPath,
+  getProductName,
+  Product,
+  ProductsOrderBy,
+} from '@shared/product';
+import { formatSpec } from '@shared/spec';
+import React, { useMemo } from 'react';
 import { CompareProductsForm } from '../compare-products-form';
-import { Feed, FeedItems, FeedLink, FeedLinks } from '../feed';
+import {
+  ComparisonFeedItem,
+  Feed,
+  FeedItems,
+  FeedLink,
+  FeedLinks,
+  ProductFeedItem,
+} from '../feed';
 
 export interface OverviewGpusPageProps {
   gpusByPerformance: Product[];
@@ -15,6 +28,18 @@ export interface OverviewGpusPageProps {
 export const OverviewGpusPage = (props: OverviewGpusPageProps) => {
   const { gpusByPerformance, gpusByValue } = props;
   useProductCache(gpusByPerformance, gpusByValue);
+
+  const popularComparisons = useMemo(() => {
+    return [
+      [gpusByPerformance[0], gpusByPerformance[1]],
+      [gpusByValue[0], gpusByValue[1]],
+      [gpusByPerformance[1], gpusByPerformance[2]],
+    ] as [Product, Product][];
+  }, [gpusByPerformance, gpusByValue]);
+
+  const popularGpus = useMemo(() => {
+    return gpusByPerformance.slice(0, 3);
+  }, [gpusByPerformance]);
 
   return (
     <WebsiteLayout>
@@ -74,140 +99,38 @@ export const OverviewGpusPage = (props: OverviewGpusPageProps) => {
             </p>
 
             <ul className={classNames('flex flex-col gap-4 mb-4')}>
-              <li
-                className={classNames(
-                  'bg-slate-200 flex items-center justify-center px-4 py-2 rounded shadow',
-                )}
-              >
-                <div
-                  className={classNames(
-                    'flex items-center justify-center h-full mr-5 text-2xl font-medium',
-                  )}
+              {gpusByPerformance.map((gpu, i) => (
+                <a
+                  key={gpu.id}
+                  href={getProductDetailsPath(gpu)}
+                  className="text-inherit"
                 >
-                  #1
-                </div>
-                <div className={classNames('flex-1')}>
-                  <div className={classNames('mb-1 font-medium text-lg')}>
-                    NVIDIA RTX 3700
-                  </div>
-                  <div className={classNames('text-sm')}>Price: $234.99</div>
-                </div>
-                <div
-                  className={classNames(
-                    'bg-[#3f51b5] border-px rounded flex items-center justify-center text-xl text-slate-100 w-20 h-full',
-                  )}
-                >
-                  100.0
-                </div>
-              </li>
-
-              <li
-                className={classNames(
-                  'bg-slate-200 flex items-center justify-center px-4 py-2 rounded shadow',
-                )}
-              >
-                <div
-                  className={classNames(
-                    'flex items-center justify-center h-full mr-5 text-2xl font-medium',
-                  )}
-                >
-                  #2
-                </div>
-                <div className={classNames('flex-1')}>
-                  <div className={classNames('mb-1 font-medium text-lg')}>
-                    NVIDIA RTX 3600
-                  </div>
-                  <div className={classNames('text-sm')}>Price: $234.99</div>
-                </div>
-                <div
-                  className={classNames(
-                    'bg-[#3f51b5] border-px rounded flex items-center justify-center text-xl text-slate-100 w-20 h-full',
-                  )}
-                >
-                  93.34
-                </div>
-              </li>
-
-              <li
-                className={classNames(
-                  'bg-slate-200 flex items-center justify-center px-4 py-2 rounded shadow',
-                )}
-              >
-                <div
-                  className={classNames(
-                    'flex items-center justify-center h-full mr-5 text-2xl font-medium',
-                  )}
-                >
-                  #3
-                </div>
-                <div className={classNames('flex-1')}>
-                  <div className={classNames('mb-1 font-medium text-lg')}>
-                    NVIDIA RTX 2800
-                  </div>
-                  <div className={classNames('text-sm')}>Price: $234.99</div>
-                </div>
-                <div
-                  className={classNames(
-                    'bg-[#3f51b5] border-px rounded flex items-center justify-center text-xl text-slate-100 w-20 h-full',
-                  )}
-                >
-                  92.23
-                </div>
-              </li>
-
-              <li
-                className={classNames(
-                  'bg-slate-200 flex items-center justify-center px-4 py-2 rounded shadow',
-                )}
-              >
-                <div
-                  className={classNames(
-                    'flex items-center justify-center h-full mr-5 text-2xl font-medium',
-                  )}
-                >
-                  #4
-                </div>
-                <div className={classNames('flex-1')}>
-                  <div className={classNames('mb-1 font-medium text-lg')}>
-                    NVIDIA RTX 2700
-                  </div>
-                  <div className={classNames('text-sm')}>Price: $234.99</div>
-                </div>
-                <div
-                  className={classNames(
-                    'bg-[#3f51b5] border-px rounded flex items-center justify-center text-xl text-slate-100 w-20 h-full',
-                  )}
-                >
-                  82.23
-                </div>
-              </li>
-
-              <li
-                className={classNames(
-                  'bg-slate-200 flex items-center justify-center px-4 py-2 rounded shadow',
-                )}
-              >
-                <div
-                  className={classNames(
-                    'flex items-center justify-center h-full mr-5 text-2xl font-medium',
-                  )}
-                >
-                  #5
-                </div>
-                <div className={classNames('flex-1')}>
-                  <div className={classNames('mb-1 font-medium text-lg')}>
-                    NVIDIA RTX 2600
-                  </div>
-                  <div className={classNames('text-sm')}>Price: $234.99</div>
-                </div>
-                <div
-                  className={classNames(
-                    'bg-[#3f51b5] border-px rounded flex items-center justify-center text-xl text-slate-100 w-20 h-full',
-                  )}
-                >
-                  81.23
-                </div>
-              </li>
+                  <li
+                    className={classNames(
+                      'bg-slate-200 flex gap-4 items-center justify-between px-4 py-2 rounded shadow',
+                    )}
+                  >
+                    <div
+                      className={classNames(
+                        'flex items-center justify-center h-ful text-2xl font-medium',
+                      )}
+                    >
+                      #{i + 1}
+                    </div>
+                    <div className={classNames('flex-1 font-medium text-2xl')}>
+                      {getProductName(gpu)}
+                    </div>
+                    <div
+                      className={classNames(
+                        'flex flex-col items-end justify-between text-lg',
+                      )}
+                    >
+                      <div>{formatSpec(gpu.specs?.launchPrice)}</div>
+                      <div>{formatSpec(gpu.specs?.releaseDate)}</div>
+                    </div>
+                  </li>
+                </a>
+              ))}
             </ul>
 
             <div className={classNames('self-end')}>
@@ -232,140 +155,39 @@ export const OverviewGpusPage = (props: OverviewGpusPageProps) => {
             </p>
 
             <ul className={classNames('flex flex-col gap-4 mb-4')}>
-              <li
-                className={classNames(
-                  'bg-slate-200 flex items-center justify-center px-4 py-2 rounded shadow',
-                )}
-              >
-                <div
-                  className={classNames(
-                    'flex items-center justify-center h-full mr-5 text-2xl font-medium',
-                  )}
+              {gpusByValue.map((gpu, i) => (
+                <a
+                  key={gpu.id}
+                  href={getProductDetailsPath(gpu)}
+                  className="text-inherit"
                 >
-                  #1
-                </div>
-                <div className={classNames('flex-1')}>
-                  <div className={classNames('mb-1 font-medium text-lg')}>
-                    NVIDIA RTX 3700
-                  </div>
-                  <div className={classNames('text-sm')}>Price: $234.99</div>
-                </div>
-                <div
-                  className={classNames(
-                    'bg-[#3f51b5] border-px rounded flex items-center justify-center text-xl text-slate-100 w-20 h-full',
-                  )}
-                >
-                  100.0
-                </div>
-              </li>
-
-              <li
-                className={classNames(
-                  'bg-slate-200 flex items-center justify-center px-4 py-2 rounded shadow',
-                )}
-              >
-                <div
-                  className={classNames(
-                    'flex items-center justify-center h-full mr-5 text-2xl font-medium',
-                  )}
-                >
-                  #2
-                </div>
-                <div className={classNames('flex-1')}>
-                  <div className={classNames('mb-1 font-medium text-lg')}>
-                    NVIDIA RTX 3600
-                  </div>
-                  <div className={classNames('text-sm')}>Price: $234.99</div>
-                </div>
-                <div
-                  className={classNames(
-                    'bg-[#3f51b5] border-px rounded flex items-center justify-center text-xl text-slate-100 w-20 h-full',
-                  )}
-                >
-                  93.34
-                </div>
-              </li>
-
-              <li
-                className={classNames(
-                  'bg-slate-200 flex items-center justify-center px-4 py-2 rounded shadow',
-                )}
-              >
-                <div
-                  className={classNames(
-                    'flex items-center justify-center h-full mr-5 text-2xl font-medium',
-                  )}
-                >
-                  #3
-                </div>
-                <div className={classNames('flex-1')}>
-                  <div className={classNames('mb-1 font-medium text-lg')}>
-                    NVIDIA RTX 2800
-                  </div>
-                  <div className={classNames('text-sm')}>Price: $234.99</div>
-                </div>
-                <div
-                  className={classNames(
-                    'bg-[#3f51b5] border-px rounded flex items-center justify-center text-xl text-slate-100 w-20 h-full',
-                  )}
-                >
-                  92.23
-                </div>
-              </li>
-
-              <li
-                className={classNames(
-                  'bg-slate-200 flex items-center justify-center px-4 py-2 rounded shadow',
-                )}
-              >
-                <div
-                  className={classNames(
-                    'flex items-center justify-center h-full mr-5 text-2xl font-medium',
-                  )}
-                >
-                  #4
-                </div>
-                <div className={classNames('flex-1')}>
-                  <div className={classNames('mb-1 font-medium text-lg')}>
-                    NVIDIA RTX 2700
-                  </div>
-                  <div className={classNames('text-sm')}>Price: $234.99</div>
-                </div>
-                <div
-                  className={classNames(
-                    'bg-[#3f51b5] border-px rounded flex items-center justify-center text-xl text-slate-100 w-20 h-full',
-                  )}
-                >
-                  82.23
-                </div>
-              </li>
-
-              <li
-                className={classNames(
-                  'bg-slate-200 flex items-center justify-center px-4 py-2 rounded shadow',
-                )}
-              >
-                <div
-                  className={classNames(
-                    'flex items-center justify-center h-full mr-5 text-2xl font-medium',
-                  )}
-                >
-                  #5
-                </div>
-                <div className={classNames('flex-1')}>
-                  <div className={classNames('mb-1 font-medium text-lg')}>
-                    NVIDIA RTX 2600
-                  </div>
-                  <div className={classNames('text-sm')}>Price: $234.99</div>
-                </div>
-                <div
-                  className={classNames(
-                    'bg-[#3f51b5] border-px rounded flex items-center justify-center text-xl text-slate-100 w-20 h-full',
-                  )}
-                >
-                  81.23
-                </div>
-              </li>
+                  <li
+                    key={gpu.id}
+                    className={classNames(
+                      'bg-slate-200 flex gap-4 items-center justify-between px-4 py-2 rounded shadow',
+                    )}
+                  >
+                    <div
+                      className={classNames(
+                        'flex items-center justify-center h-full text-2xl font-medium',
+                      )}
+                    >
+                      #{i + 1}
+                    </div>
+                    <div className={classNames('flex-1 font-medium text-2xl')}>
+                      {getProductName(gpu)}
+                    </div>
+                    <div
+                      className={classNames(
+                        'flex flex-col items-end justify-between text-lg',
+                      )}
+                    >
+                      <div>{formatSpec(gpu.specs?.launchPrice)}</div>
+                      <div>{formatSpec(gpu.specs?.releaseDate)}</div>
+                    </div>
+                  </li>
+                </a>
+              ))}
             </ul>
 
             <div className={classNames('self-end')}>
@@ -382,18 +204,32 @@ export const OverviewGpusPage = (props: OverviewGpusPageProps) => {
         <Feed>
           <h2>Popular Comparisons</h2>
 
-          <FeedItems></FeedItems>
+          <FeedItems>
+            {popularComparisons.map((comparison, i) => (
+              <ComparisonFeedItem key={i} products={comparison} />
+            ))}
+          </FeedItems>
         </Feed>
 
         <Feed>
           <h2>Popular GPUs</h2>
 
-          <FeedItems></FeedItems>
+          <FeedItems>
+            {popularGpus.map((gpu, i) => (
+              <ProductFeedItem key={i} product={gpu} />
+            ))}
+          </FeedItems>
 
           <FeedLinks>
-            <FeedLink>All GPUs</FeedLink>
-            <FeedLink>Best Performing GPUs</FeedLink>
-            <FeedLink>Best Value GPUs</FeedLink>
+            <FeedLink href="/gpus/list">All GPUs</FeedLink>
+            <FeedLink
+              href={`/gpus/list?sort=${ProductsOrderBy.PerformanceRating}`}
+            >
+              Best Performing GPUs
+            </FeedLink>
+            <FeedLink href={`/gpus/list?sort=${ProductsOrderBy.ValueRating}`}>
+              Best Value GPUs
+            </FeedLink>
           </FeedLinks>
         </Feed>
       </section>

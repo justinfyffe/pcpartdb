@@ -1,11 +1,13 @@
 import { Card, Img } from '@client/shared/components';
 import { classNames } from '@client/shared/ui';
+import { PhotoIcon } from '@heroicons/react/24/outline';
 import {
   getProductComparisonPath,
   getProductName,
   Product,
 } from '@shared/product';
-import React, { FunctionComponent } from 'react';
+import { formatSpec } from '@shared/spec';
+import React, { FunctionComponent, useMemo } from 'react';
 
 interface ComparisonFeedItemProps {
   products: [Product, Product];
@@ -17,7 +19,23 @@ interface ComparisonFeedItemProps {
 export const ComparisonFeedItem: FunctionComponent<ComparisonFeedItemProps> = (
   props,
 ) => {
-  const [product1, product2] = props.products;
+  const { products } = props;
+  const [product1, product2] = products;
+
+  const [price1, price2] = useMemo(
+    () => [
+      formatSpec(product1.specs?.launchPrice),
+      formatSpec(product2.specs?.launchPrice),
+    ],
+    [product1, product2],
+  );
+
+  const [image1, image2] = useMemo(() => {
+    return [
+      product1.images?.details?.[0]?.image,
+      product2.images?.details?.[0]?.image,
+    ];
+  }, [product1, product2]);
 
   return (
     <a
@@ -29,37 +47,57 @@ export const ComparisonFeedItem: FunctionComponent<ComparisonFeedItemProps> = (
     >
       <Card as="article">
         <div className="relative flex gap-0.5 m-[-16px_-16px_0] rounded-t rounded-b-none h-40 w-[calc(100%_+_32px)] max-w-[calc(100%_+_48px)] overflow-hidden border-b-px">
-          <Img
-            src="https://www.pcgamesn.com/wp-content/sites/pcgamesn/2022/04/Nvidia-RTX-4070-price-release-date-spec-benchmarks-1.jpg"
-            className={classNames(
-              'flex-1 h-40 object-cover overflow-hidden',
-              props.className,
-            )}
-          />
+          {image1 != null ? (
+            <Img
+              src={image1}
+              className={classNames(
+                'flex-1 h-40 object-cover overflow-hidden',
+                props.className,
+              )}
+            />
+          ) : (
+            <div
+              className={classNames(
+                'flex-1 flex flex-col items-center justify-center',
+                'h-40',
+              )}
+            >
+              <PhotoIcon className={classNames('-mb-3', 'w-23')} />
+              <span className="font-semibold">No Image</span>
+            </div>
+          )}
 
-          <Img
-            src="https://i.ebayimg.com/images/g/fPAAAOSwPDNg7qZT/s-l640.jpg"
-            className={classNames(
-              'flex-1 h-40 object-cover overflow-hidden',
-              props.className,
-            )}
-          />
+          {image2 != null ? (
+            <Img
+              src={image2}
+              className={classNames(
+                'flex-1 h-40 object-cover overflow-hidden',
+                props.className,
+              )}
+            />
+          ) : (
+            <div
+              className={classNames(
+                'flex-1 flex flex-col items-center justify-center',
+                'h-40',
+              )}
+            >
+              <PhotoIcon className={classNames('-mb-3', 'w-23')} />
+              <span className="font-semibold">No Image</span>
+            </div>
+          )}
 
           <div className="flex gap-11.5 w-full h-full absolute items-end justify-center">
-            <div className="flex-1 text-[#ececec] font-semibold px-2 text-xs bg-[#558501] border-t-px border-l-px border-gray-50 text-center">
-              {getProductName(product1, { company: false })}
-            </div>
-            <div className="flex-1 text-[#ececec] font-semibold px-2 text-xs bg-[#850101] border-t-px border-r-px border-gray-50 text-center">
-              {getProductName(product2, { company: false })}
-            </div>
+            <Banner product={product1} />
+            <Banner product={product2} />
           </div>
 
           <div className="flex w-full h-full absolute items-start justify-between rounded-t">
             <div className="text-[#ececec] font-normal px-1.5 py-0.5 text-2xs bg-[rgba(51,65,85,1)] border-b-px border-r-px border-gray-50 rounded-tl rounded-br">
-              $499
+              {price1}
             </div>
             <div className="text-[#ececec] font-normal px-1.5 py-0.5 text-2xs bg-[rgba(51,65,85,1)]  border-b-px border-l-px border-gray-50 rounded-tr rounded-bl">
-              $399
+              {price2}
             </div>
           </div>
 
@@ -70,13 +108,61 @@ export const ComparisonFeedItem: FunctionComponent<ComparisonFeedItemProps> = (
           </div>
         </div>
 
-        <div className="flex flex-col gap-2 text-sm">
+        <div className="flex flex-col text-sm">
           <h3 className="font-medium text-base text-indigo-500">
             {getProductName(product1)} vs {getProductName(product2)}
           </h3>
-          Is the 3070 better bang for your buck?
+          <Subtitle products={products} />
         </div>
       </Card>
     </a>
+  );
+};
+
+interface BannerProps {
+  product: Product;
+}
+
+const Banner: FunctionComponent<BannerProps> = (props) => {
+  const { product } = props;
+  const company = useMemo(
+    () => product.specs?.company?.value?.toLowerCase(),
+    [product],
+  );
+
+  return (
+    <div
+      className={classNames(
+        'flex-1 text-[#ececec] font-semibold px-2 text-xs bg-[#666] border-t-px border-r-px border-gray-50 text-center',
+        company === 'nvidia' ? 'bg-[#558501]' : '',
+        company === 'amd' ? 'bg-[#850101]' : '',
+      )}
+    >
+      {getProductName(product, { company: false })}
+    </div>
+  );
+};
+
+interface SubtitleProps {
+  products: Product[];
+}
+
+const Subtitle: FunctionComponent<SubtitleProps> = (props) => {
+  const { products } = props;
+  const [product1, product2] = products;
+
+  const name1 = useMemo(
+    () => getProductName(product1, { company: false }),
+    [product1],
+  );
+  const name2 = useMemo(
+    () => getProductName(product2, { company: false }),
+    [product2],
+  );
+
+  return (
+    <>
+      How does the {name1} compare to {name2}&apos;s performance?
+    </>
   );
 };

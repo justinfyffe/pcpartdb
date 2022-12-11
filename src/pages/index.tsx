@@ -9,57 +9,46 @@ import { NextPageContext } from 'next';
 export async function getServerSideProps(_ctx: NextPageContext) {
   return transaction(async (trx) => {
     // TODO - NVIDA vs AMD
-    // Popular
+    // 3rd option
 
     // TODO - NVIDIA
-    // Most Popular
+    // 3rd option
 
     // TODO - AMD
-    // Most Popular
+    // 3rd option
 
     const gpus: Product[] = await serializeAsync(
       productService.list({ type: ProductType.GPU }, { trx }),
     );
 
-    const nvidiaGpus = filterProducts(gpus, { company: 'NVIDIA' });
-    const amdGpus = filterProducts(gpus, { company: 'AMD' });
+    const nvidia = filterProducts(gpus, { company: 'NVIDIA' });
+    const amd = filterProducts(gpus, { company: 'AMD' });
 
-    const bestPerformingNvidiaGpu =
-      sortProducts(nvidiaGpus, ProductsOrderBy.PerformanceRating)[0] ?? null;
-    const bestPerformingAmdGpu =
-      sortProducts(amdGpus, ProductsOrderBy.PerformanceRating)[0] ?? null;
+    const bestPerformingNvidia =
+      sortProducts(nvidia, ProductsOrderBy.PerformanceRating)[0] ?? null;
+    const bestPerformingAmd =
+      sortProducts(amd, ProductsOrderBy.PerformanceRating)[0] ?? null;
 
-    const bestValueNvidiaGpu =
-      sortProducts(nvidiaGpus, ProductsOrderBy.ValueRating)[0] ?? null;
-    const bestValueAmdGpu =
-      sortProducts(amdGpus, ProductsOrderBy.ValueRating)[0] ?? null;
+    const bestValueNvidia =
+      sortProducts(nvidia, ProductsOrderBy.ValueRating)[0] ?? null;
+    const bestValueAmd =
+      sortProducts(amd, ProductsOrderBy.ValueRating)[0] ?? null;
 
     const nvidiaVsAmdGpus = [];
-    if (bestPerformingNvidiaGpu != null && bestPerformingAmdGpu != null) {
-      nvidiaVsAmdGpus.push([bestPerformingNvidiaGpu, bestPerformingAmdGpu]);
+    if (bestPerformingNvidia != null && bestPerformingAmd != null) {
+      nvidiaVsAmdGpus.push([bestPerformingNvidia, bestPerformingAmd]);
     }
-    if (bestValueNvidiaGpu != null && bestValueAmdGpu != null) {
-      nvidiaVsAmdGpus.push([bestValueNvidiaGpu, bestValueAmdGpu]);
+    if (bestValueNvidia != null && bestValueAmd != null) {
+      nvidiaVsAmdGpus.push([bestValueNvidia, bestValueAmd]);
     }
 
-    const nvidia = await serializeAsync(
-      productService.list(
-        { type: ProductType.GPU, filter: { company: 'nvidia' }, limit: 3 },
-        { trx },
-      ),
-    );
-
-    const amd = await serializeAsync(
-      productService.list(
-        { type: ProductType.GPU, filter: { company: 'amd' }, limit: 3 },
-        { trx },
-      ),
-    );
+    const nvidiaGpus = [bestPerformingNvidia, bestValueNvidia];
+    const amdGpus = [bestPerformingAmd, bestValueAmd];
 
     const pageProps: HomePageProps = {
       nvidiaVsAmdGpus: JSON.parse(JSON.stringify(nvidiaVsAmdGpus)),
-      nvidiaGpus: JSON.parse(JSON.stringify(nvidia)),
-      amdGpus: JSON.parse(JSON.stringify(amd)),
+      nvidiaGpus: JSON.parse(JSON.stringify(nvidiaGpus)),
+      amdGpus: JSON.parse(JSON.stringify(amdGpus)),
     };
 
     return { props: pageProps };

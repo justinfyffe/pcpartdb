@@ -9,8 +9,14 @@ import {
 import { formatSpec } from '@shared/spec';
 import React, { FunctionComponent, useMemo } from 'react';
 
+export enum ProductFeedTag {
+  GreatPerformance = 'GREAT_PERFORMANCE',
+  GreatValue = 'GREAT_VALUE',
+}
+
 interface ProductFeedItemProps {
   product: Product;
+  tag?: ProductFeedTag;
 
   as?: React.ElementType;
   className?: string;
@@ -19,12 +25,22 @@ interface ProductFeedItemProps {
 export const ProductFeedItem: FunctionComponent<ProductFeedItemProps> = (
   props,
 ) => {
-  const { product } = props;
+  const { product, tag } = props;
 
   const price = useMemo(
     () => formatSpec(product.specs?.launchPrice),
     [product],
   );
+
+  const label = useMemo(() => {
+    if (tag === ProductFeedTag.GreatPerformance) {
+      return 'Great Performance';
+    } else if (tag === ProductFeedTag.GreatValue) {
+      return 'Great Value';
+    } else {
+      return null;
+    }
+  }, [tag]);
 
   const images = useMemo(() => {
     const ret = [
@@ -101,16 +117,18 @@ export const ProductFeedItem: FunctionComponent<ProductFeedItemProps> = (
               </div>
             )}
 
-            <div
-              className={classNames(
-                'bg-[rgba(51,65,85,1)]',
-                'font-normal text-2xs text-[#ececec]',
-                'px-1.5 py-0.5',
-                'border-b-px border-l-px border-gray-50 rounded-bl rounded-tr',
-              )}
-            >
-              Best Performance
-            </div>
+            {label && (
+              <div
+                className={classNames(
+                  'bg-[rgba(51,65,85,1)]',
+                  'font-normal text-2xs text-[#ececec]',
+                  'px-1.5 py-0.5',
+                  'border-b-px border-l-px border-gray-50 rounded-bl rounded-tr',
+                )}
+              >
+                {label}
+              </div>
+            )}
           </div>
         </div>
 
@@ -118,9 +136,32 @@ export const ProductFeedItem: FunctionComponent<ProductFeedItemProps> = (
           <h3 className="font-medium text-base text-indigo-500">
             {getProductName(product)}
           </h3>
-          The RTX 3070 is the best performing NVIDIA GPU in our database.
+          <Subtitle product={product} tag={tag} />
         </div>
       </Card>
     </a>
   );
+};
+
+interface SubtitleProps {
+  product: Product;
+  tag?: ProductFeedTag;
+}
+
+const Subtitle: FunctionComponent<SubtitleProps> = (props) => {
+  const { product, tag } = props;
+
+  const text = useMemo(() => {
+    const name = getProductName(product, { company: false });
+
+    if (tag === ProductFeedTag.GreatPerformance) {
+      return `The ${name} is one of the strongest GPUs.`;
+    } else if (tag === ProductFeedTag.GreatValue) {
+      return `The ${name} has some of the best value on the market.`;
+    } else {
+      return `Learn more about the ${name}.`;
+    }
+  }, [product, tag]);
+
+  return <>{text}</>;
 };
