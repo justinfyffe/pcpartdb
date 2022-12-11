@@ -37,7 +37,7 @@ export interface Product {
 
 export type ProductComparison = [Product, Product];
 
-export interface RelevantProducts {
+export interface RelatedProducts {
   comparisons?: ProductComparison[];
   gpus?: Product[];
 }

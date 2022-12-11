@@ -17,7 +17,7 @@ import {
   SidenavPopularProducts,
 } from '@client/sidenav';
 import { formatBenchmark } from '@shared/benchmark';
-import { Product, RelevantProducts } from '@shared/product';
+import { Product, RelatedProducts } from '@shared/product';
 import { formatProductMeta } from '@shared/product-meta';
 import { getShoppingUrl } from '@shared/retail-model';
 import React, { useMemo } from 'react';
@@ -36,7 +36,7 @@ import { Summary } from './summary';
 export interface CompareGpuPageProps {
   gpus: Product[];
 
-  relevantProducts: RelevantProducts;
+  relatedProducts: RelatedProducts;
 }
 
 export const CompareGpuPage = (props: CompareGpuPageProps) => {

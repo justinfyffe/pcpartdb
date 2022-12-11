@@ -1,7 +1,15 @@
 Immediate Tasks:
-- handle popular products and comparisons
-  - db table that tracks analytics / stats
-    - one row per comparison, one row per individual product
+- handle related products and comparisons
+  - with a seed
+    - similar performance ratings
+    - similar value ratings
+    - same architecture
+    - similar release year
+    - newest
+  - without a seed
+    - top performers
+    - top value
+    - newest
 - cleanup layout
   - cleanup component code
     - input prefix and suffix

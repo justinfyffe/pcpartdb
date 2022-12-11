@@ -89,7 +89,7 @@ export class ProductService {
     return products;
   }
 
-  async getRelevantProducts(
+  async getRelatedProducts(
     seed: Product | ProductComparison | null,
     ctx: Context,
   ) {

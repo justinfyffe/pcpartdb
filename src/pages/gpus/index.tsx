@@ -27,7 +27,7 @@ export async function getServerSideProps(_ctx: NextPageContext) {
       gpusByPerformance: bestPerforming,
       gpusByValue: bestValue,
 
-      relevantProducts: {
+      relatedProducts: {
         comparisons: [],
         gpus: [],
       },

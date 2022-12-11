@@ -17,7 +17,7 @@ import {
   Product,
   ProductComparison,
   ProductsOrderBy,
-  RelevantProducts,
+  RelatedProducts,
 } from '@shared/product';
 import React, { useMemo } from 'react';
 
@@ -26,11 +26,11 @@ export interface HomePageProps {
   nvidiaGpus: Product[];
   amdGpus: Product[];
 
-  relevantProducts: RelevantProducts;
+  relatedProducts: RelatedProducts;
 }
 
 export const HomePage = (props: HomePageProps) => {
-  const { nvidiaVsAmdGpus, nvidiaGpus, amdGpus, relevantProducts } = props;
+  const { nvidiaVsAmdGpus, nvidiaGpus, amdGpus, relatedProducts } = props;
   const comparisonGpus = useMemo(
     () => nvidiaVsAmdGpus.flat(),
     [nvidiaVsAmdGpus],
@@ -49,7 +49,7 @@ export const HomePage = (props: HomePageProps) => {
           </h1>
 
           <CompareProductsForm values={[null, null]} />
-          <CompareProductsFormLinks relevantProducts={relevantProducts} />
+          <CompareProductsFormLinks relatedProducts={relatedProducts} />
         </section>
 
         <Feed>

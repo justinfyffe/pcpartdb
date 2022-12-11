@@ -15,7 +15,7 @@ import {
   getProductDetailsPath,
   getProductName,
   Product,
-  RelevantProducts,
+  RelatedProducts,
 } from '@shared/product';
 import { formatProductMeta } from '@shared/product-meta';
 import { formatSpec } from '@shared/spec';
@@ -29,11 +29,11 @@ import {
 export interface ListGpusPageProps {
   gpus: Product[];
 
-  relevantProducts: RelevantProducts;
+  relatedProducts: RelatedProducts;
 }
 
 export const ListGpusPage = (props: ListGpusPageProps) => {
-  const { gpus, relevantProducts } = props;
+  const { gpus, relatedProducts } = props;
   useProductCache(gpus);
 
   const router = useRouter();
@@ -60,7 +60,7 @@ export const ListGpusPage = (props: ListGpusPageProps) => {
           </h2>
 
           <CompareProductsForm values={[null, null]} />
-          <CompareProductsFormLinks relevantProducts={relevantProducts} />
+          <CompareProductsFormLinks relatedProducts={relatedProducts} />
         </section>
 
         <article className="flex-1 flex flex-col">

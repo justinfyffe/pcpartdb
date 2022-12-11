@@ -22,7 +22,7 @@ import {
   StarIcon,
 } from '@heroicons/react/24/outline';
 import { formatBenchmark } from '@shared/benchmark';
-import { Product, RelevantProducts } from '@shared/product';
+import { Product, RelatedProducts } from '@shared/product';
 import { formatProductMeta } from '@shared/product-meta';
 import { getShoppingUrl } from '@shared/retail-model';
 import { formatSpec } from '@shared/spec';
@@ -46,7 +46,7 @@ import { Summary } from './summary';
 export interface ViewGpuPageProps {
   gpu: Product;
 
-  relevantProducts: RelevantProducts;
+  relatedProducts: RelatedProducts;
 }
 
 export const ViewGpuPage = (props: ViewGpuPageProps) => {

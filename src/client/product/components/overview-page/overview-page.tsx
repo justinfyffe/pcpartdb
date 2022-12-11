@@ -8,7 +8,7 @@ import {
   Product,
   ProductComparison,
   ProductsOrderBy,
-  RelevantProducts,
+  RelatedProducts,
 } from '@shared/product';
 import { formatSpec } from '@shared/spec';
 import React, { useMemo } from 'react';
@@ -29,11 +29,11 @@ export interface OverviewGpusPageProps {
   gpusByPerformance: Product[];
   gpusByValue: Product[];
 
-  relevantProducts: RelevantProducts;
+  relatedProducts: RelatedProducts;
 }
 
 export const OverviewGpusPage = (props: OverviewGpusPageProps) => {
-  const { gpusByPerformance, gpusByValue, relevantProducts } = props;
+  const { gpusByPerformance, gpusByValue, relatedProducts } = props;
   useProductCache(gpusByPerformance, gpusByValue);
 
   const popularComparisons = useMemo(() => {
@@ -62,7 +62,7 @@ export const OverviewGpusPage = (props: OverviewGpusPageProps) => {
           </h2>
 
           <CompareProductsForm values={[null, null]} />
-          <CompareProductsFormLinks relevantProducts={relevantProducts} />
+          <CompareProductsFormLinks relatedProducts={relatedProducts} />
         </section>
 
         <section

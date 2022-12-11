@@ -3,19 +3,19 @@ import {
   getProductComparisonPath,
   getProductDetailsPath,
   getProductName,
-  RelevantProducts,
+  RelatedProducts,
 } from '@shared/product';
 import React, { FunctionComponent } from 'react';
 
 interface CompareProductsFormLinksProps {
-  relevantProducts: RelevantProducts;
+  relatedProducts: RelatedProducts;
 }
 
 export const CompareProductsFormLinks: FunctionComponent<
   CompareProductsFormLinksProps
 > = (props) => {
-  const { relevantProducts } = props;
-  const { comparisons, gpus } = relevantProducts;
+  const { relatedProducts } = props;
+  const { comparisons, gpus } = relatedProducts;
 
   return (
     <section className="flex flex-col gap-1 text-xs">
