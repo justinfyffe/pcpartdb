@@ -42,18 +42,23 @@ export async function getServerSideProps(_ctx: NextPageContext) {
       nvidiaVsAmdGpus.push([bestValueNvidia, bestValueAmd]);
     }
 
-    const nvidiaGpus = [bestPerformingNvidia, bestValueNvidia];
-    const amdGpus = [bestPerformingAmd, bestValueAmd];
+    const nvidiaGpus = [bestPerformingNvidia, bestValueNvidia].filter(
+      (gpu) => gpu != null,
+    );
+    const amdGpus = [bestPerformingAmd, bestValueAmd].filter(
+      (gpu) => gpu != null,
+    );
 
+    const relatedProducts = await productService.getRelatedProducts(
+      { type: ProductType.GPU },
+      { trx },
+    );
     const pageProps: HomePageProps = {
       nvidiaVsAmdGpus: JSON.parse(JSON.stringify(nvidiaVsAmdGpus)),
       nvidiaGpus: JSON.parse(JSON.stringify(nvidiaGpus)),
       amdGpus: JSON.parse(JSON.stringify(amdGpus)),
 
-      relatedProducts: {
-        comparisons: [],
-        gpus: [],
-      },
+      relatedProducts: JSON.parse(JSON.stringify(relatedProducts)),
     };
 
     return { props: pageProps };

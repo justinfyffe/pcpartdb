@@ -9,6 +9,8 @@ import {
   ProductComparison,
   ProductRequest,
   ProductType,
+  RelatedProducts,
+  RelatedProductsRequest,
 } from '@shared/product';
 import { productImagesValidator } from '@shared/product-image';
 import { ProductMetas, productMetasValidator } from '@shared/product-meta';
@@ -89,14 +91,47 @@ export class ProductService {
     return products;
   }
 
-  async getRelatedProducts(
-    seed: Product | ProductComparison | null,
-    ctx: Context,
-  ) {
-    const comparisons: ProductComparison[] = [];
-    const gpus: Product[] = [];
+  async getRelatedProducts(options: RelatedProductsRequest, ctx: Context) {
+    const { type, seed, prioritize } = options;
+    const limit = options.limit ?? 3;
 
-    return { comparisons, gpus };
+    const gpus = await this.list({ type, orderBy: prioritize }, ctx);
+
+    let seedIndex = 0;
+    if (seed != null && 'id' in seed) {
+      seedIndex = gpus.findIndex((gpu) => gpu.id === seed.id);
+    } else if (Array.isArray(seed)) {
+      seedIndex = gpus.findIndex((gpu) => gpu.id === seed[0].id);
+    }
+
+    const relatedGpus = new Map<number, Product>();
+    const relatedComparisons = new Map<string, ProductComparison>();
+    let prevProduct: Product = null;
+    for (let i = 0; i < limit; ++i) {
+      prevProduct = gpus[seedIndex].serialize();
+
+      seedIndex += (i + 1) * (i % 2 === 0 ? 1 : -1);
+      seedIndex = Math.max(0, Math.min(seedIndex, gpus.length - 1));
+
+      const gpu = gpus[seedIndex].serialize();
+      relatedGpus.set(gpu.id, gpu);
+
+      if (prevProduct.id !== gpu.id) {
+        const comparison = [prevProduct, gpu].sort(
+          (gpu1, gpu2) => gpu1.id - gpu2.id,
+        ) as ProductComparison;
+
+        relatedComparisons.set(
+          comparison.map((value) => value.id).join(','),
+          comparison,
+        );
+      }
+    }
+
+    return {
+      comparisons: [...relatedComparisons.values()].slice(0, limit),
+      gpus: [...relatedGpus.values()].slice(0, limit),
+    } as RelatedProducts;
   }
 
   async getProductById(id: number, ctx: Context) {

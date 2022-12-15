@@ -27,7 +27,7 @@ export const CompareProductsFormLinks: FunctionComponent<
               <a href={getProductComparisonPath(...comparison)}>
                 {getProductComparisonName(comparison)}
               </a>
-              {i === comparisons.length - 1 && <>,</>}
+              {i < comparisons.length - 1 && <>,</>}
             </li>
           ))}
         </ul>
@@ -37,8 +37,8 @@ export const CompareProductsFormLinks: FunctionComponent<
         <ul className="flex gap-3">
           {gpus.map((gpu, i) => (
             <li key={i}>
-              <a href={getProductName(gpu)}>{getProductDetailsPath(gpu)}</a>
-              {i === gpus.length - 1 && <>,</>}
+              <a href={getProductDetailsPath(gpu)}>{getProductName(gpu)}</a>
+              {i < gpus.length - 1 && <>,</>}
             </li>
           ))}
         </ul>

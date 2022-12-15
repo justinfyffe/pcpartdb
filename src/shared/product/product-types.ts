@@ -75,3 +75,10 @@ export interface ListProductsRequest {
   orderBy?: ProductsOrderBy;
   limit?: number;
 }
+
+export interface RelatedProductsRequest {
+  type: ProductType;
+  seed?: Product | ProductComparison;
+  prioritize?: ProductsOrderBy;
+  limit?: number;
+}
