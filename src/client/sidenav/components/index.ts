@@ -1,3 +1,3 @@
-export * from './popular-comparisons';
-export * from './popular-products';
+export * from './comparisons';
+export * from './products';
 export * from './sidenav';

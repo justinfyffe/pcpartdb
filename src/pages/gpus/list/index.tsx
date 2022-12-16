@@ -20,13 +20,14 @@ export async function getServerSideProps(ctx: NextPageContext) {
     );
     await productService.populateRanks(gpus, { trx });
 
+    const relatedProducts = await productService.getRelatedProducts(
+      { type: ProductType.GPU, prioritize: ProductsOrderBy.ReleaseDate },
+      { trx },
+    );
+
     const pageProps: ListGpusPageProps = {
       gpus: JSON.parse(JSON.stringify(gpus)),
-
-      relatedProducts: {
-        comparisons: [],
-        gpus: [],
-      },
+      relatedProducts: JSON.parse(JSON.stringify(relatedProducts)),
     };
 
     return { props: pageProps };

@@ -5,10 +5,10 @@ export enum MetaRobots {
   NOSNIPPET = 'nosnippet',
 }
 
-export interface Seo {
-  htmlTitle?: string;
-  metaKeywords?: string;
-  metaDescription?: string;
-  metaRobots?: MetaRobots[];
+export interface SeoInputs {
+  title?: string;
+  keywords?: string[];
+  description?: string;
+  robots?: MetaRobots[];
   canonical?: string;
 }

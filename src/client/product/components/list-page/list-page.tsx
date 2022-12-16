@@ -35,8 +35,10 @@ export interface ListGpusPageProps {
 export const ListGpusPage = (props: ListGpusPageProps) => {
   const { gpus, relatedProducts } = props;
   useProductCache(gpus);
-
   const router = useRouter();
+
+  const title = 'All GPUs';
+  const canonical = '/gpus/list';
 
   const handleGpuRowClick = useCallback(
     (url: string) => {
@@ -46,11 +48,11 @@ export const ListGpusPage = (props: ListGpusPageProps) => {
   );
 
   return (
-    <WebsiteLayout>
+    <WebsiteLayout seo={{ title, canonical }}>
       <Breadcrumbs className="mb-4">
         <Breadcrumb href="/">Home</Breadcrumb>
         <Breadcrumb href="/gpus">GPUs</Breadcrumb>
-        <Breadcrumb>All GPUS</Breadcrumb>
+        <Breadcrumb>{title}</Breadcrumb>
       </Breadcrumbs>
 
       <section className="flex flex-col gap-8 justify-center">
@@ -64,7 +66,7 @@ export const ListGpusPage = (props: ListGpusPageProps) => {
         </section>
 
         <article className="flex-1 flex flex-col">
-          <h1 className="md:text-2xl text-3xl">All GPUs</h1>
+          <h1 className="md:text-2xl text-3xl">{title}</h1>
 
           <div className="flex">
             <Table responsive className="flex-1">

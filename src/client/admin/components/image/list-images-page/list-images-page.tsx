@@ -16,6 +16,7 @@ import {
 } from '@client/shared/components';
 import { AdminLayout } from '@client/shared/layouts';
 import { Image } from '@shared/image';
+import { MetaRobots } from '@shared/layout';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 
@@ -30,8 +31,11 @@ export const AdminListImagesPage = (props: AdminListImagesPageProps) => {
   const [saved] = useState(router.query.saved === 'true');
   const [deleted] = useState(router.query.deleted === 'true');
 
+  const title = 'Images';
+  const robots = [MetaRobots.NOINDEX];
+
   return (
-    <AdminLayout>
+    <AdminLayout seo={{ title, robots }}>
       <article>
         <section>
           {saved && (

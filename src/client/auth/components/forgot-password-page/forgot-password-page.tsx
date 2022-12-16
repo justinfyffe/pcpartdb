@@ -20,6 +20,7 @@ import { userService } from '@client/user';
 import Joi from '@hapi/joi';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { ApiError, ValidationErrorType } from '@shared/error';
+import { MetaRobots } from '@shared/layout';
 import { EMAIL_MAX_LENGTH } from '@shared/user';
 import React, { useCallback, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -71,10 +72,13 @@ export const ForgotPasswordPage = (_props: ForgotPasswordPageProps) => {
     [setError],
   );
 
+  const title = 'Forgot your Password?';
+  const robots = [MetaRobots.NOINDEX];
+
   return (
-    <WebsiteLayout>
+    <WebsiteLayout seo={{ title, robots }}>
       <article>
-        <h1 className="font-semibold mb-4">Forgot your Password?</h1>
+        <h1 className="font-semibold mb-4">{title}</h1>
 
         <section>
           {requestError && isInternalServerError(requestError) && (

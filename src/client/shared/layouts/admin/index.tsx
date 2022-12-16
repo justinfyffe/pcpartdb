@@ -1,10 +1,12 @@
 import { authService } from '@client/auth';
 import { ComputerDesktopIcon } from '@heroicons/react/24/solid';
+import { SeoInputs } from '@shared/layout';
 import { useRouter } from 'next/router';
 import React, { FunctionComponent, useCallback } from 'react';
 import {
   Button,
   ButtonVariant,
+  Seo,
   Toolbar,
   ToolbarNav,
   ToolbarTitle,
@@ -12,6 +14,8 @@ import {
 import { classNames } from '../../ui';
 
 interface AdminLayoutProps {
+  seo?: SeoInputs;
+
   className?: string;
   children?: React.ReactNode;
 }
@@ -26,6 +30,7 @@ export const AdminLayout: FunctionComponent<AdminLayoutProps> = (props) => {
 
   return (
     <>
+      <Seo seo={props.seo || {}} />
       <Toolbar>
         <ToolbarTitle>
           <ComputerDesktopIcon className={classNames('h-8 w-8')} /> PC Parts DB

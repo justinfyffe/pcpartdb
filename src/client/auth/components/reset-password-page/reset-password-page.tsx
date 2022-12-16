@@ -21,6 +21,7 @@ import { userService } from '@client/user';
 import Joi from '@hapi/joi';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { ApiError, ValidationErrorType } from '@shared/error';
+import { MetaRobots } from '@shared/layout';
 import { PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH } from '@shared/user';
 import { useRouter } from 'next/router';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -87,8 +88,11 @@ export const ResetPasswordPage = (props: ResetPasswordPageProps) => {
     [setError, router],
   );
 
+  const title = 'Reset Password';
+  const robots = [MetaRobots.NOINDEX];
+
   return (
-    <WebsiteLayout>
+    <WebsiteLayout seo={{ title, robots }}>
       <article>
         <h1 className="font-semibold mb-4">Reset Password</h1>
 

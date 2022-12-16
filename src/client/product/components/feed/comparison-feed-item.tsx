@@ -40,7 +40,7 @@ export const ComparisonFeedItem: FunctionComponent<ComparisonFeedItemProps> = (
 
   return (
     <a
-      href={getProductComparisonPath(product1, product2)}
+      href={getProductComparisonPath(products)}
       className={classNames(
         'flex-1 mx-4 mb-6 max-w-96 min-w-70',
         props.className,

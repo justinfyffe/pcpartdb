@@ -1,4 +1,5 @@
 import { ComputerDesktopIcon, HeartIcon } from '@heroicons/react/24/solid';
+import { SeoInputs } from '@shared/layout';
 import React, { FunctionComponent } from 'react';
 import {
   Button,
@@ -8,6 +9,7 @@ import {
   FooterSectionTitle,
   List,
   ListItem,
+  Seo,
   Toolbar,
   ToolbarNav,
   ToolbarTitle,
@@ -15,6 +17,8 @@ import {
 import { classNames } from '../../ui';
 
 interface WebsiteLayoutProps {
+  seo?: SeoInputs;
+
   className?: string;
   children?: React.ReactNode;
 }
@@ -22,6 +26,7 @@ interface WebsiteLayoutProps {
 export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
   return (
     <>
+      <Seo seo={props.seo ?? {}} />
       <Toolbar>
         <ToolbarTitle>
           <ComputerDesktopIcon className={classNames('h-8 w-8 mt-0.5')} /> PC

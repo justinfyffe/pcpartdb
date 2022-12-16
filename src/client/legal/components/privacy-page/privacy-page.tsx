@@ -6,15 +6,19 @@ import React from 'react';
 interface PrivacyPageProps {}
 
 export const PrivacyPage = (_props: PrivacyPageProps) => {
+  const title = 'Privacy Policy';
+  const canonical = '/privacy';
+  const keywords: string[] = [];
+
   return (
-    <WebsiteLayout>
+    <WebsiteLayout seo={{ title, keywords, canonical }}>
       <Breadcrumbs className="mb-4">
         <Breadcrumb href="/">Home</Breadcrumb>
-        <Breadcrumb>Privacy Policy</Breadcrumb>
+        <Breadcrumb>{title}</Breadcrumb>
       </Breadcrumbs>
 
       <article>
-        <h1 className="font-semibold">Privacy Policy</h1>
+        <h1 className="font-semibold">{title}</h1>
 
         <section>
           <p>

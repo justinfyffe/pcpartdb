@@ -107,7 +107,12 @@ export class ProductService {
     const relatedGpus = new Map<number, Product>();
     const relatedComparisons = new Map<string, ProductComparison>();
     let prevProduct: Product = null;
-    for (let i = 0; i < limit; ++i) {
+    for (
+      let i = 0;
+      i < gpus.length &&
+      (relatedGpus.size < limit || relatedComparisons.size < limit);
+      ++i
+    ) {
       prevProduct = gpus[seedIndex].serialize();
 
       seedIndex += (i + 1) * (i % 2 === 0 ? 1 : -1);

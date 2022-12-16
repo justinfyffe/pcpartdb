@@ -11,13 +11,15 @@ import {
 } from '@client/shared/components';
 import { WebsiteLayout } from '@client/shared/layouts';
 import { classNames } from '@client/shared/ui';
-import {
-  Sidenav,
-  SidenavPopularComparisons,
-  SidenavPopularProducts,
-} from '@client/sidenav';
+import { Sidenav, SidenavComparisons, SidenavProducts } from '@client/sidenav';
 import { formatBenchmark } from '@shared/benchmark';
-import { Product, RelatedProducts } from '@shared/product';
+import {
+  getProductComparisonName,
+  getProductComparisonPath,
+  getProductName,
+  ProductComparison,
+  RelatedProducts,
+} from '@shared/product';
 import { formatProductMeta } from '@shared/product-meta';
 import { getShoppingUrl } from '@shared/retail-model';
 import React, { useMemo } from 'react';
@@ -34,17 +36,15 @@ import { SpecRow } from './spec-row';
 import { Summary } from './summary';
 
 export interface CompareGpuPageProps {
-  gpus: Product[];
-
+  comparison: ProductComparison;
   relatedProducts: RelatedProducts;
 }
 
 export const CompareGpuPage = (props: CompareGpuPageProps) => {
-  const { gpus } = props;
-  useProductCache(gpus);
+  const { comparison, relatedProducts } = props;
+  useProductCache(comparison);
 
-  const gpu1 = gpus[0];
-  const gpu2 = gpus[1];
+  const [gpu1, gpu2] = comparison;
 
   const context = useMemo(
     () => createProductsContextState([gpu1, gpu2]),
@@ -55,23 +55,29 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
   const benchmarks1 = context.benchmarks[0];
   const meta2 = context.meta[1];
   const benchmarks2 = context.benchmarks[1];
-  const shoppingUrl1 = useMemo(() => getShoppingUrl(gpu1), [gpu1]);
-  const shoppingUrl2 = useMemo(() => getShoppingUrl(gpu2), [gpu2]);
+  const shoppingUrl1 = getShoppingUrl(gpu1);
+  const shoppingUrl2 = getShoppingUrl(gpu2);
 
-  const pageTitle = `${gpu1.name} vs ${gpu2.name}`;
+  const title = getProductComparisonName(comparison);
+  const keywords = [
+    getProductName(comparison[0]),
+    getProductName(comparison[1]),
+    getProductComparisonName(comparison),
+  ];
+  const canonical = getProductComparisonPath(comparison);
 
   return (
     <ProductsContext.Provider value={context}>
-      <WebsiteLayout>
+      <WebsiteLayout seo={{ title, keywords, canonical }}>
         <Breadcrumbs className="mb-4">
           <Breadcrumb href="/">Home</Breadcrumb>
           <Breadcrumb href="/gpus">GPUs</Breadcrumb>
-          <Breadcrumb>{pageTitle}</Breadcrumb>
+          <Breadcrumb>{title}</Breadcrumb>
         </Breadcrumbs>
 
         <div className="flex flex-wrap gap-8 justify-center">
           <section className="flex flex-wrap w-full">
-            <h1 className="font-semibold">{pageTitle}</h1>
+            <h1 className="font-semibold">{title}</h1>
 
             <CompareProductsForm values={[gpu1.id, gpu2.id]} />
           </section>
@@ -446,8 +452,8 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
           </article>
 
           <Sidenav>
-            <SidenavPopularComparisons />
-            <SidenavPopularProducts />
+            <SidenavComparisons comparisons={relatedProducts.comparisons} />
+            <SidenavProducts products={relatedProducts.gpus} />
           </Sidenav>
         </div>
       </WebsiteLayout>

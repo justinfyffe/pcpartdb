@@ -35,18 +35,21 @@ export const HomePage = (props: HomePageProps) => {
     () => nvidiaVsAmdGpus.flat(),
     [nvidiaVsAmdGpus],
   );
+  // TODO: cache related products
   useProductCache(comparisonGpus, nvidiaGpus, amdGpus);
 
   const [bestPerformanceNvidia, bestValueNvidia] = nvidiaGpus;
   const [bestPerformanceAmd, bestValueAmd] = amdGpus;
 
+  const title = 'GPU Specifications, Benchmarks, and Comparisons';
+  const canonical = '/';
+  const keywords: string[] = [];
+
   return (
-    <WebsiteLayout>
+    <WebsiteLayout seo={{ title, keywords, canonical }}>
       <section className="flex flex-col gap-8 justify-center">
         <section className={classNames('flex flex-col justify-center gap-4')}>
-          <h1 className="md:text-2xl text-3xl mb-0">
-            GPU Specifications, Benchmarks, and Comparisons
-          </h1>
+          <h1 className="md:text-2xl text-3xl mb-0">{title}</h1>
 
           <CompareProductsForm values={[null, null]} />
           <CompareProductsFormLinks relatedProducts={relatedProducts} />

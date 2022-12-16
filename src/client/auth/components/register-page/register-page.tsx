@@ -17,6 +17,7 @@ import { WebsiteLayout } from '@client/shared/layouts';
 import Joi from '@hapi/joi';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { ApiError, ValidationErrorType } from '@shared/error';
+import { MetaRobots } from '@shared/layout';
 import {
   EMAIL_MAX_LENGTH,
   PASSWORD_MAX_LENGTH,
@@ -81,8 +82,11 @@ export const RegisterPage = (_props: RegisterPageProps) => {
     [router, setError],
   );
 
+  const title = 'Create Account?';
+  const robots = [MetaRobots.NOINDEX];
+
   return (
-    <WebsiteLayout>
+    <WebsiteLayout seo={{ title, robots }}>
       <article>
         <h1 className="font-semibold mb-4">Create Account</h1>
 

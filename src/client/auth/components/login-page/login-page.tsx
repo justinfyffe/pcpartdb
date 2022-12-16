@@ -20,6 +20,7 @@ import { WebsiteLayout } from '@client/shared/layouts';
 import Joi from '@hapi/joi';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { ApiError, ValidationErrorType } from '@shared/error';
+import { MetaRobots } from '@shared/layout';
 import { EMAIL_MAX_LENGTH, PASSWORD_MAX_LENGTH } from '@shared/user';
 import { useRouter } from 'next/dist/client/router';
 import React, { FunctionComponent, useCallback, useState } from 'react';
@@ -90,15 +91,18 @@ export const LoginPage: FunctionComponent<LoginPageProps> = (
     [router, setError],
   );
 
+  const title = 'Sign in to your Account';
+  const robots = [MetaRobots.NOINDEX];
+
   return (
-    <WebsiteLayout>
+    <WebsiteLayout seo={{ title, robots }}>
       <Breadcrumbs className="mb-4">
         <Breadcrumb href="/">Home</Breadcrumb>
         <Breadcrumb>Sign in</Breadcrumb>
       </Breadcrumbs>
 
       <article>
-        <h1 className="font-semibold mb-4">Sign in to your Account</h1>
+        <h1 className="font-semibold mb-4">{title}</h1>
 
         <section>
           {requestError && isForbiddenError(requestError) && (

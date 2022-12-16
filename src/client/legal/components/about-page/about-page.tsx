@@ -6,11 +6,15 @@ import React from 'react';
 interface AboutPageProps {}
 
 export const AboutPage = (_props: AboutPageProps) => {
+  const title = 'About Us';
+  const canonical = '/about';
+  const keywords: string[] = [];
+
   return (
-    <WebsiteLayout>
+    <WebsiteLayout seo={{ title, canonical, keywords }}>
       <Breadcrumbs className="mb-4">
         <Breadcrumb href="/">Home</Breadcrumb>
-        <Breadcrumb>About us</Breadcrumb>
+        <Breadcrumb>{title}</Breadcrumb>
       </Breadcrumbs>
 
       <article>

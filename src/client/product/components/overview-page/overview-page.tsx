@@ -36,6 +36,10 @@ export const OverviewGpusPage = (props: OverviewGpusPageProps) => {
   const { gpusByPerformance, gpusByValue, relatedProducts } = props;
   useProductCache(gpusByPerformance, gpusByValue);
 
+  const title = 'Compare GPU Specifications, Benchmarks, and Comparisons';
+  const canonical = '/gpus';
+  const keywords: string[] = [];
+
   const popularComparisons = useMemo(() => {
     return [
       [gpusByPerformance[0], gpusByPerformance[1]],
@@ -49,7 +53,7 @@ export const OverviewGpusPage = (props: OverviewGpusPageProps) => {
   }, [gpusByPerformance]);
 
   return (
-    <WebsiteLayout>
+    <WebsiteLayout seo={{ title, keywords, canonical }}>
       <Breadcrumbs className="mb-4">
         <Breadcrumb href="/">Home</Breadcrumb>
         <Breadcrumb>GPUs</Breadcrumb>
@@ -57,9 +61,9 @@ export const OverviewGpusPage = (props: OverviewGpusPageProps) => {
 
       <section className="flex flex-col gap-8 justify-center">
         <section className={classNames('flex flex-col justify-center gap-4')}>
-          <h2 className="md:text-2xl text-3xl mb-0">
+          <h1 className="md:text-2xl text-3xl mb-0">
             Compare GPU Specifications, Benchmarks, and Comparisons
-          </h2>
+          </h1>
 
           <CompareProductsForm values={[null, null]} />
           <CompareProductsFormLinks relatedProducts={relatedProducts} />

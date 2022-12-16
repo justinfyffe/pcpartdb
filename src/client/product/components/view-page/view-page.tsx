@@ -7,11 +7,7 @@ import {
 } from '@client/shared/components';
 import { WebsiteLayout } from '@client/shared/layouts';
 import { classNames } from '@client/shared/ui';
-import {
-  Sidenav,
-  SidenavPopularComparisons,
-  SidenavPopularProducts,
-} from '@client/sidenav';
+import { Sidenav, SidenavComparisons, SidenavProducts } from '@client/sidenav';
 import {
   BoltIcon,
   CalendarDaysIcon,
@@ -22,7 +18,12 @@ import {
   StarIcon,
 } from '@heroicons/react/24/outline';
 import { formatBenchmark } from '@shared/benchmark';
-import { Product, RelatedProducts } from '@shared/product';
+import {
+  getProductDetailsPath,
+  getProductName,
+  Product,
+  RelatedProducts,
+} from '@shared/product';
 import { formatProductMeta } from '@shared/product-meta';
 import { getShoppingUrl } from '@shared/retail-model';
 import { formatSpec } from '@shared/spec';
@@ -50,13 +51,17 @@ export interface ViewGpuPageProps {
 }
 
 export const ViewGpuPage = (props: ViewGpuPageProps) => {
-  const { gpu } = props;
+  const { gpu, relatedProducts } = props;
   useProductCache(gpu);
 
   const context = useMemo(() => createProductContextState(gpu), [gpu]);
   const specs = context.specs;
   const meta = context.metas;
   const benchmarks = context.benchmarks;
+
+  const title = gpu.name;
+  const canonical = getProductDetailsPath(gpu);
+  const keywords = [getProductName(gpu)];
 
   const highlightMemory = useMemo(() => {
     const memorySize = formatSpec(specs.memorySize);
@@ -74,7 +79,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
 
   return (
     <ProductContext.Provider value={context}>
-      <WebsiteLayout>
+      <WebsiteLayout seo={{ title, canonical, keywords }}>
         <Breadcrumbs className="mb-4">
           <Breadcrumb href="/">Home</Breadcrumb>
           <Breadcrumb href="/gpus">GPUs</Breadcrumb>
@@ -83,7 +88,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
 
         <div className="flex flex-wrap justify-center gap-8">
           <section className="flex flex-col w-full">
-            <h1 className="md:text-2xl text-3xl">{gpu.name}</h1>
+            <h1 className="md:text-2xl text-3xl">{title}</h1>
 
             <CompareProductsForm values={[gpu.id]} />
           </section>
@@ -393,8 +398,8 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
           </article>
 
           <Sidenav>
-            <SidenavPopularProducts />
-            <SidenavPopularComparisons />
+            <SidenavProducts products={relatedProducts.gpus} />
+            <SidenavComparisons comparisons={relatedProducts.comparisons} />
           </Sidenav>
         </div>
       </WebsiteLayout>

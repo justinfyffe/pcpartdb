@@ -24,7 +24,7 @@ export const CompareProductsFormLinks: FunctionComponent<
         <ul className="flex gap-3">
           {comparisons.map((comparison, i) => (
             <li key={i}>
-              <a href={getProductComparisonPath(...comparison)}>
+              <a href={getProductComparisonPath(comparison)}>
                 {getProductComparisonName(comparison)}
               </a>
               {i < comparisons.length - 1 && <>,</>}

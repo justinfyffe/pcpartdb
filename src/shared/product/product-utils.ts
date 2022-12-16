@@ -13,7 +13,6 @@ export function getProductName(
   }
 
   const includeCompany = options?.company ?? true;
-
   const company = includeCompany ? product.specs?.company?.value ?? null : null;
 
   return company != null ? `${company} ${product.name}` : product.name;
@@ -42,6 +41,11 @@ export function getProductDetailsPath(product: Product) {
   return `/gpus/view/${product.slug}`;
 }
 
-export function getProductComparisonPath(product1: Product, product2: Product) {
+export function getProductComparisonPath(comparison: ProductComparison) {
+  const [product1, product2] = reorderProductComparison(comparison);
   return `/gpus/compare/${product1.slug}--vs--${product2.slug}`;
+}
+
+function reorderProductComparison(comparison: ProductComparison) {
+  return [...comparison].sort((p1, p2) => p1.id - p2.id);
 }

@@ -23,14 +23,16 @@ export async function getServerSideProps(_ctx: NextPageContext) {
       TOTAL_PRODUCTS_PER_LIST,
     );
 
-    const pageProps = {
-      gpusByPerformance: bestPerforming,
-      gpusByValue: bestValue,
+    const relatedProducts = await productService.getRelatedProducts(
+      { type: ProductType.GPU, prioritize: ProductsOrderBy.ReleaseDate },
+      { trx },
+    );
 
-      relatedProducts: {
-        comparisons: [],
-        gpus: [],
-      },
+    const pageProps = {
+      gpusByPerformance: JSON.parse(JSON.stringify(bestPerforming)),
+      gpusByValue: JSON.parse(JSON.stringify(bestValue)),
+
+      relatedProducts: JSON.parse(JSON.stringify(relatedProducts)),
     } as OverviewGpusPageProps;
 
     return { props: pageProps };
