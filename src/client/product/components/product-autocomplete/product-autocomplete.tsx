@@ -7,6 +7,7 @@ import {
 import { classNames } from '@client/shared/ui';
 import { ChevronDownIcon } from '@heroicons/react/24/outline';
 import { Product, ProductType } from '@shared/product';
+import { getCompanyLogoImage } from '@shared/product-image';
 import React, {
   forwardRef,
   useCallback,
@@ -95,38 +96,14 @@ export const ProductAutocomplete = forwardRef<
     [productCache, onChange],
   );
 
-  const prefixImage = useMemo(() => {
-    if (product == null) {
-      return null;
-    }
-
-    const specs = product.specs;
-
-    if (specs.company?.value === 'NVIDIA') {
-      return '/images/logos/nvidia.svg';
-    } else if (specs.company?.value === 'AMD') {
-      return '/images/logos/amd.svg';
-    } else {
-      return null;
-    }
-  }, [product]);
+  const prefixImage = getCompanyLogoImage(product);
 
   const resultsImages = useMemo(() => {
     if (results.length === 0) {
       return null;
     }
 
-    return results.map((product) => {
-      const specs = product.specs;
-
-      if (specs.company?.value === 'NVIDIA') {
-        return '/images/logos/nvidia.svg';
-      } else if (specs.company?.value === 'AMD') {
-        return '/images/logos/amd.svg';
-      } else {
-        return null;
-      }
-    });
+    return results.map((product) => getCompanyLogoImage(product));
   }, [results]);
 
   return (
