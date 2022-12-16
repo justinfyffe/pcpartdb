@@ -1,9 +1,14 @@
 import { OverviewGpusPage, OverviewGpusPageProps } from '@client/product';
 import { transaction } from '@server/db/database';
 import { productService } from '@server/product/product-service';
-import { limitProducts, sortProducts } from '@server/product/product-utils';
 import { serializeAsync } from '@server/shared/types/serialize';
-import { Product, ProductsOrderBy, ProductType } from '@shared/product';
+import {
+  limitProducts,
+  Product,
+  ProductsOrderBy,
+  ProductType,
+  sortProducts,
+} from '@shared/product';
 import { NextPageContext } from 'next';
 
 const TOTAL_PRODUCTS_PER_LIST = 5;

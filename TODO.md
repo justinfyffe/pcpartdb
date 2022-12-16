@@ -9,25 +9,15 @@ Immediate Tasks:
   - auto-generate summary
 - gpus list page
   - title based on sorting and filter
+  - seo title based on sorting and filter
 - gpus overview page
   - popular comparisons
   - popular gpus
-- side navs
-  - popular comparisons
-  - popular gpus
-- home page
-- about page
-  - fix layout
-  - side bar?
-- privacy policy page
-  - fix layout
-  - side bar?
 - clean up html
 - initial on-page seo
-  - canonical links
   - alt tags
-- consistent naming of comparisons (order by id?)
 - launch
+- improve content
 - retail models
   - override specs
 - look into using useController
