@@ -21,7 +21,9 @@ export const ProductContext = createContext<ProductContextState>({
   reviews: {},
 });
 
-export function createProductContextState(product: Product) {
+export function createProductContextState(input: Product) {
+  const product = { ...input };
+
   return {
     product,
     specs: product.specs,
