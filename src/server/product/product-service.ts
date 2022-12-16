@@ -4,6 +4,8 @@ import { Context } from '@server/shared/context';
 import { validate } from '@server/shared/types/validate';
 import { benchmarksValidator } from '@shared/benchmark';
 import {
+  filterProducts,
+  limitProducts,
   ListProductsRequest,
   Product,
   ProductComparison,
@@ -11,6 +13,7 @@ import {
   ProductType,
   RelatedProducts,
   RelatedProductsRequest,
+  sortProducts,
 } from '@shared/product';
 import { productImagesValidator } from '@shared/product-image';
 import { ProductMetas, productMetasValidator } from '@shared/product-meta';
@@ -18,7 +21,6 @@ import { reviewsValidator } from '@shared/review';
 import { Specs, specsValidator } from '@shared/spec';
 import { addPerformanceBenchmarks } from './benchmark-utils';
 import { productRepository } from './product-repository';
-import { filterProducts, limitProducts, sortProducts } from './product-utils';
 
 const createProductValidator = Joi.object({
   slug: Joi.string().required(),
