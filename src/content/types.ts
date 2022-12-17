@@ -1,3 +1,5 @@
+import React from 'react';
+
 export enum ContentTag {
   BestPerformance = 'BEST_PERFORMANCE',
   BestValue = 'BEST_VALUE',
@@ -20,8 +22,6 @@ export interface ContentUnit {
   text: string[];
 }
 
-export type ContentSentence = ContentUnit[];
+export type Content = ContentUnit[];
 
-export type ContentParagraph = ContentSentence[];
-
-export type Content = ContentParagraph[];
+export type ContentParams = Record<string, string | React.ReactElement>;

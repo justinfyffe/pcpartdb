@@ -1,11 +1,6 @@
-import {
-  Content,
-  ContentParagraph,
-  ContentSentence,
-  ContentTag,
-} from '@content/types';
+import { Content, ContentTag } from '@content/types';
 
-const introSentence1: ContentSentence = [
+export const introSentence1: Content = [
   {
     tags: [ContentTag.Recent, ContentTag.Released],
     text: [
@@ -41,7 +36,7 @@ const introSentence1: ContentSentence = [
     ],
   },
 ];
-const introSentence2: ContentSentence = [
+export const introSentence2: Content = [
   {
     tags: [],
     text: [
@@ -52,14 +47,7 @@ const introSentence2: ContentSentence = [
   },
 ];
 
-export const introParagraph: ContentParagraph = [
-  introSentence1,
-  introSentence2,
-];
-
-export const introSection: Content = [introParagraph];
-
-const performanceSentence1: ContentSentence = [
+export const performanceSentence1: Content = [
   {
     tags: [ContentTag.BestPerformance],
     text: [
@@ -78,7 +66,7 @@ const performanceSentence1: ContentSentence = [
   },
 ];
 
-const performanceSentence2: ContentSentence = [
+export const performanceSentence2: Content = [
   {
     tags: [ContentTag.BestPerformance],
     text: [
@@ -98,7 +86,7 @@ const performanceSentence2: ContentSentence = [
   },
 ];
 
-const performanceSentence3: ContentSentence = [
+export const performanceSentence3: Content = [
   {
     tags: [ContentTag.BestValue],
     text: [
@@ -117,13 +105,7 @@ const performanceSentence3: ContentSentence = [
   },
 ];
 
-const performanceParagraph1: ContentParagraph = [
-  performanceSentence1,
-  performanceSentence2,
-  performanceSentence3,
-];
-
-const performanceSentence4: ContentSentence = [
+export const performanceSentence4: Content = [
   {
     tags: [ContentTag.BestPerformance],
     text: [
@@ -144,7 +126,7 @@ const performanceSentence4: ContentSentence = [
   },
 ];
 
-const performanceSentence5: ContentSentence = [
+export const performanceSentence5: Content = [
   {
     tags: [],
     text: [
@@ -154,14 +136,4 @@ const performanceSentence5: ContentSentence = [
       `,
     ],
   },
-];
-
-const performanceParagraph2: ContentParagraph = [
-  performanceSentence4,
-  performanceSentence5,
-];
-
-export const performanceSection: Content = [
-  performanceParagraph1,
-  performanceParagraph2,
 ];
