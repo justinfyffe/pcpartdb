@@ -20,6 +20,7 @@
       "outDir": ".next",
       "paths": {
         "@client/*": ["src/client/*"],
+        "@content/*": ["src/content/*"],
         "@shared/*": ["src/shared/*"],
         "@server/*": ["src/server/*"],
       },
