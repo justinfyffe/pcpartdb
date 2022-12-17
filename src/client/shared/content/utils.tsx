@@ -1,3 +1,5 @@
+import React from 'react';
+import { Content } from './component';
 import {
   CompiledContent,
   ContentKeys,
@@ -68,7 +70,6 @@ function generateContentKey(keys: ContentKeys = []) {
   return sorted.join(',');
 }
 
-// TODO: return react component?
 export function compileContent(...content: RawContent[]) {
   const compiled: CompiledContent = {};
 
@@ -81,7 +82,10 @@ export function compileContent(...content: RawContent[]) {
     compiled[key] = compileContentVariants(...variants);
   }
 
-  return compiled;
+  // eslint-disable-next-line react/display-name
+  return (props: { keys?: ContentKeys; params?: ContentParams }) => (
+    <Content content={compiled} {...props} />
+  );
 }
 
 function compileContentVariants(...variants: RawContentVariant[]) {

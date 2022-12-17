@@ -8,7 +8,7 @@ export enum ContentKey {
   Released = 'RELEASED',
 }
 
-export const introSentence1 = compileContent(
+export const IntroSentence1 = compileContent(
   {
     key: [ContentKey.Recent, ContentKey.Released],
     variants: [

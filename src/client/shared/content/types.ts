@@ -1,7 +1,7 @@
-import { FunctionComponent } from 'react';
+import React, { FunctionComponent } from 'react';
 
 export type ContentKeys = string[] | Record<string, boolean>;
-export type ContentParams = Record<string, string>;
+export type ContentParams = Record<string, string | React.ReactNode>;
 export type ContentDependencies = string[];
 
 export interface RawContentVariant {
