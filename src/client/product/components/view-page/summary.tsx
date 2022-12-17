@@ -1,6 +1,8 @@
+import { Content } from '@client/shared/content';
 import { formatProductMeta } from '@shared/product-meta';
 import { formatSpec } from '@shared/spec';
 import React, { useContext, useMemo } from 'react';
+import { ContentKey, introSentence1 } from './content';
 import { ProductContext } from './product-context';
 
 const HIGH_END_MIN = 650;
@@ -15,13 +17,30 @@ export const Summary = (props: SummaryProps) => {
 
   return (
     <section className={className}>
-      <IntroParagraph />
-      <MemoryParagraph />
-      <CompatibilityParagraph />
-      <CoresParagraph />
-      <ConclusionParagraph />
+      <p>
+        <Content
+          content={introSentence1}
+          keys={{ [ContentKey.Released]: true }}
+          params={{
+            productName: 'Test GPU 1',
+            marketSegment: 'Desktop',
+            releaseDate: '12/12/12',
+            company: 'AMD',
+          }}
+        />
+      </p>
     </section>
   );
+
+  // return (
+  //   <section className={className}>
+  //     <IntroParagraph />
+  //     <MemoryParagraph />
+  //     <CompatibilityParagraph />
+  //     <CoresParagraph />
+  //     <ConclusionParagraph />
+  //   </section>
+  // );
 };
 
 const IntroParagraph = () => {
