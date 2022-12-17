@@ -8,6 +8,8 @@ export enum ContentKey {
   Released = 'RELEASED',
 }
 
+// TODO: flatten so keys, deps, and component are all in the same object
+// Rename keys to "hints"
 export const IntroSentence1 = compileContent(
   {
     key: [ContentKey.Recent, ContentKey.Released],
