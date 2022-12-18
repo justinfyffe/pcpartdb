@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react';
 
-export type ContentKeys = string[] | Record<string, boolean>;
+export type ContentHints = string[] | Record<string, boolean>;
 export type ContentParams = Record<string, string | React.ReactNode>;
 export type ContentDependencies = string[];
 
@@ -10,15 +10,17 @@ export interface RawContentVariant {
 }
 
 export interface RawContent {
-  key?: ContentKeys;
-  variants: RawContentVariant | RawContentVariant[];
-}
-
-export interface ContentVariant {
-  deps: string[];
+  hints?: ContentHints;
+  deps?: string[];
   component: FunctionComponent<ContentParams>;
 }
 
 export interface CompiledContent {
-  [key: string]: ContentVariant[];
+  // Hints key to variant
+  [key: string]: CompiledContentVariant[];
+}
+
+export interface CompiledContentVariant {
+  deps?: string[];
+  component: FunctionComponent<ContentParams>;
 }

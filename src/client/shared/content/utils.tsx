@@ -2,25 +2,24 @@ import React from 'react';
 import { Content } from './component';
 import {
   CompiledContent,
-  ContentKeys,
+  CompiledContentVariant,
+  ContentHints,
   ContentParams,
-  ContentVariant,
   RawContent,
-  RawContentVariant,
 } from './types';
 
 interface ProcessContentOptions {
   content: CompiledContent;
-  keys?: ContentKeys;
+  hints?: ContentHints;
   params?: ContentParams;
 }
 
 export function processContent(options: ProcessContentOptions) {
-  const { content, keys, params } = options;
+  const { content, hints, params } = options;
 
-  const variants = getVariantsByKeys(content, keys);
+  const variants = getVariantsByHints(content, hints);
   if (variants == null || variants.length === 0) {
-    const tagsKey = generateContentKey(keys);
+    const tagsKey = generateContentKey(hints);
     throw new Error(
       `Cannot find content variant for tags=${tagsKey}. A fallback variant is missing.`,
     );
@@ -37,7 +36,7 @@ export function processContent(options: ProcessContentOptions) {
   return variant.component(params);
 }
 
-function getVariantsByKeys(content: CompiledContent, keys?: ContentKeys) {
+function getVariantsByHints(content: CompiledContent, keys?: ContentHints) {
   const key = generateContentKey(keys ?? []);
 
   const variants = content[key];
@@ -46,7 +45,7 @@ function getVariantsByKeys(content: CompiledContent, keys?: ContentKeys) {
 }
 
 function getVariantByParams(
-  variants: ContentVariant[],
+  variants: CompiledContentVariant[],
   params?: ContentParams,
 ) {
   const paramsToFind = new Set(Object.keys(params ?? {}));
@@ -63,7 +62,7 @@ function getVariantByParams(
   return null;
 }
 
-function generateContentKey(keys: ContentKeys = []) {
+function generateContentKey(keys: ContentHints = []) {
   const sorted = Array.isArray(keys)
     ? [...keys].sort()
     : [...Object.keys(keys).filter((key) => keys[key] === true)].sort();
@@ -74,23 +73,21 @@ export function compileContent(...content: RawContent[]) {
   const compiled: CompiledContent = {};
 
   for (let i = 0; i < content.length; ++i) {
-    const { key: rawKey, variants: rawVariants } = content[i];
+    const { hints, deps, component } = content[i];
 
-    const key = generateContentKey(rawKey);
-    const variants = Array.isArray(rawVariants) ? rawVariants : [rawVariants];
-
-    compiled[key] = compileContentVariants(...variants);
+    const key = generateContentKey(hints);
+    compiled[key] = compiled[key] || [];
+    compiled[key].push({ deps, component });
   }
 
+  Object.keys(compiled).forEach((key) => {
+    compiled[key].sort(
+      (v1, v2) => (v2.deps?.length ?? 0) - (v1.deps?.length ?? 0),
+    );
+  });
+
   // eslint-disable-next-line react/display-name
-  return (props: { keys?: ContentKeys; params?: ContentParams }) => (
+  return (props: { hints?: ContentHints; params?: ContentParams }) => (
     <Content content={compiled} {...props} />
   );
-}
-
-function compileContentVariants(...variants: RawContentVariant[]) {
-  return variants.map((variant) => ({
-    deps: variant.deps ?? [],
-    component: variant.component,
-  }));
 }

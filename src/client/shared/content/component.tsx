@@ -1,12 +1,12 @@
 import React, { FunctionComponent, useContext } from 'react';
 import { ContentContext } from './context';
-import { CompiledContent, ContentKeys, ContentParams } from './types';
+import { CompiledContent, ContentHints, ContentParams } from './types';
 import { processContent } from './utils';
 
 export interface ContentProps {
   content: CompiledContent;
 
-  keys?: ContentKeys;
+  keys?: ContentHints;
   params?: ContentParams;
 }
 

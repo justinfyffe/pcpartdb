@@ -1,8 +1,8 @@
 import { createContext } from 'react';
-import { ContentKeys, ContentParams } from './types';
+import { ContentHints, ContentParams } from './types';
 
 interface ContentContextState {
-  keys?: ContentKeys;
+  keys?: ContentHints;
   params?: ContentParams;
 }
 

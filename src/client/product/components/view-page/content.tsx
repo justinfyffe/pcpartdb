@@ -1,82 +1,69 @@
 import { compileContent } from '@client/shared/content';
 import React from 'react';
 
-export enum ContentKey {
+export enum ContentHint {
   BestPerformance = 'BEST_PERFORMANCE',
   BestValue = 'BEST_VALUE',
   Recent = 'RECENT',
   Released = 'RELEASED',
 }
 
-// TODO: flatten so keys, deps, and component are all in the same object
-// Rename keys to "hints"
 export const IntroSentence1 = compileContent(
   {
-    key: [ContentKey.Recent, ContentKey.Released],
-    variants: [
-      {
-        deps: ['productName', 'marketSegment', 'company', 'releaseDate'],
-        component: (props) => (
-          <>
-            The {props.productName} is a {props.marketSegment} {props.company}{' '}
-            GPU that recently launched during {props.releaseDate}.
-          </>
-        ),
-      },
-      {
-        deps: ['productName', 'company', 'releaseDate'],
-        component: (props) => (
-          <>
-            The {props.productName} is a {props.company} GPU that recently
-            launched during {props.releaseDate}.
-          </>
-        ),
-      },
-    ],
+    hints: [ContentHint.Recent, ContentHint.Released],
+    deps: ['productName', 'marketSegment', 'company', 'releaseDate'],
+    component: (props) => (
+      <>
+        The {props.productName} is a {props.marketSegment} {props.company} GPU
+        that recently launched during {props.releaseDate}.
+      </>
+    ),
   },
   {
-    key: [ContentKey.Released],
-    variants: [
-      {
-        deps: ['productName', 'marketSegment', 'company', 'releaseDate'],
-        component: (props) => (
-          <>
-            The {props.productName} is a {props.marketSegment} {props.company}{' '}
-            GPU that launched during {props.releaseDate}.
-          </>
-        ),
-      },
-    ],
+    hints: [ContentHint.Recent, ContentHint.Released],
+    deps: ['productName', 'company', 'releaseDate'],
+    component: (props) => (
+      <>
+        The {props.productName} is a {props.company} GPU that recently launched
+        during {props.releaseDate}.
+      </>
+    ),
   },
   {
-    variants: [
-      {
-        deps: ['productName', 'marketSegment', 'company', 'releaseDate'],
-        component: (props) => (
-          <>
-            The {props.productName} is a {props.marketSegment} {props.company}{' '}
-            GPU with a release date of {props.releaseDate}.
-          </>
-        ),
-      },
-      {
-        deps: ['productName', 'company', 'releaseDate'],
-        component: (props) => (
-          <>
-            The {props.productName} by {props.company} has a release date of{' '}
-            {props.releaseDate}.
-          </>
-        ),
-      },
-      {
-        deps: ['productName', 'company'],
-        component: (props) => (
-          <>
-            The {props.productName} is a GPU by {props.company}.
-          </>
-        ),
-      },
-    ],
+    hints: [ContentHint.Released],
+    deps: ['productName', 'marketSegment', 'company', 'releaseDate'],
+    component: (props) => (
+      <>
+        The {props.productName} is a {props.marketSegment} {props.company} GPU
+        that launched during {props.releaseDate}.
+      </>
+    ),
+  },
+  {
+    deps: ['productName', 'marketSegment', 'company', 'releaseDate'],
+    component: (props) => (
+      <>
+        The {props.productName} is a {props.marketSegment} {props.company} GPU
+        with a release date of {props.releaseDate}.
+      </>
+    ),
+  },
+  {
+    deps: ['productName', 'company', 'releaseDate'],
+    component: (props) => (
+      <>
+        The {props.productName} by {props.company} has a release date of{' '}
+        {props.releaseDate}.
+      </>
+    ),
+  },
+  {
+    deps: ['productName', 'company'],
+    component: (props) => (
+      <>
+        The {props.productName} is a GPU by {props.company}.
+      </>
+    ),
   },
 );
 

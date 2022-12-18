@@ -1,7 +1,7 @@
 import { formatProductMeta } from '@shared/product-meta';
 import { formatSpec } from '@shared/spec';
 import React, { useContext, useMemo } from 'react';
-import { ContentKey, IntroSentence1 } from './content';
+import { ContentHint, IntroSentence1 } from './content';
 import { ProductContext } from './product-context';
 
 const HIGH_END_MIN = 650;
@@ -18,7 +18,7 @@ export const Summary = (props: SummaryProps) => {
     <section className={className}>
       <p>
         <IntroSentence1
-          keys={{ [ContentKey.Released]: true }}
+          hints={{ [ContentHint.Released]: true }}
           params={{
             productName: 'Test GPU 1',
             marketSegment: 'Desktop',
