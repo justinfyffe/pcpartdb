@@ -3,7 +3,9 @@ Immediate Tasks:
   - improve supporting subsets of hints.
     - You can have more hints on the value, and the key will check if its
       whole set of hints is covered.
-    - Figure out better way of keys for hints.
+      - Figure out better way of keys for hints.
+      - Maybe loop through hints in order of appearance, instead of using keys?
+        - And then check if the top one has its hints fulfilled
 - cleanup layout
   - cleanup component code
     - input prefix and suffix
