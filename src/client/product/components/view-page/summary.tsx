@@ -1,7 +1,17 @@
+import { ContentContext } from '@client/shared/content';
 import { formatProductMeta } from '@shared/product-meta';
 import { formatSpec } from '@shared/spec';
 import React, { useContext, useMemo } from 'react';
-import { ContentHint, IntroSentence1 } from './content';
+import {
+  ContentHint,
+  IntroSentence1,
+  IntroSentence2,
+  PerformanceSentence1,
+  PerformanceSentence2,
+  PerformanceSentence3,
+  PerformanceSentence4,
+  PerformanceSentence5,
+} from './content';
 import { ProductContext } from './product-context';
 
 const HIGH_END_MIN = 650;
@@ -17,15 +27,55 @@ export const Summary = (props: SummaryProps) => {
   return (
     <section className={className}>
       <p>
-        <IntroSentence1
-          hints={{ [ContentHint.Released]: true }}
-          params={{
-            productName: 'Test GPU 1',
-            marketSegment: 'Desktop',
-            releaseDate: '12/12/12',
-            company: 'AMD',
+        <ContentContext.Provider
+          value={{
+            hints: { [ContentHint.Released]: true },
+            params: {
+              productName: 'Test GPU 1',
+              marketSegment: 'Desktop',
+              releaseDate: '12/12/12',
+              company: 'AMD',
+              budgetSegment: 'mid-range',
+              msrp: '$399',
+            },
           }}
-        />
+        >
+          <IntroSentence1 /> <IntroSentence2 />
+        </ContentContext.Provider>
+      </p>
+      <p>
+        <ContentContext.Provider
+          value={{
+            hints: {},
+            params: {
+              productName: 'Test GPU 1',
+              otherProductName: 'Test GPU 2',
+              percentage: '30%',
+              rank: '3rd',
+            },
+          }}
+        >
+          <PerformanceSentence1 /> <PerformanceSentence2 />{' '}
+          <PerformanceSentence3 />
+        </ContentContext.Provider>
+      </p>
+      <p>
+        <ContentContext.Provider
+          value={{
+            hints: {},
+            params: {
+              totalProducts: '43',
+              releaseYear: '2021',
+              releaseDateRank: '5th',
+              companyRank: '2nd',
+              company: 'AMD',
+              architectureRank: '4th',
+              architecture: 'RDNA 2.0',
+            },
+          }}
+        >
+          <PerformanceSentence4 /> <PerformanceSentence5 />
+        </ContentContext.Provider>
       </p>
     </section>
   );

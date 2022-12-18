@@ -2,7 +2,7 @@ import { createContext } from 'react';
 import { ContentHints, ContentParams } from './types';
 
 interface ContentContextState {
-  keys?: ContentHints;
+  hints?: ContentHints;
   params?: ContentParams;
 }
 

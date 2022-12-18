@@ -6,7 +6,7 @@ import { processContent } from './utils';
 export interface ContentProps {
   content: CompiledContent;
 
-  keys?: ContentHints;
+  hints?: ContentHints;
   params?: ContentParams;
 }
 
@@ -15,8 +15,8 @@ export const Content: FunctionComponent<ContentProps> = (props) => {
 
   const context = useContext(ContentContext);
 
-  const keys = props.keys || context.keys;
+  const hints = props.hints || context.hints;
   const params = props.params || context.params;
 
-  return <>{processContent({ content, keys, params })}</>;
+  return <>{processContent({ content, hints, params })}</>;
 };

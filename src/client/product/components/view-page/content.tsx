@@ -67,161 +67,106 @@ export const IntroSentence1 = compileContent(
   },
 );
 
-/*export const introSentence1: Content = [
+export const IntroSentence2 = compileContent({
+  deps: ['budgetSegment', 'msrp'],
+  component: (props) => (
+    <>
+      It is targeted towards the {props.budgetSegment} PC market with a MSRP of{' '}
+      {props.msrp}.
+    </>
+  ),
+});
+
+export const PerformanceSentence1 = compileContent(
   {
-    tags: [ContentTag.Recent, ContentTag.Released],
-    deps: [
-      'productName',
-      'marketSegmentUrl',
-      'marketSegment',
-      'company',
-      'releaseDate',
-    ],
-    text: (props) => (
+    hints: [ContentHint.BestPerformance],
+    deps: ['productName'],
+    component: (props) => (
+      <>The {props.productName} is the best performing GPU in our database.</>
+    ),
+  },
+  {
+    deps: ['productName', 'rank'],
+    component: (props) => (
       <>
-        The {props.productName} is a <a href={props.marketSegmentUrl}>{props.marketSegment}</a>
-        <strong>{props.company}</strong> GPU that recently launched during
-        {props.releaseDate}.
+        The {props.productName} is the {props.rank} most performant GPU in our
+        database.
       </>
-    )
-    texts: [
-      () => (
-        <>
-          The {productName} is a <a href={marketSegmentUrl}>{marketSegment}</a>{' '}
-          <strong>{company}</strong> GPU that recently launched during
-          {releaseDate}.
-        </>
-      ),
+    ),
+  },
+);
+
+export const PerformanceSentence2 = compileContent(
+  {
+    hints: [ContentHint.BestPerformance],
+    deps: ['percentage', 'otherProductName'],
+    component: (props) => (
       <>
-        The #productName# is a <a href="#marketSegmentUrl#">#marketSegment#</a>{' '}
-        <strong>#company#</strong> GPU that recently launched during
-        #releaseDate#.
-      </>,
-      `
-      The {{productName}} is a {{company}} GPU that recently launched during {{releaseDate}}.
-      `,
-    ],
+        It is approximately {props.percentage} better performing than the next
+        best GPU, the {props.otherProductName}.
+      </>
+    ),
   },
   {
-    tags: [ContentTag.Released],
-    texts: [
-      `
-      The {{productName}} is a {{marketSegment}} {{company}} GPU that launched during {{releaseDate}}.
-      `,
-    ],
+    deps: ['productName', 'rank'],
+    component: (props) => (
+      <>
+        The {props.productName} is the {props.rank} most performant GPU in our
+        database.
+      </>
+    ),
   },
-  {
-    texts: [
-      `
-      The {{productName}} is a {{marketSegment}} {{company}} GPU with a release date of {{releaseDate}}.
-      `,
-      `
-      The {{productName}} by {{company}} has a release date of {{releaseDate}}.
-      `,
-      `
-      The {{productName}} is a GPU by {{company}}.
-      `,
-    ],
-  },
-];
-export const introSentence2: Content = [
-  {
-    texts: [
-      `
-      It is targeted towards the {{budgetSegment}} PC market with a MSRP of {{msrp}}.
-      `,
-    ],
-  },
-];
+);
 
-export const performanceSentence1: Content = [
+export const PerformanceSentence3 = compileContent(
   {
-    tags: [ContentTag.BestPerformance],
-    texts: [
-      `
-      The {{productName}} is the best performing GPU in our database.
-      `,
-    ],
+    hints: [ContentHint.BestValue],
+    deps: [],
+    component: (_props) => (
+      <>It also has the best value compared to the other GPUs.</>
+    ),
   },
   {
-    tags: [],
-    texts: [
-      `
-      The {{productName}} is the {{rank}} most performant GPU in our database.
-      `,
-    ],
+    deps: ['percentage', 'otherProductName'],
+    component: (props) => (
+      <>
+        It is also {props.percentage} stronger than the GPU with the best value,
+        the {props.otherProductName}.
+      </>
+    ),
   },
-];
+);
 
-export const performanceSentence2: Content = [
+export const PerformanceSentence4 = compileContent(
   {
-    tags: [ContentTag.BestPerformance],
-    texts: [
-      `
-      It is approximately {{percentage}} better performing than the next best GPU, the {{otherProductName}}.
-      `,
-    ],
+    hints: [ContentHint.BestPerformance],
+    deps: ['totalProducts', 'releaseYear'],
+    component: (props) => (
+      <>
+        This graphics card is the strongest card among the {props.totalProducts}{' '}
+        GPUs that also launched in {props.releaseYear}.
+      </>
+    ),
   },
   {
-    tags: [],
-    texts: [
-      `
-      It is approximately {{percentage}} as strong as the best performing GPU
-      that we are tracking, the {{otherProductName}}.
-      `,
-    ],
+    deps: ['releaseDateRank', 'totalProducts', 'releaseYear'],
+    component: (props) => (
+      <>
+        This graphics card is the {props.releaseDateRank} strongest card among
+        the {props.totalProducts} GPUs that also launched in {props.releaseYear}
+        .
+      </>
+    ),
   },
-];
+);
 
-export const performanceSentence3: Content = [
-  {
-    tags: [ContentTag.BestValue],
-    texts: [
-      `
-      It also has the best value compared to the other GPUs.
-      `,
-    ],
-  },
-  {
-    tags: [],
-    texts: [
-      `
-      It is also {{percentage}} stronger than the GPU with the best value, the {{otherProductName}}.
-      `,
-    ],
-  },
-];
-
-export const performanceSentence4: Content = [
-  {
-    tags: [ContentTag.BestPerformance],
-    texts: [
-      `
-      This graphics card is the strongest card among the {{totalProducts}} GPUs that also launched
-      in {{launchDate}}.
-      `,
-    ],
-  },
-  {
-    tags: [],
-    texts: [
-      `
-      This graphics card is the {{releaseDateRank}} strongest card among the {{totalProducts}} GPUs
-      that also launched in {{launchDate}}.
-      `,
-    ],
-  },
-];
-
-export const performanceSentence5: Content = [
-  {
-    tags: [],
-    texts: [
-      `
-      Additionally, it is the {{companyRank}} most powerful {{company}} GPU, and {{architectureRank}}
-      in the {{architecture}} architecture family.
-      `,
-    ],
-  },
-];
-*/
+export const PerformanceSentence5 = compileContent({
+  deps: ['companyRank', 'company', 'architectureRank', 'architecture'],
+  component: (props) => (
+    <>
+      Additionally, it is the {props.companyRank} most powerful {props.company}{' '}
+      GPU, and {props.architectureRank}
+      in the {props.architecture} architecture family.
+    </>
+  ),
+});
