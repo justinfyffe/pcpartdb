@@ -1,4 +1,9 @@
 Immediate Tasks:
+- content framework
+  - improve supporting subsets of hints.
+    - You can have more hints on the value, and the key will check if its
+      whole set of hints is covered.
+    - Figure out better way of keys for hints.
 - cleanup layout
   - cleanup component code
     - input prefix and suffix

@@ -80,12 +80,6 @@ export function compileContent(...content: RawContent[]) {
     compiled[key].push({ deps, component });
   }
 
-  Object.keys(compiled).forEach((key) => {
-    compiled[key].sort(
-      (v1, v2) => (v2.deps?.length ?? 0) - (v1.deps?.length ?? 0),
-    );
-  });
-
   // eslint-disable-next-line react/display-name
   return (props: { hints?: ContentHints; params?: ContentParams }) => (
     <Content content={compiled} {...props} />
