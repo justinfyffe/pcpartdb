@@ -4,11 +4,6 @@ export type ContentHints = string[] | Record<string, boolean>;
 export type ContentParams = Record<string, string | React.ReactNode>;
 export type ContentDependencies = string[];
 
-export interface RawContentVariant {
-  deps?: ContentDependencies;
-  component: FunctionComponent<ContentParams>;
-}
-
 export interface RawContent {
   hints?: ContentHints;
   deps?: string[];
