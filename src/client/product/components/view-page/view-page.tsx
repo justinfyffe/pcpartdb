@@ -175,14 +175,19 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
               </HighlightList>
             </section>
 
-            <Summary />
+            <section>
+              <h2>Summary</h2>
+
+              <Summary />
+            </section>
 
             <section>
               <h2 className="mb-0">General Info</h2>
 
               <p className={classNames('text-content-dimmed')}>
                 {`${gpu.name}'s`} performance rating, market segment, release
-                date, and launch price.
+                date, and launch price. Check how the {getProductName(gpu)}{' '}
+                compares in performance and value.
               </p>
 
               <Table responsive>
@@ -243,19 +248,18 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
             </section>
 
             <section>
-              <h2 className="mb-0">Reviews</h2>
+              <h2 className="mb-0">Benchmarks</h2>
 
               <p className={classNames('text-content-dimmed')}>
-                What others are saying about {gpu.name}.
+                {`${gpu.name}'s`} performance and rating metrics. These identify
+                how strong the GPU performs compared to its peers.
               </p>
 
               <Table responsive>
                 <TBody>
-                  <ReviewRow review="amazon" />
-                  <ReviewRow review="pcGamer" />
-                  <ReviewRow review="techRadar" />
-                  <ReviewRow review="techSpot" />
-                  <ReviewRow review="tomsHardware" />
+                  <BenchmarkRow benchmark="g3dMark" />
+                  <BenchmarkRow benchmark="g2dMark" />
+                  <BenchmarkRow benchmark="timeSpyGraphics" />
                 </TBody>
               </Table>
             </section>
@@ -267,7 +271,8 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                 <h3 className="mb-0">Processor</h3>
 
                 <p className={classNames('text-content-dimmed')}>
-                  {`${gpu.name}'s`} processor chip details.
+                  {`${gpu.name}'s`} processor chip details like its code name
+                  and architecture.
                 </p>
 
                 <Table responsive>
@@ -281,29 +286,14 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
               </section>
 
               <section>
-                <h3 className="mb-0">Memory</h3>
-
-                <p className={classNames('text-content-dimmed')}>
-                  {`${gpu.name}'s`} memory size, bandwidth, and clock speeds.
-                </p>
-
-                <Table responsive>
-                  <TBody>
-                    <SpecRow spec="memorySize" />
-                    <SpecRow spec="memoryType" />
-                    <SpecRow spec="memoryBandwidth" />
-                    <SpecRow spec="memoryClock" />
-                    <SpecRow spec="memoryInterface" />
-                  </TBody>
-                </Table>
-              </section>
-
-              <section>
                 <h3 className="mb-0">Board Compatibility &amp; Dimensions</h3>
 
                 <p className={classNames('text-content-dimmed')}>
                   {`${gpu.name}'s`} dimensions, bus interface, power
-                  consumption, and output ports.
+                  consumption, and output ports. These specs are useful for
+                  verifying that the {getProductName(gpu)} fits within your case
+                  and is compatible with your motherboard, power supply, and
+                  monitor.
                 </p>
 
                 <Table responsive>
@@ -323,10 +313,35 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
               </section>
 
               <section>
+                <h3 className="mb-0">Memory</h3>
+
+                <p className={classNames('text-content-dimmed')}>
+                  {`${gpu.name}'s`} memory size, bandwidth, and clock speeds.
+                  GPU memory stores graphics data like frames, textures, and
+                  shadows which helps display rendered images. These specs are
+                  critical for graphics-intense applications like gaming and 3D
+                  modeling.
+                </p>
+
+                <Table responsive>
+                  <TBody>
+                    <SpecRow spec="memorySize" />
+                    <SpecRow spec="memoryType" />
+                    <SpecRow spec="memoryBandwidth" />
+                    <SpecRow spec="memoryClock" />
+                    <SpecRow spec="memoryInterface" />
+                  </TBody>
+                </Table>
+              </section>
+
+              <section>
                 <h3 className="mb-0">Cores &amp; Clock Speeds</h3>
 
                 <p className={classNames('text-content-dimmed')}>
-                  {`${gpu.name}'s`} cores, clock speed, and cache.
+                  {`${gpu.name}'s`} cores, clock speed, and cache. These specs
+                  have an impact on how fast the {getProductName(gpu)} can
+                  process graphics. Each type of core serves a specific
+                  computational purpose.
                 </p>
 
                 <Table responsive>
@@ -380,18 +395,19 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
             </section>
 
             <section>
-              <h2 className="mb-0">Benchmarks</h2>
+              <h2 className="mb-0">Reviews</h2>
 
               <p className={classNames('text-content-dimmed')}>
-                {`${gpu.name}'s`} performance and rating metrics. These identify
-                how strong the GPU performs compared to its peers.
+                What others are saying about {gpu.name}.
               </p>
 
               <Table responsive>
                 <TBody>
-                  <BenchmarkRow benchmark="g3dMark" />
-                  <BenchmarkRow benchmark="g2dMark" />
-                  <BenchmarkRow benchmark="timeSpyGraphics" />
+                  <ReviewRow review="amazon" />
+                  <ReviewRow review="pcGamer" />
+                  <ReviewRow review="techRadar" />
+                  <ReviewRow review="techSpot" />
+                  <ReviewRow review="tomsHardware" />
                 </TBody>
               </Table>
             </section>

@@ -6,21 +6,13 @@ Immediate Tasks:
       - Figure out better way of keys for hints.
       - Maybe loop through hints in order of appearance, instead of using keys?
         - And then check if the top one has its hints fulfilled
-- cleanup layout
-  - cleanup component code
-    - input prefix and suffix
-    - common styling
-  - utility functions (get name, get url)
-  - react components
+- Website name and logo
+  - decide between "PC Part DB" and "PC Parts DB"
+  - finalize logo
+- combine gpu overview page and list page?
+  - seo title based on sorting and filters
 - compare gpus page
   - auto-generate summary
-- gpus list page
-  - title based on sorting and filter
-  - seo title based on sorting and filter
-- gpus overview page
-  - popular comparisons
-  - popular gpus
-- clean up html
 - initial on-page seo
   - alt tags
 - launch
