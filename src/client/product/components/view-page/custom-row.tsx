@@ -1,4 +1,5 @@
 import { Td, Tr } from '@client/shared/components';
+import { classNames } from '@client/shared/ui';
 import React from 'react';
 
 interface CustomRowProps {
@@ -23,10 +24,16 @@ export const CustomRowLabel = (props: CustomRowLabelProps) => {
 
 interface CustomRowValueProps {
   children?: React.ReactNode;
+
+  className?: string;
 }
 
 export const CustomRowValue = (props: CustomRowValueProps) => {
-  const { children } = props;
+  const { children, className } = props;
 
-  return <Td className="border-l-0 text-left w-[50%]">{children}</Td>;
+  return (
+    <Td className={classNames('border-l-0 text-left w-[50%]', className)}>
+      {children}
+    </Td>
+  );
 };

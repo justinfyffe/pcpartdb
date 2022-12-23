@@ -1,4 +1,7 @@
 Immediate Tasks:
+- clean up ui:
+  - view page: small paragraph summary for each specs section
+  - compare page: adjust content like view page
 - content framework
   - improve supporting subsets of hints.
     - You can have more hints on the value, and the key will check if its

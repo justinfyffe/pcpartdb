@@ -33,7 +33,6 @@ import {
 } from './products-context';
 import { ReviewRow } from './review-row';
 import { SpecRow } from './spec-row';
-import { Summary } from './summary';
 
 export interface CompareGpuPageProps {
   comparison: ProductComparison;
@@ -121,10 +120,6 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
 
                 <ProductImages product={gpu2} />
               </div>
-            </section>
-
-            <section>
-              <Summary />
             </section>
 
             <section className="flex flex-col gap-6">
