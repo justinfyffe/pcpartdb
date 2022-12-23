@@ -16,9 +16,12 @@ Immediate Tasks:
   - seo title based on sorting and filters
 - compare gpus page
   - auto-generate summary
-- initial on-page seo
-  - alt tags
+- ready for launch
+  - setup hosting
+  - setup email
 - launch
+- on-page seo
+  - alt tags
 - improve content
 - retail models
   - override specs
