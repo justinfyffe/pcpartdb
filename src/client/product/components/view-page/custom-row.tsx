@@ -3,13 +3,24 @@ import { classNames } from '@client/shared/ui';
 import React from 'react';
 
 interface CustomRowProps {
+  highlight?: boolean;
+
   children?: React.ReactElement<CustomRowLabelProps | CustomRowValueProps>[];
 }
 
 export const CustomRow = (props: CustomRowProps) => {
-  const { children } = props;
+  const { children, highlight } = props;
 
-  return <Tr>{children}</Tr>;
+  return (
+    <Tr
+      className={classNames(
+        'border-x-px',
+        highlight ? 'font-bold !bg-indigo-200' : '',
+      )}
+    >
+      {children}
+    </Tr>
+  );
 };
 
 interface CustomRowLabelProps {
@@ -19,7 +30,7 @@ interface CustomRowLabelProps {
 export const CustomRowLabel = (props: CustomRowLabelProps) => {
   const { children } = props;
 
-  return <Td className="border-r-0 text-left w-[50%]">{children}</Td>;
+  return <Td className="border-x-0 text-left w-[50%]">{children}</Td>;
 };
 
 interface CustomRowValueProps {
@@ -32,7 +43,7 @@ export const CustomRowValue = (props: CustomRowValueProps) => {
   const { children, className } = props;
 
   return (
-    <Td className={classNames('border-l-0 text-left w-[50%]', className)}>
+    <Td className={classNames('border-x-0 text-left w-[50%]', className)}>
       {children}
     </Td>
   );

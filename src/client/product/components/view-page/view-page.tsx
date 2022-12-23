@@ -178,6 +178,14 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
             </section>
 
             <section>
+              <p>
+                Check current availability and price of the AMD Radeon RX 6700.
+                See below for a comprehensive list of its benchmarks, reviews,
+                and specs.
+              </p>
+            </section>
+
+            <section>
               <h2 className="mb-0 font-semibold">General Info</h2>
 
               <p className={classNames('text-content-dimmed')}>
@@ -186,7 +194,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                 availability and price for the {getProductName(gpu)}.
               </p>
 
-              <Table responsive className="mb-4">
+              <Table border responsive className="mb-4">
                 <TBody>
                   <CustomRow>
                     <CustomRowLabel>Shop</CustomRowLabel>
@@ -261,16 +269,231 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
               <section className="flex gap-8 mb-4">
                 <div className="flex-1">
                   <h3 className="mb-1">Compared to 2021 GPUs</h3>
-                  <Table responsive>
+                  <Table border responsive>
                     <THead>
                       <Tr>
-                        <Th></Th>
-                        <Th className="text-left">Relative Performance</Th>
-                        <Th className="text-right">Rank</Th>
+                        <Th className="border-0"></Th>
+                        <Th className="text-left border-0">
+                          Relative Performance
+                        </Th>
+                        <Th className="text-right border-0">Rank</Th>
                       </Tr>
                     </THead>
                     <TBody>
                       <CustomRow>
+                        <CustomRowLabel>RTX 3060</CustomRowLabel>
+                        <CustomRowValue className="text-left">
+                          120%
+                        </CustomRowValue>
+                        <CustomRowValue className="text-right">
+                          7
+                        </CustomRowValue>
+                      </CustomRow>
+                      <CustomRow>
+                        <CustomRowLabel>RTX 3060</CustomRowLabel>
+                        <CustomRowValue className="text-left">
+                          118%
+                        </CustomRowValue>
+                        <CustomRowValue className="text-right">
+                          8
+                        </CustomRowValue>
+                      </CustomRow>
+                      <CustomRow>
+                        <CustomRowLabel>RTX 3060</CustomRowLabel>
+                        <CustomRowValue className="text-left">
+                          110%
+                        </CustomRowValue>
+                        <CustomRowValue className="text-right">
+                          9
+                        </CustomRowValue>
+                      </CustomRow>
+                      <CustomRow highlight>
+                        <CustomRowLabel>RTX 3060</CustomRowLabel>
+                        <CustomRowValue className="text-left">
+                          100%
+                        </CustomRowValue>
+                        <CustomRowValue className="text-right">
+                          10
+                        </CustomRowValue>
+                      </CustomRow>
+                      <CustomRow>
+                        <CustomRowLabel>RTX 3060</CustomRowLabel>
+                        <CustomRowValue className="text-left">
+                          90%
+                        </CustomRowValue>
+                        <CustomRowValue className="text-right">
+                          11
+                        </CustomRowValue>
+                      </CustomRow>
+                      <CustomRow>
+                        <CustomRowLabel>RTX 3060</CustomRowLabel>
+                        <CustomRowValue className="text-left">
+                          87%
+                        </CustomRowValue>
+                        <CustomRowValue className="text-right">
+                          12
+                        </CustomRowValue>
+                      </CustomRow>
+                      <CustomRow>
+                        <CustomRowLabel>RTX 3060</CustomRowLabel>
+                        <CustomRowValue className="text-left">
+                          80%
+                        </CustomRowValue>
+                        <CustomRowValue className="text-right">
+                          13
+                        </CustomRowValue>
+                      </CustomRow>
+                      <CustomRow>
+                        <CustomRowLabel>RTX 3060</CustomRowLabel>
+                        <CustomRowValue className="text-left">
+                          74%
+                        </CustomRowValue>
+                        <CustomRowValue className="text-right">
+                          14
+                        </CustomRowValue>
+                      </CustomRow>
+                      <CustomRow>
+                        <CustomRowLabel>RTX 3060</CustomRowLabel>
+                        <CustomRowValue className="text-left">
+                          65%
+                        </CustomRowValue>
+                        <CustomRowValue className="text-right">
+                          15
+                        </CustomRowValue>
+                      </CustomRow>
+                    </TBody>
+                  </Table>
+                </div>
+
+                <div className="flex-1">
+                  <h3 className="mb-1">Compared to NVIDIA Ampere GPUs</h3>
+                  <Table border responsive>
+                    <THead>
+                      <Tr>
+                        <Th className="border-0"></Th>
+                        <Th className="text-left border-0">
+                          Relative Performance
+                        </Th>
+                        <Th className="text-right border-0">Rank</Th>
+                      </Tr>
+                    </THead>
+                    <TBody>
+                      <CustomRow>
+                        <CustomRowLabel>RTX 3060</CustomRowLabel>
+                        <CustomRowValue className="text-left">
+                          120%
+                        </CustomRowValue>
+                        <CustomRowValue className="text-right">
+                          7
+                        </CustomRowValue>
+                      </CustomRow>
+                      <CustomRow>
+                        <CustomRowLabel>RTX 3060</CustomRowLabel>
+                        <CustomRowValue className="text-left">
+                          118%
+                        </CustomRowValue>
+                        <CustomRowValue className="text-right">
+                          8
+                        </CustomRowValue>
+                      </CustomRow>
+                      <CustomRow>
+                        <CustomRowLabel>RTX 3060</CustomRowLabel>
+                        <CustomRowValue className="text-left">
+                          110%
+                        </CustomRowValue>
+                        <CustomRowValue className="text-right">
+                          9
+                        </CustomRowValue>
+                      </CustomRow>
+                      <CustomRow>
+                        <CustomRowLabel>RTX 3060</CustomRowLabel>
+                        <CustomRowValue className="text-left">
+                          100%
+                        </CustomRowValue>
+                        <CustomRowValue className="text-right">
+                          10
+                        </CustomRowValue>
+                      </CustomRow>
+                      <CustomRow>
+                        <CustomRowLabel>RTX 3060</CustomRowLabel>
+                        <CustomRowValue className="text-left">
+                          90%
+                        </CustomRowValue>
+                        <CustomRowValue className="text-right">
+                          11
+                        </CustomRowValue>
+                      </CustomRow>
+                      <CustomRow>
+                        <CustomRowLabel>RTX 3060</CustomRowLabel>
+                        <CustomRowValue className="text-left">
+                          87%
+                        </CustomRowValue>
+                        <CustomRowValue className="text-right">
+                          12
+                        </CustomRowValue>
+                      </CustomRow>
+                      <CustomRow highlight>
+                        <CustomRowLabel>RTX 3060</CustomRowLabel>
+                        <CustomRowValue className="text-left">
+                          80%
+                        </CustomRowValue>
+                        <CustomRowValue className="text-right">
+                          13
+                        </CustomRowValue>
+                      </CustomRow>
+                      <CustomRow>
+                        <CustomRowLabel>RTX 3060</CustomRowLabel>
+                        <CustomRowValue className="text-left">
+                          74%
+                        </CustomRowValue>
+                        <CustomRowValue className="text-right">
+                          14
+                        </CustomRowValue>
+                      </CustomRow>
+                      <CustomRow>
+                        <CustomRowLabel>RTX 3060</CustomRowLabel>
+                        <CustomRowValue className="text-left">
+                          65%
+                        </CustomRowValue>
+                        <CustomRowValue className="text-right">
+                          15
+                        </CustomRowValue>
+                      </CustomRow>
+                    </TBody>
+                  </Table>
+                </div>
+              </section>
+
+              <p>
+                The Test GPU 1 is the 3rd most performant GPU in our database.
+                It is also 30% stronger than the GPU with the best value, the
+                Test GPU 2.
+              </p>
+              <p>
+                This graphics card is the 5th strongest card among the 43 GPUs
+                that also launched in 2021. Additionally, it is the 2nd most
+                powerful AMD GPU, and 4thin the RDNA 2.0 architecture family.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="mb-0 font-semibold">Value</h2>
+
+              <section className="flex gap-8 mb-4">
+                <div className="flex-1">
+                  <h3 className="mb-1">Compared to 2021 GPUs</h3>
+                  <Table border responsive>
+                    <THead>
+                      <Tr>
+                        <Th className="border-0"></Th>
+                        <Th className="text-left border-0">
+                          Relative Performance
+                        </Th>
+                        <Th className="text-right border-0">Rank</Th>
+                      </Tr>
+                    </THead>
+                    <TBody>
+                      <CustomRow highlight>
                         <CustomRowLabel>RTX 3060</CustomRowLabel>
                         <CustomRowValue className="text-left">
                           120%
@@ -357,12 +580,14 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
 
                 <div className="flex-1">
                   <h3 className="mb-1">Compared to NVIDIA Ampere GPUs</h3>
-                  <Table responsive>
+                  <Table border responsive>
                     <THead>
                       <Tr>
-                        <Th></Th>
-                        <Th className="text-left">Relative Performance</Th>
-                        <Th className="text-right">Rank</Th>
+                        <Th className="border-0"></Th>
+                        <Th className="text-left border-0">
+                          Relative Performance
+                        </Th>
+                        <Th className="text-right border-0">Rank</Th>
                       </Tr>
                     </THead>
                     <TBody>
@@ -411,7 +636,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                           11
                         </CustomRowValue>
                       </CustomRow>
-                      <CustomRow>
+                      <CustomRow highlight>
                         <CustomRowLabel>RTX 3060</CustomRowLabel>
                         <CustomRowValue className="text-left">
                           87%
@@ -462,234 +687,6 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                 that also launched in 2021. Additionally, it is the 2nd most
                 powerful AMD GPU, and 4thin the RDNA 2.0 architecture family.
               </p>
-            </section>
-
-            <section>
-              <h2 className="mb-0 font-semibold">Value</h2>
-
-              <section className="flex gap-8 mb-4">
-                <div className="flex-1">
-                  <h3 className="mb-1">Relative to 2021 GPUs</h3>
-                  <Table responsive>
-                    <THead>
-                      <Tr>
-                        <Th></Th>
-                        <Th className="text-left">Relative Performance</Th>
-                        <Th className="text-right">Rank</Th>
-                      </Tr>
-                    </THead>
-                    <TBody>
-                      <CustomRow>
-                        <CustomRowLabel>RTX 3060</CustomRowLabel>
-                        <CustomRowValue className="text-left">
-                          120%
-                        </CustomRowValue>
-                        <CustomRowValue className="text-right">
-                          7
-                        </CustomRowValue>
-                      </CustomRow>
-                      <CustomRow>
-                        <CustomRowLabel>RTX 3060</CustomRowLabel>
-                        <CustomRowValue className="text-left">
-                          118%
-                        </CustomRowValue>
-                        <CustomRowValue className="text-right">
-                          8
-                        </CustomRowValue>
-                      </CustomRow>
-                      <CustomRow>
-                        <CustomRowLabel>RTX 3060</CustomRowLabel>
-                        <CustomRowValue className="text-left">
-                          110%
-                        </CustomRowValue>
-                        <CustomRowValue className="text-right">
-                          9
-                        </CustomRowValue>
-                      </CustomRow>
-                      <CustomRow>
-                        <CustomRowLabel>RTX 3060</CustomRowLabel>
-                        <CustomRowValue className="text-left">
-                          100%
-                        </CustomRowValue>
-                        <CustomRowValue className="text-right">
-                          10
-                        </CustomRowValue>
-                      </CustomRow>
-                      <CustomRow>
-                        <CustomRowLabel>RTX 3060</CustomRowLabel>
-                        <CustomRowValue className="text-left">
-                          90%
-                        </CustomRowValue>
-                        <CustomRowValue className="text-right">
-                          11
-                        </CustomRowValue>
-                      </CustomRow>
-                      <CustomRow>
-                        <CustomRowLabel>RTX 3060</CustomRowLabel>
-                        <CustomRowValue className="text-left">
-                          87%
-                        </CustomRowValue>
-                        <CustomRowValue className="text-right">
-                          12
-                        </CustomRowValue>
-                      </CustomRow>
-                      <CustomRow>
-                        <CustomRowLabel>RTX 3060</CustomRowLabel>
-                        <CustomRowValue className="text-left">
-                          80%
-                        </CustomRowValue>
-                        <CustomRowValue className="text-right">
-                          13
-                        </CustomRowValue>
-                      </CustomRow>
-                      <CustomRow>
-                        <CustomRowLabel>RTX 3060</CustomRowLabel>
-                        <CustomRowValue className="text-left">
-                          74%
-                        </CustomRowValue>
-                        <CustomRowValue className="text-right">
-                          14
-                        </CustomRowValue>
-                      </CustomRow>
-                      <CustomRow>
-                        <CustomRowLabel>RTX 3060</CustomRowLabel>
-                        <CustomRowValue className="text-left">
-                          65%
-                        </CustomRowValue>
-                        <CustomRowValue className="text-right">
-                          15
-                        </CustomRowValue>
-                      </CustomRow>
-                    </TBody>
-                  </Table>
-                </div>
-
-                <div className="flex-1">
-                  <h3 className="mb-1">Relative to NVIDIA Ampere GPUs</h3>
-                  <Table responsive>
-                    <THead>
-                      <Tr>
-                        <Th></Th>
-                        <Th className="text-left">Relative Performance</Th>
-                        <Th className="text-right">Rank</Th>
-                      </Tr>
-                    </THead>
-                    <TBody>
-                      <CustomRow>
-                        <CustomRowLabel>RTX 3060</CustomRowLabel>
-                        <CustomRowValue className="text-left">
-                          120%
-                        </CustomRowValue>
-                        <CustomRowValue className="text-right">
-                          7
-                        </CustomRowValue>
-                      </CustomRow>
-                      <CustomRow>
-                        <CustomRowLabel>RTX 3060</CustomRowLabel>
-                        <CustomRowValue className="text-left">
-                          118%
-                        </CustomRowValue>
-                        <CustomRowValue className="text-right">
-                          8
-                        </CustomRowValue>
-                      </CustomRow>
-                      <CustomRow>
-                        <CustomRowLabel>RTX 3060</CustomRowLabel>
-                        <CustomRowValue className="text-left">
-                          110%
-                        </CustomRowValue>
-                        <CustomRowValue className="text-right">
-                          9
-                        </CustomRowValue>
-                      </CustomRow>
-                      <CustomRow>
-                        <CustomRowLabel>RTX 3060</CustomRowLabel>
-                        <CustomRowValue className="text-left">
-                          100%
-                        </CustomRowValue>
-                        <CustomRowValue className="text-right">
-                          10
-                        </CustomRowValue>
-                      </CustomRow>
-                      <CustomRow>
-                        <CustomRowLabel>RTX 3060</CustomRowLabel>
-                        <CustomRowValue className="text-left">
-                          90%
-                        </CustomRowValue>
-                        <CustomRowValue className="text-right">
-                          11
-                        </CustomRowValue>
-                      </CustomRow>
-                      <CustomRow>
-                        <CustomRowLabel>RTX 3060</CustomRowLabel>
-                        <CustomRowValue className="text-left">
-                          87%
-                        </CustomRowValue>
-                        <CustomRowValue className="text-right">
-                          12
-                        </CustomRowValue>
-                      </CustomRow>
-                      <CustomRow>
-                        <CustomRowLabel>RTX 3060</CustomRowLabel>
-                        <CustomRowValue className="text-left">
-                          80%
-                        </CustomRowValue>
-                        <CustomRowValue className="text-right">
-                          13
-                        </CustomRowValue>
-                      </CustomRow>
-                      <CustomRow>
-                        <CustomRowLabel>RTX 3060</CustomRowLabel>
-                        <CustomRowValue className="text-left">
-                          74%
-                        </CustomRowValue>
-                        <CustomRowValue className="text-right">
-                          14
-                        </CustomRowValue>
-                      </CustomRow>
-                      <CustomRow>
-                        <CustomRowLabel>RTX 3060</CustomRowLabel>
-                        <CustomRowValue className="text-left">
-                          65%
-                        </CustomRowValue>
-                        <CustomRowValue className="text-right">
-                          15
-                        </CustomRowValue>
-                      </CustomRow>
-                    </TBody>
-                  </Table>
-                </div>
-              </section>
-
-              <p>
-                The Test GPU 1 is the 3rd most performant GPU in our database.
-                It is also 30% stronger than the GPU with the best value, the
-                Test GPU 2.
-              </p>
-              <p>
-                This graphics card is the 5th strongest card among the 43 GPUs
-                that also launched in 2021. Additionally, it is the 2nd most
-                powerful AMD GPU, and 4thin the RDNA 2.0 architecture family.
-              </p>
-            </section>
-
-            <section>
-              <h2 className="mb-0 font-semibold">Reviews</h2>
-
-              <p className={classNames('text-content-dimmed')}>
-                What consumers and popular publications are saying about the{' '}
-                {gpu.name}.
-              </p>
-
-              <Table responsive>
-                <TBody>
-                  <ReviewRow review="amazon" />
-                  <ReviewRow review="pcGamer" />
-                  <ReviewRow review="techRadar" />
-                  <ReviewRow review="techSpot" />
-                  <ReviewRow review="tomsHardware" />
-                </TBody>
-              </Table>
             </section>
 
             <section>
@@ -701,13 +698,41 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                 performance.
               </p>
 
-              <Table responsive>
+              <Table border responsive className="mb-4">
                 <TBody>
                   <BenchmarkRow benchmark="g3dMark" />
                   <BenchmarkRow benchmark="g2dMark" />
                   <BenchmarkRow benchmark="timeSpyGraphics" />
                 </TBody>
               </Table>
+
+              <p>
+                Paragraph about G3D Mark, G2D Mark, 3Dmark Time Spy Graphics
+              </p>
+            </section>
+
+            <section>
+              <h2 className="mb-0 font-semibold">Reviews</h2>
+
+              <p className={classNames('text-content-dimmed')}>
+                What consumers and popular publications are saying about the{' '}
+                {gpu.name}.
+              </p>
+
+              <Table border responsive className="mb-4">
+                <TBody>
+                  <ReviewRow review="amazon" />
+                  <ReviewRow review="pcGamer" />
+                  <ReviewRow review="techRadar" />
+                  <ReviewRow review="techSpot" />
+                  <ReviewRow review="tomsHardware" />
+                </TBody>
+              </Table>
+
+              <p>
+                {getProductName(gpu)} has an average score of 4.5 across popular
+                publications tracked in our database.
+              </p>
             </section>
 
             <section className="flex flex-col gap-6">
@@ -722,7 +747,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                   efficient at computing than their predecessors.
                 </p>
 
-                <Table responsive>
+                <Table border responsive className="mb-4">
                   <TBody>
                     <SpecRow spec="gpuName" />
                     <SpecRow spec="architecture" />
@@ -730,6 +755,11 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                     <SpecRow spec="transistors" />
                   </TBody>
                 </Table>
+
+                <p>
+                  {getProductName(gpu)} uses the Ampere architecture and is
+                  based on 8 nm manufacturing process.
+                </p>
               </section>
 
               <section>
@@ -743,7 +773,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                   monitor.
                 </p>
 
-                <Table responsive>
+                <Table border responsive className="mb-4">
                   <TBody>
                     <SpecRow spec="slotWidth" />
                     <SpecRow spec="length" />
@@ -757,6 +787,13 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                     <SpecRow spec="outputs" />
                   </TBody>
                 </Table>
+
+                <p>
+                  The {gpu.name} is quite large, taking up 3-slots with
+                  dimensions of 304 x 137 x 61 mm. The GPU has a Thermal Design
+                  Power (TDP) of 450 W and it is recommended to be used with a
+                  minimum 850 W PSU.
+                </p>
               </section>
 
               <section>
@@ -770,7 +807,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                   modeling.
                 </p>
 
-                <Table responsive>
+                <Table border responsive className="mb-4">
                   <TBody>
                     <SpecRow spec="memorySize" />
                     <SpecRow spec="memoryType" />
@@ -779,6 +816,20 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                     <SpecRow spec="memoryInterface" />
                   </TBody>
                 </Table>
+
+                <p>
+                  This RDNA 2.0 GPU has 12 GB of GDDR6 memory. This amount of
+                  memory is similar to the other GPUs that launched in 2021. It
+                  is comparable with the GPUs that launched this year, making it
+                  sufficient for most memory requirements.
+                </p>
+
+                <p>
+                  This memory is clocked 2,000 MHz and has a bandwidth of 384
+                  GB/s with a 192 bit interface. This kind of memory performance
+                  was among the best in 2021, and is still in-line with
+                  mid-range GPUs released today.
+                </p>
               </section>
 
               <section>
@@ -791,7 +842,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                   computational purpose.
                 </p>
 
-                <Table responsive>
+                <Table border responsive className="mb-4">
                   <TBody>
                     <SpecRow spec="shaderUnitsCudaCores" />
                     <SpecRow spec="textureMappingUnits" />
@@ -804,6 +855,17 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                     <SpecRow spec="l2Cache" />
                   </TBody>
                 </Table>
+
+                <p>
+                  This card operates at a base clock speed of 2,235 MHz. The
+                  16,384 Cores gives it a FP32 performance of 83 TFLOPS and FP64
+                  performance of 1,290 GFLOPS.
+                </p>
+                <p>
+                  The 176 Render Output Units (ROPs) gives it a pixel fill rate
+                  of 444 GPixel/s. The 512 Texture Mapping Units (TMUs) gives it
+                  a texture fill rate of 1,290 GTexel/s.
+                </p>
               </section>
 
               <section>
@@ -816,7 +878,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                   ROPs, cores, and clock frequency.
                 </p>
 
-                <Table responsive>
+                <Table border responsive className="mb-4">
                   <TBody>
                     <SpecRow spec="pixelFillRate" />
                     <SpecRow spec="textureFillRate" />
@@ -824,6 +886,8 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                     <SpecRow spec="fp64Performance" />
                   </TBody>
                 </Table>
+
+                <p>Paragraph about theoretical performance.</p>
               </section>
 
               <section>
@@ -834,7 +898,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                   GPUs may not support recent versions.
                 </p>
 
-                <Table responsive>
+                <Table border responsive className="mb-4">
                   <TBody>
                     <SpecRow spec="directXVersion" />
                     <SpecRow spec="openClVersion" />
@@ -842,7 +906,17 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                     <SpecRow spec="shaderModelVersion" />
                   </TBody>
                 </Table>
+
+                <p>Paragraph about theoretical performance.</p>
               </section>
+            </section>
+
+            <section>
+              <p className="text-xs">
+                Note: The data represented on this page considers the 300 GPUs
+                that we track in our database. Check which graphics cards we are
+                tracking on our listing page.
+              </p>
             </section>
           </article>
 

@@ -1,6 +1,6 @@
 Immediate Tasks:
 - clean up ui:
-  - view page: small paragraph summary for each specs section
+  - view page: write content/paragraphs. add links
   - compare page: adjust content like view page
 - content framework
   - improve supporting subsets of hints.
@@ -10,9 +10,10 @@ Immediate Tasks:
       - Maybe loop through hints in order of appearance, instead of using keys?
         - And then check if the top one has its hints fulfilled
 - Website name and logo
-  - decide between "PC Part DB" and "PC Parts DB"
+  - decide between "PC Part DB" and "PC Parts DB" (leaning towards PC Parts DB)
   - finalize logo
-- combine gpu overview page and list page?
+- combine gpu overview page and list page
+  - replace popular gpus and comparisons with the list
   - seo title based on sorting and filters
 - compare gpus page
   - auto-generate summary
@@ -27,6 +28,8 @@ Immediate Tasks:
   - override specs
 - look into using useController
 - improve html semantics
+- adjust related gpus and comparisons
+  - should only use gpus listed on the page's tables
 
 Roadmap:
 Legend:
