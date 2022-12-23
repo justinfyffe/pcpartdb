@@ -20,7 +20,6 @@ import {
   ShoppingCartIcon,
   StarIcon,
 } from '@heroicons/react/24/outline';
-import { formatBenchmark } from '@shared/benchmark';
 import {
   getProductDetailsPath,
   getProductName,
@@ -34,6 +33,17 @@ import React, { useMemo } from 'react';
 import { CompareProductsForm } from '../compare-products-form';
 import { ProductImages } from '../product-images';
 import { BenchmarkRow } from './benchmark-row';
+import {
+  GeneralInfoIntro,
+  GeneralInfoSummary,
+  GeneralInfoTable,
+} from './content/general-info';
+import { IntroParagraph } from './content/intro';
+import {
+  PerformanceArchitectureTable,
+  PerformanceYearTable,
+} from './content/performance';
+import { createViewPageContextState, ViewPageContext } from './context';
 import { CustomRow, CustomRowLabel, CustomRowValue } from './custom-row';
 import {
   HighlightButton,
@@ -42,26 +52,26 @@ import {
   HighlightListItem,
   HighlightValue,
 } from './highlight-list';
-import { createProductContextState, ProductContext } from './product-context';
 import { ReviewRow } from './review-row';
 import { SpecRow } from './spec-row';
+import { ViewPageContentData } from './types';
 
 export interface ViewGpuPageProps {
   gpu: Product;
 
+  contentData: ViewPageContentData;
   relatedProducts: RelatedProducts;
 }
 
 export const ViewGpuPage = (props: ViewGpuPageProps) => {
-  const { gpu, relatedProducts } = props;
+  const { gpu, relatedProducts, contentData } = props;
   useProductCache(gpu);
 
-  const context = useMemo(() => createProductContextState(gpu), [gpu]);
-  const specs = context.specs;
-  const meta = context.metas;
-  const benchmarks = context.benchmarks;
+  const context = createViewPageContextState({ product: gpu, contentData });
+  const specs = gpu.specs;
+  const meta = gpu.metas;
 
-  const title = gpu.name;
+  const title = getProductName(gpu);
   const canonical = getProductDetailsPath(gpu);
   const keywords = [getProductName(gpu)];
 
@@ -80,12 +90,12 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
   const shoppingUrl = useMemo(() => getShoppingUrl(gpu), [gpu]);
 
   return (
-    <ProductContext.Provider value={context}>
+    <ViewPageContext.Provider value={context}>
       <WebsiteLayout seo={{ title, canonical, keywords }}>
         <Breadcrumbs className="mb-4">
           <Breadcrumb href="/">Home</Breadcrumb>
           <Breadcrumb href="/gpus">GPUs</Breadcrumb>
-          <Breadcrumb>{gpu.name}</Breadcrumb>
+          <Breadcrumb>{title}</Breadcrumb>
         </Breadcrumbs>
 
         <div className="flex flex-wrap justify-center gap-8">
@@ -177,90 +187,18 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
               </HighlightList>
             </section>
 
-            <section>
-              <p>
-                Check current availability and price of the AMD Radeon RX 6700.
-                See below for a comprehensive list of its benchmarks, reviews,
-                and specs.
-              </p>
+            <section className="-mb-4">
+              <IntroParagraph />
             </section>
 
             <section>
               <h2 className="mb-0 font-semibold">General Info</h2>
+              <GeneralInfoIntro />
+              <GeneralInfoTable className="mb-4" />
 
-              <p className={classNames('text-content-dimmed')}>
-                {`${gpu.name}'s`} basic details like its performance rating,
-                market segment, release date, and launch price. Check
-                availability and price for the {getProductName(gpu)}.
-              </p>
-
-              <Table border responsive className="mb-4">
-                <TBody>
-                  <CustomRow>
-                    <CustomRowLabel>Shop</CustomRowLabel>
-                    <CustomRowValue>
-                      {shoppingUrl != null ? (
-                        <a
-                          href={shoppingUrl}
-                          target="_blank"
-                          rel="noreferrer noopener"
-                          className="text-green-600 font-bold"
-                        >
-                          Check Price
-                        </a>
-                      ) : (
-                        <>--</>
-                      )}
-                    </CustomRowValue>
-                  </CustomRow>
-                  <CustomRow>
-                    <CustomRowLabel>Performance Rating (Rank)</CustomRowLabel>
-                    <CustomRowValue>
-                      {benchmarks.performanceScore != null &&
-                      meta.performanceRank != null ? (
-                        <>
-                          {formatBenchmark(benchmarks.performanceScore)} (
-                          {formatProductMeta(meta.performanceRank)})
-                        </>
-                      ) : (
-                        <>--</>
-                      )}
-                    </CustomRowValue>
-                  </CustomRow>
-                  <CustomRow>
-                    <CustomRowLabel>
-                      Performance Per Dollar (Rank)
-                    </CustomRowLabel>
-                    <CustomRowValue>
-                      {benchmarks.valueScore != null &&
-                      meta.valueRank != null ? (
-                        <>
-                          {formatBenchmark(benchmarks.valueScore)} (
-                          {formatProductMeta(meta.valueRank)})
-                        </>
-                      ) : (
-                        <>--</>
-                      )}
-                    </CustomRowValue>
-                  </CustomRow>
-                  <SpecRow spec="company" />
-                  <SpecRow spec="marketSegment" />
-                  <SpecRow spec="releaseDate" />
-                  <SpecRow spec="launchPrice" />
-                </TBody>
-              </Table>
-
-              <p>
-                The Test GPU 1 is a Desktop AMD GPU that launched during Q1
-                2021. It is targeted towards the mid-range PC market with a MSRP
-                of $399.
-              </p>
-
-              <p>
-                The AMD Radeon RX 6700 is the 14th best performing graphics card
-                out of the 300 GPUs in our database. It is the 4th best in value
-                graphics card.
-              </p>
+              <div className="-mb-4">
+                <GeneralInfoSummary />
+              </div>
             </section>
 
             <section>
@@ -269,198 +207,12 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
               <section className="flex gap-8 mb-4">
                 <div className="flex-1">
                   <h3 className="mb-1">Compared to 2021 GPUs</h3>
-                  <Table border responsive>
-                    <THead>
-                      <Tr>
-                        <Th className="border-0"></Th>
-                        <Th className="text-left border-0">
-                          Relative Performance
-                        </Th>
-                        <Th className="text-right border-0">Rank</Th>
-                      </Tr>
-                    </THead>
-                    <TBody>
-                      <CustomRow>
-                        <CustomRowLabel>RTX 3060</CustomRowLabel>
-                        <CustomRowValue className="text-left">
-                          120%
-                        </CustomRowValue>
-                        <CustomRowValue className="text-right">
-                          7
-                        </CustomRowValue>
-                      </CustomRow>
-                      <CustomRow>
-                        <CustomRowLabel>RTX 3060</CustomRowLabel>
-                        <CustomRowValue className="text-left">
-                          118%
-                        </CustomRowValue>
-                        <CustomRowValue className="text-right">
-                          8
-                        </CustomRowValue>
-                      </CustomRow>
-                      <CustomRow>
-                        <CustomRowLabel>RTX 3060</CustomRowLabel>
-                        <CustomRowValue className="text-left">
-                          110%
-                        </CustomRowValue>
-                        <CustomRowValue className="text-right">
-                          9
-                        </CustomRowValue>
-                      </CustomRow>
-                      <CustomRow highlight>
-                        <CustomRowLabel>RTX 3060</CustomRowLabel>
-                        <CustomRowValue className="text-left">
-                          100%
-                        </CustomRowValue>
-                        <CustomRowValue className="text-right">
-                          10
-                        </CustomRowValue>
-                      </CustomRow>
-                      <CustomRow>
-                        <CustomRowLabel>RTX 3060</CustomRowLabel>
-                        <CustomRowValue className="text-left">
-                          90%
-                        </CustomRowValue>
-                        <CustomRowValue className="text-right">
-                          11
-                        </CustomRowValue>
-                      </CustomRow>
-                      <CustomRow>
-                        <CustomRowLabel>RTX 3060</CustomRowLabel>
-                        <CustomRowValue className="text-left">
-                          87%
-                        </CustomRowValue>
-                        <CustomRowValue className="text-right">
-                          12
-                        </CustomRowValue>
-                      </CustomRow>
-                      <CustomRow>
-                        <CustomRowLabel>RTX 3060</CustomRowLabel>
-                        <CustomRowValue className="text-left">
-                          80%
-                        </CustomRowValue>
-                        <CustomRowValue className="text-right">
-                          13
-                        </CustomRowValue>
-                      </CustomRow>
-                      <CustomRow>
-                        <CustomRowLabel>RTX 3060</CustomRowLabel>
-                        <CustomRowValue className="text-left">
-                          74%
-                        </CustomRowValue>
-                        <CustomRowValue className="text-right">
-                          14
-                        </CustomRowValue>
-                      </CustomRow>
-                      <CustomRow>
-                        <CustomRowLabel>RTX 3060</CustomRowLabel>
-                        <CustomRowValue className="text-left">
-                          65%
-                        </CustomRowValue>
-                        <CustomRowValue className="text-right">
-                          15
-                        </CustomRowValue>
-                      </CustomRow>
-                    </TBody>
-                  </Table>
+                  <PerformanceYearTable />
                 </div>
 
                 <div className="flex-1">
                   <h3 className="mb-1">Compared to NVIDIA Ampere GPUs</h3>
-                  <Table border responsive>
-                    <THead>
-                      <Tr>
-                        <Th className="border-0"></Th>
-                        <Th className="text-left border-0">
-                          Relative Performance
-                        </Th>
-                        <Th className="text-right border-0">Rank</Th>
-                      </Tr>
-                    </THead>
-                    <TBody>
-                      <CustomRow>
-                        <CustomRowLabel>RTX 3060</CustomRowLabel>
-                        <CustomRowValue className="text-left">
-                          120%
-                        </CustomRowValue>
-                        <CustomRowValue className="text-right">
-                          7
-                        </CustomRowValue>
-                      </CustomRow>
-                      <CustomRow>
-                        <CustomRowLabel>RTX 3060</CustomRowLabel>
-                        <CustomRowValue className="text-left">
-                          118%
-                        </CustomRowValue>
-                        <CustomRowValue className="text-right">
-                          8
-                        </CustomRowValue>
-                      </CustomRow>
-                      <CustomRow>
-                        <CustomRowLabel>RTX 3060</CustomRowLabel>
-                        <CustomRowValue className="text-left">
-                          110%
-                        </CustomRowValue>
-                        <CustomRowValue className="text-right">
-                          9
-                        </CustomRowValue>
-                      </CustomRow>
-                      <CustomRow>
-                        <CustomRowLabel>RTX 3060</CustomRowLabel>
-                        <CustomRowValue className="text-left">
-                          100%
-                        </CustomRowValue>
-                        <CustomRowValue className="text-right">
-                          10
-                        </CustomRowValue>
-                      </CustomRow>
-                      <CustomRow>
-                        <CustomRowLabel>RTX 3060</CustomRowLabel>
-                        <CustomRowValue className="text-left">
-                          90%
-                        </CustomRowValue>
-                        <CustomRowValue className="text-right">
-                          11
-                        </CustomRowValue>
-                      </CustomRow>
-                      <CustomRow>
-                        <CustomRowLabel>RTX 3060</CustomRowLabel>
-                        <CustomRowValue className="text-left">
-                          87%
-                        </CustomRowValue>
-                        <CustomRowValue className="text-right">
-                          12
-                        </CustomRowValue>
-                      </CustomRow>
-                      <CustomRow highlight>
-                        <CustomRowLabel>RTX 3060</CustomRowLabel>
-                        <CustomRowValue className="text-left">
-                          80%
-                        </CustomRowValue>
-                        <CustomRowValue className="text-right">
-                          13
-                        </CustomRowValue>
-                      </CustomRow>
-                      <CustomRow>
-                        <CustomRowLabel>RTX 3060</CustomRowLabel>
-                        <CustomRowValue className="text-left">
-                          74%
-                        </CustomRowValue>
-                        <CustomRowValue className="text-right">
-                          14
-                        </CustomRowValue>
-                      </CustomRow>
-                      <CustomRow>
-                        <CustomRowLabel>RTX 3060</CustomRowLabel>
-                        <CustomRowValue className="text-left">
-                          65%
-                        </CustomRowValue>
-                        <CustomRowValue className="text-right">
-                          15
-                        </CustomRowValue>
-                      </CustomRow>
-                    </TBody>
-                  </Table>
+                  <PerformanceArchitectureTable />
                 </div>
               </section>
 
@@ -913,9 +665,10 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
 
             <section>
               <p className="text-xs">
-                Note: The data represented on this page considers the 300 GPUs
-                that we track in our database. Check which graphics cards we are
-                tracking on our listing page.
+                The rankings, relative performance, and relative value
+                represented on this page considers the 300 GPUs that we track in
+                our database. Check which graphics cards we are tracking on our{' '}
+                <a href="/gpus">GPU list</a> page.
               </p>
             </section>
           </article>
@@ -926,6 +679,6 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
           </Sidenav>
         </div>
       </WebsiteLayout>
-    </ProductContext.Provider>
+    </ViewPageContext.Provider>
   );
 };

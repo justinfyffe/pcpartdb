@@ -18,7 +18,10 @@ export enum ProductsOrderBy {
 }
 
 export interface ProductsFilter {
+  performanceRated?: boolean;
+
   company?: string;
+  architecture?: string;
 }
 
 export interface Product {

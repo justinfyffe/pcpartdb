@@ -1,14 +1,29 @@
 Immediate Tasks:
+- Prep for launch
+  - Finish UIs
+    - View Page
+      - finish content, add links, fetch remaining data
+    - Compare page
+      - adjust like view page, add links, fetch remaining data
+    - List page
+      - Combine with overview page, remove popular comparisons/gpus
+  - Audit
+    - Check links, meta tags, canonical tags
+    - check legal pages for correct name and email
+  - Website name + logo
+    - Finalize name and logo (e.g. pc part db vs pc parts db)
+    - Check with matt for name grammar
+  - Email
+    - Set up email alias
+  - Hosting
+    - Set up database
+    - Set up domain
+    - launch
+
 - clean up ui:
   - view page: write content/paragraphs. add links
   - compare page: adjust content like view page
-- content framework
-  - improve supporting subsets of hints.
-    - You can have more hints on the value, and the key will check if its
-      whole set of hints is covered.
-      - Figure out better way of keys for hints.
-      - Maybe loop through hints in order of appearance, instead of using keys?
-        - And then check if the top one has its hints fulfilled
+  
 - Website name and logo
   - decide between "PC Part DB" and "PC Parts DB" (leaning towards PC Parts DB)
   - finalize logo

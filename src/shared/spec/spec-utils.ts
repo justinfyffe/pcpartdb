@@ -9,6 +9,7 @@ export enum SpecBooleanFormatter {
 
 export enum SpecDateFormatter {
   QuarterYear = 'QQQ yyyy',
+  Year = 'yyyy',
 }
 
 export enum ClockSpeedUnit {
@@ -98,13 +99,17 @@ function specValueMultiplier(spec: Spec) {
   }
 }
 
+export function hasSpec(spec: Spec) {
+  return spec?.value != null;
+}
+
 export function compareSpecs(spec1: Spec, spec2: Spec) {
-  // Handle edge cases (nulls)
-  if (spec1?.value == null && spec2?.value == null) {
+  // Handle edge cases (missing specs)
+  if (!hasSpec(spec1) && !hasSpec(spec2)) {
     return 0;
-  } else if (spec1?.value == null) {
+  } else if (!hasSpec(spec1)) {
     return -1;
-  } else if (spec2?.value == null) {
+  } else if (!hasSpec(spec2)) {
     return 1;
   }
 
@@ -142,15 +147,12 @@ export interface FormatSpecOptions {
 }
 
 export function formatSpec(spec: Spec, options?: FormatSpecOptions) {
-  if (spec == null) {
+  if (!hasSpec(spec)) {
     return null;
   }
 
   const { value, metadata } = spec;
   const specKey = metadata?.specKey;
-  if (value == null) {
-    return null;
-  }
 
   // Handle special cases
   if (specKey === 'slotWidth' && typeof spec.value === 'number') {

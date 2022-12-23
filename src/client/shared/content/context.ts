@@ -1,8 +1,8 @@
 import { createContext } from 'react';
-import { ContentHints, ContentParams } from './types';
+import { ContentFilters, ContentParams } from './types';
 
 interface ContentContextState {
-  hints?: ContentHints;
+  hints?: ContentFilters;
   params?: ContentParams;
 }
 

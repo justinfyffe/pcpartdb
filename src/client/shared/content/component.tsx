@@ -1,22 +1,24 @@
 import React, { FunctionComponent, useContext } from 'react';
 import { ContentContext } from './context';
-import { CompiledContent, ContentHints, ContentParams } from './types';
+import { CompiledContent, ContentFilters, ContentParams } from './types';
 import { processContent } from './utils';
 
 export interface ContentProps {
-  content: CompiledContent;
+  compiledContent: CompiledContent;
 
-  hints?: ContentHints;
+  filters?: ContentFilters;
   params?: ContentParams;
+  required?: boolean;
 }
 
 export const Content: FunctionComponent<ContentProps> = (props) => {
-  const { content } = props;
+  const { compiledContent } = props;
 
   const context = useContext(ContentContext);
 
-  const hints = props.hints || context.hints;
+  const filters = props.filters || context.hints;
   const params = props.params || context.params;
+  const required = props.required || false;
 
-  return <>{processContent({ content, hints, params })}</>;
+  return <>{processContent({ compiledContent, filters, params, required })}</>;
 };

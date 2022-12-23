@@ -60,11 +60,25 @@ export function filterProducts<T extends Product>(
   return products.filter((product) => {
     let result = true;
 
-    if (filter?.company != null) {
+    if (result && filter?.performanceRated === true) {
+      result = product.benchmarks?.performanceScore?.value != null;
+    }
+
+    if (result && filter?.company != null) {
       result =
-        result &&
         filter.company.toLowerCase() ===
-          product.specs?.company?.value?.toLowerCase();
+        product.specs?.company?.value?.toLowerCase();
+    }
+
+    if (result && filter?.architecture != null) {
+      result =
+        filter.architecture.toLowerCase() ===
+        product.specs?.architecture?.value?.toLowerCase();
+    }
+
+    if (result && filter?.year != null) {
+      result =
+        filter.year === Number(product.specs?.releaseDate?.value?.slice(0, 4));
     }
 
     return result;
@@ -125,4 +139,13 @@ export function limitProducts<T extends Product>(
   }
 
   return result;
+}
+
+export function sliceProducts<T extends Product>(
+  products: T[],
+  start: number,
+  total: number,
+) {
+  const result = [...products];
+  return result.slice(start, start + total);
 }

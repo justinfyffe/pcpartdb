@@ -3,85 +3,107 @@ import { Content } from './component';
 import {
   CompiledContent,
   CompiledContentVariant,
-  ContentHints,
+  ContentFilters,
   ContentParams,
   RawContent,
 } from './types';
 
 interface ProcessContentOptions {
-  content: CompiledContent;
-  hints?: ContentHints;
+  compiledContent: CompiledContent;
+  filters?: ContentFilters;
   params?: ContentParams;
+  required?: boolean;
 }
 
 export function processContent(options: ProcessContentOptions) {
-  const { content, hints, params } = options;
+  const { compiledContent, filters, params, required } = options;
 
-  const variants = getVariantsByHints(content, hints);
-  if (variants == null || variants.length === 0) {
-    const tagsKey = generateContentKey(hints);
-    throw new Error(
-      `Cannot find content variant for tags=${tagsKey}. A fallback variant is missing.`,
-    );
+  for (let i = 0; i < compiledContent.length; ++i) {
+    const content = compiledContent[i];
+    if (!hasRequiredFilters(content, filters)) {
+      continue;
+    }
+
+    if (!hasRequiredParams(content, params)) {
+      continue;
+    }
+
+    return content.component(params);
   }
 
-  const variant = getVariantByParams(variants, params);
-
-  if (variant == null) {
-    throw new Error(
-      'Cannot find content variant. Usually this means some required parameters are missing.',
-    );
+  if (!required) {
+    return <></>;
   }
 
-  return variant.component(params);
+  throw new Error(
+    'Cannot find content variant, but one is required. Check filters and parameters.',
+  );
 }
 
-function getVariantsByHints(content: CompiledContent, keys?: ContentHints) {
-  const key = generateContentKey(keys ?? []);
+function hasRequiredFilters(
+  content: CompiledContentVariant,
+  filters?: ContentFilters,
+) {
+  if (content.filters == null || content.filters.length === 0) {
+    return true;
+  }
 
-  const variants = content[key];
-  const fallbackVariants = content[''];
-  return variants || fallbackVariants || null;
+  if (filters == null) {
+    return false;
+  }
+
+  let filtersToCheck: Set<string>;
+  if (Array.isArray(filters)) {
+    filtersToCheck = new Set(filters || []);
+  } else {
+    const filtered: string[] = [];
+    const keys = Object.keys(filters);
+    for (const filter of keys) {
+      if (filters[filter] === true) {
+        filtered.push(filter);
+      }
+    }
+    filtersToCheck = new Set(filtered);
+  }
+
+  return content.filters.every((hint) => filtersToCheck.has(hint));
 }
 
-function getVariantByParams(
-  variants: CompiledContentVariant[],
+function hasRequiredParams(
+  content: CompiledContentVariant,
   params?: ContentParams,
 ) {
-  const paramsToFind = new Set(Object.keys(params ?? {}));
-
-  for (let i = 0; i < variants.length; ++i) {
-    const variant = variants[i];
-    const { deps } = variant;
-
-    if (deps.every((param) => paramsToFind.has(param))) {
-      return variant;
-    }
+  if (content.deps == null || content.deps.length === 0) {
+    return true;
   }
 
-  return null;
-}
+  if (params == null) {
+    return false;
+  }
 
-function generateContentKey(keys: ContentHints = []) {
-  const sorted = Array.isArray(keys)
-    ? [...keys].sort()
-    : [...Object.keys(keys).filter((key) => keys[key] === true)].sort();
-  return sorted.join(',');
+  const paramsToFind = new Set(Object.keys(params ?? {}));
+  return content.deps.every(
+    (param) => paramsToFind.has(param) && params[param] != null,
+  );
 }
 
 export function compileContent(...content: RawContent[]) {
-  const compiled: CompiledContent = {};
+  const compiled: CompiledContent = [];
 
   for (let i = 0; i < content.length; ++i) {
-    const { hints, deps, component } = content[i];
+    const { filters: hints, deps, component } = content[i];
 
-    const key = generateContentKey(hints);
-    compiled[key] = compiled[key] || [];
-    compiled[key].push({ deps, component });
+    compiled.push({
+      filters: hints || [],
+      deps: deps || [],
+      component,
+    });
   }
 
   // eslint-disable-next-line react/display-name
-  return (props: { hints?: ContentHints; params?: ContentParams }) => (
-    <Content content={compiled} {...props} />
-  );
+  return (props: {
+    hints?: ContentFilters;
+    params?: ContentParams;
+    required?: boolean;
+  }) => <Content compiledContent={compiled} {...props} />;
 }

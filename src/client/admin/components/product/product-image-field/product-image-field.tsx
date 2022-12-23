@@ -1,7 +1,12 @@
 import { useImageCache } from '@client/shared/cache';
 import { Image } from '@shared/image';
 import { ProductImage } from '@shared/product-image';
-import React, { FunctionComponent, useCallback, useState } from 'react';
+import React, {
+  FunctionComponent,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import { ImageInput } from '../../image';
 
 interface ProductImageFieldProps {
@@ -25,6 +30,19 @@ export const ProductImageField: FunctionComponent<ProductImageFieldProps> = (
 
     return value.image ?? imageCache.get(value.imageId);
   });
+
+  // Strip "image" from value
+  useEffect(() => {
+    if (value?.image == null) {
+      return;
+    }
+
+    onChange?.(
+      value != null
+        ? { imageId: value.imageId, metadata: value.metadata }
+        : null,
+    );
+  }, [value, onChange]);
 
   const handleChange = useCallback(
     (image: Image) => {

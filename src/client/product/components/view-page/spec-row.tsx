@@ -1,7 +1,7 @@
 import { Td, Tr } from '@client/shared/components';
 import { formatSpec, SpecBooleanFormatter, SpecKey } from '@shared/spec';
 import React, { useContext } from 'react';
-import { ProductContext } from './product-context';
+import { ViewPageContext } from './context';
 
 const LABELS: Record<string, string> = {
   // General
@@ -68,8 +68,8 @@ interface SpecRowProps {
 export const SpecRow = (props: SpecRowProps) => {
   const { spec: key } = props;
 
-  const context = useContext(ProductContext);
-  const specs = context.specs;
+  const { product } = useContext(ViewPageContext);
+  const specs = product.specs;
 
   return (
     <Tr>
