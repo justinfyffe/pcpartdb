@@ -14,7 +14,7 @@ export const PerformanceSummarySentence1 = compileContent({
   component: (props) => (
     <>
       The {props.productName} is the {props.performanceYearRank} strongest card
-      among {props.totalYearGpus} benchmarked GPUs that also launched in{' '}
+      among {props.totalYearGpus} benchmarked GPUs that launched in{' '}
       {props.launchYear}.
     </>
   ),

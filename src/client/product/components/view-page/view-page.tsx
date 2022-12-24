@@ -4,9 +4,6 @@ import {
   Breadcrumbs,
   Table,
   TBody,
-  Th,
-  THead,
-  Tr,
 } from '@client/shared/components';
 import { WebsiteLayout } from '@client/shared/layouts';
 import { classNames } from '@client/shared/ui';
@@ -41,13 +38,17 @@ import {
 import { IntroParagraph } from './content/intro';
 import {
   PerformanceArchitectureTable,
+  PerformanceIntro,
   PerformanceSummary,
   PerformanceYearTable,
 } from './content/performance';
-import { PerformanceIntro } from './content/performance/intro';
-import { ValueArchitectureTable, ValueYearTable } from './content/value';
+import {
+  ValueArchitectureTable,
+  ValueIntro,
+  ValueSummary,
+  ValueYearTable,
+} from './content/value';
 import { createViewPageContextState, ViewPageContext } from './context';
-import { CustomRow, CustomRowLabel, CustomRowValue } from './custom-row';
 import {
   HighlightButton,
   HighlightLabel,
@@ -208,7 +209,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
               <h2 className="mb-0 font-semibold">Relative Performance</h2>
               <PerformanceIntro />
 
-              <section className="flex gap-8 mb-4">
+              <section className="flex flex-wrap gap-8 mb-4">
                 <div className="flex-1">
                   <h3 className="mb-1">Compared to 2021 GPUs</h3>
                   <PerformanceYearTable />
@@ -226,9 +227,10 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
             </section>
 
             <section>
-              <h2 className="mb-0 font-semibold">Value</h2>
+              <h2 className="mb-0 font-semibold">Relative Value</h2>
+              <ValueIntro />
 
-              <section className="flex gap-8 mb-4">
+              <section className="flex flex-wrap gap-8 mb-4">
                 <div className="flex-1">
                   <h3 className="mb-1">Compared to 2021 GPUs</h3>
                   <ValueYearTable />
@@ -240,16 +242,9 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                 </div>
               </section>
 
-              <p>
-                The Test GPU 1 is the 3rd most performant GPU in our database.
-                It is also 30% stronger than the GPU with the best value, the
-                Test GPU 2.
-              </p>
-              <p>
-                This graphics card is the 5th strongest card among the 43 GPUs
-                that also launched in 2021. Additionally, it is the 2nd most
-                powerful AMD GPU, and 4thin the RDNA 2.0 architecture family.
-              </p>
+              <div className="-mb-4">
+                <ValueSummary />
+              </div>
             </section>
 
             <section>
