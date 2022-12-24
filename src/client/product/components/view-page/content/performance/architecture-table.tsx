@@ -1,7 +1,6 @@
 import { Table, TBody, Th, THead, Tr } from '@client/shared/components';
-import { getProductName } from '@shared/product';
-import { formatProductMeta } from '@shared/product-meta';
-import React, { FunctionComponent, useContext } from 'react';
+import { getProductName, Product } from '@shared/product';
+import React, { FunctionComponent, useCallback, useContext } from 'react';
 import { ViewPageContext } from '../../context';
 import { CustomRow, CustomRowLabel, CustomRowValue } from '../../custom-row';
 
@@ -14,19 +13,22 @@ export const PerformanceArchitectureTable: FunctionComponent<
 > = (props) => {
   const { className } = props;
   const { product, contentData } = useContext(ViewPageContext);
-  const { performanceArchitectureGpus: architectureGpus } = contentData;
+  const {
+    performanceArchitectureGpus: gpus,
+    performanceArchitectureRank: rank,
+  } = contentData;
 
-  const baseline = product.benchmarks?.performanceScore?.value;
+  const seedIndex = gpus.findIndex((gpu) => product.id === gpu.id);
 
-  const relativePerformance = architectureGpus.map((gpu) => {
-    const performance = gpu.benchmarks?.performanceScore?.value;
+  const getRelativePerformance = useCallback(
+    (relatedGpu: Product) => {
+      const baseline = product.benchmarks.performanceScore.value;
+      const relatedPerformance = relatedGpu.benchmarks.performanceScore.value;
 
-    if (performance == null || baseline == null) {
-      return null;
-    }
-
-    return ((performance / baseline) * 100).toFixed(0);
-  });
+      return ((relatedPerformance / baseline) * 100).toFixed(0);
+    },
+    [product],
+  );
 
   // TODO: use relative rank, not overall rank
   return (
@@ -39,21 +41,17 @@ export const PerformanceArchitectureTable: FunctionComponent<
         </Tr>
       </THead>
       <TBody>
-        {architectureGpus.map((gpu, i) => {
+        {gpus.map((gpu, i) => {
           return (
             <CustomRow key={i} highlight={product.id === gpu.id}>
               <CustomRowLabel>
                 {getProductName(gpu, { company: false })}
               </CustomRowLabel>
               <CustomRowValue className="text-left">
-                {(relativePerformance[i] != null) != null ? (
-                  <>{relativePerformance[i]}%</>
-                ) : (
-                  '--'
-                )}
+                {getRelativePerformance(gpu)}%
               </CustomRowValue>
               <CustomRowValue className="text-right">
-                {formatProductMeta(gpu.metas.performanceRank)}
+                {rank - (seedIndex - i)}
               </CustomRowValue>
             </CustomRow>
           );

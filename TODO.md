@@ -1,4 +1,6 @@
 Immediate Tasks:
+- Clean up format code
+  - replace formatSpec, formatMeta with more specific utils
 - Prep for launch
   - Finish UIs
     - View Page

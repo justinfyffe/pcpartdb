@@ -4,7 +4,7 @@ import {
   Product,
   ProductComparison,
   ProductsFilter,
-  ProductsOrderBy,
+  ProductsSort,
 } from './product-types';
 
 interface GetProductNameOptions {
@@ -87,22 +87,22 @@ export function filterProducts<T extends Product>(
 
 export function sortProducts<T extends Product>(
   products: T[],
-  orderBy?: ProductsOrderBy,
+  sort?: ProductsSort,
 ): T[] {
   const result = [...products];
 
-  if (orderBy === ProductsOrderBy.Id) {
+  if (sort === ProductsSort.Id) {
     // ASC
     result.sort((p1, p2) => p1.id - p2.id);
-  } else if (orderBy === ProductsOrderBy.Name) {
+  } else if (sort === ProductsSort.Name) {
     // ASC
     result.sort((p1, p2) => p1.name.localeCompare(p2.name));
-  } else if (orderBy === ProductsOrderBy.ReleaseDate) {
+  } else if (sort === ProductsSort.ReleaseDate) {
     // DESC
     result.sort((p1, p2) =>
       compareSpecs(p2.specs?.releaseDate, p1.specs?.releaseDate),
     );
-  } else if (orderBy === ProductsOrderBy.PerformanceRating) {
+  } else if (sort === ProductsSort.PerformanceRating) {
     // DESC
     result.sort((p1, p2) =>
       compareBenchmarks(
@@ -110,7 +110,7 @@ export function sortProducts<T extends Product>(
         p1.benchmarks?.performanceScore,
       ),
     );
-  } else if (orderBy === ProductsOrderBy.ValueRating) {
+  } else if (sort === ProductsSort.ValueRating) {
     // DESC
     result.sort((p1, p2) =>
       compareBenchmarks(p2.benchmarks?.valueScore, p1.benchmarks?.valueScore),
@@ -128,24 +128,11 @@ export function sortProducts<T extends Product>(
   return result;
 }
 
-export function limitProducts<T extends Product>(
+export function paginateProducts<T extends Product>(
   products: T[],
+  offset: number,
   limit: number,
 ): T[] {
   const result = [...products];
-
-  if (limit != null) {
-    result.splice(limit - 1);
-  }
-
-  return result;
-}
-
-export function sliceProducts<T extends Product>(
-  products: T[],
-  start: number,
-  total: number,
-) {
-  const result = [...products];
-  return result.slice(start, start + total);
+  return result.slice(offset, offset + limit);
 }

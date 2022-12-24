@@ -7,7 +7,7 @@ import {
   getProductName,
   Product,
   ProductComparison,
-  ProductsOrderBy,
+  ProductsSort,
   RelatedProducts,
 } from '@shared/product';
 import { formatSpec } from '@shared/spec';
@@ -122,7 +122,7 @@ export const OverviewGpusPage = (props: OverviewGpusPageProps) => {
 
             <div className={classNames('self-end')}>
               <a
-                href={`/gpus/list?sort=${ProductsOrderBy.PerformanceRating}`}
+                href={`/gpus/list?sort=${ProductsSort.PerformanceRating}`}
                 className={classNames('text-indigo-400')}
               >
                 View all GPUs by performance
@@ -179,7 +179,7 @@ export const OverviewGpusPage = (props: OverviewGpusPageProps) => {
 
             <div className={classNames('self-end')}>
               <a
-                href={`/gpus/list?sort=${ProductsOrderBy.ValueRating}`}
+                href={`/gpus/list?sort=${ProductsSort.ValueRating}`}
                 className={classNames('text-indigo-400')}
               >
                 View all GPUs by performance per dollar
@@ -210,11 +210,11 @@ export const OverviewGpusPage = (props: OverviewGpusPageProps) => {
           <FeedLinks>
             <FeedLink href="/gpus/list">All GPUs</FeedLink>
             <FeedLink
-              href={`/gpus/list?sort=${ProductsOrderBy.PerformanceRating}`}
+              href={`/gpus/list?sort=${ProductsSort.PerformanceRating}`}
             >
               Best Performing GPUs
             </FeedLink>
-            <FeedLink href={`/gpus/list?sort=${ProductsOrderBy.ValueRating}`}>
+            <FeedLink href={`/gpus/list?sort=${ProductsSort.ValueRating}`}>
               Best Value GPUs
             </FeedLink>
           </FeedLinks>

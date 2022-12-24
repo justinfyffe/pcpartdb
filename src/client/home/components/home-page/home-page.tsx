@@ -16,7 +16,7 @@ import { classNames } from '@client/shared/ui';
 import {
   Product,
   ProductComparison,
-  ProductsOrderBy,
+  ProductsSort,
   RelatedProducts,
 } from '@shared/product';
 import React, { useMemo } from 'react';
@@ -67,11 +67,11 @@ export const HomePage = (props: HomePageProps) => {
           <FeedLinks>
             <FeedLink href="/gpus/list">All GPUs</FeedLink>
             <FeedLink
-              href={`/gpus/list?sort=${ProductsOrderBy.PerformanceRating}`}
+              href={`/gpus/list?sort=${ProductsSort.PerformanceRating}`}
             >
               Best Performing GPUs
             </FeedLink>
-            <FeedLink href={`/gpus/list?sort=${ProductsOrderBy.ValueRating}`}>
+            <FeedLink href={`/gpus/list?sort=${ProductsSort.ValueRating}`}>
               Best Value GPUs
             </FeedLink>
           </FeedLinks>
@@ -100,12 +100,12 @@ export const HomePage = (props: HomePageProps) => {
               All NVIDIA GPUs
             </FeedLink>
             <FeedLink
-              href={`/gpus/list?company=nvidia&sort=${ProductsOrderBy.PerformanceRating}`}
+              href={`/gpus/list?company=nvidia&sort=${ProductsSort.PerformanceRating}`}
             >
               Best Performing NVIDIA GPUs
             </FeedLink>
             <FeedLink
-              href={`/gpus/list?company=nvidia&sort=${ProductsOrderBy.ValueRating}`}
+              href={`/gpus/list?company=nvidia&sort=${ProductsSort.ValueRating}`}
             >
               Best Value NVIDIA GPUs
             </FeedLink>
@@ -133,12 +133,12 @@ export const HomePage = (props: HomePageProps) => {
           <FeedLinks>
             <FeedLink href="/gpus/list?company=amd">All AMD GPUs</FeedLink>
             <FeedLink
-              href={`/gpus/list?company=amd&sort=${ProductsOrderBy.PerformanceRating}`}
+              href={`/gpus/list?company=amd&sort=${ProductsSort.PerformanceRating}`}
             >
               Best Performing AMD GPUs
             </FeedLink>
             <FeedLink
-              href={`/gpus/list?company=amd&sort=${ProductsOrderBy.ValueRating}`}
+              href={`/gpus/list?company=amd&sort=${ProductsSort.ValueRating}`}
             >
               Best Value AMD GPUs
             </FeedLink>

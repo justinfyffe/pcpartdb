@@ -6,55 +6,26 @@ import {
 import { transaction } from '@server/db/database';
 import { productService } from '@server/product/product-service';
 import { Context } from '@server/shared/context';
-import { serializeAsync } from '@server/shared/types/serialize';
+import { serialize } from '@server/shared/types/serialize';
 import {
-  filterProducts,
+  paginateProducts,
   Product,
-  ProductsFilter,
-  ProductsOrderBy,
+  ProductsSort,
   ProductType,
-  sliceProducts,
-  sortProducts,
 } from '@shared/product';
-import { formatSpec, hasSpec, SpecDateFormatter } from '@shared/spec';
+import { formatSpec, SpecDateFormatter } from '@shared/spec';
 import { NextPageContext } from 'next';
 
-const TOTAL_RELATIVE_PERFORMANCE_PRODUCTS = 10;
+const TOTAL_COMPARED_PRODUCTS = 10;
 
-export async function getServerSideProps(ctx: NextPageContext) {
+export async function getServerSideProps(nextCtx: NextPageContext) {
   return transaction(async (trx) => {
-    const slug = ctx.query.slug as string;
-    const gpu = await getGpu(slug, { trx });
+    const ctx = { trx };
 
-    const allRatedGpus = await getAllRatedGpus(ctx);
-    const gpusByPerformance = sortProducts(
-      allRatedGpus,
-      ProductsOrderBy.PerformanceRating,
-    );
-
-    const performanceArchitectureGpus = getPerformanceArchitectureGpus(
-      gpusByPerformance,
-      gpu,
-    );
-    const performanceYearGpus = getPerformanceYearGpus(gpusByPerformance, gpu);
-
-    const gpusByValue = sortProducts(allRatedGpus, ProductsOrderBy.ValueRating);
-
-    const contentData: ViewPageContentData = {
-      totalPerformanceRatedGpus: allRatedGpus.length,
-      performanceArchitectureGpus,
-      performanceYearGpus,
-    };
-
-    // TODO: determine this based on launch year, architecture, company
-    const relatedProducts = await productService.getRelatedProducts(
-      {
-        type: ProductType.GPU,
-        seed: gpu,
-        prioritize: ProductsOrderBy.ReleaseDate,
-      },
-      { trx },
-    );
+    const slug = nextCtx.query.slug as string;
+    const gpu = await getGpu(slug, ctx);
+    const contentData = await getContentData(gpu, ctx);
+    const relatedProducts = await getRelatedGpus(gpu, ctx);
 
     const pageProps: ViewGpuPageProps = {
       gpu: JSON.parse(JSON.stringify(gpu)),
@@ -66,103 +37,112 @@ export async function getServerSideProps(ctx: NextPageContext) {
   });
 }
 
-async function getGpu(slug: string, ctx: Context) {
-  const gpu: Product = await serializeAsync(productService.get(slug, ctx));
-  await productService.populateRanks(gpu, ctx);
-  return gpu;
-}
-
-async function getAllRatedGpus(ctx: Context) {
-  return await productService.list(
-    { type: ProductType.GPU, filter: { performanceRated: true } },
+async function getGpu(slug: string, ctx: Context): Promise<Product> {
+  const product = productService.get(
+    { slug, includeImages: true, includeRanks: true },
     ctx,
   );
+
+  return serialize(product);
 }
 
-function getPerformanceArchitectureGpus(gpus: Product[], seed: Product) {
-  return getPerformanceGpus(gpus, seed, {
-    architecture: formatSpec(seed.specs?.architecture),
-  });
+async function getContentData(gpu: Product, ctx: Context) {
+  const totalRatedGpus = await getTotalRatedGpus(ctx);
+
+  const {
+    products: performanceArchitectureGpus,
+    rank: performanceArchitectureRank,
+    total: totalArchitectureGpus,
+  } = await getPerformanceArchitectureGpus(gpu, ctx);
+  const {
+    products: performanceYearGpus,
+    rank: performanceYearRank,
+    total: totalYearGpus,
+  } = await getPerformanceYearGpus(gpu, ctx);
+
+  return {
+    totalRatedGpus,
+    totalArchitectureGpus,
+    performanceArchitectureGpus,
+    performanceArchitectureRank,
+    totalYearGpus,
+    performanceYearGpus,
+    performanceYearRank,
+  } as ViewPageContentData;
 }
 
-function getPerformanceYearGpus(gpus: Product[], seed: Product) {
-  return getPerformanceGpus(gpus, seed, {
-    year: Number(
-      formatSpec(seed.specs?.releaseDate, {
-        dateFormatter: SpecDateFormatter.Year,
-      }),
-    ),
-  });
-}
-
-function getPerformanceGpus(
-  gpus: Product[],
-  seed: Product,
-  filter: ProductsFilter,
-) {
-  const filteredGpus = filterProducts(gpus, filter);
-
-  const seedIndex = filteredGpus.findIndex((gpu) => gpu.id === seed.id);
-  const start = Math.max(
-    0,
-    seedIndex - TOTAL_RELATIVE_PERFORMANCE_PRODUCTS / 2,
+async function getTotalRatedGpus(ctx: Context) {
+  const results = await productService.list(
+    {
+      type: ProductType.GPU,
+      filter: { performanceRated: true },
+    },
+    ctx,
   );
-  return sliceProducts(
-    filteredGpus,
-    start,
-    TOTAL_RELATIVE_PERFORMANCE_PRODUCTS,
-  );
+  return results.length;
 }
 
-function getRelatedPerformanceGpus(allGpus: Product[], seedGpu: Product) {
-  const performanceGpus = sortProducts(
-    allGpus,
-    ProductsOrderBy.PerformanceRating,
+async function getPerformanceArchitectureGpus(seed: Product, ctx: Context) {
+  const company = formatSpec(seed.specs?.company);
+  const architecture = formatSpec(seed.specs?.architecture);
+
+  const results = await productService.list(
+    {
+      type: ProductType.GPU,
+      filter: { performanceRated: true, company, architecture },
+      sort: ProductsSort.PerformanceRating,
+    },
+    ctx,
+  );
+  const total = results.length;
+
+  const seedIndex = results.findIndex((gpu) => gpu.id === seed.id);
+  const start = Math.max(0, seedIndex - TOTAL_COMPARED_PRODUCTS / 2);
+
+  const products: Product[] = serialize(
+    paginateProducts(results, start, TOTAL_COMPARED_PRODUCTS),
   );
 
-  let launchYearGpus: Product[] = [];
-  let architectureGpus: Product[] = [];
+  return { products, rank: seedIndex + 1, total };
+}
 
-  // Year
-  if (hasSpec(seedGpu.specs?.releaseDate)) {
-    const year = Number(
-      formatSpec(seedGpu.specs.releaseDate, {
-        dateFormatter: SpecDateFormatter.Year,
-      }),
-    );
-    const filteredGpus = filterProducts(performanceGpus, { year });
+async function getPerformanceYearGpus(seed: Product, ctx: Context) {
+  const year = Number(
+    formatSpec(seed.specs?.releaseDate, {
+      dateFormatter: SpecDateFormatter.Year,
+    }),
+  );
 
-    const seedIndex = filteredGpus.findIndex((gpu) => gpu.id === seedGpu.id);
-    const start = Math.max(
-      0,
-      seedIndex - TOTAL_RELATIVE_PERFORMANCE_PRODUCTS / 2,
-    );
-    launchYearGpus = sliceProducts(
-      filteredGpus,
-      start,
-      TOTAL_RELATIVE_PERFORMANCE_PRODUCTS,
-    );
-  }
+  const results = await productService.list(
+    {
+      type: ProductType.GPU,
+      filter: { performanceRated: true, year },
+      sort: ProductsSort.PerformanceRating,
+    },
+    ctx,
+  );
+  const total = results.length;
 
-  // Architecture
-  if (hasSpec(seedGpu.specs?.architecture)) {
-    const filteredGpus = filterProducts(performanceGpus, {
-      architecture: formatSpec(seedGpu.specs?.architecture),
-    });
+  const seedIndex = results.findIndex((gpu) => gpu.id === seed.id);
+  const start = Math.max(0, seedIndex - TOTAL_COMPARED_PRODUCTS / 2);
 
-    const seedIndex = filteredGpus.findIndex((gpu) => gpu.id === seedGpu.id);
-    const start = Math.max(
-      0,
-      seedIndex - TOTAL_RELATIVE_PERFORMANCE_PRODUCTS / 2,
-    );
-    architectureGpus = sliceProducts(
-      filteredGpus,
-      start,
-      TOTAL_RELATIVE_PERFORMANCE_PRODUCTS,
-    );
-  }
+  const products: Product[] = serialize(
+    paginateProducts(results, start, TOTAL_COMPARED_PRODUCTS),
+  );
 
-  return { launchYearGpus, architectureGpus };
+  return { products, rank: seedIndex + 1, total };
+}
+
+// TODO: determine this based on gpus fetched for content tables
+async function getRelatedGpus(seed: Product, ctx: Context) {
+  return await productService.getRelatedProducts(
+    {
+      type: ProductType.GPU,
+      seed,
+      prioritize: ProductsSort.ReleaseDate,
+    },
+    ctx,
+  );
 }
 
 export default ViewGpuPage;

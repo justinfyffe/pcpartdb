@@ -4,8 +4,8 @@ import { Context } from '@server/shared/context';
 import { validate } from '@server/shared/types/validate';
 import { benchmarksValidator } from '@shared/benchmark';
 import {
-  filterProducts,
-  limitProducts,
+  FindComparisonRequest,
+  FindProductRequest,
   ListProductsRequest,
   Product,
   ProductComparison,
@@ -13,7 +13,6 @@ import {
   ProductType,
   RelatedProducts,
   RelatedProductsRequest,
-  sortProducts,
 } from '@shared/product';
 import { productImagesValidator } from '@shared/product-image';
 import { ProductMetas, productMetasValidator } from '@shared/product-meta';
@@ -48,22 +47,11 @@ const updateProductValidator = Joi.object({
 
 export class ProductService {
   async list(options: ListProductsRequest, ctx: Context) {
-    const { type, filter, orderBy, limit } = options;
-
-    // Fetch all products
-    let products = await productRepository.list(type, ctx);
-
-    products = filterProducts(products, filter);
-    products = sortProducts(products, orderBy);
-    products = limitProducts(products, limit);
-
-    return products;
+    return await productRepository.list(options, ctx);
   }
 
-  async get(idOrSlug: string | number, ctx: Context) {
-    const product = isNaN(Number(idOrSlug))
-      ? await this.getProductBySlug(idOrSlug as string, ctx)
-      : await this.getProductById(Number(idOrSlug), ctx);
+  async get(options: FindProductRequest, ctx: Context) {
+    const product = await productRepository.find(options, ctx);
 
     if (product == null) {
       throw notFoundError(null);
@@ -72,8 +60,9 @@ export class ProductService {
     return product;
   }
 
-  async getComparison(idsOrSlugs: string, ctx: Context) {
-    const parts = idsOrSlugs.split('--vs--');
+  async getComparison(options: FindComparisonRequest, ctx: Context) {
+    const { slug, includeImages, includeRanks } = options;
+    const parts = slug.split('--vs--');
 
     if (parts.length !== 2) {
       throw badRequestError(null);
@@ -81,7 +70,7 @@ export class ProductService {
 
     const promises = [];
     for (const part of parts) {
-      promises.push(this.get(part, ctx));
+      promises.push(this.get({ slug: part, includeImages, includeRanks }, ctx));
     }
     const products = await Promise.all(promises);
     const filteredProducts = products.filter((product) => product != null);
@@ -97,7 +86,7 @@ export class ProductService {
     const { type, seed, prioritize } = options;
     const limit = options.limit ?? 3;
 
-    const gpus = await this.list({ type, orderBy: prioritize }, ctx);
+    const gpus = await this.list({ type, sort: prioritize }, ctx);
 
     let seedIndex = 0;
     if (seed != null && 'id' in seed) {
@@ -141,14 +130,6 @@ export class ProductService {
     } as RelatedProducts;
   }
 
-  async getProductById(id: number, ctx: Context) {
-    return await productRepository.findById(id, ctx);
-  }
-
-  async getProductBySlug(slug: string, ctx: Context) {
-    return await productRepository.findBySlug(slug, ctx);
-  }
-
   // TODO: check slug uniqueness
   async create(data: ProductRequest, ctx: Context) {
     validate(data, createProductValidator);
@@ -164,7 +145,7 @@ export class ProductService {
 
     addPerformanceBenchmarks(data);
 
-    const product = await productRepository.findById(id, ctx);
+    const product = await productRepository.find({ id }, ctx);
     if (product == null) {
       throw notFoundError({ product: id });
     }
@@ -173,7 +154,7 @@ export class ProductService {
   }
 
   async delete(id: number, ctx: Context) {
-    const product = await productRepository.findById(id, ctx);
+    const product = await productRepository.find({ id }, ctx);
     if (product == null) {
       throw notFoundError({ product: id });
     }
@@ -192,35 +173,6 @@ export class ProductService {
 
   async autocompleteMeta(key: keyof ProductMetas, query: string, ctx: Context) {
     return await productRepository.findSimilarMetaValue(key, query, ctx);
-  }
-
-  async populateRanks(products: Product | Product[], ctx: Context) {
-    const productsArr = Array.isArray(products) ? products : [products];
-
-    if (productsArr.length === 0) {
-      return;
-    }
-
-    const type = productsArr[0].type;
-    if (productsArr.some((product) => product.type !== type)) {
-      throw new Error('Products must be of the same type when applying ranks');
-    }
-
-    const ids = productsArr.map((product) => product.id);
-    const performanceRanks = await productRepository.getPerformanceRanks(
-      ids,
-      type,
-      ctx,
-    );
-    const valueRanks = await productRepository.getValueRanks(ids, type, ctx);
-
-    productsArr.forEach((product, i) => {
-      product.metas = {
-        ...product.metas,
-        performanceRank: { value: performanceRanks[i] },
-        valueRank: { value: valueRanks[i] },
-      };
-    });
   }
 }
 

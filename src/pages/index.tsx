@@ -5,7 +5,7 @@ import { serializeAsync } from '@server/shared/types/serialize';
 import {
   filterProducts,
   Product,
-  ProductsOrderBy,
+  ProductsSort,
   ProductType,
   sortProducts,
 } from '@shared/product';
@@ -30,14 +30,13 @@ export async function getServerSideProps(_ctx: NextPageContext) {
     const amd = filterProducts(gpus, { company: 'AMD' });
 
     const bestPerformingNvidia =
-      sortProducts(nvidia, ProductsOrderBy.PerformanceRating)[0] ?? null;
+      sortProducts(nvidia, ProductsSort.PerformanceRating)[0] ?? null;
     const bestPerformingAmd =
-      sortProducts(amd, ProductsOrderBy.PerformanceRating)[0] ?? null;
+      sortProducts(amd, ProductsSort.PerformanceRating)[0] ?? null;
 
     const bestValueNvidia =
-      sortProducts(nvidia, ProductsOrderBy.ValueRating)[0] ?? null;
-    const bestValueAmd =
-      sortProducts(amd, ProductsOrderBy.ValueRating)[0] ?? null;
+      sortProducts(nvidia, ProductsSort.ValueRating)[0] ?? null;
+    const bestValueAmd = sortProducts(amd, ProductsSort.ValueRating)[0] ?? null;
 
     const nvidiaVsAmdGpus = [];
     if (bestPerformingNvidia != null && bestPerformingAmd != null) {
@@ -55,7 +54,7 @@ export async function getServerSideProps(_ctx: NextPageContext) {
     );
 
     const relatedProducts = await productService.getRelatedProducts(
-      { type: ProductType.GPU, prioritize: ProductsOrderBy.ReleaseDate },
+      { type: ProductType.GPU, prioritize: ProductsSort.ReleaseDate },
       { trx },
     );
 

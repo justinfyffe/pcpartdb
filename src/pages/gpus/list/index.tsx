@@ -2,7 +2,7 @@ import { ListGpusPage, ListGpusPageProps } from '@client/product';
 import { transaction } from '@server/db/database';
 import { productService } from '@server/product/product-service';
 import { serializeAsync } from '@server/shared/types/serialize';
-import { ProductsOrderBy, ProductType } from '@shared/product';
+import { ProductsSort, ProductType } from '@shared/product';
 import { NextPageContext } from 'next';
 
 export async function getServerSideProps(ctx: NextPageContext) {
@@ -10,18 +10,22 @@ export async function getServerSideProps(ctx: NextPageContext) {
     const { query } = ctx;
 
     const company = query.company as string;
-    const sort = query.sort as ProductsOrderBy;
+    const sort = query.sort as ProductsSort;
 
     const gpus = await serializeAsync(
       productService.list(
-        { type: ProductType.GPU, filter: { company }, orderBy: sort },
+        {
+          type: ProductType.GPU,
+          filter: { company },
+          sort: sort,
+          includeRanks: true,
+        },
         { trx },
       ),
     );
-    await productService.populateRanks(gpus, { trx });
 
     const relatedProducts = await productService.getRelatedProducts(
-      { type: ProductType.GPU, prioritize: ProductsOrderBy.ReleaseDate },
+      { type: ProductType.GPU, prioritize: ProductsSort.ReleaseDate },
       { trx },
     );
 

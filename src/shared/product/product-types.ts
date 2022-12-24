@@ -9,7 +9,7 @@ export enum ProductType {
   GPU = 'GPU',
 }
 
-export enum ProductsOrderBy {
+export enum ProductsSort {
   Id = 'id',
   Name = 'name',
   PerformanceRating = 'performance_rating',
@@ -22,6 +22,7 @@ export interface ProductsFilter {
 
   company?: string;
   architecture?: string;
+  year?: number;
 }
 
 export interface Product {
@@ -72,16 +73,33 @@ export interface ImportProductResults {
 
 export interface ListProductsRequest {
   type: ProductType;
-
   filter?: ProductsFilter;
-
-  orderBy?: ProductsOrderBy;
+  sort?: ProductsSort;
+  offset?: number;
   limit?: number;
+
+  includeRanks?: boolean;
+  includeImages?: boolean;
+}
+
+export interface FindProductRequest {
+  id?: number;
+  slug?: string;
+
+  includeRanks?: boolean;
+  includeImages?: boolean;
+}
+
+export interface FindComparisonRequest {
+  slug?: string;
+
+  includeRanks?: boolean;
+  includeImages?: boolean;
 }
 
 export interface RelatedProductsRequest {
   type: ProductType;
   seed?: Product | ProductComparison;
-  prioritize?: ProductsOrderBy;
+  prioritize?: ProductsSort;
   limit?: number;
 }

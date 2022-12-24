@@ -30,13 +30,12 @@ export const GeneralInfoSummarySentence2 = compileContent({
 });
 
 export const GeneralInfoSummarySentence3 = compileContent({
-  deps: ['performanceRank', 'totalPerformanceRatedGpus', 'valueRank'],
+  deps: ['performanceRank', 'totalRatedGpus', 'valueRank'],
   component: (props) => (
     <>
       This GPU is the{' '}
       <a href="#">{props.performanceRank} best performing graphics card</a>{' '}
-      compared to the {props.totalPerformanceRatedGpus} ranked cards in our
-      database.
+      compared to the {props.totalRatedGpus} ranked cards in our database.
     </>
   ),
 });
@@ -54,7 +53,7 @@ export const GeneralInfoSummary = () => {
   const { product, contentData } = useContext(ViewPageContext);
 
   const { specs, metas } = product;
-  const { totalPerformanceRatedGpus } = contentData;
+  const { totalRatedGpus } = contentData;
 
   const params: ContentParams = {
     productName: getProductName(product),
@@ -68,7 +67,7 @@ export const GeneralInfoSummary = () => {
     valueRank: formatProductMeta(metas.valueRank, {
       ordinalSuffix: true,
     }),
-    totalPerformanceRatedGpus,
+    totalRatedGpus,
   };
 
   return (

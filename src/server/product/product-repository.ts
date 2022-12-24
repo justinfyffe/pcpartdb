@@ -2,47 +2,97 @@ import { RepositoryConfig } from '@server/db/repository';
 import { imageRepository } from '@server/images/image-repository';
 import { serialize } from '@server/shared/types/serialize';
 import { Image } from '@shared/image';
-import { ProductType } from '@shared/product';
+import {
+  filterProducts,
+  paginateProducts,
+  ProductsFilter,
+  ProductsSort,
+  ProductType,
+  sortProducts,
+} from '@shared/product';
 import { ProductMetas } from '@shared/product-meta';
 import { Specs } from '@shared/spec';
 import { Model, raw, ref } from 'objection';
 import { ProductModel, ProductModelPojo } from './product-model';
 
+interface ListOptions {
+  type: ProductType;
+  filter?: ProductsFilter;
+  sort?: ProductsSort;
+  offset?: number;
+  limit?: number;
+
+  includeImages?: boolean;
+  includeRanks?: boolean;
+}
+
+interface FindOptions {
+  id?: number;
+  slug?: string;
+
+  includeImages?: boolean;
+  includeRanks?: boolean;
+}
+
 export class ProductRepository {
-  async list(type: ProductType, config?: RepositoryConfig) {
-    const products = await ProductModel.query(config?.trx)
+  async list(options: ListOptions, config?: RepositoryConfig) {
+    const { type, filter, sort, offset, limit, includeImages, includeRanks } =
+      options;
+
+    let products = await ProductModel.query(config?.trx)
       .where('type', type)
       .orderBy('id', 'DESC');
 
-    await this.populateImages(products);
+    if (filter != null) {
+      products = filterProducts(products, filter);
+    }
+
+    if (sort != null) {
+      products = sortProducts(products, sort);
+    }
+
+    if (offset != null || limit != null) {
+      products = paginateProducts(
+        products,
+        offset ?? 0,
+        limit ?? products.length,
+      );
+    }
+
+    if (includeImages) {
+      await this.populateImages(products, config);
+    }
+
+    if (includeRanks) {
+      await this.populateRanks(products, config);
+    }
 
     return products;
   }
 
-  async save(product: ProductModelPojo, config?: RepositoryConfig) {
-    const { id } = await ProductModel.query(config?.trx)
-      .insert(product)
-      .onConflict('id')
-      .merge()
-      .returning('*');
+  async find(options: FindOptions, config?: RepositoryConfig) {
+    const { id, slug, includeImages, includeRanks } = options;
 
-    return this.findById(id, config);
-  }
+    let product: ProductModel;
+    if (id != null) {
+      product = await ProductModel.query(config?.trx).findById(id);
+    } else if (slug != null) {
+      product = await ProductModel.query(config?.trx).findOne({ slug });
+    }
 
-  async findById(id: number, config?: RepositoryConfig) {
-    const product = await ProductModel.query(config?.trx).findById(id);
-    await this.populateImages([product]);
+    if (product == null) {
+      return null;
+    }
+
+    if (includeImages) {
+      await this.populateImages([product], config);
+    }
+
+    if (includeRanks) {
+      await this.populateRanks([product], config);
+    }
+
     return product;
-  }
-
-  async findBySlug(slug: string, config?: RepositoryConfig) {
-    const product = await ProductModel.query(config?.trx).findOne({ slug });
-    await this.populateImages([product]);
-    return product;
-  }
-
-  async delete(id: number, config?: RepositoryConfig) {
-    return await ProductModel.query(config?.trx).deleteById(id);
   }
 
   async findSimilarValue(
@@ -81,6 +131,20 @@ export class ProductRepository {
     return results.map(
       (result) => (result as unknown as { value: string }).value,
     );
+  }
+
+  async save(product: ProductModelPojo, config?: RepositoryConfig) {
+    const { id } = await ProductModel.query(config?.trx)
+      .insert(product)
+      .onConflict('id')
+      .merge()
+      .returning('*');
+
+    return this.find({ id }, config);
+  }
+
+  async delete(id: number, config?: RepositoryConfig) {
+    return await ProductModel.query(config?.trx).deleteById(id);
   }
 
   async getPerformanceRanks(
@@ -155,6 +219,32 @@ export class ProductRepository {
   async getValueRank(id: number, type: ProductType, config?: RepositoryConfig) {
     const ranks = await this.getValueRanks([id], type, config);
     return ranks[0] ?? null;
+  }
+
+  private async populateRanks(
+    products: ProductModel[],
+    config?: RepositoryConfig,
+  ) {
+    if (products.length === 0) {
+      return;
+    }
+
+    const type = products[0].type;
+    if (products.some((product) => product.type !== type)) {
+      throw new Error('Products must be of the same type when applying ranks');
+    }
+
+    const ids = products.map((product) => product.id);
+    const performanceRanks = await this.getPerformanceRanks(ids, type, config);
+    const valueRanks = await this.getValueRanks(ids, type, config);
+
+    products.forEach((product, i) => {
+      product.metas = {
+        ...product.metas,
+        performanceRank: { value: performanceRanks[i] },
+        valueRank: { value: valueRanks[i] },
+      };
+    });
   }
 
   private async populateImages(

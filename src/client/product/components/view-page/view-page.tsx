@@ -41,6 +41,7 @@ import {
 import { IntroParagraph } from './content/intro';
 import {
   PerformanceArchitectureTable,
+  PerformanceSummary,
   PerformanceYearTable,
 } from './content/performance';
 import { createViewPageContextState, ViewPageContext } from './context';
@@ -216,16 +217,9 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                 </div>
               </section>
 
-              <p>
-                The Test GPU 1 is the 3rd most performant GPU in our database.
-                It is also 30% stronger than the GPU with the best value, the
-                Test GPU 2.
-              </p>
-              <p>
-                This graphics card is the 5th strongest card among the 43 GPUs
-                that also launched in 2021. Additionally, it is the 2nd most
-                powerful AMD GPU, and 4thin the RDNA 2.0 architecture family.
-              </p>
+              <div className="-mb-4">
+                <PerformanceSummary />
+              </div>
             </section>
 
             <section>
@@ -238,9 +232,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                     <THead>
                       <Tr>
                         <Th className="border-0"></Th>
-                        <Th className="text-left border-0">
-                          Relative Performance
-                        </Th>
+                        <Th className="text-left border-0">Relative Value</Th>
                         <Th className="text-right border-0">Rank</Th>
                       </Tr>
                     </THead>
@@ -336,9 +328,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                     <THead>
                       <Tr>
                         <Th className="border-0"></Th>
-                        <Th className="text-left border-0">
-                          Relative Performance
-                        </Th>
+                        <Th className="text-left border-0">Relative Value</Th>
                         <Th className="text-right border-0">Rank</Th>
                       </Tr>
                     </THead>

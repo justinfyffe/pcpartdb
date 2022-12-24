@@ -3,28 +3,29 @@ import {
   ContentContext,
   ContentParams,
 } from '@client/shared/content';
+import { getOrdinalNumber } from '@shared/content';
 import { getProductName } from '@shared/product';
 import { formatSpec, SpecDateFormatter } from '@shared/spec';
 import React, { useContext } from 'react';
 import { ViewPageContext } from '../../context';
 
 export const PerformanceSummarySentence1 = compileContent({
-  deps: ['productName', 'yearRank', 'yearTotalGpus', 'launchYear'],
+  deps: ['productName', 'performanceYearRank', 'totalYearGpus', 'launchYear'],
   component: (props) => (
     <>
-      The {props.productName} is the {props.yearRank} strongest card among the{' '}
-      {props.yearTotalGpus} that also launched in {props.launchYear}.
+      The {props.productName} is the {props.performanceYearRank} strongest card
+      among the {props.totalYearGpus} GPUs that also launched in{' '}
+      {props.launchYear}.
     </>
   ),
 });
 
 export const PerformanceSummarySentence2 = compileContent({
-  deps: ['architectureRank', 'architectureTotalGpus', 'company', 'companyRank'],
+  deps: ['performanceArchitectureRank', 'totalArchitectureGpus', 'company'],
   component: (props) => (
     <>
-      Additionally, it is the {props.companyRank} most powerful {props.company}{' '}
-      GPU, and {props.architectureRank} in the {props.architecture} architecture
-      family.
+      It is also the {props.performanceArchitectureRank} most powerful card in
+      the {props.company} {props.architecture} architecture family.
     </>
   ),
 });
@@ -38,6 +39,14 @@ export const PerformanceSummary = () => {
     launchYear: formatSpec(product.specs?.releaseDate, {
       dateFormatter: SpecDateFormatter.Year,
     }),
+
+    totalYearGpus: contentData.totalYearGpus,
+    performanceYearRank: getOrdinalNumber(contentData.performanceYearRank),
+
+    totalArchitectureGpus: contentData.totalArchitectureGpus,
+    performanceArchitectureRank: getOrdinalNumber(
+      contentData.performanceArchitectureRank,
+    ),
   };
 
   return (
@@ -45,8 +54,6 @@ export const PerformanceSummary = () => {
       <p>
         <PerformanceSummarySentence1 /> <PerformanceSummarySentence2 />
       </p>
-
-      <p></p>
     </ContentContext.Provider>
   );
 };

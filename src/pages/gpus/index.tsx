@@ -2,34 +2,37 @@ import { OverviewGpusPage, OverviewGpusPageProps } from '@client/product';
 import { transaction } from '@server/db/database';
 import { productService } from '@server/product/product-service';
 import { serializeAsync } from '@server/shared/types/serialize';
-import {
-  limitProducts,
-  Product,
-  ProductsOrderBy,
-  ProductType,
-  sortProducts,
-} from '@shared/product';
+import { Product, ProductsSort, ProductType } from '@shared/product';
 import { NextPageContext } from 'next';
 
 const TOTAL_PRODUCTS_PER_LIST = 5;
 
 export async function getServerSideProps(_ctx: NextPageContext) {
   return transaction(async (trx) => {
-    const gpus: Product[] = await serializeAsync(
-      productService.list({ type: ProductType.GPU }, { trx }),
+    const bestPerforming: Product[] = await serializeAsync(
+      productService.list(
+        {
+          type: ProductType.GPU,
+          sort: ProductsSort.PerformanceRating,
+          limit: TOTAL_PRODUCTS_PER_LIST,
+        },
+        { trx },
+      ),
     );
 
-    const bestPerforming = limitProducts(
-      sortProducts(gpus, ProductsOrderBy.PerformanceRating),
-      TOTAL_PRODUCTS_PER_LIST,
-    );
-    const bestValue = limitProducts(
-      sortProducts(gpus, ProductsOrderBy.ValueRating),
-      TOTAL_PRODUCTS_PER_LIST,
+    const bestValue: Product[] = await serializeAsync(
+      productService.list(
+        {
+          type: ProductType.GPU,
+          sort: ProductsSort.ValueRating,
+          limit: TOTAL_PRODUCTS_PER_LIST,
+        },
+        { trx },
+      ),
     );
 
     const relatedProducts = await productService.getRelatedProducts(
-      { type: ProductType.GPU, prioritize: ProductsOrderBy.ReleaseDate },
+      { type: ProductType.GPU, prioritize: ProductsSort.ReleaseDate },
       { trx },
     );
 
