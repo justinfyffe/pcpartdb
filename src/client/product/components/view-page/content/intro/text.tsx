@@ -17,15 +17,15 @@ export const IntroSentence1 = compileContent({
   deps: ['productName', 'shoppingUrl'],
   component: (props: Params) => (
     <>
-      <a href={props.shoppingUrl}>Check the current availability and price</a>{' '}
-      of the {props.productName}.
+      <a href={props.shoppingUrl}>View the current availability and price</a>{' '}
+      for the {props.productName}.
     </>
   ),
 });
 
 export const IntroSentence2 = compileContent({
   component: () => (
-    <>See below for a comprehensive list of benchmarks, reviews, and specs.</>
+    <>Check below for a comprehensive list of benchmarks, reviews, and specs.</>
   ),
 });
 
