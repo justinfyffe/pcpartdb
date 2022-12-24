@@ -64,6 +64,10 @@ export function filterProducts<T extends Product>(
       result = product.benchmarks?.performanceScore?.value != null;
     }
 
+    if (result && filter?.valueRated === true) {
+      result = product.benchmarks?.valueScore?.value != null;
+    }
+
     if (result && filter?.company != null) {
       result =
         filter.company.toLowerCase() ===
@@ -126,13 +130,4 @@ export function sortProducts<T extends Product>(
   }
 
   return result;
-}
-
-export function paginateProducts<T extends Product>(
-  products: T[],
-  offset: number,
-  limit: number,
-): T[] {
-  const result = [...products];
-  return result.slice(offset, offset + limit);
 }

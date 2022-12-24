@@ -7,12 +7,7 @@ import { transaction } from '@server/db/database';
 import { productService } from '@server/product/product-service';
 import { Context } from '@server/shared/context';
 import { serialize } from '@server/shared/types/serialize';
-import {
-  paginateProducts,
-  Product,
-  ProductsSort,
-  ProductType,
-} from '@shared/product';
+import { Product, ProductsSort, ProductType } from '@shared/product';
 import { formatSpec, SpecDateFormatter } from '@shared/spec';
 import { NextPageContext } from 'next';
 
@@ -49,6 +44,7 @@ async function getGpu(slug: string, ctx: Context): Promise<Product> {
 async function getContentData(gpu: Product, ctx: Context) {
   const totalRatedGpus = await getTotalRatedGpus(ctx);
 
+  // TODO: how to handle when gpu is at the end of these lists?
   const {
     products: performanceArchitectureGpus,
     rank: performanceArchitectureRank,
@@ -60,14 +56,23 @@ async function getContentData(gpu: Product, ctx: Context) {
     total: totalYearGpus,
   } = await getPerformanceYearGpus(gpu, ctx);
 
+  const { products: valueArchitectureGpus, rank: valueArchitectureRank } =
+    await getValueArchitectureGpus(gpu, ctx);
+  const { products: valueYearGpus, rank: valueYearRank } =
+    await getValueYearGpus(gpu, ctx);
+
   return {
     totalRatedGpus,
     totalArchitectureGpus,
     performanceArchitectureGpus,
     performanceArchitectureRank,
+    valueArchitectureGpus,
+    valueArchitectureRank,
     totalYearGpus,
     performanceYearGpus,
     performanceYearRank,
+    valueYearGpus,
+    valueYearRank,
   } as ViewPageContentData;
 }
 
@@ -97,11 +102,15 @@ async function getPerformanceArchitectureGpus(seed: Product, ctx: Context) {
   const total = results.length;
 
   const seedIndex = results.findIndex((gpu) => gpu.id === seed.id);
-  const start = Math.max(0, seedIndex - TOTAL_COMPARED_PRODUCTS / 2);
-
-  const products: Product[] = serialize(
-    paginateProducts(results, start, TOTAL_COMPARED_PRODUCTS),
-  );
+  const sizePerSide = Math.floor(TOTAL_COMPARED_PRODUCTS / 2);
+  let start = Math.max(0, seedIndex - sizePerSide);
+  let end = Math.min(seedIndex + sizePerSide, results.length);
+  if (end - start !== TOTAL_COMPARED_PRODUCTS) {
+    const diff = TOTAL_COMPARED_PRODUCTS - (end - start);
+    start = Math.max(0, start - diff);
+    end = Math.min(end + diff, results.length);
+  }
+  const products: Product[] = serialize(results.slice(start, end));
 
   return { products, rank: seedIndex + 1, total };
 }
@@ -124,11 +133,74 @@ async function getPerformanceYearGpus(seed: Product, ctx: Context) {
   const total = results.length;
 
   const seedIndex = results.findIndex((gpu) => gpu.id === seed.id);
-  const start = Math.max(0, seedIndex - TOTAL_COMPARED_PRODUCTS / 2);
+  const sizePerSide = Math.floor(TOTAL_COMPARED_PRODUCTS / 2);
+  let start = Math.max(0, seedIndex - sizePerSide);
+  let end = Math.min(seedIndex + sizePerSide, results.length);
+  if (end - start !== TOTAL_COMPARED_PRODUCTS) {
+    const diff = TOTAL_COMPARED_PRODUCTS - (end - start);
+    start = Math.max(0, start - diff);
+    end = Math.min(end + diff, results.length);
+  }
+  const products: Product[] = serialize(results.slice(start, end));
 
-  const products: Product[] = serialize(
-    paginateProducts(results, start, TOTAL_COMPARED_PRODUCTS),
+  return { products, rank: seedIndex + 1, total };
+}
+
+async function getValueArchitectureGpus(seed: Product, ctx: Context) {
+  const company = formatSpec(seed.specs?.company);
+  const architecture = formatSpec(seed.specs?.architecture);
+
+  const results = await productService.list(
+    {
+      type: ProductType.GPU,
+      filter: { valueRated: true, company, architecture },
+      sort: ProductsSort.ValueRating,
+    },
+    ctx,
   );
+  const total = results.length;
+
+  const seedIndex = results.findIndex((gpu) => gpu.id === seed.id);
+  const sizePerSide = Math.floor(TOTAL_COMPARED_PRODUCTS / 2);
+  let start = Math.max(0, seedIndex - sizePerSide);
+  let end = Math.min(seedIndex + sizePerSide, results.length);
+  if (end - start !== TOTAL_COMPARED_PRODUCTS) {
+    const diff = TOTAL_COMPARED_PRODUCTS - (end - start);
+    start = Math.max(0, start - diff);
+    end = Math.min(end + diff, results.length);
+  }
+  const products: Product[] = serialize(results.slice(start, end));
+
+  return { products, rank: seedIndex + 1, total };
+}
+
+async function getValueYearGpus(seed: Product, ctx: Context) {
+  const year = Number(
+    formatSpec(seed.specs?.releaseDate, {
+      dateFormatter: SpecDateFormatter.Year,
+    }),
+  );
+
+  const results = await productService.list(
+    {
+      type: ProductType.GPU,
+      filter: { valueRated: true, year },
+      sort: ProductsSort.ValueRating,
+    },
+    ctx,
+  );
+  const total = results.length;
+
+  const seedIndex = results.findIndex((gpu) => gpu.id === seed.id);
+  const sizePerSide = Math.floor(TOTAL_COMPARED_PRODUCTS / 2);
+  let start = Math.max(0, seedIndex - sizePerSide);
+  let end = Math.min(seedIndex + sizePerSide, results.length);
+  if (end - start !== TOTAL_COMPARED_PRODUCTS) {
+    const diff = TOTAL_COMPARED_PRODUCTS - (end - start);
+    start = Math.max(0, start - diff);
+    end = Math.min(end + diff, results.length);
+  }
+  const products: Product[] = serialize(results.slice(start, end));
 
   return { products, rank: seedIndex + 1, total };
 }

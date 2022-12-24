@@ -35,7 +35,7 @@ export const GeneralInfoSummarySentence3 = compileContent({
     <>
       This GPU is the{' '}
       <a href="#">{props.performanceRank} best performing graphics card</a>{' '}
-      compared to the {props.totalRatedGpus} ranked cards in our database.
+      compared to the {props.totalRatedGpus} benchmarked cards in our database.
     </>
   ),
 });

@@ -4,24 +4,26 @@ import React, { FunctionComponent, useCallback, useContext } from 'react';
 import { ViewPageContext } from '../../context';
 import { CustomRow, CustomRowLabel, CustomRowValue } from '../../custom-row';
 
-interface PerformanceYearTableProps {
+interface ValueArchitectureTableProps {
   className?: string;
 }
 
-export const PerformanceYearTable: FunctionComponent<
-  PerformanceYearTableProps
+export const ValueArchitectureTable: FunctionComponent<
+  ValueArchitectureTableProps
 > = (props) => {
   const { className } = props;
   const { product, contentData } = useContext(ViewPageContext);
-  const { performanceYearGpus: gpus, performanceYearRank } = contentData;
+  const { valueArchitectureGpus: gpus, valueArchitectureRank: rank } =
+    contentData;
 
   const seedIndex = gpus.findIndex((gpu) => product.id === gpu.id);
-  const getRelativePerformance = useCallback(
-    (relatedGpu: Product) => {
-      const baseline = product.benchmarks.performanceScore.value;
-      const relatedPerformance = relatedGpu.benchmarks.performanceScore.value;
 
-      return ((relatedPerformance / baseline) * 100).toFixed(0);
+  const getRelativeValue = useCallback(
+    (relatedGpu: Product) => {
+      const baseline = product.benchmarks.valueScore.value;
+      const relatedValue = relatedGpu.benchmarks.valueScore.value;
+
+      return ((relatedValue / baseline) * 100).toFixed(0);
     },
     [product],
   );
@@ -31,22 +33,22 @@ export const PerformanceYearTable: FunctionComponent<
       <THead>
         <Tr>
           <Th className="border-0"></Th>
-          <Th className="text-left border-0">Relative Performance</Th>
+          <Th className="text-left border-0">Relative Value</Th>
           <Th className="text-right border-0">Rank</Th>
         </Tr>
       </THead>
       <TBody>
         {gpus.map((gpu, i) => {
           return (
-            <CustomRow key={i} highlight={i === seedIndex}>
+            <CustomRow key={i} highlight={product.id === gpu.id}>
               <CustomRowLabel>
                 {getProductName(gpu, { company: false })}
               </CustomRowLabel>
               <CustomRowValue className="text-left">
-                {getRelativePerformance(gpu)}%
+                {getRelativeValue(gpu)}%
               </CustomRowValue>
               <CustomRowValue className="text-right">
-                {performanceYearRank - (seedIndex - i)}
+                {rank - (seedIndex - i)}
               </CustomRowValue>
             </CustomRow>
           );

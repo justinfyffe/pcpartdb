@@ -30,7 +30,6 @@ export const PerformanceArchitectureTable: FunctionComponent<
     [product],
   );
 
-  // TODO: use relative rank, not overall rank
   return (
     <Table border responsive className={className}>
       <THead>

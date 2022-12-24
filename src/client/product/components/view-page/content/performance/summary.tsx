@@ -14,14 +14,19 @@ export const PerformanceSummarySentence1 = compileContent({
   component: (props) => (
     <>
       The {props.productName} is the {props.performanceYearRank} strongest card
-      among the {props.totalYearGpus} GPUs that also launched in{' '}
+      among {props.totalYearGpus} benchmarked GPUs that also launched in{' '}
       {props.launchYear}.
     </>
   ),
 });
 
 export const PerformanceSummarySentence2 = compileContent({
-  deps: ['performanceArchitectureRank', 'totalArchitectureGpus', 'company'],
+  deps: [
+    'performanceArchitectureRank',
+    'totalArchitectureGpus',
+    'company',
+    'architecture',
+  ],
   component: (props) => (
     <>
       It is also the {props.performanceArchitectureRank} most powerful card in
@@ -36,6 +41,7 @@ export const PerformanceSummary = () => {
   const params: ContentParams = {
     productName: getProductName(product),
     company: formatSpec(product.specs?.company),
+    architecture: formatSpec(product.specs?.architecture),
     launchYear: formatSpec(product.specs?.releaseDate, {
       dateFormatter: SpecDateFormatter.Year,
     }),

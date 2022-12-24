@@ -44,6 +44,8 @@ import {
   PerformanceSummary,
   PerformanceYearTable,
 } from './content/performance';
+import { PerformanceIntro } from './content/performance/intro';
+import { ValueArchitectureTable, ValueYearTable } from './content/value';
 import { createViewPageContextState, ViewPageContext } from './context';
 import { CustomRow, CustomRowLabel, CustomRowValue } from './custom-row';
 import {
@@ -203,7 +205,8 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
             </section>
 
             <section>
-              <h2 className="mb-0 font-semibold">Performance</h2>
+              <h2 className="mb-0 font-semibold">Relative Performance</h2>
+              <PerformanceIntro />
 
               <section className="flex gap-8 mb-4">
                 <div className="flex-1">
@@ -228,194 +231,12 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
               <section className="flex gap-8 mb-4">
                 <div className="flex-1">
                   <h3 className="mb-1">Compared to 2021 GPUs</h3>
-                  <Table border responsive>
-                    <THead>
-                      <Tr>
-                        <Th className="border-0"></Th>
-                        <Th className="text-left border-0">Relative Value</Th>
-                        <Th className="text-right border-0">Rank</Th>
-                      </Tr>
-                    </THead>
-                    <TBody>
-                      <CustomRow highlight>
-                        <CustomRowLabel>RTX 3060</CustomRowLabel>
-                        <CustomRowValue className="text-left">
-                          120%
-                        </CustomRowValue>
-                        <CustomRowValue className="text-right">
-                          7
-                        </CustomRowValue>
-                      </CustomRow>
-                      <CustomRow>
-                        <CustomRowLabel>RTX 3060</CustomRowLabel>
-                        <CustomRowValue className="text-left">
-                          118%
-                        </CustomRowValue>
-                        <CustomRowValue className="text-right">
-                          8
-                        </CustomRowValue>
-                      </CustomRow>
-                      <CustomRow>
-                        <CustomRowLabel>RTX 3060</CustomRowLabel>
-                        <CustomRowValue className="text-left">
-                          110%
-                        </CustomRowValue>
-                        <CustomRowValue className="text-right">
-                          9
-                        </CustomRowValue>
-                      </CustomRow>
-                      <CustomRow>
-                        <CustomRowLabel>RTX 3060</CustomRowLabel>
-                        <CustomRowValue className="text-left">
-                          100%
-                        </CustomRowValue>
-                        <CustomRowValue className="text-right">
-                          10
-                        </CustomRowValue>
-                      </CustomRow>
-                      <CustomRow>
-                        <CustomRowLabel>RTX 3060</CustomRowLabel>
-                        <CustomRowValue className="text-left">
-                          90%
-                        </CustomRowValue>
-                        <CustomRowValue className="text-right">
-                          11
-                        </CustomRowValue>
-                      </CustomRow>
-                      <CustomRow>
-                        <CustomRowLabel>RTX 3060</CustomRowLabel>
-                        <CustomRowValue className="text-left">
-                          87%
-                        </CustomRowValue>
-                        <CustomRowValue className="text-right">
-                          12
-                        </CustomRowValue>
-                      </CustomRow>
-                      <CustomRow>
-                        <CustomRowLabel>RTX 3060</CustomRowLabel>
-                        <CustomRowValue className="text-left">
-                          80%
-                        </CustomRowValue>
-                        <CustomRowValue className="text-right">
-                          13
-                        </CustomRowValue>
-                      </CustomRow>
-                      <CustomRow>
-                        <CustomRowLabel>RTX 3060</CustomRowLabel>
-                        <CustomRowValue className="text-left">
-                          74%
-                        </CustomRowValue>
-                        <CustomRowValue className="text-right">
-                          14
-                        </CustomRowValue>
-                      </CustomRow>
-                      <CustomRow>
-                        <CustomRowLabel>RTX 3060</CustomRowLabel>
-                        <CustomRowValue className="text-left">
-                          65%
-                        </CustomRowValue>
-                        <CustomRowValue className="text-right">
-                          15
-                        </CustomRowValue>
-                      </CustomRow>
-                    </TBody>
-                  </Table>
+                  <ValueYearTable />
                 </div>
 
                 <div className="flex-1">
                   <h3 className="mb-1">Compared to NVIDIA Ampere GPUs</h3>
-                  <Table border responsive>
-                    <THead>
-                      <Tr>
-                        <Th className="border-0"></Th>
-                        <Th className="text-left border-0">Relative Value</Th>
-                        <Th className="text-right border-0">Rank</Th>
-                      </Tr>
-                    </THead>
-                    <TBody>
-                      <CustomRow>
-                        <CustomRowLabel>RTX 3060</CustomRowLabel>
-                        <CustomRowValue className="text-left">
-                          120%
-                        </CustomRowValue>
-                        <CustomRowValue className="text-right">
-                          7
-                        </CustomRowValue>
-                      </CustomRow>
-                      <CustomRow>
-                        <CustomRowLabel>RTX 3060</CustomRowLabel>
-                        <CustomRowValue className="text-left">
-                          118%
-                        </CustomRowValue>
-                        <CustomRowValue className="text-right">
-                          8
-                        </CustomRowValue>
-                      </CustomRow>
-                      <CustomRow>
-                        <CustomRowLabel>RTX 3060</CustomRowLabel>
-                        <CustomRowValue className="text-left">
-                          110%
-                        </CustomRowValue>
-                        <CustomRowValue className="text-right">
-                          9
-                        </CustomRowValue>
-                      </CustomRow>
-                      <CustomRow>
-                        <CustomRowLabel>RTX 3060</CustomRowLabel>
-                        <CustomRowValue className="text-left">
-                          100%
-                        </CustomRowValue>
-                        <CustomRowValue className="text-right">
-                          10
-                        </CustomRowValue>
-                      </CustomRow>
-                      <CustomRow>
-                        <CustomRowLabel>RTX 3060</CustomRowLabel>
-                        <CustomRowValue className="text-left">
-                          90%
-                        </CustomRowValue>
-                        <CustomRowValue className="text-right">
-                          11
-                        </CustomRowValue>
-                      </CustomRow>
-                      <CustomRow highlight>
-                        <CustomRowLabel>RTX 3060</CustomRowLabel>
-                        <CustomRowValue className="text-left">
-                          87%
-                        </CustomRowValue>
-                        <CustomRowValue className="text-right">
-                          12
-                        </CustomRowValue>
-                      </CustomRow>
-                      <CustomRow>
-                        <CustomRowLabel>RTX 3060</CustomRowLabel>
-                        <CustomRowValue className="text-left">
-                          80%
-                        </CustomRowValue>
-                        <CustomRowValue className="text-right">
-                          13
-                        </CustomRowValue>
-                      </CustomRow>
-                      <CustomRow>
-                        <CustomRowLabel>RTX 3060</CustomRowLabel>
-                        <CustomRowValue className="text-left">
-                          74%
-                        </CustomRowValue>
-                        <CustomRowValue className="text-right">
-                          14
-                        </CustomRowValue>
-                      </CustomRow>
-                      <CustomRow>
-                        <CustomRowLabel>RTX 3060</CustomRowLabel>
-                        <CustomRowValue className="text-left">
-                          65%
-                        </CustomRowValue>
-                        <CustomRowValue className="text-right">
-                          15
-                        </CustomRowValue>
-                      </CustomRow>
-                    </TBody>
-                  </Table>
+                  <ValueArchitectureTable />
                 </div>
               </section>
 

@@ -4,7 +4,6 @@ import { serialize } from '@server/shared/types/serialize';
 import { Image } from '@shared/image';
 import {
   filterProducts,
-  paginateProducts,
   ProductsFilter,
   ProductsSort,
   ProductType,
@@ -19,7 +18,6 @@ interface ListOptions {
   type: ProductType;
   filter?: ProductsFilter;
   sort?: ProductsSort;
-  offset?: number;
   limit?: number;
 
   includeImages?: boolean;
@@ -36,8 +34,7 @@ interface FindOptions {
 
 export class ProductRepository {
   async list(options: ListOptions, config?: RepositoryConfig) {
-    const { type, filter, sort, offset, limit, includeImages, includeRanks } =
-      options;
+    const { type, filter, sort, limit, includeImages, includeRanks } = options;
 
     let products = await ProductModel.query(config?.trx)
       .where('type', type)
@@ -51,12 +48,8 @@ export class ProductRepository {
       products = sortProducts(products, sort);
     }
 
-    if (offset != null || limit != null) {
-      products = paginateProducts(
-        products,
-        offset ?? 0,
-        limit ?? products.length,
-      );
+    if (limit != null) {
+      products = products.slice(0, limit);
     }
 
     if (includeImages) {

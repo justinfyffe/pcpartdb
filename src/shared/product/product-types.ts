@@ -19,6 +19,7 @@ export enum ProductsSort {
 
 export interface ProductsFilter {
   performanceRated?: boolean;
+  valueRated?: boolean;
 
   company?: string;
   architecture?: string;
@@ -75,7 +76,6 @@ export interface ListProductsRequest {
   type: ProductType;
   filter?: ProductsFilter;
   sort?: ProductsSort;
-  offset?: number;
   limit?: number;
 
   includeRanks?: boolean;
