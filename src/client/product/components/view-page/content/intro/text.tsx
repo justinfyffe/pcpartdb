@@ -1,23 +1,16 @@
-import {
-  compileContent,
-  ContentContext,
-  ContentParams,
-} from '@client/shared/content';
+import { compileContent, ContentContext } from '@client/shared/content';
 import { getProductName } from '@shared/product';
 import { getShoppingUrl } from '@shared/retail-model';
 import React, { useContext } from 'react';
 import { ViewPageContext } from '../../context';
 
-interface Params extends ContentParams {
-  productName?: string;
-  shoppingUrl?: string;
-}
-
 export const IntroSentence1 = compileContent({
   deps: ['productName', 'shoppingUrl'],
-  component: (props: Params) => (
+  component: (props) => (
     <>
-      <a href={props.shoppingUrl}>View the current availability and price</a>{' '}
+      <a href={props.shoppingUrl as string}>
+        View the current availability and price
+      </a>{' '}
       for the {props.productName}.
     </>
   ),
@@ -25,14 +18,14 @@ export const IntroSentence1 = compileContent({
 
 export const IntroSentence2 = compileContent({
   component: () => (
-    <>Check below for a comprehensive list of benchmarks, reviews, and specs.</>
+    <>Check below for a comprehensive list of benchmarks and specs.</>
   ),
 });
 
 export const IntroParagraph = () => {
   const { product } = useContext(ViewPageContext);
 
-  const params: Params = {
+  const params = {
     productName: getProductName(product),
     shoppingUrl: getShoppingUrl(product),
   };

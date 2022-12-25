@@ -1,7 +1,7 @@
 import { Td, Tr } from '@client/shared/components';
 import { BenchmarkKey, formatBenchmark } from '@shared/benchmark';
 import React, { useContext } from 'react';
-import { ProductsContext } from './products-context';
+import { ComparePageContext } from './context';
 
 const LABELS: Record<string, string> = {
   g2dMark: 'G2D Mark',
@@ -16,9 +16,10 @@ interface BenchmarkRowProps {
 export const BenchmarkRow = (props: BenchmarkRowProps) => {
   const { benchmark: key } = props;
 
-  const context = useContext(ProductsContext);
-  const benchmark1 = context.benchmarks[0][key];
-  const benchmark2 = context.benchmarks[1][key];
+  const context = useContext(ComparePageContext);
+  const [product1, product2] = context.comparison;
+  const benchmark1 = product1.benchmarks[key];
+  const benchmark2 = product2.benchmarks[key];
 
   return (
     <Tr>

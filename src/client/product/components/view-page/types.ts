@@ -14,6 +14,4 @@ export interface ViewPageContentData {
   performanceArchitectureRank?: number;
   valueArchitectureGpus?: Product[];
   valueArchitectureRank?: number;
-
-  averagePublicationRating?: number;
 }

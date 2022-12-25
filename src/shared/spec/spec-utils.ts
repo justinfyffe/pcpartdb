@@ -256,11 +256,11 @@ export function formatDimensions(product: Product) {
   }
 
   if (height != null) {
-    return `${length} x ${width} x ${height}`;
+    return `${length} (L) x ${width} (W) x ${height} (H)`;
   }
 
   if (slots != null) {
-    return `${length} x ${width} x ${slots}`;
+    return `${length} (L) x ${width} (W) x ${slots} (H)`;
   }
 
   return null;

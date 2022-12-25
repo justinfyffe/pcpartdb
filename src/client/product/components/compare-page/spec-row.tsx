@@ -1,7 +1,7 @@
 import { Td, Tr } from '@client/shared/components';
 import { formatSpec, SpecBooleanFormatter, SpecKey } from '@shared/spec';
 import React, { useContext } from 'react';
-import { ProductsContext } from './products-context';
+import { ComparePageContext } from './context';
 
 const LABELS: Record<string, string> = {
   // General
@@ -68,9 +68,10 @@ interface SpecRowProps {
 export const SpecRow = (props: SpecRowProps) => {
   const { spec: key } = props;
 
-  const context = useContext(ProductsContext);
-  const spec1 = context.specs[0][key];
-  const spec2 = context.specs[1][key];
+  const context = useContext(ComparePageContext);
+  const [product1, product2] = context.comparison;
+  const spec1 = product1.specs[key];
+  const spec2 = product2.specs[key];
 
   return (
     <Tr>

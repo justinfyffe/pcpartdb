@@ -1,7 +1,7 @@
 import { Td, Tr } from '@client/shared/components';
 import { formatReview, ReviewKey } from '@shared/review';
 import React, { useContext } from 'react';
-import { ProductsContext } from './products-context';
+import { ComparePageContext } from './context';
 
 const LABELS: Record<string, string> = {
   amazon: 'Amazon',
@@ -18,9 +18,10 @@ interface ReviewRowProps {
 export const ReviewRow = (props: ReviewRowProps) => {
   const { review: key } = props;
 
-  const context = useContext(ProductsContext);
-  const review1 = context.reviews[0][key];
-  const review2 = context.reviews[1][key];
+  const context = useContext(ComparePageContext);
+  const [product1, product2] = context.comparison;
+  const review1 = product1.reviews[key];
+  const review2 = product2.reviews[key];
 
   return (
     <Tr>

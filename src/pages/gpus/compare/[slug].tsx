@@ -1,19 +1,17 @@
 import { CompareGpuPage, CompareGpuPageProps } from '@client/product';
 import { transaction } from '@server/db/database';
 import { productService } from '@server/product/product-service';
-import { serializeAsync } from '@server/shared/types/serialize';
-import { ProductsSort, ProductType } from '@shared/product';
+import { Context } from '@server/shared/context';
+import { serialize } from '@server/shared/types/serialize';
+import { ProductComparison, ProductsSort, ProductType } from '@shared/product';
 import { NextPageContext } from 'next';
 
-export async function getServerSideProps(ctx: NextPageContext) {
+export async function getServerSideProps(nextCtx: NextPageContext) {
   return transaction(async (trx) => {
-    const slug = ctx.query.slug as string;
-    const comparison = await serializeAsync(
-      productService.getComparison(
-        { slug, includeImages: true, includeRanks: true },
-        { trx },
-      ),
-    );
+    const ctx = { trx };
+    const slug = nextCtx.query.slug as string;
+
+    const comparison = await getComparison(slug, ctx);
 
     const relatedProducts = await productService.getRelatedProducts(
       {
@@ -31,6 +29,18 @@ export async function getServerSideProps(ctx: NextPageContext) {
 
     return { props: pageProps };
   });
+}
+
+async function getComparison(
+  slug: string,
+  ctx: Context,
+): Promise<ProductComparison> {
+  const comparison = productService.getComparison(
+    { slug, includeImages: true, includeRanks: true },
+    ctx,
+  );
+
+  return serialize(comparison);
 }
 
 export default CompareGpuPage;

@@ -46,7 +46,12 @@ import {
   CompatibilitySummary,
   CompatibilityTable,
 } from './content/specs/compatibility';
-import { CoresIntro, CoresSummary, CoresTable } from './content/specs/cores';
+import {
+  CoresIntro,
+  CoresPerformanceTable,
+  CoresSummary,
+  CoresTable,
+} from './content/specs/cores';
 import {
   MemoryIntro,
   MemorySummary,
@@ -303,6 +308,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                 <h3 className="mb-0">Cores &amp; Clock Speeds</h3>
                 <CoresIntro />
                 <CoresTable className="mb-4" />
+                <CoresPerformanceTable className="mb-4" />
 
                 <div className="-mb-4">
                   <CoresSummary />

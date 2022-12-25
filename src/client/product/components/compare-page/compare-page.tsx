@@ -1,18 +1,7 @@
 import { useProductCache } from '@client/shared/cache';
-import {
-  Breadcrumb,
-  Breadcrumbs,
-  Button,
-  Table,
-  TBody,
-  Th,
-  THead,
-  Tr,
-} from '@client/shared/components';
+import { Breadcrumb, Breadcrumbs, Button } from '@client/shared/components';
 import { WebsiteLayout } from '@client/shared/layouts';
-import { classNames } from '@client/shared/ui';
 import { Sidenav, SidenavComparisons, SidenavProducts } from '@client/sidenav';
-import { formatBenchmark } from '@shared/benchmark';
 import {
   getProductComparisonName,
   getProductComparisonPath,
@@ -20,19 +9,50 @@ import {
   ProductComparison,
   RelatedProducts,
 } from '@shared/product';
-import { formatProductMeta } from '@shared/product-meta';
 import { getShoppingUrl } from '@shared/retail-model';
-import React, { useMemo } from 'react';
+import React from 'react';
 import { CompareProductsForm } from '../compare-products-form';
 import { ProductImages } from '../product-images';
-import { BenchmarkRow } from './benchmark-row';
-import { CustomRow, CustomRowLabel, CustomRowValue } from './custom-row';
 import {
-  createProductsContextState,
-  ProductsContext,
-} from './products-context';
-import { ReviewRow } from './review-row';
-import { SpecRow } from './spec-row';
+  BenchmarksIntro,
+  BenchmarksSummary,
+  BenchmarksTable,
+} from './content/benchmarks';
+import {
+  GeneralInfoIntro,
+  GeneralInfoSummary,
+  GeneralInfoTable,
+} from './content/general-info';
+import { IntroParagraph } from './content/intro';
+import {
+  PerformanceIntro,
+  PerformanceSummary,
+  PerformanceTable,
+} from './content/performance';
+import { ApiIntro, ApiSummary, ApiTable } from './content/specs/api';
+import {
+  CompatibilityIntro,
+  CompatibilityTable,
+  CompatibillitySummary,
+} from './content/specs/compatibility';
+import {
+  CoresIntro,
+  CoresPerformanceTable,
+  CoresSummary,
+  CoresTable,
+} from './content/specs/cores';
+import {
+  MemoryIntro,
+  MemorySummary,
+  MemoryTable,
+} from './content/specs/memory';
+import {
+  ProcessorIntro,
+  ProcessorSummary,
+  ProcessorTable,
+} from './content/specs/processor';
+import { ValueIntro, ValueSummary, ValueTable } from './content/value';
+import { ComparePageContext, createComparePageContextState } from './context';
 
 export interface CompareGpuPageProps {
   comparison: ProductComparison;
@@ -45,15 +65,11 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
 
   const [gpu1, gpu2] = comparison;
 
-  const context = useMemo(
-    () => createProductsContextState([gpu1, gpu2]),
-    [gpu1, gpu2],
-  );
+  const context = createComparePageContextState({
+    comparison,
+    contentData: null,
+  });
 
-  const meta1 = context.meta[0];
-  const benchmarks1 = context.benchmarks[0];
-  const meta2 = context.meta[1];
-  const benchmarks2 = context.benchmarks[1];
   const shoppingUrl1 = getShoppingUrl(gpu1);
   const shoppingUrl2 = getShoppingUrl(gpu2);
 
@@ -66,7 +82,7 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
   const canonical = getProductComparisonPath(comparison);
 
   return (
-    <ProductsContext.Provider value={context}>
+    <ComparePageContext.Provider value={context}>
       <WebsiteLayout seo={{ title, keywords, canonical }}>
         <Breadcrumbs className="mb-4">
           <Breadcrumb href="/">Home</Breadcrumb>
@@ -85,7 +101,9 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
             <section className="flex md:flex-wrap gap-8 justify-evenly">
               <div className="flex-1 flex flex-col gap-4 min-w-52.5 max-w-87.5">
                 <div className="flex gap-2 items-center justify-between">
-                  <h2 className="md:text-2xl text-3xl mb-0">{gpu1.name}</h2>
+                  <h2 className="md:text-2xl text-3xl mb-0">
+                    {getProductName(gpu1)}
+                  </h2>
 
                   {shoppingUrl1 != null && (
                     <Button
@@ -104,7 +122,9 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
 
               <div className="flex-1 flex flex-col gap-4 min-w-52.5 max-w-87.5">
                 <div className="flex gap-2 items-center justify-between">
-                  <h2 className="md:text-2xl text-3xl mb-0">{gpu2.name}</h2>
+                  <h2 className="md:text-2xl text-3xl mb-0">
+                    {getProductName(gpu2)}
+                  </h2>
 
                   {shoppingUrl2 && (
                     <Button
@@ -122,138 +142,49 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
               </div>
             </section>
 
+            <section className="-mb-4">
+              <IntroParagraph />
+            </section>
+
             <section className="flex flex-col gap-6">
               <section>
                 <h2 className="mb-0">General Info</h2>
+                <GeneralInfoIntro />
+                <GeneralInfoTable className="mb-4" />
 
-                <p className={classNames('text-content-dimmed mb-0')}>
-                  Performance rating, market segment, release date, and launch
-                  price for {gpu1.name} and {gpu2.name}.
-                </p>
-
-                <Table responsive>
-                  <THead>
-                    <Tr>
-                      <Th></Th>
-                      <Th>{gpu1.name}</Th>
-                      <Th>{gpu2.name}</Th>
-                    </Tr>
-                  </THead>
-                  <TBody>
-                    <CustomRow>
-                      <CustomRowLabel>Shop</CustomRowLabel>
-                      <CustomRowValue>
-                        {shoppingUrl1 != null ? (
-                          <a
-                            href={shoppingUrl1}
-                            target="_blank"
-                            rel="noreferrer noopener"
-                            className="text-green-600 font-bold"
-                          >
-                            Check Price
-                          </a>
-                        ) : (
-                          <>--</>
-                        )}
-                      </CustomRowValue>
-                      <CustomRowValue>
-                        {shoppingUrl2 != null ? (
-                          <a
-                            href={shoppingUrl2}
-                            target="_blank"
-                            rel="noreferrer noopener"
-                            className="text-green-600 font-bold"
-                          >
-                            Check Price
-                          </a>
-                        ) : (
-                          <>--</>
-                        )}
-                      </CustomRowValue>
-                    </CustomRow>
-                    <CustomRow>
-                      <CustomRowLabel>Performance Rating (Rank)</CustomRowLabel>
-                      <CustomRowValue>
-                        {benchmarks1.performanceScore != null &&
-                        meta1.performanceRank != null ? (
-                          <>
-                            {formatBenchmark(benchmarks1.performanceScore)} (
-                            {formatProductMeta(meta1.performanceRank)})
-                          </>
-                        ) : (
-                          <>--</>
-                        )}
-                      </CustomRowValue>
-                      <CustomRowValue>
-                        {benchmarks2.performanceScore != null &&
-                        meta2.performanceRank != null ? (
-                          <>
-                            {formatBenchmark(benchmarks2.performanceScore)} (
-                            {formatProductMeta(meta2.performanceRank)})
-                          </>
-                        ) : (
-                          <>--</>
-                        )}
-                      </CustomRowValue>
-                    </CustomRow>
-                    <CustomRow>
-                      <CustomRowLabel>
-                        Performance Per Dollar (Rank)
-                      </CustomRowLabel>
-                      <CustomRowValue>
-                        {benchmarks1.valueScore != null &&
-                        meta1.valueRank != null ? (
-                          <>
-                            {formatBenchmark(benchmarks1.valueScore)} (
-                            {formatProductMeta(meta1.valueRank)})
-                          </>
-                        ) : (
-                          <>--</>
-                        )}
-                      </CustomRowValue>
-                      <CustomRowValue>
-                        {benchmarks2.valueScore != null &&
-                        meta2.valueRank != null ? (
-                          <>
-                            {formatBenchmark(benchmarks2.valueScore)} (
-                            {formatProductMeta(meta2.valueRank)})
-                          </>
-                        ) : (
-                          <>--</>
-                        )}
-                      </CustomRowValue>
-                    </CustomRow>
-                    <SpecRow spec="company" />
-                    <SpecRow spec="marketSegment" />
-                    <SpecRow spec="releaseDate" />
-                    <SpecRow spec="launchPrice" />
-                  </TBody>
-                </Table>
+                <div className="-mb-4">
+                  <GeneralInfoSummary />
+                </div>
               </section>
 
               <section>
-                <h2 className="mb-0">Reviews</h2>
+                <h2 className="mb-0 font-semibold">Relative Performance</h2>
+                <PerformanceIntro />
+                <PerformanceTable className="mb-4" />
 
-                <p className={classNames('text-content-dimmed mb-0')}>
-                  What others are saying about {gpu1.name} and {gpu2.name}.
-                </p>
+                <div className="-mb-4">
+                  <PerformanceSummary />
+                </div>
+              </section>
 
-                <Table responsive>
-                  <THead>
-                    <Tr>
-                      <Th></Th>
-                      <Th>{gpu1.name}</Th>
-                      <Th>{gpu2.name}</Th>
-                    </Tr>
-                  </THead>
-                  <TBody>
-                    <ReviewRow review="amazon" />
-                    <ReviewRow review="pcGamer" />
-                    <ReviewRow review="techRadar" />
-                    <ReviewRow review="techSpot" />
-                    <ReviewRow review="tomsHardware" />
-                  </TBody>
-                </Table>
+              <section>
+                <h2 className="mb-0 font-semibold">Relative Value</h2>
+                <ValueIntro />
+                <ValueTable className="mb-4" />
+
+                <div className="-mb-4">
+                  <ValueSummary />
+                </div>
+              </section>
+
+              <section>
+                <h2 className="mb-0">Benchmarks</h2>
+                <BenchmarksIntro />
+                <BenchmarksTable className="mb-4" />
+
+                <div className="-mb-4">
+                  <BenchmarksSummary />
+                </div>
               </section>
 
               <section className="flex flex-col gap-6">
@@ -261,187 +192,54 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
 
                 <section>
                   <h3 className="mb-0">Processor</h3>
+                  <ProcessorIntro />
+                  <ProcessorTable className="mb-4" />
 
-                  <p className={classNames('text-content-dimmed mb-0')}>
-                    Processor chip details for {gpu1.name} and {gpu2.name}
-                  </p>
-
-                  <Table responsive>
-                    <THead>
-                      <Tr>
-                        <Th></Th>
-                        <Th>{gpu1.name}</Th>
-                        <Th>{gpu2.name}</Th>
-                      </Tr>
-                    </THead>
-                    <TBody>
-                      <SpecRow spec="gpuName" />
-                      <SpecRow spec="architecture" />
-                      <SpecRow spec="processSize" />
-                      <SpecRow spec="transistors" />
-                    </TBody>
-                  </Table>
+                  <div className="-mb-4">
+                    <ProcessorSummary />
+                  </div>
                 </section>
 
                 <section>
                   <h3 className="mb-0">Memory</h3>
+                  <MemoryIntro />
+                  <MemoryTable className="mb-4" />
 
-                  <p className={classNames('text-content-dimmed mb-0')}>
-                    Memory size, bandwidth, and clock speeds for {gpu1.name} and{' '}
-                    {gpu2.name}.
-                  </p>
-
-                  <Table responsive>
-                    <THead>
-                      <Tr>
-                        <Th></Th>
-                        <Th>{gpu1.name}</Th>
-                        <Th>{gpu2.name}</Th>
-                      </Tr>
-                    </THead>
-                    <TBody>
-                      <SpecRow spec="memorySize" />
-                      <SpecRow spec="memoryType" />
-                      <SpecRow spec="memoryBandwidth" />
-                      <SpecRow spec="memoryClock" />
-                      <SpecRow spec="memoryInterface" />
-                    </TBody>
-                  </Table>
+                  <div className="-mb-4">
+                    <MemorySummary />
+                  </div>
                 </section>
 
                 <section>
                   <h3 className="mb-0">Board Compatibility &amp; Dimensions</h3>
+                  <CompatibilityIntro />
+                  <CompatibilityTable className="mb-4" />
 
-                  <p className={classNames('text-content-dimmed mb-0')}>
-                    Dimensions, bus interface, power consumption, and output
-                    ports for {gpu1.name} and {gpu2.name}
-                  </p>
-
-                  <Table responsive>
-                    <THead>
-                      <Tr>
-                        <Th></Th>
-                        <Th>{gpu1.name}</Th>
-                        <Th>{gpu2.name}</Th>
-                      </Tr>
-                    </THead>
-                    <TBody>
-                      <SpecRow spec="slotWidth" />
-                      <SpecRow spec="length" />
-                      <SpecRow spec="width" />
-                      <SpecRow spec="height" />
-                      <SpecRow spec="weight" />
-                      <SpecRow spec="busInterface" />
-                      <SpecRow spec="thermalDesignPower" />
-                      <SpecRow spec="suggestedPsu" />
-                      <SpecRow spec="powerConnectors" />
-                      <SpecRow spec="outputs" />
-                    </TBody>
-                  </Table>
+                  <div className="-mb-4">
+                    <CompatibillitySummary />
+                  </div>
                 </section>
 
                 <section>
                   <h3 className="mb-0">Cores &amp; Clock Speeds</h3>
+                  <CoresIntro />
+                  <CoresTable className="mb-4" />
+                  <CoresPerformanceTable className="mb-4" />
 
-                  <p className={classNames('text-content-dimmed mb-0')}>
-                    Cores, clock speed, and cache for {gpu1.name} and{' '}
-                    {gpu2.name}
-                  </p>
-
-                  <Table responsive>
-                    <THead>
-                      <Tr>
-                        <Th></Th>
-                        <Th>{gpu1.name}</Th>
-                        <Th>{gpu2.name}</Th>
-                      </Tr>
-                    </THead>
-                    <TBody>
-                      <SpecRow spec="shaderUnitsCudaCores" />
-                      <SpecRow spec="textureMappingUnits" />
-                      <SpecRow spec="renderOutputUnits" />
-                      <SpecRow spec="tensorCores" />
-                      <SpecRow spec="rayTracingCores" />
-                      <SpecRow spec="coreClockSpeedBase" />
-                      <SpecRow spec="coreClockSpeedBoost" />
-                      <SpecRow spec="l1Cache" />
-                      <SpecRow spec="l2Cache" />
-                    </TBody>
-                  </Table>
-                </section>
-
-                <section>
-                  <h3 className="mb-0">Theoretical Performance</h3>
-
-                  <p className={classNames('text-content-dimmed mb-0')}>
-                    Computational performance like pixel fill rate, texture fill
-                    rate, and floating-point operations per second for the{' '}
-                    {gpu1.name} and {gpu2.name}.
-                  </p>
-
-                  <Table responsive>
-                    <THead>
-                      <Tr>
-                        <Th></Th>
-                        <Th>{gpu1.name}</Th>
-                        <Th>{gpu2.name}</Th>
-                      </Tr>
-                    </THead>
-                    <TBody>
-                      <SpecRow spec="pixelFillRate" />
-                      <SpecRow spec="textureFillRate" />
-                      <SpecRow spec="fp32Performance" />
-                      <SpecRow spec="fp64Performance" />
-                    </TBody>
-                  </Table>
+                  <div className="-mb-4">
+                    <CoresSummary />
+                  </div>
                 </section>
 
                 <section>
                   <h3 className="mb-0">API Support</h3>
+                  <ApiIntro />
+                  <ApiTable className="mb-4" />
 
-                  <Table responsive>
-                    <THead>
-                      <Tr>
-                        <Th></Th>
-                        <Th>{gpu1.name}</Th>
-                        <Th>{gpu2.name}</Th>
-                      </Tr>
-                    </THead>
-                    <TBody>
-                      <SpecRow spec="directXVersion" />
-                      <SpecRow spec="openClVersion" />
-                      <SpecRow spec="openGlVersion" />
-                      <SpecRow spec="shaderModelVersion" />
-                      <SpecRow spec="gSyncFreeSyncSupport" />
-                      <SpecRow spec="sliCrossfireSupport" />
-                    </TBody>
-                  </Table>
+                  <div className="-mb-4">
+                    <ApiSummary />
+                  </div>
                 </section>
-              </section>
-
-              <section>
-                <h2 className="mb-0">Benchmarks</h2>
-
-                <p className={classNames('text-content-dimmed mb-0')}>
-                  Performance and rating metrics for {gpu1.name} and {gpu2.name}
-                  . These identify how strong the GPU performs compared to its
-                  peers.
-                </p>
-
-                <Table responsive>
-                  <THead>
-                    <Tr>
-                      <Th></Th>
-                      <Th>{gpu1.name}</Th>
-                      <Th>{gpu2.name}</Th>
-                    </Tr>
-                  </THead>
-                  <TBody>
-                    <BenchmarkRow benchmark="g3dMark" />
-                    <BenchmarkRow benchmark="g2dMark" />
-                    <BenchmarkRow benchmark="timeSpyGraphics" />
-                  </TBody>
-                </Table>
               </section>
             </section>
           </article>
@@ -452,6 +250,6 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
           </Sidenav>
         </div>
       </WebsiteLayout>
-    </ProductsContext.Provider>
+    </ComparePageContext.Provider>
   );
 };

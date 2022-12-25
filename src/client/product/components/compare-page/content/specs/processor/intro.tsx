@@ -1,23 +1,25 @@
 import { compileContent, ContentContext } from '@client/shared/content';
 import { getProductName } from '@shared/product';
 import React, { useContext } from 'react';
-import { ViewPageContext } from '../../../context';
+import { ComparePageContext } from '../../../context';
 
 export const ProcessorIntroSentence1 = compileContent({
-  deps: ['productName'],
+  deps: ['productName1', 'productName2'],
   component: (props) => <>Enter Intro here</>,
 });
 
 export const ProcessorIntro = () => {
-  const { product } = useContext(ViewPageContext);
+  const { comparison } = useContext(ComparePageContext);
+  const [product1, product2] = comparison;
 
   const params = {
-    productName: getProductName(product),
+    productName1: getProductName(product1),
+    productName2: getProductName(product2),
   };
 
   return (
     <ContentContext.Provider value={{ params }}>
-      <p className="text-content-dimmed">
+      <p className="text-content-dimmed mb-0">
         <ProcessorIntroSentence1 />
       </p>
     </ContentContext.Provider>
