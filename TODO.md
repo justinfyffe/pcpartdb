@@ -1,8 +1,7 @@
 Immediate Tasks:
 - Clean up format code
   - replace formatSpec, formatMeta with more specific utils
-- Is it worth showing reviews? Most publications probably won't have ratings.
-  - Maybe just link to the review instead?
+- get rid of reviews for now
 - Prep for launch
   - Finish UIs
     - View Page

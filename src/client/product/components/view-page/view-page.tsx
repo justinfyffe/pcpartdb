@@ -29,7 +29,11 @@ import { formatSpec } from '@shared/spec';
 import React, { useMemo } from 'react';
 import { CompareProductsForm } from '../compare-products-form';
 import { ProductImages } from '../product-images';
-import { BenchmarkRow } from './benchmark-row';
+import {
+  BenchmarksIntro,
+  BenchmarksSummary,
+  BenchmarksTable,
+} from './content/benchmarks';
 import {
   GeneralInfoIntro,
   GeneralInfoSummary,
@@ -42,6 +46,23 @@ import {
   PerformanceSummary,
   PerformanceYearTable,
 } from './content/performance';
+import { ApiIntro, ApiTable } from './content/specs/api';
+import {
+  CompatibilityIntro,
+  CompatibilitySummary,
+  CompatibilityTable,
+} from './content/specs/compatibility';
+import { CoresIntro, CoresTable } from './content/specs/cores';
+import { MemoryIntro, MemoryTable } from './content/specs/memory';
+import {
+  ProcessorIntro,
+  ProcessorSummary,
+  ProcessorTable,
+} from './content/specs/processor';
+import {
+  TheoreticalPerformanceIntro,
+  TheoreticalPerformanceTable,
+} from './content/specs/theoretical-performance';
 import {
   ValueArchitectureTable,
   ValueIntro,
@@ -56,7 +77,6 @@ import {
   HighlightListItem,
   HighlightValue,
 } from './highlight-list';
-import { ReviewRow } from './review-row';
 import { SpecRow } from './spec-row';
 import { ViewPageContentData } from './types';
 
@@ -211,12 +231,10 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
 
               <section className="flex flex-wrap gap-8 mb-4">
                 <div className="flex-1">
-                  <h3 className="mb-1">Compared to 2021 GPUs</h3>
                   <PerformanceYearTable />
                 </div>
 
                 <div className="flex-1">
-                  <h3 className="mb-1">Compared to NVIDIA Ampere GPUs</h3>
                   <PerformanceArchitectureTable />
                 </div>
               </section>
@@ -232,12 +250,10 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
 
               <section className="flex flex-wrap gap-8 mb-4">
                 <div className="flex-1">
-                  <h3 className="mb-1">Compared to 2021 GPUs</h3>
                   <ValueYearTable />
                 </div>
 
                 <div className="flex-1">
-                  <h3 className="mb-1">Compared to NVIDIA Ampere GPUs</h3>
                   <ValueArchitectureTable />
                 </div>
               </section>
@@ -249,48 +265,12 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
 
             <section>
               <h2 className="mb-0 font-semibold">Benchmarks</h2>
+              <BenchmarksIntro />
+              <BenchmarksTable className="mb-4" />
 
-              <p className={classNames('text-content-dimmed')}>
-                Performance and rating metrics for the {getProductName(gpu)}.
-                Benchmarks are usually the best indicator for determing a GPUs
-                performance.
-              </p>
-
-              <Table border responsive className="mb-4">
-                <TBody>
-                  <BenchmarkRow benchmark="g3dMark" />
-                  <BenchmarkRow benchmark="g2dMark" />
-                  <BenchmarkRow benchmark="timeSpyGraphics" />
-                </TBody>
-              </Table>
-
-              <p>
-                Paragraph about G3D Mark, G2D Mark, 3Dmark Time Spy Graphics
-              </p>
-            </section>
-
-            <section>
-              <h2 className="mb-0 font-semibold">Reviews</h2>
-
-              <p className={classNames('text-content-dimmed')}>
-                What consumers and popular publications are saying about the{' '}
-                {gpu.name}.
-              </p>
-
-              <Table border responsive className="mb-4">
-                <TBody>
-                  <ReviewRow review="amazon" />
-                  <ReviewRow review="pcGamer" />
-                  <ReviewRow review="techRadar" />
-                  <ReviewRow review="techSpot" />
-                  <ReviewRow review="tomsHardware" />
-                </TBody>
-              </Table>
-
-              <p>
-                {getProductName(gpu)} has an average score of 4.5 across popular
-                publications tracked in our database.
-              </p>
+              <div className="-mb-4">
+                <BenchmarksSummary />
+              </div>
             </section>
 
             <section className="flex flex-col gap-6">
@@ -298,174 +278,83 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
 
               <section>
                 <h3 className="mb-0">Processor</h3>
+                <ProcessorIntro />
+                <ProcessorTable className="mb-4" />
 
-                <p className={classNames('text-content-dimmed')}>
-                  {`${gpu.name}'s`} processor chip details like its code name
-                  and architecture. Modern architectures are more performant and
-                  efficient at computing than their predecessors.
-                </p>
-
-                <Table border responsive className="mb-4">
-                  <TBody>
-                    <SpecRow spec="gpuName" />
-                    <SpecRow spec="architecture" />
-                    <SpecRow spec="processSize" />
-                    <SpecRow spec="transistors" />
-                  </TBody>
-                </Table>
-
-                <p>
-                  {getProductName(gpu)} uses the Ampere architecture and is
-                  based on 8 nm manufacturing process.
-                </p>
+                <div className="-mb-4">
+                  <ProcessorSummary />
+                </div>
               </section>
 
               <section>
                 <h3 className="mb-0">Board Compatibility &amp; Dimensions</h3>
+                <CompatibilityIntro />
+                <CompatibilityTable className="mb-4" />
 
-                <p className={classNames('text-content-dimmed')}>
-                  {`${gpu.name}'s`} dimensions, bus interface, power
-                  consumption, and output ports. These specs are useful for
-                  verifying that the {getProductName(gpu)} fits within your case
-                  and is compatible with your motherboard, power supply, and
-                  monitor.
-                </p>
-
-                <Table border responsive className="mb-4">
-                  <TBody>
-                    <SpecRow spec="slotWidth" />
-                    <SpecRow spec="length" />
-                    <SpecRow spec="width" />
-                    <SpecRow spec="height" />
-                    <SpecRow spec="weight" />
-                    <SpecRow spec="busInterface" />
-                    <SpecRow spec="thermalDesignPower" />
-                    <SpecRow spec="suggestedPsu" />
-                    <SpecRow spec="powerConnectors" />
-                    <SpecRow spec="outputs" />
-                  </TBody>
-                </Table>
-
-                <p>
-                  The {gpu.name} is quite large, taking up 3-slots with
-                  dimensions of 304 x 137 x 61 mm. The GPU has a Thermal Design
-                  Power (TDP) of 450 W and it is recommended to be used with a
-                  minimum 850 W PSU.
-                </p>
+                <div className="-mb-4">
+                  <CompatibilitySummary />
+                </div>
               </section>
 
               <section>
                 <h3 className="mb-0">Memory</h3>
+                <MemoryIntro />
+                <MemoryTable className="mb-4" />
 
-                <p className={classNames('text-content-dimmed')}>
-                  {`${gpu.name}'s`} memory size, bandwidth, and clock speeds.
-                  GPU memory stores graphics data like frames, textures, and
-                  shadows which helps display rendered images. These specs are
-                  critical for graphics-intense applications like gaming and 3D
-                  modeling.
-                </p>
+                <div className="-mb-4">
+                  <p>
+                    This RDNA 2.0 GPU has 12 GB of GDDR6 memory. This amount of
+                    memory is similar to the other GPUs that launched in 2021.
+                    It is comparable with the GPUs that launched this year,
+                    making it sufficient for most memory requirements.
+                  </p>
 
-                <Table border responsive className="mb-4">
-                  <TBody>
-                    <SpecRow spec="memorySize" />
-                    <SpecRow spec="memoryType" />
-                    <SpecRow spec="memoryBandwidth" />
-                    <SpecRow spec="memoryClock" />
-                    <SpecRow spec="memoryInterface" />
-                  </TBody>
-                </Table>
-
-                <p>
-                  This RDNA 2.0 GPU has 12 GB of GDDR6 memory. This amount of
-                  memory is similar to the other GPUs that launched in 2021. It
-                  is comparable with the GPUs that launched this year, making it
-                  sufficient for most memory requirements.
-                </p>
-
-                <p>
-                  This memory is clocked 2,000 MHz and has a bandwidth of 384
-                  GB/s with a 192 bit interface. This kind of memory performance
-                  was among the best in 2021, and is still in-line with
-                  mid-range GPUs released today.
-                </p>
+                  <p>
+                    This memory is clocked 2,000 MHz and has a bandwidth of 384
+                    GB/s with a 192 bit interface. This kind of memory
+                    performance was among the best in 2021, and is still in-line
+                    with mid-range GPUs released today.
+                  </p>
+                </div>
               </section>
 
               <section>
                 <h3 className="mb-0">Cores &amp; Clock Speeds</h3>
+                <CoresIntro />
+                <CoresTable className="mb-4" />
 
-                <p className={classNames('text-content-dimmed')}>
-                  {`${gpu.name}'s`} cores, clock speed, and cache. These specs
-                  have an impact on how fast the {getProductName(gpu)} can
-                  process graphics. Each type of core serves a specific
-                  computational purpose.
-                </p>
-
-                <Table border responsive className="mb-4">
-                  <TBody>
-                    <SpecRow spec="shaderUnitsCudaCores" />
-                    <SpecRow spec="textureMappingUnits" />
-                    <SpecRow spec="renderOutputUnits" />
-                    <SpecRow spec="tensorCores" />
-                    <SpecRow spec="rayTracingCores" />
-                    <SpecRow spec="coreClockSpeedBase" />
-                    <SpecRow spec="coreClockSpeedBoost" />
-                    <SpecRow spec="l1Cache" />
-                    <SpecRow spec="l2Cache" />
-                  </TBody>
-                </Table>
-
-                <p>
-                  This card operates at a base clock speed of 2,235 MHz. The
-                  16,384 Cores gives it a FP32 performance of 83 TFLOPS and FP64
-                  performance of 1,290 GFLOPS.
-                </p>
-                <p>
-                  The 176 Render Output Units (ROPs) gives it a pixel fill rate
-                  of 444 GPixel/s. The 512 Texture Mapping Units (TMUs) gives it
-                  a texture fill rate of 1,290 GTexel/s.
-                </p>
+                <div className="-mb-4">
+                  <p>
+                    This card operates at a base clock speed of 2,235 MHz. The
+                    16,384 Cores gives it a FP32 performance of 83 TFLOPS and
+                    FP64 performance of 1,290 GFLOPS.
+                  </p>
+                  <p>
+                    The 176 Render Output Units (ROPs) gives it a pixel fill
+                    rate of 444 GPixel/s. The 512 Texture Mapping Units (TMUs)
+                    gives it a texture fill rate of 1,290 GTexel/s.
+                  </p>
+                </div>
               </section>
 
               <section>
                 <h3 className="mb-0">Theoretical Performance</h3>
+                <TheoreticalPerformanceIntro />
+                <TheoreticalPerformanceTable className="mb-4" />
 
-                <p className={classNames('text-content-dimmed')}>
-                  {`${gpu.name}'s`} computational performance like pixel fill
-                  rate, texture fill rate, and floating-point operations per
-                  second. This is the calculated performance based on TMUs,
-                  ROPs, cores, and clock frequency.
-                </p>
-
-                <Table border responsive className="mb-4">
-                  <TBody>
-                    <SpecRow spec="pixelFillRate" />
-                    <SpecRow spec="textureFillRate" />
-                    <SpecRow spec="fp32Performance" />
-                    <SpecRow spec="fp64Performance" />
-                  </TBody>
-                </Table>
-
-                <p>Paragraph about theoretical performance.</p>
+                <div className="-mb-4">
+                  <p>Paragraph about theoretical performance.</p>
+                </div>
               </section>
 
               <section>
                 <h3 className="mb-0">API Support</h3>
+                <ApiIntro />
+                <ApiTable className="mb-4" />
 
-                <p className={classNames('text-content-dimmed')}>
-                  API versions that the {getProductName(gpu)} supports. Older
-                  GPUs may not support recent versions.
-                </p>
-
-                <Table border responsive className="mb-4">
-                  <TBody>
-                    <SpecRow spec="directXVersion" />
-                    <SpecRow spec="openClVersion" />
-                    <SpecRow spec="openGlVersion" />
-                    <SpecRow spec="shaderModelVersion" />
-                  </TBody>
-                </Table>
-
-                <p>Paragraph about theoretical performance.</p>
+                <div className="-mb-4">
+                  <p>Paragraph about theoretical performance.</p>
+                </div>
               </section>
             </section>
 
