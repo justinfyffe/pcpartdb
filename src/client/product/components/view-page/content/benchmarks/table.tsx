@@ -13,13 +13,11 @@ export const BenchmarksTable: FunctionComponent<BenchmarksTableProps> = (
 
   return (
     <Table border responsive className={className}>
-      <Table border responsive className="mb-4">
-        <TBody>
-          <BenchmarkRow benchmark="g3dMark" />
-          <BenchmarkRow benchmark="g2dMark" />
-          <BenchmarkRow benchmark="timeSpyGraphics" />
-        </TBody>
-      </Table>
+      <TBody>
+        <BenchmarkRow benchmark="g3dMark" />
+        <BenchmarkRow benchmark="g2dMark" />
+        <BenchmarkRow benchmark="timeSpyGraphics" />
+      </TBody>
     </Table>
   );
 };

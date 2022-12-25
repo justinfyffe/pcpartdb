@@ -1,12 +1,6 @@
 import { useProductCache } from '@client/shared/cache';
-import {
-  Breadcrumb,
-  Breadcrumbs,
-  Table,
-  TBody,
-} from '@client/shared/components';
+import { Breadcrumb, Breadcrumbs } from '@client/shared/components';
 import { WebsiteLayout } from '@client/shared/layouts';
-import { classNames } from '@client/shared/ui';
 import { Sidenav, SidenavComparisons, SidenavProducts } from '@client/sidenav';
 import {
   BoltIcon,
@@ -46,23 +40,23 @@ import {
   PerformanceSummary,
   PerformanceYearTable,
 } from './content/performance';
-import { ApiIntro, ApiTable } from './content/specs/api';
+import { ApiIntro, ApiSummary, ApiTable } from './content/specs/api';
 import {
   CompatibilityIntro,
   CompatibilitySummary,
   CompatibilityTable,
 } from './content/specs/compatibility';
-import { CoresIntro, CoresTable } from './content/specs/cores';
-import { MemoryIntro, MemoryTable } from './content/specs/memory';
+import { CoresIntro, CoresSummary, CoresTable } from './content/specs/cores';
+import {
+  MemoryIntro,
+  MemorySummary,
+  MemoryTable,
+} from './content/specs/memory';
 import {
   ProcessorIntro,
   ProcessorSummary,
   ProcessorTable,
 } from './content/specs/processor';
-import {
-  TheoreticalPerformanceIntro,
-  TheoreticalPerformanceTable,
-} from './content/specs/theoretical-performance';
 import {
   ValueArchitectureTable,
   ValueIntro,
@@ -77,7 +71,6 @@ import {
   HighlightListItem,
   HighlightValue,
 } from './highlight-list';
-import { SpecRow } from './spec-row';
 import { ViewPageContentData } from './types';
 
 export interface ViewGpuPageProps {
@@ -302,19 +295,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                 <MemoryTable className="mb-4" />
 
                 <div className="-mb-4">
-                  <p>
-                    This RDNA 2.0 GPU has 12 GB of GDDR6 memory. This amount of
-                    memory is similar to the other GPUs that launched in 2021.
-                    It is comparable with the GPUs that launched this year,
-                    making it sufficient for most memory requirements.
-                  </p>
-
-                  <p>
-                    This memory is clocked 2,000 MHz and has a bandwidth of 384
-                    GB/s with a 192 bit interface. This kind of memory
-                    performance was among the best in 2021, and is still in-line
-                    with mid-range GPUs released today.
-                  </p>
+                  <MemorySummary />
                 </div>
               </section>
 
@@ -324,26 +305,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                 <CoresTable className="mb-4" />
 
                 <div className="-mb-4">
-                  <p>
-                    This card operates at a base clock speed of 2,235 MHz. The
-                    16,384 Cores gives it a FP32 performance of 83 TFLOPS and
-                    FP64 performance of 1,290 GFLOPS.
-                  </p>
-                  <p>
-                    The 176 Render Output Units (ROPs) gives it a pixel fill
-                    rate of 444 GPixel/s. The 512 Texture Mapping Units (TMUs)
-                    gives it a texture fill rate of 1,290 GTexel/s.
-                  </p>
-                </div>
-              </section>
-
-              <section>
-                <h3 className="mb-0">Theoretical Performance</h3>
-                <TheoreticalPerformanceIntro />
-                <TheoreticalPerformanceTable className="mb-4" />
-
-                <div className="-mb-4">
-                  <p>Paragraph about theoretical performance.</p>
+                  <CoresSummary />
                 </div>
               </section>
 
@@ -353,7 +315,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                 <ApiTable className="mb-4" />
 
                 <div className="-mb-4">
-                  <p>Paragraph about theoretical performance.</p>
+                  <ApiSummary />
                 </div>
               </section>
             </section>
@@ -361,7 +323,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
             <section>
               <p className="text-xs">
                 The rankings, relative performance, and relative value
-                represented on this page considers the 300 GPUs that we track in
+                represented on this page considers the X GPUs that we track in
                 our database. Check which graphics cards we are tracking on our{' '}
                 <a href="/gpus">GPU list</a> page.
               </p>

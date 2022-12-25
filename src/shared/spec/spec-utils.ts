@@ -1,3 +1,4 @@
+import { Product } from '@shared/product';
 import Big from 'big.js';
 import { format, parse } from 'date-fns';
 import { MarketSegmentValue, Spec } from './spec-types';
@@ -242,4 +243,25 @@ function formatMarketSegment(value: MarketSegmentValue) {
 function formatDate(value: string, formatter: SpecDateFormatter) {
   const date = parse(value, 'yyyy-MM-dd', new Date());
   return format(date, formatter);
+}
+
+export function formatDimensions(product: Product) {
+  const length = formatSpec(product.specs?.length);
+  const height = formatSpec(product.specs?.height);
+  const width = formatSpec(product.specs?.width);
+  const slots = formatSpec(product.specs?.slotWidth);
+
+  if (length == null || width == null) {
+    return null;
+  }
+
+  if (height != null) {
+    return `${length} x ${width} x ${height}`;
+  }
+
+  if (slots != null) {
+    return `${length} x ${width} x ${slots}`;
+  }
+
+  return null;
 }
