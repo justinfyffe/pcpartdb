@@ -1,4 +1,5 @@
 import { Table, TBody, Th, THead, Tr } from '@client/shared/components';
+import { getProductName } from '@shared/product';
 import React, { FunctionComponent, useContext } from 'react';
 import { ComparePageContext } from '../../context';
 
@@ -9,10 +10,14 @@ interface ValueTableProps {
 export const ValueTable: FunctionComponent<ValueTableProps> = (props) => {
   const { className } = props;
   const { comparison, contentData } = useContext(ComparePageContext);
+  const [product1, product2] = comparison;
 
   return (
     <>
-      <h3 className="mb-1">Compared to BLANK GPUs</h3>
+      <div className="mb-1 text-right">
+        Baseline: <span className="font-bold">{getProductName(product1)}</span>{' '}
+        or <a href="#">{getProductName(product2)}</a>
+      </div>
       <Table border responsive className={className}>
         <THead>
           <Tr>

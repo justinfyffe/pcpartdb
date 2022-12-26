@@ -24,7 +24,7 @@ export const GeneralInfoIntro = () => {
 
   return (
     <ContentContext.Provider value={{ params }}>
-      <p className="text-content-dimmed mb-0">
+      <p className="text-content-dimmed">
         <GeneralInfoIntroSentence1 />
       </p>
     </ContentContext.Provider>

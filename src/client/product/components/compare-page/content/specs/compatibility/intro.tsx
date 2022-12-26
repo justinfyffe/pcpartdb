@@ -26,7 +26,7 @@ export const CompatibilityIntro = () => {
 
   return (
     <ContentContext.Provider value={{ params }}>
-      <p className="text-content-dimmed mb-0">
+      <p className="text-content-dimmed">
         <CompatibilityIntroSentence1 />
       </p>
     </ContentContext.Provider>

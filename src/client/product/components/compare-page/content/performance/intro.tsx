@@ -25,7 +25,7 @@ export const PerformanceIntro = () => {
 
   return (
     <ContentContext.Provider value={{ params }}>
-      <p className="text-content-dimmed mb-0">
+      <p className="text-content-dimmed">
         <PerformanceIntroSentence1 />
       </p>
     </ContentContext.Provider>

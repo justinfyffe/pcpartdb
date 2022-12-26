@@ -53,9 +53,11 @@ import {
 } from './content/specs/processor';
 import { ValueIntro, ValueSummary, ValueTable } from './content/value';
 import { ComparePageContext, createComparePageContextState } from './context';
+import { ComparePageContentData } from './types';
 
 export interface CompareGpuPageProps {
   comparison: ProductComparison;
+  contentData: ComparePageContentData;
   relatedProducts: RelatedProducts;
 }
 

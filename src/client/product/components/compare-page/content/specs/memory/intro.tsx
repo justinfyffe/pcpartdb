@@ -26,7 +26,7 @@ export const MemoryIntro = () => {
 
   return (
     <ContentContext.Provider value={{ params }}>
-      <p className="text-content-dimmed mb-0">
+      <p className="text-content-dimmed">
         <MemoryIntroSentence1 />
       </p>
     </ContentContext.Provider>

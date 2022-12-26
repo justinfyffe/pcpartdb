@@ -41,9 +41,9 @@ export const PerformanceArchitectureTable: FunctionComponent<
       <Table border responsive className={className}>
         <THead>
           <Tr>
-            <Th className="border-0"></Th>
-            <Th className="text-left border-0">Relative Performance</Th>
-            <Th className="text-right border-0">Rank</Th>
+            <Th></Th>
+            <Th className="text-left">Relative Performance</Th>
+            <Th className="text-right">Rank</Th>
           </Tr>
         </THead>
         <TBody>

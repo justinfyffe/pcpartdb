@@ -1,14 +1,26 @@
 import { Td, Tr } from '@client/shared/components';
+import { classNames } from '@client/shared/ui';
 import React from 'react';
 
 interface CustomRowProps {
+  highlight?: boolean;
+  secondary?: boolean;
   children?: React.ReactElement<CustomRowLabelProps | CustomRowValueProps>[];
 }
 
 export const CustomRow = (props: CustomRowProps) => {
-  const { children } = props;
+  const { children, highlight, secondary } = props;
 
-  return <Tr>{children}</Tr>;
+  return (
+    <Tr
+      className={classNames(
+        highlight ? 'font-bold !bg-indigo-100' : '',
+        secondary ? 'font-bold !bg-fuchsia-100' : '',
+      )}
+    >
+      {children}
+    </Tr>
+  );
 };
 
 interface CustomRowLabelProps {
@@ -18,15 +30,19 @@ interface CustomRowLabelProps {
 export const CustomRowLabel = (props: CustomRowLabelProps) => {
   const { children } = props;
 
-  return <Td className="border-r-0 text-left w-[33%]">{children}</Td>;
+  return <Td className="text-left w-[33%]">{children}</Td>;
 };
 
 interface CustomRowValueProps {
   children?: React.ReactNode;
+
+  className?: string;
 }
 
 export const CustomRowValue = (props: CustomRowValueProps) => {
-  const { children } = props;
+  const { children, className } = props;
 
-  return <Td className="border-l-0 text-left w-[33%]">{children}</Td>;
+  return (
+    <Td className={classNames('text-left w-[33%]', className)}>{children}</Td>
+  );
 };

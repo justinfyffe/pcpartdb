@@ -16,22 +16,19 @@ export const BenchmarksTable: FunctionComponent<BenchmarksTableProps> = (
   const [product1, product2] = comparison;
 
   return (
-    <>
-      <h3 className="mb-1">Compared to BLANK GPUs</h3>
-      <Table border responsive className={className}>
-        <THead>
-          <Tr>
-            <Th></Th>
-            <Th>{getProductName(product1, { company: false })}</Th>
-            <Th>{getProductName(product2, { company: false })}</Th>
-          </Tr>
-        </THead>
-        <TBody>
-          <BenchmarkRow benchmark="g3dMark" />
-          <BenchmarkRow benchmark="g2dMark" />
-          <BenchmarkRow benchmark="timeSpyGraphics" />
-        </TBody>
-      </Table>
-    </>
+    <Table border responsive className={className}>
+      <THead>
+        <Tr>
+          <Th></Th>
+          <Th>{getProductName(product1, { company: false })}</Th>
+          <Th>{getProductName(product2, { company: false })}</Th>
+        </Tr>
+      </THead>
+      <TBody>
+        <BenchmarkRow benchmark="g3dMark" />
+        <BenchmarkRow benchmark="g2dMark" />
+        <BenchmarkRow benchmark="timeSpyGraphics" />
+      </TBody>
+    </Table>
   );
 };

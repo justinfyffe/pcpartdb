@@ -33,6 +33,7 @@ export const Table: FunctionComponent<TableProps> = (props) => {
               {...htmlProps}
               className={classNames(
                 'border-collapse w-full max-w-full',
+                border ? 'border-px' : '',
                 props.className,
               )}
             >
@@ -45,6 +46,7 @@ export const Table: FunctionComponent<TableProps> = (props) => {
             {...htmlProps}
             className={classNames(
               'border-collapse w-full max-w-full',
+              border ? 'border-px' : '',
               props.className,
             )}
           >
@@ -100,7 +102,7 @@ export const Th: FunctionComponent<ThProps> = (props) => {
       {...htmlProps}
       className={classNames(
         'text-left p-2 font-medium',
-        context.border ? 'border-px' : '',
+        context.border ? 'border-y-px' : '',
         className,
       )}
     >
@@ -120,7 +122,7 @@ export const Td: FunctionComponent<TdProps> = (props) => {
       {...htmlProps}
       className={classNames(
         'p-2 text-left',
-        context.border ? 'border-px' : '',
+        context.border ? 'border-y-px' : '',
         className,
       )}
     >
