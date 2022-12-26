@@ -22,6 +22,9 @@ Immediate Tasks:
     - Set up database
     - Set up domain
     - launch
+  - Other
+    - Analytics
+    - Google Search Console 
 
 - clean up ui:
   - view page: write content/paragraphs. add links
