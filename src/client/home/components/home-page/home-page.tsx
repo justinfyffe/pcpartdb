@@ -65,13 +65,11 @@ export const HomePage = (props: HomePageProps) => {
           </FeedItems>
 
           <FeedLinks>
-            <FeedLink href="/gpus/list">All GPUs</FeedLink>
-            <FeedLink
-              href={`/gpus/list?sort=${ProductsSort.PerformanceRating}`}
-            >
+            <FeedLink href="/gpus">All GPUs</FeedLink>
+            <FeedLink href={`/gpus?sort=${ProductsSort.PerformanceRating}`}>
               Best Performing GPUs
             </FeedLink>
-            <FeedLink href={`/gpus/list?sort=${ProductsSort.ValueRating}`}>
+            <FeedLink href={`/gpus?sort=${ProductsSort.ValueRating}`}>
               Best Value GPUs
             </FeedLink>
           </FeedLinks>
@@ -96,16 +94,14 @@ export const HomePage = (props: HomePageProps) => {
           </FeedItems>
 
           <FeedLinks>
-            <FeedLink href="/gpus/list?company=nvidia">
-              All NVIDIA GPUs
-            </FeedLink>
+            <FeedLink href="/gpus?company=nvidia">All NVIDIA GPUs</FeedLink>
             <FeedLink
-              href={`/gpus/list?company=nvidia&sort=${ProductsSort.PerformanceRating}`}
+              href={`/gpus?company=nvidia&sort=${ProductsSort.PerformanceRating}`}
             >
               Best Performing NVIDIA GPUs
             </FeedLink>
             <FeedLink
-              href={`/gpus/list?company=nvidia&sort=${ProductsSort.ValueRating}`}
+              href={`/gpus?company=nvidia&sort=${ProductsSort.ValueRating}`}
             >
               Best Value NVIDIA GPUs
             </FeedLink>
@@ -131,14 +127,14 @@ export const HomePage = (props: HomePageProps) => {
           </FeedItems>
 
           <FeedLinks>
-            <FeedLink href="/gpus/list?company=amd">All AMD GPUs</FeedLink>
+            <FeedLink href="/gpus?company=amd">All AMD GPUs</FeedLink>
             <FeedLink
-              href={`/gpus/list?company=amd&sort=${ProductsSort.PerformanceRating}`}
+              href={`/gpus?company=amd&sort=${ProductsSort.PerformanceRating}`}
             >
               Best Performing AMD GPUs
             </FeedLink>
             <FeedLink
-              href={`/gpus/list?company=amd&sort=${ProductsSort.ValueRating}`}
+              href={`/gpus?company=amd&sort=${ProductsSort.ValueRating}`}
             >
               Best Value AMD GPUs
             </FeedLink>

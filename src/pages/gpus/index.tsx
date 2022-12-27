@@ -1,44 +1,43 @@
-import { OverviewGpusPage, OverviewGpusPageProps } from '@client/product';
+import {
+  ListQuery,
+  OverviewGpusPage,
+  OverviewGpusPageProps,
+} from '@client/product';
 import { transaction } from '@server/db/database';
 import { productService } from '@server/product/product-service';
 import { serializeAsync } from '@server/shared/types/serialize';
-import { Product, ProductsSort, ProductType } from '@shared/product';
+import { ProductsSort, ProductType } from '@shared/product';
 import { NextPageContext } from 'next';
 
-const TOTAL_PRODUCTS_PER_LIST = 5;
-
-export async function getServerSideProps(_ctx: NextPageContext) {
+export async function getServerSideProps(nextCtx: NextPageContext) {
   return transaction(async (trx) => {
-    const bestPerforming: Product[] = await serializeAsync(
-      productService.list(
-        {
-          type: ProductType.GPU,
-          sort: ProductsSort.PerformanceRating,
-          limit: TOTAL_PRODUCTS_PER_LIST,
-        },
-        { trx },
-      ),
-    );
+    const { query } = nextCtx;
+    const company = query.company as string;
+    const sort = query.sort as ProductsSort;
+    const ctx = { trx };
 
-    const bestValue: Product[] = await serializeAsync(
+    const listQuery: ListQuery = { company, sort };
+
+    const gpus = await serializeAsync(
       productService.list(
         {
           type: ProductType.GPU,
-          sort: ProductsSort.ValueRating,
-          limit: TOTAL_PRODUCTS_PER_LIST,
+          filter: { company },
+          sort: sort,
+          includeRanks: true,
         },
-        { trx },
+        ctx,
       ),
     );
 
     const relatedProducts = await productService.getRelatedProducts(
       { type: ProductType.GPU, prioritize: ProductsSort.ReleaseDate },
-      { trx },
+      ctx,
     );
 
     const pageProps = {
-      gpusByPerformance: JSON.parse(JSON.stringify(bestPerforming)),
-      gpusByValue: JSON.parse(JSON.stringify(bestValue)),
+      listQuery,
+      gpus: JSON.parse(JSON.stringify(gpus)),
 
       relatedProducts: JSON.parse(JSON.stringify(relatedProducts)),
     } as OverviewGpusPageProps;
