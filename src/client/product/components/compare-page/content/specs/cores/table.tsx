@@ -33,6 +33,10 @@ export const CoresTable: FunctionComponent<CoresTableProps> = (props) => {
         <SpecRow spec="coreClockSpeedBoost" />
         <SpecRow spec="l1Cache" />
         <SpecRow spec="l2Cache" />
+        <SpecRow spec="pixelFillRate" />
+        <SpecRow spec="textureFillRate" />
+        <SpecRow spec="fp32Performance" />
+        <SpecRow spec="fp64Performance" />
       </TBody>
     </Table>
   );

@@ -1,6 +1,13 @@
-import { Table, TBody, Td, Th, THead, Tr } from '@client/shared/components';
-import { getProductName } from '@shared/product';
-import React, { FunctionComponent, useContext } from 'react';
+import { Table, TBody, Th, THead, Tr } from '@client/shared/components';
+import { getProductName, Product } from '@shared/product';
+import { formatProductMeta } from '@shared/product-meta';
+import React, {
+  FunctionComponent,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 import { ComparePageContext } from '../../context';
 import { CustomRow, CustomRowLabel, CustomRowValue } from '../../custom-row';
 
@@ -14,12 +21,49 @@ export const PerformanceTable: FunctionComponent<PerformanceTableProps> = (
   const { className } = props;
   const { comparison, contentData } = useContext(ComparePageContext);
   const [product1, product2] = comparison;
+  const { relativePerformanceGpus: gpus } = contentData;
+
+  const [baselineProduct, setBaselineProduct] = useState(product1);
+  const [secondaryProduct, setSecondaryProduct] = useState(product2);
+
+  useEffect(() => {
+    setBaselineProduct(product1);
+    setSecondaryProduct(product2);
+  }, [product1, product2]);
+
+  const getRelativePerformance = useCallback(
+    (relatedGpu: Product) => {
+      const baseline = baselineProduct.benchmarks.performanceScore.value;
+      const relatedValue = relatedGpu.benchmarks.performanceScore.value;
+
+      return ((relatedValue / baseline) * 100).toFixed(0);
+    },
+    [baselineProduct],
+  );
+
+  const toggleBaselineProduct = useCallback(
+    (product: Product) => {
+      setSecondaryProduct(baselineProduct);
+      setBaselineProduct(product);
+    },
+    [baselineProduct],
+  );
 
   return (
     <>
       <div className="mb-1 text-right">
-        Baseline: <span className="font-bold">{getProductName(product1)}</span>{' '}
-        or <a href="#">{getProductName(product2)}</a>
+        Baseline:{' '}
+        <BaselineToggle
+          product={product1}
+          active={baselineProduct.id === product1.id}
+          onClick={() => toggleBaselineProduct(product1)}
+        />{' '}
+        or{' '}
+        <BaselineToggle
+          product={product2}
+          active={baselineProduct.id === product2.id}
+          onClick={() => toggleBaselineProduct(product2)}
+        />
       </div>
       <Table border responsive className={className}>
         <THead>
@@ -30,63 +74,47 @@ export const PerformanceTable: FunctionComponent<PerformanceTableProps> = (
           </Tr>
         </THead>
         <TBody>
-          <CustomRow>
-            <CustomRowLabel>GeForceRTX 4090</CustomRowLabel>
-            <CustomRowValue className="text-left">210%</CustomRowValue>
-            <CustomRowValue className="text-left">10</CustomRowValue>
-          </CustomRow>
-          <CustomRow>
-            <CustomRowLabel>GeForceRTX 3090</CustomRowLabel>
-            <CustomRowValue className="text-left">120%</CustomRowValue>
-            <CustomRowValue className="text-left">11</CustomRowValue>
-          </CustomRow>
-          <CustomRow secondary>
-            <CustomRowLabel>GeForceRTX 3070</CustomRowLabel>
-            <CustomRowValue className="text-left">110%</CustomRowValue>
-            <CustomRowValue className="text-left">12</CustomRowValue>
-          </CustomRow>
-          <CustomRow>
-            <CustomRowLabel>GeForceRTX 3060</CustomRowLabel>
-            <CustomRowValue className="text-left">105%</CustomRowValue>
-            <CustomRowValue className="text-left">13</CustomRowValue>
-          </CustomRow>
-          <CustomRow>
-            <CustomRowLabel>GeForceRTX 2080</CustomRowLabel>
-            <CustomRowValue className="text-left">102%</CustomRowValue>
-            <CustomRowValue className="text-left">14</CustomRowValue>
-          </CustomRow>
-          <Tr>
-            <Td colSpan={3} className="text-center">
-              &#8230;
-            </Td>
-          </Tr>
-          <CustomRow>
-            <CustomRowLabel>GeForceRTX 2080</CustomRowLabel>
-            <CustomRowValue className="text-left">102%</CustomRowValue>
-            <CustomRowValue className="text-left">42</CustomRowValue>
-          </CustomRow>
-          <CustomRow>
-            <CustomRowLabel>GeForceRTX 2080</CustomRowLabel>
-            <CustomRowValue className="text-left">102%</CustomRowValue>
-            <CustomRowValue className="text-left">43</CustomRowValue>
-          </CustomRow>
-          <CustomRow highlight>
-            <CustomRowLabel>GeForceRTX 2070</CustomRowLabel>
-            <CustomRowValue className="text-left">100%</CustomRowValue>
-            <CustomRowValue className="text-left">44</CustomRowValue>
-          </CustomRow>
-          <CustomRow>
-            <CustomRowLabel>GeForceRTX 2060</CustomRowLabel>
-            <CustomRowValue className="text-left">90%</CustomRowValue>
-            <CustomRowValue className="text-left">45</CustomRowValue>
-          </CustomRow>
-          <CustomRow>
-            <CustomRowLabel>GeForceRTX 3050</CustomRowLabel>
-            <CustomRowValue className="text-left">0%</CustomRowValue>
-            <CustomRowValue className="text-left">46</CustomRowValue>
-          </CustomRow>
+          {gpus.map((gpu) => (
+            <CustomRow
+              key={gpu.id}
+              highlight={gpu.id === baselineProduct.id}
+              secondary={gpu.id === secondaryProduct.id}
+            >
+              <CustomRowLabel>
+                {getProductName(gpu, { company: false })}
+              </CustomRowLabel>
+              <CustomRowValue className="text-left">
+                {getRelativePerformance(gpu)}%
+              </CustomRowValue>
+              <CustomRowValue className="text-left">
+                {formatProductMeta(gpu.metas?.performanceRank)}
+              </CustomRowValue>
+            </CustomRow>
+          ))}
         </TBody>
       </Table>
     </>
   );
+};
+
+interface BaselineToggleProps {
+  product: Product;
+  active: boolean;
+  onClick: () => void;
+}
+
+export const BaselineToggle: FunctionComponent<BaselineToggleProps> = (
+  props,
+) => {
+  const { product, active, onClick } = props;
+
+  if (active) {
+    return <span className="font-bold">{getProductName(product)}</span>;
+  } else {
+    return (
+      <a className="cursor-pointer" onClick={onClick}>
+        {getProductName(product)}
+      </a>
+    );
+  }
 };

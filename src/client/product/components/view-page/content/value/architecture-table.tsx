@@ -47,7 +47,7 @@ export const ValueArchitectureTable: FunctionComponent<
         <TBody>
           {gpus.map((gpu, i) => {
             return (
-              <CustomRow key={i} highlight={product.id === gpu.id}>
+              <CustomRow key={gpu.id} highlight={product.id === gpu.id}>
                 <CustomRowLabel>
                   {getProductName(gpu, { company: false })}
                 </CustomRowLabel>

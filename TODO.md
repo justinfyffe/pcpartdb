@@ -1,7 +1,7 @@
 Immediate Tasks:
 - Clean up format code
   - replace formatSpec, formatMeta with more specific utils
-- get rid of reviews for now
+- remove reviews code
 - Prep for launch
   - Finish UIs
     - View Page
@@ -9,7 +9,7 @@ Immediate Tasks:
     - Compare page
       - adjust like view page, add links, fetch remaining data
     - List page
-      - Combine with overview page, remove popular comparisons/gpus
+      - Combine with overview page, remove popular comparisons/gpus from overview page
   - Audit
     - Check links, meta tags, canonical tags
     - check legal pages for correct name and email
@@ -22,35 +22,26 @@ Immediate Tasks:
     - Set up database
     - Set up domain
     - launch
+  - Polishing
+    - Hard load page when calling router.push or router.replace?
+      - probably cannot use next/router
+    - remove selected option in compare products form
+    - use product and fix bugs
   - Other
     - Analytics
     - Google Search Console 
 
-- clean up ui:
-  - view page: write content/paragraphs. add links
-  - compare page: adjust content like view page
-  
-- Website name and logo
-  - decide between "PC Part DB" and "PC Parts DB" (leaning towards PC Parts DB)
-  - finalize logo
-- combine gpu overview page and list page
-  - replace popular gpus and comparisons with the list
-  - seo title based on sorting and filters
-- compare gpus page
-  - auto-generate summary
-- ready for launch
-  - setup hosting
-  - setup email
-- launch
-- on-page seo
-  - alt tags
-- improve content
+Post-launch:
+- clean up code
+- View and Compare Page
+  - Write summaries for each table/section
+  - Add tooltips for each spec
+  - look into using useController
+- on-site SEO
+  - Add alt tags
+  - html semantics
 - retail models
-  - override specs
-- look into using useController
-- improve html semantics
-- adjust related gpus and comparisons
-  - should only use gpus listed on the page's tables
+
 
 Roadmap:
 Legend:

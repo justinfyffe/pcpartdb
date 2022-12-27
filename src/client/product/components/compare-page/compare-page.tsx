@@ -13,45 +13,23 @@ import { getShoppingUrl } from '@shared/retail-model';
 import React from 'react';
 import { CompareProductsForm } from '../compare-products-form';
 import { ProductImages } from '../product-images';
-import {
-  BenchmarksIntro,
-  BenchmarksSummary,
-  BenchmarksTable,
-} from './content/benchmarks';
-import {
-  GeneralInfoIntro,
-  GeneralInfoSummary,
-  GeneralInfoTable,
-} from './content/general-info';
+import { BenchmarksIntro, BenchmarksTable } from './content/benchmarks';
+import { GeneralInfoIntro, GeneralInfoTable } from './content/general-info';
 import { IntroParagraph } from './content/intro';
-import {
-  PerformanceIntro,
-  PerformanceSummary,
-  PerformanceTable,
-} from './content/performance';
-import { ApiIntro, ApiSummary, ApiTable } from './content/specs/api';
+import { PerformanceIntro, PerformanceTable } from './content/performance';
+import { ApiIntro, ApiTable } from './content/specs/api';
 import {
   CompatibilityIntro,
   CompatibilityTable,
-  CompatibillitySummary,
 } from './content/specs/compatibility';
 import {
   CoresIntro,
   CoresPerformanceTable,
-  CoresSummary,
   CoresTable,
 } from './content/specs/cores';
-import {
-  MemoryIntro,
-  MemorySummary,
-  MemoryTable,
-} from './content/specs/memory';
-import {
-  ProcessorIntro,
-  ProcessorSummary,
-  ProcessorTable,
-} from './content/specs/processor';
-import { ValueIntro, ValueSummary, ValueTable } from './content/value';
+import { MemoryIntro, MemoryTable } from './content/specs/memory';
+import { ProcessorIntro, ProcessorTable } from './content/specs/processor';
+import { ValueIntro, ValueTable } from './content/value';
 import { ComparePageContext, createComparePageContextState } from './context';
 import { ComparePageContentData } from './types';
 
@@ -62,15 +40,12 @@ export interface CompareGpuPageProps {
 }
 
 export const CompareGpuPage = (props: CompareGpuPageProps) => {
-  const { comparison, relatedProducts } = props;
+  const { comparison, contentData, relatedProducts } = props;
   useProductCache(comparison);
 
   const [gpu1, gpu2] = comparison;
 
-  const context = createComparePageContextState({
-    comparison,
-    contentData: null,
-  });
+  const context = createComparePageContextState({ comparison, contentData });
 
   const shoppingUrl1 = getShoppingUrl(gpu1);
   const shoppingUrl2 = getShoppingUrl(gpu2);
@@ -148,101 +123,71 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
               <IntroParagraph />
             </section>
 
+            <section>
+              <h2 className="mb-0">General Info</h2>
+              <GeneralInfoIntro />
+              <GeneralInfoTable className="mb-4" />
+            </section>
+
+            <section>
+              <h2 className="mb-0 font-semibold">Relative Performance</h2>
+              <PerformanceIntro />
+              <PerformanceTable className="mb-4" />
+            </section>
+
+            <section>
+              <h2 className="mb-0 font-semibold">Relative Value</h2>
+              <ValueIntro />
+              <ValueTable className="mb-4" />
+            </section>
+
+            <section>
+              <h2 className="mb-0">Benchmarks</h2>
+              <BenchmarksIntro />
+              <BenchmarksTable className="mb-4" />
+            </section>
+
             <section className="flex flex-col gap-6">
-              <section>
-                <h2 className="mb-0">General Info</h2>
-                <GeneralInfoIntro />
-                <GeneralInfoTable className="mb-4" />
+              <h2 className="mb-0">Technical Specs</h2>
 
-                <div className="-mb-4">
-                  <GeneralInfoSummary />
-                </div>
+              <section>
+                <h3 className="mb-0">Processor</h3>
+                <ProcessorIntro />
+                <ProcessorTable className="mb-4" />
               </section>
 
               <section>
-                <h2 className="mb-0 font-semibold">Relative Performance</h2>
-                <PerformanceIntro />
-                <PerformanceTable className="mb-4" />
-
-                <div className="-mb-4">
-                  <PerformanceSummary />
-                </div>
+                <h3 className="mb-0">Memory</h3>
+                <MemoryIntro />
+                <MemoryTable className="mb-4" />
               </section>
 
               <section>
-                <h2 className="mb-0 font-semibold">Relative Value</h2>
-                <ValueIntro />
-                <ValueTable className="mb-4" />
-
-                <div className="-mb-4">
-                  <ValueSummary />
-                </div>
+                <h3 className="mb-0">Board Compatibility &amp; Dimensions</h3>
+                <CompatibilityIntro />
+                <CompatibilityTable className="mb-4" />
               </section>
 
               <section>
-                <h2 className="mb-0">Benchmarks</h2>
-                <BenchmarksIntro />
-                <BenchmarksTable className="mb-4" />
-
-                <div className="-mb-4">
-                  <BenchmarksSummary />
-                </div>
+                <h3 className="mb-0">Cores &amp; Clock Speeds</h3>
+                <CoresIntro />
+                <CoresTable className="mb-4" />
               </section>
 
-              <section className="flex flex-col gap-6">
-                <h2 className="mb-0">Technical Specs</h2>
-
-                <section>
-                  <h3 className="mb-0">Processor</h3>
-                  <ProcessorIntro />
-                  <ProcessorTable className="mb-4" />
-
-                  <div className="-mb-4">
-                    <ProcessorSummary />
-                  </div>
-                </section>
-
-                <section>
-                  <h3 className="mb-0">Memory</h3>
-                  <MemoryIntro />
-                  <MemoryTable className="mb-4" />
-
-                  <div className="-mb-4">
-                    <MemorySummary />
-                  </div>
-                </section>
-
-                <section>
-                  <h3 className="mb-0">Board Compatibility &amp; Dimensions</h3>
-                  <CompatibilityIntro />
-                  <CompatibilityTable className="mb-4" />
-
-                  <div className="-mb-4">
-                    <CompatibillitySummary />
-                  </div>
-                </section>
-
-                <section>
-                  <h3 className="mb-0">Cores &amp; Clock Speeds</h3>
-                  <CoresIntro />
-                  <CoresTable className="mb-4" />
-                  <CoresPerformanceTable className="mb-4" />
-
-                  <div className="-mb-4">
-                    <CoresSummary />
-                  </div>
-                </section>
-
-                <section>
-                  <h3 className="mb-0">API Support</h3>
-                  <ApiIntro />
-                  <ApiTable className="mb-4" />
-
-                  <div className="-mb-4">
-                    <ApiSummary />
-                  </div>
-                </section>
+              <section>
+                <h3 className="mb-0">API Support</h3>
+                <ApiIntro />
+                <ApiTable className="mb-4" />
               </section>
+            </section>
+
+            <section>
+              <p className="text-xs">
+                The ranks on this page considers the{' '}
+                {contentData.totalPerformanceRatedGpus} GPUs that we track in
+                our database. Check which graphics cards we are tracking on our{' '}
+                <a href="/gpus">GPU list</a> page.
+              </p>
             </section>
           </article>
 

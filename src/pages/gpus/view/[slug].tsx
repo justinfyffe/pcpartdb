@@ -48,13 +48,9 @@ async function getContentData(gpu: Product, ctx: Context) {
   const {
     products: performanceArchitectureGpus,
     rank: performanceArchitectureRank,
-    total: totalArchitectureGpus,
   } = await getPerformanceArchitectureGpus(gpu, ctx);
-  const {
-    products: performanceYearGpus,
-    rank: performanceYearRank,
-    total: totalYearGpus,
-  } = await getPerformanceYearGpus(gpu, ctx);
+  const { products: performanceYearGpus, rank: performanceYearRank } =
+    await getPerformanceYearGpus(gpu, ctx);
 
   const { products: valueArchitectureGpus, rank: valueArchitectureRank } =
     await getValueArchitectureGpus(gpu, ctx);
@@ -62,17 +58,17 @@ async function getContentData(gpu: Product, ctx: Context) {
     await getValueYearGpus(gpu, ctx);
 
   return {
-    totalRatedGpus,
-    totalArchitectureGpus,
-    performanceArchitectureGpus,
-    performanceArchitectureRank,
-    valueArchitectureGpus,
-    valueArchitectureRank,
-    totalYearGpus,
+    totalPerformanceRatedGpus: totalRatedGpus,
+
     performanceYearGpus,
     performanceYearRank,
+    performanceArchitectureGpus,
+    performanceArchitectureRank,
+
     valueYearGpus,
     valueYearRank,
+    valueArchitectureGpus,
+    valueArchitectureRank,
   } as ViewPageContentData;
 }
 
@@ -99,7 +95,6 @@ async function getPerformanceArchitectureGpus(seed: Product, ctx: Context) {
     },
     ctx,
   );
-  const total = results.length;
 
   const seedIndex = results.findIndex((gpu) => gpu.id === seed.id);
   const sizePerSide = Math.floor(TOTAL_COMPARED_PRODUCTS / 2);
@@ -112,7 +107,7 @@ async function getPerformanceArchitectureGpus(seed: Product, ctx: Context) {
   }
   const products: Product[] = serialize(results.slice(start, end));
 
-  return { products, rank: seedIndex + 1, total };
+  return { products, rank: seedIndex + 1 };
 }
 
 async function getPerformanceYearGpus(seed: Product, ctx: Context) {
@@ -130,7 +125,6 @@ async function getPerformanceYearGpus(seed: Product, ctx: Context) {
     },
     ctx,
   );
-  const total = results.length;
 
   const seedIndex = results.findIndex((gpu) => gpu.id === seed.id);
   const sizePerSide = Math.floor(TOTAL_COMPARED_PRODUCTS / 2);
@@ -143,7 +137,7 @@ async function getPerformanceYearGpus(seed: Product, ctx: Context) {
   }
   const products: Product[] = serialize(results.slice(start, end));
 
-  return { products, rank: seedIndex + 1, total };
+  return { products, rank: seedIndex + 1 };
 }
 
 async function getValueArchitectureGpus(seed: Product, ctx: Context) {
@@ -158,7 +152,6 @@ async function getValueArchitectureGpus(seed: Product, ctx: Context) {
     },
     ctx,
   );
-  const total = results.length;
 
   const seedIndex = results.findIndex((gpu) => gpu.id === seed.id);
   const sizePerSide = Math.floor(TOTAL_COMPARED_PRODUCTS / 2);
@@ -171,7 +164,7 @@ async function getValueArchitectureGpus(seed: Product, ctx: Context) {
   }
   const products: Product[] = serialize(results.slice(start, end));
 
-  return { products, rank: seedIndex + 1, total };
+  return { products, rank: seedIndex + 1 };
 }
 
 async function getValueYearGpus(seed: Product, ctx: Context) {
@@ -189,7 +182,6 @@ async function getValueYearGpus(seed: Product, ctx: Context) {
     },
     ctx,
   );
-  const total = results.length;
 
   const seedIndex = results.findIndex((gpu) => gpu.id === seed.id);
   const sizePerSide = Math.floor(TOTAL_COMPARED_PRODUCTS / 2);
@@ -202,7 +194,7 @@ async function getValueYearGpus(seed: Product, ctx: Context) {
   }
   const products: Product[] = serialize(results.slice(start, end));
 
-  return { products, rank: seedIndex + 1, total };
+  return { products, rank: seedIndex + 1 };
 }
 
 // TODO: determine this based on gpus fetched for content tables

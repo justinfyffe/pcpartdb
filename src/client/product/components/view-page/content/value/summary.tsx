@@ -20,12 +20,7 @@ export const ValueSummarySentence1 = compileContent({
 });
 
 export const ValueSummarySentence2 = compileContent({
-  deps: [
-    'valueArchitectureRank',
-    'totalArchitectureGpus',
-    'company',
-    'architecture',
-  ],
+  deps: ['valueArchitectureRank', 'company', 'architecture'],
   component: (props) => (
     <>
       It is also the {props.valueArchitectureRank} best bang for your buck
@@ -45,12 +40,6 @@ export const ValueSummary = () => {
     launchYear: formatSpec(product.specs?.releaseDate, {
       dateFormatter: SpecDateFormatter.Year,
     }),
-
-    totalYearGpus: contentData.totalYearGpus,
-    valueYearRank: getOrdinalNumber(contentData.valueYearRank),
-
-    totalArchitectureGpus: contentData.totalArchitectureGpus,
-    valueArchitectureRank: getOrdinalNumber(contentData.valueArchitectureRank),
   };
 
   return (

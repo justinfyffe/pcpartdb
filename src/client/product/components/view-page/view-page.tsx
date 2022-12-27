@@ -23,49 +23,25 @@ import { formatSpec } from '@shared/spec';
 import React, { useMemo } from 'react';
 import { CompareProductsForm } from '../compare-products-form';
 import { ProductImages } from '../product-images';
-import {
-  BenchmarksIntro,
-  BenchmarksSummary,
-  BenchmarksTable,
-} from './content/benchmarks';
-import {
-  GeneralInfoIntro,
-  GeneralInfoSummary,
-  GeneralInfoTable,
-} from './content/general-info';
+import { BenchmarksIntro, BenchmarksTable } from './content/benchmarks';
+import { GeneralInfoIntro, GeneralInfoTable } from './content/general-info';
 import { IntroParagraph } from './content/intro';
 import {
   PerformanceArchitectureTable,
   PerformanceIntro,
-  PerformanceSummary,
   PerformanceYearTable,
 } from './content/performance';
-import { ApiIntro, ApiSummary, ApiTable } from './content/specs/api';
+import { ApiIntro, ApiTable } from './content/specs/api';
 import {
   CompatibilityIntro,
-  CompatibilitySummary,
   CompatibilityTable,
 } from './content/specs/compatibility';
-import {
-  CoresIntro,
-  CoresPerformanceTable,
-  CoresSummary,
-  CoresTable,
-} from './content/specs/cores';
-import {
-  MemoryIntro,
-  MemorySummary,
-  MemoryTable,
-} from './content/specs/memory';
-import {
-  ProcessorIntro,
-  ProcessorSummary,
-  ProcessorTable,
-} from './content/specs/processor';
+import { CoresIntro, CoresTable } from './content/specs/cores';
+import { MemoryIntro, MemoryTable } from './content/specs/memory';
+import { ProcessorIntro, ProcessorTable } from './content/specs/processor';
 import {
   ValueArchitectureTable,
   ValueIntro,
-  ValueSummary,
   ValueYearTable,
 } from './content/value';
 import { createViewPageContextState, ViewPageContext } from './context';
@@ -217,10 +193,6 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
               <h2 className="mb-0 font-semibold">General Info</h2>
               <GeneralInfoIntro />
               <GeneralInfoTable className="mb-4" />
-
-              <div className="-mb-4">
-                <GeneralInfoSummary />
-              </div>
             </section>
 
             <section>
@@ -236,10 +208,6 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                   <PerformanceArchitectureTable />
                 </div>
               </section>
-
-              <div className="-mb-4">
-                <PerformanceSummary />
-              </div>
             </section>
 
             <section>
@@ -255,20 +223,12 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                   <ValueArchitectureTable />
                 </div>
               </section>
-
-              <div className="-mb-4">
-                <ValueSummary />
-              </div>
             </section>
 
             <section>
               <h2 className="mb-0 font-semibold">Benchmarks</h2>
               <BenchmarksIntro />
               <BenchmarksTable className="mb-4" />
-
-              <div className="-mb-4">
-                <BenchmarksSummary />
-              </div>
             </section>
 
             <section className="flex flex-col gap-6">
@@ -278,58 +238,37 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
                 <h3 className="mb-0">Processor</h3>
                 <ProcessorIntro />
                 <ProcessorTable className="mb-4" />
-
-                <div className="-mb-4">
-                  <ProcessorSummary />
-                </div>
               </section>
 
               <section>
                 <h3 className="mb-0">Board Compatibility &amp; Dimensions</h3>
                 <CompatibilityIntro />
                 <CompatibilityTable className="mb-4" />
-
-                <div className="-mb-4">
-                  <CompatibilitySummary />
-                </div>
               </section>
 
               <section>
                 <h3 className="mb-0">Memory</h3>
                 <MemoryIntro />
                 <MemoryTable className="mb-4" />
-
-                <div className="-mb-4">
-                  <MemorySummary />
-                </div>
               </section>
 
               <section>
                 <h3 className="mb-0">Cores &amp; Clock Speeds</h3>
                 <CoresIntro />
                 <CoresTable className="mb-4" />
-                <CoresPerformanceTable className="mb-4" />
-
-                <div className="-mb-4">
-                  <CoresSummary />
-                </div>
               </section>
 
               <section>
                 <h3 className="mb-0">API Support</h3>
                 <ApiIntro />
                 <ApiTable className="mb-4" />
-
-                <div className="-mb-4">
-                  <ApiSummary />
-                </div>
               </section>
             </section>
 
             <section>
               <p className="text-xs">
-                The rankings, relative performance, and relative value
-                represented on this page considers the X GPUs that we track in
+                The ranks on this page considers the{' '}
+                {contentData.totalPerformanceRatedGpus} GPUs that we track in
                 our database. Check which graphics cards we are tracking on our{' '}
                 <a href="/gpus">GPU list</a> page.
               </p>

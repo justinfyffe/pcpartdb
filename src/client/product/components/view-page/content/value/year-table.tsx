@@ -45,7 +45,7 @@ export const ValueYearTable: FunctionComponent<ValueYearTableProps> = (
         <TBody>
           {gpus.map((gpu, i) => {
             return (
-              <CustomRow key={i} highlight={i === seedIndex}>
+              <CustomRow key={gpu.id} highlight={i === seedIndex}>
                 <CustomRowLabel>
                   {getProductName(gpu, { company: false })}
                 </CustomRowLabel>

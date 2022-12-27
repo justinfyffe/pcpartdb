@@ -21,12 +21,7 @@ export const PerformanceSummarySentence1 = compileContent({
 });
 
 export const PerformanceSummarySentence2 = compileContent({
-  deps: [
-    'performanceArchitectureRank',
-    'totalArchitectureGpus',
-    'company',
-    'architecture',
-  ],
+  deps: ['performanceArchitectureRank', 'company', 'architecture'],
   component: (props) => (
     <>
       It is also the {props.performanceArchitectureRank} most powerful card in
@@ -45,14 +40,6 @@ export const PerformanceSummary = () => {
     launchYear: formatSpec(product.specs?.releaseDate, {
       dateFormatter: SpecDateFormatter.Year,
     }),
-
-    totalYearGpus: contentData.totalYearGpus,
-    performanceYearRank: getOrdinalNumber(contentData.performanceYearRank),
-
-    totalArchitectureGpus: contentData.totalArchitectureGpus,
-    performanceArchitectureRank: getOrdinalNumber(
-      contentData.performanceArchitectureRank,
-    ),
   };
 
   return (

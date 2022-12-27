@@ -18,9 +18,7 @@ export const PerformanceSummary = () => {
 
   return (
     <ContentContext.Provider value={{ params }}>
-      <p>
-        <PerformanceSummarySentence1 />
-      </p>
+      <p></p>
     </ContentContext.Provider>
   );
 };

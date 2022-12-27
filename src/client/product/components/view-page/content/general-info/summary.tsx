@@ -53,7 +53,7 @@ export const GeneralInfoSummary = () => {
   const { product, contentData } = useContext(ViewPageContext);
 
   const { specs, metas } = product;
-  const { totalRatedGpus } = contentData;
+  const { totalPerformanceRatedGpus: totalRatedGpus } = contentData;
 
   const params: ContentParams = {
     productName: getProductName(product),

@@ -1,17 +1,15 @@
 import { Product } from '@shared/product';
 
 export interface ViewPageContentData {
-  totalRatedGpus: number;
+  totalPerformanceRatedGpus: number;
 
-  totalYearGpus?: number;
   performanceYearGpus?: Product[];
   performanceYearRank?: number;
-  valueYearGpus?: Product[];
-  valueYearRank?: number;
-
-  totalArchitectureGpus?: number;
   performanceArchitectureGpus?: Product[];
   performanceArchitectureRank?: number;
+
+  valueYearGpus?: Product[];
+  valueYearRank?: number;
   valueArchitectureGpus?: Product[];
   valueArchitectureRank?: number;
 }

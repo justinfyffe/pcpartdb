@@ -95,7 +95,8 @@ export class ProductRepository {
   ) {
     return await ProductModel.query(config?.trx)
       .where('type', type)
-      .andWhere('name', 'ILIKE', `%${query}%`);
+      .andWhere('name', 'ILIKE', `%${query}%`)
+      .limit(5);
   }
 
   async findSimilarSpecValue(
@@ -105,7 +106,8 @@ export class ProductRepository {
   ) {
     const results = await ProductModel.query(config?.trx)
       .select(ref(`specs:${key}.value`).as('value'))
-      .where(ref(`specs:${key}.value`).castText(), 'ILIKE', `%${query}%`);
+      .where(ref(`specs:${key}.value`).castText(), 'ILIKE', `%${query}%`)
+      .limit(5);
 
     return results.map(
       (result) => (result as unknown as { value: string }).value,
@@ -119,7 +121,8 @@ export class ProductRepository {
   ) {
     const results = await ProductModel.query(config?.trx)
       .select(ref(`metas:${key}.value`).as('value'))
-      .where(ref(`metas:${key}.value`).castText(), 'ILIKE', `%${query}%`);
+      .where(ref(`metas:${key}.value`).castText(), 'ILIKE', `%${query}%`)
+      .limit(5);
 
     return results.map(
       (result) => (result as unknown as { value: string }).value,
