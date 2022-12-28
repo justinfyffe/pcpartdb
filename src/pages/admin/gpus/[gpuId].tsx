@@ -8,7 +8,7 @@ export const getServerSideProps = staffSsrPageProps(async (ctx: SsrContext) => {
   const query = ctx.page.query as { gpuId: string };
   const gpuId = parseInt(query.gpuId, 10);
 
-  const gpu = await serializeAsync(productService.get(gpuId, ctx));
+  const gpu = await serializeAsync(productService.get({ id: gpuId }, ctx));
 
   return { gpu } as AdminEditGpuPageProps;
 });
