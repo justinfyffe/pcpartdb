@@ -26,17 +26,18 @@ export async function getServerSideProps(_ctx: NextPageContext) {
       productService.list({ type: ProductType.GPU }, { trx }),
     );
 
-    const nvidia = filterProducts(gpus, { company: 'NVIDIA' });
-    const amd = filterProducts(gpus, { company: 'AMD' });
+    const nvidia = filterProducts(gpus, { company: ['nvidia'] });
+    const amd = filterProducts(gpus, { company: ['amd'] });
 
     const bestPerformingNvidia =
-      sortProducts(nvidia, ProductsSort.PerformanceRating)[0] ?? null;
+      sortProducts(nvidia, { sort: ProductsSort.PerformanceRating })[0] ?? null;
     const bestPerformingAmd =
-      sortProducts(amd, ProductsSort.PerformanceRating)[0] ?? null;
+      sortProducts(amd, { sort: ProductsSort.PerformanceRating })[0] ?? null;
 
     const bestValueNvidia =
-      sortProducts(nvidia, ProductsSort.ValueRating)[0] ?? null;
-    const bestValueAmd = sortProducts(amd, ProductsSort.ValueRating)[0] ?? null;
+      sortProducts(nvidia, { sort: ProductsSort.ValueRating })[0] ?? null;
+    const bestValueAmd =
+      sortProducts(amd, { sort: ProductsSort.ValueRating })[0] ?? null;
 
     const nvidiaVsAmdGpus = [];
     if (bestPerformingNvidia != null && bestPerformingAmd != null) {

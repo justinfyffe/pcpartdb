@@ -30,12 +30,12 @@ export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
       <Toolbar>
         <ToolbarTitle>
           <ComputerDesktopIcon className={classNames('h-8 w-8 mt-0.5')} /> PC
-          Parts DB
+          Parts Database
         </ToolbarTitle>
 
         <ToolbarNav>
           <Button href="/gpus" variant={ButtonVariant.Toolbar}>
-            Browse Graphics Cards
+            GPUs
           </Button>
         </ToolbarNav>
       </Toolbar>

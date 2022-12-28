@@ -76,7 +76,7 @@ async function getTotalRatedGpus(ctx: Context) {
   const results = await productService.list(
     {
       type: ProductType.GPU,
-      filter: { performanceRated: true },
+      query: { filter: { performanceRated: true } },
     },
     ctx,
   );
@@ -90,8 +90,14 @@ async function getPerformanceArchitectureGpus(seed: Product, ctx: Context) {
   const results = await productService.list(
     {
       type: ProductType.GPU,
-      filter: { performanceRated: true, company, architecture },
-      sort: ProductsSort.PerformanceRating,
+      query: {
+        filter: {
+          performanceRated: true,
+          company: [company],
+          architecture: [architecture],
+        },
+        orderBy: { sort: ProductsSort.PerformanceRating },
+      },
     },
     ctx,
   );
@@ -120,8 +126,10 @@ async function getPerformanceYearGpus(seed: Product, ctx: Context) {
   const results = await productService.list(
     {
       type: ProductType.GPU,
-      filter: { performanceRated: true, year },
-      sort: ProductsSort.PerformanceRating,
+      query: {
+        filter: { performanceRated: true, year: [year] },
+        orderBy: { sort: ProductsSort.PerformanceRating },
+      },
     },
     ctx,
   );
@@ -147,8 +155,14 @@ async function getValueArchitectureGpus(seed: Product, ctx: Context) {
   const results = await productService.list(
     {
       type: ProductType.GPU,
-      filter: { valueRated: true, company, architecture },
-      sort: ProductsSort.ValueRating,
+      query: {
+        filter: {
+          valueRated: true,
+          company: [company],
+          architecture: [architecture],
+        },
+        orderBy: { sort: ProductsSort.ValueRating },
+      },
     },
     ctx,
   );
@@ -177,8 +191,10 @@ async function getValueYearGpus(seed: Product, ctx: Context) {
   const results = await productService.list(
     {
       type: ProductType.GPU,
-      filter: { valueRated: true, year },
-      sort: ProductsSort.ValueRating,
+      query: {
+        filter: { valueRated: true, year: [year] },
+        orderBy: { sort: ProductsSort.ValueRating },
+      },
     },
     ctx,
   );

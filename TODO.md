@@ -9,7 +9,7 @@ Immediate Tasks:
     - Compare page
       - adjust like view page, add links, fetch remaining data
     - List page
-      - Combine with overview page, remove popular comparisons/gpus from overview page
+      - filters, functionality
   - Audit
     - Check links, meta tags, canonical tags
     - check legal pages for correct name and email
@@ -30,9 +30,12 @@ Immediate Tasks:
   - Other
     - Analytics
     - Google Search Console 
+    - rename repo and other things to pcpartsdb (or pcpartdb)
 
 Post-launch:
 - clean up code
+- List Page
+  - infinite scroll
 - View and Compare Page
   - Write summaries for each table/section
   - Add tooltips for each spec

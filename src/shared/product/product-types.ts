@@ -9,23 +9,6 @@ export enum ProductType {
   GPU = 'GPU',
 }
 
-export enum ProductsSort {
-  Id = 'id',
-  Name = 'name',
-  PerformanceRating = 'performance_rating',
-  ValueRating = 'value_rating',
-  ReleaseDate = 'release_date',
-}
-
-export interface ProductsFilter {
-  performanceRated?: boolean;
-  valueRated?: boolean;
-
-  company?: string;
-  architecture?: string;
-  year?: number;
-}
-
 export interface Product {
   id?: number;
   slug: string;
@@ -38,13 +21,6 @@ export interface Product {
   benchmarks?: Benchmarks;
   reviews?: Reviews;
   images?: ProductImages;
-}
-
-export type ProductComparison = [Product, Product];
-
-export interface RelatedProducts {
-  comparisons?: ProductComparison[];
-  gpus?: Product[];
 }
 
 export interface ProductRequest {
@@ -60,27 +36,7 @@ export interface ProductRequest {
   images: ProductImagesRequest;
 }
 
-export interface ImportProductRequest {
-  url: string;
-}
-
-export interface ImportProductResults {
-  name?: string;
-  specs?: Specs;
-  metas?: ProductMetas;
-  benchmarks?: Benchmarks;
-  reviews?: Reviews;
-}
-
-export interface ListProductsRequest {
-  type: ProductType;
-  filter?: ProductsFilter;
-  sort?: ProductsSort;
-  limit?: number;
-
-  includeRanks?: boolean;
-  includeImages?: boolean;
-}
+export type ProductComparison = [Product, Product];
 
 export interface FindProductRequest {
   id?: number;
@@ -97,9 +53,66 @@ export interface FindComparisonRequest {
   includeImages?: boolean;
 }
 
+export interface RelatedProducts {
+  gpus?: Product[];
+  comparisons?: ProductComparison[];
+}
+
 export interface RelatedProductsRequest {
   type: ProductType;
   seed?: Product | ProductComparison;
   prioritize?: ProductsSort;
   limit?: number;
+}
+
+export enum ProductsSort {
+  Id = 'id',
+  Name = 'name',
+  PerformanceRating = 'performance-rating',
+  ValueRating = 'value-rating',
+  ReleaseDate = 'release-date',
+}
+
+export enum ProductsOrder {
+  Asc = 'asc',
+  Desc = 'desc',
+}
+
+export interface ProductsFilter {
+  company?: string[];
+  architecture?: string[];
+  year?: number[];
+
+  performanceRated?: boolean;
+  valueRated?: boolean;
+}
+
+export interface ProductsOrderBy {
+  sort: ProductsSort;
+  order?: ProductsOrder;
+}
+
+export interface ProductsQuery {
+  filter?: ProductsFilter;
+  orderBy?: ProductsOrderBy;
+}
+
+export interface ListProductsRequest {
+  type: ProductType;
+  query?: ProductsQuery;
+
+  includeRanks?: boolean;
+  includeImages?: boolean;
+}
+
+export interface ImportProductRequest {
+  url: string;
+}
+
+export interface ImportProductResults {
+  name?: string;
+  specs?: Specs;
+  metas?: ProductMetas;
+  benchmarks?: Benchmarks;
+  reviews?: Reviews;
 }

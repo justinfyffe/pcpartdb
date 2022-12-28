@@ -3,6 +3,7 @@ import { ProductCache } from '@client/shared/cache';
 import {
   ImportProductRequest,
   ImportProductResults,
+  ListProductsRequest,
   Product,
   ProductRequest,
   ProductType,
@@ -14,6 +15,14 @@ const PATH = 'products';
 
 export class ProductService {
   constructor(private api: ApiClient) {}
+
+  async list(data: ListProductsRequest) {
+    const products = await this.api.get<Product[]>(PATH, {
+      params: { q: JSON.stringify(data) },
+    });
+    ProductCache.save(products);
+    return products;
+  }
 
   async create(data: ProductRequest) {
     const product = await this.api.post<Product>(PATH, data);

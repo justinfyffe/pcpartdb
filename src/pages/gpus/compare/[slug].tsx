@@ -55,7 +55,7 @@ async function getTotalRatedGpus(ctx: Context) {
   const results = await productService.list(
     {
       type: ProductType.GPU,
-      filter: { performanceRated: true },
+      query: { filter: { performanceRated: true } },
     },
     ctx,
   );
@@ -68,8 +68,10 @@ async function getPerformanceGpus(seed: ProductComparison, ctx: Context) {
   const results = await productService.list(
     {
       type: ProductType.GPU,
-      filter: { performanceRated: true },
-      sort: ProductsSort.PerformanceRating,
+      query: {
+        filter: { performanceRated: true },
+        orderBy: { sort: ProductsSort.PerformanceRating },
+      },
       includeRanks: true,
     },
     ctx,
@@ -127,8 +129,10 @@ async function getValueGpus(seed: ProductComparison, ctx: Context) {
   const results = await productService.list(
     {
       type: ProductType.GPU,
-      filter: { valueRated: true },
-      sort: ProductsSort.ValueRating,
+      query: {
+        filter: { valueRated: true },
+        orderBy: { sort: ProductsSort.ValueRating },
+      },
       includeRanks: true,
     },
     ctx,

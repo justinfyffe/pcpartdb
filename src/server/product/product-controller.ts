@@ -10,6 +10,11 @@ import { Specs } from '@shared/spec';
 import { productImporterService } from './product-importer-service';
 import { productService } from './product-service';
 
+export const listProducts = controller(async (ctx: ApiContext) => {
+  const data = JSON.parse(ctx.req.query['q'] as string);
+  return await productService.list(data, ctx);
+});
+
 export const autocompleteProducts = controller(async (ctx: ApiContext) => {
   const type = ctx.req.query['type'] as ProductType;
   const query = ctx.req.query['query'] as string;

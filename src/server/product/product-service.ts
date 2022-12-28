@@ -86,7 +86,10 @@ export class ProductService {
     const { type, seed, prioritize } = options;
     const limit = options.limit ?? 3;
 
-    const gpus = await this.list({ type, sort: prioritize }, ctx);
+    const gpus = await this.list(
+      { type, query: { orderBy: { sort: prioritize } } },
+      ctx,
+    );
 
     let seedIndex = 0;
     if (seed != null && 'id' in seed) {

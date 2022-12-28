@@ -4,6 +4,8 @@ import {
   Product,
   ProductComparison,
   ProductsFilter,
+  ProductsOrder,
+  ProductsOrderBy,
   ProductsSort,
 } from './product-types';
 
@@ -57,8 +59,19 @@ export function filterProducts<T extends Product>(
   products: T[],
   filter: ProductsFilter,
 ): T[] {
+  const companyFilters =
+    filter?.company?.map((company) => company.toLowerCase()) ?? [];
+  const architectureFilters =
+    filter?.architecture?.map((architecture) => architecture.toLowerCase()) ??
+    [];
+  const yearFilters = filter?.year ?? [];
+
   return products.filter((product) => {
     let result = true;
+
+    const company = product.specs?.company?.value?.toLowerCase();
+    const architecture = product.specs?.architecture?.value?.toLowerCase();
+    const year = Number(product.specs?.releaseDate?.value?.slice(0, 4));
 
     if (result && filter?.performanceRated === true) {
       result = product.benchmarks?.performanceScore?.value != null;
@@ -68,21 +81,22 @@ export function filterProducts<T extends Product>(
       result = product.benchmarks?.valueScore?.value != null;
     }
 
-    if (result && filter?.company != null) {
+    if (result && companyFilters.length > 0) {
       result =
-        filter.company.toLowerCase() ===
-        product.specs?.company?.value?.toLowerCase();
+        result &&
+        companyFilters.some((companyFilter) => companyFilter === company);
     }
 
-    if (result && filter?.architecture != null) {
+    if (result && architectureFilters.length > 0) {
       result =
-        filter.architecture.toLowerCase() ===
-        product.specs?.architecture?.value?.toLowerCase();
+        result &&
+        architectureFilters.some(
+          (architectureFilter) => architectureFilter === architecture,
+        );
     }
 
-    if (result && filter?.year != null) {
-      result =
-        filter.year === Number(product.specs?.releaseDate?.value?.slice(0, 4));
+    if (result && yearFilters.length > 0) {
+      result = result && yearFilters.some((yearFilter) => yearFilter === year);
     }
 
     return result;
@@ -91,41 +105,75 @@ export function filterProducts<T extends Product>(
 
 export function sortProducts<T extends Product>(
   products: T[],
-  sort?: ProductsSort,
+  orderBy?: ProductsOrderBy,
 ): T[] {
   const result = [...products];
 
+  const sort = orderBy?.sort;
+
   if (sort === ProductsSort.Id) {
-    // ASC
-    result.sort((p1, p2) => p1.id - p2.id);
-  } else if (sort === ProductsSort.Name) {
-    // ASC
-    result.sort((p1, p2) => p1.name.localeCompare(p2.name));
-  } else if (sort === ProductsSort.ReleaseDate) {
-    // DESC
+    // Default ASC
+    const order = orderBy?.order ?? ProductsOrder.Asc;
     result.sort((p1, p2) =>
-      compareSpecs(p2.specs?.releaseDate, p1.specs?.releaseDate),
+      order === ProductsOrder.Asc ? p1.id - p2.id : p2.id - p1.id,
+    );
+  } else if (sort === ProductsSort.Name) {
+    // Default ASC
+    const order = orderBy?.order ?? ProductsOrder.Asc;
+    result.sort((p1, p2) =>
+      order === ProductsOrder.Asc
+        ? p1.name.localeCompare(p2.name)
+        : p2.name.localeCompare(p1.name),
+    );
+  } else if (sort === ProductsSort.ReleaseDate) {
+    // Default DESC
+    const order = orderBy?.order ?? ProductsOrder.Desc;
+    result.sort((p1, p2) =>
+      order === ProductsOrder.Asc
+        ? compareSpecs(p1.specs?.releaseDate, p2.specs?.releaseDate)
+        : compareSpecs(p2.specs?.releaseDate, p1.specs?.releaseDate),
     );
   } else if (sort === ProductsSort.PerformanceRating) {
-    // DESC
+    // Default DESC
+    const order = orderBy?.order ?? ProductsOrder.Desc;
     result.sort((p1, p2) =>
-      compareBenchmarks(
-        p2.benchmarks?.performanceScore,
-        p1.benchmarks?.performanceScore,
-      ),
+      order === ProductsOrder.Asc
+        ? compareBenchmarks(
+            p1.benchmarks?.performanceScore,
+            p2.benchmarks?.performanceScore,
+          )
+        : compareBenchmarks(
+            p2.benchmarks?.performanceScore,
+            p1.benchmarks?.performanceScore,
+          ),
     );
   } else if (sort === ProductsSort.ValueRating) {
-    // DESC
+    // Default DESC
+    const order = orderBy?.order ?? ProductsOrder.Desc;
     result.sort((p1, p2) =>
-      compareBenchmarks(p2.benchmarks?.valueScore, p1.benchmarks?.valueScore),
+      order === ProductsOrder.Asc
+        ? compareBenchmarks(
+            p1.benchmarks?.valueScore,
+            p2.benchmarks?.valueScore,
+          )
+        : compareBenchmarks(
+            p2.benchmarks?.valueScore,
+            p1.benchmarks?.valueScore,
+          ),
     );
   } else {
     // Default sort - performance DESC
+    const order = orderBy?.order ?? ProductsOrder.Desc;
     result.sort((p1, p2) =>
-      compareBenchmarks(
-        p2.benchmarks?.performanceScore,
-        p1.benchmarks?.performanceScore,
-      ),
+      order === ProductsOrder.Asc
+        ? compareBenchmarks(
+            p1.benchmarks?.performanceScore,
+            p2.benchmarks?.performanceScore,
+          )
+        : compareBenchmarks(
+            p2.benchmarks?.performanceScore,
+            p1.benchmarks?.performanceScore,
+          ),
     );
   }
 

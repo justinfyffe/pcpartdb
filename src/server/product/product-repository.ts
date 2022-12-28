@@ -4,8 +4,7 @@ import { serialize } from '@server/shared/types/serialize';
 import { Image } from '@shared/image';
 import {
   filterProducts,
-  ProductsFilter,
-  ProductsSort,
+  ListProductsRequest,
   ProductType,
   sortProducts,
 } from '@shared/product';
@@ -14,15 +13,7 @@ import { Specs } from '@shared/spec';
 import { Model, raw, ref } from 'objection';
 import { ProductModel, ProductModelPojo } from './product-model';
 
-interface ListOptions {
-  type: ProductType;
-  filter?: ProductsFilter;
-  sort?: ProductsSort;
-  limit?: number;
-
-  includeImages?: boolean;
-  includeRanks?: boolean;
-}
+type ListOptions = ListProductsRequest;
 
 interface FindOptions {
   id?: number;
@@ -34,22 +25,18 @@ interface FindOptions {
 
 export class ProductRepository {
   async list(options: ListOptions, config?: RepositoryConfig) {
-    const { type, filter, sort, limit, includeImages, includeRanks } = options;
+    const { type, query, includeImages, includeRanks } = options;
 
     let products = await ProductModel.query(config?.trx)
       .where('type', type)
       .orderBy('id', 'DESC');
 
-    if (filter != null) {
-      products = filterProducts(products, filter);
+    if (query?.filter != null) {
+      products = filterProducts(products, query?.filter);
     }
 
-    if (sort != null) {
-      products = sortProducts(products, sort);
-    }
-
-    if (limit != null) {
-      products = products.slice(0, limit);
+    if (query?.orderBy != null) {
+      products = sortProducts(products, query.orderBy);
     }
 
     if (includeImages) {

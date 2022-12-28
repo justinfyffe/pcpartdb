@@ -22,11 +22,7 @@ import {
   CompatibilityIntro,
   CompatibilityTable,
 } from './content/specs/compatibility';
-import {
-  CoresIntro,
-  CoresPerformanceTable,
-  CoresTable,
-} from './content/specs/cores';
+import { CoresIntro, CoresTable } from './content/specs/cores';
 import { MemoryIntro, MemoryTable } from './content/specs/memory';
 import { ProcessorIntro, ProcessorTable } from './content/specs/processor';
 import { ValueIntro, ValueTable } from './content/value';
