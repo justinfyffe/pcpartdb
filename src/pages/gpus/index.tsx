@@ -50,6 +50,7 @@ export async function getServerSideProps(nextCtx: NextPageContext) {
     const query = getQuery(nextCtx.query);
 
     const gpus = await getGpusForQuery(query, ctx);
+    const totalGpus = await getTotalGpus(ctx);
 
     const relatedProducts = await productService.getRelatedProducts(
       { type: ProductType.GPU, prioritize: ProductsSort.ReleaseDate },
@@ -59,6 +60,7 @@ export async function getServerSideProps(nextCtx: NextPageContext) {
     const pageProps = {
       query: JSON.parse(JSON.stringify(query)),
       gpus: JSON.parse(JSON.stringify(gpus)),
+      totalGpus,
 
       relatedProducts: JSON.parse(JSON.stringify(relatedProducts)),
     } as ListGpusPageProps;
@@ -89,6 +91,10 @@ async function getGpus(query: ProductsQuery, ctx: Context) {
   );
 
   return serialize(gpus);
+}
+
+async function getTotalGpus(ctx: Context) {
+  return await productService.count({ type: ProductType.GPU }, ctx);
 }
 
 export default ListGpusPage;

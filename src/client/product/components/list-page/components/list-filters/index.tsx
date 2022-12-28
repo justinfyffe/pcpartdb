@@ -5,17 +5,16 @@ import React, {
   FunctionComponent,
   useCallback,
   useContext,
-  useMemo,
+  useState,
 } from 'react';
 import { ListPageContext } from '../../context';
 
 export const ListFilters: FunctionComponent = () => {
   const { query, setQuery } = useContext(ListPageContext);
 
-  const companies = useMemo(
-    () => new Set<string>(query.filter.company),
-    [query],
-  );
+  console.log(query);
+
+  const [companies] = useState(() => new Set<string>(query.filter?.company));
 
   const handleBestPerformanceClick = useCallback(() => {
     setQuery({
@@ -41,10 +40,13 @@ export const ListFilters: FunctionComponent = () => {
 
       setQuery({
         ...query,
-        filter: { ...query.filter, company: [...companies.values()] },
+        filter: {
+          ...query.filter,
+          company: companies.size > 0 ? [...companies.keys()] : undefined,
+        },
       });
     },
-    [query, setQuery, companies],
+    [companies, query, setQuery],
   );
 
   return (

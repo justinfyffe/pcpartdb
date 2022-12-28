@@ -9,6 +9,7 @@ import {
   ProductType,
   RelatedProducts,
 } from '@shared/product';
+import { useRouter } from 'next/router';
 import React, { useCallback, useState } from 'react';
 import {
   CompareProductsForm,
@@ -16,39 +17,49 @@ import {
 } from '../compare-products-form';
 import { ListFilters, ListTable, ListTitle } from './components';
 import { createListPageContextState, ListPageContext } from './context';
+import { generateListUrl } from './utils';
 
 export interface ListGpusPageProps {
   query?: ProductsQuery;
   gpus: Product[];
+  totalGpus: number;
   relatedProducts: RelatedProducts;
 }
 
 export const ListGpusPage = (props: ListGpusPageProps) => {
-  const { relatedProducts } = props;
+  const { totalGpus, relatedProducts } = props;
   useProductCache(props.gpus);
+  const router = useRouter();
 
   const [gpus, setGpus] = useState(props.gpus);
   const [query, setQueryState] = useState(props.query);
+  const [canonical, setCanonical] = useState(() => generateListUrl(query));
 
-  const setQuery = useCallback((query: ProductsQuery) => {
-    async function fetchGpus() {
-      const gpus = await productService.list({
-        type: ProductType.GPU,
-        query,
-        includeRanks: true,
-      });
-      setGpus(gpus);
-    }
-    fetchGpus();
+  const setQuery = useCallback(
+    (q: ProductsQuery) => {
+      async function fetchGpus() {
+        const gpus = await productService.list({
+          type: ProductType.GPU,
+          query: q,
+          includeRanks: true,
+        });
+        setGpus(gpus);
+        setQueryState(q);
+      }
+      fetchGpus();
 
-    setQueryState(query);
-  }, []);
+      const url = generateListUrl(q);
+      router.replace(url, undefined, { shallow: true });
+      setCanonical(url);
+    },
+    [router],
+  );
 
   const context = createListPageContextState({ query, setQuery, gpus });
 
   const title = 'Graphics Cards';
-  const canonical = '/gpus';
   const keywords: string[] = [];
+
   return (
     <WebsiteLayout seo={{ title, keywords, canonical }}>
       <ListPageContext.Provider value={context}>
@@ -59,10 +70,6 @@ export const ListGpusPage = (props: ListGpusPageProps) => {
 
         <section className="flex flex-col gap-8 justify-center">
           <section className={classNames('flex flex-col justify-center gap-4')}>
-            <h2 className="md:text-2xl text-3xl mb-0">
-              Compare GPU Specifications, Benchmarks, and Comparisons
-            </h2>
-
             <CompareProductsForm values={[null, null]} />
             <CompareProductsFormLinks relatedProducts={relatedProducts} />
           </section>
@@ -77,8 +84,8 @@ export const ListGpusPage = (props: ListGpusPageProps) => {
 
             <section>
               <p className="text-xs">
-                The ranks on this page considers the X GPUs that we track in our
-                database.
+                The ranks on this page considers the {totalGpus} GPUs that we
+                track in our database.
               </p>
             </section>
           </article>

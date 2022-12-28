@@ -16,7 +16,7 @@ export const Content: FunctionComponent<ContentProps> = (props) => {
 
   const context = useContext(ContentContext);
 
-  const filters = props.filters || context.hints;
+  const filters = props.filters || context.filters;
   const params = props.params || context.params;
   const required = props.required || false;
 

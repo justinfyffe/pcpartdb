@@ -46,6 +46,11 @@ const updateProductValidator = Joi.object({
 }).options({ abortEarly: false });
 
 export class ProductService {
+  async count(options: ListProductsRequest, ctx: Context) {
+    const products = await productRepository.list(options, ctx);
+    return products.length;
+  }
+
   async list(options: ListProductsRequest, ctx: Context) {
     return await productRepository.list(options, ctx);
   }
