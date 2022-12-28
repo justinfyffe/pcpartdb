@@ -12,6 +12,7 @@ export * from './form';
 export * from './image';
 export * from './input';
 export * from './list';
+export * from './menu';
 export * from './select';
 export * from './seo';
 export * from './spinner';

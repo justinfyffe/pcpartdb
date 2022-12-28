@@ -5,11 +5,23 @@ import React from 'react';
 export const TitleSentence1 = compileContent(
   {
     filters: [ProductsSort.PerformanceRating],
-    component: (props) => <>Best Graphics Cards by Performance</>,
+    deps: ['company'],
+    component: (props) => (
+      <>Best {props.company} Graphics Cards by Performance</>
+    ),
   },
   {
     filters: [ProductsSort.ValueRating],
-    component: (props) => <>Best Graphics Cards by Value</>,
+    deps: ['company'],
+    component: (props) => <>Best {props.company} Graphics Cards by Value</>,
+  },
+  {
+    filters: [ProductsSort.PerformanceRating],
+    component: () => <>Best Graphics Cards by Performance</>,
+  },
+  {
+    filters: [ProductsSort.ValueRating],
+    component: () => <>Best Graphics Cards by Value</>,
   },
 );
 

@@ -12,8 +12,6 @@ import { ListPageContext } from '../../context';
 export const ListFilters: FunctionComponent = () => {
   const { query, setQuery } = useContext(ListPageContext);
 
-  console.log(query);
-
   const [companies] = useState(() => new Set<string>(query.filter?.company));
 
   const handleBestPerformanceClick = useCallback(() => {
@@ -50,7 +48,7 @@ export const ListFilters: FunctionComponent = () => {
   );
 
   return (
-    <section className="flex flex-col gap-4 min-w-40 border-px p-2">
+    <aside className="flex flex-col gap-4 min-w-60 border-px p-2">
       <div className="flex flex-col gap-2">
         <div className="font-bold">Sort:</div>
         <a
@@ -90,6 +88,6 @@ export const ListFilters: FunctionComponent = () => {
           NVIDIA
         </Checkbox>
       </div>
-    </section>
+    </aside>
   );
 };

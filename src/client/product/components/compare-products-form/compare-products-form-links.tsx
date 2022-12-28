@@ -1,3 +1,4 @@
+import { classNames } from '@client/shared/ui';
 import {
   getProductComparisonName,
   getProductComparisonPath,
@@ -9,16 +10,17 @@ import React, { FunctionComponent } from 'react';
 
 interface CompareProductsFormLinksProps {
   relatedProducts: RelatedProducts;
+  className?: string;
 }
 
 export const CompareProductsFormLinks: FunctionComponent<
   CompareProductsFormLinksProps
 > = (props) => {
-  const { relatedProducts } = props;
+  const { relatedProducts, className } = props;
   const { comparisons, gpus } = relatedProducts;
 
   return (
-    <section className="flex flex-col gap-1 text-xs">
+    <section className={classNames('flex flex-col gap-1 text-xs', className)}>
       <div className="flex gap-2">
         Popular Comparisons:
         <ul className="flex gap-3">

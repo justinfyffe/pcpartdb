@@ -1,6 +1,6 @@
 import { ContentContext } from '@client/shared/content';
 import { ProductsSort } from '@shared/product';
-import React, { FunctionComponent, useContext, useMemo } from 'react';
+import React, { FunctionComponent, useContext } from 'react';
 import { ListPageContext } from '../../context';
 import { SubtitleSentence1, TitleSentence1 } from './content';
 
@@ -11,8 +11,15 @@ export const ListTitle: FunctionComponent = () => {
     [query.orderBy?.sort ?? ProductsSort.PerformanceRating]: true,
   };
 
+  const params = {
+    company:
+      query.filter?.company?.length === 1
+        ? query.filter?.company[0].toUpperCase()
+        : null,
+  };
+
   return (
-    <ContentContext.Provider value={{ filters }}>
+    <ContentContext.Provider value={{ filters, params }}>
       <div>
         <h1 className="md:text-2xl text-3xl mb-0">
           <TitleSentence1 />

@@ -27,6 +27,7 @@ Immediate Tasks:
       - probably cannot use next/router
     - remove selected option in compare products form
     - use product and fix bugs
+    - mobile styling
   - Other
     - Analytics
     - Google Search Console 
