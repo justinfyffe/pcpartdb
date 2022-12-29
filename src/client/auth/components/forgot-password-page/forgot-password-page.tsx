@@ -20,7 +20,7 @@ import { userService } from '@client/user';
 import Joi from '@hapi/joi';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { ApiError, ValidationErrorType } from '@shared/error';
-import { MetaRobots } from '@shared/layout';
+import { MetaRobots } from '@shared/website';
 import { EMAIL_MAX_LENGTH } from '@shared/user';
 import React, { useCallback, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';

@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { Button, ButtonVariant } from '@client/shared/components';
 import { AdminLayout } from '@client/shared/layouts';
-import { MetaRobots } from '@shared/layout';
+import { MetaRobots } from '@shared/website';
 import React from 'react';
 import { ImageForm } from '../image-form';
 

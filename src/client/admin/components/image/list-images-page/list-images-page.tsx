@@ -16,7 +16,7 @@ import {
 } from '@client/shared/components';
 import { AdminLayout } from '@client/shared/layouts';
 import { Image } from '@shared/image';
-import { MetaRobots } from '@shared/layout';
+import { MetaRobots } from '@shared/website';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 

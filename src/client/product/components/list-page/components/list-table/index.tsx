@@ -32,7 +32,7 @@ export const ListTable: FunctionComponent = () => {
         {gpus.map((gpu) => (
           <Tr
             key={gpu.id}
-            className="cursor-pointer"
+            className="cursor-pointer hover:bg-slate-100"
             onClick={() => handleGpuRowClick(getProductDetailsPath(gpu))}
           >
             <Td>

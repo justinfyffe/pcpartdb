@@ -1,9 +1,5 @@
-import { SeoInputs } from '@shared/layout';
-import {
-  getPageKeywords,
-  getPageTitle,
-  getPageUrl,
-} from '@shared/layout/layout-utils';
+import { getPageKeywords, getPageTitle, getPageUrl } from '@shared/website';
+import { SeoInputs } from '@shared/website';
 import Head from 'next/head';
 import React, { FunctionComponent } from 'react';
 

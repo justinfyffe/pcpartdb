@@ -1,6 +1,6 @@
 import { authService } from '@client/auth';
 import { ComputerDesktopIcon } from '@heroicons/react/24/solid';
-import { SeoInputs } from '@shared/layout';
+import { SeoInputs } from '@shared/website';
 import { useRouter } from 'next/router';
 import React, { FunctionComponent, useCallback } from 'react';
 import {

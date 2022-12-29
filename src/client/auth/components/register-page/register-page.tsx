@@ -17,7 +17,7 @@ import { WebsiteLayout } from '@client/shared/layouts';
 import Joi from '@hapi/joi';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { ApiError, ValidationErrorType } from '@shared/error';
-import { MetaRobots } from '@shared/layout';
+import { MetaRobots } from '@shared/website';
 import {
   EMAIL_MAX_LENGTH,
   PASSWORD_MAX_LENGTH,

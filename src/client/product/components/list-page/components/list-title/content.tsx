@@ -1,19 +1,25 @@
-import { compileContent } from '@client/shared/content';
+import { compileContent, ContentParams } from '@client/shared/content';
 import { ProductsSort } from '@shared/product';
 import React from 'react';
+
+export interface ListTitleContentParams extends ContentParams {
+  company?: string;
+}
 
 export const TitleSentence1 = compileContent(
   {
     filters: [ProductsSort.PerformanceRating],
     deps: ['company'],
-    component: (props) => (
+    component: (props: ContentParams) => (
       <>Best {props.company} Graphics Cards by Performance</>
     ),
   },
   {
     filters: [ProductsSort.ValueRating],
     deps: ['company'],
-    component: (props) => <>Best {props.company} Graphics Cards by Value</>,
+    component: (props: ContentParams) => (
+      <>Best {props.company} Graphics Cards by Value</>
+    ),
   },
   {
     filters: [ProductsSort.PerformanceRating],
@@ -28,10 +34,10 @@ export const TitleSentence1 = compileContent(
 export const SubtitleSentence1 = compileContent(
   {
     filters: [ProductsSort.PerformanceRating],
-    component: (props) => <>Sorted by highest performance benchmarks</>,
+    component: () => <>Sorted by highest performance benchmarks</>,
   },
   {
     filters: [ProductsSort.ValueRating],
-    component: (props) => <>Sorted by performance per dollar</>,
+    component: () => <>Sorted by performance per dollar</>,
   },
 );

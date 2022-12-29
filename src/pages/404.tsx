@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import { WebsiteLayout } from '@client/shared/layouts';
-import { MetaRobots } from '@shared/layout';
+import { MetaRobots } from '@shared/website';
 import React from 'react';
 
 export interface Error404PageProps {}

@@ -3,18 +3,10 @@ import { useProductCache } from '@client/shared/cache';
 import { Breadcrumb, Breadcrumbs } from '@client/shared/components';
 import { WebsiteLayout } from '@client/shared/layouts';
 import { classNames } from '@client/shared/ui';
-import {
-  Product,
-  ProductsQuery,
-  ProductType,
-  RelatedProducts,
-} from '@shared/product';
+import { Product, ProductsQuery, ProductType } from '@shared/product';
 import { useRouter } from 'next/router';
 import React, { useCallback, useState } from 'react';
-import {
-  CompareProductsForm,
-  CompareProductsFormLinks,
-} from '../compare-products-form';
+import { CompareProductsForm } from '../compare-products-form';
 import {
   ListFilters,
   ListPresetsMenu,
@@ -28,11 +20,10 @@ export interface ListGpusPageProps {
   query?: ProductsQuery;
   gpus: Product[];
   totalGpus: number;
-  relatedProducts: RelatedProducts;
 }
 
 export const ListGpusPage = (props: ListGpusPageProps) => {
-  const { totalGpus, relatedProducts } = props;
+  const { totalGpus } = props;
   useProductCache(props.gpus);
   const router = useRouter();
 
@@ -76,10 +67,6 @@ export const ListGpusPage = (props: ListGpusPageProps) => {
         <section className="flex flex-col gap-8 justify-center">
           <section className={classNames('flex flex-col justify-center gap-4')}>
             <CompareProductsForm values={[null, null]} />
-            <CompareProductsFormLinks
-              relatedProducts={relatedProducts}
-              className="md:hidden"
-            />
           </section>
 
           <article className="flex-1 flex flex-col gap-4">

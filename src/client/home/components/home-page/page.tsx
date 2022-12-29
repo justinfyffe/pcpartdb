@@ -1,7 +1,10 @@
 import 'reflect-metadata';
+import { CompareProductsForm } from '@client/product';
+import { WebsiteLayout } from '@client/shared/layouts';
+import { classNames } from '@client/shared/ui';
+import { Product, ProductComparison, ProductsSort } from '@shared/product';
+import React from 'react';
 import {
-  CompareProductsForm,
-  CompareProductsFormLinks,
   ComparisonFeedItem,
   Feed,
   FeedItems,
@@ -9,34 +12,16 @@ import {
   FeedLinks,
   ProductFeedItem,
   ProductFeedTag,
-} from '@client/product';
-import { useProductCache } from '@client/shared/cache';
-import { WebsiteLayout } from '@client/shared/layouts';
-import { classNames } from '@client/shared/ui';
-import {
-  Product,
-  ProductComparison,
-  ProductsSort,
-  RelatedProducts,
-} from '@shared/product';
-import React, { useMemo } from 'react';
+} from './components/feed';
 
 export interface HomePageProps {
   nvidiaVsAmdGpus: ProductComparison[];
   nvidiaGpus: Product[];
   amdGpus: Product[];
-
-  relatedProducts: RelatedProducts;
 }
 
 export const HomePage = (props: HomePageProps) => {
-  const { nvidiaVsAmdGpus, nvidiaGpus, amdGpus, relatedProducts } = props;
-  const comparisonGpus = useMemo(
-    () => nvidiaVsAmdGpus.flat(),
-    [nvidiaVsAmdGpus],
-  );
-  // TODO: cache related products
-  useProductCache(comparisonGpus, nvidiaGpus, amdGpus);
+  const { nvidiaVsAmdGpus, nvidiaGpus, amdGpus } = props;
 
   const [bestPerformanceNvidia, bestValueNvidia] = nvidiaGpus;
   const [bestPerformanceAmd, bestValueAmd] = amdGpus;
@@ -52,7 +37,6 @@ export const HomePage = (props: HomePageProps) => {
           <h1 className="md:text-2xl text-3xl mb-0">{title}</h1>
 
           <CompareProductsForm values={[null, null]} />
-          <CompareProductsFormLinks relatedProducts={relatedProducts} />
         </section>
 
         <Feed>

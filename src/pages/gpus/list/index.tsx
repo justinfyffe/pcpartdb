@@ -8,7 +8,7 @@ import { transaction } from '@server/db/database';
 import { productService } from '@server/product/product-service';
 import { Context } from '@server/shared/context';
 import { serialize } from '@server/shared/types/serialize';
-import { ProductsQuery, ProductsSort, ProductType } from '@shared/product';
+import { ProductsQuery, ProductType } from '@shared/product';
 import { NextPageContext } from 'next';
 import { ParsedUrlQuery } from 'querystring';
 
@@ -20,17 +20,10 @@ export async function getServerSideProps(nextCtx: NextPageContext) {
     const gpus = await getGpusForQuery(query, ctx);
     const totalGpus = await getTotalGpus(ctx);
 
-    const relatedProducts = await productService.getRelatedProducts(
-      { type: ProductType.GPU, prioritize: ProductsSort.ReleaseDate },
-      ctx,
-    );
-
     const pageProps = {
       query: JSON.parse(JSON.stringify(query)),
       gpus: JSON.parse(JSON.stringify(gpus)),
       totalGpus,
-
-      relatedProducts: JSON.parse(JSON.stringify(relatedProducts)),
     } as ListGpusPageProps;
 
     return { props: pageProps };

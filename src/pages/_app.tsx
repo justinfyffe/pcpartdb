@@ -1,7 +1,7 @@
 import '../assets/styles/global.css';
 import 'reflect-metadata';
 import { CacheHydration } from '@client/shared/cache';
-import { GonContext } from '@client/shared/gon';
+import { LayoutContext } from '@client/shared/layouts';
 import axios from 'axios';
 import App, { AppContext, AppProps } from 'next/app';
 import Head from 'next/head';
@@ -12,13 +12,13 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
   const { error } = pageProps as any;
 
   return (
-    <GonContext.Provider value={{ fieldCounter: 0 }}>
+    <LayoutContext.Provider value={{ fieldCounter: 0 }}>
       <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <CacheHydration />
       {!error && <Component {...pageProps}></Component>}
-    </GonContext.Provider>
+    </LayoutContext.Provider>
   );
 };
 
