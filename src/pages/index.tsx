@@ -54,17 +54,10 @@ export async function getServerSideProps(_ctx: NextPageContext) {
       (gpu) => gpu != null,
     );
 
-    const relatedProducts = await productService.getRelatedProducts(
-      { type: ProductType.GPU, prioritize: ProductsSort.ReleaseDate },
-      { trx },
-    );
-
     const pageProps: HomePageProps = {
       nvidiaVsAmdGpus: JSON.parse(JSON.stringify(nvidiaVsAmdGpus)),
       nvidiaGpus: JSON.parse(JSON.stringify(nvidiaGpus)),
       amdGpus: JSON.parse(JSON.stringify(amdGpus)),
-
-      relatedProducts: JSON.parse(JSON.stringify(relatedProducts)),
     };
 
     return { props: pageProps };
