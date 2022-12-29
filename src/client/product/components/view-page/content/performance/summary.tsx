@@ -1,10 +1,10 @@
+import { getProductName } from '@client/product';
 import {
   compileContent,
   ContentContext,
   ContentParams,
 } from '@client/shared/content';
 import { getOrdinalNumber } from '@shared/content';
-import { getProductName } from '@shared/product';
 import { formatSpec, SpecDateFormatter } from '@shared/spec';
 import React, { useContext } from 'react';
 import { ViewPageContext } from '../../context';

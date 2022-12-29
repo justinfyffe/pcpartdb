@@ -1,5 +1,6 @@
 Immediate Tasks:
-- Clean up format code
+- Clean up code
+  - move shared/utils to server and client. see product utils as an example
   - replace formatSpec, formatMeta with more specific utils
 - remove reviews code
 - Prep for launch

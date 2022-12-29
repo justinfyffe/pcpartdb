@@ -14,6 +14,7 @@ export interface ButtonProps
   as?: React.ElementType;
 
   variant?: ButtonVariant;
+  ref?: null;
 }
 
 const BUTTON_VARIANTS = {
@@ -25,7 +26,7 @@ const BUTTON_VARIANTS = {
   [ButtonVariant.Toolbar]: 'bg-toolbar text-toolbar shadow-none',
 };
 
-export const Button = forwardRef<HTMLInputElement, ButtonProps>(
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (props, ref) => {
     const { as, href, variant, className, type, ...htmlProps } = props;
 
