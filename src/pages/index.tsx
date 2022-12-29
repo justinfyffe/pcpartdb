@@ -1,14 +1,9 @@
 import { HomePage, HomePageProps } from '@client/home';
 import { transaction } from '@server/db/database';
 import { productService } from '@server/product/product-service';
+import { filterProducts, sortProducts } from '@server/product/product-utils';
 import { serializeAsync } from '@server/shared/types/serialize';
-import {
-  filterProducts,
-  Product,
-  ProductsSort,
-  ProductType,
-  sortProducts,
-} from '@shared/product';
+import { Product, ProductsSort, ProductType } from '@shared/product';
 import { NextPageContext } from 'next';
 
 export async function getServerSideProps(_ctx: NextPageContext) {

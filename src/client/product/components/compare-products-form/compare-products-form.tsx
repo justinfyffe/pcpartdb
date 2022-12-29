@@ -1,7 +1,11 @@
+import {
+  getProductComparisonSlug,
+  getProductDetailsSlug,
+} from '@client/product/product-utils';
 import { ProductCache } from '@client/shared/cache';
 import { Button, ButtonVariant, Form } from '@client/shared/components';
 import { classNames } from '@client/shared/ui';
-import { ProductType } from '@shared/product';
+import { ProductComparison, ProductType } from '@shared/product';
 import { useRouter } from 'next/router';
 import React, {
   FormEvent,
@@ -50,12 +54,10 @@ export const CompareProductsForm: FunctionComponent<
         .map((value) => ProductCache.get(value));
 
       if (products.length === 2) {
-        router.push(
-          `/gpus/compare/${products[0].slug}--vs--${products[1].slug}`,
-        );
+        router.push(getProductComparisonSlug(products as ProductComparison));
         return;
       } else if (products.length === 1) {
-        router.push(`/gpus/view/${products[0].slug}`);
+        router.push(getProductDetailsSlug(products[0]));
         return;
       } else {
         return;

@@ -1,11 +1,9 @@
+import { getProductDetailsSlug, getProductName } from '@client/product';
 import { Card, Img } from '@client/shared/components';
 import { classNames } from '@client/shared/ui';
+import { getViewGpuPath } from '@client/shared/website';
 import { PhotoIcon } from '@heroicons/react/24/outline';
-import {
-  getProductDetailsPath,
-  getProductName,
-  Product,
-} from '@shared/product';
+import { Product } from '@shared/product';
 import { formatSpec } from '@shared/spec';
 import React, { FunctionComponent, useMemo } from 'react';
 
@@ -52,7 +50,7 @@ export const ProductFeedItem: FunctionComponent<ProductFeedItemProps> = (
 
   return (
     <a
-      href={getProductDetailsPath(product)}
+      href={getViewGpuPath(getProductDetailsSlug(product))}
       className={classNames(
         'flex-1',
         'mx-4 mb-6',

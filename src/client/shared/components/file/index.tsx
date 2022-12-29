@@ -1,3 +1,4 @@
+import { useLayout } from '@client/shared/layouts';
 import React, {
   ChangeEvent,
   FunctionComponent,
@@ -5,7 +6,6 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { useGon } from '../../gon';
 import { Button, ButtonVariant } from '../button';
 import { TextInput } from '../input';
 
@@ -26,8 +26,8 @@ export const File: FunctionComponent<FileProps> = (props) => {
   const { name, onChange } = props;
   const [file, setFile] = useState(null);
 
-  const gon = useGon();
-  const [fileId] = useState(() => gon.fieldCounter++);
+  const layout = useLayout();
+  const [fileId] = useState(() => layout.fieldCounter++);
 
   const fileRef = useRef<HTMLInputElement>();
   const inputId = `file-upload-${fileId}`;

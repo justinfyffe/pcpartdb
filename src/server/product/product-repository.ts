@@ -2,16 +2,12 @@ import { RepositoryConfig } from '@server/db/repository';
 import { imageRepository } from '@server/images/image-repository';
 import { serialize } from '@server/shared/types/serialize';
 import { Image } from '@shared/image';
-import {
-  filterProducts,
-  ListProductsRequest,
-  ProductType,
-  sortProducts,
-} from '@shared/product';
+import { ListProductsRequest, ProductType } from '@shared/product';
 import { ProductMetas } from '@shared/product-meta';
 import { Specs } from '@shared/spec';
 import { Model, raw, ref } from 'objection';
 import { ProductModel, ProductModelPojo } from './product-model';
+import { filterProducts, sortProducts } from './product-utils';
 
 type ListOptions = ListProductsRequest;
 

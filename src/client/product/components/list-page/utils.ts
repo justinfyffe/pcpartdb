@@ -1,15 +1,16 @@
+import { getListGpusPath } from '@client/shared/website';
 import { ProductsQuery } from '@shared/product';
 import { LIST_PRESETS } from './types';
 
-export function getListUrl(presetOrQuery: ProductsQuery | string) {
+export function getListPath(presetOrQuery: ProductsQuery | string) {
   if (typeof presetOrQuery === 'string') {
-    return `/gpus/list/${presetOrQuery}`;
+    return getListGpusPath(presetOrQuery);
   }
 
   const query = presetOrQuery;
   const preset = getPresetEquivalent(query);
   if (preset != null) {
-    return `/gpus/list/${preset}`;
+    return getListGpusPath(preset);
   }
 
   const params = new URLSearchParams();
@@ -27,7 +28,7 @@ export function getListUrl(presetOrQuery: ProductsQuery | string) {
   }
 
   const q = params.toString();
-  return q ? `/gpus/list/?${q}` : '/gpus/list/';
+  return getListGpusPath(q ? `?${q}` : '');
 }
 
 function getPresetEquivalent(query: ProductsQuery) {

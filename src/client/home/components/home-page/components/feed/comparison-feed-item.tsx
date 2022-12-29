@@ -1,12 +1,9 @@
+import { getProductComparisonSlug, getProductName } from '@client/product';
 import { Card, Img } from '@client/shared/components';
 import { classNames } from '@client/shared/ui';
+import { getCompareGpusPath } from '@client/shared/website';
 import { PhotoIcon } from '@heroicons/react/24/outline';
-import {
-  getProductComparisonPath,
-  getProductName,
-  Product,
-  ProductComparison,
-} from '@shared/product';
+import { Product, ProductComparison } from '@shared/product';
 import { formatSpec } from '@shared/spec';
 import React, { FunctionComponent, useMemo } from 'react';
 
@@ -40,7 +37,7 @@ export const ComparisonFeedItem: FunctionComponent<ComparisonFeedItemProps> = (
 
   return (
     <a
-      href={getProductComparisonPath(products)}
+      href={getCompareGpusPath(getProductComparisonSlug(products))}
       className={classNames(
         'flex-1 mx-4 mb-6 max-w-96 min-w-70',
         props.className,

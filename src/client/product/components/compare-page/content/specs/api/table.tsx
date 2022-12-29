@@ -1,5 +1,5 @@
+import { getProductName } from '@client/product';
 import { Table, TBody, Th, THead, Tr } from '@client/shared/components';
-import { getProductName } from '@shared/product';
 import React, { FunctionComponent, useContext } from 'react';
 import { ComparePageContext } from '../../../context';
 import { SpecRow } from '../../../spec-row';

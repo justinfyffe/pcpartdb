@@ -1,9 +1,10 @@
-import { classNames } from '@client/shared/ui';
 import {
   getProductComparisonName,
-  getProductComparisonPath,
-  ProductComparison,
-} from '@shared/product';
+  getProductComparisonSlug,
+} from '@client/product';
+import { classNames } from '@client/shared/ui';
+import { getCompareGpusPath } from '@client/shared/website';
+import { ProductComparison } from '@shared/product';
 import React, { FunctionComponent } from 'react';
 import { SidenavSection, SidenavSectionTitle } from '../sidenav';
 
@@ -43,7 +44,7 @@ const ComparisonListing: FunctionComponent<ComparisonListingProps> = (
 
   return (
     <a
-      href={getProductComparisonPath(comparison)}
+      href={getCompareGpusPath(getProductComparisonSlug(comparison))}
       className="flex items-center gap-3 px-3 py-3 border-px rounded text-sm"
     >
       <div className="flex-1">{getProductComparisonName(comparison)}</div>

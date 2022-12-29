@@ -1,5 +1,5 @@
+import { getProductName } from '@client/product';
 import { compileContent, ContentContext } from '@client/shared/content';
-import { getProductName } from '@shared/product';
 import React, { useContext } from 'react';
 import { ComparePageContext } from '../../context';
 

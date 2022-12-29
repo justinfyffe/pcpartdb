@@ -1,5 +1,6 @@
+import { getProductName } from '@client/product';
 import { Table, TBody, Th, THead, Tr } from '@client/shared/components';
-import { getProductName, Product } from '@shared/product';
+import { Product } from '@shared/product';
 import { formatSpec } from '@shared/spec';
 import React, { FunctionComponent, useCallback, useContext } from 'react';
 import { ViewPageContext } from '../../context';

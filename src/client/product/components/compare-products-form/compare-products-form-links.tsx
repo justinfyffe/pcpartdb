@@ -1,11 +1,12 @@
-import { classNames } from '@client/shared/ui';
 import {
   getProductComparisonName,
-  getProductComparisonPath,
-  getProductDetailsPath,
+  getProductComparisonSlug,
+  getProductDetailsSlug,
   getProductName,
-  RelatedProducts,
-} from '@shared/product';
+} from '@client/product';
+import { classNames } from '@client/shared/ui';
+import { getCompareGpusPath, getViewGpuPath } from '@client/shared/website';
+import { RelatedProducts } from '@shared/product';
 import React, { FunctionComponent } from 'react';
 
 interface CompareProductsFormLinksProps {
@@ -26,7 +27,9 @@ export const CompareProductsFormLinks: FunctionComponent<
         <ul className="flex gap-3">
           {comparisons.map((comparison, i) => (
             <li key={i}>
-              <a href={getProductComparisonPath(comparison)}>
+              <a
+                href={getCompareGpusPath(getProductComparisonSlug(comparison))}
+              >
                 {getProductComparisonName(comparison)}
               </a>
               {i < comparisons.length - 1 && <>,</>}
@@ -39,7 +42,9 @@ export const CompareProductsFormLinks: FunctionComponent<
         <ul className="flex gap-3">
           {gpus.map((gpu, i) => (
             <li key={i}>
-              <a href={getProductDetailsPath(gpu)}>{getProductName(gpu)}</a>
+              <a href={getViewGpuPath(getProductDetailsSlug(gpu))}>
+                {getProductName(gpu)}
+              </a>
               {i < gpus.length - 1 && <>,</>}
             </li>
           ))}

@@ -1,9 +1,7 @@
+import { getProductDetailsSlug, getProductName } from '@client/product';
 import { classNames } from '@client/shared/ui';
-import {
-  getProductDetailsPath,
-  getProductName,
-  Product,
-} from '@shared/product';
+import { getViewGpuPath } from '@client/shared/website';
+import { Product } from '@shared/product';
 import React, { FunctionComponent } from 'react';
 import { SidenavSection, SidenavSectionTitle } from '../sidenav';
 
@@ -41,7 +39,7 @@ const ProductListing: FunctionComponent<ProductListingProps> = (props) => {
 
   return (
     <a
-      href={getProductDetailsPath(product)}
+      href={getViewGpuPath(getProductDetailsSlug(product))}
       className="flex items-center gap-3 px-3 py-3 border-px rounded text-sm"
     >
       <div className="flex-1">{getProductName(product)}</div>

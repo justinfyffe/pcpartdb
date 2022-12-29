@@ -1,9 +1,9 @@
+import { getProductName } from '@client/product';
 import {
   compileContent,
   ContentContext,
   ContentParams,
 } from '@client/shared/content';
-import { getProductName } from '@shared/product';
 import { getShoppingUrl } from '@shared/retail-model';
 import React, { useContext } from 'react';
 import { ComparePageContext } from '../../context';

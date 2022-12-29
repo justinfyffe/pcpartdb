@@ -1,14 +1,4 @@
-export const WEBSITE_NAME = 'PC Parts Database';
-export const WEBSITE_URL = 'https://pcpartsdb.com';
-
-const WEBSITE_KEYWORDS = [
-  WEBSITE_NAME,
-  'PC Hardware',
-  'PC Parts',
-  'Graphics Cards',
-  'Video Cards',
-  'GPUs',
-];
+import { WEBSITE_KEYWORDS, WEBSITE_NAME, WEBSITE_URL } from '@shared/website';
 
 export function getPageTitle(title: string) {
   return `${title} - ${WEBSITE_NAME}`;

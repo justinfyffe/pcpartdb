@@ -1,14 +1,14 @@
+import {
+  getProductComparisonName,
+  getProductComparisonSlug,
+  getProductName,
+} from '@client/product';
 import { useProductCache } from '@client/shared/cache';
 import { Breadcrumb, Breadcrumbs, Button } from '@client/shared/components';
 import { WebsiteLayout } from '@client/shared/layouts';
+import { getCompareGpusPath } from '@client/shared/website';
 import { Sidenav, SidenavComparisons, SidenavProducts } from '@client/sidenav';
-import {
-  getProductComparisonName,
-  getProductComparisonPath,
-  getProductName,
-  ProductComparison,
-  RelatedProducts,
-} from '@shared/product';
+import { ProductComparison, RelatedProducts } from '@shared/product';
 import { getShoppingUrl } from '@shared/retail-model';
 import React from 'react';
 import { CompareProductsForm } from '../compare-products-form';
@@ -52,7 +52,9 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
     getProductName(comparison[1]),
     getProductComparisonName(comparison),
   ];
-  const canonical = getProductComparisonPath(comparison);
+  const canonical = getCompareGpusPath(
+    getProductComparisonSlug(comparison, { ordered: true }),
+  );
 
   return (
     <ComparePageContext.Provider value={context}>

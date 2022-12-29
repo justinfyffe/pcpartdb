@@ -1,6 +1,6 @@
+import { getProductName } from '@client/product';
 import { Table, TBody, Th, THead, Tr } from '@client/shared/components';
 import { formatBenchmark } from '@shared/benchmark';
-import { getProductName } from '@shared/product';
 import { formatProductMeta } from '@shared/product-meta';
 import { getShoppingUrl } from '@shared/retail-model';
 import React, { FunctionComponent, useContext } from 'react';

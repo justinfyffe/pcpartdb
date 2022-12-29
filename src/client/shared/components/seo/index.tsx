@@ -1,4 +1,8 @@
-import { getPageKeywords, getPageTitle, getPageUrl } from '@shared/website';
+import {
+  getPageKeywords,
+  getPageTitle,
+  getPageUrl,
+} from '@client/shared/website';
 import { SeoInputs } from '@shared/website';
 import Head from 'next/head';
 import React, { FunctionComponent } from 'react';

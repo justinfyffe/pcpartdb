@@ -1,5 +1,6 @@
+import { getProductDetailsSlug, getProductName } from '@client/product';
 import { Table, TBody, Td, Th, THead, Tr } from '@client/shared/components';
-import { getProductDetailsPath, getProductName } from '@shared/product';
+import { getViewGpuPath } from '@client/shared/website';
 import { formatProductMeta } from '@shared/product-meta';
 import { formatSpec } from '@shared/spec';
 import { useRouter } from 'next/router';
@@ -33,10 +34,12 @@ export const ListTable: FunctionComponent = () => {
           <Tr
             key={gpu.id}
             className="cursor-pointer hover:bg-slate-100"
-            onClick={() => handleGpuRowClick(getProductDetailsPath(gpu))}
+            onClick={() => handleGpuRowClick(getProductDetailsSlug(gpu))}
           >
             <Td>
-              <a href={getProductDetailsPath(gpu)}>{getProductName(gpu)}</a>
+              <a href={getViewGpuPath(getProductDetailsSlug(gpu))}>
+                {getProductName(gpu)}
+              </a>
             </Td>
             <Td>{formatProductMeta(gpu.metas.performanceRank) || '--'}</Td>
             <Td>{formatProductMeta(gpu.metas.valueRank) || '--'}</Td>

@@ -1,9 +1,9 @@
+import { getProductName } from '@client/product';
 import {
   compileContent,
   ContentContext,
   ContentParams,
 } from '@client/shared/content';
-import { getProductName } from '@shared/product';
 import { formatProductMeta } from '@shared/product-meta';
 import { formatSpec } from '@shared/spec';
 import React, { useContext } from 'react';

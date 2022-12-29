@@ -1,10 +1,5 @@
-import React, {
-  createContext,
-  FunctionComponent,
-  useMemo,
-  useState,
-} from 'react';
-import { useGon } from '../../gon';
+import { useLayout } from '@client/shared/layouts';
+import React, { createContext, FunctionComponent, useMemo } from 'react';
 import { classNames } from '../../ui';
 
 interface FieldState {
@@ -46,10 +41,10 @@ interface FieldErrorProps {
 export const Field: FunctionComponent<FieldProps> = (props) => {
   const Element = props.as || 'div';
 
-  const gon = useGon();
+  const layout = useLayout();
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const fieldId = useMemo(() => gon.fieldCounter++, []);
+  const fieldId = useMemo(() => layout.fieldCounter++, []);
   const context = useMemo(
     () => ({ fieldId: `field-id-${fieldId}` }),
     [fieldId],

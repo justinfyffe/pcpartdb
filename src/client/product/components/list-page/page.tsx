@@ -14,7 +14,7 @@ import {
   ListTitle,
 } from './components';
 import { createListPageContextState, ListPageContext } from './context';
-import { getListUrl } from './utils';
+import { getListPath } from './utils';
 
 export interface ListGpusPageProps {
   query?: ProductsQuery;
@@ -29,7 +29,7 @@ export const ListGpusPage = (props: ListGpusPageProps) => {
 
   const [gpus, setGpus] = useState(props.gpus);
   const [query, setQueryState] = useState(props.query);
-  const [canonical, setCanonical] = useState(() => getListUrl(query));
+  const [canonical, setCanonical] = useState(() => getListPath(query));
 
   const setQuery = useCallback(
     (q: ProductsQuery) => {
@@ -44,7 +44,7 @@ export const ListGpusPage = (props: ListGpusPageProps) => {
       }
       fetchGpus();
 
-      const url = getListUrl(q);
+      const url = getListPath(q);
       router.replace(url, undefined, { shallow: true });
       setCanonical(url);
     },

@@ -1,6 +1,8 @@
+import { getProductDetailsSlug, getProductName } from '@client/product';
 import { useProductCache } from '@client/shared/cache';
 import { Breadcrumb, Breadcrumbs } from '@client/shared/components';
 import { WebsiteLayout } from '@client/shared/layouts';
+import { getViewGpuPath } from '@client/shared/website';
 import { Sidenav, SidenavComparisons, SidenavProducts } from '@client/sidenav';
 import {
   BoltIcon,
@@ -11,12 +13,7 @@ import {
   ShoppingCartIcon,
   StarIcon,
 } from '@heroicons/react/24/outline';
-import {
-  getProductDetailsPath,
-  getProductName,
-  Product,
-  RelatedProducts,
-} from '@shared/product';
+import { Product, RelatedProducts } from '@shared/product';
 import { formatProductMeta } from '@shared/product-meta';
 import { getShoppingUrl } from '@shared/retail-model';
 import { formatSpec } from '@shared/spec';
@@ -70,7 +67,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
   const meta = gpu.metas;
 
   const title = getProductName(gpu);
-  const canonical = getProductDetailsPath(gpu);
+  const canonical = getViewGpuPath(getProductDetailsSlug(gpu));
   const keywords = [getProductName(gpu)];
 
   const highlightMemory = useMemo(() => {
