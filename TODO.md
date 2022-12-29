@@ -9,7 +9,9 @@ Immediate Tasks:
     - Compare page
       - adjust like view page, add links, fetch remaining data
     - List page
-      - filters, functionality
+      - related gpus search
+      - mobile ui
+      - filtered rank
   - Audit
     - Check links, meta tags, canonical tags
     - check legal pages for correct name and email
