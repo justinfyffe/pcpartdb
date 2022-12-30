@@ -3,7 +3,7 @@ import {
   ListGpusPage,
   ListGpusPageProps,
   ListPreset,
-} from '@client/product';
+} from '@client/product/pages';
 import { transaction } from '@server/db/database';
 import { productService } from '@server/product/product-service';
 import { Context } from '@server/shared/context';

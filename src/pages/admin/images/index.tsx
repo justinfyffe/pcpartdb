@@ -1,4 +1,7 @@
-import { AdminListImagesPage, AdminListImagesPageProps } from '@client/admin';
+import {
+  AdminListImagesPage,
+  AdminListImagesPageProps,
+} from '@client/admin/pages';
 import { imageService } from '@server/images/image-service';
 import { SsrContext } from '@server/shared/ssr/context';
 import { staffSsrPageProps } from '@server/shared/ssr/props';

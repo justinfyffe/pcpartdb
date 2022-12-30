@@ -1,4 +1,4 @@
-import { getProductName, getViewGpuSlug } from '@client/product';
+import { getGpuName, getViewGpuSlug } from '@client/product';
 import { classNames } from '@client/shared/ui';
 import { getViewGpuPath } from '@client/shared/website';
 import { Product } from '@shared/product';
@@ -42,7 +42,7 @@ const ProductListing: FunctionComponent<ProductListingProps> = (props) => {
       href={getViewGpuPath(getViewGpuSlug(product))}
       className="flex items-center gap-3 px-3 py-3 border-px rounded text-sm"
     >
-      <div className="flex-1">{getProductName(product)}</div>
+      <div className="flex-1">{getGpuName(product)}</div>
     </a>
   );
 };

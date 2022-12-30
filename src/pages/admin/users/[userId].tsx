@@ -1,4 +1,4 @@
-import { AdminEditUserPage, AdminEditUserPageProps } from '@client/admin';
+import { AdminEditUserPage, AdminEditUserPageProps } from '@client/admin/pages';
 import { SsrContext } from '@server/shared/ssr/context';
 import { staffSsrPageProps } from '@server/shared/ssr/props';
 import { serializeAsync } from '@server/shared/types/serialize';

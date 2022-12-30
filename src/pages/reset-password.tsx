@@ -1,4 +1,4 @@
-import { ResetPasswordPage } from '@client/auth/components';
+import { ResetPasswordPage } from '@client/auth/pages';
 import { SsrContext } from '@server/shared/ssr/context';
 import { guestSsrPageProps } from '@server/shared/ssr/props';
 

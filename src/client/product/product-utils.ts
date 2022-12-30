@@ -4,10 +4,7 @@ interface GetProductNameOptions {
   company?: boolean;
 }
 
-export function getProductName(
-  product: Product,
-  options?: GetProductNameOptions,
-) {
+export function getGpuName(product: Product, options?: GetProductNameOptions) {
   if (product == null) {
     return null;
   }
@@ -31,10 +28,7 @@ export function getGpuComparisonName(
     return null;
   }
 
-  return `${getProductName(product1, options)} vs ${getProductName(
-    product2,
-    options,
-  )}`;
+  return `${getGpuName(product1, options)} vs ${getGpuName(product2, options)}`;
 }
 
 export function getViewGpuSlug(product: Product) {

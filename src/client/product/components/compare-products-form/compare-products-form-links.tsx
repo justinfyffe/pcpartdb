@@ -1,7 +1,7 @@
 import {
   getCompareGpusSlug,
   getGpuComparisonName,
-  getProductName,
+  getGpuName,
   getViewGpuSlug,
 } from '@client/product';
 import { classNames } from '@client/shared/ui';
@@ -41,7 +41,7 @@ export const CompareProductsFormLinks: FunctionComponent<
           {gpus.map((gpu, i) => (
             <li key={i}>
               <a href={getViewGpuPath(getViewGpuSlug(gpu))}>
-                {getProductName(gpu)}
+                {getGpuName(gpu)}
               </a>
               {i < gpus.length - 1 && <>,</>}
             </li>

@@ -1,5 +1,8 @@
-import { CompareGpuPage, CompareGpuPageProps } from '@client/product';
-import { ComparePageContentData } from '@client/product/components/compare-page/types';
+import {
+  CompareGpuPage,
+  CompareGpuPageProps,
+} from '@client/product/pages/compare-gpus';
+import { ComparePageContentData } from '@client/product/pages/compare-gpus/types';
 import { transaction } from '@server/db/database';
 import { productService } from '@server/product/product-service';
 import { Context } from '@server/shared/context';

@@ -1,4 +1,4 @@
-import { AdminNewImagePage } from '@client/admin';
+import { AdminNewImagePage } from '@client/admin/pages';
 import { SsrContext } from '@server/shared/ssr/context';
 import { staffSsrPageProps } from '@server/shared/ssr/props';
 

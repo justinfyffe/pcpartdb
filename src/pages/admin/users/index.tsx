@@ -1,4 +1,7 @@
-import { AdminListUsersPage, AdminListUsersPageProps } from '@client/admin';
+import {
+  AdminListUsersPage,
+  AdminListUsersPageProps,
+} from '@client/admin/pages';
 import { SsrContext } from '@server/shared/ssr/context';
 import { staffSsrPageProps } from '@server/shared/ssr/props';
 import { serializeAsync } from '@server/shared/types/serialize';

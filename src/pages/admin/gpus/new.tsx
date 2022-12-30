@@ -1,4 +1,4 @@
-import { AdminNewGpuPage } from '@client/admin';
+import { AdminNewGpuPage } from '@client/admin/pages';
 import { SsrContext } from '@server/shared/ssr/context';
 import { staffSsrPageProps } from '@server/shared/ssr/props';
 

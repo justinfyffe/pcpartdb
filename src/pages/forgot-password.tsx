@@ -1,4 +1,4 @@
-import { ForgotPasswordPage } from '@client/auth/components';
+import { ForgotPasswordPage } from '@client/auth/pages';
 import { SsrContext } from '@server/shared/ssr/context';
 import { guestSsrPageProps } from '@server/shared/ssr/props';
 

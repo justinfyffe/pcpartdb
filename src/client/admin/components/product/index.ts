@@ -1,7 +1,4 @@
-export * from './edit-gpu-page';
 export * from './gpu-form';
-export * from './list-gpus-page';
-export * from './new-gpu-page';
 export * from './benchmark-field';
 export * from './product-image-field';
 export * from './product-meta-field';
