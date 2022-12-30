@@ -1,6 +1,6 @@
 import {
-  getProductComparisonSlug,
-  getProductDetailsSlug,
+  getCompareGpusSlug,
+  getViewGpuSlug,
 } from '@client/product/product-utils';
 import { ProductCache } from '@client/shared/cache';
 import { Button, ButtonVariant, Form } from '@client/shared/components';
@@ -54,10 +54,10 @@ export const CompareProductsForm: FunctionComponent<
         .map((value) => ProductCache.get(value));
 
       if (products.length === 2) {
-        router.push(getProductComparisonSlug(products as ProductComparison));
+        router.push(getCompareGpusSlug(products as ProductComparison));
         return;
       } else if (products.length === 1) {
-        router.push(getProductDetailsSlug(products[0]));
+        router.push(getViewGpuSlug(products[0]));
         return;
       } else {
         return;

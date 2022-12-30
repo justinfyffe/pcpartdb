@@ -1,6 +1,6 @@
 import {
-  getProductComparisonName,
-  getProductComparisonSlug,
+  getCompareGpusSlug,
+  getGpuComparisonName,
   getProductName,
 } from '@client/product';
 import { useProductCache } from '@client/shared/cache';
@@ -46,14 +46,14 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
   const shoppingUrl1 = getShoppingUrl(gpu1);
   const shoppingUrl2 = getShoppingUrl(gpu2);
 
-  const title = getProductComparisonName(comparison);
+  const title = getGpuComparisonName(comparison);
   const keywords = [
     getProductName(comparison[0]),
     getProductName(comparison[1]),
-    getProductComparisonName(comparison),
+    getGpuComparisonName(comparison),
   ];
   const canonical = getCompareGpusPath(
-    getProductComparisonSlug(comparison, { ordered: true }),
+    getCompareGpusSlug(comparison, { ordered: true }),
   );
 
   return (

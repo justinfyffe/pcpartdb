@@ -1,4 +1,4 @@
-import { getProductDetailsSlug, getProductName } from '@client/product';
+import { getProductName, getViewGpuSlug } from '@client/product';
 import { useProductCache } from '@client/shared/cache';
 import { Breadcrumb, Breadcrumbs } from '@client/shared/components';
 import { WebsiteLayout } from '@client/shared/layouts';
@@ -67,7 +67,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
   const meta = gpu.metas;
 
   const title = getProductName(gpu);
-  const canonical = getViewGpuPath(getProductDetailsSlug(gpu));
+  const canonical = getViewGpuPath(getViewGpuSlug(gpu));
   const keywords = [getProductName(gpu)];
 
   const highlightMemory = useMemo(() => {

@@ -18,13 +18,13 @@ export function getProductName(
   return company != null ? `${company} ${product.name}` : product.name;
 }
 
-interface GetProductComparisonNameOptions {
+interface GetGpuComparisonNameOptions {
   company?: boolean;
 }
 
-export function getProductComparisonName(
+export function getGpuComparisonName(
   comparison: ProductComparison,
-  options?: GetProductComparisonNameOptions,
+  options?: GetGpuComparisonNameOptions,
 ) {
   const [product1, product2] = comparison;
   if (product1 == null || product2 == null) {
@@ -37,7 +37,7 @@ export function getProductComparisonName(
   )}`;
 }
 
-export function getProductDetailsSlug(product: Product) {
+export function getViewGpuSlug(product: Product) {
   return product.slug;
 }
 
@@ -45,7 +45,7 @@ interface GetProductComparisonSlugOptions {
   ordered?: boolean;
 }
 
-export function getProductComparisonSlug(
+export function getCompareGpusSlug(
   comparison: ProductComparison,
   options?: GetProductComparisonSlugOptions,
 ) {

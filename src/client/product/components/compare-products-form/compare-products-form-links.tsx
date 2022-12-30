@@ -1,8 +1,8 @@
 import {
-  getProductComparisonName,
-  getProductComparisonSlug,
-  getProductDetailsSlug,
+  getCompareGpusSlug,
+  getGpuComparisonName,
   getProductName,
+  getViewGpuSlug,
 } from '@client/product';
 import { classNames } from '@client/shared/ui';
 import { getCompareGpusPath, getViewGpuPath } from '@client/shared/website';
@@ -27,10 +27,8 @@ export const CompareProductsFormLinks: FunctionComponent<
         <ul className="flex gap-3">
           {comparisons.map((comparison, i) => (
             <li key={i}>
-              <a
-                href={getCompareGpusPath(getProductComparisonSlug(comparison))}
-              >
-                {getProductComparisonName(comparison)}
+              <a href={getCompareGpusPath(getCompareGpusSlug(comparison))}>
+                {getGpuComparisonName(comparison)}
               </a>
               {i < comparisons.length - 1 && <>,</>}
             </li>
@@ -42,7 +40,7 @@ export const CompareProductsFormLinks: FunctionComponent<
         <ul className="flex gap-3">
           {gpus.map((gpu, i) => (
             <li key={i}>
-              <a href={getViewGpuPath(getProductDetailsSlug(gpu))}>
+              <a href={getViewGpuPath(getViewGpuSlug(gpu))}>
                 {getProductName(gpu)}
               </a>
               {i < gpus.length - 1 && <>,</>}

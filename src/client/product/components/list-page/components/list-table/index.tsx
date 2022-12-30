@@ -1,4 +1,4 @@
-import { getProductDetailsSlug, getProductName } from '@client/product';
+import { getProductName, getViewGpuSlug } from '@client/product';
 import { Table, TBody, Td, Th, THead, Tr } from '@client/shared/components';
 import { getViewGpuPath } from '@client/shared/website';
 import { formatProductMeta } from '@shared/product-meta';
@@ -34,10 +34,10 @@ export const ListTable: FunctionComponent = () => {
           <Tr
             key={gpu.id}
             className="cursor-pointer hover:bg-slate-100"
-            onClick={() => handleGpuRowClick(getProductDetailsSlug(gpu))}
+            onClick={() => handleGpuRowClick(getViewGpuSlug(gpu))}
           >
             <Td>
-              <a href={getViewGpuPath(getProductDetailsSlug(gpu))}>
+              <a href={getViewGpuPath(getViewGpuSlug(gpu))}>
                 {getProductName(gpu)}
               </a>
             </Td>

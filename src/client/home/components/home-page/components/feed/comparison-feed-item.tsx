@@ -1,4 +1,4 @@
-import { getProductComparisonSlug, getProductName } from '@client/product';
+import { getCompareGpusSlug, getProductName } from '@client/product';
 import { Card, Img } from '@client/shared/components';
 import { classNames } from '@client/shared/ui';
 import { getCompareGpusPath } from '@client/shared/website';
@@ -37,7 +37,7 @@ export const ComparisonFeedItem: FunctionComponent<ComparisonFeedItemProps> = (
 
   return (
     <a
-      href={getCompareGpusPath(getProductComparisonSlug(products))}
+      href={getCompareGpusPath(getCompareGpusSlug(products))}
       className={classNames(
         'flex-1 mx-4 mb-6 max-w-96 min-w-70',
         props.className,

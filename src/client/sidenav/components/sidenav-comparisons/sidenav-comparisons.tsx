@@ -1,7 +1,4 @@
-import {
-  getProductComparisonName,
-  getProductComparisonSlug,
-} from '@client/product';
+import { getCompareGpusSlug, getGpuComparisonName } from '@client/product';
 import { classNames } from '@client/shared/ui';
 import { getCompareGpusPath } from '@client/shared/website';
 import { ProductComparison } from '@shared/product';
@@ -44,10 +41,10 @@ const ComparisonListing: FunctionComponent<ComparisonListingProps> = (
 
   return (
     <a
-      href={getCompareGpusPath(getProductComparisonSlug(comparison))}
+      href={getCompareGpusPath(getCompareGpusSlug(comparison))}
       className="flex items-center gap-3 px-3 py-3 border-px rounded text-sm"
     >
-      <div className="flex-1">{getProductComparisonName(comparison)}</div>
+      <div className="flex-1">{getGpuComparisonName(comparison)}</div>
     </a>
   );
 };

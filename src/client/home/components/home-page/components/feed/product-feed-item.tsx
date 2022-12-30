@@ -1,4 +1,4 @@
-import { getProductDetailsSlug, getProductName } from '@client/product';
+import { getProductName, getViewGpuSlug } from '@client/product';
 import { Card, Img } from '@client/shared/components';
 import { classNames } from '@client/shared/ui';
 import { getViewGpuPath } from '@client/shared/website';
@@ -50,7 +50,7 @@ export const ProductFeedItem: FunctionComponent<ProductFeedItemProps> = (
 
   return (
     <a
-      href={getViewGpuPath(getProductDetailsSlug(product))}
+      href={getViewGpuPath(getViewGpuSlug(product))}
       className={classNames(
         'flex-1',
         'mx-4 mb-6',
