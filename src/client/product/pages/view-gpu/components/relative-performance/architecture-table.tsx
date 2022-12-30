@@ -1,5 +1,6 @@
-import { formatSpec, getGpuName } from '@client/product';
+import { formatSpec, getGpuName, getViewGpuSlug } from '@client/product';
 import { Table, TBody, Th, THead, Tr } from '@client/shared/components';
+import { getViewGpuPath } from '@client/shared/website';
 import { Product } from '@shared/product';
 import React, { FunctionComponent, useCallback, useContext } from 'react';
 import { ViewPageContext } from '../../context';
@@ -51,7 +52,13 @@ export const PerformanceArchitectureTable: FunctionComponent<
             return (
               <CustomRow key={i} highlight={product.id === gpu.id}>
                 <CustomRowLabel>
-                  {getGpuName(gpu, { company: false })}
+                  {i === seedIndex ? (
+                    <>{getGpuName(gpu, { company: false })}</>
+                  ) : (
+                    <a href={getViewGpuPath(getViewGpuSlug(gpu))}>
+                      {getGpuName(gpu, { company: false })}
+                    </a>
+                  )}
                 </CustomRowLabel>
                 <CustomRowValue className="text-left">
                   {getRelativePerformance(gpu)}%

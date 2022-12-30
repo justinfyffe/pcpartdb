@@ -7,7 +7,6 @@ import { Button, ButtonVariant, Form } from '@client/shared/components';
 import { classNames } from '@client/shared/ui';
 import { getCompareGpusPath, getViewGpuPath } from '@client/shared/website';
 import { ProductComparison, ProductType } from '@shared/product';
-import { useRouter } from 'next/router';
 import React, {
   FormEvent,
   FunctionComponent,
@@ -28,7 +27,6 @@ export const CompareProductsForm: FunctionComponent<
 > = (props) => {
   const { className } = props;
 
-  const router = useRouter();
   const [values, setValues] = useState(props.values ?? [null, null]);
 
   const filteredValues = useMemo(
@@ -66,7 +64,7 @@ export const CompareProductsForm: FunctionComponent<
         return;
       }
     },
-    [values, router],
+    [values],
   );
 
   return (

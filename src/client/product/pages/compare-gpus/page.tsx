@@ -2,11 +2,10 @@ import {
   getCompareGpusSlug,
   getGpuComparisonName,
   getGpuName,
-  getShoppingUrl,
 } from '@client/product';
-import { CompareProductsForm, ProductImages } from '@client/product/components';
+import { CompareProductsForm } from '@client/product/components';
 import { useProductCache } from '@client/shared/cache';
-import { Breadcrumb, Breadcrumbs, Button } from '@client/shared/components';
+import { Breadcrumb, Breadcrumbs } from '@client/shared/components';
 import { WebsiteLayout } from '@client/shared/layouts';
 import { getCompareGpusPath, getListGpusPath } from '@client/shared/website';
 import { Sidenav, SidenavComparisons, SidenavProducts } from '@client/sidenav';
@@ -37,9 +36,6 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
   const [gpu1, gpu2] = comparison;
 
   const context = createComparePageContextState({ comparison, contentData });
-
-  const shoppingUrl1 = getShoppingUrl(gpu1);
-  const shoppingUrl2 = getShoppingUrl(gpu2);
 
   const title = getGpuComparisonName(comparison);
   const keywords = [

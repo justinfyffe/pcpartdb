@@ -1,5 +1,6 @@
-import { getGpuName } from '@client/product';
+import { getGpuName, getViewGpuSlug } from '@client/product';
 import { Table, TBody, Th, THead, Tr } from '@client/shared/components';
+import { getViewGpuPath } from '@client/shared/website';
 import { Product } from '@shared/product';
 import { formatProductMeta } from '@shared/product-meta';
 import React, {
@@ -82,7 +83,9 @@ export const PerformanceTable: FunctionComponent<PerformanceTableProps> = (
               secondary={gpu.id === secondaryProduct.id}
             >
               <CustomRowLabel>
-                {getGpuName(gpu, { company: false })}
+                <a href={getViewGpuPath(getViewGpuSlug(gpu))}>
+                  {getGpuName(gpu, { company: false })}
+                </a>
               </CustomRowLabel>
               <CustomRowValue className="text-left">
                 {getRelativePerformance(gpu)}%
