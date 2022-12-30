@@ -64,7 +64,7 @@ export const ListGpusPage = (props: ListGpusPageProps) => {
           <Breadcrumb>Graphics Cards</Breadcrumb>
         </Breadcrumbs>
 
-        <section className="flex flex-col gap-8 justify-center">
+        <section className="flex flex-col gap-8 justify-center mb-8">
           <section className={classNames('flex flex-col justify-center gap-4')}>
             <CompareProductsForm values={[null, null]} />
           </section>
@@ -72,21 +72,24 @@ export const ListGpusPage = (props: ListGpusPageProps) => {
           <article className="flex-1 flex flex-col gap-4">
             <div className="flex items-center justify-between">
               <ListTitle />
-              <ListPresetsMenu />
+              <ListPresetsMenu className="md:hidden" />
+              <ListPresetsMenu includeFilters className="hidden md:block" />
             </div>
 
             <section className="flex gap-4 items-start">
               <ListTable />
-              <ListFilters />
-            </section>
-
-            <section>
-              <p className="text-xs">
-                The ranks on this page considers the {totalGpus} GPUs that we
-                track in our database.
-              </p>
+              <aside className="md:hidden border-px">
+                <ListFilters />
+              </aside>
             </section>
           </article>
+        </section>
+
+        <section>
+          <p className="text-xs">
+            The ranks on this page considers the {totalGpus} GPUs that we track
+            in our database.
+          </p>
         </section>
       </ListPageContext.Provider>
     </WebsiteLayout>

@@ -9,7 +9,11 @@ import React, {
 } from 'react';
 import { ListPageContext } from '../../context';
 
-export const ListFilters: FunctionComponent = () => {
+interface ListFiltersProps {
+  className?: string;
+}
+
+export const ListFilters: FunctionComponent<ListFiltersProps> = (props) => {
   const { query, setQuery } = useContext(ListPageContext);
 
   const [companies] = useState(() => new Set<string>(query.filter?.company));
@@ -48,7 +52,12 @@ export const ListFilters: FunctionComponent = () => {
   );
 
   return (
-    <aside className="flex flex-col gap-4 min-w-60 border-px p-2">
+    <div
+      className={classNames(
+        'flex flex-col gap-4 min-w-62 p-2',
+        props.className,
+      )}
+    >
       <div className="flex flex-col gap-2">
         <div className="font-bold">Sort:</div>
         <a
@@ -88,6 +97,6 @@ export const ListFilters: FunctionComponent = () => {
           NVIDIA
         </Checkbox>
       </div>
-    </aside>
+    </div>
   );
 };

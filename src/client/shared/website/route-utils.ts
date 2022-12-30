@@ -3,7 +3,7 @@ export function getHomePath() {
 }
 
 export function getListGpusPath(slug?: string) {
-  return `/gpus/list/${slug}`;
+  return `/gpus/list/${slug ?? ''}`;
 }
 
 export function getViewGpuPath(slug?: string) {

@@ -37,12 +37,15 @@ export const ProductImages: FunctionComponent<ProductImagesProps> = (props) => {
   return (
     <div
       className={classNames(
-        'flex flex-wrap gap-3 mx-auto items-center justify-start w-full',
+        'flex flex-col gap-3 mx-auto items-start justify-start w-full',
         className,
       )}
     >
-      <div className="aspect-square bg-slate-50 flex items-center justify-center rounded w-full">
-        <Img className="h-auto mx-auto w-full" src={images[selected]} />
+      <div className="bg-slate-50 flex items-center justify-center rounded w-full h-70 p-4">
+        <Img
+          className="mx-auto h-auto max-h-full w-auto"
+          src={images[selected]}
+        />
       </div>
 
       <div className="flex flex-wrap w-full gap-4">

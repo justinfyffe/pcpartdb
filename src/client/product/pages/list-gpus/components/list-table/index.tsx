@@ -2,20 +2,11 @@ import { formatSpec, getGpuName, getViewGpuSlug } from '@client/product';
 import { Table, TBody, Td, Th, THead, Tr } from '@client/shared/components';
 import { getViewGpuPath } from '@client/shared/website';
 import { formatProductMeta } from '@shared/product-meta';
-import { useRouter } from 'next/router';
-import React, { FunctionComponent, useCallback, useContext } from 'react';
+import React, { FunctionComponent, useContext } from 'react';
 import { ListPageContext } from '../../context';
 
 export const ListTable: FunctionComponent = () => {
   const { gpus } = useContext(ListPageContext);
-  const router = useRouter();
-
-  const handleGpuRowClick = useCallback(
-    (url: string) => {
-      router.push(url);
-    },
-    [router],
-  );
 
   return (
     <Table border responsive className="flex-1">
@@ -30,15 +21,12 @@ export const ListTable: FunctionComponent = () => {
 
       <TBody>
         {gpus.map((gpu) => (
-          <Tr
-            key={gpu.id}
-            className="cursor-pointer hover:bg-slate-100"
-            onClick={() =>
-              handleGpuRowClick(getViewGpuPath(getViewGpuSlug(gpu)))
-            }
-          >
+          <Tr key={gpu.id}>
             <Td>
-              <a href={getViewGpuPath(getViewGpuSlug(gpu))}>
+              <a
+                href={getViewGpuPath(getViewGpuSlug(gpu))}
+                className="font-semibold"
+              >
                 {getGpuName(gpu)}
               </a>
             </Td>

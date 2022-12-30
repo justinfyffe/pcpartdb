@@ -1,24 +1,17 @@
 Immediate Tasks:
 - Clean up code
   - move shared/utils to server and client. see product utils as an example
-  - replace formatSpec, formatMeta with more specific utils
-- remove reviews code
+  - replace formatSpec, formatMeta with more specific utils, move to client/shared/format
 - Prep for launch
   - Finish UIs
+    - Home page
+      - improve which products are fetched
     - View Page
-      - finish content, add links, fetch remaining data
+      - finish content, improve related products
     - Compare page
-      - adjust like view page, add links, fetch remaining data
-    - List page
-      - related gpus search
-      - mobile ui
-      - filtered rank
+      - finish content, improve related products, fix relative tables bugs
   - Audit
     - Check links, meta tags, canonical tags
-    - check legal pages for correct name and email
-  - Website name + logo
-    - Finalize name and logo (e.g. pc part db vs pc parts db)
-    - Check with matt for name grammar
   - Email
     - Set up email alias
   - Hosting
@@ -26,11 +19,8 @@ Immediate Tasks:
     - Set up domain
     - launch
   - Polishing
-    - Hard load page when calling router.push or router.replace?
-      - probably cannot use next/router
     - remove selected option in compare products form
     - use product and fix bugs
-    - mobile styling
   - Other
     - Analytics
     - Google Search Console 
@@ -39,6 +29,7 @@ Immediate Tasks:
 Post-launch:
 - clean up code
 - List Page
+  - filtered rank
   - infinite scroll
 - View and Compare Page
   - Write summaries for each table/section

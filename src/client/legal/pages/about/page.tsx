@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 import { Breadcrumb, Breadcrumbs } from '@client/shared/components';
 import { WebsiteLayout } from '@client/shared/layouts';
+import { WEBSITE_NAME } from '@shared/website';
 import React from 'react';
 
 interface AboutPageProps {}
@@ -18,11 +19,11 @@ export const AboutPage = (_props: AboutPageProps) => {
       </Breadcrumbs>
 
       <article>
-        <h1 className="font-semibold mb-4">About PC Parts DB</h1>
+        <h1 className="font-semibold mb-4">About {WEBSITE_NAME}</h1>
 
         <section>
           <p>
-            PC Parts DB was created to provide a better experience for anyone
+            {WEBSITE_NAME} was created to provide a better experience for anyone
             researching PC hardware. Our website&apos;s tools and comprehensive
             database of parts will help you make an informed choice of which
             part you should add to your PC build.
@@ -38,12 +39,12 @@ export const AboutPage = (_props: AboutPageProps) => {
 
         <section>
           <h2 className="font-semibold">For advertising inquiries</h2>
-          <p>advertise@pcpartsdb.com</p>
+          <p>advertise@pcpartdb.com</p>
         </section>
 
         <section>
           <h2 className="font-semibold">For other inquiries</h2>
-          <p>hello@pcpartsdb.com</p>
+          <p>hello@pcpartdb.com</p>
         </section>
 
         <section>

@@ -16,23 +16,23 @@ const TitleSentence1 = compileContent(
     filters: [ProductsSort.PerformanceRating],
     deps: ['company'],
     component: (props: ContentParams) => (
-      <>Best {props.company} Graphics Cards by Performance</>
+      <>Best {props.company} graphics cards by performance</>
     ),
   },
   {
     filters: [ProductsSort.ValueRating],
     deps: ['company'],
     component: (props: ContentParams) => (
-      <>Best {props.company} Graphics Cards by Value</>
+      <>Best {props.company} graphics cards by value</>
     ),
   },
   {
     filters: [ProductsSort.PerformanceRating],
-    component: () => <>Best Graphics Cards by Performance</>,
+    component: () => <>Best graphics cards by performance</>,
   },
   {
     filters: [ProductsSort.ValueRating],
-    component: () => <>Best Graphics Cards by Value</>,
+    component: () => <>Best graphics cards by value</>,
   },
 );
 

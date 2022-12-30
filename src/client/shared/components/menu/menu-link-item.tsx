@@ -7,7 +7,7 @@ export interface MenuItemProps {
   className?: string;
 }
 
-export const MenuItem: FunctionComponent<MenuItemProps> = (props) => {
+export const MenuLinkItem: FunctionComponent<MenuItemProps> = (props) => {
   const { href, children, className } = props;
 
   return (
