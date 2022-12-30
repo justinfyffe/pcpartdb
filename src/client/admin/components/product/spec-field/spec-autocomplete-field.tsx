@@ -52,13 +52,7 @@ export const SpecAutocompleteField = forwardRef<
       ref={ref}
     >
       {results.map((result) => (
-        <AutocompleteOption
-          key={result}
-          label={result}
-          value={result}
-          className="hover:bg-[#fafafa]"
-          hoveredClassName="bg-[#fafafa]"
-        >
+        <AutocompleteOption key={result} label={result} value={result}>
           {result}
         </AutocompleteOption>
       ))}

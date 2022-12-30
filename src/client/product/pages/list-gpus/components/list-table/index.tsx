@@ -1,8 +1,7 @@
-import { getGpuName, getViewGpuSlug } from '@client/product';
+import { formatSpec, getGpuName, getViewGpuSlug } from '@client/product';
 import { Table, TBody, Td, Th, THead, Tr } from '@client/shared/components';
 import { getViewGpuPath } from '@client/shared/website';
 import { formatProductMeta } from '@shared/product-meta';
-import { formatSpec } from '@shared/spec';
 import { useRouter } from 'next/router';
 import React, { FunctionComponent, useCallback, useContext } from 'react';
 import { ListPageContext } from '../../context';
@@ -34,7 +33,9 @@ export const ListTable: FunctionComponent = () => {
           <Tr
             key={gpu.id}
             className="cursor-pointer hover:bg-slate-100"
-            onClick={() => handleGpuRowClick(getViewGpuSlug(gpu))}
+            onClick={() =>
+              handleGpuRowClick(getViewGpuPath(getViewGpuSlug(gpu)))
+            }
           >
             <Td>
               <a href={getViewGpuPath(getViewGpuSlug(gpu))}>

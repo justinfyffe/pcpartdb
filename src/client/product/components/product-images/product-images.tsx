@@ -1,8 +1,7 @@
-import { getImageUrl } from '@client/image';
+import { getCompanyLogoImagePath, getImagePath } from '@client/image';
 import { Img } from '@client/shared/components';
 import { classNames } from '@client/shared/ui';
 import { Product } from '@shared/product';
-import { getCompanyLogoImage } from '@shared/product-image';
 import React, { FunctionComponent, useMemo, useState } from 'react';
 import { ProductImageOption } from './product-image-option';
 
@@ -19,10 +18,10 @@ export const ProductImages: FunctionComponent<ProductImagesProps> = (props) => {
 
   const images = useMemo(() => {
     const productImages = product.images?.details ?? [];
-    const companyImage = getCompanyLogoImage(product);
+    const companyImage = getCompanyLogoImagePath(product);
     const images = productImages
       .filter((image) => image.image != null)
-      .map((image) => getImageUrl(image.image));
+      .map((image) => getImagePath(image.image));
 
     if (companyImage != null) {
       images.push(companyImage);

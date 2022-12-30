@@ -2,7 +2,7 @@ import {
   LIST_PRESETS,
   ListGpusPage,
   ListGpusPageProps,
-  ListPreset,
+  ListPresetSlug,
 } from '@client/product/pages';
 import { transaction } from '@server/db/database';
 import { productService } from '@server/product/product-service';
@@ -34,7 +34,7 @@ function getQuery(query: ParsedUrlQuery) {
   const company = (query.company as string)?.split(',');
   const sort = query.sort as string;
   const order = query.order as string;
-  const preset = query.preset as ListPreset;
+  const preset = query.preset as ListPresetSlug;
 
   if (preset != null && LIST_PRESETS[preset] != null) {
     return LIST_PRESETS[preset];

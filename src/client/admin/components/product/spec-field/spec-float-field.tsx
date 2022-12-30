@@ -2,11 +2,7 @@ import { NumberInput } from '@client/shared/components';
 import { Spec, SpecKey } from '@shared/spec';
 import React, { forwardRef, useCallback, useMemo, useState } from 'react';
 
-const PREFIXES: { [key: string]: string[] } = {
-  launchPrice: ['$'],
-};
-
-const SUFFIXES: Record<string, string[]> = {
+const UNITS: Record<string, string[]> = {
   processSize: ['nm', 'μm'],
   transistors: ['million'],
   length: ['mm'],
@@ -19,6 +15,7 @@ const SUFFIXES: Record<string, string[]> = {
   coreClockSpeedBoost: ['MHz', 'GHz'],
   l1Cache: ['KB', 'MB'],
   l2Cache: ['MB', 'KB'],
+  launchPrice: ['USD'],
   pixelFillRate: ['GPixel/s'],
   textureFillRate: ['GTexel/s'],
   fp32Performance: ['TFLOPS', 'GFLOPS'],
@@ -40,25 +37,16 @@ export const SpecFloatField = forwardRef<HTMLInputElement, SpecFloatFieldProps>(
   (props, ref) => {
     const { field, value, onChange } = props;
 
-    const prefixes = useMemo(() => PREFIXES[field] ?? [], [field]);
-    const suffixes = useMemo(() => SUFFIXES[field] ?? [], [field]);
-    const prefix = useMemo(() => {
-      return prefixes.includes(value?.metadata?.prefix)
-        ? value?.metadata?.prefix
-        : prefixes[0] ?? null;
-    }, [prefixes, value]);
+    const units = useMemo(() => UNITS[field] ?? [], [field]);
 
-    const suffix = useMemo(() => {
-      return suffixes.includes(value?.metadata?.suffix)
-        ? value?.metadata?.suffix
-        : suffixes[0] ?? null;
-    }, [suffixes, value]);
+    const unit = useMemo(() => {
+      return units.includes(value?.metadata?.unit)
+        ? value?.metadata?.unit
+        : units[0] ?? null;
+    }, [units, value]);
 
-    const [prefixIndex, setPrefixIndex] = useState(() =>
-      prefixes.length > 0 && prefix != null ? prefixes.indexOf(prefix) : 0,
-    );
-    const [suffixIndex, setSuffixIndex] = useState(() =>
-      suffixes.length > 0 && suffix != null ? suffixes.indexOf(suffix) : 0,
+    const [unitIndex, setUnitIndex] = useState(() =>
+      units.length > 0 && unit != null ? units.indexOf(unit) : 0,
     );
 
     const baseValue = value?.value ?? null;
@@ -67,43 +55,30 @@ export const SpecFloatField = forwardRef<HTMLInputElement, SpecFloatFieldProps>(
       (value: number) => {
         onChange?.(
           value != null
-            ? { value, metadata: { specKey: field, prefix, suffix } }
+            ? { value, metadata: { specKey: field, unit: unit } }
             : null,
         );
       },
-      [field, prefix, suffix, onChange],
+      [field, unit, onChange],
     );
 
-    const handlePrefixClick = useCallback(() => {
-      const newIndex = prefixIndex < prefixes.length - 1 ? prefixIndex + 1 : 0;
-      setPrefixIndex(newIndex);
+    const handleUnitClick = useCallback(() => {
+      const newIndex = unitIndex < units.length - 1 ? unitIndex + 1 : 0;
+      setUnitIndex(newIndex);
       const newValue: Spec<number> = {
         value: baseValue,
-        metadata: { specKey: field, prefix: prefixes[prefixIndex] },
+        metadata: { specKey: field, unit: units[unitIndex] },
       };
 
       onChange?.(newValue);
-    }, [baseValue, field, prefixes, prefixIndex, onChange]);
-
-    const handleSuffixClick = useCallback(() => {
-      const newIndex = suffixIndex < suffixes.length - 1 ? suffixIndex + 1 : 0;
-      setSuffixIndex(newIndex);
-      const newValue: Spec<number> = {
-        value: baseValue,
-        metadata: { specKey: field, suffix: suffixes[suffixIndex] },
-      };
-
-      onChange?.(newValue);
-    }, [baseValue, field, suffixes, suffixIndex, onChange]);
+    }, [baseValue, field, units, unitIndex, onChange]);
 
     return (
       <NumberInput
         value={baseValue}
-        prefix={prefix}
-        suffix={suffix}
+        suffix={unit}
         onChange={handleChange}
-        onPrefixClick={handlePrefixClick}
-        onSuffixClick={handleSuffixClick}
+        onSuffixClick={handleUnitClick}
         ref={ref}
       />
     );

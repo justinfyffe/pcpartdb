@@ -11,7 +11,6 @@ export async function up(knex: Knex): Promise<void> {
     table.jsonb('specs');
     table.jsonb('metas');
     table.jsonb('benchmarks');
-    table.jsonb('reviews');
     table.jsonb('images');
 
     table.timestamps(true, true);

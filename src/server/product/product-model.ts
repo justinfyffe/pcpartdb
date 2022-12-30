@@ -3,7 +3,6 @@ import { Benchmarks } from '@shared/benchmark';
 import { Product, ProductType } from '@shared/product';
 import { ProductImages } from '@shared/product-image';
 import { ProductMetas } from '@shared/product-meta';
-import { Reviews } from '@shared/review';
 import { Specs } from '@shared/spec';
 import { Model, PartialModelObject } from 'objection';
 
@@ -20,7 +19,6 @@ export class ProductModel extends Model implements Serializable<Product> {
   // Relations
   specs?: Specs;
   benchmarks?: Benchmarks;
-  reviews?: Reviews;
   metas?: ProductMetas;
   images?: ProductImages;
 
@@ -32,7 +30,6 @@ export class ProductModel extends Model implements Serializable<Product> {
       name: this.name,
       specs: this.specs ?? {},
       benchmarks: this.benchmarks ?? {},
-      reviews: this.reviews ?? {},
       metas: this.metas ?? {},
       images: this.images ?? {},
     };

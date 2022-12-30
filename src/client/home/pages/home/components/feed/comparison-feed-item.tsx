@@ -1,10 +1,9 @@
-import { getCompareGpusSlug, getGpuName } from '@client/product';
+import { formatSpec, getCompareGpusSlug, getGpuName } from '@client/product';
 import { Card, Img } from '@client/shared/components';
 import { classNames } from '@client/shared/ui';
 import { getCompareGpusPath } from '@client/shared/website';
 import { PhotoIcon } from '@heroicons/react/24/outline';
 import { Product, ProductComparison } from '@shared/product';
-import { formatSpec } from '@shared/spec';
 import React, { FunctionComponent, useMemo } from 'react';
 
 interface ComparisonFeedItemProps {

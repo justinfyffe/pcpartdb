@@ -1,21 +1,12 @@
+import { getCompanyLogoImagePath } from '@client/image';
 import { useProductCache } from '@client/shared/cache';
-import {
-  Autocomplete,
-  AutocompleteOption,
-  Img,
-} from '@client/shared/components';
+import { Autocomplete, Img } from '@client/shared/components';
 import { classNames } from '@client/shared/ui';
 import { ChevronDownIcon } from '@heroicons/react/24/outline';
 import { Product, ProductType } from '@shared/product';
-import { getCompanyLogoImage } from '@shared/product-image';
-import React, {
-  forwardRef,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+import React, { forwardRef, useCallback, useEffect, useState } from 'react';
 import { productService } from '../../product-service';
+import { ProductAutocompleteOption } from './product-autocomplete-option';
 
 interface ProductAutocompleteProps {
   productType: ProductType;
@@ -74,7 +65,6 @@ export const ProductAutocomplete = forwardRef<
       );
 
       setResults(filtered);
-
       return filtered.length > 0;
     },
     [type, excludeProductId, setResults],
@@ -82,6 +72,7 @@ export const ProductAutocomplete = forwardRef<
 
   const handleChange = useCallback(
     async (value: string) => {
+      console.log(value);
       if (value == null) {
         setProduct(null);
         onChange?.(null);
@@ -90,21 +81,14 @@ export const ProductAutocomplete = forwardRef<
 
       const productId = Number(value);
       const selectedProduct = productCache.get(productId);
+      console.log(selectedProduct);
       setProduct(selectedProduct);
       onChange?.(productId);
     },
     [productCache, onChange],
   );
 
-  const prefixImage = getCompanyLogoImage(product);
-
-  const resultsImages = useMemo(() => {
-    if (results.length === 0) {
-      return null;
-    }
-
-    return results.map((product) => getCompanyLogoImage(product));
-  }, [results]);
+  const prefixImage = getCompanyLogoImagePath(product);
 
   return (
     <Autocomplete
@@ -119,26 +103,7 @@ export const ProductAutocomplete = forwardRef<
       ref={ref}
     >
       {results.map((result, i) => (
-        <AutocompleteOption
-          key={result.id}
-          label={result.name}
-          value={`${result.id}`}
-          className="hover:bg-[#fafafa]"
-          hoveredClassName="bg-[#fafafa]"
-        >
-          <div className="flex flex-1 items-center gap-4">
-            {resultsImages[i] ? (
-              <Img src={resultsImages[i]} className="h-5" />
-            ) : (
-              <></>
-            )}
-            <span className="flex-1 text-sm">{result.name}</span>
-            <div className="flex flex-col gap-1 items-end text-2xs">
-              <div className="text-[#aaa]">2022</div>
-              <div className="text-[#aaa]">$399.99</div>
-            </div>
-          </div>
-        </AutocompleteOption>
+        <ProductAutocompleteOption key={result.id} index={i} product={result} />
       ))}
     </Autocomplete>
   );

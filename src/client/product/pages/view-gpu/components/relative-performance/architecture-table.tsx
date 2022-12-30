@@ -1,7 +1,6 @@
-import { getGpuName } from '@client/product';
+import { formatSpec, getGpuName } from '@client/product';
 import { Table, TBody, Th, THead, Tr } from '@client/shared/components';
 import { Product } from '@shared/product';
-import { formatSpec } from '@shared/spec';
 import React, { FunctionComponent, useCallback, useContext } from 'react';
 import { ViewPageContext } from '../../context';
 import { CustomRow, CustomRowLabel, CustomRowValue } from '../custom-row';

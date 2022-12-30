@@ -1,7 +1,6 @@
 import { Benchmarks, BenchmarksRequest } from '../benchmark';
 import { ProductImages, ProductImagesRequest } from '../product-image';
 import { ProductMetas, ProductMetasRequest } from '../product-meta';
-import { Reviews, ReviewsRequest } from '../review';
 import { Specs, SpecsRequest } from '../spec';
 
 export enum ProductType {
@@ -19,7 +18,6 @@ export interface Product {
   specs?: Specs;
   metas?: ProductMetas;
   benchmarks?: Benchmarks;
-  reviews?: Reviews;
   images?: ProductImages;
 }
 
@@ -32,7 +30,6 @@ export interface ProductRequest {
   specs: SpecsRequest;
   metas: ProductMetasRequest;
   benchmarks: BenchmarksRequest;
-  reviews: ReviewsRequest;
   images: ProductImagesRequest;
 }
 
@@ -114,5 +111,4 @@ export interface ImportProductResults {
   specs?: Specs;
   metas?: ProductMetas;
   benchmarks?: Benchmarks;
-  reviews?: Reviews;
 }

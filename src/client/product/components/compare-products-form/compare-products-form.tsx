@@ -5,6 +5,7 @@ import {
 import { ProductCache } from '@client/shared/cache';
 import { Button, ButtonVariant, Form } from '@client/shared/components';
 import { classNames } from '@client/shared/ui';
+import { getCompareGpusPath, getViewGpuPath } from '@client/shared/website';
 import { ProductComparison, ProductType } from '@shared/product';
 import { useRouter } from 'next/router';
 import React, {
@@ -54,10 +55,12 @@ export const CompareProductsForm: FunctionComponent<
         .map((value) => ProductCache.get(value));
 
       if (products.length === 2) {
-        router.push(getCompareGpusSlug(products as ProductComparison));
+        router.push(
+          getCompareGpusPath(getCompareGpusSlug(products as ProductComparison)),
+        );
         return;
       } else if (products.length === 1) {
-        router.push(getViewGpuSlug(products[0]));
+        router.push(getViewGpuPath(getViewGpuSlug(products[0])));
         return;
       } else {
         return;

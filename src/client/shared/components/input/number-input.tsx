@@ -1,6 +1,12 @@
 import React, { forwardRef, useCallback, WheelEvent } from 'react';
 import { Input, InputProps } from './input';
 
+export interface NumberInputProps
+  extends Omit<InputProps, 'type' | 'value' | 'onChange'> {
+  value?: number;
+  onChange?: (value: number) => void;
+}
+
 export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
   (props, ref) => {
     const { value, onChange, ...restProps } = props;
@@ -29,9 +35,3 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
   },
 );
 NumberInput.displayName = 'NumberInput';
-
-export interface NumberInputProps
-  extends Omit<InputProps, 'type' | 'value' | 'onChange'> {
-  value?: number;
-  onChange?: (value: number) => void;
-}

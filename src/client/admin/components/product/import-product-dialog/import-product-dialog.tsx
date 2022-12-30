@@ -123,8 +123,6 @@ export const ImportProductDialog: FunctionComponent<
                 <ImportSpec spec="openClVersion" />
                 <ImportSpec spec="openGlVersion" />
                 <ImportSpec spec="shaderModelVersion" />
-                <ImportSpec spec="gSyncFreeSyncSupport" />
-                <ImportSpec spec="sliCrossfireSupport" />
               </TBody>
             </Table>
           </div>

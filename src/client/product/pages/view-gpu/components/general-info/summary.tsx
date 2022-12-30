@@ -1,11 +1,10 @@
-import { getGpuName } from '@client/product';
+import { formatSpec, getGpuName } from '@client/product';
 import {
   compileContent,
   ContentContext,
   ContentParams,
 } from '@client/shared/content';
 import { formatProductMeta } from '@shared/product-meta';
-import { formatSpec } from '@shared/spec';
 import React, { useContext } from 'react';
 import { ViewPageContext } from '../../context';
 
@@ -62,10 +61,10 @@ export const GeneralInfoSummary = () => {
     launchWindow: formatSpec(specs.releaseDate),
     msrp: formatSpec(specs.launchPrice),
     performanceRank: formatProductMeta(metas.performanceRank, {
-      ordinalSuffix: true,
+      ordinalNumber: true,
     }),
     valueRank: formatProductMeta(metas.valueRank, {
-      ordinalSuffix: true,
+      ordinalNumber: true,
     }),
     totalRatedGpus,
   };

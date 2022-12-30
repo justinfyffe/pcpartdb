@@ -1,6 +1,6 @@
 import { ProductsQuery, ProductsSort } from '@shared/product';
 
-export enum ListPreset {
+export enum ListPresetSlug {
   BestPerformance = 'best-performance',
   BestPerformanceAmd = 'best-performance-amd',
   BestPerformanceNvidia = 'best-performance-nvidia',
@@ -9,28 +9,28 @@ export enum ListPreset {
   BestValueNvidia = 'best-value-nvidia',
 }
 
-export const LIST_PRESETS: Record<ListPreset, ProductsQuery> = {
-  [ListPreset.BestPerformance]: {
+export const LIST_PRESETS: Record<ListPresetSlug, ProductsQuery> = {
+  [ListPresetSlug.BestPerformance]: {
     filter: {},
     orderBy: { sort: ProductsSort.PerformanceRating },
   },
-  [ListPreset.BestPerformanceAmd]: {
+  [ListPresetSlug.BestPerformanceAmd]: {
     filter: { company: ['amd'] },
     orderBy: { sort: ProductsSort.PerformanceRating },
   },
-  [ListPreset.BestPerformanceNvidia]: {
+  [ListPresetSlug.BestPerformanceNvidia]: {
     filter: { company: ['nvidia'] },
     orderBy: { sort: ProductsSort.PerformanceRating },
   },
-  [ListPreset.BestValue]: {
+  [ListPresetSlug.BestValue]: {
     filter: {},
     orderBy: { sort: ProductsSort.ValueRating },
   },
-  [ListPreset.BestValueAmd]: {
+  [ListPresetSlug.BestValueAmd]: {
     filter: { company: ['amd'] },
     orderBy: { sort: ProductsSort.ValueRating },
   },
-  [ListPreset.BestValueNvidia]: {
+  [ListPresetSlug.BestValueNvidia]: {
     filter: { company: ['nvidia'] },
     orderBy: { sort: ProductsSort.ValueRating },
   },

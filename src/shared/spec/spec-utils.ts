@@ -1,16 +1,9 @@
-import { Product } from '@shared/product';
 import Big from 'big.js';
-import { format, parse } from 'date-fns';
-import { MarketSegmentValue, Spec } from './spec-types';
+import { Spec } from './spec-types';
 
 export enum SpecBooleanFormatter {
   TrueFalse = 'TRUE_FALSE',
   YesNo = 'YES_NO',
-}
-
-export enum SpecDateFormatter {
-  QuarterYear = 'QQQ yyyy',
-  Year = 'yyyy',
 }
 
 export enum ClockSpeedUnit {
@@ -41,6 +34,7 @@ export enum PixelFillRateUnit {
 export enum TextureFillRate {
   GTexelps = 'GTexel/s',
 }
+
 const clockSpeedMultiplier: Record<ClockSpeedUnit, number> = {
   [ClockSpeedUnit.KHz]: 1_000,
   [ClockSpeedUnit.MHz]: 1_000_000,
@@ -71,30 +65,30 @@ const textureFillRate: Record<TextureFillRate, number> = {
 function specValueMultiplier(spec: Spec) {
   const { metadata } = spec;
 
-  if (metadata?.suffix == null) {
+  if (metadata?.unit == null) {
     return 1;
   }
 
-  const { suffix } = metadata;
+  const { unit } = metadata;
 
-  switch (suffix) {
+  switch (unit) {
     case ClockSpeedUnit.KHz:
     case ClockSpeedUnit.MHz:
     case ClockSpeedUnit.GHz:
-      return clockSpeedMultiplier[suffix];
+      return clockSpeedMultiplier[unit];
     case StorageUnit.KB:
     case StorageUnit.MB:
     case StorageUnit.GB:
     case StorageUnit.TB:
-      return storageMultiplier[suffix];
+      return storageMultiplier[unit];
     case BandwidthUnit.Kbps:
     case BandwidthUnit.Mbps:
     case BandwidthUnit.Gbps:
-      return bandwidthMultiplier[suffix];
+      return bandwidthMultiplier[unit];
     case PixelFillRateUnit.GPixelps:
-      return pixelFillRate[suffix];
+      return pixelFillRate[unit];
     case TextureFillRate.GTexelps:
-      return textureFillRate[suffix];
+      return textureFillRate[unit];
     default:
       return 1;
   }
@@ -137,131 +131,4 @@ export function compareSpecs(spec1: Spec, spec2: Spec) {
   }
 
   throw new Error(`Cannot compare specs of type '${typeof spec1.value}'`);
-}
-
-export interface FormatSpecOptions {
-  decimals?: number;
-  booleanFormatter?: SpecBooleanFormatter;
-  dateFormatter?: SpecDateFormatter;
-  prefix?: boolean;
-  suffix?: boolean;
-}
-
-export function formatSpec(spec: Spec, options?: FormatSpecOptions) {
-  if (!hasSpec(spec)) {
-    return null;
-  }
-
-  const { value, metadata } = spec;
-  const specKey = metadata?.specKey;
-
-  // Handle special cases
-  if (specKey === 'slotWidth' && typeof spec.value === 'number') {
-    return `${spec.value}-slot`;
-  }
-  if (specKey === 'marketSegment') {
-    return formatMarketSegment(value as MarketSegmentValue);
-  }
-  if (specKey === 'releaseDate') {
-    return formatDate(
-      value as string,
-      options?.dateFormatter ?? SpecDateFormatter.QuarterYear,
-    );
-  }
-  if (specKey === 'openClVersion' && typeof spec.value === 'number') {
-    return spec.value.toFixed(1);
-  }
-  if (specKey === 'openGlVersion' && typeof spec.value === 'number') {
-    return spec.value.toFixed(1);
-  }
-  if (specKey === 'shaderModelVersion' && typeof spec.value === 'number') {
-    return spec.value.toFixed(1);
-  }
-
-  // Compute string to return
-  let returnValue: string = null;
-  if (typeof value === 'boolean') {
-    returnValue = formatBooleanValue(
-      value,
-      options?.booleanFormatter ?? SpecBooleanFormatter.YesNo,
-    );
-  } else if (typeof value === 'number' && Number.isInteger(value)) {
-    returnValue = value.toLocaleString();
-  } else if (typeof value === 'number' && !Number.isInteger(value)) {
-    returnValue = value.toLocaleString(undefined, {
-      minimumFractionDigits: options?.decimals ?? 0,
-      maximumFractionDigits: options?.decimals ?? 0,
-    });
-  } else if (typeof value === 'string') {
-    returnValue = value;
-  } else {
-    return null;
-  }
-
-  if (returnValue == null) {
-    return null;
-  }
-
-  // Apply modifiers
-  const prefix = metadata?.prefix ?? null;
-  const suffix = metadata?.suffix ?? null;
-
-  if ((options?.prefix ?? true) && prefix != null) {
-    returnValue = `${prefix}${returnValue}`;
-  }
-
-  if ((options?.suffix ?? true) && suffix != null) {
-    returnValue = `${returnValue} ${suffix}`;
-  }
-
-  return returnValue;
-}
-
-function formatBooleanValue(value: boolean, formatter: SpecBooleanFormatter) {
-  if (formatter === SpecBooleanFormatter.TrueFalse) {
-    return value ? 'True' : 'False';
-  } else if (formatter === SpecBooleanFormatter.YesNo) {
-    return value ? 'Yes' : 'No';
-  } else {
-    throw new Error(`Invalid boolean formatter: ${formatter}`);
-  }
-}
-
-function formatMarketSegment(value: MarketSegmentValue) {
-  switch (value) {
-    case MarketSegmentValue.Desktop:
-      return 'Desktop';
-    case MarketSegmentValue.Laptop:
-      return 'Laptop';
-    case MarketSegmentValue.Server:
-      return 'Server';
-    default:
-      throw new Error(`Invalid market segment value: ${value}`);
-  }
-}
-
-function formatDate(value: string, formatter: SpecDateFormatter) {
-  const date = parse(value, 'yyyy-MM-dd', new Date());
-  return format(date, formatter);
-}
-
-export function formatDimensions(product: Product) {
-  const length = formatSpec(product.specs?.length);
-  const height = formatSpec(product.specs?.height);
-  const width = formatSpec(product.specs?.width);
-  const slots = formatSpec(product.specs?.slotWidth);
-
-  if (length == null || width == null) {
-    return null;
-  }
-
-  if (height != null) {
-    return `${length} (L) x ${width} (W) x ${height} (H)`;
-  }
-
-  if (slots != null) {
-    return `${length} (L) x ${width} (W) x ${slots} (H)`;
-  }
-
-  return null;
 }

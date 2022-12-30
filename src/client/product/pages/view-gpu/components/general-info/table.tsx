@@ -1,7 +1,7 @@
+import { getShoppingUrl } from '@client/product';
 import { Table, TBody } from '@client/shared/components';
 import { formatBenchmark } from '@shared/benchmark';
 import { formatProductMeta } from '@shared/product-meta';
-import { getShoppingUrl } from '@shared/retail-model';
 import React, { FunctionComponent, useContext } from 'react';
 import { ViewPageContext } from '../../context';
 import { CustomRow, CustomRowLabel, CustomRowValue } from '../custom-row';

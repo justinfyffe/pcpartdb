@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { formatDimensions, formatFileSize, getImageUrl } from '@client/image';
+import { formatDimensions, formatFileSize, getImagePath } from '@client/image';
 import {
   Alert,
   AlertVariant,
@@ -83,7 +83,7 @@ export const AdminListImagesPage = (props: AdminListImagesPageProps) => {
                       <a href={`/admin/images/${image.id}`}>{image.name}</a>
                     </Td>
                     <Td>
-                      <TextInput value={getImageUrl(image)} disabled />
+                      <TextInput value={getImagePath(image)} disabled />
                     </Td>
                     <Td>{formatFileSize(image.fileSize)}</Td>
                     <Td>{formatDimensions(image.width, image.height)}</Td>

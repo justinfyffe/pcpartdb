@@ -16,7 +16,6 @@ import {
 } from '@shared/product';
 import { productImagesValidator } from '@shared/product-image';
 import { ProductMetas, productMetasValidator } from '@shared/product-meta';
-import { reviewsValidator } from '@shared/review';
 import { Specs, specsValidator } from '@shared/spec';
 import { addPerformanceBenchmarks } from './benchmark-utils';
 import { productRepository } from './product-repository';
@@ -29,7 +28,6 @@ const createProductValidator = Joi.object({
   metas: productMetasValidator,
   specs: specsValidator,
   benchmarks: benchmarksValidator,
-  reviews: reviewsValidator,
   images: productImagesValidator,
 }).options({ abortEarly: false });
 
@@ -41,7 +39,6 @@ const updateProductValidator = Joi.object({
   metas: productMetasValidator,
   specs: specsValidator,
   benchmarks: benchmarksValidator,
-  reviews: reviewsValidator,
   images: productImagesValidator,
 }).options({ abortEarly: false });
 

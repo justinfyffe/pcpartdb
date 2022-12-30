@@ -1,3 +1,3 @@
 export * from './admin';
-export * from './context';
+export * from './layout-context';
 export * from './website';

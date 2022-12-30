@@ -3,7 +3,7 @@ import { ProductMeta, ProductMetaBooleanFormatter } from './product-meta-types';
 export interface FormatMetaOptions {
   decimals?: number;
   booleanFormatter?: ProductMetaBooleanFormatter;
-  ordinalSuffix?: boolean;
+  ordinalNumber?: boolean;
 }
 
 export function formatProductMeta(
@@ -46,7 +46,7 @@ export function formatProductMeta(
   }
 
   // Apply modifiers
-  if (options?.ordinalSuffix && typeof value === 'number') {
+  if (options?.ordinalNumber && typeof value === 'number') {
     const ordinalSuffix = getOrdinalSuffix(value as number);
     returnValue = `${returnValue}${ordinalSuffix}`;
   }

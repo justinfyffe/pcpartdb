@@ -77,8 +77,6 @@ const INPUT_TYPES: Record<string, InputType> = {
   openClVersion: 'float',
   openGlVersion: 'float',
   shaderModelVersion: 'float',
-  gSyncFreeSyncSupport: 'boolean',
-  sliCrossfireSupport: 'boolean',
 };
 
 interface SpecFieldProps {

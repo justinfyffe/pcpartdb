@@ -1,4 +1,4 @@
-import { ComputerDesktopIcon, HeartIcon } from '@heroicons/react/24/solid';
+import { HeartIcon } from '@heroicons/react/24/solid';
 import { SeoInputs, WEBSITE_NAME } from '@shared/website';
 import React, { FunctionComponent } from 'react';
 import {
@@ -28,10 +28,7 @@ export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
     <>
       <Seo seo={props.seo ?? {}} />
       <Toolbar>
-        <ToolbarTitle>
-          <ComputerDesktopIcon className={classNames('h-8 w-8 mt-0.5')} />{' '}
-          {WEBSITE_NAME}
-        </ToolbarTitle>
+        <ToolbarTitle>{WEBSITE_NAME}</ToolbarTitle>
 
         <ToolbarNav>
           <Button href="/gpus" variant={ButtonVariant.Toolbar}>
@@ -78,7 +75,7 @@ export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
           <FooterSectionTitle>Disclaimer &amp; Disclosure</FooterSectionTitle>
 
           <p>
-            PC Parts DB provides specs, benchmarks, and reviews based on various
+            {WEBSITE_NAME} provides specs and benchmarks based on various
             sources. If you discover an error, please{' '}
             <a href="/about" className="text-footer-link">
               contact us
@@ -87,13 +84,13 @@ export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
           </p>
 
           <p>
-            PC Parts DB is a participant of affiliate programs and earns
+            {WEBSITE_NAME} is a participant of affiliate programs and earns
             commission from qualifying purchases.
           </p>
         </FooterSection>
 
         <FooterSection className={classNames('flex-none text-center w-full')}>
-          Copyright &copy; PC Parts DB
+          Copyright &copy; {WEBSITE_NAME}
           <br />
           Made with{' '}
           <HeartIcon className={classNames('inline-block h-4 w-4 mb-0.5')} /> in

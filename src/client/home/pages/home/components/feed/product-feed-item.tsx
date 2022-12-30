@@ -1,10 +1,9 @@
-import { getGpuName, getViewGpuSlug } from '@client/product';
+import { formatSpec, getGpuName, getViewGpuSlug } from '@client/product';
 import { Card, Img } from '@client/shared/components';
 import { classNames } from '@client/shared/ui';
 import { getViewGpuPath } from '@client/shared/website';
 import { PhotoIcon } from '@heroicons/react/24/outline';
 import { Product } from '@shared/product';
-import { formatSpec } from '@shared/spec';
 import React, { FunctionComponent, useMemo } from 'react';
 
 export enum ProductFeedTag {

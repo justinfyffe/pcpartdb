@@ -1,8 +1,10 @@
 import 'reflect-metadata';
 import { CompareProductsForm } from '@client/product/components';
+import { ListPresetSlug } from '@client/product/pages';
 import { WebsiteLayout } from '@client/shared/layouts';
 import { classNames } from '@client/shared/ui';
-import { Product, ProductComparison, ProductsSort } from '@shared/product';
+import { getListGpusPath } from '@client/shared/website';
+import { Product, ProductComparison } from '@shared/product';
 import React from 'react';
 import {
   ComparisonFeedItem,
@@ -26,7 +28,7 @@ export const HomePage = (props: HomePageProps) => {
   const [bestPerformanceNvidia, bestValueNvidia] = nvidiaGpus;
   const [bestPerformanceAmd, bestValueAmd] = amdGpus;
 
-  const title = 'GPU Specifications, Benchmarks, and Comparisons';
+  const title = 'GPU specifications, benchmarks, and comparisons';
   const canonical = '/';
   const keywords: string[] = [];
 
@@ -49,12 +51,11 @@ export const HomePage = (props: HomePageProps) => {
           </FeedItems>
 
           <FeedLinks>
-            <FeedLink href="/gpus">All GPUs</FeedLink>
-            <FeedLink href={`/gpus?sort=${ProductsSort.PerformanceRating}`}>
-              Best Performing GPUs
+            <FeedLink href={getListGpusPath(ListPresetSlug.BestPerformance)}>
+              Best performing GPUs
             </FeedLink>
-            <FeedLink href={`/gpus?sort=${ProductsSort.ValueRating}`}>
-              Best Value GPUs
+            <FeedLink href={getListGpusPath(ListPresetSlug.BestValue)}>
+              Best value GPUs
             </FeedLink>
           </FeedLinks>
         </Feed>
@@ -78,16 +79,13 @@ export const HomePage = (props: HomePageProps) => {
           </FeedItems>
 
           <FeedLinks>
-            <FeedLink href="/gpus?company=nvidia">All NVIDIA GPUs</FeedLink>
             <FeedLink
-              href={`/gpus?company=nvidia&sort=${ProductsSort.PerformanceRating}`}
+              href={getListGpusPath(ListPresetSlug.BestPerformanceNvidia)}
             >
-              Best Performing NVIDIA GPUs
+              Best performing NVIDIA GPUs
             </FeedLink>
-            <FeedLink
-              href={`/gpus?company=nvidia&sort=${ProductsSort.ValueRating}`}
-            >
-              Best Value NVIDIA GPUs
+            <FeedLink href={getListGpusPath(ListPresetSlug.BestValueNvidia)}>
+              Best value NVIDIA GPUs
             </FeedLink>
           </FeedLinks>
         </Feed>
@@ -111,16 +109,11 @@ export const HomePage = (props: HomePageProps) => {
           </FeedItems>
 
           <FeedLinks>
-            <FeedLink href="/gpus?company=amd">All AMD GPUs</FeedLink>
-            <FeedLink
-              href={`/gpus?company=amd&sort=${ProductsSort.PerformanceRating}`}
-            >
-              Best Performing AMD GPUs
+            <FeedLink href={getListGpusPath(ListPresetSlug.BestPerformanceAmd)}>
+              Best performing AMD GPUs
             </FeedLink>
-            <FeedLink
-              href={`/gpus?company=amd&sort=${ProductsSort.ValueRating}`}
-            >
-              Best Value AMD GPUs
+            <FeedLink href={getListGpusPath(ListPresetSlug.BestValueAmd)}>
+              Best value AMD GPUs
             </FeedLink>
           </FeedLinks>
         </Feed>

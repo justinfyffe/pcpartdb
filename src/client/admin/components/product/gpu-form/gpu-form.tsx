@@ -38,7 +38,6 @@ import {
   productMetaValidator,
 } from '@shared/product-meta';
 import { RetailModel } from '@shared/retail-model';
-import { Review, ReviewsRequest, reviewValidator } from '@shared/review';
 import {
   MarketSegmentValue,
   Spec,
@@ -58,7 +57,6 @@ import { BenchmarkField } from '../benchmark-field';
 import { ImportProductDialog } from '../import-product-dialog';
 import { ProductImageField, ProductImagesField } from '../product-image-field';
 import { RetailModelsField } from '../retail-model-field';
-import { ReviewField } from '../review-field';
 import { SlugField } from '../slug-field';
 import { SpecField } from '../spec-field';
 
@@ -116,8 +114,6 @@ interface ProductFormData {
   memoryBandwidth?: Spec<number>;
 
   // API Support
-  gSyncFreeSyncSupport?: Spec<boolean>;
-  sliCrossfireSupport?: Spec<boolean>;
   directXVersion?: Spec<number | string>;
   openClVersion?: Spec<number | string>;
   openGlVersion?: Spec<number | string>;
@@ -127,13 +123,6 @@ interface ProductFormData {
   g2dMarkBenchmark?: Benchmark<number>;
   g3dMarkBenchmark?: Benchmark<number>;
   timeSpyGraphicsBenchmark?: Benchmark<number>;
-
-  // Reviews
-  amazonReview?: Review<number>;
-  pcGamerReview?: Review<number>;
-  techRadarReview?: Review<number>;
-  techSpotReview?: Review<number>;
-  tomsHardwareReview?: Review<number>;
 
   // Images
   autocompleteImage?: ProductImage;
@@ -198,8 +187,6 @@ const productValidator = Joi.object({
   memoryBandwidth: specValidator.allow(null),
 
   // API Support
-  gSyncFreeSyncSupport: specValidator.allow(null),
-  sliCrossfireSupport: specValidator.allow(null),
   directXVersion: specValidator.allow(null),
   openClVersion: specValidator.allow(null),
   openGlVersion: specValidator.allow(null),
@@ -209,13 +196,6 @@ const productValidator = Joi.object({
   g2dMarkBenchmark: benchmarkValidator.allow(null),
   g3dMarkBenchmark: benchmarkValidator.allow(null),
   timeSpyGraphicsBenchmark: benchmarkValidator.allow(null),
-
-  // Reviews
-  amazonReview: reviewValidator.allow(null),
-  pcGamerReview: reviewValidator.allow(null),
-  techRadarReview: reviewValidator.allow(null),
-  techSpotReview: reviewValidator.allow(null),
-  tomsHardwareReview: reviewValidator.allow(null),
 
   // Images
   autocompleteImage: productImageValidator.allow(null),
@@ -234,7 +214,6 @@ function formOptions(gpu?: Product): UseFormProps<ProductFormData> {
   const meta = gpu?.metas || {};
   const specs = gpu?.specs || {};
   const benchmarks = gpu?.benchmarks || {};
-  const reviews = gpu?.reviews || {};
   const images = gpu?.images || {};
 
   return {
@@ -294,8 +273,6 @@ function formOptions(gpu?: Product): UseFormProps<ProductFormData> {
       memoryBandwidth: specs.memoryBandwidth || null,
 
       // API Support
-      gSyncFreeSyncSupport: specs.gSyncFreeSyncSupport || null,
-      sliCrossfireSupport: specs.sliCrossfireSupport || null,
       directXVersion: specs.directXVersion || null,
       openClVersion: specs.openClVersion || null,
       openGlVersion: specs.openGlVersion || null,
@@ -305,13 +282,6 @@ function formOptions(gpu?: Product): UseFormProps<ProductFormData> {
       g2dMarkBenchmark: benchmarks.g2dMark || null,
       g3dMarkBenchmark: benchmarks.g3dMark || null,
       timeSpyGraphicsBenchmark: benchmarks.timeSpyGraphics || null,
-
-      // Reviews
-      amazonReview: reviews.amazon || null,
-      pcGamerReview: reviews.pcGamer || null,
-      techRadarReview: reviews.techRadar || null,
-      techSpotReview: reviews.techSpot || null,
-      tomsHardwareReview: reviews.tomsHardware || null,
 
       // Images
       autocompleteImage: images.autocomplete || null,
@@ -357,7 +327,6 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
         metas: toMetaRequest(formData),
         specs: toSpecsRequest(formData),
         benchmarks: toBenchmarksRequest(formData),
-        reviews: toReviewsRequest(formData),
         images: toRequestImages(formData),
       };
 
@@ -937,28 +906,6 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               )}
             />
           </Field>
-
-          <Field>
-            G-Sync / Free-Sync Support
-            <Controller
-              name="gSyncFreeSyncSupport"
-              control={control}
-              render={({ field }) => (
-                <SpecField field="gSyncFreeSyncSupport" {...field} ref={null} />
-              )}
-            />
-          </Field>
-
-          <Field>
-            SLI / Crossfire Support
-            <Controller
-              name="sliCrossfireSupport"
-              control={control}
-              render={({ field }) => (
-                <SpecField field="sliCrossfireSupport" {...field} ref={null} />
-              )}
-            />
-          </Field>
         </section>
       </section>
 
@@ -986,50 +933,6 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           control={control}
           render={({ field }) => (
             <BenchmarkField field="timeSpyGraphics" {...field} ref={null} />
-          )}
-        />
-      </section>
-
-      <section>
-        <h2 className="mb-4">Reviews</h2>
-
-        <Controller
-          name="amazonReview"
-          control={control}
-          render={({ field }) => (
-            <ReviewField field="amazon" {...field} ref={null} />
-          )}
-        />
-
-        <Controller
-          name="pcGamerReview"
-          control={control}
-          render={({ field }) => (
-            <ReviewField field="pcGamer" {...field} ref={null} />
-          )}
-        />
-
-        <Controller
-          name="techRadarReview"
-          control={control}
-          render={({ field }) => (
-            <ReviewField field="techRadar" {...field} ref={null} />
-          )}
-        />
-
-        <Controller
-          name="techSpotReview"
-          control={control}
-          render={({ field }) => (
-            <ReviewField field="techSpot" {...field} ref={null} />
-          )}
-        />
-
-        <Controller
-          name="tomsHardwareReview"
-          control={control}
-          render={({ field }) => (
-            <ReviewField field="tomsHardware" {...field} ref={null} />
           )}
         />
       </section>
@@ -1158,8 +1061,6 @@ function toSpecsRequest(formData: ProductFormData): SpecsRequest {
     memoryBandwidth: formData.memoryBandwidth || null,
 
     // API Support
-    gSyncFreeSyncSupport: formData.gSyncFreeSyncSupport || null,
-    sliCrossfireSupport: formData.sliCrossfireSupport || null,
     directXVersion: formData.directXVersion || null,
     openClVersion: formData.openClVersion || null,
     openGlVersion: formData.openGlVersion || null,
@@ -1172,16 +1073,6 @@ function toBenchmarksRequest(formData: ProductFormData): BenchmarksRequest {
     g2dMark: formData.g2dMarkBenchmark || null,
     g3dMark: formData.g3dMarkBenchmark || null,
     timeSpyGraphics: formData.timeSpyGraphicsBenchmark || null,
-  };
-}
-
-function toReviewsRequest(formData: ProductFormData): ReviewsRequest {
-  return {
-    amazon: formData.amazonReview || null,
-    pcGamer: formData.pcGamerReview || null,
-    techRadar: formData.techRadarReview || null,
-    techSpot: formData.techSpotReview || null,
-    tomsHardware: formData.tomsHardwareReview || null,
   };
 }
 

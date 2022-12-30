@@ -22,7 +22,7 @@ export async function importFromTechPowerUp(url: string) {
     height: getNumberValue($, 'Height'),
     l1Cache: getNumberValue($, 'L1 Cache'),
     l2Cache: getNumberValue($, 'L2 Cache'),
-    launchPrice: getDollarValue($, 'Launch Price'),
+    launchPrice: getNumberValue($, 'Launch Price'),
     length: getNumberValue($, 'Length'),
     memoryBandwidth: getNumberValue($, 'Bandwidth'),
     memoryClock: getNumberValue($, 'Memory Clock'),
@@ -82,16 +82,6 @@ function getDateValue($: cheerio.CheerioAPI, label: string): Spec<string> {
   }
 }
 
-function getDollarValue($: cheerio.CheerioAPI, label: string): Spec<number> {
-  const numberValue = getNumberValue($, label);
-  const prefix = numberValue.metadata?.suffix === 'USD' ? '$' : null;
-
-  return {
-    value: numberValue.value,
-    metadata: { prefix },
-  };
-}
-
 function getSlotWidthValue($: cheerio.CheerioAPI, label: string): Spec<number> {
   const stringValue = getStringValue($, label)?.value;
 
@@ -128,11 +118,11 @@ function getStringValue($: cheerio.CheerioAPI, label: string): Spec<string> {
 function getNumberValue($: cheerio.CheerioAPI, label: string): Spec<number> {
   const values = getSpecValues($, label);
   const value = values[0];
-  const [base, suffix] = parseNumberValue(value || null);
+  const [base, unit] = parseNumberValue(value || null);
 
   return {
     value: base,
-    metadata: { suffix },
+    metadata: { unit },
   };
 }
 
@@ -159,7 +149,7 @@ function parseNumberValue(value: string): [number, string] {
     return [null, null];
   }
 
-  const [base, suffix] = value.split(' ');
+  const [base, unit] = value.split(' ');
   const sanitizedBase = Number(base.replace(',', ''));
-  return [sanitizedBase, suffix || null];
+  return [sanitizedBase, unit || null];
 }

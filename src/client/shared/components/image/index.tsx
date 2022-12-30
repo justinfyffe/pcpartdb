@@ -1,4 +1,4 @@
-import { getImageUrl } from '@client/image';
+import { getImagePath } from '@client/image';
 import { Image } from '@shared/image';
 import React, { FunctionComponent, HTMLProps } from 'react';
 import { classNames } from '../../ui';
@@ -12,7 +12,7 @@ export interface ImgProps
 export const Img: FunctionComponent<ImgProps> = (props) => {
   const { src, className, ...htmlProps } = props;
 
-  const url = typeof src === 'string' ? src : getImageUrl(src);
+  const url = typeof src === 'string' ? src : getImagePath(src);
 
   return (
     <img

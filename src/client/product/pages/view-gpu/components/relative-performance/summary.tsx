@@ -1,11 +1,10 @@
-import { getGpuName } from '@client/product';
+import { formatSpec, getGpuName } from '@client/product';
 import {
   compileContent,
   ContentContext,
   ContentParams,
 } from '@client/shared/content';
-import { getOrdinalNumber } from '@client/shared/format';
-import { formatSpec, SpecDateFormatter } from '@shared/spec';
+import { DateFormatter, formatOrdinalNumber } from '@client/shared/format';
 import React, { useContext } from 'react';
 import { ViewPageContext } from '../../context';
 
@@ -38,7 +37,7 @@ export const PerformanceSummary = () => {
     company: formatSpec(product.specs?.company),
     architecture: formatSpec(product.specs?.architecture),
     launchYear: formatSpec(product.specs?.releaseDate, {
-      dateFormatter: SpecDateFormatter.Year,
+      dateFormatter: DateFormatter.Year,
     }),
   };
 

@@ -1,10 +1,10 @@
 import { Product, ProductComparison } from '@shared/product';
 
-interface GetProductNameOptions {
+interface GetGpuNameOptions {
   company?: boolean;
 }
 
-export function getGpuName(product: Product, options?: GetProductNameOptions) {
+export function getGpuName(product: Product, options?: GetGpuNameOptions) {
   if (product == null) {
     return null;
   }
@@ -48,4 +48,8 @@ export function getCompareGpusSlug(
       ? [...comparison].sort((p1, p2) => p1.id - p2.id)
       : comparison;
   return `${product1.slug}--vs--${product2.slug}`;
+}
+
+export function getShoppingUrl(product: Product) {
+  return product.metas?.retailModels?.value?.[0]?.amazonUrl ?? null;
 }

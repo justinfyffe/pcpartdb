@@ -1,8 +1,7 @@
-import { getGpuName } from '@client/product';
+import { getGpuName, getShoppingUrl } from '@client/product';
 import { Table, TBody, Th, THead, Tr } from '@client/shared/components';
 import { formatBenchmark } from '@shared/benchmark';
 import { formatProductMeta } from '@shared/product-meta';
-import { getShoppingUrl } from '@shared/retail-model';
 import React, { FunctionComponent, useContext } from 'react';
 import { ComparePageContext } from '../../context';
 import { CustomRow, CustomRowLabel, CustomRowValue } from '../custom-row';

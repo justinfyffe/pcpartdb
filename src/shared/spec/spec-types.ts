@@ -60,8 +60,6 @@ export interface Specs {
   openClVersion?: Spec<number | string>;
   openGlVersion?: Spec<number | string>;
   shaderModelVersion?: Spec<number | string>;
-  gSyncFreeSyncSupport?: Spec<boolean>;
-  sliCrossfireSupport?: Spec<boolean>;
 
   [key: string]: Spec;
 }
@@ -71,8 +69,8 @@ export type SpecKey = keyof Specs;
 
 export interface SpecMetadata {
   specKey?: SpecKey;
-  prefix?: string;
-  suffix?: string;
+  currency?: string;
+  unit?: string;
 }
 
 export interface Spec<T = unknown> {
@@ -141,6 +139,4 @@ export const specsValidator = Joi.object({
   openClVersion: specValidator.allow(null),
   openGlVersion: specValidator.allow(null),
   shaderModelVersion: specValidator.allow(null),
-  gSyncFreeSyncSupport: specValidator.allow(null),
-  sliCrossfireSupport: specValidator.allow(null),
 }).options({ abortEarly: false });

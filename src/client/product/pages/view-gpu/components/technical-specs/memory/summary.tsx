@@ -1,9 +1,9 @@
+import { formatSpec } from '@client/product';
 import {
   compileContent,
   ContentContext,
   ContentParams,
 } from '@client/shared/content';
-import { formatSpec } from '@shared/spec';
 import React, { useContext } from 'react';
 import { ViewPageContext } from '../../../context';
 

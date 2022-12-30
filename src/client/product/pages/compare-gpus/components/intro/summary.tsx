@@ -1,10 +1,9 @@
-import { getGpuName } from '@client/product';
+import { getGpuName, getShoppingUrl } from '@client/product';
 import {
   compileContent,
   ContentContext,
   ContentParams,
 } from '@client/shared/content';
-import { getShoppingUrl } from '@shared/retail-model';
 import React, { useContext } from 'react';
 import { ComparePageContext } from '../../context';
 

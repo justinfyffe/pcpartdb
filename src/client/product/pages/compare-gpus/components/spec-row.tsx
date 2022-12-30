@@ -1,5 +1,7 @@
+import { formatSpec } from '@client/product';
 import { Td, Tr } from '@client/shared/components';
-import { formatSpec, SpecBooleanFormatter, SpecKey } from '@shared/spec';
+import { BooleanFormatter } from '@client/shared/format';
+import { SpecKey } from '@shared/spec';
 import React, { useContext } from 'react';
 import { ComparePageContext } from '../context';
 
@@ -57,8 +59,6 @@ const LABELS: Record<string, string> = {
   openClVersion: 'OpenCL',
   openGlVersion: 'OpenGL',
   shaderModelVersion: 'Shader Model',
-  gSyncFreeSyncSupport: 'G-Sync / FreeSync',
-  sliCrossfireSupport: 'SLI / Crossfire',
 };
 
 interface SpecRowProps {
@@ -78,12 +78,12 @@ export const SpecRow = (props: SpecRowProps) => {
       <Td className="text-left w-[33%]">{LABELS[key]}</Td>
       <Td className="text-left w-[33%]">
         {formatSpec(spec1, {
-          booleanFormatter: SpecBooleanFormatter.YesNo,
+          booleanFormatter: BooleanFormatter.YesNo,
         }) || '--'}
       </Td>
       <Td className="text-left w-[33%]">
         {formatSpec(spec2, {
-          booleanFormatter: SpecBooleanFormatter.YesNo,
+          booleanFormatter: BooleanFormatter.YesNo,
         }) || '--'}
       </Td>
     </Tr>

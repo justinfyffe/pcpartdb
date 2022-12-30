@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import { ContentFilters, ContentParams } from './types';
+import { ContentFilters, ContentParams } from './content-types';
 
 interface ContentContextState {
   filters?: ContentFilters;

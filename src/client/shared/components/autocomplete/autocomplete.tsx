@@ -1,6 +1,5 @@
 import React, {
   Children,
-  createContext,
   forwardRef,
   KeyboardEvent,
   MouseEvent,
@@ -11,16 +10,9 @@ import React, {
 import { classNames } from '../../ui';
 import { TextInput, TextInputProps } from '../input';
 import { Spinner } from '../spinner';
-import { AutocompleteChild } from './autocomplete-child';
+import { AutocompleteContext } from './autocomplete-context';
 import { AutocompleteOptionProps } from './autocomplete-option';
-
-interface AutocompleteState {
-  hoveredIndex: number;
-}
-
-export const AutocompleteContext = createContext<AutocompleteState>({
-  hoveredIndex: -1,
-});
+import { AutocompleteResult } from './autocomplete-types';
 
 export interface AutocompleteProps extends TextInputProps {
   // Allow arbitrary values
@@ -33,9 +25,7 @@ export interface AutocompleteProps extends TextInputProps {
   prefix?: string | React.ReactElement;
   placeholder?: string;
 
-  children?:
-    | React.ReactElement<AutocompleteOptionProps>[]
-    | React.ReactElement<AutocompleteOptionProps>;
+  children?: React.ReactElement<React.ReactElement<AutocompleteOptionProps>>[];
 }
 
 export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
@@ -59,20 +49,12 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
     const [isOpen, setOpen] = useState(false);
     const [isLoading, setLoading] = useState(false);
     const [hoveredIndex, setHoveredIndex] = useState(-1);
-    const [items, setItems] = useState<{ label: string; value: string }[]>([]);
+    const [hoveredResult, setHoveredResult] =
+      useState<AutocompleteResult>(null);
     const totalChildren = Children.count(children);
 
     useEffect(() => setQuery(propsLabel), [propsLabel]);
     useEffect(() => setValue(propsValue), [propsValue]);
-
-    useEffect(() => {
-      setItems(
-        Children.map(children, ({ props: { label, value } }) => ({
-          label,
-          value,
-        })),
-      );
-    }, [children]);
 
     const handleQuery = useCallback(
       async (query: string) => {
@@ -109,14 +91,14 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
           e.preventDefault();
           e.stopPropagation();
 
-          const { label, value } = items[hoveredIndex];
+          const { label, value } = hoveredResult;
           setValue(value);
           setQuery(label);
           onChange?.(value);
           setOpen(false);
         }
       },
-      [onChange, isOpen, items, hoveredIndex, totalChildren],
+      [onChange, isOpen, hoveredResult, hoveredIndex, totalChildren],
     );
 
     const handleChildrenMouseDown = useCallback((e: MouseEvent) => {
@@ -125,14 +107,13 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
     }, []);
 
     const handleChildClick = useCallback(
-      (index: number) => {
-        const item = items[index];
-        setValue(item.value);
-        setQuery(item.label);
-        onChange?.(item.value);
+      (result: AutocompleteResult) => {
+        setValue(result.value);
+        setQuery(result.label);
+        onChange?.(result.value);
         setOpen(false);
       },
-      [onChange, items],
+      [onChange],
     );
 
     const handleBlur = useCallback(() => {
@@ -160,7 +141,13 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
     }, [query, onQuery]);
 
     return (
-      <AutocompleteContext.Provider value={{ hoveredIndex }}>
+      <AutocompleteContext.Provider
+        value={{
+          hoveredIndex,
+          onClick: handleChildClick,
+          onHovered: setHoveredResult,
+        }}
+      >
         <div className={classNames('block relative w-full', className)}>
           <TextInput
             prefix={prefix}
@@ -184,17 +171,7 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
               isOpen ? 'block' : 'hidden',
             )}
           >
-            {Children.map(children, (child, i) => (
-              <AutocompleteChild
-                key={child.props.value}
-                index={i}
-                onClick={() => handleChildClick(i)}
-                className={child.props.className}
-                hoveredClassName={child.props.hoveredClassName}
-              >
-                {child}
-              </AutocompleteChild>
-            ))}
+            {children}
           </div>
         </div>
       </AutocompleteContext.Provider>

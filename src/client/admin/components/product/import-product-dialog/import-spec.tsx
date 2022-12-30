@@ -1,5 +1,6 @@
+import { formatSpec, SpecBooleanFormatter } from '@client/product';
 import { Checkbox, Td, Tr } from '@client/shared/components';
-import { formatSpec, SpecBooleanFormatter, SpecKey } from '@shared/spec';
+import { SpecKey } from '@shared/spec';
 import React, {
   FunctionComponent,
   useCallback,
@@ -62,8 +63,6 @@ const LABELS: Record<string, string> = {
   openClVersion: 'OpenCL',
   openGlVersion: 'OpenGL',
   shaderModelVersion: 'Shader Model',
-  gSyncFreeSyncSupport: 'G-Sync / FreeSync',
-  sliCrossfireSupport: 'SLI / Crossfire',
 };
 
 interface ImportSpecProps {

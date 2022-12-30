@@ -1,7 +1,7 @@
-import { getGpuName } from '@client/product';
+import { formatSpec, getGpuName } from '@client/product';
 import { Table, TBody, Th, THead, Tr } from '@client/shared/components';
+import { DateFormatter } from '@client/shared/format';
 import { Product } from '@shared/product';
-import { formatSpec, SpecDateFormatter } from '@shared/spec';
 import React, { FunctionComponent, useCallback, useContext } from 'react';
 import { ViewPageContext } from '../../context';
 import { CustomRow, CustomRowLabel, CustomRowValue } from '../custom-row';
@@ -29,7 +29,7 @@ export const ValueYearTable: FunctionComponent<ValueYearTableProps> = (
 
   const seedIndex = gpus.findIndex((gpu) => product.id === gpu.id);
   const year = formatSpec(product.specs?.releaseDate, {
-    dateFormatter: SpecDateFormatter.Year,
+    dateFormatter: DateFormatter.Year,
   });
 
   return (

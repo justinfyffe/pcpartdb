@@ -1,5 +1,5 @@
-export const WEBSITE_NAME = 'PC Parts Database';
-export const WEBSITE_URL = 'https://pcpartsdb.com';
+export const WEBSITE_NAME = 'PC Part Database';
+export const WEBSITE_URL = 'https://pcpartdb.com';
 
 export const WEBSITE_KEYWORDS = [
   WEBSITE_NAME,

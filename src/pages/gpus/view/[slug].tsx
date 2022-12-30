@@ -1,14 +1,15 @@
+import { formatSpec } from '@client/product';
 import {
   ViewGpuPage,
   ViewGpuPageProps,
   ViewPageContentData,
 } from '@client/product/pages';
+import { DateFormatter } from '@client/shared/format';
 import { transaction } from '@server/db/database';
 import { productService } from '@server/product/product-service';
 import { Context } from '@server/shared/context';
 import { serialize } from '@server/shared/types/serialize';
 import { Product, ProductsSort, ProductType } from '@shared/product';
-import { formatSpec, SpecDateFormatter } from '@shared/spec';
 import { NextPageContext } from 'next';
 
 const TOTAL_COMPARED_PRODUCTS = 10;
@@ -119,7 +120,7 @@ async function getPerformanceArchitectureGpus(seed: Product, ctx: Context) {
 async function getPerformanceYearGpus(seed: Product, ctx: Context) {
   const year = Number(
     formatSpec(seed.specs?.releaseDate, {
-      dateFormatter: SpecDateFormatter.Year,
+      dateFormatter: DateFormatter.Year,
     }),
   );
 
@@ -184,7 +185,7 @@ async function getValueArchitectureGpus(seed: Product, ctx: Context) {
 async function getValueYearGpus(seed: Product, ctx: Context) {
   const year = Number(
     formatSpec(seed.specs?.releaseDate, {
-      dateFormatter: SpecDateFormatter.Year,
+      dateFormatter: DateFormatter.Year,
     }),
   );
 

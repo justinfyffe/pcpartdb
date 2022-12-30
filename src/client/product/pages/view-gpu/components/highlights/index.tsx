@@ -1,3 +1,4 @@
+import { formatSpec, getShoppingUrl } from '@client/product';
 import {
   BoltIcon,
   CalendarDaysIcon,
@@ -8,8 +9,6 @@ import {
   StarIcon,
 } from '@heroicons/react/24/outline';
 import { formatProductMeta } from '@shared/product-meta';
-import { getShoppingUrl } from '@shared/retail-model';
-import { formatSpec } from '@shared/spec';
 import React, { FunctionComponent, useContext, useMemo } from 'react';
 import { ViewPageContext } from '../../context';
 import {

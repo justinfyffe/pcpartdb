@@ -1,12 +1,12 @@
 import React from 'react';
-import { Content } from './component';
+import { Content } from './content';
 import {
   CompiledContent,
   CompiledContentVariant,
   ContentFilters,
   ContentParams,
   RawContent,
-} from './types';
+} from './content-types';
 
 interface ProcessContentOptions {
   compiledContent: CompiledContent;

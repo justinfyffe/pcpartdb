@@ -1,7 +1,11 @@
 import React, { FunctionComponent, useContext } from 'react';
-import { ContentContext } from './context';
-import { CompiledContent, ContentFilters, ContentParams } from './types';
-import { processContent } from './utils';
+import { ContentContext } from './content-context';
+import {
+  CompiledContent,
+  ContentFilters,
+  ContentParams,
+} from './content-types';
+import { processContent } from './content-utils';
 
 export interface ContentProps {
   compiledContent: CompiledContent;
