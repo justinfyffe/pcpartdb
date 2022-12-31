@@ -1,6 +1,5 @@
 import { authService } from '@client/auth';
-import { ComputerDesktopIcon } from '@heroicons/react/24/solid';
-import { SeoInputs } from '@shared/website';
+import { SeoInputs, WEBSITE_NAME } from '@shared/website';
 import { useRouter } from 'next/router';
 import React, { FunctionComponent, useCallback } from 'react';
 import {
@@ -32,9 +31,7 @@ export const AdminLayout: FunctionComponent<AdminLayoutProps> = (props) => {
     <>
       <Seo seo={props.seo || {}} />
       <Toolbar>
-        <ToolbarTitle>
-          <ComputerDesktopIcon className={classNames('h-8 w-8')} /> PC Parts DB
-        </ToolbarTitle>
+        <ToolbarTitle>{WEBSITE_NAME}</ToolbarTitle>
 
         <ToolbarNav className="hidden md:block">
           <Button variant={ButtonVariant.Toolbar} href="/">
@@ -61,26 +58,11 @@ export const AdminLayout: FunctionComponent<AdminLayoutProps> = (props) => {
               <Button variant={ButtonVariant.Default} href="/admin/gpus">
                 GPUs
               </Button>
-              <Button variant={ButtonVariant.Default} href="#">
-                Comparisons
-              </Button>
-              <Button variant={ButtonVariant.Default} href="#">
-                Articles
-              </Button>
               <Button variant={ButtonVariant.Default} href="/admin/images">
                 Images
               </Button>
               <Button variant={ButtonVariant.Default} href="/admin/users">
                 Accounts
-              </Button>
-              <Button variant={ButtonVariant.Default} href="#">
-                Monetization
-              </Button>
-              <Button variant={ButtonVariant.Default} href="#">
-                SEO
-              </Button>
-              <Button variant={ButtonVariant.Default} href="#">
-                Task Queue
               </Button>
             </nav>
           </aside>

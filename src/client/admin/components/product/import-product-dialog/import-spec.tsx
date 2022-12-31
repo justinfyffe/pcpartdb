@@ -1,5 +1,6 @@
-import { formatSpec, SpecBooleanFormatter } from '@client/product';
+import { formatSpec } from '@client/product';
 import { Checkbox, Td, Tr } from '@client/shared/components';
+import { BooleanFormatter } from '@client/shared/format';
 import { SpecKey } from '@shared/spec';
 import React, {
   FunctionComponent,
@@ -88,7 +89,7 @@ export const ImportSpec: FunctionComponent<ImportSpecProps> = (props) => {
       <Td>{LABELS[key]}</Td>
       <Td>
         {formatSpec(spec, {
-          booleanFormatter: SpecBooleanFormatter.YesNo,
+          booleanFormatter: BooleanFormatter.YesNo,
         }) || '--'}
       </Td>
       <Td className="text-right">

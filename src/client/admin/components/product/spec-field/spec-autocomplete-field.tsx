@@ -51,8 +51,13 @@ export const SpecAutocompleteField = forwardRef<
       onChange={handleChange}
       ref={ref}
     >
-      {results.map((result) => (
-        <AutocompleteOption key={result} label={result} value={result}>
+      {results.map((result, i) => (
+        <AutocompleteOption
+          key={result}
+          index={i}
+          label={result}
+          value={result}
+        >
           {result}
         </AutocompleteOption>
       ))}

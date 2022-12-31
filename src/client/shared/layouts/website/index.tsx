@@ -1,3 +1,4 @@
+import { getListGpusPath } from '@client/shared/website';
 import { HeartIcon } from '@heroicons/react/24/solid';
 import { SeoInputs, WEBSITE_NAME } from '@shared/website';
 import React, { FunctionComponent } from 'react';
@@ -31,7 +32,7 @@ export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
         <ToolbarTitle>{WEBSITE_NAME}</ToolbarTitle>
 
         <ToolbarNav>
-          <Button href="/gpus" variant={ButtonVariant.Toolbar}>
+          <Button href={getListGpusPath()} variant={ButtonVariant.Toolbar}>
             GPUs
           </Button>
         </ToolbarNav>

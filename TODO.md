@@ -1,19 +1,18 @@
 Immediate Tasks:
 - Clean up code
   - move shared/utils to server and client. see product utils as an example
-  - replace formatSpec, formatMeta with more specific utils, move to client/shared/format
 - Prep for launch
   - Finish UIs
     - Home page
       - improve which products are fetched
     - View Page
-      - finish content, improve related products
+      - finish content, improve related products, fix relative table code
     - Compare page
       - finish content, improve related products, fix relative tables bugs
   - Audit
-    - Check links, meta tags, canonical tags
+    - Check links
   - Email
-    - Set up email alias
+    - Set up email sending for forgot password
   - Hosting
     - Set up database
     - Set up domain
@@ -22,12 +21,13 @@ Immediate Tasks:
     - remove selected option in compare products form
     - use product and fix bugs
   - Other
-    - Analytics
-    - Google Search Console 
-    - rename repo and other things to pcpartsdb (or pcpartdb)
+    - rename repo and other things to pcpartdb (or pcpartsdb)
 
 Post-launch:
+- set up backups
+- add analytics and search console
 - clean up code
+  - formatMeta, formatBenchmark should be similar to formatspec
 - List Page
   - filtered rank
   - infinite scroll
@@ -39,6 +39,7 @@ Post-launch:
   - Add alt tags
   - html semantics
 - retail models
+- improve admin panel
 
 
 Roadmap:

@@ -87,8 +87,8 @@ export const ListGpusPage = (props: ListGpusPageProps) => {
 
         <section>
           <p className="text-xs">
-            The ranks on this page considers the {totalGpus} GPUs that we track
-            in our database.
+            The ranks on this page are based on the {totalGpus} GPUs that we
+            track in our database.
           </p>
         </section>
       </ListPageContext.Provider>

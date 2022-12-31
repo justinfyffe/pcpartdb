@@ -18,7 +18,7 @@ export const FeedLinks: FunctionComponent<FeedLinksProps> = (props) => {
   return (
     <div
       className={classNames(
-        'flex flex-wrap justify-end gap-4 font-medium',
+        'flex flex-wrap justify-end gap-8 font-medium',
         props.className,
       )}
     >

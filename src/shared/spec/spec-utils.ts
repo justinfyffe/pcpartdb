@@ -1,11 +1,6 @@
 import Big from 'big.js';
 import { Spec } from './spec-types';
 
-export enum SpecBooleanFormatter {
-  TrueFalse = 'TRUE_FALSE',
-  YesNo = 'YES_NO',
-}
-
 export enum ClockSpeedUnit {
   KHz = 'KHz',
   MHz = 'MHz',
