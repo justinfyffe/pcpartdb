@@ -11,8 +11,6 @@ Immediate Tasks:
       - finish content, improve related products, fix relative tables bugs
   - Audit
     - Check links
-  - Email
-    - Set up email sending for forgot password
   - Hosting
     - Set up database
     - Set up domain
@@ -25,6 +23,8 @@ Immediate Tasks:
 
 Post-launch:
 - set up backups
+ - Email
+    - Set up email sending for forgot password
 - add analytics and search console
 - clean up code
   - formatMeta, formatBenchmark should be similar to formatspec
