@@ -25,8 +25,8 @@ export interface HomePageProps {
 export const HomePage = (props: HomePageProps) => {
   const { nvidiaVsAmdGpus, nvidiaGpus, amdGpus } = props;
 
-  const [bestPerformanceNvidia, bestValueNvidia] = nvidiaGpus;
-  const [bestPerformanceAmd, bestValueAmd] = amdGpus;
+  const [bestPerformanceNvidia, bestValueNvidia, randomNvidia] = nvidiaGpus;
+  const [bestPerformanceAmd, bestValueAmd, randomAmd] = amdGpus;
 
   const title = 'GPU specifications, benchmarks, and comparisons';
   const canonical = '/';
@@ -76,6 +76,7 @@ export const HomePage = (props: HomePageProps) => {
                 tag={ProductFeedTag.GreatValue}
               />
             )}
+            {randomNvidia != null && <ProductFeedItem product={randomNvidia} />}
           </FeedItems>
 
           <FeedLinks>
@@ -106,6 +107,7 @@ export const HomePage = (props: HomePageProps) => {
                 tag={ProductFeedTag.GreatValue}
               />
             )}
+            {randomAmd != null && <ProductFeedItem product={randomAmd} />}
           </FeedItems>
 
           <FeedLinks>

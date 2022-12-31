@@ -72,7 +72,6 @@ export const ProductAutocomplete = forwardRef<
 
   const handleChange = useCallback(
     async (value: string) => {
-      console.log(value);
       if (value == null) {
         setProduct(null);
         onChange?.(null);
@@ -81,7 +80,6 @@ export const ProductAutocomplete = forwardRef<
 
       const productId = Number(value);
       const selectedProduct = productCache.get(productId);
-      console.log(selectedProduct);
       setProduct(selectedProduct);
       onChange?.(productId);
     },

@@ -5,7 +5,12 @@ import { ComparePageContext } from '../../../context';
 
 export const ProcessorIntroSentence1 = compileContent({
   deps: ['productName1', 'productName2'],
-  component: (props) => <>Enter Intro here</>,
+  component: (props) => (
+    <>
+      General information about the processors for the {props.productName1} and{' '}
+      {props.productName2}.
+    </>
+  ),
 });
 
 export const ProcessorIntro = () => {

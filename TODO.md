@@ -3,12 +3,10 @@ Immediate Tasks:
   - move shared/utils to server and client. see product utils as an example
 - Prep for launch
   - Finish UIs
-    - Home page
-      - improve which products are fetched
     - View Page
-      - finish content, improve related products, fix relative table code
+      - improve related products, fix relative table code
     - Compare page
-      - finish content, improve related products, fix relative tables bugs
+      - improve related products, fix relative tables bugs
   - Audit
     - Check links
   - Hosting
@@ -18,8 +16,10 @@ Immediate Tasks:
   - Polishing
     - remove selected option in compare products form
     - use product and fix bugs
+      - drop down arrow for autocomplete
   - Other
     - rename repo and other things to pcpartdb (or pcpartsdb)
+    - create dist script
 
 Post-launch:
 - set up backups

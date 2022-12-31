@@ -4,13 +4,13 @@ import React, { useContext } from 'react';
 import { ViewPageContext } from '../../../context';
 
 export const CompatibilityIntroSentence1 = compileContent({
-  deps: ['productName'],
+  deps: ['longProductName', 'shortProductName'],
   component: (props) => (
     <>
-      {props.productName}&apos;s dimensions, bus interface, power consumption,
-      and output ports. These specs are useful for verifying that the{' '}
-      {props.productName} fits within your case and is compatible with your
-      motherboard, power supply, and monitor.
+      {props.longProductName}&apos;s dimensions, bus interface, power
+      consumption, and output ports. These specs are useful for verifying that
+      the {props.shortProductName} fits within your case and is compatible with
+      your motherboard, power supply, and monitor.
     </>
   ),
 });
@@ -19,7 +19,8 @@ export const CompatibilityIntro = () => {
   const { product } = useContext(ViewPageContext);
 
   const params = {
-    productName: getGpuName(product),
+    longProductName: getGpuName(product),
+    shortProductName: getGpuName(product, { company: false }),
   };
 
   return (

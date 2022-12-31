@@ -7,8 +7,9 @@ export const GeneralInfoIntroSentence1 = compileContent({
   deps: ['productName1', 'productName2'],
   component: (props) => (
     <>
-      Basic details like its performance rating, market segment, release date,
-      and launch price for the {props.productName1} and {props.productName2}.
+      General information about the {props.productName1} and{' '}
+      {props.productName2} like their performance rating, release date, and
+      launch price.
     </>
   ),
 });

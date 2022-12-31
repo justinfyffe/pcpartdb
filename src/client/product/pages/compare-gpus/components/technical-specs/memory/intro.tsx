@@ -7,8 +7,8 @@ export const MemoryIntroSentence1 = compileContent({
   deps: ['productName1', 'productName2'],
   component: (props) => (
     <>
-      {props.productName1} and {props.productName2}&apos;s memory size,
-      bandwidth, and clock speeds. GPU memory stores graphics data like frames,
+      The memory size, bandwidth, and clock speeds for the {props.productName1}{' '}
+      and {props.productName2}. GPU memory stores graphics data like frames,
       textures, and shadows which helps display rendered images. These specs are
       critical for graphics-intense applications like gaming and 3D modeling.
     </>

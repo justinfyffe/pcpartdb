@@ -4,13 +4,18 @@ import React, { useContext } from 'react';
 import { ComparePageContext } from '../../../context';
 
 export const CoresIntroSentence1 = compileContent({
-  deps: ['productName1', 'productName2'],
+  deps: [
+    'longProductName1',
+    'longProductName2',
+    'shortProductName1',
+    'shortProductName2',
+  ],
   component: (props) => (
     <>
-      {props.productName1} and {props.productName2}&apos;s cores, clock speed,
-      and cache. These specs have an impact on how fast the {props.productName1}{' '}
-      and {props.productName2} can process graphics. Each type of core serves a
-      specific computational purpose.
+      {props.longProductName1} and {props.longProductName2}&apos;s cores, clock
+      speed, and cache. These specs have an impact on how fast the{' '}
+      {props.shortProductName1} and {props.shortProductName2} can process
+      graphics. Each type of core serves a specific computational purpose.
     </>
   ),
 });
@@ -20,8 +25,10 @@ export const CoresIntro = () => {
   const [product1, product2] = comparison;
 
   const params = {
-    productName1: getGpuName(product1),
-    productName2: getGpuName(product2),
+    longProductName1: getGpuName(product1),
+    longProductName2: getGpuName(product2),
+    shortProductName1: getGpuName(product1, { company: false }),
+    shortProductName2: getGpuName(product2, { company: false }),
   };
 
   return (

@@ -9,7 +9,7 @@ export const PerformanceIntroSentence1 = compileContent({
     <>
       Compare {props.productName1} and {props.productName2}&apos;s performance
       with similar GPUs. Relative performance provides insight into how their
-      benchmarks compare to its peers.
+      benchmarks compare to their peers.
     </>
   ),
 });

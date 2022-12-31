@@ -5,7 +5,9 @@ import { ViewPageContext } from '../../../context';
 
 export const ProcessorIntroSentence1 = compileContent({
   deps: ['productName'],
-  component: (props) => <>Enter Intro here</>,
+  component: (props) => (
+    <>General information about {props.productName}&apos;s processor.</>
+  ),
 });
 
 export const ProcessorIntro = () => {

@@ -8,8 +8,8 @@ export const ValueIntroSentence1 = compileContent({
   component: (props) => (
     <>
       Compare {props.productName1} and {props.productName2}&apos;s value with
-      similar GPUs. Relative value provides insight into which GPU gives the
-      best bang for your buck.
+      similar GPUs. Relative value provides insight into which GPUs give the
+      better bang for your buck.
     </>
   ),
 });

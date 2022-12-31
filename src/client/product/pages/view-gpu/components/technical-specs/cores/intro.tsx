@@ -4,12 +4,12 @@ import React, { useContext } from 'react';
 import { ViewPageContext } from '../../../context';
 
 export const CoresIntroSentence1 = compileContent({
-  deps: ['productName'],
+  deps: ['longProductName', 'shortProductName'],
   component: (props) => (
     <>
-      {props.productName}&apos;s cores, clock speed, and cache. These specs have
-      an impact on how fast the {props.productName} can process graphics. Each
-      type of core serves a specific computational purpose.
+      {props.longProductName}&apos;s cores, clock speed, and cache. These specs
+      have an impact on how fast the {props.shortProductName} can process
+      graphics. Each type of core serves a specific computational purpose.
     </>
   ),
 });
@@ -18,7 +18,8 @@ export const CoresIntro = () => {
   const { product } = useContext(ViewPageContext);
 
   const params = {
-    productName: getGpuName(product),
+    longProductName: getGpuName(product),
+    shortProductName: getGpuName(product, { company: false }),
   };
 
   return (
