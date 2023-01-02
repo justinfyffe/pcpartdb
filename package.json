@@ -34,7 +34,7 @@
   "bugs": {
     "url": "https://github.com/justinfyffe/easypcspecs/issues"
   },
-  "homepage": "https://pcpartsdb.com",
+  "homepage": "https://pcpartdb.com",
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
     "@types/big.js": "^6.1.6",

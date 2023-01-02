@@ -3,33 +3,32 @@ import {
   CompareGpuPageProps,
 } from '@client/product/pages/compare-gpus';
 import { ComparePageContentData } from '@client/product/pages/compare-gpus/types';
-import { transaction } from '@server/db/database';
 import { productService } from '@server/product/product-service';
+import { sortProducts } from '@server/product/product-utils';
 import { Context } from '@server/shared/context';
+import { SsrContext } from '@server/shared/ssr/context';
+import { ssrPageProps } from '@server/shared/ssr/props';
 import { serialize } from '@server/shared/types/serialize';
-import { ProductComparison, ProductsSort, ProductType } from '@shared/product';
-import { NextPageContext } from 'next';
+import {
+  Product,
+  ProductComparison,
+  ProductsSort,
+  ProductType,
+} from '@shared/product';
 
 const TOTAL_COMPARED_PRODUCTS = 10;
 
-export async function getServerSideProps(nextCtx: NextPageContext) {
-  return transaction(async (trx) => {
-    const ctx = { trx };
-    const slug = nextCtx.query.slug as string;
+export const getServerSideProps = ssrPageProps<CompareGpuPageProps>(
+  async (ctx: SsrContext) => {
+    const slug = ctx.page.query.slug as string;
 
     const comparison = await getComparison(slug, ctx);
     const contentData = await getContentData(comparison, ctx);
     const relatedProducts = await getRelatedGpus(comparison, ctx);
 
-    const pageProps: CompareGpuPageProps = {
-      comparison: JSON.parse(JSON.stringify(comparison)),
-      contentData: JSON.parse(JSON.stringify(contentData)),
-      relatedProducts: JSON.parse(JSON.stringify(relatedProducts)),
-    };
-
-    return { props: pageProps };
-  });
-}
+    return { comparison, contentData, relatedProducts };
+  },
+);
 
 async function getComparison(
   slug: string,
@@ -65,9 +64,61 @@ async function getTotalRatedGpus(ctx: Context) {
   return results.length;
 }
 
-async function getPerformanceGpus(seed: ProductComparison, ctx: Context) {
-  const [seedGpu1, seedGpu2] = seed;
+function getSurroundingGpus(gpus: Product[], seed: Product, total: number) {
+  const seedIndex = gpus.findIndex((gpu) => gpu.id === seed.id);
+  let start = seedIndex;
+  let end = seedIndex + 1;
+  let counter = 0;
+  while (end - start < total && (start > 0 || end < gpus.length)) {
+    if (counter++ % 2 === 0) {
+      if (start > 0) {
+        --start;
+      }
+    } else {
+      if (end < gpus.length) {
+        ++end;
+      }
+    }
+  }
 
+  return gpus.slice(start, end);
+}
+
+function getSurroundingGpus2(
+  gpus: Product[],
+  seed: ProductComparison,
+  total: number,
+) {
+  const seedIndex1 = gpus.findIndex((gpu) => gpu.id === seed[0].id);
+  const seedIndex2 = gpus.findIndex((gpu) => gpu.id === seed[1].id);
+
+  if (Math.abs(seedIndex2 - seedIndex1) > total) {
+    return [
+      ...getSurroundingGpus(gpus, seed[0], Math.floor(total / 2)),
+      ...getSurroundingGpus(gpus, seed[1], Math.floor(total / 2)),
+    ];
+  } else {
+    const seedIndex = Math.floor((seedIndex1 + seedIndex2) / 2);
+    let start = seedIndex;
+    let end = seedIndex + 1;
+    let counter = 0;
+    while (end - start < total && (start > 0 || end < gpus.length)) {
+      if (counter++ % 2 === 0) {
+        if (start > 0) {
+          --start;
+        }
+      } else {
+        if (end < gpus.length) {
+          ++end;
+        }
+      }
+    }
+
+    return gpus.slice(start, end);
+  }
+}
+
+async function getPerformanceGpus(seed: ProductComparison, ctx: Context) {
   const results = await productService.list(
     {
       type: ProductType.GPU,
@@ -80,55 +131,16 @@ async function getPerformanceGpus(seed: ProductComparison, ctx: Context) {
     ctx,
   );
 
-  const sizePerProduct = Math.floor(TOTAL_COMPARED_PRODUCTS / 2);
-  const seedIndex1 = results.findIndex((gpu) => gpu.id === seedGpu1.id);
-  const seedIndex2 = results.findIndex((gpu) => gpu.id === seedGpu2.id);
+  const sortedSeed = sortProducts(seed, {
+    sort: ProductsSort.PerformanceRating,
+  }) as ProductComparison;
 
-  if (Math.abs(seedIndex2 - seedIndex1) < sizePerProduct) {
-    // Within same group
-    const midIndex = Math.floor((seedIndex2 + seedIndex1) / 2);
-    let start = Math.max(0, midIndex - sizePerProduct);
-    let end = Math.min(midIndex + sizePerProduct, results.length);
-    if (end - start !== TOTAL_COMPARED_PRODUCTS) {
-      const diff = TOTAL_COMPARED_PRODUCTS - (end - start);
-      start = Math.max(0, start - diff);
-      end = Math.min(end + diff, results.length);
-    }
-
-    return serialize(results.slice(start, end));
-  } else {
-    // Split groups
-    const sizePerSide = Math.floor(sizePerProduct / 2);
-    let start1 = Math.max(0, seedIndex1 - sizePerSide);
-    let end1 = Math.min(seedIndex1 + sizePerSide, results.length);
-    if (end1 - start1 !== sizePerSide) {
-      const diff = TOTAL_COMPARED_PRODUCTS - (end1 - start1);
-      start1 = Math.max(0, start1 - diff);
-      end1 = Math.min(end1 + diff, results.length);
-    }
-
-    let start2 = Math.max(0, seedIndex2 - sizePerSide);
-    let end2 = Math.min(seedIndex2 + sizePerSide, results.length);
-    if (end2 - start2 !== sizePerSide) {
-      const diff = TOTAL_COMPARED_PRODUCTS - (end1 - start2);
-      start2 = Math.max(0, start2 - diff);
-      end2 = Math.min(end2 + diff, results.length);
-    }
-
-    const products1 = results.slice(start1, end1);
-    const products2 = results.slice(start2, end2);
-
-    if (start1 < start2) {
-      return serialize([...products1, ...products2]);
-    } else {
-      return serialize([...products2, ...products1]);
-    }
-  }
+  return serialize(
+    await getSurroundingGpus2(results, sortedSeed, TOTAL_COMPARED_PRODUCTS),
+  );
 }
 
 async function getValueGpus(seed: ProductComparison, ctx: Context) {
-  const [seedGpu1, seedGpu2] = seed;
-
   const results = await productService.list(
     {
       type: ProductType.GPU,
@@ -141,50 +153,13 @@ async function getValueGpus(seed: ProductComparison, ctx: Context) {
     ctx,
   );
 
-  const sizePerProduct = Math.floor(TOTAL_COMPARED_PRODUCTS / 2);
-  const seedIndex1 = results.findIndex((gpu) => gpu.id === seedGpu1.id);
-  const seedIndex2 = results.findIndex((gpu) => gpu.id === seedGpu2.id);
+  const sortedSeed = sortProducts(seed, {
+    sort: ProductsSort.ValueRating,
+  }) as ProductComparison;
 
-  if (Math.abs(seedIndex2 - seedIndex1) < sizePerProduct) {
-    // Within same group
-    const midIndex = Math.floor((seedIndex2 + seedIndex1) / 2);
-    let start = Math.max(0, midIndex - sizePerProduct);
-    let end = Math.min(midIndex + sizePerProduct, results.length);
-    if (end - start !== TOTAL_COMPARED_PRODUCTS) {
-      const diff = TOTAL_COMPARED_PRODUCTS - (end - start);
-      start = Math.max(0, start - diff);
-      end = Math.min(end + diff, results.length);
-    }
-
-    return serialize(results.slice(start, end));
-  } else {
-    // Split groups
-    const sizePerSide = Math.floor(sizePerProduct / 2);
-    let start1 = Math.max(0, seedIndex1 - sizePerSide);
-    let end1 = Math.min(seedIndex1 + sizePerSide, results.length);
-    if (end1 - start1 !== sizePerSide) {
-      const diff = TOTAL_COMPARED_PRODUCTS - (end1 - start1);
-      start1 = Math.max(0, start1 - diff);
-      end1 = Math.min(end1 + diff, results.length);
-    }
-
-    let start2 = Math.max(0, seedIndex2 - sizePerSide);
-    let end2 = Math.min(seedIndex2 + sizePerSide, results.length);
-    if (end2 - start2 !== sizePerSide) {
-      const diff = TOTAL_COMPARED_PRODUCTS - (end1 - start2);
-      start2 = Math.max(0, start2 - diff);
-      end2 = Math.min(end2 + diff, results.length);
-    }
-
-    const products1 = results.slice(start1, end1);
-    const products2 = results.slice(start2, end2);
-
-    if (start1 < start2) {
-      return serialize([...products1, ...products2]);
-    } else {
-      return serialize([...products2, ...products1]);
-    }
-  }
+  return serialize(
+    await getSurroundingGpus2(results, sortedSeed, TOTAL_COMPARED_PRODUCTS),
+  );
 }
 
 // TODO: determine this based on gpus fetched for content tables

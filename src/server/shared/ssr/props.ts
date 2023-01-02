@@ -14,9 +14,9 @@ interface SsrPageProps {
   redirect?: unknown;
 }
 
-export function ssrPageProps(
+export function ssrPageProps<T = unknown>(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  func: (ctx: SsrContext) => unknown,
+  func: (ctx: SsrContext) => T | Promise<T>,
   guards?: GuardFunction[],
 ) {
   const newFunc = async (pageCtx: NextPageContext): Promise<SsrPageProps> => {

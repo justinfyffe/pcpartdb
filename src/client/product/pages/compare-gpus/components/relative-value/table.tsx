@@ -1,5 +1,5 @@
 import { getGpuName, getViewGpuSlug } from '@client/product';
-import { Table, TBody, Th, THead, Tr } from '@client/shared/components';
+import { Table, TBody, Td, Th, THead, Tr } from '@client/shared/components';
 import { getViewGpuPath } from '@client/shared/website';
 import { Product } from '@shared/product';
 import { formatProductMeta } from '@shared/product-meta';
@@ -8,6 +8,7 @@ import React, {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from 'react';
 import { ComparePageContext } from '../../context';
@@ -21,10 +22,27 @@ export const ValueTable: FunctionComponent<ValueTableProps> = (props) => {
   const { className } = props;
   const { comparison, contentData } = useContext(ComparePageContext);
   const [product1, product2] = comparison;
-  const { relativeValueGpus: gpus } = contentData;
+  const { relativeValueGpus } = contentData;
 
   const [baselineProduct, setBaselineProduct] = useState(product1);
   const [secondaryProduct, setSecondaryProduct] = useState(product2);
+
+  // Add nulls to rank gaps
+  const gpus = useMemo(() => {
+    const ret: Product[] = [];
+    for (let i = 0; i < relativeValueGpus.length; ++i) {
+      if (i > 0) {
+        const rankDiff =
+          relativeValueGpus[i].metas.valueRank.value -
+          relativeValueGpus[i - 1].metas.valueRank.value;
+        if (rankDiff > 1) {
+          ret.push(null);
+        }
+      }
+      ret.push(relativeValueGpus[i]);
+    }
+    return ret;
+  }, [relativeValueGpus]);
 
   useEffect(() => {
     setBaselineProduct(product1);
@@ -74,25 +92,33 @@ export const ValueTable: FunctionComponent<ValueTableProps> = (props) => {
           </Tr>
         </THead>
         <TBody>
-          {gpus.map((gpu) => (
-            <CustomRow
-              key={gpu.id}
-              highlight={gpu.id === baselineProduct.id}
-              secondary={gpu.id === secondaryProduct.id}
-            >
-              <CustomRowLabel>
-                <a href={getViewGpuPath(getViewGpuSlug(gpu))}>
-                  {getGpuName(gpu, { company: false })}
-                </a>
-              </CustomRowLabel>
-              <CustomRowValue className="text-left">
-                {getRelativePerformance(gpu)}%
-              </CustomRowValue>
-              <CustomRowValue className="text-left">
-                {formatProductMeta(gpu.metas?.valueRank)}
-              </CustomRowValue>
-            </CustomRow>
-          ))}
+          {gpus.map((gpu) =>
+            gpu != null ? (
+              <CustomRow
+                key={gpu.id}
+                highlight={gpu.id === baselineProduct.id}
+                secondary={gpu.id === secondaryProduct.id}
+              >
+                <CustomRowLabel>
+                  <a href={getViewGpuPath(getViewGpuSlug(gpu))}>
+                    {getGpuName(gpu, { company: false })}
+                  </a>
+                </CustomRowLabel>
+                <CustomRowValue className="text-left">
+                  {getRelativePerformance(gpu)}%
+                </CustomRowValue>
+                <CustomRowValue className="text-left">
+                  {formatProductMeta(gpu.metas?.valueRank)}
+                </CustomRowValue>
+              </CustomRow>
+            ) : (
+              <Tr>
+                <Td colSpan={3} className="text-center">
+                  &#8230;
+                </Td>
+              </Tr>
+            ),
+          )}
         </TBody>
       </Table>
     </>

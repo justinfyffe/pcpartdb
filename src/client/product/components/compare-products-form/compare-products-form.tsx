@@ -52,12 +52,12 @@ export const CompareProductsForm: FunctionComponent<
         .filter((value) => value != null)
         .map((value) => ProductCache.get(value));
 
-      if (products.length === 2) {
+      if (products.length === 2 && products[0].id !== products[1].id) {
         window.location.href = getCompareGpusPath(
           getCompareGpusSlug(products as ProductComparison),
         );
         return;
-      } else if (products.length === 1) {
+      } else if (products.length === 1 || products[0].id === products[1].id) {
         window.location.href = getViewGpuPath(getViewGpuSlug(products[0]));
         return;
       } else {

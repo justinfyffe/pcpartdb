@@ -2,29 +2,24 @@ Immediate Tasks:
 - Clean up code
   - move shared/utils to server and client. see product utils as an example
 - Prep for launch
-  - Finish UIs
-    - View Page
-      - improve related products, fix relative table code
-    - Compare page
-      - improve related products, fix relative tables bugs
-  - Audit
-    - Check links
-  - Hosting
-    - Set up database
-    - Set up domain
-    - launch
-  - Polishing
-    - remove selected option in compare products form
-    - use product and fix bugs
-      - drop down arrow for autocomplete
-  - Other
-    - rename repo and other things to pcpartdb (or pcpartsdb)
+  - Final steps
+    - test links
+    - set up database
+    - set up domain
+    - favicon
+    - rename repo and db to pcpartdb
     - create dist script
+  - Maybe
+    - rename Product to PcPart
+      - PcPartMeta
+      - PcPartReview
+      - PcPartBenchmark
+      - PcPartSpec
 
 Post-launch:
 - set up backups
- - Email
-    - Set up email sending for forgot password
+- Email
+  - Set up email sending for forgot password
 - add analytics and search console
 - clean up code
   - formatMeta, formatBenchmark should be similar to formatspec
@@ -39,6 +34,7 @@ Post-launch:
   - Add alt tags
   - html semantics
 - retail models
+- improve related products
 - improve admin panel
 
 
@@ -57,6 +53,9 @@ Legend:
   - [LEGL] About
   - [LEGL] Privacy
   - [EFFY] Basic admin panel
+- 1.0.1
+  - [EFFY] Set sources on pc parts, automate pulling data (but require approval)
+  - [CTNT] Summaries for view/compare
 - 1.1
   - [CTNT] CPUs
 - 1.2

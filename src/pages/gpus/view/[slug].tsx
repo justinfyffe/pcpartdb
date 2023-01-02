@@ -1,37 +1,27 @@
-import { formatSpec } from '@client/product';
 import {
   ViewGpuPage,
   ViewGpuPageProps,
   ViewPageContentData,
 } from '@client/product/pages';
-import { DateFormatter } from '@client/shared/format';
-import { transaction } from '@server/db/database';
 import { productService } from '@server/product/product-service';
 import { Context } from '@server/shared/context';
+import { SsrContext } from '@server/shared/ssr/context';
+import { ssrPageProps } from '@server/shared/ssr/props';
 import { serialize } from '@server/shared/types/serialize';
 import { Product, ProductsSort, ProductType } from '@shared/product';
-import { NextPageContext } from 'next';
 
 const TOTAL_COMPARED_PRODUCTS = 10;
 
-export async function getServerSideProps(nextCtx: NextPageContext) {
-  return transaction(async (trx) => {
-    const ctx = { trx };
-
-    const slug = nextCtx.query.slug as string;
+export const getServerSideProps = ssrPageProps<ViewGpuPageProps>(
+  async (ctx: SsrContext) => {
+    const slug = ctx.page.query.slug as string;
     const gpu = await getGpu(slug, ctx);
     const contentData = await getContentData(gpu, ctx);
     const relatedProducts = await getRelatedGpus(gpu, ctx);
 
-    const pageProps: ViewGpuPageProps = {
-      gpu: JSON.parse(JSON.stringify(gpu)),
-      contentData: JSON.parse(JSON.stringify(contentData)),
-      relatedProducts: JSON.parse(JSON.stringify(relatedProducts)),
-    };
-
-    return { props: pageProps };
-  });
-}
+    return { gpu, contentData, relatedProducts };
+  },
+);
 
 async function getGpu(slug: string, ctx: Context): Promise<Product> {
   const product = productService.get(
@@ -45,31 +35,13 @@ async function getGpu(slug: string, ctx: Context): Promise<Product> {
 async function getContentData(gpu: Product, ctx: Context) {
   const totalRatedGpus = await getTotalRatedGpus(ctx);
 
-  // TODO: how to handle when gpu is at the end of these lists?
-  const {
-    products: performanceArchitectureGpus,
-    rank: performanceArchitectureRank,
-  } = await getPerformanceArchitectureGpus(gpu, ctx);
-  const { products: performanceYearGpus, rank: performanceYearRank } =
-    await getPerformanceYearGpus(gpu, ctx);
-
-  const { products: valueArchitectureGpus, rank: valueArchitectureRank } =
-    await getValueArchitectureGpus(gpu, ctx);
-  const { products: valueYearGpus, rank: valueYearRank } =
-    await getValueYearGpus(gpu, ctx);
+  const relativePerformanceGpus = await getPerformanceGpus(gpu, ctx);
+  const relativeValueGpus = await getValueGpus(gpu, ctx);
 
   return {
     totalPerformanceRatedGpus: totalRatedGpus,
-
-    performanceYearGpus,
-    performanceYearRank,
-    performanceArchitectureGpus,
-    performanceArchitectureRank,
-
-    valueYearGpus,
-    valueYearRank,
-    valueArchitectureGpus,
-    valueArchitectureRank,
+    relativePerformanceGpus,
+    relativeValueGpus,
   } as ViewPageContentData;
 }
 
@@ -84,134 +56,60 @@ async function getTotalRatedGpus(ctx: Context) {
   return results.length;
 }
 
-async function getPerformanceArchitectureGpus(seed: Product, ctx: Context) {
-  const company = formatSpec(seed.specs?.company);
-  const architecture = formatSpec(seed.specs?.architecture);
+function getSurroundingGpus(gpus: Product[], seed: Product, total: number) {
+  const seedIndex = gpus.findIndex((gpu) => gpu.id === seed.id);
+  let start = seedIndex;
+  let end = seedIndex + 1;
+  let counter = 0;
+  while (end - start < total && (start > 0 || end < gpus.length)) {
+    if (counter++ % 2 === 0) {
+      if (start > 0) {
+        --start;
+      }
+    } else {
+      if (end < gpus.length) {
+        ++end;
+      }
+    }
+  }
 
+  return gpus.slice(start, end);
+}
+
+async function getPerformanceGpus(seed: Product, ctx: Context) {
   const results = await productService.list(
     {
       type: ProductType.GPU,
       query: {
-        filter: {
-          performanceRated: true,
-          company: [company],
-          architecture: [architecture],
-        },
+        filter: { performanceRated: true },
         orderBy: { sort: ProductsSort.PerformanceRating },
       },
+      includeRanks: true,
     },
     ctx,
   );
 
-  const seedIndex = results.findIndex((gpu) => gpu.id === seed.id);
-  const sizePerSide = Math.floor(TOTAL_COMPARED_PRODUCTS / 2);
-  let start = Math.max(0, seedIndex - sizePerSide);
-  let end = Math.min(seedIndex + sizePerSide, results.length);
-  if (end - start !== TOTAL_COMPARED_PRODUCTS) {
-    const diff = TOTAL_COMPARED_PRODUCTS - (end - start);
-    start = Math.max(0, start - diff);
-    end = Math.min(end + diff, results.length);
-  }
-  const products: Product[] = serialize(results.slice(start, end));
-
-  return { products, rank: seedIndex + 1 };
+  return serialize(
+    await getSurroundingGpus(results, seed, TOTAL_COMPARED_PRODUCTS),
+  );
 }
 
-async function getPerformanceYearGpus(seed: Product, ctx: Context) {
-  const year = Number(
-    formatSpec(seed.specs?.releaseDate, {
-      dateFormatter: DateFormatter.Year,
-    }),
-  );
-
+async function getValueGpus(seed: Product, ctx: Context) {
   const results = await productService.list(
     {
       type: ProductType.GPU,
       query: {
-        filter: { performanceRated: true, year: [year] },
-        orderBy: { sort: ProductsSort.PerformanceRating },
-      },
-    },
-    ctx,
-  );
-
-  const seedIndex = results.findIndex((gpu) => gpu.id === seed.id);
-  const sizePerSide = Math.floor(TOTAL_COMPARED_PRODUCTS / 2);
-  let start = Math.max(0, seedIndex - sizePerSide);
-  let end = Math.min(seedIndex + sizePerSide, results.length);
-  if (end - start !== TOTAL_COMPARED_PRODUCTS) {
-    const diff = TOTAL_COMPARED_PRODUCTS - (end - start);
-    start = Math.max(0, start - diff);
-    end = Math.min(end + diff, results.length);
-  }
-  const products: Product[] = serialize(results.slice(start, end));
-
-  return { products, rank: seedIndex + 1 };
-}
-
-async function getValueArchitectureGpus(seed: Product, ctx: Context) {
-  const company = formatSpec(seed.specs?.company);
-  const architecture = formatSpec(seed.specs?.architecture);
-
-  const results = await productService.list(
-    {
-      type: ProductType.GPU,
-      query: {
-        filter: {
-          valueRated: true,
-          company: [company],
-          architecture: [architecture],
-        },
+        filter: { valueRated: true },
         orderBy: { sort: ProductsSort.ValueRating },
       },
+      includeRanks: true,
     },
     ctx,
   );
 
-  const seedIndex = results.findIndex((gpu) => gpu.id === seed.id);
-  const sizePerSide = Math.floor(TOTAL_COMPARED_PRODUCTS / 2);
-  let start = Math.max(0, seedIndex - sizePerSide);
-  let end = Math.min(seedIndex + sizePerSide, results.length);
-  if (end - start !== TOTAL_COMPARED_PRODUCTS) {
-    const diff = TOTAL_COMPARED_PRODUCTS - (end - start);
-    start = Math.max(0, start - diff);
-    end = Math.min(end + diff, results.length);
-  }
-  const products: Product[] = serialize(results.slice(start, end));
-
-  return { products, rank: seedIndex + 1 };
-}
-
-async function getValueYearGpus(seed: Product, ctx: Context) {
-  const year = Number(
-    formatSpec(seed.specs?.releaseDate, {
-      dateFormatter: DateFormatter.Year,
-    }),
+  return serialize(
+    await getSurroundingGpus(results, seed, TOTAL_COMPARED_PRODUCTS),
   );
-
-  const results = await productService.list(
-    {
-      type: ProductType.GPU,
-      query: {
-        filter: { valueRated: true, year: [year] },
-        orderBy: { sort: ProductsSort.ValueRating },
-      },
-    },
-    ctx,
-  );
-
-  const seedIndex = results.findIndex((gpu) => gpu.id === seed.id);
-  const sizePerSide = Math.floor(TOTAL_COMPARED_PRODUCTS / 2);
-  let start = Math.max(0, seedIndex - sizePerSide);
-  let end = Math.min(seedIndex + sizePerSide, results.length);
-  if (end - start !== TOTAL_COMPARED_PRODUCTS) {
-    const diff = TOTAL_COMPARED_PRODUCTS - (end - start);
-    start = Math.max(0, start - diff);
-    end = Math.min(end + diff, results.length);
-  }
-  const products: Product[] = serialize(results.slice(start, end));
-
-  return { products, rank: seedIndex + 1 };
 }
 
 // TODO: determine this based on gpus fetched for content tables

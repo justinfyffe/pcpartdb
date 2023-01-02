@@ -56,7 +56,7 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
           <Breadcrumb>{title}</Breadcrumb>
         </Breadcrumbs>
 
-        <div className="flex flex-wrap gap-8 mb-8 justify-center">
+        <div className="flex flex-wrap gap-8 justify-center">
           <section className="flex flex-wrap w-full">
             <h1 className="font-semibold">{title}</h1>
 
@@ -75,6 +75,17 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
             <RelativeValue />
             <Benchmarks />
             <TechnicalSpecs />
+
+            <section>
+              <p className="text-xs">
+                The ranks on this page considers the{' '}
+                {contentData.totalPerformanceRatedGpus} performance-rated and
+                value-rated GPUs that we track in our database. GPUs without
+                performance or value ratings are excluded. Check which graphics
+                cards we are tracking on our{' '}
+                <a href={getListGpusPath()}>GPU list</a> page.
+              </p>
+            </section>
           </article>
 
           <Sidenav>
@@ -82,15 +93,6 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
             <SidenavProducts products={relatedProducts.gpus} />
           </Sidenav>
         </div>
-
-        <section>
-          <p className="text-xs">
-            The ranks on this page considers the{' '}
-            {contentData.totalPerformanceRatedGpus} GPUs that we track in our
-            database. Check which graphics cards we are tracking on our{' '}
-            <a href={getListGpusPath()}>GPU list</a> page.
-          </p>
-        </section>
       </WebsiteLayout>
     </ComparePageContext.Provider>
   );

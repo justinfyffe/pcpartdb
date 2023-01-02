@@ -4,7 +4,14 @@ import { Autocomplete, Img } from '@client/shared/components';
 import { classNames } from '@client/shared/ui';
 import { ChevronDownIcon } from '@heroicons/react/24/outline';
 import { Product, ProductType } from '@shared/product';
-import React, { forwardRef, useCallback, useEffect, useState } from 'react';
+import React, {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from 'react';
 import { productService } from '../../product-service';
 import { ProductAutocompleteOption } from './product-autocomplete-option';
 
@@ -30,6 +37,9 @@ export const ProductAutocomplete = forwardRef<
     excludeProductId,
     className,
   } = props;
+
+  const inputRef = useRef<HTMLInputElement>();
+  useImperativeHandle(ref, () => inputRef.current);
 
   const productCache = useProductCache();
 
@@ -86,19 +96,26 @@ export const ProductAutocomplete = forwardRef<
     [productCache, onChange],
   );
 
+  const handleSuffixClick = useCallback(() => {
+    inputRef.current.focus();
+  }, [inputRef]);
+
   const prefixImage = getCompanyLogoImagePath(product);
 
   return (
     <Autocomplete
-      prefix={prefixImage ? <Img src={prefixImage} className="h-5" /> : <></>}
+      prefix={
+        prefixImage ? <Img src={prefixImage} className="h-5" /> : undefined
+      }
       label={product?.name ?? ''}
       value={value != null && value !== 0 ? `${value}` : ''}
       onQuery={handleQuery}
       onChange={handleChange}
+      onSuffixClick={handleSuffixClick}
       className={classNames('flex flex-1 items-center', className)}
       suffix={value == null ? <ChevronDownIcon className="w-4" /> : null}
       placeholder="Select GPU"
-      ref={ref}
+      ref={inputRef}
     >
       {results.map((result, i) => (
         <ProductAutocompleteOption key={result.id} index={i} product={result} />

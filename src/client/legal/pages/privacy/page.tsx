@@ -137,7 +137,7 @@ export const PrivacyPage = (_props: PrivacyPageProps) => {
             Have any questions, comments, or concerns about this privacy policy,
             your data, or your rights with respect to your information? Please
             get in touch by emailing us at{' '}
-            <a href="mailto:hello@pcpartsdb.com">hello@pcpartsdb.com</a> and
+            <a href="mailto:hello@pcpartdb.com">hello@pcpartdb.com</a> and
             we&apos;ll be happy to try to answer them!
           </p>
         </section>

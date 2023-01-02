@@ -76,9 +76,16 @@ export class ProductRepository {
     query: string,
     config?: RepositoryConfig,
   ) {
+    const tokens = query
+      .split(' ')
+      .map((value) => value.trim())
+      .join('|');
+
     return await ProductModel.query(config?.trx)
       .where('type', type)
-      .andWhere('name', 'ILIKE', `%${query}%`)
+      .andWhere('name', '~*', `(${tokens})`)
+      .orWhere(ref('specs:company.value').castText(), '~*', `(${tokens})`)
+      .orderBy(ref('specs:launchDate.value').castText(), 'DESC')
       .limit(5);
   }
 

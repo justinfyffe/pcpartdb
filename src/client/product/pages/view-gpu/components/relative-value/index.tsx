@@ -1,7 +1,6 @@
 import React, { FunctionComponent } from 'react';
-import { ValueArchitectureTable } from './architecture-table';
 import { ValueIntro } from './intro';
-import { ValueYearTable } from './year-table';
+import { ValueTable } from './table';
 
 export const RelativeValue: FunctionComponent = () => {
   return (
@@ -10,13 +9,7 @@ export const RelativeValue: FunctionComponent = () => {
       <ValueIntro />
 
       <section className="flex flex-wrap gap-8 mb-4">
-        <div className="flex-1">
-          <ValueYearTable />
-        </div>
-
-        <div className="flex-1">
-          <ValueArchitectureTable />
-        </div>
+        <ValueTable />
       </section>
     </section>
   );

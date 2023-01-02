@@ -4,31 +4,24 @@ import {
   ListGpusPageProps,
   ListPresetSlug,
 } from '@client/product/pages';
-import { transaction } from '@server/db/database';
 import { productService } from '@server/product/product-service';
 import { Context } from '@server/shared/context';
+import { SsrContext } from '@server/shared/ssr/context';
+import { ssrPageProps } from '@server/shared/ssr/props';
 import { serialize } from '@server/shared/types/serialize';
 import { ProductsQuery, ProductType } from '@shared/product';
-import { NextPageContext } from 'next';
 import { ParsedUrlQuery } from 'querystring';
 
-export async function getServerSideProps(nextCtx: NextPageContext) {
-  return transaction(async (trx) => {
-    const ctx: Context = { trx };
-    const query = getQuery(nextCtx.query);
+export const getServerSideProps = ssrPageProps<ListGpusPageProps>(
+  async (ctx: SsrContext) => {
+    const query = getQuery(ctx.page.query);
 
     const gpus = await getGpusForQuery(query, ctx);
     const totalGpus = await getTotalGpus(ctx);
 
-    const pageProps = {
-      query: JSON.parse(JSON.stringify(query)),
-      gpus: JSON.parse(JSON.stringify(gpus)),
-      totalGpus,
-    } as ListGpusPageProps;
-
-    return { props: pageProps };
-  });
-}
+    return { query, gpus, totalGpus };
+  },
+);
 
 function getQuery(query: ParsedUrlQuery) {
   const company = (query.company as string)?.split(',');

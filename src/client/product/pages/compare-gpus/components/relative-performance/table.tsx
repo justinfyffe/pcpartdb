@@ -1,5 +1,5 @@
 import { getGpuName, getViewGpuSlug } from '@client/product';
-import { Table, TBody, Th, THead, Tr } from '@client/shared/components';
+import { Table, TBody, Td, Th, THead, Tr } from '@client/shared/components';
 import { getViewGpuPath } from '@client/shared/website';
 import { Product } from '@shared/product';
 import { formatProductMeta } from '@shared/product-meta';
@@ -8,6 +8,7 @@ import React, {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from 'react';
 import { ComparePageContext } from '../../context';
@@ -23,10 +24,27 @@ export const PerformanceTable: FunctionComponent<PerformanceTableProps> = (
   const { className } = props;
   const { comparison, contentData } = useContext(ComparePageContext);
   const [product1, product2] = comparison;
-  const { relativePerformanceGpus: gpus } = contentData;
+  const { relativePerformanceGpus } = contentData;
 
   const [baselineProduct, setBaselineProduct] = useState(product1);
   const [secondaryProduct, setSecondaryProduct] = useState(product2);
+
+  // Add nulls to rank gaps
+  const gpus = useMemo(() => {
+    const ret: Product[] = [];
+    for (let i = 0; i < relativePerformanceGpus.length; ++i) {
+      if (i > 0) {
+        const rankDiff =
+          relativePerformanceGpus[i].metas.performanceRank.value -
+          relativePerformanceGpus[i - 1].metas.performanceRank.value;
+        if (rankDiff > 1) {
+          ret.push(null);
+        }
+      }
+      ret.push(relativePerformanceGpus[i]);
+    }
+    return ret;
+  }, [relativePerformanceGpus]);
 
   useEffect(() => {
     setBaselineProduct(product1);
@@ -36,9 +54,9 @@ export const PerformanceTable: FunctionComponent<PerformanceTableProps> = (
   const getRelativePerformance = useCallback(
     (relatedGpu: Product) => {
       const baseline = baselineProduct.benchmarks.performanceScore.value;
-      const relatedValue = relatedGpu.benchmarks.performanceScore.value;
+      const relatedPerf = relatedGpu.benchmarks.performanceScore.value;
 
-      return ((relatedValue / baseline) * 100).toFixed(0);
+      return ((relatedPerf / baseline) * 100).toFixed(0);
     },
     [baselineProduct],
   );
@@ -76,25 +94,33 @@ export const PerformanceTable: FunctionComponent<PerformanceTableProps> = (
           </Tr>
         </THead>
         <TBody>
-          {gpus.map((gpu) => (
-            <CustomRow
-              key={gpu.id}
-              highlight={gpu.id === baselineProduct.id}
-              secondary={gpu.id === secondaryProduct.id}
-            >
-              <CustomRowLabel>
-                <a href={getViewGpuPath(getViewGpuSlug(gpu))}>
-                  {getGpuName(gpu, { company: false })}
-                </a>
-              </CustomRowLabel>
-              <CustomRowValue className="text-left">
-                {getRelativePerformance(gpu)}%
-              </CustomRowValue>
-              <CustomRowValue className="text-left">
-                {formatProductMeta(gpu.metas?.performanceRank)}
-              </CustomRowValue>
-            </CustomRow>
-          ))}
+          {gpus.map((gpu) =>
+            gpu != null ? (
+              <CustomRow
+                key={gpu.id}
+                highlight={gpu.id === baselineProduct.id}
+                secondary={gpu.id === secondaryProduct.id}
+              >
+                <CustomRowLabel>
+                  <a href={getViewGpuPath(getViewGpuSlug(gpu))}>
+                    {getGpuName(gpu, { company: false })}
+                  </a>
+                </CustomRowLabel>
+                <CustomRowValue className="text-left">
+                  {getRelativePerformance(gpu)}%
+                </CustomRowValue>
+                <CustomRowValue className="text-left">
+                  {formatProductMeta(gpu.metas?.performanceRank)}
+                </CustomRowValue>
+              </CustomRow>
+            ) : (
+              <Tr>
+                <Td colSpan={3} className="text-center">
+                  &#8230;
+                </Td>
+              </Tr>
+            ),
+          )}
         </TBody>
       </Table>
     </>

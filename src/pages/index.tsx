@@ -1,8 +1,9 @@
 import { HomePage, HomePageProps } from '@client/home/pages';
-import { transaction } from '@server/db/database';
 import { productService } from '@server/product/product-service';
 import { filterProducts, sortProducts } from '@server/product/product-utils';
 import { Context } from '@server/shared/context';
+import { SsrContext } from '@server/shared/ssr/context';
+import { ssrPageProps } from '@server/shared/ssr/props';
 import { serialize } from '@server/shared/types/serialize';
 import {
   Product,
@@ -10,11 +11,9 @@ import {
   ProductsSort,
   ProductType,
 } from '@shared/product';
-import { NextPageContext } from 'next';
 
-export async function getServerSideProps(_ctx: NextPageContext) {
-  return transaction(async (trx) => {
-    const ctx = { trx };
+export const getServerSideProps = ssrPageProps<HomePageProps>(
+  async (ctx: SsrContext) => {
     const gpus = await getAllGpus(ctx);
     const nvidiaGpus = getNvidiaGpus(gpus);
     const amdGpus = getAmdGpus(gpus);
@@ -25,15 +24,9 @@ export async function getServerSideProps(_ctx: NextPageContext) {
       [nvidiaGpus[2], amdGpus[2]],
     ].filter(([p1, p2]) => p1 != null && p2 != null) as ProductComparison[];
 
-    const pageProps: HomePageProps = {
-      nvidiaVsAmdGpus: JSON.parse(JSON.stringify(nvidiaVsAmdGpus)),
-      nvidiaGpus: JSON.parse(JSON.stringify(nvidiaGpus)),
-      amdGpus: JSON.parse(JSON.stringify(amdGpus)),
-    };
-
-    return { props: pageProps };
-  });
-}
+    return { nvidiaVsAmdGpus, nvidiaGpus, amdGpus };
+  },
+);
 
 async function getAllGpus(ctx: Context) {
   const gpus = await productService.list({ type: ProductType.GPU }, ctx);

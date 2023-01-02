@@ -1,7 +1,6 @@
 import React, { FunctionComponent } from 'react';
-import { PerformanceArchitectureTable } from './architecture-table';
 import { PerformanceIntro } from './intro';
-import { PerformanceYearTable } from './year-table';
+import { PerformanceTable } from './table';
 
 export const RelativePerformance: FunctionComponent = () => {
   return (
@@ -10,13 +9,7 @@ export const RelativePerformance: FunctionComponent = () => {
       <PerformanceIntro />
 
       <section className="flex flex-wrap gap-8 mb-4">
-        <div className="flex-1">
-          <PerformanceYearTable />
-        </div>
-
-        <div className="flex-1">
-          <PerformanceArchitectureTable />
-        </div>
+        <PerformanceTable />
       </section>
     </section>
   );

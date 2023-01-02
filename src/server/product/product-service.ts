@@ -1,5 +1,5 @@
 import Joi from '@hapi/joi';
-import { badRequestError, notFoundError } from '@server/shared/api/status';
+import { notFoundError } from '@server/shared/api/status';
 import { Context } from '@server/shared/context';
 import { validate } from '@server/shared/types/validate';
 import { benchmarksValidator } from '@shared/benchmark';
@@ -67,7 +67,9 @@ export class ProductService {
     const parts = slug.split('--vs--');
 
     if (parts.length !== 2) {
-      throw badRequestError(null);
+      throw notFoundError(null);
+    } else if (parts[0] === parts[1]) {
+      throw notFoundError(null);
     }
 
     const promises = [];

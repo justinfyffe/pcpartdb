@@ -8,6 +8,7 @@ import {
   Footer,
   FooterSection,
   FooterSectionTitle,
+  Img,
   List,
   ListItem,
   Seo,
@@ -29,7 +30,9 @@ export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
     <>
       <Seo seo={props.seo ?? {}} />
       <Toolbar>
-        <ToolbarTitle>{WEBSITE_NAME}</ToolbarTitle>
+        <ToolbarTitle>
+          <Img src="/images/logo.svg" className="w-8 mt-0.5" /> {WEBSITE_NAME}
+        </ToolbarTitle>
 
         <ToolbarNav>
           <Button href={getListGpusPath()} variant={ButtonVariant.Toolbar}>

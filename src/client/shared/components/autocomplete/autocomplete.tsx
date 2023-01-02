@@ -41,6 +41,7 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
       freeSolo,
       onChange,
       onQuery,
+      onSuffixClick,
       children,
     } = props;
 
@@ -158,6 +159,7 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
             onKeyDown={handleKeyDown}
             onBlur={handleBlur}
             onFocus={handleFocus}
+            onSuffixClick={onSuffixClick}
             className="w-full"
             ref={ref}
             clearable={!!value}

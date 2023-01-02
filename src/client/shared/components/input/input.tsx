@@ -8,6 +8,7 @@ import React, {
   useCallback,
   useContext,
   useEffect,
+  useImperativeHandle,
   useRef,
   useState,
   WheelEvent,
@@ -56,8 +57,10 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
     onWheel,
   } = props;
 
-  const [value, setValue] = useState(propsValue ?? null);
+  const inputRef = useRef<HTMLInputElement>();
+  useImperativeHandle(ref, () => inputRef.current);
 
+  const [value, setValue] = useState(propsValue ?? null);
   useEffect(() => setValue(propsValue), [propsValue]);
 
   const handlePrefixClick = useCallback(
@@ -67,6 +70,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
     },
     [onPrefixClick],
   );
+
   const handleSuffixClick = useCallback(
     (e: MouseEvent) => {
       e.preventDefault();
@@ -166,7 +170,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
         onBlur={handleBlur}
         onFocus={handleFocus}
         onWheel={handleWheel}
-        ref={ref}
+        ref={inputRef}
       />
 
       {props.prefix && (

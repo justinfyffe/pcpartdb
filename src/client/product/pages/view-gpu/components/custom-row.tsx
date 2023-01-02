@@ -25,7 +25,7 @@ interface CustomRowLabelProps {
 export const CustomRowLabel = (props: CustomRowLabelProps) => {
   const { children } = props;
 
-  return <Td className="text-left w-[50%]">{children}</Td>;
+  return <Td className="text-left w-[33%]">{children}</Td>;
 };
 
 interface CustomRowValueProps {
@@ -38,6 +38,6 @@ export const CustomRowValue = (props: CustomRowValueProps) => {
   const { children, className } = props;
 
   return (
-    <Td className={classNames('text-left w-[50%]', className)}>{children}</Td>
+    <Td className={classNames('text-left w-[33%]', className)}>{children}</Td>
   );
 };

@@ -5,9 +5,11 @@ export function errorHandler(e: Error | ServerError) {
   const error = getErrorProps(e);
   if (error.type === HttpErrorType.UnauthorizedError) {
     return { redirect: { destination: '/login', permanent: false } };
+  } else if (error.type === HttpErrorType.NotFoundError) {
+    return { notFound: true };
   }
 
-  return { props: { error } };
+  return { props: { error: JSON.parse(JSON.stringify(error)) } };
 }
 
 function getErrorProps(e: Error | ServerError) {
