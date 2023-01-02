@@ -8,12 +8,6 @@ Immediate Tasks:
     - set up domain
     - rename repo and db to pcpartdb
     - create dist script
-  - Maybe
-    - rename Part to PcPart
-      - PcPartMeta
-      - PcPartReview
-      - PcPartBenchmark
-      - PcPartSpec
 
 Post-launch:
 - set up backups
