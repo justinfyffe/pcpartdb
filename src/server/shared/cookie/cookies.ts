@@ -1,1 +1,1 @@
-export const SESSION_COOKIE = 'pcpartsdb_session';
+export const SESSION_COOKIE = 'pcpartdb_session';

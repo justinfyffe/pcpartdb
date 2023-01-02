@@ -1,5 +1,5 @@
 {
-  "name": "pcpartsdb",
+  "name": "pcpartdb",
   "version": "1.0.0",
   "description": "Website for viewing and comparing pc specs in an easy format",
   "main": "index.js",
