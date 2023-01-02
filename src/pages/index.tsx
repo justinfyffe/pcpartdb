@@ -1,16 +1,11 @@
 import { HomePage, HomePageProps } from '@client/home/pages';
-import { productService } from '@server/product/product-service';
-import { filterProducts, sortProducts } from '@server/product/product-utils';
+import { partService } from '@server/part/part-service';
+import { filterParts, sortParts } from '@server/part/part-utils';
 import { Context } from '@server/shared/context';
 import { SsrContext } from '@server/shared/ssr/context';
 import { ssrPageProps } from '@server/shared/ssr/props';
 import { serialize } from '@server/shared/types/serialize';
-import {
-  Product,
-  ProductComparison,
-  ProductsSort,
-  ProductType,
-} from '@shared/product';
+import { Part, PartComparison, PartSort, PartType } from '@shared/part';
 
 export const getServerSideProps = ssrPageProps<HomePageProps>(
   async (ctx: SsrContext) => {
@@ -22,28 +17,28 @@ export const getServerSideProps = ssrPageProps<HomePageProps>(
       [nvidiaGpus[0], amdGpus[0]],
       [nvidiaGpus[1], amdGpus[1]],
       [nvidiaGpus[2], amdGpus[2]],
-    ].filter(([p1, p2]) => p1 != null && p2 != null) as ProductComparison[];
+    ].filter(([p1, p2]) => p1 != null && p2 != null) as PartComparison[];
 
     return { nvidiaVsAmdGpus, nvidiaGpus, amdGpus };
   },
 );
 
 async function getAllGpus(ctx: Context) {
-  const gpus = await productService.list({ type: ProductType.GPU }, ctx);
-  return serialize(gpus) as Product[];
+  const gpus = await partService.list({ type: PartType.GPU }, ctx);
+  return serialize(gpus) as Part[];
 }
 
-function getNvidiaGpus(gpus: Product[]) {
-  const nvidiaGpus = filterProducts(gpus, { company: ['nvidia'] });
+function getNvidiaGpus(gpus: Part[]) {
+  const nvidiaGpus = filterParts(gpus, { company: ['nvidia'] });
 
   const bestPerformingGpus =
-    sortProducts(nvidiaGpus, {
-      sort: ProductsSort.PerformanceRating,
+    sortParts(nvidiaGpus, {
+      sort: PartSort.PerformanceRating,
     }) ?? [];
 
   const bestValueGpus =
-    sortProducts(nvidiaGpus, {
-      sort: ProductsSort.PerformanceRating,
+    sortParts(nvidiaGpus, {
+      sort: PartSort.PerformanceRating,
     }) ?? [];
 
   const bestPerformingGpu = bestPerformingGpus[0] || null;
@@ -56,17 +51,17 @@ function getNvidiaGpus(gpus: Product[]) {
   return [bestPerformingGpu, bestValueGpu, randomGpu];
 }
 
-function getAmdGpus(gpus: Product[]) {
-  const amdGpus = filterProducts(gpus, { company: ['amd'] });
+function getAmdGpus(gpus: Part[]) {
+  const amdGpus = filterParts(gpus, { company: ['amd'] });
 
   const bestPerformingGpus =
-    sortProducts(amdGpus, {
-      sort: ProductsSort.PerformanceRating,
+    sortParts(amdGpus, {
+      sort: PartSort.PerformanceRating,
     }) ?? [];
 
   const bestValueGpus =
-    sortProducts(amdGpus, {
-      sort: ProductsSort.PerformanceRating,
+    sortParts(amdGpus, {
+      sort: PartSort.PerformanceRating,
     }) ?? [];
 
   const bestPerformingGpu = bestPerformingGpus[0] || null;

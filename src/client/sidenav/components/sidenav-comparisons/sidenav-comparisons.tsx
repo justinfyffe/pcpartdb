@@ -1,12 +1,12 @@
-import { getCompareGpusSlug, getGpuComparisonName } from '@client/product';
+import { getCompareGpusSlug, getGpuComparisonName } from '@client/part';
 import { classNames } from '@client/shared/ui';
 import { getCompareGpusPath } from '@client/shared/website';
-import { ProductComparison } from '@shared/product';
+import { PartComparison } from '@shared/part';
 import React, { FunctionComponent } from 'react';
 import { SidenavSection, SidenavSectionTitle } from '../sidenav';
 
 interface SidenavComparisonsProps {
-  comparisons?: ProductComparison[];
+  comparisons?: PartComparison[];
   className?: string;
 }
 
@@ -31,7 +31,7 @@ export const SidenavComparisons: FunctionComponent<SidenavComparisonsProps> = (
 };
 
 interface ComparisonListingProps {
-  comparison: ProductComparison;
+  comparison: PartComparison;
 }
 
 const ComparisonListing: FunctionComponent<ComparisonListingProps> = (

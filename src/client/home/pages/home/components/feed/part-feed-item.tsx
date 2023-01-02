@@ -1,0 +1,159 @@
+import { formatSpec, getGpuName, getViewGpuSlug } from '@client/part';
+import { Card, Img } from '@client/shared/components';
+import { classNames } from '@client/shared/ui';
+import { getViewGpuPath } from '@client/shared/website';
+import { PhotoIcon } from '@heroicons/react/24/outline';
+import { Part } from '@shared/part';
+import React, { FunctionComponent, useMemo } from 'react';
+
+export enum PartFeedTag {
+  GreatPerformance = 'GREAT_PERFORMANCE',
+  GreatValue = 'GREAT_VALUE',
+}
+
+interface PartFeedItemProps {
+  part: Part;
+  tag?: PartFeedTag;
+
+  as?: React.ElementType;
+  className?: string;
+}
+
+export const PartFeedItem: FunctionComponent<PartFeedItemProps> = (props) => {
+  const { part, tag } = props;
+
+  const price = useMemo(() => formatSpec(part.specs?.launchPrice), [part]);
+
+  const label = useMemo(() => {
+    if (tag === PartFeedTag.GreatPerformance) {
+      return 'Great Performance';
+    } else if (tag === PartFeedTag.GreatValue) {
+      return 'Great Value';
+    } else {
+      return null;
+    }
+  }, [tag]);
+
+  const images = useMemo(() => {
+    const ret = [
+      part.images?.details?.[0]?.image,
+      part.images?.details?.[1]?.image,
+    ];
+    return ret.filter((image) => image != null);
+  }, [part]);
+
+  return (
+    <a
+      href={getViewGpuPath(getViewGpuSlug(part))}
+      className={classNames(
+        'flex-1',
+        'mx-4 mb-6',
+        'max-w-96 min-w-70',
+        props.className,
+      )}
+    >
+      <Card as="article">
+        <div
+          className={classNames(
+            'relative',
+            'flex gap-0.5',
+            'm-[-16px_-16px_0]',
+            'h-40 w-[calc(100%_+_32px)] max-w-[calc(100%_+_48px)]',
+            'border-b-px rounded-t',
+            'overflow-hidden',
+          )}
+        >
+          {images.map((image, i) => (
+            <Img
+              key={i}
+              src={image}
+              className={classNames(
+                'bg-white',
+                'flex-1',
+                'h-40',
+                'object-cover overflow-hidden',
+                props.className,
+              )}
+            />
+          ))}
+          {images.length === 0 && (
+            <div
+              className={classNames(
+                'flex-1 flex flex-col items-center justify-center',
+                'h-40',
+              )}
+            >
+              <PhotoIcon className={classNames('-mb-3', 'w-23')} />
+              <span className="font-semibold">No Image</span>
+            </div>
+          )}
+
+          <div
+            className={classNames(
+              'absolute',
+              'flex items-start justify-between',
+              'rounded-t',
+              'h-full w-full',
+            )}
+          >
+            {price != null && (
+              <div
+                className={classNames(
+                  'bg-[rgba(51,65,85,1)]',
+                  'font-normal text-2xs text-[#ececec]',
+                  'px-1.5 py-0.5',
+                  'border-b-px border-r-px border-gray-50 rounded-br rounded-tl',
+                )}
+              >
+                {price}
+              </div>
+            )}
+
+            {label && (
+              <div
+                className={classNames(
+                  'bg-[rgba(51,65,85,1)]',
+                  'font-normal text-2xs text-[#ececec]',
+                  'px-1.5 py-0.5',
+                  'border-b-px border-l-px border-gray-50 rounded-bl rounded-tr',
+                )}
+              >
+                {label}
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className={classNames('flex flex-col gap-2 text-sm')}>
+          <h3 className="font-medium text-base text-indigo-500">
+            {getGpuName(part)}
+          </h3>
+          <Subtitle part={part} tag={tag} />
+        </div>
+      </Card>
+    </a>
+  );
+};
+
+interface SubtitleProps {
+  part: Part;
+  tag?: PartFeedTag;
+}
+
+const Subtitle: FunctionComponent<SubtitleProps> = (props) => {
+  const { part, tag } = props;
+
+  const text = useMemo(() => {
+    const name = getGpuName(part, { company: false });
+
+    if (tag === PartFeedTag.GreatPerformance) {
+      return `The ${name} is one of the strongest GPUs.`;
+    } else if (tag === PartFeedTag.GreatValue) {
+      return `The ${name} has some of the best value on the market.`;
+    } else {
+      return `Learn more about the ${name}.`;
+    }
+  }, [part, tag]);
+
+  return <>{text}</>;
+};

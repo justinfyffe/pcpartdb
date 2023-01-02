@@ -43,7 +43,7 @@ export const PrivacyPage = (_props: PrivacyPageProps) => {
           <p>
             When you sign up on our website, we ask for identifying information
             such as your name and email address. This allows you to personalize
-            your account, along with being able to receive product updates and
+            your account, along with being able to receive part updates and
             other essential information. With your consent, we may also send you
             our newsletter and other updates.
           </p>
@@ -112,10 +112,10 @@ export const PrivacyPage = (_props: PrivacyPageProps) => {
           <h2>Links to other sites</h2>
 
           <p>
-            We often include links to third-party websites, services, or
-            products. These third-party websites are separate entities that have
-            their own privacy policies. We have no liability or responsiblity
-            for their activities or content.
+            We often include links to third-party websites, services, or parts.
+            These third-party websites are separate entities that have their own
+            privacy policies. We have no liability or responsiblity for their
+            activities or content.
           </p>
 
           <p>

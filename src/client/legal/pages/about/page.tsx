@@ -52,7 +52,7 @@ export const AboutPage = (_props: AboutPageProps) => {
           <p>
             We are a participant of affiliate advertising programs which allow
             us to earn from qualifying purchases. We do not buy or sell the
-            products listed on this website.
+            parts listed on this website.
           </p>
         </section>
       </article>

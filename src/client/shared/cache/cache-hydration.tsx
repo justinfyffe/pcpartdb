@@ -1,16 +1,16 @@
-import { useImageCache, useProductCache } from '@client/shared/cache';
+import { useImageCache, usePartCache } from '@client/shared/cache';
 import { Image } from '@shared/image';
-import { Product } from '@shared/product';
+import { Part } from '@shared/part';
 import Head from 'next/head';
 import React, { FunctionComponent } from 'react';
 
 interface CacheState {
   images: Record<number, Image>;
-  products: Record<number, Product>;
+  parts: Record<number, Part>;
 }
 
 export const CacheHydration: FunctionComponent = () => {
-  const productCache = useProductCache();
+  const partCache = usePartCache();
   const imageCache = useImageCache();
 
   if (typeof document !== 'undefined') {
@@ -18,14 +18,14 @@ export const CacheHydration: FunctionComponent = () => {
     if (el != null) {
       const state: CacheState = JSON.parse(el.textContent);
       imageCache.hydrate(state.images);
-      productCache.hydrate(state.products);
+      partCache.hydrate(state.parts);
     }
 
     return <React.Fragment />;
   } else {
     const state: CacheState = {
       images: imageCache.toObject(),
-      products: productCache.toObject(),
+      parts: partCache.toObject(),
     };
     return (
       <Head>

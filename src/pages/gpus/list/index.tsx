@@ -3,13 +3,13 @@ import {
   ListGpusPage,
   ListGpusPageProps,
   ListPresetSlug,
-} from '@client/product/pages';
-import { productService } from '@server/product/product-service';
+} from '@client/part/pages';
+import { partService } from '@server/part/part-service';
 import { Context } from '@server/shared/context';
 import { SsrContext } from '@server/shared/ssr/context';
 import { ssrPageProps } from '@server/shared/ssr/props';
 import { serialize } from '@server/shared/types/serialize';
-import { ProductsQuery, ProductType } from '@shared/product';
+import { PartsQuery, PartType } from '@shared/part';
 import { ParsedUrlQuery } from 'querystring';
 
 export const getServerSideProps = ssrPageProps<ListGpusPageProps>(
@@ -36,16 +36,16 @@ function getQuery(query: ParsedUrlQuery) {
   return {
     filter: { company },
     orderBy: { sort, order },
-  } as ProductsQuery;
+  } as PartsQuery;
 }
 
-async function getGpusForQuery(query: ProductsQuery, ctx: Context) {
+async function getGpusForQuery(query: PartsQuery, ctx: Context) {
   return await getGpus(query, ctx);
 }
 
-async function getGpus(query: ProductsQuery, ctx: Context) {
-  const gpus = await productService.list(
-    { type: ProductType.GPU, query, includeRanks: true },
+async function getGpus(query: PartsQuery, ctx: Context) {
+  const gpus = await partService.list(
+    { type: PartType.GPU, query, includeRanks: true },
     ctx,
   );
 
@@ -53,7 +53,7 @@ async function getGpus(query: ProductsQuery, ctx: Context) {
 }
 
 async function getTotalGpus(ctx: Context) {
-  return await productService.count({ type: ProductType.GPU }, ctx);
+  return await partService.count({ type: PartType.GPU }, ctx);
 }
 
 export default ListGpusPage;

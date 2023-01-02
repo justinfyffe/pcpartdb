@@ -1,13 +1,13 @@
-import { formatSpec, getCompareGpusSlug, getGpuName } from '@client/product';
+import { formatSpec, getCompareGpusSlug, getGpuName } from '@client/part';
 import { Card, Img } from '@client/shared/components';
 import { classNames } from '@client/shared/ui';
 import { getCompareGpusPath } from '@client/shared/website';
 import { PhotoIcon } from '@heroicons/react/24/outline';
-import { Product, ProductComparison } from '@shared/product';
+import { Part, PartComparison } from '@shared/part';
 import React, { FunctionComponent, useMemo } from 'react';
 
 interface ComparisonFeedItemProps {
-  products: ProductComparison;
+  parts: PartComparison;
 
   as?: React.ElementType;
   className?: string;
@@ -16,27 +16,27 @@ interface ComparisonFeedItemProps {
 export const ComparisonFeedItem: FunctionComponent<ComparisonFeedItemProps> = (
   props,
 ) => {
-  const { products } = props;
-  const [product1, product2] = products;
+  const { parts } = props;
+  const [part1, part2] = parts;
 
   const [price1, price2] = useMemo(
     () => [
-      formatSpec(product1.specs?.launchPrice),
-      formatSpec(product2.specs?.launchPrice),
+      formatSpec(part1.specs?.launchPrice),
+      formatSpec(part2.specs?.launchPrice),
     ],
-    [product1, product2],
+    [part1, part2],
   );
 
   const [image1, image2] = useMemo(() => {
     return [
-      product1.images?.details?.[0]?.image,
-      product2.images?.details?.[0]?.image,
+      part1.images?.details?.[0]?.image,
+      part2.images?.details?.[0]?.image,
     ];
-  }, [product1, product2]);
+  }, [part1, part2]);
 
   return (
     <a
-      href={getCompareGpusPath(getCompareGpusSlug(products))}
+      href={getCompareGpusPath(getCompareGpusSlug(parts))}
       className={classNames(
         'flex-1 mx-4 mb-6 max-w-96 min-w-70',
         props.className,
@@ -85,8 +85,8 @@ export const ComparisonFeedItem: FunctionComponent<ComparisonFeedItemProps> = (
           )}
 
           <div className="flex gap-11.5 w-full h-full absolute items-end justify-center">
-            <Banner product={product1} />
-            <Banner product={product2} />
+            <Banner part={part1} />
+            <Banner part={part2} />
           </div>
 
           <div className="flex w-full h-full absolute items-start justify-between rounded-t">
@@ -107,9 +107,9 @@ export const ComparisonFeedItem: FunctionComponent<ComparisonFeedItemProps> = (
 
         <div className="flex flex-col text-sm">
           <h3 className="font-medium text-base text-indigo-500">
-            {getGpuName(product1)} vs {getGpuName(product2)}
+            {getGpuName(part1)} vs {getGpuName(part2)}
           </h3>
-          <Subtitle products={products} />
+          <Subtitle parts={parts} />
         </div>
       </Card>
     </a>
@@ -117,14 +117,14 @@ export const ComparisonFeedItem: FunctionComponent<ComparisonFeedItemProps> = (
 };
 
 interface BannerProps {
-  product: Product;
+  part: Part;
 }
 
 const Banner: FunctionComponent<BannerProps> = (props) => {
-  const { product } = props;
+  const { part } = props;
   const company = useMemo(
-    () => product.specs?.company?.value?.toLowerCase(),
-    [product],
+    () => part.specs?.company?.value?.toLowerCase(),
+    [part],
   );
 
   return (
@@ -135,27 +135,21 @@ const Banner: FunctionComponent<BannerProps> = (props) => {
         company === 'amd' ? 'bg-[#850101]' : '',
       )}
     >
-      {getGpuName(product, { company: false })}
+      {getGpuName(part, { company: false })}
     </div>
   );
 };
 
 interface SubtitleProps {
-  products: Product[];
+  parts: Part[];
 }
 
 const Subtitle: FunctionComponent<SubtitleProps> = (props) => {
-  const { products } = props;
-  const [product1, product2] = products;
+  const { parts } = props;
+  const [part1, part2] = parts;
 
-  const name1 = useMemo(
-    () => getGpuName(product1, { company: false }),
-    [product1],
-  );
-  const name2 = useMemo(
-    () => getGpuName(product2, { company: false }),
-    [product2],
-  );
+  const name1 = useMemo(() => getGpuName(part1, { company: false }), [part1]);
+  const name2 = useMemo(() => getGpuName(part2, { company: false }), [part2]);
 
   return (
     <>

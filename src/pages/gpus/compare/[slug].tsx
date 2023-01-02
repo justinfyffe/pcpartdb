@@ -1,22 +1,17 @@
 import {
   CompareGpuPage,
   CompareGpuPageProps,
-} from '@client/product/pages/compare-gpus';
-import { ComparePageContentData } from '@client/product/pages/compare-gpus/types';
-import { productService } from '@server/product/product-service';
-import { sortProducts } from '@server/product/product-utils';
+} from '@client/part/pages/compare-gpus';
+import { ComparePageContentData } from '@client/part/pages/compare-gpus/types';
+import { partService } from '@server/part/part-service';
+import { sortParts } from '@server/part/part-utils';
 import { Context } from '@server/shared/context';
 import { SsrContext } from '@server/shared/ssr/context';
 import { ssrPageProps } from '@server/shared/ssr/props';
 import { serialize } from '@server/shared/types/serialize';
-import {
-  Product,
-  ProductComparison,
-  ProductsSort,
-  ProductType,
-} from '@shared/product';
+import { Part, PartComparison, PartSort, PartType } from '@shared/part';
 
-const TOTAL_COMPARED_PRODUCTS = 10;
+const TOTAL_COMPARED_PARTS = 10;
 
 export const getServerSideProps = ssrPageProps<CompareGpuPageProps>(
   async (ctx: SsrContext) => {
@@ -24,17 +19,17 @@ export const getServerSideProps = ssrPageProps<CompareGpuPageProps>(
 
     const comparison = await getComparison(slug, ctx);
     const contentData = await getContentData(comparison, ctx);
-    const relatedProducts = await getRelatedGpus(comparison, ctx);
+    const relatedParts = await getRelatedGpus(comparison, ctx);
 
-    return { comparison, contentData, relatedProducts };
+    return { comparison, contentData, relatedParts };
   },
 );
 
 async function getComparison(
   slug: string,
   ctx: Context,
-): Promise<ProductComparison> {
-  const comparison = productService.getComparison(
+): Promise<PartComparison> {
+  const comparison = partService.getComparison(
     { slug, includeImages: true, includeRanks: true },
     ctx,
   );
@@ -42,7 +37,7 @@ async function getComparison(
   return serialize(comparison);
 }
 
-async function getContentData(comparison: ProductComparison, ctx: Context) {
+async function getContentData(comparison: PartComparison, ctx: Context) {
   const totalRatedGpus = await getTotalRatedGpus(ctx);
 
   return {
@@ -54,9 +49,9 @@ async function getContentData(comparison: ProductComparison, ctx: Context) {
 }
 
 async function getTotalRatedGpus(ctx: Context) {
-  const results = await productService.list(
+  const results = await partService.list(
     {
-      type: ProductType.GPU,
+      type: PartType.GPU,
       query: { filter: { performanceRated: true } },
     },
     ctx,
@@ -64,7 +59,7 @@ async function getTotalRatedGpus(ctx: Context) {
   return results.length;
 }
 
-function getSurroundingGpus(gpus: Product[], seed: Product, total: number) {
+function getSurroundingGpus(gpus: Part[], seed: Part, total: number) {
   const seedIndex = gpus.findIndex((gpu) => gpu.id === seed.id);
   let start = seedIndex;
   let end = seedIndex + 1;
@@ -85,8 +80,8 @@ function getSurroundingGpus(gpus: Product[], seed: Product, total: number) {
 }
 
 function getSurroundingGpus2(
-  gpus: Product[],
-  seed: ProductComparison,
+  gpus: Part[],
+  seed: PartComparison,
   total: number,
 ) {
   const seedIndex1 = gpus.findIndex((gpu) => gpu.id === seed[0].id);
@@ -118,57 +113,57 @@ function getSurroundingGpus2(
   }
 }
 
-async function getPerformanceGpus(seed: ProductComparison, ctx: Context) {
-  const results = await productService.list(
+async function getPerformanceGpus(seed: PartComparison, ctx: Context) {
+  const results = await partService.list(
     {
-      type: ProductType.GPU,
+      type: PartType.GPU,
       query: {
         filter: { performanceRated: true },
-        orderBy: { sort: ProductsSort.PerformanceRating },
+        orderBy: { sort: PartSort.PerformanceRating },
       },
       includeRanks: true,
     },
     ctx,
   );
 
-  const sortedSeed = sortProducts(seed, {
-    sort: ProductsSort.PerformanceRating,
-  }) as ProductComparison;
+  const sortedSeed = sortParts(seed, {
+    sort: PartSort.PerformanceRating,
+  }) as PartComparison;
 
   return serialize(
-    await getSurroundingGpus2(results, sortedSeed, TOTAL_COMPARED_PRODUCTS),
+    await getSurroundingGpus2(results, sortedSeed, TOTAL_COMPARED_PARTS),
   );
 }
 
-async function getValueGpus(seed: ProductComparison, ctx: Context) {
-  const results = await productService.list(
+async function getValueGpus(seed: PartComparison, ctx: Context) {
+  const results = await partService.list(
     {
-      type: ProductType.GPU,
+      type: PartType.GPU,
       query: {
         filter: { valueRated: true },
-        orderBy: { sort: ProductsSort.ValueRating },
+        orderBy: { sort: PartSort.ValueRating },
       },
       includeRanks: true,
     },
     ctx,
   );
 
-  const sortedSeed = sortProducts(seed, {
-    sort: ProductsSort.ValueRating,
-  }) as ProductComparison;
+  const sortedSeed = sortParts(seed, {
+    sort: PartSort.ValueRating,
+  }) as PartComparison;
 
   return serialize(
-    await getSurroundingGpus2(results, sortedSeed, TOTAL_COMPARED_PRODUCTS),
+    await getSurroundingGpus2(results, sortedSeed, TOTAL_COMPARED_PARTS),
   );
 }
 
 // TODO: determine this based on gpus fetched for content tables
-async function getRelatedGpus(seed: ProductComparison, ctx: Context) {
-  return await productService.getRelatedProducts(
+async function getRelatedGpus(seed: PartComparison, ctx: Context) {
+  return await partService.getRelatedParts(
     {
-      type: ProductType.GPU,
+      type: PartType.GPU,
       seed,
-      prioritize: ProductsSort.ReleaseDate,
+      prioritize: PartSort.ReleaseDate,
     },
     ctx,
   );

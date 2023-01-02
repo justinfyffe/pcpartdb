@@ -1,16 +1,15 @@
 Immediate Tasks:
 - Clean up code
-  - move shared/utils to server and client. see product utils as an example
+  - move shared/utils to server and client. see part utils as an example
 - Prep for launch
   - Final steps
     - test links
     - set up database
     - set up domain
-    - favicon
     - rename repo and db to pcpartdb
     - create dist script
   - Maybe
-    - rename Product to PcPart
+    - rename Part to PcPart
       - PcPartMeta
       - PcPartReview
       - PcPartBenchmark
@@ -34,7 +33,7 @@ Post-launch:
   - Add alt tags
   - html semantics
 - retail models
-- improve related products
+- improve related parts
 - improve admin panel
 
 

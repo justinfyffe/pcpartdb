@@ -1,12 +1,12 @@
 import { Image as ImageDto, ImageMeta } from '@shared/image';
-import { Product } from '@shared/product';
+import { Part } from '@shared/part';
 
 export function getImagePath(image: ImageDto) {
   return `/u/images/${image.path}`;
 }
 
-export function getCompanyLogoImagePath(product: Product) {
-  const specs = product?.specs;
+export function getCompanyLogoImagePath(part: Part) {
+  const specs = part?.specs;
   const company = specs?.company?.value;
 
   if (company == null) {

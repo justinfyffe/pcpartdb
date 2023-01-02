@@ -1,3 +1,3 @@
 export * from './sidenav-comparisons';
-export * from './sidenav-products';
+export * from './sidenav-parts';
 export * from './sidenav';
