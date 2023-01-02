@@ -3,11 +3,11 @@ Immediate Tasks:
   - move shared/utils to server and client. see part utils as an example
 - Prep for launch
   - Final steps
+    - rename repo and db to pcpartdb
+    - create dist script
     - test links
     - set up database
     - set up domain
-    - rename repo and db to pcpartdb
-    - create dist script
 
 Post-launch:
 - set up backups
