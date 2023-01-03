@@ -29,6 +29,7 @@ Post-launch:
 - View and Compare Page
   - Write summaries for each table/section
   - Add tooltips for each spec
+  - 
   - look into using useController
 - on-site SEO
   - Add alt tags
