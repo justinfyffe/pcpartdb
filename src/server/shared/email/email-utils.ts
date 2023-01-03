@@ -27,6 +27,7 @@ export async function sendEmail(options: EmailOptions) {
     transporter.close();
   }
 }
+
 function getSmtpSettings() {
   const host = process.env.SMTP_HOST;
   const port = Number(process.env.SMTP_PORT);

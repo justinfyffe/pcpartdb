@@ -1,0 +1,5 @@
+#!/bin/bash
+DIRECTORY=$(cd `dirname $0` && pwd)
+
+cd $DIRECTORY/../../
+NODE_ENV=production pm2 start npm --node-args="--gc_interval=100" --name pcpartdb -- run start

@@ -3,11 +3,18 @@ Immediate Tasks:
   - move shared/utils to server and client. see part utils as an example
 - Prep for launch
   - Final steps
-    - rename repo and db to pcpartdb
-    - create dist script
+    - create nginx file in server/nginx.conf
+    - setup deployment process
     - test links
     - set up database
     - set up domain
+  - Notes for server
+    - in ~ folder,
+      - justin@my-websites-ubuntu-s-nyc3-01:~$ ls -l
+        total 4
+        drwxrwxr-x 2 justin justin 4096 Jul  4  2020 backups
+        lrwxrwxrwx 1 justin justin   21 Jun 15  2020 bigbarkclub -> /srv/web/bigbarkclub/
+        lrwxrwxrwx 1 justin justin   18 Jul 24 04:51 finestpc -> /srv/web/finestpc/
 
 Post-launch:
 - set up backups

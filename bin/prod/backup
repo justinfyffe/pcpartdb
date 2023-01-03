@@ -1,0 +1,31 @@
+#!/bin/bash
+set -euo pipefail
+
+DIRECTORY=$(cd `dirname $0` && pwd)
+cd $DIRECTORY/../../
+
+umask 077
+
+BACKUP_DIRECTORY=../backups/pcpartdb
+DATABASE_BACKUP="$BACKUP_DIRECTORY/pcpartdb-db.sql"
+APPLICATION_BACKUP="$BACKUP_DIRECTORY/pcpartdb.tar.gz"
+
+mkdir -p "$BACKUP_DIRECTORY"
+
+cleanup() {
+  rm -f "$DATABASE_BACKUP.tmp" "$APPLICATION_BACKUP.tmp"
+}
+
+trap cleanup EXIT
+
+pg_dump pcpartdb > "$DATABASE_BACKUP.tmp"
+
+tar \
+  --exclude='./.env' \
+  --exclude='*/.env' \
+  --exclude='./.git' \
+  -czf "$APPLICATION_BACKUP.tmp" \
+  .
+
+mv "$DATABASE_BACKUP.tmp" "$DATABASE_BACKUP"
+mv "$APPLICATION_BACKUP.tmp" "$APPLICATION_BACKUP"
