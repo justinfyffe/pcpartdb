@@ -31,7 +31,8 @@ export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
       <Seo seo={props.seo ?? {}} />
       <Toolbar>
         <ToolbarTitle>
-          <Img src="/images/logo.svg" className="w-8 mt-0.5" /> {WEBSITE_NAME}
+          <Img src="/images/logo.svg" className="w-8 mt-0.5 mr-1" />{' '}
+          {WEBSITE_NAME}
         </ToolbarTitle>
 
         <ToolbarNav>

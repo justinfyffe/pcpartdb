@@ -5,6 +5,7 @@ import React, { FunctionComponent, useCallback } from 'react';
 import {
   Button,
   ButtonVariant,
+  Img,
   Seo,
   Toolbar,
   ToolbarNav,
@@ -31,7 +32,10 @@ export const AdminLayout: FunctionComponent<AdminLayoutProps> = (props) => {
     <>
       <Seo seo={props.seo || {}} />
       <Toolbar>
-        <ToolbarTitle>{WEBSITE_NAME}</ToolbarTitle>
+        <ToolbarTitle>
+          <Img src="/images/logo.svg" className="w-8 mt-0.5 mr-1" />{' '}
+          {WEBSITE_NAME}
+        </ToolbarTitle>
 
         <ToolbarNav className="hidden md:block">
           <Button variant={ButtonVariant.Toolbar} href="/">

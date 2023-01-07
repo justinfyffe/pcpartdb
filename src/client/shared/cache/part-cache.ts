@@ -25,11 +25,7 @@ class PartCacheImpl {
   }
 
   private saveImages(partImages: PartImages) {
-    const images = [
-      partImages?.autocomplete,
-      partImages?.thumbnail,
-      ...(partImages?.details ?? []),
-    ]
+    const images = [...(partImages?.details ?? [])]
       .filter((partImage) => partImage?.image != null)
       .map((partImage) => partImage.image!);
 

@@ -8,7 +8,7 @@ export function ok<T = unknown>(response: T, ctx: ApiContext) {
   res.status(200).json(response);
 }
 
-export function notFoundError<T = unknown>(response: T) {
+export function notFoundError<T = unknown>(response?: T) {
   return new ServerError(HttpErrorType.NotFoundError, response);
 }
 

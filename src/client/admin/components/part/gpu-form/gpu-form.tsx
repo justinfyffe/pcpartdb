@@ -50,7 +50,7 @@ import React, {
 import { Controller, useForm, UseFormProps } from 'react-hook-form';
 import { BenchmarkField } from '../benchmark-field';
 import { ImportPartDialog } from '../import-part-dialog';
-import { PartImageField, PartImagesField } from '../part-image-field';
+import { PartImagesField } from '../part-image-field';
 import { RetailModelsField } from '../retail-model-field';
 import { SlugField } from '../slug-field';
 import { SpecField } from '../spec-field';
@@ -120,8 +120,6 @@ interface PartFormData {
   timeSpyGraphicsBenchmark?: Benchmark<number>;
 
   // Images
-  autocompleteImage?: PartImage;
-  thumbnailImage?: PartImage;
   detailsImages?: PartImage[];
 
   // Retail Models
@@ -193,8 +191,6 @@ const partValidator = Joi.object({
   timeSpyGraphicsBenchmark: benchmarkValidator.allow(null),
 
   // Images
-  autocompleteImage: partImageValidator.allow(null),
-  thumbnailImage: partImageValidator.allow(null),
   detailsImages: Joi.array().items(partImageValidator.allow(null)),
 
   // Retail Models
@@ -279,8 +275,6 @@ function formOptions(gpu?: Part): UseFormProps<PartFormData> {
       timeSpyGraphicsBenchmark: benchmarks.timeSpyGraphics || null,
 
       // Images
-      autocompleteImage: images.autocomplete || null,
-      thumbnailImage: images.thumbnail || null,
       detailsImages: images.details || [],
 
       // RetailModels,
@@ -935,26 +929,6 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
       <section>
         <h2 className="mb-4">Images</h2>
 
-        <Field>
-          Autocomplete Image
-          <Controller
-            name="autocompleteImage"
-            control={control}
-            render={({ field }) => <PartImageField {...field} ref={null} />}
-          />
-        </Field>
-
-        <Field>
-          Thumbnail Image
-          <Controller
-            name="thumbnailImage"
-            control={control}
-            render={({ field }) => <PartImageField {...field} ref={null} />}
-          />
-        </Field>
-
-        <h3 className="mb-4">Part Images</h3>
-
         <Controller
           name="detailsImages"
           control={control}
@@ -1073,8 +1047,6 @@ function toBenchmarksRequest(formData: PartFormData): BenchmarksRequest {
 
 function toRequestImages(formData: PartFormData): PartImagesRequest {
   return {
-    autocomplete: formData.autocompleteImage || null,
-    thumbnail: formData.thumbnailImage || null,
-    details: formData.detailsImages || [],
+    details: formData.detailsImages.filter((value) => value != null) || [],
   };
 }

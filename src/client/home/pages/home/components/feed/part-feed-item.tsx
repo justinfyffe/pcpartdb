@@ -1,3 +1,4 @@
+import { getCompanyLogoImagePath } from '@client/image';
 import { formatSpec, getGpuName, getViewGpuSlug } from '@client/part';
 import { Card, Img } from '@client/shared/components';
 import { classNames } from '@client/shared/ui';
@@ -37,7 +38,7 @@ export const PartFeedItem: FunctionComponent<PartFeedItemProps> = (props) => {
   const images = useMemo(() => {
     const ret = [
       part.images?.details?.[0]?.image,
-      part.images?.details?.[1]?.image,
+      part.images?.details?.[1]?.image ?? getCompanyLogoImagePath(part),
     ];
     return ret.filter((image) => image != null);
   }, [part]);
@@ -52,9 +53,10 @@ export const PartFeedItem: FunctionComponent<PartFeedItemProps> = (props) => {
         props.className,
       )}
     >
-      <Card as="article">
+      <Card as="article" className="h-full">
         <div
           className={classNames(
+            'bg-white',
             'relative',
             'flex gap-0.5',
             'm-[-16px_-16px_0]',
@@ -71,7 +73,7 @@ export const PartFeedItem: FunctionComponent<PartFeedItemProps> = (props) => {
                 'bg-white',
                 'flex-1',
                 'h-40',
-                'object-cover overflow-hidden',
+                'object-contain overflow-hidden',
                 props.className,
               )}
             />
@@ -100,7 +102,7 @@ export const PartFeedItem: FunctionComponent<PartFeedItemProps> = (props) => {
               <div
                 className={classNames(
                   'bg-[rgba(51,65,85,1)]',
-                  'font-normal text-2xs text-[#ececec]',
+                  'font-normal text-xs text-[#ececec]',
                   'px-1.5 py-0.5',
                   'border-b-px border-r-px border-gray-50 rounded-br rounded-tl',
                 )}
@@ -113,7 +115,7 @@ export const PartFeedItem: FunctionComponent<PartFeedItemProps> = (props) => {
               <div
                 className={classNames(
                   'bg-[rgba(51,65,85,1)]',
-                  'font-normal text-2xs text-[#ececec]',
+                  'font-normal text-xs text-[#ececec]',
                   'px-1.5 py-0.5',
                   'border-b-px border-l-px border-gray-50 rounded-bl rounded-tr',
                 )}

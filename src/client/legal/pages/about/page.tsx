@@ -32,8 +32,8 @@ export const AboutPage = (_props: AboutPageProps) => {
           <p>
             We have an exciting roadmap with plans for more content and tools
             that will further help the PC community. If you have any feedback,
-            questions, or requests, please reach out to our emails listed below.
-            We thank you for your support.
+            questions, or requests, then please reach out to our emails listed
+            below. We thank you for your support.
           </p>
         </section>
 

@@ -96,6 +96,7 @@ export class PartRepository {
   ) {
     const results = await PartModel.query(config?.trx)
       .select(ref(`specs:${key}.value`).as('value'))
+      .distinctOn('value')
       .where(ref(`specs:${key}.value`).castText(), 'ILIKE', `%${query}%`)
       .limit(5);
 
@@ -111,6 +112,7 @@ export class PartRepository {
   ) {
     const results = await PartModel.query(config?.trx)
       .select(ref(`metas:${key}.value`).as('value'))
+      .distinctOn('value')
       .where(ref(`metas:${key}.value`).castText(), 'ILIKE', `%${query}%`)
       .limit(5);
 
@@ -233,8 +235,6 @@ export class PartRepository {
   private async populateImages(parts: PartModel[], config?: RepositoryConfig) {
     const imageIds = parts
       .reduce((acc, part) => {
-        acc.push(part.images?.autocomplete?.imageId);
-        acc.push(part.images?.thumbnail?.imageId);
         part?.images?.details?.forEach((image) => acc.push(image.imageId));
         return acc;
       }, [] as number[])
@@ -247,16 +247,6 @@ export class PartRepository {
     }, {} as Record<number, Image>);
 
     parts.forEach((part) => {
-      const thumbnail = part?.images?.thumbnail;
-      if (thumbnail != null) {
-        thumbnail.image = imagesMap[thumbnail.imageId];
-      }
-
-      const autocomplete = part?.images?.autocomplete;
-      if (autocomplete != null) {
-        autocomplete.image = imagesMap[autocomplete.imageId];
-      }
-
       part?.images?.details.forEach((detailImage) => {
         detailImage.image = imagesMap[detailImage.imageId];
       });

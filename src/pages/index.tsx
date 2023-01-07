@@ -24,7 +24,10 @@ export const getServerSideProps = ssrPageProps<HomePageProps>(
 );
 
 async function getAllGpus(ctx: Context) {
-  const gpus = await partService.list({ type: PartType.GPU }, ctx);
+  const gpus = await partService.list(
+    { type: PartType.GPU, includeImages: true },
+    ctx,
+  );
   return serialize(gpus) as Part[];
 }
 
@@ -38,7 +41,7 @@ function getNvidiaGpus(gpus: Part[]) {
 
   const bestValueGpus =
     sortParts(nvidiaGpus, {
-      sort: PartSort.PerformanceRating,
+      sort: PartSort.ValueRating,
     }) ?? [];
 
   const bestPerformingGpu = bestPerformingGpus[0] || null;
@@ -46,7 +49,7 @@ function getNvidiaGpus(gpus: Part[]) {
 
   const randomGpu =
     bestPerformingGpus[
-      Math.floor(Math.random() * Math.max(nvidiaGpus.length - 1, 10))
+      Math.floor(Math.random() * Math.min(nvidiaGpus.length - 1, 15))
     ];
   return [bestPerformingGpu, bestValueGpu, randomGpu];
 }
@@ -61,7 +64,7 @@ function getAmdGpus(gpus: Part[]) {
 
   const bestValueGpus =
     sortParts(amdGpus, {
-      sort: PartSort.PerformanceRating,
+      sort: PartSort.ValueRating,
     }) ?? [];
 
   const bestPerformingGpu = bestPerformingGpus[0] || null;
@@ -69,7 +72,7 @@ function getAmdGpus(gpus: Part[]) {
 
   const randomGpu =
     bestPerformingGpus[
-      Math.floor(Math.random() * Math.max(amdGpus.length - 1, 10))
+      Math.floor(Math.random() * Math.min(amdGpus.length - 1, 15))
     ];
   return [bestPerformingGpu, bestValueGpu, randomGpu];
 }

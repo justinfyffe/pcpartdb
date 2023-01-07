@@ -41,7 +41,7 @@ export const PartImages: FunctionComponent<PartImagesProps> = (props) => {
         className,
       )}
     >
-      <div className="bg-slate-50 flex items-center justify-center rounded w-full h-70 p-4">
+      <div className="bg-slate-50 flex items-center justify-center rounded w-full h-80 p-4">
         <Img
           className="mx-auto h-auto max-h-full w-auto"
           src={images[selected]}

@@ -33,6 +33,7 @@ export class ImageService {
     return image;
   }
 
+  // TODO: prevent overriding images
   async create(data: ImageRequest, ctx: Context) {
     validate(data, imageValidator);
 
@@ -55,6 +56,7 @@ export class ImageService {
     );
   }
 
+  // TODO: prevent overriding images
   async update(id: number, data: ImageRequest, ctx: Context) {
     validate(data, imageValidator);
 

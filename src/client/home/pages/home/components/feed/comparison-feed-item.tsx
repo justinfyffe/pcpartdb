@@ -1,3 +1,4 @@
+import { getCompanyLogoImagePath } from '@client/image';
 import { formatSpec, getCompareGpusSlug, getGpuName } from '@client/part';
 import { Card, Img } from '@client/shared/components';
 import { classNames } from '@client/shared/ui';
@@ -29,8 +30,8 @@ export const ComparisonFeedItem: FunctionComponent<ComparisonFeedItemProps> = (
 
   const [image1, image2] = useMemo(() => {
     return [
-      part1.images?.details?.[0]?.image,
-      part2.images?.details?.[0]?.image,
+      part1.images?.details?.[0]?.image ?? getCompanyLogoImagePath(part1),
+      part2.images?.details?.[0]?.image ?? getCompanyLogoImagePath(part2),
     ];
   }, [part1, part2]);
 
@@ -42,13 +43,13 @@ export const ComparisonFeedItem: FunctionComponent<ComparisonFeedItemProps> = (
         props.className,
       )}
     >
-      <Card as="article">
-        <div className="relative flex gap-0.5 m-[-16px_-16px_0] rounded-t rounded-b-none h-40 w-[calc(100%_+_32px)] max-w-[calc(100%_+_48px)] overflow-hidden border-b-px">
+      <Card as="article" className="h-full">
+        <div className="bg-white relative flex gap-0.5 m-[-16px_-16px_0] rounded-t rounded-b-none h-40 w-[calc(100%_+_32px)] max-w-[calc(100%_+_48px)] overflow-hidden border-b-px">
           {image1 != null ? (
             <Img
               src={image1}
               className={classNames(
-                'flex-1 h-40 object-cover overflow-hidden',
+                'flex-1 h-40 object-contain overflow-hidden',
                 props.className,
               )}
             />
@@ -68,7 +69,7 @@ export const ComparisonFeedItem: FunctionComponent<ComparisonFeedItemProps> = (
             <Img
               src={image2}
               className={classNames(
-                'flex-1 h-40 object-cover overflow-hidden',
+                'flex-1 h-40 object-contain overflow-hidden',
                 props.className,
               )}
             />
@@ -90,10 +91,10 @@ export const ComparisonFeedItem: FunctionComponent<ComparisonFeedItemProps> = (
           </div>
 
           <div className="flex w-full h-full absolute items-start justify-between rounded-t">
-            <div className="text-[#ececec] font-normal px-1.5 py-0.5 text-2xs bg-[rgba(51,65,85,1)] border-b-px border-r-px border-gray-50 rounded-tl rounded-br">
+            <div className="text-[#ececec] font-normal px-1.5 py-0.5 text-xs bg-[rgba(51,65,85,1)] border-b-px border-r-px border-gray-50 rounded-tl rounded-br">
               {price1}
             </div>
-            <div className="text-[#ececec] font-normal px-1.5 py-0.5 text-2xs bg-[rgba(51,65,85,1)]  border-b-px border-l-px border-gray-50 rounded-tr rounded-bl">
+            <div className="text-[#ececec] font-normal px-1.5 py-0.5 text-xs bg-[rgba(51,65,85,1)]  border-b-px border-l-px border-gray-50 rounded-tr rounded-bl">
               {price2}
             </div>
           </div>
@@ -153,7 +154,7 @@ const Subtitle: FunctionComponent<SubtitleProps> = (props) => {
 
   return (
     <>
-      How does the {name1} compare to {name2}&apos;s performance?
+      How does the {name1} compare with the {name2}?
     </>
   );
 };

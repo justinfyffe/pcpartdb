@@ -1,9 +1,6 @@
 Immediate Tasks:
-- Clean up code
-  - move shared/utils to server and client. see part utils as an example
 - Prep for launch
   - Final steps
-    - create nginx file in server/nginx.conf
     - setup deployment process
     - test links
     - set up database
@@ -29,11 +26,11 @@ Post-launch:
 - View and Compare Page
   - Write summaries for each table/section
   - Add tooltips for each spec
-  - 
   - look into using useController
 - on-site SEO
   - Add alt tags
   - html semantics
+  - sitemap
 - retail models
 - improve related parts
 - improve admin panel

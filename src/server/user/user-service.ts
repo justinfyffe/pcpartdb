@@ -22,6 +22,7 @@ import {
   ResetPasswordRequest,
   UserRequest,
 } from '@shared/user';
+import { WEBSITE_NAME } from '@shared/website';
 import * as bcrypt from 'bcryptjs';
 import { userRepository } from './user-repository';
 
@@ -66,6 +67,10 @@ const resetPasswordValidator = Joi.object({
 }).options({ abortEarly: false });
 
 class UserService {
+  async count(ctx: Context) {
+    return await userRepository.count(ctx);
+  }
+
   async list(ctx: Context) {
     return await userRepository.list(ctx);
   }
@@ -165,10 +170,10 @@ class UserService {
     }
 
     await sendEmail({
-      from: `PC Parts DB <${websiteEmail}>`,
+      from: `${WEBSITE_NAME} <${websiteEmail}>`,
       to: data.email,
-      subject: 'PC Parts DB Password Reset Request',
-      text: `There has been a request to reset your password at PC Parts DB. You can reset your password at the following location:\n\n${process.env.WEBSITE_URL}/reset-password?token=${jwt}.\n\nIf you did not make this request, then ignore this email.`,
+      subject: `${WEBSITE_NAME} Password Reset Request`,
+      text: `There has been a request to reset your password at ${WEBSITE_NAME}. You can reset your password at the following location:\n\n${process.env.WEBSITE_URL}/reset-password?token=${jwt}.\n\nIf you did not make this request, then ignore this email.`,
     });
   }
 

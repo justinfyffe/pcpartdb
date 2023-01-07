@@ -32,10 +32,13 @@ export const PartImagesField: FunctionComponent<PartImagesFieldProps> = (
 
   const handleImageChange = useCallback(
     (i: number, partImage: PartImage) => {
-      value[i] = {
-        imageId: partImage.imageId,
-        metadata: partImage.metadata,
-      };
+      value[i] =
+        partImage != null
+          ? {
+              imageId: partImage.imageId,
+              metadata: partImage.metadata,
+            }
+          : null;
       onChange(value);
     },
     [value, onChange],
