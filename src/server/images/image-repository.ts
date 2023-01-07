@@ -25,6 +25,14 @@ export class ImageRepository {
   async findByIds(ids: number[], config?: RepositoryConfig) {
     return await ImageModel.query(config?.trx).whereIn('id', ids);
   }
+
+  async findByPath(path: string, config?: RepositoryConfig) {
+    return await ImageModel.query(config?.trx).findOne({ path });
+  }
+
+  async findByPaths(paths: string[], config?: RepositoryConfig) {
+    return await ImageModel.query(config?.trx).whereIn('paths', paths);
+  }
 }
 
 export const imageRepository = new ImageRepository();

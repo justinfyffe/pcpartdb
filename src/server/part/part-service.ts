@@ -1,12 +1,9 @@
-import Joi from '@hapi/joi';
 import { notFoundError } from '@server/shared/api/status';
 import { Context } from '@server/shared/context';
-import { validate } from '@server/shared/types/validate';
-import { benchmarksValidator } from '@shared/benchmark';
+import { serialize } from '@server/shared/types/serialize';
+import { throttlePromises } from '@server/shared/utils/promise-utils';
 import {
   FindComparisonRequest,
-  FindPartRequest,
-  ListPartsRequest,
   Part,
   PartComparison,
   PartRequest,
@@ -14,45 +11,22 @@ import {
   RelatedParts,
   RelatedPartsRequest,
 } from '@shared/part';
-import { partImagesValidator } from '@shared/part-image';
-import { PartMetas, partMetasValidator } from '@shared/part-meta';
-import { Specs, specsValidator } from '@shared/spec';
+import { PartMetas } from '@shared/part-meta';
+import { Specs } from '@shared/spec';
 import { addPerformanceBenchmarks } from './benchmark-utils';
-import { partRepository } from './part-repository';
-
-const createPartValidator = Joi.object({
-  slug: Joi.string().required(),
-  type: Joi.string().valid(PartType.CPU, PartType.GPU),
-  name: Joi.string().required(),
-  // TODO: add validator for unique keys
-  metas: partMetasValidator,
-  specs: specsValidator,
-  benchmarks: benchmarksValidator,
-  images: partImagesValidator,
-}).options({ abortEarly: false });
-
-const updatePartValidator = Joi.object({
-  slug: Joi.string().required(),
-  type: Joi.string().valid(PartType.CPU, PartType.GPU),
-  name: Joi.string().required(),
-  // TODO: add validator for unique keys
-  metas: partMetasValidator,
-  specs: specsValidator,
-  benchmarks: benchmarksValidator,
-  images: partImagesValidator,
-}).options({ abortEarly: false });
+import { FindOptions, ListOptions, partRepository } from './part-repository';
 
 export class PartService {
-  async count(options: ListPartsRequest, ctx: Context) {
+  async count(options: ListOptions, ctx: Context) {
     const parts = await partRepository.list(options, ctx);
     return parts.length;
   }
 
-  async list(options: ListPartsRequest, ctx: Context) {
+  async list(options: ListOptions, ctx: Context) {
     return await partRepository.list(options, ctx);
   }
 
-  async get(options: FindPartRequest, ctx: Context) {
+  async get(options: FindOptions, ctx: Context) {
     const part = await partRepository.find(options, ctx);
 
     if (part == null) {
@@ -141,8 +115,6 @@ export class PartService {
 
   // TODO: check slug uniqueness
   async create(data: PartRequest, ctx: Context) {
-    validate(data, createPartValidator);
-
     addPerformanceBenchmarks(data);
 
     return await partRepository.save(data, ctx);
@@ -150,8 +122,6 @@ export class PartService {
 
   // TODO: check slug uniqueness
   async update(id: number, data: PartRequest, ctx: Context) {
-    validate(data, updatePartValidator);
-
     addPerformanceBenchmarks(data);
 
     const part = await partRepository.find({ id }, ctx);
@@ -182,6 +152,16 @@ export class PartService {
 
   async autocompleteMeta(key: keyof PartMetas, query: string, ctx: Context) {
     return await partRepository.findSimilarMetaValue(key, query, ctx);
+  }
+
+  async import(parts: Part[], ctx: Context) {
+    const promises = parts.map((part) => partRepository.save(part, ctx));
+    await throttlePromises(promises, 5);
+  }
+
+  async export(id: number, ctx: Context) {
+    const product = await partRepository.find({ id }, ctx);
+    return serialize(product) as Part;
   }
 }
 

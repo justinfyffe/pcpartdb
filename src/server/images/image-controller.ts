@@ -1,6 +1,6 @@
 import { ApiContext } from '@server/shared/api/context';
 import { staffController } from '@server/shared/api/controller';
-import * as uploads from '@server/shared/uploads/uploads-utils';
+import * as uploads from '@server/shared/uploads/file-utils';
 import type { ImageRequest } from '@shared/image';
 import { imageService } from './image-service';
 

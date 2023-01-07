@@ -5,10 +5,12 @@ import {
   ListPresetSlug,
 } from '@client/part/pages';
 import { partService } from '@server/part/part-service';
+import { partsQueryValidator } from '@server/part/part-validators';
 import { Context } from '@server/shared/context';
 import { SsrContext } from '@server/shared/ssr/context';
 import { ssrPageProps } from '@server/shared/ssr/props';
 import { serialize } from '@server/shared/types/serialize';
+import { validate } from '@server/shared/types/validate';
 import { PartsQuery, PartType } from '@shared/part';
 import { ParsedUrlQuery } from 'querystring';
 
@@ -33,10 +35,13 @@ function getQuery(query: ParsedUrlQuery) {
     return LIST_PRESETS[preset];
   }
 
-  return {
+  const partsQuery = {
     filter: { company },
     orderBy: { sort, order },
   } as PartsQuery;
+  validate(partsQuery, partsQueryValidator);
+
+  return partsQuery as PartsQuery;
 }
 
 async function getGpusForQuery(query: PartsQuery, ctx: Context) {
@@ -45,7 +50,7 @@ async function getGpusForQuery(query: PartsQuery, ctx: Context) {
 
 async function getGpus(query: PartsQuery, ctx: Context) {
   const gpus = await partService.list(
-    { type: PartType.GPU, query, includeRanks: true },
+    { type: PartType.GPU, query, includeRanks: true, includeImages: false },
     ctx,
   );
 

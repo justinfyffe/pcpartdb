@@ -20,9 +20,9 @@ export function errorHandler(ctx: ApiContext, e: Error | ServerError) {
     } as ApiError);
   } else if (e instanceof Error) {
     console.log(e.stack);
-    res.status(500);
+    res.status(500).send({});
   } else {
-    res.status(500);
+    res.status(500).send({});
   }
 }
 
@@ -35,7 +35,7 @@ export function joiValidationError(error: ValidationError) {
     });
   });
 
-  badRequestError(errors);
+  return badRequestError(errors);
 }
 
 function convertJoiToCamelCase(type: string) {

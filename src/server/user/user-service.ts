@@ -1,4 +1,3 @@
-import Joi from '@hapi/joi';
 import {
   badRequestError,
   internalServerError,
@@ -13,11 +12,7 @@ import {
   JwtType,
   verifyJwt,
 } from '@server/shared/jwt/jwt-utils';
-import { validate } from '@server/shared/types/validate';
 import {
-  EMAIL_MAX_LENGTH,
-  PASSWORD_MAX_LENGTH,
-  PASSWORD_MIN_LENGTH,
   RequestPasswordResetRequest,
   ResetPasswordRequest,
   UserRequest,
@@ -25,46 +20,6 @@ import {
 import { WEBSITE_NAME } from '@shared/website';
 import * as bcrypt from 'bcryptjs';
 import { userRepository } from './user-repository';
-
-const createUserValidator = Joi.object({
-  email: Joi.string()
-    .email({ tlds: { allow: false } })
-    .max(EMAIL_MAX_LENGTH)
-    .required(),
-  password: Joi.string()
-    .min(PASSWORD_MIN_LENGTH)
-    .max(PASSWORD_MAX_LENGTH)
-    .required(),
-  isStaff: Joi.boolean(),
-}).options({ abortEarly: false });
-
-const updateUserValidator = Joi.object({
-  email: Joi.string()
-    .email({ tlds: { allow: false } })
-    .max(EMAIL_MAX_LENGTH)
-    .required(),
-  password: Joi.string()
-    .min(PASSWORD_MIN_LENGTH)
-    .max(PASSWORD_MAX_LENGTH)
-    .allow(null, '')
-    .optional(),
-  isStaff: Joi.boolean(),
-}).options({ abortEarly: false });
-
-const requestPasswordResetValidator = Joi.object({
-  email: Joi.string()
-    .email({ tlds: { allow: false } })
-    .max(EMAIL_MAX_LENGTH)
-    .required(),
-}).options({ abortEarly: false });
-
-const resetPasswordValidator = Joi.object({
-  token: Joi.string().required(),
-  password: Joi.string()
-    .min(PASSWORD_MIN_LENGTH)
-    .max(PASSWORD_MAX_LENGTH)
-    .required(),
-}).options({ abortEarly: false });
 
 class UserService {
   async count(ctx: Context) {
@@ -85,8 +40,6 @@ class UserService {
   }
 
   async create(data: UserRequest, ctx: Context) {
-    validate(data, createUserValidator);
-
     const existingUser = await userRepository.findByEmail(data.email);
     if (existingUser != null) {
       throw badRequestError({
@@ -116,8 +69,6 @@ class UserService {
 
   // TODO: don't allow removing last staff user
   async update(id: number, data: UserRequest, ctx: Context) {
-    validate(data, updateUserValidator);
-
     const user = await userRepository.findById(id, ctx);
     if (user == null) {
       throw notFoundError({ user: id });
@@ -147,8 +98,6 @@ class UserService {
   }
 
   async requestPasswordReset(data: RequestPasswordResetRequest, ctx: Context) {
-    validate(data, requestPasswordResetValidator);
-
     const user = await userRepository.findByEmail(data.email, ctx);
     if (user == null) {
       // Don't error out so users cannot detect which accounts exist on the website.
@@ -178,8 +127,6 @@ class UserService {
   }
 
   async resetPassword(data: ResetPasswordRequest, ctx: Context) {
-    validate(data, resetPasswordValidator);
-
     if (!verifyJwt(JwtType.ResetPassword, data.token)) {
       throw badRequestError({ property: 'token', constraint: 'invalidToken' });
     }

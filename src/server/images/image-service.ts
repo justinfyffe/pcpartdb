@@ -1,10 +1,12 @@
 import Joi from '@hapi/joi';
 import { badRequestError, notFoundError } from '@server/shared/api/status';
 import { Context } from '@server/shared/context';
+import { serialize } from '@server/shared/types/serialize';
 import { validate } from '@server/shared/types/validate';
-import * as uploads from '@server/shared/uploads/uploads-utils';
+import * as uploadUtils from '@server/shared/uploads/file-utils';
+import { throttlePromises } from '@server/shared/utils/promise-utils';
 import { ValidationErrorType } from '@shared/error';
-import { ImageRequest } from '@shared/image';
+import { Image, ImageRequest } from '@shared/image';
 import { imageRepository } from './image-repository';
 
 const imageValidator = Joi.object({
@@ -37,9 +39,9 @@ export class ImageService {
   async create(data: ImageRequest, ctx: Context) {
     validate(data, imageValidator);
 
-    await uploads.move(
-      uploads.tmpPath(data.tempPath),
-      uploads.imagePath(data.path),
+    await uploadUtils.move(
+      uploadUtils.uploadsPath(data.tempPath),
+      uploadUtils.imagePath(data.path),
     );
 
     return await imageRepository.save(
@@ -69,7 +71,7 @@ export class ImageService {
 
     // Check if the path has changed. If it did, we should move the image
     if (previousPath !== data.path) {
-      if (await uploads.exists(uploads.imagePath(data.path))) {
+      if (await uploadUtils.exists(uploadUtils.imagePath(data.path))) {
         // A different image exists at this path. Abort
         throw badRequestError({
           property: 'path',
@@ -78,23 +80,23 @@ export class ImageService {
       }
 
       // All good to move
-      if (await uploads.exists(uploads.imagePath(previousPath))) {
-        await uploads.move(
-          uploads.imagePath(previousPath),
-          uploads.imagePath(data.path),
+      if (await uploadUtils.exists(uploadUtils.imagePath(previousPath))) {
+        await uploadUtils.move(
+          uploadUtils.imagePath(previousPath),
+          uploadUtils.imagePath(data.path),
         );
       }
     }
 
     // Check if we uploaded a new image, move it if we did
     if (data.file) {
-      await uploads.move(
-        uploads.tmpPath(data.tempPath),
-        uploads.imagePath(data.path),
+      await uploadUtils.move(
+        uploadUtils.uploadsPath(data.tempPath),
+        uploadUtils.imagePath(data.path),
       );
     }
 
-    const stats = await uploads.stats(uploads.imagePath(data.path));
+    const stats = await uploadUtils.stats(uploadUtils.imagePath(data.path));
 
     // Update image data
     image.name = data.name ?? image.name;
@@ -116,8 +118,23 @@ export class ImageService {
     }
 
     await imageRepository.delete(id, ctx);
-    await uploads.remove(uploads.imagePath(image.path));
+    await uploadUtils.remove(uploadUtils.imagePath(image.path));
     return id;
+  }
+
+  async import(images: Image[], ctx: Context) {
+    const promises = images.map((image) =>
+      imageRepository.save(
+        { ...image, uploadedAt: new Date(image.uploadedAt) },
+        ctx,
+      ),
+    );
+    await throttlePromises(promises, 5);
+  }
+
+  async export(ids: number[], ctx: Context) {
+    const images = await imageRepository.findByIds(ids, ctx);
+    return serialize(images) as Image[];
   }
 }
 

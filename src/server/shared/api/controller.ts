@@ -4,7 +4,7 @@ import { userGuard } from '@server/auth/user-guard';
 import { transaction } from '@server/db/database';
 import { userMiddleware } from '@server/user/user-middleware';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { serializeAsync } from '../types/serialize';
+import { serialize } from '../types/serialize';
 import { ApiContext } from './context';
 import { errorHandler } from './error';
 import { ok } from './status';
@@ -31,12 +31,14 @@ export function controller(
         }
 
         // Run Controller
-        const result = await serializeAsync(func(ctx));
+        let result = await func(ctx);
+        result = serialize(result);
 
         // Send back resposne
         ok(result ?? {}, ctx);
       });
     } catch (e) {
+      console.log(e);
       errorHandler(ctx, e as Error);
     }
   };

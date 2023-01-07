@@ -16,6 +16,8 @@ export async function up(knex: Knex): Promise<void> {
     table.timestamp('uploaded_at', { useTz: true }).defaultTo(knex.fn.now());
 
     table.timestamps(true, true);
+
+    table.unique(['path']);
   });
 
   await knex.raw(`

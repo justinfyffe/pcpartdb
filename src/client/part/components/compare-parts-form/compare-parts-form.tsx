@@ -105,7 +105,7 @@ export const ComparePartsForm: FunctionComponent<ComparePartsFormProps> = (
         disabled={filteredValues.length === 0}
         className="min-w-25"
       >
-        {filteredValues.length === 1 ? 'Search' : 'Compare'}
+        {filteredValues.length === 1 ? 'View' : 'Compare'}
       </Button>
     </Form>
   );

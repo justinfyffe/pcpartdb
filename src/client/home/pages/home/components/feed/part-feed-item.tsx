@@ -147,11 +147,12 @@ const Subtitle: FunctionComponent<SubtitleProps> = (props) => {
 
   const text = useMemo(() => {
     const name = getGpuName(part, { company: false });
+    const company = formatSpec(part.specs?.company);
 
     if (tag === PartFeedTag.GreatPerformance) {
-      return `The ${name} is one of the strongest GPUs.`;
+      return `The ${name} is the most powerful ${company} GPU.`;
     } else if (tag === PartFeedTag.GreatValue) {
-      return `The ${name} has some of the best value on the market.`;
+      return `The ${name} has the best value among ${company} GPUs.`;
     } else {
       return `Learn more about the ${name}.`;
     }

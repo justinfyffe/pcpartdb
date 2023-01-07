@@ -20,6 +20,11 @@ export const SlugField = forwardRef<HTMLInputElement, SlugFieldProps>(
     const company: Spec<string> = useWatch({ control, name: 'company' });
     const [slug, setSlug] = useState(value);
 
+    const handleChange = useCallback((value: string) => {
+      setSlug(value);
+      onChange?.(value);
+    }, []);
+
     const handleGenerate = useCallback(() => {
       const parts = [];
       if (company?.value != null) {
@@ -42,6 +47,7 @@ export const SlugField = forwardRef<HTMLInputElement, SlugFieldProps>(
       <Input
         type="string"
         value={slug || ''}
+        onChange={handleChange}
         ref={ref}
         suffix={<Button onClick={handleGenerate}>Generate</Button>}
       />

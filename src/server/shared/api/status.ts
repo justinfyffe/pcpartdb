@@ -5,7 +5,9 @@ import { ApiContext } from './context';
 export function ok<T = unknown>(response: T, ctx: ApiContext) {
   const { res } = ctx;
 
-  res.status(200).json(response);
+  if (!res.headersSent) {
+    res.status(200).json(response);
+  }
 }
 
 export function notFoundError<T = unknown>(response?: T) {

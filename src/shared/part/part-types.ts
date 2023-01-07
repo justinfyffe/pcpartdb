@@ -97,13 +97,10 @@ export interface PartsQuery {
 export interface ListPartsRequest {
   type: PartType;
   query?: PartsQuery;
-
-  includeRanks?: boolean;
-  includeImages?: boolean;
 }
 
 export interface ImportPartRequest {
-  url: string;
+  url?: string;
 }
 
 export interface ImportPartResults {
@@ -111,4 +108,13 @@ export interface ImportPartResults {
   specs?: Specs;
   metas?: PartMetas;
   benchmarks?: Benchmarks;
+}
+
+export interface ExportPartRequest {
+  id: number;
+}
+
+export interface ExportPartResult {
+  file: string;
+  recommendedFileName: string;
 }

@@ -68,7 +68,7 @@ export const FileLabel: FunctionComponent<FileLabelProps> = (props) => {
       as="label"
       htmlFor={props.for}
       className="bottom-0 flex flex-col justify-center mb-0 absolute right-0 top-0"
-      variant={ButtonVariant.Primary}
+      variant={ButtonVariant.Secondary}
     >
       {props.children}
     </Button>

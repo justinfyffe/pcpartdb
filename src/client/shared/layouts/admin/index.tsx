@@ -68,6 +68,9 @@ export const AdminLayout: FunctionComponent<AdminLayoutProps> = (props) => {
               <Button variant={ButtonVariant.Default} href="/admin/users">
                 Accounts
               </Button>
+              <Button variant={ButtonVariant.Default} href="/admin/export">
+                Export
+              </Button>
             </nav>
           </aside>
           <div className={classNames('flex-1 text-content', props.className)}>

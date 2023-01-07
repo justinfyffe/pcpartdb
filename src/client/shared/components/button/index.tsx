@@ -50,7 +50,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         className={classNames(
           'relative font-medium no-underline text-center cursor-pointer inline-block px-4 py-2 relative rounded shadow',
           BUTTON_VARIANTS[variant ?? ButtonVariant.None],
-          props.disabled ? 'bg-[#ddd] border-[#ddd] text-[#aaa]' : '',
+          props.disabled
+            ? 'bg-[#ddd] border-[#ddd] text-[#aaa] cursor-default'
+            : '',
           className,
         )}
         ref={ref}

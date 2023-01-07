@@ -37,7 +37,6 @@ export const ListGpusPage = (props: ListGpusPageProps) => {
         const gpus = await partService.list({
           type: PartType.GPU,
           query: q,
-          includeRanks: true,
         });
         setGpus(gpus);
         setQueryState(q);

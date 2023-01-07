@@ -2,16 +2,22 @@ import { RepositoryConfig } from '@server/db/repository';
 import { imageRepository } from '@server/images/image-repository';
 import { serialize } from '@server/shared/types/serialize';
 import { Image } from '@shared/image';
-import { ListPartsRequest, PartType } from '@shared/part';
+import { PartsQuery, PartType } from '@shared/part';
 import { PartMetas } from '@shared/part-meta';
 import { Specs } from '@shared/spec';
 import { Model, raw, ref } from 'objection';
 import { PartModel, PartModelPojo } from './part-model';
 import { filterParts, sortParts } from './part-utils';
 
-type ListOptions = ListPartsRequest;
+export interface ListOptions {
+  type?: PartType;
+  query?: PartsQuery;
 
-interface FindOptions {
+  includeRanks?: boolean;
+  includeImages?: boolean;
+}
+
+export interface FindOptions {
   id?: number;
   slug?: string;
 
@@ -23,9 +29,12 @@ export class PartRepository {
   async list(options: ListOptions, config?: RepositoryConfig) {
     const { type, query, includeImages, includeRanks } = options;
 
-    let parts = await PartModel.query(config?.trx)
-      .where('type', type)
-      .orderBy('id', 'DESC');
+    let partsQuery = PartModel.query(config?.trx).orderBy('id', 'DESC');
+    if (type != null) {
+      partsQuery = partsQuery.where('type', type);
+    }
+
+    let parts = await partsQuery;
 
     if (query?.filter != null) {
       parts = filterParts(parts, query?.filter);
