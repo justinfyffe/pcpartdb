@@ -2,7 +2,7 @@ import { formatSpec } from '@client/part';
 import { Td, Tr } from '@client/shared/components';
 import { BooleanFormatter } from '@client/shared/format';
 import { SpecKey } from '@shared/spec';
-import React, { FunctionComponent, useContext, useState } from 'react';
+import React, { FunctionComponent, useContext } from 'react';
 import { ImportPartsContext } from './import-parts-context';
 
 const LABELS: Record<string, string> = {
@@ -70,7 +70,7 @@ export const ImportSpec: FunctionComponent<ImportSpecProps> = (props) => {
 
   const context = useContext(ImportPartsContext);
   const specs = context.specs;
-  const [spec] = useState(() => specs[key]);
+  const spec = specs[key];
 
   return (
     <Tr className="hover:bg-gray-200">

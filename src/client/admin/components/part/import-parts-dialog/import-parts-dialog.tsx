@@ -112,7 +112,7 @@ export const ImportPartsDialog: FunctionComponent<ImportPartsDialogProps> = (
             <Table>
               <THead>
                 <Tr sticky>
-                  <Th>Field</Th>
+                  <Th className="w-4/12">Field</Th>
                   <Th>Value</Th>
                 </Tr>
               </THead>

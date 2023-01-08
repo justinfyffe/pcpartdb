@@ -1,15 +1,17 @@
 import { badRequestError } from '@server/shared/api/status';
 import { Context } from '@server/shared/context';
+import { serialize } from '@server/shared/types/serialize';
 import * as fileUtils from '@server/shared/utils/file-utils';
 import {
   ExportPartsRequest,
   ExportPartsResponse,
   ImportPartialPartRequest,
+  Part,
 } from '@shared/part';
 import fs from 'fs/promises';
 import { importFromJsonFile } from './importers/json-file-importer';
 import { importFromTechPowerUp } from './importers/techpowerup-importer';
-import { partService } from './part-service';
+import { partRepository } from './part-repository';
 
 enum Importers {
   TechPowerUp = 'www.techpowerup.com',
@@ -34,14 +36,19 @@ export class PartImporterService {
     const { ids } = request;
 
     // Gather data
-    let part = await partService.export(ids[0], ctx);
-    part = { ...part, id: undefined, images: {} };
+    const partModels = await partRepository.findByIds({ ids }, ctx);
+    const parts: Part[] = serialize(partModels);
+    parts.forEach((part) => {
+      part.id = undefined;
+      part.images = {};
+    });
 
     // Create files to export
-    const recommendedFileName = `${part.slug}.json`;
-    const tempFileName = fileUtils.generateRandomName(part.slug, 'json');
+    const recommendedFileName =
+      parts.length === 1 ? `${parts[0].slug}.json` : 'parts.json';
+    const tempFileName = fileUtils.generateRandomName(null, 'json');
     const tempFilePath = fileUtils.exportsPath(tempFileName);
-    await fs.writeFile(tempFilePath, JSON.stringify([part]), 'utf-8');
+    await fs.writeFile(tempFilePath, JSON.stringify(parts), 'utf-8');
 
     // Return exported file
     return { file: tempFileName, recommendedFileName } as ExportPartsResponse;

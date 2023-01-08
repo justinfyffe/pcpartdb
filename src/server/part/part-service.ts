@@ -1,7 +1,5 @@
 import { notFoundError } from '@server/shared/api/status';
 import { Context } from '@server/shared/context';
-import { serialize } from '@server/shared/types/serialize';
-import { throttlePromises } from '@server/shared/utils/promise-utils';
 import {
   FindComparisonRequest,
   Part,
@@ -152,16 +150,6 @@ export class PartService {
 
   async autocompleteMeta(key: keyof PartMetas, query: string, ctx: Context) {
     return await partRepository.findSimilarMetaValue(key, query, ctx);
-  }
-
-  async import(parts: Part[], ctx: Context) {
-    const promises = parts.map((part) => partRepository.save(part, ctx));
-    await throttlePromises(promises, 5);
-  }
-
-  async export(id: number, ctx: Context) {
-    const product = await partRepository.find({ id }, ctx);
-    return serialize(product) as Part;
   }
 }
 

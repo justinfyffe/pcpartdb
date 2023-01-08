@@ -1,12 +1,10 @@
 import Joi from '@hapi/joi';
 import { badRequestError, notFoundError } from '@server/shared/api/status';
 import { Context } from '@server/shared/context';
-import { serialize } from '@server/shared/types/serialize';
 import { validate } from '@server/shared/types/validate';
 import * as fileUtils from '@server/shared/utils/file-utils';
-import { throttlePromises } from '@server/shared/utils/promise-utils';
 import { ValidationErrorType } from '@shared/error';
-import { Image, ImageRequest } from '@shared/image';
+import { ImageRequest } from '@shared/image';
 import { imageRepository } from './image-repository';
 
 const imageValidator = Joi.object({
@@ -120,21 +118,6 @@ export class ImageService {
     await imageRepository.delete(id, ctx);
     await fileUtils.remove(fileUtils.imagePath(image.path));
     return id;
-  }
-
-  async import(images: Image[], ctx: Context) {
-    const promises = images.map((image) =>
-      imageRepository.save(
-        { ...image, uploadedAt: new Date(image.uploadedAt) },
-        ctx,
-      ),
-    );
-    await throttlePromises(promises, 5);
-  }
-
-  async export(ids: number[], ctx: Context) {
-    const images = await imageRepository.findByIds(ids, ctx);
-    return serialize(images) as Image[];
   }
 }
 

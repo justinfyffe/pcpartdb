@@ -6,6 +6,7 @@ import {
   AlertVariant,
   Button,
   ButtonVariant,
+  Checkbox,
   Field,
   File,
   showDialog,
@@ -19,7 +20,7 @@ import {
 import { AdminLayout } from '@client/shared/layouts';
 import { Part } from '@shared/part';
 import { useRouter } from 'next/router';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { downloadExportFile } from './export-utils';
 
 export interface AdminListGpusPageProps {
@@ -32,6 +33,7 @@ export const AdminListGpusPage = (props: AdminListGpusPageProps) => {
   const [saved] = useState(router.query.saved === 'true');
   const [deleted] = useState(router.query.deleted === 'true');
   const [importFile, setImportFile] = useState<File>(null);
+  const exportList = useMemo(() => new Set<number>(), []);
 
   const handleImportFileChange = useCallback((file: File) => {
     setImportFile(file);
@@ -43,10 +45,21 @@ export const AdminListGpusPage = (props: AdminListGpusPageProps) => {
     });
   }, [importFile]);
 
-  const handleExportClick = useCallback(async (id: number) => {
-    const result = await partService.export({ ids: [id] });
+  const handleExportToggle = useCallback(
+    async (id: number, checked: boolean) => {
+      if (checked) {
+        exportList.add(id);
+      } else {
+        exportList.delete(id);
+      }
+    },
+    [exportList],
+  );
+
+  const handleExportClick = useCallback(async () => {
+    const result = await partService.export({ ids: [...exportList.values()] });
     downloadExportFile(result);
-  }, []);
+  }, [exportList]);
 
   return (
     <AdminLayout>
@@ -98,33 +111,43 @@ export const AdminListGpusPage = (props: AdminListGpusPageProps) => {
           <h2>All GPUs</h2>
 
           {gpus.length > 0 && (
-            <Table border responsive>
-              <THead>
-                <Tr className="font-medium">
-                  <Th className="text-center">ID</Th>
-                  <Th>Name</Th>
-                  <Th>Export</Th>
-                </Tr>
-              </THead>
-              <TBody>
-                {gpus.map((gpu) => (
-                  <Tr key={gpu.id}>
-                    <Td className="text-center">{gpu.id}</Td>
-                    <Td>
-                      <a href={`/admin/gpus/${gpu.id}`}>{gpu.name}</a>
-                    </Td>
-                    <Td>
-                      <a
-                        onClick={() => handleExportClick(gpu.id)}
-                        className="cursor-pointer"
-                      >
-                        Export
-                      </a>
-                    </Td>
+            <div className="flex flex-col gap-4">
+              <Table border responsive>
+                <THead>
+                  <Tr className="font-medium">
+                    <Th className="w-10"></Th>
+                    <Th className="text-left">ID</Th>
+                    <Th>Name</Th>
                   </Tr>
-                ))}
-              </TBody>
-            </Table>
+                </THead>
+                <TBody>
+                  {gpus.map((gpu) => (
+                    <Tr key={gpu.id}>
+                      <Td>
+                        <Checkbox
+                          onChange={(checked) =>
+                            handleExportToggle(gpu.id, checked)
+                          }
+                        />
+                      </Td>
+                      <Td className="text-left">{gpu.id}</Td>
+                      <Td>
+                        <a href={`/admin/gpus/${gpu.id}`}>{gpu.name}</a>
+                      </Td>
+                    </Tr>
+                  ))}
+                </TBody>
+              </Table>
+
+              <div className="flex justify-end">
+                <Button
+                  variant={ButtonVariant.Primary}
+                  onClick={() => handleExportClick()}
+                >
+                  Export
+                </Button>
+              </div>
+            </div>
           )}
 
           {gpus.length === 0 && (
