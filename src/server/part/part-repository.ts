@@ -25,13 +25,6 @@ export interface FindOptions {
   includeRanks?: boolean;
 }
 
-export interface FindByIdsOptions {
-  ids?: number[];
-
-  includeImages?: boolean;
-  includeRanks?: boolean;
-}
-
 export class PartRepository {
   async list(options: ListOptions, config?: RepositoryConfig) {
     const { type, query, includeImages, includeRanks } = options;
@@ -85,22 +78,6 @@ export class PartRepository {
     }
 
     return part;
-  }
-
-  async findByIds(options: FindByIdsOptions, config?: RepositoryConfig) {
-    const { ids, includeImages, includeRanks } = options;
-
-    const parts = await PartModel.query(config?.trx).whereIn('id', ids);
-
-    if (includeImages) {
-      await this.populateImages(parts, config);
-    }
-
-    if (includeRanks) {
-      await this.populateRanks(parts, config);
-    }
-
-    return parts;
   }
 
   async findSimilarValue(

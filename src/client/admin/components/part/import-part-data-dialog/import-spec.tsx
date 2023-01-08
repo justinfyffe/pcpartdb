@@ -1,9 +1,14 @@
 import { formatSpec } from '@client/part';
-import { Td, Tr } from '@client/shared/components';
+import { Checkbox, Td, Tr } from '@client/shared/components';
 import { BooleanFormatter } from '@client/shared/format';
 import { SpecKey } from '@shared/spec';
-import React, { FunctionComponent, useContext } from 'react';
-import { ImportPartsContext } from './import-parts-context';
+import React, {
+  FunctionComponent,
+  useCallback,
+  useContext,
+  useState,
+} from 'react';
+import { ImportPartDataContext } from './import-part-data-context';
 
 const LABELS: Record<string, string> = {
   // General
@@ -68,17 +73,38 @@ interface ImportSpecProps {
 export const ImportSpec: FunctionComponent<ImportSpecProps> = (props) => {
   const { spec: key } = props;
 
-  const context = useContext(ImportPartsContext);
+  const context = useContext(ImportPartDataContext);
   const specs = context.specs;
-  const spec = specs[key];
+
+  const [spec] = useState(() => {
+    if (specs[key] == null || specs[key]?.value == null) {
+      delete specs[key];
+      return null;
+    }
+    return specs[key];
+  });
+  const [checked, setChecked] = useState(() => spec != null);
+
+  const handleClick = useCallback(() => {
+    if (checked) {
+      delete specs[key];
+    } else {
+      specs[key] = spec;
+    }
+
+    setChecked(!checked);
+  }, [specs, key, spec, checked]);
 
   return (
-    <Tr className="hover:bg-gray-200">
+    <Tr onClick={handleClick} className="hover:bg-gray-200 cursor-pointer">
       <Td>{LABELS[key]}</Td>
       <Td>
         {formatSpec(spec, {
           booleanFormatter: BooleanFormatter.YesNo,
         }) || '--'}
+      </Td>
+      <Td className="text-right">
+        <Checkbox value={checked} />
       </Td>
     </Tr>
   );

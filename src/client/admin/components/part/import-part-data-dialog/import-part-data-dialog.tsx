@@ -18,16 +18,16 @@ import React, {
   useState,
 } from 'react';
 import { ImportName } from './import-name';
-import { ImportPartialPartContext } from './import-partial-part-context';
+import { ImportPartDataContext } from './import-part-data-context';
 import { ImportSpec } from './import-spec';
 
-interface ImportPartialPartDialogProps {
+interface ImportPartDataDialogProps {
   url: string;
   onImport: (data: Partial<Part>) => void;
 }
 
-export const ImportPartialPartDialog: FunctionComponent<
-  ImportPartialPartDialogProps
+export const ImportPartDataDialog: FunctionComponent<
+  ImportPartDataDialogProps
 > = (props) => {
   const { url, onImport } = props;
 
@@ -36,7 +36,7 @@ export const ImportPartialPartDialog: FunctionComponent<
 
   useEffect(() => {
     async function importPart() {
-      const results = await partService.importPartialPart({ url });
+      const results = await partService.importPartData({ url });
       setDataToImport(results.part);
       setLoading(false);
     }
@@ -65,7 +65,7 @@ export const ImportPartialPartDialog: FunctionComponent<
       )}
 
       {!loading && (
-        <ImportPartialPartContext.Provider value={dataToImport}>
+        <ImportPartDataContext.Provider value={dataToImport}>
           <div className="flex-1 max-h-[calc(100%_-_50px)] overflow-auto">
             <Table>
               <THead>
@@ -126,7 +126,7 @@ export const ImportPartialPartDialog: FunctionComponent<
               </TBody>
             </Table>
           </div>
-        </ImportPartialPartContext.Provider>
+        </ImportPartDataContext.Provider>
       )}
 
       <div className="flex justify-between">

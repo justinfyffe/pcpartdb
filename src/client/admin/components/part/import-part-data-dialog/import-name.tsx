@@ -6,12 +6,12 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import { ImportPartialPartContext } from './import-partial-part-context';
+import { ImportPartDataContext } from './import-part-data-context';
 
 interface ImportNameProps {}
 
 export const ImportName: FunctionComponent<ImportNameProps> = (_props) => {
-  const context = useContext(ImportPartialPartContext);
+  const context = useContext(ImportPartDataContext);
   const [name] = useState(() => {
     if (context.name == null) {
       delete context.name;

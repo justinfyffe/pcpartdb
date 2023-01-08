@@ -49,7 +49,7 @@ import React, {
 } from 'react';
 import { Controller, useForm, UseFormProps } from 'react-hook-form';
 import { BenchmarkField } from '../benchmark-field';
-import { ImportPartialPartDialog } from '../import-partial-part-dialog';
+import { ImportPartDataDialog } from '../import-part-data-dialog';
 import { PartImagesField } from '../part-image-field';
 import { RetailModelsField } from '../retail-model-field';
 import { SlugField } from '../slug-field';
@@ -364,7 +364,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
 
   const handleImportClick = useCallback(() => {
     const url: string = importRef.current.value;
-    showDialog(<ImportPartialPartDialog url={url} onImport={handleImport} />, {
+    showDialog(<ImportPartDataDialog url={url} onImport={handleImport} />, {
       disableClose: true,
     });
   }, [handleImport]);

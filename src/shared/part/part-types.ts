@@ -89,23 +89,10 @@ export interface ListPartsRequest {
   query?: PartsQuery;
 }
 
-export interface ImportPartialPartRequest {
+export interface ImportPartDataRequest {
   url?: string;
 }
 
-export interface ImportPartialPartResponse {
+export interface ImportPartDataResponse {
   part: Partial<Part>;
-}
-
-export interface ImportPartsResponse {
-  parts: Part[];
-}
-
-export interface ExportPartsRequest {
-  ids: number[];
-}
-
-export interface ExportPartsResponse {
-  file: string;
-  recommendedFileName: string;
 }

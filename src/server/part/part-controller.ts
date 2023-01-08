@@ -1,10 +1,8 @@
 import { ApiContext } from '@server/shared/api/context';
 import { controller, staffController } from '@server/shared/api/controller';
 import { validate } from '@server/shared/types/validate';
-import * as fileUtils from '@server/shared/utils/file-utils';
 import type {
-  ExportPartsRequest,
-  ImportPartialPartRequest,
+  ImportPartDataRequest,
   ListPartsRequest,
   PartRequest,
   PartType,
@@ -74,21 +72,7 @@ export const deletePart = staffController(async (ctx: ApiContext) => {
   return await partService.delete(id, ctx);
 });
 
-export const importPartialPart = staffController(async (ctx: ApiContext) => {
-  const body = ctx.req.body as ImportPartialPartRequest;
-  return partImporterService.importPartialPart(body);
-});
-
-export const importParts = staffController(async (ctx: ApiContext) => {
-  await fileUtils.uploadFile('file', ctx);
-
-  const body = ctx.req.body;
-  const filePath = body.tempPath;
-
-  return partImporterService.importParts(filePath, ctx);
-});
-
-export const exportParts = staffController(async (ctx: ApiContext) => {
-  const body = ctx.req.body as ExportPartsRequest;
-  return await partImporterService.exportParts(body, ctx);
+export const importPartData = staffController(async (ctx: ApiContext) => {
+  const body = ctx.req.body as ImportPartDataRequest;
+  return partImporterService.importPartData(body);
 });

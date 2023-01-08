@@ -1,11 +1,8 @@
 import { ApiClient, apiClient } from '@client/shared/api';
 import { PartCache } from '@client/shared/cache';
 import {
-  ExportPartsRequest,
-  ExportPartsResponse,
-  ImportPartialPartRequest,
-  ImportPartialPartResponse,
-  ImportPartsResponse,
+  ImportPartDataRequest,
+  ImportPartDataResponse,
   ListPartsRequest,
   Part,
   PartRequest,
@@ -64,27 +61,8 @@ export class PartService {
     });
   }
 
-  async importPartialPart(data: ImportPartialPartRequest) {
-    return await this.api.post<ImportPartialPartResponse>(
-      `${PATH}/import`,
-      data,
-    );
-  }
-
-  async importParts(file: File) {
-    const formData = new FormData();
-    formData.append('file', file);
-    return await this.api.post<ImportPartsResponse>(
-      `${PATH}/import/file`,
-      formData,
-      {
-        headers: { 'content-type': 'multipart/form-data' },
-      },
-    );
-  }
-
-  async export(data: ExportPartsRequest) {
-    return await this.api.post<ExportPartsResponse>(`${PATH}/export`, data);
+  async importPartData(data: ImportPartDataRequest) {
+    return await this.api.post<ImportPartDataResponse>(`${PATH}/import`, data);
   }
 }
 
