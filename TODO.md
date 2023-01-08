@@ -1,10 +1,8 @@
 Immediate Tasks:
 - Prep for launch
   - import / export service
-    - only import parts, not images
-    - require approval
+    - how to handle images?
   - improve validations
-  - Backup system
   - Secure part-controller: listParts
   - Final steps
     - setup deployment process

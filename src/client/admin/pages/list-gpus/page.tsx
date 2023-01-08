@@ -125,6 +125,7 @@ export const AdminListGpusPage = (props: AdminListGpusPageProps) => {
                     <Tr key={gpu.id}>
                       <Td>
                         <Checkbox
+                          value={exportList.has(gpu.id)}
                           onChange={(checked) =>
                             handleExportToggle(gpu.id, checked)
                           }
