@@ -1,7 +1,13 @@
 Immediate Tasks:
 - Prep for launch
   - import / export service
-    - how to handle images?
+    - whats the purpose?
+      - to make local development easier
+      - shouldn't be used for publishing or backups
+      - therefore, importing/exporting images is not needed
+      - SHOULD WE EVEN BOTHER WITH THIS FEATURE
+        - Probably not, local and production should be pretty different and it adds complexities
+        - Only support partial importing from url locations
   - improve validations
   - Secure part-controller: listParts
   - Final steps
