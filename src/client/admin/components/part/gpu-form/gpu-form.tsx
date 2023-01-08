@@ -21,7 +21,7 @@ import {
   benchmarkValidator,
 } from '@shared/benchmark';
 import { ApiError, ValidationErrorType } from '@shared/error';
-import { ImportPartResults, Part, PartRequest, PartType } from '@shared/part';
+import { Part, PartRequest, PartType } from '@shared/part';
 import {
   PartImage,
   PartImagesRequest,
@@ -49,7 +49,7 @@ import React, {
 } from 'react';
 import { Controller, useForm, UseFormProps } from 'react-hook-form';
 import { BenchmarkField } from '../benchmark-field';
-import { ImportPartDialog } from '../import-part-dialog';
+import { ImportPartialPartDialog } from '../import-partial-part-dialog';
 import { PartImagesField } from '../part-image-field';
 import { RetailModelsField } from '../retail-model-field';
 import { SlugField } from '../slug-field';
@@ -352,7 +352,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
   }, [gpu, router, setError]);
 
   const handleImport = useCallback(
-    (data: ImportPartResults) => {
+    (data: Partial<Part>) => {
       setValue('name', data.name);
       Object.keys(data.specs).forEach((specKey) => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -364,7 +364,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
 
   const handleImportClick = useCallback(() => {
     const url: string = importRef.current.value;
-    showDialog(<ImportPartDialog url={url} onImport={handleImport} />, {
+    showDialog(<ImportPartialPartDialog url={url} onImport={handleImport} />, {
       disableClose: true,
     });
   }, [handleImport]);

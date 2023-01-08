@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import { ImportPartsDialog } from '@client/admin/components/part/import-parts-dialog';
 import { partService } from '@client/part';
 import {
   Alert,
@@ -7,6 +8,7 @@ import {
   ButtonVariant,
   Field,
   File,
+  showDialog,
   Table,
   TBody,
   Td,
@@ -36,11 +38,13 @@ export const AdminListGpusPage = (props: AdminListGpusPageProps) => {
   }, []);
 
   const handleImportClick = useCallback(async () => {
-    await partService.importFromFile(importFile);
+    showDialog(<ImportPartsDialog file={importFile} />, {
+      disableClose: true,
+    });
   }, [importFile]);
 
   const handleExportClick = useCallback(async (id: number) => {
-    const result = await partService.export({ id });
+    const result = await partService.export({ ids: [id] });
     downloadExportFile(result);
   }, []);
 
@@ -70,15 +74,23 @@ export const AdminListGpusPage = (props: AdminListGpusPageProps) => {
         </div>
 
         <section className="border-b-px border-b-slate-300 mb-6">
-          <Field className="flex-1 mx-2">
-            Import Part
-            <File name="file" onChange={handleImportFileChange} />
-            <Button
-              variant={ButtonVariant.Secondary}
-              onClick={handleImportClick}
-            >
-              Import
-            </Button>
+          <h2>Import GPUs</h2>
+
+          <Field className="flex-1">
+            <div className="flex gap-4">
+              <File
+                name="file"
+                onChange={handleImportFileChange}
+                className="flex-1"
+              />
+
+              <Button
+                variant={ButtonVariant.Secondary}
+                onClick={handleImportClick}
+              >
+                Import
+              </Button>
+            </div>
           </Field>
         </section>
 

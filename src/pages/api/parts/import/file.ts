@@ -1,4 +1,4 @@
-import { importPartsFile } from '@server/part/part-controller';
+import { importParts } from '@server/part/part-controller';
 
 export const config = {
   api: {
@@ -6,4 +6,4 @@ export const config = {
   },
 };
 
-export default importPartsFile;
+export default importParts;

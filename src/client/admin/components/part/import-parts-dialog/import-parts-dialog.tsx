@@ -10,43 +10,69 @@ import {
   THead,
   Tr,
 } from '@client/shared/components';
-import { ImportPartResults } from '@shared/part';
+import { ImportPartsResponse } from '@shared/part';
 import React, {
   FunctionComponent,
   useCallback,
   useEffect,
   useState,
 } from 'react';
+import { ImportId } from './import-id';
 import { ImportName } from './import-name';
-import { ImportPartContext } from './import-part-context';
+import { ImportPartsContext } from './import-parts-context';
 import { ImportSpec } from './import-spec';
 
-interface ImportPartDialogProps {
-  url: string;
-  onImport: (data: ImportPartResults) => void;
+interface ImportPartsDialogProps {
+  file?: File;
 }
 
-export const ImportPartDialog: FunctionComponent<ImportPartDialogProps> = (
+export const ImportPartsDialog: FunctionComponent<ImportPartsDialogProps> = (
   props,
 ) => {
-  const { url, onImport } = props;
+  const { file } = props;
 
   const [loading, setLoading] = useState<boolean>(true);
-  const [dataToImport, setDataToImport] = useState<ImportPartResults>(null);
+  const [importResults, setImportResults] = useState<ImportPartsResponse>(null);
+
+  const [partCounter, setPartCounter] = useState<number>(0);
+  const partToImport = importResults?.parts?.[partCounter] || null;
 
   useEffect(() => {
-    async function importPart() {
-      const results = await partService.import({ url });
-      setDataToImport(results);
+    async function importParts() {
+      const results = await partService.importParts(file);
+      setImportResults(results);
       setLoading(false);
     }
-    importPart();
-  }, [url]);
+    importParts();
+  }, [file]);
 
-  const handleApply = useCallback(() => {
-    onImport(dataToImport);
-    closeDialog();
-  }, [onImport, dataToImport]);
+  const handleSkip = useCallback(async () => {
+    if (partCounter + 1 >= importResults.parts.length) {
+      closeDialog();
+    } else {
+      setPartCounter(partCounter + 1);
+    }
+  }, [importResults, partCounter]);
+
+  const handleApply = useCallback(async () => {
+    if (partToImport.id == null) {
+      await partService.create({
+        ...partToImport,
+        id: undefined,
+      });
+    } else {
+      await partService.update(partToImport.id, {
+        ...partToImport,
+        id: undefined,
+      });
+    }
+
+    if (partCounter + 1 >= importResults.parts.length) {
+      closeDialog();
+    } else {
+      setPartCounter(partCounter + 1);
+    }
+  }, [importResults, partCounter, partToImport]);
 
   const handleCancel = useCallback(() => {
     closeDialog();
@@ -64,18 +90,34 @@ export const ImportPartDialog: FunctionComponent<ImportPartDialogProps> = (
         </div>
       )}
 
-      {!loading && (
-        <ImportPartContext.Provider value={dataToImport}>
+      {!loading && partToImport != null && (
+        <ImportPartsContext.Provider value={partToImport}>
+          <div>
+            <h3 className="mb-1">Import Part?</h3>
+
+            {partToImport.id == null ? (
+              <p>
+                This will create a new part in the database. Images are
+                excluded.
+              </p>
+            ) : (
+              <p>
+                This will overwrite the part with id {partToImport.id} in the
+                database. Images are excluded.
+              </p>
+            )}
+          </div>
+
           <div className="flex-1 max-h-[calc(100%_-_50px)] overflow-auto">
             <Table>
               <THead>
                 <Tr sticky>
                   <Th>Field</Th>
                   <Th>Value</Th>
-                  <Th className="text-right">Import?</Th>
                 </Tr>
               </THead>
               <TBody>
+                <ImportId />
                 <ImportName />
                 <ImportSpec spec="company" />
                 <ImportSpec spec="marketSegment" />
@@ -126,12 +168,15 @@ export const ImportPartDialog: FunctionComponent<ImportPartDialogProps> = (
               </TBody>
             </Table>
           </div>
-        </ImportPartContext.Provider>
+        </ImportPartsContext.Provider>
       )}
 
       <div className="flex justify-between">
         <Button variant={ButtonVariant.Default} onClick={handleCancel}>
           Cancel
+        </Button>
+        <Button variant={ButtonVariant.Primary} onClick={handleSkip}>
+          Skip
         </Button>
         <Button variant={ButtonVariant.Primary} onClick={handleApply}>
           Apply

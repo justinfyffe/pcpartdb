@@ -1,9 +1,9 @@
 Immediate Tasks:
 - Prep for launch
   - import / export service
-    - instead of importing/exporting whole site, support exporting 1 or multiple part/parts at a time
-      - add a checkbox to the gpu list page?
-    - improve validations
+    - only import parts, not images
+    - require approval
+  - improve validations
   - Backup system
   - Secure part-controller: listParts
   - Final steps

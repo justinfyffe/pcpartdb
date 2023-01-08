@@ -1,4 +1,4 @@
-import { ImportPartResults } from '@shared/part';
+import { ImportPartialPartResponse } from '@shared/part';
 import { Spec, Specs } from '@shared/spec';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
@@ -53,13 +53,17 @@ export async function importFromTechPowerUp(url: string) {
 
   // Add Spec Key
   Object.keys(specs).forEach((specKey) => {
-    if (specs[specKey]?.metadata == null) {
+    if (specs[specKey] == null) {
+      return;
+    }
+
+    if (specs[specKey].metadata == null) {
       specs[specKey].metadata = {};
     }
     specs[specKey].metadata = { ...specs[specKey]?.metadata, specKey };
   });
 
-  return { name: getName($), specs } as ImportPartResults;
+  return { part: { name: getName($), specs } } as ImportPartialPartResponse;
 }
 
 function getName($: cheerio.CheerioAPI) {

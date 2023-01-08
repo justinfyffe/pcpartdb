@@ -20,10 +20,13 @@ export const SlugField = forwardRef<HTMLInputElement, SlugFieldProps>(
     const company: Spec<string> = useWatch({ control, name: 'company' });
     const [slug, setSlug] = useState(value);
 
-    const handleChange = useCallback((value: string) => {
-      setSlug(value);
-      onChange?.(value);
-    }, []);
+    const handleChange = useCallback(
+      (value: string) => {
+        setSlug(value);
+        onChange?.(value);
+      },
+      [onChange],
+    );
 
     const handleGenerate = useCallback(() => {
       const parts = [];

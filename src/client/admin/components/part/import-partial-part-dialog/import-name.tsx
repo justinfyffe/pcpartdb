@@ -3,19 +3,37 @@ import React, {
   FunctionComponent,
   useCallback,
   useContext,
+  useEffect,
   useState,
 } from 'react';
-import { ImportPartContext } from './import-part-context';
+import { ImportPartialPartContext } from './import-partial-part-context';
 
 interface ImportNameProps {}
 
 export const ImportName: FunctionComponent<ImportNameProps> = (_props) => {
-  const context = useContext(ImportPartContext);
-  const [name] = useState(() => context.name);
+  const context = useContext(ImportPartialPartContext);
+  const [name] = useState(() => {
+    if (context.name == null) {
+      delete context.name;
+      return null;
+    }
+    return context.name;
+  });
   const [checked, setChecked] = useState(() => name != null);
 
+  useEffect(() => {
+    if (name == null) {
+      delete context.name;
+    }
+  }, [context, name]);
+
   const handleClick = useCallback(() => {
-    context.name = checked ? null : name;
+    if (checked) {
+      delete context.name;
+    } else {
+      context.name = name;
+    }
+
     setChecked(!checked);
   }, [context, name, checked]);
 
@@ -24,7 +42,7 @@ export const ImportName: FunctionComponent<ImportNameProps> = (_props) => {
       <Td>Name</Td>
       <Td>{name}</Td>
       <Td className="text-right">
-        <Checkbox value={checked} disabled={name == null} />
+        <Checkbox value={checked} />
       </Td>
     </Tr>
   );

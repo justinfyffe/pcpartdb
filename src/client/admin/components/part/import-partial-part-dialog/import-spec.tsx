@@ -8,7 +8,7 @@ import React, {
   useContext,
   useState,
 } from 'react';
-import { ImportPartContext } from './import-part-context';
+import { ImportPartialPartContext } from './import-partial-part-context';
 
 const LABELS: Record<string, string> = {
   // General
@@ -73,14 +73,25 @@ interface ImportSpecProps {
 export const ImportSpec: FunctionComponent<ImportSpecProps> = (props) => {
   const { spec: key } = props;
 
-  const context = useContext(ImportPartContext);
+  const context = useContext(ImportPartialPartContext);
   const specs = context.specs;
 
-  const [spec] = useState(() => specs[key]);
-  const [checked, setChecked] = useState(() => spec?.value != null);
+  const [spec] = useState(() => {
+    if (specs[key] == null || specs[key]?.value == null) {
+      delete specs[key];
+      return null;
+    }
+    return specs[key];
+  });
+  const [checked, setChecked] = useState(() => spec != null);
 
   const handleClick = useCallback(() => {
-    specs[key] = checked ? null : spec;
+    if (checked) {
+      delete specs[key];
+    } else {
+      specs[key] = spec;
+    }
+
     setChecked(!checked);
   }, [specs, key, spec, checked]);
 
@@ -93,7 +104,7 @@ export const ImportSpec: FunctionComponent<ImportSpecProps> = (props) => {
         }) || '--'}
       </Td>
       <Td className="text-right">
-        <Checkbox value={checked} disabled={spec?.value == null} />
+        <Checkbox value={checked} />
       </Td>
     </Tr>
   );

@@ -1,4 +1,5 @@
 import { useLayout } from '@client/shared/layouts';
+import { classNames } from '@client/shared/ui';
 import React, {
   ChangeEvent,
   FunctionComponent,
@@ -14,6 +15,8 @@ export interface FileProps {
   onChange?: (file: File) => void;
 
   children?: React.ReactNode;
+
+  className?: string;
 }
 
 export interface FileLabelProps {
@@ -23,7 +26,7 @@ export interface FileLabelProps {
 }
 
 export const File: FunctionComponent<FileProps> = (props) => {
-  const { name, onChange } = props;
+  const { name, onChange, className } = props;
   const [file, setFile] = useState(null);
 
   const layout = useLayout();
@@ -47,7 +50,7 @@ export const File: FunctionComponent<FileProps> = (props) => {
   );
 
   return (
-    <div className="block relative">
+    <div className={classNames('block relative', className)}>
       <input
         type="file"
         id={inputId}

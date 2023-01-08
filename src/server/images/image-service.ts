@@ -3,7 +3,7 @@ import { badRequestError, notFoundError } from '@server/shared/api/status';
 import { Context } from '@server/shared/context';
 import { serialize } from '@server/shared/types/serialize';
 import { validate } from '@server/shared/types/validate';
-import * as uploadUtils from '@server/shared/uploads/file-utils';
+import * as fileUtils from '@server/shared/utils/file-utils';
 import { throttlePromises } from '@server/shared/utils/promise-utils';
 import { ValidationErrorType } from '@shared/error';
 import { Image, ImageRequest } from '@shared/image';
@@ -39,9 +39,9 @@ export class ImageService {
   async create(data: ImageRequest, ctx: Context) {
     validate(data, imageValidator);
 
-    await uploadUtils.move(
-      uploadUtils.uploadsPath(data.tempPath),
-      uploadUtils.imagePath(data.path),
+    await fileUtils.move(
+      fileUtils.uploadsPath(data.tempPath),
+      fileUtils.imagePath(data.path),
     );
 
     return await imageRepository.save(
@@ -71,7 +71,7 @@ export class ImageService {
 
     // Check if the path has changed. If it did, we should move the image
     if (previousPath !== data.path) {
-      if (await uploadUtils.exists(uploadUtils.imagePath(data.path))) {
+      if (await fileUtils.exists(fileUtils.imagePath(data.path))) {
         // A different image exists at this path. Abort
         throw badRequestError({
           property: 'path',
@@ -80,23 +80,23 @@ export class ImageService {
       }
 
       // All good to move
-      if (await uploadUtils.exists(uploadUtils.imagePath(previousPath))) {
-        await uploadUtils.move(
-          uploadUtils.imagePath(previousPath),
-          uploadUtils.imagePath(data.path),
+      if (await fileUtils.exists(fileUtils.imagePath(previousPath))) {
+        await fileUtils.move(
+          fileUtils.imagePath(previousPath),
+          fileUtils.imagePath(data.path),
         );
       }
     }
 
     // Check if we uploaded a new image, move it if we did
     if (data.file) {
-      await uploadUtils.move(
-        uploadUtils.uploadsPath(data.tempPath),
-        uploadUtils.imagePath(data.path),
+      await fileUtils.move(
+        fileUtils.uploadsPath(data.tempPath),
+        fileUtils.imagePath(data.path),
       );
     }
 
-    const stats = await uploadUtils.stats(uploadUtils.imagePath(data.path));
+    const stats = await fileUtils.stats(fileUtils.imagePath(data.path));
 
     // Update image data
     image.name = data.name ?? image.name;
@@ -118,7 +118,7 @@ export class ImageService {
     }
 
     await imageRepository.delete(id, ctx);
-    await uploadUtils.remove(uploadUtils.imagePath(image.path));
+    await fileUtils.remove(fileUtils.imagePath(image.path));
     return id;
   }
 

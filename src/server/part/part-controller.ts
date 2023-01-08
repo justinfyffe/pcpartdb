@@ -1,17 +1,16 @@
 import { ApiContext } from '@server/shared/api/context';
 import { controller, staffController } from '@server/shared/api/controller';
 import { validate } from '@server/shared/types/validate';
-import * as fileUtils from '@server/shared/uploads/file-utils';
+import * as fileUtils from '@server/shared/utils/file-utils';
 import type {
-  ExportPartRequest,
-  ImportPartRequest,
+  ExportPartsRequest,
+  ImportPartialPartRequest,
   ListPartsRequest,
   PartRequest,
   PartType,
 } from '@shared/part';
 import { PartMetas } from '@shared/part-meta';
 import { Specs } from '@shared/spec';
-import { partImportExportService } from './part-import-export-service';
 import { partImporterService } from './part-importer-service';
 import { partService } from './part-service';
 import {
@@ -75,21 +74,21 @@ export const deletePart = staffController(async (ctx: ApiContext) => {
   return await partService.delete(id, ctx);
 });
 
-export const importPart = staffController(async (ctx: ApiContext) => {
-  const body = ctx.req.body as ImportPartRequest;
-  return partImporterService.import(body);
+export const importPartialPart = staffController(async (ctx: ApiContext) => {
+  const body = ctx.req.body as ImportPartialPartRequest;
+  return partImporterService.importPartialPart(body);
 });
 
-export const importPartsFile = staffController(async (ctx: ApiContext) => {
+export const importParts = staffController(async (ctx: ApiContext) => {
   await fileUtils.uploadFile('file', ctx);
 
   const body = ctx.req.body;
-  const tgzPath = body.tempPath;
+  const filePath = body.tempPath;
 
-  return partImportExportService.import(tgzPath, ctx);
+  return partImporterService.importParts(filePath, ctx);
 });
 
-export const exportPart = staffController(async (ctx: ApiContext) => {
-  const body = ctx.req.body as ExportPartRequest;
-  return await partImportExportService.export(body, ctx);
+export const exportParts = staffController(async (ctx: ApiContext) => {
+  const body = ctx.req.body as ExportPartsRequest;
+  return await partImporterService.exportParts(body, ctx);
 });

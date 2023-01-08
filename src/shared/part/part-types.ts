@@ -1,7 +1,7 @@
-import { Benchmarks, BenchmarksRequest } from '../benchmark';
-import { PartImages, PartImagesRequest } from '../part-image';
-import { PartMetas, PartMetasRequest } from '../part-meta';
-import { Specs, SpecsRequest } from '../spec';
+import { Benchmarks } from '../benchmark';
+import { PartImages } from '../part-image';
+import { PartMetas } from '../part-meta';
+import { Specs } from '../spec';
 
 export enum PartType {
   CPU = 'CPU',
@@ -21,17 +21,7 @@ export interface Part {
   images?: PartImages;
 }
 
-export interface PartRequest {
-  slug: string;
-
-  type: PartType;
-  name: string;
-
-  specs: SpecsRequest;
-  metas: PartMetasRequest;
-  benchmarks: BenchmarksRequest;
-  images: PartImagesRequest;
-}
+export type PartRequest = Part;
 
 export type PartComparison = [Part, Part];
 
@@ -99,22 +89,23 @@ export interface ListPartsRequest {
   query?: PartsQuery;
 }
 
-export interface ImportPartRequest {
+export interface ImportPartialPartRequest {
   url?: string;
 }
 
-export interface ImportPartResults {
-  name?: string;
-  specs?: Specs;
-  metas?: PartMetas;
-  benchmarks?: Benchmarks;
+export interface ImportPartialPartResponse {
+  part: Partial<Part>;
 }
 
-export interface ExportPartRequest {
-  id: number;
+export interface ImportPartsResponse {
+  parts: Part[];
 }
 
-export interface ExportPartResult {
+export interface ExportPartsRequest {
+  ids: number[];
+}
+
+export interface ExportPartsResponse {
   file: string;
   recommendedFileName: string;
 }

@@ -256,7 +256,7 @@ export class PartRepository {
     }, {} as Record<number, Image>);
 
     parts.forEach((part) => {
-      part?.images?.details.forEach((detailImage) => {
+      part?.images?.details?.forEach((detailImage) => {
         detailImage.image = imagesMap[detailImage.imageId];
       });
     });
