@@ -35,7 +35,7 @@ export const PartImagesField: FunctionComponent<PartImagesFieldProps> = (
       value[i] =
         partImage != null
           ? {
-              imageId: partImage.imageId,
+              id: partImage.id,
               metadata: partImage.metadata,
             }
           : null;

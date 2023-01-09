@@ -18,6 +18,8 @@ export interface Benchmarks {
   cpuMark?: Benchmark<number>;
   threadMark?: Benchmark<number>;
   timeSpyPhysics?: Benchmark<number>;
+
+  [key: string]: Benchmark;
 }
 
 export type BenchmarksRequest = Benchmarks;

@@ -30,8 +30,8 @@ export const ComparisonFeedItem: FunctionComponent<ComparisonFeedItemProps> = (
 
   const [image1, image2] = useMemo(() => {
     return [
-      part1.images?.details?.[0]?.image ?? getCompanyLogoImagePath(part1),
-      part2.images?.details?.[0]?.image ?? getCompanyLogoImagePath(part2),
+      part1.images?.[0]?.image ?? getCompanyLogoImagePath(part1),
+      part2.images?.[0]?.image ?? getCompanyLogoImagePath(part2),
     ];
   }, [part1, part2]);
 

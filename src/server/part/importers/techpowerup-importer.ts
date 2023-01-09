@@ -4,6 +4,7 @@ import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { format, parse } from 'date-fns';
 
+// Example: https://www.techpowerup.com/gpu-specs/geforce-rtx-3090.c3622
 export async function importFromTechPowerUp(url: string) {
   const response = await axios.get(url);
   const $ = cheerio.load(response.data);

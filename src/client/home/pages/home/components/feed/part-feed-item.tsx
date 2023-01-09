@@ -37,8 +37,8 @@ export const PartFeedItem: FunctionComponent<PartFeedItemProps> = (props) => {
 
   const images = useMemo(() => {
     const ret = [
-      part.images?.details?.[0]?.image,
-      part.images?.details?.[1]?.image ?? getCompanyLogoImagePath(part),
+      part.images?.[0]?.image,
+      part.images?.[1]?.image ?? getCompanyLogoImagePath(part),
     ];
     return ret.filter((image) => image != null);
   }, [part]);

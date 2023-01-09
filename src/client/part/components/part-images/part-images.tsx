@@ -17,7 +17,7 @@ export const PartImages: FunctionComponent<PartImagesProps> = (props) => {
   const [selected, setSelected] = useState(0);
 
   const images = useMemo(() => {
-    const partImages = part.images?.details ?? [];
+    const partImages = part.images ?? [];
     const companyImage = getCompanyLogoImagePath(part);
     const images = partImages
       .filter((image) => image.image != null)

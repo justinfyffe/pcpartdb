@@ -33,9 +33,17 @@ export class ImageService {
     return image;
   }
 
-  // TODO: prevent overriding images
   async create(data: ImageRequest, ctx: Context) {
     validate(data, imageValidator);
+
+    // Check if another image already exists at the path
+    const existingImage = await imageRepository.findByPath(data.path);
+    if (existingImage != null) {
+      throw badRequestError({
+        property: 'path',
+        constraint: 'EXISTING_IMAGE_AT_PATH',
+      });
+    }
 
     await fileUtils.move(
       fileUtils.uploadsPath(data.tempPath),
@@ -56,13 +64,21 @@ export class ImageService {
     );
   }
 
-  // TODO: prevent overriding images
   async update(id: number, data: ImageRequest, ctx: Context) {
     validate(data, imageValidator);
 
     const image = await imageRepository.findById(id, ctx);
     if (image == null) {
       throw notFoundError({ user: id });
+    }
+
+    // Check if another image already exists at the path
+    const existingImage = await imageRepository.findByPath(data.path);
+    if (existingImage != null && existingImage.id !== id) {
+      throw badRequestError({
+        property: 'path',
+        constraint: 'EXISTING_IMAGE_AT_PATH',
+      });
     }
 
     const previousPath = image.path;

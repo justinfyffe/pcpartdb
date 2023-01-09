@@ -1,6 +1,6 @@
 import { CacheContext, ImageCache } from '@client/shared/cache';
 import { Part } from '@shared/part';
-import { PartImages } from '@shared/part-image';
+import { PartImage } from '@shared/part-image';
 import { useContext } from 'react';
 
 class PartCacheImpl {
@@ -24,8 +24,8 @@ class PartCacheImpl {
     });
   }
 
-  private saveImages(partImages: PartImages) {
-    const images = [...(partImages?.details ?? [])]
+  private saveImages(partImages: PartImage[]) {
+    const images = [...(partImages ?? [])]
       .filter((partImage) => partImage?.image != null)
       .map((partImage) => partImage.image!);
 

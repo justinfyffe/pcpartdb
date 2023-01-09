@@ -1,4 +1,4 @@
-import { notFoundError } from '@server/shared/api/status';
+import { badRequestError, notFoundError } from '@server/shared/api/status';
 import { Context } from '@server/shared/context';
 import {
   FindComparisonRequest,
@@ -111,16 +111,32 @@ export class PartService {
     } as RelatedParts;
   }
 
-  // TODO: check slug uniqueness
   async create(data: PartRequest, ctx: Context) {
+    // Check if another part exists at the slug
+    const existingPart = await partRepository.find({ slug: data.slug }, ctx);
+    if (existingPart != null) {
+      throw badRequestError({
+        property: 'slug',
+        constraint: 'EXISTING_PART_AT_SLUG',
+      });
+    }
+
     addPerformanceBenchmarks(data);
 
     return await partRepository.save(data, ctx);
   }
 
-  // TODO: check slug uniqueness
   async update(id: number, data: PartRequest, ctx: Context) {
     addPerformanceBenchmarks(data);
+
+    // Check if another part exists at the slug
+    const existingPart = await partRepository.find({ slug: data.slug }, ctx);
+    if (existingPart != null && existingPart.id !== id) {
+      throw badRequestError({
+        property: 'slug',
+        constraint: 'EXISTING_PART_AT_SLUG',
+      });
+    }
 
     const part = await partRepository.find({ id }, ctx);
     if (part == null) {

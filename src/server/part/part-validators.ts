@@ -41,7 +41,6 @@ export const createPartRequestValidator = Joi.object({
   slug: Joi.string().required(),
   type: Joi.string().valid(PartType.CPU, PartType.GPU),
   name: Joi.string().required(),
-  // TODO: add validator for unique keys
   metas: partMetasValidator,
   specs: specsValidator,
   benchmarks: benchmarksValidator,
@@ -52,7 +51,6 @@ export const updatePartRequestValidator = Joi.object({
   slug: Joi.string().required(),
   type: Joi.string().valid(PartType.CPU, PartType.GPU),
   name: Joi.string().required(),
-  // TODO: add validator for unique keys
   metas: partMetasValidator,
   specs: specsValidator,
   benchmarks: benchmarksValidator,

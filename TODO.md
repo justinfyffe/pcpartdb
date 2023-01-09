@@ -1,12 +1,11 @@
 Immediate Tasks:
+- Test
 - Prep for launch
-  - improve validations
-  - Secure part-controller: listParts
   - Final steps
     - setup deployment process
-    - test links
     - set up database
     - set up domain
+    - delete old server
   - Notes for server
     - in ~ folder,
       - justin@my-websites-ubuntu-s-nyc3-01:~$ ls -l
@@ -16,7 +15,11 @@ Immediate Tasks:
         lrwxrwxrwx 1 justin justin   18 Jul 24 04:51 finestpc -> /srv/web/finestpc/
 
 Post-launch:
-- set up backups
+- set up auto backups
+- add audit events table
+  - track all changes to content
+- improve import dialog
+  - show all values
 - Email
   - Set up email sending for forgot password
 - add analytics and search console
@@ -36,6 +39,9 @@ Post-launch:
 - retail models
 - improve related parts
 - improve admin panel
+- improve database usage
+  - filter less in-memory
+  - should part images be its own table? or a json schema or break into columns?
 
 
 Roadmap:

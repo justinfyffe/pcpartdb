@@ -115,12 +115,12 @@ interface PartFormData {
   shaderModelVersion?: Spec<number | string>;
 
   // Benchmarks
-  g2dMarkBenchmark?: Benchmark<number>;
-  g3dMarkBenchmark?: Benchmark<number>;
-  timeSpyGraphicsBenchmark?: Benchmark<number>;
+  g2dMark?: Benchmark<number>;
+  g3dMark?: Benchmark<number>;
+  timeSpyGraphics?: Benchmark<number>;
 
   // Images
-  detailsImages?: PartImage[];
+  images?: PartImage[];
 
   // Retail Models
   retailModels?: PartMeta<RetailModel[]>;
@@ -186,12 +186,12 @@ const partValidator = Joi.object({
   shaderModelVersion: specValidator.allow(null),
 
   // Benchmarks
-  g2dMarkBenchmark: benchmarkValidator.allow(null),
-  g3dMarkBenchmark: benchmarkValidator.allow(null),
-  timeSpyGraphicsBenchmark: benchmarkValidator.allow(null),
+  g2dMark: benchmarkValidator.allow(null),
+  g3dMark: benchmarkValidator.allow(null),
+  timeSpyGraphics: benchmarkValidator.allow(null),
 
   // Images
-  detailsImages: Joi.array().items(partImageValidator.allow(null)),
+  images: Joi.array().items(partImageValidator.allow(null)),
 
   // Retail Models
   retailModels: partMetaValidator.allow(null),
@@ -205,7 +205,7 @@ function formOptions(gpu?: Part): UseFormProps<PartFormData> {
   const meta = gpu?.metas || {};
   const specs = gpu?.specs || {};
   const benchmarks = gpu?.benchmarks || {};
-  const images = gpu?.images || {};
+  const images = gpu?.images || [];
 
   return {
     resolver: joiResolver(partValidator),
@@ -270,12 +270,12 @@ function formOptions(gpu?: Part): UseFormProps<PartFormData> {
       shaderModelVersion: specs.shaderModelVersion || null,
 
       // Benchmarks
-      g2dMarkBenchmark: benchmarks.g2dMark || null,
-      g3dMarkBenchmark: benchmarks.g3dMark || null,
-      timeSpyGraphicsBenchmark: benchmarks.timeSpyGraphics || null,
+      g2dMark: benchmarks.g2dMark || null,
+      g3dMark: benchmarks.g3dMark || null,
+      timeSpyGraphics: benchmarks.timeSpyGraphics || null,
 
       // Images
-      detailsImages: images.details || [],
+      images: images || [],
 
       // RetailModels,
       retailModels: meta.retailModels || null,
@@ -354,9 +354,15 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
   const handleImport = useCallback(
     (data: Partial<Part>) => {
       setValue('name', data.name);
-      Object.keys(data.specs).forEach((specKey) => {
+      Object.keys(data.specs || {}).forEach((specKey) => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         setValue(specKey as any, data.specs[specKey]);
+      });
+      console.log(data.benchmarks);
+      Object.keys(data.benchmarks || {}).forEach((benchmarkKey) => {
+        console.log(benchmarkKey);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        setValue(benchmarkKey as any, data.benchmarks[benchmarkKey]);
       });
     },
     [setValue],
@@ -902,7 +908,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
         <h2 className="mb-4">Benchmarks</h2>
 
         <Controller
-          name="g3dMarkBenchmark"
+          name="g3dMark"
           control={control}
           render={({ field }) => (
             <BenchmarkField field="g3dMark" {...field} ref={null} />
@@ -910,7 +916,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
         />
 
         <Controller
-          name="g2dMarkBenchmark"
+          name="g2dMark"
           control={control}
           render={({ field }) => (
             <BenchmarkField field="g2dMark" {...field} ref={null} />
@@ -918,7 +924,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
         />
 
         <Controller
-          name="timeSpyGraphicsBenchmark"
+          name="timeSpyGraphics"
           control={control}
           render={({ field }) => (
             <BenchmarkField field="timeSpyGraphics" {...field} ref={null} />
@@ -930,7 +936,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
         <h2 className="mb-4">Images</h2>
 
         <Controller
-          name="detailsImages"
+          name="images"
           control={control}
           render={({ field }) => <PartImagesField {...field} ref={null} />}
         />
@@ -1039,14 +1045,12 @@ function toSpecsRequest(formData: PartFormData): SpecsRequest {
 
 function toBenchmarksRequest(formData: PartFormData): BenchmarksRequest {
   return {
-    g2dMark: formData.g2dMarkBenchmark || null,
-    g3dMark: formData.g3dMarkBenchmark || null,
-    timeSpyGraphics: formData.timeSpyGraphicsBenchmark || null,
+    g2dMark: formData.g2dMark || null,
+    g3dMark: formData.g3dMark || null,
+    timeSpyGraphics: formData.timeSpyGraphics || null,
   };
 }
 
 function toRequestImages(formData: PartFormData): PartImagesRequest {
-  return {
-    details: formData.detailsImages.filter((value) => value != null) || [],
-  };
+  return formData.images.filter((value) => value != null) || [];
 }

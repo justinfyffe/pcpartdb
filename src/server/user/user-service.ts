@@ -67,11 +67,21 @@ class UserService {
     );
   }
 
-  // TODO: don't allow removing last staff user
   async update(id: number, data: UserRequest, ctx: Context) {
     const user = await userRepository.findById(id, ctx);
     if (user == null) {
       throw notFoundError({ user: id });
+    }
+
+    if (
+      user.isStaff &&
+      !data.isStaff &&
+      (await userRepository.countStaff(ctx)) <= 1
+    ) {
+      throw badRequestError({
+        property: 'isStaff',
+        constraint: 'LAST_STAFF_USER',
+      });
     }
 
     let passwordHash = user.passwordHash;
@@ -86,11 +96,17 @@ class UserService {
     );
   }
 
-  // TODO: don't allow deleting last staff user
   async delete(id: number, ctx: Context) {
     const user = await userRepository.findById(id, ctx);
     if (user == null) {
       throw notFoundError({ user: id });
+    }
+
+    if ((await userRepository.countStaff(ctx)) <= 1) {
+      throw badRequestError({
+        property: 'isStaff',
+        constraint: 'LAST_STAFF_USER',
+      });
     }
 
     await userRepository.delete(id, ctx);

@@ -1,5 +1,5 @@
 import { Benchmarks } from '../benchmark';
-import { PartImages } from '../part-image';
+import { PartImage } from '../part-image';
 import { PartMetas } from '../part-meta';
 import { Specs } from '../spec';
 
@@ -18,7 +18,7 @@ export interface Part {
   specs?: Specs;
   metas?: PartMetas;
   benchmarks?: Benchmarks;
-  images?: PartImages;
+  images?: PartImage[];
 }
 
 export type PartRequest = Part;

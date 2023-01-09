@@ -29,6 +29,12 @@ export class UserRepository {
   async count(config?: RepositoryConfig) {
     return await UserModel.query(config?.trx).resultSize();
   }
+
+  async countStaff(config?: RepositoryConfig) {
+    return await UserModel.query(config?.trx)
+      .where('isStaff', true)
+      .resultSize();
+  }
 }
 
 export const userRepository = new UserRepository();

@@ -28,7 +28,7 @@ export const PartImageField: FunctionComponent<PartImageFieldProps> = (
       return null;
     }
 
-    return value.image ?? imageCache.get(value.imageId);
+    return value.image ?? imageCache.get(value.id);
   });
 
   // Strip "image" from value
@@ -38,16 +38,14 @@ export const PartImageField: FunctionComponent<PartImageFieldProps> = (
     }
 
     onChange?.(
-      value != null
-        ? { imageId: value.imageId, metadata: value.metadata }
-        : null,
+      value != null ? { id: value.id, metadata: value.metadata } : null,
     );
   }, [value, onChange]);
 
   const handleChange = useCallback(
     (image: Image) => {
       const newValue: PartImage =
-        image != null ? { imageId: image.id, metadata: value?.metadata } : null;
+        image != null ? { id: image.id, metadata: value?.metadata } : null;
 
       onChange?.(newValue);
       setImage(image);

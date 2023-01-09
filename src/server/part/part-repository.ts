@@ -244,7 +244,7 @@ export class PartRepository {
   private async populateImages(parts: PartModel[], config?: RepositoryConfig) {
     const imageIds = parts
       .reduce((acc, part) => {
-        part?.images?.details?.forEach((image) => acc.push(image.imageId));
+        part?.images?.forEach((image) => acc.push(image.id));
         return acc;
       }, [] as number[])
       .filter((id) => id != null);
@@ -256,8 +256,8 @@ export class PartRepository {
     }, {} as Record<number, Image>);
 
     parts.forEach((part) => {
-      part?.images?.details?.forEach((detailImage) => {
-        detailImage.image = imagesMap[detailImage.imageId];
+      part?.images?.forEach((image) => {
+        image.image = imagesMap[image.id];
       });
     });
   }
