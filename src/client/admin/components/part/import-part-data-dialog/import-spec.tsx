@@ -78,7 +78,7 @@ export const ImportSpec: FunctionComponent<ImportSpecProps> = (props) => {
 
   const [spec] = useState(() => {
     if (specs?.[key] == null || specs?.[key]?.value == null) {
-      delete specs?.[key];
+      delete specs[key];
       return null;
     }
     return specs[key];

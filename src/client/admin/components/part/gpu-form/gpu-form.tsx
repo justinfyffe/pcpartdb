@@ -354,13 +354,13 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
   const handleImport = useCallback(
     (data: Partial<Part>) => {
       setValue('name', data.name);
+
       Object.keys(data.specs || {}).forEach((specKey) => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         setValue(specKey as any, data.specs[specKey]);
       });
-      console.log(data.benchmarks);
+
       Object.keys(data.benchmarks || {}).forEach((benchmarkKey) => {
-        console.log(benchmarkKey);
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         setValue(benchmarkKey as any, data.benchmarks[benchmarkKey]);
       });

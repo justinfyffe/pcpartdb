@@ -17,6 +17,7 @@ import React, {
   useEffect,
   useState,
 } from 'react';
+import { ImportBenchmark } from './import-benchmark';
 import { ImportName } from './import-name';
 import { ImportPartDataContext } from './import-part-data-context';
 import { ImportSpec } from './import-spec';
@@ -123,6 +124,10 @@ export const ImportPartDataDialog: FunctionComponent<
                 <ImportSpec spec="openClVersion" />
                 <ImportSpec spec="openGlVersion" />
                 <ImportSpec spec="shaderModelVersion" />
+
+                <ImportBenchmark benchmark="g3dMark" />
+                <ImportBenchmark benchmark="g2dMark" />
+                <ImportBenchmark benchmark="timeSpyGraphics" />
               </TBody>
             </Table>
           </div>
