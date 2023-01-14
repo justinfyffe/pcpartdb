@@ -1,10 +1,4 @@
-import React, {
-  forwardRef,
-  HTMLProps,
-  useCallback,
-  useEffect,
-  useState,
-} from 'react';
+import React, { forwardRef, HTMLProps, useCallback } from 'react';
 import { classNames } from '../../ui';
 
 interface CheckboxProps
@@ -17,22 +11,11 @@ interface CheckboxProps
 
 export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
   (props, ref) => {
-    const {
-      children,
-      className,
-      onChange,
-      value: propsValue,
-      disabled,
-    } = props;
-
-    const [value, setValue] = useState(propsValue);
-
-    useEffect(() => setValue(propsValue), [propsValue]);
+    const { children, className, onChange, value, checked, disabled } = props;
 
     const handleChange = useCallback(
       (e: React.ChangeEvent<HTMLInputElement>) => {
         const newValue = e.target.checked;
-        setValue(newValue);
         onChange?.(newValue);
       },
       [onChange],
@@ -48,7 +31,7 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
       >
         <input
           type="checkbox"
-          checked={value}
+          checked={checked || value || false}
           disabled={disabled}
           onChange={handleChange}
           className={classNames('mr-2')}

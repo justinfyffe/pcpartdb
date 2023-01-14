@@ -1,8 +1,5 @@
 Immediate Tasks:
 - Test
-  - fix import dialog bugs
-    - handling missing interfaces
-    - handling unchecking/checking import spec without data
 - Prep for launch
   - Final steps
     - setup deployment process

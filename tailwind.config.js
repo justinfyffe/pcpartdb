@@ -83,6 +83,8 @@ module.exports = {
       '5xl': '36px',
     },
     spacing: sizing,
+    minHeight: sizing,
+    maxHeight: sizing,
     minWidth: sizing,
     maxWidth: sizing,
     borderWidth: sizing,

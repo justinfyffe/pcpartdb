@@ -1,11 +1,13 @@
 import { formatSpec } from '@client/part';
 import { Checkbox, Td, Tr } from '@client/shared/components';
 import { BooleanFormatter } from '@client/shared/format';
-import { SpecKey } from '@shared/spec';
+import { Spec, SpecKey } from '@shared/spec';
 import React, {
   FunctionComponent,
   useCallback,
   useContext,
+  useEffect,
+  useMemo,
   useState,
 } from 'react';
 import { ImportPartDataContext } from './import-part-data-context';
@@ -75,36 +77,42 @@ export const ImportSpec: FunctionComponent<ImportSpecProps> = (props) => {
 
   const context = useContext(ImportPartDataContext);
   const specs = context.specs;
+  const emptyValue: Spec = useMemo(
+    () => ({ value: null, metadata: { specKey: key } }),
+    [key],
+  );
 
-  const [spec] = useState(() => {
-    if (specs?.[key] == null || specs?.[key]?.value == null) {
-      delete specs[key];
-      return null;
+  const [checked, setChecked] = useState(() => false);
+
+  useEffect(() => {
+    if (specs[key] == null) {
+      specs[key] = { value: emptyValue, import: false };
+      setChecked(false);
+    } else {
+      setChecked(specs[key].import);
     }
-    return specs[key];
-  });
-  const [checked, setChecked] = useState(() => spec != null);
+  }, [specs, key, emptyValue]);
 
   const handleClick = useCallback(() => {
     if (checked) {
-      delete specs[key];
+      specs[key].import = false;
     } else {
-      specs[key] = spec;
+      specs[key].import = true;
     }
 
     setChecked(!checked);
-  }, [specs, key, spec, checked]);
+  }, [specs, key, checked]);
 
   return (
     <Tr onClick={handleClick} className="hover:bg-gray-200 cursor-pointer">
       <Td>{LABELS[key]}</Td>
       <Td>
-        {formatSpec(spec, {
+        {formatSpec(specs?.[key]?.value, {
           booleanFormatter: BooleanFormatter.YesNo,
         }) || '--'}
       </Td>
       <Td className="text-right">
-        <Checkbox value={checked} />
+        <Checkbox value={specs?.[key]?.import ?? false} />
       </Td>
     </Tr>
   );

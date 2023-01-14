@@ -43,7 +43,6 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
     } = props;
 
     const [isOpen, setOpen] = useState(false);
-    const [selected, setSelected] = useState<SelectValue>(value);
     const [options, setOptions] = useState<{ label: string; value: string }[]>(
       [],
     );
@@ -67,20 +66,23 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
       );
     }, [children]);
 
-    const handleShowOptions = useCallback((e: MouseEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-      e.nativeEvent.stopImmediatePropagation();
-      setOpen(true);
-    }, []);
+    const handleShowOptions = useCallback(
+      (e: MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        e.nativeEvent.stopImmediatePropagation();
+        setOpen(!isOpen);
+      },
+      [isOpen],
+    );
 
     const handleClear = useCallback(
       (e: MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
         e.nativeEvent.stopImmediatePropagation();
-        setSelected(null);
         onChange(null);
+        setOpen(false);
       },
       [onChange],
     );
@@ -92,21 +94,21 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
           e.nativeEvent.stopImmediatePropagation();
         }
 
-        const value = multiple ? toggleOption(selected, option) : option.value;
-        setSelected(value);
-        onChange(value);
+        const newValue = multiple ? toggleOption(value, option) : option.value;
+        console.log(newValue);
+        onChange(newValue);
       },
-      [multiple, onChange, selected],
+      [multiple, onChange, value],
     );
 
     const handleSelectChange = useCallback(
       (event: ChangeEvent<HTMLSelectElement>) => {
         const value = event.target.value;
-        setSelected(value != '' ? value : null);
         onChange(value);
       },
       [onChange],
     );
+
     return (
       <div className="block relative">
         <select
@@ -114,7 +116,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
           className="sr-only"
           multiple={multiple}
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          value={selected || ''}
+          value={value || (multiple ? [] : '')}
           onChange={handleSelectChange}
           ref={ref}
         >
@@ -126,11 +128,11 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
         </select>
 
         <div
-          className="pointer border-px m-0 p-3 rounded text-sm w-full shadow min-h-11.5"
+          className="pointer border-px m-0 p-3 rounded text-sm w-full shadow min-h-12.5"
           onClick={handleShowOptions}
         >
-          {getSelectedText(options, selected) || placeholder}
-          {clearable && selected != null && (
+          {getSelectedText(value, options) || placeholder}
+          {clearable && value != null && (
             <div
               className="items-center rounded-r-md flex font-medium h-[calc(100%_-_2px)] m-px px-4 absolute right-0 top-0 hover:bg-[#fafafa]"
               onClick={handleClear}
@@ -138,7 +140,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
               <XMarkIcon className="w-4" />
             </div>
           )}
-          {(!clearable || selected == null) && (
+          {(!clearable || value == null) && (
             <div className="items-center rounded-r-md flex font-medium h-[calc(100%_-_2px)] m-px px-4 absolute right-0 top-0">
               <ChevronDownIcon className="w-4" />
             </div>
@@ -158,8 +160,8 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
               onClick={(ev) => handleOptionClick(ev, child.props)}
               className={classNames(
                 'items-center pointer flex py-2 px-4',
-                !isSelected(selected, child.props) ? 'hover:bg-[#fafafa]' : '',
-                !multiple && isSelected(selected, child.props)
+                !isSelected(value, child.props) ? 'hover:bg-[#fafafa]' : '',
+                !multiple && isSelected(value, child.props)
                   ? 'bg-[#3f51b5] text-[#ececec]'
                   : '',
               )}
@@ -167,7 +169,8 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
               {multiple && (
                 <Checkbox
                   className="h-4 mr-4 w-4"
-                  checked={isSelected(selected, child.props)}
+                  value={null}
+                  checked={isSelected(value, child.props)}
                   readOnly
                 />
               )}
@@ -187,7 +190,7 @@ function isSelected(selectedValues: SelectValue, option: SelectOptionProps) {
     : selectedValues === option.value;
 }
 
-function getSelectedText(options: SelectOptionProps[], selected: SelectValue) {
+function getSelectedText(selected: SelectValue, options: SelectOptionProps[]) {
   return options
     .filter((option) => isSelected(selected, option))
     .map((option) => option.label)

@@ -10,7 +10,6 @@ import {
   THead,
   Tr,
 } from '@client/shared/components';
-import { Part } from '@shared/part';
 import React, {
   FunctionComponent,
   useCallback,
@@ -19,12 +18,16 @@ import React, {
 } from 'react';
 import { ImportBenchmark } from './import-benchmark';
 import { ImportName } from './import-name';
-import { ImportPartDataContext } from './import-part-data-context';
+import {
+  createImportContext,
+  ImportPartDataContext,
+} from './import-part-data-context';
 import { ImportSpec } from './import-spec';
+import { ImportPartDataResults } from './import-types';
 
 interface ImportPartDataDialogProps {
   url: string;
-  onImport: (data: Partial<Part>) => void;
+  onImport: (data: ImportPartDataResults) => void;
 }
 
 export const ImportPartDataDialog: FunctionComponent<
@@ -33,21 +36,21 @@ export const ImportPartDataDialog: FunctionComponent<
   const { url, onImport } = props;
 
   const [loading, setLoading] = useState<boolean>(true);
-  const [dataToImport, setDataToImport] = useState<Partial<Part>>(null);
+  const [context, setContext] = useState<ImportPartDataResults>(null);
 
   useEffect(() => {
     async function importPart() {
       const results = await partService.importPartData({ url });
-      setDataToImport(results.part);
+      setContext(createImportContext(results));
       setLoading(false);
     }
     importPart();
   }, [url]);
 
   const handleApply = useCallback(() => {
-    onImport(dataToImport);
+    onImport(context);
     closeDialog();
-  }, [onImport, dataToImport]);
+  }, [onImport, context]);
 
   const handleCancel = useCallback(() => {
     closeDialog();
@@ -66,7 +69,7 @@ export const ImportPartDataDialog: FunctionComponent<
       )}
 
       {!loading && (
-        <ImportPartDataContext.Provider value={dataToImport}>
+        <ImportPartDataContext.Provider value={context}>
           <div className="flex-1 max-h-[calc(100%_-_50px)] overflow-auto">
             <Table>
               <THead>

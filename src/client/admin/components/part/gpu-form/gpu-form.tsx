@@ -49,7 +49,10 @@ import React, {
 } from 'react';
 import { Controller, useForm, UseFormProps } from 'react-hook-form';
 import { BenchmarkField } from '../benchmark-field';
-import { ImportPartDataDialog } from '../import-part-data-dialog';
+import {
+  ImportPartDataDialog,
+  ImportPartDataResults,
+} from '../import-part-data-dialog';
 import { PartImagesField } from '../part-image-field';
 import { RetailModelsField } from '../retail-model-field';
 import { SlugField } from '../slug-field';
@@ -352,17 +355,24 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
   }, [gpu, router, setError]);
 
   const handleImport = useCallback(
-    (data: Partial<Part>) => {
-      setValue('name', data.name);
+    (data: ImportPartDataResults) => {
+      console.log(data);
+      if (data.name.import) {
+        setValue('name', data.name.value);
+      }
 
       Object.keys(data.specs || {}).forEach((specKey) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        setValue(specKey as any, data.specs[specKey]);
+        if (data.specs[specKey].import) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          setValue(specKey as any, data.specs[specKey].value);
+        }
       });
 
       Object.keys(data.benchmarks || {}).forEach((benchmarkKey) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        setValue(benchmarkKey as any, data.benchmarks[benchmarkKey]);
+        if (data.benchmarks[benchmarkKey].import) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          setValue(benchmarkKey as any, data.benchmarks[benchmarkKey].value);
+        }
       });
     },
     [setValue],

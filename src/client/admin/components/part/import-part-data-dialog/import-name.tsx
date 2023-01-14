@@ -12,37 +12,35 @@ interface ImportNameProps {}
 
 export const ImportName: FunctionComponent<ImportNameProps> = (_props) => {
   const context = useContext(ImportPartDataContext);
-  const [name] = useState(() => {
-    if (context.name == null) {
-      delete context.name;
-      return null;
-    }
-    return context.name;
-  });
-  const [checked, setChecked] = useState(() => name != null);
+  const emptyValue: string = null;
+
+  const [checked, setChecked] = useState(() => false);
 
   useEffect(() => {
-    if (name == null) {
-      delete context.name;
+    if (context.name == null) {
+      context.name = { value: emptyValue, import: false };
+      setChecked(false);
+    } else {
+      setChecked(context.name.import);
     }
-  }, [context, name]);
+  }, [context, emptyValue]);
 
   const handleClick = useCallback(() => {
     if (checked) {
-      delete context.name;
+      context.name.import = true;
     } else {
-      context.name = name;
+      context.name.import = false;
     }
 
     setChecked(!checked);
-  }, [context, name, checked]);
+  }, [context, checked]);
 
   return (
     <Tr onClick={handleClick} className="hover:bg-gray-200 cursor-pointer">
       <Td>Name</Td>
-      <Td>{name}</Td>
+      <Td>{context.name?.value || '--'}</Td>
       <Td className="text-right">
-        <Checkbox value={checked} />
+        <Checkbox value={context.name?.import ?? false} />
       </Td>
     </Tr>
   );
