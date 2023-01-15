@@ -107,7 +107,8 @@ function getSlotWidthValue($: cheerio.CheerioAPI, label: string): Spec<number> {
 function getCompanyValue($: cheerio.CheerioAPI): Spec<string> {
   const fullName = $('.gpudb-name').text();
   const [company] = fullName.split(' ');
-  if (company === 'NVIDIA' || company === 'AMD') {
+  const lcCompany = company.toLowerCase();
+  if (lcCompany === 'nvidia' || lcCompany === 'amd' || lcCompany === 'intel') {
     return { value: company };
   }
 

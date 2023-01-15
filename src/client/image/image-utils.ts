@@ -13,10 +13,12 @@ export function getCompanyLogoImagePath(part: Part) {
     return null;
   }
 
-  switch (company) {
-    case 'AMD':
+  switch (company.toLowerCase()) {
+    case 'amd':
       return '/images/logos/amd.svg';
-    case 'NVIDIA':
+    case 'intel':
+      return '/images/logos/intel.svg';
+    case 'nvidia':
       return '/images/logos/nvidia.svg';
     default:
       return null;
