@@ -33,6 +33,7 @@ export const PartImagesField: FunctionComponent<PartImagesFieldProps> = (
     [],
   );
 
+  // TODO: this could probably be made into a hook
   const [rowKeys] = useState(() => {
     const ret: string[] = [];
     value?.value?.forEach(() => ret.push(uuidv4()));
