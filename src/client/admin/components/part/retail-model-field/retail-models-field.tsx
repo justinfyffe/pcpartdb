@@ -9,9 +9,10 @@ import { RetailModel } from '@shared/retail-model';
 import React, {
   FunctionComponent,
   useCallback,
-  useEffect,
+  useMemo,
   useState,
 } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import { RetailModelField } from './retail-model-field';
 
 interface RetailModelsFieldProps {
@@ -26,56 +27,80 @@ interface RetailModelsFieldProps {
 export const RetailModelsField: FunctionComponent<RetailModelsFieldProps> = (
   props,
 ) => {
-  const { value: propsValue, onChange } = props;
+  const { value, onChange } = props;
+  const emptyValue = useMemo(
+    () => ({ value: [] } as PartMeta<RetailModel[]>),
+    [],
+  );
 
-  const [value, setValue] = useState(propsValue || { value: [] });
-  useEffect(() => setValue(propsValue || { value: [] }), [propsValue]);
+  const [rowKeys] = useState(() => {
+    const ret: string[] = [];
+    value?.value?.forEach(() => ret.push(uuidv4()));
+    return ret;
+  });
 
   const handleChange = useCallback(
     (i: number, retailModel: RetailModel) => {
-      value.value[i] = retailModel;
-      onChange(value);
+      const newValue = value != null ? { ...value } : emptyValue;
+      newValue.value[i] = retailModel;
+      onChange(newValue);
     },
-    [value, onChange],
+    [emptyValue, value, onChange],
   );
 
   const handleAppend = useCallback(() => {
-    value.value.push(null);
-    onChange(value);
-  }, [value, onChange]);
+    const newValue = value != null ? { ...value } : emptyValue;
+    rowKeys.push(uuidv4());
+    newValue.value.push(null);
+    onChange(newValue);
+  }, [rowKeys, emptyValue, value, onChange]);
 
   const handleShiftUp = useCallback(
     (i: number) => {
-      const tmp = value.value[i];
-      value.value[i] = value.value[i - 1];
-      value.value[i - 1] = tmp;
-      onChange(value);
+      const newValue = { ...value };
+
+      // Swap values and row keys
+      [newValue.value[i], newValue.value[i - 1]] = [
+        newValue.value[i - 1],
+        newValue.value[i],
+      ];
+      [rowKeys[i], rowKeys[i - 1]] = [rowKeys[i - 1], rowKeys[i]];
+
+      onChange(newValue);
     },
-    [value, onChange],
+    [rowKeys, value, onChange],
   );
 
   const handleShiftDown = useCallback(
     (i: number) => {
-      const tmp = value.value[i];
-      value.value[i] = value.value[i + 1];
-      value.value[i + 1] = tmp;
-      onChange(value);
+      const newValue = { ...value };
+
+      // Swap values and row keys
+      [newValue.value[i], newValue.value[i + 1]] = [
+        newValue.value[i + 1],
+        newValue.value[i],
+      ];
+      [rowKeys[i], rowKeys[i + 1]] = [rowKeys[i + 1], rowKeys[i]];
+
+      onChange(newValue);
     },
-    [value, onChange],
+    [rowKeys, value, onChange],
   );
 
   const handleRemove = useCallback(
     (i: number) => {
-      value.value.splice(i, 1);
-      onChange(value);
+      const newValue = { ...value };
+      newValue.value.splice(i, 1);
+      rowKeys.splice(i, 1);
+      onChange(newValue.value.length > 0 ? newValue : null);
     },
-    [value, onChange],
+    [rowKeys, value, onChange],
   );
 
   return (
     <div className="flex flex-col w-full mb-6">
-      {value.value.map((retailModel, i) => (
-        <div key={i} className="flex items-stretch">
+      {value?.value.map((retailModel, i) => (
+        <div key={rowKeys[i]} className="flex items-stretch">
           <div className="mx-6 text-3xl self-center">{i + 1}</div>
 
           <RetailModelField
@@ -99,7 +124,6 @@ export const RetailModelsField: FunctionComponent<RetailModelsFieldProps> = (
               onClick={() => handleShiftDown(i)}
               className="h-11.5"
             >
-              {' '}
               <ChevronDownIcon className="w-4" />
             </Button>
             <Button

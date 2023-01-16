@@ -1,4 +1,5 @@
 import Joi from '@hapi/joi';
+import { PartImage } from '@shared/part-image';
 import { RetailModel } from '../retail-model';
 
 export enum PartMetaBooleanFormatter {
@@ -12,7 +13,7 @@ export interface PartMetas {
   valueRank?: PartMeta<number>;
 
   // Persisted Meta Values
-  description?: PartMeta<string>;
+  images?: PartMeta<PartImage[]>;
   retailModels?: PartMeta<RetailModel[]>;
 }
 
@@ -39,6 +40,6 @@ export const partMetasValidator = Joi.object({
   performanceRank: partMetaValidator.allow(null),
   valueRank: partMetaValidator.allow(null),
 
-  description: partMetaValidator.allow(null),
+  images: partMetaValidator.allow(null),
   retailModels: partMetaValidator.allow(null),
 });

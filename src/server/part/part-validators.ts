@@ -1,7 +1,6 @@
 import Joi from '@hapi/joi';
 import { benchmarksValidator } from '@shared/benchmark';
 import { PartOrder, PartSort, PartType } from '@shared/part';
-import { partImagesValidator } from '@shared/part-image';
 import { partMetasValidator } from '@shared/part-meta';
 import { specsValidator } from '@shared/spec';
 
@@ -44,7 +43,6 @@ export const createPartRequestValidator = Joi.object({
   metas: partMetasValidator,
   specs: specsValidator,
   benchmarks: benchmarksValidator,
-  images: partImagesValidator,
 }).options({ abortEarly: false });
 
 export const updatePartRequestValidator = Joi.object({
@@ -54,7 +52,6 @@ export const updatePartRequestValidator = Joi.object({
   metas: partMetasValidator,
   specs: specsValidator,
   benchmarks: benchmarksValidator,
-  images: partImagesValidator,
 }).options({ abortEarly: false });
 
 export const autocompletePartsRequestValidator = Joi.object({

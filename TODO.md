@@ -1,7 +1,4 @@
 Immediate Tasks:
-- Add intel logo and comparison color
-- Test
-  - something not working with part images, seems to be saved as an object and not array
 - Prep for launch
   - Final steps
     - setup deployment process
@@ -38,7 +35,8 @@ Post-launch:
   - Add alt tags
   - html semantics
   - sitemap
-- retail models
+- improvements to part and image cache?
+  - are they needed? could it be done better
 - improve related parts
 - improve admin panel
 - improve database usage

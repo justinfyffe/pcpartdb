@@ -8,10 +8,9 @@ export async function up(knex: Knex): Promise<void> {
     table.string('type').notNullable();
     table.string('name').notNullable();
 
-    table.jsonb('specs');
     table.jsonb('metas');
+    table.jsonb('specs');
     table.jsonb('benchmarks');
-    table.jsonb('images');
 
     table.timestamps(true, true);
 

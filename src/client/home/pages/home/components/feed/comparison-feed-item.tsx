@@ -134,6 +134,7 @@ const Banner: FunctionComponent<BannerProps> = (props) => {
         'flex-1 text-[#ececec] font-semibold px-2 text-xs bg-[#666] border-t-px border-r-px border-gray-50 text-center',
         company === 'nvidia' ? 'bg-[#558501]' : '',
         company === 'amd' ? 'bg-[#850101]' : '',
+        company === 'intel' ? 'bg-[#0071c5]' : '',
       )}
     >
       {getGpuName(part, { company: false })}

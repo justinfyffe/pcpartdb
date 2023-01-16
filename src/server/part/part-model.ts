@@ -1,7 +1,6 @@
 import { Serializable } from '@server/shared/types/serialize';
 import { Benchmarks } from '@shared/benchmark';
 import { Part, PartType } from '@shared/part';
-import { PartImage } from '@shared/part-image';
 import { PartMetas } from '@shared/part-meta';
 import { Specs } from '@shared/spec';
 import { Model, PartialModelObject } from 'objection';
@@ -20,7 +19,6 @@ export class PartModel extends Model implements Serializable<Part> {
   specs?: Specs;
   benchmarks?: Benchmarks;
   metas?: PartMetas;
-  images?: PartImage[];
 
   serialize(): Part {
     return {
@@ -31,7 +29,6 @@ export class PartModel extends Model implements Serializable<Part> {
       specs: this.specs ?? {},
       benchmarks: this.benchmarks ?? {},
       metas: this.metas ?? {},
-      images: this.images ?? [],
     };
   }
 }

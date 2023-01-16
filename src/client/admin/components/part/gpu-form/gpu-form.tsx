@@ -22,11 +22,7 @@ import {
 } from '@shared/benchmark';
 import { ApiError, ValidationErrorType } from '@shared/error';
 import { Part, PartRequest, PartType } from '@shared/part';
-import {
-  PartImage,
-  PartImagesRequest,
-  partImageValidator,
-} from '@shared/part-image';
+import { PartImage } from '@shared/part-image';
 import {
   PartMeta,
   PartMetasRequest,
@@ -123,7 +119,7 @@ interface PartFormData {
   timeSpyGraphics?: Benchmark<number>;
 
   // Images
-  images?: PartImage[];
+  images?: PartMeta<PartImage[]>;
 
   // Retail Models
   retailModels?: PartMeta<RetailModel[]>;
@@ -194,7 +190,7 @@ const partValidator = Joi.object({
   timeSpyGraphics: benchmarkValidator.allow(null),
 
   // Images
-  images: Joi.array().items(partImageValidator.allow(null)),
+  images: partMetaValidator.allow(null),
 
   // Retail Models
   retailModels: partMetaValidator.allow(null),
@@ -208,7 +204,6 @@ function formOptions(gpu?: Part): UseFormProps<PartFormData> {
   const meta = gpu?.metas || {};
   const specs = gpu?.specs || {};
   const benchmarks = gpu?.benchmarks || {};
-  const images = gpu?.images || [];
 
   return {
     resolver: joiResolver(partValidator),
@@ -278,9 +273,9 @@ function formOptions(gpu?: Part): UseFormProps<PartFormData> {
       timeSpyGraphics: benchmarks.timeSpyGraphics || null,
 
       // Images
-      images: images || [],
+      images: meta.images || null,
 
-      // RetailModels,
+      // RetailModels
       retailModels: meta.retailModels || null,
     },
   };
@@ -319,7 +314,6 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
         metas: toMetaRequest(formData),
         specs: toSpecsRequest(formData),
         benchmarks: toBenchmarksRequest(formData),
-        images: toRequestImages(formData),
       };
 
       try {
@@ -990,9 +984,19 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
 };
 
 function toMetaRequest(formData: PartFormData): PartMetasRequest {
-  return {
-    retailModels: formData.retailModels || null,
-  };
+  const images = formData.images;
+  if (images?.value != null) {
+    images.value = images.value.filter((image) => image != null);
+  }
+
+  const retailModels = formData.retailModels;
+  if (retailModels?.value != null) {
+    retailModels.value = retailModels.value.filter(
+      (retailModel) => retailModel != null,
+    );
+  }
+
+  return { images: images || null, retailModels: retailModels || null };
 }
 
 function toSpecsRequest(formData: PartFormData): SpecsRequest {
@@ -1059,8 +1063,4 @@ function toBenchmarksRequest(formData: PartFormData): BenchmarksRequest {
     g3dMark: formData.g3dMark || null,
     timeSpyGraphics: formData.timeSpyGraphics || null,
   };
-}
-
-function toRequestImages(formData: PartFormData): PartImagesRequest {
-  return formData.images.filter((value) => value != null) || [];
 }

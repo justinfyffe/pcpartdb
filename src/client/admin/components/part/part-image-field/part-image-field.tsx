@@ -38,7 +38,7 @@ export const PartImageField: FunctionComponent<PartImageFieldProps> = (
     }
 
     onChange?.(
-      value != null ? { id: value.id, metadata: value.metadata } : null,
+      value != null ? { id: value.id, metadata: value?.metadata } : null,
     );
   }, [value, onChange]);
 
