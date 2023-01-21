@@ -7,7 +7,7 @@
     "clean": "npm run clean:app & npm run clean:migrations",
     "clean:app": "rm -rf .next",
     "clean:migrations": "rm -rf dist/db",
-    "build": "npm run build:app & npm run build:migrations",
+    "build": "npm run build:app && npm run build:migrations",
     "build:app": "next build",
     "build:migrations": "tsc --project tsconfig.migrations.json",
     "dev": "next dev",

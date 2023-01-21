@@ -1,1 +1,4 @@
+#!/bin/bash
+DIRECTORY=$(cd `dirname $0` && pwd)
+
 docker-compose up db

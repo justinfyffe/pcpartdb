@@ -1,0 +1,32 @@
+#!/bin/bash
+DIRECTORY=$(cd `dirname $0` && pwd)
+cd $DIRECTORY/../..
+
+npm run build
+
+TMP_BUILD_DIR="./tmp/build"
+
+rm -rf ./builds
+mkdir -p ./builds
+
+rm -rf $TMP_BUILD_DIR
+mkdir -p $TMP_BUILD_DIR
+
+# Copy folders
+cp -r ./bin $TMP_BUILD_DIR
+cp -r ./dist $TMP_BUILD_DIR
+cp -r ./node_modules $TMP_BUILD_DIR
+cp -r ./dist $TMP_BUILD_DIR
+cp -r ./public $TMP_BUILD_DIR
+cp -r ./server $TMP_BUILD_DIR
+
+# Copy filles
+cp -r ./package.json $TMP_BUILD_DIR
+cp -r ./package-lock.json $TMP_BUILD_DIR
+cp -r ./next.config.js $TMP_BUILD_DIR
+
+# Remove upload files
+rm -rf $TMP_BUILD_DIR/public/u
+
+cd $TMP_BUILD_DIR
+tar -cvpzf ../../builds/pcpartdb.tar.gz .

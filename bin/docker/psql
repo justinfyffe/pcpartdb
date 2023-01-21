@@ -1,3 +1,4 @@
 #!/bin/bash
+DIRECTORY=$(cd `dirname $0` && pwd)
 
 docker-compose exec db psql -U $1

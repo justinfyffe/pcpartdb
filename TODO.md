@@ -1,5 +1,6 @@
 Immediate Tasks:
 - Prep for launch
+  - Test build and release scripts
   - Final steps
     - setup deployment process
     - set up database

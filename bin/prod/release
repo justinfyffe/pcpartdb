@@ -1,0 +1,12 @@
+#!/bin/bash
+DIRECTORY=$(cd `dirname $0` && pwd)
+cd $DIRECTORY/../..
+
+FILE=$1
+
+# Backup files
+./bin/prod/backup
+
+# Extract files
+tar -xvf $FILE
+
