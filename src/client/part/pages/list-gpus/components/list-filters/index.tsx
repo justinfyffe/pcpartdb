@@ -91,6 +91,12 @@ export const ListFilters: FunctionComponent<ListFiltersProps> = (props) => {
           AMD
         </Checkbox>
         <Checkbox
+          value={query.filter?.company?.includes('intel') ?? false}
+          onChange={(value) => handleCompanyToggle('intel', value)}
+        >
+          Intel
+        </Checkbox>
+        <Checkbox
           value={query.filter?.company?.includes('nvidia') ?? false}
           onChange={(value) => handleCompanyToggle('nvidia', value)}
         >
