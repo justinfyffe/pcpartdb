@@ -13,6 +13,7 @@ rm -rf $TMP_BUILD_DIR
 mkdir -p $TMP_BUILD_DIR
 
 # Copy folders
+cp -r ./.next $TMP_BUILD_DIR
 cp -r ./bin $TMP_BUILD_DIR
 cp -r ./dist $TMP_BUILD_DIR
 cp -r ./node_modules $TMP_BUILD_DIR
@@ -24,6 +25,7 @@ cp -r ./server $TMP_BUILD_DIR
 cp ./package.json $TMP_BUILD_DIR
 cp ./package-lock.json $TMP_BUILD_DIR
 cp ./next.config.js $TMP_BUILD_DIR
+cp ./knexfile.dist.js $TMP_BUILD_DIR
 cp ./.env.sample $TMP_BUILD_DIR
 
 # Remove upload files
