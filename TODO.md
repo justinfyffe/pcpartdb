@@ -1,5 +1,6 @@
 Immediate Tasks:
 - Prep for launch
+  - gon object?
   - Test build and release scripts
   - Final steps
     - setup deployment process
@@ -15,6 +16,7 @@ Immediate Tasks:
         lrwxrwxrwx 1 justin justin   18 Jul 24 04:51 finestpc -> /srv/web/finestpc/
 
 Post-launch:
+- remove usage of router.push.
 - set up auto backups
 - add audit events table
   - track all changes to content
