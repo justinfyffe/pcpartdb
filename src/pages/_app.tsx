@@ -18,7 +18,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
 
-      {ctx.enableGoogleAnalytics && (
+      {ctx?.enableGoogleAnalytics && (
         <>
           <Script
             strategy="afterInteractive"
