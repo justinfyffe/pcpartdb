@@ -1,6 +1,5 @@
 Immediate Tasks:
 - Prep for launch
-  - gon object?
   - Test build and release scripts
   - Final steps
     - setup deployment process

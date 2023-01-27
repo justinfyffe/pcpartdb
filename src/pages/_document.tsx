@@ -17,24 +17,6 @@ class MyDocument extends Document {
     return (
       <Html lang="en" className="bg-html">
         <Head>
-          {/* TODO: Don't show if local development or staff user */}
-          <script
-            async
-            src="https://www.googletagmanager.com/gtag/js?id=G-3JJHHL4XC1"
-          ></script>
-          <script
-            type="text/javascript"
-            dangerouslySetInnerHTML={{
-              __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-
-              gtag('config', 'G-3JJHHL4XC1');
-            `,
-            }}
-          />
-
           <meta charSet="utf-8" />
           <link rel="icon" type="image/x-icon" href="/favicon.ico" />
           <link
@@ -59,7 +41,6 @@ class MyDocument extends Document {
             href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900|Sacramento&display=swap"
             rel="preconnect"
           />
-          <link rel="preconnect" href="https://www.google-analytics.com" />
           <link
             rel="preload"
             href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900|Sacramento&display=swap"
@@ -69,6 +50,7 @@ class MyDocument extends Document {
             rel="stylesheet"
             href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900|Sacramento&display=swap"
           />
+          <link rel="preconnect" href="https://www.google-analytics.com" />
         </Head>
         <body>
           <Main />

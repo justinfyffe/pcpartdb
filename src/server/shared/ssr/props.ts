@@ -4,6 +4,7 @@ import { userGuard } from '@server/auth/user-guard';
 import { transaction } from '@server/db/database';
 import { userMiddleware } from '@server/user/user-middleware';
 import { NextPageContext } from 'next';
+import { contextPropsMiddleware } from '../context/context-props-middleware';
 import { SsrContext } from './context';
 import { errorHandler } from './error';
 
@@ -24,6 +25,7 @@ export function ssrPageProps<T = unknown>(
       req: pageCtx.req,
       res: pageCtx.res,
       page: pageCtx,
+      props: {},
     };
     try {
       return await transaction(async (trx) => {
@@ -31,6 +33,7 @@ export function ssrPageProps<T = unknown>(
 
         // Middleware
         await userMiddleware(ctx);
+        await contextPropsMiddleware(ctx);
 
         // Apply Guards
         for (const guard of guards ?? []) {
@@ -39,11 +42,14 @@ export function ssrPageProps<T = unknown>(
 
         // Run getServerSideProps
         const props = (await func(ctx)) ?? {};
-        return { props: JSON.parse(JSON.stringify(props)) };
+        return JSON.parse(
+          JSON.stringify({ props: { ...props, ctx: ctx.props } }),
+        );
       });
     } catch (e) {
       console.log(e);
-      return errorHandler(e as Error);
+      const error = errorHandler(e as Error);
+      return JSON.parse(JSON.stringify({ props: { error, ctx: ctx.props } }));
     }
   };
 

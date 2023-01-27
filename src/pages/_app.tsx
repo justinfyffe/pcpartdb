@@ -5,17 +5,41 @@ import { LayoutContext } from '@client/shared/layouts';
 import axios from 'axios';
 import App, { AppContext, AppProps } from 'next/app';
 import Head from 'next/head';
+import Script from 'next/script';
 import React from 'react';
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { error } = pageProps as any;
+  const { ctx, error } = pageProps as any;
 
   return (
     <LayoutContext.Provider value={{ fieldCounter: 0 }}>
       <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
+
+      {ctx.enableGoogleAnalytics && (
+        <>
+          <Script
+            strategy="afterInteractive"
+            src={`https://www.googletagmanager.com/gtag/js?id=${ctx.googleAnalyticsId}`}
+          />
+          <Script
+            id="google-analytics"
+            strategy="afterInteractive"
+            dangerouslySetInnerHTML={{
+              __html: `
+                  window.dataLayer = window.dataLayer || [];
+                  function gtag(){dataLayer.push(arguments);}
+                  gtag('js', new Date());
+
+                  gtag('config', '${ctx.googleAnalyticsId}');
+                `,
+            }}
+          />
+        </>
+      )}
+
       <CacheHydration />
       {!error && <Component {...pageProps}></Component>}
     </LayoutContext.Provider>

@@ -1,7 +1,7 @@
 import { useImageCache, usePartCache } from '@client/shared/cache';
 import { Image } from '@shared/image';
 import { Part } from '@shared/part';
-import Head from 'next/head';
+import Script from 'next/script';
 import React, { FunctionComponent } from 'react';
 
 interface CacheState {
@@ -28,13 +28,11 @@ export const CacheHydration: FunctionComponent = () => {
       parts: partCache.toObject(),
     };
     return (
-      <Head>
-        <script
-          id="cache"
-          type="application/json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(state) }}
-        />
-      </Head>
+      <Script
+        id="cache"
+        type="application/json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(state) }}
+      />
     );
   }
 };

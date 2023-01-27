@@ -9,7 +9,7 @@ export function errorHandler(e: Error | ServerError) {
     return { notFound: true };
   }
 
-  return { props: { error: JSON.parse(JSON.stringify(error)) } };
+  return error;
 }
 
 function getErrorProps(e: Error | ServerError) {

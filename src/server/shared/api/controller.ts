@@ -17,7 +17,7 @@ export function controller(
   guards?: GuardFunction[],
 ) {
   const newFunc = async (req: NextApiRequest, res: NextApiResponse) => {
-    const ctx: ApiContext = { req, res };
+    const ctx: ApiContext = { req, res, props: {} };
     try {
       await transaction(async (trx) => {
         ctx.trx = trx;
