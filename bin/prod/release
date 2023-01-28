@@ -1,12 +1,15 @@
 #!/bin/bash
 DIRECTORY=$(cd `dirname $0` && pwd)
-cd $DIRECTORY/../..
-
-FILE=$1
+cd $DIRECTORY/../../
 
 # Backup files
 ./bin/prod/backup
 
 # Extract files
-tar -xvf $FILE
+tar -xf ./pcpartdb.tar.gz
 
+# Migrate the database
+./bin/prod/migrate
+
+# Restart server
+./bin/prod/restart

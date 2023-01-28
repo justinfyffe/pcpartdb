@@ -1,0 +1,42 @@
+#!/bin/bash
+set -euo pipefail
+
+DIRECTORY=$(cd `dirname $0` && pwd)
+cd $DIRECTORY/../
+
+: "${DEPLOY_HOST:?DEPLOY_HOST is required}"
+: "${DEPLOY_USER:?DEPLOY_USER is required}"
+
+if [[ ! "$DEPLOY_HOST" =~ ^[A-Za-z0-9.-]+$ ]]; then
+  echo "DEPLOY_HOST must be a hostname or IPv4 address" >&2
+  exit 1
+fi
+
+if [[ ! "$DEPLOY_USER" =~ ^[A-Za-z_][A-Za-z0-9_-]*$ ]]; then
+  echo "DEPLOY_USER is invalid" >&2
+  exit 1
+fi
+
+DEPLOY_TARGET="$DEPLOY_USER@$DEPLOY_HOST"
+
+# Build
+./bin/build
+
+# Copy
+ssh "$DEPLOY_TARGET" 'mkdir -p ~/releases/pcpartdb'
+scp ./builds/pcpartdb.tar.gz "$DEPLOY_TARGET":~/releases/pcpartdb
+
+# Release Flow
+ssh "$DEPLOY_TARGET" './pcpartdb/bin/prod/backup'
+ssh "$DEPLOY_TARGET" './pcpartdb/bin/prod/unpack'
+ssh "$DEPLOY_TARGET" './pcpartdb/bin/prod/release'
+
+# Download Backup
+mkdir -p ~/backups/pcpartdb
+chmod 700 ~/backups/pcpartdb
+scp "$DEPLOY_TARGET":~/backups/pcpartdb/pcpartdb-db.sql ~/backups/pcpartdb/pcpartdb-db.sql
+scp "$DEPLOY_TARGET":~/backups/pcpartdb/pcpartdb.tar.gz ~/backups/pcpartdb/pcpartdb.tar.gz
+
+timestamp=$(date +%F_%H-%M-%S)
+mv ~/backups/pcpartdb/pcpartdb-db.sql ~/backups/pcpartdb/pcpartdb-db.$timestamp.sql
+mv ~/backups/pcpartdb/pcpartdb.tar.gz ~/backups/pcpartdb/pcpartdb.$timestamp.tar.gz
