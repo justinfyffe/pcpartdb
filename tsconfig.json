@@ -1,39 +1,48 @@
 {
-    "compilerOptions": {
-      "allowJs": true,
-      "allowSyntheticDefaultImports": true,
-      "baseUrl": ".",
-      "downlevelIteration": true,
-      "emitDecoratorMetadata": true,
-      "esModuleInterop": true,
-      "experimentalDecorators": true,
-      "forceConsistentCasingInFileNames": true,
-      "isolatedModules": true,
-      "incremental": true,
-      "jsx": "preserve",
-      "lib": ["es2017", "dom"],
-      "module": "esnext",
-      "moduleResolution": "node",
-      "noEmit": true,
-      "noImplicitReturns": true,
-      "noImplicitThis": true,
-      "outDir": ".next",
-      "paths": {
-        "@client/*": ["src/client/*"],
-        "@content/*": ["src/content/*"],
-        "@shared/*": ["src/shared/*"],
-        "@server/*": ["src/server/*"],
-      },
-      "pretty": true,
-      "removeComments": true,
-      "resolveJsonModule": true,
-      "skipLibCheck": true,
-      "sourceMap": true,
-      "strict": true,
-      "strictNullChecks": false,
-      "target": "es5"
+  "compilerOptions": {
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": "./src",
+    "downlevelIteration": true,
+    "emitDecoratorMetadata": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    "incremental": true,
+    "jsx": "preserve",
+    "lib": [
+      "es2017",
+      "dom"
+    ],
+    "module": "esnext",
+    "moduleResolution": "node",
+    "noEmit": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "outDir": ".next",
+    "paths": {
+      "@client/*": ["client/*"],
+      "@shared/*": ["shared/*"],
+      "@server/*": ["server/*"]
     },
-    "include": ["./src/**/*.ts", "./src/**/*.tsx", "next-env.d.ts", "src/pages/index.tss"],
-    "exclude": ["node_modules", "src/server/db/**/*.ts"]
-  }
-  
+    "pretty": true,
+    "removeComments": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "strict": true,
+    "strictNullChecks": false,
+    "target": "es5"
+  },
+  "include": [
+    "./src/**/*.ts",
+    "./src/**/*.tsx",
+    "next-env.d.ts",
+    "src/pages/index.tss"
+  ],
+  "exclude": [
+    "node_modules",
+    "src/server/db/**/*.ts"
+  ]
+}
