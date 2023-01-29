@@ -24,6 +24,7 @@ import {
   GpuBenchmarks,
   gpuBenchmarkValidator,
   GpuImages,
+  gpuImageValidator,
   GpuSpec,
   GpuSpecs,
   gpuSpecValidator,
@@ -179,7 +180,7 @@ const gpuValidator = Joi.object({
   timespyGraphics: gpuBenchmarkValidator.allow(null),
 
   // Images
-  images: Joi.array().allow(Joi.any()),
+  images: Joi.array().allow(gpuImageValidator),
 }).options({ abortEarly: false });
 
 interface GpuFormProps {

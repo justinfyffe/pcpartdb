@@ -162,7 +162,7 @@ export class GpuRepository {
       .select(
         'gpuId',
         raw(
-          "CAST(RANK() OVER ( ORDER BY (performanceScore->>'value')::float DESC ) AS INTEGER) AS rank",
+          "CAST(RANK() OVER ( ORDER BY (performance_score->>'value')::float DESC ) AS INTEGER) AS rank",
         ),
       );
 
@@ -192,7 +192,7 @@ export class GpuRepository {
       .select(
         'gpuId',
         raw(
-          "CAST(RANK() OVER ( ORDER BY (valueScore->>'value')::float DESC ) AS INTEGER) AS rank",
+          "CAST(RANK() OVER ( ORDER BY (value_score->>'value')::float DESC ) AS INTEGER) AS rank",
         ),
       );
 
@@ -228,24 +228,22 @@ export class GpuRepository {
     let filterQuery = query;
 
     if (performanceRated === true) {
-      filterQuery = filterQuery
-        .joinRelated('benchmarks')
-        .whereNotNull(ref('benchmarks.performanceScore:value'));
+      filterQuery = filterQuery.whereNotNull(
+        ref('benchmarks.performanceScore:value'),
+      );
     }
 
     if (valueRated === true) {
-      filterQuery = filterQuery
-        .joinRelated('benchmarks')
-        .whereNotNull(ref('benchmarks.valueScore:value'));
+      filterQuery = filterQuery.whereNotNull(
+        ref('benchmarks.valueScore:value'),
+      );
     }
 
     if (companies?.length > 0) {
-      filterQuery = filterQuery
-        .joinRelated('specs')
-        .whereIn(
-          raw('LOWER(??)', [ref('specs.company:value').castText()]),
-          companies,
-        );
+      filterQuery = filterQuery.whereIn(
+        raw('LOWER(??)', [ref('specs.company:value').castText()]),
+        companies,
+      );
     }
 
     return filterQuery;
@@ -269,21 +267,19 @@ export class GpuRepository {
     } else if (sort === GpuSort.ReleaseDate) {
       // Default DESC
       const order = orderBy?.order ?? GpuOrder.Desc;
-      orderQuery = orderQuery.orderBy(ref('specs.launchDate.value'), order);
+      orderQuery = orderQuery.orderBy(ref('specs.launchDate:value'), order);
     } else if (sort === GpuSort.PerformanceRating) {
       // Default DESC
       const order = orderBy?.order ?? GpuOrder.Desc;
-      orderQuery = orderQuery.orderBy(
-        ref('benchmarks.performanceScore.value'),
-        order,
-      );
+      orderQuery = orderQuery
+        .whereNotNull(ref('benchmarks.performanceScore:value'))
+        .orderBy(ref('benchmarks.performanceScore:value'), order);
     } else if (sort === GpuSort.ValueRating) {
       // Default DESC
       const order = orderBy?.order ?? GpuOrder.Desc;
-      orderQuery = orderQuery.orderBy(
-        ref('benchmarks.valueScore.value'),
-        order,
-      );
+      orderQuery = orderQuery
+        .whereNotNull(ref('benchmarks.valueScore:value'))
+        .orderBy(ref('benchmarks.valueScore:value'), order);
     }
 
     return orderQuery;

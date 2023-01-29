@@ -32,8 +32,7 @@ export interface GpuBenchmark<T = unknown> {
 
 export const gpuBenchmarkValidator = Joi.object({
   value: Joi.any().allow(null),
-  source: Joi.string().allow(null),
-  metadata: Joi.any().allow(null),
+  meta: Joi.any().allow(null),
 }).options({ abortEarly: false });
 
 export const gpuBenchmarksValidator = Joi.object({

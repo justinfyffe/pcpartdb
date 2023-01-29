@@ -1,6 +1,11 @@
 Immediate Tasks:
   - Data refactor
-    - Set correct base values for imports
+    - test home page
+    - test view page
+    - test compare page
+    - test compare form
+    - test related gpus
+    - move company, launch price, market segment, release date to gpus table
   
 
 Post-launch:
