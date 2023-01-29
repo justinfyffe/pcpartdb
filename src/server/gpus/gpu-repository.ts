@@ -86,12 +86,8 @@ export class GpuRepository {
     return await GpuModel.query(config?.trx)
       .withGraphJoined('specs')
       .andWhere('name', '~*', `(${tokens})`)
-      .orWhere(
-        ref('company:value').from('specs').castText(),
-        '~*',
-        `(${tokens})`,
-      )
-      .orderBy(ref('launchDate:value').from('specs').castText(), 'DESC')
+      .orWhere(ref('specs.company:value').castText(), '~*', `(${tokens})`)
+      .orderBy(ref('specs.releaseDate:value').castText(), 'DESC')
       .limit(5);
   }
 
@@ -267,7 +263,7 @@ export class GpuRepository {
     } else if (sort === GpuSort.ReleaseDate) {
       // Default DESC
       const order = orderBy?.order ?? GpuOrder.Desc;
-      orderQuery = orderQuery.orderBy(ref('specs.launchDate:value'), order);
+      orderQuery = orderQuery.orderBy(ref('specs.releaseDate:value'), order);
     } else if (sort === GpuSort.PerformanceRating) {
       // Default DESC
       const order = orderBy?.order ?? GpuOrder.Desc;

@@ -5,7 +5,10 @@ Immediate Tasks:
     - test compare page
     - test compare form
     - test related gpus
+    - test gpu import
+    - fix home page gpus list
     - move company, launch price, market segment, release date to gpus table
+  - Scrapers and proxies
   
 
 Post-launch:
