@@ -12,12 +12,12 @@ import {
   Tr,
 } from '@client/shared/components';
 import { AdminLayout } from '@client/shared/layouts';
-import { Part } from '@shared/part';
+import { Gpu } from '@shared/gpus';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 
 export interface AdminListGpusPageProps {
-  gpus: Part[];
+  gpus: Gpu[];
 }
 
 export const AdminListGpusPage = (props: AdminListGpusPageProps) => {

@@ -2,11 +2,11 @@ import 'reflect-metadata';
 import { GpuForm } from '@client/admin/components';
 import { Button, ButtonVariant } from '@client/shared/components';
 import { AdminLayout } from '@client/shared/layouts';
-import { Part } from '@shared/part';
+import { Gpu } from '@shared/gpus';
 import React from 'react';
 
 export interface AdminEditGpuPageProps {
-  gpu: Part;
+  gpu: Gpu;
 }
 
 export const AdminEditGpuPage = (props: AdminEditGpuPageProps) => {

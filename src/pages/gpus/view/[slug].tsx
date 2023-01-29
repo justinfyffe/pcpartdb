@@ -2,37 +2,37 @@ import {
   ViewGpuPage,
   ViewGpuPageProps,
   ViewPageContentData,
-} from '@client/part/pages';
-import { partService } from '@server/part/part-service';
+} from '@client/gpus/pages';
+import { gpuService } from '@server/gpus/gpu-service';
 import { Context } from '@server/shared/context';
 import { SsrContext } from '@server/shared/ssr/context';
 import { ssrPageProps } from '@server/shared/ssr/props';
 import { serialize } from '@server/shared/types/serialize';
-import { Part, PartSort, PartType } from '@shared/part';
+import { Gpu, GpuSort } from '@shared/gpus';
 
-const TOTAL_COMPARED_PARTS = 10;
+const TOTAL_COMPARED_GPUS = 10;
 
 export const getServerSideProps = ssrPageProps<ViewGpuPageProps>(
   async (ctx: SsrContext) => {
     const slug = ctx.page.query.slug as string;
     const gpu = await getGpu(slug, ctx);
     const contentData = await getContentData(gpu, ctx);
-    const relatedParts = await getRelatedGpus(gpu, ctx);
+    const relatedGpus = await getRelatedGpus(gpu, ctx);
 
-    return { gpu, contentData, relatedParts };
+    return { gpu, contentData, relatedGpus };
   },
 );
 
-async function getGpu(slug: string, ctx: Context): Promise<Part> {
-  const part = partService.get(
+async function getGpu(slug: string, ctx: Context): Promise<Gpu> {
+  const gpu = gpuService.get(
     { slug, includeImages: true, includeRanks: true },
     ctx,
   );
 
-  return serialize(part);
+  return serialize(gpu);
 }
 
-async function getContentData(gpu: Part, ctx: Context) {
+async function getContentData(gpu: Gpu, ctx: Context) {
   const totalRatedGpus = await getTotalRatedGpus(ctx);
 
   const relativePerformanceGpus = await getPerformanceGpus(gpu, ctx);
@@ -46,9 +46,8 @@ async function getContentData(gpu: Part, ctx: Context) {
 }
 
 async function getTotalRatedGpus(ctx: Context) {
-  const results = await partService.list(
+  const results = await gpuService.list(
     {
-      type: PartType.GPU,
       query: { filter: { performanceRated: true } },
     },
     ctx,
@@ -56,7 +55,7 @@ async function getTotalRatedGpus(ctx: Context) {
   return results.length;
 }
 
-function getSurroundingGpus(gpus: Part[], seed: Part, total: number) {
+function getSurroundingGpus(gpus: Gpu[], seed: Gpu, total: number) {
   const seedIndex = gpus.findIndex((gpu) => gpu.id === seed.id);
   let start = seedIndex;
   let end = seedIndex + 1;
@@ -76,49 +75,50 @@ function getSurroundingGpus(gpus: Part[], seed: Part, total: number) {
   return gpus.slice(start, end);
 }
 
-async function getPerformanceGpus(seed: Part, ctx: Context) {
-  const results = await partService.list(
-    {
-      type: PartType.GPU,
-      query: {
-        filter: { performanceRated: true },
-        orderBy: { sort: PartSort.PerformanceRating },
+async function getPerformanceGpus(seed: Gpu, ctx: Context) {
+  const results = await serialize(
+    gpuService.list(
+      {
+        query: {
+          filter: { performanceRated: true },
+          orderBy: { sort: GpuSort.PerformanceRating },
+        },
+        includeRanks: true,
       },
-      includeRanks: true,
-    },
-    ctx,
+      ctx,
+    ),
   );
 
   return serialize(
-    await getSurroundingGpus(results, seed, TOTAL_COMPARED_PARTS),
+    await getSurroundingGpus(results, seed, TOTAL_COMPARED_GPUS),
   );
 }
 
-async function getValueGpus(seed: Part, ctx: Context) {
-  const results = await partService.list(
-    {
-      type: PartType.GPU,
-      query: {
-        filter: { valueRated: true },
-        orderBy: { sort: PartSort.ValueRating },
+async function getValueGpus(seed: Gpu, ctx: Context) {
+  const results = await serialize(
+    gpuService.list(
+      {
+        query: {
+          filter: { valueRated: true },
+          orderBy: { sort: GpuSort.ValueRating },
+        },
+        includeRanks: true,
       },
-      includeRanks: true,
-    },
-    ctx,
+      ctx,
+    ),
   );
 
   return serialize(
-    await getSurroundingGpus(results, seed, TOTAL_COMPARED_PARTS),
+    await getSurroundingGpus(results, seed, TOTAL_COMPARED_GPUS),
   );
 }
 
 // TODO: determine this based on gpus fetched for content tables
-async function getRelatedGpus(seed: Part, ctx: Context) {
-  return await partService.getRelatedParts(
+async function getRelatedGpus(seed: Gpu, ctx: Context) {
+  return await gpuService.getRelatedGpus(
     {
-      type: PartType.GPU,
       seed,
-      prioritize: PartSort.ReleaseDate,
+      prioritize: GpuSort.ReleaseDate,
     },
     ctx,
   );

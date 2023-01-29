@@ -1,18 +1,7 @@
 Immediate Tasks:
-- Prep for launch
-  - Test build and release scripts
-  - Final steps
-    - setup deployment process
-    - set up database
-    - set up domain
-    - delete old server
-  - Notes for server
-    - in ~ folder,
-      - justin@my-websites-ubuntu-s-nyc3-01:~$ ls -l
-        total 4
-        drwxrwxr-x 2 justin justin 4096 Jul  4  2020 backups
-        lrwxrwxrwx 1 justin justin   21 Jun 15  2020 bigbarkclub -> /srv/web/bigbarkclub/
-        lrwxrwxrwx 1 justin justin   18 Jul 24 04:51 finestpc -> /srv/web/finestpc/
+  - Data refactor
+    - Set correct base values for imports
+  
 
 Post-launch:
 - remove usage of router.push.

@@ -1,9 +1,8 @@
 import { AdminEditGpuPage, AdminEditGpuPageProps } from '@client/admin/pages';
-import { partService } from '@server/part/part-service';
+import { gpuService } from '@server/gpus/gpu-service';
 import { Context } from '@server/shared/context';
 import { SsrContext } from '@server/shared/ssr/context';
 import { staffSsrPageProps } from '@server/shared/ssr/props';
-import { serialize } from '@server/shared/types/serialize';
 
 export const getServerSideProps = staffSsrPageProps(async (ctx: SsrContext) => {
   const query = ctx.page.query as { gpuId: string };
@@ -15,9 +14,7 @@ export const getServerSideProps = staffSsrPageProps(async (ctx: SsrContext) => {
 });
 
 async function getGpu(id: number, ctx: Context) {
-  const gpu = await partService.get({ id, includeImages: true }, ctx);
-
-  return serialize(gpu);
+  return await gpuService.get({ id, includeImages: true }, ctx);
 }
 
 export default AdminEditGpuPage;

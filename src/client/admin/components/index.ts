@@ -1,3 +1,3 @@
 export * from './image';
-export * from './part';
+export * from './gpu';
 export * from './user';

@@ -7,7 +7,7 @@
     "outDir": "./dist/db/migrations",
     "skipLibCheck": true,
     "sourceMap": true,
-    "module": "esnext",
+    "module": "CommonJS",
     "moduleResolution": "node",
   },
   "include": ["./src/db/migrations/*.ts"],

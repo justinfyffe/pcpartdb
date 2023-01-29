@@ -3,15 +3,15 @@ import {
   ListGpusPage,
   ListGpusPageProps,
   ListPresetSlug,
-} from '@client/part/pages';
-import { partService } from '@server/part/part-service';
-import { partsQueryValidator } from '@server/part/part-validators';
+} from '@client/gpus/pages';
+import { gpuService } from '@server/gpus/gpu-service';
+import { gpusQueryValidator } from '@server/gpus/gpu-validators';
 import { Context } from '@server/shared/context';
 import { SsrContext } from '@server/shared/ssr/context';
 import { ssrPageProps } from '@server/shared/ssr/props';
 import { serialize } from '@server/shared/types/serialize';
 import { validate } from '@server/shared/types/validate';
-import { PartsQuery, PartType } from '@shared/part';
+import { GpusQuery } from '@shared/gpus';
 import { ParsedUrlQuery } from 'querystring';
 
 export const getServerSideProps = ssrPageProps<ListGpusPageProps>(
@@ -35,22 +35,22 @@ function getQuery(query: ParsedUrlQuery) {
     return LIST_PRESETS[preset];
   }
 
-  const partsQuery = {
+  const gpusQuery = {
     filter: { company },
     orderBy: { sort, order },
-  } as PartsQuery;
-  validate(partsQuery, partsQueryValidator);
+  } as GpusQuery;
+  validate(gpusQuery, gpusQueryValidator);
 
-  return partsQuery as PartsQuery;
+  return gpusQuery as GpusQuery;
 }
 
-async function getGpusForQuery(query: PartsQuery, ctx: Context) {
+async function getGpusForQuery(query: GpusQuery, ctx: Context) {
   return await getGpus(query, ctx);
 }
 
-async function getGpus(query: PartsQuery, ctx: Context) {
-  const gpus = await partService.list(
-    { type: PartType.GPU, query, includeRanks: true, includeImages: false },
+async function getGpus(query: GpusQuery, ctx: Context) {
+  const gpus = await gpuService.list(
+    { query, includeRanks: true, includeImages: false },
     ctx,
   );
 
@@ -58,7 +58,7 @@ async function getGpus(query: PartsQuery, ctx: Context) {
 }
 
 async function getTotalGpus(ctx: Context) {
-  return await partService.count({ type: PartType.GPU }, ctx);
+  return await gpuService.count({}, ctx);
 }
 
 export default ListGpusPage;

@@ -1,16 +1,16 @@
-import { useImageCache, usePartCache } from '@client/shared/cache';
+import { useGpuCache, useImageCache } from '@client/shared/cache';
+import { Gpu } from '@shared/gpus';
 import { Image } from '@shared/image';
-import { Part } from '@shared/part';
 import Script from 'next/script';
 import React, { FunctionComponent } from 'react';
 
 interface CacheState {
   images: Record<number, Image>;
-  parts: Record<number, Part>;
+  gpus: Record<number, Gpu>;
 }
 
 export const CacheHydration: FunctionComponent = () => {
-  const partCache = usePartCache();
+  const gpuCache = useGpuCache();
   const imageCache = useImageCache();
 
   if (typeof document !== 'undefined') {
@@ -18,14 +18,14 @@ export const CacheHydration: FunctionComponent = () => {
     if (el != null) {
       const state: CacheState = JSON.parse(el.textContent);
       imageCache.hydrate(state.images);
-      partCache.hydrate(state.parts);
+      gpuCache.hydrate(state.gpus);
     }
 
     return <React.Fragment />;
   } else {
     const state: CacheState = {
       images: imageCache.toObject(),
-      parts: partCache.toObject(),
+      gpus: gpuCache.toObject(),
     };
     return (
       <Script

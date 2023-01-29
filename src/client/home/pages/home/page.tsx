@@ -1,10 +1,10 @@
 import 'reflect-metadata';
-import { ComparePartsForm } from '@client/part/components';
-import { ListPresetSlug } from '@client/part/pages';
+import { CompareGpusForm } from '@client/gpus/components';
+import { ListPresetSlug } from '@client/gpus/pages';
 import { WebsiteLayout } from '@client/shared/layouts';
 import { classNames } from '@client/shared/ui';
 import { getListGpusPath } from '@client/shared/website';
-import { Part, PartComparison } from '@shared/part';
+import { Gpu, GpuComparison } from '@shared/gpus';
 import React from 'react';
 import {
   ComparisonFeedItem,
@@ -12,14 +12,14 @@ import {
   FeedItems,
   FeedLink,
   FeedLinks,
-  PartFeedItem,
-  PartFeedTag,
+  GpuFeedItem,
+  GpuFeedTag,
 } from './components/feed';
 
 export interface HomePageProps {
-  nvidiaVsAmdGpus: PartComparison[];
-  nvidiaGpus: Part[];
-  amdGpus: Part[];
+  nvidiaVsAmdGpus: GpuComparison[];
+  nvidiaGpus: Gpu[];
+  amdGpus: Gpu[];
 }
 
 export const HomePage = (props: HomePageProps) => {
@@ -38,7 +38,7 @@ export const HomePage = (props: HomePageProps) => {
         <section className={classNames('flex flex-col justify-center gap-4')}>
           <h1 className="md:text-2xl text-3xl mb-0">{title}</h1>
 
-          <ComparePartsForm values={[null, null]} />
+          <CompareGpusForm values={[null, null]} />
         </section>
 
         <Feed>
@@ -46,7 +46,7 @@ export const HomePage = (props: HomePageProps) => {
 
           <FeedItems>
             {nvidiaVsAmdGpus.map(([nvidiaGpu, amdGpu], i) => (
-              <ComparisonFeedItem key={i} parts={[nvidiaGpu, amdGpu]} />
+              <ComparisonFeedItem key={i} gpus={[nvidiaGpu, amdGpu]} />
             ))}
           </FeedItems>
 
@@ -65,18 +65,15 @@ export const HomePage = (props: HomePageProps) => {
 
           <FeedItems>
             {bestPerformanceNvidia != null && (
-              <PartFeedItem
-                part={bestPerformanceNvidia}
-                tag={PartFeedTag.GreatPerformance}
+              <GpuFeedItem
+                gpu={bestPerformanceNvidia}
+                tag={GpuFeedTag.GreatPerformance}
               />
             )}
             {bestValueNvidia != null && (
-              <PartFeedItem
-                part={bestValueNvidia}
-                tag={PartFeedTag.GreatValue}
-              />
+              <GpuFeedItem gpu={bestValueNvidia} tag={GpuFeedTag.GreatValue} />
             )}
-            {randomNvidia != null && <PartFeedItem part={randomNvidia} />}
+            {randomNvidia != null && <GpuFeedItem gpu={randomNvidia} />}
           </FeedItems>
 
           <FeedLinks>
@@ -96,15 +93,15 @@ export const HomePage = (props: HomePageProps) => {
 
           <FeedItems>
             {bestPerformanceAmd != null && (
-              <PartFeedItem
-                part={bestPerformanceAmd}
-                tag={PartFeedTag.GreatPerformance}
+              <GpuFeedItem
+                gpu={bestPerformanceAmd}
+                tag={GpuFeedTag.GreatPerformance}
               />
             )}
             {bestValueAmd != null && (
-              <PartFeedItem part={bestValueAmd} tag={PartFeedTag.GreatValue} />
+              <GpuFeedItem gpu={bestValueAmd} tag={GpuFeedTag.GreatValue} />
             )}
-            {randomAmd != null && <PartFeedItem part={randomAmd} />}
+            {randomAmd != null && <GpuFeedItem gpu={randomAmd} />}
           </FeedItems>
 
           <FeedLinks>

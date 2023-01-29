@@ -1,12 +1,12 @@
+import { Gpu } from '@shared/gpus';
 import { Image as ImageDto, ImageMeta } from '@shared/image';
-import { Part } from '@shared/part';
 
 export function getImagePath(image: ImageDto) {
   return `/u/images/${image.path}`;
 }
 
-export function getCompanyLogoImagePath(part: Part) {
-  const specs = part?.specs;
+export function getCompanyLogoImagePath(gpu: Gpu) {
+  const specs = gpu?.specs;
   const company = specs?.company?.value;
 
   if (company == null) {

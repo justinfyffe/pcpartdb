@@ -1,4 +1,4 @@
 export * from './cache-context';
 export * from './cache-hydration';
 export * from './image-cache';
-export * from './part-cache';
+export * from './gpu-cache';
