@@ -11,7 +11,7 @@ import React, {
 const LABELS: Record<string, string> = {
   g2dMark: 'G2D Mark',
   g3dMark: 'G3D Mark',
-  timeSpyGraphics: '3DMark Time Spy Graphics',
+  timespyGraphics: '3DMark Time Spy Graphics',
 };
 
 interface GpuBenchmarkFieldProps {

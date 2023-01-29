@@ -16,7 +16,7 @@ export const BenchmarksTable: FunctionComponent<BenchmarksTableProps> = (
       <TBody>
         <BenchmarkRow benchmark="g3dMark" />
         <BenchmarkRow benchmark="g2dMark" />
-        <BenchmarkRow benchmark="timeSpyGraphics" />
+        <BenchmarkRow benchmark="timespyGraphics" />
       </TBody>
     </Table>
   );

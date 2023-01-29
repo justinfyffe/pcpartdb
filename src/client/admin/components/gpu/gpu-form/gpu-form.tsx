@@ -1,4 +1,5 @@
 import { gpuService } from '@client/gpus';
+import { useGpuCache } from '@client/shared/cache';
 import {
   Alert,
   AlertVariant,
@@ -265,6 +266,7 @@ function formOptions(gpu?: Gpu): UseFormProps<GpuFormData> {
 export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
   const { gpu } = props;
   const isUpdate = gpu != null;
+  useGpuCache(gpu);
 
   const router = useRouter();
   const [saving, setSaving] = useState(false);
@@ -305,6 +307,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
 
         router.push('/admin/gpus');
       } catch (err) {
+        console.log(err);
         setRequestError(err as ApiError);
         setValidationErrors(err as ApiError, setError);
       } finally {
@@ -1038,10 +1041,14 @@ function toBenchmarksRequest(formData: GpuFormData): GpuBenchmarks {
   return {
     g2dMark: formData.g2dMark || null,
     g3dMark: formData.g3dMark || null,
-    timeSpyGraphics: formData.timespyGraphics || null,
+    timespyGraphics: formData.timespyGraphics || null,
   };
 }
 
 function toImagesRequest(formData: GpuFormData): GpuImages {
-  return formData.images?.map((image) => ({ id: image.id })) ?? [];
+  return (
+    formData.images
+      ?.filter((image) => image != null)
+      .map((image) => ({ id: image.id })) ?? []
+  );
 }

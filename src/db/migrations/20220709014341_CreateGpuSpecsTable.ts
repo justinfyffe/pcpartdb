@@ -2,7 +2,7 @@ import { Knex } from 'knex';
 
 export async function up(knex: Knex): Promise<void> {
   await knex.schema.createTable('gpu_specs', (table: Knex.TableBuilder) => {
-    table.integer('gpu_id').unsigned();
+    table.integer('gpu_id').unsigned().notNullable();
 
     // TODO: move these for to gpus?
     table.jsonb('company');

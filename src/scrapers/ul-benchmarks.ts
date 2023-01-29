@@ -13,7 +13,7 @@ export async function importFromUlBenchmarks(url: string) {
 
   // Get Benchmark Values
   const benchmarks: GpuBenchmarks = {
-    timespyGraphics: getTimeSpyGraphics($),
+    timespyGraphics: getTimespyGraphics($),
   };
 
   // Add Benchmark Key
@@ -32,8 +32,8 @@ export async function importFromUlBenchmarks(url: string) {
   return { gpu: { benchmarks } } as ImportGpuDataResponse;
 }
 
-function getTimeSpyGraphics($: cheerio.CheerioAPI): GpuBenchmark<number> {
-  const timeSpyGraphics = $('.result-pimp-badge-score-item').first().text();
+function getTimespyGraphics($: cheerio.CheerioAPI): GpuBenchmark<number> {
+  const timespyGraphics = $('.result-pimp-badge-score-item').first().text();
 
-  return { value: Number(timeSpyGraphics) };
+  return { value: Number(timespyGraphics) };
 }

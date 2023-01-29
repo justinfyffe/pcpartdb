@@ -2,7 +2,6 @@ import { RepositoryConfig } from '@server/db/repository';
 import {
   CreateGpuRequest,
   FindGpuRequest,
-  Gpu,
   GpuOrder,
   GpusFilter,
   GpusOrderBy,
@@ -13,7 +12,7 @@ import {
 } from '@shared/gpus';
 import Objection, { Model, raw, ref } from 'objection';
 import { GpuBenchmarksModel } from './gpu-benchmarks-model';
-import { GpuModel, GpuModelPojo } from './gpu-model';
+import { GpuModel } from './gpu-model';
 
 export interface ListOptions {
   query?: GpusQuery;
@@ -32,7 +31,7 @@ export interface FindOptions {
 
 export class GpuRepository {
   async list(options: ListOptions, config?: RepositoryConfig) {
-    const { includeImages, includeRanks } = options;
+    const { includeImages } = options;
     const { filter, orderBy } = options.query ?? {};
 
     let query = GpuModel.query(config?.trx)
@@ -57,7 +56,7 @@ export class GpuRepository {
   }
 
   async find(options: FindGpuRequest, config?: RepositoryConfig) {
-    const { id, slug, includeImages, includeRanks } = options;
+    const { id, slug, includeImages } = options;
 
     let query: Objection.QueryBuilder<GpuModel, unknown> = GpuModel.query(
       config?.trx,
@@ -118,38 +117,37 @@ export class GpuRepository {
   }
 
   async create(data: CreateGpuRequest, config?: RepositoryConfig) {
-    const inserted = await GpuModel.query(config?.trx).insert({
-      ...data,
-      parent: undefined,
-      specs: undefined,
-      benchmarks: undefined,
-      images: undefined,
-    });
+    const { parent: _parent, specs, benchmarks, images, ...gpu } = data;
+    const inserted = await GpuModel.query(config?.trx).insert(gpu);
 
-    await inserted.$relatedQuery('specs').insert(data.specs);
-    await inserted.$relatedQuery('benchmarks').insert(data.benchmarks);
+    await inserted.$relatedQuery('specs', config?.trx).insert(specs ?? {});
     await inserted
-      .$relatedQuery('images')
-      .relate(data.images?.map((image) => image.id));
+      .$relatedQuery('benchmarks', config?.trx)
+      .insert(benchmarks ?? {});
+    if (images?.length > 0) {
+      await inserted
+        .$relatedQuery('images', config?.trx)
+        .relate(images?.map((image) => image.id));
+    }
 
     return this.find({ id: inserted.id }, config);
   }
 
   async update(id: number, data: UpdateGpuRequest, config?: RepositoryConfig) {
-    const updated = await GpuModel.query(config?.trx).updateAndFetchById(id, {
-      ...data,
-      parent: undefined,
-      specs: undefined,
-      benchmarks: undefined,
-      images: undefined,
-    });
+    const { parent: _parent, specs, benchmarks, images, ...gpu } = data;
+    const updated = await GpuModel.query(config?.trx).updateAndFetchById(
+      id,
+      gpu,
+    );
 
-    await updated.$relatedQuery('specs').update(data.specs);
-    await updated.$relatedQuery('benchmarks').update(data.benchmarks);
-    await updated
-      .$relatedQuery('images')
-      .unrelate()
-      .relate(data.images?.map((image) => image.id));
+    await updated.$relatedQuery('specs', config?.trx).update(specs);
+    await updated.$relatedQuery('benchmarks', config?.trx).update(benchmarks);
+    await updated.$relatedQuery('images', config?.trx).unrelate();
+    if (images?.length > 0) {
+      await updated
+        .$relatedQuery('images', config?.trx)
+        .relate(images?.map((image) => image.id));
+    }
 
     return this.find({ id: updated.id }, config);
   }

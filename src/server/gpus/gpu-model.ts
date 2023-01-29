@@ -32,10 +32,10 @@ export class GpuModel extends Model implements Serializable<Gpu> {
       slug: this.slug,
       name: this.name,
       affiliateUrl: this.affiliateUrl,
-      parent: this.parent?.serialize(),
-      specs: this.specs?.serialize(),
-      benchmarks: this.benchmarks?.serialize(),
-      images: this.images?.map((image) => image.serialize()),
+      parent: this.parent?.serialize() ?? null,
+      specs: this.specs?.serialize() ?? {},
+      benchmarks: this.benchmarks?.serialize() ?? {},
+      images: this.images?.map((image) => image.serialize()) ?? [],
     };
   }
 

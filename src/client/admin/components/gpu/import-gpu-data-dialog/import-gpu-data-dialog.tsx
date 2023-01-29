@@ -130,7 +130,7 @@ export const ImportGpuDataDialog: FunctionComponent<
 
                 <ImportGpuBenchmark benchmark="g3dMark" />
                 <ImportGpuBenchmark benchmark="g2dMark" />
-                <ImportGpuBenchmark benchmark="timeSpyGraphics" />
+                <ImportGpuBenchmark benchmark="timespyGraphics" />
               </TBody>
             </Table>
           </div>

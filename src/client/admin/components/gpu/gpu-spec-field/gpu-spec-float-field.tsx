@@ -4,6 +4,7 @@ import {
   BitUnit,
   ClockSpeedUnit,
   FlopsUnit,
+  getBaseGpuSpecValue,
   getDisplayGpuSpecValue,
   GpuSpec,
   GpuSpecKey,
@@ -67,7 +68,6 @@ export const GpuSpecFloatField = forwardRef<
       : 0,
   );
 
-  const baseValue = value?.value ?? null;
   const displayValue = useMemo(() => {
     if (value?.value == null) {
       return null;
@@ -79,7 +79,12 @@ export const GpuSpecFloatField = forwardRef<
   const handleChange = useCallback(
     (value: number) => {
       onChange?.(
-        value != null ? { value, meta: { specKey: field, displayUnit } } : null,
+        value != null
+          ? {
+              value: getBaseGpuSpecValue(value, displayUnit),
+              meta: { specKey: field, displayUnit },
+            }
+          : null,
       );
     },
     [field, displayUnit, onChange],
@@ -89,12 +94,12 @@ export const GpuSpecFloatField = forwardRef<
     const newIndex = unitIndex < displayUnits.length - 1 ? unitIndex + 1 : 0;
     setUnitIndex(newIndex);
     const newValue: GpuSpec<number> = {
-      value: baseValue,
+      value: getBaseGpuSpecValue(displayValue, displayUnits[unitIndex]),
       meta: { specKey: field, displayUnit: displayUnits[unitIndex] },
     };
 
     onChange?.(newValue);
-  }, [baseValue, field, displayUnits, unitIndex, onChange]);
+  }, [unitIndex, displayUnits, displayValue, field, onChange]);
 
   return (
     <NumberInput

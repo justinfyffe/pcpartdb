@@ -1,6 +1,5 @@
 import { CacheContext, ImageCache } from '@client/shared/cache';
 import { Gpu } from '@shared/gpus';
-import { Image } from '@shared/image';
 import { useContext } from 'react';
 
 class GpuCacheImpl {
@@ -15,17 +14,17 @@ class GpuCacheImpl {
       if (Array.isArray(gpus)) {
         gpus.forEach((gpu) => {
           this.cache.set(gpu.id, gpu);
-          ImageCache.save(gpu.images || null);
+          if (gpu.images?.length > 0) {
+            ImageCache.save(gpu.images);
+          }
         });
       } else {
         this.cache.set(gpus.id, gpus);
-        ImageCache.save(gpus.images);
+        if (gpus.images?.length > 0) {
+          ImageCache.save(gpus.images);
+        }
       }
     });
-  }
-
-  private saveImages(images: Image[]) {
-    ImageCache.save(images);
   }
 
   delete(id: number) {
