@@ -132,6 +132,7 @@ function getStringValue($: cheerio.CheerioAPI, label: string): GpuSpec<string> {
 function getNumberValue($: cheerio.CheerioAPI, label: string): GpuSpec<number> {
   const values = getSpecValues($, label);
   const value = values[0];
+  // TODO: set correct base value
   const [base, displayUnit] = parseNumberValue(value || null);
 
   return {

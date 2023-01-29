@@ -25,8 +25,26 @@ export const PerformanceTable: FunctionComponent<PerformanceTableProps> = (
   const [gpu1, gpu2] = comparison;
   const { relativePerformanceGpus } = contentData;
 
-  const [baselineGpu, setBaselineGpu] = useState(gpu1);
-  const [secondaryGpu, setSecondaryGpu] = useState(gpu2);
+  const [baselineGpu, setBaselineGpu] = useState(() => {
+    if (
+      gpu1.benchmarks?.performanceScore?.value == null &&
+      gpu2.benchmarks?.performanceScore?.value == null
+    ) {
+      return null;
+    } else {
+      return gpu1.benchmarks?.performanceScore?.value != null ? gpu1 : gpu2;
+    }
+  });
+  const [secondaryGpu, setSecondaryGpu] = useState(() => {
+    if (
+      gpu1.benchmarks?.performanceScore?.value == null ||
+      gpu2.benchmarks?.performanceScore?.value == null
+    ) {
+      return null;
+    } else {
+      return gpu2;
+    }
+  });
 
   // Add nulls to rank gaps
   const gpus = useMemo(() => {
@@ -46,8 +64,25 @@ export const PerformanceTable: FunctionComponent<PerformanceTableProps> = (
   }, [relativePerformanceGpus]);
 
   useEffect(() => {
-    setBaselineGpu(gpu1);
-    setSecondaryGpu(gpu2);
+    if (
+      gpu1.benchmarks?.performanceScore?.value == null &&
+      gpu2.benchmarks?.performanceScore?.value == null
+    ) {
+      setBaselineGpu(null);
+    } else {
+      setBaselineGpu(
+        gpu1.benchmarks?.performanceScore?.value != null ? gpu1 : gpu2,
+      );
+    }
+
+    if (
+      gpu1.benchmarks?.performanceScore?.value == null ||
+      gpu2.benchmarks?.performanceScore?.value == null
+    ) {
+      setSecondaryGpu(null);
+    } else {
+      setSecondaryGpu(gpu2);
+    }
   }, [gpu1, gpu2]);
 
   const getRelativePerformance = useCallback(
@@ -74,13 +109,13 @@ export const PerformanceTable: FunctionComponent<PerformanceTableProps> = (
         Baseline:{' '}
         <BaselineToggle
           gpu={gpu1}
-          active={baselineGpu.id === gpu1.id}
+          active={baselineGpu?.id === gpu1.id}
           onClick={() => toggleBaselineGpu(gpu1)}
         />{' '}
         or{' '}
         <BaselineToggle
           gpu={gpu2}
-          active={baselineGpu.id === gpu2.id}
+          active={baselineGpu?.id === gpu2.id}
           onClick={() => toggleBaselineGpu(gpu2)}
         />
       </div>
@@ -97,8 +132,8 @@ export const PerformanceTable: FunctionComponent<PerformanceTableProps> = (
             gpu != null ? (
               <CustomRow
                 key={gpu.id}
-                highlight={gpu.id === baselineGpu.id}
-                secondary={gpu.id === secondaryGpu.id}
+                highlight={gpu.id === baselineGpu?.id}
+                secondary={gpu.id === secondaryGpu?.id}
               >
                 <CustomRowLabel>
                   <a href={getViewGpuPath(getViewGpuSlug(gpu))}>
@@ -136,6 +171,14 @@ export const BaselineToggle: FunctionComponent<BaselineToggleProps> = (
   props,
 ) => {
   const { gpu, active, onClick } = props;
+
+  if (gpu.benchmarks?.performanceScore?.value == null) {
+    return (
+      <span className="text-content-dimmed cursor-not-allowed">
+        {getGpuName(gpu)}
+      </span>
+    );
+  }
 
   if (active) {
     return <span className="font-bold">{getGpuName(gpu)}</span>;

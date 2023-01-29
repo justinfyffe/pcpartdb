@@ -23,8 +23,29 @@ export const ValueTable: FunctionComponent<ValueTableProps> = (props) => {
   const [gpu1, gpu2] = comparison;
   const { relativeValueGpus } = contentData;
 
-  const [baselineGpu, setBaselineGpu] = useState(gpu1);
-  const [secondaryGpu, setSecondaryGpu] = useState(gpu2);
+  const [baselineGpu, setBaselineGpu] = useState(() => {
+    if (
+      gpu1.benchmarks?.valueScore?.value == null &&
+      gpu2.benchmarks?.valueScore?.value == null
+    ) {
+      return null;
+    } else {
+      return gpu1.benchmarks?.valueScore?.value != null ? gpu1 : gpu2;
+    }
+  });
+  const [secondaryGpu, setSecondaryGpu] = useState(() => {
+    if (
+      gpu1.benchmarks?.valueScore?.value == null ||
+      gpu2.benchmarks?.valueScore?.value == null
+    ) {
+      return null;
+    } else {
+      return gpu2;
+    }
+  });
+
+  console.log('baseline', baselineGpu);
+  console.log('secondary', secondaryGpu);
 
   // Add nulls to rank gaps
   const gpus = useMemo(() => {
@@ -44,13 +65,28 @@ export const ValueTable: FunctionComponent<ValueTableProps> = (props) => {
   }, [relativeValueGpus]);
 
   useEffect(() => {
-    setBaselineGpu(gpu1);
-    setSecondaryGpu(gpu2);
+    if (
+      gpu1.benchmarks?.valueScore?.value == null &&
+      gpu2.benchmarks?.valueScore?.value == null
+    ) {
+      setBaselineGpu(null);
+    } else {
+      setBaselineGpu(gpu1.benchmarks?.valueScore?.value != null ? gpu1 : gpu2);
+    }
+
+    if (
+      gpu1.benchmarks?.valueScore?.value == null ||
+      gpu2.benchmarks?.valueScore?.value == null
+    ) {
+      setSecondaryGpu(null);
+    } else {
+      setSecondaryGpu(gpu2);
+    }
   }, [gpu1, gpu2]);
 
   const getRelativePerformance = useCallback(
     (relatedGpu: Gpu) => {
-      const baseline = baselineGpu.benchmarks.valueScore.value;
+      const baseline = baselineGpu?.benchmarks.valueScore.value;
       const relatedValue = relatedGpu.benchmarks.valueScore.value;
 
       return ((relatedValue / baseline) * 100).toFixed(0);
@@ -72,13 +108,13 @@ export const ValueTable: FunctionComponent<ValueTableProps> = (props) => {
         Baseline:{' '}
         <BaselineToggle
           gpu={gpu1}
-          active={baselineGpu.id === gpu1.id}
+          active={baselineGpu?.id === gpu1.id}
           onClick={() => toggleBaselineGpu(gpu1)}
         />{' '}
         or{' '}
         <BaselineToggle
           gpu={gpu2}
-          active={baselineGpu.id === gpu2.id}
+          active={baselineGpu?.id === gpu2.id}
           onClick={() => toggleBaselineGpu(gpu2)}
         />
       </div>
@@ -95,8 +131,8 @@ export const ValueTable: FunctionComponent<ValueTableProps> = (props) => {
             gpu != null ? (
               <CustomRow
                 key={gpu.id}
-                highlight={gpu.id === baselineGpu.id}
-                secondary={gpu.id === secondaryGpu.id}
+                highlight={gpu.id === baselineGpu?.id}
+                secondary={gpu.id === secondaryGpu?.id}
               >
                 <CustomRowLabel>
                   <a href={getViewGpuPath(getViewGpuSlug(gpu))}>
@@ -134,6 +170,14 @@ export const BaselineToggle: FunctionComponent<BaselineToggleProps> = (
   props,
 ) => {
   const { gpu, active, onClick } = props;
+
+  if (gpu.benchmarks?.valueScore?.value == null) {
+    return (
+      <span className="text-content-dimmed cursor-not-allowed">
+        {getGpuName(gpu)}
+      </span>
+    );
+  }
 
   if (active) {
     return <span className="font-bold">{getGpuName(gpu)}</span>;
