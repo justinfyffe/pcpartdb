@@ -1,6 +1,8 @@
 Immediate Tasks:
   - Data refactor
     - test gpu import
+      - set correct base value when importing
+      - separate unit storage from formatting
     - fix related gpus
     - fix relative performance and value gpus
     - fix home page gpus list
