@@ -30,23 +30,23 @@ export const ValueTable: FunctionComponent<ValueTableProps> = (props) => {
       <THead>
         <Tr>
           <Th></Th>
-          <Th className="text-left">Relative Performance</Th>
+          <Th className="text-left">Relative Value</Th>
           <Th className="text-left">Rank</Th>
         </Tr>
       </THead>
       <TBody>
-        {relativeValueGpus.map((gpu) => (
-          <CustomRow key={gpu.id} highlight={gpu.id === gpu.id}>
+        {relativeValueGpus.map((relativeGpu) => (
+          <CustomRow key={relativeGpu.id} highlight={relativeGpu.id === gpu.id}>
             <CustomRowLabel>
-              <a href={getViewGpuPath(getViewGpuSlug(gpu))}>
-                {getGpuName(gpu, { company: false })}
+              <a href={getViewGpuPath(getViewGpuSlug(relativeGpu))}>
+                {getGpuName(relativeGpu, { company: false })}
               </a>
             </CustomRowLabel>
             <CustomRowValue className="text-left">
-              {getRelativeValue(gpu)}%
+              {getRelativeValue(relativeGpu)}%
             </CustomRowValue>
             <CustomRowValue className="text-left">
-              {gpu.ranks?.valueRank}
+              {relativeGpu.ranks?.valueRank}
             </CustomRowValue>
           </CustomRow>
         ))}

@@ -92,12 +92,16 @@ export const ComparisonFeedItem: FunctionComponent<ComparisonFeedItemProps> = (
           </div>
 
           <div className="flex w-full h-full absolute items-start justify-between rounded-t">
-            <div className="text-[#ececec] font-normal px-1.5 py-0.5 text-xs bg-[rgba(51,65,85,1)] border-b-px border-r-px border-gray-50 rounded-tl rounded-br">
-              {price1}
-            </div>
-            <div className="text-[#ececec] font-normal px-1.5 py-0.5 text-xs bg-[rgba(51,65,85,1)]  border-b-px border-l-px border-gray-50 rounded-tr rounded-bl">
-              {price2}
-            </div>
+            {price1 != null && (
+              <div className="text-[#ececec] font-normal px-1.5 py-0.5 text-xs bg-[rgba(51,65,85,1)] border-b-px border-r-px border-gray-50 rounded-tl rounded-br">
+                {price1}
+              </div>
+            )}
+            {price2 != null && (
+              <div className="text-[#ececec] font-normal px-1.5 py-0.5 text-xs bg-[rgba(51,65,85,1)]  border-b-px border-l-px border-gray-50 rounded-tr rounded-bl">
+                {price2}
+              </div>
+            )}
           </div>
 
           <div className="flex w-full h-full items-end justify-center absolute">

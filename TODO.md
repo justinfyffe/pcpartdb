@@ -1,14 +1,13 @@
 Immediate Tasks:
   - Data refactor
-    - test home page
-    - test view page
     - test compare page
     - test compare form
-    - test related gpus
     - test gpu import
+    - fix related gpus
     - fix home page gpus list
     - move company, launch price, market segment, release date to gpus table
   - Scrapers and proxies
+  - Test everything
   
 
 Post-launch:

@@ -45,7 +45,7 @@ export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
       <div className="bg-white">
         <main
           className={classNames(
-            'container px-4 py-4 text-content max-w-full w-full',
+            'container px-4 py-4 text-content w-full',
             props.className,
           )}
         >

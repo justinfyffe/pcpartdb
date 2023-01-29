@@ -59,6 +59,7 @@ const sizing = {
   120: '480px',
   125: '500px',
   247: '988px',
+  full: '100%',
 };
 
 module.exports = {

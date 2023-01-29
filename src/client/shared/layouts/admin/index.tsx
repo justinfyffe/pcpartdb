@@ -50,7 +50,7 @@ export const AdminLayout: FunctionComponent<AdminLayoutProps> = (props) => {
       <div className="bg-white">
         <main
           className={classNames(
-            'container flex gap-4 px-4 py-4 max-w-full w-full',
+            'container flex gap-4 px-4 py-4 w-full',
             props.className,
           )}
         >

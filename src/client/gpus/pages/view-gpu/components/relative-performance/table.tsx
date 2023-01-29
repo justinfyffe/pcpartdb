@@ -37,18 +37,18 @@ export const PerformanceTable: FunctionComponent<PerformanceTableProps> = (
         </Tr>
       </THead>
       <TBody>
-        {relativePerformanceGpus.map((gpu) => (
-          <CustomRow key={gpu.id} highlight={gpu.id === gpu.id}>
+        {relativePerformanceGpus.map((relativeGpu) => (
+          <CustomRow key={relativeGpu.id} highlight={relativeGpu.id === gpu.id}>
             <CustomRowLabel>
-              <a href={getViewGpuPath(getViewGpuSlug(gpu))}>
-                {getGpuName(gpu, { company: false })}
+              <a href={getViewGpuPath(getViewGpuSlug(relativeGpu))}>
+                {getGpuName(relativeGpu, { company: false })}
               </a>
             </CustomRowLabel>
             <CustomRowValue className="text-left">
-              {getRelativePerformance(gpu)}%
+              {getRelativePerformance(relativeGpu)}%
             </CustomRowValue>
             <CustomRowValue className="text-left">
-              {gpu.ranks?.performanceRank}
+              {relativeGpu.ranks?.performanceRank}
             </CustomRowValue>
           </CustomRow>
         ))}
