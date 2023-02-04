@@ -60,7 +60,7 @@ interface GpuFormData {
   releaseDate?: GpuSpec<string>;
 
   // Processor
-  gpuCodename?: GpuSpec<string>;
+  codename?: GpuSpec<string>;
   architecture?: GpuSpec<string>;
   processSize?: GpuSpec<number>;
   transistors?: GpuSpec<number>;
@@ -127,7 +127,7 @@ const gpuValidator = Joi.object({
   releaseDate: gpuSpecValidator.allow(null),
 
   // Processor
-  gpuCodename: gpuSpecValidator.allow(null),
+  codename: gpuSpecValidator.allow(null),
   architecture: gpuSpecValidator.allow(null),
   processSize: gpuSpecValidator.allow(null),
   transistors: gpuSpecValidator.allow(null),
@@ -206,7 +206,7 @@ function formOptions(gpu?: Gpu): UseFormProps<GpuFormData> {
       releaseDate: specs.releaseDate || null,
 
       // Processor
-      gpuCodename: specs.gpuCodename || null,
+      codename: specs.codename || null,
       architecture: specs.architecture || null,
       processSize: specs.processSize || null,
       transistors: specs.transistors || null,
@@ -476,7 +476,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           <Field>
             GPU Codename
             <Controller
-              name="gpuCodename"
+              name="codename"
               control={control}
               render={({ field }) => (
                 <GpuSpecField field="gpuName" {...field} ref={null} />
@@ -989,7 +989,7 @@ function toSpecsRequest(formData: GpuFormData): GpuSpecs {
     releaseDate: formData.releaseDate || null,
 
     // Processor
-    gpuCodename: formData.gpuCodename || null,
+    codename: formData.codename || null,
     architecture: formData.architecture || null,
     processSize: formData.processSize || null,
     transistors: formData.transistors || null,

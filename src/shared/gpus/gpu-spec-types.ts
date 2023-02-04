@@ -16,7 +16,7 @@ export interface GpuSpecs {
   releaseDate?: GpuSpec<string>;
 
   // Processor
-  gpuCodename?: GpuSpec<string>;
+  codename?: GpuSpec<string>;
   architecture?: GpuSpec<string>;
   processSize?: GpuSpec<number>;
   transistors?: GpuSpec<number>;
@@ -72,7 +72,7 @@ export interface GpuSpecMeta {
   specKey?: GpuSpecKey;
   source?: string;
   currency?: string;
-  displayUnit?: GpuSpecUnit;
+  unit?: GpuSpecUnit;
 }
 
 export interface GpuSpec<T = unknown> {
@@ -81,24 +81,45 @@ export interface GpuSpec<T = unknown> {
 }
 
 export enum BandwidthUnit {
-  Kbps = 'Kb/s',
-  Mbps = 'Mb/s',
-  Gbps = 'Gb/s',
+  kbps = 'kbps',
+  mbps = 'mbps',
+  gbps = 'gbps',
+}
+
+export enum BandwidthFormat {
+  kbps = 'Kb/s',
+  mbps = 'Mb/s',
+  gbps = 'Gb/s',
 }
 
 export enum BitUnit {
   bit = 'bit',
 }
 
+export enum BitFormat {
+  bit = 'bit',
+}
+
 export enum ClockSpeedUnit {
-  KHz = 'KHz',
-  MHz = 'MHz',
-  GHz = 'GHz',
+  khz = 'khz',
+  mhz = 'mhz',
+  ghz = 'ghz',
+}
+
+export enum ClockSpeedFormat {
+  khz = 'KHz',
+  mhz = 'MHz',
+  ghz = 'GHz',
 }
 
 export enum FlopsUnit {
-  GFLOPS = 'GFLOPS',
-  TFLOPS = 'TFLOPS',
+  gflops = 'gflops',
+  tflops = 'tflops',
+}
+
+export enum FlopsFormat {
+  gflops = 'GFLOPS',
+  tflops = 'TFLOPS',
 }
 
 export enum LengthUnit {
@@ -107,36 +128,75 @@ export enum LengthUnit {
   mm = 'mm',
 }
 
+export enum LengthFormat {
+  um = 'μm',
+  nm = 'nm',
+  mm = 'mm',
+}
+
 export enum MemoryUnit {
-  KB = 'KB',
-  MB = 'MB',
-  GB = 'GB',
+  kb = 'kb',
+  mb = 'mb',
+  gb = 'gb',
+}
+
+export enum MemoryFormat {
+  kb = 'KB',
+  mb = 'MB',
+  gb = 'GB',
 }
 
 export enum NumericUnit {
   million = 'million',
 }
 
+export enum NumericFormat {
+  million = 'million',
+}
+
 export enum PixelFillRateUnit {
-  GPixelps = 'GPixel/s',
+  gpixelps = 'gpixelps',
+}
+
+export enum PixelFillRateFormat {
+  gpixelps = 'GPixel/s',
 }
 
 export enum StorageUnit {
-  KB = 'KB',
-  MB = 'MB',
-  GB = 'GB',
-  TB = 'TB',
+  kb = 'kb',
+  mb = 'MB',
+  gb = 'GB',
+  tb = 'TB',
+}
+
+export enum StorageFormat {
+  kb = 'KB',
+  mb = 'MB',
+  gb = 'GB',
+  tb = 'TB',
 }
 
 export enum TextureFillRateUnit {
-  GTexelps = 'GTexel/s',
+  gtexelps = 'gtexelps',
+}
+
+export enum TextureFillRateFormat {
+  gtexelps = 'GTexel/s',
 }
 
 export enum WattageUnit {
-  W = 'W',
+  w = 'w',
+}
+
+export enum WattageFormat {
+  w = 'W',
 }
 
 export enum WeightUnit {
+  kg = 'kg',
+}
+
+export enum WeightFormat {
   kg = 'kg',
 }
 
@@ -167,7 +227,7 @@ export const gpuSpecsValidator = Joi.object({
   releaseDate: gpuSpecValidator.allow(null),
 
   // Processor
-  gpuCodename: gpuSpecValidator.allow(null),
+  codename: gpuSpecValidator.allow(null),
   architecture: gpuSpecValidator.allow(null),
   processSize: gpuSpecValidator.allow(null),
   transistors: gpuSpecValidator.allow(null),

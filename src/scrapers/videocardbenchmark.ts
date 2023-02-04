@@ -17,25 +17,12 @@ export async function importFromVideoCardBenchmark(url: string) {
     g2dMark: getG2dMark($),
   };
 
-  // Add Benchmark Key
-  Object.keys(benchmarks).forEach((benchmarkKey) => {
-    const benchmark = benchmarks[benchmarkKey] as GpuBenchmark;
-    if (benchmark == null) {
-      return;
-    }
-
-    if (benchmark.meta == null) {
-      benchmark.meta = {};
-    }
-    benchmark.meta = { ...benchmark?.meta, benchmarkKey };
-  });
-
   return { gpu: { benchmarks } } as ImportGpuDataResponse;
 }
 
 function getG3dMark($: cheerio.CheerioAPI): GpuBenchmark<number> {
   const g3dMark = $('.speedicon').siblings('span').first().text();
-  return { value: Number(g3dMark) };
+  return { value: Number(g3dMark), meta: { benchmarkKey: 'g3dMark' } };
 }
 
 function getG2dMark($: cheerio.CheerioAPI): GpuBenchmark<number> {
@@ -48,5 +35,5 @@ function getG2dMark($: cheerio.CheerioAPI): GpuBenchmark<number> {
     .text()
     .trim();
 
-  return { value: Number(g2dMark) };
+  return { value: Number(g2dMark), meta: { benchmarkKey: 'g2dMark' } };
 }

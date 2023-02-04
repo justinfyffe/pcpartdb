@@ -5,8 +5,13 @@ import {
   formatDate,
   formatPrice,
 } from '@client/shared/format';
-import { Gpu, GpuSpec, MarketSegmentValue } from '@shared/gpus';
-import { getDisplayGpuSpecValue } from '@shared/gpus/gpu-spec-utils';
+import {
+  getDisplayGpuSpecValue,
+  getSpecUnitFormat,
+  Gpu,
+  GpuSpec,
+  MarketSegmentValue,
+} from '@shared/gpus';
 
 export function formatGpuDimensions(gpu: Gpu) {
   const length = formatGpuSpec(gpu.specs?.length);
@@ -72,13 +77,13 @@ export function formatGpuSpec(spec: GpuSpec, options?: FormatGpuSpecOptions) {
 
   // Compute string to return
   let returnValue: string = null;
-  const displayUnit = meta?.displayUnit ?? null;
+  const unit = meta?.unit ?? null;
   if (typeof value === 'boolean') {
     returnValue = formatBooleanValue(value);
   } else if (typeof value === 'number' && Number.isInteger(value)) {
-    returnValue = getDisplayGpuSpecValue(value, displayUnit).toLocaleString();
+    returnValue = getDisplayGpuSpecValue(value, unit).toLocaleString();
   } else if (typeof value === 'number' && !Number.isInteger(value)) {
-    returnValue = getDisplayGpuSpecValue(value, displayUnit).toLocaleString(
+    returnValue = getDisplayGpuSpecValue(value, unit).toLocaleString(
       undefined,
       {
         minimumFractionDigits: options?.decimals ?? 0,
@@ -96,8 +101,9 @@ export function formatGpuSpec(spec: GpuSpec, options?: FormatGpuSpecOptions) {
   }
 
   // Apply modifiers
-  if ((options?.showUnits ?? true) && displayUnit != null) {
-    returnValue = `${returnValue} ${displayUnit}`;
+  if ((options?.showUnits ?? true) && unit != null) {
+    const formattedUnit = getSpecUnitFormat(unit);
+    returnValue = `${returnValue} ${formattedUnit}`;
   }
 
   return returnValue;

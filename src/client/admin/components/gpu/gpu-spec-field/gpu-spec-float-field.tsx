@@ -57,8 +57,8 @@ export const GpuSpecFloatField = forwardRef<
 
   const displayUnits = useMemo(() => DISPLAY_UNITS[field] ?? [], [field]);
   const displayUnit = useMemo(() => {
-    return displayUnits.includes(value?.meta?.displayUnit)
-      ? value?.meta?.displayUnit
+    return displayUnits.includes(value?.meta?.unit)
+      ? value?.meta?.unit
       : displayUnits[0] ?? null;
   }, [displayUnits, value]);
 
@@ -82,7 +82,7 @@ export const GpuSpecFloatField = forwardRef<
         value != null
           ? {
               value: getBaseGpuSpecValue(value, displayUnit),
-              meta: { specKey: field, displayUnit },
+              meta: { specKey: field, unit: displayUnit },
             }
           : null,
       );
@@ -95,7 +95,7 @@ export const GpuSpecFloatField = forwardRef<
     setUnitIndex(newIndex);
     const newValue: GpuSpec<number> = {
       value: getBaseGpuSpecValue(displayValue, displayUnits[unitIndex]),
-      meta: { specKey: field, displayUnit: displayUnits[unitIndex] },
+      meta: { specKey: field, unit: displayUnits[unitIndex] },
     };
 
     onChange?.(newValue);

@@ -23,6 +23,7 @@
     "outDir": ".next",
     "paths": {
       "@client/*": ["client/*"],
+      "@scrapers/*": ["scrapers/*"],
       "@shared/*": ["shared/*"],
       "@server/*": ["server/*"]
     },
@@ -42,7 +43,6 @@
   ],
   "exclude": [
     "node_modules",
-    "src/db/**/*.ts",
-    "src/scrapers/**/*.ts"
+    "src/db/**/*.ts"
   ]
 }

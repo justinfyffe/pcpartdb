@@ -16,24 +16,14 @@ export async function importFromUlBenchmarks(url: string) {
     timespyGraphics: getTimespyGraphics($),
   };
 
-  // Add Benchmark Key
-  Object.keys(benchmarks).forEach((benchmarkKey) => {
-    const benchmark = benchmarks[benchmarkKey] as GpuBenchmark;
-    if (benchmark == null) {
-      return;
-    }
-
-    if (benchmark.meta == null) {
-      benchmark.meta = {};
-    }
-    benchmark.meta = { ...benchmark?.meta, benchmarkKey };
-  });
-
   return { gpu: { benchmarks } } as ImportGpuDataResponse;
 }
 
 function getTimespyGraphics($: cheerio.CheerioAPI): GpuBenchmark<number> {
   const timespyGraphics = $('.result-pimp-badge-score-item').first().text();
 
-  return { value: Number(timespyGraphics) };
+  return {
+    value: Number(timespyGraphics),
+    meta: { benchmarkKey: 'timespyGraphics' },
+  };
 }

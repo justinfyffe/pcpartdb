@@ -33,7 +33,7 @@ const INPUT_TYPES: Record<string, InputType> = {
   releaseDate: 'date',
 
   // Processor
-  gpuCodename: 'autocomplete',
+  codename: 'autocomplete',
   architecture: 'autocomplete',
   processSize: 'float',
   transistors: 'float',

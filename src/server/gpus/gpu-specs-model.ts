@@ -14,7 +14,7 @@ export class GpuSpecsModel extends Model implements Serializable<GpuSpecs> {
   launchPrice?: GpuSpec<number>;
   releaseDate?: GpuSpec<string>;
 
-  gpuCodename?: GpuSpec<string>;
+  codename?: GpuSpec<string>;
   architecture?: GpuSpec<string>;
   processSize?: GpuSpec<number>;
   transistors?: GpuSpec<number>;
@@ -65,7 +65,7 @@ export class GpuSpecsModel extends Model implements Serializable<GpuSpecs> {
       launchPrice: this.launchPrice,
       releaseDate: this.releaseDate,
 
-      gpuCodename: this.gpuCodename,
+      codename: this.codename,
       architecture: this.architecture,
       processSize: this.processSize,
       transistors: this.transistors,

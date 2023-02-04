@@ -7,6 +7,7 @@ Immediate Tasks:
     - fix relative performance and value gpus
     - fix home page gpus list
     - move company, launch price, market segment, release date to gpus table
+  - get rid of objectionjs, just use knex
   - Scrapers and proxies
   - Test everything
   
