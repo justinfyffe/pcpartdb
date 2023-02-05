@@ -1,3 +1,5 @@
+import { Prisma } from '@prisma/client';
+import { prisma } from '@server/db/database';
 import { RepositoryConfig } from '@server/db/repository';
 import {
   CreateGpuRequest,
@@ -17,7 +19,6 @@ import { GpuModel } from './gpu-model';
 export interface ListOptions {
   query?: GpusQuery;
 
-  includeRanks?: boolean;
   includeImages?: boolean;
 }
 
@@ -31,8 +32,20 @@ export interface FindOptions {
 
 export class GpuRepository {
   async list(options: ListOptions, config?: RepositoryConfig) {
-    const { includeImages } = options;
+    const db = config?.trx ?? prisma;
+
+    const includeImages = options?.includeImages ?? false;
     const { filter, orderBy } = options.query ?? {};
+
+    const rows = await prisma.gpus.findMany({
+      include: {
+        gpu_specs: true,
+        gpu_benchmarks: true,
+        gpu_images: includeImages ? { include: { images: true } } : false,
+      },
+    });
+
+    // return mapped rows
 
     let query = GpuModel.query(config?.trx)
       .withGraphJoined('specs')
@@ -55,7 +68,10 @@ export class GpuRepository {
     return gpus;
   }
 
-  async find(options: FindGpuRequest, config?: RepositoryConfig) {
+  async find(
+    options: FindGpuRequest,
+    config?: RepositoryConfig,
+  ): gpusWhereInput {
     const { id, slug, includeImages } = options;
 
     let query: Objection.QueryBuilder<GpuModel, unknown> = GpuModel.query(
@@ -210,6 +226,32 @@ export class GpuRepository {
   async getValueRank(id: number, config?: RepositoryConfig) {
     const ranks = await this.getValueRanks([id], config);
     return ranks[0] ?? null;
+  }
+
+  private generateWhere(filter: GpusFilter): Prisma.gpusWhereInput {
+    const performanceRated = filter?.performanceRated;
+    const valueRated = filter?.valueRated;
+    const companies =
+      filter?.company?.map((company) => company.toLowerCase()) ?? [];
+
+    return {
+      gpu_specs: {
+        OR: [
+          {
+            company: {
+              path: ['value'],
+              equals: companies[0],
+            },
+          },
+          {
+            company: {
+              path: ['value'],
+              equals: companies[1],
+            },
+          },
+        ],
+      },
+    };
   }
 
   private filterGpus(

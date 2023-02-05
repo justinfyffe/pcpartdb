@@ -1,14 +1,14 @@
-import { UserModel } from '@server/user/user-model';
+import { Prisma } from '@prisma/client';
+import { User } from '@shared/user';
 import { IncomingMessage, ServerResponse } from 'http';
 import { NextPageContext } from 'next';
-import { Transaction } from 'objection';
 import { ContextProps } from '../context';
 
 export interface SsrContext {
-  trx?: Transaction;
+  trx?: Prisma.TransactionClient;
   req?: IncomingMessage;
   res?: ServerResponse;
-  user?: UserModel;
+  user?: User;
   token?: string;
   page?: NextPageContext;
   props?: ContextProps;

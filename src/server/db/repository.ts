@@ -1,5 +1,5 @@
-import { Transaction } from 'objection';
+import { Prisma } from '@prisma/client';
 
 export interface RepositoryConfig {
-  trx?: Transaction;
+  trx?: Prisma.TransactionClient;
 }

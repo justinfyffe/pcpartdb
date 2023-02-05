@@ -1,6 +1,5 @@
+import { Prisma, PrismaClient } from '@prisma/client';
 import * as dotenv from 'dotenv';
-import initKnex, { Knex } from 'knex';
-import { knexSnakeCaseMappers, Model } from 'objection';
 
 dotenv.config();
 
@@ -33,60 +32,16 @@ if (POSTGRES_PASSWORD === '') {
   throw new Error('Missing POSTGRES_PASSWORD. Please add it to .env');
 }
 
-export enum IsolationLevel {
-  ReadUncommitted = 'read uncommitted',
-  ReadCommitted = 'read committed',
-  Snapshot = 'snapshot',
-  RepeatableRead = 'repeatable read',
-  Serializable = 'serializable',
-}
+export const prisma = new PrismaClient();
 
-let db: Knex | undefined;
-export async function closeDatabase() {
-  if (db == null) {
-    return;
-  }
-
-  await db.destroy();
-  db = undefined;
-}
-
-export function openDatabase() {
-  if (db != null) {
-    return db;
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  if (process.env.NODE_ENV === 'development' && (global as any).db != null) {
-    // Prevent hotloading from causing too many clients error.
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    db = (global as any).db;
-  } else {
-    const host = POSTGRES_HOST;
-    const port = POSTGRES_PORT;
-    const database = POSTGRES_DB;
-    const user = POSTGRES_USER;
-    const password = POSTGRES_PASSWORD;
-
-    db = initKnex({
-      client: 'pg',
-      useNullAsDefault: true,
-      connection: { host, port, user, password, database },
-      ...knexSnakeCaseMappers(),
-    });
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (global as any).db = db;
-  }
-
-  Model.knex(db);
-  return db;
-}
-
-export function transaction<T = void>(
-  callback: (t: Knex.Transaction) => Promise<T>,
-  isolationLevel?: IsolationLevel,
+export async function transaction<T = void>(
+  callback: (trx: Prisma.TransactionClient) => Promise<T>,
+  isolationLevel?: Prisma.TransactionIsolationLevel,
 ) {
-  const db = openDatabase();
-
-  return db.transaction(callback, { isolationLevel });
+  return await prisma.$transaction(
+    async (trx) => {
+      return await callback(trx);
+    },
+    { isolationLevel },
+  );
 }

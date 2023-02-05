@@ -1,39 +1,69 @@
+import { prisma } from '@server/db/database';
 import { RepositoryConfig } from '@server/db/repository';
-import { UserModel, UserModelPojo } from './user-model';
+
+export interface CreateUserOptions {
+  email: string;
+  passwordHash: string;
+  isStaff: boolean;
+}
+export type UpdateUserOptions = Partial<CreateUserOptions>;
 
 export class UserRepository {
   async list(config?: RepositoryConfig) {
-    return await UserModel.query(config?.trx).orderBy('id', 'DESC');
-  }
-
-  async save(user: UserModelPojo, config?: RepositoryConfig) {
-    return await UserModel.query(config?.trx)
-      .insert(user)
-      .onConflict('email')
-      .merge()
-      .returning('*');
-  }
-
-  async delete(id: number, config?: RepositoryConfig) {
-    return await UserModel.query(config?.trx).deleteById(id);
+    const db = config?.trx ?? prisma;
+    return await db.users.findMany({
+      orderBy: {
+        id: 'desc',
+      },
+    });
   }
 
   async findById(id: number, config?: RepositoryConfig) {
-    return await UserModel.query(config?.trx).findById(id);
+    const db = config?.trx ?? prisma;
+    return await db.users.findUnique({ where: { id } });
   }
 
   async findByEmail(email: string, config?: RepositoryConfig) {
-    return await UserModel.query(config?.trx).findOne({ email });
+    const db = config?.trx ?? prisma;
+    return await db.users.findUnique({ where: { email } });
   }
 
   async count(config?: RepositoryConfig) {
-    return await UserModel.query(config?.trx).resultSize();
+    const db = config?.trx ?? prisma;
+    return await db.users.count();
   }
 
   async countStaff(config?: RepositoryConfig) {
-    return await UserModel.query(config?.trx)
-      .where('isStaff', true)
-      .resultSize();
+    const db = config?.trx ?? prisma;
+    return await db.users.count({ where: { is_staff: true } });
+  }
+
+  async create(user: CreateUserOptions, config?: RepositoryConfig) {
+    const db = config?.trx ?? prisma;
+    return await db.users.create({
+      data: {
+        email: user.email,
+        password_hash: user.passwordHash,
+        is_staff: user.isStaff,
+      },
+    });
+  }
+
+  async update(id: number, user: UpdateUserOptions, config?: RepositoryConfig) {
+    const db = config?.trx ?? prisma;
+    return await db.users.update({
+      where: { id },
+      data: {
+        email: user.email,
+        password_hash: user.passwordHash,
+        is_staff: user.isStaff,
+      },
+    });
+  }
+
+  async delete(id: number, config?: RepositoryConfig) {
+    const db = config?.trx ?? prisma;
+    await db.users.delete({ where: { id } });
   }
 }
 

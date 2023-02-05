@@ -1,29 +1,40 @@
+import { prisma } from '@server/db/database';
 import { RepositoryConfig } from '@server/db/repository';
-import { AccessTokenModel, AccessTokenModelPojo } from './access-token-model';
+
+export interface CreateAccessTokenOptions {
+  userId: number;
+  tokenHash: string;
+  expiresAt: Date;
+}
 
 export class AccessTokenRepository {
-  async save(accessToken: AccessTokenModelPojo, config?: RepositoryConfig) {
-    return await AccessTokenModel.query(config?.trx)
-      .insert(accessToken)
-      .returning('*');
+  async create(
+    accessToken: CreateAccessTokenOptions,
+    config?: RepositoryConfig,
+  ) {
+    const db = config?.trx ?? prisma;
+    return await db.access_tokens.create({
+      data: {
+        user_id: accessToken.userId,
+        token_hash: accessToken.tokenHash,
+        expires_at: accessToken.expiresAt,
+      },
+    });
   }
 
   async findByTokenHash(tokenHash: string, config?: RepositoryConfig) {
-    return await AccessTokenModel.query(config?.trx)
-      .withGraphFetched('user')
-      .findOne({
-        tokenHash,
-      });
+    const db = config?.trx ?? prisma;
+    return await db.access_tokens.findUnique({
+      where: { token_hash: tokenHash },
+      include: { users: true },
+    });
   }
 
   async delete(id: number, config?: RepositoryConfig) {
-    await AccessTokenModel.query(config?.trx).deleteById(id);
-  }
-
-  async deleteExpiredSessions(config?: RepositoryConfig) {
-    await AccessTokenModel.query(config?.trx)
-      .where('dateExpired', '<', new Date())
-      .delete();
+    const db = config?.trx ?? prisma;
+    await db.access_tokens.delete({
+      where: { id },
+    });
   }
 }
 

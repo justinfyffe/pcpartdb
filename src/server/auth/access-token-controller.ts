@@ -12,5 +12,5 @@ export const login = guestController(async (ctx: ApiContext) => {
 });
 
 export const logout = userController(async (ctx: ApiContext) => {
-  await accessTokenService.logout(ctx.user, ctx);
+  await accessTokenService.logout(ctx);
 });

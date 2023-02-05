@@ -5,6 +5,7 @@ import { validate } from '@server/shared/types/validate';
 import * as fileUtils from '@server/shared/utils/file-utils';
 import { ValidationErrorType } from '@shared/error';
 import { ImageRequest } from '@shared/image';
+import { mapToImageDto } from './image-mappers';
 import { imageRepository } from './image-repository';
 
 const imageValidator = Joi.object({
@@ -21,16 +22,17 @@ const imageValidator = Joi.object({
 
 export class ImageService {
   async list(ctx: Context) {
-    return await imageRepository.list(ctx);
+    const rows = await imageRepository.list(ctx);
+    return rows.map((row) => mapToImageDto(row));
   }
 
   async get(id: number, ctx: Context) {
-    const image = await imageRepository.findById(id, ctx);
-    if (image == null) {
-      throw notFoundError({ user: id });
+    const row = await imageRepository.findById(id, ctx);
+    if (row == null) {
+      throw notFoundError({ image: id });
     }
 
-    return image;
+    return mapToImageDto(row);
   }
 
   async create(data: ImageRequest, ctx: Context) {
@@ -50,7 +52,9 @@ export class ImageService {
       fileUtils.imagePath(data.path),
     );
 
-    return await imageRepository.save(
+    const stats = await fileUtils.stats(fileUtils.imagePath(data.path));
+
+    const row = await imageRepository.create(
       {
         name: data.name,
         path: data.path,
@@ -59,9 +63,12 @@ export class ImageService {
         fileSize: data.fileSize,
         height: data.height,
         width: data.width,
+        uploadedAt: stats.mtime,
       },
       ctx,
     );
+
+    return mapToImageDto(row);
   }
 
   async update(id: number, data: ImageRequest, ctx: Context) {
@@ -69,7 +76,7 @@ export class ImageService {
 
     const image = await imageRepository.findById(id, ctx);
     if (image == null) {
-      throw notFoundError({ user: id });
+      throw notFoundError({ image: id });
     }
 
     // Check if another image already exists at the path
@@ -112,17 +119,22 @@ export class ImageService {
 
     const stats = await fileUtils.stats(fileUtils.imagePath(data.path));
 
-    // Update image data
-    image.name = data.name ?? image.name;
-    image.path = data.path ?? image.path;
-    image.sourceName = data.sourceName ?? image.sourceName;
-    image.sourceUrl = data.sourceUrl ?? image.sourceUrl;
-    image.fileSize = data.fileSize ?? image.fileSize;
-    image.height = data.height ?? image.height;
-    image.width = data.width ?? image.width;
-    image.uploadedAt = stats.mtime;
+    const row = await imageRepository.update(
+      id,
+      {
+        name: data.name,
+        path: data.path,
+        sourceName: data.sourceName,
+        sourceUrl: data.sourceUrl,
+        fileSize: data.fileSize,
+        height: data.height,
+        width: data.width,
+        uploadedAt: stats.mtime,
+      },
+      ctx,
+    );
 
-    return await imageRepository.save(image, ctx);
+    return mapToImageDto(row);
   }
 
   async delete(id: number, ctx: Context) {

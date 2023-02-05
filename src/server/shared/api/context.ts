@@ -1,13 +1,13 @@
-import { UserModel } from '@server/user/user-model';
+import { Prisma } from '@prisma/client';
+import { User } from '@shared/user';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { Transaction } from 'objection';
 import { ContextProps } from '../context';
 
 export interface ApiContext {
-  trx?: Transaction;
+  trx?: Prisma.TransactionClient;
   req?: NextApiRequest;
   res?: NextApiResponse;
-  user?: UserModel;
+  user?: User;
   token?: string;
   props?: ContextProps;
 }

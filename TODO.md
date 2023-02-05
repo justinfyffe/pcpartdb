@@ -1,13 +1,11 @@
 Immediate Tasks:
+  - store all spec metadata in a metadata column in gpu_specs, store scalar values for spec columns
   - Data refactor
-    - test gpu import
-      - set correct base value when importing
-      - separate unit storage from formatting
     - fix related gpus
     - fix relative performance and value gpus
     - fix home page gpus list
-    - move company, launch price, market segment, release date to gpus table
-  - get rid of objectionjs, just use knex
+    - move company, launch price, market segment, release date to gpus table?
+  - use prisma instead of objectionjs?
   - Scrapers and proxies
   - Test everything
   

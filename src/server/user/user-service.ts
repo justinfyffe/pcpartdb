@@ -19,6 +19,7 @@ import {
 } from '@shared/user';
 import { WEBSITE_NAME } from '@shared/website';
 import * as bcrypt from 'bcryptjs';
+import { mapToUserDto } from './user-mappers';
 import { userRepository } from './user-repository';
 
 class UserService {
@@ -27,16 +28,17 @@ class UserService {
   }
 
   async list(ctx: Context) {
-    return await userRepository.list(ctx);
+    const rows = await userRepository.list(ctx);
+    return rows.map((row) => mapToUserDto(row));
   }
 
   async get(id: number, ctx: Context) {
-    const user = await userRepository.findById(id, ctx);
-    if (user == null) {
+    const row = await userRepository.findById(id, ctx);
+    if (row == null) {
       throw notFoundError({ user: id });
     }
 
-    return user;
+    return mapToUserDto(row);
   }
 
   async create(data: UserRequest, ctx: Context) {
@@ -57,7 +59,7 @@ class UserService {
       isStaff = true;
     }
 
-    return await userRepository.save(
+    const result = await userRepository.create(
       {
         email: data.email,
         passwordHash,
@@ -65,6 +67,8 @@ class UserService {
       },
       ctx,
     );
+
+    return mapToUserDto(result);
   }
 
   async update(id: number, data: UserRequest, ctx: Context) {
@@ -74,7 +78,7 @@ class UserService {
     }
 
     if (
-      user.isStaff &&
+      user.is_staff &&
       !data.isStaff &&
       (await userRepository.countStaff(ctx)) <= 1
     ) {
@@ -84,16 +88,19 @@ class UserService {
       });
     }
 
-    let passwordHash = user.passwordHash;
+    let passwordHash = user.password_hash;
     if (data.password != null && data.password.length > 0) {
       const salt = await bcrypt.genSalt();
       passwordHash = await bcrypt.hash(data.password, salt);
     }
 
-    return await userRepository.save(
+    const result = await userRepository.update(
+      id,
       { email: data.email, passwordHash, isStaff: data.isStaff ?? false },
       ctx,
     );
+
+    return mapToUserDto(result);
   }
 
   async delete(id: number, ctx: Context) {
@@ -156,7 +163,7 @@ class UserService {
     const salt = await bcrypt.genSalt();
     const passwordHash = await bcrypt.hash(data.password, salt);
 
-    await userRepository.save({ ...user, passwordHash });
+    await userRepository.update(id, { passwordHash }, ctx);
   }
 }
 
