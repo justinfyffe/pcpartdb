@@ -10,21 +10,25 @@ class GpuCacheImpl {
   }
 
   save(...gpusToSave: (Gpu | Gpu[])[]) {
-    gpusToSave.forEach((gpus) => {
-      if (Array.isArray(gpus)) {
-        gpus.forEach((gpu) => {
-          this.cache.set(gpu.id, gpu);
-          if (gpu.images?.length > 0) {
-            ImageCache.save(gpu.images);
+    gpusToSave
+      .filter((gpus) => gpus != null)
+      .forEach((gpus) => {
+        if (Array.isArray(gpus)) {
+          gpus
+            .filter((gpu) => gpu != null)
+            .forEach((gpu) => {
+              this.cache.set(gpu.id, gpu);
+              if (gpu.images?.length > 0) {
+                ImageCache.save(gpu.images);
+              }
+            });
+        } else {
+          this.cache.set(gpus.id, gpus);
+          if (gpus.images?.length > 0) {
+            ImageCache.save(gpus.images);
           }
-        });
-      } else {
-        this.cache.set(gpus.id, gpus);
-        if (gpus.images?.length > 0) {
-          ImageCache.save(gpus.images);
         }
-      }
-    });
+      });
   }
 
   delete(id: number) {
