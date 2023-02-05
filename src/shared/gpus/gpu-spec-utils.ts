@@ -3,7 +3,7 @@ import {
   BitUnit,
   ClockSpeedUnit,
   FlopsUnit,
-  GpuSpecUnit,
+  GpuUnit,
   LengthUnit,
   MemoryUnit,
   NumericUnit,
@@ -134,7 +134,7 @@ const weightFormats: Record<WeightUnit, string> = {
   [WeightUnit.kg]: 'kg',
 };
 
-function getGpuSpecValueMultiplier(unit: GpuSpecUnit) {
+function getGpuSpecValueMultiplier(unit: GpuUnit) {
   if (unit == null) {
     return 1;
   }
@@ -182,17 +182,17 @@ function getGpuSpecValueMultiplier(unit: GpuSpecUnit) {
   }
 }
 
-export function getBaseGpuSpecValue(displayValue: number, unit: GpuSpecUnit) {
+export function calculateBaseGpuSpecValue(displayValue: number, unit: GpuUnit) {
   const multiplier = getGpuSpecValueMultiplier(unit);
   return displayValue * multiplier;
 }
 
-export function getDisplayGpuSpecValue(baseValue: number, unit: GpuSpecUnit) {
+export function calculateDisplayGpuSpecValue(baseValue: number, unit: GpuUnit) {
   const multiplier = getGpuSpecValueMultiplier(unit);
   return baseValue / multiplier;
 }
 
-export function getSpecUnitFormat(unit: GpuSpecUnit) {
+export function getUnitFormat(unit: GpuUnit) {
   if (unit == null) {
     return '';
   }

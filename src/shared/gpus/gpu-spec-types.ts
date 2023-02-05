@@ -72,7 +72,7 @@ export interface GpuSpecMeta {
   specKey?: GpuSpecKey;
   source?: string;
   currency?: string;
-  unit?: GpuSpecUnit;
+  unit?: GpuUnit;
 }
 
 export interface GpuSpec<T = unknown> {
@@ -86,18 +86,12 @@ export enum BandwidthUnit {
   gbps = 'gbps',
 }
 
-export enum BandwidthFormat {
-  kbps = 'Kb/s',
-  mbps = 'Mb/s',
-  gbps = 'Gb/s',
-}
-
 export enum BitUnit {
   bit = 'bit',
 }
 
-export enum BitFormat {
-  bit = 'bit',
+export enum CurrencyUnit {
+  USD = 'USD',
 }
 
 export enum ClockSpeedUnit {
@@ -106,29 +100,12 @@ export enum ClockSpeedUnit {
   ghz = 'ghz',
 }
 
-export enum ClockSpeedFormat {
-  khz = 'KHz',
-  mhz = 'MHz',
-  ghz = 'GHz',
-}
-
 export enum FlopsUnit {
   gflops = 'gflops',
   tflops = 'tflops',
 }
 
-export enum FlopsFormat {
-  gflops = 'GFLOPS',
-  tflops = 'TFLOPS',
-}
-
 export enum LengthUnit {
-  um = 'μm',
-  nm = 'nm',
-  mm = 'mm',
-}
-
-export enum LengthFormat {
   um = 'μm',
   nm = 'nm',
   mm = 'mm',
@@ -140,17 +117,7 @@ export enum MemoryUnit {
   gb = 'gb',
 }
 
-export enum MemoryFormat {
-  kb = 'KB',
-  mb = 'MB',
-  gb = 'GB',
-}
-
 export enum NumericUnit {
-  million = 'million',
-}
-
-export enum NumericFormat {
   million = 'million',
 }
 
@@ -158,52 +125,30 @@ export enum PixelFillRateUnit {
   gpixelps = 'gpixelps',
 }
 
-export enum PixelFillRateFormat {
-  gpixelps = 'GPixel/s',
-}
-
 export enum StorageUnit {
   kb = 'kb',
-  mb = 'MB',
-  gb = 'GB',
-  tb = 'TB',
-}
-
-export enum StorageFormat {
-  kb = 'KB',
-  mb = 'MB',
-  gb = 'GB',
-  tb = 'TB',
+  mb = 'mb',
+  gb = 'gb',
+  tb = 'tb',
 }
 
 export enum TextureFillRateUnit {
   gtexelps = 'gtexelps',
 }
 
-export enum TextureFillRateFormat {
-  gtexelps = 'GTexel/s',
-}
-
 export enum WattageUnit {
   w = 'w',
-}
-
-export enum WattageFormat {
-  w = 'W',
 }
 
 export enum WeightUnit {
   kg = 'kg',
 }
 
-export enum WeightFormat {
-  kg = 'kg',
-}
-
-export type GpuSpecUnit =
+export type GpuUnit =
   | BandwidthUnit
   | BitUnit
   | ClockSpeedUnit
+  | CurrencyUnit
   | FlopsUnit
   | LengthUnit
   | MemoryUnit

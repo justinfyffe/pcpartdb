@@ -6,8 +6,8 @@ import {
   formatPrice,
 } from '@client/shared/format';
 import {
-  getDisplayGpuSpecValue,
-  getSpecUnitFormat,
+  calculateDisplayGpuSpecValue,
+  getUnitFormat,
   Gpu,
   GpuSpec,
   MarketSegmentValue,
@@ -81,9 +81,9 @@ export function formatGpuSpec(spec: GpuSpec, options?: FormatGpuSpecOptions) {
   if (typeof value === 'boolean') {
     returnValue = formatBooleanValue(value);
   } else if (typeof value === 'number' && Number.isInteger(value)) {
-    returnValue = getDisplayGpuSpecValue(value, unit).toLocaleString();
+    returnValue = calculateDisplayGpuSpecValue(value, unit).toLocaleString();
   } else if (typeof value === 'number' && !Number.isInteger(value)) {
-    returnValue = getDisplayGpuSpecValue(value, unit).toLocaleString(
+    returnValue = calculateDisplayGpuSpecValue(value, unit).toLocaleString(
       undefined,
       {
         minimumFractionDigits: options?.decimals ?? 0,
@@ -102,7 +102,7 @@ export function formatGpuSpec(spec: GpuSpec, options?: FormatGpuSpecOptions) {
 
   // Apply modifiers
   if ((options?.showUnits ?? true) && unit != null) {
-    const formattedUnit = getSpecUnitFormat(unit);
+    const formattedUnit = getUnitFormat(unit);
     returnValue = `${returnValue} ${formattedUnit}`;
   }
 
