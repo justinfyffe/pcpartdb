@@ -26,7 +26,7 @@ export const ProcessorTable: FunctionComponent<ProcessorTableProps> = (
         </Tr>
       </THead>
       <TBody>
-        <SpecRow spec="gpuName" />
+        <SpecRow spec="codename" />
         <SpecRow spec="architecture" />
         <SpecRow spec="processSize" />
         <SpecRow spec="transistors" />

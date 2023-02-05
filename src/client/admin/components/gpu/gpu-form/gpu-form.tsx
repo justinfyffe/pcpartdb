@@ -479,7 +479,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
               name="codename"
               control={control}
               render={({ field }) => (
-                <GpuSpecField field="gpuName" {...field} ref={null} />
+                <GpuSpecField field="codename" {...field} ref={null} />
               )}
             />
           </Field>

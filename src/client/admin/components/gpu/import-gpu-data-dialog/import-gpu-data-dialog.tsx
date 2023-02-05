@@ -86,7 +86,7 @@ export const ImportGpuDataDialog: FunctionComponent<
                 <ImportGpuSpec spec="launchPrice" />
                 <ImportGpuSpec spec="releaseDate" />
 
-                <ImportGpuSpec spec="gpuName" />
+                <ImportGpuSpec spec="codename" />
                 <ImportGpuSpec spec="architecture" />
                 <ImportGpuSpec spec="processSize" />
                 <ImportGpuSpec spec="transistors" />

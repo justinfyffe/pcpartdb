@@ -13,7 +13,7 @@ const LABELS: Record<string, string> = {
   releaseDate: 'Release Date',
 
   // Processor
-  gpuName: 'GPU Name',
+  codename: 'Codename',
   architecture: 'Architecture',
   processSize: 'Process Size',
   transistors: 'Transistors',

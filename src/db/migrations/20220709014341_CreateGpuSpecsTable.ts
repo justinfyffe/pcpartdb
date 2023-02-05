@@ -10,7 +10,7 @@ export async function up(knex: Knex): Promise<void> {
     table.jsonb('launch_price');
     table.jsonb('release_date');
 
-    table.jsonb('gpu_codename');
+    table.jsonb('codename');
     table.jsonb('architecture');
     table.jsonb('process_size');
     table.jsonb('transistors');
