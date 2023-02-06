@@ -1,11 +1,13 @@
 Immediate Tasks:
   - store all spec metadata in a metadata column in gpu_specs, store scalar values for spec columns
   - Data refactor
+    - replace objectionjs with prisma
+    - Look at GpuEntity and GpuSpecsEntity. Follow same for other types
+    - test everything
     - fix related gpus
     - fix relative performance and value gpus
     - fix home page gpus list
     - move company, launch price, market segment, release date to gpus table?
-  - use prisma instead of objectionjs?
   - Scrapers and proxies
   - Test everything
   
