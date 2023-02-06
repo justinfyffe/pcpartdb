@@ -58,12 +58,13 @@ export interface GpuSpecs {
   fp64Performance?: GpuSpec<number>;
 
   // API Support
-  directxVersion?: GpuSpec<number | string>;
-  openClVersion?: GpuSpec<number | string>;
-  openGlVersion?: GpuSpec<number | string>;
-  shaderModelVersion?: GpuSpec<number | string>;
+  directxVersion?: GpuSpec<string>;
+  openClVersion?: GpuSpec<string>;
+  openGlVersion?: GpuSpec<string>;
+  shaderModelVersion?: GpuSpec<string>;
 
-  [key: string]: number | GpuSpec;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [key: string]: number | GpuSpec<any>;
 }
 
 export type GpuSpecKey = keyof GpuSpecs;
@@ -75,7 +76,7 @@ export interface GpuSpecMeta {
   unit?: GpuUnit;
 }
 
-export interface GpuSpec<T = unknown> {
+export interface GpuSpec<T> {
   value?: T;
   meta?: GpuSpecMeta;
 }

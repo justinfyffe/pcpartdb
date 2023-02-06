@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["fullTextSearch", "orderByNulls"]
 }
 
 datasource db {
@@ -7,125 +8,148 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model access_tokens {
-  id         Int       @id @default(autoincrement())
-  user_id    Int
-  token_hash String    @unique(map: "access_tokens_token_hash_unique") @db.VarChar(255)
-  expires_at DateTime? @db.Timestamptz(6)
-  created_at DateTime  @default(now()) @db.Timestamptz(6)
-  updated_at DateTime  @default(now()) @db.Timestamptz(6) @updatedAt
-  users      users     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "access_tokens_user_id_foreign")
+model AccessToken {
+  id        Int       @id @default(autoincrement())
+  userId    Int       @map("user_id")
+  tokenHash String    @map("token_hash") @unique(map: "access_tokens_token_hash_unique") @db.VarChar(255)
+  expiresAt DateTime? @map("expires_at") @db.Timestamptz(6)
+  createdAt DateTime  @map("created_at") @default(now()) @db.Timestamptz(6) @ignore
+  updatedAt DateTime  @map("updated_at") @default(now()) @db.Timestamptz(6) @updatedAt @ignore
 
-  @@index([expires_at], map: "access_tokens_expires_at_index")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "access_tokens_user_id_foreign")
+
+  @@index([expiresAt], map: "access_tokens_expires_at_index")
+
+  @@map("access_tokens")
 }
 
-model gpu_benchmarks {
-  gpu_id            Int      @id
-  performance_score Json?
-  value_score       Json?
-  g3d_mark          Json?
-  g2d_mark          Json?
-  timespy_graphics  Json?
-  created_at        DateTime @default(now()) @db.Timestamptz(6)
-  updated_at        DateTime @default(now()) @db.Timestamptz(6) @updatedAt
-  gpus              gpus     @relation(fields: [gpu_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "gpu_benchmarks_gpu_id_foreign")
+model GpuBenchmarks {
+  gpuId            Int      @map("gpu_id") @id
+  performanceScore Float?   @map("performance_score")
+  valueScore       Float?   @map("value_score")
+  g3dMark          Float?   @map("g3d_mark")
+  g2dMark          Float?   @map("g2d_mark")
+  timespyGraphics  Float?   @map("timespy_graphics")
+  metadata         Json?
+  createdAt        DateTime @map("created_at") @default(now()) @db.Timestamptz(6) @ignore
+  updatedAt        DateTime @map("updated_at") @default(now()) @db.Timestamptz(6) @updatedAt @ignore
+
+  gpu              Gpu     @relation(fields: [gpuId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "gpu_benchmarks_gpu_id_foreign")
+
+  @@map("gpu_benchmarks")
 }
 
-model gpu_images {
-  gpu_id     Int
-  image_id   Int
-  created_at DateTime @default(now()) @db.Timestamptz(6)
-  updated_at DateTime @default(now()) @db.Timestamptz(6) @updatedAt
-  gpus       gpus     @relation(fields: [gpu_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "gpu_images_gpu_id_foreign")
-  images     images   @relation(fields: [image_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "gpu_images_image_id_foreign")
+model GpuImage {
+  gpuId     Int      @map("gpu_id")
+  imageId   Int      @map("image_id")
+  createdAt DateTime @map("created_at") @default(now()) @db.Timestamptz(6) @ignore
+  updatedAt DateTime @map("updated_at") @default(now()) @db.Timestamptz(6) @updatedAt @ignore
 
-  @@id([gpu_id, image_id])
+  gpu       Gpu     @relation(fields: [gpuId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "gpu_images_gpu_id_foreign")
+  image     Image   @relation(fields: [imageId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "gpu_images_image_id_foreign")
+
+  @@map("gpu_images")
+  @@id([gpuId, imageId])
 }
 
-model gpu_specs {
-  gpu_id                  Int      @id
-  company                 Json?
-  market_segment          Json?
-  launch_price            Json?
-  release_date            Json?
-  codename                Json?
-  architecture            Json?
-  process_size            Json?
-  transistors             Json?
-  memory_size             Json?
-  memory_type             Json?
-  memory_clock            Json?
-  memory_interface        Json?
-  memory_bandwidth        Json?
-  slot_width              Json?
-  length                  Json?
-  width                   Json?
-  height                  Json?
-  weight                  Json?
-  thermal_design_power    Json?
-  suggested_psu           Json?
-  bus_interface           Json?
-  power_connectors        Json?
-  outputs                 Json?
-  shader_units_cuda_cores Json?
-  texture_mapping_units   Json?
-  render_output_units     Json?
-  tensor_cores            Json?
-  ray_tracing_cores       Json?
-  core_clock_speed_base   Json?
-  core_clock_speed_boost  Json?
-  l1_cache                Json?
-  l2_cache                Json?
-  pixel_fill_rate         Json?
-  texture_fill_rate       Json?
-  fp32_performance        Json?
-  fp64_performance        Json?
-  directx_version         Json?
-  open_cl_version         Json?
-  open_gl_version         Json?
-  shader_model_version    Json?
-  created_at              DateTime @default(now()) @db.Timestamptz(6)
-  updated_at              DateTime @default(now()) @db.Timestamptz(6) @updatedAt
-  gpus                    gpus     @relation(fields: [gpu_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "gpu_specs_gpu_id_foreign")
+model GpuSpecs {
+  gpuId                   Int     @map("gpu_id")      @id
+  company                 String?
+  marketSegment           String? @map("market_segment")
+  launchPrice             Float?  @map("launch_price")
+  releaseDate             String? @map("release_date")
+  codename                String?
+  architecture            String?
+  processSize             Float?  @map("process_size")
+  transistors             Float?
+  memorySize              Float?  @map("memory_size")
+  memoryType              String? @map("memory_type")
+  memoryClock             Float?  @map("memory_clock")
+  memoryInterface         Float?  @map("memory_interface")
+  memoryBandwidth         Float?  @map("memory_bandwidth")
+  slotWidth               Float?  @map("slot_width")
+  length                  Float?
+  width                   Float?
+  height                  Float?
+  weight                  Float?
+  thermalDesignPower      Float?  @map("thermal_design_power")
+  suggestedPsu            Float?  @map("suggested_psu")
+  busInterface            String? @map("bus_interface")
+  powerConnectors         String? @map("power_connectors")
+  outputs                 String?
+  shaderUnitsCudaCores    Float?  @map("shader_units_cuda_cores")
+  textureMappingUnits     Float?  @map("texture_mapping_units")
+  renderOutputUnits       Float?  @map("render_output_units")
+  tensorCores             Float?  @map("tensor_cores")
+  rayTracingCores         Float?  @map("ray_tracing_cores")
+  coreClockSpeedBase      Float?  @map("core_clock_speed_base")
+  coreClockSpeedBoost     Float?  @map("core_clock_speed_boost")
+  l1Cache                 Float?  @map("l1_cache ")
+  l2Cache                 Float?  @map("l2_cache")
+  pixelFillRate           Float?  @map("pixel_fill_rate")
+  textureFillRate         Float?  @map("texture_fill_rate")
+  fp32Performance         Float?  @map("fp32_performance")
+  fp64Performance         Float?  @map("fp64_performance")
+  directxVersion          String? @map("directx_version")
+  openClVersion           String? @map("open_cl_version")
+  openGlVersion           String? @map("open_gl_version")
+  shaderModelVersion      String? @map("shader_model_version")
+  metadata                Json?
+  createdAt               DateTime @map("created_at") @default(now()) @db.Timestamptz(6) @ignore
+  updatedAt               DateTime @map("updated_at") @default(now()) @db.Timestamptz(6) @updatedAt @ignore
+
+  gpu                     Gpu     @relation(fields: [gpuId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "gpu_specs_gpu_id_foreign")
+
+  @@map("gpu_specs")
 }
 
-model gpus {
+model Gpu {
   id             Int             @id @default(autoincrement())
-  parent_id      Int?
+  parentId       Int?            @map("parent_id")
   slug           String          @unique(map: "gpus_slug_unique") @db.VarChar(255)
   name           String          @unique(map: "gpus_name_unique") @db.VarChar(255)
-  affiliate_url  String?         @db.VarChar(255)
-  created_at     DateTime        @default(now()) @db.Timestamptz(6)
-  updated_at     DateTime        @default(now()) @db.Timestamptz(6) @updatedAt
-  gpu_benchmarks gpu_benchmarks?
-  gpu_images     gpu_images[]
-  gpu_specs      gpu_specs?
-  gpus           gpus?           @relation("gpusTogpus", fields: [parent_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "gpus_parent_id_foreign")
-  other_gpus     gpus[]          @relation("gpusTogpus")
+  affiliateUrl  String?         @map("affiliate_url") @db.VarChar(255)
+  metadata       Json?
+  createdAt     DateTime        @map("created_at") @default(now()) @db.Timestamptz(6) @ignore
+  updatedAt     DateTime        @map("updated_at") @default(now()) @db.Timestamptz(6) @updatedAt @ignore
+
+  benchmarks GpuBenchmarks?
+  images       GpuImage[]
+  specs        GpuSpecs?
+  parent       Gpu?           @relation("gpusTogpus", fields: [parentId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "gpus_parent_id_foreign")
+  children     Gpu[]          @relation("gpusTogpus")
+
+  @@map("gpus")
 }
 
-model images {
+model Image {
   id          Int          @id @default(autoincrement())
   path        String       @unique(map: "images_path_unique") @db.VarChar(255)
   name        String       @db.VarChar(255)
-  source_name String?      @db.VarChar(255)
-  source_url  String?      @db.VarChar(255)
-  file_size   Int?
+  sourceName String?     @map("source_name") @db.VarChar(255)
+  sourceUrl  String?     @map("source_url") @db.VarChar(255)
+  fileSize   Int?        @map("file_size")
   height      Int?
   width       Int?
-  uploaded_at DateTime?    @default(now()) @db.Timestamptz(6)
-  created_at  DateTime     @default(now()) @db.Timestamptz(6)
-  updated_at  DateTime     @default(now()) @db.Timestamptz(6)
-  gpu_images  gpu_images[]
+  uploadedAt DateTime?    @map("uploaded_at") @default(now()) @db.Timestamptz(6)
+  createdAt  DateTime     @map("created_at") @default(now()) @db.Timestamptz(6) @ignore
+  updatedAt  DateTime     @map("updated_at") @default(now()) @db.Timestamptz(6) @ignore
+
+  gpuImages  GpuImage[]
+
+  @@map("images")
 }
 
-model users {
+model User {
   id            Int             @id @default(autoincrement())
   email         String          @unique(map: "users_email_unique") @db.VarChar(255)
-  password_hash String          @db.VarChar(255)
-  is_staff      Boolean?        @default(false)
-  registered_at DateTime?       @default(now()) @db.Timestamptz(6)
-  created_at    DateTime        @default(now()) @db.Timestamptz(6)
-  updated_at    DateTime        @default(now()) @db.Timestamptz(6) @updatedAt
-  access_tokens access_tokens[]
+  passwordHash String           @map("password_hash") @db.VarChar(255)
+  isStaff      Boolean?         @map("is_staff") @default(false)
+  registeredAt DateTime?       @map("registered_at") @default(now()) @db.Timestamptz(6)
+  createdAt    DateTime        @map("created_at") @default(now()) @db.Timestamptz(6) @ignore
+  updatedAt    DateTime        @map("updated_at") @default(now()) @db.Timestamptz(6) @updatedAt @ignore
+
+  accessTokens AccessToken[]
+
+  @@map("users")
 }

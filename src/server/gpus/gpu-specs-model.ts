@@ -1,5 +1,10 @@
 import { Serializable } from '@server/shared/types/serialize';
-import { GpuSpec, GpuSpecs, MarketSegmentValue } from '@shared/gpus';
+import {
+  GpuSpec,
+  GpuSpecMeta,
+  GpuSpecs,
+  MarketSegmentValue,
+} from '@shared/gpus';
 import { Model, PartialModelObject } from 'objection';
 
 export class GpuSpecsModel extends Model implements Serializable<GpuSpecs> {

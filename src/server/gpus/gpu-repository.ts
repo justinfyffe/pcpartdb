@@ -2,19 +2,13 @@ import { Prisma } from '@prisma/client';
 import { prisma } from '@server/db/database';
 import { RepositoryConfig } from '@server/db/repository';
 import {
-  CreateGpuRequest,
-  FindGpuRequest,
   GpuOrder,
   GpusFilter,
   GpusOrderBy,
   GpuSort,
-  GpuSpecKey,
   GpusQuery,
-  UpdateGpuRequest,
 } from '@shared/gpus';
-import Objection, { Model, raw, ref } from 'objection';
-import { GpuBenchmarksModel } from './gpu-benchmarks-model';
-import { GpuModel } from './gpu-model';
+import { GpuEntity, GpuSpecsEntity } from './gpu-entities';
 
 export interface ListOptions {
   query?: GpusQuery;
@@ -23,169 +17,182 @@ export interface ListOptions {
 }
 
 export interface FindOptions {
-  id?: number;
-  slug?: string;
-
   includeImages?: boolean;
-  includeRanks?: boolean;
 }
 
 export class GpuRepository {
-  async list(options: ListOptions, config?: RepositoryConfig) {
+  async list(
+    options: ListOptions,
+    config?: RepositoryConfig,
+  ): Promise<GpuEntity[]> {
     const db = config?.trx ?? prisma;
 
     const includeImages = options?.includeImages ?? false;
     const { filter, orderBy } = options.query ?? {};
 
-    const rows = await prisma.gpus.findMany({
+    return await db.gpu.findMany({
+      where: this.generateWhere(filter),
+      orderBy: this.generateOrderBy(orderBy),
       include: {
-        gpu_specs: true,
-        gpu_benchmarks: true,
-        gpu_images: includeImages ? { include: { images: true } } : false,
+        specs: true,
+        benchmarks: true,
+        images: includeImages ? { include: { image: true } } : false,
       },
     });
-
-    // return mapped rows
-
-    let query = GpuModel.query(config?.trx)
-      .withGraphJoined('specs')
-      .withGraphJoined('benchmarks');
-
-    if (filter != null) {
-      query = this.filterGpus(query, filter);
-    }
-
-    if (orderBy != null) {
-      query = this.orderGpus(query, orderBy);
-    }
-
-    if (includeImages) {
-      query = query.withGraphFetched('images');
-    }
-
-    const gpus = await query;
-
-    return gpus;
   }
 
-  async find(
-    options: FindGpuRequest,
+  async findById(
+    id: number,
+    options: FindOptions,
     config?: RepositoryConfig,
-  ): gpusWhereInput {
-    const { id, slug, includeImages } = options;
+  ): Promise<GpuEntity> {
+    const trx = config?.trx ?? prisma;
+    const { includeImages } = options;
 
-    let query: Objection.QueryBuilder<GpuModel, unknown> = GpuModel.query(
-      config?.trx,
-    );
-
-    if (id != null) {
-      query = query.findById(id);
-    } else if (slug != null) {
-      query = query.findOne({ slug });
-    }
-
-    query = query.withGraphJoined('specs').withGraphJoined('benchmarks');
-
-    if (includeImages) {
-      query = query.withGraphFetched('images');
-    }
-
-    return (await query) as GpuModel;
+    return await trx.gpu.findUnique({
+      where: { id },
+      include: {
+        specs: true,
+        benchmarks: true,
+        images: includeImages ? { include: { image: true } } : false,
+      },
+    });
   }
 
-  async findSimilarValue(query: string, config?: RepositoryConfig) {
+  async findBySlug(
+    slug: string,
+    options: FindOptions,
+    config?: RepositoryConfig,
+  ): Promise<GpuEntity> {
+    const trx = config?.trx ?? prisma;
+    const { includeImages } = options;
+
+    return await trx.gpu.findUnique({
+      where: { slug },
+      include: {
+        specs: true,
+        benchmarks: true,
+        images: includeImages ? { include: { image: true } } : false,
+      },
+    });
+  }
+
+  async findSimilarValue(
+    query: string,
+    config?: RepositoryConfig,
+  ): Promise<GpuEntity[]> {
+    const db = config?.trx ?? prisma;
+
     const tokens = query
       .split(' ')
       .map((value) => value.trim())
       .join('|');
 
-    return await GpuModel.query(config?.trx)
-      .withGraphJoined('specs')
-      .andWhere('name', '~*', `(${tokens})`)
-      .orWhere(ref('specs.company:value').castText(), '~*', `(${tokens})`)
-      .orderBy(ref('specs.releaseDate:value').castText(), 'DESC')
-      .limit(5);
+    const idsFromName: number[] = await db.$queryRaw`
+      SELECT id FROM "gpus"
+      WHERE "name" ~* "(${tokens})"
+      LIMIT 5
+    `;
+
+    const idsFromCompany: number[] = await db.$queryRaw`
+      SELECT gpu_id FROM "gpus"
+      WHERE "company" ~* "(${tokens})"
+      LIMIT 5
+    `;
+
+    const ids = [...idsFromName, ...idsFromCompany];
+
+    return await db.gpu.findMany({
+      where: { id: { in: ids } },
+      orderBy: { specs: { releaseDate: 'desc' } },
+      take: 5,
+      include: { specs: true },
+    });
   }
 
   async findSimilarSpecValue(
-    key: GpuSpecKey,
+    key: keyof GpuSpecsEntity,
     query: string,
     config?: RepositoryConfig,
-  ) {
-    const results = await GpuModel.query(config?.trx)
-      .withGraphJoined('specs')
-      .select(ref(`${key}:value`).from('specs').as('value'))
-      .distinctOn('value')
-      .where(
-        ref(`${key}:value`).from('specs').castText(),
-        'ILIKE',
-        `%${query}%`,
-      )
-      .limit(5);
+  ): Promise<string[]> {
+    const trx = config?.trx ?? prisma;
+    const results = await trx.gpuSpecs.findMany({
+      select: { [key]: true },
+      distinct: key,
+      where: {
+        [key]: { contains: query, mode: 'insensitive' },
+      },
+    });
 
-    return results.map(
-      (result) => (result as unknown as { value: string }).value,
-    );
+    return results.map((result) => result[key]);
   }
 
-  async create(data: CreateGpuRequest, config?: RepositoryConfig) {
-    const { parent: _parent, specs, benchmarks, images, ...gpu } = data;
-    const inserted = await GpuModel.query(config?.trx).insert(gpu);
+  async create(data: GpuEntity, config?: RepositoryConfig) {
+    const trx = config?.trx ?? prisma;
 
-    await inserted.$relatedQuery('specs', config?.trx).insert(specs ?? {});
-    await inserted
-      .$relatedQuery('benchmarks', config?.trx)
-      .insert(benchmarks ?? {});
-    if (images?.length > 0) {
-      await inserted
-        .$relatedQuery('images', config?.trx)
-        .relate(images?.map((image) => image.id));
-    }
+    const {
+      specs: specsData,
+      benchmarks: benchmarksData,
+      images,
+      ...gpuData
+    } = data;
 
-    return this.find({ id: inserted.id }, config);
+    const imagesData = images.map((image) => ({ imageId: image.imageId }));
+
+    return await trx.gpu.create({
+      data: {
+        ...gpuData,
+        specs: { create: specsData },
+        benchmarks: { create: benchmarksData },
+        images: { create: imagesData },
+      },
+    });
   }
 
-  async update(id: number, data: UpdateGpuRequest, config?: RepositoryConfig) {
-    const { parent: _parent, specs, benchmarks, images, ...gpu } = data;
-    const updated = await GpuModel.query(config?.trx).updateAndFetchById(
-      id,
-      gpu,
-    );
+  async update(id: number, data: GpuEntity, config?: RepositoryConfig) {
+    const trx = config?.trx ?? prisma;
 
-    await updated.$relatedQuery('specs', config?.trx).update(specs);
-    await updated.$relatedQuery('benchmarks', config?.trx).update(benchmarks);
-    await updated.$relatedQuery('images', config?.trx).unrelate();
-    if (images?.length > 0) {
-      await updated
-        .$relatedQuery('images', config?.trx)
-        .relate(images?.map((image) => image.id));
-    }
+    const {
+      specs: specsData,
+      benchmarks: benchmarksData,
+      images,
+      ...gpuData
+    } = data;
 
-    return this.find({ id: updated.id }, config);
+    const imagesData = images.map((image) => ({ imageId: image.imageId }));
+
+    await trx.gpuImage.deleteMany({ where: { gpuId: id } });
+    return await trx.gpu.update({
+      where: { id },
+      data: {
+        ...gpuData,
+        specs: { update: specsData },
+        benchmarks: { update: benchmarksData },
+        images: { create: imagesData },
+      },
+    });
   }
 
   async delete(id: number, config?: RepositoryConfig) {
-    return await GpuModel.query(config?.trx).deleteById(id);
+    const trx = config?.trx ?? prisma;
+    await trx.gpu.delete({ where: { id } });
   }
 
   async getPerformanceRanks(ids: number[], config?: RepositoryConfig) {
-    const ranksQuery = GpuBenchmarksModel.query(config?.trx)
-      .whereNotNull(ref('performanceScore:value'))
-      .select(
-        'gpuId',
-        raw(
-          "CAST(RANK() OVER ( ORDER BY (performance_score->>'value')::float DESC ) AS INTEGER) AS rank",
-        ),
-      );
+    const trx = config?.trx ?? prisma;
+    const idsAndRanks: { gpuId: number; rank: number }[] = await trx.$queryRaw`
+      SELECT gpuId, rank
+      FROM (
+        SELECT
+          gpu_id AS gpuId,
+          CAST(RANK() OVER ( ORDER BY performance_score DESC ) AS INTEGER) AS rank
+        FROM gpu_benchmarks 
+        WHERE performance_score IS NOT NULL
+      )
+      WHERE gpuId IN ${ids}
+    `;
 
-    const ranks = (await Model.query(config?.trx)
-      .select('gpuId', 'rank')
-      .from(ranksQuery.as('ranks'))
-      .whereIn('gpuId', ids)) as unknown as {
-      gpuId: number;
-      rank: number;
-    }[];
-    const ranksMap = ranks.reduce((acc, value) => {
+    const ranksMap = idsAndRanks.reduce((acc, value) => {
       acc[value.gpuId] = value.rank;
       return acc;
     }, {} as Record<number, number>);
@@ -199,23 +206,20 @@ export class GpuRepository {
   }
 
   async getValueRanks(ids: number[], config?: RepositoryConfig) {
-    const ranksQuery = GpuBenchmarksModel.query(config?.trx)
-      .whereNotNull(ref('valueScore:value'))
-      .select(
-        'gpuId',
-        raw(
-          "CAST(RANK() OVER ( ORDER BY (value_score->>'value')::float DESC ) AS INTEGER) AS rank",
-        ),
-      );
+    const trx = config?.trx ?? prisma;
+    const idsAndRanks: { gpuId: number; rank: number }[] = await trx.$queryRaw`
+      SELECT gpuId, rank
+      FROM (
+        SELECT
+          gpu_id AS gpuId,
+          CAST(RANK() OVER ( ORDER BY value_score DESC ) AS INTEGER) AS rank
+        FROM gpu_benchmarks 
+        WHERE value_score IS NOT NULL
+      )
+      WHERE gpuId IN ${ids}
+    `;
 
-    const ranks = (await Model.query(config?.trx)
-      .select('gpuId', 'rank')
-      .from(ranksQuery.as('ranks'))
-      .whereIn('gpuId', ids)) as unknown as {
-      gpuId: number;
-      rank: number;
-    }[];
-    const ranksMap = ranks.reduce((acc, value) => {
+    const ranksMap = idsAndRanks.reduce((acc, value) => {
       acc[value.gpuId] = value.rank;
       return acc;
     }, {} as Record<number, number>);
@@ -228,99 +232,59 @@ export class GpuRepository {
     return ranks[0] ?? null;
   }
 
-  private generateWhere(filter: GpusFilter): Prisma.gpusWhereInput {
-    const performanceRated = filter?.performanceRated;
+  private generateWhere(filter: GpusFilter): Prisma.GpuWhereInput {
+    const performanceRated = filter?.performanceRated ?? false;
     const valueRated = filter?.valueRated;
-    const companies =
-      filter?.company?.map((company) => company.toLowerCase()) ?? [];
+    const companies = filter?.company ?? [];
+
+    const performanceRatedWhere: Prisma.FloatNullableFilter = performanceRated
+      ? { not: null }
+      : undefined;
+    const valueRatedWhere: Prisma.FloatNullableFilter = valueRated
+      ? { not: null }
+      : undefined;
+    const companyWhere: Prisma.StringNullableFilter =
+      companies.length > 0 ? { in: companies, mode: 'insensitive' } : undefined;
 
     return {
-      gpu_specs: {
-        OR: [
-          {
-            company: {
-              path: ['value'],
-              equals: companies[0],
-            },
-          },
-          {
-            company: {
-              path: ['value'],
-              equals: companies[1],
-            },
-          },
-        ],
+      specs: {
+        company: companyWhere,
+      },
+      benchmarks: {
+        performanceScore: performanceRatedWhere,
+        valueScore: valueRatedWhere,
       },
     };
   }
 
-  private filterGpus(
-    query: Objection.QueryBuilder<GpuModel, GpuModel[]>,
-    filter: GpusFilter,
-  ) {
-    const performanceRated = filter?.performanceRated;
-    const valueRated = filter?.valueRated;
-    const companies =
-      filter?.company?.map((company) => company.toLowerCase()) ?? [];
-
-    let filterQuery = query;
-
-    if (performanceRated === true) {
-      filterQuery = filterQuery.whereNotNull(
-        ref('benchmarks.performanceScore:value'),
-      );
-    }
-
-    if (valueRated === true) {
-      filterQuery = filterQuery.whereNotNull(
-        ref('benchmarks.valueScore:value'),
-      );
-    }
-
-    if (companies?.length > 0) {
-      filterQuery = filterQuery.whereIn(
-        raw('LOWER(??)', [ref('specs.company:value').castText()]),
-        companies,
-      );
-    }
-
-    return filterQuery;
-  }
-
-  private orderGpus(
-    query: Objection.QueryBuilder<GpuModel, GpuModel[]>,
+  private generateOrderBy(
     orderBy: GpusOrderBy,
-  ) {
+  ): Prisma.GpuOrderByWithRelationAndSearchRelevanceInput {
     const { sort } = orderBy;
 
-    let orderQuery = query;
     if (sort === GpuSort.Id) {
       // Default ASC
       const order = orderBy?.order ?? GpuOrder.Asc;
-      orderQuery = orderQuery.orderBy('id', order);
+      return { id: order };
     } else if (sort === GpuSort.Name) {
       // Default ASC
       const order = orderBy?.order ?? GpuOrder.Asc;
-      orderQuery = orderQuery.orderBy('name', order);
+      return { name: order };
     } else if (sort === GpuSort.ReleaseDate) {
       // Default DESC
       const order = orderBy?.order ?? GpuOrder.Desc;
-      orderQuery = orderQuery.orderBy(ref('specs.releaseDate:value'), order);
+      return { specs: { releaseDate: order } };
     } else if (sort === GpuSort.PerformanceRating) {
       // Default DESC
       const order = orderBy?.order ?? GpuOrder.Desc;
-      orderQuery = orderQuery
-        .whereNotNull(ref('benchmarks.performanceScore:value'))
-        .orderBy(ref('benchmarks.performanceScore:value'), order);
+      return { benchmarks: { performanceScore: order } };
     } else if (sort === GpuSort.ValueRating) {
       // Default DESC
       const order = orderBy?.order ?? GpuOrder.Desc;
-      orderQuery = orderQuery
-        .whereNotNull(ref('benchmarks.valueScore:value'))
-        .orderBy(ref('benchmarks.valueScore:value'), order);
+      return { benchmarks: { valueScore: order } };
+    } else {
+      return { id: 'desc' };
     }
-
-    return orderQuery;
   }
 }
 
