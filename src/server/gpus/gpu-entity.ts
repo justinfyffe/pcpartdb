@@ -1,6 +1,7 @@
 import * as db from '@prisma/client';
 
 export type GpuEntity = db.Gpu & {
+  parent?: GpuEntity;
   specs?: GpuSpecsEntity;
   benchmarks?: GpuBenchmarksEntity;
   images?: GpuImageEntity[];

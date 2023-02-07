@@ -8,16 +8,18 @@ import {
   GpuSort,
   GpusQuery,
 } from '@shared/gpus';
-import { GpuEntity, GpuSpecsEntity } from './gpu-entities';
+import { GpuEntity, GpuSpecsEntity } from './gpu-entity';
 
 export interface ListOptions {
   query?: GpusQuery;
 
   includeImages?: boolean;
+  includeRanks?: boolean;
 }
 
 export interface FindOptions {
   includeImages?: boolean;
+  includeRanks?: boolean;
 }
 
 export class GpuRepository {
@@ -131,6 +133,7 @@ export class GpuRepository {
     const trx = config?.trx ?? prisma;
 
     const {
+      parent: _parent,
       specs: specsData,
       benchmarks: benchmarksData,
       images,
@@ -153,6 +156,7 @@ export class GpuRepository {
     const trx = config?.trx ?? prisma;
 
     const {
+      parent: _parent,
       specs: specsData,
       benchmarks: benchmarksData,
       images,

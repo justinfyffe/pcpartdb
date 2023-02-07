@@ -1050,6 +1050,6 @@ function toImagesRequest(formData: GpuFormData): GpuImages {
   return (
     formData.images
       ?.filter((image) => image != null)
-      .map((image) => ({ id: image.id })) ?? []
+      .map((image) => ({ id: image.imageId })) ?? []
   );
 }

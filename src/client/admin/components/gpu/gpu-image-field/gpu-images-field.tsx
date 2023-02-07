@@ -39,7 +39,7 @@ export const GpuImagesField: FunctionComponent<GpuImagesFieldProps> = (
   const handleImageChange = useCallback(
     (i: number, image: GpuImage) => {
       const newValue: GpuImages = value != null ? [...value] : emptyValue;
-      newValue[i] = image != null ? { id: image.id } : null;
+      newValue[i] = image != null ? { imageId: image.imageId } : null;
       onChange(newValue);
     },
     [emptyValue, value, onChange],

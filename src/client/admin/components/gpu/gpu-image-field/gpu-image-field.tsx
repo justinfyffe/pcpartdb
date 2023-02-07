@@ -18,14 +18,14 @@ export const GpuImageField: FunctionComponent<GpuImageFieldProps> = (props) => {
 
   const handleChange = useCallback(
     (image: Image) => {
-      onChange?.(image != null ? { id: image.id } : null);
+      onChange?.(image != null ? { imageId: image.id } : null);
     },
     [onChange],
   );
 
   return (
     <ImageInput
-      value={value != null ? imageCache.get(value.id) : null}
+      value={value != null ? imageCache.get(value.imageId) : null}
       recommendedHeight={300}
       recommendedWidth={300}
       onChange={handleChange}

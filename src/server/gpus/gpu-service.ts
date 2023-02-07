@@ -1,28 +1,29 @@
 import { badRequestError, notFoundError } from '@server/shared/api/status';
 import { Context } from '@server/shared/context';
-import { serialize } from '@server/shared/types/serialize';
 import {
   CreateGpuRequest,
   FindGpuComparisonRequest,
   Gpu,
   GpuComparison,
-  GpuSpecKey,
   RelatedGpus,
   RelatedGpusRequest,
   UpdateGpuRequest,
 } from '@shared/gpus';
 import { addPerformanceBenchmarks } from './benchmark-utils';
+import { GpuSpecsEntity } from './gpu-entity';
+import { mapToGpuDto, mapToGpuDtos, mapToGpuEntity } from './gpu-mappers';
 import { FindOptions, gpuRepository, ListOptions } from './gpu-repository';
 
 export class GpuService {
   async count(options: ListOptions, ctx: Context) {
-    const gpus = await gpuRepository.list(options, ctx);
-    return gpus.length;
+    const gpuEntities = await gpuRepository.list(options, ctx);
+    return gpuEntities.length;
   }
 
   async list(options: ListOptions, ctx: Context) {
-    const gpuModels = await gpuRepository.list(options, ctx);
-    const gpus: Gpu[] = serialize(gpuModels);
+    const gpuEntities = await gpuRepository.list(options, ctx);
+
+    const gpus: Gpu[] = mapToGpuDtos(gpuEntities);
 
     if (options.includeRanks) {
       await this.populateRanks(gpus, ctx);
@@ -31,14 +32,27 @@ export class GpuService {
     return gpus;
   }
 
-  async get(options: FindOptions, ctx: Context) {
-    const gpuModel = await gpuRepository.find(options, ctx);
-    const gpu: Gpu = serialize(gpuModel);
+  async getById(id: number, options: FindOptions, ctx: Context) {
+    const gpuEntity = await gpuRepository.findById(id, options, ctx);
+    const gpu = mapToGpuDto(gpuEntity);
 
     if (gpu == null) {
       throw notFoundError(null);
     }
+    if (options.includeRanks) {
+      await this.populateRanks([gpu], ctx);
+    }
 
+    return gpu;
+  }
+
+  async getBySlug(slug: string, options: FindOptions, ctx: Context) {
+    const gpuEntity = await gpuRepository.findBySlug(slug, options, ctx);
+    const gpu = mapToGpuDto(gpuEntity);
+
+    if (gpu == null) {
+      throw notFoundError(null);
+    }
     if (options.includeRanks) {
       await this.populateRanks([gpu], ctx);
     }
@@ -59,7 +73,7 @@ export class GpuService {
     const promises = [];
     for (const slugItem of slugs) {
       promises.push(
-        this.get({ slug: slugItem, includeImages, includeRanks }, ctx),
+        this.getBySlug(slugItem, { includeImages, includeRanks }, ctx),
       );
     }
     const gpus = await Promise.all(promises);
@@ -125,7 +139,7 @@ export class GpuService {
 
   async create(data: CreateGpuRequest, ctx: Context) {
     // Check if another part exists at the slug
-    const existingGpu = await gpuRepository.find({ slug: data.slug }, ctx);
+    const existingGpu = await gpuRepository.findBySlug(data.slug, {}, ctx);
     if (existingGpu != null) {
       throw badRequestError({
         property: 'slug',
@@ -135,12 +149,13 @@ export class GpuService {
 
     addPerformanceBenchmarks(data.specs, data.benchmarks);
 
-    return await gpuRepository.create(data, ctx);
+    const entity = mapToGpuEntity({ id: undefined, ...data });
+    return await gpuRepository.create(entity, ctx);
   }
 
   async update(id: number, data: UpdateGpuRequest, ctx: Context) {
     // Check if another gpu exists at the slug
-    const existingGpu = await gpuRepository.find({ slug: data.slug }, ctx);
+    const existingGpu = await gpuRepository.findBySlug(data.slug, {}, ctx);
     if (existingGpu != null && existingGpu.id !== id) {
       throw badRequestError({
         property: 'slug',
@@ -148,18 +163,19 @@ export class GpuService {
       });
     }
 
-    const gpu = await gpuRepository.find({ id }, ctx);
+    const gpu = await gpuRepository.findById(id, {}, ctx);
     if (gpu == null) {
       throw notFoundError({ gpu: id });
     }
 
     addPerformanceBenchmarks(data.specs, data.benchmarks);
 
-    return await gpuRepository.update(id, data, ctx);
+    const entity = mapToGpuEntity({ id: undefined, ...data });
+    return await gpuRepository.update(id, entity, ctx);
   }
 
   async delete(id: number, ctx: Context) {
-    const gpu = await gpuRepository.find({ id }, ctx);
+    const gpu = await gpuRepository.findById(id, {}, ctx);
     if (gpu == null) {
       throw notFoundError({ gpu: id });
     }
@@ -172,7 +188,11 @@ export class GpuService {
     return await gpuRepository.findSimilarValue(query, ctx);
   }
 
-  async autocompleteSpec(key: GpuSpecKey, query: string, ctx: Context) {
+  async autocompleteSpec(
+    key: keyof GpuSpecsEntity,
+    query: string,
+    ctx: Context,
+  ) {
     return await gpuRepository.findSimilarSpecValue(key, query, ctx);
   }
 

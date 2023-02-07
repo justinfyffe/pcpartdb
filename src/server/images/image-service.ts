@@ -4,8 +4,8 @@ import { Context } from '@server/shared/context';
 import { validate } from '@server/shared/types/validate';
 import * as fileUtils from '@server/shared/utils/file-utils';
 import { ValidationErrorType } from '@shared/error';
-import { ImageRequest } from '@shared/image';
-import { mapToImageDto } from './image-mappers';
+import { CreateImageRequest, UpdateImageRequest } from '@shared/image';
+import { mapToImageDto, mapToImageEntity } from './image-mappers';
 import { imageRepository } from './image-repository';
 
 const imageValidator = Joi.object({
@@ -35,7 +35,7 @@ export class ImageService {
     return mapToImageDto(row);
   }
 
-  async create(data: ImageRequest, ctx: Context) {
+  async create(data: CreateImageRequest, ctx: Context) {
     validate(data, imageValidator);
 
     // Check if another image already exists at the path
@@ -54,24 +54,16 @@ export class ImageService {
 
     const stats = await fileUtils.stats(fileUtils.imagePath(data.path));
 
-    const row = await imageRepository.create(
-      {
-        name: data.name,
-        path: data.path,
-        sourceName: data.sourceName,
-        sourceUrl: data.sourceUrl,
-        fileSize: data.fileSize,
-        height: data.height,
-        width: data.width,
-        uploadedAt: stats.mtime,
-      },
-      ctx,
-    );
+    const entity = mapToImageEntity({
+      ...data,
+      uploadedAt: stats.mtime.getTime(),
+    });
+    const row = await imageRepository.create(entity, ctx);
 
     return mapToImageDto(row);
   }
 
-  async update(id: number, data: ImageRequest, ctx: Context) {
+  async update(id: number, data: UpdateImageRequest, ctx: Context) {
     validate(data, imageValidator);
 
     const image = await imageRepository.findById(id, ctx);
@@ -119,20 +111,11 @@ export class ImageService {
 
     const stats = await fileUtils.stats(fileUtils.imagePath(data.path));
 
-    const row = await imageRepository.update(
-      id,
-      {
-        name: data.name,
-        path: data.path,
-        sourceName: data.sourceName,
-        sourceUrl: data.sourceUrl,
-        fileSize: data.fileSize,
-        height: data.height,
-        width: data.width,
-        uploadedAt: stats.mtime,
-      },
-      ctx,
-    );
+    const entity = mapToImageEntity({
+      ...data,
+      uploadedAt: stats.mtime.getTime(),
+    });
+    const row = await imageRepository.update(id, entity, ctx);
 
     return mapToImageDto(row);
   }

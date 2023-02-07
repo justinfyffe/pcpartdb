@@ -1,26 +1,30 @@
-import { Image } from '@shared/image';
 import { GpuBenchmarks } from './gpu-benchmark-types';
 import { GpuImages } from './gpu-image-types';
 import { GpuRanks } from './gpu-rank-types';
 import { GpuSpecs } from './gpu-spec-types';
 
 export interface Gpu {
-  id: number;
+  id?: number;
   parentId?: number;
   slug: string;
 
   name: string;
   affiliateUrl?: string;
+  metadata?: GpuMeta;
 
+  // Relations
   parent?: Gpu;
   specs?: GpuSpecs;
   benchmarks?: GpuBenchmarks;
-  images?: Image[];
+  images?: GpuImages;
 
+  // Non-DB Fields
   ranks?: GpuRanks;
 }
 
 export type GpuComparison = [Gpu, Gpu];
+
+export interface GpuMeta {}
 
 export interface FindGpuRequest {
   id?: number;
@@ -37,13 +41,13 @@ export interface FindGpuComparisonRequest {
   includeImages?: boolean;
 }
 
-export interface CreateGpuRequest extends Omit<Gpu, 'id' | 'images'> {
+export interface CreateGpuRequest extends Omit<Gpu, 'id'> {
   specs: GpuSpecs;
   benchmarks: GpuBenchmarks;
   images: GpuImages;
 }
 
-export interface UpdateGpuRequest extends Omit<Gpu, 'id' | 'images'> {
+export interface UpdateGpuRequest extends Omit<Gpu, 'id'> {
   specs: GpuSpecs;
   benchmarks: GpuBenchmarks;
   images: GpuImages;

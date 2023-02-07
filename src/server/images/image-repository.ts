@@ -1,24 +1,11 @@
 import { prisma } from '@server/db/database';
 import { RepositoryConfig } from '@server/db/repository';
-
-export interface CreateImageOptions {
-  path: string;
-  name: string;
-
-  sourceName?: string;
-  sourceUrl?: string;
-
-  fileSize?: number;
-  height?: number;
-  width?: number;
-  uploadedAt?: Date;
-}
-export type UpdateImageOptions = CreateImageOptions;
+import { ImageEntity } from './image-entity';
 
 export class ImageRepository {
   async list(config?: RepositoryConfig) {
-    const db = config?.trx ?? prisma;
-    return await db.images.findMany({
+    const trx = config?.trx ?? prisma;
+    return await trx.image.findMany({
       orderBy: {
         id: 'desc',
       },
@@ -26,69 +13,47 @@ export class ImageRepository {
   }
 
   async findById(id: number, config?: RepositoryConfig) {
-    const db = config?.trx ?? prisma;
-    return await db.images.findUnique({ where: { id } });
+    const trx = config?.trx ?? prisma;
+    return await trx.image.findUnique({ where: { id } });
   }
 
   async findByIds(ids: number[], config?: RepositoryConfig) {
-    const db = config?.trx ?? prisma;
-    return await db.images.findMany({
+    const trx = config?.trx ?? prisma;
+    return await trx.image.findMany({
       where: { id: { in: ids } },
     });
   }
 
   async findByPath(path: string, config?: RepositoryConfig) {
-    const db = config?.trx ?? prisma;
-    return await db.images.findUnique({ where: { path } });
+    const trx = config?.trx ?? prisma;
+    return await trx.image.findUnique({ where: { path } });
   }
 
   async findByPaths(paths: string[], config?: RepositoryConfig) {
-    const db = config?.trx ?? prisma;
-    return await db.images.findMany({
+    const trx = config?.trx ?? prisma;
+    return await trx.image.findMany({
       where: { path: { in: paths } },
     });
   }
 
-  async create(image: CreateImageOptions, config?: RepositoryConfig) {
-    const db = config?.trx ?? prisma;
-    return await db.images.create({
-      data: {
-        path: image.path,
-        name: image.name,
-        source_name: image.sourceName,
-        source_url: image.sourceUrl,
-        file_size: image.fileSize,
-        height: image.height,
-        width: image.width,
-        updated_at: image.uploadedAt,
-      },
+  async create(image: ImageEntity, config?: RepositoryConfig) {
+    const trx = config?.trx ?? prisma;
+    return await trx.image.create({
+      data: image,
     });
   }
 
-  async update(
-    id: number,
-    image: UpdateImageOptions,
-    config?: RepositoryConfig,
-  ) {
-    const db = config?.trx ?? prisma;
-    return await db.images.update({
+  async update(id: number, image: ImageEntity, config?: RepositoryConfig) {
+    const trx = config?.trx ?? prisma;
+    return await trx.image.update({
       where: { id },
-      data: {
-        path: image.path,
-        name: image.name,
-        source_name: image.sourceName,
-        source_url: image.sourceUrl,
-        file_size: image.fileSize,
-        height: image.height,
-        width: image.width,
-        updated_at: image.uploadedAt,
-      },
+      data: image,
     });
   }
 
   async delete(id: number, config?: RepositoryConfig) {
-    const db = config?.trx ?? prisma;
-    await db.images.delete({
+    const trx = config?.trx ?? prisma;
+    await trx.image.delete({
       where: { id },
     });
   }

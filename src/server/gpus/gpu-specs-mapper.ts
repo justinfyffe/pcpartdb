@@ -1,8 +1,9 @@
 import * as db from '@prisma/client';
 import { Prisma } from '@prisma/client';
 import { GpuSpec, GpuSpecMeta, GpuSpecs } from '@shared/gpus';
+import { GpuSpecsEntity } from './gpu-entity';
 
-export function mapToGpuSpecsDto(entity: db.GpuSpecs): GpuSpecs {
+export function mapToGpuSpecsDto(entity: GpuSpecsEntity): GpuSpecs {
   if (entity == null) {
     return null;
   }
@@ -75,7 +76,11 @@ function mapToGpuSpecDto<T>(
   };
 }
 
-export function mapToGpuSpecsEntity(specs: GpuSpecs): db.GpuSpecs {
+export function mapToGpuSpecsEntity(specs: GpuSpecs): GpuSpecsEntity {
+  if (specs == null) {
+    return null;
+  }
+
   const metadata = {};
 
   const mappedSpecs = {
@@ -153,7 +158,7 @@ export function mapToGpuSpecsEntity(specs: GpuSpecs): db.GpuSpecs {
 
   return {
     ...mappedSpecs,
-    gpuId: specs.gpuId,
+    gpuId: undefined,
     metadata: metadata as Prisma.JsonObject,
   };
 }

@@ -15,7 +15,8 @@ export interface GpuBenchmarks {
   g2dMark?: GpuBenchmark<number>;
   timespyGraphics?: GpuBenchmark<number>;
 
-  [key: string]: number | GpuBenchmark;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [key: string]: number | GpuBenchmark<any>;
 }
 
 export type GpuBenchmarkKey = keyof GpuBenchmarks;

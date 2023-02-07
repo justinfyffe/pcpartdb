@@ -24,7 +24,7 @@ export const getServerSideProps = ssrPageProps<ViewGpuPageProps>(
 );
 
 async function getGpu(slug: string, ctx: Context): Promise<Gpu> {
-  const gpu = gpuService.get(
+  const gpu = gpuService.getById(
     { slug, includeImages: true, includeRanks: true },
     ctx,
   );

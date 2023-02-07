@@ -1,7 +1,11 @@
 import Joi from '@hapi/joi';
+import { Image } from '@shared/image';
 
 export interface GpuImage {
-  id: number;
+  gpuId?: number;
+  imageId?: number;
+
+  image?: Image;
 }
 
 export type GpuImages = GpuImage[];
