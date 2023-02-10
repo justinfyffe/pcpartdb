@@ -36,8 +36,8 @@ import { Controller, useForm, UseFormProps } from 'react-hook-form';
 
 interface UserFormData {
   email: string;
-  password?: string;
-  isStaff?: boolean;
+  password: string;
+  isStaff: boolean;
 }
 
 const createUserValidator = Joi.object({

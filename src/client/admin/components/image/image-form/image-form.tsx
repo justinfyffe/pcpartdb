@@ -23,7 +23,7 @@ import { isBadRequestError, setValidationErrors } from '@client/shared/error';
 import Joi from '@hapi/joi';
 import { joiResolver } from '@hookform/resolvers/joi';
 import { ApiError, ValidationErrorType } from '@shared/error';
-import { Image, ImageMeta, ImageRequest } from '@shared/image';
+import { CreateImageRequest, Image, ImageMeta } from '@shared/image';
 import { useRouter } from 'next/router';
 import React, {
   FunctionComponent,
@@ -93,7 +93,7 @@ export const ImageForm: FunctionComponent<ImageFormProps> = (props) => {
     setValue,
     setError,
     formState: { errors },
-  } = useForm<ImageRequest>(form);
+  } = useForm<CreateImageRequest>(form);
 
   // https://github.com/react-hook-form/react-hook-form/issues/127
   useEffect(() => {
@@ -107,7 +107,7 @@ export const ImageForm: FunctionComponent<ImageFormProps> = (props) => {
       const fileSize = imageMeta?.fileSize ?? image?.fileSize;
       const width = imageMeta?.width ?? image?.width;
       const height = imageMeta?.height ?? image?.height;
-      const data: ImageRequest = { ...formData, fileSize, width, height };
+      const data: CreateImageRequest = { ...formData, fileSize, width, height };
 
       try {
         const savedImage = isUpdate

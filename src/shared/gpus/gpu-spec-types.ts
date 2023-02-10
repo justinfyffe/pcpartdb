@@ -76,7 +76,7 @@ export interface GpuSpecMeta {
   unit?: GpuUnit;
 }
 
-export interface GpuSpec<T> {
+export interface GpuSpec<T = unknown> {
   value?: T;
   meta?: GpuSpecMeta;
 }

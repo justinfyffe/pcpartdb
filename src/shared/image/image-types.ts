@@ -19,12 +19,12 @@ export interface ImageMeta {
   width: number;
 }
 
-export interface CreateImageRequest extends Omit<Image, 'id'> {
+export interface CreateImageRequest extends Omit<Image, 'id' | 'uploadedAt'> {
   file?: File;
   tempPath?: string;
 }
 
-export interface UpdateImageRequest extends Omit<Image, 'id'> {
+export interface UpdateImageRequest extends Omit<Image, 'id' | 'uploadedAt'> {
   file?: File;
   tempPath?: string;
 }

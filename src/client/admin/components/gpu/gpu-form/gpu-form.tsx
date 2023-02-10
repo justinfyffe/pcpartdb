@@ -102,10 +102,10 @@ interface GpuFormData {
   memoryBandwidth?: GpuSpec<number>;
 
   // API Support
-  directxVersion?: GpuSpec<number | string>;
-  openClVersion?: GpuSpec<number | string>;
-  openGlVersion?: GpuSpec<number | string>;
-  shaderModelVersion?: GpuSpec<number | string>;
+  directxVersion?: GpuSpec<string>;
+  openClVersion?: GpuSpec<string>;
+  openGlVersion?: GpuSpec<string>;
+  shaderModelVersion?: GpuSpec<string>;
 
   // Benchmarks
   g2dMark?: GpuBenchmark<number>;
@@ -1050,6 +1050,6 @@ function toImagesRequest(formData: GpuFormData): GpuImages {
   return (
     formData.images
       ?.filter((image) => image != null)
-      .map((image) => ({ id: image.imageId })) ?? []
+      .map((image) => ({ imageId: image.imageId })) ?? []
   );
 }

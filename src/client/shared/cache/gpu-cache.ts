@@ -19,13 +19,21 @@ class GpuCacheImpl {
             .forEach((gpu) => {
               this.cache.set(gpu.id, gpu);
               if (gpu.images?.length > 0) {
-                ImageCache.save(gpu.images);
+                ImageCache.save(
+                  gpu.images
+                    .filter((image) => image?.image != null)
+                    .map((image) => image.image),
+                );
               }
             });
         } else {
           this.cache.set(gpus.id, gpus);
           if (gpus.images?.length > 0) {
-            ImageCache.save(gpus.images);
+            ImageCache.save(
+              gpus.images
+                .filter((image) => image?.image != null)
+                .map((image) => image.image),
+            );
           }
         }
       });

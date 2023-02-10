@@ -1,11 +1,5 @@
 Immediate Tasks:
-  - store all spec metadata in a metadata column in gpu_specs, store scalar values for spec columns
   - Data refactor
-    - replace objectionjs with prisma
-    - Look at GpuEntity and GpuSpecsEntity. Follow same for other types
-      - UserEntity
-      - AccessTokenEntity
-      - Update Frontend?
     - test everything
     - fix related gpus
     - fix relative performance and value gpus

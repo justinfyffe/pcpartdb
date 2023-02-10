@@ -1,9 +1,10 @@
 import { ApiClient, apiClient } from '@client/shared/api';
 import {
+  CreateUserRequest,
   RequestPasswordResetRequest,
   ResetPasswordRequest,
+  UpdateUserRequest,
   User,
-  UserRequest,
 } from '@shared/user';
 
 const PATH = 'users';
@@ -11,11 +12,11 @@ const PATH = 'users';
 export class UserService {
   constructor(private api: ApiClient) {}
 
-  async create(data: UserRequest) {
+  async create(data: CreateUserRequest) {
     return await this.api.post<User>(PATH, data);
   }
 
-  async update(id: number, data: UserRequest) {
+  async update(id: number, data: UpdateUserRequest) {
     return await this.api.put<User>(`${PATH}/${id}`, data);
   }
 

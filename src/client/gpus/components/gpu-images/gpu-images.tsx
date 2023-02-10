@@ -20,8 +20,8 @@ export const GpuImages: FunctionComponent<GpuImagesProps> = (props) => {
     const gpuImages = gpu.images ?? [];
     const companyImage = getCompanyLogoImagePath(gpu);
     const images = gpuImages
-      .filter((image) => image != null)
-      .map((image) => getImagePath(image));
+      .filter((image) => image?.image != null)
+      .map(({ image }) => getImagePath(image));
 
     if (companyImage != null) {
       images.push(companyImage);

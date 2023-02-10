@@ -14,7 +14,7 @@ export const getServerSideProps = staffSsrPageProps(async (ctx: SsrContext) => {
 });
 
 async function getGpu(id: number, ctx: Context) {
-  return await gpuService.getById({ id, includeImages: true }, ctx);
+  return await gpuService.getById(id, { includeImages: true }, ctx);
 }
 
 export default AdminEditGpuPage;

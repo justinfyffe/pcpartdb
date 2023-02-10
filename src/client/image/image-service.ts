@@ -1,6 +1,6 @@
 import { ApiClient, apiClient } from '@client/shared/api';
 import { ImageCache } from '@client/shared/cache';
-import { Image, ImageRequest } from '@shared/image';
+import { CreateImageRequest, Image, UpdateImageRequest } from '@shared/image';
 
 const PATH = 'images';
 
@@ -13,7 +13,7 @@ export class ImageService {
     return images;
   }
 
-  async create(formData: ImageRequest) {
+  async create(formData: CreateImageRequest) {
     const data = new FormData();
     data.append('formData', JSON.stringify(formData));
     data.append('file', formData.file);
@@ -25,7 +25,7 @@ export class ImageService {
     return image;
   }
 
-  async update(id: number, formData: ImageRequest) {
+  async update(id: number, formData: UpdateImageRequest) {
     const data = new FormData();
     data.append('formData', JSON.stringify(formData));
     if (formData.file) {

@@ -306,18 +306,16 @@ function getMemoryType($: cheerio.CheerioAPI): GpuSpec<string> {
   return { value: value || null, meta: { specKey: 'memoryType' } };
 }
 
-function getOpenClVersion($: cheerio.CheerioAPI): GpuSpec<number> {
+function getOpenClVersion($: cheerio.CheerioAPI): GpuSpec<string> {
   const values = tokenizeSpecValues($, 'OpenCL');
-  const [displayValue] = parseNumberValue(values[0] || null);
-  const baseValue = displayValue;
-  return { value: baseValue, meta: { specKey: 'openClVersion' } };
+  const value = values.join(', ');
+  return { value: value || null, meta: { specKey: 'openClVersion' } };
 }
 
-function getOpenGlVersion($: cheerio.CheerioAPI): GpuSpec<number> {
+function getOpenGlVersion($: cheerio.CheerioAPI): GpuSpec<string> {
   const values = tokenizeSpecValues($, 'OpenGL');
-  const [displayValue] = parseNumberValue(values[0] || null);
-  const baseValue = displayValue;
-  return { value: baseValue, meta: { specKey: 'openGlVersion' } };
+  const value = values.join(', ');
+  return { value: value || null, meta: { specKey: 'openGlVersion' } };
 }
 
 function getOutputs($: cheerio.CheerioAPI): GpuSpec<string> {
@@ -403,11 +401,10 @@ function getRenderOutputUnits($: cheerio.CheerioAPI): GpuSpec<number> {
   return { value: baseValue, meta: { specKey: 'renderOutputUnits' } };
 }
 
-function getShaderModelVersion($: cheerio.CheerioAPI): GpuSpec<number> {
+function getShaderModelVersion($: cheerio.CheerioAPI): GpuSpec<string> {
   const values = tokenizeSpecValues($, 'Shader Model');
-  const [displayValue] = parseNumberValue(values[0] || null);
-  const baseValue = displayValue;
-  return { value: baseValue, meta: { specKey: 'shaderModelVersion' } };
+  const value = values.join(', ');
+  return { value: value || null, meta: { specKey: 'shaderModelVersion' } };
 }
 
 function getShaderUnitsCudaCores($: cheerio.CheerioAPI): GpuSpec<number> {
