@@ -19,5 +19,5 @@ export async function userMiddleware(ctx: ApiContext | SsrContext) {
   );
 
   ctx.token = accessToken ? token : null;
-  ctx.user = accessToken ? mapToUserDto(accessToken.users) : null;
+  ctx.user = accessToken ? mapToUserDto(accessToken.user) : null;
 }

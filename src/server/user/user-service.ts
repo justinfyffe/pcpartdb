@@ -13,13 +13,14 @@ import {
   verifyJwt,
 } from '@server/shared/jwt/jwt-utils';
 import {
+  CreateUserRequest,
   RequestPasswordResetRequest,
   ResetPasswordRequest,
-  UserRequest,
+  UpdateUserRequest,
 } from '@shared/user';
 import { WEBSITE_NAME } from '@shared/website';
 import * as bcrypt from 'bcryptjs';
-import { mapToUserDto } from './user-mappers';
+import { mapToUserDto, mapToUserEntity } from './user-mappers';
 import { userRepository } from './user-repository';
 
 class UserService {
@@ -41,7 +42,7 @@ class UserService {
     return mapToUserDto(row);
   }
 
-  async create(data: UserRequest, ctx: Context) {
+  async create(data: CreateUserRequest, ctx: Context) {
     const existingUser = await userRepository.findByEmail(data.email);
     if (existingUser != null) {
       throw badRequestError({
@@ -59,26 +60,24 @@ class UserService {
       isStaff = true;
     }
 
-    const result = await userRepository.create(
-      {
-        email: data.email,
-        passwordHash,
-        isStaff,
-      },
-      ctx,
-    );
+    const entity = mapToUserEntity({
+      email: data.email,
+      passwordHash,
+      isStaff,
+    });
+    const result = await userRepository.create(entity, ctx);
 
     return mapToUserDto(result);
   }
 
-  async update(id: number, data: UserRequest, ctx: Context) {
+  async update(id: number, data: UpdateUserRequest, ctx: Context) {
     const user = await userRepository.findById(id, ctx);
     if (user == null) {
       throw notFoundError({ user: id });
     }
 
     if (
-      user.is_staff &&
+      user.isStaff &&
       !data.isStaff &&
       (await userRepository.countStaff(ctx)) <= 1
     ) {
@@ -88,17 +87,18 @@ class UserService {
       });
     }
 
-    let passwordHash = user.password_hash;
+    let passwordHash = user.passwordHash;
     if (data.password != null && data.password.length > 0) {
       const salt = await bcrypt.genSalt();
       passwordHash = await bcrypt.hash(data.password, salt);
     }
 
-    const result = await userRepository.update(
-      id,
-      { email: data.email, passwordHash, isStaff: data.isStaff ?? false },
-      ctx,
-    );
+    const entity = mapToUserEntity({
+      email: data.email,
+      passwordHash,
+      isStaff: data.isStaff,
+    });
+    const result = await userRepository.update(id, entity, ctx);
 
     return mapToUserDto(result);
   }

@@ -18,7 +18,9 @@ export function mapToGpuImageDtos(entities: GpuImageEntity[]): GpuImage[] {
   return entities.map((entity) => mapToGpuImageDto(entity));
 }
 
-export function mapToGpuImageEntity(gpuImage: GpuImage): GpuImageEntity {
+export function mapToGpuImageEntity(
+  gpuImage: Partial<GpuImage>,
+): GpuImageEntity {
   if (gpuImage == null) {
     return null;
   }

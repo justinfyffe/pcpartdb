@@ -9,10 +9,11 @@ export interface User {
   registeredAt: number;
 }
 
-export interface UserRequest {
-  email: string;
+export interface CreateUserRequest extends Omit<User, 'id' | 'registeredAt'> {
+  password: string;
+}
+export interface UpdateUserRequest extends Omit<User, 'id' | 'registeredAt'> {
   password?: string;
-  isStaff?: boolean;
 }
 
 export interface RegisterRequest {

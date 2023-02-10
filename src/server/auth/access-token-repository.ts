@@ -1,5 +1,6 @@
 import { prisma } from '@server/db/database';
 import { RepositoryConfig } from '@server/db/repository';
+import { AccessTokenEntity } from './access-token-entity';
 
 export interface CreateAccessTokenOptions {
   userId: number;
@@ -9,30 +10,24 @@ export interface CreateAccessTokenOptions {
 
 export class AccessTokenRepository {
   async create(
-    accessToken: CreateAccessTokenOptions,
+    accessToken: Omit<AccessTokenEntity, 'id' | 'user'>,
     config?: RepositoryConfig,
   ) {
-    const db = config?.trx ?? prisma;
-    return await db.access_tokens.create({
-      data: {
-        user_id: accessToken.userId,
-        token_hash: accessToken.tokenHash,
-        expires_at: accessToken.expiresAt,
-      },
-    });
+    const trx = config?.trx ?? prisma;
+    return await trx.accessToken.create({ data: accessToken });
   }
 
   async findByTokenHash(tokenHash: string, config?: RepositoryConfig) {
-    const db = config?.trx ?? prisma;
-    return await db.access_tokens.findUnique({
-      where: { token_hash: tokenHash },
-      include: { users: true },
+    const trx = config?.trx ?? prisma;
+    return await trx.accessToken.findUnique({
+      where: { tokenHash },
+      include: { user: true },
     });
   }
 
   async delete(id: number, config?: RepositoryConfig) {
-    const db = config?.trx ?? prisma;
-    await db.access_tokens.delete({
+    const trx = config?.trx ?? prisma;
+    await trx.accessToken.delete({
       where: { id },
     });
   }

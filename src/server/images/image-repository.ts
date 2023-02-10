@@ -36,14 +36,18 @@ export class ImageRepository {
     });
   }
 
-  async create(image: ImageEntity, config?: RepositoryConfig) {
+  async create(image: Omit<ImageEntity, 'id'>, config?: RepositoryConfig) {
     const trx = config?.trx ?? prisma;
     return await trx.image.create({
       data: image,
     });
   }
 
-  async update(id: number, image: ImageEntity, config?: RepositoryConfig) {
+  async update(
+    id: number,
+    image: Partial<ImageEntity>,
+    config?: RepositoryConfig,
+  ) {
     const trx = config?.trx ?? prisma;
     return await trx.image.update({
       where: { id },

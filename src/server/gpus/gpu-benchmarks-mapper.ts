@@ -37,7 +37,7 @@ function mapToGpuBenchmarkDto<T>(
 }
 
 export function mapToGpuBenchmarksEntity(
-  benchmarks: GpuBenchmarks,
+  benchmarks: Partial<GpuBenchmarks>,
 ): GpuBenchmarksEntity {
   if (benchmarks == null) {
     return null;
@@ -69,7 +69,7 @@ export function mapToGpuBenchmarksEntity(
 }
 
 function mapToGpuBenchmarkEntity(
-  benchmarks: GpuBenchmarks,
+  benchmarks: Partial<GpuBenchmarks>,
   key: keyof GpuBenchmarks,
   metadata: { [col: string]: GpuBenchmarkMeta },
 ) {

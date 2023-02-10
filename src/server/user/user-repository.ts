@@ -1,5 +1,6 @@
 import { prisma } from '@server/db/database';
 import { RepositoryConfig } from '@server/db/repository';
+import { UserEntity } from './user-entity';
 
 export interface CreateUserOptions {
   email: string;
@@ -10,8 +11,8 @@ export type UpdateUserOptions = Partial<CreateUserOptions>;
 
 export class UserRepository {
   async list(config?: RepositoryConfig) {
-    const db = config?.trx ?? prisma;
-    return await db.users.findMany({
+    const trx = config?.trx ?? prisma;
+    return await trx.user.findMany({
       orderBy: {
         id: 'desc',
       },
@@ -19,51 +20,45 @@ export class UserRepository {
   }
 
   async findById(id: number, config?: RepositoryConfig) {
-    const db = config?.trx ?? prisma;
-    return await db.users.findUnique({ where: { id } });
+    const trx = config?.trx ?? prisma;
+    return await trx.user.findUnique({ where: { id } });
   }
 
   async findByEmail(email: string, config?: RepositoryConfig) {
-    const db = config?.trx ?? prisma;
-    return await db.users.findUnique({ where: { email } });
+    const trx = config?.trx ?? prisma;
+    return await trx.user.findUnique({ where: { email } });
   }
 
   async count(config?: RepositoryConfig) {
-    const db = config?.trx ?? prisma;
-    return await db.users.count();
+    const trx = config?.trx ?? prisma;
+    return await trx.user.count();
   }
 
   async countStaff(config?: RepositoryConfig) {
-    const db = config?.trx ?? prisma;
-    return await db.users.count({ where: { is_staff: true } });
+    const trx = config?.trx ?? prisma;
+    return await trx.user.count({ where: { isStaff: true } });
   }
 
-  async create(user: CreateUserOptions, config?: RepositoryConfig) {
-    const db = config?.trx ?? prisma;
-    return await db.users.create({
-      data: {
-        email: user.email,
-        password_hash: user.passwordHash,
-        is_staff: user.isStaff,
-      },
-    });
+  async create(
+    user: Omit<UserEntity, 'id' | 'registeredAt'>,
+    config?: RepositoryConfig,
+  ) {
+    const trx = config?.trx ?? prisma;
+    return await trx.user.create({ data: user });
   }
 
-  async update(id: number, user: UpdateUserOptions, config?: RepositoryConfig) {
-    const db = config?.trx ?? prisma;
-    return await db.users.update({
-      where: { id },
-      data: {
-        email: user.email,
-        password_hash: user.passwordHash,
-        is_staff: user.isStaff,
-      },
-    });
+  async update(
+    id: number,
+    user: Partial<UserEntity>,
+    config?: RepositoryConfig,
+  ) {
+    const trx = config?.trx ?? prisma;
+    return await trx.user.update({ where: { id }, data: user });
   }
 
   async delete(id: number, config?: RepositoryConfig) {
-    const db = config?.trx ?? prisma;
-    await db.users.delete({ where: { id } });
+    const trx = config?.trx ?? prisma;
+    await trx.user.delete({ where: { id } });
   }
 }
 

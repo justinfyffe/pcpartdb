@@ -32,7 +32,7 @@ export function mapToGpuDtos(entities: GpuEntity[]): Gpu[] {
   return entities.map((entity) => mapToGpuDto(entity));
 }
 
-export function mapToGpuEntity(entity: Gpu): GpuEntity {
+export function mapToGpuEntity(entity: Partial<Gpu>): GpuEntity {
   if (entity == null) {
     return null;
   }

@@ -3,11 +3,11 @@ import { controller, staffController } from '@server/shared/api/controller';
 import { validate } from '@server/shared/types/validate';
 import {
   CreateGpuRequest,
-  GpuSpecKey,
   ImportGpuDataRequest,
   ListGpusRequest,
   UpdateGpuRequest,
 } from '@shared/gpus';
+import { GpuSpecsEntity } from './gpu-entity';
 import { gpuImporterService } from './gpu-importer-service';
 import { gpuService } from './gpu-service';
 import {
@@ -34,7 +34,7 @@ export const autocompleteGpus = controller(async (ctx: ApiContext) => {
 });
 
 export const autocompleteSpecs = staffController(async (ctx: ApiContext) => {
-  const key = ctx.req.query['key'] as GpuSpecKey;
+  const key = ctx.req.query['key'] as keyof GpuSpecsEntity;
   const query = ctx.req.query['value'] as string;
   validate({ key, query }, autocompleteSpecsRequestValidator);
   return await gpuService.autocompleteSpec(key, query ?? '', ctx);

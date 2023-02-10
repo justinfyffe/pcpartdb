@@ -129,7 +129,7 @@ export class GpuRepository {
     return results.map((result) => result[key]);
   }
 
-  async create(data: GpuEntity, config?: RepositoryConfig) {
+  async create(data: Omit<GpuEntity, 'id'>, config?: RepositoryConfig) {
     const trx = config?.trx ?? prisma;
 
     const {
@@ -152,7 +152,11 @@ export class GpuRepository {
     });
   }
 
-  async update(id: number, data: GpuEntity, config?: RepositoryConfig) {
+  async update(
+    id: number,
+    data: Partial<GpuEntity>,
+    config?: RepositoryConfig,
+  ) {
     const trx = config?.trx ?? prisma;
 
     const {

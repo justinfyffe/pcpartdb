@@ -1,10 +1,10 @@
-import * as db from '@prisma/client';
+import { UserEntity } from '@server/user/user-entity';
 import { mapToUserDto } from '@server/user/user-mappers';
 import { AccessToken } from '@shared/auth';
 
 export function mapToAccessTokenDto(
   rawToken: string,
-  user: db.users,
+  user: UserEntity,
 ): AccessToken {
   return {
     token: rawToken,

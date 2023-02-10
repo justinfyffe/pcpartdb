@@ -17,8 +17,7 @@ export class AccessTokenService {
     const user = await userRepository.findByEmail(data.email, ctx);
     if (
       !(
-        user != null &&
-        (await bcrypt.compare(data.password, user.password_hash))
+        user != null && (await bcrypt.compare(data.password, user.passwordHash))
       )
     ) {
       throw forbiddenError();
@@ -40,9 +39,7 @@ export class AccessTokenService {
     cookieService.save(
       SESSION_COOKIE,
       token,
-      {
-        expires: data.remember ? expiresAt.getTime() : undefined,
-      },
+      { expires: data.remember ? expiresAt.getTime() : undefined },
       ctx,
     );
 
@@ -52,7 +49,7 @@ export class AccessTokenService {
   async logout(ctx: Context) {
     const hash = hashToken(ctx.token);
     const entity = await accessTokenRepository.findByTokenHash(hash, ctx);
-    if (entity == null || entity.user_id !== ctx.user?.id) {
+    if (entity == null || entity.userId !== ctx.user?.id) {
       throw unauthorizedError();
     }
 
