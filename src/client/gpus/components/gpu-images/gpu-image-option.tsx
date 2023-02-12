@@ -16,7 +16,7 @@ export const GpuImageOption: FunctionComponent<GpuImageOptionProps> = (
   return (
     <div
       className={classNames(
-        'bg-gray-50 border-px border-transparent flex items-center h-15 w-15 cursor-pointer',
+        'bg-gray-50 border-px border-transparent flex items-center h-15 w-15 cursor-pointer overflow-hidden',
         className,
       )}
       onClick={onClick}

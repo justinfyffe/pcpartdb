@@ -1,8 +1,8 @@
+import { importFromTechPowerUp } from '@scrapers/techpowerup';
+import { importFromUlBenchmarks } from '@scrapers/ul-benchmarks';
+import { importFromVideoCardBenchmark } from '@scrapers/videocardbenchmark';
 import { badRequestError } from '@server/shared/api/status';
 import { ImportGpuDataRequest } from '@shared/gpus';
-import { importFromTechPowerUp } from './importers/techpowerup-importer';
-import { importFromUlBenchmarks } from './importers/ul-benchmarks-importer';
-import { importFromVideoCardBenchmark } from './importers/videocardbenchmark-importer';
 
 enum Importers {
   TechPowerUp = 'www.techpowerup.com',

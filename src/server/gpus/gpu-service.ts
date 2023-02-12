@@ -37,7 +37,7 @@ export class GpuService {
     const gpu = mapToGpuDto(gpuEntity);
 
     if (gpu == null) {
-      throw notFoundError(null);
+      throw notFoundError({ gpu: id });
     }
     if (options.includeRanks) {
       await this.populateRanks([gpu], ctx);
@@ -51,7 +51,7 @@ export class GpuService {
     const gpu = mapToGpuDto(gpuEntity);
 
     if (gpu == null) {
-      throw notFoundError(null);
+      throw notFoundError({ gpu: slug });
     }
     if (options.includeRanks) {
       await this.populateRanks([gpu], ctx);
@@ -65,9 +65,9 @@ export class GpuService {
     const slugs = slug.split('--vs--');
 
     if (slugs.length !== 2) {
-      throw notFoundError(null);
+      throw notFoundError({ comparison: slug });
     } else if (slugs[0] === slugs[1]) {
-      throw notFoundError(null);
+      throw notFoundError({ comparison: slug });
     }
 
     const promises = [];
@@ -150,7 +150,8 @@ export class GpuService {
     addPerformanceBenchmarks(data.specs, data.benchmarks);
 
     const entity = mapToGpuEntity({ id: undefined, ...data });
-    return await gpuRepository.create(entity, ctx);
+    const result = await gpuRepository.create(entity, ctx);
+    return mapToGpuDto(result);
   }
 
   async update(id: number, data: UpdateGpuRequest, ctx: Context) {
@@ -171,7 +172,8 @@ export class GpuService {
     addPerformanceBenchmarks(data.specs, data.benchmarks);
 
     const entity = mapToGpuEntity({ id: undefined, ...data });
-    return await gpuRepository.update(id, entity, ctx);
+    const result = await gpuRepository.update(id, entity, ctx);
+    return mapToGpuDto(result);
   }
 
   async delete(id: number, ctx: Context) {
@@ -185,7 +187,8 @@ export class GpuService {
   }
 
   async autocomplete(query: string, ctx: Context) {
-    return await gpuRepository.findSimilarValue(query, ctx);
+    const results = await gpuRepository.findSimilarValue(query, ctx);
+    return mapToGpuDtos(results);
   }
 
   async autocompleteSpec(

@@ -90,19 +90,19 @@ export class GpuRepository {
       .map((value) => value.trim())
       .join('|');
 
-    const idsFromName: number[] = await db.$queryRaw`
-      SELECT id FROM "gpus"
-      WHERE "name" ~* "(${tokens})"
+    const idsFromName: { id: number }[] = await db.$queryRaw`
+      SELECT id FROM gpus
+      WHERE name ~* (${tokens})
       LIMIT 5
     `;
 
-    const idsFromCompany: number[] = await db.$queryRaw`
-      SELECT gpu_id FROM "gpus"
-      WHERE "company" ~* "(${tokens})"
+    const idsFromCompany: { id: number }[] = await db.$queryRaw`
+      SELECT gpu_id as id FROM gpu_specs
+      WHERE company ~* (${tokens})
       LIMIT 5
     `;
 
-    const ids = [...idsFromName, ...idsFromCompany];
+    const ids = [...idsFromName, ...idsFromCompany].map((json) => json.id);
 
     return await db.gpu.findMany({
       where: { id: { in: ids } },
@@ -190,20 +190,20 @@ export class GpuRepository {
 
   async getPerformanceRanks(ids: number[], config?: RepositoryConfig) {
     const trx = config?.trx ?? prisma;
-    const idsAndRanks: { gpuId: number; rank: number }[] = await trx.$queryRaw`
-      SELECT gpuId, rank
+    const idsAndRanks: { gpu_id: number; rank: number }[] = await trx.$queryRaw`
+      SELECT ranks.gpu_id, ranks.rank AS rank
       FROM (
         SELECT
-          gpu_id AS gpuId,
+          gpu_id,
           CAST(RANK() OVER ( ORDER BY performance_score DESC ) AS INTEGER) AS rank
         FROM gpu_benchmarks 
         WHERE performance_score IS NOT NULL
-      )
-      WHERE gpuId IN ${ids}
+      ) AS ranks
+      WHERE ranks.gpu_id IN (${Prisma.join(ids)})
     `;
 
     const ranksMap = idsAndRanks.reduce((acc, value) => {
-      acc[value.gpuId] = value.rank;
+      acc[value.gpu_id] = value.rank;
       return acc;
     }, {} as Record<number, number>);
 
@@ -217,20 +217,20 @@ export class GpuRepository {
 
   async getValueRanks(ids: number[], config?: RepositoryConfig) {
     const trx = config?.trx ?? prisma;
-    const idsAndRanks: { gpuId: number; rank: number }[] = await trx.$queryRaw`
-      SELECT gpuId, rank
+    const idsAndRanks: { gpu_id: number; rank: number }[] = await trx.$queryRaw`
+      SELECT ranks.gpu_id, ranks.rank AS rank
       FROM (
         SELECT
-          gpu_id AS gpuId,
+          gpu_id,
           CAST(RANK() OVER ( ORDER BY value_score DESC ) AS INTEGER) AS rank
         FROM gpu_benchmarks 
         WHERE value_score IS NOT NULL
-      )
-      WHERE gpuId IN ${ids}
+      ) AS ranks
+      WHERE ranks.gpu_id IN (${Prisma.join(ids)})
     `;
 
     const ranksMap = idsAndRanks.reduce((acc, value) => {
-      acc[value.gpuId] = value.rank;
+      acc[value.gpu_id] = value.rank;
       return acc;
     }, {} as Record<number, number>);
 
