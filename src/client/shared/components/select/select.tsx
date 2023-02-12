@@ -95,7 +95,6 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
         }
 
         const newValue = multiple ? toggleOption(value, option) : option.value;
-        console.log(newValue);
         onChange(newValue);
       },
       [multiple, onChange, value],

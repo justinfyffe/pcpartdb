@@ -15,6 +15,10 @@ export function mapToGpuImageDto(entity: GpuImageEntity): GpuImage {
 }
 
 export function mapToGpuImageDtos(entities: GpuImageEntity[]): GpuImage[] {
+  if (entities == null) {
+    return [];
+  }
+
   return entities.map((entity) => mapToGpuImageDto(entity));
 }
 
@@ -26,7 +30,17 @@ export function mapToGpuImageEntity(
   }
 
   return {
-    gpuId: undefined,
+    gpuId: gpuImage.gpuId,
     imageId: gpuImage.imageId,
   };
+}
+
+export function mapToGpuImageEntities(
+  gpuImages: Partial<GpuImage>[],
+): GpuImageEntity[] {
+  if (gpuImages == null) {
+    return [];
+  }
+
+  return gpuImages.map((gpuImage) => mapToGpuImageEntity(gpuImage));
 }

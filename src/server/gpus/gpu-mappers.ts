@@ -4,7 +4,7 @@ import {
   mapToGpuBenchmarksEntity,
 } from './gpu-benchmarks-mapper';
 import { GpuEntity } from './gpu-entity';
-import { mapToGpuImageDtos } from './gpu-image-mapper';
+import { mapToGpuImageDtos, mapToGpuImageEntities } from './gpu-image-mapper';
 import { mapToGpuSpecsDto, mapToGpuSpecsEntity } from './gpu-specs-mapper';
 
 export function mapToGpuDto(entity: GpuEntity): Gpu {
@@ -49,6 +49,6 @@ export function mapToGpuEntity(entity: Partial<Gpu>): GpuEntity {
     parent: mapToGpuEntity(entity.parent),
     specs: mapToGpuSpecsEntity(entity.specs),
     benchmarks: mapToGpuBenchmarksEntity(entity.benchmarks),
-    images: null,
+    images: mapToGpuImageEntities(entity.images),
   };
 }

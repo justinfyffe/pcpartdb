@@ -5,7 +5,6 @@ import { classNames } from '@client/shared/ui';
 import { getCompareGpusPath } from '@client/shared/website';
 import { PhotoIcon } from '@heroicons/react/24/outline';
 import { Gpu, GpuComparison } from '@shared/gpus';
-import { Image } from '@shared/image';
 import React, { FunctionComponent, useMemo } from 'react';
 
 interface ComparisonFeedItemProps {
@@ -31,8 +30,8 @@ export const ComparisonFeedItem: FunctionComponent<ComparisonFeedItemProps> = (
 
   const [image1, image2] = useMemo(() => {
     return [
-      gpu1.images?.[0] ?? getCompanyLogoImagePath(gpu1),
-      gpu2.images?.[0] ?? getCompanyLogoImagePath(gpu2),
+      gpu1.images?.[0]?.image ?? getCompanyLogoImagePath(gpu1),
+      gpu2.images?.[0]?.image ?? getCompanyLogoImagePath(gpu2),
     ];
   }, [gpu1, gpu2]);
 
@@ -48,7 +47,7 @@ export const ComparisonFeedItem: FunctionComponent<ComparisonFeedItemProps> = (
         <div className="bg-white relative flex gap-0.5 m-[-16px_-16px_0] rounded-t rounded-b-none h-40 w-[calc(100%_+_32px)] max-w-[calc(100%_+_48px)] overflow-hidden border-b-px">
           {image1 != null ? (
             <Img
-              src={image1 as string | Image}
+              src={image1}
               className={classNames(
                 'flex-1 h-40 object-contain overflow-hidden',
                 props.className,
@@ -68,7 +67,7 @@ export const ComparisonFeedItem: FunctionComponent<ComparisonFeedItemProps> = (
 
           {image2 != null ? (
             <Img
-              src={image2 as string | Image}
+              src={image2}
               className={classNames(
                 'flex-1 h-40 object-contain overflow-hidden',
                 props.className,

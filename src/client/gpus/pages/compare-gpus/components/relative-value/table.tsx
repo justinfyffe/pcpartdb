@@ -44,9 +44,6 @@ export const ValueTable: FunctionComponent<ValueTableProps> = (props) => {
     }
   });
 
-  console.log('baseline', baselineGpu);
-  console.log('secondary', secondaryGpu);
-
   // Add nulls to rank gaps
   const gpus = useMemo(() => {
     const ret: Gpu[] = [];

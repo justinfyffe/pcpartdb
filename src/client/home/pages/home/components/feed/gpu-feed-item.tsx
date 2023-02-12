@@ -5,7 +5,6 @@ import { classNames } from '@client/shared/ui';
 import { getViewGpuPath } from '@client/shared/website';
 import { PhotoIcon } from '@heroicons/react/24/outline';
 import { Gpu } from '@shared/gpus';
-import { Image } from '@shared/image';
 import React, { FunctionComponent, useMemo } from 'react';
 
 export enum GpuFeedTag {
@@ -38,8 +37,8 @@ export const GpuFeedItem: FunctionComponent<GpuFeedItemProps> = (props) => {
 
   const images = useMemo(() => {
     const ret = [
-      gpu.images?.[0],
-      gpu.images?.[1] ?? getCompanyLogoImagePath(gpu),
+      gpu.images?.[0]?.image,
+      gpu.images?.[1]?.image ?? getCompanyLogoImagePath(gpu),
     ];
     return ret.filter((image) => image != null);
   }, [gpu]);
@@ -69,7 +68,7 @@ export const GpuFeedItem: FunctionComponent<GpuFeedItemProps> = (props) => {
           {images.map((image, i) => (
             <Img
               key={i}
-              src={image as string | Image}
+              src={image}
               className={classNames(
                 'bg-white',
                 'flex-1',

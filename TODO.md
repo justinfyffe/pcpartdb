@@ -1,6 +1,23 @@
 Immediate Tasks:
   - Data refactor
     - test everything
+      - [X] Register
+      - [X] Login
+      - [x] Create GPU
+      - [X] Edit GPU
+      - [X] Import Techpowerup
+      - [X] Import g3d Benchmark
+      - [X] import timespy benchmark
+      - [X] Add image
+      - [X] Update image
+      - [X] Delete image
+      - [] Delete gpu
+      - [] value rank
+      - [] performance rank
+      - [X] home page
+      - [] view page
+      - [] compare page
+      - [] list page
     - fix related gpus
     - fix relative performance and value gpus
     - fix home page gpus list

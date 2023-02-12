@@ -140,14 +140,15 @@ export class GpuRepository {
       ...gpuData
     } = data;
 
-    const imagesData = images.map((image) => ({ imageId: image.imageId }));
+    const imagesData =
+      images?.map((image) => ({ imageId: image.imageId })) ?? [];
 
     return await trx.gpu.create({
       data: {
         ...gpuData,
         specs: { create: specsData },
         benchmarks: { create: benchmarksData },
-        images: { create: imagesData },
+        images: { createMany: { data: imagesData, skipDuplicates: true } },
       },
     });
   }
@@ -167,7 +168,8 @@ export class GpuRepository {
       ...gpuData
     } = data;
 
-    const imagesData = images.map((image) => ({ imageId: image.imageId }));
+    const imagesData =
+      images?.map((image) => ({ imageId: image.imageId })) ?? [];
 
     await trx.gpuImage.deleteMany({ where: { gpuId: id } });
     return await trx.gpu.update({
@@ -176,7 +178,7 @@ export class GpuRepository {
         ...gpuData,
         specs: { update: specsData },
         benchmarks: { update: benchmarksData },
-        images: { create: imagesData },
+        images: { createMany: { data: imagesData, skipDuplicates: true } },
       },
     });
   }
@@ -268,8 +270,11 @@ export class GpuRepository {
   private generateOrderBy(
     orderBy: GpusOrderBy,
   ): Prisma.GpuOrderByWithRelationAndSearchRelevanceInput {
-    const { sort } = orderBy;
+    if (orderBy == null) {
+      return { id: 'desc' };
+    }
 
+    const { sort } = orderBy;
     if (sort === GpuSort.Id) {
       // Default ASC
       const order = orderBy?.order ?? GpuOrder.Asc;
