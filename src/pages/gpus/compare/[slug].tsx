@@ -8,7 +8,13 @@ import { Context } from '@server/shared/context';
 import { SsrContext } from '@server/shared/ssr/context';
 import { ssrPageProps } from '@server/shared/ssr/props';
 import { serialize } from '@server/shared/types/serialize';
-import { Gpu, GpuComparison, GpuSort } from '@shared/gpus';
+import {
+  Gpu,
+  GpuComparison,
+  GpuSort,
+  RelatedComparisons,
+  RelatedGpus,
+} from '@shared/gpus';
 
 const TOTAL_COMPARED_GPUS = 10;
 
@@ -18,9 +24,10 @@ export const getServerSideProps = ssrPageProps<CompareGpuPageProps>(
 
     const comparison = await getComparison(slug, ctx);
     const contentData = await getContentData(comparison, ctx);
-    const relatedGpus = await getRelatedGpus(comparison, ctx);
+    const relatedGpus = await getRelatedGpus();
+    const relatedComparisons = await getRelatedComparisons();
 
-    return { comparison, contentData, relatedGpus };
+    return { comparison, contentData, relatedGpus, relatedComparisons };
   },
 );
 
@@ -142,14 +149,13 @@ async function getValueGpus(seed: GpuComparison, ctx: Context) {
 }
 
 // TODO: determine this based on gpus fetched for content tables
-async function getRelatedGpus(seed: GpuComparison, ctx: Context) {
-  return await gpuService.getRelatedGpus(
-    {
-      seed,
-      prioritize: GpuSort.ReleaseDate,
-    },
-    ctx,
-  );
+async function getRelatedGpus() {
+  return { gpus: [] } as RelatedGpus;
+}
+
+// TODO: determine this based on gpus fetched for content tables
+async function getRelatedComparisons() {
+  return { comparisons: [] } as RelatedComparisons;
 }
 
 export default CompareGpuPage;

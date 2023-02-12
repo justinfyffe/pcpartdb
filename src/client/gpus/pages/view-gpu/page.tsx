@@ -5,7 +5,7 @@ import { Breadcrumb, Breadcrumbs } from '@client/shared/components';
 import { WebsiteLayout } from '@client/shared/layouts';
 import { getListGpusPath, getViewGpuPath } from '@client/shared/website';
 import { Sidenav, SidenavComparisons, SidenavGpus } from '@client/sidenav';
-import { Gpu, RelatedGpus } from '@shared/gpus';
+import { Gpu, RelatedComparisons, RelatedGpus } from '@shared/gpus';
 import React from 'react';
 import {
   Benchmarks,
@@ -24,10 +24,11 @@ export interface ViewGpuPageProps {
 
   contentData: ViewPageContentData;
   relatedGpus: RelatedGpus;
+  relatedComparisons: RelatedComparisons;
 }
 
 export const ViewGpuPage = (props: ViewGpuPageProps) => {
-  const { gpu, relatedGpus, contentData } = props;
+  const { gpu, relatedGpus, relatedComparisons, contentData } = props;
   useGpuCache(gpu);
 
   const context = createViewPageContextState({ gpu: gpu, contentData });
@@ -67,7 +68,7 @@ export const ViewGpuPage = (props: ViewGpuPageProps) => {
 
           <Sidenav>
             <SidenavGpus gpus={relatedGpus.gpus} />
-            <SidenavComparisons comparisons={relatedGpus.comparisons} />
+            <SidenavComparisons comparisons={relatedComparisons.comparisons} />
           </Sidenav>
         </div>
 

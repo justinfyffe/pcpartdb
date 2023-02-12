@@ -4,9 +4,6 @@ import {
   CreateGpuRequest,
   FindGpuComparisonRequest,
   Gpu,
-  GpuComparison,
-  RelatedGpus,
-  RelatedGpusRequest,
   UpdateGpuRequest,
 } from '@shared/gpus';
 import { addPerformanceBenchmarks } from './benchmark-utils';
@@ -84,57 +81,6 @@ export class GpuService {
     }
 
     return gpus;
-  }
-
-  async getRelatedGpus(options: RelatedGpusRequest, ctx: Context) {
-    const { seed, prioritize } = options;
-    const limit = options.limit ?? 3;
-
-    const gpus = await this.list(
-      { query: { orderBy: { sort: prioritize } } },
-      ctx,
-    );
-
-    let seedIndex = 0;
-    if (seed != null && 'id' in seed) {
-      seedIndex = gpus.findIndex((gpu) => gpu.id === seed.id);
-    } else if (Array.isArray(seed)) {
-      seedIndex = gpus.findIndex((gpu) => gpu.id === seed[0].id);
-    }
-
-    const relatedGpus = new Map<number, Gpu>();
-    const relatedComparisons = new Map<string, GpuComparison>();
-    let prevGpu: Gpu = null;
-    for (
-      let i = 0;
-      i < gpus.length &&
-      (relatedGpus.size < limit || relatedComparisons.size < limit);
-      ++i
-    ) {
-      prevGpu = gpus[seedIndex];
-
-      seedIndex += (i + 1) * (i % 2 === 0 ? 1 : -1);
-      seedIndex = Math.max(0, Math.min(seedIndex, gpus.length - 1));
-
-      const gpu = gpus[seedIndex];
-      relatedGpus.set(gpu.id, gpu);
-
-      if (prevGpu.id !== gpu.id) {
-        const comparison = [prevGpu, gpu].sort(
-          (gpu1, gpu2) => gpu1.id - gpu2.id,
-        ) as GpuComparison;
-
-        relatedComparisons.set(
-          comparison.map((value) => value.id).join(','),
-          comparison,
-        );
-      }
-    }
-
-    return {
-      comparisons: [...relatedComparisons.values()].slice(0, limit),
-      gpus: [...relatedGpus.values()].slice(0, limit),
-    } as RelatedGpus;
   }
 
   async create(data: CreateGpuRequest, ctx: Context) {

@@ -55,13 +55,10 @@ export interface UpdateGpuRequest extends Omit<Gpu, 'id'> {
 
 export interface RelatedGpus {
   gpus?: Gpu[];
-  comparisons?: GpuComparison[];
 }
 
-export interface RelatedGpusRequest {
-  seed?: Gpu | GpuComparison;
-  prioritize?: GpuSort;
-  limit?: number;
+export interface RelatedComparisons {
+  comparisons?: GpuComparison[];
 }
 
 export enum GpuSort {

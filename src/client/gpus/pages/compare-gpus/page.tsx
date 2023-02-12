@@ -9,7 +9,7 @@ import { Breadcrumb, Breadcrumbs } from '@client/shared/components';
 import { WebsiteLayout } from '@client/shared/layouts';
 import { getCompareGpusPath, getListGpusPath } from '@client/shared/website';
 import { Sidenav, SidenavComparisons, SidenavGpus } from '@client/sidenav';
-import { GpuComparison, RelatedGpus } from '@shared/gpus';
+import { GpuComparison, RelatedComparisons, RelatedGpus } from '@shared/gpus';
 import React from 'react';
 import {
   Benchmarks,
@@ -27,10 +27,11 @@ export interface CompareGpuPageProps {
   comparison: GpuComparison;
   contentData: ComparePageContentData;
   relatedGpus: RelatedGpus;
+  relatedComparisons: RelatedComparisons;
 }
 
 export const CompareGpuPage = (props: CompareGpuPageProps) => {
-  const { comparison, contentData, relatedGpus } = props;
+  const { comparison, contentData, relatedGpus, relatedComparisons } = props;
   useGpuCache(comparison);
 
   const [gpu1, gpu2] = comparison;
@@ -89,7 +90,7 @@ export const CompareGpuPage = (props: CompareGpuPageProps) => {
           </article>
 
           <Sidenav>
-            <SidenavComparisons comparisons={relatedGpus.comparisons} />
+            <SidenavComparisons comparisons={relatedComparisons.comparisons} />
             <SidenavGpus gpus={relatedGpus.gpus} />
           </Sidenav>
         </div>
