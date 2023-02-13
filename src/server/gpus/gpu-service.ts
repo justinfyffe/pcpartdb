@@ -4,6 +4,7 @@ import {
   CreateGpuRequest,
   FindGpuComparisonRequest,
   Gpu,
+  GpuComparison,
   UpdateGpuRequest,
 } from '@shared/gpus';
 import { addPerformanceBenchmarks } from './benchmark-utils';
@@ -80,7 +81,7 @@ export class GpuService {
       throw notFoundError(null);
     }
 
-    return gpus;
+    return gpus as GpuComparison;
   }
 
   async create(data: CreateGpuRequest, ctx: Context) {

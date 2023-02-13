@@ -6,7 +6,6 @@ import { imageService } from '@server/images/image-service';
 import { Context } from '@server/shared/context';
 import { SsrContext } from '@server/shared/ssr/context';
 import { staffSsrPageProps } from '@server/shared/ssr/props';
-import { serialize } from '@server/shared/types/serialize';
 
 export const getServerSideProps = staffSsrPageProps(async (ctx: SsrContext) => {
   const images = await getImages(ctx);
@@ -15,9 +14,7 @@ export const getServerSideProps = staffSsrPageProps(async (ctx: SsrContext) => {
 });
 
 async function getImages(ctx: Context) {
-  const images = imageService.list(ctx);
-
-  return serialize(images);
+  return await imageService.list(ctx);
 }
 
 export default AdminListImagesPage;

@@ -7,7 +7,6 @@ import { gpuService } from '@server/gpus/gpu-service';
 import { Context } from '@server/shared/context';
 import { SsrContext } from '@server/shared/ssr/context';
 import { ssrPageProps } from '@server/shared/ssr/props';
-import { serialize } from '@server/shared/types/serialize';
 import {
   Gpu,
   GpuComparison,
@@ -24,8 +23,19 @@ export const getServerSideProps = ssrPageProps<CompareGpuPageProps>(
 
     const comparison = await getComparison(slug, ctx);
     const contentData = await getContentData(comparison, ctx);
-    const relatedGpus = await getRelatedGpus();
-    const relatedComparisons = await getRelatedComparisons();
+
+    const relatedGpus = await getRelatedGpus(
+      3,
+      contentData.relativePerformanceGpus,
+      contentData.relativeValueGpus,
+      comparison,
+    );
+    const relatedComparisons = await getRelatedComparisons(
+      3,
+      contentData.relativePerformanceGpus,
+      contentData.relativeValueGpus,
+      comparison,
+    );
 
     return { comparison, contentData, relatedGpus, relatedComparisons };
   },
@@ -35,12 +45,10 @@ async function getComparison(
   slug: string,
   ctx: Context,
 ): Promise<GpuComparison> {
-  const comparison = gpuService.getComparison(
+  return await gpuService.getComparison(
     { slug, includeImages: true, includeRanks: true },
     ctx,
   );
-
-  return serialize(comparison);
 }
 
 async function getContentData(comparison: GpuComparison, ctx: Context) {
@@ -115,22 +123,18 @@ function getSurroundingGpus2(gpus: Gpu[], seed: GpuComparison, total: number) {
 }
 
 async function getPerformanceGpus(seed: GpuComparison, ctx: Context) {
-  const results = await serialize(
-    gpuService.list(
-      {
-        query: {
-          filter: { performanceRated: true },
-          orderBy: { sort: GpuSort.PerformanceRating },
-        },
-        includeRanks: true,
+  const results = await gpuService.list(
+    {
+      query: {
+        filter: { performanceRated: true },
+        orderBy: { sort: GpuSort.PerformanceRating },
       },
-      ctx,
-    ),
+      includeRanks: true,
+    },
+    ctx,
   );
 
-  return serialize(
-    await getSurroundingGpus2(results, seed, TOTAL_COMPARED_GPUS),
-  );
+  return await getSurroundingGpus2(results, seed, TOTAL_COMPARED_GPUS);
 }
 
 async function getValueGpus(seed: GpuComparison, ctx: Context) {
@@ -148,14 +152,67 @@ async function getValueGpus(seed: GpuComparison, ctx: Context) {
   return await getSurroundingGpus2(results, seed, TOTAL_COMPARED_GPUS);
 }
 
-// TODO: determine this based on gpus fetched for content tables
-async function getRelatedGpus() {
-  return { gpus: [] } as RelatedGpus;
+async function getRelatedGpus(
+  total: number,
+  performanceGpus: Gpu[],
+  valueGpus: Gpu[],
+  excludeGpus: Gpu[],
+) {
+  const map = [...performanceGpus, ...valueGpus].reduce((acc, gpu) => {
+    acc[gpu.id] = gpu;
+    return acc;
+  }, {} as Record<number, Gpu>);
+
+  const performanceIds = performanceGpus.map((gpu) => gpu.id);
+  const valueIds = valueGpus.map((gpu) => gpu.id);
+
+  const set = new Set([...performanceIds, ...valueIds]);
+  excludeGpus.forEach((gpu) => set.delete(gpu.id));
+
+  const related: Gpu[] = [];
+  for (let i = 0; i < total && set.size > 0; ++i) {
+    const randIdx = Math.floor(Math.random() * set.size);
+    const id = [...set.values()][randIdx];
+    set.delete(id);
+
+    related.push(map[id]);
+  }
+
+  return { gpus: related } as RelatedGpus;
 }
 
-// TODO: determine this based on gpus fetched for content tables
-async function getRelatedComparisons() {
-  return { comparisons: [] } as RelatedComparisons;
+async function getRelatedComparisons(
+  total: number,
+  performanceGpus: Gpu[],
+  valueGpus: Gpu[],
+  pageComparison: GpuComparison,
+) {
+  const map = [...performanceGpus, ...valueGpus].reduce((acc, gpu) => {
+    acc[gpu.id] = gpu;
+    return acc;
+  }, {} as Record<number, Gpu>);
+
+  const performanceIds = performanceGpus.map((gpu) => gpu.id);
+  const valueIds = valueGpus.map((gpu) => gpu.id);
+
+  const set = new Set([...performanceIds, ...valueIds]);
+  pageComparison.forEach((gpu) => set.delete(gpu.id));
+
+  const related: Gpu[] = [];
+  for (let i = 0; i < total && set.size > 0; ++i) {
+    const randIdx = Math.floor(Math.random() * set.size);
+    const id = [...set.values()][randIdx];
+    set.delete(id);
+
+    related.push(map[id]);
+  }
+
+  const comparisons = related.map((relatedGpu, i) => [
+    pageComparison[i % 2],
+    relatedGpu,
+  ]);
+
+  return { comparisons } as RelatedComparisons;
 }
 
 export default CompareGpuPage;

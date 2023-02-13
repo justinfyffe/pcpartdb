@@ -5,7 +5,6 @@ import {
 import { Context } from '@server/shared/context';
 import { SsrContext } from '@server/shared/ssr/context';
 import { staffSsrPageProps } from '@server/shared/ssr/props';
-import { serialize } from '@server/shared/types/serialize';
 import { userService } from '@server/user/user-service';
 
 export const getServerSideProps = staffSsrPageProps(async (ctx: SsrContext) => {
@@ -15,8 +14,7 @@ export const getServerSideProps = staffSsrPageProps(async (ctx: SsrContext) => {
 });
 
 async function getUsers(ctx: Context) {
-  const users = await userService.list(ctx);
-  return serialize(users);
+  return await userService.list(ctx);
 }
 
 export default AdminListUsersPage;

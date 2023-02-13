@@ -9,7 +9,6 @@ import { gpusQueryValidator } from '@server/gpus/gpu-validators';
 import { Context } from '@server/shared/context';
 import { SsrContext } from '@server/shared/ssr/context';
 import { ssrPageProps } from '@server/shared/ssr/props';
-import { serialize } from '@server/shared/types/serialize';
 import { validate } from '@server/shared/types/validate';
 import { GpusQuery } from '@shared/gpus';
 import { ParsedUrlQuery } from 'querystring';
@@ -49,12 +48,10 @@ async function getGpusForQuery(query: GpusQuery, ctx: Context) {
 }
 
 async function getGpus(query: GpusQuery, ctx: Context) {
-  const gpus = await gpuService.list(
+  return await gpuService.list(
     { query, includeRanks: true, includeImages: false },
     ctx,
   );
-
-  return serialize(gpus);
 }
 
 async function getTotalGpus(ctx: Context) {

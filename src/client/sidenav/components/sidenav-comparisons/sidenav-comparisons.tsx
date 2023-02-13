@@ -15,6 +15,10 @@ export const SidenavComparisons: FunctionComponent<SidenavComparisonsProps> = (
 ) => {
   const comparisons = props.comparisons || [];
 
+  if (comparisons.length === 0) {
+    return <></>;
+  }
+
   return (
     <SidenavSection
       className={classNames('flex flex-col gap-3', props.className)}

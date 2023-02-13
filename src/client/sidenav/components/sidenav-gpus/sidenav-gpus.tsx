@@ -13,6 +13,10 @@ interface SidenavGpusProps {
 export const SidenavGpus: FunctionComponent<SidenavGpusProps> = (props) => {
   const gpus = props.gpus || [];
 
+  if (gpus.length === 0) {
+    return <></>;
+  }
+
   return (
     <SidenavSection
       className={classNames('flex flex-col gap-3', props.className)}

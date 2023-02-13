@@ -2,7 +2,6 @@ import { AdminEditUserPage, AdminEditUserPageProps } from '@client/admin/pages';
 import { Context } from '@server/shared/context';
 import { SsrContext } from '@server/shared/ssr/context';
 import { staffSsrPageProps } from '@server/shared/ssr/props';
-import { serialize } from '@server/shared/types/serialize';
 import { userService } from '@server/user/user-service';
 
 export const getServerSideProps = staffSsrPageProps(async (ctx: SsrContext) => {
@@ -15,8 +14,7 @@ export const getServerSideProps = staffSsrPageProps(async (ctx: SsrContext) => {
 });
 
 async function getUser(id: number, ctx: Context) {
-  const user = await userService.get(id, ctx);
-  return serialize(user);
+  return await userService.get(id, ctx);
 }
 
 export default AdminEditUserPage;

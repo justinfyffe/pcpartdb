@@ -1,6 +1,5 @@
 Immediate Tasks:
   - Data refactor
-    - remove related gpus
     - fix relative performance and value gpus
     - fix home page gpus and comparisons list
     - move company, launch price, market segment, release date to gpus table?
