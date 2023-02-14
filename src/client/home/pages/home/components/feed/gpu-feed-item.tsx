@@ -43,6 +43,10 @@ export const GpuFeedItem: FunctionComponent<GpuFeedItemProps> = (props) => {
     return ret.filter((image) => image != null);
   }, [gpu]);
 
+  const isCompanyImage = useMemo(() => {
+    return images.map((image) => image === getCompanyLogoImagePath(gpu));
+  }, [gpu, images]);
+
   return (
     <a
       href={getViewGpuPath(getViewGpuSlug(gpu))}
@@ -74,6 +78,7 @@ export const GpuFeedItem: FunctionComponent<GpuFeedItemProps> = (props) => {
                 'flex-1',
                 'h-40',
                 'object-contain overflow-hidden',
+                isCompanyImage[i] ? 'p-4' : '',
                 props.className,
               )}
             />
@@ -147,12 +152,11 @@ const Subtitle: FunctionComponent<SubtitleProps> = (props) => {
 
   const text = useMemo(() => {
     const name = getGpuName(gpu, { company: false });
-    const company = formatGpuSpec(gpu.specs?.company);
 
     if (tag === GpuFeedTag.GreatPerformance) {
-      return `The ${name} is the most powerful ${company} GPU.`;
+      return `The ${name} is a powerful card, but is it worth the money?`;
     } else if (tag === GpuFeedTag.GreatValue) {
-      return `The ${name} has the best value among ${company} GPUs.`;
+      return `The ${name} is known for good value, but how well does it perform?`;
     } else {
       return `Learn more about the ${name}.`;
     }

@@ -1,10 +1,10 @@
 Immediate Tasks:
   - Data refactor
-    - fix relative performance and value gpus
-    - fix home page gpus and comparisons list
+    - home page - update comparison texts based on tag
     - move company, launch price, market segment, release date to gpus table?
-  - Scrapers and proxies
+      - These are values we will commonly need outside of specs
   - Test everything
+  - Add Content manually, scrapers can come later
   
 
 Post-launch:

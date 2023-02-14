@@ -7,8 +7,14 @@ import { PhotoIcon } from '@heroicons/react/24/outline';
 import { Gpu, GpuComparison } from '@shared/gpus';
 import React, { FunctionComponent, useMemo } from 'react';
 
+export enum ComparisonFeedTag {
+  ComparePerformance = 'COMPARE_PERFORMANCE',
+  CompareValue = 'COMPARE_VALUE',
+}
+
 interface ComparisonFeedItemProps {
   gpus: GpuComparison;
+  tag?: ComparisonFeedTag;
 
   as?: React.ElementType;
   className?: string;
@@ -35,6 +41,13 @@ export const ComparisonFeedItem: FunctionComponent<ComparisonFeedItemProps> = (
     ];
   }, [gpu1, gpu2]);
 
+  const [isCompanyImage1, isCompanyImage2] = useMemo(() => {
+    return [
+      image1 === getCompanyLogoImagePath(gpu1),
+      image2 === getCompanyLogoImagePath(gpu2),
+    ];
+  }, [gpu1, image1, gpu2, image2]);
+
   return (
     <a
       href={getCompareGpusPath(getCompareGpusSlug(gpus))}
@@ -50,6 +63,7 @@ export const ComparisonFeedItem: FunctionComponent<ComparisonFeedItemProps> = (
               src={image1}
               className={classNames(
                 'flex-1 h-40 object-contain overflow-hidden',
+                isCompanyImage1 ? 'p-8' : '',
                 props.className,
               )}
             />
@@ -70,6 +84,7 @@ export const ComparisonFeedItem: FunctionComponent<ComparisonFeedItemProps> = (
               src={image2}
               className={classNames(
                 'flex-1 h-40 object-contain overflow-hidden',
+                isCompanyImage2 ? 'p-8' : '',
                 props.className,
               )}
             />

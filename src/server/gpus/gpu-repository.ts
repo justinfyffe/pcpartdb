@@ -30,7 +30,7 @@ export class GpuRepository {
     const db = config?.trx ?? prisma;
 
     const includeImages = options?.includeImages ?? false;
-    const { filter, orderBy } = options.query ?? {};
+    const { filter, orderBy, limit, offset } = options.query ?? {};
 
     return await db.gpu.findMany({
       where: this.generateWhere(filter),
@@ -40,6 +40,8 @@ export class GpuRepository {
         benchmarks: true,
         images: includeImages ? { include: { image: true } } : false,
       },
+      skip: offset,
+      take: limit,
     });
   }
 
