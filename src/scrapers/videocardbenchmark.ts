@@ -1,8 +1,4 @@
-import {
-  GpuBenchmark,
-  GpuBenchmarks,
-  ImportGpuDataResponse,
-} from '@shared/gpus';
+import { GpuBenchmarks, GpuField, ImportGpuDataResponse } from '@shared/gpus';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 
@@ -20,12 +16,12 @@ export async function importFromVideoCardBenchmark(url: string) {
   return { gpu: { benchmarks } } as ImportGpuDataResponse;
 }
 
-function getG3dMark($: cheerio.CheerioAPI): GpuBenchmark<number> {
+function getG3dMark($: cheerio.CheerioAPI): GpuField<number> {
   const g3dMark = $('.speedicon').siblings('span').first().text();
-  return { value: Number(g3dMark), meta: { benchmarkKey: 'g3dMark' } };
+  return { value: Number(g3dMark), meta: { fieldKey: 'g3dMark' } };
 }
 
-function getG2dMark($: cheerio.CheerioAPI): GpuBenchmark<number> {
+function getG2dMark($: cheerio.CheerioAPI): GpuField<number> {
   const g2dMark = $('strong')
     .filter((_i, el) => $(el).text().trim() === 'Average G2D Mark:')
     .parent()
@@ -35,5 +31,5 @@ function getG2dMark($: cheerio.CheerioAPI): GpuBenchmark<number> {
     .text()
     .trim();
 
-  return { value: Number(g2dMark), meta: { benchmarkKey: 'g2dMark' } };
+  return { value: Number(g2dMark), meta: { fieldKey: 'g2dMark' } };
 }

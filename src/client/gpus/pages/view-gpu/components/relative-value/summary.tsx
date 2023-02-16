@@ -1,4 +1,4 @@
-import { formatGpuSpec, getGpuName } from '@client/gpus';
+import { formatGpuField, getGpuName } from '@client/gpus';
 import {
   compileContent,
   ContentContext,
@@ -34,9 +34,9 @@ export const ValueSummary = () => {
 
   const params: ContentParams = {
     gpuName: getGpuName(gpu),
-    company: formatGpuSpec(gpu.specs?.company),
-    architecture: formatGpuSpec(gpu.specs?.architecture),
-    launchYear: formatGpuSpec(gpu.specs?.releaseDate, {
+    company: formatGpuField(gpu.company),
+    architecture: formatGpuField(gpu.specs?.architecture),
+    launchYear: formatGpuField(gpu.releaseDate, {
       dateFormatter: DateFormatter.Year,
     }),
   };

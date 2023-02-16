@@ -1,12 +1,12 @@
 import { TextInput } from '@client/shared/components';
-import { GpuSpec, GpuSpecKey } from '@shared/gpus';
+import { GpuField } from '@shared/gpus';
 import React, { forwardRef, useCallback } from 'react';
 
 interface GpuSpecStringFieldProps {
-  field: GpuSpecKey;
+  field: string;
 
-  value?: GpuSpec<string>;
-  onChange?: (value: GpuSpec<string>) => void;
+  value?: GpuField<string>;
+  onChange?: (value: GpuField<string>) => void;
 }
 
 export const GpuSpecStringField = forwardRef<
@@ -19,7 +19,7 @@ export const GpuSpecStringField = forwardRef<
 
   const handleChange = useCallback(
     (value: string) => {
-      onChange?.(value != null ? { value, meta: { specKey: field } } : null);
+      onChange?.(value != null ? { value, meta: { fieldKey: field } } : null);
     },
     [field, onChange],
   );

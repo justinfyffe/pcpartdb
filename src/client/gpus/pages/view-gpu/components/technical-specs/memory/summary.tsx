@@ -1,4 +1,4 @@
-import { formatGpuSpec } from '@client/gpus';
+import { formatGpuField } from '@client/gpus';
 import {
   compileContent,
   ContentContext,
@@ -28,10 +28,10 @@ export const MemorySummary = () => {
   const { gpu } = useContext(ViewPageContext);
 
   const params: ContentParams = {
-    architecture: formatGpuSpec(gpu.specs?.architecture),
-    memoryClock: formatGpuSpec(gpu.specs?.memoryClock),
-    memoryBandwidth: formatGpuSpec(gpu.specs?.memoryBandwidth),
-    memoryInterface: formatGpuSpec(gpu.specs?.memoryInterface),
+    architecture: formatGpuField(gpu.specs?.architecture),
+    memoryClock: formatGpuField(gpu.specs?.memoryClock),
+    memoryBandwidth: formatGpuField(gpu.specs?.memoryBandwidth),
+    memoryInterface: formatGpuField(gpu.specs?.memoryInterface),
   };
 
   return (

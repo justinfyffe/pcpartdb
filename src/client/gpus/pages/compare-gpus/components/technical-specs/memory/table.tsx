@@ -2,7 +2,7 @@ import { getGpuName } from '@client/gpus';
 import { Table, TBody, Th, THead, Tr } from '@client/shared/components';
 import React, { FunctionComponent, useContext } from 'react';
 import { ComparePageContext } from '../../../context';
-import { SpecRow } from '../../spec-row';
+import { FieldRow } from '../../field-row';
 
 interface MemoryTableProps {
   className?: string;
@@ -24,11 +24,11 @@ export const MemoryTable: FunctionComponent<MemoryTableProps> = (props) => {
         </Tr>
       </THead>
       <TBody>
-        <SpecRow spec="memorySize" />
-        <SpecRow spec="memoryType" />
-        <SpecRow spec="memoryBandwidth" />
-        <SpecRow spec="memoryClock" />
-        <SpecRow spec="memoryInterface" />
+        <FieldRow field="memorySize" />
+        <FieldRow field="memoryType" />
+        <FieldRow field="memoryBandwidth" />
+        <FieldRow field="memoryClock" />
+        <FieldRow field="memoryInterface" />
       </TBody>
     </Table>
   );

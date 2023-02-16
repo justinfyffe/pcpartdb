@@ -1,4 +1,4 @@
-import { formatGpuSpec } from '@client/gpus';
+import { formatGpuField } from '@client/gpus';
 import {
   compileContent,
   ContentContext,
@@ -33,14 +33,14 @@ export const CoresSummary = () => {
   const { gpu } = useContext(ViewPageContext);
 
   const params: ContentParams = {
-    cores: formatGpuSpec(gpu.specs?.shaderUnitsCudaCores),
-    coreClockSpeedBase: formatGpuSpec(gpu.specs?.coreClockSpeedBase),
-    fp32Performance: formatGpuSpec(gpu.specs?.fp32Performance),
-    fp64Performance: formatGpuSpec(gpu.specs?.fp64Performance),
-    rops: formatGpuSpec(gpu.specs?.renderOutputUnits),
-    pixelFillRate: formatGpuSpec(gpu.specs?.pixelFillRate),
-    tmus: formatGpuSpec(gpu.specs?.textureMappingUnits),
-    textureFillRate: formatGpuSpec(gpu.specs?.textureFillRate),
+    cores: formatGpuField(gpu.specs?.shaderUnitsCudaCores),
+    coreClockSpeedBase: formatGpuField(gpu.specs?.coreClockSpeedBase),
+    fp32Performance: formatGpuField(gpu.specs?.fp32Performance),
+    fp64Performance: formatGpuField(gpu.specs?.fp64Performance),
+    rops: formatGpuField(gpu.specs?.renderOutputUnits),
+    pixelFillRate: formatGpuField(gpu.specs?.pixelFillRate),
+    tmus: formatGpuField(gpu.specs?.textureMappingUnits),
+    textureFillRate: formatGpuField(gpu.specs?.textureFillRate),
   };
 
   return (

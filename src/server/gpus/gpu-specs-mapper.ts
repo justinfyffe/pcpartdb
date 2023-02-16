@@ -1,6 +1,7 @@
 import { Prisma } from '@prisma/client';
-import { GpuSpec, GpuSpecMeta, GpuSpecs } from '@shared/gpus';
+import { GpuSpecs } from '@shared/gpus';
 import { GpuSpecsEntity } from './gpu-entity';
+import { mapToGpuFieldDto, mapToGpuFieldEntity } from './gpu-field-mapper';
 
 export function mapToGpuSpecsDto(entity: GpuSpecsEntity): GpuSpecs {
   if (entity == null) {
@@ -10,68 +11,47 @@ export function mapToGpuSpecsDto(entity: GpuSpecsEntity): GpuSpecs {
   return {
     gpuId: entity.gpuId,
 
-    company: mapToGpuSpecDto(entity, 'company'),
-    marketSegment: mapToGpuSpecDto(entity, 'marketSegment'),
-    launchPrice: mapToGpuSpecDto(entity, 'launchPrice'),
-    releaseDate: mapToGpuSpecDto(entity, 'releaseDate'),
+    codename: mapToGpuFieldDto(entity, 'codename'),
+    architecture: mapToGpuFieldDto(entity, 'architecture'),
+    processSize: mapToGpuFieldDto(entity, 'processSize'),
+    transistors: mapToGpuFieldDto(entity, 'transistors'),
 
-    codename: mapToGpuSpecDto(entity, 'codename'),
-    architecture: mapToGpuSpecDto(entity, 'architecture'),
-    processSize: mapToGpuSpecDto(entity, 'processSize'),
-    transistors: mapToGpuSpecDto(entity, 'transistors'),
+    memorySize: mapToGpuFieldDto(entity, 'memorySize'),
+    memoryType: mapToGpuFieldDto(entity, 'memoryType'),
+    memoryClock: mapToGpuFieldDto(entity, 'memoryClock'),
+    memoryInterface: mapToGpuFieldDto(entity, 'memoryInterface'),
+    memoryBandwidth: mapToGpuFieldDto(entity, 'memoryBandwidth'),
 
-    memorySize: mapToGpuSpecDto(entity, 'memorySize'),
-    memoryType: mapToGpuSpecDto(entity, 'memoryType'),
-    memoryClock: mapToGpuSpecDto(entity, 'memoryClock'),
-    memoryInterface: mapToGpuSpecDto(entity, 'memoryInterface'),
-    memoryBandwidth: mapToGpuSpecDto(entity, 'memoryBandwidth'),
+    slotWidth: mapToGpuFieldDto(entity, 'slotWidth'),
+    length: mapToGpuFieldDto(entity, 'length'),
+    width: mapToGpuFieldDto(entity, 'width'),
+    height: mapToGpuFieldDto(entity, 'height'),
+    weight: mapToGpuFieldDto(entity, 'weight'),
+    thermalDesignPower: mapToGpuFieldDto(entity, 'thermalDesignPower'),
+    suggestedPsu: mapToGpuFieldDto(entity, 'suggestedPsu'),
+    busInterface: mapToGpuFieldDto(entity, 'busInterface'),
+    powerConnectors: mapToGpuFieldDto(entity, 'powerConnectors'),
+    outputs: mapToGpuFieldDto(entity, 'outputs'),
 
-    slotWidth: mapToGpuSpecDto(entity, 'slotWidth'),
-    length: mapToGpuSpecDto(entity, 'length'),
-    width: mapToGpuSpecDto(entity, 'width'),
-    height: mapToGpuSpecDto(entity, 'height'),
-    weight: mapToGpuSpecDto(entity, 'weight'),
-    thermalDesignPower: mapToGpuSpecDto(entity, 'thermalDesignPower'),
-    suggestedPsu: mapToGpuSpecDto(entity, 'suggestedPsu'),
-    busInterface: mapToGpuSpecDto(entity, 'busInterface'),
-    powerConnectors: mapToGpuSpecDto(entity, 'powerConnectors'),
-    outputs: mapToGpuSpecDto(entity, 'outputs'),
+    shaderUnitsCudaCores: mapToGpuFieldDto(entity, 'shaderUnitsCudaCores'),
+    textureMappingUnits: mapToGpuFieldDto(entity, 'textureMappingUnits'),
+    renderOutputUnits: mapToGpuFieldDto(entity, 'renderOutputUnits'),
+    tensorCores: mapToGpuFieldDto(entity, 'tensorCores'),
+    rayTracingCores: mapToGpuFieldDto(entity, 'rayTracingCores'),
+    coreClockSpeedBase: mapToGpuFieldDto(entity, 'coreClockSpeedBase'),
+    coreClockSpeedBoost: mapToGpuFieldDto(entity, 'coreClockSpeedBoost'),
+    l1Cache: mapToGpuFieldDto(entity, 'l1Cache'),
+    l2Cache: mapToGpuFieldDto(entity, 'l2Cache'),
 
-    shaderUnitsCudaCores: mapToGpuSpecDto(entity, 'shaderUnitsCudaCores'),
-    textureMappingUnits: mapToGpuSpecDto(entity, 'textureMappingUnits'),
-    renderOutputUnits: mapToGpuSpecDto(entity, 'renderOutputUnits'),
-    tensorCores: mapToGpuSpecDto(entity, 'tensorCores'),
-    rayTracingCores: mapToGpuSpecDto(entity, 'rayTracingCores'),
-    coreClockSpeedBase: mapToGpuSpecDto(entity, 'coreClockSpeedBase'),
-    coreClockSpeedBoost: mapToGpuSpecDto(entity, 'coreClockSpeedBoost'),
-    l1Cache: mapToGpuSpecDto(entity, 'l1Cache'),
-    l2Cache: mapToGpuSpecDto(entity, 'l2Cache'),
+    pixelFillRate: mapToGpuFieldDto(entity, 'pixelFillRate'),
+    textureFillRate: mapToGpuFieldDto(entity, 'textureFillRate'),
+    fp32Performance: mapToGpuFieldDto(entity, 'fp32Performance'),
+    fp64Performance: mapToGpuFieldDto(entity, 'fp64Performance'),
 
-    pixelFillRate: mapToGpuSpecDto(entity, 'pixelFillRate'),
-    textureFillRate: mapToGpuSpecDto(entity, 'textureFillRate'),
-    fp32Performance: mapToGpuSpecDto(entity, 'fp32Performance'),
-    fp64Performance: mapToGpuSpecDto(entity, 'fp64Performance'),
-
-    directxVersion: mapToGpuSpecDto(entity, 'directxVersion'),
-    openClVersion: mapToGpuSpecDto(entity, 'openClVersion'),
-    openGlVersion: mapToGpuSpecDto(entity, 'openGlVersion'),
-    shaderModelVersion: mapToGpuSpecDto(entity, 'shaderModelVersion'),
-  };
-}
-
-function mapToGpuSpecDto<T>(
-  entity: GpuSpecsEntity,
-  key: keyof GpuSpecsEntity,
-): GpuSpec<T> {
-  if (entity[key] == null) {
-    return null;
-  }
-
-  const metadata = entity.metadata as Prisma.JsonObject;
-
-  return {
-    value: entity[key] as T,
-    meta: metadata?.[key] as Prisma.JsonObject,
+    directxVersion: mapToGpuFieldDto(entity, 'directxVersion'),
+    openClVersion: mapToGpuFieldDto(entity, 'openClVersion'),
+    openGlVersion: mapToGpuFieldDto(entity, 'openGlVersion'),
+    shaderModelVersion: mapToGpuFieldDto(entity, 'shaderModelVersion'),
   };
 }
 
@@ -82,73 +62,72 @@ export function mapToGpuSpecsEntity(specs: GpuSpecs): GpuSpecsEntity {
 
   const metadata = {};
 
-  const mappedSpecs = {
-    company: mapToGpuSpecEntity(specs, 'company', metadata),
-    marketSegment: mapToGpuSpecEntity(specs, 'marketSegment', metadata),
-    launchPrice: mapToGpuSpecEntity(specs, 'launchPrice', metadata),
-    releaseDate: mapToGpuSpecEntity(specs, 'releaseDate', metadata),
+  const mappedSpecs: Partial<GpuSpecsEntity> = {
+    codename: mapToGpuFieldEntity(specs, 'codename', metadata),
+    architecture: mapToGpuFieldEntity(specs, 'architecture', metadata),
+    processSize: mapToGpuFieldEntity(specs, 'processSize', metadata),
+    transistors: mapToGpuFieldEntity(specs, 'transistors', metadata),
 
-    codename: mapToGpuSpecEntity(specs, 'codename', metadata),
-    architecture: mapToGpuSpecEntity(specs, 'architecture', metadata),
-    processSize: mapToGpuSpecEntity(specs, 'processSize', metadata),
-    transistors: mapToGpuSpecEntity(specs, 'transistors', metadata),
+    memorySize: mapToGpuFieldEntity(specs, 'memorySize', metadata),
+    memoryType: mapToGpuFieldEntity(specs, 'memoryType', metadata),
+    memoryClock: mapToGpuFieldEntity(specs, 'memoryClock', metadata),
+    memoryInterface: mapToGpuFieldEntity(specs, 'memoryInterface', metadata),
+    memoryBandwidth: mapToGpuFieldEntity(specs, 'memoryBandwidth', metadata),
 
-    memorySize: mapToGpuSpecEntity(specs, 'memorySize', metadata),
-    memoryType: mapToGpuSpecEntity(specs, 'memoryType', metadata),
-    memoryClock: mapToGpuSpecEntity(specs, 'memoryClock', metadata),
-    memoryInterface: mapToGpuSpecEntity(specs, 'memoryInterface', metadata),
-    memoryBandwidth: mapToGpuSpecEntity(specs, 'memoryBandwidth', metadata),
-
-    slotWidth: mapToGpuSpecEntity(specs, 'slotWidth', metadata),
-    length: mapToGpuSpecEntity(specs, 'length', metadata),
-    width: mapToGpuSpecEntity(specs, 'width', metadata),
-    height: mapToGpuSpecEntity(specs, 'height', metadata),
-    weight: mapToGpuSpecEntity(specs, 'weight', metadata),
-    thermalDesignPower: mapToGpuSpecEntity(
+    slotWidth: mapToGpuFieldEntity(specs, 'slotWidth', metadata),
+    length: mapToGpuFieldEntity(specs, 'length', metadata),
+    width: mapToGpuFieldEntity(specs, 'width', metadata),
+    height: mapToGpuFieldEntity(specs, 'height', metadata),
+    weight: mapToGpuFieldEntity(specs, 'weight', metadata),
+    thermalDesignPower: mapToGpuFieldEntity(
       specs,
       'thermalDesignPower',
       metadata,
     ),
-    suggestedPsu: mapToGpuSpecEntity(specs, 'suggestedPsu', metadata),
-    busInterface: mapToGpuSpecEntity(specs, 'busInterface', metadata),
-    powerConnectors: mapToGpuSpecEntity(specs, 'powerConnectors', metadata),
-    outputs: mapToGpuSpecEntity(specs, 'outputs', metadata),
+    suggestedPsu: mapToGpuFieldEntity(specs, 'suggestedPsu', metadata),
+    busInterface: mapToGpuFieldEntity(specs, 'busInterface', metadata),
+    powerConnectors: mapToGpuFieldEntity(specs, 'powerConnectors', metadata),
+    outputs: mapToGpuFieldEntity(specs, 'outputs', metadata),
 
-    shaderUnitsCudaCores: mapToGpuSpecEntity(
+    shaderUnitsCudaCores: mapToGpuFieldEntity(
       specs,
       'shaderUnitsCudaCores',
       metadata,
     ),
-    textureMappingUnits: mapToGpuSpecEntity(
+    textureMappingUnits: mapToGpuFieldEntity(
       specs,
       'textureMappingUnits',
       metadata,
     ),
-    renderOutputUnits: mapToGpuSpecEntity(specs, 'renderOutputUnits', metadata),
-    tensorCores: mapToGpuSpecEntity(specs, 'tensorCores', metadata),
-    rayTracingCores: mapToGpuSpecEntity(specs, 'rayTracingCores', metadata),
-    coreClockSpeedBase: mapToGpuSpecEntity(
+    renderOutputUnits: mapToGpuFieldEntity(
+      specs,
+      'renderOutputUnits',
+      metadata,
+    ),
+    tensorCores: mapToGpuFieldEntity(specs, 'tensorCores', metadata),
+    rayTracingCores: mapToGpuFieldEntity(specs, 'rayTracingCores', metadata),
+    coreClockSpeedBase: mapToGpuFieldEntity(
       specs,
       'coreClockSpeedBase',
       metadata,
     ),
-    coreClockSpeedBoost: mapToGpuSpecEntity(
+    coreClockSpeedBoost: mapToGpuFieldEntity(
       specs,
       'coreClockSpeedBoost',
       metadata,
     ),
-    l1Cache: mapToGpuSpecEntity(specs, 'l1Cache', metadata),
-    l2Cache: mapToGpuSpecEntity(specs, 'l2Cache', metadata),
+    l1Cache: mapToGpuFieldEntity(specs, 'l1Cache', metadata),
+    l2Cache: mapToGpuFieldEntity(specs, 'l2Cache', metadata),
 
-    pixelFillRate: mapToGpuSpecEntity(specs, 'pixelFillRate', metadata),
-    textureFillRate: mapToGpuSpecEntity(specs, 'textureFillRate', metadata),
-    fp32Performance: mapToGpuSpecEntity(specs, 'fp32Performance', metadata),
-    fp64Performance: mapToGpuSpecEntity(specs, 'fp64Performance', metadata),
+    pixelFillRate: mapToGpuFieldEntity(specs, 'pixelFillRate', metadata),
+    textureFillRate: mapToGpuFieldEntity(specs, 'textureFillRate', metadata),
+    fp32Performance: mapToGpuFieldEntity(specs, 'fp32Performance', metadata),
+    fp64Performance: mapToGpuFieldEntity(specs, 'fp64Performance', metadata),
 
-    directxVersion: mapToGpuSpecEntity(specs, 'directxVersion', metadata),
-    openClVersion: mapToGpuSpecEntity(specs, 'openClVersion', metadata),
-    openGlVersion: mapToGpuSpecEntity(specs, 'openGlVersion', metadata),
-    shaderModelVersion: mapToGpuSpecEntity(
+    directxVersion: mapToGpuFieldEntity(specs, 'directxVersion', metadata),
+    openClVersion: mapToGpuFieldEntity(specs, 'openClVersion', metadata),
+    openGlVersion: mapToGpuFieldEntity(specs, 'openGlVersion', metadata),
+    shaderModelVersion: mapToGpuFieldEntity(
       specs,
       'shaderModelVersion',
       metadata,
@@ -159,19 +138,5 @@ export function mapToGpuSpecsEntity(specs: GpuSpecs): GpuSpecsEntity {
     ...mappedSpecs,
     gpuId: undefined,
     metadata: metadata as Prisma.JsonObject,
-  };
-}
-
-function mapToGpuSpecEntity(
-  specs: Partial<GpuSpecs>,
-  key: keyof GpuSpecs,
-  metadata: { [col: string]: GpuSpecMeta },
-) {
-  const spec = specs?.[key];
-  if (typeof spec === 'number') {
-    throw new Error(`Cannot map gpu spec to entity, key=${key}`);
-  }
-
-  metadata[key] = spec?.meta ?? null;
-  return spec?.value ?? null;
+  } as GpuSpecsEntity;
 }

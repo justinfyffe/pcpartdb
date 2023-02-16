@@ -1,4 +1,4 @@
-import { formatGpuSpec, getGpuName } from '@client/gpus';
+import { formatGpuField, getGpuName } from '@client/gpus';
 import { getCompanyLogoImagePath } from '@client/image';
 import { AutocompleteOption, Img } from '@client/shared/components';
 import { DateFormatter } from '@client/shared/format';
@@ -19,10 +19,10 @@ export const GpuAutocompleteOption: FunctionComponent<
   const name = getGpuName(gpu, { company: false });
   const image = getCompanyLogoImagePath(gpu);
 
-  const releaseDate = formatGpuSpec(gpu.specs?.releaseDate, {
+  const releaseDate = formatGpuField(gpu.releaseDate, {
     dateFormatter: DateFormatter.Year,
   });
-  const price = formatGpuSpec(gpu.specs?.launchPrice);
+  const price = formatGpuField(gpu.launchPrice);
 
   return (
     <AutocompleteOption index={index} label={name} value={`${id}`}>

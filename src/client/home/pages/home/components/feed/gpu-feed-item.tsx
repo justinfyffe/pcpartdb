@@ -1,4 +1,4 @@
-import { formatGpuSpec, getGpuName, getViewGpuSlug } from '@client/gpus';
+import { formatGpuField, getGpuName, getViewGpuSlug } from '@client/gpus';
 import { getCompanyLogoImagePath } from '@client/image';
 import { Card, Img } from '@client/shared/components';
 import { classNames } from '@client/shared/ui';
@@ -23,7 +23,7 @@ interface GpuFeedItemProps {
 export const GpuFeedItem: FunctionComponent<GpuFeedItemProps> = (props) => {
   const { gpu, tag } = props;
 
-  const price = useMemo(() => formatGpuSpec(gpu.specs?.launchPrice), [gpu]);
+  const price = useMemo(() => formatGpuField(gpu.launchPrice), [gpu]);
 
   const label = useMemo(() => {
     if (tag === GpuFeedTag.GreatPerformance) {

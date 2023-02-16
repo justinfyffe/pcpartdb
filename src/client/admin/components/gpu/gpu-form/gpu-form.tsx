@@ -20,14 +20,12 @@ import { ApiError, ValidationErrorType } from '@shared/error';
 import {
   CreateGpuRequest,
   Gpu,
-  GpuBenchmark,
   GpuBenchmarks,
-  gpuBenchmarkValidator,
+  GpuField,
+  gpuFieldValidator,
   GpuImages,
   gpuImageValidator,
-  GpuSpec,
   GpuSpecs,
-  gpuSpecValidator,
   MarketSegmentValue,
   UpdateGpuRequest,
 } from '@shared/gpus';
@@ -54,63 +52,63 @@ interface GpuFormData {
   name: string;
 
   // General
-  company?: GpuSpec<string>;
-  marketSegment?: GpuSpec<MarketSegmentValue>;
-  launchPrice?: GpuSpec<number>;
-  releaseDate?: GpuSpec<string>;
+  company?: GpuField<string>;
+  marketSegment?: GpuField<MarketSegmentValue>;
+  launchPrice?: GpuField<number>;
+  releaseDate?: GpuField<string>;
 
   // Processor
-  codename?: GpuSpec<string>;
-  architecture?: GpuSpec<string>;
-  processSize?: GpuSpec<number>;
-  transistors?: GpuSpec<number>;
+  codename?: GpuField<string>;
+  architecture?: GpuField<string>;
+  processSize?: GpuField<number>;
+  transistors?: GpuField<number>;
 
   // Board Compatibility & Dimensions
-  slotWidth?: GpuSpec<number>;
-  length?: GpuSpec<number>;
-  width?: GpuSpec<number>;
-  height?: GpuSpec<number>;
-  weight?: GpuSpec<number>;
-  busInterface?: GpuSpec<string>;
-  thermalDesignPower?: GpuSpec<number>;
-  suggestedPsu?: GpuSpec<number>;
-  powerConnectors?: GpuSpec<string>;
-  outputs?: GpuSpec<string>;
+  slotWidth?: GpuField<number>;
+  length?: GpuField<number>;
+  width?: GpuField<number>;
+  height?: GpuField<number>;
+  weight?: GpuField<number>;
+  busInterface?: GpuField<string>;
+  thermalDesignPower?: GpuField<number>;
+  suggestedPsu?: GpuField<number>;
+  powerConnectors?: GpuField<string>;
+  outputs?: GpuField<string>;
 
   // Cores & Clock Speeds
-  shaderUnitsCudaCores?: GpuSpec<number>;
-  textureMappingUnits?: GpuSpec<number>;
-  renderOutputUnits?: GpuSpec<number>;
-  tensorCores?: GpuSpec<number>;
-  rayTracingCores?: GpuSpec<number>;
-  coreClockSpeedBase?: GpuSpec<number>;
-  coreClockSpeedBoost?: GpuSpec<number>;
-  l1Cache?: GpuSpec<number>;
-  l2Cache?: GpuSpec<number>;
+  shaderUnitsCudaCores?: GpuField<number>;
+  textureMappingUnits?: GpuField<number>;
+  renderOutputUnits?: GpuField<number>;
+  tensorCores?: GpuField<number>;
+  rayTracingCores?: GpuField<number>;
+  coreClockSpeedBase?: GpuField<number>;
+  coreClockSpeedBoost?: GpuField<number>;
+  l1Cache?: GpuField<number>;
+  l2Cache?: GpuField<number>;
 
   // Theoretical Performance
-  pixelFillRate?: GpuSpec<number>;
-  textureFillRate?: GpuSpec<number>;
-  fp32Performance?: GpuSpec<number>;
-  fp64Performance?: GpuSpec<number>;
+  pixelFillRate?: GpuField<number>;
+  textureFillRate?: GpuField<number>;
+  fp32Performance?: GpuField<number>;
+  fp64Performance?: GpuField<number>;
 
   // Memory
-  memorySize?: GpuSpec<number>;
-  memoryType?: GpuSpec<string>;
-  memoryClock?: GpuSpec<number>;
-  memoryInterface?: GpuSpec<number>;
-  memoryBandwidth?: GpuSpec<number>;
+  memorySize?: GpuField<number>;
+  memoryType?: GpuField<string>;
+  memoryClock?: GpuField<number>;
+  memoryInterface?: GpuField<number>;
+  memoryBandwidth?: GpuField<number>;
 
   // API Support
-  directxVersion?: GpuSpec<string>;
-  openClVersion?: GpuSpec<string>;
-  openGlVersion?: GpuSpec<string>;
-  shaderModelVersion?: GpuSpec<string>;
+  directxVersion?: GpuField<string>;
+  openClVersion?: GpuField<string>;
+  openGlVersion?: GpuField<string>;
+  shaderModelVersion?: GpuField<string>;
 
   // Benchmarks
-  g2dMark?: GpuBenchmark<number>;
-  g3dMark?: GpuBenchmark<number>;
-  timespyGraphics?: GpuBenchmark<number>;
+  g2dMark?: GpuField<number>;
+  g3dMark?: GpuField<number>;
+  timespyGraphics?: GpuField<number>;
 
   // Images
   images?: GpuImages;
@@ -121,63 +119,63 @@ const gpuValidator = Joi.object({
   name: Joi.string().required(),
 
   // General
-  company: gpuSpecValidator.allow(null),
-  marketSegment: gpuSpecValidator.allow(null),
-  launchPrice: gpuSpecValidator.allow(null),
-  releaseDate: gpuSpecValidator.allow(null),
+  company: gpuFieldValidator.allow(null),
+  marketSegment: gpuFieldValidator.allow(null),
+  launchPrice: gpuFieldValidator.allow(null),
+  releaseDate: gpuFieldValidator.allow(null),
 
   // Processor
-  codename: gpuSpecValidator.allow(null),
-  architecture: gpuSpecValidator.allow(null),
-  processSize: gpuSpecValidator.allow(null),
-  transistors: gpuSpecValidator.allow(null),
+  codename: gpuFieldValidator.allow(null),
+  architecture: gpuFieldValidator.allow(null),
+  processSize: gpuFieldValidator.allow(null),
+  transistors: gpuFieldValidator.allow(null),
 
   // Board Compatibility & Dimensions
-  slotWidth: gpuSpecValidator.allow(null),
-  length: gpuSpecValidator.allow(null),
-  width: gpuSpecValidator.allow(null),
-  height: gpuSpecValidator.allow(null),
-  weight: gpuSpecValidator.allow(null),
-  busInterface: gpuSpecValidator.allow(null),
-  thermalDesignPower: gpuSpecValidator.allow(null),
-  suggestedPsu: gpuSpecValidator.allow(null),
-  powerConnectors: gpuSpecValidator.allow(null),
-  outputs: gpuSpecValidator.allow(null),
+  slotWidth: gpuFieldValidator.allow(null),
+  length: gpuFieldValidator.allow(null),
+  width: gpuFieldValidator.allow(null),
+  height: gpuFieldValidator.allow(null),
+  weight: gpuFieldValidator.allow(null),
+  busInterface: gpuFieldValidator.allow(null),
+  thermalDesignPower: gpuFieldValidator.allow(null),
+  suggestedPsu: gpuFieldValidator.allow(null),
+  powerConnectors: gpuFieldValidator.allow(null),
+  outputs: gpuFieldValidator.allow(null),
 
   // Cores & Clock Speed
-  shaderUnitsCudaCores: gpuSpecValidator.allow(null),
-  textureMappingUnits: gpuSpecValidator.allow(null),
-  renderOutputUnits: gpuSpecValidator.allow(null),
-  tensorCores: gpuSpecValidator.allow(null),
-  rayTracingCores: gpuSpecValidator.allow(null),
-  coreClockSpeedBase: gpuSpecValidator.allow(null),
-  coreClockSpeedBoost: gpuSpecValidator.allow(null),
-  l1Cache: gpuSpecValidator.allow(null),
-  l2Cache: gpuSpecValidator.allow(null),
+  shaderUnitsCudaCores: gpuFieldValidator.allow(null),
+  textureMappingUnits: gpuFieldValidator.allow(null),
+  renderOutputUnits: gpuFieldValidator.allow(null),
+  tensorCores: gpuFieldValidator.allow(null),
+  rayTracingCores: gpuFieldValidator.allow(null),
+  coreClockSpeedBase: gpuFieldValidator.allow(null),
+  coreClockSpeedBoost: gpuFieldValidator.allow(null),
+  l1Cache: gpuFieldValidator.allow(null),
+  l2Cache: gpuFieldValidator.allow(null),
 
   // Theoretical Performance
-  pixelFillRate: gpuSpecValidator.allow(null),
-  textureFillRate: gpuSpecValidator.allow(null),
-  fp32Performance: gpuSpecValidator.allow(null),
-  fp64Performance: gpuSpecValidator.allow(null),
+  pixelFillRate: gpuFieldValidator.allow(null),
+  textureFillRate: gpuFieldValidator.allow(null),
+  fp32Performance: gpuFieldValidator.allow(null),
+  fp64Performance: gpuFieldValidator.allow(null),
 
   // Memory
-  memorySize: gpuSpecValidator.allow(null),
-  memoryType: gpuSpecValidator.allow(null),
-  memoryClock: gpuSpecValidator.allow(null),
-  memoryInterface: gpuSpecValidator.allow(null),
-  memoryBandwidth: gpuSpecValidator.allow(null),
+  memorySize: gpuFieldValidator.allow(null),
+  memoryType: gpuFieldValidator.allow(null),
+  memoryClock: gpuFieldValidator.allow(null),
+  memoryInterface: gpuFieldValidator.allow(null),
+  memoryBandwidth: gpuFieldValidator.allow(null),
 
   // API Support
-  directxVersion: gpuSpecValidator.allow(null),
-  openClVersion: gpuSpecValidator.allow(null),
-  openGlVersion: gpuSpecValidator.allow(null),
-  shaderModelVersion: gpuSpecValidator.allow(null),
+  directxVersion: gpuFieldValidator.allow(null),
+  openClVersion: gpuFieldValidator.allow(null),
+  openGlVersion: gpuFieldValidator.allow(null),
+  shaderModelVersion: gpuFieldValidator.allow(null),
 
   // Benchmarks
-  g2dMark: gpuBenchmarkValidator.allow(null),
-  g3dMark: gpuBenchmarkValidator.allow(null),
-  timespyGraphics: gpuBenchmarkValidator.allow(null),
+  g2dMark: gpuFieldValidator.allow(null),
+  g3dMark: gpuFieldValidator.allow(null),
+  timespyGraphics: gpuFieldValidator.allow(null),
 
   // Images
   images: Joi.array().allow(gpuImageValidator),
@@ -200,10 +198,10 @@ function formOptions(gpu?: Gpu): UseFormProps<GpuFormData> {
       name: gpu?.name || null,
 
       // General
-      company: specs.company || null,
-      marketSegment: specs.marketSegment || null,
-      launchPrice: specs.launchPrice || null,
-      releaseDate: specs.releaseDate || null,
+      company: gpu?.company || null,
+      marketSegment: gpu?.marketSegment || null,
+      launchPrice: gpu?.launchPrice || null,
+      releaseDate: gpu?.releaseDate || null,
 
       // Processor
       codename: specs.codename || null,
@@ -294,6 +292,10 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
       const request: CreateGpuRequest | UpdateGpuRequest = {
         slug: formData.slug,
         name: formData.name,
+        company: formData.company,
+        marketSegment: formData.marketSegment,
+        launchPrice: formData.launchPrice,
+        releaseDate: formData.releaseDate,
         specs: toSpecsRequest(formData),
         benchmarks: toBenchmarksRequest(formData),
         images: toImagesRequest(formData),
@@ -338,17 +340,10 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
         setValue('name', data.name.value);
       }
 
-      Object.keys(data.specs || {}).forEach((specKey) => {
-        if (data.specs[specKey].import) {
+      Object.keys(data.fields || {}).forEach((fieldKey) => {
+        if (data.fields[fieldKey].import) {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          setValue(specKey as any, data.specs[specKey].value);
-        }
-      });
-
-      Object.keys(data.benchmarks || {}).forEach((benchmarkKey) => {
-        if (data.benchmarks[benchmarkKey].import) {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          setValue(benchmarkKey as any, data.benchmarks[benchmarkKey].value);
+          setValue(fieldKey as any, data.fields[fieldKey].value);
         }
       });
     },
@@ -982,12 +977,6 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
 
 function toSpecsRequest(formData: GpuFormData): GpuSpecs {
   return {
-    // General
-    company: formData.company || null,
-    marketSegment: formData.marketSegment || null,
-    launchPrice: formData.launchPrice || null,
-    releaseDate: formData.releaseDate || null,
-
     // Processor
     codename: formData.codename || null,
     architecture: formData.architecture || null,

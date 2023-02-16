@@ -1,4 +1,4 @@
-import { formatGpuDimensions, formatGpuSpec, getGpuName } from '@client/gpus';
+import { formatGpuDimensions, formatGpuField, getGpuName } from '@client/gpus';
 import {
   compileContent,
   ContentContext,
@@ -24,10 +24,10 @@ export const CompatibilitySummary = () => {
 
   const params: ContentParams = {
     gpuName: getGpuName(gpu),
-    slotWidth: formatGpuSpec(gpu.specs?.slotWidth),
+    slotWidth: formatGpuField(gpu.specs?.slotWidth),
     dimensions: formatGpuDimensions(gpu),
-    tdp: formatGpuSpec(gpu.specs?.thermalDesignPower),
-    suggestedPsu: formatGpuSpec(gpu.specs?.suggestedPsu),
+    tdp: formatGpuField(gpu.specs?.thermalDesignPower),
+    suggestedPsu: formatGpuField(gpu.specs?.suggestedPsu),
   };
 
   return (

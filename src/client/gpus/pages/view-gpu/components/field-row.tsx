@@ -1,9 +1,9 @@
-import { formatGpuSpec } from '@client/gpus';
+import { formatGpuField } from '@client/gpus/gpu-utils';
 import { Td, Tr } from '@client/shared/components';
 import { BooleanFormatter } from '@client/shared/format';
-import { GpuSpec, GpuSpecKey } from '@shared/gpus';
+import { Gpu, GpuBenchmarks, GpuField, GpuSpecs } from '@shared/gpus';
 import React, { useContext } from 'react';
-import { ComparePageContext } from '../context';
+import { ViewPageContext } from '../context';
 
 const LABELS: Record<string, string> = {
   // General
@@ -61,28 +61,29 @@ const LABELS: Record<string, string> = {
   shaderModelVersion: 'Shader Model',
 };
 
-interface SpecRowProps {
-  spec: GpuSpecKey;
+interface FieldRowProps {
+  field: string;
 }
 
-export const SpecRow = (props: SpecRowProps) => {
-  const { spec: key } = props;
+export const FieldRow = (props: FieldRowProps) => {
+  const { field: key } = props;
 
-  const context = useContext(ComparePageContext);
-  const [gpu1, gpu2] = context.comparison;
-  const spec1 = gpu1.specs[key] as GpuSpec;
-  const spec2 = gpu2.specs[key] as GpuSpec;
+  const { gpu } = useContext(ViewPageContext);
+
+  let field: GpuField;
+  if (key in gpu.specs) {
+    field = gpu.specs[key as keyof GpuSpecs] as GpuField;
+  } else if (key in gpu.benchmarks) {
+    field = gpu.benchmarks[key as keyof GpuBenchmarks] as GpuField;
+  } else {
+    field = gpu[key as keyof Gpu] as GpuField;
+  }
 
   return (
     <Tr>
-      <Td className="text-left w-[33%]">{LABELS[key]}</Td>
-      <Td className="text-left w-[33%]">
-        {formatGpuSpec(spec1, {
-          booleanFormatter: BooleanFormatter.YesNo,
-        }) || '--'}
-      </Td>
-      <Td className="text-left w-[33%]">
-        {formatGpuSpec(spec2, {
+      <Td className="text-left w-[50%]">{LABELS[key]}</Td>
+      <Td className="text-left w-[50%]">
+        {formatGpuField(field, {
           booleanFormatter: BooleanFormatter.YesNo,
         }) || '--'}
       </Td>

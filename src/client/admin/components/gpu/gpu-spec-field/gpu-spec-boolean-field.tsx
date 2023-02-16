@@ -1,12 +1,12 @@
 import { Select, SelectOption, SelectValue } from '@client/shared/components';
-import { GpuSpec, GpuSpecKey } from '@shared/gpus';
+import { GpuField } from '@shared/gpus';
 import React, { forwardRef, useCallback } from 'react';
 
 interface GpuSpecStringFieldProps {
-  field: GpuSpecKey;
+  field: string;
 
-  value?: GpuSpec<boolean>;
-  onChange?: (value: GpuSpec<boolean>) => void;
+  value?: GpuField<boolean>;
+  onChange?: (value: GpuField<boolean>) => void;
 }
 
 export const GpuSpecBooleanField = forwardRef<
@@ -24,7 +24,7 @@ export const GpuSpecBooleanField = forwardRef<
     (value: SelectValue) => {
       onChange?.(
         value != null && typeof value == 'string'
-          ? { value: value === 'true', meta: { specKey: field } }
+          ? { value: value === 'true', meta: { fieldKey: field } }
           : null,
       );
     },

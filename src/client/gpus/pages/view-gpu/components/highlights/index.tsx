@@ -1,4 +1,4 @@
-import { formatGpuSpec, getShoppingUrl } from '@client/gpus';
+import { formatGpuField, getShoppingUrl } from '@client/gpus';
 import {
   BoltIcon,
   CalendarDaysIcon,
@@ -33,14 +33,14 @@ export const Highlights: FunctionComponent<HighlightsProps> = (props) => {
   const shoppingUrl = getShoppingUrl(gpu);
 
   const highlightMemory = useMemo(() => {
-    const memorySize = formatGpuSpec(specs.memorySize);
-    const memoryType = formatGpuSpec(specs.memoryType);
+    const memorySize = formatGpuField(specs.memorySize);
+    const memoryType = formatGpuField(specs.memoryType);
     return [memorySize, memoryType].filter((value) => value != null).join(' ');
   }, [specs]);
 
   const highlightSlots = useMemo(() => {
-    const slotWidth = formatGpuSpec(specs.slotWidth);
-    const height = formatGpuSpec(specs.height);
+    const slotWidth = formatGpuField(specs.slotWidth);
+    const height = formatGpuField(specs.height);
     return [slotWidth, height].filter((value) => value != null).join(', ');
   }, [specs]);
 
@@ -95,7 +95,7 @@ export const Highlights: FunctionComponent<HighlightsProps> = (props) => {
         <HighlightLabel icon={<BoltIcon />}>TDP</HighlightLabel>
 
         <HighlightValue>
-          {formatGpuSpec(specs.thermalDesignPower) || '--'}
+          {formatGpuField(specs.thermalDesignPower) || '--'}
         </HighlightValue>
       </HighlightListItem>
 
@@ -105,7 +105,7 @@ export const Highlights: FunctionComponent<HighlightsProps> = (props) => {
         </HighlightLabel>
 
         <HighlightValue>
-          {formatGpuSpec(specs.releaseDate) || '--'}
+          {formatGpuField(gpu.releaseDate) || '--'}
         </HighlightValue>
       </HighlightListItem>
     </HighlightList>

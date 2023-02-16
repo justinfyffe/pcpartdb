@@ -1,6 +1,6 @@
 import { Field, NumberInput, TextInput } from '@client/shared/components';
 import { classNames } from '@client/shared/ui';
-import { GpuBenchmark, GpuBenchmarkKey } from '@shared/gpus';
+import { GpuField } from '@shared/gpus';
 import React, {
   FunctionComponent,
   useCallback,
@@ -15,10 +15,10 @@ const LABELS: Record<string, string> = {
 };
 
 interface GpuBenchmarkFieldProps {
-  field: GpuBenchmarkKey;
+  field: string;
 
-  value?: GpuBenchmark<number>;
-  onChange?: (value: GpuBenchmark<number>) => void;
+  value?: GpuField<number>;
+  onChange?: (value: GpuField<number>) => void;
 
   className?: string;
   ref?: unknown;
@@ -34,10 +34,10 @@ export const GpuBenchmarkField: FunctionComponent<GpuBenchmarkFieldProps> = (
 
   const handleScoreChange = useCallback(
     (score: number) => {
-      const newValue: GpuBenchmark<number> = {
+      const newValue: GpuField<number> = {
         ...value,
         value: score,
-        meta: { benchmarkKey: field },
+        meta: { fieldKey: field },
       };
       setValue(newValue);
       onChange(newValue);
@@ -47,9 +47,9 @@ export const GpuBenchmarkField: FunctionComponent<GpuBenchmarkFieldProps> = (
 
   const handleSourceChange = useCallback(
     (source: string) => {
-      const newValue: GpuBenchmark<number> = {
+      const newValue: GpuField<number> = {
         ...value,
-        meta: { benchmarkKey: field, source },
+        meta: { fieldKey: field, source },
       };
       setValue(newValue);
       onChange(newValue);

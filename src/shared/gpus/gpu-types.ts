@@ -1,7 +1,14 @@
 import { GpuBenchmarks } from './gpu-benchmark-types';
+import { GpuField } from './gpu-field-types';
 import { GpuImages } from './gpu-image-types';
 import { GpuRanks } from './gpu-rank-types';
 import { GpuSpecs } from './gpu-spec-types';
+
+export enum MarketSegmentValue {
+  Desktop = 'DESKTOP',
+  Laptop = 'LAPTOP',
+  Server = 'SERVER',
+}
 
 export interface Gpu {
   id?: number;
@@ -10,7 +17,11 @@ export interface Gpu {
 
   name: string;
   affiliateUrl?: string;
-  metadata?: GpuMeta;
+
+  company?: GpuField<string>;
+  marketSegment?: GpuField<MarketSegmentValue>;
+  launchPrice?: GpuField<number>;
+  releaseDate?: GpuField<string>;
 
   // Relations
   parent?: Gpu;
@@ -23,8 +34,6 @@ export interface Gpu {
 }
 
 export type GpuComparison = [Gpu, Gpu];
-
-export interface GpuMeta {}
 
 export interface FindGpuRequest {
   id?: number;

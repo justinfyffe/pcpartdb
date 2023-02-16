@@ -1,9 +1,9 @@
-import { formatGpuBenchmark, getShoppingUrl } from '@client/gpus';
+import { formatGpuField, getShoppingUrl } from '@client/gpus';
 import { Table, TBody } from '@client/shared/components';
 import React, { FunctionComponent, useContext } from 'react';
 import { ViewPageContext } from '../../context';
 import { CustomRow, CustomRowLabel, CustomRowValue } from '../custom-row';
-import { SpecRow } from '../spec-row';
+import { FieldRow } from '../field-row';
 
 interface GeneralInfoTableProps {
   className?: string;
@@ -44,7 +44,7 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
             {benchmarks.performanceScore != null &&
             ranks.performanceRank != null ? (
               <>
-                {formatGpuBenchmark(benchmarks.performanceScore)} (
+                {formatGpuField(benchmarks.performanceScore)} (
                 {ranks.performanceRank})
               </>
             ) : (
@@ -57,18 +57,18 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
           <CustomRowValue>
             {benchmarks.valueScore != null && ranks.valueRank != null ? (
               <>
-                {formatGpuBenchmark(benchmarks.valueScore)} ({ranks.valueRank})
+                {formatGpuField(benchmarks.valueScore)} ({ranks.valueRank})
               </>
             ) : (
               <>--</>
             )}
           </CustomRowValue>
         </CustomRow>
-        <SpecRow spec="company" />
-        <SpecRow spec="architecture" />
-        <SpecRow spec="marketSegment" />
-        <SpecRow spec="releaseDate" />
-        <SpecRow spec="launchPrice" />
+        <FieldRow field="company" />
+        <FieldRow field="architecture" />
+        <FieldRow field="marketSegment" />
+        <FieldRow field="releaseDate" />
+        <FieldRow field="launchPrice" />
       </TBody>
     </Table>
   );

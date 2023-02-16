@@ -1,14 +1,14 @@
 import { NumberInput } from '@client/shared/components';
-import { GpuSpec, GpuSpecKey } from '@shared/gpus';
+import { GpuField } from '@shared/gpus';
 import React, { forwardRef, useCallback, useMemo, useState } from 'react';
 
 const CURRENCIES = ['USD'];
 
 interface GpuSpecCurrencyFieldProps {
-  field: GpuSpecKey;
+  field: string;
 
-  value?: GpuSpec<number>;
-  onChange?: (value: GpuSpec<number>) => void;
+  value?: GpuField<number>;
+  onChange?: (value: GpuField<number>) => void;
 }
 
 export const GpuSpecCurrencyField = forwardRef<
@@ -34,7 +34,7 @@ export const GpuSpecCurrencyField = forwardRef<
   const handleChange = useCallback(
     (value: number) => {
       onChange?.(
-        value != null ? { value, meta: { specKey: field, currency } } : null,
+        value != null ? { value, meta: { fieldKey: field, currency } } : null,
       );
     },
     [field, currency, onChange],
@@ -44,9 +44,9 @@ export const GpuSpecCurrencyField = forwardRef<
     const newIndex =
       currencyIndex < CURRENCIES.length - 1 ? currencyIndex + 1 : 0;
     setCurrencyIndex(newIndex);
-    const newValue: GpuSpec<number> = {
+    const newValue: GpuField<number> = {
       value: baseValue,
-      meta: { specKey: field, currency: CURRENCIES[currencyIndex] },
+      meta: { fieldKey: field, currency: CURRENCIES[currencyIndex] },
     };
 
     onChange?.(newValue);

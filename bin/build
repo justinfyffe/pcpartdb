@@ -20,12 +20,12 @@ cp -r ./node_modules $TMP_BUILD_DIR
 cp -r ./dist $TMP_BUILD_DIR
 cp -r ./public $TMP_BUILD_DIR
 cp -r ./server $TMP_BUILD_DIR
+cp -r ./prisma $TMP_BUILD_DIR
 
-# Copy filles
+# Copy files
 cp ./package.json $TMP_BUILD_DIR
 cp ./package-lock.json $TMP_BUILD_DIR
 cp ./next.config.js $TMP_BUILD_DIR
-cp ./knexfile.dist.js $TMP_BUILD_DIR
 cp ./.env.sample $TMP_BUILD_DIR
 
 # Remove upload files

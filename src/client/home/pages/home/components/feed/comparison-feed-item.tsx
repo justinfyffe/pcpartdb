@@ -1,4 +1,4 @@
-import { formatGpuSpec, getCompareGpusSlug, getGpuName } from '@client/gpus';
+import { formatGpuField, getCompareGpusSlug, getGpuName } from '@client/gpus';
 import { getCompanyLogoImagePath } from '@client/image';
 import { Card, Img } from '@client/shared/components';
 import { classNames } from '@client/shared/ui';
@@ -27,10 +27,7 @@ export const ComparisonFeedItem: FunctionComponent<ComparisonFeedItemProps> = (
   const [gpu1, gpu2] = gpus;
 
   const [price1, price2] = useMemo(
-    () => [
-      formatGpuSpec(gpu1.specs?.launchPrice),
-      formatGpuSpec(gpu2.specs?.launchPrice),
-    ],
+    () => [formatGpuField(gpu1.launchPrice), formatGpuField(gpu2.launchPrice)],
     [gpu1, gpu2],
   );
 
@@ -142,10 +139,7 @@ interface BannerProps {
 
 const Banner: FunctionComponent<BannerProps> = (props) => {
   const { gpu } = props;
-  const company = useMemo(
-    () => gpu.specs?.company?.value?.toLowerCase(),
-    [gpu],
-  );
+  const company = useMemo(() => gpu.company?.value?.toLowerCase(), [gpu]);
 
   return (
     <div

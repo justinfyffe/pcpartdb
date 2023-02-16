@@ -1,6 +1,6 @@
-import { formatGpuBenchmark } from '@client/gpus';
+import { formatGpuField } from '@client/gpus/gpu-utils';
 import { Td, Tr } from '@client/shared/components';
-import { GpuBenchmark, GpuBenchmarkKey } from '@shared/gpus';
+import { GpuBenchmarks, GpuField } from '@shared/gpus';
 import React, { useContext } from 'react';
 import { ComparePageContext } from '../../context';
 
@@ -11,7 +11,7 @@ const LABELS: Record<string, string> = {
 };
 
 interface BenchmarkRowProps {
-  benchmark: GpuBenchmarkKey;
+  benchmark: keyof GpuBenchmarks;
 }
 
 export const BenchmarkRow = (props: BenchmarkRowProps) => {
@@ -19,8 +19,8 @@ export const BenchmarkRow = (props: BenchmarkRowProps) => {
 
   const context = useContext(ComparePageContext);
   const [gpu1, gpu2] = context.comparison;
-  const benchmark1 = gpu1.benchmarks[key] as GpuBenchmark;
-  const benchmark2 = gpu2.benchmarks[key] as GpuBenchmark;
+  const benchmark1 = gpu1.benchmarks[key] as GpuField;
+  const benchmark2 = gpu2.benchmarks[key] as GpuField;
 
   return (
     <Tr>
@@ -29,16 +29,16 @@ export const BenchmarkRow = (props: BenchmarkRowProps) => {
       </Td>
       <Td className="text-left w-[33%]">
         {benchmark1?.meta?.source != null ? (
-          <a href={benchmark1.meta.source}>{formatGpuBenchmark(benchmark1)}</a>
+          <a href={benchmark1.meta.source}>{formatGpuField(benchmark1)}</a>
         ) : (
-          <>{formatGpuBenchmark(benchmark1) || '--'}</>
+          <>{formatGpuField(benchmark1) || '--'}</>
         )}
       </Td>
       <Td className="text-left w-[33%]">
         {benchmark2?.meta?.source != null ? (
-          <a href={benchmark2.meta.source}>{formatGpuBenchmark(benchmark2)}</a>
+          <a href={benchmark2.meta.source}>{formatGpuField(benchmark2)}</a>
         ) : (
-          <>{formatGpuBenchmark(benchmark2) || '--'}</>
+          <>{formatGpuField(benchmark2) || '--'}</>
         )}
       </Td>
     </Tr>

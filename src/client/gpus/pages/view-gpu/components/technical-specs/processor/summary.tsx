@@ -1,4 +1,4 @@
-import { formatGpuSpec, getGpuName } from '@client/gpus';
+import { formatGpuField, getGpuName } from '@client/gpus';
 import {
   compileContent,
   ContentContext,
@@ -24,8 +24,8 @@ export const ProcessorSummary = () => {
 
   const params: ContentParams = {
     gpuName: getGpuName(gpu),
-    architecture: formatGpuSpec(specs.architecture),
-    processSize: formatGpuSpec(specs.processSize),
+    architecture: formatGpuField(specs.architecture),
+    processSize: formatGpuField(specs.processSize),
   };
 
   return (

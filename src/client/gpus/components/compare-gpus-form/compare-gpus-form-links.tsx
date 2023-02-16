@@ -6,19 +6,21 @@ import {
 } from '@client/gpus';
 import { classNames } from '@client/shared/ui';
 import { getCompareGpusPath, getViewGpuPath } from '@client/shared/website';
-import { RelatedGpus } from '@shared/gpus';
+import { RelatedComparisons, RelatedGpus } from '@shared/gpus';
 import React, { FunctionComponent } from 'react';
 
 interface CompareGpusFormLinksProps {
   relatedGpus: RelatedGpus;
+  relatedComparisons: RelatedComparisons;
   className?: string;
 }
 
 export const CompareGpusFormLinks: FunctionComponent<
   CompareGpusFormLinksProps
 > = (props) => {
-  const { relatedGpus, className } = props;
-  const { comparisons, gpus } = relatedGpus;
+  const { relatedGpus, relatedComparisons, className } = props;
+  const { gpus } = relatedGpus;
+  const { comparisons } = relatedComparisons;
 
   return (
     <section className={classNames('flex flex-col gap-1 text-xs', className)}>

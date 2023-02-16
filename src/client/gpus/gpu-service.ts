@@ -3,7 +3,7 @@ import { GpuCache } from '@client/shared/cache';
 import {
   CreateGpuRequest,
   Gpu,
-  GpuSpecKey,
+  GpuSpecs,
   ImportGpuDataRequest,
   ImportGpuDataResponse,
   ListGpusRequest,
@@ -48,7 +48,7 @@ export class GpuService {
     return gpus;
   }
 
-  async autocompleteSpec(query: string, key?: GpuSpecKey) {
+  async autocompleteSpec(query: string, key?: string) {
     return await this.api.get<string[]>(`${PATH}/specs/autocomplete`, {
       params: { key, value: query },
     });

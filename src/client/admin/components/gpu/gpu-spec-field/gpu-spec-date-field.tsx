@@ -1,12 +1,12 @@
 import { DateInput } from '@client/shared/components';
-import { GpuSpec, GpuSpecKey } from '@shared/gpus';
+import { GpuField } from '@shared/gpus';
 import React, { forwardRef, useCallback } from 'react';
 
 interface GpuSpecDateFieldProps {
-  field: GpuSpecKey;
+  field: string;
 
-  value?: GpuSpec<string>;
-  onChange?: (value: GpuSpec<string>) => void;
+  value?: GpuField<string>;
+  onChange?: (value: GpuField<string>) => void;
 }
 
 export const GpuSpecDateField = forwardRef<
@@ -19,7 +19,7 @@ export const GpuSpecDateField = forwardRef<
 
   const handleChange = useCallback(
     (value: string) => {
-      onChange?.(value != null ? { value, meta: { specKey: field } } : null);
+      onChange?.(value != null ? { value, meta: { fieldKey: field } } : null);
     },
     [field, onChange],
   );

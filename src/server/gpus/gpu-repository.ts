@@ -92,25 +92,18 @@ export class GpuRepository {
       .map((value) => value.trim())
       .join('|');
 
-    const idsFromName: { id: number }[] = await db.$queryRaw`
+    const idsFromNameOrCompany: { id: number }[] = await db.$queryRaw`
       SELECT id FROM gpus
-      WHERE name ~* (${tokens})
+      WHERE name ~* (${tokens}) OR company ~* (${tokens})
       LIMIT 5
     `;
 
-    const idsFromCompany: { id: number }[] = await db.$queryRaw`
-      SELECT gpu_id as id FROM gpu_specs
-      WHERE company ~* (${tokens})
-      LIMIT 5
-    `;
-
-    const ids = [...idsFromName, ...idsFromCompany].map((json) => json.id);
+    const ids = idsFromNameOrCompany.map((json) => json.id);
 
     return await db.gpu.findMany({
       where: { id: { in: ids } },
-      orderBy: { specs: { releaseDate: 'desc' } },
+      orderBy: { releaseDate: 'desc' },
       take: 5,
-      include: { specs: true },
     });
   }
 
@@ -259,9 +252,7 @@ export class GpuRepository {
       companies.length > 0 ? { in: companies, mode: 'insensitive' } : undefined;
 
     return {
-      specs: {
-        company: companyWhere,
-      },
+      company: companyWhere,
       benchmarks: {
         performanceScore: performanceRatedWhere,
         valueScore: valueRatedWhere,
@@ -288,7 +279,7 @@ export class GpuRepository {
     } else if (sort === GpuSort.ReleaseDate) {
       // Default DESC
       const order = orderBy?.order ?? GpuOrder.Desc;
-      return { specs: { releaseDate: order } };
+      return { releaseDate: order };
     } else if (sort === GpuSort.PerformanceRating) {
       // Default DESC
       const order = orderBy?.order ?? GpuOrder.Desc;

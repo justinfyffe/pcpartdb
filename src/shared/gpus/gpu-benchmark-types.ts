@@ -1,4 +1,5 @@
 import Joi from '@hapi/joi';
+import { GpuField } from './gpu-field-types';
 
 export enum BenchmarkBooleanFormatter {
   TrueFalse = 'TRUE_FALSE',
@@ -8,27 +9,15 @@ export enum BenchmarkBooleanFormatter {
 export interface GpuBenchmarks {
   gpuId?: number;
 
-  performanceScore?: GpuBenchmark<number>;
-  valueScore?: GpuBenchmark<number>;
+  performanceScore?: GpuField<number>;
+  valueScore?: GpuField<number>;
 
-  g3dMark?: GpuBenchmark<number>;
-  g2dMark?: GpuBenchmark<number>;
-  timespyGraphics?: GpuBenchmark<number>;
+  g3dMark?: GpuField<number>;
+  g2dMark?: GpuField<number>;
+  timespyGraphics?: GpuField<number>;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [key: string]: number | GpuBenchmark<any>;
-}
-
-export type GpuBenchmarkKey = keyof GpuBenchmarks;
-
-export interface GpuBenchmarkMeta {
-  benchmarkKey?: GpuBenchmarkKey;
-  source?: string;
-}
-
-export interface GpuBenchmark<T = unknown> {
-  value?: T;
-  meta?: GpuBenchmarkMeta;
+  // [key: string]: number | GpuField<any>;
 }
 
 export const gpuBenchmarkValidator = Joi.object({

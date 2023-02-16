@@ -1,5 +1,5 @@
 import { Select, SelectOption, SelectValue } from '@client/shared/components';
-import { GpuSpec, GpuSpecKey, MarketSegmentValue } from '@shared/gpus';
+import { GpuField, MarketSegmentValue } from '@shared/gpus';
 import React, { forwardRef, useCallback, useMemo } from 'react';
 
 const ITEMS: { [key: string]: { label: string; value: string }[] } = {
@@ -11,10 +11,10 @@ const ITEMS: { [key: string]: { label: string; value: string }[] } = {
 };
 
 interface GpuSpecEnumFieldProps {
-  field: GpuSpecKey;
+  field: string;
 
-  value?: GpuSpec<string>;
-  onChange?: (value: GpuSpec<string>) => void;
+  value?: GpuField<string>;
+  onChange?: (value: GpuField<string>) => void;
 }
 
 export const GpuSpecEnumField = forwardRef<
@@ -35,7 +35,7 @@ export const GpuSpecEnumField = forwardRef<
 
       onChange?.(
         value != null
-          ? { value: value as string, meta: { specKey: field } }
+          ? { value: value as string, meta: { fieldKey: field } }
           : null,
       );
     },

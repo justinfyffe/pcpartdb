@@ -1,6 +1,6 @@
-import { formatGpuBenchmark } from '@client/gpus/gpu-benchmark-utils';
+import { formatGpuField } from '@client/gpus/gpu-utils';
 import { Td, Tr } from '@client/shared/components';
-import { GpuBenchmark, GpuBenchmarkKey } from '@shared/gpus';
+import { GpuBenchmarks, GpuField } from '@shared/gpus';
 import React, { useContext } from 'react';
 import { ViewPageContext } from '../../context';
 
@@ -11,14 +11,14 @@ const LABELS: Record<string, string> = {
 };
 
 interface BenchmarkRowProps {
-  benchmark: GpuBenchmarkKey;
+  benchmark: keyof GpuBenchmarks;
 }
 
 export const BenchmarkRow = (props: BenchmarkRowProps) => {
   const { benchmark: key } = props;
 
   const { gpu } = useContext(ViewPageContext);
-  const benchmark = gpu.benchmarks[key] as GpuBenchmark;
+  const benchmark = gpu.benchmarks[key] as GpuField;
 
   return (
     <Tr>
@@ -27,9 +27,9 @@ export const BenchmarkRow = (props: BenchmarkRowProps) => {
       </Td>
       <Td className="text-left w-[50%]">
         {benchmark?.meta?.source != null ? (
-          <a href={benchmark.meta.source}>{formatGpuBenchmark(benchmark)}</a>
+          <a href={benchmark.meta.source}>{formatGpuField(benchmark)}</a>
         ) : (
-          <>{formatGpuBenchmark(benchmark) || '--'}</>
+          <>{formatGpuField(benchmark) || '--'}</>
         )}
       </Td>
     </Tr>

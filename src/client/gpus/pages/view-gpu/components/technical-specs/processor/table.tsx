@@ -1,6 +1,6 @@
 import { Table, TBody } from '@client/shared/components';
 import React, { FunctionComponent } from 'react';
-import { SpecRow } from '../../spec-row';
+import { FieldRow } from '../../field-row';
 
 interface ProcessorTableProps {
   className?: string;
@@ -14,10 +14,10 @@ export const ProcessorTable: FunctionComponent<ProcessorTableProps> = (
   return (
     <Table border responsive className={className}>
       <TBody>
-        <SpecRow spec="gpuName" />
-        <SpecRow spec="architecture" />
-        <SpecRow spec="processSize" />
-        <SpecRow spec="transistors" />
+        <FieldRow field="gpuName" />
+        <FieldRow field="architecture" />
+        <FieldRow field="processSize" />
+        <FieldRow field="transistors" />
       </TBody>
     </Table>
   );

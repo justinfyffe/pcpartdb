@@ -1,9 +1,11 @@
+import { Prisma } from '@prisma/client';
 import { Gpu } from '@shared/gpus';
 import {
   mapToGpuBenchmarksDto,
   mapToGpuBenchmarksEntity,
 } from './gpu-benchmarks-mapper';
 import { GpuEntity } from './gpu-entity';
+import { mapToGpuFieldDto, mapToGpuFieldEntity } from './gpu-field-mapper';
 import { mapToGpuImageDtos, mapToGpuImageEntities } from './gpu-image-mapper';
 import { mapToGpuSpecsDto, mapToGpuSpecsEntity } from './gpu-specs-mapper';
 
@@ -19,7 +21,11 @@ export function mapToGpuDto(entity: GpuEntity): Gpu {
 
     name: entity.name,
     affiliateUrl: entity.affiliateUrl,
-    metadata: entity.metadata,
+
+    company: mapToGpuFieldDto(entity, 'company'),
+    marketSegment: mapToGpuFieldDto(entity, 'marketSegment'),
+    launchPrice: mapToGpuFieldDto(entity, 'launchPrice'),
+    releaseDate: mapToGpuFieldDto(entity, 'releaseDate'),
 
     parent: mapToGpuDto(entity.parent),
     specs: mapToGpuSpecsDto(entity.specs),
@@ -32,23 +38,35 @@ export function mapToGpuDtos(entities: GpuEntity[]): Gpu[] {
   return entities.map((entity) => mapToGpuDto(entity));
 }
 
-export function mapToGpuEntity(entity: Partial<Gpu>): GpuEntity {
-  if (entity == null) {
+export function mapToGpuEntity(gpu: Partial<Gpu>): GpuEntity {
+  if (gpu == null) {
     return null;
   }
 
-  return {
-    id: undefined,
-    parentId: entity.parentId,
+  const metadata = {};
 
-    slug: entity.slug,
-    name: entity.name,
-    affiliateUrl: entity.affiliateUrl,
-    metadata: entity.metadata,
-
-    parent: mapToGpuEntity(entity.parent),
-    specs: mapToGpuSpecsEntity(entity.specs),
-    benchmarks: mapToGpuBenchmarksEntity(entity.benchmarks),
-    images: mapToGpuImageEntities(entity.images),
+  const mappedFields: Partial<GpuEntity> = {
+    company: mapToGpuFieldEntity(gpu, 'company', metadata),
+    marketSegment: mapToGpuFieldEntity(gpu, 'marketSegment', metadata),
+    launchPrice: mapToGpuFieldEntity(gpu, 'launchPrice', metadata),
+    releaseDate: mapToGpuFieldEntity(gpu, 'releaseDate', metadata),
   };
+
+  return {
+    ...mappedFields,
+
+    id: undefined,
+    parentId: gpu.parentId,
+
+    slug: gpu.slug,
+    name: gpu.name,
+    affiliateUrl: gpu.affiliateUrl,
+
+    metadata: metadata as Prisma.JsonObject,
+
+    parent: mapToGpuEntity(gpu.parent),
+    specs: mapToGpuSpecsEntity(gpu.specs),
+    benchmarks: mapToGpuBenchmarksEntity(gpu.benchmarks),
+    images: mapToGpuImageEntities(gpu.images),
+  } as GpuEntity;
 }

@@ -1,7 +1,7 @@
-import { formatGpuSpec } from '@client/gpus';
+import { formatGpuField } from '@client/gpus';
 import { Checkbox, Td, Tr } from '@client/shared/components';
 import { BooleanFormatter } from '@client/shared/format';
-import { GpuSpec, GpuSpecKey } from '@shared/gpus';
+import { GpuField } from '@shared/gpus';
 import React, {
   FunctionComponent,
   useCallback,
@@ -66,53 +66,60 @@ const LABELS: Record<string, string> = {
   openClVersion: 'OpenCL',
   openGlVersion: 'OpenGL',
   shaderModelVersion: 'Shader Model',
+
+  // Benchmarks
+  g3dMark: 'G3D Mark',
+  g2dMark: 'G2D Mark',
+  timespyGraphics: '3DMark Time Spy Graphics',
 };
 
-interface ImportGpuSpecProps {
-  spec: GpuSpecKey;
+interface ImportGpuFieldProps {
+  field: string;
 }
 
-export const ImportGpuSpec: FunctionComponent<ImportGpuSpecProps> = (props) => {
-  const { spec: key } = props;
+export const ImportGpuField: FunctionComponent<ImportGpuFieldProps> = (
+  props,
+) => {
+  const { field: key } = props;
 
   const context = useContext(ImportGpuDataContext);
-  const specs = context.specs;
-  const emptyValue: GpuSpec = useMemo(
-    () => ({ value: null, meta: { specKey: key } }),
+  const fields = context.fields;
+  const emptyValue: GpuField = useMemo(
+    () => ({ value: null, meta: { fieldKey: key } }),
     [key],
   );
 
   const [checked, setChecked] = useState(() => false);
 
   useEffect(() => {
-    if (specs[key] == null) {
-      specs[key] = { value: emptyValue, import: false };
+    if (fields[key] == null) {
+      fields[key] = { value: emptyValue, import: false };
       setChecked(false);
     } else {
-      setChecked(specs[key].import);
+      setChecked(fields[key].import);
     }
-  }, [specs, key, emptyValue]);
+  }, [fields, key, emptyValue]);
 
   const handleClick = useCallback(() => {
     if (checked) {
-      specs[key].import = false;
+      fields[key].import = false;
     } else {
-      specs[key].import = true;
+      fields[key].import = true;
     }
 
     setChecked(!checked);
-  }, [specs, key, checked]);
+  }, [fields, key, checked]);
 
   return (
     <Tr onClick={handleClick} className="hover:bg-gray-200 cursor-pointer">
       <Td>{LABELS[key]}</Td>
       <Td>
-        {formatGpuSpec(specs?.[key]?.value, {
+        {formatGpuField(fields?.[key]?.value, {
           booleanFormatter: BooleanFormatter.YesNo,
         }) || '--'}
       </Td>
       <Td className="text-right">
-        <Checkbox value={specs?.[key]?.import ?? false} />
+        <Checkbox value={fields?.[key]?.import ?? false} />
       </Td>
     </Tr>
   );

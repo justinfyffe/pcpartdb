@@ -2,15 +2,14 @@ import { NumberInput } from '@client/shared/components';
 import {
   BandwidthUnit,
   BitUnit,
-  calculateBaseGpuSpecValue,
-  calculateDisplayGpuSpecValue,
+  calculateBaseGpuFieldValue,
+  calculateDisplayGpuFieldValue,
   ClockSpeedUnit,
   CurrencyUnit,
   FlopsUnit,
   getUnitFormat,
-  GpuSpec,
-  GpuSpecKey,
-  GpuUnit,
+  GpuField,
+  GpuFieldUnit,
   LengthUnit,
   MemoryUnit,
   NumericUnit,
@@ -21,7 +20,7 @@ import {
 } from '@shared/gpus';
 import React, { forwardRef, useCallback, useMemo, useState } from 'react';
 
-const UNITS: Record<string, GpuUnit[]> = {
+const UNITS: Record<string, GpuFieldUnit[]> = {
   launchPrice: [CurrencyUnit.USD],
   processSize: [LengthUnit.nm, LengthUnit.um],
   transistors: [NumericUnit.million],
@@ -46,10 +45,10 @@ const UNITS: Record<string, GpuUnit[]> = {
 };
 
 interface GpuSpecFloatFieldProps {
-  field: GpuSpecKey;
+  field: string;
 
-  value?: GpuSpec<number>;
-  onChange?: (value: GpuSpec<number>) => void;
+  value?: GpuField<number>;
+  onChange?: (value: GpuField<number>) => void;
 }
 
 export const GpuSpecFloatField = forwardRef<
@@ -74,7 +73,7 @@ export const GpuSpecFloatField = forwardRef<
       return null;
     }
 
-    return calculateDisplayGpuSpecValue(value.value, unit);
+    return calculateDisplayGpuFieldValue(value.value, unit);
   }, [value, unit]);
 
   const handleChange = useCallback(
@@ -82,8 +81,8 @@ export const GpuSpecFloatField = forwardRef<
       onChange?.(
         value != null
           ? {
-              value: calculateBaseGpuSpecValue(value, unit),
-              meta: { specKey: field, unit: unit },
+              value: calculateBaseGpuFieldValue(value, unit),
+              meta: { fieldKey: field, unit: unit },
             }
           : null,
       );
@@ -94,9 +93,9 @@ export const GpuSpecFloatField = forwardRef<
   const handleUnitClick = useCallback(() => {
     const newIndex = unitIndex < units.length - 1 ? unitIndex + 1 : 0;
     setUnitIndex(newIndex);
-    const newValue: GpuSpec<number> = {
-      value: calculateBaseGpuSpecValue(displayValue, units[unitIndex]),
-      meta: { specKey: field, unit: units[unitIndex] },
+    const newValue: GpuField<number> = {
+      value: calculateBaseGpuFieldValue(displayValue, units[unitIndex]),
+      meta: { fieldKey: field, unit: units[unitIndex] },
     };
 
     onChange?.(newValue);

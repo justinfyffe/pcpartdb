@@ -94,7 +94,7 @@ export class GpuService {
       });
     }
 
-    addPerformanceBenchmarks(data.specs, data.benchmarks);
+    addPerformanceBenchmarks(data, data.benchmarks);
 
     const entity = mapToGpuEntity({ id: undefined, ...data });
     const result = await gpuRepository.create(entity, ctx);
@@ -116,7 +116,7 @@ export class GpuService {
       throw notFoundError({ gpu: id });
     }
 
-    addPerformanceBenchmarks(data.specs, data.benchmarks);
+    addPerformanceBenchmarks(data, data.benchmarks);
 
     const entity = mapToGpuEntity({ id: undefined, ...data });
     const result = await gpuRepository.update(id, entity, ctx);

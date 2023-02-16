@@ -1,6 +1,7 @@
 import Joi from '@hapi/joi';
 import {
   gpuBenchmarksValidator,
+  gpuFieldValidator,
   GpuOrder,
   GpuSort,
   gpuSpecsValidator,
@@ -38,6 +39,10 @@ export const listGpusRequestValidator = Joi.object({
 export const createGpuRequestValidator = Joi.object({
   slug: Joi.string().required(),
   name: Joi.string().required(),
+  company: gpuFieldValidator,
+  marketSegment: gpuFieldValidator,
+  launchPrice: gpuFieldValidator,
+  releaseDate: gpuFieldValidator,
   specs: gpuSpecsValidator,
   benchmarks: gpuBenchmarksValidator,
   images: Joi.array().allow(Joi.any()),
@@ -46,6 +51,10 @@ export const createGpuRequestValidator = Joi.object({
 export const updateGpuRequestValidator = Joi.object({
   slug: Joi.string().required(),
   name: Joi.string().required(),
+  company: gpuFieldValidator,
+  marketSegment: gpuFieldValidator,
+  launchPrice: gpuFieldValidator,
+  releaseDate: gpuFieldValidator,
   specs: gpuSpecsValidator,
   benchmarks: gpuBenchmarksValidator,
   images: Joi.array().allow(Joi.any()),

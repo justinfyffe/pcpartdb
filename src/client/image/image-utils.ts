@@ -6,8 +6,7 @@ export function getImagePath(image: ImageDto) {
 }
 
 export function getCompanyLogoImagePath(gpu: Gpu) {
-  const specs = gpu?.specs;
-  const company = specs?.company?.value;
+  const company = gpu?.company?.value;
 
   if (company == null) {
     return null;

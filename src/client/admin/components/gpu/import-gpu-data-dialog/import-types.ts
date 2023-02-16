@@ -1,9 +1,4 @@
-import {
-  GpuBenchmark,
-  GpuBenchmarkKey,
-  GpuSpec,
-  GpuSpecKey,
-} from '@shared/gpus';
+import { GpuField } from '@shared/gpus';
 
 export interface ImportGpuDataResult<T = unknown> {
   import: boolean;
@@ -12,6 +7,5 @@ export interface ImportGpuDataResult<T = unknown> {
 
 export interface ImportGpuDataResults {
   name: ImportGpuDataResult<string>;
-  specs: Record<GpuSpecKey, ImportGpuDataResult<GpuSpec>>;
-  benchmarks: Record<GpuBenchmarkKey, ImportGpuDataResult<GpuBenchmark>>;
+  fields: Record<string, ImportGpuDataResult<GpuField>>;
 }

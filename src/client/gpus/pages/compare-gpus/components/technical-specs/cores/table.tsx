@@ -2,7 +2,7 @@ import { getGpuName } from '@client/gpus';
 import { Table, TBody, Th, THead, Tr } from '@client/shared/components';
 import React, { FunctionComponent, useContext } from 'react';
 import { ComparePageContext } from '../../../context';
-import { SpecRow } from '../../spec-row';
+import { FieldRow } from '../../field-row';
 
 interface CoresTableProps {
   className?: string;
@@ -24,19 +24,19 @@ export const CoresTable: FunctionComponent<CoresTableProps> = (props) => {
         </Tr>
       </THead>
       <TBody>
-        <SpecRow spec="shaderUnitsCudaCores" />
-        <SpecRow spec="textureMappingUnits" />
-        <SpecRow spec="renderOutputUnits" />
-        <SpecRow spec="tensorCores" />
-        <SpecRow spec="rayTracingCores" />
-        <SpecRow spec="coreClockSpeedBase" />
-        <SpecRow spec="coreClockSpeedBoost" />
-        <SpecRow spec="l1Cache" />
-        <SpecRow spec="l2Cache" />
-        <SpecRow spec="pixelFillRate" />
-        <SpecRow spec="textureFillRate" />
-        <SpecRow spec="fp32Performance" />
-        <SpecRow spec="fp64Performance" />
+        <FieldRow field="shaderUnitsCudaCores" />
+        <FieldRow field="textureMappingUnits" />
+        <FieldRow field="renderOutputUnits" />
+        <FieldRow field="tensorCores" />
+        <FieldRow field="rayTracingCores" />
+        <FieldRow field="coreClockSpeedBase" />
+        <FieldRow field="coreClockSpeedBoost" />
+        <FieldRow field="l1Cache" />
+        <FieldRow field="l2Cache" />
+        <FieldRow field="pixelFillRate" />
+        <FieldRow field="textureFillRate" />
+        <FieldRow field="fp32Performance" />
+        <FieldRow field="fp64Performance" />
       </TBody>
     </Table>
   );
@@ -64,10 +64,10 @@ export const CoresPerformanceTable: FunctionComponent<
         </Tr>
       </THead>
       <TBody>
-        <SpecRow spec="pixelFillRate" />
-        <SpecRow spec="textureFillRate" />
-        <SpecRow spec="fp32Performance" />
-        <SpecRow spec="fp64Performance" />
+        <FieldRow field="pixelFillRate" />
+        <FieldRow field="textureFillRate" />
+        <FieldRow field="fp32Performance" />
+        <FieldRow field="fp64Performance" />
       </TBody>
     </Table>
   );

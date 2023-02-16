@@ -1,8 +1,8 @@
 Immediate Tasks:
   - Data refactor
-    - home page - update comparison texts based on tag
     - move company, launch price, market segment, release date to gpus table?
       - These are values we will commonly need outside of specs
+    - home page - update comparison texts based on tag
   - Test everything
   - Add Content manually, scrapers can come later
   

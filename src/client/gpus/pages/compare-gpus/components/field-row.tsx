@@ -1,9 +1,9 @@
-import { formatGpuSpec } from '@client/gpus/gpu-spec-utils';
+import { formatGpuField } from '@client/gpus';
 import { Td, Tr } from '@client/shared/components';
 import { BooleanFormatter } from '@client/shared/format';
-import { GpuSpec, GpuSpecKey } from '@shared/gpus';
+import { Gpu, GpuBenchmarks, GpuField, GpuSpecs } from '@shared/gpus';
 import React, { useContext } from 'react';
-import { ViewPageContext } from '../context';
+import { ComparePageContext } from '../context';
 
 const LABELS: Record<string, string> = {
   // General
@@ -61,21 +61,38 @@ const LABELS: Record<string, string> = {
   shaderModelVersion: 'Shader Model',
 };
 
-interface SpecRowProps {
-  spec: GpuSpecKey;
+interface FieldRowProps {
+  field: string;
 }
 
-export const SpecRow = (props: SpecRowProps) => {
-  const { spec: key } = props;
+export const FieldRow = (props: FieldRowProps) => {
+  const { field: key } = props;
 
-  const { gpu } = useContext(ViewPageContext);
-  const specs = gpu.specs;
+  const context = useContext(ComparePageContext);
+  const [gpu1, gpu2] = context.comparison;
+  let field1: GpuField;
+  let field2: GpuField;
+  if (key in gpu1.specs || key in gpu2.specs) {
+    field1 = gpu1.specs[key as keyof GpuSpecs] as GpuField;
+    field2 = gpu2.specs[key as keyof GpuSpecs] as GpuField;
+  } else if (key in gpu1.benchmarks || key in gpu2.benchmarks) {
+    field1 = gpu1.benchmarks[key as keyof GpuBenchmarks] as GpuField;
+    field2 = gpu2.benchmarks[key as keyof GpuBenchmarks] as GpuField;
+  } else {
+    field1 = gpu1[key as keyof Gpu] as GpuField;
+    field2 = gpu2[key as keyof Gpu] as GpuField;
+  }
 
   return (
     <Tr>
-      <Td className="text-left w-[50%]">{LABELS[key]}</Td>
-      <Td className="text-left w-[50%]">
-        {formatGpuSpec(specs[key] as GpuSpec, {
+      <Td className="text-left w-[33%]">{LABELS[key]}</Td>
+      <Td className="text-left w-[33%]">
+        {formatGpuField(field1, {
+          booleanFormatter: BooleanFormatter.YesNo,
+        }) || '--'}
+      </Td>
+      <Td className="text-left w-[33%]">
+        {formatGpuField(field2, {
           booleanFormatter: BooleanFormatter.YesNo,
         }) || '--'}
       </Td>

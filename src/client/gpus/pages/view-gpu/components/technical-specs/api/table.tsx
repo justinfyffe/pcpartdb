@@ -1,6 +1,6 @@
 import { Table, TBody } from '@client/shared/components';
 import React, { FunctionComponent } from 'react';
-import { SpecRow } from '../../spec-row';
+import { FieldRow } from '../../field-row';
 
 interface ApiTableProps {
   className?: string;
@@ -12,10 +12,10 @@ export const ApiTable: FunctionComponent<ApiTableProps> = (props) => {
   return (
     <Table border responsive className={className}>
       <TBody>
-        <SpecRow spec="directxVersion" />
-        <SpecRow spec="openClVersion" />
-        <SpecRow spec="openGlVersion" />
-        <SpecRow spec="shaderModelVersion" />
+        <FieldRow field="directxVersion" />
+        <FieldRow field="openClVersion" />
+        <FieldRow field="openGlVersion" />
+        <FieldRow field="shaderModelVersion" />
       </TBody>
     </Table>
   );

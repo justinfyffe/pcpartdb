@@ -2,7 +2,7 @@ import { getGpuName } from '@client/gpus';
 import { Table, TBody, Th, THead, Tr } from '@client/shared/components';
 import React, { FunctionComponent, useContext } from 'react';
 import { ComparePageContext } from '../../../context';
-import { SpecRow } from '../../spec-row';
+import { FieldRow } from '../../field-row';
 
 interface ProcessorTableProps {
   className?: string;
@@ -26,10 +26,10 @@ export const ProcessorTable: FunctionComponent<ProcessorTableProps> = (
         </Tr>
       </THead>
       <TBody>
-        <SpecRow spec="codename" />
-        <SpecRow spec="architecture" />
-        <SpecRow spec="processSize" />
-        <SpecRow spec="transistors" />
+        <FieldRow field="codename" />
+        <FieldRow field="architecture" />
+        <FieldRow field="processSize" />
+        <FieldRow field="transistors" />
       </TBody>
     </Table>
   );

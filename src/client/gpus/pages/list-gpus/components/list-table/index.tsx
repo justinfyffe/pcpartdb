@@ -1,4 +1,4 @@
-import { formatGpuSpec, getGpuName, getViewGpuSlug } from '@client/gpus';
+import { formatGpuField, getGpuName, getViewGpuSlug } from '@client/gpus';
 import { Table, TBody, Td, Th, THead, Tr } from '@client/shared/components';
 import { getViewGpuPath } from '@client/shared/website';
 import React, { FunctionComponent, useContext } from 'react';
@@ -31,7 +31,7 @@ export const ListTable: FunctionComponent = () => {
             </Td>
             <Td>{gpu.ranks?.performanceRank || '--'}</Td>
             <Td>{gpu.ranks?.valueRank || '--'}</Td>
-            <Td>{formatGpuSpec(gpu.specs.releaseDate) || '--'}</Td>
+            <Td>{formatGpuField(gpu.releaseDate) || '--'}</Td>
           </Tr>
         ))}
       </TBody>

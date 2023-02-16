@@ -1,4 +1,4 @@
-import { GpuSpec, GpuSpecKey } from '@shared/gpus';
+import { GpuField } from '@shared/gpus';
 import React, {
   forwardRef,
   Ref,
@@ -27,7 +27,7 @@ type InputType =
 
 const INPUT_TYPES: Record<string, InputType> = {
   // General
-  company: 'autocomplete',
+  company: 'string',
   marketSegment: 'enum',
   launchPrice: 'currency',
   releaseDate: 'date',
@@ -83,10 +83,10 @@ const INPUT_TYPES: Record<string, InputType> = {
 
 interface GpuSpecFieldProps {
   type?: InputType;
-  field: GpuSpecKey;
+  field: string;
 
-  value?: GpuSpec;
-  onChange?: (value: GpuSpec) => void;
+  value?: GpuField;
+  onChange?: (value: GpuField) => void;
 }
 
 export const GpuSpecField = forwardRef<unknown, GpuSpecFieldProps>(
@@ -97,7 +97,7 @@ export const GpuSpecField = forwardRef<unknown, GpuSpecFieldProps>(
     useEffect(() => setValue(propsValue), [propsValue]);
 
     const handleChange = useCallback(
-      (value: GpuSpec) => {
+      (value: GpuField) => {
         setValue(value);
         onChange?.(value);
       },
@@ -109,7 +109,7 @@ export const GpuSpecField = forwardRef<unknown, GpuSpecFieldProps>(
       return (
         <GpuSpecAutocompleteField
           field={field}
-          value={value as GpuSpec<string>}
+          value={value as GpuField<string>}
           onChange={handleChange}
           ref={ref as Ref<HTMLInputElement>}
         />
@@ -118,7 +118,7 @@ export const GpuSpecField = forwardRef<unknown, GpuSpecFieldProps>(
       return (
         <GpuSpecCurrencyField
           field={field}
-          value={value as GpuSpec<number>}
+          value={value as GpuField<number>}
           onChange={handleChange}
           ref={ref as Ref<HTMLInputElement>}
         />
@@ -127,7 +127,7 @@ export const GpuSpecField = forwardRef<unknown, GpuSpecFieldProps>(
       return (
         <GpuSpecStringField
           field={field}
-          value={value as GpuSpec<string>}
+          value={value as GpuField<string>}
           onChange={handleChange}
           ref={ref as Ref<HTMLInputElement>}
         />
@@ -136,7 +136,7 @@ export const GpuSpecField = forwardRef<unknown, GpuSpecFieldProps>(
       return (
         <GpuSpecTextField
           field={field}
-          value={value as GpuSpec<string>}
+          value={value as GpuField<string>}
           onChange={handleChange}
           ref={ref as Ref<HTMLTextAreaElement>}
         />
@@ -145,7 +145,7 @@ export const GpuSpecField = forwardRef<unknown, GpuSpecFieldProps>(
       return (
         <GpuSpecFloatField
           field={field}
-          value={value as GpuSpec<number>}
+          value={value as GpuField<number>}
           onChange={handleChange}
           ref={ref as Ref<HTMLInputElement>}
         />
@@ -154,7 +154,7 @@ export const GpuSpecField = forwardRef<unknown, GpuSpecFieldProps>(
       return (
         <GpuSpecDateField
           field={field}
-          value={value as GpuSpec<string>}
+          value={value as GpuField<string>}
           onChange={handleChange}
           ref={ref as Ref<HTMLInputElement>}
         />
@@ -163,7 +163,7 @@ export const GpuSpecField = forwardRef<unknown, GpuSpecFieldProps>(
       return (
         <GpuSpecBooleanField
           field={field}
-          value={value as GpuSpec<boolean>}
+          value={value as GpuField<boolean>}
           onChange={handleChange}
           ref={ref as Ref<HTMLSelectElement>}
         />
@@ -172,7 +172,7 @@ export const GpuSpecField = forwardRef<unknown, GpuSpecFieldProps>(
       return (
         <GpuSpecEnumField
           field={field}
-          value={value as GpuSpec<string>}
+          value={value as GpuField<string>}
           onChange={handleChange}
           ref={ref as Ref<HTMLSelectElement>}
         />
@@ -181,7 +181,7 @@ export const GpuSpecField = forwardRef<unknown, GpuSpecFieldProps>(
       return (
         <GpuSpecStringField
           field={field}
-          value={value as GpuSpec<string>}
+          value={value as GpuField<string>}
           onChange={handleChange}
           ref={ref as Ref<HTMLInputElement>}
         />

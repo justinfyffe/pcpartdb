@@ -54,10 +54,6 @@ model GpuImage {
 
 model GpuSpecs {
   gpuId                   Int     @map("gpu_id")      @id
-  company                 String?
-  marketSegment           String? @map("market_segment")
-  launchPrice             Float?  @map("launch_price")
-  releaseDate             String? @map("release_date")
   codename                String?
   architecture            String?
   processSize             Float?  @map("process_size")
@@ -108,10 +104,14 @@ model Gpu {
   parentId       Int?            @map("parent_id")
   slug           String          @unique(map: "gpus_slug_unique") @db.VarChar(255)
   name           String          @unique(map: "gpus_name_unique") @db.VarChar(255)
-  affiliateUrl  String?         @map("affiliate_url") @db.VarChar(255)
+  affiliateUrl   String?         @map("affiliate_url") @db.VarChar(255)
+  company        String?
+  marketSegment  String?         @map("market_segment")
+  launchPrice    Float?          @map("launch_price")
+  releaseDate    String?         @map("release_date")
   metadata       Json?
-  createdAt     DateTime        @map("created_at") @default(now()) @db.Timestamptz(6) @ignore
-  updatedAt     DateTime        @map("updated_at") @default(now()) @db.Timestamptz(6) @updatedAt @ignore
+  createdAt      DateTime        @map("created_at") @default(now()) @db.Timestamptz(6) @ignore
+  updatedAt      DateTime        @map("updated_at") @default(now()) @db.Timestamptz(6) @updatedAt @ignore
 
   benchmarks GpuBenchmarks?
   images       GpuImage[]

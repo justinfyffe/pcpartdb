@@ -1,7 +1,11 @@
-import { GpuBenchmarks, GpuSpecs } from '@shared/gpus';
+import {
+  CreateGpuRequest,
+  GpuBenchmarks,
+  UpdateGpuRequest,
+} from '@shared/gpus';
 
 export function addPerformanceBenchmarks(
-  specs: GpuSpecs,
+  request: CreateGpuRequest | UpdateGpuRequest,
   benchmarks: GpuBenchmarks,
 ) {
   const performance = calculatePerformanceScore(benchmarks);
@@ -9,7 +13,7 @@ export function addPerformanceBenchmarks(
     benchmarks.performanceScore = { value: performance };
   }
 
-  const value = calculateValueScore(specs, performance);
+  const value = calculateValueScore(request, performance);
   if (value != null) {
     benchmarks.valueScore = { value };
   }
@@ -28,10 +32,13 @@ function calculatePerformanceScore(benchmarks: GpuBenchmarks) {
   return g3dMark;
 }
 
-function calculateValueScore(specs: GpuSpecs, performance: number) {
+function calculateValueScore(
+  request: CreateGpuRequest | UpdateGpuRequest,
+  performance: number,
+) {
   // Get inputs
   const performanceScore = performance;
-  const launchPrice = specs?.launchPrice?.value;
+  const launchPrice = request?.launchPrice?.value;
 
   // Validate inputs
   if (performanceScore == null) {

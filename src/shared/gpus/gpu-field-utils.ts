@@ -3,7 +3,7 @@ import {
   BitUnit,
   ClockSpeedUnit,
   FlopsUnit,
-  GpuUnit,
+  GpuFieldUnit,
   LengthUnit,
   MemoryUnit,
   NumericUnit,
@@ -12,7 +12,7 @@ import {
   TextureFillRateUnit,
   WattageUnit,
   WeightUnit,
-} from './gpu-spec-types';
+} from './gpu-field-types';
 
 const bandwidthMultiplier: Record<BandwidthUnit, number> = {
   [BandwidthUnit.kbps]: 1_000,
@@ -134,7 +134,7 @@ const weightFormats: Record<WeightUnit, string> = {
   [WeightUnit.kg]: 'kg',
 };
 
-function getGpuSpecValueMultiplier(unit: GpuUnit) {
+function getGpuFieldValueMultiplier(unit: GpuFieldUnit) {
   if (unit == null) {
     return 1;
   }
@@ -182,17 +182,23 @@ function getGpuSpecValueMultiplier(unit: GpuUnit) {
   }
 }
 
-export function calculateBaseGpuSpecValue(displayValue: number, unit: GpuUnit) {
-  const multiplier = getGpuSpecValueMultiplier(unit);
+export function calculateBaseGpuFieldValue(
+  displayValue: number,
+  unit: GpuFieldUnit,
+) {
+  const multiplier = getGpuFieldValueMultiplier(unit);
   return displayValue * multiplier;
 }
 
-export function calculateDisplayGpuSpecValue(baseValue: number, unit: GpuUnit) {
-  const multiplier = getGpuSpecValueMultiplier(unit);
+export function calculateDisplayGpuFieldValue(
+  baseValue: number,
+  unit: GpuFieldUnit,
+) {
+  const multiplier = getGpuFieldValueMultiplier(unit);
   return baseValue / multiplier;
 }
 
-export function getUnitFormat(unit: GpuUnit) {
+export function getUnitFormat(unit: GpuFieldUnit) {
   if (unit == null) {
     return '';
   }

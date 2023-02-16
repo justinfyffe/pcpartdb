@@ -38,10 +38,6 @@ CREATE TABLE "gpu_images" (
 -- CreateTable
 CREATE TABLE "gpu_specs" (
     "gpu_id" INTEGER NOT NULL,
-    "company" TEXT,
-    "market_segment" TEXT,
-    "launch_price" DOUBLE PRECISION,
-    "release_date" TEXT,
     "codename" TEXT,
     "architecture" TEXT,
     "process_size" DOUBLE PRECISION,
@@ -92,6 +88,10 @@ CREATE TABLE "gpus" (
     "slug" VARCHAR(255) NOT NULL,
     "name" VARCHAR(255) NOT NULL,
     "affiliate_url" VARCHAR(255),
+    "company" TEXT,
+    "market_segment" TEXT,
+    "launch_price" DOUBLE PRECISION,
+    "release_date" TEXT,
     "metadata" JSONB,
     "created_at" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,

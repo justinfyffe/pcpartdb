@@ -1,9 +1,9 @@
-import { formatGpuBenchmark, getGpuName, getShoppingUrl } from '@client/gpus';
+import { formatGpuField, getGpuName, getShoppingUrl } from '@client/gpus';
 import { Table, TBody, Th, THead, Tr } from '@client/shared/components';
 import React, { FunctionComponent, useContext } from 'react';
 import { ComparePageContext } from '../../context';
 import { CustomRow, CustomRowLabel, CustomRowValue } from '../custom-row';
-import { SpecRow } from '../spec-row';
+import { FieldRow } from '../field-row';
 
 interface GeneralInfoTableProps {
   className?: string;
@@ -71,7 +71,7 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
             {benchmarks1.performanceScore != null &&
             ranks1.performanceRank != null ? (
               <>
-                {formatGpuBenchmark(benchmarks1.performanceScore)} (
+                {formatGpuField(benchmarks1.performanceScore)} (
                 {ranks1.performanceRank})
               </>
             ) : (
@@ -82,7 +82,7 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
             {benchmarks2.performanceScore != null &&
             ranks2.performanceRank != null ? (
               <>
-                {formatGpuBenchmark(benchmarks2.performanceScore)} (
+                {formatGpuField(benchmarks2.performanceScore)} (
                 {ranks2.performanceRank})
               </>
             ) : (
@@ -95,8 +95,7 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
           <CustomRowValue>
             {benchmarks1.valueScore != null && ranks1.valueRank != null ? (
               <>
-                {formatGpuBenchmark(benchmarks1.valueScore)} ({ranks1.valueRank}
-                )
+                {formatGpuField(benchmarks1.valueScore)} ({ranks1.valueRank})
               </>
             ) : (
               <>--</>
@@ -105,18 +104,17 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
           <CustomRowValue>
             {benchmarks2.valueScore != null && ranks2.valueRank != null ? (
               <>
-                {formatGpuBenchmark(benchmarks2.valueScore)} ({ranks2.valueRank}
-                )
+                {formatGpuField(benchmarks2.valueScore)} ({ranks2.valueRank})
               </>
             ) : (
               <>--</>
             )}
           </CustomRowValue>
         </CustomRow>
-        <SpecRow spec="company" />
-        <SpecRow spec="marketSegment" />
-        <SpecRow spec="releaseDate" />
-        <SpecRow spec="launchPrice" />
+        <FieldRow field="company" />
+        <FieldRow field="marketSegment" />
+        <FieldRow field="releaseDate" />
+        <FieldRow field="launchPrice" />
       </TBody>
     </Table>
   );

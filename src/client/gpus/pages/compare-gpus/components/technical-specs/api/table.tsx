@@ -2,7 +2,7 @@ import { getGpuName } from '@client/gpus';
 import { Table, TBody, Th, THead, Tr } from '@client/shared/components';
 import React, { FunctionComponent, useContext } from 'react';
 import { ComparePageContext } from '../../../context';
-import { SpecRow } from '../../spec-row';
+import { FieldRow } from '../../field-row';
 
 interface ApiTableProps {
   className?: string;
@@ -24,10 +24,10 @@ export const ApiTable: FunctionComponent<ApiTableProps> = (props) => {
         </Tr>
       </THead>
       <TBody>
-        <SpecRow spec="directxVersion" />
-        <SpecRow spec="openClVersion" />
-        <SpecRow spec="openGlVersion" />
-        <SpecRow spec="shaderModelVersion" />
+        <FieldRow field="directxVersion" />
+        <FieldRow field="openClVersion" />
+        <FieldRow field="openGlVersion" />
+        <FieldRow field="shaderModelVersion" />
       </TBody>
     </Table>
   );

@@ -1,6 +1,6 @@
 import { Button } from '@client/shared/components';
 import { Input } from '@client/shared/components/input/input';
-import { GpuSpec } from '@shared/gpus';
+import { GpuField } from '@shared/gpus';
 import React, { forwardRef, useCallback, useState } from 'react';
 import { Control, useWatch } from 'react-hook-form';
 
@@ -17,7 +17,7 @@ export const GpuSlugField = forwardRef<HTMLInputElement, GpuSlugFieldProps>(
     const { control, onChange, value } = props;
 
     const name: string = useWatch({ control, name: 'name' });
-    const company: GpuSpec<string> = useWatch({ control, name: 'company' });
+    const company: GpuField<string> = useWatch({ control, name: 'company' });
     const [slug, setSlug] = useState(value);
 
     const handleChange = useCallback(

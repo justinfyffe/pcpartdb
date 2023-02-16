@@ -16,12 +16,11 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import { ImportGpuBenchmark } from './import-gpu-benchmark';
 import {
   createImportContext,
   ImportGpuDataContext,
 } from './import-gpu-data-context';
-import { ImportGpuSpec } from './import-gpu-spec';
+import { ImportGpuField } from './import-gpu-field';
 import { ImportName } from './import-name';
 import { ImportGpuDataResults } from './import-types';
 
@@ -81,56 +80,56 @@ export const ImportGpuDataDialog: FunctionComponent<
               </THead>
               <TBody>
                 <ImportName />
-                <ImportGpuSpec spec="company" />
-                <ImportGpuSpec spec="marketSegment" />
-                <ImportGpuSpec spec="launchPrice" />
-                <ImportGpuSpec spec="releaseDate" />
+                <ImportGpuField field="company" />
+                <ImportGpuField field="marketSegment" />
+                <ImportGpuField field="launchPrice" />
+                <ImportGpuField field="releaseDate" />
 
-                <ImportGpuSpec spec="codename" />
-                <ImportGpuSpec spec="architecture" />
-                <ImportGpuSpec spec="processSize" />
-                <ImportGpuSpec spec="transistors" />
+                <ImportGpuField field="codename" />
+                <ImportGpuField field="architecture" />
+                <ImportGpuField field="processSize" />
+                <ImportGpuField field="transistors" />
 
-                <ImportGpuSpec spec="memorySize" />
-                <ImportGpuSpec spec="memoryType" />
-                <ImportGpuSpec spec="memoryClock" />
-                <ImportGpuSpec spec="memoryInterface" />
-                <ImportGpuSpec spec="memoryBandwidth" />
+                <ImportGpuField field="memorySize" />
+                <ImportGpuField field="memoryType" />
+                <ImportGpuField field="memoryClock" />
+                <ImportGpuField field="memoryInterface" />
+                <ImportGpuField field="memoryBandwidth" />
 
-                <ImportGpuSpec spec="slotWidth" />
-                <ImportGpuSpec spec="length" />
-                <ImportGpuSpec spec="width" />
-                <ImportGpuSpec spec="height" />
-                <ImportGpuSpec spec="weight" />
-                <ImportGpuSpec spec="thermalDesignPower" />
-                <ImportGpuSpec spec="suggestedPsu" />
-                <ImportGpuSpec spec="busInterface" />
-                <ImportGpuSpec spec="powerConnectors" />
-                <ImportGpuSpec spec="outputs" />
+                <ImportGpuField field="slotWidth" />
+                <ImportGpuField field="length" />
+                <ImportGpuField field="width" />
+                <ImportGpuField field="height" />
+                <ImportGpuField field="weight" />
+                <ImportGpuField field="thermalDesignPower" />
+                <ImportGpuField field="suggestedPsu" />
+                <ImportGpuField field="busInterface" />
+                <ImportGpuField field="powerConnectors" />
+                <ImportGpuField field="outputs" />
 
-                <ImportGpuSpec spec="shaderUnitsCudaCores" />
-                <ImportGpuSpec spec="textureMappingUnits" />
-                <ImportGpuSpec spec="renderOutputUnits" />
-                <ImportGpuSpec spec="tensorCores" />
-                <ImportGpuSpec spec="rayTracingCores" />
-                <ImportGpuSpec spec="coreClockSpeedBase" />
-                <ImportGpuSpec spec="coreClockSpeedBoost" />
-                <ImportGpuSpec spec="l1Cache" />
-                <ImportGpuSpec spec="l2Cache" />
+                <ImportGpuField field="shaderUnitsCudaCores" />
+                <ImportGpuField field="textureMappingUnits" />
+                <ImportGpuField field="renderOutputUnits" />
+                <ImportGpuField field="tensorCores" />
+                <ImportGpuField field="rayTracingCores" />
+                <ImportGpuField field="coreClockSpeedBase" />
+                <ImportGpuField field="coreClockSpeedBoost" />
+                <ImportGpuField field="l1Cache" />
+                <ImportGpuField field="l2Cache" />
 
-                <ImportGpuSpec spec="pixelFillRate" />
-                <ImportGpuSpec spec="textureFillRate" />
-                <ImportGpuSpec spec="fp32Performance" />
-                <ImportGpuSpec spec="fp64Performance" />
+                <ImportGpuField field="pixelFillRate" />
+                <ImportGpuField field="textureFillRate" />
+                <ImportGpuField field="fp32Performance" />
+                <ImportGpuField field="fp64Performance" />
 
-                <ImportGpuSpec spec="directxVersion" />
-                <ImportGpuSpec spec="openClVersion" />
-                <ImportGpuSpec spec="openGlVersion" />
-                <ImportGpuSpec spec="shaderModelVersion" />
+                <ImportGpuField field="directxVersion" />
+                <ImportGpuField field="openClVersion" />
+                <ImportGpuField field="openGlVersion" />
+                <ImportGpuField field="shaderModelVersion" />
 
-                <ImportGpuBenchmark benchmark="g3dMark" />
-                <ImportGpuBenchmark benchmark="g2dMark" />
-                <ImportGpuBenchmark benchmark="timespyGraphics" />
+                <ImportGpuField field="g3dMark" />
+                <ImportGpuField field="g2dMark" />
+                <ImportGpuField field="timespyGraphics" />
               </TBody>
             </Table>
           </div>
