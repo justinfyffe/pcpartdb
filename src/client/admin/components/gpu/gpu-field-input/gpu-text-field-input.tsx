@@ -2,16 +2,16 @@ import { Textarea } from '@client/shared/components';
 import { GpuField } from '@shared/gpus';
 import React, { forwardRef, useCallback } from 'react';
 
-interface GpuSpecTextFieldProps {
+interface GpuTextFieldInputProps {
   field: string;
 
   value?: GpuField<string>;
   onChange?: (value: GpuField<string>) => void;
 }
 
-export const GpuSpecTextField = forwardRef<
+export const GpuTextFieldInput = forwardRef<
   HTMLTextAreaElement,
-  GpuSpecTextFieldProps
+  GpuTextFieldInputProps
 >((props, ref) => {
   const { field, value, onChange } = props;
 
@@ -26,4 +26,4 @@ export const GpuSpecTextField = forwardRef<
 
   return <Textarea value={baseValue} onChange={handleChange} ref={ref} />;
 });
-GpuSpecTextField.displayName = 'GpuSpecTextField';
+GpuTextFieldInput.displayName = 'GpuTextFieldInput';

@@ -10,16 +10,16 @@ const ITEMS: { [key: string]: { label: string; value: string }[] } = {
   ],
 };
 
-interface GpuSpecEnumFieldProps {
+interface GpuEnumFieldInputProps {
   field: string;
 
   value?: GpuField<string>;
   onChange?: (value: GpuField<string>) => void;
 }
 
-export const GpuSpecEnumField = forwardRef<
+export const GpuEnumFieldInput = forwardRef<
   HTMLSelectElement,
-  GpuSpecEnumFieldProps
+  GpuEnumFieldInputProps
 >((props, ref) => {
   const { field, value, onChange } = props;
 
@@ -52,4 +52,4 @@ export const GpuSpecEnumField = forwardRef<
     </Select>
   );
 });
-GpuSpecEnumField.displayName = 'GpuSpecEnumField';
+GpuEnumFieldInput.displayName = 'GpuEnumFieldInput';

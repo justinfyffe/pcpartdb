@@ -1,17 +1,17 @@
-import { DateInput } from '@client/shared/components';
+import { TextInput } from '@client/shared/components';
 import { GpuField } from '@shared/gpus';
 import React, { forwardRef, useCallback } from 'react';
 
-interface GpuSpecDateFieldProps {
+interface GpuStringFieldInputProps {
   field: string;
 
   value?: GpuField<string>;
   onChange?: (value: GpuField<string>) => void;
 }
 
-export const GpuSpecDateField = forwardRef<
+export const GpuStringFieldInput = forwardRef<
   HTMLInputElement,
-  GpuSpecDateFieldProps
+  GpuStringFieldInputProps
 >((props, ref) => {
   const { field, value, onChange } = props;
 
@@ -24,6 +24,6 @@ export const GpuSpecDateField = forwardRef<
     [field, onChange],
   );
 
-  return <DateInput value={baseValue} onChange={handleChange} ref={ref} />;
+  return <TextInput value={baseValue} onChange={handleChange} ref={ref} />;
 });
-GpuSpecDateField.displayName = 'GpuSpecDateField';
+GpuStringFieldInput.displayName = 'GpuStringFieldInput';

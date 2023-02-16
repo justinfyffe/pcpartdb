@@ -3,16 +3,16 @@ import { Autocomplete, AutocompleteOption } from '@client/shared/components';
 import { GpuField } from '@shared/gpus';
 import React, { forwardRef, useCallback, useState } from 'react';
 
-interface GpuSpecAutocompleteFieldProps {
+interface GpuAutocompleteSpecFieldInputProps {
   field: string;
 
   value?: GpuField<string>;
   onChange?: (value: GpuField<string>) => void;
 }
 
-export const GpuSpecAutocompleteField = forwardRef<
+export const GpuAutocompleteSpecFieldInput = forwardRef<
   HTMLInputElement,
-  GpuSpecAutocompleteFieldProps
+  GpuAutocompleteSpecFieldInputProps
 >((props, ref) => {
   const { field, value, onChange } = props;
 
@@ -62,4 +62,4 @@ export const GpuSpecAutocompleteField = forwardRef<
     </Autocomplete>
   );
 });
-GpuSpecAutocompleteField.displayName = 'GpuSpecAutocompleteField';
+GpuAutocompleteSpecFieldInput.displayName = 'GpuAutocompleteSpecFieldInput';

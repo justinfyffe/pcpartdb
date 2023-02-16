@@ -2,16 +2,16 @@ import { Select, SelectOption, SelectValue } from '@client/shared/components';
 import { GpuField } from '@shared/gpus';
 import React, { forwardRef, useCallback } from 'react';
 
-interface GpuSpecStringFieldProps {
+interface GpuBooleanFieldInputProps {
   field: string;
 
   value?: GpuField<boolean>;
   onChange?: (value: GpuField<boolean>) => void;
 }
 
-export const GpuSpecBooleanField = forwardRef<
+export const GpuBooleanFieldInput = forwardRef<
   HTMLSelectElement,
-  GpuSpecStringFieldProps
+  GpuBooleanFieldInputProps
 >((props, ref) => {
   const { field, value, onChange } = props;
 
@@ -42,4 +42,4 @@ export const GpuSpecBooleanField = forwardRef<
     </Select>
   );
 });
-GpuSpecBooleanField.displayName = 'GpuSpecBooleanField';
+GpuBooleanFieldInput.displayName = 'GpuBooleanFieldInput';

@@ -4,16 +4,16 @@ import React, { forwardRef, useCallback, useMemo, useState } from 'react';
 
 const CURRENCIES = ['USD'];
 
-interface GpuSpecCurrencyFieldProps {
+interface GpuCurrencyFieldInputProps {
   field: string;
 
   value?: GpuField<number>;
   onChange?: (value: GpuField<number>) => void;
 }
 
-export const GpuSpecCurrencyField = forwardRef<
+export const GpuCurrencyFieldInput = forwardRef<
   HTMLInputElement,
-  GpuSpecCurrencyFieldProps
+  GpuCurrencyFieldInputProps
 >((props, ref) => {
   const { field, value, onChange } = props;
 
@@ -62,4 +62,4 @@ export const GpuSpecCurrencyField = forwardRef<
     />
   );
 });
-GpuSpecCurrencyField.displayName = 'GpuSpecCurrencyField';
+GpuCurrencyFieldInput.displayName = 'GpuCurrencyFieldInput';

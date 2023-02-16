@@ -44,16 +44,16 @@ const UNITS: Record<string, GpuFieldUnit[]> = {
   memoryClock: [ClockSpeedUnit.mhz],
 };
 
-interface GpuSpecFloatFieldProps {
+interface GpuFloatFieldInputProps {
   field: string;
 
   value?: GpuField<number>;
   onChange?: (value: GpuField<number>) => void;
 }
 
-export const GpuSpecFloatField = forwardRef<
+export const GpuFloatFieldInput = forwardRef<
   HTMLInputElement,
-  GpuSpecFloatFieldProps
+  GpuFloatFieldInputProps
 >((props, ref) => {
   const { field, value, onChange } = props;
 
@@ -111,4 +111,4 @@ export const GpuSpecFloatField = forwardRef<
     />
   );
 });
-GpuSpecFloatField.displayName = 'GpuSpecFloatField';
+GpuFloatFieldInput.displayName = 'GpuFloatFieldInput';

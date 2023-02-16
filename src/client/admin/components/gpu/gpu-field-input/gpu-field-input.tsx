@@ -6,14 +6,14 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import { GpuSpecAutocompleteField } from './gpu-spec-autocomplete-field';
-import { GpuSpecBooleanField } from './gpu-spec-boolean-field';
-import { GpuSpecCurrencyField } from './gpu-spec-currency-field';
-import { GpuSpecDateField } from './gpu-spec-date-field';
-import { GpuSpecEnumField } from './gpu-spec-enum-field';
-import { GpuSpecFloatField } from './gpu-spec-float-field';
-import { GpuSpecStringField } from './gpu-spec-string-field';
-import { GpuSpecTextField } from './gpu-spec-text-field';
+import { GpuAutocompleteSpecFieldInput } from './gpu-autocomplete-spec-field-input';
+import { GpuBooleanFieldInput } from './gpu-boolean-field-input';
+import { GpuCurrencyFieldInput } from './gpu-currency-field-input';
+import { GpuDateFieldInput } from './gpu-date-field-input';
+import { GpuEnumFieldInput } from './gpu-enum-field-input';
+import { GpuFloatFieldInput } from './gpu-float-field-input';
+import { GpuStringFieldInput } from './gpu-string-field-input';
+import { GpuTextFieldInput } from './gpu-text-field-input';
 
 type InputType =
   | 'autocomplete'
@@ -89,7 +89,7 @@ interface GpuSpecFieldProps {
   onChange?: (value: GpuField) => void;
 }
 
-export const GpuSpecField = forwardRef<unknown, GpuSpecFieldProps>(
+export const GpuFieldInput = forwardRef<unknown, GpuSpecFieldProps>(
   (props, ref) => {
     const { type, field, value: propsValue, onChange } = props;
 
@@ -107,7 +107,7 @@ export const GpuSpecField = forwardRef<unknown, GpuSpecFieldProps>(
     const inputType = type ?? INPUT_TYPES[field];
     if (inputType === 'autocomplete') {
       return (
-        <GpuSpecAutocompleteField
+        <GpuAutocompleteSpecFieldInput
           field={field}
           value={value as GpuField<string>}
           onChange={handleChange}
@@ -116,7 +116,7 @@ export const GpuSpecField = forwardRef<unknown, GpuSpecFieldProps>(
       );
     } else if (inputType === 'currency') {
       return (
-        <GpuSpecCurrencyField
+        <GpuCurrencyFieldInput
           field={field}
           value={value as GpuField<number>}
           onChange={handleChange}
@@ -125,7 +125,7 @@ export const GpuSpecField = forwardRef<unknown, GpuSpecFieldProps>(
       );
     } else if (inputType === 'string') {
       return (
-        <GpuSpecStringField
+        <GpuStringFieldInput
           field={field}
           value={value as GpuField<string>}
           onChange={handleChange}
@@ -134,7 +134,7 @@ export const GpuSpecField = forwardRef<unknown, GpuSpecFieldProps>(
       );
     } else if (inputType === 'text') {
       return (
-        <GpuSpecTextField
+        <GpuTextFieldInput
           field={field}
           value={value as GpuField<string>}
           onChange={handleChange}
@@ -143,7 +143,7 @@ export const GpuSpecField = forwardRef<unknown, GpuSpecFieldProps>(
       );
     } else if (inputType === 'float') {
       return (
-        <GpuSpecFloatField
+        <GpuFloatFieldInput
           field={field}
           value={value as GpuField<number>}
           onChange={handleChange}
@@ -152,7 +152,7 @@ export const GpuSpecField = forwardRef<unknown, GpuSpecFieldProps>(
       );
     } else if (inputType === 'date') {
       return (
-        <GpuSpecDateField
+        <GpuDateFieldInput
           field={field}
           value={value as GpuField<string>}
           onChange={handleChange}
@@ -161,7 +161,7 @@ export const GpuSpecField = forwardRef<unknown, GpuSpecFieldProps>(
       );
     } else if (inputType === 'boolean') {
       return (
-        <GpuSpecBooleanField
+        <GpuBooleanFieldInput
           field={field}
           value={value as GpuField<boolean>}
           onChange={handleChange}
@@ -170,7 +170,7 @@ export const GpuSpecField = forwardRef<unknown, GpuSpecFieldProps>(
       );
     } else if (inputType === 'enum') {
       return (
-        <GpuSpecEnumField
+        <GpuEnumFieldInput
           field={field}
           value={value as GpuField<string>}
           onChange={handleChange}
@@ -179,7 +179,7 @@ export const GpuSpecField = forwardRef<unknown, GpuSpecFieldProps>(
       );
     } else {
       return (
-        <GpuSpecStringField
+        <GpuStringFieldInput
           field={field}
           value={value as GpuField<string>}
           onChange={handleChange}
@@ -189,4 +189,4 @@ export const GpuSpecField = forwardRef<unknown, GpuSpecFieldProps>(
     }
   },
 );
-GpuSpecField.displayName = 'GpuSpecField';
+GpuFieldInput.displayName = 'GpuFieldInput';
