@@ -12,9 +12,9 @@ import React, {
   useState,
 } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { GpuImageField } from './gpu-image-field';
+import { GpuImageInput } from './gpu-image-input';
 
-interface GpuImagesFieldProps {
+interface GpuImagesInputProps {
   name: string;
   value: GpuImages;
 
@@ -23,7 +23,7 @@ interface GpuImagesFieldProps {
   ref?: unknown;
 }
 
-export const GpuImagesField: FunctionComponent<GpuImagesFieldProps> = (
+export const GpuImagesInput: FunctionComponent<GpuImagesInputProps> = (
   props,
 ) => {
   const { value, onChange } = props;
@@ -94,7 +94,7 @@ export const GpuImagesField: FunctionComponent<GpuImagesFieldProps> = (
         <div key={rowKeys[i]} className="flex items-stretch mb-6">
           <div className="mx-6 text-3xl self-center">{i + 1}</div>
 
-          <GpuImageField
+          <GpuImageInput
             value={image}
             onChange={(value) => handleImageChange(i, value)}
             className="flex-1 mb-0"

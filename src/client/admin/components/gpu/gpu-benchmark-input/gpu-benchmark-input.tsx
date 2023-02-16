@@ -14,7 +14,7 @@ const LABELS: Record<string, string> = {
   timespyGraphics: '3DMark Time Spy Graphics',
 };
 
-interface GpuBenchmarkFieldProps {
+interface GpuBenchmarkInputProps {
   field: string;
 
   value?: GpuField<number>;
@@ -24,7 +24,7 @@ interface GpuBenchmarkFieldProps {
   ref?: unknown;
 }
 
-export const GpuBenchmarkField: FunctionComponent<GpuBenchmarkFieldProps> = (
+export const GpuBenchmarkInput: FunctionComponent<GpuBenchmarkInputProps> = (
   props,
 ) => {
   const { field, value: propsValue, onChange, className } = props;

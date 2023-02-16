@@ -4,7 +4,7 @@ import { Image } from '@shared/image';
 import React, { FunctionComponent, useCallback } from 'react';
 import { ImageInput } from '../../image';
 
-interface GpuImageFieldProps {
+interface GpuImageInputProps {
   value?: GpuImage;
   onChange?: (value: GpuImage) => void;
 
@@ -12,7 +12,7 @@ interface GpuImageFieldProps {
   ref?: unknown;
 }
 
-export const GpuImageField: FunctionComponent<GpuImageFieldProps> = (props) => {
+export const GpuImageInput: FunctionComponent<GpuImageInputProps> = (props) => {
   const { value, onChange, className } = props;
   const imageCache = useImageCache();
 

@@ -38,10 +38,10 @@ import React, {
   useState,
 } from 'react';
 import { Controller, useForm, UseFormProps } from 'react-hook-form';
-import { GpuBenchmarkField } from '../gpu-benchmark-field';
+import { GpuBenchmarkInput } from '../gpu-benchmark-input';
 import { GpuFieldInput } from '../gpu-field-input';
-import { GpuImagesField } from '../gpu-image-field';
-import { GpuSlugField } from '../gpu-slug-field';
+import { GpuImagesInput } from '../gpu-image-input';
+import { GpuSlugInput } from '../gpu-slug-input';
 import {
   ImportGpuDataDialog,
   ImportGpuDataResults,
@@ -405,7 +405,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
             name="slug"
             control={control}
             render={({ field }) => (
-              <GpuSlugField control={control} {...field} ref={null} />
+              <GpuSlugInput control={control} {...field} ref={null} />
             )}
           />
           {errors.slug?.type === ValidationErrorType.MissingStringValue && (
@@ -921,7 +921,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           name="g3dMark"
           control={control}
           render={({ field }) => (
-            <GpuBenchmarkField field="g3dMark" {...field} ref={null} />
+            <GpuBenchmarkInput field="g3dMark" {...field} ref={null} />
           )}
         />
 
@@ -929,7 +929,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           name="g2dMark"
           control={control}
           render={({ field }) => (
-            <GpuBenchmarkField field="g2dMark" {...field} ref={null} />
+            <GpuBenchmarkInput field="g2dMark" {...field} ref={null} />
           )}
         />
 
@@ -937,7 +937,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           name="timespyGraphics"
           control={control}
           render={({ field }) => (
-            <GpuBenchmarkField field="timespyGraphics" {...field} ref={null} />
+            <GpuBenchmarkInput field="timespyGraphics" {...field} ref={null} />
           )}
         />
       </section>
@@ -948,7 +948,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
         <Controller
           name="images"
           control={control}
-          render={({ field }) => <GpuImagesField {...field} ref={null} />}
+          render={({ field }) => <GpuImagesInput {...field} ref={null} />}
         />
       </section>
 

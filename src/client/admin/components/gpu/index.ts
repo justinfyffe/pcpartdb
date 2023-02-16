@@ -1,4 +1,4 @@
 export * from './gpu-form';
-export * from './gpu-benchmark-field';
-export * from './gpu-image-field';
+export * from './gpu-benchmark-input';
+export * from './gpu-image-input';
 export * from './gpu-field-input';

@@ -4,7 +4,7 @@ import { GpuField } from '@shared/gpus';
 import React, { forwardRef, useCallback, useState } from 'react';
 import { Control, useWatch } from 'react-hook-form';
 
-interface GpuSlugFieldProps {
+interface GpuSlugInputProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   control: Control<any, any>;
 
@@ -12,7 +12,7 @@ interface GpuSlugFieldProps {
   onChange?: (value: string) => void;
 }
 
-export const GpuSlugField = forwardRef<HTMLInputElement, GpuSlugFieldProps>(
+export const GpuSlugInput = forwardRef<HTMLInputElement, GpuSlugInputProps>(
   (props, ref) => {
     const { control, onChange, value } = props;
 
@@ -57,4 +57,4 @@ export const GpuSlugField = forwardRef<HTMLInputElement, GpuSlugFieldProps>(
     );
   },
 );
-GpuSlugField.displayName = 'SlugField';
+GpuSlugInput.displayName = 'SlugField';
