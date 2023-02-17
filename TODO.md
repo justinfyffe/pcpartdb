@@ -1,4 +1,5 @@
 Immediate Tasks:
+  - Don't upload node_modules when deploying, just use npx
   - Data refactor
     - home page - update comparison texts based on tag
   - Test everything
