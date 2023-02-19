@@ -10,7 +10,7 @@ import { Context } from '@server/shared/context';
 import { SsrContext } from '@server/shared/ssr/context';
 import { ssrPageProps } from '@server/shared/ssr/props';
 import { validate } from '@server/shared/types/validate';
-import { GpusQuery } from '@shared/gpus';
+import { GpuSort, GpusQuery } from '@shared/gpus';
 import { ParsedUrlQuery } from 'querystring';
 
 export const getServerSideProps = ssrPageProps<ListGpusPageProps>(
@@ -26,7 +26,7 @@ export const getServerSideProps = ssrPageProps<ListGpusPageProps>(
 
 function getQuery(query: ParsedUrlQuery) {
   const company = (query.company as string)?.split(',');
-  const sort = query.sort as string;
+  const sort = (query.sort as string) || GpuSort.PerformanceRating;
   const order = query.order as string;
   const preset = query.preset as ListPresetSlug;
 
