@@ -1,4 +1,9 @@
-import { GpuBenchmarks, GpuField, ImportGpuDataResponse } from '@shared/gpus';
+import {
+  GpuBenchmarks,
+  GpuField,
+  ImportGpuDataResponse,
+  MarketSegmentValue,
+} from '@shared/gpus';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 
@@ -13,7 +18,9 @@ export async function importFromVideoCardBenchmark(url: string) {
     g2dMark: getG2dMark($),
   };
 
-  return { gpu: { benchmarks } } as ImportGpuDataResponse;
+  return {
+    gpu: { marketSegment: getMarketSegment($), benchmarks },
+  } as ImportGpuDataResponse;
 }
 
 function getG3dMark($: cheerio.CheerioAPI): GpuField<number> {
@@ -32,4 +39,29 @@ function getG2dMark($: cheerio.CheerioAPI): GpuField<number> {
     .trim();
 
   return { value: Number(g2dMark), meta: { fieldKey: 'g2dMark' } };
+}
+
+function getMarketSegment($: cheerio.CheerioAPI): GpuField<MarketSegmentValue> {
+  const text = $('.desc-foot p strong')
+    .filter((_i, strong) => $(strong).text().trim() === 'Videocard Category:')
+    .parent()
+    .contents()
+    .filter((_i, el) => el.type === 'text' && el.nodeValue.trim() !== '')
+    .first()
+    .text()
+    .trim();
+
+  let marketSegment: MarketSegmentValue = null;
+  if (text === 'Desktop') {
+    marketSegment = MarketSegmentValue.Desktop;
+  } else if (text === 'Mobile') {
+    marketSegment = MarketSegmentValue.Laptop;
+  } else if (text === 'Workstation') {
+    marketSegment = MarketSegmentValue.Workstation;
+  }
+
+  return {
+    value: marketSegment as MarketSegmentValue,
+    meta: { fieldKey: 'marketSegment' },
+  };
 }

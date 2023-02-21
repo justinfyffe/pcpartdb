@@ -32,7 +32,7 @@ function getSmtpSettings() {
   const host = process.env.SMTP_HOST;
   const port = Number(process.env.SMTP_PORT);
   const secure = port === 465;
-  const user = process.env.SMTP_USERNAME;
+  const user = process.env.SMTP_USER;
   const pass = process.env.SMTP_PASSWORD;
 
   return { host, port, secure, auth: { user, pass } };

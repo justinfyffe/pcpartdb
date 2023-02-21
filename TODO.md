@@ -1,5 +1,6 @@
 Immediate Tasks:
-  - Fetch market segment from videocardbenchmarkz
+  - Fix bug where unauthorized pages doesn't display
+  - Improve security for reset password (store hashed tokens in db)
   - Don't upload node_modules when deploying, just use npx
   - Data refactor
     - home page - update comparison texts based on tag

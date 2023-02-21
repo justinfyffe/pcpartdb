@@ -9,7 +9,7 @@ function getSecret(type: JwtType) {
     case JwtType.ResetPassword:
       return process.env.JWT_SECRET_RESET_PASSWORD;
     default:
-      return null;
+      throw new Error(`Missing JWT Secret for type=${type}`);
   }
 }
 
