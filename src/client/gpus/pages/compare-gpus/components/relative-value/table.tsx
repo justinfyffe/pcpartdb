@@ -52,7 +52,7 @@ export const ValueTable: FunctionComponent<ValueTableProps> = (props) => {
         const rankDiff =
           relativeValueGpus[i].ranks.valueRank -
           relativeValueGpus[i - 1].ranks.valueRank;
-        if (rankDiff > 1) {
+        if (rankDiff !== 1) {
           ret.push(null);
         }
       }

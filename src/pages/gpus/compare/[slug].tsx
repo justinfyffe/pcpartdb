@@ -97,9 +97,11 @@ function getSurroundingGpus2(gpus: Gpu[], seed: GpuComparison, total: number) {
   const seedIndex2 = gpus.findIndex((gpu) => gpu.id === seed[1].id);
 
   if (Math.abs(seedIndex2 - seedIndex1) > total) {
+    const seeds =
+      seedIndex1 < seedIndex2 ? [seed[0], seed[1]] : [seed[1], seed[0]];
     return [
-      ...getSurroundingGpus(gpus, seed[0], Math.floor(total / 2)),
-      ...getSurroundingGpus(gpus, seed[1], Math.floor(total / 2)),
+      ...getSurroundingGpus(gpus, seeds[0], Math.floor(total / 2)),
+      ...getSurroundingGpus(gpus, seeds[1], Math.floor(total / 2)),
     ];
   } else {
     const seedIndex = Math.floor((seedIndex1 + seedIndex2) / 2);
@@ -122,6 +124,7 @@ function getSurroundingGpus2(gpus: Gpu[], seed: GpuComparison, total: number) {
   }
 }
 
+// TODO: clean up this logic
 async function getPerformanceGpus(seed: GpuComparison, ctx: Context) {
   const results = await gpuService.list(
     {
@@ -137,6 +140,7 @@ async function getPerformanceGpus(seed: GpuComparison, ctx: Context) {
   return await getSurroundingGpus2(results, seed, TOTAL_COMPARED_GPUS);
 }
 
+// TODO: clean up this logic
 async function getValueGpus(seed: GpuComparison, ctx: Context) {
   const results = await gpuService.list(
     {

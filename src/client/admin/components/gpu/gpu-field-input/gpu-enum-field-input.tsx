@@ -7,6 +7,7 @@ const ITEMS: { [key: string]: { label: string; value: string }[] } = {
     { label: 'Desktop', value: MarketSegmentValue.Desktop },
     { label: 'Laptop', value: MarketSegmentValue.Laptop },
     { label: 'Server', value: MarketSegmentValue.Server },
+    { label: 'Workstation', value: MarketSegmentValue.Workstation },
   ],
 };
 

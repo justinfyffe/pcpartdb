@@ -54,7 +54,7 @@ export const PerformanceTable: FunctionComponent<PerformanceTableProps> = (
         const rankDiff =
           relativePerformanceGpus[i].ranks.performanceRank -
           relativePerformanceGpus[i - 1].ranks.performanceRank;
-        if (rankDiff > 1) {
+        if (rankDiff !== 1) {
           ret.push(null);
         }
       }

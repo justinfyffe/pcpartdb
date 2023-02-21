@@ -8,6 +8,7 @@ export enum MarketSegmentValue {
   Desktop = 'DESKTOP',
   Laptop = 'LAPTOP',
   Server = 'SERVER',
+  Workstation = 'WORKSTATION',
 }
 
 export interface Gpu {
