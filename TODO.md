@@ -1,4 +1,5 @@
 Immediate Tasks:
+  - Fix bug where launch price cannot be empty (GeForce RTX 2060 12 GB)
   - Fix bug where unauthorized pages doesn't display
   - Improve security for reset password (store hashed tokens in db)
   - Don't upload node_modules when deploying, just use npx
