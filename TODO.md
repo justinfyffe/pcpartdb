@@ -1,12 +1,10 @@
 Immediate Tasks:
-  - Fix bug where launch price cannot be empty (GeForce RTX 2060 12 GB)
   - Fix bug where unauthorized pages doesn't display
   - Improve security for reset password (store hashed tokens in db)
   - Don't upload node_modules when deploying, just use npx
   - Data refactor
     - home page - update comparison texts based on tag
   - Test everything
-  - Add Content manually, scrapers can come later
   
 
 Post-launch:
@@ -16,11 +14,6 @@ Post-launch:
   - track all changes to content
 - improve import dialog
   - show all values
-- Email
-  - Set up email sending for forgot password
-- add analytics and search console
-- clean up code
-  - formatMeta, formatBenchmark should be similar to formatspec
 - List Page
   - filtered rank
   - infinite scroll
@@ -36,9 +29,6 @@ Post-launch:
   - are they needed? could it be done better
 - improve related parts
 - improve admin panel
-- improve database usage
-  - filter less in-memory
-  - should part images be its own table? or a json schema or break into columns?
 
 
 Roadmap:
