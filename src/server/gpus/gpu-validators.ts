@@ -39,24 +39,24 @@ export const listGpusRequestValidator = Joi.object({
 export const createGpuRequestValidator = Joi.object({
   slug: Joi.string().required(),
   name: Joi.string().required(),
-  company: gpuFieldValidator,
-  marketSegment: gpuFieldValidator,
-  launchPrice: gpuFieldValidator,
-  releaseDate: gpuFieldValidator,
-  specs: gpuSpecsValidator,
-  benchmarks: gpuBenchmarksValidator,
+  company: gpuFieldValidator.allow(null),
+  marketSegment: gpuFieldValidator.allow(null),
+  launchPrice: gpuFieldValidator.allow(null),
+  releaseDate: gpuFieldValidator.allow(null),
+  specs: gpuSpecsValidator.allow(null),
+  benchmarks: gpuBenchmarksValidator.allow(null),
   images: Joi.array().allow(Joi.any()),
 }).options({ abortEarly: false });
 
 export const updateGpuRequestValidator = Joi.object({
   slug: Joi.string().required(),
   name: Joi.string().required(),
-  company: gpuFieldValidator,
-  marketSegment: gpuFieldValidator,
-  launchPrice: gpuFieldValidator,
-  releaseDate: gpuFieldValidator,
-  specs: gpuSpecsValidator,
-  benchmarks: gpuBenchmarksValidator,
+  company: gpuFieldValidator.allow(null),
+  marketSegment: gpuFieldValidator.allow(null),
+  launchPrice: gpuFieldValidator.allow(null),
+  releaseDate: gpuFieldValidator.allow(null),
+  specs: gpuSpecsValidator.allow(null),
+  benchmarks: gpuBenchmarksValidator.allow(null),
   images: Joi.array().allow(Joi.any()),
 }).options({ abortEarly: false });
 
