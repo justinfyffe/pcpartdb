@@ -59,6 +59,7 @@ const INPUT_TYPES: Record<string, InputType> = {
 
   // Cores & Clock Speeds
   shaderUnitsCudaCores: 'float',
+  computeUnitsSmCount: 'float',
   textureMappingUnits: 'float',
   renderOutputUnits: 'float',
   tensorCores: 'float',
@@ -76,9 +77,9 @@ const INPUT_TYPES: Record<string, InputType> = {
 
   // API Support
   directxVersion: 'autocomplete',
-  openClVersion: 'float',
-  openGlVersion: 'float',
-  shaderModelVersion: 'float',
+  openClVersion: 'autocomplete',
+  openGlVersion: 'autocomplete',
+  shaderModelVersion: 'autocomplete',
 };
 
 interface GpuSpecFieldProps {

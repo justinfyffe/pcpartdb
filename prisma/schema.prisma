@@ -74,6 +74,7 @@ model GpuSpecs {
   powerConnectors         String? @map("power_connectors")
   outputs                 String?
   shaderUnitsCudaCores    Float?  @map("shader_units_cuda_cores")
+  computeUnitsSmCount     Float?  @map("compute_units_sm_count")
   textureMappingUnits     Float?  @map("texture_mapping_units")
   renderOutputUnits       Float?  @map("render_output_units")
   tensorCores             Float?  @map("tensor_cores")

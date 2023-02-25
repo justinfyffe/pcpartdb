@@ -91,10 +91,10 @@ export function compileContent(...content: RawContent[]) {
   const compiled: CompiledContent = [];
 
   for (let i = 0; i < content.length; ++i) {
-    const { filters: hints, deps, component } = content[i];
+    const { filters, deps, component } = content[i];
 
     compiled.push({
-      filters: hints || [],
+      filters: filters || [],
       deps: deps || [],
       component,
     });
@@ -102,7 +102,7 @@ export function compileContent(...content: RawContent[]) {
 
   // eslint-disable-next-line react/display-name
   return (props: {
-    hints?: ContentFilters;
+    filters?: ContentFilters;
     params?: ContentParams;
     required?: boolean;
   }) => <Content compiledContent={compiled} {...props} />;

@@ -25,6 +25,7 @@ export const CoresTable: FunctionComponent<CoresTableProps> = (props) => {
       </THead>
       <TBody>
         <FieldRow field="shaderUnitsCudaCores" />
+        <FieldRow field="computeUnitsSmCount" />
         <FieldRow field="textureMappingUnits" />
         <FieldRow field="renderOutputUnits" />
         <FieldRow field="tensorCores" />

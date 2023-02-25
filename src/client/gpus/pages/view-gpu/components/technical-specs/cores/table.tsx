@@ -15,6 +15,7 @@ export const CoresTable: FunctionComponent<CoresTableProps> = (props) => {
     <Table border responsive className={className}>
       <TBody>
         <FieldRow field="shaderUnitsCudaCores" />
+        <FieldRow field="computeUnitsSmCount" />
         <FieldRow field="textureMappingUnits" />
         <FieldRow field="renderOutputUnits" />
         <FieldRow field="tensorCores" />

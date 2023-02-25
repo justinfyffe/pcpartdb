@@ -46,6 +46,7 @@ const LABELS: Record<string, string> = {
 
   // Cores & Clock Speeds
   shaderUnitsCudaCores: 'Shader Units / CUDA Cores',
+  computeUnitsSmCount: 'Compute Units / SM Count',
   textureMappingUnits: 'Texture Mapping Units (TMUs)',
   renderOutputUnits: 'Render Output Units (ROPs)',
   tensorCores: 'Tensor Cores',

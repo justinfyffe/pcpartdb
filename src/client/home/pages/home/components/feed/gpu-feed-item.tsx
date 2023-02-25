@@ -1,6 +1,11 @@
 import { formatGpuField, getGpuName, getViewGpuSlug } from '@client/gpus';
 import { getCompanyLogoImagePath } from '@client/image';
 import { Card, Img } from '@client/shared/components';
+import {
+  compileContent,
+  ContentContext,
+  ContentParams,
+} from '@client/shared/content';
 import { classNames } from '@client/shared/ui';
 import { getViewGpuPath } from '@client/shared/website';
 import { PhotoIcon } from '@heroicons/react/24/outline';
@@ -150,17 +155,37 @@ interface SubtitleProps {
 const Subtitle: FunctionComponent<SubtitleProps> = (props) => {
   const { gpu, tag } = props;
 
-  const text = useMemo(() => {
-    const name = getGpuName(gpu, { company: false });
+  const params: ContentParams = useMemo(
+    () => ({
+      name: getGpuName(gpu, { company: false }),
+    }),
+    [gpu],
+  );
 
-    if (tag === GpuFeedTag.GreatPerformance) {
-      return `The ${name} is a powerful card, but is it worth the money?`;
-    } else if (tag === GpuFeedTag.GreatValue) {
-      return `The ${name} is known for good value, but how well does it perform?`;
-    } else {
-      return `Learn more about the ${name}.`;
-    }
-  }, [gpu, tag]);
-
-  return <>{text}</>;
+  return (
+    <ContentContext.Provider value={{ filters: [tag], params }}>
+      <SubtitleSentence1 />
+    </ContentContext.Provider>
+  );
 };
+
+export const SubtitleSentence1 = compileContent(
+  {
+    filters: [GpuFeedTag.GreatPerformance],
+    deps: ['name'],
+    component: (props) => (
+      <>The {props.name} has great performance, but is it worth the money?</>
+    ),
+  },
+  {
+    filters: [GpuFeedTag.GreatValue],
+    deps: ['name'],
+    component: (props) => (
+      <>The {props.name} has great value, but how well does it perform?</>
+    ),
+  },
+  {
+    deps: ['name'],
+    component: (props) => <>Learn more about the {props.name}.</>,
+  },
+);

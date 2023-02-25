@@ -31,6 +31,7 @@ export interface GpuSpecs {
 
   // Cores & Clock Speeds
   shaderUnitsCudaCores?: GpuField<number>;
+  computeUnitsSmCount?: GpuField<number>;
   textureMappingUnits?: GpuField<number>;
   renderOutputUnits?: GpuField<number>;
   tensorCores?: GpuField<number>;
@@ -84,6 +85,7 @@ export const gpuSpecsValidator = Joi.object({
 
   // Cores & Clock Speeds
   shaderUnitsCudaCores: gpuFieldValidator.allow(null),
+  computeUnitsSmCount: gpuFieldValidator.allow(null),
   textureMappingUnits: gpuFieldValidator.allow(null),
   renderOutputUnits: gpuFieldValidator.allow(null),
   tensorCores: gpuFieldValidator.allow(null),

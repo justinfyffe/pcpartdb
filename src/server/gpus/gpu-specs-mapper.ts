@@ -34,6 +34,7 @@ export function mapToGpuSpecsDto(entity: GpuSpecsEntity): GpuSpecs {
     outputs: mapToGpuFieldDto(entity, 'outputs'),
 
     shaderUnitsCudaCores: mapToGpuFieldDto(entity, 'shaderUnitsCudaCores'),
+    computeUnitsSmCount: mapToGpuFieldDto(entity, 'computeUnitsSmCount'),
     textureMappingUnits: mapToGpuFieldDto(entity, 'textureMappingUnits'),
     renderOutputUnits: mapToGpuFieldDto(entity, 'renderOutputUnits'),
     tensorCores: mapToGpuFieldDto(entity, 'tensorCores'),
@@ -92,6 +93,11 @@ export function mapToGpuSpecsEntity(specs: GpuSpecs): GpuSpecsEntity {
     shaderUnitsCudaCores: mapToGpuFieldEntity(
       specs,
       'shaderUnitsCudaCores',
+      metadata,
+    ),
+    computeUnitsSmCount: mapToGpuFieldEntity(
+      specs,
+      'computeUnitsSmCount',
       metadata,
     ),
     textureMappingUnits: mapToGpuFieldEntity(

@@ -1,6 +1,11 @@
 import { formatGpuField, getCompareGpusSlug, getGpuName } from '@client/gpus';
 import { getCompanyLogoImagePath } from '@client/image';
 import { Card, Img } from '@client/shared/components';
+import {
+  compileContent,
+  ContentContext,
+  ContentParams,
+} from '@client/shared/content';
 import { classNames } from '@client/shared/ui';
 import { getCompareGpusPath } from '@client/shared/website';
 import { PhotoIcon } from '@heroicons/react/24/outline';
@@ -13,7 +18,7 @@ export enum ComparisonFeedTag {
 }
 
 interface ComparisonFeedItemProps {
-  gpus: GpuComparison;
+  comparison: GpuComparison;
   tag?: ComparisonFeedTag;
 
   as?: React.ElementType;
@@ -23,8 +28,8 @@ interface ComparisonFeedItemProps {
 export const ComparisonFeedItem: FunctionComponent<ComparisonFeedItemProps> = (
   props,
 ) => {
-  const { gpus } = props;
-  const [gpu1, gpu2] = gpus;
+  const { comparison, tag } = props;
+  const [gpu1, gpu2] = comparison;
 
   const [price1, price2] = useMemo(
     () => [formatGpuField(gpu1.launchPrice), formatGpuField(gpu2.launchPrice)],
@@ -47,7 +52,7 @@ export const ComparisonFeedItem: FunctionComponent<ComparisonFeedItemProps> = (
 
   return (
     <a
-      href={getCompareGpusPath(getCompareGpusSlug(gpus))}
+      href={getCompareGpusPath(getCompareGpusSlug(comparison))}
       className={classNames(
         'flex-1 mx-4 mb-6 max-w-96 min-w-70',
         props.className,
@@ -126,7 +131,7 @@ export const ComparisonFeedItem: FunctionComponent<ComparisonFeedItemProps> = (
           <h3 className="font-medium text-base text-indigo-500">
             {getGpuName(gpu1)} vs {getGpuName(gpu2)}
           </h3>
-          <Subtitle gpus={gpus} />
+          <Subtitle comparison={comparison} tag={tag} />
         </div>
       </Card>
     </a>
@@ -156,19 +161,51 @@ const Banner: FunctionComponent<BannerProps> = (props) => {
 };
 
 interface SubtitleProps {
-  gpus: Gpu[];
+  comparison: GpuComparison;
+  tag?: ComparisonFeedTag;
 }
 
 const Subtitle: FunctionComponent<SubtitleProps> = (props) => {
-  const { gpus } = props;
-  const [gpu1, gpu2] = gpus;
+  const { comparison, tag } = props;
+  const [gpu1, gpu2] = comparison;
 
-  const name1 = useMemo(() => getGpuName(gpu1, { company: false }), [gpu1]);
-  const name2 = useMemo(() => getGpuName(gpu2, { company: false }), [gpu2]);
+  const params: ContentParams = useMemo(
+    () => ({
+      name1: getGpuName(gpu1, { company: false }),
+      name2: getGpuName(gpu2, { company: false }),
+    }),
+    [gpu1, gpu2],
+  );
 
   return (
-    <>
-      How does the {name1} compare with the {name2}?
-    </>
+    <ContentContext.Provider value={{ filters: [tag], params }}>
+      <SubtitleSentence1 />
+    </ContentContext.Provider>
   );
 };
+
+export const SubtitleSentence1 = compileContent(
+  {
+    filters: [ComparisonFeedTag.ComparePerformance],
+    deps: ['name1', 'name2'],
+    component: (props) => (
+      <>
+        Does the {props.name1} outperform the {props.name2}?
+      </>
+    ),
+  },
+  {
+    filters: [ComparisonFeedTag.CompareValue],
+    component: () => (
+      <>Which of these graphics cards have the better bang for your buck?</>
+    ),
+  },
+  {
+    deps: ['name1', 'name2'],
+    component: (props) => (
+      <>
+        How does the {props.name1} compare with the {props.name2}?
+      </>
+    ),
+  },
+);

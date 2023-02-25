@@ -77,6 +77,7 @@ interface GpuFormData {
 
   // Cores & Clock Speeds
   shaderUnitsCudaCores?: GpuField<number>;
+  computeUnitsSmCount?: GpuField<number>;
   textureMappingUnits?: GpuField<number>;
   renderOutputUnits?: GpuField<number>;
   tensorCores?: GpuField<number>;
@@ -144,6 +145,7 @@ const gpuValidator = Joi.object({
 
   // Cores & Clock Speed
   shaderUnitsCudaCores: gpuFieldValidator.allow(null),
+  computeUnitsSmCount: gpuFieldValidator.allow(null),
   textureMappingUnits: gpuFieldValidator.allow(null),
   renderOutputUnits: gpuFieldValidator.allow(null),
   tensorCores: gpuFieldValidator.allow(null),
@@ -223,6 +225,7 @@ function formOptions(gpu?: Gpu): UseFormProps<GpuFormData> {
 
       // Cores & Clock Speeds
       shaderUnitsCudaCores: specs.shaderUnitsCudaCores || null,
+      computeUnitsSmCount: specs.computeUnitsSmCount || null,
       textureMappingUnits: specs.textureMappingUnits || null,
       renderOutputUnits: specs.renderOutputUnits || null,
       tensorCores: specs.tensorCores || null,
@@ -709,6 +712,21 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           </Field>
 
           <Field>
+            Compute Units / SM Count
+            <Controller
+              name="computeUnitsSmCount"
+              control={control}
+              render={({ field }) => (
+                <GpuFieldInput
+                  field="computeUnitsSmCount"
+                  {...field}
+                  ref={null}
+                />
+              )}
+            />
+          </Field>
+
+          <Field>
             Texture Mapping Units (TMUs)
             <Controller
               name="textureMappingUnits"
@@ -1001,6 +1019,7 @@ function toSpecsRequest(formData: GpuFormData): GpuSpecs {
 
     // Cores & Clock Speeds
     shaderUnitsCudaCores: formData.shaderUnitsCudaCores || null,
+    computeUnitsSmCount: formData.computeUnitsSmCount || null,
     textureMappingUnits: formData.textureMappingUnits || null,
     renderOutputUnits: formData.renderOutputUnits || null,
     tensorCores: formData.tensorCores || null,

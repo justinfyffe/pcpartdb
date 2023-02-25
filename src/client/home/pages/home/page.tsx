@@ -8,6 +8,7 @@ import { Gpu, GpuComparison } from '@shared/gpus';
 import React from 'react';
 import {
   ComparisonFeedItem,
+  ComparisonFeedTag,
   Feed,
   FeedItems,
   FeedLink,
@@ -25,6 +26,8 @@ export interface HomePageProps {
 export const HomePage = (props: HomePageProps) => {
   const { nvidiaVsAmdGpus, nvidiaGpus, amdGpus } = props;
 
+  const [bestPerformanceComparison, bestValueComparison, randomComparison] =
+    nvidiaVsAmdGpus;
   const [bestPerformanceNvidia, bestValueNvidia, randomNvidia] = nvidiaGpus;
   const [bestPerformanceAmd, bestValueAmd, randomAmd] = amdGpus;
 
@@ -45,9 +48,21 @@ export const HomePage = (props: HomePageProps) => {
           <h2>NVIDIA vs AMD GPUs</h2>
 
           <FeedItems>
-            {nvidiaVsAmdGpus.map(([nvidiaGpu, amdGpu], i) => (
-              <ComparisonFeedItem key={i} gpus={[nvidiaGpu, amdGpu]} />
-            ))}
+            {bestPerformanceComparison != null && (
+              <ComparisonFeedItem
+                comparison={bestPerformanceComparison}
+                tag={ComparisonFeedTag.ComparePerformance}
+              />
+            )}
+            {bestValueComparison != null && (
+              <ComparisonFeedItem
+                comparison={bestValueComparison}
+                tag={ComparisonFeedTag.CompareValue}
+              />
+            )}
+            {randomComparison != null && (
+              <ComparisonFeedItem comparison={randomComparison} />
+            )}
           </FeedItems>
 
           <FeedLinks>

@@ -33,7 +33,7 @@ export async function importFromTechPowerUp(url: string) {
     architecture: getArchitecture($),
     busInterface: getBusInterface($),
     codename: getCodename($),
-
+    computeUnitsSmCount: getComputeUnitsSmCount($),
     coreClockSpeedBase: getCoreClockSpeedBase($),
     coreClockSpeedBoost: getCoreClockSpeedBoost($),
     directxVersion: getDirectxVersion($),
@@ -42,7 +42,6 @@ export async function importFromTechPowerUp(url: string) {
     height: getHeight($),
     l1Cache: getL1Cache($),
     l2Cache: getL2Cache($),
-
     length: getLength($),
     memoryBandwidth: getMemoryBandwidth($),
     memoryClock: getMemoryClock($),
@@ -107,6 +106,14 @@ function getCompany($: cheerio.CheerioAPI): GpuField<string> {
   }
 
   return null;
+}
+
+function getComputeUnitsSmCount($: cheerio.CheerioAPI): GpuField<number> {
+  const values1 = tokenizeSpecValues($, 'Compute Units');
+  const values2 = tokenizeSpecValues($, 'SM Count');
+  const [displayValue] = parseNumberValue(values1[0] || values2[0] || null);
+  const baseValue = displayValue;
+  return { value: baseValue, meta: { fieldKey: 'computeUnitsSmCount' } };
 }
 
 function getCoreClockSpeedBase($: cheerio.CheerioAPI): GpuField<number> {

@@ -108,6 +108,7 @@ export const ImportGpuDataDialog: FunctionComponent<
                 <ImportGpuField field="outputs" />
 
                 <ImportGpuField field="shaderUnitsCudaCores" />
+                <ImportGpuField field="computeUnitsSmCount" />
                 <ImportGpuField field="textureMappingUnits" />
                 <ImportGpuField field="renderOutputUnits" />
                 <ImportGpuField field="tensorCores" />

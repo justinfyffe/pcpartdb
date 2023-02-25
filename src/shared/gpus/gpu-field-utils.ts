@@ -186,6 +186,10 @@ export function calculateBaseGpuFieldValue(
   displayValue: number,
   unit: GpuFieldUnit,
 ) {
+  if (displayValue == null) {
+    return null;
+  }
+
   const multiplier = getGpuFieldValueMultiplier(unit);
   return displayValue * multiplier;
 }
@@ -194,6 +198,10 @@ export function calculateDisplayGpuFieldValue(
   baseValue: number,
   unit: GpuFieldUnit,
 ) {
+  if (baseValue == null) {
+    return null;
+  }
+
   const multiplier = getGpuFieldValueMultiplier(unit);
   return baseValue / multiplier;
 }
