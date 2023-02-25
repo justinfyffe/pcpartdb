@@ -6,10 +6,14 @@ cd $DIRECTORY/../../
 ./bin/prod/backup
 
 # Extract files
-tar -xf ./pcpartdb.tar.gz
+tar -xf ../releases/pcpartdb/pcpartdb.tar.gz
+
+# Remove release file
+rm pcpartdb.tar.gz
 
 # Migrate the database
 ./bin/prod/migrate
 
 # Restart server
 ./bin/prod/restart
+
