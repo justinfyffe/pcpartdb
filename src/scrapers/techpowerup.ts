@@ -146,8 +146,12 @@ function getDirectxVersion($: cheerio.CheerioAPI): GpuField<string> {
 }
 
 function getFp32Performance($: cheerio.CheerioAPI): GpuField<number> {
-  const values = tokenizeSpecValues($, 'FP32 (float) performance');
-  const [displayValue, displayUnit] = parseNumberValue(values[0] || null);
+  const values1 = tokenizeSpecValues($, 'FP32 (float) performance');
+  console.log(values1);
+  const values2 = tokenizeSpecValues($, 'FP32 (float)');
+  const [displayValue, displayUnit] = parseNumberValue(
+    values1[0] || values2[0] || null,
+  );
 
   const formats: Record<string, FlopsUnit> = {
     GFLOPS: FlopsUnit.gflops,
@@ -160,8 +164,11 @@ function getFp32Performance($: cheerio.CheerioAPI): GpuField<number> {
 }
 
 function getFp64Performance($: cheerio.CheerioAPI): GpuField<number> {
-  const values = tokenizeSpecValues($, 'FP64 (double) performance');
-  const [displayValue, displayUnit] = parseNumberValue(values[0] || null);
+  const values1 = tokenizeSpecValues($, 'FP64 (double) performance');
+  const values2 = tokenizeSpecValues($, 'FP64 (double)');
+  const [displayValue, displayUnit] = parseNumberValue(
+    values1[0] || values2[0] || null,
+  );
 
   const formats: Record<string, FlopsUnit> = {
     GFLOPS: FlopsUnit.gflops,
@@ -531,7 +538,7 @@ function tokenizeSpecValues($: cheerio.CheerioAPI, label: string) {
     .split(';;')
     .map((val) => val.trim());
 
-  return values;
+  return values.filter((value) => !!value);
 }
 
 function parseNumberValue(value: string): [number, string] {
