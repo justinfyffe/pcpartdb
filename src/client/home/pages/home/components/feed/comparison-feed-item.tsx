@@ -184,7 +184,7 @@ const Subtitle: FunctionComponent<SubtitleProps> = (props) => {
   );
 };
 
-export const SubtitleSentence1 = compileContent(
+const SubtitleSentence1 = compileContent(
   {
     filters: [ComparisonFeedTag.ComparePerformance],
     deps: ['name1', 'name2'],
