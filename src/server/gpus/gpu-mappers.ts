@@ -1,5 +1,5 @@
 import { Prisma } from '@prisma/client';
-import { Gpu, GpuDataSourceMeta, GpuMeta } from '@shared/gpus';
+import { Gpu, GpuDataSource, GpuMeta } from '@shared/gpus';
 import {
   mapToGpuBenchmarksDto,
   mapToGpuBenchmarksEntity,
@@ -57,7 +57,7 @@ function mapToGpuMetaDto(metaJson: GpuMetaJson, options?: MapToDtoOptions) {
         acc[key] = metaJson.dataSources[key];
         return acc;
       },
-      {} as Record<string, GpuDataSourceMeta>,
+      {} as Record<string, GpuDataSource>,
     );
   }
 
@@ -105,7 +105,7 @@ function mapToGpuMetaEntity(meta: GpuMeta) {
   const dataSources = Object.keys(meta.dataSources ?? {}).reduce((acc, key) => {
     acc[key] = meta.dataSources[key];
     return acc;
-  }, {} as Record<string, GpuDataSourceMeta>);
+  }, {} as Record<string, GpuDataSource>);
 
   return { dataSources, fields: {} } as GpuMetaJson;
 }

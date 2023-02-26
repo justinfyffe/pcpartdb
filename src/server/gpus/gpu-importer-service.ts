@@ -4,7 +4,7 @@ import { importFromVideoCardBenchmark } from '@scrapers/videocardbenchmark';
 import { badRequestError } from '@server/shared/api/status';
 import { deepMergeObjects } from '@server/shared/utils/object-utils';
 import {
-  GpuDataSourceMeta,
+  GpuDataSource,
   ImportGpuDataRequest,
   ImportGpuDataResponse,
 } from '@shared/gpus';
@@ -29,7 +29,7 @@ export class GpuImporterService {
     return result;
   }
 
-  private async importDataFromSource(source: GpuDataSourceMeta) {
+  private async importDataFromSource(source: GpuDataSource) {
     const parsedUrl = new URL(source.url);
 
     if (parsedUrl.hostname === Importers.TechPowerUp) {

@@ -10,7 +10,7 @@ import {
   THead,
   Tr,
 } from '@client/shared/components';
-import { GpuDataSourceMeta } from '@shared/gpus';
+import { GpuDataSource } from '@shared/gpus';
 import React, {
   FunctionComponent,
   useCallback,
@@ -26,7 +26,7 @@ import { ImportName } from './import-name';
 import { ImportGpuDataResults } from './import-types';
 
 interface ImportGpuDataDialogProps {
-  sources: GpuDataSourceMeta[];
+  sources: GpuDataSource[];
   onImport: (data: ImportGpuDataResults) => void;
 }
 

@@ -9,7 +9,7 @@ Immediate Tasks:
     - [X] Add non-intrusive UI to override data source on individual field
     - [] Update existing gpus to use new metadata structure
       - [X] local
-      - [] prod
+      - [] prod - run pcpartdb.com/api/gpus/fix
     - [] Remove legacy metadata mappers after updating
     - [] Add download date when importing
   - Fix bug where unauthorized pages doesn't display

@@ -1,6 +1,6 @@
 import {
   GpuBenchmarks,
-  GpuDataSource,
+  GpuDataSourceKey,
   GpuField,
   ImportGpuDataResponse,
 } from '@shared/gpus';
@@ -29,7 +29,7 @@ function getTimespyGraphics($: cheerio.CheerioAPI): GpuField<number> {
     meta: {
       fieldKey: 'timespyGraphics',
       dataSource: {
-        source: GpuDataSource.UlBenchmarks,
+        source: GpuDataSourceKey.UlBenchmarks,
         enabled: value != null,
       },
     },

@@ -22,7 +22,7 @@ import {
   Gpu,
   GpuBenchmarks,
   GpuDataSource,
-  GpuDataSourceMeta,
+  GpuDataSourceKey,
   gpuDataSourceValidator,
   GpuField,
   gpuFieldValidator,
@@ -56,9 +56,9 @@ interface GpuFormData {
   name: string;
 
   // Data Sources
-  techPowerUpSource?: GpuDataSourceMeta;
-  videocardBenchmarksSource?: GpuDataSourceMeta;
-  ulBenchmarksSource?: GpuDataSourceMeta;
+  techPowerUpSource?: GpuDataSource;
+  videocardBenchmarksSource?: GpuDataSource;
+  ulBenchmarksSource?: GpuDataSource;
 
   // General
   company?: GpuField<string>;
@@ -215,11 +215,11 @@ function formOptions(gpu?: Gpu): UseFormProps<GpuFormData> {
 
       // Data Sources
       techPowerUpSource:
-        gpu?.meta?.dataSources?.[GpuDataSource.TechPowerUp] || null,
+        gpu?.meta?.dataSources?.[GpuDataSourceKey.TechPowerUp] || null,
       videocardBenchmarksSource:
-        gpu?.meta?.dataSources?.[GpuDataSource.VideocardBenchmarks] || null,
+        gpu?.meta?.dataSources?.[GpuDataSourceKey.VideocardBenchmarks] || null,
       ulBenchmarksSource:
-        gpu?.meta?.dataSources?.[GpuDataSource.UlBenchmarks] || null,
+        gpu?.meta?.dataSources?.[GpuDataSourceKey.UlBenchmarks] || null,
 
       // General
       company: gpu?.company || null,
@@ -441,7 +441,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
         </Field>
 
         <Button variant={ButtonVariant.Secondary} onClick={handleImportClick}>
-          Refresh Data
+          Import Data
         </Button>
       </section>
 
@@ -1069,9 +1069,10 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
 function toGpuMetaRequest(formData: GpuFormData): GpuMeta {
   return {
     dataSources: {
-      [GpuDataSource.TechPowerUp]: formData.techPowerUpSource,
-      [GpuDataSource.VideocardBenchmarks]: formData.videocardBenchmarksSource,
-      [GpuDataSource.UlBenchmarks]: formData.ulBenchmarksSource,
+      [GpuDataSourceKey.TechPowerUp]: formData.techPowerUpSource,
+      [GpuDataSourceKey.VideocardBenchmarks]:
+        formData.videocardBenchmarksSource,
+      [GpuDataSourceKey.UlBenchmarks]: formData.ulBenchmarksSource,
     },
   };
 }

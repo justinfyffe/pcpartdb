@@ -1,10 +1,10 @@
 import { TextInput } from '@client/shared/components';
-import { GpuDataSourceMeta } from '@shared/gpus';
+import { GpuDataSource } from '@shared/gpus';
 import React, { forwardRef, useCallback } from 'react';
 
 interface GpuDataSourceInputProps {
-  value?: GpuDataSourceMeta;
-  onChange?: (value: GpuDataSourceMeta) => void;
+  value?: GpuDataSource;
+  onChange?: (value: GpuDataSource) => void;
 }
 
 export const GpuDataSourceInput = forwardRef<

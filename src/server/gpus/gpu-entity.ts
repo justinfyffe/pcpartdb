@@ -1,5 +1,5 @@
 import * as db from '@prisma/client';
-import { GpuDataSourceMeta, GpuFieldMeta } from '@shared/gpus';
+import { GpuDataSource, GpuFieldMeta } from '@shared/gpus';
 
 export type GpuEntity = db.Gpu & {
   parent?: GpuEntity;
@@ -21,7 +21,7 @@ export interface GpuFieldsMetaJson {
 }
 
 export interface GpuMetaJson extends GpuFieldsMetaJson {
-  dataSources?: Record<string, GpuDataSourceMeta>;
+  dataSources?: Record<string, GpuDataSource>;
 }
 
 export interface GpuSpecsMetaJson extends GpuFieldsMetaJson {}

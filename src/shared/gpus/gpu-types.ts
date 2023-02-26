@@ -12,17 +12,17 @@ export enum MarketSegmentValue {
   Workstation = 'WORKSTATION',
 }
 
-export enum GpuDataSource {
+export enum GpuDataSourceKey {
   TechPowerUp = 'TECHPOWERUP',
   UlBenchmarks = 'UL_BENCHMARKS',
   VideocardBenchmarks = 'VIDEOCARD_BENCHMARKS',
 }
 
 export interface GpuMeta {
-  dataSources?: Record<string, GpuDataSourceMeta>;
+  dataSources?: Record<string, GpuDataSource>;
 }
 
-export interface GpuDataSourceMeta {
+export interface GpuDataSource {
   url?: string;
   downloadDate?: number;
 }
@@ -127,7 +127,7 @@ export interface ListGpusRequest {
 }
 
 export interface ImportGpuDataRequest {
-  sources: GpuDataSourceMeta[];
+  sources: GpuDataSource[];
 }
 
 export interface ImportGpuDataResponse {
