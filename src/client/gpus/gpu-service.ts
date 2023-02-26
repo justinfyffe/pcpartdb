@@ -3,7 +3,6 @@ import { GpuCache } from '@client/shared/cache';
 import {
   CreateGpuRequest,
   Gpu,
-  GpuSpecs,
   ImportGpuDataRequest,
   ImportGpuDataResponse,
   ListGpusRequest,

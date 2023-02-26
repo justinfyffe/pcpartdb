@@ -1,4 +1,9 @@
-import { GpuBenchmarks, GpuField, ImportGpuDataResponse } from '@shared/gpus';
+import {
+  GpuBenchmarks,
+  GpuDataSource,
+  GpuField,
+  ImportGpuDataResponse,
+} from '@shared/gpus';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 
@@ -18,8 +23,15 @@ export async function importFromUlBenchmarks(url: string) {
 function getTimespyGraphics($: cheerio.CheerioAPI): GpuField<number> {
   const timespyGraphics = $('.result-pimp-badge-score-item').first().text();
 
+  const value = timespyGraphics ? Number(timespyGraphics) : null;
   return {
-    value: Number(timespyGraphics),
-    meta: { fieldKey: 'timespyGraphics' },
+    value,
+    meta: {
+      fieldKey: 'timespyGraphics',
+      dataSource: {
+        source: GpuDataSource.UlBenchmarks,
+        enabled: value != null,
+      },
+    },
   };
 }

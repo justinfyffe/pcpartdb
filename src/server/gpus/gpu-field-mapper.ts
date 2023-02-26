@@ -1,5 +1,5 @@
-import { Prisma } from '@prisma/client';
 import { GpuField, GpuFieldMeta } from '@shared/gpus';
+import { GpuFieldsMetaJson } from './gpu-entity';
 
 export function mapToGpuFieldDto<
   TReturn,
@@ -9,21 +9,30 @@ export function mapToGpuFieldDto<
     return null;
   }
 
-  const metadata = entity.metadata as Prisma.JsonObject;
+  const metadata = entity.metadata as GpuFieldsMetaJson;
+
+  let meta: GpuFieldMeta;
+  if (metadata?.fields?.[key as string] != null) {
+    meta = metadata?.fields?.[key as string];
+  } else if (metadata?.[key as string] != null) {
+    // TODO: remove once we have migrated fields meta
+    meta = metadata?.[key as string];
+  }
 
   return {
     value: entity[key as string] as TReturn,
-    meta: metadata?.[key] as Prisma.JsonObject,
+    meta,
   };
 }
 
 export function mapToGpuFieldEntity<TReturn, TEntity>(
   fields: Partial<TEntity>,
   key: keyof TEntity,
-  metadata: { [col: string]: GpuFieldMeta },
+  metadata: GpuFieldsMetaJson,
 ) {
   const field = fields?.[key] as GpuField<TReturn>;
 
-  metadata[key as string] = field?.meta ?? null;
+  metadata.fields = metadata.fields ?? {};
+  metadata.fields[key as string] = field?.meta ?? null;
   return field?.value ?? null;
 }

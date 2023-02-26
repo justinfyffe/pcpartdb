@@ -54,6 +54,7 @@ export const GpuCurrencyFieldInput = forwardRef<
 
   return (
     <NumberInput
+      disabled={value?.meta?.dataSource?.enabled}
       value={baseValue}
       suffix={currency}
       onChange={handleChange}

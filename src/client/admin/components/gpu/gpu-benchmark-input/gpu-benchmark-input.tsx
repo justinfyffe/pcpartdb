@@ -1,4 +1,4 @@
-import { Field, NumberInput, TextInput } from '@client/shared/components';
+import { Button, ButtonVariant, NumberInput } from '@client/shared/components';
 import { classNames } from '@client/shared/ui';
 import { GpuField } from '@shared/gpus';
 import React, {
@@ -7,12 +7,6 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-
-const LABELS: Record<string, string> = {
-  g2dMark: 'G2D Mark',
-  g3dMark: 'G3D Mark',
-  timespyGraphics: '3DMark Time Spy Graphics',
-};
 
 interface GpuBenchmarkInputProps {
   field: string;
@@ -45,39 +39,31 @@ export const GpuBenchmarkInput: FunctionComponent<GpuBenchmarkInputProps> = (
     [field, onChange, value],
   );
 
-  const handleSourceChange = useCallback(
-    (source: string) => {
-      const newValue: GpuField<number> = {
-        ...value,
-        meta: { fieldKey: field, source },
-      };
-      setValue(newValue);
-      onChange(newValue);
-    },
-    [field, onChange, value],
-  );
+  const handleOverrideClick = useCallback(() => {
+    if (value.meta?.dataSource?.enabled == null) {
+      return;
+    }
+
+    value.meta.dataSource = { enabled: false };
+    setValue(value);
+    onChange?.(value);
+  }, [onChange, value]);
 
   return (
-    <div className={classNames('flex gap-6 items-center', className)}>
-      <div className="flex-1 max-w-50">{LABELS[field] ?? '--'}</div>
-
-      <Field className="flex-1">
-        Score
-        <NumberInput
-          value={value?.value ?? null}
-          onChange={handleScoreChange}
-          ref={null}
-        />
-      </Field>
-
-      <Field className="flex-1">
-        Source
-        <TextInput
-          value={value?.meta?.source ?? null}
-          onChange={handleSourceChange}
-          ref={null}
-        />
-      </Field>
+    <div className={classNames('flex gap-4', className)}>
+      <NumberInput
+        disabled={value?.meta?.dataSource?.enabled}
+        value={value?.value ?? null}
+        onChange={handleScoreChange}
+        ref={null}
+      />
+      <Button
+        disabled={value?.meta?.dataSource?.enabled !== true}
+        variant={ButtonVariant.Default}
+        onClick={handleOverrideClick}
+      >
+        Override
+      </Button>
     </div>
   );
 };

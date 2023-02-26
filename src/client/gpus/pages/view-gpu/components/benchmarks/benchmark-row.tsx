@@ -25,13 +25,7 @@ export const BenchmarkRow = (props: BenchmarkRowProps) => {
       <Td className="text-left w-[50%]">
         <>{LABELS[key]}</>
       </Td>
-      <Td className="text-left w-[50%]">
-        {benchmark?.meta?.source != null ? (
-          <a href={benchmark.meta.source}>{formatGpuField(benchmark)}</a>
-        ) : (
-          <>{formatGpuField(benchmark) || '--'}</>
-        )}
-      </Td>
+      <Td className="text-left w-[50%]">{formatGpuField(benchmark) || '--'}</Td>
     </Tr>
   );
 };

@@ -1,10 +1,16 @@
 import Joi from '@hapi/joi';
+import { GpuDataSource } from './gpu-types';
 
 export interface GpuFieldMeta {
   fieldKey?: string;
-  source?: string;
   currency?: string;
   unit?: GpuFieldUnit;
+  dataSource?: GpuFieldDataSourceMeta;
+}
+
+export interface GpuFieldDataSourceMeta {
+  source?: GpuDataSource;
+  enabled?: boolean;
 }
 
 export interface GpuField<T = unknown> {

@@ -10,6 +10,7 @@ import {
   THead,
   Tr,
 } from '@client/shared/components';
+import { GpuDataSourceMeta } from '@shared/gpus';
 import React, {
   FunctionComponent,
   useCallback,
@@ -25,26 +26,28 @@ import { ImportName } from './import-name';
 import { ImportGpuDataResults } from './import-types';
 
 interface ImportGpuDataDialogProps {
-  url: string;
+  sources: GpuDataSourceMeta[];
   onImport: (data: ImportGpuDataResults) => void;
 }
 
 export const ImportGpuDataDialog: FunctionComponent<
   ImportGpuDataDialogProps
 > = (props) => {
-  const { url, onImport } = props;
+  const { sources, onImport } = props;
 
   const [loading, setLoading] = useState<boolean>(true);
   const [context, setContext] = useState<ImportGpuDataResults>(null);
 
   useEffect(() => {
     async function importGpu() {
-      const results = await gpuService.importGpuData({ url });
+      const results = await gpuService.importGpuData({ sources });
       setContext(createImportContext(results));
       setLoading(false);
     }
     importGpu();
-  }, [url]);
+    // Should only run once on component mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleApply = useCallback(() => {
     onImport(context);

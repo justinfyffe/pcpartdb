@@ -24,6 +24,13 @@ export const GpuTextFieldInput = forwardRef<
     [field, onChange],
   );
 
-  return <Textarea value={baseValue} onChange={handleChange} ref={ref} />;
+  return (
+    <Textarea
+      disabled={value?.meta?.dataSource?.enabled}
+      value={baseValue}
+      onChange={handleChange}
+      ref={ref}
+    />
+  );
 });
 GpuTextFieldInput.displayName = 'GpuTextFieldInput';

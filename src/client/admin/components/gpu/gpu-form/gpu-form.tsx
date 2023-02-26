@@ -21,10 +21,14 @@ import {
   CreateGpuRequest,
   Gpu,
   GpuBenchmarks,
+  GpuDataSource,
+  GpuDataSourceMeta,
+  gpuDataSourceValidator,
   GpuField,
   gpuFieldValidator,
   GpuImages,
   gpuImageValidator,
+  GpuMeta,
   GpuSpecs,
   MarketSegmentValue,
   UpdateGpuRequest,
@@ -34,11 +38,11 @@ import React, {
   FunctionComponent,
   useCallback,
   useMemo,
-  useRef,
   useState,
 } from 'react';
-import { Controller, useForm, UseFormProps } from 'react-hook-form';
+import { Controller, useForm, UseFormProps, useWatch } from 'react-hook-form';
 import { GpuBenchmarkInput } from '../gpu-benchmark-input';
+import { GpuDataSourceInput } from '../gpu-datasource-input';
 import { GpuFieldInput } from '../gpu-field-input';
 import { GpuImagesInput } from '../gpu-image-input';
 import { GpuSlugInput } from '../gpu-slug-input';
@@ -50,6 +54,11 @@ import {
 interface GpuFormData {
   slug: string;
   name: string;
+
+  // Data Sources
+  techPowerUpSource?: GpuDataSourceMeta;
+  videocardBenchmarksSource?: GpuDataSourceMeta;
+  ulBenchmarksSource?: GpuDataSourceMeta;
 
   // General
   company?: GpuField<string>;
@@ -118,6 +127,11 @@ interface GpuFormData {
 const gpuValidator = Joi.object({
   slug: Joi.string().required(),
   name: Joi.string().required(),
+
+  // Data Sources
+  techPowerUpSource: gpuDataSourceValidator.allow(null),
+  videocardBenchmarksSource: gpuDataSourceValidator.allow(null),
+  ulBenchmarksSource: gpuDataSourceValidator.allow(null),
 
   // General
   company: gpuFieldValidator.allow(null),
@@ -199,6 +213,14 @@ function formOptions(gpu?: Gpu): UseFormProps<GpuFormData> {
       slug: gpu?.slug || null,
       name: gpu?.name || null,
 
+      // Data Sources
+      techPowerUpSource:
+        gpu?.meta?.dataSources?.[GpuDataSource.TechPowerUp] || null,
+      videocardBenchmarksSource:
+        gpu?.meta?.dataSources?.[GpuDataSource.VideocardBenchmarks] || null,
+      ulBenchmarksSource:
+        gpu?.meta?.dataSources?.[GpuDataSource.UlBenchmarks] || null,
+
       // General
       company: gpu?.company || null,
       marketSegment: gpu?.marketSegment || null,
@@ -274,7 +296,6 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [requestError, setRequestError] = useState<ApiError>(null);
-  const importRef = useRef(null);
 
   const form = useMemo(() => formOptions(gpu), [gpu]);
 
@@ -299,6 +320,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
         marketSegment: formData.marketSegment,
         launchPrice: formData.launchPrice,
         releaseDate: formData.releaseDate,
+        meta: toGpuMetaRequest(formData),
         specs: toSpecsRequest(formData),
         benchmarks: toBenchmarksRequest(formData),
         images: toImagesRequest(formData),
@@ -306,12 +328,14 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
 
       try {
         if (isUpdate) {
-          await gpuService.update(gpu.id, request);
+          console.log(request);
+          // await gpuService.update(gpu.id, request);
         } else {
-          await gpuService.create(request);
+          console.log(request);
+          // await gpuService.create(request);
         }
 
-        router.push('/admin/gpus');
+        // router.push('/admin/gpus');
       } catch (err) {
         console.log(err);
         setRequestError(err as ApiError);
@@ -353,12 +377,26 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
     [setValue],
   );
 
+  const importSources = useWatch({
+    control,
+    name: [
+      'techPowerUpSource',
+      'videocardBenchmarksSource',
+      'ulBenchmarksSource',
+    ],
+  });
+
   const handleImportClick = useCallback(() => {
-    const url: string = importRef.current.value;
-    showDialog(<ImportGpuDataDialog url={url} onImport={handleImport} />, {
-      disableClose: true,
-    });
-  }, [handleImport]);
+    showDialog(
+      <ImportGpuDataDialog
+        sources={importSources.filter((source) => source != null)}
+        onImport={handleImport}
+      />,
+      {
+        disableClose: true,
+      },
+    );
+  }, [importSources, handleImport]);
 
   return (
     <Form onSubmit={handleSubmit(handleSave)}>
@@ -374,19 +412,39 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
         </Alert>
       )}
 
-      <section className="border-b-px border-b-slate-300 mb-6">
+      <section className="border-b-px border-b-slate-300 mb-6 pb-6">
+        <h2 className="mb-4">Data Sources</h2>
+
         <Field>
-          Import Data
-          <div className="flex gap-4">
-            <TextInput ref={importRef} className="flex-1" />
-            <Button
-              variant={ButtonVariant.Secondary}
-              onClick={handleImportClick}
-            >
-              Import
-            </Button>
-          </div>
+          TechPowerUp
+          <Controller
+            name="techPowerUpSource"
+            control={control}
+            render={({ field }) => <GpuDataSourceInput {...field} ref={null} />}
+          />
         </Field>
+
+        <Field>
+          Videocard Benchmarks
+          <Controller
+            name="videocardBenchmarksSource"
+            control={control}
+            render={({ field }) => <GpuDataSourceInput {...field} ref={null} />}
+          />
+        </Field>
+
+        <Field>
+          UL Benchmarks
+          <Controller
+            name="ulBenchmarksSource"
+            control={control}
+            render={({ field }) => <GpuDataSourceInput {...field} ref={null} />}
+          />
+        </Field>
+
+        <Button variant={ButtonVariant.Secondary} onClick={handleImportClick}>
+          Refresh Data
+        </Button>
       </section>
 
       <section>
@@ -935,29 +993,42 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
       <section>
         <h2 className="mb-4">Benchmarks</h2>
 
-        <Controller
-          name="g3dMark"
-          control={control}
-          render={({ field }) => (
-            <GpuBenchmarkInput field="g3dMark" {...field} ref={null} />
-          )}
-        />
+        <Field>
+          G3D Mark
+          <Controller
+            name="g3dMark"
+            control={control}
+            render={({ field }) => (
+              <GpuBenchmarkInput field="g3dMark" {...field} ref={null} />
+            )}
+          />
+        </Field>
 
-        <Controller
-          name="g2dMark"
-          control={control}
-          render={({ field }) => (
-            <GpuBenchmarkInput field="g2dMark" {...field} ref={null} />
-          )}
-        />
+        <Field>
+          G2D Mark
+          <Controller
+            name="g2dMark"
+            control={control}
+            render={({ field }) => (
+              <GpuBenchmarkInput field="g2dMark" {...field} ref={null} />
+            )}
+          />
+        </Field>
 
-        <Controller
-          name="timespyGraphics"
-          control={control}
-          render={({ field }) => (
-            <GpuBenchmarkInput field="timespyGraphics" {...field} ref={null} />
-          )}
-        />
+        <Field>
+          3DMark Time Spy Graphics
+          <Controller
+            name="timespyGraphics"
+            control={control}
+            render={({ field }) => (
+              <GpuBenchmarkInput
+                field="timespyGraphics"
+                {...field}
+                ref={null}
+              />
+            )}
+          />
+        </Field>
       </section>
 
       <section>
@@ -996,6 +1067,16 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
     </Form>
   );
 };
+
+function toGpuMetaRequest(formData: GpuFormData): GpuMeta {
+  return {
+    dataSources: {
+      [GpuDataSource.TechPowerUp]: formData.techPowerUpSource,
+      [GpuDataSource.VideocardBenchmarks]: formData.videocardBenchmarksSource,
+      [GpuDataSource.UlBenchmarks]: formData.ulBenchmarksSource,
+    },
+  };
+}
 
 function toSpecsRequest(formData: GpuFormData): GpuSpecs {
   return {

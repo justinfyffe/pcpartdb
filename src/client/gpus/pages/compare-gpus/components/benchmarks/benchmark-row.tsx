@@ -28,18 +28,10 @@ export const BenchmarkRow = (props: BenchmarkRowProps) => {
         <>{LABELS[key]}</>
       </Td>
       <Td className="text-left w-[33%]">
-        {benchmark1?.meta?.source != null ? (
-          <a href={benchmark1.meta.source}>{formatGpuField(benchmark1)}</a>
-        ) : (
-          <>{formatGpuField(benchmark1) || '--'}</>
-        )}
+        {formatGpuField(benchmark1) || '--'}
       </Td>
       <Td className="text-left w-[33%]">
-        {benchmark2?.meta?.source != null ? (
-          <a href={benchmark2.meta.source}>{formatGpuField(benchmark2)}</a>
-        ) : (
-          <>{formatGpuField(benchmark2) || '--'}</>
-        )}
+        {formatGpuField(benchmark2) || '--'}
       </Td>
     </Tr>
   );

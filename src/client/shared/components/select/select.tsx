@@ -16,6 +16,7 @@ export type SelectValue = string | ReadonlyArray<string>;
 
 interface SelectProps {
   name?: string;
+  disabled?: boolean;
   direction?: 'top' | 'bottom';
   placeholder?: string;
   multiple?: boolean;
@@ -33,6 +34,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
   (props, ref) => {
     const {
       name,
+      disabled,
       direction,
       placeholder,
       multiple,
@@ -68,12 +70,16 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
 
     const handleShowOptions = useCallback(
       (e: MouseEvent) => {
+        if (disabled) {
+          return;
+        }
+
         e.preventDefault();
         e.stopPropagation();
         e.nativeEvent.stopImmediatePropagation();
         setOpen(!isOpen);
       },
-      [isOpen],
+      [isOpen, disabled],
     );
 
     const handleClear = useCallback(
@@ -109,8 +115,9 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
     );
 
     return (
-      <div className="block relative">
+      <div className="block relative w-full">
         <select
+          disabled={disabled}
           name={name}
           className="sr-only"
           multiple={multiple}
@@ -127,7 +134,10 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
         </select>
 
         <div
-          className="pointer border-px m-0 p-3 rounded text-sm w-full shadow min-h-12.5"
+          className={classNames(
+            'border-px m-0 p-3 rounded text-sm w-full shadow min-h-12.5',
+            disabled ? 'bg-disabled-input' : 'pointer',
+          )}
           onClick={handleShowOptions}
         >
           {getSelectedText(value, options) || placeholder}

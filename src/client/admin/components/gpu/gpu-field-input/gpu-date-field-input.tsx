@@ -24,6 +24,13 @@ export const GpuDateFieldInput = forwardRef<
     [field, onChange],
   );
 
-  return <DateInput value={baseValue} onChange={handleChange} ref={ref} />;
+  return (
+    <DateInput
+      disabled={value?.meta?.dataSource?.enabled}
+      value={baseValue}
+      onChange={handleChange}
+      ref={ref}
+    />
+  );
 });
 GpuDateFieldInput.displayName = 'GpuDateFieldInput';

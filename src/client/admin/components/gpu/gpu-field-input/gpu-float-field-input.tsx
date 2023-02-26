@@ -103,6 +103,7 @@ export const GpuFloatFieldInput = forwardRef<
 
   return (
     <NumberInput
+      disabled={value?.meta?.dataSource?.enabled}
       value={displayValue}
       suffix={getUnitFormat(unit)}
       onChange={handleChange}

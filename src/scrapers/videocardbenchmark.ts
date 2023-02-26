@@ -1,5 +1,6 @@
 import {
   GpuBenchmarks,
+  GpuDataSource,
   GpuField,
   ImportGpuDataResponse,
   MarketSegmentValue,
@@ -25,7 +26,17 @@ export async function importFromVideoCardBenchmark(url: string) {
 
 function getG3dMark($: cheerio.CheerioAPI): GpuField<number> {
   const g3dMark = $('.speedicon').siblings('span').first().text();
-  return { value: Number(g3dMark), meta: { fieldKey: 'g3dMark' } };
+  const value = g3dMark ? Number(g3dMark) : null;
+  return {
+    value,
+    meta: {
+      fieldKey: 'g3dMark',
+      dataSource: {
+        source: GpuDataSource.VideocardBenchmarks,
+        enabled: value != null,
+      },
+    },
+  };
 }
 
 function getG2dMark($: cheerio.CheerioAPI): GpuField<number> {
@@ -38,7 +49,17 @@ function getG2dMark($: cheerio.CheerioAPI): GpuField<number> {
     .text()
     .trim();
 
-  return { value: Number(g2dMark), meta: { fieldKey: 'g2dMark' } };
+  const value = g2dMark ? Number(g2dMark) : null;
+  return {
+    value,
+    meta: {
+      fieldKey: 'g2dMark',
+      dataSource: {
+        source: GpuDataSource.VideocardBenchmarks,
+        enabled: value != null,
+      },
+    },
+  };
 }
 
 function getMarketSegment($: cheerio.CheerioAPI): GpuField<MarketSegmentValue> {
@@ -51,17 +72,23 @@ function getMarketSegment($: cheerio.CheerioAPI): GpuField<MarketSegmentValue> {
     .text()
     .trim();
 
-  let marketSegment: MarketSegmentValue = null;
+  let value: MarketSegmentValue = null;
   if (text === 'Desktop') {
-    marketSegment = MarketSegmentValue.Desktop;
+    value = MarketSegmentValue.Desktop;
   } else if (text === 'Mobile') {
-    marketSegment = MarketSegmentValue.Laptop;
+    value = MarketSegmentValue.Laptop;
   } else if (text === 'Workstation') {
-    marketSegment = MarketSegmentValue.Workstation;
+    value = MarketSegmentValue.Workstation;
   }
 
   return {
-    value: marketSegment as MarketSegmentValue,
-    meta: { fieldKey: 'marketSegment' },
+    value,
+    meta: {
+      fieldKey: 'marketSegment',
+      dataSource: {
+        source: GpuDataSource.VideocardBenchmarks,
+        enabled: value != null,
+      },
+    },
   };
 }

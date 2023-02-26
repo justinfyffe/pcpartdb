@@ -2,7 +2,12 @@ import { importFromTechPowerUp } from '@scrapers/techpowerup';
 import { importFromUlBenchmarks } from '@scrapers/ul-benchmarks';
 import { importFromVideoCardBenchmark } from '@scrapers/videocardbenchmark';
 import { badRequestError } from '@server/shared/api/status';
-import { ImportGpuDataRequest } from '@shared/gpus';
+import { deepMergeObjects } from '@server/shared/utils/object-utils';
+import {
+  GpuDataSourceMeta,
+  ImportGpuDataRequest,
+  ImportGpuDataResponse,
+} from '@shared/gpus';
 
 enum Importers {
   TechPowerUp = 'www.techpowerup.com',
@@ -12,14 +17,27 @@ enum Importers {
 
 export class GpuImporterService {
   async importData(request: ImportGpuDataRequest) {
-    const parsedUrl = new URL(request.url);
+    const result: ImportGpuDataResponse = { gpu: {} };
+
+    for (let i = 0; i < request.sources.length; ++i) {
+      deepMergeObjects(
+        result,
+        await this.importDataFromSource(request.sources[i]),
+      );
+    }
+
+    return result;
+  }
+
+  private async importDataFromSource(source: GpuDataSourceMeta) {
+    const parsedUrl = new URL(source.url);
 
     if (parsedUrl.hostname === Importers.TechPowerUp) {
-      return await importFromTechPowerUp(request.url);
+      return await importFromTechPowerUp(source.url);
     } else if (parsedUrl.hostname === Importers.UlBenchmarks) {
-      return await importFromUlBenchmarks(request.url);
+      return await importFromUlBenchmarks(source.url);
     } else if (parsedUrl.hostname === Importers.VideoCardBenchmark) {
-      return await importFromVideoCardBenchmark(request.url);
+      return await importFromVideoCardBenchmark(source.url);
     } else {
       throw badRequestError();
     }

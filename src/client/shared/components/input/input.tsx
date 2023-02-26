@@ -149,7 +149,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
   const context = useContext(FieldContext);
 
   return (
-    <div className={classNames('relative', props.className)}>
+    <div className={classNames('relative w-full', props.className)}>
       <input
         type={props.type ?? 'text'}
         value={value || ''}

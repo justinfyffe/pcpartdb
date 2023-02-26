@@ -1,3 +1,4 @@
+import { Button, ButtonVariant } from '@client/shared/components';
 import { GpuField } from '@shared/gpus';
 import React, {
   forwardRef,
@@ -82,7 +83,7 @@ const INPUT_TYPES: Record<string, InputType> = {
   shaderModelVersion: 'autocomplete',
 };
 
-interface GpuSpecFieldProps {
+interface GpuFieldInputProps {
   type?: InputType;
   field: string;
 
@@ -90,7 +91,7 @@ interface GpuSpecFieldProps {
   onChange?: (value: GpuField) => void;
 }
 
-export const GpuFieldInput = forwardRef<unknown, GpuSpecFieldProps>(
+export const GpuFieldInput = forwardRef<unknown, GpuFieldInputProps>(
   (props, ref) => {
     const { type, field, value: propsValue, onChange } = props;
 
@@ -105,89 +106,114 @@ export const GpuFieldInput = forwardRef<unknown, GpuSpecFieldProps>(
       [onChange],
     );
 
+    const handleOverrideClick = useCallback(() => {
+      if (value.meta?.dataSource?.enabled == null) {
+        return;
+      }
+
+      value.meta.dataSource = { enabled: false };
+      setValue(value);
+      onChange?.(value);
+    }, [onChange, value]);
+
     const inputType = type ?? INPUT_TYPES[field];
-    if (inputType === 'autocomplete') {
-      return (
-        <GpuAutocompleteSpecFieldInput
-          field={field}
-          value={value as GpuField<string>}
-          onChange={handleChange}
-          ref={ref as Ref<HTMLInputElement>}
-        />
-      );
-    } else if (inputType === 'currency') {
-      return (
-        <GpuCurrencyFieldInput
-          field={field}
-          value={value as GpuField<number>}
-          onChange={handleChange}
-          ref={ref as Ref<HTMLInputElement>}
-        />
-      );
-    } else if (inputType === 'string') {
-      return (
-        <GpuStringFieldInput
-          field={field}
-          value={value as GpuField<string>}
-          onChange={handleChange}
-          ref={ref as Ref<HTMLInputElement>}
-        />
-      );
-    } else if (inputType === 'text') {
-      return (
-        <GpuTextFieldInput
-          field={field}
-          value={value as GpuField<string>}
-          onChange={handleChange}
-          ref={ref as Ref<HTMLTextAreaElement>}
-        />
-      );
-    } else if (inputType === 'float') {
-      return (
-        <GpuFloatFieldInput
-          field={field}
-          value={value as GpuField<number>}
-          onChange={handleChange}
-          ref={ref as Ref<HTMLInputElement>}
-        />
-      );
-    } else if (inputType === 'date') {
-      return (
-        <GpuDateFieldInput
-          field={field}
-          value={value as GpuField<string>}
-          onChange={handleChange}
-          ref={ref as Ref<HTMLInputElement>}
-        />
-      );
-    } else if (inputType === 'boolean') {
-      return (
-        <GpuBooleanFieldInput
-          field={field}
-          value={value as GpuField<boolean>}
-          onChange={handleChange}
-          ref={ref as Ref<HTMLSelectElement>}
-        />
-      );
-    } else if (inputType === 'enum') {
-      return (
-        <GpuEnumFieldInput
-          field={field}
-          value={value as GpuField<string>}
-          onChange={handleChange}
-          ref={ref as Ref<HTMLSelectElement>}
-        />
-      );
-    } else {
-      return (
-        <GpuStringFieldInput
-          field={field}
-          value={value as GpuField<string>}
-          onChange={handleChange}
-          ref={ref as Ref<HTMLInputElement>}
-        />
-      );
-    }
+    const renderInput = useCallback(() => {
+      if (inputType === 'autocomplete') {
+        return (
+          <GpuAutocompleteSpecFieldInput
+            field={field}
+            value={value as GpuField<string>}
+            onChange={handleChange}
+            ref={ref as Ref<HTMLInputElement>}
+          />
+        );
+      } else if (inputType === 'currency') {
+        return (
+          <GpuCurrencyFieldInput
+            field={field}
+            value={value as GpuField<number>}
+            onChange={handleChange}
+            ref={ref as Ref<HTMLInputElement>}
+          />
+        );
+      } else if (inputType === 'string') {
+        return (
+          <GpuStringFieldInput
+            field={field}
+            value={value as GpuField<string>}
+            onChange={handleChange}
+            ref={ref as Ref<HTMLInputElement>}
+          />
+        );
+      } else if (inputType === 'text') {
+        return (
+          <GpuTextFieldInput
+            field={field}
+            value={value as GpuField<string>}
+            onChange={handleChange}
+            ref={ref as Ref<HTMLTextAreaElement>}
+          />
+        );
+      } else if (inputType === 'float') {
+        return (
+          <GpuFloatFieldInput
+            field={field}
+            value={value as GpuField<number>}
+            onChange={handleChange}
+            ref={ref as Ref<HTMLInputElement>}
+          />
+        );
+      } else if (inputType === 'date') {
+        return (
+          <GpuDateFieldInput
+            field={field}
+            value={value as GpuField<string>}
+            onChange={handleChange}
+            ref={ref as Ref<HTMLInputElement>}
+          />
+        );
+      } else if (inputType === 'boolean') {
+        return (
+          <GpuBooleanFieldInput
+            field={field}
+            value={value as GpuField<boolean>}
+            onChange={handleChange}
+            ref={ref as Ref<HTMLSelectElement>}
+          />
+        );
+      } else if (inputType === 'enum') {
+        return (
+          <GpuEnumFieldInput
+            field={field}
+            value={value as GpuField<string>}
+            onChange={handleChange}
+            ref={ref as Ref<HTMLSelectElement>}
+          />
+        );
+      } else {
+        return (
+          <GpuStringFieldInput
+            field={field}
+            value={value as GpuField<string>}
+            onChange={handleChange}
+            ref={ref as Ref<HTMLInputElement>}
+          />
+        );
+      }
+    }, [field, handleChange, inputType, ref, value]);
+
+    return (
+      <div className="flex gap-4">
+        {renderInput()}
+        <Button
+          disabled={value?.meta?.dataSource?.enabled !== true}
+          variant={ButtonVariant.Default}
+          onClick={handleOverrideClick}
+        >
+          Override
+        </Button>
+      </div>
+    );
   },
 );
 GpuFieldInput.displayName = 'GpuFieldInput';

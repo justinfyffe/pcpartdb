@@ -86,11 +86,15 @@ export const ImportGpuField: FunctionComponent<ImportGpuFieldProps> = (
   const context = useContext(ImportGpuDataContext);
   const fields = context.fields;
   const emptyValue: GpuField = useMemo(
-    () => ({ value: null, meta: { fieldKey: key } }),
+    () => ({
+      value: null,
+      meta: { fieldKey: key, dataSource: { enabled: false } },
+    }),
     [key],
   );
 
   const [checked, setChecked] = useState(() => false);
+  const [source] = useState(() => fields[key]?.value?.meta?.dataSource?.source);
 
   useEffect(() => {
     if (fields[key] == null) {
@@ -104,12 +108,14 @@ export const ImportGpuField: FunctionComponent<ImportGpuFieldProps> = (
   const handleClick = useCallback(() => {
     if (checked) {
       fields[key].import = false;
+      fields[key].value.meta.dataSource = { enabled: false };
     } else {
       fields[key].import = true;
+      fields[key].value.meta.dataSource = { source, enabled: true };
     }
 
     setChecked(!checked);
-  }, [fields, key, checked]);
+  }, [checked, fields, key, source]);
 
   return (
     <Tr onClick={handleClick} className="hover:bg-gray-200 cursor-pointer">

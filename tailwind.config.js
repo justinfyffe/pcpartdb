@@ -100,6 +100,7 @@ module.exports = {
         'button-secondary': '#ff4081',
         card: 'rgb(249,240,251)',
         content: '#ffffff',
+        'disabled-input': '#eeeeee',
         footer: '#312e81',
         html: '#312e81',
         'mouse-hover': '#fafafa',

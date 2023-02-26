@@ -44,7 +44,13 @@ export const GpuEnumFieldInput = forwardRef<
   );
 
   return (
-    <Select value={baseValue} onChange={handleChange} clearable ref={ref}>
+    <Select
+      disabled={value?.meta?.dataSource?.enabled}
+      value={baseValue}
+      onChange={handleChange}
+      clearable
+      ref={ref}
+    >
       {items.map((item) => (
         <SelectOption key={item.value} label={item.label} value={item.value}>
           {item.label}

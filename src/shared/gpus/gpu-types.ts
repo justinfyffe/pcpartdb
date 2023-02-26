@@ -1,3 +1,4 @@
+import Joi from '@hapi/joi';
 import { GpuBenchmarks } from './gpu-benchmark-types';
 import { GpuField } from './gpu-field-types';
 import { GpuImages } from './gpu-image-types';
@@ -9,6 +10,21 @@ export enum MarketSegmentValue {
   Laptop = 'LAPTOP',
   Server = 'SERVER',
   Workstation = 'WORKSTATION',
+}
+
+export enum GpuDataSource {
+  TechPowerUp = 'TECHPOWERUP',
+  UlBenchmarks = 'UL_BENCHMARKS',
+  VideocardBenchmarks = 'VIDEOCARD_BENCHMARKS',
+}
+
+export interface GpuMeta {
+  dataSources?: Record<string, GpuDataSourceMeta>;
+}
+
+export interface GpuDataSourceMeta {
+  url?: string;
+  downloadDate?: number;
 }
 
 export interface Gpu {
@@ -23,6 +39,8 @@ export interface Gpu {
   marketSegment?: GpuField<MarketSegmentValue>;
   launchPrice?: GpuField<number>;
   releaseDate?: GpuField<string>;
+
+  meta?: GpuMeta;
 
   // Relations
   parent?: Gpu;
@@ -109,9 +127,14 @@ export interface ListGpusRequest {
 }
 
 export interface ImportGpuDataRequest {
-  url?: string;
+  sources: GpuDataSourceMeta[];
 }
 
 export interface ImportGpuDataResponse {
   gpu: Partial<Gpu>;
 }
+
+export const gpuDataSourceValidator = Joi.object({
+  url: Joi.string().allow(null),
+  downloadDate: Joi.number().allow(null),
+}).options({ abortEarly: false });

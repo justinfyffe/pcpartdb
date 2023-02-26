@@ -31,6 +31,7 @@ export interface AutocompleteProps extends TextInputProps {
 export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
   (props, ref) => {
     const {
+      disabled,
       className,
       direction,
       label: propsLabel,
@@ -151,6 +152,7 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
       >
         <div className={classNames('block relative w-full', className)}>
           <TextInput
+            disabled={disabled}
             prefix={prefix}
             suffix={isLoading ? <Spinner /> : suffix}
             placeholder={placeholder}
@@ -162,7 +164,7 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
             onSuffixClick={onSuffixClick}
             className="w-full"
             ref={ref}
-            clearable={!!value}
+            clearable={!disabled && !!value}
           />
 
           <div
