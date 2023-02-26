@@ -64,3 +64,11 @@ export const importGpuData = staffController(async (ctx: ApiContext) => {
   const body = ctx.req.body as ImportGpuDataRequest;
   return gpuImporterService.importData(body);
 });
+
+// TODO: remove this after fixing metadata
+export const fixGpuMetadata = staffController(async (ctx: ApiContext) => {
+  const gpus = await gpuService.list({}, ctx);
+  for (let i = 0; i < gpus.length; ++i) {
+    await gpuService.update(gpus[i].id, gpus[i] as UpdateGpuRequest, ctx);
+  }
+});

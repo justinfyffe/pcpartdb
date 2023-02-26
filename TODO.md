@@ -3,11 +3,13 @@ X: Done and tested
 
 Immediate Tasks:
   - Scraping improvements - data sources
-    - [~] add mappers to handle data source in database
-    - [] Exclude data source details for non-staff users (or exclude outside admin panel)
-    - [~] Add UI for specifying sources for the gpu
-    - [~] Add non-intrusive UI to override data source on individual field
+    - [X] add mappers to handle data source in database
+    - [X] Exclude data source details for non-staff users (or exclude outside admin panel)
+    - [X] Add UI for specifying sources for the gpu
+    - [X] Add non-intrusive UI to override data source on individual field
     - [] Update existing gpus to use new metadata structure
+      - [X] local
+      - [] prod
     - [] Remove legacy metadata mappers after updating
     - [] Add download date when importing
   - Fix bug where unauthorized pages doesn't display

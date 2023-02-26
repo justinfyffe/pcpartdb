@@ -138,3 +138,9 @@ export const gpuDataSourceValidator = Joi.object({
   url: Joi.string().allow(null),
   downloadDate: Joi.number().allow(null),
 }).options({ abortEarly: false });
+
+export const gpuMetaValidator = Joi.object({
+  dataSources: Joi.object()
+    .pattern(/.*/, gpuDataSourceValidator.allow(null))
+    .allow(null),
+}).options({ abortEarly: false });

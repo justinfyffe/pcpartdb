@@ -2,6 +2,7 @@ import Joi from '@hapi/joi';
 import {
   gpuBenchmarksValidator,
   gpuFieldValidator,
+  gpuMetaValidator,
   GpuOrder,
   GpuSort,
   gpuSpecsValidator,
@@ -46,6 +47,7 @@ export const createGpuRequestValidator = Joi.object({
   specs: gpuSpecsValidator.allow(null),
   benchmarks: gpuBenchmarksValidator.allow(null),
   images: Joi.array().allow(Joi.any()),
+  meta: gpuMetaValidator.allow(null),
 }).options({ abortEarly: false });
 
 export const updateGpuRequestValidator = Joi.object({
@@ -58,6 +60,7 @@ export const updateGpuRequestValidator = Joi.object({
   specs: gpuSpecsValidator.allow(null),
   benchmarks: gpuBenchmarksValidator.allow(null),
   images: Joi.array().allow(Joi.any()),
+  meta: gpuMetaValidator.allow(null),
 }).options({ abortEarly: false });
 
 export const autocompleteGpusRequestValidator = Joi.object({

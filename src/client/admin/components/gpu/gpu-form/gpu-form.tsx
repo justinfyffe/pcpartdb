@@ -328,14 +328,12 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
 
       try {
         if (isUpdate) {
-          console.log(request);
-          // await gpuService.update(gpu.id, request);
+          await gpuService.update(gpu.id, request);
         } else {
-          console.log(request);
-          // await gpuService.create(request);
+          await gpuService.create(request);
         }
 
-        // router.push('/admin/gpus');
+        router.push('/admin/gpus');
       } catch (err) {
         console.log(err);
         setRequestError(err as ApiError);

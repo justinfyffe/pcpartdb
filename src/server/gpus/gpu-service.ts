@@ -32,7 +32,7 @@ export class GpuService {
 
   async getById(id: number, options: FindOptions, ctx: Context) {
     const gpuEntity = await gpuRepository.findById(id, options, ctx);
-    const gpu = mapToGpuDto(gpuEntity);
+    const gpu = mapToGpuDto(gpuEntity, { includeSources: ctx.user?.isStaff });
 
     if (gpu == null) {
       throw notFoundError({ gpu: id });
@@ -46,7 +46,7 @@ export class GpuService {
 
   async getBySlug(slug: string, options: FindOptions, ctx: Context) {
     const gpuEntity = await gpuRepository.findBySlug(slug, options, ctx);
-    const gpu = mapToGpuDto(gpuEntity);
+    const gpu = mapToGpuDto(gpuEntity, { includeSources: ctx.user?.isStaff });
 
     if (gpu == null) {
       throw notFoundError({ gpu: slug });

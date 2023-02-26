@@ -1,10 +1,18 @@
 import { GpuField, GpuFieldMeta } from '@shared/gpus';
 import { GpuFieldsMetaJson } from './gpu-entity';
 
+interface MapToDtoOptions {
+  includeSources?: boolean;
+}
+
 export function mapToGpuFieldDto<
   TReturn,
   TEntity extends Record<string, unknown>,
->(entity: TEntity, key: keyof TEntity): GpuField<TReturn> {
+>(
+  entity: TEntity,
+  key: keyof TEntity,
+  options?: MapToDtoOptions,
+): GpuField<TReturn> {
   if (entity[key as string] == null) {
     return null;
   }
@@ -15,8 +23,13 @@ export function mapToGpuFieldDto<
   if (metadata?.fields?.[key as string] != null) {
     meta = metadata?.fields?.[key as string];
   } else if (metadata?.[key as string] != null) {
-    // TODO: remove once we have migrated fields meta
+    // TODO: remove this after fixing metadata
     meta = metadata?.[key as string];
+  }
+
+  // Don't include sources unless explicitly specified
+  if (meta != null && options?.includeSources !== true) {
+    meta.dataSource = undefined;
   }
 
   return {

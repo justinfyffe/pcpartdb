@@ -9,7 +9,11 @@ import { mapToGpuFieldDto, mapToGpuFieldEntity } from './gpu-field-mapper';
 import { mapToGpuImageDtos, mapToGpuImageEntities } from './gpu-image-mapper';
 import { mapToGpuSpecsDto, mapToGpuSpecsEntity } from './gpu-specs-mapper';
 
-export function mapToGpuDto(entity: GpuEntity): Gpu {
+interface MapToDtoOptions {
+  includeSources?: boolean;
+}
+
+export function mapToGpuDto(entity: GpuEntity, options?: MapToDtoOptions): Gpu {
   if (entity == null) {
     return null;
   }
@@ -22,32 +26,41 @@ export function mapToGpuDto(entity: GpuEntity): Gpu {
     name: entity.name,
     affiliateUrl: entity.affiliateUrl,
 
-    company: mapToGpuFieldDto(entity, 'company'),
-    marketSegment: mapToGpuFieldDto(entity, 'marketSegment'),
-    launchPrice: mapToGpuFieldDto(entity, 'launchPrice'),
-    releaseDate: mapToGpuFieldDto(entity, 'releaseDate'),
+    company: mapToGpuFieldDto(entity, 'company', options),
+    marketSegment: mapToGpuFieldDto(entity, 'marketSegment', options),
+    launchPrice: mapToGpuFieldDto(entity, 'launchPrice', options),
+    releaseDate: mapToGpuFieldDto(entity, 'releaseDate', options),
 
-    meta: mapToGpuMetaDto(entity.metadata as GpuMetaJson),
+    meta: mapToGpuMetaDto(entity.metadata as GpuMetaJson, options),
 
-    parent: mapToGpuDto(entity.parent),
-    specs: mapToGpuSpecsDto(entity.specs),
-    benchmarks: mapToGpuBenchmarksDto(entity.benchmarks),
+    parent: mapToGpuDto(entity.parent, options),
+    specs: mapToGpuSpecsDto(entity.specs, options),
+    benchmarks: mapToGpuBenchmarksDto(entity.benchmarks, options),
     images: mapToGpuImageDtos(entity.images),
   };
 }
 
-export function mapToGpuDtos(entities: GpuEntity[]): Gpu[] {
-  return entities.map((entity) => mapToGpuDto(entity));
+export function mapToGpuDtos(
+  entities: GpuEntity[],
+  options?: MapToDtoOptions,
+): Gpu[] {
+  return entities.map((entity) => mapToGpuDto(entity, options));
 }
 
-function mapToGpuMetaDto(metaJson: GpuMetaJson) {
-  const dataSources = Object.keys(metaJson?.dataSources ?? {}).reduce(
-    (acc, key) => {
-      acc[key] = metaJson.dataSources[key];
-      return acc;
-    },
-    {} as Record<string, GpuDataSourceMeta>,
-  );
+function mapToGpuMetaDto(metaJson: GpuMetaJson, options?: MapToDtoOptions) {
+  let dataSources = {};
+
+  // Don't include sources unless explicitly specified
+  if (options?.includeSources) {
+    dataSources = Object.keys(metaJson?.dataSources ?? {}).reduce(
+      (acc, key) => {
+        acc[key] = metaJson.dataSources[key];
+        return acc;
+      },
+      {} as Record<string, GpuDataSourceMeta>,
+    );
+  }
+
   return { dataSources } as GpuMeta;
 }
 

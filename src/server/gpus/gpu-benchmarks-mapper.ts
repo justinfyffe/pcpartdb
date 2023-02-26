@@ -3,8 +3,13 @@ import { GpuBenchmarks } from '@shared/gpus';
 import { GpuBenchmarksEntity } from './gpu-entity';
 import { mapToGpuFieldDto, mapToGpuFieldEntity } from './gpu-field-mapper';
 
+interface MapToDtoOptions {
+  includeSources?: boolean;
+}
+
 export function mapToGpuBenchmarksDto(
   entity: GpuBenchmarksEntity,
+  options?: MapToDtoOptions,
 ): GpuBenchmarks {
   if (entity == null) {
     return null;
@@ -13,11 +18,11 @@ export function mapToGpuBenchmarksDto(
   return {
     gpuId: entity.gpuId,
 
-    g3dMark: mapToGpuFieldDto(entity, 'g3dMark'),
-    g2dMark: mapToGpuFieldDto(entity, 'g2dMark'),
-    timespyGraphics: mapToGpuFieldDto(entity, 'timespyGraphics'),
-    performanceScore: mapToGpuFieldDto(entity, 'performanceScore'),
-    valueScore: mapToGpuFieldDto(entity, 'valueScore'),
+    g3dMark: mapToGpuFieldDto(entity, 'g3dMark', options),
+    g2dMark: mapToGpuFieldDto(entity, 'g2dMark', options),
+    timespyGraphics: mapToGpuFieldDto(entity, 'timespyGraphics', options),
+    performanceScore: mapToGpuFieldDto(entity, 'performanceScore', options),
+    valueScore: mapToGpuFieldDto(entity, 'valueScore', options),
   };
 }
 
