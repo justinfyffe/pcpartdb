@@ -15,9 +15,6 @@ export type GpuImageEntity = db.GpuImage & {
 
 export interface GpuFieldsMetaJson {
   fields?: Record<string, GpuFieldMeta>;
-
-  // Legacy
-  [fieldKey: string]: GpuFieldMeta;
 }
 
 export interface GpuMetaJson extends GpuFieldsMetaJson {

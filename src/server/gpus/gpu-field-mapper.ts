@@ -22,9 +22,6 @@ export function mapToGpuFieldDto<
   let meta: GpuFieldMeta;
   if (metadata?.fields?.[key as string] != null) {
     meta = metadata?.fields?.[key as string];
-  } else if (metadata?.[key as string] != null) {
-    // TODO: remove this after fixing metadata
-    meta = metadata?.[key as string];
   }
 
   // Don't include sources unless explicitly specified
