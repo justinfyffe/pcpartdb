@@ -5,7 +5,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'PUT') {
     return updateUser(req, res);
   } else {
-    res.status(404);
+    res.status(404).json({});
     return null;
   }
 }

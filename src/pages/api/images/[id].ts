@@ -13,7 +13,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   } else if (req.method === 'DELETE') {
     return deleteImage(req, res);
   } else {
-    res.status(404);
+    res.status(404).json({});
     return null;
   }
 }
