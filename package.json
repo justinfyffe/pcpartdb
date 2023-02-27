@@ -5,20 +5,19 @@
   "main": "index.js",
   "scripts": {
     "deploy": "./bin/deploy",
-    "clean": "npm run clean:app && npm run clean:scrapers",
+    "clean": "npm run clean:app && npm run clean:tools",
     "clean:app": "rm -rf .next",
-    "clean:scrapers": "rm -rf dist/scrapers",
-    "build": "npm run build:app && npm run build:scrapers",
+    "clean:tools": "rm -rf dist/tools",
+    "build": "npm run build:app && npm run build:tools",
     "build:app": "next build",
-    "build:scrapers": "tsc --project tsconfig.scrapers.json",
+    "build:tools": "tsc --project tsconfig.tools.json",
     "dev": "next dev",
     "start": "next start -p 3010",
     "db:migrate": "prisma migrate deploy",
     "db:generate:client": "prisma generate",
     "db:generate:migration": "prisma migrate dev",
     "db:pull": "prisma db pull",
-    "db:push": "prisma db push",
-    "scrape": "node dist/scrapers/main"
+    "db:push": "prisma db push"
   },
   "repository": {
     "type": "git",
@@ -107,6 +106,7 @@
     "uuid": "^9.0.0"
   },
   "_moduleAliases": {
+    "@scrapers": "dist/scrapers",
     "@shared": "dist/shared"
   }
 }

@@ -10,11 +10,12 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "paths": {
+      "@scrapers/*": ["scrapers/*"],
       "@shared/*": ["shared/*"],
     },
     "baseUrl": "./src",
     "target": "esnext",
     
   },
-  "include": ["./src/scrapers/*.ts"],
+  "include": ["./src/tools/**/*.ts"],
 }

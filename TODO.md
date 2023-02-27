@@ -2,6 +2,18 @@
 X: Done and tested
 
 Immediate Tasks:
+  - Make separate project for tools? Or setup lerna? Or not bother
+    - Can exclude out of deployment
+    - Can include heavier dependencies
+    - Tools
+      - Scraper: Fetches URLs and creates data structure
+  - Scraping Tool
+    - Download pages:
+      - techpowerup https://www.techpowerup.com/gpu-specs/?ajaxsrch=g&_=1677459591243
+      - ul benchmarks: https://benchmarks.ul.com/compare/best-gpus?amount=0&reverseOrder=true&search=v
+      - videocardbenchmark https://www.videocardbenchmark.net/GPU_mega_page.html
+        - Needs puppeteer (how to avoid including in deployment) - maybe install globally?
+    - Create tool that builds data set from downloaded pages
   - Scraping improvements - data sources
     - [] Add download date when importing
   - Fix bug where unauthorized pages doesn't display
