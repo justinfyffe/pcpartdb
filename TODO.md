@@ -5,6 +5,7 @@ Immediate Tasks:
   - Make separate project for tools? Or setup lerna? Or not bother
     - Can exclude out of deployment
     - Can include heavier dependencies
+    - CLI Tools that will be useful to run to improve workflows
     - Tools
       - Scraper: Fetches URLs and creates data structure
   - Scraping Tool
