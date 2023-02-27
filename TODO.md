@@ -2,7 +2,7 @@
 X: Done and tested
 
 Immediate Tasks:
-  - Make separate project for tools? Or setup lerna? Or not bother
+  - Make separate project for tools? Or setup lerna? or setup npm workspace? Or not bother
     - Can exclude out of deployment
     - Can include heavier dependencies
     - CLI Tools that will be useful to run to improve workflows
