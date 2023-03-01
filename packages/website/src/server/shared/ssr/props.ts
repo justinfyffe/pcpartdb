@@ -10,7 +10,7 @@ import { errorHandler } from './error';
 
 type GuardFunction = (ctx: SsrContext) => void;
 
-interface SsrPageProps {
+export interface SsrPageProps {
   props?: unknown;
   redirect?: unknown;
 }

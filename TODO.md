@@ -3,6 +3,7 @@ X: Done and tested
 
 Workspaces:
 - scraper
+- database (prisma, migrations)
 - website
 
 Immediate Tasks:
