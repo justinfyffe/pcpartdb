@@ -1,0 +1,57 @@
+import {
+  getCompareGpusSlug,
+  getGpuComparisonName,
+} from '@pcpartdb/website/client/gpus';
+import { classNames } from '@pcpartdb/website/client/shared/ui';
+import { getCompareGpusPath } from '@pcpartdb/website/client/shared/website';
+import { GpuComparison } from '@pcpartdb/website/shared/gpus';
+import React, { FunctionComponent } from 'react';
+import { SidenavSection, SidenavSectionTitle } from '../sidenav';
+
+interface SidenavComparisonsProps {
+  comparisons?: GpuComparison[];
+  className?: string;
+}
+
+export const SidenavComparisons: FunctionComponent<SidenavComparisonsProps> = (
+  props,
+) => {
+  const comparisons = props.comparisons || [];
+
+  if (comparisons.length === 0) {
+    return <></>;
+  }
+
+  return (
+    <SidenavSection
+      className={classNames('flex flex-col gap-3', props.className)}
+    >
+      <SidenavSectionTitle>Related Comparisons</SidenavSectionTitle>
+
+      <div className="flex flex-col gap-4">
+        {comparisons.map((comparison, i) => (
+          <ComparisonListing key={i} comparison={comparison} />
+        ))}
+      </div>
+    </SidenavSection>
+  );
+};
+
+interface ComparisonListingProps {
+  comparison: GpuComparison;
+}
+
+const ComparisonListing: FunctionComponent<ComparisonListingProps> = (
+  props,
+) => {
+  const { comparison } = props;
+
+  return (
+    <a
+      href={getCompareGpusPath(getCompareGpusSlug(comparison))}
+      className="flex items-center gap-3 px-3 py-3 border-px rounded text-sm"
+    >
+      <div className="flex-1">{getGpuComparisonName(comparison)}</div>
+    </a>
+  );
+};

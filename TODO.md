@@ -1,6 +1,10 @@
 ~: Maybe done, but need to test
 X: Done and tested
 
+Workspaces:
+- scraper
+- website
+
 Immediate Tasks:
   - Make separate project for tools? Or setup lerna? or setup npm workspace? Or not bother
     - Can exclude out of deployment

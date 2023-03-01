@@ -2,7 +2,7 @@
   "compilerOptions": {
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
-    "baseUrl": "./src",
+    "baseUrl": ".",
     "downlevelIteration": true,
     "emitDecoratorMetadata": true,
     "esModuleInterop": true,
@@ -11,21 +11,14 @@
     "isolatedModules": true,
     "incremental": true,
     "jsx": "preserve",
-    "lib": [
-      "es2017",
-      "dom"
-    ],
-    "module": "esnext",
+    "lib": ["esnext"],
+    "module": "CommonJS",
     "moduleResolution": "node",
-    "noEmit": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,
-    "outDir": ".next",
+    "outDir": "./dist",
     "paths": {
-      "@client/*": ["client/*"],
-      "@scrapers/*": ["scrapers/*"],
-      "@shared/*": ["shared/*"],
-      "@server/*": ["server/*"]
+      "@pcpartdb/website/*": ["packages/website/src/*"],
     },
     "pretty": true,
     "removeComments": true,
@@ -34,15 +27,16 @@
     "sourceMap": true,
     "strict": true,
     "strictNullChecks": false,
-    "target": "es5"
+    "target": "ES2018"
   },
+  "references": [
+    { "path": "packages/scraper/tsconfig.json" },
+    { "path": "packages/website/tsconfig.json" },
+  ],
   "include": [
     "./src/**/*.ts",
     "./src/**/*.tsx",
     "next-env.d.ts",
   ],
-  "exclude": [
-    "node_modules",
-    "src/db/**/*.ts"
-  ]
+  "exclude": ["dist", "node_modules", "*.d.ts", "src/db/**/*.ts"]
 }
