@@ -3,9 +3,8 @@
   "compilerOptions": {
     "composite": true,
     "outDir": "./dist",
-    "noEmit": false,
+    "noEmit": true,
     "target": "es5",
-    "rootDir": "./src"
   },
   "include": ["./src/**/*"],
   "exclude": ["dist", "node_modules"]
