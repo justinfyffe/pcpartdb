@@ -1,4 +1,5 @@
 import Joi from '@hapi/joi';
+import { imageRepository } from '@pcpartdb/database';
 import {
   badRequestError,
   notFoundError,
@@ -12,7 +13,6 @@ import {
   UpdateImageRequest,
 } from '@pcpartdb/website/shared/image';
 import { mapToImageDto, mapToImageEntity } from './image-mappers';
-import { imageRepository } from './image-repository';
 
 const imageValidator = Joi.object({
   name: Joi.string().required(),

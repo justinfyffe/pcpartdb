@@ -37,7 +37,7 @@
       "typescriptreact"
   ],
   "eslint.workingDirectories": [
-
+    "./packages/database",
     "./packages/scraper",
     "./packages/website"
   ],

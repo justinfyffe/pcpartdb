@@ -1,4 +1,10 @@
 import {
+  FindOptions,
+  gpuRepository,
+  GpuSpecsEntity,
+  ListOptions,
+} from '@pcpartdb/database';
+import {
   badRequestError,
   notFoundError,
 } from '@pcpartdb/website/server/shared/api/status';
@@ -11,9 +17,7 @@ import {
   UpdateGpuRequest,
 } from '@pcpartdb/website/shared/gpus';
 import { addPerformanceBenchmarks } from './benchmark-utils';
-import { GpuSpecsEntity } from './gpu-entity';
 import { mapToGpuDto, mapToGpuDtos, mapToGpuEntity } from './gpu-mappers';
-import { FindOptions, gpuRepository, ListOptions } from './gpu-repository';
 
 export class GpuService {
   async count(options: ListOptions, ctx: Context) {

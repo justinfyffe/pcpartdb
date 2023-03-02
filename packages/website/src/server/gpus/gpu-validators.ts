@@ -1,10 +1,9 @@
 import Joi from '@hapi/joi';
+import { GpuOrder, GpuSort } from '@pcpartdb/database';
 import {
   gpuBenchmarksValidator,
   gpuFieldValidator,
   gpuMetaValidator,
-  GpuOrder,
-  GpuSort,
   gpuSpecsValidator,
 } from '@pcpartdb/website/shared/gpus';
 

@@ -1,5 +1,5 @@
-import { UserEntity } from '@pcpartdb/website/server/user/user-entity';
 import * as db from '@prisma/client';
+import { UserEntity } from '../user/user-entity';
 
 export type AccessTokenEntity = db.AccessToken & {
   user?: UserEntity;

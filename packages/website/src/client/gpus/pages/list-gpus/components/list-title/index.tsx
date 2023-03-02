@@ -1,9 +1,9 @@
+import { GpuSort } from '@pcpartdb/database';
 import {
   compileContent,
   ContentContext,
   ContentParams,
 } from '@pcpartdb/website/client/shared/content';
-import { GpuSort } from '@pcpartdb/website/shared/gpus';
 import React, { FunctionComponent, useContext } from 'react';
 import { ListPageContext } from '../../context';
 

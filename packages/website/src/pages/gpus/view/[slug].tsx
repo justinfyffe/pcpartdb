@@ -1,3 +1,4 @@
+import { GpuSort } from '@pcpartdb/database';
 import {
   ViewGpuPage,
   ViewGpuPageProps,
@@ -9,7 +10,6 @@ import { SsrContext } from '@pcpartdb/website/server/shared/ssr/context';
 import { ssrPageProps } from '@pcpartdb/website/server/shared/ssr/props';
 import {
   Gpu,
-  GpuSort,
   RelatedComparisons,
   RelatedGpus,
 } from '@pcpartdb/website/shared/gpus';

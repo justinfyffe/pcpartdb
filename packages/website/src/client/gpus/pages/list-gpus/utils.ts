@@ -1,5 +1,5 @@
+import { GpusQuery } from '@pcpartdb/database';
 import { getListGpusPath } from '@pcpartdb/website/client/shared/website';
-import { GpusQuery } from '@pcpartdb/website/shared/gpus';
 import { LIST_PRESETS } from './types';
 
 export function getListPath(presetOrQuery: GpusQuery | string) {

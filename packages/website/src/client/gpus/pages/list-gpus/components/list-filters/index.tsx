@@ -1,6 +1,6 @@
+import { GpuSort } from '@pcpartdb/database';
 import { Checkbox } from '@pcpartdb/website/client/shared/components';
 import { classNames } from '@pcpartdb/website/client/shared/ui';
-import { GpuSort } from '@pcpartdb/website/shared/gpus';
 import React, {
   FunctionComponent,
   useCallback,

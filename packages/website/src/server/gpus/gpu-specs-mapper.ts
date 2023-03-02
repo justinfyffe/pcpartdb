@@ -1,6 +1,6 @@
-import { Prisma } from '@prisma/client';
+import { GpuSpecsEntity } from '@pcpartdb/database';
 import { GpuSpecs } from '@pcpartdb/website/shared/gpus';
-import { GpuSpecsEntity } from './gpu-entity';
+import { Prisma } from '@prisma/client';
 import { mapToGpuFieldDto, mapToGpuFieldEntity } from './gpu-field-mapper';
 
 interface MapToDtoOptions {

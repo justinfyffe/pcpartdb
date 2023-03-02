@@ -1,4 +1,5 @@
 import Joi from '@hapi/joi';
+import { GpusQuery } from '@pcpartdb/database';
 import { GpuBenchmarks } from './gpu-benchmark-types';
 import { GpuField } from './gpu-field-types';
 import { GpuImages } from './gpu-image-types';
@@ -87,39 +88,6 @@ export interface RelatedGpus {
 
 export interface RelatedComparisons {
   comparisons?: GpuComparison[];
-}
-
-export enum GpuSort {
-  Id = 'id',
-  Name = 'name',
-  PerformanceRating = 'performance-rating',
-  ValueRating = 'value-rating',
-  ReleaseDate = 'release-date',
-}
-
-export enum GpuOrder {
-  Asc = 'asc',
-  Desc = 'desc',
-}
-
-export interface GpusFilter {
-  company?: string[];
-
-  performanceRated?: boolean;
-  valueRated?: boolean;
-}
-
-export interface GpusOrderBy {
-  sort: GpuSort;
-  order?: GpuOrder;
-}
-
-export interface GpusQuery {
-  filter?: GpusFilter;
-  orderBy?: GpusOrderBy;
-
-  limit?: number;
-  offset?: number;
 }
 
 export interface ListGpusRequest {

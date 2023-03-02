@@ -1,4 +1,4 @@
-import { UserEntity } from '@pcpartdb/website/server/user/user-entity';
+import { UserEntity } from '@pcpartdb/database';
 import { mapToUserDto } from '@pcpartdb/website/server/user/user-mappers';
 import { AccessToken } from '@pcpartdb/website/shared/auth';
 

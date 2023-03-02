@@ -1,4 +1,4 @@
-import { GpuSort, GpusQuery } from '@pcpartdb/website/shared/gpus';
+import { GpuSort, GpusQuery } from '@pcpartdb/database';
 
 export enum ListPresetSlug {
   BestPerformance = 'best-performance',

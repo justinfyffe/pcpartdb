@@ -1,6 +1,5 @@
-import { Prisma } from '@prisma/client';
+import { GpuBenchmarksEntity, Prisma } from '@pcpartdb/database';
 import { GpuBenchmarks } from '@pcpartdb/website/shared/gpus';
-import { GpuBenchmarksEntity } from './gpu-entity';
 import { mapToGpuFieldDto, mapToGpuFieldEntity } from './gpu-field-mapper';
 
 interface MapToDtoOptions {

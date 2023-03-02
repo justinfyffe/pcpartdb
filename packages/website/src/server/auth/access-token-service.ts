@@ -1,3 +1,4 @@
+import { accessTokenRepository, userRepository } from '@pcpartdb/database';
 import {
   forbiddenError,
   unauthorizedError,
@@ -9,11 +10,9 @@ import {
   generateToken,
   hashToken,
 } from '@pcpartdb/website/server/shared/crypto/crypto-utils';
-import { userRepository } from '@pcpartdb/website/server/user/user-repository';
 import { LoginRequest } from '@pcpartdb/website/shared/auth';
 import * as bcrypt from 'bcryptjs';
 import { mapToAccessTokenDto } from './access-token-mappers';
-import { accessTokenRepository } from './access-token-repository';
 
 const SESSION_EXPIRES = 1000 * 60 * 60 * 24; // 1 day
 const COOKIE_EXPIRES = 1000 * 60 * 60 * 24 * 30; // 30 days

@@ -1,3 +1,4 @@
+import { GpuSort, GpusQuery } from '@pcpartdb/database';
 import {
   LIST_PRESETS,
   ListGpusPage,
@@ -10,7 +11,6 @@ import { Context } from '@pcpartdb/website/server/shared/context';
 import { SsrContext } from '@pcpartdb/website/server/shared/ssr/context';
 import { ssrPageProps } from '@pcpartdb/website/server/shared/ssr/props';
 import { validate } from '@pcpartdb/website/server/shared/types/validate';
-import { GpuSort, GpusQuery } from '@pcpartdb/website/shared/gpus';
 import { ParsedUrlQuery } from 'querystring';
 
 export const getServerSideProps = ssrPageProps<ListGpusPageProps>(

@@ -4,20 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build": "npm run database build & npm run scraper build & npm run website build",
     "deploy": "./bin/deploy",
-    "clean": "npm run clean:app && npm run clean:tools",
-    "clean:app": "rm -rf .next",
-    "clean:tools": "rm -rf dist/tools",
-    "build": "npm run build:app && npm run build:tools",
-    "build:app": "next build",
-    "build:tools": "tsc --project tsconfig.tools.json",
-    "dev": "next dev",
-    "start": "next start -p 3010",
-    "db:migrate": "prisma migrate deploy",
-    "db:generate:client": "prisma generate",
-    "db:generate:migration": "prisma migrate dev",
-    "db:pull": "prisma db pull",
-    "db:push": "prisma db push"
+    "database": "npm --workspace=@pcpartdb/database run",
+    "scraper": "npm --workspace=@pcpartdb/scraper run",
+    "website": "npm --workspace=@pcpartdb/website run"
   },
   "repository": {
     "type": "git",
@@ -30,7 +21,8 @@
     "url": "https://github.com/justinfyffe/pcpartdb/issues"
   },
   "homepage": "https://pcpartdb.com",
-  "workspaces": [
+  "workspaces":  [
+    "packages/database",
     "packages/scraper",
     "packages/website"
   ],
@@ -48,6 +40,7 @@
     "eslint-plugin-simple-import-sort": "^7.0.0",
     "prettier": "^2.6.2",
     "rimraf": "^3.0.2",
+    "ts-node": "^10.8.0",
     "typescript": "^4.7.2"
   },
   "dependencies": {}

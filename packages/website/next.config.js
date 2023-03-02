@@ -18,4 +18,10 @@ module.exports = withBundleAnalyzer({
   // So, the source code is "basePath-ready".
   // You can remove `basePath` if you don't need it.
   reactStrictMode: false,
+  experimental: {
+    // this will allow nextjs to resolve files (js, ts, css)
+    // outside packages/app directory.
+    externalDir: true,
+  },
+  transpilePackages: ['@pcpartdb/database'],
 });

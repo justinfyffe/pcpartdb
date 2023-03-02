@@ -1,9 +1,10 @@
+import { GpuSort } from '@pcpartdb/database';
 import { HomePage, HomePageProps } from '@pcpartdb/website/client/home/pages';
 import { gpuService } from '@pcpartdb/website/server/gpus/gpu-service';
 import { Context } from '@pcpartdb/website/server/shared/context';
 import { SsrContext } from '@pcpartdb/website/server/shared/ssr/context';
 import { ssrPageProps } from '@pcpartdb/website/server/shared/ssr/props';
-import { GpuComparison, GpuSort } from '@pcpartdb/website/shared/gpus';
+import { GpuComparison } from '@pcpartdb/website/shared/gpus';
 
 export const getServerSideProps = ssrPageProps<HomePageProps>(
   async (ctx: SsrContext) => {

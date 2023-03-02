@@ -1,7 +1,7 @@
+import { transaction } from '@pcpartdb/database';
 import { guestGuard } from '@pcpartdb/website/server/auth/guest-guard';
 import { staffGuard } from '@pcpartdb/website/server/auth/staff-guard';
 import { userGuard } from '@pcpartdb/website/server/auth/user-guard';
-import { transaction } from '@pcpartdb/website/server/db/database';
 import { userMiddleware } from '@pcpartdb/website/server/user/user-middleware';
 import { NextPageContext } from 'next';
 import { contextPropsMiddleware } from '../context/context-props-middleware';

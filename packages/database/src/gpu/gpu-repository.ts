@@ -1,14 +1,40 @@
-import { prisma } from '@pcpartdb/website/server/db/database';
-import { RepositoryConfig } from '@pcpartdb/website/server/db/repository';
-import {
-  GpuOrder,
-  GpusFilter,
-  GpusOrderBy,
-  GpuSort,
-  GpusQuery,
-} from '@pcpartdb/website/shared/gpus';
 import { Prisma } from '@prisma/client';
+import { prisma } from '../database';
+import { RepositoryConfig } from '../repository';
 import { GpuEntity, GpuSpecsEntity } from './gpu-entity';
+
+export enum GpuSort {
+  Id = 'id',
+  Name = 'name',
+  PerformanceRating = 'performance-rating',
+  ValueRating = 'value-rating',
+  ReleaseDate = 'release-date',
+}
+
+export enum GpuOrder {
+  Asc = 'asc',
+  Desc = 'desc',
+}
+
+export interface GpusFilter {
+  company?: string[];
+
+  performanceRated?: boolean;
+  valueRated?: boolean;
+}
+
+export interface GpusOrderBy {
+  sort: GpuSort;
+  order?: GpuOrder;
+}
+
+export interface GpusQuery {
+  filter?: GpusFilter;
+  orderBy?: GpusOrderBy;
+
+  limit?: number;
+  offset?: number;
+}
 
 export interface ListOptions {
   query?: GpusQuery;

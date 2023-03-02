@@ -1,4 +1,4 @@
-import { accessTokenRepository } from '@pcpartdb/website/server/auth/access-token-repository';
+import { accessTokenRepository } from '@pcpartdb/database';
 import { ApiContext } from '@pcpartdb/website/server/shared/api/context';
 import { cookieService } from '@pcpartdb/website/server/shared/cookie/cookie-service';
 import { SESSION_COOKIE } from '@pcpartdb/website/server/shared/cookie/cookies';

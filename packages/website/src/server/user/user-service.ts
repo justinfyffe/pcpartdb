@@ -1,3 +1,4 @@
+import { userRepository } from '@pcpartdb/database';
 import {
   badRequestError,
   internalServerError,
@@ -21,7 +22,6 @@ import {
 import { WEBSITE_NAME } from '@pcpartdb/website/shared/website';
 import * as bcrypt from 'bcryptjs';
 import { mapToUserDto, mapToUserEntity } from './user-mappers';
-import { userRepository } from './user-repository';
 
 class UserService {
   async count(ctx: Context) {

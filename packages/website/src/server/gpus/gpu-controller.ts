@@ -1,3 +1,4 @@
+import { GpuSpecsEntity } from '@pcpartdb/database';
 import { ApiContext } from '@pcpartdb/website/server/shared/api/context';
 import {
   controller,
@@ -10,7 +11,6 @@ import {
   ListGpusRequest,
   UpdateGpuRequest,
 } from '@pcpartdb/website/shared/gpus';
-import { GpuSpecsEntity } from './gpu-entity';
 import { gpuImporterService } from './gpu-importer-service';
 import { gpuService } from './gpu-service';
 import {

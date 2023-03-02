@@ -1,3 +1,4 @@
+import { GpusQuery } from '@pcpartdb/database';
 import { CompareGpusForm } from '@pcpartdb/website/client/gpus/components';
 import { gpuService } from '@pcpartdb/website/client/gpus/gpu-service';
 import { useGpuCache } from '@pcpartdb/website/client/shared/cache';
@@ -7,7 +8,7 @@ import {
 } from '@pcpartdb/website/client/shared/components';
 import { WebsiteLayout } from '@pcpartdb/website/client/shared/layouts';
 import { classNames } from '@pcpartdb/website/client/shared/ui';
-import { Gpu, GpusQuery } from '@pcpartdb/website/shared/gpus';
+import { Gpu } from '@pcpartdb/website/shared/gpus';
 import { useRouter } from 'next/router';
 import React, { useCallback, useState } from 'react';
 import {

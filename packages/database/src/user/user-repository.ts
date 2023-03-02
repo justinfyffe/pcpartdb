@@ -1,5 +1,5 @@
-import { prisma } from '@pcpartdb/website/server/db/database';
-import { RepositoryConfig } from '@pcpartdb/website/server/db/repository';
+import { prisma } from '../database';
+import { RepositoryConfig } from '../repository';
 import { UserEntity } from './user-entity';
 
 export interface CreateUserOptions {

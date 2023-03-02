@@ -1,4 +1,5 @@
-import { Gpu, GpusQuery } from '@pcpartdb/website/shared/gpus';
+import { GpusQuery } from '@pcpartdb/database';
+import { Gpu } from '@pcpartdb/website/shared/gpus';
 import { createContext } from 'react';
 
 interface ListPageContextState {

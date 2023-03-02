@@ -1,8 +1,9 @@
 {
   "name": "@pcpartdb/scraper",
+  "private": "true",
   "version": "1.0.0",
   "description": "Website for viewing and comparing pc specs in an easy format",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "clean": "rm -rf dist",
     "build": "tsc",

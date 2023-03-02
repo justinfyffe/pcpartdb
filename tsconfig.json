@@ -18,6 +18,8 @@
     "noImplicitThis": true,
     "outDir": "./dist",
     "paths": {
+      "@pcpartdb/database/*": ["packages/database/src/*"],
+      "@pcpartdb/database": ["packages/database/src"],
       "@pcpartdb/website/*": ["packages/website/src/*"],
     },
     "pretty": true,
@@ -27,16 +29,13 @@
     "sourceMap": true,
     "strict": true,
     "strictNullChecks": false,
-    "target": "ES2018"
+    "target": "es5"
   },
   "references": [
+    { "path": "packages/database/tsconfig.json"},
     { "path": "packages/scraper/tsconfig.json" },
     { "path": "packages/website/tsconfig.json" },
   ],
-  "include": [
-    "./src/**/*.ts",
-    "./src/**/*.tsx",
-    "next-env.d.ts",
-  ],
-  "exclude": ["dist", "node_modules", "*.d.ts", "src/db/**/*.ts"]
+  "include": [],
+  "exclude": ["dist", "node_modules", "*.d.ts"]
 }
