@@ -7,6 +7,28 @@ Workspaces:
 - website
 
 Immediate Tasks:
+  - Migrate to nestjs
+    - finish view models
+    - setting props
+    - remove server code in website
+    - Image uploading
+      - Public folder
+    - Remove references to database and server from website
+    - call view models endpoint from nextjs
+    - call api from nextjs
+    - imports cleanup
+    - TEST
+      - Image uploading
+      - Adding data
+      - Updating data
+      - Deleting data
+      - Creating Account
+      - Signing In
+      - Auth guards
+      - Home Page
+      - View Page
+      - Compare Page
+      - List Page
   - Make separate project for tools? Or setup lerna? or setup npm workspace? Or not bother
     - Can exclude out of deployment
     - Can include heavier dependencies

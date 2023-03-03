@@ -1,40 +1,18 @@
-import { Prisma } from '@prisma/client';
-import { prisma } from '../database';
-import { RepositoryConfig } from '../repository';
-import { GpuEntity, GpuSpecsEntity } from './gpu-entity';
-
-export enum GpuSort {
-  Id = 'id',
-  Name = 'name',
-  PerformanceRating = 'performance-rating',
-  ValueRating = 'value-rating',
-  ReleaseDate = 'release-date',
-}
-
-export enum GpuOrder {
-  Asc = 'asc',
-  Desc = 'desc',
-}
-
-export interface GpusFilter {
-  company?: string[];
-
-  performanceRated?: boolean;
-  valueRated?: boolean;
-}
-
-export interface GpusOrderBy {
-  sort: GpuSort;
-  order?: GpuOrder;
-}
-
-export interface GpusQuery {
-  filter?: GpusFilter;
-  orderBy?: GpusOrderBy;
-
-  limit?: number;
-  offset?: number;
-}
+import { Injectable } from '@nestjs/common';
+import {
+  GpuEntity,
+  GpuSpecsEntity,
+  Prisma,
+  prisma,
+  RepositoryConfig,
+} from '@pcpartdb/database';
+import {
+  GpuOrder,
+  GpusFilter,
+  GpusOrderBy,
+  GpuSort,
+  GpusQuery,
+} from '@pcpartdb/shared/gpus';
 
 export interface ListOptions {
   query?: GpusQuery;
@@ -48,6 +26,7 @@ export interface FindOptions {
   includeRanks?: boolean;
 }
 
+@Injectable()
 export class GpuRepository {
   async list(
     options: ListOptions,
@@ -319,5 +298,3 @@ export class GpuRepository {
     }
   }
 }
-
-export const gpuRepository = new GpuRepository();
