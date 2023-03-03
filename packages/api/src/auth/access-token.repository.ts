@@ -1,6 +1,9 @@
-import { prisma } from '../database';
-import { RepositoryConfig } from '../repository';
-import { AccessTokenEntity } from './access-token-entity';
+import { Injectable } from '@nestjs/common';
+import {
+  AccessTokenEntity,
+  prisma,
+  RepositoryConfig,
+} from '@pcpartdb/database';
 
 export interface CreateAccessTokenOptions {
   userId: number;
@@ -8,6 +11,7 @@ export interface CreateAccessTokenOptions {
   expiresAt: Date;
 }
 
+@Injectable()
 export class AccessTokenRepository {
   async create(
     accessToken: Omit<AccessTokenEntity, 'id' | 'user'>,
@@ -32,5 +36,3 @@ export class AccessTokenRepository {
     });
   }
 }
-
-export const accessTokenRepository = new AccessTokenRepository();

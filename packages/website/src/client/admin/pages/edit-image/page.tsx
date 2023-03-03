@@ -1,19 +1,15 @@
 import 'reflect-metadata';
+import { AdminEditImageViewModel } from '@pcpartdb/shared/view-models';
 import { ImageForm } from '@pcpartdb/website/client/admin/components';
 import {
   Button,
   ButtonVariant,
 } from '@pcpartdb/website/client/shared/components';
 import { AdminLayout } from '@pcpartdb/website/client/shared/layouts';
-import { Image } from '@pcpartdb/website/shared/image';
 import { MetaRobots } from '@pcpartdb/website/shared/website';
 import React from 'react';
 
-export interface AdminEditImagePageProps {
-  image: Image;
-}
-
-export const AdminEditImagePage = (props: AdminEditImagePageProps) => {
+export const AdminEditImagePage = (props: AdminEditImageViewModel) => {
   const { image } = props;
 
   const title = `Edit Image: ${image.name}`;

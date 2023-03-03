@@ -1,4 +1,3 @@
-export async function main() {
-  console.log('here');
-}
-main();
+export * from './techpowerup';
+export * from './ul-benchmarks';
+export * from './videocardbenchmarks';

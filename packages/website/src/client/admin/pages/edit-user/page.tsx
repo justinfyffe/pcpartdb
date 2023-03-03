@@ -1,18 +1,14 @@
 import 'reflect-metadata';
+import { AdminEditUserViewModel } from '@pcpartdb/shared/view-models';
 import { UserForm } from '@pcpartdb/website/client/admin/components';
 import {
   Button,
   ButtonVariant,
 } from '@pcpartdb/website/client/shared/components';
 import { AdminLayout } from '@pcpartdb/website/client/shared/layouts';
-import { User } from '@pcpartdb/website/shared/user';
 import React from 'react';
 
-export interface AdminEditUserPageProps {
-  user: User;
-}
-
-export const AdminEditUserPage = (props: AdminEditUserPageProps) => {
+export const AdminEditUserPage = (props: AdminEditUserViewModel) => {
   const { user } = props;
 
   return (

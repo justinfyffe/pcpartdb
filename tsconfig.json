@@ -20,6 +20,10 @@
     "paths": {
       "@pcpartdb/database/*": ["packages/database/src/*"],
       "@pcpartdb/database": ["packages/database/src"],
+      "@pcpartdb/scraper/*": ["packages/scraper/src/*"],
+      "@pcpartdb/scraper": ["packages/scraper/src"],
+      "@pcpartdb/shared/*": ["packages/shared/src/*"],
+      "@pcpartdb/shared": ["packages/shared/src"],
       "@pcpartdb/website/*": ["packages/website/src/*"],
     },
     "pretty": true,
@@ -32,8 +36,10 @@
     "target": "es5"
   },
   "references": [
+    { "path": "packages/api/tsconfig.json"},
     { "path": "packages/database/tsconfig.json"},
     { "path": "packages/scraper/tsconfig.json" },
+    { "path": "packages/shared/tsconfig.json"},
     { "path": "packages/website/tsconfig.json" },
   ],
   "include": [],

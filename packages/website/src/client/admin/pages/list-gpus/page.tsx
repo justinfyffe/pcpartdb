@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import { AdminListGpusViewModel } from '@pcpartdb/shared/view-models';
 import {
   Alert,
   AlertVariant,
@@ -12,15 +13,10 @@ import {
   Tr,
 } from '@pcpartdb/website/client/shared/components';
 import { AdminLayout } from '@pcpartdb/website/client/shared/layouts';
-import { Gpu } from '@pcpartdb/website/shared/gpus';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 
-export interface AdminListGpusPageProps {
-  gpus: Gpu[];
-}
-
-export const AdminListGpusPage = (props: AdminListGpusPageProps) => {
+export const AdminListGpusPage = (props: AdminListGpusViewModel) => {
   const { gpus } = props;
   const router = useRouter();
   const [saved] = useState(router.query.saved === 'true');

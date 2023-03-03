@@ -1,6 +1,5 @@
-import { prisma } from '../database';
-import { RepositoryConfig } from '../repository';
-import { UserEntity } from './user-entity';
+import { Injectable } from '@nestjs/common';
+import { prisma, RepositoryConfig, UserEntity } from '@pcpartdb/database';
 
 export interface CreateUserOptions {
   email: string;
@@ -9,6 +8,7 @@ export interface CreateUserOptions {
 }
 export type UpdateUserOptions = Partial<CreateUserOptions>;
 
+@Injectable()
 export class UserRepository {
   async list(config?: RepositoryConfig) {
     const trx = config?.trx ?? prisma;
@@ -61,5 +61,3 @@ export class UserRepository {
     await trx.user.delete({ where: { id } });
   }
 }
-
-export const userRepository = new UserRepository();

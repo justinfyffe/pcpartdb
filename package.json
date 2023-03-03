@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "npm run database build & npm run scraper build & npm run website build",
+    "build": "npm run api build & npm run database build & npm run scraper build & npm run website build",
     "deploy": "./bin/deploy",
+    "api": "npm --workspace=@pcpartdb/api run",
     "database": "npm --workspace=@pcpartdb/database run",
     "scraper": "npm --workspace=@pcpartdb/scraper run",
     "website": "npm --workspace=@pcpartdb/website run"
@@ -22,8 +23,10 @@
   },
   "homepage": "https://pcpartdb.com",
   "workspaces":  [
+    "packages/api",
     "packages/database",
     "packages/scraper",
+    "packages/shared",
     "packages/website"
   ],
   "devDependencies": {

@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import { AdminListImagesViewModel } from '@pcpartdb/shared/view-models';
 import {
   formatDimensions,
   formatFileSize,
@@ -19,16 +20,11 @@ import {
   Tr,
 } from '@pcpartdb/website/client/shared/components';
 import { AdminLayout } from '@pcpartdb/website/client/shared/layouts';
-import { Image } from '@pcpartdb/website/shared/image';
 import { MetaRobots } from '@pcpartdb/website/shared/website';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 
-export interface AdminListImagesPageProps {
-  images: Image[];
-}
-
-export const AdminListImagesPage = (props: AdminListImagesPageProps) => {
+export const AdminListImagesPage = (props: AdminListImagesViewModel) => {
   const { images } = props;
 
   const router = useRouter();

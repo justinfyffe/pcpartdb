@@ -1,0 +1,21 @@
+{
+  "name": "@pcpartdb/shared",
+  "private": "true",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "build": "nest build",
+    "dev": "nest start --watch",
+    "start": "node dist/main"
+  },
+  "author": "Justin Fyffe <test@example.com>",
+  "license": "UNLICENSED",
+  "homepage": "https://pcpartdb.com",
+  "devDependencies": {
+    "@types/hapi__joi": "^17.1.8",
+    "@types/node": "^17.0.36"
+  },
+  "dependencies": {
+    "@hapi/joi": "^17.1.1"
+  }
+}

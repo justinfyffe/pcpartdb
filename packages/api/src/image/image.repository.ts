@@ -1,7 +1,7 @@
-import { prisma } from '../database';
-import { RepositoryConfig } from '../repository';
-import { ImageEntity } from './image-entity';
+import { Injectable } from '@nestjs/common';
+import { ImageEntity, prisma, RepositoryConfig } from '@pcpartdb/database';
 
+@Injectable()
 export class ImageRepository {
   async list(config?: RepositoryConfig) {
     const trx = config?.trx ?? prisma;
@@ -62,5 +62,3 @@ export class ImageRepository {
     });
   }
 }
-
-export const imageRepository = new ImageRepository();

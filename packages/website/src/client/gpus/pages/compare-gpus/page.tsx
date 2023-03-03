@@ -1,3 +1,4 @@
+import { CompareGpusViewModel } from '@pcpartdb/shared/view-models';
 import {
   getCompareGpusSlug,
   getGpuComparisonName,
@@ -37,14 +38,7 @@ import { GpuHeader } from './components/gpu-header';
 import { ComparePageContext, createComparePageContextState } from './context';
 import { ComparePageContentData } from './types';
 
-export interface CompareGpuPageProps {
-  comparison: GpuComparison;
-  contentData: ComparePageContentData;
-  relatedGpus: RelatedGpus;
-  relatedComparisons: RelatedComparisons;
-}
-
-export const CompareGpuPage = (props: CompareGpuPageProps) => {
+export const CompareGpuPage = (props: CompareGpusViewModel) => {
   const { comparison, contentData, relatedGpus, relatedComparisons } = props;
   useGpuCache(comparison);
 
