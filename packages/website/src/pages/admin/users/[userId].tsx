@@ -1,23 +1,11 @@
-import {
-  AdminEditUserPage,
-  AdminEditUserPageProps,
-} from '@pcpartdb/website/client/admin/pages';
-import { Context } from '@pcpartdb/website/server/shared/context';
-import { SsrContext } from '@pcpartdb/website/server/shared/ssr/context';
-import { staffSsrPageProps } from '@pcpartdb/website/server/shared/ssr/props';
-import { userService } from '@pcpartdb/website/server/user/user-service';
+import { NextPageContext } from 'next';
+import { AdminEditUserPage } from '../../../client/admin/pages';
+import { viewModelsClient } from '../../../client/shared/view-models';
 
-export const getServerSideProps = staffSsrPageProps(async (ctx: SsrContext) => {
-  const query = ctx.page.query as { userId: string };
-  const userId = parseInt(query.userId, 10);
-
-  const user = await getUser(userId, ctx);
-
-  return { user } as AdminEditUserPageProps;
-});
-
-async function getUser(id: number, ctx: Context) {
-  return await userService.get(id, ctx);
+export async function getServerSideProps(ctx: NextPageContext) {
+  const query = ctx.query as { userId: string };
+  const userId = Number(query.userId);
+  return await viewModelsClient.get(`admin/users/edit/${userId}`);
 }
 
 export default AdminEditUserPage;

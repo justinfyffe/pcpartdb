@@ -1,4 +1,3 @@
-import { Checkbox, Td, Tr } from '@pcpartdb/website/client/shared/components';
 import React, {
   FunctionComponent,
   useCallback,
@@ -6,6 +5,7 @@ import React, {
   useEffect,
   useState,
 } from 'react';
+import { Checkbox, Td, Tr } from '../../../../shared/components';
 import { ImportGpuDataContext } from './import-gpu-data-context';
 
 interface ImportNameProps {}

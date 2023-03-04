@@ -1,4 +1,3 @@
-import { classNames } from '@pcpartdb/website/client/shared/ui';
 import React, {
   Children,
   FunctionComponent,
@@ -6,6 +5,7 @@ import React, {
   useEffect,
   useState,
 } from 'react';
+import { classNames } from '../../ui';
 import { TabProps } from './tab';
 
 export interface TabsProps {

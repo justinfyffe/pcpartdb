@@ -3,11 +3,9 @@
   "private": "true",
   "version": "1.0.0",
   "description": "Website for viewing and comparing pc specs in an easy format",
-  "main": "dist/index.js",
   "scripts": {
     "clean": "rm -rf dist",
-    "build": "tsc",
-    "ts-node": "ts-node"
+    "build": "tsc"
   },
   "author": "Justin Fyffe <test@example.com>",
   "license": "UNLICENSED",
@@ -17,6 +15,8 @@
     "typescript": "^4.7.2"
   },
   "dependencies": {
+    "@pcpartdb/database": "*",
+    "@pcpartdb/shared": "*",
     "axios": "^0.27.2",
     "cheerio": "^1.0.0-rc.12"
   }

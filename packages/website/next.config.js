@@ -8,6 +8,12 @@ module.exports = withBundleAnalyzer({
   redirects: () => [
     { source: '/gpus', destination: '/gpus/list', permanent: false },
   ],
+  rewrites: () => [
+    {
+      source: '/api/:path*',
+      destination: `${process.env.API_URL}/:path*`,
+    },
+  ],
   eslint: {
     dirs: ['.'],
   },
@@ -23,5 +29,5 @@ module.exports = withBundleAnalyzer({
     // outside packages/app directory.
     externalDir: true,
   },
-  transpilePackages: ['@pcpartdb/database'],
+  transpilePackages: ['@pcpartdb/shared'],
 });

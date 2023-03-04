@@ -1,8 +1,8 @@
-import { Button } from '@pcpartdb/website/client/shared/components';
-import { Input } from '@pcpartdb/website/client/shared/components/input/input';
-import { GpuField } from '@pcpartdb/website/shared/gpus';
+import { GpuField } from '@pcpartdb/shared/gpus';
 import React, { forwardRef, useCallback, useState } from 'react';
 import { Control, useWatch } from 'react-hook-form';
+import { Button } from '../../../../shared/components';
+import { Input } from '../../../../shared/components/input/input';
 
 interface GpuSlugInputProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

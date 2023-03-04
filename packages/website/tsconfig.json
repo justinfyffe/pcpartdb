@@ -1,11 +1,28 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "composite": true,
-    "lib": ["esnext", "dom"],
-    "noEmit": true,
-    "outDir": ".next"
+    "lib": [
+      "esnext",
+      "dom"
+    ],
+    "outDir": ".next",
+    "rootDir": "src",
+    "noEmit": true
   },
-  "include": ["./src/**/*", "./next-env.d.ts"],
-  "exclude": ["dist", "node_modules"]
+  "include": [
+    "./**/*.ts",
+    "./**/*.tsx",
+    "./next-env.d.ts"
+  ],
+  "exclude": [
+    ".next"
+  ],
+  "references": [
+    {
+      "path": "../database"
+    },
+    {
+      "path": "../shared"
+    }
+  ]
 }

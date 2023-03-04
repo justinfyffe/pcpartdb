@@ -1,8 +1,8 @@
 import 'reflect-metadata';
-import { WebsiteLayout } from '@pcpartdb/website/client/shared/layouts';
-import { getHomePath } from '@pcpartdb/website/client/shared/website';
-import { MetaRobots } from '@pcpartdb/website/shared/website';
+import { MetaRobots } from '@pcpartdb/shared/website';
 import React from 'react';
+import { WebsiteLayout } from '../client/shared/layouts';
+import { getHomePath } from '../client/shared/website';
 
 export interface Error404PageProps {}
 

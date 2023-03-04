@@ -1,10 +1,10 @@
+import React, { cloneElement } from 'react';
 import {
   Button,
   ButtonProps,
   ButtonVariant,
-} from '@pcpartdb/website/client/shared/components';
-import { classNames } from '@pcpartdb/website/client/shared/ui';
-import React, { cloneElement } from 'react';
+} from '../../../../../shared/components';
+import { classNames } from '../../../../../shared/ui';
 
 interface HighlightListProps {
   children?: React.ReactNode;

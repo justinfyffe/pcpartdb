@@ -8,8 +8,9 @@ Workspaces:
 
 Immediate Tasks:
   - Migrate to nestjs
-    - finish view models
+    - hook up db to app module
     - setting props
+      - Maybe as filter for view models module?
     - remove server code in website
     - Image uploading
       - Public folder
@@ -18,6 +19,7 @@ Immediate Tasks:
     - call api from nextjs
     - imports cleanup
     - TEST
+      - Error handling
       - Image uploading
       - Adding data
       - Updating data

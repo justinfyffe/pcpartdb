@@ -1,25 +1,6 @@
 import Joi from '@hapi/joi';
 import { joiResolver } from '@hookform/resolvers/joi';
-import { gpuService } from '@pcpartdb/website/client/gpus';
-import { useGpuCache } from '@pcpartdb/website/client/shared/cache';
-import {
-  Alert,
-  AlertVariant,
-  Button,
-  ButtonVariant,
-  Field,
-  FieldError,
-  Form,
-  FormActions,
-  showDialog,
-  Spinner,
-  TextInput,
-} from '@pcpartdb/website/client/shared/components';
-import {
-  isBadRequestError,
-  setValidationErrors,
-} from '@pcpartdb/website/client/shared/error';
-import { ApiError, ValidationErrorType } from '@pcpartdb/website/shared/error';
+import { ApiError, ValidationErrorType } from '@pcpartdb/shared/error';
 import {
   CreateGpuRequest,
   Gpu,
@@ -35,7 +16,7 @@ import {
   GpuSpecs,
   MarketSegmentValue,
   UpdateGpuRequest,
-} from '@pcpartdb/website/shared/gpus';
+} from '@pcpartdb/shared/gpus';
 import { useRouter } from 'next/router';
 import React, {
   FunctionComponent,
@@ -44,6 +25,25 @@ import React, {
   useState,
 } from 'react';
 import { Controller, useForm, UseFormProps, useWatch } from 'react-hook-form';
+import { gpuService } from '../../../../gpus';
+import { useGpuCache } from '../../../../shared/cache';
+import {
+  Alert,
+  AlertVariant,
+  Button,
+  ButtonVariant,
+  Field,
+  FieldError,
+  Form,
+  FormActions,
+  showDialog,
+  Spinner,
+  TextInput,
+} from '../../../../shared/components';
+import {
+  isBadRequestError,
+  setValidationErrors,
+} from '../../../../shared/error';
 import { GpuBenchmarkInput } from '../gpu-benchmark-input';
 import { GpuDataSourceInput } from '../gpu-datasource-input';
 import { GpuFieldInput } from '../gpu-field-input';

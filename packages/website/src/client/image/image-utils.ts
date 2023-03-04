@@ -1,5 +1,5 @@
-import { Gpu } from '@pcpartdb/website/shared/gpus';
-import { Image as ImageDto, ImageMeta } from '@pcpartdb/website/shared/image';
+import { Gpu } from '@pcpartdb/shared/gpus';
+import { Image as ImageDto, ImageMeta } from '@pcpartdb/shared/image';
 
 export function getImagePath(image: ImageDto) {
   return `/u/images/${image.path}`;

@@ -1,7 +1,6 @@
-import { AboutPage } from '@pcpartdb/website/client/legal/pages';
-import { SsrContext } from '@pcpartdb/website/server/shared/ssr/context';
-import { ssrPageProps } from '@pcpartdb/website/server/shared/ssr/props';
+import { NextPageContext } from 'next';
+import { AboutPage } from '../client/legal/pages';
 
-export const getServerSideProps = ssrPageProps(async (_ctx: SsrContext) => {});
+export async function getServerSideProps(_ctx: NextPageContext) {}
 
 export default AboutPage;

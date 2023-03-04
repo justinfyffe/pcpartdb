@@ -1,5 +1,4 @@
 import Joi from '@hapi/joi';
-import { GpusQuery } from '@pcpartdb/database';
 import { GpuBenchmarks } from './gpu-benchmark-types';
 import { GpuField } from './gpu-field-types';
 import { GpuImages } from './gpu-image-types';

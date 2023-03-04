@@ -1,10 +1,10 @@
-import { formatGpuField } from '@pcpartdb/website/client/gpus';
+import React, { useContext } from 'react';
+import { formatGpuField } from '../../../../../../gpus';
 import {
   compileContent,
   ContentContext,
   ContentParams,
-} from '@pcpartdb/website/client/shared/content';
-import React, { useContext } from 'react';
+} from '../../../../../../shared/content';
 import { ViewPageContext } from '../../../context';
 
 export const CoresSummarySentence1 = compileContent({

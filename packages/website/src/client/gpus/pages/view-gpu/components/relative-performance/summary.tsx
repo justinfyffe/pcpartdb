@@ -1,14 +1,14 @@
-import { formatGpuField, getGpuName } from '@pcpartdb/website/client/gpus';
+import React, { useContext } from 'react';
+import { formatGpuField, getGpuName } from '../../../../../gpus';
 import {
   compileContent,
   ContentContext,
   ContentParams,
-} from '@pcpartdb/website/client/shared/content';
+} from '../../../../../shared/content';
 import {
   DateFormatter,
   formatOrdinalNumber,
-} from '@pcpartdb/website/client/shared/format';
-import React, { useContext } from 'react';
+} from '../../../../../shared/format';
 import { ViewPageContext } from '../../context';
 
 export const PerformanceSummarySentence1 = compileContent({

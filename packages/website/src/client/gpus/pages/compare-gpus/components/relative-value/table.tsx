@@ -1,14 +1,4 @@
-import { getGpuName, getViewGpuSlug } from '@pcpartdb/website/client/gpus';
-import {
-  Table,
-  TBody,
-  Td,
-  Th,
-  THead,
-  Tr,
-} from '@pcpartdb/website/client/shared/components';
-import { getViewGpuPath } from '@pcpartdb/website/client/shared/website';
-import { Gpu } from '@pcpartdb/website/shared/gpus';
+import { Gpu } from '@pcpartdb/shared/gpus';
 import React, {
   FunctionComponent,
   useCallback,
@@ -17,6 +7,16 @@ import React, {
   useMemo,
   useState,
 } from 'react';
+import { getGpuName, getViewGpuSlug } from '../../../../../gpus';
+import {
+  Table,
+  TBody,
+  Td,
+  Th,
+  THead,
+  Tr,
+} from '../../../../../shared/components';
+import { getViewGpuPath } from '../../../../../shared/website';
 import { ComparePageContext } from '../../context';
 import { CustomRow, CustomRowLabel, CustomRowValue } from '../custom-row';
 

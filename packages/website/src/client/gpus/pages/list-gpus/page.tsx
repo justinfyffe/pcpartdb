@@ -1,16 +1,13 @@
-import { GpusQuery } from '@pcpartdb/database';
-import { CompareGpusForm } from '@pcpartdb/website/client/gpus/components';
-import { gpuService } from '@pcpartdb/website/client/gpus/gpu-service';
-import { useGpuCache } from '@pcpartdb/website/client/shared/cache';
-import {
-  Breadcrumb,
-  Breadcrumbs,
-} from '@pcpartdb/website/client/shared/components';
-import { WebsiteLayout } from '@pcpartdb/website/client/shared/layouts';
-import { classNames } from '@pcpartdb/website/client/shared/ui';
-import { Gpu } from '@pcpartdb/website/shared/gpus';
+import { GpusQuery } from '@pcpartdb/shared/gpus';
+import { ListGpusViewModel } from '@pcpartdb/shared/view-models';
 import { useRouter } from 'next/router';
 import React, { useCallback, useState } from 'react';
+import { CompareGpusForm } from '../../../gpus/components';
+import { gpuService } from '../../../gpus/gpu-service';
+import { useGpuCache } from '../../../shared/cache';
+import { Breadcrumb, Breadcrumbs } from '../../../shared/components';
+import { WebsiteLayout } from '../../../shared/layouts';
+import { classNames } from '../../../shared/ui';
 import {
   ListFilters,
   ListPresetsMenu,
@@ -20,13 +17,7 @@ import {
 import { createListPageContextState, ListPageContext } from './context';
 import { getListPath } from './utils';
 
-export interface ListGpusPageProps {
-  query?: GpusQuery;
-  gpus: Gpu[];
-  totalGpus: number;
-}
-
-export const ListGpusPage = (props: ListGpusPageProps) => {
+export const ListGpusPage = (props: ListGpusViewModel) => {
   const { totalGpus } = props;
   useGpuCache(props.gpus);
   const router = useRouter();

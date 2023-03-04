@@ -1,10 +1,10 @@
-import { gpuService } from '@pcpartdb/website/client/gpus';
+import { GpuField } from '@pcpartdb/shared/gpus';
+import React, { forwardRef, useCallback, useState } from 'react';
+import { gpuService } from '../../../../gpus/gpu-service';
 import {
   Autocomplete,
   AutocompleteOption,
-} from '@pcpartdb/website/client/shared/components';
-import { GpuField } from '@pcpartdb/website/shared/gpus';
-import React, { forwardRef, useCallback, useState } from 'react';
+} from '../../../../shared/components';
 
 interface GpuAutocompleteSpecFieldInputProps {
   field: string;

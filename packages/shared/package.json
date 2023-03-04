@@ -4,9 +4,8 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "build": "nest build",
-    "dev": "nest start --watch",
-    "start": "node dist/main"
+    "clean": "rm -rf dist",
+    "build": "tsc"
   },
   "author": "Justin Fyffe <test@example.com>",
   "license": "UNLICENSED",

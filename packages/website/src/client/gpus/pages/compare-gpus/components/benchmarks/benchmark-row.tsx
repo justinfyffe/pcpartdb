@@ -1,7 +1,7 @@
-import { formatGpuField } from '@pcpartdb/website/client/gpus/gpu-utils';
-import { Td, Tr } from '@pcpartdb/website/client/shared/components';
-import { GpuBenchmarks, GpuField } from '@pcpartdb/website/shared/gpus';
+import { GpuBenchmarks, GpuField } from '@pcpartdb/shared/gpus';
 import React, { useContext } from 'react';
+import { formatGpuField } from '../../../../../gpus';
+import { Td, Tr } from '../../../../../shared/components';
 import { ComparePageContext } from '../../context';
 
 const LABELS: Record<string, string> = {

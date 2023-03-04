@@ -1,9 +1,6 @@
-import { ForgotPasswordPage } from '@pcpartdb/website/client/auth/pages';
-import { SsrContext } from '@pcpartdb/website/server/shared/ssr/context';
-import { guestSsrPageProps } from '@pcpartdb/website/server/shared/ssr/props';
+import { NextPageContext } from 'next';
+import { ForgotPasswordPage } from '../client/auth/pages';
 
-export const getServerSideProps = guestSsrPageProps(
-  async (_ctx: SsrContext) => {},
-);
+export async function getServerSideProps(_ctx: NextPageContext) {}
 
 export default ForgotPasswordPage;

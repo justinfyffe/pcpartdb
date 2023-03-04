@@ -1,10 +1,10 @@
-import { getGpuName, getShoppingUrl } from '@pcpartdb/website/client/gpus';
+import React, { useContext } from 'react';
+import { getGpuName, getShoppingUrl } from '../../../../../gpus';
 import {
   compileContent,
   ContentContext,
   ContentParams,
-} from '@pcpartdb/website/client/shared/content';
-import React, { useContext } from 'react';
+} from '../../../../../shared/content';
 import { ComparePageContext } from '../../context';
 
 export const IntroSentence1 = compileContent({

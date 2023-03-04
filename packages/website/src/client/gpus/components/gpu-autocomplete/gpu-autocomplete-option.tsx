@@ -1,12 +1,9 @@
-import { formatGpuField, getGpuName } from '@pcpartdb/website/client/gpus';
-import { getCompanyLogoImagePath } from '@pcpartdb/website/client/image';
-import {
-  AutocompleteOption,
-  Img,
-} from '@pcpartdb/website/client/shared/components';
-import { DateFormatter } from '@pcpartdb/website/client/shared/format';
-import { Gpu } from '@pcpartdb/website/shared/gpus';
+import { Gpu } from '@pcpartdb/shared/gpus';
 import React, { FunctionComponent } from 'react';
+import { formatGpuField, getGpuName } from '../../../gpus';
+import { getCompanyLogoImagePath } from '../../../image';
+import { AutocompleteOption, Img } from '../../../shared/components';
+import { DateFormatter } from '../../../shared/format';
 
 interface GpuAutocompleteOptionProps {
   index: number;

@@ -1,11 +1,8 @@
-import {
-  getCompareGpusSlug,
-  getGpuComparisonName,
-} from '@pcpartdb/website/client/gpus';
-import { classNames } from '@pcpartdb/website/client/shared/ui';
-import { getCompareGpusPath } from '@pcpartdb/website/client/shared/website';
-import { GpuComparison } from '@pcpartdb/website/shared/gpus';
+import { GpuComparison } from '@pcpartdb/shared/gpus';
 import React, { FunctionComponent } from 'react';
+import { getCompareGpusSlug, getGpuComparisonName } from '../../../gpus';
+import { classNames } from '../../../shared/ui';
+import { getCompareGpusPath } from '../../../shared/website';
 import { SidenavSection, SidenavSectionTitle } from '../sidenav';
 
 interface SidenavComparisonsProps {

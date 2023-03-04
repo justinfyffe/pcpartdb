@@ -1,20 +1,20 @@
 import { PhotoIcon } from '@heroicons/react/24/outline';
+import { Gpu } from '@pcpartdb/shared/gpus';
+import React, { FunctionComponent, useMemo } from 'react';
 import {
   formatGpuField,
   getGpuName,
   getViewGpuSlug,
-} from '@pcpartdb/website/client/gpus';
-import { getCompanyLogoImagePath } from '@pcpartdb/website/client/image';
-import { Card, Img } from '@pcpartdb/website/client/shared/components';
+} from '../../../../../gpus';
+import { getCompanyLogoImagePath } from '../../../../../image';
+import { Card, Img } from '../../../../../shared/components';
 import {
   compileContent,
   ContentContext,
   ContentParams,
-} from '@pcpartdb/website/client/shared/content';
-import { classNames } from '@pcpartdb/website/client/shared/ui';
-import { getViewGpuPath } from '@pcpartdb/website/client/shared/website';
-import { Gpu } from '@pcpartdb/website/shared/gpus';
-import React, { FunctionComponent, useMemo } from 'react';
+} from '../../../../../shared/content';
+import { classNames } from '../../../../../shared/ui';
+import { getViewGpuPath } from '../../../../../shared/website';
 
 export enum GpuFeedTag {
   GreatPerformance = 'GREAT_PERFORMANCE',

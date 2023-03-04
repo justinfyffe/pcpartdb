@@ -1,10 +1,10 @@
+import { GpuField } from '@pcpartdb/shared/gpus';
+import React, { forwardRef, useCallback } from 'react';
 import {
   Select,
   SelectOption,
   SelectValue,
-} from '@pcpartdb/website/client/shared/components';
-import { GpuField } from '@pcpartdb/website/shared/gpus';
-import React, { forwardRef, useCallback } from 'react';
+} from '../../../../shared/components';
 
 interface GpuBooleanFieldInputProps {
   field: string;

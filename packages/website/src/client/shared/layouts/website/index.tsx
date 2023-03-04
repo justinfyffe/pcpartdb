@@ -1,6 +1,5 @@
 import { HeartIcon } from '@heroicons/react/24/solid';
-import { getListGpusPath } from '@pcpartdb/website/client/shared/website';
-import { SeoInputs, WEBSITE_NAME } from '@pcpartdb/website/shared/website';
+import { SeoInputs, WEBSITE_NAME } from '@pcpartdb/shared/website';
 import React, { FunctionComponent } from 'react';
 import {
   Button,
@@ -17,6 +16,7 @@ import {
   ToolbarTitle,
 } from '../../components';
 import { classNames } from '../../ui';
+import { getListGpusPath } from '../../website';
 
 interface WebsiteLayoutProps {
   seo?: SeoInputs;

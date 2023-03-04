@@ -1,10 +1,10 @@
+import { Image } from '@pcpartdb/shared/image';
+import React, { FunctionComponent, useCallback, useState } from 'react';
 import {
   Button,
   ButtonVariant,
   closeDialog,
-} from '@pcpartdb/website/client/shared/components';
-import { Image } from '@pcpartdb/website/shared/image';
-import React, { FunctionComponent, useCallback, useState } from 'react';
+} from '../../../../shared/components';
 import { ImageForm } from '../image-form';
 import { ImageList } from './image-list';
 

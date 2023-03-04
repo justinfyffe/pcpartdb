@@ -7,8 +7,8 @@ import {
   ShoppingCartIcon,
   StarIcon,
 } from '@heroicons/react/24/outline';
-import { formatGpuField, getShoppingUrl } from '@pcpartdb/website/client/gpus';
 import React, { FunctionComponent, useContext, useMemo } from 'react';
+import { formatGpuField, getShoppingUrl } from '../../../../../gpus';
 import { ViewPageContext } from '../../context';
 import {
   HighlightButton,

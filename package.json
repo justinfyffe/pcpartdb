@@ -22,13 +22,7 @@
     "url": "https://github.com/justinfyffe/pcpartdb/issues"
   },
   "homepage": "https://pcpartdb.com",
-  "workspaces":  [
-    "packages/api",
-    "packages/database",
-    "packages/scraper",
-    "packages/shared",
-    "packages/website"
-  ],
+  "workspaces":  ["packages/*"],
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.26.0",
     "@typescript-eslint/parser": "^5.26.0",

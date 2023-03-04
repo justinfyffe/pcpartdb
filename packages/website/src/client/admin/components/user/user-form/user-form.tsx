@@ -1,5 +1,20 @@
 import Joi from '@hapi/joi';
 import { joiResolver } from '@hookform/resolvers/joi';
+import { ApiError, ValidationErrorType } from '@pcpartdb/shared/error';
+import {
+  EMAIL_MAX_LENGTH,
+  PASSWORD_MAX_LENGTH,
+  PASSWORD_MIN_LENGTH,
+  User,
+} from '@pcpartdb/shared/user';
+import { useRouter } from 'next/router';
+import React, {
+  FunctionComponent,
+  useCallback,
+  useMemo,
+  useState,
+} from 'react';
+import { Controller, useForm, UseFormProps } from 'react-hook-form';
 import {
   Alert,
   AlertVariant,
@@ -15,27 +30,12 @@ import {
   PasswordInput,
   Spinner,
   TextInput,
-} from '@pcpartdb/website/client/shared/components';
+} from '../../../../shared/components';
 import {
   isBadRequestError,
   setValidationErrors,
-} from '@pcpartdb/website/client/shared/error';
-import { userService } from '@pcpartdb/website/client/user';
-import { ApiError, ValidationErrorType } from '@pcpartdb/website/shared/error';
-import {
-  EMAIL_MAX_LENGTH,
-  PASSWORD_MAX_LENGTH,
-  PASSWORD_MIN_LENGTH,
-  User,
-} from '@pcpartdb/website/shared/user';
-import { useRouter } from 'next/router';
-import React, {
-  FunctionComponent,
-  useCallback,
-  useMemo,
-  useState,
-} from 'react';
-import { Controller, useForm, UseFormProps } from 'react-hook-form';
+} from '../../../../shared/error';
+import { userService } from '../../../../user';
 
 interface UserFormData {
   email: string;

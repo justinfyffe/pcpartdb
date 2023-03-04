@@ -1,12 +1,12 @@
 import '../assets/styles/global.css';
 import 'reflect-metadata';
-import { CacheHydration } from '@pcpartdb/website/client/shared/cache';
-import { LayoutContext } from '@pcpartdb/website/client/shared/layouts';
 import axios from 'axios';
 import App, { AppContext, AppProps } from 'next/app';
 import Head from 'next/head';
 import Script from 'next/script';
 import React from 'react';
+import { CacheHydration } from '../client/shared/cache';
+import { LayoutContext } from '../client/shared/layouts';
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

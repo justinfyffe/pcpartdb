@@ -1,7 +1,4 @@
-import { formatGpuField } from '@pcpartdb/website/client/gpus';
-import { Checkbox, Td, Tr } from '@pcpartdb/website/client/shared/components';
-import { BooleanFormatter } from '@pcpartdb/website/client/shared/format';
-import { GpuField } from '@pcpartdb/website/shared/gpus';
+import { GpuField } from '@pcpartdb/shared/gpus';
 import React, {
   FunctionComponent,
   useCallback,
@@ -10,6 +7,9 @@ import React, {
   useMemo,
   useState,
 } from 'react';
+import { formatGpuField } from '../../../../gpus';
+import { Checkbox, Td, Tr } from '../../../../shared/components';
+import { BooleanFormatter } from '../../../../shared/format';
 import { ImportGpuDataContext } from './import-gpu-data-context';
 
 const LABELS: Record<string, string> = {

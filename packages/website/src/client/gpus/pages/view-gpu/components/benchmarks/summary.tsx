@@ -1,9 +1,9 @@
+import React from 'react';
 import {
   compileContent,
   ContentContext,
   ContentParams,
-} from '@pcpartdb/website/client/shared/content';
-import React from 'react';
+} from '../../../../../shared/content';
 
 export const BenchmarksSummarySentence1 = compileContent({
   deps: [],

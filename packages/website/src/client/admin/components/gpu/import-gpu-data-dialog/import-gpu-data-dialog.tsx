@@ -1,4 +1,11 @@
-import { gpuService } from '@pcpartdb/website/client/gpus';
+import { GpuDataSource } from '@pcpartdb/shared/gpus';
+import React, {
+  FunctionComponent,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
+import { gpuService } from '../../../../gpus';
 import {
   Button,
   ButtonVariant,
@@ -9,14 +16,7 @@ import {
   Th,
   THead,
   Tr,
-} from '@pcpartdb/website/client/shared/components';
-import { GpuDataSource } from '@pcpartdb/website/shared/gpus';
-import React, {
-  FunctionComponent,
-  useCallback,
-  useEffect,
-  useState,
-} from 'react';
+} from '../../../../shared/components';
 import {
   createImportContext,
   ImportGpuDataContext,

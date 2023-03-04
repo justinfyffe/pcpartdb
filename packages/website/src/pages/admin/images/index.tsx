@@ -1,20 +1,9 @@
-import {
-  AdminListImagesPage,
-  AdminListImagesPageProps,
-} from '@pcpartdb/website/client/admin/pages';
-import { imageService } from '@pcpartdb/website/server/images/image-service';
-import { Context } from '@pcpartdb/website/server/shared/context';
-import { SsrContext } from '@pcpartdb/website/server/shared/ssr/context';
-import { staffSsrPageProps } from '@pcpartdb/website/server/shared/ssr/props';
+import { NextPageContext } from 'next';
+import { AdminListImagesPage } from '../../../client/admin/pages';
+import { viewModelsClient } from '../../../client/shared/view-models';
 
-export const getServerSideProps = staffSsrPageProps(async (ctx: SsrContext) => {
-  const images = await getImages(ctx);
-
-  return { images } as AdminListImagesPageProps;
-});
-
-async function getImages(ctx: Context) {
-  return await imageService.list(ctx);
+export async function getServerSideProps(_ctx: NextPageContext) {
+  return await viewModelsClient.get('admin/images/list');
 }
 
 export default AdminListImagesPage;

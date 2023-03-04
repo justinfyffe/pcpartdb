@@ -1,11 +1,11 @@
-import { formatGpuField, getGpuName } from '@pcpartdb/website/client/gpus';
+import React, { useContext } from 'react';
+import { formatGpuField, getGpuName } from '../../../../../gpus';
 import {
   compileContent,
   ContentContext,
   ContentParams,
-} from '@pcpartdb/website/client/shared/content';
-import { formatOrdinalNumber } from '@pcpartdb/website/client/shared/format';
-import React, { useContext } from 'react';
+} from '../../../../../shared/content';
+import { formatOrdinalNumber } from '../../../../../shared/format';
 import { ViewPageContext } from '../../context';
 
 export const GeneralInfoSummarySentence1 = compileContent({

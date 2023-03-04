@@ -1,10 +1,10 @@
+import { GpuField, MarketSegmentValue } from '@pcpartdb/shared/gpus';
+import React, { forwardRef, useCallback, useMemo } from 'react';
 import {
   Select,
   SelectOption,
   SelectValue,
-} from '@pcpartdb/website/client/shared/components';
-import { GpuField, MarketSegmentValue } from '@pcpartdb/website/shared/gpus';
-import React, { forwardRef, useCallback, useMemo } from 'react';
+} from '../../../../shared/components';
 
 const ITEMS: { [key: string]: { label: string; value: string }[] } = {
   marketSegment: [

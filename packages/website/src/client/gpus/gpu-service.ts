@@ -1,5 +1,3 @@
-import { ApiClient, apiClient } from '@pcpartdb/website/client/shared/api';
-import { GpuCache } from '@pcpartdb/website/client/shared/cache';
 import {
   CreateGpuRequest,
   Gpu,
@@ -7,7 +5,9 @@ import {
   ImportGpuDataResponse,
   ListGpusRequest,
   UpdateGpuRequest,
-} from '@pcpartdb/website/shared/gpus';
+} from '@pcpartdb/shared/gpus';
+import { ApiClient, apiClient } from '../shared/api';
+import { GpuCache } from '../shared/cache';
 
 const PATH = 'gpus';
 

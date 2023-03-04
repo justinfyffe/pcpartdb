@@ -1,10 +1,9 @@
 import 'reflect-metadata';
 import { AdminListImagesViewModel } from '@pcpartdb/shared/view-models';
-import {
-  formatDimensions,
-  formatFileSize,
-  getImagePath,
-} from '@pcpartdb/website/client/image';
+import { MetaRobots } from '@pcpartdb/shared/website';
+import { useRouter } from 'next/router';
+import React, { useState } from 'react';
+import { formatDimensions, formatFileSize, getImagePath } from '../../../image';
 import {
   Alert,
   AlertVariant,
@@ -18,11 +17,8 @@ import {
   Th,
   THead,
   Tr,
-} from '@pcpartdb/website/client/shared/components';
-import { AdminLayout } from '@pcpartdb/website/client/shared/layouts';
-import { MetaRobots } from '@pcpartdb/website/shared/website';
-import { useRouter } from 'next/router';
-import React, { useState } from 'react';
+} from '../../../shared/components';
+import { AdminLayout } from '../../../shared/layouts';
 
 export const AdminListImagesPage = (props: AdminListImagesViewModel) => {
   const { images } = props;

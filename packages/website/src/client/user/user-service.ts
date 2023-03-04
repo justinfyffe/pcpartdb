@@ -1,11 +1,11 @@
-import { ApiClient, apiClient } from '@pcpartdb/website/client/shared/api';
 import {
   CreateUserRequest,
   RequestPasswordResetRequest,
   ResetPasswordRequest,
   UpdateUserRequest,
   User,
-} from '@pcpartdb/website/shared/user';
+} from '@pcpartdb/shared/user';
+import { ApiClient, apiClient } from '../shared/api';
 
 const PATH = 'users';
 

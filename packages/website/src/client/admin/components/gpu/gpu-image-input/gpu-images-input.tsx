@@ -3,11 +3,7 @@ import {
   ChevronUpIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline';
-import {
-  Button,
-  ButtonVariant,
-} from '@pcpartdb/website/client/shared/components';
-import { GpuImage, GpuImages } from '@pcpartdb/website/shared/gpus';
+import { GpuImage, GpuImages } from '@pcpartdb/shared/gpus';
 import React, {
   FunctionComponent,
   useCallback,
@@ -15,6 +11,7 @@ import React, {
   useState,
 } from 'react';
 import { v4 as uuidv4 } from 'uuid';
+import { Button, ButtonVariant } from '../../../../shared/components';
 import { GpuImageInput } from './gpu-image-input';
 
 interface GpuImagesInputProps {

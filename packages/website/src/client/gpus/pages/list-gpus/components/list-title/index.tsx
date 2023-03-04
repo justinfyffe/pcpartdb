@@ -1,10 +1,10 @@
-import { GpuSort } from '@pcpartdb/database';
+import { GpuSort } from '@pcpartdb/shared/gpus';
+import React, { FunctionComponent, useContext } from 'react';
 import {
   compileContent,
   ContentContext,
   ContentParams,
-} from '@pcpartdb/website/client/shared/content';
-import React, { FunctionComponent, useContext } from 'react';
+} from '../../../../../shared/content';
 import { ListPageContext } from '../../context';
 
 interface ListTitleContentParams extends ContentParams {

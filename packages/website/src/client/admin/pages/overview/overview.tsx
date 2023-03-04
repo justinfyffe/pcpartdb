@@ -1,6 +1,6 @@
 import 'reflect-metadata';
-import { AdminLayout } from '@pcpartdb/website/client/shared/layouts';
 import React from 'react';
+import { AdminLayout } from '../../../shared/layouts';
 
 interface AdminOverviewPageProps {}
 

@@ -1,10 +1,10 @@
-import { ApiClient, apiClient } from '@pcpartdb/website/client/shared/api';
-import { ImageCache } from '@pcpartdb/website/client/shared/cache';
 import {
   CreateImageRequest,
   Image,
   UpdateImageRequest,
-} from '@pcpartdb/website/shared/image';
+} from '@pcpartdb/shared/image';
+import { ApiClient, apiClient } from '../shared/api';
+import { ImageCache } from '../shared/cache';
 
 const PATH = 'images';
 

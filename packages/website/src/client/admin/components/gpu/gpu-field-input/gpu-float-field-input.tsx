@@ -1,4 +1,3 @@
-import { NumberInput } from '@pcpartdb/website/client/shared/components';
 import {
   BandwidthUnit,
   BitUnit,
@@ -17,8 +16,9 @@ import {
   TextureFillRateUnit,
   WattageUnit,
   WeightUnit,
-} from '@pcpartdb/website/shared/gpus';
+} from '@pcpartdb/shared/gpus';
 import React, { forwardRef, useCallback, useMemo, useState } from 'react';
+import { NumberInput } from '../../../../shared/components';
 
 const UNITS: Record<string, GpuFieldUnit[]> = {
   launchPrice: [CurrencyUnit.USD],

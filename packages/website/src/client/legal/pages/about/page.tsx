@@ -1,11 +1,8 @@
 import 'reflect-metadata';
-import {
-  Breadcrumb,
-  Breadcrumbs,
-} from '@pcpartdb/website/client/shared/components';
-import { WebsiteLayout } from '@pcpartdb/website/client/shared/layouts';
-import { WEBSITE_NAME } from '@pcpartdb/website/shared/website';
+import { WEBSITE_NAME } from '@pcpartdb/shared/website';
 import React from 'react';
+import { Breadcrumb, Breadcrumbs } from '../../../shared/components';
+import { WebsiteLayout } from '../../../shared/layouts';
 
 interface AboutPageProps {}
 

@@ -1,11 +1,11 @@
 import 'reflect-metadata';
-import { CompareGpusForm } from '@pcpartdb/website/client/gpus/components';
-import { ListPresetSlug } from '@pcpartdb/website/client/gpus/pages';
-import { WebsiteLayout } from '@pcpartdb/website/client/shared/layouts';
-import { classNames } from '@pcpartdb/website/client/shared/ui';
-import { getListGpusPath } from '@pcpartdb/website/client/shared/website';
-import { Gpu, GpuComparison } from '@pcpartdb/website/shared/gpus';
+import { HomeViewModel } from '@pcpartdb/shared/view-models';
 import React from 'react';
+import { CompareGpusForm } from '../../../gpus/components';
+import { ListPresetSlug } from '../../../gpus/pages';
+import { WebsiteLayout } from '../../../shared/layouts';
+import { classNames } from '../../../shared/ui';
+import { getListGpusPath } from '../../../shared/website';
 import {
   ComparisonFeedItem,
   ComparisonFeedTag,
@@ -17,13 +17,7 @@ import {
   GpuFeedTag,
 } from './components/feed';
 
-export interface HomePageProps {
-  nvidiaVsAmdGpus: GpuComparison[];
-  nvidiaGpus: Gpu[];
-  amdGpus: Gpu[];
-}
-
-export const HomePage = (props: HomePageProps) => {
+export const HomePage = (props: HomeViewModel) => {
   const { nvidiaVsAmdGpus, nvidiaGpus, amdGpus } = props;
 
   const [bestPerformanceComparison, bestValueComparison, randomComparison] =

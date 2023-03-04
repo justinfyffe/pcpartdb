@@ -1,14 +1,14 @@
+import React, { useContext } from 'react';
 import {
   formatGpuDimensions,
   formatGpuField,
   getGpuName,
-} from '@pcpartdb/website/client/gpus';
+} from '../../../../../../gpus';
 import {
   compileContent,
   ContentContext,
   ContentParams,
-} from '@pcpartdb/website/client/shared/content';
-import React, { useContext } from 'react';
+} from '../../../../../../shared/content';
 import { ViewPageContext } from '../../../context';
 
 export const CompatibilitySummarySentence1 = compileContent({

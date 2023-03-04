@@ -1,9 +1,5 @@
 import { ChevronDownIcon } from '@heroicons/react/24/outline';
-import { getCompanyLogoImagePath } from '@pcpartdb/website/client/image';
-import { useGpuCache } from '@pcpartdb/website/client/shared/cache';
-import { Autocomplete, Img } from '@pcpartdb/website/client/shared/components';
-import { classNames } from '@pcpartdb/website/client/shared/ui';
-import { Gpu } from '@pcpartdb/website/shared/gpus';
+import { Gpu } from '@pcpartdb/shared/gpus';
 import React, {
   forwardRef,
   useCallback,
@@ -12,6 +8,10 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import { getCompanyLogoImagePath } from '../../../image';
+import { useGpuCache } from '../../../shared/cache';
+import { Autocomplete, Img } from '../../../shared/components';
+import { classNames } from '../../../shared/ui';
 import { gpuService } from '../../gpu-service';
 import { GpuAutocompleteOption } from './gpu-autocomplete-option';
 

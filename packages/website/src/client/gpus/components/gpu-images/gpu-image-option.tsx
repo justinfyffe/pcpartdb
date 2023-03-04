@@ -1,6 +1,6 @@
-import { Img } from '@pcpartdb/website/client/shared/components';
-import { classNames } from '@pcpartdb/website/client/shared/ui';
 import React, { FunctionComponent } from 'react';
+import { Img } from '../../../shared/components';
+import { classNames } from '../../../shared/ui';
 
 interface GpuImageOptionProps {
   src: string;

@@ -1,17 +1,14 @@
 import { PhotoIcon } from '@heroicons/react/24/outline';
-import {
-  formatDimensions,
-  formatFileSize,
-} from '@pcpartdb/website/client/image';
+import { Image } from '@pcpartdb/shared/image';
+import React, { FunctionComponent, useCallback, useState } from 'react';
+import { formatDimensions, formatFileSize } from '../../../../image';
 import {
   Button,
   ButtonVariant,
   Img,
   showDialog,
-} from '@pcpartdb/website/client/shared/components';
-import { classNames } from '@pcpartdb/website/client/shared/ui';
-import { Image } from '@pcpartdb/website/shared/image';
-import React, { FunctionComponent, useCallback, useState } from 'react';
+} from '../../../../shared/components';
+import { classNames } from '../../../../shared/ui';
 import { ImageDialog } from '../image-dialog';
 
 interface ImageInputProps {

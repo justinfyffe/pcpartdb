@@ -1,36 +1,7 @@
 import Joi from '@hapi/joi';
 import { joiResolver } from '@hookform/resolvers/joi';
-import {
-  formatDimensions,
-  formatFileSize,
-  getImageMeta,
-  imageService,
-} from '@pcpartdb/website/client/image';
-import {
-  Alert,
-  AlertVariant,
-  Button,
-  ButtonVariant,
-  Field,
-  FieldError,
-  FieldHint,
-  FieldOptional,
-  File,
-  Form,
-  FormActions,
-  Spinner,
-  TextInput,
-} from '@pcpartdb/website/client/shared/components';
-import {
-  isBadRequestError,
-  setValidationErrors,
-} from '@pcpartdb/website/client/shared/error';
-import { ApiError, ValidationErrorType } from '@pcpartdb/website/shared/error';
-import {
-  CreateImageRequest,
-  Image,
-  ImageMeta,
-} from '@pcpartdb/website/shared/image';
+import { ApiError, ValidationErrorType } from '@pcpartdb/shared/error';
+import { CreateImageRequest, Image, ImageMeta } from '@pcpartdb/shared/image';
 import { useRouter } from 'next/router';
 import React, {
   FunctionComponent,
@@ -45,6 +16,31 @@ import {
   useForm,
   UseFormProps,
 } from 'react-hook-form';
+import {
+  formatDimensions,
+  formatFileSize,
+  getImageMeta,
+  imageService,
+} from '../../../../image';
+import {
+  Alert,
+  AlertVariant,
+  Button,
+  ButtonVariant,
+  Field,
+  FieldError,
+  FieldHint,
+  FieldOptional,
+  File,
+  Form,
+  FormActions,
+  Spinner,
+  TextInput,
+} from '../../../../shared/components';
+import {
+  isBadRequestError,
+  setValidationErrors,
+} from '../../../../shared/error';
 
 interface ImageFormData {
   path: string;

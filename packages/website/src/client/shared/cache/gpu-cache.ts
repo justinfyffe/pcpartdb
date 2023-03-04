@@ -1,9 +1,6 @@
-import {
-  CacheContext,
-  ImageCache,
-} from '@pcpartdb/website/client/shared/cache';
-import { Gpu } from '@pcpartdb/website/shared/gpus';
+import { Gpu } from '@pcpartdb/shared/gpus';
 import { useContext } from 'react';
+import { CacheContext, ImageCache } from '../cache';
 
 class GpuCacheImpl {
   private cache = new Map<number, Gpu>();

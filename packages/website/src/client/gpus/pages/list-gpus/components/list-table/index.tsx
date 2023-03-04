@@ -1,8 +1,9 @@
+import React, { FunctionComponent, useContext } from 'react';
 import {
   formatGpuField,
   getGpuName,
   getViewGpuSlug,
-} from '@pcpartdb/website/client/gpus';
+} from '../../../../../gpus';
 import {
   Table,
   TBody,
@@ -10,9 +11,8 @@ import {
   Th,
   THead,
   Tr,
-} from '@pcpartdb/website/client/shared/components';
-import { getViewGpuPath } from '@pcpartdb/website/client/shared/website';
-import React, { FunctionComponent, useContext } from 'react';
+} from '../../../../../shared/components';
+import { getViewGpuPath } from '../../../../../shared/website';
 import { ListPageContext } from '../../context';
 
 export const ListTable: FunctionComponent = () => {

@@ -1,11 +1,8 @@
 import 'reflect-metadata';
-import { GpuForm } from '@pcpartdb/website/client/admin/components';
-import {
-  Button,
-  ButtonVariant,
-} from '@pcpartdb/website/client/shared/components';
-import { AdminLayout } from '@pcpartdb/website/client/shared/layouts';
 import React from 'react';
+import { GpuForm } from '../../../admin/components';
+import { Button, ButtonVariant } from '../../../shared/components';
+import { AdminLayout } from '../../../shared/layouts';
 
 interface AdminNewGpuPageProps {}
 

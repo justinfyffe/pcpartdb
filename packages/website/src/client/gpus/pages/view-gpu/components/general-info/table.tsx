@@ -1,6 +1,6 @@
-import { formatGpuField, getShoppingUrl } from '@pcpartdb/website/client/gpus';
-import { Table, TBody } from '@pcpartdb/website/client/shared/components';
 import React, { FunctionComponent, useContext } from 'react';
+import { formatGpuField, getShoppingUrl } from '../../../../../gpus';
+import { Table, TBody } from '../../../../../shared/components';
 import { ViewPageContext } from '../../context';
 import { CustomRow, CustomRowLabel, CustomRowValue } from '../custom-row';
 import { FieldRow } from '../field-row';

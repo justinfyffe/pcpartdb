@@ -2,7 +2,7 @@ import {
   WEBSITE_KEYWORDS,
   WEBSITE_NAME,
   WEBSITE_URL,
-} from '@pcpartdb/website/shared/website';
+} from '@pcpartdb/shared/website';
 
 export function getPageTitle(title: string) {
   return `${title} - ${WEBSITE_NAME}`;

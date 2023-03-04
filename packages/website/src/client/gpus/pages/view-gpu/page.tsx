@@ -1,29 +1,12 @@
-import { getGpuName, getViewGpuSlug } from '@pcpartdb/website/client/gpus';
-import {
-  CompareGpusForm,
-  GpuImages,
-} from '@pcpartdb/website/client/gpus/components';
-import { useGpuCache } from '@pcpartdb/website/client/shared/cache';
-import {
-  Breadcrumb,
-  Breadcrumbs,
-} from '@pcpartdb/website/client/shared/components';
-import { WebsiteLayout } from '@pcpartdb/website/client/shared/layouts';
-import {
-  getListGpusPath,
-  getViewGpuPath,
-} from '@pcpartdb/website/client/shared/website';
-import {
-  Sidenav,
-  SidenavComparisons,
-  SidenavGpus,
-} from '@pcpartdb/website/client/sidenav';
-import {
-  Gpu,
-  RelatedComparisons,
-  RelatedGpus,
-} from '@pcpartdb/website/shared/gpus';
+import { ViewGpuViewModel } from '@pcpartdb/shared/view-models';
 import React from 'react';
+import { getGpuName, getViewGpuSlug } from '../../../gpus';
+import { CompareGpusForm, GpuImages } from '../../../gpus/components';
+import { useGpuCache } from '../../../shared/cache';
+import { Breadcrumb, Breadcrumbs } from '../../../shared/components';
+import { WebsiteLayout } from '../../../shared/layouts';
+import { getListGpusPath, getViewGpuPath } from '../../../shared/website';
+import { Sidenav, SidenavComparisons, SidenavGpus } from '../../../sidenav';
 import {
   Benchmarks,
   GeneralInfo,
@@ -34,17 +17,8 @@ import {
   TechnicalSpecs,
 } from './components';
 import { createViewPageContextState, ViewPageContext } from './context';
-import { ViewPageContentData } from './types';
 
-export interface ViewGpuPageProps {
-  gpu: Gpu;
-
-  contentData: ViewPageContentData;
-  relatedGpus: RelatedGpus;
-  relatedComparisons: RelatedComparisons;
-}
-
-export const ViewGpuPage = (props: ViewGpuPageProps) => {
+export const ViewGpuPage = (props: ViewGpuViewModel) => {
   const { gpu, relatedGpus, relatedComparisons, contentData } = props;
   useGpuCache(gpu);
 

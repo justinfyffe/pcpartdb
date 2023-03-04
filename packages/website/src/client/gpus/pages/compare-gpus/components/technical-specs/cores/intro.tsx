@@ -1,9 +1,9 @@
-import { getGpuName } from '@pcpartdb/website/client/gpus';
+import React, { useContext } from 'react';
+import { getGpuName } from '../../../../../../gpus';
 import {
   compileContent,
   ContentContext,
-} from '@pcpartdb/website/client/shared/content';
-import React, { useContext } from 'react';
+} from '../../../../../../shared/content';
 import { ComparePageContext } from '../../../context';
 
 export const CoresIntroSentence1 = compileContent({

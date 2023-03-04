@@ -1,5 +1,5 @@
-import { classNames } from '@pcpartdb/website/client/shared/ui';
 import React, { FunctionComponent } from 'react';
+import { classNames } from '../../../../../shared/ui';
 
 interface FeedProps {
   as?: React.ElementType;

@@ -1,6 +1,6 @@
-import { NumberInput } from '@pcpartdb/website/client/shared/components';
-import { GpuField } from '@pcpartdb/website/shared/gpus';
+import { GpuField } from '@pcpartdb/shared/gpus';
 import React, { forwardRef, useCallback, useMemo, useState } from 'react';
+import { NumberInput } from '../../../../shared/components';
 
 const CURRENCIES = ['USD'];
 

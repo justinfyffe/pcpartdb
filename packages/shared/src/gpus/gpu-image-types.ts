@@ -1,5 +1,5 @@
 import Joi from '@hapi/joi';
-import { Image } from '@pcpartdb/website/shared/image';
+import { Image } from '../image';
 
 export interface GpuImage {
   gpuId?: number;

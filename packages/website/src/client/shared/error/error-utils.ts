@@ -6,7 +6,7 @@ import {
   InternalServerError,
   NotFoundError,
   UnauthorizedError,
-} from '@pcpartdb/website/shared/error';
+} from '@pcpartdb/shared/error';
 import { UseFormSetError } from 'react-hook-form';
 
 export function isInternalServerError(

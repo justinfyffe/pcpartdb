@@ -1,12 +1,12 @@
-import { getGpuName } from '@pcpartdb/website/client/gpus';
+import React, { FunctionComponent, useContext } from 'react';
+import { getGpuName } from '../../../../../../gpus';
 import {
   Table,
   TBody,
   Th,
   THead,
   Tr,
-} from '@pcpartdb/website/client/shared/components';
-import React, { FunctionComponent, useContext } from 'react';
+} from '../../../../../../shared/components';
 import { ComparePageContext } from '../../../context';
 import { FieldRow } from '../../field-row';
 

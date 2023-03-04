@@ -1,6 +1,6 @@
-import { Td, Tr } from '@pcpartdb/website/client/shared/components';
-import { classNames } from '@pcpartdb/website/client/shared/ui';
 import React from 'react';
+import { Td, Tr } from '../../../../shared/components';
+import { classNames } from '../../../../shared/ui';
 
 interface CustomRowProps {
   highlight?: boolean;

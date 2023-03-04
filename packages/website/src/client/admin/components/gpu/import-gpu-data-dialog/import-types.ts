@@ -1,4 +1,4 @@
-import { GpuField } from '@pcpartdb/website/shared/gpus';
+import { GpuField } from '@pcpartdb/shared/gpus';
 
 export interface ImportGpuDataResult<T = unknown> {
   import: boolean;

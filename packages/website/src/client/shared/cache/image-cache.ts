@@ -1,4 +1,4 @@
-import { Image } from '@pcpartdb/website/shared/image';
+import { Image } from '@pcpartdb/shared/image';
 import { useContext } from 'react';
 import { CacheContext } from './cache-context';
 

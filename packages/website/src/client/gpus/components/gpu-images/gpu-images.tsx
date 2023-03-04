@@ -1,11 +1,8 @@
-import {
-  getCompanyLogoImagePath,
-  getImagePath,
-} from '@pcpartdb/website/client/image';
-import { Img } from '@pcpartdb/website/client/shared/components';
-import { classNames } from '@pcpartdb/website/client/shared/ui';
-import { Gpu } from '@pcpartdb/website/shared/gpus';
+import { Gpu } from '@pcpartdb/shared/gpus';
 import React, { FunctionComponent, useMemo, useState } from 'react';
+import { getCompanyLogoImagePath, getImagePath } from '../../../image';
+import { Img } from '../../../shared/components';
+import { classNames } from '../../../shared/ui';
 import { GpuImageOption } from './gpu-image-option';
 
 interface GpuImagesProps {

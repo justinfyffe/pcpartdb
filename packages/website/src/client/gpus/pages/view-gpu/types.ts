@@ -1,4 +1,4 @@
-import { Gpu } from '@pcpartdb/website/shared/gpus';
+import { Gpu } from '@pcpartdb/shared/gpus';
 
 export interface ViewPageContentData {
   totalPerformanceRatedGpus: number;

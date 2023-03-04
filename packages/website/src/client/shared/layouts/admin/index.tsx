@@ -1,7 +1,7 @@
-import { authService } from '@pcpartdb/website/client/auth';
-import { SeoInputs, WEBSITE_NAME } from '@pcpartdb/website/shared/website';
+import { SeoInputs, WEBSITE_NAME } from '@pcpartdb/shared/website';
 import { useRouter } from 'next/router';
 import React, { FunctionComponent, useCallback } from 'react';
+import { authService } from '../../../auth';
 import {
   Button,
   ButtonVariant,

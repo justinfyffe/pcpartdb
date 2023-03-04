@@ -1,5 +1,5 @@
-import { useLayout } from '@pcpartdb/website/client/shared/layouts';
 import React, { createContext, FunctionComponent, useMemo } from 'react';
+import { useLayout } from '../../layouts';
 import { classNames } from '../../ui';
 
 interface FieldState {

@@ -1,9 +1,6 @@
-import { AdminNewUserPage } from '@pcpartdb/website/client/admin/pages';
-import { SsrContext } from '@pcpartdb/website/server/shared/ssr/context';
-import { staffSsrPageProps } from '@pcpartdb/website/server/shared/ssr/props';
+import { NextPageContext } from 'next';
+import { AdminNewUserPage } from '../../../client/admin/pages';
 
-export const getServerSideProps = staffSsrPageProps(
-  async (_ctx: SsrContext) => {},
-);
+export async function getServerSideProps(_ctx: NextPageContext) {}
 
 export default AdminNewUserPage;

@@ -1,12 +1,12 @@
-import { GpuSort } from '@pcpartdb/database';
-import { Checkbox } from '@pcpartdb/website/client/shared/components';
-import { classNames } from '@pcpartdb/website/client/shared/ui';
+import { GpuSort } from '@pcpartdb/shared/gpus';
 import React, {
   FunctionComponent,
   useCallback,
   useContext,
   useState,
 } from 'react';
+import { Checkbox } from '../../../../../shared/components';
+import { classNames } from '../../../../../shared/ui';
 import { ListPageContext } from '../../context';
 
 interface ListFiltersProps {

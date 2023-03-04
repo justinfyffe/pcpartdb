@@ -1,5 +1,5 @@
-import { classNames } from '@pcpartdb/website/client/shared/ui';
 import React, { FunctionComponent, useContext, useEffect } from 'react';
+import { classNames } from '../../ui';
 import { AutocompleteContext } from './autocomplete-context';
 
 export interface AutocompleteOptionProps {

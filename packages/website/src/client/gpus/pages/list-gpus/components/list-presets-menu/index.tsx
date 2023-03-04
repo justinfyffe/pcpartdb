@@ -1,8 +1,8 @@
 import { Bars3Icon } from '@heroicons/react/24/outline';
-import { Menu, MenuLinkItem } from '@pcpartdb/website/client/shared/components';
-import { classNames } from '@pcpartdb/website/client/shared/ui';
-import { getListGpusPath } from '@pcpartdb/website/client/shared/website';
 import React, { FunctionComponent } from 'react';
+import { Menu, MenuLinkItem } from '../../../../../shared/components';
+import { classNames } from '../../../../../shared/ui';
+import { getListGpusPath } from '../../../../../shared/website';
 import { ListPresetSlug } from '../../types';
 import { ListFilters } from '../list-filters';
 

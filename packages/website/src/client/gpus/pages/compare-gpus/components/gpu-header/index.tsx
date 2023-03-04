@@ -1,8 +1,8 @@
-import { getGpuName, getShoppingUrl } from '@pcpartdb/website/client/gpus';
-import { GpuImages } from '@pcpartdb/website/client/gpus/components';
-import { Button } from '@pcpartdb/website/client/shared/components';
-import { Gpu } from '@pcpartdb/website/shared/gpus';
+import { Gpu } from '@pcpartdb/shared/gpus';
 import React, { FunctionComponent } from 'react';
+import { getGpuName, getShoppingUrl } from '../../../../../gpus';
+import { GpuImages } from '../../../../../gpus/components';
+import { Button } from '../../../../../shared/components';
 
 interface GpuHeaderProps {
   gpu: Gpu;

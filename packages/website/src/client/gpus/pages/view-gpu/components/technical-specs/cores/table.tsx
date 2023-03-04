@@ -1,6 +1,6 @@
 export * from './intro';
 export * from './table';
-import { Table, TBody } from '@pcpartdb/website/client/shared/components';
+import { Table, TBody } from '../../../../../../shared/components';
 import React, { FunctionComponent } from 'react';
 import { FieldRow } from '../../field-row';
 

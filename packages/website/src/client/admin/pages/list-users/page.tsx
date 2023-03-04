@@ -1,5 +1,8 @@
 import 'reflect-metadata';
 import { AdminListUsersViewModel } from '@pcpartdb/shared/view-models';
+import { format } from 'date-fns';
+import { useRouter } from 'next/router';
+import React, { useState } from 'react';
 import {
   Alert,
   AlertVariant,
@@ -11,11 +14,8 @@ import {
   Th,
   THead,
   Tr,
-} from '@pcpartdb/website/client/shared/components';
-import { AdminLayout } from '@pcpartdb/website/client/shared/layouts';
-import { format } from 'date-fns';
-import { useRouter } from 'next/router';
-import React, { useState } from 'react';
+} from '../../../shared/components';
+import { AdminLayout } from '../../../shared/layouts';
 
 export const AdminListUsersPage = (props: AdminListUsersViewModel) => {
   const { users } = props;

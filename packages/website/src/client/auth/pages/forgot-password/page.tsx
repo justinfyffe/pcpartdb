@@ -1,6 +1,11 @@
 import 'reflect-metadata';
 import Joi from '@hapi/joi';
 import { joiResolver } from '@hookform/resolvers/joi';
+import { ApiError, ValidationErrorType } from '@pcpartdb/shared/error';
+import { EMAIL_MAX_LENGTH } from '@pcpartdb/shared/user';
+import { MetaRobots } from '@pcpartdb/shared/website';
+import React, { useCallback, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import {
   Alert,
   AlertVariant,
@@ -12,18 +17,13 @@ import {
   FormActions,
   Spinner,
   TextInput,
-} from '@pcpartdb/website/client/shared/components';
+} from '../../../shared/components';
 import {
   isInternalServerError,
   setValidationErrors,
-} from '@pcpartdb/website/client/shared/error';
-import { WebsiteLayout } from '@pcpartdb/website/client/shared/layouts';
-import { userService } from '@pcpartdb/website/client/user';
-import { ApiError, ValidationErrorType } from '@pcpartdb/website/shared/error';
-import { EMAIL_MAX_LENGTH } from '@pcpartdb/website/shared/user';
-import { MetaRobots } from '@pcpartdb/website/shared/website';
-import React, { useCallback, useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+} from '../../../shared/error';
+import { WebsiteLayout } from '../../../shared/layouts';
+import { userService } from '../../../user';
 
 interface RequestPasswordResetFormData {
   email: string;

@@ -1,8 +1,4 @@
-import {
-  Button,
-  ButtonVariant,
-} from '@pcpartdb/website/client/shared/components';
-import { GpuField } from '@pcpartdb/website/shared/gpus';
+import { GpuField } from '@pcpartdb/shared/gpus';
 import React, {
   forwardRef,
   Ref,
@@ -10,6 +6,7 @@ import React, {
   useEffect,
   useState,
 } from 'react';
+import { Button, ButtonVariant } from '../../../../shared/components';
 import { GpuAutocompleteSpecFieldInput } from './gpu-autocomplete-spec-field-input';
 import { GpuBooleanFieldInput } from './gpu-boolean-field-input';
 import { GpuCurrencyFieldInput } from './gpu-currency-field-input';

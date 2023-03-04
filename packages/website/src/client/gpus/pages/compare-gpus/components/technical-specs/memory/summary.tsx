@@ -1,9 +1,9 @@
+import React, { useContext } from 'react';
 import {
   compileContent,
   ContentContext,
   ContentParams,
-} from '@pcpartdb/website/client/shared/content';
-import React, { useContext } from 'react';
+} from '../../../../../../shared/content';
 import { ComparePageContext } from '../../../context';
 
 export const MemorySummarySentence1 = compileContent({

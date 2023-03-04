@@ -1,8 +1,5 @@
-import {
-  compileContent,
-  ContentContext,
-} from '@pcpartdb/website/client/shared/content';
 import React from 'react';
+import { compileContent, ContentContext } from '../../../../../shared/content';
 
 export const GeneralInfoSummarySentence1 = compileContent({
   deps: [],

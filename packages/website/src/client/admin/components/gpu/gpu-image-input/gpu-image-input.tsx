@@ -1,7 +1,7 @@
-import { useImageCache } from '@pcpartdb/website/client/shared/cache';
-import { GpuImage } from '@pcpartdb/website/shared/gpus';
-import { Image } from '@pcpartdb/website/shared/image';
+import { GpuImage } from '@pcpartdb/shared/gpus';
+import { Image } from '@pcpartdb/shared/image';
 import React, { FunctionComponent, useCallback } from 'react';
+import { useImageCache } from '../../../../shared/cache';
 import { ImageInput } from '../../image';
 
 interface GpuImageInputProps {

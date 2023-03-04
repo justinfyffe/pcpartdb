@@ -1,6 +1,6 @@
-import { TextInput } from '@pcpartdb/website/client/shared/components';
-import { GpuField } from '@pcpartdb/website/shared/gpus';
+import { GpuField } from '@pcpartdb/shared/gpus';
 import React, { forwardRef, useCallback } from 'react';
+import { TextInput } from '../../../../shared/components';
 
 interface GpuStringFieldInputProps {
   field: string;

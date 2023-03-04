@@ -1,16 +1,16 @@
-import {
-  Button,
-  ButtonVariant,
-  NumberInput,
-} from '@pcpartdb/website/client/shared/components';
-import { classNames } from '@pcpartdb/website/client/shared/ui';
-import { GpuField } from '@pcpartdb/website/shared/gpus';
+import { GpuField } from '@pcpartdb/shared/gpus';
 import React, {
   FunctionComponent,
   useCallback,
   useEffect,
   useState,
 } from 'react';
+import {
+  Button,
+  ButtonVariant,
+  NumberInput,
+} from '../../../../shared/components';
+import { classNames } from '../../../../shared/ui';
 
 interface GpuBenchmarkInputProps {
   field: string;

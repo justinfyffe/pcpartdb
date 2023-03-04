@@ -1,5 +1,3 @@
-import { useLayout } from '@pcpartdb/website/client/shared/layouts';
-import { classNames } from '@pcpartdb/website/client/shared/ui';
 import React, {
   ChangeEvent,
   FunctionComponent,
@@ -7,6 +5,8 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import { useLayout } from '../../layouts';
+import { classNames } from '../../ui';
 import { Button, ButtonVariant } from '../button';
 import { TextInput } from '../input';
 

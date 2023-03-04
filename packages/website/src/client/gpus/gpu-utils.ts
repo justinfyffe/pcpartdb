@@ -1,18 +1,18 @@
 import {
-  BooleanFormatter,
-  DateFormatter,
-  formatBooleanValue,
-  formatDate,
-  formatPrice,
-} from '@pcpartdb/website/client/shared/format';
-import {
   calculateDisplayGpuFieldValue,
   getUnitFormat,
   Gpu,
   GpuComparison,
   GpuField,
   MarketSegmentValue,
-} from '@pcpartdb/website/shared/gpus';
+} from '@pcpartdb/shared/gpus';
+import {
+  BooleanFormatter,
+  DateFormatter,
+  formatBooleanValue,
+  formatDate,
+  formatPrice,
+} from '../shared/format';
 
 interface GetGpuNameOptions {
   company?: boolean;

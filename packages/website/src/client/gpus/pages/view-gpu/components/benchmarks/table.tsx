@@ -1,5 +1,5 @@
-import { Table, TBody } from '@pcpartdb/website/client/shared/components';
 import React, { FunctionComponent } from 'react';
+import { Table, TBody } from '../../../../../shared/components';
 import { BenchmarkRow } from './benchmark-row';
 
 interface BenchmarksTableProps {

@@ -1,11 +1,10 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "composite": true,
-    "outDir": "./dist",
-    "noEmit": true,
-    "target": "es5",
+    "outDir": "dist",
+    "rootDir": "src"
   },
-  "include": ["./src/**/*"],
-  "exclude": ["dist", "node_modules"]
+  "include": ["./**/*.ts"],
+  "exclude": ["dist"],
+  "references": [{ "path": "../database" }, { "path": "../scraper" }, { "path": "../shared" }]
 }

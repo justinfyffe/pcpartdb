@@ -1,6 +1,6 @@
-import { getImagePath } from '@pcpartdb/website/client/image';
-import { Image } from '@pcpartdb/website/shared/image';
+import { Image } from '@pcpartdb/shared/image';
 import React, { FunctionComponent, HTMLProps } from 'react';
+import { getImagePath } from '../../../image';
 import { classNames } from '../../ui';
 
 export interface ImgProps
