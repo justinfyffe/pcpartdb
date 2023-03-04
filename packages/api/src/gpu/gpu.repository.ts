@@ -1,18 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import {
-  GpuEntity,
-  GpuSpecsEntity,
-  Prisma,
-  prisma,
-  RepositoryConfig,
-} from '@pcpartdb/database';
-import {
   GpuOrder,
   GpusFilter,
   GpusOrderBy,
   GpuSort,
   GpusQuery,
 } from '@pcpartdb/shared';
+import { Prisma } from '@prisma/client';
+import { Database, RepositoryConfig } from '../database';
+import { GpuEntity, GpuSpecsEntity } from './gpu.entity';
 
 export interface ListOptions {
   query?: GpusQuery;
@@ -28,11 +24,13 @@ export interface FindOptions {
 
 @Injectable()
 export class GpuRepository {
+  constructor(private db: Database) {}
+
   async list(
     options: ListOptions,
     config?: RepositoryConfig,
   ): Promise<GpuEntity[]> {
-    const db = config?.trx ?? prisma;
+    const db = config?.trx ?? this.db;
 
     const includeImages = options?.includeImages ?? false;
     const { filter, orderBy, limit, offset } = options.query ?? {};
@@ -55,7 +53,7 @@ export class GpuRepository {
     options: FindOptions,
     config?: RepositoryConfig,
   ): Promise<GpuEntity> {
-    const trx = config?.trx ?? prisma;
+    const trx = config?.trx ?? this.db;
     const { includeImages } = options;
 
     return await trx.gpu.findUnique({
@@ -73,7 +71,7 @@ export class GpuRepository {
     options: FindOptions,
     config?: RepositoryConfig,
   ): Promise<GpuEntity> {
-    const trx = config?.trx ?? prisma;
+    const trx = config?.trx ?? this.db;
     const { includeImages } = options;
 
     return await trx.gpu.findUnique({
@@ -90,7 +88,7 @@ export class GpuRepository {
     query: string,
     config?: RepositoryConfig,
   ): Promise<GpuEntity[]> {
-    const db = config?.trx ?? prisma;
+    const db = config?.trx ?? this.db;
 
     const tokens = query
       .split(' ')
@@ -117,7 +115,7 @@ export class GpuRepository {
     query: string,
     config?: RepositoryConfig,
   ): Promise<string[]> {
-    const trx = config?.trx ?? prisma;
+    const trx = config?.trx ?? this.db;
     const results = await trx.gpuSpecs.findMany({
       select: { [key]: true },
       distinct: key,
@@ -130,7 +128,7 @@ export class GpuRepository {
   }
 
   async create(data: Omit<GpuEntity, 'id'>, config?: RepositoryConfig) {
-    const trx = config?.trx ?? prisma;
+    const trx = config?.trx ?? this.db;
 
     const {
       parent: _parent,
@@ -158,7 +156,7 @@ export class GpuRepository {
     data: Partial<GpuEntity>,
     config?: RepositoryConfig,
   ) {
-    const trx = config?.trx ?? prisma;
+    const trx = config?.trx ?? this.db;
 
     const {
       parent: _parent,
@@ -184,12 +182,12 @@ export class GpuRepository {
   }
 
   async delete(id: number, config?: RepositoryConfig) {
-    const trx = config?.trx ?? prisma;
+    const trx = config?.trx ?? this.db;
     await trx.gpu.delete({ where: { id } });
   }
 
   async getPerformanceRanks(ids: number[], config?: RepositoryConfig) {
-    const trx = config?.trx ?? prisma;
+    const trx = config?.trx ?? this.db;
     const idsAndRanks: { gpu_id: number; rank: number }[] = await trx.$queryRaw`
       SELECT ranks.gpu_id, ranks.rank AS rank
       FROM (
@@ -216,7 +214,7 @@ export class GpuRepository {
   }
 
   async getValueRanks(ids: number[], config?: RepositoryConfig) {
-    const trx = config?.trx ?? prisma;
+    const trx = config?.trx ?? this.db;
     const idsAndRanks: { gpu_id: number; rank: number }[] = await trx.$queryRaw`
       SELECT ranks.gpu_id, ranks.rank AS rank
       FROM (

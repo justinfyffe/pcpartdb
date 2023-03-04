@@ -1,5 +1,5 @@
-import { GpuFieldsMetaJson } from '@pcpartdb/database';
 import { GpuField, GpuFieldMeta } from '@pcpartdb/shared';
+import { GpuFieldsMetaJson } from './gpu.entity';
 
 interface MapToDtoOptions {
   includeSources?: boolean;

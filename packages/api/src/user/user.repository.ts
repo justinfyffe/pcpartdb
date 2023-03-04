@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { prisma, RepositoryConfig, UserEntity } from '@pcpartdb/database';
+import { Database, RepositoryConfig } from '../database';
+import { UserEntity } from './user.entity';
 
 export interface CreateUserOptions {
   email: string;
@@ -10,8 +11,10 @@ export type UpdateUserOptions = Partial<CreateUserOptions>;
 
 @Injectable()
 export class UserRepository {
+  constructor(private db: Database) {}
+
   async list(config?: RepositoryConfig) {
-    const trx = config?.trx ?? prisma;
+    const trx = config?.trx ?? this.db;
     return await trx.user.findMany({
       orderBy: {
         id: 'desc',
@@ -20,22 +23,22 @@ export class UserRepository {
   }
 
   async findById(id: number, config?: RepositoryConfig) {
-    const trx = config?.trx ?? prisma;
+    const trx = config?.trx ?? this.db;
     return await trx.user.findUnique({ where: { id } });
   }
 
   async findByEmail(email: string, config?: RepositoryConfig) {
-    const trx = config?.trx ?? prisma;
+    const trx = config?.trx ?? this.db;
     return await trx.user.findUnique({ where: { email } });
   }
 
   async count(config?: RepositoryConfig) {
-    const trx = config?.trx ?? prisma;
+    const trx = config?.trx ?? this.db;
     return await trx.user.count();
   }
 
   async countStaff(config?: RepositoryConfig) {
-    const trx = config?.trx ?? prisma;
+    const trx = config?.trx ?? this.db;
     return await trx.user.count({ where: { isStaff: true } });
   }
 
@@ -43,7 +46,7 @@ export class UserRepository {
     user: Omit<UserEntity, 'id' | 'registeredAt'>,
     config?: RepositoryConfig,
   ) {
-    const trx = config?.trx ?? prisma;
+    const trx = config?.trx ?? this.db;
     return await trx.user.create({ data: user });
   }
 
@@ -52,12 +55,12 @@ export class UserRepository {
     user: Partial<UserEntity>,
     config?: RepositoryConfig,
   ) {
-    const trx = config?.trx ?? prisma;
+    const trx = config?.trx ?? this.db;
     return await trx.user.update({ where: { id }, data: user });
   }
 
   async delete(id: number, config?: RepositoryConfig) {
-    const trx = config?.trx ?? prisma;
+    const trx = config?.trx ?? this.db;
     await trx.user.delete({ where: { id } });
   }
 }

@@ -10,7 +10,6 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { GpuSpecsEntity } from '@pcpartdb/database';
 import {
   CreateGpuRequest,
   ImportGpuDataRequest,
@@ -20,6 +19,7 @@ import {
 import { StaffGuard } from '../auth/staff.guard';
 import { ApiRequest } from '../shared/http';
 import { validate } from '../shared/types/validate';
+import { GpuSpecsEntity } from './gpu.entity';
 import { GpuService } from './gpu.service';
 import {
   autocompleteGpusRequestValidator,
@@ -107,7 +107,7 @@ export class GpuController {
   @UseGuards(StaffGuard)
   async importData(
     @Body() body: ImportGpuDataRequest,
-    @Req() request: ApiRequest,
+    @Req() _request: ApiRequest,
   ) {
     return this.gpuImporterService.importData(body);
   }

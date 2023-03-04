@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "description": "Website for viewing and comparing pc specs in an easy format",
   "scripts": {
-    "clean": "rm -rf .next",
+    "clean": "rm -rf .next && rm -f tsconfig.tsbuildinfo",
     "build": "next build",
     "dev": "next dev",
     "start": "next start -p 3010"

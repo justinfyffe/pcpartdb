@@ -1,6 +1,6 @@
-import { GpuImageEntity } from '@pcpartdb/database';
 import { GpuImage } from '@pcpartdb/shared';
 import { mapToImageDto } from '../image/image.mapper';
+import { GpuImageEntity } from './gpu.entity';
 
 export function mapToGpuImageDto(entity: GpuImageEntity): GpuImage {
   if (entity == null) {

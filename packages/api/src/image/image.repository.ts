@@ -1,10 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { ImageEntity, prisma, RepositoryConfig } from '@pcpartdb/database';
+import { Database, RepositoryConfig } from '../database';
+import { ImageEntity } from './image.entity';
 
 @Injectable()
 export class ImageRepository {
+  constructor(private db: Database) {}
+
   async list(config?: RepositoryConfig) {
-    const trx = config?.trx ?? prisma;
+    const trx = config?.trx ?? this.db;
     return await trx.image.findMany({
       orderBy: {
         id: 'desc',
@@ -13,31 +16,31 @@ export class ImageRepository {
   }
 
   async findById(id: number, config?: RepositoryConfig) {
-    const trx = config?.trx ?? prisma;
+    const trx = config?.trx ?? this.db;
     return await trx.image.findUnique({ where: { id } });
   }
 
   async findByIds(ids: number[], config?: RepositoryConfig) {
-    const trx = config?.trx ?? prisma;
+    const trx = config?.trx ?? this.db;
     return await trx.image.findMany({
       where: { id: { in: ids } },
     });
   }
 
   async findByPath(path: string, config?: RepositoryConfig) {
-    const trx = config?.trx ?? prisma;
+    const trx = config?.trx ?? this.db;
     return await trx.image.findUnique({ where: { path } });
   }
 
   async findByPaths(paths: string[], config?: RepositoryConfig) {
-    const trx = config?.trx ?? prisma;
+    const trx = config?.trx ?? this.db;
     return await trx.image.findMany({
       where: { path: { in: paths } },
     });
   }
 
   async create(image: Omit<ImageEntity, 'id'>, config?: RepositoryConfig) {
-    const trx = config?.trx ?? prisma;
+    const trx = config?.trx ?? this.db;
     return await trx.image.create({
       data: image,
     });
@@ -48,7 +51,7 @@ export class ImageRepository {
     image: Partial<ImageEntity>,
     config?: RepositoryConfig,
   ) {
-    const trx = config?.trx ?? prisma;
+    const trx = config?.trx ?? this.db;
     return await trx.image.update({
       where: { id },
       data: image,
@@ -56,7 +59,7 @@ export class ImageRepository {
   }
 
   async delete(id: number, config?: RepositoryConfig) {
-    const trx = config?.trx ?? prisma;
+    const trx = config?.trx ?? this.db;
     await trx.image.delete({
       where: { id },
     });

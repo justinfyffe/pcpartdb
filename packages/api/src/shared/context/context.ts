@@ -1,5 +1,5 @@
-import { Prisma } from '@pcpartdb/database';
 import { User } from '@pcpartdb/shared';
+import { Prisma } from '@prisma/client';
 import { Request, Response } from 'express';
 
 export interface ContextProps {

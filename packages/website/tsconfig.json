@@ -17,12 +17,5 @@
   "exclude": [
     ".next"
   ],
-  "references": [
-    {
-      "path": "../database"
-    },
-    {
-      "path": "../shared"
-    }
-  ]
+  "references": [{ "path": "../shared" }]
 }

@@ -1,5 +1,5 @@
-import { ImageEntity } from '@pcpartdb/database';
 import { Image } from '@pcpartdb/shared';
+import { ImageEntity } from './image.entity';
 
 export function mapToImageDto(row: ImageEntity): Image {
   if (row == null) {

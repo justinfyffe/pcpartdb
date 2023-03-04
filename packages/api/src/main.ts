@@ -1,12 +1,16 @@
 import { NestFactory } from '@nestjs/core';
 import * as dotenv from 'dotenv';
 import { AppModule } from './app.module';
+import { Database } from './database';
 import { AllExceptionsFilter } from './shared/error';
 
 dotenv.config();
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  const database = app.get(Database);
+  await database.enableShutdownHooks(app);
 
   app.useGlobalFilters(new AllExceptionsFilter());
 

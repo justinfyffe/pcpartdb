@@ -1,5 +1,6 @@
-import { GpuEntity, GpuMetaJson, Prisma } from '@pcpartdb/database';
 import { Gpu, GpuDataSource, GpuMeta } from '@pcpartdb/shared';
+import { Prisma } from '@prisma/client';
+import { GpuEntity, GpuMetaJson } from './gpu.entity';
 import {
   mapToGpuBenchmarksDto,
   mapToGpuBenchmarksEntity,

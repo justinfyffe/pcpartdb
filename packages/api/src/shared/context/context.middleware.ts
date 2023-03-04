@@ -1,8 +1,8 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
-import { transaction } from '@pcpartdb/database';
 import { User } from '@pcpartdb/shared';
 import { NextFunction } from 'express';
 import { AccessTokenRepository } from '../../auth/access-token.repository';
+import { Database } from '../../database';
 import { mapToUserDto } from '../../user/user.mapper';
 import { CookieService, SESSION_COOKIE } from '../cookie';
 import { hashToken } from '../crypto';
@@ -14,6 +14,7 @@ export class ContextMiddleware implements NestMiddleware {
   constructor(
     private accessTokenRepository: AccessTokenRepository,
     private cookies: CookieService,
+    private db: Database,
   ) {}
 
   async use(req: ApiRequest, res: ApiResponse, next: NextFunction) {
@@ -34,7 +35,7 @@ export class ContextMiddleware implements NestMiddleware {
     };
 
     req.context = context;
-    await transaction(async (trx) => {
+    await this.db.transaction(async (trx) => {
       context.trx = trx;
 
       next();
