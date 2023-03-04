@@ -4,7 +4,7 @@ import {
   GpuField,
   GpuSpecs,
   ImportGpuDataResponse,
-} from '@pcpartdb/shared/gpus';
+} from '@pcpartdb/shared';
 import { createContext } from 'react';
 import { ImportGpuDataResult, ImportGpuDataResults } from './import-types';
 

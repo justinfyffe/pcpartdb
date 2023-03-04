@@ -1,5 +1,5 @@
 import { PhotoIcon } from '@heroicons/react/24/outline';
-import { Image } from '@pcpartdb/shared/image';
+import { Image } from '@pcpartdb/shared';
 import React, { FunctionComponent, useCallback, useState } from 'react';
 import { formatDimensions, formatFileSize } from '../../../../image';
 import {

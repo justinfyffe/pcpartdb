@@ -1,4 +1,4 @@
-import { SeoInputs } from '@pcpartdb/shared/website';
+import { SeoInputs } from '@pcpartdb/shared';
 import Head from 'next/head';
 import React, { FunctionComponent } from 'react';
 import { getPageKeywords, getPageTitle, getPageUrl } from '../../website';

@@ -1,4 +1,4 @@
-import { RelatedComparisons, RelatedGpus } from '@pcpartdb/shared/gpus';
+import { RelatedComparisons, RelatedGpus } from '@pcpartdb/shared';
 import React, { FunctionComponent } from 'react';
 import {
   getCompareGpusSlug,

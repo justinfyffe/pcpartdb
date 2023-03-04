@@ -1,4 +1,4 @@
-import { Image } from '@pcpartdb/shared/image';
+import { Image } from '@pcpartdb/shared';
 import React, { FunctionComponent, useCallback } from 'react';
 import { formatDimensions, formatFileSize } from '../../../../image';
 import { Card, Img, TextInput } from '../../../../shared/components';

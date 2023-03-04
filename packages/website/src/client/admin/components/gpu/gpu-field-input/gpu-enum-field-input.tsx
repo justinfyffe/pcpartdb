@@ -1,4 +1,4 @@
-import { GpuField, MarketSegmentValue } from '@pcpartdb/shared/gpus';
+import { GpuField, MarketSegmentValue } from '@pcpartdb/shared';
 import React, { forwardRef, useCallback, useMemo } from 'react';
 import {
   Select,

@@ -1,8 +1,4 @@
-import {
-  WEBSITE_KEYWORDS,
-  WEBSITE_NAME,
-  WEBSITE_URL,
-} from '@pcpartdb/shared/website';
+import { WEBSITE_KEYWORDS, WEBSITE_NAME, WEBSITE_URL } from '@pcpartdb/shared';
 
 export function getPageTitle(title: string) {
   return `${title} - ${WEBSITE_NAME}`;

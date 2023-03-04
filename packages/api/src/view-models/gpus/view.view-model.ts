@@ -4,8 +4,8 @@ import {
   GpuSort,
   RelatedComparisons,
   RelatedGpus,
-} from '@pcpartdb/shared/gpus';
-import { ViewGpuViewModel } from '@pcpartdb/shared/view-models';
+  ViewGpuViewModel,
+} from '@pcpartdb/shared';
 import { GpuService } from '../../gpu/gpu.service';
 import { Context } from '../../shared/context';
 

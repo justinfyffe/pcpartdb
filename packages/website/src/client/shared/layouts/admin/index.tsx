@@ -1,4 +1,4 @@
-import { SeoInputs, WEBSITE_NAME } from '@pcpartdb/shared/website';
+import { SeoInputs, WEBSITE_NAME } from '@pcpartdb/shared';
 import { useRouter } from 'next/router';
 import React, { FunctionComponent, useCallback } from 'react';
 import { authService } from '../../../auth';

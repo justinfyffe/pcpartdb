@@ -10,13 +10,13 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { GpuSpecsEntity } from '@pcpartdb/database/gpu';
+import { GpuSpecsEntity } from '@pcpartdb/database';
 import {
   CreateGpuRequest,
   ImportGpuDataRequest,
   ListGpusRequest,
   UpdateGpuRequest,
-} from '@pcpartdb/shared/gpus';
+} from '@pcpartdb/shared';
 import { StaffGuard } from '../auth/staff.guard';
 import { ApiRequest } from '../shared/http';
 import { validate } from '../shared/types/validate';

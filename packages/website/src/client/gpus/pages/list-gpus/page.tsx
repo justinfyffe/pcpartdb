@@ -1,5 +1,4 @@
-import { GpusQuery } from '@pcpartdb/shared/gpus';
-import { ListGpusViewModel } from '@pcpartdb/shared/view-models';
+import { GpusQuery, ListGpusViewModel } from '@pcpartdb/shared';
 import { useRouter } from 'next/router';
 import React, { useCallback, useState } from 'react';
 import { CompareGpusForm } from '../../../gpus/components';

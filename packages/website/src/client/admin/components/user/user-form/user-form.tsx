@@ -1,12 +1,13 @@
 import Joi from '@hapi/joi';
 import { joiResolver } from '@hookform/resolvers/joi';
-import { ApiError, ValidationErrorType } from '@pcpartdb/shared/error';
 import {
+  ApiError,
   EMAIL_MAX_LENGTH,
   PASSWORD_MAX_LENGTH,
   PASSWORD_MIN_LENGTH,
   User,
-} from '@pcpartdb/shared/user';
+  ValidationErrorType,
+} from '@pcpartdb/shared';
 import { useRouter } from 'next/router';
 import React, {
   FunctionComponent,

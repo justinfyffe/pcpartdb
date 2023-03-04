@@ -1,4 +1,4 @@
-import { GpuComparison } from '@pcpartdb/shared/gpus';
+import { GpuComparison } from '@pcpartdb/shared';
 import React, {
   FormEvent,
   FunctionComponent,

@@ -9,7 +9,7 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { AccessToken, LoginRequest } from '@pcpartdb/shared/auth';
+import { AccessToken, LoginRequest } from '@pcpartdb/shared';
 import { ApiRequest, ApiResponse } from '../shared/http';
 import { validate } from '../shared/types/validate';
 import { AccessTokenService } from './access-token.service';

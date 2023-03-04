@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { MetaRobots } from '@pcpartdb/shared/website';
+import { MetaRobots } from '@pcpartdb/shared';
 import React from 'react';
 import { WebsiteLayout } from '../client/shared/layouts';
 import { getHomePath } from '../client/shared/website';

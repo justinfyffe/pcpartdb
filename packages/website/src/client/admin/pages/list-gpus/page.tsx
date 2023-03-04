@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { AdminListGpusViewModel } from '@pcpartdb/shared/view-models';
+import { AdminListGpusViewModel } from '@pcpartdb/shared';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import {

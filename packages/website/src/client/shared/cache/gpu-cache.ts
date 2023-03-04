@@ -1,4 +1,4 @@
-import { Gpu } from '@pcpartdb/shared/gpus';
+import { Gpu } from '@pcpartdb/shared';
 import { useContext } from 'react';
 import { CacheContext, ImageCache } from '../cache';
 

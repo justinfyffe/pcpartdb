@@ -1,4 +1,4 @@
-import { CompareGpusViewModel } from '@pcpartdb/shared/view-models';
+import { CompareGpusViewModel } from '@pcpartdb/shared';
 import React from 'react';
 import {
   getCompareGpusSlug,

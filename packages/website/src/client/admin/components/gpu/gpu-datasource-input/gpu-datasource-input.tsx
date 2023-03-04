@@ -1,4 +1,4 @@
-import { GpuDataSource } from '@pcpartdb/shared/gpus';
+import { GpuDataSource } from '@pcpartdb/shared';
 import React, { forwardRef, useCallback } from 'react';
 import { TextInput } from '../../../../shared/components';
 

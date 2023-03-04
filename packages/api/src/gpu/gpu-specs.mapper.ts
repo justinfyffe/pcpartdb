@@ -1,5 +1,5 @@
 import { GpuSpecsEntity, Prisma } from '@pcpartdb/database';
-import { GpuSpecs } from '@pcpartdb/shared/gpus';
+import { GpuSpecs } from '@pcpartdb/shared';
 import { mapToGpuFieldDto, mapToGpuFieldEntity } from './gpu-field.mapper';
 
 interface MapToDtoOptions {

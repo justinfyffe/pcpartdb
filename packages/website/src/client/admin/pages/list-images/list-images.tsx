@@ -1,6 +1,5 @@
 import 'reflect-metadata';
-import { AdminListImagesViewModel } from '@pcpartdb/shared/view-models';
-import { MetaRobots } from '@pcpartdb/shared/website';
+import { AdminListImagesViewModel, MetaRobots } from '@pcpartdb/shared';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { formatDimensions, formatFileSize, getImagePath } from '../../../image';

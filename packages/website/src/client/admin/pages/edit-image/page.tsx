@@ -1,6 +1,5 @@
 import 'reflect-metadata';
-import { AdminEditImageViewModel } from '@pcpartdb/shared/view-models';
-import { MetaRobots } from '@pcpartdb/shared/website';
+import { AdminEditImageViewModel, MetaRobots } from '@pcpartdb/shared';
 import React from 'react';
 import { ImageForm } from '../../../admin/components';
 import { Button, ButtonVariant } from '../../../shared/components';

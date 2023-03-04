@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { GpuSort, GpusQuery } from '@pcpartdb/shared/gpus';
 import {
+  GpuSort,
+  GpusQuery,
   LIST_PRESETS,
   ListGpusViewModel,
   ListPresetSlug,
-} from '@pcpartdb/shared/view-models';
+} from '@pcpartdb/shared';
 import { GpuService } from '../../gpu/gpu.service';
 import { gpusQueryValidator } from '../../gpu/gpu.validators';
 import { Context } from '../../shared/context';

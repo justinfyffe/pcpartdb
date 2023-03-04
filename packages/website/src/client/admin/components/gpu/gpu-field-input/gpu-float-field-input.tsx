@@ -16,7 +16,7 @@ import {
   TextureFillRateUnit,
   WattageUnit,
   WeightUnit,
-} from '@pcpartdb/shared/gpus';
+} from '@pcpartdb/shared';
 import React, { forwardRef, useCallback, useMemo, useState } from 'react';
 import { NumberInput } from '../../../../shared/components';
 

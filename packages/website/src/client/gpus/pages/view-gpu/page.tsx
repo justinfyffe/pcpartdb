@@ -1,4 +1,4 @@
-import { ViewGpuViewModel } from '@pcpartdb/shared/view-models';
+import { ViewGpuViewModel } from '@pcpartdb/shared';
 import React from 'react';
 import { getGpuName, getViewGpuSlug } from '../../../gpus';
 import { CompareGpusForm, GpuImages } from '../../../gpus/components';

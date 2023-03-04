@@ -1,6 +1,6 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { transaction } from '@pcpartdb/database';
-import { User } from '@pcpartdb/shared/user';
+import { User } from '@pcpartdb/shared';
 import { NextFunction } from 'express';
 import { AccessTokenRepository } from '../../auth/access-token.repository';
 import { mapToUserDto } from '../../user/user.mapper';

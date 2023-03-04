@@ -6,7 +6,7 @@ import {
   GpuOrder,
   GpuSort,
   gpuSpecsValidator,
-} from '@pcpartdb/shared/gpus';
+} from '@pcpartdb/shared';
 
 export const gpusFilterValidator = Joi.object({
   company: Joi.array().items(Joi.string()).allow('', null),

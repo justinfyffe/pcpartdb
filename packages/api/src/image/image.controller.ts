@@ -9,7 +9,7 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { CreateImageRequest, UpdateImageRequest } from '@pcpartdb/shared/image';
+import { CreateImageRequest, UpdateImageRequest } from '@pcpartdb/shared';
 import { StaffGuard } from '../auth/staff.guard';
 import { ApiRequest } from '../shared/http';
 import * as fileUtils from '../shared/utils';

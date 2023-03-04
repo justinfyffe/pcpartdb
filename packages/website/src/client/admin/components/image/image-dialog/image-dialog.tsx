@@ -1,4 +1,4 @@
-import { Image } from '@pcpartdb/shared/image';
+import { Image } from '@pcpartdb/shared';
 import React, { FunctionComponent, useCallback, useState } from 'react';
 import {
   Button,

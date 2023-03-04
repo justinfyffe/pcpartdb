@@ -1,4 +1,4 @@
-import { GpuField } from '@pcpartdb/shared/gpus';
+import { GpuField } from '@pcpartdb/shared';
 import React, { forwardRef, useCallback, useMemo, useState } from 'react';
 import { NumberInput } from '../../../../shared/components';
 

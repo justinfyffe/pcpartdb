@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { AdminEditUserViewModel } from '@pcpartdb/shared/view-models';
+import { AdminEditUserViewModel } from '@pcpartdb/shared';
 import React from 'react';
 import { UserForm } from '../../../admin/components';
 import { Button, ButtonVariant } from '../../../shared/components';

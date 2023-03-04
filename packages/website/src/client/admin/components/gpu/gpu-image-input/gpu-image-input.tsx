@@ -1,5 +1,4 @@
-import { GpuImage } from '@pcpartdb/shared/gpus';
-import { Image } from '@pcpartdb/shared/image';
+import { GpuImage, Image } from '@pcpartdb/shared';
 import React, { FunctionComponent, useCallback } from 'react';
 import { useImageCache } from '../../../../shared/cache';
 import { ImageInput } from '../../image';

@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { WEBSITE_NAME } from '@pcpartdb/shared/website';
+import { WEBSITE_NAME } from '@pcpartdb/shared';
 import React from 'react';
 import { Breadcrumb, Breadcrumbs } from '../../../shared/components';
 import { WebsiteLayout } from '../../../shared/layouts';

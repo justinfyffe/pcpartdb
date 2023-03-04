@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { GpuComparison, GpuSort } from '@pcpartdb/shared/gpus';
-import { HomeViewModel } from '@pcpartdb/shared/view-models';
+import { GpuComparison, GpuSort, HomeViewModel } from '@pcpartdb/shared';
 import { GpuService } from '../../gpu/gpu.service';
 import { Context } from '../../shared/context';
 

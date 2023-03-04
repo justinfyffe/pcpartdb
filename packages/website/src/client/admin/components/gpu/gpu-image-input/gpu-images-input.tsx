@@ -3,7 +3,7 @@ import {
   ChevronUpIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline';
-import { GpuImage, GpuImages } from '@pcpartdb/shared/gpus';
+import { GpuImage, GpuImages } from '@pcpartdb/shared';
 import React, {
   FunctionComponent,
   useCallback,

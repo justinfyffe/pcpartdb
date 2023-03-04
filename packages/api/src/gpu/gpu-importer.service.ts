@@ -8,7 +8,7 @@ import {
   GpuDataSource,
   ImportGpuDataRequest,
   ImportGpuDataResponse,
-} from '@pcpartdb/shared/gpus';
+} from '@pcpartdb/shared';
 import { badRequestError } from '../shared/error';
 import { deepMergeObjects } from '../shared/utils';
 

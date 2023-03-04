@@ -1,4 +1,4 @@
-import { GpuField } from '@pcpartdb/shared/gpus';
+import { GpuField } from '@pcpartdb/shared';
 import React, { forwardRef, useCallback, useState } from 'react';
 import { Control, useWatch } from 'react-hook-form';
 import { Button } from '../../../../shared/components';

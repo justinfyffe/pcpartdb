@@ -1,5 +1,5 @@
 import { ValidationError } from '@hapi/joi';
-import { HttpErrorType, ValidationPropertyError } from '@pcpartdb/shared/error';
+import { HttpErrorType, ValidationPropertyError } from '@pcpartdb/shared';
 
 export class ServerError extends Error {
   readonly type: HttpErrorType;

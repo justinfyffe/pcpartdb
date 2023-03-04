@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import {
+  CompareGpusViewModel,
   Gpu,
   GpuComparison,
   GpuSort,
   RelatedComparisons,
   RelatedGpus,
-} from '@pcpartdb/shared/gpus';
-import { CompareGpusViewModel } from '@pcpartdb/shared/view-models';
+} from '@pcpartdb/shared';
 import { GpuService } from '../../gpu/gpu.service';
 import { Context } from '../../shared/context';
 

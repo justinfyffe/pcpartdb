@@ -6,7 +6,7 @@ import {
   Gpu,
   GpuComparison,
   UpdateGpuRequest,
-} from '@pcpartdb/shared/gpus';
+} from '@pcpartdb/shared';
 import { Context } from '../shared/context';
 import { badRequestError, notFoundError } from '../shared/error';
 import { addPerformanceBenchmarks } from './benchmark-utils';

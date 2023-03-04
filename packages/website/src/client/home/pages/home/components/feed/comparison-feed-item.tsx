@@ -1,5 +1,5 @@
 import { PhotoIcon } from '@heroicons/react/24/outline';
-import { Gpu, GpuComparison } from '@pcpartdb/shared/gpus';
+import { Gpu, GpuComparison } from '@pcpartdb/shared';
 import React, { FunctionComponent, useMemo } from 'react';
 import {
   formatGpuField,

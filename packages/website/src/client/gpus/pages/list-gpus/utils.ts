@@ -1,4 +1,4 @@
-import { GpusQuery } from '@pcpartdb/shared/gpus';
+import { GpusQuery } from '@pcpartdb/shared';
 import { getListGpusPath } from '../../../shared/website';
 import { LIST_PRESETS } from './types';
 

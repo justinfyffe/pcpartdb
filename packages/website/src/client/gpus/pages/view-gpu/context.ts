@@ -1,4 +1,4 @@
-import { Gpu } from '@pcpartdb/shared/gpus';
+import { Gpu } from '@pcpartdb/shared';
 import { createContext } from 'react';
 import { ViewPageContentData } from './types';
 

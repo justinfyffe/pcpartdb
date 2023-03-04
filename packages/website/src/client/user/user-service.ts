@@ -4,7 +4,7 @@ import {
   ResetPasswordRequest,
   UpdateUserRequest,
   User,
-} from '@pcpartdb/shared/user';
+} from '@pcpartdb/shared';
 import { ApiClient, apiClient } from '../shared/api';
 
 const PATH = 'users';

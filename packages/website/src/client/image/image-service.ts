@@ -2,7 +2,7 @@ import {
   CreateImageRequest,
   Image,
   UpdateImageRequest,
-} from '@pcpartdb/shared/image';
+} from '@pcpartdb/shared';
 import { ApiClient, apiClient } from '../shared/api';
 import { ImageCache } from '../shared/cache';
 

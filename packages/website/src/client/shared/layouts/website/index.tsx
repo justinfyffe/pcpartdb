@@ -1,5 +1,5 @@
 import { HeartIcon } from '@heroicons/react/24/solid';
-import { SeoInputs, WEBSITE_NAME } from '@pcpartdb/shared/website';
+import { SeoInputs, WEBSITE_NAME } from '@pcpartdb/shared';
 import React, { FunctionComponent } from 'react';
 import {
   Button,

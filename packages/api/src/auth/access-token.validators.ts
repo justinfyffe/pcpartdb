@@ -1,5 +1,5 @@
 import Joi from '@hapi/joi';
-import { EMAIL_MAX_LENGTH, PASSWORD_MAX_LENGTH } from '@pcpartdb/shared/user';
+import { EMAIL_MAX_LENGTH, PASSWORD_MAX_LENGTH } from '@pcpartdb/shared';
 
 export const loginRequestValidator = Joi.object({
   email: Joi.string()

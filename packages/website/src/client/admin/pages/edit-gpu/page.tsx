@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { AdminEditGpuViewModel } from '@pcpartdb/shared/view-models';
+import { AdminEditGpuViewModel } from '@pcpartdb/shared';
 import React from 'react';
 import { GpuForm } from '../../../admin/components';
 import { Button, ButtonVariant } from '../../../shared/components';

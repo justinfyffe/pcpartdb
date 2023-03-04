@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { LoginRequest } from '@pcpartdb/shared/auth';
+import { LoginRequest } from '@pcpartdb/shared';
 import * as bcrypt from 'bcryptjs';
 import { Context } from '../shared/context';
 import { CookieService, SESSION_COOKIE } from '../shared/cookie';
-import { generateToken, hashToken } from '../shared/crypto/crypto-utils';
+import { generateToken, hashToken } from '../shared/crypto';
 import { forbiddenError, unauthorizedError } from '../shared/error';
 import { UserRepository } from '../user/user.repository';
 import { mapToAccessTokenDto } from './access-token.mapper';

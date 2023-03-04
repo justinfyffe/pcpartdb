@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { AdminEditUserViewModel } from '@pcpartdb/shared/view-models';
+import { AdminEditUserViewModel } from '@pcpartdb/shared';
 import { UserService } from 'packages/api/src/user/user.service';
 import { Context } from '../../../shared/context';
 

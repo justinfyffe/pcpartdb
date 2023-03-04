@@ -1,4 +1,4 @@
-import { GpuField } from '@pcpartdb/shared/gpus';
+import { GpuField } from '@pcpartdb/shared';
 import React, { forwardRef, useCallback, useState } from 'react';
 import { gpuService } from '../../../../gpus/gpu-service';
 import {

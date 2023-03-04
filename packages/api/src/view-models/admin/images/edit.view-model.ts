@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { AdminEditImageViewModel } from '@pcpartdb/shared/view-models';
+import { AdminEditImageViewModel } from '@pcpartdb/shared';
 import { ImageService } from 'packages/api/src/image/image.service';
 import { Context } from '../../../shared/context';
 

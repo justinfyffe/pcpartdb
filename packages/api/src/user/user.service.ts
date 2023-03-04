@@ -4,8 +4,8 @@ import {
   RequestPasswordResetRequest,
   ResetPasswordRequest,
   UpdateUserRequest,
-} from '@pcpartdb/shared/user';
-import { WEBSITE_NAME } from '@pcpartdb/shared/website';
+  WEBSITE_NAME,
+} from '@pcpartdb/shared';
 import * as bcrypt from 'bcryptjs';
 import { Context } from '../shared/context';
 import { generateToken } from '../shared/crypto';

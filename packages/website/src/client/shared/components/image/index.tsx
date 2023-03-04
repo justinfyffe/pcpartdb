@@ -1,4 +1,4 @@
-import { Image } from '@pcpartdb/shared/image';
+import { Image } from '@pcpartdb/shared';
 import React, { FunctionComponent, HTMLProps } from 'react';
 import { getImagePath } from '../../../image';
 import { classNames } from '../../ui';

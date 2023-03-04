@@ -1,4 +1,4 @@
-import { GpuField } from '@pcpartdb/shared/gpus';
+import { GpuField } from '@pcpartdb/shared';
 import React, { forwardRef, useCallback } from 'react';
 import { Textarea } from '../../../../shared/components';
 

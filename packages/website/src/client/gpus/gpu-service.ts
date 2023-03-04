@@ -5,7 +5,7 @@ import {
   ImportGpuDataResponse,
   ListGpusRequest,
   UpdateGpuRequest,
-} from '@pcpartdb/shared/gpus';
+} from '@pcpartdb/shared';
 import { ApiClient, apiClient } from '../shared/api';
 import { GpuCache } from '../shared/cache';
 

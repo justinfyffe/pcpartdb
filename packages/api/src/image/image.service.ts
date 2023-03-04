@@ -1,7 +1,10 @@
 import Joi from '@hapi/joi';
 import { Injectable } from '@nestjs/common';
-import { ValidationErrorType } from '@pcpartdb/shared/error';
-import { CreateImageRequest, UpdateImageRequest } from '@pcpartdb/shared/image';
+import {
+  CreateImageRequest,
+  UpdateImageRequest,
+  ValidationErrorType,
+} from '@pcpartdb/shared';
 import { Context } from '../shared/context';
 import { badRequestError, notFoundError } from '../shared/error';
 import { validate } from '../shared/types/validate';

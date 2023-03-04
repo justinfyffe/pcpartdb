@@ -12,7 +12,7 @@ import {
   GpusOrderBy,
   GpuSort,
   GpusQuery,
-} from '@pcpartdb/shared/gpus';
+} from '@pcpartdb/shared';
 
 export interface ListOptions {
   query?: GpusQuery;

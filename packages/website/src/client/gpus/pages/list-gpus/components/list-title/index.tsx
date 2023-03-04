@@ -1,4 +1,4 @@
-import { GpuSort } from '@pcpartdb/shared/gpus';
+import { GpuSort } from '@pcpartdb/shared';
 import React, { FunctionComponent, useContext } from 'react';
 import {
   compileContent,

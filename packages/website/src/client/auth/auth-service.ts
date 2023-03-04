@@ -1,5 +1,4 @@
-import { AccessToken, LoginRequest } from '@pcpartdb/shared/auth';
-import { RegisterRequest } from '@pcpartdb/shared/user';
+import { AccessToken, LoginRequest, RegisterRequest } from '@pcpartdb/shared';
 import { ApiClient, apiClient } from '../shared/api';
 
 export class AuthService {

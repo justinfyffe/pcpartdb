@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { HomeViewModel } from '@pcpartdb/shared/view-models';
+import { HomeViewModel } from '@pcpartdb/shared';
 import React from 'react';
 import { CompareGpusForm } from '../../../gpus/components';
 import { ListPresetSlug } from '../../../gpus/pages';

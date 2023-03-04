@@ -1,7 +1,12 @@
 import Joi from '@hapi/joi';
 import { joiResolver } from '@hookform/resolvers/joi';
-import { ApiError, ValidationErrorType } from '@pcpartdb/shared/error';
-import { CreateImageRequest, Image, ImageMeta } from '@pcpartdb/shared/image';
+import {
+  ApiError,
+  CreateImageRequest,
+  Image,
+  ImageMeta,
+  ValidationErrorType,
+} from '@pcpartdb/shared';
 import { useRouter } from 'next/router';
 import React, {
   FunctionComponent,

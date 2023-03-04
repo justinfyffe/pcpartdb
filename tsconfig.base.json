@@ -26,12 +26,7 @@
     "strictNullChecks": false,
     "target": "es5",
     "paths": {
-      "@pcpartdb/database/*": ["packages/database/dist/*"],
-      "@pcpartdb/database": ["packages/database/dist"],
-      "@pcpartdb/scraper/*": ["packages/scraper/dist/*"],
-      "@pcpartdb/scraper": ["packages/scraper/dist"],
-      "@pcpartdb/shared/*": ["packages/shared/dist/*"],
-      "@pcpartdb/shared": ["packages/shared/dist"]
+      "@pcpartdb/*/src": ["packages/*/src"]
     },
   },
   "exclude": ["node_modules", "dist"]

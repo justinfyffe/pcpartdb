@@ -1,4 +1,4 @@
-import { GpuComparison } from '@pcpartdb/shared/gpus';
+import { GpuComparison } from '@pcpartdb/shared';
 import { createContext } from 'react';
 import { ComparePageContentData } from './types';
 

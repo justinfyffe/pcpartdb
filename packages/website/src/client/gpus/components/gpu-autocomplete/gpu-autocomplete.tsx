@@ -1,5 +1,5 @@
 import { ChevronDownIcon } from '@heroicons/react/24/outline';
-import { Gpu } from '@pcpartdb/shared/gpus';
+import { Gpu } from '@pcpartdb/shared';
 import React, {
   forwardRef,
   useCallback,

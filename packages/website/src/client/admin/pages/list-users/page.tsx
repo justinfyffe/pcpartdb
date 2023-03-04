@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { AdminListUsersViewModel } from '@pcpartdb/shared/view-models';
+import { AdminListUsersViewModel } from '@pcpartdb/shared';
 import { format } from 'date-fns';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';

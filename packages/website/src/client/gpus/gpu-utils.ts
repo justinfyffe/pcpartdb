@@ -5,7 +5,7 @@ import {
   GpuComparison,
   GpuField,
   MarketSegmentValue,
-} from '@pcpartdb/shared/gpus';
+} from '@pcpartdb/shared';
 import {
   BooleanFormatter,
   DateFormatter,

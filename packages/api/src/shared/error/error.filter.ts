@@ -4,7 +4,7 @@ import {
   ExceptionFilter,
   HttpStatus,
 } from '@nestjs/common';
-import { ApiError, HttpErrorType } from '@pcpartdb/shared/error';
+import { ApiError, HttpErrorType } from '@pcpartdb/shared';
 import { getErrorStatusCode, ServerError } from './error-utils';
 
 @Catch()

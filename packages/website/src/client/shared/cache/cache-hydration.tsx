@@ -1,5 +1,4 @@
-import { Gpu } from '@pcpartdb/shared/gpus';
-import { Image } from '@pcpartdb/shared/image';
+import { Gpu, Image } from '@pcpartdb/shared';
 import Script from 'next/script';
 import React, { FunctionComponent } from 'react';
 import { useGpuCache, useImageCache } from '../cache';

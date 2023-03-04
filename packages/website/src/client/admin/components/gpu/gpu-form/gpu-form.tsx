@@ -1,7 +1,7 @@
 import Joi from '@hapi/joi';
 import { joiResolver } from '@hookform/resolvers/joi';
-import { ApiError, ValidationErrorType } from '@pcpartdb/shared/error';
 import {
+  ApiError,
   CreateGpuRequest,
   Gpu,
   GpuBenchmarks,
@@ -16,7 +16,8 @@ import {
   GpuSpecs,
   MarketSegmentValue,
   UpdateGpuRequest,
-} from '@pcpartdb/shared/gpus';
+  ValidationErrorType,
+} from '@pcpartdb/shared';
 import { useRouter } from 'next/router';
 import React, {
   FunctionComponent,

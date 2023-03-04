@@ -14,7 +14,7 @@ import {
   PixelFillRateUnit,
   TextureFillRateUnit,
   WattageUnit,
-} from '@pcpartdb/shared/gpus';
+} from '@pcpartdb/shared';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { format, parse } from 'date-fns';

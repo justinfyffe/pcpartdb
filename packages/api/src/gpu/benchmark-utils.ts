@@ -2,7 +2,7 @@ import {
   CreateGpuRequest,
   GpuBenchmarks,
   UpdateGpuRequest,
-} from '@pcpartdb/shared/gpus';
+} from '@pcpartdb/shared';
 
 export function addPerformanceBenchmarks(
   request: CreateGpuRequest | UpdateGpuRequest,

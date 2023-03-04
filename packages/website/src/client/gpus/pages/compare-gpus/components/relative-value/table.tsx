@@ -1,4 +1,4 @@
-import { Gpu } from '@pcpartdb/shared/gpus';
+import { Gpu } from '@pcpartdb/shared';
 import React, {
   FunctionComponent,
   useCallback,

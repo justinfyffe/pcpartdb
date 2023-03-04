@@ -1,4 +1,4 @@
-import { Gpu } from '@pcpartdb/shared/gpus';
+import { Gpu } from '@pcpartdb/shared';
 import React, { FunctionComponent } from 'react';
 import { getGpuName, getViewGpuSlug } from '../../../gpus';
 import { classNames } from '../../../shared/ui';

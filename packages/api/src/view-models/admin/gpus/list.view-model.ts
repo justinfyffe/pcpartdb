@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { AdminListGpusViewModel } from '@pcpartdb/shared/view-models';
+import { AdminListGpusViewModel } from '@pcpartdb/shared';
 import { GpuService } from '../../../gpu/gpu.service';
 import { Context } from '../../../shared/context';
 

@@ -1,4 +1,4 @@
-import { Gpu, GpuBenchmarks, GpuField, GpuSpecs } from '@pcpartdb/shared/gpus';
+import { Gpu, GpuBenchmarks, GpuField, GpuSpecs } from '@pcpartdb/shared';
 import React, { useContext } from 'react';
 import { formatGpuField } from '../../../../gpus';
 import { Td, Tr } from '../../../../shared/components';

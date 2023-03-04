@@ -1,13 +1,14 @@
 import 'reflect-metadata';
 import Joi from '@hapi/joi';
 import { joiResolver } from '@hookform/resolvers/joi';
-import { ApiError, ValidationErrorType } from '@pcpartdb/shared/error';
 import {
+  ApiError,
   EMAIL_MAX_LENGTH,
+  MetaRobots,
   PASSWORD_MAX_LENGTH,
   PASSWORD_MIN_LENGTH,
-} from '@pcpartdb/shared/user';
-import { MetaRobots } from '@pcpartdb/shared/website';
+  ValidationErrorType,
+} from '@pcpartdb/shared';
 import { useRouter } from 'next/router';
 import React, { useCallback, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';

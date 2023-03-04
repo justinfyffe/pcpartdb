@@ -12,7 +12,7 @@ import {
   RegisterRequest,
   RequestPasswordResetRequest,
   ResetPasswordRequest,
-} from '@pcpartdb/shared/user';
+} from '@pcpartdb/shared';
 import { GuestGuard } from '../auth/guest.guard';
 import { StaffGuard } from '../auth/staff.guard';
 import { ApiRequest } from '../shared/http';

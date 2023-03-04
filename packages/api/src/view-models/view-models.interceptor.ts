@@ -4,7 +4,7 @@ import {
   Injectable,
   NestInterceptor,
 } from '@nestjs/common';
-import { ViewModel } from '@pcpartdb/shared/view-models';
+import { ViewModel } from '@pcpartdb/shared';
 import { map } from 'rxjs';
 import { ApiRequest } from '../shared/http';
 

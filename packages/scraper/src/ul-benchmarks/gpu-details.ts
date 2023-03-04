@@ -3,7 +3,7 @@ import {
   GpuDataSourceKey,
   GpuField,
   ImportGpuDataResponse,
-} from '@pcpartdb/shared/gpus';
+} from '@pcpartdb/shared';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 
