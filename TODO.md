@@ -8,7 +8,6 @@ Workspaces:
 
 Immediate Tasks:
   - Migrate to nestjs
-    - add transactions to api calls
     - handle deployment script
     - TEST
       - Error handling
