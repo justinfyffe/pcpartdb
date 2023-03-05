@@ -2,19 +2,16 @@ import { Injectable, NestMiddleware } from '@nestjs/common';
 import { User } from '@pcpartdb/shared';
 import { NextFunction } from 'express';
 import { AccessTokenRepository } from '../../auth/access-token.repository';
-import { Database } from '../../database';
 import { mapToUserDto } from '../../user/user.mapper';
 import { CookieService, SESSION_COOKIE } from '../cookie';
 import { hashToken } from '../crypto';
 import { ApiRequest, ApiResponse } from '../http';
-import { Context } from './context';
 
 @Injectable()
 export class ContextMiddleware implements NestMiddleware {
   constructor(
     private accessTokenRepository: AccessTokenRepository,
     private cookies: CookieService,
-    private db: Database,
   ) {}
 
   async use(req: ApiRequest, res: ApiResponse, next: NextFunction) {
@@ -26,7 +23,7 @@ export class ContextMiddleware implements NestMiddleware {
       isStaff: user?.isStaff ?? false,
     };
 
-    const context: Context = {
+    req.context = {
       req,
       res,
       user,
@@ -34,12 +31,7 @@ export class ContextMiddleware implements NestMiddleware {
       props,
     };
 
-    req.context = context;
-    await this.db.transaction(async (trx) => {
-      context.trx = trx;
-
-      next();
-    });
+    next();
   }
 
   private async getUser(

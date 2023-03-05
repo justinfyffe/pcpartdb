@@ -10,6 +10,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AccessToken, LoginRequest } from '@pcpartdb/shared';
+import { Database } from '../database';
+import { Context, Ctx } from '../shared/context';
 import { ApiRequest, ApiResponse } from '../shared/http';
 import { validate } from '../shared/types/validate';
 import { AccessTokenService } from './access-token.service';
@@ -19,7 +21,10 @@ import { UserGuard } from './user.guard';
 
 @Controller('access-tokens')
 export class AccessTokenController {
-  constructor(private accessTokenService: AccessTokenService) {}
+  constructor(
+    private db: Database,
+    private accessTokenService: AccessTokenService,
+  ) {}
 
   @Get()
   async checkAuthentication(
@@ -39,16 +44,24 @@ export class AccessTokenController {
 
   @Post()
   @UseGuards(GuestGuard)
-  async login(@Body() body: LoginRequest, @Req() request: ApiRequest) {
-    const ctx = request.context;
-    validate(body, loginRequestValidator);
-    await this.accessTokenService.login(body, ctx);
+  async login(@Body() body: LoginRequest, @Ctx() ctx: Context) {
+    return this.db.transaction(
+      async () => {
+        validate(body, loginRequestValidator);
+        await this.accessTokenService.login(body, ctx);
+      },
+      { ctx },
+    );
   }
 
   @Delete()
   @UseGuards(UserGuard)
-  async logout(@Req() request: ApiRequest) {
-    const ctx = request.context;
-    await this.accessTokenService.logout(ctx);
+  async logout(@Ctx() ctx: Context) {
+    return this.db.transaction(
+      async () => {
+        await this.accessTokenService.logout(ctx);
+      },
+      { ctx },
+    );
   }
 }

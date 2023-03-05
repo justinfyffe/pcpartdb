@@ -1,5 +1,11 @@
 import { INestApplication, Injectable, OnModuleInit } from '@nestjs/common';
 import { Prisma, PrismaClient } from '@prisma/client';
+import { Context } from '../shared/context';
+
+interface TransactionOptions {
+  ctx?: Context;
+  isolationLevel?: Prisma.TransactionIsolationLevel;
+}
 
 @Injectable()
 export class Database extends PrismaClient implements OnModuleInit {
@@ -15,13 +21,17 @@ export class Database extends PrismaClient implements OnModuleInit {
 
   async transaction<T = void>(
     callback: (trx: Prisma.TransactionClient) => Promise<T>,
-    isolationLevel?: Prisma.TransactionIsolationLevel,
+    options?: TransactionOptions,
   ) {
     return await this.$transaction(
       async (trx) => {
+        if (options?.ctx != null) {
+          options.ctx.trx = trx;
+        }
+
         return await callback(trx);
       },
-      { isolationLevel },
+      { isolationLevel: options?.isolationLevel },
     );
   }
 }

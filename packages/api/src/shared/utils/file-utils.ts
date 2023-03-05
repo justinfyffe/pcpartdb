@@ -6,9 +6,11 @@ import { Context } from '../context';
 const CWD_PATH = path.resolve(process.cwd());
 
 const TMP_PATH = path.join(CWD_PATH, 'tmp');
+const WEBSITE_PATH = path.join(CWD_PATH, '../website');
+
 const UPLOADS_PATH = path.join(TMP_PATH, 'uploads');
 const EXPORTS_PATH = path.join(TMP_PATH, 'exports');
-const PUBLIC_IMAGES_PATH = path.join(CWD_PATH, 'public/u/images');
+const PUBLIC_IMAGES_PATH = path.join(WEBSITE_PATH, 'public/u/images');
 
 if (!fs.existsSync(TMP_PATH)) {
   fs.mkdirSync(TMP_PATH, { recursive: true });

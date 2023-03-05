@@ -8,13 +8,8 @@ Workspaces:
 
 Immediate Tasks:
   - Migrate to nestjs
+    - add transactions to api calls
     - handle deployment script
-    - handle uploads
-    - hook up db to app module
-    - Image uploading
-      - Public folder
-    - call view models endpoint from nextjs
-    - call api from nextjs
     - TEST
       - Error handling
       - Image uploading

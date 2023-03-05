@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Param,
-  Post,
-  Put,
-  Req,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Param, Post, Put, UseGuards } from '@nestjs/common';
 import {
   CreateUserRequest,
   RegisterRequest,
@@ -15,7 +7,8 @@ import {
 } from '@pcpartdb/shared';
 import { GuestGuard } from '../auth/guest.guard';
 import { StaffGuard } from '../auth/staff.guard';
-import { ApiRequest } from '../shared/http';
+import { Database } from '../database';
+import { Context, Ctx } from '../shared/context';
 import { validate } from '../shared/types/validate';
 import { UserService } from './user.service';
 import {
@@ -28,14 +21,18 @@ import {
 
 @Controller('users')
 export class UserController {
-  constructor(private userService: UserService) {}
+  constructor(private db: Database, private userService: UserService) {}
 
   @Post()
   @UseGuards(StaffGuard)
-  async create(@Body() body: CreateUserRequest, @Req() req: ApiRequest) {
-    const ctx = req.context;
-    validate(body, createUserRequestValidator);
-    return await this.userService.create(body, ctx);
+  async create(@Body() body: CreateUserRequest, @Ctx() ctx: Context) {
+    return await this.db.transaction(
+      async () => {
+        validate(body, createUserRequestValidator);
+        return await this.userService.create(body, ctx);
+      },
+      { ctx },
+    );
   }
 
   @Put(':id')
@@ -43,42 +40,55 @@ export class UserController {
   async update(
     @Param('id') idStr: string,
     @Body() body: CreateUserRequest,
-    @Req() request: ApiRequest,
+    @Ctx() ctx: Context,
   ) {
-    const id = Number(idStr);
-    const ctx = request.context;
+    return await this.db.transaction(
+      async () => {
+        const id = Number(idStr);
 
-    validate(body, updateUserRequestValidator);
-    return await this.userService.update(id, body, ctx);
+        validate(body, updateUserRequestValidator);
+        return await this.userService.update(id, body, ctx);
+      },
+      { ctx },
+    );
   }
 
   @Post('register')
   @UseGuards(GuestGuard)
-  async register(@Body() body: RegisterRequest, @Req() request: ApiRequest) {
-    const ctx = request.context;
-    validate(body, registerRequestValidator);
-    return await this.userService.create({ ...body, isStaff: false }, ctx);
+  async register(@Body() body: RegisterRequest, @Ctx() ctx: Context) {
+    return await this.db.transaction(
+      async () => {
+        validate(body, registerRequestValidator);
+        return await this.userService.create({ ...body, isStaff: false }, ctx);
+      },
+      { ctx },
+    );
   }
 
   @Post('request-password-reset')
   @UseGuards(GuestGuard)
   async requestPasswordReset(
     @Body() body: RequestPasswordResetRequest,
-    @Req() req: ApiRequest,
+    @Ctx() ctx: Context,
   ) {
-    const ctx = req.context;
-    validate(body, requestPasswordResetRequestValidator);
-    return await this.userService.requestPasswordReset(body, ctx);
+    return await this.db.transaction(
+      async () => {
+        validate(body, requestPasswordResetRequestValidator);
+        return await this.userService.requestPasswordReset(body, ctx);
+      },
+      { ctx },
+    );
   }
 
   @Post('reset-password')
   @UseGuards(GuestGuard)
-  async resetPassword(
-    @Body() body: ResetPasswordRequest,
-    @Req() req: ApiRequest,
-  ) {
-    const ctx = req.context;
-    validate(body, resetPasswordRequestValidator);
-    return await this.userService.resetPassword(body, ctx);
+  async resetPassword(@Body() body: ResetPasswordRequest, @Ctx() ctx: Context) {
+    return await this.db.transaction(
+      async () => {
+        validate(body, resetPasswordRequestValidator);
+        return await this.userService.resetPassword(body, ctx);
+      },
+      { ctx },
+    );
   }
 }

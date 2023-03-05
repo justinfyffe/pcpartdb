@@ -9,10 +9,10 @@ import { map } from 'rxjs';
 import { ApiRequest } from '../shared/http';
 
 @Injectable()
-export class ViewModelsInterceptor implements NestInterceptor {
+export class ViewModelInterceptor implements NestInterceptor {
   constructor() {}
 
-  async intercept(context: ExecutionContext, next: CallHandler) {
+  intercept(context: ExecutionContext, next: CallHandler) {
     const request = context.switchToHttp().getRequest() as ApiRequest;
     return next.handle().pipe(
       map((value) => {

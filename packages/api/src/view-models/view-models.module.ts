@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { DatabaseModule } from '../database';
 import { GpuModule } from '../gpu/gpu.module';
 import { ImageModule } from '../image/image.module';
 import { UserModule } from '../user/user.module';
@@ -15,7 +16,7 @@ import { HomeViewModelService } from './home/home.view-model';
 import { ViewModelsController } from './view-models.controller';
 
 @Module({
-  imports: [GpuModule, ImageModule, UserModule],
+  imports: [DatabaseModule, GpuModule, ImageModule, UserModule],
   controllers: [ViewModelsController],
   providers: [
     AdminEditGpuViewModelService,

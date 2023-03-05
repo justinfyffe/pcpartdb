@@ -6,12 +6,12 @@ import {
   Param,
   Post,
   Put,
-  Req,
   UseGuards,
 } from '@nestjs/common';
 import { CreateImageRequest, UpdateImageRequest } from '@pcpartdb/shared';
 import { StaffGuard } from '../auth/staff.guard';
-import { ApiRequest } from '../shared/http';
+import { Database } from '../database';
+import { Context, Ctx } from '../shared/context';
 import * as fileUtils from '../shared/utils';
 import { ImageService } from './image.service';
 
@@ -29,49 +29,65 @@ interface UpdateImageBody {
 
 @Controller('images')
 export class ImageController {
-  constructor(private imageService: ImageService) {}
+  constructor(private db: Database, private imageService: ImageService) {}
 
   @Get()
   @UseGuards(StaffGuard)
-  async list(@Req() request: ApiRequest) {
-    const ctx = request.context;
-    return await this.imageService.list(ctx);
+  async list(@Ctx() ctx: Context) {
+    return await this.db.transaction(
+      async () => {
+        return await this.imageService.list(ctx);
+      },
+      { ctx },
+    );
   }
 
   @Post()
   @UseGuards(StaffGuard)
-  async create(@Body() body: CreateImageBody, @Req() request: ApiRequest) {
-    const ctx = request.context;
-    await fileUtils.uploadFile('file', ctx);
+  async create(@Body() body: CreateImageBody, @Ctx() ctx: Context) {
+    return await this.db.transaction(
+      async () => {
+        await fileUtils.uploadFile('file', ctx);
 
-    const data = JSON.parse(body.formData) as CreateImageRequest;
-    const tempPath = body.tempPath;
+        const data = JSON.parse(body.formData) as CreateImageRequest;
+        const tempPath = body.tempPath;
 
-    return await this.imageService.create({ ...data, tempPath }, ctx);
+        return await this.imageService.create({ ...data, tempPath }, ctx);
+      },
+      { ctx },
+    );
   }
 
   @Put(':id')
   async update(
     @Param('id') idStr: string,
     @Body() body: UpdateImageBody,
-    @Req() request: ApiRequest,
+    @Ctx() ctx: Context,
   ) {
-    const id = Number(idStr);
-    const ctx = request.context;
+    return await this.db.transaction(
+      async () => {
+        const id = Number(idStr);
 
-    await fileUtils.uploadFile('file', ctx);
+        await fileUtils.uploadFile('file', ctx);
 
-    const data = JSON.parse(body.formData) as UpdateImageRequest;
-    const tempPath = body.tempPath;
+        const data = JSON.parse(body.formData) as UpdateImageRequest;
+        const tempPath = body.tempPath;
 
-    return await this.imageService.update(id, { ...data, tempPath }, ctx);
+        return await this.imageService.update(id, { ...data, tempPath }, ctx);
+      },
+      { ctx },
+    );
   }
 
   @Delete(':id')
-  async delete(@Param('id') idStr: string, @Req() request: ApiRequest) {
-    const id = Number(idStr);
-    const ctx = request.context;
+  async delete(@Param('id') idStr: string, @Ctx() ctx: Context) {
+    return await this.db.transaction(
+      async () => {
+        const id = Number(idStr);
 
-    return await this.imageService.delete(id, ctx);
+        return await this.imageService.delete(id, ctx);
+      },
+      { ctx },
+    );
   }
 }

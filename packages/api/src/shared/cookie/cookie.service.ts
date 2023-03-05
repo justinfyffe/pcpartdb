@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { Request, Response } from 'express';
 import { Context } from '../context';
+import { ApiRequest } from '../http';
 
 interface CookieOptions {
   expires?: number;
@@ -8,7 +8,7 @@ interface CookieOptions {
 
 @Injectable()
 export class CookieService {
-  get(request: Request, name: string) {
+  get(request: ApiRequest, name: string) {
     return request['cookies'][name];
   }
 
