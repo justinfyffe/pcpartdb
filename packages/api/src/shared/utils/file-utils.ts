@@ -1,7 +1,6 @@
 import * as fs from 'fs';
 import multer, { diskStorage } from 'multer';
 import path from 'path';
-import { Context } from '../context';
 
 const CWD_PATH = path.resolve(process.cwd());
 
@@ -25,7 +24,7 @@ if (!fs.existsSync(PUBLIC_IMAGES_PATH)) {
   fs.mkdirSync(PUBLIC_IMAGES_PATH, { recursive: true });
 }
 
-const multerOptions: multer.Options = {
+export const MULTER_OPTIONS: multer.Options = {
   storage: diskStorage({
     destination: uploadsPath(),
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -36,21 +35,6 @@ const multerOptions: multer.Options = {
     },
   }),
 };
-const uploader = multer(multerOptions);
-
-export function uploadFile(field: string, ctx: Context) {
-  return new Promise((resolve, reject) => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    uploader.single(field)(ctx.req as any, ctx.res as any, async (err) => {
-      if (err) {
-        reject();
-        return;
-      }
-
-      resolve(null);
-    });
-  });
-}
 
 export function tmpPath(file?: string) {
   return file != null ? path.join(TMP_PATH, file) : TMP_PATH;

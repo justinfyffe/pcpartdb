@@ -11,18 +11,13 @@ Immediate Tasks:
     - handle deployment script
       - npm pack
     - TEST
-      - Error handling
-      - Image uploading
-      - Adding data
-      - Updating data
-      - Deleting data
       - Creating Account
-      - Signing In
-      - Auth guards
-      - Home Page
-      - View Page
-      - Compare Page
       - List Page
+        - this is very buggy overall
+        - fix bugs with custom lists and reloading
+        - bug when modifying after preset
+      - forget password
+      - reset password
   - Make separate project for tools? Or setup lerna? or setup npm workspace? Or not bother
     - Can exclude out of deployment
     - Can include heavier dependencies

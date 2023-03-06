@@ -8,6 +8,8 @@ import {
   gpuSpecsValidator,
 } from '@pcpartdb/shared';
 
+export const gpuPresetsValidator = Joi.string();
+
 export const gpusFilterValidator = Joi.object({
   company: Joi.array().items(Joi.string()).allow('', null),
 
@@ -29,12 +31,13 @@ export const gpusOrderByValidator = Joi.object({
 });
 
 export const gpusQueryValidator = Joi.object({
+  preset: gpuPresetsValidator.allow(null),
   filter: gpusFilterValidator.allow(null),
   orderBy: gpusOrderByValidator.allow(null),
 });
 
 export const listGpusRequestValidator = Joi.object({
-  query: gpusQueryValidator,
+  query: gpusQueryValidator.allow(null),
 }).options({ abortEarly: false });
 
 export const createGpuRequestValidator = Joi.object({

@@ -2,6 +2,7 @@
 DIRECTORY=$(cd `dirname $0` && pwd)
 cd $DIRECTORY/../
 
+npm run clean
 npm run build
 
 TMP_BUILD_DIR="./tmp/build"
