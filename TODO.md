@@ -7,6 +7,8 @@ Workspaces:
 - website
 
 Immediate Tasks:
+  - Prod deployment:
+    - Update .env file with API details
   - Migrate to nestjs
     - test deployment script
     - TEST
