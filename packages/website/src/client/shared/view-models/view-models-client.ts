@@ -9,7 +9,12 @@ export class ViewModelsClient {
   constructor(private axios: AxiosInstance, private baseUrl: string) {}
 
   async get<T = unknown>(path: string, config?: AxiosRequestConfig) {
-    return await this.request<T>('GET', path, undefined, config);
+    try {
+      const result = await this.request<T>('GET', path, undefined, config);
+      return { props: result };
+    } catch (error) {
+      return { props: { error } };
+    }
   }
 
   private async request<T = unknown>(
@@ -29,7 +34,6 @@ export class ViewModelsClient {
       return response?.data;
     } catch (err) {
       if (err instanceof AxiosError) {
-        console.error(err.response?.data);
         throw err.response?.data;
       } else {
         throw err;

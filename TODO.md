@@ -9,6 +9,7 @@ Workspaces:
 Immediate Tasks:
   - Migrate to nestjs
     - handle deployment script
+      - npm pack
     - TEST
       - Error handling
       - Image uploading

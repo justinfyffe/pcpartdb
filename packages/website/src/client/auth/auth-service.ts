@@ -4,6 +4,10 @@ import { ApiClient, apiClient } from '../shared/api';
 export class AuthService {
   constructor(private api: ApiClient) {}
 
+  async checkAuthentication() {
+    return await this.api.get<AccessToken>('access-tokens');
+  }
+
   async login(data: LoginRequest) {
     return await this.api.post<AccessToken>('access-tokens', data);
   }

@@ -1,6 +1,4 @@
-import { NextPageContext } from 'next';
 import { AdminOverviewPage } from '../../client/admin/pages';
+import { withStaffGuard } from '../../client/shared/guards';
 
-export async function getServerSideProps(_ctx: NextPageContext) {}
-
-export default AdminOverviewPage;
+export default withStaffGuard(AdminOverviewPage);

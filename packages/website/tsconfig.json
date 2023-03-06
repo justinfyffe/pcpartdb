@@ -6,6 +6,5 @@
     "noEmit": true,
   },
   "include": ["./**/*.ts", "./**/*.tsx", "./next-env.d.ts"],
-  "exclude": [".next"],
   "references": [{ "path": "../shared" }]
 }

@@ -1,11 +1,4 @@
-import {
-  Controller,
-  Get,
-  Param,
-  Query,
-  UseGuards,
-  UseInterceptors,
-} from '@nestjs/common';
+import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
 import { StaffGuard } from '../auth/staff.guard';
 import { Database } from '../database';
 import { Context, Ctx } from '../shared/context';
@@ -19,10 +12,8 @@ import { CompareGpusViewModelService } from './gpus/compare.view-model';
 import { ListGpusViewModelService } from './gpus/list.view-model';
 import { ViewGpuViewModelService } from './gpus/view.view-model';
 import { HomeViewModelService } from './home/home.view-model';
-import { ViewModelInterceptor } from './view-model.interceptor';
 
 @Controller('view-models')
-@UseInterceptors(ViewModelInterceptor)
 export class ViewModelsController {
   constructor(
     private db: Database,

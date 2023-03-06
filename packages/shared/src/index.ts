@@ -1,4 +1,5 @@
 export * from './auth';
+export * from './config';
 export * from './error';
 export * from './gpus';
 export * from './image';

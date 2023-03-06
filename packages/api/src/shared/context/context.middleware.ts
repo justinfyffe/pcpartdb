@@ -1,5 +1,5 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
-import { User } from '@pcpartdb/shared';
+import { Config, User } from '@pcpartdb/shared';
 import { NextFunction } from 'express';
 import { AccessTokenRepository } from '../../auth/access-token.repository';
 import { mapToUserDto } from '../../user/user.mapper';
@@ -17,10 +17,11 @@ export class ContextMiddleware implements NestMiddleware {
   async use(req: ApiRequest, res: ApiResponse, next: NextFunction) {
     const { user, token } = await this.getUser(req);
 
-    const props = {
+    const config: Config = {
       enableGoogleAnalytics: process.env.ENABLE_GOOGLE_ANALYTICS === 'true',
       googleAnalyticsId: process.env.GOOGLE_ANALYTICS_ID,
       isStaff: user?.isStaff ?? false,
+      user,
     };
 
     req.context = {
@@ -28,7 +29,7 @@ export class ContextMiddleware implements NestMiddleware {
       res,
       user,
       token,
-      props,
+      config,
     };
 
     next();

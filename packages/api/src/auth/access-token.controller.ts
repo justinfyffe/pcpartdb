@@ -5,14 +5,13 @@ import {
   Get,
   HttpStatus,
   Post,
-  Req,
   Res,
   UseGuards,
 } from '@nestjs/common';
 import { AccessToken, LoginRequest } from '@pcpartdb/shared';
 import { Database } from '../database';
 import { Context, Ctx } from '../shared/context';
-import { ApiRequest, ApiResponse } from '../shared/http';
+import { ApiResponse } from '../shared/http';
 import { validate } from '../shared/types/validate';
 import { AccessTokenService } from './access-token.service';
 import { loginRequestValidator } from './access-token.validators';
@@ -27,11 +26,7 @@ export class AccessTokenController {
   ) {}
 
   @Get()
-  async checkAuthentication(
-    @Req() request: ApiRequest,
-    @Res() response: ApiResponse,
-  ) {
-    const ctx = request.context;
+  async checkAuthentication(@Res() response: ApiResponse, @Ctx() ctx: Context) {
     if (ctx.token && ctx.user) {
       return response.status(HttpStatus.OK).send({
         token: ctx.token,

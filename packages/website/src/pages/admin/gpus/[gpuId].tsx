@@ -1,4 +1,5 @@
 import { NextPageContext } from 'next';
+import { withStaffGuard } from 'packages/website/src/client/shared/guards';
 import { AdminEditGpuPage } from '../../../client/admin/pages';
 import { viewModelsClient } from '../../../client/shared/view-models';
 
@@ -8,4 +9,4 @@ export async function getServerSideProps(ctx: NextPageContext) {
   return await viewModelsClient.get(`admin/gpus/edit/${gpuId}`);
 }
 
-export default AdminEditGpuPage;
+export default withStaffGuard(AdminEditGpuPage);

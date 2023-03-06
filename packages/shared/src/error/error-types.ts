@@ -16,7 +16,6 @@ export interface ApiError<T = unknown> {
   statusCode: number;
   timestamp: string;
   data?: T;
-  stack?: string;
 }
 
 export interface BadRequestError

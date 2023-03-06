@@ -1,6 +1,4 @@
-import { NextPageContext } from 'next';
 import { ForgotPasswordPage } from '../client/auth/pages';
+import { withGuestGuard } from '../client/shared/guards';
 
-export async function getServerSideProps(_ctx: NextPageContext) {}
-
-export default ForgotPasswordPage;
+export default withGuestGuard(ForgotPasswordPage);

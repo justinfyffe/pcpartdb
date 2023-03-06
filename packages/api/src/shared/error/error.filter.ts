@@ -2,6 +2,7 @@ import {
   ArgumentsHost,
   Catch,
   ExceptionFilter,
+  ForbiddenException,
   HttpStatus,
 } from '@nestjs/common';
 import { ApiError, HttpErrorType } from '@pcpartdb/shared';
@@ -22,7 +23,12 @@ export class AllExceptionsFilter implements ExceptionFilter {
         statusCode: getErrorStatusCode(e.type),
         timestamp: new Date().toISOString(),
         data: e?.data,
-        stack: e.stack,
+      } as ApiError);
+    } else if (e instanceof ForbiddenException) {
+      response.status(status).json({
+        type: HttpErrorType.ForbiddenError,
+        statusCode: getErrorStatusCode(HttpErrorType.ForbiddenError),
+        timestamp: new Date().toISOString(),
       } as ApiError);
     } else {
       response
