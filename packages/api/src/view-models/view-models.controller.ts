@@ -1,4 +1,5 @@
 import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
+import { ListGpusRequest } from '@pcpartdb/shared';
 import { StaffGuard } from '../auth/staff.guard';
 import { Database } from '../database';
 import { Context, Ctx } from '../shared/context';
@@ -101,9 +102,12 @@ export class ViewModelsController {
   }
 
   @Get('gpus/list')
-  async listGpus(@Query() query: Record<string, string>, @Ctx() ctx: Context) {
+  async listGpus(@Query('q') q: string, @Ctx() ctx: Context) {
     return await this.db.transaction(
-      () => this.listGpusViewModelService.viewModel(query, ctx),
+      async () => {
+        const data = JSON.parse(q) as ListGpusRequest;
+        return await this.listGpusViewModelService.viewModel(data, ctx);
+      },
       { ctx },
     );
   }

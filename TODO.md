@@ -8,14 +8,9 @@ Workspaces:
 
 Immediate Tasks:
   - Migrate to nestjs
-    - handle deployment script
-      - npm pack
+    - test deployment script
     - TEST
       - Creating Account
-      - List Page
-        - this is very buggy overall
-        - fix bugs with custom lists and reloading
-        - bug when modifying after preset
       - forget password
       - reset password
   - Make separate project for tools? Or setup lerna? or setup npm workspace? Or not bother

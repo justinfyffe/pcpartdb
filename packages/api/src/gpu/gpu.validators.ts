@@ -31,7 +31,6 @@ export const gpusOrderByValidator = Joi.object({
 });
 
 export const gpusQueryValidator = Joi.object({
-  preset: gpuPresetsValidator.allow(null),
   filter: gpusFilterValidator.allow(null),
   orderBy: gpusOrderByValidator.allow(null),
 });

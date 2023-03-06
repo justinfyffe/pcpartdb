@@ -1,5 +1,4 @@
 import Joi from '@hapi/joi';
-import { ListPresetSlug } from '../view-models';
 import { GpuBenchmarks } from './gpu-benchmark-types';
 import { GpuField } from './gpu-field-types';
 import { GpuImages } from './gpu-image-types';
