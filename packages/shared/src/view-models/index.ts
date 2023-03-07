@@ -1,3 +1,4 @@
+export * from './auth';
 export * from './gpus';
 export * from './home';
 export * from './images';

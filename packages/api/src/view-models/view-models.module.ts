@@ -9,6 +9,7 @@ import { AdminEditImageViewModelService } from './admin/images/edit.view-model';
 import { AdminListImagesViewModelService } from './admin/images/list.view-model';
 import { AdminEditUserViewModelService } from './admin/users/edit.view-model';
 import { AdminListUsersViewModelService } from './admin/users/list.view-model';
+import { RegisterViewModelService } from './auth/register.view-model';
 import { CompareGpusViewModelService } from './gpus/compare.view-model';
 import { ListGpusViewModelService } from './gpus/list.view-model';
 import { ViewGpuViewModelService } from './gpus/view.view-model';
@@ -28,6 +29,7 @@ import { ViewModelsController } from './view-models.controller';
     CompareGpusViewModelService,
     ListGpusViewModelService,
     ViewGpuViewModelService,
+    RegisterViewModelService,
     HomeViewModelService,
   ],
 })

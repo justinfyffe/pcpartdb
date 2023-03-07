@@ -9,10 +9,9 @@ Workspaces:
 Immediate Tasks:
   - Prod deployment:
     - Update .env file with API details
+    - add symlink .env file to api and website
   - Migrate to nestjs
-    - test deployment script
     - TEST
-      - Creating Account
       - forget password
       - reset password
   - Make separate project for tools? Or setup lerna? or setup npm workspace? Or not bother

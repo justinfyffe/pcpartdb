@@ -3,4 +3,4 @@ DIRECTORY=$(cd `dirname $0` && pwd)
 cd $DIRECTORY/../../
 
 npm run api db:migrate
-npm run api db:generate:client
+npm run api db:client

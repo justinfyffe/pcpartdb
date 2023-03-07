@@ -9,6 +9,7 @@ import { AdminEditImageViewModelService } from './admin/images/edit.view-model';
 import { AdminListImagesViewModelService } from './admin/images/list.view-model';
 import { AdminEditUserViewModelService } from './admin/users/edit.view-model';
 import { AdminListUsersViewModelService } from './admin/users/list.view-model';
+import { RegisterViewModelService } from './auth/register.view-model';
 import { CompareGpusViewModelService } from './gpus/compare.view-model';
 import { ListGpusViewModelService } from './gpus/list.view-model';
 import { ViewGpuViewModelService } from './gpus/view.view-model';
@@ -27,6 +28,7 @@ export class ViewModelsController {
     private compareGpusViewModelService: CompareGpusViewModelService,
     private listGpusViewModelService: ListGpusViewModelService,
     private viewGpuViewModelService: ViewGpuViewModelService,
+    private registerViewModelService: RegisterViewModelService,
     private homeViewModelService: HomeViewModelService,
   ) {}
 
@@ -116,6 +118,14 @@ export class ViewModelsController {
   async viewGpu(@Param('slug') slug: string, @Ctx() ctx: Context) {
     return await this.db.transaction(
       () => this.viewGpuViewModelService.viewModel(slug, ctx),
+      { ctx },
+    );
+  }
+
+  @Get('register')
+  async register(@Ctx() ctx: Context) {
+    return await this.db.transaction(
+      () => this.registerViewModelService.viewModel(ctx),
       { ctx },
     );
   }
