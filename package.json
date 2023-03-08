@@ -10,7 +10,9 @@
     "api": "npm --workspace=@pcpartdb/api run",
     "scraper": "npm --workspace=@pcpartdb/scraper run",
     "shared": "npm --workspace=@pcpartdb/shared run",
-    "website": "npm --workspace=@pcpartdb/website run"
+    "website": "npm --workspace=@pcpartdb/website run",
+    "prod:api": "npm run api start",
+    "prod:website": "npm run website start"
   },
   "repository": {
     "type": "git",

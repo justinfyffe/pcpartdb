@@ -4,7 +4,7 @@ cd $DIRECTORY/../
 
 # Build project
 npm run clean
-npm run build
+# npm run build
 
 # Setup builds directory
 rm -rf ./builds
@@ -16,7 +16,7 @@ rm -rf $TMP_BUILD_DIR
 mkdir -p $TMP_BUILD_DIR
 
 # Copy folders
-
+cp -r ./server $TMP_BUILD_DIR
 cp -r ./bin $TMP_BUILD_DIR
 cp -r ./packages $TMP_BUILD_DIR
 cp -r ./node_modules $TMP_BUILD_DIR
@@ -25,6 +25,8 @@ cp -r ./node_modules $TMP_BUILD_DIR
 cp ./package.json $TMP_BUILD_DIR
 cp ./package-lock.json $TMP_BUILD_DIR
 cp ./.env.sample $TMP_BUILD_DIR
+cp ./tsconfig.base.json $TMP_BUILD_DIR
+cp ./tsconfig.json $TMP_BUILD_DIR
 
 # Remove upload files
 rm -rf $TMP_BUILD_DIR/packages/website/public/u
