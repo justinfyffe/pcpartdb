@@ -2,4 +2,7 @@
 DIRECTORY=$(cd `dirname $0` && pwd)
 cd $DIRECTORY/../../
 
-NODE_ENV=production pm2 start npm --node-args="--gc_interval=100" --name pcpartdb -- run start
+pm2 stop all
+
+NODE_ENV=production pm2 start npm --node-args="--gc_interval=100" --name "pcpartdb-api" -- run "api start"
+NODE_ENV=production pm2 start npm --node-args="--gc_interval=100" --name "pcpartdb-website" -- run "website start"

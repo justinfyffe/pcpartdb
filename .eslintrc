@@ -66,7 +66,7 @@
     "import/resolver": {
       "typescript": {
         "alwaysTryTypes": true,
-        "project": ["./tsconfig.json", "./tsconfig.migrations.json"]
+        "project": ["./tsconfig.json", "./packages/*/tsconfig.json"]
       }
     },
     "react": {

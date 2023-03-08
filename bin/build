@@ -2,34 +2,33 @@
 DIRECTORY=$(cd `dirname $0` && pwd)
 cd $DIRECTORY/../
 
+# Build project
+npm run clean
 npm run build
 
-TMP_BUILD_DIR="./tmp/build"
-
+# Setup builds directory
 rm -rf ./builds
 mkdir -p ./builds
 
+# Setup temp build directory
+TMP_BUILD_DIR="./tmp/build"
 rm -rf $TMP_BUILD_DIR
 mkdir -p $TMP_BUILD_DIR
 
 # Copy folders
-cp -r ./.next $TMP_BUILD_DIR
+
 cp -r ./bin $TMP_BUILD_DIR
-cp -r ./dist $TMP_BUILD_DIR
+cp -r ./packages $TMP_BUILD_DIR
 cp -r ./node_modules $TMP_BUILD_DIR
-cp -r ./dist $TMP_BUILD_DIR
-cp -r ./public $TMP_BUILD_DIR
-cp -r ./server $TMP_BUILD_DIR
-cp -r ./prisma $TMP_BUILD_DIR
 
 # Copy files
 cp ./package.json $TMP_BUILD_DIR
 cp ./package-lock.json $TMP_BUILD_DIR
-cp ./next.config.js $TMP_BUILD_DIR
 cp ./.env.sample $TMP_BUILD_DIR
 
 # Remove upload files
-rm -rf $TMP_BUILD_DIR/public/u
+rm -rf $TMP_BUILD_DIR/packages/website/public/u
 
 cd $TMP_BUILD_DIR
 tar -cpzf ../../builds/pcpartdb.tar.gz .
+rm -rf $TMP_BUILD_DIR

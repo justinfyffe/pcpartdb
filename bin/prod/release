@@ -8,9 +8,15 @@ cd $DIRECTORY/../../
 # Extract files
 tar xf ../releases/pcpartdb/pcpartdb.tar.gz .
 
+# Setup Symlinks
+cd packages/api
+ln -s ../../.env .env
+cd ../website
+ln -s ../../.env .env
+cd ../..
+
 # Migrate the database
 ./bin/prod/migrate
 
 # Restart server
 ./bin/prod/restart
-

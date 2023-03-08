@@ -1,0 +1,21 @@
+{
+  "name": "@pcpartdb/shared",
+  "private": "true",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "clean": "rm -rf ./dist && rm -f tsconfig.tsbuildinfo",
+    "build": "tsc"
+  },
+  "author": "Justin Fyffe <test@example.com>",
+  "license": "UNLICENSED",
+  "homepage": "https://pcpartdb.com",
+  "devDependencies": {
+    "@types/hapi__joi": "^17.1.8",
+    "@types/node": "^17.0.36"
+  },
+  "dependencies": {
+    "@hapi/joi": "^17.1.1"
+  }
+}

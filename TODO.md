@@ -1,7 +1,21 @@
 ~: Maybe done, but need to test
 X: Done and tested
 
+Workspaces:
+- scraper
+- database (prisma, migrations)
+- website
+
 Immediate Tasks:
+  - Prod deployment:
+    - Update .env file with API details
+    - add symlink .env file to api and website
+    - manually handle release
+  - improve security for resetting password
+    - Store tokens in database, don't use jwt
+    - delete token after being used
+  - improve autocomplete sorting
+    - show more recent gpus
   - Make separate project for tools? Or setup lerna? or setup npm workspace? Or not bother
     - Can exclude out of deployment
     - Can include heavier dependencies
