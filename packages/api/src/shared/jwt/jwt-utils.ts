@@ -30,6 +30,6 @@ export function verifyJwt(type: JwtType, token: string) {
   }
 }
 
-export function decodeJwt<T = unknown>(token: string) {
-  return jwt.decode(token) as T;
+export function decodeJwt<T = unknown>(type: JwtType, token: string) {
+  return jwt.verify(token, getSecret(type)) as T;
 }
