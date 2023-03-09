@@ -4,5 +4,10 @@ cd $DIRECTORY/../../
 
 pm2 stop all
 
+<<<<<<< HEAD
 NODE_ENV=production pm2 start npm --node-args="--gc_interval=100" --name "pcpartdb-api" -- run "api start"
 NODE_ENV=production pm2 start npm --node-args="--gc_interval=100" --name "pcpartdb-website" -- run "website start"
+=======
+NODE_ENV=production pm2 start npm --node-args="--gc_interval=100" --name "pcpartdb-api" -- run "prod:api"
+NODE_ENV=production pm2 start npm --node-args="--gc_interval=100" --name "pcpartdb-website" -- run "prod:website"
+>>>>>>> workspaces
