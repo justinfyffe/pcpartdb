@@ -54,7 +54,6 @@ export class ImageController {
     @Body() body: CreateImageBody,
     @Ctx() ctx: Context,
   ) {
-    console.log(file);
     return await this.db.transaction(
       async () => {
         // await fileUtils.uploadFile('file', ctx);

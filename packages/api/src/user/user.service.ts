@@ -153,7 +153,7 @@ export class UserService {
       throw badRequestError({ property: 'token', constraint: 'invalidToken' });
     }
 
-    const { id } = decodeJwt<{ id: number }>(data.token);
+    const { id } = decodeJwt<{ id: number }>(JwtType.ResetPassword, data.token);
     const user = await this.userRepository.findById(id, ctx);
     if (user == null) {
       throw notFoundError({ user: id });

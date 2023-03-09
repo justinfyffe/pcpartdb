@@ -7,14 +7,13 @@ Workspaces:
 - website
 
 Immediate Tasks:
+<<<<<<< HEAD
   - Deployment bug
     - For some reason, port for dev api is being included
       - Need to replace 3001 with 3011 in the .next/routes-manifest file
-      - check if production when building next
-  - Migrate to nestjs
-    - TEST
-      - forget password
-      - reset password
+      - check if production when building
+  - improve autocomplete sorting
+    - show more recent gpus
   - Make separate project for tools? Or setup lerna? or setup npm workspace? Or not bother
     - Can exclude out of deployment
     - Can include heavier dependencies

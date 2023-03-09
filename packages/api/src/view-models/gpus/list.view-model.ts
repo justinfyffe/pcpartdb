@@ -14,7 +14,6 @@ export class ListGpusViewModelService {
   constructor(private gpuService: GpuService) {}
 
   async viewModel(request: ListGpusRequest, ctx: Context) {
-    console.log(request);
     validate(request, listGpusRequestValidator);
 
     const { query } = request;
