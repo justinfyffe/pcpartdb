@@ -135,7 +135,7 @@ export const PerformanceTable: FunctionComponent<PerformanceTableProps> = (
           </Tr>
         </THead>
         <TBody>
-          {gpus.map((gpu) =>
+          {gpus.map((gpu, i) =>
             gpu != null ? (
               <CustomRow
                 key={gpu.id}
@@ -155,7 +155,7 @@ export const PerformanceTable: FunctionComponent<PerformanceTableProps> = (
                 </CustomRowValue>
               </CustomRow>
             ) : (
-              <Tr>
+              <Tr key={`idx-${i}`}>
                 <Td colSpan={3} className="text-center">
                   &#8230;
                 </Td>
