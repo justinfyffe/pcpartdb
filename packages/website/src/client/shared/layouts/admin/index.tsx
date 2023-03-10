@@ -47,10 +47,10 @@ export const AdminLayout: FunctionComponent<AdminLayoutProps> = (props) => {
         </ToolbarNav>
       </Toolbar>
 
-      <div className="bg-white">
+      <div className="bg-html">
         <main
           className={classNames(
-            'container flex gap-4 px-4 py-4 w-full',
+            'bg-content container flex gap-4 px-4 py-4 w-full',
             props.className,
           )}
         >

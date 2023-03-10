@@ -102,7 +102,7 @@ module.exports = {
         content: '#ffffff',
         'disabled-input': '#eeeeee',
         footer: '#312e81',
-        html: '#312e81',
+        html: '#efefef', //'#312e81',
         'mouse-hover': '#fafafa',
         toolbar: '#312e81',
       },

@@ -27,14 +27,11 @@ export const Toolbar: FunctionComponent<ToolbarProps> = (props) => {
 
   return (
     <Element
-      className={classNames(
-        'bg-toolbar block static text-toolbar',
-        props.className,
-      )}
+      className={classNames('block static text-toolbar', props.className)}
     >
       <div
         className={classNames(
-          'container flex h-16 items-center justify-between px-4',
+          'bg-toolbar container flex h-16 items-center justify-between px-4',
         )}
       >
         {props.children}

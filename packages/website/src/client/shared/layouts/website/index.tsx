@@ -42,10 +42,10 @@ export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
         </ToolbarNav>
       </Toolbar>
 
-      <div className="bg-white">
+      <div className="bg-html">
         <main
           className={classNames(
-            'container px-4 py-4 text-content w-full',
+            'bg-content container px-4 py-4 text-content w-full',
             props.className,
           )}
         >
