@@ -2,7 +2,6 @@ import * as fs from 'fs';
 import path from 'path';
 
 const CWD_PATH = path.resolve(process.cwd());
-
 const DATA_PATH = path.join(CWD_PATH, 'data');
 
 if (!fs.existsSync(DATA_PATH)) {

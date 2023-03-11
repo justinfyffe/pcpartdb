@@ -1,8 +1,10 @@
+import { VideocardBenchmarksGpuUrl } from '@pcpartdb/scraper';
 import { MarketSegmentValue } from '@pcpartdb/shared';
 import * as fs from 'fs';
 import * as fsPromises from 'fs/promises';
+import { videocardBenchmarksDataPath } from './utils';
 
-interface RawGpu {
+interface RawGpuUrl {
   id: string;
   name: string;
   price: string;
@@ -21,18 +23,12 @@ interface RawGpu {
   output: boolean;
 }
 
-export interface VideocardBenchmarksUrlData {
-  name: string;
-  marketSegment: MarketSegmentValue;
-  g3dMark: number;
-  g2dMark: number;
-  url: string;
-}
+const URL = 'https://www.videocardbenchmark.net/gpu.php?gpu={name}&id={id}';
 
-export async function sanitizeVideocardBenchmarksRawGpus(
-  inputFile: string,
-  outputFile: string,
-) {
+export async function sanitizeVideocardBenchmarksGpuUrls() {
+  const inputFile = videocardBenchmarksDataPath('raw-gpu-urls.json');
+  const outputFile = videocardBenchmarksDataPath('gpu-urls.json');
+
   if (!fs.existsSync(inputFile)) {
     throw new Error(
       'Missing Input File. Try downloading the data from https://www.videocardbenchmark.net/GPU_mega_page.html',
@@ -40,7 +36,7 @@ export async function sanitizeVideocardBenchmarksRawGpus(
   }
 
   const jsonString = await fsPromises.readFile(inputFile, 'utf-8');
-  const rawGpus: RawGpu[] = JSON.parse(jsonString);
+  const rawGpus: RawGpuUrl[] = JSON.parse(jsonString);
 
   const gpus = rawGpus.map(sanitize).filter((gpu) => gpu != null);
 
@@ -53,7 +49,7 @@ export async function sanitizeVideocardBenchmarksRawGpus(
   return gpus;
 }
 
-function sanitize(gpu: RawGpu): VideocardBenchmarksUrlData {
+function sanitize(gpu: RawGpuUrl): VideocardBenchmarksGpuUrl {
   const name = gpu.name;
   const marketSegment = getMarketSegment(gpu);
   const g3dMark = getG3dMark(gpu);
@@ -72,15 +68,14 @@ function sanitize(gpu: RawGpu): VideocardBenchmarksUrlData {
   return { name, url, marketSegment, g3dMark, g2dMark };
 }
 
-function getUrl(gpu: RawGpu) {
-  const url = 'https://www.videocardbenchmark.net/gpu.php?gpu={name}&id={id}';
-
-  return url
-    .replace('{name}', gpu.name.replace(' ', '+'))
-    .replace('{id}', gpu.id);
+function getUrl(gpu: RawGpuUrl) {
+  return URL.replace('{name}', gpu.name.replace(' ', '+')).replace(
+    '{id}',
+    gpu.id,
+  );
 }
 
-function getMarketSegment(gpu: RawGpu) {
+function getMarketSegment(gpu: RawGpuUrl) {
   const category = gpu.cat.split(', ');
   if (category.length === 0) {
     return null;
@@ -98,14 +93,14 @@ function getMarketSegment(gpu: RawGpu) {
   }
 }
 
-function getG3dMark(gpu: RawGpu) {
+function getG3dMark(gpu: RawGpuUrl) {
   const cleanG3d = gpu.g3d.replace(',', '');
   const value = Number(cleanG3d);
 
   return Number.isNaN(value) ? null : value;
 }
 
-function getG2dMark(gpu: RawGpu) {
+function getG2dMark(gpu: RawGpuUrl) {
   const cleanG2d = gpu.g2d.replace(',', '');
   const value = Number(cleanG2d);
 

@@ -46,4 +46,4 @@ yarn.lock
 **/public/u
 
 # Scraping data
-packages/tools/data
+packages/cli/data
