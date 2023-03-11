@@ -13,9 +13,6 @@ pids
 results
 tmp
 
-# Build
-public/css/main.css
-
 # Coverage reports
 coverage
 
@@ -46,4 +43,7 @@ dist
 yarn.lock
 
 # Ignore uploaded and exported files
-public/u
+**/public/u
+
+# Scraping data
+packages/scraper/data
