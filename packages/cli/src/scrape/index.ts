@@ -1,10 +1,14 @@
 import { importFromTechPowerUp } from '@pcpartdb/scraper';
-import yargs from 'yargs';
+import { Command } from 'commander';
 import { buildSourceModel, readSourceModel } from './source-model';
 import { scrapeTechPowerUpGpuUrls } from './techpowerup';
 import { ScrapeSource } from './types';
 import { scrapeUlBenchmarkGpuUrls } from './ul-benchmarks';
 import { sanitizeVideocardBenchmarksGpuUrls } from './videocardbenchmarks';
+
+const program = new Command();
+
+program.parse(process.argv);
 
 const parser = yargs(process.argv).options({
   scrapeUrls: {
