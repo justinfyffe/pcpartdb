@@ -4,12 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "npm run shared build && npm run scraper build && npm run api build && npm run website build",
-    "clean": "npm run api clean & npm run scraper clean & npm run shared clean & npm run website clean",
+    "build": "npm run shared build && npm run scraper build && npm run api build && npm run website build && npm run tools build",
+    "clean": "npm run api clean & npm run scraper clean & npm run shared clean & npm run tools clean & npm run website clean",
     "deploy": "./bin/deploy",
     "api": "npm --workspace=@pcpartdb/api run",
     "scraper": "npm --workspace=@pcpartdb/scraper run",
     "shared": "npm --workspace=@pcpartdb/shared run",
+    "tools": "npm --workspace=@pcpartdb/tools run",
     "website": "npm --workspace=@pcpartdb/website run",
     "prod:api": "npm run api start",
     "prod:website": "npm run website start"

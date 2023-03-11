@@ -4,6 +4,7 @@
     { "path": "packages/api"},
     { "path": "packages/scraper" },
     { "path": "packages/shared"},
+    { "path": "packages/tools" },
     { "path": "packages/website" },
   ]
 }

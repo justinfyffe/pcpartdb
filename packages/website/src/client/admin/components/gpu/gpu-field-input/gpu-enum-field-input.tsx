@@ -9,8 +9,7 @@ import {
 const ITEMS: { [key: string]: { label: string; value: string }[] } = {
   marketSegment: [
     { label: 'Desktop', value: MarketSegmentValue.Desktop },
-    { label: 'Laptop', value: MarketSegmentValue.Laptop },
-    { label: 'Server', value: MarketSegmentValue.Server },
+    { label: 'Mobile', value: MarketSegmentValue.Mobile },
     { label: 'Workstation', value: MarketSegmentValue.Workstation },
   ],
 };

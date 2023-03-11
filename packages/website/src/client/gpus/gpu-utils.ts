@@ -171,10 +171,8 @@ function formatMarketSegment(value: MarketSegmentValue) {
   switch (value) {
     case MarketSegmentValue.Desktop:
       return 'Desktop';
-    case MarketSegmentValue.Laptop:
-      return 'Laptop';
-    case MarketSegmentValue.Server:
-      return 'Server';
+    case MarketSegmentValue.Mobile:
+      return 'Mobile';
     case MarketSegmentValue.Workstation:
       return 'Workstation';
     default:

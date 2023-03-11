@@ -76,7 +76,7 @@ function getMarketSegment($: cheerio.CheerioAPI): GpuField<MarketSegmentValue> {
   if (text === 'Desktop') {
     value = MarketSegmentValue.Desktop;
   } else if (text === 'Mobile') {
-    value = MarketSegmentValue.Laptop;
+    value = MarketSegmentValue.Mobile;
   } else if (text === 'Workstation') {
     value = MarketSegmentValue.Workstation;
   }

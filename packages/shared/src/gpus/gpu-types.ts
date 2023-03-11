@@ -7,8 +7,7 @@ import { GpuSpecs } from './gpu-spec-types';
 
 export enum MarketSegmentValue {
   Desktop = 'DESKTOP',
-  Laptop = 'LAPTOP',
-  Server = 'SERVER',
+  Mobile = 'MOBILE',
   Workstation = 'WORKSTATION',
 }
 

@@ -1,2 +1,2 @@
-export * from './gpu-details';
-export * from './gpu-urls';
+export * from './sanitize-raw-gpus';
+export * from './scrape-gpu-details';

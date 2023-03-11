@@ -7,14 +7,12 @@ Workspaces:
 - website
 
 Immediate Tasks:
+  - TODO
+    - Set up util for data path
+    - Move file saving to tool (util)
+    - create page to import scraped data
   - improve autocomplete sorting
     - show more recent gpus
-  - Make separate project for tools? Or setup lerna? or setup npm workspace? Or not bother
-    - Can exclude out of deployment
-    - Can include heavier dependencies
-    - CLI Tools that will be useful to run to improve workflows
-    - Tools
-      - Scraper: Fetches URLs and creates data structure
   - Scraping Tool
     - Download pages:
       - techpowerup https://www.techpowerup.com/gpu-specs/?ajaxsrch=g&_=1677459591243
