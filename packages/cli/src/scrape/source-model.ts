@@ -1,7 +1,7 @@
 import {
-  TechPowerUpGpuUrl,
-  UlBenchmarkGpuUrl,
-  VideocardBenchmarksGpuUrl,
+  TechPowerUpGpuSource,
+  UlBenchmarkGpuSource,
+  VideocardBenchmarksGpuSource,
 } from '@pcpartdb/scraper';
 import * as fpPromises from 'fs/promises';
 import { join } from 'path';
@@ -10,9 +10,9 @@ import { GpuSourceModel } from './types';
 const SOURCE_MODEL_PATH = join(__dirname, '../../data/scraper/source-models');
 
 export async function buildSourceModel(
-  techpowerUpUrlData: TechPowerUpGpuUrl[],
-  ulBenchmarkUrlData: UlBenchmarkGpuUrl[],
-  videocardBenchmarksUrlData: VideocardBenchmarksGpuUrl[],
+  techpowerUpUrlData: TechPowerUpGpuSource[],
+  ulBenchmarkUrlData: UlBenchmarkGpuSource[],
+  videocardBenchmarksUrlData: VideocardBenchmarksGpuSource[],
 ) {
   const map: Record<string, GpuSourceModel> = {};
 

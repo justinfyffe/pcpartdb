@@ -1,6 +1,6 @@
 import { MarketSegmentValue } from '@pcpartdb/shared';
 
-export interface VideocardBenchmarksGpuUrl {
+export interface VideocardBenchmarksGpuSource {
   name: string;
   marketSegment: MarketSegmentValue;
   g3dMark: number;

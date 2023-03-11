@@ -1,7 +1,7 @@
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 
-export interface UlBenchmarkGpuUrl {
+export interface UlBenchmarkGpuSource {
   name: string;
   company: string;
   timespyScore: number;
@@ -12,7 +12,7 @@ export interface ScrapeUlBenchmarkGpuUrlsOptions {
 }
 const SEARCH_URL = 'https://benchmarks.ul.com/compare/best-gpus?search={query}';
 
-export async function scrapeUlBenchmarkGpuUrls(
+export async function scrapeUlBenchmarkGpuSources(
   options: ScrapeUlBenchmarkGpuUrlsOptions,
 ) {
   return await scrapeSearchData(options.query);
@@ -21,7 +21,7 @@ export async function scrapeUlBenchmarkGpuUrls(
 async function scrapeSearchData(query: string) {
   const $ = cheerio.load(await fetchSearchPage(query));
 
-  const gpus: UlBenchmarkGpuUrl[] = [];
+  const gpus: UlBenchmarkGpuSource[] = [];
 
   const el = $('table#productTable tbody tr');
   el.each((_i, tr) => {

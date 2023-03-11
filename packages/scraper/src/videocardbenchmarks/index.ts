@@ -1,2 +1,2 @@
-export * from './gpu-urls';
-export * from './scrape-gpu-details';
+export * from './gpu-sources';
+export * from './gpu-details';

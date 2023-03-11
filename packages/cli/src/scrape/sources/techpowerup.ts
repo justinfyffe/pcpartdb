@@ -1,10 +1,10 @@
 import {
-  scrapeUlBenchmarkGpuSources as scrapeGpuUrls,
-  UlBenchmarkGpuSource,
+  scrapeTechPowerUpGpuSources as scrapeGpuSources,
+  TechPowerUpGpuSource,
 } from '@pcpartdb/scraper';
 import * as fsPromises from 'fs/promises';
-import { sleep } from '../shared/process';
-import { ulBenchmarksDataPath } from './utils';
+import { sleep } from '../../shared/process';
+import { techPowerUpDataPath } from '../utils';
 
 const QUERIES = [
   'a',
@@ -33,17 +33,14 @@ const QUERIES = [
   'x',
   'y',
   'z',
-  'intel',
-  'amd',
-  'nvidia',
 ];
 
 const SLEEP_DELAY = 5_000;
 
-export async function scrapeUlBenchmarkGpuUrls() {
-  const map: Record<string, UlBenchmarkGpuSource> = {};
+export async function scrapeTechPowerUpGpuSources() {
+  const map: Record<string, TechPowerUpGpuSource> = {};
   for (let i = 0; i < QUERIES.length; ++i) {
-    const gpusForQuery = await scrapeGpuUrls({ query: QUERIES[0] });
+    const gpusForQuery = await scrapeGpuSources({ query: QUERIES[0] });
     gpusForQuery.forEach((gpu) => {
       map[gpu.name] = gpu;
     });
@@ -53,7 +50,7 @@ export async function scrapeUlBenchmarkGpuUrls() {
   const gpus = Object.values(map);
 
   await fsPromises.writeFile(
-    ulBenchmarksDataPath('gpu-urls.json'),
+    techPowerUpDataPath('gpu-sources.json'),
     JSON.stringify(gpus, undefined, 2),
     'utf-8',
   );

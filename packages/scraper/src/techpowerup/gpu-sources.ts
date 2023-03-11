@@ -1,7 +1,7 @@
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 
-export interface TechPowerUpGpuUrl {
+export interface TechPowerUpGpuSource {
   name: string;
   company: string;
   url: string;
@@ -15,7 +15,7 @@ const BASE_URL = 'https://www.techpowerup.com';
 const SEARCH_URL =
   'https://www.techpowerup.com/gpu-specs/?ajaxsrch={query}&_={timestamp}';
 
-export async function scrapeTechPowerUpGpuUrls(
+export async function scrapeTechPowerUpGpuSources(
   options: ScrapeTechPowerUpGpuUrlsOptions,
 ) {
   return await scrapeSearchData(options.query);
@@ -24,7 +24,7 @@ export async function scrapeTechPowerUpGpuUrls(
 async function scrapeSearchData(query: string) {
   const $ = cheerio.load(await fetchSearchPage(query));
 
-  const gpus: TechPowerUpGpuUrl[] = [];
+  const gpus: TechPowerUpGpuSource[] = [];
 
   const el = $('table tbody tr td:first-child');
   el.each((i, td) => {

@@ -1,6 +1,6 @@
 import {
-  scrapeTechPowerUpGpuUrls as scrapeGpuUrls,
-  TechPowerUpGpuUrl,
+  scrapeTechPowerUpGpuSources as scrapeGpuUrls,
+  TechPowerUpGpuSource,
 } from '@pcpartdb/scraper';
 import * as fsPromises from 'fs/promises';
 import { sleep } from '../shared/process';
@@ -38,7 +38,7 @@ const QUERIES = [
 const SLEEP_DELAY = 5_000;
 
 export async function scrapeTechPowerUpGpuUrls() {
-  const map: Record<string, TechPowerUpGpuUrl> = {};
+  const map: Record<string, TechPowerUpGpuSource> = {};
   for (let i = 0; i < QUERIES.length; ++i) {
     const gpusForQuery = await scrapeGpuUrls({ query: QUERIES[0] });
     gpusForQuery.forEach((gpu) => {
