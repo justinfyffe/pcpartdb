@@ -41,3 +41,9 @@ export function videocardBenchmarksDataPath(file?: string) {
     ? path.join(VIDEOCARDBENCHMARKS_DATA_PATH, file)
     : VIDEOCARDBENCHMARKS_DATA_PATH;
 }
+
+export function sourceModelsDataPath(file?: string) {
+  return file != null
+    ? path.join(SOURCE_MODELS_PATH, file)
+    : SOURCE_MODELS_PATH;
+}

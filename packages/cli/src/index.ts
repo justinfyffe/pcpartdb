@@ -14,10 +14,12 @@ scrape
   });
 scrape
   .command('data')
-  .option('-c|--count <value>', '', '10')
-  .option('-o|--offset <value>', '', '0')
+  .option('-m|--model')
+  .option('-c|--count <value>')
+  .option('-o|--offset <value>')
   .action(async (options) => {
     await scrapeDataCommandHandler({
+      model: options.model,
       count: options.count,
       offset: options.offset,
     });

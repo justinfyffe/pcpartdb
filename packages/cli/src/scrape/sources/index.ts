@@ -1,3 +1,4 @@
+import { ScrapeSource } from '../types';
 import { scrapeTechPowerUpGpuSources } from './techpowerup';
 import { scrapeUlBenchmarkGpuSources } from './ul-benchmarks';
 import { sanitizeVideocardBenchmarksGpuSources } from './videocardbenchmarks';
@@ -11,11 +12,11 @@ export async function scrapeSourcesCommandHandler(
 ) {
   const { source } = args;
 
-  if (source === 'techpowerup') {
+  if (source === ScrapeSource.TechPowerUp) {
     await scrapeTechPowerUpGpuSources();
-  } else if (source === 'ul-benchmarks') {
+  } else if (source === ScrapeSource.UlBenchmarks) {
     await scrapeUlBenchmarkGpuSources();
-  } else if (source === 'videocardbenchmarks') {
+  } else if (source === ScrapeSource.VideocardBenchmarks) {
     await sanitizeVideocardBenchmarksGpuSources();
   } else {
     await scrapeTechPowerUpGpuSources();

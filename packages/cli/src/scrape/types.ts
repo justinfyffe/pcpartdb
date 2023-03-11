@@ -6,14 +6,16 @@ export enum ScrapeSource {
   VideocardBenchmarks = 'videocardbenchmarks',
 }
 
-export interface GpuSourceModel {
+export interface GpuSource {
   name?: string;
   company?: string;
   marketSegment?: MarketSegmentValue;
   g3dMark?: number;
   g2dMark?: number;
   timespyScore?: number;
-  techpowerupUrl?: string;
+  techPowerUpUrl?: string;
   ulBenchmarksUrl?: string;
   videocardBenchmarksUrl?: string;
 }
+
+export type GpuSourceModel = GpuSource[];

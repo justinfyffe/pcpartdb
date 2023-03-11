@@ -18,8 +18,6 @@
   "dependencies": {
     "@pcpartdb/scraper": "*",
     "@pcpartdb/shared": "*",
-    "axios": "^0.27.2",
-    "cheerio": "^1.0.0-rc.12",
     "commander": "^10.0.0"
   }
 }
