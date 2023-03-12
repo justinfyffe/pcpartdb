@@ -10,6 +10,7 @@ export type ScrapeSourcesCommandArgs = {
 export async function scrapeSourcesCommandHandler(
   args: ScrapeSourcesCommandArgs,
 ) {
+  console.log(`Scraping sources with args=${JSON.stringify(args)}`);
   const { source } = args;
 
   if (source === ScrapeSource.TechPowerUp) {

@@ -14,9 +14,9 @@ scrape
   });
 scrape
   .command('data')
-  .option('-m|--model')
-  .option('-c|--count <value>')
-  .option('-o|--offset <value>')
+  .option('--model [value]')
+  .option('--count [value]')
+  .option('--offset [value]')
   .action(async (options) => {
     await scrapeDataCommandHandler({
       model: options.model,

@@ -8,8 +8,7 @@ Workspaces:
 
 Immediate Tasks:
   - TODO
-    - Set up util for data path
-    - Move file saving to tool (util)
+    - Significantly increase sleep time, 5 seconds is too short
     - create page to import scraped data
   - improve autocomplete sorting
     - show more recent gpus

@@ -1,3 +1,4 @@
+import { getGpuData } from './gpu-data';
 import { getSourceModel } from './source-model';
 
 export type ScrapeDataCommandArgs = {
@@ -7,17 +8,18 @@ export type ScrapeDataCommandArgs = {
 };
 
 export async function scrapeDataCommandHandler(args: ScrapeDataCommandArgs) {
+  console.log(`Scraping data with args=${JSON.stringify(args)}`);
+
   const { model } = args;
-  const count = args.count != null ? Number(args.count) : 10;
+
   const offset = args.offset != null ? Number(args.offset) : 0;
+  const count = args.count != null ? Number(args.count) : 10;
 
   // Get source model
+  console.log('Getting Source Model');
   const sourceModel = await getSourceModel(model);
 
   // Fetch data
-  for (let i = offset; i < offset + count; ++i) {
-    const sourceData = sourceModel[i];
-  }
-
-  // Generate GPUs
+  console.log('Building GPU Data');
+  await getGpuData(sourceModel, offset, count);
 }

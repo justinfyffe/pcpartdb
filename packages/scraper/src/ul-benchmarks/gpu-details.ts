@@ -8,7 +8,7 @@ import axios from 'axios';
 import * as cheerio from 'cheerio';
 
 // Example: https://benchmarks.ul.com/hardware/gpu/NVIDIA%20GeForce%20RTX%204090+review
-export async function importFromUlBenchmarks(url: string) {
+export async function scrapeUlBenchmarksGpuDetails(url: string) {
   const response = await axios.get(url);
   const $ = cheerio.load(response.data);
 

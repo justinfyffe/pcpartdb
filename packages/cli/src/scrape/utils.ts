@@ -10,6 +10,7 @@ const VIDEOCARDBENCHMARKS_DATA_PATH = path.join(
   SCRAPER_DATA_PATH,
   'videocardbenchmarks',
 );
+const GPUS_DATA_PATH = path.join(SCRAPER_DATA_PATH, 'gpus');
 
 if (!fs.existsSync(SOURCE_MODELS_PATH)) {
   fs.mkdirSync(SOURCE_MODELS_PATH, { recursive: true });
@@ -22,6 +23,9 @@ if (!fs.existsSync(UL_BENCHMARKS_DATA_PATH)) {
 }
 if (!fs.existsSync(VIDEOCARDBENCHMARKS_DATA_PATH)) {
   fs.mkdirSync(VIDEOCARDBENCHMARKS_DATA_PATH, { recursive: true });
+}
+if (!fs.existsSync(GPUS_DATA_PATH)) {
+  fs.mkdirSync(GPUS_DATA_PATH, { recursive: true });
 }
 
 export function techPowerUpDataPath(file?: string) {
@@ -46,4 +50,8 @@ export function sourceModelsDataPath(file?: string) {
   return file != null
     ? path.join(SOURCE_MODELS_PATH, file)
     : SOURCE_MODELS_PATH;
+}
+
+export function gpusDataPath(file?: string) {
+  return file != null ? path.join(GPUS_DATA_PATH, file) : GPUS_DATA_PATH;
 }

@@ -9,7 +9,7 @@ import axios from 'axios';
 import * as cheerio from 'cheerio';
 
 // Example: https://www.videocardbenchmark.net/gpu.php?gpu=GeForce+RTX+4090&id=4606
-export async function importFromVideocardBenchmarks(url: string) {
+export async function scrapeVideocardBenchmarksGpuDetails(url: string) {
   const response = await axios.get(url);
   const $ = cheerio.load(response.data);
 

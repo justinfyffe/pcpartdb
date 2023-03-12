@@ -28,7 +28,7 @@ async function scrapeSearchData(query: string) {
     const $tr = $(tr);
 
     const $deviceEl = $tr.find('a.OneLinkNoTx');
-    const url = $deviceEl.attr('href');
+    const url = $deviceEl.attr('href').trim();
     const { company, name } = parseGpuName($deviceEl.text().trim());
 
     const $scoreEl = $tr.find('span.bar-score');

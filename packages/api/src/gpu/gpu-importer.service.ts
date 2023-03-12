@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import {
-  importFromTechPowerUp,
-  importFromUlBenchmarks,
-  importFromVideocardBenchmarks,
+  scrapeTechPowerUpGpuDetails,
+  scrapeUlBenchmarksGpuDetails,
+  scrapeVideocardBenchmarksGpuDetails,
 } from '@pcpartdb/scraper';
 import {
   GpuDataSource,
@@ -37,11 +37,11 @@ export class GpuImporterService {
     const parsedUrl = new URL(source.url);
 
     if (parsedUrl.hostname === Importers.TechPowerUp) {
-      return await importFromTechPowerUp(source.url);
+      return await scrapeTechPowerUpGpuDetails(source.url);
     } else if (parsedUrl.hostname === Importers.UlBenchmarks) {
-      return await importFromUlBenchmarks(source.url);
+      return await scrapeUlBenchmarksGpuDetails(source.url);
     } else if (parsedUrl.hostname === Importers.VideocardBenchmark) {
-      return await importFromVideocardBenchmarks(source.url);
+      return await scrapeVideocardBenchmarksGpuDetails(source.url);
     } else {
       throw badRequestError();
     }

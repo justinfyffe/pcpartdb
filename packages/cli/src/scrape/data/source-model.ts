@@ -10,11 +10,13 @@ import {
   sourceModelsDataPath,
   techPowerUpDataPath,
   ulBenchmarksDataPath,
+  videocardBenchmarksDataPath,
 } from '../utils';
 
 export async function getSourceModel(model?: string) {
   if (model == null) {
     // Source model not provided, generate it.
+    console.log('Source Model not provided. Building it based on saved data.');
     return await buildSourceModel();
   } else {
     // Source model file provided, use that instead.
@@ -22,6 +24,7 @@ export async function getSourceModel(model?: string) {
       throw new Error(`Cannot find source model at ${model}`);
     }
 
+    console.log(`Reading Source Model from ${model}`);
     return await readSourceModel(model);
   }
 }
@@ -52,22 +55,26 @@ async function buildSourceModel() {
     const key = data.name;
     map[key] = map[key] || { name: data.name };
     map[key].marketSegment = data.marketSegment;
+    map[key].releaseDate = data.releaseDate;
     map[key].g3dMark = data.g3dMark;
     map[key].g2dMark = data.g2dMark;
     map[key].videocardBenchmarksUrl = data.url;
   });
 
+  // We only want GPUs with most data and g3d mark
   const sourceModel: GpuSourceModel = Object.values(map).filter(
-    (model) => model.techPowerUpUrl != null && model.ulBenchmarksUrl != null,
+    (model) =>
+      model.techPowerUpUrl != null && model.videocardBenchmarksUrl != null,
   );
+  sourceModel.sort((m1, m2) => m2.releaseDate - m1.releaseDate); // Descending
 
   // Save to file with date
-  const json = JSON.stringify(sourceModel, undefined, 2);
-  await fsPromises.writeFile(
-    sourceModelsDataPath(`source-model-${new Date().getTime()}.json`),
-    json,
-    'utf-8',
+  const path = sourceModelsDataPath(
+    `source-model-${new Date().getTime()}.json`,
   );
+  console.log(`Finished building Source Model. Saving to ${path}`);
+  const json = JSON.stringify(sourceModel, undefined, 2);
+  await fsPromises.writeFile(path, json, 'utf-8');
 
   return sourceModel;
 }
@@ -95,7 +102,7 @@ async function readUlBenchmarkSources() {
 
 async function readVideocardBenchmarksSources() {
   const json = await fsPromises.readFile(
-    ulBenchmarksDataPath('gpu-sources.json'),
+    videocardBenchmarksDataPath('gpu-sources.json'),
     'utf-8',
   );
   return JSON.parse(json) as VideocardBenchmarksGpuSource[];
