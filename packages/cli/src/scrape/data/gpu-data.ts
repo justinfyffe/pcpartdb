@@ -1,11 +1,11 @@
 import { scrapeTechPowerUpGpuDetails } from '@pcpartdb/scraper';
-import { Gpu, GpuDataSourceKey } from '@pcpartdb/shared';
+import { generateGpuSlug, Gpu, GpuDataSourceKey } from '@pcpartdb/shared';
 import * as fsPromises from 'fs/promises';
 import { sleep } from '../../shared/process';
 import { GpuSource, GpuSourceModel } from '../types';
 import { gpusDataPath } from '../utils';
 
-const SLEEP_DELAY = 5_000;
+const SLEEP_DELAY = 60_000;
 
 export async function getGpuData(
   sourceModel: GpuSourceModel,
@@ -99,6 +99,8 @@ function decorateGpu(gpu: Partial<Gpu>, source: GpuSource) {
       },
     },
   };
+
+  gpu.slug = generateGpuSlug(gpu.name, gpu.company?.value);
 
   return gpu;
 }

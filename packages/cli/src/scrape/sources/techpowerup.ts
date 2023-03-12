@@ -37,7 +37,7 @@ const QUERIES = ['a', 'b'];
 //   'z',
 // ];
 
-const SLEEP_DELAY = 5_000;
+const SLEEP_DELAY = 30_000;
 
 export async function scrapeTechPowerUpGpuSources() {
   console.log('Scraping GPU Sources from TechPowerUp');

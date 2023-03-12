@@ -1,6 +1,7 @@
 export * from './edit-gpu';
 export * from './edit-image';
 export * from './edit-user';
+export * from './import-gpus';
 export * from './list-gpus';
 export * from './list-images';
 export * from './list-users';

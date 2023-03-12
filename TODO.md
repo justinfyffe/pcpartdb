@@ -8,25 +8,23 @@ Workspaces:
 
 Immediate Tasks:
   - TODO
-    - Significantly increase sleep time, 5 seconds is too short
     - create page to import scraped data
+      - add preview dialog per gpu - just json for now
+      - update import button
+    - clean up import code
+      - rename single gpu import to "scrape"
+      - clean up paths for preview and actual import
+  - folder structure for pages and components
+    - <feature>/pages/<page-name>/components
+    - <feature>/shared/components/
   - improve autocomplete sorting
     - show more recent gpus
-  - Scraping Tool
-    - Download pages:
-      - techpowerup https://www.techpowerup.com/gpu-specs/?ajaxsrch=g&_=1677459591243
-      - ul benchmarks: https://benchmarks.ul.com/compare/best-gpus?amount=0&reverseOrder=true&search=v
-      - videocardbenchmark https://www.videocardbenchmark.net/GPU_mega_page.html
-        - Needs puppeteer (how to avoid including in deployment) - maybe install globally?
-    - Create tool that builds data set from downloaded pages
-  - Scraping improvements - data sources
-    - [] Add download date when importing
+  - Scraping improvements
+    - Add download date when importing
+    - Allow ability to overwrite existing gpus
   - Fix bug where unauthorized pages doesn't display
   - Improve security for reset password (store hashed tokens in db)
   - Don't upload node_modules when deploying, just use npx
-  - Data refactor
-    - home page - update comparison texts based on tag
-  - Test everything
   
 
 Post-launch:

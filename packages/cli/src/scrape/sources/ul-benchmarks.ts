@@ -39,7 +39,7 @@ const QUERIES = ['a', 'b'];
 //   'nvidia',
 // ];
 
-const SLEEP_DELAY = 5_000;
+const SLEEP_DELAY = 30_000;
 
 export async function scrapeUlBenchmarkGpuSources() {
   console.log('Scraping GPU Sources from UL Benchmarks');

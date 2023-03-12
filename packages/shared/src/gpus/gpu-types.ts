@@ -133,6 +133,11 @@ export interface ImportGpuDataResponse {
   gpu: Partial<Gpu>;
 }
 
+export interface PreviewImportGpusResponse {
+  newGpus: Gpu[];
+  existingGpus: Gpu[];
+}
+
 export const gpuDataSourceValidator = Joi.object({
   url: Joi.string().allow(null),
   downloadDate: Joi.number().allow(null),

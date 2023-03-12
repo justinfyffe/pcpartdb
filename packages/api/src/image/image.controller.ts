@@ -6,7 +6,6 @@ import {
   Param,
   Post,
   Put,
-  UploadedFile,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -15,7 +14,6 @@ import { CreateImageRequest, UpdateImageRequest } from '@pcpartdb/shared';
 import { StaffGuard } from '../auth/staff.guard';
 import { Database } from '../database';
 import { Context, Ctx } from '../shared/context';
-import * as fileUtils from '../shared/utils';
 import { MULTER_OPTIONS } from '../shared/utils';
 import { ImageService } from './image.service';
 
@@ -49,15 +47,9 @@ export class ImageController {
   @Post()
   @UseGuards(StaffGuard)
   @UseInterceptors(FileInterceptor('file', MULTER_OPTIONS))
-  async create(
-    @UploadedFile() file: any,
-    @Body() body: CreateImageBody,
-    @Ctx() ctx: Context,
-  ) {
+  async create(@Body() body: CreateImageBody, @Ctx() ctx: Context) {
     return await this.db.transaction(
       async () => {
-        // await fileUtils.uploadFile('file', ctx);
-
         const data = JSON.parse(body.formData) as CreateImageRequest;
         const tempPath = body.tempPath;
 
@@ -70,7 +62,6 @@ export class ImageController {
   @Put(':id')
   @UseInterceptors(FileInterceptor('file', MULTER_OPTIONS))
   async update(
-    @UploadedFile() file: any,
     @Param('id') idStr: string,
     @Body() body: UpdateImageBody,
     @Ctx() ctx: Context,
@@ -78,8 +69,6 @@ export class ImageController {
     return await this.db.transaction(
       async () => {
         const id = Number(idStr);
-
-        // await fileUtils.uploadFile('file', ctx);
 
         const data = JSON.parse(body.formData) as UpdateImageRequest;
         const tempPath = body.tempPath;

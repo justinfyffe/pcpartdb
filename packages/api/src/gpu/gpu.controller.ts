@@ -8,7 +8,9 @@ import {
   Put,
   Query,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import {
   CreateGpuRequest,
   ImportGpuDataRequest,
@@ -19,6 +21,7 @@ import { StaffGuard } from '../auth/staff.guard';
 import { Database } from '../database';
 import { Context, Ctx } from '../shared/context';
 import { validate } from '../shared/types/validate';
+import { MULTER_OPTIONS } from '../shared/utils';
 import { GpuSpecsEntity } from './gpu.entity';
 import { GpuService } from './gpu.service';
 import {
@@ -29,6 +32,11 @@ import {
   updateGpuRequestValidator,
 } from './gpu.validators';
 import { GpuImporterService } from './gpu-importer.service';
+
+interface PreviewGpusImportBody {
+  file?: File;
+  tempPath?: string;
+}
 
 @Controller('gpus')
 export class GpuController {
@@ -128,6 +136,22 @@ export class GpuController {
   @Post('import')
   @UseGuards(StaffGuard)
   async importData(@Body() body: ImportGpuDataRequest) {
-    return this.gpuImporterService.importData(body);
+    return await this.gpuImporterService.importData(body);
+  }
+
+  @Post('preview-import')
+  @UseGuards(StaffGuard)
+  @UseInterceptors(FileInterceptor('file', MULTER_OPTIONS))
+  async previewImport(
+    @Body() body: PreviewGpusImportBody,
+    @Ctx() ctx: Context,
+  ) {
+    return await this.db.transaction(
+      async () => {
+        const file = body.tempPath;
+        return await this.gpuImporterService.previewImport(file, ctx);
+      },
+      { ctx },
+    );
   }
 }

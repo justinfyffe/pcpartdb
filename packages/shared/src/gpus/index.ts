@@ -5,3 +5,4 @@ export * from './gpu-image-types';
 export * from './gpu-spec-types';
 export * from './gpu-rank-types';
 export * from './gpu-types';
+export * from './gpu-utils';

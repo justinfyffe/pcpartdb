@@ -4,6 +4,7 @@ import {
   ImportGpuDataRequest,
   ImportGpuDataResponse,
   ListGpusRequest,
+  PreviewImportGpusResponse,
   UpdateGpuRequest,
 } from '@pcpartdb/shared';
 import { ApiClient, apiClient } from '../shared/api';
@@ -55,6 +56,18 @@ export class GpuService {
 
   async importGpuData(data: ImportGpuDataRequest) {
     return await this.api.post<ImportGpuDataResponse>(`${PATH}/import`, data);
+  }
+
+  async previewImportGpus(file: File) {
+    const data = new FormData();
+    data.append('file', file);
+
+    const results = await this.api.post<PreviewImportGpusResponse>(
+      `${PATH}/preview-import`,
+      data,
+      { headers: { 'content-type': 'multipart/form-data' } },
+    );
+    return results;
   }
 }
 

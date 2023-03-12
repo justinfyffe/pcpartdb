@@ -84,6 +84,14 @@ export class GpuRepository {
     });
   }
 
+  async findByName(name: string, config?: RepositoryConfig) {
+    const trx = config?.trx ?? this.db;
+
+    return await trx.gpu.findFirst({
+      where: { name: { equals: name, mode: 'insensitive' } },
+    });
+  }
+
   async findSimilarValue(
     query: string,
     config?: RepositoryConfig,
