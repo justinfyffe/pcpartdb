@@ -10,6 +10,8 @@ Immediate Tasks:
   - TODO
     - create page to import scraped data
       - add preview dialog per gpu - just json for now
+      - create endpoint for actually saving gpus
+        - takes in array of gpus, only new gpus for now
       - update import button
     - clean up import code
       - rename single gpu import to "scrape"
