@@ -10,7 +10,7 @@ import React, {
 import { formatGpuField } from '../../../../gpus';
 import { Checkbox, Td, Tr } from '../../../../shared/components';
 import { BooleanFormatter } from '../../../../shared/format';
-import { ImportGpuDataContext } from './import-gpu-data-context';
+import { ScrapeGpuDetailsContext } from './scrape-gpu-details-context';
 
 const LABELS: Record<string, string> = {
   // General
@@ -74,16 +74,16 @@ const LABELS: Record<string, string> = {
   timespyGraphics: '3DMark Time Spy Graphics',
 };
 
-interface ImportGpuFieldProps {
+interface ScrapeGpuFieldProps {
   field: string;
 }
 
-export const ImportGpuField: FunctionComponent<ImportGpuFieldProps> = (
+export const ScrapeGpuField: FunctionComponent<ScrapeGpuFieldProps> = (
   props,
 ) => {
   const { field: key } = props;
 
-  const context = useContext(ImportGpuDataContext);
+  const context = useContext(ScrapeGpuDetailsContext);
   const fields = context.fields;
   const emptyValue: GpuField = useMemo(
     () => ({
@@ -98,19 +98,19 @@ export const ImportGpuField: FunctionComponent<ImportGpuFieldProps> = (
 
   useEffect(() => {
     if (fields[key] == null) {
-      fields[key] = { value: emptyValue, import: false };
+      fields[key] = { value: emptyValue, enabled: false };
       setChecked(false);
     } else {
-      setChecked(fields[key].import);
+      setChecked(fields[key].enabled);
     }
   }, [fields, key, emptyValue]);
 
   const handleClick = useCallback(() => {
     if (checked) {
-      fields[key].import = false;
+      fields[key].enabled = false;
       fields[key].value.meta.dataSource = { enabled: false };
     } else {
-      fields[key].import = true;
+      fields[key].enabled = true;
       fields[key].value.meta.dataSource = { source, enabled: true };
     }
 
@@ -126,7 +126,7 @@ export const ImportGpuField: FunctionComponent<ImportGpuFieldProps> = (
         }) || '--'}
       </Td>
       <Td className="text-right">
-        <Checkbox value={fields?.[key]?.import ?? false} />
+        <Checkbox value={fields?.[key]?.enabled ?? false} />
       </Td>
     </Tr>
   );

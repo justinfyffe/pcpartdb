@@ -101,17 +101,9 @@ export interface FindGpuComparisonRequest {
   includeImages?: boolean;
 }
 
-export interface CreateGpuRequest extends Omit<Gpu, 'id'> {
-  specs: GpuSpecs;
-  benchmarks: GpuBenchmarks;
-  images: GpuImages;
-}
+export interface CreateGpuRequest extends Omit<Gpu, 'id'> {}
 
-export interface UpdateGpuRequest extends Omit<Gpu, 'id'> {
-  specs: GpuSpecs;
-  benchmarks: GpuBenchmarks;
-  images: GpuImages;
-}
+export interface UpdateGpuRequest extends Omit<Gpu, 'id'> {}
 
 export interface RelatedGpus {
   gpus?: Gpu[];
@@ -125,17 +117,21 @@ export interface ListGpusRequest {
   query?: GpusQuery;
 }
 
-export interface ImportGpuDataRequest {
+export interface ScrapeGpuDetailsRequest {
   sources: GpuDataSource[];
 }
 
-export interface ImportGpuDataResponse {
+export interface ScrapeGpuDetailsResponse {
   gpu: Partial<Gpu>;
 }
 
 export interface PreviewImportGpusResponse {
   newGpus: Gpu[];
   existingGpus: Gpu[];
+}
+
+export interface ImportGpusRequest {
+  gpus: Gpu[];
 }
 
 export const gpuDataSourceValidator = Joi.object({

@@ -7,11 +7,11 @@ import {
   GpuDataSourceKey,
   GpuField,
   GpuSpecs,
-  ImportGpuDataResponse,
   LengthUnit,
   MemoryUnit,
   NumericUnit,
   PixelFillRateUnit,
+  ScrapeGpuDetailsResponse,
   TextureFillRateUnit,
   WattageUnit,
 } from '@pcpartdb/shared';
@@ -71,7 +71,7 @@ export async function scrapeTechPowerUpGpuDetails(url: string) {
 
   return {
     gpu: { name, company, launchPrice, releaseDate, specs },
-  } as ImportGpuDataResponse;
+  } as ScrapeGpuDetailsResponse;
 }
 
 function getName($: cheerio.CheerioAPI) {

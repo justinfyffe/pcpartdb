@@ -1,14 +1,19 @@
 import 'reflect-metadata';
-import { Gpu } from '@pcpartdb/shared';
+import { ApiError, Gpu } from '@pcpartdb/shared';
+import { useRouter } from 'next/router';
 import React, { useCallback, useMemo, useState } from 'react';
 import { getGpuName, gpuService } from '../../../gpus';
 import {
+  Alert,
+  AlertVariant,
   Button,
   ButtonVariant,
   Checkbox,
   Field,
   FieldHint,
   File,
+  showDialog,
+  Spinner,
   Table,
   TBody,
   Td,
@@ -16,6 +21,7 @@ import {
 } from '../../../shared/components';
 import { AdminLayout } from '../../../shared/layouts';
 import { getViewGpuPath } from '../../../shared/website';
+import { PreviewDialog } from './components';
 
 interface AdminImportGpusPageProps {}
 
@@ -25,6 +31,10 @@ export const AdminImportGpusPage = (_props: AdminImportGpusPageProps) => {
   const [gpusToImportMap, setGpusToImportMap] = useState(
     {} as Record<string, Gpu>,
   );
+
+  const router = useRouter();
+  const [importing, setImporting] = useState(false);
+  const [requestError, setRequestError] = useState<ApiError>(null);
 
   const hasData = newGpus.length > 0 || existingGpus.length > 0;
   const gpusToImport = useMemo(
@@ -46,6 +56,10 @@ export const AdminImportGpusPage = (_props: AdminImportGpusPageProps) => {
     );
   }, []);
 
+  const handlePreviewGpu = useCallback((gpu: Gpu) => {
+    showDialog(<PreviewDialog gpu={gpu} />);
+  }, []);
+
   const handleImportCheck = useCallback(
     (gpu: Gpu, checked: boolean) => {
       if (checked) {
@@ -59,15 +73,27 @@ export const AdminImportGpusPage = (_props: AdminImportGpusPageProps) => {
     [gpusToImportMap],
   );
 
-  const handleImportClicked = useCallback(() => {
-    console.log(gpusToImport);
-  }, [gpusToImport]);
+  const handleImportClicked = useCallback(async () => {
+    setImporting(true);
+
+    try {
+      await gpuService.importGpus({ gpus: gpusToImport });
+
+      router.push('/admin/gpus');
+    } catch (err) {
+      console.log(err);
+      setRequestError(err as ApiError);
+    } finally {
+      setImporting(false);
+    }
+    await gpuService.importGpus({ gpus: gpusToImport });
+  }, [gpusToImport, router]);
 
   return (
     <AdminLayout>
       <article>
         <div className="flex items-center justify-between mb-4">
-          <h1 className="font-semibold">GPUs - Import GPUs</h1>
+          <h1 className="font-semibold">GPUs - Import</h1>
 
           <Button href="/admin/gpus" variant={ButtonVariant.Default}>
             Back
@@ -81,6 +107,12 @@ export const AdminImportGpusPage = (_props: AdminImportGpusPageProps) => {
             Upload results from scraping tool
           </FieldHint>
         </Field>
+
+        {requestError && (
+          <Alert variant={AlertVariant.Error}>
+            An unknown error has occurred. Please try again later.
+          </Alert>
+        )}
 
         {hasData && (
           <div className="flex flex-col mt-8 gap-4">
@@ -98,7 +130,12 @@ export const AdminImportGpusPage = (_props: AdminImportGpusPageProps) => {
                     {newGpus.map((gpu) => (
                       <Tr key={gpu.name}>
                         <Td>
-                          <a className="cursor-pointer">{getGpuName(gpu)}</a>
+                          <a
+                            onClick={() => handlePreviewGpu(gpu)}
+                            className="cursor-pointer"
+                          >
+                            {getGpuName(gpu)}
+                          </a>
                         </Td>
                         <Td className="text-right">
                           <Checkbox
@@ -142,11 +179,12 @@ export const AdminImportGpusPage = (_props: AdminImportGpusPageProps) => {
 
             <Button
               variant={ButtonVariant.Primary}
-              disabled={gpusToImport.length === 0}
+              disabled={importing || gpusToImport.length === 0}
               className="self-end"
               onClick={handleImportClicked}
             >
-              Import {gpusToImport.length} New GPUs
+              {importing && <Spinner />}
+              {!importing && <span>Import {gpusToImport.length} New GPUs</span>}
             </Button>
           </div>
         )}

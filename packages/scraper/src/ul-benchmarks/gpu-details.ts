@@ -2,7 +2,7 @@ import {
   GpuBenchmarks,
   GpuDataSourceKey,
   GpuField,
-  ImportGpuDataResponse,
+  ScrapeGpuDetailsResponse,
 } from '@pcpartdb/shared';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
@@ -17,7 +17,7 @@ export async function scrapeUlBenchmarksGpuDetails(url: string) {
     timespyGraphics: getTimespyGraphics($),
   };
 
-  return { gpu: { benchmarks } } as ImportGpuDataResponse;
+  return { gpu: { benchmarks } } as ScrapeGpuDetailsResponse;
 }
 
 function getTimespyGraphics($: cheerio.CheerioAPI): GpuField<number> {

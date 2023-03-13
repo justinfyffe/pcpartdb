@@ -51,9 +51,9 @@ import { GpuFieldInput } from '../gpu-field-input';
 import { GpuImagesInput } from '../gpu-image-input';
 import { GpuSlugInput } from '../gpu-slug-input';
 import {
-  ImportGpuDataDialog,
-  ImportGpuDataResults,
-} from '../import-gpu-data-dialog';
+  ScrapeGpuDetailsDialog,
+  ScrapeGpuDetailsResults,
+} from '../scrape-gpu-details-dialog';
 
 interface GpuFormData {
   slug: string;
@@ -363,14 +363,14 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
     }
   }, [gpu, router, setError]);
 
-  const handleImport = useCallback(
-    (data: ImportGpuDataResults) => {
-      if (data.name.import) {
+  const handleScrape = useCallback(
+    (data: ScrapeGpuDetailsResults) => {
+      if (data.name.enabled) {
         setValue('name', data.name.value);
       }
 
       Object.keys(data.fields || {}).forEach((fieldKey) => {
-        if (data.fields[fieldKey].import) {
+        if (data.fields[fieldKey].enabled) {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           setValue(fieldKey as any, data.fields[fieldKey].value);
         }
@@ -388,17 +388,17 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
     ],
   });
 
-  const handleImportClick = useCallback(() => {
+  const handleScrapeClick = useCallback(() => {
     showDialog(
-      <ImportGpuDataDialog
+      <ScrapeGpuDetailsDialog
         sources={importSources.filter((source) => source != null)}
-        onImport={handleImport}
+        onImport={handleScrape}
       />,
       {
         disableClose: true,
       },
     );
-  }, [importSources, handleImport]);
+  }, [importSources, handleScrape]);
 
   return (
     <Form onSubmit={handleSubmit(handleSave)}>
@@ -444,8 +444,8 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           />
         </Field>
 
-        <Button variant={ButtonVariant.Secondary} onClick={handleImportClick}>
-          Import Data
+        <Button variant={ButtonVariant.Secondary} onClick={handleScrapeClick}>
+          Scrape Details
         </Button>
       </section>
 

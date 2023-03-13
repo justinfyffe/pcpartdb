@@ -13,8 +13,9 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import {
   CreateGpuRequest,
-  ImportGpuDataRequest,
+  ImportGpusRequest,
   ListGpusRequest,
+  ScrapeGpuDetailsRequest,
   UpdateGpuRequest,
 } from '@pcpartdb/shared';
 import { StaffGuard } from '../auth/staff.guard';
@@ -133,10 +134,10 @@ export class GpuController {
     );
   }
 
-  @Post('import')
+  @Post('scrape-details')
   @UseGuards(StaffGuard)
-  async importData(@Body() body: ImportGpuDataRequest) {
-    return await this.gpuImporterService.importData(body);
+  async scrapeDetails(@Body() body: ScrapeGpuDetailsRequest) {
+    return await this.gpuImporterService.scrapeDetails(body);
   }
 
   @Post('preview-import')
@@ -150,6 +151,17 @@ export class GpuController {
       async () => {
         const file = body.tempPath;
         return await this.gpuImporterService.previewImport(file, ctx);
+      },
+      { ctx },
+    );
+  }
+
+  @Post('import')
+  @UseGuards(StaffGuard)
+  async import(@Body() body: ImportGpusRequest, @Ctx() ctx: Context) {
+    return await this.db.transaction(
+      async () => {
+        await this.gpuImporterService.import(body, ctx);
       },
       { ctx },
     );

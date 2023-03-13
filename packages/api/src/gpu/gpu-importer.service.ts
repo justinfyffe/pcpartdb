@@ -7,9 +7,10 @@ import {
 import {
   Gpu,
   GpuDataSource,
-  ImportGpuDataRequest,
-  ImportGpuDataResponse,
+  ImportGpusRequest,
   PreviewImportGpusResponse,
+  ScrapeGpuDetailsRequest,
+  ScrapeGpuDetailsResponse,
 } from '@pcpartdb/shared';
 import * as fsPromises from 'fs/promises';
 import { Context } from '../shared/context';
@@ -18,6 +19,7 @@ import { deepMergeObjects } from '../shared/utils';
 import * as fileUtils from '../shared/utils';
 import { mapToGpuDto } from './gpu.mapper';
 import { GpuRepository } from './gpu.repository';
+import { GpuService } from './gpu.service';
 
 enum Importers {
   TechPowerUp = 'www.techpowerup.com',
@@ -27,15 +29,18 @@ enum Importers {
 
 @Injectable()
 export class GpuImporterService {
-  constructor(private gpuRepository: GpuRepository) {}
+  constructor(
+    private gpuService: GpuService,
+    private gpuRepository: GpuRepository,
+  ) {}
 
-  async importData(request: ImportGpuDataRequest) {
-    const result: ImportGpuDataResponse = { gpu: {} };
+  async scrapeDetails(request: ScrapeGpuDetailsRequest) {
+    const result: ScrapeGpuDetailsResponse = { gpu: {} };
 
     for (let i = 0; i < request.sources.length; ++i) {
       deepMergeObjects(
         result,
-        await this.importDataFromSource(request.sources[i]),
+        await this.scrapeDetailsFromSource(request.sources[i]),
       );
     }
 
@@ -70,7 +75,15 @@ export class GpuImporterService {
     return { newGpus, existingGpus } as PreviewImportGpusResponse;
   }
 
-  private async importDataFromSource(source: GpuDataSource) {
+  async import(request: ImportGpusRequest, ctx: Context) {
+    const { gpus } = request;
+    for (let i = 0; i < gpus.length; ++i) {
+      const gpu = gpus[i];
+      await this.gpuService.create(gpu, ctx);
+    }
+  }
+
+  private async scrapeDetailsFromSource(source: GpuDataSource) {
     const parsedUrl = new URL(source.url);
 
     if (parsedUrl.hostname === Importers.TechPowerUp) {

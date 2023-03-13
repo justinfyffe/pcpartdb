@@ -2,7 +2,7 @@ import {
   GpuBenchmarks,
   GpuDataSourceKey,
   GpuField,
-  ImportGpuDataResponse,
+  ScrapeGpuDetailsResponse,
   MarketSegmentValue,
 } from '@pcpartdb/shared';
 import axios from 'axios';
@@ -21,7 +21,7 @@ export async function scrapeVideocardBenchmarksGpuDetails(url: string) {
 
   return {
     gpu: { marketSegment: getMarketSegment($), benchmarks },
-  } as ImportGpuDataResponse;
+  } as ScrapeGpuDetailsResponse;
 }
 
 function getG3dMark($: cheerio.CheerioAPI): GpuField<number> {

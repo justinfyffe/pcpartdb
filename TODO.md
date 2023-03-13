@@ -7,15 +7,11 @@ Workspaces:
 - website
 
 Immediate Tasks:
+  - use branches for each version, merge to master afterwards
   - TODO
     - create page to import scraped data
-      - add preview dialog per gpu - just json for now
-      - create endpoint for actually saving gpus
-        - takes in array of gpus, only new gpus for now
-      - update import button
-    - clean up import code
-      - rename single gpu import to "scrape"
-      - clean up paths for preview and actual import
+      - test
+    - Add pagination, not infinite scroll
   - folder structure for pages and components
     - <feature>/pages/<page-name>/components
     - <feature>/shared/components/
