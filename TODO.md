@@ -7,6 +7,7 @@ Workspaces:
 - website
 
 Immediate Tasks:
+  - use branches for each version, merge to master afterwards
   - TODO
     - create page to import scraped data
       - test
