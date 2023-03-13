@@ -6,30 +6,30 @@ import React, {
   useState,
 } from 'react';
 import { Checkbox, Td, Tr } from '../../../../shared/components';
-import { ImportGpuDataContext } from './import-gpu-data-context';
+import { ScrapeGpuDetailsContext } from './scrape-gpu-details-context';
 
-interface ImportNameProps {}
+interface ScrapeNameProps {}
 
-export const ImportName: FunctionComponent<ImportNameProps> = (_props) => {
-  const context = useContext(ImportGpuDataContext);
+export const ScrapeName: FunctionComponent<ScrapeNameProps> = (_props) => {
+  const context = useContext(ScrapeGpuDetailsContext);
   const emptyValue: string = null;
 
   const [checked, setChecked] = useState(() => false);
 
   useEffect(() => {
     if (context.name == null) {
-      context.name = { value: emptyValue, import: false };
+      context.name = { value: emptyValue, enabled: false };
       setChecked(false);
     } else {
-      setChecked(context.name.import);
+      setChecked(context.name.enabled);
     }
   }, [context, emptyValue]);
 
   const handleClick = useCallback(() => {
     if (checked) {
-      context.name.import = true;
+      context.name.enabled = true;
     } else {
-      context.name.import = false;
+      context.name.enabled = false;
     }
 
     setChecked(!checked);
@@ -40,7 +40,7 @@ export const ImportName: FunctionComponent<ImportNameProps> = (_props) => {
       <Td>Name</Td>
       <Td>{context.name?.value || '--'}</Td>
       <Td className="text-right">
-        <Checkbox value={context.name?.import ?? false} />
+        <Checkbox value={context.name?.enabled ?? false} />
       </Td>
     </Tr>
   );

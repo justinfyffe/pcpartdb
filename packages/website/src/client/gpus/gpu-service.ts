@@ -1,10 +1,11 @@
 import {
   CreateGpuRequest,
   Gpu,
-  ImportGpuDataRequest,
-  ImportGpuDataResponse,
+  ImportGpusRequest,
   ListGpusRequest,
   PreviewImportGpusResponse,
+  ScrapeGpuDetailsRequest,
+  ScrapeGpuDetailsResponse,
   UpdateGpuRequest,
 } from '@pcpartdb/shared';
 import { ApiClient, apiClient } from '../shared/api';
@@ -54,8 +55,11 @@ export class GpuService {
     });
   }
 
-  async importGpuData(data: ImportGpuDataRequest) {
-    return await this.api.post<ImportGpuDataResponse>(`${PATH}/import`, data);
+  async scrapeGpuDetails(data: ScrapeGpuDetailsRequest) {
+    return await this.api.post<ScrapeGpuDetailsResponse>(
+      `${PATH}/scrape-details`,
+      data,
+    );
   }
 
   async previewImportGpus(file: File) {
@@ -68,6 +72,10 @@ export class GpuService {
       { headers: { 'content-type': 'multipart/form-data' } },
     );
     return results;
+  }
+
+  async importGpus(data: ImportGpusRequest) {
+    return await this.api.post(`${PATH}/import`, data);
   }
 }
 

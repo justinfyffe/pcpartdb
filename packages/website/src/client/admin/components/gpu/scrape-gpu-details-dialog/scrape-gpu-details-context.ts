@@ -3,22 +3,23 @@ import {
   GpuBenchmarks,
   GpuField,
   GpuSpecs,
-  ImportGpuDataResponse,
+  ScrapeGpuDetailsResponse,
 } from '@pcpartdb/shared';
 import { createContext } from 'react';
-import { ImportGpuDataResult, ImportGpuDataResults } from './import-types';
+import { ScrapeGpuDetailResult, ScrapeGpuDetailsResults } from './scrape-types';
 
-export const ImportGpuDataContext = createContext<ImportGpuDataResults>(null);
+export const ScrapeGpuDetailsContext =
+  createContext<ScrapeGpuDetailsResults>(null);
 
-export function createImportContext(response: ImportGpuDataResponse) {
+export function createScrapeContext(response: ScrapeGpuDetailsResponse) {
   const { gpu } = response;
   const { specs, benchmarks } = gpu;
 
-  const importedFields: Record<string, ImportGpuDataResult<GpuField>> = {};
+  const scrapedFields: Record<string, ScrapeGpuDetailResult<GpuField>> = {};
 
   ['company', 'marketSegment', 'releaseDate', 'launchPrice'].forEach((key) => {
     const value = gpu[key as keyof Gpu] as GpuField;
-    importedFields[key] = { value, import: value?.value != null };
+    scrapedFields[key] = { value, enabled: value?.value != null };
   });
 
   if (specs != null) {
@@ -28,7 +29,7 @@ export function createImportContext(response: ImportGpuDataResponse) {
         return;
       }
 
-      importedFields[key] = { value, import: value?.value != null };
+      scrapedFields[key] = { value, enabled: value?.value != null };
     });
   }
 
@@ -39,12 +40,12 @@ export function createImportContext(response: ImportGpuDataResponse) {
         return;
       }
 
-      importedFields[key] = { value, import: value?.value != null };
+      scrapedFields[key] = { value, enabled: value?.value != null };
     });
   }
 
   return {
-    name: { value: gpu.name, import: gpu.name != null },
-    fields: importedFields,
-  } as ImportGpuDataResults;
+    name: { value: gpu.name, enabled: gpu.name != null },
+    fields: scrapedFields,
+  } as ScrapeGpuDetailsResults;
 }
