@@ -13,6 +13,7 @@ export * from './image';
 export * from './input';
 export * from './list';
 export * from './menu';
+export * from './pagination';
 export * from './select';
 export * from './seo';
 export * from './spinner';

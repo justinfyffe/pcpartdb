@@ -4,7 +4,11 @@ import React, { useCallback, useState } from 'react';
 import { CompareGpusForm } from '../../../gpus/components';
 import { gpuService } from '../../../gpus/gpu-service';
 import { useGpuCache } from '../../../shared/cache';
-import { Breadcrumb, Breadcrumbs } from '../../../shared/components';
+import {
+  Breadcrumb,
+  Breadcrumbs,
+  Pagination,
+} from '../../../shared/components';
 import { WebsiteLayout } from '../../../shared/layouts';
 import { classNames } from '../../../shared/ui';
 import {
