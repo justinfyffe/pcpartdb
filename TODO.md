@@ -17,7 +17,6 @@ Immediate Tasks:
     - <feature>/shared/components/
   - improve autocomplete sorting
     - show more recent gpus
-  - infinite scroll
   - Scraping improvements
     - Add download date when importing
     - Allow ability to overwrite existing gpus
