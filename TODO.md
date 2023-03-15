@@ -9,9 +9,12 @@ Workspaces:
 Immediate Tasks:
   - use branches for each version, merge to master afterwards
   - TODO
+    - Pagination - add pagination to admin gpus list
+      - update list without fully reloading page
+    - Pagination - update table without fully reloading page
+      - Use on-click, keep href for seo
     - create page to import scraped data
       - test
-    - Add pagination, not infinite scroll
   - folder structure for pages and components
     - <feature>/pages/<page-name>/components
     - <feature>/shared/components/

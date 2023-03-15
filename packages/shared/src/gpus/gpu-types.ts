@@ -117,6 +117,11 @@ export interface ListGpusRequest {
   query?: GpusQuery;
 }
 
+export interface ListGpusResponse {
+  gpus: Gpu[];
+  totalGpus: number;
+}
+
 export interface ScrapeGpuDetailsRequest {
   sources: GpuDataSource[];
 }

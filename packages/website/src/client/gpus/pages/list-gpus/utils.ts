@@ -2,18 +2,31 @@ import { GpusQuery } from '@pcpartdb/shared';
 import { getListGpusPath } from '../../../shared/website';
 import { LIST_PRESETS } from './types';
 
+export const DEFAULT_LIST_GPUS_LIMIT = 50;
+
 export function getListPath(presetOrQuery: GpusQuery | string) {
   if (typeof presetOrQuery === 'string') {
     return getListGpusPath(presetOrQuery);
   }
 
+  const params = new URLSearchParams();
   const query = presetOrQuery;
-  const preset = getPresetEquivalent(query);
-  if (preset != null) {
-    return getListGpusPath(preset);
+
+  if (query.limit != null && query.limit !== DEFAULT_LIST_GPUS_LIMIT) {
+    params.append('limit', `${query.limit}`);
   }
 
-  const params = new URLSearchParams();
+  if (query.offset != null && query.offset !== 0) {
+    params.append('offset', `${query.offset}`);
+  }
+
+  // Check if the rest of the query is a preset or not.
+  const preset = getPresetEquivalent(query);
+  if (preset != null) {
+    const q = params.toString();
+    const urlQuery = q ? `?${q}` : '';
+    return getListGpusPath(`${preset}${urlQuery}`);
+  }
 
   if (query.filter?.company?.length > 0) {
     params.append('company', query.filter.company.join(','));

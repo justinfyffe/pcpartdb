@@ -29,6 +29,7 @@ export interface CompareGpusViewModel {
 
 export interface ListGpusViewModel {
   query?: GpusQuery;
+  totalResults: number;
   gpus: Gpu[];
   totalGpus: number;
 }

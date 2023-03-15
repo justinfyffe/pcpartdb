@@ -8,6 +8,8 @@ import {
   gpuSpecsValidator,
 } from '@pcpartdb/shared';
 
+const MAX_LIMIT_GPUS_QUERY = 100;
+
 export const gpuPresetsValidator = Joi.string();
 
 export const gpusFilterValidator = Joi.object({
@@ -33,6 +35,8 @@ export const gpusOrderByValidator = Joi.object({
 export const gpusQueryValidator = Joi.object({
   filter: gpusFilterValidator.allow(null),
   orderBy: gpusOrderByValidator.allow(null),
+  offset: Joi.number().min(0),
+  limit: Joi.number().positive().max(MAX_LIMIT_GPUS_QUERY),
 });
 
 export const listGpusRequestValidator = Joi.object({

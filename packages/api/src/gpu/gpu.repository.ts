@@ -10,6 +10,13 @@ import { Prisma } from '@prisma/client';
 import { Database, RepositoryConfig } from '../database';
 import { GpuEntity, GpuSpecsEntity } from './gpu.entity';
 
+export interface CountOptions {
+  query?: GpusQuery;
+
+  includeImages?: boolean;
+  includeRanks?: boolean;
+}
+
 export interface ListOptions {
   query?: GpusQuery;
 
@@ -25,6 +32,16 @@ export interface FindOptions {
 @Injectable()
 export class GpuRepository {
   constructor(private db: Database) {}
+
+  async count(options: CountOptions, config?: RepositoryConfig) {
+    const db = config?.trx ?? this.db;
+    const { filter, orderBy } = options.query ?? {};
+
+    return await db.gpu.findMany({
+      where: this.generateWhere(filter),
+      orderBy: this.generateOrderBy(orderBy),
+    });
+  }
 
   async list(
     options: ListOptions,

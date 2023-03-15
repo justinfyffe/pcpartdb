@@ -15,6 +15,7 @@ import {
   CreateGpuRequest,
   ImportGpusRequest,
   ListGpusRequest,
+  ListGpusResponse,
   ScrapeGpuDetailsRequest,
   UpdateGpuRequest,
 } from '@pcpartdb/shared';
@@ -53,10 +54,13 @@ export class GpuController {
       async () => {
         const data = JSON.parse(q) as ListGpusRequest;
         validate(data, listGpusRequestValidator);
-        return await this.gpuService.list(
+        const gpus = await this.gpuService.list(
           { ...data, includeRanks: true, includeImages: false },
           ctx,
         );
+        const totalGpus = await this.gpuService.count({ ...data }, ctx);
+
+        return { gpus, totalGpus } as ListGpusResponse;
       },
       { ctx },
     );

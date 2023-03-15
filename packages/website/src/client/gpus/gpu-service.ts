@@ -3,6 +3,7 @@ import {
   Gpu,
   ImportGpusRequest,
   ListGpusRequest,
+  ListGpusResponse,
   PreviewImportGpusResponse,
   ScrapeGpuDetailsRequest,
   ScrapeGpuDetailsResponse,
@@ -17,11 +18,11 @@ export class GpuService {
   constructor(private api: ApiClient) {}
 
   async list(data: ListGpusRequest) {
-    const gpus = await this.api.get<Gpu[]>(PATH, {
+    const response = await this.api.get<ListGpusResponse>(PATH, {
       params: { q: JSON.stringify(data) },
     });
-    GpuCache.save(gpus);
-    return gpus;
+    GpuCache.save(response.gpus);
+    return response;
   }
 
   async create(data: CreateGpuRequest) {

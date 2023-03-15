@@ -11,14 +11,19 @@ import { badRequestError, notFoundError } from '../shared/error';
 import { addPerformanceBenchmarks } from './benchmark-utils';
 import { GpuSpecsEntity } from './gpu.entity';
 import { mapToGpuDto, mapToGpuDtos, mapToGpuEntity } from './gpu.mapper';
-import { FindOptions, GpuRepository, ListOptions } from './gpu.repository';
+import {
+  CountOptions,
+  FindOptions,
+  GpuRepository,
+  ListOptions,
+} from './gpu.repository';
 
 @Injectable()
 export class GpuService {
   constructor(private gpuRepository: GpuRepository) {}
 
-  async count(options: ListOptions, ctx: Context) {
-    const gpuEntities = await this.gpuRepository.list(options, ctx);
+  async count(options: CountOptions, ctx: Context) {
+    const gpuEntities = await this.gpuRepository.count(options, ctx);
     return gpuEntities.length;
   }
 

@@ -7,14 +7,19 @@ interface PaginationProps {
   neighborPagesDisplayed?: number;
   marginPagesDisplayed?: number;
 
+  hidePages?: boolean;
+
   currentPage: number;
   resultsPerPage: number;
   totalResults: number;
+
+  hrefBuilder: (page: number) => string;
 }
 
 export const Pagination: FunctionComponent<PaginationProps> = (props) => {
-  const { currentPage, resultsPerPage, totalResults } = props;
+  const { currentPage, resultsPerPage, totalResults, hrefBuilder } = props;
 
+  const hidePages = props.hidePages ?? false;
   const neighborPagesDisplayed = props.neighborPagesDisplayed ?? 2;
   const marginPagesDisplayed = props.marginPagesDisplayed ?? 2;
 
@@ -43,7 +48,7 @@ export const Pagination: FunctionComponent<PaginationProps> = (props) => {
   }, [currentPage, neighborPagesDisplayed, totalPages]);
 
   const right = useMemo(() => {
-    const start = Math.max(1, totalPages - marginPagesDisplayed);
+    const start = Math.max(1, totalPages - marginPagesDisplayed + 1);
     const pages: number[] = [];
     for (let i = start; i <= totalPages; ++i) {
       pages.push(i);
@@ -86,23 +91,48 @@ export const Pagination: FunctionComponent<PaginationProps> = (props) => {
     return pages;
   }, [left, middle, right]);
 
+  if (pages.length === 1) {
+    return <></>;
+  }
+
   return (
-    <nav className={classNames('flex gap-2', props.className)}>
-      {currentPage > 1 ? <a href="#">Previous</a> : <></>}
+    <nav
+      className={classNames(
+        'flex gap-6 justify-between items-center font-semibold p-2',
+        props.className,
+      )}
+    >
+      {currentPage > 1 ? (
+        <a href={hrefBuilder(currentPage - 1)}>Previous</a>
+      ) : (
+        <div></div>
+      )}
 
-      <ul className="flex gap-2">
-        {pages.map((page, i) => (
-          <li key={page || `null-${i}`}>
-            {page == null ? (
-              <>&hellip;</>
-            ) : (
-              <>{page === currentPage ? <>{page}</> : <a href="#">{page}</a>}</>
-            )}
-          </li>
-        ))}
-      </ul>
+      {!hidePages && (
+        <ul className="flex gap-8">
+          {pages.map((page, i) => (
+            <li key={page || `null-${i}`}>
+              {page == null ? (
+                <>&hellip;</>
+              ) : (
+                <>
+                  {page === currentPage ? (
+                    <>{page}</>
+                  ) : (
+                    <a href={hrefBuilder(page)}>{page}</a>
+                  )}
+                </>
+              )}
+            </li>
+          ))}
+        </ul>
+      )}
 
-      {currentPage < totalPages ? <a href="#">Next</a> : <></>}
+      {currentPage < totalPages ? (
+        <a href={hrefBuilder(currentPage + 1)}>Next</a>
+      ) : (
+        <div></div>
+      )}
     </nav>
   );
 };

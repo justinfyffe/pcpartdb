@@ -26,16 +26,16 @@ export const ListGpusPage = (props: ListGpusViewModel) => {
   const router = useRouter();
 
   const [gpus, setGpus] = useState(props.gpus);
+  const [totalResults, setTotalResults] = useState(props.totalResults);
   const [query, setQueryState] = useState(props.query);
   const [canonical, setCanonical] = useState(() => getListPath(query));
 
   const setQuery = useCallback(
     (q: GpusQuery) => {
       async function fetchGpus() {
-        const gpus = await gpuService.list({
-          query: q,
-        });
-        setGpus(gpus);
+        const response = await gpuService.list({ query: q });
+        setGpus(response.gpus);
+        setTotalResults(response.totalGpus);
         setQueryState(q);
       }
       fetchGpus();
@@ -45,6 +45,13 @@ export const ListGpusPage = (props: ListGpusViewModel) => {
       setCanonical(url);
     },
     [router],
+  );
+
+  const getPageUrl = useCallback(
+    (page: number) => {
+      return getListPath({ ...query, offset: query.limit * (page - 1) });
+    },
+    [query],
   );
 
   const context = createListPageContextState({ query, setQuery, gpus });
@@ -60,7 +67,7 @@ export const ListGpusPage = (props: ListGpusViewModel) => {
           <Breadcrumb>Graphics Cards</Breadcrumb>
         </Breadcrumbs>
 
-        <section className="flex flex-col gap-8 justify-center mb-8">
+        <section className="flex flex-col gap-8 justify-center mb-4">
           <section className={classNames('flex flex-col justify-center gap-4')}>
             <CompareGpusForm values={[null, null]} />
           </section>
@@ -73,7 +80,17 @@ export const ListGpusPage = (props: ListGpusViewModel) => {
             </div>
 
             <section className="flex gap-4 items-start">
-              <ListTable />
+              <div className="flex-1 flex flex-col gap-4">
+                <ListTable />
+                <Pagination
+                  currentPage={Math.ceil(1 + query.offset / query.limit)}
+                  resultsPerPage={query.limit}
+                  totalResults={totalResults}
+                  hrefBuilder={getPageUrl}
+                  hidePages
+                />
+              </div>
+
               <aside className="md:hidden border-px">
                 <ListFilters />
               </aside>
