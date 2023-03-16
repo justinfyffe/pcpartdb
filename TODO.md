@@ -9,10 +9,15 @@ Workspaces:
 Immediate Tasks:
   - use branches for each version, merge to master afterwards
   - TODO
+    - Pagination - list gpus 
+      - don't reload after pressing back/forward
+        - CREATE DEFAULT QUERY FOR NO PRESET
+        - return query with list response?
+        - generate query based on url
+          - reuse code for building query for getServerSideProps and list component
     - Pagination - admin gpus list
       - update list without fully reloading page?
-    - Pagination - list gpus 
-      - don't reload after pressing back/forward?
+    - Clean up pagination code
     - create page to import scraped data
       - test
   - folder structure for pages and components
