@@ -21,6 +21,7 @@ export const ListFilters: FunctionComponent<ListFiltersProps> = (props) => {
   const handleBestPerformanceClick = useCallback(() => {
     setQuery({
       ...query,
+      offset: 0,
       orderBy: { sort: GpuSort.PerformanceRating },
     });
   }, [query, setQuery]);
@@ -28,6 +29,7 @@ export const ListFilters: FunctionComponent<ListFiltersProps> = (props) => {
   const handleBestValueClick = useCallback(() => {
     setQuery({
       ...query,
+      offset: 0,
       orderBy: { sort: GpuSort.ValueRating },
     });
   }, [query, setQuery]);
@@ -42,6 +44,7 @@ export const ListFilters: FunctionComponent<ListFiltersProps> = (props) => {
 
       setQuery({
         ...query,
+        offset: 0,
         filter: {
           ...query.filter,
           company: companies.size > 0 ? [...companies.keys()] : undefined,

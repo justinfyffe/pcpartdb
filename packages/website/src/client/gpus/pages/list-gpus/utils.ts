@@ -2,7 +2,7 @@ import { GpusQuery } from '@pcpartdb/shared';
 import { getListGpusPath } from '../../../shared/website';
 import { LIST_PRESETS } from './types';
 
-export const DEFAULT_LIST_GPUS_LIMIT = 50;
+export const DEFAULT_LIST_GPUS_LIMIT = 10;
 
 export function getListPath(presetOrQuery: GpusQuery | string) {
   if (typeof presetOrQuery === 'string') {

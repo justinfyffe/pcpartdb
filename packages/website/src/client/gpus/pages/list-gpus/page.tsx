@@ -1,6 +1,6 @@
 import { GpusQuery, ListGpusViewModel } from '@pcpartdb/shared';
 import { useRouter } from 'next/router';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { CompareGpusForm } from '../../../gpus/components';
 import { gpuService } from '../../../gpus/gpu-service';
 import { useGpuCache } from '../../../shared/cache';
@@ -30,6 +30,16 @@ export const ListGpusPage = (props: ListGpusViewModel) => {
   const [query, setQueryState] = useState(props.query);
   const [canonical, setCanonical] = useState(() => getListPath(query));
 
+  useEffect(() => {
+    router.beforePopState(() => {
+      // Reload the page. Next seems to have a bug
+      // where the data doesn't fetch when going back/forward
+      // TODO: can we get query based on url instead of reloading
+      router.reload();
+      return true;
+    });
+  }, [router]);
+
   const setQuery = useCallback(
     (q: GpusQuery) => {
       async function fetchGpus() {
@@ -41,13 +51,22 @@ export const ListGpusPage = (props: ListGpusViewModel) => {
       fetchGpus();
 
       const url = getListPath(q);
-      router.replace(url, undefined, { shallow: true });
+      router.push(url, undefined, { shallow: true });
       setCanonical(url);
     },
     [router],
   );
 
-  const getPageUrl = useCallback(
+  const paginationPageClick = useCallback(
+    (page: number, evt: React.MouseEvent) => {
+      evt.preventDefault();
+      evt.stopPropagation();
+      setQuery({ ...query, offset: query.limit * (page - 1) });
+    },
+    [query, setQuery],
+  );
+
+  const paginationHrefBuilder = useCallback(
     (page: number) => {
       return getListPath({ ...query, offset: query.limit * (page - 1) });
     },
@@ -86,8 +105,9 @@ export const ListGpusPage = (props: ListGpusViewModel) => {
                   currentPage={Math.ceil(1 + query.offset / query.limit)}
                   resultsPerPage={query.limit}
                   totalResults={totalResults}
-                  hrefBuilder={getPageUrl}
-                  hidePages
+                  onPageClick={paginationPageClick}
+                  hrefBuilder={paginationHrefBuilder}
+                  hidePages={false}
                 />
               </div>
 
