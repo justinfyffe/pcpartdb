@@ -108,6 +108,7 @@ export const ListGpusPage = (props: ListGpusViewModel) => {
                   totalResults={totalResults}
                   onPageClick={paginationPageClick}
                   hrefBuilder={paginationHrefBuilder}
+                  neighborPagesClassName="lg:hidden"
                   hidePages={false}
                 />
               </div>

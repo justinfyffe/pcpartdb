@@ -3,6 +3,7 @@ import { classNames } from '../../ui';
 
 interface PaginationProps {
   className?: string;
+  neighborPagesClassName?: string;
 
   neighborPagesDisplayed?: number;
   marginPagesDisplayed?: number;
@@ -19,6 +20,8 @@ interface PaginationProps {
 
 export const Pagination: FunctionComponent<PaginationProps> = (props) => {
   const {
+    className,
+    neighborPagesClassName,
     currentPage,
     resultsPerPage,
     totalResults,
@@ -106,7 +109,7 @@ export const Pagination: FunctionComponent<PaginationProps> = (props) => {
     <nav
       className={classNames(
         'flex gap-6 justify-between items-center font-semibold p-2',
-        props.className,
+        className,
       )}
     >
       {currentPage > 1 ? (
@@ -121,7 +124,7 @@ export const Pagination: FunctionComponent<PaginationProps> = (props) => {
       )}
 
       {!hidePages && (
-        <ul className="flex gap-8">
+        <ul className={classNames('flex gap-8', neighborPagesClassName)}>
           {pages.map((page, i) => (
             <li key={page || `null-${i}`}>
               {page == null ? (
