@@ -1,8 +1,7 @@
 import 'reflect-metadata';
-import { HomeViewModel } from '@pcpartdb/shared';
+import { HomeViewModel, ListGpusPresetSlug } from '@pcpartdb/shared';
 import React from 'react';
 import { CompareGpusForm } from '../../../gpus/components';
-import { ListPresetSlug } from '../../../gpus/pages';
 import { WebsiteLayout } from '../../../shared/layouts';
 import { classNames } from '../../../shared/ui';
 import { getListGpusPath } from '../../../shared/website';
@@ -60,10 +59,12 @@ export const HomePage = (props: HomeViewModel) => {
           </FeedItems>
 
           <FeedLinks>
-            <FeedLink href={getListGpusPath(ListPresetSlug.BestPerformance)}>
+            <FeedLink
+              href={getListGpusPath(ListGpusPresetSlug.BestPerformance)}
+            >
               Best performing GPUs
             </FeedLink>
-            <FeedLink href={getListGpusPath(ListPresetSlug.BestValue)}>
+            <FeedLink href={getListGpusPath(ListGpusPresetSlug.BestValue)}>
               Best value GPUs
             </FeedLink>
           </FeedLinks>
@@ -87,11 +88,13 @@ export const HomePage = (props: HomeViewModel) => {
 
           <FeedLinks>
             <FeedLink
-              href={getListGpusPath(ListPresetSlug.BestPerformanceNvidia)}
+              href={getListGpusPath(ListGpusPresetSlug.BestPerformanceNvidia)}
             >
               Best performing NVIDIA GPUs
             </FeedLink>
-            <FeedLink href={getListGpusPath(ListPresetSlug.BestValueNvidia)}>
+            <FeedLink
+              href={getListGpusPath(ListGpusPresetSlug.BestValueNvidia)}
+            >
               Best value NVIDIA GPUs
             </FeedLink>
           </FeedLinks>
@@ -114,10 +117,12 @@ export const HomePage = (props: HomeViewModel) => {
           </FeedItems>
 
           <FeedLinks>
-            <FeedLink href={getListGpusPath(ListPresetSlug.BestPerformanceAmd)}>
+            <FeedLink
+              href={getListGpusPath(ListGpusPresetSlug.BestPerformanceAmd)}
+            >
               Best performing AMD GPUs
             </FeedLink>
-            <FeedLink href={getListGpusPath(ListPresetSlug.BestValueAmd)}>
+            <FeedLink href={getListGpusPath(ListGpusPresetSlug.BestValueAmd)}>
               Best value AMD GPUs
             </FeedLink>
           </FeedLinks>

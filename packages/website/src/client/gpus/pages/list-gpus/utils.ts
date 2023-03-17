@@ -1,6 +1,5 @@
-import { GpusQuery } from '@pcpartdb/shared';
+import { GpusQuery, LIST_GPUS_PRESETS } from '@pcpartdb/shared';
 import { getListGpusPath } from '../../../shared/website';
-import { LIST_PRESETS } from './types';
 
 export const DEFAULT_LIST_GPUS_LIMIT = 10;
 
@@ -45,7 +44,7 @@ export function getListPath(presetOrQuery: GpusQuery | string) {
 }
 
 function getPresetEquivalent(query: GpusQuery) {
-  const presets = Object.entries(LIST_PRESETS);
+  const presets = Object.entries(LIST_GPUS_PRESETS);
 
   for (const [key, preset] of presets) {
     if (areQueriesEqual(query, preset)) {

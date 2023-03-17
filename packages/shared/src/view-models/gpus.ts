@@ -15,14 +15,16 @@ export interface AdminListGpusViewModel {
   gpus: Gpu[];
 }
 
+export interface CompareGpusContentData {
+  totalPerformanceRatedGpus: number;
+
+  relativePerformanceGpus: Gpu[];
+  relativeValueGpus: Gpu[];
+}
+
 export interface CompareGpusViewModel {
   comparison: GpuComparison;
-  contentData: {
-    totalPerformanceRatedGpus: number;
-
-    relativePerformanceGpus: Gpu[];
-    relativeValueGpus: Gpu[];
-  };
+  contentData: CompareGpusContentData;
   relatedGpus: RelatedGpus;
   relatedComparisons: RelatedComparisons;
 }
@@ -34,7 +36,7 @@ export interface ListGpusViewModel {
   totalGpus: number;
 }
 
-export enum ListPresetSlug {
+export enum ListGpusPresetSlug {
   BestPerformance = 'best-performance',
   BestPerformanceAmd = 'best-performance-amd',
   BestPerformanceNvidia = 'best-performance-nvidia',
@@ -43,42 +45,44 @@ export enum ListPresetSlug {
   BestValueNvidia = 'best-value-nvidia',
 }
 
-export const LIST_PRESETS: Record<ListPresetSlug, GpusQuery> = {
-  [ListPresetSlug.BestPerformance]: {
+export const LIST_GPUS_PRESETS: Record<ListGpusPresetSlug, GpusQuery> = {
+  [ListGpusPresetSlug.BestPerformance]: {
     filter: {},
     orderBy: { sort: GpuSort.PerformanceRating },
   },
-  [ListPresetSlug.BestPerformanceAmd]: {
+  [ListGpusPresetSlug.BestPerformanceAmd]: {
     filter: { company: ['amd'] },
     orderBy: { sort: GpuSort.PerformanceRating },
   },
-  [ListPresetSlug.BestPerformanceNvidia]: {
+  [ListGpusPresetSlug.BestPerformanceNvidia]: {
     filter: { company: ['nvidia'] },
     orderBy: { sort: GpuSort.PerformanceRating },
   },
-  [ListPresetSlug.BestValue]: {
+  [ListGpusPresetSlug.BestValue]: {
     filter: {},
     orderBy: { sort: GpuSort.ValueRating },
   },
-  [ListPresetSlug.BestValueAmd]: {
+  [ListGpusPresetSlug.BestValueAmd]: {
     filter: { company: ['amd'] },
     orderBy: { sort: GpuSort.ValueRating },
   },
-  [ListPresetSlug.BestValueNvidia]: {
+  [ListGpusPresetSlug.BestValueNvidia]: {
     filter: { company: ['nvidia'] },
     orderBy: { sort: GpuSort.ValueRating },
   },
 };
 
+export interface ViewGpuContentData {
+  totalPerformanceRatedGpus: number;
+
+  relativePerformanceGpus?: Gpu[];
+  relativeValueGpus?: Gpu[];
+}
+
 export interface ViewGpuViewModel {
   gpu: Gpu;
 
-  contentData: {
-    totalPerformanceRatedGpus: number;
-
-    relativePerformanceGpus?: Gpu[];
-    relativeValueGpus?: Gpu[];
-  };
+  contentData: ViewGpuContentData;
   relatedGpus: RelatedGpus;
   relatedComparisons: RelatedComparisons;
 }

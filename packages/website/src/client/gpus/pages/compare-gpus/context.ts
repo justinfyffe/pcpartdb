@@ -1,10 +1,9 @@
-import { GpuComparison } from '@pcpartdb/shared';
+import { CompareGpusContentData, GpuComparison } from '@pcpartdb/shared';
 import { createContext } from 'react';
-import { ComparePageContentData } from './types';
 
 interface ComparePageContextState {
   comparison: GpuComparison;
-  contentData: ComparePageContentData;
+  contentData: CompareGpusContentData;
 }
 
 export const ComparePageContext = createContext<ComparePageContextState>({
@@ -14,7 +13,7 @@ export const ComparePageContext = createContext<ComparePageContextState>({
 
 export function createComparePageContextState(input: {
   comparison: GpuComparison;
-  contentData: ComparePageContentData;
+  contentData: CompareGpusContentData;
 }) {
   const comparison = [...input.comparison];
   const contentData = { ...input.contentData };

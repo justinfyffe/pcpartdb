@@ -1,10 +1,9 @@
-import { Gpu } from '@pcpartdb/shared';
+import { Gpu, ViewGpuContentData } from '@pcpartdb/shared';
 import { createContext } from 'react';
-import { ViewPageContentData } from './types';
 
 interface ViewPageContextState {
   gpu: Gpu;
-  contentData: ViewPageContentData;
+  contentData: ViewGpuContentData;
 }
 
 export const ViewPageContext = createContext<ViewPageContextState>({
@@ -14,7 +13,7 @@ export const ViewPageContext = createContext<ViewPageContextState>({
 
 export function createViewPageContextState(input: {
   gpu: Gpu;
-  contentData: ViewPageContentData;
+  contentData: ViewGpuContentData;
 }) {
   const gpu = { ...input.gpu };
   const contentData = { ...input.contentData };

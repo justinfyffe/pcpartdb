@@ -1,9 +1,9 @@
 import { Bars3Icon } from '@heroicons/react/24/outline';
+import { ListGpusPresetSlug } from '@pcpartdb/shared';
 import React, { FunctionComponent } from 'react';
 import { Menu, MenuLinkItem } from '../../../../../shared/components';
 import { classNames } from '../../../../../shared/ui';
 import { getListGpusPath } from '../../../../../shared/website';
-import { ListPresetSlug } from '../../types';
 import { ListFilters } from '../list-filters';
 
 interface ListPresetsMenuProps {
@@ -25,26 +25,30 @@ export const ListPresetsMenu: FunctionComponent<ListPresetsMenuProps> = (
       <section>
         <div className="font-bold p-2">Lists:</div>
         <div className="flex flex-col">
-          <MenuLinkItem href={getListGpusPath(ListPresetSlug.BestPerformance)}>
+          <MenuLinkItem
+            href={getListGpusPath(ListGpusPresetSlug.BestPerformance)}
+          >
             Best performance GPUs
           </MenuLinkItem>
           <MenuLinkItem
-            href={getListGpusPath(ListPresetSlug.BestPerformanceAmd)}
+            href={getListGpusPath(ListGpusPresetSlug.BestPerformanceAmd)}
           >
             Best performance AMD GPUs
           </MenuLinkItem>
           <MenuLinkItem
-            href={getListGpusPath(ListPresetSlug.BestPerformanceNvidia)}
+            href={getListGpusPath(ListGpusPresetSlug.BestPerformanceNvidia)}
           >
             Best performance NVIDIA GPUs
           </MenuLinkItem>
-          <MenuLinkItem href={getListGpusPath(ListPresetSlug.BestValue)}>
+          <MenuLinkItem href={getListGpusPath(ListGpusPresetSlug.BestValue)}>
             Best value GPUs
           </MenuLinkItem>
-          <MenuLinkItem href={getListGpusPath(ListPresetSlug.BestValueAmd)}>
+          <MenuLinkItem href={getListGpusPath(ListGpusPresetSlug.BestValueAmd)}>
             Best value AMD GPUs
           </MenuLinkItem>
-          <MenuLinkItem href={getListGpusPath(ListPresetSlug.BestValueNvidia)}>
+          <MenuLinkItem
+            href={getListGpusPath(ListGpusPresetSlug.BestValueNvidia)}
+          >
             Best value NVIDIA GPUs
           </MenuLinkItem>
         </div>

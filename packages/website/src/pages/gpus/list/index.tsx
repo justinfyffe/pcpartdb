@@ -1,9 +1,9 @@
 import {
   GpuOrder,
   GpuSort,
-  LIST_PRESETS,
+  LIST_GPUS_PRESETS,
+  ListGpusPresetSlug,
   ListGpusRequest,
-  ListPresetSlug,
 } from '@pcpartdb/shared';
 import { NextPageContext } from 'next';
 import { ListGpusPage } from '../../../client/gpus/pages';
@@ -19,11 +19,11 @@ export async function getServerSideProps(ctx: NextPageContext) {
   const company = (query.company as string)?.split(',');
   const sort = (query.sort as GpuSort) || GpuSort.PerformanceRating;
   const order = query.order as GpuOrder;
-  const preset = query.preset as ListPresetSlug;
+  const preset = query.preset as ListGpusPresetSlug;
 
   let request: ListGpusRequest;
-  if (preset != null && LIST_PRESETS[preset] != null) {
-    request = { query: { ...LIST_PRESETS[preset], limit, offset } };
+  if (preset != null && LIST_GPUS_PRESETS[preset] != null) {
+    request = { query: { ...LIST_GPUS_PRESETS[preset], limit, offset } };
   } else {
     request = {
       query: {
