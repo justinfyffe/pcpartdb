@@ -1,4 +1,9 @@
-import { RelatedComparisons, RelatedGpus } from '@pcpartdb/shared';
+import {
+  getCompareGpusPath,
+  getViewGpuPath,
+  RelatedComparisons,
+  RelatedGpus,
+} from '@pcpartdb/shared';
 import React, { FunctionComponent } from 'react';
 import {
   getCompareGpusSlug,
@@ -7,7 +12,6 @@ import {
   getViewGpuSlug,
 } from '../../../gpus';
 import { classNames } from '../../../shared/ui';
-import { getCompareGpusPath, getViewGpuPath } from '../../../shared/website';
 
 interface CompareGpusFormLinksProps {
   relatedGpus: RelatedGpus;

@@ -1,4 +1,8 @@
-import { CompareGpusViewModel } from '@pcpartdb/shared';
+import {
+  CompareGpusViewModel,
+  getCompareGpusPath,
+  getListGpusPath,
+} from '@pcpartdb/shared';
 import React from 'react';
 import {
   getCompareGpusSlug,
@@ -9,7 +13,6 @@ import { CompareGpusForm } from '../../../gpus/components';
 import { useGpuCache } from '../../../shared/cache';
 import { Breadcrumb, Breadcrumbs } from '../../../shared/components';
 import { WebsiteLayout } from '../../../shared/layouts';
-import { getCompareGpusPath, getListGpusPath } from '../../../shared/website';
 import { Sidenav, SidenavComparisons, SidenavGpus } from '../../../sidenav';
 import {
   Benchmarks,

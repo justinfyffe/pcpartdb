@@ -1,7 +1,11 @@
-import { SeoInputs } from '@pcpartdb/shared';
+import {
+  getPageKeywords,
+  getPageTitle,
+  getPageUrl,
+  SeoInputs,
+} from '@pcpartdb/shared';
 import Head from 'next/head';
 import React, { FunctionComponent } from 'react';
-import { getPageKeywords, getPageTitle, getPageUrl } from '../../website';
 
 export interface SeoProps {
   seo?: SeoInputs;

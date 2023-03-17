@@ -1,9 +1,8 @@
 import { Bars3Icon } from '@heroicons/react/24/outline';
-import { ListGpusPresetSlug } from '@pcpartdb/shared';
+import { getListGpusPath, ListGpusPresetSlug } from '@pcpartdb/shared';
 import React, { FunctionComponent } from 'react';
 import { Menu, MenuLinkItem } from '../../../../../shared/components';
 import { classNames } from '../../../../../shared/ui';
-import { getListGpusPath } from '../../../../../shared/website';
 import { ListFilters } from '../list-filters';
 
 interface ListPresetsMenuProps {

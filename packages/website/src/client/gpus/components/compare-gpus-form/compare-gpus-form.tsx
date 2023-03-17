@@ -1,4 +1,8 @@
-import { GpuComparison } from '@pcpartdb/shared';
+import {
+  getCompareGpusPath,
+  getViewGpuPath,
+  GpuComparison,
+} from '@pcpartdb/shared';
 import React, {
   FormEvent,
   FunctionComponent,
@@ -10,7 +14,6 @@ import { getCompareGpusSlug, getViewGpuSlug } from '../../../gpus';
 import { GpuCache } from '../../../shared/cache';
 import { Button, ButtonVariant, Form } from '../../../shared/components';
 import { classNames } from '../../../shared/ui';
-import { getCompareGpusPath, getViewGpuPath } from '../../../shared/website';
 import { GpuAutocomplete } from '../gpu-autocomplete';
 
 interface CompareGpusFormProps {

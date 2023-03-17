@@ -1,9 +1,9 @@
 import {
   DEFAULT_LIST_GPUS_LIMIT,
+  getListGpusPath,
   GpusQuery,
   LIST_GPUS_PRESETS,
 } from '@pcpartdb/shared';
-import { getListGpusPath } from '../../../shared/website';
 
 export function getListPath(presetOrQuery: GpusQuery | string) {
   if (typeof presetOrQuery === 'string') {

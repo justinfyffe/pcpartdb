@@ -6,16 +6,7 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 
 module.exports = withBundleAnalyzer({
   redirects: () => [
-    {
-      source: '/gpus',
-      destination: '/gpus/list/best-performance',
-      permanent: false,
-    },
-    {
-      source: '/gpus/list',
-      destination: '/gpus/list/best-performance',
-      permanent: false,
-    },
+    { source: '/gpus', destination: '/gpus/list', permanent: false },
   ],
   eslint: {
     dirs: ['.'],

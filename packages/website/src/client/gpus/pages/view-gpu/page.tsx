@@ -1,11 +1,14 @@
-import { ViewGpuViewModel } from '@pcpartdb/shared';
+import {
+  getListGpusPath,
+  getViewGpuPath,
+  ViewGpuViewModel,
+} from '@pcpartdb/shared';
 import React from 'react';
 import { getGpuName, getViewGpuSlug } from '../../../gpus';
 import { CompareGpusForm, GpuImages } from '../../../gpus/components';
 import { useGpuCache } from '../../../shared/cache';
 import { Breadcrumb, Breadcrumbs } from '../../../shared/components';
 import { WebsiteLayout } from '../../../shared/layouts';
-import { getListGpusPath, getViewGpuPath } from '../../../shared/website';
 import { Sidenav, SidenavComparisons, SidenavGpus } from '../../../sidenav';
 import {
   Benchmarks,

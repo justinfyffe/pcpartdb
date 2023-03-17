@@ -1,4 +1,4 @@
-import { Gpu } from '@pcpartdb/shared';
+import { getViewGpuPath, Gpu } from '@pcpartdb/shared';
 import React, {
   FunctionComponent,
   useCallback,
@@ -16,7 +16,6 @@ import {
   THead,
   Tr,
 } from '../../../../../shared/components';
-import { getViewGpuPath } from '../../../../../shared/website';
 import { ComparePageContext } from '../../context';
 import { CustomRow, CustomRowLabel, CustomRowValue } from '../custom-row';
 

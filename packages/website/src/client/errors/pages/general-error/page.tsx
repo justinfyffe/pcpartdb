@@ -1,8 +1,7 @@
 import 'reflect-metadata';
-import { MetaRobots } from '@pcpartdb/shared';
+import { getHomePath, MetaRobots } from '@pcpartdb/shared';
 import React from 'react';
 import { WebsiteLayout } from '../../../shared/layouts';
-import { getHomePath } from '../../../shared/website';
 
 export interface GeneralErrorPageProps {}
 

@@ -10,11 +10,7 @@ Immediate Tasks:
   - use branches for each version, merge to master afterwards
   - TODO
     - Pagination - list gpus 
-      - don't reload after pressing back/forward
-        - CREATE DEFAULT QUERY FOR NO PRESET
-        - return query with list response?
-        - generate query based on url
-          - reuse code for building query for getServerSideProps and list component
+      - hide individual pages on small screens
     - Pagination - admin gpus list
       - update list without fully reloading page?
     - Clean up pagination code

@@ -1,8 +1,7 @@
-import { Gpu } from '@pcpartdb/shared';
+import { getViewGpuPath, Gpu } from '@pcpartdb/shared';
 import React, { FunctionComponent, useCallback, useContext } from 'react';
 import { getGpuName, getViewGpuSlug } from '../../../../../gpus';
 import { Table, TBody, Th, THead, Tr } from '../../../../../shared/components';
-import { getViewGpuPath } from '../../../../../shared/website';
 import { ViewPageContext } from '../../context';
 import { CustomRow, CustomRowLabel, CustomRowValue } from '../custom-row';
 

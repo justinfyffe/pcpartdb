@@ -1,5 +1,5 @@
 import { PhotoIcon } from '@heroicons/react/24/outline';
-import { Gpu, GpuComparison } from '@pcpartdb/shared';
+import { getCompareGpusPath, Gpu, GpuComparison } from '@pcpartdb/shared';
 import React, { FunctionComponent, useMemo } from 'react';
 import {
   formatGpuField,
@@ -14,7 +14,6 @@ import {
   ContentParams,
 } from '../../../../../shared/content';
 import { classNames } from '../../../../../shared/ui';
-import { getCompareGpusPath } from '../../../../../shared/website';
 
 export enum ComparisonFeedTag {
   ComparePerformance = 'COMPARE_PERFORMANCE',

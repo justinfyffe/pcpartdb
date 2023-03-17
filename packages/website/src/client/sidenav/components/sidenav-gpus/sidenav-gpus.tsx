@@ -1,8 +1,7 @@
-import { Gpu } from '@pcpartdb/shared';
+import { getViewGpuPath, Gpu } from '@pcpartdb/shared';
 import React, { FunctionComponent } from 'react';
 import { getGpuName, getViewGpuSlug } from '../../../gpus';
 import { classNames } from '../../../shared/ui';
-import { getViewGpuPath } from '../../../shared/website';
 import { SidenavSection, SidenavSectionTitle } from '../sidenav';
 
 interface SidenavGpusProps {

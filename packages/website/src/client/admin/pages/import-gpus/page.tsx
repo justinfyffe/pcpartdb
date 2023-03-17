@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { ApiError, Gpu } from '@pcpartdb/shared';
+import { ApiError, getViewGpuPath, Gpu } from '@pcpartdb/shared';
 import { useRouter } from 'next/router';
 import React, { useCallback, useMemo, useState } from 'react';
 import { getGpuName, gpuService } from '../../../gpus';
@@ -20,7 +20,6 @@ import {
   Tr,
 } from '../../../shared/components';
 import { AdminLayout } from '../../../shared/layouts';
-import { getViewGpuPath } from '../../../shared/website';
 import { PreviewDialog } from './components';
 
 interface AdminImportGpusPageProps {}

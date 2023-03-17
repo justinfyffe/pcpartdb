@@ -1,8 +1,7 @@
-import { GpuComparison } from '@pcpartdb/shared';
+import { getCompareGpusPath, GpuComparison } from '@pcpartdb/shared';
 import React, { FunctionComponent } from 'react';
 import { getCompareGpusSlug, getGpuComparisonName } from '../../../gpus';
 import { classNames } from '../../../shared/ui';
-import { getCompareGpusPath } from '../../../shared/website';
 import { SidenavSection, SidenavSectionTitle } from '../sidenav';
 
 interface SidenavComparisonsProps {

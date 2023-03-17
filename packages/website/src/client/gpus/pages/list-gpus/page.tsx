@@ -1,4 +1,8 @@
-import { GpusQuery, ListGpusViewModel } from '@pcpartdb/shared';
+import {
+  generateGpusQueryFromPath,
+  GpusQuery,
+  ListGpusViewModel,
+} from '@pcpartdb/shared';
 import { useRouter } from 'next/router';
 import React, { useCallback, useEffect, useState } from 'react';
 import { CompareGpusForm } from '../../../gpus/components';
@@ -30,31 +34,28 @@ export const ListGpusPage = (props: ListGpusViewModel) => {
   const [query, setQueryState] = useState(props.query);
   const [canonical, setCanonical] = useState(() => getListPath(query));
 
+  const fetchGpus = useCallback(async (q: GpusQuery) => {
+    const response = await gpuService.list({ query: q });
+    setGpus(response.gpus);
+    setTotalResults(response.totalGpus);
+    setQueryState(q);
+  }, []);
+
   useEffect(() => {
-    router.beforePopState(() => {
-      // Reload the page. Next seems to have a bug
-      // where the data doesn't fetch when going back/forward
-      // TODO: can we get query based on url instead of reloading
-      router.reload();
+    router.beforePopState((cb) => {
+      fetchGpus(generateGpusQueryFromPath(cb.as));
       return true;
     });
-  }, [router]);
+  }, [fetchGpus, router]);
 
   const setQuery = useCallback(
-    (q: GpusQuery) => {
-      async function fetchGpus() {
-        const response = await gpuService.list({ query: q });
-        setGpus(response.gpus);
-        setTotalResults(response.totalGpus);
-        setQueryState(q);
-      }
-      fetchGpus();
-
+    async (q: GpusQuery) => {
+      await fetchGpus(q);
       const url = getListPath(q);
       router.push(url, undefined, { shallow: true });
       setCanonical(url);
     },
-    [router],
+    [fetchGpus, router],
   );
 
   const paginationPageClick = useCallback(

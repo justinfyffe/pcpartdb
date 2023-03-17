@@ -1,5 +1,5 @@
 import { HeartIcon } from '@heroicons/react/24/solid';
-import { ListGpusPresetSlug, SeoInputs, WEBSITE_NAME } from '@pcpartdb/shared';
+import { getListGpusPath, SeoInputs, WEBSITE_NAME } from '@pcpartdb/shared';
 import React, { FunctionComponent } from 'react';
 import {
   Button,
@@ -16,7 +16,6 @@ import {
   ToolbarTitle,
 } from '../../components';
 import { classNames } from '../../ui';
-import { getListGpusPath } from '../../website';
 
 interface WebsiteLayoutProps {
   seo?: SeoInputs;
@@ -36,10 +35,7 @@ export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
         </ToolbarTitle>
 
         <ToolbarNav>
-          <Button
-            href={getListGpusPath(ListGpusPresetSlug.BestPerformance)}
-            variant={ButtonVariant.Toolbar}
-          >
+          <Button href={getListGpusPath()} variant={ButtonVariant.Toolbar}>
             GPUs
           </Button>
         </ToolbarNav>

@@ -1,10 +1,13 @@
 import 'reflect-metadata';
-import { HomeViewModel, ListGpusPresetSlug } from '@pcpartdb/shared';
+import {
+  getListGpusPath,
+  HomeViewModel,
+  ListGpusPresetSlug,
+} from '@pcpartdb/shared';
 import React from 'react';
 import { CompareGpusForm } from '../../../gpus/components';
 import { WebsiteLayout } from '../../../shared/layouts';
 import { classNames } from '../../../shared/ui';
-import { getListGpusPath } from '../../../shared/website';
 import {
   ComparisonFeedItem,
   ComparisonFeedTag,
