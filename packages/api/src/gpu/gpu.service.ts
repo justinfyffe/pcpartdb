@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import {
   CreateGpuRequest,
-  FindGpuComparisonRequest,
   Gpu,
   GpuComparison,
   UpdateGpuRequest,
@@ -17,6 +16,13 @@ import {
   GpuRepository,
   ListOptions,
 } from './gpu.repository';
+
+export interface GetComparisonOptions {
+  slug?: string;
+
+  includeRanks?: boolean;
+  includeImages?: boolean;
+}
 
 @Injectable()
 export class GpuService {
@@ -67,7 +73,7 @@ export class GpuService {
     return gpu;
   }
 
-  async getComparison(options: FindGpuComparisonRequest, ctx: Context) {
+  async getComparison(options: GetComparisonOptions, ctx: Context) {
     const { slug, includeImages, includeRanks } = options;
     const slugs = slug.split('--vs--');
 

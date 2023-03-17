@@ -86,21 +86,6 @@ export interface GpusQuery {
   offset?: number;
 }
 
-export interface FindGpuRequest {
-  id?: number;
-  slug?: string;
-
-  includeRanks?: boolean;
-  includeImages?: boolean;
-}
-
-export interface FindGpuComparisonRequest {
-  slug?: string;
-
-  includeRanks?: boolean;
-  includeImages?: boolean;
-}
-
 export interface CreateGpuRequest extends Omit<Gpu, 'id'> {}
 
 export interface UpdateGpuRequest extends Omit<Gpu, 'id'> {}
