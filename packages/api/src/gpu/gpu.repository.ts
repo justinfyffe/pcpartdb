@@ -1,5 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import {
+  DEFAULT_LIST_GPUS_LIMIT,
+  DEFAULT_LIST_GPUS_OFFSET,
+  DEFAULT_LIST_GPUS_SORT,
   GpuOrder,
   GpusFilter,
   GpusOrderBy,
@@ -54,14 +57,16 @@ export class GpuRepository {
 
     return await db.gpu.findMany({
       where: this.generateWhere(filter),
-      orderBy: this.generateOrderBy(orderBy),
+      orderBy: this.generateOrderBy(
+        orderBy ?? { sort: DEFAULT_LIST_GPUS_SORT },
+      ),
       include: {
         specs: true,
         benchmarks: true,
         images: includeImages ? { include: { image: true } } : false,
       },
-      skip: offset,
-      take: limit,
+      skip: offset ?? DEFAULT_LIST_GPUS_OFFSET,
+      take: limit ?? DEFAULT_LIST_GPUS_LIMIT,
     });
   }
 

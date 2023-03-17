@@ -1,4 +1,7 @@
 import {
+  DEFAULT_LIST_GPUS_LIMIT,
+  DEFAULT_LIST_GPUS_OFFSET,
+  DEFAULT_LIST_GPUS_SORT,
   GpuOrder,
   GpuSort,
   LIST_GPUS_PRESETS,
@@ -7,17 +10,16 @@ import {
 } from '@pcpartdb/shared';
 import { NextPageContext } from 'next';
 import { ListGpusPage } from '../../../client/gpus/pages';
-import { DEFAULT_LIST_GPUS_LIMIT } from '../../../client/gpus/pages/list-gpus/utils';
 import { viewModelsClient } from '../../../client/shared/view-models';
 
 export async function getServerSideProps(ctx: NextPageContext) {
   const query = ctx.query;
 
-  const offset = Number(query.offset ?? 0);
+  const offset = Number(query.offset ?? DEFAULT_LIST_GPUS_OFFSET);
   const limit = Number(query.limit ?? DEFAULT_LIST_GPUS_LIMIT);
 
   const company = (query.company as string)?.split(',');
-  const sort = (query.sort as GpuSort) || GpuSort.PerformanceRating;
+  const sort = (query.sort as GpuSort) || DEFAULT_LIST_GPUS_SORT;
   const order = query.order as GpuOrder;
   const preset = query.preset as ListGpusPresetSlug;
 
