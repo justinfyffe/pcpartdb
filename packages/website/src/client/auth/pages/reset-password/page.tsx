@@ -3,6 +3,7 @@ import Joi from '@hapi/joi';
 import { joiResolver } from '@hookform/resolvers/joi';
 import {
   ApiError,
+  getHomePath,
   MetaRobots,
   PASSWORD_MAX_LENGTH,
   PASSWORD_MIN_LENGTH,
@@ -56,7 +57,7 @@ export const ResetPasswordPage = (props: ResetPasswordPageProps) => {
 
   useEffect(() => {
     if (token == null) {
-      router.push('/');
+      router.push(getHomePath());
     }
   }, [router, token]);
 

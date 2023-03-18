@@ -7,7 +7,7 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import { getGpuName, getViewGpuSlug } from '../../../../../gpus';
+import { getGpuName } from '../../../../../gpus';
 import {
   Table,
   TBody,
@@ -138,7 +138,7 @@ export const ValueTable: FunctionComponent<ValueTableProps> = (props) => {
                 secondary={gpu.id === secondaryGpu?.id}
               >
                 <CustomRowLabel>
-                  <a href={getViewGpuPath(getViewGpuSlug(gpu))}>
+                  <a href={getViewGpuPath(gpu)}>
                     {getGpuName(gpu, { company: false })}
                   </a>
                 </CustomRowLabel>

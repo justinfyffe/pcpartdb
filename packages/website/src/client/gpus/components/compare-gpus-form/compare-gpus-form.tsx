@@ -10,7 +10,7 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import { getCompareGpusSlug, getViewGpuSlug } from '../../../gpus';
+import { getCompareGpusSlug } from '../../../gpus';
 import { GpuCache } from '../../../shared/cache';
 import { Button, ButtonVariant, Form } from '../../../shared/components';
 import { classNames } from '../../../shared/ui';
@@ -58,7 +58,7 @@ export const CompareGpusForm: FunctionComponent<CompareGpusFormProps> = (
         );
         return;
       } else if (gpus.length === 1 || gpus[0].id === gpus[1].id) {
-        window.location.href = getViewGpuPath(getViewGpuSlug(gpus[0]));
+        window.location.href = getViewGpuPath(gpus[0]);
         return;
       } else {
         return;

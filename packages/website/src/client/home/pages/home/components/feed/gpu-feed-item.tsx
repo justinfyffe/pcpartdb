@@ -1,11 +1,7 @@
 import { PhotoIcon } from '@heroicons/react/24/outline';
 import { getViewGpuPath, Gpu } from '@pcpartdb/shared';
 import React, { FunctionComponent, useMemo } from 'react';
-import {
-  formatGpuField,
-  getGpuName,
-  getViewGpuSlug,
-} from '../../../../../gpus';
+import { formatGpuField, getGpuName } from '../../../../../gpus';
 import { getCompanyLogoImagePath } from '../../../../../image';
 import { Card, Img } from '../../../../../shared/components';
 import {
@@ -57,7 +53,7 @@ export const GpuFeedItem: FunctionComponent<GpuFeedItemProps> = (props) => {
 
   return (
     <a
-      href={getViewGpuPath(getViewGpuSlug(gpu))}
+      href={getViewGpuPath(gpu)}
       className={classNames(
         'flex-1',
         'mx-4 mb-6',

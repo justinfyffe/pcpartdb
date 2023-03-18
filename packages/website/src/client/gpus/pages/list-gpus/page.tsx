@@ -1,5 +1,7 @@
 import {
   generateGpusQueryFromPath,
+  getHomePath,
+  getListGpusPath,
   GpusQuery,
   ListGpusViewModel,
 } from '@pcpartdb/shared';
@@ -22,7 +24,6 @@ import {
   ListTitle,
 } from './components';
 import { createListPageContextState, ListPageContext } from './context';
-import { getListPath } from './utils';
 
 export const ListGpusPage = (props: ListGpusViewModel) => {
   const { totalGpus } = props;
@@ -31,14 +32,14 @@ export const ListGpusPage = (props: ListGpusViewModel) => {
 
   const [gpus, setGpus] = useState(props.gpus);
   const [totalResults, setTotalResults] = useState(props.totalResults);
-  const [query, setQueryState] = useState(props.query);
-  const [canonical, setCanonical] = useState(() => getListPath(query));
+  const [query, setQuery] = useState(props.query);
+  const [canonical, setCanonical] = useState(() => getListGpusPath(query));
 
   const fetchGpus = useCallback(async (q: GpusQuery) => {
     const response = await gpuService.list({ query: q });
     setGpus(response.gpus);
     setTotalResults(response.totalGpus);
-    setQueryState(q);
+    setQuery(q);
   }, []);
 
   useEffect(() => {
@@ -48,10 +49,10 @@ export const ListGpusPage = (props: ListGpusViewModel) => {
     });
   }, [fetchGpus, router]);
 
-  const setQuery = useCallback(
+  const updateQuery = useCallback(
     async (q: GpusQuery) => {
       await fetchGpus(q);
-      const url = getListPath(q);
+      const url = getListGpusPath(q);
       router.push(url, undefined, { shallow: true });
       setCanonical(url);
     },
@@ -62,20 +63,18 @@ export const ListGpusPage = (props: ListGpusViewModel) => {
     (page: number, evt: React.MouseEvent) => {
       evt.preventDefault();
       evt.stopPropagation();
-      setQuery({ ...query, offset: query.limit * (page - 1) });
+      updateQuery({ ...query, offset: query.limit * (page - 1) });
     },
-    [query, setQuery],
+    [query, updateQuery],
   );
 
   const paginationHrefBuilder = useCallback(
-    (page: number) => {
-      return getListPath({ ...query, offset: query.limit * (page - 1) });
-    },
+    (page: number) =>
+      getListGpusPath({ ...query, offset: query.limit * (page - 1) }),
     [query],
   );
 
-  const context = createListPageContextState({ query, setQuery, gpus });
-
+  const context = createListPageContextState({ query, updateQuery, gpus });
   const title = 'Graphics Cards';
   const keywords: string[] = [];
 
@@ -83,7 +82,7 @@ export const ListGpusPage = (props: ListGpusViewModel) => {
     <WebsiteLayout seo={{ title, keywords, canonical }}>
       <ListPageContext.Provider value={context}>
         <Breadcrumbs className="mb-4">
-          <Breadcrumb href="/">Home</Breadcrumb>
+          <Breadcrumb href={getHomePath()}>Home</Breadcrumb>
           <Breadcrumb>Graphics Cards</Breadcrumb>
         </Breadcrumbs>
 

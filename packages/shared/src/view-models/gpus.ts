@@ -11,7 +11,9 @@ export interface AdminEditGpuViewModel {
 }
 
 export interface AdminListGpusViewModel {
+  query?: GpusQuery;
   gpus: Gpu[];
+  totalResults: number;
 }
 
 export interface CompareGpusContentData {

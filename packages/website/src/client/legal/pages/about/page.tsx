@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { WEBSITE_NAME } from '@pcpartdb/shared';
+import { getHomePath, WEBSITE_NAME } from '@pcpartdb/shared';
 import React from 'react';
 import { Breadcrumb, Breadcrumbs } from '../../../shared/components';
 import { WebsiteLayout } from '../../../shared/layouts';
@@ -14,7 +14,7 @@ export const AboutPage = (_props: AboutPageProps) => {
   return (
     <WebsiteLayout seo={{ title, canonical, keywords }}>
       <Breadcrumbs className="mb-4">
-        <Breadcrumb href="/">Home</Breadcrumb>
+        <Breadcrumb href={getHomePath()}>Home</Breadcrumb>
         <Breadcrumb>{title}</Breadcrumb>
       </Breadcrumbs>
 

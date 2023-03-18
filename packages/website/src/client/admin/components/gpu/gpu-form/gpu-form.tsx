@@ -3,6 +3,7 @@ import { joiResolver } from '@hookform/resolvers/joi';
 import {
   ApiError,
   CreateGpuRequest,
+  getAdminListGpusPath,
   Gpu,
   GpuBenchmarks,
   GpuDataSource,
@@ -337,7 +338,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           await gpuService.create(request);
         }
 
-        router.push('/admin/gpus');
+        router.push(getAdminListGpusPath());
       } catch (err) {
         console.log(err);
         setRequestError(err as ApiError);
@@ -354,7 +355,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
 
     try {
       await gpuService.delete(gpu.id);
-      router.push('/admin/gpus');
+      router.push(getAdminListGpusPath());
     } catch (err) {
       setRequestError(err as ApiError);
       setValidationErrors(err as ApiError, setError);

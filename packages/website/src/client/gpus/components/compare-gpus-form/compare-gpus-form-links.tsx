@@ -9,7 +9,6 @@ import {
   getCompareGpusSlug,
   getGpuComparisonName,
   getGpuName,
-  getViewGpuSlug,
 } from '../../../gpus';
 import { classNames } from '../../../shared/ui';
 
@@ -46,9 +45,7 @@ export const CompareGpusFormLinks: FunctionComponent<
         <ul className="flex gap-3">
           {gpus.map((gpu, i) => (
             <li key={i}>
-              <a href={getViewGpuPath(getViewGpuSlug(gpu))}>
-                {getGpuName(gpu)}
-              </a>
+              <a href={getViewGpuPath(gpu)}>{getGpuName(gpu)}</a>
               {i < gpus.length - 1 && <>,</>}
             </li>
           ))}

@@ -1,4 +1,9 @@
-import { SeoInputs, WEBSITE_NAME } from '@pcpartdb/shared';
+import {
+  getAdminListGpusPath,
+  getHomePath,
+  SeoInputs,
+  WEBSITE_NAME,
+} from '@pcpartdb/shared';
 import { useRouter } from 'next/router';
 import React, { FunctionComponent, useCallback } from 'react';
 import { authService } from '../../../auth';
@@ -25,7 +30,7 @@ export const AdminLayout: FunctionComponent<AdminLayoutProps> = (props) => {
 
   const handleLogout = useCallback(async () => {
     await authService.logout();
-    router.push('/');
+    router.push(getHomePath());
   }, [router]);
 
   return (
@@ -38,7 +43,7 @@ export const AdminLayout: FunctionComponent<AdminLayoutProps> = (props) => {
         </ToolbarTitle>
 
         <ToolbarNav className="hidden md:block">
-          <Button variant={ButtonVariant.Toolbar} href="/">
+          <Button variant={ButtonVariant.Toolbar} href={getHomePath()}>
             Back to Website
           </Button>
           <Button variant={ButtonVariant.Toolbar} onClick={handleLogout}>
@@ -59,7 +64,10 @@ export const AdminLayout: FunctionComponent<AdminLayoutProps> = (props) => {
               <Button variant={ButtonVariant.Default} href="/admin">
                 Overview
               </Button>
-              <Button variant={ButtonVariant.Default} href="/admin/gpus">
+              <Button
+                variant={ButtonVariant.Default}
+                href={getAdminListGpusPath()}
+              >
                 GPUs
               </Button>
               <Button variant={ButtonVariant.Default} href="/admin/images">

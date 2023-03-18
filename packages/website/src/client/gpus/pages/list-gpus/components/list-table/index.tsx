@@ -1,10 +1,6 @@
 import { getViewGpuPath } from '@pcpartdb/shared';
 import React, { FunctionComponent, useContext } from 'react';
-import {
-  formatGpuField,
-  getGpuName,
-  getViewGpuSlug,
-} from '../../../../../gpus';
+import { formatGpuField, getGpuName } from '../../../../../gpus';
 import {
   Table,
   TBody,
@@ -33,10 +29,7 @@ export const ListTable: FunctionComponent = () => {
         {gpus.map((gpu) => (
           <Tr key={gpu.id}>
             <Td>
-              <a
-                href={getViewGpuPath(getViewGpuSlug(gpu))}
-                className="font-semibold"
-              >
+              <a href={getViewGpuPath(gpu)} className="font-semibold">
                 {getGpuName(gpu)}
               </a>
             </Td>

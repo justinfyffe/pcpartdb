@@ -1,6 +1,7 @@
 import {
   CompareGpusViewModel,
   getCompareGpusPath,
+  getHomePath,
   getListGpusPath,
 } from '@pcpartdb/shared';
 import React from 'react';
@@ -47,7 +48,7 @@ export const CompareGpuPage = (props: CompareGpusViewModel) => {
     <ComparePageContext.Provider value={context}>
       <WebsiteLayout seo={{ title, keywords, canonical }}>
         <Breadcrumbs className="mb-4">
-          <Breadcrumb href="/">Home</Breadcrumb>
+          <Breadcrumb href={getHomePath()}>Home</Breadcrumb>
           <Breadcrumb href={getListGpusPath()}>Graphics Cards</Breadcrumb>
           <Breadcrumb>{title}</Breadcrumb>
         </Breadcrumbs>

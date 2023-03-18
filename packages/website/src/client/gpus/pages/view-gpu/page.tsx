@@ -1,10 +1,11 @@
 import {
+  getHomePath,
   getListGpusPath,
   getViewGpuPath,
   ViewGpuViewModel,
 } from '@pcpartdb/shared';
 import React from 'react';
-import { getGpuName, getViewGpuSlug } from '../../../gpus';
+import { getGpuName } from '../../../gpus';
 import { CompareGpusForm, GpuImages } from '../../../gpus/components';
 import { useGpuCache } from '../../../shared/cache';
 import { Breadcrumb, Breadcrumbs } from '../../../shared/components';
@@ -28,14 +29,14 @@ export const ViewGpuPage = (props: ViewGpuViewModel) => {
   const context = createViewPageContextState({ gpu: gpu, contentData });
 
   const title = getGpuName(gpu);
-  const canonical = getViewGpuPath(getViewGpuSlug(gpu));
+  const canonical = getViewGpuPath(gpu);
   const keywords = [getGpuName(gpu)];
 
   return (
     <ViewPageContext.Provider value={context}>
       <WebsiteLayout seo={{ title, canonical, keywords }}>
         <Breadcrumbs className="mb-4">
-          <Breadcrumb href="/">Home</Breadcrumb>
+          <Breadcrumb href={getHomePath()}>Home</Breadcrumb>
           <Breadcrumb href={getListGpusPath()}>Graphics Cards</Breadcrumb>
           <Breadcrumb>{title}</Breadcrumb>
         </Breadcrumbs>

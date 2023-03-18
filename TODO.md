@@ -9,11 +9,13 @@ Workspaces:
 Immediate Tasks:
   - use branches for each version, merge to master afterwards
   - TODO
-    - Pagination - admin gpus list
-      - update list without fully reloading page?
     - Clean up pagination code
       - currentPage, or offset?
+      - rename totalGpus variable
     - test page to import scraped data
+    - clean up code
+      - create functions for all hrefs
+        - e.g. getHomePath
   - folder structure for pages and components
     - <feature>/pages/<page-name>/components
     - <feature>/shared/components/

@@ -1,4 +1,4 @@
-import { getListGpusPath } from '../website';
+import { getListGpusPath } from '../routes';
 import {
   DEFAULT_LIST_GPUS_LIMIT,
   DEFAULT_LIST_GPUS_OFFSET,

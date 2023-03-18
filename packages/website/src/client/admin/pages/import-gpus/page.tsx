@@ -162,7 +162,7 @@ export const AdminImportGpusPage = (_props: AdminImportGpusPageProps) => {
                       <Tr key={gpu.slug}>
                         <Td>
                           <a
-                            href={getViewGpuPath(gpu.slug)}
+                            href={getViewGpuPath(gpu)}
                             target="_blank"
                             rel="noreferrer"
                           >

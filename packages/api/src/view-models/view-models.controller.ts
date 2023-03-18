@@ -46,9 +46,12 @@ export class ViewModelsController {
 
   @Get('admin/gpus/list')
   @UseGuards(StaffGuard)
-  async adminListGpus(@Ctx() ctx: Context) {
+  async adminListGpus(@Query('q') q: string, @Ctx() ctx: Context) {
     return await this.db.transaction(
-      () => this.adminListGpusViewModelService.viewModel(ctx),
+      async () => {
+        const data = JSON.parse(q) as ListGpusRequest;
+        return await this.adminListGpusViewModelService.viewModel(data, ctx);
+      },
       { ctx },
     );
   }

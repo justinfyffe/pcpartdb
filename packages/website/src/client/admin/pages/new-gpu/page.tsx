@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import { getAdminListGpusPath } from '@pcpartdb/shared';
 import React from 'react';
 import { GpuForm } from '../../../admin/components';
 import { Button, ButtonVariant } from '../../../shared/components';
@@ -13,7 +14,7 @@ export const AdminNewGpuPage = (_props: AdminNewGpuPageProps) => {
         <div className="flex items-center justify-between mb-4">
           <h1 className="font-semibold">GPUs - New GPU</h1>
 
-          <Button href="/admin/gpus" variant={ButtonVariant.Default}>
+          <Button href={getAdminListGpusPath()} variant={ButtonVariant.Default}>
             Back
           </Button>
         </div>

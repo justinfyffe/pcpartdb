@@ -1,6 +1,6 @@
 import { getViewGpuPath, Gpu } from '@pcpartdb/shared';
 import React, { FunctionComponent, useCallback, useContext } from 'react';
-import { getGpuName, getViewGpuSlug } from '../../../../../gpus';
+import { getGpuName } from '../../../../../gpus';
 import { Table, TBody, Th, THead, Tr } from '../../../../../shared/components';
 import { ViewPageContext } from '../../context';
 import { CustomRow, CustomRowLabel, CustomRowValue } from '../custom-row';
@@ -37,7 +37,7 @@ export const ValueTable: FunctionComponent<ValueTableProps> = (props) => {
         {relativeValueGpus.map((relativeGpu) => (
           <CustomRow key={relativeGpu.id} highlight={relativeGpu.id === gpu.id}>
             <CustomRowLabel>
-              <a href={getViewGpuPath(getViewGpuSlug(relativeGpu))}>
+              <a href={getViewGpuPath(relativeGpu)}>
                 {getGpuName(relativeGpu, { company: false })}
               </a>
             </CustomRowLabel>

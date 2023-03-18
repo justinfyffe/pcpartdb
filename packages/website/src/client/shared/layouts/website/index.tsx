@@ -1,5 +1,10 @@
 import { HeartIcon } from '@heroicons/react/24/solid';
-import { getListGpusPath, SeoInputs, WEBSITE_NAME } from '@pcpartdb/shared';
+import {
+  getHomePath,
+  getListGpusPath,
+  SeoInputs,
+  WEBSITE_NAME,
+} from '@pcpartdb/shared';
 import React, { FunctionComponent } from 'react';
 import {
   Button,
@@ -58,7 +63,7 @@ export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
 
           <List direction="vertical">
             <ListItem>
-              <a href="/" className="text-footer-link">
+              <a href={getHomePath()} className="text-footer-link">
                 Home
               </a>
             </ListItem>

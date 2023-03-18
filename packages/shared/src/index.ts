@@ -3,6 +3,7 @@ export * from './config';
 export * from './error';
 export * from './gpus';
 export * from './image';
+export * from './routes';
 export * from './user';
 export * from './view-models';
 export * from './website';

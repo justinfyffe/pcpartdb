@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import { getHomePath } from '@pcpartdb/shared';
 import React from 'react';
 import { Breadcrumb, Breadcrumbs } from '../../../shared/components';
 import { WebsiteLayout } from '../../../shared/layouts';
@@ -13,7 +14,7 @@ export const PrivacyPage = (_props: PrivacyPageProps) => {
   return (
     <WebsiteLayout seo={{ title, keywords, canonical }}>
       <Breadcrumbs className="mb-4">
-        <Breadcrumb href="/">Home</Breadcrumb>
+        <Breadcrumb href={getHomePath()}>Home</Breadcrumb>
         <Breadcrumb>{title}</Breadcrumb>
       </Breadcrumbs>
 

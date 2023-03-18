@@ -4,6 +4,7 @@ import { joiResolver } from '@hookform/resolvers/joi';
 import {
   ApiError,
   EMAIL_MAX_LENGTH,
+  getHomePath,
   MetaRobots,
   PASSWORD_MAX_LENGTH,
   ValidationErrorType,
@@ -101,7 +102,7 @@ export const LoginPage: FunctionComponent<LoginPageProps> = (
   return (
     <WebsiteLayout seo={{ title, robots }}>
       <Breadcrumbs className="mb-4">
-        <Breadcrumb href="/">Home</Breadcrumb>
+        <Breadcrumb href={getHomePath()}>Home</Breadcrumb>
         <Breadcrumb>Sign in</Breadcrumb>
       </Breadcrumbs>
 

@@ -3,24 +3,24 @@ import { createContext } from 'react';
 
 interface ListPageContextState {
   query?: GpusQuery;
-  setQuery: (query: GpusQuery) => void;
+  updateQuery: (query: GpusQuery) => void;
   gpus: Gpu[];
 }
 
 export const ListPageContext = createContext<ListPageContextState>({
   query: null,
-  setQuery: null,
+  updateQuery: null,
   gpus: null,
 });
 
 export function createListPageContextState(input: {
   query: GpusQuery;
-  setQuery: (query: GpusQuery) => void;
+  updateQuery: (query: GpusQuery) => void;
   gpus: Gpu[];
 }) {
   const query = { ...input.query };
-  const setQuery = input.setQuery;
+  const updateQuery = input.updateQuery;
   const gpus = [...input.gpus];
 
-  return { query, setQuery, gpus } as ListPageContextState;
+  return { query, updateQuery, gpus } as ListPageContextState;
 }

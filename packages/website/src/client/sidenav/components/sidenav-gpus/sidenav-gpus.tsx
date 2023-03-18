@@ -1,6 +1,6 @@
 import { getViewGpuPath, Gpu } from '@pcpartdb/shared';
 import React, { FunctionComponent } from 'react';
-import { getGpuName, getViewGpuSlug } from '../../../gpus';
+import { getGpuName } from '../../../gpus';
 import { classNames } from '../../../shared/ui';
 import { SidenavSection, SidenavSectionTitle } from '../sidenav';
 
@@ -40,7 +40,7 @@ const GpuListing: FunctionComponent<GpuListingProps> = (props) => {
 
   return (
     <a
-      href={getViewGpuPath(getViewGpuSlug(gpu))}
+      href={getViewGpuPath(gpu)}
       className="flex items-center gap-3 px-3 py-3 border-px rounded text-sm"
     >
       <div className="flex-1">{getGpuName(gpu)}</div>

@@ -45,10 +45,6 @@ export function getGpuComparisonName(
   return `${getGpuName(gpu1, options)} vs ${getGpuName(gpu2, options)}`;
 }
 
-export function getViewGpuSlug(gpu: Gpu) {
-  return gpu.slug;
-}
-
 interface GetGpuComparisonSlugOptions {
   ordered?: boolean;
 }

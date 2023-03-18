@@ -14,7 +14,7 @@ interface ListFiltersProps {
 }
 
 export const ListFilters: FunctionComponent<ListFiltersProps> = (props) => {
-  const { query, setQuery } = useContext(ListPageContext);
+  const { query, updateQuery: setQuery } = useContext(ListPageContext);
 
   const [companies] = useState(() => new Set<string>(query.filter?.company));
 
