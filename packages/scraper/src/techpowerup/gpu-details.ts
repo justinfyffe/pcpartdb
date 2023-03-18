@@ -18,9 +18,19 @@ import {
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { format, parse } from 'date-fns';
+import { getProxiedUrl } from '../utils';
+
+export interface ScrapeTechPowerGpuDetailsOptions {
+  url: string;
+  proxy?: boolean;
+}
 
 // Example: https://www.techpowerup.com/gpu-specs/geforce-rtx-3090.c3622
-export async function scrapeTechPowerUpGpuDetails(url: string) {
+export async function scrapeTechPowerUpGpuDetails(
+  options: ScrapeTechPowerGpuDetailsOptions,
+) {
+  const url = options.proxy ? getProxiedUrl(options.url) : options.url;
+  console.log(url);
   const response = await axios.get(url);
   const $ = cheerio.load(response.data);
 

@@ -3,6 +3,7 @@ import {
   AdminListGpusViewModel,
   generateGpusQueryFromPath,
   getAdminEditGpuPath,
+  getAdminImportGpusPath,
   getAdminListGpusPath,
   getAdminNewGpuPath,
   GpusQuery,
@@ -97,9 +98,17 @@ export const AdminListGpusPage = (props: AdminListGpusViewModel) => {
         <div className="flex items-center justify-between mb-4">
           <h1 className="font-semibold">GPUs</h1>
 
-          <Button href={getAdminNewGpuPath()} variant={ButtonVariant.Default}>
-            Add
-          </Button>
+          <div className="flex gap-4">
+            <Button
+              href={getAdminImportGpusPath()}
+              variant={ButtonVariant.Default}
+            >
+              Import
+            </Button>
+            <Button href={getAdminNewGpuPath()} variant={ButtonVariant.Default}>
+              Add
+            </Button>
+          </div>
         </div>
 
         <section>

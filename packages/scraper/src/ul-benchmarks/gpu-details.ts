@@ -6,9 +6,19 @@ import {
 } from '@pcpartdb/shared';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
+import { getProxiedUrl } from '../utils';
+
+export interface ScrapeUlBenchmarksGpuDetailsOptions {
+  url: string;
+  proxy?: boolean;
+}
 
 // Example: https://benchmarks.ul.com/hardware/gpu/NVIDIA%20GeForce%20RTX%204090+review
-export async function scrapeUlBenchmarksGpuDetails(url: string) {
+export async function scrapeUlBenchmarksGpuDetails(
+  options: ScrapeUlBenchmarksGpuDetailsOptions,
+) {
+  const url = options.proxy ? getProxiedUrl(options.url) : options.url;
+
   const response = await axios.get(url);
   const $ = cheerio.load(response.data);
 

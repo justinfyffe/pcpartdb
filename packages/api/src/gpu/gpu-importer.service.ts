@@ -87,11 +87,11 @@ export class GpuImporterService {
     const parsedUrl = new URL(source.url);
 
     if (parsedUrl.hostname === Importers.TechPowerUp) {
-      return await scrapeTechPowerUpGpuDetails(source.url);
+      return await scrapeTechPowerUpGpuDetails({ url: source.url });
     } else if (parsedUrl.hostname === Importers.UlBenchmarks) {
-      return await scrapeUlBenchmarksGpuDetails(source.url);
+      return await scrapeUlBenchmarksGpuDetails({ url: source.url });
     } else if (parsedUrl.hostname === Importers.VideocardBenchmark) {
-      return await scrapeVideocardBenchmarksGpuDetails(source.url);
+      return await scrapeVideocardBenchmarksGpuDetails({ url: source.url });
     } else {
       throw badRequestError();
     }

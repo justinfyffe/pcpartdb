@@ -98,6 +98,10 @@ function generatePaginationParamsFromGpusQuery(query: GpusQuery) {
   return params;
 }
 
+export function getAdminImportGpusPath() {
+  return '/admin/gpus/import';
+}
+
 function generateSearchParamsFromGpusQuery(query: GpusQuery) {
   const params = new URLSearchParams();
 

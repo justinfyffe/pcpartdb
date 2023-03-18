@@ -1,5 +1,6 @@
 import axios from 'axios';
 import * as cheerio from 'cheerio';
+import { getProxiedUrl } from '../utils';
 
 export interface TechPowerUpGpuSource {
   name: string;
@@ -9,6 +10,7 @@ export interface TechPowerUpGpuSource {
 
 export interface ScrapeTechPowerUpGpuUrlsOptions {
   query: string;
+  proxy?: boolean;
 }
 
 const BASE_URL = 'https://www.techpowerup.com';
@@ -18,11 +20,11 @@ const SEARCH_URL =
 export async function scrapeTechPowerUpGpuSources(
   options: ScrapeTechPowerUpGpuUrlsOptions,
 ) {
-  return await scrapeSearchData(options.query);
+  return await scrapeSearchData(options);
 }
 
-async function scrapeSearchData(query: string) {
-  const $ = cheerio.load(await fetchSearchPage(query));
+async function scrapeSearchData(options: ScrapeTechPowerUpGpuUrlsOptions) {
+  const $ = cheerio.load(await fetchSearchPage(options));
 
   const gpus: TechPowerUpGpuSource[] = [];
 
@@ -49,8 +51,9 @@ async function scrapeSearchData(query: string) {
   return gpus;
 }
 
-async function fetchSearchPage(query: string) {
-  const url = buildSearchUrl(query);
+async function fetchSearchPage(options: ScrapeTechPowerUpGpuUrlsOptions) {
+  const searchUrl = buildSearchUrl(options.query);
+  const url = options.proxy ? getProxiedUrl(searchUrl) : searchUrl;
   const response = await axios.get(url);
   return response.data;
 }

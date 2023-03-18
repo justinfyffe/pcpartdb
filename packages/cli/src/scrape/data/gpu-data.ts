@@ -5,19 +5,23 @@ import { sleep } from '../../shared/process';
 import { GpuSource, GpuSourceModel } from '../types';
 import { gpusDataPath } from '../utils';
 
-const SLEEP_DELAY = 60_000;
+const SLEEP_DELAY = 5_000;
 
-export async function getGpuData(
-  sourceModel: GpuSourceModel,
-  offset: number,
-  count: number,
-) {
+interface GetGpuDataOptions {
+  sourceModel: GpuSourceModel;
+  offset: number;
+  count: number;
+  proxy?: boolean;
+}
+
+export async function getGpuData(options: GetGpuDataOptions) {
+  const { sourceModel, offset, count, proxy } = options;
   const gpus: Partial<Gpu>[] = [];
   for (let i = offset; i < offset + count; ++i) {
     const source = sourceModel[i];
 
     console.log(`Scraping GPU data for i=${i}`);
-    const gpu = await scrapeGpuData(source);
+    const gpu = await scrapeGpuData(source, proxy);
     gpus.push(gpu);
 
     await sleep(SLEEP_DELAY);
@@ -31,13 +35,16 @@ export async function getGpuData(
   await fsPromises.writeFile(path, JSON.stringify(gpus, undefined, 2), 'utf-8');
 }
 
-async function scrapeGpuData(source: GpuSource) {
+async function scrapeGpuData(source: GpuSource, proxy?: boolean) {
   if (source.techPowerUpUrl == null) {
     throw new Error(`Missing TechPowerUp URL for ${source.name}`);
   }
 
   console.log(`Scraping ${source.name} - ${source.techPowerUpUrl}`);
-  const data = await scrapeTechPowerUpGpuDetails(source.techPowerUpUrl);
+  const data = await scrapeTechPowerUpGpuDetails({
+    url: source.techPowerUpUrl,
+    proxy,
+  });
 
   console.log(`Decorating ${source.name}`);
   return decorateGpu(data.gpu, source);

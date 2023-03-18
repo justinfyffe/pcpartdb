@@ -5,12 +5,13 @@ export type ScrapeDataCommandArgs = {
   model?: string;
   count?: string;
   offset?: string;
+  proxy?: boolean;
 };
 
 export async function scrapeDataCommandHandler(args: ScrapeDataCommandArgs) {
   console.log(`Scraping data with args=${JSON.stringify(args)}`);
 
-  const { model } = args;
+  const { model, proxy } = args;
 
   const offset = args.offset != null ? Number(args.offset) : 0;
   const count = args.count != null ? Number(args.count) : 10;
@@ -21,5 +22,5 @@ export async function scrapeDataCommandHandler(args: ScrapeDataCommandArgs) {
 
   // Fetch data
   console.log('Building GPU Data');
-  await getGpuData(sourceModel, offset, count);
+  await getGpuData({ sourceModel, offset, count, proxy });
 }

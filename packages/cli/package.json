@@ -8,9 +8,9 @@
     "clean": "rm -rf ./dist && rm -f tsconfig.tsbuildinfo",
     "build": "tsc",
     "scrape:sources": "node ./dist/index.js scrape sources",
-    "scrape:sources:techpowerup": "node ./dist/index.js scrape sources techpowerup",
-    "scrape:sources:ul-benchmarks": "node ./dist/index.js scrape sources ul-benchmarks",
-    "scrape:sources:videocardbenchmarks": "node ./dist/index.js scrape sources videocardbenchmarks",
+    "scrape:sources:techpowerup": "node ./dist/index.js scrape sources --source techpowerup",
+    "scrape:sources:ul-benchmarks": "node ./dist/index.js scrape sources --source ul-benchmarks",
+    "scrape:sources:videocardbenchmarks": "node ./dist/index.js scrape sources --source videocardbenchmarks",
     "scrape:data": "node ./dist/index.js scrape data"
   },
   "author": "Justin Fyffe <test@example.com>",
@@ -24,6 +24,7 @@
     "@pcpartdb/scraper": "*",
     "@pcpartdb/shared": "*",
     "commander": "^10.0.0",
-    "date-fns": "^2.28.0"
+    "date-fns": "^2.28.0",
+    "dotenv": "^16.0.3"
   }
 }

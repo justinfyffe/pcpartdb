@@ -1,5 +1,6 @@
 import axios from 'axios';
 import * as cheerio from 'cheerio';
+import { getProxiedUrl } from '../utils';
 
 export interface UlBenchmarkGpuSource {
   name: string;
@@ -9,17 +10,18 @@ export interface UlBenchmarkGpuSource {
 }
 export interface ScrapeUlBenchmarkGpuUrlsOptions {
   query: string;
+  proxy?: boolean;
 }
 const SEARCH_URL = 'https://benchmarks.ul.com/compare/best-gpus?search={query}';
 
 export async function scrapeUlBenchmarkGpuSources(
   options: ScrapeUlBenchmarkGpuUrlsOptions,
 ) {
-  return await scrapeSearchData(options.query);
+  return await scrapeSearchData(options);
 }
 
-async function scrapeSearchData(query: string) {
-  const $ = cheerio.load(await fetchSearchPage(query));
+async function scrapeSearchData(options: ScrapeUlBenchmarkGpuUrlsOptions) {
+  const $ = cheerio.load(await fetchSearchPage(options));
 
   const gpus: UlBenchmarkGpuSource[] = [];
 
@@ -40,8 +42,10 @@ async function scrapeSearchData(query: string) {
   return gpus;
 }
 
-async function fetchSearchPage(query: string) {
-  const url = buildSearchUrl(query);
+async function fetchSearchPage(options: ScrapeUlBenchmarkGpuUrlsOptions) {
+  const searchUrl = buildSearchUrl(options.query);
+  const url = options.proxy ? getProxiedUrl(searchUrl) : searchUrl;
+
   const response = await axios.get(url);
   return response.data;
 }

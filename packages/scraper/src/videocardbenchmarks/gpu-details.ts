@@ -2,14 +2,24 @@ import {
   GpuBenchmarks,
   GpuDataSourceKey,
   GpuField,
-  ScrapeGpuDetailsResponse,
   MarketSegmentValue,
+  ScrapeGpuDetailsResponse,
 } from '@pcpartdb/shared';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
+import { getProxiedUrl } from '../utils';
+
+export interface ScrapeVideocardBenchmarksGpuDetailsOptions {
+  url: string;
+  proxy?: boolean;
+}
 
 // Example: https://www.videocardbenchmark.net/gpu.php?gpu=GeForce+RTX+4090&id=4606
-export async function scrapeVideocardBenchmarksGpuDetails(url: string) {
+export async function scrapeVideocardBenchmarksGpuDetails(
+  options: ScrapeVideocardBenchmarksGpuDetailsOptions,
+) {
+  const url = options.proxy ? getProxiedUrl(options.url) : options.url;
+
   const response = await axios.get(url);
   const $ = cheerio.load(response.data);
 

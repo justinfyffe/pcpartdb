@@ -9,7 +9,8 @@ Workspaces:
 Immediate Tasks:
   - use branches for each version, merge to master afterwards
   - TODO
-    - test page to import scraped data
+    - import scraped results page
+      - raw tab + formatted preview tab
   - folder structure for pages and components
     - <feature>/pages/<page-name>/components
     - <feature>/shared/components/
@@ -19,8 +20,8 @@ Immediate Tasks:
     - Add download date when importing
     - Allow ability to overwrite existing gpus
   - Fix bug where unauthorized pages doesn't display
-  - Improve security for reset password (store hashed tokens in db)
-  - Don't upload node_modules when deploying, just use npx
+  - Improve security for reset password (add expiration to jwt)
+  - code clean up - 
   
 
 Post-launch:
