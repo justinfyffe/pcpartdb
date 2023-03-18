@@ -99,7 +99,7 @@ export interface RelatedComparisons {
 }
 
 export interface ListGpusRequest {
-  query?: GpusQuery;
+  query: GpusQuery;
 }
 
 export interface ListGpusResponse {

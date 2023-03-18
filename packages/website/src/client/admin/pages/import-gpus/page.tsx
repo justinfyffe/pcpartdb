@@ -1,5 +1,10 @@
 import 'reflect-metadata';
-import { ApiError, getViewGpuPath, Gpu } from '@pcpartdb/shared';
+import {
+  ApiError,
+  getAdminListGpusPath,
+  getViewGpuPath,
+  Gpu,
+} from '@pcpartdb/shared';
 import { useRouter } from 'next/router';
 import React, { useCallback, useMemo, useState } from 'react';
 import { getGpuName, gpuService } from '../../../gpus';
@@ -94,7 +99,7 @@ export const AdminImportGpusPage = (_props: AdminImportGpusPageProps) => {
         <div className="flex items-center justify-between mb-4">
           <h1 className="font-semibold">GPUs - Import</h1>
 
-          <Button href="/admin/gpus" variant={ButtonVariant.Default}>
+          <Button href={getAdminListGpusPath()} variant={ButtonVariant.Default}>
             Back
           </Button>
         </div>

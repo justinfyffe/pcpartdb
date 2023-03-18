@@ -1,5 +1,8 @@
 import {
   getAdminListGpusPath,
+  getAdminListImagesPath,
+  getAdminListUsersPath,
+  getAdminOverviewPath,
   getHomePath,
   SeoInputs,
   WEBSITE_NAME,
@@ -61,7 +64,10 @@ export const AdminLayout: FunctionComponent<AdminLayoutProps> = (props) => {
         >
           <aside className="w-50">
             <nav className="flex flex-col gap-2">
-              <Button variant={ButtonVariant.Default} href="/admin">
+              <Button
+                variant={ButtonVariant.Default}
+                href={getAdminOverviewPath()}
+              >
                 Overview
               </Button>
               <Button
@@ -70,11 +76,17 @@ export const AdminLayout: FunctionComponent<AdminLayoutProps> = (props) => {
               >
                 GPUs
               </Button>
-              <Button variant={ButtonVariant.Default} href="/admin/images">
+              <Button
+                variant={ButtonVariant.Default}
+                href={getAdminListImagesPath()}
+              >
                 Images
               </Button>
-              <Button variant={ButtonVariant.Default} href="/admin/users">
-                Accounts
+              <Button
+                variant={ButtonVariant.Default}
+                href={getAdminListUsersPath()}
+              >
+                Users
               </Button>
             </nav>
           </aside>

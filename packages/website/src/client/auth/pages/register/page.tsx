@@ -4,6 +4,7 @@ import { joiResolver } from '@hookform/resolvers/joi';
 import {
   ApiError,
   EMAIL_MAX_LENGTH,
+  getLoginPath,
   MetaRobots,
   PASSWORD_MAX_LENGTH,
   PASSWORD_MIN_LENGTH,
@@ -72,7 +73,7 @@ export const RegisterPage = (_props: RegisterPageProps) => {
 
       try {
         await authService.register(data);
-        router.push('/login?registered=true');
+        router.push(`${getLoginPath()}?registered=true`);
       } catch (err) {
         setRequestError(err);
         setValidationErrors(err as ApiError, setError);
@@ -162,7 +163,7 @@ export const RegisterPage = (_props: RegisterPageProps) => {
         <section>
           <div className="mt-4 leading-6 text-2xs text-center">
             Already have an account?{' '}
-            <a href="/login" className="no-underline">
+            <a href={getLoginPath()} className="no-underline">
               Sign in here
             </a>
             .

@@ -4,6 +4,7 @@ import { joiResolver } from '@hookform/resolvers/joi';
 import {
   ApiError,
   EMAIL_MAX_LENGTH,
+  getLoginPath,
   MetaRobots,
   ValidationErrorType,
 } from '@pcpartdb/shared';
@@ -138,7 +139,7 @@ export const ForgotPasswordPage = (_props: ForgotPasswordPageProps) => {
         <section>
           <div className="mt-4 leading-6 text-2xs text-center">
             Remember your password?{' '}
-            <a href="/login" className="no-underline">
+            <a href={getLoginPath()} className="no-underline">
               Sign in
             </a>
             .

@@ -20,9 +20,14 @@ export class ListGpusViewModelService {
 
     const gpus = await this.getGpusForQuery(query, ctx);
     const totalResults = await this.getTotalGpusForQuery(query, ctx);
-    const totalGpus = await this.getTotalGpus(ctx);
+    const trackedGpus = await this.getTrackedGpus(ctx);
 
-    return { query, gpus, totalGpus, totalResults } as ListGpusViewModel;
+    return {
+      query,
+      gpus,
+      totalResults,
+      contentData: { trackedGpus },
+    } as ListGpusViewModel;
   }
 
   private async getGpusForQuery(query: GpusQuery, ctx: Context) {
@@ -40,7 +45,7 @@ export class ListGpusViewModelService {
     );
   }
 
-  private async getTotalGpus(ctx: Context) {
+  private async getTrackedGpus(ctx: Context) {
     return await this.gpuService.count({}, ctx);
   }
 }

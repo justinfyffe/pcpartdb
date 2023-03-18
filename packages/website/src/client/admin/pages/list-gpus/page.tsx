@@ -16,6 +16,7 @@ import {
   Button,
   ButtonVariant,
   Pagination,
+  PaginationResult,
   Table,
   TBody,
   Td,
@@ -58,17 +59,21 @@ export const AdminListGpusPage = (props: AdminListGpusViewModel) => {
   );
 
   const paginationPageClick = useCallback(
-    (page: number, evt: React.MouseEvent) => {
+    (result: PaginationResult, evt: React.MouseEvent) => {
       evt.preventDefault();
       evt.stopPropagation();
-      updateQuery({ ...query, offset: query.limit * (page - 1) });
+      updateQuery({ ...query, offset: result.offset, limit: result.limit });
     },
     [query, updateQuery],
   );
 
   const paginationHrefBuilder = useCallback(
-    (page: number) =>
-      getAdminListGpusPath({ ...query, offset: query.limit * (page - 1) }),
+    (result: PaginationResult) =>
+      getAdminListGpusPath({
+        ...query,
+        offset: result.offset,
+        limit: result.limit,
+      }),
     [query],
   );
 
@@ -120,7 +125,7 @@ export const AdminListGpusPage = (props: AdminListGpusViewModel) => {
               </Table>
 
               <Pagination
-                currentPage={Math.ceil(1 + query.offset / query.limit)}
+                resultsOffset={query.offset}
                 resultsPerPage={query.limit}
                 totalResults={totalResults}
                 onPageClick={paginationPageClick}

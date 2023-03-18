@@ -1,5 +1,10 @@
-import React, { FunctionComponent, useMemo } from 'react';
+import React, { FunctionComponent, useCallback, useMemo } from 'react';
 import { classNames } from '../../ui';
+
+export interface PaginationResult {
+  offset: number;
+  limit: number;
+}
 
 interface PaginationProps {
   className?: string;
@@ -10,19 +15,19 @@ interface PaginationProps {
 
   hidePages?: boolean;
 
-  currentPage: number;
+  resultsOffset: number;
   resultsPerPage: number;
   totalResults: number;
 
-  hrefBuilder: (page: number) => string;
-  onPageClick?: (page: number, event?: React.MouseEvent) => void;
+  hrefBuilder: (result: PaginationResult) => string;
+  onPageClick?: (result: PaginationResult, event?: React.MouseEvent) => void;
 }
 
 export const Pagination: FunctionComponent<PaginationProps> = (props) => {
   const {
     className,
     neighborPagesClassName,
-    currentPage,
+    resultsOffset,
     resultsPerPage,
     totalResults,
     hrefBuilder,
@@ -32,6 +37,20 @@ export const Pagination: FunctionComponent<PaginationProps> = (props) => {
   const hidePages = props.hidePages ?? false;
   const neighborPagesDisplayed = props.neighborPagesDisplayed ?? 2;
   const marginPagesDisplayed = props.marginPagesDisplayed ?? 2;
+
+  const getPaginationResult = useCallback(
+    (page: number) => {
+      const limit = resultsPerPage;
+      const offset = limit * (page - 1);
+      return { limit, offset };
+    },
+    [resultsPerPage],
+  );
+
+  const currentPage = useMemo(
+    () => Math.ceil(1 + resultsOffset / resultsPerPage),
+    [resultsOffset, resultsPerPage],
+  );
 
   const totalPages = useMemo(
     () => Math.ceil(totalResults / resultsPerPage),
@@ -114,8 +133,10 @@ export const Pagination: FunctionComponent<PaginationProps> = (props) => {
     >
       {currentPage > 1 ? (
         <a
-          href={hrefBuilder(currentPage - 1)}
-          onClick={(evt) => onPageClick?.(currentPage - 1, evt)}
+          href={hrefBuilder(getPaginationResult(currentPage - 1))}
+          onClick={(evt) =>
+            onPageClick?.(getPaginationResult(currentPage - 1), evt)
+          }
         >
           Previous
         </a>
@@ -135,8 +156,10 @@ export const Pagination: FunctionComponent<PaginationProps> = (props) => {
                     <>{page}</>
                   ) : (
                     <a
-                      href={hrefBuilder(page)}
-                      onClick={(evt) => onPageClick?.(page, evt)}
+                      href={hrefBuilder(getPaginationResult(page))}
+                      onClick={(evt) =>
+                        onPageClick?.(getPaginationResult(page), evt)
+                      }
                     >
                       {page}
                     </a>
@@ -150,8 +173,10 @@ export const Pagination: FunctionComponent<PaginationProps> = (props) => {
 
       {currentPage < totalPages ? (
         <a
-          href={hrefBuilder(currentPage + 1)}
-          onClick={(evt) => onPageClick?.(currentPage + 1, evt)}
+          href={hrefBuilder(getPaginationResult(currentPage + 1))}
+          onClick={(evt) =>
+            onPageClick?.(getPaginationResult(currentPage + 1), evt)
+          }
         >
           Next
         </a>

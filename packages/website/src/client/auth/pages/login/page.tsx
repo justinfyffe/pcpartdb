@@ -4,7 +4,10 @@ import { joiResolver } from '@hookform/resolvers/joi';
 import {
   ApiError,
   EMAIL_MAX_LENGTH,
+  getAdminOverviewPath,
+  getForgotPasswordPath,
   getHomePath,
+  getRegisterPath,
   MetaRobots,
   PASSWORD_MAX_LENGTH,
   ValidationErrorType,
@@ -59,7 +62,7 @@ export const LoginPage: FunctionComponent<LoginPageProps> = (
     router.query.registered === 'true',
   );
   const [resetPassword, setResetPassword] = useState(
-    router.query.resetpassword === 'true',
+    router.query.reset_password === 'true',
   );
 
   const {
@@ -85,7 +88,7 @@ export const LoginPage: FunctionComponent<LoginPageProps> = (
 
       try {
         await authService.login(formData);
-        router.push('/admin');
+        router.push(getAdminOverviewPath());
       } catch (err) {
         setRequestError(err as ApiError);
         setValidationErrors(err as ApiError, setError);
@@ -194,7 +197,7 @@ export const LoginPage: FunctionComponent<LoginPageProps> = (
         <section>
           <div className="mt-4 leading-6 text-2xs text-center">
             Don&apos;t have an account?{' '}
-            <a href="/register" className="no-underline">
+            <a href={getRegisterPath()} className="no-underline">
               Register
             </a>
             .
@@ -202,7 +205,7 @@ export const LoginPage: FunctionComponent<LoginPageProps> = (
 
           <div className="leading-6 text-2xs text-center">
             Forgot your password?{' '}
-            <a href="/forgot-password" className="no-underline">
+            <a href={getForgotPasswordPath()} className="no-underline">
               Reset your password
             </a>
             .

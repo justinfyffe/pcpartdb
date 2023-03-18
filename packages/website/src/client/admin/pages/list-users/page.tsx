@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { AdminListUsersViewModel } from '@pcpartdb/shared';
+import { AdminListUsersViewModel, getAdminNewUserPath } from '@pcpartdb/shared';
 import { format } from 'date-fns';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
@@ -44,7 +44,7 @@ export const AdminListUsersPage = (props: AdminListUsersViewModel) => {
         <div className="flex items-center justify-between mb-4">
           <h1 className="font-semibold">Users</h1>
 
-          <Button variant={ButtonVariant.Primary} href="/admin/users/new">
+          <Button variant={ButtonVariant.Primary} href={getAdminNewUserPath()}>
             Add
           </Button>
         </div>

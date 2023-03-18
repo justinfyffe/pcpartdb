@@ -1,7 +1,9 @@
 import { HeartIcon } from '@heroicons/react/24/solid';
 import {
+  getAboutPath,
   getHomePath,
   getListGpusPath,
+  getPrivacyPath,
   SeoInputs,
   WEBSITE_NAME,
 } from '@pcpartdb/shared';
@@ -68,12 +70,12 @@ export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
               </a>
             </ListItem>
             <ListItem>
-              <a href="/about" className="text-footer-link">
+              <a href={getAboutPath()} className="text-footer-link">
                 About Us
               </a>
             </ListItem>
             <ListItem>
-              <a href="/privacy" className="text-footer-link">
+              <a href={getPrivacyPath()} className="text-footer-link">
                 Privacy
               </a>
             </ListItem>
@@ -86,7 +88,7 @@ export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
           <p>
             {WEBSITE_NAME} provides specs and benchmarks based on various
             sources. If you discover an error, please{' '}
-            <a href="/about" className="text-footer-link">
+            <a href={getAboutPath()} className="text-footer-link">
               contact us
             </a>
             .

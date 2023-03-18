@@ -14,6 +14,7 @@ import {
   Breadcrumb,
   Breadcrumbs,
   Pagination,
+  PaginationResult,
 } from '../../../shared/components';
 import { WebsiteLayout } from '../../../shared/layouts';
 import { classNames } from '../../../shared/ui';
@@ -26,7 +27,8 @@ import {
 import { createListPageContextState, ListPageContext } from './context';
 
 export const ListGpusPage = (props: ListGpusViewModel) => {
-  const { totalGpus } = props;
+  const { trackedGpus } = props.contentData;
+
   useGpuCache(props.gpus);
   const router = useRouter();
 
@@ -60,17 +62,17 @@ export const ListGpusPage = (props: ListGpusViewModel) => {
   );
 
   const paginationPageClick = useCallback(
-    (page: number, evt: React.MouseEvent) => {
+    (result: PaginationResult, evt: React.MouseEvent) => {
       evt.preventDefault();
       evt.stopPropagation();
-      updateQuery({ ...query, offset: query.limit * (page - 1) });
+      updateQuery({ ...query, offset: result.offset, limit: result.limit });
     },
     [query, updateQuery],
   );
 
   const paginationHrefBuilder = useCallback(
-    (page: number) =>
-      getListGpusPath({ ...query, offset: query.limit * (page - 1) }),
+    (result: PaginationResult) =>
+      getListGpusPath({ ...query, offset: result.offset, limit: result.limit }),
     [query],
   );
 
@@ -102,7 +104,7 @@ export const ListGpusPage = (props: ListGpusViewModel) => {
               <div className="flex-1 flex flex-col gap-4">
                 <ListTable />
                 <Pagination
-                  currentPage={Math.ceil(1 + query.offset / query.limit)}
+                  resultsOffset={query.offset}
                   resultsPerPage={query.limit}
                   totalResults={totalResults}
                   onPageClick={paginationPageClick}
@@ -121,7 +123,7 @@ export const ListGpusPage = (props: ListGpusViewModel) => {
 
         <section>
           <p className="text-xs">
-            The ranks on this page are based on the {totalGpus} GPUs that we
+            The ranks on this page are based on the {trackedGpus} GPUs that we
             track in our database.
           </p>
         </section>

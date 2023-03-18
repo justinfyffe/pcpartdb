@@ -1,5 +1,10 @@
 import 'reflect-metadata';
-import { AdminListImagesViewModel, MetaRobots } from '@pcpartdb/shared';
+import {
+  AdminListImagesViewModel,
+  getAdminEditImagePath,
+  getAdminNewImagePath,
+  MetaRobots,
+} from '@pcpartdb/shared';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { formatDimensions, formatFileSize, getImagePath } from '../../../image';
@@ -49,7 +54,7 @@ export const AdminListImagesPage = (props: AdminListImagesViewModel) => {
         <div className="flex items-center justify-between mb-4">
           <h1 className="font-semibold">Images</h1>
 
-          <Button href="/admin/images/new" variant={ButtonVariant.Default}>
+          <Button href={getAdminNewImagePath()} variant={ButtonVariant.Default}>
             Add
           </Button>
         </div>
@@ -75,7 +80,7 @@ export const AdminListImagesPage = (props: AdminListImagesViewModel) => {
                     </Td>
                     <Td className="text-center">{image.id}</Td>
                     <Td>
-                      <a href={`/admin/images/${image.id}`}>{image.name}</a>
+                      <a href={getAdminEditImagePath(image)}>{image.name}</a>
                     </Td>
                     <Td>
                       <TextInput value={getImagePath(image)} disabled />

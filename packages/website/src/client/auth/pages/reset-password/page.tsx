@@ -4,6 +4,7 @@ import { joiResolver } from '@hookform/resolvers/joi';
 import {
   ApiError,
   getHomePath,
+  getLoginPath,
   MetaRobots,
   PASSWORD_MAX_LENGTH,
   PASSWORD_MIN_LENGTH,
@@ -82,7 +83,7 @@ export const ResetPasswordPage = (props: ResetPasswordPageProps) => {
 
       try {
         await userService.resetPassword(formData);
-        router.push('/login?resetpassword=true');
+        router.push(`${getLoginPath()}?reset_password=true`);
       } catch (err) {
         setRequestError(err as ApiError);
         setValidationErrors(err as ApiError, setError);
@@ -159,7 +160,7 @@ export const ResetPasswordPage = (props: ResetPasswordPageProps) => {
 
         <section>
           <div className="mt-4 leading-6 text-2xs text-center">
-            Remember your password? <a href="/login">Sign in</a>. .
+            Remember your password? <a href={getLoginPath()}>Sign in</a>. .
           </div>
         </section>
       </article>
