@@ -8,8 +8,6 @@ Workspaces:
 
 Immediate Tasks:
   - use branches for each version, merge to master afterwards
-  - TODO
-    - Fix bug where empty value rank is ordered first
   - folder structure for pages and components
     - <feature>/pages/<page-name>/components
     - <feature>/shared/components/

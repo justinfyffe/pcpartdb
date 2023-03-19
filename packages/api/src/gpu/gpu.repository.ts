@@ -316,11 +316,13 @@ export class GpuRepository {
     } else if (sort === GpuSort.PerformanceRating) {
       // Default DESC
       const order = orderBy?.order ?? GpuOrder.Desc;
-      return { benchmarks: { performanceScore: order } };
+      return {
+        benchmarks: { performanceScore: { sort: order, nulls: 'last' } },
+      };
     } else if (sort === GpuSort.ValueRating) {
       // Default DESC
       const order = orderBy?.order ?? GpuOrder.Desc;
-      return { benchmarks: { valueScore: order } };
+      return { benchmarks: { valueScore: { sort: order, nulls: 'last' } } };
     } else {
       return { id: 'desc' };
     }
