@@ -14,7 +14,7 @@ export const ProcessorTable: FunctionComponent<ProcessorTableProps> = (
   return (
     <Table border responsive className={className}>
       <TBody>
-        <FieldRow field="gpuName" />
+        <FieldRow field="codename" />
         <FieldRow field="architecture" />
         <FieldRow field="processSize" />
         <FieldRow field="transistors" />
