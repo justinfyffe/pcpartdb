@@ -8,7 +8,7 @@ import { ulBenchmarksDataPath } from '../utils';
 
 const QUERIES = ['amd', 'nvidia', 'intel', 'geforce', 'rtx', 'radeon'];
 
-const SLEEP_DELAY = 30_000;
+const SLEEP_DELAY = 15_000;
 
 interface ScrapeUlBenchmarkGpuSources {
   proxy?: boolean;

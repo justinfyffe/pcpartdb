@@ -5,7 +5,7 @@ import { sleep } from '../../shared/process';
 import { GpuSource, GpuSourceModel } from '../types';
 import { gpusDataPath } from '../utils';
 
-const SLEEP_DELAY = 5_000;
+const SLEEP_DELAY = 10_000;
 
 interface GetGpuDataOptions {
   sourceModel: GpuSourceModel;

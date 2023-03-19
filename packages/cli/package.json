@@ -7,11 +7,11 @@
   "scripts": {
     "clean": "rm -rf ./dist && rm -f tsconfig.tsbuildinfo",
     "build": "tsc",
-    "scrape:sources": "node ./dist/index.js scrape sources",
-    "scrape:sources:techpowerup": "node ./dist/index.js scrape sources --source techpowerup",
-    "scrape:sources:ul-benchmarks": "node ./dist/index.js scrape sources --source ul-benchmarks",
+    "scrape:sources": "node ./dist/index.js scrape sources --proxy",
+    "scrape:sources:techpowerup": "node ./dist/index.js scrape sources --source techpowerup --proxy",
+    "scrape:sources:ul-benchmarks": "node ./dist/index.js scrape sources --source ul-benchmarks --proxy",
     "scrape:sources:videocardbenchmarks": "node ./dist/index.js scrape sources --source videocardbenchmarks",
-    "scrape:data": "node ./dist/index.js scrape data"
+    "scrape:data": "node ./dist/index.js scrape data --proxy"
   },
   "author": "Justin Fyffe <test@example.com>",
   "license": "UNLICENSED",

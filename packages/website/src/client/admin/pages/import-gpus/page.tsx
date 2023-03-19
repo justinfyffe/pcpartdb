@@ -104,6 +104,12 @@ export const AdminImportGpusPage = (_props: AdminImportGpusPageProps) => {
           </Button>
         </div>
 
+        {requestError && (
+          <Alert variant={AlertVariant.Error}>
+            An unknown error has occurred. Please try again later.
+          </Alert>
+        )}
+
         <Field className="flex-1 mx-2">
           File
           <File name="file" onChange={handleFileChange} />
@@ -112,14 +118,8 @@ export const AdminImportGpusPage = (_props: AdminImportGpusPageProps) => {
           </FieldHint>
         </Field>
 
-        {requestError && (
-          <Alert variant={AlertVariant.Error}>
-            An unknown error has occurred. Please try again later.
-          </Alert>
-        )}
-
         {hasData && (
-          <div className="flex flex-col mt-8 gap-4">
+          <div className="flex flex-col mt-4 gap-4">
             <h2 className="mb-0">Preview</h2>
 
             <div className="flex gap-4">
