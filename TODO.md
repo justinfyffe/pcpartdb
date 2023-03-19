@@ -9,8 +9,7 @@ Workspaces:
 Immediate Tasks:
   - use branches for each version, merge to master afterwards
   - TODO
-    - import scraped results page
-      - raw tab + formatted preview tab
+    - test actually importing
   - folder structure for pages and components
     - <feature>/pages/<page-name>/components
     - <feature>/shared/components/
