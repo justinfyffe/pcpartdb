@@ -105,9 +105,9 @@ export const ComparisonFeedItem: FunctionComponent<ComparisonFeedItemProps> = (
             </div>
           )}
 
-          <div className="flex gap-11.5 w-full h-full absolute items-end justify-center">
-            <Banner gpu={gpu1} />
-            <Banner gpu={gpu2} />
+          <div className="flex flex-1 w-full h-full absolute items-end">
+            <Banner gpu={gpu1} className="mr-[23px] max-w-[calc(50%-23px)]" />
+            <Banner gpu={gpu2} className="ml-[23px] max-w-[calc(50%-23px)]" />
           </div>
 
           <div className="flex w-full h-full absolute items-start justify-between rounded-t">
@@ -143,19 +143,23 @@ export const ComparisonFeedItem: FunctionComponent<ComparisonFeedItemProps> = (
 
 interface BannerProps {
   gpu: Gpu;
+  className?: string;
 }
 
 const Banner: FunctionComponent<BannerProps> = (props) => {
-  const { gpu } = props;
+  const { gpu, className } = props;
   const company = useMemo(() => gpu.company?.value?.toLowerCase(), [gpu]);
 
   return (
     <div
       className={classNames(
-        'flex-1 text-[#ececec] font-semibold px-2 text-xs bg-[#666] border-t-px border-r-px border-gray-50 text-center',
+        'flex-1 text-[#ececec] font-semibold px-2 text-xs bg-[#666]',
+        'border-t-px border-r-px border-gray-50 text-center',
+        'text-ellipsis overflow-hidden whitespace-nowrap',
         company === 'nvidia' ? 'bg-[#558501]' : '',
         company === 'amd' ? 'bg-[#850101]' : '',
         company === 'intel' ? 'bg-[#0071c5]' : '',
+        className,
       )}
     >
       {getGpuName(gpu, { company: false })}
