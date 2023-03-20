@@ -15,7 +15,12 @@ interface HighlightListProps {
 export const HighlightList = (props: HighlightListProps) => {
   const { children, className } = props;
   return (
-    <ul className={classNames('flex flex-col md:gap-3 gap-4', className)}>
+    <ul
+      className={classNames(
+        'grid grid-cols-2 lg:flex flex-col md:gap-3 gap-4',
+        className,
+      )}
+    >
       {children}
     </ul>
   );

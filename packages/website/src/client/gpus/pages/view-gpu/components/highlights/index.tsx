@@ -4,14 +4,12 @@ import {
   CircleStackIcon,
   CubeTransparentIcon,
   CurrencyDollarIcon,
-  ShoppingCartIcon,
   StarIcon,
 } from '@heroicons/react/24/outline';
 import React, { FunctionComponent, useContext, useMemo } from 'react';
-import { formatGpuField, getShoppingUrl } from '../../../../../gpus';
+import { formatGpuField } from '../../../../../gpus';
 import { ViewPageContext } from '../../context';
 import {
-  HighlightButton,
   HighlightLabel,
   HighlightList,
   HighlightListItem,
@@ -30,8 +28,6 @@ export const Highlights: FunctionComponent<HighlightsProps> = (props) => {
   const specs = gpu.specs;
   const ranks = gpu.ranks;
 
-  const shoppingUrl = getShoppingUrl(gpu);
-
   const highlightMemory = useMemo(() => {
     const memorySize = formatGpuField(specs.memorySize);
     const memoryType = formatGpuField(specs.memoryType);
@@ -48,7 +44,7 @@ export const Highlights: FunctionComponent<HighlightsProps> = (props) => {
 
   return (
     <HighlightList className={className}>
-      <HighlightListItem>
+      {/* <HighlightListItem>
         <HighlightLabel icon={<ShoppingCartIcon />}>Shop</HighlightLabel>
 
         <HighlightValue>
@@ -65,7 +61,7 @@ export const Highlights: FunctionComponent<HighlightsProps> = (props) => {
             <>--</>
           )}
         </HighlightValue>
-      </HighlightListItem>
+      </HighlightListItem> */}
 
       <HighlightListItem>
         <HighlightLabel icon={<StarIcon />}>Performance Rank</HighlightLabel>

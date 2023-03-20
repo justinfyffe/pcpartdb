@@ -23,7 +23,6 @@ import {
   RelativeValue,
   TechnicalSpecs,
 } from './components';
-import { GpuHeader } from './components/gpu-header';
 import { ComparePageContext, createComparePageContextState } from './context';
 
 export const CompareGpuPage = (props: CompareGpusViewModel) => {
@@ -61,10 +60,10 @@ export const CompareGpuPage = (props: CompareGpusViewModel) => {
           </section>
 
           <article className="flex-1 flex flex-col gap-8">
-            <section className="flex md:flex-wrap gap-8 justify-evenly">
+            {/* <section className="flex md:flex-wrap gap-8 justify-evenly">
               <GpuHeader gpu={gpu1} />
               <GpuHeader gpu={gpu2} />
-            </section>
+            </section> */}
 
             <Intro />
             <GeneralInfo />

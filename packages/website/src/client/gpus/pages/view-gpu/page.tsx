@@ -6,7 +6,7 @@ import {
 } from '@pcpartdb/shared';
 import React from 'react';
 import { getGpuName } from '../../../gpus';
-import { CompareGpusForm, GpuImages } from '../../../gpus/components';
+import { CompareGpusForm } from '../../../gpus/components';
 import { useGpuCache } from '../../../shared/cache';
 import { Breadcrumb, Breadcrumbs } from '../../../shared/components';
 import { WebsiteLayout } from '../../../shared/layouts';
@@ -49,7 +49,7 @@ export const ViewGpuPage = (props: ViewGpuViewModel) => {
 
           <article className="flex-1 flex flex-col gap-8">
             <section className="flex flex-wrap justify-start gap-8">
-              <GpuImages gpu={gpu} className="flex-1 min-w-80" />
+              {/* <GpuImages gpu={gpu} className="flex-1 min-w-80" /> */}
               <Highlights className="flex-1" />
             </section>
 
