@@ -29,12 +29,12 @@ export const GeneralInfoSummarySentence2 = compileContent({
 });
 
 export const GeneralInfoSummarySentence3 = compileContent({
-  deps: ['performanceRank', 'totalRatedGpus', 'valueRank'],
+  deps: ['performanceRank', 'valueRank'],
   component: (props) => (
     <>
       This GPU is the{' '}
       <a href="#">{props.performanceRank} best performing graphics card</a>{' '}
-      compared to the {props.totalRatedGpus} benchmarked cards in our database.
+      compared to the benchmarked cards in our database.
     </>
   ),
 });
@@ -49,10 +49,9 @@ export const GeneralInfoSummarySentence4 = compileContent({
 });
 
 export const GeneralInfoSummary = () => {
-  const { gpu, contentData } = useContext(ViewPageContext);
+  const { gpu } = useContext(ViewPageContext);
 
   const { specs, ranks } = gpu;
-  const { totalPerformanceRatedGpus: totalRatedGpus } = contentData;
 
   const params: ContentParams = {
     gpuName: getGpuName(gpu),
@@ -62,7 +61,6 @@ export const GeneralInfoSummary = () => {
     msrp: formatGpuField(gpu.launchPrice),
     performanceRank: formatOrdinalNumber(ranks.performanceRank),
     valueRank: formatOrdinalNumber(ranks.valueRank),
-    totalRatedGpus,
   };
 
   return (
