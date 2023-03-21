@@ -3,6 +3,7 @@ import {
   CreateGpuRequest,
   Gpu,
   GpuComparison,
+  GpusQuery,
   UpdateGpuRequest,
 } from '@pcpartdb/shared';
 import { Context } from '../shared/context';
@@ -10,14 +11,28 @@ import { badRequestError, notFoundError } from '../shared/error';
 import { addPerformanceBenchmarks } from './benchmark-utils';
 import { GpuSpecsEntity } from './gpu.entity';
 import { mapToGpuDto, mapToGpuDtos, mapToGpuEntity } from './gpu.mapper';
-import {
-  CountOptions,
-  FindOptions,
-  GpuRepository,
-  ListOptions,
-} from './gpu.repository';
+import { GpuRepository } from './gpu.repository';
 
-export interface GetComparisonOptions {
+interface CountOptions {
+  query?: GpusQuery;
+
+  includeImages?: boolean;
+  includeRanks?: boolean;
+}
+
+interface ListOptions {
+  query?: GpusQuery;
+
+  includeImages?: boolean;
+  includeRanks?: boolean;
+}
+
+interface GetOptions {
+  includeImages?: boolean;
+  includeRanks?: boolean;
+}
+
+interface GetComparisonOptions {
   slug?: string;
 
   includeRanks?: boolean;
@@ -45,7 +60,7 @@ export class GpuService {
     return gpus;
   }
 
-  async getById(id: number, options: FindOptions, ctx: Context) {
+  async getById(id: number, options: GetOptions, ctx: Context) {
     const gpuEntity = await this.gpuRepository.findById(id, options, ctx);
     const gpu = mapToGpuDto(gpuEntity, { includeSources: ctx.user?.isStaff });
 
@@ -59,7 +74,7 @@ export class GpuService {
     return gpu;
   }
 
-  async getBySlug(slug: string, options: FindOptions, ctx: Context) {
+  async getBySlug(slug: string, options: GetOptions, ctx: Context) {
     const gpuEntity = await this.gpuRepository.findBySlug(slug, options, ctx);
     const gpu = mapToGpuDto(gpuEntity, { includeSources: ctx.user?.isStaff });
 

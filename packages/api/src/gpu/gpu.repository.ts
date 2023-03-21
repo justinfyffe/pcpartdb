@@ -13,23 +13,18 @@ import { Prisma } from '@prisma/client';
 import { Database, RepositoryConfig } from '../database';
 import { GpuEntity, GpuSpecsEntity } from './gpu.entity';
 
-export interface CountOptions {
+interface CountOptions {
   query?: GpusQuery;
-
   includeImages?: boolean;
-  includeRanks?: boolean;
 }
 
-export interface ListOptions {
+interface ListOptions {
   query?: GpusQuery;
-
   includeImages?: boolean;
-  includeRanks?: boolean;
 }
 
-export interface FindOptions {
+interface FindOptions {
   includeImages?: boolean;
-  includeRanks?: boolean;
 }
 
 @Injectable()
