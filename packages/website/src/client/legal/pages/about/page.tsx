@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import { getAboutPath, getHomePath, WEBSITE_NAME } from '@pcpartdb/shared';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Breadcrumb, Breadcrumbs, Seo } from '../../../shared/components';
 import { WebsiteLayout } from '../../../shared/layouts';
 
@@ -9,15 +9,24 @@ interface AboutPageProps {}
 export const AboutPage = (_props: AboutPageProps) => {
   const pageTitle = `About ${WEBSITE_NAME}`;
   const seoTitle = 'About Us';
-  const seoCanonical = getAboutPath();
+  const seoDescription =
+    'Mission statement and contact details for PC Part DB.';
+  const seoCanonical = useMemo(() => getAboutPath(), []);
   const seoKeywords: string[] = [];
+
+  const homeHref = useMemo(() => getHomePath(), []);
 
   return (
     <WebsiteLayout>
-      <Seo title={seoTitle} keywords={seoKeywords} canonical={seoCanonical} />
+      <Seo
+        title={seoTitle}
+        keywords={seoKeywords}
+        description={seoDescription}
+        canonical={seoCanonical}
+      />
 
       <Breadcrumbs className="mb-4">
-        <Breadcrumb href={getHomePath()}>Home</Breadcrumb>
+        <Breadcrumb href={homeHref}>Home</Breadcrumb>
         <Breadcrumb>{pageTitle}</Breadcrumb>
       </Breadcrumbs>
 

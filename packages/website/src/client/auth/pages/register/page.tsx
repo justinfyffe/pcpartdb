@@ -4,17 +4,20 @@ import { joiResolver } from '@hookform/resolvers/joi';
 import {
   ApiError,
   EMAIL_MAX_LENGTH,
+  getHomePath,
   getLoginPath,
   PASSWORD_MAX_LENGTH,
   PASSWORD_MIN_LENGTH,
   ValidationErrorType,
 } from '@pcpartdb/shared';
 import { useRouter } from 'next/router';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import {
   Alert,
   AlertVariant,
+  Breadcrumb,
+  Breadcrumbs,
   Button,
   ButtonVariant,
   Field,
@@ -89,9 +92,17 @@ export const RegisterPage = (_props: RegisterPageProps) => {
   const seoTitle = `${pageTitle}`;
   const seoRobots = [MetaRobots.NOINDEX];
 
+  const homeHref = useMemo(() => getHomePath(), []);
+  const loginHref = useMemo(() => getLoginPath(), []);
+
   return (
     <WebsiteLayout>
       <Seo title={seoTitle} robots={seoRobots} />
+      <Breadcrumbs className="mb-4">
+        <Breadcrumb href={homeHref}>Home</Breadcrumb>
+        <Breadcrumb>{pageTitle}</Breadcrumb>
+      </Breadcrumbs>
+
       <article>
         <h1 className="font-semibold mb-4">{pageTitle}</h1>
 
@@ -166,7 +177,7 @@ export const RegisterPage = (_props: RegisterPageProps) => {
         <section>
           <div className="mt-4 leading-6 text-2xs text-center">
             Already have an account?{' '}
-            <a href={getLoginPath()} className="no-underline">
+            <a href={loginHref} className="no-underline">
               Sign in here
             </a>
             .

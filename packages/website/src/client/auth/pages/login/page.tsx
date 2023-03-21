@@ -12,7 +12,12 @@ import {
   ValidationErrorType,
 } from '@pcpartdb/shared';
 import { useRouter } from 'next/dist/client/router';
-import React, { FunctionComponent, useCallback, useState } from 'react';
+import React, {
+  FunctionComponent,
+  useCallback,
+  useMemo,
+  useState,
+} from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import {
   Alert,
@@ -104,11 +109,15 @@ export const LoginPage: FunctionComponent<LoginPageProps> = (
   const seoTitle = `${pageTitle}`;
   const seoRobots = [MetaRobots.NOINDEX];
 
+  const homeHref = useMemo(() => getHomePath(), []);
+  const registerHref = useMemo(() => getRegisterPath(), []);
+  const forgotPasswordHref = useMemo(() => getForgotPasswordPath(), []);
+
   return (
     <WebsiteLayout>
       <Seo title={seoTitle} robots={seoRobots} />
       <Breadcrumbs className="mb-4">
-        <Breadcrumb href={getHomePath()}>Home</Breadcrumb>
+        <Breadcrumb href={homeHref}>Home</Breadcrumb>
         <Breadcrumb>{pageTitle}</Breadcrumb>
       </Breadcrumbs>
 
@@ -200,7 +209,7 @@ export const LoginPage: FunctionComponent<LoginPageProps> = (
         <section>
           <div className="mt-4 leading-6 text-2xs text-center">
             Don&apos;t have an account?{' '}
-            <a href={getRegisterPath()} className="no-underline">
+            <a href={registerHref} className="no-underline">
               Register
             </a>
             .
@@ -208,7 +217,7 @@ export const LoginPage: FunctionComponent<LoginPageProps> = (
 
           <div className="leading-6 text-2xs text-center">
             Forgot your password?{' '}
-            <a href={getForgotPasswordPath()} className="no-underline">
+            <a href={forgotPasswordHref} className="no-underline">
               Reset your password
             </a>
             .

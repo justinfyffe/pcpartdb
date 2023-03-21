@@ -31,6 +31,14 @@ export const ViewGpuPage = (props: ViewGpuViewModel) => {
 
   const pageTitle = useMemo(() => getGpuName(gpu), [gpu]);
   const seoTitle = `${pageTitle} - GPU specs, benchmarks, and value`;
+  const seoDescription = useMemo(() => {
+    const fullGpuName = getGpuName(gpu);
+
+    return (
+      `View the specs, benchmarks, relative performance and value of the ${fullGpuName}. ` +
+      'Our database of graphics cards will help you choose the best GPU for your computer.'
+    );
+  }, [gpu]);
   const seoCanonical = useMemo(() => getViewGpuPath(gpu), [gpu]);
   const seoKeywords = useMemo(() => [getGpuName(gpu)], [gpu]);
 
@@ -39,7 +47,12 @@ export const ViewGpuPage = (props: ViewGpuViewModel) => {
 
   return (
     <ViewPageContext.Provider value={context}>
-      <Seo title={seoTitle} keywords={seoKeywords} canonical={seoCanonical} />
+      <Seo
+        title={seoTitle}
+        keywords={seoKeywords}
+        description={seoDescription}
+        canonical={seoCanonical}
+      />
 
       <WebsiteLayout>
         <Breadcrumbs className="mb-4">

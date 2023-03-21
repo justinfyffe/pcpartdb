@@ -31,12 +31,20 @@ export const HomePage = (props: HomeViewModel) => {
 
   const pageTitle = 'GPU specifications, benchmarks, and comparisons';
   const seoTitle = `${pageTitle}`;
+  const seoDescription =
+    'View and compare GPU specs and benchmarks. ' +
+    'Our database of PC Parts will help you choose the best parts for your computer.';
   const seoCanonical = getHomePath();
   const seoKeywords: string[] = [];
 
   return (
     <WebsiteLayout>
-      <Seo title={seoTitle} keywords={seoKeywords} canonical={seoCanonical} />
+      <Seo
+        title={seoTitle}
+        keywords={seoKeywords}
+        description={seoDescription}
+        canonical={seoCanonical}
+      />
       <section className="flex flex-col gap-8 justify-center">
         <section className={classNames('flex flex-col justify-center gap-4')}>
           <h1 className="md:text-2xl text-3xl mb-0">{pageTitle}</h1>

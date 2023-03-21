@@ -21,7 +21,11 @@ import {
   ListTitle,
 } from './components';
 import { ListPageContext } from './context';
-import { useListPageContextProps, useSeoTitle } from './hooks';
+import {
+  useListPageContextProps,
+  useSeoDescription,
+  useSeoTitle,
+} from './hooks';
 
 export const ListGpusPage = (props: ListGpusViewModel) => {
   useGpuCache(props.gpus);
@@ -62,16 +66,24 @@ export const ListGpusPage = (props: ListGpusViewModel) => {
   });
 
   const seoTitle = useSeoTitle(context);
+  const seoDescription = useSeoDescription(context);
   const seoKeywords: string[] = [];
   const seoCanonical = useMemo(() => getListGpusPath(query), [query]);
 
+  const homeHref = useMemo(() => getHomePath(), []);
+
   return (
     <WebsiteLayout>
-      <Seo title={seoTitle} keywords={seoKeywords} canonical={seoCanonical} />
+      <Seo
+        title={seoTitle}
+        keywords={seoKeywords}
+        description={seoDescription}
+        canonical={seoCanonical}
+      />
 
       <ListPageContext.Provider value={context}>
         <Breadcrumbs className="mb-4">
-          <Breadcrumb href={getHomePath()}>Home</Breadcrumb>
+          <Breadcrumb href={homeHref}>Home</Breadcrumb>
           <Breadcrumb>Graphics Cards</Breadcrumb>
         </Breadcrumbs>
 

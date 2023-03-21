@@ -4,7 +4,7 @@ import {
   getHomePath,
   getListGpusPath,
 } from '@pcpartdb/shared';
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   getCompareGpusSlug,
   getGpuComparisonName,
@@ -40,13 +40,27 @@ export const CompareGpuPage = (props: CompareGpusViewModel) => {
     getGpuName(comparison[0]),
     getGpuName(comparison[1]),
   ];
+  const seoDescription = useMemo(() => {
+    const shortGpuName1 = getGpuName(gpu1, { company: false });
+    const shortGpuName2 = getGpuName(gpu2, { company: false });
+
+    return (
+      `Compare the specs, benchmarks, relative performance and value of the ${shortGpuName1} and ${shortGpuName2}. ` +
+      'Our database of graphics cards will help you choose the best GPU for your computer.'
+    );
+  }, [gpu1, gpu2]);
   const seoCanonical = getCompareGpusPath(
     getCompareGpusSlug(comparison, { ordered: true }),
   );
 
   return (
     <ComparePageContext.Provider value={context}>
-      <Seo title={seoTitle} keywords={seoKeywords} canonical={seoCanonical} />
+      <Seo
+        title={seoTitle}
+        keywords={seoKeywords}
+        description={seoDescription}
+        canonical={seoCanonical}
+      />
       <WebsiteLayout>
         <Breadcrumbs className="mb-4">
           <Breadcrumb href={getHomePath()}>Home</Breadcrumb>

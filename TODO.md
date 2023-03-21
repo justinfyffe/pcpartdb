@@ -6,8 +6,6 @@ Immediate Tasks:
       - don't have "includeRanks" on repository, only on service.
     - relative performance and relative value should be filtering based on market segment
 
-  - replace contenthook with content function
-
   - use branches for each version, merge to master afterwards
   - folder structure for pages and components
     - look at List GPUs page for example

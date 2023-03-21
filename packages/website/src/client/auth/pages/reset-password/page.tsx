@@ -10,11 +10,13 @@ import {
   ValidationErrorType,
 } from '@pcpartdb/shared';
 import { useRouter } from 'next/router';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import {
   Alert,
   AlertVariant,
+  Breadcrumb,
+  Breadcrumbs,
   Button,
   ButtonVariant,
   Field,
@@ -99,9 +101,17 @@ export const ResetPasswordPage = (props: ResetPasswordPageProps) => {
   const seoTitle = `${pageTitle}`;
   const seoRobots = [MetaRobots.NOINDEX];
 
+  const homeHref = useMemo(() => getHomePath(), []);
+  const loginHref = useMemo(() => getLoginPath(), []);
+
   return (
     <WebsiteLayout>
       <Seo title={seoTitle} robots={seoRobots} />
+      <Breadcrumbs className="mb-4">
+        <Breadcrumb href={homeHref}>Home</Breadcrumb>
+        <Breadcrumb>{pageTitle}</Breadcrumb>
+      </Breadcrumbs>
+
       <article>
         <h1 className="font-semibold mb-4">{pageTitle}</h1>
 
@@ -163,7 +173,7 @@ export const ResetPasswordPage = (props: ResetPasswordPageProps) => {
 
         <section>
           <div className="mt-4 leading-6 text-2xs text-center">
-            Remember your password? <a href={getLoginPath()}>Sign in</a>. .
+            Remember your password? <a href={loginHref}>Sign in</a>. .
           </div>
         </section>
       </article>
