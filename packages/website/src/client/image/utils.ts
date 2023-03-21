@@ -27,7 +27,7 @@ export function formatFileSize(fileSize: number) {
   return `${Math.round(fileSize / 1024)} KB`;
 }
 
-export function formatDimensions(width: number, height: number) {
+export function formatImageDimensions(width: number, height: number) {
   return `${width}x${height}`;
 }
 

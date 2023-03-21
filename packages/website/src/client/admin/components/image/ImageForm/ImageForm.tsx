@@ -22,8 +22,8 @@ import {
   UseFormProps,
 } from 'react-hook-form';
 import {
-  formatDimensions,
   formatFileSize,
+  formatImageDimensions,
   getImageMeta,
   imageService,
 } from '../../../../image';
@@ -205,7 +205,7 @@ export const ImageForm: FunctionComponent<ImageFormProps> = (props) => {
               <span>Size: {formatFileSize(imageMeta.fileSize)}</span>
               <span>
                 Dimensions:{' '}
-                {formatDimensions(imageMeta.width, imageMeta.height)}
+                {formatImageDimensions(imageMeta.width, imageMeta.height)}
               </span>
             </FieldHint>
           )}

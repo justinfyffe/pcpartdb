@@ -6,7 +6,11 @@ import {
 } from '@pcpartdb/shared';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
-import { formatDimensions, formatFileSize, getImagePath } from '../../../image';
+import {
+  formatFileSize,
+  formatImageDimensions,
+  getImagePath,
+} from '../../../image';
 import {
   Alert,
   AlertVariant,
@@ -90,7 +94,7 @@ export const AdminListImagesPage = (props: AdminListImagesViewModel) => {
                       <TextInput value={getImagePath(image)} disabled />
                     </Td>
                     <Td>{formatFileSize(image.fileSize)}</Td>
-                    <Td>{formatDimensions(image.width, image.height)}</Td>
+                    <Td>{formatImageDimensions(image.width, image.height)}</Td>
                   </Tr>
                 ))}
               </TBody>

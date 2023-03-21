@@ -1,6 +1,6 @@
 import { Image } from '@pcpartdb/shared';
 import React, { FunctionComponent, useCallback } from 'react';
-import { formatDimensions, formatFileSize } from '../../../../image';
+import { formatFileSize, formatImageDimensions } from '../../../../image';
 import { Card, Img, TextInput } from '../../../../shared/components';
 
 interface ImageListCardProps {
@@ -35,7 +35,7 @@ export const ImageListCard: FunctionComponent<ImageListCardProps> = (props) => {
 
         <div className="text-[#aaa] flex text-2xs justify-between -mx-3 -mb-3">
           <span>{formatFileSize(image.fileSize)}</span>
-          <span>{formatDimensions(image.width, image.height)}</span>
+          <span>{formatImageDimensions(image.width, image.height)}</span>
         </div>
       </Card>
     </div>

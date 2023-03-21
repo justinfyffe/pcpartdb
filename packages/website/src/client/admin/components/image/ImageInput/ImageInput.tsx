@@ -1,7 +1,7 @@
 import { PhotoIcon } from '@heroicons/react/24/outline';
 import { Image } from '@pcpartdb/shared';
 import React, { FunctionComponent, useCallback, useState } from 'react';
-import { formatDimensions, formatFileSize } from '../../../../image';
+import { formatFileSize, formatImageDimensions } from '../../../../image';
 import {
   Button,
   ButtonVariant,
@@ -67,11 +67,11 @@ const SelectedImageInput = (
 
         <div className="text-[#aaa] text-2xs my-1">
           {formatFileSize(value.fileSize)} &bull;
-          {formatDimensions(value.width, value.height)}
+          {formatImageDimensions(value.width, value.height)}
           {recommendedHeight && recommendedWidth && (
             <div className="mt-1">
               Recommended:{' '}
-              {formatDimensions(recommendedWidth, recommendedHeight)}
+              {formatImageDimensions(recommendedWidth, recommendedHeight)}
             </div>
           )}
         </div>
@@ -107,7 +107,8 @@ const EmptyImageInput = (
       No Image
       {recommendedHeight && recommendedWidth && (
         <div className="text-2xs mt-2">
-          Recommended: {formatDimensions(recommendedWidth, recommendedHeight)}
+          Recommended:{' '}
+          {formatImageDimensions(recommendedWidth, recommendedHeight)}
         </div>
       )}
     </div>
