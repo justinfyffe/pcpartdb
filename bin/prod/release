@@ -5,6 +5,9 @@ cd $DIRECTORY/../../
 # Backup files
 ./bin/prod/backup
 
+# Cleanup old files
+./bin/prod/clean
+
 # Extract files
 tar xf ../releases/pcpartdb/pcpartdb.tar.gz .
 

@@ -1,0 +1,10 @@
+#!/bin/bash
+DIRECTORY=$(cd `dirname $0` && pwd)
+cd $DIRECTORY/../../
+
+# Clean dist files
+npm run clean
+
+# Remove node_modules
+rm -rf node_modules
+rm -rf packages/**/node_modules

@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "npm run shared build && npm run scraper build && npm run cli build && npm run api build && npm run website build",
-    "clean": "npm run api clean & npm run cli clean & npm run scraper clean & npm run shared clean  & npm run website clean",
+    "clean": "npm run api clean & npm run cli clean & npm run scraper clean & npm run shared clean & npm run website clean",
     "deploy": "./bin/deploy",
     "api": "npm --workspace=@pcpartdb/api run",
     "cli": "npm --workspace=@pcpartdb/cli run",
