@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { getHomePath, WEBSITE_NAME } from '@pcpartdb/shared';
+import { getAboutPath, getHomePath, WEBSITE_NAME } from '@pcpartdb/shared';
 import React from 'react';
 import { Breadcrumb, Breadcrumbs } from '../../../shared/components';
 import { WebsiteLayout } from '../../../shared/layouts';
@@ -8,7 +8,7 @@ interface AboutPageProps {}
 
 export const AboutPage = (_props: AboutPageProps) => {
   const title = 'About Us';
-  const canonical = '/about';
+  const canonical = getAboutPath();
   const keywords: string[] = [];
 
   return (

@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 import {
+  getHomePath,
   getListGpusPath,
   HomeViewModel,
   ListGpusPresetSlug,
@@ -28,7 +29,7 @@ export const HomePage = (props: HomeViewModel) => {
   const [bestPerformanceAmd, bestValueAmd, randomAmd] = amdGpus;
 
   const title = 'GPU specifications, benchmarks, and comparisons';
-  const canonical = '/';
+  const canonical = getHomePath();
   const keywords: string[] = [];
 
   return (

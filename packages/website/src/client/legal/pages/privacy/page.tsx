@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { getHomePath } from '@pcpartdb/shared';
+import { getHomePath, getPrivacyPath } from '@pcpartdb/shared';
 import React from 'react';
 import { Breadcrumb, Breadcrumbs } from '../../../shared/components';
 import { WebsiteLayout } from '../../../shared/layouts';
@@ -8,7 +8,7 @@ interface PrivacyPageProps {}
 
 export const PrivacyPage = (_props: PrivacyPageProps) => {
   const title = 'Privacy Policy';
-  const canonical = '/privacy';
+  const canonical = getPrivacyPath();
   const keywords: string[] = [];
 
   return (

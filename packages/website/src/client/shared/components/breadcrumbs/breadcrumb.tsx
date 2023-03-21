@@ -13,7 +13,7 @@ export const Breadcrumb: FunctionComponent<BreadcrumbProps> = (props) => {
 
   return (
     <li className={classNames(className)}>
-      {href ? <a href={href}>{children}</a> : children}
+      {href != null ? <a href={href}>{children}</a> : children}
     </li>
   );
 };
