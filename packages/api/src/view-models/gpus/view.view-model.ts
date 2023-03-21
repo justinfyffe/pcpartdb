@@ -99,9 +99,10 @@ export class ViewGpuViewModelService {
       [ContentTag.BestPerformanceCompany]:
         gpu.ranks?.performanceCompanyRank === 1,
       [ContentTag.BestPerformanceYear]: gpu.ranks?.performanceYearRank === 1,
+      [ContentTag.BestValue]: gpu.ranks?.valueRank === 1,
       [ContentTag.Launched]: hasGpuLaunched(gpu),
-      [ContentTag.ExtraLargeSize]: slots >= 3,
-      [ContentTag.LargeSize]: slots > 2.5 && slots < 3,
+      [ContentTag.ExtraLargeSize]: slots > 3,
+      [ContentTag.LargeSize]: slots > 2.5 && slots <= 3,
       [ContentTag.CommonSize]: slots <= 2.5 && slots >= 2,
       [ContentTag.SmallSize]: slots < 2,
     } as ContentTags;

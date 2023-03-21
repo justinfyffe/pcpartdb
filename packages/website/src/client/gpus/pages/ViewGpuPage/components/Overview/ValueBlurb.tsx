@@ -19,18 +19,22 @@ const ValueBlurbSentence1 = compileContentComponent({
 });
 
 export const ValueBlurb = () => {
-  const { gpu } = useContext(ViewPageContext);
+  const { gpu, contentData } = useContext(ViewPageContext);
 
   const context = useMemo(() => {
+    const tags = contentData.contentTags;
     const params = {
       gpuName: getGpuName(gpu),
       launchPrice: formatGpuField(gpu.launchPrice),
       performanceRating: formatGpuField(gpu.benchmarks?.performanceScore),
-      valueRank: formatOrdinalNumber(gpu.ranks?.valueRank),
+      valueRank:
+        gpu.ranks?.valueRank > 1
+          ? formatOrdinalNumber(gpu.ranks?.valueRank)
+          : '',
     };
 
-    return { params };
-  }, [gpu]);
+    return { tags, params };
+  }, [contentData.contentTags, gpu]);
 
   return (
     <ContentContext.Provider value={context}>

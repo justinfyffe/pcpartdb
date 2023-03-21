@@ -26,28 +26,21 @@ const DimensionsBlurbSentence2 = compileContentComponent({
 const DimensionsBlurbSentence3 = compileContentComponent(
   {
     tags: [ContentTag.ExtraLargeSize],
-    component: () => (
-      <>This is much larger than most GPUs than the typical dual-slot card.</>
-    ),
+    component: () => <>This is much larger in size than most modern GPUs.</>,
   },
   {
     tags: [ContentTag.LargeSize],
-    component: () => (
-      <>This is slightly larger than the typical dual-slot card.</>
-    ),
+    component: () => <>This is slightly larger than most modern GPUs.</>,
   },
   {
     tags: [ContentTag.CommonSize],
     component: () => (
-      <>
-        This is in line with most other GPUs as dual-slot cards are the most
-        common.
-      </>
+      <>This is similar in size to the majority of modern GPUs.</>
     ),
   },
   {
     tags: [ContentTag.SmallSize],
-    component: () => <>This is smaller than the typical dual-slot card.</>,
+    component: () => <>This size is smaller than most modern GPUs.</>,
   },
 );
 
