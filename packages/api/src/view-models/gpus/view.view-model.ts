@@ -8,7 +8,8 @@ import {
   ViewGpuContentData,
   ViewGpuViewModel,
 } from '@pcpartdb/shared';
-import { GpuRank, GpuService } from '../../gpu/gpu.service';
+import { parseISO } from 'date-fns';
+import { GpuService } from '../../gpu/gpu.service';
 import { Context } from '../../shared/context';
 import { getSurroundingValues } from '../../shared/utils';
 
@@ -49,9 +50,10 @@ export class ViewGpuViewModelService {
       {
         includeImages: true,
         includeRanks: [
-          GpuRank.Performance,
-          GpuRank.PerformanceCompany,
-          GpuRank.Value,
+          'performanceRank',
+          'performanceCompanyRank',
+          'performanceYearRank',
+          'valueRank',
         ],
       },
       ctx,
@@ -59,8 +61,14 @@ export class ViewGpuViewModelService {
   }
 
   private async getContentData(gpu: Gpu, ctx: Context) {
+    const year = parseISO(gpu.releaseDate?.value).getFullYear();
+
     const totalPerformanceGpus = await this.gpuService.count(
       { query: { filter: { performanceRated: true } } },
+      ctx,
+    );
+    const totalPerformanceYearGpus = await this.gpuService.count(
+      { query: { filter: { year: [year], performanceRated: true } } },
       ctx,
     );
     const relativePerformanceGpus = await this.getRelativePerformanceGpus(
@@ -71,6 +79,7 @@ export class ViewGpuViewModelService {
 
     return {
       totalPerformanceGpus,
+      totalPerformanceYearGpus,
       relativePerformanceGpus,
       relativeValueGpus,
     } as ViewGpuContentData;
@@ -92,7 +101,7 @@ export class ViewGpuViewModelService {
           orderBy: { sort: GpuSort.PerformanceRating, order: GpuOrder.Asc },
           limit: TOTAL_COMPARED_GPUS,
         },
-        includeRanks: [GpuRank.Performance, GpuRank.Value],
+        includeRanks: ['performanceRank'],
       },
       ctx,
     );
@@ -108,7 +117,7 @@ export class ViewGpuViewModelService {
           orderBy: { sort: GpuSort.PerformanceRating, order: GpuOrder.Desc },
           limit: TOTAL_COMPARED_GPUS,
         },
-        includeRanks: [GpuRank.Performance, GpuRank.Value],
+        includeRanks: ['performanceRank'],
       },
       ctx,
     );
@@ -144,7 +153,7 @@ export class ViewGpuViewModelService {
           orderBy: { sort: GpuSort.ValueRating, order: GpuOrder.Asc },
           limit: TOTAL_COMPARED_GPUS,
         },
-        includeRanks: [GpuRank.Performance, GpuRank.Value],
+        includeRanks: ['valueRank'],
       },
       ctx,
     );
@@ -160,7 +169,7 @@ export class ViewGpuViewModelService {
           orderBy: { sort: GpuSort.ValueRating, order: GpuOrder.Desc },
           limit: TOTAL_COMPARED_GPUS,
         },
-        includeRanks: [GpuRank.Performance, GpuRank.Value],
+        includeRanks: ['valueRank'],
       },
       ctx,
     );

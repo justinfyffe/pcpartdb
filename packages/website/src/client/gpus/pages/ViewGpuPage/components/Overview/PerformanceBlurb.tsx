@@ -1,9 +1,12 @@
-import { formatOrdinalNumber } from 'packages/website/src/client/shared/format';
 import React, { useContext, useMemo } from 'react';
 import {
   compileContentComponent,
   ContentContext,
 } from '../../../../../shared/content';
+import {
+  DateFormatter,
+  formatOrdinalNumber,
+} from '../../../../../shared/format';
 import { formatGpuField, getGpuName } from '../../../..';
 import { ViewPageContext } from '../../context';
 
@@ -19,11 +22,18 @@ const PerformanceBlurbSentence1 = compileContentComponent({
 });
 
 const PerformanceBlurbSentence2 = compileContentComponent({
-  deps: ['company', 'performanceCompanyRank'],
+  deps: [
+    'company',
+    'performanceCompanyRank',
+    'performanceYearRank',
+    'totalPerformanceYearGpus',
+    'year',
+  ],
   component: (props) => (
     <>
       It is the {props.performanceCompanyRank} most powerful {props.company}{' '}
-      GPU, and is the 3rd most powerful among the 8 GPUs released in 2016.
+      GPU, and is the {props.performanceYearRank} most powerful among the{' '}
+      {props.totalPerformanceYearGpus} GPUs released in {props.year}.
     </>
   ),
 });
@@ -38,8 +48,13 @@ export const PerformanceBlurb = () => {
       performanceCompanyRank: formatOrdinalNumber(
         gpu.ranks?.performanceCompanyRank,
       ),
+      performanceYearRank: formatOrdinalNumber(gpu.ranks?.performanceYearRank),
       performanceRank: formatOrdinalNumber(gpu.ranks?.performanceRank),
       totalPerformanceGpus: contentData.totalPerformanceGpus,
+      totalPerformanceYearGpus: contentData.totalPerformanceYearGpus,
+      year: formatGpuField(gpu.releaseDate, {
+        dateFormatter: DateFormatter.Year,
+      }),
     };
 
     return { params };

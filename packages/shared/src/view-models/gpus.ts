@@ -40,6 +40,7 @@ export interface ListGpusViewModel {
 
 export interface ViewGpuContentData {
   totalPerformanceGpus: number;
+  totalPerformanceYearGpus: number;
 
   relativePerformanceGpus?: Gpu[];
   relativeValueGpus?: Gpu[];

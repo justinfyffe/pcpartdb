@@ -1,9 +1,6 @@
 import { Injectable } from '@nestjs/common';
+import { GpuRanksFilter } from '@pcpartdb/shared';
 import { Database, RepositoryConfig } from '../../database';
-
-interface GetRanksOptions {
-  company?: string[];
-}
 
 @Injectable()
 export class GpuRanksRepository {
@@ -11,13 +8,13 @@ export class GpuRanksRepository {
 
   async getPerformanceRanks(
     ids: number[],
-    options?: GetRanksOptions,
+    filter?: GpuRanksFilter,
     config?: RepositoryConfig,
   ) {
     const trx = config?.trx ?? this.db;
 
     const { where, parameters, nextParameterIndex } =
-      this.generateWhere(options);
+      this.generateWhere(filter);
 
     const idsAndRanks: { gpu_id: number; rank: number }[] =
       await trx.$queryRawUnsafe(
@@ -47,13 +44,13 @@ export class GpuRanksRepository {
 
   async getValueRanks(
     ids: number[],
-    options?: GetRanksOptions,
+    filter?: GpuRanksFilter,
     config?: RepositoryConfig,
   ) {
     const trx = config?.trx ?? this.db;
 
     const { where, parameters, nextParameterIndex } =
-      this.generateWhere(options);
+      this.generateWhere(filter);
 
     const idsAndRanks: { gpu_id: number; rank: number }[] =
       await trx.$queryRawUnsafe(
@@ -81,14 +78,20 @@ export class GpuRanksRepository {
     return ids.map((id) => ranksMap[id] ?? null);
   }
 
-  private generateWhere(options?: GetRanksOptions) {
+  private generateWhere(filter?: GpuRanksFilter) {
     const parameters: unknown[] = [];
     const where: string[] = [];
     let nextParameterIndex = 1;
 
-    if (options?.company != null && options.company.length > 0) {
+    if (filter?.company != null && filter.company.length > 0) {
       where.push(`gpu.company = ANY ($${nextParameterIndex++})`);
-      parameters.push(options.company);
+      parameters.push(filter.company);
+    }
+    if (filter?.year != null) {
+      where.push(
+        `DATE_PART('year', gpu.release_date::date) = ANY ($${nextParameterIndex++})`,
+      );
+      parameters.push(filter.year);
     }
 
     return {

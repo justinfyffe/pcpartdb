@@ -19,7 +19,7 @@ import { StaffGuard } from '../auth/staff.guard';
 import { Database } from '../database';
 import { Context, Ctx } from '../shared/context';
 import { validate } from '../shared/types/validate';
-import { GpuRank, GpuService } from './gpu.service';
+import { GpuService } from './gpu.service';
 import {
   createGpuRequestValidator,
   listGpusRequestValidator,
@@ -45,7 +45,7 @@ export class GpuController {
           {
             ...data,
             fields: data.fields || [],
-            includeRanks: [GpuRank.Performance, GpuRank.Value],
+            includeRanks: ['performanceRank', 'valueRank'],
             includeImages: false,
           },
           ctx,

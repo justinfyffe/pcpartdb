@@ -4,6 +4,7 @@ import {
   Gpu,
   GpuComparison,
   GpuFieldKey,
+  GpuRank,
   GpusQuery,
   UpdateGpuRequest,
 } from '@pcpartdb/shared';
@@ -13,12 +14,6 @@ import { addPerformanceBenchmarks } from './benchmark-utils';
 import { mapToGpuDto, mapToGpuDtos, mapToGpuEntity } from './gpu.mapper';
 import { GpuRepository } from './gpu.repository';
 import { GpuRanksService } from './ranks/gpu-ranks.service';
-
-export enum GpuRank {
-  Performance = 'PERFORMANCE',
-  PerformanceCompany = 'PERFORMANCE_COMPANY',
-  Value = 'VALUE',
-}
 
 interface CountOptions {
   query?: GpusQuery;
@@ -63,11 +58,7 @@ export class GpuService {
     const gpus: Gpu[] = mapToGpuDtos(gpuEntities, { fields });
 
     if (options.includeRanks) {
-      await this.gpuRanksService.populateRanks(
-        gpus,
-        [GpuRank.Performance, GpuRank.Value],
-        ctx,
-      );
+      await this.gpuRanksService.populateRanks(options.includeRanks, gpus, ctx);
     }
 
     return gpus;
@@ -82,8 +73,8 @@ export class GpuService {
     }
     if (options.includeRanks) {
       await this.gpuRanksService.populateRanks(
-        [gpu],
         options.includeRanks,
+        [gpu],
         ctx,
       );
     }
@@ -100,8 +91,8 @@ export class GpuService {
     }
     if (options.includeRanks) {
       await this.gpuRanksService.populateRanks(
-        [gpu],
         options.includeRanks,
+        [gpu],
         ctx,
       );
     }
@@ -126,9 +117,7 @@ export class GpuService {
           slugItem,
           {
             includeImages,
-            includeRanks: includeRanks
-              ? [GpuRank.Performance, GpuRank.Value]
-              : null,
+            includeRanks: includeRanks || null,
           },
           ctx,
         ),

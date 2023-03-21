@@ -173,6 +173,7 @@ export class GpuRepository {
     const maxValueScore = filter?.maxValueScore;
     const minValueScore = filter?.minValueScore;
     const companies = filter?.company ?? [];
+    const years = filter?.year ?? [];
     const excludeIds = filter?.excludeIds;
 
     // Exclude Ids
@@ -208,13 +209,22 @@ export class GpuRepository {
     // Company
     const companyWhere: Prisma.StringNullableFilter =
       companies.length > 0 ? { in: companies, mode: 'insensitive' } : undefined;
+    const yearWhere: Prisma.GpuWhereInput[] = years.map((year) => ({
+      releaseDate: {
+        gte: `${year}-01-01`,
+        lte: `${year}-12-31`,
+      },
+    }));
 
     return {
-      id: idWhere,
-      company: companyWhere,
-      benchmarks: {
-        performanceScore: performanceWhere,
-        valueScore: valueWhere,
+      AND: {
+        id: idWhere,
+        company: companyWhere,
+        benchmarks: {
+          performanceScore: performanceWhere,
+          valueScore: valueWhere,
+        },
+        OR: yearWhere,
       },
     };
   }
