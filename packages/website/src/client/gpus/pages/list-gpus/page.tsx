@@ -27,8 +27,6 @@ import {
 import { createListPageContextState, ListPageContext } from './context';
 
 export const ListGpusPage = (props: ListGpusViewModel) => {
-  const { trackedGpus } = props.contentData;
-
   useGpuCache(props.gpus);
   const router = useRouter();
 
@@ -119,13 +117,6 @@ export const ListGpusPage = (props: ListGpusViewModel) => {
               </aside>
             </section>
           </article>
-        </section>
-
-        <section>
-          <p className="text-xs">
-            The ranks on this page are based on the {trackedGpus} GPUs that we
-            track in our database.
-          </p>
         </section>
       </ListPageContext.Provider>
     </WebsiteLayout>

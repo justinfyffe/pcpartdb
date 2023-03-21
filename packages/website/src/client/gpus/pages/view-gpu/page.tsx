@@ -66,15 +66,6 @@ export const ViewGpuPage = (props: ViewGpuViewModel) => {
             <SidenavComparisons comparisons={relatedComparisons.comparisons} />
           </Sidenav>
         </div>
-
-        <section>
-          <p className="text-xs">
-            The ranks on this page considers the{' '}
-            {contentData.totalPerformanceRatedGpus} GPUs that we track in our
-            database. Check which graphics cards we are tracking on our{' '}
-            <a href={getListGpusPath()}>GPU list</a> page.
-          </p>
-        </section>
       </WebsiteLayout>
     </ViewPageContext.Provider>
   );
