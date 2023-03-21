@@ -8,6 +8,7 @@ Immediate Tasks:
     - clean up surrounding gpus code
     - clean up list options, count options
       - don't have "includeRanks" on repository, only on service.
+    - relative performance and relative value should be filtering based on market segment
 
   - use branches for each version, merge to master afterwards
   - folder structure for pages and components
@@ -20,7 +21,7 @@ Immediate Tasks:
     - Allow ability to overwrite existing gpus
   - Fix bug where unauthorized pages doesn't display
   - Improve security for reset password (add expiration to jwt)
-  - code clean up - 
+  - code clean up
   
 
 Post-launch:
