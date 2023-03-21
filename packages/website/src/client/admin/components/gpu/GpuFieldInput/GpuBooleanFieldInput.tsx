@@ -1,4 +1,4 @@
-import { GpuField } from '@pcpartdb/shared';
+import { GpuField, GpuFieldKey } from '@pcpartdb/shared';
 import React, { forwardRef, useCallback } from 'react';
 import {
   Select,
@@ -7,7 +7,7 @@ import {
 } from '../../../../shared/components';
 
 interface GpuBooleanFieldInputProps {
-  field: string;
+  field: GpuFieldKey;
 
   value?: GpuField<boolean>;
   onChange?: (value: GpuField<boolean>) => void;

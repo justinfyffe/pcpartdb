@@ -3,6 +3,7 @@ import {
   CreateGpuRequest,
   Gpu,
   GpuComparison,
+  GpuFieldKey,
   GpusQuery,
   UpdateGpuRequest,
 } from '@pcpartdb/shared';
@@ -23,7 +24,7 @@ interface CountOptions {
 interface ListOptions {
   query?: GpusQuery;
 
-  fields?: string[];
+  fields?: GpuFieldKey[];
   includeImages?: boolean;
   includeRanks?: boolean;
 }
@@ -52,7 +53,8 @@ export class GpuService {
   async list(options: ListOptions, ctx: Context) {
     const gpuEntities = await this.gpuRepository.list(options, ctx);
 
-    const gpus: Gpu[] = mapToGpuDtos(gpuEntities);
+    const fields = options.fields != null ? new Set(options.fields) : null;
+    const gpus: Gpu[] = mapToGpuDtos(gpuEntities, { fields });
 
     if (options.includeRanks) {
       await this.populateRanks(gpus, ctx);

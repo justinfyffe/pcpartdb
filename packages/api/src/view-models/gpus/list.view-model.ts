@@ -39,7 +39,12 @@ export class ListGpusViewModelService {
 
   private async getGpus(query: GpusQuery, ctx: Context) {
     return await this.gpuService.list(
-      { query, includeRanks: true, includeImages: false },
+      {
+        query,
+        fields: ['company', 'performanceScore', 'valueScore', 'releaseDate'],
+        includeRanks: true,
+        includeImages: false,
+      },
       ctx,
     );
   }

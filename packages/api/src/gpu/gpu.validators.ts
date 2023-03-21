@@ -41,6 +41,7 @@ export const gpusQueryValidator = Joi.object({
 
 export const listGpusRequestValidator = Joi.object({
   query: gpusQueryValidator.allow(null),
+  fields: Joi.array().allow(Joi.string()).allow(null),
 }).options({ abortEarly: false });
 
 export const createGpuRequestValidator = Joi.object({

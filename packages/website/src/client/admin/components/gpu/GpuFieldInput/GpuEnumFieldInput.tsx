@@ -1,4 +1,4 @@
-import { GpuField, MarketSegmentValue } from '@pcpartdb/shared';
+import { GpuField, GpuFieldKey, MarketSegmentValue } from '@pcpartdb/shared';
 import React, { forwardRef, useCallback, useMemo } from 'react';
 import {
   Select,
@@ -15,7 +15,7 @@ const ITEMS: { [key: string]: { label: string; value: string }[] } = {
 };
 
 interface GpuEnumFieldInputProps {
-  field: string;
+  field: GpuFieldKey;
 
   value?: GpuField<string>;
   onChange?: (value: GpuField<string>) => void;

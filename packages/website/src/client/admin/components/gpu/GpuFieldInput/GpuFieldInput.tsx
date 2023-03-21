@@ -1,4 +1,4 @@
-import { GpuField } from '@pcpartdb/shared';
+import { GpuField, GpuFieldKey } from '@pcpartdb/shared';
 import React, {
   forwardRef,
   Ref,
@@ -85,7 +85,7 @@ const INPUT_TYPES: Record<string, InputType> = {
 
 interface GpuFieldInputProps {
   type?: InputType;
-  field: string;
+  field: GpuFieldKey;
 
   value?: GpuField;
   onChange?: (value: GpuField) => void;

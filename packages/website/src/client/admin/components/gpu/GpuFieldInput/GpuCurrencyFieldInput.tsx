@@ -1,11 +1,11 @@
-import { GpuField } from '@pcpartdb/shared';
+import { GpuField, GpuFieldKey } from '@pcpartdb/shared';
 import React, { forwardRef, useCallback, useMemo, useState } from 'react';
 import { NumberInput } from '../../../../shared/components';
 
 const CURRENCIES = ['USD'];
 
 interface GpuCurrencyFieldInputProps {
-  field: string;
+  field: GpuFieldKey;
 
   value?: GpuField<number>;
   onChange?: (value: GpuField<number>) => void;

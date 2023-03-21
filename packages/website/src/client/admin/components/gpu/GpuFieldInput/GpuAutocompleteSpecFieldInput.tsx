@@ -1,4 +1,4 @@
-import { GpuField } from '@pcpartdb/shared';
+import { GpuField, GpuFieldKey } from '@pcpartdb/shared';
 import React, { forwardRef, useCallback, useState } from 'react';
 import { gpuService } from '../../../../gpus/gpuService';
 import {
@@ -7,7 +7,7 @@ import {
 } from '../../../../shared/components';
 
 interface GpuAutocompleteSpecFieldInputProps {
-  field: string;
+  field: GpuFieldKey;
 
   value?: GpuField<string>;
   onChange?: (value: GpuField<string>) => void;

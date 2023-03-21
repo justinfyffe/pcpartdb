@@ -1,6 +1,6 @@
 import Joi from '@hapi/joi';
 import { GpuBenchmarks } from './gpu-benchmark-types';
-import { GpuField } from './gpu-field-types';
+import { GpuField, GpuFieldKey } from './gpu-field-types';
 import { GpuImages } from './gpu-image-types';
 import { GpuRanks } from './gpu-rank-types';
 import { GpuSpecs } from './gpu-spec-types';
@@ -107,6 +107,7 @@ export interface RelatedComparisons {
 
 export interface ListGpusRequest {
   query: GpusQuery;
+  fields?: GpuFieldKey[];
 }
 
 export interface ListGpusResponse {

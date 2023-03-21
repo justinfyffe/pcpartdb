@@ -1,9 +1,9 @@
-import { GpuField } from '@pcpartdb/shared';
+import { GpuField, GpuFieldKey } from '@pcpartdb/shared';
 import React, { forwardRef, useCallback } from 'react';
 import { DateInput } from '../../../../shared/components';
 
 interface GpuDateFieldInputProps {
-  field: string;
+  field: GpuFieldKey;
 
   value?: GpuField<string>;
   onChange?: (value: GpuField<string>) => void;

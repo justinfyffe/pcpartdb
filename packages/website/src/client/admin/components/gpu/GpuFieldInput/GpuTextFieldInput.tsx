@@ -1,9 +1,9 @@
-import { GpuField } from '@pcpartdb/shared';
+import { GpuField, GpuFieldKey } from '@pcpartdb/shared';
 import React, { forwardRef, useCallback } from 'react';
 import { Textarea } from '../../../../shared/components';
 
 interface GpuTextFieldInputProps {
-  field: string;
+  field: GpuFieldKey;
 
   value?: GpuField<string>;
   onChange?: (value: GpuField<string>) => void;

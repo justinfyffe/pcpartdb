@@ -1,4 +1,4 @@
-import { GpuField } from '@pcpartdb/shared';
+import { GpuField, GpuFieldKey } from '@pcpartdb/shared';
 import React, {
   FunctionComponent,
   useCallback,
@@ -75,7 +75,7 @@ const LABELS: Record<string, string> = {
 };
 
 interface ScrapeGpuFieldProps {
-  field: string;
+  field: GpuFieldKey;
 }
 
 export const ScrapeGpuField: FunctionComponent<ScrapeGpuFieldProps> = (

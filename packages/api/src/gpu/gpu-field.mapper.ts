@@ -15,11 +15,11 @@ export function mapToGpuFieldDto<
   options?: MapToDtoOptions,
 ): GpuField<TReturn> {
   if (entity[key as string] == null) {
-    return null;
+    return undefined;
   }
 
   if (options?.fields != null && !options?.fields.has(String(key))) {
-    return null;
+    return undefined;
   }
 
   const metadata = entity.metadata as GpuFieldsMetaJson;

@@ -1,4 +1,4 @@
-import { GpuField } from '@pcpartdb/shared';
+import { GpuField, GpuFieldKey } from '@pcpartdb/shared';
 import React, {
   FunctionComponent,
   useCallback,
@@ -13,7 +13,7 @@ import {
 import { classNames } from '../../../../shared/ui';
 
 interface GpuBenchmarkInputProps {
-  field: string;
+  field: GpuFieldKey;
 
   value?: GpuField<number>;
   onChange?: (value: GpuField<number>) => void;

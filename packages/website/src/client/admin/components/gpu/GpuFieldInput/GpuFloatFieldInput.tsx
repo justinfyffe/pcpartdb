@@ -8,6 +8,7 @@ import {
   FlopsUnit,
   getUnitFormat,
   GpuField,
+  GpuFieldKey,
   GpuFieldUnit,
   LengthUnit,
   MemoryUnit,
@@ -45,7 +46,7 @@ const UNITS: Record<string, GpuFieldUnit[]> = {
 };
 
 interface GpuFloatFieldInputProps {
-  field: string;
+  field: GpuFieldKey;
 
   value?: GpuField<number>;
   onChange?: (value: GpuField<number>) => void;
