@@ -43,8 +43,12 @@ const ListTableRow: FunctionComponent<ListTableRowProps> = (props) => {
 
   const href = useMemo(() => getViewGpuPath(gpu), [gpu]);
   const name = useMemo(() => getGpuName(gpu), [gpu]);
-  const performanceRank = gpu.ranks?.performanceRank || '--';
-  const valueRank = gpu.ranks?.valueRank || '--';
+  const performance = useMemo(() => {
+    return gpu.ranks?.performanceRank || '--';
+  }, [gpu.ranks?.performanceRank]);
+  const value = useMemo(() => {
+    return gpu.ranks?.valueRank || '--';
+  }, [gpu.ranks?.valueRank]);
   const releaseDate = useMemo(
     () => formatGpuField(gpu.releaseDate) || '--',
     [gpu.releaseDate],
@@ -57,8 +61,8 @@ const ListTableRow: FunctionComponent<ListTableRowProps> = (props) => {
           {name}
         </a>
       </Td>
-      <Td>{performanceRank}</Td>
-      <Td>{valueRank}</Td>
+      <Td>{performance}</Td>
+      <Td>{value}</Td>
       <Td>{releaseDate}</Td>
     </Tr>
   );

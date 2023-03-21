@@ -43,31 +43,38 @@ function getSeoCanonical(path: string) {
 export const Seo: FunctionComponent<SeoProps> = (props) => {
   const { title, keywords, description, robots, canonical } = props;
 
-  const seoTitle = useMemo(() => getSeoTitle(title), [title]);
+  const seoTitle = useMemo(
+    () => (title != null ? getSeoTitle(title) : null),
+    [title],
+  );
   const seoKeywords = useMemo(
-    () => getSeoKeywords(...keywords).join(', '),
+    () => (keywords != null ? getSeoKeywords(...keywords).join(', ') : null),
     [keywords],
   );
-  const seoRobots = useMemo(() => robots?.join(','), [robots]);
-  const seoCanonical = useMemo(() => getSeoCanonical(canonical), [canonical]);
+  const seoRobots = useMemo(
+    () => (robots != null ? robots.join(',') : null),
+    [robots],
+  );
+  const seoCanonical = useMemo(
+    () => (canonical != null ? getSeoCanonical(canonical) : null),
+    [canonical],
+  );
 
   return (
     <Head>
-      {title != null ? (
+      {seoTitle != null ? (
         <title key="title">{seoTitle}</title>
       ) : (
         <title key="title">{WEBSITE_NAME}</title>
       )}
-      {keywords && (
+      {seoKeywords && (
         <meta name="keywords" content={seoKeywords} key="metaKeywords" />
       )}
       {description && (
         <meta name="description" content={description} key="metaDescription" />
       )}
-      {robots && robots.length > 0 && (
-        <meta name="robots" content={seoRobots} key="metaRobots" />
-      )}
-      {canonical && (
+      {seoRobots && <meta name="robots" content={seoRobots} key="metaRobots" />}
+      {seoCanonical && (
         <link rel="canonical" href={seoCanonical} key="linkCanonical" />
       )}
     </Head>
