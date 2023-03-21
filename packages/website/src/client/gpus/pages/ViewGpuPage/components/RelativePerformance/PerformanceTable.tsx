@@ -1,5 +1,5 @@
 import { getViewGpuPath, Gpu } from '@pcpartdb/shared';
-import React, { FunctionComponent, useCallback, useContext } from 'react';
+import React, { FunctionComponent, useContext, useMemo } from 'react';
 import { Table, TBody, Th, THead, Tr } from '../../../../../shared/components';
 import { getGpuName } from '../../../..';
 import { ViewPageContext } from '../../context';
@@ -15,16 +15,6 @@ export const PerformanceTable: FunctionComponent<PerformanceTableProps> = (
   const { className } = props;
   const { gpu, contentData } = useContext(ViewPageContext);
   const { relativePerformanceGpus } = contentData;
-
-  const getRelativePerformance = useCallback(
-    (relatedGpu: Gpu) => {
-      const baseline = gpu.benchmarks.performanceScore.value;
-      const relatedPerformance = relatedGpu.benchmarks.performanceScore.value;
-
-      return ((relatedPerformance / baseline) * 100).toFixed(0);
-    },
-    [gpu],
-  );
 
   return (
     <Table border responsive className={className}>
@@ -53,30 +43,34 @@ interface PerformanceTableRowProps {
   relativeGpu: Gpu;
 }
 
-export const PerformanceTableRow: FunctionComponent<
-  PerformanceTableRowProps
-> = (props) => {
+const PerformanceTableRow: FunctionComponent<PerformanceTableRowProps> = (
+  props,
+) => {
   const { baselineGpu, relativeGpu } = props;
 
-  const getRelativePerformance = useCallback(
-    (relatedGpu: Gpu) => {
-      const baseline = baselineGpu.benchmarks.performanceScore.value;
-      const relatedPerformance = relatedGpu.benchmarks.performanceScore.value;
+  const relativePerformancePct = useMemo(() => {
+    const baseline = baselineGpu.benchmarks.performanceScore.value;
+    const relatedPerformance = relativeGpu.benchmarks.performanceScore.value;
 
-      return ((relatedPerformance / baseline) * 100).toFixed(0);
-    },
-    [baselineGpu],
+    return ((relatedPerformance / baseline) * 100).toFixed(0);
+  }, [
+    baselineGpu.benchmarks.performanceScore.value,
+    relativeGpu.benchmarks.performanceScore.value,
+  ]);
+
+  const href = useMemo(() => getViewGpuPath(relativeGpu), [relativeGpu]);
+  const gpuName = useMemo(
+    () => getGpuName(relativeGpu, { company: false }),
+    [relativeGpu],
   );
 
   return (
     <CustomRow highlight={relativeGpu.id === baselineGpu.id}>
       <CustomRowLabel>
-        <a href={getViewGpuPath(relativeGpu)}>
-          {getGpuName(relativeGpu, { company: false })}
-        </a>
+        <a href={href}>{gpuName}</a>
       </CustomRowLabel>
       <CustomRowValue className="text-left">
-        {getRelativePerformance(relativeGpu)}%
+        {relativePerformancePct}%
       </CustomRowValue>
       <CustomRowValue className="text-left">
         {relativeGpu.ranks?.performanceRank}

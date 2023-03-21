@@ -42,6 +42,14 @@ export const Highlights: FunctionComponent<HighlightsProps> = (props) => {
     );
   }, [specs]);
 
+  const highlightTdp = useMemo(() => {
+    return formatGpuField(specs.thermalDesignPower) || '--';
+  }, [specs.thermalDesignPower]);
+
+  const highlightReleaseDate = useMemo(() => {
+    return formatGpuField(gpu.releaseDate) || '--';
+  }, [gpu.releaseDate]);
+
   return (
     <HighlightList className={className}>
       {/* <HighlightListItem>
@@ -92,9 +100,7 @@ export const Highlights: FunctionComponent<HighlightsProps> = (props) => {
       <HighlightListItem>
         <HighlightLabel icon={<BoltIcon />}>TDP</HighlightLabel>
 
-        <HighlightValue>
-          {formatGpuField(specs.thermalDesignPower) || '--'}
-        </HighlightValue>
+        <HighlightValue>{highlightTdp}</HighlightValue>
       </HighlightListItem>
 
       <HighlightListItem>
@@ -102,9 +108,7 @@ export const Highlights: FunctionComponent<HighlightsProps> = (props) => {
           Release Date
         </HighlightLabel>
 
-        <HighlightValue>
-          {formatGpuField(gpu.releaseDate) || '--'}
-        </HighlightValue>
+        <HighlightValue>{highlightReleaseDate}</HighlightValue>
       </HighlightListItem>
     </HighlightList>
   );
