@@ -51,25 +51,13 @@ export class CompareGpusViewModelService {
   }
 
   private async getContentData(comparison: GpuComparison, ctx: Context) {
-    const totalRatedGpus = await this.getTotalRatedGpus(ctx);
-
     return {
-      totalPerformanceRatedGpus: totalRatedGpus,
-
       relativePerformanceGpus: await this.getRelativePerformanceGpus(
         comparison,
         ctx,
       ),
       relativeValueGpus: await this.getRelativeValueGpus(comparison, ctx),
     };
-  }
-
-  private async getTotalRatedGpus(ctx: Context) {
-    const results = await this.gpuService.list(
-      { query: { filter: { performanceRated: true } } },
-      ctx,
-    );
-    return results.length;
   }
 
   private async getRelativePerformanceGpus(

@@ -17,8 +17,6 @@ export interface AdminListGpusViewModel {
 }
 
 export interface CompareGpusContentData {
-  totalPerformanceRatedGpus: number;
-
   relativePerformanceGpus: Gpu[];
   relativeValueGpus: Gpu[];
 }
@@ -30,9 +28,7 @@ export interface CompareGpusViewModel {
   relatedComparisons: RelatedComparisons;
 }
 
-export interface ListGpusContentData {
-  trackedGpus: number;
-}
+export interface ListGpusContentData {}
 
 export interface ListGpusViewModel {
   query: GpusQuery;
@@ -43,8 +39,6 @@ export interface ListGpusViewModel {
 }
 
 export interface ViewGpuContentData {
-  totalPerformanceRatedGpus: number;
-
   relativePerformanceGpus?: Gpu[];
   relativeValueGpus?: Gpu[];
 }

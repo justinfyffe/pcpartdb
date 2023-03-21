@@ -51,8 +51,6 @@ export class ViewGpuViewModelService {
   }
 
   private async getContentData(gpu: Gpu, ctx: Context) {
-    const totalRatedGpus = await this.getTotalRatedGpus(ctx);
-
     const relativePerformanceGpus = await this.getRelativePerformanceGpus(
       gpu,
       ctx,
@@ -60,20 +58,9 @@ export class ViewGpuViewModelService {
     const relativeValueGpus = await this.getRelativeValueGpus(gpu, ctx);
 
     return {
-      totalPerformanceRatedGpus: totalRatedGpus,
       relativePerformanceGpus,
       relativeValueGpus,
     };
-  }
-
-  private async getTotalRatedGpus(ctx: Context) {
-    const results = await this.gpuService.list(
-      {
-        query: { filter: { performanceRated: true } },
-      },
-      ctx,
-    );
-    return results.length;
   }
 
   private async getRelativePerformanceGpus(seed: Gpu, ctx: Context) {
