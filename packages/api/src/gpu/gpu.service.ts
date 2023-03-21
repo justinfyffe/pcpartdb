@@ -149,7 +149,7 @@ export class GpuService {
   }
 
   async autocomplete(query: string, ctx: Context) {
-    const results = await this.gpuRepository.findSimilarValue(query, ctx);
+    const results = await this.gpuRepository.autocomplete(query, ctx);
     return mapToGpuDtos(results);
   }
 
@@ -158,7 +158,7 @@ export class GpuService {
     query: string,
     ctx: Context,
   ) {
-    return await this.gpuRepository.findSimilarSpecValue(key, query, ctx);
+    return await this.gpuRepository.autocompleteSpec(key, query, ctx);
   }
 
   private async populateRanks(gpus: Gpu[], ctx: Context) {

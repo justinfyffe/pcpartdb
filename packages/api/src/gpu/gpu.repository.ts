@@ -28,16 +28,16 @@ export interface ListOptions {
   includeRanks?: boolean;
 }
 
-export interface ListSurroundingOptions {
-  limitPerSide: number;
-  surrounding: GpuSort;
-
-  filter?: GpusFilter;
-}
-
 export interface FindOptions {
   includeImages?: boolean;
   includeRanks?: boolean;
+}
+
+export interface FindSurroundingOptions {
+  surrounding: GpuSort;
+  limitPerSide: number;
+
+  filter?: GpusFilter;
 }
 
 @Injectable()
@@ -78,9 +78,53 @@ export class GpuRepository {
     });
   }
 
-  async listSurrounding(
+  async findById(
     id: number,
-    options: ListSurroundingOptions,
+    options: FindOptions,
+    config?: RepositoryConfig,
+  ): Promise<GpuEntity> {
+    const trx = config?.trx ?? this.db;
+    const { includeImages } = options;
+
+    return await trx.gpu.findUnique({
+      where: { id },
+      include: {
+        specs: true,
+        benchmarks: true,
+        images: includeImages ? { include: { image: true } } : false,
+      },
+    });
+  }
+
+  async findBySlug(
+    slug: string,
+    options: FindOptions,
+    config?: RepositoryConfig,
+  ): Promise<GpuEntity> {
+    const trx = config?.trx ?? this.db;
+    const { includeImages } = options;
+
+    return await trx.gpu.findUnique({
+      where: { slug },
+      include: {
+        specs: true,
+        benchmarks: true,
+        images: includeImages ? { include: { image: true } } : false,
+      },
+    });
+  }
+
+  async findByName(name: string, config?: RepositoryConfig) {
+    const trx = config?.trx ?? this.db;
+
+    return await trx.gpu.findFirst({
+      where: { name: { equals: name, mode: 'insensitive' } },
+    });
+  }
+
+  async findSurrounding(
+    id: number,
+    options: FindSurroundingOptions,
     config?: RepositoryConfig,
   ) {
     const { filter, surrounding, limitPerSide } = options;
@@ -155,51 +199,7 @@ export class GpuRepository {
     );
   }
 
-  async findById(
-    id: number,
-    options: FindOptions,
-    config?: RepositoryConfig,
-  ): Promise<GpuEntity> {
-    const trx = config?.trx ?? this.db;
-    const { includeImages } = options;
-
-    return await trx.gpu.findUnique({
-      where: { id },
-      include: {
-        specs: true,
-        benchmarks: true,
-        images: includeImages ? { include: { image: true } } : false,
-      },
-    });
-  }
-
-  async findBySlug(
-    slug: string,
-    options: FindOptions,
-    config?: RepositoryConfig,
-  ): Promise<GpuEntity> {
-    const trx = config?.trx ?? this.db;
-    const { includeImages } = options;
-
-    return await trx.gpu.findUnique({
-      where: { slug },
-      include: {
-        specs: true,
-        benchmarks: true,
-        images: includeImages ? { include: { image: true } } : false,
-      },
-    });
-  }
-
-  async findByName(name: string, config?: RepositoryConfig) {
-    const trx = config?.trx ?? this.db;
-
-    return await trx.gpu.findFirst({
-      where: { name: { equals: name, mode: 'insensitive' } },
-    });
-  }
-
-  async findSimilarValue(
+  async autocomplete(
     query: string,
     config?: RepositoryConfig,
   ): Promise<GpuEntity[]> {
@@ -225,7 +225,7 @@ export class GpuRepository {
     });
   }
 
-  async findSimilarSpecValue(
+  async autocompleteSpec(
     key: keyof GpuSpecsEntity,
     query: string,
     config?: RepositoryConfig,

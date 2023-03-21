@@ -4,7 +4,7 @@ X: Done and tested
 Immediate Tasks:
   - Fix bug with getting relative performance gpus.
     - not working due to default limit
-    - look at listSurrounding in gpu.repository.
+    - look at getSurrounding in gpu.repository.
       - this works, but needs to be hooked up and code needs to be improved and cleaned
 
   - use branches for each version, merge to master afterwards
