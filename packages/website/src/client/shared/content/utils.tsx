@@ -11,7 +11,7 @@ import {
   ContentFunctionParams,
   RawContentComponent,
   RawContentFunction,
-} from './content-types';
+} from './types';
 
 interface ProcessContentComponentOptions {
   variants: CompiledContentComponentVariants;

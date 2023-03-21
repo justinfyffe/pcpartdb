@@ -1,13 +1,13 @@
 import React, { FunctionComponent, useContext, useMemo } from 'react';
-import { ContentContext } from './content-context';
+import { ContentContext } from './ContentContext';
 import {
   CompiledContentComponentVariants,
   ContentComponentParams,
   ContentFilters,
   ContentFunction,
   ContentFunctionParams,
-} from './content-types';
-import { processContentComponent } from './content-utils';
+} from './types';
+import { processContentComponent } from './utils';
 
 export interface ContentComponentProps {
   variants: CompiledContentComponentVariants;

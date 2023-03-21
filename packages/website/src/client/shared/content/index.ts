@@ -1,4 +1,4 @@
 export * from './Content';
-export * from './content-context';
-export * from './content-types';
-export * from './content-utils';
+export * from './ContentContext';
+export * from './types';
+export * from './utils';

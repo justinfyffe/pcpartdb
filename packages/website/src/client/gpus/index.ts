@@ -1,2 +1,2 @@
-export * from './gpu-service';
-export * from './gpu-utils';
+export * from './gpuService';
+export * from './utils';

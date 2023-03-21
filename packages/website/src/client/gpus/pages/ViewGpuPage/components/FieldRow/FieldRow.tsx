@@ -2,7 +2,7 @@ import { Gpu, GpuBenchmarks, GpuField, GpuSpecs } from '@pcpartdb/shared';
 import React, { useContext, useMemo } from 'react';
 import { Td, Tr } from '../../../../../shared/components';
 import { BooleanFormatter } from '../../../../../shared/format';
-import { formatGpuField } from '../../../../gpu-utils';
+import { formatGpuField } from '../../../../utils';
 import { ViewPageContext } from '../../context';
 
 const LABELS: Record<string, string> = {

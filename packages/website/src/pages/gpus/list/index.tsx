@@ -4,7 +4,7 @@ import {
 } from '@pcpartdb/shared';
 import { NextPageContext } from 'next';
 import { ListGpusPage } from '../../../client/gpus/pages';
-import { viewModelsClient } from '../../../client/shared/view-models';
+import { viewModelsClient } from '../../../client/shared/api';
 
 export async function getServerSideProps(ctx: NextPageContext) {
   const query = generateGpusQueryFromSearchParams(ctx.query);

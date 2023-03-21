@@ -1,1 +1,1 @@
-export * from './ui-utils';
+export * from './utils';

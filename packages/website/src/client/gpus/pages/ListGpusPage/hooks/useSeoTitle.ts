@@ -4,7 +4,7 @@ import {
   ContentFunctionParams,
 } from 'packages/website/src/client/shared/content';
 import { useMemo } from 'react';
-import { formatGpuCompany } from '../../../gpu-utils';
+import { formatGpuCompany } from '../../../utils';
 import { ListPageContextProps } from '../context';
 
 const seoTitle = compileContentFunction(

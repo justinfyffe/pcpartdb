@@ -39,7 +39,7 @@ import {
 } from '../../../shared/components';
 import { isForbiddenError, setValidationErrors } from '../../../shared/error';
 import { WebsiteLayout } from '../../../shared/layouts';
-import { authService } from '../../auth-service';
+import { authService } from '../../authService';
 
 interface LoginFormData {
   email: string;

@@ -12,7 +12,7 @@ import { Breadcrumb, Breadcrumbs, Seo } from '../../../shared/components';
 import { WebsiteLayout } from '../../../shared/layouts';
 import { classNames } from '../../../shared/ui';
 import { CompareGpusForm } from '../../components';
-import { gpuService } from '../../gpu-service';
+import { gpuService } from '../../gpuService';
 import {
   ListFilters,
   ListPagination,

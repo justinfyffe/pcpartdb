@@ -1,2 +1,2 @@
-export * from './image-service';
-export * from './image-utils';
+export * from './imageService';
+export * from './utils';

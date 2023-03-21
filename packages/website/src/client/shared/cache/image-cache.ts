@@ -1,6 +1,6 @@
 import { Image } from '@pcpartdb/shared';
 import { useContext } from 'react';
-import { CacheContext } from './cache-context';
+import { CacheContext } from './CacheContext';
 
 class ImageCacheImpl {
   private cache = new Map<number, Image>();

@@ -12,7 +12,7 @@ import { getCompanyLogoImagePath } from '../../../image';
 import { useGpuCache } from '../../../shared/cache';
 import { Autocomplete, Img } from '../../../shared/components';
 import { classNames } from '../../../shared/ui';
-import { gpuService } from '../../gpu-service';
+import { gpuService } from '../../gpuService';
 import { GpuAutocompleteOption } from './GpuAutocompleteOption';
 
 interface GpuAutocompleteProps {

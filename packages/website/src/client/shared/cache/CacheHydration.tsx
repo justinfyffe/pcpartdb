@@ -1,7 +1,7 @@
 import { Gpu, Image } from '@pcpartdb/shared';
 import Script from 'next/script';
 import React, { FunctionComponent } from 'react';
-import { useGpuCache, useImageCache } from '../cache';
+import { useGpuCache, useImageCache } from '.';
 
 interface CacheState {
   images: Record<number, Image>;

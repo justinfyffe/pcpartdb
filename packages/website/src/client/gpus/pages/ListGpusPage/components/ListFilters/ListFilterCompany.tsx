@@ -6,7 +6,7 @@ import React, {
 } from 'react';
 import { Checkbox } from '../../../../../shared/components';
 import { classNames } from '../../../../../shared/ui';
-import { formatGpuCompany } from '../../../../gpu-utils';
+import { formatGpuCompany } from '../../../../utils';
 import { ListPageContext } from '../../context';
 
 interface ListFilterComnpanyProps {

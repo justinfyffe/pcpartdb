@@ -1,6 +1,6 @@
 import { GpuField } from '@pcpartdb/shared';
 import React, { forwardRef, useCallback, useState } from 'react';
-import { gpuService } from '../../../../gpus/gpu-service';
+import { gpuService } from '../../../../gpus/gpuService';
 import {
   Autocomplete,
   AutocompleteOption,

@@ -5,7 +5,7 @@ import {
   ContentComponentParams,
   ContentContext,
 } from '../../../../../shared/content';
-import { formatGpuCompany } from '../../../../gpu-utils';
+import { formatGpuCompany } from '../../../../utils';
 import { ListPageContext } from '../../context';
 
 interface ListTitleContentParams extends ContentComponentParams {

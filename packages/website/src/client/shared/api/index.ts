@@ -1,1 +1,2 @@
-export * from './api-client';
+export * from './apiClient';
+export * from './viewModelsClient';

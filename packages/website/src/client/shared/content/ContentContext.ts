@@ -3,7 +3,7 @@ import {
   ContentComponentParams,
   ContentFilters,
   ContentFunctionParams,
-} from './content-types';
+} from './types';
 
 interface ContentContextState {
   filters?: ContentFilters;
