@@ -9,7 +9,6 @@ export const config = {
 
 const proxy = createProxyMiddleware({
   target: process.env.API_URL,
-  pathRewrite: { '^/api': '' }, // remove `/api` prefix
 });
 
 export default function handler(req: any, res: any) {

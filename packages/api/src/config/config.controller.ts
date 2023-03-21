@@ -5,6 +5,6 @@ import { Context, Ctx } from '../shared/context';
 export class ConfigController {
   @Get()
   async getConfig(@Ctx() ctx: Context) {
-    return ctx.config ?? {};
+    return ctx?.config ?? {};
   }
 }

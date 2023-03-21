@@ -20,6 +20,7 @@ async function bootstrap() {
   await database.enableShutdownHooks(app);
 
   app.useGlobalFilters(new AllExceptionsFilter());
+  app.setGlobalPrefix('/api');
 
   await app.listen(process.env.API_PORT);
   console.log(`Application is running on: ${await app.getUrl()}`);
