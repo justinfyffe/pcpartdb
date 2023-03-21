@@ -11,6 +11,7 @@ import {
 } from '@pcpartdb/shared';
 import { Prisma } from '@prisma/client';
 import { Database, RepositoryConfig } from '../database';
+import { deepMergeObjects } from '../shared/utils';
 import { GpuEntity, GpuSpecsEntity } from './gpu.entity';
 
 export interface CountOptions {
@@ -25,6 +26,13 @@ export interface ListOptions {
 
   includeImages?: boolean;
   includeRanks?: boolean;
+}
+
+export interface ListSurroundingOptions {
+  limitPerSide: number;
+  surrounding: GpuSort;
+
+  filter?: GpusFilter;
 }
 
 export interface FindOptions {
@@ -68,6 +76,83 @@ export class GpuRepository {
       skip: offset ?? DEFAULT_LIST_GPUS_OFFSET,
       take: limit ?? DEFAULT_LIST_GPUS_LIMIT,
     });
+  }
+
+  async listSurrounding(
+    id: number,
+    options: ListSurroundingOptions,
+    config?: RepositoryConfig,
+  ) {
+    const { filter, surrounding, limitPerSide } = options;
+
+    const gpu = await this.findById(id, {}, config);
+    const db = config?.trx ?? this.db;
+
+    let belowWhere: Prisma.GpuWhereInput = null;
+    let aboveWhere: Prisma.GpuWhereInput = null;
+    if (surrounding === GpuSort.PerformanceRating) {
+      belowWhere = deepMergeObjects(
+        this.generateWhere({ ...filter, performanceRated: true }),
+        {
+          id: { not: id },
+          benchmarks: {
+            performanceScore: { lt: gpu.benchmarks?.performanceScore },
+          },
+        },
+      );
+      aboveWhere = deepMergeObjects(
+        this.generateWhere({ ...filter, performanceRated: true }),
+        {
+          id: { not: id },
+          benchmarks: {
+            performanceScore: { gt: gpu.benchmarks?.performanceScore },
+          },
+        },
+      );
+    } else if (surrounding === GpuSort.ValueRating) {
+      belowWhere = deepMergeObjects(
+        this.generateWhere({ ...filter, valueRated: true }),
+        {
+          id: { not: id },
+          benchmarks: { valueScore: { lte: gpu.benchmarks?.valueScore } },
+        },
+      );
+      aboveWhere = deepMergeObjects(
+        this.generateWhere({ ...filter, valueRated: true }),
+        {
+          id: { not: id },
+          benchmarks: { valueScore: { gte: gpu.benchmarks?.valueScore } },
+        },
+      );
+    }
+
+    const belowResults = await db.gpu.findMany({
+      where: belowWhere,
+      orderBy: this.generateOrderBy({
+        sort: surrounding,
+        order: GpuOrder.Desc,
+      }),
+      include: { specs: true, benchmarks: true },
+      take: limitPerSide,
+    });
+
+    const aboveResults = await db.gpu.findMany({
+      where: aboveWhere,
+      orderBy: this.generateOrderBy({ sort: surrounding, order: GpuOrder.Asc }),
+      include: { specs: true, benchmarks: true },
+      take: limitPerSide,
+    });
+
+    console.log(
+      belowResults.map(
+        (value) => `${value.id}: ${value.benchmarks?.performanceScore}`,
+      ),
+    );
+    console.log(
+      aboveResults.map(
+        (value) => `${value.id}: ${value.benchmarks?.performanceScore}`,
+      ),
+    );
   }
 
   async findById(

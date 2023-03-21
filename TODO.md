@@ -1,12 +1,12 @@
 ~: Maybe done, but need to test
 X: Done and tested
 
-Workspaces:
-- scraper
-- database (prisma, migrations)
-- website
-
 Immediate Tasks:
+  - Fix bug with getting relative performance gpus.
+    - not working due to default limit
+    - look at listSurrounding in gpu.repository.
+      - this works, but needs to be hooked up and code needs to be improved and cleaned
+
   - use branches for each version, merge to master afterwards
   - folder structure for pages and components
     - <feature>/pages/<page-name>/components
