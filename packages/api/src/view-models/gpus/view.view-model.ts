@@ -96,6 +96,17 @@ export class ViewGpuViewModelService {
       ctx,
     );
 
+    const bestValueSegmentGpus = await this.gpuService.list(
+      {
+        query: {
+          filter: { segment: [segment], valueRated: true },
+          orderBy: { sort: GpuSort.ValueRating },
+          limit: 1,
+        },
+      },
+      ctx,
+    );
+
     const contentTags = this.getContentTags(gpu);
 
     return {
@@ -105,6 +116,7 @@ export class ViewGpuViewModelService {
       relativePerformanceGpus,
       relativeValueGpus,
       bestPerformanceSegmentGpu: bestPerformanceSegmentGpus?.[0],
+      bestValueSegmentGpu: bestValueSegmentGpus?.[0],
     } as ViewGpuContentData;
   }
 

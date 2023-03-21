@@ -87,9 +87,10 @@ export const PerformanceBlurb = () => {
         gpu.ranks?.performanceSegmentCompanyRank > 1
           ? formatOrdinalNumber(gpu.ranks?.performanceSegmentCompanyRank)
           : '',
-      performanceSegmentYearRank: formatOrdinalNumber(
-        gpu.ranks?.performanceSegmentYearRank,
-      ),
+      performanceSegmentYearRank:
+        gpu.ranks?.performanceSegmentYearRank > 1
+          ? formatOrdinalNumber(gpu.ranks?.performanceSegmentYearRank)
+          : '',
       performanceRank:
         gpu.ranks?.performanceRank > 1
           ? formatOrdinalNumber(gpu.ranks?.performanceRank)

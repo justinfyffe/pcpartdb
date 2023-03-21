@@ -1,3 +1,4 @@
+import { getViewGpuPath } from '@pcpartdb/shared';
 import { formatOrdinalNumber } from 'packages/website/src/client/shared/format';
 import React, { useContext, useMemo } from 'react';
 import {
@@ -18,16 +19,22 @@ const ValueBlurbSentence1 = compileContentComponent({
   component: (props) => (
     <>
       Its {props.performanceRating} performance rating and {props.launchPrice}{' '}
-      launch price gives it a performanc per dollar of {props.valueRating}. This
-      makes it the {props.valueRank} best value card in our database.
+      launch price gives it a performance per dollar of {props.valueRating}.
+      This makes it the {props.valueRank} best value card in our database.
     </>
   ),
 });
 
 const ValueBlurbSentence2 = compileContentComponent({
-  deps: [],
+  deps: ['bestValueSegmentGpuName', 'bestValueSegmentGpuValue'],
   component: (props) => (
-    <>The best value card, foo, has a performance per dollar of bar.</>
+    <>
+      The card with the highest value,{' '}
+      <a href={props.bestValueSegmentGpuPath as string}>
+        {props.bestValueSegmentGpuName}
+      </a>
+      , has a performance per dollar of {props.bestValueSegmentGpuValue}.
+    </>
   ),
 });
 
@@ -35,8 +42,15 @@ export const ValueBlurb = () => {
   const { gpu, contentData } = useContext(ViewPageContext);
 
   const context = useMemo(() => {
+    const bestValueSegmentGpu = contentData.bestValueSegmentGpu;
+
     const tags = contentData.contentTags;
     const params = {
+      bestValueSegmentGpuName: getGpuName(bestValueSegmentGpu),
+      bestValueSegmentGpuPath: getViewGpuPath(bestValueSegmentGpu),
+      bestValueSegmentGpuValue: formatGpuField(
+        bestValueSegmentGpu.benchmarks?.valueScore,
+      ),
       gpuName: getGpuName(gpu),
       launchPrice: formatGpuField(gpu.launchPrice),
       performanceRating: formatGpuField(gpu.benchmarks?.performanceScore),
@@ -48,7 +62,7 @@ export const ValueBlurb = () => {
     };
 
     return { tags, params };
-  }, [contentData.contentTags, gpu]);
+  }, [contentData.bestValueSegmentGpu, contentData.contentTags, gpu]);
 
   return (
     <ContentContext.Provider value={context}>
