@@ -1,0 +1,76 @@
+import { Image } from '@pcpartdb/shared';
+import React, { FunctionComponent, useCallback, useState } from 'react';
+import {
+  Button,
+  ButtonVariant,
+  closeDialog,
+} from '../../../../shared/components';
+import { ImageForm } from '../ImageForm';
+import { ImageList } from './ImageList';
+
+enum Tabs {
+  List,
+  Upload,
+}
+
+interface ImageDialogProps {
+  onSelect: (image: Image) => void;
+}
+
+export const ImageDialog: FunctionComponent<ImageDialogProps> = (props) => {
+  const { onSelect } = props;
+  const [tab, setCurrentTab] = useState(Tabs.List);
+
+  const handleListClick = useCallback(() => {
+    setCurrentTab(Tabs.List);
+  }, []);
+
+  const handleSelect = useCallback(
+    (image: Image) => {
+      onSelect(image);
+      closeDialog();
+    },
+    [onSelect],
+  );
+
+  const handleUploadClick = useCallback(() => {
+    setCurrentTab(Tabs.Upload);
+  }, []);
+
+  const handleUpload = useCallback(
+    (image: Image) => {
+      onSelect(image);
+      closeDialog();
+    },
+    [onSelect],
+  );
+
+  return (
+    <div className="bg-white flex flex-col h-[80%] w-[80%] p-4 overflow-auto max-w-247 rounded shadow">
+      <div className="items-center flex justify-center my-2 -mx-2">
+        <Button
+          type="button"
+          variant={tab === Tabs.List ? ButtonVariant.Primary : undefined}
+          onClick={handleListClick}
+          className="border-px flex-1 mx-2"
+        >
+          Select Image
+        </Button>
+
+        <Button
+          type="button"
+          variant={tab === Tabs.Upload ? ButtonVariant.Primary : undefined}
+          onClick={handleUploadClick}
+          className="border-px flex-1 mx-2"
+        >
+          Upload Image
+        </Button>
+      </div>
+
+      <div className="mt-4 overflow-x-hidden overflow-y-auto">
+        {tab === Tabs.List && <ImageList onSelect={handleSelect} />}
+        {tab === Tabs.Upload && <ImageForm onSuccess={handleUpload} />}
+      </div>
+    </div>
+  );
+};

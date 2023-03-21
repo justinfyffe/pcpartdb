@@ -1,3 +1,3 @@
-import { NotFoundPage } from '../client/errors/pages/not-found';
+import { NotFoundPage } from '../client/errors/pages/NotFoundPage';
 
 export default NotFoundPage;

@@ -1,3 +1,3 @@
-export * from './image-dialog';
-export * from './image-form';
-export * from './image-input';
+export * from './ImageDialog';
+export * from './ImageForm';
+export * from './ImageInput';

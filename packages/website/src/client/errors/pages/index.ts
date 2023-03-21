@@ -1,3 +1,3 @@
-export * from './error';
-export * from './general-error';
-export * from './not-found';
+export * from './ErrorPage';
+export * from './GeneralErrorPage';
+export * from './NotFoundPage';

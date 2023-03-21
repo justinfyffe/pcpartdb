@@ -1,3 +1,3 @@
-export * from './guest-guard';
-export * from './staff-guard';
-export * from './user-guard';
+export * from './withGuestGuard';
+export * from './withStaffGuard';
+export * from './withUserGuard';
