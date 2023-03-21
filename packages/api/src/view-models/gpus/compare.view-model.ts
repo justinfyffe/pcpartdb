@@ -3,6 +3,7 @@ import {
   CompareGpusViewModel,
   Gpu,
   GpuComparison,
+  GpuOrder,
   GpuSort,
   RelatedComparisons,
   RelatedGpus,
@@ -101,6 +102,8 @@ export class CompareGpusViewModelService {
         ...this.getSurroundingGpus(gpus, seeds[1], Math.floor(total / 2)),
       ];
     } else {
+      // TODO: fix this logic. This can be heavily weighted to one side.
+      // Example: see http://localhost:3000/gpus/compare/nvidia-geforce-gtx-1660--vs--nvidia-geforce-rtx-4090/
       const seedIndex = Math.floor((seedIndex1 + seedIndex2) / 2);
       let start = seedIndex;
       let end = seedIndex + 1;
@@ -123,34 +126,181 @@ export class CompareGpusViewModelService {
 
   // TODO: clean up this logic
   private async getPerformanceGpus(seed: GpuComparison, ctx: Context) {
-    const results = await this.gpuService.list(
+    const above1 = await this.gpuService.list(
       {
         query: {
-          filter: { performanceRated: true },
-          orderBy: { sort: GpuSort.PerformanceRating },
+          filter: {
+            excludeIds: [seed[0].id, seed[1].id],
+            minPerformanceScore: seed[0].benchmarks?.performanceScore?.value,
+            performanceRated: true,
+          },
+          orderBy: { sort: GpuSort.PerformanceRating, order: GpuOrder.Asc },
+          limit: TOTAL_COMPARED_GPUS,
         },
         includeRanks: true,
       },
       ctx,
     );
 
-    return await this.getSurroundingGpus2(results, seed, TOTAL_COMPARED_GPUS);
+    const below1 = await this.gpuService.list(
+      {
+        query: {
+          filter: {
+            excludeIds: [seed[0].id, seed[1].id],
+            maxPerformanceScore: seed[0].benchmarks?.performanceScore?.value,
+            performanceRated: true,
+          },
+          orderBy: { sort: GpuSort.PerformanceRating, order: GpuOrder.Desc },
+          limit: TOTAL_COMPARED_GPUS,
+        },
+        includeRanks: true,
+      },
+      ctx,
+    );
+
+    const above2 = await this.gpuService.list(
+      {
+        query: {
+          filter: {
+            excludeIds: [seed[0].id, seed[1].id],
+            minPerformanceScore: seed[1].benchmarks?.performanceScore?.value,
+            performanceRated: true,
+          },
+          orderBy: { sort: GpuSort.PerformanceRating, order: GpuOrder.Asc },
+          limit: TOTAL_COMPARED_GPUS,
+        },
+        includeRanks: true,
+      },
+      ctx,
+    );
+
+    const below2 = await this.gpuService.list(
+      {
+        query: {
+          filter: {
+            excludeIds: [seed[0].id, seed[1].id],
+            maxPerformanceScore: seed[1].benchmarks?.performanceScore?.value,
+            performanceRated: true,
+          },
+          orderBy: { sort: GpuSort.PerformanceRating, order: GpuOrder.Desc },
+          limit: TOTAL_COMPARED_GPUS,
+        },
+        includeRanks: true,
+      },
+      ctx,
+    );
+
+    const relativeGpusSet = [
+      ...above1,
+      ...below1,
+      ...above2,
+      ...below2,
+      ...seed,
+    ].reduce((acc, gpu) => {
+      acc[gpu.id] = gpu;
+      return acc;
+    }, {} as Record<number, Gpu>);
+
+    const relativeGpus = Object.values(relativeGpusSet).sort(
+      (gpu1, gpu2) =>
+        gpu2.benchmarks?.performanceScore?.value -
+        gpu1.benchmarks?.performanceScore?.value,
+    );
+
+    return await this.getSurroundingGpus2(
+      relativeGpus,
+      seed,
+      TOTAL_COMPARED_GPUS,
+    );
   }
 
   // TODO: clean up this logic
   private async getValueGpus(seed: GpuComparison, ctx: Context) {
-    const results = await this.gpuService.list(
+    const above1 = await this.gpuService.list(
       {
         query: {
-          filter: { valueRated: true },
-          orderBy: { sort: GpuSort.ValueRating },
+          filter: {
+            excludeIds: [seed[0].id, seed[1].id],
+            minValueScore: seed[0].benchmarks?.valueScore?.value,
+            valueRated: true,
+          },
+          orderBy: { sort: GpuSort.ValueRating, order: GpuOrder.Asc },
+          limit: TOTAL_COMPARED_GPUS,
         },
         includeRanks: true,
       },
       ctx,
     );
 
-    return await this.getSurroundingGpus2(results, seed, TOTAL_COMPARED_GPUS);
+    const below1 = await this.gpuService.list(
+      {
+        query: {
+          filter: {
+            excludeIds: [seed[0].id, seed[1].id],
+            maxValueScore: seed[0].benchmarks?.valueScore?.value,
+            valueRated: true,
+          },
+          orderBy: { sort: GpuSort.ValueRating, order: GpuOrder.Desc },
+          limit: TOTAL_COMPARED_GPUS,
+        },
+        includeRanks: true,
+      },
+      ctx,
+    );
+
+    const above2 = await this.gpuService.list(
+      {
+        query: {
+          filter: {
+            excludeIds: [seed[0].id, seed[1].id],
+            minValueScore: seed[1].benchmarks?.valueScore?.value,
+            valueRated: true,
+          },
+          orderBy: { sort: GpuSort.ValueRating, order: GpuOrder.Asc },
+          limit: TOTAL_COMPARED_GPUS,
+        },
+        includeRanks: true,
+      },
+      ctx,
+    );
+
+    const below2 = await this.gpuService.list(
+      {
+        query: {
+          filter: {
+            excludeIds: [seed[0].id, seed[1].id],
+            maxValueScore: seed[1].benchmarks?.valueScore?.value,
+            valueRated: true,
+          },
+          orderBy: { sort: GpuSort.ValueRating, order: GpuOrder.Desc },
+          limit: TOTAL_COMPARED_GPUS,
+        },
+        includeRanks: true,
+      },
+      ctx,
+    );
+
+    const relativeGpusSet = [
+      ...above1,
+      ...below1,
+      ...above2,
+      ...below2,
+      ...seed,
+    ].reduce((acc, gpu) => {
+      acc[gpu.id] = gpu;
+      return acc;
+    }, {} as Record<number, Gpu>);
+
+    const relativeGpus = Object.values(relativeGpusSet).sort(
+      (gpu1, gpu2) =>
+        gpu2.benchmarks?.valueScore?.value - gpu1.benchmarks?.valueScore?.value,
+    );
+
+    return await this.getSurroundingGpus2(
+      relativeGpus,
+      seed,
+      TOTAL_COMPARED_GPUS,
+    );
   }
 
   private async getRelatedGpus(

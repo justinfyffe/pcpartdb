@@ -358,22 +358,53 @@ export class GpuRepository {
   private generateWhere(filter: GpusFilter): Prisma.GpuWhereInput {
     const performanceRated = filter?.performanceRated ?? false;
     const valueRated = filter?.valueRated;
+    const maxPerformanceScore = filter?.maxPerformanceScore;
+    const minPerformanceScore = filter?.minPerformanceScore;
+    const maxValueScore = filter?.maxValueScore;
+    const minValueScore = filter?.minValueScore;
     const companies = filter?.company ?? [];
+    const excludeIds = filter?.excludeIds;
 
-    const performanceRatedWhere: Prisma.FloatNullableFilter = performanceRated
-      ? { not: null }
-      : undefined;
-    const valueRatedWhere: Prisma.FloatNullableFilter = valueRated
-      ? { not: null }
-      : undefined;
+    // Exclude Ids
+    let idWhere: Prisma.IntFilter = {};
+    if (excludeIds != null) {
+      idWhere = { ...idWhere, notIn: excludeIds };
+    }
+
+    // Performance Score
+    let performanceWhere: Prisma.FloatNullableFilter = {};
+    if (performanceRated) {
+      performanceWhere = { ...performanceWhere, not: null };
+    }
+    if (maxPerformanceScore != null) {
+      performanceWhere = { ...performanceWhere, lte: maxPerformanceScore };
+    }
+    if (minPerformanceScore != null) {
+      performanceWhere = { ...performanceWhere, gte: minPerformanceScore };
+    }
+
+    // Value Score
+    let valueWhere: Prisma.FloatNullableFilter = {};
+    if (valueRated) {
+      valueWhere = { ...valueWhere, not: null };
+    }
+    if (maxPerformanceScore != null) {
+      valueWhere = { ...valueWhere, lte: maxValueScore };
+    }
+    if (minPerformanceScore != null) {
+      valueWhere = { ...valueWhere, gte: minValueScore };
+    }
+
+    // Company
     const companyWhere: Prisma.StringNullableFilter =
       companies.length > 0 ? { in: companies, mode: 'insensitive' } : undefined;
 
     return {
+      id: idWhere,
       company: companyWhere,
       benchmarks: {
-        performanceScore: performanceRatedWhere,
-        valueScore: valueRatedWhere,
+        performanceScore: performanceWhere,
+        valueScore: valueWhere,
       },
     };
   }

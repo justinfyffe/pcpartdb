@@ -3,9 +3,11 @@ X: Done and tested
 
 Immediate Tasks:
   - Fix bug with getting relative performance gpus.
-    - not working due to default limit
-    - look at getSurrounding in gpu.repository.
-      - this works, but needs to be hooked up and code needs to be improved and cleaned
+    - fix bug with relative performance value: http://localhost:3000/gpus/compare/nvidia-geforce-gtx-1660--vs--nvidia-geforce-rtx-4090/
+      - heavily skewed to one side. due to getSurroundingGpus2
+    - clean up surrounding gpus code
+    - clean up list options, count options
+      - don't have "includeRanks" on repository, only on service.
 
   - use branches for each version, merge to master afterwards
   - folder structure for pages and components
