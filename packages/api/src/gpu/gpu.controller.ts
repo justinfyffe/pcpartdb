@@ -55,7 +55,12 @@ export class GpuController {
         const data = JSON.parse(q) as ListGpusRequest;
         validate(data, listGpusRequestValidator);
         const gpus = await this.gpuService.list(
-          { ...data, includeRanks: true, includeImages: false },
+          {
+            ...data,
+            fields: data.fields || [],
+            includeRanks: true,
+            includeImages: false,
+          },
           ctx,
         );
         const totalGpus = await this.gpuService.count({ ...data }, ctx);

@@ -89,10 +89,10 @@ export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
             .
           </p>
 
-          <p>
+          {/* <p>
             {WEBSITE_NAME} is a participant of affiliate programs and earns
             commission from qualifying purchases.
-          </p>
+          </p> */}
         </FooterSection>
 
         <FooterSection className={classNames('flex-none text-center w-full')}>

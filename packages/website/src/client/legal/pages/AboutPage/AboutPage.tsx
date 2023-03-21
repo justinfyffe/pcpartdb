@@ -59,14 +59,14 @@ export const AboutPage = (_props: AboutPageProps) => {
           <p>hello@pcpartdb.com</p>
         </section>
 
-        <section>
+        {/* <section>
           <h2 className="font-semibold">Affiliate Disclaimer</h2>
           <p>
             We are a participant of affiliate advertising programs which allow
             us to earn from qualifying purchases. We do not buy or sell the
             parts listed on this website.
           </p>
-        </section>
+        </section> */}
       </article>
     </WebsiteLayout>
   );
