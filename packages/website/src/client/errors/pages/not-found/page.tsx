@@ -7,16 +7,15 @@ import { WebsiteLayout } from '../../../shared/layouts';
 export interface NotFoundPageProps {}
 
 export const NotFoundPage = (_props: NotFoundPageProps) => {
+  const pageTitle = 'Sorry, we could not find that page';
+  const seoTitle = `${pageTitle}`;
+  const seoRobots = [MetaRobots.NOINDEX];
+
   return (
     <WebsiteLayout>
-      <Seo
-        title="Sorry, we could not find that page"
-        robots={[MetaRobots.NOINDEX]}
-      />
+      <Seo title={seoTitle} robots={seoRobots} />
       <article>
-        <h1 className="font-semibold mb-4">
-          Sorry, we could not find that page
-        </h1>
+        <h1 className="font-semibold mb-4">{pageTitle}</h1>
 
         <p>
           The page you are looking for may not exist. Please go to our{' '}

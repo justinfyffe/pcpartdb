@@ -100,16 +100,20 @@ export const LoginPage: FunctionComponent<LoginPageProps> = (
     [router, setError],
   );
 
+  const pageTitle = 'Sign in to your Account';
+  const seoTitle = `${pageTitle}`;
+  const seoRobots = [MetaRobots.NOINDEX];
+
   return (
     <WebsiteLayout>
-      <Seo title="Sign in to your Account" robots={[MetaRobots.NOINDEX]} />
+      <Seo title={seoTitle} robots={seoRobots} />
       <Breadcrumbs className="mb-4">
         <Breadcrumb href={getHomePath()}>Home</Breadcrumb>
-        <Breadcrumb>Sign in</Breadcrumb>
+        <Breadcrumb>{pageTitle}</Breadcrumb>
       </Breadcrumbs>
 
       <article>
-        <h1 className="font-semibold mb-4">Sign in to your Account</h1>
+        <h1 className="font-semibold mb-4">{pageTitle}</h1>
 
         <section>
           {requestError && isForbiddenError(requestError) && (

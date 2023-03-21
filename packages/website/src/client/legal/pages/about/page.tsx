@@ -7,21 +7,22 @@ import { WebsiteLayout } from '../../../shared/layouts';
 interface AboutPageProps {}
 
 export const AboutPage = (_props: AboutPageProps) => {
-  const title = 'About Us';
-  const canonical = getAboutPath();
-  const keywords: string[] = [];
+  const pageTitle = `About ${WEBSITE_NAME}`;
+  const seoTitle = 'About Us';
+  const seoCanonical = getAboutPath();
+  const seoKeywords: string[] = [];
 
   return (
     <WebsiteLayout>
-      <Seo title={title} keywords={keywords} canonical={canonical} />
+      <Seo title={seoTitle} keywords={seoKeywords} canonical={seoCanonical} />
 
       <Breadcrumbs className="mb-4">
         <Breadcrumb href={getHomePath()}>Home</Breadcrumb>
-        <Breadcrumb>{title}</Breadcrumb>
+        <Breadcrumb>{pageTitle}</Breadcrumb>
       </Breadcrumbs>
 
       <article>
-        <h1 className="font-semibold mb-4">About {WEBSITE_NAME}</h1>
+        <h1 className="font-semibold mb-4">{pageTitle}</h1>
 
         <section>
           <p>

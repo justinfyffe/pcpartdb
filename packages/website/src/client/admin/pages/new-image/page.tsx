@@ -13,15 +13,17 @@ import { AdminLayout } from '../../../shared/layouts';
 interface AdminNewImagePageProps {}
 
 export const AdminNewImagePage = (_props: AdminNewImagePageProps) => {
-  const title = 'New Image';
+  const pageTitle = 'New Image';
+  const seoTitle = `${pageTitle} - Admin Panel`;
+  const seoRobots = [MetaRobots.NOINDEX, MetaRobots.NOFOLLOW];
 
   return (
     <AdminLayout>
-      <Seo title={title} robots={[MetaRobots.NOINDEX]} />
+      <Seo title={seoTitle} robots={seoRobots} />
 
       <article>
         <div className="flex items-center justify-between mb-4">
-          <h1 className="font-semibold">Images - Upload Image</h1>
+          <h1 className="font-semibold">{pageTitle}</h1>
 
           <Button
             href={getAdminListImagesPath()}

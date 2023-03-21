@@ -33,29 +33,30 @@ export const CompareGpuPage = (props: CompareGpusViewModel) => {
 
   const context = createComparePageContextState({ comparison, contentData });
 
-  const title = getGpuComparisonName(comparison);
-  const keywords = [
+  const pageTitle = getGpuComparisonName(comparison);
+  const seoTitle = `${pageTitle} - GPU specs, benchmarks, and value`;
+  const seoKeywords = [
+    pageTitle,
     getGpuName(comparison[0]),
     getGpuName(comparison[1]),
-    getGpuComparisonName(comparison),
   ];
-  const canonical = getCompareGpusPath(
+  const seoCanonical = getCompareGpusPath(
     getCompareGpusSlug(comparison, { ordered: true }),
   );
 
   return (
     <ComparePageContext.Provider value={context}>
-      <Seo title={title} keywords={keywords} canonical={canonical} />
+      <Seo title={seoTitle} keywords={seoKeywords} canonical={seoCanonical} />
       <WebsiteLayout>
         <Breadcrumbs className="mb-4">
           <Breadcrumb href={getHomePath()}>Home</Breadcrumb>
           <Breadcrumb href={getListGpusPath()}>Graphics Cards</Breadcrumb>
-          <Breadcrumb>{title}</Breadcrumb>
+          <Breadcrumb>{pageTitle}</Breadcrumb>
         </Breadcrumbs>
 
         <div className="flex flex-wrap gap-8 justify-center">
           <section className="flex flex-wrap w-full">
-            <h1 className="font-semibold">{title}</h1>
+            <h1 className="font-semibold">{pageTitle}</h1>
 
             <CompareGpusForm values={[gpu1.id, gpu2.id]} />
           </section>

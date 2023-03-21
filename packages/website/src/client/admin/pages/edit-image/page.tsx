@@ -16,15 +16,17 @@ import { AdminLayout } from '../../../shared/layouts';
 export const AdminEditImagePage = (props: AdminEditImageViewModel) => {
   const { image } = props;
 
-  const title = `Edit Image: ${image.name}`;
+  const pageTitle = 'Edit Image';
+  const seoTitle = `${pageTitle} - Admin Panel`;
+  const seoRobots = [MetaRobots.NOINDEX, MetaRobots.NOFOLLOW];
 
   return (
     <AdminLayout>
-      <Seo title={title} robots={[MetaRobots.NOINDEX]} />
+      <Seo title={seoTitle} robots={seoRobots} />
 
       <article>
         <div className="flex items-center justify-between mb-4">
-          <h1 className="font-semibold">Images - Edit Image</h1>
+          <h1 className="font-semibold">{pageTitle}</h1>
 
           <Button
             href={getAdminListImagesPath()}
@@ -34,7 +36,7 @@ export const AdminEditImagePage = (props: AdminEditImageViewModel) => {
           </Button>
         </div>
 
-        <ImageForm image={props.image} />
+        <ImageForm image={image} />
       </article>
     </AdminLayout>
   );

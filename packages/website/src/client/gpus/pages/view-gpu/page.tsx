@@ -28,23 +28,25 @@ export const ViewGpuPage = (props: ViewGpuViewModel) => {
 
   const context = createViewPageContextState({ gpu: gpu, contentData });
 
-  const title = getGpuName(gpu);
-  const canonical = getViewGpuPath(gpu);
-  const keywords = [getGpuName(gpu)];
+  const pageTitle = getGpuName(gpu);
+  const seoTitle = `${pageTitle} - GPU specs, benchmarks, and value`;
+  const seoCanonical = getViewGpuPath(gpu);
+  const seoKeywords = [getGpuName(gpu)];
 
   return (
     <ViewPageContext.Provider value={context}>
-      <Seo title={title} keywords={keywords} canonical={canonical} />
+      <Seo title={seoTitle} keywords={seoKeywords} canonical={seoCanonical} />
+
       <WebsiteLayout>
         <Breadcrumbs className="mb-4">
           <Breadcrumb href={getHomePath()}>Home</Breadcrumb>
           <Breadcrumb href={getListGpusPath()}>Graphics Cards</Breadcrumb>
-          <Breadcrumb>{title}</Breadcrumb>
+          <Breadcrumb>{pageTitle}</Breadcrumb>
         </Breadcrumbs>
 
         <div className="flex flex-wrap justify-center gap-8 mb-8">
           <section className="flex flex-col w-full">
-            <h1 className="md:text-2xl text-3xl">{title}</h1>
+            <h1 className="md:text-2xl text-3xl">{pageTitle}</h1>
             <CompareGpusForm values={[gpu.id]} />
           </section>
 

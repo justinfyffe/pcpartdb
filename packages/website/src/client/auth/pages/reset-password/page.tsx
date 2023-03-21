@@ -95,11 +95,15 @@ export const ResetPasswordPage = (props: ResetPasswordPageProps) => {
     [setError, router],
   );
 
+  const pageTitle = 'Reset Password';
+  const seoTitle = `${pageTitle}`;
+  const seoRobots = [MetaRobots.NOINDEX];
+
   return (
     <WebsiteLayout>
-      <Seo title="Reset Password" robots={[MetaRobots.NOINDEX]} />
+      <Seo title={seoTitle} robots={seoRobots} />
       <article>
-        <h1 className="font-semibold mb-4">Reset Password</h1>
+        <h1 className="font-semibold mb-4">{pageTitle}</h1>
 
         <section>
           {errors.token?.type === ValidationErrorType.InvalidToken && (

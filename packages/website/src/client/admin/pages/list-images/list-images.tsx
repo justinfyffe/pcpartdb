@@ -32,11 +32,13 @@ export const AdminListImagesPage = (props: AdminListImagesViewModel) => {
   const [saved] = useState(router.query.saved === 'true');
   const [deleted] = useState(router.query.deleted === 'true');
 
-  const title = 'Images';
+  const pageTitle = 'Images';
+  const seoTitle = `${pageTitle} - Admin Panel`;
+  const seoRobots = [MetaRobots.NOINDEX, MetaRobots.NOFOLLOW];
 
   return (
     <AdminLayout>
-      <Seo title={title} robots={[MetaRobots.NOINDEX]} />
+      <Seo title={seoTitle} robots={seoRobots} />
 
       <article>
         <section>
@@ -54,7 +56,7 @@ export const AdminListImagesPage = (props: AdminListImagesViewModel) => {
         </section>
 
         <div className="flex items-center justify-between mb-4">
-          <h1 className="font-semibold">Images</h1>
+          <h1 className="font-semibold">{pageTitle}</h1>
 
           <Button href={getAdminNewImagePath()} variant={ButtonVariant.Default}>
             Add

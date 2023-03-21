@@ -16,9 +16,10 @@ import {
   AlertVariant,
   Button,
   ButtonVariant,
+  MetaRobots,
   Pagination,
   PaginationResult,
-  Spinner,
+  Seo,
   Table,
   TBody,
   Td,
@@ -86,8 +87,14 @@ export const AdminListGpusPage = (props: AdminListGpusViewModel) => {
     [query],
   );
 
+  const pageTitle = 'GPUs';
+  const seoTitle = `${pageTitle} - Admin Panel`;
+  const seoRobots = [MetaRobots.NOINDEX, MetaRobots.NOFOLLOW];
+
   return (
     <AdminLayout>
+      <Seo title={seoTitle} robots={seoRobots} />
+
       <article>
         <section>
           {saved && (
@@ -104,7 +111,7 @@ export const AdminListGpusPage = (props: AdminListGpusViewModel) => {
         </section>
 
         <div className="flex items-center justify-between mb-4">
-          <h1 className="font-semibold">GPUs</h1>
+          <h1 className="font-semibold">{pageTitle}</h1>
 
           <div className="flex gap-4">
             <Button

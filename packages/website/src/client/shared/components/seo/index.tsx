@@ -2,7 +2,7 @@ import { WEBSITE_NAME, WEBSITE_URL } from '@pcpartdb/shared';
 import Head from 'next/head';
 import React, { FunctionComponent } from 'react';
 
-const WEBSITE_KEYWORDS = [
+const BASE_KEYWORDS = [
   'PC Part DB',
   'PC Hardware',
   'PC Parts',
@@ -31,7 +31,7 @@ function getSeoTitle(title: string) {
 }
 
 function getSeoKeywords(...keywords: string[]) {
-  return [...keywords, ...WEBSITE_KEYWORDS];
+  return [...keywords, ...BASE_KEYWORDS];
 }
 
 function getSeoCanonical(path: string) {

@@ -7,21 +7,22 @@ import { WebsiteLayout } from '../../../shared/layouts';
 interface PrivacyPageProps {}
 
 export const PrivacyPage = (_props: PrivacyPageProps) => {
-  const title = 'Privacy Policy';
-  const canonical = getPrivacyPath();
-  const keywords: string[] = [];
+  const pageTitle = 'Privacy Policy';
+  const seoTitle = `${pageTitle}`;
+  const seoCanonical = getPrivacyPath();
+  const seoKeywords: string[] = [];
 
   return (
     <WebsiteLayout>
-      <Seo title={title} keywords={keywords} canonical={canonical} />
+      <Seo title={seoTitle} keywords={seoKeywords} canonical={seoCanonical} />
 
       <Breadcrumbs className="mb-4">
         <Breadcrumb href={getHomePath()}>Home</Breadcrumb>
-        <Breadcrumb>{title}</Breadcrumb>
+        <Breadcrumb>{pageTitle}</Breadcrumb>
       </Breadcrumbs>
 
       <article>
-        <h1 className="font-semibold">{title}</h1>
+        <h1 className="font-semibold">{pageTitle}</h1>
 
         <section>
           <p>

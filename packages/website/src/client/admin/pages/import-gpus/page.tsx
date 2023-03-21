@@ -17,6 +17,8 @@ import {
   Field,
   FieldHint,
   File,
+  MetaRobots,
+  Seo,
   showDialog,
   Spinner,
   Table,
@@ -93,11 +95,17 @@ export const AdminImportGpusPage = (_props: AdminImportGpusPageProps) => {
     await gpuService.importGpus({ gpus: gpusToImport });
   }, [gpusToImport, router]);
 
+  const pageTitle = 'Import GPUs';
+  const seoTitle = `${pageTitle} - Admin Panel`;
+  const seoRobots = [MetaRobots.NOINDEX, MetaRobots.NOFOLLOW];
+
   return (
     <AdminLayout>
+      <Seo title={seoTitle} robots={seoRobots} />
+
       <article>
         <div className="flex items-center justify-between mb-4">
-          <h1 className="font-semibold">GPUs - Import</h1>
+          <h1 className="font-semibold">{pageTitle}</h1>
 
           <Button href={getAdminListGpusPath()} variant={ButtonVariant.Default}>
             Back

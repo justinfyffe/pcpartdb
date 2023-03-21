@@ -7,14 +7,15 @@ import { WebsiteLayout } from '../../../shared/layouts';
 export interface GeneralErrorPageProps {}
 
 export const GeneralErrorPage = (_props: GeneralErrorPageProps) => {
+  const pageTitle = 'An unknown error has occurred';
+  const seoTitle = `${pageTitle}`;
+  const seoRobots = [MetaRobots.NOINDEX];
+
   return (
     <WebsiteLayout>
-      <Seo
-        title="An unknown error has occurred"
-        robots={[MetaRobots.NOINDEX]}
-      />
+      <Seo title={seoTitle} robots={seoRobots} />
       <article>
-        <h1 className="font-semibold mb-4">An unknown error has occurred</h1>
+        <h1 className="font-semibold mb-4">{pageTitle}</h1>
 
         <p>
           Something went wrong when loading this page. Please go to our{' '}

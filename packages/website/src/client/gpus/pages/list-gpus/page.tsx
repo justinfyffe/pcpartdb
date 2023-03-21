@@ -34,7 +34,9 @@ export const ListGpusPage = (props: ListGpusViewModel) => {
   const [gpus, setGpus] = useState(props.gpus);
   const [totalResults, setTotalResults] = useState(props.totalResults);
   const [query, setQuery] = useState(props.query);
-  const [canonical, setCanonical] = useState(() => getListGpusPath(query));
+  const [seoCanonical, setSeoCanonical] = useState(() =>
+    getListGpusPath(query),
+  );
 
   const fetchGpus = useCallback(async (q: GpusQuery) => {
     const response = await gpuService.list({ query: q });
@@ -55,7 +57,7 @@ export const ListGpusPage = (props: ListGpusViewModel) => {
       await fetchGpus(q);
       const url = getListGpusPath(q);
       router.push(url, undefined, { shallow: true });
-      setCanonical(url);
+      setSeoCanonical(url);
     },
     [fetchGpus, router],
   );
@@ -76,17 +78,19 @@ export const ListGpusPage = (props: ListGpusViewModel) => {
   );
 
   const context = createListPageContextState({ query, updateQuery, gpus });
-  const title = 'Graphics Cards';
-  const keywords: string[] = [];
+
+  const pageTitle = 'Graphics Cards';
+  const seoTitle = `${pageTitle}`;
+  const seoKeywords: string[] = [];
 
   return (
     <WebsiteLayout>
-      <Seo title={title} keywords={keywords} canonical={canonical} />
+      <Seo title={seoTitle} keywords={seoKeywords} canonical={seoCanonical} />
 
       <ListPageContext.Provider value={context}>
         <Breadcrumbs className="mb-4">
           <Breadcrumb href={getHomePath()}>Home</Breadcrumb>
-          <Breadcrumb>Graphics Cards</Breadcrumb>
+          <Breadcrumb>{pageTitle}</Breadcrumb>
         </Breadcrumbs>
 
         <section className="flex flex-col gap-8 justify-center mb-4">

@@ -8,6 +8,8 @@ import {
   AlertVariant,
   Button,
   ButtonVariant,
+  MetaRobots,
+  Seo,
   Table,
   TBody,
   Td,
@@ -24,8 +26,14 @@ export const AdminListUsersPage = (props: AdminListUsersViewModel) => {
   const [saved] = useState(router.query.saved === 'true');
   const [deleted] = useState(router.query.deleted === 'true');
 
+  const pageTitle = 'Users';
+  const seoTitle = `${pageTitle} - Admin Panel`;
+  const seoRobots = [MetaRobots.NOINDEX, MetaRobots.NOFOLLOW];
+
   return (
     <AdminLayout>
+      <Seo title={seoTitle} robots={seoRobots} />
+
       <article>
         <section>
           {saved && (
@@ -42,7 +50,7 @@ export const AdminListUsersPage = (props: AdminListUsersViewModel) => {
         </section>
 
         <div className="flex items-center justify-between mb-4">
-          <h1 className="font-semibold">Users</h1>
+          <h1 className="font-semibold">{pageTitle}</h1>
 
           <Button variant={ButtonVariant.Primary} href={getAdminNewUserPath()}>
             Add

@@ -77,11 +77,16 @@ export const ForgotPasswordPage = (_props: ForgotPasswordPageProps) => {
     [setError],
   );
 
+  const pageTitle = 'Forgot your Password?';
+  const seoTitle = `${pageTitle}`;
+  const seoRobots = [MetaRobots.NOINDEX];
+
   return (
     <WebsiteLayout>
-      <Seo title="Forgot your Password?" robots={[MetaRobots.NOINDEX]} />
+      <Seo title={seoTitle} robots={seoRobots} />
+
       <article>
-        <h1 className="font-semibold mb-4">Forgot your Password?</h1>
+        <h1 className="font-semibold mb-4">{pageTitle}</h1>
 
         <section>
           {requestError && isInternalServerError(requestError) && (

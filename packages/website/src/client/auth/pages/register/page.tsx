@@ -85,11 +85,15 @@ export const RegisterPage = (_props: RegisterPageProps) => {
     [router, setError],
   );
 
+  const pageTitle = 'Create Account';
+  const seoTitle = `${pageTitle}`;
+  const seoRobots = [MetaRobots.NOINDEX];
+
   return (
     <WebsiteLayout>
-      <Seo title="Create Account" robots={[MetaRobots.NOINDEX]} />
+      <Seo title={seoTitle} robots={seoRobots} />
       <article>
-        <h1 className="font-semibold mb-4">Create Account</h1>
+        <h1 className="font-semibold mb-4">{pageTitle}</h1>
 
         <section>
           {requestError && isBadRequestError(requestError) && (
