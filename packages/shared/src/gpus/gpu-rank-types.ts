@@ -2,8 +2,8 @@ import { MarketSegmentValue } from './gpu-types';
 
 export interface GpuRanks {
   performanceRank?: number;
-  performanceSegmentCompanyRank?: number;
-  performanceSegmentYearRank?: number;
+  performanceRankForCompanySegment?: number;
+  performanceRankForSegmentYear?: number;
 
   valueRank?: number;
 }

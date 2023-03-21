@@ -1,4 +1,4 @@
-import { getViewGpuPath } from '@pcpartdb/shared';
+import { ContentTag, getViewGpuPath } from '@pcpartdb/shared';
 import { formatOrdinalNumber } from 'packages/website/src/client/shared/format';
 import React, { useContext, useMemo } from 'react';
 import {
@@ -20,29 +20,50 @@ const ValueBlurbSentence1 = compileContentComponent({
     <>
       Its {props.performanceRating} performance rating and {props.launchPrice}{' '}
       launch price gives it a performance per dollar of {props.valueRating}.
-      This makes it the {props.valueRank} best value card in our database.
     </>
   ),
 });
 
-const ValueBlurbSentence2 = compileContentComponent({
-  deps: ['bestValueSegmentGpuName', 'bestValueSegmentGpuValue'],
-  component: (props) => (
-    <>
-      The card with the highest value,{' '}
-      <a href={props.bestValueSegmentGpuPath as string}>
-        {props.bestValueSegmentGpuName}
-      </a>
-      , has a performance per dollar of {props.bestValueSegmentGpuValue}.
-    </>
-  ),
-});
+const ValueBlurbSentence2 = compileContentComponent(
+  {
+    tags: [ContentTag.BestValue],
+    deps: [],
+    component: () => <> Is is the best value card in our database.</>,
+  },
+  {
+    deps: ['valueRank'],
+    component: (props) => (
+      <>This makes it the {props.valueRank} best value card in our database.</>
+    ),
+  },
+);
+
+const ValueBlurbSentence3 = compileContentComponent(
+  {
+    tags: [ContentTag.BestValue],
+    deps: [],
+    component: () => <></>,
+  },
+  {
+    tags: [ContentTag.BestValue],
+    deps: ['bestValueSegmentGpuName', 'bestValueSegmentGpuValue'],
+    component: (props) => (
+      <>
+        The card with the highest value,{' '}
+        <a href={props.bestValueSegmentGpuPath as string}>
+          {props.bestValueSegmentGpuName}
+        </a>
+        , has a performance per dollar of {props.bestValueSegmentGpuValue}.
+      </>
+    ),
+  },
+);
 
 export const ValueBlurb = () => {
   const { gpu, contentData } = useContext(ViewPageContext);
 
   const context = useMemo(() => {
-    const bestValueSegmentGpu = contentData.bestValueSegmentGpu;
+    const bestValueSegmentGpu = contentData.bestValueGpuForSegment;
 
     const tags = contentData.contentTags;
     const params = {
@@ -62,12 +83,12 @@ export const ValueBlurb = () => {
     };
 
     return { tags, params };
-  }, [contentData.bestValueSegmentGpu, contentData.contentTags, gpu]);
+  }, [contentData.bestValueGpuForSegment, contentData.contentTags, gpu]);
 
   return (
     <ContentContext.Provider value={context}>
       <p>
-        <ValueBlurbSentence1 /> <ValueBlurbSentence2 />
+        <ValueBlurbSentence1 /> <ValueBlurbSentence2 /> <ValueBlurbSentence3 />
       </p>
     </ContentContext.Provider>
   );

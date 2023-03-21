@@ -24,16 +24,16 @@ const PerformanceBlurbSentence1 = compileContentComponent({
 const PerformanceBlurbSentence2 = compileContentComponent({
   deps: [
     'company',
-    'performanceSegmentCompanyRank',
-    'performanceSegmentYearRank',
+    'performanceRankForCompanySegment',
+    'performanceRankForSegmentYear',
     'marketSegment',
     'year',
   ],
   component: (props) => (
     <>
-      It is {props.company}&apos;s {props.performanceSegmentCompanyRank}{' '}
+      It is {props.company}&apos;s {props.performanceRankForCompanySegment}{' '}
       strongest {props.marketSegment} card and had the{' '}
-      {props.performanceSegmentYearRank} best performance rating of the{' '}
+      {props.performanceRankForSegmentYear} best performance rating of the{' '}
       {props.marketSegment} graphics cards that released in {props.year}.
     </>
   ),
@@ -62,7 +62,7 @@ export const PerformanceBlurb = () => {
   const { gpu, contentData } = useContext(ViewPageContext);
 
   const context = useMemo(() => {
-    const bestPerformanceSegmentGpu = contentData.bestPerformanceSegmentGpu;
+    const bestPerformanceSegmentGpu = contentData.bestPerformanceGpuForSegment;
     // const bestPerformanceDifference = (
     //   100 *
     //   (bestPerformanceSegmentGpu.benchmarks?.performanceScore?.value /
@@ -83,13 +83,13 @@ export const PerformanceBlurb = () => {
       company: formatGpuField(gpu.company),
       gpuName: getGpuName(gpu),
       marketSegment: formatGpuField(gpu.marketSegment).toLowerCase(),
-      performanceSegmentCompanyRank:
-        gpu.ranks?.performanceSegmentCompanyRank > 1
-          ? formatOrdinalNumber(gpu.ranks?.performanceSegmentCompanyRank)
+      performanceRankForCompanySegment:
+        gpu.ranks?.performanceRankForCompanySegment > 1
+          ? formatOrdinalNumber(gpu.ranks?.performanceRankForCompanySegment)
           : '',
-      performanceSegmentYearRank:
-        gpu.ranks?.performanceSegmentYearRank > 1
-          ? formatOrdinalNumber(gpu.ranks?.performanceSegmentYearRank)
+      performanceRankForSegmentYear:
+        gpu.ranks?.performanceRankForSegmentYear > 1
+          ? formatOrdinalNumber(gpu.ranks?.performanceRankForSegmentYear)
           : '',
       performanceRank:
         gpu.ranks?.performanceRank > 1

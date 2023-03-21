@@ -21,8 +21,8 @@ export class GpuRanksService {
       ? await this.gpuRanksRepository.getPerformanceRanks(ids, null, ctx)
       : null;
 
-    const performanceSegmentCompanyRank = enabledRanks.has(
-      'performanceSegmentCompanyRank',
+    const performanceRankForCompanySegment = enabledRanks.has(
+      'performanceRankForCompanySegment',
     )
       ? await this.gpuRanksRepository.getPerformanceRanks(
           ids,
@@ -31,8 +31,8 @@ export class GpuRanksService {
         )
       : null;
 
-    const performanceSegmentYearRank = enabledRanks.has(
-      'performanceSegmentYearRank',
+    const performanceRankForSegmentYear = enabledRanks.has(
+      'performanceRankForSegmentYear',
     )
       ? await this.gpuRanksRepository.getPerformanceRanks(
           ids,
@@ -49,8 +49,8 @@ export class GpuRanksService {
       gpu.ranks = {
         ...gpu.ranks,
         performanceRank: performanceRanks?.[i],
-        performanceSegmentCompanyRank: performanceSegmentCompanyRank?.[i],
-        performanceSegmentYearRank: performanceSegmentYearRank?.[i],
+        performanceRankForCompanySegment: performanceRankForCompanySegment?.[i],
+        performanceRankForSegmentYear: performanceRankForSegmentYear?.[i],
         valueRank: valueRanks?.[i],
       };
     });

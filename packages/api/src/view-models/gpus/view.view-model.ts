@@ -54,8 +54,8 @@ export class ViewGpuViewModelService {
         includeImages: true,
         includeRanks: [
           'performanceRank',
-          'performanceSegmentCompanyRank',
-          'performanceSegmentYearRank',
+          'performanceRankForCompanySegment',
+          'performanceRankForSegmentYear',
           'valueRank',
         ],
       },
@@ -115,8 +115,8 @@ export class ViewGpuViewModelService {
       totalPerformanceSegmentYearGpus,
       relativePerformanceGpus,
       relativeValueGpus,
-      bestPerformanceSegmentGpu: bestPerformanceSegmentGpus?.[0],
-      bestValueSegmentGpu: bestValueSegmentGpus?.[0],
+      bestPerformanceGpuForSegment: bestPerformanceSegmentGpus?.[0],
+      bestValueGpuForSegment: bestValueSegmentGpus?.[0],
     } as ViewGpuContentData;
   }
 
@@ -125,10 +125,10 @@ export class ViewGpuViewModelService {
 
     return {
       [ContentTag.BestPerformance]: gpu.ranks?.performanceRank === 1,
-      [ContentTag.BestPerformanceSegmentCompany]:
-        gpu.ranks?.performanceSegmentCompanyRank === 1,
-      [ContentTag.BestPerformanceSegmentYear]:
-        gpu.ranks?.performanceSegmentYearRank === 1,
+      [ContentTag.BestPerformanceForCompanySegment]:
+        gpu.ranks?.performanceRankForCompanySegment === 1,
+      [ContentTag.BestPerformanceForSegmentYear]:
+        gpu.ranks?.performanceRankForSegmentYear === 1,
       [ContentTag.BestValue]: gpu.ranks?.valueRank === 1,
 
       [ContentTag.Launched]: hasGpuLaunched(gpu),
