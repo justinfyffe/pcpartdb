@@ -4,7 +4,6 @@ import {
   getHomePath,
   getListGpusPath,
   getPrivacyPath,
-  SeoInputs,
   WEBSITE_NAME,
 } from '@pcpartdb/shared';
 import React, { FunctionComponent } from 'react';
@@ -17,7 +16,6 @@ import {
   Img,
   List,
   ListItem,
-  Seo,
   Toolbar,
   ToolbarNav,
   ToolbarTitle,
@@ -25,8 +23,6 @@ import {
 import { classNames } from '../../ui';
 
 interface WebsiteLayoutProps {
-  seo?: SeoInputs;
-
   className?: string;
   children?: React.ReactNode;
 }
@@ -34,7 +30,6 @@ interface WebsiteLayoutProps {
 export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
   return (
     <>
-      <Seo seo={props.seo ?? {}} />
       <Toolbar>
         <ToolbarTitle>
           <Img src="/images/logo.svg" className="w-8 mt-0.5 mr-1" />{' '}

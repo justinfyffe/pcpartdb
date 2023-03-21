@@ -8,7 +8,7 @@ import React from 'react';
 import { getGpuName } from '../../../gpus';
 import { CompareGpusForm } from '../../../gpus/components';
 import { useGpuCache } from '../../../shared/cache';
-import { Breadcrumb, Breadcrumbs } from '../../../shared/components';
+import { Breadcrumb, Breadcrumbs, Seo } from '../../../shared/components';
 import { WebsiteLayout } from '../../../shared/layouts';
 import { Sidenav, SidenavComparisons, SidenavGpus } from '../../../sidenav';
 import {
@@ -34,7 +34,8 @@ export const ViewGpuPage = (props: ViewGpuViewModel) => {
 
   return (
     <ViewPageContext.Provider value={context}>
-      <WebsiteLayout seo={{ title, canonical, keywords }}>
+      <Seo title={title} keywords={keywords} canonical={canonical} />
+      <WebsiteLayout>
         <Breadcrumbs className="mb-4">
           <Breadcrumb href={getHomePath()}>Home</Breadcrumb>
           <Breadcrumb href={getListGpusPath()}>Graphics Cards</Breadcrumb>

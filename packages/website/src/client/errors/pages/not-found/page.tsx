@@ -1,19 +1,21 @@
 import 'reflect-metadata';
-import { getHomePath, MetaRobots } from '@pcpartdb/shared';
+import { getHomePath } from '@pcpartdb/shared';
 import React from 'react';
+import { MetaRobots, Seo } from '../../../shared/components';
 import { WebsiteLayout } from '../../../shared/layouts';
 
 export interface NotFoundPageProps {}
 
 export const NotFoundPage = (_props: NotFoundPageProps) => {
-  const title = 'Sorry, we could not find that page.';
-  const robots = [MetaRobots.NOINDEX];
-
   return (
-    <WebsiteLayout seo={{ title, robots }}>
+    <WebsiteLayout>
+      <Seo
+        title="Sorry, we could not find that page"
+        robots={[MetaRobots.NOINDEX]}
+      />
       <article>
         <h1 className="font-semibold mb-4">
-          Sorry, we could not find that page.
+          Sorry, we could not find that page
         </h1>
 
         <p>

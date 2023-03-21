@@ -5,7 +5,6 @@ import {
   ApiError,
   EMAIL_MAX_LENGTH,
   getLoginPath,
-  MetaRobots,
   ValidationErrorType,
 } from '@pcpartdb/shared';
 import React, { useCallback, useState } from 'react';
@@ -19,6 +18,8 @@ import {
   FieldError,
   Form,
   FormActions,
+  MetaRobots,
+  Seo,
   Spinner,
   TextInput,
 } from '../../../shared/components';
@@ -76,13 +77,11 @@ export const ForgotPasswordPage = (_props: ForgotPasswordPageProps) => {
     [setError],
   );
 
-  const title = 'Forgot your Password?';
-  const robots = [MetaRobots.NOINDEX];
-
   return (
-    <WebsiteLayout seo={{ title, robots }}>
+    <WebsiteLayout>
+      <Seo title="Forgot your Password?" robots={[MetaRobots.NOINDEX]} />
       <article>
-        <h1 className="font-semibold mb-4">{title}</h1>
+        <h1 className="font-semibold mb-4">Forgot your Password?</h1>
 
         <section>
           {requestError && isInternalServerError(requestError) && (

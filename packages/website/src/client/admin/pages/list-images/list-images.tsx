@@ -3,7 +3,6 @@ import {
   AdminListImagesViewModel,
   getAdminEditImagePath,
   getAdminNewImagePath,
-  MetaRobots,
 } from '@pcpartdb/shared';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
@@ -14,6 +13,8 @@ import {
   Button,
   ButtonVariant,
   Img,
+  MetaRobots,
+  Seo,
   Table,
   TBody,
   Td,
@@ -32,10 +33,11 @@ export const AdminListImagesPage = (props: AdminListImagesViewModel) => {
   const [deleted] = useState(router.query.deleted === 'true');
 
   const title = 'Images';
-  const robots = [MetaRobots.NOINDEX];
 
   return (
-    <AdminLayout seo={{ title, robots }}>
+    <AdminLayout>
+      <Seo title={title} robots={[MetaRobots.NOINDEX]} />
+
       <article>
         <section>
           {saved && (

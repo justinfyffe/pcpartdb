@@ -4,7 +4,6 @@ import {
   getAdminListUsersPath,
   getAdminOverviewPath,
   getHomePath,
-  SeoInputs,
   WEBSITE_NAME,
 } from '@pcpartdb/shared';
 import { useRouter } from 'next/router';
@@ -14,7 +13,6 @@ import {
   Button,
   ButtonVariant,
   Img,
-  Seo,
   Toolbar,
   ToolbarNav,
   ToolbarTitle,
@@ -22,8 +20,6 @@ import {
 import { classNames } from '../../ui';
 
 interface AdminLayoutProps {
-  seo?: SeoInputs;
-
   className?: string;
   children?: React.ReactNode;
 }
@@ -38,7 +34,6 @@ export const AdminLayout: FunctionComponent<AdminLayoutProps> = (props) => {
 
   return (
     <>
-      <Seo seo={props.seo || {}} />
       <Toolbar>
         <ToolbarTitle>
           <Img src="/images/logo.svg" className="w-8 mt-0.5 mr-1" />{' '}

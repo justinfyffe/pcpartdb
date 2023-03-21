@@ -5,7 +5,6 @@ import {
   ApiError,
   EMAIL_MAX_LENGTH,
   getLoginPath,
-  MetaRobots,
   PASSWORD_MAX_LENGTH,
   PASSWORD_MIN_LENGTH,
   ValidationErrorType,
@@ -22,7 +21,9 @@ import {
   FieldError,
   Form,
   FormActions,
+  MetaRobots,
   PasswordInput,
+  Seo,
   Spinner,
   TextInput,
 } from '../../../shared/components';
@@ -84,11 +85,9 @@ export const RegisterPage = (_props: RegisterPageProps) => {
     [router, setError],
   );
 
-  const title = 'Create Account?';
-  const robots = [MetaRobots.NOINDEX];
-
   return (
-    <WebsiteLayout seo={{ title, robots }}>
+    <WebsiteLayout>
+      <Seo title="Create Account" robots={[MetaRobots.NOINDEX]} />
       <article>
         <h1 className="font-semibold mb-4">Create Account</h1>
 

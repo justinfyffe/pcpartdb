@@ -5,7 +5,6 @@ import {
   ApiError,
   getHomePath,
   getLoginPath,
-  MetaRobots,
   PASSWORD_MAX_LENGTH,
   PASSWORD_MIN_LENGTH,
   ValidationErrorType,
@@ -23,7 +22,9 @@ import {
   Form,
   FormActions,
   HiddenInput,
+  MetaRobots,
   PasswordInput,
+  Seo,
   Spinner,
 } from '../../../shared/components';
 import {
@@ -94,11 +95,9 @@ export const ResetPasswordPage = (props: ResetPasswordPageProps) => {
     [setError, router],
   );
 
-  const title = 'Reset Password';
-  const robots = [MetaRobots.NOINDEX];
-
   return (
-    <WebsiteLayout seo={{ title, robots }}>
+    <WebsiteLayout>
+      <Seo title="Reset Password" robots={[MetaRobots.NOINDEX]} />
       <article>
         <h1 className="font-semibold mb-4">Reset Password</h1>
 

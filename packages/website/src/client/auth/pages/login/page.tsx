@@ -8,7 +8,6 @@ import {
   getForgotPasswordPath,
   getHomePath,
   getRegisterPath,
-  MetaRobots,
   PASSWORD_MAX_LENGTH,
   ValidationErrorType,
 } from '@pcpartdb/shared';
@@ -27,7 +26,9 @@ import {
   FieldError,
   Form,
   FormActions,
+  MetaRobots,
   PasswordInput,
+  Seo,
   Spinner,
   TextInput,
 } from '../../../shared/components';
@@ -99,18 +100,16 @@ export const LoginPage: FunctionComponent<LoginPageProps> = (
     [router, setError],
   );
 
-  const title = 'Sign in to your Account';
-  const robots = [MetaRobots.NOINDEX];
-
   return (
-    <WebsiteLayout seo={{ title, robots }}>
+    <WebsiteLayout>
+      <Seo title="Sign in to your Account" robots={[MetaRobots.NOINDEX]} />
       <Breadcrumbs className="mb-4">
         <Breadcrumb href={getHomePath()}>Home</Breadcrumb>
         <Breadcrumb>Sign in</Breadcrumb>
       </Breadcrumbs>
 
       <article>
-        <h1 className="font-semibold mb-4">{title}</h1>
+        <h1 className="font-semibold mb-4">Sign in to your Account</h1>
 
         <section>
           {requestError && isForbiddenError(requestError) && (

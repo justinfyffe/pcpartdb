@@ -15,6 +15,7 @@ import {
   Breadcrumbs,
   Pagination,
   PaginationResult,
+  Seo,
 } from '../../../shared/components';
 import { WebsiteLayout } from '../../../shared/layouts';
 import { classNames } from '../../../shared/ui';
@@ -79,7 +80,9 @@ export const ListGpusPage = (props: ListGpusViewModel) => {
   const keywords: string[] = [];
 
   return (
-    <WebsiteLayout seo={{ title, keywords, canonical }}>
+    <WebsiteLayout>
+      <Seo title={title} keywords={keywords} canonical={canonical} />
+
       <ListPageContext.Provider value={context}>
         <Breadcrumbs className="mb-4">
           <Breadcrumb href={getHomePath()}>Home</Breadcrumb>

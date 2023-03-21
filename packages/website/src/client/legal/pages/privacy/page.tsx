@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { getHomePath, getPrivacyPath } from '@pcpartdb/shared';
 import React from 'react';
-import { Breadcrumb, Breadcrumbs } from '../../../shared/components';
+import { Breadcrumb, Breadcrumbs, Seo } from '../../../shared/components';
 import { WebsiteLayout } from '../../../shared/layouts';
 
 interface PrivacyPageProps {}
@@ -12,7 +12,9 @@ export const PrivacyPage = (_props: PrivacyPageProps) => {
   const keywords: string[] = [];
 
   return (
-    <WebsiteLayout seo={{ title, keywords, canonical }}>
+    <WebsiteLayout>
+      <Seo title={title} keywords={keywords} canonical={canonical} />
+
       <Breadcrumbs className="mb-4">
         <Breadcrumb href={getHomePath()}>Home</Breadcrumb>
         <Breadcrumb>{title}</Breadcrumb>

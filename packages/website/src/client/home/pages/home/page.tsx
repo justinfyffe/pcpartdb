@@ -7,6 +7,7 @@ import {
 } from '@pcpartdb/shared';
 import React from 'react';
 import { CompareGpusForm } from '../../../gpus/components';
+import { Seo } from '../../../shared/components';
 import { WebsiteLayout } from '../../../shared/layouts';
 import { classNames } from '../../../shared/ui';
 import {
@@ -33,7 +34,8 @@ export const HomePage = (props: HomeViewModel) => {
   const keywords: string[] = [];
 
   return (
-    <WebsiteLayout seo={{ title, keywords, canonical }}>
+    <WebsiteLayout>
+      <Seo title={title} keywords={keywords} canonical={canonical} />
       <section className="flex flex-col gap-8 justify-center">
         <section className={classNames('flex flex-col justify-center gap-4')}>
           <h1 className="md:text-2xl text-3xl mb-0">{title}</h1>
