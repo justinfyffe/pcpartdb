@@ -1,12 +1,15 @@
 import { Gpu, ViewGpuContentData } from '@pcpartdb/shared';
+import { useMemo } from 'react';
 import { ViewPageContextProps } from '../context';
 
 export function useViewPageContextProps(input: {
   gpu: Gpu;
   contentData: ViewGpuContentData;
 }) {
-  const gpu = { ...input.gpu };
-  const contentData = { ...input.contentData };
+  return useMemo(() => {
+    const gpu = { ...input.gpu };
+    const contentData = { ...input.contentData };
 
-  return { gpu, contentData } as ViewPageContextProps;
+    return { gpu, contentData } as ViewPageContextProps;
+  }, [input.contentData, input.gpu]);
 }

@@ -1,3 +1,3 @@
-export * from './compare-gpus-form';
-export * from './gpu-autocomplete';
-export * from './gpu-images';
+export * from './CompareGpusForm';
+export * from './GpuAutocomplete';
+export * from './GpuImages';

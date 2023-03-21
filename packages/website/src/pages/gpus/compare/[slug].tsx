@@ -1,5 +1,5 @@
 import { NextPageContext } from 'next';
-import { CompareGpuPage } from '../../../client/gpus/pages/compare-gpus';
+import { CompareGpuPage } from '../../../client/gpus/pages';
 import { viewModelsClient } from '../../../client/shared/view-models';
 
 export async function getServerSideProps(ctx: NextPageContext) {
