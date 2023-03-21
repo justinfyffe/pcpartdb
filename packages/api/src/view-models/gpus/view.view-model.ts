@@ -54,8 +54,8 @@ export class ViewGpuViewModelService {
         includeImages: true,
         includeRanks: [
           'performanceRank',
-          'performanceCompanyRank',
-          'performanceYearRank',
+          'performanceSegmentCompanyRank',
+          'performanceSegmentYearRank',
           'valueRank',
         ],
       },
@@ -65,13 +65,18 @@ export class ViewGpuViewModelService {
 
   private async getContentData(gpu: Gpu, ctx: Context) {
     const year = parseISO(gpu.releaseDate?.value).getFullYear();
+    const segment = gpu.marketSegment?.value;
 
     const totalPerformanceGpus = await this.gpuService.count(
       { query: { filter: { performanceRated: true } } },
       ctx,
     );
-    const totalPerformanceYearGpus = await this.gpuService.count(
-      { query: { filter: { year: [year], performanceRated: true } } },
+    const totalPerformanceSegmentYearGpus = await this.gpuService.count(
+      {
+        query: {
+          filter: { year: [year], segment: [segment], performanceRated: true },
+        },
+      },
       ctx,
     );
     const relativePerformanceGpus = await this.getRelativePerformanceGpus(
@@ -85,7 +90,7 @@ export class ViewGpuViewModelService {
     return {
       contentTags,
       totalPerformanceGpus,
-      totalPerformanceYearGpus,
+      totalPerformanceSegmentYearGpus,
       relativePerformanceGpus,
       relativeValueGpus,
     } as ViewGpuContentData;
@@ -96,9 +101,10 @@ export class ViewGpuViewModelService {
 
     return {
       [ContentTag.BestPerformance]: gpu.ranks?.performanceRank === 1,
-      [ContentTag.BestPerformanceCompany]:
-        gpu.ranks?.performanceCompanyRank === 1,
-      [ContentTag.BestPerformanceYear]: gpu.ranks?.performanceYearRank === 1,
+      [ContentTag.BestPerformanceSegmentCompany]:
+        gpu.ranks?.performanceSegmentCompanyRank === 1,
+      [ContentTag.BestPerformanceSegmentYear]:
+        gpu.ranks?.performanceSegmentYearRank === 1,
       [ContentTag.BestValue]: gpu.ranks?.valueRank === 1,
       [ContentTag.Launched]: hasGpuLaunched(gpu),
       [ContentTag.ExtraLargeSize]: slots > 3,

@@ -23,32 +23,38 @@ const PerformanceBlurbSentence1 = compileContentComponent({
 });
 
 const PerformanceBlurbSentence2 = compileContentComponent({
-  deps: ['company', 'performanceCompanyRank'],
+  deps: ['company', 'performanceSegmentCompanyRank', 'marketSegment'],
   component: (props) => (
     <>
-      It has the {props.performanceCompanyRank} highest performance rating among{' '}
-      {props.company} GPUs.
+      It has the {props.performanceSegmentCompanyRank} highest performance
+      rating among {props.marketSegment} {props.company} GPUs.
     </>
   ),
 });
 
 const PerformanceBlurbSentence3 = compileContentComponent(
   {
-    tags: [ContentTag.BestPerformanceYear],
-    deps: ['performanceYearRank', 'totalPerformanceYearGpus', 'year'],
+    tags: [ContentTag.BestPerformanceSegmentYear],
+    deps: ['totalPerformanceSegmentYearGpus', 'year', 'marketSegment'],
     component: (props) => (
       <>
-        Its performance rating is the highest among the{' '}
-        {props.totalPerformanceYearGpus} GPUs released in {props.year}.
+        Its performance rating is the highest among the {props.marketSegment}{' '}
+        {props.totalPerformanceSegmentYearGpus} GPUs released in {props.year}.
       </>
     ),
   },
   {
-    deps: ['performanceYearRank', 'totalPerformanceYearGpus', 'year'],
+    deps: [
+      'performanceSegmentYearRank',
+      'totalPerformanceSegmentYearGpus',
+      'year',
+      'marketSegment',
+    ],
     component: (props) => (
       <>
-        Its performance rating puts it at {props.performanceYearRank} among the{' '}
-        {props.totalPerformanceYearGpus} GPUs released in {props.year}.
+        Its performance rating puts it at {props.performanceSegmentYearRank}{' '}
+        among the {props.totalPerformanceSegmentYearGpus} {props.marketSegment}{' '}
+        GPUs released in {props.year}.
       </>
     ),
   },
@@ -62,17 +68,21 @@ export const PerformanceBlurb = () => {
     const params = {
       company: formatGpuField(gpu.company),
       gpuName: getGpuName(gpu),
-      performanceCompanyRank:
-        gpu.ranks?.performanceCompanyRank > 1
-          ? formatOrdinalNumber(gpu.ranks?.performanceCompanyRank)
+      marketSegment: formatGpuField(gpu.marketSegment).toLowerCase(),
+      performanceSegmentCompanyRank:
+        gpu.ranks?.performanceSegmentCompanyRank > 1
+          ? formatOrdinalNumber(gpu.ranks?.performanceSegmentCompanyRank)
           : '',
-      performanceYearRank: formatOrdinalNumber(gpu.ranks?.performanceYearRank),
+      performanceSegmentYearRank: formatOrdinalNumber(
+        gpu.ranks?.performanceSegmentYearRank,
+      ),
       performanceRank:
         gpu.ranks?.performanceRank > 1
           ? formatOrdinalNumber(gpu.ranks?.performanceRank)
           : '',
       totalPerformanceGpus: contentData.totalPerformanceGpus,
-      totalPerformanceYearGpus: contentData.totalPerformanceYearGpus,
+      totalPerformanceSegmentYearGpus:
+        contentData.totalPerformanceSegmentYearGpus,
       year: formatGpuField(gpu.releaseDate, {
         dateFormatter: DateFormatter.Year,
       }),

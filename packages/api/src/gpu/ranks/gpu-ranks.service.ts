@@ -21,18 +21,22 @@ export class GpuRanksService {
       ? await this.gpuRanksRepository.getPerformanceRanks(ids, null, ctx)
       : null;
 
-    const performanceCompanyRank = enabledRanks.has('performanceCompanyRank')
+    const performanceSegmentCompanyRank = enabledRanks.has(
+      'performanceSegmentCompanyRank',
+    )
       ? await this.gpuRanksRepository.getPerformanceRanks(
           ids,
-          { company: filter.company },
+          { company: filter.company, segment: filter.segment },
           ctx,
         )
       : null;
 
-    const performanceYearRank = enabledRanks.has('performanceYearRank')
+    const performanceSegmentYearRank = enabledRanks.has(
+      'performanceSegmentYearRank',
+    )
       ? await this.gpuRanksRepository.getPerformanceRanks(
           ids,
-          { year: filter.year },
+          { year: filter.year, segment: filter.segment },
           ctx,
         )
       : null;
@@ -45,8 +49,8 @@ export class GpuRanksService {
       gpu.ranks = {
         ...gpu.ranks,
         performanceRank: performanceRanks?.[i],
-        performanceCompanyRank: performanceCompanyRank?.[i],
-        performanceYearRank: performanceYearRank?.[i],
+        performanceSegmentCompanyRank: performanceSegmentCompanyRank?.[i],
+        performanceSegmentYearRank: performanceSegmentYearRank?.[i],
         valueRank: valueRanks?.[i],
       };
     });
@@ -71,6 +75,14 @@ export class GpuRanksService {
       ),
     ];
 
-    return { company, year };
+    const segment = [
+      ...new Set(
+        gpus
+          .filter((value) => value != null)
+          .map((gpu) => gpu.marketSegment?.value),
+      ),
+    ];
+
+    return { company, year, segment };
   }
 }

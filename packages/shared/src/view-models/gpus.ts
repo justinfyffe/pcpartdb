@@ -43,7 +43,7 @@ export interface ViewGpuContentData {
   contentTags: ContentTags;
 
   totalPerformanceGpus: number;
-  totalPerformanceYearGpus: number;
+  totalPerformanceSegmentYearGpus: number;
 
   relativePerformanceGpus?: Gpu[];
   relativeValueGpus?: Gpu[];

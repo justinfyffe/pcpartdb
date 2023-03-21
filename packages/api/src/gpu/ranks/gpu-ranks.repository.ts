@@ -93,9 +93,13 @@ export class GpuRanksRepository {
       );
       parameters.push(filter.year);
     }
+    if (filter?.segment != null) {
+      where.push(`gpu.market_segment = ANY ($${nextParameterIndex++})`);
+      parameters.push(filter.segment);
+    }
 
     return {
-      where: where.length > 0 ? ` AND ${where.join('AND')}` : '',
+      where: where.length > 0 ? ` AND ${where.join(' AND ')}` : '',
       parameters,
       nextParameterIndex,
     };

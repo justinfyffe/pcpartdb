@@ -1,7 +1,7 @@
 export enum ContentTag {
   BestPerformance = 'BEST_PERFORMANCE',
-  BestPerformanceCompany = 'BEST_PERFORMANCE_COMPANY',
-  BestPerformanceYear = 'BEST_PERFORMANCE_YEAR',
+  BestPerformanceSegmentCompany = 'BEST_PERFORMANCE_SEGMENT_COMPANY',
+  BestPerformanceSegmentYear = 'BEST_PERFORMANCE_SEGMENT_YEAR',
   BestValue = 'BEST_VALUE',
 
   Launched = 'LAUNCHED',
