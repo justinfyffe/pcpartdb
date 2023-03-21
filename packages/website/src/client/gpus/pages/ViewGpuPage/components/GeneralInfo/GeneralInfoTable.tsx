@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useContext, useMemo } from 'react';
 import { Table, TBody } from '../../../../../shared/components';
-import { formatGpuField, getShoppingUrl } from '../../../..';
+import { formatGpuField } from '../../../..';
 import { ViewPageContext } from '../../context';
 import { CustomRow, CustomRowLabel, CustomRowValue } from '../CustomRow';
 import { FieldRow } from '../FieldRow';
@@ -16,7 +16,6 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
   const { gpu } = useContext(ViewPageContext);
   const { benchmarks, ranks } = gpu;
 
-  const shoppingUrl = useMemo(() => getShoppingUrl(gpu), [gpu]);
   const performanceScoreValue = useMemo(() => {
     if (benchmarks.performanceScore != null && ranks.performanceRank != null) {
       const score = formatGpuField(benchmarks.performanceScore);
@@ -42,7 +41,7 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
   return (
     <Table border responsive className={className}>
       <TBody>
-        <CustomRow>
+        {/* <CustomRow>
           <CustomRowLabel>Shop</CustomRowLabel>
           <CustomRowValue>
             {shoppingUrl != null ? (
@@ -58,7 +57,7 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
               <>--</>
             )}
           </CustomRowValue>
-        </CustomRow>
+        </CustomRow> */}
         <CustomRow>
           <CustomRowLabel>Performance Rating (Rank)</CustomRowLabel>
           <CustomRowValue>{performanceScoreValue}</CustomRowValue>

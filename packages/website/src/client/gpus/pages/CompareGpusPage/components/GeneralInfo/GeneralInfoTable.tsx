@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useContext } from 'react';
 import { Table, TBody, Th, THead, Tr } from '../../../../../shared/components';
-import { formatGpuField, getGpuName, getShoppingUrl } from '../../../..';
+import { formatGpuField, getGpuName } from '../../../..';
 import { ComparePageContext } from '../../context';
 import {
   CustomRow,
@@ -25,9 +25,6 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
   const benchmarks2 = gpu2.benchmarks;
   const ranks2 = gpu2.ranks;
 
-  const shoppingUrl1 = getShoppingUrl(gpu1);
-  const shoppingUrl2 = getShoppingUrl(gpu2);
-
   return (
     <Table border responsive className={className}>
       <THead>
@@ -38,7 +35,7 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
         </Tr>
       </THead>
       <TBody>
-        <CustomRow>
+        {/* <CustomRow>
           <CustomRowLabel>Shop</CustomRowLabel>
           <CustomRowValue>
             {shoppingUrl1 != null ? (
@@ -68,7 +65,7 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
               <>--</>
             )}
           </CustomRowValue>
-        </CustomRow>
+        </CustomRow> */}
         <CustomRow>
           <CustomRowLabel>Performance Rating (Rank)</CustomRowLabel>
           <CustomRowValue>
