@@ -26,6 +26,7 @@ export class GpuRanksRepository {
               CAST(RANK() OVER ( ORDER BY benchmark.performance_score DESC ) AS INTEGER) AS rank
             FROM gpu_benchmarks AS benchmark
             INNER JOIN gpus AS gpu ON benchmark.gpu_id = gpu.id
+            INNER JOIN gpu_specs AS spec ON benchmark.gpu_id = spec.gpu_id
             WHERE benchmark.performance_score IS NOT NULL ${where}
           ) AS ranks
           WHERE ranks.gpu_id = ANY ($${nextParameterIndex})
@@ -62,6 +63,7 @@ export class GpuRanksRepository {
               CAST(RANK() OVER ( ORDER BY benchmark.value_score DESC ) AS INTEGER) AS rank
             FROM gpu_benchmarks AS benchmark
             INNER JOIN gpus AS gpu ON benchmark.gpu_id = gpu.id
+            INNER JOIN gpu_specs AS spec ON benchmark.gpu_id = spec.gpu_id
             WHERE benchmark.value_score IS NOT NULL ${where}
           ) AS ranks
           WHERE ranks.gpu_id = ANY ($${nextParameterIndex})
@@ -83,6 +85,10 @@ export class GpuRanksRepository {
     const where: string[] = [];
     let nextParameterIndex = 1;
 
+    if (filter?.architecture != null && filter.architecture.length > 0) {
+      where.push(`spec.architecture = ANY ($${nextParameterIndex++})`);
+      parameters.push(filter.architecture);
+    }
     if (filter?.company != null && filter.company.length > 0) {
       where.push(`gpu.company = ANY ($${nextParameterIndex++})`);
       parameters.push(filter.company);

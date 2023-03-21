@@ -21,6 +21,16 @@ export class GpuRanksService {
       ? await this.gpuRanksRepository.getPerformanceRanks(ids, null, ctx)
       : null;
 
+    const performanceRankForArchitectureSegment = enabledRanks.has(
+      'performanceRankForArchitectureSegment',
+    )
+      ? await this.gpuRanksRepository.getPerformanceRanks(
+          ids,
+          { architecture: filter.architecture, segment: filter.segment },
+          ctx,
+        )
+      : null;
+
     const performanceRankForCompanySegment = enabledRanks.has(
       'performanceRankForCompanySegment',
     )
@@ -45,13 +55,24 @@ export class GpuRanksService {
       ? await this.gpuRanksRepository.getValueRanks(ids, null, ctx)
       : null;
 
+    const valueRankForSegment = enabledRanks.has('valueRankForSegment')
+      ? await this.gpuRanksRepository.getValueRanks(
+          ids,
+          { segment: filter.segment },
+          ctx,
+        )
+      : null;
+
     gpus.forEach((gpu, i) => {
       gpu.ranks = {
         ...gpu.ranks,
         performanceRank: performanceRanks?.[i],
+        performanceRankForArchitectureSegment:
+          performanceRankForArchitectureSegment?.[i],
         performanceRankForCompanySegment: performanceRankForCompanySegment?.[i],
         performanceRankForSegmentYear: performanceRankForSegmentYear?.[i],
         valueRank: valueRanks?.[i],
+        valueRankForSegment: valueRankForSegment?.[i],
       };
     });
   }
@@ -60,6 +81,14 @@ export class GpuRanksService {
     if (gpus.length === 0) {
       return {};
     }
+
+    const architecture = [
+      ...new Set(
+        gpus
+          .map((gpu) => gpu.specs?.architecture?.value)
+          .filter((value) => value != null),
+      ),
+    ];
 
     const company = [
       ...new Set(
@@ -83,6 +112,6 @@ export class GpuRanksService {
       ),
     ];
 
-    return { company, year, segment };
+    return { architecture, company, year, segment };
   }
 }

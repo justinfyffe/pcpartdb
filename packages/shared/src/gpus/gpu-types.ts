@@ -67,6 +67,7 @@ export enum GpuOrder {
 }
 
 export interface GpusFilter {
+  architecture?: string[];
   company?: string[];
   year?: number[];
   segment?: MarketSegmentValue[];

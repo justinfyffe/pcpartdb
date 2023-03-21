@@ -172,6 +172,7 @@ export class GpuRepository {
     const minPerformanceScore = filter?.minPerformanceScore;
     const maxValueScore = filter?.maxValueScore;
     const minValueScore = filter?.minValueScore;
+    const architectures = filter?.architecture ?? [];
     const companies = filter?.company ?? [];
     const years = filter?.year ?? [];
     const segments = filter?.segment ?? [];
@@ -207,11 +208,21 @@ export class GpuRepository {
       valueWhere = { ...valueWhere, gte: minValueScore };
     }
 
+    // Architecture
+    const architectureWhere: Prisma.StringNullableFilter =
+      architectures.length > 0
+        ? { in: architectures, mode: 'insensitive' }
+        : undefined;
+
     // Company
     const companyWhere: Prisma.StringNullableFilter =
       companies.length > 0 ? { in: companies, mode: 'insensitive' } : undefined;
+
+    // Segment
     const segmentWhere: Prisma.StringNullableFilter =
       segments.length > 0 ? { in: segments, mode: 'insensitive' } : undefined;
+
+    // Year
     const yearWhere: Prisma.GpuWhereInput[] = years.map((year) => ({
       releaseDate: {
         gte: `${year}-01-01`,
@@ -224,6 +235,9 @@ export class GpuRepository {
         id: idWhere,
         company: companyWhere,
         marketSegment: segmentWhere,
+        specs: {
+          architecture: architectureWhere,
+        },
         benchmarks: {
           performanceScore: performanceWhere,
           valueScore: valueWhere,

@@ -27,33 +27,17 @@ const ValueBlurbSentence1 = compileContentComponent({
 const ValueBlurbSentence2 = compileContentComponent(
   {
     tags: [ContentTag.BestValue],
-    deps: [],
-    component: () => <> Is is the best value card in our database.</>,
-  },
-  {
-    deps: ['valueRank'],
+    deps: ['marketSegment'],
     component: (props) => (
-      <>This makes it the {props.valueRank} best value card in our database.</>
+      <>It is the best value {props.marketSegment} card in our database.</>
     ),
   },
-);
-
-const ValueBlurbSentence3 = compileContentComponent(
   {
-    tags: [ContentTag.BestValue],
-    deps: [],
-    component: () => <></>,
-  },
-  {
-    tags: [ContentTag.BestValue],
-    deps: ['bestValueSegmentGpuName', 'bestValueSegmentGpuValue'],
+    deps: ['valueRankForSegment', 'marketSegment'],
     component: (props) => (
       <>
-        The card with the highest value,{' '}
-        <a href={props.bestValueSegmentGpuPath as string}>
-          {props.bestValueSegmentGpuName}
-        </a>
-        , has a performance per dollar of {props.bestValueSegmentGpuValue}.
+        This makes it the {props.valueRankForSegment} best value{' '}
+        {props.marketSegment} card in our database.
       </>
     ),
   },
@@ -63,32 +47,30 @@ export const ValueBlurb = () => {
   const { gpu, contentData } = useContext(ViewPageContext);
 
   const context = useMemo(() => {
-    const bestValueSegmentGpu = contentData.bestValueGpuForSegment;
-
     const tags = contentData.contentTags;
     const params = {
-      bestValueSegmentGpuName: getGpuName(bestValueSegmentGpu),
-      bestValueSegmentGpuPath: getViewGpuPath(bestValueSegmentGpu),
-      bestValueSegmentGpuValue: formatGpuField(
-        bestValueSegmentGpu.benchmarks?.valueScore,
-      ),
       gpuName: getGpuName(gpu),
       launchPrice: formatGpuField(gpu.launchPrice),
+      marketSegment: formatGpuField(gpu.marketSegment).toLowerCase(),
       performanceRating: formatGpuField(gpu.benchmarks?.performanceScore),
       valueRank:
         gpu.ranks?.valueRank > 1
           ? formatOrdinalNumber(gpu.ranks?.valueRank)
           : '',
+      valueRankForSegment:
+        gpu.ranks?.valueRankForSegment > 1
+          ? formatOrdinalNumber(gpu.ranks?.valueRankForSegment)
+          : '',
       valueRating: formatGpuField(gpu.benchmarks?.valueScore),
     };
 
     return { tags, params };
-  }, [contentData.bestValueGpuForSegment, contentData.contentTags, gpu]);
+  }, [contentData.contentTags, gpu]);
 
   return (
     <ContentContext.Provider value={context}>
       <p>
-        <ValueBlurbSentence1 /> <ValueBlurbSentence2 /> <ValueBlurbSentence3 />
+        <ValueBlurbSentence1 /> <ValueBlurbSentence2 />
       </p>
     </ContentContext.Provider>
   );

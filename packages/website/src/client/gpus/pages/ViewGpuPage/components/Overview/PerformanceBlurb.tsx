@@ -22,38 +22,21 @@ const PerformanceBlurbSentence1 = compileContentComponent({
 });
 
 const PerformanceBlurbSentence2 = compileContentComponent({
-  deps: [
-    'company',
-    'performanceRankForCompanySegment',
-    'performanceRankForSegmentYear',
-    'marketSegment',
-    'year',
-  ],
+  deps: ['performanceRankForSegmentYear', 'marketSegment', 'year'],
   component: (props) => (
     <>
-      It is {props.company}&apos;s {props.performanceRankForCompanySegment}{' '}
-      strongest {props.marketSegment} card and had the{' '}
-      {props.performanceRankForSegmentYear} best performance rating of the{' '}
+      It has the {props.performanceRankForSegmentYear} best performance of the{' '}
       {props.marketSegment} graphics cards that released in {props.year}.
     </>
   ),
 });
 
 const PerformanceBlurbSentence3 = compileContentComponent({
-  deps: [
-    'bestPerformanceDifference',
-    'bestPerformanceSegmentGpuName',
-    'bestPerformanceSegmentGpuPath',
-    'shortGpuName',
-  ],
+  deps: ['bestPerformanceDifference', 'bestPerformanceSegmentGpuName'],
   component: (props) => (
     <>
-      Its performance rating is {props.bestPerformanceDifference}% of the top
-      rated GPU, the{' '}
-      <a href={props.bestPerformanceSegmentGpuPath as string}>
-        {props.bestPerformanceSegmentGpuName}
-      </a>
-      .
+      It is approximately {props.bestPerformanceDifference}% as fast as the{' '}
+      {props.bestPerformanceSegmentGpuName}, the top benchmarked GPU.
     </>
   ),
 });
@@ -63,12 +46,6 @@ export const PerformanceBlurb = () => {
 
   const context = useMemo(() => {
     const bestPerformanceSegmentGpu = contentData.bestPerformanceGpuForSegment;
-    // const bestPerformanceDifference = (
-    //   100 *
-    //   (bestPerformanceSegmentGpu.benchmarks?.performanceScore?.value /
-    //     gpu.benchmarks?.performanceScore?.value -
-    //     1)
-    // ).toFixed(2);
     const bestPerformanceDifference = (
       100 *
       (gpu.benchmarks?.performanceScore?.value /

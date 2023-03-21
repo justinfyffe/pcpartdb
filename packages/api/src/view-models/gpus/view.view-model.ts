@@ -54,9 +54,11 @@ export class ViewGpuViewModelService {
         includeImages: true,
         includeRanks: [
           'performanceRank',
+          'performanceRankForArchitectureSegment',
           'performanceRankForCompanySegment',
           'performanceRankForSegmentYear',
           'valueRank',
+          'valueRankForSegment',
         ],
       },
       ctx,
@@ -125,6 +127,8 @@ export class ViewGpuViewModelService {
 
     return {
       [ContentTag.BestPerformance]: gpu.ranks?.performanceRank === 1,
+      [ContentTag.BestPerformanceForArchitectureSegment]:
+        gpu.ranks?.performanceRankForArchitectureSegment === 1,
       [ContentTag.BestPerformanceForCompanySegment]:
         gpu.ranks?.performanceRankForCompanySegment === 1,
       [ContentTag.BestPerformanceForSegmentYear]:

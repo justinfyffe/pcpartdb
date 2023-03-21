@@ -1,4 +1,5 @@
 import { ContentTag } from '@pcpartdb/shared';
+import { formatOrdinalNumber } from 'packages/website/src/client/shared/format';
 import React, { useContext, useMemo } from 'react';
 import {
   compileContentComponent,
@@ -14,7 +15,7 @@ const IntroBlurbSentence1 = compileContentComponent(
     component: (props) => (
       <>
         The {props.gpuName} is a {props.marketSegment} graphics card that
-        launched during {props.releaseDate}.
+        released during {props.releaseDate}.
       </>
     ),
   },
@@ -22,8 +23,8 @@ const IntroBlurbSentence1 = compileContentComponent(
     deps: ['gpuName', 'marketSegment', 'releaseDate'],
     component: (props) => (
       <>
-        The {props.gpuName} is a {props.marketSegment} graphics card will launch
-        during {props.releaseDate}.
+        The {props.gpuName} is a {props.marketSegment} graphics card will
+        released during {props.releaseDate}.
       </>
     ),
   },
@@ -33,7 +34,7 @@ const IntroBlurbSentence1 = compileContentComponent(
     component: (props) => (
       <>
         The {props.shortGpuName} is a {props.company} graphics card that
-        launched during <strong>{props.releaseDate}</strong>.
+        released during <strong>{props.releaseDate}</strong>.
       </>
     ),
   },
@@ -41,7 +42,7 @@ const IntroBlurbSentence1 = compileContentComponent(
     deps: ['company', 'shortGpuName', 'releaseDate'],
     component: (props) => (
       <>
-        The {props.shortGpuName} is a {props.company} graphics card will launch
+        The {props.shortGpuName} is a {props.company} graphics card will release
         during {props.releaseDate}.
       </>
     ),
@@ -53,7 +54,7 @@ const IntroBlurbSentence2 = compileContentComponent(
     deps: ['launchPrice'],
     tags: [ContentTag.Launched],
     component: (props) => (
-      <>It was released with prices starting at {props.launchPrice} MSRP.</>
+      <>It launched with prices starting at {props.launchPrice} MSRP.</>
     ),
   },
   {
@@ -64,7 +65,23 @@ const IntroBlurbSentence2 = compileContentComponent(
   },
 );
 
-const IntroBlurbSentence3 = compileContentComponent(
+const IntroBlurbSentence3 = compileContentComponent({
+  deps: [
+    'architecture',
+    'company',
+    'marketSegment',
+    'performanceRankForArchitectureSegment',
+  ],
+  component: (props) => (
+    <>
+      Its the {props.performanceRankForArchitectureSegment} fastest{' '}
+      {props.marketSegment} GPU in {props.company}&apos;s {props.architecture}{' '}
+      lineup.
+    </>
+  ),
+});
+
+const IntroBlurbSentence4 = compileContentComponent(
   {
     deps: ['architecture', 'codename', 'company', 'processSize'],
     component: (props) => (
@@ -118,6 +135,12 @@ export const IntroBlurb = () => {
       height: formatGpuField(gpu.specs?.height),
       launchPrice: formatGpuField(gpu.launchPrice),
       marketSegment: formatGpuField(gpu.marketSegment).toLowerCase(),
+      performanceRankForArchitectureSegment:
+        gpu.ranks?.performanceRankForArchitectureSegment > 1
+          ? formatOrdinalNumber(
+              gpu.ranks?.performanceRankForArchitectureSegment,
+            )
+          : '',
       processSize: formatGpuField(gpu.specs?.processSize),
       releaseDate: formatGpuField(gpu.releaseDate),
       shortGpuName: getGpuName(gpu, { company: false }),
@@ -130,7 +153,7 @@ export const IntroBlurb = () => {
   return (
     <ContentContext.Provider value={context}>
       <p>
-        <IntroBlurbSentence1 /> <IntroBlurbSentence2 /> <IntroBlurbSentence3 />
+        <IntroBlurbSentence1 /> <IntroBlurbSentence2 /> <IntroBlurbSentence3 />{' '}
       </p>
     </ContentContext.Provider>
   );

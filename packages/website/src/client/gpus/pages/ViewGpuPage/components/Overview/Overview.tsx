@@ -14,10 +14,10 @@ export const Overview: FunctionComponent = () => {
       <h2>Overview</h2>
 
       <IntroBlurb />
-      <DimensionsBlurb />
-      <PowerSupplyBlurb />
       <PerformanceBlurb />
       <ValueBlurb />
+      <DimensionsBlurb />
+      <PowerSupplyBlurb />
     </section>
   );
 };
