@@ -207,21 +207,24 @@ export class GpuRepository {
 
     const tokens = query
       .split(' ')
-      .map((value) => value.trim())
-      .join('|');
-
-    const idsFromNameOrCompany: { id: number }[] = await db.$queryRaw`
-      SELECT id FROM gpus
-      WHERE name ~* (${tokens}) OR company ~* (${tokens})
-      LIMIT 5
-    `;
-
-    const ids = idsFromNameOrCompany.map((json) => json.id);
+      .map((value) => value.trim().toLowerCase())
+      .filter((value) => value.length > 1);
 
     return await db.gpu.findMany({
-      where: { id: { in: ids } },
-      orderBy: { releaseDate: 'desc' },
-      take: 5,
+      where: {
+        OR: [
+          { name: { search: tokens.join(' | '), mode: 'insensitive' } },
+          { company: { search: tokens.join(' | '), mode: 'insensitive' } },
+        ],
+      },
+      orderBy: {
+        _relevance: {
+          fields: ['name', 'company'],
+          search: tokens.join(' | '),
+          sort: 'desc',
+        },
+      },
+      take: 6,
     });
   }
 

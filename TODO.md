@@ -10,9 +10,6 @@ Immediate Tasks:
   - folder structure for pages and components
     - <feature>/pages/<page-name>/components
     - <feature>/shared/components/
-  - improve autocomplete sorting
-    - show more recent gpus
-    - regex should be AND, not OR when using spaces
   - Scraping improvements
     - Add download date when importing
     - Allow ability to overwrite existing gpus
