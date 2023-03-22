@@ -9,6 +9,7 @@ import {
 } from '@pcpartdb/shared';
 import { GpuService } from '../../gpu/gpu.service';
 import { Context } from '../../shared/context';
+import { getSurroundingValues } from '../../shared/utils';
 
 const TOTAL_COMPARED_GPUS = 10;
 
@@ -75,27 +76,11 @@ export class ViewGpuViewModelService {
     return results.length;
   }
 
-  private getSurroundingGpus(gpus: Gpu[], seed: Gpu, total: number) {
-    const seedIndex = gpus.findIndex((gpu) => gpu.id === seed.id);
-    let start = seedIndex;
-    let end = seedIndex + 1;
-    let counter = 0;
-    while (end - start < total && (start > 0 || end < gpus.length)) {
-      if (counter++ % 2 === 0) {
-        if (start > 0) {
-          --start;
-        }
-      } else {
-        if (end < gpus.length) {
-          ++end;
-        }
-      }
+  private async getRelativePerformanceGpus(seed: Gpu, ctx: Context) {
+    if (seed.benchmarks?.performanceScore?.value == null) {
+      return [];
     }
 
-    return gpus.slice(start, end);
-  }
-
-  private async getRelativePerformanceGpus(seed: Gpu, ctx: Context) {
     const above = await this.gpuService.list(
       {
         query: {
@@ -128,16 +113,24 @@ export class ViewGpuViewModelService {
       ctx,
     );
 
-    const relativeGpus = [...above, seed, ...below].sort(
+    const neighbors = [...above, seed, ...below].sort(
       (gpu1, gpu2) =>
         gpu2.benchmarks?.performanceScore?.value -
         gpu1.benchmarks?.performanceScore?.value,
     );
 
-    return this.getSurroundingGpus(relativeGpus, seed, TOTAL_COMPARED_GPUS);
+    return getSurroundingValues(
+      neighbors,
+      neighbors.findIndex((gpu) => gpu.id === seed.id),
+      TOTAL_COMPARED_GPUS,
+    );
   }
 
   private async getRelativeValueGpus(seed: Gpu, ctx: Context) {
+    if (seed.benchmarks?.valueScore?.value == null) {
+      return [];
+    }
+
     const above = await this.gpuService.list(
       {
         query: {
@@ -170,12 +163,16 @@ export class ViewGpuViewModelService {
       ctx,
     );
 
-    const relativeGpus = [...above, seed, ...below].sort(
+    const neighbors = [...above, seed, ...below].sort(
       (gpu1, gpu2) =>
         gpu2.benchmarks?.valueScore?.value - gpu1.benchmarks?.valueScore?.value,
     );
 
-    return this.getSurroundingGpus(relativeGpus, seed, TOTAL_COMPARED_GPUS);
+    return getSurroundingValues(
+      neighbors,
+      neighbors.findIndex((gpu) => gpu.id === seed.id),
+      TOTAL_COMPARED_GPUS,
+    );
   }
 
   private async getRelatedGpus(
@@ -207,7 +204,6 @@ export class ViewGpuViewModelService {
     return { gpus: related } as RelatedGpus;
   }
 
-  // TODO: determine this based on gpus fetched for content tables
   private async getRelatedComparisons(
     total: number,
     performanceGpus: Gpu[],

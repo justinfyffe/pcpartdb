@@ -2,10 +2,6 @@
 X: Done and tested
 
 Immediate Tasks:
-  - Fix bug with getting relative performance gpus.
-    - fix bug with relative performance value: http://localhost:3000/gpus/compare/nvidia-geforce-gtx-1660--vs--nvidia-geforce-rtx-4090/
-      - heavily skewed to one side. due to getSurroundingGpus2
-    - clean up surrounding gpus code
     - clean up list options, count options
       - don't have "includeRanks" on repository, only on service.
     - relative performance and relative value should be filtering based on market segment
@@ -16,6 +12,7 @@ Immediate Tasks:
     - <feature>/shared/components/
   - improve autocomplete sorting
     - show more recent gpus
+    - regex should be AND, not OR when using spaces
   - Scraping improvements
     - Add download date when importing
     - Allow ability to overwrite existing gpus

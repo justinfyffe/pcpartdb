@@ -388,10 +388,10 @@ export class GpuRepository {
     if (valueRated) {
       valueWhere = { ...valueWhere, not: null };
     }
-    if (maxPerformanceScore != null) {
+    if (maxValueScore != null) {
       valueWhere = { ...valueWhere, lte: maxValueScore };
     }
-    if (minPerformanceScore != null) {
+    if (minValueScore != null) {
       valueWhere = { ...valueWhere, gte: minValueScore };
     }
 

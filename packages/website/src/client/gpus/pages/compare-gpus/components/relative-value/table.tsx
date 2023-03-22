@@ -87,7 +87,7 @@ export const ValueTable: FunctionComponent<ValueTableProps> = (props) => {
     }
   }, [gpu1, gpu2]);
 
-  const getRelativePerformance = useCallback(
+  const getRelativeValue = useCallback(
     (relatedGpu: Gpu) => {
       const baseline = baselineGpu?.benchmarks.valueScore.value;
       const relatedValue = relatedGpu.benchmarks.valueScore.value;
@@ -143,7 +143,7 @@ export const ValueTable: FunctionComponent<ValueTableProps> = (props) => {
                   </a>
                 </CustomRowLabel>
                 <CustomRowValue className="text-left">
-                  {getRelativePerformance(gpu)}%
+                  {getRelativeValue(gpu)}%
                 </CustomRowValue>
                 <CustomRowValue className="text-left">
                   {gpu.ranks?.valueRank}

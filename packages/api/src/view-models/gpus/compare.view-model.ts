@@ -10,6 +10,7 @@ import {
 } from '@pcpartdb/shared';
 import { GpuService } from '../../gpu/gpu.service';
 import { Context } from '../../shared/context';
+import { getSurroundingValues } from '../../shared/utils';
 
 const TOTAL_COMPARED_GPUS = 10;
 
@@ -55,83 +56,117 @@ export class CompareGpusViewModelService {
     return {
       totalPerformanceRatedGpus: totalRatedGpus,
 
-      relativePerformanceGpus: await this.getPerformanceGpus(comparison, ctx),
-      relativeValueGpus: await this.getValueGpus(comparison, ctx),
+      relativePerformanceGpus: await this.getRelativePerformanceGpus(
+        comparison,
+        ctx,
+      ),
+      relativeValueGpus: await this.getRelativeValueGpus(comparison, ctx),
     };
   }
 
   private async getTotalRatedGpus(ctx: Context) {
     const results = await this.gpuService.list(
-      {
-        query: { filter: { performanceRated: true } },
-      },
+      { query: { filter: { performanceRated: true } } },
       ctx,
     );
     return results.length;
   }
 
-  private getSurroundingGpus(gpus: Gpu[], seed: Gpu, total: number) {
-    const seedIndex = gpus.findIndex((gpu) => gpu.id === seed.id);
-    let start = seedIndex;
-    let end = seedIndex + 1;
-    let counter = 0;
-    while (end - start < total && (start > 0 || end < gpus.length)) {
-      if (counter++ % 2 === 0) {
-        if (start > 0) {
-          --start;
-        }
-      } else {
-        if (end < gpus.length) {
-          ++end;
-        }
-      }
+  private async getRelativePerformanceGpus(
+    comparison: GpuComparison,
+    ctx: Context,
+  ) {
+    const [gpu1, gpu2] = comparison;
+    const neighbors1 = await this.getPerformanceNeighbors(gpu1, ctx);
+    const neighbors2 = await this.getPerformanceNeighbors(gpu2, ctx);
+
+    // At least one GPU has no neighbors (missing rank)
+    if (neighbors1.length === 0 && neighbors2.length === 0) {
+      return [];
+    }
+    if (neighbors1.length === 0 || neighbors2.length === 0) {
+      const neighbors = [...neighbors1, ...neighbors2];
+      return getSurroundingValues(
+        neighbors,
+        neighbors.findIndex((gpu) => gpu.id === gpu1.id || gpu.id === gpu2.id),
+        TOTAL_COMPARED_GPUS,
+      );
     }
 
-    return gpus.slice(start, end);
-  }
+    // Both GPUS have neighbors
+    const hasGapBetweenNeighbors =
+      Math.abs(gpu1.ranks?.performanceRank - gpu2.ranks?.performanceRank) >
+      TOTAL_COMPARED_GPUS / 2;
 
-  private getSurroundingGpus2(gpus: Gpu[], seed: GpuComparison, total: number) {
-    const seedIndex1 = gpus.findIndex((gpu) => gpu.id === seed[0].id);
-    const seedIndex2 = gpus.findIndex((gpu) => gpu.id === seed[1].id);
-
-    if (Math.abs(seedIndex2 - seedIndex1) > total) {
-      const seeds =
-        seedIndex1 < seedIndex2 ? [seed[0], seed[1]] : [seed[1], seed[0]];
-      return [
-        ...this.getSurroundingGpus(gpus, seeds[0], Math.floor(total / 2)),
-        ...this.getSurroundingGpus(gpus, seeds[1], Math.floor(total / 2)),
-      ];
+    if (hasGapBetweenNeighbors) {
+      return this.concatNeighbors(
+        comparison,
+        neighbors1,
+        neighbors2,
+        (g1, g2) => g1.ranks?.performanceRank - g2.ranks?.performanceRank,
+      );
     } else {
-      // TODO: fix this logic. This can be heavily weighted to one side.
-      // Example: see http://localhost:3000/gpus/compare/nvidia-geforce-gtx-1660--vs--nvidia-geforce-rtx-4090/
-      const seedIndex = Math.floor((seedIndex1 + seedIndex2) / 2);
-      let start = seedIndex;
-      let end = seedIndex + 1;
-      let counter = 0;
-      while (end - start < total && (start > 0 || end < gpus.length)) {
-        if (counter++ % 2 === 0) {
-          if (start > 0) {
-            --start;
-          }
-        } else {
-          if (end < gpus.length) {
-            ++end;
-          }
-        }
-      }
-
-      return gpus.slice(start, end);
+      return this.mergeNeighbors(
+        comparison,
+        neighbors1,
+        neighbors2,
+        (g1, g2) => g1.ranks?.performanceRank - g2.ranks?.performanceRank,
+      );
     }
   }
 
-  // TODO: clean up this logic
-  private async getPerformanceGpus(seed: GpuComparison, ctx: Context) {
-    const above1 = await this.gpuService.list(
+  private async getRelativeValueGpus(comparison: GpuComparison, ctx: Context) {
+    const [gpu1, gpu2] = comparison;
+    const neighbors1 = await this.getValueNeighbors(gpu1, ctx);
+    const neighbors2 = await this.getValueNeighbors(gpu2, ctx);
+
+    // At least one GPU has no neighbors (missing rank)
+    if (neighbors1.length === 0 && neighbors2.length === 0) {
+      return [];
+    }
+    if (neighbors1.length === 0 || neighbors2.length === 0) {
+      const neighbors = [...neighbors1, ...neighbors2];
+      return getSurroundingValues(
+        neighbors,
+        neighbors.findIndex((gpu) => gpu.id === gpu1.id || gpu.id === gpu2.id),
+        TOTAL_COMPARED_GPUS,
+      );
+    }
+
+    // Both GPUs have neighbors. Need to combine them.
+    const hasGapBetweenNeighbors =
+      Math.abs(gpu1.ranks?.valueRank - gpu2.ranks?.valueRank) >
+      TOTAL_COMPARED_GPUS / 2;
+
+    if (hasGapBetweenNeighbors) {
+      return this.concatNeighbors(
+        comparison,
+        neighbors1,
+        neighbors2,
+        (g1, g2) => g1.ranks?.valueRank - g2.ranks?.valueRank,
+      );
+    } else {
+      return this.mergeNeighbors(
+        comparison,
+        neighbors1,
+        neighbors2,
+        (g1, g2) => g1.ranks?.valueRank - g2.ranks?.valueRank,
+      );
+    }
+  }
+
+  private async getPerformanceNeighbors(gpu: Gpu, ctx: Context) {
+    // Missing value. Cannot have neighbors.
+    if (gpu.benchmarks?.performanceScore?.value == null) {
+      return [];
+    }
+
+    const above = await this.gpuService.list(
       {
         query: {
           filter: {
-            excludeIds: [seed[0].id, seed[1].id],
-            minPerformanceScore: seed[0].benchmarks?.performanceScore?.value,
+            excludeIds: [gpu.id],
+            minPerformanceScore: gpu.benchmarks?.performanceScore?.value,
             performanceRated: true,
           },
           orderBy: { sort: GpuSort.PerformanceRating, order: GpuOrder.Asc },
@@ -142,12 +177,12 @@ export class CompareGpusViewModelService {
       ctx,
     );
 
-    const below1 = await this.gpuService.list(
+    const below = await this.gpuService.list(
       {
         query: {
           filter: {
-            excludeIds: [seed[0].id, seed[1].id],
-            maxPerformanceScore: seed[0].benchmarks?.performanceScore?.value,
+            excludeIds: [gpu.id],
+            maxPerformanceScore: gpu.benchmarks?.performanceScore?.value,
             performanceRated: true,
           },
           orderBy: { sort: GpuSort.PerformanceRating, order: GpuOrder.Desc },
@@ -158,70 +193,24 @@ export class CompareGpusViewModelService {
       ctx,
     );
 
-    const above2 = await this.gpuService.list(
-      {
-        query: {
-          filter: {
-            excludeIds: [seed[0].id, seed[1].id],
-            minPerformanceScore: seed[1].benchmarks?.performanceScore?.value,
-            performanceRated: true,
-          },
-          orderBy: { sort: GpuSort.PerformanceRating, order: GpuOrder.Asc },
-          limit: TOTAL_COMPARED_GPUS,
-        },
-        includeRanks: true,
-      },
-      ctx,
-    );
-
-    const below2 = await this.gpuService.list(
-      {
-        query: {
-          filter: {
-            excludeIds: [seed[0].id, seed[1].id],
-            maxPerformanceScore: seed[1].benchmarks?.performanceScore?.value,
-            performanceRated: true,
-          },
-          orderBy: { sort: GpuSort.PerformanceRating, order: GpuOrder.Desc },
-          limit: TOTAL_COMPARED_GPUS,
-        },
-        includeRanks: true,
-      },
-      ctx,
-    );
-
-    const relativeGpusSet = [
-      ...above1,
-      ...below1,
-      ...above2,
-      ...below2,
-      ...seed,
-    ].reduce((acc, gpu) => {
-      acc[gpu.id] = gpu;
-      return acc;
-    }, {} as Record<number, Gpu>);
-
-    const relativeGpus = Object.values(relativeGpusSet).sort(
-      (gpu1, gpu2) =>
-        gpu2.benchmarks?.performanceScore?.value -
-        gpu1.benchmarks?.performanceScore?.value,
-    );
-
-    return await this.getSurroundingGpus2(
-      relativeGpus,
-      seed,
-      TOTAL_COMPARED_GPUS,
+    const neighborsSet = [...above, gpu, ...below];
+    return Object.values(neighborsSet).sort(
+      (gpu1, gpu2) => gpu1.ranks?.performanceRank - gpu2.ranks?.performanceRank,
     );
   }
 
-  // TODO: clean up this logic
-  private async getValueGpus(seed: GpuComparison, ctx: Context) {
-    const above1 = await this.gpuService.list(
+  private async getValueNeighbors(gpu: Gpu, ctx: Context) {
+    // Missing value. Cannot have neighbors.
+    if (gpu.benchmarks?.valueScore?.value == null) {
+      return [];
+    }
+
+    const above = await this.gpuService.list(
       {
         query: {
           filter: {
-            excludeIds: [seed[0].id, seed[1].id],
-            minValueScore: seed[0].benchmarks?.valueScore?.value,
+            excludeIds: [gpu.id],
+            minValueScore: gpu.benchmarks?.valueScore?.value,
             valueRated: true,
           },
           orderBy: { sort: GpuSort.ValueRating, order: GpuOrder.Asc },
@@ -232,12 +221,12 @@ export class CompareGpusViewModelService {
       ctx,
     );
 
-    const below1 = await this.gpuService.list(
+    const below = await this.gpuService.list(
       {
         query: {
           filter: {
-            excludeIds: [seed[0].id, seed[1].id],
-            maxValueScore: seed[0].benchmarks?.valueScore?.value,
+            excludeIds: [gpu.id],
+            maxValueScore: gpu.benchmarks?.valueScore?.value,
             valueRated: true,
           },
           orderBy: { sort: GpuSort.ValueRating, order: GpuOrder.Desc },
@@ -248,59 +237,70 @@ export class CompareGpusViewModelService {
       ctx,
     );
 
-    const above2 = await this.gpuService.list(
-      {
-        query: {
-          filter: {
-            excludeIds: [seed[0].id, seed[1].id],
-            minValueScore: seed[1].benchmarks?.valueScore?.value,
-            valueRated: true,
-          },
-          orderBy: { sort: GpuSort.ValueRating, order: GpuOrder.Asc },
-          limit: TOTAL_COMPARED_GPUS,
-        },
-        includeRanks: true,
-      },
-      ctx,
+    const neighborsSet = [...above, gpu, ...below];
+    return Object.values(neighborsSet).sort(
+      (gpu1, gpu2) => gpu1.ranks?.valueRank - gpu2.ranks?.valueRank,
+    );
+  }
+
+  private concatNeighbors(
+    comparison: GpuComparison,
+    neighbors1: Gpu[],
+    neighbors2: Gpu[],
+    compareFn: (gpu1: Gpu, gpu2: Gpu) => number,
+  ) {
+    const [gpu1, gpu2] = comparison;
+
+    // Get the nearest neighbors for both GPUs
+    const surrounding1 = getSurroundingValues(
+      neighbors1,
+      neighbors1.findIndex((gpu) => gpu.id === gpu1.id),
+      TOTAL_COMPARED_GPUS / 2,
+    );
+    const surrounding2 = getSurroundingValues(
+      neighbors2,
+      neighbors2.findIndex((gpu) => gpu.id === gpu2.id),
+      TOTAL_COMPARED_GPUS / 2,
     );
 
-    const below2 = await this.gpuService.list(
-      {
-        query: {
-          filter: {
-            excludeIds: [seed[0].id, seed[1].id],
-            maxValueScore: seed[1].benchmarks?.valueScore?.value,
-            valueRated: true,
-          },
-          orderBy: { sort: GpuSort.ValueRating, order: GpuOrder.Desc },
-          limit: TOTAL_COMPARED_GPUS,
-        },
-        includeRanks: true,
-      },
-      ctx,
+    // Combine them and sort.
+    return [...surrounding1, ...surrounding2].sort(compareFn);
+  }
+
+  private mergeNeighbors(
+    comparison: GpuComparison,
+    neighbors1: Gpu[],
+    neighbors2: Gpu[],
+    compareFn: (gpu1: Gpu, gpu2: Gpu) => number,
+  ) {
+    const [gpu1, gpu2] = comparison;
+
+    // Get the nearest neighbors for both GPUs
+    const surrounding1 = getSurroundingValues(
+      neighbors1,
+      neighbors1.findIndex((gpu) => gpu.id === gpu1.id),
+      TOTAL_COMPARED_GPUS,
+    );
+    const surrounding2 = getSurroundingValues(
+      neighbors2,
+      neighbors2.findIndex((gpu) => gpu.id === gpu2.id),
+      TOTAL_COMPARED_GPUS,
     );
 
-    const relativeGpusSet = [
-      ...above1,
-      ...below1,
-      ...above2,
-      ...below2,
-      ...seed,
-    ].reduce((acc, gpu) => {
+    // Combine the nearest neighbors. Factor in that they may overlap.
+    const set = [...surrounding1, ...surrounding2].reduce((acc, gpu) => {
       acc[gpu.id] = gpu;
       return acc;
     }, {} as Record<number, Gpu>);
+    const merged = Object.values(set).sort(compareFn);
 
-    const relativeGpus = Object.values(relativeGpusSet).sort(
-      (gpu1, gpu2) =>
-        gpu2.benchmarks?.valueScore?.value - gpu1.benchmarks?.valueScore?.value,
-    );
+    // Find the middle point between the two GPUs that are being compared.
+    const idx1 = merged.findIndex((gpu) => gpu.id === gpu1.id);
+    const idx2 = merged.findIndex((gpu) => gpu.id === gpu2.id);
+    const pivot = Math.ceil((idx1 + idx2) / 2);
 
-    return await this.getSurroundingGpus2(
-      relativeGpus,
-      seed,
-      TOTAL_COMPARED_GPUS,
-    );
+    // Find the GPUs surrounding the middle point.
+    return getSurroundingValues(merged, pivot, TOTAL_COMPARED_GPUS);
   }
 
   private async getRelatedGpus(
