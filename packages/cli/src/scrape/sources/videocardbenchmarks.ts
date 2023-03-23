@@ -69,7 +69,7 @@ export async function sanitizeVideocardBenchmarksGpuSources() {
 }
 
 function sanitize(gpu: RawGpuSource): VideocardBenchmarksGpuSource {
-  const name = gpu.name;
+  const { name, company } = parseRawName(gpu.name);
   const marketSegment = getMarketSegment(gpu);
   const g3dMark = getG3dMark(gpu);
   const g2dMark = getG2dMark(gpu);
@@ -85,7 +85,23 @@ function sanitize(gpu: RawGpuSource): VideocardBenchmarksGpuSource {
     return null;
   }
 
-  return { name, url, marketSegment, g3dMark, g2dMark, releaseDate };
+  return { name, company, url, marketSegment, g3dMark, g2dMark, releaseDate };
+}
+
+function parseRawName(rawName: string) {
+  const [companyPart, ...nameParts] = rawName.split(' ');
+
+  let name = null;
+  let company = null;
+  const companyLc = companyPart.toLowerCase();
+  if (companyLc === 'amd' || companyLc === 'nvidia' || companyLc === 'intel') {
+    name = nameParts.join(' ');
+    company = companyPart;
+  } else {
+    name = [companyPart, ...nameParts].join(' ');
+  }
+
+  return { company, name };
 }
 
 function getUrl(gpu: RawGpuSource) {

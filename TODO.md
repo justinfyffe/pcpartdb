@@ -16,6 +16,7 @@ Immediate Tasks:
   - Fix bug where unauthorized pages doesn't display
   - Improve security for reset password (add expiration to jwt)
   - code clean up
+    - rename videocardbenchmarks to videocardbenchmark
   
 
 Post-launch:

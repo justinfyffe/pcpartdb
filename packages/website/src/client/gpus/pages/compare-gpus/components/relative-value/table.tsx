@@ -53,13 +53,21 @@ export const ValueTable: FunctionComponent<ValueTableProps> = (props) => {
   // Add nulls to rank gaps
   const gpus = useMemo(() => {
     const ret: Gpu[] = [];
+    let dontNullGap = false;
     for (let i = 0; i < relativeValueGpus.length; ++i) {
       if (i > 0) {
         const rankDiff =
           relativeValueGpus[i].ranks.valueRank -
           relativeValueGpus[i - 1].ranks.valueRank;
+
         if (rankDiff !== 1) {
-          ret.push(null);
+          if (rankDiff === 0) {
+            dontNullGap = true;
+          } else if (dontNullGap) {
+            dontNullGap = false;
+          } else {
+            ret.push(null);
+          }
         }
       }
       ret.push(relativeValueGpus[i]);

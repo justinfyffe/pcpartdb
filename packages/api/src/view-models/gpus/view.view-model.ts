@@ -113,7 +113,9 @@ export class ViewGpuViewModelService {
       ctx,
     );
 
-    const neighbors = [...above, seed, ...below].sort(
+    const neighbors = [
+      ...new Map([...above, seed, ...below].map((n) => [n.id, n])).values(),
+    ].sort(
       (gpu1, gpu2) =>
         gpu2.benchmarks?.performanceScore?.value -
         gpu1.benchmarks?.performanceScore?.value,
@@ -163,7 +165,9 @@ export class ViewGpuViewModelService {
       ctx,
     );
 
-    const neighbors = [...above, seed, ...below].sort(
+    const neighbors = [
+      ...new Map([...above, seed, ...below].map((n) => [n.id, n])).values(),
+    ].sort(
       (gpu1, gpu2) =>
         gpu2.benchmarks?.valueScore?.value - gpu1.benchmarks?.valueScore?.value,
     );

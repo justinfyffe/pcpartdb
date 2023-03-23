@@ -193,9 +193,12 @@ export class CompareGpusViewModelService {
       ctx,
     );
 
-    const neighborsSet = [...above, gpu, ...below];
-    return Object.values(neighborsSet).sort(
-      (gpu1, gpu2) => gpu1.ranks?.performanceRank - gpu2.ranks?.performanceRank,
+    return [
+      ...new Map([...above, gpu, ...below].map((n) => [n.id, n])).values(),
+    ].sort(
+      (gpu1, gpu2) =>
+        gpu2.benchmarks?.performanceScore?.value -
+        gpu1.benchmarks?.performanceScore?.value,
     );
   }
 
@@ -237,9 +240,11 @@ export class CompareGpusViewModelService {
       ctx,
     );
 
-    const neighborsSet = [...above, gpu, ...below];
-    return Object.values(neighborsSet).sort(
-      (gpu1, gpu2) => gpu1.ranks?.valueRank - gpu2.ranks?.valueRank,
+    return [
+      ...new Map([...above, gpu, ...below].map((n) => [n.id, n])).values(),
+    ].sort(
+      (gpu1, gpu2) =>
+        gpu2.benchmarks?.valueScore?.value - gpu1.benchmarks?.valueScore?.value,
     );
   }
 

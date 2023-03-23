@@ -38,27 +38,40 @@ async function buildSourceModel() {
 
   techPowerUpSources.forEach((data) => {
     const key = data.name;
-    map[key] = map[key] || { name: data.name };
-    map[key].company = data.company;
-    map[key].techPowerUpUrl = data.url;
+    const orig = map[key] || {};
+    map[key] = {
+      ...orig,
+      name: orig.name || data.name,
+      techPowerUpUrl: orig.techPowerUpUrl || data.url,
+      company: orig.company || data.company,
+    };
   });
 
   ulBenchmarkSources.forEach((data) => {
     const key = data.name;
-    map[key] = map[key] || { name: data.name };
-    map[key].company = data.company;
-    map[key].timespyScore = data.timespyScore;
-    map[key].ulBenchmarksUrl = data.url;
+    const orig = map[key] || {};
+    map[key] = {
+      ...orig,
+      name: orig.name || data.name,
+      timespyScore: orig.timespyScore || data.timespyScore,
+      ulBenchmarksUrl: orig.ulBenchmarksUrl || data.url,
+      company: orig.company || data.company,
+    };
   });
 
   videocardBenchmarksSources.forEach((data) => {
     const key = data.name;
-    map[key] = map[key] || { name: data.name };
-    map[key].marketSegment = data.marketSegment;
-    map[key].releaseDate = data.releaseDate;
-    map[key].g3dMark = data.g3dMark;
-    map[key].g2dMark = data.g2dMark;
-    map[key].videocardBenchmarksUrl = data.url;
+    const orig = map[key] || {};
+    map[key] = {
+      ...orig,
+      name: orig.name || data.name,
+      g2dMark: orig.g2dMark || data.g2dMark,
+      g3dMark: orig.g3dMark || data.g3dMark,
+      marketSegment: orig.marketSegment || data.marketSegment,
+      videocardBenchmarksUrl: orig.videocardBenchmarksUrl || data.url,
+      releaseDate: orig.releaseDate || data.releaseDate,
+      company: orig.company || data.company,
+    };
   });
 
   // We only want GPUs with most data and g3d mark

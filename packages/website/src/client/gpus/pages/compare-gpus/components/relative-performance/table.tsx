@@ -55,13 +55,21 @@ export const PerformanceTable: FunctionComponent<PerformanceTableProps> = (
   // Add nulls to rank gaps
   const gpus = useMemo(() => {
     const ret: Gpu[] = [];
+    let dontNullGap = false;
     for (let i = 0; i < relativePerformanceGpus.length; ++i) {
       if (i > 0) {
         const rankDiff =
           relativePerformanceGpus[i].ranks.performanceRank -
           relativePerformanceGpus[i - 1].ranks.performanceRank;
+
         if (rankDiff !== 1) {
-          ret.push(null);
+          if (rankDiff === 0) {
+            dontNullGap = true;
+          } else if (dontNullGap) {
+            dontNullGap = false;
+          } else {
+            ret.push(null);
+          }
         }
       }
       ret.push(relativePerformanceGpus[i]);
