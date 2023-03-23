@@ -208,24 +208,45 @@ export class GpuRepository {
     const tokens = query
       .split(' ')
       .map((value) => value.trim().toLowerCase())
-      .filter((value) => value.length > 1);
+      .filter((value) => value.length > 1)
+      .join('|');
 
-    return await db.gpu.findMany({
+    // Get results based on search relevancy.
+    const priorityResults = await db.gpu.findMany({
       where: {
         OR: [
-          { name: { search: tokens.join(' | '), mode: 'insensitive' } },
-          { company: { search: tokens.join(' | '), mode: 'insensitive' } },
+          { name: { search: tokens, mode: 'insensitive' } },
+          { company: { search: tokens, mode: 'insensitive' } },
         ],
       },
       orderBy: {
         _relevance: {
           fields: ['name', 'company'],
-          search: tokens.join(' | '),
+          search: tokens,
           sort: 'desc',
         },
       },
       take: 6,
     });
+
+    // Get results based on pattern matching.
+    const fillerResultIds: { id: number }[] = await db.$queryRaw`
+      SELECT id FROM gpus
+      WHERE name ~* (${tokens}) OR company ~* (${tokens})
+      ORDER BY release_date DESC
+      LIMIT 6
+    `;
+    const fillerResults = await db.gpu.findMany({
+      where: { id: { in: fillerResultIds.map((json) => json.id) } },
+      orderBy: { releaseDate: 'desc' },
+    });
+
+    // Return top results.
+    return [
+      ...new Map(
+        [...priorityResults, ...fillerResults].map((v) => [v.id, v]),
+      ).values(),
+    ].slice(0, 6);
   }
 
   async autocompleteSpec(
