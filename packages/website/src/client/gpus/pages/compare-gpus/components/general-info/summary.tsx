@@ -1,7 +1,10 @@
 import React from 'react';
-import { compileContent, ContentContext } from '../../../../../shared/content';
+import {
+  compileContentComponent,
+  ContentContext,
+} from '../../../../../shared/content';
 
-export const GeneralInfoSummarySentence1 = compileContent({
+export const GeneralInfoSummarySentence1 = compileContentComponent({
   deps: [],
   component: (props) => <></>,
 });

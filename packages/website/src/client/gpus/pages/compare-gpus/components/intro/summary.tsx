@@ -1,13 +1,13 @@
 import React, { useContext } from 'react';
 import { getGpuName, getShoppingUrl } from '../../../../../gpus';
 import {
-  compileContent,
+  compileContentComponent,
   ContentContext,
   ContentParams,
 } from '../../../../../shared/content';
 import { ComparePageContext } from '../../context';
 
-export const IntroSentence1 = compileContent({
+export const IntroSentence1 = compileContentComponent({
   deps: ['gpuName1', 'shoppingUrl1', 'gpuName2', 'shoppingUrl2'],
   component: (props: ContentParams) => (
     <>
@@ -18,7 +18,7 @@ export const IntroSentence1 = compileContent({
   ),
 });
 
-export const IntroSentence2 = compileContent({
+export const IntroSentence2 = compileContentComponent({
   component: () => (
     <>
       Check below for a comprehensive comparison of performance, benchmarks, and

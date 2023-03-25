@@ -1,9 +1,12 @@
 import React, { useContext } from 'react';
 import { getGpuName, getShoppingUrl } from '../../../../../gpus';
-import { compileContent, ContentContext } from '../../../../../shared/content';
+import {
+  compileContentComponent,
+  ContentContext,
+} from '../../../../../shared/content';
 import { ViewPageContext } from '../../context';
 
-export const IntroSentence1 = compileContent({
+export const IntroSentence1 = compileContentComponent({
   deps: ['gpuName', 'shoppingUrl'],
   component: (props) => (
     <>
@@ -15,7 +18,7 @@ export const IntroSentence1 = compileContent({
   ),
 });
 
-export const IntroSentence2 = compileContent({
+export const IntroSentence2 = compileContentComponent({
   component: () => (
     <>Check below for a comprehensive list of benchmarks and specs.</>
   ),

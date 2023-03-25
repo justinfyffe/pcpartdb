@@ -1,20 +1,20 @@
 import React, { useContext } from 'react';
 import { formatGpuField } from '../../../../../../gpus';
 import {
-  compileContent,
+  compileContentComponent,
   ContentContext,
   ContentParams,
 } from '../../../../../../shared/content';
 import { ViewPageContext } from '../../../context';
 
-export const MemorySummarySentence1 = compileContent({
+export const MemorySummarySentence1 = compileContentComponent({
   deps: ['architecture'],
   component: (props) => (
     <>This {props.architecture} GPU has 12 GB of GDDR6 memory.</>
   ),
 });
 
-export const MemorySummarySentence2 = compileContent({
+export const MemorySummarySentence2 = compileContentComponent({
   deps: ['memoryClock', 'memoryBandwidth', 'memoryInterface'],
   component: (props) => (
     <>

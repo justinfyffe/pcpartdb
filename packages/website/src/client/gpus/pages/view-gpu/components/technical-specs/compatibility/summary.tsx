@@ -5,13 +5,13 @@ import {
   getGpuName,
 } from '../../../../../../gpus';
 import {
-  compileContent,
+  compileContentComponent,
   ContentContext,
   ContentParams,
 } from '../../../../../../shared/content';
 import { ViewPageContext } from '../../../context';
 
-export const CompatibilitySummarySentence1 = compileContent({
+export const CompatibilitySummarySentence1 = compileContentComponent({
   deps: ['gpuName', 'slotWidth', 'dimensions', 'tdp', 'suggestedPsu'],
   component: (props) => (
     <>

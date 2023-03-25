@@ -5,7 +5,7 @@ import { formatGpuField, getGpuName } from '../../../../../gpus';
 import { getCompanyLogoImagePath } from '../../../../../image';
 import { Card, Img } from '../../../../../shared/components';
 import {
-  compileContent,
+  compileContentComponent,
   ContentContext,
   ContentParams,
 } from '../../../../../shared/content';
@@ -168,7 +168,7 @@ const Subtitle: FunctionComponent<SubtitleProps> = (props) => {
   );
 };
 
-const SubtitleSentence1 = compileContent(
+const SubtitleSentence1 = compileContentComponent(
   {
     filters: [GpuFeedTag.GreatPerformance],
     deps: ['name'],

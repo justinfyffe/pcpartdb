@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { formatGpuField, getGpuName } from '../../../../../gpus';
 import {
-  compileContent,
+  compileContentComponent,
   ContentContext,
   ContentParams,
 } from '../../../../../shared/content';
@@ -11,7 +11,7 @@ import {
 } from '../../../../../shared/format';
 import { ViewPageContext } from '../../context';
 
-export const ValueSummarySentence1 = compileContent({
+export const ValueSummarySentence1 = compileContentComponent({
   deps: ['gpuName', 'valueYearRank', 'totalYearGpus', 'launchYear'],
   component: (props) => (
     <>
@@ -21,7 +21,7 @@ export const ValueSummarySentence1 = compileContent({
   ),
 });
 
-export const ValueSummarySentence2 = compileContent({
+export const ValueSummarySentence2 = compileContentComponent({
   deps: ['valueArchitectureRank', 'company', 'architecture'],
   component: (props) => (
     <>

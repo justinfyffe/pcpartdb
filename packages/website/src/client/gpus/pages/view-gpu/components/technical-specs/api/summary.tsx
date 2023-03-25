@@ -1,13 +1,13 @@
 import React, { useContext } from 'react';
 import { getGpuName } from '../../../../../../gpus';
 import {
-  compileContent,
+  compileContentComponent,
   ContentContext,
   ContentParams,
 } from '../../../../../../shared/content';
 import { ViewPageContext } from '../../../context';
 
-export const ApiSummarySentence1 = compileContent({
+export const ApiSummarySentence1 = compileContentComponent({
   deps: [],
   component: (props) => <></>,
 });

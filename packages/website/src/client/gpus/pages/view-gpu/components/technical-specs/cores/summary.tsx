@@ -1,13 +1,13 @@
 import React, { useContext } from 'react';
 import { formatGpuField } from '../../../../../../gpus';
 import {
-  compileContent,
+  compileContentComponent,
   ContentContext,
   ContentParams,
 } from '../../../../../../shared/content';
 import { ViewPageContext } from '../../../context';
 
-export const CoresSummarySentence1 = compileContent({
+export const CoresSummarySentence1 = compileContentComponent({
   deps: ['coreClockSpeedBase', 'cores', 'fp32Performance', 'fp64Performance'],
   component: (props) => (
     <>
@@ -18,7 +18,7 @@ export const CoresSummarySentence1 = compileContent({
   ),
 });
 
-export const CoresSummarySentence2 = compileContent({
+export const CoresSummarySentence2 = compileContentComponent({
   deps: ['rops', 'pixelFillRate', 'tmus', 'textureFillRate'],
   component: (props) => (
     <>

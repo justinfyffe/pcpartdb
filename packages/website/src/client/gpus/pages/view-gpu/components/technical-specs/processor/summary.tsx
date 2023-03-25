@@ -1,13 +1,13 @@
 import React, { useContext } from 'react';
 import { formatGpuField, getGpuName } from '../../../../../../gpus';
 import {
-  compileContent,
+  compileContentComponent,
   ContentContext,
   ContentParams,
 } from '../../../../../../shared/content';
 import { ViewPageContext } from '../../../context';
 
-export const ProcessorSummarySentence1 = compileContent({
+export const ProcessorSummarySentence1 = compileContentComponent({
   deps: ['gpuName', 'architecture', 'processSize'],
   component: (props) => (
     <>

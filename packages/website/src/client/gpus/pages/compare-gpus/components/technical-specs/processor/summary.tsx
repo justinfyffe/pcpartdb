@@ -1,12 +1,12 @@
 import React, { useContext } from 'react';
 import {
-  compileContent,
+  compileContentComponent,
   ContentContext,
   ContentParams,
 } from '../../../../../../shared/content';
 import { ComparePageContext } from '../../../context';
 
-export const ProcessorSummarySentence1 = compileContent({
+export const ProcessorSummarySentence1 = compileContentComponent({
   deps: [],
   component: (props) => <></>,
 });

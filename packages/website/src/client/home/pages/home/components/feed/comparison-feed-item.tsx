@@ -9,7 +9,7 @@ import {
 import { getCompanyLogoImagePath } from '../../../../../image';
 import { Card, Img } from '../../../../../shared/components';
 import {
-  compileContent,
+  compileContentComponent,
   ContentContext,
   ContentParams,
 } from '../../../../../shared/content';
@@ -191,7 +191,7 @@ const Subtitle: FunctionComponent<SubtitleProps> = (props) => {
   );
 };
 
-const SubtitleSentence1 = compileContent(
+const SubtitleSentence1 = compileContentComponent(
   {
     filters: [ComparisonFeedTag.ComparePerformance],
     deps: ['name1', 'name2'],

@@ -1,11 +1,11 @@
 import React from 'react';
 import {
-  compileContent,
+  compileContentComponent,
   ContentContext,
   ContentParams,
 } from '../../../../../shared/content';
 
-export const BenchmarksSummarySentence1 = compileContent({
+export const BenchmarksSummarySentence1 = compileContentComponent({
   deps: [],
   component: () => (
     <>
@@ -15,7 +15,7 @@ export const BenchmarksSummarySentence1 = compileContent({
   ),
 });
 
-export const BenchmarksSummarySentence2 = compileContent({
+export const BenchmarksSummarySentence2 = compileContentComponent({
   deps: [],
   component: () => (
     <>
@@ -25,7 +25,7 @@ export const BenchmarksSummarySentence2 = compileContent({
   ),
 });
 
-export const BenchmarksSummarySentence3 = compileContent({
+export const BenchmarksSummarySentence3 = compileContentComponent({
   deps: [],
   component: () => (
     <>

@@ -87,7 +87,7 @@ function hasRequiredParams(
   );
 }
 
-export function compileContent(...content: RawContent[]) {
+export function compileContentComponent(...content: RawContent[]) {
   const compiled: CompiledContent = [];
 
   for (let i = 0; i < content.length; ++i) {

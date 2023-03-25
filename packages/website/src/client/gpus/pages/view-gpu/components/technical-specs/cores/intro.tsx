@@ -1,12 +1,12 @@
 import React, { useContext } from 'react';
 import { getGpuName } from '../../../../../../gpus';
 import {
-  compileContent,
+  compileContentComponent,
   ContentContext,
 } from '../../../../../../shared/content';
 import { ViewPageContext } from '../../../context';
 
-export const CoresIntroSentence1 = compileContent({
+export const CoresIntroSentence1 = compileContentComponent({
   deps: ['longGpuName', 'shortGpuName'],
   component: (props) => (
     <>

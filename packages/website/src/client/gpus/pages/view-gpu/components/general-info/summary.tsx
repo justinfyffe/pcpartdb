@@ -1,14 +1,14 @@
 import React, { useContext } from 'react';
 import { formatGpuField, getGpuName } from '../../../../../gpus';
 import {
-  compileContent,
+  compileContentComponent,
   ContentContext,
   ContentParams,
 } from '../../../../../shared/content';
 import { formatOrdinalNumber } from '../../../../../shared/format';
 import { ViewPageContext } from '../../context';
 
-export const GeneralInfoSummarySentence1 = compileContent({
+export const GeneralInfoSummarySentence1 = compileContentComponent({
   deps: ['gpuName', 'architecture', 'launchWindow'],
   component: (props) => (
     <>
@@ -18,7 +18,7 @@ export const GeneralInfoSummarySentence1 = compileContent({
   ),
 });
 
-export const GeneralInfoSummarySentence2 = compileContent({
+export const GeneralInfoSummarySentence2 = compileContentComponent({
   deps: ['marketSegment', 'msrp'],
   component: (props) => (
     <>
@@ -28,7 +28,7 @@ export const GeneralInfoSummarySentence2 = compileContent({
   ),
 });
 
-export const GeneralInfoSummarySentence3 = compileContent({
+export const GeneralInfoSummarySentence3 = compileContentComponent({
   deps: ['performanceRank', 'valueRank'],
   component: (props) => (
     <>
@@ -39,7 +39,7 @@ export const GeneralInfoSummarySentence3 = compileContent({
   ),
 });
 
-export const GeneralInfoSummarySentence4 = compileContent({
+export const GeneralInfoSummarySentence4 = compileContentComponent({
   deps: ['valueRank'],
   component: (props) => (
     <>

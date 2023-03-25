@@ -1,7 +1,7 @@
 import { GpuSort } from '@pcpartdb/shared';
 import React, { FunctionComponent, useContext } from 'react';
 import {
-  compileContent,
+  compileContentComponent,
   ContentContext,
   ContentParams,
 } from '../../../../../shared/content';
@@ -11,7 +11,7 @@ interface ListTitleContentParams extends ContentParams {
   company?: string;
 }
 
-const TitleSentence1 = compileContent(
+const TitleSentence1 = compileContentComponent(
   {
     filters: [GpuSort.PerformanceRating],
     deps: ['company'],
@@ -36,7 +36,7 @@ const TitleSentence1 = compileContent(
   },
 );
 
-const SubtitleSentence1 = compileContent(
+const SubtitleSentence1 = compileContentComponent(
   {
     filters: [GpuSort.PerformanceRating],
     component: () => <>Sorted by highest performance benchmarks</>,

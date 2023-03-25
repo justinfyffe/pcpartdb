@@ -1,12 +1,12 @@
 import React, { useContext } from 'react';
 import { getGpuName } from '../../../../../../gpus';
 import {
-  compileContent,
+  compileContentComponent,
   ContentContext,
 } from '../../../../../../shared/content';
 import { ComparePageContext } from '../../../context';
 
-export const ProcessorIntroSentence1 = compileContent({
+export const ProcessorIntroSentence1 = compileContentComponent({
   deps: ['gpuName1', 'gpuName2'],
   component: (props) => (
     <>
