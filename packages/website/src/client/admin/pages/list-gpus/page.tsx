@@ -18,6 +18,7 @@ import {
   ButtonVariant,
   Pagination,
   PaginationResult,
+  Spinner,
   Table,
   TBody,
   Td,
@@ -31,6 +32,7 @@ export const AdminListGpusPage = (props: AdminListGpusViewModel) => {
   const router = useRouter();
   const [saved] = useState(router.query.saved === 'true');
   const [deleted] = useState(router.query.deleted === 'true');
+  const [refreshingRatings, setRefreshingRatings] = useState(false);
 
   const [gpus, setGpus] = useState(props.gpus);
   const [totalResults, setTotalResults] = useState(props.totalResults);
@@ -49,6 +51,12 @@ export const AdminListGpusPage = (props: AdminListGpusViewModel) => {
       return true;
     });
   }, [fetchGpus, router]);
+
+  const handleRefreshRatings = useCallback(async () => {
+    setRefreshingRatings(true);
+    await gpuService.refreshRatings();
+    setRefreshingRatings(false);
+  }, []);
 
   const updateQuery = useCallback(
     async (q: GpusQuery) => {
@@ -99,6 +107,13 @@ export const AdminListGpusPage = (props: AdminListGpusViewModel) => {
           <h1 className="font-semibold">GPUs</h1>
 
           <div className="flex gap-4">
+            <Button
+              variant={ButtonVariant.Default}
+              disabled={refreshingRatings}
+              onClick={() => handleRefreshRatings()}
+            >
+              Refresh Ratings
+            </Button>
             <Button
               href={getAdminImportGpusPath()}
               variant={ButtonVariant.Default}

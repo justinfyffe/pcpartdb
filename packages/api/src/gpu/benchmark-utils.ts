@@ -10,12 +10,15 @@ export function addPerformanceBenchmarks(
 ) {
   const performance = calculatePerformanceScore(benchmarks);
   if (performance != null) {
-    benchmarks.performanceScore = { value: performance };
+    benchmarks.performanceScore = {
+      value: performance,
+      meta: { fieldKey: 'performanceScore' },
+    };
   }
 
   const value = calculateValueScore(request, performance);
   if (value != null) {
-    benchmarks.valueScore = { value };
+    benchmarks.valueScore = { value, meta: { fieldKey: 'valueScore' } };
   }
 }
 

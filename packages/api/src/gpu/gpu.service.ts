@@ -161,6 +161,20 @@ export class GpuService {
     return await this.gpuRepository.autocompleteSpec(key, query, ctx);
   }
 
+  async refreshRatings(ctx: Context) {
+    const limit = 50;
+    const totalGpus = await this.count({}, ctx);
+    for (let i = 0; i < totalGpus; i += limit) {
+      const gpus = await this.list({ query: { offset: i, limit } }, ctx);
+
+      for (let j = 0; j < gpus.length; ++j) {
+        const gpu = gpus[j];
+        addPerformanceBenchmarks(gpu, gpu.benchmarks);
+        await this.update(gpu.id, gpu, ctx);
+      }
+    }
+  }
+
   private async populateRanks(gpus: Gpu[], ctx: Context) {
     if (gpus.length === 0) {
       return;

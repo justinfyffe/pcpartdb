@@ -138,6 +138,17 @@ export class GpuController {
     );
   }
 
+  @Post('refresh-ratings')
+  @UseGuards(StaffGuard)
+  async refreshRatings(@Ctx() ctx: Context) {
+    return await this.db.transaction(
+      async () => {
+        await this.gpuService.refreshRatings(ctx);
+      },
+      { ctx },
+    );
+  }
+
   @Post('scrape-details')
   @UseGuards(StaffGuard)
   async scrapeDetails(@Body() body: ScrapeGpuDetailsRequest) {

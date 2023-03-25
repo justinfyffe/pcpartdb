@@ -128,6 +128,9 @@ export function formatGpuField(
   if (fieldKey === 'shaderModelVersion' && typeof field.value === 'number') {
     return field.value.toFixed(1);
   }
+  if (fieldKey === 'valueScore' && typeof field.value === 'number') {
+    return field.value.toFixed(2);
+  }
 
   // Compute string to return
   let returnValue: string = null;
