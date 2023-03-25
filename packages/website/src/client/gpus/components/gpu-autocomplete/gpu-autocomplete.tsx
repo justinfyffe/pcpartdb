@@ -84,6 +84,7 @@ export const GpuAutocomplete = forwardRef<
       const selectedGpu = gpuCache.get(gpuId);
       setGpu(selectedGpu);
       onChange?.(gpuId);
+      inputRef?.current?.blur();
     },
     [gpuCache, onChange],
   );
