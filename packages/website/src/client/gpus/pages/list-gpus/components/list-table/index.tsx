@@ -1,5 +1,5 @@
-import { getViewGpuPath } from '@pcpartdb/shared';
-import React, { FunctionComponent, useContext } from 'react';
+import { getViewGpuPath, Gpu } from '@pcpartdb/shared';
+import React, { FunctionComponent, useContext, useMemo } from 'react';
 import { formatGpuField, getGpuName } from '../../../../../gpus';
 import {
   Table,
@@ -27,18 +27,39 @@ export const ListTable: FunctionComponent = () => {
 
       <TBody>
         {gpus.map((gpu) => (
-          <Tr key={gpu.id}>
-            <Td>
-              <a href={getViewGpuPath(gpu)} className="font-semibold">
-                {getGpuName(gpu)}
-              </a>
-            </Td>
-            <Td>{gpu.ranks?.performanceRank || '--'}</Td>
-            <Td>{gpu.ranks?.valueRank || '--'}</Td>
-            <Td>{formatGpuField(gpu.releaseDate) || '--'}</Td>
-          </Tr>
+          <ListTableRow key={gpu.id} gpu={gpu} />
         ))}
       </TBody>
     </Table>
+  );
+};
+
+interface ListTableRowProps {
+  gpu: Gpu;
+}
+
+const ListTableRow: FunctionComponent<ListTableRowProps> = (props) => {
+  const { gpu } = props;
+
+  const href = useMemo(() => getViewGpuPath(gpu), [gpu]);
+  const name = useMemo(() => getGpuName(gpu), [gpu]);
+  const performanceRank = gpu.ranks?.valueRank || '--';
+  const valueRank = gpu.ranks?.valueRank || '--';
+  const releaseDate = useMemo(
+    () => formatGpuField(gpu.releaseDate) || '--',
+    [gpu.releaseDate],
+  );
+
+  return (
+    <Tr>
+      <Td>
+        <a href={href} className="font-semibold">
+          {name}
+        </a>
+      </Td>
+      <Td>{performanceRank}</Td>
+      <Td>{valueRank}</Td>
+      <Td>{releaseDate}</Td>
+    </Tr>
   );
 };

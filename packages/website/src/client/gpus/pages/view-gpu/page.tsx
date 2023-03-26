@@ -4,7 +4,7 @@ import {
   getViewGpuPath,
   ViewGpuViewModel,
 } from '@pcpartdb/shared';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { getGpuName } from '../../../gpus';
 import { CompareGpusForm } from '../../../gpus/components';
 import { useGpuCache } from '../../../shared/cache';
@@ -26,12 +26,15 @@ export const ViewGpuPage = (props: ViewGpuViewModel) => {
   const { gpu, relatedGpus, relatedComparisons, contentData } = props;
   useGpuCache(gpu);
 
-  const context = createViewPageContextState({ gpu: gpu, contentData });
+  const context = createViewPageContextState({ gpu, contentData });
 
-  const pageTitle = getGpuName(gpu);
+  const pageTitle = useMemo(() => getGpuName(gpu), [gpu]);
   const seoTitle = `${pageTitle} - GPU specs, benchmarks, and value`;
-  const seoCanonical = getViewGpuPath(gpu);
-  const seoKeywords = [getGpuName(gpu)];
+  const seoCanonical = useMemo(() => getViewGpuPath(gpu), [gpu]);
+  const seoKeywords = useMemo(() => [getGpuName(gpu)], [gpu]);
+
+  const homeHref = useMemo(() => getHomePath(), []);
+  const listGpusHref = useMemo(() => getListGpusPath(), []);
 
   return (
     <ViewPageContext.Provider value={context}>
@@ -39,8 +42,8 @@ export const ViewGpuPage = (props: ViewGpuViewModel) => {
 
       <WebsiteLayout>
         <Breadcrumbs className="mb-4">
-          <Breadcrumb href={getHomePath()}>Home</Breadcrumb>
-          <Breadcrumb href={getListGpusPath()}>Graphics Cards</Breadcrumb>
+          <Breadcrumb href={homeHref}>Home</Breadcrumb>
+          <Breadcrumb href={listGpusHref}>Graphics Cards</Breadcrumb>
           <Breadcrumb>{pageTitle}</Breadcrumb>
         </Breadcrumbs>
 

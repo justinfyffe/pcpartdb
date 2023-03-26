@@ -1,5 +1,5 @@
 import { GpuBenchmarks, GpuField } from '@pcpartdb/shared';
-import React, { useContext } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { formatGpuField } from '../../../../../gpus/gpu-utils';
 import { Td, Tr } from '../../../../../shared/components';
 import { ViewPageContext } from '../../context';
@@ -20,12 +20,13 @@ export const BenchmarkRow = (props: BenchmarkRowProps) => {
   const { gpu } = useContext(ViewPageContext);
   const benchmark = gpu.benchmarks[key] as GpuField;
 
+  const label = LABELS[key];
+  const value = useMemo(() => formatGpuField(benchmark) || '--', [benchmark]);
+
   return (
     <Tr>
-      <Td className="text-left w-[50%]">
-        <>{LABELS[key]}</>
-      </Td>
-      <Td className="text-left w-[50%]">{formatGpuField(benchmark) || '--'}</Td>
+      <Td className="text-left w-[50%]">{label}</Td>
+      <Td className="text-left w-[50%]">{value}</Td>
     </Tr>
   );
 };

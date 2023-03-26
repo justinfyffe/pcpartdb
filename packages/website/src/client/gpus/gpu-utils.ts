@@ -1,4 +1,3 @@
-import { string } from '@hapi/joi';
 import {
   calculateDisplayGpuFieldValue,
   getUnitFormat,

@@ -1,5 +1,5 @@
 import { GpuSort } from '@pcpartdb/shared';
-import React, { FunctionComponent, useContext } from 'react';
+import React, { FunctionComponent, useContext, useMemo } from 'react';
 import {
   compileContentComponent,
   ContentComponentParams,
@@ -51,19 +51,23 @@ const SubtitleSentence = compileContentComponent(
 export const ListTitle: FunctionComponent = () => {
   const { query } = useContext(ListPageContext);
 
-  const filters = {
-    [query.orderBy?.sort ?? GpuSort.PerformanceRating]: true,
-  };
+  const contextValue = useMemo(() => {
+    const filters = {
+      [query.orderBy?.sort ?? GpuSort.PerformanceRating]: true,
+    };
 
-  const params: ListTitleContentParams = {
-    company:
-      query.filter?.company?.length === 1
-        ? formatGpuCompany(query.filter?.company[0])
-        : null,
-  };
+    const params: ListTitleContentParams = {
+      company:
+        query.filter?.company?.length === 1
+          ? formatGpuCompany(query.filter?.company[0])
+          : null,
+    };
+
+    return { filters, params };
+  }, [query.filter?.company, query.orderBy?.sort]);
 
   return (
-    <ContentContext.Provider value={{ filters, params }}>
+    <ContentContext.Provider value={contextValue}>
       <div>
         <h1 className="md:text-2xl text-3xl mb-0">
           <TitleSentence />
