@@ -3,7 +3,7 @@ import React, { FunctionComponent } from 'react';
 export type ContentFilters = string[] | Record<string, boolean>;
 export type ContentDependencies = string[];
 export type ContentComponentParams = Record<string, string | React.ReactNode>;
-export type ContentHookParams = Record<string, string>;
+export type ContentFunctionParams = Record<string, string>;
 
 export interface RawContentComponent {
   filters?: string[];
@@ -20,22 +20,22 @@ export interface CompiledContentComponentVariant {
   component: FunctionComponent<ContentComponentParams>;
 }
 
-export interface RawContentHook {
+export interface RawContentFunction {
   filters?: string[];
   deps?: string[];
-  hook: (props?: ContentHookParams) => string;
+  hook: (props?: ContentFunctionParams) => string;
 }
 
-export interface CompiledContentHookVariant {
+export interface CompiledContentFunctionVariant {
   filters?: string[];
   deps?: string[];
-  hook: (props?: ContentHookParams) => string;
+  hook: (props?: ContentFunctionParams) => string;
 }
 
-export type CompiledContentHookVariants = CompiledContentHookVariant[];
+export type CompiledContentFunctionVariants = CompiledContentFunctionVariant[];
 
-export type ContentHookFunction = (props?: {
+export type ContentFunction = (props?: {
   filters?: ContentFilters;
-  params?: ContentHookParams;
+  params?: ContentFunctionParams;
   required?: boolean;
 }) => string;

@@ -2,13 +2,11 @@
 X: Done and tested
 
 Immediate Tasks:
-    - Maybe remove /api from nginx config?
-      - Proxy middleware from nextjs should handle it.
-      - Keeps api server from being directly exposed
-    - maybe don't redirect missing tail "/"
     - clean up list options, count options
       - don't have "includeRanks" on repository, only on service.
     - relative performance and relative value should be filtering based on market segment
+
+  - replace contenthook with content function
 
   - use branches for each version, merge to master afterwards
   - folder structure for pages and components

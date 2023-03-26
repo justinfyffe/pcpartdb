@@ -1,16 +1,16 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { Content } from './content';
 import {
   CompiledContentComponentVariant,
   CompiledContentComponentVariants,
-  CompiledContentHookVariant,
-  CompiledContentHookVariants,
+  CompiledContentFunctionVariant,
+  CompiledContentFunctionVariants,
   ContentComponentParams,
   ContentFilters,
-  ContentHookFunction,
-  ContentHookParams,
+  ContentFunction,
+  ContentFunctionParams,
   RawContentComponent,
-  RawContentHook,
+  RawContentFunction,
 } from './content-types';
 
 interface ProcessContentComponentOptions {
@@ -20,10 +20,10 @@ interface ProcessContentComponentOptions {
   required?: boolean;
 }
 
-interface ProcessContentHookOptions {
-  variants: CompiledContentHookVariants;
+interface ProcessContentFunctionOptions {
+  variants: CompiledContentFunctionVariants;
   filters?: ContentFilters;
-  params?: ContentHookParams;
+  params?: ContentFunctionParams;
   required?: boolean;
 }
 
@@ -54,7 +54,7 @@ export function processContentComponent(
   );
 }
 
-export function processContentHook(options: ProcessContentHookOptions) {
+export function processContentFunction(options: ProcessContentFunctionOptions) {
   const { variants, filters, params, required } = options;
 
   for (let i = 0; i < variants.length; ++i) {
@@ -80,7 +80,7 @@ export function processContentHook(options: ProcessContentHookOptions) {
 }
 
 function hasRequiredFilters(
-  content: CompiledContentComponentVariant | CompiledContentHookVariant,
+  content: CompiledContentComponentVariant | CompiledContentFunctionVariant,
   filters?: ContentFilters,
 ) {
   if (content.filters == null || content.filters.length === 0) {
@@ -109,8 +109,8 @@ function hasRequiredFilters(
 }
 
 function hasRequiredParams(
-  content: CompiledContentComponentVariant | CompiledContentHookVariant,
-  params?: ContentComponentParams | ContentHookParams,
+  content: CompiledContentComponentVariant | CompiledContentFunctionVariant,
+  params?: ContentComponentParams | ContentFunctionParams,
 ) {
   if (content.deps == null || content.deps.length === 0) {
     return true;
@@ -147,10 +147,10 @@ export function compileContentComponent(...content: RawContentComponent[]) {
   }) => <Content variants={variants} {...props} />;
 }
 
-export function compileContentHook(
-  ...content: RawContentHook[]
-): ContentHookFunction {
-  const variants: CompiledContentHookVariants = [];
+export function compileContentFunction(
+  ...content: RawContentFunction[]
+): ContentFunction {
+  const variants: CompiledContentFunctionVariants = [];
 
   for (let i = 0; i < content.length; ++i) {
     const { filters, deps, hook } = content[i];
@@ -163,12 +163,10 @@ export function compileContentHook(
   }
 
   return (props?) => {
-    return useMemo(() => {
-      const filters = props.filters || [];
-      const params = props.params || {};
-      const required = props.required || false;
+    const filters = props.filters || [];
+    const params = props.params || {};
+    const required = props.required || false;
 
-      return processContentHook({ variants, filters, params, required });
-    }, [props]);
+    return processContentFunction({ variants, filters, params, required });
   };
 }

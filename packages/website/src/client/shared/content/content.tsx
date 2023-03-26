@@ -4,8 +4,8 @@ import {
   CompiledContentComponentVariants,
   ContentComponentParams,
   ContentFilters,
-  ContentHookFunction,
-  ContentHookParams,
+  ContentFunction,
+  ContentFunctionParams,
 } from './content-types';
 import { processContentComponent } from './content-utils';
 
@@ -18,18 +18,18 @@ export interface ContentComponentProps {
 }
 
 export interface ContentHookProps {
-  hook: ContentHookFunction;
+  function: ContentFunction;
 
   filters?: ContentFilters;
-  params?: ContentHookParams;
+  params?: ContentFunctionParams;
   required?: boolean;
 }
 
 export const Content: FunctionComponent<
   ContentComponentProps | ContentHookProps
 > = (props) => {
-  if ('hook' in props) {
-    return <ContentHook {...props} />;
+  if ('function' in props) {
+    return <ContentFunction {...props} />;
   } else {
     return <ContentComponent {...props} />;
   }
@@ -56,13 +56,13 @@ const ContentComponent: FunctionComponent<ContentComponentProps> = (props) => {
   return <>{component}</>;
 };
 
-const ContentHook: FunctionComponent<ContentHookProps> = (props) => {
-  const { hook } = props;
+const ContentFunction: FunctionComponent<ContentHookProps> = (props) => {
+  const { function: hook } = props;
 
   const context = useContext(ContentContext);
 
   const filters = props.filters || context.filters;
-  const params = props.params || (context.params as ContentHookParams);
+  const params = props.params || (context.params as ContentFunctionParams);
   const required = props.required || false;
 
   return <>{hook({ filters, params, required })}</>;

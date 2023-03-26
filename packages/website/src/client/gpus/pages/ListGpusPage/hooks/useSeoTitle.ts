@@ -1,23 +1,23 @@
 import { GpuSort } from '@pcpartdb/shared';
 import {
-  compileContentHook,
-  ContentHookParams,
+  compileContentFunction,
+  ContentFunctionParams,
 } from 'packages/website/src/client/shared/content';
 import { useMemo } from 'react';
 import { formatGpuCompany } from '../../../gpu-utils';
 import { ListPageContextProps } from '../context';
 
-const useSeoTitleContent = compileContentHook(
+const seoTitle = compileContentFunction(
   {
     filters: [GpuSort.PerformanceRating],
     deps: ['company'],
-    hook: (props: ContentHookParams) =>
+    hook: (props: ContentFunctionParams) =>
       `Best ${props.company} Graphics Cards by Performance`,
   },
   {
     filters: [GpuSort.ValueRating],
     deps: ['company'],
-    hook: (props: ContentHookParams) =>
+    hook: (props: ContentFunctionParams) =>
       `Best ${props.company} Graphics Cards by Value`,
   },
   {
@@ -33,7 +33,7 @@ const useSeoTitleContent = compileContentHook(
 export const useSeoTitle = (context: ListPageContextProps) => {
   const { query } = context;
 
-  const args = useMemo(() => {
+  return useMemo(() => {
     const filters = {
       [query.orderBy?.sort ?? GpuSort.PerformanceRating]: true,
     };
@@ -45,8 +45,6 @@ export const useSeoTitle = (context: ListPageContextProps) => {
           : null,
     };
 
-    return { filters, params };
+    return seoTitle({ filters, params });
   }, [query.filter?.company, query.orderBy?.sort]);
-
-  return useSeoTitleContent(args);
 };
