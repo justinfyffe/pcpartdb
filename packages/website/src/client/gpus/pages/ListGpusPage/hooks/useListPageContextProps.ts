@@ -1,19 +1,6 @@
 import { Gpu, GpusQuery } from '@pcpartdb/shared';
-import { createContext, useMemo } from 'react';
-
-export interface ListPageContextProps {
-  query?: GpusQuery;
-  updateQuery: (query: GpusQuery) => void;
-  gpus: Gpu[];
-  totalResults: number;
-}
-
-export const ListPageContext = createContext<ListPageContextProps>({
-  query: null,
-  updateQuery: null,
-  gpus: null,
-  totalResults: null,
-});
+import { useMemo } from 'react';
+import { ListPageContextProps } from '../context';
 
 export function useListPageContextProps(input: {
   query: GpusQuery;

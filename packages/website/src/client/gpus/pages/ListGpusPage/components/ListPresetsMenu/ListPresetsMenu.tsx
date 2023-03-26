@@ -3,7 +3,7 @@ import { getListGpusPath, ListGpusPresetSlug } from '@pcpartdb/shared';
 import React, { FunctionComponent, useMemo } from 'react';
 import { Menu, MenuLinkItem } from '../../../../../shared/components';
 import { classNames } from '../../../../../shared/ui';
-import { ListFilters } from '../list-filters';
+import { ListFilters } from '../ListFilters';
 
 interface ListPresetsMenuProps {
   includeFilters?: boolean;

@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from 'react';
 import { classNames } from '../../../../../shared/ui';
-import { ListFilterComnpany } from './list-filter-company';
-import { ListFilterSort } from './list-filter-sort';
+import { ListFilterComnpany } from './ListFilterCompany';
+import { ListFilterSort } from './ListFilterSort';
 
 interface ListFiltersProps {
   className?: string;

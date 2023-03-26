@@ -7,12 +7,12 @@ import {
 } from '@pcpartdb/shared';
 import { useRouter } from 'next/router';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { CompareGpusForm } from '../../../gpus/components';
-import { gpuService } from '../../../gpus/gpu-service';
 import { useGpuCache } from '../../../shared/cache';
 import { Breadcrumb, Breadcrumbs, Seo } from '../../../shared/components';
 import { WebsiteLayout } from '../../../shared/layouts';
 import { classNames } from '../../../shared/ui';
+import { CompareGpusForm } from '../../components';
+import { gpuService } from '../../gpu-service';
 import {
   ListFilters,
   ListPagination,
@@ -20,8 +20,8 @@ import {
   ListTable,
   ListTitle,
 } from './components';
-import { ListPageContext, useListPageContextProps } from './context';
-import { useSeoTitle } from './hooks';
+import { ListPageContext } from './context';
+import { useListPageContextProps, useSeoTitle } from './hooks';
 
 export const ListGpusPage = (props: ListGpusViewModel) => {
   useGpuCache(props.gpus);

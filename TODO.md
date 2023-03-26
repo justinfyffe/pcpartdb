@@ -12,6 +12,7 @@ Immediate Tasks:
 
   - use branches for each version, merge to master afterwards
   - folder structure for pages and components
+    - look at List GPUs page for example
     - <feature>/pages/<page-name>/components/
       - Components only used on the page for this feature.
     - <feature>/pages/<page-name>/hooks/
