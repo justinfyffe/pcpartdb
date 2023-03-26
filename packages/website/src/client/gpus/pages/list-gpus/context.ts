@@ -1,26 +1,28 @@
 import { Gpu, GpusQuery } from '@pcpartdb/shared';
-import { createContext } from 'react';
+import { createContext, useMemo } from 'react';
 
-interface ListPageContextState {
+export interface ListPageContextProps {
   query?: GpusQuery;
   updateQuery: (query: GpusQuery) => void;
   gpus: Gpu[];
 }
 
-export const ListPageContext = createContext<ListPageContextState>({
+export const ListPageContext = createContext<ListPageContextProps>({
   query: null,
   updateQuery: null,
   gpus: null,
 });
 
-export function createListPageContextState(input: {
+export function useListPageContextProps(input: {
   query: GpusQuery;
   updateQuery: (query: GpusQuery) => void;
   gpus: Gpu[];
 }) {
-  const query = { ...input.query };
-  const updateQuery = input.updateQuery;
-  const gpus = [...input.gpus];
+  return useMemo(() => {
+    const query = { ...input.query };
+    const updateQuery = input.updateQuery;
+    const gpus = [...input.gpus];
 
-  return { query, updateQuery, gpus } as ListPageContextState;
+    return { query, updateQuery, gpus } as ListPageContextProps;
+  }, [input.gpus, input.query, input.updateQuery]);
 }

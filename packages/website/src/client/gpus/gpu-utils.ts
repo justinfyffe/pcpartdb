@@ -1,3 +1,4 @@
+import { string } from '@hapi/joi';
 import {
   calculateDisplayGpuFieldValue,
   getUnitFormat,
@@ -24,7 +25,7 @@ export function getGpuName(gpu: Gpu, options?: GetGpuNameOptions) {
   }
 
   const includeCompany = options?.company ?? true;
-  const company = includeCompany ? gpu.company?.value ?? null : null;
+  const company = includeCompany ? formatGpuField(gpu.company) : null;
 
   return company != null ? `${company} ${gpu.name}` : gpu.name;
 }
@@ -62,6 +63,23 @@ export function getCompareGpusSlug(
 
 export function getShoppingUrl(gpu: Gpu) {
   return gpu.affiliateUrl ?? null;
+}
+
+export function formatGpuCompany(company: string) {
+  if (company == null) {
+    return null;
+  }
+
+  switch (company.toLowerCase()) {
+    case 'amd':
+      return 'AMD';
+    case 'intel':
+      return 'Intel';
+    case 'nvidia':
+      return 'NVIDIA';
+    default:
+      return company;
+  }
 }
 
 export function formatGpuDimensions(gpu: Gpu) {
@@ -104,32 +122,31 @@ export function formatGpuField(
   const fieldKey = meta?.fieldKey;
 
   // Handle special cases
-  if (fieldKey === 'launchPrice') {
-    return formatPrice(field.value as number, {
-      ...options,
-      currency: field.meta?.currency,
-    });
+  if (fieldKey === 'company' && typeof value === 'string') {
+    return formatGpuCompany(value);
+  } else if (fieldKey === 'launchPrice' && typeof value === 'number') {
+    return formatPrice(value, { ...options, currency: field.meta?.currency });
   }
-  if (fieldKey === 'slotWidth' && typeof field.value === 'number') {
-    return `${field.value}-slot`;
+  if (fieldKey === 'slotWidth' && typeof value === 'number') {
+    return `${value}-slot`;
   }
   if (fieldKey === 'marketSegment') {
     return formatMarketSegment(value as MarketSegmentValue);
   }
-  if (fieldKey === 'releaseDate') {
-    return formatDate(value as string, { formatter: options?.dateFormatter });
+  if (fieldKey === 'releaseDate' && typeof value === 'string') {
+    return formatDate(value, { formatter: options?.dateFormatter });
   }
-  if (fieldKey === 'openClVersion' && typeof field.value === 'number') {
-    return field.value.toFixed(1);
+  if (fieldKey === 'openClVersion' && typeof value === 'number') {
+    return value.toFixed(1);
   }
-  if (fieldKey === 'openGlVersion' && typeof field.value === 'number') {
-    return field.value.toFixed(1);
+  if (fieldKey === 'openGlVersion' && typeof value === 'number') {
+    return value.toFixed(1);
   }
-  if (fieldKey === 'shaderModelVersion' && typeof field.value === 'number') {
-    return field.value.toFixed(1);
+  if (fieldKey === 'shaderModelVersion' && typeof value === 'number') {
+    return value.toFixed(1);
   }
-  if (fieldKey === 'valueScore' && typeof field.value === 'number') {
-    return field.value.toFixed(2);
+  if (fieldKey === 'valueScore' && typeof value === 'number') {
+    return value.toFixed(2);
   }
 
   // Compute string to return

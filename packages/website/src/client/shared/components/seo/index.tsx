@@ -1,6 +1,6 @@
 import { WEBSITE_NAME, WEBSITE_URL } from '@pcpartdb/shared';
 import Head from 'next/head';
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useMemo } from 'react';
 
 const BASE_KEYWORDS = [
   'PC Part DB',
@@ -43,20 +43,33 @@ function getSeoCanonical(path: string) {
 export const Seo: FunctionComponent<SeoProps> = (props) => {
   const { title, keywords, description, robots, canonical } = props;
 
+  const seoTitle = useMemo(() => getSeoTitle(title), [title]);
+  const seoKeywords = useMemo(
+    () => getSeoKeywords(...keywords).join(', '),
+    [keywords],
+  );
+  const seoRobots = useMemo(() => robots?.join(','), [robots]);
+  const seoCanonical = useMemo(() => getSeoCanonical(canonical), [canonical]);
+
   return (
     <Head>
-      {title && <title>{getSeoTitle(title)}</title>}
+      {title != null ? (
+        <title key="title">{seoTitle}</title>
+      ) : (
+        <title key="title">{WEBSITE_NAME}</title>
+      )}
       {keywords && (
-        <meta
-          name="keywords"
-          content={getSeoKeywords(...keywords).join(', ')}
-        />
+        <meta name="keywords" content={seoKeywords} key="metaKeywords" />
       )}
-      {description && <meta name="description" content={description} />}
+      {description && (
+        <meta name="description" content={description} key="metaDescription" />
+      )}
       {robots && robots.length > 0 && (
-        <meta name="robots" content={robots.join(',')} />
+        <meta name="robots" content={seoRobots} key="metaRobots" />
       )}
-      {canonical && <link rel="canonical" href={getSeoCanonical(canonical)} />}
+      {canonical && (
+        <link rel="canonical" href={seoCanonical} key="linkCanonical" />
+      )}
     </Head>
   );
 };

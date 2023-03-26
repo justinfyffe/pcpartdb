@@ -2,27 +2,28 @@ import { GpuSort } from '@pcpartdb/shared';
 import React, { FunctionComponent, useContext } from 'react';
 import {
   compileContentComponent,
+  ContentComponentParams,
   ContentContext,
-  ContentParams,
 } from '../../../../../shared/content';
+import { formatGpuCompany } from '../../../../gpu-utils';
 import { ListPageContext } from '../../context';
 
-interface ListTitleContentParams extends ContentParams {
+interface ListTitleContentParams extends ContentComponentParams {
   company?: string;
 }
 
-const TitleSentence1 = compileContentComponent(
+const TitleSentence = compileContentComponent(
   {
     filters: [GpuSort.PerformanceRating],
     deps: ['company'],
-    component: (props: ContentParams) => (
+    component: (props: ListTitleContentParams) => (
       <>Best {props.company} graphics cards by performance</>
     ),
   },
   {
     filters: [GpuSort.ValueRating],
     deps: ['company'],
-    component: (props: ContentParams) => (
+    component: (props: ListTitleContentParams) => (
       <>Best {props.company} graphics cards by value</>
     ),
   },
@@ -36,7 +37,7 @@ const TitleSentence1 = compileContentComponent(
   },
 );
 
-const SubtitleSentence1 = compileContentComponent(
+const SubtitleSentence = compileContentComponent(
   {
     filters: [GpuSort.PerformanceRating],
     component: () => <>Sorted by highest performance benchmarks</>,
@@ -57,7 +58,7 @@ export const ListTitle: FunctionComponent = () => {
   const params: ListTitleContentParams = {
     company:
       query.filter?.company?.length === 1
-        ? query.filter?.company[0].toUpperCase()
+        ? formatGpuCompany(query.filter?.company[0])
         : null,
   };
 
@@ -65,11 +66,11 @@ export const ListTitle: FunctionComponent = () => {
     <ContentContext.Provider value={{ filters, params }}>
       <div>
         <h1 className="md:text-2xl text-3xl mb-0">
-          <TitleSentence1 />
+          <TitleSentence />
         </h1>
 
         <p className="text-content-dimmed mb-0">
-          <SubtitleSentence1 />
+          <SubtitleSentence />
         </p>
       </div>
     </ContentContext.Provider>

@@ -3,7 +3,7 @@ import { formatGpuField, getGpuName } from '../../../../../../gpus';
 import {
   compileContentComponent,
   ContentContext,
-  ContentParams,
+  ContentComponentParams,
 } from '../../../../../../shared/content';
 import { ViewPageContext } from '../../../context';
 
@@ -22,7 +22,7 @@ export const ProcessorSummary = () => {
 
   const { specs } = gpu;
 
-  const params: ContentParams = {
+  const params: ContentComponentParams = {
     gpuName: getGpuName(gpu),
     architecture: formatGpuField(specs.architecture),
     processSize: formatGpuField(specs.processSize),

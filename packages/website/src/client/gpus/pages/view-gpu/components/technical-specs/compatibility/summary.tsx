@@ -7,7 +7,7 @@ import {
 import {
   compileContentComponent,
   ContentContext,
-  ContentParams,
+  ContentComponentParams,
 } from '../../../../../../shared/content';
 import { ViewPageContext } from '../../../context';
 
@@ -26,7 +26,7 @@ export const CompatibilitySummarySentence1 = compileContentComponent({
 export const CompatibilitySummary = () => {
   const { gpu } = useContext(ViewPageContext);
 
-  const params: ContentParams = {
+  const params: ContentComponentParams = {
     gpuName: getGpuName(gpu),
     slotWidth: formatGpuField(gpu.specs?.slotWidth),
     dimensions: formatGpuDimensions(gpu),

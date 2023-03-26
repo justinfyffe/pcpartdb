@@ -1,25 +1,39 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Content } from './content';
 import {
-  CompiledContent,
-  CompiledContentVariant,
+  CompiledContentComponentVariant,
+  CompiledContentComponentVariants,
+  CompiledContentHookVariant,
+  CompiledContentHookVariants,
+  ContentComponentParams,
   ContentFilters,
-  ContentParams,
-  RawContent,
+  ContentHookFunction,
+  ContentHookParams,
+  RawContentComponent,
+  RawContentHook,
 } from './content-types';
 
-interface ProcessContentOptions {
-  compiledContent: CompiledContent;
+interface ProcessContentComponentOptions {
+  variants: CompiledContentComponentVariants;
   filters?: ContentFilters;
-  params?: ContentParams;
+  params?: ContentComponentParams;
   required?: boolean;
 }
 
-export function processContent(options: ProcessContentOptions) {
-  const { compiledContent, filters, params, required } = options;
+interface ProcessContentHookOptions {
+  variants: CompiledContentHookVariants;
+  filters?: ContentFilters;
+  params?: ContentHookParams;
+  required?: boolean;
+}
 
-  for (let i = 0; i < compiledContent.length; ++i) {
-    const content = compiledContent[i];
+export function processContentComponent(
+  options: ProcessContentComponentOptions,
+) {
+  const { variants, filters, params, required } = options;
+
+  for (let i = 0; i < variants.length; ++i) {
+    const content = variants[i];
     if (!hasRequiredFilters(content, filters)) {
       continue;
     }
@@ -40,8 +54,33 @@ export function processContent(options: ProcessContentOptions) {
   );
 }
 
+export function processContentHook(options: ProcessContentHookOptions) {
+  const { variants, filters, params, required } = options;
+
+  for (let i = 0; i < variants.length; ++i) {
+    const content = variants[i];
+    if (!hasRequiredFilters(content, filters)) {
+      continue;
+    }
+
+    if (!hasRequiredParams(content, params)) {
+      continue;
+    }
+
+    return content.hook(params);
+  }
+
+  if (!required) {
+    return '';
+  }
+
+  throw new Error(
+    'Cannot find content variant, but one is required. Check filters and parameters.',
+  );
+}
+
 function hasRequiredFilters(
-  content: CompiledContentVariant,
+  content: CompiledContentComponentVariant | CompiledContentHookVariant,
   filters?: ContentFilters,
 ) {
   if (content.filters == null || content.filters.length === 0) {
@@ -70,8 +109,8 @@ function hasRequiredFilters(
 }
 
 function hasRequiredParams(
-  content: CompiledContentVariant,
-  params?: ContentParams,
+  content: CompiledContentComponentVariant | CompiledContentHookVariant,
+  params?: ContentComponentParams | ContentHookParams,
 ) {
   if (content.deps == null || content.deps.length === 0) {
     return true;
@@ -87,13 +126,13 @@ function hasRequiredParams(
   );
 }
 
-export function compileContentComponent(...content: RawContent[]) {
-  const compiled: CompiledContent = [];
+export function compileContentComponent(...content: RawContentComponent[]) {
+  const variants: CompiledContentComponentVariants = [];
 
   for (let i = 0; i < content.length; ++i) {
     const { filters, deps, component } = content[i];
 
-    compiled.push({
+    variants.push({
       filters: filters || [],
       deps: deps || [],
       component,
@@ -103,7 +142,33 @@ export function compileContentComponent(...content: RawContent[]) {
   // eslint-disable-next-line react/display-name
   return (props: {
     filters?: ContentFilters;
-    params?: ContentParams;
+    params?: ContentComponentParams;
     required?: boolean;
-  }) => <Content compiledContent={compiled} {...props} />;
+  }) => <Content variants={variants} {...props} />;
+}
+
+export function compileContentHook(
+  ...content: RawContentHook[]
+): ContentHookFunction {
+  const variants: CompiledContentHookVariants = [];
+
+  for (let i = 0; i < content.length; ++i) {
+    const { filters, deps, hook } = content[i];
+
+    variants.push({
+      filters: filters || [],
+      deps: deps || [],
+      hook,
+    });
+  }
+
+  return (props?) => {
+    return useMemo(() => {
+      const filters = props.filters || [];
+      const params = props.params || {};
+      const required = props.required || false;
+
+      return processContentHook({ variants, filters, params, required });
+    }, [props]);
+  };
 }

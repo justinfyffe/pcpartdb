@@ -7,7 +7,7 @@ import { Card, Img } from '../../../../../shared/components';
 import {
   compileContentComponent,
   ContentContext,
-  ContentParams,
+  ContentComponentParams,
 } from '../../../../../shared/content';
 import { classNames } from '../../../../../shared/ui';
 
@@ -154,7 +154,7 @@ interface SubtitleProps {
 const Subtitle: FunctionComponent<SubtitleProps> = (props) => {
   const { gpu, tag } = props;
 
-  const params: ContentParams = useMemo(
+  const params: ContentComponentParams = useMemo(
     () => ({
       name: getGpuName(gpu, { company: false }),
     }),

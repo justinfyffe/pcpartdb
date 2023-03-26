@@ -3,7 +3,7 @@ import { formatGpuField } from '../../../../../../gpus';
 import {
   compileContentComponent,
   ContentContext,
-  ContentParams,
+  ContentComponentParams,
 } from '../../../../../../shared/content';
 import { ViewPageContext } from '../../../context';
 
@@ -27,7 +27,7 @@ export const MemorySummarySentence2 = compileContentComponent({
 export const MemorySummary = () => {
   const { gpu } = useContext(ViewPageContext);
 
-  const params: ContentParams = {
+  const params: ContentComponentParams = {
     architecture: formatGpuField(gpu.specs?.architecture),
     memoryClock: formatGpuField(gpu.specs?.memoryClock),
     memoryBandwidth: formatGpuField(gpu.specs?.memoryBandwidth),

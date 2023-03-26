@@ -1,9 +1,13 @@
 import { createContext } from 'react';
-import { ContentFilters, ContentParams } from './content-types';
+import {
+  ContentComponentParams,
+  ContentFilters,
+  ContentHookParams,
+} from './content-types';
 
 interface ContentContextState {
   filters?: ContentFilters;
-  params?: ContentParams;
+  params?: ContentComponentParams | ContentHookParams;
 }
 
 export const ContentContext = createContext<ContentContextState>({});

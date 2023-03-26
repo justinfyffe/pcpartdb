@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import {
   compileContentComponent,
   ContentContext,
-  ContentParams,
+  ContentComponentParams,
 } from '../../../../../../shared/content';
 import { ComparePageContext } from '../../../context';
 
@@ -14,7 +14,7 @@ export const CompatibilitySummarySentence1 = compileContentComponent({
 export const CompatibillitySummary = () => {
   const { comparison } = useContext(ComparePageContext);
 
-  const params: ContentParams = {};
+  const params: ContentComponentParams = {};
 
   return (
     <ContentContext.Provider value={{ params }}>

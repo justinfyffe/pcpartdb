@@ -2,7 +2,7 @@ import React from 'react';
 import {
   compileContentComponent,
   ContentContext,
-  ContentParams,
+  ContentComponentParams,
 } from '../../../../../shared/content';
 
 export const BenchmarksSummarySentence1 = compileContentComponent({
@@ -37,7 +37,7 @@ export const BenchmarksSummarySentence3 = compileContentComponent({
 });
 
 export const BenchmarksSummary = () => {
-  const params: ContentParams = {};
+  const params: ContentComponentParams = {};
 
   return (
     <ContentContext.Provider value={{ params }}>

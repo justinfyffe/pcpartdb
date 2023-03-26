@@ -3,7 +3,7 @@ import { formatGpuField, getGpuName } from '../../../../../gpus';
 import {
   compileContentComponent,
   ContentContext,
-  ContentParams,
+  ContentComponentParams,
 } from '../../../../../shared/content';
 import { formatOrdinalNumber } from '../../../../../shared/format';
 import { ViewPageContext } from '../../context';
@@ -53,7 +53,7 @@ export const GeneralInfoSummary = () => {
 
   const { specs, ranks } = gpu;
 
-  const params: ContentParams = {
+  const params: ContentComponentParams = {
     gpuName: getGpuName(gpu),
     architecture: formatGpuField(specs.architecture),
     marketSegment: formatGpuField(gpu.marketSegment),

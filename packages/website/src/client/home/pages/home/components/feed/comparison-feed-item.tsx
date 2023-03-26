@@ -10,8 +10,8 @@ import { getCompanyLogoImagePath } from '../../../../../image';
 import { Card, Img } from '../../../../../shared/components';
 import {
   compileContentComponent,
+  ContentComponentParams,
   ContentContext,
-  ContentParams,
 } from '../../../../../shared/content';
 import { classNames } from '../../../../../shared/ui';
 
@@ -176,7 +176,7 @@ const Subtitle: FunctionComponent<SubtitleProps> = (props) => {
   const { comparison, tag } = props;
   const [gpu1, gpu2] = comparison;
 
-  const params: ContentParams = useMemo(
+  const params: ContentComponentParams = useMemo(
     () => ({
       name1: getGpuName(gpu1, { company: false }),
       name2: getGpuName(gpu2, { company: false }),

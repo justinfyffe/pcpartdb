@@ -2,8 +2,8 @@ import React, { useContext } from 'react';
 import { getGpuName } from '../../../../../../gpus';
 import {
   compileContentComponent,
+  ContentComponentParams,
   ContentContext,
-  ContentParams,
 } from '../../../../../../shared/content';
 import { ViewPageContext } from '../../../context';
 
@@ -15,7 +15,7 @@ export const ApiSummarySentence1 = compileContentComponent({
 export const ApiSummary = () => {
   const { gpu } = useContext(ViewPageContext);
 
-  const params: ContentParams = {
+  const params: ContentComponentParams = {
     gpuName: getGpuName(gpu),
   };
 

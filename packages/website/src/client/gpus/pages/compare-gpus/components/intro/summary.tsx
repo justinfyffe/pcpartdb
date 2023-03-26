@@ -3,13 +3,13 @@ import { getGpuName, getShoppingUrl } from '../../../../../gpus';
 import {
   compileContentComponent,
   ContentContext,
-  ContentParams,
+  ContentComponentParams,
 } from '../../../../../shared/content';
 import { ComparePageContext } from '../../context';
 
 export const IntroSentence1 = compileContentComponent({
   deps: ['gpuName1', 'shoppingUrl1', 'gpuName2', 'shoppingUrl2'],
-  component: (props: ContentParams) => (
+  component: (props: ContentComponentParams) => (
     <>
       View the current availability and price for the{' '}
       <a href={props.shoppingUrl1 as string}>{props.gpuName1}</a> and{' '}
@@ -31,7 +31,7 @@ export const IntroSummary = () => {
   const { comparison } = useContext(ComparePageContext);
   const [gpu1, gpu2] = comparison;
 
-  const params: ContentParams = {
+  const params: ContentComponentParams = {
     gpuName1: getGpuName(gpu1),
     shoppingUrl1: getShoppingUrl(gpu1),
     gpuName2: getGpuName(gpu2),

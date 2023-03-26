@@ -25,7 +25,8 @@ import {
   ListTable,
   ListTitle,
 } from './components';
-import { createListPageContextState, ListPageContext } from './context';
+import { ListPageContext, useListPageContextProps } from './context';
+import { useSeoTitle } from './hooks';
 
 export const ListGpusPage = (props: ListGpusViewModel) => {
   useGpuCache(props.gpus);
@@ -77,10 +78,8 @@ export const ListGpusPage = (props: ListGpusViewModel) => {
     [query],
   );
 
-  const context = createListPageContextState({ query, updateQuery, gpus });
-
-  const pageTitle = 'Graphics Cards';
-  const seoTitle = `${pageTitle}`;
+  const context = useListPageContextProps({ query, updateQuery, gpus });
+  const seoTitle = useSeoTitle(context);
   const seoKeywords: string[] = [];
 
   return (
@@ -90,7 +89,7 @@ export const ListGpusPage = (props: ListGpusViewModel) => {
       <ListPageContext.Provider value={context}>
         <Breadcrumbs className="mb-4">
           <Breadcrumb href={getHomePath()}>Home</Breadcrumb>
-          <Breadcrumb>{pageTitle}</Breadcrumb>
+          <Breadcrumb>Graphics Cards</Breadcrumb>
         </Breadcrumbs>
 
         <section className="flex flex-col gap-8 justify-center mb-4">

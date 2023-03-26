@@ -3,7 +3,7 @@ import { formatGpuField } from '../../../../../../gpus';
 import {
   compileContentComponent,
   ContentContext,
-  ContentParams,
+  ContentComponentParams,
 } from '../../../../../../shared/content';
 import { ViewPageContext } from '../../../context';
 
@@ -32,7 +32,7 @@ export const CoresSummarySentence2 = compileContentComponent({
 export const CoresSummary = () => {
   const { gpu } = useContext(ViewPageContext);
 
-  const params: ContentParams = {
+  const params: ContentComponentParams = {
     cores: formatGpuField(gpu.specs?.shaderUnitsCudaCores),
     coreClockSpeedBase: formatGpuField(gpu.specs?.coreClockSpeedBase),
     fp32Performance: formatGpuField(gpu.specs?.fp32Performance),

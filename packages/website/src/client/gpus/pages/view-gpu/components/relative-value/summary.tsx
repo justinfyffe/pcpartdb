@@ -3,7 +3,7 @@ import { formatGpuField, getGpuName } from '../../../../../gpus';
 import {
   compileContentComponent,
   ContentContext,
-  ContentParams,
+  ContentComponentParams,
 } from '../../../../../shared/content';
 import {
   DateFormatter,
@@ -35,7 +35,7 @@ export const ValueSummarySentence2 = compileContentComponent({
 export const ValueSummary = () => {
   const { gpu, contentData } = useContext(ViewPageContext);
 
-  const params: ContentParams = {
+  const params: ContentComponentParams = {
     gpuName: getGpuName(gpu),
     company: formatGpuField(gpu.company),
     architecture: formatGpuField(gpu.specs?.architecture),
