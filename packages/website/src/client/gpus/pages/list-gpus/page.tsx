@@ -6,21 +6,16 @@ import {
   ListGpusViewModel,
 } from '@pcpartdb/shared';
 import { useRouter } from 'next/router';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { CompareGpusForm } from '../../../gpus/components';
 import { gpuService } from '../../../gpus/gpu-service';
 import { useGpuCache } from '../../../shared/cache';
-import {
-  Breadcrumb,
-  Breadcrumbs,
-  Pagination,
-  PaginationResult,
-  Seo,
-} from '../../../shared/components';
+import { Breadcrumb, Breadcrumbs, Seo } from '../../../shared/components';
 import { WebsiteLayout } from '../../../shared/layouts';
 import { classNames } from '../../../shared/ui';
 import {
   ListFilters,
+  ListPagination,
   ListPresetsMenu,
   ListTable,
   ListTitle,
@@ -35,9 +30,6 @@ export const ListGpusPage = (props: ListGpusViewModel) => {
   const [gpus, setGpus] = useState(props.gpus);
   const [totalResults, setTotalResults] = useState(props.totalResults);
   const [query, setQuery] = useState(props.query);
-  const [seoCanonical, setSeoCanonical] = useState(() =>
-    getListGpusPath(query),
-  );
 
   const fetchGpus = useCallback(async (q: GpusQuery) => {
     const response = await gpuService.list({ query: q });
@@ -58,29 +50,20 @@ export const ListGpusPage = (props: ListGpusViewModel) => {
       await fetchGpus(q);
       const url = getListGpusPath(q);
       router.push(url, undefined, { shallow: true });
-      setSeoCanonical(url);
     },
     [fetchGpus, router],
   );
 
-  const paginationPageClick = useCallback(
-    (result: PaginationResult, evt: React.MouseEvent) => {
-      evt.preventDefault();
-      evt.stopPropagation();
-      updateQuery({ ...query, offset: result.offset, limit: result.limit });
-    },
-    [query, updateQuery],
-  );
+  const context = useListPageContextProps({
+    query,
+    updateQuery,
+    gpus,
+    totalResults,
+  });
 
-  const paginationHrefBuilder = useCallback(
-    (result: PaginationResult) =>
-      getListGpusPath({ ...query, offset: result.offset, limit: result.limit }),
-    [query],
-  );
-
-  const context = useListPageContextProps({ query, updateQuery, gpus });
   const seoTitle = useSeoTitle(context);
   const seoKeywords: string[] = [];
+  const seoCanonical = useMemo(() => getListGpusPath(query), [query]);
 
   return (
     <WebsiteLayout>
@@ -107,15 +90,7 @@ export const ListGpusPage = (props: ListGpusViewModel) => {
             <section className="flex gap-4 items-start">
               <div className="flex-1 flex flex-col gap-4">
                 <ListTable />
-                <Pagination
-                  resultsOffset={query.offset}
-                  resultsPerPage={query.limit}
-                  totalResults={totalResults}
-                  onPageClick={paginationPageClick}
-                  hrefBuilder={paginationHrefBuilder}
-                  neighborPagesClassName="lg:hidden"
-                  hidePages={false}
-                />
+                <ListPagination />
               </div>
 
               <aside className="md:hidden border-px">

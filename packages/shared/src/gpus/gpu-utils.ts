@@ -23,7 +23,7 @@ export function generateGpuSlug(name: string, company: string) {
 }
 
 export function generateGpusQueryFromPath(path: string) {
-  const presetRegex = getListGpusPath('[a-zA-Z0-9-_]+');
+  const presetRegex = getListGpusPath('([a-zA-Z0-9-_]+)');
   const matches = path.match(presetRegex);
   const preset = matches != null && matches.length > 1 ? matches[1] : null;
 
