@@ -1,6 +1,5 @@
 import { getViewGpuPath, Gpu } from '@pcpartdb/shared';
 import React, { FunctionComponent, useContext, useMemo } from 'react';
-import { formatGpuField, getGpuName } from '../../../../../gpus';
 import {
   Table,
   TBody,
@@ -9,6 +8,7 @@ import {
   THead,
   Tr,
 } from '../../../../../shared/components';
+import { formatGpuField, getGpuName } from '../../../..';
 import { ListPageContext } from '../../context';
 
 export const ListTable: FunctionComponent = () => {

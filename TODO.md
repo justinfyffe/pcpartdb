@@ -12,8 +12,16 @@ Immediate Tasks:
 
   - use branches for each version, merge to master afterwards
   - folder structure for pages and components
-    - <feature>/pages/<page-name>/components
-    - <feature>/shared/components/
+    - <feature>/pages/<page-name>/components/
+      - Components only used on the page for this feature.
+    - <feature>/pages/<page-name>/hooks/
+      - Hooks only used on the page for this feature.
+    - <feature>/components/
+      - Components used across multiple pages for this feature.
+    - <feature>/hooks/
+      - Hooks used across multiple pages for this feature.
+    - TODO: where to place utils and services?
+    - folders and files should use PascalCase and camelCase except for package folders
   - Scraping improvements
     - Add download date when importing
     - Allow ability to overwrite existing gpus

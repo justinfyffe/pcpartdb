@@ -1,1 +1,1 @@
-export * from './seo-title';
+export * from './useSeoTitle';
