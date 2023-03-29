@@ -10,6 +10,7 @@ import { mapToGpuImageDtos, mapToGpuImageEntities } from './gpu-image.mapper';
 import { mapToGpuSpecsDto, mapToGpuSpecsEntity } from './gpu-specs.mapper';
 
 interface MapToDtoOptions {
+  fields?: Set<string>;
   includeSources?: boolean;
 }
 

@@ -4,6 +4,7 @@ import { GpuBenchmarksEntity } from './gpu.entity';
 import { mapToGpuFieldDto, mapToGpuFieldEntity } from './gpu-field.mapper';
 
 interface MapToDtoOptions {
+  fields?: Set<string>;
   includeSources?: boolean;
 }
 

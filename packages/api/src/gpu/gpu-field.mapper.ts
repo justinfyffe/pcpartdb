@@ -2,6 +2,7 @@ import { GpuField, GpuFieldMeta } from '@pcpartdb/shared';
 import { GpuFieldsMetaJson } from './gpu.entity';
 
 interface MapToDtoOptions {
+  fields?: Set<string>;
   includeSources?: boolean;
 }
 
@@ -14,6 +15,10 @@ export function mapToGpuFieldDto<
   options?: MapToDtoOptions,
 ): GpuField<TReturn> {
   if (entity[key as string] == null) {
+    return null;
+  }
+
+  if (options?.fields != null && !options?.fields.has(String(key))) {
     return null;
   }
 

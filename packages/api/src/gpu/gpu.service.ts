@@ -23,6 +23,7 @@ interface CountOptions {
 interface ListOptions {
   query?: GpusQuery;
 
+  fields?: string[];
   includeImages?: boolean;
   includeRanks?: boolean;
 }
