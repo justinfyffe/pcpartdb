@@ -127,7 +127,7 @@ export function formatGpuField(
     return formatPrice(value, { ...options, currency: field.meta?.currency });
   }
   if (fieldKey === 'slotWidth' && typeof value === 'number') {
-    return `${value}-slot`;
+    return `${value}`;
   }
   if (fieldKey === 'marketSegment') {
     return formatMarketSegment(value as MarketSegmentValue);

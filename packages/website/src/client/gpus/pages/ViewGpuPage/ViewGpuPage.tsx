@@ -15,7 +15,7 @@ import {
   Benchmarks,
   GeneralInfo,
   Highlights,
-  Intro,
+  Overview,
   RelativePerformance,
   RelativeValue,
   TechnicalSpecs,
@@ -73,7 +73,7 @@ export const ViewGpuPage = (props: ViewGpuViewModel) => {
               <Highlights className="flex-1" />
             </section>
 
-            <Intro />
+            <Overview />
             <GeneralInfo />
             <RelativePerformance />
             <RelativeValue />

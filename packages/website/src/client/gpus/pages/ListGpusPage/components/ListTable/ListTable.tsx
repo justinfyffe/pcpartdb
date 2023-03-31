@@ -19,9 +19,9 @@ export const ListTable: FunctionComponent = () => {
       <THead>
         <Tr>
           <Th>GPU</Th>
-          <Th>Performance Rank</Th>
-          <Th>Value Rank</Th>
-          <Th>Release Date</Th>
+          <Th className="text-right">Performance Rating</Th>
+          <Th className="text-right">Performance Per Dollar</Th>
+          <Th className="text-right">Release Date</Th>
         </Tr>
       </THead>
 
@@ -44,11 +44,11 @@ const ListTableRow: FunctionComponent<ListTableRowProps> = (props) => {
   const href = useMemo(() => getViewGpuPath(gpu), [gpu]);
   const name = useMemo(() => getGpuName(gpu), [gpu]);
   const performance = useMemo(() => {
-    return gpu.ranks?.performanceRank || '--';
-  }, [gpu.ranks?.performanceRank]);
-  const value = useMemo(() => {
-    return gpu.ranks?.valueRank || '--';
-  }, [gpu.ranks?.valueRank]);
+    return formatGpuField(gpu.benchmarks?.performanceScore) || '--';
+  }, [gpu.benchmarks?.performanceScore]);
+  const performancePerDollar = useMemo(() => {
+    return formatGpuField(gpu.benchmarks?.valueScore) || '--';
+  }, [gpu.benchmarks?.valueScore]);
   const releaseDate = useMemo(
     () => formatGpuField(gpu.releaseDate) || '--',
     [gpu.releaseDate],
@@ -61,9 +61,9 @@ const ListTableRow: FunctionComponent<ListTableRowProps> = (props) => {
           {name}
         </a>
       </Td>
-      <Td>{performance}</Td>
-      <Td>{value}</Td>
-      <Td>{releaseDate}</Td>
+      <Td className="text-right">{performance}</Td>
+      <Td className="text-right">{performancePerDollar}</Td>
+      <Td className="text-right">{releaseDate}</Td>
     </Tr>
   );
 };
