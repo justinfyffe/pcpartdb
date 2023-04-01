@@ -26,7 +26,6 @@ export const PowerSupplyBlurb = () => {
       company: formatGpuField(gpu.company),
       gpuName: getGpuName(gpu),
       psu: formatGpuField(gpu.specs?.suggestedPsu),
-      tdp: formatGpuField(gpu.specs?.thermalDesignPower),
     };
 
     return { params };
@@ -36,8 +35,6 @@ export const PowerSupplyBlurb = () => {
     <ContentContext.Provider value={context}>
       <p>
         <PowerSupplyBlurbSentence1 />
-
-        {/* Blurb about TDP */}
       </p>
     </ContentContext.Provider>
   );

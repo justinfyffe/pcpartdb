@@ -3,7 +3,9 @@ import { getGpuName } from '../../../../utils';
 import { ViewPageContext } from '../../context';
 import { DimensionsBlurb } from './DimensionsBlurb';
 import { IntroBlurb } from './IntroBlurb';
+import { PerformanceBlurb } from './PerformanceBlurb';
 import { PowerSupplyBlurb } from './PowerSupplyBlurb';
+import { ValueBlurb } from './ValueBlurb';
 
 export const Overview: FunctionComponent = () => {
   const { gpu } = useContext(ViewPageContext);
@@ -30,15 +32,8 @@ export const Overview: FunctionComponent = () => {
         How well does the {getGpuName(gpu, { company: false })} perform? Is it
         worth the money?
       </h3>
-
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Suscipit adipiscing
-        bibendum est ultricies integer quis auctor elit. Fermentum odio eu
-        feugiat pretium nibh ipsum consequat nisl. Tincidunt dui ut ornare
-        lectus sit. Elit pellentesque habitant morbi tristique senectus et netus
-        et malesuada. At auctor urna nunc id.
-      </p>
+      <PerformanceBlurb />
+      <ValueBlurb />
     </section>
   );
 };

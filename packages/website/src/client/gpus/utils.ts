@@ -6,6 +6,7 @@ import {
   GpuField,
   MarketSegmentValue,
 } from '@pcpartdb/shared';
+import { parseISO } from 'date-fns';
 import {
   BooleanFormatter,
   DateFormatter,
@@ -62,6 +63,16 @@ export function getCompareGpusSlug(
 
 export function getShoppingUrl(gpu: Gpu) {
   return gpu.affiliateUrl ?? null;
+}
+
+export function hasGpuLaunched(gpu: Gpu) {
+  if (gpu?.releaseDate?.value == null) {
+    return false;
+  }
+
+  const date = new Date();
+  const releaseDate = parseISO(gpu.releaseDate?.value);
+  return date.getTime() >= releaseDate.getTime();
 }
 
 export function formatGpuCompany(company: string) {

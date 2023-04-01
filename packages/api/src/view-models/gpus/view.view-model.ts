@@ -51,6 +51,12 @@ export class ViewGpuViewModelService {
   }
 
   private async getContentData(gpu: Gpu, ctx: Context) {
+    const totalPerformanceGpus = await this.gpuService.count(
+      {
+        query: { filter: { performanceRated: true } },
+      },
+      ctx,
+    );
     const relativePerformanceGpus = await this.getRelativePerformanceGpus(
       gpu,
       ctx,
@@ -58,6 +64,7 @@ export class ViewGpuViewModelService {
     const relativeValueGpus = await this.getRelativeValueGpus(gpu, ctx);
 
     return {
+      totalPerformanceGpus,
       relativePerformanceGpus,
       relativeValueGpus,
     };

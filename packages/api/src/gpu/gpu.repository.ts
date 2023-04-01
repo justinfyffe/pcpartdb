@@ -237,6 +237,7 @@ export class GpuRepository {
 
   async getPerformanceRanks(ids: number[], config?: RepositoryConfig) {
     const trx = config?.trx ?? this.db;
+
     const idsAndRanks: { gpu_id: number; rank: number }[] = await trx.$queryRaw`
       SELECT ranks.gpu_id, ranks.rank AS rank
       FROM (
