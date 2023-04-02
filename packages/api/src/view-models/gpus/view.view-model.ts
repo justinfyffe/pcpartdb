@@ -92,7 +92,7 @@ export class ViewGpuViewModelService {
           orderBy: { sort: GpuSort.PerformanceRating, order: GpuOrder.Asc },
           limit: TOTAL_COMPARED_GPUS,
         },
-        includeRanks: true,
+        includeRanks: [GpuRank.Performance, GpuRank.Value],
       },
       ctx,
     );
@@ -108,7 +108,7 @@ export class ViewGpuViewModelService {
           orderBy: { sort: GpuSort.PerformanceRating, order: GpuOrder.Desc },
           limit: TOTAL_COMPARED_GPUS,
         },
-        includeRanks: true,
+        includeRanks: [GpuRank.Performance, GpuRank.Value],
       },
       ctx,
     );
@@ -144,7 +144,7 @@ export class ViewGpuViewModelService {
           orderBy: { sort: GpuSort.ValueRating, order: GpuOrder.Asc },
           limit: TOTAL_COMPARED_GPUS,
         },
-        includeRanks: true,
+        includeRanks: [GpuRank.Performance, GpuRank.Value],
       },
       ctx,
     );
@@ -160,7 +160,7 @@ export class ViewGpuViewModelService {
           orderBy: { sort: GpuSort.ValueRating, order: GpuOrder.Desc },
           limit: TOTAL_COMPARED_GPUS,
         },
-        includeRanks: true,
+        includeRanks: [GpuRank.Performance, GpuRank.Value],
       },
       ctx,
     );

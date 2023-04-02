@@ -25,7 +25,7 @@ import { Context, Ctx } from '../shared/context';
 import { validate } from '../shared/types/validate';
 import { MULTER_OPTIONS } from '../shared/utils';
 import { GpuSpecsEntity } from './gpu.entity';
-import { GpuService } from './gpu.service';
+import { GpuRank, GpuService } from './gpu.service';
 import {
   autocompleteGpusRequestValidator,
   autocompleteSpecsRequestValidator,
@@ -58,7 +58,7 @@ export class GpuController {
           {
             ...data,
             fields: data.fields || [],
-            includeRanks: true,
+            includeRanks: [GpuRank.Performance, GpuRank.Value],
             includeImages: false,
           },
           ctx,

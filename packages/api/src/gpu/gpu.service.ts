@@ -13,6 +13,7 @@ import { addPerformanceBenchmarks } from './benchmark-utils';
 import { GpuSpecsEntity } from './gpu.entity';
 import { mapToGpuDto, mapToGpuDtos, mapToGpuEntity } from './gpu.mapper';
 import { GpuRepository } from './gpu.repository';
+import { GpuAutocompleteRepository } from './gpu-autocomplete.repository';
 import { GpuRanksRepository } from './gpu-ranks.repository';
 
 export enum GpuRank {
@@ -23,9 +24,6 @@ export enum GpuRank {
 
 interface CountOptions {
   query?: GpusQuery;
-
-  includeImages?: boolean;
-  includeRanks?: boolean;
 }
 
 interface ListOptions {
@@ -33,7 +31,7 @@ interface ListOptions {
 
   fields?: GpuFieldKey[];
   includeImages?: boolean;
-  includeRanks?: boolean;
+  includeRanks?: GpuRank[];
 }
 
 interface GetOptions {
@@ -44,7 +42,7 @@ interface GetOptions {
 interface GetComparisonOptions {
   slug?: string;
 
-  includeRanks?: boolean;
+  includeRanks?: GpuRank[];
   includeImages?: boolean;
 }
 
@@ -52,6 +50,7 @@ interface GetComparisonOptions {
 export class GpuService {
   constructor(
     private gpuRepository: GpuRepository,
+    private gpuAutocompleteRepository: GpuAutocompleteRepository,
     private gpuRanksRepository: GpuRanksRepository,
   ) {}
 
@@ -186,7 +185,10 @@ export class GpuService {
   }
 
   async autocomplete(query: string, ctx: Context) {
-    const results = await this.gpuRepository.autocomplete(query, ctx);
+    const results = await this.gpuAutocompleteRepository.autocomplete(
+      query,
+      ctx,
+    );
     return mapToGpuDtos(results);
   }
 
@@ -195,7 +197,11 @@ export class GpuService {
     query: string,
     ctx: Context,
   ) {
-    return await this.gpuRepository.autocompleteSpec(key, query, ctx);
+    return await this.gpuAutocompleteRepository.autocompleteSpec(
+      key,
+      query,
+      ctx,
+    );
   }
 
   async refreshRatings(ctx: Context) {

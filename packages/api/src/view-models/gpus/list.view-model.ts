@@ -4,7 +4,7 @@ import {
   ListGpusRequest,
   ListGpusViewModel,
 } from '@pcpartdb/shared';
-import { GpuService } from '../../gpu/gpu.service';
+import { GpuRank, GpuService } from '../../gpu/gpu.service';
 import { listGpusRequestValidator } from '../../gpu/gpu.validators';
 import { Context } from '../../shared/context';
 import { validate } from '../../shared/types/validate';
@@ -42,7 +42,7 @@ export class ListGpusViewModelService {
       {
         query,
         fields: ['company', 'performanceScore', 'valueScore', 'releaseDate'],
-        includeRanks: true,
+        includeRanks: [GpuRank.Performance, GpuRank.Value],
         includeImages: false,
       },
       ctx,

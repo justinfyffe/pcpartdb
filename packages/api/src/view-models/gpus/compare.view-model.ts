@@ -8,7 +8,7 @@ import {
   RelatedComparisons,
   RelatedGpus,
 } from '@pcpartdb/shared';
-import { GpuService } from '../../gpu/gpu.service';
+import { GpuRank, GpuService } from '../../gpu/gpu.service';
 import { Context } from '../../shared/context';
 import { getSurroundingValues } from '../../shared/utils';
 
@@ -45,7 +45,11 @@ export class CompareGpusViewModelService {
 
   private async getComparison(slug: string, ctx: Context) {
     return await this.gpuService.getComparison(
-      { slug, includeImages: true, includeRanks: true },
+      {
+        slug,
+        includeImages: true,
+        includeRanks: [GpuRank.Performance, GpuRank.Value],
+      },
       ctx,
     );
   }
@@ -160,7 +164,7 @@ export class CompareGpusViewModelService {
           orderBy: { sort: GpuSort.PerformanceRating, order: GpuOrder.Asc },
           limit: TOTAL_COMPARED_GPUS,
         },
-        includeRanks: true,
+        includeRanks: [GpuRank.Performance, GpuRank.Value],
       },
       ctx,
     );
@@ -176,7 +180,7 @@ export class CompareGpusViewModelService {
           orderBy: { sort: GpuSort.PerformanceRating, order: GpuOrder.Desc },
           limit: TOTAL_COMPARED_GPUS,
         },
-        includeRanks: true,
+        includeRanks: [GpuRank.Performance, GpuRank.Value],
       },
       ctx,
     );
@@ -207,7 +211,7 @@ export class CompareGpusViewModelService {
           orderBy: { sort: GpuSort.ValueRating, order: GpuOrder.Asc },
           limit: TOTAL_COMPARED_GPUS,
         },
-        includeRanks: true,
+        includeRanks: [GpuRank.Performance, GpuRank.Value],
       },
       ctx,
     );
@@ -223,7 +227,7 @@ export class CompareGpusViewModelService {
           orderBy: { sort: GpuSort.ValueRating, order: GpuOrder.Desc },
           limit: TOTAL_COMPARED_GPUS,
         },
-        includeRanks: true,
+        includeRanks: [GpuRank.Performance, GpuRank.Value],
       },
       ctx,
     );
