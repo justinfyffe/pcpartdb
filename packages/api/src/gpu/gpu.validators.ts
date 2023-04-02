@@ -69,16 +69,3 @@ export const updateGpuRequestValidator = Joi.object({
   images: Joi.array().allow(Joi.any()),
   meta: gpuMetaValidator.allow(null),
 }).options({ abortEarly: false });
-
-export const autocompleteGpusRequestValidator = Joi.object({
-  query: Joi.string().allow(''),
-}).options({
-  abortEarly: false,
-});
-
-export const autocompleteSpecsRequestValidator = Joi.object({
-  key: Joi.string().required(),
-  query: Joi.string().required(),
-}).options({
-  abortEarly: false,
-});

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Database, RepositoryConfig } from '../database';
+import { Database, RepositoryConfig } from '../../database';
 
 interface GetRanksOptions {
   company?: string[];

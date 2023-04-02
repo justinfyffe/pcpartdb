@@ -10,11 +10,9 @@ import {
 import { Context } from '../shared/context';
 import { badRequestError, notFoundError } from '../shared/error';
 import { addPerformanceBenchmarks } from './benchmark-utils';
-import { GpuSpecsEntity } from './gpu.entity';
 import { mapToGpuDto, mapToGpuDtos, mapToGpuEntity } from './gpu.mapper';
 import { GpuRepository } from './gpu.repository';
-import { GpuAutocompleteRepository } from './gpu-autocomplete.repository';
-import { GpuRanksRepository } from './gpu-ranks.repository';
+import { GpuRanksService } from './ranks/gpu-ranks.service';
 
 export enum GpuRank {
   Performance = 'PERFORMANCE',
@@ -50,8 +48,7 @@ interface GetComparisonOptions {
 export class GpuService {
   constructor(
     private gpuRepository: GpuRepository,
-    private gpuAutocompleteRepository: GpuAutocompleteRepository,
-    private gpuRanksRepository: GpuRanksRepository,
+    private gpuRanksService: GpuRanksService,
   ) {}
 
   async count(options: CountOptions, ctx: Context) {
@@ -66,7 +63,11 @@ export class GpuService {
     const gpus: Gpu[] = mapToGpuDtos(gpuEntities, { fields });
 
     if (options.includeRanks) {
-      await this.populateRanks(gpus, [GpuRank.Performance, GpuRank.Value], ctx);
+      await this.gpuRanksService.populateRanks(
+        gpus,
+        [GpuRank.Performance, GpuRank.Value],
+        ctx,
+      );
     }
 
     return gpus;
@@ -80,7 +81,11 @@ export class GpuService {
       throw notFoundError({ gpu: id });
     }
     if (options.includeRanks) {
-      await this.populateRanks([gpu], options.includeRanks, ctx);
+      await this.gpuRanksService.populateRanks(
+        [gpu],
+        options.includeRanks,
+        ctx,
+      );
     }
 
     return gpu;
@@ -94,7 +99,11 @@ export class GpuService {
       throw notFoundError({ gpu: slug });
     }
     if (options.includeRanks) {
-      await this.populateRanks([gpu], options.includeRanks, ctx);
+      await this.gpuRanksService.populateRanks(
+        [gpu],
+        options.includeRanks,
+        ctx,
+      );
     }
 
     return gpu;
@@ -184,26 +193,6 @@ export class GpuService {
     return id;
   }
 
-  async autocomplete(query: string, ctx: Context) {
-    const results = await this.gpuAutocompleteRepository.autocomplete(
-      query,
-      ctx,
-    );
-    return mapToGpuDtos(results);
-  }
-
-  async autocompleteSpec(
-    key: keyof GpuSpecsEntity,
-    query: string,
-    ctx: Context,
-  ) {
-    return await this.gpuAutocompleteRepository.autocompleteSpec(
-      key,
-      query,
-      ctx,
-    );
-  }
-
   async refreshRatings(ctx: Context) {
     const limit = 50;
     const totalGpus = await this.count({}, ctx);
@@ -216,46 +205,5 @@ export class GpuService {
         await this.update(gpu.id, gpu, ctx);
       }
     }
-  }
-
-  private async populateRanks(gpus: Gpu[], ranks: GpuRank[], ctx: Context) {
-    if (gpus.length === 0) {
-      return;
-    }
-
-    const enabledRanks = new Set(ranks);
-    const ids = gpus.map((gpu) => gpu.id);
-    const companies = [
-      ...new Set(
-        gpus
-          .map((gpu) => gpu.company?.value)
-          .filter((company) => company != null),
-      ).values(),
-    ];
-
-    const performanceRanks = enabledRanks.has(GpuRank.Performance)
-      ? await this.gpuRanksRepository.getPerformanceRanks(ids, null, ctx)
-      : null;
-
-    const performanceCompanyRank = enabledRanks.has(GpuRank.PerformanceCompany)
-      ? await this.gpuRanksRepository.getPerformanceRanks(
-          ids,
-          { company: companies },
-          ctx,
-        )
-      : null;
-
-    const valueRanks = enabledRanks.has(GpuRank.Value)
-      ? await this.gpuRanksRepository.getValueRanks(ids, null, ctx)
-      : null;
-
-    gpus.forEach((gpu, i) => {
-      gpu.ranks = {
-        ...gpu.ranks,
-        performanceRank: performanceRanks?.[i],
-        performanceCompanyRank: performanceCompanyRank?.[i],
-        valueRank: valueRanks?.[i],
-      };
-    });
   }
 }

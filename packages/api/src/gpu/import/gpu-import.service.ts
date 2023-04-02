@@ -13,13 +13,13 @@ import {
   ScrapeGpuDetailsResponse,
 } from '@pcpartdb/shared';
 import * as fsPromises from 'fs/promises';
-import { Context } from '../shared/context';
-import { badRequestError } from '../shared/error';
-import { deepMergeObjects } from '../shared/utils';
-import * as fileUtils from '../shared/utils';
-import { mapToGpuDto } from './gpu.mapper';
-import { GpuRepository } from './gpu.repository';
-import { GpuService } from './gpu.service';
+import { Context } from '../../shared/context';
+import { badRequestError } from '../../shared/error';
+import { deepMergeObjects } from '../../shared/utils';
+import * as fileUtils from '../../shared/utils';
+import { mapToGpuDto } from '../gpu.mapper';
+import { GpuRepository } from '../gpu.repository';
+import { GpuService } from '../gpu.service';
 
 enum Importers {
   TechPowerUp = 'www.techpowerup.com',
@@ -28,7 +28,7 @@ enum Importers {
 }
 
 @Injectable()
-export class GpuImporterService {
+export class GpuImportService {
   constructor(
     private gpuService: GpuService,
     private gpuRepository: GpuRepository,

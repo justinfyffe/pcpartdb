@@ -1,22 +1,22 @@
 import { Module } from '@nestjs/common';
 import { DatabaseModule } from '../database';
+import { GpuAutocompleteModule } from './autocomplete/gpu-autocomplete.module';
 import { GpuController } from './gpu.controller';
 import { GpuRepository } from './gpu.repository';
 import { GpuService } from './gpu.service';
-import { GpuAutocompleteRepository } from './gpu-autocomplete.repository';
-import { GpuImporterService } from './gpu-importer.service';
-import { GpuRanksRepository } from './gpu-ranks.repository';
+import { GpuImportModule } from './import/gpu-import.module';
+import { GpuRanksModule } from './ranks/gpu-ranks.module';
+import { GpuRanksRepository } from './ranks/gpu-ranks.repository';
 
 @Module({
-  imports: [DatabaseModule],
-  controllers: [GpuController],
-  providers: [
-    GpuService,
-    GpuImporterService,
-    GpuRepository,
-    GpuAutocompleteRepository,
-    GpuRanksRepository,
+  imports: [
+    DatabaseModule,
+    GpuAutocompleteModule,
+    GpuImportModule,
+    GpuRanksModule,
   ],
-  exports: [GpuService, GpuImporterService, GpuRepository],
+  controllers: [GpuController],
+  providers: [GpuService, GpuRepository, GpuRanksRepository],
+  exports: [GpuService, GpuRepository],
 })
 export class GpuModule {}

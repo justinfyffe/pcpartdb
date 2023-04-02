@@ -51,7 +51,7 @@ export class GpuService {
   }
 
   async autocompleteSpec(query: string, key?: string) {
-    return await this.api.get<string[]>(`${PATH}/specs/autocomplete`, {
+    return await this.api.get<string[]>(`${PATH}/autocomplete/specs`, {
       params: { key, value: query },
     });
   }
@@ -62,7 +62,7 @@ export class GpuService {
 
   async scrapeGpuDetails(data: ScrapeGpuDetailsRequest) {
     return await this.api.post<ScrapeGpuDetailsResponse>(
-      `${PATH}/scrape-details`,
+      `${PATH}/import/scrape`,
       data,
     );
   }
@@ -72,7 +72,7 @@ export class GpuService {
     data.append('file', file);
 
     const results = await this.api.post<PreviewImportGpusResponse>(
-      `${PATH}/preview-import`,
+      `${PATH}/import/preview`,
       data,
       { headers: { 'content-type': 'multipart/form-data' } },
     );
