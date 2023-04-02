@@ -33,12 +33,9 @@ export class GpuRepository {
 
   async count(options: CountOptions, config?: RepositoryConfig) {
     const db = config?.trx ?? this.db;
-    const { filter, orderBy } = options.query ?? {};
+    const { filter } = options.query ?? {};
 
-    return await db.gpu.findMany({
-      where: this.generateWhere(filter),
-      orderBy: this.generateOrderBy(orderBy),
-    });
+    return await db.gpu.findMany({ where: this.generateWhere(filter) });
   }
 
   async list(
@@ -233,61 +230,6 @@ export class GpuRepository {
   async delete(id: number, config?: RepositoryConfig) {
     const trx = config?.trx ?? this.db;
     await trx.gpu.delete({ where: { id } });
-  }
-
-  async getPerformanceRanks(ids: number[], config?: RepositoryConfig) {
-    const trx = config?.trx ?? this.db;
-
-    const idsAndRanks: { gpu_id: number; rank: number }[] = await trx.$queryRaw`
-      SELECT ranks.gpu_id, ranks.rank AS rank
-      FROM (
-        SELECT
-          gpu_id,
-          CAST(RANK() OVER ( ORDER BY performance_score DESC ) AS INTEGER) AS rank
-        FROM gpu_benchmarks 
-        WHERE performance_score IS NOT NULL
-      ) AS ranks
-      WHERE ranks.gpu_id IN (${Prisma.join(ids)})
-    `;
-
-    const ranksMap = idsAndRanks.reduce((acc, value) => {
-      acc[value.gpu_id] = value.rank;
-      return acc;
-    }, {} as Record<number, number>);
-
-    return ids.map((id) => ranksMap[id] ?? null);
-  }
-
-  async getPerformanceRank(id: number, config?: RepositoryConfig) {
-    const ranks = await this.getPerformanceRanks([id], config);
-    return ranks[0] ?? null;
-  }
-
-  async getValueRanks(ids: number[], config?: RepositoryConfig) {
-    const trx = config?.trx ?? this.db;
-    const idsAndRanks: { gpu_id: number; rank: number }[] = await trx.$queryRaw`
-      SELECT ranks.gpu_id, ranks.rank AS rank
-      FROM (
-        SELECT
-          gpu_id,
-          CAST(RANK() OVER ( ORDER BY value_score DESC ) AS INTEGER) AS rank
-        FROM gpu_benchmarks 
-        WHERE value_score IS NOT NULL
-      ) AS ranks
-      WHERE ranks.gpu_id IN (${Prisma.join(ids)})
-    `;
-
-    const ranksMap = idsAndRanks.reduce((acc, value) => {
-      acc[value.gpu_id] = value.rank;
-      return acc;
-    }, {} as Record<number, number>);
-
-    return ids.map((id) => ranksMap[id] ?? null);
-  }
-
-  async getValueRank(id: number, config?: RepositoryConfig) {
-    const ranks = await this.getValueRanks([id], config);
-    return ranks[0] ?? null;
   }
 
   private generateWhere(filter: GpusFilter): Prisma.GpuWhereInput {

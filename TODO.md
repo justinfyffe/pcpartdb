@@ -2,8 +2,7 @@
 X: Done and tested
 
 Immediate Tasks:
-    - clean up list options, count options
-      - don't have "includeRanks" on repository, only on service.
+    - content: add rank for company performance. Figure out how to do db query
     - relative performance and relative value should be filtering based on market segment
 
   - use branches for each version, merge to master afterwards

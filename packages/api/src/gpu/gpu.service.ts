@@ -13,6 +13,13 @@ import { addPerformanceBenchmarks } from './benchmark-utils';
 import { GpuSpecsEntity } from './gpu.entity';
 import { mapToGpuDto, mapToGpuDtos, mapToGpuEntity } from './gpu.mapper';
 import { GpuRepository } from './gpu.repository';
+import { GpuRanksRepository } from './gpu-ranks.repository';
+
+export enum GpuRank {
+  Performance = 'PERFORMANCE',
+  PerformanceCompany = 'PERFORMANCE_COMPANY',
+  Value = 'VALUE',
+}
 
 interface CountOptions {
   query?: GpusQuery;
@@ -31,7 +38,7 @@ interface ListOptions {
 
 interface GetOptions {
   includeImages?: boolean;
-  includeRanks?: boolean;
+  includeRanks?: GpuRank[];
 }
 
 interface GetComparisonOptions {
@@ -43,7 +50,10 @@ interface GetComparisonOptions {
 
 @Injectable()
 export class GpuService {
-  constructor(private gpuRepository: GpuRepository) {}
+  constructor(
+    private gpuRepository: GpuRepository,
+    private gpuRanksRepository: GpuRanksRepository,
+  ) {}
 
   async count(options: CountOptions, ctx: Context) {
     const gpuEntities = await this.gpuRepository.count(options, ctx);
@@ -57,7 +67,7 @@ export class GpuService {
     const gpus: Gpu[] = mapToGpuDtos(gpuEntities, { fields });
 
     if (options.includeRanks) {
-      await this.populateRanks(gpus, ctx);
+      await this.populateRanks(gpus, [GpuRank.Performance, GpuRank.Value], ctx);
     }
 
     return gpus;
@@ -71,7 +81,7 @@ export class GpuService {
       throw notFoundError({ gpu: id });
     }
     if (options.includeRanks) {
-      await this.populateRanks([gpu], ctx);
+      await this.populateRanks([gpu], options.includeRanks, ctx);
     }
 
     return gpu;
@@ -85,7 +95,7 @@ export class GpuService {
       throw notFoundError({ gpu: slug });
     }
     if (options.includeRanks) {
-      await this.populateRanks([gpu], ctx);
+      await this.populateRanks([gpu], options.includeRanks, ctx);
     }
 
     return gpu;
@@ -104,7 +114,16 @@ export class GpuService {
     const promises = [];
     for (const slugItem of slugs) {
       promises.push(
-        this.getBySlug(slugItem, { includeImages, includeRanks }, ctx),
+        this.getBySlug(
+          slugItem,
+          {
+            includeImages,
+            includeRanks: includeRanks
+              ? [GpuRank.Performance, GpuRank.Value]
+              : null,
+          },
+          ctx,
+        ),
       );
     }
     const gpus = await Promise.all(promises);
@@ -193,23 +212,43 @@ export class GpuService {
     }
   }
 
-  private async populateRanks(gpus: Gpu[], ctx: Context) {
+  private async populateRanks(gpus: Gpu[], ranks: GpuRank[], ctx: Context) {
     if (gpus.length === 0) {
       return;
     }
 
+    const enabledRanks = new Set(ranks);
     const ids = gpus.map((gpu) => gpu.id);
-    const performanceRanks = await this.gpuRepository.getPerformanceRanks(
-      ids,
-      ctx,
-    );
-    const valueRanks = await this.gpuRepository.getValueRanks(ids, ctx);
+    const companies = [
+      ...new Set(
+        gpus
+          .map((gpu) => gpu.company?.value)
+          .filter((company) => company != null),
+      ).values(),
+    ];
+
+    const performanceRanks = enabledRanks.has(GpuRank.Performance)
+      ? await this.gpuRanksRepository.getPerformanceRanks(ids, null, ctx)
+      : null;
+
+    const performanceCompanyRank = enabledRanks.has(GpuRank.PerformanceCompany)
+      ? await this.gpuRanksRepository.getPerformanceRanks(
+          ids,
+          { company: companies },
+          ctx,
+        )
+      : null;
+
+    const valueRanks = enabledRanks.has(GpuRank.Value)
+      ? await this.gpuRanksRepository.getValueRanks(ids, null, ctx)
+      : null;
 
     gpus.forEach((gpu, i) => {
       gpu.ranks = {
         ...gpu.ranks,
-        performanceRank: performanceRanks[i],
-        valueRank: valueRanks[i],
+        performanceRank: performanceRanks?.[i],
+        performanceCompanyRank: performanceCompanyRank?.[i],
+        valueRank: valueRanks?.[i],
       };
     });
   }

@@ -5,9 +5,10 @@ import {
   GpuSort,
   RelatedComparisons,
   RelatedGpus,
+  ViewGpuContentData,
   ViewGpuViewModel,
 } from '@pcpartdb/shared';
-import { GpuService } from '../../gpu/gpu.service';
+import { GpuRank, GpuService } from '../../gpu/gpu.service';
 import { Context } from '../../shared/context';
 import { getSurroundingValues } from '../../shared/utils';
 
@@ -45,16 +46,21 @@ export class ViewGpuViewModelService {
   private async getGpu(slug: string, ctx: Context): Promise<Gpu> {
     return await this.gpuService.getBySlug(
       slug,
-      { includeImages: true, includeRanks: true },
+      {
+        includeImages: true,
+        includeRanks: [
+          GpuRank.Performance,
+          GpuRank.PerformanceCompany,
+          GpuRank.Value,
+        ],
+      },
       ctx,
     );
   }
 
   private async getContentData(gpu: Gpu, ctx: Context) {
     const totalPerformanceGpus = await this.gpuService.count(
-      {
-        query: { filter: { performanceRated: true } },
-      },
+      { query: { filter: { performanceRated: true } } },
       ctx,
     );
     const relativePerformanceGpus = await this.getRelativePerformanceGpus(
@@ -67,7 +73,7 @@ export class ViewGpuViewModelService {
       totalPerformanceGpus,
       relativePerformanceGpus,
       relativeValueGpus,
-    };
+    } as ViewGpuContentData;
   }
 
   private async getRelativePerformanceGpus(seed: Gpu, ctx: Context) {

@@ -1,6 +1,6 @@
 export interface GpuRanks {
   performanceRank?: number;
-  valueRank?: number;
+  performanceCompanyRank?: number;
 
-  companyPerformanceRank?: number;
+  valueRank?: number;
 }

@@ -4,7 +4,7 @@ import {
   compileContentComponent,
   ContentContext,
 } from '../../../../../shared/content';
-import { getGpuName } from '../../../..';
+import { formatGpuField, getGpuName } from '../../../..';
 import { ViewPageContext } from '../../context';
 
 const PerformanceBlurbSentence1 = compileContentComponent({
@@ -19,11 +19,11 @@ const PerformanceBlurbSentence1 = compileContentComponent({
 });
 
 const PerformanceBlurbSentence2 = compileContentComponent({
-  deps: ['companyPerformanceRank'],
+  deps: ['company', 'performanceCompanyRank'],
   component: (props) => (
     <>
-      It is the {props.companyPerformanceRank} most powerful NVIDIA GPU, and is
-      the 3rd most powerful among the 8 GPUs released in 2016.
+      It is the {props.performanceCompanyRank} most powerful {props.company}{' '}
+      GPU, and is the 3rd most powerful among the 8 GPUs released in 2016.
     </>
   ),
 });
@@ -33,12 +33,13 @@ export const PerformanceBlurb = () => {
 
   const context = useMemo(() => {
     const params = {
-      totalPerformanceGpus: contentData.totalPerformanceGpus,
+      company: formatGpuField(gpu.company),
       gpuName: getGpuName(gpu),
-      companyPerformanceRank: formatOrdinalNumber(
-        gpu.ranks?.companyPerformanceRank,
+      performanceCompanyRank: formatOrdinalNumber(
+        gpu.ranks?.performanceCompanyRank,
       ),
       performanceRank: formatOrdinalNumber(gpu.ranks?.performanceRank),
+      totalPerformanceGpus: contentData.totalPerformanceGpus,
     };
 
     return { params };
