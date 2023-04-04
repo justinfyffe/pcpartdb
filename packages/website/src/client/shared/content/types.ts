@@ -1,12 +1,12 @@
 import React, { FunctionComponent } from 'react';
 
-export type ContentFilters = string[] | Record<string, boolean>;
+export type ContentTags = string[] | Record<string, boolean>;
 export type ContentDependencies = string[];
 export type ContentComponentParams = Record<string, string | React.ReactNode>;
 export type ContentFunctionParams = Record<string, string>;
 
 export interface RawContentComponent {
-  filters?: string[];
+  tags?: string[];
   deps?: string[];
   component: FunctionComponent<ContentComponentParams>;
 }
@@ -15,19 +15,19 @@ export type CompiledContentComponentVariants =
   CompiledContentComponentVariant[];
 
 export interface CompiledContentComponentVariant {
-  filters?: string[];
+  tags?: string[];
   deps?: string[];
   component: FunctionComponent<ContentComponentParams>;
 }
 
 export interface RawContentFunction {
-  filters?: string[];
+  tags?: string[];
   deps?: string[];
   hook: (props?: ContentFunctionParams) => string;
 }
 
 export interface CompiledContentFunctionVariant {
-  filters?: string[];
+  tags?: string[];
   deps?: string[];
   hook: (props?: ContentFunctionParams) => string;
 }
@@ -35,7 +35,7 @@ export interface CompiledContentFunctionVariant {
 export type CompiledContentFunctionVariants = CompiledContentFunctionVariant[];
 
 export type ContentFunction = (props?: {
-  filters?: ContentFilters;
+  tags?: ContentTags;
   params?: ContentFunctionParams;
   required?: boolean;
 }) => string;

@@ -162,7 +162,7 @@ const Subtitle: FunctionComponent<SubtitleProps> = (props) => {
   );
 
   return (
-    <ContentContext.Provider value={{ filters: [tag], params }}>
+    <ContentContext.Provider value={{ tags: [tag], params }}>
       <SubtitleSentence1 />
     </ContentContext.Provider>
   );
@@ -170,14 +170,14 @@ const Subtitle: FunctionComponent<SubtitleProps> = (props) => {
 
 const SubtitleSentence1 = compileContentComponent(
   {
-    filters: [GpuFeedTag.GreatPerformance],
+    tags: [GpuFeedTag.GreatPerformance],
     deps: ['name'],
     component: (props) => (
       <>The {props.name} has great performance, but is it worth the money?</>
     ),
   },
   {
-    filters: [GpuFeedTag.GreatValue],
+    tags: [GpuFeedTag.GreatValue],
     deps: ['name'],
     component: (props) => (
       <>The {props.name} has great value, but how well does it perform?</>

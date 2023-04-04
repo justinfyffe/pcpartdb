@@ -10,9 +10,9 @@ import {
 } from '@pcpartdb/shared';
 import { Context } from '../shared/context';
 import { badRequestError, notFoundError } from '../shared/error';
-import { addPerformanceBenchmarks } from './benchmark-utils';
 import { mapToGpuDto, mapToGpuDtos, mapToGpuEntity } from './gpu.mapper';
 import { GpuRepository } from './gpu.repository';
+import { addPerformanceBenchmarks } from './gpu-benchmarks.utils';
 import { GpuRanksService } from './ranks/gpu-ranks.service';
 
 interface CountOptions {

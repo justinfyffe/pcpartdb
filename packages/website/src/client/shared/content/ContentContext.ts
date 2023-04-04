@@ -1,12 +1,12 @@
 import { createContext } from 'react';
 import {
   ContentComponentParams,
-  ContentFilters,
   ContentFunctionParams,
+  ContentTags,
 } from './types';
 
 interface ContentContextState {
-  filters?: ContentFilters;
+  tags?: ContentTags;
   params?: ContentComponentParams | ContentFunctionParams;
 }
 

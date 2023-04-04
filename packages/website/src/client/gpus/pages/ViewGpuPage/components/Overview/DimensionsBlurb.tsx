@@ -1,3 +1,4 @@
+import { ContentTag } from '@pcpartdb/shared';
 import React, { useContext, useMemo } from 'react';
 import {
   compileContentComponent,
@@ -5,13 +6,6 @@ import {
 } from '../../../../../shared/content';
 import { formatGpuDimensions, formatGpuField, getGpuName } from '../../../..';
 import { ViewPageContext } from '../../context';
-
-enum Filter {
-  ExtraLargeSize = 'EXTRA_LARGE_SIZE',
-  LargeSize = 'LARGE_SIZE',
-  CommonSize = 'COMMON_SIZE',
-  SmallSize = 'SMALL_SIZE',
-}
 
 const DimensionsBlurbSentence1 = compileContentComponent({
   deps: ['dimensions', 'gpuName'],
@@ -31,19 +25,19 @@ const DimensionsBlurbSentence2 = compileContentComponent({
 
 const DimensionsBlurbSentence3 = compileContentComponent(
   {
-    filters: [Filter.ExtraLargeSize],
+    tags: [ContentTag.ExtraLargeSize],
     component: () => (
       <>This is much larger than most GPUs than the typical dual-slot card.</>
     ),
   },
   {
-    filters: [Filter.LargeSize],
+    tags: [ContentTag.LargeSize],
     component: () => (
       <>This is slightly larger than the typical dual-slot card.</>
     ),
   },
   {
-    filters: [Filter.CommonSize],
+    tags: [ContentTag.CommonSize],
     component: () => (
       <>
         This is in line with most other GPUs as dual-slot cards are the most
@@ -52,23 +46,16 @@ const DimensionsBlurbSentence3 = compileContentComponent(
     ),
   },
   {
-    filters: [Filter.SmallSize],
+    tags: [ContentTag.SmallSize],
     component: () => <>This is smaller than the typical dual-slot card.</>,
   },
 );
 
 export const DimensionsBlurb = () => {
-  const { gpu } = useContext(ViewPageContext);
+  const { gpu, contentData } = useContext(ViewPageContext);
 
   const context = useMemo(() => {
-    const slots = gpu.specs?.slotWidth?.value;
-    const filters = {
-      [Filter.ExtraLargeSize]: slots >= 3,
-      [Filter.LargeSize]: slots > 2.5 && slots < 3,
-      [Filter.CommonSize]: slots <= 2.5 && slots >= 2,
-      [Filter.SmallSize]: slots < 2,
-    };
-
+    const tags = contentData.contentTags;
     const params = {
       dimensions: formatGpuDimensions(gpu),
       gpuName: getGpuName(gpu),
@@ -76,8 +63,8 @@ export const DimensionsBlurb = () => {
       slotWidth: formatGpuField(gpu.specs?.slotWidth),
     };
 
-    return { filters, params };
-  }, [gpu]);
+    return { tags, params };
+  }, [contentData.contentTags, gpu]);
 
   return (
     <ContentContext.Provider value={context}>

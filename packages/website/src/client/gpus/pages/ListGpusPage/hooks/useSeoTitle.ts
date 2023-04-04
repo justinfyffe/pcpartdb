@@ -9,23 +9,23 @@ import { ListPageContextProps } from '../context';
 
 const seoTitle = compileContentFunction(
   {
-    filters: [GpuSort.PerformanceRating],
+    tags: [GpuSort.PerformanceRating],
     deps: ['company'],
     hook: (props: ContentFunctionParams) =>
       `Best ${props.company} Graphics Cards by Performance`,
   },
   {
-    filters: [GpuSort.ValueRating],
+    tags: [GpuSort.ValueRating],
     deps: ['company'],
     hook: (props: ContentFunctionParams) =>
       `Best ${props.company} Graphics Cards by Value`,
   },
   {
-    filters: [GpuSort.PerformanceRating],
+    tags: [GpuSort.PerformanceRating],
     hook: () => 'Best Graphics Cards by Performance',
   },
   {
-    filters: [GpuSort.ValueRating],
+    tags: [GpuSort.ValueRating],
     hook: () => 'Best Graphics Cards by Value',
   },
 );
@@ -45,6 +45,6 @@ export const useSeoTitle = (context: ListPageContextProps) => {
           : null,
     };
 
-    return seoTitle({ filters, params });
+    return seoTitle({ tags: filters, params });
   }, [query.filter?.company, query.orderBy?.sort]);
 };

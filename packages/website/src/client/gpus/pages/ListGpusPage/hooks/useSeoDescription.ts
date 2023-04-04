@@ -9,27 +9,27 @@ import { ListPageContextProps } from '../context';
 
 const seoDescription = compileContentFunction(
   {
-    filters: [GpuSort.PerformanceRating],
+    tags: [GpuSort.PerformanceRating],
     deps: ['company'],
     hook: (props: ContentFunctionParams) =>
       `View a list of the best ${props.company} graphics cards by performance. ` +
       'Our database of graphics cards will help you choose the best GPU for your computer.',
   },
   {
-    filters: [GpuSort.ValueRating],
+    tags: [GpuSort.ValueRating],
     deps: ['company'],
     hook: (props: ContentFunctionParams) =>
       `View a list of the best ${props.company} graphics cards by value. ` +
       'Our database of graphics cards will help you choose the best GPU for your computer.',
   },
   {
-    filters: [GpuSort.PerformanceRating],
+    tags: [GpuSort.PerformanceRating],
     hook: () =>
       'View a list of the best graphics cards by performance. ' +
       'Our database of graphics cards will help you choose the best GPU for your computer.',
   },
   {
-    filters: [GpuSort.ValueRating],
+    tags: [GpuSort.ValueRating],
     hook: () =>
       'View a list of the best graphics cards by value. ' +
       'Our database of graphics cards will help you choose the best GPU for your computer.',
@@ -51,6 +51,6 @@ export const useSeoDescription = (context: ListPageContextProps) => {
           : null,
     };
 
-    return seoDescription({ filters, params });
+    return seoDescription({ tags: filters, params });
   }, [query.filter?.company, query.orderBy?.sort]);
 };

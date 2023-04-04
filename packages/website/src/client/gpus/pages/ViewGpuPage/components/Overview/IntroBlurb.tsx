@@ -1,19 +1,16 @@
+import { ContentTag } from '@pcpartdb/shared';
 import React, { useContext, useMemo } from 'react';
 import {
   compileContentComponent,
   ContentContext,
 } from '../../../../../shared/content';
-import { formatGpuField, getGpuName, hasGpuLaunched } from '../../../..';
+import { formatGpuField, getGpuName } from '../../../..';
 import { ViewPageContext } from '../../context';
-
-enum Filter {
-  Launched = 'LAUNCHED',
-}
 
 const IntroBlurbSentence1 = compileContentComponent(
   {
     deps: ['gpuName', 'marketSegment', 'releaseDate'],
-    filters: [Filter.Launched],
+    tags: [ContentTag.Launched],
     component: (props) => (
       <>
         The {props.gpuName} is a {props.marketSegment} graphics card that
@@ -32,11 +29,11 @@ const IntroBlurbSentence1 = compileContentComponent(
   },
   {
     deps: ['company', 'shortGpuName', 'releaseDate'],
-    filters: [Filter.Launched],
+    tags: [ContentTag.Launched],
     component: (props) => (
       <>
         The {props.shortGpuName} is a {props.company} graphics card that
-        launched during {props.releaseDate}.
+        launched during <strong>{props.releaseDate}</strong>.
       </>
     ),
   },
@@ -54,7 +51,7 @@ const IntroBlurbSentence1 = compileContentComponent(
 const IntroBlurbSentence2 = compileContentComponent(
   {
     deps: ['launchPrice'],
-    filters: [Filter.Launched],
+    tags: [ContentTag.Launched],
     component: (props) => (
       <>It was released with prices starting at {props.launchPrice} MSRP.</>
     ),
@@ -79,7 +76,7 @@ const IntroBlurbSentence3 = compileContentComponent(
     component: (props) => (
       <>
         The {props.codename} chip that powers the {props.shortGpuName} uses the{' '}
-        {props.company} {props.architecture} architecture and built on the{' '}
+        {props.company} {props.architecture} architecture and is built on the{' '}
         {props.processSize} process.
       </>
     ),
@@ -115,12 +112,10 @@ const IntroBlurbSentence3 = compileContentComponent(
 );
 
 export const IntroBlurb = () => {
-  const { gpu } = useContext(ViewPageContext);
+  const { gpu, contentData } = useContext(ViewPageContext);
 
   const context = useMemo(() => {
-    const filters = {
-      [Filter.Launched]: hasGpuLaunched(gpu),
-    };
+    const tags = contentData.contentTags;
     const params = {
       architecture: formatGpuField(gpu.specs?.architecture),
       codename: formatGpuField(gpu.specs?.codename),
@@ -135,8 +130,8 @@ export const IntroBlurb = () => {
       slotWidth: formatGpuField(gpu.specs?.slotWidth),
     };
 
-    return { filters, params };
-  }, [gpu]);
+    return { tags, params };
+  }, [contentData.contentTags, gpu]);
 
   return (
     <ContentContext.Provider value={context}>

@@ -1,3 +1,4 @@
+import { parseISO } from 'date-fns';
 import { getListGpusPath } from '../routes';
 import {
   DEFAULT_LIST_GPUS_LIMIT,
@@ -6,7 +7,7 @@ import {
   LIST_GPUS_PRESETS,
   ListGpusPresetSlug,
 } from './gpu-consts';
-import { GpuOrder, GpuSort } from './gpu-types';
+import { Gpu, GpuOrder, GpuSort } from './gpu-types';
 
 export function generateGpuSlug(name: string, company: string) {
   const slugParts = [];
@@ -59,4 +60,14 @@ export function generateGpusQueryFromSearchParams(
       limit,
     };
   }
+}
+
+export function hasGpuLaunched(gpu: Gpu) {
+  if (gpu?.releaseDate?.value == null) {
+    return false;
+  }
+
+  const date = new Date();
+  const releaseDate = parseISO(gpu.releaseDate?.value);
+  return date.getTime() >= releaseDate.getTime();
 }

@@ -6,23 +6,23 @@ import {
   CompiledContentFunctionVariant,
   CompiledContentFunctionVariants,
   ContentComponentParams,
-  ContentFilters,
   ContentFunction,
   ContentFunctionParams,
+  ContentTags,
   RawContentComponent,
   RawContentFunction,
 } from './types';
 
 interface ProcessContentComponentOptions {
   variants: CompiledContentComponentVariants;
-  filters?: ContentFilters;
+  tags?: ContentTags;
   params?: ContentComponentParams;
   required?: boolean;
 }
 
 interface ProcessContentFunctionOptions {
   variants: CompiledContentFunctionVariants;
-  filters?: ContentFilters;
+  tags?: ContentTags;
   params?: ContentFunctionParams;
   required?: boolean;
 }
@@ -30,11 +30,11 @@ interface ProcessContentFunctionOptions {
 export function processContentComponent(
   options: ProcessContentComponentOptions,
 ) {
-  const { variants, filters, params, required } = options;
+  const { variants, tags: filters, params, required } = options;
 
   for (let i = 0; i < variants.length; ++i) {
     const content = variants[i];
-    if (!hasRequiredFilters(content, filters)) {
+    if (!hasRequiredTags(content, filters)) {
       continue;
     }
 
@@ -55,11 +55,11 @@ export function processContentComponent(
 }
 
 export function processContentFunction(options: ProcessContentFunctionOptions) {
-  const { variants, filters, params, required } = options;
+  const { variants, tags, params, required } = options;
 
   for (let i = 0; i < variants.length; ++i) {
     const content = variants[i];
-    if (!hasRequiredFilters(content, filters)) {
+    if (!hasRequiredTags(content, tags)) {
       continue;
     }
 
@@ -79,33 +79,33 @@ export function processContentFunction(options: ProcessContentFunctionOptions) {
   );
 }
 
-function hasRequiredFilters(
+function hasRequiredTags(
   content: CompiledContentComponentVariant | CompiledContentFunctionVariant,
-  filters?: ContentFilters,
+  tags?: ContentTags,
 ) {
-  if (content.filters == null || content.filters.length === 0) {
+  if (content.tags == null || content.tags.length === 0) {
     return true;
   }
 
-  if (filters == null) {
+  if (tags == null) {
     return false;
   }
 
-  let filtersToCheck: Set<string>;
-  if (Array.isArray(filters)) {
-    filtersToCheck = new Set(filters || []);
+  let tagsToCheck: Set<string>;
+  if (Array.isArray(tags)) {
+    tagsToCheck = new Set(tags || []);
   } else {
     const filtered: string[] = [];
-    const keys = Object.keys(filters);
+    const keys = Object.keys(tags);
     for (const filter of keys) {
-      if (filters[filter] === true) {
+      if (tags[filter] === true) {
         filtered.push(filter);
       }
     }
-    filtersToCheck = new Set(filtered);
+    tagsToCheck = new Set(filtered);
   }
 
-  return content.filters.every((hint) => filtersToCheck.has(hint));
+  return content.tags.every((hint) => tagsToCheck.has(hint));
 }
 
 function hasRequiredParams(
@@ -130,10 +130,10 @@ export function compileContentComponent(...content: RawContentComponent[]) {
   const variants: CompiledContentComponentVariants = [];
 
   for (let i = 0; i < content.length; ++i) {
-    const { filters, deps, component } = content[i];
+    const { tags, deps, component } = content[i];
 
     variants.push({
-      filters: filters || [],
+      tags: tags || [],
       deps: deps || [],
       component,
     });
@@ -141,7 +141,7 @@ export function compileContentComponent(...content: RawContentComponent[]) {
 
   // eslint-disable-next-line react/display-name
   return (props: {
-    filters?: ContentFilters;
+    tags?: ContentTags;
     params?: ContentComponentParams;
     required?: boolean;
   }) => <Content variants={variants} {...props} />;
@@ -153,20 +153,20 @@ export function compileContentFunction(
   const variants: CompiledContentFunctionVariants = [];
 
   for (let i = 0; i < content.length; ++i) {
-    const { filters, deps, hook } = content[i];
+    const { tags, deps, hook } = content[i];
 
     variants.push({
-      filters: filters || [],
+      tags: tags || [],
       deps: deps || [],
       hook,
     });
   }
 
   return (props?) => {
-    const filters = props.filters || [];
+    const tags = props.tags || [];
     const params = props.params || {};
     const required = props.required || false;
 
-    return processContentFunction({ variants, filters, params, required });
+    return processContentFunction({ variants, tags, params, required });
   };
 }

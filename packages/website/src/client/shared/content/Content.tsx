@@ -3,16 +3,16 @@ import { ContentContext } from './ContentContext';
 import {
   CompiledContentComponentVariants,
   ContentComponentParams,
-  ContentFilters,
   ContentFunction,
   ContentFunctionParams,
+  ContentTags,
 } from './types';
 import { processContentComponent } from './utils';
 
 export interface ContentComponentProps {
   variants: CompiledContentComponentVariants;
 
-  filters?: ContentFilters;
+  tags?: ContentTags;
   params?: ContentComponentParams;
   required?: boolean;
 }
@@ -20,7 +20,7 @@ export interface ContentComponentProps {
 export interface ContentHookProps {
   function: ContentFunction;
 
-  filters?: ContentFilters;
+  tags?: ContentTags;
   params?: ContentFunctionParams;
   required?: boolean;
 }
@@ -40,18 +40,18 @@ const ContentComponent: FunctionComponent<ContentComponentProps> = (props) => {
 
   const context = useContext(ContentContext);
 
-  const filters = props.filters || context.filters;
+  const tags = props.tags || context.tags;
   const params = props.params || context.params;
   const required = props.required || false;
 
   const component = useMemo(() => {
     return processContentComponent({
       variants,
-      filters,
+      tags: tags,
       params,
       required,
     });
-  }, [filters, params, required, variants]);
+  }, [tags, params, required, variants]);
 
   return <>{component}</>;
 };
@@ -61,9 +61,9 @@ const ContentFunction: FunctionComponent<ContentHookProps> = (props) => {
 
   const context = useContext(ContentContext);
 
-  const filters = props.filters || context.filters;
+  const tags = props.tags || context.tags;
   const params = props.params || (context.params as ContentFunctionParams);
   const required = props.required || false;
 
-  return <>{hook({ filters, params, required })}</>;
+  return <>{hook({ tags, params, required })}</>;
 };

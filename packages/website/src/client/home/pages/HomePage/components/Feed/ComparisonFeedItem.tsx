@@ -185,7 +185,7 @@ const Subtitle: FunctionComponent<SubtitleProps> = (props) => {
   );
 
   return (
-    <ContentContext.Provider value={{ filters: [tag], params }}>
+    <ContentContext.Provider value={{ tags: [tag], params }}>
       <SubtitleSentence1 />
     </ContentContext.Provider>
   );
@@ -193,7 +193,7 @@ const Subtitle: FunctionComponent<SubtitleProps> = (props) => {
 
 const SubtitleSentence1 = compileContentComponent(
   {
-    filters: [ComparisonFeedTag.ComparePerformance],
+    tags: [ComparisonFeedTag.ComparePerformance],
     deps: ['name1', 'name2'],
     component: (props) => (
       <>
@@ -202,7 +202,7 @@ const SubtitleSentence1 = compileContentComponent(
     ),
   },
   {
-    filters: [ComparisonFeedTag.CompareValue],
+    tags: [ComparisonFeedTag.CompareValue],
     component: () => (
       <>Which of these graphics cards have the better bang for your buck?</>
     ),

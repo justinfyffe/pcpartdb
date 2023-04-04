@@ -1,3 +1,4 @@
+import { ContentTags } from '../content';
 import {
   Gpu,
   GpuComparison,
@@ -39,6 +40,8 @@ export interface ListGpusViewModel {
 }
 
 export interface ViewGpuContentData {
+  contentTags: ContentTags;
+
   totalPerformanceGpus: number;
   totalPerformanceYearGpus: number;
 

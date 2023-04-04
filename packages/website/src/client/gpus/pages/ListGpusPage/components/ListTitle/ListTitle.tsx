@@ -14,36 +14,36 @@ interface ListTitleContentParams extends ContentComponentParams {
 
 const TitleSentence = compileContentComponent(
   {
-    filters: [GpuSort.PerformanceRating],
+    tags: [GpuSort.PerformanceRating],
     deps: ['company'],
     component: (props: ListTitleContentParams) => (
       <>Best {props.company} graphics cards by performance</>
     ),
   },
   {
-    filters: [GpuSort.ValueRating],
+    tags: [GpuSort.ValueRating],
     deps: ['company'],
     component: (props: ListTitleContentParams) => (
       <>Best {props.company} graphics cards by value</>
     ),
   },
   {
-    filters: [GpuSort.PerformanceRating],
+    tags: [GpuSort.PerformanceRating],
     component: () => <>Best graphics cards by performance</>,
   },
   {
-    filters: [GpuSort.ValueRating],
+    tags: [GpuSort.ValueRating],
     component: () => <>Best graphics cards by value</>,
   },
 );
 
 const SubtitleSentence = compileContentComponent(
   {
-    filters: [GpuSort.PerformanceRating],
+    tags: [GpuSort.PerformanceRating],
     component: () => <>Sorted by highest performance benchmarks</>,
   },
   {
-    filters: [GpuSort.ValueRating],
+    tags: [GpuSort.ValueRating],
     component: () => <>Sorted by performance per dollar</>,
   },
 );

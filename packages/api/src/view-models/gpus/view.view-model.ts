@@ -1,8 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import {
+  ContentTag,
+  ContentTags,
   Gpu,
   GpuOrder,
   GpuSort,
+  hasGpuLaunched,
   RelatedComparisons,
   RelatedGpus,
   ViewGpuContentData,
@@ -77,12 +80,31 @@ export class ViewGpuViewModelService {
     );
     const relativeValueGpus = await this.getRelativeValueGpus(gpu, ctx);
 
+    const contentTags = this.getContentTags(gpu);
+
     return {
+      contentTags,
       totalPerformanceGpus,
       totalPerformanceYearGpus,
       relativePerformanceGpus,
       relativeValueGpus,
     } as ViewGpuContentData;
+  }
+
+  private getContentTags(gpu: Gpu) {
+    const slots = gpu.specs?.slotWidth?.value;
+
+    return {
+      [ContentTag.BestPerformance]: gpu.ranks?.performanceRank === 1,
+      [ContentTag.BestPerformanceCompany]:
+        gpu.ranks?.performanceCompanyRank === 1,
+      [ContentTag.BestPerformanceYear]: gpu.ranks?.performanceYearRank === 1,
+      [ContentTag.Launched]: hasGpuLaunched(gpu),
+      [ContentTag.ExtraLargeSize]: slots >= 3,
+      [ContentTag.LargeSize]: slots > 2.5 && slots < 3,
+      [ContentTag.CommonSize]: slots <= 2.5 && slots >= 2,
+      [ContentTag.SmallSize]: slots < 2,
+    } as ContentTags;
   }
 
   private async getRelativePerformanceGpus(seed: Gpu, ctx: Context) {
