@@ -8,13 +8,26 @@ import { formatGpuField, getGpuName } from '../../../..';
 import { ViewPageContext } from '../../context';
 
 const ValueBlurbSentence1 = compileContentComponent({
-  deps: ['gpuName', 'valueRank', 'performanceRating', 'launchPrice'],
+  deps: [
+    'gpuName',
+    'valueRank',
+    'valueRating',
+    'performanceRating',
+    'launchPrice',
+  ],
   component: (props) => (
     <>
-      The {props.gpuName} has the {props.valueRank} best performance per dollar
-      based on its {props.performanceRating} performance rating and{' '}
-      {props.launchPrice} launch price.
+      Its {props.performanceRating} performance rating and {props.launchPrice}{' '}
+      launch price gives it a performanc per dollar of {props.valueRating}. This
+      makes it the {props.valueRank} best value card in our database.
     </>
+  ),
+});
+
+const ValueBlurbSentence2 = compileContentComponent({
+  deps: [],
+  component: (props) => (
+    <>The best value card, foo, has a performance per dollar of bar.</>
   ),
 });
 
@@ -31,6 +44,7 @@ export const ValueBlurb = () => {
         gpu.ranks?.valueRank > 1
           ? formatOrdinalNumber(gpu.ranks?.valueRank)
           : '',
+      valueRating: formatGpuField(gpu.benchmarks?.valueScore),
     };
 
     return { tags, params };
@@ -39,7 +53,7 @@ export const ValueBlurb = () => {
   return (
     <ContentContext.Provider value={context}>
       <p>
-        <ValueBlurbSentence1 />
+        <ValueBlurbSentence1 /> <ValueBlurbSentence2 />
       </p>
     </ContentContext.Provider>
   );

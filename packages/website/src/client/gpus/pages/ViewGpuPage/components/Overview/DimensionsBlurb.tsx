@@ -7,21 +7,74 @@ import {
 import { formatGpuDimensions, formatGpuField, getGpuName } from '../../../..';
 import { ViewPageContext } from '../../context';
 
-const DimensionsBlurbSentence1 = compileContentComponent({
-  deps: ['dimensions', 'gpuName'],
-  component: (props) => (
-    <>
-      The {props.gpuName} has dimensions measuring {props.dimensions}.
-    </>
-  ),
-});
+const DimensionsBlurbSentence1 = compileContentComponent(
+  {
+    tags: [ContentTag.ExtraLargeSize],
+    deps: ['dimensions', 'shortGpuName'],
+    component: (props) => (
+      <>
+        The {props.shortGpuName} is a very large card with dimensions measuring{' '}
+        {props.dimensions}.
+      </>
+    ),
+  },
+  {
+    tags: [ContentTag.LargeSize],
+    deps: ['dimensions', 'shortGpuName'],
+    component: (props) => (
+      <>
+        The {props.shortGpuName} is a large card with dimensions measuring{' '}
+        {props.dimensions}.
+      </>
+    ),
+  },
+  {
+    tags: [ContentTag.SmallSize],
+    deps: ['dimensions', 'shortGpuName'],
+    component: (props) => (
+      <>
+        The {props.shortGpuName} is a low-profile card with dimensions measuring{' '}
+        {props.dimensions}.
+      </>
+    ),
+  },
+  {
+    tags: [ContentTag.CompactSize],
+    deps: ['dimensions', 'shortGpuName'],
+    component: (props) => (
+      <>
+        The {props.shortGpuName} is a compact, low-profile card with dimensions
+        measuring {props.dimensions}.
+      </>
+    ),
+  },
+  {
+    deps: ['dimensions', 'shortGpuName'],
+    component: (props) => (
+      <>
+        The {props.shortGpuName} has dimensions measuring {props.dimensions}.
+      </>
+    ),
+  },
+);
 
-const DimensionsBlurbSentence2 = compileContentComponent({
-  deps: ['slotWidth'],
-  component: (props) => (
-    <>The graphics card takes up {props.slotWidth} PCIe slots.</>
-  ),
-});
+const DimensionsBlurbSentence2 = compileContentComponent(
+  {
+    deps: ['marketSegment', 'slotWidth'],
+    component: (props) => (
+      <>
+        This {props.marketSegment} component takes up {props.slotWidth} PCIe
+        slots.
+      </>
+    ),
+  },
+  {
+    deps: ['slotWidth'],
+    component: (props) => (
+      <>This component takes up {props.slotWidth} PCIe slots.</>
+    ),
+  },
+);
 
 const DimensionsBlurbSentence3 = compileContentComponent(
   {
@@ -30,7 +83,7 @@ const DimensionsBlurbSentence3 = compileContentComponent(
   },
   {
     tags: [ContentTag.LargeSize],
-    component: () => <>This is slightly larger than most modern GPUs.</>,
+    component: () => <>This is larger than most modern GPUs.</>,
   },
   {
     tags: [ContentTag.CommonSize],
@@ -51,8 +104,9 @@ export const DimensionsBlurb = () => {
     const tags = contentData.contentTags;
     const params = {
       dimensions: formatGpuDimensions(gpu),
-      gpuName: getGpuName(gpu),
       height: formatGpuField(gpu.specs?.height),
+      marketSegment: formatGpuField(gpu.marketSegment).toLowerCase(),
+      shortGpuName: getGpuName(gpu, { company: false }),
       slotWidth: formatGpuField(gpu.specs?.slotWidth),
     };
 

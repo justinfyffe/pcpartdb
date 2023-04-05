@@ -66,46 +66,40 @@ const IntroBlurbSentence2 = compileContentComponent(
 
 const IntroBlurbSentence3 = compileContentComponent(
   {
-    deps: [
-      'architecture',
-      'codename',
-      'company',
-      'processSize',
-      'shortGpuName',
-    ],
+    deps: ['architecture', 'codename', 'company', 'processSize'],
     component: (props) => (
       <>
-        The {props.codename} chip that powers the {props.shortGpuName} uses the{' '}
-        {props.company} {props.architecture} architecture and is built on the{' '}
-        {props.processSize} process.
-      </>
-    ),
-  },
-  {
-    deps: ['architecture', 'company', 'processSize', 'shortGpuName'],
-    component: (props) => (
-      <>
-        The chip that powers the {props.shortGpuName} uses the {props.company}{' '}
+        The {props.codename} chip that powers the GPU uses the {props.company}{' '}
         {props.architecture} architecture and is built on the{' '}
         {props.processSize} process.
       </>
     ),
   },
   {
-    deps: ['architecture', 'codename', 'company', 'shortGpuName'],
+    deps: ['architecture', 'company', 'processSize'],
     component: (props) => (
       <>
-        The {props.codename} chip that powers the {props.shortGpuName} uses the{' '}
-        {props.company} {props.architecture} architecture.
+        The chip that powers the {props.shortGpuName} uses the GPU{' '}
+        {props.architecture} architecture and is built on the{' '}
+        {props.processSize} process.
       </>
     ),
   },
   {
-    deps: ['codename', 'processSize', 'shortGpuName'],
+    deps: ['architecture', 'codename', 'company'],
     component: (props) => (
       <>
-        The {props.codename} chip that powers the {props.shortGpuName} is built
-        on the {props.processSize} process.
+        The {props.codename} chip that powers the GPU uses the {props.company}{' '}
+        {props.architecture} architecture.
+      </>
+    ),
+  },
+  {
+    deps: ['codename', 'processSize'],
+    component: (props) => (
+      <>
+        The {props.codename} chip that powers the GPU is built on the{' '}
+        {props.processSize} process.
       </>
     ),
   },

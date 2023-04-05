@@ -47,6 +47,8 @@ export interface ViewGpuContentData {
 
   relativePerformanceGpus?: Gpu[];
   relativeValueGpus?: Gpu[];
+
+  bestPerformanceSegmentGpu?: Gpu;
 }
 
 export interface ViewGpuViewModel {

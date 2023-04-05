@@ -85,6 +85,17 @@ export class ViewGpuViewModelService {
     );
     const relativeValueGpus = await this.getRelativeValueGpus(gpu, ctx);
 
+    const bestPerformanceSegmentGpus = await this.gpuService.list(
+      {
+        query: {
+          filter: { segment: [segment], performanceRated: true },
+          orderBy: { sort: GpuSort.PerformanceRating },
+          limit: 1,
+        },
+      },
+      ctx,
+    );
+
     const contentTags = this.getContentTags(gpu);
 
     return {
@@ -93,6 +104,7 @@ export class ViewGpuViewModelService {
       totalPerformanceSegmentYearGpus,
       relativePerformanceGpus,
       relativeValueGpus,
+      bestPerformanceSegmentGpu: bestPerformanceSegmentGpus?.[0],
     } as ViewGpuContentData;
   }
 
@@ -106,11 +118,14 @@ export class ViewGpuViewModelService {
       [ContentTag.BestPerformanceSegmentYear]:
         gpu.ranks?.performanceSegmentYearRank === 1,
       [ContentTag.BestValue]: gpu.ranks?.valueRank === 1,
+
       [ContentTag.Launched]: hasGpuLaunched(gpu),
+
       [ContentTag.ExtraLargeSize]: slots > 3,
       [ContentTag.LargeSize]: slots > 2.5 && slots <= 3,
       [ContentTag.CommonSize]: slots <= 2.5 && slots >= 2,
-      [ContentTag.SmallSize]: slots < 2,
+      [ContentTag.SmallSize]: slots < 2 && slots >= 1.5,
+      [ContentTag.CompactSize]: slots < 1.5,
     } as ContentTags;
   }
 
