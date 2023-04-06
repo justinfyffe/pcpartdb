@@ -67,6 +67,10 @@ export const ValueBlurb = () => {
     return { tags, params };
   }, [contentData.contentTags, gpu]);
 
+  if (gpu.benchmarks?.valueScore == null) {
+    return <></>;
+  }
+
   return (
     <ContentContext.Provider value={context}>
       <p>

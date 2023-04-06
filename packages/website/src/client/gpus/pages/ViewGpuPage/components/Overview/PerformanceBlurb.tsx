@@ -12,11 +12,12 @@ import { formatGpuField, getGpuName } from '../../../..';
 import { ViewPageContext } from '../../context';
 
 const PerformanceBlurbSentence1 = compileContentComponent({
-  deps: ['gpuName', 'performanceRank', 'totalPerformanceGpus'],
+  deps: ['shortGpuName', 'performanceRank', 'totalPerformanceGpus'],
   component: (props) => (
     <>
-      The {props.gpuName} delivers the {props.performanceRank} best performance
-      among the {props.totalPerformanceGpus} benchmarked GPUs in our database.
+      The {props.shortGpuName} delivers the {props.performanceRank} best
+      performance among the {props.totalPerformanceGpus} benchmarked GPUs in our
+      database.
     </>
   ),
 });
@@ -25,21 +26,32 @@ const PerformanceBlurbSentence2 = compileContentComponent({
   deps: ['performanceRankForSegmentYear', 'marketSegment', 'year'],
   component: (props) => (
     <>
-      It has the {props.performanceRankForSegmentYear} best performance of the{' '}
-      {props.marketSegment} graphics cards that released in {props.year}.
+      It is the {props.performanceRankForSegmentYear} strongest{' '}
+      {props.marketSegment} card that released in {props.year}.
     </>
   ),
 });
 
-const PerformanceBlurbSentence3 = compileContentComponent({
-  deps: ['bestPerformanceDifference', 'bestPerformanceSegmentGpuName'],
-  component: (props) => (
-    <>
-      It is approximately {props.bestPerformanceDifference}% as fast as the{' '}
-      {props.bestPerformanceSegmentGpuName}, the top benchmarked GPU.
-    </>
-  ),
-});
+const PerformanceBlurbSentence3 = compileContentComponent(
+  {
+    tags: [ContentTag.BestPerformanceForSegmentYear],
+    component: () => <></>,
+  },
+  {
+    deps: [
+      'bestPerformanceDifference',
+      'bestPerformanceSegmentGpuName',
+      'marketSegment',
+    ],
+    component: (props) => (
+      <>
+        It is approximately {props.bestPerformanceDifference}% as fast as the{' '}
+        {props.bestPerformanceSegmentGpuName}, the fastest {props.marketSegment}{' '}
+        GPU.
+      </>
+    ),
+  },
+);
 
 export const PerformanceBlurb = () => {
   const { gpu, contentData } = useContext(ViewPageContext);
@@ -58,7 +70,6 @@ export const PerformanceBlurb = () => {
       bestPerformanceSegmentGpuName: getGpuName(bestPerformanceSegmentGpu),
       bestPerformanceSegmentGpuPath: getViewGpuPath(bestPerformanceSegmentGpu),
       company: formatGpuField(gpu.company),
-      gpuName: getGpuName(gpu),
       marketSegment: formatGpuField(gpu.marketSegment).toLowerCase(),
       performanceRankForCompanySegment:
         gpu.ranks?.performanceRankForCompanySegment > 1
@@ -83,6 +94,10 @@ export const PerformanceBlurb = () => {
 
     return { tags, params };
   }, [gpu, contentData]);
+
+  if (gpu.benchmarks?.performanceScore == null) {
+    return <></>;
+  }
 
   return (
     <ContentContext.Provider value={context}>

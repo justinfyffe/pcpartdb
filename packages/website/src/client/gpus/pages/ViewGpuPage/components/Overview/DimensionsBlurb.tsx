@@ -10,49 +10,49 @@ import { ViewPageContext } from '../../context';
 const DimensionsBlurbSentence1 = compileContentComponent(
   {
     tags: [ContentTag.ExtraLargeSize],
-    deps: ['dimensions', 'shortGpuName'],
+    deps: ['dimensions', 'gpuName'],
     component: (props) => (
       <>
-        The {props.shortGpuName} is a very large card with dimensions measuring{' '}
+        The {props.gpuName} is a very large card with dimensions measuring{' '}
         {props.dimensions}.
       </>
     ),
   },
   {
     tags: [ContentTag.LargeSize],
-    deps: ['dimensions', 'shortGpuName'],
+    deps: ['dimensions', 'gpuName'],
     component: (props) => (
       <>
-        The {props.shortGpuName} is a large card with dimensions measuring{' '}
+        The {props.gpuName} is a large card with dimensions measuring{' '}
         {props.dimensions}.
       </>
     ),
   },
   {
     tags: [ContentTag.SmallSize],
-    deps: ['dimensions', 'shortGpuName'],
+    deps: ['dimensions', 'gpuName'],
     component: (props) => (
       <>
-        The {props.shortGpuName} is a low-profile card with dimensions measuring{' '}
+        The {props.gpuName} is a low-profile card with dimensions measuring{' '}
         {props.dimensions}.
       </>
     ),
   },
   {
     tags: [ContentTag.CompactSize],
-    deps: ['dimensions', 'shortGpuName'],
+    deps: ['dimensions', 'gpuName'],
     component: (props) => (
       <>
-        The {props.shortGpuName} is a compact, low-profile card with dimensions
+        The {props.gpuName} is a compact, low-profile card with dimensions
         measuring {props.dimensions}.
       </>
     ),
   },
   {
-    deps: ['dimensions', 'shortGpuName'],
+    deps: ['dimensions', 'gpuName'],
     component: (props) => (
       <>
-        The {props.shortGpuName} has dimensions measuring {props.dimensions}.
+        The {props.gpuName} has dimensions measuring {props.dimensions}.
       </>
     ),
   },
@@ -60,40 +60,21 @@ const DimensionsBlurbSentence1 = compileContentComponent(
 
 const DimensionsBlurbSentence2 = compileContentComponent(
   {
-    deps: ['marketSegment', 'slotWidth'],
+    deps: ['marketSegment', 'slotWidth', 'slotsUnit'],
     component: (props) => (
       <>
-        This {props.marketSegment} component takes up {props.slotWidth} PCIe
-        slots.
+        This {props.marketSegment} card takes up {props.slotWidth} PCIe{' '}
+        {props.slotsUnit}.
       </>
     ),
   },
   {
-    deps: ['slotWidth'],
+    deps: ['slotWidth', 'slotsUnit'],
     component: (props) => (
-      <>This component takes up {props.slotWidth} PCIe slots.</>
+      <>
+        This card takes up {props.slotWidth} PCIe {props.slotsUnit}.
+      </>
     ),
-  },
-);
-
-const DimensionsBlurbSentence3 = compileContentComponent(
-  {
-    tags: [ContentTag.ExtraLargeSize],
-    component: () => <>This is much larger in size than most modern GPUs.</>,
-  },
-  {
-    tags: [ContentTag.LargeSize],
-    component: () => <>This is larger than most modern GPUs.</>,
-  },
-  {
-    tags: [ContentTag.CommonSize],
-    component: () => (
-      <>This is similar in size to the majority of modern GPUs.</>
-    ),
-  },
-  {
-    tags: [ContentTag.SmallSize],
-    component: () => <>This size is smaller than most modern GPUs.</>,
   },
 );
 
@@ -103,11 +84,11 @@ export const DimensionsBlurb = () => {
   const context = useMemo(() => {
     const tags = contentData.contentTags;
     const params = {
-      dimensions: formatGpuDimensions(gpu),
-      height: formatGpuField(gpu.specs?.height),
+      dimensions: formatGpuDimensions(gpu, { allowMissingDimensions: true }),
       marketSegment: formatGpuField(gpu.marketSegment).toLowerCase(),
-      shortGpuName: getGpuName(gpu, { company: false }),
-      slotWidth: formatGpuField(gpu.specs?.slotWidth),
+      gpuName: getGpuName(gpu),
+      slotWidth: formatGpuField(gpu.specs?.slotWidth, { showUnits: false }),
+      slotsUnit: gpu.specs?.slotWidth?.value === 1 ? 'slot' : 'slots',
     };
 
     return { tags, params };
@@ -116,8 +97,7 @@ export const DimensionsBlurb = () => {
   return (
     <ContentContext.Provider value={context}>
       <p>
-        <DimensionsBlurbSentence1 /> <DimensionsBlurbSentence2 />{' '}
-        <DimensionsBlurbSentence3 />
+        <DimensionsBlurbSentence1 /> <DimensionsBlurbSentence2 />
       </p>
     </ContentContext.Provider>
   );

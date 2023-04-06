@@ -1,3 +1,4 @@
+import { boolean } from '@hapi/joi';
 import {
   calculateDisplayGpuFieldValue,
   getUnitFormat,
@@ -6,7 +7,6 @@ import {
   GpuField,
   MarketSegmentValue,
 } from '@pcpartdb/shared';
-import { parseISO } from 'date-fns';
 import {
   BooleanFormatter,
   DateFormatter,
@@ -82,25 +82,33 @@ export function formatGpuCompany(company: string) {
   }
 }
 
-export function formatGpuDimensions(gpu: Gpu) {
+interface FormatGpuDimensionsOptions {
+  allowMissingDimensions?: boolean;
+}
+
+export function formatGpuDimensions(
+  gpu: Gpu,
+  options?: FormatGpuDimensionsOptions,
+) {
   const length = formatGpuField(gpu.specs?.length);
   const height = formatGpuField(gpu.specs?.height);
   const width = formatGpuField(gpu.specs?.width);
   const slots = formatGpuField(gpu.specs?.slotWidth);
 
-  if (length == null || width == null) {
+  const dimensions: string[] = [];
+  dimensions.push(length != null ? `${length} (L)` : null);
+  dimensions.push(width != null ? `${width} (W)` : null);
+  if (height != null) {
+    dimensions.push(`${height} (H)`);
+  } else if (slots != null) {
+    dimensions.push(`${slots} (H)`);
+  }
+
+  if (options?.allowMissingDimensions === false && dimensions.includes(null)) {
     return null;
   }
 
-  if (height != null) {
-    return `${length} (L) x ${width} (W) x ${height} (H)`;
-  }
-
-  if (slots != null) {
-    return `${length} (L) x ${width} (W) x ${slots} (H)`;
-  }
-
-  return null;
+  return dimensions.filter((value) => value != null).join(' x ') || null;
 }
 
 export interface FormatGpuFieldOptions {
@@ -128,7 +136,10 @@ export function formatGpuField(
     return formatPrice(value, { ...options, currency: field.meta?.currency });
   }
   if (fieldKey === 'slotWidth' && typeof value === 'number') {
-    return `${value}`;
+    if (options?.showUnits === false) {
+      return `${value}`;
+    }
+    return value === 1 ? `${value} slot` : `${value} slots`;
   }
   if (fieldKey === 'marketSegment') {
     return formatMarketSegment(value as MarketSegmentValue);

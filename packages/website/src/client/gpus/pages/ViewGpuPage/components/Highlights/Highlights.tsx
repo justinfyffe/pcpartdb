@@ -35,8 +35,7 @@ export const Highlights: FunctionComponent<HighlightsProps> = (props) => {
   }, [specs]);
 
   const highlightSlots = useMemo(() => {
-    let slotWidth = formatGpuField(specs.slotWidth);
-    slotWidth = slotWidth != null ? `${slotWidth}-slot` : null;
+    const slotWidth = formatGpuField(specs.slotWidth);
     let height = formatGpuField(specs.height);
     height = height != null ? `${height} (H)` : null;
     return (
