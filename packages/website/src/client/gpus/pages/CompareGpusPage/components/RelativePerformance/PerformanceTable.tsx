@@ -15,7 +15,7 @@ import {
   THead,
   Tr,
 } from '../../../../../shared/components';
-import { getGpuName } from '../../../..';
+import { formatGpuField, getGpuName } from '../../../..';
 import { ComparePageContext } from '../../context';
 import {
   CustomRow,
@@ -141,8 +141,8 @@ export const PerformanceTable: FunctionComponent<PerformanceTableProps> = (
         <THead>
           <Tr>
             <Th></Th>
-            <Th className="text-left">Relative Performance</Th>
-            <Th className="text-left">Rank</Th>
+            <Th className="text-right">Performance Rating</Th>
+            <Th className="text-right">Relative Performance</Th>
           </Tr>
         </THead>
         <TBody>
@@ -158,11 +158,11 @@ export const PerformanceTable: FunctionComponent<PerformanceTableProps> = (
                     {getGpuName(gpu, { company: false })}
                   </a>
                 </CustomRowLabel>
-                <CustomRowValue className="text-left">
-                  {getRelativePerformance(gpu)}%
+                <CustomRowValue className="text-right">
+                  {formatGpuField(gpu.benchmarks?.performanceScore)}
                 </CustomRowValue>
-                <CustomRowValue className="text-left">
-                  {gpu.ranks?.performanceRank}
+                <CustomRowValue className="text-right">
+                  {getRelativePerformance(gpu)}%
                 </CustomRowValue>
               </CustomRow>
             ) : (

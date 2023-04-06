@@ -1,7 +1,7 @@
 import { getViewGpuPath, Gpu } from '@pcpartdb/shared';
 import React, { FunctionComponent, useContext, useMemo } from 'react';
 import { Table, TBody, Th, THead, Tr } from '../../../../../shared/components';
-import { getGpuName } from '../../../..';
+import { formatGpuField, getGpuName } from '../../../..';
 import { ViewPageContext } from '../../context';
 import { CustomRow, CustomRowLabel, CustomRowValue } from '../CustomRow';
 
@@ -21,8 +21,8 @@ export const PerformanceTable: FunctionComponent<PerformanceTableProps> = (
       <THead>
         <Tr>
           <Th></Th>
-          <Th className="text-left">Relative Performance</Th>
-          <Th className="text-left">Rank</Th>
+          <Th className="text-right">Performance Rating</Th>
+          <Th className="text-right">Relative Performance</Th>
         </Tr>
       </THead>
       <TBody>
@@ -58,6 +58,11 @@ const PerformanceTableRow: FunctionComponent<PerformanceTableRowProps> = (
     relativeGpu.benchmarks.performanceScore.value,
   ]);
 
+  const rating = useMemo(
+    () => formatGpuField(relativeGpu.benchmarks?.performanceScore),
+    [relativeGpu],
+  );
+
   const href = useMemo(() => getViewGpuPath(relativeGpu), [relativeGpu]);
   const gpuName = useMemo(
     () => getGpuName(relativeGpu, { company: false }),
@@ -69,11 +74,9 @@ const PerformanceTableRow: FunctionComponent<PerformanceTableRowProps> = (
       <CustomRowLabel>
         <a href={href}>{gpuName}</a>
       </CustomRowLabel>
-      <CustomRowValue className="text-left">
+      <CustomRowValue className="text-right">{rating}</CustomRowValue>
+      <CustomRowValue className="text-right">
         {relativePerformancePct}%
-      </CustomRowValue>
-      <CustomRowValue className="text-left">
-        {relativeGpu.ranks?.performanceRank}
       </CustomRowValue>
     </CustomRow>
   );

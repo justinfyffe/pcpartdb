@@ -1,7 +1,7 @@
 import { getViewGpuPath, Gpu } from '@pcpartdb/shared';
 import React, { FunctionComponent, useContext, useMemo } from 'react';
 import { Table, TBody, Th, THead, Tr } from '../../../../../shared/components';
-import { getGpuName } from '../../../..';
+import { formatGpuField, getGpuName } from '../../../..';
 import { ViewPageContext } from '../../context';
 import { CustomRow, CustomRowLabel, CustomRowValue } from '../CustomRow';
 
@@ -19,8 +19,8 @@ export const ValueTable: FunctionComponent<ValueTableProps> = (props) => {
       <THead>
         <Tr>
           <Th></Th>
-          <Th className="text-left">Relative Value</Th>
-          <Th className="text-left">Rank</Th>
+          <Th className="text-right">Performance Per Dollar</Th>
+          <Th className="text-right">Relative Value</Th>
         </Tr>
       </THead>
       <TBody>
@@ -54,6 +54,11 @@ const ValueTableRow: FunctionComponent<ValueTableRowProps> = (props) => {
     relativeGpu.benchmarks.valueScore.value,
   ]);
 
+  const rating = useMemo(
+    () => formatGpuField(relativeGpu.benchmarks?.valueScore),
+    [relativeGpu],
+  );
+
   const href = useMemo(() => getViewGpuPath(relativeGpu), [relativeGpu]);
   const gpuName = useMemo(
     () => getGpuName(relativeGpu, { company: false }),
@@ -68,9 +73,9 @@ const ValueTableRow: FunctionComponent<ValueTableRowProps> = (props) => {
       <CustomRowLabel>
         <a href={href}>{gpuName}</a>
       </CustomRowLabel>
-      <CustomRowValue className="text-left">{relativeValuePct}%</CustomRowValue>
-      <CustomRowValue className="text-left">
-        {relativeGpu.ranks?.valueRank}
+      <CustomRowValue className="text-right">{rating}</CustomRowValue>
+      <CustomRowValue className="text-right">
+        {relativeValuePct}%
       </CustomRowValue>
     </CustomRow>
   );

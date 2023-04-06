@@ -15,7 +15,7 @@ import {
   THead,
   Tr,
 } from '../../../../../shared/components';
-import { getGpuName } from '../../../..';
+import { formatGpuField, getGpuName } from '../../../..';
 import { ComparePageContext } from '../../context';
 import {
   CustomRow,
@@ -137,8 +137,8 @@ export const ValueTable: FunctionComponent<ValueTableProps> = (props) => {
         <THead>
           <Tr>
             <Th></Th>
-            <Th className="text-left">Relative Value</Th>
-            <Th className="text-left">Rank</Th>
+            <Th className="text-right">Performance Per Dollar</Th>
+            <Th className="text-right">Relative Value</Th>
           </Tr>
         </THead>
         <TBody>
@@ -154,11 +154,11 @@ export const ValueTable: FunctionComponent<ValueTableProps> = (props) => {
                     {getGpuName(gpu, { company: false })}
                   </a>
                 </CustomRowLabel>
-                <CustomRowValue className="text-left">
-                  {getRelativeValue(gpu)}%
+                <CustomRowValue className="text-right">
+                  {formatGpuField(gpu.benchmarks?.valueScore)}
                 </CustomRowValue>
-                <CustomRowValue className="text-left">
-                  {gpu.ranks?.valueRank}
+                <CustomRowValue className="text-right">
+                  {getRelativeValue(gpu)}%
                 </CustomRowValue>
               </CustomRow>
             ) : (
