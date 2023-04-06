@@ -3,6 +3,7 @@ X: Done and tested
 
 Immediate Tasks:
     - code cleanup:
+      - change "base" text value to 16px, not 18px.
       - make tailwind screen sizing min instead of max
         - seeing lg:text-xl implies large screens have text-xl
     - content: add rank for company performance. Figure out how to do db query
