@@ -51,11 +51,9 @@ export const HighlightLabel = (props: HighlightLabelProps) => {
 
   return (
     <div className="flex-1 flex gap-2 items-center">
-      <div className="mr-1">
-        {cloneElement(icon, { className: 'w-5 lg:w-7.5' })}
-      </div>
+      <div className="mr-1">{cloneElement(icon, { className: 'w-5' })}</div>
 
-      <div className="font-medium text-xl lg:text-2xl">{children}</div>
+      <div className="font-medium md:text-sm text-xl">{children}</div>
     </div>
   );
 };
@@ -68,7 +66,7 @@ export const HighlightValue = (props: HighlightValueProps) => {
   const { children } = props;
 
   return (
-    <div className="text-md lg:text-lg text-slate-600 text-right">
+    <div className="md:text-sm text-base text-slate-600 text-right">
       {children}
     </div>
   );
@@ -88,7 +86,7 @@ export const HighlightButton = (props: HighlightButtonProps) => {
       {...restProps}
       variant={ButtonVariant.None}
       className={classNames(
-        'self-stretch lg:text-lg text-right py-1',
+        'self-stretch text-base text-right py-1',
         className,
       )}
     >

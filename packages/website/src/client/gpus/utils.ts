@@ -96,10 +96,10 @@ export function formatGpuDimensions(
   const slots = formatGpuField(gpu.specs?.slotWidth);
 
   const dimensions: string[] = [];
-  dimensions.push(length != null ? `${length} (L)` : null);
-  dimensions.push(width != null ? `${width} (W)` : null);
+  dimensions.push(length != null ? `${length}` : null);
+  dimensions.push(width != null ? `${width}` : null);
   if (height != null) {
-    dimensions.push(`${height} (H)`);
+    dimensions.push(`${height}`);
   } else if (slots != null) {
     dimensions.push(`${slots} (H)`);
   }

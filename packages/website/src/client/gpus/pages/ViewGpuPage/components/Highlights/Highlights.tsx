@@ -7,7 +7,7 @@ import {
   StarIcon,
 } from '@heroicons/react/24/outline';
 import React, { FunctionComponent, useContext, useMemo } from 'react';
-import { formatGpuField } from '../../../..';
+import { formatGpuDimensions, formatGpuField } from '../../../..';
 import { ViewPageContext } from '../../context';
 import {
   HighlightLabel,
@@ -25,8 +25,16 @@ export const Highlights: FunctionComponent<HighlightsProps> = (props) => {
 
   const context = useContext(ViewPageContext);
   const gpu = context.gpu;
+  const benchmarks = gpu.benchmarks;
   const specs = gpu.specs;
-  const ranks = gpu.ranks;
+
+  const highlightPerformance = useMemo(() => {
+    return formatGpuField(benchmarks.performanceScore) || '--';
+  }, [benchmarks]);
+
+  const highlightValue = useMemo(() => {
+    return formatGpuField(benchmarks.valueScore) || '--';
+  }, [benchmarks]);
 
   const highlightMemory = useMemo(() => {
     const memorySize = formatGpuField(specs.memorySize);
@@ -34,14 +42,9 @@ export const Highlights: FunctionComponent<HighlightsProps> = (props) => {
     return [memorySize, memoryType].filter((value) => value != null).join(' ');
   }, [specs]);
 
-  const highlightSlots = useMemo(() => {
-    const slotWidth = formatGpuField(specs.slotWidth);
-    let height = formatGpuField(specs.height);
-    height = height != null ? `${height} (H)` : null;
-    return (
-      [slotWidth, height].filter((value) => value != null).join(', ') || '--'
-    );
-  }, [specs]);
+  const highlightDimensions = useMemo(() => {
+    return formatGpuDimensions(gpu, { allowMissingDimensions: true });
+  }, [gpu]);
 
   const highlightTdp = useMemo(() => {
     return formatGpuField(specs.thermalDesignPower) || '--';
@@ -73,17 +76,17 @@ export const Highlights: FunctionComponent<HighlightsProps> = (props) => {
       </HighlightListItem> */}
 
       <HighlightListItem>
-        <HighlightLabel icon={<StarIcon />}>Performance Rank</HighlightLabel>
+        <HighlightLabel icon={<StarIcon />}>Performance Rating</HighlightLabel>
 
-        <HighlightValue>{ranks?.performanceRank || '--'}</HighlightValue>
+        <HighlightValue>{highlightPerformance}</HighlightValue>
       </HighlightListItem>
 
       <HighlightListItem>
         <HighlightLabel icon={<CurrencyDollarIcon />}>
-          Value Rank
+          Performance Per Dollar
         </HighlightLabel>
 
-        <HighlightValue>{ranks?.valueRank || '--'}</HighlightValue>
+        <HighlightValue>{highlightValue}</HighlightValue>
       </HighlightListItem>
 
       <HighlightListItem>
@@ -93,9 +96,11 @@ export const Highlights: FunctionComponent<HighlightsProps> = (props) => {
       </HighlightListItem>
 
       <HighlightListItem>
-        <HighlightLabel icon={<CubeTransparentIcon />}>Slots</HighlightLabel>
+        <HighlightLabel icon={<CubeTransparentIcon />}>
+          Dimensions
+        </HighlightLabel>
 
-        <HighlightValue>{highlightSlots}</HighlightValue>
+        <HighlightValue>{highlightDimensions}</HighlightValue>
       </HighlightListItem>
 
       <HighlightListItem>

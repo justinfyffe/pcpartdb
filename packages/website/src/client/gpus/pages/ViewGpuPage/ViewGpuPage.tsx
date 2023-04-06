@@ -67,7 +67,7 @@ export const ViewGpuPage = (props: ViewGpuViewModel) => {
             <CompareGpusForm values={[gpu.id]} />
           </section>
 
-          <article className="flex-1 flex flex-col gap-8">
+          <article className="md:min-w-full flex-1 flex flex-col gap-8">
             <section className="flex flex-wrap justify-start gap-8">
               {/* <GpuImages gpu={gpu} className="flex-1 min-w-80" /> */}
               <Highlights className="flex-1" />

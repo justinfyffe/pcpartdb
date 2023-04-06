@@ -2,6 +2,9 @@
 X: Done and tested
 
 Immediate Tasks:
+    - code cleanup:
+      - make tailwind screen sizing min instead of max
+        - seeing lg:text-xl implies large screens have text-xl
     - content: add rank for company performance. Figure out how to do db query
     - relative performance and relative value should be filtering based on market segment
 
