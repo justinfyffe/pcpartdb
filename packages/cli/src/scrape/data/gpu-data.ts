@@ -21,8 +21,13 @@ export async function getGpuData(options: GetGpuDataOptions) {
     const source = sourceModel[i];
 
     console.log(`Scraping GPU data for i=${i}`);
-    const gpu = await scrapeGpuData(source, proxy);
-    gpus.push(gpu);
+    try {
+      const gpu = await scrapeGpuData(source, proxy);
+      gpus.push(gpu);
+    } catch (err) {
+      console.error('Encountered error when scraping.');
+      console.error(err);
+    }
 
     await sleep(SLEEP_DELAY);
   }

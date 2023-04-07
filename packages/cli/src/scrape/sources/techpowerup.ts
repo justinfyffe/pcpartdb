@@ -36,11 +36,16 @@ export async function scrapeTechPowerUpGpuSources(
   for (let i = 0; i < QUERIES.length; ++i) {
     const query = QUERIES[i];
     console.log(`Scraping query: ${query}`);
-    const gpusForQuery = await scrapeGpuSources({ ...options, query });
-    console.log(`Scraped ${gpusForQuery.length}`);
-    gpusForQuery.forEach((gpu) => {
-      map[gpu.name] = gpu;
-    });
+    try {
+      const gpusForQuery = await scrapeGpuSources({ ...options, query });
+      console.log(`Scraped ${gpusForQuery.length}`);
+      gpusForQuery.forEach((gpu) => {
+        map[gpu.name] = gpu;
+      });
+    } catch (err) {
+      console.error('Encountered error when scraping.');
+      console.error(err);
+    }
     await sleep(SLEEP_DELAY);
   }
 

@@ -2,7 +2,12 @@
 X: Done and tested
 
 Immediate Tasks:
+    - crawler
+      - add retry functionality
+
     - code cleanup:
+      - create crawler class.
+        - Consider using a class base structure?
       - change "base" text value to 16px, not 18px.
       - make tailwind screen sizing min instead of max
         - seeing lg:text-xl implies large screens have text-xl
