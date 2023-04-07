@@ -1,10 +1,5 @@
 import 'reflect-metadata';
-import {
-  ApiError,
-  getAdminListGpusPath,
-  getViewGpuPath,
-  Gpu,
-} from '@pcpartdb/shared';
+import { ApiError, getAdminListGpusPath, Gpu } from '@pcpartdb/shared';
 import { useRouter } from 'next/router';
 import React, { useCallback, useMemo, useState } from 'react';
 import { getGpuName, gpuService } from '../../../gpus';

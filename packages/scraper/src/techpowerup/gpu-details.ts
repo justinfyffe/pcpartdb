@@ -30,7 +30,6 @@ export async function scrapeTechPowerUpGpuDetails(
   options: ScrapeTechPowerGpuDetailsOptions,
 ) {
   const url = options.proxy ? getProxiedUrl(options.url) : options.url;
-  console.log(url);
   const response = await axios.get(url);
   const $ = cheerio.load(response.data);
 

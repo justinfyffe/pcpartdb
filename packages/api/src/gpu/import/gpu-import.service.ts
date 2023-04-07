@@ -12,13 +12,11 @@ import {
   ScrapeGpuDetailsRequest,
   ScrapeGpuDetailsResponse,
 } from '@pcpartdb/shared';
-import e from 'express';
 import * as fsPromises from 'fs/promises';
 import { Context } from '../../shared/context';
 import { badRequestError } from '../../shared/error';
 import { deepMergeObjects } from '../../shared/utils';
 import * as fileUtils from '../../shared/utils';
-import { mapToGpuDto } from '../gpu.mapper';
 import { GpuRepository } from '../gpu.repository';
 import { GpuService } from '../gpu.service';
 
@@ -95,11 +93,20 @@ export class GpuImportService {
     const parsedUrl = new URL(source.url);
 
     if (parsedUrl.hostname === Importers.TechPowerUp) {
-      return await scrapeTechPowerUpGpuDetails({ url: source.url });
+      return await scrapeTechPowerUpGpuDetails({
+        url: source.url,
+        proxy: true,
+      });
     } else if (parsedUrl.hostname === Importers.UlBenchmarks) {
-      return await scrapeUlBenchmarksGpuDetails({ url: source.url });
+      return await scrapeUlBenchmarksGpuDetails({
+        url: source.url,
+        proxy: true,
+      });
     } else if (parsedUrl.hostname === Importers.VideocardBenchmark) {
-      return await scrapeVideocardBenchmarksGpuDetails({ url: source.url });
+      return await scrapeVideocardBenchmarksGpuDetails({
+        url: source.url,
+        proxy: true,
+      });
     } else {
       throw badRequestError();
     }
