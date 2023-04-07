@@ -15,10 +15,9 @@ import {
   TextureFillRateUnit,
   WattageUnit,
 } from '@pcpartdb/shared';
-import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { format, parse } from 'date-fns';
-import { getProxiedUrl } from '../utils';
+import { scraper } from '../scraper';
 
 export interface ScrapeTechPowerGpuDetailsOptions {
   url: string;
@@ -29,8 +28,7 @@ export interface ScrapeTechPowerGpuDetailsOptions {
 export async function scrapeTechPowerUpGpuDetails(
   options: ScrapeTechPowerGpuDetailsOptions,
 ) {
-  const url = options.proxy ? getProxiedUrl(options.url) : options.url;
-  const response = await axios.get(url);
+  const response = await scraper.scrape(options.url, { retries: 1 });
   const $ = cheerio.load(response.data);
 
   const name = getName($);

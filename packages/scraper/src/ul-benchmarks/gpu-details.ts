@@ -4,9 +4,8 @@ import {
   GpuField,
   ScrapeGpuDetailsResponse,
 } from '@pcpartdb/shared';
-import axios from 'axios';
 import * as cheerio from 'cheerio';
-import { getProxiedUrl } from '../utils';
+import { scraper } from '../scraper';
 
 export interface ScrapeUlBenchmarksGpuDetailsOptions {
   url: string;
@@ -17,9 +16,7 @@ export interface ScrapeUlBenchmarksGpuDetailsOptions {
 export async function scrapeUlBenchmarksGpuDetails(
   options: ScrapeUlBenchmarksGpuDetailsOptions,
 ) {
-  const url = options.proxy ? getProxiedUrl(options.url) : options.url;
-
-  const response = await axios.get(url);
+  const response = await scraper.scrape(options.url, { retries: 1 });
   const $ = cheerio.load(response.data);
 
   // Get Benchmark Values

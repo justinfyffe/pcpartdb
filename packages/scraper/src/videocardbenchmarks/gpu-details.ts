@@ -5,9 +5,8 @@ import {
   MarketSegmentValue,
   ScrapeGpuDetailsResponse,
 } from '@pcpartdb/shared';
-import axios from 'axios';
 import * as cheerio from 'cheerio';
-import { getProxiedUrl } from '../utils';
+import { scraper } from '../scraper';
 
 export interface ScrapeVideocardBenchmarksGpuDetailsOptions {
   url: string;
@@ -18,9 +17,7 @@ export interface ScrapeVideocardBenchmarksGpuDetailsOptions {
 export async function scrapeVideocardBenchmarksGpuDetails(
   options: ScrapeVideocardBenchmarksGpuDetailsOptions,
 ) {
-  const url = options.proxy ? getProxiedUrl(options.url) : options.url;
-
-  const response = await axios.get(url);
+  const response = await scraper.scrape(options.url, { retries: 1 });
   const $ = cheerio.load(response.data);
 
   // Get Benchmark Values

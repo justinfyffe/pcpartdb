@@ -1,6 +1,5 @@
-import axios from 'axios';
 import * as cheerio from 'cheerio';
-import { getProxiedUrl } from '../utils';
+import { scraper } from '../scraper';
 
 export interface UlBenchmarkGpuSource {
   name: string;
@@ -44,9 +43,7 @@ async function scrapeSearchData(options: ScrapeUlBenchmarkGpuUrlsOptions) {
 
 async function fetchSearchPage(options: ScrapeUlBenchmarkGpuUrlsOptions) {
   const searchUrl = buildSearchUrl(options.query);
-  const url = options.proxy ? getProxiedUrl(searchUrl) : searchUrl;
-
-  const response = await axios.get(url);
+  const response = await scraper.scrape(searchUrl, { retries: 1 });
   return response.data;
 }
 
