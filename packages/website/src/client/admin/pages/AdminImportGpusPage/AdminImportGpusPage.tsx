@@ -55,7 +55,7 @@ export const AdminImportGpusPage = (_props: AdminImportGpusPageProps) => {
     setExistingGpus(results.existingGpus);
 
     setGpusToImportMap(
-      results.newGpus.reduce((acc, gpu) => {
+      [...results.newGpus, ...results.existingGpus].reduce((acc, gpu) => {
         acc[gpu.slug] = gpu;
         return acc;
       }, {} as Record<string, Gpu>),
@@ -175,12 +175,19 @@ export const AdminImportGpusPage = (_props: AdminImportGpusPageProps) => {
                       <Tr key={gpu.slug}>
                         <Td>
                           <a
-                            href={getViewGpuPath(gpu)}
-                            target="_blank"
-                            rel="noreferrer"
+                            onClick={() => handlePreviewGpu(gpu)}
+                            className="cursor-pointer"
                           >
                             {getGpuName(gpu)}
                           </a>
+                        </Td>
+                        <Td className="text-right">
+                          <Checkbox
+                            value={gpusToImportMap[gpu.slug] != null}
+                            onChange={(checked) =>
+                              handleImportCheck(gpu, checked)
+                            }
+                          />
                         </Td>
                       </Tr>
                     ))}
@@ -196,7 +203,7 @@ export const AdminImportGpusPage = (_props: AdminImportGpusPageProps) => {
               onClick={handleImportClicked}
             >
               {importing && <Spinner />}
-              {!importing && <span>Import {gpusToImport.length} New GPUs</span>}
+              {!importing && <span>Import {gpusToImport.length} GPUs</span>}
             </Button>
           </div>
         )}

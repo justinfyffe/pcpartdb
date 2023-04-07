@@ -12,6 +12,7 @@ import {
   ScrapeGpuDetailsRequest,
   ScrapeGpuDetailsResponse,
 } from '@pcpartdb/shared';
+import e from 'express';
 import * as fsPromises from 'fs/promises';
 import { Context } from '../../shared/context';
 import { badRequestError } from '../../shared/error';
@@ -67,8 +68,11 @@ export class GpuImportService {
       if (gpuEntity == null) {
         newGpus.push(gpuToImport);
       } else {
-        const existingGpu = mapToGpuDto(gpuEntity, { includeSources: true });
-        existingGpus.push(existingGpu);
+        existingGpus.push({
+          ...gpuToImport,
+          id: gpuEntity.id,
+          slug: gpuEntity.slug,
+        });
       }
     }
 
@@ -79,7 +83,11 @@ export class GpuImportService {
     const { gpus } = request;
     for (let i = 0; i < gpus.length; ++i) {
       const gpu = gpus[i];
-      await this.gpuService.create(gpu, ctx);
+      if (gpu.id != null) {
+        await this.gpuService.update(gpu.id, gpu, ctx);
+      } else {
+        await this.gpuService.create(gpu, ctx);
+      }
     }
   }
 
