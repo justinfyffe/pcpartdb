@@ -1,11 +1,5 @@
+import { ScrapingAntUsage } from '@pcpartdb/shared';
 import axios from 'axios';
-
-export interface ScraperUsage {
-  startDate: Date;
-  endDate: Date;
-  totalCredits: number;
-  remainingCredits: number;
-}
 
 interface ScraperOptions {
   scrapingAntApiKey: string;
@@ -67,7 +61,7 @@ export class Scraper {
       endDate: new Date(data.end_date),
       totalCredits: data.plan_total_credits,
       remainingCredits: data.remained_credits,
-    } as ScraperUsage;
+    } as ScrapingAntUsage;
   }
 }
 

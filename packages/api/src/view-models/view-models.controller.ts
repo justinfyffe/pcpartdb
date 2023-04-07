@@ -7,6 +7,7 @@ import { AdminEditGpuViewModelService } from './admin/gpus/edit.view-model';
 import { AdminListGpusViewModelService } from './admin/gpus/list.view-model';
 import { AdminEditImageViewModelService } from './admin/images/edit.view-model';
 import { AdminListImagesViewModelService } from './admin/images/list.view-model';
+import { AdminOverviewViewModelService } from './admin/overview/overview.view-model';
 import { AdminEditUserViewModelService } from './admin/users/edit.view-model';
 import { AdminListUsersViewModelService } from './admin/users/list.view-model';
 import { RegisterViewModelService } from './auth/register.view-model';
@@ -19,6 +20,7 @@ import { HomeViewModelService } from './home/home.view-model';
 export class ViewModelsController {
   constructor(
     private db: Database,
+    private adminOverviewViewModelService: AdminOverviewViewModelService,
     private adminEditGpuViewModelService: AdminEditGpuViewModelService,
     private adminListGpusViewModelService: AdminListGpusViewModelService,
     private adminEditImageViewModelService: AdminEditImageViewModelService,
@@ -31,6 +33,17 @@ export class ViewModelsController {
     private registerViewModelService: RegisterViewModelService,
     private homeViewModelService: HomeViewModelService,
   ) {}
+
+  @Get('admin/overview')
+  @UseGuards(StaffGuard)
+  async adminOverview(@Ctx() ctx: Context) {
+    return await this.db.transaction(
+      () => {
+        return this.adminOverviewViewModelService.viewModel();
+      },
+      { ctx },
+    );
+  }
 
   @Get('admin/gpus/edit/:id')
   @UseGuards(StaffGuard)

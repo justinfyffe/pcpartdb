@@ -1,11 +1,10 @@
 import 'reflect-metadata';
+import { AdminOverviewViewModel } from '@pcpartdb/shared';
 import React from 'react';
-import { MetaRobots, Seo } from '../../../shared/components';
+import { Card, CardTitle, MetaRobots, Seo } from '../../../shared/components';
 import { AdminLayout } from '../../../shared/layouts';
 
-interface AdminOverviewPageProps {}
-
-export const AdminOverviewPage = (_props: AdminOverviewPageProps) => {
+export const AdminOverviewPage = (props: AdminOverviewViewModel) => {
   const pageTitle = 'Overview';
   const seoTitle = `${pageTitle} - Admin Panel`;
   const seoRobots = [MetaRobots.NOINDEX, MetaRobots.NOFOLLOW];
@@ -16,6 +15,12 @@ export const AdminOverviewPage = (_props: AdminOverviewPageProps) => {
 
       <article>
         <h1 className="font-semibold mb-4">{pageTitle}</h1>
+
+        <Card className="max-w-[300px]">
+          <CardTitle>Scraping Ant Usage:</CardTitle>
+          {props.scrapingAntUsage.remainingCredits} /{' '}
+          {props.scrapingAntUsage.totalCredits}
+        </Card>
       </article>
     </AdminLayout>
   );
