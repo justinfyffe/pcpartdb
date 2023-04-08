@@ -1,7 +1,13 @@
-~: Maybe done, but need to test
-X: Done and tested
+Auto-update logic:
+  - start with 2 GPUs / hour => 6 requests/hour => 4320 requests/month
+    - 252 GPUs / 2 => 126 hours => fresh data every 5-6 days
+  - Store queue in file, so we can pick up where we left off
+  - build queue when queue is empty
+  - order by release date, no release dates should be first
 
 Immediate Tasks:
+    - symlink public folder to outside of packages
+    - store data outside of packages
     - code cleanup:
       - create crawler class.
         - Consider using a class base structure?
@@ -11,7 +17,6 @@ Immediate Tasks:
     - content: add rank for company performance. Figure out how to do db query
     - relative performance and relative value should be filtering based on market segment
 
-  - use branches for each version, merge to master afterwards
   - folder structure for pages and components
     - look at List GPUs page for example
     - <feature>/pages/<page-name>/components/

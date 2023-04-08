@@ -1,8 +1,8 @@
 {
   "name": "@pcpartdb/api",
+  "description": "Backend API service for the website. No packages should depend on this.",
   "private": "true",
   "version": "1.0.0",
-  "description": "",
   "scripts": {
     "build": "nest build",
     "clean": "rm -rf ./dist && rm -f tsconfig.tsbuildinfo && rm -rf ./tmp",

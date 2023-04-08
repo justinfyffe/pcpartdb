@@ -1,8 +1,9 @@
 {
   "name": "@pcpartdb/website",
+  "description": "Frontend service for the PC Part DB website. No packages should depend on this.",
   "private": "true",
   "version": "1.0.0",
-  "description": "Website for viewing and comparing pc specs in an easy format",
+
   "scripts": {
     "clean": "rm -rf .next && rm -f tsconfig.tsbuildinfo && rm -rf ./tmp",
     "build": "next build",
