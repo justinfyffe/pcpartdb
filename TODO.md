@@ -2,9 +2,6 @@
 X: Done and tested
 
 Immediate Tasks:
-    - crawler
-      - add retry functionality
-
     - code cleanup:
       - create crawler class.
         - Consider using a class base structure?
