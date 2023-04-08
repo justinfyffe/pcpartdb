@@ -4,7 +4,7 @@ import {
   Gpu,
   GpusQuery,
   LIST_GPUS_PRESETS,
-} from '../gpus';
+} from '../gpu';
 
 export function getListGpusPath(presetOrQuery?: GpusQuery | string) {
   const basePath = '/gpus/list/';

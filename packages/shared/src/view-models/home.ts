@@ -1,4 +1,4 @@
-import { Gpu, GpuComparison } from '../gpus';
+import { Gpu, GpuComparison } from '../gpu';
 
 export interface HomeViewModel {
   nvidiaVsAmdGpus: GpuComparison[];

@@ -4,13 +4,45 @@ Auto-update logic:
   - Store queue in file, so we can pick up where we left off
   - build queue when queue is empty
   - order by release date, no release dates should be first
+  - Must do pending updates, see below
+  - only allow auto-updates for fields that are enabled for 3rd party data.
+
+Data Updates:
+  - All automated data changes require pending updates checks, except for the following:
+    - benchmarks
+    - note: release date and launch price should still be approved since they don't change often
+      - when we add current price, that will be auto-approved
+  - store in db table of update with a diff of the existing and new data objects
+  - show in admin panel all pending updates
+    - Add dialog to show diff
+    - make it easy to approve/reject
+  - an entity can only have one pending update at a time, to avoid conflicts
+    - if a pending update already exists,
+  - can also show auto-approved updates
+  - import tool could show pending updates, but doesn't need to add to pending updates table
+  - DB Table:
+    - data_updates
+      - id: number
+      - gpu_id: number (nullable so we can support other future types)
+      - decision_user_id: number (null => automatic)
+      - description: string
+      - diff: json
+      - status: REJECTED, PENDING, APPROVED
+      - update_source: MANUAL, AUTO_UPDATER, GPU_IMPORTER
+      - date_decision: Date
+      - date_created: Date
+      - date_updated: Date
+  - DataUpdateEntity, DataUpdate
+  - TBD: how to make sure we're not constantly rejecting the same changes
+    - Note: Rejecting is probably a sign that we need to improve our importers
+    - Maybe don't worry about it until it becomes a problem?
+  - TBD: should manually updating a gpu go through this too?
 
 Immediate Tasks:
     - symlink public folder to outside of packages
     - store data outside of packages for auto-updater and cli
     - code cleanup:
-      - create crawler class.
-        - Consider using a class base structure?
+      - use text instead of varchar
       - change "base" text value to 16px, not 18px.
       - make tailwind screen sizing min instead of max
         - seeing lg:text-xl implies large screens have text-xl

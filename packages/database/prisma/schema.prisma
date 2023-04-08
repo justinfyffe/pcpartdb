@@ -16,7 +16,7 @@ model AccessToken {
   createdAt DateTime  @map("created_at") @default(now()) @db.Timestamptz(6) @ignore
   updatedAt DateTime  @map("updated_at") @default(now()) @db.Timestamptz(6) @updatedAt @ignore
 
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "access_tokens_user_id_foreign")
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "access_tokens_user_id_foreign")
 
   @@index([expiresAt], map: "access_tokens_expires_at_index")
 
@@ -34,7 +34,7 @@ model GpuBenchmarks {
   createdAt        DateTime @map("created_at") @default(now()) @db.Timestamptz(6) @ignore
   updatedAt        DateTime @map("updated_at") @default(now()) @db.Timestamptz(6) @updatedAt @ignore
 
-  gpu              Gpu     @relation(fields: [gpuId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "gpu_benchmarks_gpu_id_foreign")
+  gpu              Gpu      @relation(fields: [gpuId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "gpu_benchmarks_gpu_id_foreign")
 
   @@map("gpu_benchmarks")
 }
@@ -45,8 +45,8 @@ model GpuImage {
   createdAt DateTime @map("created_at") @default(now()) @db.Timestamptz(6) @ignore
   updatedAt DateTime @map("updated_at") @default(now()) @db.Timestamptz(6) @updatedAt @ignore
 
-  gpu       Gpu     @relation(fields: [gpuId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "gpu_images_gpu_id_foreign")
-  image     Image   @relation(fields: [imageId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "gpu_images_image_id_foreign")
+  gpu       Gpu      @relation(fields: [gpuId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "gpu_images_gpu_id_foreign")
+  image     Image    @relation(fields: [imageId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "gpu_images_image_id_foreign")
 
   @@map("gpu_images")
   @@id([gpuId, imageId])
@@ -117,8 +117,11 @@ model Gpu {
   benchmarks GpuBenchmarks?
   images       GpuImage[]
   specs        GpuSpecs?
-  parent       Gpu?           @relation("gpusTogpus", fields: [parentId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "gpus_parent_id_foreign")
-  children     Gpu[]          @relation("gpusTogpus")
+
+  parent       Gpu?           @relation("gpusToGpus", fields: [parentId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "gpus_parent_id_foreign")
+  children     Gpu[]          @relation("gpusToGpus")
+
+  dataUpdates  DataUpdate[]
 
   @@map("gpus")
 }
@@ -127,14 +130,14 @@ model Image {
   id          Int          @id @default(autoincrement())
   path        String       @unique(map: "images_path_unique") @db.VarChar(255)
   name        String       @db.VarChar(255)
-  sourceName String?     @map("source_name") @db.VarChar(255)
-  sourceUrl  String?     @map("source_url") @db.VarChar(255)
-  fileSize   Int?        @map("file_size")
+  sourceName  String?      @map("source_name") @db.VarChar(255)
+  sourceUrl   String?      @map("source_url") @db.VarChar(255)
+  fileSize    Int?         @map("file_size")
   height      Int?
   width       Int?
-  uploadedAt DateTime?    @map("uploaded_at") @default(now()) @db.Timestamptz(6)
-  createdAt  DateTime     @map("created_at") @default(now()) @db.Timestamptz(6) @ignore
-  updatedAt  DateTime     @map("updated_at") @default(now()) @db.Timestamptz(6) @ignore
+  uploadedAt  DateTime?    @map("uploaded_at") @default(now()) @db.Timestamptz(6)
+  createdAt   DateTime     @map("created_at") @default(now()) @db.Timestamptz(6) @ignore
+  updatedAt   DateTime     @map("updated_at") @default(now()) @db.Timestamptz(6) @ignore
 
   gpuImages  GpuImage[]
 
@@ -142,15 +145,39 @@ model Image {
 }
 
 model User {
-  id            Int             @id @default(autoincrement())
-  email         String          @unique(map: "users_email_unique") @db.VarChar(255)
-  passwordHash String           @map("password_hash") @db.VarChar(255)
-  isStaff      Boolean?         @map("is_staff") @default(false)
+  id           Int             @id @default(autoincrement())
+  email        String          @unique(map: "users_email_unique") @db.VarChar(255)
+  passwordHash String          @map("password_hash") @db.VarChar(255)
+  isStaff      Boolean?        @map("is_staff") @default(false)
   registeredAt DateTime?       @map("registered_at") @default(now()) @db.Timestamptz(6)
   createdAt    DateTime        @map("created_at") @default(now()) @db.Timestamptz(6) @ignore
   updatedAt    DateTime        @map("updated_at") @default(now()) @db.Timestamptz(6) @updatedAt @ignore
 
   accessTokens AccessToken[]
+  dataUpdates  DataUpdate[]
 
   @@map("users")
+}
+
+model DataUpdate {
+  id              Int       @id @default(autoincrement())
+  decisionUserId  Int?      @map("decision_user_id")
+
+  gpuId           Int?      @map("gpu_id")
+
+  description     String?
+  status          String
+  updateSource    String    @map("update_source")
+
+  diff            Json?
+  metadata        Json?
+
+  decisionMadeAt  DateTime? @map("decision_made_at")
+  createdAt       DateTime  @map("created_at") @default(now()) @db.Timestamptz(6) @ignore
+  updatedAt       DateTime  @map("updated_at") @default(now()) @db.Timestamptz(6) @updatedAt @ignore
+
+  decisionUser    User?     @relation(fields: [decisionUserId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "data_updates_decision_user_id_foreign")
+  gpu             Gpu?      @relation(fields: [gpuId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "data_updates_gpu_id_foreign")
+
+  @@map("data_updates")
 }

@@ -5,7 +5,7 @@ import {
   GpusQuery,
   RelatedComparisons,
   RelatedGpus,
-} from '../gpus';
+} from '../gpu';
 
 export interface AdminEditGpuViewModel {
   gpu: Gpu;

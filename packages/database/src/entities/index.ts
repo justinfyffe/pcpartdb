@@ -1,4 +1,5 @@
 export * from './AccessTokenEntity';
+export * from './DataUpdateEntity';
 export * from './GpuBenchmarksEntity';
 export * from './GpuEntity';
 export * from './GpuFieldsMetaJson';
