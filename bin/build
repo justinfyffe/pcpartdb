@@ -31,7 +31,8 @@ cp ./tsconfig.json $TMP_BUILD_DIR
 # Remove upload files
 rm -rf $TMP_BUILD_DIR/packages/website/public/u
 
-# Remove cli data
+# Remove cli and updater data
+rm -rf $TMP_BUILD_DIR/packages/auto-updater/data
 rm -rf $TMP_BUILD_DIR/packages/cli/data
 
 cd $TMP_BUILD_DIR

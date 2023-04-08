@@ -8,6 +8,7 @@
     "clean": "npm run api clean & npm run cli clean & npm run scraper clean & npm run shared clean & npm run website clean",
     "deploy": "./bin/deploy",
     "api": "npm --workspace=@pcpartdb/api run",
+    "auto-updater": "npm --workspace=@pcpartdb/auto-updater run",
     "cli": "npm --workspace=@pcpartdb/cli run",
     "scraper": "npm --workspace=@pcpartdb/scraper run",
     "shared": "npm --workspace=@pcpartdb/shared run",

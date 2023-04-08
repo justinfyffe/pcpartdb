@@ -7,7 +7,7 @@ Auto-update logic:
 
 Immediate Tasks:
     - symlink public folder to outside of packages
-    - store data outside of packages
+    - store data outside of packages for auto-updater and cli
     - code cleanup:
       - create crawler class.
         - Consider using a class base structure?

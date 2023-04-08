@@ -1,0 +1,10 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": "src"
+  },
+  "include": ["./**/*.ts"],
+  "exclude": ["dist"],
+  "references": [{ "path": "../scraper" }, { "path": "../shared" }]
+}

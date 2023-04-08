@@ -45,5 +45,6 @@ yarn.lock
 # Ignore uploaded and exported files
 **/public/u
 
-# Scraping data
+# CLI and Auto-updater data
+packages/auto-updater/data
 packages/cli/data
