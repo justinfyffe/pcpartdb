@@ -1,8 +1,8 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
+import { mapToUserDto } from '@pcpartdb/database';
 import { Config, User } from '@pcpartdb/shared';
 import { NextFunction } from 'express';
 import { AccessTokenRepository } from '../../auth/access-token.repository';
-import { mapToUserDto } from '../../user/user.mapper';
 import { CookieService, SESSION_COOKIE } from '../cookie';
 import { hashToken } from '../crypto';
 import { ApiRequest, ApiResponse } from '../http';

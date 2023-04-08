@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
+import { AccessTokenEntity } from '@pcpartdb/database';
 import { Database, RepositoryConfig } from '../database';
-import { AccessTokenEntity } from './access-token.entity';
 
 export interface CreateAccessTokenOptions {
   userId: number;

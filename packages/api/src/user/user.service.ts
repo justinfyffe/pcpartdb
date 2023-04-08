@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { mapToUserDto, mapToUserEntity } from '@pcpartdb/database';
 import {
   CreateUserRequest,
   RequestPasswordResetRequest,
@@ -16,7 +17,6 @@ import {
   notFoundError,
 } from '../shared/error';
 import { decodeJwt, generateJwt, JwtType, verifyJwt } from '../shared/jwt';
-import { mapToUserDto, mapToUserEntity } from './user.mapper';
 import { UserRepository } from './user.repository';
 
 @Injectable()

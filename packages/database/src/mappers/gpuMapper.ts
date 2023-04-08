@@ -1,13 +1,13 @@
 import { Gpu, GpuDataSource, GpuMeta } from '@pcpartdb/shared';
 import { Prisma } from '@prisma/client';
-import { GpuEntity, GpuMetaJson } from './gpu.entity';
+import { GpuEntity, GpuMetaJson } from '../entities';
 import {
   mapToGpuBenchmarksDto,
   mapToGpuBenchmarksEntity,
-} from './gpu-benchmarks.mapper';
-import { mapToGpuFieldDto, mapToGpuFieldEntity } from './gpu-field.mapper';
-import { mapToGpuImageDtos, mapToGpuImageEntities } from './gpu-image.mapper';
-import { mapToGpuSpecsDto, mapToGpuSpecsEntity } from './gpu-specs.mapper';
+} from './gpuBenchmarksMapper';
+import { mapToGpuFieldDto, mapToGpuFieldEntity } from './gpuFieldMapper';
+import { mapToGpuImageDtos, mapToGpuImageEntities } from './gpuImageMapper';
+import { mapToGpuSpecsDto, mapToGpuSpecsEntity } from './gpuSpecsMapper';
 
 interface MapToDtoOptions {
   fields?: Set<string>;

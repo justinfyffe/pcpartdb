@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
+import { GpuSpecsEntity, mapToGpuDtos } from '@pcpartdb/database';
 import { Context } from '../../shared/context';
-import { GpuSpecsEntity } from '../gpu.entity';
-import { mapToGpuDtos } from '../gpu.mapper';
 import { GpuAutocompleteRepository } from './gpu-autocomplete.repository';
 
 export enum GpuRank {

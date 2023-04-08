@@ -1,5 +1,6 @@
 import Joi from '@hapi/joi';
 import { Injectable } from '@nestjs/common';
+import { mapToImageDto, mapToImageEntity } from '@pcpartdb/database';
 import {
   CreateImageRequest,
   UpdateImageRequest,
@@ -9,7 +10,6 @@ import { Context } from '../shared/context';
 import { badRequestError, notFoundError } from '../shared/error';
 import { validate } from '../shared/types/validate';
 import * as fileUtils from '../shared/utils';
-import { mapToImageDto, mapToImageEntity } from './image.mapper';
 import { ImageRepository } from './image.repository';
 
 const imageValidator = Joi.object({

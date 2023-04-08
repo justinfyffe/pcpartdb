@@ -1,9 +1,9 @@
 import { Controller, Get, Query, UseGuards } from '@nestjs/common';
+import { GpuSpecsEntity } from '@pcpartdb/database';
 import { StaffGuard } from '../../auth/staff.guard';
 import { Database } from '../../database';
 import { Context, Ctx } from '../../shared/context';
 import { validate } from '../../shared/types/validate';
-import { GpuSpecsEntity } from '../gpu.entity';
 import {
   autocompleteGpusRequestValidator,
   autocompleteSpecsRequestValidator,

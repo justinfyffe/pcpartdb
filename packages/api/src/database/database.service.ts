@@ -1,16 +1,20 @@
 import { INestApplication, Injectable, OnModuleInit } from '@nestjs/common';
-import { Prisma, PrismaClient } from '@prisma/client';
+import {
+  DatabaseClient,
+  IsolationLevel,
+  Transaction,
+} from '@pcpartdb/database';
 import { Context } from '../shared/context';
 
 interface TransactionOptions {
   ctx?: Context;
-  isolationLevel?: Prisma.TransactionIsolationLevel;
+  isolationLevel?: IsolationLevel;
 }
 
 @Injectable()
-export class Database extends PrismaClient implements OnModuleInit {
+export class Database extends DatabaseClient implements OnModuleInit {
   async onModuleInit() {
-    await this.$connect();
+    await this.connect();
   }
 
   async enableShutdownHooks(app: INestApplication) {
@@ -20,10 +24,10 @@ export class Database extends PrismaClient implements OnModuleInit {
   }
 
   async transaction<T = void>(
-    callback: (trx: Prisma.TransactionClient) => Promise<T>,
+    callback: (trx: Transaction) => Promise<T>,
     options?: TransactionOptions,
   ) {
-    return await this.$transaction(
+    return await super.transaction(
       async (trx) => {
         if (options?.ctx != null) {
           options.ctx.trx = trx;

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
+import { UserEntity } from '@pcpartdb/database';
 import { Database, RepositoryConfig } from '../database';
-import { UserEntity } from './user.entity';
 
 export interface CreateUserOptions {
   email: string;

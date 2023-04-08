@@ -1,5 +1,5 @@
-import { Prisma } from '@prisma/client';
+import { Transaction } from '@pcpartdb/database';
 
 export interface RepositoryConfig {
-  trx?: Prisma.TransactionClient;
+  trx?: Transaction;
 }

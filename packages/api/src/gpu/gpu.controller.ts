@@ -25,15 +25,10 @@ import {
   listGpusRequestValidator,
   updateGpuRequestValidator,
 } from './gpu.validators';
-import { GpuImportService } from './import/gpu-import.service';
 
 @Controller('gpus')
 export class GpuController {
-  constructor(
-    private db: Database,
-    private gpuService: GpuService,
-    private gpuImporterService: GpuImportService,
-  ) {}
+  constructor(private db: Database, private gpuService: GpuService) {}
 
   @Get()
   async list(@Query('q') q: string, @Ctx() ctx: Context) {

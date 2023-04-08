@@ -4,6 +4,7 @@
     { "path": "packages/api"},
     { "path": "packages/auto-updater"},
     { "path": "packages/cli" },
+    { "path": "packages/database" },
     { "path": "packages/scraper" },
     { "path": "packages/shared"},
     { "path": "packages/website" },

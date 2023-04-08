@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { mapToAccessTokenDto } from '@pcpartdb/database';
 import { LoginRequest } from '@pcpartdb/shared';
 import * as bcrypt from 'bcryptjs';
 import { Context } from '../shared/context';
@@ -6,7 +7,6 @@ import { CookieService, SESSION_COOKIE } from '../shared/cookie';
 import { generateToken, hashToken } from '../shared/crypto';
 import { forbiddenError, unauthorizedError } from '../shared/error';
 import { UserRepository } from '../user/user.repository';
-import { mapToAccessTokenDto } from './access-token.mapper';
 import { AccessTokenRepository } from './access-token.repository';
 
 const SESSION_EXPIRES = 1000 * 60 * 60 * 24; // 1 day

@@ -1,5 +1,5 @@
 import { User } from '@pcpartdb/shared';
-import { UserEntity } from './user.entity';
+import { UserEntity } from '../entities';
 
 export function mapToUserDto(row: UserEntity): User {
   if (row == null) {

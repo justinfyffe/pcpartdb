@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { mapToGpuDto, mapToGpuDtos, mapToGpuEntity } from '@pcpartdb/database';
 import {
   CreateGpuRequest,
   Gpu,
@@ -10,7 +11,6 @@ import {
 } from '@pcpartdb/shared';
 import { Context } from '../shared/context';
 import { badRequestError, notFoundError } from '../shared/error';
-import { mapToGpuDto, mapToGpuDtos, mapToGpuEntity } from './gpu.mapper';
 import { GpuRepository } from './gpu.repository';
 import { addPerformanceBenchmarks } from './gpu-benchmarks.utils';
 import { GpuRanksService } from './ranks/gpu-ranks.service';

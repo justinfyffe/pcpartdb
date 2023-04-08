@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { GpuEntity } from '@pcpartdb/database';
 import {
   DEFAULT_LIST_GPUS_LIMIT,
   DEFAULT_LIST_GPUS_OFFSET,
@@ -11,7 +12,6 @@ import {
 } from '@pcpartdb/shared';
 import { Prisma } from '@prisma/client';
 import { Database, RepositoryConfig } from '../database';
-import { GpuEntity } from './gpu.entity';
 
 interface CountOptions {
   query?: GpusQuery;

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
+import { GpuEntity, GpuSpecsEntity } from '@pcpartdb/database';
 import { Database, RepositoryConfig } from '../../database';
-import { GpuEntity, GpuSpecsEntity } from '../gpu.entity';
 
 @Injectable()
 export class GpuAutocompleteRepository {

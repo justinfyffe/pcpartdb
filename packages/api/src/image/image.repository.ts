@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
+import { ImageEntity } from '@pcpartdb/database';
 import { Database, RepositoryConfig } from '../database';
-import { ImageEntity } from './image.entity';
 
 @Injectable()
 export class ImageRepository {
