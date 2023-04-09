@@ -1,3 +1,16 @@
+Code cleanup
+- Don't call individual scrape functions, pass data sources instead.
+- Don't include ScrapeGpuDetailsResponse in scraper.
+  - Just use scrape results type.
+- remove custom deep merge
+- enabled should be false instead of removed when editing manually.
+- improve mapping of field type to data source.
+  - support multiple data sources
+- improve structure of field
+  - remove nested DataSource, flatten:
+    - enabled -> autoUpdate
+    - dataSources -> Array by order of precedence
+
 Auto-update logic:
   - start with 2 GPUs / hour => 6 requests/hour => 4320 requests/month
     - 252 GPUs / 2 => 126 hours => fresh data every 5-6 days
@@ -6,6 +19,13 @@ Auto-update logic:
   - order by release date, no release dates should be first
   - Must do pending updates, see below
   - only allow auto-updates for fields that are enabled for 3rd party data.
+  - should saving gpus invalidate data updates?
+    - probably
+
+- add general scrapeGpuData to scraper.
+  - deep merge the results from all sources
+  - create data type for scrape results; separate from scrape response in shared
+  - don't expose the individual scraping methods
 
 Data Updates:
   - All automated data changes require pending updates checks, except for the following:

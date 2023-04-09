@@ -202,6 +202,7 @@ export class GpuService {
     const id = dataUpdate.gpuId;
     const gpu = await this.getById(id, { includeImages: true }, ctx);
     const diff = dataUpdate.diff;
+    // TODO: skip fields that are not enabled.
     applyDiff(gpu, diff);
     await this.update(id, gpu, ctx);
   }

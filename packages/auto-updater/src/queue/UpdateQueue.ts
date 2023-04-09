@@ -1,25 +1,20 @@
 import { Transaction } from '@pcpartdb/database';
 import * as fsPromises from 'fs/promises';
-import { getDatabase } from '../shared/database';
 
-interface QueueData {
-  gpuId: number;
-}
-
-interface UpdateQueueOptions {
+export interface UpdateQueueOptions {
   file: string;
 }
 
-export class UpdateQueue {
-  private queue: QueueData[];
-  private file: string;
+export abstract class UpdateQueue<T> {
+  protected queue: T[];
+  protected file: string;
 
   constructor(options: UpdateQueueOptions) {
     this.file = options.file;
     this.queue = [];
   }
 
-  async next(trx?: Transaction) {
+  async next(trx: Transaction) {
     if (this.queue == null || this.queue.length === 0) {
       await this.buildQueue(trx);
     }
@@ -37,21 +32,5 @@ export class UpdateQueue {
     this.queue = JSON.parse(await fsPromises.readFile(this.file, 'utf-8'));
   }
 
-  private async buildQueue(trx?: Transaction) {
-    const db = trx ?? (await getDatabase());
-
-    // Queue will consist of GPUs, ordered by release date.
-    // Null release dates first.
-    const gpus = await db.gpu.findMany({
-      select: { id: true },
-      orderBy: { releaseDate: { sort: 'desc', nulls: 'first' } },
-    });
-
-    const gpuIds = gpus.map(({ id }) => id);
-
-    const queueData: QueueData[] = gpuIds.map((gpuId) => ({ gpuId }));
-    this.queue = queueData;
-
-    await this.save();
-  }
+  protected abstract buildQueue(trx: Transaction): void;
 }

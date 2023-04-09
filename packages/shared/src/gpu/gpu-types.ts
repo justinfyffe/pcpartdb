@@ -23,7 +23,6 @@ export interface GpuMeta {
 
 export interface GpuDataSource {
   url?: string;
-  downloadDate?: number;
 }
 
 export interface Gpu {

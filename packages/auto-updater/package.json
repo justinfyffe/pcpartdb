@@ -6,7 +6,8 @@
   "main": "dist/index.js",
   "scripts": {
     "clean": "rm -rf ./dist && rm -f tsconfig.tsbuildinfo",
-    "build": "tsc"
+    "build": "tsc",
+    "gpus": "node ./dist/index.js"
   },
   "author": "Justin Fyffe <test@example.com>",
   "license": "UNLICENSED",
@@ -20,6 +21,7 @@
     "@pcpartdb/database": "*",
     "@pcpartdb/scraper": "*",
     "@pcpartdb/shared": "*",
+    "deepmerge": "^4.3.1",
     "node-schedule": "^2.1.1"
   }
 }

@@ -46,11 +46,11 @@ import {
   isBadRequestError,
   setValidationErrors,
 } from '../../../../shared/error';
-import { GpuSlugInput } from '../GpuSlugInput';
 import { GpuBenchmarkInput } from '../GpuBenchmarkInput';
 import { GpuDataSourceInput } from '../GpuDataSourceInput';
 import { GpuFieldInput } from '../GpuFieldInput';
 import { GpuImagesInput } from '../GpuImageInput';
+import { GpuSlugInput } from '../GpuSlugInput';
 import {
   ScrapeGpuDetailsDialog,
   ScrapeGpuDetailsResults,
