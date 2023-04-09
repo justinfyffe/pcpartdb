@@ -1,4 +1,5 @@
 export * from './gpu-benchmark-types';
+export * from './gpu-benchmark-utils';
 export * from './gpu-consts';
 export * from './gpu-field-types';
 export * from './gpu-field-utils';

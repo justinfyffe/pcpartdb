@@ -9,12 +9,13 @@ import {
   GpuFieldKey,
   GpuRank,
   GpusQuery,
+  populatePerformanceScoreBenchmark,
+  populateValueScoreBenchmark,
   UpdateGpuRequest,
 } from '@pcpartdb/shared';
 import { Context } from '../shared/context';
 import { badRequestError, notFoundError } from '../shared/error';
 import { GpuRepository } from './gpu.repository';
-import { addPerformanceBenchmarks } from './gpu-benchmarks.utils';
 import { GpuRanksService } from './ranks/gpu-ranks.service';
 
 interface CountOptions {
@@ -145,7 +146,8 @@ export class GpuService {
       });
     }
 
-    addPerformanceBenchmarks(data, data.benchmarks);
+    populatePerformanceScoreBenchmark(data);
+    populateValueScoreBenchmark(data);
 
     const entity = mapToGpuEntity({ id: undefined, ...data });
     const result = await this.gpuRepository.create(entity, ctx);
@@ -167,7 +169,8 @@ export class GpuService {
       throw notFoundError({ gpu: id });
     }
 
-    addPerformanceBenchmarks(data, data.benchmarks);
+    populatePerformanceScoreBenchmark(data);
+    populateValueScoreBenchmark(data);
 
     const entity = mapToGpuEntity({ id: undefined, ...data });
     const result = await this.gpuRepository.update(id, entity, ctx);
@@ -192,7 +195,8 @@ export class GpuService {
 
       for (let j = 0; j < gpus.length; ++j) {
         const gpu = gpus[j];
-        addPerformanceBenchmarks(gpu, gpu.benchmarks);
+        populatePerformanceScoreBenchmark(gpu);
+        populateValueScoreBenchmark(gpu);
         await this.update(gpu.id, gpu, ctx);
       }
     }

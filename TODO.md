@@ -11,6 +11,8 @@ Code cleanup
     - enabled -> autoUpdate
     - dataSource -> just specifies where the data came from.
 - create cli tool to fix existing data
+- move performance and value calculations to shared
+  - allows us to use cli and auto-updating
 
 Auto-update logic:
   - start with 2 GPUs / hour => 6 requests/hour => 4320 requests/month
