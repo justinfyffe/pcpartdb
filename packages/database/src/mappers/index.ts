@@ -1,4 +1,5 @@
 export * from './accessTokenMapper';
+export * from './dataUpdateMapper';
 export * from './gpuBenchmarksMapper';
 export * from './gpuFieldMapper';
 export * from './gpuImageMapper';

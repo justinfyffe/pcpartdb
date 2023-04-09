@@ -1,5 +1,9 @@
+import { Operation } from 'fast-json-patch';
 import { Gpu } from '../gpu';
 import { User } from '../user';
+
+export type DataUpdateOperation = Operation;
+export type DataUpdateDiff = DataUpdateOperation[];
 
 export enum DataUpdateStatus {
   Pending = 'PENDING',
@@ -23,12 +27,10 @@ export interface DataUpdate {
   status: DataUpdateStatus;
   updateSource: DataUpdateSource;
 
-  diff: any;
+  diff: DataUpdateDiff;
   metadata: DataUpdateMeta;
 
   decisionMadeAt?: number;
-  createdAt: number;
-  updatedAt: number;
 
   // Relations
   decisionUser?: User;
