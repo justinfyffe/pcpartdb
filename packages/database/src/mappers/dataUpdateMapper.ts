@@ -22,6 +22,10 @@ export function mapToDataUpdateDto(entity: DataUpdateEntity): DataUpdate {
   };
 }
 
+export function mapToDataUpdateDtos(entities: DataUpdateEntity[]) {
+  return entities.map((entity) => mapToDataUpdateDto(entity));
+}
+
 export function mapToDataUpdateEntity(dto: DataUpdate): DataUpdateEntity {
   return {
     id: dto.id,
@@ -33,5 +37,7 @@ export function mapToDataUpdateEntity(dto: DataUpdate): DataUpdateEntity {
     diff: dto.diff as unknown as Prisma.JsonValue,
     metadata: dto.metadata,
     decisionMadeAt: new Date(dto.decisionMadeAt),
+    createdAt: undefined,
+    updatedAt: undefined,
   };
 }

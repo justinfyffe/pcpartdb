@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { mapToGpuDto, mapToGpuDtos, mapToGpuEntity } from '@pcpartdb/database';
 import {
+  applyDiff,
   CreateGpuRequest,
+  DataUpdate,
   Gpu,
   GpuComparison,
   GpuFieldKey,
@@ -194,5 +196,13 @@ export class GpuService {
         await this.update(gpu.id, gpu, ctx);
       }
     }
+  }
+
+  async applyDataUpdate(dataUpdate: DataUpdate, ctx: Context) {
+    const id = dataUpdate.gpuId;
+    const gpu = await this.getById(id, { includeImages: true }, ctx);
+    const diff = dataUpdate.diff;
+    applyDiff(gpu, diff);
+    await this.update(id, gpu, ctx);
   }
 }
