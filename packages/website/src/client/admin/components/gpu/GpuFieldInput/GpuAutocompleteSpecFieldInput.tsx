@@ -45,7 +45,7 @@ export const GpuAutocompleteSpecFieldInput = forwardRef<
 
   return (
     <Autocomplete
-      disabled={value?.meta?.dataSource?.enabled}
+      disabled={value?.meta?.autoUpdate}
       freeSolo
       onQuery={handleQuery}
       label={baseValue}

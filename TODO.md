@@ -9,7 +9,8 @@ Code cleanup
 - improve structure of field
   - remove nested DataSource, flatten:
     - enabled -> autoUpdate
-    - dataSources -> Array by order of precedence
+    - dataSource -> just specifies where the data came from.
+- create cli tool to fix existing data
 
 Auto-update logic:
   - start with 2 GPUs / hour => 6 requests/hour => 4320 requests/month

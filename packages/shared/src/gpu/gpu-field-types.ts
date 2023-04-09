@@ -14,6 +14,8 @@ export interface GpuFieldMeta {
   fieldKey?: GpuFieldKey;
   currency?: string;
   unit?: GpuFieldUnit;
+  autoUpdate?: boolean;
+  source?: GpuDataSourceKey;
   dataSource?: GpuFieldDataSource;
 }
 

@@ -26,7 +26,7 @@ export const GpuDateFieldInput = forwardRef<
 
   return (
     <DateInput
-      disabled={value?.meta?.dataSource?.enabled}
+      disabled={value?.meta?.autoUpdate}
       value={baseValue}
       onChange={handleChange}
       ref={ref}

@@ -60,10 +60,8 @@ function decorateGpu(gpu: Partial<Gpu>, source: GpuSource) {
     value: source.marketSegment,
     meta: {
       fieldKey: 'marketSegment',
-      dataSource: {
-        source: GpuDataSourceKey.VideocardBenchmarks,
-        enabled: source.marketSegment != null,
-      },
+      autoUpdate: source.marketSegment != null,
+      source: GpuDataSourceKey.VideocardBenchmarks,
     },
   };
 
@@ -72,30 +70,24 @@ function decorateGpu(gpu: Partial<Gpu>, source: GpuSource) {
       value: source.g3dMark,
       meta: {
         fieldKey: 'g3dMark',
-        dataSource: {
-          source: GpuDataSourceKey.VideocardBenchmarks,
-          enabled: source.g3dMark != null,
-        },
+        autoUpdate: source.g3dMark != null,
+        source: GpuDataSourceKey.VideocardBenchmarks,
       },
     },
     g2dMark: {
       value: source.g2dMark,
       meta: {
         fieldKey: 'g2dMark',
-        dataSource: {
-          source: GpuDataSourceKey.VideocardBenchmarks,
-          enabled: source.g2dMark != null,
-        },
+        autoUpdate: source.g2dMark != null,
+        source: GpuDataSourceKey.VideocardBenchmarks,
       },
     },
     timespyGraphics: {
       value: source.timespyScore,
       meta: {
         fieldKey: 'timespyGraphics',
-        dataSource: {
-          source: GpuDataSourceKey.VideocardBenchmarks,
-          enabled: source.timespyScore != null,
-        },
+        autoUpdate: source.timespyScore != null,
+        source: GpuDataSourceKey.VideocardBenchmarks,
       },
     },
   };

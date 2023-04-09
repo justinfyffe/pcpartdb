@@ -52,17 +52,12 @@ export async function gpuUpdater(trx: Transaction) {
   const filteredMerge = (target: unknown, source: unknown) => {
     const field = target as GpuField;
 
-    // Not a GPU field, keep mering.
-    if (field?.meta?.fieldKey == null) {
-      return deepmerge(target, source, { customMerge: () => filteredMerge });
+    // Auto-updating is disabled. Skip merging.
+    if (field?.meta?.autoUpdate === false) {
+      return target;
     }
 
-    // Auto-updating data is enabled. Merge.
-    if (field?.meta?.dataSource?.enabled === true) {
-      return deepmerge(target, source, { customMerge: () => filteredMerge });
-    }
-
-    return target;
+    return deepmerge(target, source, { customMerge: () => filteredMerge });
   };
   const updatedGpu = deepmerge(gpu, scrapeResults.gpu, {
     customMerge: () => filteredMerge,

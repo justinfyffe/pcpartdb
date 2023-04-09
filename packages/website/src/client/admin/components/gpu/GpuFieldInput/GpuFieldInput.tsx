@@ -6,7 +6,7 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import { Button, ButtonVariant } from '../../../../shared/components';
+import { Checkbox } from '../../../../shared/components';
 import { GpuAutocompleteSpecFieldInput } from './GpuAutocompleteSpecFieldInput';
 import { GpuBooleanFieldInput } from './GpuBooleanFieldInput';
 import { GpuCurrencyFieldInput } from './GpuCurrencyFieldInput';
@@ -100,21 +100,25 @@ export const GpuFieldInput = forwardRef<unknown, GpuFieldInputProps>(
 
     const handleChange = useCallback(
       (value: GpuField) => {
+        value.meta = { fieldKey: field, ...value?.meta };
         setValue(value);
         onChange?.(value);
       },
-      [onChange],
+      [field, onChange],
     );
 
-    const handleOverrideClick = useCallback(() => {
-      if (value.meta?.dataSource?.enabled == null) {
-        return;
-      }
+    const handleAutoUpdateChange = useCallback(
+      (checked: boolean) => {
+        if (checked == false) {
+          value.meta.source = undefined;
+        }
+        value.meta.autoUpdate = checked;
 
-      value.meta.dataSource = { enabled: false };
-      setValue(value);
-      onChange?.(value);
-    }, [onChange, value]);
+        setValue(value);
+        onChange?.(value);
+      },
+      [onChange, value],
+    );
 
     const inputType = type ?? INPUT_TYPES[field];
     const renderInput = useCallback(() => {
@@ -205,13 +209,12 @@ export const GpuFieldInput = forwardRef<unknown, GpuFieldInputProps>(
     return (
       <div className="flex gap-4">
         {renderInput()}
-        <Button
-          disabled={value?.meta?.dataSource?.enabled !== true}
-          variant={ButtonVariant.Default}
-          onClick={handleOverrideClick}
+        <Checkbox
+          value={value?.meta?.autoUpdate === true}
+          onChange={handleAutoUpdateChange}
         >
-          Override
-        </Button>
+          Auto Update
+        </Checkbox>
       </div>
     );
   },

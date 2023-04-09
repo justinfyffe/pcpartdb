@@ -5,11 +5,7 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import {
-  Button,
-  ButtonVariant,
-  NumberInput,
-} from '../../../../shared/components';
+import { Checkbox, NumberInput } from '../../../../shared/components';
 import { classNames } from '../../../../shared/ui';
 
 interface GpuBenchmarkInputProps {
@@ -32,10 +28,11 @@ export const GpuBenchmarkInput: FunctionComponent<GpuBenchmarkInputProps> = (
 
   const handleScoreChange = useCallback(
     (score: number) => {
+      const meta = { fieldKey: field, ...value?.meta };
       const newValue: GpuField<number> = {
         ...value,
         value: score,
-        meta: { fieldKey: field },
+        meta,
       };
       setValue(newValue);
       onChange(newValue);
@@ -43,31 +40,33 @@ export const GpuBenchmarkInput: FunctionComponent<GpuBenchmarkInputProps> = (
     [field, onChange, value],
   );
 
-  const handleOverrideClick = useCallback(() => {
-    if (value.meta?.dataSource?.enabled == null) {
-      return;
-    }
+  const handleAutoUpdateChange = useCallback(
+    (checked: boolean) => {
+      if (checked == false) {
+        value.meta.source = undefined;
+      }
+      value.meta.autoUpdate = checked;
 
-    value.meta.dataSource = { enabled: false };
-    setValue(value);
-    onChange?.(value);
-  }, [onChange, value]);
+      setValue(value);
+      onChange?.(value);
+    },
+    [onChange, value],
+  );
 
   return (
     <div className={classNames('flex gap-4', className)}>
       <NumberInput
-        disabled={value?.meta?.dataSource?.enabled}
+        disabled={value?.meta?.autoUpdate}
         value={value?.value ?? null}
         onChange={handleScoreChange}
         ref={null}
       />
-      <Button
-        disabled={value?.meta?.dataSource?.enabled !== true}
-        variant={ButtonVariant.Default}
-        onClick={handleOverrideClick}
+      <Checkbox
+        value={value?.meta?.autoUpdate === true}
+        onChange={handleAutoUpdateChange}
       >
-        Override
-      </Button>
+        Auto Update
+      </Checkbox>
     </div>
   );
 };

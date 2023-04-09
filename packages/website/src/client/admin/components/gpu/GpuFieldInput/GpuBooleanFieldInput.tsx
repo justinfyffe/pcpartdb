@@ -37,7 +37,7 @@ export const GpuBooleanFieldInput = forwardRef<
 
   return (
     <Select
-      disabled={value?.meta?.dataSource?.enabled}
+      disabled={value?.meta?.autoUpdate}
       value={baseValue}
       onChange={handleChange}
       clearable

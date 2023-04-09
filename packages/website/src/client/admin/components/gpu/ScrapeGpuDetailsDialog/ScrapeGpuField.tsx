@@ -88,13 +88,13 @@ export const ScrapeGpuField: FunctionComponent<ScrapeGpuFieldProps> = (
   const emptyValue: GpuField = useMemo(
     () => ({
       value: null,
-      meta: { fieldKey: key, dataSource: { enabled: false } },
+      meta: { fieldKey: key, autoUpdate: false },
     }),
     [key],
   );
 
   const [checked, setChecked] = useState(() => false);
-  const [source] = useState(() => fields[key]?.value?.meta?.dataSource?.source);
+  const [source] = useState(() => fields[key]?.value?.meta?.source);
 
   useEffect(() => {
     if (fields[key] == null) {
@@ -108,10 +108,11 @@ export const ScrapeGpuField: FunctionComponent<ScrapeGpuFieldProps> = (
   const handleClick = useCallback(() => {
     if (checked) {
       fields[key].enabled = false;
-      fields[key].value.meta.dataSource = { enabled: false };
+      fields[key].value.meta.autoUpdate = false;
     } else {
       fields[key].enabled = true;
-      fields[key].value.meta.dataSource = { source, enabled: true };
+      fields[key].value.meta.autoUpdate = true;
+      fields[key].value.meta.source = source;
     }
 
     setChecked(!checked);

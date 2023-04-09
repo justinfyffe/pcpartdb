@@ -26,7 +26,7 @@ export const GpuStringFieldInput = forwardRef<
 
   return (
     <TextInput
-      disabled={value?.meta?.dataSource?.enabled}
+      disabled={value?.meta?.autoUpdate}
       value={baseValue}
       onChange={handleChange}
       ref={ref}
