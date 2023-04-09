@@ -1,3 +1,5 @@
-export async function main() {}
+import * as scheduler from 'node-schedule';
 
-main();
+const UPDATE_GPUS_CRON = '*/30 * * * *';
+
+scheduler.scheduleJob(UPDATE_GPUS_CRON, () => {});
