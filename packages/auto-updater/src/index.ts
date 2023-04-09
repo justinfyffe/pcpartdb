@@ -1,6 +1,5 @@
 import * as scheduler from 'node-schedule';
 import { gpuUpdater } from './gpu-updater';
-import { getDatabase } from './shared/database';
 
 // const UPDATE_GPUS_CRON = '*/30 * * * *';
 
@@ -12,9 +11,6 @@ import { getDatabase } from './shared/database';
 // });
 
 async function main() {
-  const db = await getDatabase();
-  await db.transaction(async (trx) => {
-    await gpuUpdater(trx);
-  });
+  await gpuUpdater();
 }
 main();

@@ -7,6 +7,8 @@
   "scripts": {
     "clean": "rm -rf ./dist && rm -f tsconfig.tsbuildinfo",
     "build": "tsc",
+    "gpus:fixData": "node ./dist/index.js gpus fixData",
+    "gpus:refreshRatings": "node ./dist/index.js gpus refreshRatings",
     "scrape:sources": "node ./dist/index.js scrape sources --proxy",
     "scrape:sources:techpowerup": "node ./dist/index.js scrape sources --source techpowerup --proxy",
     "scrape:sources:ul-benchmarks": "node ./dist/index.js scrape sources --source ul-benchmarks --proxy",
@@ -21,6 +23,7 @@
     "typescript": "^4.7.2"
   },
   "dependencies": {
+    "@pcpartdb/database": "*",
     "@pcpartdb/scraper": "*",
     "@pcpartdb/shared": "*",
     "commander": "^10.0.0",

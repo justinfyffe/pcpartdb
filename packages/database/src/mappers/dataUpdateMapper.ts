@@ -6,7 +6,7 @@ import {
   DataUpdateStatus,
 } from '@pcpartdb/shared';
 import { Prisma } from '@prisma/client';
-import { DataUpdateEntity } from '../entities';
+import { DataUpdateEntity } from '../data-update';
 
 export function mapToDataUpdateDto(entity: DataUpdateEntity): DataUpdate {
   return {

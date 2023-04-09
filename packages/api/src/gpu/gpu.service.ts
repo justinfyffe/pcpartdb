@@ -50,8 +50,7 @@ export class GpuService {
   ) {}
 
   async count(options: CountOptions, ctx: Context) {
-    const gpuEntities = await this.gpuRepository.count(options, ctx);
-    return gpuEntities.length;
+    return await this.gpuRepository.count(options, ctx);
   }
 
   async list(options: ListOptions, ctx: Context) {

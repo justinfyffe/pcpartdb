@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { AccessTokenEntity } from '@pcpartdb/database';
-import { Database, RepositoryConfig } from '../database';
+import { AccessTokenRepository as BaseAccessTokenRepository } from '@pcpartdb/database';
+import { Database } from '../database';
 
 export interface CreateAccessTokenOptions {
   userId: number;
@@ -9,29 +9,8 @@ export interface CreateAccessTokenOptions {
 }
 
 @Injectable()
-export class AccessTokenRepository {
-  constructor(private db: Database) {}
-
-  async create(
-    accessToken: Omit<AccessTokenEntity, 'id' | 'user'>,
-    config?: RepositoryConfig,
-  ) {
-    const trx = config?.trx ?? this.db;
-    return await trx.accessToken.create({ data: accessToken });
-  }
-
-  async findByTokenHash(tokenHash: string, config?: RepositoryConfig) {
-    const trx = config?.trx ?? this.db;
-    return await trx.accessToken.findUnique({
-      where: { tokenHash },
-      include: { user: true },
-    });
-  }
-
-  async delete(id: number, config?: RepositoryConfig) {
-    const trx = config?.trx ?? this.db;
-    await trx.accessToken.delete({
-      where: { id },
-    });
+export class AccessTokenRepository extends BaseAccessTokenRepository {
+  constructor(db: Database) {
+    super(db);
   }
 }

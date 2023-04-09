@@ -1,5 +1,5 @@
 import { AccessToken } from '@pcpartdb/shared';
-import { UserEntity } from '../entities';
+import { UserEntity } from '../user';
 import { mapToUserDto } from './userMapper';
 
 export function mapToAccessTokenDto(
