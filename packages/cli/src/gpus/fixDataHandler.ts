@@ -1,5 +1,6 @@
 import { GpuRepository, mapToGpuDto, mapToGpuEntity } from '@pcpartdb/database';
 import {
+  Gpu,
   GpuBenchmarks,
   GpuField,
   GpuOrder,
@@ -32,15 +33,22 @@ export async function fixDataHandler() {
 
       for (let j = 0; j < gpus.length; ++j) {
         const gpu = mapToGpuDto(gpus[j], { includeSources: true });
-
-        fixSpecs(gpu.specs);
-        fixBenchmarks(gpu.benchmarks);
-
+        fixGpu(gpu);
         const data = mapToGpuEntity(gpu);
         await gpuRepository.update(gpu.id, data, ctx);
       }
     }
   });
+}
+
+function fixGpu(gpu: Gpu) {
+  Object.keys(gpu).forEach((key) => {
+    const value = gpu[key as keyof Gpu];
+    fixFieldMeta(value as GpuField);
+  });
+
+  fixSpecs(gpu.specs);
+  fixBenchmarks(gpu.benchmarks);
 }
 
 function fixSpecs(obj: GpuSpecs) {

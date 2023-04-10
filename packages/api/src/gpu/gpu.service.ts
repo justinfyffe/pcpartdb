@@ -186,21 +186,6 @@ export class GpuService {
     return id;
   }
 
-  async refreshRatings(ctx: Context) {
-    const limit = 50;
-    const totalGpus = await this.count({}, ctx);
-    for (let i = 0; i < totalGpus; i += limit) {
-      const gpus = await this.list({ query: { offset: i, limit } }, ctx);
-
-      for (let j = 0; j < gpus.length; ++j) {
-        const gpu = gpus[j];
-        populatePerformanceScoreBenchmark(gpu);
-        populateValueScoreBenchmark(gpu);
-        await this.update(gpu.id, gpu, ctx);
-      }
-    }
-  }
-
   async applyDataUpdate(dataUpdate: DataUpdate, ctx: Context) {
     const id = dataUpdate.gpuId;
     const gpu = await this.getById(id, { includeImages: true }, ctx);

@@ -19,7 +19,7 @@ export const GpuTextFieldInput = forwardRef<
 
   const handleChange = useCallback(
     (value: string) => {
-      onChange?.(value != null ? { value, meta: { fieldKey: field } } : null);
+      onChange?.({ value, meta: { fieldKey: field } });
     },
     [field, onChange],
   );

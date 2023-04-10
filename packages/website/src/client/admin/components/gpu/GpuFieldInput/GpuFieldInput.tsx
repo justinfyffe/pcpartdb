@@ -100,7 +100,9 @@ export const GpuFieldInput = forwardRef<unknown, GpuFieldInputProps>(
 
     const handleChange = useCallback(
       (value: GpuField) => {
-        value.meta = { fieldKey: field, ...value?.meta };
+        if (value != null) {
+          value.meta = { fieldKey: field, ...(value?.meta ?? {}) };
+        }
         setValue(value);
         onChange?.(value);
       },
@@ -109,15 +111,16 @@ export const GpuFieldInput = forwardRef<unknown, GpuFieldInputProps>(
 
     const handleAutoUpdateChange = useCallback(
       (checked: boolean) => {
+        const newValue = value || { value: null, meta: { fieldKey: field } };
         if (checked == false) {
-          value.meta.source = undefined;
+          newValue.meta.source = undefined;
         }
-        value.meta.autoUpdate = checked;
+        newValue.meta.autoUpdate = checked;
 
-        setValue(value);
-        onChange?.(value);
+        setValue(newValue);
+        onChange?.(newValue);
       },
-      [onChange, value],
+      [field, onChange, value],
     );
 
     const inputType = type ?? INPUT_TYPES[field];

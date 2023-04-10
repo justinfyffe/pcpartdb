@@ -56,10 +56,6 @@ export class GpuService {
     });
   }
 
-  async refreshRatings() {
-    return await this.api.post(`${PATH}/refresh-ratings`, null);
-  }
-
   async scrapeGpuDetails(data: ScrapeGpuDetailsRequest) {
     return await this.api.post<ScrapeGpuDetailsResponse>(
       `${PATH}/import/scrape`,

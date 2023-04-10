@@ -33,9 +33,7 @@ export const GpuCurrencyFieldInput = forwardRef<
 
   const handleChange = useCallback(
     (value: number) => {
-      onChange?.(
-        value != null ? { value, meta: { fieldKey: field, currency } } : null,
-      );
+      onChange?.({ value, meta: { fieldKey: field, currency } });
     },
     [field, currency, onChange],
   );

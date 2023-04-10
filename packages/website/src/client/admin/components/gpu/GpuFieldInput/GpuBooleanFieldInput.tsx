@@ -26,11 +26,7 @@ export const GpuBooleanFieldInput = forwardRef<
 
   const handleChange = useCallback(
     (value: SelectValue) => {
-      onChange?.(
-        value != null && typeof value == 'string'
-          ? { value: value === 'true', meta: { fieldKey: field } }
-          : null,
-      );
+      onChange?.({ value: value === 'true', meta: { fieldKey: field } });
     },
     [field, onChange],
   );

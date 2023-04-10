@@ -79,14 +79,10 @@ export const GpuFloatFieldInput = forwardRef<
 
   const handleChange = useCallback(
     (value: number) => {
-      onChange?.(
-        value != null
-          ? {
-              value: calculateBaseGpuFieldValue(value, unit),
-              meta: { fieldKey: field, unit: unit },
-            }
-          : null,
-      );
+      onChange?.({
+        value: calculateBaseGpuFieldValue(value, unit),
+        meta: { fieldKey: field, unit: unit },
+      });
     },
     [field, unit, onChange],
   );

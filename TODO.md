@@ -3,14 +3,6 @@ Code cleanup
 - Don't include ScrapeGpuDetailsResponse in scraper.
   - Just use scrape results type.
 - remove custom deep merge
-- enabled should be false instead of removed when editing manually.
-- improve mapping of field type to data source.
-  - support multiple data sources
-- improve structure of field
-  - remove nested DataSource, flatten:
-    - enabled -> autoUpdate
-    - dataSource -> just specifies where the data came from.
-- create cli tool to fix existing data
 - move performance and value calculations to shared
   - allows us to use cli and auto-updating
 

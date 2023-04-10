@@ -93,15 +93,4 @@ export class GpuController {
       { ctx },
     );
   }
-
-  @Post('refresh-ratings')
-  @UseGuards(StaffGuard)
-  async refreshRatings(@Ctx() ctx: Context) {
-    return await this.db.transaction(
-      async () => {
-        await this.gpuService.refreshRatings(ctx);
-      },
-      { ctx },
-    );
-  }
 }

@@ -37,11 +37,7 @@ export const GpuEnumFieldInput = forwardRef<
         throw new Error('Invalid select value for SpecEnumField');
       }
 
-      onChange?.(
-        value != null
-          ? { value: value as string, meta: { fieldKey: field } }
-          : null,
-      );
+      onChange?.({ value: value as string, meta: { fieldKey: field } });
     },
     [field, onChange],
   );

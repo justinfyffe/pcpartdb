@@ -42,15 +42,16 @@ export const GpuBenchmarkInput: FunctionComponent<GpuBenchmarkInputProps> = (
 
   const handleAutoUpdateChange = useCallback(
     (checked: boolean) => {
+      const newValue = value || { value: null, meta: { fieldKey: field } };
       if (checked == false) {
-        value.meta.source = undefined;
+        newValue.meta.source = undefined;
       }
-      value.meta.autoUpdate = checked;
+      newValue.meta.autoUpdate = checked;
 
-      setValue(value);
-      onChange?.(value);
+      setValue(newValue);
+      onChange?.(newValue);
     },
-    [onChange, value],
+    [field, onChange, value],
   );
 
   return (
