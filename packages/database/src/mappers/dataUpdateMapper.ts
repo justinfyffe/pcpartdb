@@ -18,7 +18,7 @@ export function mapToDataUpdateDto(entity: DataUpdateEntity): DataUpdate {
     updateSource: entity.updateSource as DataUpdateSource,
     diff: entity.diff as unknown as DataUpdateDiff,
     metadata: entity.metadata as DataUpdateMeta,
-    decisionMadeAt: entity.decisionMadeAt.getTime(),
+    decisionMadeAt: entity.decisionMadeAt?.getTime() || null,
   };
 }
 
@@ -36,7 +36,8 @@ export function mapToDataUpdateEntity(dto: DataUpdate): DataUpdateEntity {
     updateSource: dto.updateSource,
     diff: dto.diff as unknown as Prisma.JsonValue,
     metadata: dto.metadata,
-    decisionMadeAt: new Date(dto.decisionMadeAt),
+    decisionMadeAt:
+      dto.decisionMadeAt != null ? new Date(dto.decisionMadeAt) : null,
     createdAt: undefined,
     updatedAt: undefined,
   };

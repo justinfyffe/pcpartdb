@@ -1,55 +1,13 @@
-Code cleanup
-- Don't call individual scrape functions, pass data sources instead.
-- Don't include ScrapeGpuDetailsResponse in scraper.
-  - Just use scrape results type.
-- remove custom deep merge
-
-Auto-update logic:
-  - start with 2 GPUs / hour => 6 requests/hour => 4320 requests/month
-    - 252 GPUs / 2 => 126 hours => fresh data every 5-6 days
-  - Store queue in file, so we can pick up where we left off
-  - build queue when queue is empty
-  - order by release date, no release dates should be first
-  - Must do pending updates, see below
-  - only allow auto-updates for fields that are enabled for 3rd party data.
-  - should saving gpus invalidate data updates?
-    - probably
-
-- add general scrapeGpuData to scraper.
-  - deep merge the results from all sources
-  - create data type for scrape results; separate from scrape response in shared
-  - don't expose the individual scraping methods
-
-Data Updates:
-  - All automated data changes require pending updates checks, except for the following:
-    - benchmarks
-    - note: release date and launch price should still be approved since they don't change often
-      - when we add current price, that will be auto-approved
-  - store in db table of update with a diff of the existing and new data objects
-  - show in admin panel all pending updates
-    - Add dialog to show diff
-    - make it easy to approve/reject
-  - an entity can only have one pending update at a time, to avoid conflicts
-    - if a pending update already exists,
-  - can also show auto-approved updates
-  - import tool could show pending updates, but doesn't need to add to pending updates table
-  - DB Table:
-    - data_updates
-      - id: number
-      - gpu_id: number (nullable so we can support other future types)
-      - decision_user_id: number (null => automatic)
-      - description: string
-      - diff: json
-      - status: REJECTED, PENDING, APPROVED
-      - update_source: MANUAL, AUTO_UPDATER, GPU_IMPORTER
-      - date_decision: Date
-      - date_created: Date
-      - date_updated: Date
-  - DataUpdateEntity, DataUpdate
-  - TBD: how to make sure we're not constantly rejecting the same changes
-    - Note: Rejecting is probably a sign that we need to improve our importers
-    - Maybe don't worry about it until it becomes a problem?
-  - TBD: should manually updating a gpu go through this too?
+Auto-update / pending update remaining work:
+- Approve button, Reject button
+- Pagination for pending updates
+- Approved updates page
+- Rejected updates page
+- Code cleanup
+  - Don't call individual scrape functions, pass data sources instead.
+  - Don't include ScrapeGpuDetailsResponse in scraper.
+    - Just use scrape results type.
+  - remove custom deep merge
 
 Immediate Tasks:
     - symlink public folder to outside of packages

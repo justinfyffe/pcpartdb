@@ -16,6 +16,8 @@ export interface GpuFieldMeta {
   unit?: GpuFieldUnit;
   autoUpdate?: boolean;
   source?: GpuDataSourceKey;
+
+  // TODO: remove this
   dataSource?: GpuFieldDataSource;
 }
 

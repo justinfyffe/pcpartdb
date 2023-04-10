@@ -36,3 +36,8 @@ export interface DataUpdate {
   decisionUser?: User;
   gpu?: Gpu;
 }
+
+export interface ListPendingUpdatesRequest {
+  limit?: number;
+  offset?: number;
+}

@@ -18,6 +18,10 @@ export class DataUpdateService {
     private gpuService: GpuService,
   ) {}
 
+  async countPendingUpdates(ctx: Context) {
+    return await this.dataUpdateRepository.countPending(ctx);
+  }
+
   async getPendingUpdates(options: GetPendingUpdatesOptions, ctx: Context) {
     const entities = await this.dataUpdateRepository.listPending(options, ctx);
     const dataUpdates: DataUpdate[] = mapToDataUpdateDtos(entities);

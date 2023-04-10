@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Put, UseGuards } from '@nestjs/common';
+import { Controller, Param, Put, UseGuards } from '@nestjs/common';
 import { StaffGuard } from '../auth/staff.guard';
 import { Database } from '../database';
 import { Context, Ctx } from '../shared/context';
@@ -10,17 +10,6 @@ export class DataUpdateController {
     private db: Database,
     private dataUpdateService: DataUpdateService,
   ) {}
-
-  @Get('pending')
-  @UseGuards(StaffGuard)
-  async getPendingUpdates(@Ctx() ctx: Context) {
-    return this.db.transaction(
-      async () => {
-        return await this.dataUpdateService.getPendingUpdates({}, ctx);
-      },
-      { ctx },
-    );
-  }
 
   @Put(':id/approve')
   @UseGuards(StaffGuard)

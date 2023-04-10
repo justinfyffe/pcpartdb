@@ -15,7 +15,8 @@
     "shared": "npm --workspace=@pcpartdb/shared run",
     "website": "npm --workspace=@pcpartdb/website run",
     "prod:api": "npm run api start",
-    "prod:website": "npm run website start"
+    "prod:website": "npm run website start",
+    "prod:auto-updater": "npm run auto-updater start"
   },
   "repository": {
     "type": "git",

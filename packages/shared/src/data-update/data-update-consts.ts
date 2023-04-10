@@ -1,0 +1,2 @@
+export const DEFAULT_LIST_UPDATES_LIMIT = 50;
+export const DEFAULT_LIST_UPDATES_OFFSET = 0;

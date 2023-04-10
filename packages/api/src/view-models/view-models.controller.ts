@@ -1,5 +1,5 @@
 import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
-import { ListGpusRequest } from '@pcpartdb/shared';
+import { ListGpusRequest, ListPendingUpdatesRequest } from '@pcpartdb/shared';
 import { StaffGuard } from '../auth/staff.guard';
 import { Database } from '../database';
 import { Context, Ctx } from '../shared/context';
@@ -8,6 +8,7 @@ import { AdminListGpusViewModelService } from './admin/gpus/list.view-model';
 import { AdminEditImageViewModelService } from './admin/images/edit.view-model';
 import { AdminListImagesViewModelService } from './admin/images/list.view-model';
 import { AdminOverviewViewModelService } from './admin/overview/overview.view-model';
+import { AdminPendingUpdatesViewModelService } from './admin/updates/pending-updates.view-model';
 import { AdminEditUserViewModelService } from './admin/users/edit.view-model';
 import { AdminListUsersViewModelService } from './admin/users/list.view-model';
 import { RegisterViewModelService } from './auth/register.view-model';
@@ -27,6 +28,7 @@ export class ViewModelsController {
     private adminListImagesViewModelService: AdminListImagesViewModelService,
     private adminEditUserViewModelService: AdminEditUserViewModelService,
     private adminListUsersViewModelService: AdminListUsersViewModelService,
+    private adminPendingUpdatesViewModelService: AdminPendingUpdatesViewModelService,
     private compareGpusViewModelService: CompareGpusViewModelService,
     private listGpusViewModelService: ListGpusViewModelService,
     private viewGpuViewModelService: ViewGpuViewModelService,
@@ -107,6 +109,18 @@ export class ViewModelsController {
   async adminListUsers(@Ctx() ctx: Context) {
     return await this.db.transaction(
       () => this.adminListUsersViewModelService.viewModel(ctx),
+      { ctx },
+    );
+  }
+
+  @Get('admin/updates/pending')
+  @UseGuards(StaffGuard)
+  async adminPendingUpdates(@Query('q') q: string, @Ctx() ctx: Context) {
+    return await this.db.transaction(
+      () => {
+        const data = JSON.parse(q) as ListPendingUpdatesRequest;
+        return this.adminPendingUpdatesViewModelService.viewModel(data, ctx);
+      },
       { ctx },
     );
   }
