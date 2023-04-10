@@ -8,6 +8,7 @@ export interface UpdateQueueOptions {
 export abstract class UpdateQueue<T> {
   protected queue: T[];
   protected file: string;
+  private loaded = false;
 
   constructor(options: UpdateQueueOptions) {
     this.file = options.file;
@@ -15,6 +16,10 @@ export abstract class UpdateQueue<T> {
   }
 
   async next(trx: Transaction) {
+    if (!this.loaded) {
+      await this.load();
+    }
+
     if (this.queue == null || this.queue.length === 0) {
       await this.buildQueue(trx);
     }
@@ -30,6 +35,7 @@ export abstract class UpdateQueue<T> {
 
   async load() {
     this.queue = JSON.parse(await fsPromises.readFile(this.file, 'utf-8'));
+    this.loaded = true;
   }
 
   protected abstract buildQueue(trx: Transaction): void;

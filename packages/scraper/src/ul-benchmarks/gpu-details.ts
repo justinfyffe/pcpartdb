@@ -36,7 +36,7 @@ function getTimespyGraphics($: cheerio.CheerioAPI): GpuField<number> {
     meta: {
       fieldKey: 'timespyGraphics',
       source: GpuDataSourceKey.UlBenchmarks,
-      autoUpdate: value != null,
+      autoUpdate: true,
     },
   };
 }

@@ -1,4 +1,5 @@
 import {
+  DataUpdateStatus,
   DEFAULT_LIST_GPUS_LIMIT,
   DEFAULT_LIST_GPUS_OFFSET,
   DEFAULT_LIST_GPUS_SORT,
@@ -136,6 +137,16 @@ export class GpuRepository {
   ) {
     const trx = config?.trx ?? this.db;
 
+    // Reject any pending updates.
+    await trx.dataUpdate.updateMany({
+      where: { gpuId: id, status: DataUpdateStatus.Pending },
+      data: {
+        decisionMadeAt: new Date(),
+        status: DataUpdateStatus.Rejected,
+      },
+    });
+
+    // Update GPU
     const {
       parent: _parent,
       specs: specsData,

@@ -95,7 +95,7 @@ function getArchitecture($: cheerio.CheerioAPI): GpuField<string> {
     meta: {
       fieldKey: 'architecture',
       source: GpuDataSourceKey.TechPowerUp,
-      autoUpdate: value != null,
+      autoUpdate: true,
     },
   };
 }
@@ -108,7 +108,7 @@ function getBusInterface($: cheerio.CheerioAPI): GpuField<string> {
     meta: {
       fieldKey: 'busInterface',
       source: GpuDataSourceKey.TechPowerUp,
-      autoUpdate: value != null,
+      autoUpdate: true,
     },
   };
 }
@@ -121,7 +121,7 @@ function getCodename($: cheerio.CheerioAPI): GpuField<string> {
     meta: {
       fieldKey: 'codename',
       source: GpuDataSourceKey.TechPowerUp,
-      autoUpdate: value != null,
+      autoUpdate: true,
     },
   };
 }
@@ -137,7 +137,7 @@ function getCompany($: cheerio.CheerioAPI): GpuField<string> {
       meta: {
         fieldKey: 'company',
         source: GpuDataSourceKey.TechPowerUp,
-        autoUpdate: value != null,
+        autoUpdate: true,
       },
     };
   }
@@ -155,7 +155,7 @@ function getComputeUnitsSmCount($: cheerio.CheerioAPI): GpuField<number> {
     meta: {
       fieldKey: 'computeUnitsSmCount',
       source: GpuDataSourceKey.TechPowerUp,
-      autoUpdate: value != null,
+      autoUpdate: true,
     },
   };
 }
@@ -178,7 +178,7 @@ function getCoreClockSpeedBase($: cheerio.CheerioAPI): GpuField<number> {
       unit,
       fieldKey: 'coreClockSpeedBase',
       source: GpuDataSourceKey.TechPowerUp,
-      autoUpdate: value != null,
+      autoUpdate: true,
     },
   };
 }
@@ -201,7 +201,7 @@ function getCoreClockSpeedBoost($: cheerio.CheerioAPI): GpuField<number> {
       unit,
       fieldKey: 'coreClockSpeedBoost',
       source: GpuDataSourceKey.TechPowerUp,
-      autoUpdate: value != null,
+      autoUpdate: true,
     },
   };
 }
@@ -214,7 +214,7 @@ function getDirectxVersion($: cheerio.CheerioAPI): GpuField<string> {
     meta: {
       fieldKey: 'directxVersion',
       source: GpuDataSourceKey.TechPowerUp,
-      autoUpdate: value != null,
+      autoUpdate: true,
     },
   };
 }
@@ -239,7 +239,7 @@ function getFp32Performance($: cheerio.CheerioAPI): GpuField<number> {
       unit,
       fieldKey: 'fp32Performance',
       source: GpuDataSourceKey.TechPowerUp,
-      autoUpdate: value != null,
+      autoUpdate: true,
     },
   };
 }
@@ -264,7 +264,7 @@ function getFp64Performance($: cheerio.CheerioAPI): GpuField<number> {
       unit,
       fieldKey: 'fp64Performance',
       source: GpuDataSourceKey.TechPowerUp,
-      autoUpdate: value != null,
+      autoUpdate: true,
     },
   };
 }
@@ -287,7 +287,7 @@ function getHeight($: cheerio.CheerioAPI): GpuField<number> {
       unit,
       fieldKey: 'height',
       source: GpuDataSourceKey.TechPowerUp,
-      autoUpdate: value != null,
+      autoUpdate: true,
     },
   };
 }
@@ -310,7 +310,7 @@ function getL1Cache($: cheerio.CheerioAPI): GpuField<number> {
       unit,
       fieldKey: 'l1Cache',
       source: GpuDataSourceKey.TechPowerUp,
-      autoUpdate: value != null,
+      autoUpdate: true,
     },
   };
 }
@@ -333,7 +333,7 @@ function getL2Cache($: cheerio.CheerioAPI): GpuField<number> {
       unit,
       fieldKey: 'l2Cache',
       source: GpuDataSourceKey.TechPowerUp,
-      autoUpdate: value != null,
+      autoUpdate: true,
     },
   };
 }
@@ -354,7 +354,7 @@ function getLaunchPrice($: cheerio.CheerioAPI): GpuField<number> {
       currency,
       fieldKey: 'launchPrice',
       source: GpuDataSourceKey.TechPowerUp,
-      autoUpdate: value != null,
+      autoUpdate: true,
     },
   };
 }
@@ -377,7 +377,7 @@ function getLength($: cheerio.CheerioAPI): GpuField<number> {
       unit,
       fieldKey: 'length',
       source: GpuDataSourceKey.TechPowerUp,
-      autoUpdate: value != null,
+      autoUpdate: true,
     },
   };
 }
@@ -400,7 +400,7 @@ function getMemoryBandwidth($: cheerio.CheerioAPI): GpuField<number> {
       unit,
       fieldKey: 'memoryBandwidth',
       source: GpuDataSourceKey.TechPowerUp,
-      autoUpdate: value != null,
+      autoUpdate: true,
     },
   };
 }
@@ -423,7 +423,7 @@ function getMemoryClock($: cheerio.CheerioAPI): GpuField<number> {
       unit,
       fieldKey: 'memoryClock',
       source: GpuDataSourceKey.TechPowerUp,
-      autoUpdate: value != null,
+      autoUpdate: true,
     },
   };
 }
@@ -444,7 +444,7 @@ function getMemoryInterface($: cheerio.CheerioAPI): GpuField<number> {
       unit,
       fieldKey: 'memoryInterface',
       source: GpuDataSourceKey.TechPowerUp,
-      autoUpdate: value != null,
+      autoUpdate: true,
     },
   };
 }
@@ -467,7 +467,7 @@ function getMemorySize($: cheerio.CheerioAPI): GpuField<number> {
       unit,
       fieldKey: 'memorySize',
       source: GpuDataSourceKey.TechPowerUp,
-      autoUpdate: value != null,
+      autoUpdate: true,
     },
   };
 }
@@ -480,7 +480,7 @@ function getMemoryType($: cheerio.CheerioAPI): GpuField<string> {
     meta: {
       fieldKey: 'memoryType',
       source: GpuDataSourceKey.TechPowerUp,
-      autoUpdate: value != null,
+      autoUpdate: true,
     },
   };
 }
@@ -493,7 +493,7 @@ function getOpenClVersion($: cheerio.CheerioAPI): GpuField<string> {
     meta: {
       fieldKey: 'openClVersion',
       source: GpuDataSourceKey.TechPowerUp,
-      autoUpdate: value != null,
+      autoUpdate: true,
     },
   };
 }
@@ -506,7 +506,7 @@ function getOpenGlVersion($: cheerio.CheerioAPI): GpuField<string> {
     meta: {
       fieldKey: 'openGlVersion',
       source: GpuDataSourceKey.TechPowerUp,
-      autoUpdate: value != null,
+      autoUpdate: true,
     },
   };
 }
@@ -519,7 +519,7 @@ function getOutputs($: cheerio.CheerioAPI): GpuField<string> {
     meta: {
       fieldKey: 'outputs',
       source: GpuDataSourceKey.TechPowerUp,
-      autoUpdate: value != null,
+      autoUpdate: true,
     },
   };
 }
@@ -540,7 +540,7 @@ function getPixelFillRate($: cheerio.CheerioAPI): GpuField<number> {
       unit,
       fieldKey: 'pixelFillRate',
       source: GpuDataSourceKey.TechPowerUp,
-      autoUpdate: value != null,
+      autoUpdate: true,
     },
   };
 }
@@ -553,7 +553,7 @@ function getPowerConnectors($: cheerio.CheerioAPI): GpuField<string> {
     meta: {
       fieldKey: 'powerConnectors',
       source: GpuDataSourceKey.TechPowerUp,
-      autoUpdate: value != null,
+      autoUpdate: true,
     },
   };
 }
@@ -575,7 +575,7 @@ function getProcessSize($: cheerio.CheerioAPI): GpuField<number> {
       unit,
       fieldKey: 'processSize',
       source: GpuDataSourceKey.TechPowerUp,
-      autoUpdate: value != null,
+      autoUpdate: true,
     },
   };
 }
@@ -589,7 +589,7 @@ function getRayTracingCores($: cheerio.CheerioAPI): GpuField<number> {
     meta: {
       fieldKey: 'rayTracingCores',
       source: GpuDataSourceKey.TechPowerUp,
-      autoUpdate: value != null,
+      autoUpdate: true,
     },
   };
 }
@@ -624,7 +624,7 @@ function getReleaseDate($: cheerio.CheerioAPI): GpuField<string> {
     meta: {
       fieldKey: 'releaseDate',
       source: GpuDataSourceKey.TechPowerUp,
-      autoUpdate: value != null,
+      autoUpdate: true,
     },
   };
 }
@@ -638,7 +638,7 @@ function getRenderOutputUnits($: cheerio.CheerioAPI): GpuField<number> {
     meta: {
       fieldKey: 'renderOutputUnits',
       source: GpuDataSourceKey.TechPowerUp,
-      autoUpdate: value != null,
+      autoUpdate: true,
     },
   };
 }
@@ -651,7 +651,7 @@ function getShaderModelVersion($: cheerio.CheerioAPI): GpuField<string> {
     meta: {
       fieldKey: 'shaderModelVersion',
       source: GpuDataSourceKey.TechPowerUp,
-      autoUpdate: value != null,
+      autoUpdate: true,
     },
   };
 }
@@ -665,7 +665,7 @@ function getShaderUnitsCudaCores($: cheerio.CheerioAPI): GpuField<number> {
     meta: {
       fieldKey: 'shaderUnitsCudaCores',
       source: GpuDataSourceKey.TechPowerUp,
-      autoUpdate: value != null,
+      autoUpdate: true,
     },
   };
 }
@@ -690,7 +690,7 @@ function getSlotWidth($: cheerio.CheerioAPI): GpuField<number> {
     meta: {
       fieldKey: 'slotWidth',
       source: GpuDataSourceKey.TechPowerUp,
-      autoUpdate: value != null,
+      autoUpdate: true,
     },
   };
 }
@@ -710,7 +710,7 @@ function getSuggestedPsu($: cheerio.CheerioAPI): GpuField<number> {
       unit,
       fieldKey: 'suggestedPsu',
       source: GpuDataSourceKey.TechPowerUp,
-      autoUpdate: value != null,
+      autoUpdate: true,
     },
   };
 }
@@ -724,7 +724,7 @@ function getTensorCores($: cheerio.CheerioAPI): GpuField<number> {
     meta: {
       fieldKey: 'tensorCores',
       source: GpuDataSourceKey.TechPowerUp,
-      autoUpdate: value != null,
+      autoUpdate: true,
     },
   };
 }
@@ -745,7 +745,7 @@ function getTextureFillRate($: cheerio.CheerioAPI): GpuField<number> {
       unit,
       fieldKey: 'textureFillRate',
       source: GpuDataSourceKey.TechPowerUp,
-      autoUpdate: value != null,
+      autoUpdate: true,
     },
   };
 }
@@ -759,7 +759,7 @@ function getTextureMappingUnits($: cheerio.CheerioAPI): GpuField<number> {
     meta: {
       fieldKey: 'textureMappingUnits',
       source: GpuDataSourceKey.TechPowerUp,
-      autoUpdate: value != null,
+      autoUpdate: true,
     },
   };
 }
@@ -780,7 +780,7 @@ function getThermalDesignPower($: cheerio.CheerioAPI): GpuField<number> {
       unit,
       fieldKey: 'thermalDesignPower',
       source: GpuDataSourceKey.TechPowerUp,
-      autoUpdate: value != null,
+      autoUpdate: true,
     },
   };
 }
@@ -801,7 +801,7 @@ function getTransistors($: cheerio.CheerioAPI): GpuField<number> {
       unit,
       fieldKey: 'transistors',
       source: GpuDataSourceKey.TechPowerUp,
-      autoUpdate: value != null,
+      autoUpdate: true,
     },
   };
 }
@@ -824,7 +824,7 @@ function getWidth($: cheerio.CheerioAPI): GpuField<number> {
       unit,
       fieldKey: 'width',
       source: GpuDataSourceKey.TechPowerUp,
-      autoUpdate: value != null,
+      autoUpdate: true,
     },
   };
 }

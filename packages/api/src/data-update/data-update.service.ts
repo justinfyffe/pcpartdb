@@ -27,43 +27,47 @@ export class DataUpdateService {
   async approveUpdate(id: number, ctx: Context) {
     const entity = await this.dataUpdateRepository.findById(id, ctx);
 
-    if (entity == null) {
+    if (entity == null || entity.status !== DataUpdateStatus.Pending) {
       throw notFoundError({ dataUpdateId: id });
     }
 
     const dataUpdate = mapToDataUpdateDto(entity);
-    if (dataUpdate.gpuId != null) {
-      await this.gpuService.applyDataUpdate(dataUpdate, ctx);
-    }
 
+    // Update status
     entity.status = DataUpdateStatus.Approved;
     entity.decisionUserId = ctx.user?.id;
     entity.decisionMadeAt = new Date();
-
     const updatedEntity = await this.dataUpdateRepository.update(
       id,
       entity,
       ctx,
     );
+
+    // Apply diff
+    if (dataUpdate.gpuId != null) {
+      await this.gpuService.applyDataUpdate(dataUpdate, ctx);
+    }
+
     return mapToDataUpdateDto(updatedEntity);
   }
 
   async rejectUpdate(id: number, ctx: Context) {
     const entity = await this.dataUpdateRepository.findById(id, ctx);
 
-    if (entity == null) {
+    if (entity == null || entity.status !== DataUpdateStatus.Pending) {
       throw notFoundError({ dataUpdateId: id });
     }
 
+    // Update status
     entity.status = DataUpdateStatus.Rejected;
     entity.decisionUserId = ctx.user?.id;
     entity.decisionMadeAt = new Date();
-
     const updatedEntity = await this.dataUpdateRepository.update(
       id,
       entity,
       ctx,
     );
+
     return mapToDataUpdateDto(updatedEntity);
   }
 }

@@ -24,18 +24,16 @@ export async function gpuUpdater() {
   const gpuRepository = new GpuRepository(db);
   const dataUpdateRepository = new DataUpdateRepository(db);
 
-  // const queue = new GpuUpdateQueue({
-  //   file: GPU_QUEUE_FILE,
-  // });
-
-  const gpuId = 1;
+  const queue = new GpuUpdateQueue({
+    file: GPU_QUEUE_FILE,
+  });
 
   // Get gpu from from db
   const gpu = await db.transaction(async (trx) => {
     const ctx = { trx };
 
-    // // Pull next gpu from the queue.
-    // const { gpuId } = await queue.next(trx);
+    // Pull next gpu from the queue.
+    const { gpuId } = await queue.next(trx);
 
     const entity = await gpuRepository.findById(gpuId, {}, ctx);
     return mapToGpuDto(entity, { includeSources: true });
@@ -80,12 +78,19 @@ export async function gpuUpdater() {
   await db.transaction(async (trx) => {
     const ctx = { trx };
 
-    // Delete existing pending diffs
+    // Reject existing pending diffs
     const pendingUpdatesForGpu = await dataUpdateRepository.listPending({
       gpuId: gpu.id,
     });
     for (const update of pendingUpdatesForGpu) {
-      await dataUpdateRepository.delete(update.id, ctx);
+      await dataUpdateRepository.update(
+        update.id,
+        {
+          status: DataUpdateStatus.Rejected,
+          decisionMadeAt: new Date(),
+        },
+        ctx,
+      );
     }
 
     // Save diff

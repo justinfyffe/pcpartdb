@@ -39,7 +39,7 @@ function getG3dMark($: cheerio.CheerioAPI): GpuField<number> {
     meta: {
       fieldKey: 'g3dMark',
       source: GpuDataSourceKey.VideocardBenchmarks,
-      autoUpdate: value != null,
+      autoUpdate: true,
     },
   };
 }
@@ -60,7 +60,7 @@ function getG2dMark($: cheerio.CheerioAPI): GpuField<number> {
     meta: {
       fieldKey: 'g2dMark',
       source: GpuDataSourceKey.VideocardBenchmarks,
-      autoUpdate: value != null,
+      autoUpdate: true,
     },
   };
 }
@@ -89,7 +89,7 @@ function getMarketSegment($: cheerio.CheerioAPI): GpuField<MarketSegmentValue> {
     meta: {
       fieldKey: 'marketSegment',
       source: GpuDataSourceKey.VideocardBenchmarks,
-      autoUpdate: value != null,
+      autoUpdate: true,
     },
   };
 }

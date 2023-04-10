@@ -3,8 +3,6 @@ Code cleanup
 - Don't include ScrapeGpuDetailsResponse in scraper.
   - Just use scrape results type.
 - remove custom deep merge
-- move performance and value calculations to shared
-  - allows us to use cli and auto-updating
 
 Auto-update logic:
   - start with 2 GPUs / hour => 6 requests/hour => 4320 requests/month
