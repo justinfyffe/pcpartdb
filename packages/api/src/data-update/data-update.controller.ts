@@ -1,8 +1,14 @@
-import { Controller, Param, Put, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, Put, Query, UseGuards } from '@nestjs/common';
+import {
+  ListPendingUpdatesRequest,
+  ListPendingUpdatesResponse,
+} from '@pcpartdb/shared';
 import { StaffGuard } from '../auth/staff.guard';
 import { Database } from '../database';
 import { Context, Ctx } from '../shared/context';
+import { validate } from '../shared/types/validate';
 import { DataUpdateService } from './data-update.service';
+import { listPendingUpdatesRequestValidator } from './data-update.validators';
 
 @Controller('data-updates')
 export class DataUpdateController {
@@ -10,6 +16,29 @@ export class DataUpdateController {
     private db: Database,
     private dataUpdateService: DataUpdateService,
   ) {}
+
+  @Get('pending')
+  @UseGuards(StaffGuard)
+  async getPendingUpdates(@Query('q') q: string, @Ctx() ctx: Context) {
+    return this.db.transaction(
+      async () => {
+        const data = JSON.parse(q) as ListPendingUpdatesRequest;
+        validate(data, listPendingUpdatesRequestValidator);
+        const pendingUpdates = await this.dataUpdateService.getPendingUpdates(
+          data,
+          ctx,
+        );
+        const totalPendingUpdates =
+          await this.dataUpdateService.countPendingUpdates(ctx);
+
+        return {
+          pendingUpdates,
+          totalPendingUpdates,
+        } as ListPendingUpdatesResponse;
+      },
+      { ctx },
+    );
+  }
 
   @Put(':id/approve')
   @UseGuards(StaffGuard)

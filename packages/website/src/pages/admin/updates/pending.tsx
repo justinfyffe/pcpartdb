@@ -8,11 +8,9 @@ import { withStaffGuard } from 'packages/website/src/client/shared/guards';
 import { AdminPendingUpdatesPage } from '../../../client/admin/pages';
 import { viewModelsClient } from '../../../client/shared/api';
 
-export async function getServerSideProps(ctx: NextPageContext) {
-  const query = ctx.query;
-
-  const offset = Number(query.offset ?? DEFAULT_LIST_UPDATES_OFFSET);
-  const limit = Number(query.limit ?? DEFAULT_LIST_UPDATES_LIMIT);
+export async function getServerSideProps(_ctx: NextPageContext) {
+  const offset = DEFAULT_LIST_UPDATES_OFFSET;
+  const limit = DEFAULT_LIST_UPDATES_LIMIT;
 
   const request: ListPendingUpdatesRequest = { offset, limit };
 

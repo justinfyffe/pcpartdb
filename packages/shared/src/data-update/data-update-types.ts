@@ -41,3 +41,8 @@ export interface ListPendingUpdatesRequest {
   limit?: number;
   offset?: number;
 }
+
+export interface ListPendingUpdatesResponse {
+  pendingUpdates: DataUpdate[];
+  totalPendingUpdates: number;
+}

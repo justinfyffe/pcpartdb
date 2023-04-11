@@ -1,6 +1,9 @@
+Update database.
+Missing rtx a4500
+Missing gpus that have unknown category on videocardbenchmarks
+
 Auto-update / pending update remaining work:
-- Approve button, Reject button
-- Pagination for pending updates
+- Add logging to auto-update job script
 - Approved updates page
 - Rejected updates page
 - Code cleanup
@@ -39,6 +42,7 @@ Immediate Tasks:
   - Improve security for reset password (add expiration to jwt)
   - code clean up
     - rename videocardbenchmarks to videocardbenchmark
+    - improve usage of react components - break down into smaller
   
 
 Post-launch:

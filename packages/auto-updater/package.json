@@ -7,7 +7,7 @@
   "scripts": {
     "clean": "rm -rf ./dist && rm -f tsconfig.tsbuildinfo",
     "build": "tsc",
-    "gpus": "node ./dist/index.js"
+    "start": "node ./dist/index.js"
   },
   "author": "Justin Fyffe <test@example.com>",
   "license": "UNLICENSED",

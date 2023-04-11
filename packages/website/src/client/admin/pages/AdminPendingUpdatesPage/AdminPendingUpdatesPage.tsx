@@ -1,30 +1,28 @@
 import 'reflect-metadata';
-import { CheckIcon, NoSymbolIcon } from '@heroicons/react/24/outline';
-import { AdminPendingUpdatesViewModel, DataUpdate } from '@pcpartdb/shared';
-import React, { useCallback, useState } from 'react';
+import {
+  AdminPendingUpdatesViewModel,
+  DEFAULT_LIST_UPDATES_LIMIT,
+  DEFAULT_LIST_UPDATES_OFFSET,
+} from '@pcpartdb/shared';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   Alert,
   AlertVariant,
-  Button,
-  ButtonVariant,
   MetaRobots,
   Pagination,
   PaginationResult,
   Seo,
-  showDialog,
-  Table,
-  TBody,
-  Td,
-  Th,
-  THead,
-  Tr,
 } from '../../../shared/components';
 import { AdminLayout } from '../../../shared/layouts';
-import { PreviewDialog } from './components';
+import { adminService } from '../../adminService';
+import { PendingUpdatesTable } from './components';
 
 export const AdminPendingUpdatesPage = (
   props: AdminPendingUpdatesViewModel,
 ) => {
+  const [limit, setLimit] = useState(DEFAULT_LIST_UPDATES_LIMIT);
+  const [offset, setOffset] = useState(DEFAULT_LIST_UPDATES_OFFSET);
+
   const pageTitle = 'Pending Updates';
   const seoTitle = `${pageTitle} - Admin Panel`;
   const seoRobots = [MetaRobots.NOINDEX, MetaRobots.NOFOLLOW];
@@ -32,27 +30,25 @@ export const AdminPendingUpdatesPage = (
   const [pendingUpdates, setPendingUpdates] = useState(props.pendingUpdates);
   const [totalResults, setTotalResults] = useState(props.totalResults);
 
-  const handlePreviewUpdate = useCallback((update: DataUpdate) => {
-    showDialog(<PreviewDialog dataUpdate={update} />);
-  }, []);
+  useEffect(() => {
+    async function fetchPendingUpdates() {
+      const { pendingUpdates, totalPendingUpdates } =
+        await adminService.getPendingUpdates({ limit, offset });
+      setPendingUpdates(pendingUpdates);
+      setTotalResults(totalPendingUpdates);
+    }
+    fetchPendingUpdates();
+  }, [limit, offset]);
 
-  // const paginationPageClick = useCallback(
-  //   (result: PaginationResult, evt: React.MouseEvent) => {
-  //     evt.preventDefault();
-  //     evt.stopPropagation();
-  //   },
-  //   [],
-  // );
-
-  // const paginationHrefBuilder = useCallback(
-  //   (result: PaginationResult) =>
-  //     getAdminListGpusPath({
-  //       ...query,
-  //       offset: result.offset,
-  //       limit: result.limit,
-  //     }),
-  //   [query],
-  // );
+  const paginationPageClick = useCallback(
+    async (result: PaginationResult, evt: React.MouseEvent) => {
+      evt.preventDefault();
+      evt.stopPropagation();
+      setLimit(result.limit);
+      setOffset(result.offset);
+    },
+    [],
+  );
 
   return (
     <AdminLayout>
@@ -64,49 +60,16 @@ export const AdminPendingUpdatesPage = (
         <section>
           {pendingUpdates.length > 0 && (
             <>
-              <Table border responsive>
-                <THead>
-                  <Tr className="font-medium">
-                    <Th className="text-left">ID</Th>
-                    <Th>Description</Th>
-                    <Th></Th>
-                  </Tr>
-                </THead>
-                <TBody>
-                  {pendingUpdates.map((pendingUpdate) => (
-                    <Tr key={pendingUpdate.id}>
-                      <Td className="text-left">{pendingUpdate.id}</Td>
-                      <Td>
-                        <a
-                          className="cursor-pointer"
-                          onClick={() => handlePreviewUpdate(pendingUpdate)}
-                        >
-                          {pendingUpdate.description}
-                        </a>
-                      </Td>
-                      <Td className="flex gap-4 justify-end">
-                        <Button variant={ButtonVariant.Default}>
-                          <CheckIcon className="w-4" />
-                        </Button>
+              <PendingUpdatesTable updates={pendingUpdates} />
 
-                        <Button variant={ButtonVariant.Default}>
-                          <NoSymbolIcon className="w-4" />
-                        </Button>
-                      </Td>
-                    </Tr>
-                  ))}
-                </TBody>
-              </Table>
-
-              {/* <Pagination
-                resultsOffset={query.offset}
-                resultsPerPage={query.limit}
+              <Pagination
+                resultsOffset={offset}
+                resultsPerPage={limit}
                 totalResults={totalResults}
                 onPageClick={paginationPageClick}
-                hrefBuilder={paginationHrefBuilder}
                 neighborPagesClassName="lg:hidden"
                 hidePages={false}
-              /> */}
+              />
             </>
           )}
 

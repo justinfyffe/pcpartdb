@@ -5,7 +5,7 @@ import {
   ButtonVariant,
   closeDialog,
 } from '../../../../../shared/components';
-import { RawDiffTab } from './raw-diff-tab';
+import { RawDiffTab } from './RawDiffTab';
 
 interface PreviewDialogProps {
   dataUpdate: DataUpdate;

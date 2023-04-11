@@ -19,7 +19,7 @@ interface PaginationProps {
   resultsPerPage: number;
   totalResults: number;
 
-  hrefBuilder: (result: PaginationResult) => string;
+  hrefBuilder?: (result: PaginationResult) => string;
   onPageClick?: (result: PaginationResult, event?: React.MouseEvent) => void;
 }
 
@@ -133,7 +133,7 @@ export const Pagination: FunctionComponent<PaginationProps> = (props) => {
     >
       {currentPage > 1 ? (
         <a
-          href={hrefBuilder(getPaginationResult(currentPage - 1))}
+          href={hrefBuilder?.(getPaginationResult(currentPage - 1))}
           onClick={(evt) =>
             onPageClick?.(getPaginationResult(currentPage - 1), evt)
           }
@@ -156,7 +156,7 @@ export const Pagination: FunctionComponent<PaginationProps> = (props) => {
                     <>{page}</>
                   ) : (
                     <a
-                      href={hrefBuilder(getPaginationResult(page))}
+                      href={hrefBuilder?.(getPaginationResult(page))}
                       onClick={(evt) =>
                         onPageClick?.(getPaginationResult(page), evt)
                       }
@@ -173,7 +173,7 @@ export const Pagination: FunctionComponent<PaginationProps> = (props) => {
 
       {currentPage < totalPages ? (
         <a
-          href={hrefBuilder(getPaginationResult(currentPage + 1))}
+          href={hrefBuilder?.(getPaginationResult(currentPage + 1))}
           onClick={(evt) =>
             onPageClick?.(getPaginationResult(currentPage + 1), evt)
           }
