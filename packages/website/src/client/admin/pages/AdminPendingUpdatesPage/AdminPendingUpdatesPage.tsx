@@ -16,6 +16,8 @@ import {
 import { AdminLayout } from '../../../shared/layouts';
 import { adminService } from '../../adminService';
 import { PendingUpdatesTable } from './components';
+import { PendingUpdatesPageContext } from './context';
+import { usePendingUpdatesPageContextProps } from './hooks';
 
 export const AdminPendingUpdatesPage = (
   props: AdminPendingUpdatesViewModel,
@@ -32,54 +34,55 @@ export const AdminPendingUpdatesPage = (
 
   useEffect(() => {
     async function fetchPendingUpdates() {
-      const { pendingUpdates, totalPendingUpdates } =
-        await adminService.getPendingUpdates({ limit, offset });
-      setPendingUpdates(pendingUpdates);
-      setTotalResults(totalPendingUpdates);
+      const response = await adminService.getPendingUpdates({ limit, offset });
+      setPendingUpdates(response.pendingUpdates);
+      setTotalResults(response.totalPendingUpdates);
     }
     fetchPendingUpdates();
   }, [limit, offset]);
 
-  const paginationPageClick = useCallback(
-    async (result: PaginationResult, evt: React.MouseEvent) => {
-      evt.preventDefault();
-      evt.stopPropagation();
-      setLimit(result.limit);
-      setOffset(result.offset);
-    },
-    [],
-  );
+  const paginationPageClick = useCallback(async (result: PaginationResult) => {
+    setLimit(result.limit);
+    setOffset(result.offset);
+  }, []);
+
+  const context = usePendingUpdatesPageContextProps({
+    pendingUpdates,
+    setPendingUpdates,
+  });
 
   return (
     <AdminLayout>
       <Seo title={seoTitle} robots={seoRobots} />
 
-      <article>
-        <h1 className="font-semibold mb-4">{pageTitle}</h1>
+      <PendingUpdatesPageContext.Provider value={context}>
+        <article>
+          <h1 className="font-semibold mb-4">{pageTitle}</h1>
 
-        <section>
-          {pendingUpdates.length > 0 && (
-            <>
-              <PendingUpdatesTable updates={pendingUpdates} />
+          <section>
+            {pendingUpdates.length > 0 && (
+              <>
+                <PendingUpdatesTable />
 
-              <Pagination
-                resultsOffset={offset}
-                resultsPerPage={limit}
-                totalResults={totalResults}
-                onPageClick={paginationPageClick}
-                neighborPagesClassName="lg:hidden"
-                hidePages={false}
-              />
-            </>
-          )}
+                <Pagination
+                  resultsOffset={offset}
+                  resultsPerPage={limit}
+                  totalResults={totalResults}
+                  onPageClick={paginationPageClick}
+                  neighborPagesClassName="lg:hidden"
+                  hidePages={false}
+                />
+              </>
+            )}
 
-          {pendingUpdates.length === 0 && (
-            <Alert variant={AlertVariant.Info}>
-              There are no pending updates.
-            </Alert>
-          )}
-        </section>
-      </article>
+            {pendingUpdates.length === 0 && (
+              <Alert variant={AlertVariant.Info}>
+                There are no pending updates.
+              </Alert>
+            )}
+          </section>
+        </article>
+      </PendingUpdatesPageContext.Provider>
     </AdminLayout>
   );
 };

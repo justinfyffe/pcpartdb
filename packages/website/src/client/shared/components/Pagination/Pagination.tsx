@@ -133,6 +133,7 @@ export const Pagination: FunctionComponent<PaginationProps> = (props) => {
     >
       {currentPage > 1 ? (
         <a
+          className="cursor-pointer"
           href={hrefBuilder?.(getPaginationResult(currentPage - 1))}
           onClick={(evt) =>
             onPageClick?.(getPaginationResult(currentPage - 1), evt)
@@ -156,6 +157,7 @@ export const Pagination: FunctionComponent<PaginationProps> = (props) => {
                     <>{page}</>
                   ) : (
                     <a
+                      className="cursor-pointer"
                       href={hrefBuilder?.(getPaginationResult(page))}
                       onClick={(evt) =>
                         onPageClick?.(getPaginationResult(page), evt)
@@ -173,6 +175,7 @@ export const Pagination: FunctionComponent<PaginationProps> = (props) => {
 
       {currentPage < totalPages ? (
         <a
+          className="cursor-pointer"
           href={hrefBuilder?.(getPaginationResult(currentPage + 1))}
           onClick={(evt) =>
             onPageClick?.(getPaginationResult(currentPage + 1), evt)
