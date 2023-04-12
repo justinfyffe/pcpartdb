@@ -3,9 +3,6 @@ Missing rtx a4500
 Missing gpus that have unknown category on videocardbenchmarks
 
 Auto-update / pending update remaining work:
-- Add logging to auto-update job script
-- Approved updates page
-- Rejected updates page
 - Code cleanup
   - Don't call individual scrape functions, pass data sources instead.
   - Don't include ScrapeGpuDetailsResponse in scraper.

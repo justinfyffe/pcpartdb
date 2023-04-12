@@ -88,7 +88,7 @@ export const AdminLayout: FunctionComponent<AdminLayoutProps> = (props) => {
                 variant={ButtonVariant.Default}
                 href={getAdminUpdatesPath()}
               >
-                Pending Updates
+                Data Updates
               </Button>
             </nav>
           </aside>
