@@ -3,11 +3,11 @@
   "description": "Auto updater service that update parts periodically. No packages should depend on this.",
   "private": "true",
   "version": "1.0.0",
-  "main": "dist/index.js",
   "scripts": {
     "clean": "rm -rf ./dist && rm -f tsconfig.tsbuildinfo",
     "build": "tsc",
-    "start": "node ./dist/index.js"
+    "gpu-updater": "node ./dist/gpu-updater/main.js",
+    "schedule:gpu-updater": "node ./dist/gpu-updater/schedule.js"
   },
   "author": "Justin Fyffe <test@example.com>",
   "license": "UNLICENSED",

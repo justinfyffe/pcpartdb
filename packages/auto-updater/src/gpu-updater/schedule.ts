@@ -1,5 +1,5 @@
 import * as scheduler from 'node-schedule';
-import { gpuUpdater } from './gpu-updater';
+import { gpuUpdater } from './gpuUpdater';
 
 const UPDATE_GPUS_CRON = '*/30 * * * *';
 

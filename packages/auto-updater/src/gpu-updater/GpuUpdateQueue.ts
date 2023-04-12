@@ -1,5 +1,5 @@
 import { Transaction } from '@pcpartdb/database';
-import { UpdateQueue } from '../queue/UpdateQueue';
+import { UpdateQueue } from '../shared/UpdateQueue';
 
 interface GpuQueueData {
   gpuId: number;

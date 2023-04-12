@@ -1,4 +1,5 @@
 import { Transaction } from '@pcpartdb/database';
+import * as fs from 'fs';
 import * as fsPromises from 'fs/promises';
 
 export interface UpdateQueueOptions {
@@ -34,7 +35,12 @@ export abstract class UpdateQueue<T> {
   }
 
   async load() {
-    this.queue = JSON.parse(await fsPromises.readFile(this.file, 'utf-8'));
+    if (fs.existsSync(this.file)) {
+      this.queue = JSON.parse(await fsPromises.readFile(this.file, 'utf-8'));
+    } else {
+      this.queue = [];
+    }
+
     this.loaded = true;
   }
 

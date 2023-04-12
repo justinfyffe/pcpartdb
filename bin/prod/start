@@ -6,4 +6,4 @@ pm2 stop all
 
 NODE_ENV=production pm2 start npm --node-args="--gc_interval=100" --name "pcpartdb-api" -- run "prod:api"
 NODE_ENV=production pm2 start npm --node-args="--gc_interval=100" --name "pcpartdb-website" -- run "prod:website"
-NODE_ENV=production pm2 start npm --node-args="--gc_interval=100" --name "pcpartdb-auto-updater" -- run "prod:auto-updater"
+NODE_ENV=production pm2 start npm --node-args="--gc_interval=100" --name "pcpartdb-gpu-updater" -- run "prod:gpu-updater"

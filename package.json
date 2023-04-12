@@ -16,7 +16,7 @@
     "website": "npm --workspace=@pcpartdb/website run",
     "prod:api": "npm run api start",
     "prod:website": "npm run website start",
-    "prod:auto-updater": "npm run auto-updater start"
+    "prod:gpu-updater": "npm run auto-updater schedule:gpu-updater"
   },
   "repository": {
     "type": "git",
