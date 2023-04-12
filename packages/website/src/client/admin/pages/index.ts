@@ -9,4 +9,4 @@ export * from './AdminNewGpuPage';
 export * from './AdminNewImagePage';
 export * from './AdminNewUserPage';
 export * from './AdminOverviewPage';
-export * from './AdminPendingUpdatesPage';
+export * from './AdminDataUpdatesPage';

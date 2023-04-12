@@ -1,27 +1,25 @@
 import { DataUpdate } from '@pcpartdb/shared';
 import React, { FunctionComponent, useCallback, useContext } from 'react';
 import { Table, TBody, Th, THead, Tr } from '../../../../../shared/components';
-import { PendingUpdatesPageContext } from '../../context';
-import { PendingUpdateRow } from './PendingUpdateRow';
+import { DataUpdatesPageContext } from '../../context';
+import { UpdateRow } from './UpdateRow';
 
-interface PendingUpdatesTableProps {}
+interface UpdatesTableProps {}
 
-export const PendingUpdatesTable: FunctionComponent<
-  PendingUpdatesTableProps
-> = (_props) => {
-  const context = useContext(PendingUpdatesPageContext);
-  const { pendingUpdates, setPendingUpdates } = context;
+export const UpdatesTable: FunctionComponent<UpdatesTableProps> = (_props) => {
+  const context = useContext(DataUpdatesPageContext);
+  const { updates, setUpdates } = context;
 
   const handleUpdate = useCallback(
     (update: DataUpdate) => {
-      const newUpdates = [...pendingUpdates];
+      const newUpdates = [...updates];
       const idx = newUpdates.findIndex((value) => update.id === value.id);
       if (idx >= 0) {
         newUpdates.splice(idx, 1);
       }
-      setPendingUpdates(newUpdates);
+      setUpdates(newUpdates);
     },
-    [setPendingUpdates, pendingUpdates],
+    [setUpdates, updates],
   );
 
   return (
@@ -34,8 +32,8 @@ export const PendingUpdatesTable: FunctionComponent<
         </Tr>
       </THead>
       <TBody>
-        {pendingUpdates.map((update) => (
-          <PendingUpdateRow
+        {updates.map((update) => (
+          <UpdateRow
             key={update.id}
             update={update}
             onApprove={handleUpdate}

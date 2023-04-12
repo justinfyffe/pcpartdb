@@ -3,7 +3,7 @@ import {
   getAdminListImagesPath,
   getAdminListUsersPath,
   getAdminOverviewPath,
-  getAdminPendingUpdatesPath,
+  getAdminUpdatesPath,
   getHomePath,
   WEBSITE_NAME,
 } from '@pcpartdb/shared';
@@ -86,7 +86,7 @@ export const AdminLayout: FunctionComponent<AdminLayoutProps> = (props) => {
               </Button>
               <Button
                 variant={ButtonVariant.Default}
-                href={getAdminPendingUpdatesPath()}
+                href={getAdminUpdatesPath()}
               >
                 Pending Updates
               </Button>

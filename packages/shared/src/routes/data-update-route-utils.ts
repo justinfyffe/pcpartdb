@@ -1,3 +1,3 @@
-export function getAdminPendingUpdatesPath() {
-  return '/admin/updates/pending';
+export function getAdminUpdatesPath() {
+  return '/admin/data-updates';
 }

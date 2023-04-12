@@ -1,14 +1,14 @@
 import { Controller, Get, Param, Put, Query, UseGuards } from '@nestjs/common';
 import {
-  ListPendingUpdatesRequest,
-  ListPendingUpdatesResponse,
+  ListDataUpdatesRequest,
+  ListDataUpdatesResponse,
 } from '@pcpartdb/shared';
 import { StaffGuard } from '../auth/staff.guard';
 import { Database } from '../database';
 import { Context, Ctx } from '../shared/context';
 import { validate } from '../shared/types/validate';
 import { DataUpdateService } from './data-update.service';
-import { listPendingUpdatesRequestValidator } from './data-update.validators';
+import { listUpdatesRequestValidator } from './data-update.validators';
 
 @Controller('data-updates')
 export class DataUpdateController {
@@ -17,24 +17,24 @@ export class DataUpdateController {
     private dataUpdateService: DataUpdateService,
   ) {}
 
-  @Get('pending')
+  @Get()
   @UseGuards(StaffGuard)
-  async getPendingUpdates(@Query('q') q: string, @Ctx() ctx: Context) {
+  async getUpdates(@Query('q') q: string, @Ctx() ctx: Context) {
     return this.db.transaction(
       async () => {
-        const data = JSON.parse(q) as ListPendingUpdatesRequest;
-        validate(data, listPendingUpdatesRequestValidator);
-        const pendingUpdates = await this.dataUpdateService.getPendingUpdates(
+        const data = JSON.parse(q) as ListDataUpdatesRequest;
+        validate(data, listUpdatesRequestValidator);
+        const updates = await this.dataUpdateService.getUpdates(data, ctx);
+        const totalUpdates = await this.dataUpdateService.countUpdates(
           data,
           ctx,
         );
-        const totalPendingUpdates =
-          await this.dataUpdateService.countPendingUpdates(ctx);
 
         return {
-          pendingUpdates,
-          totalPendingUpdates,
-        } as ListPendingUpdatesResponse;
+          status: data.status,
+          updates: updates,
+          totalUpdates: totalUpdates,
+        } as ListDataUpdatesResponse;
       },
       { ctx },
     );

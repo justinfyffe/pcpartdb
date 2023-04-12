@@ -1,6 +1,7 @@
-import { DataUpdate } from '../data-update';
+import { DataUpdate, DataUpdateStatus } from '../data-update';
 
-export interface AdminPendingUpdatesViewModel {
-  pendingUpdates: DataUpdate[];
-  totalResults: number;
+export interface AdminDataUpdatesViewModel {
+  status?: DataUpdateStatus;
+  updates: DataUpdate[];
+  totalUpdates: number;
 }

@@ -3,10 +3,17 @@ import { mapToDataUpdateDto, mapToDataUpdateDtos } from '@pcpartdb/database';
 import { DataUpdate, DataUpdateStatus } from '@pcpartdb/shared';
 import { GpuService } from '../gpu/gpu.service';
 import { Context } from '../shared/context';
-import { notFoundError } from '../shared/error';
+import { badRequestError, notFoundError } from '../shared/error';
 import { DataUpdateRepository } from './data-update.repository';
 
-interface GetPendingUpdatesOptions {
+interface CountUpdatesOptions {
+  gpuId?: number;
+  status?: DataUpdateStatus;
+}
+
+interface GetUpdatesOptions {
+  gpuId?: number;
+  status?: DataUpdateStatus;
   limit?: number;
   offset?: number;
 }
@@ -18,12 +25,12 @@ export class DataUpdateService {
     private gpuService: GpuService,
   ) {}
 
-  async countPendingUpdates(ctx: Context) {
-    return await this.dataUpdateRepository.countPending(ctx);
+  async countUpdates(options: CountUpdatesOptions, ctx: Context) {
+    return await this.dataUpdateRepository.count(options, ctx);
   }
 
-  async getPendingUpdates(options: GetPendingUpdatesOptions, ctx: Context) {
-    const entities = await this.dataUpdateRepository.listPending(options, ctx);
+  async getUpdates(options: GetUpdatesOptions, ctx: Context) {
+    const entities = await this.dataUpdateRepository.list(options, ctx);
     const dataUpdates: DataUpdate[] = mapToDataUpdateDtos(entities);
     return dataUpdates;
   }
@@ -31,8 +38,11 @@ export class DataUpdateService {
   async approveUpdate(id: number, ctx: Context) {
     const entity = await this.dataUpdateRepository.findById(id, ctx);
 
-    if (entity == null || entity.status !== DataUpdateStatus.Pending) {
+    if (entity == null) {
       throw notFoundError({ dataUpdateId: id });
+    }
+    if (entity.status !== DataUpdateStatus.Pending) {
+      throw badRequestError();
     }
 
     const dataUpdate = mapToDataUpdateDto(entity);

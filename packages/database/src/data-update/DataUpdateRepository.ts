@@ -1,14 +1,20 @@
 import {
   DataUpdateStatus,
-  DEFAULT_LIST_UPDATES_LIMIT,
-  DEFAULT_LIST_UPDATES_OFFSET,
+  DEFAULT_LIST_DATA_UPDATES_LIMIT,
+  DEFAULT_LIST_DATA_UPDATES_OFFSET,
 } from '@pcpartdb/shared';
 import { DatabaseClient } from '../DatabaseClient';
 import { RepositoryConfig } from '../RepositoryConfig';
 import { DataUpdateEntity } from './DataUpdateEntity';
 
+interface CountOptions {
+  gpuId?: number;
+  status?: DataUpdateStatus;
+}
+
 interface ListOptions {
   gpuId?: number;
+  status?: DataUpdateStatus;
 
   offset?: number;
   limit?: number;
@@ -17,26 +23,29 @@ interface ListOptions {
 export class DataUpdateRepository {
   constructor(protected db: DatabaseClient) {}
 
-  async countPending(config?: RepositoryConfig) {
+  async count(options?: CountOptions, config?: RepositoryConfig) {
     const db = config?.trx ?? this.db;
+
+    const { gpuId, status } = options ?? {};
+
     return await db.dataUpdate.count({
-      where: { status: DataUpdateStatus.Pending },
+      where: { gpuId, status },
     });
   }
 
-  async listPending(
+  async list(
     options: ListOptions,
     config?: RepositoryConfig,
   ): Promise<DataUpdateEntity[]> {
     const db = config?.trx ?? this.db;
 
-    const { gpuId, limit, offset } = options ?? {};
+    const { gpuId, status, limit, offset } = options ?? {};
 
     return await db.dataUpdate.findMany({
-      where: { gpuId, status: DataUpdateStatus.Pending },
+      where: { gpuId, status },
       orderBy: { createdAt: 'asc' },
-      skip: offset ?? DEFAULT_LIST_UPDATES_OFFSET,
-      take: limit ?? DEFAULT_LIST_UPDATES_LIMIT,
+      skip: offset ?? DEFAULT_LIST_DATA_UPDATES_OFFSET,
+      take: limit ?? DEFAULT_LIST_DATA_UPDATES_LIMIT,
     });
   }
 

@@ -79,7 +79,7 @@ export async function gpuUpdater() {
     const ctx = { trx };
 
     // Reject existing pending diffs
-    const pendingUpdatesForGpu = await dataUpdateRepository.listPending({
+    const pendingUpdatesForGpu = await dataUpdateRepository.list({
       gpuId: gpu.id,
     });
     for (const update of pendingUpdatesForGpu) {

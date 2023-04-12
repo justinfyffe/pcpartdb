@@ -113,4 +113,5 @@ tr:nth-child(even) {
 
 :disabled {
   background-color: #eee;
+  border: 1px solid #eee;
 }

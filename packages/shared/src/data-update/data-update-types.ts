@@ -37,12 +37,14 @@ export interface DataUpdate {
   gpu?: Gpu;
 }
 
-export interface ListPendingUpdatesRequest {
+export interface ListDataUpdatesRequest {
+  status?: DataUpdateStatus;
   limit?: number;
   offset?: number;
 }
 
-export interface ListPendingUpdatesResponse {
-  pendingUpdates: DataUpdate[];
-  totalPendingUpdates: number;
+export interface ListDataUpdatesResponse {
+  status?: DataUpdateStatus;
+  updates: DataUpdate[];
+  totalUpdates: number;
 }
