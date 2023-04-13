@@ -14,10 +14,10 @@ import {
 } from '@pcpartdb/shared';
 import deepmerge from 'deepmerge';
 import { getDatabase } from '../shared/database';
-import { dataPath } from '../shared/file';
 import { GpuUpdateQueue } from './GpuUpdateQueue';
+import { gpuUpdaterDataPath } from './utils';
 
-const GPU_QUEUE_FILE = dataPath('gpu-queue.json');
+const GPU_QUEUE_FILE = gpuUpdaterDataPath('gpu-queue.json');
 
 export async function updateNextGpu() {
   const db = await getDatabase();
