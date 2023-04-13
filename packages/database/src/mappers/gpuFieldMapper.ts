@@ -31,6 +31,7 @@ export function mapToGpuFieldDto<
 
   // Don't include sources unless explicitly specified
   if (meta != null && options?.includeSources !== true) {
+    meta.autoUpdate = undefined;
     meta.source = undefined;
     meta.dataSource = undefined;
   }
