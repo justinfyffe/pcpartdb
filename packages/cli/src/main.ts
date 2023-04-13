@@ -1,33 +1,44 @@
 import { Command } from 'commander';
 import * as dotenv from 'dotenv';
-import { fixDataHandler, refreshRatingsHandler } from './gpus';
-import { scrapeDataCommandHandler } from './scrape/data';
-import { scrapeSourcesCommandHandler } from './scrape/sources';
+import { fixDataCommand } from './fix-data';
+import { gpuUpdaterCommand } from './gpu-updater';
+import { refreshRatingsCommand } from './refresh-ratings';
+import { scrapeDataCommand } from './scrape-data';
+import { scrapeSourcesCommand } from './scrape-sources';
 
 dotenv.config();
 
 const program = new Command();
 
-// Scrape command
-const scrape = program.command('scrape');
-scrape
-  .command('sources')
+// Gpu Updater
+program
+  .command('gpu-updater')
+  .option('--schedule')
+  .action(async (options) => {
+    await gpuUpdaterCommand({ schedule: options.schedule });
+  });
+
+// Scrape Sources command
+program
+  .command('scrape-sources')
   .option('--source [value]')
   .option('--proxy')
   .action(async (options) => {
-    await scrapeSourcesCommandHandler({
+    await scrapeSourcesCommand({
       source: options.source,
       proxy: options.proxy,
     });
   });
-scrape
-  .command('data')
+
+// Scrape Data command
+program
+  .command('scrape-data')
   .option('--model [value]')
   .option('--count [value]')
   .option('--offset [value]')
   .option('--proxy')
   .action(async (options) => {
-    await scrapeDataCommandHandler({
+    await scrapeDataCommand({
       model: options.model,
       count: options.count,
       offset: options.offset,
@@ -35,14 +46,14 @@ scrape
     });
   });
 
-const gpus = program.command('gpus');
-gpus.command('refreshRatings').action(async () => {
-  await refreshRatingsHandler();
+// Refresh GPU Performance and Value Scores
+program.command('refresh-ratings').action(async () => {
+  await refreshRatingsCommand({});
 });
 
 // Remove this after data source structure has been fixed.
-gpus.command('fixData').action(async () => {
-  await fixDataHandler();
+program.command('fix-data').action(async () => {
+  await fixDataCommand({});
 });
 
 program.parse(process.argv);

@@ -1,9 +1,9 @@
 import { scrapeTechPowerUpGpuDetails } from '@pcpartdb/scraper';
 import { generateGpuSlug, Gpu, GpuDataSourceKey } from '@pcpartdb/shared';
 import * as fsPromises from 'fs/promises';
-import { sleep } from '../../shared/process';
-import { GpuSource, GpuSourceModel } from '../types';
-import { gpusDataPath } from '../utils';
+import { sleep } from '../shared/process';
+import { GpuSource, GpuSourceModel } from './types';
+import { gpusDataPath } from './utils';
 
 const SLEEP_DELAY = 10_000;
 

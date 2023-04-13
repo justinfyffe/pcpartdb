@@ -5,7 +5,7 @@ import {
 } from '@pcpartdb/shared';
 import { getDatabase } from '../shared/database';
 
-export async function refreshRatingsHandler() {
+export async function refreshRatings() {
   const db = await getDatabase();
   const gpuRepository = new GpuRepository(db);
 

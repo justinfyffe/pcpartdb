@@ -1,16 +1,14 @@
-import { ScrapeSource } from '../types';
-import { scrapeTechPowerUpGpuSources } from './techpowerup';
-import { scrapeUlBenchmarkGpuSources } from './ul-benchmarks';
-import { sanitizeVideocardBenchmarksGpuSources } from './videocardbenchmarks';
+import { sanitizeVideocardBenchmarksGpuSources } from './sanitizeVideocardBenchmarksGpuSources';
+import { scrapeTechPowerUpGpuSources } from './scrapeTechPowerUpGpuSources';
+import { scrapeUlBenchmarkGpuSources } from './scrapeUlBenchmarkGpuSources';
+import { ScrapeSource } from './types';
 
 export type ScrapeSourcesCommandArgs = {
   source: string;
   proxy?: boolean;
 };
 
-export async function scrapeSourcesCommandHandler(
-  args: ScrapeSourcesCommandArgs,
-) {
+export async function scrapeSourcesCommand(args: ScrapeSourcesCommandArgs) {
   console.log(`Scraping sources with args=${JSON.stringify(args)}`);
   const { source, proxy } = args;
 

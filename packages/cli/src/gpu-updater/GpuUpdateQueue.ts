@@ -2,16 +2,20 @@ import { Transaction } from '@pcpartdb/database';
 import * as fs from 'fs';
 import * as fsPromises from 'fs/promises';
 
-export interface UpdateQueueOptions {
+export interface GpuUpdateQueueOptions {
   file: string;
 }
 
-export abstract class UpdateQueue<T> {
-  protected queue: T[];
+interface GpuQueueData {
+  gpuId: number;
+}
+
+export class GpuUpdateQueue {
+  protected queue: GpuQueueData[];
   protected file: string;
   private loaded = false;
 
-  constructor(options: UpdateQueueOptions) {
+  constructor(options: GpuUpdateQueueOptions) {
     this.file = options.file;
     this.queue = [];
   }
@@ -44,5 +48,19 @@ export abstract class UpdateQueue<T> {
     this.loaded = true;
   }
 
-  protected abstract buildQueue(trx: Transaction): void;
+  protected async buildQueue(trx: Transaction) {
+    // Fetch GPUs by release date. Nulls first
+    const gpus = await trx.gpu.findMany({
+      select: { id: true },
+      orderBy: { releaseDate: { sort: 'desc', nulls: 'first' } },
+    });
+    const gpuIds = gpus.map(({ id }) => id);
+
+    // Generate queue data.
+    const queueData: GpuQueueData[] = gpuIds.map((gpuId) => ({ gpuId }));
+    this.queue = queueData;
+
+    // Save queu
+    await this.save();
+  }
 }

@@ -4,11 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "npm run shared build && npm run database build && npm run scraper build && npm run auto-updater build && npm run cli build && npm run api build && npm run website build",
-    "clean": "npm run api clean & npm run auto-updater clean & npm run cli clean & npm run database clean & npm run scraper clean & npm run shared clean & npm run website clean",
+    "build": "npm run shared build && npm run database build && npm run scraper build && npm run cli build && npm run api build && npm run website build",
+    "clean": "npm run api clean & npm run cli clean & npm run database clean & npm run scraper clean & npm run shared clean & npm run website clean",
     "deploy": "./bin/deploy",
     "api": "npm --workspace=@pcpartdb/api run",
-    "auto-updater": "npm --workspace=@pcpartdb/auto-updater run",
     "cli": "npm --workspace=@pcpartdb/cli run",
     "database": "npm --workspace=@pcpartdb/database run",
     "scraper": "npm --workspace=@pcpartdb/scraper run",
@@ -16,7 +15,7 @@
     "website": "npm --workspace=@pcpartdb/website run",
     "prod:api": "npm run api start",
     "prod:website": "npm run website start",
-    "prod:gpu-updater": "npm run auto-updater schedule:gpu-updater"
+    "prod:gpu-updater": "npm run cli gpu-updater:schedule"
   },
   "repository": {
     "type": "git",

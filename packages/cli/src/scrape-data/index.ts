@@ -1,5 +1,5 @@
-import { getGpuData } from './gpu-data';
-import { getSourceModel } from './source-model';
+import { getGpuData } from './getGpuData';
+import { getSourceModel } from './getSourceModel';
 
 export type ScrapeDataCommandArgs = {
   model?: string;
@@ -8,7 +8,7 @@ export type ScrapeDataCommandArgs = {
   proxy?: boolean;
 };
 
-export async function scrapeDataCommandHandler(args: ScrapeDataCommandArgs) {
+export async function scrapeDataCommand(args: ScrapeDataCommandArgs) {
   console.log(`Scraping data with args=${JSON.stringify(args)}`);
 
   const { model, proxy } = args;

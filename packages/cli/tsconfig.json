@@ -6,5 +6,5 @@
   },
   "include": ["./**/*.ts"],
   "exclude": ["dist"],
-  "references": [{ "path": "../scraper" }, { "path": "../shared" }]
+  "references": [{ "path": "../database" }, { "path": "../scraper" }, { "path": "../shared" }]
 }

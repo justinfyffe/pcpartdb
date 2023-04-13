@@ -1,38 +1,25 @@
 import {
-  scrapeTechPowerUpGpuSources as scrapeGpuSources,
-  TechPowerUpGpuSource,
+  scrapeUlBenchmarkGpuSources as scrapeGpuSources,
+  UlBenchmarkGpuSource,
 } from '@pcpartdb/scraper';
 import * as fsPromises from 'fs/promises';
-import { sleep } from '../../shared/process';
-import { techPowerUpDataPath } from '../utils';
+import { sleep } from '../shared/process';
+import { ulBenchmarksDataPath } from './utils';
 
-const QUERIES = [
-  '2023',
-  '2022',
-  '2021',
-  '2020',
-  '2019',
-  '2018',
-  '2017',
-  '2016',
-  '2015',
-  '2014',
-  '2013',
-  '2012',
-];
+const QUERIES = ['amd', 'nvidia', 'intel', 'geforce', 'rtx', 'radeon'];
 
 const SLEEP_DELAY = 15_000;
 
-interface ScrapeTechPowerUpGpuSources {
+interface ScrapeUlBenchmarkGpuSources {
   proxy?: boolean;
 }
 
-export async function scrapeTechPowerUpGpuSources(
-  options: ScrapeTechPowerUpGpuSources,
+export async function scrapeUlBenchmarkGpuSources(
+  options: ScrapeUlBenchmarkGpuSources,
 ) {
-  console.log('Scraping GPU Sources from TechPowerUp');
+  console.log('Scraping GPU Sources from UL Benchmarks');
 
-  const map: Record<string, TechPowerUpGpuSource> = {};
+  const map: Record<string, UlBenchmarkGpuSource> = {};
   for (let i = 0; i < QUERIES.length; ++i) {
     const query = QUERIES[i];
     console.log(`Scraping query: ${query}`);
@@ -50,13 +37,15 @@ export async function scrapeTechPowerUpGpuSources(
   }
 
   const gpus = Object.values(map);
-  console.log(`Scraped ${gpus.length} sources`);
+  console.log(`Scraped ${gpus.length} total sources`);
 
-  const path = techPowerUpDataPath('gpu-sources.json');
-  const timestampPath = techPowerUpDataPath(
+  const path = ulBenchmarksDataPath('gpu-sources.json');
+  const timestampPath = ulBenchmarksDataPath(
     `gpu-sources-${new Date().getTime()}.json`,
   );
-  console.log(`Finished scraping sources. Saving to ${path}`);
+  console.log(
+    `Finished scraping sources. Saving to ${path} and ${timestampPath}`,
+  );
   await fsPromises.writeFile(path, JSON.stringify(gpus, undefined, 2), 'utf-8');
   await fsPromises.writeFile(
     timestampPath,

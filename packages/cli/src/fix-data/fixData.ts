@@ -9,7 +9,7 @@ import {
 } from '@pcpartdb/shared';
 import { getDatabase } from '../shared/database';
 
-export async function fixDataHandler() {
+export async function fixData() {
   const db = await getDatabase();
   const gpuRepository = new GpuRepository(db);
 

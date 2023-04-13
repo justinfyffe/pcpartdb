@@ -5,13 +5,13 @@ import {
 } from '@pcpartdb/scraper';
 import * as fs from 'fs';
 import * as fsPromises from 'fs/promises';
-import { GpuSource, GpuSourceModel } from '../types';
+import { GpuSource, GpuSourceModel } from './types';
 import {
   sourceModelsDataPath,
   techPowerUpDataPath,
   ulBenchmarksDataPath,
   videocardBenchmarksDataPath,
-} from '../utils';
+} from './utils';
 
 export async function getSourceModel(model?: string) {
   if (model == null) {

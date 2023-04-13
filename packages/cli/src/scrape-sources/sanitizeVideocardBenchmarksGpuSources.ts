@@ -3,7 +3,7 @@ import { MarketSegmentValue } from '@pcpartdb/shared';
 import { parse } from 'date-fns';
 import * as fs from 'fs';
 import * as fsPromises from 'fs/promises';
-import { videocardBenchmarksDataPath } from '../utils';
+import { videocardBenchmarksDataPath } from './utils';
 
 interface RawGpuSource {
   id: string;

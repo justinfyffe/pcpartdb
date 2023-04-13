@@ -19,7 +19,7 @@ import { GpuUpdateQueue } from './GpuUpdateQueue';
 
 const GPU_QUEUE_FILE = dataPath('gpu-queue.json');
 
-export async function gpuUpdater() {
+export async function updateNextGpu() {
   const db = await getDatabase();
   const gpuRepository = new GpuRepository(db);
   const dataUpdateRepository = new DataUpdateRepository(db);
