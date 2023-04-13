@@ -6,7 +6,9 @@ cd $DIRECTORY/../../
 npm run clean
 
 # Remove stale files
+rm -rf packages/**/dist
 rm -rf packages/**/src
+rm -rf packages/**/.next
 
 # Remove node_modules
 rm -rf node_modules
