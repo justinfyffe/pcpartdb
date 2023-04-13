@@ -51,6 +51,7 @@ export class ViewGpuViewModelService {
     return await this.gpuService.getBySlug(
       slug,
       {
+        includeSpecs: true,
         includeImages: true,
         includeRanks: [
           'performanceRank',

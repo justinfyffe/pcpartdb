@@ -16,15 +16,16 @@ import { GpuEntity } from './GpuEntity';
 
 interface CountOptions {
   query?: GpusQuery;
-  includeImages?: boolean;
 }
 
 interface ListOptions {
   query?: GpusQuery;
+  includeSpecs?: boolean;
   includeImages?: boolean;
 }
 
 interface FindOptions {
+  includeSpecs?: boolean;
   includeImages?: boolean;
 }
 
@@ -45,6 +46,7 @@ export class GpuRepository {
     const db = config?.trx ?? this.db;
 
     const includeImages = options?.includeImages ?? false;
+    const includeSpecs = options?.includeSpecs ?? false;
     const { filter, orderBy, limit, offset } = options.query ?? {};
 
     return await db.gpu.findMany({
@@ -53,7 +55,7 @@ export class GpuRepository {
         orderBy ?? { sort: DEFAULT_LIST_GPUS_SORT },
       ),
       include: {
-        specs: true,
+        specs: includeSpecs,
         benchmarks: true,
         images: includeImages ? { include: { image: true } } : false,
       },
@@ -68,12 +70,14 @@ export class GpuRepository {
     config?: RepositoryConfig,
   ): Promise<GpuEntity> {
     const trx = config?.trx ?? this.db;
-    const { includeImages } = options;
+
+    const includeImages = options?.includeImages ?? false;
+    const includeSpecs = options?.includeSpecs ?? false;
 
     return await trx.gpu.findUnique({
       where: { id },
       include: {
-        specs: true,
+        specs: includeSpecs,
         benchmarks: true,
         images: includeImages ? { include: { image: true } } : false,
       },
@@ -86,12 +90,14 @@ export class GpuRepository {
     config?: RepositoryConfig,
   ): Promise<GpuEntity> {
     const trx = config?.trx ?? this.db;
-    const { includeImages } = options;
+
+    const includeImages = options?.includeImages ?? false;
+    const includeSpecs = options?.includeSpecs ?? false;
 
     return await trx.gpu.findUnique({
       where: { slug },
       include: {
-        specs: true,
+        specs: includeSpecs,
         benchmarks: true,
         images: includeImages ? { include: { image: true } } : false,
       },

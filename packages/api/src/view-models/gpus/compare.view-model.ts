@@ -47,6 +47,7 @@ export class CompareGpusViewModelService {
     return await this.gpuService.getComparison(
       {
         slug,
+        includeSpecs: true,
         includeImages: true,
         includeRanks: ['performanceRank', 'valueRank'],
       },
