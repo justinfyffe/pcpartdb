@@ -14,7 +14,7 @@ tar xf ../releases/pcpartdb/pcpartdb.tar.gz .
 # Setup Symlinks
 cd packages/api
 ln -s ../../.env .env
-cd ../auto-updater
+cd ../cli
 ln -s ../../.env .env
 cd ../database
 ln -s ../../.env .env

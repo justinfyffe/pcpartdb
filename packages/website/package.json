@@ -8,7 +8,8 @@
     "clean": "rm -rf .next && rm -f tsconfig.tsbuildinfo && rm -rf ./tmp",
     "build": "next build",
     "dev": "next dev",
-    "start": "next start -p 3010"
+    "start": "next start -p 3010",
+    "start-dev": "next start -p 3000"
   },
   "author": "Justin Fyffe <test@example.com>",
   "license": "UNLICENSED",
