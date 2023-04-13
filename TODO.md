@@ -1,14 +1,13 @@
 Update database.
 Missing rtx a4500
 Missing gpus that have unknown category on videocardbenchmarks
+- add special cases to scrape script
 
 Auto-update / pending update remaining work:
-- data folder
 - Code cleanup
   - Don't call individual scrape functions, pass data sources instead.
   - Don't include ScrapeGpuDetailsResponse in scraper.
     - Just use scrape results type.
-  - remove custom deep merge
 
 Immediate Tasks:
     - symlink public folder to outside of packages

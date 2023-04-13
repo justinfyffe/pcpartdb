@@ -12,10 +12,10 @@ import {
   ScrapeGpuDetailsRequest,
   ScrapeGpuDetailsResponse,
 } from '@pcpartdb/shared';
+import deepmerge from 'deepmerge';
 import * as fsPromises from 'fs/promises';
 import { Context } from '../../shared/context';
 import { badRequestError } from '../../shared/error';
-import { deepMergeObjects } from '../../shared/utils';
 import * as fileUtils from '../../shared/utils';
 import { GpuRepository } from '../gpu.repository';
 import { GpuService } from '../gpu.service';
@@ -34,10 +34,10 @@ export class GpuImportService {
   ) {}
 
   async scrapeDetails(request: ScrapeGpuDetailsRequest) {
-    const result: ScrapeGpuDetailsResponse = { gpu: {} };
+    let result: ScrapeGpuDetailsResponse = { gpu: {} };
 
     for (let i = 0; i < request.sources.length; ++i) {
-      deepMergeObjects(
+      result = deepmerge(
         result,
         await this.scrapeDetailsFromSource(request.sources[i]),
       );
