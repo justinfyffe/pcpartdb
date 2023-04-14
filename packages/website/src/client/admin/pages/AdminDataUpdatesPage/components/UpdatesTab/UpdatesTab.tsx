@@ -79,7 +79,7 @@ export const UpdatesTab: FunctionComponent<UpdatesTabProps> = (props) => {
 
         {updates.length === 0 && (
           <Alert variant={AlertVariant.Info}>
-            There are no pending updates.
+            There are no {status?.toLowerCase()} updates.
           </Alert>
         )}
       </section>

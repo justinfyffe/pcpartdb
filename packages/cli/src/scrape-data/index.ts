@@ -22,5 +22,5 @@ export async function scrapeDataCommand(args: ScrapeDataCommandArgs) {
 
   // Fetch data
   console.log('Building GPU Data');
-  await getGpuData({ sourceModel, offset, count, proxy });
+  // await getGpuData({ sourceModel, offset, count, proxy });
 }

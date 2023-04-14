@@ -43,7 +43,7 @@ export async function sanitizeVideocardBenchmarksGpuSources() {
   }
 
   const jsonString = await fsPromises.readFile(inputFile, 'utf-8');
-  const rawGpus: RawGpuSource[] = JSON.parse(jsonString);
+  const rawGpus: RawGpuSource[] = JSON.parse(jsonString).data;
   console.log(`Sanitizing ${rawGpus.length}`);
 
   const gpus = rawGpus.map(sanitize).filter((gpu) => gpu != null);
@@ -76,12 +76,7 @@ function sanitize(gpu: RawGpuSource): VideocardBenchmarksGpuSource {
   const releaseDate = getReleaseDate(gpu);
   const url = getUrl(gpu);
 
-  if (
-    marketSegment == null ||
-    g3dMark == null ||
-    releaseDate == null ||
-    url == null
-  ) {
+  if (g3dMark == null || releaseDate == null || url == null) {
     return null;
   }
 

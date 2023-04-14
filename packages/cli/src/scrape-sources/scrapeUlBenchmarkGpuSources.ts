@@ -6,7 +6,7 @@ import * as fsPromises from 'fs/promises';
 import { sleep } from '../shared/process';
 import { ulBenchmarksDataPath } from './utils';
 
-const QUERIES = ['amd', 'nvidia', 'intel', 'geforce', 'rtx', 'radeon'];
+const QUERIES = ['amd', 'nvidia', 'intel', 'geforce', 'rtx', 'radeon', 'gtx'];
 
 const SLEEP_DELAY = 15_000;
 
