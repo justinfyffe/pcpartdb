@@ -27,6 +27,7 @@ export async function fixData() {
             limit,
             orderBy: { sort: GpuSort.Id, order: GpuOrder.Asc },
           },
+          includeSpecs: true,
         },
         ctx,
       );
