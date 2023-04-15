@@ -17,7 +17,7 @@ export async function refreshRatings() {
 
     for (let i = 0; i < totalGpus; i += limit) {
       const gpus = await gpuRepository.list(
-        { query: { offset: i, limit }, includeSpecs: true },
+        { query: { offset: i, limit } },
         ctx,
       );
 

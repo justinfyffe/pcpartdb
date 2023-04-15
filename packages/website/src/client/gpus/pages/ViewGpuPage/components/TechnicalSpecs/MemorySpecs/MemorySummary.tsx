@@ -29,10 +29,10 @@ export const MemorySummary = () => {
 
   const context = useMemo(() => {
     const params: ContentComponentParams = {
-      architecture: formatGpuField(gpu.specs?.architecture),
-      memoryClock: formatGpuField(gpu.specs?.memoryClock),
-      memoryBandwidth: formatGpuField(gpu.specs?.memoryBandwidth),
-      memoryInterface: formatGpuField(gpu.specs?.memoryInterface),
+      architecture: formatGpuField(gpu.architecture),
+      memoryClock: formatGpuField(gpu.memoryClock),
+      memoryBandwidth: formatGpuField(gpu.memoryBandwidth),
+      memoryInterface: formatGpuField(gpu.memoryInterface),
     };
 
     return { params };

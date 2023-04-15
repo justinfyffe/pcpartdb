@@ -9,7 +9,7 @@ import { useGpuCache } from '../../../shared/cache';
 import { Breadcrumb, Breadcrumbs, Seo } from '../../../shared/components';
 import { WebsiteLayout } from '../../../shared/layouts';
 import { Sidenav, SidenavComparisons, SidenavGpus } from '../../../sidenav';
-import { getCompareGpusSlug, getGpuComparisonName, getGpuName } from '../..';
+import { getGpuComparisonName, getGpuName } from '../..';
 import { CompareGpusForm } from '../../components';
 import {
   Benchmarks,
@@ -46,9 +46,7 @@ export const CompareGpuPage = (props: CompareGpusViewModel) => {
       'Our database of graphics cards will help you choose the best GPU for your computer.'
     );
   }, [gpu1, gpu2]);
-  const seoCanonical = getCompareGpusPath(
-    getCompareGpusSlug(comparison, { ordered: true }),
-  );
+  const seoCanonical = getCompareGpusPath(comparison, { ordered: true });
 
   return (
     <ComparePageContext.Provider value={context}>

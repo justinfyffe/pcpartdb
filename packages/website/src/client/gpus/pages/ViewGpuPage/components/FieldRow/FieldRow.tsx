@@ -1,4 +1,4 @@
-import { Gpu, GpuBenchmarks, GpuField, GpuSpecs } from '@pcpartdb/shared';
+import { Gpu, GpuField } from '@pcpartdb/shared';
 import React, { useContext, useMemo } from 'react';
 import { Td, Tr } from '../../../../../shared/components';
 import { BooleanFormatter } from '../../../../../shared/format';
@@ -72,11 +72,7 @@ export const FieldRow = (props: FieldRowProps) => {
   const { gpu } = useContext(ViewPageContext);
 
   let field: GpuField;
-  if (key in gpu.specs) {
-    field = gpu.specs[key as keyof GpuSpecs] as GpuField;
-  } else if (key in gpu.benchmarks) {
-    field = gpu.benchmarks[key as keyof GpuBenchmarks] as GpuField;
-  } else {
+  if (key in gpu) {
     field = gpu[key as keyof Gpu] as GpuField;
   }
 

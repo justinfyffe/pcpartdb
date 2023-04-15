@@ -4,9 +4,9 @@ import {
   calculateBaseGpuFieldValue,
   ClockSpeedUnit,
   FlopsUnit,
+  Gpu,
   GpuDataSourceKey,
   GpuField,
-  GpuSpecs,
   LengthUnit,
   MemoryUnit,
   NumericUnit,
@@ -31,13 +31,11 @@ export async function scrapeTechPowerUpGpuDetails(
   const response = await scraper.scrape(options.url, { retries: 1 });
   const $ = cheerio.load(response.data);
 
-  const name = getName($);
-  const company = getCompany($);
-  const launchPrice = getLaunchPrice($);
-  const releaseDate = getReleaseDate($);
-
-  // Get Spec Values
-  const specs: GpuSpecs = {
+  const gpu: Partial<Gpu> = {
+    name: getName($),
+    company: getCompany($),
+    launchPrice: getLaunchPrice($),
+    releaseDate: getReleaseDate($),
     architecture: getArchitecture($),
     busInterface: getBusInterface($),
     codename: getCodename($),
@@ -76,9 +74,7 @@ export async function scrapeTechPowerUpGpuDetails(
     width: getWidth($),
   };
 
-  return {
-    gpu: { name, company, launchPrice, releaseDate, specs },
-  } as ScrapeGpuDetailsResponse;
+  return { gpu: { ...gpu } } as ScrapeGpuDetailsResponse;
 }
 
 function getName($: cheerio.CheerioAPI) {

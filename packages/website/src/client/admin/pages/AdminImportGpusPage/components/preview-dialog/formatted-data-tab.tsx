@@ -99,52 +99,52 @@ export const FormattedDataTab: FunctionComponent<FormattedDataTabProps> = (
           <FormattedDataRow field={gpu.launchPrice} />
           <FormattedDataRow field={gpu.releaseDate} />
 
-          <FormattedDataRow field={gpu.specs?.codename} />
-          <FormattedDataRow field={gpu.specs?.architecture} />
-          <FormattedDataRow field={gpu.specs?.processSize} />
-          <FormattedDataRow field={gpu.specs?.transistors} />
+          <FormattedDataRow field={gpu.codename} />
+          <FormattedDataRow field={gpu.architecture} />
+          <FormattedDataRow field={gpu.processSize} />
+          <FormattedDataRow field={gpu.transistors} />
 
-          <FormattedDataRow field={gpu.specs?.memorySize} />
-          <FormattedDataRow field={gpu.specs?.memoryType} />
-          <FormattedDataRow field={gpu.specs?.memoryClock} />
-          <FormattedDataRow field={gpu.specs?.memoryInterface} />
-          <FormattedDataRow field={gpu.specs?.memoryBandwidth} />
+          <FormattedDataRow field={gpu.memorySize} />
+          <FormattedDataRow field={gpu.memoryType} />
+          <FormattedDataRow field={gpu.memoryClock} />
+          <FormattedDataRow field={gpu.memoryInterface} />
+          <FormattedDataRow field={gpu.memoryBandwidth} />
 
-          <FormattedDataRow field={gpu.specs?.slotWidth} />
-          <FormattedDataRow field={gpu.specs?.length} />
-          <FormattedDataRow field={gpu.specs?.width} />
-          <FormattedDataRow field={gpu.specs?.height} />
-          <FormattedDataRow field={gpu.specs?.weight} />
-          <FormattedDataRow field={gpu.specs?.thermalDesignPower} />
-          <FormattedDataRow field={gpu.specs?.suggestedPsu} />
-          <FormattedDataRow field={gpu.specs?.busInterface} />
-          <FormattedDataRow field={gpu.specs?.powerConnectors} />
-          <FormattedDataRow field={gpu.specs?.outputs} />
+          <FormattedDataRow field={gpu.slotWidth} />
+          <FormattedDataRow field={gpu.length} />
+          <FormattedDataRow field={gpu.width} />
+          <FormattedDataRow field={gpu.height} />
+          <FormattedDataRow field={gpu.weight} />
+          <FormattedDataRow field={gpu.thermalDesignPower} />
+          <FormattedDataRow field={gpu.suggestedPsu} />
+          <FormattedDataRow field={gpu.busInterface} />
+          <FormattedDataRow field={gpu.powerConnectors} />
+          <FormattedDataRow field={gpu.outputs} />
 
-          <FormattedDataRow field={gpu.specs?.shaderUnitsCudaCores} />
-          <FormattedDataRow field={gpu.specs?.computeUnitsSmCount} />
-          <FormattedDataRow field={gpu.specs?.textureMappingUnits} />
-          <FormattedDataRow field={gpu.specs?.renderOutputUnits} />
-          <FormattedDataRow field={gpu.specs?.tensorCores} />
-          <FormattedDataRow field={gpu.specs?.rayTracingCores} />
-          <FormattedDataRow field={gpu.specs?.coreClockSpeedBase} />
-          <FormattedDataRow field={gpu.specs?.coreClockSpeedBoost} />
-          <FormattedDataRow field={gpu.specs?.l1Cache} />
-          <FormattedDataRow field={gpu.specs?.l2Cache} />
+          <FormattedDataRow field={gpu.shaderUnitsCudaCores} />
+          <FormattedDataRow field={gpu.computeUnitsSmCount} />
+          <FormattedDataRow field={gpu.textureMappingUnits} />
+          <FormattedDataRow field={gpu.renderOutputUnits} />
+          <FormattedDataRow field={gpu.tensorCores} />
+          <FormattedDataRow field={gpu.rayTracingCores} />
+          <FormattedDataRow field={gpu.coreClockSpeedBase} />
+          <FormattedDataRow field={gpu.coreClockSpeedBoost} />
+          <FormattedDataRow field={gpu.l1Cache} />
+          <FormattedDataRow field={gpu.l2Cache} />
 
-          <FormattedDataRow field={gpu.specs?.pixelFillRate} />
-          <FormattedDataRow field={gpu.specs?.textureFillRate} />
-          <FormattedDataRow field={gpu.specs?.fp32Performance} />
-          <FormattedDataRow field={gpu.specs?.fp64Performance} />
+          <FormattedDataRow field={gpu.pixelFillRate} />
+          <FormattedDataRow field={gpu.textureFillRate} />
+          <FormattedDataRow field={gpu.fp32Performance} />
+          <FormattedDataRow field={gpu.fp64Performance} />
 
-          <FormattedDataRow field={gpu.specs?.directxVersion} />
-          <FormattedDataRow field={gpu.specs?.openClVersion} />
-          <FormattedDataRow field={gpu.specs?.openGlVersion} />
-          <FormattedDataRow field={gpu.specs?.shaderModelVersion} />
+          <FormattedDataRow field={gpu.directxVersion} />
+          <FormattedDataRow field={gpu.openClVersion} />
+          <FormattedDataRow field={gpu.openGlVersion} />
+          <FormattedDataRow field={gpu.shaderModelVersion} />
 
-          <FormattedDataRow field={gpu.benchmarks?.g3dMark} />
-          <FormattedDataRow field={gpu.benchmarks?.g2dMark} />
-          <FormattedDataRow field={gpu.benchmarks?.timespyGraphics} />
+          <FormattedDataRow field={gpu.g3dMark} />
+          <FormattedDataRow field={gpu.g2dMark} />
+          <FormattedDataRow field={gpu.timespyGraphics} />
         </TBody>
       </Table>
     </div>

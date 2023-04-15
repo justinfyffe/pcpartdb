@@ -47,7 +47,6 @@ export class CompareGpusViewModelService {
     return await this.gpuService.getComparison(
       {
         slug,
-        includeSpecs: true,
         includeImages: true,
         includeRanks: ['performanceRank', 'valueRank'],
       },
@@ -150,7 +149,7 @@ export class CompareGpusViewModelService {
 
   private async getPerformanceNeighbors(gpu: Gpu, ctx: Context) {
     // Missing value. Cannot have neighbors.
-    if (gpu.benchmarks?.performanceScore?.value == null) {
+    if (gpu.performanceScore?.value == null) {
       return [];
     }
 
@@ -159,12 +158,13 @@ export class CompareGpusViewModelService {
         query: {
           filter: {
             excludeIds: [gpu.id],
-            minPerformanceScore: gpu.benchmarks?.performanceScore?.value,
+            minPerformanceScore: gpu.performanceScore?.value,
             performanceRated: true,
           },
           orderBy: { sort: GpuSort.PerformanceRating, order: GpuOrder.Asc },
           limit: TOTAL_COMPARED_GPUS,
         },
+        fields: ['company', 'performanceScore'],
         includeRanks: ['performanceRank'],
       },
       ctx,
@@ -175,12 +175,13 @@ export class CompareGpusViewModelService {
         query: {
           filter: {
             excludeIds: [gpu.id],
-            maxPerformanceScore: gpu.benchmarks?.performanceScore?.value,
+            maxPerformanceScore: gpu.performanceScore?.value,
             performanceRated: true,
           },
           orderBy: { sort: GpuSort.PerformanceRating, order: GpuOrder.Desc },
           limit: TOTAL_COMPARED_GPUS,
         },
+        fields: ['company', 'performanceScore'],
         includeRanks: ['performanceRank'],
       },
       ctx,
@@ -190,14 +191,13 @@ export class CompareGpusViewModelService {
       ...new Map([...above, gpu, ...below].map((n) => [n.id, n])).values(),
     ].sort(
       (gpu1, gpu2) =>
-        gpu2.benchmarks?.performanceScore?.value -
-        gpu1.benchmarks?.performanceScore?.value,
+        gpu2.performanceScore?.value - gpu1.performanceScore?.value,
     );
   }
 
   private async getValueNeighbors(gpu: Gpu, ctx: Context) {
     // Missing value. Cannot have neighbors.
-    if (gpu.benchmarks?.valueScore?.value == null) {
+    if (gpu.valueScore?.value == null) {
       return [];
     }
 
@@ -206,12 +206,13 @@ export class CompareGpusViewModelService {
         query: {
           filter: {
             excludeIds: [gpu.id],
-            minValueScore: gpu.benchmarks?.valueScore?.value,
+            minValueScore: gpu.valueScore?.value,
             valueRated: true,
           },
           orderBy: { sort: GpuSort.ValueRating, order: GpuOrder.Asc },
           limit: TOTAL_COMPARED_GPUS,
         },
+        fields: ['company', 'valueScore'],
         includeRanks: ['valueRank'],
       },
       ctx,
@@ -222,12 +223,13 @@ export class CompareGpusViewModelService {
         query: {
           filter: {
             excludeIds: [gpu.id],
-            maxValueScore: gpu.benchmarks?.valueScore?.value,
+            maxValueScore: gpu.valueScore?.value,
             valueRated: true,
           },
           orderBy: { sort: GpuSort.ValueRating, order: GpuOrder.Desc },
           limit: TOTAL_COMPARED_GPUS,
         },
+        fields: ['company', 'valueScore'],
         includeRanks: ['valueRank'],
       },
       ctx,
@@ -235,10 +237,7 @@ export class CompareGpusViewModelService {
 
     return [
       ...new Map([...above, gpu, ...below].map((n) => [n.id, n])).values(),
-    ].sort(
-      (gpu1, gpu2) =>
-        gpu2.benchmarks?.valueScore?.value - gpu1.benchmarks?.valueScore?.value,
-    );
+    ].sort((gpu1, gpu2) => gpu2.valueScore?.value - gpu1.valueScore?.value);
   }
 
   private concatNeighbors(

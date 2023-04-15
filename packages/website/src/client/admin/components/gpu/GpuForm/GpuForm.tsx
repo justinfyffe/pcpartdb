@@ -5,7 +5,6 @@ import {
   CreateGpuRequest,
   getAdminListGpusPath,
   Gpu,
-  GpuBenchmarks,
   GpuDataSource,
   GpuDataSourceKey,
   gpuDataSourceValidator,
@@ -13,8 +12,6 @@ import {
   gpuFieldValidator,
   GpuImages,
   gpuImageValidator,
-  GpuMeta,
-  GpuSpecs,
   MarketSegmentValue,
   UpdateGpuRequest,
   ValidationErrorType,
@@ -207,8 +204,6 @@ interface GpuFormProps {
 }
 
 function formOptions(gpu?: Gpu): UseFormProps<GpuFormData> {
-  const specs = gpu?.specs || {};
-  const benchmarks = gpu?.benchmarks || {};
   const images = gpu?.images || [];
 
   return {
@@ -233,58 +228,58 @@ function formOptions(gpu?: Gpu): UseFormProps<GpuFormData> {
       releaseDate: gpu?.releaseDate || null,
 
       // Processor
-      codename: specs.codename || null,
-      architecture: specs.architecture || null,
-      processSize: specs.processSize || null,
-      transistors: specs.transistors || null,
+      codename: gpu?.codename || null,
+      architecture: gpu?.architecture || null,
+      processSize: gpu?.processSize || null,
+      transistors: gpu?.transistors || null,
 
       // Board Compatibility & Dimensions
-      slotWidth: specs.slotWidth || null,
-      length: specs.length || null,
-      width: specs.width || null,
-      height: specs.height || null,
-      weight: specs.weight || null,
-      busInterface: specs.busInterface || null,
-      thermalDesignPower: specs.thermalDesignPower || null,
-      suggestedPsu: specs.suggestedPsu || null,
-      powerConnectors: specs.powerConnectors || null,
-      outputs: specs.outputs || null,
+      slotWidth: gpu?.slotWidth || null,
+      length: gpu?.length || null,
+      width: gpu?.width || null,
+      height: gpu?.height || null,
+      weight: gpu?.weight || null,
+      busInterface: gpu?.busInterface || null,
+      thermalDesignPower: gpu?.thermalDesignPower || null,
+      suggestedPsu: gpu?.suggestedPsu || null,
+      powerConnectors: gpu?.powerConnectors || null,
+      outputs: gpu?.outputs || null,
 
       // Cores & Clock Speeds
-      shaderUnitsCudaCores: specs.shaderUnitsCudaCores || null,
-      computeUnitsSmCount: specs.computeUnitsSmCount || null,
-      textureMappingUnits: specs.textureMappingUnits || null,
-      renderOutputUnits: specs.renderOutputUnits || null,
-      tensorCores: specs.tensorCores || null,
-      rayTracingCores: specs.rayTracingCores || null,
-      coreClockSpeedBase: specs.coreClockSpeedBase || null,
-      coreClockSpeedBoost: specs.coreClockSpeedBoost || null,
-      l1Cache: specs.l1Cache || null,
-      l2Cache: specs.l2Cache || null,
+      shaderUnitsCudaCores: gpu?.shaderUnitsCudaCores || null,
+      computeUnitsSmCount: gpu?.computeUnitsSmCount || null,
+      textureMappingUnits: gpu?.textureMappingUnits || null,
+      renderOutputUnits: gpu?.renderOutputUnits || null,
+      tensorCores: gpu?.tensorCores || null,
+      rayTracingCores: gpu?.rayTracingCores || null,
+      coreClockSpeedBase: gpu?.coreClockSpeedBase || null,
+      coreClockSpeedBoost: gpu?.coreClockSpeedBoost || null,
+      l1Cache: gpu?.l1Cache || null,
+      l2Cache: gpu?.l2Cache || null,
 
       // Theoretical Performance
-      pixelFillRate: specs.pixelFillRate || null,
-      textureFillRate: specs.textureFillRate || null,
-      fp32Performance: specs.fp32Performance || null,
-      fp64Performance: specs.fp64Performance || null,
+      pixelFillRate: gpu?.pixelFillRate || null,
+      textureFillRate: gpu?.textureFillRate || null,
+      fp32Performance: gpu?.fp32Performance || null,
+      fp64Performance: gpu?.fp64Performance || null,
 
       // Memory
-      memorySize: specs.memorySize || null,
-      memoryType: specs.memoryType || null,
-      memoryClock: specs.memoryClock || null,
-      memoryInterface: specs.memoryInterface || null,
-      memoryBandwidth: specs.memoryBandwidth || null,
+      memorySize: gpu?.memorySize || null,
+      memoryType: gpu?.memoryType || null,
+      memoryClock: gpu?.memoryClock || null,
+      memoryInterface: gpu?.memoryInterface || null,
+      memoryBandwidth: gpu?.memoryBandwidth || null,
 
       // API Support
-      directxVersion: specs.directxVersion || null,
-      openClVersion: specs.openClVersion || null,
-      openGlVersion: specs.openGlVersion || null,
-      shaderModelVersion: specs.shaderModelVersion || null,
+      directxVersion: gpu?.directxVersion || null,
+      openClVersion: gpu?.openClVersion || null,
+      openGlVersion: gpu?.openGlVersion || null,
+      shaderModelVersion: gpu?.shaderModelVersion || null,
 
       // Benchmarks
-      g2dMark: benchmarks.g2dMark || null,
-      g3dMark: benchmarks.g3dMark || null,
-      timespyGraphics: benchmarks.timespyGraphics || null,
+      g2dMark: gpu?.g2dMark || null,
+      g3dMark: gpu?.g3dMark || null,
+      timespyGraphics: gpu?.timespyGraphics || null,
 
       // Images
       images: images,
@@ -318,18 +313,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
     async (formData: GpuFormData) => {
       setSaving(true);
 
-      const request: CreateGpuRequest | UpdateGpuRequest = {
-        slug: formData.slug,
-        name: formData.name,
-        company: formData.company,
-        marketSegment: formData.marketSegment,
-        launchPrice: formData.launchPrice,
-        releaseDate: formData.releaseDate,
-        meta: toGpuMetaRequest(formData),
-        specs: toSpecsRequest(formData),
-        benchmarks: toBenchmarksRequest(formData),
-        images: toImagesRequest(formData),
-      };
+      const request = toGpuRequest(formData);
 
       try {
         if (isUpdate) {
@@ -1071,19 +1055,19 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
   );
 };
 
-function toGpuMetaRequest(formData: GpuFormData): GpuMeta {
+function toGpuRequest(
+  formData: GpuFormData,
+): CreateGpuRequest | UpdateGpuRequest {
   return {
-    dataSources: {
-      [GpuDataSourceKey.TechPowerUp]: formData.techPowerUpSource,
-      [GpuDataSourceKey.VideocardBenchmarks]:
-        formData.videocardBenchmarksSource,
-      [GpuDataSourceKey.UlBenchmarks]: formData.ulBenchmarksSource,
-    },
-  };
-}
+    slug: formData.slug,
+    name: formData.name,
 
-function toSpecsRequest(formData: GpuFormData): GpuSpecs {
-  return {
+    // General Info
+    company: formData.company,
+    marketSegment: formData.marketSegment,
+    launchPrice: formData.launchPrice,
+    releaseDate: formData.releaseDate,
+
     // Processor
     codename: formData.codename || null,
     architecture: formData.architecture || null,
@@ -1132,21 +1116,25 @@ function toSpecsRequest(formData: GpuFormData): GpuSpecs {
     openClVersion: formData.openClVersion || null,
     openGlVersion: formData.openGlVersion || null,
     shaderModelVersion: formData.shaderModelVersion || null,
-  };
-}
 
-function toBenchmarksRequest(formData: GpuFormData): GpuBenchmarks {
-  return {
+    // Benchmarks
     g2dMark: formData.g2dMark || null,
     g3dMark: formData.g3dMark || null,
     timespyGraphics: formData.timespyGraphics || null,
-  };
-}
 
-function toImagesRequest(formData: GpuFormData): GpuImages {
-  return (
-    formData.images
-      ?.filter((image) => image != null)
-      .map((image) => ({ imageId: image.imageId })) ?? []
-  );
+    // Meta
+    meta: {
+      dataSources: {
+        [GpuDataSourceKey.TechPowerUp]: formData.techPowerUpSource,
+        [GpuDataSourceKey.VideocardBenchmarks]:
+          formData.videocardBenchmarksSource,
+        [GpuDataSourceKey.UlBenchmarks]: formData.ulBenchmarksSource,
+      },
+    },
+
+    images:
+      formData.images
+        ?.filter((image) => image != null)
+        .map((image) => ({ imageId: image.imageId })) ?? [],
+  };
 }

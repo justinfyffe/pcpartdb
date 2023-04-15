@@ -1,5 +1,5 @@
 import {
-  GpuBenchmarks,
+  Gpu,
   GpuDataSourceKey,
   GpuField,
   ScrapeGpuDetailsResponse,
@@ -19,12 +19,11 @@ export async function scrapeUlBenchmarksGpuDetails(
   const response = await scraper.scrape(options.url, { retries: 1 });
   const $ = cheerio.load(response.data);
 
-  // Get Benchmark Values
-  const benchmarks: GpuBenchmarks = {
+  const gpu: Partial<Gpu> = {
     timespyGraphics: getTimespyGraphics($),
   };
 
-  return { gpu: { benchmarks } } as ScrapeGpuDetailsResponse;
+  return { gpu: { ...gpu } } as ScrapeGpuDetailsResponse;
 }
 
 function getTimespyGraphics($: cheerio.CheerioAPI): GpuField<number> {

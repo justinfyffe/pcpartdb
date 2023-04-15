@@ -6,7 +6,7 @@ import {
 } from '@pcpartdb/shared';
 import React, { FunctionComponent } from 'react';
 import { classNames } from '../../../shared/ui';
-import { getCompareGpusSlug, getGpuComparisonName, getGpuName } from '../..';
+import { getGpuComparisonName, getGpuName } from '../..';
 
 interface CompareGpusFormLinksProps {
   relatedGpus: RelatedGpus;
@@ -28,7 +28,7 @@ export const CompareGpusFormLinks: FunctionComponent<
         <ul className="flex gap-3">
           {comparisons.map((comparison, i) => (
             <li key={i}>
-              <a href={getCompareGpusPath(getCompareGpusSlug(comparison))}>
+              <a href={getCompareGpusPath(comparison)}>
                 {getGpuComparisonName(comparison)}
               </a>
               {i < comparisons.length - 1 && <>,</>}

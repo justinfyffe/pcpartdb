@@ -31,7 +31,6 @@ interface ListOptions {
 }
 
 interface GetOptions {
-  includeSpecs?: boolean;
   includeImages?: boolean;
   includeRanks?: GpuRank[];
 }
@@ -40,7 +39,6 @@ interface GetComparisonOptions {
   slug?: string;
 
   includeRanks?: GpuRank[];
-  includeSpecs?: boolean;
   includeImages?: boolean;
 }
 
@@ -105,7 +103,7 @@ export class GpuService {
   }
 
   async getComparison(options: GetComparisonOptions, ctx: Context) {
-    const { slug, includeSpecs, includeImages, includeRanks } = options;
+    const { slug, includeImages, includeRanks } = options;
     const slugs = slug.split('--vs--');
 
     if (slugs.length !== 2) {
@@ -120,7 +118,6 @@ export class GpuService {
         this.getBySlug(
           slugItem,
           {
-            includeSpecs,
             includeImages,
             includeRanks: includeRanks || null,
           },

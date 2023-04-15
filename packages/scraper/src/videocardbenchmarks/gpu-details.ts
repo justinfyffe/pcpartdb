@@ -1,5 +1,5 @@
 import {
-  GpuBenchmarks,
+  Gpu,
   GpuDataSourceKey,
   GpuField,
   MarketSegmentValue,
@@ -20,15 +20,13 @@ export async function scrapeVideocardBenchmarksGpuDetails(
   const response = await scraper.scrape(options.url, { retries: 1 });
   const $ = cheerio.load(response.data);
 
-  // Get Benchmark Values
-  const benchmarks: GpuBenchmarks = {
+  const gpu: Partial<Gpu> = {
+    marketSegment: getMarketSegment($),
     g3dMark: getG3dMark($),
     g2dMark: getG2dMark($),
   };
 
-  return {
-    gpu: { marketSegment: getMarketSegment($), benchmarks },
-  } as ScrapeGpuDetailsResponse;
+  return { gpu: { ...gpu } } as ScrapeGpuDetailsResponse;
 }
 
 function getG3dMark($: cheerio.CheerioAPI): GpuField<number> {

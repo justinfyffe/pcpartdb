@@ -30,8 +30,8 @@ export const PowerSupplyBlurb = () => {
   const context = useMemo(() => {
     const params = {
       company: formatGpuField(gpu.company),
-      psu: formatGpuField(gpu.specs?.suggestedPsu),
-      tdp: formatGpuField(gpu.specs?.thermalDesignPower),
+      psu: formatGpuField(gpu.suggestedPsu),
+      tdp: formatGpuField(gpu.thermalDesignPower),
     };
 
     return { params };

@@ -1,8 +1,13 @@
-import { GpuRepository, mapToGpuDto, mapToGpuEntity } from '@pcpartdb/database';
+import {
+  GpuRepository,
+  mapToGpuBenchmarksDto,
+  mapToGpuDto,
+  mapToGpuEntity,
+  mapToGpuSpecsDto,
+} from '@pcpartdb/database';
 import {
   Gpu,
   GpuBenchmarks,
-  GpuField,
   GpuOrder,
   GpuSort,
   GpuSpecs,
@@ -13,65 +18,66 @@ export async function fixData() {
   const db = await getDatabase();
   const gpuRepository = new GpuRepository(db);
 
-  await db.transaction(async (trx) => {
+  const totalGpus = await db.transaction(async (trx) => {
     const ctx = { trx };
+    return await gpuRepository.count({}, ctx);
+  });
 
-    const limit = 50;
-    const totalGpus = await gpuRepository.count({}, ctx);
+  for (let i = 0; i < totalGpus; ++i) {
+    await db.transaction(async (trx) => {
+      const ctx = { trx };
 
-    for (let i = 0; i < totalGpus; i += limit) {
       const gpus = await gpuRepository.list(
         {
           query: {
             offset: i,
-            limit,
+            limit: 1,
             orderBy: { sort: GpuSort.Id, order: GpuOrder.Asc },
           },
-          includeSpecs: true,
         },
         ctx,
       );
 
-      for (let j = 0; j < gpus.length; ++j) {
-        const gpu = mapToGpuDto(gpus[j], { includeSources: true });
-        fixGpu(gpu);
-        const data = mapToGpuEntity(gpu);
-        await gpuRepository.update(gpu.id, data, ctx);
-      }
-    }
-  });
-}
+      const gpuEntity = gpus[0];
+      const specsEntity = await trx.gpuSpecs.findUnique({
+        where: { gpuId: gpuEntity.id },
+      });
+      const benchmarksEntity = await trx.gpuBenchmarks.findUnique({
+        where: { gpuId: gpuEntity.id },
+      });
 
-function fixGpu(gpu: Gpu) {
-  Object.keys(gpu).forEach((key) => {
-    const value = gpu[key as keyof Gpu];
-    fixFieldMeta(value as GpuField);
-  });
+      const gpu = mapToGpuDto(gpuEntity, { includeSources: true });
+      const specs = mapToGpuSpecsDto(specsEntity, {
+        includeSources: true,
+      });
+      const benchmarks = mapToGpuBenchmarksDto(benchmarksEntity, {
+        includeSources: true,
+      });
 
-  fixSpecs(gpu.specs);
-  fixBenchmarks(gpu.benchmarks);
-}
-
-function fixSpecs(obj: GpuSpecs) {
-  Object.keys(obj).forEach((key) => {
-    const spec = obj[key as keyof GpuSpecs];
-    fixFieldMeta(spec as GpuField);
-  });
-}
-
-function fixBenchmarks(obj: GpuBenchmarks) {
-  Object.keys(obj).forEach((key) => {
-    const spec = obj[key as keyof GpuBenchmarks];
-    fixFieldMeta(spec as GpuField);
-  });
-}
-
-function fixFieldMeta(field: GpuField) {
-  if (field?.meta?.dataSource == null) {
-    return;
+      const result = fixGpu(gpu, specs, benchmarks);
+      const data = mapToGpuEntity(result);
+      await gpuRepository.update(result.id, data, ctx);
+    });
   }
+}
 
-  field.meta.source = field.meta.dataSource.source;
-  field.meta.autoUpdate = field.meta.dataSource.enabled;
-  delete field.meta.dataSource;
+function fixGpu(gpu: Gpu, specs: GpuSpecs, benchmarks: GpuBenchmarks) {
+  let result = { ...gpu };
+  result = migrateSpecs(result, specs);
+  result = migrateBenchmarks(result, benchmarks);
+  return result;
+}
+
+function migrateSpecs(gpu: Gpu, specs: GpuSpecs) {
+  return {
+    ...gpu,
+    ...specs,
+  };
+}
+
+function migrateBenchmarks(gpu: Gpu, benchmarks: GpuBenchmarks) {
+  return {
+    ...gpu,
+    ...benchmarks,
+  };
 }

@@ -1,6 +1,6 @@
 import { getCompareGpusPath, GpuComparison } from '@pcpartdb/shared';
 import React, { FunctionComponent } from 'react';
-import { getCompareGpusSlug, getGpuComparisonName } from '../../../gpus';
+import { getGpuComparisonName } from '../../../gpus';
 import { classNames } from '../../../shared/ui';
 import { SidenavSection, SidenavSectionTitle } from '../Sidenav';
 
@@ -44,7 +44,7 @@ const ComparisonListing: FunctionComponent<ComparisonListingProps> = (
 
   return (
     <a
-      href={getCompareGpusPath(getCompareGpusSlug(comparison))}
+      href={getCompareGpusPath(comparison)}
       className="flex items-center gap-3 px-3 py-3 border-px rounded text-sm"
     >
       <div className="flex-1">{getGpuComparisonName(comparison)}</div>

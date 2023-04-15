@@ -44,11 +44,11 @@ const ListTableRow: FunctionComponent<ListTableRowProps> = (props) => {
   const href = useMemo(() => getViewGpuPath(gpu), [gpu]);
   const name = useMemo(() => getGpuName(gpu), [gpu]);
   const performance = useMemo(() => {
-    return formatGpuField(gpu.benchmarks?.performanceScore) || '--';
-  }, [gpu.benchmarks?.performanceScore]);
+    return formatGpuField(gpu.performanceScore) || '--';
+  }, [gpu.performanceScore]);
   const performancePerDollar = useMemo(() => {
-    return formatGpuField(gpu.benchmarks?.valueScore) || '--';
-  }, [gpu.benchmarks?.valueScore]);
+    return formatGpuField(gpu.valueScore) || '--';
+  }, [gpu.valueScore]);
   const releaseDate = useMemo(
     () => formatGpuField(gpu.releaseDate) || '--',
     [gpu.releaseDate],

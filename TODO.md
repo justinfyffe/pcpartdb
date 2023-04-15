@@ -1,9 +1,33 @@
 Update database.
-Missing rtx a4500
 Missing gpus that have unknown category on videocardbenchmarks
-- add special cases to scrape script
+- support missing market segment
+- add admin tool to see missing data
+  - on gpus list, show (4 missing data)
+
+- flatten gpu database
+  - [x] no need for separate specs and benchmarks table
+    - [] Remove after deployment. needed to fix data first
+  - [X] create fix data function for it
+  - [X] remove usage of nested specs
+  - [X] remove usage of nested benchmarks
+  - [X] fix validators
+  - [X] fix scraping
+  - [X] fix limiting data that's pulled
+  - [x] test test test
+
+code cleanup
+- function to join url paths
+- move filesystem utilities to shared
 
 Auto-update / pending update remaining work:
+- Bug fix
+  - don't create data update if websites fail to load.
+  - make diff more clear when updating specs
+  - make sure slug is not being included
+  - add auto-update checkbox to name
+  - add includeSpecs to admin panel
+    - or maybe rename to excludeSpecs?
+  - order approved/rejected by most recent
 - Code cleanup
   - Don't call individual scrape functions, pass data sources instead.
   - Don't include ScrapeGpuDetailsResponse in scraper.

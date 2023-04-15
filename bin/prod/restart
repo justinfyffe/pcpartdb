@@ -2,3 +2,4 @@
 pm2 restart pcpartdb-api
 pm2 restart pcpartdb-website
 pm2 restart pcpartdb-gpu-updater
+pm2 restart pcpartdb-sitemap-updater

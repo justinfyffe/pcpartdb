@@ -85,10 +85,10 @@ export const DimensionsBlurb = () => {
     const tags = contentData.contentTags;
     const params = {
       dimensions: formatGpuDimensions(gpu, { allowMissingDimensions: true }),
-      marketSegment: formatGpuField(gpu.marketSegment).toLowerCase(),
+      marketSegment: formatGpuField(gpu.marketSegment)?.toLowerCase(),
       gpuName: getGpuName(gpu),
-      slotWidth: formatGpuField(gpu.specs?.slotWidth, { showUnits: false }),
-      slotsUnit: gpu.specs?.slotWidth?.value === 1 ? 'slot' : 'slots',
+      slotWidth: formatGpuField(gpu.slotWidth, { showUnits: false }),
+      slotsUnit: gpu.slotWidth?.value === 1 ? 'slot' : 'slots',
     };
 
     return { tags, params };

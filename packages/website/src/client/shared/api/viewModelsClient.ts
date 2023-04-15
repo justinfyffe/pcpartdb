@@ -44,5 +44,5 @@ export class ViewModelsClient {
 
 export const viewModelsClient = new ViewModelsClient(
   axios,
-  process.env.WEBSITE_URL || '',
+  process.env.NEXT_PUBLIC_WEBSITE_URL || '',
 );

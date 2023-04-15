@@ -1,5 +1,5 @@
 import { Controller, Get, Query, UseGuards } from '@nestjs/common';
-import { GpuSpecsEntity } from '@pcpartdb/database';
+import { GpuEntity } from '@pcpartdb/database';
 import { StaffGuard } from '../../auth/staff.guard';
 import { Database } from '../../database';
 import { Context, Ctx } from '../../shared/context';
@@ -39,7 +39,7 @@ export class GpuAutocompleteController {
       async () => {
         validate({ key, query }, autocompleteSpecsRequestValidator);
         return await this.gpuAutocompleteService.autocompleteSpec(
-          key as keyof GpuSpecsEntity,
+          key as keyof Omit<GpuEntity, 'parent' | 'images'>,
           query ?? '',
           ctx,
         );

@@ -6,7 +6,7 @@ import { PerformanceTable } from './PerformanceTable';
 export const RelativePerformance: FunctionComponent = () => {
   const { gpu } = useContext(ViewPageContext);
 
-  if (gpu.benchmarks?.performanceScore?.value == null) {
+  if (gpu.performanceScore?.value == null) {
     return <></>;
   }
 

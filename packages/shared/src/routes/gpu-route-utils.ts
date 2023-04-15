@@ -2,6 +2,7 @@ import {
   DEFAULT_LIST_GPUS_LIMIT,
   DEFAULT_LIST_GPUS_OFFSET,
   Gpu,
+  GpuComparison,
   GpusQuery,
   LIST_GPUS_PRESETS,
 } from '../gpu';
@@ -50,8 +51,24 @@ export function getViewGpuPath(gpuOrSlug: Gpu | string) {
   return `/gpus/view/${slug}/`;
 }
 
-export function getCompareGpusPath(slug: string) {
-  return `/gpus/compare/${slug}/`;
+interface GetCompareGpusPathOptions {
+  ordered?: boolean;
+}
+
+export function getCompareGpusPath(
+  comparisonOrSlug: GpuComparison | string,
+  options?: GetCompareGpusPathOptions,
+) {
+  if (typeof comparisonOrSlug === 'string') {
+    return `/gpus/compare/${comparisonOrSlug}/`;
+  }
+
+  const comparison = comparisonOrSlug;
+  const [gpu1, gpu2] =
+    options?.ordered === true
+      ? [...comparison].sort((p1, p2) => p1.id - p2.id)
+      : comparison;
+  return `/gpus/compare/${gpu1.slug}--vs--${gpu2.slug}/`;
 }
 
 export function getAdminListGpusPath(query?: GpusQuery) {

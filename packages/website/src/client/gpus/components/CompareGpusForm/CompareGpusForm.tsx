@@ -13,7 +13,6 @@ import React, {
 import { GpuCache } from '../../../shared/cache';
 import { Button, ButtonVariant, Form } from '../../../shared/components';
 import { classNames } from '../../../shared/ui';
-import { getCompareGpusSlug } from '../..';
 import { GpuAutocomplete } from '../GpuAutocomplete';
 
 interface CompareGpusFormProps {
@@ -53,9 +52,7 @@ export const CompareGpusForm: FunctionComponent<CompareGpusFormProps> = (
         .map((value) => GpuCache.get(value));
 
       if (gpus.length === 2 && gpus[0].id !== gpus[1].id) {
-        window.location.href = getCompareGpusPath(
-          getCompareGpusSlug(gpus as GpuComparison),
-        );
+        window.location.href = getCompareGpusPath(gpus as GpuComparison);
         return;
       } else if (gpus.length === 1 || gpus[0].id === gpus[1].id) {
         window.location.href = getViewGpuPath(gpus[0]);

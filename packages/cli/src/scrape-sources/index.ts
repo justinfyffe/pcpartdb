@@ -1,3 +1,4 @@
+import { buildSourceModel } from './buildSourceModel';
 import { sanitizeVideocardBenchmarksGpuSources } from './sanitizeVideocardBenchmarksGpuSources';
 import { scrapeTechPowerUpGpuSources } from './scrapeTechPowerUpGpuSources';
 import { scrapeUlBenchmarkGpuSources } from './scrapeUlBenchmarkGpuSources';
@@ -23,4 +24,6 @@ export async function scrapeSourcesCommand(args: ScrapeSourcesCommandArgs) {
     await scrapeUlBenchmarkGpuSources({ proxy });
     await sanitizeVideocardBenchmarksGpuSources();
   }
+
+  await buildSourceModel();
 }

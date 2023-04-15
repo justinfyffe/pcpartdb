@@ -15,27 +15,25 @@ export class GpuRanksRepository {
     const { where, parameters, nextParameterIndex } =
       this.generateWhere(filter);
 
-    const idsAndRanks: { gpu_id: number; rank: number }[] =
+    const idsAndRanks: { id: number; rank: number }[] =
       await trx.$queryRawUnsafe(
         `
-          SELECT ranks.gpu_id, ranks.rank AS rank
+          SELECT ranks.id, ranks.rank AS rank
           FROM (
             SELECT
-              benchmark.gpu_id,
-              CAST(RANK() OVER ( ORDER BY benchmark.performance_score DESC ) AS INTEGER) AS rank
-            FROM gpu_benchmarks AS benchmark
-            INNER JOIN gpus AS gpu ON benchmark.gpu_id = gpu.id
-            INNER JOIN gpu_specs AS spec ON benchmark.gpu_id = spec.gpu_id
-            WHERE benchmark.performance_score IS NOT NULL ${where}
+              gpu.id,
+              CAST(RANK() OVER ( ORDER BY gpu.performance_score DESC ) AS INTEGER) AS rank
+            FROM gpus AS gpu
+            WHERE gpu.performance_score IS NOT NULL ${where}
           ) AS ranks
-          WHERE ranks.gpu_id = ANY ($${nextParameterIndex})
+          WHERE ranks.id = ANY ($${nextParameterIndex})
         `,
         ...parameters,
         ids,
       );
 
     const ranksMap = idsAndRanks.reduce((acc, value) => {
-      acc[value.gpu_id] = value.rank;
+      acc[value.id] = value.rank;
       return acc;
     }, {} as Record<number, number>);
 
@@ -52,27 +50,25 @@ export class GpuRanksRepository {
     const { where, parameters, nextParameterIndex } =
       this.generateWhere(filter);
 
-    const idsAndRanks: { gpu_id: number; rank: number }[] =
+    const idsAndRanks: { id: number; rank: number }[] =
       await trx.$queryRawUnsafe(
         `
-          SELECT ranks.gpu_id, ranks.rank AS rank
+          SELECT ranks.id, ranks.rank AS rank
           FROM (
             SELECT
-              benchmark.gpu_id,
-              CAST(RANK() OVER ( ORDER BY benchmark.value_score DESC ) AS INTEGER) AS rank
-            FROM gpu_benchmarks AS benchmark
-            INNER JOIN gpus AS gpu ON benchmark.gpu_id = gpu.id
-            INNER JOIN gpu_specs AS spec ON benchmark.gpu_id = spec.gpu_id
-            WHERE benchmark.value_score IS NOT NULL ${where}
+              gpu.id,
+              CAST(RANK() OVER ( ORDER BY gpu.value_score DESC ) AS INTEGER) AS rank
+            FROM gpus AS gpu
+            WHERE gpu.value_score IS NOT NULL ${where}
           ) AS ranks
-          WHERE ranks.gpu_id = ANY ($${nextParameterIndex})
+          WHERE ranks.id = ANY ($${nextParameterIndex})
         `,
         ...parameters,
         ids,
       );
 
     const ranksMap = idsAndRanks.reduce((acc, value) => {
-      acc[value.gpu_id] = value.rank;
+      acc[value.id] = value.rank;
       return acc;
     }, {} as Record<number, number>);
 
@@ -85,7 +81,7 @@ export class GpuRanksRepository {
     let nextParameterIndex = 1;
 
     if (filter?.architecture != null && filter.architecture.length > 0) {
-      where.push(`spec.architecture = ANY ($${nextParameterIndex++})`);
+      where.push(`gpu.architecture = ANY ($${nextParameterIndex++})`);
       parameters.push(filter.architecture);
     }
     if (filter?.company != null && filter.company.length > 0) {

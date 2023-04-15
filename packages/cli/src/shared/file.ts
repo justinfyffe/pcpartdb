@@ -3,6 +3,7 @@ import path from 'path';
 
 const CWD_PATH = path.resolve(process.cwd());
 const DATA_PATH = path.join(CWD_PATH, '../..', 'data');
+const PUBLIC_PATH = path.join(CWD_PATH, '..', 'website/public');
 
 if (!fs.existsSync(DATA_PATH)) {
   fs.mkdirSync(DATA_PATH, { recursive: true });
@@ -10,6 +11,10 @@ if (!fs.existsSync(DATA_PATH)) {
 
 export function dataPath(file?: string) {
   return file != null ? path.join(DATA_PATH, file) : DATA_PATH;
+}
+
+export function publicPath(file?: string) {
+  return file != null ? path.join(PUBLIC_PATH, file) : PUBLIC_PATH;
 }
 
 export async function createFolder(folder: string) {

@@ -65,30 +65,30 @@ function decorateGpu(gpu: Partial<Gpu>, source: GpuSource) {
     },
   };
 
-  gpu.benchmarks = {
-    g3dMark: {
-      value: source.g3dMark,
-      meta: {
-        fieldKey: 'g3dMark',
-        autoUpdate: source.g3dMark != null,
-        source: GpuDataSourceKey.VideocardBenchmarks,
-      },
+  gpu.g3dMark = {
+    value: source.g3dMark,
+    meta: {
+      fieldKey: 'g3dMark',
+      autoUpdate: source.g3dMark != null,
+      source: GpuDataSourceKey.VideocardBenchmarks,
     },
-    g2dMark: {
-      value: source.g2dMark,
-      meta: {
-        fieldKey: 'g2dMark',
-        autoUpdate: source.g2dMark != null,
-        source: GpuDataSourceKey.VideocardBenchmarks,
-      },
+  };
+
+  gpu.g2dMark = {
+    value: source.g2dMark,
+    meta: {
+      fieldKey: 'g2dMark',
+      autoUpdate: source.g2dMark != null,
+      source: GpuDataSourceKey.VideocardBenchmarks,
     },
-    timespyGraphics: {
-      value: source.timespyScore,
-      meta: {
-        fieldKey: 'timespyGraphics',
-        autoUpdate: source.timespyScore != null,
-        source: GpuDataSourceKey.VideocardBenchmarks,
-      },
+  };
+
+  gpu.timespyGraphics = {
+    value: source.timespyScore,
+    meta: {
+      fieldKey: 'timespyGraphics',
+      autoUpdate: source.timespyScore != null,
+      source: GpuDataSourceKey.VideocardBenchmarks,
     },
   };
 

@@ -34,14 +34,14 @@ export const CoresSummary = () => {
 
   const context = useMemo(() => {
     const params: ContentComponentParams = {
-      cores: formatGpuField(gpu.specs?.shaderUnitsCudaCores),
-      coreClockSpeedBase: formatGpuField(gpu.specs?.coreClockSpeedBase),
-      fp32Performance: formatGpuField(gpu.specs?.fp32Performance),
-      fp64Performance: formatGpuField(gpu.specs?.fp64Performance),
-      rops: formatGpuField(gpu.specs?.renderOutputUnits),
-      pixelFillRate: formatGpuField(gpu.specs?.pixelFillRate),
-      tmus: formatGpuField(gpu.specs?.textureMappingUnits),
-      textureFillRate: formatGpuField(gpu.specs?.textureFillRate),
+      cores: formatGpuField(gpu.shaderUnitsCudaCores),
+      coreClockSpeedBase: formatGpuField(gpu.coreClockSpeedBase),
+      fp32Performance: formatGpuField(gpu.fp32Performance),
+      fp64Performance: formatGpuField(gpu.fp64Performance),
+      rops: formatGpuField(gpu.renderOutputUnits),
+      pixelFillRate: formatGpuField(gpu.pixelFillRate),
+      tmus: formatGpuField(gpu.textureMappingUnits),
+      textureFillRate: formatGpuField(gpu.textureFillRate),
     };
 
     return { params };

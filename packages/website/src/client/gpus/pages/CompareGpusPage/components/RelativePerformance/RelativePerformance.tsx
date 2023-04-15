@@ -8,8 +8,8 @@ export const RelativePerformance: FunctionComponent = () => {
   const [gpu1, gpu2] = comparison;
 
   if (
-    gpu1.benchmarks?.performanceScore?.value == null &&
-    gpu2.benchmarks?.performanceScore?.value == null
+    gpu1.performanceScore?.value == null &&
+    gpu2.performanceScore?.value == null
   ) {
     return <></>;
   }

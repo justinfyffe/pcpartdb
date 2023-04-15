@@ -1,12 +1,5 @@
 import Joi from '@hapi/joi';
-import {
-  gpuBenchmarksValidator,
-  gpuFieldValidator,
-  gpuMetaValidator,
-  GpuOrder,
-  GpuSort,
-  gpuSpecsValidator,
-} from '@pcpartdb/shared';
+import { GpuOrder, GpuSort, gpuValidator } from '@pcpartdb/shared';
 
 const MAX_LIMIT_GPUS_QUERY = 100;
 
@@ -44,28 +37,5 @@ export const listGpusRequestValidator = Joi.object({
   fields: Joi.array().allow(Joi.string()).allow(null),
 }).options({ abortEarly: false });
 
-export const createGpuRequestValidator = Joi.object({
-  slug: Joi.string().required(),
-  name: Joi.string().required(),
-  company: gpuFieldValidator.allow(null),
-  marketSegment: gpuFieldValidator.allow(null),
-  launchPrice: gpuFieldValidator.allow(null),
-  releaseDate: gpuFieldValidator.allow(null),
-  specs: gpuSpecsValidator.allow(null),
-  benchmarks: gpuBenchmarksValidator.allow(null),
-  images: Joi.array().allow(Joi.any()),
-  meta: gpuMetaValidator.allow(null),
-}).options({ abortEarly: false });
-
-export const updateGpuRequestValidator = Joi.object({
-  slug: Joi.string().required(),
-  name: Joi.string().required(),
-  company: gpuFieldValidator.allow(null),
-  marketSegment: gpuFieldValidator.allow(null),
-  launchPrice: gpuFieldValidator.allow(null),
-  releaseDate: gpuFieldValidator.allow(null),
-  specs: gpuSpecsValidator.allow(null),
-  benchmarks: gpuBenchmarksValidator.allow(null),
-  images: Joi.array().allow(Joi.any()),
-  meta: gpuMetaValidator.allow(null),
-}).options({ abortEarly: false });
+export const createGpuRequestValidator = gpuValidator;
+export const updateGpuRequestValidator = gpuValidator;

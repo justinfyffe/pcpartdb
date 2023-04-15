@@ -5,6 +5,7 @@ import { gpuUpdaterCommand } from './gpu-updater';
 import { refreshRatingsCommand } from './refresh-ratings';
 import { scrapeDataCommand } from './scrape-data';
 import { scrapeSourcesCommand } from './scrape-sources';
+import { sitemapUpdaterCommand } from './sitemap-updater';
 
 dotenv.config();
 
@@ -16,6 +17,14 @@ program
   .option('--schedule')
   .action(async (options) => {
     await gpuUpdaterCommand({ schedule: options.schedule });
+  });
+
+// Sitemap Updater
+program
+  .command('sitemap-updater')
+  .option('--schedule')
+  .action(async (options) => {
+    await sitemapUpdaterCommand({ schedule: options.schedule });
   });
 
 // Scrape Sources command

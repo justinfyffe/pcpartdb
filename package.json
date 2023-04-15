@@ -15,7 +15,8 @@
     "website": "npm --workspace=@pcpartdb/website run",
     "prod:api": "npm run api start",
     "prod:website": "npm run website start",
-    "prod:gpu-updater": "npm run cli gpu-updater:schedule"
+    "prod:gpu-updater": "npm run cli gpu-updater:schedule",
+    "prod:sitemap-updater": "npm run cli sitemap-updater:schedule"
   },
   "repository": {
     "type": "git",

@@ -1,4 +1,3 @@
-import { boolean } from '@hapi/joi';
 import {
   calculateDisplayGpuFieldValue,
   getUnitFormat,
@@ -46,21 +45,6 @@ export function getGpuComparisonName(
   return `${getGpuName(gpu1, options)} vs ${getGpuName(gpu2, options)}`;
 }
 
-interface GetGpuComparisonSlugOptions {
-  ordered?: boolean;
-}
-
-export function getCompareGpusSlug(
-  comparison: GpuComparison,
-  options?: GetGpuComparisonSlugOptions,
-) {
-  const [gpu1, gpu2] =
-    options?.ordered === true
-      ? [...comparison].sort((p1, p2) => p1.id - p2.id)
-      : comparison;
-  return `${gpu1.slug}--vs--${gpu2.slug}`;
-}
-
 export function getShoppingUrl(gpu: Gpu) {
   return gpu.affiliateUrl ?? null;
 }
@@ -90,10 +74,10 @@ export function formatGpuDimensions(
   gpu: Gpu,
   options?: FormatGpuDimensionsOptions,
 ) {
-  const length = formatGpuField(gpu.specs?.length);
-  const height = formatGpuField(gpu.specs?.height);
-  const width = formatGpuField(gpu.specs?.width);
-  const slots = formatGpuField(gpu.specs?.slotWidth);
+  const length = formatGpuField(gpu.length);
+  const height = formatGpuField(gpu.height);
+  const width = formatGpuField(gpu.width);
+  const slots = formatGpuField(gpu.slotWidth);
 
   const dimensions: string[] = [];
   dimensions.push(length != null ? `${length}` : null);

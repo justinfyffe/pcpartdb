@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { GpuSpecsEntity, mapToGpuDtos } from '@pcpartdb/database';
+import { GpuEntity, mapToGpuDtos } from '@pcpartdb/database';
 import { Context } from '../../shared/context';
 import { GpuAutocompleteRepository } from './gpu-autocomplete.repository';
 
@@ -22,7 +22,7 @@ export class GpuAutocompleteService {
   }
 
   async autocompleteSpec(
-    key: keyof GpuSpecsEntity,
+    key: keyof Omit<GpuEntity, 'parent' | 'images'>,
     query: string,
     ctx: Context,
   ) {

@@ -1,6 +1,6 @@
 import Joi from '@hapi/joi';
 import { GpuBenchmarks } from './gpu-benchmark-types';
-import { GpuField, GpuFieldKey } from './gpu-field-types';
+import { GpuField, GpuFieldKey, gpuFieldValidator } from './gpu-field-types';
 import { GpuImages } from './gpu-image-types';
 import { GpuRanks } from './gpu-rank-types';
 import { GpuSpecs } from './gpu-spec-types';
@@ -33,20 +33,78 @@ export interface Gpu {
   name: string;
   affiliateUrl?: string;
 
+  // General Info
   company?: GpuField<string>;
   marketSegment?: GpuField<MarketSegmentValue>;
   launchPrice?: GpuField<number>;
   releaseDate?: GpuField<string>;
 
+  // Processor
+  codename?: GpuField<string>;
+  architecture?: GpuField<string>;
+  processSize?: GpuField<number>;
+  transistors?: GpuField<number>;
+
+  // Memory
+  memorySize?: GpuField<number>;
+  memoryType?: GpuField<string>;
+  memoryClock?: GpuField<number>;
+  memoryInterface?: GpuField<number>;
+  memoryBandwidth?: GpuField<number>;
+
+  // Board Design
+  slotWidth?: GpuField<number>;
+  length?: GpuField<number>;
+  width?: GpuField<number>;
+  height?: GpuField<number>;
+  weight?: GpuField<number>;
+  thermalDesignPower?: GpuField<number>;
+  suggestedPsu?: GpuField<number>;
+  busInterface?: GpuField<string>;
+  powerConnectors?: GpuField<string>;
+  outputs?: GpuField<string>;
+
+  // Cores & Clock Speeds
+  shaderUnitsCudaCores?: GpuField<number>;
+  computeUnitsSmCount?: GpuField<number>;
+  textureMappingUnits?: GpuField<number>;
+  renderOutputUnits?: GpuField<number>;
+  tensorCores?: GpuField<number>;
+  rayTracingCores?: GpuField<number>;
+  coreClockSpeedBase?: GpuField<number>;
+  coreClockSpeedBoost?: GpuField<number>;
+  l1Cache?: GpuField<number>;
+  l2Cache?: GpuField<number>;
+
+  // Theoretical Performance
+  pixelFillRate?: GpuField<number>;
+  textureFillRate?: GpuField<number>;
+  fp32Performance?: GpuField<number>;
+  fp64Performance?: GpuField<number>;
+
+  // API Support
+  directxVersion?: GpuField<string>;
+  openClVersion?: GpuField<string>;
+  openGlVersion?: GpuField<string>;
+  shaderModelVersion?: GpuField<string>;
+
+  // Benchmarks
+  performanceScore?: GpuField<number>;
+  valueScore?: GpuField<number>;
+  g3dMark?: GpuField<number>;
+  g2dMark?: GpuField<number>;
+  timespyGraphics?: GpuField<number>;
+
   meta?: GpuMeta;
+  updatedAt?: number;
 
   // Relations
   parent?: Gpu;
-  specs?: GpuSpecs;
-  benchmarks?: GpuBenchmarks;
+  specs?: GpuSpecs; // TODO: remove this
+  benchmarks?: GpuBenchmarks; // TODO: remove this
   images?: GpuImages;
 
-  // Non-DB Fields
+  // Ranks - Non-DB Field
   ranks?: GpuRanks;
 }
 
@@ -143,4 +201,71 @@ export const gpuMetaValidator = Joi.object({
   dataSources: Joi.object()
     .pattern(/.*/, gpuDataSourceValidator.allow(null))
     .allow(null),
+}).options({ abortEarly: false });
+
+export const gpuValidator = Joi.object({
+  slug: Joi.string().required(),
+  name: Joi.string().required(),
+  company: gpuFieldValidator.allow(null),
+  marketSegment: gpuFieldValidator.allow(null),
+  launchPrice: gpuFieldValidator.allow(null),
+  releaseDate: gpuFieldValidator.allow(null),
+
+  // Processor
+  codename: gpuFieldValidator.allow(null),
+  architecture: gpuFieldValidator.allow(null),
+  processSize: gpuFieldValidator.allow(null),
+  transistors: gpuFieldValidator.allow(null),
+
+  // Memory
+  memorySize: gpuFieldValidator.allow(null),
+  memoryType: gpuFieldValidator.allow(null),
+  memoryClock: gpuFieldValidator.allow(null),
+  memoryInterface: gpuFieldValidator.allow(null),
+  memoryBandwidth: gpuFieldValidator.allow(null),
+
+  // Board Design
+  slotWidth: gpuFieldValidator.allow(null),
+  length: gpuFieldValidator.allow(null),
+  width: gpuFieldValidator.allow(null),
+  height: gpuFieldValidator.allow(null),
+  weight: gpuFieldValidator.allow(null),
+  thermalDesignPower: gpuFieldValidator.allow(null),
+  suggestedPsu: gpuFieldValidator.allow(null),
+  busInterface: gpuFieldValidator.allow(null),
+  powerConnectors: gpuFieldValidator.allow(null),
+  outputs: gpuFieldValidator.allow(null),
+
+  // Cores & Clock Speeds
+  shaderUnitsCudaCores: gpuFieldValidator.allow(null),
+  computeUnitsSmCount: gpuFieldValidator.allow(null),
+  textureMappingUnits: gpuFieldValidator.allow(null),
+  renderOutputUnits: gpuFieldValidator.allow(null),
+  tensorCores: gpuFieldValidator.allow(null),
+  rayTracingCores: gpuFieldValidator.allow(null),
+  coreClockSpeedBase: gpuFieldValidator.allow(null),
+  coreClockSpeedBoost: gpuFieldValidator.allow(null),
+  l1Cache: gpuFieldValidator.allow(null),
+  l2Cache: gpuFieldValidator.allow(null),
+
+  // Theoretical Performance
+  pixelFillRate: gpuFieldValidator.allow(null),
+  textureFillRate: gpuFieldValidator.allow(null),
+  fp32Performance: gpuFieldValidator.allow(null),
+  fp64Performance: gpuFieldValidator.allow(null),
+
+  // API Support
+  directxVersion: gpuFieldValidator.allow(null),
+  openClVersion: gpuFieldValidator.allow(null),
+  openGlVersion: gpuFieldValidator.allow(null),
+  shaderModelVersion: gpuFieldValidator.allow(null),
+
+  performanceScore: gpuFieldValidator.allow(null),
+  valueScore: gpuFieldValidator.allow(null),
+  g3dMark: gpuFieldValidator.allow(null),
+  g2dMark: gpuFieldValidator.allow(null),
+  timespyGraphics: gpuFieldValidator.allow(null),
+
+  images: Joi.array().allow(Joi.any()),
+  meta: gpuMetaValidator.allow(null),
 }).options({ abortEarly: false });

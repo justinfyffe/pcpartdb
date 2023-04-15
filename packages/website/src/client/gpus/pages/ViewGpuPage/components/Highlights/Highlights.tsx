@@ -25,30 +25,28 @@ export const Highlights: FunctionComponent<HighlightsProps> = (props) => {
 
   const context = useContext(ViewPageContext);
   const gpu = context.gpu;
-  const benchmarks = gpu.benchmarks;
-  const specs = gpu.specs;
 
   const highlightPerformance = useMemo(() => {
-    return formatGpuField(benchmarks.performanceScore) || '--';
-  }, [benchmarks]);
+    return formatGpuField(gpu.performanceScore) || '--';
+  }, [gpu]);
 
   const highlightValue = useMemo(() => {
-    return formatGpuField(benchmarks.valueScore) || '--';
-  }, [benchmarks]);
+    return formatGpuField(gpu.valueScore) || '--';
+  }, [gpu]);
 
   const highlightMemory = useMemo(() => {
-    const memorySize = formatGpuField(specs.memorySize);
-    const memoryType = formatGpuField(specs.memoryType);
+    const memorySize = formatGpuField(gpu.memorySize);
+    const memoryType = formatGpuField(gpu.memoryType);
     return [memorySize, memoryType].filter((value) => value != null).join(' ');
-  }, [specs]);
+  }, [gpu]);
 
   const highlightDimensions = useMemo(() => {
     return formatGpuDimensions(gpu, { allowMissingDimensions: true });
   }, [gpu]);
 
   const highlightTdp = useMemo(() => {
-    return formatGpuField(specs.thermalDesignPower) || '--';
-  }, [specs.thermalDesignPower]);
+    return formatGpuField(gpu.thermalDesignPower) || '--';
+  }, [gpu.thermalDesignPower]);
 
   const highlightReleaseDate = useMemo(() => {
     return formatGpuField(gpu.releaseDate) || '--';

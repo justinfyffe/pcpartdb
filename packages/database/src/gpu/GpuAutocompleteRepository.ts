@@ -1,7 +1,6 @@
 import { DatabaseClient } from '../DatabaseClient';
 import { RepositoryConfig } from '../RepositoryConfig';
 import { GpuEntity } from './GpuEntity';
-import { GpuSpecsEntity } from './GpuSpecsEntity';
 
 export class GpuAutocompleteRepository {
   constructor(protected db: DatabaseClient) {}
@@ -57,12 +56,12 @@ export class GpuAutocompleteRepository {
   }
 
   async autocompleteSpec(
-    key: keyof GpuSpecsEntity,
+    key: keyof Omit<GpuEntity, 'parent' | 'images'>,
     query: string,
     config?: RepositoryConfig,
   ): Promise<string[]> {
     const trx = config?.trx ?? this.db;
-    const results = await trx.gpuSpecs.findMany({
+    const results = await trx.gpu.findMany({
       select: { [key]: true },
       distinct: key,
       where: {

@@ -1,4 +1,4 @@
-import { GpuBenchmarks, GpuField } from '@pcpartdb/shared';
+import { Gpu, GpuField } from '@pcpartdb/shared';
 import React, { useContext } from 'react';
 import { Td, Tr } from '../../../../../shared/components';
 import { formatGpuField } from '../../../..';
@@ -11,7 +11,7 @@ const LABELS: Record<string, string> = {
 };
 
 interface BenchmarkRowProps {
-  benchmark: keyof GpuBenchmarks;
+  benchmark: keyof Gpu;
 }
 
 export const BenchmarkRow = (props: BenchmarkRowProps) => {
@@ -19,8 +19,8 @@ export const BenchmarkRow = (props: BenchmarkRowProps) => {
 
   const context = useContext(ComparePageContext);
   const [gpu1, gpu2] = context.comparison;
-  const benchmark1 = gpu1.benchmarks[key] as GpuField;
-  const benchmark2 = gpu2.benchmarks[key] as GpuField;
+  const benchmark1 = gpu1[key] as GpuField;
+  const benchmark2 = gpu2[key] as GpuField;
 
   return (
     <Tr>

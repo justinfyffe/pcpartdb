@@ -20,12 +20,10 @@ interface CountOptions {
 
 interface ListOptions {
   query?: GpusQuery;
-  includeSpecs?: boolean;
   includeImages?: boolean;
 }
 
 interface FindOptions {
-  includeSpecs?: boolean;
   includeImages?: boolean;
 }
 
@@ -46,7 +44,6 @@ export class GpuRepository {
     const db = config?.trx ?? this.db;
 
     const includeImages = options?.includeImages ?? false;
-    const includeSpecs = options?.includeSpecs ?? false;
     const { filter, orderBy, limit, offset } = options.query ?? {};
 
     return await db.gpu.findMany({
@@ -54,11 +51,7 @@ export class GpuRepository {
       orderBy: this.generateOrderBy(
         orderBy ?? { sort: DEFAULT_LIST_GPUS_SORT },
       ),
-      include: {
-        specs: includeSpecs,
-        benchmarks: true,
-        images: includeImages ? { include: { image: true } } : false,
-      },
+      include: { images: includeImages ? { include: { image: true } } : false },
       skip: offset ?? DEFAULT_LIST_GPUS_OFFSET,
       take: limit ?? DEFAULT_LIST_GPUS_LIMIT,
     });
@@ -72,15 +65,10 @@ export class GpuRepository {
     const trx = config?.trx ?? this.db;
 
     const includeImages = options?.includeImages ?? false;
-    const includeSpecs = options?.includeSpecs ?? false;
 
     return await trx.gpu.findUnique({
       where: { id },
-      include: {
-        specs: includeSpecs,
-        benchmarks: true,
-        images: includeImages ? { include: { image: true } } : false,
-      },
+      include: { images: includeImages ? { include: { image: true } } : false },
     });
   }
 
@@ -92,15 +80,10 @@ export class GpuRepository {
     const trx = config?.trx ?? this.db;
 
     const includeImages = options?.includeImages ?? false;
-    const includeSpecs = options?.includeSpecs ?? false;
 
     return await trx.gpu.findUnique({
       where: { slug },
-      include: {
-        specs: includeSpecs,
-        benchmarks: true,
-        images: includeImages ? { include: { image: true } } : false,
-      },
+      include: { images: includeImages ? { include: { image: true } } : false },
     });
   }
 
@@ -115,13 +98,7 @@ export class GpuRepository {
   async create(data: Omit<GpuEntity, 'id'>, config?: RepositoryConfig) {
     const trx = config?.trx ?? this.db;
 
-    const {
-      parent: _parent,
-      specs: specsData,
-      benchmarks: benchmarksData,
-      images,
-      ...gpuData
-    } = data;
+    const { parent: _parent, images, ...gpuData } = data;
 
     const imagesData =
       images?.map((image) => ({ imageId: image.imageId })) ?? [];
@@ -129,8 +106,6 @@ export class GpuRepository {
     return await trx.gpu.create({
       data: {
         ...gpuData,
-        specs: { create: specsData },
-        benchmarks: { create: benchmarksData },
         images: { createMany: { data: imagesData, skipDuplicates: true } },
       },
     });
@@ -153,13 +128,7 @@ export class GpuRepository {
     });
 
     // Update GPU
-    const {
-      parent: _parent,
-      specs: specsData,
-      benchmarks: benchmarksData,
-      images,
-      ...gpuData
-    } = data;
+    const { parent: _parent, images, ...gpuData } = data;
 
     const imagesData =
       images?.map((image) => ({ imageId: image.imageId })) ?? [];
@@ -169,8 +138,6 @@ export class GpuRepository {
       where: { id },
       data: {
         ...gpuData,
-        specs: { update: specsData },
-        benchmarks: { update: benchmarksData },
         images: { createMany: { data: imagesData, skipDuplicates: true } },
       },
     });
@@ -251,13 +218,9 @@ export class GpuRepository {
         id: idWhere,
         company: companyWhere,
         marketSegment: segmentWhere,
-        specs: {
-          architecture: architectureWhere,
-        },
-        benchmarks: {
-          performanceScore: performanceWhere,
-          valueScore: valueWhere,
-        },
+        architecture: architectureWhere,
+        performanceScore: performanceWhere,
+        valueScore: valueWhere,
         OR: yearWhere,
       },
     };
@@ -286,13 +249,11 @@ export class GpuRepository {
     } else if (sort === GpuSort.PerformanceRating) {
       // Default DESC
       const order = orderBy?.order ?? GpuOrder.Desc;
-      return {
-        benchmarks: { performanceScore: { sort: order, nulls: 'last' } },
-      };
+      return { performanceScore: { sort: order, nulls: 'last' } };
     } else if (sort === GpuSort.ValueRating) {
       // Default DESC
       const order = orderBy?.order ?? GpuOrder.Desc;
-      return { benchmarks: { valueScore: { sort: order, nulls: 'last' } } };
+      return { valueScore: { sort: order, nulls: 'last' } };
     } else {
       return { id: 'desc' };
     }

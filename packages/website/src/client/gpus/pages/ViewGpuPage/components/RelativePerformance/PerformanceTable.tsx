@@ -49,17 +49,14 @@ const PerformanceTableRow: FunctionComponent<PerformanceTableRowProps> = (
   const { baselineGpu, relativeGpu } = props;
 
   const relativePerformancePct = useMemo(() => {
-    const baseline = baselineGpu.benchmarks.performanceScore.value;
-    const relatedPerformance = relativeGpu.benchmarks.performanceScore.value;
+    const baseline = baselineGpu.performanceScore.value;
+    const relatedPerformance = relativeGpu.performanceScore.value;
 
     return ((relatedPerformance / baseline) * 100).toFixed(0);
-  }, [
-    baselineGpu.benchmarks.performanceScore.value,
-    relativeGpu.benchmarks.performanceScore.value,
-  ]);
+  }, [baselineGpu.performanceScore.value, relativeGpu.performanceScore.value]);
 
   const rating = useMemo(
-    () => formatGpuField(relativeGpu.benchmarks?.performanceScore),
+    () => formatGpuField(relativeGpu.performanceScore),
     [relativeGpu],
   );
 

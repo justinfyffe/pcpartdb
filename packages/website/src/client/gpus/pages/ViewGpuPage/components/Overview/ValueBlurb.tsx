@@ -51,8 +51,8 @@ export const ValueBlurb = () => {
     const params = {
       gpuName: getGpuName(gpu),
       launchPrice: formatGpuField(gpu.launchPrice),
-      marketSegment: formatGpuField(gpu.marketSegment).toLowerCase(),
-      performanceRating: formatGpuField(gpu.benchmarks?.performanceScore),
+      marketSegment: formatGpuField(gpu.marketSegment)?.toLowerCase(),
+      performanceRating: formatGpuField(gpu.performanceScore),
       valueRank:
         gpu.ranks?.valueRank > 1
           ? formatOrdinalNumber(gpu.ranks?.valueRank)
@@ -61,13 +61,13 @@ export const ValueBlurb = () => {
         gpu.ranks?.valueRankForSegment > 1
           ? formatOrdinalNumber(gpu.ranks?.valueRankForSegment)
           : '',
-      valueRating: formatGpuField(gpu.benchmarks?.valueScore),
+      valueRating: formatGpuField(gpu.valueScore),
     };
 
     return { tags, params };
   }, [contentData.contentTags, gpu]);
 
-  if (gpu.benchmarks?.valueScore == null) {
+  if (gpu.valueScore == null) {
     return <></>;
   }
 

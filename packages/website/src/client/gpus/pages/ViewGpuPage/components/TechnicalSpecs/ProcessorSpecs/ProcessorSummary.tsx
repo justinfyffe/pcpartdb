@@ -20,17 +20,15 @@ export const ProcessorSummarySentence1 = compileContentComponent({
 export const ProcessorSummary = () => {
   const { gpu } = useContext(ViewPageContext);
 
-  const { specs } = gpu;
-
   const context = useMemo(() => {
     const params: ContentComponentParams = {
       gpuName: getGpuName(gpu),
-      architecture: formatGpuField(specs.architecture),
-      processSize: formatGpuField(specs.processSize),
+      architecture: formatGpuField(gpu.architecture),
+      processSize: formatGpuField(gpu.processSize),
     };
 
     return { params };
-  }, [gpu, specs]);
+  }, [gpu]);
 
   return (
     <ContentContext.Provider value={context}>

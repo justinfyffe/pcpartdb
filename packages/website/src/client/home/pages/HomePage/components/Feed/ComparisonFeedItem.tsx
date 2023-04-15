@@ -1,11 +1,7 @@
 import { PhotoIcon } from '@heroicons/react/24/outline';
 import { getCompareGpusPath, Gpu, GpuComparison } from '@pcpartdb/shared';
 import React, { FunctionComponent, useMemo } from 'react';
-import {
-  formatGpuField,
-  getCompareGpusSlug,
-  getGpuName,
-} from '../../../../../gpus';
+import { formatGpuField, getGpuName } from '../../../../../gpus';
 import { getCompanyLogoImagePath } from '../../../../../image';
 import { Card, Img } from '../../../../../shared/components';
 import {
@@ -55,7 +51,7 @@ export const ComparisonFeedItem: FunctionComponent<ComparisonFeedItemProps> = (
 
   return (
     <a
-      href={getCompareGpusPath(getCompareGpusSlug(comparison))}
+      href={getCompareGpusPath(comparison)}
       className={classNames(
         'flex-1 mx-4 mb-6 max-w-96 min-w-70',
         props.className,

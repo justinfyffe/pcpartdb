@@ -45,17 +45,14 @@ const ValueTableRow: FunctionComponent<ValueTableRowProps> = (props) => {
   const { baselineGpu, relativeGpu } = props;
 
   const relativeValuePct = useMemo(() => {
-    const baseline = baselineGpu.benchmarks.valueScore.value;
-    const relatedValue = relativeGpu.benchmarks.valueScore.value;
+    const baseline = baselineGpu.valueScore.value;
+    const relatedValue = relativeGpu.valueScore.value;
 
     return ((relatedValue / baseline) * 100).toFixed(0);
-  }, [
-    baselineGpu.benchmarks.valueScore.value,
-    relativeGpu.benchmarks.valueScore.value,
-  ]);
+  }, [baselineGpu.valueScore.value, relativeGpu.valueScore.value]);
 
   const rating = useMemo(
-    () => formatGpuField(relativeGpu.benchmarks?.valueScore),
+    () => formatGpuField(relativeGpu.valueScore),
     [relativeGpu],
   );
 

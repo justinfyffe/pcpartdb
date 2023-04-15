@@ -60,17 +60,20 @@ export const PerformanceBlurb = () => {
     const bestPerformanceSegmentGpu = contentData.bestPerformanceGpuForSegment;
     const bestPerformanceDifference = (
       100 *
-      (gpu.benchmarks?.performanceScore?.value /
-        bestPerformanceSegmentGpu.benchmarks?.performanceScore?.value)
+      (gpu.performanceScore?.value /
+        bestPerformanceSegmentGpu?.performanceScore?.value)
     ).toFixed(2);
 
     const tags = contentData.contentTags;
     const params = {
       bestPerformanceDifference,
       bestPerformanceSegmentGpuName: getGpuName(bestPerformanceSegmentGpu),
-      bestPerformanceSegmentGpuPath: getViewGpuPath(bestPerformanceSegmentGpu),
+      bestPerformanceSegmentGpuPath:
+        bestPerformanceSegmentGpu != null
+          ? getViewGpuPath(bestPerformanceSegmentGpu)
+          : null,
       company: formatGpuField(gpu.company),
-      marketSegment: formatGpuField(gpu.marketSegment).toLowerCase(),
+      marketSegment: formatGpuField(gpu.marketSegment)?.toLowerCase(),
       performanceRankForCompanySegment:
         gpu.ranks?.performanceRankForCompanySegment > 1
           ? formatOrdinalNumber(gpu.ranks?.performanceRankForCompanySegment)
@@ -95,7 +98,7 @@ export const PerformanceBlurb = () => {
     return { tags, params };
   }, [gpu, contentData]);
 
-  if (gpu.benchmarks?.performanceScore == null) {
+  if (gpu.performanceScore == null) {
     return <></>;
   }
 

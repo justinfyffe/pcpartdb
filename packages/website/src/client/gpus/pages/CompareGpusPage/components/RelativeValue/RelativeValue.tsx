@@ -7,10 +7,7 @@ export const RelativeValue: FunctionComponent = () => {
   const { comparison } = useContext(ComparePageContext);
   const [gpu1, gpu2] = comparison;
 
-  if (
-    gpu1.benchmarks?.valueScore?.value == null &&
-    gpu2.benchmarks?.valueScore?.value == null
-  ) {
+  if (gpu1.valueScore?.value == null && gpu2.valueScore?.value == null) {
     return <></>;
   }
 

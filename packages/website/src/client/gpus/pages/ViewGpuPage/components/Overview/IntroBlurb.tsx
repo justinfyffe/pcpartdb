@@ -34,7 +34,7 @@ const IntroBlurbSentence1 = compileContentComponent(
     component: (props) => (
       <>
         The {props.shortGpuName} is a {props.company} graphics card that
-        released during <strong>{props.releaseDate}</strong>.
+        released during {props.releaseDate}.
       </>
     ),
   },
@@ -128,23 +128,23 @@ export const IntroBlurb = () => {
   const context = useMemo(() => {
     const tags = contentData.contentTags;
     const params = {
-      architecture: formatGpuField(gpu.specs?.architecture),
-      codename: formatGpuField(gpu.specs?.codename),
+      architecture: formatGpuField(gpu.architecture),
+      codename: formatGpuField(gpu.codename),
       company: formatGpuField(gpu.company),
       gpuName: getGpuName(gpu),
-      height: formatGpuField(gpu.specs?.height),
+      height: formatGpuField(gpu.height),
       launchPrice: formatGpuField(gpu.launchPrice),
-      marketSegment: formatGpuField(gpu.marketSegment).toLowerCase(),
+      marketSegment: formatGpuField(gpu.marketSegment)?.toLowerCase(),
       performanceRankForArchitectureSegment:
         gpu.ranks?.performanceRankForArchitectureSegment > 1
           ? formatOrdinalNumber(
               gpu.ranks?.performanceRankForArchitectureSegment,
             )
           : '',
-      processSize: formatGpuField(gpu.specs?.processSize),
+      processSize: formatGpuField(gpu.processSize),
       releaseDate: formatGpuField(gpu.releaseDate),
       shortGpuName: getGpuName(gpu, { company: false }),
-      slotWidth: formatGpuField(gpu.specs?.slotWidth),
+      slotWidth: formatGpuField(gpu.slotWidth),
     };
 
     return { tags, params };

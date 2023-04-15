@@ -39,7 +39,7 @@ export const PerformanceSummary = () => {
     const params: ContentComponentParams = {
       gpuName: getGpuName(gpu),
       company: formatGpuField(gpu.company),
-      architecture: formatGpuField(gpu.specs?.architecture),
+      architecture: formatGpuField(gpu.architecture),
       launchYear: formatGpuField(gpu.releaseDate, {
         dateFormatter: DateFormatter.Year,
       }),

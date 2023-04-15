@@ -1,5 +1,4 @@
-import Joi from '@hapi/joi';
-import { GpuField, gpuFieldValidator } from './gpu-field-types';
+import { GpuField } from './gpu-field-types';
 
 export interface GpuSpecs {
   gpuId?: number;
@@ -56,54 +55,3 @@ export interface GpuSpecs {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   // [key: string]: number | GpuField<any>;
 }
-
-export const gpuSpecsValidator = Joi.object({
-  // Processor
-  codename: gpuFieldValidator.allow(null),
-  architecture: gpuFieldValidator.allow(null),
-  processSize: gpuFieldValidator.allow(null),
-  transistors: gpuFieldValidator.allow(null),
-
-  // Memory
-  memorySize: gpuFieldValidator.allow(null),
-  memoryType: gpuFieldValidator.allow(null),
-  memoryClock: gpuFieldValidator.allow(null),
-  memoryInterface: gpuFieldValidator.allow(null),
-  memoryBandwidth: gpuFieldValidator.allow(null),
-
-  // Board Design
-  slotWidth: gpuFieldValidator.allow(null),
-  length: gpuFieldValidator.allow(null),
-  width: gpuFieldValidator.allow(null),
-  height: gpuFieldValidator.allow(null),
-  weight: gpuFieldValidator.allow(null),
-  thermalDesignPower: gpuFieldValidator.allow(null),
-  suggestedPsu: gpuFieldValidator.allow(null),
-  busInterface: gpuFieldValidator.allow(null),
-  powerConnectors: gpuFieldValidator.allow(null),
-  outputs: gpuFieldValidator.allow(null),
-
-  // Cores & Clock Speeds
-  shaderUnitsCudaCores: gpuFieldValidator.allow(null),
-  computeUnitsSmCount: gpuFieldValidator.allow(null),
-  textureMappingUnits: gpuFieldValidator.allow(null),
-  renderOutputUnits: gpuFieldValidator.allow(null),
-  tensorCores: gpuFieldValidator.allow(null),
-  rayTracingCores: gpuFieldValidator.allow(null),
-  coreClockSpeedBase: gpuFieldValidator.allow(null),
-  coreClockSpeedBoost: gpuFieldValidator.allow(null),
-  l1Cache: gpuFieldValidator.allow(null),
-  l2Cache: gpuFieldValidator.allow(null),
-
-  // Theoretical Performance
-  pixelFillRate: gpuFieldValidator.allow(null),
-  textureFillRate: gpuFieldValidator.allow(null),
-  fp32Performance: gpuFieldValidator.allow(null),
-  fp64Performance: gpuFieldValidator.allow(null),
-
-  // API Support
-  directxVersion: gpuFieldValidator.allow(null),
-  openClVersion: gpuFieldValidator.allow(null),
-  openGlVersion: gpuFieldValidator.allow(null),
-  shaderModelVersion: gpuFieldValidator.allow(null),
-}).options({ abortEarly: false });

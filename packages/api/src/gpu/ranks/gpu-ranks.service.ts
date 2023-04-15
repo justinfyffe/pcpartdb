@@ -85,7 +85,7 @@ export class GpuRanksService {
     const architecture = [
       ...new Set(
         gpus
-          .map((gpu) => gpu.specs?.architecture?.value)
+          .map((gpu) => gpu.architecture?.value)
           .filter((value) => value != null),
       ),
     ];

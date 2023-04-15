@@ -1,4 +1,4 @@
-import { Gpu, GpuBenchmarks, GpuField, GpuSpecs } from '@pcpartdb/shared';
+import { Gpu, GpuField } from '@pcpartdb/shared';
 import React, { useContext } from 'react';
 import { Td, Tr } from '../../../../../shared/components';
 import { BooleanFormatter } from '../../../../../shared/format';
@@ -71,18 +71,8 @@ export const FieldRow = (props: FieldRowProps) => {
 
   const context = useContext(ComparePageContext);
   const [gpu1, gpu2] = context.comparison;
-  let field1: GpuField;
-  let field2: GpuField;
-  if (key in gpu1.specs || key in gpu2.specs) {
-    field1 = gpu1.specs[key as keyof GpuSpecs] as GpuField;
-    field2 = gpu2.specs[key as keyof GpuSpecs] as GpuField;
-  } else if (key in gpu1.benchmarks || key in gpu2.benchmarks) {
-    field1 = gpu1.benchmarks[key as keyof GpuBenchmarks] as GpuField;
-    field2 = gpu2.benchmarks[key as keyof GpuBenchmarks] as GpuField;
-  } else {
-    field1 = gpu1[key as keyof Gpu] as GpuField;
-    field2 = gpu2[key as keyof Gpu] as GpuField;
-  }
+  const field1 = gpu1[key as keyof Gpu] as GpuField;
+  const field2 = gpu2[key as keyof Gpu] as GpuField;
 
   return (
     <Tr>

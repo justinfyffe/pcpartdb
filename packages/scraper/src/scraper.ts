@@ -38,6 +38,7 @@ export class Scraper {
         response = await axios.get<T>(proxiedUrl);
         break;
       } catch (err) {
+        console.error(err);
         if (i < retries) {
           console.error(`Encountered error scraping ${url}. Retrying`);
         } else {

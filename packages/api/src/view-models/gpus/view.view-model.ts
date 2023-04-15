@@ -51,7 +51,6 @@ export class ViewGpuViewModelService {
     return await this.gpuService.getBySlug(
       slug,
       {
-        includeSpecs: true,
         includeImages: true,
         includeRanks: [
           'performanceRank',
@@ -124,7 +123,7 @@ export class ViewGpuViewModelService {
   }
 
   private getContentTags(gpu: Gpu) {
-    const slots = gpu.specs?.slotWidth?.value;
+    const slots = gpu.slotWidth?.value;
 
     return {
       [ContentTag.BestPerformance]: gpu.ranks?.performanceRank === 1,
@@ -147,7 +146,7 @@ export class ViewGpuViewModelService {
   }
 
   private async getRelativePerformanceGpus(seed: Gpu, ctx: Context) {
-    if (seed.benchmarks?.performanceScore?.value == null) {
+    if (seed.performanceScore?.value == null) {
       return [];
     }
 
@@ -156,12 +155,13 @@ export class ViewGpuViewModelService {
         query: {
           filter: {
             excludeIds: [seed.id],
-            minPerformanceScore: seed.benchmarks?.performanceScore?.value,
+            minPerformanceScore: seed.performanceScore?.value,
             performanceRated: true,
           },
           orderBy: { sort: GpuSort.PerformanceRating, order: GpuOrder.Asc },
           limit: TOTAL_COMPARED_GPUS,
         },
+        fields: ['company', 'performanceScore'],
         includeRanks: ['performanceRank'],
       },
       ctx,
@@ -172,12 +172,13 @@ export class ViewGpuViewModelService {
         query: {
           filter: {
             excludeIds: [seed.id],
-            maxPerformanceScore: seed.benchmarks?.performanceScore?.value,
+            maxPerformanceScore: seed.performanceScore?.value,
             performanceRated: true,
           },
           orderBy: { sort: GpuSort.PerformanceRating, order: GpuOrder.Desc },
           limit: TOTAL_COMPARED_GPUS,
         },
+        fields: ['company', 'performanceScore'],
         includeRanks: ['performanceRank'],
       },
       ctx,
@@ -187,8 +188,7 @@ export class ViewGpuViewModelService {
       ...new Map([...above, seed, ...below].map((n) => [n.id, n])).values(),
     ].sort(
       (gpu1, gpu2) =>
-        gpu2.benchmarks?.performanceScore?.value -
-        gpu1.benchmarks?.performanceScore?.value,
+        gpu2.performanceScore?.value - gpu1.performanceScore?.value,
     );
 
     return getSurroundingValues(
@@ -199,7 +199,7 @@ export class ViewGpuViewModelService {
   }
 
   private async getRelativeValueGpus(seed: Gpu, ctx: Context) {
-    if (seed.benchmarks?.valueScore?.value == null) {
+    if (seed.valueScore?.value == null) {
       return [];
     }
 
@@ -208,12 +208,13 @@ export class ViewGpuViewModelService {
         query: {
           filter: {
             excludeIds: [seed.id],
-            minValueScore: seed.benchmarks?.valueScore?.value,
+            minValueScore: seed.valueScore?.value,
             valueRated: true,
           },
           orderBy: { sort: GpuSort.ValueRating, order: GpuOrder.Asc },
           limit: TOTAL_COMPARED_GPUS,
         },
+        fields: ['company', 'valueScore'],
         includeRanks: ['valueRank'],
       },
       ctx,
@@ -224,12 +225,13 @@ export class ViewGpuViewModelService {
         query: {
           filter: {
             excludeIds: [seed.id],
-            maxValueScore: seed.benchmarks?.valueScore?.value,
+            maxValueScore: seed.valueScore?.value,
             valueRated: true,
           },
           orderBy: { sort: GpuSort.ValueRating, order: GpuOrder.Desc },
           limit: TOTAL_COMPARED_GPUS,
         },
+        fields: ['company', 'valueScore'],
         includeRanks: ['valueRank'],
       },
       ctx,
@@ -237,10 +239,7 @@ export class ViewGpuViewModelService {
 
     const neighbors = [
       ...new Map([...above, seed, ...below].map((n) => [n.id, n])).values(),
-    ].sort(
-      (gpu1, gpu2) =>
-        gpu2.benchmarks?.valueScore?.value - gpu1.benchmarks?.valueScore?.value,
-    );
+    ].sort((gpu1, gpu2) => gpu2.valueScore?.value - gpu1.valueScore?.value);
 
     return getSurroundingValues(
       neighbors,

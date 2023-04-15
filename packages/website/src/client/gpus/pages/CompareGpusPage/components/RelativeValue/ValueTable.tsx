@@ -34,20 +34,14 @@ export const ValueTable: FunctionComponent<ValueTableProps> = (props) => {
   const { relativeValueGpus } = contentData;
 
   const [baselineGpu, setBaselineGpu] = useState(() => {
-    if (
-      gpu1.benchmarks?.valueScore?.value == null &&
-      gpu2.benchmarks?.valueScore?.value == null
-    ) {
+    if (gpu1.valueScore?.value == null && gpu2.valueScore?.value == null) {
       return null;
     } else {
-      return gpu1.benchmarks?.valueScore?.value != null ? gpu1 : gpu2;
+      return gpu1.valueScore?.value != null ? gpu1 : gpu2;
     }
   });
   const [secondaryGpu, setSecondaryGpu] = useState(() => {
-    if (
-      gpu1.benchmarks?.valueScore?.value == null ||
-      gpu2.benchmarks?.valueScore?.value == null
-    ) {
+    if (gpu1.valueScore?.value == null || gpu2.valueScore?.value == null) {
       return null;
     } else {
       return gpu2;
@@ -80,19 +74,13 @@ export const ValueTable: FunctionComponent<ValueTableProps> = (props) => {
   }, [relativeValueGpus]);
 
   useEffect(() => {
-    if (
-      gpu1.benchmarks?.valueScore?.value == null &&
-      gpu2.benchmarks?.valueScore?.value == null
-    ) {
+    if (gpu1.valueScore?.value == null && gpu2.valueScore?.value == null) {
       setBaselineGpu(null);
     } else {
-      setBaselineGpu(gpu1.benchmarks?.valueScore?.value != null ? gpu1 : gpu2);
+      setBaselineGpu(gpu1.valueScore?.value != null ? gpu1 : gpu2);
     }
 
-    if (
-      gpu1.benchmarks?.valueScore?.value == null ||
-      gpu2.benchmarks?.valueScore?.value == null
-    ) {
+    if (gpu1.valueScore?.value == null || gpu2.valueScore?.value == null) {
       setSecondaryGpu(null);
     } else {
       setSecondaryGpu(gpu2);
@@ -101,8 +89,8 @@ export const ValueTable: FunctionComponent<ValueTableProps> = (props) => {
 
   const getRelativeValue = useCallback(
     (relatedGpu: Gpu) => {
-      const baseline = baselineGpu?.benchmarks.valueScore.value;
-      const relatedValue = relatedGpu.benchmarks.valueScore.value;
+      const baseline = baselineGpu?.valueScore.value;
+      const relatedValue = relatedGpu.valueScore.value;
 
       return ((relatedValue / baseline) * 100).toFixed(0);
     },
@@ -155,7 +143,7 @@ export const ValueTable: FunctionComponent<ValueTableProps> = (props) => {
                   </a>
                 </CustomRowLabel>
                 <CustomRowValue className="text-right">
-                  {formatGpuField(gpu.benchmarks?.valueScore)}
+                  {formatGpuField(gpu.valueScore)}
                 </CustomRowValue>
                 <CustomRowValue className="text-right">
                   {getRelativeValue(gpu)}%
@@ -186,7 +174,7 @@ export const BaselineToggle: FunctionComponent<BaselineToggleProps> = (
 ) => {
   const { gpu, active, onClick } = props;
 
-  if (gpu.benchmarks?.valueScore?.value == null) {
+  if (gpu.valueScore?.value == null) {
     return (
       <span className="text-content-dimmed cursor-not-allowed">
         {getGpuName(gpu)}

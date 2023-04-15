@@ -3,6 +3,8 @@ import { Prisma } from '@prisma/client';
 import { GpuBenchmarksEntity } from '../gpu';
 import { mapToGpuFieldDto, mapToGpuFieldEntity } from './gpuFieldMapper';
 
+// TODO: remove this file
+
 interface MapToDtoOptions {
   fields?: Set<string>;
   includeSources?: boolean;

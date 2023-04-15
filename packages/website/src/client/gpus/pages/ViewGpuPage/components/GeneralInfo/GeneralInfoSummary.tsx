@@ -51,12 +51,12 @@ export const GeneralInfoSummarySentence4 = compileContentComponent({
 export const GeneralInfoSummary = () => {
   const { gpu } = useContext(ViewPageContext);
 
-  const { specs, ranks } = gpu;
+  const { ranks } = gpu;
 
   const context = useMemo(() => {
     const params: ContentComponentParams = {
       gpuName: getGpuName(gpu),
-      architecture: formatGpuField(specs.architecture),
+      architecture: formatGpuField(gpu.architecture),
       marketSegment: formatGpuField(gpu.marketSegment),
       launchWindow: formatGpuField(gpu.releaseDate),
       msrp: formatGpuField(gpu.launchPrice),
@@ -64,7 +64,7 @@ export const GeneralInfoSummary = () => {
       valueRank: formatOrdinalNumber(ranks.valueRank),
     };
     return { params };
-  }, [gpu, ranks.performanceRank, ranks.valueRank, specs.architecture]);
+  }, [gpu, ranks.performanceRank, ranks.valueRank]);
 
   return (
     <ContentContext.Provider value={context}>

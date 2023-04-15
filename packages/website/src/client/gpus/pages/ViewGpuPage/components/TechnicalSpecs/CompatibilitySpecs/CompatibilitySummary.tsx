@@ -29,10 +29,10 @@ export const CompatibilitySummary = () => {
   const context = useMemo(() => {
     const params: ContentComponentParams = {
       gpuName: getGpuName(gpu),
-      slotWidth: formatGpuField(gpu.specs?.slotWidth),
+      slotWidth: formatGpuField(gpu.slotWidth),
       dimensions: formatGpuDimensions(gpu),
-      tdp: formatGpuField(gpu.specs?.thermalDesignPower),
-      suggestedPsu: formatGpuField(gpu.specs?.suggestedPsu),
+      tdp: formatGpuField(gpu.thermalDesignPower),
+      suggestedPsu: formatGpuField(gpu.suggestedPsu),
     };
 
     return { params };

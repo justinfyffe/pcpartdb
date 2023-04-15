@@ -14,29 +14,29 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
 ) => {
   const { className } = props;
   const { gpu } = useContext(ViewPageContext);
-  const { benchmarks, ranks } = gpu;
+  const { ranks } = gpu;
 
   const performanceScoreValue = useMemo(() => {
-    if (benchmarks.performanceScore != null && ranks.performanceRank != null) {
-      const score = formatGpuField(benchmarks.performanceScore);
+    if (gpu.performanceScore != null && ranks.performanceRank != null) {
+      const score = formatGpuField(gpu.performanceScore);
       const rank = ranks.performanceRank;
 
       return `${score} (${rank})`;
     } else {
       return '--';
     }
-  }, [benchmarks.performanceScore, ranks.performanceRank]);
+  }, [gpu.performanceScore, ranks.performanceRank]);
 
   const valueScoreValue = useMemo(() => {
-    if (benchmarks.valueScore != null && ranks.valueRank != null) {
-      const score = formatGpuField(benchmarks.valueScore);
+    if (gpu.valueScore != null && ranks.valueRank != null) {
+      const score = formatGpuField(gpu.valueScore);
       const rank = ranks.valueRank;
 
       return `${score} (${rank})`;
     } else {
       return '--';
     }
-  }, [benchmarks.valueScore, ranks.valueRank]);
+  }, [gpu.valueScore, ranks.valueRank]);
 
   return (
     <Table border responsive className={className}>

@@ -1,4 +1,4 @@
-import { GpuBenchmarks, GpuField } from '@pcpartdb/shared';
+import { Gpu, GpuField } from '@pcpartdb/shared';
 import React, { useContext, useMemo } from 'react';
 import { Td, Tr } from '../../../../../shared/components';
 import { formatGpuField } from '../../../../utils';
@@ -11,14 +11,14 @@ const LABELS: Record<string, string> = {
 };
 
 interface BenchmarkRowProps {
-  benchmark: keyof GpuBenchmarks;
+  benchmark: keyof Gpu;
 }
 
 export const BenchmarkRow = (props: BenchmarkRowProps) => {
   const { benchmark: key } = props;
 
   const { gpu } = useContext(ViewPageContext);
-  const benchmark = gpu.benchmarks[key] as GpuField;
+  const benchmark = gpu[key] as GpuField;
 
   const label = LABELS[key];
   const value = useMemo(() => formatGpuField(benchmark) || '--', [benchmark]);

@@ -33,7 +33,6 @@ export function mapToGpuFieldDto<
   if (meta != null && options?.includeSources !== true) {
     meta.autoUpdate = undefined;
     meta.source = undefined;
-    meta.dataSource = undefined;
   }
 
   return {

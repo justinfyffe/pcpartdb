@@ -3,7 +3,7 @@ import { Gpu } from './gpu-types';
 export function populatePerformanceScoreBenchmark(gpu: Gpu) {
   const performance = calculatePerformanceScore(gpu);
   if (performance != null) {
-    gpu.benchmarks.performanceScore = {
+    gpu.performanceScore = {
       value: performance,
       meta: { fieldKey: 'performanceScore', autoUpdate: false },
     };
@@ -13,7 +13,7 @@ export function populatePerformanceScoreBenchmark(gpu: Gpu) {
 export function populateValueScoreBenchmark(gpu: Gpu) {
   const value = calculateValueScore(gpu);
   if (value != null) {
-    gpu.benchmarks.valueScore = {
+    gpu.valueScore = {
       value,
       meta: { fieldKey: 'valueScore', autoUpdate: false },
     };
@@ -22,7 +22,7 @@ export function populateValueScoreBenchmark(gpu: Gpu) {
 
 function calculatePerformanceScore(gpu: Gpu) {
   // Get inputs
-  const g3dMark = gpu.benchmarks?.g3dMark?.value;
+  const g3dMark = gpu.g3dMark?.value;
 
   // Validate inputs
   if (g3dMark == null || typeof g3dMark !== 'number') {
@@ -35,8 +35,8 @@ function calculatePerformanceScore(gpu: Gpu) {
 
 function calculateValueScore(gpu: Gpu) {
   // Get inputs
-  const performanceScore = gpu.benchmarks?.performanceScore?.value;
-  const launchPrice = gpu?.launchPrice?.value;
+  const performanceScore = gpu.performanceScore?.value;
+  const launchPrice = gpu.launchPrice?.value;
 
   // Validate inputs
   if (performanceScore == null) {

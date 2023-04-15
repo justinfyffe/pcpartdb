@@ -20,9 +20,7 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
   const { comparison } = useContext(ComparePageContext);
   const [gpu1, gpu2] = comparison;
 
-  const benchmarks1 = gpu1.benchmarks;
   const ranks1 = gpu1.ranks;
-  const benchmarks2 = gpu2.benchmarks;
   const ranks2 = gpu2.ranks;
 
   return (
@@ -69,10 +67,9 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
         <CustomRow>
           <CustomRowLabel>Performance Rating (Rank)</CustomRowLabel>
           <CustomRowValue>
-            {benchmarks1.performanceScore != null &&
-            ranks1.performanceRank != null ? (
+            {gpu1.performanceScore != null && ranks1.performanceRank != null ? (
               <>
-                {formatGpuField(benchmarks1.performanceScore)} (
+                {formatGpuField(gpu1.performanceScore)} (
                 {ranks1.performanceRank})
               </>
             ) : (
@@ -80,10 +77,9 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
             )}
           </CustomRowValue>
           <CustomRowValue>
-            {benchmarks2.performanceScore != null &&
-            ranks2.performanceRank != null ? (
+            {gpu2.performanceScore != null && ranks2.performanceRank != null ? (
               <>
-                {formatGpuField(benchmarks2.performanceScore)} (
+                {formatGpuField(gpu2.performanceScore)} (
                 {ranks2.performanceRank})
               </>
             ) : (
@@ -94,18 +90,18 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
         <CustomRow>
           <CustomRowLabel>Performance Per Dollar (Rank)</CustomRowLabel>
           <CustomRowValue>
-            {benchmarks1.valueScore != null && ranks1.valueRank != null ? (
+            {gpu1.valueScore != null && ranks1.valueRank != null ? (
               <>
-                {formatGpuField(benchmarks1.valueScore)} ({ranks1.valueRank})
+                {formatGpuField(gpu1.valueScore)} ({ranks1.valueRank})
               </>
             ) : (
               <>--</>
             )}
           </CustomRowValue>
           <CustomRowValue>
-            {benchmarks2.valueScore != null && ranks2.valueRank != null ? (
+            {gpu2.valueScore != null && ranks2.valueRank != null ? (
               <>
-                {formatGpuField(benchmarks2.valueScore)} ({ranks2.valueRank})
+                {formatGpuField(gpu2.valueScore)} ({ranks2.valueRank})
               </>
             ) : (
               <>--</>
