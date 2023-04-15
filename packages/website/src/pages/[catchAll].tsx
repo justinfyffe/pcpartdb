@@ -7,7 +7,7 @@ const CWD_PATH = path.resolve(process.cwd());
 const SITEMAPS_PATH = path.join(CWD_PATH, '../..', 'data', 'sitemaps');
 
 export async function getServerSideProps(ctx: NextPageContext) {
-  const slug = ctx.query.slug as string;
+  const slug = ctx.query.catchAll as string;
 
   // Handle XML sitemaps
   if (
