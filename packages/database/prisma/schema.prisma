@@ -23,23 +23,6 @@ model AccessToken {
   @@map("access_tokens")
 }
 
-// TODO: remove this in 1.0.21
-model GpuBenchmarks {
-  gpuId            Int      @map("gpu_id") @id
-  performanceScore Float?   @map("performance_score")
-  valueScore       Float?   @map("value_score")
-  g3dMark          Float?   @map("g3d_mark")
-  g2dMark          Float?   @map("g2d_mark")
-  timespyGraphics  Float?   @map("timespy_graphics")
-  metadata         Json?
-  createdAt        DateTime @map("created_at") @default(now()) @db.Timestamptz(6) @ignore
-  updatedAt        DateTime @map("updated_at") @default(now()) @db.Timestamptz(6) @updatedAt @ignore
-
-  gpu              Gpu      @relation(fields: [gpuId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "gpu_benchmarks_gpu_id_foreign")
-
-  @@map("gpu_benchmarks")
-}
-
 model GpuImage {
   gpuId     Int      @map("gpu_id")
   imageId   Int      @map("image_id")
@@ -51,55 +34,6 @@ model GpuImage {
 
   @@map("gpu_images")
   @@id([gpuId, imageId])
-}
-
-// TODO: remove this in 1.0.21
-model GpuSpecs {
-  gpuId                   Int     @map("gpu_id")      @id
-  codename                String?
-  architecture            String?
-  processSize             Float?  @map("process_size")
-  transistors             Float?
-  memorySize              Float?  @map("memory_size")
-  memoryType              String? @map("memory_type")
-  memoryClock             Float?  @map("memory_clock")
-  memoryInterface         Float?  @map("memory_interface")
-  memoryBandwidth         Float?  @map("memory_bandwidth")
-  slotWidth               Float?  @map("slot_width")
-  length                  Float?
-  width                   Float?
-  height                  Float?
-  weight                  Float?
-  thermalDesignPower      Float?  @map("thermal_design_power")
-  suggestedPsu            Float?  @map("suggested_psu")
-  busInterface            String? @map("bus_interface")
-  powerConnectors         String? @map("power_connectors")
-  outputs                 String?
-  shaderUnitsCudaCores    Float?  @map("shader_units_cuda_cores")
-  computeUnitsSmCount     Float?  @map("compute_units_sm_count")
-  textureMappingUnits     Float?  @map("texture_mapping_units")
-  renderOutputUnits       Float?  @map("render_output_units")
-  tensorCores             Float?  @map("tensor_cores")
-  rayTracingCores         Float?  @map("ray_tracing_cores")
-  coreClockSpeedBase      Float?  @map("core_clock_speed_base")
-  coreClockSpeedBoost     Float?  @map("core_clock_speed_boost")
-  l1Cache                 Float?  @map("l1_cache ")
-  l2Cache                 Float?  @map("l2_cache")
-  pixelFillRate           Float?  @map("pixel_fill_rate")
-  textureFillRate         Float?  @map("texture_fill_rate")
-  fp32Performance         Float?  @map("fp32_performance")
-  fp64Performance         Float?  @map("fp64_performance")
-  directxVersion          String? @map("directx_version")
-  openClVersion           String? @map("open_cl_version")
-  openGlVersion           String? @map("open_gl_version")
-  shaderModelVersion      String? @map("shader_model_version")
-  metadata                Json?
-  createdAt               DateTime @map("created_at") @default(now()) @db.Timestamptz(6) @ignore
-  updatedAt               DateTime @map("updated_at") @default(now()) @db.Timestamptz(6) @updatedAt @ignore
-
-  gpu                     Gpu     @relation(fields: [gpuId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "gpu_specs_gpu_id_foreign")
-
-  @@map("gpu_specs")
 }
 
 model Gpu {
@@ -171,10 +105,6 @@ model Gpu {
   updatedAt      DateTime        @map("updated_at") @default(now()) @db.Timestamptz(6) @updatedAt
 
   // Relations
-
-  // TODO: remove this in 1.0.21
-  benchmarks GpuBenchmarks?
-  specs        GpuSpecs?
 
   images       GpuImage[]
   parent       Gpu?           @relation("gpusToGpus", fields: [parentId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "gpus_parent_id_foreign")

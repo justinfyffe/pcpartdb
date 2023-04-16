@@ -12,23 +12,15 @@ export async function refreshRatings() {
   await db.transaction(async (trx) => {
     const ctx = { trx };
 
-    const limit = 50;
-    const totalGpus = await gpuRepository.count({}, ctx);
+    const gpus = await gpuRepository.listAll({}, ctx);
 
-    for (let i = 0; i < totalGpus; i += limit) {
-      const gpus = await gpuRepository.list(
-        { query: { offset: i, limit } },
-        ctx,
-      );
+    for (let j = 0; j < gpus.length; ++j) {
+      const gpu = mapToGpuDto(gpus[j], { includeSources: true });
+      populatePerformanceScoreBenchmark(gpu);
+      populateValueScoreBenchmark(gpu);
 
-      for (let j = 0; j < gpus.length; ++j) {
-        const gpu = mapToGpuDto(gpus[j], { includeSources: true });
-        populatePerformanceScoreBenchmark(gpu);
-        populateValueScoreBenchmark(gpu);
-
-        const data = mapToGpuEntity(gpu);
-        await gpuRepository.update(gpu.id, data, ctx);
-      }
+      const data = mapToGpuEntity(gpu);
+      await gpuRepository.update(gpu.id, data, ctx);
     }
   });
 }

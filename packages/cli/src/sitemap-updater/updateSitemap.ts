@@ -67,11 +67,9 @@ async function writeGpuViewsSitemap() {
 
   const gpus = await db.transaction(async (trx) => {
     const ctx = { trx };
-    const results = await gpuRepository.list(
+    const results = await gpuRepository.listAll(
       {
         query: {
-          offset: null,
-          limit: null,
           orderBy: { sort: GpuSort.ReleaseDate, order: GpuOrder.Desc },
         },
       },
@@ -97,11 +95,9 @@ async function writeGpuComparisonsSitemap() {
 
   const gpus = await db.transaction(async (trx) => {
     const ctx = { trx };
-    const results = await gpuRepository.list(
+    const results = await gpuRepository.listAll(
       {
         query: {
-          offset: null,
-          limit: null,
           orderBy: { sort: GpuSort.ReleaseDate, order: GpuOrder.Desc },
         },
       },

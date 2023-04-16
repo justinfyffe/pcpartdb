@@ -57,6 +57,24 @@ export class GpuRepository {
     });
   }
 
+  async listAll(
+    options: ListOptions,
+    config?: RepositoryConfig,
+  ): Promise<GpuEntity[]> {
+    const db = config?.trx ?? this.db;
+
+    const includeImages = options?.includeImages ?? false;
+    const { filter, orderBy } = options.query ?? {};
+
+    return await db.gpu.findMany({
+      where: this.generateWhere(filter),
+      orderBy: this.generateOrderBy(
+        orderBy ?? { sort: DEFAULT_LIST_GPUS_SORT },
+      ),
+      include: { images: includeImages ? { include: { image: true } } : false },
+    });
+  }
+
   async findById(
     id: number,
     options: FindOptions,
