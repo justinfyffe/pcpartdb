@@ -40,6 +40,8 @@ export async function updateSitemap() {
 }
 
 async function writeGeneralSitemap() {
+  console.log('Generating General sitemap');
+
   const entries = [
     { url: WEBSITE_URL },
     { url: `${WEBSITE_URL}/about` },
@@ -51,6 +53,8 @@ async function writeGeneralSitemap() {
 }
 
 async function writeGpuListsSitemap() {
+  console.log('Generating GPU Lists sitemap');
+
   const entries: SitemapEntry[] = Object.entries(LIST_GPUS_PRESETS).map(
     ([_key, preset]) => ({
       url: `${WEBSITE_URL}${getListGpusPath(preset)}`,
@@ -62,22 +66,18 @@ async function writeGpuListsSitemap() {
 }
 
 async function writeGpuViewsSitemap() {
+  console.log('Generating GPU Views sitemap');
+
   const db = await getDatabase();
   const gpuRepository = new GpuRepository(db);
 
-  const gpus = await db.transaction(async (trx) => {
-    const ctx = { trx };
-    const results = await gpuRepository.listAll(
-      {
-        query: {
-          orderBy: { sort: GpuSort.ReleaseDate, order: GpuOrder.Desc },
-        },
-      },
-      ctx,
-    );
-
-    return mapToGpuDtos(results);
+  const results = await gpuRepository.listAll({
+    query: {
+      orderBy: { sort: GpuSort.ReleaseDate, order: GpuOrder.Desc },
+    },
   });
+  console.log(`Read ${results.length} gpus`);
+  const gpus = mapToGpuDtos(results);
 
   const entries: SitemapEntry[] = gpus.map((gpu) => ({
     url: `${WEBSITE_URL}${getViewGpuPath(gpu)}`,
@@ -90,29 +90,25 @@ async function writeGpuViewsSitemap() {
 }
 
 async function writeGpuComparisonsSitemap() {
+  console.log('Generating GPU Comparison sitemap');
+
   const db = await getDatabase();
   const gpuRepository = new GpuRepository(db);
 
-  const gpus = await db.transaction(async (trx) => {
-    const ctx = { trx };
-    const results = await gpuRepository.listAll(
-      {
-        query: {
-          orderBy: { sort: GpuSort.ReleaseDate, order: GpuOrder.Desc },
-        },
-      },
-      ctx,
-    );
-
-    return mapToGpuDtos(results);
+  const results = await gpuRepository.listAll({
+    query: {
+      orderBy: { sort: GpuSort.ReleaseDate, order: GpuOrder.Desc },
+    },
   });
+  console.log(`Read ${results.length} gpus`);
+  const gpus = mapToGpuDtos(results);
 
   let fileCounter = 0;
   let entriesCounter = 0;
   let entries: SitemapEntry[] = [];
   const sitemapUrls: string[] = [];
 
-  for (let i = 0; i < gpus.length; ++i) {
+  for (let i = 0; i < gpus.length - 1; ++i) {
     for (let j = i + 1; j < gpus.length; ++j) {
       const gpu1 = gpus[i];
       const gpu2 = gpus[j];
@@ -192,6 +188,7 @@ async function writeSitemap(path: string, entries: SitemapEntry[]) {
 
 async function removeExistingSitemaps() {
   const paths = await fsPromises.readdir(sitemapPath());
+  console.log(`Removing existing ${paths} sitemaps`);
   for (const path of paths) {
     await fsPromises.rm(sitemapPath(path));
   }

@@ -263,7 +263,7 @@ export class GpuRepository {
     } else if (sort === GpuSort.ReleaseDate) {
       // Default DESC
       const order = orderBy?.order ?? GpuOrder.Desc;
-      return { releaseDate: order };
+      return { releaseDate: { sort: order, nulls: 'last' } };
     } else if (sort === GpuSort.PerformanceRating) {
       // Default DESC
       const order = orderBy?.order ?? GpuOrder.Desc;

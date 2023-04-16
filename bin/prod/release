@@ -5,6 +5,9 @@ cd $DIRECTORY/../../
 # Backup files
 ./bin/prod/backup
 
+# Stop the services due to memory/cpu constraints
+./bin/prod/stop
+
 # Cleanup old files
 ./bin/prod/clean
 

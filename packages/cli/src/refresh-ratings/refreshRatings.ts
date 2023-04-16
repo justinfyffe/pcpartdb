@@ -6,6 +6,8 @@ import {
 import { getDatabase } from '../shared/database';
 
 export async function refreshRatings() {
+  console.log('Refreshing ratings');
+
   const db = await getDatabase();
   const gpuRepository = new GpuRepository(db);
 
@@ -14,8 +16,10 @@ export async function refreshRatings() {
 
     const gpus = await gpuRepository.listAll({}, ctx);
 
-    for (let j = 0; j < gpus.length; ++j) {
-      const gpu = mapToGpuDto(gpus[j], { includeSources: true });
+    console.log(`Fetched ${gpus.length} gpus`);
+
+    for (let i = 0; i < gpus.length; ++i) {
+      const gpu = mapToGpuDto(gpus[i], { includeSources: true });
       populatePerformanceScoreBenchmark(gpu);
       populateValueScoreBenchmark(gpu);
 
