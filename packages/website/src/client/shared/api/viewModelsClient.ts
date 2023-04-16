@@ -1,3 +1,4 @@
+import { joinUrlParts } from '@pcpartdb/shared';
 import axios, {
   AxiosError,
   AxiosInstance,
@@ -24,10 +25,11 @@ export class ViewModelsClient {
     config?: AxiosRequestConfig,
   ) {
     try {
+      const url = joinUrlParts(this.baseUrl, 'api/view-models', path);
       const response = await this.axios.request<T>({
         ...config,
         method,
-        url: `${this.baseUrl}/api/view-models/${path}`,
+        url,
         data,
         withCredentials: true,
       });

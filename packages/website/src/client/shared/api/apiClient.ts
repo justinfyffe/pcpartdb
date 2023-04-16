@@ -1,3 +1,4 @@
+import { joinUrlParts } from '@pcpartdb/shared';
 import axios, {
   AxiosError,
   AxiosInstance,
@@ -43,10 +44,11 @@ export class ApiClient {
     config?: AxiosRequestConfig,
   ) {
     try {
+      const url = joinUrlParts(this.baseUrl, 'api', path);
       const response = await this.axios.request<T>({
         ...config,
         method,
-        url: `${this.baseUrl}/api/${path}`,
+        url,
         data,
         withCredentials: true,
       });

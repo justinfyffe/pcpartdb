@@ -1,5 +1,9 @@
 import 'reflect-metadata';
-import { AdminListUsersViewModel, getAdminNewUserPath } from '@pcpartdb/shared';
+import {
+  AdminListUsersViewModel,
+  getAdminEditUserPath,
+  getAdminNewUserPath,
+} from '@pcpartdb/shared';
 import { format } from 'date-fns';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
@@ -72,7 +76,7 @@ export const AdminListUsersPage = (props: AdminListUsersViewModel) => {
                   <Tr key={user.id}>
                     <Td className="text-center">{user.id}</Td>
                     <Td>
-                      <a href={`/admin/users/${user.id}`}>{user.email}</a>
+                      <a href={getAdminEditUserPath(user)}>{user.email}</a>
                     </Td>
                     <Td className="text-center">
                       {format(user.registeredAt, "MMMM d, yyyy 'at' h:mm a")}

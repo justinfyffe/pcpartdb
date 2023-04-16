@@ -1,4 +1,5 @@
 import {
+  joinUrlParts,
   ListDataUpdatesRequest,
   ListDataUpdatesResponse,
 } from '@pcpartdb/shared';
@@ -16,11 +17,13 @@ export class AdminService {
   }
 
   async approvePendingUpdate(id: number) {
-    return await this.api.put(`${DATA_UPDATES_PATH}/${id}/approve`, {});
+    const path = joinUrlParts(DATA_UPDATES_PATH, String(id), 'approve');
+    return await this.api.put(path, {});
   }
 
   async rejectPendingUpdate(id: number) {
-    return await this.api.put(`${DATA_UPDATES_PATH}/${id}/reject`, {});
+    const path = joinUrlParts(DATA_UPDATES_PATH, String(id), 'reject');
+    return await this.api.put(path, {});
   }
 }
 

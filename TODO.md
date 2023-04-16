@@ -10,7 +10,6 @@ Retail models
 - how to access? just a link on the page, or a dropdown to select from all retail models.
 
 code cleanup
-- function to join url paths
 - move filesystem utilities to shared
 
 Auto-update / pending update remaining work:

@@ -1,6 +1,7 @@
 import {
   CreateImageRequest,
   Image,
+  joinUrlParts,
   UpdateImageRequest,
 } from '@pcpartdb/shared';
 import { ApiClient, apiClient } from '../shared/api';
@@ -22,7 +23,7 @@ export class ImageService {
     data.append('formData', JSON.stringify(formData));
     data.append('file', formData.file);
 
-    const image = await this.api.post<Image>(`${PATH}`, data, {
+    const image = await this.api.post<Image>(PATH, data, {
       headers: { 'content-type': 'multipart/form-data' },
     });
     ImageCache.save(image);
@@ -36,7 +37,8 @@ export class ImageService {
       data.append('file', formData.file);
     }
 
-    const image = await this.api.put<Image>(`${PATH}/${id}`, data, {
+    const path = joinUrlParts(PATH, String(id));
+    const image = await this.api.put<Image>(path, data, {
       headers: { 'content-type': 'multipart/form-data' },
     });
     ImageCache.save(image);
@@ -44,7 +46,8 @@ export class ImageService {
   }
 
   async delete(id: number) {
-    await this.api.delete(`${PATH}/${id}`);
+    const path = joinUrlParts(PATH, String(id));
+    await this.api.delete(path);
     ImageCache.delete(id);
   }
 }

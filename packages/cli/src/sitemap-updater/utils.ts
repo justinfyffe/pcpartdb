@@ -1,4 +1,4 @@
-import { WEBSITE_URL } from '@pcpartdb/shared';
+import { joinUrlParts, WEBSITE_URL } from '@pcpartdb/shared';
 import * as fs from 'fs';
 import path from 'path';
 import { dataPath } from '../shared/file';
@@ -14,5 +14,5 @@ export function sitemapPath(file?: string) {
 }
 
 export function sitemapUrl(file: string) {
-  return `${WEBSITE_URL}/${file}`;
+  return joinUrlParts(WEBSITE_URL, file);
 }

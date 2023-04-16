@@ -1,3 +1,3 @@
 export function getAdminUpdatesPath() {
-  return '/admin/data-updates';
+  return '/admin/data-updates/';
 }

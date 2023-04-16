@@ -1,7 +1,9 @@
 import { GpuRepository, mapToGpuDtos } from '@pcpartdb/database';
 import {
+  getAboutPath,
   getCompareGpusPath,
   getListGpusPath,
+  getPrivacyPath,
   getViewGpuPath,
   GpuOrder,
   GpuSort,
@@ -44,8 +46,8 @@ async function writeGeneralSitemap() {
 
   const entries = [
     { url: WEBSITE_URL },
-    { url: `${WEBSITE_URL}/about` },
-    { url: `${WEBSITE_URL}/privacy` },
+    { url: sitemapUrl(getAboutPath()) },
+    { url: sitemapUrl(getPrivacyPath()) },
   ] as SitemapEntry[];
 
   await writeSitemap(sitemapPath(GENERAL_FILENAME), entries);
@@ -57,7 +59,7 @@ async function writeGpuListsSitemap() {
 
   const entries: SitemapEntry[] = Object.entries(LIST_GPUS_PRESETS).map(
     ([_key, preset]) => ({
-      url: `${WEBSITE_URL}${getListGpusPath(preset)}`,
+      url: sitemapUrl(getListGpusPath(preset)),
     }),
   );
 
@@ -80,7 +82,7 @@ async function writeGpuViewsSitemap() {
   const gpus = mapToGpuDtos(results);
 
   const entries: SitemapEntry[] = gpus.map((gpu) => ({
-    url: `${WEBSITE_URL}${getViewGpuPath(gpu)}`,
+    url: sitemapUrl(getViewGpuPath(gpu)),
     lastModification:
       gpu.updatedAt != null ? new Date(gpu.updatedAt) : undefined,
   }));
@@ -113,9 +115,11 @@ async function writeGpuComparisonsSitemap() {
       const gpu1 = gpus[i];
       const gpu2 = gpus[j];
 
-      const url = `${WEBSITE_URL}${getCompareGpusPath([gpu1, gpu2], {
-        ordered: true,
-      })}`;
+      const url = sitemapUrl(
+        getCompareGpusPath([gpu1, gpu2], {
+          ordered: true,
+        }),
+      );
       const lastModTimestamp = Math.max(
         gpu1.updatedAt ?? 0,
         gpu2.updatedAt ?? 0,

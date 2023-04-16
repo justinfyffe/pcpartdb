@@ -2,6 +2,7 @@ import {
   CreateGpuRequest,
   Gpu,
   ImportGpusRequest,
+  joinUrlParts,
   ListGpusRequest,
   ListGpusResponse,
   PreviewImportGpusResponse,
@@ -32,18 +33,21 @@ export class GpuService {
   }
 
   async update(id: number, data: UpdateGpuRequest) {
-    const gpu = await this.api.put<Gpu>(`${PATH}/${id}`, data);
+    const path = joinUrlParts(PATH, String(id));
+    const gpu = await this.api.put<Gpu>(path, data);
     GpuCache.save(gpu);
     return gpu;
   }
 
   async delete(id: number) {
-    await this.api.delete(`${PATH}/${id}`);
+    const path = joinUrlParts(PATH, String(id));
+    await this.api.delete(path);
     GpuCache.delete(id);
   }
 
   async autocomplete(query: string) {
-    const gpus = await this.api.get<Gpu[]>(`${PATH}/autocomplete`, {
+    const path = joinUrlParts(PATH, 'autocomplete');
+    const gpus = await this.api.get<Gpu[]>(path, {
       params: { query },
     });
     GpuCache.save(gpus);
@@ -51,32 +55,31 @@ export class GpuService {
   }
 
   async autocompleteSpec(query: string, key?: string) {
-    return await this.api.get<string[]>(`${PATH}/autocomplete/specs`, {
+    const path = joinUrlParts(PATH, 'autocomplete/specs');
+    return await this.api.get<string[]>(path, {
       params: { key, value: query },
     });
   }
 
   async scrapeGpuDetails(data: ScrapeGpuDetailsRequest) {
-    return await this.api.post<ScrapeGpuDetailsResponse>(
-      `${PATH}/import/scrape`,
-      data,
-    );
+    const path = joinUrlParts(PATH, 'import/scrape');
+    return await this.api.post<ScrapeGpuDetailsResponse>(path, data);
   }
 
   async previewImportGpus(file: File) {
     const data = new FormData();
     data.append('file', file);
 
-    const results = await this.api.post<PreviewImportGpusResponse>(
-      `${PATH}/import/preview`,
-      data,
-      { headers: { 'content-type': 'multipart/form-data' } },
-    );
+    const path = joinUrlParts(PATH, 'import/preview');
+    const results = await this.api.post<PreviewImportGpusResponse>(path, data, {
+      headers: { 'content-type': 'multipart/form-data' },
+    });
     return results;
   }
 
   async importGpus(data: ImportGpusRequest) {
-    return await this.api.post(`${PATH}/import`, data);
+    const path = joinUrlParts(PATH, 'import');
+    return await this.api.post(path, data);
   }
 }
 

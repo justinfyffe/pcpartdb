@@ -1,4 +1,4 @@
-import { WEBSITE_NAME, WEBSITE_URL } from '@pcpartdb/shared';
+import { joinUrlParts, WEBSITE_NAME, WEBSITE_URL } from '@pcpartdb/shared';
 import Head from 'next/head';
 import React, { FunctionComponent, useMemo } from 'react';
 
@@ -35,9 +35,7 @@ function getSeoKeywords(...keywords: string[]) {
 }
 
 function getSeoCanonical(path: string) {
-  return path.startsWith('/')
-    ? `${WEBSITE_URL}${path}`
-    : `${WEBSITE_URL}/${path}`;
+  return joinUrlParts(WEBSITE_URL, path);
 }
 
 export const Seo: FunctionComponent<SeoProps> = (props) => {

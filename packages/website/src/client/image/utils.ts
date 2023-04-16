@@ -1,7 +1,12 @@
-import { Gpu, Image as ImageDto, ImageMeta } from '@pcpartdb/shared';
+import {
+  Gpu,
+  Image as ImageDto,
+  ImageMeta,
+  joinUrlParts,
+} from '@pcpartdb/shared';
 
 export function getImagePath(image: ImageDto) {
-  return `/u/images/${image.path}`;
+  return joinUrlParts('/u/images', image.path);
 }
 
 export function getCompanyLogoImagePath(gpu: Gpu) {

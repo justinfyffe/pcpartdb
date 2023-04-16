@@ -1,5 +1,6 @@
 import {
   CreateUserRequest,
+  joinUrlParts,
   RequestPasswordResetRequest,
   ResetPasswordRequest,
   UpdateUserRequest,
@@ -17,19 +18,23 @@ export class UserService {
   }
 
   async update(id: number, data: UpdateUserRequest) {
-    return await this.api.put<User>(`${PATH}/${id}`, data);
+    const path = joinUrlParts(PATH, String(id));
+    return await this.api.put<User>(path, data);
   }
 
   async delete(id: number) {
-    await this.api.delete(`${PATH}/${id}`);
+    const path = joinUrlParts(PATH, String(id));
+    await this.api.delete(path);
   }
 
   async requestPasswordReset(data: RequestPasswordResetRequest) {
-    await this.api.post(`${PATH}/request-password-reset`, data);
+    const path = joinUrlParts(PATH, 'request-password-reset');
+    await this.api.post(path, data);
   }
 
   async resetPassword(data: ResetPasswordRequest) {
-    await this.api.post(`${PATH}/reset-password`, data);
+    const path = joinUrlParts(PATH, 'reset-password');
+    await this.api.post(path, data);
   }
 }
 

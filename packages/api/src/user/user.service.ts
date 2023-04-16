@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { mapToUserDto, mapToUserEntity } from '@pcpartdb/database';
 import {
   CreateUserRequest,
+  joinUrlParts,
   RequestPasswordResetRequest,
   ResetPasswordRequest,
   UpdateUserRequest,
@@ -140,11 +141,17 @@ export class UserService {
       throw internalServerError();
     }
 
+    const url = joinUrlParts(
+      process.env.WEBSITE_URL,
+      'reset-password',
+      `?token=${jwt}`,
+    );
+
     await sendEmail({
       from: `${WEBSITE_NAME} <${websiteEmail}>`,
       to: data.email,
       subject: `${WEBSITE_NAME} Password Reset Request`,
-      text: `There has been a request to reset your password at ${WEBSITE_NAME}. You can reset your password at the following location:\n\n${process.env.WEBSITE_URL}/reset-password?token=${jwt}.\n\nIf you did not make this request, then ignore this email.`,
+      text: `There has been a request to reset your password at ${WEBSITE_NAME}. You can reset your password at the following location:\n\n${url}.\n\nIf you did not make this request, then ignore this email.`,
     });
   }
 

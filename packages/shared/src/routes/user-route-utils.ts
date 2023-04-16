@@ -1,4 +1,5 @@
 import { User } from '../user';
+import { joinUrlParts } from '../utils';
 
 export function getAdminListUsersPath() {
   return '/admin/users/';
@@ -10,5 +11,5 @@ export function getAdminNewUserPath() {
 
 export function getAdminEditUserPath(userOrId: User | number) {
   const id = typeof userOrId === 'number' ? userOrId : userOrId.id;
-  return `/admin/users/${id}/`;
+  return joinUrlParts('/admin/users/', String(id), '/');
 }

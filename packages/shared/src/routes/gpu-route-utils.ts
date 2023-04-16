@@ -6,6 +6,7 @@ import {
   GpusQuery,
   LIST_GPUS_PRESETS,
 } from '../gpu';
+import { joinUrlParts } from '../utils';
 
 export function getListGpusPath(presetOrQuery?: GpusQuery | string) {
   const basePath = '/gpus/list/';
@@ -15,7 +16,7 @@ export function getListGpusPath(presetOrQuery?: GpusQuery | string) {
   }
 
   if (typeof presetOrQuery === 'string') {
-    return `${basePath}${presetOrQuery}/`;
+    return joinUrlParts(basePath, presetOrQuery, '/');
   }
 
   const query = presetOrQuery;
@@ -28,8 +29,7 @@ export function getListGpusPath(presetOrQuery?: GpusQuery | string) {
   const preset = getListGpusPresetEquivalent(query);
   if (preset != null) {
     const q = new URLSearchParams(paginationParams).toString();
-    const urlQuery = q ? `?${q}` : '';
-    return `${basePath}${preset}/${urlQuery}`;
+    return joinUrlParts(basePath, preset, q ? `?${q}` : '');
   }
 
   const searchParams =
@@ -42,13 +42,12 @@ export function getListGpusPath(presetOrQuery?: GpusQuery | string) {
     ...searchParams,
   }).toString();
 
-  const q = combinedParams ? `?${combinedParams}` : '';
-  return `${basePath}${q}`;
+  return joinUrlParts(basePath, combinedParams ? `?${combinedParams}` : '');
 }
 
 export function getViewGpuPath(gpuOrSlug: Gpu | string) {
   const slug = typeof gpuOrSlug === 'string' ? gpuOrSlug : gpuOrSlug.slug;
-  return `/gpus/view/${slug}/`;
+  return joinUrlParts('/gpus/view/', slug, '/');
 }
 
 interface GetCompareGpusPathOptions {
@@ -60,7 +59,7 @@ export function getCompareGpusPath(
   options?: GetCompareGpusPathOptions,
 ) {
   if (typeof comparisonOrSlug === 'string') {
-    return `/gpus/compare/${comparisonOrSlug}/`;
+    return joinUrlParts('/gpus/compare/', comparisonOrSlug, '/');
   }
 
   const comparison = comparisonOrSlug;
@@ -68,7 +67,8 @@ export function getCompareGpusPath(
     options?.ordered === true
       ? [...comparison].sort((p1, p2) => p1.id - p2.id)
       : comparison;
-  return `/gpus/compare/${gpu1.slug}--vs--${gpu2.slug}/`;
+
+  return joinUrlParts('/gpus/compare/', `${gpu1.slug}--vs--${gpu2.slug}`, '/');
 }
 
 export function getAdminListGpusPath(query?: GpusQuery) {
@@ -88,8 +88,7 @@ export function getAdminListGpusPath(query?: GpusQuery) {
     ...searchParams,
   }).toString();
 
-  const q = combinedParams ? `?${combinedParams}` : '';
-  return `${path}${q}`;
+  return joinUrlParts(path, combinedParams ? `?${combinedParams}` : '');
 }
 
 export function getAdminNewGpuPath() {
@@ -98,7 +97,7 @@ export function getAdminNewGpuPath() {
 
 export function getAdminEditGpuPath(gpuOrId: Gpu | number) {
   const id = typeof gpuOrId === 'number' ? gpuOrId : gpuOrId.id;
-  return `/admin/gpus/${id}/`;
+  return joinUrlParts('/admin/gpus/', String(id), '/');
 }
 
 function generatePaginationParamsFromGpusQuery(query: GpusQuery) {
