@@ -28,6 +28,7 @@ import {
   Tr,
 } from '../../../shared/components';
 import { AdminLayout } from '../../../shared/layouts';
+import { MissingDataChip } from './components';
 
 export const AdminListGpusPage = (props: AdminListGpusViewModel) => {
   const router = useRouter();
@@ -84,6 +85,8 @@ export const AdminListGpusPage = (props: AdminListGpusViewModel) => {
   const seoTitle = `${pageTitle} - Admin Panel`;
   const seoRobots = [MetaRobots.NOINDEX, MetaRobots.NOFOLLOW];
 
+  console.log(gpus);
+
   return (
     <AdminLayout>
       <Seo title={seoTitle} robots={seoRobots} />
@@ -127,6 +130,7 @@ export const AdminListGpusPage = (props: AdminListGpusViewModel) => {
                   <Tr className="font-medium">
                     <Th className="text-left">ID</Th>
                     <Th>Name</Th>
+                    <Th></Th>
                   </Tr>
                 </THead>
                 <TBody>
@@ -135,6 +139,9 @@ export const AdminListGpusPage = (props: AdminListGpusViewModel) => {
                       <Td className="text-left">{gpu.id}</Td>
                       <Td>
                         <a href={getAdminEditGpuPath(gpu)}>{gpu.name}</a>
+                      </Td>
+                      <Td className="text-right p-0">
+                        <MissingDataChip gpu={gpu} />
                       </Td>
                     </Tr>
                   ))}

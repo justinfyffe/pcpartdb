@@ -1,8 +1,3 @@
-Update database.
-Missing gpus that have unknown category on videocardbenchmarks
-- support missing market segment
-- add admin tool to see missing data
-  - on gpus list, show (4 missing data)
 
 code cleanup
 - function to join url paths
@@ -13,8 +8,6 @@ Auto-update / pending update remaining work:
   - don't create data update if websites fail to load.
   - make diff more clear when updating specs
   - add auto-update checkbox to name
-  - add includeSpecs to admin panel
-    - or maybe rename to excludeSpecs?
   - order approved/rejected by most recent
 - Code cleanup
   - Don't call individual scrape functions, pass data sources instead.

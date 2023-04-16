@@ -190,3 +190,7 @@ function formatMarketSegment(value: MarketSegmentValue) {
       throw new Error(`Invalid market segment value: ${value}`);
   }
 }
+
+export function hasGpuFieldValue(field: GpuField) {
+  return field?.value != null;
+}
