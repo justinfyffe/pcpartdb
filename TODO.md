@@ -1,3 +1,13 @@
+Retail models
+- gpus table or separate table for simplicity?
+  - e.g. gpu_retail_boards
+- gpu_retail_boards
+  - store diff of gpu details? or store the full gpu details
+    - diff is probably better
+  - scrape from techpowerup
+- should each retail board have their own url? and place in the sitemap?
+- how to handle comparing?
+- how to access? just a link on the page, or a dropdown to select from all retail models.
 
 code cleanup
 - function to join url paths
@@ -6,7 +16,6 @@ code cleanup
 Auto-update / pending update remaining work:
 - Bug fix
   - don't create data update if websites fail to load.
-  - make diff more clear when updating specs
   - add auto-update checkbox to name
   - order approved/rejected by most recent
 - Code cleanup
