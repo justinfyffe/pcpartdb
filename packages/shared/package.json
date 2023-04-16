@@ -1,6 +1,6 @@
 {
   "name": "@pcpartdb/shared",
-  "description": "Shared types and utilities library to be used with other services.",
+  "description": "Shared types and utilities library to be used with frontend and backend services.",
   "private": "true",
   "version": "1.0.0",
   "main": "dist/index.js",

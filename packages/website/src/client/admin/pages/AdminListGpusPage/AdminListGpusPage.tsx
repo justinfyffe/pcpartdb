@@ -55,9 +55,7 @@ export const AdminListGpusPage = (props: AdminListGpusViewModel) => {
   );
 
   const handlePageClick = useCallback(
-    (query: GpusQuery) => {
-      updateQuery(query);
-    },
+    (query: GpusQuery) => updateQuery(query),
     [updateQuery],
   );
 
