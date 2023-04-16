@@ -1,6 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import {
+  CompareGpusContentData,
   CompareGpusViewModel,
+  ContentTag,
+  ContentTags,
   Gpu,
   GpuComparison,
   GpuOrder,
@@ -56,12 +59,17 @@ export class CompareGpusViewModelService {
 
   private async getContentData(comparison: GpuComparison, ctx: Context) {
     return {
+      contentTags: this.getContentTags(comparison),
       relativePerformanceGpus: await this.getRelativePerformanceGpus(
         comparison,
         ctx,
       ),
       relativeValueGpus: await this.getRelativeValueGpus(comparison, ctx),
-    };
+    } as CompareGpusContentData;
+  }
+
+  private getContentTags(comparison: GpuComparison) {
+    return {} as ContentTags;
   }
 
   private async getRelativePerformanceGpus(

@@ -12,7 +12,7 @@ export enum ContentTag {
   ExtraLargeSize = 'EXTRA_LARGE_SIZE',
   LargeSize = 'LARGE_SIZE',
   SmallSize = 'SMALL_SIZE',
-  CompactSize = 'SMALL_SIZE',
+  CompactSize = 'COMPACT_SIZE',
 }
 
 export type ContentTags = string[] | Record<string, boolean>;
