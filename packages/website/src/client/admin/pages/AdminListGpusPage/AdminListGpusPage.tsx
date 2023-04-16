@@ -2,7 +2,6 @@ import 'reflect-metadata';
 import {
   AdminListGpusViewModel,
   generateGpusQueryFromPath,
-  getAdminEditGpuPath,
   getAdminImportGpusPath,
   getAdminListGpusPath,
   getAdminNewGpuPath,
@@ -17,18 +16,11 @@ import {
   Button,
   ButtonVariant,
   MetaRobots,
-  Pagination,
-  PaginationResult,
   Seo,
-  Table,
-  TBody,
-  Td,
-  Th,
-  THead,
-  Tr,
 } from '../../../shared/components';
 import { AdminLayout } from '../../../shared/layouts';
-import { MissingDataChip } from './components';
+import { GpuTable } from './components';
+import { GpuPagination } from './components/GpuPagination';
 
 export const AdminListGpusPage = (props: AdminListGpusViewModel) => {
   const router = useRouter();
@@ -62,23 +54,11 @@ export const AdminListGpusPage = (props: AdminListGpusViewModel) => {
     [fetchGpus, router],
   );
 
-  const paginationPageClick = useCallback(
-    (result: PaginationResult, evt: React.MouseEvent) => {
-      evt.preventDefault();
-      evt.stopPropagation();
-      updateQuery({ ...query, offset: result.offset, limit: result.limit });
+  const handlePageClick = useCallback(
+    (query: GpusQuery) => {
+      updateQuery(query);
     },
-    [query, updateQuery],
-  );
-
-  const paginationHrefBuilder = useCallback(
-    (result: PaginationResult) =>
-      getAdminListGpusPath({
-        ...query,
-        offset: result.offset,
-        limit: result.limit,
-      }),
-    [query],
+    [updateQuery],
   );
 
   const pageTitle = 'GPUs';
@@ -123,37 +103,11 @@ export const AdminListGpusPage = (props: AdminListGpusViewModel) => {
         <section>
           {gpus.length > 0 && (
             <>
-              <Table border responsive>
-                <THead>
-                  <Tr className="font-medium">
-                    <Th className="text-left">ID</Th>
-                    <Th>Name</Th>
-                    <Th></Th>
-                  </Tr>
-                </THead>
-                <TBody>
-                  {gpus.map((gpu) => (
-                    <Tr key={gpu.id}>
-                      <Td className="text-left">{gpu.id}</Td>
-                      <Td>
-                        <a href={getAdminEditGpuPath(gpu)}>{gpu.name}</a>
-                      </Td>
-                      <Td className="text-right p-0">
-                        <MissingDataChip gpu={gpu} />
-                      </Td>
-                    </Tr>
-                  ))}
-                </TBody>
-              </Table>
-
-              <Pagination
-                resultsOffset={query.offset}
-                resultsPerPage={query.limit}
-                totalResults={totalResults}
-                onPageClick={paginationPageClick}
-                hrefBuilder={paginationHrefBuilder}
-                neighborPagesClassName="lg:hidden"
-                hidePages={false}
+              <GpuTable gpus={gpus} />
+              <GpuPagination
+                query={query}
+                totalGpus={totalResults}
+                onPageClick={handlePageClick}
               />
             </>
           )}
