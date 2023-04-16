@@ -85,8 +85,6 @@ export const AdminListGpusPage = (props: AdminListGpusViewModel) => {
   const seoTitle = `${pageTitle} - Admin Panel`;
   const seoRobots = [MetaRobots.NOINDEX, MetaRobots.NOFOLLOW];
 
-  console.log(gpus);
-
   return (
     <AdminLayout>
       <Seo title={seoTitle} robots={seoRobots} />
