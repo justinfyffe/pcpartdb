@@ -36,10 +36,7 @@ export const ListGpusPage = (props: ListGpusViewModel) => {
   const [query, setQuery] = useState(props.query);
 
   const fetchGpus = useCallback(async (q: GpusQuery) => {
-    const response = await gpuService.list({
-      query: q,
-      fields: ['company', 'performanceScore', 'valueScore', 'releaseDate'],
-    });
+    const response = await gpuService.list({ query: q });
     setGpus(response.gpus);
     setTotalResults(response.totalGpus);
     setQuery(q);

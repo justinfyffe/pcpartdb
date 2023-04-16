@@ -39,7 +39,13 @@ export class GpuController {
         const gpus = await this.gpuService.list(
           {
             ...data,
-            fields: data.fields || [],
+            fields: data.fields || [
+              'company',
+              'releaseDate',
+              'marketSegment',
+              'performanceScore',
+              'valueScore',
+            ],
             includeRanks: ['performanceRank', 'valueRank'],
             includeImages: false,
           },
