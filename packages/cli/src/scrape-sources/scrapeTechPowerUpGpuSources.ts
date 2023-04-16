@@ -21,7 +21,7 @@ const QUERIES = [
   '2012',
 ];
 
-const SLEEP_DELAY = 15_000;
+const SLEEP_DELAY = 30_000;
 
 interface ScrapeTechPowerUpGpuSources {
   proxy?: boolean;

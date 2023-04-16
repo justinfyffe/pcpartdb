@@ -62,7 +62,7 @@ export async function buildSourceModel() {
     (model) =>
       model.techPowerUpUrl != null && model.videocardBenchmarksUrl != null,
   );
-  sourceModel.sort((m1, m2) => m2.releaseDate - m1.releaseDate); // Descending
+  sourceModel.sort((m1, m2) => m2.g3dMark - m1.g3dMark); // Descending
 
   // Save to file with date
   const path = sourceModelsDataPath('source-model.json');
