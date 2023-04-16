@@ -1,10 +1,10 @@
 import { ContentTag } from '@pcpartdb/shared';
-import { formatOrdinalNumber } from 'packages/website/src/client/shared/format';
 import React, { useContext, useMemo } from 'react';
 import {
   compileContentComponent,
   ContentContext,
 } from '../../../../../shared/content';
+import { formatOrdinalNumber } from '../../../../../shared/format';
 import { formatGpuField, getGpuName } from '../../../..';
 import { ViewPageContext } from '../../context';
 

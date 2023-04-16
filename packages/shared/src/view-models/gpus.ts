@@ -18,6 +18,8 @@ export interface AdminListGpusViewModel {
 }
 
 export interface CompareGpusContentData {
+  contentTags: ContentTags;
+
   relativePerformanceGpus: Gpu[];
   relativeValueGpus: Gpu[];
 }

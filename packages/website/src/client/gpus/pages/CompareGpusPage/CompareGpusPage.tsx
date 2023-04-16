@@ -15,6 +15,7 @@ import {
   Benchmarks,
   GeneralInfo,
   Intro,
+  Overview,
   RelativePerformance,
   RelativeValue,
   TechnicalSpecs,
@@ -77,6 +78,7 @@ export const CompareGpuPage = (props: CompareGpusViewModel) => {
             </section> */}
 
             <Intro />
+            {/* <Overview /> */}
             <GeneralInfo />
             <RelativePerformance />
             <RelativeValue />
