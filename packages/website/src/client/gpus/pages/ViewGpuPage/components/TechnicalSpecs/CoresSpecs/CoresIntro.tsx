@@ -1,33 +1,24 @@
-import React, { useContext, useMemo } from 'react';
+import React, { useContext } from 'react';
 import {
   compileContentComponent,
   ContentContext,
 } from '../../../../../../shared/content';
-import { getGpuName } from '../../../../..';
 import { ViewPageContext } from '../../../context';
 
 export const CoresIntroSentence1 = compileContentComponent({
-  deps: ['longGpuName', 'shortGpuName'],
+  deps: ['gpuName', 'shortGpuName'],
   component: (props) => (
     <>
-      {props.longGpuName}&apos;s cores, clock speed, and cache. These specs have
-      an impact on how fast the {props.shortGpuName} can process graphics. Each
+      {props.gpuName}&apos;s cores, clock speed, and cache. These specs have an
+      impact on how fast the {props.shortGpuName} can process graphics. Each
       type of core serves a specific computational purpose.
     </>
   ),
 });
 
 export const CoresIntro = () => {
-  const { gpu } = useContext(ViewPageContext);
-
-  const context = useMemo(() => {
-    const params = {
-      longGpuName: getGpuName(gpu),
-      shortGpuName: getGpuName(gpu, { company: false }),
-    };
-
-    return { params };
-  }, [gpu]);
+  const { contentParams, contentTags } = useContext(ViewPageContext);
+  const context = { tags: contentTags, params: contentParams };
 
   return (
     <ContentContext.Provider value={context}>

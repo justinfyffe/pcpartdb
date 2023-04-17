@@ -1,17 +1,15 @@
-import { ContentTag } from '@pcpartdb/shared';
-import React, { useContext, useMemo } from 'react';
+import React, { useContext } from 'react';
 import {
   compileContentComponent,
   ContentContext,
 } from '../../../../../shared/content';
-import { formatOrdinalNumber } from '../../../../../shared/format';
-import { formatGpuField, getGpuName } from '../../../..';
+import { ViewGpuContentTag } from '../../content';
 import { ViewPageContext } from '../../context';
 
 const IntroBlurbSentence1 = compileContentComponent(
   {
     deps: ['gpuName', 'marketSegment', 'releaseDate'],
-    tags: [ContentTag.Launched],
+    tags: [ViewGpuContentTag.Launched],
     component: (props) => (
       <>
         The {props.gpuName} is a {props.marketSegment} graphics card that
@@ -30,7 +28,7 @@ const IntroBlurbSentence1 = compileContentComponent(
   },
   {
     deps: ['company', 'shortGpuName', 'releaseDate'],
-    tags: [ContentTag.Launched],
+    tags: [ViewGpuContentTag.Launched],
     component: (props) => (
       <>
         The {props.shortGpuName} is a {props.company} graphics card that
@@ -52,7 +50,7 @@ const IntroBlurbSentence1 = compileContentComponent(
 const IntroBlurbSentence2 = compileContentComponent(
   {
     deps: ['launchPrice'],
-    tags: [ContentTag.Launched],
+    tags: [ViewGpuContentTag.Launched],
     component: (props) => (
       <>It launched with prices starting at {props.launchPrice} MSRP.</>
     ),
@@ -123,32 +121,8 @@ const IntroBlurbSentence4 = compileContentComponent(
 );
 
 export const IntroBlurb = () => {
-  const { gpu, contentData } = useContext(ViewPageContext);
-
-  const context = useMemo(() => {
-    const tags = contentData.contentTags;
-    const params = {
-      architecture: formatGpuField(gpu.architecture),
-      codename: formatGpuField(gpu.codename),
-      company: formatGpuField(gpu.company),
-      gpuName: getGpuName(gpu),
-      height: formatGpuField(gpu.height),
-      launchPrice: formatGpuField(gpu.launchPrice),
-      marketSegment: formatGpuField(gpu.marketSegment)?.toLowerCase(),
-      performanceRankForArchitectureSegment:
-        gpu.ranks?.performanceRankForArchitectureSegment > 1
-          ? formatOrdinalNumber(
-              gpu.ranks?.performanceRankForArchitectureSegment,
-            )
-          : '',
-      processSize: formatGpuField(gpu.processSize),
-      releaseDate: formatGpuField(gpu.releaseDate),
-      shortGpuName: getGpuName(gpu, { company: false }),
-      slotWidth: formatGpuField(gpu.slotWidth),
-    };
-
-    return { tags, params };
-  }, [contentData.contentTags, gpu]);
+  const { contentTags, contentParams } = useContext(ViewPageContext);
+  const context = { tags: contentTags, params: contentParams };
 
   return (
     <ContentContext.Provider value={context}>

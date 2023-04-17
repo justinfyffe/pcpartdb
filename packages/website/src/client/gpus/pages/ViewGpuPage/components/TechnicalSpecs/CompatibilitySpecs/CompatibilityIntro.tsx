@@ -1,17 +1,16 @@
-import React, { useContext, useMemo } from 'react';
+import React, { useContext } from 'react';
 import {
   compileContentComponent,
   ContentContext,
 } from '../../../../../../shared/content';
-import { getGpuName } from '../../../../..';
 import { ViewPageContext } from '../../../context';
 
 export const CompatibilityIntroSentence1 = compileContentComponent({
-  deps: ['longGpuName', 'shortGpuName'],
+  deps: ['gpuName', 'shortGpuName'],
   component: (props) => (
     <>
-      {props.longGpuName}&apos;s dimensions, bus interface, power consumption,
-      and output ports. These specs are useful for verifying that the{' '}
+      {props.gpuName}&apos;s dimensions, bus interface, power consumption, and
+      output ports. These specs are useful for verifying that the{' '}
       {props.shortGpuName} fits within your case and is compatible with your
       motherboard, power supply, and monitor.
     </>
@@ -19,16 +18,8 @@ export const CompatibilityIntroSentence1 = compileContentComponent({
 });
 
 export const CompatibilityIntro = () => {
-  const { gpu } = useContext(ViewPageContext);
-
-  const context = useMemo(() => {
-    const params = {
-      longGpuName: getGpuName(gpu),
-      shortGpuName: getGpuName(gpu, { company: false }),
-    };
-
-    return { params };
-  }, [gpu]);
+  const { contentParams, contentTags } = useContext(ViewPageContext);
+  const context = { tags: contentTags, params: contentParams };
 
   return (
     <ContentContext.Provider value={context}>

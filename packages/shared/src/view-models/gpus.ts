@@ -1,4 +1,3 @@
-import { ContentTags } from '../content';
 import {
   Gpu,
   GpuComparison,
@@ -18,8 +17,6 @@ export interface AdminListGpusViewModel {
 }
 
 export interface CompareGpusContentData {
-  contentTags: ContentTags;
-
   relativePerformanceGpus: Gpu[];
   relativeValueGpus: Gpu[];
 }
@@ -42,8 +39,6 @@ export interface ListGpusViewModel {
 }
 
 export interface ViewGpuContentData {
-  contentTags: ContentTags;
-
   totalPerformanceGpus: number;
   totalPerformanceSegmentYearGpus: number;
 

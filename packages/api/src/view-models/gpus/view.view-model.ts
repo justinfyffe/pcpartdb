@@ -1,11 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import {
-  ContentTag,
-  ContentTags,
   Gpu,
   GpuOrder,
   GpuSort,
-  hasGpuLaunched,
   RelatedComparisons,
   RelatedGpus,
   ViewGpuContentData,
@@ -109,10 +106,7 @@ export class ViewGpuViewModelService {
       ctx,
     );
 
-    const contentTags = this.getContentTags(gpu);
-
     return {
-      contentTags,
       totalPerformanceGpus,
       totalPerformanceSegmentYearGpus,
       relativePerformanceGpus,
@@ -120,29 +114,6 @@ export class ViewGpuViewModelService {
       bestPerformanceGpuForSegment: bestPerformanceSegmentGpus?.[0],
       bestValueGpuForSegment: bestValueSegmentGpus?.[0],
     } as ViewGpuContentData;
-  }
-
-  private getContentTags(gpu: Gpu) {
-    const slots = gpu.slotWidth?.value;
-
-    return {
-      [ContentTag.BestPerformance]: gpu.ranks?.performanceRank === 1,
-      [ContentTag.BestPerformanceForArchitectureSegment]:
-        gpu.ranks?.performanceRankForArchitectureSegment === 1,
-      [ContentTag.BestPerformanceForCompanySegment]:
-        gpu.ranks?.performanceRankForCompanySegment === 1,
-      [ContentTag.BestPerformanceForSegmentYear]:
-        gpu.ranks?.performanceRankForSegmentYear === 1,
-      [ContentTag.BestValue]: gpu.ranks?.valueRank === 1,
-
-      [ContentTag.Launched]: hasGpuLaunched(gpu),
-
-      [ContentTag.ExtraLargeSize]: slots > 3,
-      [ContentTag.LargeSize]: slots > 2.5 && slots <= 3,
-      [ContentTag.CommonSize]: slots <= 2.5 && slots >= 2,
-      [ContentTag.SmallSize]: slots < 2 && slots >= 1.5,
-      [ContentTag.CompactSize]: slots < 1.5,
-    } as ContentTags;
   }
 
   private async getRelativePerformanceGpus(seed: Gpu, ctx: Context) {

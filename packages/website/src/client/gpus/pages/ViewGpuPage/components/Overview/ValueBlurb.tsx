@@ -1,11 +1,9 @@
-import { ContentTag, getViewGpuPath } from '@pcpartdb/shared';
-import { formatOrdinalNumber } from 'packages/website/src/client/shared/format';
-import React, { useContext, useMemo } from 'react';
+import React, { useContext } from 'react';
 import {
   compileContentComponent,
   ContentContext,
 } from '../../../../../shared/content';
-import { formatGpuField, getGpuName } from '../../../..';
+import { ViewGpuContentTag } from '../../content';
 import { ViewPageContext } from '../../context';
 
 const ValueBlurbSentence1 = compileContentComponent({
@@ -26,7 +24,7 @@ const ValueBlurbSentence1 = compileContentComponent({
 
 const ValueBlurbSentence2 = compileContentComponent(
   {
-    tags: [ContentTag.BestValue],
+    tags: [ViewGpuContentTag.BestValue],
     deps: ['marketSegment'],
     component: (props) => (
       <>It is the best value {props.marketSegment} card in our database.</>
@@ -44,28 +42,8 @@ const ValueBlurbSentence2 = compileContentComponent(
 );
 
 export const ValueBlurb = () => {
-  const { gpu, contentData } = useContext(ViewPageContext);
-
-  const context = useMemo(() => {
-    const tags = contentData.contentTags;
-    const params = {
-      gpuName: getGpuName(gpu),
-      launchPrice: formatGpuField(gpu.launchPrice),
-      marketSegment: formatGpuField(gpu.marketSegment)?.toLowerCase(),
-      performanceRating: formatGpuField(gpu.performanceScore),
-      valueRank:
-        gpu.ranks?.valueRank > 1
-          ? formatOrdinalNumber(gpu.ranks?.valueRank)
-          : '',
-      valueRankForSegment:
-        gpu.ranks?.valueRankForSegment > 1
-          ? formatOrdinalNumber(gpu.ranks?.valueRankForSegment)
-          : '',
-      valueRating: formatGpuField(gpu.valueScore),
-    };
-
-    return { tags, params };
-  }, [contentData.contentTags, gpu]);
+  const { gpu, contentParams, contentTags } = useContext(ViewPageContext);
+  const context = { tags: contentTags, params: contentParams };
 
   if (gpu.valueScore == null) {
     return <></>;

@@ -1,9 +1,8 @@
-import React, { useContext, useMemo } from 'react';
+import React, { useContext } from 'react';
 import {
   compileContentComponent,
   ContentContext,
 } from '../../../../../shared/content';
-import { formatGpuField } from '../../../..';
 import { ViewPageContext } from '../../context';
 
 const PowerSupplyBlurbSentence1 = compileContentComponent({
@@ -25,17 +24,8 @@ const PowerSupplyBlurbSentence2 = compileContentComponent({
 });
 
 export const PowerSupplyBlurb = () => {
-  const { gpu } = useContext(ViewPageContext);
-
-  const context = useMemo(() => {
-    const params = {
-      company: formatGpuField(gpu.company),
-      psu: formatGpuField(gpu.suggestedPsu),
-      tdp: formatGpuField(gpu.thermalDesignPower),
-    };
-
-    return { params };
-  }, [gpu]);
+  const { contentParams, contentTags } = useContext(ViewPageContext);
+  const context = { tags: contentTags, params: contentParams };
 
   return (
     <ContentContext.Provider value={context}>

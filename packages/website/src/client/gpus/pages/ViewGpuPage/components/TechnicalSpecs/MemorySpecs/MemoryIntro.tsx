@@ -1,9 +1,8 @@
-import React, { useContext, useMemo } from 'react';
+import React, { useContext } from 'react';
 import {
   compileContentComponent,
   ContentContext,
 } from '../../../../../../shared/content';
-import { getGpuName } from '../../../../..';
 import { ViewPageContext } from '../../../context';
 
 export const MemoryIntroSentence1 = compileContentComponent({
@@ -19,15 +18,8 @@ export const MemoryIntroSentence1 = compileContentComponent({
 });
 
 export const MemoryIntro = () => {
-  const { gpu } = useContext(ViewPageContext);
-
-  const context = useMemo(() => {
-    const params = {
-      gpuName: getGpuName(gpu),
-    };
-
-    return { params };
-  }, [gpu]);
+  const { contentParams, contentTags } = useContext(ViewPageContext);
+  const context = { tags: contentTags, params: contentParams };
 
   return (
     <ContentContext.Provider value={context}>

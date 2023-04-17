@@ -1,17 +1,15 @@
-import { ContentTag } from '@pcpartdb/shared';
 import React, { useContext, useMemo } from 'react';
-import { formatOrdinalNumber } from '../../../../..//shared/format';
 import {
   compileContentComponent,
   ContentContext,
 } from '../../../../../shared/content';
-import { formatGpuField, getGpuName } from '../../../..';
+import { CompareGpusContentTag } from '../../content';
 import { ComparePageContext } from '../../context';
 
 const IntroBlurbSentence1 = compileContentComponent(
   {
     deps: ['gpuName', 'marketSegment', 'releaseDate'],
-    tags: [ContentTag.Launched],
+    tags: [CompareGpusContentTag.SameCompany],
     component: (props) => (
       <>
         The {props.gpuName} is a {props.marketSegment} graphics card that
@@ -30,7 +28,7 @@ const IntroBlurbSentence1 = compileContentComponent(
   },
   {
     deps: ['company', 'shortGpuName', 'releaseDate'],
-    tags: [ContentTag.Launched],
+    tags: [CompareGpusContentTag.SameCompany],
     component: (props) => (
       <>
         The {props.shortGpuName} is a {props.company} graphics card that
@@ -52,7 +50,7 @@ const IntroBlurbSentence1 = compileContentComponent(
 const IntroBlurbSentence2 = compileContentComponent(
   {
     deps: ['launchPrice'],
-    tags: [ContentTag.Launched],
+    tags: [CompareGpusContentTag.SameCompany],
     component: (props) => (
       <>It launched with prices starting at {props.launchPrice} MSRP.</>
     ),

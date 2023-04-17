@@ -1,14 +1,9 @@
-import { ContentTag, getViewGpuPath } from '@pcpartdb/shared';
-import React, { useContext, useMemo } from 'react';
+import React, { useContext } from 'react';
 import {
   compileContentComponent,
   ContentContext,
 } from '../../../../../shared/content';
-import {
-  DateFormatter,
-  formatOrdinalNumber,
-} from '../../../../../shared/format';
-import { formatGpuField, getGpuName } from '../../../..';
+import { ViewGpuContentTag } from '../../content';
 import { ViewPageContext } from '../../context';
 
 const PerformanceBlurbSentence1 = compileContentComponent({
@@ -34,7 +29,7 @@ const PerformanceBlurbSentence2 = compileContentComponent({
 
 const PerformanceBlurbSentence3 = compileContentComponent(
   {
-    tags: [ContentTag.BestPerformanceForSegmentYear],
+    tags: [ViewGpuContentTag.BestPerformanceForSegmentYear],
     component: () => <></>,
   },
   {
@@ -54,49 +49,8 @@ const PerformanceBlurbSentence3 = compileContentComponent(
 );
 
 export const PerformanceBlurb = () => {
-  const { gpu, contentData } = useContext(ViewPageContext);
-
-  const context = useMemo(() => {
-    const bestPerformanceSegmentGpu = contentData.bestPerformanceGpuForSegment;
-    const bestPerformanceDifference = (
-      100 *
-      (gpu.performanceScore?.value /
-        bestPerformanceSegmentGpu?.performanceScore?.value)
-    ).toFixed(2);
-
-    const tags = contentData.contentTags;
-    const params = {
-      bestPerformanceDifference,
-      bestPerformanceSegmentGpuName: getGpuName(bestPerformanceSegmentGpu),
-      bestPerformanceSegmentGpuPath:
-        bestPerformanceSegmentGpu != null
-          ? getViewGpuPath(bestPerformanceSegmentGpu)
-          : null,
-      company: formatGpuField(gpu.company),
-      marketSegment: formatGpuField(gpu.marketSegment)?.toLowerCase(),
-      performanceRankForCompanySegment:
-        gpu.ranks?.performanceRankForCompanySegment > 1
-          ? formatOrdinalNumber(gpu.ranks?.performanceRankForCompanySegment)
-          : '',
-      performanceRankForSegmentYear:
-        gpu.ranks?.performanceRankForSegmentYear > 1
-          ? formatOrdinalNumber(gpu.ranks?.performanceRankForSegmentYear)
-          : '',
-      performanceRank:
-        gpu.ranks?.performanceRank > 1
-          ? formatOrdinalNumber(gpu.ranks?.performanceRank)
-          : '',
-      shortGpuName: getGpuName(gpu, { company: false }),
-      totalPerformanceGpus: contentData.totalPerformanceGpus,
-      totalPerformanceSegmentYearGpus:
-        contentData.totalPerformanceSegmentYearGpus,
-      year: formatGpuField(gpu.releaseDate, {
-        dateFormatter: DateFormatter.Year,
-      }),
-    };
-
-    return { tags, params };
-  }, [gpu, contentData]);
+  const { gpu, contentParams, contentTags } = useContext(ViewPageContext);
+  const context = { tags: contentTags, params: contentParams };
 
   if (gpu.performanceScore == null) {
     return <></>;

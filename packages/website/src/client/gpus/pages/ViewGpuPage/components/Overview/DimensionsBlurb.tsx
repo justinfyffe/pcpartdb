@@ -1,15 +1,14 @@
-import { ContentTag } from '@pcpartdb/shared';
-import React, { useContext, useMemo } from 'react';
+import React, { useContext } from 'react';
 import {
   compileContentComponent,
   ContentContext,
 } from '../../../../../shared/content';
-import { formatGpuDimensions, formatGpuField, getGpuName } from '../../../..';
+import { ViewGpuContentTag } from '../../content';
 import { ViewPageContext } from '../../context';
 
 const DimensionsBlurbSentence1 = compileContentComponent(
   {
-    tags: [ContentTag.ExtraLargeSize],
+    tags: [ViewGpuContentTag.ExtraLargeSize],
     deps: ['dimensions', 'gpuName'],
     component: (props) => (
       <>
@@ -19,7 +18,7 @@ const DimensionsBlurbSentence1 = compileContentComponent(
     ),
   },
   {
-    tags: [ContentTag.LargeSize],
+    tags: [ViewGpuContentTag.LargeSize],
     deps: ['dimensions', 'gpuName'],
     component: (props) => (
       <>
@@ -29,7 +28,7 @@ const DimensionsBlurbSentence1 = compileContentComponent(
     ),
   },
   {
-    tags: [ContentTag.SmallSize],
+    tags: [ViewGpuContentTag.SmallSize],
     deps: ['dimensions', 'gpuName'],
     component: (props) => (
       <>
@@ -39,7 +38,7 @@ const DimensionsBlurbSentence1 = compileContentComponent(
     ),
   },
   {
-    tags: [ContentTag.CompactSize],
+    tags: [ViewGpuContentTag.CompactSize],
     deps: ['dimensions', 'gpuName'],
     component: (props) => (
       <>
@@ -60,39 +59,27 @@ const DimensionsBlurbSentence1 = compileContentComponent(
 
 const DimensionsBlurbSentence2 = compileContentComponent(
   {
-    deps: ['marketSegment', 'slotWidth', 'slotsUnit'],
+    deps: ['marketSegment', 'slotWidthNoUnits', 'slotWidthUnits'],
     component: (props) => (
       <>
-        This {props.marketSegment} card takes up {props.slotWidth} PCIe{' '}
-        {props.slotsUnit}.
+        This {props.marketSegment} card takes up {props.slotWidthNoUnits} PCIe{' '}
+        {props.slotWidthUnits}.
       </>
     ),
   },
   {
-    deps: ['slotWidth', 'slotsUnit'],
+    deps: ['slotWidthNoUnits', 'slotWidthUnits'],
     component: (props) => (
       <>
-        This card takes up {props.slotWidth} PCIe {props.slotsUnit}.
+        This card takes up {props.slotWidthNoUnits} PCIe {props.slotWidthUnits}.
       </>
     ),
   },
 );
 
 export const DimensionsBlurb = () => {
-  const { gpu, contentData } = useContext(ViewPageContext);
-
-  const context = useMemo(() => {
-    const tags = contentData.contentTags;
-    const params = {
-      dimensions: formatGpuDimensions(gpu, { allowMissingDimensions: true }),
-      marketSegment: formatGpuField(gpu.marketSegment)?.toLowerCase(),
-      gpuName: getGpuName(gpu),
-      slotWidth: formatGpuField(gpu.slotWidth, { showUnits: false }),
-      slotsUnit: gpu.slotWidth?.value === 1 ? 'slot' : 'slots',
-    };
-
-    return { tags, params };
-  }, [contentData.contentTags, gpu]);
+  const { contentParams, contentTags } = useContext(ViewPageContext);
+  const context = { tags: contentTags, params: contentParams };
 
   return (
     <ContentContext.Provider value={context}>

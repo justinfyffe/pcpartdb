@@ -1,11 +1,10 @@
-import { GpuSort } from '@pcpartdb/shared';
-import React, { FunctionComponent, useContext, useMemo } from 'react';
+import React, { FunctionComponent, useContext } from 'react';
 import {
   compileContentComponent,
   ContentComponentParams,
   ContentContext,
 } from '../../../../../shared/content';
-import { formatGpuCompany } from '../../../../utils';
+import { ListGpusContentTag } from '../../content';
 import { ListPageContext } from '../../context';
 
 interface ListTitleContentParams extends ContentComponentParams {
@@ -14,60 +13,46 @@ interface ListTitleContentParams extends ContentComponentParams {
 
 const TitleSentence = compileContentComponent(
   {
-    tags: [GpuSort.PerformanceRating],
+    tags: [ListGpusContentTag.SortedBestPerformance],
     deps: ['company'],
     component: (props: ListTitleContentParams) => (
       <>Best {props.company} graphics cards by performance</>
     ),
   },
   {
-    tags: [GpuSort.ValueRating],
+    tags: [ListGpusContentTag.SortedBestValue],
     deps: ['company'],
     component: (props: ListTitleContentParams) => (
       <>Best {props.company} graphics cards by value</>
     ),
   },
   {
-    tags: [GpuSort.PerformanceRating],
+    tags: [ListGpusContentTag.SortedBestPerformance],
     component: () => <>Best graphics cards by performance</>,
   },
   {
-    tags: [GpuSort.ValueRating],
+    tags: [ListGpusContentTag.SortedBestValue],
     component: () => <>Best graphics cards by value</>,
   },
 );
 
 const SubtitleSentence = compileContentComponent(
   {
-    tags: [GpuSort.PerformanceRating],
+    tags: [ListGpusContentTag.SortedBestPerformance],
     component: () => <>Sorted by highest performance benchmarks</>,
   },
   {
-    tags: [GpuSort.ValueRating],
+    tags: [ListGpusContentTag.SortedBestValue],
     component: () => <>Sorted by performance per dollar</>,
   },
 );
 
 export const ListTitle: FunctionComponent = () => {
-  const { query } = useContext(ListPageContext);
-
-  const contextValue = useMemo(() => {
-    const filters = {
-      [query.orderBy?.sort ?? GpuSort.PerformanceRating]: true,
-    };
-
-    const params: ListTitleContentParams = {
-      company:
-        query.filter?.company?.length === 1
-          ? formatGpuCompany(query.filter?.company[0])
-          : null,
-    };
-
-    return { filters, params };
-  }, [query.filter?.company, query.orderBy?.sort]);
+  const { contentParams, contentTags } = useContext(ListPageContext);
+  const context = { tags: contentTags, params: contentParams };
 
   return (
-    <ContentContext.Provider value={contextValue}>
+    <ContentContext.Provider value={context}>
       <div>
         <h1 className="md:text-2xl text-3xl mb-0">
           <TitleSentence />

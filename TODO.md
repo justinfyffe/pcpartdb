@@ -10,7 +10,13 @@ Retail models
 - how to access? just a link on the page, or a dropdown to select from all retail models.
 
 code cleanup
-- move filesystem utilities to shared
+- cleanup shared
+  - pure utilities
+  - no dependencies that are browser or backend only
+
+- cleanup utilities
+  - more gpu field utils
+    - are equal, compare, has value
 
 Auto-update / pending update remaining work:
 - Bug fix

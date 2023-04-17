@@ -4,7 +4,6 @@ import {
   ContentComponentParams,
   ContentContext,
 } from '../../../../../shared/content';
-import { getGpuName, getShoppingUrl } from '../../../..';
 import { ComparePageContext } from '../../context';
 
 export const IntroSentence1 = compileContentComponent({
@@ -28,18 +27,11 @@ export const IntroSentence2 = compileContentComponent({
 });
 
 export const IntroSummary = () => {
-  const { comparison } = useContext(ComparePageContext);
-  const [gpu1, gpu2] = comparison;
-
-  const params: ContentComponentParams = {
-    gpuName1: getGpuName(gpu1),
-    shoppingUrl1: getShoppingUrl(gpu1),
-    gpuName2: getGpuName(gpu2),
-    shoppingUrl2: getShoppingUrl(gpu2),
-  };
+  const { contentParams, contentTags } = useContext(ComparePageContext);
+  const context = { tags: contentTags, params: contentParams };
 
   return (
-    <ContentContext.Provider value={{ params }}>
+    <ContentContext.Provider value={context}>
       <p>
         <IntroSentence1 /> <IntroSentence2 />
       </p>

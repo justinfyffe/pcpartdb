@@ -3,7 +3,6 @@ import {
   compileContentComponent,
   ContentContext,
 } from '../../../../../shared/content';
-import { getGpuName } from '../../../..';
 import { ComparePageContext } from '../../context';
 
 export const GeneralInfoIntroSentence1 = compileContentComponent({
@@ -17,16 +16,11 @@ export const GeneralInfoIntroSentence1 = compileContentComponent({
 });
 
 export const GeneralInfoIntro = () => {
-  const { comparison } = useContext(ComparePageContext);
-  const [gpu1, gpu2] = comparison;
-
-  const params = {
-    gpuName1: getGpuName(gpu1),
-    gpuName2: getGpuName(gpu2),
-  };
+  const { contentParams, contentTags } = useContext(ComparePageContext);
+  const context = { tags: contentTags, params: contentParams };
 
   return (
-    <ContentContext.Provider value={{ params }}>
+    <ContentContext.Provider value={context}>
       <p className="text-content-dimmed">
         <GeneralInfoIntroSentence1 />
       </p>
