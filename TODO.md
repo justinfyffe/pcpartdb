@@ -1,3 +1,9 @@
+Next tasks:
+- compare page overview
+- improve list page features
+  - filter by year (multiselect combobox), market segment (checkbox)
+  - sort by release date
+
 Retail models
 - gpus table or separate table for simplicity?
   - e.g. gpu_retail_boards
@@ -13,6 +19,7 @@ code cleanup
 - cleanup shared
   - pure utilities
   - no dependencies that are browser or backend only
+  - 
 
 - cleanup utilities
   - more gpu field utils
