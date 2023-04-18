@@ -1,8 +1,11 @@
 import { GpuComparison } from '@pcpartdb/shared';
 import { parse } from 'date-fns';
+import { formatGpuField } from '../../../utils';
 
 export enum CompareGpusContentTag {
   SameCompany = 'SAME_COMPANY',
+  SameMarketSegment = 'SAME_MARKET_SEGMENT',
+  SameReleaseDate = 'SAME_RELEASE_DATE',
   SameReleaseYear = 'SAME_RELEASE_YEAR',
 }
 
@@ -11,15 +14,23 @@ export function getContentTags(comparison: GpuComparison) {
 
   const sameCompany = gpu1.company?.value === gpu2.company?.value;
 
-  const sameReleaseYear = false;
+  const sameMarketSegment =
+    gpu1.marketSegment?.value === gpu2.marketSegment?.value;
+
+  let sameReleaseDate = false;
+  let sameReleaseYear = false;
   if (gpu1.releaseDate?.value != null && gpu2.releaseDate?.value != null) {
     const gpu1Year = parse(gpu1.releaseDate.value, 'yyyy-MM-dd', new Date());
     const gpu2Year = parse(gpu2.releaseDate.value, 'yyyy-MM-dd', new Date());
-    return gpu1Year.getUTCFullYear() === gpu2Year.getUTCFullYear();
+    sameReleaseDate =
+      formatGpuField(gpu1.releaseDate) === formatGpuField(gpu2.releaseDate);
+    sameReleaseYear = gpu1Year.getUTCFullYear() === gpu2Year.getUTCFullYear();
   }
 
   return {
     [CompareGpusContentTag.SameCompany]: sameCompany,
+    [CompareGpusContentTag.SameMarketSegment]: sameMarketSegment,
+    [CompareGpusContentTag.SameReleaseDate]: sameReleaseDate,
     [CompareGpusContentTag.SameReleaseYear]: sameReleaseYear,
   };
 }

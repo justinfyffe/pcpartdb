@@ -3,6 +3,12 @@ Next tasks:
 - improve list page features
   - filter by year (multiselect combobox), market segment (checkbox)
   - sort by release date
+- improve automation
+  - find new gpus automatically
+    - maybe need a two core DO account
+- Depending on if enough traffic for affiliate sales:
+  - cpus
+  - gpu retail models
 
 Retail models
 - gpus table or separate table for simplicity?

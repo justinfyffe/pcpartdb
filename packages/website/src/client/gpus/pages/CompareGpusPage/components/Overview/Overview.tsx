@@ -1,5 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import { IntroBlurb } from './IntroBlurb';
+import { PerformanceBlurb } from './PerformanceBlurb';
 
 export const Overview: FunctionComponent = () => {
   return (
@@ -7,8 +8,8 @@ export const Overview: FunctionComponent = () => {
       <h2>Overview</h2>
 
       <IntroBlurb />
-      {/*<PerformanceBlurb />
-      <ValueBlurb /> */}
+      <PerformanceBlurb />
+      {/* <ValueBlurb /> */}
     </section>
   );
 };

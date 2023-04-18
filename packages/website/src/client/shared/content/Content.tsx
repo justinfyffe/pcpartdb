@@ -47,7 +47,7 @@ const ContentComponent: FunctionComponent<ContentComponentProps> = (props) => {
   const component = useMemo(() => {
     return processContentComponent({
       variants,
-      tags: tags,
+      tags,
       params,
       required,
     });

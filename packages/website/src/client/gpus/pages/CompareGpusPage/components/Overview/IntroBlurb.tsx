@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from 'react';
+import React, { useContext } from 'react';
 import {
   compileContentComponent,
   ContentContext,
@@ -8,40 +8,64 @@ import { ComparePageContext } from '../../context';
 
 const IntroBlurbSentence1 = compileContentComponent(
   {
-    deps: ['gpuName', 'marketSegment', 'releaseDate'],
+    tags: [
+      CompareGpusContentTag.SameCompany,
+      CompareGpusContentTag.SameMarketSegment,
+    ],
+    deps: ['shortGpuName1', 'shortGpuName2', 'company1'],
+    component: (props) => (
+      <>
+        The {props.shortGpuName1} and {props.shortGpuName2} are both{' '}
+        {props.marketSegment1} graphics cards from {props.company1}.
+      </>
+    ),
+  },
+  {
     tags: [CompareGpusContentTag.SameCompany],
+    deps: ['shortGpuName1', 'shortGpuName2', 'company1'],
     component: (props) => (
       <>
-        The {props.gpuName} is a {props.marketSegment} graphics card that
-        released during {props.releaseDate}.
+        The {props.shortGpuName1} and {props.shortGpuName2} are both graphics
+        cards from {props.company1}.
       </>
     ),
   },
   {
-    deps: ['gpuName', 'marketSegment', 'releaseDate'],
+    tags: [CompareGpusContentTag.SameMarketSegment],
+    deps: ['gpuName1', 'gpuName2', 'marketSegment1'],
     component: (props) => (
       <>
-        The {props.gpuName} is a {props.marketSegment} graphics card will
-        released during {props.releaseDate}.
+        The {props.gpuName1} and {props.gpuName2} are both graphics cards that
+        target the {props.marketSegment1} market.
       </>
     ),
   },
   {
-    deps: ['company', 'shortGpuName', 'releaseDate'],
-    tags: [CompareGpusContentTag.SameCompany],
+    tags: [],
+    deps: [
+      'gpuName1',
+      'gpuName2',
+      'shortGpuName1',
+      'shortGpuName2',
+      'marketSegment1',
+      'marketSegment2',
+    ],
     component: (props) => (
       <>
-        The {props.shortGpuName} is a {props.company} graphics card that
-        released during {props.releaseDate}.
+        The {props.gpuName1} and {props.gpuName2} are graphics cards that target
+        different markets, making them difficult to compare. The{' '}
+        {props.shortGpuName1} targets {props.marketSegment1} users, whereas the{' '}
+        {props.shortGpuName2} targets {props.marketSegment2} users.
       </>
     ),
   },
   {
-    deps: ['company', 'shortGpuName', 'releaseDate'],
+    tags: [],
+    deps: ['shortGpuName1', 'shortGpuName2', 'company1', 'company2'],
     component: (props) => (
       <>
-        The {props.shortGpuName} is a {props.company} graphics card will release
-        during {props.releaseDate}.
+        The {props.shortGpuName1} and {props.shortGpuName2} are graphics cards
+        developed by {props.company1} and {props.company2}, respectively.
       </>
     ),
   },
@@ -49,30 +73,52 @@ const IntroBlurbSentence1 = compileContentComponent(
 
 const IntroBlurbSentence2 = compileContentComponent(
   {
-    deps: ['launchPrice'],
-    tags: [CompareGpusContentTag.SameCompany],
+    tags: [CompareGpusContentTag.SameReleaseDate],
+    deps: ['releaseDate1'],
     component: (props) => (
-      <>It launched with prices starting at {props.launchPrice} MSRP.</>
+      <>
+        These two GPUs launched around the same time during {props.releaseDate1}
+        .
+      </>
     ),
   },
   {
-    deps: ['launchPrice'],
+    tags: [CompareGpusContentTag.SameReleaseYear],
+    deps: [
+      'newerShortGpuName',
+      'newerReleaseDate',
+      'olderShortGpuName',
+      'olderReleaseDate',
+    ],
     component: (props) => (
-      <>It is expected to have a MSRP of {props.launchPrice}.</>
+      <>
+        The {props.newerShortGpuName} was released in {props.newerReleaseDate},
+        making it slightly newer than the {props.olderShortGpuName}, which was
+        released in {props.olderReleaseDate}.
+      </>
+    ),
+  },
+  {
+    tags: [],
+    deps: [
+      'newerShortGpuName',
+      'newerReleaseDate',
+      'olderShortGpuName',
+      'olderReleaseDate',
+    ],
+    component: (props) => (
+      <>
+        The {props.newerShortGpuName} was released in {props.newerReleaseDate},
+        making it newer than the {props.olderShortGpuName}, which was released
+        in {props.olderReleaseDate}.
+      </>
     ),
   },
 );
 
 export const IntroBlurb = () => {
-  const { comparison, contentData } = useContext(ComparePageContext);
-  const [gpu1, gpu2] = comparison;
-
-  const context = useMemo(() => {
-    const tags = {};
-    const params = {};
-
-    return { tags, params };
-  }, []);
+  const { contentParams, contentTags } = useContext(ComparePageContext);
+  const context = { tags: contentTags, params: contentParams };
 
   return (
     <ContentContext.Provider value={context}>
@@ -82,35 +128,3 @@ export const IntroBlurb = () => {
     </ContentContext.Provider>
   );
 };
-
-// The RTX 2060 and RTX 4070 are both powerful graphics cards from Nvidia, but they have a number of key differences.
-
-// Architecture
-
-// The RTX 2060 is based on the Turing architecture, while the RTX 4070 is based on the Ada Lovelace architecture. Ada Lovelace is a newer architecture, so it offers a number of performance improvements over Turing.
-
-// CUDA cores
-
-// The RTX 2060 has 1920 CUDA cores, while the RTX 4070 has 7,680 CUDA cores. This means that the RTX 4070 has more than four times as many CUDA cores as the RTX 2060. This increase in CUDA cores leads to a significant improvement in performance.
-
-// Memory
-
-// The RTX 2060 has 6GB of GDDR6 memory, while the RTX 4070 has 12GB of GDDR6X memory. This means that the RTX 4070 has twice as much memory as the RTX 2060. This extra memory can be useful for playing games at high resolutions or with high-quality textures.
-
-// Boost clock
-
-// The RTX 2060 has a boost clock of 1680 MHz, while the RTX 4070 has a boost clock of 2.6 GHz. This means that the RTX 4070 is significantly faster than the RTX 2060.
-
-// TDP
-
-// The RTX 2060 has a TDP of 160W, while the RTX 4070 has a TDP of 200W. This means that the RTX 4070 requires more power than the RTX 2060.
-
-// Price
-
-// The RTX 2060 was released at a starting price of $349, while the RTX 4070 is expected to have a starting price of $800. This means that the RTX 4070 is significantly more expensive than the RTX 2060.
-
-// Overall
-
-// The RTX 4070 is a significant upgrade over the RTX 2060. It offers better performance, more memory, a faster boost clock, and a higher TDP. However, it is also significantly more expensive than the RTX 2060.
-
-// If you are looking for the best possible performance and you don't mind spending more money, then the RTX 4070 is the way to go. But if you are on a budget or you don't need the latest features, then the RTX 2060 is still a great option.
