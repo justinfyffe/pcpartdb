@@ -10,6 +10,7 @@ Next tasks:
   - Mobile Workstation?
 - audit data
   - make sure market segments and launch prices are correct
+  - turn off auto-update on static specs
 - view page overview
   - use ai to reword sentences.
   - add memory, cores?
