@@ -11,12 +11,45 @@ const PerformanceBlurbSentence1 = compileContentComponent({
   deps: ['fasterShortGpuName', 'slowerShortGpuName', 'fasterPerformanceFactor'],
   component: (props) => (
     <>
-      The {props.fasterShortGpuName} is a stronger card, delivering{' '}
-      {props.fasterPerformanceFactor} better performance than the{' '}
-      {props.slowerShortGpuName}.
+      The {props.fasterShortGpuName} is a more powerful card than the{' '}
+      {props.slowerShortGpuName}, delivering approximately{' '}
+      {props.fasterPerformanceFactor} better performance.
     </>
   ),
 });
+
+const PerformanceBlurbSentence2 = compileContentComponent(
+  {
+    tags: [CompareGpusContentTag.DifferentBetterPerformanceAndValue],
+    deps: [
+      'higherValueShortGpuName',
+      'lowerValueShortGpuName',
+      'betterValueFactor',
+    ],
+    component: (props) => (
+      <>
+        Despite being slower, the {props.higherValueShortGpuName} offers better
+        value for money, with a {props.betterValueFactor} higher performance per
+        dollar.
+      </>
+    ),
+  },
+  {
+    tags: [],
+    deps: [
+      'higherValueShortGpuName',
+      'lowerValueShortGpuName',
+      'betterValueFactor',
+    ],
+    component: (props) => (
+      <>
+        The {props.higherValueShortGpuName} also has {props.betterValueFactor}{' '}
+        better value with a higher performance per dollar than the{' '}
+        {props.lowerValueShortGpuName}.
+      </>
+    ),
+  },
+);
 
 export const PerformanceBlurb = () => {
   const { contentParams, contentTags } = useContext(ComparePageContext);
@@ -25,7 +58,7 @@ export const PerformanceBlurb = () => {
   return (
     <ContentContext.Provider value={context}>
       <p>
-        <PerformanceBlurbSentence1 />
+        <PerformanceBlurbSentence1 /> <PerformanceBlurbSentence2 />
       </p>
     </ContentContext.Provider>
   );

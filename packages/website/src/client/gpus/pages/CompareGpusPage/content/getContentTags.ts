@@ -7,6 +7,7 @@ export enum CompareGpusContentTag {
   SameMarketSegment = 'SAME_MARKET_SEGMENT',
   SameReleaseDate = 'SAME_RELEASE_DATE',
   SameReleaseYear = 'SAME_RELEASE_YEAR',
+  DifferentBetterPerformanceAndValue = 'DIFFERENT_BETTER_PERFORMANCE_AND_VALUE',
 }
 
 export function getContentTags(comparison: GpuComparison) {
@@ -27,10 +28,28 @@ export function getContentTags(comparison: GpuComparison) {
     sameReleaseYear = gpu1Year.getUTCFullYear() === gpu2Year.getUTCFullYear();
   }
 
+  let differentBetterPerformanceAndValue = false;
+  if (
+    gpu1.performanceScore?.value != null &&
+    gpu2.performanceScore?.value != null &&
+    gpu1.valueScore?.value != null &&
+    gpu2.valueScore?.value != null
+  ) {
+    const performanceScore1 = gpu1.performanceScore?.value;
+    const performanceScore2 = gpu2.performanceScore?.value;
+    const valueScore1 = gpu1.valueScore?.value;
+    const valueScore2 = gpu2.valueScore?.value;
+    differentBetterPerformanceAndValue =
+      (performanceScore1 > performanceScore2 && valueScore2 > valueScore1) ||
+      (performanceScore2 > performanceScore1 && valueScore1 > valueScore2);
+  }
+
   return {
     [CompareGpusContentTag.SameCompany]: sameCompany,
     [CompareGpusContentTag.SameMarketSegment]: sameMarketSegment,
     [CompareGpusContentTag.SameReleaseDate]: sameReleaseDate,
     [CompareGpusContentTag.SameReleaseYear]: sameReleaseYear,
+    [CompareGpusContentTag.DifferentBetterPerformanceAndValue]:
+      differentBetterPerformanceAndValue,
   };
 }

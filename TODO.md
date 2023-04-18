@@ -1,5 +1,18 @@
 Next tasks:
 - compare page overview
+  - add dimensions blurb
+  - add power supply blurb
+  - use ai to reword sentences.
+  - add ranks
+  - add memory, cores?
+- new market segments
+  - Integrated
+  - Mobile Workstation?
+- audit data
+  - make sure market segments and launch prices are correct
+- view page overview
+  - use ai to reword sentences.
+  - add memory, cores?
 - improve list page features
   - filter by year (multiselect combobox), market segment (checkbox)
   - sort by release date

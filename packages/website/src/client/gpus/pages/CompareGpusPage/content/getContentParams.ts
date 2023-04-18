@@ -25,6 +25,9 @@ export interface CompareGpusContentParams {
   fasterShortGpuName?: string;
   slowerShortGpuName?: string;
   fasterPerformanceFactor?: string;
+  higherValueShortGpuName?: string;
+  lowerValueShortGpuName?: string;
+  betterValueFactor?: string;
 }
 
 export function getContentParams(
@@ -96,6 +99,25 @@ export function getContentParams(
     }
   }
 
+  let higherValueShortGpuName: string,
+    lowerValueShortGpuName: string,
+    betterValueFactor: string;
+  if (gpu1.valueScore?.value != null && gpu2.valueScore?.value != null) {
+    const valueScore1 = gpu1.valueScore?.value;
+    const valueScore2 = gpu2.valueScore?.value;
+    if (valueScore1 > valueScore2) {
+      higherValueShortGpuName = getGpuName(gpu1, { company: false });
+      lowerValueShortGpuName = getGpuName(gpu2, { company: false });
+      betterValueFactor =
+        ((valueScore1 / valueScore2 - 1) * 100).toFixed(2) + '%';
+    } else if (valueScore1 < valueScore2) {
+      lowerValueShortGpuName = getGpuName(gpu1, { company: false });
+      higherValueShortGpuName = getGpuName(gpu2, { company: false });
+      betterValueFactor =
+        ((valueScore2 / valueScore1 - 1) * 100).toFixed(2) + '%';
+    }
+  }
+
   return {
     company1,
     company2,
@@ -118,5 +140,8 @@ export function getContentParams(
     fasterShortGpuName,
     slowerShortGpuName,
     fasterPerformanceFactor,
+    higherValueShortGpuName,
+    lowerValueShortGpuName,
+    betterValueFactor,
   } as CompareGpusContentParams as ContentParams;
 }
