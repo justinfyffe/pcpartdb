@@ -7,6 +7,8 @@ export enum CompareGpusContentTag {
   SameMarketSegment = 'SAME_MARKET_SEGMENT',
   SameReleaseDate = 'SAME_RELEASE_DATE',
   SameReleaseYear = 'SAME_RELEASE_YEAR',
+  SameLength = 'SAME_LENGTH',
+  SameSlotWidth = 'SAME_SLOT_WIDTH',
   DifferentBetterPerformanceAndValue = 'DIFFERENT_BETTER_PERFORMANCE_AND_VALUE',
 }
 
@@ -44,6 +46,9 @@ export function getContentTags(comparison: GpuComparison) {
       (performanceScore2 > performanceScore1 && valueScore1 > valueScore2);
   }
 
+  const sameLength = gpu1.length?.value === gpu2.length?.value;
+  const sameSlotWidth = gpu1.slotWidth?.value === gpu2.slotWidth?.value;
+
   return {
     [CompareGpusContentTag.SameCompany]: sameCompany,
     [CompareGpusContentTag.SameMarketSegment]: sameMarketSegment,
@@ -51,5 +56,7 @@ export function getContentTags(comparison: GpuComparison) {
     [CompareGpusContentTag.SameReleaseYear]: sameReleaseYear,
     [CompareGpusContentTag.DifferentBetterPerformanceAndValue]:
       differentBetterPerformanceAndValue,
+    [CompareGpusContentTag.SameSlotWidth]: sameSlotWidth,
+    [CompareGpusContentTag.SameLength]: sameLength,
   };
 }

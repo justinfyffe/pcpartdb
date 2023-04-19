@@ -15,7 +15,7 @@ const IntroBlurbSentence1 = compileContentComponent(
     deps: ['shortGpuName1', 'shortGpuName2', 'company1'],
     component: (props) => (
       <>
-        The {props.shortGpuName1} and {props.shortGpuName2} are both{' '}
+        The {props.shortGpuName1} and {props.shortGpuName2} are{' '}
         {props.marketSegment1} graphics cards from {props.company1}.
       </>
     ),
@@ -25,8 +25,8 @@ const IntroBlurbSentence1 = compileContentComponent(
     deps: ['shortGpuName1', 'shortGpuName2', 'company1'],
     component: (props) => (
       <>
-        The {props.shortGpuName1} and {props.shortGpuName2} are both graphics
-        cards from {props.company1}.
+        The {props.shortGpuName1} and {props.shortGpuName2} are graphics cards
+        from {props.company1}.
       </>
     ),
   },
@@ -35,8 +35,8 @@ const IntroBlurbSentence1 = compileContentComponent(
     deps: ['gpuName1', 'gpuName2', 'marketSegment1'],
     component: (props) => (
       <>
-        The {props.gpuName1} and {props.gpuName2} are both graphics cards that
-        target the {props.marketSegment1} market.
+        The {props.gpuName1} and {props.gpuName2} are graphics cards that target
+        the {props.marketSegment1} market.
       </>
     ),
   },
@@ -76,10 +76,7 @@ const IntroBlurbSentence2 = compileContentComponent(
     tags: [CompareGpusContentTag.SameReleaseDate],
     deps: ['releaseDate1'],
     component: (props) => (
-      <>
-        These two GPUs launched around the same time during {props.releaseDate1}
-        .
-      </>
+      <>They launched around the same time during {props.releaseDate1}.</>
     ),
   },
   {

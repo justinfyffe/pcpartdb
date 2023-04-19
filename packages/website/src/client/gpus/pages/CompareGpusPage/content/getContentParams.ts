@@ -1,7 +1,12 @@
 import { CompareGpusContentData, GpuComparison } from '@pcpartdb/shared';
 import { ContentParams } from 'packages/website/src/client/shared/content';
 import { DateFormatter } from 'packages/website/src/client/shared/format';
-import { formatGpuField, getGpuName, getShoppingUrl } from '../../../utils';
+import {
+  formatGpuDimensions,
+  formatGpuField,
+  getGpuName,
+  getShoppingUrl,
+} from '../../../utils';
 
 export interface CompareGpusContentParams {
   company1?: string;
@@ -10,12 +15,12 @@ export interface CompareGpusContentParams {
   gpuName2?: string;
   marketSegment1?: string;
   marketSegment2?: string;
+  releaseDate1?: string;
+  releaseDate2?: string;
   shoppingUrl1?: string;
   shoppingUrl2?: string;
   shortGpuName1?: string;
   shortGpuName2?: string;
-  releaseDate1?: string;
-  releaseDate2?: string;
   year1?: string;
   year2?: string;
   newerShortGpuName?: string;
@@ -28,6 +33,12 @@ export interface CompareGpusContentParams {
   higherValueShortGpuName?: string;
   lowerValueShortGpuName?: string;
   betterValueFactor?: string;
+  slotWidth1?: string;
+  slotWidth2?: string;
+  length1?: string;
+  length2?: string;
+  dimensions1?: string;
+  dimensions2?: string;
 }
 
 export function getContentParams(
@@ -118,6 +129,17 @@ export function getContentParams(
     }
   }
 
+  const slotWidth1 = formatGpuField(gpu1.slotWidth, { showUnits: false });
+  const slotWidth2 = formatGpuField(gpu2.slotWidth, { showUnits: false });
+  const length1 = formatGpuField(gpu1.length);
+  const length2 = formatGpuField(gpu2.length);
+  const dimensions1 = formatGpuDimensions(gpu1, {
+    allowMissingDimensions: false,
+  });
+  const dimensions2 = formatGpuDimensions(gpu2, {
+    allowMissingDimensions: false,
+  });
+
   return {
     company1,
     company2,
@@ -143,5 +165,11 @@ export function getContentParams(
     higherValueShortGpuName,
     lowerValueShortGpuName,
     betterValueFactor,
+    slotWidth1,
+    slotWidth2,
+    length1,
+    length2,
+    dimensions1,
+    dimensions2,
   } as CompareGpusContentParams as ContentParams;
 }
