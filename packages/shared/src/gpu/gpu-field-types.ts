@@ -3,11 +3,6 @@ import { Gpu, GpuDataSourceKey } from './gpu-types';
 
 export type GpuFieldKey = keyof Gpu;
 
-export interface GpuFieldDataSource {
-  source?: GpuDataSourceKey;
-  enabled?: boolean;
-}
-
 export interface GpuFieldMeta {
   fieldKey?: GpuFieldKey;
   currency?: string;

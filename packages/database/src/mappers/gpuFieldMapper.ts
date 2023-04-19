@@ -47,8 +47,11 @@ export function mapToGpuFieldEntity<TReturn, TEntity>(
   metadata: GpuFieldsMetaJson,
 ) {
   const field = fields?.[key] as GpuField<TReturn>;
+  if (field?.meta?.source != null) {
+    delete field.meta.source;
+  }
 
-  metadata.fields = metadata.fields ?? {};
-  metadata.fields[key as string] = field?.meta ?? null;
+  metadata.fields = metadata.fields || {};
+  metadata.fields[key as string] = field?.meta || null;
   return field?.value ?? null;
 }

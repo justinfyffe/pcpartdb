@@ -94,7 +94,6 @@ export const ScrapeGpuField: FunctionComponent<ScrapeGpuFieldProps> = (
   );
 
   const [checked, setChecked] = useState(() => false);
-  const [source] = useState(() => fields[key]?.value?.meta?.source);
 
   useEffect(() => {
     if (fields[key] == null) {
@@ -112,11 +111,10 @@ export const ScrapeGpuField: FunctionComponent<ScrapeGpuFieldProps> = (
     } else {
       fields[key].enabled = true;
       fields[key].value.meta.autoUpdate = true;
-      fields[key].value.meta.source = source;
     }
 
     setChecked(!checked);
-  }, [checked, fields, key, source]);
+  }, [checked, fields, key]);
 
   return (
     <Tr onClick={handleClick} className="hover:bg-gray-200 cursor-pointer">

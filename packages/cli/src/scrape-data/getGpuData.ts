@@ -58,38 +58,22 @@ async function scrapeGpuData(source: GpuSource, proxy?: boolean) {
 function decorateGpu(gpu: Partial<Gpu>, source: GpuSource) {
   gpu.marketSegment = {
     value: source.marketSegment,
-    meta: {
-      fieldKey: 'marketSegment',
-      autoUpdate: source.marketSegment != null,
-      source: GpuDataSourceKey.VideocardBenchmarks,
-    },
+    meta: { fieldKey: 'marketSegment', autoUpdate: true },
   };
 
   gpu.g3dMark = {
     value: source.g3dMark,
-    meta: {
-      fieldKey: 'g3dMark',
-      autoUpdate: source.g3dMark != null,
-      source: GpuDataSourceKey.VideocardBenchmarks,
-    },
+    meta: { fieldKey: 'g3dMark', autoUpdate: true },
   };
 
   gpu.g2dMark = {
     value: source.g2dMark,
-    meta: {
-      fieldKey: 'g2dMark',
-      autoUpdate: source.g2dMark != null,
-      source: GpuDataSourceKey.VideocardBenchmarks,
-    },
+    meta: { fieldKey: 'g2dMark', autoUpdate: true },
   };
 
   gpu.timespyGraphics = {
     value: source.timespyScore,
-    meta: {
-      fieldKey: 'timespyGraphics',
-      autoUpdate: source.timespyScore != null,
-      source: GpuDataSourceKey.VideocardBenchmarks,
-    },
+    meta: { fieldKey: 'timespyGraphics', autoUpdate: true },
   };
 
   gpu.meta = {

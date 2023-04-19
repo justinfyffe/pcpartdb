@@ -1,6 +1,5 @@
 import {
   Gpu,
-  GpuDataSourceKey,
   GpuField,
   MarketSegmentValue,
   ScrapeGpuDetailsResponse,
@@ -36,7 +35,6 @@ function getG3dMark($: cheerio.CheerioAPI): GpuField<number> {
     value,
     meta: {
       fieldKey: 'g3dMark',
-      source: GpuDataSourceKey.VideocardBenchmarks,
       autoUpdate: true,
     },
   };
@@ -57,7 +55,6 @@ function getG2dMark($: cheerio.CheerioAPI): GpuField<number> {
     value,
     meta: {
       fieldKey: 'g2dMark',
-      source: GpuDataSourceKey.VideocardBenchmarks,
       autoUpdate: true,
     },
   };
@@ -86,7 +83,6 @@ function getMarketSegment($: cheerio.CheerioAPI): GpuField<MarketSegmentValue> {
     value,
     meta: {
       fieldKey: 'marketSegment',
-      source: GpuDataSourceKey.VideocardBenchmarks,
       autoUpdate: true,
     },
   };
