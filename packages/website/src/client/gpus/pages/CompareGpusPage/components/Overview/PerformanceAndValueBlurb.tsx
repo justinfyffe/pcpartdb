@@ -6,7 +6,7 @@ import {
 import { CompareGpusContentTag } from '../../content';
 import { ComparePageContext } from '../../context';
 
-const PerformanceBlurbSentence1 = compileContentComponent({
+const PerformanceAndValueBlurbSentence1 = compileContentComponent({
   tags: [],
   deps: ['fasterShortGpuName', 'slowerShortGpuName', 'fasterPerformanceFactor'],
   component: (props) => (
@@ -18,7 +18,7 @@ const PerformanceBlurbSentence1 = compileContentComponent({
   ),
 });
 
-const PerformanceBlurbSentence2 = compileContentComponent(
+const PerformanceAndValueBlurbSentence2 = compileContentComponent(
   {
     tags: [CompareGpusContentTag.DifferentBetterPerformanceAndValue],
     deps: [
@@ -51,14 +51,15 @@ const PerformanceBlurbSentence2 = compileContentComponent(
   },
 );
 
-export const PerformanceBlurb = () => {
+export const PerformanceAndValueBlurb = () => {
   const { contentParams, contentTags } = useContext(ComparePageContext);
   const context = { tags: contentTags, params: contentParams };
 
   return (
     <ContentContext.Provider value={context}>
       <p>
-        <PerformanceBlurbSentence1 /> <PerformanceBlurbSentence2 />
+        <PerformanceAndValueBlurbSentence1 />{' '}
+        <PerformanceAndValueBlurbSentence2 />
       </p>
     </ContentContext.Provider>
   );
