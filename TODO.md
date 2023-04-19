@@ -1,6 +1,4 @@
 Next tasks:
-- Bug fixes
-  - gpu updater is not respecting "autoUpdate" field
 - compare page overview
   - add dimensions blurb
   - add power supply blurb
@@ -13,6 +11,7 @@ Next tasks:
 - audit data
   - make sure market segments and launch prices are correct
   - turn off auto-update on static specs
+    - maybe a freeze button which toggles off auto-update
 - view page overview
   - use ai to reword sentences.
   - add memory, cores?

@@ -43,6 +43,7 @@ export class GpuController {
               'company',
               'releaseDate',
               'marketSegment',
+              'launchPrice',
               'performanceScore',
               'valueScore',
             ],
