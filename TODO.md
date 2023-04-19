@@ -1,4 +1,6 @@
 Next tasks:
+- Bug fixes
+  - gpu updater is not respecting "autoUpdate" field
 - compare page overview
   - add dimensions blurb
   - add power supply blurb
