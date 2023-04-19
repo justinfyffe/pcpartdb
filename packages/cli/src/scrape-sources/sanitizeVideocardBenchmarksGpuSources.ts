@@ -1,6 +1,5 @@
 import { VideocardBenchmarksGpuSource } from '@pcpartdb/scraper';
 import { MarketSegmentValue } from '@pcpartdb/shared';
-import { parse } from 'date-fns';
 import * as fs from 'fs';
 import * as fsPromises from 'fs/promises';
 import { videocardBenchmarksDataPath } from './utils';
@@ -73,14 +72,13 @@ function sanitize(gpu: RawGpuSource): VideocardBenchmarksGpuSource {
   const marketSegment = getMarketSegment(gpu);
   const g3dMark = getG3dMark(gpu);
   const g2dMark = getG2dMark(gpu);
-  const releaseDate = getReleaseDate(gpu);
   const url = getUrl(gpu);
 
-  if (g3dMark == null || releaseDate == null || url == null) {
+  if (g3dMark == null || url == null) {
     return null;
   }
 
-  return { name, company, url, marketSegment, g3dMark, g2dMark, releaseDate };
+  return { name, company, url, marketSegment, g3dMark, g2dMark };
 }
 
 function parseRawName(rawName: string) {
@@ -136,12 +134,4 @@ function getG2dMark(gpu: RawGpuSource) {
   const value = Number(cleanG2d);
 
   return Number.isNaN(value) ? null : value;
-}
-
-function getReleaseDate(gpu: RawGpuSource) {
-  if (gpu.date == null) {
-    return null;
-  }
-
-  return parse(gpu.date, 'MMM yyyy', new Date()).getTime();
 }

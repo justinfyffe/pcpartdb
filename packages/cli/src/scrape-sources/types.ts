@@ -10,7 +10,6 @@ export interface GpuSource {
   name?: string;
   company?: string;
   marketSegment?: MarketSegmentValue;
-  releaseDate?: number;
   g3dMark?: number;
   g2dMark?: number;
   timespyScore?: number;

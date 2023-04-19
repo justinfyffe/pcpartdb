@@ -6,6 +6,5 @@ export interface VideocardBenchmarksGpuSource {
   marketSegment: MarketSegmentValue;
   g3dMark: number;
   g2dMark: number;
-  releaseDate: number;
   url: string;
 }

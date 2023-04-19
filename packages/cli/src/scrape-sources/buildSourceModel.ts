@@ -52,7 +52,6 @@ export async function buildSourceModel() {
       g3dMark: orig.g3dMark || data.g3dMark,
       marketSegment: orig.marketSegment || data.marketSegment,
       videocardBenchmarksUrl: orig.videocardBenchmarksUrl || data.url,
-      releaseDate: orig.releaseDate || data.releaseDate,
       company: orig.company || data.company,
     };
   });
