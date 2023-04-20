@@ -62,8 +62,8 @@ const MemoryBlurbSentence2 = compileContentComponent(
     component: (props) => (
       <>
         It has {props.moreMemorySize} of {props.moreMemoryType} memory with a
-        bandwidth ({props.moreMemoryInterface} interface,{' '}
-        {props.moreMemoryClock} clock), whereas the{' '}
+        bandwidth of {props.moreMemoryBandwidth} ({props.moreMemoryInterface}{' '}
+        interface, {props.moreMemoryClock} clock), whereas the{' '}
         {props.lessMemorySizeShortGpuName} has {props.lessMemorySize} of{' '}
         {props.lessMemoryType} memory with a bandwidth of{' '}
         {props.lessMemoryBandwidth} ({props.lessMemoryInterface} interface,{' '}
@@ -86,17 +86,20 @@ const MemoryBlurbSentence2 = compileContentComponent(
     ],
     component: (props) => (
       <>
-        It has {props.moreMemorySize} of memory with a bandwidth (
-        {props.moreMemoryInterface} interface, {props.moreMemoryClock} clock),
-        whereas the {props.lessMemorySizeShortGpuName} has{' '}
-        {props.lessMemorySize} of memory with a bandwidth of{' '}
-        {props.lessMemoryBandwidth} ({props.lessMemoryInterface} interface,{' '}
-        {props.lessMemoryClock} clock).
+        It has {props.moreMemorySize} of memory with a bandwidth of{' '}
+        {props.moreMemoryBandwidth} ({props.moreMemoryInterface} interface,{' '}
+        {props.moreMemoryClock} clock), whereas the{' '}
+        {props.lessMemorySizeShortGpuName} has {props.lessMemorySize} of memory
+        with a bandwidth of {props.lessMemoryBandwidth} (
+        {props.lessMemoryInterface} interface, {props.lessMemoryClock} clock).
       </>
     ),
   },
   {
-    tags: [CompareGpusContentTag.DifferentMemoryBandwidth],
+    tags: [
+      CompareGpusContentTag.DifferentMemorySize,
+      CompareGpusContentTag.DifferentMemoryBandwidth,
+    ],
     deps: [
       'moreMemorySize',
       'moreMemoryBandwidth',
@@ -106,9 +109,29 @@ const MemoryBlurbSentence2 = compileContentComponent(
     ],
     component: (props) => (
       <>
-        It has {props.moreMemorySize} of memory with a bandwidth, whereas the{' '}
+        It has {props.moreMemorySize} of memory with a bandwidth of{' '}
+        {props.moreMemoryBandwidth}, whereas the{' '}
         {props.lessMemorySizeShortGpuName} has {props.lessMemorySize} of memory
         with a bandwidth of {props.lessMemoryBandwidth}.
+      </>
+    ),
+  },
+  {
+    tags: [
+      CompareGpusContentTag.SameMemorySize,
+      CompareGpusContentTag.DifferentMemoryBandwidth,
+    ],
+    deps: [
+      'shortGpuName1',
+      'shortGpuName2',
+      'memoryBandwidth1',
+      'memoryBandwidth2',
+    ],
+    component: (props) => (
+      <>
+        {props.shortGpuName1}&apos;s memory has a bandwidth of{' '}
+        {props.memoryBandwidth1}, whereas the {props.shortGpuName2} has a memory
+        bandwidth of {props.memoryBandwidth2}.
       </>
     ),
   },

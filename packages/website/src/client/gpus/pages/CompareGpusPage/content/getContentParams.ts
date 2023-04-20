@@ -44,6 +44,7 @@ export interface CompareGpusContentParams {
   memoryType1?: string;
   memoryType2?: string;
   memoryBandwidth1?: string;
+  memoryBandwidth2?: string;
   moreMemorySizeShortGpuName?: string;
   moreMemorySize?: string;
   moreMemoryType?: string;
@@ -203,6 +204,7 @@ function getMemoryParams(comparison: GpuComparison) {
     memoryType1: formatGpuField(gpu1.memoryType),
     memoryType2: formatGpuField(gpu2.memoryType),
     memoryBandwidth1: formatGpuField(gpu1.memoryBandwidth),
+    memoryBandwidth2: formatGpuField(gpu2.memoryBandwidth),
     moreMemorySizeShortGpuName: getGpuName(moreMemoryGpu, { company: false }),
     moreMemorySize: formatGpuField(moreMemoryGpu?.memorySize),
     moreMemoryType: formatGpuField(moreMemoryGpu?.memoryType),
