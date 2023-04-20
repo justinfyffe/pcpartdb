@@ -1,4 +1,4 @@
-import { CompareGpusContentData, GpuComparison } from '@pcpartdb/shared';
+import { Gpu, GpuComparison, GpuFieldKey } from '@pcpartdb/shared';
 import { ContentParams } from 'packages/website/src/client/shared/content';
 import { DateFormatter } from 'packages/website/src/client/shared/format';
 import {
@@ -39,12 +39,26 @@ export interface CompareGpusContentParams {
   length2?: string;
   dimensions1?: string;
   dimensions2?: string;
+
+  memorySize1?: string;
+  memoryType1?: string;
+  memoryType2?: string;
+  memoryBandwidth1?: string;
+  moreMemorySizeShortGpuName?: string;
+  moreMemorySize?: string;
+  moreMemoryType?: string;
+  moreMemoryInterface?: string;
+  moreMemoryClock?: string;
+  moreMemoryBandwidth?: string;
+  lessMemorySizeShortGpuName?: string;
+  lessMemorySize?: string;
+  lessMemoryType?: string;
+  lessMemoryInterface?: string;
+  lessMemoryClock?: string;
+  lessMemoryBandwidth?: string;
 }
 
-export function getContentParams(
-  comparison: GpuComparison,
-  contentData: CompareGpusContentData,
-) {
+export function getContentParams(comparison: GpuComparison) {
   const [gpu1, gpu2] = comparison;
 
   const company1 = formatGpuField(gpu1.company);
@@ -171,5 +185,57 @@ export function getContentParams(
     length2,
     dimensions1,
     dimensions2,
+    ...getMemoryParams(comparison),
   } as CompareGpusContentParams as ContentParams;
+}
+
+function getMemoryParams(comparison: GpuComparison) {
+  const [gpu1, gpu2] = comparison;
+
+  const [moreMemoryGpu, lessMemoryGpu] = getGreaterAndLesserGpuFromField(
+    gpu1,
+    gpu2,
+    'memorySize',
+  );
+
+  return {
+    memorySize1: formatGpuField(gpu1.memorySize),
+    memoryType1: formatGpuField(gpu1.memoryType),
+    memoryType2: formatGpuField(gpu2.memoryType),
+    memoryBandwidth1: formatGpuField(gpu1.memoryBandwidth),
+    moreMemorySizeShortGpuName: getGpuName(moreMemoryGpu, { company: false }),
+    moreMemorySize: formatGpuField(moreMemoryGpu?.memorySize),
+    moreMemoryType: formatGpuField(moreMemoryGpu?.memoryType),
+    moreMemoryInterface: formatGpuField(moreMemoryGpu?.memoryInterface),
+    moreMemoryClock: formatGpuField(moreMemoryGpu?.memoryClock),
+    moreMemoryBandwidth: formatGpuField(moreMemoryGpu?.memoryBandwidth),
+    lessMemorySizeShortGpuName: getGpuName(lessMemoryGpu, { company: false }),
+    lessMemorySize: formatGpuField(lessMemoryGpu?.memorySize),
+    lessMemoryType: formatGpuField(lessMemoryGpu?.memoryType),
+    lessMemoryInterface: formatGpuField(lessMemoryGpu?.memoryInterface),
+    lessMemoryClock: formatGpuField(lessMemoryGpu?.memoryClock),
+    lessMemoryBandwidth: formatGpuField(lessMemoryGpu?.memoryBandwidth),
+  } as CompareGpusContentParams as ContentParams;
+}
+
+export function getGreaterAndLesserGpuFromField(
+  gpu1: Gpu,
+  gpu2: Gpu,
+  fieldKey: GpuFieldKey,
+) {
+  const field1 = gpu1?.[fieldKey];
+  const field2 = gpu2?.[fieldKey];
+  if (typeof field1 !== 'object' || typeof field2 !== 'object') {
+    return [null, null];
+  }
+
+  if (!('value' in field1 && 'value' in field2)) {
+    return [null, null];
+  }
+
+  if (field1.value === field2.value) {
+    return [null, null];
+  }
+
+  return field1.value > field2.value ? [gpu1, gpu2] : [gpu2, gpu1];
 }

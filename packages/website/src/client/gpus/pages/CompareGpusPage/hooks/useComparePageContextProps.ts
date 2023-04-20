@@ -11,7 +11,7 @@ export function useComparePageContextProps(input: {
     const comparison: GpuComparison = [...input.comparison];
     const contentData = { ...input.contentData };
     const contentTags = getContentTags(comparison);
-    const contentParams = getContentParams(comparison, contentData);
+    const contentParams = getContentParams(comparison);
 
     return {
       comparison,

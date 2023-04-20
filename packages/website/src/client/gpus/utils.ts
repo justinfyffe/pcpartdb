@@ -14,7 +14,7 @@ import {
   formatPrice,
 } from '../shared/format';
 
-interface GetGpuNameOptions {
+export interface GetGpuNameOptions {
   company?: boolean;
 }
 

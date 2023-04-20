@@ -1,5 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import { IntroBlurb } from './IntroBlurb';
+import { MemoryBlurb } from './MemoryBlurb';
 import { PerformanceAndValueBlurb } from './PerformanceAndValueBlurb';
 
 export const Overview: FunctionComponent = () => {
@@ -9,6 +10,7 @@ export const Overview: FunctionComponent = () => {
 
       <IntroBlurb />
       <PerformanceAndValueBlurb />
+      <MemoryBlurb />
     </section>
   );
 };

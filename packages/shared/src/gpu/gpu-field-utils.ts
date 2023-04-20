@@ -75,9 +75,9 @@ const memoryMultiplier: Record<MemoryUnit, number> = {
 };
 
 const memoryFormats: Record<MemoryUnit, string> = {
-  [MemoryUnit.kb]: 'kb',
-  [MemoryUnit.mb]: 'mb',
-  [MemoryUnit.gb]: 'gb',
+  [MemoryUnit.kb]: 'KB',
+  [MemoryUnit.mb]: 'MB',
+  [MemoryUnit.gb]: 'GB',
 };
 
 const numericMultiplier: Record<NumericUnit, number> = {

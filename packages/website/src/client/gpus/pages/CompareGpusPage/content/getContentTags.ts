@@ -10,6 +10,12 @@ export enum CompareGpusContentTag {
   SameLength = 'SAME_LENGTH',
   SameSlotWidth = 'SAME_SLOT_WIDTH',
   DifferentBetterPerformanceAndValue = 'DIFFERENT_BETTER_PERFORMANCE_AND_VALUE',
+  SameMemorySize = 'SAME_MEMORY_SIZE',
+  SameMemoryType = 'SAME_MEMORY_TYPE',
+  SameMemoryBandwidth = 'SAME_MEMORY_BANDWIDTH',
+  DifferentMemorySize = 'DIFFERENT_MEMORY_SIZE',
+  DifferentMemoryBandwidth = 'DIFFERENT_MEMORY_BANDWIDTH',
+  MoreMemorySizeAndBandwidth = 'MORE_MEMORY_SIZE_AND_BANDWIDTH',
 }
 
 export function getContentTags(comparison: GpuComparison) {
@@ -58,5 +64,91 @@ export function getContentTags(comparison: GpuComparison) {
       differentBetterPerformanceAndValue,
     [CompareGpusContentTag.SameSlotWidth]: sameSlotWidth,
     [CompareGpusContentTag.SameLength]: sameLength,
+    [CompareGpusContentTag.SameMemorySize]: hasSameMemorySize(comparison),
+    [CompareGpusContentTag.SameMemoryType]: hasSameMemoryType(comparison),
+    [CompareGpusContentTag.SameMemoryBandwidth]:
+      hasSameMemoryBandwidth(comparison),
+    [CompareGpusContentTag.DifferentMemoryBandwidth]:
+      hasDifferentMemoryBandwidth(comparison),
+    [CompareGpusContentTag.DifferentMemorySize]:
+      hasDifferentMemorySize(comparison),
+    [CompareGpusContentTag.MoreMemorySizeAndBandwidth]:
+      hasMoreMemorySizeAndBandwidth(comparison),
   };
+}
+
+function hasSameMemorySize(comparison: GpuComparison) {
+  const [gpu1, gpu2] = comparison;
+
+  if (gpu1.memorySize?.value == null || gpu2.memorySize?.value == null) {
+    return false;
+  }
+
+  return gpu1.memorySize.value === gpu2.memorySize.value;
+}
+
+function hasSameMemoryType(comparison: GpuComparison) {
+  const [gpu1, gpu2] = comparison;
+
+  if (gpu1.memoryType?.value == null || gpu2.memoryType?.value == null) {
+    return false;
+  }
+
+  return gpu1.memoryType.value === gpu2.memoryType.value;
+}
+
+function hasSameMemoryBandwidth(comparison: GpuComparison) {
+  const [gpu1, gpu2] = comparison;
+
+  if (
+    gpu1.memoryBandwidth?.value == null ||
+    gpu2.memoryBandwidth?.value == null
+  ) {
+    return false;
+  }
+
+  return gpu1.memoryBandwidth.value === gpu2.memoryBandwidth.value;
+}
+
+function hasDifferentMemorySize(comparison: GpuComparison) {
+  const [gpu1, gpu2] = comparison;
+
+  if (gpu1.memorySize?.value == null || gpu2.memorySize?.value == null) {
+    return false;
+  }
+
+  return gpu1.memorySize.value !== gpu2.memorySize.value;
+}
+
+function hasDifferentMemoryBandwidth(comparison: GpuComparison) {
+  const [gpu1, gpu2] = comparison;
+
+  if (
+    gpu1.memoryBandwidth?.value == null ||
+    gpu2.memoryBandwidth?.value == null
+  ) {
+    return false;
+  }
+
+  return gpu1.memoryBandwidth.value !== gpu2.memoryBandwidth.value;
+}
+
+function hasMoreMemorySizeAndBandwidth(comparison: GpuComparison) {
+  const [gpu1, gpu2] = comparison;
+
+  if (
+    gpu1.memorySize?.value > gpu2.memorySize?.value &&
+    gpu1.memoryBandwidth?.value > gpu2.memoryBandwidth?.value
+  ) {
+    return true;
+  }
+
+  if (
+    gpu2.memorySize?.value > gpu1.memorySize?.value &&
+    gpu2.memoryBandwidth?.value > gpu1.memoryBandwidth?.value
+  ) {
+    return true;
+  }
+
+  return false;
 }
