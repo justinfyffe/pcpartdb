@@ -50,48 +50,18 @@ const MemoryBlurbSentence2 = compileContentComponent(
       'moreMemorySize',
       'moreMemoryType',
       'moreMemoryBandwidth',
-      'moreMemoryClock',
-      'moreMemoryInterface',
       'lessMemorySizeShortGpuName',
       'lessMemorySize',
       'lessMemoryType',
       'lessMemoryBandwidth',
-      'lessMemoryClock',
-      'lessMemoryInterface',
     ],
     component: (props) => (
       <>
         It has {props.moreMemorySize} of {props.moreMemoryType} memory with a
-        bandwidth of {props.moreMemoryBandwidth} ({props.moreMemoryInterface}{' '}
-        interface, {props.moreMemoryClock} clock), whereas the{' '}
-        {props.lessMemorySizeShortGpuName} has {props.lessMemorySize} of{' '}
-        {props.lessMemoryType} memory with a bandwidth of{' '}
-        {props.lessMemoryBandwidth} ({props.lessMemoryInterface} interface,{' '}
-        {props.lessMemoryClock} clock).
-      </>
-    ),
-  },
-  {
-    tags: [CompareGpusContentTag.DifferentMemoryBandwidth],
-    deps: [
-      'moreMemorySize',
-      'moreMemoryBandwidth',
-      'moreMemoryClock',
-      'moreMemoryInterface',
-      'lessMemorySizeShortGpuName',
-      'lessMemorySize',
-      'lessMemoryBandwidth',
-      'lessMemoryClock',
-      'lessMemoryInterface',
-    ],
-    component: (props) => (
-      <>
-        It has {props.moreMemorySize} of memory with a bandwidth of{' '}
-        {props.moreMemoryBandwidth} ({props.moreMemoryInterface} interface,{' '}
-        {props.moreMemoryClock} clock), whereas the{' '}
-        {props.lessMemorySizeShortGpuName} has {props.lessMemorySize} of memory
-        with a bandwidth of {props.lessMemoryBandwidth} (
-        {props.lessMemoryInterface} interface, {props.lessMemoryClock} clock).
+        bandwidth of {props.moreMemoryBandwidth}, compared to the{' '}
+        {props.lessMemorySizeShortGpuName}&apos;s {props.lessMemorySize} of{' '}
+        {props.lessMemoryType} memory and bandwidth of{' '}
+        {props.lessMemoryBandwidth}.
       </>
     ),
   },
@@ -110,9 +80,9 @@ const MemoryBlurbSentence2 = compileContentComponent(
     component: (props) => (
       <>
         It has {props.moreMemorySize} of memory with a bandwidth of{' '}
-        {props.moreMemoryBandwidth}, whereas the{' '}
-        {props.lessMemorySizeShortGpuName} has {props.lessMemorySize} of memory
-        with a bandwidth of {props.lessMemoryBandwidth}.
+        {props.moreMemoryBandwidth}, compared to the{' '}
+        {props.lessMemorySizeShortGpuName}&apos;s {props.lessMemorySize} of
+        memory and bandwidth of {props.lessMemoryBandwidth}.
       </>
     ),
   },
@@ -130,8 +100,8 @@ const MemoryBlurbSentence2 = compileContentComponent(
     component: (props) => (
       <>
         {props.shortGpuName1}&apos;s memory has a bandwidth of{' '}
-        {props.memoryBandwidth1}, whereas the {props.shortGpuName2} has a memory
-        bandwidth of {props.memoryBandwidth2}.
+        {props.memoryBandwidth1}, compared to the {props.shortGpuName2}&apos;s
+        memory bandwidth of {props.memoryBandwidth2}.
       </>
     ),
   },
