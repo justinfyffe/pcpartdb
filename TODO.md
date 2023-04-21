@@ -4,7 +4,8 @@ Next tasks:
     - add architecture
   - improve perfromance/value blurb
   - use ai to reword sentences.
-  - add ranks
+    - intro
+    - performance and value
   - add cores?
 - new market segments
   - Integrated

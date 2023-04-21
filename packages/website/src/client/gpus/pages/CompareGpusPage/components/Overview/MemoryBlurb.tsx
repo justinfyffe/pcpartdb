@@ -89,12 +89,12 @@ const MemoryConclusion = compileContentComponent(
     ],
     deps: ['gpu1MemorySizeMoreOrLess', 'gpu1MemoryBandwidthFasterOrSlower'],
     // This means that the RTX 4090 stores more data than the RX 7900 XTX,
-    // and transfers it to and from memory faster.
+    // and transfers the data to and from memory faster.
     component: (props) => (
       <>
         This means that the {props.shortestGpuName1} stores{' '}
         {props.gpu1MemorySizeMoreOrLess} data than the {props.shortestGpuName2},
-        and transfers it to and from memory{' '}
+        and transfers the data to and from memory{' '}
         {props.gpu1MemoryBandwidthFasterOrSlower}.
       </>
     ),
@@ -106,11 +106,11 @@ const MemoryConclusion = compileContentComponent(
     ],
     deps: ['gpu1MemoryBandwidthFasterOrSlower'],
     // This means that the RTX 4090 stores the same amount of data as the RX 7900 XT,
-    // but transfers it to and from memory faster.
+    // but transfers the data to and from memory faster.
     component: (props) => (
       <>
         This means that the {props.shortestGpuName1} stores the same amount of
-        data as the {props.shortestGpuName2}, but transfers it to and from
+        data as the {props.shortestGpuName2}, but transfers the data to and from
         memory {props.gpu1MemoryBandwidthFasterOrSlower}.
       </>
     ),
@@ -122,12 +122,12 @@ const MemoryConclusion = compileContentComponent(
     ],
     deps: ['gpu1MemorySizeMoreOrLess'],
     // This means that the RTX 4090 stores more data than the RX 7900 XT,
-    // but transfers it to and from memory at the same speed.
+    // but transfers the data to and from memory at the same speed.
     component: (props) => (
       <>
         This means that the {props.shortestGpuName1} stores{' '}
         {props.gpu1MemorySizeMoreOrLess} data than the {props.shortestGpuName2},
-        but transfers it to and from memory at the same speed.
+        but transfers the data to and from memory at the same speed.
       </>
     ),
   },
@@ -138,11 +138,11 @@ const MemoryConclusion = compileContentComponent(
     ],
     deps: ['gpu1MemorySizeMoreOrLess'],
     // This means that the RTX 4090 stores a similar amount of data as the RX 7900 XT,
-    // and transfers it to and from memory at similar speeds.
+    // and transfers the data to and from memory at similar speeds.
     component: (props) => (
       <>
         This means that the {props.shortestGpuName1} stores a similar amount of
-        data as the {props.shortestGpuName2}, and transfers it to and from
+        data as the {props.shortestGpuName2}, and transfers the data to and from
         memory at similar speeds.
       </>
     ),
