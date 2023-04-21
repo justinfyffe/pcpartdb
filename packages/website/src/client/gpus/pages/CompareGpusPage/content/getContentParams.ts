@@ -13,14 +13,17 @@ export interface CompareGpusContentParams {
   company2?: string;
   gpuName1?: string;
   gpuName2?: string;
+  shortGpuName1?: string;
+  shortGpuName2?: string;
+  shortestGpuName1?: string;
+  shortestGpuName2?: string;
   marketSegment1?: string;
   marketSegment2?: string;
   releaseDate1?: string;
   releaseDate2?: string;
+
   shoppingUrl1?: string;
   shoppingUrl2?: string;
-  shortGpuName1?: string;
-  shortGpuName2?: string;
   year1?: string;
   year2?: string;
   newerShortGpuName?: string;
@@ -57,23 +60,18 @@ export interface CompareGpusContentParams {
   lessMemoryInterface?: string;
   lessMemoryClock?: string;
   lessMemoryBandwidth?: string;
+
+  tdp1?: string;
+  higherPsuGpuName?: string;
+  psu1?: string;
+  psu2?: string;
 }
 
 export function getContentParams(comparison: GpuComparison) {
   const [gpu1, gpu2] = comparison;
 
-  const company1 = formatGpuField(gpu1.company);
-  const company2 = formatGpuField(gpu2.company);
-  const gpuName1 = getGpuName(gpu1);
-  const gpuName2 = getGpuName(gpu2);
-  const marketSegment1 = formatGpuField(gpu1.marketSegment)?.toLowerCase();
-  const marketSegment2 = formatGpuField(gpu2.marketSegment)?.toLowerCase();
   const shoppingUrl1 = getShoppingUrl(gpu1);
   const shoppingUrl2 = getShoppingUrl(gpu2);
-  const shortGpuName1 = getGpuName(gpu1, { company: false });
-  const shortGpuName2 = getGpuName(gpu2, { company: false });
-  const releaseDate1 = formatGpuField(gpu1.releaseDate);
-  const releaseDate2 = formatGpuField(gpu2.releaseDate);
   const year1 = formatGpuField(gpu1.releaseDate, {
     dateFormatter: DateFormatter.Year,
   });
@@ -156,18 +154,8 @@ export function getContentParams(comparison: GpuComparison) {
   });
 
   return {
-    company1,
-    company2,
-    gpuName1,
-    gpuName2,
-    marketSegment1,
-    marketSegment2,
     shoppingUrl1,
     shoppingUrl2,
-    shortGpuName1,
-    shortGpuName2,
-    releaseDate1,
-    releaseDate2,
     year1,
     year2,
     newerShortGpuName,
@@ -186,7 +174,28 @@ export function getContentParams(comparison: GpuComparison) {
     length2,
     dimensions1,
     dimensions2,
+    ...getGeneralParams(comparison),
     ...getMemoryParams(comparison),
+    ...getPowerSupplyParams(comparison),
+  } as CompareGpusContentParams as ContentParams;
+}
+
+function getGeneralParams(comparison: GpuComparison) {
+  const [gpu1, gpu2] = comparison;
+
+  return {
+    company1: formatGpuField(gpu1.company),
+    company2: formatGpuField(gpu2.company),
+    gpuName1: getGpuName(gpu1),
+    gpuName2: getGpuName(gpu2),
+    shortGpuName1: getGpuName(gpu1, { company: false }),
+    shortGpuName2: getGpuName(gpu2, { company: false }),
+    shortestGpuName1: getGpuName(gpu1, { company: false, brand: false }),
+    shortestGpuName2: getGpuName(gpu2, { company: false, brand: false }),
+    marketSegment1: formatGpuField(gpu1.marketSegment)?.toLowerCase(),
+    marketSegment2: formatGpuField(gpu2.marketSegment)?.toLowerCase(),
+    releaseDate1: formatGpuField(gpu1.releaseDate),
+    releaseDate2: formatGpuField(gpu2.releaseDate),
   } as CompareGpusContentParams as ContentParams;
 }
 
@@ -217,6 +226,26 @@ function getMemoryParams(comparison: GpuComparison) {
     lessMemoryInterface: formatGpuField(lessMemoryGpu?.memoryInterface),
     lessMemoryClock: formatGpuField(lessMemoryGpu?.memoryClock),
     lessMemoryBandwidth: formatGpuField(lessMemoryGpu?.memoryBandwidth),
+  } as CompareGpusContentParams as ContentParams;
+}
+
+function getPowerSupplyParams(comparison: GpuComparison) {
+  const [gpu1, gpu2] = comparison;
+
+  const [higherPsuGpu] = getGreaterAndLesserGpuFromField(
+    gpu1,
+    gpu2,
+    'suggestedPsu',
+  );
+
+  return {
+    tdp1: formatGpuField(gpu1.thermalDesignPower),
+    higherPsuGpuName: getGpuName(higherPsuGpu, {
+      company: false,
+      brand: false,
+    }),
+    psu1: formatGpuField(gpu1.suggestedPsu),
+    psu2: formatGpuField(gpu2.suggestedPsu),
   } as CompareGpusContentParams as ContentParams;
 }
 

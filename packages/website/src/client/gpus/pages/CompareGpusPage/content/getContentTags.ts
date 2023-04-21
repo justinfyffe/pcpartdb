@@ -1,8 +1,9 @@
-import { GpuComparison } from '@pcpartdb/shared';
+import { GpuComparison, GpuField } from '@pcpartdb/shared';
 import { parse } from 'date-fns';
 import { formatGpuField } from '../../../utils';
 
 export enum CompareGpusContentTag {
+  DifferentCompany = 'DIFFERENT_COMPANY',
   SameCompany = 'SAME_COMPANY',
   SameMarketSegment = 'SAME_MARKET_SEGMENT',
   SameReleaseDate = 'SAME_RELEASE_DATE',
@@ -16,12 +17,15 @@ export enum CompareGpusContentTag {
   DifferentMemorySize = 'DIFFERENT_MEMORY_SIZE',
   DifferentMemoryBandwidth = 'DIFFERENT_MEMORY_BANDWIDTH',
   MoreMemorySizeAndBandwidth = 'MORE_MEMORY_SIZE_AND_BANDWIDTH',
+
+  DifferentTdp = 'DIFFERENT_TDP',
+  SameTdp = 'SAME_TDP',
+  DifferentPsu = 'DIFFERENT_PSU',
+  SamePsu = 'SAME_PSU',
 }
 
 export function getContentTags(comparison: GpuComparison) {
   const [gpu1, gpu2] = comparison;
-
-  const sameCompany = gpu1.company?.value === gpu2.company?.value;
 
   const sameMarketSegment =
     gpu1.marketSegment?.value === gpu2.marketSegment?.value;
@@ -56,7 +60,8 @@ export function getContentTags(comparison: GpuComparison) {
   const sameSlotWidth = gpu1.slotWidth?.value === gpu2.slotWidth?.value;
 
   return {
-    [CompareGpusContentTag.SameCompany]: sameCompany,
+    [CompareGpusContentTag.DifferentCompany]: hasDifferentCompany(comparison),
+    [CompareGpusContentTag.SameCompany]: hasSameCompany(comparison),
     [CompareGpusContentTag.SameMarketSegment]: sameMarketSegment,
     [CompareGpusContentTag.SameReleaseDate]: sameReleaseDate,
     [CompareGpusContentTag.SameReleaseYear]: sameReleaseYear,
@@ -74,7 +79,28 @@ export function getContentTags(comparison: GpuComparison) {
       hasDifferentMemorySize(comparison),
     [CompareGpusContentTag.MoreMemorySizeAndBandwidth]:
       hasMoreMemorySizeAndBandwidth(comparison),
+
+    ...getPowerSupplyTags(comparison),
   };
+}
+
+function getPowerSupplyTags(comparison: GpuComparison) {
+  return {
+    [CompareGpusContentTag.DifferentTdp]: hasDifferentTdp(comparison),
+    [CompareGpusContentTag.SameTdp]: hasSameTdp(comparison),
+    [CompareGpusContentTag.DifferentPsu]: hasDifferentPsu(comparison),
+    [CompareGpusContentTag.SamePsu]: hasSamePsu(comparison),
+  };
+}
+
+function hasDifferentCompany(comparison: GpuComparison) {
+  const [gpu1, gpu2] = comparison;
+  return hasDifferentValue(gpu1.company, gpu2.company);
+}
+
+function hasSameCompany(comparison: GpuComparison) {
+  const [gpu1, gpu2] = comparison;
+  return hasSameValue(gpu1.company, gpu2.company);
 }
 
 function hasSameMemorySize(comparison: GpuComparison) {
@@ -151,4 +177,40 @@ function hasMoreMemorySizeAndBandwidth(comparison: GpuComparison) {
   }
 
   return false;
+}
+
+function hasDifferentTdp(comparison: GpuComparison) {
+  const [gpu1, gpu2] = comparison;
+  return hasDifferentValue(gpu1.thermalDesignPower, gpu2.thermalDesignPower);
+}
+
+function hasSameTdp(comparison: GpuComparison) {
+  const [gpu1, gpu2] = comparison;
+  return hasSameValue(gpu1.thermalDesignPower, gpu2.thermalDesignPower);
+}
+
+function hasDifferentPsu(comparison: GpuComparison) {
+  const [gpu1, gpu2] = comparison;
+  return hasDifferentValue(gpu1.suggestedPsu, gpu2.suggestedPsu);
+}
+
+function hasSamePsu(comparison: GpuComparison) {
+  const [gpu1, gpu2] = comparison;
+  return hasSameValue(gpu1.suggestedPsu, gpu2.suggestedPsu);
+}
+
+function hasDifferentValue(field1?: GpuField, field2?: GpuField) {
+  if (field1?.value == null || field2?.value == null) {
+    return false;
+  }
+
+  return field1.value !== field2.value;
+}
+
+function hasSameValue(field1?: GpuField, field2?: GpuField) {
+  if (field1?.value == null || field2?.value == null) {
+    return false;
+  }
+
+  return field1.value === field2.value;
 }

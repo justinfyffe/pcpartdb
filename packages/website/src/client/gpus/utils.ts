@@ -14,7 +14,10 @@ import {
   formatPrice,
 } from '../shared/format';
 
+const BRANDS = ['GeForce', 'Radeon'];
+
 export interface GetGpuNameOptions {
+  brand?: boolean;
   company?: boolean;
 }
 
@@ -26,7 +29,14 @@ export function getGpuName(gpu: Gpu, options?: GetGpuNameOptions) {
   const includeCompany = options?.company ?? true;
   const company = includeCompany ? formatGpuField(gpu.company) : null;
 
-  return company != null ? `${company} ${gpu.name}` : gpu.name;
+  const includeBrand = options?.brand ?? true;
+  const gpuName = includeBrand
+    ? gpu.name
+    : BRANDS.reduce((acc, brand) => {
+        return acc.replace(` ${brand} `, ' ');
+      }, gpu.name);
+
+  return company != null ? `${company} ${gpuName}` : gpuName;
 }
 
 interface GetGpuComparisonNameOptions {
