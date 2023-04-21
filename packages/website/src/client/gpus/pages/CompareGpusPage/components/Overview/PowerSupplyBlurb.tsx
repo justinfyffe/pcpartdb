@@ -10,9 +10,7 @@ const PowerSupplyIntro = compileContentComponent(
   {
     tags: [CompareGpusContentTag.DifferentTdp],
     deps: [],
-    component: (props) => (
-      <>These GPUs have a different maximum power draw (TDP).</>
-    ),
+    component: () => <>These GPUs have a different maximum power draw (TDP).</>,
   },
   {
     tags: [CompareGpusContentTag.SameTdp],

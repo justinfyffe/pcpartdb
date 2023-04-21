@@ -1,10 +1,11 @@
 Next tasks:
 - compare page overview
-  - add dimensions blurb
-  - add power supply blurb
+  - improve intro blurb
+    - add architecture
+  - improve perfromance/value blurb
   - use ai to reword sentences.
   - add ranks
-  - add memory, cores?
+  - add cores?
 - new market segments
   - Integrated
   - Mobile Workstation?
