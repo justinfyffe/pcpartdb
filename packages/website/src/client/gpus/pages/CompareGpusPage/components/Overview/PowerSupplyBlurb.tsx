@@ -17,7 +17,7 @@ const PowerSupplyIntro = compileContentComponent(
   {
     tags: [CompareGpusContentTag.SameTdp],
     deps: ['tdp1'],
-    // These RTX 2070 and RTX 2080 have the same maximum power draw (TDP) of 750 W.
+    // The RTX 2070 and RTX 2080 have the same maximum power draw (TDP) of 750 W.
     component: (props) => (
       <>
         The {props.shortGpuName1} and {props.shortGpuName2} have the same
@@ -124,7 +124,6 @@ const PowerSupplyParagraph = compileContentComponent({
   ),
 });
 
-// Or compatibility blurb?
 export const PowerSupplyBlurb = () => {
   const { contentParams, contentTags } = useContext(ComparePageContext);
   const context = { tags: contentTags, params: contentParams };

@@ -21,7 +21,6 @@ export interface CompareGpusContentParams {
   marketSegment2?: string;
   releaseDate1?: string;
   releaseDate2?: string;
-
   shoppingUrl1?: string;
   shoppingUrl2?: string;
   year1?: string;
@@ -36,12 +35,6 @@ export interface CompareGpusContentParams {
   higherValueShortGpuName?: string;
   lowerValueShortGpuName?: string;
   betterValueFactor?: string;
-  slotWidth1?: string;
-  slotWidth2?: string;
-  length1?: string;
-  length2?: string;
-  dimensions1?: string;
-  dimensions2?: string;
 
   memorySize1?: string;
   memoryType1?: string;
@@ -60,6 +53,14 @@ export interface CompareGpusContentParams {
   lessMemoryInterface?: string;
   lessMemoryClock?: string;
   lessMemoryBandwidth?: string;
+
+  gpu1ThickerOrThinner?: string;
+  slotWidth1?: string;
+  slotWidth2?: string;
+  length1?: string;
+  length2?: string;
+  dimensions1?: string;
+  dimensions2?: string;
 
   tdp1?: string;
   higherPsuGpuName?: string;
@@ -142,17 +143,6 @@ export function getContentParams(comparison: GpuComparison) {
     }
   }
 
-  const slotWidth1 = formatGpuField(gpu1.slotWidth, { showUnits: false });
-  const slotWidth2 = formatGpuField(gpu2.slotWidth, { showUnits: false });
-  const length1 = formatGpuField(gpu1.length);
-  const length2 = formatGpuField(gpu2.length);
-  const dimensions1 = formatGpuDimensions(gpu1, {
-    allowMissingDimensions: false,
-  });
-  const dimensions2 = formatGpuDimensions(gpu2, {
-    allowMissingDimensions: false,
-  });
-
   return {
     shoppingUrl1,
     shoppingUrl2,
@@ -168,14 +158,9 @@ export function getContentParams(comparison: GpuComparison) {
     higherValueShortGpuName,
     lowerValueShortGpuName,
     betterValueFactor,
-    slotWidth1,
-    slotWidth2,
-    length1,
-    length2,
-    dimensions1,
-    dimensions2,
     ...getGeneralParams(comparison),
     ...getMemoryParams(comparison),
+    ...getCompatibilityParams(comparison),
     ...getPowerSupplyParams(comparison),
   } as CompareGpusContentParams as ContentParams;
 }
@@ -226,6 +211,31 @@ function getMemoryParams(comparison: GpuComparison) {
     lessMemoryInterface: formatGpuField(lessMemoryGpu?.memoryInterface),
     lessMemoryClock: formatGpuField(lessMemoryGpu?.memoryClock),
     lessMemoryBandwidth: formatGpuField(lessMemoryGpu?.memoryBandwidth),
+  } as CompareGpusContentParams as ContentParams;
+}
+
+function getCompatibilityParams(comparison: GpuComparison) {
+  const [gpu1, gpu2] = comparison;
+
+  let gpu1ThickerOrThinner: string;
+  if (gpu1.slotWidth?.value != null && gpu2.slotWidth?.value != null) {
+    if (gpu1.slotWidth?.value > gpu2.slotWidth?.value) {
+      gpu1ThickerOrThinner = 'thicker';
+    } else if (gpu1.slotWidth?.value < gpu2.slotWidth?.value) {
+      gpu1ThickerOrThinner = 'thinner';
+    }
+  }
+
+  return {
+    gpu1ThickerOrThinner,
+    slotWidth1: formatGpuField(gpu1.slotWidth, { showUnits: false }),
+    slotWidth2: formatGpuField(gpu2.slotWidth, { showUnits: false }),
+    length1: formatGpuField(gpu1.length),
+    length: formatGpuField(gpu2.length),
+    dimensions1: formatGpuDimensions(gpu1, { allowMissingDimensions: false }),
+    dimensions2: formatGpuDimensions(gpu2, { allowMissingDimensions: false }),
+    outputs1: formatGpuField(gpu1.outputs),
+    outputs2: formatGpuField(gpu2.outputs),
   } as CompareGpusContentParams as ContentParams;
 }
 

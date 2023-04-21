@@ -33,8 +33,8 @@ export function getGpuName(gpu: Gpu, options?: GetGpuNameOptions) {
   const gpuName = includeBrand
     ? gpu.name
     : BRANDS.reduce((acc, brand) => {
-        return acc.replace(` ${brand} `, ' ');
-      }, gpu.name);
+        return acc.replace(`${brand}`, '');
+      }, gpu.name).trim();
 
   return company != null ? `${company} ${gpuName}` : gpuName;
 }
