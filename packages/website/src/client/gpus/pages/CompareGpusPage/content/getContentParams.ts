@@ -1,4 +1,5 @@
 import { Gpu, GpuComparison, GpuFieldKey } from '@pcpartdb/shared';
+import { format } from 'date-fns';
 import { ContentParams } from 'packages/website/src/client/shared/content';
 import { DateFormatter } from 'packages/website/src/client/shared/format';
 import {
@@ -19,8 +20,13 @@ export interface CompareGpusContentParams {
   shortestGpuName2?: string;
   marketSegment1?: string;
   marketSegment2?: string;
+  gpu1NewerOrOlder?: string;
+  gpu1WillReleaseOrWereReleased?: string;
+  gpu1WillReleaseOrWasReleased?: string;
+  gpu2WillReleaseOrWasReleased?: string;
   releaseDate1?: string;
   releaseDate2?: string;
+
   shoppingUrl1?: string;
   shoppingUrl2?: string;
   year1?: string;
@@ -156,6 +162,38 @@ export function getContentParams(comparison: GpuComparison) {
 function getGeneralParams(comparison: GpuComparison) {
   const [gpu1, gpu2] = comparison;
 
+  let gpu1NewerOrOlder: string;
+  if (gpu1.releaseDate?.value != null && gpu2.releaseDate?.value != null) {
+    if (gpu1.releaseDate?.value > gpu2.releaseDate?.value) {
+      gpu1NewerOrOlder = 'newer';
+    } else if (gpu1.memorySize?.value < gpu2.memorySize?.value) {
+      gpu1NewerOrOlder = 'older';
+    }
+  }
+
+  const today = format(new Date(), 'yyyy-MM-dd');
+
+  let gpu1WillReleaseOrWereReleased: string;
+  let gpu1WillReleaseOrWasReleased: string;
+  if (gpu1.releaseDate?.value != null) {
+    if (gpu1.releaseDate?.value > today) {
+      gpu1WillReleaseOrWereReleased = 'will release';
+      gpu1WillReleaseOrWasReleased = 'will release';
+    } else {
+      gpu1WillReleaseOrWereReleased = 'were released';
+      gpu1WillReleaseOrWasReleased = 'was released';
+    }
+  }
+
+  let gpu2WillReleaseOrWasReleased: string;
+  if (gpu2.releaseDate?.value != null) {
+    if (gpu2.releaseDate?.value > today) {
+      gpu2WillReleaseOrWasReleased = 'will release';
+    } else {
+      gpu2WillReleaseOrWasReleased = 'was released';
+    }
+  }
+
   return {
     company1: formatGpuField(gpu1.company),
     company2: formatGpuField(gpu2.company),
@@ -167,6 +205,10 @@ function getGeneralParams(comparison: GpuComparison) {
     shortestGpuName2: getGpuName(gpu2, { company: false, brand: false }),
     marketSegment1: formatGpuField(gpu1.marketSegment)?.toLowerCase(),
     marketSegment2: formatGpuField(gpu2.marketSegment)?.toLowerCase(),
+    gpu1NewerOrOlder,
+    gpu1WillReleaseOrWereReleased,
+    gpu1WillReleaseOrWasReleased,
+    gpu2WillReleaseOrWasReleased,
     releaseDate1: formatGpuField(gpu1.releaseDate),
     releaseDate2: formatGpuField(gpu2.releaseDate),
   } as CompareGpusContentParams as ContentParams;

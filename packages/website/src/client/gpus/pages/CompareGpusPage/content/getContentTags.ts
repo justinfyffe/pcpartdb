@@ -1,12 +1,16 @@
 import { GpuComparison, GpuField, MarketSegmentValue } from '@pcpartdb/shared';
 import { parse } from 'date-fns';
+import { DateFormatter } from 'packages/website/src/client/shared/format';
 import { formatGpuField } from '../../../utils';
 
 export enum CompareGpusContentTag {
   DifferentCompany = 'DIFFERENT_COMPANY',
   SameCompany = 'SAME_COMPANY',
+  DifferentMarketSegment = 'DIFFERENT_MARKET_SEGMENT',
   SameMarketSegment = 'SAME_MARKET_SEGMENT',
+  DifferentReleaseDate = 'DIFFERENT_RELEASE_DATE',
   SameReleaseDate = 'SAME_RELEASE_DATE',
+  DifferentReleaseYear = 'DIFFERENT_RELEASE_YEAR',
   SameReleaseYear = 'SAME_RELEASE_YEAR',
 
   DifferentBetterPerformanceAndValue = 'DIFFERENT_BETTER_PERFORMANCE_AND_VALUE',
@@ -31,19 +35,6 @@ export enum CompareGpusContentTag {
 export function getContentTags(comparison: GpuComparison) {
   const [gpu1, gpu2] = comparison;
 
-  const sameMarketSegment =
-    gpu1.marketSegment?.value === gpu2.marketSegment?.value;
-
-  let sameReleaseDate = false;
-  let sameReleaseYear = false;
-  if (gpu1.releaseDate?.value != null && gpu2.releaseDate?.value != null) {
-    const gpu1Year = parse(gpu1.releaseDate.value, 'yyyy-MM-dd', new Date());
-    const gpu2Year = parse(gpu2.releaseDate.value, 'yyyy-MM-dd', new Date());
-    sameReleaseDate =
-      formatGpuField(gpu1.releaseDate) === formatGpuField(gpu2.releaseDate);
-    sameReleaseYear = gpu1Year.getUTCFullYear() === gpu2Year.getUTCFullYear();
-  }
-
   let differentBetterPerformanceAndValue = false;
   if (
     gpu1.performanceScore?.value != null &&
@@ -61,17 +52,29 @@ export function getContentTags(comparison: GpuComparison) {
   }
 
   return {
-    [CompareGpusContentTag.DifferentCompany]: hasDifferentCompany(comparison),
-    [CompareGpusContentTag.SameCompany]: hasSameCompany(comparison),
-    [CompareGpusContentTag.SameMarketSegment]: sameMarketSegment,
-    [CompareGpusContentTag.SameReleaseDate]: sameReleaseDate,
-    [CompareGpusContentTag.SameReleaseYear]: sameReleaseYear,
     [CompareGpusContentTag.DifferentBetterPerformanceAndValue]:
       differentBetterPerformanceAndValue,
 
+    ...getGeneralTags(comparison),
     ...getMemoryTags(comparison),
     ...getCompatibilityTags(comparison),
     ...getPowerSupplyTags(comparison),
+  };
+}
+
+function getGeneralTags(comparison: GpuComparison) {
+  return {
+    [CompareGpusContentTag.DifferentCompany]: hasDifferentCompany(comparison),
+    [CompareGpusContentTag.SameCompany]: hasSameCompany(comparison),
+    [CompareGpusContentTag.DifferentMarketSegment]:
+      hasDifferentMarketSegment(comparison),
+    [CompareGpusContentTag.SameMarketSegment]: hasSameMarketSegment(comparison),
+    [CompareGpusContentTag.DifferentReleaseDate]:
+      hasDifferentReleaseDate(comparison),
+    [CompareGpusContentTag.SameReleaseDate]: hasSameReleaseDate(comparison),
+    [CompareGpusContentTag.DifferentReleaseYear]:
+      hasDifferentReleaseYear(comparison),
+    [CompareGpusContentTag.SameReleaseYear]: hasSameReleaseYear(comparison),
   };
 }
 
@@ -115,6 +118,58 @@ function hasDifferentCompany(comparison: GpuComparison) {
 function hasSameCompany(comparison: GpuComparison) {
   const [gpu1, gpu2] = comparison;
   return hasSameValue(gpu1.company, gpu2.company);
+}
+
+function hasDifferentMarketSegment(comparison: GpuComparison) {
+  const [gpu1, gpu2] = comparison;
+  return hasDifferentValue(gpu1.marketSegment, gpu2.marketSegment);
+}
+
+function hasSameMarketSegment(comparison: GpuComparison) {
+  const [gpu1, gpu2] = comparison;
+  return hasSameValue(gpu1.marketSegment, gpu2.marketSegment);
+}
+
+function hasDifferentReleaseDate(comparison: GpuComparison) {
+  const [gpu1, gpu2] = comparison;
+  if (gpu1.releaseDate == null || gpu2.releaseDate == null) {
+    return false;
+  }
+
+  return formatGpuField(gpu1.releaseDate) !== formatGpuField(gpu2.releaseDate);
+}
+
+function hasSameReleaseDate(comparison: GpuComparison) {
+  const [gpu1, gpu2] = comparison;
+  if (gpu1.releaseDate == null || gpu2.releaseDate == null) {
+    return false;
+  }
+
+  return formatGpuField(gpu1.releaseDate) === formatGpuField(gpu2.releaseDate);
+}
+
+function hasDifferentReleaseYear(comparison: GpuComparison) {
+  const [gpu1, gpu2] = comparison;
+  if (gpu1.releaseDate == null || gpu2.releaseDate == null) {
+    return false;
+  }
+
+  return (
+    formatGpuField(gpu1.releaseDate, { dateFormatter: DateFormatter.Year }) !==
+    formatGpuField(gpu2.releaseDate, { dateFormatter: DateFormatter.Year })
+  );
+}
+
+function hasSameReleaseYear(comparison: GpuComparison) {
+  const [gpu1, gpu2] = comparison;
+  if (gpu1.releaseDate == null || gpu2.releaseDate == null) {
+    return false;
+  }
+
+  return (
+    formatGpuField(gpu1.releaseDate, { dateFormatter: DateFormatter.Year }) ===
+    formatGpuField(gpu2.releaseDate, { dateFormatter: DateFormatter.Year })
+  );
 }
 
 function hasSameMemorySize(comparison: GpuComparison) {
