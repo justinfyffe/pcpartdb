@@ -3,7 +3,6 @@ Next tasks:
   - add architecture
   - add ranks?
   - add cores?
-  - add highlights section
 - view page overview improvements
   - Use ai to reword sentences
   - Restructure code to similar to the compare page.
