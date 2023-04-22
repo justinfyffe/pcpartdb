@@ -89,7 +89,7 @@ export class CompareGpusViewModelService {
     // Both GPUS have neighbors
     const hasGapBetweenNeighbors =
       Math.abs(gpu1.ranks?.performanceRank - gpu2.ranks?.performanceRank) >
-      TOTAL_COMPARED_GPUS / 2;
+      TOTAL_COMPARED_GPUS / 2 + 1;
 
     if (hasGapBetweenNeighbors) {
       return this.concatNeighbors(
@@ -129,7 +129,7 @@ export class CompareGpusViewModelService {
     // Both GPUs have neighbors. Need to combine them.
     const hasGapBetweenNeighbors =
       Math.abs(gpu1.ranks?.valueRank - gpu2.ranks?.valueRank) >
-      TOTAL_COMPARED_GPUS / 2;
+      TOTAL_COMPARED_GPUS / 2 + 1;
 
     if (hasGapBetweenNeighbors) {
       return this.concatNeighbors(
