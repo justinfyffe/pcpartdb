@@ -6,12 +6,12 @@ import {
 import { ViewPageContext } from '../../../context';
 
 export const CoresIntroSentence1 = compileContentComponent({
-  deps: ['gpuName', 'shortGpuName'],
+  deps: [],
   component: (props) => (
     <>
-      {props.gpuName}&apos;s cores, clock speed, and cache. These specs have an
-      impact on how fast the {props.shortGpuName} can process graphics. Each
-      type of core serves a specific computational purpose.
+      {props.shortGpuName}&apos;s cores, clock speed, and cache. These specs
+      have an impact on how fast the {props.shortGpuName} can process graphics.
+      Each type of core serves a specific computational purpose.
     </>
   ),
 });

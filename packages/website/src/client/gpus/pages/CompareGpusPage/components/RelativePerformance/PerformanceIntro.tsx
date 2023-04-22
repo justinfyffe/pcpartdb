@@ -6,11 +6,11 @@ import {
 import { ComparePageContext } from '../../context';
 
 export const PerformanceIntroSentence1 = compileContentComponent({
-  deps: ['gpuName1', 'gpuName2'],
+  deps: [],
   component: (props) => (
     <>
-      Compare {props.gpuName1} and {props.gpuName2}&apos;s performance with
-      similar GPUs. Relative performance provides insight into how their
+      Compare {props.shortGpuName1} and {props.shortGpuName2}&apos;s performance
+      with similar GPUs. Relative performance provides insight into how their
       benchmarks compare to their peers.
     </>
   ),

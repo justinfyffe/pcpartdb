@@ -30,13 +30,14 @@ export interface CompareGpusContentParams {
   gpu1PerformanceMoreOrLess?: string;
   gpu1PerformanceHigherOrLower?: string;
   gpu1PerformanceDifferencePct?: string;
-  gpu1ValueBetterOrWorse?: string;
+  gpu1ValueHigherOrLower?: string;
   performancePerDollar1?: string;
   performancePerDollar2?: string;
 
   gpu1MemorySizeMoreOrLess?: string;
   gpu1MemoryBandwidthFasterOrSlower?: string;
   memorySize1?: string;
+  memorySize2?: string;
   memoryType1?: string;
   memoryType2?: string;
   memoryBandwidth1?: string;
@@ -152,14 +153,14 @@ function getPerformanceParams(comparison: GpuComparison) {
     }
   }
 
-  let gpu1ValueBetterOrWorse: string;
+  let gpu1ValueHigherOrLower: string;
   if (gpu1.valueScore?.value != null && gpu2.valueScore?.value != null) {
     const valueScore1 = gpu1.valueScore.value;
     const valueScore2 = gpu2.valueScore.value;
     if (valueScore1 > valueScore2) {
-      gpu1ValueBetterOrWorse = 'better';
+      gpu1ValueHigherOrLower = 'higher';
     } else if (valueScore1 < valueScore2) {
-      gpu1ValueBetterOrWorse = 'worse';
+      gpu1ValueHigherOrLower = 'lower';
     }
   }
 
@@ -167,7 +168,7 @@ function getPerformanceParams(comparison: GpuComparison) {
     gpu1PerformanceMoreOrLess,
     gpu1PerformanceHigherOrLower,
     gpu1PerformanceDifferencePct,
-    gpu1ValueBetterOrWorse,
+    gpu1ValueHigherOrLower,
     performancePerDollar1: formatGpuField(gpu1.valueScore),
     performancePerDollar2: formatGpuField(gpu2.valueScore),
   } as CompareGpusContentParams as ContentParams;
@@ -201,6 +202,7 @@ function getMemoryParams(comparison: GpuComparison) {
     gpu1MemorySizeMoreOrLess,
     gpu1MemoryBandwidthFasterOrSlower,
     memorySize1: formatGpuField(gpu1.memorySize),
+    memorySize2: formatGpuField(gpu2.memorySize),
     memoryType1: formatGpuField(gpu1.memoryType),
     memoryType2: formatGpuField(gpu2.memoryType),
     memoryBandwidth1: formatGpuField(gpu1.memoryBandwidth),

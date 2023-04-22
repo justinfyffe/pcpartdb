@@ -14,7 +14,7 @@ import {
   formatPrice,
 } from '../shared/format';
 
-const BRANDS = ['GeForce', 'Radeon'];
+const BRANDS = ['Radeon', 'GeForce', 'Quadro'];
 
 export interface GetGpuNameOptions {
   brand?: boolean;

@@ -6,11 +6,11 @@ import {
 import { ViewPageContext } from '../../../context';
 
 export const ApiIntroSentence1 = compileContentComponent({
-  deps: ['gpuName'],
+  deps: [],
   component: (props) => (
     <>
-      API versions that the {props.gpuName} supports. Older GPUs may not support
-      recent versions.
+      API versions that the {props.shortGpuName} supports. Older GPUs may not
+      support recent versions.
     </>
   ),
 });

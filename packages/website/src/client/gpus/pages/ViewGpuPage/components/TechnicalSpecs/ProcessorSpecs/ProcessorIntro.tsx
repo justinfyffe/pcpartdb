@@ -6,9 +6,9 @@ import {
 import { ViewPageContext } from '../../../context';
 
 export const ProcessorIntroSentence1 = compileContentComponent({
-  deps: ['gpuName'],
+  deps: [],
   component: (props) => (
-    <>General information about {props.gpuName}&apos;s processor.</>
+    <>General information about {props.shortGpuName}&apos;s processor.</>
   ),
 });
 

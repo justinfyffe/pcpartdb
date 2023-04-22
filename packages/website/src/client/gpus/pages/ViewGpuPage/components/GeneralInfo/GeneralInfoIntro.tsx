@@ -6,11 +6,11 @@ import {
 import { ViewPageContext } from '../../context';
 
 export const GeneralInfoIntroSentence1 = compileContentComponent({
-  deps: ['gpuName'],
+  deps: [],
   component: (props) => (
     <>
-      General information about the {props.gpuName} like its performance rating,
-      release date, and launch price.
+      General information about the {props.shortGpuName} like its performance
+      rating, release date, and launch price.
     </>
   ),
 });

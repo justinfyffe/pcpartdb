@@ -6,11 +6,12 @@ import {
 import { ComparePageContext } from '../../context';
 
 export const GeneralInfoIntroSentence1 = compileContentComponent({
-  deps: ['gpuName1', 'gpuName2'],
+  deps: [],
   component: (props) => (
     <>
-      General information about the {props.gpuName1} and {props.gpuName2} like
-      their performance rating, release date, and launch price.
+      General information about the {props.shortGpuName1} and{' '}
+      {props.shortGpuName2} like their performance rating, release date, and
+      launch price.
     </>
   ),
 });

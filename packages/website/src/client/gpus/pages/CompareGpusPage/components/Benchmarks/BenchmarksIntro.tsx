@@ -6,12 +6,12 @@ import {
 import { ComparePageContext } from '../../context';
 
 export const BenchmarksIntroSentence1 = compileContentComponent({
-  deps: ['gpuName1', 'gpuName2'],
+  deps: [],
   component: (props) => (
     <>
-      Performance and benchmark metrics for the {props.gpuName1} and{' '}
-      {props.gpuName2}. These are usually the best indicator for determing a
-      GPUs performance.
+      Performance and benchmark metrics for the {props.shortGpuName1} and{' '}
+      {props.shortGpuName2}. These are usually the best indicator for determing
+      a GPUs performance.
     </>
   ),
 });

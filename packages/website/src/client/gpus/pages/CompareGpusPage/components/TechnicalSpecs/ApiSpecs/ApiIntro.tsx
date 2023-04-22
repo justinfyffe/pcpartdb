@@ -6,11 +6,11 @@ import {
 import { ComparePageContext } from '../../../context';
 
 export const ApiIntroSentence1 = compileContentComponent({
-  deps: ['gpuName1', 'gpuName2'],
+  deps: [],
   component: (props) => (
     <>
-      API versions that the {props.gpuName1} and {props.gpuName2} supports.
-      Older GPUs may not support recent versions.
+      API versions that the {props.shortGpuName1} and {props.shortGpuName2}{' '}
+      supports. Older GPUs may not support recent versions.
     </>
   ),
 });

@@ -6,11 +6,11 @@ import {
 import { ComparePageContext } from '../../../context';
 
 export const ProcessorIntroSentence1 = compileContentComponent({
-  deps: ['gpuName1', 'gpuName2'],
+  deps: [],
   component: (props) => (
     <>
-      General information about the processors for the {props.gpuName1} and{' '}
-      {props.gpuName2}.
+      General information about the processors for the {props.shortGpuName1} and{' '}
+      {props.shortGpuName2}.
     </>
   ),
 });

@@ -6,11 +6,12 @@ import {
 import { ViewPageContext } from '../../context';
 
 export const PerformanceIntroSentence1 = compileContentComponent({
-  deps: ['gpuName'],
+  deps: [],
   component: (props) => (
     <>
-      Compare {props.gpuName}&apos;s performance with similar GPUs. Relative
-      performance provides insight into how its benchmarks compare to its peers.
+      Compare {props.shortGpuName}&apos;s performance with similar GPUs.
+      Relative performance provides insight into how its benchmarks compare to
+      its peers.
     </>
   ),
 });

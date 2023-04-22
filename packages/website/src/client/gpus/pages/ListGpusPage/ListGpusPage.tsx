@@ -100,7 +100,7 @@ export const ListGpusPage = (props: ListGpusViewModel) => {
             </div>
 
             <section className="flex gap-4 items-start">
-              <div className="flex-1 flex flex-col gap-4">
+              <div className="flex-1 flex flex-col gap-4 max-w-full">
                 <ListTable />
                 <ListPagination />
               </div>

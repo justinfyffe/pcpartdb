@@ -6,11 +6,11 @@ import {
 import { ViewPageContext } from '../../context';
 
 export const ValueIntroSentence1 = compileContentComponent({
-  deps: ['gpuName'],
+  deps: [],
   component: (props) => (
     <>
-      Compare {props.gpuName}&apos;s value with similar GPUs. Relative value
-      provides insight into which GPU gives the best bang for your buck.
+      Compare {props.shortGpuName}&apos;s value with similar GPUs. Relative
+      value provides insight into which GPU gives the best bang for your buck.
     </>
   ),
 });

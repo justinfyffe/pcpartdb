@@ -6,11 +6,11 @@ import {
 import { ViewPageContext } from '../../../context';
 
 export const CompatibilityIntroSentence1 = compileContentComponent({
-  deps: ['gpuName', 'shortGpuName'],
+  deps: [],
   component: (props) => (
     <>
-      {props.gpuName}&apos;s dimensions, bus interface, power consumption, and
-      output ports. These specs are useful for verifying that the{' '}
+      {props.shortGpuName}&apos;s dimensions, bus interface, power consumption,
+      and output ports. These specs are useful for verifying that the{' '}
       {props.shortGpuName} fits within your case and is compatible with your
       motherboard, power supply, and monitor.
     </>

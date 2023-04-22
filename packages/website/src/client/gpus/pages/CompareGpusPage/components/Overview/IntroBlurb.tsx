@@ -122,7 +122,7 @@ const IntroReleaseDate = compileContentComponent(
     // Both graphics cards were released during Q3 2022.
     component: (props) => (
       <>
-        Both graphics cards {props.gpu1WillReleaseOrWereReleased} in{' '}
+        These graphics cards {props.gpu1WillReleaseOrWereReleased} in{' '}
         {props.releaseDate1}.
       </>
     ),

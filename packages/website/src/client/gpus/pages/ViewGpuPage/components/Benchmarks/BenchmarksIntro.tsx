@@ -6,10 +6,10 @@ import {
 import { ViewPageContext } from '../../context';
 
 export const BenchmarksIntroSentence1 = compileContentComponent({
-  deps: ['gpuName'],
+  deps: [],
   component: (props) => (
     <>
-      Performance and benchmark metrics for the {props.gpuName}. These are
+      Performance and benchmark metrics for the {props.shortGpuName}. These are
       usually the best indicator for determing a GPUs performance.
     </>
   ),

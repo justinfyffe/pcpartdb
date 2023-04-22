@@ -1,22 +1,6 @@
-import {
-  BoltIcon,
-  CalendarDaysIcon,
-  CircleStackIcon,
-  ClockIcon,
-  CurrencyDollarIcon,
-  StarIcon,
-} from '@heroicons/react/24/outline';
-import React, { FunctionComponent, useContext, useMemo } from 'react';
-import { formatGpuField, getGpuName } from '../../../..';
-import { ComparePageContext } from '../../context';
+import React, { FunctionComponent } from 'react';
 import { ClockHighlightListItem } from './ClockHighlightListItem';
-import {
-  HighlightLabel,
-  HighlightList,
-  HighlightListItem,
-  HighlightValue,
-  HighlightValues,
-} from './HighlightList';
+import { HighlightList } from './HighlightList';
 import { MemoryHighlightListItem } from './MemoryHighlightListItem';
 import { PerformanceHighlightListItem } from './PerformanceHighlightListItem';
 import { ReleaseDateHighlightListItem } from './ReleaseDateHighlightListItem';

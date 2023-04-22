@@ -45,19 +45,19 @@ const PerformanceValue = compileContentComponent(
   {
     tags: [CompareGpusContentTag.DifferentPerformancePerDollar],
     deps: [
-      'gpu1ValueBetterOrWorse',
+      'gpu1ValueHigherOrLower',
       'performancePerDollar1',
       'performancePerDollar2',
     ],
-    // Based on their performance ratings and launch prices, the RTX 2070 has worse
+    // Based on their performance and launch prices, the RTX 2070 has worse
     // performance per dollar than the RX 7900. It has a performance per dollar of 23.45,
     // while the RX 7900 has a performance per dollar of 34.56.
     component: (props) => (
       <>
-        Based on their performance ratings and launch prices, the{' '}
-        {props.shortestGpuName1} has {props.gpu1ValueBetterOrWorse} performance
-        per dollar than the {props.shortestGpuName2}. It has a performance per
-        dollar of {props.performancePerDollar1}, while the{' '}
+        Based on their performance and launch prices, the{' '}
+        {props.shortestGpuName1} has a {props.gpu1ValueHigherOrLower}{' '}
+        performance per dollar than the {props.shortestGpuName2}. It has a
+        performance per dollar of {props.performancePerDollar1}, while the{' '}
         {props.shortestGpuName2} has a performance per dollar of{' '}
         {props.performancePerDollar2}.
       </>
@@ -66,11 +66,11 @@ const PerformanceValue = compileContentComponent(
   {
     tags: [CompareGpusContentTag.SamePerformancePerDollar],
     deps: ['performancePerDollar1'],
-    // Based on their performance ratings and launch prices, the RTX 2070 has the same
+    // Based on their performance and launch prices, the RTX 2070 has the same
     // performance per dollar as the RX 7900: 23.45.
     component: (props) => (
       <>
-        Based on their performance ratings and launch prices, the{' '}
+        Based on their performance and launch prices, the{' '}
         {props.shortestGpuName1} has the same performance per dollar as the{' '}
         {props.shortestGpuName2}: {props.performancePerDollar1}.
       </>
