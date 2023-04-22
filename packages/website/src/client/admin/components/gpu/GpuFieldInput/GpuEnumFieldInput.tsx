@@ -35,7 +35,7 @@ export const GpuEnumFieldInput = forwardRef<
   const handleChange = useCallback(
     (value: SelectValue) => {
       if (value != null && typeof value != 'string') {
-        throw new Error('Invalid select value for SpecEnumField');
+        throw new Error('Invalid select value for GpuEnumFieldInput');
       }
 
       onChange?.({ value: value as string, meta: { fieldKey: field } });
