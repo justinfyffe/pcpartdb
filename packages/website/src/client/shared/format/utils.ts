@@ -47,6 +47,7 @@ export function formatPrice(value: number, options?: FormatPriceOptions) {
 export enum DateFormatter {
   QuarterYear = 'QQQ yyyy',
   Year = 'yyyy',
+  YearQuarter = 'yyyy QQQ',
 }
 
 interface FormatDateOptions {
