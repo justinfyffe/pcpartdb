@@ -1,0 +1,100 @@
+import React, { useContext } from 'react';
+import {
+  compileContentComponent,
+  ContentContext,
+} from '../../../../../shared/content';
+import { CompareGpusContentTag } from '../../content';
+import { ComparePageContext } from '../../context';
+
+const PerformanceIntro = compileContentComponent(
+  {
+    tags: [CompareGpusContentTag.DifferentPerformance],
+    deps: [
+      'gpu1PerformanceMoreOrLess',
+      'gpu1PerformanceHigherOrLower',
+      'gpu1PerformanceDifferencePct',
+    ],
+    // The GeForce RTX 2070 is a less powerful graphics card than the Radeon RX 7900,
+    // delivering approximately 15% less performance than the RX 7900 in the
+    // benchmarks that we track.
+    component: (props) => (
+      <>
+        The {props.shortGpuName1} is a {props.gpu1PerformanceMoreOrLess}{' '}
+        powerful graphics card than the {props.shortGpuName2}, delivering
+        approximately {props.gpu1PerformanceDifferencePct}{' '}
+        {props.gpu1PerformanceHigherOrLower} performance than the{' '}
+        {props.shortestGpuName2} in the benchmarks that we track.
+      </>
+    ),
+  },
+  {
+    tags: [CompareGpusContentTag.SamePerformance],
+    deps: [],
+    // The GeForce RTX 2070 and Radeon RX 7900 have nearly identical performances in the
+    // benchmarks that we track.
+    component: (props) => (
+      <>
+        The {props.shortGpuName1} and {props.shortGpuName2} have nearly
+        identical performances in the benchmarks that we track.
+      </>
+    ),
+  },
+);
+
+const PerformanceValue = compileContentComponent(
+  {
+    tags: [CompareGpusContentTag.DifferentPerformancePerDollar],
+    deps: [
+      'gpu1ValueBetterOrWorse',
+      'performancePerDollar1',
+      'performancePerDollar2',
+    ],
+    // Based on their performance ratings and launch prices, the RTX 2070 has worse
+    // performance per dollar than the RX 7900. It has a performance per dollar of 23.45,
+    // while the RX 7900 has a performance per dollar of 34.56.
+    component: (props) => (
+      <>
+        Based on their performance ratings and launch prices, the{' '}
+        {props.shortestGpuName1} has {props.gpu1ValueBetterOrWorse} performance
+        per dollar than the {props.shortestGpuName2}. It has a performance per
+        dollar of {props.performancePerDollar1}, while the{' '}
+        {props.shortestGpuName2} has a performance per dollar of{' '}
+        {props.performancePerDollar2}.
+      </>
+    ),
+  },
+  {
+    tags: [CompareGpusContentTag.SamePerformancePerDollar],
+    deps: ['performancePerDollar1'],
+    // Based on their performance ratings and launch prices, the RTX 2070 has the same
+    // performance per dollar as the RX 7900: 23.45.
+    component: (props) => (
+      <>
+        Based on their performance ratings and launch prices, the{' '}
+        {props.shortestGpuName1} has the same performance per dollar as the{' '}
+        {props.shortestGpuName2}: {props.performancePerDollar1}.
+      </>
+    ),
+  },
+);
+
+const PerformanceParagraph = compileContentComponent({
+  tags: [],
+  deps: [],
+  component: () => (
+    <p>
+      <PerformanceIntro /> <PerformanceValue />
+    </p>
+  ),
+});
+
+export const PerformanceBlurb = () => {
+  const { contentParams, contentTags } = useContext(ComparePageContext);
+  const context = { tags: contentTags, params: contentParams };
+
+  return (
+    <ContentContext.Provider value={context}>
+      <PerformanceParagraph />
+    </ContentContext.Provider>
+  );
+};

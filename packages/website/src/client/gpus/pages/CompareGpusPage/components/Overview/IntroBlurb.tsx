@@ -103,36 +103,16 @@ const IntroAudience = compileContentComponent(
 
 const IntroReleaseDate = compileContentComponent(
   {
-    tags: [
-      CompareGpusContentTag.DifferentReleaseDate,
-      CompareGpusContentTag.DifferentReleaseYear,
-    ],
-    deps: ['releaseDate1', 'releaseDate2'],
-    // The RTX 3070 is a newer card than the RX 7900 XTX. It was released in Q2 2022,
-    // while the RX 7900 XTX was released in Q1 2022.
+    tags: [CompareGpusContentTag.DifferentReleaseDate],
+    deps: ['releaseDate1', 'releaseDate2', 'gpu2WillReleaseOrWasReleased'],
+    // The RTX 3070 is the newer card of the two GPUs, having a release date of Q2 2022,
+    // while the RX 7900 was released in Q1 2022.
     component: (props) => (
       <>
-        The {props.shortestGpuName1} is a {props.gpu1NewerOrOlder} than the{' '}
-        {props.shortestGpuName2}. It {props.gpu1WillReleaseOrWasReleased} in{' '}
-        {props.releaseDate1}, while the {props.shortestGpuName2}{' '}
-        {props.gpu2WillReleaseOrWasReleased} in {props.releaseDate2}.
-      </>
-    ),
-  },
-  {
-    tags: [
-      CompareGpusContentTag.DifferentReleaseDate,
-      CompareGpusContentTag.SameReleaseYear,
-    ],
-    deps: ['releaseDate1', 'releaseDate2'],
-    // The RTX 3070 is a slightly newer card than the RX 7900 XTX. It was released in Q2 2022,
-    // while the RX 7900 XTX was released in Q1 2022.
-    component: (props) => (
-      <>
-        The {props.shortestGpuName1} is a slightly {props.gpu1NewerOrOlder} than
-        the {props.shortestGpuName2}. It {props.gpu1WillReleaseOrWasReleased} in{' '}
-        {props.releaseDate1}, while the {props.shortestGpuName2}{' '}
-        {props.gpu2WillReleaseOrWasReleased} in {props.releaseDate2}.
+        The {props.shortestGpuName1} is the {props.gpu1NewerOrOlder} card of the
+        two GPUs, having a release date of {props.releaseDate1}, while the{' '}
+        {props.shortestGpuName2} {props.gpu2WillReleaseOrWasReleased} in{' '}
+        {props.releaseDate2}.
       </>
     ),
   },
@@ -142,8 +122,34 @@ const IntroReleaseDate = compileContentComponent(
     // Both graphics cards were released during Q3 2022.
     component: (props) => (
       <>
-        Both graphics cards {props.gpu1WillReleaseOrWereReleased} during{' '}
+        Both graphics cards {props.gpu1WillReleaseOrWereReleased} in{' '}
         {props.releaseDate1}.
+      </>
+    ),
+  },
+);
+
+const IntroLaunchPrice = compileContentComponent(
+  {
+    tags: [CompareGpusContentTag.DifferentLaunchPrice],
+    deps: ['gpu1LaunchPriceHigherOrLower', 'launchPrice1', 'launchPrice2'],
+    // The RTX 3070 has a higher launch price, at $999 compared to the RX 7900 XTX's $399.
+    component: (props) => (
+      <>
+        The {props.shortestGpuName1} has a {props.gpu1LaunchPriceHigherOrLower}{' '}
+        launch price, at {props.launchPrice1} compared to the{' '}
+        {props.shortestGpuName2}&apos;s {props.launchPrice2}.
+      </>
+    ),
+  },
+  {
+    tags: [CompareGpusContentTag.SameLaunchPrice],
+    deps: ['launchPrice1'],
+    // The RTX 3070 has the same launch price as the RX 7900 XTX, $399.
+    component: (props) => (
+      <>
+        The {props.shortestGpuName1} has the same launch price as the{' '}
+        {props.shortestGpuName2}&apos; {props.launchPrice1}.
       </>
     ),
   },
@@ -154,7 +160,7 @@ const IntroParagraph = compileContentComponent({
   deps: [],
   component: () => (
     <p>
-      <IntroAudience /> <IntroReleaseDate />
+      <IntroAudience /> <IntroReleaseDate /> <IntroLaunchPrice />
     </p>
   ),
 });

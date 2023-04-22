@@ -1,12 +1,10 @@
 import { Gpu, GpuComparison, GpuFieldKey } from '@pcpartdb/shared';
 import { format } from 'date-fns';
 import { ContentParams } from 'packages/website/src/client/shared/content';
-import { DateFormatter } from 'packages/website/src/client/shared/format';
 import {
   formatGpuDimensions,
   formatGpuField,
   getGpuName,
-  getShoppingUrl,
 } from '../../../utils';
 
 export interface CompareGpusContentParams {
@@ -22,25 +20,19 @@ export interface CompareGpusContentParams {
   marketSegment2?: string;
   gpu1NewerOrOlder?: string;
   gpu1WillReleaseOrWereReleased?: string;
-  gpu1WillReleaseOrWasReleased?: string;
   gpu2WillReleaseOrWasReleased?: string;
   releaseDate1?: string;
   releaseDate2?: string;
+  gpu1LaunchPriceHigherOrLower?: string;
+  launchPrice1?: string;
+  launchPrice2?: string;
 
-  shoppingUrl1?: string;
-  shoppingUrl2?: string;
-  year1?: string;
-  year2?: string;
-  newerShortGpuName?: string;
-  olderShortGpuName?: string;
-  newerReleaseDate?: string;
-  olderReleaseDate?: string;
-  fasterShortGpuName?: string;
-  slowerShortGpuName?: string;
-  fasterPerformanceFactor?: string;
-  higherValueShortGpuName?: string;
-  lowerValueShortGpuName?: string;
-  betterValueFactor?: string;
+  gpu1PerformanceMoreOrLess?: string;
+  gpu1PerformanceHigherOrLower?: string;
+  gpu1PerformanceDifferencePct?: string;
+  gpu1ValueBetterOrWorse?: string;
+  performancePerDollar1?: string;
+  performancePerDollar2?: string;
 
   gpu1MemorySizeMoreOrLess?: string;
   gpu1MemoryBandwidthFasterOrSlower?: string;
@@ -63,96 +55,9 @@ export interface CompareGpusContentParams {
 }
 
 export function getContentParams(comparison: GpuComparison) {
-  const [gpu1, gpu2] = comparison;
-
-  const shoppingUrl1 = getShoppingUrl(gpu1);
-  const shoppingUrl2 = getShoppingUrl(gpu2);
-  const year1 = formatGpuField(gpu1.releaseDate, {
-    dateFormatter: DateFormatter.Year,
-  });
-  const year2 = formatGpuField(gpu2.releaseDate, {
-    dateFormatter: DateFormatter.Year,
-  });
-
-  let newerShortGpuName: string,
-    olderShortGpuName: string,
-    newerReleaseDate: string,
-    olderReleaseDate: string;
-  // Can only have newer and older gpus if both have different release dates.
-  if (gpu1.releaseDate?.value != null && gpu2.releaseDate?.value != null) {
-    const releaseDateCmp = gpu1.releaseDate.value.localeCompare(
-      gpu2.releaseDate.value,
-    );
-    if (releaseDateCmp < 0) {
-      olderShortGpuName = getGpuName(gpu1, { company: false });
-      olderReleaseDate = formatGpuField(gpu1.releaseDate);
-      newerShortGpuName = getGpuName(gpu2, { company: false });
-      newerReleaseDate = formatGpuField(gpu2.releaseDate);
-    } else if (releaseDateCmp > 0) {
-      newerShortGpuName = getGpuName(gpu1, { company: false });
-      newerReleaseDate = formatGpuField(gpu1.releaseDate);
-      olderShortGpuName = getGpuName(gpu2, { company: false });
-      olderReleaseDate = formatGpuField(gpu2.releaseDate);
-    }
-  }
-
-  let fasterShortGpuName: string,
-    slowerShortGpuName: string,
-    fasterPerformanceFactor: string;
-  if (
-    gpu1.performanceScore?.value != null &&
-    gpu2.performanceScore?.value != null
-  ) {
-    const performanceScore1 = gpu1.performanceScore?.value;
-    const performanceScore2 = gpu2.performanceScore?.value;
-    if (performanceScore1 > performanceScore2) {
-      fasterShortGpuName = getGpuName(gpu1, { company: false });
-      slowerShortGpuName = getGpuName(gpu2, { company: false });
-      fasterPerformanceFactor =
-        ((performanceScore1 / performanceScore2 - 1) * 100).toFixed(2) + '%';
-    } else if (performanceScore1 < performanceScore2) {
-      slowerShortGpuName = getGpuName(gpu1, { company: false });
-      fasterShortGpuName = getGpuName(gpu2, { company: false });
-      fasterPerformanceFactor =
-        ((performanceScore2 / performanceScore1 - 1) * 100).toFixed(2) + '%';
-    }
-  }
-
-  let higherValueShortGpuName: string,
-    lowerValueShortGpuName: string,
-    betterValueFactor: string;
-  if (gpu1.valueScore?.value != null && gpu2.valueScore?.value != null) {
-    const valueScore1 = gpu1.valueScore?.value;
-    const valueScore2 = gpu2.valueScore?.value;
-    if (valueScore1 > valueScore2) {
-      higherValueShortGpuName = getGpuName(gpu1, { company: false });
-      lowerValueShortGpuName = getGpuName(gpu2, { company: false });
-      betterValueFactor =
-        ((valueScore1 / valueScore2 - 1) * 100).toFixed(2) + '%';
-    } else if (valueScore1 < valueScore2) {
-      lowerValueShortGpuName = getGpuName(gpu1, { company: false });
-      higherValueShortGpuName = getGpuName(gpu2, { company: false });
-      betterValueFactor =
-        ((valueScore2 / valueScore1 - 1) * 100).toFixed(2) + '%';
-    }
-  }
-
   return {
-    shoppingUrl1,
-    shoppingUrl2,
-    year1,
-    year2,
-    newerShortGpuName,
-    olderShortGpuName,
-    newerReleaseDate,
-    olderReleaseDate,
-    fasterShortGpuName,
-    slowerShortGpuName,
-    fasterPerformanceFactor,
-    higherValueShortGpuName,
-    lowerValueShortGpuName,
-    betterValueFactor,
     ...getGeneralParams(comparison),
+    ...getPerformanceParams(comparison),
     ...getMemoryParams(comparison),
     ...getCompatibilityParams(comparison),
     ...getPowerSupplyParams(comparison),
@@ -166,7 +71,7 @@ function getGeneralParams(comparison: GpuComparison) {
   if (gpu1.releaseDate?.value != null && gpu2.releaseDate?.value != null) {
     if (gpu1.releaseDate?.value > gpu2.releaseDate?.value) {
       gpu1NewerOrOlder = 'newer';
-    } else if (gpu1.memorySize?.value < gpu2.memorySize?.value) {
+    } else if (gpu1.releaseDate?.value < gpu2.releaseDate?.value) {
       gpu1NewerOrOlder = 'older';
     }
   }
@@ -174,14 +79,11 @@ function getGeneralParams(comparison: GpuComparison) {
   const today = format(new Date(), 'yyyy-MM-dd');
 
   let gpu1WillReleaseOrWereReleased: string;
-  let gpu1WillReleaseOrWasReleased: string;
   if (gpu1.releaseDate?.value != null) {
     if (gpu1.releaseDate?.value > today) {
       gpu1WillReleaseOrWereReleased = 'will release';
-      gpu1WillReleaseOrWasReleased = 'will release';
     } else {
       gpu1WillReleaseOrWereReleased = 'were released';
-      gpu1WillReleaseOrWasReleased = 'was released';
     }
   }
 
@@ -191,6 +93,15 @@ function getGeneralParams(comparison: GpuComparison) {
       gpu2WillReleaseOrWasReleased = 'will release';
     } else {
       gpu2WillReleaseOrWasReleased = 'was released';
+    }
+  }
+
+  let gpu1LaunchPriceHigherOrLower: string;
+  if (gpu1.launchPrice?.value != null && gpu2.launchPrice?.value != null) {
+    if (gpu1.launchPrice?.value > gpu2.launchPrice?.value) {
+      gpu1LaunchPriceHigherOrLower = 'higher';
+    } else if (gpu1.launchPrice?.value < gpu2.launchPrice?.value) {
+      gpu1LaunchPriceHigherOrLower = 'lower';
     }
   }
 
@@ -207,10 +118,58 @@ function getGeneralParams(comparison: GpuComparison) {
     marketSegment2: formatGpuField(gpu2.marketSegment)?.toLowerCase(),
     gpu1NewerOrOlder,
     gpu1WillReleaseOrWereReleased,
-    gpu1WillReleaseOrWasReleased,
     gpu2WillReleaseOrWasReleased,
     releaseDate1: formatGpuField(gpu1.releaseDate),
     releaseDate2: formatGpuField(gpu2.releaseDate),
+    gpu1LaunchPriceHigherOrLower,
+    launchPrice1: formatGpuField(gpu1.launchPrice),
+    launchPrice2: formatGpuField(gpu2.launchPrice),
+  } as CompareGpusContentParams as ContentParams;
+}
+
+function getPerformanceParams(comparison: GpuComparison) {
+  const [gpu1, gpu2] = comparison;
+
+  let gpu1PerformanceMoreOrLess: string;
+  let gpu1PerformanceHigherOrLower: string;
+  let gpu1PerformanceDifferencePct: string;
+  if (
+    gpu1.performanceScore?.value != null &&
+    gpu2.performanceScore?.value != null
+  ) {
+    const performanceScore1 = gpu1.performanceScore.value;
+    const performanceScore2 = gpu2.performanceScore.value;
+    if (performanceScore1 > performanceScore2) {
+      gpu1PerformanceMoreOrLess = 'more';
+      gpu1PerformanceHigherOrLower = 'higher';
+      gpu1PerformanceDifferencePct =
+        ((performanceScore1 / performanceScore2 - 1) * 100).toFixed(0) + '%';
+    } else if (performanceScore1 < performanceScore2) {
+      gpu1PerformanceMoreOrLess = 'less';
+      gpu1PerformanceHigherOrLower = 'lower';
+      gpu1PerformanceDifferencePct =
+        ((1 - performanceScore1 / performanceScore2) * 100).toFixed(0) + '%';
+    }
+  }
+
+  let gpu1ValueBetterOrWorse: string;
+  if (gpu1.valueScore?.value != null && gpu2.valueScore?.value != null) {
+    const valueScore1 = gpu1.valueScore.value;
+    const valueScore2 = gpu2.valueScore.value;
+    if (valueScore1 > valueScore2) {
+      gpu1ValueBetterOrWorse = 'better';
+    } else if (valueScore1 < valueScore2) {
+      gpu1ValueBetterOrWorse = 'worse';
+    }
+  }
+
+  return {
+    gpu1PerformanceMoreOrLess,
+    gpu1PerformanceHigherOrLower,
+    gpu1PerformanceDifferencePct,
+    gpu1ValueBetterOrWorse,
+    performancePerDollar1: formatGpuField(gpu1.valueScore),
+    performancePerDollar2: formatGpuField(gpu2.valueScore),
   } as CompareGpusContentParams as ContentParams;
 }
 

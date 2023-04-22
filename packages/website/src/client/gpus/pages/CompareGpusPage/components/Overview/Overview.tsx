@@ -2,7 +2,7 @@ import React, { FunctionComponent } from 'react';
 import { CompatibilityBlurb } from './CompatibilityBlurb';
 import { IntroBlurb } from './IntroBlurb';
 import { MemoryBlurb } from './MemoryBlurb';
-import { PerformanceAndValueBlurb } from './PerformanceAndValueBlurb';
+import { PerformanceBlurb } from './PerformanceBlurb';
 import { PowerSupplyBlurb } from './PowerSupplyBlurb';
 
 export const Overview: FunctionComponent = () => {
@@ -11,7 +11,7 @@ export const Overview: FunctionComponent = () => {
       <h2>Overview</h2>
 
       <IntroBlurb />
-      <PerformanceAndValueBlurb />
+      <PerformanceBlurb />
       <MemoryBlurb />
       <CompatibilityBlurb />
       <PowerSupplyBlurb />

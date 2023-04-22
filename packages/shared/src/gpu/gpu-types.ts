@@ -7,6 +7,7 @@ export enum MarketSegmentValue {
   Desktop = 'DESKTOP',
   Mobile = 'MOBILE',
   Workstation = 'WORKSTATION',
+  Integrated = 'INTEGRATED',
 }
 
 export enum GpuDataSourceKey {

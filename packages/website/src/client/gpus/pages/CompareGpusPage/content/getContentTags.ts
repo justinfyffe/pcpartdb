@@ -1,6 +1,4 @@
 import { GpuComparison, GpuField, MarketSegmentValue } from '@pcpartdb/shared';
-import { parse } from 'date-fns';
-import { DateFormatter } from 'packages/website/src/client/shared/format';
 import { formatGpuField } from '../../../utils';
 
 export enum CompareGpusContentTag {
@@ -10,10 +8,13 @@ export enum CompareGpusContentTag {
   SameMarketSegment = 'SAME_MARKET_SEGMENT',
   DifferentReleaseDate = 'DIFFERENT_RELEASE_DATE',
   SameReleaseDate = 'SAME_RELEASE_DATE',
-  DifferentReleaseYear = 'DIFFERENT_RELEASE_YEAR',
-  SameReleaseYear = 'SAME_RELEASE_YEAR',
+  DifferentLaunchPrice = 'DIFFERENT_LAUNCH_PRICE',
+  SameLaunchPrice = 'SAME_LAUNCH_PRICE',
 
-  DifferentBetterPerformanceAndValue = 'DIFFERENT_BETTER_PERFORMANCE_AND_VALUE',
+  DifferentPerformance = 'DIFFERENT_PERFORMANCE',
+  SamePerformance = 'SAME_PERFORMANCE',
+  DifferentPerformancePerDollar = 'DIFFERENT_PERFORMANCE_PER_DOLLAR',
+  SamePerformancePerDollar = 'SAME_PERFORMANCE_PER_DOLLAR',
 
   SameMemorySize = 'SAME_MEMORY_SIZE',
   SameMemoryType = 'SAME_MEMORY_TYPE',
@@ -33,29 +34,9 @@ export enum CompareGpusContentTag {
 }
 
 export function getContentTags(comparison: GpuComparison) {
-  const [gpu1, gpu2] = comparison;
-
-  let differentBetterPerformanceAndValue = false;
-  if (
-    gpu1.performanceScore?.value != null &&
-    gpu2.performanceScore?.value != null &&
-    gpu1.valueScore?.value != null &&
-    gpu2.valueScore?.value != null
-  ) {
-    const performanceScore1 = gpu1.performanceScore?.value;
-    const performanceScore2 = gpu2.performanceScore?.value;
-    const valueScore1 = gpu1.valueScore?.value;
-    const valueScore2 = gpu2.valueScore?.value;
-    differentBetterPerformanceAndValue =
-      (performanceScore1 > performanceScore2 && valueScore2 > valueScore1) ||
-      (performanceScore2 > performanceScore1 && valueScore1 > valueScore2);
-  }
-
   return {
-    [CompareGpusContentTag.DifferentBetterPerformanceAndValue]:
-      differentBetterPerformanceAndValue,
-
     ...getGeneralTags(comparison),
+    ...getPerformanceTags(comparison),
     ...getMemoryTags(comparison),
     ...getCompatibilityTags(comparison),
     ...getPowerSupplyTags(comparison),
@@ -72,9 +53,21 @@ function getGeneralTags(comparison: GpuComparison) {
     [CompareGpusContentTag.DifferentReleaseDate]:
       hasDifferentReleaseDate(comparison),
     [CompareGpusContentTag.SameReleaseDate]: hasSameReleaseDate(comparison),
-    [CompareGpusContentTag.DifferentReleaseYear]:
-      hasDifferentReleaseYear(comparison),
-    [CompareGpusContentTag.SameReleaseYear]: hasSameReleaseYear(comparison),
+    [CompareGpusContentTag.DifferentLaunchPrice]:
+      hasDifferentLaunchPrice(comparison),
+    [CompareGpusContentTag.SameLaunchPrice]: hasSameLaunchPrice(comparison),
+  };
+}
+
+function getPerformanceTags(comparison: GpuComparison) {
+  return {
+    [CompareGpusContentTag.DifferentPerformance]:
+      hasDifferentPerformance(comparison),
+    [CompareGpusContentTag.SamePerformance]: hasSamePerformance(comparison),
+    [CompareGpusContentTag.DifferentPerformancePerDollar]:
+      hasDifferentPerformancePerDollar(comparison),
+    [CompareGpusContentTag.SamePerformancePerDollar]:
+      hasSamePerformancePerDollar(comparison),
   };
 }
 
@@ -148,84 +141,59 @@ function hasSameReleaseDate(comparison: GpuComparison) {
   return formatGpuField(gpu1.releaseDate) === formatGpuField(gpu2.releaseDate);
 }
 
-function hasDifferentReleaseYear(comparison: GpuComparison) {
+function hasDifferentLaunchPrice(comparison: GpuComparison) {
   const [gpu1, gpu2] = comparison;
-  if (gpu1.releaseDate == null || gpu2.releaseDate == null) {
-    return false;
-  }
-
-  return (
-    formatGpuField(gpu1.releaseDate, { dateFormatter: DateFormatter.Year }) !==
-    formatGpuField(gpu2.releaseDate, { dateFormatter: DateFormatter.Year })
-  );
+  return hasDifferentValue(gpu1.launchPrice, gpu2.launchPrice);
 }
 
-function hasSameReleaseYear(comparison: GpuComparison) {
+function hasSameLaunchPrice(comparison: GpuComparison) {
   const [gpu1, gpu2] = comparison;
-  if (gpu1.releaseDate == null || gpu2.releaseDate == null) {
-    return false;
-  }
-
-  return (
-    formatGpuField(gpu1.releaseDate, { dateFormatter: DateFormatter.Year }) ===
-    formatGpuField(gpu2.releaseDate, { dateFormatter: DateFormatter.Year })
-  );
+  return hasSameValue(gpu1.launchPrice, gpu2.launchPrice);
 }
 
-function hasSameMemorySize(comparison: GpuComparison) {
+function hasDifferentPerformance(comparison: GpuComparison) {
   const [gpu1, gpu2] = comparison;
-
-  if (gpu1.memorySize?.value == null || gpu2.memorySize?.value == null) {
-    return false;
-  }
-
-  return gpu1.memorySize.value === gpu2.memorySize.value;
+  return hasDifferentValue(gpu1.performanceScore, gpu2.performanceScore);
 }
 
-function hasSameMemoryType(comparison: GpuComparison) {
+function hasSamePerformance(comparison: GpuComparison) {
   const [gpu1, gpu2] = comparison;
-
-  if (gpu1.memoryType?.value == null || gpu2.memoryType?.value == null) {
-    return false;
-  }
-
-  return gpu1.memoryType.value === gpu2.memoryType.value;
+  return hasSameValue(gpu1.performanceScore, gpu2.performanceScore);
 }
 
-function hasSameMemoryBandwidth(comparison: GpuComparison) {
+function hasDifferentPerformancePerDollar(comparison: GpuComparison) {
   const [gpu1, gpu2] = comparison;
+  return hasDifferentValue(gpu1.valueScore, gpu2.valueScore);
+}
 
-  if (
-    gpu1.memoryBandwidth?.value == null ||
-    gpu2.memoryBandwidth?.value == null
-  ) {
-    return false;
-  }
-
-  return gpu1.memoryBandwidth.value === gpu2.memoryBandwidth.value;
+function hasSamePerformancePerDollar(comparison: GpuComparison) {
+  const [gpu1, gpu2] = comparison;
+  return hasSameValue(gpu1.valueScore, gpu2.valueScore);
 }
 
 function hasDifferentMemorySize(comparison: GpuComparison) {
   const [gpu1, gpu2] = comparison;
+  return hasDifferentValue(gpu1.memorySize, gpu2.memorySize);
+}
 
-  if (gpu1.memorySize?.value == null || gpu2.memorySize?.value == null) {
-    return false;
-  }
+function hasSameMemorySize(comparison: GpuComparison) {
+  const [gpu1, gpu2] = comparison;
+  return hasSameValue(gpu1.memorySize, gpu2.memorySize);
+}
 
-  return gpu1.memorySize.value !== gpu2.memorySize.value;
+function hasSameMemoryType(comparison: GpuComparison) {
+  const [gpu1, gpu2] = comparison;
+  return hasSameValue(gpu1.memoryType, gpu2.memoryType);
 }
 
 function hasDifferentMemoryBandwidth(comparison: GpuComparison) {
   const [gpu1, gpu2] = comparison;
+  return hasDifferentValue(gpu1.memoryBandwidth, gpu2.memoryBandwidth);
+}
 
-  if (
-    gpu1.memoryBandwidth?.value == null ||
-    gpu2.memoryBandwidth?.value == null
-  ) {
-    return false;
-  }
-
-  return gpu1.memoryBandwidth.value !== gpu2.memoryBandwidth.value;
+function hasSameMemoryBandwidth(comparison: GpuComparison) {
+  const [gpu1, gpu2] = comparison;
+  return hasSameValue(gpu1.memoryBandwidth, gpu2.memoryBandwidth);
 }
 
 function hasDifferentSlotWidth(comparison: GpuComparison) {

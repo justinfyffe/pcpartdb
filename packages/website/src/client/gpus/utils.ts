@@ -196,6 +196,8 @@ function formatMarketSegment(value: MarketSegmentValue) {
       return 'Mobile';
     case MarketSegmentValue.Workstation:
       return 'Workstation';
+    case MarketSegmentValue.Integrated:
+      return 'Integrated';
     default:
       throw new Error(`Invalid market segment value: ${value}`);
   }

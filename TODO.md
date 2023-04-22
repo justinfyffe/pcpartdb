@@ -1,22 +1,21 @@
 Next tasks:
-- compare page overview
-  - improve intro blurb
-    - add architecture
-  - improve perfromance/value blurb
-  - use ai to reword sentences.
-    - intro
-    - performance and value
+- compare page overview improvements
+  - add architecture
+  - add ranks?
   - add cores?
-- new market segments
-  - Integrated
-  - Mobile Workstation?
+  - add highlights section
+- view page overview improvements
+  - Use ai to reword sentences
+  - Restructure code to similar to the compare page.
 - audit data
   - make sure market segments and launch prices are correct
   - turn off auto-update on static specs
     - maybe a freeze button which toggles off auto-update
 - view page overview
   - use ai to reword sentences.
-  - add memory, cores?
+  - add memory
+  - add cores?
+  - Restructure code to similar to the compare page.
 - improve list page features
   - filter by year (multiselect combobox), market segment (checkbox)
   - sort by release date
