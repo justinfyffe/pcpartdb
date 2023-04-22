@@ -30,7 +30,7 @@ export const HomePage = (props: HomeViewModel) => {
   const [bestPerformanceAmd, bestValueAmd, randomAmd] = amdGpus;
 
   const pageTitle = 'GPU specifications, benchmarks, and comparisons';
-  const seoTitle = `${pageTitle}`;
+  const seoTitle = `PC Part DB - ${pageTitle}`;
   const seoDescription =
     'View and compare GPU specs and benchmarks. ' +
     'Our database of PC Parts will help you choose the best parts for your computer.';

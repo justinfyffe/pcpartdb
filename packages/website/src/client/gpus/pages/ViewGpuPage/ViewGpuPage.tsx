@@ -30,12 +30,14 @@ export const ViewGpuPage = (props: ViewGpuViewModel) => {
   const context = useViewPageContextProps({ gpu, contentData });
 
   const pageTitle = useMemo(() => getGpuName(gpu), [gpu]);
-  const seoTitle = `${pageTitle} - GPU specs, benchmarks, and value`;
+  const seoTitle = `${getGpuName(gpu, {
+    company: false,
+  })}: Specs, performance, and value`;
   const seoDescription = useMemo(() => {
     const fullGpuName = getGpuName(gpu);
 
     return (
-      `View the specs, benchmarks, relative performance and value of the ${fullGpuName}. ` +
+      `View the specs, benchmarks, and performance per dollar of the ${fullGpuName}. ` +
       'Our database of graphics cards will help you choose the best GPU for your computer.'
     );
   }, [gpu]);

@@ -14,7 +14,6 @@ import { CompareGpusForm } from '../../components';
 import {
   Benchmarks,
   GeneralInfo,
-  Intro,
   Overview,
   RelativePerformance,
   RelativeValue,
@@ -32,18 +31,22 @@ export const CompareGpuPage = (props: CompareGpusViewModel) => {
   const context = useComparePageContextProps({ comparison, contentData });
 
   const pageTitle = getGpuComparisonName(comparison);
-  const seoTitle = `${pageTitle} - GPU specs, benchmarks, and value`;
+  const seoTitle = `${getGpuComparisonName(comparison, {
+    company: false,
+  })}: Compare specs, performance, and value`;
   const seoKeywords = [
     pageTitle,
     getGpuName(comparison[0]),
     getGpuName(comparison[1]),
+    getGpuName(comparison[0], { company: false }),
+    getGpuName(comparison[1], { company: false }),
   ];
   const seoDescription = useMemo(() => {
-    const shortGpuName1 = getGpuName(gpu1, { company: false });
-    const shortGpuName2 = getGpuName(gpu2, { company: false });
+    const shortGpuName1 = getGpuName(gpu1, { company: false, brand: false });
+    const shortGpuName2 = getGpuName(gpu2, { company: false, brand: false });
 
     return (
-      `Compare the specs, benchmarks, relative performance and value of the ${shortGpuName1} and ${shortGpuName2}. ` +
+      `Compare the specs, benchmarks, and performance per dollar of the ${shortGpuName1} and ${shortGpuName2}. ` +
       'Our database of graphics cards will help you choose the best GPU for your computer.'
     );
   }, [gpu1, gpu2]);

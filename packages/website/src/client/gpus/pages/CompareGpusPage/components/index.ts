@@ -1,6 +1,5 @@
 export * from './Benchmarks';
 export * from './GeneralInfo';
-export * from './Intro';
 export * from './Overview';
 export * from './RelativePerformance';
 export * from './RelativeValue';
