@@ -32,6 +32,7 @@ export const CompareGpuPage = (props: CompareGpusViewModel) => {
   const context = useComparePageContextProps({ comparison, contentData });
 
   const pageTitle = getGpuComparisonName(comparison);
+  const shortPageTitle = getGpuComparisonName(comparison, { company: false });
   const seoTitle = `${getGpuComparisonName(comparison, {
     company: false,
   })}: Compare specs, performance, and value`;
@@ -65,7 +66,7 @@ export const CompareGpuPage = (props: CompareGpusViewModel) => {
         <Breadcrumbs className="mb-4">
           <Breadcrumb href={getHomePath()}>Home</Breadcrumb>
           <Breadcrumb href={getListGpusPath()}>Graphics Cards</Breadcrumb>
-          <Breadcrumb>{pageTitle}</Breadcrumb>
+          <Breadcrumb>{shortPageTitle}</Breadcrumb>
         </Breadcrumbs>
 
         <div className="flex flex-wrap gap-8 justify-center">

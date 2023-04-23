@@ -1,4 +1,5 @@
 import { BoltIcon } from '@heroicons/react/24/outline';
+import { classNames } from 'packages/website/src/client/shared/ui';
 import React, { FunctionComponent, useContext, useMemo } from 'react';
 import { formatGpuField, getGpuName } from '../../../..';
 import { ComparePageContext } from '../../context';
@@ -6,7 +7,6 @@ import {
   HighlightLabel,
   HighlightListItem,
   HighlightValue,
-  HighlightValues,
 } from './HighlightList';
 
 interface TdpHighlightListItemProps {
@@ -49,14 +49,20 @@ export const TdpHighlightListItem: FunctionComponent<
         TDP
       </HighlightLabel>
 
-      <HighlightValues>
-        <HighlightValue className={bold1 ? 'font-bold' : ''}>
-          {names[0]}: {values[0]}
-        </HighlightValue>
-        <HighlightValue className={bold2 ? 'font-bold' : ''}>
-          {names[1]}: {values[1]}
-        </HighlightValue>
-      </HighlightValues>
+      <HighlightValue>
+        <div className={classNames('text-right', bold1 ? 'font-bold' : '')}>
+          {names[0]}:
+        </div>
+        <div className={classNames('text-right', bold1 ? 'font-bold' : '')}>
+          {values[0]}
+        </div>
+        <div className={classNames('text-right', bold2 ? 'font-bold' : '')}>
+          {names[1]}:
+        </div>
+        <div className={classNames('text-right', bold2 ? 'font-bold' : '')}>
+          {values[1]}
+        </div>
+      </HighlightValue>
     </HighlightListItem>
   );
 };

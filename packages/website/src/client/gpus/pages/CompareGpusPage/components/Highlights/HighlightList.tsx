@@ -79,20 +79,15 @@ export const HighlightValue = (props: HighlightValueProps) => {
   const { children, className } = props;
 
   return (
-    <div className={classNames('text-xs text-slate-600 text-right', className)}>
+    <div
+      className={classNames(
+        'grid grid-cols-[auto_auto] grid-rows-2 gap-x-2',
+        className,
+      )}
+    >
       {children}
     </div>
   );
-};
-
-interface HighlightValuesProps {
-  children?: React.ReactNode;
-}
-
-export const HighlightValues = (props: HighlightValuesProps) => {
-  const { children } = props;
-
-  return <div className="flex flex-col justify-end">{children}</div>;
 };
 
 interface HighlightButtonProps extends ButtonProps {

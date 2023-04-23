@@ -246,7 +246,9 @@ export class GpuRepository {
 
   private generateOrderBy(
     orderBy: GpusOrderBy,
-  ): Prisma.GpuOrderByWithRelationAndSearchRelevanceInput {
+  ):
+    | Prisma.GpuOrderByWithRelationAndSearchRelevanceInput
+    | Prisma.GpuOrderByWithRelationAndSearchRelevanceInput[] {
     if (orderBy == null) {
       return { id: 'desc' };
     }

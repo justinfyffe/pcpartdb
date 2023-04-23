@@ -162,11 +162,9 @@ export function compileContentFunction(
     });
   }
 
-  return (props?) => {
-    const tags = props.tags || [];
-    const params = props.params || {};
-    const required = props.required || false;
-
-    return processContentFunction({ variants, tags, params, required });
-  };
+  return (props: {
+    tags?: ContentTags;
+    params?: ContentFunctionParams;
+    required?: boolean;
+  }) => processContentFunction({ variants, ...props });
 }

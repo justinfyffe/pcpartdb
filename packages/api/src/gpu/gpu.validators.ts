@@ -7,6 +7,7 @@ export const gpuPresetsValidator = Joi.string();
 
 export const gpusFilterValidator = Joi.object({
   company: Joi.array().items(Joi.string()).allow('', null),
+  segment: Joi.array().items(Joi.string()).allow('', null),
 
   performanceRated: Joi.boolean(),
   valueRated: Joi.boolean(),

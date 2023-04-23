@@ -15,8 +15,9 @@ import { CompareGpusForm } from '../../components';
 import { gpuService } from '../../gpuService';
 import {
   ListFilters,
+  ListMenu,
   ListPagination,
-  ListPresetsMenu,
+  ListPresets,
   ListTable,
   ListTitle,
 } from './components';
@@ -95,8 +96,11 @@ export const ListGpusPage = (props: ListGpusViewModel) => {
           <article className="flex-1 flex flex-col gap-4">
             <div className="flex items-center justify-between">
               <ListTitle />
-              <ListPresetsMenu className="md:hidden" />
-              <ListPresetsMenu includeFilters className="hidden md:block" />
+              <ListMenu
+                includeFilters
+                includePresets
+                className="hidden md:block"
+              />
             </div>
 
             <section className="flex gap-4 items-start">
@@ -105,8 +109,13 @@ export const ListGpusPage = (props: ListGpusViewModel) => {
                 <ListPagination />
               </div>
 
-              <aside className="md:hidden border-px">
-                <ListFilters />
+              <aside className="md:hidden flex flex-col gap-4">
+                <div className="border-px">
+                  <ListFilters />
+                </div>
+                <div className="border-px">
+                  <ListPresets />
+                </div>
               </aside>
             </section>
           </article>

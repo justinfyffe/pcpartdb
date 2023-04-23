@@ -1,50 +1,42 @@
-import { GpuSort } from '@pcpartdb/shared';
 import {
   compileContentFunction,
   ContentFunctionParams,
 } from 'packages/website/src/client/shared/content';
 import { useMemo } from 'react';
-import { formatGpuCompany } from '../../../utils';
+import { ListGpusContentTag } from '../content';
 import { ListPageContextProps } from '../context';
 
 const seoTitle = compileContentFunction(
   {
-    tags: [GpuSort.PerformanceRating],
-    deps: ['company'],
-    hook: (props: ContentFunctionParams) =>
-      `Best ${props.company} Graphics Cards by Performance`,
+    tags: [ListGpusContentTag.SortedBestPerformance],
+    deps: [],
+    hook: (props) =>
+      `${props.bestOrWorstTitle} ${props.company || ''} ${
+        props.marketSegment || ''
+      } GPUs by performance`,
   },
   {
-    tags: [GpuSort.ValueRating],
-    deps: ['company'],
-    hook: (props: ContentFunctionParams) =>
-      `Best ${props.company} Graphics Cards by Value`,
+    tags: [ListGpusContentTag.SortedBestValue],
+    deps: [],
+    hook: (props) =>
+      `${props.bestOrWorstTitle} ${props.company || ''} ${
+        props.marketSegment || ''
+      } GPUs by performance per dollar`,
   },
   {
-    tags: [GpuSort.PerformanceRating],
-    hook: () => 'Best Graphics Cards by Performance',
-  },
-  {
-    tags: [GpuSort.ValueRating],
-    hook: () => 'Best Graphics Cards by Value',
+    tags: [ListGpusContentTag.SortedReleaseDate],
+    deps: [],
+    hook: (props) =>
+      `${props.newestOrOldestTitle} ${props.company || ''} ${
+        props.marketSegment || ''
+      } GPUs by release date`,
   },
 );
 
 export const useSeoTitle = (context: ListPageContextProps) => {
-  const { query } = context;
+  const { contentParams: params, contentTags: tags } = context;
 
   return useMemo(() => {
-    const filters = {
-      [query.orderBy?.sort ?? GpuSort.PerformanceRating]: true,
-    };
-
-    const params = {
-      company:
-        query.filter?.company?.length === 1
-          ? formatGpuCompany(query.filter?.company[0])
-          : null,
-    };
-
-    return seoTitle({ tags: filters, params });
-  }, [query.filter?.company, query.orderBy?.sort]);
+    return seoTitle({ tags, params: params as ContentFunctionParams });
+  }, [params, tags]);
 };

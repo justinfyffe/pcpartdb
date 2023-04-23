@@ -188,7 +188,7 @@ export function formatGpuField(
   return returnValue;
 }
 
-function formatMarketSegment(value: MarketSegmentValue) {
+export function formatMarketSegment(value: MarketSegmentValue) {
   switch (value) {
     case MarketSegmentValue.Desktop:
       return 'Desktop';

@@ -16,14 +16,15 @@ Next tasks:
   - add cores?
   - Restructure code to similar to the compare page.
 - improve list page features
-  - filter by year (multiselect combobox), market segment (checkbox)
-  - sort by release date
+  - filter by year (multiselect combobox)
 - improve automation
   - find new gpus automatically
     - maybe need a two core DO account
 - Depending on if enough traffic for affiliate sales:
   - cpus
   - gpu retail models
+- code cleanup
+  - replace max with min for media queries
 
 Retail models
 - gpus table or separate table for simplicity?

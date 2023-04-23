@@ -1,4 +1,5 @@
 import { CircleStackIcon } from '@heroicons/react/24/outline';
+import { classNames } from 'packages/website/src/client/shared/ui';
 import React, { FunctionComponent, useContext, useMemo } from 'react';
 import { formatGpuField, getGpuName } from '../../../..';
 import { ComparePageContext } from '../../context';
@@ -6,7 +7,6 @@ import {
   HighlightLabel,
   HighlightListItem,
   HighlightValue,
-  HighlightValues,
 } from './HighlightList';
 
 interface MemoryHighlightListItemProps {
@@ -32,15 +32,15 @@ export const MemoryHighlightListItem: FunctionComponent<
   const values = useMemo(() => {
     const memorySize1 = formatGpuField(gpu1.memorySize);
     const memoryType1 = formatGpuField(gpu1.memoryType);
-    const memory1 = [memorySize1, memoryType1]
-      .filter((value) => value != null)
-      .join(' ');
+    const memory1 =
+      [memorySize1, memoryType1].filter((value) => value != null).join(' ') ||
+      '--';
 
     const memorySize2 = formatGpuField(gpu2.memorySize);
     const memoryType2 = formatGpuField(gpu2.memoryType);
-    const memory2 = [memorySize2, memoryType2]
-      .filter((value) => value != null)
-      .join(' ');
+    const memory2 =
+      [memorySize2, memoryType2].filter((value) => value != null).join(' ') ||
+      '--';
 
     return [memory1, memory2];
   }, [gpu1, gpu2]);
@@ -58,14 +58,20 @@ export const MemoryHighlightListItem: FunctionComponent<
         Memory
       </HighlightLabel>
 
-      <HighlightValues>
-        <HighlightValue className={bold1 ? 'font-bold' : ''}>
-          {names[0]}: {values[0]}
-        </HighlightValue>
-        <HighlightValue className={bold2 ? 'font-bold' : ''}>
-          {names[1]}: {values[1]}
-        </HighlightValue>
-      </HighlightValues>
+      <HighlightValue>
+        <div className={classNames('text-right', bold1 ? 'font-bold' : '')}>
+          {names[0]}:
+        </div>
+        <div className={classNames('text-right', bold1 ? 'font-bold' : '')}>
+          {values[0]}
+        </div>
+        <div className={classNames('text-right', bold2 ? 'font-bold' : '')}>
+          {names[1]}:
+        </div>
+        <div className={classNames('text-right', bold2 ? 'font-bold' : '')}>
+          {values[1]}
+        </div>
+      </HighlightValue>
     </HighlightListItem>
   );
 };

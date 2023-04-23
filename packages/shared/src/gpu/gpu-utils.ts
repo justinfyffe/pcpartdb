@@ -3,6 +3,7 @@ import { getListGpusPath } from '../routes';
 import {
   DEFAULT_LIST_GPUS_LIMIT,
   DEFAULT_LIST_GPUS_OFFSET,
+  DEFAULT_LIST_GPUS_ORDER,
   DEFAULT_LIST_GPUS_SORT,
   LIST_GPUS_PRESETS,
   ListGpusPresetSlug,
@@ -47,7 +48,7 @@ export function generateGpusQueryFromSearchParams(
 
   const company = (query.company as string)?.split(',');
   const sort = (query.sort as GpuSort) || DEFAULT_LIST_GPUS_SORT;
-  const order = query.order as GpuOrder;
+  const order = (query.order as GpuOrder) || DEFAULT_LIST_GPUS_ORDER;
   const preset = query.preset as ListGpusPresetSlug;
 
   if (preset != null && LIST_GPUS_PRESETS[preset] != null) {

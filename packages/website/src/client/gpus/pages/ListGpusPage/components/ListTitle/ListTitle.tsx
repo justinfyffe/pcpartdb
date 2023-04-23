@@ -1,51 +1,63 @@
 import React, { FunctionComponent, useContext } from 'react';
 import {
   compileContentComponent,
-  ContentComponentParams,
   ContentContext,
 } from '../../../../../shared/content';
 import { ListGpusContentTag } from '../../content';
 import { ListPageContext } from '../../context';
 
-interface ListTitleContentParams extends ContentComponentParams {
-  company?: string;
-}
-
 const TitleSentence = compileContentComponent(
   {
     tags: [ListGpusContentTag.SortedBestPerformance],
-    deps: ['company'],
-    component: (props: ListTitleContentParams) => (
-      <>Best {props.company} graphics cards by performance</>
+    deps: [],
+    component: (props) => (
+      <>
+        {props.bestOrWorstTitle} {props.company} {props.marketSegment} GPUs by
+        performance
+      </>
     ),
   },
   {
     tags: [ListGpusContentTag.SortedBestValue],
-    deps: ['company'],
-    component: (props: ListTitleContentParams) => (
-      <>Best {props.company} graphics cards by value</>
+    deps: [],
+    component: (props) => (
+      <>
+        {props.bestOrWorstTitle} {props.company} {props.marketSegment} GPUs by
+        performance per dollar
+      </>
     ),
   },
   {
-    tags: [ListGpusContentTag.SortedBestPerformance],
-    component: () => <>Best graphics cards by performance</>,
-  },
-  {
-    tags: [ListGpusContentTag.SortedBestValue],
-    component: () => <>Best graphics cards by value</>,
+    tags: [ListGpusContentTag.SortedReleaseDate],
+    component: (props) => (
+      <>
+        {props.newestOrOldestTitle} {props.company} {props.marketSegment} GPUs
+        by release date
+      </>
+    ),
   },
 );
 
-const SubtitleSentence = compileContentComponent(
+const SortedSentence = compileContentComponent(
   {
     tags: [ListGpusContentTag.SortedBestPerformance],
-    component: () => <>Sorted by highest performance benchmarks</>,
+    component: () => <>Sorted by highest performance benchmarks.</>,
   },
   {
     tags: [ListGpusContentTag.SortedBestValue],
     component: () => <>Sorted by performance per dollar</>,
   },
+  {
+    tags: [ListGpusContentTag.SortedReleaseDate],
+    component: () => <>Sorted by release date</>,
+  },
 );
+
+const FilteredSentence = compileContentComponent({
+  tags: [],
+  deps: ['filtersList'],
+  component: (props) => <>Filtered to {props.filtersList} graphics cards.</>,
+});
 
 export const ListTitle: FunctionComponent = () => {
   const { contentParams, contentTags } = useContext(ListPageContext);
@@ -59,7 +71,7 @@ export const ListTitle: FunctionComponent = () => {
         </h1>
 
         <p className="text-content-dimmed mb-0">
-          <SubtitleSentence />
+          <SortedSentence /> <FilteredSentence />
         </p>
       </div>
     </ContentContext.Provider>

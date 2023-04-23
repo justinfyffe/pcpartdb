@@ -4,7 +4,6 @@ import {
   ContentFunctionParams,
 } from 'packages/website/src/client/shared/content';
 import { useMemo } from 'react';
-import { formatGpuCompany } from '../../../utils';
 import { ListPageContextProps } from '../context';
 
 const seoDescription = compileContentFunction(
@@ -37,20 +36,9 @@ const seoDescription = compileContentFunction(
 );
 
 export const useSeoDescription = (context: ListPageContextProps) => {
-  const { query } = context;
+  const { contentParams: params, contentTags: tags } = context;
 
   return useMemo(() => {
-    const filters = {
-      [query.orderBy?.sort ?? GpuSort.PerformanceRating]: true,
-    };
-
-    const params = {
-      company:
-        query.filter?.company?.length === 1
-          ? formatGpuCompany(query.filter?.company[0])
-          : null,
-    };
-
-    return seoDescription({ tags: filters, params });
-  }, [query.filter?.company, query.orderBy?.sort]);
+    return seoDescription({ tags, params: params as ContentFunctionParams });
+  }, [tags, params]);
 };

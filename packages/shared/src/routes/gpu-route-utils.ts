@@ -125,6 +125,10 @@ function generateSearchParamsFromGpusQuery(query: GpusQuery) {
     params.append('company', query.filter.company.join(','));
   }
 
+  if (query.filter?.segment?.length > 0) {
+    params.append('segment', query.filter.segment.join(','));
+  }
+
   if (query.orderBy?.sort) {
     params.append('sort', query.orderBy.sort);
   }
@@ -151,14 +155,26 @@ function getListGpusPresetEquivalent(query: GpusQuery) {
 function areGpuQueriesEqual(query1: GpusQuery, query2: GpusQuery) {
   const sort1 = query1.orderBy?.sort;
   const sort2 = query2.orderBy?.sort;
+  const order1 = query1.orderBy?.order;
+  const order2 = query2.orderBy?.order;
   const company1 = query1.filter?.company ?? [];
   const company2 = query2.filter?.company ?? [];
+  const segment1 = query1.filter?.segment ?? [];
+  const segment2 = query2.filter?.segment ?? [];
 
   if (sort1 !== sort2) {
     return false;
   }
 
+  if (order1 !== order2) {
+    return false;
+  }
+
   if (!company1.every((company) => company2.includes(company))) {
+    return false;
+  }
+
+  if (!segment1.every((segment) => segment2.includes(segment))) {
     return false;
   }
 

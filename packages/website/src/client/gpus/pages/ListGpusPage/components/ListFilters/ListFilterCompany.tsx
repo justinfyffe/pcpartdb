@@ -44,8 +44,8 @@ export const ListFilterComnpany: FunctionComponent<ListFilterComnpanyProps> = (
   );
 
   return (
-    <div className={classNames('flex flex-col gap-2', props.className)}>
-      <div className="font-bold">Company:</div>
+    <div className={classNames('flex flex-col', props.className)}>
+      <div className="font-bold m-2">Company:</div>
       <ListFilterComnpanyItem company="amd" onChange={handleCompanyToggle} />
       <ListFilterComnpanyItem company="intel" onChange={handleCompanyToggle} />
       <ListFilterComnpanyItem company="nvidia" onChange={handleCompanyToggle} />
@@ -71,7 +71,11 @@ const ListFilterComnpanyItem: FunctionComponent<ListFilterComnpanyItemProps> = (
   const name = useMemo(() => formatGpuCompany(company), [company]);
 
   return (
-    <Checkbox value={value} onChange={(value) => onChange(company, value)}>
+    <Checkbox
+      value={value}
+      onChange={(value) => onChange(company, value)}
+      className="p-2 hover:bg-slate-100"
+    >
       {name}
     </Checkbox>
   );
