@@ -80,23 +80,29 @@ export class GpuRanksRepository {
     const where: string[] = [];
     let nextParameterIndex = 1;
 
-    if (filter?.architecture != null && filter.architecture.length > 0) {
+    const architecture =
+      filter?.architecture?.filter((value) => value != null) ?? [];
+    const company = filter?.company?.filter((value) => value != null) ?? [];
+    const year = filter?.year?.filter((value) => value != null) ?? [];
+    const segment = filter?.segment?.filter((value) => value != null) ?? [];
+
+    if (architecture.length > 0) {
       where.push(`gpu.architecture = ANY ($${nextParameterIndex++})`);
-      parameters.push(filter.architecture);
+      parameters.push(architecture);
     }
-    if (filter?.company != null && filter.company.length > 0) {
+    if (company.length > 0) {
       where.push(`gpu.company = ANY ($${nextParameterIndex++})`);
-      parameters.push(filter.company);
+      parameters.push(company);
     }
-    if (filter?.year != null) {
+    if (year.length > 0) {
       where.push(
         `DATE_PART('year', gpu.release_date::date) = ANY ($${nextParameterIndex++})`,
       );
-      parameters.push(filter.year);
+      parameters.push(year);
     }
-    if (filter?.segment != null) {
+    if (segment.length > 0) {
       where.push(`gpu.market_segment = ANY ($${nextParameterIndex++})`);
-      parameters.push(filter.segment);
+      parameters.push(segment);
     }
 
     return {
