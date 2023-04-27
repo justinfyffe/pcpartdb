@@ -14,7 +14,7 @@ export const ApprovedUpdateRow: FunctionComponent<ApprovedUpdateRowProps> = (
   const { update } = props;
 
   const handlePreviewUpdate = useCallback((update: DataUpdate) => {
-    showDialog(<PreviewDialog dataUpdate={update} />);
+    showDialog(<PreviewDialog id={update.id} />);
   }, []);
 
   return (

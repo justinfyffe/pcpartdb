@@ -1,28 +1,46 @@
 import { DataUpdate } from '@pcpartdb/shared';
-import React, { FunctionComponent } from 'react';
-import {
-  Button,
-  ButtonVariant,
-  closeDialog,
-} from '../../../../../shared/components';
-import { RawDiffTab } from './RawDiffTab';
+import React, { FunctionComponent, useEffect, useState } from 'react';
+import { Spinner } from '../../../../../shared/components';
+import { adminService } from '../../../../adminService';
+import { GpuDiffView } from '../../../../components';
+
+enum Tab {
+  Formatted,
+  Raw,
+}
 
 interface PreviewDialogProps {
-  dataUpdate: DataUpdate;
+  id: number;
 }
 
 export const PreviewDialog: FunctionComponent<PreviewDialogProps> = (props) => {
-  const { dataUpdate } = props;
+  const { id } = props;
+  const [dataUpdate, setDataUpdate] = useState<DataUpdate>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    async function fetchUpdate() {
+      setLoading(true);
+      const response = await adminService.getUpdate(id);
+      setDataUpdate(response);
+      setLoading(false);
+    }
+    fetchUpdate();
+  }, [id]);
 
   return (
     <div className="bg-white flex flex-col gap-4 h-[80%] w-[80%] p-4 overflow-auto max-w-247 rounded shadow">
-      <RawDiffTab dataUpdate={dataUpdate} />
+      {loading && (
+        <div className="flex flex-col items-center justify-center h-full w-full gap-6">
+          <Spinner className="w-24 h-24 border-3" />
+          <div className="flex flex-col gap-2">
+            <h3 className="text-2xl text-center">Loading update.</h3>
+            <div className="text-lg">This may take a moment.</div>
+          </div>
+        </div>
+      )}
 
-      <div className="flex justify-end">
-        <Button variant={ButtonVariant.Default} onClick={() => closeDialog()}>
-          Close
-        </Button>
-      </div>
+      {!loading && <GpuDiffView diff={dataUpdate.data} />}
     </div>
   );
 };

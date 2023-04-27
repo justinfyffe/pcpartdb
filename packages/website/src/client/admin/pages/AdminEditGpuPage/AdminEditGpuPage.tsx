@@ -1,5 +1,9 @@
 import 'reflect-metadata';
-import { AdminEditGpuViewModel, getAdminListGpusPath } from '@pcpartdb/shared';
+import {
+  AdminEditGpuViewModel,
+  getAdminListGpusPath,
+  getViewGpuPath,
+} from '@pcpartdb/shared';
 import React from 'react';
 import {
   Button,
@@ -24,6 +28,10 @@ export const AdminEditGpuPage = (props: AdminEditGpuViewModel) => {
       <article>
         <div className="flex items-center justify-between mb-4">
           <h1 className="font-semibold">{pageTitle}</h1>
+
+          <Button href={getViewGpuPath(gpu)} variant={ButtonVariant.Default}>
+            View Page
+          </Button>
 
           <Button href={getAdminListGpusPath()} variant={ButtonVariant.Default}>
             Back

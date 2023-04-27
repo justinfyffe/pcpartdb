@@ -5,7 +5,6 @@ import {
   ClockSpeedUnit,
   FlopsUnit,
   Gpu,
-  GpuDataSourceKey,
   GpuField,
   LengthUnit,
   MemoryUnit,

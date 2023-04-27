@@ -182,16 +182,24 @@ function getGpuFieldValueMultiplier(unit: GpuFieldUnit) {
   }
 }
 
+interface CalculateBaseGpuFieldValueOptions {
+  decimals?: number;
+}
+
 export function calculateBaseGpuFieldValue(
   displayValue: number,
   unit: GpuFieldUnit,
+  options?: CalculateBaseGpuFieldValueOptions,
 ) {
   if (displayValue == null) {
     return null;
   }
 
   const multiplier = getGpuFieldValueMultiplier(unit);
-  return displayValue * multiplier;
+  const result = displayValue * multiplier;
+
+  const decimals = options?.decimals ?? 0;
+  return Number(result.toFixed(decimals));
 }
 
 export function calculateDisplayGpuFieldValue(

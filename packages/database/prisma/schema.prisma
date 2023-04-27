@@ -158,7 +158,7 @@ model DataUpdate {
   status          String
   updateSource    String    @map("update_source")
 
-  diff            Json?
+  data            Bytes?
   metadata        Json?
 
   decisionMadeAt  DateTime? @map("decision_made_at")

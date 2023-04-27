@@ -1,5 +1,6 @@
 import { HeartIcon } from '@heroicons/react/24/solid';
 import {
+  Config,
   getAboutPath,
   getHomePath,
   getListGpusPath,
@@ -23,6 +24,9 @@ import {
 import { classNames } from '../../ui';
 
 interface WebsiteLayoutProps {
+  config?: Config;
+  editThisPageHref?: string;
+
   className?: string;
   children?: React.ReactNode;
 }
@@ -102,6 +106,11 @@ export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
           <HeartIcon className={classNames('inline-block h-4 w-4 mb-0.5')} /> in
           New York
         </FooterSection>
+        {props.config?.isStaff && props.editThisPageHref != null && (
+          <FooterSection className={classNames('flex-none text-center w-full')}>
+            <a href={props.editThisPageHref}>edit this page</a>
+          </FooterSection>
+        )}
       </Footer>
     </>
   );

@@ -1,4 +1,6 @@
 import {
+  Config,
+  getAdminEditGpuPath,
   getHomePath,
   getListGpusPath,
   getViewGpuPath,
@@ -23,8 +25,8 @@ import {
 import { ViewPageContext } from './context';
 import { useViewPageContextProps } from './hooks';
 
-export const ViewGpuPage = (props: ViewGpuViewModel) => {
-  const { gpu, relatedGpus, relatedComparisons, contentData } = props;
+export const ViewGpuPage = (props: ViewGpuViewModel & { config: Config }) => {
+  const { gpu, relatedGpus, relatedComparisons, contentData, config } = props;
   useGpuCache(gpu);
 
   const context = useViewPageContextProps({ gpu, contentData });
@@ -46,6 +48,10 @@ export const ViewGpuPage = (props: ViewGpuViewModel) => {
 
   const homeHref = useMemo(() => getHomePath(), []);
   const listGpusHref = useMemo(() => getListGpusPath(), []);
+  const editHref = useMemo(
+    () => (config.isStaff ? getAdminEditGpuPath(gpu) : null),
+    [config.isStaff, gpu],
+  );
 
   return (
     <ViewPageContext.Provider value={context}>
@@ -56,7 +62,7 @@ export const ViewGpuPage = (props: ViewGpuViewModel) => {
         canonical={seoCanonical}
       />
 
-      <WebsiteLayout>
+      <WebsiteLayout config={config} editThisPageHref={editHref}>
         <Breadcrumbs className="mb-4">
           <Breadcrumb href={homeHref}>Home</Breadcrumb>
           <Breadcrumb href={listGpusHref}>Graphics Cards</Breadcrumb>

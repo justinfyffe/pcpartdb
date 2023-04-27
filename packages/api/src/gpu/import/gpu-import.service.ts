@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { mapToGpuDto } from '@pcpartdb/database';
 import {
   scrapeTechPowerUpGpuDetails,
   scrapeUlBenchmarksGpuDetails,
@@ -7,6 +8,7 @@ import {
 import {
   Gpu,
   GpuDataSource,
+  GpuDiff,
   ImportGpusRequest,
   PreviewImportGpusResponse,
   ScrapeGpuDetailsRequest,
@@ -52,8 +54,7 @@ export class GpuImportService {
     const gpusToImport: Gpu[] = JSON.parse(json);
     await fileUtils.remove(path);
 
-    const newGpus: Gpu[] = [];
-    const existingGpus: Gpu[] = [];
+    const diffs: GpuDiff[] = [];
 
     for (let i = 0; i < gpusToImport.length; ++i) {
       const gpuToImport = gpusToImport[i];
@@ -62,19 +63,18 @@ export class GpuImportService {
 
       let gpuEntity = await this.gpuRepository.findBySlug(slug, {}, ctx);
       gpuEntity = gpuEntity || (await this.gpuRepository.findByName(name, ctx));
+      const original = mapToGpuDto(gpuEntity, { includeSources: true });
 
-      if (gpuEntity == null) {
-        newGpus.push(gpuToImport);
-      } else {
-        existingGpus.push({
-          ...gpuToImport,
-          id: gpuEntity.id,
-          slug: gpuEntity.slug,
-        });
-      }
+      const updated = {
+        ...gpuToImport,
+        id: original?.id,
+        slug: original?.slug || slug,
+      };
+
+      diffs.push({ original, updated });
     }
 
-    return { newGpus, existingGpus } as PreviewImportGpusResponse;
+    return { diffs } as PreviewImportGpusResponse;
   }
 
   async import(request: ImportGpusRequest, ctx: Context) {

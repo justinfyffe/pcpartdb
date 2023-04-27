@@ -115,11 +115,8 @@ async function writeGpuComparisonsSitemap() {
       const gpu1 = gpus[i];
       const gpu2 = gpus[j];
 
-      const url = sitemapUrl(
-        getCompareGpusPath([gpu1, gpu2], {
-          ordered: true,
-        }),
-      );
+      const url1 = sitemapUrl(getCompareGpusPath([gpu1, gpu2]));
+      const url2 = sitemapUrl(getCompareGpusPath([gpu1, gpu2]));
       const lastModTimestamp = Math.max(
         gpu1.updatedAt ?? 0,
         gpu2.updatedAt ?? 0,
@@ -127,7 +124,8 @@ async function writeGpuComparisonsSitemap() {
       const lastModification =
         lastModTimestamp != 0 ? new Date(lastModTimestamp) : undefined;
 
-      entries.push({ url, lastModification });
+      entries.push({ url: url1, lastModification });
+      entries.push({ url: url2, lastModification });
 
       if (++entriesCounter >= COMPARISONS_PER_SITEMAP) {
         const filename = GPU_COMPARISONS_FILENAME.replace(

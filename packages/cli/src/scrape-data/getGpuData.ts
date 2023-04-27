@@ -12,10 +12,11 @@ interface GetGpuDataOptions {
   offset: number;
   count: number;
   proxy?: boolean;
+  file?: string;
 }
 
 export async function getGpuData(options: GetGpuDataOptions) {
-  const { sourceModel, offset, count, proxy } = options;
+  const { sourceModel, offset, count, proxy, file } = options;
   const gpus: Partial<Gpu>[] = [];
   for (let i = offset; i < offset + count; ++i) {
     const source = sourceModel[i];
@@ -34,7 +35,7 @@ export async function getGpuData(options: GetGpuDataOptions) {
 
   console.log(`Fetched ${gpus.length}`);
 
-  const path = gpusDataPath(`gpus-${new Date().getTime()}.json`);
+  const path = gpusDataPath(file);
   console.log(`Finished building GPU data. Saving to ${path}`);
 
   await fsPromises.writeFile(path, JSON.stringify(gpus, undefined, 2), 'utf-8');

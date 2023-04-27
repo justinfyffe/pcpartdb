@@ -40,6 +40,18 @@ export class DataUpdateController {
     );
   }
 
+  @Get(':id')
+  @UseGuards(StaffGuard)
+  async getUpdate(@Param('id') idStr: string, @Ctx() ctx: Context) {
+    return this.db.transaction(
+      async () => {
+        const id = Number(idStr);
+        return await this.dataUpdateService.getUpdate(id, ctx);
+      },
+      { ctx },
+    );
+  }
+
   @Put(':id/approve')
   @UseGuards(StaffGuard)
   async approveUpdate(@Param('id') idStr: string, @Ctx() ctx: Context) {

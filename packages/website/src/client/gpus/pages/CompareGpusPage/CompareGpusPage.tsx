@@ -52,7 +52,7 @@ export const CompareGpuPage = (props: CompareGpusViewModel) => {
       'Our database of graphics cards will help you choose the best GPU for your computer.'
     );
   }, [gpu1, gpu2]);
-  const seoCanonical = getCompareGpusPath(comparison, { ordered: true });
+  const seoCanonical = getCompareGpusPath(comparison);
 
   return (
     <ComparePageContext.Provider value={context}>

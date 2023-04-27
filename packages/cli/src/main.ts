@@ -32,10 +32,12 @@ program
   .command('scrape-sources')
   .option('--source [value]')
   .option('--proxy')
+  .option('--skipScraping')
   .action(async (options) => {
     await scrapeSourcesCommand({
       source: options.source,
       proxy: options.proxy,
+      skipScraping: options.skipScraping,
     });
   });
 
@@ -45,12 +47,14 @@ program
   .option('--model [value]')
   .option('--count [value]')
   .option('--offset [value]')
+  .option('--file [value]')
   .option('--proxy')
   .action(async (options) => {
     await scrapeDataCommand({
       model: options.model,
       count: options.count,
       offset: options.offset,
+      file: options.file,
       proxy: options.proxy,
     });
   });

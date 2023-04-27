@@ -1,4 +1,5 @@
 import {
+  DataUpdate,
   joinUrlParts,
   ListDataUpdatesRequest,
   ListDataUpdatesResponse,
@@ -14,6 +15,11 @@ export class AdminService {
     return await this.api.get<ListDataUpdatesResponse>(DATA_UPDATES_PATH, {
       params: { q: JSON.stringify(request) },
     });
+  }
+
+  async getUpdate(id: number) {
+    const path = joinUrlParts(DATA_UPDATES_PATH, String(id));
+    return await this.api.get<DataUpdate>(path);
   }
 
   async approvePendingUpdate(id: number) {

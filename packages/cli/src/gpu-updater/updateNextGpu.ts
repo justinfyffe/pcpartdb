@@ -6,13 +6,13 @@ import {
 } from '@pcpartdb/database';
 import { scrapeGpu } from '@pcpartdb/scraper';
 import {
-  DataUpdate,
   DataUpdateSource,
   DataUpdateStatus,
-  generateDiff,
+  GpuDataUpdate,
   GpuField,
 } from '@pcpartdb/shared';
 import deepmerge from 'deepmerge';
+import { compare as generateJsonPatch } from 'fast-json-patch';
 import { getDatabase } from '../shared/database';
 import { GpuUpdateQueue } from './GpuUpdateQueue';
 import { gpuUpdaterDataPath } from './utils';
@@ -69,8 +69,8 @@ export async function updateNextGpu() {
   });
 
   // Create diff. Skip if there aren't any.
-  const diff = generateDiff(gpu, updatedGpu);
-  if (diff.length === 0) {
+  const jsonPatch = generateJsonPatch(gpu, updatedGpu);
+  if (jsonPatch.length === 0) {
     return;
   }
 
@@ -81,28 +81,26 @@ export async function updateNextGpu() {
     // Reject existing pending diffs
     const pendingUpdatesForGpu = await dataUpdateRepository.list({
       gpuId: gpu.id,
+      status: DataUpdateStatus.Pending,
     });
     for (const update of pendingUpdatesForGpu) {
       await dataUpdateRepository.update(
         update.id,
-        {
-          status: DataUpdateStatus.Rejected,
-          decisionMadeAt: new Date(),
-        },
+        { status: DataUpdateStatus.Rejected, decisionMadeAt: new Date() },
         ctx,
       );
     }
 
-    // Save diff
-    const dataUpdate: DataUpdate = {
+    // Save Data Update
+    const dataUpdate: GpuDataUpdate = {
       gpuId: gpu.id,
-      description: `${diff.length} changes detected for ${gpu.name}.`,
+      description: `${jsonPatch.length} changes detected for ${gpu.name}.`,
       status: DataUpdateStatus.Pending,
       updateSource: DataUpdateSource.AutoUpdater,
-      diff: diff,
+      data: { original: gpu, updated: updatedGpu },
       metadata: {},
     };
-    const dataUpdateEntity = mapToDataUpdateEntity(dataUpdate);
+    const dataUpdateEntity = await mapToDataUpdateEntity(dataUpdate);
     await dataUpdateRepository.create(dataUpdateEntity, ctx);
   });
 }

@@ -46,7 +46,7 @@ export const PendingUpdateRow: FunctionComponent<PendingUpdateRowProps> = (
   );
 
   const handlePreviewUpdate = useCallback((update: DataUpdate) => {
-    showDialog(<PreviewDialog dataUpdate={update} />);
+    showDialog(<PreviewDialog id={update.id} />);
   }, []);
 
   return (

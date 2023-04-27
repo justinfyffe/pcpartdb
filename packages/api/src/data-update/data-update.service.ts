@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { mapToDataUpdateDto, mapToDataUpdateDtos } from '@pcpartdb/database';
-import { DataUpdate, DataUpdateStatus } from '@pcpartdb/shared';
+import { DataUpdate, DataUpdateStatus, GpuDataUpdate } from '@pcpartdb/shared';
 import { GpuService } from '../gpu/gpu.service';
 import { Context } from '../shared/context';
 import { badRequestError, notFoundError } from '../shared/error';
@@ -31,8 +31,20 @@ export class DataUpdateService {
 
   async getUpdates(options: GetUpdatesOptions, ctx: Context) {
     const entities = await this.dataUpdateRepository.list(options, ctx);
-    const dataUpdates: DataUpdate[] = mapToDataUpdateDtos(entities);
+    const dataUpdates: DataUpdate[] = await mapToDataUpdateDtos(entities, {
+      includeData: false,
+    });
     return dataUpdates;
+  }
+
+  async getUpdate(id: number, ctx: Context) {
+    const entity = await this.dataUpdateRepository.findById(id, ctx);
+
+    if (entity == null) {
+      throw notFoundError({ dataUpdateId: id });
+    }
+
+    return await mapToDataUpdateDto(entity);
   }
 
   async approveUpdate(id: number, ctx: Context) {
@@ -45,7 +57,7 @@ export class DataUpdateService {
       throw badRequestError();
     }
 
-    const dataUpdate = mapToDataUpdateDto(entity);
+    const dataUpdate = await mapToDataUpdateDto(entity);
 
     // Update status
     entity.status = DataUpdateStatus.Approved;
@@ -59,10 +71,10 @@ export class DataUpdateService {
 
     // Apply diff
     if (dataUpdate.gpuId != null) {
-      await this.gpuService.applyDataUpdate(dataUpdate, ctx);
+      await this.gpuService.applyDataUpdate(dataUpdate as GpuDataUpdate, ctx);
     }
 
-    return mapToDataUpdateDto(updatedEntity);
+    return await mapToDataUpdateDto(updatedEntity);
   }
 
   async rejectUpdate(id: number, ctx: Context) {
@@ -82,6 +94,6 @@ export class DataUpdateService {
       ctx,
     );
 
-    return mapToDataUpdateDto(updatedEntity);
+    return await mapToDataUpdateDto(updatedEntity);
   }
 }

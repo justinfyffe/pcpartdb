@@ -1,9 +1,8 @@
 import { Operation } from 'fast-json-patch';
-import { Gpu } from '../gpu';
+import { Gpu, GpuDiff } from '../gpu';
 import { User } from '../user';
 
-export type DataUpdateOperation = Operation;
-export type DataUpdateDiff = DataUpdateOperation[];
+export type Diff = Operation[];
 
 export enum DataUpdateStatus {
   Pending = 'PENDING',
@@ -18,7 +17,7 @@ export enum DataUpdateSource {
 
 export interface DataUpdateMeta {}
 
-export interface DataUpdate {
+export interface DataUpdate<TUpdateData = unknown> {
   id?: number;
   decisionUserId?: number;
   gpuId?: number;
@@ -27,8 +26,8 @@ export interface DataUpdate {
   status: DataUpdateStatus;
   updateSource: DataUpdateSource;
 
-  diff: DataUpdateDiff;
-  metadata: DataUpdateMeta;
+  data?: TUpdateData;
+  metadata?: DataUpdateMeta;
 
   decisionMadeAt?: number;
 
@@ -36,6 +35,8 @@ export interface DataUpdate {
   decisionUser?: User;
   gpu?: Gpu;
 }
+
+export interface GpuDataUpdate extends DataUpdate<GpuDiff> {}
 
 export interface ListDataUpdatesRequest {
   status?: DataUpdateStatus;

@@ -1,4 +1,5 @@
 Next tasks:
+- Missing gpus:
 - compare page overview improvements
   - add architecture
   - add ranks?

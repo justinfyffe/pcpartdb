@@ -180,9 +180,13 @@ export interface ScrapeGpuDetailsResponse {
   gpu: Partial<Gpu>;
 }
 
+export interface GpuDiff {
+  original?: Gpu;
+  updated?: Gpu;
+}
+
 export interface PreviewImportGpusResponse {
-  newGpus: Gpu[];
-  existingGpus: Gpu[];
+  diffs: GpuDiff[];
 }
 
 export interface ImportGpusRequest {

@@ -1,4 +1,4 @@
-import { ListGpusPresetSlug } from '@pcpartdb/shared';
+import { getListGpusPath, ListGpusPresetSlug } from '@pcpartdb/shared';
 import React, { FunctionComponent } from 'react';
 
 interface ListPresetsProps {
@@ -40,7 +40,7 @@ export const ListPresets: FunctionComponent<ListPresetsProps> = (props) => {
         {presets.map((preset) => (
           <a
             key={preset.slug}
-            href={preset.slug}
+            href={getListGpusPath(preset.slug)}
             className="block p-2 hover:bg-slate-100"
           >
             {preset.label}

@@ -1,11 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { mapToGpuDto, mapToGpuDtos, mapToGpuEntity } from '@pcpartdb/database';
 import {
-  applyDiff,
   CreateGpuRequest,
-  DataUpdate,
   Gpu,
   GpuComparison,
+  GpuDataUpdate,
   GpuFieldKey,
   GpuRank,
   GpusQuery,
@@ -57,7 +56,10 @@ export class GpuService {
     const gpuEntities = await this.gpuRepository.list(options, ctx);
 
     const fields = options.fields != null ? new Set(options.fields) : null;
-    const gpus: Gpu[] = mapToGpuDtos(gpuEntities, { fields });
+    const gpus: Gpu[] = mapToGpuDtos(gpuEntities, {
+      fields,
+      includeSources: ctx.user?.isStaff,
+    });
 
     if (options.includeRanks) {
       await this.gpuRanksService.populateRanks(options.includeRanks, gpus, ctx);
@@ -186,11 +188,8 @@ export class GpuService {
     return id;
   }
 
-  async applyDataUpdate(dataUpdate: DataUpdate, ctx: Context) {
-    const id = dataUpdate.gpuId;
-    const gpu = await this.getById(id, { includeImages: true }, ctx);
-    const diff = dataUpdate.diff;
-    applyDiff(gpu, diff);
-    await this.update(id, gpu, ctx);
+  async applyDataUpdate(dataUpdate: GpuDataUpdate, ctx: Context) {
+    const updated = dataUpdate.data.updated;
+    await this.update(dataUpdate.gpuId, updated, ctx);
   }
 }

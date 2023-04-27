@@ -1,14 +1,35 @@
 import {
   DataUpdate,
-  DataUpdateDiff,
   DataUpdateMeta,
   DataUpdateSource,
   DataUpdateStatus,
 } from '@pcpartdb/shared';
-import { Prisma } from '@prisma/client';
+import * as zlib from 'zlib';
 import { DataUpdateEntity } from '../data-update';
 
-export function mapToDataUpdateDto(entity: DataUpdateEntity): DataUpdate {
+interface MapToDtoOptions {
+  includeData?: boolean;
+}
+
+export async function mapToDataUpdateDto<TUpdateData = unknown>(
+  entity: DataUpdateEntity,
+  options?: MapToDtoOptions,
+): Promise<DataUpdate> {
+  const includeData = options?.includeData ?? true;
+
+  let data: TUpdateData = null;
+  if (includeData) {
+    data = await new Promise<TUpdateData>((resolve, reject) => {
+      zlib.gunzip(entity.data, (err, result) => {
+        if (err != null) {
+          reject(err);
+        } else {
+          resolve(JSON.parse(result.toString('utf-8')) as TUpdateData);
+        }
+      });
+    });
+  }
+
   return {
     id: entity.id,
     decisionUserId: entity.decisionUserId,
@@ -16,17 +37,40 @@ export function mapToDataUpdateDto(entity: DataUpdateEntity): DataUpdate {
     description: entity.description,
     status: entity.status as DataUpdateStatus,
     updateSource: entity.updateSource as DataUpdateSource,
-    diff: entity.diff as unknown as DataUpdateDiff,
+    data,
     metadata: entity.metadata as DataUpdateMeta,
     decisionMadeAt: entity.decisionMadeAt?.getTime() || null,
   };
 }
 
-export function mapToDataUpdateDtos(entities: DataUpdateEntity[]) {
-  return entities.map((entity) => mapToDataUpdateDto(entity));
+interface MapToDtoOptions {
+  includeData?: boolean;
 }
 
-export function mapToDataUpdateEntity(dto: DataUpdate): DataUpdateEntity {
+export async function mapToDataUpdateDtos<TUpdateData = unknown>(
+  entities: DataUpdateEntity[],
+  options?: MapToDtoOptions,
+) {
+  const ret: DataUpdate[] = [];
+  for (let i = 0; i < entities.length; ++i) {
+    ret.push(await mapToDataUpdateDto<TUpdateData>(entities[i], options));
+  }
+  return ret;
+}
+
+export async function mapToDataUpdateEntity(
+  dto: DataUpdate,
+): Promise<DataUpdateEntity> {
+  const data = await new Promise<Buffer>((resolve, reject) => {
+    zlib.gzip(Buffer.from(JSON.stringify(dto.data)), (err, result) => {
+      if (err != null) {
+        reject(err);
+      } else {
+        resolve(result);
+      }
+    });
+  });
+
   return {
     id: dto.id,
     decisionUserId: dto.decisionUserId,
@@ -34,7 +78,7 @@ export function mapToDataUpdateEntity(dto: DataUpdate): DataUpdateEntity {
     description: dto.description,
     status: dto.status,
     updateSource: dto.updateSource,
-    diff: dto.diff as unknown as Prisma.JsonValue,
+    data,
     metadata: dto.metadata,
     decisionMadeAt:
       dto.decisionMadeAt != null ? new Date(dto.decisionMadeAt) : null,

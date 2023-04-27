@@ -106,7 +106,8 @@ export function formatGpuDimensions(
 }
 
 export interface FormatGpuFieldOptions {
-  decimals?: number;
+  minDecimals?: number;
+  maxDecimals?: number;
   booleanFormatter?: BooleanFormatter;
   dateFormatter?: DateFormatter;
   showUnits?: boolean;
@@ -159,14 +160,12 @@ export function formatGpuField(
   const unit = meta?.unit ?? null;
   if (typeof value === 'boolean') {
     returnValue = formatBooleanValue(value);
-  } else if (typeof value === 'number' && Number.isInteger(value)) {
-    returnValue = calculateDisplayGpuFieldValue(value, unit).toLocaleString();
-  } else if (typeof value === 'number' && !Number.isInteger(value)) {
+  } else if (typeof value === 'number') {
     returnValue = calculateDisplayGpuFieldValue(value, unit).toLocaleString(
       undefined,
       {
-        minimumFractionDigits: options?.decimals ?? 0,
-        maximumFractionDigits: options?.decimals ?? 0,
+        minimumFractionDigits: options?.minDecimals ?? 0,
+        maximumFractionDigits: options?.maxDecimals ?? 2,
       },
     );
   } else if (typeof value === 'string') {

@@ -56,12 +56,17 @@ export async function buildSourceModel() {
     };
   });
 
-  // We only want GPUs with most data and g3d mark
+  // We only want GPUs with most data
   const sourceModel: GpuSourceModel = Object.values(map).filter(
-    (model) =>
-      model.techPowerUpUrl != null && model.videocardBenchmarksUrl != null,
+    (model) => model.techPowerUpUrl != null,
   );
-  sourceModel.sort((m1, m2) => m2.g3dMark - m1.g3dMark); // Descending
+  sourceModel.sort((m1, m2) => {
+    if (m1.g3dMark != null || m2.g3dMark != null) {
+      return (m2.g3dMark ?? 0) - (m1.g3dMark ?? 0);
+    }
+
+    return m1.name.localeCompare(m2.name);
+  }); // g3d mark descending, then name ascending.
 
   // Save to file with date
   const path = sourceModelsDataPath('source-model.json');

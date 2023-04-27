@@ -1,14 +1,20 @@
-import { Gpu } from '@pcpartdb/shared';
+import { Gpu, GpuDataSourceKey } from '@pcpartdb/shared';
 import React, { FunctionComponent, useMemo } from 'react';
 import { hasGpuFieldValue } from '../../../../../gpus';
 
 enum MissingData {
+  TechPowerUp = 'TECHPOWERUP',
+  VideocardBenchmark = 'VIDEOCARDBENCHMARK',
+  UlBenchmarks = 'UL_BENCHMARKS',
   MarketSegment = 'MARKET_SEGMENT',
   ReleaseDate = 'RELEASE_DATE',
   LaunchPrice = 'LAUNCH_PRICE',
 }
 
 const LABELS = {
+  [MissingData.TechPowerUp]: 'TechPowerUp',
+  [MissingData.VideocardBenchmark]: 'Videocard Benchmark',
+  [MissingData.UlBenchmarks]: 'UL Benchmarks',
   [MissingData.MarketSegment]: 'Market Segment',
   [MissingData.ReleaseDate]: 'Release Date',
   [MissingData.LaunchPrice]: 'Launch Price',
@@ -45,6 +51,20 @@ export const MissingDataChip: FunctionComponent<MissingDataChipProps> = (
 
 function checkMissingData(gpu: Gpu): MissingData[] {
   const missingData: MissingData[] = [];
+
+  if (gpu.meta?.dataSources?.[GpuDataSourceKey.TechPowerUp]?.url == null) {
+    missingData.push(MissingData.TechPowerUp);
+  }
+
+  if (
+    gpu.meta?.dataSources?.[GpuDataSourceKey.VideocardBenchmarks]?.url == null
+  ) {
+    missingData.push(MissingData.VideocardBenchmark);
+  }
+
+  if (gpu.meta?.dataSources?.[GpuDataSourceKey.UlBenchmarks]?.url == null) {
+    missingData.push(MissingData.UlBenchmarks);
+  }
 
   if (!hasGpuFieldValue(gpu.marketSegment)) {
     missingData.push(MissingData.MarketSegment);
