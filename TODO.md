@@ -1,5 +1,4 @@
 Next tasks:
-- Missing gpus:
 - compare page overview improvements
   - add architecture
   - add ranks?
@@ -8,7 +7,6 @@ Next tasks:
   - Use ai to reword sentences
   - Restructure code to similar to the compare page.
 - audit data
-  - make sure market segments and launch prices are correct
   - turn off auto-update on static specs
     - maybe a freeze button which toggles off auto-update
 - view page overview
@@ -26,8 +24,36 @@ Next tasks:
   - gpu retail models
 - code cleanup
   - replace max with min for media queries
+    - or support both
+- add mechanism to report bad data
+- more data sources for redundancy/accuracy?
+  - pc part picker
+    - will be useful for the non-cpu and non-gpu parts
+
+CPUs
+- Data sources:
+  - pc part picker?
+    - some extra data
+    - e.g. https://pcpartpicker.com/product/g94BD3/amd-ryzen-5-5600x-37-ghz-6-core-processor-100-100000065box
+  - techpowerup
+    - most core data
+    - e.g. https://www.techpowerup.com/cpu-specs/ryzen-9-7950x.c2846
+    - https://www.techpowerup.com/cpu-specs/core-i7-13700k.c2850
+  - cpu benchmark
+    - performance
+    - e.g. https://www.cpubenchmark.net/cpu.php?cpu=AMD+Ryzen+Threadripper+PRO+5975WX&id=4776
+- Other Notes:
+  - Benchmarks:
+    - CPU Mark (Passmark)
+    - GeekBench 6 - Single-core and multi-core
+      - need to make sure we check that it's geekbench 6 and not other versions.
+        If it's other versions, then we may need to update
+      - https://browser.geekbench.com/processor-benchmarks/
+  - CPUs could belong to multiple classes: e.g. server, desktop, and workstation
+    - Should we default to desktop/workstation then? or support both
 
 Retail models
+- toggle between chipsets and retail models?
 - gpus table or separate table for simplicity?
   - e.g. gpu_retail_boards
 - gpu_retail_boards
@@ -37,6 +63,9 @@ Retail models
 - should each retail board have their own url? and place in the sitemap?
 - how to handle comparing?
 - how to access? just a link on the page, or a dropdown to select from all retail models.
+- where to get data?
+  - pc part picker?
+  - techpowerup?
 
 code cleanup
 - cleanup shared
