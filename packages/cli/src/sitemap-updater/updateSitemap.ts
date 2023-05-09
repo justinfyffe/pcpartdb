@@ -106,7 +106,6 @@ async function writeGpuComparisonsSitemap() {
   const gpus = mapToGpuDtos(results);
 
   let fileCounter = 0;
-  let entriesCounter = 0;
   let entries: SitemapEntry[] = [];
   const sitemapUrls: string[] = [];
 
@@ -116,7 +115,7 @@ async function writeGpuComparisonsSitemap() {
       const gpu2 = gpus[j];
 
       const url1 = sitemapUrl(getCompareGpusPath([gpu1, gpu2]));
-      const url2 = sitemapUrl(getCompareGpusPath([gpu1, gpu2]));
+      const url2 = sitemapUrl(getCompareGpusPath([gpu2, gpu1]));
       const lastModTimestamp = Math.max(
         gpu1.updatedAt ?? 0,
         gpu2.updatedAt ?? 0,
@@ -127,7 +126,7 @@ async function writeGpuComparisonsSitemap() {
       entries.push({ url: url1, lastModification });
       entries.push({ url: url2, lastModification });
 
-      if (++entriesCounter >= COMPARISONS_PER_SITEMAP) {
+      if (entries.length >= COMPARISONS_PER_SITEMAP) {
         const filename = GPU_COMPARISONS_FILENAME.replace(
           '{i}',
           `${fileCounter}`,
@@ -135,13 +134,12 @@ async function writeGpuComparisonsSitemap() {
         sitemapUrls.push(sitemapUrl(filename));
         await writeSitemap(sitemapPath(filename), entries);
         entries = [];
-        entriesCounter = 0;
         fileCounter++;
       }
     }
   }
 
-  if (entriesCounter > 0) {
+  if (entries.length > 0) {
     const filename = GPU_COMPARISONS_FILENAME.replace('{i}', `${fileCounter}`);
     sitemapUrls.push(sitemapUrl(filename));
     await writeSitemap(sitemapPath(filename), entries);

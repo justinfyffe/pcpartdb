@@ -50,6 +50,7 @@ export interface CompareGpusContentParams {
   dimensions2?: string;
 
   tdp1?: string;
+  tdp2?: string;
   higherPsuGpuName?: string;
   psu1?: string;
   psu2?: string;
@@ -244,6 +245,7 @@ function getPowerSupplyParams(comparison: GpuComparison) {
 
   return {
     tdp1: formatGpuField(gpu1.thermalDesignPower),
+    tdp2: formatGpuField(gpu2.thermalDesignPower),
     higherPsuGpuName: getGpuName(higherPsuGpu, {
       company: false,
       brand: false,

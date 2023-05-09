@@ -31,8 +31,8 @@ const PowerSupplyTdp = compileContentComponent({
   // The GeForce RTX 2070 has a TDP of 450 W, while the Radeon RX 7900 XTX has a TDP of 355 W.
   component: (props) => (
     <>
-      The {props.shortGpuName1} has a TDP of 450 W, while the{' '}
-      {props.shortGpuName2} has a TDP of 355 W.
+      The {props.shortGpuName1} has a TDP of {props.tdp1}, while the{' '}
+      {props.shortGpuName2} has a TDP of {props.tdp2}.
     </>
   ),
 });
