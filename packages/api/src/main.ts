@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import bodyParser from 'body-parser';
+import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import * as dotenv from 'dotenv';
 import { AppModule } from './app.module';
@@ -12,6 +13,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.use(cookieParser());
+  app.use(compression());
 
   // Increase max payload size.
   app.use(bodyParser.json({ limit: '1mb' }));
