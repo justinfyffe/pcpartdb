@@ -1,4 +1,5 @@
 Next tasks:
+- create scratch pad cli script
 - missing gpu:
   - RTX 4060
   - Bug: Missing performance => "Its the fastest GPU in the Ada lineup"

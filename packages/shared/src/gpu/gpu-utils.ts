@@ -17,11 +17,21 @@ export function getChipset(gpu: Gpu) {
 export function generateGpuSlug(name: string, company: string) {
   const slugParts = [];
   if (company != null) {
-    const companyParts = company.split(' ').map((value) => value.toLowerCase());
+    const companyParts = company
+      .replaceAll('+', ' plus ')
+      .replaceAll(/[^a-zA-Z0-9-_]+/g, ' ')
+      .split(' ')
+      .map((value) => value.toLowerCase().trim())
+      .filter((value) => value.length > 0);
     slugParts.push(...companyParts);
   }
   if (name != null) {
-    const nameParts = name.split(' ').map((value) => value.toLowerCase());
+    const nameParts = name
+      .replaceAll('+', ' plus ')
+      .replaceAll(/[^a-zA-Z0-9-_]+/g, ' ')
+      .split(' ')
+      .map((value) => value.toLowerCase().trim())
+      .filter((value) => value.length > 0);
     slugParts.push(...nameParts);
   }
 

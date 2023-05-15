@@ -1,4 +1,5 @@
 import { fixData } from './fixData';
+import { fixRetailModelResults } from './fixRetailModelResults';
 
 export interface FixDataCommandArgs {}
 
