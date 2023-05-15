@@ -3,7 +3,8 @@ import { GpuFieldsMetaJson } from './GpuFieldsMetaJson';
 import { GpuImageEntity } from './GpuImageEntity';
 
 export type GpuEntity = db.Gpu & {
-  parent?: GpuEntity;
+  chipset?: GpuEntity;
+  retailModels?: GpuEntity[];
   images?: GpuImageEntity[];
 };
 

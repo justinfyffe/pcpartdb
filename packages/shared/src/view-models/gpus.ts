@@ -19,6 +19,9 @@ export interface AdminListGpusViewModel {
 export interface CompareGpusContentData {
   relativePerformanceGpus: Gpu[];
   relativeValueGpus: Gpu[];
+
+  retailModels1?: Gpu[];
+  retailModels2?: Gpu[];
 }
 
 export interface CompareGpusViewModel {
@@ -47,6 +50,8 @@ export interface ViewGpuContentData {
 
   bestPerformanceGpuForSegment?: Gpu;
   bestValueGpuForSegment?: Gpu;
+
+  retailModels?: Gpu[];
 }
 
 export interface ViewGpuViewModel {

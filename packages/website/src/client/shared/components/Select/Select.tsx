@@ -140,7 +140,9 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
           )}
           onClick={handleShowOptions}
         >
-          {getSelectedText(value, options) || placeholder}
+          {getSelectedText(value, options) || (
+            <span className="text-placeholder">{placeholder}</span>
+          )}
           {clearable && value != null && (
             <div
               className="items-center rounded-r-md flex font-medium h-[calc(100%_-_2px)] m-px px-4 absolute right-0 top-0 hover:bg-[#fafafa]"

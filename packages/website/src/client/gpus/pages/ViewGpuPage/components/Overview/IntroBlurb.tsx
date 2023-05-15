@@ -6,87 +6,72 @@ import {
 import { ViewGpuContentTag } from '../../content';
 import { ViewPageContext } from '../../context';
 
-const IntroBlurbSentence1 = compileContentComponent(
+const IntroAudience = compileContentComponent(
   {
-    deps: ['gpuName', 'marketSegment', 'releaseDate'],
-    tags: [ViewGpuContentTag.Launched],
+    tags: [],
+    deps: ['marketSegment'],
+    // The NVIDIA Geforce RTX 3070 is a graphics card that targets
+    // desktop users.
     component: (props) => (
       <>
-        The {props.gpuName} is a {props.marketSegment} graphics card that
-        released during {props.releaseDate}.
+        The {props.gpuName} is a graphics card that targets the{' '}
+        {props.marketSegment} GPU market.
       </>
     ),
   },
   {
-    deps: ['gpuName', 'marketSegment', 'releaseDate'],
+    tags: [],
+    deps: [],
+    // The Geforce RTX 3070 is a graphics card by NVIDIA.
     component: (props) => (
       <>
-        The {props.gpuName} is a {props.marketSegment} graphics card will
-        released during {props.releaseDate}.
-      </>
-    ),
-  },
-  {
-    deps: ['company', 'shortGpuName', 'releaseDate'],
-    tags: [ViewGpuContentTag.Launched],
-    component: (props) => (
-      <>
-        The {props.shortGpuName} is a {props.company} graphics card that
-        released during {props.releaseDate}.
-      </>
-    ),
-  },
-  {
-    deps: ['company', 'shortGpuName', 'releaseDate'],
-    component: (props) => (
-      <>
-        The {props.shortGpuName} is a {props.company} graphics card will release
-        during {props.releaseDate}.
+        The {props.shortGpuName} is a graphics card manufactured by{' '}
+        {props.company}.
       </>
     ),
   },
 );
 
-const IntroBlurbSentence2 = compileContentComponent(
+const IntroReleaseDateAndMsrp = compileContentComponent(
   {
-    deps: ['launchPrice'],
-    tags: [ViewGpuContentTag.Launched],
+    tags: [],
+    deps: ['releaseDate', 'launchPrice', 'launchedOrWillLaunch'],
+    // It launched in Q1 2022 with a price of $1,999 (MSRP).
     component: (props) => (
-      <>It launched with prices starting at {props.launchPrice} MSRP.</>
+      <>
+        It {props.launchedOrWillLaunch} in {props.releaseDate} with a price of{' '}
+        {props.launchPrice} (MSRP).
+      </>
     ),
   },
   {
-    deps: ['launchPrice'],
+    tags: [],
+    deps: ['releaseDate', 'launchedOrWillLaunch'],
+    // It launched in Q1 2022.
     component: (props) => (
-      <>It is expected to have a MSRP of {props.launchPrice}.</>
+      <>
+        It {props.launchedOrWillLaunch} in {props.releaseDate}.
+      </>
+    ),
+  },
+  {
+    tags: [],
+    deps: ['launchPrice'],
+    // It has a launch price of $1,999 (MSRP).
+    component: (props) => (
+      <>It has a launch price of {props.launchPrice} MSRP.</>
     ),
   },
 );
 
-const IntroBlurbSentence3 = compileContentComponent({
-  deps: [
-    'architecture',
-    'company',
-    'marketSegment',
-    'performanceRankForArchitectureSegment',
-  ],
-  component: (props) => (
-    <>
-      Its the {props.performanceRankForArchitectureSegment} fastest{' '}
-      {props.marketSegment} GPU in {props.company}&apos;s {props.architecture}{' '}
-      lineup.
-    </>
-  ),
-});
-
-const IntroBlurbSentence4 = compileContentComponent(
+const IntroArchitecture = compileContentComponent(
   {
-    deps: ['architecture', 'codename', 'company', 'processSize'],
+    deps: ['architecture', 'codename', 'chipsetCompany', 'processSize'],
     component: (props) => (
       <>
-        The {props.codename} chip that powers the GPU uses the {props.company}{' '}
-        {props.architecture} architecture and is built on the{' '}
-        {props.processSize} process.
+        The {props.codename} chip that powers the GPU uses the{' '}
+        {props.architecture} architecture by {props.chipsetCompany}, and is
+        built on the {props.processSize} process.
       </>
     ),
   },
@@ -94,18 +79,18 @@ const IntroBlurbSentence4 = compileContentComponent(
     deps: ['architecture', 'company', 'processSize'],
     component: (props) => (
       <>
-        The chip that powers the {props.shortGpuName} uses the GPU{' '}
-        {props.architecture} architecture and is built on the{' '}
+        The chip that powers the {props.shortGpuName} uses the{' '}
+        {props.architecture} architecture, and is built on the{' '}
         {props.processSize} process.
       </>
     ),
   },
   {
-    deps: ['architecture', 'codename', 'company'],
+    deps: ['architecture', 'codename', 'chipsetCompany'],
     component: (props) => (
       <>
-        The {props.codename} chip that powers the GPU uses the {props.company}{' '}
-        {props.architecture} architecture.
+        The {props.codename} chip that powers the GPU uses the{' '}
+        {props.chipsetCompany} {props.architecture} architecture.
       </>
     ),
   },
@@ -120,15 +105,61 @@ const IntroBlurbSentence4 = compileContentComponent(
   },
 );
 
+const IntroBlurbArchitecturePerformance = compileContentComponent(
+  {
+    tags: [ViewGpuContentTag.IsRetailModel],
+    deps: [
+      'chipsetShortestName',
+      'architecture',
+      'company',
+      'marketSegment',
+      'performanceRankForArchitectureSegment',
+    ],
+    component: (props) => (
+      <>
+        Its based on the {props.chipsetShortestName} chipset which is the{' '}
+        {props.performanceRankForArchitectureSegment} fastest{' '}
+        {props.marketSegment} GPU in {props.chipsetCompany}&apos;s{' '}
+        {props.architecture} lineup.
+      </>
+    ),
+  },
+  {
+    tags: [ViewGpuContentTag.IsChipset],
+    deps: [
+      'architecture',
+      'company',
+      'marketSegment',
+      'performanceRankForArchitectureSegment',
+    ],
+    component: (props) => (
+      <>
+        Its the {props.performanceRankForArchitectureSegment} fastest{' '}
+        {props.marketSegment} GPU in {props.company}&apos;s {props.architecture}{' '}
+        lineup.
+      </>
+    ),
+  },
+);
+
+const IntroParagraph = compileContentComponent({
+  tags: [],
+  deps: [],
+  component: () => (
+    <p>
+      <IntroAudience /> <IntroReleaseDateAndMsrp /> <IntroArchitecture />{' '}
+      <IntroBlurbArchitecturePerformance />
+    </p>
+  ),
+});
+
 export const IntroBlurb = () => {
   const { contentTags, contentParams } = useContext(ViewPageContext);
   const context = { tags: contentTags, params: contentParams };
 
   return (
     <ContentContext.Provider value={context}>
-      <p>
-        <IntroBlurbSentence1 /> <IntroBlurbSentence2 /> <IntroBlurbSentence3 />{' '}
-      </p>
+      <IntroParagraph />
     </ContentContext.Provider>
   );
 };

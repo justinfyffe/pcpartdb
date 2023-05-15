@@ -5,7 +5,6 @@ import { Database } from '../database';
 import { Context, Ctx } from '../shared/context';
 import { AdminDataUpdatesViewModelService } from './admin/data-updates/data-updates.view-model';
 import { AdminEditGpuViewModelService } from './admin/gpus/edit.view-model';
-import { AdminListGpusViewModelService } from './admin/gpus/list.view-model';
 import { AdminEditImageViewModelService } from './admin/images/edit.view-model';
 import { AdminListImagesViewModelService } from './admin/images/list.view-model';
 import { AdminOverviewViewModelService } from './admin/overview/overview.view-model';
@@ -23,7 +22,6 @@ export class ViewModelsController {
     private db: Database,
     private adminOverviewViewModelService: AdminOverviewViewModelService,
     private adminEditGpuViewModelService: AdminEditGpuViewModelService,
-    private adminListGpusViewModelService: AdminListGpusViewModelService,
     private adminEditImageViewModelService: AdminEditImageViewModelService,
     private adminListImagesViewModelService: AdminListImagesViewModelService,
     private adminEditUserViewModelService: AdminEditUserViewModelService,
@@ -54,18 +52,6 @@ export class ViewModelsController {
       () => {
         const id = Number(idStr);
         return this.adminEditGpuViewModelService.viewModel(id, ctx);
-      },
-      { ctx },
-    );
-  }
-
-  @Get('admin/gpus/list')
-  @UseGuards(StaffGuard)
-  async adminListGpus(@Query('q') q: string, @Ctx() ctx: Context) {
-    return await this.db.transaction(
-      async () => {
-        const data = JSON.parse(q) as ListGpusRequest;
-        return await this.adminListGpusViewModelService.viewModel(data, ctx);
       },
       { ctx },
     );

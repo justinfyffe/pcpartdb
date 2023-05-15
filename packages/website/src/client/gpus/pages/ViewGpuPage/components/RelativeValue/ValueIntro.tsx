@@ -5,12 +5,13 @@ import {
 } from '../../../../../shared/content';
 import { ViewPageContext } from '../../context';
 
-export const ValueIntroSentence1 = compileContentComponent({
+const ValueIntroSentence1 = compileContentComponent({
   deps: [],
   component: (props) => (
     <>
       Compare {props.shortGpuName}&apos;s value with similar GPUs. Relative
       value provides insight into which GPU gives the best bang for your buck.
+      This data is based on chipset performance and MSRP.
     </>
   ),
 });

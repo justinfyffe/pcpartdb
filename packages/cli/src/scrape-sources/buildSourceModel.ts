@@ -58,7 +58,7 @@ export async function buildSourceModel() {
 
   // We only want GPUs with most data
   const sourceModel: GpuSourceModel = Object.values(map).filter(
-    (model) => model.techPowerUpUrl != null,
+    (model) => model.company != null && model.techPowerUpUrl != null,
   );
   sourceModel.sort((m1, m2) => {
     if (m1.g3dMark != null || m2.g3dMark != null) {

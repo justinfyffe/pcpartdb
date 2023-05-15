@@ -3,9 +3,11 @@ import deepmerge from 'deepmerge';
 import { scrapeTechPowerUpGpuDetails } from '../techpowerup';
 import { scrapeUlBenchmarksGpuDetails } from '../ul-benchmarks';
 import { scrapeVideocardBenchmarksGpuDetails } from '../videocardbenchmarks';
+import { scrapeChipsetGpu } from './scrapeChipsetGpu';
 
 export interface ScrapeGpuOptions {
   dataSources: Record<string, GpuDataSource>;
+  chipset?: Gpu;
   proxy?: boolean;
 }
 
@@ -14,7 +16,7 @@ export interface ScrapeGpuResults {
 }
 
 export async function scrapeGpu(options: ScrapeGpuOptions) {
-  const { dataSources, proxy } = options;
+  const { chipset, dataSources, proxy } = options;
 
   const techPowerUpUrl = dataSources[GpuDataSourceKey.TechPowerUp]?.url;
   const ulBenchmarksUrl = dataSources[GpuDataSourceKey.UlBenchmarks]?.url;
@@ -22,6 +24,10 @@ export async function scrapeGpu(options: ScrapeGpuOptions) {
     dataSources[GpuDataSourceKey.VideocardBenchmarks]?.url;
 
   let scrapedGpu: Partial<Gpu> = {};
+  if (chipset != null) {
+    const { gpu } = await scrapeChipsetGpu({ chipset });
+    scrapedGpu = deepmerge(scrapedGpu, gpu);
+  }
   if (techPowerUpUrl != null) {
     const { gpu } = await scrapeTechPowerUpGpuDetails({
       url: techPowerUpUrl,

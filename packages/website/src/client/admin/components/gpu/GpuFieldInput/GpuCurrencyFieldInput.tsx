@@ -1,4 +1,5 @@
 import { GpuField, GpuFieldKey } from '@pcpartdb/shared';
+import { formatGpuField } from 'packages/website/src/client/gpus';
 import React, { forwardRef, useCallback, useMemo, useState } from 'react';
 import { NumberInput } from '../../../../shared/components';
 
@@ -8,6 +9,7 @@ interface GpuCurrencyFieldInputProps {
   field: GpuFieldKey;
 
   value?: GpuField<number>;
+  parentValue?: GpuField<number>;
   onChange?: (value: GpuField<number>) => void;
 }
 
@@ -15,7 +17,7 @@ export const GpuCurrencyFieldInput = forwardRef<
   HTMLInputElement,
   GpuCurrencyFieldInputProps
 >((props, ref) => {
-  const { field, value, onChange } = props;
+  const { field, value, parentValue, onChange } = props;
 
   const currency = useMemo(() => {
     return CURRENCIES.includes(value?.meta?.currency)
@@ -30,6 +32,8 @@ export const GpuCurrencyFieldInput = forwardRef<
   );
 
   const baseValue = value?.value ?? null;
+
+  const placeholder = useMemo(() => formatGpuField(parentValue), [parentValue]);
 
   const handleChange = useCallback(
     (value: number) => {
@@ -52,6 +56,7 @@ export const GpuCurrencyFieldInput = forwardRef<
 
   return (
     <NumberInput
+      placeholder={placeholder}
       disabled={value?.meta?.autoUpdate}
       value={baseValue}
       suffix={currency}

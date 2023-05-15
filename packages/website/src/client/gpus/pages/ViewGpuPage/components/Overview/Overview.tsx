@@ -1,19 +1,19 @@
 import React, { FunctionComponent } from 'react';
-import { DimensionsBlurb } from './DimensionsBlurb';
+import { CompatibilityBlurb } from './CompatibilityBlurb';
 import { IntroBlurb } from './IntroBlurb';
+import { MemoryBlurb } from './MemoryBlurb';
 import { PerformanceBlurb } from './PerformanceBlurb';
 import { PowerSupplyBlurb } from './PowerSupplyBlurb';
-import { ValueBlurb } from './ValueBlurb';
 
 export const Overview: FunctionComponent = () => {
   return (
     <section className="-mb-4">
-      <h2>Overview</h2>
+      <h2 className="font-semibold">Overview</h2>
 
       <IntroBlurb />
       <PerformanceBlurb />
-      <ValueBlurb />
-      <DimensionsBlurb />
+      <MemoryBlurb />
+      <CompatibilityBlurb />
       <PowerSupplyBlurb />
     </section>
   );

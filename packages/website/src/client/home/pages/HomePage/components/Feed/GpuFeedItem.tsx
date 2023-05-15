@@ -2,7 +2,7 @@ import { PhotoIcon } from '@heroicons/react/24/outline';
 import { getViewGpuPath, Gpu } from '@pcpartdb/shared';
 import React, { FunctionComponent, useMemo } from 'react';
 import { formatGpuField, getGpuName } from '../../../../../gpus';
-import { getCompanyLogoImagePath } from '../../../../../image';
+import { getCompanyLogoFeedPath } from '../../../../../image';
 import { Card, Img } from '../../../../../shared/components';
 import {
   compileContentComponent,
@@ -42,13 +42,13 @@ export const GpuFeedItem: FunctionComponent<GpuFeedItemProps> = (props) => {
   const images = useMemo(() => {
     const ret = [
       gpu.images?.[0]?.image,
-      gpu.images?.[1]?.image ?? getCompanyLogoImagePath(gpu),
+      gpu.images?.[1]?.image ?? getCompanyLogoFeedPath(gpu),
     ];
     return ret.filter((image) => image != null);
   }, [gpu]);
 
   const isCompanyImage = useMemo(() => {
-    return images.map((image) => image === getCompanyLogoImagePath(gpu));
+    return images.map((image) => image === getCompanyLogoFeedPath(gpu));
   }, [gpu, images]);
 
   return (

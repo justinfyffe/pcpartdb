@@ -5,12 +5,13 @@ import {
 } from '../../../../../shared/content';
 import { ViewPageContext } from '../../context';
 
-export const GeneralInfoIntroSentence1 = compileContentComponent({
+const GeneralInfoIntroSentence1 = compileContentComponent({
   deps: [],
   component: (props) => (
     <>
-      General information about the {props.shortGpuName} like its performance
-      rating, release date, and launch price.
+      General information about the {props.shortGpuName} like its performance,
+      release date, and launch price. Performance rating and performance per
+      dollar are based on its chipset.
     </>
   ),
 });

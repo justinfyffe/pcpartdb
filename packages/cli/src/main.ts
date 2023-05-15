@@ -4,6 +4,7 @@ import { fixDataCommand } from './fix-data';
 import { gpuUpdaterCommand } from './gpu-updater';
 import { refreshRatingsCommand } from './refresh-ratings';
 import { scrapeDataCommand } from './scrape-data';
+import { scrapeRetailModelsCommand } from './scrape-retail-models';
 import { scrapeSourcesCommand } from './scrape-sources';
 import { sitemapUpdaterCommand } from './sitemap-updater';
 
@@ -55,6 +56,32 @@ program
       count: options.count,
       offset: options.offset,
       file: options.file,
+      proxy: options.proxy,
+    });
+  });
+
+// Scrape Retail Models command
+// Example:
+// npm run cli scrape-retail-models:sourcesOnly -- -- --chipsetId 1 --marketSegment DESKTOP --techPowerUpUrl "https://www.techpowerup.com/gpu-specs/geforce-rtx-4090.c3889"
+// npm run cli scrape-retail-models:dataOnly -- -- --chipsetId 1
+program
+  .command('scrape-retail-models')
+  .option('--chipsetId [value]')
+  .option('--marketSegment [value]')
+  .option('--techPowerUpUrl [value]')
+  .option('--segments [value]')
+  .option('--sourcesFile [value]')
+  .option('--sourcesOnly')
+  .option('--dataOnly')
+  .option('--proxy')
+  .action(async (options) => {
+    await scrapeRetailModelsCommand({
+      chipsetId: options.chipsetId,
+      marketSegment: options.marketSegment,
+      techPowerUpUrl: options.techPowerUpUrl,
+      segments: options.segments,
+      sourcesOnly: options.sourcesOnly,
+      dataOnly: options.dataOnly,
       proxy: options.proxy,
     });
   });

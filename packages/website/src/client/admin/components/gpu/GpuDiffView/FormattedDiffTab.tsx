@@ -6,7 +6,8 @@ import { BooleanFormatter } from '../../../../shared/format';
 
 const LABELS: Record<string, string> = {
   // General
-  company: 'Company',
+  partNumber: 'Part Number',
+  company: 'Manufacturer',
   marketSegment: 'Market Segment',
   launchPrice: 'Launch Price (MSRP)',
   releaseDate: 'Release Date',
@@ -98,6 +99,10 @@ export const FormattedDiffTab: FunctionComponent<FormattedDiffTabProps> = (
             label="Slug"
             beforeValue={before?.slug}
             afterValue={after.slug}
+          />
+          <FormattedDiffRow
+            before={before?.partNumber}
+            after={after.partNumber}
           />
           <FormattedDiffRow before={before?.company} after={after.company} />
           <FormattedDiffRow

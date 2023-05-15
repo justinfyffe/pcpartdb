@@ -12,6 +12,10 @@ export class AdminEditGpuViewModelService {
   }
 
   private async getGpu(id: number, ctx: Context) {
-    return await this.gpuService.getById(id, { includeImages: true }, ctx);
+    return await this.gpuService.getById(
+      id,
+      { includeChipset: true, includeImages: true },
+      ctx,
+    );
   }
 }

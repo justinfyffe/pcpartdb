@@ -18,6 +18,7 @@ import {
   WattageUnit,
   WeightUnit,
 } from '@pcpartdb/shared';
+import { formatGpuField } from 'packages/website/src/client/gpus';
 import React, { forwardRef, useCallback, useMemo, useState } from 'react';
 import { NumberInput } from '../../../../shared/components';
 
@@ -49,6 +50,7 @@ interface GpuFloatFieldInputProps {
   field: GpuFieldKey;
 
   value?: GpuField<number>;
+  parentValue?: GpuField<number>;
   onChange?: (value: GpuField<number>) => void;
 }
 
@@ -56,7 +58,7 @@ export const GpuFloatFieldInput = forwardRef<
   HTMLInputElement,
   GpuFloatFieldInputProps
 >((props, ref) => {
-  const { field, value, onChange } = props;
+  const { field, value, parentValue, onChange } = props;
 
   const units = useMemo(() => UNITS[field] ?? [], [field]);
   const unit = useMemo(() => {
@@ -98,8 +100,11 @@ export const GpuFloatFieldInput = forwardRef<
     onChange?.(newValue);
   }, [unitIndex, units, displayValue, field, onChange]);
 
+  const placeholder = useMemo(() => formatGpuField(parentValue), [parentValue]);
+
   return (
     <NumberInput
+      placeholder={placeholder}
       disabled={value?.meta?.autoUpdate}
       value={displayValue}
       suffix={getUnitFormat(unit)}

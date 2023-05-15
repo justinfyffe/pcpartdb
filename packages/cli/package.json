@@ -16,6 +16,8 @@
     "scrape-sources:ul-benchmarks": "node ./dist/main.js scrape-sources --source ul-benchmarks --proxy",
     "scrape-sources:videocardbenchmarks": "node ./dist/main.js scrape-sources --source videocardbenchmarks",
     "scrape-data": "node ./dist/main.js scrape-data --proxy",
+    "scrape-retail-models:dataOnly": "node ./dist/main.js scrape-retail-models --proxy --dataOnly",
+    "scrape-retail-models:sourcesOnly": "node ./dist/main.js scrape-retail-models --proxy --sourcesOnly",
     "sitemap-updater": "node ./dist/main.js sitemap-updater",
     "sitemap-updater:schedule": "node ./dist/main.js sitemap-updater --schedule"
   },

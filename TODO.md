@@ -1,4 +1,18 @@
 Next tasks:
+- missing gpu:
+  - RTX 4060
+  - Bug: Missing performance => "Its the fastest GPU in the Ada lineup"
+    - Fixed with latest changes
+- retail models
+- cpus
+  - view
+  - compare
+  - list
+  - automation for importing/updating
+- improve automation
+  - pull in new data
+  - two core DO server
+- seo
 - compare page overview improvements
   - add architecture
   - add ranks?
@@ -16,19 +30,34 @@ Next tasks:
   - Restructure code to similar to the compare page.
 - improve list page features
   - filter by year (multiselect combobox)
-- improve automation
-  - find new gpus automatically
-    - maybe need a two core DO account
-- Depending on if enough traffic for affiliate sales:
-  - cpus
-  - gpu retail models
 - code cleanup
-  - replace max with min for media queries
-    - or support both
-- add mechanism to report bad data
-- more data sources for redundancy/accuracy?
-  - pc part picker
-    - will be useful for the non-cpu and non-gpu parts
+  - support max along with min for media queries
+  - get rid of gpu and image cache?, or heavily improve it
+
+
+OVERVIEW
+- Use "chip" instead of "card" for mobile and integrated gpus
+
+
+AUTOMATION IDEAS
+- need to support new chipsets and retail models
+- how to add to crawler queue
+  - script that automatically adds to database?
+  - add buttons that add to queue?
+    - e.g. Edit GPU - "Add GPU / Retail Model to queue"
+    - e.g. Edit GPU - "Add Retail Models"
+- crawler queue database table?
+  - type
+    - e.g. GPU_CHIPSET, GPU_RETAIL_MODEL
+  - metadata
+    - i.e. extra data like parent chipset id
+  - urls
+    - i.e. multiple sets like techpowerup, videocardbenchmarks
+    - e.g. https://www.techpowerup.com/gpu-specs/asus-rog-strix-rtx-3070-gaming.b8030  
+  - status
+    - e.g. PENDING, CANCELED, IN_PROGRESS, COMPLETED 
+  - 
+
 
 CPUs
 - Data sources:
@@ -52,52 +81,24 @@ CPUs
   - CPUs could belong to multiple classes: e.g. server, desktop, and workstation
     - Should we default to desktop/workstation then? or support both
 
-Retail models
-- toggle between chipsets and retail models?
-- gpus table or separate table for simplicity?
-  - e.g. gpu_retail_boards
-- gpu_retail_boards
-  - store diff of gpu details? or store the full gpu details
-    - diff is probably better
-  - scrape from techpowerup
-- should each retail board have their own url? and place in the sitemap?
-- how to handle comparing?
-- how to access? just a link on the page, or a dropdown to select from all retail models.
-- where to get data?
-  - pc part picker?
-  - techpowerup?
 
-code cleanup
+
+CODE CLEANUP IDEAS
 - cleanup shared
   - pure utilities
   - no dependencies that are browser or backend only
-  - 
-
+- centralized location for company names
+- centralized location for field key -> label
 - cleanup utilities
   - more gpu field utils
     - are equal, compare, has value
-
-Auto-update / pending update remaining work:
-- Bug fix
-  - don't create data update if websites fail to load.
-  - add auto-update checkbox to name
-  - order approved/rejected by most recent
-- Code cleanup
+- scraping
   - Don't call individual scrape functions, pass data sources instead.
   - Don't include ScrapeGpuDetailsResponse in scraper.
     - Just use scrape results type.
-
-Immediate Tasks:
-    - symlink public folder to outside of packages
-    - code cleanup:
-      - use text instead of varchar
-      - change "base" text value to 16px, not 18px.
-      - make tailwind screen sizing min instead of max
-        - seeing lg:text-xl implies large screens have text-xl
-    - content: add rank for company performance. Figure out how to do db query
-    - relative performance and relative value should be filtering based on market segment
-
-  - folder structure for pages and components
+- symlink public folder to outside of packages?
+- change "base" text value to 16px, not 18px.
+- improve folder structure
     - look at List GPUs page for example
     - <feature>/pages/<page-name>/components/
       - Components only used on the page for this feature.
@@ -109,36 +110,35 @@ Immediate Tasks:
       - Hooks used across multiple pages for this feature.
     - TODO: where to place utils and services?
     - folders and files should use PascalCase and camelCase except for package folders
-  - Scraping improvements
-    - Add download date when importing
-    - Allow ability to overwrite existing gpus
-  - Fix bug where unauthorized pages doesn't display
-  - Improve security for reset password (add expiration to jwt)
-  - code clean up
-    - rename videocardbenchmarks to videocardbenchmark
-    - improve usage of react components - break down into smaller
-  
+- improve usage of react components - break down into smaller
+- remove usage of router.push
+- get rid of, or improve gpu and image cache
+
+CONTENT IMPROVEMENTS
+- "targets the <segment> GPU market"
+- relative performance and relative value should be filtering based on market segment
+- content: add rank for company performance. Figure out how to do db query
+- Add FPS benchmarks
+
+
+ 
 
 Post-launch:
 - remove usage of router.push.
 - set up auto backups
 - add audit events table
   - track all changes to content
-- improve import dialog
-  - show all values
 - List Page
   - filtered rank
   - infinite scroll
 - View and Compare Page
-  - Write summaries for each table/section
   - Add tooltips for each spec
   - look into using useController
 - on-site SEO
   - Add alt tags
   - html semantics
   - sitemap
-- improvements to part and image cache?
-  - are they needed? could it be done better
+  - improve canonicals
 - improve related parts
 - improve admin panel
 

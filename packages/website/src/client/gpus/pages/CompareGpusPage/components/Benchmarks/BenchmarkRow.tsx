@@ -1,5 +1,5 @@
 import { Gpu, GpuField } from '@pcpartdb/shared';
-import React, { useContext } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { Td, Tr } from '../../../../../shared/components';
 import { formatGpuField } from '../../../..';
 import { ComparePageContext } from '../../context';
@@ -19,20 +19,28 @@ export const BenchmarkRow = (props: BenchmarkRowProps) => {
 
   const context = useContext(ComparePageContext);
   const [gpu1, gpu2] = context.comparison;
-  const benchmark1 = gpu1[key] as GpuField;
-  const benchmark2 = gpu2[key] as GpuField;
+  const benchmark1 =
+    (gpu1.chipset?.[key] as GpuField) || (gpu1[key] as GpuField);
+  const benchmark2 =
+    (gpu2.chipset?.[key] as GpuField) || (gpu2[key] as GpuField);
+
+  const label = LABELS[key];
+  const value1 = useMemo(
+    () => formatGpuField(benchmark1) || '--',
+    [benchmark1],
+  );
+  const value2 = useMemo(
+    () => formatGpuField(benchmark2) || '--',
+    [benchmark2],
+  );
 
   return (
     <Tr>
       <Td className="text-left w-[33%]">
-        <>{LABELS[key]}</>
+        <>{label}*</>
       </Td>
-      <Td className="text-left w-[33%]">
-        {formatGpuField(benchmark1) || '--'}
-      </Td>
-      <Td className="text-left w-[33%]">
-        {formatGpuField(benchmark2) || '--'}
-      </Td>
+      <Td className="text-left w-[33%]">{value1}</Td>
+      <Td className="text-left w-[33%]">{value2}</Td>
     </Tr>
   );
 };

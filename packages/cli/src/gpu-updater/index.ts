@@ -1,7 +1,7 @@
 import * as scheduler from 'node-schedule';
 import { updateNextGpu } from './updateNextGpu';
 
-const UPDATE_GPUS_CRON = '*/30 * * * *';
+const UPDATE_GPUS_CRON = '0,30 * * * *';
 
 export interface GpuUpdaterCommandArgs {
   schedule?: boolean;

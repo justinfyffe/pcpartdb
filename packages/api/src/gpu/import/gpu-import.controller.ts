@@ -38,8 +38,11 @@ export class GpuImportController {
 
   @Post('scrape')
   @UseGuards(StaffGuard)
-  async scrapeDetails(@Body() body: ScrapeGpuDetailsRequest) {
-    return await this.gpuImportService.scrapeDetails(body);
+  async scrapeDetails(
+    @Body() body: ScrapeGpuDetailsRequest,
+    @Ctx() ctx: Context,
+  ) {
+    return await this.gpuImportService.scrapeDetails(body, ctx);
   }
 
   @Post('preview')

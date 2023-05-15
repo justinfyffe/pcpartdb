@@ -25,20 +25,34 @@ interface ListOptions {
   query?: GpusQuery;
 
   fields?: GpuFieldKey[];
+  chipsetFields?: GpuFieldKey[];
+  retailModelFields?: GpuFieldKey[];
+
   includeImages?: boolean;
+  includeChipset?: boolean;
+  includeRetailModels?: boolean;
   includeRanks?: GpuRank[];
 }
 
 interface GetOptions {
+  chipsetFields?: GpuFieldKey[];
+  retailModelFields?: GpuFieldKey[];
+
   includeImages?: boolean;
+  includeChipset?: boolean;
+  includeRetailModels?: boolean;
   includeRanks?: GpuRank[];
 }
 
 interface GetComparisonOptions {
   slug?: string;
+  chipsetFields?: GpuFieldKey[];
+  retailModelFields?: GpuFieldKey[];
 
-  includeRanks?: GpuRank[];
   includeImages?: boolean;
+  includeChipset?: boolean;
+  includeRetailModels?: boolean;
+  includeRanks?: GpuRank[];
 }
 
 @Injectable()
@@ -56,8 +70,16 @@ export class GpuService {
     const gpuEntities = await this.gpuRepository.list(options, ctx);
 
     const fields = options.fields != null ? new Set(options.fields) : null;
+    const chipsetFields =
+      options.chipsetFields != null ? new Set(options.chipsetFields) : null;
+    const retailModelFields =
+      options.retailModelFields != null
+        ? new Set(options.retailModelFields)
+        : null;
     const gpus: Gpu[] = mapToGpuDtos(gpuEntities, {
       fields,
+      chipsetFields,
+      retailModelFields,
       includeSources: ctx.user?.isStaff,
     });
 
@@ -69,8 +91,19 @@ export class GpuService {
   }
 
   async getById(id: number, options: GetOptions, ctx: Context) {
+    const chipsetFields =
+      options.chipsetFields != null ? new Set(options.chipsetFields) : null;
+    const retailModelFields =
+      options.retailModelFields != null
+        ? new Set(options.retailModelFields)
+        : null;
+
     const gpuEntity = await this.gpuRepository.findById(id, options, ctx);
-    const gpu = mapToGpuDto(gpuEntity, { includeSources: ctx.user?.isStaff });
+    const gpu = mapToGpuDto(gpuEntity, {
+      chipsetFields,
+      retailModelFields,
+      includeSources: ctx.user?.isStaff,
+    });
 
     if (gpu == null) {
       throw notFoundError({ gpu: id });
@@ -78,7 +111,7 @@ export class GpuService {
     if (options.includeRanks) {
       await this.gpuRanksService.populateRanks(
         options.includeRanks,
-        [gpu],
+        [gpu, gpu.chipset],
         ctx,
       );
     }
@@ -87,8 +120,19 @@ export class GpuService {
   }
 
   async getBySlug(slug: string, options: GetOptions, ctx: Context) {
+    const chipsetFields =
+      options.chipsetFields != null ? new Set(options.chipsetFields) : null;
+    const retailModelFields =
+      options.retailModelFields != null
+        ? new Set(options.retailModelFields)
+        : null;
+
     const gpuEntity = await this.gpuRepository.findBySlug(slug, options, ctx);
-    const gpu = mapToGpuDto(gpuEntity, { includeSources: ctx.user?.isStaff });
+    const gpu = mapToGpuDto(gpuEntity, {
+      chipsetFields,
+      retailModelFields,
+      includeSources: ctx.user?.isStaff,
+    });
 
     if (gpu == null) {
       throw notFoundError({ gpu: slug });
@@ -96,7 +140,7 @@ export class GpuService {
     if (options.includeRanks) {
       await this.gpuRanksService.populateRanks(
         options.includeRanks,
-        [gpu],
+        [gpu, gpu.chipset],
         ctx,
       );
     }
@@ -105,7 +149,7 @@ export class GpuService {
   }
 
   async getComparison(options: GetComparisonOptions, ctx: Context) {
-    const { slug, includeImages, includeRanks } = options;
+    const { slug } = options;
     const slugs = slug.split('--vs--');
 
     if (slugs.length !== 2) {
@@ -114,23 +158,27 @@ export class GpuService {
       throw notFoundError({ comparison: slug });
     }
 
-    const promises = [];
+    const gpus: Gpu[] = [];
     for (const slugItem of slugs) {
-      promises.push(
-        this.getBySlug(
-          slugItem,
-          {
-            includeImages,
-            includeRanks: includeRanks || null,
-          },
-          ctx,
-        ),
+      const gpu = await this.getBySlug(
+        slugItem,
+        {
+          chipsetFields: options.chipsetFields,
+          retailModelFields: options.retailModelFields,
+          includeChipset: options.includeChipset,
+          includeRetailModels: options.includeRetailModels,
+          includeImages: options.includeImages,
+          includeRanks: options.includeRanks || null,
+        },
+        ctx,
       );
-    }
-    const gpus = await Promise.all(promises);
-    const filteredGpus = gpus.filter((gpu) => gpu != null);
 
-    if (filteredGpus.length !== slugs.length) {
+      if (gpu != null) {
+        gpus.push(gpu);
+      }
+    }
+
+    if (gpus.length !== slugs.length) {
       throw notFoundError(null);
     }
 

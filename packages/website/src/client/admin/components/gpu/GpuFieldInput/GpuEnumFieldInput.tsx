@@ -1,4 +1,5 @@
 import { GpuField, GpuFieldKey, MarketSegmentValue } from '@pcpartdb/shared';
+import { formatGpuField } from 'packages/website/src/client/gpus';
 import React, { forwardRef, useCallback, useMemo } from 'react';
 import {
   Select,
@@ -19,6 +20,7 @@ interface GpuEnumFieldInputProps {
   field: GpuFieldKey;
 
   value?: GpuField<string>;
+  parentValue?: GpuField<string>;
   onChange?: (value: GpuField<string>) => void;
 }
 
@@ -26,11 +28,12 @@ export const GpuEnumFieldInput = forwardRef<
   HTMLSelectElement,
   GpuEnumFieldInputProps
 >((props, ref) => {
-  const { field, value, onChange } = props;
+  const { field, value, parentValue, onChange } = props;
 
   const items = useMemo(() => ITEMS[field] ?? [], [field]);
 
   const baseValue = value?.value ?? null;
+  const placeholder = useMemo(() => formatGpuField(parentValue), [parentValue]);
 
   const handleChange = useCallback(
     (value: SelectValue) => {
@@ -45,6 +48,7 @@ export const GpuEnumFieldInput = forwardRef<
 
   return (
     <Select
+      placeholder={placeholder}
       disabled={value?.meta?.autoUpdate}
       value={baseValue}
       onChange={handleChange}

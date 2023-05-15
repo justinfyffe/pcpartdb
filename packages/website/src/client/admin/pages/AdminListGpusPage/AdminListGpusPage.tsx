@@ -17,9 +17,11 @@ import {
   ButtonVariant,
   MetaRobots,
   Seo,
+  Tab,
+  Tabs,
 } from '../../../shared/components';
 import { AdminLayout } from '../../../shared/layouts';
-import { GpuTable } from './components';
+import { ChipsetsTab, GpuTable, RetailModelsTab } from './components';
 import { GpuPagination } from './components/GpuPagination';
 
 export const AdminListGpusPage = (props: AdminListGpusViewModel) => {
@@ -98,22 +100,14 @@ export const AdminListGpusPage = (props: AdminListGpusViewModel) => {
           </div>
         </div>
 
-        <section>
-          {gpus.length > 0 && (
-            <>
-              <GpuTable gpus={gpus} />
-              <GpuPagination
-                query={query}
-                totalGpus={totalResults}
-                onPageClick={handlePageClick}
-              />
-            </>
-          )}
-
-          {gpus.length === 0 && (
-            <Alert variant={AlertVariant.Info}>There are no GPUs.</Alert>
-          )}
-        </section>
+        <Tabs loadOnDemand>
+          <Tab label="Chipsets">
+            <ChipsetsTab />
+          </Tab>
+          <Tab label="Retail Models">
+            <RetailModelsTab />
+          </Tab>
+        </Tabs>
       </article>
     </AdminLayout>
   );

@@ -18,11 +18,19 @@ export class GpuAutocompleteService {
       query,
       ctx,
     );
-    return mapToGpuDtos(results);
+    return mapToGpuDtos(results, {
+      fields: new Set([
+        'company',
+        'launchPrice',
+        'marketSegment',
+        'releaseDate',
+      ]),
+      chipsetFields: new Set(['company']),
+    });
   }
 
   async autocompleteSpec(
-    key: keyof Omit<GpuEntity, 'parent' | 'images'>,
+    key: keyof Omit<GpuEntity, 'chipset' | 'retailModels' | 'images'>,
     query: string,
     ctx: Context,
   ) {

@@ -15,12 +15,15 @@ import xml from 'xml';
 import { getDatabase } from '../shared/database';
 import { sitemapPath, sitemapUrl } from './utils';
 
-const COMPARISONS_PER_SITEMAP = 40_000;
+const COMPARISONS_PER_SITEMAP = 45_000;
+const CHIPSETS_PER_SITEMAP = 45_000;
+const RETAIL_MODELS_PER_SITEMAP = 45_000;
 
 const INDEX_FILENAME = 'sitemap-index.xml';
 const GENERAL_FILENAME = 'sitemap-general.xml';
 const GPU_LISTS_FILENAME = 'sitemap-gpu-lists.xml';
-const GPU_VIEWS_FILENAME = 'sitemap-gpu-views.xml';
+const GPU_CHIPSETS_FILENAME = 'sitemap-gpu-chipsets-{i}.xml';
+const GPU_RETAIL_MODELS_FILENAME = 'sitemap-gpu-retail-models-{i}.xml';
 const GPU_COMPARISONS_FILENAME = 'sitemap-gpu-comparisons-{i}.xml';
 
 interface SitemapEntry {
@@ -34,7 +37,8 @@ export async function updateSitemap() {
   const sitemapUrls = [
     await writeGeneralSitemap(),
     await writeGpuListsSitemap(),
-    await writeGpuViewsSitemap(),
+    ...(await writeGpuChipsetsSitemap()),
+    ...(await writeGpuRetailModelsSitemap()),
     ...(await writeGpuComparisonsSitemap()),
   ];
 
@@ -51,6 +55,8 @@ async function writeGeneralSitemap() {
   ] as SitemapEntry[];
 
   await writeSitemap(sitemapPath(GENERAL_FILENAME), entries);
+  console.log(`Generated ${GENERAL_FILENAME} with ${entries.length} entries`);
+
   return sitemapUrl(GENERAL_FILENAME);
 }
 
@@ -64,31 +70,121 @@ async function writeGpuListsSitemap() {
   );
 
   await writeSitemap(sitemapPath(GPU_LISTS_FILENAME), entries);
+  console.log(`Generated ${GPU_LISTS_FILENAME} with ${entries.length} entries`);
+
   return sitemapUrl(GPU_LISTS_FILENAME);
 }
 
-async function writeGpuViewsSitemap() {
-  console.log('Generating GPU Views sitemap');
+async function writeGpuChipsetsSitemap() {
+  console.log('Generating GPU Chipsets sitemap');
 
   const db = await getDatabase();
   const gpuRepository = new GpuRepository(db);
 
   const results = await gpuRepository.listAll({
     query: {
-      orderBy: { sort: GpuSort.ReleaseDate, order: GpuOrder.Desc },
+      filter: { isChipset: true, isRetailModel: false },
+      orderBy: { sort: GpuSort.Name, order: GpuOrder.Asc },
     },
   });
-  console.log(`Read ${results.length} gpus`);
   const gpus = mapToGpuDtos(results);
 
-  const entries: SitemapEntry[] = gpus.map((gpu) => ({
-    url: sitemapUrl(getViewGpuPath(gpu)),
-    lastModification:
-      gpu.updatedAt != null ? new Date(gpu.updatedAt) : undefined,
-  }));
+  let fileCounter = 0;
+  let entries: SitemapEntry[] = [];
+  let totalEntries = 0;
+  const sitemapUrls: string[] = [];
 
-  await writeSitemap(sitemapPath(GPU_VIEWS_FILENAME), entries);
-  return sitemapUrl(GPU_VIEWS_FILENAME);
+  for (let i = 0; i < gpus.length - 1; ++i) {
+    const gpu = gpus[i];
+
+    const url = sitemapUrl(getViewGpuPath(gpu));
+    const lastModTimestamp = Math.max(gpu.updatedAt ?? 0, gpu.updatedAt ?? 0);
+    const lastModification =
+      lastModTimestamp != 0 ? new Date(lastModTimestamp) : undefined;
+
+    entries.push({ url, lastModification });
+    ++totalEntries;
+
+    if (entries.length >= CHIPSETS_PER_SITEMAP) {
+      const filename = GPU_CHIPSETS_FILENAME.replace('{i}', `${fileCounter}`);
+      sitemapUrls.push(sitemapUrl(filename));
+      await writeSitemap(sitemapPath(filename), entries);
+      console.log(`Generated  ${filename} with ${entries.length} entries`);
+
+      entries = [];
+      fileCounter++;
+    }
+  }
+
+  if (entries.length > 0) {
+    const filename = GPU_CHIPSETS_FILENAME.replace('{i}', `${fileCounter}`);
+    sitemapUrls.push(sitemapUrl(filename));
+    await writeSitemap(sitemapPath(filename), entries);
+    console.log(`Generated ${filename} with ${entries.length} entries`);
+  }
+
+  console.log(`${totalEntries} total entries for GPU Retail Models sitemaps`);
+
+  return sitemapUrls;
+}
+
+async function writeGpuRetailModelsSitemap() {
+  console.log('Generating GPU Retail Models sitemap');
+
+  const db = await getDatabase();
+  const gpuRepository = new GpuRepository(db);
+
+  const results = await gpuRepository.listAll({
+    query: {
+      filter: { isChipset: false, isRetailModel: true },
+      orderBy: { sort: GpuSort.Name, order: GpuOrder.Asc },
+    },
+  });
+  const gpus = mapToGpuDtos(results);
+
+  let fileCounter = 0;
+  let entries: SitemapEntry[] = [];
+  let totalEntries = 0;
+  const sitemapUrls: string[] = [];
+
+  for (let i = 0; i < gpus.length - 1; ++i) {
+    const gpu = gpus[i];
+
+    const url = sitemapUrl(getViewGpuPath(gpu));
+    const lastModTimestamp = Math.max(gpu.updatedAt ?? 0, gpu.updatedAt ?? 0);
+    const lastModification =
+      lastModTimestamp != 0 ? new Date(lastModTimestamp) : undefined;
+
+    entries.push({ url, lastModification });
+    ++totalEntries;
+
+    if (entries.length >= RETAIL_MODELS_PER_SITEMAP) {
+      const filename = GPU_RETAIL_MODELS_FILENAME.replace(
+        '{i}',
+        `${fileCounter}`,
+      );
+      sitemapUrls.push(sitemapUrl(filename));
+      await writeSitemap(sitemapPath(filename), entries);
+      console.log(`Generated  ${filename} with ${entries.length} entries`);
+
+      entries = [];
+      fileCounter++;
+    }
+  }
+
+  if (entries.length > 0) {
+    const filename = GPU_RETAIL_MODELS_FILENAME.replace(
+      '{i}',
+      `${fileCounter}`,
+    );
+    sitemapUrls.push(sitemapUrl(filename));
+    await writeSitemap(sitemapPath(filename), entries);
+    console.log(`Generated ${filename} with ${entries.length} entries`);
+  }
+
+  console.log(`${totalEntries} total entries for GPU Retail Models sitemaps`);
+
+  return sitemapUrls;
 }
 
 async function writeGpuComparisonsSitemap() {
@@ -99,14 +195,15 @@ async function writeGpuComparisonsSitemap() {
 
   const results = await gpuRepository.listAll({
     query: {
+      filter: { isChipset: true, isRetailModel: false },
       orderBy: { sort: GpuSort.ReleaseDate, order: GpuOrder.Desc },
     },
   });
-  console.log(`Read ${results.length} gpus`);
   const gpus = mapToGpuDtos(results);
 
   let fileCounter = 0;
   let entries: SitemapEntry[] = [];
+  let totalEntries = 0;
   const sitemapUrls: string[] = [];
 
   for (let i = 0; i < gpus.length - 1; ++i) {
@@ -125,6 +222,7 @@ async function writeGpuComparisonsSitemap() {
 
       entries.push({ url: url1, lastModification });
       entries.push({ url: url2, lastModification });
+      totalEntries += 2;
 
       if (entries.length >= COMPARISONS_PER_SITEMAP) {
         const filename = GPU_COMPARISONS_FILENAME.replace(
@@ -133,6 +231,8 @@ async function writeGpuComparisonsSitemap() {
         );
         sitemapUrls.push(sitemapUrl(filename));
         await writeSitemap(sitemapPath(filename), entries);
+        console.log(`Generated  ${filename} with ${entries.length} entries`);
+
         entries = [];
         fileCounter++;
       }
@@ -143,7 +243,10 @@ async function writeGpuComparisonsSitemap() {
     const filename = GPU_COMPARISONS_FILENAME.replace('{i}', `${fileCounter}`);
     sitemapUrls.push(sitemapUrl(filename));
     await writeSitemap(sitemapPath(filename), entries);
+    console.log(`Generated ${filename} with ${entries.length} entries`);
   }
+
+  console.log(`${totalEntries} total entries for GPU Comparison sitemaps`);
 
   return sitemapUrls;
 }

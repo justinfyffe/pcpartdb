@@ -183,7 +183,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
         </div>
       )}
 
-      <div className="absolute flex items-stretch right-0 inset-y-0 z-10">
+      <div className="absolute flex items-stretch right-0 inset-y-0 z-1">
         {props.suffix && (
           <div className="flex items-center px-4" onClick={handleSuffixClick}>
             {suffix}

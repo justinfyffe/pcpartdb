@@ -1,3 +1,4 @@
+import { getChipset } from '@pcpartdb/shared';
 import React, { FunctionComponent, useContext } from 'react';
 import { ComparePageContext } from '../../context';
 import { PerformanceIntro } from './PerformanceIntro';
@@ -5,11 +6,12 @@ import { PerformanceTable } from './PerformanceTable';
 
 export const RelativePerformance: FunctionComponent = () => {
   const { comparison } = useContext(ComparePageContext);
-  const [gpu1, gpu2] = comparison;
+  const chipset1 = getChipset(comparison[0]);
+  const chipset2 = getChipset(comparison[1]);
 
   if (
-    gpu1.performanceScore?.value == null &&
-    gpu2.performanceScore?.value == null
+    chipset1.performanceScore?.value == null &&
+    chipset2.performanceScore?.value == null
   ) {
     return <></>;
   }

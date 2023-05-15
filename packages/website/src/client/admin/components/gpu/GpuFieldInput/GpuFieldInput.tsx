@@ -28,12 +28,13 @@ type InputType =
 
 const INPUT_TYPES: Record<string, InputType> = {
   // General
-  company: 'string',
+  company: 'autocomplete',
   marketSegment: 'enum',
   launchPrice: 'currency',
   releaseDate: 'date',
 
   // Processor
+  partNumber: 'string',
   codename: 'autocomplete',
   architecture: 'autocomplete',
   processSize: 'float',
@@ -88,12 +89,13 @@ interface GpuFieldInputProps {
   field: GpuFieldKey;
 
   value?: GpuField;
+  parentValue?: GpuField;
   onChange?: (value: GpuField) => void;
 }
 
 export const GpuFieldInput = forwardRef<unknown, GpuFieldInputProps>(
   (props, ref) => {
-    const { type, field, value: propsValue, onChange } = props;
+    const { type, field, value: propsValue, parentValue, onChange } = props;
 
     const [value, setValue] = useState(propsValue || null);
     useEffect(() => setValue(propsValue), [propsValue]);
@@ -129,6 +131,7 @@ export const GpuFieldInput = forwardRef<unknown, GpuFieldInputProps>(
           <GpuAutocompleteSpecFieldInput
             field={field}
             value={value as GpuField<string>}
+            parentValue={parentValue as GpuField<string>}
             onChange={handleChange}
             ref={ref as Ref<HTMLInputElement>}
           />
@@ -138,6 +141,7 @@ export const GpuFieldInput = forwardRef<unknown, GpuFieldInputProps>(
           <GpuCurrencyFieldInput
             field={field}
             value={value as GpuField<number>}
+            parentValue={parentValue as GpuField<number>}
             onChange={handleChange}
             ref={ref as Ref<HTMLInputElement>}
           />
@@ -147,6 +151,7 @@ export const GpuFieldInput = forwardRef<unknown, GpuFieldInputProps>(
           <GpuStringFieldInput
             field={field}
             value={value as GpuField<string>}
+            parentValue={parentValue as GpuField<string>}
             onChange={handleChange}
             ref={ref as Ref<HTMLInputElement>}
           />
@@ -165,6 +170,7 @@ export const GpuFieldInput = forwardRef<unknown, GpuFieldInputProps>(
           <GpuFloatFieldInput
             field={field}
             value={value as GpuField<number>}
+            parentValue={parentValue as GpuField<number>}
             onChange={handleChange}
             ref={ref as Ref<HTMLInputElement>}
           />
@@ -174,6 +180,7 @@ export const GpuFieldInput = forwardRef<unknown, GpuFieldInputProps>(
           <GpuDateFieldInput
             field={field}
             value={value as GpuField<string>}
+            parentValue={parentValue as GpuField<string>}
             onChange={handleChange}
             ref={ref as Ref<HTMLInputElement>}
           />
@@ -183,6 +190,7 @@ export const GpuFieldInput = forwardRef<unknown, GpuFieldInputProps>(
           <GpuBooleanFieldInput
             field={field}
             value={value as GpuField<boolean>}
+            parentValue={value as GpuField<boolean>}
             onChange={handleChange}
             ref={ref as Ref<HTMLSelectElement>}
           />
@@ -192,6 +200,7 @@ export const GpuFieldInput = forwardRef<unknown, GpuFieldInputProps>(
           <GpuEnumFieldInput
             field={field}
             value={value as GpuField<string>}
+            parentValue={parentValue as GpuField<string>}
             onChange={handleChange}
             ref={ref as Ref<HTMLSelectElement>}
           />
@@ -201,22 +210,25 @@ export const GpuFieldInput = forwardRef<unknown, GpuFieldInputProps>(
           <GpuStringFieldInput
             field={field}
             value={value as GpuField<string>}
+            parentValue={parentValue as GpuField<string>}
             onChange={handleChange}
             ref={ref as Ref<HTMLInputElement>}
           />
         );
       }
-    }, [field, handleChange, inputType, ref, value]);
+    }, [field, handleChange, inputType, ref, value, parentValue]);
 
     return (
-      <div className="flex gap-4">
+      <div className="flex flex-col">
         {renderInput()}
-        <Checkbox
-          value={value?.meta?.autoUpdate === true}
-          onChange={handleAutoUpdateChange}
-        >
-          Auto Update
-        </Checkbox>
+        <div className="flex gap-4 items-end justify-end text-xs">
+          <Checkbox
+            value={value?.meta?.autoUpdate === true}
+            onChange={handleAutoUpdateChange}
+          >
+            Auto Update
+          </Checkbox>
+        </div>
       </div>
     );
   },

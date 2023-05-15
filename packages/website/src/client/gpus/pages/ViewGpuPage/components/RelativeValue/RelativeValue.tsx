@@ -6,7 +6,8 @@ import { ValueTable } from './ValueTable';
 export const RelativeValue: FunctionComponent = () => {
   const { gpu } = useContext(ViewPageContext);
 
-  if (gpu.valueScore?.value == null) {
+  const valueScore = gpu.chipset?.valueScore?.value || gpu.valueScore?.value;
+  if (valueScore == null) {
     return <></>;
   }
 

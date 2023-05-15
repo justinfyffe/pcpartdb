@@ -11,7 +11,7 @@ export const BenchmarksIntroSentence1 = compileContentComponent({
     <>
       Performance and benchmark metrics for the {props.shortGpuName1} and{' '}
       {props.shortGpuName2}. These are usually the best indicator for determing
-      a GPUs performance.
+      a GPUs performance. This data is based on their chipsets.
     </>
   ),
 });

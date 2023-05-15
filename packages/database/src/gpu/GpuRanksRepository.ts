@@ -80,11 +80,21 @@ export class GpuRanksRepository {
     const where: string[] = [];
     let nextParameterIndex = 1;
 
+    const isChipset = filter?.isChipset ?? false;
+    const isRetailModel = filter?.isRetailModel ?? false;
     const architecture =
       filter?.architecture?.filter((value) => value != null) ?? [];
     const company = filter?.company?.filter((value) => value != null) ?? [];
     const year = filter?.year?.filter((value) => value != null) ?? [];
     const segment = filter?.segment?.filter((value) => value != null) ?? [];
+
+    // Only include ranks for chipsets
+    if (isChipset) {
+      where.push('gpu.chipset_id IS NULL');
+    }
+    if (isRetailModel) {
+      where.push('gpu.chipset_id IS NOT NULL');
+    }
 
     if (architecture.length > 0) {
       where.push(`gpu.architecture = ANY ($${nextParameterIndex++})`);

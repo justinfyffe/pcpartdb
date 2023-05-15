@@ -38,7 +38,7 @@ export const HighlightListItem = (props: HighlightListItemProps) => {
   return (
     <li
       className={classNames(
-        'bg-slate-200 flex items-center justify-center px-4 py-1 rounded shadow',
+        'bg-slate-200 flex gap-4 items-center justify-center px-4 py-1 rounded shadow',
         className,
       )}
     >
@@ -64,29 +64,60 @@ export const HighlightLabel = (props: HighlightLabelProps) => {
         })}
       </div>
 
-      <div className="font-medium md:text-sm text-xl">{children}</div>
+      <div className="font-medium md:text-sm text-xl whitespace-nowrap">
+        {children}
+      </div>
     </div>
   );
 };
 
-interface HighlightValueProps {
+interface HighlightValuesProps {
   children?: React.ReactNode;
 
   className?: string;
 }
 
-export const HighlightValue = (props: HighlightValueProps) => {
+export const HighlightValues = (props: HighlightValuesProps) => {
   const { children, className } = props;
 
   return (
-    <div
-      className={classNames(
-        'grid grid-cols-[auto_auto] grid-rows-2 gap-x-2',
-        className,
-      )}
-    >
-      {children}
+    <div className="">
+      <div
+        className={classNames(
+          'grid grid-cols-[auto_auto] grid-rows-2 gap-x-2',
+          className,
+        )}
+      >
+        {children}
+      </div>
     </div>
+  );
+};
+
+interface HighlightValueProps {
+  name?: string;
+  value?: string;
+
+  className?: string;
+}
+
+export const HighlightValue = (props: HighlightValueProps) => {
+  const { className, name, value } = props;
+
+  return (
+    <>
+      <div
+        className={classNames(
+          'text-right whitespace-nowrap text-ellipsis overflow-hidden',
+          className,
+        )}
+      >
+        {name}:
+      </div>
+      <div className={classNames('text-right whitespace-nowrap', className)}>
+        {value}
+      </div>
+    </>
   );
 };
 

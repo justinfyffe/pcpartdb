@@ -10,7 +10,7 @@ export function useViewPageContextProps(input: {
   return useMemo(() => {
     const gpu = { ...input.gpu };
     const contentData = { ...input.contentData };
-    const contentTags = getContentTags(gpu);
+    const contentTags = getContentTags(gpu, contentData);
     const contentParams = getContentParams(gpu, contentData);
 
     return {

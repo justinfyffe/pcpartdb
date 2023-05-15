@@ -5,19 +5,22 @@ import React, {
   useCallback,
   useEffect,
   useImperativeHandle,
+  useMemo,
   useRef,
   useState,
 } from 'react';
-import { getCompanyLogoImagePath } from '../../../image';
+import { getCompanyLogoAutocompletePath } from '../../../image';
 import { useGpuCache } from '../../../shared/cache';
 import { Autocomplete, Img } from '../../../shared/components';
 import { classNames } from '../../../shared/ui';
 import { gpuService } from '../../gpuService';
+import { getGpuName } from '../../utils';
 import { GpuAutocompleteOption } from './GpuAutocompleteOption';
 
 interface GpuAutocompleteProps {
   value?: number;
   onChange?: (value: number) => void;
+  onChangeGpu?: (value: Gpu) => void;
 
   excludeGpuId?: number;
 
@@ -28,7 +31,7 @@ export const GpuAutocomplete = forwardRef<
   HTMLInputElement,
   GpuAutocompleteProps
 >((props, ref) => {
-  const { value, onChange, excludeGpuId, className } = props;
+  const { value, onChange, onChangeGpu, excludeGpuId, className } = props;
 
   const inputRef = useRef<HTMLInputElement>();
   useImperativeHandle(ref, () => inputRef.current);
@@ -43,6 +46,9 @@ export const GpuAutocomplete = forwardRef<
 
     return gpuCache.get(value);
   });
+
+  const label = useMemo(() => getGpuName(gpu), [gpu]);
+  const prefixImage = useMemo(() => getCompanyLogoAutocompletePath(gpu), [gpu]);
 
   useEffect(() => {
     async function fetchGpu() {
@@ -84,23 +90,26 @@ export const GpuAutocomplete = forwardRef<
       const selectedGpu = gpuCache.get(gpuId);
       setGpu(selectedGpu);
       onChange?.(gpuId);
-      inputRef?.current?.blur();
+      onChangeGpu?.(selectedGpu);
+
+      // Need to delay, otherwise it seems like forms sometimes re-focuses.
+      setTimeout(() => {
+        inputRef?.current?.blur();
+      });
     },
-    [gpuCache, onChange],
+    [gpuCache, onChange, onChangeGpu],
   );
 
   const handleSuffixClick = useCallback(() => {
     inputRef.current.focus();
   }, [inputRef]);
 
-  const prefixImage = getCompanyLogoImagePath(gpu);
-
   return (
     <Autocomplete
       prefix={
         prefixImage ? <Img src={prefixImage} className="h-5" /> : undefined
       }
-      label={gpu?.name ?? ''}
+      label={label || ''}
       value={value != null && value !== 0 ? `${value}` : ''}
       onQuery={handleQuery}
       onChange={handleChange}

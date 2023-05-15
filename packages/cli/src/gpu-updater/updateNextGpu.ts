@@ -28,23 +28,29 @@ export async function updateNextGpu() {
     file: GPU_QUEUE_FILE,
   });
 
-  // Get gpu from from db
-  const gpu = await db.transaction(async (trx) => {
+  // Get gpu and chipset from from db
+  const gpuResult = await db.transaction(async (trx) => {
     const ctx = { trx };
 
     // Pull next gpu from the queue.
     const { gpuId } = await queue.next(trx);
 
-    const entity = await gpuRepository.findById(gpuId, {}, ctx);
-    return mapToGpuDto(entity, { includeSources: true });
+    const gpuEntity = await gpuRepository.findById(
+      gpuId,
+      { includeChipset: true },
+      ctx,
+    );
+    return mapToGpuDto(gpuEntity, { includeSources: true });
   });
-  if (gpu == null) {
+  if (gpuResult == null) {
     return;
   }
+  const { chipset, ...gpu } = gpuResult;
 
   // Pull from data sources
   const scrapeResults = await scrapeGpu({
     dataSources: gpu.meta?.dataSources ?? {},
+    chipset,
     proxy: true,
   });
 

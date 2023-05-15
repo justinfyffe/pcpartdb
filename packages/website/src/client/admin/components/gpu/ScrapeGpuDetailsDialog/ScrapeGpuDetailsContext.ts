@@ -11,7 +11,9 @@ export function createScrapeContext(response: ScrapeGpuDetailsResponse) {
   const scrapedFields: Record<string, ScrapeGpuDetailResult<GpuField>> = {};
   Object.keys(gpu).forEach((key) => {
     const value = gpu[key as keyof Gpu];
-    if (typeof value !== 'object') {
+    if (value == null) {
+      return;
+    } else if (typeof value !== 'object') {
       return;
     } else if (!('value' in value && 'meta' in value)) {
       return;

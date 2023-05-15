@@ -21,10 +21,14 @@ interface CountOptions {
 interface ListOptions {
   query?: GpusQuery;
   includeImages?: boolean;
+  includeChipset?: boolean;
+  includeRetailModels?: boolean;
 }
 
 interface FindOptions {
   includeImages?: boolean;
+  includeChipset?: boolean;
+  includeRetailModels?: boolean;
 }
 
 export class GpuRepository {
@@ -43,15 +47,21 @@ export class GpuRepository {
   ): Promise<GpuEntity[]> {
     const db = config?.trx ?? this.db;
 
+    const includeChipset = options?.includeChipset ?? false;
+    const includeRetailModels = options?.includeRetailModels ?? false;
     const includeImages = options?.includeImages ?? false;
     const { filter, orderBy, limit, offset } = options.query ?? {};
 
     return await db.gpu.findMany({
-      where: this.generateWhere(filter),
+      where: { ...this.generateWhere(filter) },
       orderBy: this.generateOrderBy(
         orderBy ?? { sort: DEFAULT_LIST_GPUS_SORT },
       ),
-      include: { images: includeImages ? { include: { image: true } } : false },
+      include: {
+        chipset: includeChipset,
+        retailModels: includeRetailModels,
+        images: includeImages ? { include: { image: true } } : false,
+      },
       skip: offset ?? DEFAULT_LIST_GPUS_OFFSET,
       take: limit ?? DEFAULT_LIST_GPUS_LIMIT,
     });
@@ -63,15 +73,21 @@ export class GpuRepository {
   ): Promise<GpuEntity[]> {
     const db = config?.trx ?? this.db;
 
+    const includeChipset = options?.includeChipset ?? false;
+    const includeRetailModels = options?.includeRetailModels ?? false;
     const includeImages = options?.includeImages ?? false;
     const { filter, orderBy } = options.query ?? {};
 
     return await db.gpu.findMany({
-      where: this.generateWhere(filter),
+      where: { ...this.generateWhere(filter) },
       orderBy: this.generateOrderBy(
         orderBy ?? { sort: DEFAULT_LIST_GPUS_SORT },
       ),
-      include: { images: includeImages ? { include: { image: true } } : false },
+      include: {
+        chipset: includeChipset,
+        retailModels: includeRetailModels,
+        images: includeImages ? { include: { image: true } } : false,
+      },
     });
   }
 
@@ -82,11 +98,17 @@ export class GpuRepository {
   ): Promise<GpuEntity> {
     const trx = config?.trx ?? this.db;
 
+    const includeChipset = options?.includeChipset ?? false;
+    const includeRetails = options?.includeRetailModels ?? false;
     const includeImages = options?.includeImages ?? false;
 
     return await trx.gpu.findUnique({
       where: { id },
-      include: { images: includeImages ? { include: { image: true } } : false },
+      include: {
+        chipset: includeChipset,
+        retailModels: includeRetails,
+        images: includeImages ? { include: { image: true } } : false,
+      },
     });
   }
 
@@ -97,26 +119,39 @@ export class GpuRepository {
   ): Promise<GpuEntity> {
     const trx = config?.trx ?? this.db;
 
+    const includeChipset = options?.includeChipset ?? false;
+    const includeRetailModels = options?.includeRetailModels ?? false;
     const includeImages = options?.includeImages ?? false;
 
     return await trx.gpu.findUnique({
       where: { slug },
-      include: { images: includeImages ? { include: { image: true } } : false },
+      include: {
+        chipset: includeChipset,
+        retailModels: includeRetailModels,
+        images: includeImages ? { include: { image: true } } : false,
+      },
     });
   }
 
-  async findByName(name: string, config?: RepositoryConfig) {
+  async findByCompanyAndName(
+    company: string,
+    name: string,
+    config?: RepositoryConfig,
+  ) {
     const trx = config?.trx ?? this.db;
 
     return await trx.gpu.findFirst({
-      where: { name: { equals: name, mode: 'insensitive' } },
+      where: {
+        company: { equals: company, mode: 'insensitive' },
+        name: { equals: name, mode: 'insensitive' },
+      },
     });
   }
 
   async create(data: Omit<GpuEntity, 'id'>, config?: RepositoryConfig) {
     const trx = config?.trx ?? this.db;
 
-    const { parent: _parent, images, ...gpuData } = data;
+    const { chipset: _parent, images, ...gpuData } = data;
 
     const imagesData =
       images?.map((image) => ({ imageId: image.imageId })) ?? [];
@@ -124,6 +159,7 @@ export class GpuRepository {
     return await trx.gpu.create({
       data: {
         ...gpuData,
+        retailModels: {},
         images: { createMany: { data: imagesData, skipDuplicates: true } },
       },
     });
@@ -146,7 +182,7 @@ export class GpuRepository {
     });
 
     // Update GPU
-    const { parent: _parent, images, ...gpuData } = data;
+    const { chipset: _parent, images, ...gpuData } = data;
 
     const imagesData =
       images?.map((image) => ({ imageId: image.imageId })) ?? [];
@@ -156,6 +192,7 @@ export class GpuRepository {
       where: { id },
       data: {
         ...gpuData,
+        retailModels: {},
         images: { createMany: { data: imagesData, skipDuplicates: true } },
       },
     });
@@ -167,6 +204,9 @@ export class GpuRepository {
   }
 
   private generateWhere(filter: GpusFilter): Prisma.GpuWhereInput {
+    const chipsetId = filter?.chipsetId || null;
+    const isChipset = filter?.isChipset ?? false;
+    const isRetailModel = filter?.isRetailModel ?? false;
     const performanceRated = filter?.performanceRated ?? false;
     const valueRated = filter?.valueRated;
     const maxPerformanceScore = filter?.maxPerformanceScore;
@@ -183,6 +223,17 @@ export class GpuRepository {
     let idWhere: Prisma.IntFilter = {};
     if (excludeIds != null) {
       idWhere = { ...idWhere, notIn: excludeIds };
+    }
+
+    // Parent
+    let parentWhere: Prisma.IntNullableFilter = {};
+    if (isChipset && !isRetailModel) {
+      parentWhere = null;
+    } else if (!isChipset && isRetailModel) {
+      parentWhere = { not: null };
+    }
+    if (chipsetId != null) {
+      parentWhere = { ...parentWhere, equals: chipsetId };
     }
 
     // Performance Score
@@ -234,6 +285,7 @@ export class GpuRepository {
     return {
       AND: {
         id: idWhere,
+        chipsetId: parentWhere,
         company: companyWhere,
         marketSegment: segmentWhere,
         architecture: architectureWhere,
@@ -261,7 +313,7 @@ export class GpuRepository {
     } else if (sort === GpuSort.Name) {
       // Default ASC
       const order = orderBy?.order ?? GpuOrder.Asc;
-      return { name: order };
+      return [{ company: { sort: order, nulls: 'last' } }, { name: order }];
     } else if (sort === GpuSort.ReleaseDate) {
       // Default DESC
       const order = orderBy?.order ?? GpuOrder.Desc;

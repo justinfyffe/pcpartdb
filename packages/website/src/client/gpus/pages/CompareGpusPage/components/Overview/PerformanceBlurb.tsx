@@ -8,7 +8,10 @@ import { ComparePageContext } from '../../context';
 
 const PerformanceIntro = compileContentComponent(
   {
-    tags: [CompareGpusContentTag.DifferentPerformance],
+    tags: [
+      CompareGpusContentTag.DifferentChipset,
+      CompareGpusContentTag.DifferentPerformance,
+    ],
     deps: [
       'gpu1PerformanceMoreOrLess',
       'gpu1PerformanceHigherOrLower',
@@ -28,7 +31,10 @@ const PerformanceIntro = compileContentComponent(
     ),
   },
   {
-    tags: [CompareGpusContentTag.SamePerformance],
+    tags: [
+      CompareGpusContentTag.DifferentChipset,
+      CompareGpusContentTag.SamePerformance,
+    ],
     deps: [],
     // The GeForce RTX 2070 and Radeon RX 7900 have nearly identical performances in the
     // benchmarks that we track.
@@ -36,6 +42,21 @@ const PerformanceIntro = compileContentComponent(
       <>
         The {props.shortGpuName1} and {props.shortGpuName2} have nearly
         identical performances in the benchmarks that we track.
+      </>
+    ),
+  },
+
+  {
+    tags: [CompareGpusContentTag.SameChipset],
+    deps: [],
+    // The ROG STRIX RTX 4070 GAMING OC and DUAL RTX 4070 WHITE are based on the same chipset,
+    // giving them nearly identical performances. It may vary slightly based on their specs like
+    // clock speed and memory.
+    component: (props) => (
+      <>
+        The {props.shortGpuName1} and {props.shortGpuName2} are based on the
+        same chipset, giving them nearly identical performances. It may vary
+        slightly based on their specs like clock speed and memory.
       </>
     ),
   },
@@ -66,13 +87,12 @@ const PerformanceValue = compileContentComponent(
   {
     tags: [CompareGpusContentTag.SamePerformancePerDollar],
     deps: ['performancePerDollar1'],
-    // Based on their performance and launch prices, the RTX 2070 has the same
-    // performance per dollar as the RX 7900: 23.45.
+    // Their performance and launch prices gives them the same performance per
+    // dollar of 44.47.
     component: (props) => (
       <>
-        Based on their performance and launch prices, the{' '}
-        {props.shortestGpuName1} has the same performance per dollar as the{' '}
-        {props.shortestGpuName2}: {props.performancePerDollar1}.
+        Their performance and launch prices gives them the same performance per
+        dollar of {props.performancePerDollar1}.
       </>
     ),
   },

@@ -7,7 +7,8 @@ import { ComparePageContext } from '../../context';
 
 const LABELS: Record<string, string> = {
   // General
-  company: 'Company',
+  partNumber: 'Part Number',
+  company: 'Manufacturer',
   marketSegment: 'Market Segment',
   launchPrice: 'Launch Price (MSRP)',
   releaseDate: 'Release Date',

@@ -1,11 +1,13 @@
 import { GpuField, GpuFieldKey } from '@pcpartdb/shared';
-import React, { forwardRef, useCallback } from 'react';
+import { formatGpuField } from 'packages/website/src/client/gpus';
+import React, { forwardRef, useCallback, useMemo } from 'react';
 import { TextInput } from '../../../../shared/components';
 
 interface GpuStringFieldInputProps {
   field: GpuFieldKey;
 
   value?: GpuField<string>;
+  parentValue?: GpuField<string>;
   onChange?: (value: GpuField<string>) => void;
 }
 
@@ -13,9 +15,10 @@ export const GpuStringFieldInput = forwardRef<
   HTMLInputElement,
   GpuStringFieldInputProps
 >((props, ref) => {
-  const { field, value, onChange } = props;
+  const { field, value, parentValue, onChange } = props;
 
   const baseValue = value?.value ?? null;
+  const placeholder = useMemo(() => formatGpuField(parentValue), [parentValue]);
 
   const handleChange = useCallback(
     (value: string) => {
@@ -26,6 +29,7 @@ export const GpuStringFieldInput = forwardRef<
 
   return (
     <TextInput
+      placeholder={placeholder}
       disabled={value?.meta?.autoUpdate}
       value={baseValue}
       onChange={handleChange}

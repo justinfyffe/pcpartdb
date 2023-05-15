@@ -2,7 +2,7 @@ import { PhotoIcon } from '@heroicons/react/24/outline';
 import { getCompareGpusPath, Gpu, GpuComparison } from '@pcpartdb/shared';
 import React, { FunctionComponent, useMemo } from 'react';
 import { formatGpuField, getGpuName } from '../../../../../gpus';
-import { getCompanyLogoImagePath } from '../../../../../image';
+import { getCompanyLogoFeedPath } from '../../../../../image';
 import { Card, Img } from '../../../../../shared/components';
 import {
   compileContentComponent,
@@ -37,15 +37,15 @@ export const ComparisonFeedItem: FunctionComponent<ComparisonFeedItemProps> = (
 
   const [image1, image2] = useMemo(() => {
     return [
-      gpu1.images?.[0]?.image ?? getCompanyLogoImagePath(gpu1),
-      gpu2.images?.[0]?.image ?? getCompanyLogoImagePath(gpu2),
+      gpu1.images?.[0]?.image ?? getCompanyLogoFeedPath(gpu1),
+      gpu2.images?.[0]?.image ?? getCompanyLogoFeedPath(gpu2),
     ];
   }, [gpu1, gpu2]);
 
   const [isCompanyImage1, isCompanyImage2] = useMemo(() => {
     return [
-      image1 === getCompanyLogoImagePath(gpu1),
-      image2 === getCompanyLogoImagePath(gpu2),
+      image1 === getCompanyLogoFeedPath(gpu1),
+      image2 === getCompanyLogoFeedPath(gpu2),
     ];
   }, [gpu1, image1, gpu2, image2]);
 

@@ -5,14 +5,12 @@ import {
 } from '../../../../../shared/content';
 import { ViewPageContext } from '../../context';
 
-const PowerSupplyBlurbSentence1 = compileContentComponent({
+const PowerSupplyTdp = compileContentComponent({
   deps: ['tdp'],
-  component: (props) => (
-    <>This GPU has a maximum power consumption of {props.tdp}.</>
-  ),
+  component: (props) => <>This graphics card has a TDP of {props.tdp}.</>,
 });
 
-const PowerSupplyBlurbSentence2 = compileContentComponent({
+const PowerSupplySuggestedPsu = compileContentComponent({
   deps: ['company', 'psu'],
   component: (props) => (
     <>
@@ -30,7 +28,7 @@ export const PowerSupplyBlurb = () => {
   return (
     <ContentContext.Provider value={context}>
       <p>
-        <PowerSupplyBlurbSentence1 /> <PowerSupplyBlurbSentence2 />
+        <PowerSupplyTdp /> <PowerSupplySuggestedPsu />
       </p>
     </ContentContext.Provider>
   );

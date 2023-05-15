@@ -1,8 +1,10 @@
 import { GpuField, GpuFieldKey } from '@pcpartdb/shared';
+import { formatGpuField } from 'packages/website/src/client/gpus';
 import React, {
   FunctionComponent,
   useCallback,
   useEffect,
+  useMemo,
   useState,
 } from 'react';
 import { Checkbox, NumberInput } from '../../../../shared/components';
@@ -12,6 +14,7 @@ interface GpuBenchmarkInputProps {
   field: GpuFieldKey;
 
   value?: GpuField<number>;
+  parentValue?: GpuField<number>;
   onChange?: (value: GpuField<number>) => void;
 
   className?: string;
@@ -21,7 +24,7 @@ interface GpuBenchmarkInputProps {
 export const GpuBenchmarkInput: FunctionComponent<GpuBenchmarkInputProps> = (
   props,
 ) => {
-  const { field, value: propsValue, onChange, className } = props;
+  const { field, value: propsValue, parentValue, onChange, className } = props;
 
   const [value, setValue] = useState(propsValue ?? null);
   useEffect(() => setValue(propsValue), [propsValue]);
@@ -51,9 +54,12 @@ export const GpuBenchmarkInput: FunctionComponent<GpuBenchmarkInputProps> = (
     [field, onChange, value],
   );
 
+  const placeholder = useMemo(() => formatGpuField(parentValue), [parentValue]);
+
   return (
     <div className={classNames('flex gap-4', className)}>
       <NumberInput
+        placeholder={placeholder}
         disabled={value?.meta?.autoUpdate}
         value={value?.value ?? null}
         onChange={handleScoreChange}

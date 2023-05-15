@@ -98,14 +98,13 @@ const PowerSupplySuggestedPsu = compileContentComponent(
     ),
   },
   {
-    tags: ['SameCompany', 'SamePsu'],
+    tags: [CompareGpusContentTag.SameCompany, CompareGpusContentTag.SamePsu],
     deps: ['company1', 'psu1'],
     // NVIDIA recommends a 850 W PSU for both the RTX 2080 and RTX 2070.
     component: (props) => (
       <>
         {props.company1} recommends a {props.psu1} PSU for both the{' '}
-        {props.shortestGpuName1} and
-        {props.shortestGpuName2}.
+        {props.shortestGpuName1} and {props.shortestGpuName2}.
       </>
     ),
   },

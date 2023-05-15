@@ -15,11 +15,13 @@ import { getGpuName } from '../..';
 import { CompareGpusForm } from '../../components';
 import {
   Benchmarks,
+  Disclaimer,
   GeneralInfo,
   Highlights,
   Overview,
   RelativePerformance,
   RelativeValue,
+  RetailModels,
   TechnicalSpecs,
 } from './components';
 import { ViewPageContext } from './context';
@@ -27,14 +29,25 @@ import { useViewPageContextProps } from './hooks';
 
 export const ViewGpuPage = (props: ViewGpuViewModel & { config: Config }) => {
   const { gpu, relatedGpus, relatedComparisons, contentData, config } = props;
-  useGpuCache(gpu);
+  const { chipset: parent } = gpu;
+  useGpuCache(parent, gpu);
 
   const context = useViewPageContextProps({ gpu, contentData });
 
-  const pageTitle = useMemo(() => getGpuName(gpu), [gpu]);
-  const seoTitle = `${getGpuName(gpu, {
-    company: false,
-  })}: Specs, performance, and value`;
+  const chipsetName = useMemo(() => getGpuName(gpu.chipset), [gpu.chipset]);
+  const chipsetShortName = useMemo(
+    () => getGpuName(gpu.chipset, { company: false }),
+    [gpu.chipset],
+  );
+  const chipsetHref = useMemo(() => getViewGpuPath(gpu.chipset), [gpu.chipset]);
+  const gpuName = useMemo(() => getGpuName(gpu), [gpu]);
+  const gpuShortName = useMemo(
+    () => getGpuName(gpu, { company: false }),
+    [gpu],
+  );
+
+  const pageTitle = useMemo(() => gpuName, [gpuName]);
+  const seoTitle = `${getGpuName(gpu)}: Specs, performance, and value`;
   const seoDescription = useMemo(() => {
     const fullGpuName = getGpuName(gpu);
 
@@ -66,17 +79,25 @@ export const ViewGpuPage = (props: ViewGpuViewModel & { config: Config }) => {
         <Breadcrumbs className="mb-4">
           <Breadcrumb href={homeHref}>Home</Breadcrumb>
           <Breadcrumb href={listGpusHref}>Graphics Cards</Breadcrumb>
-          <Breadcrumb>{pageTitle}</Breadcrumb>
+          {chipsetShortName != null && (
+            <Breadcrumb href={chipsetHref}>{chipsetShortName}</Breadcrumb>
+          )}
+          <Breadcrumb>{gpuShortName}</Breadcrumb>
         </Breadcrumbs>
 
-        <div className="flex flex-wrap justify-center gap-8 mb-8">
+        <div className="flex flex-wrap justify-center gap-8">
           <section className="flex flex-col w-full">
-            <h1 className="md:text-2xl text-3xl">{pageTitle}</h1>
+            <div className="mb-4">
+              <h1 className="md:text-2xl text-3xl mb-0">{pageTitle}</h1>
+              {chipsetName != null && (
+                <div className="text-content-dimmed">{chipsetName}</div>
+              )}
+            </div>
             <CompareGpusForm values={[gpu.id]} />
           </section>
 
-          <article className="md:min-w-full flex-1 flex flex-col gap-8">
-            <section className="flex flex-wrap justify-start gap-8">
+          <article className="md:min-w-full flex-1 flex flex-col gap-4">
+            <section className="flex flex-wrap justify-start gap-4">
               {/* <GpuImages gpu={gpu} className="flex-1 min-w-80" /> */}
               <Highlights className="flex-1" />
             </section>
@@ -87,6 +108,10 @@ export const ViewGpuPage = (props: ViewGpuViewModel & { config: Config }) => {
             <RelativeValue />
             <Benchmarks />
             <TechnicalSpecs />
+
+            <RetailModels />
+
+            <Disclaimer />
           </article>
 
           <Sidenav>

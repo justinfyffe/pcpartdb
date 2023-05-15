@@ -8,7 +8,7 @@ import { ProcessorSpecs } from './ProcessorSpecs';
 export const TechnicalSpecs: FunctionComponent = () => {
   return (
     <section className="flex flex-col gap-6">
-      <h2 className="mb-0">Technical Specs</h2>
+      <h2 className="mb-0 font-semibold">Technical Specs</h2>
 
       <ProcessorSpecs />
       <MemorySpecs />

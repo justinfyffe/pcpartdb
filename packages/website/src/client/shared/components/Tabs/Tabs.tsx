@@ -53,15 +53,14 @@ export const Tabs: FunctionComponent<TabsProps> = (props) => {
       </ul>
       {Children.map(children, (child, i) => (
         <>
-          {loadOnDemand !== true ||
-            (activeTab === i && (
-              <div
-                key={i}
-                className={classNames(activeTab !== i ? 'hidden' : '')}
-              >
-                {child}
-              </div>
-            ))}
+          {(loadOnDemand !== true || activeTab === i) && (
+            <div
+              key={i}
+              className={classNames(activeTab !== i ? 'hidden' : '')}
+            >
+              {child}
+            </div>
+          )}
         </>
       ))}
     </Element>

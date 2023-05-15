@@ -123,6 +123,7 @@ module.exports = {
         'content-dimmed': '#9ca3af',
         footer: '#f9fafb',
         'footer-link': '#c7d2fe',
+        placeholder: '#a9a9a9',
         toolbar: '#f9fafb',
       },
     },

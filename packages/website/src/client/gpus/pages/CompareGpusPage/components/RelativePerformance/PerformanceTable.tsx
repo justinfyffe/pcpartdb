@@ -1,4 +1,4 @@
-import { getViewGpuPath, Gpu } from '@pcpartdb/shared';
+import { getChipset, getViewGpuPath, Gpu } from '@pcpartdb/shared';
 import React, {
   FunctionComponent,
   useCallback,
@@ -8,6 +8,7 @@ import React, {
   useState,
 } from 'react';
 import {
+  Checkbox,
   Table,
   TBody,
   Td,
@@ -32,32 +33,33 @@ export const PerformanceTable: FunctionComponent<PerformanceTableProps> = (
 ) => {
   const { className } = props;
   const { comparison, contentData } = useContext(ComparePageContext);
-  const [gpu1, gpu2] = comparison;
+  const chipset1 = getChipset(comparison[0]);
+  const chipset2 = getChipset(comparison[1]);
   const { relativePerformanceGpus } = contentData;
 
-  const [baselineGpu, setBaselineGpu] = useState(() => {
+  const [baselineChipset, setBaselineChipset] = useState(() => {
     if (
-      gpu1.performanceScore?.value == null &&
-      gpu2.performanceScore?.value == null
+      chipset1.performanceScore?.value == null &&
+      chipset2.performanceScore?.value == null
     ) {
       return null;
     } else {
-      return gpu1.performanceScore?.value != null ? gpu1 : gpu2;
+      return chipset1.performanceScore?.value != null ? chipset1 : chipset2;
     }
   });
-  const [secondaryGpu, setSecondaryGpu] = useState(() => {
+  const [secondaryChipset, setSecondaryChipset] = useState(() => {
     if (
-      gpu1.performanceScore?.value == null ||
-      gpu2.performanceScore?.value == null
+      chipset1.performanceScore?.value == null ||
+      chipset2.performanceScore?.value == null
     ) {
       return null;
     } else {
-      return gpu2;
+      return chipset2;
     }
   });
 
   // Add nulls to rank gaps
-  const gpus = useMemo(() => {
+  const chipsets = useMemo(() => {
     const ret: Gpu[] = [];
     let dontNullGap = false;
     for (let i = 0; i < relativePerformanceGpus.length; ++i) {
@@ -83,57 +85,76 @@ export const PerformanceTable: FunctionComponent<PerformanceTableProps> = (
 
   useEffect(() => {
     if (
-      gpu1.performanceScore?.value == null &&
-      gpu2.performanceScore?.value == null
+      chipset1.performanceScore?.value == null &&
+      chipset2.performanceScore?.value == null
     ) {
-      setBaselineGpu(null);
+      // Both GPUs are missing performances. Nothing to store.
+      setBaselineChipset(null);
     } else {
-      setBaselineGpu(gpu1.performanceScore?.value != null ? gpu1 : gpu2);
+      setBaselineChipset(
+        chipset1.performanceScore?.value != null ? chipset1 : chipset2,
+      );
     }
 
     if (
-      gpu1.performanceScore?.value == null ||
-      gpu2.performanceScore?.value == null
+      chipset1.id === chipset2.id ||
+      chipset1.performanceScore?.value == null ||
+      chipset2.performanceScore?.value == null
     ) {
-      setSecondaryGpu(null);
+      // Same chipset, or one performance is missing.
+      setSecondaryChipset(null);
     } else {
-      setSecondaryGpu(gpu2);
+      setSecondaryChipset(chipset2);
     }
-  }, [gpu1, gpu2]);
+  }, [chipset1, chipset2]);
 
   const getRelativePerformance = useCallback(
-    (relatedGpu: Gpu) => {
-      const baseline = baselineGpu.performanceScore.value;
-      const relatedPerf = relatedGpu.performanceScore.value;
+    (relatedChipset: Gpu) => {
+      const baseline = baselineChipset.performanceScore.value;
+      const relatedPerf = relatedChipset.performanceScore.value;
 
       return ((relatedPerf / baseline) * 100).toFixed(0);
     },
-    [baselineGpu],
+    [baselineChipset],
   );
 
-  const toggleBaselineGpu = useCallback(
-    (gpu: Gpu) => {
-      setSecondaryGpu(baselineGpu);
-      setBaselineGpu(gpu);
+  const toggleBaselineChipset = useCallback(
+    (chipset: Gpu) => {
+      setSecondaryChipset(baselineChipset);
+      setBaselineChipset(chipset);
     },
-    [baselineGpu],
+    [baselineChipset],
   );
 
   return (
     <>
-      <div className="mb-1 text-right">
-        Baseline:{' '}
-        <BaselineToggle
-          gpu={gpu1}
-          active={baselineGpu?.id === gpu1.id}
-          onClick={() => toggleBaselineGpu(gpu1)}
-        />{' '}
-        or{' '}
-        <BaselineToggle
-          gpu={gpu2}
-          active={baselineGpu?.id === gpu2.id}
-          onClick={() => toggleBaselineGpu(gpu2)}
-        />
+      <div className="flex flex-wrap gap-2 justify-end">
+        {/* <div className="flex flex-wrap gap-2">
+          Filter:
+          <Checkbox>Desktop</Checkbox>
+          <Checkbox>Workstation</Checkbox>
+          <Checkbox>Mobile</Checkbox>
+          <Checkbox>Integrated</Checkbox>
+        </div> */}
+
+        <div className="mb-1">
+          Baseline:{' '}
+          <BaselineToggle
+            chipset={chipset1}
+            active={baselineChipset?.id === chipset1.id}
+            onClick={() => toggleBaselineChipset(chipset1)}
+          />{' '}
+          {chipset1.id !== chipset2.id && (
+            <>
+              or{' '}
+              <BaselineToggle
+                chipset={chipset2}
+                active={baselineChipset?.id === chipset2.id}
+                onClick={() => toggleBaselineChipset(chipset2)}
+              />
+            </>
+          )}
+        </div>
       </div>
       <Table border responsive className={className}>
         <THead>
@@ -144,23 +165,23 @@ export const PerformanceTable: FunctionComponent<PerformanceTableProps> = (
           </Tr>
         </THead>
         <TBody>
-          {gpus.map((gpu, i) =>
-            gpu != null ? (
+          {chipsets.map((chipset, i) =>
+            chipset != null ? (
               <CustomRow
-                key={gpu.id}
-                highlight={gpu.id === baselineGpu?.id}
-                secondary={gpu.id === secondaryGpu?.id}
+                key={chipset.id}
+                highlight={chipset.id === baselineChipset?.id}
+                secondary={chipset.id === secondaryChipset?.id}
               >
                 <CustomRowLabel>
-                  <a href={getViewGpuPath(gpu)}>
-                    {getGpuName(gpu, { company: false })}
+                  <a href={getViewGpuPath(chipset)}>
+                    {getGpuName(chipset, { company: false })}
                   </a>
                 </CustomRowLabel>
                 <CustomRowValue className="text-right">
-                  {formatGpuField(gpu.performanceScore)}
+                  {formatGpuField(chipset.performanceScore)}
                 </CustomRowValue>
                 <CustomRowValue className="text-right">
-                  {getRelativePerformance(gpu)}%
+                  {getRelativePerformance(chipset)}%
                 </CustomRowValue>
               </CustomRow>
             ) : (
@@ -178,7 +199,7 @@ export const PerformanceTable: FunctionComponent<PerformanceTableProps> = (
 };
 
 interface BaselineToggleProps {
-  gpu: Gpu;
+  chipset: Gpu;
   active: boolean;
   onClick: () => void;
 }
@@ -186,22 +207,27 @@ interface BaselineToggleProps {
 export const BaselineToggle: FunctionComponent<BaselineToggleProps> = (
   props,
 ) => {
-  const { gpu, active, onClick } = props;
+  const { chipset: chipset, active, onClick } = props;
 
-  if (gpu.performanceScore?.value == null) {
+  const chipsetName = useMemo(
+    () => getGpuName(chipset, { company: false }),
+    [chipset],
+  );
+
+  if (chipset.performanceScore?.value == null) {
     return (
       <span className="text-content-dimmed cursor-not-allowed">
-        {getGpuName(gpu)}
+        {chipsetName}
       </span>
     );
   }
 
   if (active) {
-    return <span className="font-bold">{getGpuName(gpu)}</span>;
+    return <span className="font-bold">{chipsetName}</span>;
   } else {
     return (
       <a className="cursor-pointer" onClick={onClick}>
-        {getGpuName(gpu)}
+        {chipsetName}
       </a>
     );
   }

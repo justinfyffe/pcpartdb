@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Gpu, GpuRank, GpuRanksFilter } from '@pcpartdb/shared';
+import { getChipset, Gpu, GpuRank, GpuRanksFilter } from '@pcpartdb/shared';
 import { parseISO } from 'date-fns';
 import { Context } from '../../shared/context';
 import { GpuRanksRepository } from './gpu-ranks.repository';
@@ -9,13 +9,15 @@ export class GpuRanksService {
   constructor(private gpuRanksRepository: GpuRanksRepository) {}
 
   async populateRanks(types: GpuRank[], gpus: Gpu[], ctx: Context) {
-    if (gpus.length === 0) {
+    const filteredGpus = gpus.filter((gpu) => getChipset(gpu) != null);
+
+    if (filteredGpus.length === 0) {
       return;
     }
 
     const enabledRanks = new Set(types);
-    const ids = gpus.map((gpu) => gpu.id);
-    const filter = this.buildRanksFilter(gpus);
+    const ids = filteredGpus.map((gpu) => getChipset(gpu).id);
+    const filter = this.buildRanksFilter(filteredGpus);
 
     const performanceRanks = enabledRanks.has('performanceRank')
       ? await this.gpuRanksRepository.getPerformanceRanks(ids, null, ctx)
@@ -63,7 +65,7 @@ export class GpuRanksService {
         )
       : null;
 
-    gpus.forEach((gpu, i) => {
+    filteredGpus.forEach((gpu, i) => {
       gpu.ranks = {
         ...gpu.ranks,
         performanceRank: performanceRanks?.[i],

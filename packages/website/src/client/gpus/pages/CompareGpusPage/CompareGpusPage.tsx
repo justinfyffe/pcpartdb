@@ -13,11 +13,13 @@ import { getGpuComparisonName, getGpuName } from '../..';
 import { CompareGpusForm } from '../../components';
 import {
   Benchmarks,
+  Disclaimer,
   GeneralInfo,
   Highlights,
   Overview,
   RelativePerformance,
   RelativeValue,
+  RetailModels,
   TechnicalSpecs,
 } from './components';
 import { ComparePageContext } from './context';
@@ -76,7 +78,7 @@ export const CompareGpuPage = (props: CompareGpusViewModel) => {
             <CompareGpusForm values={[gpu1.id, gpu2.id]} />
           </section>
 
-          <article className="flex-1 flex flex-col gap-8">
+          <article className="flex-1 flex flex-col gap-4">
             {/* <section className="flex md:flex-wrap gap-8 justify-evenly">
               <GpuHeader gpu={gpu1} />
               <GpuHeader gpu={gpu2} />
@@ -89,6 +91,10 @@ export const CompareGpuPage = (props: CompareGpusViewModel) => {
             <RelativeValue />
             <Benchmarks />
             <TechnicalSpecs />
+
+            <RetailModels />
+
+            <Disclaimer />
           </article>
 
           <Sidenav>

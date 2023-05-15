@@ -1,4 +1,4 @@
-import { getViewGpuPath, Gpu } from '@pcpartdb/shared';
+import { getChipset, getViewGpuPath, Gpu } from '@pcpartdb/shared';
 import React, { FunctionComponent, useContext, useMemo } from 'react';
 import { Table, TBody, Th, THead, Tr } from '../../../../../shared/components';
 import { formatGpuField, getGpuName } from '../../../..';
@@ -29,7 +29,7 @@ export const PerformanceTable: FunctionComponent<PerformanceTableProps> = (
         {relativePerformanceGpus.map((relativeGpu) => (
           <PerformanceTableRow
             key={relativeGpu.id}
-            baselineGpu={gpu}
+            baselineGpu={getChipset(gpu)}
             relativeGpu={relativeGpu}
           />
         ))}

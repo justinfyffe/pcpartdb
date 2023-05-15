@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import {
+  getChipset,
   Gpu,
   GpuOrder,
   GpuSort,
@@ -48,6 +49,16 @@ export class ViewGpuViewModelService {
     return await this.gpuService.getBySlug(
       slug,
       {
+        includeChipset: true,
+        chipsetFields: [
+          'company',
+          'launchPrice',
+          'performanceScore',
+          'valueScore',
+          'g3dMark',
+          'g2dMark',
+          'timespyGraphics',
+        ],
         includeImages: true,
         includeRanks: [
           'performanceRank',
@@ -79,10 +90,13 @@ export class ViewGpuViewModelService {
       ctx,
     );
     const relativePerformanceGpus = await this.getRelativePerformanceGpus(
-      gpu,
+      getChipset(gpu),
       ctx,
     );
-    const relativeValueGpus = await this.getRelativeValueGpus(gpu, ctx);
+    const relativeValueGpus = await this.getRelativeValueGpus(
+      getChipset(gpu),
+      ctx,
+    );
 
     const bestPerformanceSegmentGpus = await this.gpuService.list(
       {
@@ -106,6 +120,26 @@ export class ViewGpuViewModelService {
       ctx,
     );
 
+    const retailModels = await this.gpuService.list(
+      {
+        query: {
+          filter: { chipsetId: gpu.chipset?.id || gpu.id, isRetailModel: true },
+          orderBy: { sort: GpuSort.Name },
+        },
+        fields: [
+          'company',
+          'coreClockSpeedBase',
+          'coreClockSpeedBoost',
+          'length',
+          'slotWidth',
+          'width',
+          'height',
+          'thermalDesignPower',
+        ],
+      },
+      ctx,
+    );
+
     return {
       totalPerformanceGpus,
       totalPerformanceSegmentYearGpus,
@@ -113,6 +147,7 @@ export class ViewGpuViewModelService {
       relativeValueGpus,
       bestPerformanceGpuForSegment: bestPerformanceSegmentGpus?.[0],
       bestValueGpuForSegment: bestValueSegmentGpus?.[0],
+      retailModels,
     } as ViewGpuContentData;
   }
 

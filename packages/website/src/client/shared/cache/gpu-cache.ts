@@ -56,8 +56,9 @@ export const GpuCache = new GpuCacheImpl();
 
 export function useGpuCache(...gpus: (Gpu | Gpu[])[]) {
   const { gpuCache } = useContext(CacheContext);
-  if (gpus.length > 0) {
-    gpuCache.save(...gpus);
+  const filtered = gpus.filter((gpu) => gpu != null);
+  if (filtered.length > 0) {
+    gpuCache.save(...filtered);
   }
 
   return gpuCache;

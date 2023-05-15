@@ -4,6 +4,7 @@ import {
   ListGpusRequest,
   ListGpusViewModel,
 } from '@pcpartdb/shared';
+import deepmerge from 'deepmerge';
 import { GpuService } from '../../gpu/gpu.service';
 import { listGpusRequestValidator } from '../../gpu/gpu.validators';
 import { Context } from '../../shared/context';
@@ -16,7 +17,10 @@ export class ListGpusViewModelService {
   async viewModel(request: ListGpusRequest, ctx: Context) {
     validate(request, listGpusRequestValidator);
 
-    const { query } = request;
+    const query = deepmerge(
+      { filter: { isChipset: true } } as GpusQuery,
+      request.query,
+    );
 
     const gpus = await this.getGpusForQuery(query, ctx);
     const totalResults = await this.getTotalGpusForQuery(query, ctx);
@@ -42,8 +46,19 @@ export class ListGpusViewModelService {
       {
         query,
         fields: ['company', 'performanceScore', 'valueScore', 'releaseDate'],
+        retailModelFields: [
+          'company',
+          'coreClockSpeedBase',
+          'coreClockSpeedBoost',
+          'length',
+          'slotWidth',
+          'width',
+          'height',
+          'thermalDesignPower',
+        ],
         includeRanks: ['performanceRank', 'valueRank'],
         includeImages: false,
+        includeRetailModels: true,
       },
       ctx,
     );

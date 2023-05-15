@@ -1,5 +1,6 @@
 import { GpuField, GpuFieldKey } from '@pcpartdb/shared';
-import React, { forwardRef, useCallback, useState } from 'react';
+import { formatGpuField } from 'packages/website/src/client/gpus';
+import React, { forwardRef, useCallback, useMemo, useState } from 'react';
 import { gpuService } from '../../../../gpus/gpuService';
 import {
   Autocomplete,
@@ -10,6 +11,7 @@ interface GpuAutocompleteSpecFieldInputProps {
   field: GpuFieldKey;
 
   value?: GpuField<string>;
+  parentValue?: GpuField<string>;
   onChange?: (value: GpuField<string>) => void;
 }
 
@@ -17,10 +19,12 @@ export const GpuAutocompleteSpecFieldInput = forwardRef<
   HTMLInputElement,
   GpuAutocompleteSpecFieldInputProps
 >((props, ref) => {
-  const { field, value, onChange } = props;
+  const { field, value, parentValue, onChange } = props;
 
   const baseValue = (value?.value as string) ?? null;
   const [results, setResults] = useState<string[]>([]);
+
+  const placeholder = useMemo(() => formatGpuField(parentValue), [parentValue]);
 
   const handleQuery = useCallback(
     async (query: string) => {
@@ -45,6 +49,7 @@ export const GpuAutocompleteSpecFieldInput = forwardRef<
 
   return (
     <Autocomplete
+      placeholder={placeholder}
       disabled={value?.meta?.autoUpdate}
       freeSolo
       onQuery={handleQuery}

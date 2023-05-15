@@ -15,14 +15,14 @@ const IntroAudience = compileContentComponent(
     deps: ['marketSegment1', 'marketSegment2'],
     // The NVIDIA GeForce RTX 3070 and the AMD Radeon RX 7900 XTX are graphics cards with
     // different use cases, making it difficult to compare them directly. The RTX 3070 is
-    // designed for desktop users, while the RX 7900 XTX is designed for workstation use.
+    // designed for the desktop GPU market, while the RX 7900 XTX targets the workstation market.
     component: (props) => (
       <>
         The {props.gpuName1} and the {props.gpuName2} are graphics cards with
         different use cases, making it difficult to compare them directly. The{' '}
-        {props.shortestGpuName1} is designed for {props.marketSegment1} users,
-        while the {props.shortestGpuName2} is designed for{' '}
-        {props.marketSegment2} use.
+        {props.shortestGpuName1} is designed for the {props.marketSegment1} GPU{' '}
+        market, while the {props.shortestGpuName2} targets the{' '}
+        {props.marketSegment2} market.
       </>
     ),
   },
@@ -33,11 +33,11 @@ const IntroAudience = compileContentComponent(
     ],
     deps: ['marketSegment1'],
     // The NVIDIA GeForce RTX 3070 and the AMD Radeon RX 7900 XTX are both graphics cards
-    // that target desktop users.
+    // that target the desktop GPU market.
     component: (props) => (
       <>
         The {props.gpuName1} and the {props.gpuName2} are both graphics cards
-        that target {props.marketSegment1} users.
+        that target the {props.marketSegment1} GPU market.
       </>
     ),
   },
@@ -49,14 +49,14 @@ const IntroAudience = compileContentComponent(
     deps: ['company1', 'marketSegment1', 'marketSegment2'],
     // The GeForce RTX 3070 and the Radeon RX 7900 XTX are NVIDIA graphics cards with
     // different use cases, making it difficult to compare them directly. The RTX 3070 is
-    // designed for desktop users, while the RX 7900 XTX is designed for workstation use.
+    // designed for the desktop GPU market, while the RX 7900 XTX targets the workstation market.
     component: (props) => (
       <>
         The {props.shortGpuName1} and the {props.shortGpuName2} are{' '}
         {props.company1} graphics cards with different use cases, making it
         difficult to compare them directly. The {props.shortestGpuName1} is
-        designed for {props.marketSegment1} users, while the{' '}
-        {props.shortestGpuName2} is designed for {props.marketSegment2} use.
+        designed for the {props.marketSegment1} GPU market, while the{' '}
+        {props.shortestGpuName2} targets the {props.marketSegment2} market.
       </>
     ),
   },
@@ -66,14 +66,13 @@ const IntroAudience = compileContentComponent(
       CompareGpusContentTag.SameMarketSegment,
     ],
     deps: ['company1', 'marketSegment1'],
-    // The GeForce RTX 3070 and the Radeon RX 7900 XTX are NVIDIA graphics cards with
-    // different use cases, making it difficult to compare them directly. The RTX 3070 is
-    // designed for desktop users, while the RX 7900 XTX is designed for workstation use.
+    // The GeForce RTX 3070 and the Radeon RX 7900 XTX are NVIDIA graphics cards that target
+    // the workstation GPU market.
     component: (props) => (
       <>
         The {props.shortGpuName1} and the {props.shortGpuName2} are{' '}
-        {props.company1} graphics cards that target {props.marketSegment1}{' '}
-        users.
+        {props.company1} graphics cards that target the {props.marketSegment1}{' '}
+        GPU market.
       </>
     ),
   },

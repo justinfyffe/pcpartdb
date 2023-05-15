@@ -8,7 +8,11 @@ import {
   LIST_GPUS_PRESETS,
   ListGpusPresetSlug,
 } from './gpu-consts';
-import { Gpu, GpuOrder, GpuSort } from './gpu-types';
+import { Gpu, GpuOrder, GpuSort, MarketSegmentValue } from './gpu-types';
+
+export function getChipset(gpu: Gpu) {
+  return gpu?.chipset || gpu;
+}
 
 export function generateGpuSlug(name: string, company: string) {
   const slugParts = [];
@@ -47,6 +51,9 @@ export function generateGpusQueryFromSearchParams(
   const limit = Number(query.limit ?? DEFAULT_LIST_GPUS_LIMIT);
 
   const company = (query.company as string)?.split(',');
+  const segment = (query.segment as string)
+    ?.toUpperCase()
+    .split(',') as MarketSegmentValue[];
   const sort = (query.sort as GpuSort) || DEFAULT_LIST_GPUS_SORT;
   const order = (query.order as GpuOrder) || DEFAULT_LIST_GPUS_ORDER;
   const preset = query.preset as ListGpusPresetSlug;
@@ -55,7 +62,7 @@ export function generateGpusQueryFromSearchParams(
     return { ...LIST_GPUS_PRESETS[preset], limit, offset };
   } else {
     return {
-      filter: { company },
+      filter: { company, segment },
       orderBy: { sort, order },
       offset,
       limit,

@@ -6,7 +6,6 @@ import { ImageModule } from '../image/image.module';
 import { UserModule } from '../user/user.module';
 import { AdminDataUpdatesViewModelService } from './admin/data-updates/data-updates.view-model';
 import { AdminEditGpuViewModelService } from './admin/gpus/edit.view-model';
-import { AdminListGpusViewModelService } from './admin/gpus/list.view-model';
 import { AdminEditImageViewModelService } from './admin/images/edit.view-model';
 import { AdminListImagesViewModelService } from './admin/images/list.view-model';
 import { AdminOverviewViewModelService } from './admin/overview/overview.view-model';
@@ -31,7 +30,6 @@ import { ViewModelsController } from './view-models.controller';
   providers: [
     AdminOverviewViewModelService,
     AdminEditGpuViewModelService,
-    AdminListGpusViewModelService,
     AdminEditImageViewModelService,
     AdminListImagesViewModelService,
     AdminEditUserViewModelService,

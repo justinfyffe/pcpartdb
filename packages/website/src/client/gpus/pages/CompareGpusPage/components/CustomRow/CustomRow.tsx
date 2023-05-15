@@ -5,7 +5,9 @@ import { classNames } from '../../../../../shared/ui';
 interface CustomRowProps {
   highlight?: boolean;
   secondary?: boolean;
-  children?: React.ReactElement<CustomRowLabelProps | CustomRowValueProps>[];
+  children?:
+    | React.ReactElement<CustomRowLabelProps | CustomRowValueProps>
+    | React.ReactElement<CustomRowLabelProps | CustomRowValueProps>[];
 }
 
 export const CustomRow = (props: CustomRowProps) => {

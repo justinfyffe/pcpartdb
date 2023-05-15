@@ -1,5 +1,6 @@
 import { GpuField, GpuFieldKey } from '@pcpartdb/shared';
-import React, { forwardRef, useCallback } from 'react';
+import { formatGpuField } from 'packages/website/src/client/gpus';
+import React, { forwardRef, useCallback, useMemo } from 'react';
 import {
   Select,
   SelectOption,
@@ -10,6 +11,7 @@ interface GpuBooleanFieldInputProps {
   field: GpuFieldKey;
 
   value?: GpuField<boolean>;
+  parentValue?: GpuField<boolean>;
   onChange?: (value: GpuField<boolean>) => void;
 }
 
@@ -17,12 +19,13 @@ export const GpuBooleanFieldInput = forwardRef<
   HTMLSelectElement,
   GpuBooleanFieldInputProps
 >((props, ref) => {
-  const { field, value, onChange } = props;
+  const { field, value, parentValue, onChange } = props;
 
   let baseValue: string = null;
   if (value?.value != null) {
     baseValue = value?.value ? 'true' : 'false';
   }
+  const placeholder = useMemo(() => formatGpuField(parentValue), [parentValue]);
 
   const handleChange = useCallback(
     (value: SelectValue) => {
@@ -33,6 +36,7 @@ export const GpuBooleanFieldInput = forwardRef<
 
   return (
     <Select
+      placeholder={placeholder}
       disabled={value?.meta?.autoUpdate}
       value={baseValue}
       onChange={handleChange}

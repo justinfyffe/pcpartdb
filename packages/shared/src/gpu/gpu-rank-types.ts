@@ -15,6 +15,9 @@ export interface GpuRanksFilter {
   company?: string[];
   year?: number[];
   segment?: MarketSegmentValue[];
+
+  isChipset?: boolean;
+  isRetailModel?: boolean;
 }
 
 export type GpuRank = keyof GpuRanks;

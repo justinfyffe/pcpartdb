@@ -1,9 +1,16 @@
-import { GpuComparison, GpuField, MarketSegmentValue } from '@pcpartdb/shared';
-import { formatGpuField } from '../../../utils';
+import {
+  getChipset,
+  GpuComparison,
+  GpuField,
+  MarketSegmentValue,
+} from '@pcpartdb/shared';
+import { formatGpuField, getGpuName } from '../../../utils';
 
 export enum CompareGpusContentTag {
   DifferentCompany = 'DIFFERENT_COMPANY',
   SameCompany = 'SAME_COMPANY',
+  DifferentChipset = 'DIFFERENT_CHIPSET',
+  SameChipset = 'SAME_CHIPSET',
   DifferentMarketSegment = 'DIFFERENT_MARKET_SEGMENT',
   SameMarketSegment = 'SAME_MARKET_SEGMENT',
   DifferentReleaseDate = 'DIFFERENT_RELEASE_DATE',
@@ -47,6 +54,8 @@ function getGeneralTags(comparison: GpuComparison) {
   return {
     [CompareGpusContentTag.DifferentCompany]: hasDifferentCompany(comparison),
     [CompareGpusContentTag.SameCompany]: hasSameCompany(comparison),
+    [CompareGpusContentTag.DifferentChipset]: hasDifferentChipset(comparison),
+    [CompareGpusContentTag.SameChipset]: hasSameChipset(comparison),
     [CompareGpusContentTag.DifferentMarketSegment]:
       hasDifferentMarketSegment(comparison),
     [CompareGpusContentTag.SameMarketSegment]: hasSameMarketSegment(comparison),
@@ -113,6 +122,22 @@ function hasSameCompany(comparison: GpuComparison) {
   return hasSameValue(gpu1.company, gpu2.company);
 }
 
+function hasDifferentChipset(comparison: GpuComparison) {
+  const [gpu1, gpu2] = comparison;
+  return (
+    getGpuName(getChipset(gpu1), { company: false }) !==
+    getGpuName(getChipset(gpu2), { company: false })
+  );
+}
+
+function hasSameChipset(comparison: GpuComparison) {
+  const [gpu1, gpu2] = comparison;
+  return (
+    getGpuName(getChipset(gpu1), { company: false }) ===
+    getGpuName(getChipset(gpu2), { company: false })
+  );
+}
+
 function hasDifferentMarketSegment(comparison: GpuComparison) {
   const [gpu1, gpu2] = comparison;
   return hasDifferentValue(gpu1.marketSegment, gpu2.marketSegment);
@@ -153,22 +178,31 @@ function hasSameLaunchPrice(comparison: GpuComparison) {
 
 function hasDifferentPerformance(comparison: GpuComparison) {
   const [gpu1, gpu2] = comparison;
-  return hasDifferentValue(gpu1.performanceScore, gpu2.performanceScore);
+  return hasDifferentValue(
+    getChipset(gpu1).performanceScore,
+    getChipset(gpu2).performanceScore,
+  );
 }
 
 function hasSamePerformance(comparison: GpuComparison) {
   const [gpu1, gpu2] = comparison;
-  return hasSameValue(gpu1.performanceScore, gpu2.performanceScore);
+  return hasSameValue(
+    getChipset(gpu1).performanceScore,
+    getChipset(gpu2).performanceScore,
+  );
 }
 
 function hasDifferentPerformancePerDollar(comparison: GpuComparison) {
   const [gpu1, gpu2] = comparison;
-  return hasDifferentValue(gpu1.valueScore, gpu2.valueScore);
+  return hasDifferentValue(
+    getChipset(gpu1).valueScore,
+    getChipset(gpu2).valueScore,
+  );
 }
 
 function hasSamePerformancePerDollar(comparison: GpuComparison) {
   const [gpu1, gpu2] = comparison;
-  return hasSameValue(gpu1.valueScore, gpu2.valueScore);
+  return hasSameValue(getChipset(gpu1).valueScore, getChipset(gpu2).valueScore);
 }
 
 function hasDifferentMemorySize(comparison: GpuComparison) {

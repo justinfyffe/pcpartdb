@@ -46,6 +46,10 @@ export function getListGpusPath(presetOrQuery?: GpusQuery | string) {
 }
 
 export function getViewGpuPath(gpuOrSlug: Gpu | string) {
+  if (gpuOrSlug == null) {
+    return null;
+  }
+
   const slug = typeof gpuOrSlug === 'string' ? gpuOrSlug : gpuOrSlug.slug;
   return joinUrlParts('/gpus/view/', slug, '/');
 }
@@ -126,7 +130,7 @@ function generateSearchParamsFromGpusQuery(query: GpusQuery) {
   }
 
   if (query.filter?.segment?.length > 0) {
-    params.append('segment', query.filter.segment.join(','));
+    params.append('segment', query.filter.segment.join(',').toLowerCase());
   }
 
   if (query.orderBy?.sort) {

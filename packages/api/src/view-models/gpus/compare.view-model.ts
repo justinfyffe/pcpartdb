@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import {
   CompareGpusContentData,
   CompareGpusViewModel,
+  getChipset,
   Gpu,
   GpuComparison,
   GpuOrder,
@@ -48,20 +49,56 @@ export class CompareGpusViewModelService {
     return await this.gpuService.getComparison(
       {
         slug,
+        includeChipset: true,
+        includeRetailModels: true,
         includeImages: true,
         includeRanks: ['performanceRank', 'valueRank'],
+        chipsetFields: [
+          'company',
+          'performanceScore',
+          'valueScore',
+          'g3dMark',
+          'g2dMark',
+          'timespyGraphics',
+        ],
       },
       ctx,
     );
   }
 
   private async getContentData(comparison: GpuComparison, ctx: Context) {
+    const chipset1 = getChipset(comparison[0]);
+    const chipset2 = getChipset(comparison[1]);
+
+    const retailModels1 = await this.gpuService.list(
+      {
+        query: {
+          filter: { chipsetId: chipset1.id, isRetailModel: true },
+          orderBy: { sort: GpuSort.Name },
+        },
+        fields: ['company'],
+      },
+      ctx,
+    );
+    const retailModels2 = await this.gpuService.list(
+      {
+        query: {
+          filter: { chipsetId: chipset2.id, isRetailModel: true },
+          orderBy: { sort: GpuSort.Name },
+        },
+        fields: ['company'],
+      },
+      ctx,
+    );
+
     return {
       relativePerformanceGpus: await this.getRelativePerformanceGpus(
         comparison,
         ctx,
       ),
       relativeValueGpus: await this.getRelativeValueGpus(comparison, ctx),
+      retailModels1,
+      retailModels2,
     } as CompareGpusContentData;
   }
 
@@ -70,8 +107,10 @@ export class CompareGpusViewModelService {
     ctx: Context,
   ) {
     const [gpu1, gpu2] = comparison;
-    const neighbors1 = await this.getPerformanceNeighbors(gpu1, ctx);
-    const neighbors2 = await this.getPerformanceNeighbors(gpu2, ctx);
+    const chipset1 = getChipset(gpu1);
+    const chipset2 = getChipset(gpu2);
+    const neighbors1 = await this.getPerformanceNeighbors(chipset1, ctx);
+    const neighbors2 = await this.getPerformanceNeighbors(chipset2, ctx);
 
     // At least one GPU has no neighbors (missing rank)
     if (neighbors1.length === 0 && neighbors2.length === 0) {
@@ -81,26 +120,30 @@ export class CompareGpusViewModelService {
       const neighbors = [...neighbors1, ...neighbors2];
       return getSurroundingValues(
         neighbors,
-        neighbors.findIndex((gpu) => gpu.id === gpu1.id || gpu.id === gpu2.id),
+        neighbors.findIndex(
+          (gpu) => gpu.id === chipset1.id || gpu.id === chipset2.id,
+        ),
         TOTAL_COMPARED_GPUS,
       );
     }
 
     // Both GPUS have neighbors
     const hasGapBetweenNeighbors =
-      Math.abs(gpu1.ranks?.performanceRank - gpu2.ranks?.performanceRank) >
+      Math.abs(
+        chipset1.ranks?.performanceRank - chipset2.ranks?.performanceRank,
+      ) >
       TOTAL_COMPARED_GPUS / 2 + 1;
 
     if (hasGapBetweenNeighbors) {
       return this.concatNeighbors(
-        comparison,
+        [chipset1, chipset2],
         neighbors1,
         neighbors2,
         (g1, g2) => g1.ranks?.performanceRank - g2.ranks?.performanceRank,
       );
     } else {
       return this.mergeNeighbors(
-        comparison,
+        [chipset1, chipset2],
         neighbors1,
         neighbors2,
         (g1, g2) => g1.ranks?.performanceRank - g2.ranks?.performanceRank,
@@ -110,8 +153,10 @@ export class CompareGpusViewModelService {
 
   private async getRelativeValueGpus(comparison: GpuComparison, ctx: Context) {
     const [gpu1, gpu2] = comparison;
-    const neighbors1 = await this.getValueNeighbors(gpu1, ctx);
-    const neighbors2 = await this.getValueNeighbors(gpu2, ctx);
+    const chipset1 = getChipset(gpu1);
+    const chipset2 = getChipset(gpu2);
+    const neighbors1 = await this.getValueNeighbors(chipset1, ctx);
+    const neighbors2 = await this.getValueNeighbors(chipset2, ctx);
 
     // At least one GPU has no neighbors (missing rank)
     if (neighbors1.length === 0 && neighbors2.length === 0) {
@@ -121,26 +166,28 @@ export class CompareGpusViewModelService {
       const neighbors = [...neighbors1, ...neighbors2];
       return getSurroundingValues(
         neighbors,
-        neighbors.findIndex((gpu) => gpu.id === gpu1.id || gpu.id === gpu2.id),
+        neighbors.findIndex(
+          (gpu) => gpu.id === chipset1.id || gpu.id === chipset2.id,
+        ),
         TOTAL_COMPARED_GPUS,
       );
     }
 
     // Both GPUs have neighbors. Need to combine them.
     const hasGapBetweenNeighbors =
-      Math.abs(gpu1.ranks?.valueRank - gpu2.ranks?.valueRank) >
+      Math.abs(chipset1.ranks?.valueRank - chipset2.ranks?.valueRank) >
       TOTAL_COMPARED_GPUS / 2 + 1;
 
     if (hasGapBetweenNeighbors) {
       return this.concatNeighbors(
-        comparison,
+        [chipset1, chipset2],
         neighbors1,
         neighbors2,
         (g1, g2) => g1.ranks?.valueRank - g2.ranks?.valueRank,
       );
     } else {
       return this.mergeNeighbors(
-        comparison,
+        [chipset1, chipset2],
         neighbors1,
         neighbors2,
         (g1, g2) => g1.ranks?.valueRank - g2.ranks?.valueRank,

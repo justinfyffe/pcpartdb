@@ -1,4 +1,4 @@
-import { Gpu, GpuComparison, GpuFieldKey } from '@pcpartdb/shared';
+import { getChipset, Gpu, GpuComparison, GpuFieldKey } from '@pcpartdb/shared';
 import { format } from 'date-fns';
 import { ContentParams } from 'packages/website/src/client/shared/content';
 import {
@@ -16,6 +16,10 @@ export interface CompareGpusContentParams {
   shortGpuName2?: string;
   shortestGpuName1?: string;
   shortestGpuName2?: string;
+  chipsetName1?: string;
+  chipsetName2?: string;
+  chipsetShortName1?: string;
+  chipsetShortName2?: string;
   marketSegment1?: string;
   marketSegment2?: string;
   gpu1NewerOrOlder?: string;
@@ -116,6 +120,10 @@ function getGeneralParams(comparison: GpuComparison) {
     shortGpuName2: getGpuName(gpu2, { company: false }),
     shortestGpuName1: getGpuName(gpu1, { company: false, brand: false }),
     shortestGpuName2: getGpuName(gpu2, { company: false, brand: false }),
+    chipsetName1: getGpuName(getChipset(gpu1)),
+    chipsetName2: getGpuName(getChipset(gpu2)),
+    chipsetShortName1: getGpuName(getChipset(gpu1), { company: false }),
+    chipsetShortName2: getGpuName(getChipset(gpu2), { company: false }),
     marketSegment1: formatGpuField(gpu1.marketSegment)?.toLowerCase(),
     marketSegment2: formatGpuField(gpu2.marketSegment)?.toLowerCase(),
     gpu1NewerOrOlder,
@@ -131,16 +139,18 @@ function getGeneralParams(comparison: GpuComparison) {
 
 function getPerformanceParams(comparison: GpuComparison) {
   const [gpu1, gpu2] = comparison;
+  const chipset1 = getChipset(gpu1);
+  const chipset2 = getChipset(gpu2);
 
   let gpu1PerformanceMoreOrLess: string;
   let gpu1PerformanceHigherOrLower: string;
   let gpu1PerformanceDifferencePct: string;
   if (
-    gpu1.performanceScore?.value != null &&
-    gpu2.performanceScore?.value != null
+    chipset1.performanceScore?.value != null &&
+    chipset2.performanceScore?.value != null
   ) {
-    const performanceScore1 = gpu1.performanceScore.value;
-    const performanceScore2 = gpu2.performanceScore.value;
+    const performanceScore1 = chipset1.performanceScore.value;
+    const performanceScore2 = chipset2.performanceScore.value;
     if (performanceScore1 > performanceScore2) {
       gpu1PerformanceMoreOrLess = 'more';
       gpu1PerformanceHigherOrLower = 'higher';
@@ -155,9 +165,12 @@ function getPerformanceParams(comparison: GpuComparison) {
   }
 
   let gpu1ValueHigherOrLower: string;
-  if (gpu1.valueScore?.value != null && gpu2.valueScore?.value != null) {
-    const valueScore1 = gpu1.valueScore.value;
-    const valueScore2 = gpu2.valueScore.value;
+  if (
+    chipset1.valueScore?.value != null &&
+    chipset2.valueScore?.value != null
+  ) {
+    const valueScore1 = chipset1.valueScore.value;
+    const valueScore2 = chipset2.valueScore.value;
     if (valueScore1 > valueScore2) {
       gpu1ValueHigherOrLower = 'higher';
     } else if (valueScore1 < valueScore2) {
@@ -170,8 +183,8 @@ function getPerformanceParams(comparison: GpuComparison) {
     gpu1PerformanceHigherOrLower,
     gpu1PerformanceDifferencePct,
     gpu1ValueHigherOrLower,
-    performancePerDollar1: formatGpuField(gpu1.valueScore),
-    performancePerDollar2: formatGpuField(gpu2.valueScore),
+    performancePerDollar1: formatGpuField(chipset1.valueScore),
+    performancePerDollar2: formatGpuField(chipset2.valueScore),
   } as CompareGpusContentParams as ContentParams;
 }
 

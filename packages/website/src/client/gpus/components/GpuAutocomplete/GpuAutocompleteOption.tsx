@@ -1,6 +1,6 @@
 import { Gpu } from '@pcpartdb/shared';
 import React, { FunctionComponent, useMemo } from 'react';
-import { getCompanyLogoImagePath } from '../../../image';
+import { getCompanyLogoAutocompletePath } from '../../../image';
 import { AutocompleteOption, Img } from '../../../shared/components';
 import { DateFormatter } from '../../../shared/format';
 import { formatGpuField, getGpuName } from '../..';
@@ -18,15 +18,18 @@ export const GpuAutocompleteOption: FunctionComponent<
   const id = gpu.id;
   const name = useMemo(() => getGpuName(gpu), [gpu]);
   const shortName = useMemo(() => getGpuName(gpu, { company: false }), [gpu]);
-  const image = useMemo(() => getCompanyLogoImagePath(gpu), [gpu]);
+  const image = useMemo(() => getCompanyLogoAutocompletePath(gpu), [gpu]);
 
-  const marketSegment = useMemo(
-    () => formatGpuField(gpu.marketSegment),
-    [gpu.marketSegment],
-  );
+  const marketSegmentAndChipset = useMemo(() => {
+    const marketSegment = formatGpuField(gpu.marketSegment);
+    const chipset = getGpuName(gpu.chipset, { company: false });
+    return [marketSegment, chipset].filter((value) => value != null).join(', ');
+  }, [gpu.marketSegment, gpu.chipset]);
   const releaseDate = useMemo(
     () =>
-      formatGpuField(gpu.releaseDate, { dateFormatter: DateFormatter.Year }),
+      formatGpuField(gpu.releaseDate, {
+        dateFormatter: DateFormatter.QuarterYear,
+      }),
     [gpu.releaseDate],
   );
   const price = useMemo(
@@ -41,7 +44,9 @@ export const GpuAutocompleteOption: FunctionComponent<
 
         <div className="flex flex-1 flex-col gap-1 items-start">
           <span className="flex-1 text-sm">{name}</span>
-          <span className="flex-1 text-2xs text-[#aaa]">{marketSegment}</span>
+          <span className="flex-1 text-2xs text-[#aaa]">
+            {marketSegmentAndChipset}
+          </span>
         </div>
 
         <div className="flex flex-col gap-1 items-end text-2xs">

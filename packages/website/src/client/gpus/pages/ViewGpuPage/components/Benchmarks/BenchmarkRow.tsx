@@ -18,14 +18,15 @@ export const BenchmarkRow = (props: BenchmarkRowProps) => {
   const { benchmark: key } = props;
 
   const { gpu } = useContext(ViewPageContext);
-  const benchmark = gpu[key] as GpuField;
+  const { chipset: parent } = gpu;
+  const benchmark = (parent?.[key] as GpuField) || (gpu[key] as GpuField);
 
   const label = LABELS[key];
   const value = useMemo(() => formatGpuField(benchmark) || '--', [benchmark]);
 
   return (
     <Tr>
-      <Td className="text-left w-[50%]">{label}</Td>
+      <Td className="text-left w-[50%]">{label}*</Td>
       <Td className="text-left w-[50%]">{value}</Td>
     </Tr>
   );

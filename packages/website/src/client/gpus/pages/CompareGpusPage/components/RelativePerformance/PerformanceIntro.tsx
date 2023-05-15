@@ -11,7 +11,8 @@ export const PerformanceIntroSentence1 = compileContentComponent({
     <>
       Compare {props.shortGpuName1} and {props.shortGpuName2}&apos;s performance
       with similar GPUs. Relative performance provides insight into how their
-      benchmarks compare to their peers.
+      benchmarks compare to their peers. This data is based on chipset
+      performance.
     </>
   ),
 });

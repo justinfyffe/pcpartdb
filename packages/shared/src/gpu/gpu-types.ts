@@ -21,18 +21,23 @@ export interface GpuMeta {
 }
 
 export interface GpuDataSource {
+  // Chipset ID to extract some data from like market segment.
+  chipsetId?: number;
+
+  // External URL to extract data from.
   url?: string;
 }
 
 export interface Gpu {
   id?: number;
-  parentId?: number;
+  chipsetId?: number;
   slug: string;
 
   name: string;
   affiliateUrl?: string;
 
   // General Info
+  partNumber?: GpuField<string>;
   company?: GpuField<string>;
   marketSegment?: GpuField<MarketSegmentValue>;
   launchPrice?: GpuField<number>;
@@ -98,7 +103,8 @@ export interface Gpu {
   updatedAt?: number;
 
   // Relations
-  parent?: Gpu;
+  chipset?: Gpu;
+  retailModels?: Gpu[];
   images?: GpuImages;
 
   // Ranks - Non-DB Field
@@ -133,6 +139,10 @@ export interface GpusFilter {
 
   performanceRated?: boolean;
   valueRated?: boolean;
+
+  chipsetId?: number;
+  isChipset?: boolean;
+  isRetailModel?: boolean;
 
   excludeIds?: number[];
 }
@@ -205,8 +215,11 @@ export const gpuMetaValidator = Joi.object({
 }).options({ abortEarly: false });
 
 export const gpuValidator = Joi.object({
+  chipsetId: Joi.number().allow(null),
   slug: Joi.string().required(),
   name: Joi.string().required(),
+
+  partNumber: gpuFieldValidator.allow(null),
   company: gpuFieldValidator.allow(null),
   marketSegment: gpuFieldValidator.allow(null),
   launchPrice: gpuFieldValidator.allow(null),

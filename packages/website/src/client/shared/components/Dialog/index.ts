@@ -8,6 +8,7 @@ interface DialogOptions {
 const DIALOG_CLASS = 'dialog';
 const OVERLAY_CLASS = 'dialog-overlay';
 const CONTENT_CLASS = 'dialog-content';
+const BODY_DIALOG_OPEN_CLASS = 'dialog-open';
 
 export const showDialog = (
   content: React.ReactElement,
@@ -15,6 +16,7 @@ export const showDialog = (
 ) => {
   const { dialogElement, contentElement } = createElements();
 
+  document.body.classList.add(BODY_DIALOG_OPEN_CLASS);
   document.body.appendChild(dialogElement);
   ReactDOM.render(content, contentElement);
 
@@ -35,6 +37,7 @@ export const closeDialog = () => {
     return;
   }
 
+  document.body.classList.remove(BODY_DIALOG_OPEN_CLASS);
   document.body.removeChild(dialogElement);
 };
 

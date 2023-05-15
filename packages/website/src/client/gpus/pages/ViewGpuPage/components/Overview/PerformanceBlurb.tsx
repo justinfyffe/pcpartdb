@@ -1,3 +1,4 @@
+import { getChipset } from '@pcpartdb/shared';
 import React, { useContext } from 'react';
 import {
   compileContentComponent,
@@ -6,61 +7,68 @@ import {
 import { ViewGpuContentTag } from '../../content';
 import { ViewPageContext } from '../../context';
 
-const PerformanceBlurbSentence1 = compileContentComponent({
-  deps: ['shortGpuName', 'performanceRank', 'totalPerformanceGpus'],
+const PerformanceRankPlacement = compileContentComponent({
+  deps: ['chipsetShortestName', 'performanceRank', 'totalPerformanceGpus'],
+  // The RTX 4070 delivers the 11th best performance among the 123 benchmarked GPUs in our database.
   component: (props) => (
     <>
-      The {props.shortGpuName} delivers the {props.performanceRank} best
+      The {props.chipsetShortestName} delivers the {props.performanceRank} best
       performance among the {props.totalPerformanceGpus} benchmarked GPUs in our
       database.
     </>
   ),
 });
-
-const PerformanceBlurbSentence2 = compileContentComponent({
-  deps: ['performanceRankForSegmentYear', 'marketSegment', 'year'],
-  component: (props) => (
-    <>
-      It is the {props.performanceRankForSegmentYear} strongest{' '}
-      {props.marketSegment} card that released in {props.year}.
-    </>
-  ),
-});
-
-const PerformanceBlurbSentence3 = compileContentComponent(
+const PerformanceBestDiff = compileContentComponent(
   {
     tags: [ViewGpuContentTag.BestPerformanceForSegmentYear],
-    component: () => <></>,
+    deps: [],
+    component: (_props) => <></>,
   },
   {
     deps: [
       'bestPerformanceDifference',
-      'bestPerformanceSegmentGpuName',
+      'bestPerformanceSegmentGpuShortName',
       'marketSegment',
     ],
+    // It is approximately 67.18% as fast as the GeForce RTX 4090, the fastest desktop GPU in our database.
     component: (props) => (
       <>
         It is approximately {props.bestPerformanceDifference}% as fast as the{' '}
-        {props.bestPerformanceSegmentGpuName}, the fastest {props.marketSegment}{' '}
-        GPU.
+        {props.bestPerformanceSegmentGpuShortName}, the fastest{' '}
+        {props.marketSegment} GPU in our database.
       </>
     ),
   },
 );
 
+const PerformanceValue = compileContentComponent({
+  tags: [],
+  deps: ['chipsetLaunchPrice', 'performanceRating', 'valueRating'],
+  // Its 26,638 performance rating and $599 launch price (MSRP) gives it a
+  // performance per dollar of 44.47, giving it the 12th best value for desktop GPUs.
+  component: (props) => (
+    <>
+      Its {props.performanceRating} performance rating and{' '}
+      {props.chipsetLaunchPrice} launch price (MSRP) gives it a performance per
+      dollar of {props.valueRating}, giving it the {props.valueRankForSegment}{' '}
+      best value for {props.marketSegment} GPUs.
+    </>
+  ),
+});
+
 export const PerformanceBlurb = () => {
   const { gpu, contentParams, contentTags } = useContext(ViewPageContext);
   const context = { tags: contentTags, params: contentParams };
 
-  if (gpu.performanceScore == null) {
+  if (getChipset(gpu).performanceScore == null) {
     return <></>;
   }
 
   return (
     <ContentContext.Provider value={context}>
       <p>
-        <PerformanceBlurbSentence1 /> <PerformanceBlurbSentence2 />{' '}
-        <PerformanceBlurbSentence3 />
+        <PerformanceRankPlacement /> <PerformanceBestDiff />{' '}
+        <PerformanceValue />
       </p>
     </ContentContext.Provider>
   );

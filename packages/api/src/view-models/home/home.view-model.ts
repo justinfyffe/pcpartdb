@@ -26,7 +26,11 @@ export class HomeViewModelService {
         await this.gpuService.list(
           {
             query: {
-              filter: { performanceRated: true, company: ['nvidia'] },
+              filter: {
+                performanceRated: true,
+                company: ['nvidia'],
+                isChipset: true,
+              },
               orderBy: { sort: GpuSort.PerformanceRating },
               limit: 1,
             },
@@ -39,7 +43,11 @@ export class HomeViewModelService {
     const bestValueResults = await this.gpuService.list(
       {
         query: {
-          filter: { performanceRated: true, company: ['nvidia'] },
+          filter: {
+            performanceRated: true,
+            company: ['nvidia'],
+            isChipset: true,
+          },
           orderBy: { sort: GpuSort.ValueRating },
           limit: 3,
         },
@@ -59,7 +67,11 @@ export class HomeViewModelService {
         await this.gpuService.list(
           {
             query: {
-              filter: { performanceRated: true, company: ['amd'] },
+              filter: {
+                performanceRated: true,
+                company: ['amd'],
+                isChipset: true,
+              },
               orderBy: { sort: GpuSort.PerformanceRating },
               limit: 1,
             },
@@ -72,7 +84,7 @@ export class HomeViewModelService {
     const bestValueResults = await this.gpuService.list(
       {
         query: {
-          filter: { performanceRated: true, company: ['amd'] },
+          filter: { performanceRated: true, company: ['amd'], isChipset: true },
           orderBy: { sort: GpuSort.ValueRating },
           limit: 3,
         },

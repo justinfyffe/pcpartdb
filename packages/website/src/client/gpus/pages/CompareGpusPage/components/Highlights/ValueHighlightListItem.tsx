@@ -1,5 +1,5 @@
 import { CurrencyDollarIcon } from '@heroicons/react/24/outline';
-import { classNames } from 'packages/website/src/client/shared/ui';
+import { getChipset } from '@pcpartdb/shared';
 import React, { FunctionComponent, useContext, useMemo } from 'react';
 import { formatGpuField, getGpuName } from '../../../..';
 import { ComparePageContext } from '../../context';
@@ -7,6 +7,7 @@ import {
   HighlightLabel,
   HighlightListItem,
   HighlightValue,
+  HighlightValues,
 } from './HighlightList';
 
 interface ValueHighlightListItemProps {
@@ -20,6 +21,8 @@ export const ValueHighlightListItem: FunctionComponent<
 
   const context = useContext(ComparePageContext);
   const [gpu1, gpu2] = context.comparison;
+  const chipset1 = getChipset(gpu1);
+  const chipset2 = getChipset(gpu2);
 
   const names = useMemo(
     () => [
@@ -31,38 +34,36 @@ export const ValueHighlightListItem: FunctionComponent<
 
   const values = useMemo(() => {
     return [
-      formatGpuField(gpu1.valueScore) || '--',
-      formatGpuField(gpu2.valueScore) || '--',
+      formatGpuField(chipset1.valueScore) || '--',
+      formatGpuField(chipset2.valueScore) || '--',
     ];
-  }, [gpu1, gpu2]);
+  }, [chipset1, chipset2]);
 
   const [bold1, bold2] = useMemo(() => {
     return [
-      gpu1.valueScore?.value > gpu2.valueScore?.value,
-      gpu1.valueScore?.value < gpu2.valueScore?.value,
+      chipset1.valueScore?.value > chipset2.valueScore?.value,
+      chipset1.valueScore?.value < chipset2.valueScore?.value,
     ];
-  }, [gpu1.valueScore?.value, gpu2.valueScore?.value]);
+  }, [chipset1.valueScore?.value, chipset2.valueScore?.value]);
 
   return (
     <HighlightListItem className={className}>
-      <HighlightLabel icon={<CurrencyDollarIcon className="md:hidden" />}>
-        Performance Per Dollar
+      <HighlightLabel icon={<CurrencyDollarIcon />}>
+        Performance / $
       </HighlightLabel>
 
-      <HighlightValue>
-        <div className={classNames('text-right', bold1 ? 'font-bold' : '')}>
-          {names[0]}:
-        </div>
-        <div className={classNames('text-right', bold1 ? 'font-bold' : '')}>
-          {values[0]}
-        </div>
-        <div className={classNames('text-right', bold2 ? 'font-bold' : '')}>
-          {names[1]}:
-        </div>
-        <div className={classNames('text-right', bold2 ? 'font-bold' : '')}>
-          {values[1]}
-        </div>
-      </HighlightValue>
+      <HighlightValues>
+        <HighlightValue
+          name={names[0]}
+          value={values[0]}
+          className={bold1 ? 'font-bold' : ''}
+        />
+        <HighlightValue
+          name={names[1]}
+          value={values[1]}
+          className={bold2 ? 'font-bold' : ''}
+        />
+      </HighlightValues>
     </HighlightListItem>
   );
 };

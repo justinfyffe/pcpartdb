@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useContext, useMemo } from 'react';
 import { Table, TBody } from '../../../../../shared/components';
-import { formatGpuField } from '../../../..';
+import { formatGpuField, getGpuName } from '../../../..';
 import { ViewPageContext } from '../../context';
 import { CustomRow, CustomRowLabel, CustomRowValue } from '../CustomRow';
 import { FieldRow } from '../FieldRow';
@@ -14,29 +14,38 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
 ) => {
   const { className } = props;
   const { gpu } = useContext(ViewPageContext);
-  const { ranks } = gpu;
+  const { chipset: parent } = gpu;
+
+  const performanceRank =
+    gpu.ranks.performanceRank || parent?.ranks?.performanceRank || null;
+  const valueRank = gpu.ranks.valueRank || parent?.ranks?.valueRank || null;
+
+  const chipset = useMemo(() => {
+    return getGpuName(parent || gpu);
+  }, [parent, gpu]);
 
   const performanceScoreValue = useMemo(() => {
-    if (gpu.performanceScore != null && ranks.performanceRank != null) {
-      const score = formatGpuField(gpu.performanceScore);
-      const rank = ranks.performanceRank;
+    const performanceScore =
+      formatGpuField(gpu.performanceScore) ||
+      formatGpuField(parent?.performanceScore);
 
-      return `${score} (${rank})`;
+    if (performanceScore != null && performanceRank != null) {
+      return `${performanceScore} (${performanceRank})`;
     } else {
       return '--';
     }
-  }, [gpu.performanceScore, ranks.performanceRank]);
+  }, [gpu.performanceScore, parent?.performanceScore, performanceRank]);
 
   const valueScoreValue = useMemo(() => {
-    if (gpu.valueScore != null && ranks.valueRank != null) {
-      const score = formatGpuField(gpu.valueScore);
-      const rank = ranks.valueRank;
+    const valueScore =
+      formatGpuField(gpu.valueScore) || formatGpuField(parent?.valueScore);
 
-      return `${score} (${rank})`;
+    if (valueScore != null && valueRank != null) {
+      return `${valueScore} (${valueRank})`;
     } else {
       return '--';
     }
-  }, [gpu.valueScore, ranks.valueRank]);
+  }, [gpu.valueScore, parent?.valueScore, valueRank]);
 
   return (
     <Table border responsive className={className}>
@@ -59,12 +68,16 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
           </CustomRowValue>
         </CustomRow> */}
         <CustomRow>
-          <CustomRowLabel>Performance Rating (Rank)</CustomRowLabel>
+          <CustomRowLabel>Performance Rating (Rank)*</CustomRowLabel>
           <CustomRowValue>{performanceScoreValue}</CustomRowValue>
         </CustomRow>
         <CustomRow>
-          <CustomRowLabel>Performance Per Dollar (Rank)</CustomRowLabel>
+          <CustomRowLabel>Performance Per Dollar (Rank)*</CustomRowLabel>
           <CustomRowValue>{valueScoreValue}</CustomRowValue>
+        </CustomRow>
+        <CustomRow>
+          <CustomRowLabel>Chipset</CustomRowLabel>
+          <CustomRowValue>{chipset}</CustomRowValue>
         </CustomRow>
         <FieldRow field="company" />
         <FieldRow field="architecture" />

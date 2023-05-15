@@ -17,6 +17,7 @@ import {
 import * as cheerio from 'cheerio';
 import { format, parse } from 'date-fns';
 import { scraper } from '../scraper';
+import { parseGpuName } from './utils';
 
 export interface ScrapeTechPowerGpuDetailsOptions {
   url: string;
@@ -45,6 +46,7 @@ export async function scrapeTechPowerUpGpuDetails(
     fp32Performance: getFp32Performance($),
     fp64Performance: getFp64Performance($),
     height: getHeight($),
+    partNumber: getPartNumber($),
     l1Cache: getL1Cache($),
     l2Cache: getL2Cache($),
     length: getLength($),
@@ -78,8 +80,8 @@ export async function scrapeTechPowerUpGpuDetails(
 
 function getName($: cheerio.CheerioAPI) {
   const fullName = $('.gpudb-name').text();
-  const [_company, ...name] = fullName.split(' ');
-  return name.join(' ');
+  const company = getCompany($)?.value ?? '';
+  return fullName.substring(company.length).trim();
 }
 
 function getArchitecture($: cheerio.CheerioAPI): GpuField<string> {
@@ -120,10 +122,8 @@ function getCodename($: cheerio.CheerioAPI): GpuField<string> {
 
 function getCompany($: cheerio.CheerioAPI): GpuField<string> {
   const fullName = $('.gpudb-name').text();
-  const [company] = fullName.split(' ');
-  const lcCompany = company.toLowerCase();
-  if (lcCompany === 'nvidia' || lcCompany === 'amd' || lcCompany === 'intel') {
-    const value = company;
+  const { company: value } = parseGpuName(fullName);
+  if (value != null) {
     return {
       value,
       meta: {
@@ -271,6 +271,18 @@ function getHeight($: cheerio.CheerioAPI): GpuField<number> {
     meta: {
       unit,
       fieldKey: 'height',
+      autoUpdate: true,
+    },
+  };
+}
+
+function getPartNumber($: cheerio.CheerioAPI): GpuField<string> {
+  const partNumber = $('.gpudb-name__partnum').text();
+
+  return {
+    value: partNumber,
+    meta: {
+      fieldKey: 'partNumber',
       autoUpdate: true,
     },
   };
@@ -793,6 +805,9 @@ function tokenizeSpecValues($: cheerio.CheerioAPI, label: string) {
 
   if (el.has('br')) {
     el.find('br').replaceWith(';;');
+  }
+  if (el.has('s')) {
+    el.find('s').replaceWith(';;');
   }
 
   const values = el

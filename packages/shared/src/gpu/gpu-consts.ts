@@ -50,3 +50,23 @@ export const LIST_GPUS_PRESETS: Record<ListGpusPresetSlug, GpusQuery> = {
     orderBy: { sort: GpuSort.ReleaseDate, order: GpuOrder.Asc },
   },
 };
+
+export const SUPPORTED_GPU_COMPANIES = [
+  'acer',
+  'amd',
+  'asrock',
+  'asus',
+  'evga',
+  'gainward',
+  'galax',
+  'gigabyte',
+  'inno3d',
+  'intel',
+  'msi',
+  'nvidia',
+  'pny',
+  'powercolor',
+  'sapphire',
+  'xfx',
+  'zotac',
+];

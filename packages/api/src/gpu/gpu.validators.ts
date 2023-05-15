@@ -11,6 +11,10 @@ export const gpusFilterValidator = Joi.object({
 
   performanceRated: Joi.boolean(),
   valueRated: Joi.boolean(),
+
+  chipsetId: Joi.number().min(0),
+  isChipset: Joi.boolean(),
+  isRetailModel: Joi.boolean(),
 });
 
 export const gpusOrderByValidator = Joi.object({

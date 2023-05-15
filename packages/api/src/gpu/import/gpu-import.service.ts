@@ -35,13 +35,13 @@ export class GpuImportService {
     private gpuRepository: GpuRepository,
   ) {}
 
-  async scrapeDetails(request: ScrapeGpuDetailsRequest) {
+  async scrapeDetails(request: ScrapeGpuDetailsRequest, ctx: Context) {
     let result: ScrapeGpuDetailsResponse = { gpu: {} };
 
     for (let i = 0; i < request.sources.length; ++i) {
       result = deepmerge(
         result,
-        await this.scrapeDetailsFromSource(request.sources[i]),
+        await this.scrapeDetailsFromSource(request.sources[i], ctx),
       );
     }
 
@@ -58,11 +58,14 @@ export class GpuImportService {
 
     for (let i = 0; i < gpusToImport.length; ++i) {
       const gpuToImport = gpusToImport[i];
+      const company = gpuToImport.company?.value;
       const name = gpuToImport.name;
       const slug = gpuToImport.slug;
 
       let gpuEntity = await this.gpuRepository.findBySlug(slug, {}, ctx);
-      gpuEntity = gpuEntity || (await this.gpuRepository.findByName(name, ctx));
+      gpuEntity =
+        gpuEntity ||
+        (await this.gpuRepository.findByCompanyAndName(company, name, ctx));
       const original = mapToGpuDto(gpuEntity, { includeSources: true });
 
       const updated = {
@@ -89,24 +92,32 @@ export class GpuImportService {
     }
   }
 
-  private async scrapeDetailsFromSource(source: GpuDataSource) {
-    const parsedUrl = new URL(source.url);
+  private async scrapeDetailsFromSource(source: GpuDataSource, ctx: Context) {
+    if (source.chipsetId != null) {
+      return await this.scrapeDetailsFromGpu(source.chipsetId, ctx);
+    } else if (source.url != null) {
+      return await this.scrapeDetailsFromUrl(source.url);
+    }
+
+    return {} as ScrapeGpuDetailsResponse;
+  }
+
+  private async scrapeDetailsFromGpu(gpuId: number, ctx: Context) {
+    const gpu = await this.gpuService.getById(gpuId, {}, ctx);
+    return {
+      gpu: { marketSegment: gpu.marketSegment },
+    } as ScrapeGpuDetailsResponse;
+  }
+
+  private async scrapeDetailsFromUrl(url: string) {
+    const parsedUrl = new URL(url);
 
     if (parsedUrl.hostname === Importers.TechPowerUp) {
-      return await scrapeTechPowerUpGpuDetails({
-        url: source.url,
-        proxy: true,
-      });
+      return await scrapeTechPowerUpGpuDetails({ url, proxy: true });
     } else if (parsedUrl.hostname === Importers.UlBenchmarks) {
-      return await scrapeUlBenchmarksGpuDetails({
-        url: source.url,
-        proxy: true,
-      });
+      return await scrapeUlBenchmarksGpuDetails({ url, proxy: true });
     } else if (parsedUrl.hostname === Importers.VideocardBenchmark) {
-      return await scrapeVideocardBenchmarksGpuDetails({
-        url: source.url,
-        proxy: true,
-      });
+      return await scrapeVideocardBenchmarksGpuDetails({ url, proxy: true });
     } else {
       throw badRequestError();
     }

@@ -6,6 +6,8 @@ import { mapToGpuImageDtos, mapToGpuImageEntities } from './gpuImageMapper';
 
 interface MapToDtoOptions {
   fields?: Set<string>;
+  chipsetFields?: Set<string>;
+  retailModelFields?: Set<string>;
   includeSources?: boolean;
 }
 
@@ -16,12 +18,13 @@ export function mapToGpuDto(entity: GpuEntity, options?: MapToDtoOptions): Gpu {
 
   return {
     id: entity.id,
-    parentId: entity.parentId,
+    chipsetId: entity.chipsetId,
     slug: entity.slug,
 
     name: entity.name,
     affiliateUrl: entity.affiliateUrl,
 
+    partNumber: mapToGpuFieldDto(entity, 'partNumber', options),
     company: mapToGpuFieldDto(entity, 'company', options),
     marketSegment: mapToGpuFieldDto(entity, 'marketSegment', options),
     launchPrice: mapToGpuFieldDto(entity, 'launchPrice', options),
@@ -97,7 +100,14 @@ export function mapToGpuDto(entity: GpuEntity, options?: MapToDtoOptions): Gpu {
       entity.updatedAt != null ? entity.updatedAt.getTime() : undefined,
 
     images: mapToGpuImageDtos(entity.images),
-    parent: mapToGpuDto(entity.parent, options),
+    chipset: mapToGpuDto(entity.chipset, {
+      ...options,
+      fields: options?.chipsetFields,
+    }),
+    retailModels: mapToGpuDtos(entity.retailModels, {
+      ...options,
+      fields: options?.retailModelFields,
+    }),
   };
 }
 
@@ -105,7 +115,7 @@ export function mapToGpuDtos(
   entities: GpuEntity[],
   options?: MapToDtoOptions,
 ): Gpu[] {
-  return entities.map((entity) => mapToGpuDto(entity, options));
+  return entities?.map((entity) => mapToGpuDto(entity, options)) || [];
 }
 
 function mapToGpuMetaDto(metaJson: GpuMetaJson, options?: MapToDtoOptions) {
@@ -133,6 +143,7 @@ export function mapToGpuEntity(gpu: Partial<Gpu>): GpuEntity {
   const metadata = mapToGpuMetaEntity(gpu.meta);
 
   const mappedFields: Partial<GpuEntity> = {
+    partNumber: mapToGpuFieldEntity(gpu, 'partNumber', metadata),
     company: mapToGpuFieldEntity(gpu, 'company', metadata),
     marketSegment: mapToGpuFieldEntity(gpu, 'marketSegment', metadata),
     launchPrice: mapToGpuFieldEntity(gpu, 'launchPrice', metadata),
@@ -220,7 +231,7 @@ export function mapToGpuEntity(gpu: Partial<Gpu>): GpuEntity {
     ...mappedFields,
 
     id: undefined,
-    parentId: gpu.parentId,
+    chipsetId: gpu.chipsetId,
 
     slug: gpu.slug,
     name: gpu.name,
@@ -229,7 +240,6 @@ export function mapToGpuEntity(gpu: Partial<Gpu>): GpuEntity {
     metadata: metadata as Prisma.JsonObject,
 
     images: mapToGpuImageEntities(gpu.images),
-    parent: mapToGpuEntity(gpu.parent),
   } as GpuEntity;
 }
 

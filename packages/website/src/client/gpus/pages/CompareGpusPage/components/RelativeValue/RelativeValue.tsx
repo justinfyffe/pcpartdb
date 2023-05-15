@@ -1,3 +1,4 @@
+import { getChipset } from '@pcpartdb/shared';
 import React, { FunctionComponent, useContext } from 'react';
 import { ComparePageContext } from '../../context';
 import { ValueIntro } from './ValueIntro';
@@ -5,9 +6,13 @@ import { ValueTable } from './ValueTable';
 
 export const RelativeValue: FunctionComponent = () => {
   const { comparison } = useContext(ComparePageContext);
-  const [gpu1, gpu2] = comparison;
+  const chipset1 = getChipset(comparison[0]);
+  const chipset2 = getChipset(comparison[1]);
 
-  if (gpu1.valueScore?.value == null && gpu2.valueScore?.value == null) {
+  if (
+    chipset1.valueScore?.value == null &&
+    chipset2.valueScore?.value == null
+  ) {
     return <></>;
   }
 

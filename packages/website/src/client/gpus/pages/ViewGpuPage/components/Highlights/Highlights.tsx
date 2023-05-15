@@ -25,14 +25,30 @@ export const Highlights: FunctionComponent<HighlightsProps> = (props) => {
 
   const context = useContext(ViewPageContext);
   const gpu = context.gpu;
+  const parent = gpu.chipset;
 
   const highlightPerformance = useMemo(() => {
-    return formatGpuField(gpu.performanceScore) || '--';
-  }, [gpu]);
+    const performanceScore =
+      formatGpuField(gpu.performanceScore) ||
+      formatGpuField(parent?.performanceScore);
+
+    if (performanceScore != null) {
+      return `${performanceScore}`;
+    } else {
+      return '--';
+    }
+  }, [gpu.performanceScore, parent?.performanceScore]);
 
   const highlightValue = useMemo(() => {
-    return formatGpuField(gpu.valueScore) || '--';
-  }, [gpu]);
+    const valueScore =
+      formatGpuField(gpu.valueScore) || formatGpuField(parent?.valueScore);
+
+    if (valueScore != null) {
+      return `${valueScore}`;
+    } else {
+      return '--';
+    }
+  }, [gpu.valueScore, parent?.valueScore]);
 
   const highlightMemory = useMemo(() => {
     const memorySize = formatGpuField(gpu.memorySize);
@@ -41,7 +57,7 @@ export const Highlights: FunctionComponent<HighlightsProps> = (props) => {
   }, [gpu]);
 
   const highlightDimensions = useMemo(() => {
-    return formatGpuDimensions(gpu, { allowMissingDimensions: true });
+    return formatGpuDimensions(gpu, { allowMissingDimensions: true }) || '--';
   }, [gpu]);
 
   const highlightTdp = useMemo(() => {
@@ -74,14 +90,14 @@ export const Highlights: FunctionComponent<HighlightsProps> = (props) => {
       </HighlightListItem> */}
 
       <HighlightListItem>
-        <HighlightLabel icon={<StarIcon />}>Performance Rating</HighlightLabel>
+        <HighlightLabel icon={<StarIcon />}>Performance</HighlightLabel>
 
         <HighlightValue>{highlightPerformance}</HighlightValue>
       </HighlightListItem>
 
       <HighlightListItem>
         <HighlightLabel icon={<CurrencyDollarIcon />}>
-          Performance Per Dollar
+          Performance / $
         </HighlightLabel>
 
         <HighlightValue>{highlightValue}</HighlightValue>

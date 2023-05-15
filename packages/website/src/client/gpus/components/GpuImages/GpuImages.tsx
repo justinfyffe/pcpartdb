@@ -1,6 +1,6 @@
 import { Gpu } from '@pcpartdb/shared';
 import React, { FunctionComponent, useMemo, useState } from 'react';
-import { getCompanyLogoImagePath, getImagePath } from '../../../image';
+import { getCompanyLogoAutocompletePath, getImagePath } from '../../../image';
 import { Img } from '../../../shared/components';
 import { classNames } from '../../../shared/ui';
 import { GpuImageOption } from './GpuImageOption';
@@ -18,7 +18,7 @@ export const GpuImages: FunctionComponent<GpuImagesProps> = (props) => {
 
   const images = useMemo(() => {
     const gpuImages = gpu.images ?? [];
-    const companyImage = getCompanyLogoImagePath(gpu);
+    const companyImage = getCompanyLogoAutocompletePath(gpu);
     const images = gpuImages
       .filter((image) => image?.image != null)
       .map(({ image }) => getImagePath(image));

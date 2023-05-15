@@ -39,7 +39,7 @@ export class GpuAutocompleteController {
       async () => {
         validate({ key, query }, autocompleteSpecsRequestValidator);
         return await this.gpuAutocompleteService.autocompleteSpec(
-          key as keyof Omit<GpuEntity, 'parent' | 'images'>,
+          key as keyof Omit<GpuEntity, 'chipset' | 'retailModels' | 'images'>,
           query ?? '',
           ctx,
         );

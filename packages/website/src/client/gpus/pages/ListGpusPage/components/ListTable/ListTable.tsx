@@ -1,6 +1,12 @@
 import { getViewGpuPath, Gpu } from '@pcpartdb/shared';
-import React, { FunctionComponent, useContext, useMemo } from 'react';
+import React, {
+  FunctionComponent,
+  useCallback,
+  useContext,
+  useMemo,
+} from 'react';
 import {
+  showDialog,
   Table,
   TBody,
   Td,
@@ -10,6 +16,7 @@ import {
 } from '../../../../../shared/components';
 import { formatGpuField, getGpuName } from '../../../..';
 import { ListPageContext } from '../../context';
+import { RetailModelsDialog } from '../RetailModelsDialog';
 
 export const ListTable: FunctionComponent = () => {
   const { gpus } = useContext(ListPageContext);
@@ -19,8 +26,9 @@ export const ListTable: FunctionComponent = () => {
       <THead>
         <Tr>
           <Th>GPU</Th>
-          <Th className="text-right">Performance Rating</Th>
-          <Th className="text-right">Performance Per Dollar</Th>
+          <Th className="text-left">Retail Models</Th>
+          <Th className="text-right">Performance</Th>
+          <Th className="text-right">Performance / $</Th>
           <Th className="text-right">Release Date</Th>
         </Tr>
       </THead>
@@ -43,6 +51,7 @@ const ListTableRow: FunctionComponent<ListTableRowProps> = (props) => {
 
   const href = useMemo(() => getViewGpuPath(gpu), [gpu]);
   const name = useMemo(() => getGpuName(gpu), [gpu]);
+  const retailModels = useMemo(() => gpu.retailModels || [], [gpu]);
   const performance = useMemo(() => {
     return formatGpuField(gpu.performanceScore) || '--';
   }, [gpu.performanceScore]);
@@ -54,12 +63,25 @@ const ListTableRow: FunctionComponent<ListTableRowProps> = (props) => {
     [gpu.releaseDate],
   );
 
+  const openProductsDialog = useCallback(() => {
+    showDialog(<RetailModelsDialog gpu={gpu} />);
+  }, [gpu]);
+
   return (
     <Tr>
       <Td>
         <a href={href} className="font-semibold">
           {name}
         </a>
+      </Td>
+      <Td className="text-left">
+        {retailModels.length > 0 && (
+          <a onClick={openProductsDialog} className="cursor-pointer">
+            {retailModels.length === 1 && <>1 product</>}
+            {retailModels.length > 1 && <>{retailModels.length} products</>}
+          </a>
+        )}
+        {retailModels.length === 0 && <>--</>}
       </Td>
       <Td className="text-right">{performance}</Td>
       <Td className="text-right">{performancePerDollar}</Td>

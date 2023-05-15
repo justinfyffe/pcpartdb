@@ -47,8 +47,16 @@ export class GpuController {
               'performanceScore',
               'valueScore',
             ],
+            retailModelFields: [
+              'company',
+              'memorySize',
+              'memoryType',
+              'thermalDesignPower',
+              'outputs',
+            ],
             includeRanks: ['performanceRank', 'valueRank'],
             includeImages: false,
+            includeRetailModels: true,
           },
           ctx,
         );

@@ -71,11 +71,10 @@ const MemoryBandwidth = compileContentComponent(
   {
     tags: [CompareGpusContentTag.SameMemoryBandwidth],
     deps: ['memoryBandwidth1'],
-    // Both of these GPUs have the same memory bandwidth of 448 GB/s.
+    // Both of these GPUs have a memory bandwidth of 448 GB/s.
     component: (props) => (
       <>
-        Both of these GPUs have the same memory bandwidth of{' '}
-        {props.memoryBandwidth1}.
+        Both of these GPUs have a memory bandwidth of {props.memoryBandwidth1}.
       </>
     ),
   },

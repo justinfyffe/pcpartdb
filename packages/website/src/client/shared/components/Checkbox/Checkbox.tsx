@@ -23,11 +23,7 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
 
     return (
       <label
-        className={classNames(
-          'block',
-          disabled ? '' : 'cursor-pointer',
-          className,
-        )}
+        className={classNames(disabled ? '' : 'cursor-pointer', className)}
       >
         <input
           type="checkbox"

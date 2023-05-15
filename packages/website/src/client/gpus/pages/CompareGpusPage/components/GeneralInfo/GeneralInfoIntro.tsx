@@ -11,7 +11,8 @@ export const GeneralInfoIntroSentence1 = compileContentComponent({
     <>
       General information about the {props.shortGpuName1} and{' '}
       {props.shortGpuName2} like their performance rating, release date, and
-      launch price.
+      launch price. Performance rating and performance per dollar are based on
+      their chipsets.
     </>
   ),
 });
