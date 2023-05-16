@@ -1,10 +1,7 @@
 Next tasks:
+- load retail models on demand
+  - too much data for list page
 - create scratch pad cli script
-- missing gpu:
-  - RTX 4060
-  - Bug: Missing performance => "Its the fastest GPU in the Ada lineup"
-    - Fixed with latest changes
-- retail models
 - cpus
   - view
   - compare
