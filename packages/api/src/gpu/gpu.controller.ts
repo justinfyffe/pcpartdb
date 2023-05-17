@@ -13,6 +13,7 @@ import {
   CreateGpuRequest,
   ListGpusRequest,
   ListGpusResponse,
+  ListRetailModelsResponse,
   UpdateGpuRequest,
 } from '@pcpartdb/shared';
 import { StaffGuard } from '../auth/staff.guard';
@@ -45,7 +46,35 @@ export class GpuController {
               'valueScore',
               'releaseDate',
             ],
-            retailModelFields: [
+            retailModelFields: [],
+            includeRanks: ['performanceRank', 'valueRank'],
+            includeImages: false,
+            includeRetailModels: true,
+          },
+          ctx,
+        );
+        const totalGpus = await this.gpuService.count({ ...data }, ctx);
+
+        return {
+          query: data,
+          gpus,
+          totalGpus,
+          contentData: {},
+        } as ListGpusResponse;
+      },
+      { ctx },
+    );
+  }
+
+  @Get(':id/retail-models')
+  async listRetailModels(@Param('id') idStr: string, @Ctx() ctx: Context) {
+    return await this.db.transaction(
+      async () => {
+        const chipsetId = Number(idStr);
+        const retailModels = await this.gpuService.list(
+          {
+            query: { filter: { chipsetId }, limit: 1000 },
+            fields: [
               'company',
               'coreClockSpeedBase',
               'coreClockSpeedBoost',
@@ -55,15 +84,11 @@ export class GpuController {
               'height',
               'thermalDesignPower',
             ],
-            includeRanks: ['performanceRank', 'valueRank'],
-            includeImages: false,
-            includeRetailModels: true,
           },
           ctx,
         );
-        const totalGpus = await this.gpuService.count({ ...data }, ctx);
 
-        return { gpus, totalGpus } as ListGpusResponse;
+        return { retailModels } as ListRetailModelsResponse;
       },
       { ctx },
     );

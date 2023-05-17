@@ -7,13 +7,13 @@ export function useListPageContextProps(input: {
   query: GpusQuery;
   updateQuery: (query: GpusQuery) => void;
   gpus: Gpu[];
-  totalResults: number;
+  totalGpus: number;
 }) {
   return useMemo(() => {
     const query = { ...input.query };
     const updateQuery = input.updateQuery;
     const gpus = [...input.gpus];
-    const totalResults = input.totalResults;
+    const totalGpus = input.totalGpus;
 
     const contentTags = getContentTags(query);
     const contentParams = getContentParams(query);
@@ -22,10 +22,10 @@ export function useListPageContextProps(input: {
       query,
       updateQuery,
       gpus,
-      totalResults,
+      totalGpus,
 
       contentTags,
       contentParams,
     } as ListPageContextProps;
-  }, [input.gpus, input.query, input.totalResults, input.updateQuery]);
+  }, [input.gpus, input.query, input.totalGpus, input.updateQuery]);
 }

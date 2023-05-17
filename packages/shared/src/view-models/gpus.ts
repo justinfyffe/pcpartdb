@@ -2,6 +2,7 @@ import {
   Gpu,
   GpuComparison,
   GpusQuery,
+  ListGpusResponse,
   RelatedComparisons,
   RelatedGpus,
 } from '../gpu';
@@ -31,15 +32,7 @@ export interface CompareGpusViewModel {
   relatedComparisons: RelatedComparisons;
 }
 
-export interface ListGpusContentData {}
-
-export interface ListGpusViewModel {
-  query: GpusQuery;
-  gpus: Gpu[];
-  totalResults: number;
-
-  contentData: ListGpusContentData;
-}
+export interface ListGpusViewModel extends ListGpusResponse {}
 
 export interface ViewGpuContentData {
   totalPerformanceGpus: number;

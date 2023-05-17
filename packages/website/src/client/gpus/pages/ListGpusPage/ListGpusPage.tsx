@@ -33,13 +33,13 @@ export const ListGpusPage = (props: ListGpusViewModel) => {
   const router = useRouter();
 
   const [gpus, setGpus] = useState(props.gpus);
-  const [totalResults, setTotalResults] = useState(props.totalResults);
+  const [totalGpus, setTotalGpus] = useState(props.totalGpus);
   const [query, setQuery] = useState(props.query);
 
   const fetchGpus = useCallback(async (q: GpusQuery) => {
     const response = await gpuService.list({ query: q });
     setGpus(response.gpus);
-    setTotalResults(response.totalGpus);
+    setTotalGpus(response.totalGpus);
     setQuery(q);
   }, []);
 
@@ -63,7 +63,7 @@ export const ListGpusPage = (props: ListGpusViewModel) => {
     query,
     updateQuery,
     gpus,
-    totalResults,
+    totalGpus,
   });
 
   const seoTitle = useSeoTitle(context);

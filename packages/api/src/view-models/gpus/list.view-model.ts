@@ -1,9 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import {
-  GpusQuery,
-  ListGpusRequest,
-  ListGpusViewModel,
-} from '@pcpartdb/shared';
+import { GpusQuery, ListGpusRequest, ListGpusResponse } from '@pcpartdb/shared';
 import deepmerge from 'deepmerge';
 import { GpuService } from '../../gpu/gpu.service';
 import { listGpusRequestValidator } from '../../gpu/gpu.validators';
@@ -23,14 +19,14 @@ export class ListGpusViewModelService {
     );
 
     const gpus = await this.getGpusForQuery(query, ctx);
-    const totalResults = await this.getTotalGpusForQuery(query, ctx);
+    const totalGpus = await this.getTotalGpusForQuery(query, ctx);
 
     return {
       query,
       gpus,
-      totalResults,
+      totalGpus,
       contentData: {},
-    } as ListGpusViewModel;
+    } as ListGpusResponse;
   }
 
   private async getGpusForQuery(query: GpusQuery, ctx: Context) {
@@ -46,16 +42,7 @@ export class ListGpusViewModelService {
       {
         query,
         fields: ['company', 'performanceScore', 'valueScore', 'releaseDate'],
-        retailModelFields: [
-          'company',
-          'coreClockSpeedBase',
-          'coreClockSpeedBoost',
-          'length',
-          'slotWidth',
-          'width',
-          'height',
-          'thermalDesignPower',
-        ],
+        retailModelFields: [],
         includeRanks: ['performanceRank', 'valueRank'],
         includeImages: false,
         includeRetailModels: true,

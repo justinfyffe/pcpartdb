@@ -177,9 +177,19 @@ export interface ListGpusRequest {
   fields?: GpuFieldKey[];
 }
 
+export interface ListGpusContentData {
+  retailModelCounts?: Record<number, number>;
+}
+
 export interface ListGpusResponse {
+  query: GpusQuery;
   gpus: Gpu[];
   totalGpus: number;
+  contentData: ListGpusContentData;
+}
+
+export interface ListRetailModelsResponse {
+  retailModels: Gpu[];
 }
 
 export interface ScrapeGpuDetailsRequest {

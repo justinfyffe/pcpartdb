@@ -9,7 +9,7 @@ export interface ListPageContextProps {
   query?: GpusQuery;
   updateQuery: (query: GpusQuery) => void;
   gpus: Gpu[];
-  totalResults: number;
+  totalGpus: number;
 
   contentTags: ContentTags;
   contentParams: ContentParams;
@@ -19,7 +19,7 @@ export const ListPageContext = createContext<ListPageContextProps>({
   query: null,
   updateQuery: null,
   gpus: null,
-  totalResults: null,
+  totalGpus: null,
 
   contentTags: null,
   contentParams: null,

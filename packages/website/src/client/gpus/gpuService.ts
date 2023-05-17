@@ -5,6 +5,7 @@ import {
   joinUrlParts,
   ListGpusRequest,
   ListGpusResponse,
+  ListRetailModelsResponse,
   PreviewImportGpusResponse,
   ScrapeGpuDetailsRequest,
   ScrapeGpuDetailsResponse,
@@ -23,6 +24,13 @@ export class GpuService {
       params: { q: JSON.stringify(data) },
     });
     GpuCache.save(response.gpus);
+    return response;
+  }
+
+  async listRetailModels(chipsetId: number) {
+    const path = joinUrlParts(PATH, String(chipsetId), 'retail-models');
+    const response = await this.api.get<ListRetailModelsResponse>(path);
+    GpuCache.save(response.retailModels);
     return response;
   }
 

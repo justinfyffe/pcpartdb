@@ -4,7 +4,11 @@ import { Pagination, PaginationResult } from '../../../../../shared/components';
 import { ListPageContext } from '../../context';
 
 export const ListPagination: FunctionComponent = () => {
-  const { query, updateQuery, totalResults } = useContext(ListPageContext);
+  const {
+    query,
+    updateQuery,
+    totalGpus: totalResults,
+  } = useContext(ListPageContext);
 
   const paginationPageClick = useCallback(
     (result: PaginationResult, evt: React.MouseEvent) => {

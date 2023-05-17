@@ -64,7 +64,7 @@ const ListTableRow: FunctionComponent<ListTableRowProps> = (props) => {
   );
 
   const openProductsDialog = useCallback(() => {
-    showDialog(<RetailModelsDialog gpu={gpu} />);
+    showDialog(<RetailModelsDialog chipset={gpu} />);
   }, [gpu]);
 
   return (
