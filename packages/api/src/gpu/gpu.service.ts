@@ -21,6 +21,10 @@ interface CountOptions {
   query?: GpusQuery;
 }
 
+interface CountRetailModelsOptions {
+  chipsetIds: number[];
+}
+
 interface ListOptions {
   query?: GpusQuery;
 
@@ -64,6 +68,10 @@ export class GpuService {
 
   async count(options: CountOptions, ctx: Context) {
     return await this.gpuRepository.count(options, ctx);
+  }
+
+  async countRetailModels(options: CountRetailModelsOptions, ctx: Context) {
+    return await this.gpuRepository.countRetailModels(options, ctx);
   }
 
   async list(options: ListOptions, ctx: Context) {

@@ -46,20 +46,23 @@ export class GpuController {
               'valueScore',
               'releaseDate',
             ],
-            retailModelFields: [],
             includeRanks: ['performanceRank', 'valueRank'],
             includeImages: false,
-            includeRetailModels: true,
           },
           ctx,
         );
         const totalGpus = await this.gpuService.count({ ...data }, ctx);
 
+        const retailModelCounts = await this.gpuService.countRetailModels(
+          { chipsetIds: gpus.map((gpu) => gpu.id) },
+          ctx,
+        );
+
         return {
           query: data,
           gpus,
           totalGpus,
-          contentData: {},
+          contentData: { retailModelCounts },
         } as ListGpusResponse;
       },
       { ctx },

@@ -48,10 +48,11 @@ interface ListTableRowProps {
 
 const ListTableRow: FunctionComponent<ListTableRowProps> = (props) => {
   const { gpu } = props;
+  const { contentData } = useContext(ListPageContext);
+  const retailModelsCount = contentData?.retailModelCounts?.[gpu.id] ?? 0;
 
   const href = useMemo(() => getViewGpuPath(gpu), [gpu]);
   const name = useMemo(() => getGpuName(gpu), [gpu]);
-  const retailModels = useMemo(() => gpu.retailModels || [], [gpu]);
   const performance = useMemo(() => {
     return formatGpuField(gpu.performanceScore) || '--';
   }, [gpu.performanceScore]);
@@ -75,13 +76,13 @@ const ListTableRow: FunctionComponent<ListTableRowProps> = (props) => {
         </a>
       </Td>
       <Td className="text-left">
-        {retailModels.length > 0 && (
+        {retailModelsCount > 0 && (
           <a onClick={openProductsDialog} className="cursor-pointer">
-            {retailModels.length === 1 && <>1 product</>}
-            {retailModels.length > 1 && <>{retailModels.length} products</>}
+            {retailModelsCount === 1 && <>1 product</>}
+            {retailModelsCount > 1 && <>{retailModelsCount} products</>}
           </a>
         )}
-        {retailModels.length === 0 && <>--</>}
+        {retailModelsCount === 0 && <>--</>}
       </Td>
       <Td className="text-right">{performance}</Td>
       <Td className="text-right">{performancePerDollar}</Td>

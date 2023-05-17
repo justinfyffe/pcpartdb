@@ -21,11 +21,16 @@ export class ListGpusViewModelService {
     const gpus = await this.getGpusForQuery(query, ctx);
     const totalGpus = await this.getTotalGpusForQuery(query, ctx);
 
+    const retailModelCounts = await this.gpuService.countRetailModels(
+      { chipsetIds: gpus.map((gpu) => gpu.id) },
+      ctx,
+    );
+
     return {
       query,
       gpus,
       totalGpus,
-      contentData: {},
+      contentData: { retailModelCounts },
     } as ListGpusResponse;
   }
 
@@ -42,10 +47,8 @@ export class ListGpusViewModelService {
       {
         query,
         fields: ['company', 'performanceScore', 'valueScore', 'releaseDate'],
-        retailModelFields: [],
         includeRanks: ['performanceRank', 'valueRank'],
         includeImages: false,
-        includeRetailModels: true,
       },
       ctx,
     );

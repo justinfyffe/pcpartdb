@@ -1,4 +1,4 @@
-import { Gpu, GpusQuery } from '@pcpartdb/shared';
+import { Gpu, GpusQuery, ListGpusContentData } from '@pcpartdb/shared';
 import {
   ContentParams,
   ContentTags,
@@ -10,6 +10,7 @@ export interface ListPageContextProps {
   updateQuery: (query: GpusQuery) => void;
   gpus: Gpu[];
   totalGpus: number;
+  contentData: ListGpusContentData;
 
   contentTags: ContentTags;
   contentParams: ContentParams;
@@ -20,6 +21,7 @@ export const ListPageContext = createContext<ListPageContextProps>({
   updateQuery: null,
   gpus: null,
   totalGpus: null,
+  contentData: null,
 
   contentTags: null,
   contentParams: null,

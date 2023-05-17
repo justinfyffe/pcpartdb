@@ -1,4 +1,4 @@
-import { Gpu, GpusQuery } from '@pcpartdb/shared';
+import { Gpu, GpusQuery, ListGpusContentData } from '@pcpartdb/shared';
 import { useMemo } from 'react';
 import { getContentParams, getContentTags } from '../content';
 import { ListPageContextProps } from '../context';
@@ -8,12 +8,14 @@ export function useListPageContextProps(input: {
   updateQuery: (query: GpusQuery) => void;
   gpus: Gpu[];
   totalGpus: number;
+  contentData: ListGpusContentData;
 }) {
   return useMemo(() => {
     const query = { ...input.query };
     const updateQuery = input.updateQuery;
     const gpus = [...input.gpus];
     const totalGpus = input.totalGpus;
+    const contentData = input.contentData;
 
     const contentTags = getContentTags(query);
     const contentParams = getContentParams(query);
@@ -23,6 +25,7 @@ export function useListPageContextProps(input: {
       updateQuery,
       gpus,
       totalGpus,
+      contentData,
 
       contentTags,
       contentParams,

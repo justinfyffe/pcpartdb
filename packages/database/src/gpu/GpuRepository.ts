@@ -18,6 +18,10 @@ interface CountOptions {
   query?: GpusQuery;
 }
 
+interface CountRetailModelsOptions {
+  chipsetIds: number[];
+}
+
 interface ListOptions {
   query?: GpusQuery;
   includeImages?: boolean;
@@ -39,6 +43,24 @@ export class GpuRepository {
     const { filter } = options.query ?? {};
 
     return await db.gpu.count({ where: this.generateWhere(filter) });
+  }
+
+  async countRetailModels(
+    options: CountRetailModelsOptions,
+    config?: RepositoryConfig,
+  ) {
+    const { chipsetIds } = options;
+    const db = config?.trx ?? this.db;
+    const results = await db.gpu.groupBy({
+      _count: true,
+      by: ['chipsetId'],
+      where: { chipsetId: { in: chipsetIds } },
+    });
+
+    return results.reduce((acc, result) => {
+      acc[result.chipsetId] = result._count;
+      return acc;
+    }, {} as Record<number, number>);
   }
 
   async list(
