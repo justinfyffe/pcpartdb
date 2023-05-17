@@ -1,9 +1,8 @@
 Next tasks:
-- load retail models on demand
-  - too much data for list page
 - clean up list gpus call
   - KISS
   - simplify, just use listChipsets and listRetailModels
+  - clean up other code like this too
 - create scratch pad cli script
 - cpus
   - view
