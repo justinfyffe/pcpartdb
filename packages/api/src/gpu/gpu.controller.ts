@@ -11,6 +11,8 @@ import {
 } from '@nestjs/common';
 import {
   CreateGpuRequest,
+  GpuOrder,
+  GpuSort,
   ListGpusRequest,
   ListGpusResponse,
   ListRetailModelsResponse,
@@ -76,7 +78,11 @@ export class GpuController {
         const chipsetId = Number(idStr);
         const retailModels = await this.gpuService.list(
           {
-            query: { filter: { chipsetId }, limit: 1000 },
+            query: {
+              filter: { chipsetId },
+              limit: 1000,
+              orderBy: { sort: GpuSort.Name, order: GpuOrder.Asc },
+            },
             fields: [
               'company',
               'coreClockSpeedBase',
