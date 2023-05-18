@@ -16,15 +16,15 @@ export const GpuAutocompleteOption: FunctionComponent<
   const { index, gpu } = props;
 
   const id = gpu.id;
-  const name = useMemo(() => getGpuName(gpu), [gpu]);
+  const name = useMemo(() => getGpuName(gpu, { company: false }), [gpu]);
   const shortName = useMemo(() => getGpuName(gpu, { company: false }), [gpu]);
   const image = useMemo(() => getCompanyLogoAutocompletePath(gpu), [gpu]);
 
-  const marketSegmentAndChipset = useMemo(() => {
+  const companyAndMarketSegment = useMemo(() => {
+    const company = formatGpuField(gpu.company);
     const marketSegment = formatGpuField(gpu.marketSegment);
-    const chipset = getGpuName(gpu.chipset, { company: false });
-    return [marketSegment, chipset].filter((value) => value != null).join(', ');
-  }, [gpu.marketSegment, gpu.chipset]);
+    return [company, marketSegment].filter((value) => value != null).join(', ');
+  }, [gpu.company, gpu.marketSegment]);
   const releaseDate = useMemo(
     () =>
       formatGpuField(gpu.releaseDate, {
@@ -45,7 +45,7 @@ export const GpuAutocompleteOption: FunctionComponent<
         <div className="flex flex-1 flex-col gap-1 items-start">
           <span className="flex-1 text-sm">{name}</span>
           <span className="flex-1 text-2xs text-[#aaa]">
-            {marketSegmentAndChipset}
+            {companyAndMarketSegment}
           </span>
         </div>
 

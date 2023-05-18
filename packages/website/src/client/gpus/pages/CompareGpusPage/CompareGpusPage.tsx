@@ -1,5 +1,6 @@
 import {
   CompareGpusViewModel,
+  getChipset,
   getCompareGpusPath,
   getHomePath,
   getListGpusPath,
@@ -27,9 +28,8 @@ import { useComparePageContextProps } from './hooks';
 
 export const CompareGpuPage = (props: CompareGpusViewModel) => {
   const { comparison, contentData, relatedGpus, relatedComparisons } = props;
-  useGpuCache(comparison);
-
   const [gpu1, gpu2] = comparison;
+  useGpuCache(gpu1, gpu2);
 
   const context = useComparePageContextProps({ comparison, contentData });
 
@@ -75,7 +75,7 @@ export const CompareGpuPage = (props: CompareGpusViewModel) => {
           <section className="flex flex-wrap w-full">
             <h1 className="font-semibold">{pageTitle}</h1>
 
-            <CompareGpusForm values={[gpu1.id, gpu2.id]} />
+            <CompareGpusForm values={[gpu1?.id, gpu2?.id]} />
           </section>
 
           <article className="flex-1 flex flex-col gap-4">

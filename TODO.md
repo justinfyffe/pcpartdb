@@ -1,4 +1,5 @@
 Next tasks:
+- add id to slug?
 - clean up list gpus call
   - KISS
   - simplify, just use listChipsets and listRetailModels

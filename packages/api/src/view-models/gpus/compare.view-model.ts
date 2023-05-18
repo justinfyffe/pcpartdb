@@ -49,18 +49,9 @@ export class CompareGpusViewModelService {
     return await this.gpuService.getComparison(
       {
         slug,
-        includeChipset: true,
         includeRetailModels: true,
         includeImages: true,
         includeRanks: ['performanceRank', 'valueRank'],
-        chipsetFields: [
-          'company',
-          'performanceScore',
-          'valueScore',
-          'g3dMark',
-          'g2dMark',
-          'timespyGraphics',
-        ],
       },
       ctx,
     );

@@ -1,9 +1,4 @@
-import {
-  getChipset,
-  getCompareGpusPath,
-  getViewGpuPath,
-  Gpu,
-} from '@pcpartdb/shared';
+import { getChipset, getViewGpuPath, Gpu } from '@pcpartdb/shared';
 import { classNames } from 'packages/website/src/client/shared/ui';
 import React, { FunctionComponent, useContext, useMemo } from 'react';
 import {
@@ -55,9 +50,7 @@ export const RetailModelsTable: FunctionComponent<RetailModelsTableProps> = (
             <RetailModelsTableRow
               key={currentGpu1?.id + '-' + retailModel?.id}
               currentGpu={currentGpu1}
-              otherGpu={currentGpu2}
               retailModel={retailModel}
-              side="left"
             />
           ))}
         </TBody>
@@ -75,9 +68,7 @@ export const RetailModelsTable: FunctionComponent<RetailModelsTableProps> = (
             <RetailModelsTableRow
               key={currentGpu2?.id + '-' + retailModel?.id}
               currentGpu={currentGpu2}
-              otherGpu={currentGpu1}
               retailModel={retailModel}
-              side="right"
             />
           ))}
         </TBody>
@@ -88,25 +79,16 @@ export const RetailModelsTable: FunctionComponent<RetailModelsTableProps> = (
 
 interface RetailModelsTableRowProps {
   currentGpu: Gpu;
-  otherGpu: Gpu;
   retailModel: Gpu;
-  side: 'left' | 'right';
 }
 
 const RetailModelsTableRow: FunctionComponent<RetailModelsTableRowProps> = (
   props,
 ) => {
-  const { currentGpu, otherGpu, retailModel, side } = props;
+  const { currentGpu, retailModel } = props;
 
   const name = useMemo(() => getGpuName(retailModel), [retailModel]);
   const viewHref = useMemo(() => getViewGpuPath(retailModel), [retailModel]);
-  const compareHref = useMemo(
-    () =>
-      getCompareGpusPath(
-        side === 'left' ? [retailModel, otherGpu] : [otherGpu, retailModel],
-      ),
-    [retailModel, otherGpu, side],
-  );
 
   return (
     <Tr
@@ -120,11 +102,6 @@ const RetailModelsTableRow: FunctionComponent<RetailModelsTableRowProps> = (
         )}
       >
         <a href={viewHref}>{name}</a>
-      </Td>
-      <Td>
-        {currentGpu?.id !== retailModel?.id && (
-          <a href={compareHref}>(compare)</a>
-        )}
       </Td>
     </Tr>
   );

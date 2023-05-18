@@ -55,26 +55,26 @@ export class GpuAutocompleteRepository {
       },
       take: 6,
     });
-    const priorityResultsRetailModels = await db.gpu.findMany({
-      where: {
-        AND: [{ chipsetId: { not: null } }],
-        OR: [
-          { name: { search: nameTokens.join(' & '), mode: 'insensitive' } },
-          {
-            company: { search: companyTokens.join(' & '), mode: 'insensitive' },
-          },
-        ],
-      },
-      include: { chipset: true },
-      orderBy: {
-        _relevance: {
-          fields: ['name', 'company'],
-          search: tokens.join(' | '),
-          sort: 'desc',
-        },
-      },
-      take: 6,
-    });
+    // const priorityResultsRetailModels = await db.gpu.findMany({
+    //   where: {
+    //     AND: [{ chipsetId: { not: null } }],
+    //     OR: [
+    //       { name: { search: nameTokens.join(' & '), mode: 'insensitive' } },
+    //       {
+    //         company: { search: companyTokens.join(' & '), mode: 'insensitive' },
+    //       },
+    //     ],
+    //   },
+    //   include: { chipset: true },
+    //   orderBy: {
+    //     _relevance: {
+    //       fields: ['name', 'company'],
+    //       search: tokens.join(' | '),
+    //       sort: 'desc',
+    //     },
+    //   },
+    //   take: 6,
+    // });
 
     // Get results based on pattern matching. Prioritize chipsets over retail models
     const fillerChipsetIds: { id: number }[] = await db.$queryRaw`
@@ -83,15 +83,15 @@ export class GpuAutocompleteRepository {
       ORDER BY release_date DESC
       LIMIT 6
     `;
-    const fillerRetailModelIds: { id: number }[] = await db.$queryRaw`
-      SELECT id FROM gpus
-      WHERE chipset_id IS NOT NULL AND CONCAT(company, ' ', name) ~* (${regexTokens})
-      ORDER BY release_date DESC
-      LIMIT 6
-    `;
+    // const fillerRetailModelIds: { id: number }[] = await db.$queryRaw`
+    //   SELECT id FROM gpus
+    //   WHERE chipset_id IS NOT NULL AND CONCAT(company, ' ', name) ~* (${regexTokens})
+    //   ORDER BY release_date DESC
+    //   LIMIT 6
+    // `;
     const fillerResultIds = [
       ...fillerChipsetIds,
-      ...fillerRetailModelIds,
+      // ...fillerRetailModelIds,
     ].slice(0, 6);
 
     const fillerResults = await db.gpu.findMany({
@@ -105,7 +105,7 @@ export class GpuAutocompleteRepository {
       ...new Map(
         [
           ...priorityResultsChipset,
-          ...priorityResultsRetailModels,
+          // ...priorityResultsRetailModels,
           ...fillerResults,
         ].map((v) => [v.id, v]),
       ).values(),

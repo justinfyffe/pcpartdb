@@ -47,7 +47,7 @@ export const GpuAutocomplete = forwardRef<
     return gpuCache.get(value);
   });
 
-  const label = useMemo(() => getGpuName(gpu), [gpu]);
+  const label = useMemo(() => getGpuName(gpu, { company: false }), [gpu]);
   const prefixImage = useMemo(() => getCompanyLogoAutocompletePath(gpu), [gpu]);
 
   useEffect(() => {

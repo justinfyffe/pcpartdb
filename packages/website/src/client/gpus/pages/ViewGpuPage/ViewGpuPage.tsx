@@ -1,6 +1,7 @@
 import {
   Config,
   getAdminEditGpuPath,
+  getChipset,
   getHomePath,
   getListGpusPath,
   getViewGpuPath,
@@ -29,17 +30,17 @@ import { useViewPageContextProps } from './hooks';
 
 export const ViewGpuPage = (props: ViewGpuViewModel & { config: Config }) => {
   const { gpu, relatedGpus, relatedComparisons, contentData, config } = props;
-  const { chipset: parent } = gpu;
-  useGpuCache(parent, gpu);
+  useGpuCache(gpu.chipset, gpu);
 
   const context = useViewPageContextProps({ gpu, contentData });
+  const isRetailModel = gpu.chipset != null;
 
-  const chipsetName = useMemo(() => getGpuName(gpu.chipset), [gpu.chipset]);
+  const chipset = useMemo(() => getChipset(gpu), [gpu]);
   const chipsetShortName = useMemo(
-    () => getGpuName(gpu.chipset, { company: false }),
-    [gpu.chipset],
+    () => getGpuName(chipset, { company: false }),
+    [chipset],
   );
-  const chipsetHref = useMemo(() => getViewGpuPath(gpu.chipset), [gpu.chipset]);
+  const chipsetHref = useMemo(() => getViewGpuPath(chipset), [chipset]);
   const gpuName = useMemo(() => getGpuName(gpu), [gpu]);
   const gpuShortName = useMemo(
     () => getGpuName(gpu, { company: false }),
@@ -79,7 +80,7 @@ export const ViewGpuPage = (props: ViewGpuViewModel & { config: Config }) => {
         <Breadcrumbs className="mb-4">
           <Breadcrumb href={homeHref}>Home</Breadcrumb>
           <Breadcrumb href={listGpusHref}>Graphics Cards</Breadcrumb>
-          {chipsetShortName != null && (
+          {isRetailModel && (
             <Breadcrumb href={chipsetHref}>{chipsetShortName}</Breadcrumb>
           )}
           <Breadcrumb>{gpuShortName}</Breadcrumb>
@@ -89,11 +90,8 @@ export const ViewGpuPage = (props: ViewGpuViewModel & { config: Config }) => {
           <section className="flex flex-col w-full">
             <div className="mb-4">
               <h1 className="md:text-2xl text-3xl mb-0">{pageTitle}</h1>
-              {chipsetName != null && (
-                <div className="text-content-dimmed">{chipsetName}</div>
-              )}
             </div>
-            <CompareGpusForm values={[gpu.id]} />
+            <CompareGpusForm values={[chipset?.id]} />
           </section>
 
           <article className="md:min-w-full flex-1 flex flex-col gap-4">

@@ -50,11 +50,9 @@ interface GetOptions {
 
 interface GetComparisonOptions {
   slug?: string;
-  chipsetFields?: GpuFieldKey[];
   retailModelFields?: GpuFieldKey[];
 
   includeImages?: boolean;
-  includeChipset?: boolean;
   includeRetailModels?: boolean;
   includeRanks?: GpuRank[];
 }
@@ -171,9 +169,7 @@ export class GpuService {
       const gpu = await this.getBySlug(
         slugItem,
         {
-          chipsetFields: options.chipsetFields,
           retailModelFields: options.retailModelFields,
-          includeChipset: options.includeChipset,
           includeRetailModels: options.includeRetailModels,
           includeImages: options.includeImages,
           includeRanks: options.includeRanks || null,
@@ -186,7 +182,8 @@ export class GpuService {
       }
     }
 
-    if (gpus.length !== slugs.length) {
+    const [gpu1, gpu2] = gpus;
+    if (gpu1.chipsetId != null || gpu2.chipsetId != null) {
       throw notFoundError(null);
     }
 
