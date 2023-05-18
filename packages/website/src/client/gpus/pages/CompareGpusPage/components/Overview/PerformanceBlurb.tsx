@@ -8,10 +8,7 @@ import { ComparePageContext } from '../../context';
 
 const PerformanceIntro = compileContentComponent(
   {
-    tags: [
-      CompareGpusContentTag.DifferentChipset,
-      CompareGpusContentTag.DifferentPerformance,
-    ],
+    tags: [CompareGpusContentTag.DifferentPerformance],
     deps: [
       'gpu1PerformanceMoreOrLess',
       'gpu1PerformanceHigherOrLower',
@@ -31,10 +28,7 @@ const PerformanceIntro = compileContentComponent(
     ),
   },
   {
-    tags: [
-      CompareGpusContentTag.DifferentChipset,
-      CompareGpusContentTag.SamePerformance,
-    ],
+    tags: [CompareGpusContentTag.SamePerformance],
     deps: [],
     // The GeForce RTX 2070 and Radeon RX 7900 have nearly identical performances in the
     // benchmarks that we track.
@@ -42,21 +36,6 @@ const PerformanceIntro = compileContentComponent(
       <>
         The {props.shortGpuName1} and {props.shortGpuName2} have nearly
         identical performances in the benchmarks that we track.
-      </>
-    ),
-  },
-
-  {
-    tags: [CompareGpusContentTag.SameChipset],
-    deps: [],
-    // The ROG STRIX RTX 4070 GAMING OC and DUAL RTX 4070 WHITE are based on the same chipset,
-    // giving them nearly identical performances. It may vary slightly based on their specs like
-    // clock speed and memory.
-    component: (props) => (
-      <>
-        The {props.shortGpuName1} and {props.shortGpuName2} are based on the
-        same chipset, giving them nearly identical performances. It may vary
-        slightly based on their specs like clock speed and memory.
       </>
     ),
   },

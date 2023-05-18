@@ -3,25 +3,17 @@ import {
   compileContentComponent,
   ContentContext,
 } from '../../../../../shared/content';
-import { CompareGpusContentTag } from '../../content';
 import { ComparePageContext } from '../../context';
 
-const Title = compileContentComponent(
-  {
-    tags: [CompareGpusContentTag.DifferentChipset],
-    deps: ['chipsetShortName1', 'chipsetShortName2'],
-    component: (props) => (
-      <>
-        {props.chipsetShortName1} and {props.chipsetShortName2} Graphics Cards
-      </>
-    ),
-  },
-  {
-    tags: [CompareGpusContentTag.SameChipset],
-    deps: ['chipsetShortName1'],
-    component: (props) => <>{props.chipsetShortName1} Graphics Cards</>,
-  },
-);
+const Title = compileContentComponent({
+  tags: [],
+  deps: ['chipsetShortName1', 'chipsetShortName2'],
+  component: (props) => (
+    <>
+      {props.chipsetShortName1} and {props.chipsetShortName2} Graphics Cards
+    </>
+  ),
+});
 
 export const RetailModelsTitle = () => {
   const { contentParams, contentTags } = useContext(ComparePageContext);
