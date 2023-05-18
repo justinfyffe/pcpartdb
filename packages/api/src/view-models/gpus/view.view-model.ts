@@ -297,8 +297,9 @@ export class ViewGpuViewModelService {
     const performanceIds = performanceGpus.map((gpu) => gpu.id);
     const valueIds = valueGpus.map((gpu) => gpu.id);
 
+    const pageChipset = getChipset(pageGpu);
     const set = new Set([...performanceIds, ...valueIds]);
-    set.delete(pageGpu.id);
+    set.delete(pageChipset.id);
 
     const related: Gpu[] = [];
     for (let i = 0; i < total && set.size > 0; ++i) {
@@ -309,7 +310,6 @@ export class ViewGpuViewModelService {
       related.push(map[id]);
     }
 
-    const pageChipset = getChipset(pageGpu);
     const comparisons = related.map((relatedGpu) => [pageChipset, relatedGpu]);
 
     return { comparisons } as RelatedComparisons;
