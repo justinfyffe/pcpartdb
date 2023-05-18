@@ -309,7 +309,8 @@ export class ViewGpuViewModelService {
       related.push(map[id]);
     }
 
-    const comparisons = related.map((relatedGpu) => [pageGpu, relatedGpu]);
+    const pageChipset = getChipset(pageGpu);
+    const comparisons = related.map((relatedGpu) => [pageChipset, relatedGpu]);
 
     return { comparisons } as RelatedComparisons;
   }
