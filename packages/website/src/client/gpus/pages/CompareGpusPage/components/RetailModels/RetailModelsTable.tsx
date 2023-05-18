@@ -60,7 +60,6 @@ export const RetailModelsTable: FunctionComponent<RetailModelsTableProps> = (
         <THead>
           <Tr>
             <Th>{chipsetShortName2}</Th>
-            <Th></Th>
           </Tr>
         </THead>
         <TBody>
