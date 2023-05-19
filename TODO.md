@@ -1,5 +1,7 @@
 Next tasks:
 - add id to slug?
+  - 301 redirect from old to new
+  - {id}_{slug}
 - clean up list gpus call
   - KISS
   - simplify, just use listChipsets and listRetailModels
