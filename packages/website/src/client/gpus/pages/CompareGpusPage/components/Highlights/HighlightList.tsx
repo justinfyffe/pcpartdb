@@ -38,7 +38,7 @@ export const HighlightListItem = (props: HighlightListItemProps) => {
   return (
     <li
       className={classNames(
-        'bg-slate-200 flex gap-4 items-center justify-center px-4 py-1 rounded shadow',
+        'bg-slate-200 flex flex-wrap px-4 py-1 rounded shadow',
         className,
       )}
     >
@@ -81,15 +81,13 @@ export const HighlightValues = (props: HighlightValuesProps) => {
   const { children, className } = props;
 
   return (
-    <div className="">
-      <div
-        className={classNames(
-          'grid grid-cols-[auto_auto] grid-rows-2 gap-x-2',
-          className,
-        )}
-      >
-        {children}
-      </div>
+    <div
+      className={classNames(
+        'flex-1 grid grid-cols-[auto_min-content] grid-rows-2 gap-x-2',
+        className,
+      )}
+    >
+      {children}
     </div>
   );
 };
@@ -108,7 +106,7 @@ export const HighlightValue = (props: HighlightValueProps) => {
     <>
       <div
         className={classNames(
-          'text-right whitespace-nowrap text-ellipsis overflow-hidden',
+          'text-right whitespace-nowrap text-ellipsis',
           className,
         )}
       >

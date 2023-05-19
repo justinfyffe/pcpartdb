@@ -34,7 +34,7 @@ export const HighlightListItem = (props: HighlightListItemProps) => {
   const { children } = props;
 
   return (
-    <li className="bg-slate-200 flex items-center justify-center px-4 py-2 rounded shadow">
+    <li className="bg-slate-200 flex flex-wrap px-4 py-2 rounded shadow">
       {children}
     </li>
   );
@@ -66,7 +66,7 @@ export const HighlightValue = (props: HighlightValueProps) => {
   const { children } = props;
 
   return (
-    <div className="md:text-sm text-base text-slate-600 text-right">
+    <div className="flex-1 md:text-sm text-base text-slate-600 text-right whitespace-nowrap">
       {children}
     </div>
   );
