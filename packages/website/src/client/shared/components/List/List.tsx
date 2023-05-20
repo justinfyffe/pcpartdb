@@ -23,7 +23,7 @@ export const List: FunctionComponent<ListProps> = (props) => {
   return (
     <Element
       className={classNames(
-        'flex flex-wrap gap-1',
+        'flex flex-wrap gap-2',
         direction === 'vertical' ? 'flex-col' : 'flex-row',
         props.className,
       )}

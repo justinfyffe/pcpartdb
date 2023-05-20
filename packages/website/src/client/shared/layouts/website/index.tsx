@@ -36,7 +36,11 @@ export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
     <>
       <Toolbar>
         <ToolbarTitle>
-          <Img src="/images/logo.svg" className="w-8 mt-0.5 mr-1" />{' '}
+          <Img
+            src="/images/logo.svg"
+            alt={`${WEBSITE_NAME} Logo`}
+            className="w-8 mt-0.5 mr-1"
+          />{' '}
           {WEBSITE_NAME}
         </ToolbarTitle>
 

@@ -14,7 +14,7 @@ import { useGpuCache } from '../../../shared/cache';
 import { Autocomplete, Img } from '../../../shared/components';
 import { classNames } from '../../../shared/ui';
 import { gpuService } from '../../gpuService';
-import { getGpuName } from '../../utils';
+import { formatGpuField, getGpuName } from '../../utils';
 import { GpuAutocompleteOption } from './GpuAutocompleteOption';
 
 interface GpuAutocompleteProps {
@@ -49,6 +49,7 @@ export const GpuAutocomplete = forwardRef<
 
   const label = useMemo(() => getGpuName(gpu, { company: false }), [gpu]);
   const prefixImage = useMemo(() => getCompanyLogoAutocompletePath(gpu), [gpu]);
+  const company = useMemo(() => formatGpuField(gpu?.company), [gpu?.company]);
 
   useEffect(() => {
     async function fetchGpu() {
@@ -107,7 +108,9 @@ export const GpuAutocomplete = forwardRef<
   return (
     <Autocomplete
       prefix={
-        prefixImage ? <Img src={prefixImage} className="h-5" /> : undefined
+        prefixImage ? (
+          <Img src={prefixImage} alt={company} className="h-5" />
+        ) : undefined
       }
       label={label || ''}
       value={value != null && value !== 0 ? `${value}` : ''}

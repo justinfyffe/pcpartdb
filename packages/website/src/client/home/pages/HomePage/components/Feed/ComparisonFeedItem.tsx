@@ -30,6 +30,10 @@ export const ComparisonFeedItem: FunctionComponent<ComparisonFeedItemProps> = (
   const { comparison, tag } = props;
   const [gpu1, gpu2] = comparison;
 
+  const [name1, name2] = useMemo(() => {
+    return [getGpuName(gpu1), getGpuName(gpu2)];
+  }, [gpu1, gpu2]);
+
   const [price1, price2] = useMemo(
     () => [formatGpuField(gpu1.launchPrice), formatGpuField(gpu2.launchPrice)],
     [gpu1, gpu2],
@@ -62,6 +66,7 @@ export const ComparisonFeedItem: FunctionComponent<ComparisonFeedItemProps> = (
           {image1 != null ? (
             <Img
               src={image1}
+              alt={name1}
               className={classNames(
                 'flex-1 h-40 object-contain overflow-hidden',
                 isCompanyImage1 ? 'p-8' : '',
@@ -83,6 +88,7 @@ export const ComparisonFeedItem: FunctionComponent<ComparisonFeedItemProps> = (
           {image2 != null ? (
             <Img
               src={image2}
+              alt={name2}
               className={classNames(
                 'flex-1 h-40 object-contain overflow-hidden',
                 isCompanyImage2 ? 'p-8' : '',
@@ -128,7 +134,7 @@ export const ComparisonFeedItem: FunctionComponent<ComparisonFeedItemProps> = (
 
         <div className="flex flex-col text-sm">
           <h3 className="font-medium text-base text-indigo-500">
-            {getGpuName(gpu1)} vs {getGpuName(gpu2)}
+            {name1} vs {name2}
           </h3>
           <Subtitle comparison={comparison} tag={tag} />
         </div>

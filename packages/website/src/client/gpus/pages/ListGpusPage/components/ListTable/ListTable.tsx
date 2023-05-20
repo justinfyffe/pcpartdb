@@ -6,6 +6,8 @@ import React, {
   useMemo,
 } from 'react';
 import {
+  Button,
+  ButtonVariant,
   showDialog,
   Table,
   TBody,
@@ -77,10 +79,14 @@ const ListTableRow: FunctionComponent<ListTableRowProps> = (props) => {
       </Td>
       <Td className="text-left">
         {retailModelsCount > 0 && (
-          <a onClick={openProductsDialog} className="cursor-pointer">
+          <Button
+            variant={ButtonVariant.Link}
+            onClick={openProductsDialog}
+            className="cursor-pointer"
+          >
             {retailModelsCount === 1 && <>1 product</>}
             {retailModelsCount > 1 && <>{retailModelsCount} products</>}
-          </a>
+          </Button>
         )}
         {retailModelsCount === 0 && <>--</>}
       </Td>

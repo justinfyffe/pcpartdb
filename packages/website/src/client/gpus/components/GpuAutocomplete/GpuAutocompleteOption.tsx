@@ -19,12 +19,12 @@ export const GpuAutocompleteOption: FunctionComponent<
   const name = useMemo(() => getGpuName(gpu, { company: false }), [gpu]);
   const shortName = useMemo(() => getGpuName(gpu, { company: false }), [gpu]);
   const image = useMemo(() => getCompanyLogoAutocompletePath(gpu), [gpu]);
+  const company = useMemo(() => formatGpuField(gpu.company), [gpu]);
 
   const companyAndMarketSegment = useMemo(() => {
-    const company = formatGpuField(gpu.company);
     const marketSegment = formatGpuField(gpu.marketSegment);
     return [company, marketSegment].filter((value) => value != null).join(', ');
-  }, [gpu.company, gpu.marketSegment]);
+  }, [company, gpu.marketSegment]);
   const releaseDate = useMemo(
     () =>
       formatGpuField(gpu.releaseDate, {
@@ -40,7 +40,9 @@ export const GpuAutocompleteOption: FunctionComponent<
   return (
     <AutocompleteOption index={index} label={shortName} value={`${id}`}>
       <div className="flex flex-1 items-center gap-4">
-        <div className="w-8">{image != null ? <Img src={image} /> : <></>}</div>
+        <div className="w-8">
+          {image != null ? <Img src={image} alt={company} /> : <></>}
+        </div>
 
         <div className="flex flex-1 flex-col gap-1 items-start">
           <span className="flex-1 text-sm">{name}</span>

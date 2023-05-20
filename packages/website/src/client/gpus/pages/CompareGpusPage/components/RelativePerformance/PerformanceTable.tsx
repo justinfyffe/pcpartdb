@@ -8,6 +8,8 @@ import React, {
   useState,
 } from 'react';
 import {
+  Button,
+  ButtonVariant,
   Checkbox,
   Table,
   TBody,
@@ -226,9 +228,13 @@ export const BaselineToggle: FunctionComponent<BaselineToggleProps> = (
     return <span className="font-bold">{chipsetName}</span>;
   } else {
     return (
-      <a className="cursor-pointer" onClick={onClick}>
+      <Button
+        variant={ButtonVariant.Link}
+        className="cursor-pointer"
+        onClick={onClick}
+      >
         {chipsetName}
-      </a>
+      </Button>
     );
   }
 };

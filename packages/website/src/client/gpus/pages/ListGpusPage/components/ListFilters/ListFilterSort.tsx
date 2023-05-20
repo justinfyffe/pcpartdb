@@ -65,15 +65,15 @@ const ListFilterSortItem: FunctionComponent<ListFilterSortItemProps> = (
   }, [defaultOrder, order, updateQuery, query, sort]);
 
   return (
-    <a
+    <button
       onClick={handleSortClick}
       className={classNames(
-        'cursor-pointer p-2 hover:bg-slate-100',
+        'cursor-pointer p-2 hover:bg-slate-100 text-content-link text-left',
         query.orderBy?.sort === sort ? 'font-bold' : '',
       )}
     >
       {props.children} {order === GpuOrder.Asc ? <>&#9650;</> : <></>}{' '}
       {order === GpuOrder.Desc ? <>&#9660;</> : <></>}
-    </a>
+    </button>
   );
 };

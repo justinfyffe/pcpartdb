@@ -27,6 +27,7 @@ interface GpuFeedItemProps {
 export const GpuFeedItem: FunctionComponent<GpuFeedItemProps> = (props) => {
   const { gpu, tag } = props;
 
+  const name = useMemo(() => getGpuName(gpu), [gpu]);
   const price = useMemo(() => formatGpuField(gpu.launchPrice), [gpu]);
 
   const label = useMemo(() => {
@@ -77,6 +78,7 @@ export const GpuFeedItem: FunctionComponent<GpuFeedItemProps> = (props) => {
             <Img
               key={i}
               src={image}
+              alt={name}
               className={classNames(
                 'bg-white',
                 'flex-1',

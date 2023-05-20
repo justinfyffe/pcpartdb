@@ -191,7 +191,11 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
         )}
 
         {props.clearable && (
-          <Button className="hover:bg-[#eee]" onClick={handleClear}>
+          <Button
+            className="hover:bg-[#eee]"
+            aria-label="Clear"
+            onClick={handleClear}
+          >
             <XMarkIcon className="w-4" />
           </Button>
         )}

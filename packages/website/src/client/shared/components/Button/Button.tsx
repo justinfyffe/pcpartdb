@@ -7,6 +7,7 @@ export enum ButtonVariant {
   Primary = 'primary',
   Secondary = 'secondary',
   Toolbar = 'toolbar',
+  Link = 'link',
 }
 
 export interface ButtonProps
@@ -24,6 +25,8 @@ const BUTTON_VARIANTS = {
   [ButtonVariant.Primary]: 'bg-button-primary text-button-primary',
   [ButtonVariant.Secondary]: 'bg-button-secondary text-button-secondary',
   [ButtonVariant.Toolbar]: 'bg-toolbar text-toolbar shadow-none',
+  [ButtonVariant.Link]:
+    'bg-transparent text-content shadow-none mx-[-16px] my-[-8px] text-content-link',
 };
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(

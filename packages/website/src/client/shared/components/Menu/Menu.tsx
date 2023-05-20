@@ -9,6 +9,7 @@ import { classNames } from '../../ui';
 import { Button } from '../Button';
 
 export interface MenuProps {
+  ariaLabel?: string;
   label?: string | React.ReactNode;
   children?: React.ReactNode;
   className?: string;
@@ -16,7 +17,7 @@ export interface MenuProps {
 }
 
 export const Menu: FunctionComponent<MenuProps> = (props) => {
-  const { label, children, className, overlayClassName } = props;
+  const { ariaLabel, label, children, className, overlayClassName } = props;
 
   const buttonRef = useRef(null);
   const overlayRef = useRef(null);
@@ -47,7 +48,7 @@ export const Menu: FunctionComponent<MenuProps> = (props) => {
 
   return (
     <div className={classNames('block relative', className)}>
-      <Button ref={buttonRef} onClick={toggleButton}>
+      <Button aria-label={ariaLabel} ref={buttonRef} onClick={toggleButton}>
         {label}
       </Button>
 

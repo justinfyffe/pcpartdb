@@ -15,6 +15,7 @@ export const ListMenu: FunctionComponent<ListMenuProps> = (props) => {
   return (
     <Menu
       label={<Bars3Icon className="w-8" />}
+      ariaLabel="GPU Filters"
       className={classNames('-mr-4', props.className)}
       overlayClassName="w-62 max-h-125 overflow-x-hidden overflow-y-auto"
     >
