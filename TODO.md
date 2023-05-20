@@ -1,7 +1,4 @@
 Next tasks:
-- add id to slug?
-  - 301 redirect from old to new
-  - {id}_{slug}
 - clean up list gpus call
   - KISS
   - simplify, just use listChipsets and listRetailModels
@@ -60,7 +57,14 @@ AUTOMATION IDEAS
     - e.g. https://www.techpowerup.com/gpu-specs/asus-rog-strix-rtx-3070-gaming.b8030  
   - status
     - e.g. PENDING, CANCELED, IN_PROGRESS, COMPLETED 
-  - 
+
+
+AMAZON AFFILIATE
+- Can cache pricing, but must show as-of date.
+- Use Product Advertising API to get pricing and link
+- Automation for pricing
+- Cannot do price tracking
+- Chipset goes to lowest price new retail model
 
 
 CPUs
