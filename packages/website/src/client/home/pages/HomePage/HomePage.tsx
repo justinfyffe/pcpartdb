@@ -40,7 +40,7 @@ export const HomePage = (props: HomeViewModel) => {
   return (
     <WebsiteLayout>
       <Seo
-        title={seoTitle}
+        rawTitle={seoTitle}
         keywords={seoKeywords}
         description={seoDescription}
         canonical={seoCanonical}

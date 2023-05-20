@@ -20,6 +20,7 @@ export enum MetaRobots {
 
 export interface SeoProps {
   title?: string;
+  rawTitle?: string;
   keywords?: string[];
   description?: string;
   robots?: MetaRobots[];
@@ -39,11 +40,11 @@ function getSeoCanonical(path: string) {
 }
 
 export const Seo: FunctionComponent<SeoProps> = (props) => {
-  const { title, keywords, description, robots, canonical } = props;
+  const { title, rawTitle, keywords, description, robots, canonical } = props;
 
   const seoTitle = useMemo(
-    () => (title != null ? getSeoTitle(title) : null),
-    [title],
+    () => (rawTitle || title ? rawTitle || getSeoTitle(title) : null),
+    [rawTitle, title],
   );
   const seoKeywords = useMemo(
     () => (keywords != null ? getSeoKeywords(...keywords).join(', ') : null),
