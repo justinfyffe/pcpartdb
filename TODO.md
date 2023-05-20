@@ -43,6 +43,7 @@ OVERVIEW
 
 
 AUTOMATION IDEAS
+- Add "Update" button that updates next thing in queue
 - need to support new chipsets and retail models
 - how to add to crawler queue
   - script that automatically adds to database?
@@ -63,7 +64,10 @@ AUTOMATION IDEAS
 
 
 CPUs
-- Data sources:
+- Determine CPU data structures
+- Clean up code
+  - Add GPU prefixes, or remove GPU prefix for appropriate code.
+- Determine Data sources:
   - pc part picker?
     - some extra data
     - e.g. https://pcpartpicker.com/product/g94BD3/amd-ryzen-5-5600x-37-ghz-6-core-processor-100-100000065box
@@ -74,6 +78,20 @@ CPUs
   - cpu benchmark
     - performance
     - e.g. https://www.cpubenchmark.net/cpu.php?cpu=AMD+Ryzen+Threadripper+PRO+5975WX&id=4776
+- Implement Pages
+  - CPU Admin 
+  - List CPUs Page
+  - View CPU Page
+  - Compare CPUs Page
+- Update Existing Pages
+  - Home Page
+- Implement Search Functionality
+  - Toggle Between GPU and CPU
+- Overview Summary for View and Compare CPU
+- Import Functionality
+  - Automation
+    - Scrape Data
+    - Generate Import Data
 - Other Notes:
   - Benchmarks:
     - CPU Mark (Passmark)
@@ -83,7 +101,6 @@ CPUs
       - https://browser.geekbench.com/processor-benchmarks/
   - CPUs could belong to multiple classes: e.g. server, desktop, and workstation
     - Should we default to desktop/workstation then? or support both
-
 
 
 CODE CLEANUP IDEAS
