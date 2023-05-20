@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { GpuComparison, GpuSort, HomeViewModel } from '@pcpartdb/shared';
+import { GpuComparison, HomeViewModel, ListGpusSort } from '@pcpartdb/shared';
 import { GpuService } from '../../gpu/gpu.service';
 import { Context } from '../../shared/context';
 
@@ -31,8 +31,8 @@ export class HomeViewModelService {
                 company: ['nvidia'],
                 isChipset: true,
               },
-              orderBy: { sort: GpuSort.PerformanceRating },
-              limit: 1,
+              orderBy: { sort: ListGpusSort.PerformanceRating },
+              pagination: { limit: 1 },
             },
             includeImages: true,
           },
@@ -48,8 +48,8 @@ export class HomeViewModelService {
             company: ['nvidia'],
             isChipset: true,
           },
-          orderBy: { sort: GpuSort.ValueRating },
-          limit: 3,
+          orderBy: { sort: ListGpusSort.ValueRating },
+          pagination: { limit: 3 },
         },
         includeImages: true,
       },
@@ -72,8 +72,8 @@ export class HomeViewModelService {
                 company: ['amd'],
                 isChipset: true,
               },
-              orderBy: { sort: GpuSort.PerformanceRating },
-              limit: 1,
+              orderBy: { sort: ListGpusSort.PerformanceRating },
+              pagination: { limit: 1 },
             },
             includeImages: true,
           },
@@ -85,8 +85,8 @@ export class HomeViewModelService {
       {
         query: {
           filter: { performanceRated: true, company: ['amd'], isChipset: true },
-          orderBy: { sort: GpuSort.ValueRating },
-          limit: 3,
+          orderBy: { sort: ListGpusSort.ValueRating },
+          pagination: { limit: 3 },
         },
         includeImages: true,
       },

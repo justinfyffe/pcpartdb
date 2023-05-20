@@ -7,7 +7,7 @@ import {
   GpuDataUpdate,
   GpuFieldKey,
   GpuRank,
-  GpusQuery,
+  ListGpusQuery,
   populatePerformanceScoreBenchmark,
   populateValueScoreBenchmark,
   UpdateGpuRequest,
@@ -18,7 +18,7 @@ import { GpuRepository } from './gpu.repository';
 import { GpuRanksService } from './ranks/gpu-ranks.service';
 
 interface CountOptions {
-  query?: GpusQuery;
+  query?: ListGpusQuery;
 }
 
 interface CountRetailModelsOptions {
@@ -26,7 +26,7 @@ interface CountRetailModelsOptions {
 }
 
 interface ListOptions {
-  query?: GpusQuery;
+  query?: ListGpusQuery;
 
   fields?: GpuFieldKey[];
   chipsetFields?: GpuFieldKey[];

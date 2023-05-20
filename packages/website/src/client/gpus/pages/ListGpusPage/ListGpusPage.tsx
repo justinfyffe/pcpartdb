@@ -2,7 +2,7 @@ import {
   generateGpusQueryFromPath,
   getHomePath,
   getListGpusPath,
-  GpusQuery,
+  ListGpusQuery,
   ListGpusViewModel,
 } from '@pcpartdb/shared';
 import { useRouter } from 'next/router';
@@ -37,7 +37,7 @@ export const ListGpusPage = (props: ListGpusViewModel) => {
   const [query, setQuery] = useState(props.query);
   const [contentData, setContentData] = useState(props.contentData);
 
-  const fetchGpus = useCallback(async (q: GpusQuery) => {
+  const fetchGpus = useCallback(async (q: ListGpusQuery) => {
     const response = await gpuService.list({ query: q });
     setGpus(response.gpus);
     setTotalGpus(response.totalGpus);
@@ -53,7 +53,7 @@ export const ListGpusPage = (props: ListGpusViewModel) => {
   }, [fetchGpus, router]);
 
   const updateQuery = useCallback(
-    async (q: GpusQuery) => {
+    async (q: ListGpusQuery) => {
       await fetchGpus(q);
       const url = getListGpusPath(q);
       router.push(url, undefined, { shallow: true });

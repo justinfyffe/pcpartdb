@@ -5,9 +5,9 @@ import {
   getListGpusPath,
   getPrivacyPath,
   getViewGpuPath,
-  GpuOrder,
-  GpuSort,
   LIST_GPUS_PRESETS,
+  ListGpusOrder,
+  ListGpusSort,
   WEBSITE_URL,
 } from '@pcpartdb/shared';
 import * as fsPromises from 'fs/promises';
@@ -84,7 +84,7 @@ async function writeGpuChipsetsSitemap() {
   const results = await gpuRepository.listAll({
     query: {
       filter: { isChipset: true, isRetailModel: false },
-      orderBy: { sort: GpuSort.Name, order: GpuOrder.Asc },
+      orderBy: { sort: ListGpusSort.Name, order: ListGpusOrder.Asc },
     },
   });
   const gpus = mapToGpuDtos(results);
@@ -137,7 +137,7 @@ async function writeGpuRetailModelsSitemap() {
   const results = await gpuRepository.listAll({
     query: {
       filter: { isChipset: false, isRetailModel: true },
-      orderBy: { sort: GpuSort.Name, order: GpuOrder.Asc },
+      orderBy: { sort: ListGpusSort.Name, order: ListGpusOrder.Asc },
     },
   });
   const gpus = mapToGpuDtos(results);
@@ -196,7 +196,7 @@ async function writeGpuComparisonsSitemap() {
   const results = await gpuRepository.listAll({
     query: {
       filter: { isChipset: true, isRetailModel: false },
-      orderBy: { sort: GpuSort.ReleaseDate, order: GpuOrder.Desc },
+      orderBy: { sort: ListGpusSort.ReleaseDate, order: ListGpusOrder.Desc },
     },
   });
   const gpus = mapToGpuDtos(results);

@@ -4,7 +4,7 @@ import {
   generateGpusQueryFromPath,
   getAdminListGpusPath,
   Gpu,
-  GpusQuery,
+  ListGpusQuery,
 } from '@pcpartdb/shared';
 import { useRouter } from 'next/router';
 import { GpuAutocomplete } from 'packages/website/src/client/gpus/components';
@@ -28,15 +28,14 @@ export const RetailModelsTab: FunctionComponent<RetailModelsTabProps> = () => {
 
   const [retailModels, setRetailModels] = useState<Gpu[]>([]);
   const [totalResults, setTotalResults] = useState(0);
-  const [query, setQuery] = useState<GpusQuery>({
+  const [query, setQuery] = useState<ListGpusQuery>({
     filter: { isRetailModel: true },
-    offset,
-    limit,
+    pagination: { offset, limit },
   });
 
   const [_loading, setLoading] = useState(false);
 
-  const fetchChipsets = useCallback(async (q: GpusQuery) => {
+  const fetchChipsets = useCallback(async (q: ListGpusQuery) => {
     setLoading(true);
     const response = await gpuService.list({ query: q });
     setRetailModels(response.gpus);
@@ -57,7 +56,7 @@ export const RetailModelsTab: FunctionComponent<RetailModelsTabProps> = () => {
   }, [fetchChipsets, router]);
 
   const handlePageClick = useCallback(
-    (query: GpusQuery) => {
+    (query: ListGpusQuery) => {
       setQuery(query);
       const url = getAdminListGpusPath(query);
       router.push(url, undefined, { shallow: true });
@@ -67,7 +66,7 @@ export const RetailModelsTab: FunctionComponent<RetailModelsTabProps> = () => {
 
   const handleChipsetChange = useCallback(
     (chipsetId: number) => {
-      const q: GpusQuery = {
+      const q: ListGpusQuery = {
         ...query,
         filter: { ...query.filter, chipsetId: chipsetId },
       };

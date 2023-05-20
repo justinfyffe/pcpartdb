@@ -1,9 +1,9 @@
-import { GpuOrder, GpuSort, GpusQuery } from './gpu-types';
+import { ListGpusOrder, ListGpusQuery, ListGpusSort } from './gpu-types';
 
 export const DEFAULT_LIST_GPUS_LIMIT = 50;
 export const DEFAULT_LIST_GPUS_OFFSET = 0;
-export const DEFAULT_LIST_GPUS_SORT = GpuSort.PerformanceRating;
-export const DEFAULT_LIST_GPUS_ORDER = GpuOrder.Desc;
+export const DEFAULT_LIST_GPUS_SORT = ListGpusSort.PerformanceRating;
+export const DEFAULT_LIST_GPUS_ORDER = ListGpusOrder.Desc;
 
 export enum ListGpusPresetSlug {
   BestPerformance = 'best-performance',
@@ -16,38 +16,47 @@ export enum ListGpusPresetSlug {
   Oldest = 'oldest',
 }
 
-export const LIST_GPUS_PRESETS: Record<ListGpusPresetSlug, GpusQuery> = {
+export const LIST_GPUS_PRESETS: Record<ListGpusPresetSlug, ListGpusQuery> = {
   [ListGpusPresetSlug.BestPerformance]: {
     filter: {},
-    orderBy: { sort: GpuSort.PerformanceRating, order: GpuOrder.Desc },
+    orderBy: {
+      sort: ListGpusSort.PerformanceRating,
+      order: ListGpusOrder.Desc,
+    },
   },
   [ListGpusPresetSlug.BestPerformanceAmd]: {
     filter: { company: ['amd'] },
-    orderBy: { sort: GpuSort.PerformanceRating, order: GpuOrder.Desc },
+    orderBy: {
+      sort: ListGpusSort.PerformanceRating,
+      order: ListGpusOrder.Desc,
+    },
   },
   [ListGpusPresetSlug.BestPerformanceNvidia]: {
     filter: { company: ['nvidia'] },
-    orderBy: { sort: GpuSort.PerformanceRating, order: GpuOrder.Desc },
+    orderBy: {
+      sort: ListGpusSort.PerformanceRating,
+      order: ListGpusOrder.Desc,
+    },
   },
   [ListGpusPresetSlug.BestValue]: {
     filter: {},
-    orderBy: { sort: GpuSort.ValueRating, order: GpuOrder.Desc },
+    orderBy: { sort: ListGpusSort.ValueRating, order: ListGpusOrder.Desc },
   },
   [ListGpusPresetSlug.BestValueAmd]: {
     filter: { company: ['amd'] },
-    orderBy: { sort: GpuSort.ValueRating, order: GpuOrder.Desc },
+    orderBy: { sort: ListGpusSort.ValueRating, order: ListGpusOrder.Desc },
   },
   [ListGpusPresetSlug.BestValueNvidia]: {
     filter: { company: ['nvidia'] },
-    orderBy: { sort: GpuSort.ValueRating, order: GpuOrder.Desc },
+    orderBy: { sort: ListGpusSort.ValueRating, order: ListGpusOrder.Desc },
   },
   [ListGpusPresetSlug.Newest]: {
     filter: {},
-    orderBy: { sort: GpuSort.ReleaseDate, order: GpuOrder.Desc },
+    orderBy: { sort: ListGpusSort.ReleaseDate, order: ListGpusOrder.Desc },
   },
   [ListGpusPresetSlug.Oldest]: {
     filter: {},
-    orderBy: { sort: GpuSort.ReleaseDate, order: GpuOrder.Asc },
+    orderBy: { sort: ListGpusSort.ReleaseDate, order: ListGpusOrder.Asc },
   },
 };
 

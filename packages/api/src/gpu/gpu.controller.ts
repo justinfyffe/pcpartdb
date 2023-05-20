@@ -11,10 +11,10 @@ import {
 } from '@nestjs/common';
 import {
   CreateGpuRequest,
-  GpuOrder,
-  GpuSort,
+  ListGpusOrder,
   ListGpusRequest,
   ListGpusResponse,
+  ListGpusSort,
   ListRetailModelsResponse,
   UpdateGpuRequest,
 } from '@pcpartdb/shared';
@@ -80,8 +80,8 @@ export class GpuController {
           {
             query: {
               filter: { chipsetId },
-              limit: 1000,
-              orderBy: { sort: GpuSort.Name, order: GpuOrder.Asc },
+              orderBy: { sort: ListGpusSort.Name, order: ListGpusOrder.Asc },
+              pagination: { limit: 1_000 },
             },
             fields: [
               'company',

@@ -1,4 +1,4 @@
-import { GpuSort } from '@pcpartdb/shared';
+import { ListGpusSort } from '@pcpartdb/shared';
 import {
   compileContentFunction,
   ContentFunctionParams,
@@ -8,27 +8,27 @@ import { ListPageContextProps } from '../context';
 
 const seoDescription = compileContentFunction(
   {
-    tags: [GpuSort.PerformanceRating],
+    tags: [ListGpusSort.PerformanceRating],
     deps: ['company'],
     hook: (props: ContentFunctionParams) =>
       `The best ${props.company} graphics cards by performance. ` +
       'Our database of graphics cards will help you choose the best GPU for your computer.',
   },
   {
-    tags: [GpuSort.ValueRating],
+    tags: [ListGpusSort.ValueRating],
     deps: ['company'],
     hook: (props: ContentFunctionParams) =>
       `The best ${props.company} graphics cards by value. ` +
       'Our database of graphics cards will help you choose the best GPU for your computer.',
   },
   {
-    tags: [GpuSort.PerformanceRating],
+    tags: [ListGpusSort.PerformanceRating],
     hook: () =>
       'The best graphics cards by performance. ' +
       'Our database of graphics cards will help you choose the best GPU for your computer.',
   },
   {
-    tags: [GpuSort.ValueRating],
+    tags: [ListGpusSort.ValueRating],
     hook: () =>
       'The best graphics cards by value. ' +
       'Our database of graphics cards will help you choose the best GPU for your computer.',

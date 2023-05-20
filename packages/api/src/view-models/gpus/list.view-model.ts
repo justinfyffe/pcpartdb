@@ -1,5 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { GpusQuery, ListGpusRequest, ListGpusResponse } from '@pcpartdb/shared';
+import {
+  ListGpusQuery,
+  ListGpusRequest,
+  ListGpusResponse,
+} from '@pcpartdb/shared';
 import deepmerge from 'deepmerge';
 import { GpuService } from '../../gpu/gpu.service';
 import { listGpusRequestValidator } from '../../gpu/gpu.validators';
@@ -14,7 +18,7 @@ export class ListGpusViewModelService {
     validate(request, listGpusRequestValidator);
 
     const query = deepmerge(
-      { filter: { isChipset: true } } as GpusQuery,
+      { filter: { isChipset: true } } as ListGpusQuery,
       request.query,
     );
 
@@ -34,15 +38,15 @@ export class ListGpusViewModelService {
     } as ListGpusResponse;
   }
 
-  private async getGpusForQuery(query: GpusQuery, ctx: Context) {
+  private async getGpusForQuery(query: ListGpusQuery, ctx: Context) {
     return await this.getGpus(query, ctx);
   }
 
-  private async getTotalGpusForQuery(query: GpusQuery, ctx: Context) {
+  private async getTotalGpusForQuery(query: ListGpusQuery, ctx: Context) {
     return await this.gpuService.count({ query }, ctx);
   }
 
-  private async getGpus(query: GpusQuery, ctx: Context) {
+  private async getGpus(query: ListGpusQuery, ctx: Context) {
     return await this.gpuService.list(
       {
         query,

@@ -113,7 +113,7 @@ export interface Gpu {
 
 export type GpuComparison = [Gpu, Gpu];
 
-export enum GpuSort {
+export enum ListGpusSort {
   Id = 'id',
   Name = 'name',
   PerformanceRating = 'performance-rating',
@@ -121,12 +121,12 @@ export enum GpuSort {
   ReleaseDate = 'release-date',
 }
 
-export enum GpuOrder {
+export enum ListGpusOrder {
   Asc = 'asc',
   Desc = 'desc',
 }
 
-export interface GpusFilter {
+export interface ListGpusFilter {
   architecture?: string[];
   company?: string[];
   year?: number[];
@@ -147,16 +147,20 @@ export interface GpusFilter {
   excludeIds?: number[];
 }
 
-export interface GpusOrderBy {
-  sort: GpuSort;
-  order?: GpuOrder;
+export interface ListGpusOrderBy {
+  sort: ListGpusSort;
+  order?: ListGpusOrder;
 }
 
-export interface GpusQuery {
-  filter?: GpusFilter;
-  orderBy?: GpusOrderBy;
+export interface ListGpusPagination {
   limit?: number;
   offset?: number;
+}
+
+export interface ListGpusQuery {
+  filter?: ListGpusFilter;
+  orderBy?: ListGpusOrderBy;
+  pagination?: ListGpusPagination;
 }
 
 export interface CreateGpuRequest extends Omit<Gpu, 'id'> {}
@@ -172,7 +176,7 @@ export interface RelatedComparisons {
 }
 
 export interface ListGpusRequest {
-  query: GpusQuery;
+  query: ListGpusQuery;
 }
 
 export interface ListGpusContentData {
@@ -180,7 +184,7 @@ export interface ListGpusContentData {
 }
 
 export interface ListGpusResponse {
-  query: GpusQuery;
+  query: ListGpusQuery;
   gpus: Gpu[];
   totalGpus: number;
   contentData: ListGpusContentData;

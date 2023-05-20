@@ -14,21 +14,27 @@ export const ListPagination: FunctionComponent = () => {
     (result: PaginationResult, evt: React.MouseEvent) => {
       evt.preventDefault();
       evt.stopPropagation();
-      updateQuery({ ...query, offset: result.offset, limit: result.limit });
+      updateQuery({
+        ...query,
+        pagination: { offset: result.offset, limit: result.limit },
+      });
     },
     [query, updateQuery],
   );
 
   const paginationHrefBuilder = useCallback(
     (result: PaginationResult) =>
-      getListGpusPath({ ...query, offset: result.offset, limit: result.limit }),
+      getListGpusPath({
+        ...query,
+        pagination: { offset: result.offset, limit: result.limit },
+      }),
     [query],
   );
 
   return (
     <Pagination
-      resultsOffset={query.offset}
-      resultsPerPage={query.limit}
+      resultsOffset={query.pagination?.offset}
+      resultsPerPage={query.pagination?.limit}
       totalResults={totalResults}
       onPageClick={paginationPageClick}
       hrefBuilder={paginationHrefBuilder}

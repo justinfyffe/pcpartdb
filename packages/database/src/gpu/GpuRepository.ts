@@ -3,11 +3,11 @@ import {
   DEFAULT_LIST_GPUS_LIMIT,
   DEFAULT_LIST_GPUS_OFFSET,
   DEFAULT_LIST_GPUS_SORT,
-  GpuOrder,
-  GpusFilter,
-  GpusOrderBy,
-  GpuSort,
-  GpusQuery,
+  ListGpusFilter,
+  ListGpusOrder,
+  ListGpusOrderBy,
+  ListGpusQuery,
+  ListGpusSort,
 } from '@pcpartdb/shared';
 import { Prisma } from '@prisma/client';
 import { DatabaseClient } from '../DatabaseClient';
@@ -15,7 +15,7 @@ import { RepositoryConfig } from '../RepositoryConfig';
 import { GpuEntity } from './GpuEntity';
 
 interface CountOptions {
-  query?: GpusQuery;
+  query?: ListGpusQuery;
 }
 
 interface CountRetailModelsOptions {
@@ -23,7 +23,7 @@ interface CountRetailModelsOptions {
 }
 
 interface ListOptions {
-  query?: GpusQuery;
+  query?: ListGpusQuery;
   includeImages?: boolean;
   includeChipset?: boolean;
   includeRetailModels?: boolean;
@@ -72,7 +72,8 @@ export class GpuRepository {
     const includeChipset = options?.includeChipset ?? false;
     const includeRetailModels = options?.includeRetailModels ?? false;
     const includeImages = options?.includeImages ?? false;
-    const { filter, orderBy, limit, offset } = options.query ?? {};
+    const { filter, orderBy, pagination } = options.query ?? {};
+    const { limit, offset } = pagination ?? {};
 
     return await db.gpu.findMany({
       where: { ...this.generateWhere(filter) },
@@ -225,7 +226,7 @@ export class GpuRepository {
     await trx.gpu.delete({ where: { id } });
   }
 
-  private generateWhere(filter: GpusFilter): Prisma.GpuWhereInput {
+  private generateWhere(filter: ListGpusFilter): Prisma.GpuWhereInput {
     const chipsetId = filter?.chipsetId || null;
     const isChipset = filter?.isChipset ?? false;
     const isRetailModel = filter?.isRetailModel ?? false;
@@ -319,7 +320,7 @@ export class GpuRepository {
   }
 
   private generateOrderBy(
-    orderBy: GpusOrderBy,
+    orderBy: ListGpusOrderBy,
   ):
     | Prisma.GpuOrderByWithRelationAndSearchRelevanceInput
     | Prisma.GpuOrderByWithRelationAndSearchRelevanceInput[] {
@@ -328,25 +329,25 @@ export class GpuRepository {
     }
 
     const { sort } = orderBy;
-    if (sort === GpuSort.Id) {
+    if (sort === ListGpusSort.Id) {
       // Default ASC
-      const order = orderBy?.order ?? GpuOrder.Asc;
+      const order = orderBy?.order ?? ListGpusOrder.Asc;
       return { id: order };
-    } else if (sort === GpuSort.Name) {
+    } else if (sort === ListGpusSort.Name) {
       // Default ASC
-      const order = orderBy?.order ?? GpuOrder.Asc;
+      const order = orderBy?.order ?? ListGpusOrder.Asc;
       return [{ company: { sort: order, nulls: 'last' } }, { name: order }];
-    } else if (sort === GpuSort.ReleaseDate) {
+    } else if (sort === ListGpusSort.ReleaseDate) {
       // Default DESC
-      const order = orderBy?.order ?? GpuOrder.Desc;
+      const order = orderBy?.order ?? ListGpusOrder.Desc;
       return { releaseDate: { sort: order, nulls: 'last' } };
-    } else if (sort === GpuSort.PerformanceRating) {
+    } else if (sort === ListGpusSort.PerformanceRating) {
       // Default DESC
-      const order = orderBy?.order ?? GpuOrder.Desc;
+      const order = orderBy?.order ?? ListGpusOrder.Desc;
       return { performanceScore: { sort: order, nulls: 'last' } };
-    } else if (sort === GpuSort.ValueRating) {
+    } else if (sort === ListGpusSort.ValueRating) {
       // Default DESC
-      const order = orderBy?.order ?? GpuOrder.Desc;
+      const order = orderBy?.order ?? ListGpusOrder.Desc;
       return { valueScore: { sort: order, nulls: 'last' } };
     } else {
       return { id: 'desc' };

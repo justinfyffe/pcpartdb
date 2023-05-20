@@ -1,4 +1,4 @@
-import { GpuOrder, GpusQuery } from '@pcpartdb/shared';
+import { ListGpusOrder, ListGpusQuery } from '@pcpartdb/shared';
 import { ContentParams } from 'packages/website/src/client/shared/content';
 import { formatGpuCompany, formatMarketSegment } from '../../../utils';
 
@@ -10,7 +10,7 @@ export interface ListGpusContentParams {
   filtersList?: string;
 }
 
-export function getContentParams(query: GpusQuery) {
+export function getContentParams(query: ListGpusQuery) {
   return {
     company: getCompanyParam(query),
     marketSegment: getMarketSegmentParam(query),
@@ -19,15 +19,15 @@ export function getContentParams(query: GpusQuery) {
   } as ListGpusContentParams as ContentParams;
 }
 
-function getOrderedParams(query: GpusQuery) {
+function getOrderedParams(query: ListGpusQuery) {
   let bestOrWorstTitle: string;
   let newestOrOldestTitle: string;
 
-  const sort = query.orderBy?.order || GpuOrder.Desc;
-  if (sort === GpuOrder.Asc) {
+  const sort = query.orderBy?.order || ListGpusOrder.Desc;
+  if (sort === ListGpusOrder.Asc) {
     bestOrWorstTitle = 'Worst';
     newestOrOldestTitle = 'Oldest';
-  } else if (sort === GpuOrder.Desc) {
+  } else if (sort === ListGpusOrder.Desc) {
     bestOrWorstTitle = 'Best';
     newestOrOldestTitle = 'Newest';
   }
@@ -38,7 +38,7 @@ function getOrderedParams(query: GpusQuery) {
   } as ListGpusContentParams;
 }
 
-function getCompanyParam(query: GpusQuery) {
+function getCompanyParam(query: ListGpusQuery) {
   const companies = query.filter?.company;
   if (companies == null || companies.length === 0) {
     return null;
@@ -57,7 +57,7 @@ function getCompanyParam(query: GpusQuery) {
   }
 }
 
-function getMarketSegmentParam(query: GpusQuery) {
+function getMarketSegmentParam(query: ListGpusQuery) {
   const segments = query.filter?.segment;
   if (segments == null || segments.length === 0) {
     return null;
@@ -70,7 +70,7 @@ function getMarketSegmentParam(query: GpusQuery) {
   return null;
 }
 
-function getFiltersListParam(query: GpusQuery) {
+function getFiltersListParam(query: ListGpusQuery) {
   if (query.filter == null) {
     return null;
   }

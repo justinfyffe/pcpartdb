@@ -1,12 +1,12 @@
-import { getAdminListGpusPath, GpusQuery } from '@pcpartdb/shared';
+import { getAdminListGpusPath, ListGpusQuery } from '@pcpartdb/shared';
 import React, { FunctionComponent, useCallback } from 'react';
 import { Pagination, PaginationResult } from '../../../../../shared/components';
 
 interface GpuPaginationProps {
-  query: GpusQuery;
+  query: ListGpusQuery;
   totalGpus: number;
 
-  onPageClick: (query: GpusQuery) => void;
+  onPageClick: (query: ListGpusQuery) => void;
 }
 
 export const GpuPagination: FunctionComponent<GpuPaginationProps> = (props) => {
@@ -16,7 +16,10 @@ export const GpuPagination: FunctionComponent<GpuPaginationProps> = (props) => {
     (result: PaginationResult, evt: React.MouseEvent) => {
       evt.preventDefault();
       evt.stopPropagation();
-      onPageClick?.({ ...query, offset: result.offset, limit: result.limit });
+      onPageClick?.({
+        ...query,
+        pagination: { offset: result.offset, limit: result.limit },
+      });
     },
     [query, onPageClick],
   );
@@ -25,16 +28,15 @@ export const GpuPagination: FunctionComponent<GpuPaginationProps> = (props) => {
     (result: PaginationResult) =>
       getAdminListGpusPath({
         ...query,
-        offset: result.offset,
-        limit: result.limit,
+        pagination: { offset: result.offset, limit: result.limit },
       }),
     [query],
   );
 
   return (
     <Pagination
-      resultsOffset={query.offset}
-      resultsPerPage={query.limit}
+      resultsOffset={query.pagination?.offset}
+      resultsPerPage={query.pagination?.limit}
       totalResults={totalGpus}
       onPageClick={paginationPageClick}
       hrefBuilder={paginationHrefBuilder}

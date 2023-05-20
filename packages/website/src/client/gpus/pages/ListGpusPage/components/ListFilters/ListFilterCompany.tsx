@@ -33,7 +33,7 @@ export const ListFilterComnpany: FunctionComponent<ListFilterComnpanyProps> = (
 
       updateQuery({
         ...query,
-        offset: 0,
+        pagination: { offset: 0 },
         filter: {
           ...query.filter,
           company: companies.size > 0 ? [...companies.keys()] : undefined,

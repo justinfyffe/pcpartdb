@@ -8,7 +8,13 @@ import {
   LIST_GPUS_PRESETS,
   ListGpusPresetSlug,
 } from './gpu-consts';
-import { Gpu, GpuOrder, GpuSort, MarketSegmentValue } from './gpu-types';
+import {
+  Gpu,
+  ListGpusOrder,
+  ListGpusQuery,
+  ListGpusSort,
+  MarketSegmentValue,
+} from './gpu-types';
 
 export function getChipset(gpu: Gpu) {
   return gpu?.chipset || gpu;
@@ -56,7 +62,7 @@ export function generateGpusQueryFromPath(path: string) {
 
 export function generateGpusQueryFromSearchParams(
   query: Record<string, string | string[]>,
-) {
+): ListGpusQuery {
   const offset = Number(query.offset ?? DEFAULT_LIST_GPUS_OFFSET);
   const limit = Number(query.limit ?? DEFAULT_LIST_GPUS_LIMIT);
 
@@ -64,18 +70,17 @@ export function generateGpusQueryFromSearchParams(
   const segment = (query.segment as string)
     ?.toUpperCase()
     .split(',') as MarketSegmentValue[];
-  const sort = (query.sort as GpuSort) || DEFAULT_LIST_GPUS_SORT;
-  const order = (query.order as GpuOrder) || DEFAULT_LIST_GPUS_ORDER;
+  const sort = (query.sort as ListGpusSort) || DEFAULT_LIST_GPUS_SORT;
+  const order = (query.order as ListGpusOrder) || DEFAULT_LIST_GPUS_ORDER;
   const preset = query.preset as ListGpusPresetSlug;
 
   if (preset != null && LIST_GPUS_PRESETS[preset] != null) {
-    return { ...LIST_GPUS_PRESETS[preset], limit, offset };
+    return { ...LIST_GPUS_PRESETS[preset], pagination: { limit, offset } };
   } else {
     return {
       filter: { company, segment },
       orderBy: { sort, order },
-      offset,
-      limit,
+      pagination: { offset, limit },
     };
   }
 }

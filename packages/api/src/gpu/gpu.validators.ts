@@ -1,5 +1,5 @@
 import Joi from '@hapi/joi';
-import { GpuOrder, GpuSort, gpuValidator } from '@pcpartdb/shared';
+import { gpuValidator, ListGpusOrder, ListGpusSort } from '@pcpartdb/shared';
 
 const MAX_LIMIT_GPUS_QUERY = 100;
 
@@ -15,27 +15,33 @@ export const gpusFilterValidator = Joi.object({
   chipsetId: Joi.number().min(0),
   isChipset: Joi.boolean(),
   isRetailModel: Joi.boolean(),
-});
+}).options({ abortEarly: false });
 
 export const gpusOrderByValidator = Joi.object({
   sort: Joi.string()
     .valid(
-      GpuSort.Id,
-      GpuSort.Name,
-      GpuSort.PerformanceRating,
-      GpuSort.ValueRating,
-      GpuSort.ReleaseDate,
+      ListGpusSort.Id,
+      ListGpusSort.Name,
+      ListGpusSort.PerformanceRating,
+      ListGpusSort.ValueRating,
+      ListGpusSort.ReleaseDate,
     )
     .allow('', null),
-  order: Joi.string().valid(GpuOrder.Asc, GpuOrder.Desc).allow('', null),
-});
+  order: Joi.string()
+    .valid(ListGpusOrder.Asc, ListGpusOrder.Desc)
+    .allow('', null),
+}).options({ abortEarly: false });
+
+export const gpusPaginationValidator = Joi.object({
+  offset: Joi.number().min(0),
+  limit: Joi.number().positive().max(MAX_LIMIT_GPUS_QUERY),
+}).options({ abortEarly: false });
 
 export const gpusQueryValidator = Joi.object({
   filter: gpusFilterValidator.allow(null),
   orderBy: gpusOrderByValidator.allow(null),
-  offset: Joi.number().min(0),
-  limit: Joi.number().positive().max(MAX_LIMIT_GPUS_QUERY),
-});
+  pagination: gpusPaginationValidator.allow(null),
+}).options({ abortEarly: false });
 
 export const listGpusRequestValidator = Joi.object({
   query: gpusQueryValidator.allow(null),

@@ -5,7 +5,7 @@ import {
   getAdminImportGpusPath,
   getAdminListGpusPath,
   getAdminNewGpuPath,
-  GpusQuery,
+  ListGpusQuery,
 } from '@pcpartdb/shared';
 import { useRouter } from 'next/router';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -33,7 +33,7 @@ export const AdminListGpusPage = (props: AdminListGpusViewModel) => {
   const [totalResults, setTotalResults] = useState(props.totalResults);
   const [query, setQuery] = useState(props.query);
 
-  const fetchGpus = useCallback(async (q: GpusQuery) => {
+  const fetchGpus = useCallback(async (q: ListGpusQuery) => {
     const response = await gpuService.list({ query: q });
     setGpus(response.gpus);
     setTotalResults(response.totalGpus);
@@ -48,7 +48,7 @@ export const AdminListGpusPage = (props: AdminListGpusViewModel) => {
   }, [fetchGpus, router]);
 
   const updateQuery = useCallback(
-    async (q: GpusQuery) => {
+    async (q: ListGpusQuery) => {
       await fetchGpus(q);
       const url = getAdminListGpusPath(q);
       router.push(url, undefined, { shallow: true });
@@ -57,7 +57,7 @@ export const AdminListGpusPage = (props: AdminListGpusViewModel) => {
   );
 
   const handlePageClick = useCallback(
-    (query: GpusQuery) => updateQuery(query),
+    (query: ListGpusQuery) => updateQuery(query),
     [updateQuery],
   );
 

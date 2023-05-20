@@ -1,5 +1,5 @@
 import { GpuRepository, mapToGpuDto, mapToGpuEntity } from '@pcpartdb/database';
-import { GpuOrder, GpuSort } from '@pcpartdb/shared';
+import { ListGpusOrder, ListGpusSort } from '@pcpartdb/shared';
 import { getDatabase } from '../shared/database';
 
 export async function fixData() {
@@ -15,9 +15,8 @@ export async function fixData() {
       const gpus = await gpuRepository.list(
         {
           query: {
-            offset: i,
-            limit: 1,
-            orderBy: { sort: GpuSort.Id, order: GpuOrder.Asc },
+            pagination: { offset: i, limit: 1 },
+            orderBy: { sort: ListGpusSort.Id, order: ListGpusOrder.Asc },
           },
         },
         ctx,

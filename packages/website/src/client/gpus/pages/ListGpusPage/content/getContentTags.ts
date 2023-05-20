@@ -1,4 +1,4 @@
-import { GpuOrder, GpuSort, GpusQuery } from '@pcpartdb/shared';
+import { ListGpusOrder, ListGpusQuery, ListGpusSort } from '@pcpartdb/shared';
 
 export enum ListGpusContentTag {
   OrderedAsc = 'ORDERED_ASC',
@@ -9,17 +9,18 @@ export enum ListGpusContentTag {
   SortedReleaseDate = 'SORTED_RELEASE_DATE',
 }
 
-export function getContentTags(query: GpusQuery) {
+export function getContentTags(query: ListGpusQuery) {
   return {
-    [ListGpusContentTag.OrderedAsc]: query.orderBy?.order === GpuOrder.Asc,
+    [ListGpusContentTag.OrderedAsc]: query.orderBy?.order === ListGpusOrder.Asc,
     [ListGpusContentTag.OrderedDesc]:
-      query.orderBy?.order == null || query.orderBy?.order === GpuOrder.Desc,
+      query.orderBy?.order == null ||
+      query.orderBy?.order === ListGpusOrder.Desc,
     [ListGpusContentTag.SortedBestPerformance]:
       query.orderBy?.sort == null ||
-      query.orderBy?.sort === GpuSort.PerformanceRating,
+      query.orderBy?.sort === ListGpusSort.PerformanceRating,
     [ListGpusContentTag.SortedBestValue]:
-      query.orderBy?.sort === GpuSort.ValueRating,
+      query.orderBy?.sort === ListGpusSort.ValueRating,
     [ListGpusContentTag.SortedReleaseDate]:
-      query.orderBy?.sort === GpuSort.ReleaseDate,
+      query.orderBy?.sort === ListGpusSort.ReleaseDate,
   };
 }

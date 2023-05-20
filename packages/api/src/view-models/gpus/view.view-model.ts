@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import {
   getChipset,
   Gpu,
-  GpuOrder,
-  GpuSort,
+  ListGpusOrder,
+  ListGpusSort,
   RelatedComparisons,
   RelatedGpus,
   ViewGpuContentData,
@@ -102,8 +102,8 @@ export class ViewGpuViewModelService {
       {
         query: {
           filter: { segment: [segment], performanceRated: true },
-          orderBy: { sort: GpuSort.PerformanceRating },
-          limit: 1,
+          orderBy: { sort: ListGpusSort.PerformanceRating },
+          pagination: { limit: 1 },
         },
       },
       ctx,
@@ -113,8 +113,8 @@ export class ViewGpuViewModelService {
       {
         query: {
           filter: { segment: [segment], valueRated: true },
-          orderBy: { sort: GpuSort.ValueRating },
-          limit: 1,
+          orderBy: { sort: ListGpusSort.ValueRating },
+          pagination: { limit: 1 },
         },
       },
       ctx,
@@ -124,7 +124,7 @@ export class ViewGpuViewModelService {
       {
         query: {
           filter: { chipsetId: gpu.chipset?.id || gpu.id, isRetailModel: true },
-          orderBy: { sort: GpuSort.Name },
+          orderBy: { sort: ListGpusSort.Name },
         },
         fields: [
           'company',
@@ -164,8 +164,11 @@ export class ViewGpuViewModelService {
             minPerformanceScore: seed.performanceScore?.value,
             performanceRated: true,
           },
-          orderBy: { sort: GpuSort.PerformanceRating, order: GpuOrder.Asc },
-          limit: TOTAL_COMPARED_GPUS,
+          orderBy: {
+            sort: ListGpusSort.PerformanceRating,
+            order: ListGpusOrder.Asc,
+          },
+          pagination: { limit: TOTAL_COMPARED_GPUS },
         },
         fields: ['company', 'performanceScore'],
         includeRanks: ['performanceRank'],
@@ -181,8 +184,11 @@ export class ViewGpuViewModelService {
             maxPerformanceScore: seed.performanceScore?.value,
             performanceRated: true,
           },
-          orderBy: { sort: GpuSort.PerformanceRating, order: GpuOrder.Desc },
-          limit: TOTAL_COMPARED_GPUS,
+          orderBy: {
+            sort: ListGpusSort.PerformanceRating,
+            order: ListGpusOrder.Desc,
+          },
+          pagination: { limit: TOTAL_COMPARED_GPUS },
         },
         fields: ['company', 'performanceScore'],
         includeRanks: ['performanceRank'],
@@ -217,8 +223,8 @@ export class ViewGpuViewModelService {
             minValueScore: seed.valueScore?.value,
             valueRated: true,
           },
-          orderBy: { sort: GpuSort.ValueRating, order: GpuOrder.Asc },
-          limit: TOTAL_COMPARED_GPUS,
+          orderBy: { sort: ListGpusSort.ValueRating, order: ListGpusOrder.Asc },
+          pagination: { limit: TOTAL_COMPARED_GPUS },
         },
         fields: ['company', 'valueScore'],
         includeRanks: ['valueRank'],
@@ -234,8 +240,11 @@ export class ViewGpuViewModelService {
             maxValueScore: seed.valueScore?.value,
             valueRated: true,
           },
-          orderBy: { sort: GpuSort.ValueRating, order: GpuOrder.Desc },
-          limit: TOTAL_COMPARED_GPUS,
+          orderBy: {
+            sort: ListGpusSort.ValueRating,
+            order: ListGpusOrder.Desc,
+          },
+          pagination: { limit: TOTAL_COMPARED_GPUS },
         },
         fields: ['company', 'valueScore'],
         includeRanks: ['valueRank'],

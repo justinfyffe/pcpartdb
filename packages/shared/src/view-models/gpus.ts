@@ -1,7 +1,7 @@
 import {
   Gpu,
   GpuComparison,
-  GpusQuery,
+  ListGpusQuery,
   ListGpusResponse,
   RelatedComparisons,
   RelatedGpus,
@@ -12,7 +12,7 @@ export interface AdminEditGpuViewModel {
 }
 
 export interface AdminListGpusViewModel {
-  query: GpusQuery;
+  query: ListGpusQuery;
   gpus: Gpu[];
   totalResults: number;
 }

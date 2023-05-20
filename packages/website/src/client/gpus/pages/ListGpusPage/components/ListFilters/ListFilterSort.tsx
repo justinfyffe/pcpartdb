@@ -1,4 +1,4 @@
-import { GpuOrder, GpuSort } from '@pcpartdb/shared';
+import { ListGpusOrder, ListGpusSort } from '@pcpartdb/shared';
 import React, { FunctionComponent, useCallback, useContext } from 'react';
 import { classNames } from '../../../../../shared/ui';
 import { ListPageContext } from '../../context';
@@ -14,20 +14,20 @@ export const ListFilterSort: FunctionComponent<ListFilterSortProps> = (
     <div className={classNames('flex flex-col', props.className)}>
       <div className="font-bold m-2">Sort:</div>
       <ListFilterSortItem
-        sort={GpuSort.PerformanceRating}
-        defaultOrder={GpuOrder.Desc}
+        sort={ListGpusSort.PerformanceRating}
+        defaultOrder={ListGpusOrder.Desc}
       >
         Best Performance
       </ListFilterSortItem>
       <ListFilterSortItem
-        sort={GpuSort.ValueRating}
-        defaultOrder={GpuOrder.Desc}
+        sort={ListGpusSort.ValueRating}
+        defaultOrder={ListGpusOrder.Desc}
       >
         Best Value
       </ListFilterSortItem>
       <ListFilterSortItem
-        sort={GpuSort.ReleaseDate}
-        defaultOrder={GpuOrder.Desc}
+        sort={ListGpusSort.ReleaseDate}
+        defaultOrder={ListGpusOrder.Desc}
       >
         Release Date
       </ListFilterSortItem>
@@ -36,8 +36,8 @@ export const ListFilterSort: FunctionComponent<ListFilterSortProps> = (
 };
 
 interface ListFilterSortItemProps {
-  sort: GpuSort;
-  defaultOrder?: GpuOrder;
+  sort: ListGpusSort;
+  defaultOrder?: ListGpusOrder;
   children?: React.ReactNode;
 }
 
@@ -51,15 +51,15 @@ const ListFilterSortItem: FunctionComponent<ListFilterSortItemProps> = (
 
   const handleSortClick = useCallback(() => {
     let newOrder = defaultOrder;
-    if (order === GpuOrder.Asc) {
-      newOrder = GpuOrder.Desc;
-    } else if (order === GpuOrder.Desc) {
-      newOrder = GpuOrder.Asc;
+    if (order === ListGpusOrder.Asc) {
+      newOrder = ListGpusOrder.Desc;
+    } else if (order === ListGpusOrder.Desc) {
+      newOrder = ListGpusOrder.Asc;
     }
 
     updateQuery({
       ...query,
-      offset: 0,
+      pagination: { offset: 0 },
       orderBy: { sort, order: newOrder },
     });
   }, [defaultOrder, order, updateQuery, query, sort]);
@@ -72,8 +72,8 @@ const ListFilterSortItem: FunctionComponent<ListFilterSortItemProps> = (
         query.orderBy?.sort === sort ? 'font-bold' : '',
       )}
     >
-      {props.children} {order === GpuOrder.Asc ? <>&#9650;</> : <></>}{' '}
-      {order === GpuOrder.Desc ? <>&#9660;</> : <></>}
+      {props.children} {order === ListGpusOrder.Asc ? <>&#9650;</> : <></>}{' '}
+      {order === ListGpusOrder.Desc ? <>&#9660;</> : <></>}
     </button>
   );
 };
