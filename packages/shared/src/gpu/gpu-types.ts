@@ -155,7 +155,6 @@ export interface GpusOrderBy {
 export interface GpusQuery {
   filter?: GpusFilter;
   orderBy?: GpusOrderBy;
-
   limit?: number;
   offset?: number;
 }
@@ -174,7 +173,6 @@ export interface RelatedComparisons {
 
 export interface ListGpusRequest {
   query: GpusQuery;
-  fields?: GpuFieldKey[];
 }
 
 export interface ListGpusContentData {
