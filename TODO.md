@@ -1,17 +1,25 @@
 Next tasks:
-- clean up list gpus call
-  - KISS
-  - simplify, just use listChipsets and listRetailModels
-  - clean up other code like this too
+- add content
+  - retail models, chipsets
+- clean up tech debt
+  - listChipsets call - KISS
+  - simplify components
+  - general cleanup
+  - max/min media queries
+  - improve GpuCache/ImageCache?
+    - auto cache parent and retail models from gpu
+- improve view/compare relative performance/value
+  - toggle market segments, default to same market segment
 - cpus
   - view
   - compare
   - list
   - automation for importing/updating
+- improve list page features
+  - filter by year (multiselect combobox)
 - improve automation
   - pull in new data
   - two core DO server
-- seo
 - compare page overview improvements
   - add architecture
   - add ranks?
@@ -27,11 +35,7 @@ Next tasks:
   - add memory
   - add cores?
   - Restructure code to similar to the compare page.
-- improve list page features
-  - filter by year (multiselect combobox)
-- code cleanup
-  - support max along with min for media queries
-  - get rid of gpu and image cache?, or heavily improve it
+
 
 
 OVERVIEW
