@@ -3,8 +3,6 @@ Next tasks:
   - KISS
   - simplify, just use listChipsets and listRetailModels
   - clean up other code like this too
-- create scratch pad cli script
-  - rename fixData
 - cpus
   - view
   - compare

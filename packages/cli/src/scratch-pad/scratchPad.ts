@@ -2,7 +2,7 @@ import { GpuRepository, mapToGpuDto, mapToGpuEntity } from '@pcpartdb/database';
 import { ListGpusOrder, ListGpusSort } from '@pcpartdb/shared';
 import { getDatabase } from '../shared/database';
 
-export async function fixData() {
+export async function scratchPad() {
   const db = await getDatabase();
   const gpuRepository = new GpuRepository(db);
   const totalGpus = await db.transaction(async (trx) => {

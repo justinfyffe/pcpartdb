@@ -7,7 +7,7 @@
   "scripts": {
     "clean": "rm -rf ./dist && rm -f tsconfig.tsbuildinfo",
     "build": "tsc",
-    "fix-data": "node ./dist/main.js fix-data",
+    "scratch-pad": "node ./dist/main.js scratch-pad",
     "gpu-updater": "node ./dist/main.js gpu-updater",
     "gpu-updater:schedule": "node ./dist/main.js gpu-updater --schedule",
     "refresh-ratings": "node ./dist/main.js refresh-ratings",

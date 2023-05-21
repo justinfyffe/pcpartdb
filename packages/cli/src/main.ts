@@ -1,16 +1,21 @@
 import { Command } from 'commander';
 import * as dotenv from 'dotenv';
-import { fixDataCommand } from './fix-data';
 import { gpuUpdaterCommand } from './gpu-updater';
 import { refreshRatingsCommand } from './refresh-ratings';
 import { scrapeDataCommand } from './scrape-data';
 import { scrapeRetailModelsCommand } from './scrape-retail-models';
 import { scrapeSourcesCommand } from './scrape-sources';
+import { fixDataCommand } from './scratch-pad';
 import { sitemapUpdaterCommand } from './sitemap-updater';
 
 dotenv.config();
 
 const program = new Command();
+
+// Scratch Pad script for one-off scripts.
+program.command('scratch-pad').action(async () => {
+  await fixDataCommand({});
+});
 
 // Gpu Updater
 program
@@ -89,11 +94,6 @@ program
 // Refresh GPU Performance and Value Scores
 program.command('refresh-ratings').action(async () => {
   await refreshRatingsCommand({});
-});
-
-// Remove this after data source structure has been fixed.
-program.command('fix-data').action(async () => {
-  await fixDataCommand({});
 });
 
 program.parse(process.argv);
