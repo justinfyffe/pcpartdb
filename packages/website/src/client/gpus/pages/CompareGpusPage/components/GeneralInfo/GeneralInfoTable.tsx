@@ -148,6 +148,7 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
         <FieldRow field="marketSegment" />
         <FieldRow field="releaseDate" />
         <FieldRow field="launchPrice" />
+        <FieldRow field="productionStatus" />
       </TBody>
     </Table>
   );

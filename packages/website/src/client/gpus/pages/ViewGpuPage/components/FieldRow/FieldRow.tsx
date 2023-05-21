@@ -12,6 +12,7 @@ const LABELS: Record<string, string> = {
   marketSegment: 'Market Segment',
   launchPrice: 'Launch Price (MSRP)',
   releaseDate: 'Release Date',
+  productionStatus: 'Production Status',
 
   // Processor
   codename: 'Codename',

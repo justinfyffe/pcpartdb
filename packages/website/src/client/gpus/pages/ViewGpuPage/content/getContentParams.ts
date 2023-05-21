@@ -4,6 +4,8 @@ import {
   getViewGpuPath,
   Gpu,
   hasGpuLaunched,
+  isPastLaunch,
+  ProductionStatusValue,
   ViewGpuContentData,
 } from '@pcpartdb/shared';
 import { ContentParams } from 'packages/website/src/client/shared/content';
@@ -33,7 +35,8 @@ export interface ViewGpuContentParams {
   releaseDate?: string;
   year?: string;
   totalRetailModels?: string;
-  launchedOrWillLaunch?: string;
+  wasPlannedToLaunchOrLaunchedOrWillLaunch?: string;
+  anUnreleasedOrAnEndOfLife?: string;
 
   dimensions?: string;
   height?: string;
@@ -83,6 +86,22 @@ export function getContentParams(gpu: Gpu, contentData: ViewGpuContentData) {
 function getGeneralParams(gpu: Gpu, contentData: ViewGpuContentData) {
   const chipset = getChipset(gpu);
 
+  let wasPlannedToLaunchOrLaunchedOrWillLaunch: string = null;
+  if (hasGpuLaunched(gpu)) {
+    wasPlannedToLaunchOrLaunchedOrWillLaunch = 'launched';
+  } else if (isPastLaunch(gpu)) {
+    wasPlannedToLaunchOrLaunchedOrWillLaunch = 'was planned to launch';
+  } else {
+    wasPlannedToLaunchOrLaunchedOrWillLaunch = 'will launch';
+  }
+
+  let anUnreleasedOrAnEndOfLife: string = null;
+  if (gpu.productionStatus?.value === ProductionStatusValue.EndOfLife) {
+    anUnreleasedOrAnEndOfLife = 'an end-of-life';
+  } else if (gpu.productionStatus?.value === ProductionStatusValue.Unreleased) {
+    anUnreleasedOrAnEndOfLife = 'an unreleased';
+  }
+
   return {
     architecture: formatGpuField(gpu.architecture),
     chipsetCompany: formatGpuField(chipset.company),
@@ -102,7 +121,8 @@ function getGeneralParams(gpu: Gpu, contentData: ViewGpuContentData) {
     releaseDate: formatGpuField(gpu.releaseDate),
     year: formatGpuField(gpu.releaseDate, { dateFormat: DateFormat.Year }),
     totalRetailModels: String(contentData.retailModels?.length || 0),
-    launchedOrWillLaunch: hasGpuLaunched(gpu) ? 'launched' : 'will launch',
+    wasPlannedToLaunchOrLaunchedOrWillLaunch,
+    anUnreleasedOrAnEndOfLife,
   } as ViewGpuContentParams as ContentParams;
 }
 

@@ -6,37 +6,55 @@ import {
 import { ViewGpuContentTag } from '../../content';
 import { ViewPageContext } from '../../context';
 
-const IntroAudience = compileContentComponent({
-  tags: [],
-  deps: [],
-  // The Geforce RTX 3070 is a desktop graphics card by NVIDIA.
-  component: (props) => (
-    <>
-      The {props.shortGpuName} is a {props.marketSegment} graphics card by{' '}
-      {props.company}.
-    </>
-  ),
-});
-
-const IntroReleaseDateAndMsrp = compileContentComponent(
+const IntroAudience = compileContentComponent(
   {
     tags: [],
-    deps: ['releaseDate', 'launchPrice', 'launchedOrWillLaunch'],
-    // It launched in Q1 2022 with a price of $1,999 (MSRP).
+    deps: ['anUnreleasedOrAnEndOfLife'],
+    // The Geforce RTX 3070 is an unreleased desktop graphics card by NVIDIA.
     component: (props) => (
       <>
-        It {props.launchedOrWillLaunch} in {props.releaseDate} with a price of{' '}
-        {props.launchPrice} (MSRP).
+        The {props.shortGpuName} is {props.anUnreleasedOrAnEndOfLife}{' '}
+        {props.marketSegment} graphics card by {props.company}.
       </>
     ),
   },
   {
     tags: [],
-    deps: ['releaseDate', 'launchedOrWillLaunch'],
+    deps: [],
+    // The Geforce RTX 3070 is a desktop graphics card by NVIDIA.
+    component: (props) => (
+      <>
+        The {props.shortGpuName} is a {props.marketSegment} graphics card by{' '}
+        {props.company}.
+      </>
+    ),
+  },
+);
+
+const IntroReleaseDateAndMsrp = compileContentComponent(
+  {
+    tags: [],
+    deps: [
+      'releaseDate',
+      'launchPrice',
+      'wasPlannedToLaunchOrLaunchedOrWillLaunch',
+    ],
+    // It launched in Q1 2022 with a price of $1,999 (MSRP).
+    component: (props) => (
+      <>
+        It {props.wasPlannedToLaunchOrLaunchedOrWillLaunch} in{' '}
+        {props.releaseDate} with a price of {props.launchPrice} (MSRP).
+      </>
+    ),
+  },
+  {
+    tags: [],
+    deps: ['releaseDate', 'wasPlannedToLaunchOrLaunchedOrWillLaunch'],
     // It launched in Q1 2022.
     component: (props) => (
       <>
-        It {props.launchedOrWillLaunch} in {props.releaseDate}.
+        It {props.wasPlannedToLaunchOrLaunchedOrWillLaunch} in{' '}
+        {props.releaseDate}.
       </>
     ),
   },

@@ -13,6 +13,7 @@ import {
   GpuImages,
   gpuImageValidator,
   MarketSegmentValue,
+  ProductionStatusValue,
   UpdateGpuRequest,
   ValidationErrorType,
 } from '@pcpartdb/shared';
@@ -72,6 +73,7 @@ interface GpuFormData {
   marketSegment?: GpuField<MarketSegmentValue>;
   launchPrice?: GpuField<number>;
   releaseDate?: GpuField<string>;
+  productionStatus?: GpuField<ProductionStatusValue>;
 
   // Processor
   codename?: GpuField<string>;
@@ -148,6 +150,7 @@ const gpuValidator = Joi.object({
   marketSegment: gpuFieldValidator.allow(null),
   launchPrice: gpuFieldValidator.allow(null),
   releaseDate: gpuFieldValidator.allow(null),
+  productionStatus: gpuFieldValidator.allow(null),
 
   // Processor
   codename: gpuFieldValidator.allow(null),
@@ -237,6 +240,7 @@ function formOptions(gpu?: Gpu): UseFormProps<GpuFormData> {
       marketSegment: gpu?.marketSegment || null,
       launchPrice: gpu?.launchPrice || null,
       releaseDate: gpu?.releaseDate || null,
+      productionStatus: gpu?.productionStatus || null,
 
       // Processor
       codename: gpu?.codename || null,
@@ -580,6 +584,22 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
                 {...field}
                 ref={null}
                 parentValue={parentGpu?.releaseDate}
+              />
+            )}
+          />
+        </Field>
+
+        <Field>
+          Production Status
+          <Controller
+            name="productionStatus"
+            control={control}
+            render={({ field }) => (
+              <GpuFieldInput
+                field="productionStatus"
+                {...field}
+                ref={null}
+                parentValue={parentGpu?.productionStatus}
               />
             )}
           />
@@ -1309,6 +1329,7 @@ function toGpuRequest(
     marketSegment: formData.marketSegment,
     launchPrice: formData.launchPrice,
     releaseDate: formData.releaseDate,
+    productionStatus: formData.productionStatus,
 
     // Processor
     codename: formData.codename || null,

@@ -45,11 +45,12 @@ model Gpu {
 
   // General Info 
 
-  partNumber     String?         @map("part_number")
-  company        String?
-  marketSegment  String?         @map("market_segment")
-  launchPrice    Float?          @map("launch_price")
-  releaseDate    String?         @map("release_date")
+  partNumber       String?       @map("part_number")
+  company          String?
+  marketSegment    String?       @map("market_segment")
+  launchPrice      Float?        @map("launch_price")
+  releaseDate      String?       @map("release_date")
+  productionStatus String?       @map("production_status")
   
   // Specs
 

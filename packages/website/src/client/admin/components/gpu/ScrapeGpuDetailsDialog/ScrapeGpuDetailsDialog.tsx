@@ -88,6 +88,7 @@ export const ScrapeGpuDetailsDialog: FunctionComponent<
                 <ScrapeGpuField field="marketSegment" />
                 <ScrapeGpuField field="launchPrice" />
                 <ScrapeGpuField field="releaseDate" />
+                <ScrapeGpuField field="productionStatus" />
 
                 <ScrapeGpuField field="codename" />
                 <ScrapeGpuField field="architecture" />

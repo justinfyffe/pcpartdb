@@ -105,7 +105,10 @@ export class GpuImportService {
   private async scrapeDetailsFromGpu(gpuId: number, ctx: Context) {
     const gpu = await this.gpuService.getById(gpuId, {}, ctx);
     return {
-      gpu: { marketSegment: gpu.marketSegment },
+      gpu: {
+        marketSegment: gpu.marketSegment,
+        productionStatus: gpu.productionStatus,
+      },
     } as ScrapeGpuDetailsResponse;
   }
 

@@ -29,6 +29,7 @@ export function mapToGpuDto(entity: GpuEntity, options?: MapToDtoOptions): Gpu {
     marketSegment: mapToGpuFieldDto(entity, 'marketSegment', options),
     launchPrice: mapToGpuFieldDto(entity, 'launchPrice', options),
     releaseDate: mapToGpuFieldDto(entity, 'releaseDate', options),
+    productionStatus: mapToGpuFieldDto(entity, 'productionStatus', options),
 
     codename: mapToGpuFieldDto(entity, 'codename', options),
     architecture: mapToGpuFieldDto(entity, 'architecture', options),
@@ -148,6 +149,7 @@ export function mapToGpuEntity(gpu: Partial<Gpu>): GpuEntity {
     marketSegment: mapToGpuFieldEntity(gpu, 'marketSegment', metadata),
     launchPrice: mapToGpuFieldEntity(gpu, 'launchPrice', metadata),
     releaseDate: mapToGpuFieldEntity(gpu, 'releaseDate', metadata),
+    productionStatus: mapToGpuFieldEntity(gpu, 'productionStatus', metadata),
 
     codename: mapToGpuFieldEntity(gpu, 'codename', metadata),
     architecture: mapToGpuFieldEntity(gpu, 'architecture', metadata),

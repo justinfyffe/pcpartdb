@@ -1,4 +1,4 @@
-import { parseISO } from 'date-fns';
+import { isPast, parseISO } from 'date-fns';
 import { getListGpusPath } from '../routes';
 import {
   DEFAULT_LIST_GPUS_LIMIT,
@@ -14,6 +14,7 @@ import {
   ListGpusQuery,
   ListGpusSort,
   MarketSegmentValue,
+  ProductionStatusValue,
 } from './gpu-types';
 
 export function getChipset(gpu: Gpu) {
@@ -85,7 +86,7 @@ export function generateGpusQueryFromSearchParams(
   }
 }
 
-export function hasGpuLaunched(gpu: Gpu) {
+export function isPastLaunch(gpu: Gpu) {
   if (gpu?.releaseDate?.value == null) {
     return false;
   }
@@ -93,4 +94,15 @@ export function hasGpuLaunched(gpu: Gpu) {
   const date = new Date();
   const releaseDate = parseISO(gpu.releaseDate?.value);
   return date.getTime() >= releaseDate.getTime();
+}
+
+export function hasGpuLaunched(gpu: Gpu) {
+  if (
+    gpu?.productionStatus?.value === ProductionStatusValue.Unreleased ||
+    !isPastLaunch(gpu)
+  ) {
+    return false;
+  }
+
+  return true;
 }

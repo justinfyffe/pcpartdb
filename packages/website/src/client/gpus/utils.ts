@@ -7,6 +7,7 @@ import {
   GpuComparison,
   GpuField,
   MarketSegmentValue,
+  ProductionStatusValue,
 } from '@pcpartdb/shared';
 import {
   BooleanFormatter,
@@ -139,6 +140,9 @@ export function formatGpuField(
   if (fieldKey === 'marketSegment') {
     return formatMarketSegment(value as MarketSegmentValue);
   }
+  if (fieldKey === 'productionStatus') {
+    return formatProductionStatus(value as ProductionStatusValue);
+  }
   if (fieldKey === 'releaseDate' && typeof value === 'string') {
     const format = options?.dateFormat ?? meta?.dateFormat;
     return formatDate(value, { format });
@@ -200,6 +204,19 @@ export function formatMarketSegment(value: MarketSegmentValue) {
       return 'Integrated';
     default:
       throw new Error(`Invalid market segment value: ${value}`);
+  }
+}
+
+export function formatProductionStatus(value: ProductionStatusValue) {
+  switch (value) {
+    case ProductionStatusValue.Unreleased:
+      return 'Unreleased';
+    case ProductionStatusValue.Active:
+      return 'Active';
+    case ProductionStatusValue.EndOfLife:
+      return 'End-of-life';
+    default:
+      throw new Error(`Invalid production status value: ${value}`);
   }
 }
 

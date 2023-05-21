@@ -11,6 +11,7 @@ import {
   MemoryUnit,
   NumericUnit,
   PixelFillRateUnit,
+  ProductionStatusValue,
   ScrapeGpuDetailsResponse,
   TextureFillRateUnit,
   WattageUnit,
@@ -62,6 +63,7 @@ export async function scrapeTechPowerUpGpuDetails(
     pixelFillRate: getPixelFillRate($),
     powerConnectors: getPowerConnectors($),
     processSize: getProcessSize($),
+    productionStatus: getProductionStatus($),
     rayTracingCores: getRayTracingCores($),
     renderOutputUnits: getRenderOutputUnits($),
     shaderModelVersion: getShaderModelVersion($),
@@ -557,6 +559,30 @@ function getProcessSize($: cheerio.CheerioAPI): GpuField<number> {
     meta: {
       unit,
       fieldKey: 'processSize',
+      autoUpdate: true,
+    },
+  };
+}
+
+function getProductionStatus(
+  $: cheerio.CheerioAPI,
+): GpuField<ProductionStatusValue> {
+  const values = tokenizeSpecValues($, 'Production');
+  const production = values?.[0] ?? null;
+
+  let value: ProductionStatusValue = null;
+  if (production === 'Active') {
+    value = ProductionStatusValue.Active;
+  } else if (production === 'End-of-life') {
+    value = ProductionStatusValue.EndOfLife;
+  } else if (production === 'Unreleased') {
+    value = ProductionStatusValue.Unreleased;
+  }
+
+  return {
+    value,
+    meta: {
+      fieldKey: 'productionStatus',
       autoUpdate: true,
     },
   };

@@ -11,6 +11,7 @@ const LABELS: Record<string, string> = {
   marketSegment: 'Market Segment',
   launchPrice: 'Launch Price (MSRP)',
   releaseDate: 'Release Date',
+  productionStatus: 'Production Status',
 
   // Processor
   codename: 'Codename',
@@ -116,6 +117,10 @@ export const FormattedDiffTab: FunctionComponent<FormattedDiffTabProps> = (
           <FormattedDiffRow
             before={before?.releaseDate}
             after={after.releaseDate}
+          />
+          <FormattedDiffRow
+            before={before?.productionStatus}
+            after={after.productionStatus}
           />
 
           <FormattedDiffRow before={before?.codename} after={after.codename} />

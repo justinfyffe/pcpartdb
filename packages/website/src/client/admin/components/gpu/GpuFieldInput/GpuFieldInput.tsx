@@ -32,6 +32,7 @@ const INPUT_TYPES: Record<string, InputType> = {
   marketSegment: 'enum',
   launchPrice: 'currency',
   releaseDate: 'date',
+  productionStatus: 'enum',
 
   // Processor
   partNumber: 'string',

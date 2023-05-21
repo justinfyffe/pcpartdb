@@ -9,6 +9,7 @@ export async function scrapeChipsetGpu(options: ScrapeChipsetGpuOptions) {
 
   const gpu: Partial<Gpu> = {
     marketSegment: chipset.marketSegment,
+    productionStatus: chipset.productionStatus,
   };
 
   return { gpu };

@@ -1,4 +1,11 @@
-import { getChipset, Gpu, GpuComparison, GpuFieldKey } from '@pcpartdb/shared';
+import {
+  getChipset,
+  Gpu,
+  GpuComparison,
+  GpuFieldKey,
+  hasGpuLaunched,
+  isPastLaunch,
+} from '@pcpartdb/shared';
 import { format } from 'date-fns';
 import { ContentParams } from 'packages/website/src/client/shared/content';
 import {
@@ -25,6 +32,7 @@ export interface CompareGpusContentParams {
   gpu1NewerOrOlder?: string;
   gpu1WillReleaseOrWereReleased?: string;
   gpu2WillReleaseOrWasReleased?: string;
+  gpu2WasExpectedToReleaseWillReleaseOrWasReleased?: string;
   releaseDate1?: string;
   releaseDate2?: string;
   gpu1LaunchPriceHigherOrLower?: string;
@@ -82,24 +90,18 @@ function getGeneralParams(comparison: GpuComparison) {
     }
   }
 
-  const today = format(new Date(), 'yyyy-MM-dd');
-
   let gpu1WillReleaseOrWereReleased: string;
-  if (gpu1.releaseDate?.value != null) {
-    if (gpu1.releaseDate?.value > today) {
-      gpu1WillReleaseOrWereReleased = 'will release';
-    } else {
-      gpu1WillReleaseOrWereReleased = 'were released';
-    }
+  if (isPastLaunch(gpu1)) {
+    gpu1WillReleaseOrWereReleased = 'were released';
+  } else {
+    gpu1WillReleaseOrWereReleased = 'will release';
   }
 
   let gpu2WillReleaseOrWasReleased: string;
-  if (gpu2.releaseDate?.value != null) {
-    if (gpu2.releaseDate?.value > today) {
-      gpu2WillReleaseOrWasReleased = 'will release';
-    } else {
-      gpu2WillReleaseOrWasReleased = 'was released';
-    }
+  if (isPastLaunch(gpu2)) {
+    gpu2WillReleaseOrWasReleased = 'was released';
+  } else {
+    gpu2WillReleaseOrWasReleased = 'will release';
   }
 
   let gpu1LaunchPriceHigherOrLower: string;

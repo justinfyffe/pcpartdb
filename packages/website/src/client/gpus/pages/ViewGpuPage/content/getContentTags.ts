@@ -2,6 +2,7 @@ import {
   Gpu,
   hasGpuLaunched,
   MarketSegmentValue,
+  ProductionStatusValue,
   ViewGpuContentData,
 } from '@pcpartdb/shared';
 
@@ -14,6 +15,8 @@ export enum ViewGpuContentTag {
   IsWorkstation = 'IS_WORKSTATION',
   IsMobile = 'IS_MOBILE',
   IsIntegrated = 'IS_INTEGRATED',
+  IsUnreleased = 'IS_UNRELEASED',
+  IsEndOfLife = 'IS_END_OF_LIFE',
 
   CommonSize = 'COMMON_SIZE',
   ExtraLargeSize = 'EXTRA_LARGE_SIZE',
@@ -52,6 +55,10 @@ export function getGeneralTags(gpu: Gpu, contentData: ViewGpuContentData) {
       gpu.marketSegment?.value === MarketSegmentValue.Mobile,
     [ViewGpuContentTag.IsIntegrated]:
       gpu.marketSegment?.value === MarketSegmentValue.Integrated,
+    [ViewGpuContentTag.IsUnreleased]:
+      gpu.productionStatus?.value === ProductionStatusValue.Unreleased,
+    [ViewGpuContentTag.IsEndOfLife]:
+      gpu.productionStatus?.value === ProductionStatusValue.EndOfLife,
   };
 }
 

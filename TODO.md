@@ -1,7 +1,4 @@
 Road Map:
-- Improve GPU data
-  - Preferred release date format (e.g. Year, Quarter)
-  - Production Status
 - add content
   - new gpus
     - 7600 xt

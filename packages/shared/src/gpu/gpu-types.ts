@@ -10,6 +10,12 @@ export enum MarketSegmentValue {
   Integrated = 'INTEGRATED',
 }
 
+export enum ProductionStatusValue {
+  Unreleased = 'UNRELEASED',
+  Active = 'ACTIVE',
+  EndOfLife = 'END_OF_LIFE',
+}
+
 export enum GpuDataSourceKey {
   TechPowerUp = 'TECHPOWERUP',
   UlBenchmarks = 'UL_BENCHMARKS',
@@ -42,6 +48,7 @@ export interface Gpu {
   marketSegment?: GpuField<MarketSegmentValue>;
   launchPrice?: GpuField<number>;
   releaseDate?: GpuField<string>;
+  productionStatus?: GpuField<ProductionStatusValue>;
 
   // Processor
   codename?: GpuField<string>;
@@ -232,6 +239,7 @@ export const gpuValidator = Joi.object({
   marketSegment: gpuFieldValidator.allow(null),
   launchPrice: gpuFieldValidator.allow(null),
   releaseDate: gpuFieldValidator.allow(null),
+  productionStatus: gpuFieldValidator.allow(null),
 
   // Processor
   codename: gpuFieldValidator.allow(null),

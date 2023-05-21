@@ -1,5 +1,14 @@
-import { GpuField, GpuFieldKey, MarketSegmentValue } from '@pcpartdb/shared';
-import { formatGpuField } from 'packages/website/src/client/gpus';
+import {
+  GpuField,
+  GpuFieldKey,
+  MarketSegmentValue,
+  ProductionStatusValue,
+} from '@pcpartdb/shared';
+import {
+  formatGpuField,
+  formatMarketSegment,
+  formatProductionStatus,
+} from 'packages/website/src/client/gpus';
 import React, { forwardRef, useCallback, useMemo } from 'react';
 import {
   Select,
@@ -9,10 +18,36 @@ import {
 
 const ITEMS: { [key: string]: { label: string; value: string }[] } = {
   marketSegment: [
-    { label: 'Desktop', value: MarketSegmentValue.Desktop },
-    { label: 'Mobile', value: MarketSegmentValue.Mobile },
-    { label: 'Workstation', value: MarketSegmentValue.Workstation },
-    { label: 'Integrated', value: MarketSegmentValue.Integrated },
+    {
+      label: formatMarketSegment(MarketSegmentValue.Desktop),
+      value: MarketSegmentValue.Desktop,
+    },
+    {
+      label: formatMarketSegment(MarketSegmentValue.Mobile),
+      value: MarketSegmentValue.Mobile,
+    },
+    {
+      label: formatMarketSegment(MarketSegmentValue.Workstation),
+      value: MarketSegmentValue.Workstation,
+    },
+    {
+      label: formatMarketSegment(MarketSegmentValue.Integrated),
+      value: MarketSegmentValue.Integrated,
+    },
+  ],
+  productionStatus: [
+    {
+      label: formatProductionStatus(ProductionStatusValue.Unreleased),
+      value: ProductionStatusValue.Unreleased,
+    },
+    {
+      label: formatProductionStatus(ProductionStatusValue.Active),
+      value: ProductionStatusValue.Active,
+    },
+    {
+      label: formatProductionStatus(ProductionStatusValue.EndOfLife),
+      value: ProductionStatusValue.EndOfLife,
+    },
   ],
 };
 
