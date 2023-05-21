@@ -1,5 +1,7 @@
 import {
   calculateDisplayGpuFieldValue,
+  DateFormat,
+  formatDate,
   getUnitFormat,
   Gpu,
   GpuComparison,
@@ -8,9 +10,7 @@ import {
 } from '@pcpartdb/shared';
 import {
   BooleanFormatter,
-  DateFormatter,
   formatBooleanValue,
-  formatDate,
   formatPrice,
 } from '../shared/format';
 
@@ -109,7 +109,7 @@ export interface FormatGpuFieldOptions {
   minDecimals?: number;
   maxDecimals?: number;
   booleanFormatter?: BooleanFormatter;
-  dateFormatter?: DateFormatter;
+  dateFormat?: DateFormat;
   showUnits?: boolean;
 }
 
@@ -140,7 +140,8 @@ export function formatGpuField(
     return formatMarketSegment(value as MarketSegmentValue);
   }
   if (fieldKey === 'releaseDate' && typeof value === 'string') {
-    return formatDate(value, { formatter: options?.dateFormatter });
+    const format = options?.dateFormat ?? meta?.dateFormat;
+    return formatDate(value, { format });
   }
   if (fieldKey === 'openClVersion' && typeof value === 'number') {
     return value.toFixed(1);

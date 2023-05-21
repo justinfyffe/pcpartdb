@@ -1,5 +1,3 @@
-import { format, parse } from 'date-fns';
-
 export function formatOrdinalNumber(value: number | string) {
   const num = Number(value);
 
@@ -42,22 +40,6 @@ export function formatPrice(value: number, options?: FormatPriceOptions) {
   } else {
     return `${ret} ${currency}`;
   }
-}
-
-export enum DateFormatter {
-  QuarterYear = 'QQQ yyyy',
-  Year = 'yyyy',
-  YearQuarter = 'yyyy QQQ',
-}
-
-interface FormatDateOptions {
-  formatter?: DateFormatter;
-}
-
-export function formatDate(value: string, options?: FormatDateOptions) {
-  const formatter = options?.formatter ?? DateFormatter.QuarterYear;
-  const date = parse(value, 'yyyy-MM-dd', new Date());
-  return format(date, formatter);
 }
 
 export enum BooleanFormatter {

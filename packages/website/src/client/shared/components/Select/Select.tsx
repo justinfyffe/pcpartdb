@@ -25,6 +25,7 @@ interface SelectProps {
   value?: SelectValue;
   onChange?: (value: SelectValue) => void;
 
+  className?: string;
   children?:
     | React.ReactElement<SelectOptionProps>
     | React.ReactElement<SelectOptionProps>[];
@@ -41,6 +42,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
       clearable,
       value,
       onChange,
+      className,
       children,
     } = props;
 
@@ -115,7 +117,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
     );
 
     return (
-      <div className="block relative w-full">
+      <div className={classNames('block relative w-full', className)}>
         <select
           disabled={disabled}
           name={name}

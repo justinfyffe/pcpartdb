@@ -2,6 +2,7 @@ export * from './auth';
 export * from './config';
 export * from './data-update';
 export * from './error';
+export * from './format';
 export * from './gpu';
 export * from './image';
 export * from './routes';

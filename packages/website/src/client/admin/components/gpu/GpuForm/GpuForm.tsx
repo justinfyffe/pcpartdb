@@ -570,7 +570,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
         </Field>
 
         <Field>
-          Release Date
+          Release Date &amp; Format
           <Controller
             name="releaseDate"
             control={control}

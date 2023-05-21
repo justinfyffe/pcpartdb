@@ -1,4 +1,5 @@
 import {
+  DateFormat,
   getChipset,
   getViewGpuPath,
   Gpu,
@@ -6,10 +7,7 @@ import {
   ViewGpuContentData,
 } from '@pcpartdb/shared';
 import { ContentParams } from 'packages/website/src/client/shared/content';
-import {
-  DateFormatter,
-  formatOrdinalNumber,
-} from 'packages/website/src/client/shared/format';
+import { formatOrdinalNumber } from 'packages/website/src/client/shared/format';
 import {
   formatGpuDimensions,
   formatGpuField,
@@ -102,9 +100,7 @@ function getGeneralParams(gpu: Gpu, contentData: ViewGpuContentData) {
     marketSegment: formatGpuField(gpu.marketSegment)?.toLowerCase(),
     processSize: formatGpuField(gpu.processSize),
     releaseDate: formatGpuField(gpu.releaseDate),
-    year: formatGpuField(gpu.releaseDate, {
-      dateFormatter: DateFormatter.Year,
-    }),
+    year: formatGpuField(gpu.releaseDate, { dateFormat: DateFormat.Year }),
     totalRetailModels: String(contentData.retailModels?.length || 0),
     launchedOrWillLaunch: hasGpuLaunched(gpu) ? 'launched' : 'will launch',
   } as ViewGpuContentParams as ContentParams;

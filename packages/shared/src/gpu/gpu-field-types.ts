@@ -1,4 +1,5 @@
 import Joi from '@hapi/joi';
+import { DateFormat } from '../format';
 import { Gpu, GpuDataSourceKey } from './gpu-types';
 
 export type GpuFieldKey = keyof Gpu;
@@ -7,6 +8,7 @@ export interface GpuFieldMeta {
   fieldKey?: GpuFieldKey;
   currency?: string;
   unit?: GpuFieldUnit;
+  dateFormat?: DateFormat;
   autoUpdate?: boolean;
   source?: GpuDataSourceKey;
 }

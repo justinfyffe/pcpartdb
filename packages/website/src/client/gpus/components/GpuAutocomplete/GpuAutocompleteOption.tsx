@@ -1,8 +1,7 @@
-import { Gpu } from '@pcpartdb/shared';
+import { DateFormat, Gpu } from '@pcpartdb/shared';
 import React, { FunctionComponent, useMemo } from 'react';
 import { getCompanyLogoAutocompletePath } from '../../../image';
 import { AutocompleteOption, Img } from '../../../shared/components';
-import { DateFormatter } from '../../../shared/format';
 import { formatGpuField, getGpuName } from '../..';
 
 interface GpuAutocompleteOptionProps {
@@ -28,7 +27,7 @@ export const GpuAutocompleteOption: FunctionComponent<
   const releaseDate = useMemo(
     () =>
       formatGpuField(gpu.releaseDate, {
-        dateFormatter: DateFormatter.QuarterYear,
+        dateFormat: DateFormat.QuarterYear,
       }),
     [gpu.releaseDate],
   );

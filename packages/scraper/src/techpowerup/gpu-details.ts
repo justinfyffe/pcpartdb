@@ -3,6 +3,7 @@ import {
   BitUnit,
   calculateBaseGpuFieldValue,
   ClockSpeedUnit,
+  DateFormat,
   FlopsUnit,
   Gpu,
   GpuField,
@@ -15,7 +16,7 @@ import {
   WattageUnit,
 } from '@pcpartdb/shared';
 import * as cheerio from 'cheerio';
-import { format, parse } from 'date-fns';
+import { format as formatDate, parse as parseDate } from 'date-fns';
 import { scraper } from '../scraper';
 import { parseGpuName } from './utils';
 
@@ -578,31 +579,45 @@ function getReleaseDate($: cheerio.CheerioAPI): GpuField<string> {
   const availabilityValues = tokenizeSpecValues($, 'Availability');
   const releaseDateValues = tokenizeSpecValues($, 'Release Date');
 
-  let availability: string;
-  try {
-    availability = format(
-      parse(availabilityValues[0], 'MMM do, yyyy', new Date()),
-      'yyyy-MM-dd',
-    );
-  } catch (e) {
-    availability = null;
+  let value: string = null;
+  let format: DateFormat = null;
+
+  if (value == null) {
+    value = parseDateValue(availabilityValues?.[0], 'MMM do, yyyy');
+    format = value != null ? DateFormat.QuarterYear : null;
+  }
+  if (value == null) {
+    value = parseDateValue(availabilityValues?.[0], 'MMM yyyy', {
+      endOfMonth: true,
+    });
+    format = value != null ? DateFormat.QuarterYear : null;
+  }
+  if (value == null) {
+    value = parseDateValue(availabilityValues?.[0], 'yyyy', {
+      endOfYear: true,
+    });
+    format = value != null ? DateFormat.Year : null;
+  }
+  if (value == null) {
+    value = parseDateValue(releaseDateValues?.[0], 'MMM do, yyyy');
+    format = value != null ? DateFormat.QuarterYear : null;
+  }
+  if (value == null) {
+    value = parseDateValue(releaseDateValues?.[0], 'MMM yyyy', {
+      endOfMonth: true,
+    });
+    format = value != null ? DateFormat.QuarterYear : null;
+  }
+  if (value == null) {
+    value = parseDateValue(releaseDateValues?.[0], 'yyyy', { endOfYear: true });
+    format = value != null ? DateFormat.Year : null;
   }
 
-  let releaseDate: string;
-  try {
-    releaseDate = format(
-      parse(releaseDateValues[0], 'MMM do, yyyy', new Date()),
-      'yyyy-MM-dd',
-    );
-  } catch (e) {
-    releaseDate = null;
-  }
-
-  const value = availability || releaseDate || null;
   return {
     value,
     meta: {
       fieldKey: 'releaseDate',
+      dateFormat: format,
       autoUpdate: true,
     },
   };
@@ -826,4 +841,35 @@ function parseNumberValue(value: string): [number, string] {
   const [base, unit] = value.split(' ');
   const sanitizedBase = Number(base.replace(',', ''));
   return [sanitizedBase, unit || null];
+}
+
+interface ParseDateValueOptions {
+  endOfMonth?: boolean;
+  endOfYear?: boolean;
+}
+
+function parseDateValue(
+  value: string,
+  format: string,
+  options?: ParseDateValueOptions,
+): string {
+  if (value == null) {
+    return null;
+  }
+
+  try {
+    const parsedDate = parseDate(value, format, new Date());
+
+    if (options?.endOfYear) {
+      parsedDate.setMonth(11);
+      parsedDate.setDate(31);
+    } else if (options?.endOfMonth) {
+      parsedDate.setMonth(parsedDate.getMonth() + 1);
+      parsedDate.setDate(0);
+    }
+
+    return formatDate(parsedDate, 'yyyy-MM-dd');
+  } catch (e) {
+    return null;
+  }
 }

@@ -1,5 +1,5 @@
 import { CalendarDaysIcon } from '@heroicons/react/24/outline';
-import { DateFormatter } from 'packages/website/src/client/shared/format';
+import { DateFormat } from '@pcpartdb/shared';
 import React, { FunctionComponent, useContext, useMemo } from 'react';
 import { formatGpuField, getGpuName } from '../../../..';
 import { ComparePageContext } from '../../context';
@@ -39,10 +39,10 @@ export const ReleaseDateHighlightListItem: FunctionComponent<
 
   const [bold1, bold2] = useMemo(() => {
     const releaseDate1 = formatGpuField(gpu1.releaseDate, {
-      dateFormatter: DateFormatter.YearQuarter,
+      dateFormat: DateFormat.YearQuarter,
     });
     const releaseDate2 = formatGpuField(gpu2.releaseDate, {
-      dateFormatter: DateFormatter.YearQuarter,
+      dateFormat: DateFormat.YearQuarter,
     });
     return [releaseDate1 > releaseDate2, releaseDate1 < releaseDate2];
   }, [gpu1.releaseDate, gpu2.releaseDate]);
