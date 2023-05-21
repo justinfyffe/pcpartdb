@@ -1,5 +1,5 @@
 import Joi from '@hapi/joi';
-import { GpuField, GpuFieldKey, gpuFieldValidator } from './gpu-field-types';
+import { GpuField, gpuFieldValidator } from './gpu-field-types';
 import { GpuImages } from './gpu-image-types';
 import { GpuRanks } from './gpu-rank-types';
 
@@ -173,10 +173,6 @@ export interface RelatedGpus {
 
 export interface RelatedComparisons {
   comparisons?: GpuComparison[];
-}
-
-export interface ListGpusRequest {
-  query: ListGpusQuery;
 }
 
 export interface ListGpusContentData {

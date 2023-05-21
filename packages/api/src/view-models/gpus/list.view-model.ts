@@ -1,12 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import {
-  ListGpusQuery,
-  ListGpusRequest,
-  ListGpusResponse,
-} from '@pcpartdb/shared';
+import { ListGpusQuery, ListGpusResponse } from '@pcpartdb/shared';
 import deepmerge from 'deepmerge';
 import { GpuService } from '../../gpu/gpu.service';
-import { listGpusRequestValidator } from '../../gpu/gpu.validators';
+import { listGpusQueryValidator } from '../../gpu/gpu.validators';
 import { Context } from '../../shared/context';
 import { validate } from '../../shared/types/validate';
 
@@ -14,16 +10,16 @@ import { validate } from '../../shared/types/validate';
 export class ListGpusViewModelService {
   constructor(private gpuService: GpuService) {}
 
-  async viewModel(request: ListGpusRequest, ctx: Context) {
-    validate(request, listGpusRequestValidator);
+  async viewModel(query: ListGpusQuery, ctx: Context) {
+    validate(query, listGpusQueryValidator);
 
-    const query = deepmerge(
+    const chipsetsQuery = deepmerge(
       { filter: { isChipset: true } } as ListGpusQuery,
-      request.query,
+      query,
     );
 
-    const gpus = await this.getGpusForQuery(query, ctx);
-    const totalGpus = await this.getTotalGpusForQuery(query, ctx);
+    const gpus = await this.getGpusForQuery(chipsetsQuery, ctx);
+    const totalGpus = await this.getTotalGpusForQuery(chipsetsQuery, ctx);
 
     const retailModelCounts = await this.gpuService.countRetailModels(
       { chipsetIds: gpus.map((gpu) => gpu.id) },
@@ -31,7 +27,7 @@ export class ListGpusViewModelService {
     );
 
     return {
-      query,
+      query: chipsetsQuery,
       gpus,
       totalGpus,
       contentData: { retailModelCounts },

@@ -37,12 +37,12 @@ export const ListGpusPage = (props: ListGpusViewModel) => {
   const [query, setQuery] = useState(props.query);
   const [contentData, setContentData] = useState(props.contentData);
 
-  const fetchGpus = useCallback(async (q: ListGpusQuery) => {
-    const response = await gpuService.list({ query: q });
+  const fetchGpus = useCallback(async (query: ListGpusQuery) => {
+    const response = await gpuService.list(query);
     setGpus(response.gpus);
     setTotalGpus(response.totalGpus);
     setContentData(response.contentData);
-    setQuery(q);
+    setQuery(query);
   }, []);
 
   useEffect(() => {

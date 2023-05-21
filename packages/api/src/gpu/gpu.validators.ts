@@ -5,7 +5,7 @@ const MAX_LIMIT_GPUS_QUERY = 100;
 
 export const gpuPresetsValidator = Joi.string();
 
-export const gpusFilterValidator = Joi.object({
+export const listGpusFilterValidator = Joi.object({
   company: Joi.array().items(Joi.string()).allow('', null),
   segment: Joi.array().items(Joi.string()).allow('', null),
 
@@ -17,7 +17,7 @@ export const gpusFilterValidator = Joi.object({
   isRetailModel: Joi.boolean(),
 }).options({ abortEarly: false });
 
-export const gpusOrderByValidator = Joi.object({
+export const listGpusOrderByValidator = Joi.object({
   sort: Joi.string()
     .valid(
       ListGpusSort.Id,
@@ -32,19 +32,19 @@ export const gpusOrderByValidator = Joi.object({
     .allow('', null),
 }).options({ abortEarly: false });
 
-export const gpusPaginationValidator = Joi.object({
+export const listGpusPaginationValidator = Joi.object({
   offset: Joi.number().min(0),
   limit: Joi.number().positive().max(MAX_LIMIT_GPUS_QUERY),
 }).options({ abortEarly: false });
 
-export const gpusQueryValidator = Joi.object({
-  filter: gpusFilterValidator.allow(null),
-  orderBy: gpusOrderByValidator.allow(null),
-  pagination: gpusPaginationValidator.allow(null),
+export const listGpusQueryValidator = Joi.object({
+  filter: listGpusFilterValidator.allow(null),
+  orderBy: listGpusOrderByValidator.allow(null),
+  pagination: listGpusPaginationValidator.allow(null),
 }).options({ abortEarly: false });
 
 export const listGpusRequestValidator = Joi.object({
-  query: gpusQueryValidator.allow(null),
+  query: listGpusQueryValidator.allow(null),
   fields: Joi.array().allow(Joi.string()).allow(null),
 }).options({ abortEarly: false });
 

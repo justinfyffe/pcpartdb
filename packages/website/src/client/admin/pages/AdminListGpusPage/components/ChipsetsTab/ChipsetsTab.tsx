@@ -36,7 +36,7 @@ export const ChipsetsTab: FunctionComponent<ChipsetsTabProps> = () => {
 
   const fetchChipsets = useCallback(async (q: ListGpusQuery) => {
     setLoading(true);
-    const response = await gpuService.list({ query: q });
+    const response = await gpuService.list(q);
     setChipsets(response.gpus);
     setTotalResults(response.totalGpus);
     setQuery(q);

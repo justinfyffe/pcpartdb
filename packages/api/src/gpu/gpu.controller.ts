@@ -12,7 +12,7 @@ import {
 import {
   CreateGpuRequest,
   ListGpusOrder,
-  ListGpusRequest,
+  ListGpusQuery,
   ListGpusResponse,
   ListGpusSort,
   ListRetailModelsResponse,
@@ -25,7 +25,7 @@ import { validate } from '../shared/types/validate';
 import { GpuService } from './gpu.service';
 import {
   createGpuRequestValidator,
-  listGpusRequestValidator,
+  listGpusQueryValidator,
   updateGpuRequestValidator,
 } from './gpu.validators';
 
@@ -37,11 +37,11 @@ export class GpuController {
   async list(@Query('q') q: string, @Ctx() ctx: Context) {
     return await this.db.transaction(
       async () => {
-        const data = JSON.parse(q) as ListGpusRequest;
-        validate(data, listGpusRequestValidator);
+        const query = JSON.parse(q) as ListGpusQuery;
+        validate(query, listGpusQueryValidator);
         const gpus = await this.gpuService.list(
           {
-            ...data,
+            query,
             fields: [
               'company',
               'performanceScore',
@@ -53,7 +53,7 @@ export class GpuController {
           },
           ctx,
         );
-        const totalGpus = await this.gpuService.count({ ...data }, ctx);
+        const totalGpus = await this.gpuService.count({ query }, ctx);
 
         const retailModelCounts = await this.gpuService.countRetailModels(
           { chipsetIds: gpus.map((gpu) => gpu.id) },
@@ -61,7 +61,7 @@ export class GpuController {
         );
 
         return {
-          query: data,
+          query,
           gpus,
           totalGpus,
           contentData: { retailModelCounts },

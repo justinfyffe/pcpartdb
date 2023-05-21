@@ -24,7 +24,6 @@ export const GpuTable: FunctionComponent<GpuTableProps> = (props) => {
         <Tr className="font-medium">
           <Th className="text-left">ID</Th>
           <Th className="text-left">Name</Th>
-          <Th className="text-left">Market Segment</Th>
           <Th></Th>
         </Tr>
       </THead>
@@ -46,10 +45,6 @@ const GpuTableRow: FunctionComponent<GpuTableRowProps> = (props) => {
 
   const href = useMemo(() => getAdminEditGpuPath(gpu), [gpu]);
   const name = useMemo(() => getGpuName(gpu), [gpu]);
-  const segment = useMemo(
-    () => formatGpuField(gpu.marketSegment),
-    [gpu.marketSegment],
-  );
 
   return (
     <Tr key={gpu.id}>
@@ -57,7 +52,6 @@ const GpuTableRow: FunctionComponent<GpuTableRowProps> = (props) => {
       <Td>
         <a href={href}>{name}</a>
       </Td>
-      <Td>{segment}</Td>
       <Td className="p-0">
         <MissingDataChip gpu={gpu} />
       </Td>
