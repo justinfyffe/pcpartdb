@@ -3,10 +3,8 @@ import {
   Gpu,
   GpuComparison,
   GpuFieldKey,
-  hasGpuLaunched,
   isPastLaunch,
 } from '@pcpartdb/shared';
-import { format } from 'date-fns';
 import { ContentParams } from 'packages/website/src/client/shared/content';
 import {
   formatGpuDimensions,
