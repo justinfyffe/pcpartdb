@@ -30,9 +30,7 @@ export interface CompareGpusContentParams {
   marketSegment1?: string;
   marketSegment2?: string;
   gpu1NewerOrOlder?: string;
-  gpu1WillReleaseOrWereReleased?: string;
   gpu2WillReleaseOrWasReleased?: string;
-  gpu2WasExpectedToReleaseWillReleaseOrWasReleased?: string;
   releaseDate1?: string;
   releaseDate2?: string;
   gpu1LaunchPriceHigherOrLower?: string;
@@ -90,13 +88,6 @@ function getGeneralParams(comparison: GpuComparison) {
     }
   }
 
-  let gpu1WillReleaseOrWereReleased: string;
-  if (isPastLaunch(gpu1)) {
-    gpu1WillReleaseOrWereReleased = 'were released';
-  } else {
-    gpu1WillReleaseOrWereReleased = 'will release';
-  }
-
   let gpu2WillReleaseOrWasReleased: string;
   if (isPastLaunch(gpu2)) {
     gpu2WillReleaseOrWasReleased = 'was released';
@@ -129,7 +120,6 @@ function getGeneralParams(comparison: GpuComparison) {
     marketSegment1: formatGpuField(gpu1.marketSegment)?.toLowerCase(),
     marketSegment2: formatGpuField(gpu2.marketSegment)?.toLowerCase(),
     gpu1NewerOrOlder,
-    gpu1WillReleaseOrWereReleased,
     gpu2WillReleaseOrWasReleased,
     releaseDate1: formatGpuField(gpu1.releaseDate),
     releaseDate2: formatGpuField(gpu2.releaseDate),

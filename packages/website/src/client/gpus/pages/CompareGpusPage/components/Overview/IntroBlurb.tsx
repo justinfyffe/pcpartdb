@@ -118,12 +118,9 @@ const IntroReleaseDate = compileContentComponent(
   {
     tags: [CompareGpusContentTag.SameReleaseDate],
     deps: ['releaseDate1'],
-    // These graphics cards were released during Q3 2022.
+    // They both have release dates of Q2 2022.
     component: (props) => (
-      <>
-        These graphics cards {props.gpu1WillReleaseOrWereReleased} in{' '}
-        {props.releaseDate1}.
-      </>
+      <>They both have release dates of {props.releaseDate1}.</>
     ),
   },
 );
