@@ -80,7 +80,7 @@ export class GpuAutocompleteRepository {
     const fillerChipsetIds: { id: number }[] = await db.$queryRaw`
       SELECT id FROM gpus
       WHERE chipset_id IS NULL AND CONCAT(company, ' ', name) ~* (${regexTokens})
-      ORDER BY release_date DESC
+      ORDER BY release_date DESC NULLS LAST
       LIMIT 6
     `;
     // const fillerRetailModelIds: { id: number }[] = await db.$queryRaw`
