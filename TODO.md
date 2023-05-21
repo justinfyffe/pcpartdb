@@ -1,6 +1,12 @@
-Next tasks:
+Road Map:
+- Improve GPU data
+  - Preferred release date format (e.g. Year, Quarter)
+  - Production Status
 - add content
+  - new gpus
+    - 7600 xt
   - retail models, chipsets
+    - latest gpu id: 400
 - clean up tech debt
   - listChipsets call - KISS
   - simplify components
@@ -15,8 +21,12 @@ Next tasks:
   - compare
   - list
   - automation for importing/updating
+- affiliate ads
 - improve list page features
   - filter by year (multiselect combobox)
+- improve list page style
+  - list of cards, can show more data in a prettier way
+  - better for fitting in ads
 - improve automation
   - pull in new data
   - two core DO server

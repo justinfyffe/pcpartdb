@@ -6,31 +6,17 @@ import {
 import { ViewGpuContentTag } from '../../content';
 import { ViewPageContext } from '../../context';
 
-const IntroAudience = compileContentComponent(
-  {
-    tags: [],
-    deps: ['marketSegment'],
-    // The NVIDIA Geforce RTX 3070 is a graphics card that targets
-    // desktop users.
-    component: (props) => (
-      <>
-        The {props.gpuName} is a graphics card that targets the{' '}
-        {props.marketSegment} GPU market.
-      </>
-    ),
-  },
-  {
-    tags: [],
-    deps: [],
-    // The Geforce RTX 3070 is a graphics card by NVIDIA.
-    component: (props) => (
-      <>
-        The {props.shortGpuName} is a graphics card manufactured by{' '}
-        {props.company}.
-      </>
-    ),
-  },
-);
+const IntroAudience = compileContentComponent({
+  tags: [],
+  deps: [],
+  // The Geforce RTX 3070 is a desktop graphics card by NVIDIA.
+  component: (props) => (
+    <>
+      The {props.shortGpuName} is a {props.marketSegment} graphics card by{' '}
+      {props.company}.
+    </>
+  ),
+});
 
 const IntroReleaseDateAndMsrp = compileContentComponent(
   {
