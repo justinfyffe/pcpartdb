@@ -34,7 +34,7 @@ export const ListFilterMarketSegment: FunctionComponent<
 
       updateQuery({
         ...query,
-        pagination: { offset: 0 },
+        pagination: { ...(query.pagination ?? {}), offset: 0 },
         filter: {
           ...query.filter,
           segment: segments.size > 0 ? [...segments.keys()] : undefined,

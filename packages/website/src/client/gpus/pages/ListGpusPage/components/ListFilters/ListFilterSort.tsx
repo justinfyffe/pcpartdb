@@ -59,7 +59,7 @@ const ListFilterSortItem: FunctionComponent<ListFilterSortItemProps> = (
 
     updateQuery({
       ...query,
-      pagination: { offset: 0 },
+      pagination: { ...(query.pagination ?? {}), offset: 0 },
       orderBy: { sort, order: newOrder },
     });
   }, [defaultOrder, order, updateQuery, query, sort]);
