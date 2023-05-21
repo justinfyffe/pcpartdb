@@ -613,19 +613,14 @@ function getReleaseDate($: cheerio.CheerioAPI): GpuField<string> {
     format = value != null ? DateFormat.QuarterYear : null;
   }
   if (value == null) {
+    value = parseDateValue(releaseDateValues?.[0], 'MMM do, yyyy');
+    format = value != null ? DateFormat.QuarterYear : null;
+  }
+
+  if (value == null) {
     value = parseDateValue(availabilityValues?.[0], 'MMM yyyy', {
       endOfMonth: true,
     });
-    format = value != null ? DateFormat.QuarterYear : null;
-  }
-  if (value == null) {
-    value = parseDateValue(availabilityValues?.[0], 'yyyy', {
-      endOfYear: true,
-    });
-    format = value != null ? DateFormat.Year : null;
-  }
-  if (value == null) {
-    value = parseDateValue(releaseDateValues?.[0], 'MMM do, yyyy');
     format = value != null ? DateFormat.QuarterYear : null;
   }
   if (value == null) {
@@ -633,6 +628,13 @@ function getReleaseDate($: cheerio.CheerioAPI): GpuField<string> {
       endOfMonth: true,
     });
     format = value != null ? DateFormat.QuarterYear : null;
+  }
+
+  if (value == null) {
+    value = parseDateValue(availabilityValues?.[0], 'yyyy', {
+      endOfYear: true,
+    });
+    format = value != null ? DateFormat.Year : null;
   }
   if (value == null) {
     value = parseDateValue(releaseDateValues?.[0], 'yyyy', { endOfYear: true });
