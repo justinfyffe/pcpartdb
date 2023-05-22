@@ -13,6 +13,18 @@ export function sitemapPath(file?: string) {
   return file != null ? path.join(SITEMAPS_PATH, file) : SITEMAPS_PATH;
 }
 
-export function sitemapUrl(file: string) {
-  return joinUrlParts(WEBSITE_URL, file);
+interface SitemapUrlOptions {
+  compressed?: boolean;
+}
+
+export function sitemapUrl(file: string, options?: SitemapUrlOptions) {
+  if (options?.compressed) {
+    return joinUrlParts(WEBSITE_URL, `${file}.gz`);
+  } else {
+    return joinUrlParts(WEBSITE_URL, file);
+  }
+}
+
+export function websiteUrl(path: string) {
+  return joinUrlParts(WEBSITE_URL, path);
 }

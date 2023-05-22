@@ -10,14 +10,16 @@ import {
   ListGpusSort,
   WEBSITE_URL,
 } from '@pcpartdb/shared';
+import * as fs from 'fs';
 import * as fsPromises from 'fs/promises';
 import xml from 'xml';
+import * as zlib from 'zlib';
 import { getDatabase } from '../shared/database';
-import { sitemapPath, sitemapUrl } from './utils';
+import { sitemapPath, sitemapUrl, websiteUrl } from './utils';
 
-const COMPARISONS_PER_SITEMAP = 45_000;
-const CHIPSETS_PER_SITEMAP = 45_000;
-const RETAIL_MODELS_PER_SITEMAP = 45_000;
+const COMPARISONS_PER_SITEMAP = 49_000;
+const CHIPSETS_PER_SITEMAP = 49_000;
+const RETAIL_MODELS_PER_SITEMAP = 49_000;
 
 const INDEX_FILENAME = 'sitemap-index.xml';
 const GENERAL_FILENAME = 'sitemap-general.xml';
@@ -50,14 +52,14 @@ async function writeGeneralSitemap() {
 
   const entries = [
     { url: WEBSITE_URL },
-    { url: sitemapUrl(getAboutPath()) },
-    { url: sitemapUrl(getPrivacyPath()) },
+    { url: websiteUrl(getAboutPath()) },
+    { url: websiteUrl(getPrivacyPath()) },
   ] as SitemapEntry[];
 
   await writeSitemap(sitemapPath(GENERAL_FILENAME), entries);
   console.log(`Generated ${GENERAL_FILENAME} with ${entries.length} entries`);
 
-  return sitemapUrl(GENERAL_FILENAME);
+  return sitemapUrl(GENERAL_FILENAME, { compressed: true });
 }
 
 async function writeGpuListsSitemap() {
@@ -65,14 +67,14 @@ async function writeGpuListsSitemap() {
 
   const entries: SitemapEntry[] = Object.entries(LIST_GPUS_PRESETS).map(
     ([_key, preset]) => ({
-      url: sitemapUrl(getListGpusPath(preset)),
+      url: websiteUrl(getListGpusPath(preset)),
     }),
   );
 
   await writeSitemap(sitemapPath(GPU_LISTS_FILENAME), entries);
   console.log(`Generated ${GPU_LISTS_FILENAME} with ${entries.length} entries`);
 
-  return sitemapUrl(GPU_LISTS_FILENAME);
+  return sitemapUrl(GPU_LISTS_FILENAME, { compressed: true });
 }
 
 async function writeGpuChipsetsSitemap() {
@@ -97,7 +99,7 @@ async function writeGpuChipsetsSitemap() {
   for (let i = 0; i < gpus.length - 1; ++i) {
     const gpu = gpus[i];
 
-    const url = sitemapUrl(getViewGpuPath(gpu));
+    const url = websiteUrl(getViewGpuPath(gpu));
     const lastModTimestamp = Math.max(gpu.updatedAt ?? 0, gpu.updatedAt ?? 0);
     const lastModification =
       lastModTimestamp != 0 ? new Date(lastModTimestamp) : undefined;
@@ -107,8 +109,8 @@ async function writeGpuChipsetsSitemap() {
 
     if (entries.length >= CHIPSETS_PER_SITEMAP) {
       const filename = GPU_CHIPSETS_FILENAME.replace('{i}', `${fileCounter}`);
-      sitemapUrls.push(sitemapUrl(filename));
       await writeSitemap(sitemapPath(filename), entries);
+      sitemapUrls.push(sitemapUrl(filename, { compressed: true }));
       console.log(`Generated  ${filename} with ${entries.length} entries`);
 
       entries = [];
@@ -118,8 +120,8 @@ async function writeGpuChipsetsSitemap() {
 
   if (entries.length > 0) {
     const filename = GPU_CHIPSETS_FILENAME.replace('{i}', `${fileCounter}`);
-    sitemapUrls.push(sitemapUrl(filename));
     await writeSitemap(sitemapPath(filename), entries);
+    sitemapUrls.push(sitemapUrl(filename, { compressed: true }));
     console.log(`Generated ${filename} with ${entries.length} entries`);
   }
 
@@ -150,7 +152,7 @@ async function writeGpuRetailModelsSitemap() {
   for (let i = 0; i < gpus.length - 1; ++i) {
     const gpu = gpus[i];
 
-    const url = sitemapUrl(getViewGpuPath(gpu));
+    const url = websiteUrl(getViewGpuPath(gpu));
     const lastModTimestamp = Math.max(gpu.updatedAt ?? 0, gpu.updatedAt ?? 0);
     const lastModification =
       lastModTimestamp != 0 ? new Date(lastModTimestamp) : undefined;
@@ -163,8 +165,8 @@ async function writeGpuRetailModelsSitemap() {
         '{i}',
         `${fileCounter}`,
       );
-      sitemapUrls.push(sitemapUrl(filename));
       await writeSitemap(sitemapPath(filename), entries);
+      sitemapUrls.push(sitemapUrl(filename, { compressed: true }));
       console.log(`Generated  ${filename} with ${entries.length} entries`);
 
       entries = [];
@@ -177,8 +179,8 @@ async function writeGpuRetailModelsSitemap() {
       '{i}',
       `${fileCounter}`,
     );
-    sitemapUrls.push(sitemapUrl(filename));
     await writeSitemap(sitemapPath(filename), entries);
+    sitemapUrls.push(sitemapUrl(filename, { compressed: true }));
     console.log(`Generated ${filename} with ${entries.length} entries`);
   }
 
@@ -211,8 +213,8 @@ async function writeGpuComparisonsSitemap() {
       const gpu1 = gpus[i];
       const gpu2 = gpus[j];
 
-      const url1 = sitemapUrl(getCompareGpusPath([gpu1, gpu2]));
-      const url2 = sitemapUrl(getCompareGpusPath([gpu2, gpu1]));
+      const url1 = websiteUrl(getCompareGpusPath([gpu1, gpu2]));
+      const url2 = websiteUrl(getCompareGpusPath([gpu2, gpu1]));
       const lastModTimestamp = Math.max(
         gpu1.updatedAt ?? 0,
         gpu2.updatedAt ?? 0,
@@ -229,8 +231,8 @@ async function writeGpuComparisonsSitemap() {
           '{i}',
           `${fileCounter}`,
         );
-        sitemapUrls.push(sitemapUrl(filename));
         await writeSitemap(sitemapPath(filename), entries);
+        sitemapUrls.push(sitemapUrl(filename, { compressed: true }));
         console.log(`Generated  ${filename} with ${entries.length} entries`);
 
         entries = [];
@@ -241,8 +243,8 @@ async function writeGpuComparisonsSitemap() {
 
   if (entries.length > 0) {
     const filename = GPU_COMPARISONS_FILENAME.replace('{i}', `${fileCounter}`);
-    sitemapUrls.push(sitemapUrl(filename));
     await writeSitemap(sitemapPath(filename), entries);
+    sitemapUrls.push(sitemapUrl(filename, { compressed: true }));
     console.log(`Generated ${filename} with ${entries.length} entries`);
   }
 
@@ -265,11 +267,10 @@ async function writeSitemapIndex(sitemapUrls: string[]) {
     indexObject,
     { indent: ' ' },
   )}`;
-  await fsPromises.writeFile(
-    sitemapPath(INDEX_FILENAME),
-    sitemapIndex,
-    'utf-8',
-  );
+
+  const path = sitemapPath(INDEX_FILENAME);
+  await fsPromises.writeFile(path, sitemapIndex, 'utf-8');
+  await compressSitemap(path);
 }
 
 async function writeSitemap(path: string, entries: SitemapEntry[]) {
@@ -287,6 +288,7 @@ async function writeSitemap(path: string, entries: SitemapEntry[]) {
     { indent: ' ' },
   )}`;
   await fsPromises.writeFile(path, sitemap, 'utf-8');
+  await compressSitemap(path);
 }
 
 async function removeExistingSitemaps() {
@@ -308,4 +310,11 @@ function generateSitemapUrlObject(entry: SitemapEntry) {
   }
 
   return { url: [{ loc: entry.url }] };
+}
+
+async function compressSitemap(path: string) {
+  fs.createReadStream(path)
+    .pipe(zlib.createGzip())
+    .pipe(fs.createWriteStream(`${path}.gz`));
+  await fsPromises.rm(path);
 }

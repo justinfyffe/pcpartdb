@@ -5,4 +5,4 @@ Disallow: /login
 Disallow: /register
 Disallow: /reset-password
 
-Sitemap: https://pcpartdb.com/sitemap-index.xml
+Sitemap: https://pcpartdb.com/sitemap-index.xml.gz

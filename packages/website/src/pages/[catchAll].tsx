@@ -14,12 +14,9 @@ export async function getServerSideProps(ctx: NextPageContext) {
     slug.startsWith('sitemap-') &&
     fs.existsSync(path.join(SITEMAPS_PATH, slug))
   ) {
-    const sitemap = await fsPromises.readFile(
-      path.join(SITEMAPS_PATH, slug),
-      'utf-8',
-    );
+    const sitemap = await fsPromises.readFile(path.join(SITEMAPS_PATH, slug));
     const res = ctx.res;
-    res.setHeader('Content-Type', 'text/xml');
+    res.setHeader('Content-Type', 'application/gzip');
     res.write(sitemap);
     res.end();
     return { props: {} };
