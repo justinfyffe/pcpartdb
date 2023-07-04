@@ -205,7 +205,7 @@ export const HomePage = (props: HomeViewModel) => {
               Best performing Intel CPUs
             </FeedLink>
             <FeedLink href={getListCpusPath(ListCpusPresetSlug.BestValueIntel)}>
-              Best value Intel GPUs
+              Best value Intel CPUs
             </FeedLink>
             <FeedLink
               href={getListCpusPath(ListCpusPresetSlug.BestPerformanceAmd)}
@@ -213,7 +213,7 @@ export const HomePage = (props: HomeViewModel) => {
               Best performing AMD CPUs
             </FeedLink>
             <FeedLink href={getListCpusPath(ListCpusPresetSlug.BestValueAmd)}>
-              Best value AMD GPUs
+              Best value AMD CPUs
             </FeedLink>
           </FeedLinks>
         </Feed>
