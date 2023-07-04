@@ -1,29 +1,26 @@
-import {
-  Gpu,
-  GpuDataSourceKey,
-  GpuField,
-  ScrapeGpuDetailsResponse,
-} from '@pcpartdb/shared';
+import { Gpu, GpuField, ScrapeProductResponse } from '@pcpartdb/shared';
 import * as cheerio from 'cheerio';
 import { scraper } from '../scraper';
 
 export interface ScrapeUlBenchmarksGpuDetailsOptions {
   url: string;
-  proxy?: boolean;
+  noProxy?: boolean;
 }
 
 // Example: https://benchmarks.ul.com/hardware/gpu/NVIDIA%20GeForce%20RTX%204090+review
 export async function scrapeUlBenchmarksGpuDetails(
   options: ScrapeUlBenchmarksGpuDetailsOptions,
 ) {
-  const response = await scraper.scrape(options.url, { retries: 1 });
+  const { url, noProxy } = options;
+
+  const response = await scraper.scrape(url, { retries: 1, noProxy });
   const $ = cheerio.load(response.data);
 
-  const gpu: Partial<Gpu> = {
+  const product: Partial<Gpu> = {
     timespyGraphics: getTimespyGraphics($),
   };
 
-  return { gpu: { ...gpu } } as ScrapeGpuDetailsResponse;
+  return { product } as ScrapeProductResponse;
 }
 
 function getTimespyGraphics($: cheerio.CheerioAPI): GpuField<number> {

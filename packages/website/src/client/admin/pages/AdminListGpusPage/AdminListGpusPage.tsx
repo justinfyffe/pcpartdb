@@ -1,15 +1,7 @@
 import 'reflect-metadata';
-import {
-  AdminListGpusViewModel,
-  generateGpusQueryFromPath,
-  getAdminImportGpusPath,
-  getAdminListGpusPath,
-  getAdminNewGpuPath,
-  ListGpusQuery,
-} from '@pcpartdb/shared';
+import { getAdminImportGpusPath, getAdminNewGpuPath } from '@pcpartdb/shared';
 import { useRouter } from 'next/router';
-import React, { useCallback, useEffect, useState } from 'react';
-import { gpuService } from '../../../gpus';
+import React, { useState } from 'react';
 import {
   Alert,
   AlertVariant,
@@ -21,45 +13,12 @@ import {
   Tabs,
 } from '../../../shared/components';
 import { AdminLayout } from '../../../shared/layouts';
-import { ChipsetsTab, GpuTable, RetailModelsTab } from './components';
-import { GpuPagination } from './components/GpuPagination';
+import { ChipsetsTab, RetailModelsTab } from './components';
 
-export const AdminListGpusPage = (props: AdminListGpusViewModel) => {
+export const AdminListGpusPage = () => {
   const router = useRouter();
   const [saved] = useState(router.query.saved === 'true');
   const [deleted] = useState(router.query.deleted === 'true');
-
-  const [gpus, setGpus] = useState(props.gpus);
-  const [totalResults, setTotalResults] = useState(props.totalResults);
-  const [query, setQuery] = useState(props.query);
-
-  const fetchGpus = useCallback(async (q: ListGpusQuery) => {
-    const response = await gpuService.list(q);
-    setGpus(response.gpus);
-    setTotalResults(response.totalGpus);
-    setQuery(q);
-  }, []);
-
-  useEffect(() => {
-    router.beforePopState((cb) => {
-      fetchGpus(generateGpusQueryFromPath(cb.as));
-      return true;
-    });
-  }, [fetchGpus, router]);
-
-  const updateQuery = useCallback(
-    async (q: ListGpusQuery) => {
-      await fetchGpus(q);
-      const url = getAdminListGpusPath(q);
-      router.push(url, undefined, { shallow: true });
-    },
-    [fetchGpus, router],
-  );
-
-  const handlePageClick = useCallback(
-    (query: ListGpusQuery) => updateQuery(query),
-    [updateQuery],
-  );
 
   const pageTitle = 'GPUs';
   const seoTitle = `${pageTitle} - Admin Panel`;
@@ -90,11 +49,11 @@ export const AdminListGpusPage = (props: AdminListGpusViewModel) => {
           <div className="flex gap-4">
             <Button
               href={getAdminImportGpusPath()}
-              variant={ButtonVariant.Default}
+              variant={ButtonVariant.Generic}
             >
               Import
             </Button>
-            <Button href={getAdminNewGpuPath()} variant={ButtonVariant.Default}>
+            <Button href={getAdminNewGpuPath()} variant={ButtonVariant.Generic}>
               Add
             </Button>
           </div>

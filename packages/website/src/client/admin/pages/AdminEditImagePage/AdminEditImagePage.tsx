@@ -30,7 +30,7 @@ export const AdminEditImagePage = (props: AdminEditImageViewModel) => {
 
           <Button
             href={getAdminListImagesPath()}
-            variant={ButtonVariant.Default}
+            variant={ButtonVariant.Generic}
           >
             Back
           </Button>

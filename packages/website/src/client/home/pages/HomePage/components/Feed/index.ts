@@ -1,5 +1,5 @@
-export * from './ComparisonFeedItem';
+export * from './ProductComparisonFeedItem';
 export * from './FeedItems';
 export * from './FeedLinks';
 export * from './Feed';
-export * from './GpuFeedItem';
+export * from './ProductFeedItem';

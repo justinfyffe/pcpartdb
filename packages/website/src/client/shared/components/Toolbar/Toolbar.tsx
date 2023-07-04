@@ -8,60 +8,15 @@ interface ToolbarProps {
   children?: React.ReactNode;
 }
 
-interface ToolbarTitleProps {
-  as?: React.ElementType;
-  className?: string;
-
-  children?: React.ReactNode;
-}
-
-interface ToolbarNavProps {
-  as?: React.ElementType;
-  className?: string;
-
-  children?: React.ReactNode;
-}
-
 export const Toolbar: FunctionComponent<ToolbarProps> = (props) => {
-  const Element = props.as || 'header';
-
-  return (
-    <Element
-      className={classNames('block static text-toolbar', props.className)}
-    >
-      <div
-        className={classNames(
-          'bg-toolbar container flex h-16 items-center justify-between px-4',
-        )}
-      >
-        {props.children}
-      </div>
-    </Element>
-  );
-};
-
-export const ToolbarTitle: FunctionComponent<ToolbarTitleProps> = (props) => {
-  const Element = props.as || 'div';
-
-  return (
-    <Element
-      className={classNames(
-        'flex font-medium gap-2 items-center text-3xl md:text-2xl sm:text-xl',
-        props.className,
-      )}
-    >
-      {props.children}
-    </Element>
-  );
-};
-
-export const ToolbarNav: FunctionComponent<ToolbarNavProps> = (props) => {
   const Element = props.as || 'nav';
 
   return (
     <Element
       className={classNames(
-        'flex items-center font-medium rounded-none text-sm',
+        'container block static',
+        'bg-main-brand text-default text-base p-2',
+        'flex gap-2 items-center',
         props.className,
       )}
     >

@@ -4,6 +4,7 @@ import { classNames } from '../../ui';
 interface TextareaProps {
   value?: string;
 
+  placeholder?: string;
   disabled?: boolean;
 
   onChange?: (value: string) => void;
@@ -13,7 +14,7 @@ interface TextareaProps {
 
 export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
   (props, ref) => {
-    const { className, disabled, onChange } = props;
+    const { className, placeholder, disabled, onChange } = props;
 
     const [value, setValue] = useState<string>(props.value ?? null);
 
@@ -29,10 +30,11 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
 
     return (
       <textarea
+        placeholder={placeholder}
         disabled={disabled}
         value={value || ''}
         className={classNames(
-          'border-px m-0 p-3 rounded text-sm w-full shadow',
+          'border-px m-0 p-3 rounded text-base w-full shadow',
           className,
         )}
         onChange={handleChange}

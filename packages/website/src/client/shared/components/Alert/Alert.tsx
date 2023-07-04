@@ -16,9 +16,9 @@ interface AlertProps {
 }
 
 const ALERT_VARIANTS = {
-  [AlertVariant.Error]: 'bg-alert-error text-alert-error',
-  [AlertVariant.Info]: 'bg-alert-info text-alert-info',
-  [AlertVariant.Success]: 'bg-alert-success text-alert-success',
+  [AlertVariant.Error]: 'bg-danger text-default',
+  [AlertVariant.Info]: 'bg-info text-default',
+  [AlertVariant.Success]: 'bg-success text-default',
 };
 
 export const Alert: FunctionComponent<AlertProps> = (props) => {

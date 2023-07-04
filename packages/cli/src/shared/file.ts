@@ -9,14 +9,14 @@ if (!fs.existsSync(DATA_PATH)) {
   fs.mkdirSync(DATA_PATH, { recursive: true });
 }
 
+export async function createFolder(folder: string) {
+  await fs.promises.mkdir(folder, { recursive: true });
+}
+
 export function dataPath(file?: string) {
   return file != null ? path.join(DATA_PATH, file) : DATA_PATH;
 }
 
 export function publicPath(file?: string) {
   return file != null ? path.join(PUBLIC_PATH, file) : PUBLIC_PATH;
-}
-
-export async function createFolder(folder: string) {
-  await fs.promises.mkdir(folder, { recursive: true });
 }

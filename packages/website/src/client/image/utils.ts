@@ -1,18 +1,25 @@
 import {
-  getChipset,
-  Gpu,
+  getGpuChipset,
   Image as ImageDto,
   ImageMeta,
   joinUrlParts,
+  Product,
 } from '@pcpartdb/shared';
 
 export function getImagePath(image: ImageDto) {
   return joinUrlParts('/u/images', image.path);
 }
 
-export function getCompanyLogoAutocompletePath(gpu: Gpu): string {
-  const company = gpu?.company?.value;
+export function getCompanyLogoAutocompletePath(product: Product): string {
+  if (product == null) {
+    return null;
+  }
 
+  if (!('company' in product)) {
+    return null;
+  }
+
+  const company = product.company?.value;
   if (company == null) {
     return null;
   }
@@ -54,13 +61,23 @@ export function getCompanyLogoAutocompletePath(gpu: Gpu): string {
       return '/images/autocomplete/zotac.png';
     default:
       // No logo found, try the chipset
-      return getCompanyLogoAutocompletePath(gpu.chipset);
+      return getCompanyLogoAutocompletePath(
+        'chipset' in product ? product.chipset : null,
+      );
   }
 }
 
-export function getCompanyLogoFeedPath(gpu: Gpu): string {
-  const chipset = getChipset(gpu);
-  const company = chipset?.company?.value;
+export function getCompanyLogoFeedPath(product: Product): string {
+  if (product == null) {
+    return null;
+  }
+
+  let company: string = null;
+  if ('chipset' in product) {
+    company = getGpuChipset(product)?.company?.value;
+  } else {
+    company = product.company?.value;
+  }
 
   if (company == null) {
     return null;

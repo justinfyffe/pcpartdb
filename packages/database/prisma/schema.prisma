@@ -23,6 +23,98 @@ model AccessToken {
   @@map("access_tokens")
 }
 
+model CpuImage {
+  cpuId     Int      @map("cpu_id")
+  imageId   Int      @map("image_id")
+  createdAt DateTime @map("created_at") @default(now()) @db.Timestamptz(6) @ignore
+  updatedAt DateTime @map("updated_at") @default(now()) @db.Timestamptz(6) @updatedAt @ignore
+
+  cpu       Cpu      @relation(fields: [cpuId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "cpu_images_cpu_id_foreign")
+  image     Image    @relation(fields: [imageId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "cpu_images_image_id_foreign")
+
+  @@map("cpu_images")
+  @@id([cpuId, imageId])
+}
+
+model Cpu {
+  id             Int             @id @default(autoincrement())
+
+  slug           String          @unique(map: "cpus_slug_unique") @db.VarChar(255)
+  name           String          @db.VarChar(255)
+  affiliateUrl   String?         @map("affiliate_url") @db.VarChar(255)
+
+  partNumber                 String?       @map("part_number")
+  company                    String?
+  marketSegments             String[]      @map("market_segments")
+  launchPrice                Float?        @map("launch_price")
+  releaseDate                String?       @map("release_date")
+  productionStatus           String?       @map("production_status")
+  bundledCooler              String?       @map("bundled_cooler")
+
+  socket                     String?
+  foundry                    String?
+  processSize                Float?        @map("process_size")
+  transistors                Float?
+  tCaseMax                   Float?        @map("t_case_max")
+  tjMax                      Float?        @map("tj_max")
+
+  architecture               String?
+  codename                   String?
+  generation                 String?
+  pciExpress                 String[]      @map("pci_express")
+  chipsets                   String[]
+
+  memorySupport              String[]      @map("memory_support")
+  memoryChannels             Float?        @map("memory_channels")
+  hasEccMemory               Boolean?      @map("has_ecc_memory")
+
+  coresCount                 Float?        @map("cores_count")
+  threadsCount               Float?        @map("threads_count")
+  performanceCoresCount      Float?        @map("performance_cores_count")
+  efficientCoresCount        Float?        @map("efficient_cores_count")
+  clock                      Float?        @map("clock")
+  turboClock                 Float?        @map("turbo_clock")
+  performanceCoreClock       Float?        @map("performance_core_clock")
+  performanceCoreTurboClock  Float?        @map("performance_core_turbo_clock")
+  efficientCoreClock         Float?        @map("efficient_core_clock")
+  efficientCoreTurboClock    Float?        @map("efficient_core_turbo_clock")
+  baseClock                  Float?        @map("base_clock")
+  multiplier                 Float?
+  isMultiplierUnlocked       Boolean?      @map("is_multiplier_unlocked")
+
+  tdp                        Float?        @map("tdp")
+  pl1                        Float?        @map("pl1")
+  pl2                        Float?        @map("pl2")
+  ppt                        Float?        @map("ppt")
+
+  l1Cache                    Float?        @map("l1_cache")
+  l2Cache                    Float?        @map("l2_cache")
+  l3Cache                    Float?        @map("l3_cache")
+  efficientCoreL1Cache       Float?        @map("efficient_core_l1_cache")
+  efficientCoreL2Cache       Float?        @map("efficient_core_l2_cache")
+
+  integratedGraphics         String?       @map("integrated_graphics")
+  extensionsTechnologies     String[]      @map("extensions_technologies")
+
+  performanceScore        Float?   @map("performance_score")
+  valueScore              Float?   @map("value_score")
+  cpuMarkSingleThread     Float?   @map("cpu_mark_single_thread")
+  cpuMarkMultiThread      Float?   @map("cpu_mark_multi_thread")
+  geekbenchSingleCore     Float?   @map("geekbench_single_core")
+  geekbenchMultiCore      Float?   @map("geekbench_multi_core")
+
+  metadata       Json?
+  createdAt      DateTime        @map("created_at") @default(now()) @db.Timestamptz(6) @ignore
+  updatedAt      DateTime        @map("updated_at") @default(now()) @db.Timestamptz(6) @updatedAt
+
+  images       CpuImage[]
+  dataUpdates  DataUpdate[]
+
+  @@unique([company, name], name: "cpus_company_name_unique")
+
+   @@map("cpus")
+}
+
 model GpuImage {
   gpuId     Int      @map("gpu_id")
   imageId   Int      @map("image_id")
@@ -132,6 +224,7 @@ model Image {
   createdAt   DateTime     @map("created_at") @default(now()) @db.Timestamptz(6) @ignore
   updatedAt   DateTime     @map("updated_at") @default(now()) @db.Timestamptz(6) @ignore
 
+  cpuImages  CpuImage[]
   gpuImages  GpuImage[]
 
   @@map("images")
@@ -157,6 +250,7 @@ model DataUpdate {
   decisionUserId  Int?      @map("decision_user_id")
 
   gpuId           Int?      @map("gpu_id")
+  cpuId           Int?      @map("cpu_id")
 
   description     String?
   status          String
@@ -171,6 +265,7 @@ model DataUpdate {
 
   decisionUser    User?     @relation(fields: [decisionUserId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "data_updates_decision_user_id_foreign")
   gpu             Gpu?      @relation(fields: [gpuId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "data_updates_gpu_id_foreign")
+  cpu             Cpu?      @relation(fields: [cpuId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "data_updates_cpu_id_foreign")
 
   @@map("data_updates")
 }

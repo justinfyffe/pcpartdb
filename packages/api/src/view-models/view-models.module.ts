@@ -1,17 +1,21 @@
 import { Module } from '@nestjs/common';
 import { DataUpdateModule } from '../data-update/data-update.module';
 import { DatabaseModule } from '../database';
-import { GpuModule } from '../gpu/gpu.module';
 import { ImageModule } from '../image/image.module';
+import { CpuModule } from '../product/cpu/cpu.module';
+import { GpuModule } from '../product/gpu/gpu.module';
 import { UserModule } from '../user/user.module';
 import { AdminDataUpdatesViewModelService } from './admin/data-updates/data-updates.view-model';
-import { AdminEditGpuViewModelService } from './admin/gpus/edit.view-model';
 import { AdminEditImageViewModelService } from './admin/images/edit.view-model';
 import { AdminListImagesViewModelService } from './admin/images/list.view-model';
 import { AdminOverviewViewModelService } from './admin/overview/overview.view-model';
+import { AdminEditProductViewModelService } from './admin/products/edit.view-model';
 import { AdminEditUserViewModelService } from './admin/users/edit.view-model';
 import { AdminListUsersViewModelService } from './admin/users/list.view-model';
 import { RegisterViewModelService } from './auth/register.view-model';
+import { CompareCpusViewModelService } from './cpus/compare.view-model';
+import { ListCpusViewModelService } from './cpus/list.view-model';
+import { ViewCpuViewModelService } from './cpus/view.view-model';
 import { CompareGpusViewModelService } from './gpus/compare.view-model';
 import { ListGpusViewModelService } from './gpus/list.view-model';
 import { ViewGpuViewModelService } from './gpus/view.view-model';
@@ -22,22 +26,39 @@ import { ViewModelsController } from './view-models.controller';
   imports: [
     DatabaseModule,
     DataUpdateModule,
+    CpuModule,
     GpuModule,
     ImageModule,
     UserModule,
   ],
   controllers: [ViewModelsController],
   providers: [
-    AdminOverviewViewModelService,
-    AdminEditGpuViewModelService,
+    // Admin Edit Pages
+    AdminEditProductViewModelService,
     AdminEditImageViewModelService,
-    AdminListImagesViewModelService,
     AdminEditUserViewModelService,
+
+    // Admin List Pages
+    AdminListImagesViewModelService,
     AdminListUsersViewModelService,
+
+    // Admin Other Pages
+    AdminOverviewViewModelService,
     AdminDataUpdatesViewModelService,
+
+    // Compare Pages
+    CompareCpusViewModelService,
     CompareGpusViewModelService,
+
+    // List Pages
+    ListCpusViewModelService,
     ListGpusViewModelService,
+
+    // View Pages
+    ViewCpuViewModelService,
     ViewGpuViewModelService,
+
+    // Other Pages
     RegisterViewModelService,
     HomeViewModelService,
   ],

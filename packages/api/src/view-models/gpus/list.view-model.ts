@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { ListGpusQuery, ListGpusResponse } from '@pcpartdb/shared';
 import deepmerge from 'deepmerge';
-import { GpuService } from '../../gpu/gpu.service';
-import { listGpusQueryValidator } from '../../gpu/gpu.validators';
+import { GpuService } from '../../product/gpu/gpu.service';
+import { listGpusQueryValidator } from '../../product/gpu/gpu.validators';
 import { Context } from '../../shared/context';
 import { validate } from '../../shared/types/validate';
 

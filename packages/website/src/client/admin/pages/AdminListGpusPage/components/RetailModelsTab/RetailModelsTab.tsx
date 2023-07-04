@@ -1,20 +1,23 @@
 import {
   DEFAULT_LIST_GPUS_LIMIT,
   DEFAULT_LIST_GPUS_OFFSET,
-  generateGpusQueryFromPath,
+  generateListGpusQueryFromPath,
   getAdminListGpusPath,
   Gpu,
   ListGpusQuery,
+  ProductType,
 } from '@pcpartdb/shared';
 import { useRouter } from 'next/router';
-import { GpuAutocomplete } from 'packages/website/src/client/gpus/components';
+import {
+  gpuService,
+  ProductAutocomplete,
+} from 'packages/website/src/client/product';
 import React, {
   FunctionComponent,
   useCallback,
   useEffect,
   useState,
 } from 'react';
-import { gpuService } from '../../../../../gpus';
 import { Alert, AlertVariant } from '../../../../../shared/components';
 import { GpuPagination } from '../GpuPagination';
 import { GpuTable } from '../GpuTable';
@@ -50,7 +53,7 @@ export const RetailModelsTab: FunctionComponent<RetailModelsTabProps> = () => {
 
   useEffect(() => {
     router.beforePopState((cb) => {
-      fetchChipsets(generateGpusQueryFromPath(cb.as));
+      fetchChipsets(generateListGpusQueryFromPath(cb.as));
       return true;
     });
   }, [fetchChipsets, router]);
@@ -68,7 +71,10 @@ export const RetailModelsTab: FunctionComponent<RetailModelsTabProps> = () => {
     (chipsetId: number) => {
       const q: ListGpusQuery = {
         ...query,
-        filter: { ...query.filter, chipsetId: chipsetId },
+        filter: {
+          ...query.filter,
+          chipsetId: chipsetId != null ? chipsetId : undefined,
+        },
       };
       setQuery(q);
     },
@@ -79,7 +85,10 @@ export const RetailModelsTab: FunctionComponent<RetailModelsTabProps> = () => {
     <section className="flex flex-col gap-4">
       <div className="flex gap-4 items-center">
         <span>Filter by Chipset:</span>
-        <GpuAutocomplete onChange={handleChipsetChange} />
+        <ProductAutocomplete
+          productType={ProductType.Gpu}
+          onChange={handleChipsetChange}
+        />
       </div>
 
       {retailModels.length > 0 && (

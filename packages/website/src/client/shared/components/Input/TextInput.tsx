@@ -1,6 +1,8 @@
 import React, { forwardRef, useCallback } from 'react';
 import { Input, InputProps } from './Input';
 
+export interface TextInputProps extends Omit<InputProps, 'type'> {}
+
 export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
   (props, ref) => {
     const { onChange, ...restProps } = props;
@@ -18,5 +20,3 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
   },
 );
 TextInput.displayName = 'TextInput';
-
-export interface TextInputProps extends Omit<InputProps, 'type'> {}

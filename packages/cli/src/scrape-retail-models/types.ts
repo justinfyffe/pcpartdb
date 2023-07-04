@@ -1,9 +1,9 @@
-import { MarketSegmentValue } from '@pcpartdb/shared';
+import { GpuMarketSegmentValue } from '@pcpartdb/shared';
 
 export interface RetailModelSource {
   name: string;
   company?: string;
-  marketSegment: MarketSegmentValue;
+  marketSegment: GpuMarketSegmentValue;
   chipsetId: number;
   techPowerUpUrl?: string;
 }

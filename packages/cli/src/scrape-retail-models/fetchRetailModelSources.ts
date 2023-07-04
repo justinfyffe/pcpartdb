@@ -1,14 +1,14 @@
 import { scrapeTechPowerUpRetailModelSources } from '@pcpartdb/scraper';
-import { cleanUrl, MarketSegmentValue } from '@pcpartdb/shared';
+import { cleanUrl, GpuMarketSegmentValue } from '@pcpartdb/shared';
 import * as fsPromises from 'fs/promises';
 import { RetailModelSource } from './types';
 
 interface FetchRetailModelSourcesOptions {
   sourcesPath: string;
   chipsetId: number;
-  marketSegment: MarketSegmentValue;
+  marketSegment: GpuMarketSegmentValue;
   techPowerUpUrl: string;
-  proxy?: boolean;
+  noProxy?: boolean;
 }
 
 export async function fetchRetailModelSources(
@@ -16,12 +16,12 @@ export async function fetchRetailModelSources(
 ) {
   console.log('Scraping Retail Model Sources from TechPowerUp');
 
-  const { sourcesPath, chipsetId, marketSegment, techPowerUpUrl, proxy } =
+  const { sourcesPath, chipsetId, marketSegment, techPowerUpUrl, noProxy } =
     options;
 
   const rawSources = await scrapeTechPowerUpRetailModelSources({
     url: techPowerUpUrl,
-    proxy,
+    noProxy,
   });
   const sources: RetailModelSource[] = rawSources.map((source) => ({
     chipsetId,

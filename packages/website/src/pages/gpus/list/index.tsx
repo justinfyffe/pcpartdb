@@ -1,10 +1,10 @@
-import { generateGpusQueryFromSearchParams } from '@pcpartdb/shared';
+import { generateListGpusQueryFromSearchParams } from '@pcpartdb/shared';
 import { NextPageContext } from 'next';
-import { ListGpusPage } from '../../../client/gpus/pages';
+import { ListGpusPage } from 'packages/website/src/client/product';
 import { viewModelsClient } from '../../../client/shared/api';
 
 export async function getServerSideProps(ctx: NextPageContext) {
-  const query = generateGpusQueryFromSearchParams(ctx.query);
+  const query = generateListGpusQueryFromSearchParams(ctx.query);
 
   return await viewModelsClient.get('gpus/list', {
     params: { q: JSON.stringify(query) },

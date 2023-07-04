@@ -1,7 +1,9 @@
-import { Gpu, GpuComparison } from '../gpu';
+import { Cpu, CpuComparison, Gpu, GpuComparison } from '../product';
 
 export interface HomeViewModel {
   nvidiaVsAmdGpus: GpuComparison[];
-  nvidiaGpus: Gpu[];
-  amdGpus: Gpu[];
+  popularGpus: Gpu[];
+
+  intelVsAmdCpus: CpuComparison[];
+  popularCpus: Cpu[];
 }

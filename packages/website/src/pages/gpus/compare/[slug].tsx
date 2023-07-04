@@ -1,6 +1,6 @@
 import { joinUrlParts } from '@pcpartdb/shared';
 import { NextPageContext } from 'next';
-import { CompareGpuPage } from '../../../client/gpus/pages';
+import { CompareGpusPage } from 'packages/website/src/client/product';
 import { viewModelsClient } from '../../../client/shared/api';
 
 export async function getServerSideProps(ctx: NextPageContext) {
@@ -10,4 +10,4 @@ export async function getServerSideProps(ctx: NextPageContext) {
   return await viewModelsClient.get(endpoint);
 }
 
-export default CompareGpuPage;
+export default CompareGpusPage;

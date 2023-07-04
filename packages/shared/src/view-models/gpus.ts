@@ -1,20 +1,13 @@
 import {
   Gpu,
   GpuComparison,
-  ListGpusQuery,
   ListGpusResponse,
-  RelatedComparisons,
+  RelatedGpuComparisons,
   RelatedGpus,
-} from '../gpu';
+} from '../product';
 
 export interface AdminEditGpuViewModel {
   gpu: Gpu;
-}
-
-export interface AdminListGpusViewModel {
-  query: ListGpusQuery;
-  gpus: Gpu[];
-  totalResults: number;
 }
 
 export interface CompareGpusContentData {
@@ -29,14 +22,13 @@ export interface CompareGpusViewModel {
   comparison: GpuComparison;
   contentData: CompareGpusContentData;
   relatedGpus: RelatedGpus;
-  relatedComparisons: RelatedComparisons;
+  relatedComparisons: RelatedGpuComparisons;
 }
 
 export interface ListGpusViewModel extends ListGpusResponse {}
 
 export interface ViewGpuContentData {
   totalPerformanceGpus: number;
-  totalPerformanceSegmentYearGpus: number;
 
   relativePerformanceGpus?: Gpu[];
   relativeValueGpus?: Gpu[];
@@ -52,5 +44,5 @@ export interface ViewGpuViewModel {
 
   contentData: ViewGpuContentData;
   relatedGpus: RelatedGpus;
-  relatedComparisons: RelatedComparisons;
+  relatedComparisons: RelatedGpuComparisons;
 }

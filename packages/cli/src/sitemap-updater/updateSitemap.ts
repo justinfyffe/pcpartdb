@@ -1,11 +1,22 @@
-import { GpuRepository, mapToGpuDtos } from '@pcpartdb/database';
+import {
+  CpuRepository,
+  GpuRepository,
+  mapToCpuDtos,
+  mapToGpuDtos,
+} from '@pcpartdb/database';
 import {
   getAboutPath,
+  getCompareCpusPath,
   getCompareGpusPath,
+  getListCpusPath,
   getListGpusPath,
   getPrivacyPath,
+  getViewCpuPath,
   getViewGpuPath,
+  LIST_CPUS_PRESETS,
   LIST_GPUS_PRESETS,
+  ListCpusOrder,
+  ListCpusSort,
   ListGpusOrder,
   ListGpusSort,
   WEBSITE_URL,
@@ -18,11 +29,13 @@ import { getDatabase } from '../shared/database';
 import { sitemapPath, sitemapUrl, websiteUrl } from './utils';
 
 const COMPARISONS_PER_SITEMAP = 49_000;
-const CHIPSETS_PER_SITEMAP = 49_000;
-const RETAIL_MODELS_PER_SITEMAP = 49_000;
+const PRODUCTS_PER_SITEMAP = 49_000;
 
 const INDEX_FILENAME = 'sitemap-index.xml';
 const GENERAL_FILENAME = 'sitemap-general.xml';
+const CPU_LISTS_FILENAME = 'sitemap-cpu-lists.xml';
+const CPU_PRODUCTS_FILENAME = 'sitemap-cpu-products-{i}.xml';
+const CPU_COMPARISONS_FILENAME = 'sitemap-cpu-comparisons-{i}.xml';
 const GPU_LISTS_FILENAME = 'sitemap-gpu-lists.xml';
 const GPU_CHIPSETS_FILENAME = 'sitemap-gpu-chipsets-{i}.xml';
 const GPU_RETAIL_MODELS_FILENAME = 'sitemap-gpu-retail-models-{i}.xml';
@@ -38,6 +51,9 @@ export async function updateSitemap() {
 
   const sitemapUrls = [
     await writeGeneralSitemap(),
+    await writeCpuListsSitemap(),
+    ...(await writeCpusSitemap()),
+    ...(await writeCpuComparisonsSitemap()),
     await writeGpuListsSitemap(),
     ...(await writeGpuChipsetsSitemap()),
     ...(await writeGpuRetailModelsSitemap()),
@@ -60,6 +76,136 @@ async function writeGeneralSitemap() {
   console.log(`Generated ${GENERAL_FILENAME} with ${entries.length} entries`);
 
   return sitemapUrl(GENERAL_FILENAME, { compressed: true });
+}
+
+async function writeCpuListsSitemap() {
+  console.log('Generating CPU Lists sitemap');
+
+  const entries: SitemapEntry[] = Object.entries(LIST_CPUS_PRESETS).map(
+    ([_key, preset]) => ({
+      url: websiteUrl(getListCpusPath(preset)),
+    }),
+  );
+
+  await writeSitemap(sitemapPath(CPU_LISTS_FILENAME), entries);
+  console.log(`Generated ${CPU_LISTS_FILENAME} with ${entries.length} entries`);
+
+  return sitemapUrl(CPU_LISTS_FILENAME, { compressed: true });
+}
+
+async function writeCpusSitemap() {
+  console.log('Generating CPUs sitemap');
+
+  const db = await getDatabase();
+  const cpuRepository = new CpuRepository(db);
+
+  const results = await cpuRepository.listAll({
+    query: {
+      orderBy: { sort: ListCpusSort.Name, order: ListCpusOrder.Asc },
+    },
+  });
+  const cpus = mapToCpuDtos(results);
+
+  let fileCounter = 0;
+  let entries: SitemapEntry[] = [];
+  let totalEntries = 0;
+  const sitemapUrls: string[] = [];
+
+  for (let i = 0; i < cpus.length - 1; ++i) {
+    const cpu = cpus[i];
+
+    const url = websiteUrl(getViewCpuPath(cpu));
+    const lastModTimestamp = Math.max(cpu.updatedAt ?? 0, cpu.updatedAt ?? 0);
+    const lastModification =
+      lastModTimestamp != 0 ? new Date(lastModTimestamp) : undefined;
+
+    entries.push({ url, lastModification });
+    ++totalEntries;
+
+    if (entries.length >= PRODUCTS_PER_SITEMAP) {
+      const filename = CPU_PRODUCTS_FILENAME.replace('{i}', `${fileCounter}`);
+      await writeSitemap(sitemapPath(filename), entries);
+      sitemapUrls.push(sitemapUrl(filename, { compressed: true }));
+      console.log(`Generated  ${filename} with ${entries.length} entries`);
+
+      entries = [];
+      fileCounter++;
+    }
+  }
+
+  if (entries.length > 0) {
+    const filename = CPU_PRODUCTS_FILENAME.replace('{i}', `${fileCounter}`);
+    await writeSitemap(sitemapPath(filename), entries);
+    sitemapUrls.push(sitemapUrl(filename, { compressed: true }));
+    console.log(`Generated ${filename} with ${entries.length} entries`);
+  }
+
+  console.log(`${totalEntries} total entries for CPUs sitemaps`);
+
+  return sitemapUrls;
+}
+
+async function writeCpuComparisonsSitemap() {
+  console.log('Generating CPU Comparison sitemap');
+
+  const db = await getDatabase();
+  const cpuRepository = new CpuRepository(db);
+
+  const results = await cpuRepository.listAll({
+    query: {
+      orderBy: { sort: ListCpusSort.ReleaseDate, order: ListCpusOrder.Desc },
+    },
+  });
+  const cpus = mapToCpuDtos(results);
+
+  let fileCounter = 0;
+  let entries: SitemapEntry[] = [];
+  let totalEntries = 0;
+  const sitemapUrls: string[] = [];
+
+  for (let i = 0; i < cpus.length - 1; ++i) {
+    for (let j = i + 1; j < cpus.length; ++j) {
+      const cpu1 = cpus[i];
+      const cpu2 = cpus[j];
+
+      const url1 = websiteUrl(getCompareCpusPath([cpu1, cpu2]));
+      const url2 = websiteUrl(getCompareCpusPath([cpu2, cpu1]));
+      const lastModTimestamp = Math.max(
+        cpu1.updatedAt ?? 0,
+        cpu2.updatedAt ?? 0,
+      );
+      const lastModification =
+        lastModTimestamp != 0 ? new Date(lastModTimestamp) : undefined;
+
+      entries.push({ url: url1, lastModification });
+      entries.push({ url: url2, lastModification });
+      totalEntries += 2;
+
+      if (entries.length >= COMPARISONS_PER_SITEMAP) {
+        const filename = CPU_COMPARISONS_FILENAME.replace(
+          '{i}',
+          `${fileCounter}`,
+        );
+        await writeSitemap(sitemapPath(filename), entries);
+        sitemapUrls.push(sitemapUrl(filename, { compressed: true }));
+        console.log(`Generated  ${filename} with ${entries.length} entries`);
+
+        entries = [];
+        fileCounter++;
+      }
+    }
+  }
+
+  if (entries.length > 0) {
+    const filename = CPU_COMPARISONS_FILENAME.replace('{i}', `${fileCounter}`);
+    await writeSitemap(sitemapPath(filename), entries);
+    sitemapUrls.push(sitemapUrl(filename, { compressed: true }));
+    console.log(`Generated ${filename} with ${entries.length} entries`);
+  }
+
+  console.log(`${totalEntries} total entries for CPU Comparison sitemaps`);
+
+  return sitemapUrls;
 }
 
 async function writeGpuListsSitemap() {
@@ -107,7 +253,7 @@ async function writeGpuChipsetsSitemap() {
     entries.push({ url, lastModification });
     ++totalEntries;
 
-    if (entries.length >= CHIPSETS_PER_SITEMAP) {
+    if (entries.length >= PRODUCTS_PER_SITEMAP) {
       const filename = GPU_CHIPSETS_FILENAME.replace('{i}', `${fileCounter}`);
       await writeSitemap(sitemapPath(filename), entries);
       sitemapUrls.push(sitemapUrl(filename, { compressed: true }));
@@ -125,7 +271,7 @@ async function writeGpuChipsetsSitemap() {
     console.log(`Generated ${filename} with ${entries.length} entries`);
   }
 
-  console.log(`${totalEntries} total entries for GPU Retail Models sitemaps`);
+  console.log(`${totalEntries} total entries for GPU chipsets sitemaps`);
 
   return sitemapUrls;
 }
@@ -160,7 +306,7 @@ async function writeGpuRetailModelsSitemap() {
     entries.push({ url, lastModification });
     ++totalEntries;
 
-    if (entries.length >= RETAIL_MODELS_PER_SITEMAP) {
+    if (entries.length >= PRODUCTS_PER_SITEMAP) {
       const filename = GPU_RETAIL_MODELS_FILENAME.replace(
         '{i}',
         `${fileCounter}`,

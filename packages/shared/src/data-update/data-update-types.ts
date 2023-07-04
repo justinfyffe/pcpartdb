@@ -1,5 +1,5 @@
 import { Operation } from 'fast-json-patch';
-import { Gpu, GpuDiff } from '../gpu';
+import { Cpu, Gpu, ProductDiff } from '../product';
 import { User } from '../user';
 
 export type Diff = Operation[];
@@ -20,6 +20,7 @@ export interface DataUpdateMeta {}
 export interface DataUpdate<TUpdateData = unknown> {
   id?: number;
   decisionUserId?: number;
+  cpuId?: number;
   gpuId?: number;
 
   description?: string;
@@ -33,10 +34,11 @@ export interface DataUpdate<TUpdateData = unknown> {
 
   // Relations
   decisionUser?: User;
+  cpu?: Cpu;
   gpu?: Gpu;
 }
 
-export interface GpuDataUpdate extends DataUpdate<GpuDiff> {}
+export interface ProductDataUpdate extends DataUpdate<ProductDiff> {}
 
 export interface ListDataUpdatesRequest {
   status?: DataUpdateStatus;

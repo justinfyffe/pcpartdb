@@ -20,7 +20,7 @@ export const showDialog = (
   document.body.appendChild(dialogElement);
   ReactDOM.render(content, contentElement);
 
-  if (!options?.disableClose) {
+  if (options?.disableClose !== true) {
     contentElement.addEventListener('click', (e) => {
       if (e.target !== contentElement) {
         return;

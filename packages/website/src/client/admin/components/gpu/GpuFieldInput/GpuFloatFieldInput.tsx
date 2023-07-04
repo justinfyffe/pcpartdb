@@ -1,28 +1,29 @@
 import {
   BandwidthUnit,
   BitUnit,
-  calculateBaseGpuFieldValue,
-  calculateDisplayGpuFieldValue,
   ClockSpeedUnit,
   CurrencyUnit,
   FlopsUnit,
+  getBaseUnitValue,
+  getDisplayUnitValue,
   getUnitFormat,
   GpuField,
   GpuFieldKey,
-  GpuFieldUnit,
+  hasProductFieldValue,
   LengthUnit,
-  MemoryUnit,
+  MeasurementUnit,
+  MemorySizeUnit,
   NumericUnit,
   PixelFillRateUnit,
   TextureFillRateUnit,
   WattageUnit,
   WeightUnit,
 } from '@pcpartdb/shared';
-import { formatGpuField } from 'packages/website/src/client/gpus';
+import { formatGpuField } from 'packages/website/src/client/product';
 import React, { forwardRef, useCallback, useMemo, useState } from 'react';
 import { NumberInput } from '../../../../shared/components';
 
-const UNITS: Record<string, GpuFieldUnit[]> = {
+const UNITS: Record<string, MeasurementUnit[]> = {
   launchPrice: [CurrencyUnit.USD],
   processSize: [LengthUnit.nm, LengthUnit.um],
   transistors: [NumericUnit.million],
@@ -34,13 +35,13 @@ const UNITS: Record<string, GpuFieldUnit[]> = {
   suggestedPsu: [WattageUnit.w],
   coreClockSpeedBase: [ClockSpeedUnit.mhz, ClockSpeedUnit.ghz],
   coreClockSpeedBoost: [ClockSpeedUnit.mhz, ClockSpeedUnit.ghz],
-  l1Cache: [MemoryUnit.kb, MemoryUnit.mb],
-  l2Cache: [MemoryUnit.mb, MemoryUnit.kb],
+  l1Cache: [MemorySizeUnit.kb, MemorySizeUnit.mb],
+  l2Cache: [MemorySizeUnit.mb, MemorySizeUnit.kb],
   pixelFillRate: [PixelFillRateUnit.gpixelps],
   textureFillRate: [TextureFillRateUnit.gtexelps],
   fp32Performance: [FlopsUnit.tflops, FlopsUnit.gflops],
   fp64Performance: [FlopsUnit.gflops, FlopsUnit.tflops],
-  memorySize: [MemoryUnit.gb, MemoryUnit.mb, MemoryUnit.kb],
+  memorySize: [MemorySizeUnit.gb, MemorySizeUnit.mb, MemorySizeUnit.kb],
   memoryInterface: [BitUnit.bit],
   memoryBandwidth: [BandwidthUnit.gbps, BandwidthUnit.mbps],
   memoryClock: [ClockSpeedUnit.mhz],
@@ -72,17 +73,17 @@ export const GpuFloatFieldInput = forwardRef<
   );
 
   const displayValue = useMemo(() => {
-    if (value?.value == null) {
+    if (!hasProductFieldValue(value)) {
       return null;
     }
 
-    return calculateDisplayGpuFieldValue(value.value, unit);
+    return getDisplayUnitValue(value.value, unit);
   }, [value, unit]);
 
   const handleChange = useCallback(
     (value: number) => {
       onChange?.({
-        value: calculateBaseGpuFieldValue(value, unit),
+        value: getBaseUnitValue(value, unit),
         meta: { fieldKey: field, unit: unit },
       });
     },
@@ -93,7 +94,7 @@ export const GpuFloatFieldInput = forwardRef<
     const newIndex = unitIndex < units.length - 1 ? unitIndex + 1 : 0;
     setUnitIndex(newIndex);
     const newValue: GpuField<number> = {
-      value: calculateBaseGpuFieldValue(displayValue, units[unitIndex]),
+      value: getBaseUnitValue(displayValue, units[unitIndex]),
       meta: { fieldKey: field, unit: units[unitIndex] },
     };
 

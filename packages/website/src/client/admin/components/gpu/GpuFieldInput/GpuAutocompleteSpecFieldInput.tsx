@@ -1,7 +1,7 @@
 import { GpuField, GpuFieldKey } from '@pcpartdb/shared';
-import { formatGpuField } from 'packages/website/src/client/gpus';
+import { formatGpuField } from 'packages/website/src/client/product';
 import React, { forwardRef, useCallback, useMemo, useState } from 'react';
-import { gpuService } from '../../../../gpus/gpuService';
+import { gpuService } from '../../../../product/services/gpuService';
 import {
   Autocomplete,
   AutocompleteOption,

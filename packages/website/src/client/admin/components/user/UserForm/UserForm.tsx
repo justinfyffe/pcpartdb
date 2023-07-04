@@ -196,7 +196,7 @@ export const UserForm: FunctionComponent<UserFormProps> = (props) => {
         {isUpdate && (
           <Button
             type="button"
-            variant={ButtonVariant.Secondary}
+            variant={ButtonVariant.Warning}
             onClick={handleDelete}
             disabled={saving || deleting}
             className="mr-4"

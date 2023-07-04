@@ -1,33 +1,24 @@
-import { buildSourceModel } from './buildSourceModel';
-import { sanitizeVideocardBenchmarksGpuSources } from './sanitizeVideocardBenchmarksGpuSources';
-import { scrapeTechPowerUpGpuSources } from './scrapeTechPowerUpGpuSources';
-import { scrapeUlBenchmarkGpuSources } from './scrapeUlBenchmarkGpuSources';
-import { ScrapeSource } from './types';
+import { scrapeCpuSources } from './cpu';
+import { scrapeGpuSources } from './gpu';
 
 export type ScrapeSourcesCommandArgs = {
-  source: string;
+  product: 'cpu' | 'gpu';
+  source?: string;
   skipScraping?: boolean;
-  proxy?: boolean;
+  skipSourceModel?: boolean;
+  noProxy?: boolean;
 };
 
 export async function scrapeSourcesCommand(args: ScrapeSourcesCommandArgs) {
   console.log(`Scraping sources with args=${JSON.stringify(args)}`);
-  const { source, proxy } = args;
-  const skipScraping = args.skipScraping ?? false;
+  const { product } = args;
 
-  if (!skipScraping) {
-    if (source === ScrapeSource.TechPowerUp) {
-      await scrapeTechPowerUpGpuSources({ proxy });
-    } else if (source === ScrapeSource.UlBenchmarks) {
-      await scrapeUlBenchmarkGpuSources({ proxy });
-    } else if (source === ScrapeSource.VideocardBenchmarks) {
-      await sanitizeVideocardBenchmarksGpuSources();
-    } else {
-      await scrapeTechPowerUpGpuSources({ proxy });
-      await scrapeUlBenchmarkGpuSources({ proxy });
-      await sanitizeVideocardBenchmarksGpuSources();
-    }
+  if (product === 'cpu') {
+    await scrapeCpuSources(args);
+  } else if (product === 'gpu') {
+    await scrapeGpuSources(args);
+  } else {
+    await scrapeGpuSources(args);
+    await scrapeCpuSources(args);
   }
-
-  await buildSourceModel();
 }

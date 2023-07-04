@@ -1,3 +1,49 @@
+- cpus
+  - [] download data
+  - [x] create cli scripts to fetch data sources and data
+    - [x] scrape-sources
+    - [x] scrape-data
+    - [x] test cpu data
+  - [x] add cpu support to importer
+  - [x] add cpu support to data updater
+    - Add update type to data-updater
+    - do not add it to gpu-updater, we will implement a new updating functionality soon
+    - only need to handle supporting checking update diffs
+  - [x] create cpu pages
+    - [x] view page
+      - [x] overview
+    - [x] compare page
+      - [x] overview
+    - [x] list page
+  - [x] update home page
+    - [x] search
+    - [x] feed
+  - [x] update autocomplete
+  - [x] cpu performance and value ranks
+  - [x] sitemap
+  - [x] update gpu code to be similar to cpu for components
+    - [x] product highlights
+    - [x] product field row / custom row
+- [x] code cleanup
+  - generalize gpu and cpu components to use product
+    - speed up development of new product types
+    - gpu -> ProductFieldRow
+
+- updating
+  - call it auto-pilot
+    - runs cron jobs of scrape-sources, scrape data
+    - shared service for calling website api
+      - queue scrape requests, detect rate limit
+  - create api so cli can post data updates to the website
+  - dashboard on overview that shows recent updates 
+  - add another button to form - "Update"
+    - Similar to Scrape, but only updates auto-update fields
+  - show diff for scraping
+  - store new cpu/gpu as draft?
+
+- improve deployments
+  - use docker, but not for database
+
 Road Map:
 - add content
   - new gpus
@@ -9,8 +55,6 @@ Road Map:
   - simplify components
   - general cleanup
   - max/min media queries
-  - improve GpuCache/ImageCache?
-    - auto cache parent and retail models from gpu
 - improve view/compare relative performance/value
   - toggle market segments, default to same market segment
 - cpus
@@ -43,6 +87,120 @@ Road Map:
   - add cores?
   - Restructure code to similar to the compare page.
 
+GPU DATA
+- Sources
+  - notebookcheck
+    - benchmarks
+
+CPU DATA (!! = important spec ! = yes, ~ = mayber, X = no)
+- Sources
+  ! - TechPowerUp
+      - Most specs
+  ! - CPU Benchmark (Passmark)
+      - CPU Mark
+  ! - GeekBench
+      - GeekBench benchmarks: https://browser.geekbench.com/processor-benchmarks
+  ~ - Technical.City
+      - List of CPUs
+      - Other benchmarks?
+  ~ - CPU-World
+    - features / extensions / technologies
+    - Integrated gpu data
+    - https://www.cpu-world.com/CPUs/Zen/AMD-Ryzen%209%207900X.html
+  - Nanoreview
+    - Specs? Check if more consistent
+    - https://nanoreview.net/en/cpu/intel-core-i7-13700
+  - notebookcheck
+    - benchmarks
+- Physical
+  !! - Socket :: AMD Socket AM4
+  ! - Foundry :: TSMC
+  ! - Process Size :: 7 nm
+  ! - Transistors :: 3,800 million
+  ! - Die Size: 74 mm^2
+  X - I/O Process Size :: 12 nm
+  X - I/O Die Size :: 124 mm^2
+  ! - tCaseMax :: 95o C (a.k.a. Maximum case temperature (TCase), The max temperature for optimal performance/longetivity)
+  ! - TjMax :: 100o C (a.k.a Maximum core temperature, temperature where CPU will start to throttle, reducing performance to cool down)
+- Processor
+  ! - Market :: Desktop
+  ! - Production Status :: Active
+  ! - Release Date :: Jul 7th, 2019
+  ! - Launch Price :: $199
+  ! - Part# :: 100-000000031
+  ! - Bundled Cooler :: Wraith Stealth
+- Core Config
+  !! - # of Cores :: 6
+  !! - # of Threads :: 12
+  ! - Performance Cores :: 8 (a.ka. P-Cores)
+  ! - Efficient Cores :: 8 (a.ka. E-Cores)
+  X - Hybrid Cores :: P-Cores: 8, E-Cores: 16 (a.k.a. Performance Cores and Efficient Cores)
+  X - SMP # CPUs :: 1 (a.k.a. SMP Cores - number of processors to share standard memory in a single os "symmetrical multi-processor cores")
+  !! - Integrated Graphics :: N/A
+- Performance
+  !! - Frequency :: 3.6 GHz
+  !! - Turbo Clock :: up to 4.2 GHz
+  ! - Performance Core Clock (a.k.a. Frequency)
+  ! - Performance Core Turbo Clock (a.k.a. P-Core Turbo / Turbo Clock)
+  ! - Efficient Core Clock
+  ! - Efficient Core Turbo Clock
+  ! - Base Clock :: 100 MHz
+  ! - Multiplier :: 36.0x
+  !! - Multiplier Unlocked :: Yes (overclocking support)
+  !! - TDP :: 65 W
+  X - PPT :: 116 W (a.k.a. Package Power Tracking - Allowed socket power consumption permitted across the voltage rails supplying the socket)
+  ! - PL1 :: 65 W (a.k.a. Marketed Power State (TDP))
+  ! - PL2 :: 253 W (a.k.a TDP Up or "Power Limit" - The power draw when cpu boosts to turbo)
+  X - PL2 Tau Limit :: Unlimited
+  X - FP32 :: 1,209.6 GFLOPS
+- Cache
+  !! - Cache L1 :: 64K (per core)
+  !! - Cache L2 :: 512K (per core)
+  !! - Cache L3 :: 32MB (shared)
+  X - E-Core L1 :: 96K (per core)
+  X - E-Core L2 :: 4MB (per module)
+- Architecture
+  !! - Data Width :: 64 bit
+  !! - Codename :: Matisse, Raptor Lake-S (a.k.a. Architecture codename)
+  !! - Generation :: Ryzen 5; Core i9 (Raptor Lake)  (a.k.a. Series)
+  !! - Memory Support :: DDR4 MHz Dual-channel
+  !! - # of Memory Channels :: Dual Channel
+  ! - Max Memory Size :: 128 Gb
+  !! - Memory Speed :: 3200 MT/s (DDR4), 5600 MT/s (DDR5) (Megatransfers per second, data rate)
+  ! - ECC Memory :: No
+  ! - PCI-Express :: Gen 4, 15 Lanes (CPU Only)
+  ! - Secondary PCIe :: Gen 4, 4 Lanes
+  !! - Chipsets :: AMD 300 Series, AMD 400 Series, AMD 500 Series
+! - Features
+ - MMX
+ - SSE
+ - SSE2
+ - SSe3
+ - SSSE3
+ - SSE4A
+ - SSE4.1
+ - SSE4.2
+ - AES
+ - AVX
+ - AVX2
+ - BMI1
+ - BMI2
+ - SHA
+ - F16C
+ - FMA3
+ - AMD64
+ - EVP
+ - AMD-V
+ - SMAP
+ - SMEP
+ - SMT
+ - Precision Boost 2
+ - RdRand
+ - ABM
+- Benchmarks
+  ! - CPU Mark
+  ! - GeekBench 6 Single Core
+  ! - GeekBench 6 Multi Core
 
 
 OVERVIEW

@@ -1,4 +1,10 @@
-import { AdminImportGpusPage } from 'packages/website/src/client/admin/pages';
+import { ProductType } from '@pcpartdb/shared';
+import { NextPageContext } from 'next';
+import { AdminImportProductsPage } from 'packages/website/src/client/admin/pages/AdminImportProductsPage';
 import { withStaffGuard } from 'packages/website/src/client/shared/guards';
 
-export default withStaffGuard(AdminImportGpusPage);
+export async function getServerSideProps(_ctx: NextPageContext) {
+  return { props: { productType: ProductType.Gpu } };
+}
+
+export default withStaffGuard(AdminImportProductsPage);

@@ -1,0 +1,128 @@
+import {
+  CompareCpusViewModel,
+  getCompareCpusPath,
+  getHomePath,
+  getListCpusPath,
+  ProductType,
+} from '@pcpartdb/shared';
+import React, { useMemo } from 'react';
+import { useProductCache } from '../../../../shared/cache';
+import { Breadcrumb, Breadcrumbs, Seo } from '../../../../shared/components';
+import { WebsiteLayout } from '../../../../shared/layouts';
+import {
+  Sidenav,
+  SidenavRelatedComparisons,
+  SidenavRelatedProducts,
+} from '../../../../sidenav';
+import { CompareProductsForm } from '../../../components/CompareProductsForm';
+import {
+  formatCpuComparisonName,
+  formatCpuName,
+} from '../../../utils/cpuUtils';
+import {
+  Benchmarks,
+  Disclaimer,
+  GeneralInfo,
+  Highlights,
+  Overview,
+  RelativePerformance,
+  RelativeValue,
+  TechnicalSpecs,
+} from './components';
+import { ComparePageContext } from './context';
+import { useComparePageContextProps } from './hooks';
+
+export const CompareCpusPage = (props: CompareCpusViewModel) => {
+  const { comparison, contentData, relatedCpus, relatedComparisons } = props;
+  const [cpu1, cpu2] = comparison;
+  useProductCache(ProductType.Cpu, cpu1, cpu2);
+
+  const context = useComparePageContextProps({ comparison, contentData });
+
+  const pageTitle = useMemo(
+    () => formatCpuComparisonName(comparison),
+    [comparison],
+  );
+  const shortPageTitle = useMemo(
+    () => formatCpuComparisonName(comparison, { company: false }),
+    [comparison],
+  );
+  const seoTitle = useMemo(
+    () =>
+      `${formatCpuComparisonName(comparison, {
+        company: false,
+      })}: Compare specs, performance, and value`,
+    [comparison],
+  );
+  const seoKeywords = [
+    pageTitle,
+    formatCpuName(cpu1),
+    formatCpuName(cpu2),
+    formatCpuName(cpu1, { company: false }),
+    formatCpuName(cpu2, { company: false }),
+  ];
+  const seoDescription = useMemo(() => {
+    const shortCpuName1 = formatCpuName(cpu1, { company: false, brand: false });
+    const shortCpuName2 = formatCpuName(cpu2, { company: false, brand: false });
+
+    return (
+      `Compare the specs, benchmarks, and performance per dollar of the ${shortCpuName1} and ${shortCpuName2}. ` +
+      'Our database of processors will help you choose the best CPU for your computer.'
+    );
+  }, [cpu1, cpu2]);
+  const seoCanonical = getCompareCpusPath(comparison);
+
+  const homeHref = useMemo(() => getHomePath(), []);
+  const listHref = useMemo(() => getListCpusPath(), []);
+
+  return (
+    <ComparePageContext.Provider value={context}>
+      <Seo
+        title={seoTitle}
+        keywords={seoKeywords}
+        description={seoDescription}
+        canonical={seoCanonical}
+      />
+      <WebsiteLayout>
+        <Breadcrumbs className="mb-4">
+          <Breadcrumb href={homeHref}>Home</Breadcrumb>
+          <Breadcrumb href={listHref}>Processors</Breadcrumb>
+          <Breadcrumb>{shortPageTitle}</Breadcrumb>
+        </Breadcrumbs>
+
+        <div className="flex flex-wrap gap-8 justify-center">
+          <section className="flex flex-wrap w-full">
+            <h1 className="font-semibold">{pageTitle}</h1>
+
+            <CompareProductsForm
+              productType={ProductType.Cpu}
+              values={[cpu1?.id, cpu2?.id]}
+            />
+          </section>
+
+          <article className="md:min-w-full flex-1 flex flex-col gap-4">
+            <Highlights />
+            <Overview />
+            <GeneralInfo />
+            <RelativePerformance />
+            <RelativeValue />
+            <Benchmarks />
+            <TechnicalSpecs />
+            <Disclaimer />
+          </article>
+
+          <Sidenav>
+            <SidenavRelatedComparisons
+              productType={ProductType.Cpu}
+              comparisons={relatedComparisons.comparisons}
+            />
+            <SidenavRelatedProducts
+              productType={ProductType.Cpu}
+              products={relatedCpus.cpus}
+            />
+          </Sidenav>
+        </div>
+      </WebsiteLayout>
+    </ComparePageContext.Provider>
+  );
+};

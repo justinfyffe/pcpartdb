@@ -1,3 +1,3 @@
-export * from './SidenavComparisons';
-export * from './SidenavGpus';
+export * from './SidenavRelatedComparisons';
+export * from './SidenavRelatedProducts';
 export * from './Sidenav';

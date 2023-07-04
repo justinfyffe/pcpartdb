@@ -1,18 +1,18 @@
 import {
   BandwidthUnit,
   BitUnit,
-  calculateBaseGpuFieldValue,
   ClockSpeedUnit,
   DateFormat,
   FlopsUnit,
+  getBaseUnitValue,
   Gpu,
   GpuField,
+  GpuProductionStatusValue,
   LengthUnit,
-  MemoryUnit,
+  MemorySizeUnit,
   NumericUnit,
   PixelFillRateUnit,
-  ProductionStatusValue,
-  ScrapeGpuDetailsResponse,
+  ScrapeProductResponse,
   TextureFillRateUnit,
   WattageUnit,
 } from '@pcpartdb/shared';
@@ -23,17 +23,19 @@ import { parseGpuName } from './utils';
 
 export interface ScrapeTechPowerGpuDetailsOptions {
   url: string;
-  proxy?: boolean;
+  noProxy?: boolean;
 }
 
 // Example: https://www.techpowerup.com/gpu-specs/geforce-rtx-3090.c3622
 export async function scrapeTechPowerUpGpuDetails(
   options: ScrapeTechPowerGpuDetailsOptions,
 ) {
-  const response = await scraper.scrape(options.url, { retries: 1 });
+  const { url, noProxy } = options;
+
+  const response = await scraper.scrape(url, { retries: 1, noProxy });
   const $ = cheerio.load(response.data);
 
-  const gpu: Partial<Gpu> = {
+  const product: Partial<Gpu> = {
     name: getName($),
     company: getCompany($),
     launchPrice: getLaunchPrice($),
@@ -78,7 +80,7 @@ export async function scrapeTechPowerUpGpuDetails(
     width: getWidth($),
   };
 
-  return { gpu: { ...gpu } } as ScrapeGpuDetailsResponse;
+  return { product } as ScrapeProductResponse;
 }
 
 function getName($: cheerio.CheerioAPI) {
@@ -164,7 +166,7 @@ function getCoreClockSpeedBase($: cheerio.CheerioAPI): GpuField<number> {
   };
 
   const unit = formats[displayUnit] || null;
-  const value = calculateBaseGpuFieldValue(displayValue, unit);
+  const value = getBaseUnitValue(displayValue, unit);
   return {
     value,
     meta: {
@@ -186,7 +188,7 @@ function getCoreClockSpeedBoost($: cheerio.CheerioAPI): GpuField<number> {
   };
 
   const unit = formats[displayUnit] || null;
-  const value = calculateBaseGpuFieldValue(displayValue, unit);
+  const value = getBaseUnitValue(displayValue, unit);
   return {
     value,
     meta: {
@@ -222,7 +224,7 @@ function getFp32Performance($: cheerio.CheerioAPI): GpuField<number> {
   };
 
   const unit = formats[displayUnit] || null;
-  const value = calculateBaseGpuFieldValue(displayValue, unit);
+  const value = getBaseUnitValue(displayValue, unit);
   return {
     value,
     meta: {
@@ -246,7 +248,7 @@ function getFp64Performance($: cheerio.CheerioAPI): GpuField<number> {
   };
 
   const unit = formats[displayUnit] || null;
-  const value = calculateBaseGpuFieldValue(displayValue, unit);
+  const value = getBaseUnitValue(displayValue, unit);
   return {
     value,
     meta: {
@@ -268,7 +270,7 @@ function getHeight($: cheerio.CheerioAPI): GpuField<number> {
   };
 
   const unit = formats[displayUnit] || null;
-  const value = calculateBaseGpuFieldValue(displayValue, unit);
+  const value = getBaseUnitValue(displayValue, unit);
   return {
     value,
     meta: {
@@ -295,14 +297,14 @@ function getL1Cache($: cheerio.CheerioAPI): GpuField<number> {
   const values = tokenizeSpecValues($, 'L1 Cache');
   const [displayValue, displayUnit] = parseNumberValue(values[0] || null);
 
-  const formats: Record<string, MemoryUnit> = {
-    KB: MemoryUnit.kb,
-    MB: MemoryUnit.mb,
-    GB: MemoryUnit.gb,
+  const formats: Record<string, MemorySizeUnit> = {
+    KB: MemorySizeUnit.kb,
+    MB: MemorySizeUnit.mb,
+    GB: MemorySizeUnit.gb,
   };
 
   const unit = formats[displayUnit] || null;
-  const value = calculateBaseGpuFieldValue(displayValue, unit);
+  const value = getBaseUnitValue(displayValue, unit);
   return {
     value,
     meta: {
@@ -317,14 +319,14 @@ function getL2Cache($: cheerio.CheerioAPI): GpuField<number> {
   const values = tokenizeSpecValues($, 'L2 Cache');
   const [displayValue, displayUnit] = parseNumberValue(values[0] || null);
 
-  const formats: Record<string, MemoryUnit> = {
-    KB: MemoryUnit.kb,
-    MB: MemoryUnit.mb,
-    GB: MemoryUnit.gb,
+  const formats: Record<string, MemorySizeUnit> = {
+    KB: MemorySizeUnit.kb,
+    MB: MemorySizeUnit.mb,
+    GB: MemorySizeUnit.gb,
   };
 
   const unit = formats[displayUnit] || null;
-  const value = calculateBaseGpuFieldValue(displayValue, unit);
+  const value = getBaseUnitValue(displayValue, unit);
   return {
     value,
     meta: {
@@ -366,7 +368,7 @@ function getLength($: cheerio.CheerioAPI): GpuField<number> {
   };
 
   const unit = formats[displayUnit] || null;
-  const value = calculateBaseGpuFieldValue(displayValue, unit);
+  const value = getBaseUnitValue(displayValue, unit);
   return {
     value,
     meta: {
@@ -388,7 +390,7 @@ function getMemoryBandwidth($: cheerio.CheerioAPI): GpuField<number> {
   };
 
   const unit = formats[displayUnit] || null;
-  const value = calculateBaseGpuFieldValue(displayValue, unit);
+  const value = getBaseUnitValue(displayValue, unit);
   return {
     value,
     meta: {
@@ -410,7 +412,7 @@ function getMemoryClock($: cheerio.CheerioAPI): GpuField<number> {
   };
 
   const unit = formats[displayUnit] || null;
-  const value = calculateBaseGpuFieldValue(displayValue, unit);
+  const value = getBaseUnitValue(displayValue, unit);
   return {
     value,
     meta: {
@@ -430,7 +432,7 @@ function getMemoryInterface($: cheerio.CheerioAPI): GpuField<number> {
   };
 
   const unit = formats[displayUnit] || null;
-  const value = calculateBaseGpuFieldValue(displayValue, unit);
+  const value = getBaseUnitValue(displayValue, unit);
   return {
     value,
     meta: {
@@ -445,14 +447,14 @@ function getMemorySize($: cheerio.CheerioAPI): GpuField<number> {
   const values = tokenizeSpecValues($, 'Memory Size');
   const [displayValue, displayUnit] = parseNumberValue(values[0] || null);
 
-  const formats: Record<string, MemoryUnit> = {
-    KB: MemoryUnit.kb,
-    MB: MemoryUnit.mb,
-    GB: MemoryUnit.gb,
+  const formats: Record<string, MemorySizeUnit> = {
+    KB: MemorySizeUnit.kb,
+    MB: MemorySizeUnit.mb,
+    GB: MemorySizeUnit.gb,
   };
 
   const unit = formats[displayUnit] || null;
-  const value = calculateBaseGpuFieldValue(displayValue, unit);
+  const value = getBaseUnitValue(displayValue, unit);
   return {
     value,
     meta: {
@@ -520,7 +522,7 @@ function getPixelFillRate($: cheerio.CheerioAPI): GpuField<number> {
   };
 
   const unit = formats[displayUnit] || null;
-  const value = calculateBaseGpuFieldValue(displayValue, unit);
+  const value = getBaseUnitValue(displayValue, unit);
   return {
     value,
     meta: {
@@ -553,7 +555,7 @@ function getProcessSize($: cheerio.CheerioAPI): GpuField<number> {
     mm: LengthUnit.mm,
   };
   const unit = formats[displayUnit] || null;
-  const value = calculateBaseGpuFieldValue(displayValue, unit);
+  const value = getBaseUnitValue(displayValue, unit);
   return {
     value,
     meta: {
@@ -566,17 +568,17 @@ function getProcessSize($: cheerio.CheerioAPI): GpuField<number> {
 
 function getProductionStatus(
   $: cheerio.CheerioAPI,
-): GpuField<ProductionStatusValue> {
+): GpuField<GpuProductionStatusValue> {
   const values = tokenizeSpecValues($, 'Production');
   const production = values?.[0] ?? null;
 
-  let value: ProductionStatusValue = null;
+  let value: GpuProductionStatusValue = null;
   if (production === 'Active') {
-    value = ProductionStatusValue.Active;
+    value = GpuProductionStatusValue.Active;
   } else if (production === 'End-of-life') {
-    value = ProductionStatusValue.EndOfLife;
+    value = GpuProductionStatusValue.EndOfLife;
   } else if (production === 'Unreleased') {
-    value = ProductionStatusValue.Unreleased;
+    value = GpuProductionStatusValue.Unreleased;
   }
 
   return {
@@ -721,7 +723,7 @@ function getSuggestedPsu($: cheerio.CheerioAPI): GpuField<number> {
     W: WattageUnit.w,
   };
   const unit = formats[displayUnit] || null;
-  const value = calculateBaseGpuFieldValue(displayValue, unit);
+  const value = getBaseUnitValue(displayValue, unit);
   return {
     value,
     meta: {
@@ -754,7 +756,7 @@ function getTextureFillRate($: cheerio.CheerioAPI): GpuField<number> {
   };
 
   const unit = formats[displayUnit] || null;
-  const value = calculateBaseGpuFieldValue(displayValue, unit);
+  const value = getBaseUnitValue(displayValue, unit);
   return {
     value,
     meta: {
@@ -787,7 +789,7 @@ function getThermalDesignPower($: cheerio.CheerioAPI): GpuField<number> {
   };
 
   const unit = formats[displayUnit] || null;
-  const value = calculateBaseGpuFieldValue(displayValue, unit);
+  const value = getBaseUnitValue(displayValue, unit);
   return {
     value,
     meta: {
@@ -807,7 +809,7 @@ function getTransistors($: cheerio.CheerioAPI): GpuField<number> {
   };
 
   const unit = formats[displayUnit] || null;
-  const value = calculateBaseGpuFieldValue(displayValue, unit);
+  const value = getBaseUnitValue(displayValue, unit);
   return {
     value,
     meta: {
@@ -829,7 +831,7 @@ function getWidth($: cheerio.CheerioAPI): GpuField<number> {
   };
 
   const unit = formats[displayUnit] || null;
-  const value = calculateBaseGpuFieldValue(displayValue, unit);
+  const value = getBaseUnitValue(displayValue, unit);
   return {
     value,
     meta: {

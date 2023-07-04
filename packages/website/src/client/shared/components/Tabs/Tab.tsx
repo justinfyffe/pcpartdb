@@ -14,7 +14,9 @@ export const Tab: FunctionComponent<TabProps> = (props) => {
   const Element = props.as || 'section';
 
   return (
-    <Element className={classNames('', props.className)}>
+    <Element
+      className={classNames('bg-light-shades p-4 rounded-b', props.className)}
+    >
       {props.children}
     </Element>
   );

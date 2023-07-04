@@ -1,6 +1,6 @@
 import { joinUrlParts } from '@pcpartdb/shared';
 import { NextPageContext } from 'next';
-import { ViewGpuPage } from '../../../client/gpus/pages';
+import { ViewGpuPage } from 'packages/website/src/client/product';
 import { viewModelsClient } from '../../../client/shared/api';
 
 export async function getServerSideProps(ctx: NextPageContext) {

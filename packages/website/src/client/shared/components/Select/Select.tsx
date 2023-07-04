@@ -138,7 +138,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
         <div
           className={classNames(
             'border-px m-0 p-3 rounded text-sm w-full shadow min-h-12.5',
-            disabled ? 'bg-disabled-input' : 'pointer',
+            disabled ? 'bg-disabled' : 'pointer',
           )}
           onClick={handleShowOptions}
         >
@@ -147,7 +147,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
           )}
           {clearable && value != null && (
             <div
-              className="items-center rounded-r-md flex font-medium h-[calc(100%_-_2px)] m-px px-4 absolute right-0 top-0 hover:bg-[#fafafa]"
+              className="items-center rounded-r-md flex font-medium h-[calc(100%_-_2px)] m-px px-4 absolute right-0 top-0 hover:bg-mouse-hover"
               onClick={handleClear}
             >
               <XMarkIcon className="w-4" />
@@ -173,7 +173,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
               onClick={(ev) => handleOptionClick(ev, child.props)}
               className={classNames(
                 'items-center pointer flex py-2 px-4',
-                !isSelected(value, child.props) ? 'hover:bg-[#fafafa]' : '',
+                !isSelected(value, child.props) ? 'hover:bg-mouse-hover' : '',
                 !multiple && isSelected(value, child.props)
                   ? 'bg-[#3f51b5] text-[#ececec]'
                   : '',

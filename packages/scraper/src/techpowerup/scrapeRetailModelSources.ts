@@ -10,14 +10,16 @@ export interface TechPowerUpRetailModelSource {
 
 export interface ScrapeTechPowerRetailModelUrlsOptions {
   url: string;
-  proxy?: boolean;
+  noProxy?: boolean;
 }
 
 // Example: https://www.techpowerup.com/gpu-specs/geforce-rtx-3090.c3622
 export async function scrapeTechPowerUpRetailModelSources(
   options: ScrapeTechPowerRetailModelUrlsOptions,
 ) {
-  const response = await scraper.scrape(options.url, { retries: 1 });
+  const { url, noProxy } = options;
+
+  const response = await scraper.scrape(url, { retries: 1, noProxy });
   const $ = cheerio.load(response.data);
 
   const retailModels = getRetailModels($);

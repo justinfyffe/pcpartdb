@@ -10,13 +10,13 @@ const SLEEP_DELAY = 15_000;
 interface ScrapeRetailModelsOptions {
   sources: RetailModelSources;
   segments: number;
-  proxy?: boolean;
+  noProxy?: boolean;
 }
 
 export async function scrapeRetailModels(options: ScrapeRetailModelsOptions) {
   console.log('Scraping Retail Models from TechPowerUp');
 
-  const { sources, segments, proxy } = options;
+  const { sources, segments, noProxy } = options;
 
   let retailModels: Partial<Gpu>[] = [];
 
@@ -24,7 +24,7 @@ export async function scrapeRetailModels(options: ScrapeRetailModelsOptions) {
     console.log(`Scraping Retail Model for i=${i} of ${sources.length}`);
     const source = sources[i];
 
-    const retailModel = await scrapeRetailModel(source, proxy);
+    const retailModel = await scrapeRetailModel(source, noProxy);
     if (retailModel != null) {
       retailModels.push(retailModel);
     }
@@ -51,15 +51,15 @@ export async function scrapeRetailModels(options: ScrapeRetailModelsOptions) {
 
 export async function scrapeRetailModel(
   source: RetailModelSource,
-  proxy?: boolean,
+  noProxy?: boolean,
 ) {
   try {
-    const { gpu } = await scrapeTechPowerUpGpuDetails({
+    const { product } = await scrapeTechPowerUpGpuDetails({
       url: source.techPowerUpUrl,
-      proxy,
+      noProxy,
     });
 
-    return decorateGpu(gpu, source);
+    return decorateGpu(product as Partial<Gpu>, source);
   } catch (err) {
     console.error('Encountered error when scraping.');
     console.error(err);

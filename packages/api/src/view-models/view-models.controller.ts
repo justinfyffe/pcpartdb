@@ -1,16 +1,24 @@
 import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
-import { ListDataUpdatesRequest, ListGpusQuery } from '@pcpartdb/shared';
+import {
+  ListCpusQuery,
+  ListDataUpdatesRequest,
+  ListGpusQuery,
+  ProductType,
+} from '@pcpartdb/shared';
 import { StaffGuard } from '../auth/staff.guard';
 import { Database } from '../database';
 import { Context, Ctx } from '../shared/context';
 import { AdminDataUpdatesViewModelService } from './admin/data-updates/data-updates.view-model';
-import { AdminEditGpuViewModelService } from './admin/gpus/edit.view-model';
 import { AdminEditImageViewModelService } from './admin/images/edit.view-model';
 import { AdminListImagesViewModelService } from './admin/images/list.view-model';
 import { AdminOverviewViewModelService } from './admin/overview/overview.view-model';
+import { AdminEditProductViewModelService } from './admin/products/edit.view-model';
 import { AdminEditUserViewModelService } from './admin/users/edit.view-model';
 import { AdminListUsersViewModelService } from './admin/users/list.view-model';
 import { RegisterViewModelService } from './auth/register.view-model';
+import { CompareCpusViewModelService } from './cpus/compare.view-model';
+import { ListCpusViewModelService } from './cpus/list.view-model';
+import { ViewCpuViewModelService } from './cpus/view.view-model';
 import { CompareGpusViewModelService } from './gpus/compare.view-model';
 import { ListGpusViewModelService } from './gpus/list.view-model';
 import { ViewGpuViewModelService } from './gpus/view.view-model';
@@ -21,12 +29,15 @@ export class ViewModelsController {
   constructor(
     private db: Database,
     private adminOverviewViewModelService: AdminOverviewViewModelService,
-    private adminEditGpuViewModelService: AdminEditGpuViewModelService,
+    private adminEditProductViewModelService: AdminEditProductViewModelService,
     private adminEditImageViewModelService: AdminEditImageViewModelService,
     private adminListImagesViewModelService: AdminListImagesViewModelService,
     private adminEditUserViewModelService: AdminEditUserViewModelService,
     private adminListUsersViewModelService: AdminListUsersViewModelService,
     private adminDataUpdatesViewModelService: AdminDataUpdatesViewModelService,
+    private compareCpusViewModelService: CompareCpusViewModelService,
+    private listCpusViewModelService: ListCpusViewModelService,
+    private viewCpuViewModelService: ViewCpuViewModelService,
     private compareGpusViewModelService: CompareGpusViewModelService,
     private listGpusViewModelService: ListGpusViewModelService,
     private viewGpuViewModelService: ViewGpuViewModelService,
@@ -36,22 +47,25 @@ export class ViewModelsController {
 
   @Get('admin/overview')
   @UseGuards(StaffGuard)
-  async adminOverview(@Ctx() ctx: Context) {
-    return await this.db.transaction(
-      () => {
-        return this.adminOverviewViewModelService.viewModel();
-      },
-      { ctx },
-    );
+  async adminOverview(@Ctx() _ctx: Context) {
+    return this.adminOverviewViewModelService.viewModel();
   }
 
-  @Get('admin/gpus/edit/:id')
+  @Get('admin/products/:id')
   @UseGuards(StaffGuard)
-  async adminEditGpu(@Param('id') idStr: string, @Ctx() ctx: Context) {
+  async adminEditProduct(
+    @Query('productType') productType: ProductType,
+    @Param('id') idStr: string,
+    @Ctx() ctx: Context,
+  ) {
     return await this.db.transaction(
       () => {
         const id = Number(idStr);
-        return this.adminEditGpuViewModelService.viewModel(id, ctx);
+        return this.adminEditProductViewModelService.viewModel(
+          productType,
+          id,
+          ctx,
+        );
       },
       { ctx },
     );
@@ -107,6 +121,33 @@ export class ViewModelsController {
         const data = JSON.parse(q) as ListDataUpdatesRequest;
         return this.adminDataUpdatesViewModelService.viewModel(data, ctx);
       },
+      { ctx },
+    );
+  }
+
+  @Get('cpus/compare/:slug')
+  async compareCpus(@Param('slug') slug: string, @Ctx() ctx: Context) {
+    return await this.db.transaction(
+      () => this.compareCpusViewModelService.viewModel(slug, ctx),
+      { ctx },
+    );
+  }
+
+  @Get('cpus/list')
+  async listCpus(@Query('q') q: string, @Ctx() ctx: Context) {
+    return await this.db.transaction(
+      async () => {
+        const data = JSON.parse(q) as ListCpusQuery;
+        return await this.listCpusViewModelService.viewModel(data, ctx);
+      },
+      { ctx },
+    );
+  }
+
+  @Get('cpus/view/:slug')
+  async viewCpu(@Param('slug') slug: string, @Ctx() ctx: Context) {
+    return await this.db.transaction(
+      () => this.viewCpuViewModelService.viewModel(slug, ctx),
       { ctx },
     );
   }

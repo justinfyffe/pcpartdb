@@ -25,7 +25,7 @@ export const AdminEditUserPage = (props: AdminEditUserViewModel) => {
         <div className="flex items-center justify-between mb-4">
           <h1 className="font-semibold">{pageTitle}</h1>
 
-          <Button href="/admin/users" variant={ButtonVariant.Default}>
+          <Button href="/admin/users" variant={ButtonVariant.Generic}>
             Back
           </Button>
         </div>

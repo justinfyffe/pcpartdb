@@ -2,7 +2,7 @@ import { NoSymbolIcon } from '@heroicons/react/24/outline';
 import { DataUpdate } from '@pcpartdb/shared';
 import React, { FunctionComponent, useCallback } from 'react';
 import { Button, showDialog, Td, Tr } from '../../../../../shared/components';
-import { PreviewDialog } from '../PreviewDialog';
+import { UpdateDialog } from '../UpdateDialog';
 
 interface RejectedUpdateRowProps {
   update: DataUpdate;
@@ -14,7 +14,7 @@ export const RejectedUpdateRow: FunctionComponent<RejectedUpdateRowProps> = (
   const { update } = props;
 
   const handlePreviewUpdate = useCallback((update: DataUpdate) => {
-    showDialog(<PreviewDialog id={update.id} />);
+    showDialog(<UpdateDialog id={update.id} />);
   }, []);
 
   return (

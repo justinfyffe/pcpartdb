@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { mapToDataUpdateDto, mapToDataUpdateDtos } from '@pcpartdb/database';
-import { DataUpdate, DataUpdateStatus, GpuDataUpdate } from '@pcpartdb/shared';
-import { GpuService } from '../gpu/gpu.service';
+import { DataUpdate, DataUpdateStatus } from '@pcpartdb/shared';
+import { CpuService } from '../product/cpu/cpu.service';
+import { GpuService } from '../product/gpu/gpu.service';
 import { Context } from '../shared/context';
 import { badRequestError, notFoundError } from '../shared/error';
 import { DataUpdateRepository } from './data-update.repository';
@@ -23,6 +24,7 @@ export class DataUpdateService {
   constructor(
     private dataUpdateRepository: DataUpdateRepository,
     private gpuService: GpuService,
+    private cpuService: CpuService,
   ) {}
 
   async countUpdates(options: CountUpdatesOptions, ctx: Context) {
@@ -71,7 +73,10 @@ export class DataUpdateService {
 
     // Apply diff
     if (dataUpdate.gpuId != null) {
-      await this.gpuService.applyDataUpdate(dataUpdate as GpuDataUpdate, ctx);
+      await this.gpuService.applyDataUpdate(dataUpdate, ctx);
+    }
+    if (dataUpdate.cpuId != null) {
+      await this.cpuService.applyDataUpdate(dataUpdate, ctx);
     }
 
     return await mapToDataUpdateDto(updatedEntity);

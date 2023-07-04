@@ -1,13 +1,13 @@
 import { createContext } from 'react';
-import { GpuCache } from './gpu-cache';
-import { ImageCache } from './image-cache';
+import { ImageCache } from './ImageCache';
+import { ProductCache } from './ProductCache';
 
 interface CacheContextState {
-  gpuCache: typeof GpuCache;
+  productCache: typeof ProductCache;
   imageCache: typeof ImageCache;
 }
 
 export const CacheContext = createContext<CacheContextState>({
-  gpuCache: GpuCache,
+  productCache: ProductCache,
   imageCache: ImageCache,
 });

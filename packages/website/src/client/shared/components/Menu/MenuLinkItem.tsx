@@ -13,7 +13,7 @@ export const MenuLinkItem: FunctionComponent<MenuItemProps> = (props) => {
   return (
     <a
       href={href}
-      className={classNames('block p-2 hover:bg-slate-100', className)}
+      className={classNames('block p-2 hover:bg-mouse-hover', className)}
     >
       {children}
     </a>

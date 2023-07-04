@@ -34,38 +34,51 @@ program
   });
 
 // Scrape Sources command
+// Run this command to get URLs of data sources. Creates a source model file.
+// npm run cli scrape-sources:cpu
+// npm run cli scrape-sources:gpu
 program
   .command('scrape-sources')
+  .option('--product [value]')
   .option('--source [value]')
-  .option('--proxy')
+  .option('--noProxy')
   .option('--skipScraping')
+  .option('--skipSourceModel')
   .action(async (options) => {
     await scrapeSourcesCommand({
+      product: options.product,
       source: options.source,
-      proxy: options.proxy,
+      noProxy: options.noProxy,
       skipScraping: options.skipScraping,
+      skipSourceModel: options.skipSourceModel,
     });
   });
 
 // Scrape Data command
+// Run this command to get data from sources in the source model.
+// npm run cli scrape-data:cpu -- -- --offset 0 --count 25
+// npm run cli scrape-data:gpu -- -- --offset 0 --count 25
 program
   .command('scrape-data')
+  .option('--product [value]')
   .option('--model [value]')
-  .option('--count [value]')
-  .option('--offset [value]')
+  .option('--count [value]') // Defaulit 10
+  .option('--offset [value]') // Default 0
   .option('--file [value]')
-  .option('--proxy')
+  .option('--noProxy')
   .action(async (options) => {
     await scrapeDataCommand({
+      product: options.product,
       model: options.model,
       count: options.count,
       offset: options.offset,
       file: options.file,
-      proxy: options.proxy,
+      noProxy: options.noProxy,
     });
   });
 
 // Scrape Retail Models command
+// Run this command to get retail models for a GPU
 // Example:
 // npm run cli scrape-retail-models:sourcesOnly -- -- --chipsetId 1 --marketSegment DESKTOP --techPowerUpUrl "https://www.techpowerup.com/gpu-specs/geforce-rtx-4090.c3889"
 // npm run cli scrape-retail-models:dataOnly -- -- --chipsetId 1
@@ -78,7 +91,7 @@ program
   .option('--sourcesFile [value]')
   .option('--sourcesOnly')
   .option('--dataOnly')
-  .option('--proxy')
+  .option('--noProxy')
   .action(async (options) => {
     await scrapeRetailModelsCommand({
       chipsetId: options.chipsetId,
@@ -87,7 +100,7 @@ program
       segments: options.segments,
       sourcesOnly: options.sourcesOnly,
       dataOnly: options.dataOnly,
-      proxy: options.proxy,
+      noProxy: options.noProxy,
     });
   });
 

@@ -3,10 +3,12 @@ import { classNames } from '../../ui';
 
 export enum ButtonVariant {
   None = 'none',
-  Default = 'default',
+  Generic = 'generic',
   Primary = 'primary',
-  Secondary = 'secondary',
-  Toolbar = 'toolbar',
+  Info = 'info',
+  Success = 'success',
+  Warning = 'warning',
+  Danger = 'danger',
   Link = 'link',
 }
 
@@ -19,14 +21,15 @@ export interface ButtonProps
 }
 
 const BUTTON_VARIANTS = {
-  [ButtonVariant.None]: 'bg-transparent text-content shadow-none',
-  [ButtonVariant.Default]:
-    'bg-button-default border-button-default text-button-default',
-  [ButtonVariant.Primary]: 'bg-button-primary text-button-primary',
-  [ButtonVariant.Secondary]: 'bg-button-secondary text-button-secondary',
-  [ButtonVariant.Toolbar]: 'bg-toolbar text-toolbar shadow-none',
+  [ButtonVariant.None]: 'bg-transparent text-inherit shadow-none',
+  [ButtonVariant.Generic]: 'bg-default border-px text-content',
+  [ButtonVariant.Primary]: 'bg-primary text-default',
+  [ButtonVariant.Info]: 'bg-info text-default',
+  [ButtonVariant.Success]: 'bg-success text-default',
+  [ButtonVariant.Warning]: 'bg-warning text-default',
+  [ButtonVariant.Danger]: 'bg-danger text-default',
   [ButtonVariant.Link]:
-    'bg-transparent text-content shadow-none mx-[-16px] my-[-8px] text-content-link',
+    'bg-transparent text-content shadow-none mx-[-16px] my-[-8px] text-link',
 };
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
@@ -54,7 +57,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           'relative font-medium no-underline text-center cursor-pointer inline-block px-4 py-2 rounded shadow',
           BUTTON_VARIANTS[variant ?? ButtonVariant.None],
           props.disabled
-            ? 'bg-[#ddd] border-[#ddd] text-[#aaa] cursor-default'
+            ? 'bg-disabled border-disabled text-disabled cursor-default'
             : '',
           className,
         )}

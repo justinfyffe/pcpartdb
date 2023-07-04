@@ -33,6 +33,7 @@ export async function mapToDataUpdateDto<TUpdateData = unknown>(
   return {
     id: entity.id,
     decisionUserId: entity.decisionUserId,
+    cpuId: entity.cpuId,
     gpuId: entity.gpuId,
     description: entity.description,
     status: entity.status as DataUpdateStatus,
@@ -74,6 +75,7 @@ export async function mapToDataUpdateEntity(
   return {
     id: dto.id,
     decisionUserId: dto.decisionUserId,
+    cpuId: dto.cpuId,
     gpuId: dto.gpuId,
     description: dto.description,
     status: dto.status,

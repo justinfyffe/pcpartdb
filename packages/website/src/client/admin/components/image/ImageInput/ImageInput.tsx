@@ -78,7 +78,7 @@ const SelectedImageInput = (
 
         <Button
           type="button"
-          variant={ButtonVariant.Default}
+          variant={ButtonVariant.Generic}
           onClick={onClear}
           className="mt-5"
         >

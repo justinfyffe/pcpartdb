@@ -1,7 +1,7 @@
 import { GpuRepository, mapToGpuDto, mapToGpuEntity } from '@pcpartdb/database';
 import {
-  populatePerformanceScoreBenchmark,
-  populateValueScoreBenchmark,
+  populateGpuPerformanceScoreBenchmark,
+  populateGpuValueScoreBenchmark,
 } from '@pcpartdb/shared';
 import { getDatabase } from '../shared/database';
 
@@ -20,8 +20,8 @@ export async function refreshRatings() {
 
     for (let i = 0; i < gpus.length; ++i) {
       const gpu = mapToGpuDto(gpus[i], { includeSources: true });
-      populatePerformanceScoreBenchmark(gpu);
-      populateValueScoreBenchmark(gpu);
+      populateGpuPerformanceScoreBenchmark(gpu);
+      populateGpuValueScoreBenchmark(gpu);
 
       const data = mapToGpuEntity(gpu);
       await gpuRepository.update(gpu.id, data, ctx);

@@ -9,7 +9,7 @@ export interface UlBenchmarkGpuSource {
 }
 export interface ScrapeUlBenchmarkGpuUrlsOptions {
   query: string;
-  proxy?: boolean;
+  noProxy?: boolean;
 }
 const SEARCH_URL = 'https://benchmarks.ul.com/compare/best-gpus?search={query}';
 
@@ -42,8 +42,10 @@ async function scrapeSearchData(options: ScrapeUlBenchmarkGpuUrlsOptions) {
 }
 
 async function fetchSearchPage(options: ScrapeUlBenchmarkGpuUrlsOptions) {
-  const searchUrl = buildSearchUrl(options.query);
-  const response = await scraper.scrape(searchUrl, { retries: 1 });
+  const { query, noProxy } = options;
+
+  const searchUrl = buildSearchUrl(query);
+  const response = await scraper.scrape(searchUrl, { retries: 1, noProxy });
   return response.data;
 }
 

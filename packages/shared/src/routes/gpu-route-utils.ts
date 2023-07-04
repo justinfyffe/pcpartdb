@@ -5,8 +5,9 @@ import {
   GpuComparison,
   LIST_GPUS_PRESETS,
   ListGpusQuery,
-} from '../gpu';
+} from '../product';
 import { joinUrlParts } from '../utils';
+import { GetCompareProductsPathOptions } from './product-route-utils';
 
 export function getListGpusPath(presetOrQuery?: ListGpusQuery | string) {
   const basePath = '/gpus/list/';
@@ -54,13 +55,9 @@ export function getViewGpuPath(gpuOrSlug: Gpu | string) {
   return joinUrlParts('/gpus/view/', slug, '/');
 }
 
-interface GetCompareGpusPathOptions {
-  ordered?: boolean;
-}
-
 export function getCompareGpusPath(
   comparisonOrSlug: GpuComparison | string,
-  options?: GetCompareGpusPathOptions,
+  options?: GetCompareProductsPathOptions,
 ) {
   if (typeof comparisonOrSlug === 'string') {
     return joinUrlParts('/gpus/compare/', comparisonOrSlug, '/');

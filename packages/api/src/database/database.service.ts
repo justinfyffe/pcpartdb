@@ -9,6 +9,7 @@ import { Context } from '../shared/context';
 interface TransactionOptions {
   ctx?: Context;
   isolationLevel?: IsolationLevel;
+  timeout?: number;
 }
 
 @Injectable()
@@ -35,7 +36,7 @@ export class Database extends DatabaseClient implements OnModuleInit {
 
         return await callback(trx);
       },
-      { isolationLevel: options?.isolationLevel },
+      { isolationLevel: options?.isolationLevel, timeout: options?.timeout },
     );
   }
 }

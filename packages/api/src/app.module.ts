@@ -2,8 +2,9 @@ import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from './config/config.module';
 import { DatabaseModule } from './database';
-import { GpuModule } from './gpu/gpu.module';
 import { ImageModule } from './image/image.module';
+import { CpuModule } from './product/cpu/cpu.module';
+import { GpuModule } from './product/gpu/gpu.module';
 import { ContextMiddleware } from './shared/context';
 import { CookieModule } from './shared/cookie';
 import { UserModule } from './user/user.module';
@@ -14,8 +15,9 @@ import { ViewModelsModule } from './view-models/view-models.module';
     AuthModule,
     ConfigModule,
     DatabaseModule,
-    GpuModule,
     ImageModule,
+    CpuModule,
+    GpuModule,
     CookieModule,
     UserModule,
     ViewModelsModule,

@@ -8,7 +8,7 @@ export enum HttpErrorType {
 
 export interface ValidationPropertyError {
   property: string;
-  constraint: string;
+  constraint?: string;
 }
 
 export interface ApiError<T = unknown> {

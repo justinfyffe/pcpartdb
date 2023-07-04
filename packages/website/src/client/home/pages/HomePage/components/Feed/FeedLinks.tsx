@@ -30,7 +30,7 @@ export const FeedLinks: FunctionComponent<FeedLinksProps> = (props) => {
 export const FeedLink: FunctionComponent<FeedLinkProps> = (props) => {
   const { href } = props;
   return (
-    <a href={href} className={classNames('text-sm', props.className)}>
+    <a href={href} className={classNames(props.className)}>
       {props.children}
     </a>
   );

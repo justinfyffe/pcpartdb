@@ -27,7 +27,7 @@ export const AdminNewImagePage = (_props: AdminNewImagePageProps) => {
 
           <Button
             href={getAdminListImagesPath()}
-            variant={ButtonVariant.Default}
+            variant={ButtonVariant.Generic}
           >
             Back
           </Button>

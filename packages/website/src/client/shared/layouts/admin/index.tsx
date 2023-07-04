@@ -1,4 +1,5 @@
 import {
+  getAdminListCpusPath,
   getAdminListGpusPath,
   getAdminListImagesPath,
   getAdminListUsersPath,
@@ -10,14 +11,7 @@ import {
 import { useRouter } from 'next/router';
 import React, { FunctionComponent, useCallback } from 'react';
 import { authService } from '../../../auth';
-import {
-  Button,
-  ButtonVariant,
-  Img,
-  Toolbar,
-  ToolbarNav,
-  ToolbarTitle,
-} from '../../components';
+import { Button, ButtonVariant, Img, Toolbar } from '../../components';
 import { classNames } from '../../ui';
 
 interface AdminLayoutProps {
@@ -35,24 +29,22 @@ export const AdminLayout: FunctionComponent<AdminLayoutProps> = (props) => {
 
   return (
     <>
-      <Toolbar>
-        <ToolbarTitle>
-          <Img
-            src="/images/logo.svg"
-            alt={`${WEBSITE_NAME} Logo`}
-            className="w-8 mt-0.5 mr-1"
-          />{' '}
-          {WEBSITE_NAME}
-        </ToolbarTitle>
+      <div className="container bg-content p-container flex font-bold items-center text-5xl md:text-3xl text-content">
+        <Img
+          src="/images/logo.svg"
+          alt={`${WEBSITE_NAME} Logo`}
+          className="w-10 mt-1 mr-4 md:w-8"
+        />{' '}
+        {WEBSITE_NAME}
+      </div>
 
-        <ToolbarNav className="hidden md:block">
-          <Button variant={ButtonVariant.Toolbar} href={getHomePath()}>
-            Back to Website
-          </Button>
-          <Button variant={ButtonVariant.Toolbar} onClick={handleLogout}>
-            Sign Out
-          </Button>
-        </ToolbarNav>
+      <Toolbar>
+        <Button variant={ButtonVariant.None} href={getHomePath()}>
+          Back to Website
+        </Button>
+        <Button variant={ButtonVariant.None} onClick={handleLogout}>
+          Sign Out
+        </Button>
       </Toolbar>
 
       <div className="bg-html">
@@ -65,31 +57,37 @@ export const AdminLayout: FunctionComponent<AdminLayoutProps> = (props) => {
           <aside className="w-50">
             <nav className="flex flex-col gap-2">
               <Button
-                variant={ButtonVariant.Default}
+                variant={ButtonVariant.Generic}
                 href={getAdminOverviewPath()}
               >
                 Overview
               </Button>
               <Button
-                variant={ButtonVariant.Default}
+                variant={ButtonVariant.Generic}
+                href={getAdminListCpusPath()}
+              >
+                CPUs
+              </Button>
+              <Button
+                variant={ButtonVariant.Generic}
                 href={getAdminListGpusPath()}
               >
                 GPUs
               </Button>
               <Button
-                variant={ButtonVariant.Default}
+                variant={ButtonVariant.Generic}
                 href={getAdminListImagesPath()}
               >
                 Images
               </Button>
               <Button
-                variant={ButtonVariant.Default}
+                variant={ButtonVariant.Generic}
                 href={getAdminListUsersPath()}
               >
                 Users
               </Button>
               <Button
-                variant={ButtonVariant.Default}
+                variant={ButtonVariant.Generic}
                 href={getAdminUpdatesPath()}
               >
                 Data Updates

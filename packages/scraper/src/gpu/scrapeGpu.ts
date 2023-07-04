@@ -1,54 +1,52 @@
-import { Gpu, GpuDataSource, GpuDataSourceKey } from '@pcpartdb/shared';
+import {
+  Gpu,
+  GpuDataSource,
+  GpuDataSourceKey,
+  Product,
+  ScrapeProductResponse,
+} from '@pcpartdb/shared';
 import deepmerge from 'deepmerge';
 import { scrapeTechPowerUpGpuDetails } from '../techpowerup';
 import { scrapeUlBenchmarksGpuDetails } from '../ul-benchmarks';
 import { scrapeVideocardBenchmarksGpuDetails } from '../videocardbenchmarks';
-import { scrapeChipsetGpu } from './scrapeChipsetGpu';
+import { scrapeFromChipsetGpu } from './scrapeFromChipsetGpu';
 
 export interface ScrapeGpuOptions {
-  dataSources: Record<string, GpuDataSource>;
+  sources: Record<string, GpuDataSource>;
   chipset?: Gpu;
-  proxy?: boolean;
-}
-
-export interface ScrapeGpuResults {
-  gpu: Partial<Gpu>;
 }
 
 export async function scrapeGpu(options: ScrapeGpuOptions) {
-  const { chipset, dataSources, proxy } = options;
+  const { chipset, sources } = options;
 
-  const techPowerUpUrl = dataSources[GpuDataSourceKey.TechPowerUp]?.url;
-  const ulBenchmarksUrl = dataSources[GpuDataSourceKey.UlBenchmarks]?.url;
+  const techPowerUpUrl = sources[GpuDataSourceKey.TechPowerUp]?.url;
+  const ulBenchmarksUrl = sources[GpuDataSourceKey.UlBenchmarks]?.url;
   const videocardBenchmarkUrl =
-    dataSources[GpuDataSourceKey.VideocardBenchmarks]?.url;
+    sources[GpuDataSourceKey.VideocardBenchmarks]?.url;
 
-  let scrapedGpu: Partial<Gpu> = {};
+  let scrapedProduct: Partial<Product> = {};
   if (chipset != null) {
-    const { gpu } = await scrapeChipsetGpu({ chipset });
-    scrapedGpu = deepmerge(scrapedGpu, gpu);
+    const { product } = await scrapeFromChipsetGpu({ chipset });
+    scrapedProduct = deepmerge(scrapedProduct, product);
   }
   if (techPowerUpUrl != null) {
-    const { gpu } = await scrapeTechPowerUpGpuDetails({
+    const { product } = await scrapeTechPowerUpGpuDetails({
       url: techPowerUpUrl,
-      proxy,
     });
-    scrapedGpu = deepmerge(scrapedGpu, gpu);
+    scrapedProduct = deepmerge(scrapedProduct, product);
   }
   if (ulBenchmarksUrl != null) {
-    const { gpu } = await scrapeUlBenchmarksGpuDetails({
+    const { product } = await scrapeUlBenchmarksGpuDetails({
       url: ulBenchmarksUrl,
-      proxy,
     });
-    scrapedGpu = deepmerge(scrapedGpu, gpu);
+    scrapedProduct = deepmerge(scrapedProduct, product);
   }
   if (videocardBenchmarkUrl != null) {
-    const { gpu } = await scrapeVideocardBenchmarksGpuDetails({
+    const { product } = await scrapeVideocardBenchmarksGpuDetails({
       url: videocardBenchmarkUrl,
-      proxy,
     });
-    scrapedGpu = deepmerge(scrapedGpu, gpu);
+    scrapedProduct = deepmerge(scrapedProduct, product);
   }
 
-  return { gpu: scrapedGpu } as ScrapeGpuResults;
+  return { product: scrapedProduct } as ScrapeProductResponse;
 }

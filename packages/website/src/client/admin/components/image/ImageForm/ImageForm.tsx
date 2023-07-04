@@ -7,7 +7,7 @@ import {
   ImageMeta,
   ValidationErrorType,
 } from '@pcpartdb/shared';
-import { useRouter } from 'next/router';
+import Router from 'next/router';
 import React, {
   FunctionComponent,
   useCallback,
@@ -86,7 +86,7 @@ export const ImageForm: FunctionComponent<ImageFormProps> = (props) => {
   const { image, redirectOnSuccess = true, onSuccess } = props;
   const isUpdate = image != null;
 
-  const router = useRouter();
+  const router = Router;
   const [imageMeta, setImageMeta] = useState<ImageMeta>(null);
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
@@ -272,7 +272,7 @@ export const ImageForm: FunctionComponent<ImageFormProps> = (props) => {
         {isUpdate && (
           <Button
             type="button"
-            variant={ButtonVariant.Secondary}
+            variant={ButtonVariant.Warning}
             disabled={saving || deleting}
             onClick={handleDelete}
           >

@@ -18,8 +18,8 @@ export const AdminOverviewPage = (props: AdminOverviewViewModel) => {
 
         <Card className="max-w-[300px]">
           <CardTitle>Scraping Ant Usage:</CardTitle>
-          {props.scrapingAntUsage.remainingCredits} /{' '}
-          {props.scrapingAntUsage.totalCredits}
+          {props.scrapingAntUsage?.remainingCredits} /{' '}
+          {props.scrapingAntUsage?.totalCredits}
         </Card>
       </article>
     </AdminLayout>

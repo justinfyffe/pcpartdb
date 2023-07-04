@@ -156,11 +156,24 @@ export class GpuRepository {
     });
   }
 
+  async findByName(
+    name: string,
+    config?: RepositoryConfig,
+  ): Promise<GpuEntity> {
+    const trx = config?.trx ?? this.db;
+
+    return await trx.gpu.findFirst({
+      where: {
+        name: { equals: name, mode: 'insensitive' },
+      },
+    });
+  }
+
   async findByCompanyAndName(
     company: string,
     name: string,
     config?: RepositoryConfig,
-  ) {
+  ): Promise<GpuEntity> {
     const trx = config?.trx ?? this.db;
 
     return await trx.gpu.findFirst({

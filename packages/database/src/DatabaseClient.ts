@@ -5,6 +5,7 @@ export type Transaction = Prisma.TransactionClient;
 
 interface TransactionOptions {
   isolationLevel?: IsolationLevel;
+  timeout?: number;
 }
 
 export class DatabaseClient extends PrismaClient {
@@ -20,7 +21,7 @@ export class DatabaseClient extends PrismaClient {
       async (trx) => {
         return await callback(trx);
       },
-      { isolationLevel: options?.isolationLevel },
+      { isolationLevel: options?.isolationLevel, timeout: options?.timeout },
     );
   }
 }

@@ -3,6 +3,7 @@ import {
   Config,
   getAboutPath,
   getHomePath,
+  getListCpusPath,
   getListGpusPath,
   getPrivacyPath,
   WEBSITE_NAME,
@@ -18,8 +19,6 @@ import {
   List,
   ListItem,
   Toolbar,
-  ToolbarNav,
-  ToolbarTitle,
 } from '../../components';
 import { classNames } from '../../ui';
 
@@ -34,27 +33,28 @@ interface WebsiteLayoutProps {
 export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
   return (
     <>
-      <Toolbar>
-        <ToolbarTitle>
-          <Img
-            src="/images/logo.svg"
-            alt={`${WEBSITE_NAME} Logo`}
-            className="w-8 mt-0.5 mr-1"
-          />{' '}
-          {WEBSITE_NAME}
-        </ToolbarTitle>
+      <div className="container bg-content p-container md:px-4 flex font-bold items-center text-5xl md:text-3xl text-dark-shades">
+        <Img
+          src="/images/logo.svg"
+          alt={`${WEBSITE_NAME} Logo`}
+          className="w-10 mt-1 mr-4 md:w-8"
+        />{' '}
+        {WEBSITE_NAME}
+      </div>
 
-        <ToolbarNav>
-          <Button href={getListGpusPath()} variant={ButtonVariant.Toolbar}>
-            GPUs
-          </Button>
-        </ToolbarNav>
+      <Toolbar>
+        <Button href={getListGpusPath()} variant={ButtonVariant.None}>
+          Graphics Cards
+        </Button>
+        <Button href={getListCpusPath()} variant={ButtonVariant.None}>
+          Processors
+        </Button>
       </Toolbar>
 
       <div className="bg-html">
         <main
           className={classNames(
-            'bg-content container px-4 py-4 text-content w-full',
+            'bg-content container p-container md:px-4 text-base text-content w-full',
             props.className,
           )}
         >
@@ -68,17 +68,20 @@ export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
 
           <List direction="vertical">
             <ListItem>
-              <a href={getHomePath()} className="text-footer-link">
+              <a href={getHomePath()} className="text-light-shades underline">
                 Home
               </a>
             </ListItem>
             <ListItem>
-              <a href={getAboutPath()} className="text-footer-link">
+              <a href={getAboutPath()} className="text-light-shades underline">
                 About Us
               </a>
             </ListItem>
             <ListItem>
-              <a href={getPrivacyPath()} className="text-footer-link">
+              <a
+                href={getPrivacyPath()}
+                className="text-light-shades underline"
+              >
                 Privacy
               </a>
             </ListItem>
@@ -91,7 +94,7 @@ export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
           <p>
             {WEBSITE_NAME} provides specs and benchmarks based on various
             sources. If you discover an error, please{' '}
-            <a href={getAboutPath()} className="text-footer-link">
+            <a href={getAboutPath()} className="text-light-shades underline">
               contact us
             </a>
             .
@@ -110,9 +113,15 @@ export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
           <HeartIcon className={classNames('inline-block h-4 w-4 mb-0.5')} /> in
           New York
         </FooterSection>
+
         {props.config?.isStaff && props.editThisPageHref != null && (
           <FooterSection className={classNames('flex-none text-center w-full')}>
-            <a href={props.editThisPageHref}>edit this page</a>
+            <a
+              href={props.editThisPageHref}
+              className="text-light-shades underline"
+            >
+              edit this page
+            </a>
           </FooterSection>
         )}
       </Footer>

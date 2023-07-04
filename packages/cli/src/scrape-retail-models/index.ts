@@ -1,4 +1,4 @@
-import { MarketSegmentValue } from '@pcpartdb/shared';
+import { GpuMarketSegmentValue } from '@pcpartdb/shared';
 import * as fsPromises from 'fs/promises';
 import { fetchRetailModelSources } from './fetchRetailModelSources';
 import { scrapeRetailModels } from './scrapeRetailModels';
@@ -14,20 +14,20 @@ export type ScrapeRetailModelCommandArgs = {
   techPowerUpUrl?: string;
 
   segments?: string;
-  proxy?: boolean;
+  noProxy?: boolean;
 };
 
 export async function scrapeRetailModelsCommand(
   args: ScrapeRetailModelCommandArgs,
 ) {
   console.log(`Scraping retail models with args=${JSON.stringify(args)}`);
-  const { sourcesOnly, dataOnly, techPowerUpUrl, proxy } = args;
+  const { sourcesOnly, dataOnly, techPowerUpUrl, noProxy } = args;
 
   const chipsetId = args.chipsetId != null ? Number(args.chipsetId) : null;
   const segments = args.segments != null ? Number(args.segments) : 25;
   const marketSegment =
     args.marketSegment != null
-      ? (args.marketSegment as MarketSegmentValue)
+      ? (args.marketSegment as GpuMarketSegmentValue)
       : null;
 
   const sourcesPath = sourcesDataPath(`sources-${chipsetId}.json`);
@@ -39,7 +39,7 @@ export async function scrapeRetailModelsCommand(
     if (chipsetId == null || marketSegment == null || techPowerUpUrl == null) {
       throw new Error('Missing required inputs to get sources');
     }
-    if (!Object.values(MarketSegmentValue).includes(marketSegment)) {
+    if (!Object.values(GpuMarketSegmentValue).includes(marketSegment)) {
       throw new Error('Invalid market segment');
     }
 
@@ -48,7 +48,7 @@ export async function scrapeRetailModelsCommand(
       chipsetId,
       marketSegment,
       techPowerUpUrl,
-      proxy,
+      noProxy,
       sourcesPath,
     });
   } else {
@@ -58,6 +58,6 @@ export async function scrapeRetailModelsCommand(
 
   // Scrape data from each retail model
   if (!sourcesOnly) {
-    await scrapeRetailModels({ sources, segments, proxy });
+    await scrapeRetailModels({ sources, segments, noProxy });
   }
 }

@@ -28,6 +28,7 @@ type InputType =
 
 const INPUT_TYPES: Record<string, InputType> = {
   // General
+  partNumber: 'string',
   company: 'autocomplete',
   marketSegment: 'enum',
   launchPrice: 'currency',
@@ -35,7 +36,6 @@ const INPUT_TYPES: Record<string, InputType> = {
   productionStatus: 'enum',
 
   // Processor
-  partNumber: 'string',
   codename: 'autocomplete',
   architecture: 'autocomplete',
   processSize: 'float',

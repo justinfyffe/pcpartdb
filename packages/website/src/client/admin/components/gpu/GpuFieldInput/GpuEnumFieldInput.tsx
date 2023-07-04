@@ -1,14 +1,14 @@
 import {
   GpuField,
   GpuFieldKey,
-  MarketSegmentValue,
-  ProductionStatusValue,
+  GpuMarketSegmentValue,
+  GpuProductionStatusValue,
 } from '@pcpartdb/shared';
 import {
   formatGpuField,
-  formatMarketSegment,
-  formatProductionStatus,
-} from 'packages/website/src/client/gpus';
+  formatGpuMarketSegment,
+  formatGpuProductionStatus,
+} from 'packages/website/src/client/product';
 import React, { forwardRef, useCallback, useMemo } from 'react';
 import {
   Select,
@@ -19,34 +19,34 @@ import {
 const ITEMS: { [key: string]: { label: string; value: string }[] } = {
   marketSegment: [
     {
-      label: formatMarketSegment(MarketSegmentValue.Desktop),
-      value: MarketSegmentValue.Desktop,
+      label: formatGpuMarketSegment(GpuMarketSegmentValue.Desktop),
+      value: GpuMarketSegmentValue.Desktop,
     },
     {
-      label: formatMarketSegment(MarketSegmentValue.Mobile),
-      value: MarketSegmentValue.Mobile,
+      label: formatGpuMarketSegment(GpuMarketSegmentValue.Mobile),
+      value: GpuMarketSegmentValue.Mobile,
     },
     {
-      label: formatMarketSegment(MarketSegmentValue.Workstation),
-      value: MarketSegmentValue.Workstation,
+      label: formatGpuMarketSegment(GpuMarketSegmentValue.Workstation),
+      value: GpuMarketSegmentValue.Workstation,
     },
     {
-      label: formatMarketSegment(MarketSegmentValue.Integrated),
-      value: MarketSegmentValue.Integrated,
+      label: formatGpuMarketSegment(GpuMarketSegmentValue.Integrated),
+      value: GpuMarketSegmentValue.Integrated,
     },
   ],
   productionStatus: [
     {
-      label: formatProductionStatus(ProductionStatusValue.Unreleased),
-      value: ProductionStatusValue.Unreleased,
+      label: formatGpuProductionStatus(GpuProductionStatusValue.Unreleased),
+      value: GpuProductionStatusValue.Unreleased,
     },
     {
-      label: formatProductionStatus(ProductionStatusValue.Active),
-      value: ProductionStatusValue.Active,
+      label: formatGpuProductionStatus(GpuProductionStatusValue.Active),
+      value: GpuProductionStatusValue.Active,
     },
     {
-      label: formatProductionStatus(ProductionStatusValue.EndOfLife),
-      value: ProductionStatusValue.EndOfLife,
+      label: formatGpuProductionStatus(GpuProductionStatusValue.EndOfLife),
+      value: GpuProductionStatusValue.EndOfLife,
     },
   ],
 };

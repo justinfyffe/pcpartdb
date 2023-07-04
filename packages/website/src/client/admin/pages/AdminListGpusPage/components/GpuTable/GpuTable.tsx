@@ -1,6 +1,6 @@
 import { getAdminEditGpuPath, Gpu } from '@pcpartdb/shared';
+import { formatGpuName } from 'packages/website/src/client/product';
 import React, { FunctionComponent, useMemo } from 'react';
-import { formatGpuField, getGpuName } from '../../../../../gpus';
 import {
   Table,
   TBody,
@@ -44,7 +44,7 @@ const GpuTableRow: FunctionComponent<GpuTableRowProps> = (props) => {
   const { gpu } = props;
 
   const href = useMemo(() => getAdminEditGpuPath(gpu), [gpu]);
-  const name = useMemo(() => getGpuName(gpu), [gpu]);
+  const name = useMemo(() => formatGpuName(gpu), [gpu]);
 
   return (
     <Tr key={gpu.id}>

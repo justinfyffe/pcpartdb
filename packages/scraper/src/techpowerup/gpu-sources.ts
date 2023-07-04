@@ -9,7 +9,7 @@ export interface TechPowerUpGpuSource {
 
 export interface ScrapeTechPowerUpGpuUrlsOptions {
   query: string;
-  proxy?: boolean;
+  noProxy?: boolean;
 }
 
 const BASE_URL = 'https://www.techpowerup.com';
@@ -51,8 +51,10 @@ async function scrapeSearchData(options: ScrapeTechPowerUpGpuUrlsOptions) {
 }
 
 async function fetchSearchPage(options: ScrapeTechPowerUpGpuUrlsOptions) {
-  const searchUrl = buildSearchUrl(options.query);
-  const response = await scraper.scrape(searchUrl, { retries: 1 });
+  const { query, noProxy } = options;
+
+  const searchUrl = buildSearchUrl(query);
+  const response = await scraper.scrape(searchUrl, { retries: 1, noProxy });
   return response.data;
 }
 

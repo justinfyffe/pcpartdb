@@ -8,8 +8,8 @@ import { scrapeGpu } from '@pcpartdb/scraper';
 import {
   DataUpdateSource,
   DataUpdateStatus,
-  GpuDataUpdate,
   GpuField,
+  ProductDataUpdate,
 } from '@pcpartdb/shared';
 import deepmerge from 'deepmerge';
 import { compare as generateJsonPatch } from 'fast-json-patch';
@@ -49,13 +49,12 @@ export async function updateNextGpu() {
 
   // Pull from data sources
   const scrapeResults = await scrapeGpu({
-    dataSources: gpu.meta?.dataSources ?? {},
+    sources: gpu.meta?.dataSources ?? {},
     chipset,
-    proxy: true,
   });
 
   // Check if we have any results from scraping. Skip if we don't.
-  if (scrapeResults.gpu == null) {
+  if (scrapeResults.product == null) {
     return;
   }
 
@@ -70,7 +69,7 @@ export async function updateNextGpu() {
 
     return deepmerge(target, source, { customMerge: () => filteredMerge });
   };
-  const updatedGpu = deepmerge(gpu, scrapeResults.gpu, {
+  const updatedGpu = deepmerge(gpu, scrapeResults.product, {
     customMerge: () => filteredMerge,
   });
 
@@ -98,7 +97,7 @@ export async function updateNextGpu() {
     }
 
     // Save Data Update
-    const dataUpdate: GpuDataUpdate = {
+    const dataUpdate: ProductDataUpdate = {
       gpuId: gpu.id,
       description: `${jsonPatch.length} changes detected for ${gpu.name}.`,
       status: DataUpdateStatus.Pending,

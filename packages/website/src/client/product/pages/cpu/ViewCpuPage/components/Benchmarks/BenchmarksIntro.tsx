@@ -1,0 +1,27 @@
+import React, { useContext } from 'react';
+import {
+  compileContentComponent,
+  ContentContext,
+} from '../../../../../../shared/content';
+import { ViewPageContext } from '../../context';
+
+const BenchmarksParagraph = compileContentComponent({
+  deps: [],
+  component: (props) => (
+    <p className="text-dimmed">
+      Performance and benchmark metrics for the {props.shortCpuName}. These are
+      usually the best indicator for determing a CPUs performance.
+    </p>
+  ),
+});
+
+export const BenchmarksIntro = () => {
+  const { contentParams, contentTags } = useContext(ViewPageContext);
+  const context = { tags: contentTags, params: contentParams };
+
+  return (
+    <ContentContext.Provider value={context}>
+      <BenchmarksParagraph />
+    </ContentContext.Provider>
+  );
+};

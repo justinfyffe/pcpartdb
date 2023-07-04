@@ -1,31 +1,33 @@
 import {
   Gpu,
   GpuField,
-  MarketSegmentValue,
-  ScrapeGpuDetailsResponse,
+  GpuMarketSegmentValue,
+  ScrapeProductResponse,
 } from '@pcpartdb/shared';
 import * as cheerio from 'cheerio';
 import { scraper } from '../scraper';
 
 export interface ScrapeVideocardBenchmarksGpuDetailsOptions {
   url: string;
-  proxy?: boolean;
+  noProxy?: boolean;
 }
 
 // Example: https://www.videocardbenchmark.net/gpu.php?gpu=GeForce+RTX+4090&id=4606
 export async function scrapeVideocardBenchmarksGpuDetails(
   options: ScrapeVideocardBenchmarksGpuDetailsOptions,
 ) {
-  const response = await scraper.scrape(options.url, { retries: 1 });
+  const { url, noProxy } = options;
+
+  const response = await scraper.scrape(url, { retries: 1, noProxy });
   const $ = cheerio.load(response.data);
 
-  const gpu: Partial<Gpu> = {
+  const product: Partial<Gpu> = {
     marketSegment: getMarketSegment($),
     g3dMark: getG3dMark($),
     g2dMark: getG2dMark($),
   };
 
-  return { gpu: { ...gpu } } as ScrapeGpuDetailsResponse;
+  return { product } as ScrapeProductResponse;
 }
 
 function getG3dMark($: cheerio.CheerioAPI): GpuField<number> {
@@ -60,7 +62,9 @@ function getG2dMark($: cheerio.CheerioAPI): GpuField<number> {
   };
 }
 
-function getMarketSegment($: cheerio.CheerioAPI): GpuField<MarketSegmentValue> {
+function getMarketSegment(
+  $: cheerio.CheerioAPI,
+): GpuField<GpuMarketSegmentValue> {
   const text = $('.desc-foot p strong')
     .filter((_i, strong) => $(strong).text().trim() === 'Videocard Category:')
     .parent()
@@ -70,13 +74,13 @@ function getMarketSegment($: cheerio.CheerioAPI): GpuField<MarketSegmentValue> {
     .text()
     .trim();
 
-  let value: MarketSegmentValue = null;
+  let value: GpuMarketSegmentValue = null;
   if (text === 'Desktop') {
-    value = MarketSegmentValue.Desktop;
+    value = GpuMarketSegmentValue.Desktop;
   } else if (text === 'Mobile') {
-    value = MarketSegmentValue.Mobile;
+    value = GpuMarketSegmentValue.Mobile;
   } else if (text === 'Workstation') {
-    value = MarketSegmentValue.Workstation;
+    value = GpuMarketSegmentValue.Workstation;
   }
 
   return {

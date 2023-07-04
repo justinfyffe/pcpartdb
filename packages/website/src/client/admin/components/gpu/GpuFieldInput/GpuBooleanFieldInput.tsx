@@ -1,5 +1,5 @@
-import { GpuField, GpuFieldKey } from '@pcpartdb/shared';
-import { formatGpuField } from 'packages/website/src/client/gpus';
+import { GpuField, GpuFieldKey, hasProductFieldValue } from '@pcpartdb/shared';
+import { formatGpuField } from 'packages/website/src/client/product';
 import React, { forwardRef, useCallback, useMemo } from 'react';
 import {
   Select,
@@ -22,8 +22,8 @@ export const GpuBooleanFieldInput = forwardRef<
   const { field, value, parentValue, onChange } = props;
 
   let baseValue: string = null;
-  if (value?.value != null) {
-    baseValue = value?.value ? 'true' : 'false';
+  if (hasProductFieldValue(value)) {
+    baseValue = value.value ? 'true' : 'false';
   }
   const placeholder = useMemo(() => formatGpuField(parentValue), [parentValue]);
 

@@ -26,7 +26,7 @@ export const AdminNewUserPage = (_props: NewUserPageProps) => {
           <h1 className="font-semibold">{pageTitle}</h1>
 
           <Button
-            variant={ButtonVariant.Default}
+            variant={ButtonVariant.Generic}
             href={getAdminListUsersPath()}
           >
             Back

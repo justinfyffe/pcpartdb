@@ -2,15 +2,16 @@ import { Injectable } from '@nestjs/common';
 import {
   CompareGpusContentData,
   CompareGpusViewModel,
-  getChipset,
+  getGpuChipset,
   Gpu,
   GpuComparison,
+  hasProductFieldValue,
   ListGpusOrder,
   ListGpusSort,
-  RelatedComparisons,
+  RelatedGpuComparisons,
   RelatedGpus,
 } from '@pcpartdb/shared';
-import { GpuService } from '../../gpu/gpu.service';
+import { GpuService } from '../../product/gpu/gpu.service';
 import { Context } from '../../shared/context';
 import { getSurroundingValues } from '../../shared/utils';
 
@@ -58,8 +59,8 @@ export class CompareGpusViewModelService {
   }
 
   private async getContentData(comparison: GpuComparison, ctx: Context) {
-    const chipset1 = getChipset(comparison[0]);
-    const chipset2 = getChipset(comparison[1]);
+    const chipset1 = getGpuChipset(comparison[0]);
+    const chipset2 = getGpuChipset(comparison[1]);
 
     const retailModels1 = await this.gpuService.list(
       {
@@ -98,8 +99,8 @@ export class CompareGpusViewModelService {
     ctx: Context,
   ) {
     const [gpu1, gpu2] = comparison;
-    const chipset1 = getChipset(gpu1);
-    const chipset2 = getChipset(gpu2);
+    const chipset1 = getGpuChipset(gpu1);
+    const chipset2 = getGpuChipset(gpu2);
     const neighbors1 = await this.getPerformanceNeighbors(chipset1, ctx);
     const neighbors2 = await this.getPerformanceNeighbors(chipset2, ctx);
 
@@ -144,8 +145,8 @@ export class CompareGpusViewModelService {
 
   private async getRelativeValueGpus(comparison: GpuComparison, ctx: Context) {
     const [gpu1, gpu2] = comparison;
-    const chipset1 = getChipset(gpu1);
-    const chipset2 = getChipset(gpu2);
+    const chipset1 = getGpuChipset(gpu1);
+    const chipset2 = getGpuChipset(gpu2);
     const neighbors1 = await this.getValueNeighbors(chipset1, ctx);
     const neighbors2 = await this.getValueNeighbors(chipset2, ctx);
 
@@ -188,7 +189,7 @@ export class CompareGpusViewModelService {
 
   private async getPerformanceNeighbors(gpu: Gpu, ctx: Context) {
     // Missing value. Cannot have neighbors.
-    if (gpu.performanceScore?.value == null) {
+    if (!hasProductFieldValue(gpu.performanceScore)) {
       return [];
     }
 
@@ -242,7 +243,7 @@ export class CompareGpusViewModelService {
 
   private async getValueNeighbors(gpu: Gpu, ctx: Context) {
     // Missing value. Cannot have neighbors.
-    if (gpu.valueScore?.value == null) {
+    if (!hasProductFieldValue(gpu.valueScore)) {
       return [];
     }
 
@@ -408,6 +409,6 @@ export class CompareGpusViewModelService {
       relatedGpu,
     ]);
 
-    return { comparisons } as RelatedComparisons;
+    return { comparisons } as RelatedGpuComparisons;
   }
 }

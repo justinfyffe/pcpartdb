@@ -10,7 +10,7 @@ import {
   Tr,
 } from '../../../../../shared/components';
 import { adminService } from '../../../../adminService';
-import { PreviewDialog } from '../PreviewDialog';
+import { UpdateDialog } from '../UpdateDialog';
 
 interface PendingUpdateRowProps {
   update: DataUpdate;
@@ -46,7 +46,7 @@ export const PendingUpdateRow: FunctionComponent<PendingUpdateRowProps> = (
   );
 
   const handlePreviewUpdate = useCallback((update: DataUpdate) => {
-    showDialog(<PreviewDialog id={update.id} />);
+    showDialog(<UpdateDialog id={update.id} />);
   }, []);
 
   return (
@@ -62,7 +62,7 @@ export const PendingUpdateRow: FunctionComponent<PendingUpdateRowProps> = (
       </Td>
       <Td className="flex gap-4 justify-end">
         <Button
-          variant={ButtonVariant.Default}
+          variant={ButtonVariant.Generic}
           disabled={approving || rejecting}
           onClick={() => handleApproveClick(update)}
         >
@@ -74,7 +74,7 @@ export const PendingUpdateRow: FunctionComponent<PendingUpdateRowProps> = (
         </Button>
 
         <Button
-          variant={ButtonVariant.Default}
+          variant={ButtonVariant.Generic}
           disabled={approving || rejecting}
           onClick={() => handleRejectClick(update)}
         >

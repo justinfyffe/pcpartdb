@@ -1,19 +1,19 @@
 import {
   DEFAULT_LIST_GPUS_LIMIT,
   DEFAULT_LIST_GPUS_OFFSET,
-  generateGpusQueryFromPath,
+  generateListGpusQueryFromPath,
   getAdminListGpusPath,
   Gpu,
   ListGpusQuery,
 } from '@pcpartdb/shared';
 import { useRouter } from 'next/router';
+import { gpuService } from 'packages/website/src/client/product';
 import React, {
   FunctionComponent,
   useCallback,
   useEffect,
   useState,
 } from 'react';
-import { gpuService } from '../../../../../gpus';
 import { Alert, AlertVariant } from '../../../../../shared/components';
 import { GpuPagination } from '../GpuPagination';
 import { GpuTable } from '../GpuTable';
@@ -49,7 +49,7 @@ export const ChipsetsTab: FunctionComponent<ChipsetsTabProps> = () => {
 
   useEffect(() => {
     router.beforePopState((cb) => {
-      fetchChipsets(generateGpusQueryFromPath(cb.as));
+      fetchChipsets(generateListGpusQueryFromPath(cb.as));
       return true;
     });
   }, [fetchChipsets, router]);

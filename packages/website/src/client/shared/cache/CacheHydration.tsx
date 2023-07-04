@@ -1,30 +1,34 @@
-import { Gpu, Image } from '@pcpartdb/shared';
 import Script from 'next/script';
 import React, { FunctionComponent } from 'react';
-import { useGpuCache, useImageCache } from '.';
+import {
+  ImageCacheState,
+  ProductCacheState,
+  useImageCache,
+  useProductCache,
+} from '.';
 
 interface CacheState {
-  images: Record<number, Image>;
-  gpus: Record<number, Gpu>;
+  images: ImageCacheState;
+  products: ProductCacheState;
 }
 
 export const CacheHydration: FunctionComponent = () => {
-  const gpuCache = useGpuCache();
   const imageCache = useImageCache();
+  const productCache = useProductCache();
 
   if (typeof document !== 'undefined') {
     const el = document.getElementById('cache');
     if (el != null) {
       const state: CacheState = JSON.parse(el.textContent);
       imageCache.hydrate(state.images);
-      gpuCache.hydrate(state.gpus);
+      productCache.hydrate(state.products);
     }
 
     return <React.Fragment />;
   } else {
     const state: CacheState = {
       images: imageCache.toObject(),
-      gpus: gpuCache.toObject(),
+      products: productCache.toObject(),
     };
     return (
       <Script

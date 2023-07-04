@@ -1,9 +1,9 @@
-import { MarketSegmentValue } from '@pcpartdb/shared';
+import { GpuMarketSegmentValue } from '@pcpartdb/shared';
 
 export interface VideocardBenchmarksGpuSource {
   name: string;
   company: string;
-  marketSegment: MarketSegmentValue;
+  marketSegment: GpuMarketSegmentValue;
   g3dMark: number;
   g2dMark: number;
   url: string;

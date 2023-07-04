@@ -36,21 +36,29 @@ export const Tabs: FunctionComponent<TabsProps> = (props) => {
   }, [children]);
 
   return (
-    <Element className={classNames('flex flex-col gap-4', props.className)}>
-      <ul className="flex gap-4">
+    <Element className={classNames('flex flex-col', props.className)}>
+      <ul className="flex items-center justify-start">
         {labels.map((label, i) => (
-          <li className="flex-1" key={i}>
-            <Button
-              className="w-full"
-              disabled={i === activeTab}
-              variant={ButtonVariant.Default}
-              onClick={() => handleLabelClick(i)}
-            >
-              {label}
-            </Button>
+          <li className="h-full" key={i}>
+            {i === activeTab && (
+              <div className="bg-light-shades px-4 py-2 font-bold rounded-t">
+                {label}
+              </div>
+            )}
+            {i !== activeTab && (
+              <Button
+                disabled={i === activeTab}
+                variant={ButtonVariant.None}
+                onClick={() => handleLabelClick(i)}
+                className="bg-[#f8f8f8] hover:bg-mouse-hover"
+              >
+                {label}
+              </Button>
+            )}
           </li>
         ))}
       </ul>
+
       {Children.map(children, (child, i) => (
         <>
           {(loadOnDemand !== true || activeTab === i) && (

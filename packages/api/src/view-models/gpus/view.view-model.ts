@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import {
-  getChipset,
+  getGpuChipset,
   Gpu,
+  hasProductFieldValue,
   ListGpusOrder,
   ListGpusSort,
-  RelatedComparisons,
+  RelatedGpuComparisons,
   RelatedGpus,
   ViewGpuContentData,
   ViewGpuViewModel,
 } from '@pcpartdb/shared';
-import { parseISO } from 'date-fns';
-import { GpuService } from '../../gpu/gpu.service';
+import { GpuService } from '../../product/gpu/gpu.service';
 import { Context } from '../../shared/context';
 import { getSurroundingValues } from '../../shared/utils';
 
@@ -64,7 +64,7 @@ export class ViewGpuViewModelService {
           'performanceRank',
           'performanceRankForArchitectureSegment',
           'performanceRankForCompanySegment',
-          'performanceRankForSegmentYear',
+          'performanceRankForSegment',
           'valueRank',
           'valueRankForSegment',
         ],
@@ -74,27 +74,18 @@ export class ViewGpuViewModelService {
   }
 
   private async getContentData(gpu: Gpu, ctx: Context) {
-    const year = parseISO(gpu.releaseDate?.value).getFullYear();
     const segment = gpu.marketSegment?.value;
 
     const totalPerformanceGpus = await this.gpuService.count(
       { query: { filter: { performanceRated: true } } },
       ctx,
     );
-    const totalPerformanceSegmentYearGpus = await this.gpuService.count(
-      {
-        query: {
-          filter: { year: [year], segment: [segment], performanceRated: true },
-        },
-      },
-      ctx,
-    );
     const relativePerformanceGpus = await this.getRelativePerformanceGpus(
-      getChipset(gpu),
+      getGpuChipset(gpu),
       ctx,
     );
     const relativeValueGpus = await this.getRelativeValueGpus(
-      getChipset(gpu),
+      getGpuChipset(gpu),
       ctx,
     );
 
@@ -142,7 +133,6 @@ export class ViewGpuViewModelService {
 
     return {
       totalPerformanceGpus,
-      totalPerformanceSegmentYearGpus,
       relativePerformanceGpus,
       relativeValueGpus,
       bestPerformanceGpuForSegment: bestPerformanceSegmentGpus?.[0],
@@ -152,7 +142,7 @@ export class ViewGpuViewModelService {
   }
 
   private async getRelativePerformanceGpus(seed: Gpu, ctx: Context) {
-    if (seed.performanceScore?.value == null) {
+    if (!hasProductFieldValue(seed.performanceScore)) {
       return [];
     }
 
@@ -211,7 +201,7 @@ export class ViewGpuViewModelService {
   }
 
   private async getRelativeValueGpus(seed: Gpu, ctx: Context) {
-    if (seed.valueScore?.value == null) {
+    if (!hasProductFieldValue(seed.valueScore)) {
       return [];
     }
 
@@ -306,7 +296,7 @@ export class ViewGpuViewModelService {
     const performanceIds = performanceGpus.map((gpu) => gpu.id);
     const valueIds = valueGpus.map((gpu) => gpu.id);
 
-    const pageChipset = getChipset(pageGpu);
+    const pageChipset = getGpuChipset(pageGpu);
     const set = new Set([...performanceIds, ...valueIds]);
     set.delete(pageChipset.id);
 
@@ -321,6 +311,6 @@ export class ViewGpuViewModelService {
 
     const comparisons = related.map((relatedGpu) => [pageChipset, relatedGpu]);
 
-    return { comparisons } as RelatedComparisons;
+    return { comparisons } as RelatedGpuComparisons;
   }
 }

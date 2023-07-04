@@ -20,7 +20,7 @@ export const AutocompleteOption: FunctionComponent<AutocompleteOptionProps> = (
   const { onClick, onHovered, hoveredIndex } = context;
 
   const { index, label, value, children, className } = props;
-  const hoveredClassName = props.hoveredClassName ?? 'bg-[#fafafa]';
+  const hoveredClassName = props.hoveredClassName ?? 'bg-mouse-hover';
 
   useEffect(() => {
     if (hoveredIndex === index) {

@@ -1,6 +1,5 @@
-import { Gpu, GpuDataSourceKey } from '@pcpartdb/shared';
+import { Gpu, GpuDataSourceKey, hasProductFieldValue } from '@pcpartdb/shared';
 import React, { FunctionComponent, useMemo } from 'react';
-import { hasGpuFieldValue } from '../../../../../gpus';
 
 enum MissingData {
   TechPowerUp = 'TECHPOWERUP',
@@ -40,7 +39,7 @@ export const MissingDataChip: FunctionComponent<MissingDataChipProps> = (
       {missingData.map((data) => (
         <div
           key={data}
-          className="bg-red-300 py-1 px-3 font-bold text-2xs rounded-full inline-block"
+          className="bg-warning text-default py-1 px-3 font-bold text-xs rounded-full inline-block"
         >
           {LABELS[data]}
         </div>
@@ -66,13 +65,13 @@ function checkMissingData(gpu: Gpu): MissingData[] {
     missingData.push(MissingData.UlBenchmarks);
   }
 
-  if (!hasGpuFieldValue(gpu.marketSegment)) {
+  if (!hasProductFieldValue(gpu.marketSegment)) {
     missingData.push(MissingData.MarketSegment);
   }
-  if (!hasGpuFieldValue(gpu.releaseDate)) {
+  if (!hasProductFieldValue(gpu.releaseDate)) {
     missingData.push(MissingData.ReleaseDate);
   }
-  if (!hasGpuFieldValue(gpu.launchPrice)) {
+  if (!hasProductFieldValue(gpu.launchPrice)) {
     missingData.push(MissingData.LaunchPrice);
   }
 

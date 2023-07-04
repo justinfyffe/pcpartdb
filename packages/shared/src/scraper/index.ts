@@ -1,1 +1,1 @@
-export * from './scraper-types';
+export * from './types';

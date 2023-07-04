@@ -8,17 +8,23 @@ import {
   GpuDataSource,
   GpuDataSourceKey,
   gpuDataSourceValidator,
+  gpuDataValidator,
   GpuField,
-  gpuFieldValidator,
   GpuImages,
   gpuImageValidator,
-  MarketSegmentValue,
-  ProductionStatusValue,
+  GpuMarketSegmentValue,
+  GpuProductionStatusValue,
+  Product,
+  ProductType,
   UpdateGpuRequest,
   ValidationErrorType,
 } from '@pcpartdb/shared';
 import { useRouter } from 'next/router';
-import { GpuAutocomplete } from 'packages/website/src/client/gpus/components';
+import {
+  gpuService,
+  ProductAutocomplete,
+} from 'packages/website/src/client/product';
+import { useProductCache } from 'packages/website/src/client/shared/cache';
 import React, {
   FunctionComponent,
   useCallback,
@@ -26,8 +32,6 @@ import React, {
   useState,
 } from 'react';
 import { Controller, useForm, UseFormProps, useWatch } from 'react-hook-form';
-import { gpuService } from '../../../../gpus';
-import { useGpuCache } from '../../../../shared/cache';
 import {
   Alert,
   AlertVariant,
@@ -45,15 +49,13 @@ import {
   isBadRequestError,
   setValidationErrors,
 } from '../../../../shared/error';
+import { ScrapedProduct } from '../../product';
 import { GpuBenchmarkInput } from '../GpuBenchmarkInput';
 import { GpuDataSourceInput } from '../GpuDataSourceInput';
 import { GpuFieldInput } from '../GpuFieldInput';
 import { GpuImagesInput } from '../GpuImageInput';
 import { GpuSlugInput } from '../GpuSlugInput';
-import {
-  ScrapeGpuDetailsDialog,
-  ScrapeGpuDetailsResults,
-} from '../ScrapeGpuDetailsDialog';
+import { ScrapeGpuDialog } from '../ScrapeGpuDialog';
 
 interface GpuFormData {
   // GPU Parent / Chipset ID
@@ -70,10 +72,10 @@ interface GpuFormData {
   // General
   partNumber?: GpuField<string>;
   company?: GpuField<string>;
-  marketSegment?: GpuField<MarketSegmentValue>;
+  marketSegment?: GpuField<GpuMarketSegmentValue>;
   launchPrice?: GpuField<number>;
   releaseDate?: GpuField<string>;
-  productionStatus?: GpuField<ProductionStatusValue>;
+  productionStatus?: GpuField<GpuProductionStatusValue>;
 
   // Processor
   codename?: GpuField<string>;
@@ -145,66 +147,66 @@ const gpuValidator = Joi.object({
   ulBenchmarksSource: gpuDataSourceValidator.allow(null),
 
   // General
-  partNumber: gpuFieldValidator.allow(null),
-  company: gpuFieldValidator.allow(null),
-  marketSegment: gpuFieldValidator.allow(null),
-  launchPrice: gpuFieldValidator.allow(null),
-  releaseDate: gpuFieldValidator.allow(null),
-  productionStatus: gpuFieldValidator.allow(null),
+  partNumber: gpuDataValidator.allow(null),
+  company: gpuDataValidator.allow(null),
+  marketSegment: gpuDataValidator.allow(null),
+  launchPrice: gpuDataValidator.allow(null),
+  releaseDate: gpuDataValidator.allow(null),
+  productionStatus: gpuDataValidator.allow(null),
 
   // Processor
-  codename: gpuFieldValidator.allow(null),
-  architecture: gpuFieldValidator.allow(null),
-  processSize: gpuFieldValidator.allow(null),
-  transistors: gpuFieldValidator.allow(null),
+  codename: gpuDataValidator.allow(null),
+  architecture: gpuDataValidator.allow(null),
+  processSize: gpuDataValidator.allow(null),
+  transistors: gpuDataValidator.allow(null),
 
   // Board Compatibility & Dimensions
-  slotWidth: gpuFieldValidator.allow(null),
-  length: gpuFieldValidator.allow(null),
-  width: gpuFieldValidator.allow(null),
-  height: gpuFieldValidator.allow(null),
-  weight: gpuFieldValidator.allow(null),
-  busInterface: gpuFieldValidator.allow(null),
-  thermalDesignPower: gpuFieldValidator.allow(null),
-  suggestedPsu: gpuFieldValidator.allow(null),
-  powerConnectors: gpuFieldValidator.allow(null),
-  outputs: gpuFieldValidator.allow(null),
+  slotWidth: gpuDataValidator.allow(null),
+  length: gpuDataValidator.allow(null),
+  width: gpuDataValidator.allow(null),
+  height: gpuDataValidator.allow(null),
+  weight: gpuDataValidator.allow(null),
+  busInterface: gpuDataValidator.allow(null),
+  thermalDesignPower: gpuDataValidator.allow(null),
+  suggestedPsu: gpuDataValidator.allow(null),
+  powerConnectors: gpuDataValidator.allow(null),
+  outputs: gpuDataValidator.allow(null),
 
   // Cores & Clock Speed
-  shaderUnitsCudaCores: gpuFieldValidator.allow(null),
-  computeUnitsSmCount: gpuFieldValidator.allow(null),
-  textureMappingUnits: gpuFieldValidator.allow(null),
-  renderOutputUnits: gpuFieldValidator.allow(null),
-  tensorCores: gpuFieldValidator.allow(null),
-  rayTracingCores: gpuFieldValidator.allow(null),
-  coreClockSpeedBase: gpuFieldValidator.allow(null),
-  coreClockSpeedBoost: gpuFieldValidator.allow(null),
-  l1Cache: gpuFieldValidator.allow(null),
-  l2Cache: gpuFieldValidator.allow(null),
+  shaderUnitsCudaCores: gpuDataValidator.allow(null),
+  computeUnitsSmCount: gpuDataValidator.allow(null),
+  textureMappingUnits: gpuDataValidator.allow(null),
+  renderOutputUnits: gpuDataValidator.allow(null),
+  tensorCores: gpuDataValidator.allow(null),
+  rayTracingCores: gpuDataValidator.allow(null),
+  coreClockSpeedBase: gpuDataValidator.allow(null),
+  coreClockSpeedBoost: gpuDataValidator.allow(null),
+  l1Cache: gpuDataValidator.allow(null),
+  l2Cache: gpuDataValidator.allow(null),
 
   // Theoretical Performance
-  pixelFillRate: gpuFieldValidator.allow(null),
-  textureFillRate: gpuFieldValidator.allow(null),
-  fp32Performance: gpuFieldValidator.allow(null),
-  fp64Performance: gpuFieldValidator.allow(null),
+  pixelFillRate: gpuDataValidator.allow(null),
+  textureFillRate: gpuDataValidator.allow(null),
+  fp32Performance: gpuDataValidator.allow(null),
+  fp64Performance: gpuDataValidator.allow(null),
 
   // Memory
-  memorySize: gpuFieldValidator.allow(null),
-  memoryType: gpuFieldValidator.allow(null),
-  memoryClock: gpuFieldValidator.allow(null),
-  memoryInterface: gpuFieldValidator.allow(null),
-  memoryBandwidth: gpuFieldValidator.allow(null),
+  memorySize: gpuDataValidator.allow(null),
+  memoryType: gpuDataValidator.allow(null),
+  memoryClock: gpuDataValidator.allow(null),
+  memoryInterface: gpuDataValidator.allow(null),
+  memoryBandwidth: gpuDataValidator.allow(null),
 
   // API Support
-  directxVersion: gpuFieldValidator.allow(null),
-  openClVersion: gpuFieldValidator.allow(null),
-  openGlVersion: gpuFieldValidator.allow(null),
-  shaderModelVersion: gpuFieldValidator.allow(null),
+  directxVersion: gpuDataValidator.allow(null),
+  openClVersion: gpuDataValidator.allow(null),
+  openGlVersion: gpuDataValidator.allow(null),
+  shaderModelVersion: gpuDataValidator.allow(null),
 
   // Benchmarks
-  g2dMark: gpuFieldValidator.allow(null),
-  g3dMark: gpuFieldValidator.allow(null),
-  timespyGraphics: gpuFieldValidator.allow(null),
+  g2dMark: gpuDataValidator.allow(null),
+  g3dMark: gpuDataValidator.allow(null),
+  timespyGraphics: gpuDataValidator.allow(null),
 
   // Images
   images: Joi.array().allow(gpuImageValidator),
@@ -305,7 +307,7 @@ function formOptions(gpu?: Gpu): UseFormProps<GpuFormData> {
 export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
   const { gpu } = props;
   const isUpdate = gpu != null;
-  useGpuCache(gpu, gpu?.chipset);
+  useProductCache(ProductType.Gpu, gpu, gpu?.chipset);
 
   const router = useRouter();
   const [saving, setSaving] = useState(false);
@@ -364,20 +366,18 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
     }
   }, [gpu, router, setError]);
 
-  const handleParentGpuChange = useCallback((gpu: Gpu) => {
-    setParentGpu(gpu);
+  const handleParentGpuChange = useCallback((product: Product) => {
+    setParentGpu(product as Gpu);
   }, []);
 
   const handleScrape = useCallback(
-    (data: ScrapeGpuDetailsResults) => {
-      if (data.name.enabled) {
-        setValue('name', data.name.value);
-      }
+    (scraped: ScrapedProduct) => {
+      const { scrapedData: data } = scraped;
 
-      Object.keys(data.fields || {}).forEach((fieldKey) => {
-        if (data.fields[fieldKey].enabled) {
+      Object.keys(data || {}).forEach((field) => {
+        if (data[field].enabled) {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          setValue(fieldKey as any, data.fields[fieldKey].value);
+          setValue(field as any, data[field].value);
         }
       });
     },
@@ -399,17 +399,15 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
   });
 
   const handleScrapeClick = useCallback(() => {
-    const chipsetIdSources = importChipsetId
-      .filter((chipsetId) => chipsetId != null)
-      .map((chipsetId) => ({ chipsetId }));
-    const urlSources = importSources.filter((source) => source != null);
-    showDialog(
-      <ScrapeGpuDetailsDialog
-        sources={[...chipsetIdSources, ...urlSources]}
-        onImport={handleScrape}
-      />,
-      { disableClose: true },
-    );
+    const sources: Record<string, GpuDataSource> = {
+      [GpuDataSourceKey.Chipset]: { chipsetId: importChipsetId[0] },
+      [GpuDataSourceKey.TechPowerUp]: importSources[0],
+      [GpuDataSourceKey.VideocardBenchmarks]: importSources[1],
+      [GpuDataSourceKey.UlBenchmarks]: importSources[2],
+    };
+    showDialog(<ScrapeGpuDialog sources={sources} onImport={handleScrape} />, {
+      disableClose: true,
+    });
   }, [importChipsetId, importSources, handleScrape]);
 
   return (
@@ -456,7 +454,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           />
         </Field>
 
-        <Button variant={ButtonVariant.Secondary} onClick={handleScrapeClick}>
+        <Button variant={ButtonVariant.Warning} onClick={handleScrapeClick}>
           Scrape Details
         </Button>
       </section>
@@ -468,10 +466,11 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
             name="chipsetId"
             control={control}
             render={({ field }) => (
-              <GpuAutocomplete
+              <ProductAutocomplete
                 {...field}
                 ref={null}
-                onChangeGpu={handleParentGpuChange}
+                productType={ProductType.Gpu}
+                onChangeProduct={handleParentGpuChange}
               />
             )}
           />
@@ -1292,7 +1291,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
         {isUpdate && (
           <Button
             type="button"
-            variant={ButtonVariant.Secondary}
+            variant={ButtonVariant.Danger}
             onClick={handleDelete}
             disabled={saving || deleting}
             className="mr-4"

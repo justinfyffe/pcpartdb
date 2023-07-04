@@ -62,7 +62,7 @@ export const AdminListImagesPage = (props: AdminListImagesViewModel) => {
         <div className="flex items-center justify-between mb-4">
           <h1 className="font-semibold">{pageTitle}</h1>
 
-          <Button href={getAdminNewImagePath()} variant={ButtonVariant.Default}>
+          <Button href={getAdminNewImagePath()} variant={ButtonVariant.Generic}>
             Add
           </Button>
         </div>

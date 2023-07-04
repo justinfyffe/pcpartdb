@@ -45,4 +45,4 @@ export const GpuSlugInput = forwardRef<HTMLInputElement, GpuSlugInputProps>(
     );
   },
 );
-GpuSlugInput.displayName = 'SlugField';
+GpuSlugInput.displayName = 'GpuSlugInput';

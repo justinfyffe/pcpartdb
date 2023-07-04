@@ -103,14 +103,14 @@ export const GpuImagesInput: FunctionComponent<GpuImagesInputProps> = (
           <div className="flex flex-col gap-2 mx-2 justify-between">
             <div className="flex flex-col gap-2">
               <Button
-                variant={ButtonVariant.Default}
+                variant={ButtonVariant.Generic}
                 disabled={i === 0}
                 onClick={() => handleShiftUp(i)}
               >
                 <ChevronUpIcon className="w-4" />
               </Button>
               <Button
-                variant={ButtonVariant.Default}
+                variant={ButtonVariant.Generic}
                 disabled={i === value.length - 1}
                 onClick={() => handleShiftDown(i)}
               >
@@ -119,7 +119,7 @@ export const GpuImagesInput: FunctionComponent<GpuImagesInputProps> = (
             </div>
             <div>
               <Button
-                variant={ButtonVariant.Default}
+                variant={ButtonVariant.Generic}
                 onClick={() => handleRemove(i)}
               >
                 <XMarkIcon className="w-4" />
@@ -131,7 +131,7 @@ export const GpuImagesInput: FunctionComponent<GpuImagesInputProps> = (
 
       <Button
         className="self-end"
-        variant={ButtonVariant.Secondary}
+        variant={ButtonVariant.Warning}
         onClick={() => handleAppend()}
       >
         Add Image
