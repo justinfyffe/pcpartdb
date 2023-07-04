@@ -2,14 +2,7 @@ import { joinUrlParts, WEBSITE_NAME, WEBSITE_URL } from '@pcpartdb/shared';
 import Head from 'next/head';
 import React, { FunctionComponent, useMemo } from 'react';
 
-const BASE_KEYWORDS = [
-  'PC Part DB',
-  'PC Hardware',
-  'PC Parts',
-  'Graphics Cards',
-  'Video Cards',
-  'GPUs',
-];
+const BASE_KEYWORDS = ['PC Part DB', 'PC Hardware', 'PC Parts'];
 
 export enum MetaRobots {
   NOFOLLOW = 'nofollow',
