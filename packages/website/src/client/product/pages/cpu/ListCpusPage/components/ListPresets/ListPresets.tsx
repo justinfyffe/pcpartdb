@@ -21,7 +21,7 @@ export const ListPresets: FunctionComponent<ListPresetsProps> = (props) => {
     },
     {
       slug: ListCpusPresetSlug.BestValue,
-      label: 'Best value GPUs',
+      label: 'Best value CPUs',
     },
     {
       slug: ListCpusPresetSlug.BestValueAmd,
