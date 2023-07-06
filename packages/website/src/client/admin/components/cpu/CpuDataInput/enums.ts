@@ -21,6 +21,14 @@ const MARKET_SEGMENTS: ProductEnumItem[] = [
     label: formatCpuMarketSegment(CpuMarketSegmentValue.Workstation),
     value: CpuMarketSegmentValue.Workstation,
   },
+  {
+    label: formatCpuMarketSegment(CpuMarketSegmentValue.Server),
+    value: CpuMarketSegmentValue.Server,
+  },
+  {
+    label: formatCpuMarketSegment(CpuMarketSegmentValue.Embedded),
+    value: CpuMarketSegmentValue.Embedded,
+  },
 ];
 
 const PRODUCTION_STATUS: ProductEnumItem[] = [

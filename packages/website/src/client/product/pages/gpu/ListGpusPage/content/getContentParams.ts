@@ -64,7 +64,7 @@ function getMarketSegmentParam(query: ListGpusQuery) {
   }
 
   if (segments.length === 1) {
-    return formatGpuMarketSegment(segments[0]).toLowerCase();
+    return formatGpuMarketSegment(segments[0])?.toLowerCase();
   }
 
   return null;
@@ -80,7 +80,7 @@ function getFiltersListParam(query: ListGpusQuery) {
     [];
   const segments =
     query.filter?.segment
-      ?.map((segment) => formatGpuMarketSegment(segment).toLowerCase())
+      ?.map((segment) => formatGpuMarketSegment(segment)?.toLowerCase())
       .sort() || [];
 
   const filters = [...companies, ...segments];

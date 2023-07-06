@@ -45,7 +45,9 @@ export type CpuImages = CpuImage[];
 export enum CpuMarketSegmentValue {
   Desktop = 'DESKTOP',
   Mobile = 'MOBILE',
-  Workstation = 'WORKSTATION', // Also Server
+  Workstation = 'WORKSTATION',
+  Server = 'SERVER',
+  Embedded = 'EMBEDDED',
 }
 
 export enum CpuProductionStatusValue {

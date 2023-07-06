@@ -64,7 +64,7 @@ function getMarketSegmentParam(query: ListCpusQuery) {
   }
 
   if (segments.length === 1) {
-    return formatCpuMarketSegment(segments[0]).toLowerCase();
+    return formatCpuMarketSegment(segments[0])?.toLowerCase();
   }
 
   return null;
@@ -80,7 +80,7 @@ function getFiltersListParam(query: ListCpusQuery) {
     [];
   const segments =
     query.filter?.segment
-      ?.map((segment) => formatCpuMarketSegment(segment).toLowerCase())
+      ?.map((segment) => formatCpuMarketSegment(segment)?.toLowerCase())
       .sort() || [];
 
   const filters = [...companies, ...segments];

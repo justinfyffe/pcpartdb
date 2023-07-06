@@ -90,7 +90,7 @@ function getGeneralParams(cpu: Cpu, _contentData: ViewCpuContentData) {
     shortCpuName: formatCpuName(cpu, { company: false }),
     launchPrice: formatCpuField(cpu.launchPrice),
     releaseDate: formatCpuField(cpu.releaseDate),
-    marketSegments: formatCpuField(cpu.marketSegments).toLowerCase(),
+    marketSegments: formatCpuField(cpu.marketSegments)?.toLowerCase(),
     architecture: formatCpuField(cpu.architecture),
     codename: formatCpuField(cpu.codename),
     generation: formatCpuField(cpu.generation),
@@ -165,7 +165,7 @@ function getValueParams(cpu: Cpu) {
 function getSpecsParams(cpu: Cpu) {
   return {
     memorySupport: formatCpuField(cpu.memorySupport),
-    memoryChannels: formatCpuField(cpu.memoryChannels).toLowerCase(),
+    memoryChannels: formatCpuField(cpu.memoryChannels)?.toLowerCase(),
     pciExpress: formatCpuField(cpu.pciExpress),
     coresCount: formatCpuField(cpu.coresCount),
     threadsCount: formatCpuField(cpu.threadsCount),

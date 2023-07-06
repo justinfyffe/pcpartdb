@@ -59,6 +59,14 @@ export const ListFilterMarketSegment: FunctionComponent<
         marketSegment={CpuMarketSegmentValue.Workstation}
         onChange={handleMarketSegmentToggle}
       />
+      <ListFilterMarketSegmentItem
+        marketSegment={CpuMarketSegmentValue.Server}
+        onChange={handleMarketSegmentToggle}
+      />
+      <ListFilterMarketSegmentItem
+        marketSegment={CpuMarketSegmentValue.Embedded}
+        onChange={handleMarketSegmentToggle}
+      />
     </div>
   );
 };

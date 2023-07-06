@@ -1,33 +1,30 @@
-- cpus
-  - [] download data
-  - [x] create cli scripts to fetch data sources and data
-    - [x] scrape-sources
-    - [x] scrape-data
-    - [x] test cpu data
-  - [x] add cpu support to importer
-  - [x] add cpu support to data updater
-    - Add update type to data-updater
-    - do not add it to gpu-updater, we will implement a new updating functionality soon
-    - only need to handle supporting checking update diffs
-  - [x] create cpu pages
-    - [x] view page
-      - [x] overview
-    - [x] compare page
-      - [x] overview
-    - [x] list page
-  - [x] update home page
-    - [x] search
-    - [x] feed
-  - [x] update autocomplete
-  - [x] cpu performance and value ranks
-  - [x] sitemap
-  - [x] update gpu code to be similar to cpu for components
-    - [x] product highlights
-    - [x] product field row / custom row
-- [x] code cleanup
-  - generalize gpu and cpu components to use product
-    - speed up development of new product types
-    - gpu -> ProductFieldRow
+- auto-updates
+  - General:
+    - Name: auto-pilot
+    - shared service for calling website api
+    - handle rate limiting, queue requests
+  - [] API
+    - [] API key manager on admin panel
+      - [] Create API Key
+      - [] Delete API Key
+      - [] Basic usage details
+    - [] API Guard
+  - [] Overview Page
+    - [] Widget that shows pending updates
+    - [] Improve widget for scraper usage
+  - [] Edit Form
+    - [] "Update" button - scrapes, but only updates auto-update fields
+  - [] GPU Sources
+    - [] Improve fetching sources from passmark
+  - [] New CPUs
+    - How to handle?
+  - [] New GPUs
+    - How to handle?
+  - [] Auto-Pilot program
+    - [] CPUs
+    - [] GPUs
+      - [] Chipsets
+      - [] Retail Models
 
 - updating
   - call it auto-pilot

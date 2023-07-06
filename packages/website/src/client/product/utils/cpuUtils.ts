@@ -149,6 +149,10 @@ export function formatCpuMarketSegment(value: CpuMarketSegmentValue) {
       return 'Mobile';
     case CpuMarketSegmentValue.Workstation:
       return 'Workstation';
+    case CpuMarketSegmentValue.Server:
+      return 'Server';
+    case CpuMarketSegmentValue.Embedded:
+      return 'Embedded';
     default:
       throw new Error(`Invalid market segment value: ${value}`);
   }
