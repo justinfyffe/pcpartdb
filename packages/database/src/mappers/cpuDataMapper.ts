@@ -33,15 +33,12 @@ export function mapToCpuDataDto<
   }
 
   const value = entity[key as string] as TReturn;
-  if (meta == null && entity[key as string] == null) {
+  if (meta == null && value == null) {
     // No value,
     return undefined;
   }
 
-  return {
-    value: entity[key as string] as TReturn,
-    meta,
-  };
+  return { value, meta };
 }
 
 export function mapToCpuDataEntity<TReturn, TEntity>(

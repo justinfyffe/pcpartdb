@@ -3,6 +3,7 @@ import * as cheerio from 'cheerio';
 import deepmerge from 'deepmerge';
 import { scraper } from '../../scraper';
 import { GeekBenchCpuSource } from '../types';
+import { sanitizeCpuName } from '../utils';
 
 export interface ScrapeGeekBenchCpuSourcesOptions {
   noProxy?: boolean;
@@ -32,11 +33,17 @@ function parseSingleCoreTable($: cheerio.CheerioAPI) {
     const $name = $tr.find('td.name a');
 
     const { company, name } = parseProductName($name.text().trim());
+    const sanitizedName = sanitizeCpuName(name);
     const url = cleanUrl(BASE_URL + $name.attr('href').trim());
     const scoreText = $tr.find('td.score').text().trim().replace(',', '');
     const score = scoreText ? Number(scoreText) : null;
 
-    sources[name] = { name, company, url, geekBenchSingleCore: score };
+    sources[sanitizedName] = {
+      name: sanitizedName,
+      company,
+      url,
+      geekBenchSingleCore: score,
+    };
   });
 
   return sources;

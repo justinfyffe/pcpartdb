@@ -1,3 +1,6 @@
+- cpu and gpu data
+  - next source model cpu: athlon 5150
+
 - auto-updates
   - General:
     - Name: auto-pilot

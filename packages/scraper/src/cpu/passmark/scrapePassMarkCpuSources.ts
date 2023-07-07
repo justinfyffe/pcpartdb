@@ -2,6 +2,7 @@ import { cleanUrl, parseProductName } from '@pcpartdb/shared';
 import * as cheerio from 'cheerio';
 import { scraper } from '../../scraper';
 import { PassMarkCpuSource } from '../types';
+import { sanitizeCpuName } from '../utils';
 
 export interface ScrapePassMarkCpuSourcesOptions {
   noProxy?: boolean;
@@ -31,11 +32,13 @@ export async function scrapePassMarkCpuSources(
       const { company, name } = parseProductName(
         $li.find('a span.prdname').text().trim(),
       );
+
+      const sanitizedName = sanitizeCpuName(name);
       const scoreText = $li.find('a span.count').text().trim().replace(',', '');
       const score = scoreText ? Number(scoreText) : null;
 
-      sources[name] = {
-        name,
+      sources[sanitizedName] = {
+        name: sanitizedName,
         company,
         url,
         cpuMarkMultiThread: !Number.isNaN(score) ? score : null,
