@@ -249,11 +249,13 @@ export class GpuRepository {
     const minPerformanceScore = filter?.minPerformanceScore;
     const maxValueScore = filter?.maxValueScore;
     const minValueScore = filter?.minValueScore;
-    const architectures = filter?.architecture ?? [];
-    const companies = filter?.company ?? [];
-    const years = filter?.year ?? [];
-    const segments = filter?.segment ?? [];
-    const excludeIds = filter?.excludeIds;
+    const architectures =
+      filter?.architecture?.filter((value) => value != null) ?? [];
+    const companies = filter?.company?.filter((value) => value != null) ?? [];
+    const years = filter?.year?.filter((value) => value != null) ?? [];
+    const segments = filter?.segment?.filter((value) => value != null) ?? [];
+    const excludeIds =
+      filter?.excludeIds?.filter((value) => value != null) ?? [];
 
     // Exclude Ids
     let idWhere: Prisma.IntFilter = {};

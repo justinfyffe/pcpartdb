@@ -150,6 +150,7 @@ export class ViewGpuViewModelService {
       {
         query: {
           filter: {
+            segment: [seed.marketSegment?.value],
             excludeIds: [seed.id],
             minPerformanceScore: seed.performanceScore?.value,
             performanceRated: true,
@@ -170,6 +171,7 @@ export class ViewGpuViewModelService {
       {
         query: {
           filter: {
+            segment: [seed.marketSegment?.value],
             excludeIds: [seed.id],
             maxPerformanceScore: seed.performanceScore?.value,
             performanceRated: true,
@@ -209,6 +211,7 @@ export class ViewGpuViewModelService {
       {
         query: {
           filter: {
+            segment: [seed.marketSegment?.value],
             excludeIds: [seed.id],
             minValueScore: seed.valueScore?.value,
             valueRated: true,
@@ -226,6 +229,7 @@ export class ViewGpuViewModelService {
       {
         query: {
           filter: {
+            segment: [seed.marketSegment?.value],
             excludeIds: [seed.id],
             maxValueScore: seed.valueScore?.value,
             valueRated: true,

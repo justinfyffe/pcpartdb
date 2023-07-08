@@ -11,25 +11,25 @@ const seoTitle = compileContentFunction(
     tags: [ListGpusContentTag.SortedBestPerformance],
     deps: [],
     hook: (props) =>
-      `${props.bestOrWorstTitle} ${props.company || ''} ${
-        props.marketSegment || ''
-      } GPUs by performance`,
+      `${props.bestOrWorstTitle} ${props.marketSegment || ''} ${
+        props.company || ''
+      }  GPUs by performance`,
   },
   {
     tags: [ListGpusContentTag.SortedBestValue],
     deps: [],
     hook: (props) =>
-      `${props.bestOrWorstTitle} ${props.company || ''} ${
-        props.marketSegment || ''
-      } GPUs by performance per dollar`,
+      `${props.bestOrWorstTitle} ${props.marketSegment || ''} ${
+        props.company || ''
+      }  GPUs by performance per dollar`,
   },
   {
     tags: [ListGpusContentTag.SortedReleaseDate],
     deps: [],
     hook: (props) =>
-      `${props.newestOrOldestTitle} ${props.company || ''} ${
-        props.marketSegment || ''
-      } GPUs by release date`,
+      `${props.newestOrOldestTitle} ${props.marketSegment || ''} ${
+        props.company || ''
+      }  GPUs by release date`,
   },
 );
 

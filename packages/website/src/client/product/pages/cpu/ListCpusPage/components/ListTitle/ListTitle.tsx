@@ -12,7 +12,7 @@ const TitleSentence = compileContentComponent(
     deps: [],
     component: (props) => (
       <>
-        {props.bestOrWorstTitle} {props.company} {props.marketSegment} CPUs by
+        {props.bestOrWorstTitle} {props.marketSegment} {props.company} CPUs by
         performance
       </>
     ),
@@ -22,7 +22,7 @@ const TitleSentence = compileContentComponent(
     deps: [],
     component: (props) => (
       <>
-        {props.bestOrWorstTitle} {props.company} {props.marketSegment} CPUs by
+        {props.bestOrWorstTitle} {props.marketSegment} {props.company} CPUs by
         performance per dollar
       </>
     ),
@@ -31,7 +31,7 @@ const TitleSentence = compileContentComponent(
     tags: [ListCpusContentTag.SortedReleaseDate],
     component: (props) => (
       <>
-        {props.newestOrOldestTitle} {props.company} {props.marketSegment} CPUs
+        {props.newestOrOldestTitle} {props.marketSegment} {props.company} CPUs
         by release date
       </>
     ),

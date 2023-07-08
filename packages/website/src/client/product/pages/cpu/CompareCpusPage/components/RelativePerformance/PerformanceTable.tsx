@@ -50,7 +50,7 @@ export const PerformanceTable: FunctionComponent<PerformanceTableProps> = (
   // Add nulls to rank gaps
   const cpus = useMemo(() => {
     const ret: Cpu[] = [];
-    let dontNullGap = false;
+    let dontGap = false;
     for (let i = 0; i < relativePerformanceCpus.length; ++i) {
       if (i > 0) {
         const rankDiff =
@@ -59,11 +59,12 @@ export const PerformanceTable: FunctionComponent<PerformanceTableProps> = (
 
         if (rankDiff !== 1) {
           if (rankDiff === 0) {
-            dontNullGap = true;
-          } else if (dontNullGap) {
-            dontNullGap = false;
+            dontGap = true;
+          } else if (dontGap) {
+            dontGap = false;
           } else {
-            ret.push(null);
+            // Uncomment if you want to have a ... gap
+            // ret.push(null);
           }
         }
       }

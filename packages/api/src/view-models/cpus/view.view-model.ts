@@ -126,6 +126,7 @@ export class ViewCpuViewModelService {
       {
         query: {
           filter: {
+            segment: seed.marketSegments?.value ?? [],
             excludeIds: [seed.id],
             minPerformanceScore: seed.performanceScore?.value,
             performanceRated: true,
@@ -146,6 +147,7 @@ export class ViewCpuViewModelService {
       {
         query: {
           filter: {
+            segment: seed.marketSegments?.value ?? [],
             excludeIds: [seed.id],
             maxPerformanceScore: seed.performanceScore?.value,
             performanceRated: true,
@@ -185,6 +187,7 @@ export class ViewCpuViewModelService {
       {
         query: {
           filter: {
+            segment: seed.marketSegments?.value ?? [],
             excludeIds: [seed.id],
             minValueScore: seed.valueScore?.value,
             valueRated: true,
@@ -202,6 +205,7 @@ export class ViewCpuViewModelService {
       {
         query: {
           filter: {
+            segment: seed.marketSegments?.value ?? [],
             excludeIds: [seed.id],
             maxValueScore: seed.valueScore?.value,
             valueRated: true,

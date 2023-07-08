@@ -12,7 +12,7 @@ const TitleSentence = compileContentComponent(
     deps: [],
     component: (props) => (
       <>
-        {props.bestOrWorstTitle} {props.company} {props.marketSegment} GPUs by
+        {props.bestOrWorstTitle} {props.marketSegment} {props.company} GPUs by
         performance
       </>
     ),
@@ -22,7 +22,7 @@ const TitleSentence = compileContentComponent(
     deps: [],
     component: (props) => (
       <>
-        {props.bestOrWorstTitle} {props.company} {props.marketSegment} GPUs by
+        {props.bestOrWorstTitle} {props.marketSegment} {props.company} GPUs by
         performance per dollar
       </>
     ),
@@ -31,7 +31,7 @@ const TitleSentence = compileContentComponent(
     tags: [ListGpusContentTag.SortedReleaseDate],
     component: (props) => (
       <>
-        {props.newestOrOldestTitle} {props.company} {props.marketSegment} GPUs
+        {props.newestOrOldestTitle} {props.marketSegment} {props.company} GPUs
         by release date
       </>
     ),

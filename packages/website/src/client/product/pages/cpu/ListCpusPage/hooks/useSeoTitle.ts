@@ -11,25 +11,25 @@ const seoTitle = compileContentFunction(
     tags: [ListCpusContentTag.SortedBestPerformance],
     deps: [],
     hook: (props) =>
-      `${props.bestOrWorstTitle} ${props.company || ''} ${
-        props.marketSegment || ''
-      } CPUs by performance`,
+      `${props.bestOrWorstTitle} ${props.marketSegment || ''} ${
+        props.company || ''
+      }  CPUs by performance`,
   },
   {
     tags: [ListCpusContentTag.SortedBestValue],
     deps: [],
     hook: (props) =>
-      `${props.bestOrWorstTitle} ${props.company || ''} ${
-        props.marketSegment || ''
-      } CPUs by performance per dollar`,
+      `${props.bestOrWorstTitle} ${props.marketSegment || ''} ${
+        props.company || ''
+      }  CPUs by performance per dollar`,
   },
   {
     tags: [ListCpusContentTag.SortedReleaseDate],
     deps: [],
     hook: (props) =>
-      `${props.newestOrOldestTitle} ${props.company || ''} ${
-        props.marketSegment || ''
-      } CPUs by release date`,
+      `${props.newestOrOldestTitle} ${props.marketSegment || ''} ${
+        props.company || ''
+      }  CPUs by release date`,
   },
 );
 

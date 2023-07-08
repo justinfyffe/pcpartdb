@@ -197,6 +197,7 @@ export class CompareGpusViewModelService {
       {
         query: {
           filter: {
+            segment: [gpu.marketSegment?.value],
             excludeIds: [gpu.id],
             minPerformanceScore: gpu.performanceScore?.value,
             performanceRated: true,
@@ -217,6 +218,7 @@ export class CompareGpusViewModelService {
       {
         query: {
           filter: {
+            segment: [gpu.marketSegment?.value],
             excludeIds: [gpu.id],
             maxPerformanceScore: gpu.performanceScore?.value,
             performanceRated: true,
@@ -251,6 +253,7 @@ export class CompareGpusViewModelService {
       {
         query: {
           filter: {
+            segment: [gpu.marketSegment?.value],
             excludeIds: [gpu.id],
             minValueScore: gpu.valueScore?.value,
             valueRated: true,
@@ -268,6 +271,7 @@ export class CompareGpusViewModelService {
       {
         query: {
           filter: {
+            segment: [gpu.marketSegment?.value],
             excludeIds: [gpu.id],
             maxValueScore: gpu.valueScore?.value,
             valueRated: true,

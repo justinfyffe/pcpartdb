@@ -1,5 +1,5 @@
 - cpu and gpu data
-  - next source model cpu: athlon 5150
+  - next source model cpu: offset 800
 
 - auto-updates
   - General:

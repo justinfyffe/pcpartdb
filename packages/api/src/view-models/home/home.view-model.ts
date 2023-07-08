@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import {
+  CpuMarketSegmentValue,
+  GpuMarketSegmentValue,
   HomeViewModel,
   ListCpusFilter,
   ListCpusSort,
@@ -13,11 +15,23 @@ import { Context } from '../../shared/context';
 
 const RANDOMLY_CHOOSE_FROM_COMPARISON = 5;
 
-const NVIDIA_GPU_FILTER: ListGpusFilter = { company: ['nvidia'] };
-const AMD_GPU_FILTER: ListGpusFilter = { company: ['amd'] };
+const NVIDIA_GPU_FILTER: ListGpusFilter = {
+  company: ['nvidia'],
+  segment: [GpuMarketSegmentValue.Desktop],
+};
+const AMD_GPU_FILTER: ListGpusFilter = {
+  company: ['amd'],
+  segment: [GpuMarketSegmentValue.Desktop],
+};
 
-const INTEL_CPU_FILTER: ListCpusFilter = { company: ['intel'] };
-const AMD_CPU_FILTER: ListCpusFilter = { company: ['amd'] };
+const INTEL_CPU_FILTER: ListCpusFilter = {
+  company: ['intel'],
+  segment: [CpuMarketSegmentValue.Desktop],
+};
+const AMD_CPU_FILTER: ListCpusFilter = {
+  company: ['amd'],
+  segment: [CpuMarketSegmentValue.Desktop],
+};
 
 @Injectable()
 export class HomeViewModelService {
@@ -86,10 +100,21 @@ export class HomeViewModelService {
   }
 
   private async getPopularGpus(ctx: Context) {
-    const gpu1 = await this.getPerformanceGpu({}, 5, ctx);
-    const gpu2 = await this.getValueGpu({ excludeIds: [gpu1.id] }, 5, ctx);
+    const gpu1 = await this.getPerformanceGpu(
+      { segment: [GpuMarketSegmentValue.Desktop] },
+      5,
+      ctx,
+    );
+    const gpu2 = await this.getValueGpu(
+      { segment: [GpuMarketSegmentValue.Desktop], excludeIds: [gpu1.id] },
+      5,
+      ctx,
+    );
     const gpu3 = await this.getPerformanceGpu(
-      { excludeIds: [gpu1.id, gpu2.id] },
+      {
+        segment: [GpuMarketSegmentValue.Desktop],
+        excludeIds: [gpu1.id, gpu2.id],
+      },
       5,
       ctx,
     );
@@ -143,10 +168,21 @@ export class HomeViewModelService {
   }
 
   private async getPopularCpus(ctx: Context) {
-    const cpu1 = await this.getPerformanceCpu({}, 5, ctx);
-    const cpu2 = await this.getValueCpu({ excludeIds: [cpu1.id] }, 5, ctx);
+    const cpu1 = await this.getPerformanceCpu(
+      { segment: [CpuMarketSegmentValue.Desktop] },
+      5,
+      ctx,
+    );
+    const cpu2 = await this.getValueCpu(
+      { segment: [CpuMarketSegmentValue.Desktop], excludeIds: [cpu1.id] },
+      5,
+      ctx,
+    );
     const cpu3 = await this.getPerformanceCpu(
-      { excludeIds: [cpu1.id, cpu2.id] },
+      {
+        segment: [CpuMarketSegmentValue.Desktop],
+        excludeIds: [cpu1.id, cpu2.id],
+      },
       5,
       ctx,
     );
