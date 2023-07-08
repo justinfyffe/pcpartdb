@@ -64,7 +64,8 @@ export const ValueTable: FunctionComponent<ValueTableProps> = (props) => {
           } else if (dontNullGap) {
             dontNullGap = false;
           } else {
-            ret.push(null);
+            // Uncomment if you want to have a ... gap
+            // ret.push(null);
           }
         }
       }
