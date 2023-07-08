@@ -1,11 +1,7 @@
 import * as cheerio from 'cheerio';
-import { scraper } from '../scraper';
-
-export interface TechPowerUpGpuSource {
-  name: string;
-  company: string;
-  url: string;
-}
+import { scraper } from '../../scraper';
+import { TechPowerUpGpuSource } from '../types';
+import { sanitizeGpuSourceName } from '../utils';
 
 export interface ScrapeTechPowerUpGpuUrlsOptions {
   query: string;
@@ -42,7 +38,7 @@ async function scrapeSearchData(options: ScrapeTechPowerUpGpuUrlsOptions) {
     }
 
     const url = BASE_URL + $td.find('a').attr('href').trim();
-    const name = $td.text().trim();
+    const name = sanitizeGpuSourceName($td.text().trim());
 
     gpus.push({ name, company, url });
   });

@@ -1,4 +1,4 @@
-import { scrapeTechPowerUpRetailModelSources } from '@pcpartdb/scraper';
+import { scrapeTechPowerUpGpuRetailModelSources } from '@pcpartdb/scraper';
 import { cleanUrl, GpuMarketSegmentValue } from '@pcpartdb/shared';
 import * as fsPromises from 'fs/promises';
 import { RetailModelSource } from './types';
@@ -19,7 +19,7 @@ export async function fetchRetailModelSources(
   const { sourcesPath, chipsetId, marketSegment, techPowerUpUrl, noProxy } =
     options;
 
-  const rawSources = await scrapeTechPowerUpRetailModelSources({
+  const rawSources = await scrapeTechPowerUpGpuRetailModelSources({
     url: techPowerUpUrl,
     noProxy,
   });

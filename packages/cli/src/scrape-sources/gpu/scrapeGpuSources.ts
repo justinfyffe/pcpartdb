@@ -1,5 +1,5 @@
 import { buildSourceModel } from './buildSourceModel';
-import { sanitizePassMarkGpuSources } from './sanitizeVideocardBenchmarksGpuSources';
+import { scrapePassMarkGpuSources } from './scrapePassMarkGpuSources';
 import { scrapeTechPowerUpGpuSources } from './scrapeTechPowerUpGpuSources';
 import { scrapeUlBenchmarkGpuSources } from './scrapeUlBenchmarkGpuSources';
 import { ScrapeGpuSourceOption } from './types';
@@ -21,12 +21,12 @@ export async function scrapeGpuSources(args: ScrapeGpuSourcesArgs) {
       await scrapeTechPowerUpGpuSources({ noProxy });
     } else if (source === ScrapeGpuSourceOption.UlBenchmarks) {
       await scrapeUlBenchmarkGpuSources({ noProxy });
-    } else if (source === ScrapeGpuSourceOption.VideocardBenchmarks) {
-      await sanitizePassMarkGpuSources();
+    } else if (source === ScrapeGpuSourceOption.PassMark) {
+      await scrapePassMarkGpuSources({ noProxy });
     } else {
       await scrapeTechPowerUpGpuSources({ noProxy });
+      await scrapePassMarkGpuSources({ noProxy });
       await scrapeUlBenchmarkGpuSources({ noProxy });
-      await sanitizePassMarkGpuSources();
     }
   }
 

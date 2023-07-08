@@ -1,26 +1,25 @@
 import { cleanUrl, parseProductName } from '@pcpartdb/shared';
 import * as cheerio from 'cheerio';
 import { scraper } from '../../scraper';
-import { PassMarkCpuSource } from '../types';
-import { sanitizeCpuSourceName } from '../utils';
+import { PassMarkGpuSource } from '../types';
+import { sanitizeGpuSourceName } from '../utils';
 
-export interface ScrapePassMarkCpuSourcesOptions {
+export interface ScrapePassMarkGpuSourcesOptions {
   noProxy?: boolean;
 }
 
-const BASE_URL = 'https://www.cpubenchmark.net/';
+const BASE_URL = 'https://www.videocardbenchmark.net/';
 const LIST_URLS = [
-  'https://www.cpubenchmark.net/high_end_cpus.html', // high end
-  'https://www.cpubenchmark.net/mid_range_cpus.html', // high mid range
-  'https://www.cpubenchmark.net/midlow_range_cpus.html', // low mid range
-  'https://www.cpubenchmark.net/low_end_cpus.html', // low end
+  'https://www.videocardbenchmark.net/high_end_gpus.html', // high end
+  'https://www.videocardbenchmark.net/mid_range_gpus.html', // high mid range
+  'https://www.videocardbenchmark.net/midlow_range_gpus.html', // low mid range
+  'https://www.videocardbenchmark.net/low_end_gpus.html', // low end
 ];
 
-// TODO: extract company from name
-export async function scrapePassMarkCpuSources(
-  options: ScrapePassMarkCpuSourcesOptions,
+export async function scrapePassMarkGpuSources(
+  options: ScrapePassMarkGpuSourcesOptions,
 ) {
-  const sources: Record<string, PassMarkCpuSource> = {};
+  const sources: Record<string, PassMarkGpuSource> = {};
 
   for (const url of LIST_URLS) {
     const $ = cheerio.load(await fetchListPage(url, options));
@@ -33,7 +32,7 @@ export async function scrapePassMarkCpuSources(
         $li.find('a span.prdname').text().trim(),
       );
 
-      const sanitizedName = sanitizeCpuSourceName(name);
+      const sanitizedName = sanitizeGpuSourceName(name);
       const scoreText = $li.find('a span.count').text().trim().replace(',', '');
       const score = scoreText ? Number(scoreText) : null;
 
@@ -41,7 +40,7 @@ export async function scrapePassMarkCpuSources(
         name: sanitizedName,
         company,
         url,
-        cpuMarkMultiThread: !Number.isNaN(score) ? score : null,
+        g3dMark: !Number.isNaN(score) ? score : null,
       };
     });
   }
@@ -51,7 +50,7 @@ export async function scrapePassMarkCpuSources(
 
 async function fetchListPage(
   url: string,
-  options: ScrapePassMarkCpuSourcesOptions,
+  options: ScrapePassMarkGpuSourcesOptions,
 ) {
   const { noProxy } = options;
 

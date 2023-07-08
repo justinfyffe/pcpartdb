@@ -1,5 +1,8 @@
 - cpu and gpu data
-  - next source model cpu: offset 800
+  - next source model cpu: 1075
+    - npm run cli scrape-data:cpu -- -- --count 25 --offset 0
+  - next source model gpu: 0
+    - npm run cli scrape-data:gpu -- -- --count 25 --offset 0
 
 - auto-updates
   - General:
@@ -7,6 +10,7 @@
     - shared service for calling website api
     - handle rate limiting, queue requests
   - [] API
+    - [] Database
     - [] API key manager on admin panel
       - [] Create API Key
       - [] Delete API Key
@@ -17,8 +21,8 @@
     - [] Improve widget for scraper usage
   - [] Edit Form
     - [] "Update" button - scrapes, but only updates auto-update fields
-  - [] GPU Sources
-    - [] Improve fetching sources from passmark
+  - [x] GPU Sources
+    - [x] Improve fetching sources from passmark
   - [] New CPUs
     - How to handle?
   - [] New GPUs

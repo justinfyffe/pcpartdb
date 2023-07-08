@@ -1,11 +1,22 @@
-import { scrapeTechPowerUpGpuDetails } from '@pcpartdb/scraper';
-import { generateGpuSlug, Gpu, GpuDataSourceKey } from '@pcpartdb/shared';
+import {
+  scrapePassMarkGpuData,
+  scrapeTechPowerUpGpuData,
+  scrapeUlBenchmarksGpuData,
+} from '@pcpartdb/scraper';
+import {
+  generateGpuSlug,
+  Gpu,
+  GpuDataSourceKey,
+  hasProductFieldValue,
+} from '@pcpartdb/shared';
+import deepmerge from 'deepmerge';
 import * as fsPromises from 'fs/promises';
 import { GpuSource, GpuSourceModel } from '../../scrape-sources/gpu/types';
 import { sleep } from '../../shared/process';
 import { outputPath } from './utils';
 
-const SLEEP_DELAY = 45_000;
+const SLEEP_DELAY_PER_GPU = 10_000;
+const SLEEP_DELAY_PER_SOURCE = 5_000;
 
 interface GetGpuDataOptions {
   sourceModel: GpuSourceModel;
@@ -19,7 +30,7 @@ export async function getGpuData(options: GetGpuDataOptions) {
   const { sourceModel, offset, count, noProxy, file } = options;
   const gpus: Partial<Gpu>[] = [];
   for (let i = offset; i < offset + count; ++i) {
-    const source = sourceModel[i];
+    const source = sourceModel.sources[i];
 
     console.log(`Scraping GPU data for i=${i}`);
     try {
@@ -30,8 +41,19 @@ export async function getGpuData(options: GetGpuDataOptions) {
       console.error(err);
     }
 
-    await sleep(SLEEP_DELAY);
+    await sleep(SLEEP_DELAY_PER_GPU);
   }
+
+  gpus.sort((gpu1, gpu2) => {
+    if (
+      hasProductFieldValue(gpu1.g3dMark) ||
+      hasProductFieldValue(gpu2.g3dMark)
+    ) {
+      return (gpu2.g3dMark?.value ?? 0) - (gpu1.g3dMark?.value ?? 0);
+    }
+
+    return gpu1.name.localeCompare(gpu2.name);
+  }); // cpu mark descending, then name ascending.
 
   console.log(`Fetched ${gpus.length}`);
 
@@ -46,37 +68,45 @@ async function scrapeGpuData(source: GpuSource, noProxy?: boolean) {
     throw new Error(`Missing TechPowerUp URL for ${source.name}`);
   }
 
-  console.log(`Scraping ${source.name} - ${source.techPowerUpUrl}`);
-  const data = await scrapeTechPowerUpGpuDetails({
-    url: source.techPowerUpUrl,
-    noProxy,
-  });
+  let gpu: Partial<Gpu> = {};
+  if (source.techPowerUpUrl) {
+    console.log(`Scraping ${source.name} - ${source.techPowerUpUrl}`);
+    const response = await scrapeTechPowerUpGpuData({
+      url: source.techPowerUpUrl,
+      noProxy,
+    });
+    gpu = deepmerge(gpu, response.product as Partial<Gpu>);
+  }
+
+  await sleep(SLEEP_DELAY_PER_SOURCE);
+
+  if (source.passMarkUrl) {
+    console.log(`Scraping ${source.name} - ${source.passMarkUrl}`);
+    const response = await scrapePassMarkGpuData({
+      url: source.passMarkUrl,
+      noProxy,
+    });
+    gpu = deepmerge(gpu, response.product as Partial<Gpu>);
+  }
+
+  await sleep(SLEEP_DELAY_PER_SOURCE);
+
+  if (source.ulBenchmarksUrl) {
+    console.log(`Scraping ${source.name} - ${source.ulBenchmarksUrl}`);
+    const response = await scrapeUlBenchmarksGpuData({
+      url: source.ulBenchmarksUrl,
+      noProxy,
+    });
+    gpu = deepmerge(gpu, response.product as Partial<Gpu>);
+  }
+
+  await sleep(SLEEP_DELAY_PER_SOURCE);
 
   console.log(`Decorating ${source.name}`);
-  return decorateGpu(data.product as Partial<Gpu>, source);
+  return decorateGpu(gpu, source);
 }
 
 function decorateGpu(gpu: Partial<Gpu>, source: GpuSource) {
-  gpu.marketSegment = {
-    value: source.marketSegment,
-    meta: { fieldKey: 'marketSegment', autoUpdate: true },
-  };
-
-  gpu.g3dMark = {
-    value: source.g3dMark,
-    meta: { fieldKey: 'g3dMark', autoUpdate: true },
-  };
-
-  gpu.g2dMark = {
-    value: source.g2dMark,
-    meta: { fieldKey: 'g2dMark', autoUpdate: true },
-  };
-
-  gpu.timespyGraphics = {
-    value: source.timespyScore,
-    meta: { fieldKey: 'timespyGraphics', autoUpdate: true },
-  };
-
   gpu.meta = {
     dataSources: {
       [GpuDataSourceKey.TechPowerUp as string]: { url: source.techPowerUpUrl },
@@ -84,7 +114,7 @@ function decorateGpu(gpu: Partial<Gpu>, source: GpuSource) {
         url: source.ulBenchmarksUrl,
       },
       [GpuDataSourceKey.VideocardBenchmarks as string]: {
-        url: source.videocardBenchmarksUrl,
+        url: source.passMarkUrl,
       },
     },
   };

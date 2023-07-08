@@ -2,7 +2,7 @@ import { parseProductName } from '@pcpartdb/shared';
 import * as cheerio from 'cheerio';
 import { scraper } from '../../scraper';
 import { TechPowerUpCpuSource } from '../types';
-import { sanitizeCpuName } from '../utils';
+import { sanitizeCpuSourceName } from '../utils';
 
 export interface ScrapeTechPowerUpCpuSourcesOptions {
   query: string;
@@ -26,7 +26,7 @@ export async function scrapeTechPowerUpCpuSources(
 
     const url = BASE_URL + $td.find('a').attr('href').trim();
     const { company, name } = parseProductName($td.text().trim());
-    const sanitizedName = sanitizeCpuName(name);
+    const sanitizedName = sanitizeCpuSourceName(name);
 
     cpus.push({ name: sanitizedName, company, url });
   });

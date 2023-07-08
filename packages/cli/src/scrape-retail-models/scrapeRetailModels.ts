@@ -1,4 +1,4 @@
-import { scrapeTechPowerUpGpuDetails } from '@pcpartdb/scraper';
+import { scrapeTechPowerUpGpuData } from '@pcpartdb/scraper';
 import { generateGpuSlug, Gpu, GpuDataSourceKey } from '@pcpartdb/shared';
 import * as fsPromises from 'fs/promises';
 import { sleep } from '../shared/process';
@@ -54,7 +54,7 @@ export async function scrapeRetailModel(
   noProxy?: boolean,
 ) {
   try {
-    const { product } = await scrapeTechPowerUpGpuDetails({
+    const { product } = await scrapeTechPowerUpGpuData({
       url: source.techPowerUpUrl,
       noProxy,
     });

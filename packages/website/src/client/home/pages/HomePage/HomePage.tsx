@@ -65,8 +65,8 @@ export const HomePage = (props: HomeViewModel) => {
           <Tabs>
             <Tab label="Graphics cards" className="px-4 py-8">
               <p>
-                Select 1 or 2 graphics cards to get a technical comparison of
-                their specs and benchmarks.
+                Select 1 or 2 graphics cards to get a comparison of their
+                technical specs and benchmarks.
               </p>
               <CompareProductsForm
                 productType={ProductType.Gpu}
@@ -75,7 +75,7 @@ export const HomePage = (props: HomeViewModel) => {
             </Tab>
             <Tab label="Processors" className="px-4 py-8">
               <p>
-                Select 1 or 2 processors to get a technical comparison of their
+                Select 1 or 2 processors to get a comparison of their technical
                 specs and benchmarks.
               </p>
               <CompareProductsForm

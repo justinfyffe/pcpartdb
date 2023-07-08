@@ -1,15 +1,15 @@
 import { Gpu, GpuField, ScrapeProductResponse } from '@pcpartdb/shared';
 import * as cheerio from 'cheerio';
-import { scraper } from '../scraper';
+import { scraper } from '../../scraper';
 
-export interface ScrapeUlBenchmarksGpuDetailsOptions {
+export interface ScrapeUlBenchmarksGpuDataOptions {
   url: string;
   noProxy?: boolean;
 }
 
 // Example: https://benchmarks.ul.com/hardware/gpu/NVIDIA%20GeForce%20RTX%204090+review
-export async function scrapeUlBenchmarksGpuDetails(
-  options: ScrapeUlBenchmarksGpuDetailsOptions,
+export async function scrapeUlBenchmarksGpuData(
+  options: ScrapeUlBenchmarksGpuDataOptions,
 ) {
   const { url, noProxy } = options;
 

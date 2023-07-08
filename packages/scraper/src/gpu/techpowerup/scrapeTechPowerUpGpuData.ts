@@ -18,17 +18,17 @@ import {
 } from '@pcpartdb/shared';
 import * as cheerio from 'cheerio';
 import { format as formatDate, parse as parseDate } from 'date-fns';
-import { scraper } from '../scraper';
-import { parseGpuName } from './utils';
+import { scraper } from '../../scraper';
+import { parseTechPowerUpGpuName } from './utils';
 
-export interface ScrapeTechPowerGpuDetailsOptions {
+export interface ScrapeTechPowerGpuDataOptions {
   url: string;
   noProxy?: boolean;
 }
 
 // Example: https://www.techpowerup.com/gpu-specs/geforce-rtx-3090.c3622
-export async function scrapeTechPowerUpGpuDetails(
-  options: ScrapeTechPowerGpuDetailsOptions,
+export async function scrapeTechPowerUpGpuData(
+  options: ScrapeTechPowerGpuDataOptions,
 ) {
   const { url, noProxy } = options;
 
@@ -127,7 +127,7 @@ function getCodename($: cheerio.CheerioAPI): GpuField<string> {
 
 function getCompany($: cheerio.CheerioAPI): GpuField<string> {
   const fullName = $('.gpudb-name').text();
-  const { company: value } = parseGpuName(fullName);
+  const { company: value } = parseTechPowerUpGpuName(fullName);
   if (value != null) {
     return {
       value,

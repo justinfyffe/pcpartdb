@@ -6,9 +6,9 @@ import {
   ScrapeProductResponse,
 } from '@pcpartdb/shared';
 import deepmerge from 'deepmerge';
-import { scrapeTechPowerUpGpuDetails } from '../techpowerup';
-import { scrapeUlBenchmarksGpuDetails } from '../ul-benchmarks';
-import { scrapeVideocardBenchmarksGpuDetails } from '../videocardbenchmarks';
+import { scrapeTechPowerUpGpuData } from './techpowerup';
+import { scrapeUlBenchmarksGpuData } from './ul-benchmarks';
+import { scrapePassMarkGpuData } from './passmark';
 import { scrapeFromChipsetGpu } from './scrapeFromChipsetGpu';
 
 export interface ScrapeGpuOptions {
@@ -30,19 +30,19 @@ export async function scrapeGpu(options: ScrapeGpuOptions) {
     scrapedProduct = deepmerge(scrapedProduct, product);
   }
   if (techPowerUpUrl != null) {
-    const { product } = await scrapeTechPowerUpGpuDetails({
+    const { product } = await scrapeTechPowerUpGpuData({
       url: techPowerUpUrl,
     });
     scrapedProduct = deepmerge(scrapedProduct, product);
   }
   if (ulBenchmarksUrl != null) {
-    const { product } = await scrapeUlBenchmarksGpuDetails({
+    const { product } = await scrapeUlBenchmarksGpuData({
       url: ulBenchmarksUrl,
     });
     scrapedProduct = deepmerge(scrapedProduct, product);
   }
   if (videocardBenchmarkUrl != null) {
-    const { product } = await scrapeVideocardBenchmarksGpuDetails({
+    const { product } = await scrapePassMarkGpuData({
       url: videocardBenchmarkUrl,
     });
     scrapedProduct = deepmerge(scrapedProduct, product);

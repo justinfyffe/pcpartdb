@@ -403,24 +403,150 @@ function getLaunchPrice($: cheerio.CheerioAPI) {
 }
 
 function getMarketSegments($: cheerio.CheerioAPI) {
-  const values = tokenizeMultiLine($, 'Market');
-
-  const marketSegments = values
-    .map((value) => {
-      const lcValue = value.toLowerCase();
-      if (lcValue === 'desktop') {
-        return CpuMarketSegmentValue.Desktop;
-      } else if (lcValue === 'server/workstation') {
-        return CpuMarketSegmentValue.Workstation;
-      } else if (lcValue === 'mobile') {
-        return CpuMarketSegmentValue.Mobile;
-      } else {
-        return null;
-      }
-    })
-    .filter((value) => value != null);
+  const marketSegments: CpuMarketSegmentValue[] = [];
+  if (isDesktopMarketSegment($)) {
+    marketSegments.push(CpuMarketSegmentValue.Desktop);
+  }
+  if (isMobileMarketSegment($)) {
+    marketSegments.push(CpuMarketSegmentValue.Mobile);
+  }
+  if (isWorkstationMarketSegment($)) {
+    marketSegments.push(CpuMarketSegmentValue.Workstation);
+  }
+  if (isServerMarketSegment($)) {
+    marketSegments.push(CpuMarketSegmentValue.Server);
+  }
+  if (isEmbeddedMarketSegment($)) {
+    marketSegments.push(CpuMarketSegmentValue.Embedded);
+  }
 
   return createCpuField('marketSegments', marketSegments);
+}
+
+function isDesktopMarketSegment($: cheerio.CheerioAPI) {
+  const name = getName($).toLowerCase();
+  const marketSegments = tokenizeMultiLine($, 'Market')
+    .map((value) => value.toLowerCase())
+    .filter((value) => value != null);
+
+  if (marketSegments.includes('desktop')) {
+    if (
+      name.includes(' pro-') ||
+      name.startsWith('pro-') ||
+      name.includes(' pro ') ||
+      name.startsWith('pro ')
+    ) {
+      return false;
+    }
+
+    return true;
+  }
+
+  return false;
+}
+
+function isMobileMarketSegment($: cheerio.CheerioAPI) {
+  const marketSegments = tokenizeMultiLine($, 'Market')
+    .map((value) => value.toLowerCase())
+    .filter((value) => value != null);
+
+  if (marketSegments.includes('mobile')) {
+    return true;
+  }
+
+  return false;
+}
+
+function isWorkstationMarketSegment($: cheerio.CheerioAPI) {
+  const name = getName($).toLowerCase();
+  const marketSegments = tokenizeMultiLine($, 'Market')
+    .map((value) => value.toLowerCase())
+    .filter((value) => value != null);
+
+  // Handle edge cases where desktop cpus are mislabeled as workstations
+  if (marketSegments.includes('desktop')) {
+    if (name.includes(' pro-') || name.includes(' pro ')) {
+      return true;
+    }
+
+    return false;
+  }
+
+  if (!marketSegments.includes('server/workstation')) {
+    // Does not have server/workstation, we can assume it's not.
+    return false;
+  }
+
+  if (
+    name.includes('xeon w9-') ||
+    name.includes('xeon w7-') ||
+    name.includes('xeon w5-') ||
+    name.includes('xeon w3-') ||
+    name.includes('xeon w-')
+  ) {
+    return true;
+  }
+
+  if (
+    name.includes(' pro-') ||
+    name.startsWith('pro-') ||
+    name.includes(' pro ') ||
+    name.startsWith('pro ')
+  ) {
+    return true;
+  }
+
+  return false;
+}
+
+function isServerMarketSegment($: cheerio.CheerioAPI) {
+  const name = getName($).toLowerCase();
+  const marketSegments = tokenizeMultiLine($, 'Market')
+    .map((value) => value.toLowerCase())
+    .filter((value) => value != null);
+
+  if (!marketSegments.includes('server/workstation')) {
+    // Does not have server/workstation, we can assume it's not.
+    return false;
+  }
+
+  if (name.includes('epyc') || name.includes('opteron')) {
+    return true;
+  }
+
+  if (
+    name.includes('xeon platinum') ||
+    name.includes('xeon gold') ||
+    name.includes('xeon silver') ||
+    name.includes('xeon bronze')
+  ) {
+    return true;
+  }
+
+  if (
+    name.includes('xeon e7-') ||
+    name.includes('xeon e5-') ||
+    name.includes('xeon e3-') ||
+    name.includes('xeon e-') ||
+    name.includes('xeon d-') ||
+    name.includes('xeon e') ||
+    name.includes('xeon l') ||
+    name.includes('xeon x')
+  ) {
+    return true;
+  }
+
+  return false;
+}
+
+function isEmbeddedMarketSegment($: cheerio.CheerioAPI) {
+  const name = getName($).toLowerCase();
+
+  if (name.includes('embedded')) {
+    return true;
+  }
+
+  return false;
 }
 
 function getMemoryChannels($: cheerio.CheerioAPI) {

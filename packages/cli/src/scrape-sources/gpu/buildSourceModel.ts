@@ -1,7 +1,7 @@
 import {
+  PassMarkGpuSource,
   TechPowerUpGpuSource,
   UlBenchmarkGpuSource,
-  VideocardBenchmarksGpuSource,
 } from '@pcpartdb/scraper';
 import * as fsPromises from 'fs/promises';
 import { yyyyMmDd } from '../../shared/date';
@@ -16,7 +16,7 @@ import {
 export async function buildSourceModel() {
   const techPowerUpSources = await readTechPowerUpSources();
   const ulBenchmarkSources = await readUlBenchmarkSources();
-  const videocardBenchmarksSources = await readPassMarkSources();
+  const passMarkSources = await readPassMarkSources();
 
   const map: Record<string, GpuSource> = {};
 
@@ -43,31 +43,35 @@ export async function buildSourceModel() {
     };
   });
 
-  videocardBenchmarksSources.forEach((data) => {
+  passMarkSources.forEach((data) => {
     const key = data.name;
     const orig = map[key] || {};
     map[key] = {
       ...orig,
       name: orig.name || data.name,
-      g2dMark: orig.g2dMark || data.g2dMark,
       g3dMark: orig.g3dMark || data.g3dMark,
-      marketSegment: orig.marketSegment || data.marketSegment,
-      videocardBenchmarksUrl: orig.videocardBenchmarksUrl || data.url,
+      passMarkUrl: orig.passMarkUrl || data.url,
       company: orig.company || data.company,
     };
   });
 
   // We only want GPUs with most data
-  const sourceModel: GpuSourceModel = Object.values(map).filter(
-    (model) => model.company != null && model.techPowerUpUrl != null,
+  const sources: GpuSource[] = Object.values(map).filter(
+    (model) => model.techPowerUpUrl != null,
   );
-  sourceModel.sort((m1, m2) => {
-    if (m1.g3dMark != null || m2.g3dMark != null) {
-      return (m2.g3dMark ?? 0) - (m1.g3dMark ?? 0);
+  sources.sort((s1, s2) => {
+    if (s1.g3dMark != null || s2.g3dMark != null) {
+      return (s2.g3dMark ?? 0) - (s1.g3dMark ?? 0);
     }
 
-    return m1.name.localeCompare(m2.name);
+    return s1.name.localeCompare(s2.name);
   }); // g3d mark descending, then name ascending.
+
+  const sourceModel: GpuSourceModel = {
+    name: `GPU Source Model - ${yyyyMmDd()}`,
+    date: new Date().getTime(),
+    sources,
+  };
 
   // Save to file with date
   const path = sourceModelsPath('source-model.json');
@@ -100,5 +104,5 @@ async function readUlBenchmarkSources() {
 
 async function readPassMarkSources() {
   const json = await fsPromises.readFile(passMarkPath('sources.json'), 'utf-8');
-  return JSON.parse(json) as VideocardBenchmarksGpuSource[];
+  return JSON.parse(json) as PassMarkGpuSource[];
 }

@@ -33,7 +33,7 @@ const QUERIES = [
   '9',
 ];
 
-const SLEEP_DELAY = 30_000;
+const SLEEP_DELAY = 10_000;
 
 interface ScrapeUlBenchmarkGpuSources {
   noProxy?: boolean;

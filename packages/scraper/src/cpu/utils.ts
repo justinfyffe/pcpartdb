@@ -1,4 +1,4 @@
-export function sanitizeCpuName(name: string) {
+export function sanitizeCpuSourceName(name: string) {
   let sanitized = name.toLowerCase();
 
   if (sanitized.endsWith(' apu')) {

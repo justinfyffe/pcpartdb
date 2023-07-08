@@ -5,16 +5,16 @@ import {
   ScrapeProductResponse,
 } from '@pcpartdb/shared';
 import * as cheerio from 'cheerio';
-import { scraper } from '../scraper';
+import { scraper } from '../../scraper';
 
-export interface ScrapeVideocardBenchmarksGpuDetailsOptions {
+export interface ScrapePassMarkGpuDataOptions {
   url: string;
   noProxy?: boolean;
 }
 
 // Example: https://www.videocardbenchmark.net/gpu.php?gpu=GeForce+RTX+4090&id=4606
-export async function scrapeVideocardBenchmarksGpuDetails(
-  options: ScrapeVideocardBenchmarksGpuDetailsOptions,
+export async function scrapePassMarkGpuData(
+  options: ScrapePassMarkGpuDataOptions,
 ) {
   const { url, noProxy } = options;
 
