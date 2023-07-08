@@ -77,12 +77,24 @@ export class GpuAutocompleteRepository {
     // });
 
     // Get results based on pattern matching. Prioritize chipsets over retail models
-    const fillerChipsetIds: { id: number }[] = await db.$queryRaw`
-      SELECT id FROM gpus
-      WHERE chipset_id IS NULL AND CONCAT(company, ' ', name) ~* (${regexTokens})
-      ORDER BY release_date DESC NULLS LAST
-      LIMIT 6
-    `;
+    let fillerChipsetIds: { id: number }[] = [];
+    if (regexTokens !== '.*') {
+      console.log('here');
+      fillerChipsetIds = await db.$queryRaw`
+        SELECT id FROM gpus
+        WHERE chipset_id IS NULL AND CONCAT(company, ' ', name) ~* (${regexTokens})
+        ORDER BY release_date DESC NULLS LAST
+        LIMIT 6
+      `;
+    } else {
+      fillerChipsetIds = await db.$queryRaw`
+        SELECT id FROM gpus
+        WHERE chipset_id IS NULL AND market_segment = 'DESKTOP'
+        ORDER BY performance_score DESC NULLS LAST
+        LIMIT 6
+      `;
+    }
+
     // const fillerRetailModelIds: { id: number }[] = await db.$queryRaw`
     //   SELECT id FROM gpus
     //   WHERE chipset_id IS NOT NULL AND CONCAT(company, ' ', name) ~* (${regexTokens})

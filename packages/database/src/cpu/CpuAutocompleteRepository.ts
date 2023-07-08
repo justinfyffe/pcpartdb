@@ -55,12 +55,22 @@ export class CpuAutocompleteRepository {
     });
 
     // Get results based on pattern matching.
-    const fillerCpus: { id: number }[] = await db.$queryRaw`
-      SELECT id FROM cpus
-      WHERE CONCAT(company, ' ', name) ~* (${regexTokens})
-      ORDER BY release_date DESC NULLS LAST
-      LIMIT 6
-    `;
+    let fillerCpus: { id: number }[] = [];
+    if (regexTokens !== '.*') {
+      fillerCpus = await db.$queryRaw`
+        SELECT id FROM cpus
+        WHERE CONCAT(company, ' ', name) ~* (${regexTokens})
+        ORDER BY release_date DESC NULLS LAST
+        LIMIT 6
+      `;
+    } else {
+      fillerCpus = await db.$queryRaw`
+        SELECT id FROM cpus
+        WHERE 'DESKTOP' = ANY(market_segments)
+        ORDER BY performance_score DESC NULLS LAST
+        LIMIT 6
+      `;
+    }
     const fillerResultIds = [...fillerCpus].slice(0, 6);
 
     const fillerResults = await db.cpu.findMany({
