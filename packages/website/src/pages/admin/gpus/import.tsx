@@ -1,6 +1,6 @@
 import { ProductType } from '@pcpartdb/shared';
 import { NextPageContext } from 'next';
-import { AdminImportProductsPage } from 'packages/website/src/client/admin/pages/AdminImportProductsPage';
+import { AdminImportProductsPage } from 'packages/website/src/client/admin';
 import { withStaffGuard } from 'packages/website/src/client/shared/guards';
 
 export async function getServerSideProps(_ctx: NextPageContext) {

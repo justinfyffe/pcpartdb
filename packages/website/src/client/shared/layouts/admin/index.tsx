@@ -1,4 +1,5 @@
 import {
+  getAdminAutopilotPath,
   getAdminListCpusPath,
   getAdminListGpusPath,
   getAdminListImagesPath,
@@ -61,6 +62,12 @@ export const AdminLayout: FunctionComponent<AdminLayoutProps> = (props) => {
                 href={getAdminOverviewPath()}
               >
                 Overview
+              </Button>
+              <Button
+                variant={ButtonVariant.Generic}
+                href={getAdminAutopilotPath()}
+              >
+                Autopilot (3)
               </Button>
               <Button
                 variant={ButtonVariant.Generic}

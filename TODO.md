@@ -9,15 +9,14 @@
     - Name: auto-pilot
     - shared service for calling website api
     - handle rate limiting, queue requests
-  - [] API
+  - [x] API key
     - [x] Database
-    - [] API key manager on admin panel
-      - [] Refresh API Key
-      - [] Delete API Key
+    - [x] API key manager on admin panel
+      - [x] Refresh API Key
     - [x] API Guard
       - tie api key to user
   - [] Overview Page
-    - [] Api Key widget on overview
+    - [x] Api Key widget on overview
       - create confirm dialog to prevent accidents
     - [] Widget that shows pending updates
     - [] Improve widget for scraper usage
@@ -33,6 +32,9 @@
     - [] GPUs
       - [] Chipsets
       - [] Retail Models
+  - [] ui to approve/combine sources
+  - [] ui to approve updates
+    - save and edit
 
 - updating
   - call it auto-pilot
