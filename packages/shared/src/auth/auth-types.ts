@@ -5,6 +5,12 @@ export interface AccessToken {
   user: User;
 }
 
+export interface ApiKey {
+  id: number;
+  apiKey: string;
+  user: User;
+}
+
 export interface LoginRequest {
   email: string;
   password: string;

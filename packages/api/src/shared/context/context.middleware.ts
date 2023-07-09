@@ -1,5 +1,5 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
-import { mapToUserDto } from '@pcpartdb/database';
+import { ApiKeyRepository, mapToUserDto } from '@pcpartdb/database';
 import { Config, User } from '@pcpartdb/shared';
 import { NextFunction } from 'express';
 import { AccessTokenRepository } from '../../auth/access-token.repository';
@@ -10,12 +10,15 @@ import { ApiRequest, ApiResponse } from '../http';
 @Injectable()
 export class ContextMiddleware implements NestMiddleware {
   constructor(
+    private apiKeyRepository: ApiKeyRepository,
     private accessTokenRepository: AccessTokenRepository,
     private cookies: CookieService,
   ) {}
 
   async use(req: ApiRequest, res: ApiResponse, next: NextFunction) {
-    const { user, token } = await this.getUser(req);
+    const { user, token } =
+      (await this.getUserFromCookie(req)) ||
+      (await this.getUserFromApiKey(req));
 
     const config: Config = {
       enableGoogleAnalytics: process.env.ENABLE_GOOGLE_ANALYTICS === 'true',
@@ -35,7 +38,7 @@ export class ContextMiddleware implements NestMiddleware {
     next();
   }
 
-  private async getUser(
+  private async getUserFromCookie(
     request: ApiRequest,
   ): Promise<{ user: User; token: string }> {
     const token = this.cookies.get(request, SESSION_COOKIE);
@@ -49,7 +52,28 @@ export class ContextMiddleware implements NestMiddleware {
 
     return {
       user: accessToken ? mapToUserDto(accessToken.user) : null,
-      token: null,
+      token,
     };
+  }
+
+  private async getUserFromApiKey(
+    request: ApiRequest,
+  ): Promise<{ user: User; token: string }> {
+    const authHeader = request.header('authorization');
+    if (!authHeader) {
+      return { user: null, token: null };
+    }
+
+    const [type, key] = authHeader.split(' ');
+    if (type !== 'Bearer') {
+      return { user: null, token: null };
+    }
+
+    const apiKey = await this.apiKeyRepository.findByKey(key);
+    if (apiKey == null) {
+      return { user: null, token: null };
+    }
+
+    return { user: mapToUserDto(apiKey.user), token: null };
   }
 }

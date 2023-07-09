@@ -1,4 +1,4 @@
 import { ForgotPasswordPage } from '../client/auth/pages';
-import { withGuestGuard } from '../client/shared/guards';
+// import { withGuestGuard } from '../client/shared/guards';
 
-export default withGuestGuard(ForgotPasswordPage);
+export default ForgotPasswordPage;

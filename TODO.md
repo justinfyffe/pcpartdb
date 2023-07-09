@@ -1,7 +1,7 @@
 - cpu and gpu data
-  - next source model cpu: 1075
+  - next source model cpu: 1175
     - npm run cli scrape-data:cpu -- -- --count 25 --offset 0
-  - next source model gpu: 0
+  - next source model gpu: 50
     - npm run cli scrape-data:gpu -- -- --count 25 --offset 0
 
 - auto-updates
@@ -10,24 +10,25 @@
     - shared service for calling website api
     - handle rate limiting, queue requests
   - [] API
-    - [] Database
+    - [x] Database
     - [] API key manager on admin panel
-      - [] Create API Key
+      - [] Refresh API Key
       - [] Delete API Key
-      - [] Basic usage details
-    - [] API Guard
+    - [x] API Guard
+      - tie api key to user
   - [] Overview Page
+    - [] Api Key widget on overview
+      - create confirm dialog to prevent accidents
     - [] Widget that shows pending updates
     - [] Improve widget for scraper usage
   - [] Edit Form
     - [] "Update" button - scrapes, but only updates auto-update fields
   - [x] GPU Sources
     - [x] Improve fetching sources from passmark
-  - [] New CPUs
+  - [] New CPUs/GPUs
     - How to handle?
-  - [] New GPUs
-    - How to handle?
-  - [] Auto-Pilot program
+      - Page that lists out "Draft" cpus? Should these drafts be stored somewhere else?
+  - [] Auto-Pilot script
     - [] CPUs
     - [] GPUs
       - [] Chipsets

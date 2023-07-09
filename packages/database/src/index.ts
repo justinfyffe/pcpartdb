@@ -1,4 +1,5 @@
 export * from './access-token';
+export * from './api-key';
 export * from './cpu';
 export * from './data-update';
 export * from './gpu';

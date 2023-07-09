@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { AuthModule } from '../auth/auth.module';
 import { DataUpdateModule } from '../data-update/data-update.module';
 import { DatabaseModule } from '../database';
 import { ImageModule } from '../image/image.module';
@@ -25,6 +26,7 @@ import { ViewModelsController } from './view-models.controller';
 @Module({
   imports: [
     DatabaseModule,
+    AuthModule,
     DataUpdateModule,
     CpuModule,
     GpuModule,

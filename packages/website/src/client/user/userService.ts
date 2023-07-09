@@ -1,4 +1,5 @@
 import {
+  ApiKey,
   CreateUserRequest,
   joinUrlParts,
   RequestPasswordResetRequest,
@@ -35,6 +36,11 @@ export class UserService {
   async resetPassword(data: ResetPasswordRequest) {
     const path = joinUrlParts(PATH, 'reset-password');
     await this.api.post(path, data);
+  }
+
+  async refreshApiKey() {
+    const path = joinUrlParts(PATH, 'refresh-api-key');
+    return await this.api.post<ApiKey>(path, null);
   }
 }
 

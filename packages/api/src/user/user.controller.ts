@@ -5,8 +5,10 @@ import {
   RequestPasswordResetRequest,
   ResetPasswordRequest,
 } from '@pcpartdb/shared';
+import { ApiKeyService } from '../auth/api-key.service';
 import { GuestGuard } from '../auth/guest.guard';
 import { StaffGuard } from '../auth/staff.guard';
+import { UserGuard } from '../auth/user.guard';
 import { Database } from '../database';
 import { Context, Ctx } from '../shared/context';
 import { validate } from '../shared/types/validate';
@@ -21,7 +23,11 @@ import {
 
 @Controller('users')
 export class UserController {
-  constructor(private db: Database, private userService: UserService) {}
+  constructor(
+    private db: Database,
+    private userService: UserService,
+    private apiKeyService: ApiKeyService,
+  ) {}
 
   @Post()
   @UseGuards(StaffGuard)
@@ -87,6 +93,17 @@ export class UserController {
       async () => {
         validate(body, resetPasswordRequestValidator);
         return await this.userService.resetPassword(body, ctx);
+      },
+      { ctx },
+    );
+  }
+
+  @Post('refresh-api-key')
+  @UseGuards(UserGuard)
+  async refreshApiKey(@Ctx() ctx: Context) {
+    return await this.db.transaction(
+      async () => {
+        return await this.apiKeyService.refresh(ctx);
       },
       { ctx },
     );

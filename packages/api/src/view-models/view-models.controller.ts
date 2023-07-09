@@ -47,8 +47,13 @@ export class ViewModelsController {
 
   @Get('admin/overview')
   @UseGuards(StaffGuard)
-  async adminOverview(@Ctx() _ctx: Context) {
-    return this.adminOverviewViewModelService.viewModel();
+  async adminOverview(@Ctx() ctx: Context) {
+    return await this.db.transaction(
+      () => {
+        return this.adminOverviewViewModelService.viewModel(ctx);
+      },
+      { ctx },
+    );
   }
 
   @Get('admin/products/:id')
