@@ -12,7 +12,9 @@ export class ApiKeyRepository {
     const userId = apiKey.userId;
 
     const trx = config?.trx ?? this.db;
-    await this.deleteByUserId(userId, config);
+    if ((await this.findByUserId(userId, config)) != null) {
+      await this.deleteByUserId(userId, config);
+    }
     return await trx.apiKey.create({ data: apiKey });
   }
 
