@@ -9,6 +9,11 @@ import { classNames } from '../../ui';
 import { Button, ButtonVariant } from '../Button';
 import { TabProps } from './Tab';
 
+export enum TabsVariant {
+  Horizontal = 'HORIZONTAL',
+  Buttons = 'BUTTONS',
+}
+
 export interface TabsProps {
   activeTab?: number;
   loadOnDemand?: boolean;
