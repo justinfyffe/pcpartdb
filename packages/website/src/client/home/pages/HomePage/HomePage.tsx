@@ -63,7 +63,7 @@ export const HomePage = (props: HomeViewModel) => {
           </h1>
 
           <Tabs>
-            <Tab label="Graphics cards" className="px-4 py-8">
+            <Tab label="Graphics cards" className="py-4">
               <p>
                 Select 1 or 2 graphics cards to get a comparison of their
                 technical specs and benchmarks.
@@ -73,7 +73,7 @@ export const HomePage = (props: HomeViewModel) => {
                 values={[null, null]}
               />
             </Tab>
-            <Tab label="Processors" className="px-4 py-8">
+            <Tab label="Processors" className="py-4">
               <p>
                 Select 1 or 2 processors to get a comparison of their technical
                 specs and benchmarks.

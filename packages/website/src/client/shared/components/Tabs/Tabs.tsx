@@ -6,7 +6,8 @@ import React, {
   useState,
 } from 'react';
 import { classNames } from '../../ui';
-import { Button, ButtonVariant } from '../Button';
+import { ButtonTabLabels } from './ButtonTabLabels';
+import { HorizontalTabLabels } from './HorizontalTabLabels';
 import { TabProps } from './Tab';
 
 export enum TabsVariant {
@@ -15,6 +16,7 @@ export enum TabsVariant {
 }
 
 export interface TabsProps {
+  variant?: TabsVariant;
   activeTab?: number;
   loadOnDemand?: boolean;
 
@@ -26,13 +28,14 @@ export interface TabsProps {
 
 export const Tabs: FunctionComponent<TabsProps> = (props) => {
   const { loadOnDemand, children } = props;
+  const variant = props.variant || TabsVariant.Horizontal;
 
   const Element = props.as || 'section';
 
   const [activeTab, setActiveTab] = useState(props.activeTab || 0);
   const [labels, setLabels] = useState<string[]>([]);
 
-  const handleLabelClick = useCallback((i: number) => {
+  const handleTabClick = useCallback((i: number) => {
     setActiveTab(i);
   }, []);
 
@@ -42,40 +45,43 @@ export const Tabs: FunctionComponent<TabsProps> = (props) => {
 
   return (
     <Element className={classNames('flex flex-col', props.className)}>
-      <ul className="flex items-center justify-start">
-        {labels.map((label, i) => (
-          <li className="h-full" key={i}>
-            {i === activeTab && (
-              <div className="bg-light-shades px-4 py-2 font-bold rounded-t">
-                {label}
+      {variant === TabsVariant.Horizontal && (
+        <HorizontalTabLabels
+          labels={labels}
+          activeTab={activeTab}
+          onTabClick={handleTabClick}
+        />
+      )}
+
+      {variant === TabsVariant.Buttons && (
+        <ButtonTabLabels
+          labels={labels}
+          activeTab={activeTab}
+          onTabClick={handleTabClick}
+        />
+      )}
+
+      <div
+        className={classNames(
+          variant === TabsVariant.Horizontal
+            ? 'bg-light-shades p-4 rounded-b'
+            : '',
+          variant === TabsVariant.Buttons ? 'py-8' : '',
+        )}
+      >
+        {Children.map(children, (child, i) => (
+          <>
+            {(loadOnDemand !== true || activeTab === i) && (
+              <div
+                key={i}
+                className={classNames(activeTab !== i ? 'hidden' : '')}
+              >
+                {child}
               </div>
             )}
-            {i !== activeTab && (
-              <Button
-                disabled={i === activeTab}
-                variant={ButtonVariant.None}
-                onClick={() => handleLabelClick(i)}
-                className="bg-[#f8f8f8] hover:bg-mouse-hover"
-              >
-                {label}
-              </Button>
-            )}
-          </li>
+          </>
         ))}
-      </ul>
-
-      {Children.map(children, (child, i) => (
-        <>
-          {(loadOnDemand !== true || activeTab === i) && (
-            <div
-              key={i}
-              className={classNames(activeTab !== i ? 'hidden' : '')}
-            >
-              {child}
-            </div>
-          )}
-        </>
-      ))}
+      </div>
     </Element>
   );
 };

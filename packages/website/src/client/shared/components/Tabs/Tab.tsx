@@ -1,5 +1,4 @@
 import React, { FunctionComponent } from 'react';
-import { classNames } from '../../ui';
 
 export interface TabProps {
   label?: string;
@@ -13,11 +12,5 @@ export interface TabProps {
 export const Tab: FunctionComponent<TabProps> = (props) => {
   const Element = props.as || 'section';
 
-  return (
-    <Element
-      className={classNames('bg-light-shades p-4 rounded-b', props.className)}
-    >
-      {props.children}
-    </Element>
-  );
+  return <Element className={props.className}>{props.children}</Element>;
 };

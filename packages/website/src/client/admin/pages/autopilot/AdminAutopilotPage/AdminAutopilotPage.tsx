@@ -1,9 +1,21 @@
 import 'reflect-metadata';
 import { AdminAutopilotViewModel } from '@pcpartdb/shared';
 import React from 'react';
-import { MetaRobots, Seo, Tab, Tabs } from '../../../../shared/components';
+import {
+  MetaRobots,
+  Seo,
+  Tab,
+  Tabs,
+  TabsVariant,
+} from '../../../../shared/components';
 import { AdminLayout } from '../../../../shared/layouts';
-import { AutopilotCpusTab, AutopilotGpusTab } from './components';
+import {
+  CpuSourcesTab,
+  CpusTab,
+  GpuChipsetsTab,
+  GpuRetailModelsTab,
+  GpuSourcesTab,
+} from './tabs';
 
 export const AdminAutopilotPage = (props: AdminAutopilotViewModel) => {
   const seoTitle = 'Autopilot - Admin Panel';
@@ -16,14 +28,21 @@ export const AdminAutopilotPage = (props: AdminAutopilotViewModel) => {
       <article>
         <h1 className="font-semibold mb-4">Autopilot</h1>
 
-        {/* TODO: use buttons style of tabs */}
-        <Tabs>
-          <Tab label="CPUs">
-            <AutopilotCpusTab />
+        <Tabs variant={TabsVariant.Buttons}>
+          <Tab label="CPU Sources">
+            <CpuSourcesTab />
           </Tab>
-
-          <Tab label="GPUs">
-            <AutopilotGpusTab />
+          <Tab label="CPUs">
+            <CpusTab />
+          </Tab>
+          <Tab label="GPU Sources">
+            <GpuSourcesTab />
+          </Tab>
+          <Tab label="GPU Chipsets">
+            <GpuChipsetsTab />
+          </Tab>
+          <Tab label="GPU Retail Models">
+            <GpuRetailModelsTab />
           </Tab>
         </Tabs>
 
