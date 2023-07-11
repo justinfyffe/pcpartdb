@@ -3,3 +3,4 @@ export * from './CpuSourcesTab';
 export * from './GpuChipsetsTab';
 export * from './GpuRetailModelsTab';
 export * from './GpuSourcesTab';
+export * from './QueueTab';

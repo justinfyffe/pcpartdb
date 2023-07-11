@@ -15,6 +15,7 @@ import {
   GpuChipsetsTab,
   GpuRetailModelsTab,
   GpuSourcesTab,
+  QueueTab,
 } from './tabs';
 
 export const AdminAutopilotPage = (props: AdminAutopilotViewModel) => {
@@ -45,7 +46,7 @@ export const AdminAutopilotPage = (props: AdminAutopilotViewModel) => {
             <GpuRetailModelsTab />
           </Tab>
           <Tab label="Queue">
-            <></>
+            <QueueTab />
           </Tab>
         </Tabs>
 

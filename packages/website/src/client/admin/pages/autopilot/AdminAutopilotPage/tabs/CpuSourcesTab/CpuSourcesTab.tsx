@@ -25,17 +25,26 @@ export const CpuSourcesTab = (props: CpuSourcesTabProps) => {
           <div className="flex gap-4">
             <Checkbox className="flex-1">TechPowerUp</Checkbox>{' '}
             <Checkbox className="flex-1">PassMark</Checkbox>{' '}
-            <Checkbox className="flex-1">GeekBench</Checkbox>
+            <Checkbox className="flex-1">GeekBench</Checkbox>{' '}
+            <Checkbox className="flex-1">Rejected</Checkbox>
           </div>
           <Button variant={ButtonVariant.Generic}>Refresh</Button>
         </div>
 
         <Card>
-          <CardTitle>
-            <div className="flex justify-between gap-4">
-              <span>Intel i7-12345k</span> <span>234621</span>
+          <div className="flex justify-between items-start">
+            <div className="flex flex-col gap-1">
+              <CardTitle>Intel i7-12345k</CardTitle>
+              <span className="text-sm text-dimmed">123456</span>
             </div>
-          </CardTitle>
+
+            <div className="flex gap-4">
+              <TextInput placeholder="Apply to CPU" />{' '}
+              <Button variant={ButtonVariant.Generic} disabled>
+                Apply
+              </Button>
+            </div>
+          </div>
           <CardContent>
             <Field className="flex-1">
               <div className="flex justify-between">CPU Name</div>
@@ -80,9 +89,6 @@ export const CpuSourcesTab = (props: CpuSourcesTabProps) => {
 
             <div className="flex justify-between gap-4">
               <Button variant={ButtonVariant.Generic}>Reject</Button>
-              <Button variant={ButtonVariant.Generic}>
-                Apply to Existing CPU
-              </Button>
               <Button variant={ButtonVariant.Generic}>Approve</Button>
             </div>
           </CardContent>

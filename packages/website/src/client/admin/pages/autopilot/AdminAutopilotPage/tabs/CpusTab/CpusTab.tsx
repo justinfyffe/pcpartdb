@@ -28,11 +28,11 @@ export const CpusTab = (props: CpusTabProps) => {
         </div>
 
         <Card>
-          <CardTitle>
-            <div className="flex justify-between gap-4">
-              <span>Intel i7-12345k</span> <span>New: 234621</span>
-            </div>
-          </CardTitle>
+          <div className="flex flex-col gap-1">
+            <CardTitle>Intel i7-12345k</CardTitle>
+            <span className="text-sm text-dimmed">New: 123456</span>
+          </div>
+
           <CardContent>
             <div className="flex gap-4 items-center">
               <Field className="flex-1">
