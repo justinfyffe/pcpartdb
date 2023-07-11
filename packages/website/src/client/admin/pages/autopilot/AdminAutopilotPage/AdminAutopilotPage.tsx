@@ -12,8 +12,7 @@ import { AdminLayout } from '../../../../shared/layouts';
 import {
   CpuSourcesTab,
   CpusTab,
-  GpuChipsetsTab,
-  GpuRetailModelsTab,
+  GpusTab,
   GpuSourcesTab,
   QueueTab,
 } from './tabs';
@@ -39,11 +38,8 @@ export const AdminAutopilotPage = (props: AdminAutopilotViewModel) => {
           <Tab label="GPU Sources">
             <GpuSourcesTab />
           </Tab>
-          <Tab label="GPU Chipsets">
-            <GpuChipsetsTab />
-          </Tab>
-          <Tab label="GPU Retail Models">
-            <GpuRetailModelsTab />
+          <Tab label="GPUs">
+            <GpusTab />
           </Tab>
           <Tab label="Queue">
             <QueueTab />

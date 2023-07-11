@@ -5,7 +5,11 @@
     - npm run cli scrape-data:gpu -- -- --count 25 --offset 0
 
 - auto-updates
+  - how to avoid conflicts?
+    - e.g. creating cpu manually when an equivalent new one are in the queue
+      - Error out when executing (due to matching name)
   - database tables
+    - EntityType: CPU, GPU, NEWS
     - notes: should sources be structured? data should be json
     - autopilot_queue?
     - autopilot_sources?

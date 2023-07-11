@@ -1,9 +1,9 @@
 import 'reflect-metadata';
 import React from 'react';
 
-interface GpuChipsetsTabProps {}
+interface GpusTabProps {}
 
-export const GpuChipsetsTab = (props: GpuChipsetsTabProps) => {
+export const GpusTab = (props: GpusTabProps) => {
   return (
     <>
       gpu chipsets
