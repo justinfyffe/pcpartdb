@@ -5,6 +5,27 @@
     - npm run cli scrape-data:gpu -- -- --count 25 --offset 0
 
 - auto-updates
+  - database tables
+    - notes: should sources be structured? data should be json
+    - autopilot_queue?
+    - autopilot_sources?
+    - autopilot_data?
+  - sources
+    - only add if we don't have the cpu/gpu for it already
+    - make it possible to add to existing cpu/gpu
+      - confirm if overwrite
+    - should reject only be temporary? what if we want to add it later?
+    - reject should not be temporary. we should add a "show rejected" option.
+      - can still query rejected one, reject just hides it from the list
+  - queue
+    - two parts: priority and regular
+    - when source is confirmed, add it to priority part of queue
+    - when requested on a cpu/gpu, add it to priority part of queue
+    - on a regular schedule: fetch sources, fetch existing cpus/gpus
+    - priority is always handled before regular
+    - onlly priority queue is shown on website as regular queue is programmatic
+  - updates
+    - auto-update if frequently-updated field: current price, benchmarks
   - General:
     - Name: auto-pilot
     - shared service for calling website api

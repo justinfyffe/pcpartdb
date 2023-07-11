@@ -44,6 +44,9 @@ export const AdminAutopilotPage = (props: AdminAutopilotViewModel) => {
           <Tab label="GPU Retail Models">
             <GpuRetailModelsTab />
           </Tab>
+          <Tab label="Queue">
+            <></>
+          </Tab>
         </Tabs>
 
         {/* General - Status, Updates */}

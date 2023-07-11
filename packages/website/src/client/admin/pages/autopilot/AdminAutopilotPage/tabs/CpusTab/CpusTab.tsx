@@ -8,7 +8,6 @@ import {
   Checkbox,
   Field,
   FieldHint,
-  FieldOptional,
   TextInput,
 } from 'packages/website/src/client/shared/components';
 import React from 'react';
@@ -80,7 +79,7 @@ export const CpusTab = (props: CpusTabProps) => {
                 <TextInput value="Intel i7-12345k" disabled />
               </Field>
 
-              <Button variant={ButtonVariant.Generic}>Diff</Button>
+              <Button variant={ButtonVariant.Generic}>Diff (3)</Button>
             </div>
 
             <div className="flex justify-between gap-4">

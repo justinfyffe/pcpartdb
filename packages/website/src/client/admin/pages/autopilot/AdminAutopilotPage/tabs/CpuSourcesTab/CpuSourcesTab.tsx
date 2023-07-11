@@ -80,6 +80,9 @@ export const CpuSourcesTab = (props: CpuSourcesTabProps) => {
 
             <div className="flex justify-between gap-4">
               <Button variant={ButtonVariant.Generic}>Reject</Button>
+              <Button variant={ButtonVariant.Generic}>
+                Apply to Existing CPU
+              </Button>
               <Button variant={ButtonVariant.Generic}>Approve</Button>
             </div>
           </CardContent>

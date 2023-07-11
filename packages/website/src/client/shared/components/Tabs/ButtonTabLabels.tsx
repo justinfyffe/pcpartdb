@@ -25,7 +25,7 @@ export const ButtonTabLabels: FunctionComponent<ButtonTabLabelsProps> = (
   return (
     <ul className={classNames('flex gap-4', className)}>
       {labels.map((label, i) => (
-        <li className="h-full flex-1" key={i}>
+        <li className="h-full flex-auto" key={i}>
           <Button
             disabled={i === activeTab}
             variant={ButtonVariant.Generic}
