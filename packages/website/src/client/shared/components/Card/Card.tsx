@@ -65,7 +65,7 @@ export const CardTitle: FunctionComponent<CardTitleProps> = (props) => {
   return (
     <Element
       className={classNames(
-        'font-medium text-xl text-content',
+        'font-medium text-xl text-content mb-0',
         props.className,
       )}
     >
@@ -78,7 +78,9 @@ export const CardContent: FunctionComponent<CardContentProps> = (props) => {
   const Element = props.as || 'div';
 
   return (
-    <Element className={classNames(props.className)}>{props.children}</Element>
+    <Element className={classNames('flex flex-col gap-4', props.className)}>
+      {props.children}
+    </Element>
   );
 };
 

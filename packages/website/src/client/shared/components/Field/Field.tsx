@@ -80,12 +80,7 @@ export const FieldOptional: FunctionComponent<FieldOptionalProps> = (props) => {
   const Element = props.as || 'span';
 
   return (
-    <Element
-      className={classNames(
-        'hover:underline text-[#aaa] text-xs',
-        props.className,
-      )}
-    >
+    <Element className={classNames('text-[#aaa] text-xs', props.className)}>
       {props.children}
     </Element>
   );

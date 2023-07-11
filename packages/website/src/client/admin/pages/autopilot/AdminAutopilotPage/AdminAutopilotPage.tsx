@@ -28,7 +28,7 @@ export const AdminAutopilotPage = (props: AdminAutopilotViewModel) => {
       <article>
         <h1 className="font-semibold mb-4">Autopilot</h1>
 
-        <Tabs variant={TabsVariant.Buttons}>
+        <Tabs loadOnDemand variant={TabsVariant.Buttons}>
           <Tab label="CPU Sources">
             <CpuSourcesTab />
           </Tab>

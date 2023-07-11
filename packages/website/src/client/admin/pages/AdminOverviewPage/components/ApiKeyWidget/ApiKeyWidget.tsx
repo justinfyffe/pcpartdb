@@ -6,8 +6,8 @@ import {
   CardContent,
   CardTitle,
   ConfirmDialog,
-  Input,
   showDialog,
+  TextInput,
 } from 'packages/website/src/client/shared/components';
 import { userService } from 'packages/website/src/client/user';
 import React, { useCallback, useState } from 'react';
@@ -40,7 +40,7 @@ export const ApiKeyWidget = (props: ApiKeyWidgetProps) => {
       <CardContent>
         Your API Key:
         <div className="flex gap-4">
-          <Input type="text" value={apiKey?.apiKey || ''} disabled />
+          <TextInput value={apiKey?.apiKey || ''} disabled />
           <Button
             type="button"
             variant={ButtonVariant.Primary}
