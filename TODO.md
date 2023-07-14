@@ -12,6 +12,7 @@
     - EntityType: CPU, GPU, NEWS
     - notes: should sources be structured? data should be json
     - autopilot_queue?
+      - id
       - 
     - autopilot_sources
       - id
@@ -19,6 +20,9 @@
       - id
       - entity_type (CPU, GPU)
       - action_type (create, update)
+      - entity_data (json)
+      - status (REJECTED, APPROVED)
+      - date_created
   - sources
     - only add if we don't have the cpu/gpu for it already
     - make it possible to add to existing cpu/gpu
