@@ -12,8 +12,8 @@ import { AdminLayout } from '../../../../shared/layouts';
 import {
   CpuSourcesTab,
   CpusTab,
-  GpusTab,
   GpuSourcesTab,
+  GpusTab,
   QueueTab,
 } from './tabs';
 

@@ -1,5 +1,6 @@
 import { Command } from 'commander';
 import * as dotenv from 'dotenv';
+import { autopilotCommand } from './autopilot';
 import { gpuUpdaterCommand } from './gpu-updater';
 import { refreshRatingsCommand } from './refresh-ratings';
 import { scrapeDataCommand } from './scrape-data';
@@ -16,6 +17,23 @@ const program = new Command();
 program.command('scratch-pad').action(async () => {
   await fixDataCommand({});
 });
+
+// Autopilot program
+//
+// Handles general automation of the website. Pulls sources and data, and
+// uploads it to the site. Some things are fully automated, while some things
+// require approval from the admin panel.
+//
+// Run from another machine than the web server. Requires API_KEY and API_URL
+// in env file.
+//
+// npm run cli autopilot
+program
+  .command('autopilot')
+  .option('--schedule')
+  .action(async (options) => {
+    await autopilotCommand({ schedule: options.schedule });
+  });
 
 // Gpu Updater
 program
