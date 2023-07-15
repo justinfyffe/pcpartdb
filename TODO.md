@@ -8,23 +8,56 @@
   - how to avoid conflicts?
     - e.g. creating cpu manually when an equivalent new one are in the queue
       - Error out when executing (due to matching name)
+ 
   - database tables
-    - EntityType: CPU, GPU, NEWS
-    - notes: should sources be structured? data should be json
-    - autopilot_queue?
+  -  - Autopilot Priority Queue
+    - Object
       - id
+      - status: AutopilotQueueStatus
+      - action: AutopilotAction
+      - data: json
+      - description: string
+      - priority: number
+      - status_updated_at: date
+      - created_at: date
+      - updated_at: date
+    - enum AutopilotAction
+      - UPDATE_SITEMAPS
+      - FETCH_CPU_SOURCES
+      - FETCH_GPU_SOURCES
+      - CREATE_CPU
+      - UPDATE_CPU
+      - CREATE_GPU
+      - UPDATE_GPU
+    - enum AutopilotQueueStatus
+      - PENDING
+      - PROCESSED
+      - DELETED
       - 
-    - autopilot_sources
+    - enum AutopilotEntryType
+      - CPU_SOURCE
+      - CPU_ENTITY
+      - GPU_SOURCE
+      - GPU_ENTITY
+    - enum AutopilotEntryStatus
+      - PENDING
+      - APPROVED
+      - REJECTED
+    - autopilot_entries
       - id
-    - autopilot_entities
+      - status: AutopilotEntryStatus
+      - type: AutopilotEntryType
+      - action: AutopilotAction
+      - data (json)
+      - status_updated_at: date
+      - created_at: date
+      - updated_at: date
+    - autopilot_logs
       - id
-      - entity_type (CPU, GPU)
-      - action_type (create, update)
-      - entity_data (json)
-      - status (REJECTED, APPROVED)
-      - date_created
+      - description: string
+      - created_at: date
+      - updated_at: date
   - sources
-    - only add if we don't have the cpu/gpu for it already
     - make it possible to add to existing cpu/gpu
       - confirm if overwrite
     - should reject only be temporary? what if we want to add it later?

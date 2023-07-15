@@ -1,4 +1,5 @@
 export * from './auth';
+export * from './autopilot';
 export * from './common';
 export * from './config';
 export * from './data-update';
