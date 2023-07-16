@@ -24,8 +24,8 @@ program.command('scratch-pad').action(async () => {
 // uploads it to the site. Some things are fully automated, while some things
 // require approval from the admin panel.
 //
-// Run from another machine than the web server. Requires API_KEY and API_URL
-// in env file.
+// Run from another machine than the web server. Requires AUTOPILOT_KEY and
+// AUTOPILOT_URL in env file.
 //
 // npm run cli autopilot
 program

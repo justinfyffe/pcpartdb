@@ -23,12 +23,12 @@ export async function autopilotCommand(args: AutopilotCommandArgs) {
 }
 
 function checkRequiredParameters() {
-  if (!process.env.API_KEY) {
-    throw new Error('Missing required env variable: API_KEY');
+  if (!process.env.AUTOPILOT_KEY) {
+    throw new Error('Missing required env variable: AUTOPILOT_KEY');
   }
 
-  if (!process.env.API_URL) {
-    throw new Error('Missing required env variable: API_URL');
+  if (!process.env.AUTOPILOT_URL) {
+    throw new Error('Missing required env variable: AUTOPILOT_URL');
   }
 }
 
