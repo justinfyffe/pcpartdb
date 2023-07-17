@@ -104,7 +104,6 @@ export enum AutopilotApprovalType {
 export interface AutopilotApprovalItem<T = unknown> {
   id?: number;
   statusUserId?: number;
-  queueItemId?: number;
 
   description?: string;
   status?: AutopilotApprovalStatus;
@@ -117,7 +116,6 @@ export interface AutopilotApprovalItem<T = unknown> {
 
   // Relations
   statusUser?: User;
-  queueItem?: AutopilotQueueItem;
 }
 
 /**
@@ -125,17 +123,10 @@ export interface AutopilotApprovalItem<T = unknown> {
  */
 export interface AutopilotLogItem<T = unknown> {
   id?: number;
-  queueItemId?: number;
-  approvalItemId?: number;
 
   description?: string;
-
   data?: T;
   metadata?: unknown;
 
   timestamp?: number;
-
-  // Relations
-  queueItem?: AutopilotQueueItem;
-  approvalItem?: AutopilotApprovalItem;
 }
