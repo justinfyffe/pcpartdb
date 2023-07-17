@@ -23,13 +23,9 @@ export async function executeAutopilot(context: AutopilotContext) {
     //
   } else if (action === AutopilotQueueAction.FetchGpuSources) {
     //
-  } else if (action === AutopilotQueueAction.CreateCpu) {
+  } else if (action === AutopilotQueueAction.FetchCpuData) {
     //
-  } else if (action === AutopilotQueueAction.UpdateCpu) {
-    //
-  } else if (action === AutopilotQueueAction.CreateGpu) {
-    //
-  } else if (action === AutopilotQueueAction.UpdateGpu) {
+  } else if (action === AutopilotQueueAction.FetchGpuData) {
     //
   } else {
     console.error(`Unsupported Action: ${action}`);

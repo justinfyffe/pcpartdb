@@ -1,5 +1,5 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["fullTextSearch", "orderByNulls"]
 }
 
@@ -11,26 +11,25 @@ datasource db {
 model AccessToken {
   id        Int       @id @default(autoincrement())
   userId    Int       @map("user_id")
-  tokenHash String    @map("token_hash") @unique(map: "access_tokens_token_hash_unique") @db.VarChar(255)
+  tokenHash String    @unique(map: "access_tokens_token_hash_unique") @map("token_hash") @db.VarChar(255)
   expiresAt DateTime? @map("expires_at") @db.Timestamptz(6)
-  createdAt DateTime  @map("created_at") @default(now()) @db.Timestamptz(6) @ignore
-  updatedAt DateTime  @map("updated_at") @default(now()) @db.Timestamptz(6) @updatedAt @ignore
+  createdAt DateTime  @default(now()) @map("created_at") @ignore @db.Timestamptz(6)
+  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @ignore @db.Timestamptz(6)
 
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "access_tokens_user_id_foreign")
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "access_tokens_user_id_foreign")
 
   @@index([expiresAt], map: "access_tokens_expires_at_index")
-
   @@map("access_tokens")
 }
 
 model ApiKey {
-  id        Int       @id @default(autoincrement())
-  userId    Int       @map("user_id") @unique(map: "api_keys_user_id_unique")
-  apiKey    String    @map("api_key") @unique(map: "api_keys_api_key_unique")
-  createdAt DateTime  @map("created_at") @default(now()) @db.Timestamptz(6) @ignore
-  updatedAt DateTime  @map("updated_at") @default(now()) @db.Timestamptz(6) @updatedAt @ignore
+  id        Int      @id @default(autoincrement())
+  userId    Int      @unique(map: "api_keys_user_id_unique") @map("user_id")
+  apiKey    String   @unique(map: "api_keys_api_key_unique") @map("api_key")
+  createdAt DateTime @default(now()) @map("created_at") @ignore @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @ignore @db.Timestamptz(6)
 
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "api_keys_user_id_foreign")
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "api_keys_user_id_foreign")
 
   @@map("api_keys")
 }
@@ -38,247 +37,309 @@ model ApiKey {
 model CpuImage {
   cpuId     Int      @map("cpu_id")
   imageId   Int      @map("image_id")
-  createdAt DateTime @map("created_at") @default(now()) @db.Timestamptz(6) @ignore
-  updatedAt DateTime @map("updated_at") @default(now()) @db.Timestamptz(6) @updatedAt @ignore
+  createdAt DateTime @default(now()) @map("created_at") @ignore @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @ignore @db.Timestamptz(6)
 
-  cpu       Cpu      @relation(fields: [cpuId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "cpu_images_cpu_id_foreign")
-  image     Image    @relation(fields: [imageId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "cpu_images_image_id_foreign")
+  cpu   Cpu   @relation(fields: [cpuId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "cpu_images_cpu_id_foreign")
+  image Image @relation(fields: [imageId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "cpu_images_image_id_foreign")
 
-  @@map("cpu_images")
   @@id([cpuId, imageId])
+  @@map("cpu_images")
 }
 
 model Cpu {
-  id             Int             @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
-  slug           String          @unique(map: "cpus_slug_unique") @db.VarChar(255)
-  name           String          @db.VarChar(255)
-  affiliateUrl   String?         @map("affiliate_url") @db.VarChar(255)
+  slug         String  @unique(map: "cpus_slug_unique") @db.VarChar(255)
+  name         String  @db.VarChar(255)
+  affiliateUrl String? @map("affiliate_url") @db.VarChar(255)
 
-  partNumber                 String?       @map("part_number")
-  company                    String?
-  marketSegments             String[]      @map("market_segments")
-  launchPrice                Float?        @map("launch_price")
-  releaseDate                String?       @map("release_date")
-  productionStatus           String?       @map("production_status")
-  bundledCooler              String?       @map("bundled_cooler")
+  partNumber       String?  @map("part_number")
+  company          String?
+  marketSegments   String[] @map("market_segments")
+  launchPrice      Float?   @map("launch_price")
+  releaseDate      String?  @map("release_date")
+  productionStatus String?  @map("production_status")
+  bundledCooler    String?  @map("bundled_cooler")
 
-  socket                     String?
-  foundry                    String?
-  processSize                Float?        @map("process_size")
-  transistors                Float?
-  tCaseMax                   Float?        @map("t_case_max")
-  tjMax                      Float?        @map("tj_max")
+  socket      String?
+  foundry     String?
+  processSize Float?  @map("process_size")
+  transistors Float?
+  tCaseMax    Float?  @map("t_case_max")
+  tjMax       Float?  @map("tj_max")
 
-  architecture               String?
-  codename                   String?
-  generation                 String?
-  pciExpress                 String[]      @map("pci_express")
-  chipsets                   String[]
+  architecture String?
+  codename     String?
+  generation   String?
+  pciExpress   String[] @map("pci_express")
+  chipsets     String[]
 
-  memorySupport              String[]      @map("memory_support")
-  memoryChannels             Float?        @map("memory_channels")
-  hasEccMemory               Boolean?      @map("has_ecc_memory")
+  memorySupport  String[] @map("memory_support")
+  memoryChannels Float?   @map("memory_channels")
+  hasEccMemory   Boolean? @map("has_ecc_memory")
 
-  coresCount                 Float?        @map("cores_count")
-  threadsCount               Float?        @map("threads_count")
-  performanceCoresCount      Float?        @map("performance_cores_count")
-  efficientCoresCount        Float?        @map("efficient_cores_count")
-  clock                      Float?        @map("clock")
-  turboClock                 Float?        @map("turbo_clock")
-  performanceCoreClock       Float?        @map("performance_core_clock")
-  performanceCoreTurboClock  Float?        @map("performance_core_turbo_clock")
-  efficientCoreClock         Float?        @map("efficient_core_clock")
-  efficientCoreTurboClock    Float?        @map("efficient_core_turbo_clock")
-  baseClock                  Float?        @map("base_clock")
-  multiplier                 Float?
-  isMultiplierUnlocked       Boolean?      @map("is_multiplier_unlocked")
+  coresCount                Float?   @map("cores_count")
+  threadsCount              Float?   @map("threads_count")
+  performanceCoresCount     Float?   @map("performance_cores_count")
+  efficientCoresCount       Float?   @map("efficient_cores_count")
+  clock                     Float?   @map("clock")
+  turboClock                Float?   @map("turbo_clock")
+  performanceCoreClock      Float?   @map("performance_core_clock")
+  performanceCoreTurboClock Float?   @map("performance_core_turbo_clock")
+  efficientCoreClock        Float?   @map("efficient_core_clock")
+  efficientCoreTurboClock   Float?   @map("efficient_core_turbo_clock")
+  baseClock                 Float?   @map("base_clock")
+  multiplier                Float?
+  isMultiplierUnlocked      Boolean? @map("is_multiplier_unlocked")
 
-  tdp                        Float?        @map("tdp")
-  pl1                        Float?        @map("pl1")
-  pl2                        Float?        @map("pl2")
-  ppt                        Float?        @map("ppt")
+  tdp Float? @map("tdp")
+  pl1 Float? @map("pl1")
+  pl2 Float? @map("pl2")
+  ppt Float? @map("ppt")
 
-  l1Cache                    Float?        @map("l1_cache")
-  l2Cache                    Float?        @map("l2_cache")
-  l3Cache                    Float?        @map("l3_cache")
-  efficientCoreL1Cache       Float?        @map("efficient_core_l1_cache")
-  efficientCoreL2Cache       Float?        @map("efficient_core_l2_cache")
+  l1Cache              Float? @map("l1_cache")
+  l2Cache              Float? @map("l2_cache")
+  l3Cache              Float? @map("l3_cache")
+  efficientCoreL1Cache Float? @map("efficient_core_l1_cache")
+  efficientCoreL2Cache Float? @map("efficient_core_l2_cache")
 
-  integratedGraphics         String?       @map("integrated_graphics")
-  extensionsTechnologies     String[]      @map("extensions_technologies")
+  integratedGraphics     String?  @map("integrated_graphics")
+  extensionsTechnologies String[] @map("extensions_technologies")
 
-  performanceScore        Float?   @map("performance_score")
-  valueScore              Float?   @map("value_score")
-  cpuMarkSingleThread     Float?   @map("cpu_mark_single_thread")
-  cpuMarkMultiThread      Float?   @map("cpu_mark_multi_thread")
-  geekbenchSingleCore     Float?   @map("geekbench_single_core")
-  geekbenchMultiCore      Float?   @map("geekbench_multi_core")
+  performanceScore    Float? @map("performance_score")
+  valueScore          Float? @map("value_score")
+  cpuMarkSingleThread Float? @map("cpu_mark_single_thread")
+  cpuMarkMultiThread  Float? @map("cpu_mark_multi_thread")
+  geekbenchSingleCore Float? @map("geekbench_single_core")
+  geekbenchMultiCore  Float? @map("geekbench_multi_core")
 
-  metadata       Json?
-  createdAt      DateTime        @map("created_at") @default(now()) @db.Timestamptz(6) @ignore
-  updatedAt      DateTime        @map("updated_at") @default(now()) @db.Timestamptz(6) @updatedAt
+  metadata  Json?
+  createdAt DateTime @default(now()) @map("created_at") @ignore @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
 
-  images       CpuImage[]
-  dataUpdates  DataUpdate[]
+  images      CpuImage[]
+  dataUpdates DataUpdate[]
 
   @@unique([company, name], name: "cpus_company_name_unique")
-
-   @@map("cpus")
+  @@map("cpus")
 }
 
 model GpuImage {
   gpuId     Int      @map("gpu_id")
   imageId   Int      @map("image_id")
-  createdAt DateTime @map("created_at") @default(now()) @db.Timestamptz(6) @ignore
-  updatedAt DateTime @map("updated_at") @default(now()) @db.Timestamptz(6) @updatedAt @ignore
+  createdAt DateTime @default(now()) @map("created_at") @ignore @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @ignore @db.Timestamptz(6)
 
-  gpu       Gpu      @relation(fields: [gpuId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "gpu_images_gpu_id_foreign")
-  image     Image    @relation(fields: [imageId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "gpu_images_image_id_foreign")
+  gpu   Gpu   @relation(fields: [gpuId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "gpu_images_gpu_id_foreign")
+  image Image @relation(fields: [imageId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "gpu_images_image_id_foreign")
 
-  @@map("gpu_images")
   @@id([gpuId, imageId])
+  @@map("gpu_images")
 }
 
 model Gpu {
-  id             Int             @id @default(autoincrement())
-  chipsetId      Int?            @map("chipset_id")
-  slug           String          @unique(map: "gpus_slug_unique") @db.VarChar(255)
-  name           String          @db.VarChar(255)
-  affiliateUrl   String?         @map("affiliate_url") @db.VarChar(255)
+  id           Int     @id @default(autoincrement())
+  chipsetId    Int?    @map("chipset_id")
+  slug         String  @unique(map: "gpus_slug_unique") @db.VarChar(255)
+  name         String  @db.VarChar(255)
+  affiliateUrl String? @map("affiliate_url") @db.VarChar(255)
 
   // General Info 
 
-  partNumber       String?       @map("part_number")
+  partNumber       String? @map("part_number")
   company          String?
-  marketSegment    String?       @map("market_segment")
-  launchPrice      Float?        @map("launch_price")
-  releaseDate      String?       @map("release_date")
-  productionStatus String?       @map("production_status")
-  
+  marketSegment    String? @map("market_segment")
+  launchPrice      Float?  @map("launch_price")
+  releaseDate      String? @map("release_date")
+  productionStatus String? @map("production_status")
+
   // Specs
 
-  codename                String?
-  architecture            String?
-  processSize             Float?  @map("process_size")
-  transistors             Float?
-  memorySize              Float?  @map("memory_size")
-  memoryType              String? @map("memory_type")
-  memoryClock             Float?  @map("memory_clock")
-  memoryInterface         Float?  @map("memory_interface")
-  memoryBandwidth         Float?  @map("memory_bandwidth")
-  slotWidth               Float?  @map("slot_width")
-  length                  Float?
-  width                   Float?
-  height                  Float?
-  weight                  Float?
-  thermalDesignPower      Float?  @map("thermal_design_power")
-  suggestedPsu            Float?  @map("suggested_psu")
-  busInterface            String? @map("bus_interface")
-  powerConnectors         String? @map("power_connectors")
-  outputs                 String?
-  shaderUnitsCudaCores    Float?  @map("shader_units_cuda_cores")
-  computeUnitsSmCount     Float?  @map("compute_units_sm_count")
-  textureMappingUnits     Float?  @map("texture_mapping_units")
-  renderOutputUnits       Float?  @map("render_output_units")
-  tensorCores             Float?  @map("tensor_cores")
-  rayTracingCores         Float?  @map("ray_tracing_cores")
-  coreClockSpeedBase      Float?  @map("core_clock_speed_base")
-  coreClockSpeedBoost     Float?  @map("core_clock_speed_boost")
-  l1Cache                 Float?  @map("l1_cache ")
-  l2Cache                 Float?  @map("l2_cache")
-  pixelFillRate           Float?  @map("pixel_fill_rate")
-  textureFillRate         Float?  @map("texture_fill_rate")
-  fp32Performance         Float?  @map("fp32_performance")
-  fp64Performance         Float?  @map("fp64_performance")
-  directxVersion          String? @map("directx_version")
-  openClVersion           String? @map("open_cl_version")
-  openGlVersion           String? @map("open_gl_version")
-  shaderModelVersion      String? @map("shader_model_version")
+  codename             String?
+  architecture         String?
+  processSize          Float?  @map("process_size")
+  transistors          Float?
+  memorySize           Float?  @map("memory_size")
+  memoryType           String? @map("memory_type")
+  memoryClock          Float?  @map("memory_clock")
+  memoryInterface      Float?  @map("memory_interface")
+  memoryBandwidth      Float?  @map("memory_bandwidth")
+  slotWidth            Float?  @map("slot_width")
+  length               Float?
+  width                Float?
+  height               Float?
+  weight               Float?
+  thermalDesignPower   Float?  @map("thermal_design_power")
+  suggestedPsu         Float?  @map("suggested_psu")
+  busInterface         String? @map("bus_interface")
+  powerConnectors      String? @map("power_connectors")
+  outputs              String?
+  shaderUnitsCudaCores Float?  @map("shader_units_cuda_cores")
+  computeUnitsSmCount  Float?  @map("compute_units_sm_count")
+  textureMappingUnits  Float?  @map("texture_mapping_units")
+  renderOutputUnits    Float?  @map("render_output_units")
+  tensorCores          Float?  @map("tensor_cores")
+  rayTracingCores      Float?  @map("ray_tracing_cores")
+  coreClockSpeedBase   Float?  @map("core_clock_speed_base")
+  coreClockSpeedBoost  Float?  @map("core_clock_speed_boost")
+  l1Cache              Float?  @map("l1_cache ")
+  l2Cache              Float?  @map("l2_cache")
+  pixelFillRate        Float?  @map("pixel_fill_rate")
+  textureFillRate      Float?  @map("texture_fill_rate")
+  fp32Performance      Float?  @map("fp32_performance")
+  fp64Performance      Float?  @map("fp64_performance")
+  directxVersion       String? @map("directx_version")
+  openClVersion        String? @map("open_cl_version")
+  openGlVersion        String? @map("open_gl_version")
+  shaderModelVersion   String? @map("shader_model_version")
 
   // Benchmarks
 
-  performanceScore Float?   @map("performance_score")
-  valueScore       Float?   @map("value_score")
-  g3dMark          Float?   @map("g3d_mark")
-  g2dMark          Float?   @map("g2d_mark")
-  timespyGraphics  Float?   @map("timespy_graphics")
+  performanceScore Float? @map("performance_score")
+  valueScore       Float? @map("value_score")
+  g3dMark          Float? @map("g3d_mark")
+  g2dMark          Float? @map("g2d_mark")
+  timespyGraphics  Float? @map("timespy_graphics")
 
   // Extra Details
 
-  metadata       Json?
-  createdAt      DateTime        @map("created_at") @default(now()) @db.Timestamptz(6) @ignore
-  updatedAt      DateTime        @map("updated_at") @default(now()) @db.Timestamptz(6) @updatedAt
+  metadata  Json?
+  createdAt DateTime @default(now()) @map("created_at") @ignore @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
 
   // Relations
 
   images       GpuImage[]
-  chipset      Gpu?           @relation("gpusToGpus", fields: [chipsetId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "gpus_chipset_id_foreign")
-  retailModels Gpu[]          @relation("gpusToGpus")
+  chipset      Gpu?       @relation("gpusToGpus", fields: [chipsetId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "gpus_chipset_id_foreign")
+  retailModels Gpu[]      @relation("gpusToGpus")
 
-  dataUpdates  DataUpdate[]
+  dataUpdates DataUpdate[]
 
   @@unique([company, name], name: "gpus_company_name_unique")
-
   @@map("gpus")
 }
 
 model Image {
-  id          Int          @id @default(autoincrement())
-  path        String       @unique(map: "images_path_unique") @db.VarChar(255)
-  name        String       @db.VarChar(255)
-  sourceName  String?      @map("source_name") @db.VarChar(255)
-  sourceUrl   String?      @map("source_url") @db.VarChar(255)
-  fileSize    Int?         @map("file_size")
-  height      Int?
-  width       Int?
-  uploadedAt  DateTime?    @map("uploaded_at") @default(now()) @db.Timestamptz(6)
-  createdAt   DateTime     @map("created_at") @default(now()) @db.Timestamptz(6) @ignore
-  updatedAt   DateTime     @map("updated_at") @default(now()) @db.Timestamptz(6) @ignore
+  id         Int       @id @default(autoincrement())
+  path       String    @unique(map: "images_path_unique") @db.VarChar(255)
+  name       String    @db.VarChar(255)
+  sourceName String?   @map("source_name") @db.VarChar(255)
+  sourceUrl  String?   @map("source_url") @db.VarChar(255)
+  fileSize   Int?      @map("file_size")
+  height     Int?
+  width      Int?
+  uploadedAt DateTime? @default(now()) @map("uploaded_at") @db.Timestamptz(6)
+  createdAt  DateTime  @default(now()) @map("created_at") @ignore @db.Timestamptz(6)
+  updatedAt  DateTime  @default(now()) @map("updated_at") @ignore @db.Timestamptz(6)
 
-  cpuImages  CpuImage[]
-  gpuImages  GpuImage[]
+  cpuImages CpuImage[]
+  gpuImages GpuImage[]
 
   @@map("images")
 }
 
 model User {
-  id           Int             @id @default(autoincrement())
-  email        String          @unique(map: "users_email_unique") @db.VarChar(255)
-  passwordHash String          @map("password_hash") @db.VarChar(255)
-  isStaff      Boolean?        @map("is_staff") @default(false)
-  registeredAt DateTime?       @map("registered_at") @default(now()) @db.Timestamptz(6)
-  createdAt    DateTime        @map("created_at") @default(now()) @db.Timestamptz(6) @ignore
-  updatedAt    DateTime        @map("updated_at") @default(now()) @db.Timestamptz(6) @updatedAt @ignore
+  id           Int       @id @default(autoincrement())
+  email        String    @unique(map: "users_email_unique") @db.VarChar(255)
+  passwordHash String    @map("password_hash") @db.VarChar(255)
+  isStaff      Boolean?  @default(false) @map("is_staff")
+  registeredAt DateTime? @default(now()) @map("registered_at") @db.Timestamptz(6)
+  createdAt    DateTime  @default(now()) @map("created_at") @ignore @db.Timestamptz(6)
+  updatedAt    DateTime  @default(now()) @updatedAt @map("updated_at") @ignore @db.Timestamptz(6)
 
-  accessTokens AccessToken[]
-  dataUpdates  DataUpdate[]
-  apiKey       ApiKey?
+  accessTokens          AccessToken[]
+  dataUpdates           DataUpdate[]
+  apiKey                ApiKey?
+  AutopilotQueueItem    AutopilotQueueItem[]
+  AutopilotApprovalItem AutopilotApprovalItem[]
 
   @@map("users")
 }
 
 model DataUpdate {
-  id              Int       @id @default(autoincrement())
-  decisionUserId  Int?      @map("decision_user_id")
+  id             Int  @id @default(autoincrement())
+  decisionUserId Int? @map("decision_user_id")
 
-  gpuId           Int?      @map("gpu_id")
-  cpuId           Int?      @map("cpu_id")
+  gpuId Int? @map("gpu_id")
+  cpuId Int? @map("cpu_id")
 
-  description     String?
-  status          String
-  updateSource    String    @map("update_source")
+  description  String?
+  status       String
+  updateSource String  @map("update_source")
 
-  data            Bytes?
-  metadata        Json?
+  data     Bytes?
+  metadata Json?
 
-  decisionMadeAt  DateTime? @map("decision_made_at")
-  createdAt       DateTime  @map("created_at") @default(now()) @db.Timestamptz(6)
-  updatedAt       DateTime  @map("updated_at") @default(now()) @db.Timestamptz(6) @updatedAt
+  decisionMadeAt DateTime? @map("decision_made_at")
+  createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
 
-  decisionUser    User?     @relation(fields: [decisionUserId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "data_updates_decision_user_id_foreign")
-  gpu             Gpu?      @relation(fields: [gpuId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "data_updates_gpu_id_foreign")
-  cpu             Cpu?      @relation(fields: [cpuId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "data_updates_cpu_id_foreign")
+  decisionUser User? @relation(fields: [decisionUserId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "data_updates_decision_user_id_foreign")
+  gpu          Gpu?  @relation(fields: [gpuId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "data_updates_gpu_id_foreign")
+  cpu          Cpu?  @relation(fields: [cpuId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "data_updates_cpu_id_foreign")
 
   @@map("data_updates")
+}
+
+model AutopilotQueueItem {
+  id           Int  @id @default(autoincrement())
+  statusUserId Int? @map("status_user_id")
+
+  description String?
+  status      String?
+  action      String?
+
+  data     Json?
+  metadata Json?
+
+  priority  Int      @default(0)
+  timestamp DateTime @default(now())
+
+  statusUpdatedAt DateTime? @map("status_updated_at") @db.Timestamptz(6)
+  createdAt       DateTime  @default(now()) @map("created_at") @ignore @db.Timestamptz(6)
+  updatedAt       DateTime  @default(now()) @updatedAt @map("updated_at") @ignore @db.Timestamptz(6)
+
+  statusUser      User?                   @relation(fields: [statusUserId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "autopilot_queue_items_status_user_id_foreign")
+  approvalItems   AutopilotApprovalItem[]
+  logItems        AutopilotLogItem[]
+
+  @@map("autopilot_queue_items")
+}
+
+model AutopilotApprovalItem {
+  id           Int  @id @default(autoincrement())
+  statusUserId Int? @map("status_user_id")
+  queueItemId  Int? @map("queue_item_id")
+
+  description String?
+  status      String?
+  type        String?
+
+  data        Json?
+  metadata    Json?
+
+  statusUpdatedAt DateTime? @map("status_updated_at") @db.Timestamptz(6)
+
+  statusUser       User?               @relation(fields: [statusUserId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "autopilot_approval_items_status_user_id_foreign")
+  queueItem        AutopilotQueueItem? @relation(fields: [queueItemId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "autopilot_approval_items_queue_item_id_foreign")
+  logItems         AutopilotLogItem[]
+
+  @@map("autopilot_approval_items")
+}
+
+model AutopilotLogItem {
+  id             Int  @id @default(autoincrement())
+  queueItemId    Int? @map("queue_item_id")
+  approvalItemId Int? @map("approval_item_id")
+
+  description String?
+
+  data     Json?
+  metadata Json?
+
+  timestamp DateTime @default(now())
+
+  queueItem    AutopilotQueueItem?    @relation(fields: [queueItemId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "autopilot_log_items_queue_item_id_foreign")
+  approvalItem AutopilotApprovalItem? @relation(fields: [queueItemId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "autopilot_log_items_approval_item_id_foreign")
 }

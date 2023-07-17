@@ -1,3 +1,5 @@
+import { User } from '../user';
+
 export enum AutopilotQueueStatus {
   Pending = 'PENDING',
   Processed = 'PROCESSED',
@@ -47,19 +49,24 @@ export enum AutopilotQueueAction {
  * -
  * Priority queue is ordered by `priority DESC, timestamp ASC`
  */
-export interface AutopilotQueueEntry<T = unknown> {
+export interface AutopilotQueueItem<T = unknown> {
   id?: number;
+  statusUserId?: number;
 
+  description?: string;
   status?: AutopilotQueueStatus;
   action?: AutopilotQueueAction;
+
+  data?: T;
+  metadata?: unknown;
 
   priority?: number;
   timestamp?: number;
 
-  description?: string;
-  data?: T;
-
   statusUpdatedAt?: number;
+
+  // Relations
+  statusUser?: User;
 }
 
 export enum AutopilotApprovalStatus {
@@ -94,29 +101,41 @@ export enum AutopilotApprovalType {
  * Data pulled from autopilot that we want manual approval before applying it
  * to our database. Not every autopilot action results in an approval entry.
  */
-export interface AutopilotApprovalEntry<T = unknown> {
+export interface AutopilotApprovalItem<T = unknown> {
   id?: number;
-  queueId?: number;
+  statusUserId?: number;
+  queueItemId?: number;
 
+  description?: string;
   status?: AutopilotApprovalStatus;
   type?: AutopilotApprovalType;
 
-  description?: string;
   data?: T;
+  metadata?: unknown;
 
   statusUpdatedAt?: number;
+
+  // Relations
+  statusUser?: User;
+  queueItem?: AutopilotQueueItem;
 }
 
 /**
  * Logs generated from autopilot
  */
-export interface AutopilotLogEntry<T = unknown> {
+export interface AutopilotLogItem<T = unknown> {
   id?: number;
-  queueId?: number;
-  approvalId?: number;
+  queueItemId?: number;
+  approvalItemId?: number;
 
   description?: string;
+
   data?: T;
+  metadata?: unknown;
 
   timestamp?: number;
+
+  // Relations
+  queueItem?: AutopilotQueueItem;
+  approvalItem?: AutopilotApprovalItem;
 }
