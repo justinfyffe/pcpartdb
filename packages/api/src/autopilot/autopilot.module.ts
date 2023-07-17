@@ -2,8 +2,8 @@ import { Module } from '@nestjs/common';
 import { DatabaseModule } from '../database';
 import { AutopilotController } from './autopilot.controller';
 import { AutopilotService } from './autopilot.service';
-import { AutopilotApprovalRepository } from './autopilot-approval.repository';
-import { AutopilotLogRepository } from './autopilot-log.repository';
+import { AutopilotApprovalsRepository } from './autopilot-approvals.repository';
+import { AutopilotLogsRepository } from './autopilot-logs.repository';
 import { AutopilotQueueRepository } from './autopilot-queue.repository';
 
 @Module({
@@ -11,8 +11,8 @@ import { AutopilotQueueRepository } from './autopilot-queue.repository';
   controllers: [AutopilotController],
   providers: [
     AutopilotService,
-    AutopilotApprovalRepository,
-    AutopilotLogRepository,
+    AutopilotApprovalsRepository,
+    AutopilotLogsRepository,
     AutopilotQueueRepository,
   ],
   exports: [AutopilotService],
