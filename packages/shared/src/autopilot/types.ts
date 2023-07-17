@@ -101,7 +101,7 @@ export enum AutopilotApprovalType {
  * Data pulled from autopilot that we want manual approval before applying it
  * to our database. Not every autopilot action results in an approval entry.
  */
-export interface AutopilotApprovalItem<T = unknown> {
+export interface AutopilotApproval<T = unknown> {
   id?: number;
   statusUserId?: number;
 
@@ -121,7 +121,7 @@ export interface AutopilotApprovalItem<T = unknown> {
 /**
  * Logs generated from autopilot
  */
-export interface AutopilotLogItem<T = unknown> {
+export interface AutopilotLog<T = unknown> {
   id?: number;
 
   description?: string;
