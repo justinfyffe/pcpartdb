@@ -1,3 +1,5 @@
+import { ApiClient } from '../shared/ApiClient';
+
 export interface AutopilotConfig {
   updateSitemapsDate?: number;
   fetchCpuSourcesDate?: number;
@@ -5,5 +7,6 @@ export interface AutopilotConfig {
 }
 
 export interface AutopilotContext {
+  api: ApiClient;
   config?: AutopilotConfig;
 }

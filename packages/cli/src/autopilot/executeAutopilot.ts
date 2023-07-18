@@ -1,4 +1,8 @@
 import { AutopilotQueueAction } from '@pcpartdb/shared';
+import {
+  handleFetchCpuDataAction,
+  handleFetchCpuSourcesAction,
+} from './actions';
 import { AutopilotContext } from './types';
 
 let executing = false;
@@ -20,11 +24,11 @@ export async function executeAutopilot(context: AutopilotContext) {
   if (action === AutopilotQueueAction.UpdateSitemaps) {
     //
   } else if (action === AutopilotQueueAction.FetchCpuSources) {
-    //
+    await handleFetchCpuSourcesAction(null, context);
   } else if (action === AutopilotQueueAction.FetchGpuSources) {
     //
   } else if (action === AutopilotQueueAction.FetchCpuData) {
-    //
+    await handleFetchCpuDataAction(null, context);
   } else if (action === AutopilotQueueAction.FetchGpuData) {
     //
   } else {

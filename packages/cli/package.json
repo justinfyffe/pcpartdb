@@ -38,6 +38,7 @@
     "@pcpartdb/database": "*",
     "@pcpartdb/scraper": "*",
     "@pcpartdb/shared": "*",
+    "axios": "^0.27.2",
     "commander": "^10.0.0",
     "date-fns": "^2.28.0",
     "deepmerge": "^4.3.1",

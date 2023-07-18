@@ -64,6 +64,18 @@ export class CpuController {
     );
   }
 
+  @Get(':id')
+  @UseGuards(StaffGuard)
+  async get(@Param('id') idStr: string, @Ctx() ctx: Context) {
+    return await this.db.transaction(
+      async () => {
+        const id = Number(idStr);
+        return await this.cpuService.getById(id, { includeImages: true }, ctx);
+      },
+      { ctx },
+    );
+  }
+
   @Post()
   @UseGuards(StaffGuard)
   async create(@Body() body: CreateCpuRequest, @Ctx() ctx: Context) {

@@ -26,12 +26,12 @@ export function hasProductFieldValue(field: ProductField) {
   return true;
 }
 
-export function productFieldValue(field: ProductField) {
+export function productFieldValue<T = unknown>(field: ProductField) {
   if (!hasProductFieldValue(field)) {
     return null;
   }
 
-  return field.value;
+  return field.value as T;
 }
 
 export function isProductField(value: unknown): value is ProductField {
@@ -86,4 +86,8 @@ export function compareProductFields(
       }) and ${typeof field2.value} (${field2.value})`,
     );
   }
+}
+
+export function canAutoUpdateProductField(field: ProductField) {
+  return field?.meta?.autoUpdate ?? true;
 }

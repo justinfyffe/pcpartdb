@@ -1,4 +1,6 @@
+import axios from 'axios';
 import * as scheduler from 'node-schedule';
+import { ApiClient } from '../shared/ApiClient';
 import { executeAutopilot } from './executeAutopilot';
 import { AutopilotContext } from './types';
 import { autopilotDataPath, loadAutopilotConfig } from './utils';
@@ -33,7 +35,12 @@ function checkRequiredParameters() {
 }
 
 async function createContext() {
+  const api = new ApiClient({
+    axios,
+    baseUrl: process.env.AUTOPILOT_URL,
+    apiKey: process.env.API_KEY,
+  });
   const config = await loadAutopilotConfig(autopilotDataPath('config.json'));
 
-  return { config } as AutopilotContext;
+  return { api, config } as AutopilotContext;
 }
