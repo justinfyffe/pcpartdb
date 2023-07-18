@@ -1,2 +1,2 @@
-export * from './handleFetchCpuDataAction';
-export * from './handleFetchCpuSourcesAction';
+export * from './fetchCpuData';
+export * from './fetchCpuSources';

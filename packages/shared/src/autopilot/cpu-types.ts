@@ -26,3 +26,12 @@ export interface CpuDataApproval {
   type: 'new' | 'update';
   cpu: Cpu;
 }
+
+export interface CheckCpuSourcesRequest {
+  sources: string[];
+}
+
+export interface CheckCpuSourcesResponse {
+  newSources: string[];
+  existingSources: string[];
+}

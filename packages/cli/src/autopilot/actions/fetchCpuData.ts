@@ -69,7 +69,7 @@ export async function handleFetchCpuDataAction(
       data: { type: cpuId == null ? 'new' : 'update', cpu: updatedCpu },
     };
 
-    await context.api.post('/autopilot/approvals', approval);
+    await context.api.post('/autopilot/approvals', { approvals: [approval] });
   }
 }
 
