@@ -291,8 +291,8 @@ model ProductSource {
   sourceKey   String @map("source_key")
   sourceUrl   String @map("source_url")
 
-  createdAt DateTime  @default(now()) @map("created_at") @ignore @db.Timestamptz(6)
-  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @ignore @db.Timestamptz(6)
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
 
   @@index([productType, productName], map: "product_sources_product_type_product_name_index")
   @@index([productType, sourceUrl], map: "product_sources_product_type_source_url_index")

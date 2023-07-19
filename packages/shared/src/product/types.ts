@@ -50,6 +50,7 @@ export type ProductImage = CpuImage | GpuImage;
 export type ProductImages = CpuImages | GpuImages;
 
 export type ProductDataSource = CpuDataSource | GpuDataSource;
+export type ProductSourceKey = CpuDataSourceKey | GpuDataSourceKey;
 
 export interface ProductDiff {
   original?: Product;
@@ -67,7 +68,7 @@ export interface ProductSource {
   productName: string;
   productCompany?: string;
 
-  sourceKey: CpuDataSourceKey | GpuDataSourceKey;
+  sourceKey: ProductSourceKey;
   sourceUrl: string;
 }
 

@@ -55,10 +55,12 @@ export interface AutomationQueueItem<T = unknown> {
   action?: AutomationQueueAction;
 
   data?: T;
-  metadata?: unknown;
+  metadata?: AutomationQueueItemMeta;
 
   priority?: number;
   timestamp?: number;
 
   statusUpdatedAt?: number;
 }
+
+export interface AutomationQueueItemMeta {}
