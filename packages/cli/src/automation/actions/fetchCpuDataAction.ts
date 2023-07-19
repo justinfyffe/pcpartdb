@@ -15,11 +15,11 @@ import {
 } from '@pcpartdb/shared';
 import deepmerge from 'deepmerge';
 import { compare as generateJsonPatch } from 'fast-json-patch';
-import { AutopilotContext } from '../types';
+import { AutomationContext } from '../types';
 
-export async function handleFetchCpuDataAction(
+export async function fetchCpuDataAction(
   action: FetchCpuDataAction,
-  context: AutopilotContext,
+  context: AutomationContext,
 ) {
   const { cpuId } = action;
   let { techPowerUpUrl, passMarkUrl, geekBenchUrl } = action;
@@ -93,7 +93,7 @@ async function fetchCpuData(options: {
 async function updateBenchmarks(
   cpu: Cpu,
   scrapedCpu: Cpu,
-  context: AutopilotContext,
+  context: AutomationContext,
 ) {
   if (cpu == null) {
     return;

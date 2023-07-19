@@ -5,6 +5,9 @@
     - npm run cli scrape-data:gpu -- -- --count 25 --offset 0
 
 - auto-updates
+  - TODO:
+    - Simplify. Store one cpu/gpu source per row in database. Use UI and backend
+      to combine them. Don't rjeect/delete sources, jsut archive them.
   - how to avoid conflicts?
     - e.g. creating cpu manually when an equivalent new one are in the queue
       - Error out when executing (due to matching name)
@@ -57,6 +60,19 @@
       - description: string
       - created_at: date
       - updated_at: date
+    - product_sources
+      - id
+      - product_source: string
+      - product_type: ProductType
+      - product_name: string
+      - product_url: string
+      - archived: boolean
+      - created_at: date
+      - updated_at: date
+      - Indexes:
+        - product_type, product_name
+        - product_type, product_url
+    - product_update_approvals
   - sources
     - make it possible to add to existing cpu/gpu
       - confirm if overwrite

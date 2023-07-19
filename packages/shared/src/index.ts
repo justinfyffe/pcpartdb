@@ -1,5 +1,5 @@
 export * from './auth';
-export * from './autopilot';
+export * from './automation';
 export * from './common';
 export * from './config';
 export * from './data-update';

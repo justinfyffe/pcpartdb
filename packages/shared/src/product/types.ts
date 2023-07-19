@@ -1,11 +1,31 @@
 import { MeasurementUnit } from '../common';
 import { DateFormat } from '../format';
-import { Cpu, CpuDataSource, CpuFieldKey, CpuImage, CpuImages } from './cpu';
-import { Gpu, GpuDataSource, GpuFieldKey, GpuImage, GpuImages } from './gpu';
+import {
+  Cpu,
+  CpuDataSource,
+  CpuDataSourceKey,
+  CpuFieldKey,
+  CpuImage,
+  CpuImages,
+} from './cpu';
+import {
+  Gpu,
+  GpuDataSource,
+  GpuDataSourceKey,
+  GpuFieldKey,
+  GpuImage,
+  GpuImages,
+} from './gpu';
 
 export enum ProductType {
   Cpu = 'CPU',
   Gpu = 'GPU',
+}
+
+export enum ProductUpdateStatus {
+  Pending = 'PENDING',
+  Rejected = 'REJECTED',
+  Approved = 'APPROVED',
 }
 
 export type Product = Cpu | Gpu;
@@ -31,17 +51,53 @@ export type ProductImages = CpuImages | GpuImages;
 
 export type ProductDataSource = CpuDataSource | GpuDataSource;
 
+export interface ProductDiff {
+  original?: Product;
+  updated?: Product;
+}
+
+/**
+ * Data structure containing information regarding a single source for a
+ * product.
+ */
+export interface ProductSource {
+  id?: number;
+
+  productType: ProductType;
+  productName: string;
+  productCompany?: string;
+
+  sourceKey: CpuDataSourceKey | GpuDataSourceKey;
+  sourceUrl: string;
+}
+
+/**
+ * Data structure containing information regarding data updates for a
+ * product. This could include a new or existing product.
+ */
+export interface ProductUpdate<T = unknown> {
+  id?: number;
+
+  productType: ProductType;
+  productName: string;
+
+  description?: string;
+  status: ProductUpdateStatus;
+
+  data?: T;
+  metadata?: ProductUpdateMeta;
+
+  statusUpdatedAt?: number;
+}
+
+export interface ProductUpdateMeta {}
+
 export interface ScrapeProductRequest {
   sources: Record<string, ProductDataSource>;
 }
 
 export interface ScrapeProductResponse {
   product?: Partial<Product>;
-}
-
-export interface ProductDiff {
-  original?: Product;
-  updated?: Product;
 }
 
 export interface PreviewImportProductsRequest {
@@ -55,4 +111,12 @@ export interface PreviewImportProductsResponse {
 
 export interface ImportProductsRequest {
   products: Product[];
+}
+
+export interface UploadProductSourcesRequest {
+  sources: ProductSource[];
+}
+
+export interface UploadProductSourcesResponse {
+  totalNewSources: number;
 }

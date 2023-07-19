@@ -1,12 +1,12 @@
 import { ApiClient } from '../shared/ApiClient';
 
-export interface AutopilotConfig {
+export interface AutomationConfig {
   updateSitemapsDate?: number;
   fetchCpuSourcesDate?: number;
   fetchGpuSourcesDate?: number;
 }
 
-export interface AutopilotContext {
+export interface AutomationContext {
   api: ApiClient;
-  config?: AutopilotConfig;
+  config?: AutomationConfig;
 }

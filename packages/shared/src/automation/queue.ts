@@ -1,12 +1,10 @@
-import { User } from '../user';
-
-export enum AutopilotQueueStatus {
+export enum AutomationQueueStatus {
   Pending = 'PENDING',
   Processed = 'PROCESSED',
   Deleted = 'DELETED',
 }
 
-export enum AutopilotQueueAction {
+export enum AutomationQueueAction {
   /**
    * Update sitemaps on the website. Pull CPUs and GPUs from API,
    * creates sitemap files, and uploads to the website.
@@ -49,13 +47,12 @@ export enum AutopilotQueueAction {
  * -
  * Priority queue is ordered by `priority DESC, timestamp ASC`
  */
-export interface AutopilotQueueItem<T = unknown> {
+export interface AutomationQueueItem<T = unknown> {
   id?: number;
-  statusUserId?: number;
 
   description?: string;
-  status?: AutopilotQueueStatus;
-  action?: AutopilotQueueAction;
+  status?: AutomationQueueStatus;
+  action?: AutomationQueueAction;
 
   data?: T;
   metadata?: unknown;
@@ -64,69 +61,4 @@ export interface AutopilotQueueItem<T = unknown> {
   timestamp?: number;
 
   statusUpdatedAt?: number;
-
-  // Relations
-  statusUser?: User;
-}
-
-export enum AutopilotApprovalStatus {
-  Pending = 'PENDING',
-  Approved = 'APPROVED',
-  Rejected = 'REJECTED',
-}
-
-export enum AutopilotApprovalType {
-  /**
-   * Approve new CPU sources, or apply it to an existing CPU.
-   */
-  CpuSource = 'CPU_SOURCE',
-
-  /**
-   * Approve fetched CPU data for new or exisitng CPUs.
-   */
-  CpuData = 'CPU_DATA',
-
-  /**
-   * Approve new GPU sources, or apply it to an existing GPU.
-   */
-  GpuSource = 'GPU_SOURCE',
-
-  /**
-   * Approve fetched GPU data for new or existing GPUs.
-   */
-  GpuData = 'GPU_DATA',
-}
-
-/**
- * Data pulled from autopilot that we want manual approval before applying it
- * to our database. Not every autopilot action results in an approval entry.
- */
-export interface AutopilotApproval<T = unknown> {
-  id?: number;
-  statusUserId?: number;
-
-  description?: string;
-  status?: AutopilotApprovalStatus;
-  type?: AutopilotApprovalType;
-
-  data?: T;
-  metadata?: unknown;
-
-  statusUpdatedAt?: number;
-
-  // Relations
-  statusUser?: User;
-}
-
-/**
- * Logs generated from autopilot
- */
-export interface AutopilotLog<T = unknown> {
-  id?: number;
-
-  description?: string;
-  data?: T;
-  metadata?: unknown;
-
-  timestamp?: number;
 }

@@ -1,12 +1,9 @@
-import { AutopilotQueueAction } from '@pcpartdb/shared';
-import {
-  handleFetchCpuDataAction,
-  handleFetchCpuSourcesAction,
-} from './actions';
-import { AutopilotContext } from './types';
+import { AutomationQueueAction } from '@pcpartdb/shared';
+import { fetchCpuDataAction, fetchCpuSourcesAction } from './actions';
+import { AutomationContext } from './types';
 
 let executing = false;
-export async function executeAutopilot(context: AutopilotContext) {
+export async function executeAutopilot(context: AutomationContext) {
   if (executing) {
     // Already executing a task.
     return;
@@ -21,15 +18,15 @@ export async function executeAutopilot(context: AutopilotContext) {
   //    Fetch new sources (approve/reject) (weekly? or bi-weekly?)
   //    Fetch new/updated specs (approve/reject except for benchmarks) // Non-stop
 
-  if (action === AutopilotQueueAction.UpdateSitemaps) {
+  if (action === AutomationQueueAction.UpdateSitemaps) {
     //
-  } else if (action === AutopilotQueueAction.FetchCpuSources) {
-    await handleFetchCpuSourcesAction(null, context);
-  } else if (action === AutopilotQueueAction.FetchGpuSources) {
+  } else if (action === AutomationQueueAction.FetchCpuSources) {
+    await fetchCpuSourcesAction(null, context);
+  } else if (action === AutomationQueueAction.FetchGpuSources) {
     //
-  } else if (action === AutopilotQueueAction.FetchCpuData) {
-    await handleFetchCpuDataAction(null, context);
-  } else if (action === AutopilotQueueAction.FetchGpuData) {
+  } else if (action === AutomationQueueAction.FetchCpuData) {
+    await fetchCpuDataAction(null, context);
+  } else if (action === AutomationQueueAction.FetchGpuData) {
     //
   } else {
     console.error(`Unsupported Action: ${action}`);
@@ -38,8 +35,8 @@ export async function executeAutopilot(context: AutopilotContext) {
   executing = false;
 }
 
-function getNextAction(context: AutopilotContext) {
+function getNextAction(context: AutomationContext) {
   // TODO: get next action, first check from priority queue,
   // then determine based on staleness, then update gpus/cpus
-  return null as AutopilotQueueAction;
+  return null as AutomationQueueAction;
 }
