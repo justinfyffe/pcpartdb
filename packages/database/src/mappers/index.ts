@@ -1,5 +1,6 @@
 export * from './accessTokenMapper';
 export * from './apiKeyMapper';
+export * from './automationQueueItemMapper';
 export * from './dataUpdateMapper';
 export * from './cpuDataMapper';
 export * from './cpuImageMapper';
@@ -8,4 +9,6 @@ export * from './gpuDataMapper';
 export * from './gpuImageMapper';
 export * from './gpuMapper';
 export * from './imageMapper';
+export * from './productSourceMapper';
+export * from './productUpdateMapper';
 export * from './userMapper';

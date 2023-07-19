@@ -1,17 +1,17 @@
 import { scrapeCpu } from '@pcpartdb/scraper';
 import {
-  AutopilotApproval,
-  AutopilotApprovalStatus,
-  AutopilotApprovalType,
   canAutoUpdateProductField,
   Cpu,
-  CpuDataApproval,
   CpuDataSource,
   CpuDataSourceKey,
   CpuField,
   FetchCpuDataAction,
   hasProductFieldValue,
+  ProductDiff,
   productFieldValue,
+  ProductType,
+  ProductUpdate,
+  ProductUpdateStatus,
 } from '@pcpartdb/shared';
 import deepmerge from 'deepmerge';
 import { compare as generateJsonPatch } from 'fast-json-patch';
@@ -21,56 +21,70 @@ export async function fetchCpuDataAction(
   action: FetchCpuDataAction,
   context: AutomationContext,
 ) {
-  const { cpuId } = action;
-  let { techPowerUpUrl, passMarkUrl, geekBenchUrl } = action;
-
-  // If there is an existing CPU, then use the sources from that instead.
-  let cpu: Cpu = null;
-  if (cpuId != null) {
-    cpu = await context.api.get(`/products/cpu/${cpuId}`);
-    techPowerUpUrl =
-      cpu.meta?.dataSources?.[CpuDataSourceKey.TechPowerUp]?.url || null;
-    passMarkUrl =
-      cpu.meta?.dataSources?.[CpuDataSourceKey.PassMark]?.url || null;
-    geekBenchUrl =
-      cpu.meta?.dataSources?.[CpuDataSourceKey.GeekBench]?.url || null;
+  // Get existing CPU (if cpuId is provided)
+  let originalCpu: Cpu;
+  try {
+    originalCpu = await getCpu(action.cpuId, context);
+  } catch (e) {
+    console.error(`Error getting existing CPU for action=${action}`);
+    return;
   }
 
+  // Get sources from cpu or action
+  const techPowerUpSource =
+    originalCpu != null
+      ? originalCpu.meta?.dataSources?.[CpuDataSourceKey.TechPowerUp] || null
+      : { url: action.techPowerUpUrl };
+  const passMarkSource =
+    originalCpu != null
+      ? originalCpu.meta?.dataSources?.[CpuDataSourceKey.PassMark] || null
+      : { url: action.passMarkUrl };
+  const geekBenchSource =
+    originalCpu != null
+      ? originalCpu.meta?.dataSources?.[CpuDataSourceKey.GeekBench] || null
+      : { url: action.geekBenchUrl };
+
   // Scrape the CPU data from our sources.
-  // Check if we have any results from scraping. Skip if we don't.
   const scrapedCpu = await fetchCpuData({
     sources: {
-      [CpuDataSourceKey.TechPowerUp]: { url: techPowerUpUrl },
-      [CpuDataSourceKey.PassMark]: { url: passMarkUrl },
-      [CpuDataSourceKey.GeekBench]: { url: geekBenchUrl },
+      [CpuDataSourceKey.TechPowerUp]: techPowerUpSource,
+      [CpuDataSourceKey.PassMark]: passMarkSource,
+      [CpuDataSourceKey.GeekBench]: geekBenchSource,
     },
   });
   if (scrapedCpu == null) {
+    // No results for scraping. Skip.
     console.error(
-      `No scraped data when scraping CPU during autopilot for action=${action}`,
+      `No scraped data when scraping CPU during automation for action=${action}`,
     );
     return;
   }
 
   // Update benchmarks for existing CPU. These do not require approval.
-  if (cpu != null) {
-    await updateBenchmarks(cpu, scrapedCpu, context);
+  if (originalCpu != null) {
+    await updateBenchmarks(originalCpu, scrapedCpu, context);
   }
 
   // Merge existing cpu with scraped data. Exclude auto-update disabled fields.
-  const updatedCpu = mergeCpus(cpu, scrapedCpu);
+  const updatedCpu = mergeCpus(originalCpu, scrapedCpu);
 
-  // Check if we have changes. Create an approval entry.
-  if (hasUpdates(cpu, updatedCpu)) {
-    const approval: AutopilotApproval<CpuDataApproval> = {
-      description: '',
-      status: AutopilotApprovalStatus.Pending,
-      type: AutopilotApprovalType.CpuData,
-      data: { type: cpuId == null ? 'new' : 'update', cpu: updatedCpu },
-    };
-
-    await context.api.post('/autopilot/approvals', { approvals: [approval] });
+  // Check if we have changes. Upload the update.
+  if (hasUpdates(originalCpu, updatedCpu)) {
+    await uploadProductUpdate(originalCpu, updatedCpu, context);
   }
+}
+
+async function getCpu(cpuId: number, context: AutomationContext) {
+  if (cpuId == null) {
+    return null;
+  }
+
+  const cpu = await context.api.get<Cpu>(`/products/cpu/${cpuId}`);
+  if (cpu == null) {
+    throw new Error(`Cannot find cpu for id=${cpuId}`);
+  }
+
+  return cpu;
 }
 
 async function fetchCpuData(options: {
@@ -84,64 +98,69 @@ async function fetchCpuData(options: {
     return scrapedCpu;
   } catch (e) {
     // Could not scrape the CPU. Skip as we do not have data.
-    console.error('Error when scraping CPU during autopilot');
+    console.error('Error when scraping CPU during automation');
     console.error(e);
     return null;
   }
 }
 
 async function updateBenchmarks(
-  cpu: Cpu,
+  originalCpu: Cpu,
   scrapedCpu: Cpu,
   context: AutomationContext,
 ) {
-  if (cpu == null) {
+  if (originalCpu == null) {
     return;
   }
 
   let updated = false;
+
+  // Update CPU Mark (multi-thread)
   if (
     hasProductFieldValue(scrapedCpu.cpuMarkMultiThread) &&
     canAutoUpdateProductField(scrapedCpu.cpuMarkMultiThread) &&
     productFieldValue<number>(scrapedCpu.cpuMarkMultiThread) > 0
   ) {
-    cpu.cpuMarkMultiThread =
-      scrapedCpu.cpuMarkMultiThread || cpu.cpuMarkMultiThread;
+    originalCpu.cpuMarkMultiThread =
+      scrapedCpu.cpuMarkMultiThread || originalCpu.cpuMarkMultiThread;
     updated = true;
   }
 
+  // Update CPU Mark (single-thread)
   if (
     hasProductFieldValue(scrapedCpu.cpuMarkSingleThread) &&
     canAutoUpdateProductField(scrapedCpu.cpuMarkSingleThread) &&
     productFieldValue<number>(scrapedCpu.cpuMarkSingleThread) > 0
   ) {
-    cpu.cpuMarkSingleThread =
-      scrapedCpu.cpuMarkSingleThread || cpu.cpuMarkSingleThread;
+    originalCpu.cpuMarkSingleThread =
+      scrapedCpu.cpuMarkSingleThread || originalCpu.cpuMarkSingleThread;
     updated = true;
   }
 
+  // Update GeekBench (multi-core)
   if (
     hasProductFieldValue(scrapedCpu.geekbenchMultiCore) &&
     canAutoUpdateProductField(scrapedCpu.geekbenchMultiCore) &&
     productFieldValue<number>(scrapedCpu.geekbenchMultiCore) > 0
   ) {
-    cpu.geekbenchMultiCore =
-      scrapedCpu.geekbenchMultiCore || cpu.geekbenchMultiCore;
+    originalCpu.geekbenchMultiCore =
+      scrapedCpu.geekbenchMultiCore || originalCpu.geekbenchMultiCore;
     updated = true;
   }
 
+  // Update GeekBench (single-core)
   if (
     hasProductFieldValue(scrapedCpu.geekbenchSingleCore) &&
     canAutoUpdateProductField(scrapedCpu.geekbenchSingleCore) &&
     productFieldValue<number>(scrapedCpu.geekbenchSingleCore) > 0
   ) {
-    cpu.geekbenchSingleCore =
-      scrapedCpu.geekbenchSingleCore || cpu.geekbenchSingleCore;
+    originalCpu.geekbenchSingleCore =
+      scrapedCpu.geekbenchSingleCore || originalCpu.geekbenchSingleCore;
     updated = true;
   }
 
   if (updated) {
-    await context.api.put(`/products/cpu/${cpu.id}`, cpu);
+    await context.api.put(`/products/cpu/${originalCpu.id}`, originalCpu);
   }
 }
 
@@ -162,4 +181,21 @@ function mergeCpus(cpu: Cpu, scrapedCpu: Cpu) {
 function hasUpdates(before: Cpu, after: Cpu) {
   const jsonPatch = generateJsonPatch(before, after);
   return jsonPatch.length > 0;
+}
+
+async function uploadProductUpdate(
+  originalCpu: Cpu,
+  updatedCpu: Cpu,
+  context: AutomationContext,
+) {
+  const update: ProductUpdate<ProductDiff> = {
+    productType: ProductType.Cpu,
+    productName: updatedCpu.name,
+    description: '',
+    status: ProductUpdateStatus.Pending,
+    data: { original: originalCpu, updated: updatedCpu },
+    metadata: {},
+  };
+
+  await context.api.post('/product/updates', { update });
 }
