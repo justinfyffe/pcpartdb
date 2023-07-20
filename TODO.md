@@ -1,3 +1,12 @@
+HIGH LEVEL TODO:
+- Finish automation
+- Improve performance score (not just g3d mark or cpu mark)
+- Affiliate Ads
+- More list filters
+- More benchmarks, fps averages (can have actual and estimated based on similar)
+- Glossary
+
+
 - cpu and gpu data
   - next source model cpu: 1175
     - npm run cli scrape-data:cpu -- -- --count 25 --offset 0
