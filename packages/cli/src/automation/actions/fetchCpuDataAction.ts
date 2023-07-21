@@ -5,6 +5,7 @@ import {
   CpuDataSource,
   CpuDataSourceKey,
   CpuField,
+  CreateProductUpdateRequest,
   FetchCpuDataAction,
   hasProductFieldValue,
   ProductDiff,
@@ -197,5 +198,8 @@ async function uploadProductUpdate(
     metadata: {},
   };
 
-  await context.api.post('/product/updates', { update });
+  await context.api.post(
+    '/product/updates',
+    update as CreateProductUpdateRequest,
+  );
 }

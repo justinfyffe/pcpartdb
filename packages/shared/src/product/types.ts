@@ -70,6 +70,8 @@ export interface ProductSource {
 
   sourceKey: ProductSourceKey;
   sourceUrl: string;
+
+  archived: boolean;
 }
 
 /**
@@ -114,10 +116,13 @@ export interface ImportProductsRequest {
   products: Product[];
 }
 
-export interface UploadProductSourcesRequest {
+export interface CreateProductSourcesRequest {
   sources: ProductSource[];
 }
 
-export interface UploadProductSourcesResponse {
+export interface CreateProductSourcesResponse {
   totalNewSources: number;
 }
+
+export interface CreateProductUpdateRequest
+  extends ProductUpdate<ProductDiff> {}

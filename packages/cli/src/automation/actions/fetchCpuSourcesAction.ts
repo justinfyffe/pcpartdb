@@ -6,11 +6,11 @@ import {
 } from '@pcpartdb/scraper';
 import {
   CpuDataSourceKey,
+  CreateProductSourcesRequest,
+  CreateProductSourcesResponse,
   FetchCpuSourcesAction,
   ProductSource,
   ProductType,
-  UploadProductSourcesRequest,
-  UploadProductSourcesResponse,
 } from '@pcpartdb/shared';
 import { sleep } from '../../shared/process';
 import { AutomationContext } from '../types';
@@ -84,6 +84,7 @@ async function getTechPowerUpSources() {
     productCompany: value.company,
     sourceKey: CpuDataSourceKey.TechPowerUp,
     sourceUrl: value.url,
+    archived: false,
   }));
 
   console.log(`Scraped ${sources.length} sources`);
@@ -104,6 +105,7 @@ async function getPassMarkSources() {
       productCompany: value.company,
       sourceKey: CpuDataSourceKey.PassMark,
       sourceUrl: value.url,
+      archived: false,
     }),
   );
 
@@ -125,6 +127,7 @@ async function getGeekBenchSources() {
       productCompany: value.company,
       sourceKey: CpuDataSourceKey.PassMark,
       sourceUrl: value.url,
+      archived: false,
     }),
   );
 
@@ -150,11 +153,11 @@ async function uploadCpuSources(
   let totalNewSources = 0;
   for (const batch of batches) {
     try {
-      const response = await context.api.post<UploadProductSourcesResponse>(
-        'product/sources',
+      const response = await context.api.post<CreateProductSourcesResponse>(
+        'product/sources/bulk',
         {
           sources: batch,
-        } as UploadProductSourcesRequest,
+        } as CreateProductSourcesRequest,
       );
       totalNewSources += response.totalNewSources;
     } catch (e) {

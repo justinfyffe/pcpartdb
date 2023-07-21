@@ -288,8 +288,10 @@ model ProductSource {
   productName    String @map("product_name")
   productCompany String @map("product_company")
 
-  sourceKey   String @map("source_key")
-  sourceUrl   String @map("source_url")
+  sourceKey String @map("source_key")
+  sourceUrl String @map("source_url")
+
+  archived Boolean @default(false)
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)

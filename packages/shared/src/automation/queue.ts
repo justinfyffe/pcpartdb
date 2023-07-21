@@ -1,7 +1,6 @@
 export enum AutomationQueueStatus {
   Pending = 'PENDING',
   Processed = 'PROCESSED',
-  Deleted = 'DELETED',
 }
 
 export enum AutomationQueueAction {

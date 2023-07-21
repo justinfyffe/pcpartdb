@@ -13,6 +13,7 @@ export function mapToProductSourceDto(row: ProductSourceEntity): ProductSource {
     productCompany: row.productCompany,
     sourceKey: row.sourceKey as ProductSourceKey,
     sourceUrl: row.sourceUrl,
+    archived: row.archived,
   };
 }
 
@@ -30,6 +31,7 @@ export function mapToProductSourceEntity(
     productCompany: productSource.productCompany,
     sourceKey: productSource.sourceKey,
     sourceUrl: productSource.sourceUrl,
+    archived: productSource.archived,
     createdAt: undefined,
     updatedAt: undefined,
   };

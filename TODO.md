@@ -5,6 +5,7 @@ HIGH LEVEL TODO:
 - More list filters
 - More benchmarks, fps averages (can have actual and estimated based on similar)
 - Glossary
+- Soft delete everything. Hard delete should be rare.
 
 
 - cpu and gpu data
@@ -15,6 +16,8 @@ HIGH LEVEL TODO:
 
 - auto-updates
   - TODO:
+    - product source/update validators
+    - implement product source/update controller and service for creating
     - Simplify. Store one cpu/gpu source per row in database. Use UI and backend
       to combine them. Don't rjeect/delete sources, jsut archive them.
   - how to avoid conflicts?
