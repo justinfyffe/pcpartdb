@@ -10,8 +10,6 @@ import {
 import React, { useCallback, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import {
-  Alert,
-  AlertVariant,
   Button,
   ButtonVariant,
   Field,
@@ -23,6 +21,7 @@ import {
   Spinner,
   TextInput,
 } from '../../../shared/components';
+import { Alert, AlertVariant } from '../../../shared/components/Alert';
 import {
   isInternalServerError,
   setValidationErrors,

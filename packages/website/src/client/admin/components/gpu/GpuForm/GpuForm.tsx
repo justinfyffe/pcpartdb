@@ -25,6 +25,10 @@ import {
   ProductAutocomplete,
 } from 'packages/website/src/client/product';
 import { useProductCache } from 'packages/website/src/client/shared/cache';
+import {
+  Alert,
+  AlertVariant,
+} from 'packages/website/src/client/shared/components/Alert';
 import React, {
   FunctionComponent,
   useCallback,
@@ -33,8 +37,6 @@ import React, {
 } from 'react';
 import { Controller, useForm, UseFormProps, useWatch } from 'react-hook-form';
 import {
-  Alert,
-  AlertVariant,
   Button,
   ButtonVariant,
   Field,

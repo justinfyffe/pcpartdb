@@ -10,12 +10,8 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import {
-  Alert,
-  AlertVariant,
-  Pagination,
-  PaginationResult,
-} from '../../../../../shared/components';
+import { Pagination, PaginationResult } from '../../../../../shared/components';
+import { Alert, AlertVariant } from '../../../../../shared/components/Alert';
 import { adminService } from '../../../../adminService';
 import { DataUpdatesPageContext } from '../../context';
 import { useDataUpdatesPageContextProps } from '../../hooks';

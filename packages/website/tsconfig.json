@@ -4,7 +4,17 @@
     "outDir": ".next",
     "rootDir": "src",
     "noEmit": true,
+    "module": "esnext",
+    "isolatedModules": true
   },
-  "include": ["./**/*.ts", "./**/*.tsx", "./next-env.d.ts"],
-  "references": [{ "path": "../shared" }]
+  "include": [
+    "./**/*.ts",
+    "./**/*.tsx",
+    "./next-env.d.ts"
+  ],
+  "references": [
+    {
+      "path": "../shared"
+    }
+  ]
 }

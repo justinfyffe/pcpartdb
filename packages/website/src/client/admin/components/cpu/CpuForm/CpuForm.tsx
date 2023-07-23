@@ -11,8 +11,6 @@ import { useRouter } from 'next/router';
 import { cpuService } from 'packages/website/src/client/product';
 import { useProductCache } from 'packages/website/src/client/shared/cache';
 import {
-  Alert,
-  AlertVariant,
   Button,
   ButtonVariant,
   Field,
@@ -23,6 +21,10 @@ import {
   Spinner,
   TextInput,
 } from 'packages/website/src/client/shared/components';
+import {
+  Alert,
+  AlertVariant,
+} from 'packages/website/src/client/shared/components/Alert';
 import {
   isBadRequestError,
   setValidationErrors,

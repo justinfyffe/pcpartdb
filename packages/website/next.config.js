@@ -23,5 +23,4 @@ module.exports = withBundleAnalyzer({
     // outside packages/app directory.
     externalDir: true,
   },
-  transpilePackages: ['@pcpartdb/shared'],
 });

@@ -12,8 +12,6 @@ import {
   getImagePath,
 } from '../../../image';
 import {
-  Alert,
-  AlertVariant,
   Button,
   ButtonVariant,
   Img,
@@ -27,6 +25,7 @@ import {
   THead,
   Tr,
 } from '../../../shared/components';
+import { Alert, AlertVariant } from '../../../shared/components/Alert';
 import { AdminLayout } from '../../../shared/layouts';
 
 export const AdminListImagesPage = (props: AdminListImagesViewModel) => {
