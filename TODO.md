@@ -1,9 +1,5 @@
 HIGH LEVEL TODO:
 - Finish automation
-- obfuscate all references to sources in client source code.
-  - look into nextjs obfuscator
-  - Instead of TECHPOWERUP, use an obfuscated value
-  - on api side, convert TECHPOWERUP to/from obfuscated value
 - code cleanup
   - clean up components, api code
   - reduce inconsistencies
