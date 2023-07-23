@@ -5,6 +5,10 @@ import {
   getAdminNewImagePath,
 } from '@pcpartdb/shared';
 import { useRouter } from 'next/router';
+import {
+  Alert,
+  AlertVariant,
+} from 'packages/website/src/client/shared/components/Alert';
 import React, { useState } from 'react';
 import {
   formatFileSize,
@@ -12,8 +16,6 @@ import {
   getImagePath,
 } from '../../../../image';
 import {
-  Alert,
-  AlertVariant,
   Button,
   ButtonVariant,
   Img,

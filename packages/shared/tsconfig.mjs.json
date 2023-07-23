@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "dist/mjs",
+    "rootDir": "src",
+    "module": "esnext",
+    "declaration": true,
+    "declarationMap": true,
+    "inlineSources": true,
+    "sourceMap": true,
+  },
+  "include": ["./**/*.ts"],
+  "exclude": ["dist"]
+}

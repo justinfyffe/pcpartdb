@@ -37,8 +37,11 @@
       "typescriptreact"
   ],
   "eslint.workingDirectories": [
+    "./packages/api",
+    "./packages/cli",
     "./packages/database",
     "./packages/scraper",
+    "./packages/shared",
     "./packages/website"
   ],
   "typescript.updateImportsOnFileMove.enabled": "always",

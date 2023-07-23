@@ -11,8 +11,6 @@ import { useRouter } from 'next/router';
 import React, { useCallback, useMemo, useState } from 'react';
 import { productService } from '../../../../product';
 import {
-  Alert,
-  AlertVariant,
   Button,
   ButtonVariant,
   Field,
@@ -22,6 +20,7 @@ import {
   Seo,
   Spinner,
 } from '../../../../shared/components';
+import { Alert, AlertVariant } from '../../../../shared/components/Alert';
 import { AdminLayout } from '../../../../shared/layouts';
 import { ImportProductsTable } from './components';
 import { ImportProductsPageContext } from './context';

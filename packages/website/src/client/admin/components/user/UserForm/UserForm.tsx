@@ -9,6 +9,10 @@ import {
   ValidationErrorType,
 } from '@pcpartdb/shared';
 import { useRouter } from 'next/router';
+import {
+  Alert,
+  AlertVariant,
+} from 'packages/website/src/client/shared/components/Alert';
 import React, {
   FunctionComponent,
   useCallback,
@@ -17,8 +21,6 @@ import React, {
 } from 'react';
 import { Controller, useForm, UseFormProps } from 'react-hook-form';
 import {
-  Alert,
-  AlertVariant,
   Button,
   ButtonVariant,
   Checkbox,

@@ -14,8 +14,6 @@ import { useRouter } from 'next/router';
 import React, { useCallback, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import {
-  Alert,
-  AlertVariant,
   Breadcrumb,
   Breadcrumbs,
   Button,
@@ -30,6 +28,7 @@ import {
   Spinner,
   TextInput,
 } from '../../../shared/components';
+import { Alert, AlertVariant } from '../../../shared/components/Alert';
 import { isBadRequestError, setValidationErrors } from '../../../shared/error';
 import { WebsiteLayout } from '../../../shared/layouts';
 import { authService } from '../../authService';

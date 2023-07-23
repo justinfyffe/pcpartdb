@@ -13,13 +13,12 @@ import { useRouter } from 'next/router';
 import React, { useCallback, useEffect, useState } from 'react';
 import { cpuService } from '../../../../product/services/cpuService';
 import {
-  Alert,
-  AlertVariant,
   Button,
   ButtonVariant,
   MetaRobots,
   Seo,
 } from '../../../../shared/components';
+import { Alert, AlertVariant } from '../../../../shared/components/Alert';
 import { AdminLayout } from '../../../../shared/layouts';
 import { CpuPagination, CpuTable } from './components';
 

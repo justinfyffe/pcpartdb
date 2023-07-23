@@ -1,5 +1,5 @@
 import { Image } from '../../image';
-import { ProductField, ProductFieldMeta } from '..';
+import { GpuDataSourceKey, ProductField, ProductFieldMeta } from '..';
 
 export enum ListGpusPresetSlug {
   BestPerformance = 'best-performance',
@@ -65,13 +65,6 @@ export enum GpuProductionStatusValue {
   Unreleased = 'UNRELEASED',
   Active = 'ACTIVE',
   EndOfLife = 'END_OF_LIFE',
-}
-
-export enum GpuDataSourceKey {
-  Chipset = 'CHIPSET',
-  TechPowerUp = 'TECHPOWERUP',
-  UlBenchmarks = 'UL_BENCHMARKS',
-  VideocardBenchmarks = 'VIDEOCARD_BENCHMARKS',
 }
 
 export interface GpuMeta {

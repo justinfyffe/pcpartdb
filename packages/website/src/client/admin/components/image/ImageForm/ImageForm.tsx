@@ -8,6 +8,10 @@ import {
   ValidationErrorType,
 } from '@pcpartdb/shared';
 import Router from 'next/router';
+import {
+  Alert,
+  AlertVariant,
+} from 'packages/website/src/client/shared/components/Alert';
 import React, {
   FunctionComponent,
   useCallback,
@@ -28,8 +32,6 @@ import {
   imageService,
 } from '../../../../image';
 import {
-  Alert,
-  AlertVariant,
   Button,
   ButtonVariant,
   Field,

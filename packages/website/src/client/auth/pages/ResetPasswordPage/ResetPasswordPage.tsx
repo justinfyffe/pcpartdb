@@ -13,8 +13,6 @@ import { useRouter } from 'next/router';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import {
-  Alert,
-  AlertVariant,
   Breadcrumb,
   Breadcrumbs,
   Button,
@@ -29,6 +27,7 @@ import {
   Seo,
   Spinner,
 } from '../../../shared/components';
+import { Alert, AlertVariant } from '../../../shared/components/Alert';
 import {
   isInternalServerError,
   setValidationErrors,

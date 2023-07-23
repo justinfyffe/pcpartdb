@@ -4,19 +4,21 @@ import {
   DEFAULT_LIST_DATA_UPDATES_LIMIT,
   DEFAULT_LIST_DATA_UPDATES_OFFSET,
 } from '@pcpartdb/shared';
+import { adminService } from 'packages/website/src/client/admin/adminService';
+import {
+  Pagination,
+  PaginationResult,
+} from 'packages/website/src/client/shared/components';
+import {
+  Alert,
+  AlertVariant,
+} from 'packages/website/src/client/shared/components/Alert';
 import React, {
   FunctionComponent,
   useCallback,
   useEffect,
   useState,
 } from 'react';
-import {
-  Alert,
-  AlertVariant,
-  Pagination,
-  PaginationResult,
-} from '../../../../../../shared/components';
-import { adminService } from '../../../../../adminService';
 import { DataUpdatesPageContext } from '../../context';
 import { useDataUpdatesPageContextProps } from '../../hooks';
 import { UpdatesTable } from '../UpdatesTable';

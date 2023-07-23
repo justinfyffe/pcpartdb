@@ -8,8 +8,6 @@ import { format } from 'date-fns';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import {
-  Alert,
-  AlertVariant,
   Button,
   ButtonVariant,
   MetaRobots,
@@ -21,6 +19,7 @@ import {
   THead,
   Tr,
 } from '../../../../shared/components';
+import { Alert, AlertVariant } from '../../../../shared/components/Alert';
 import { AdminLayout } from '../../../../shared/layouts';
 
 export const AdminListUsersPage = (props: AdminListUsersViewModel) => {

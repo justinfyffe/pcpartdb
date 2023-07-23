@@ -1,5 +1,5 @@
 import { Image } from '../../image';
-import { ProductField, ProductFieldMeta } from '..';
+import { CpuDataSourceKey, ProductField, ProductFieldMeta } from '..';
 
 export type CpuFieldKey = keyof CpuFields;
 
@@ -54,12 +54,6 @@ export enum CpuProductionStatusValue {
   Unreleased = 'UNRELEASED',
   Active = 'ACTIVE',
   EndOfLife = 'END_OF_LIFE',
-}
-
-export enum CpuDataSourceKey {
-  TechPowerUp = 'TECHPOWERUP',
-  PassMark = 'PASSMARK',
-  GeekBench = 'GEEKBENCH',
 }
 
 export interface CpuMeta {

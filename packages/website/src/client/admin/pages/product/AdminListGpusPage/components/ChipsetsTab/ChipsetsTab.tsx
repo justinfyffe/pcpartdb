@@ -14,7 +14,7 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import { Alert, AlertVariant } from '../../../../../../shared/components';
+import { Alert, AlertVariant } from '../../../../../../shared/components/Alert';
 import { GpuPagination } from '../GpuPagination';
 import { GpuTable } from '../GpuTable';
 

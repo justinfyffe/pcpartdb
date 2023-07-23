@@ -3,8 +3,6 @@ import { getAdminImportGpusPath, getAdminNewGpuPath } from '@pcpartdb/shared';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import {
-  Alert,
-  AlertVariant,
   Button,
   ButtonVariant,
   MetaRobots,
@@ -12,6 +10,7 @@ import {
   Tab,
   Tabs,
 } from '../../../../shared/components';
+import { Alert, AlertVariant } from '../../../../shared/components/Alert';
 import { AdminLayout } from '../../../../shared/layouts';
 import { ChipsetsTab, RetailModelsTab } from './components';
 
