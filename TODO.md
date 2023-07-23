@@ -1,11 +1,21 @@
 HIGH LEVEL TODO:
 - Finish automation
+- obfuscate all references to sources in client source code.
+  - look into nextjs obfuscator
+  - Instead of TECHPOWERUP, use an obfuscated value
+  - on api side, convert TECHPOWERUP to/from obfuscated value
+- code cleanup
+  - clean up components, api code
+  - reduce inconsistencies
+  - remove all classes from client code.
+    - api can have them
 - Improve performance score (not just g3d mark or cpu mark)
 - Affiliate Ads
 - More list filters
 - More benchmarks, fps averages (can have actual and estimated based on similar)
 - Glossary
 - Soft delete everything. Hard delete should be rare.
+- auto-backup system
 
 
 - cpu and gpu data
@@ -16,10 +26,12 @@ HIGH LEVEL TODO:
 
 - auto-updates
   - TODO:
-    - product source/update validators
-    - implement product source/update controller and service for creating
-    - Simplify. Store one cpu/gpu source per row in database. Use UI and backend
-      to combine them. Don't rjeect/delete sources, jsut archive them.
+    - fix null company name for sourceName. don't do "company name".trim
+      - get company from intel search on techpowerup
+    - store failed state and errors in queue items
+    - autocomplete source name with outbound link to site
+    - approve data and edit
+    - give option (default true) to hide sources after applying
   - how to avoid conflicts?
     - e.g. creating cpu manually when an equivalent new one are in the queue
       - Error out when executing (due to matching name)
@@ -189,120 +201,6 @@ Road Map:
   - add cores?
   - Restructure code to similar to the compare page.
 
-GPU DATA
-- Sources
-  - notebookcheck
-    - benchmarks
-
-CPU DATA (!! = important spec ! = yes, ~ = mayber, X = no)
-- Sources
-  ! - TechPowerUp
-      - Most specs
-  ! - CPU Benchmark (Passmark)
-      - CPU Mark
-  ! - GeekBench
-      - GeekBench benchmarks: https://browser.geekbench.com/processor-benchmarks
-  ~ - Technical.City
-      - List of CPUs
-      - Other benchmarks?
-  ~ - CPU-World
-    - features / extensions / technologies
-    - Integrated gpu data
-    - https://www.cpu-world.com/CPUs/Zen/AMD-Ryzen%209%207900X.html
-  - Nanoreview
-    - Specs? Check if more consistent
-    - https://nanoreview.net/en/cpu/intel-core-i7-13700
-  - notebookcheck
-    - benchmarks
-- Physical
-  !! - Socket :: AMD Socket AM4
-  ! - Foundry :: TSMC
-  ! - Process Size :: 7 nm
-  ! - Transistors :: 3,800 million
-  ! - Die Size: 74 mm^2
-  X - I/O Process Size :: 12 nm
-  X - I/O Die Size :: 124 mm^2
-  ! - tCaseMax :: 95o C (a.k.a. Maximum case temperature (TCase), The max temperature for optimal performance/longetivity)
-  ! - TjMax :: 100o C (a.k.a Maximum core temperature, temperature where CPU will start to throttle, reducing performance to cool down)
-- Processor
-  ! - Market :: Desktop
-  ! - Production Status :: Active
-  ! - Release Date :: Jul 7th, 2019
-  ! - Launch Price :: $199
-  ! - Part# :: 100-000000031
-  ! - Bundled Cooler :: Wraith Stealth
-- Core Config
-  !! - # of Cores :: 6
-  !! - # of Threads :: 12
-  ! - Performance Cores :: 8 (a.ka. P-Cores)
-  ! - Efficient Cores :: 8 (a.ka. E-Cores)
-  X - Hybrid Cores :: P-Cores: 8, E-Cores: 16 (a.k.a. Performance Cores and Efficient Cores)
-  X - SMP # CPUs :: 1 (a.k.a. SMP Cores - number of processors to share standard memory in a single os "symmetrical multi-processor cores")
-  !! - Integrated Graphics :: N/A
-- Performance
-  !! - Frequency :: 3.6 GHz
-  !! - Turbo Clock :: up to 4.2 GHz
-  ! - Performance Core Clock (a.k.a. Frequency)
-  ! - Performance Core Turbo Clock (a.k.a. P-Core Turbo / Turbo Clock)
-  ! - Efficient Core Clock
-  ! - Efficient Core Turbo Clock
-  ! - Base Clock :: 100 MHz
-  ! - Multiplier :: 36.0x
-  !! - Multiplier Unlocked :: Yes (overclocking support)
-  !! - TDP :: 65 W
-  X - PPT :: 116 W (a.k.a. Package Power Tracking - Allowed socket power consumption permitted across the voltage rails supplying the socket)
-  ! - PL1 :: 65 W (a.k.a. Marketed Power State (TDP))
-  ! - PL2 :: 253 W (a.k.a TDP Up or "Power Limit" - The power draw when cpu boosts to turbo)
-  X - PL2 Tau Limit :: Unlimited
-  X - FP32 :: 1,209.6 GFLOPS
-- Cache
-  !! - Cache L1 :: 64K (per core)
-  !! - Cache L2 :: 512K (per core)
-  !! - Cache L3 :: 32MB (shared)
-  X - E-Core L1 :: 96K (per core)
-  X - E-Core L2 :: 4MB (per module)
-- Architecture
-  !! - Data Width :: 64 bit
-  !! - Codename :: Matisse, Raptor Lake-S (a.k.a. Architecture codename)
-  !! - Generation :: Ryzen 5; Core i9 (Raptor Lake)  (a.k.a. Series)
-  !! - Memory Support :: DDR4 MHz Dual-channel
-  !! - # of Memory Channels :: Dual Channel
-  ! - Max Memory Size :: 128 Gb
-  !! - Memory Speed :: 3200 MT/s (DDR4), 5600 MT/s (DDR5) (Megatransfers per second, data rate)
-  ! - ECC Memory :: No
-  ! - PCI-Express :: Gen 4, 15 Lanes (CPU Only)
-  ! - Secondary PCIe :: Gen 4, 4 Lanes
-  !! - Chipsets :: AMD 300 Series, AMD 400 Series, AMD 500 Series
-! - Features
- - MMX
- - SSE
- - SSE2
- - SSe3
- - SSSE3
- - SSE4A
- - SSE4.1
- - SSE4.2
- - AES
- - AVX
- - AVX2
- - BMI1
- - BMI2
- - SHA
- - F16C
- - FMA3
- - AMD64
- - EVP
- - AMD-V
- - SMAP
- - SMEP
- - SMT
- - Precision Boost 2
- - RdRand
- - ABM
-- Benchmarks
-  ! - CPU Mark
-  ! - GeekBench 6 Single Core
-  ! - GeekBench 6 Multi Core
 
 
 OVERVIEW
@@ -337,47 +235,8 @@ AMAZON AFFILIATE
 - Chipset goes to lowest price new retail model
 
 
-CPUs
-- Determine CPU data structures
-- Clean up code
-  - Add GPU prefixes, or remove GPU prefix for appropriate code.
-- Determine Data sources:
-  - pc part picker?
-    - some extra data
-    - e.g. https://pcpartpicker.com/product/g94BD3/amd-ryzen-5-5600x-37-ghz-6-core-processor-100-100000065box
-  - techpowerup
-    - most core data
-    - e.g. https://www.techpowerup.com/cpu-specs/ryzen-9-7950x.c2846
-    - https://www.techpowerup.com/cpu-specs/core-i7-13700k.c2850
-  - cpu benchmark
-    - performance
-    - e.g. https://www.cpubenchmark.net/cpu.php?cpu=AMD+Ryzen+Threadripper+PRO+5975WX&id=4776
-- Implement Pages
-  - CPU Admin 
-  - List CPUs Page
-  - View CPU Page
-  - Compare CPUs Page
-- Update Existing Pages
-  - Home Page
-- Implement Search Functionality
-  - Toggle Between GPU and CPU
-- Overview Summary for View and Compare CPU
-- Import Functionality
-  - Automation
-    - Scrape Data
-    - Generate Import Data
-- Other Notes:
-  - Benchmarks:
-    - CPU Mark (Passmark)
-    - GeekBench 6 - Single-core and multi-core
-      - need to make sure we check that it's geekbench 6 and not other versions.
-        If it's other versions, then we may need to update
-      - https://browser.geekbench.com/processor-benchmarks/
-  - CPUs could belong to multiple classes: e.g. server, desktop, and workstation
-    - Should we default to desktop/workstation then? or support both
-
-
 CODE CLEANUP IDEAS
+- migrate gpu and cpu to use ListPagination, ListOrder, ListSort
 - cleanup shared
   - pure utilities
   - no dependencies that are browser or backend only

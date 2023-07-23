@@ -4,3 +4,4 @@ export * from './ProductCustomRow';
 export * from './ProductFieldRow';
 export * from './ProductHighlight';
 export * from './ProductHighlightComparison';
+export * from './ProductSourceAutocomplete';

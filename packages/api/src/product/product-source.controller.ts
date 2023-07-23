@@ -1,18 +1,117 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
-import { CreateProductSourcesRequest } from '@pcpartdb/shared';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Put,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
+import {
+  ApplyProductSourcesToProductRequest,
+  ArchiveProductSourcesRequest,
+  AutocompleteProductSourcesRequest,
+  CreateProductSourcesRequest,
+  ListProductSourceGroupsResponse,
+  ListProductSourcesQuery,
+} from '@pcpartdb/shared';
 import { StaffGuard } from '../auth/staff.guard';
+import { Database } from '../database';
 import { Context, Ctx } from '../shared/context';
+import { validate } from '../shared/types/validate';
+import {
+  applyProductSourcesToProductRequestValidator,
+  archiveProductSourcesToProductRequestValidator,
+  autocompleteProductSourcesRequestValidator,
+  createProductSourcesValidator,
+  listProductSourcesQueryValidator,
+} from './product.validators';
+import { ProductSourceService } from './product-source.service';
 
-@Controller('product/sources')
+@Controller('products/sources')
 export class ProductSourceController {
-  constructor() {}
+  constructor(private db: Database, private service: ProductSourceService) {}
 
-  @Post('bulk')
+  @Get('groups')
   @UseGuards(StaffGuard)
-  async createBulk(
-    @Body() body: CreateProductSourcesRequest,
+  async list(@Query('q') q: string, @Ctx() ctx: Context) {
+    return await this.db.transaction(
+      async () => {
+        const query =
+          q != null ? (JSON.parse(q) as ListProductSourcesQuery) : {};
+        validate(query, listProductSourcesQueryValidator);
+        const sourceGroups = await this.service.listGroups({ query }, ctx);
+        const totalSourceGroups = await this.service.countGroups(
+          { query },
+          ctx,
+        );
+
+        return {
+          query,
+          sourceGroups,
+          totalSourceGroups,
+        } as ListProductSourceGroupsResponse;
+      },
+      { ctx },
+    );
+  }
+
+  @Get('autocomplete')
+  @UseGuards(StaffGuard)
+  async autocomplete(@Query('req') request: string, @Ctx() ctx: Context) {
+    return await this.db.transaction(
+      async () => {
+        const body: AutocompleteProductSourcesRequest =
+          request != null
+            ? (JSON.parse(request) as AutocompleteProductSourcesRequest)
+            : null;
+
+        validate(body, autocompleteProductSourcesRequestValidator);
+        return await this.service.autocomplete(body, ctx);
+      },
+      { ctx },
+    );
+  }
+
+  @Post()
+  @UseGuards(StaffGuard)
+  async create(@Body() body: CreateProductSourcesRequest, @Ctx() ctx: Context) {
+    return await this.db.transaction(
+      async () => {
+        validate(body, createProductSourcesValidator);
+        await this.service.upsert(body, ctx);
+      },
+      { ctx },
+    );
+  }
+
+  @Put('apply')
+  @UseGuards(StaffGuard)
+  async applyToProduct(
+    @Body() body: ApplyProductSourcesToProductRequest,
     @Ctx() ctx: Context,
   ) {
-    //
+    return await this.db.transaction(
+      async () => {
+        validate(body, applyProductSourcesToProductRequestValidator);
+        await this.service.applyToProduct(body, ctx);
+      },
+      { ctx },
+    );
+  }
+
+  @Put('archive')
+  @UseGuards(StaffGuard)
+  async archive(
+    @Body() body: ArchiveProductSourcesRequest,
+    @Ctx() ctx: Context,
+  ) {
+    return await this.db.transaction(
+      async () => {
+        validate(body, archiveProductSourcesToProductRequestValidator);
+        await this.service.archive(body, ctx);
+      },
+      { ctx },
+    );
   }
 }

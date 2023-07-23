@@ -5,13 +5,12 @@ import { TechPowerUpCpuSource } from '../types';
 import { sanitizeCpuSourceName } from '../utils';
 
 export interface ScrapeTechPowerUpCpuSourcesOptions {
-  query: string;
+  url: string;
+  company?: string;
   noProxy?: boolean;
 }
 
 const BASE_URL = 'https://www.techpowerup.com';
-const SEARCH_URL =
-  'https://www.techpowerup.com/cpu-specs/?ajaxsrch={query}&_={timestamp}';
 
 export async function scrapeTechPowerUpCpuSources(
   options: ScrapeTechPowerUpCpuSourcesOptions,
@@ -25,23 +24,24 @@ export async function scrapeTechPowerUpCpuSources(
     const $td = $(td);
 
     const url = BASE_URL + $td.find('a').attr('href').trim();
-    const { company, name } = parseProductName($td.text().trim());
+    const { company: companyFromName, name } = parseProductName(
+      $td.text().trim(),
+    );
     const sanitizedName = sanitizeCpuSourceName(name);
 
-    cpus.push({ name: sanitizedName, company, url });
+    cpus.push({
+      name: sanitizedName,
+      company: companyFromName || options.company,
+      url,
+    });
   });
 
   return cpus;
 }
 
 async function fetchSearchPage(options: ScrapeTechPowerUpCpuSourcesOptions) {
-  const { query, noProxy } = options;
+  const { url, noProxy } = options;
 
-  const searchUrl = SEARCH_URL.replace(
-    '{query}',
-    encodeURIComponent(query),
-  ).replace('{timestamp}', `${new Date().getTime()}`);
-
-  const response = await scraper.scrape(searchUrl, { retries: 1, noProxy });
+  const response = await scraper.scrape(url, { retries: 1, noProxy });
   return response.data;
 }

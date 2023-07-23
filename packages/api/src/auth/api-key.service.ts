@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { ApiKeyRepository, mapToApiKeyDto } from '@pcpartdb/database';
+import { mapToApiKeyDto } from '@pcpartdb/database';
 import { Context } from '../shared/context';
 import { generateToken } from '../shared/crypto';
 import { forbiddenError } from '../shared/error';
+import { ApiKeyRepository } from './api-key.repository';
 
 const API_KEY_SIZE = 32;
 

@@ -43,9 +43,11 @@ export enum ValidationErrorType {
   EmailExists = 'emailExists',
   FileExists = 'fileExists',
   InvalidEmail = 'string.email',
+  InvalidProductType = 'INVALID_PRODUCT_TYPE',
   InvalidToken = 'invalidToken',
   MaxLength = 'string.max',
   MinLength = 'string.min',
+  MissingProductType = 'MISSING_PRODUCT_TYPE',
   MissingRequiredAny = 'any.required',
   MissingStringValue = 'string.empty',
 }

@@ -9,14 +9,18 @@ import {
 import {
   Cpu,
   CpuComparison,
+  CpuDataSourceKey,
   CpuFieldKey,
+  CpuMeta,
   CpuRank,
   CreateCpuRequest,
   populateCpuPerformanceScoreBenchmark,
   populateCpuValueScoreBenchmark,
   ProductDataUpdate,
+  ProductSourceGroup,
   UpdateCpuRequest,
 } from '@pcpartdb/shared';
+import deepmerge from 'deepmerge';
 import { Context } from '../../shared/context';
 import { badRequestError, notFoundError } from '../../shared/error';
 import { CpuRepository } from './cpu.repository';
@@ -189,5 +193,34 @@ export class CpuService {
   async applyDataUpdate(dataUpdate: ProductDataUpdate, ctx: Context) {
     const updated = dataUpdate.data.updated as Cpu;
     await this.update(dataUpdate.cpuId, updated, ctx);
+  }
+
+  async applySources(id: number, sources: ProductSourceGroup, ctx: Context) {
+    const cpu = await this.getById(id, null, ctx);
+
+    // Extract individual sources from group
+    const techPowerUp =
+      sources.filter(
+        (source) => source.sourceKey === CpuDataSourceKey.TechPowerUp,
+      )[0] || null;
+    const passMark =
+      sources.filter(
+        (source) => source.sourceKey === CpuDataSourceKey.PassMark,
+      )[0] || null;
+    const geekBench =
+      sources.filter(
+        (source) => source.sourceKey === CpuDataSourceKey.GeekBench,
+      )[0] || null;
+
+    // We don't want to delete sources, only overwrite them.
+    cpu.meta = deepmerge(cpu.meta, {
+      dataSources: {
+        [CpuDataSourceKey.TechPowerUp]: { url: techPowerUp?.sourceUrl },
+        [CpuDataSourceKey.PassMark]: { url: passMark?.sourceUrl },
+        [CpuDataSourceKey.GeekBench]: { url: geekBench?.sourceUrl },
+      },
+    } as CpuMeta);
+
+    await this.update(id, cpu, ctx);
   }
 }

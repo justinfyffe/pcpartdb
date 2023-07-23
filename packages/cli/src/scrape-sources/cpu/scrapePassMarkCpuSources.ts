@@ -15,7 +15,7 @@ export async function scrapePassMarkCpuSources(
 ) {
   console.log('Scraping CPU Sources from PassMark');
 
-  const sources = await scrapeCpuSources(options);
+  const sources = await scrapeCpuSources({ ...options, url: '' });
   await sleep(SLEEP_DELAY);
   console.log(`Scraped ${sources.length} sources`);
 

@@ -1,5 +1,5 @@
 import {
-  AutomationQueueAction,
+  AutomationAction,
   AutomationQueueItem,
   AutomationQueueItemMeta,
   AutomationQueueStatus,
@@ -26,7 +26,7 @@ export async function mapToAutomationQueueItemDto<TUpdateData = unknown>(
     id: entity.id,
     description: entity.description,
     status: entity.status as AutomationQueueStatus,
-    action: entity.action as AutomationQueueAction,
+    action: entity.action as AutomationAction,
     data,
     metadata: entity.metadata as AutomationQueueItemMeta,
     priority: entity.priority,

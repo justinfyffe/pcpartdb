@@ -120,6 +120,7 @@ model Cpu {
 
   images      CpuImage[]
   dataUpdates DataUpdate[]
+  productUpdates ProductUpdate[]
 
   @@unique([company, name], name: "cpus_company_name_unique")
   @@map("cpus")
@@ -215,6 +216,7 @@ model Gpu {
   retailModels Gpu[]      @relation("gpusToGpus")
 
   dataUpdates DataUpdate[]
+  productUpdates ProductUpdate[]
 
   @@unique([company, name], name: "gpus_company_name_unique")
   @@map("gpus")
@@ -284,20 +286,18 @@ model DataUpdate {
 model ProductSource {
   id Int @id @default(autoincrement())
 
-  productType    String @map("product_type")
-  productName    String @map("product_name")
-  productCompany String @map("product_company")
-
-  sourceKey String @map("source_key")
-  sourceUrl String @map("source_url")
+  productType String  @map("product_type")
+  sourceName  String  @map("source_name")
+  sourceKey   String  @map("source_key")
+  sourceUrl   String  @map("source_url")
 
   archived Boolean @default(false)
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
 
-  @@index([productType, productName], map: "product_sources_product_type_product_name_index")
-  @@index([productType, sourceUrl], map: "product_sources_product_type_source_url_index")
+  @@index([productType, sourceName], name: "type_name") 
+  @@unique([productType, sourceKey, sourceUrl], name: "type_key_url")
 
   @@map("product_sources")
 }
@@ -305,18 +305,25 @@ model ProductSource {
 model ProductUpdate {
   id Int @id @default(autoincrement())
 
-  productType String @map("product_type")
-  productName String @map("product_name")
+  productType    String  @map("product_type")
+  productName    String  @map("product_name")
+  productCompany String? @map("product_company")
 
-  description String?
   status      String
-
+  description String?
+  
   data     Bytes?
   metadata Json?
+
+  cpuId Int? @map("cpu_id")
+  gpuId Int? @map("gpu_id")
 
   statusUpdatedAt DateTime? @map("status_updated_at") @db.Timestamptz(6)
   createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt       DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  cpu Cpu? @relation(fields: [cpuId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "product_updates_cpu_id_foreign")
+  gpu Gpu? @relation(fields: [gpuId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "product_updates_gpu_id_foreign")
 
   @@map("product_updates")
 }

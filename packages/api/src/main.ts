@@ -1,13 +1,13 @@
+import * as dotenv from 'dotenv';
+dotenv.config();
+
 import { NestFactory } from '@nestjs/core';
 import bodyParser from 'body-parser';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
-import * as dotenv from 'dotenv';
 import { AppModule } from './app.module';
 import { Database } from './database';
 import { AllExceptionsFilter } from './shared/error';
-
-dotenv.config();
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

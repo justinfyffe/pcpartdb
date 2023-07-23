@@ -24,12 +24,20 @@ export async function mapToProductUpdateDto<TUpdateData = unknown>(
 
   return {
     id: entity.id,
+
     productType: entity.productType as ProductType,
     productName: entity.productName,
+    productCompany: entity.productCompany,
+
     description: entity.description,
     status: entity.status as ProductUpdateStatus,
+
     data,
     metadata: entity.metadata as ProductUpdateMeta,
+
+    cpuId: entity.cpuId,
+    gpuId: entity.gpuId,
+
     statusUpdatedAt: entity.statusUpdatedAt?.getTime() || null,
   };
 }
@@ -56,12 +64,20 @@ export async function mapToProductUpdateEntity(
 
   return {
     id: dto.id,
+
     productType: dto.productType,
     productName: dto.productName,
+    productCompany: dto.productCompany,
+
     description: dto.description,
     status: dto.status,
+
     data,
     metadata: dto.metadata,
+
+    cpuId: dto.cpuId,
+    gpuId: dto.gpuId,
+
     statusUpdatedAt:
       dto.statusUpdatedAt != null ? new Date(dto.statusUpdatedAt) : null,
     createdAt: undefined,

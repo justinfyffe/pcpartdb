@@ -8,6 +8,6 @@ import { AutomationQueueRepository } from './automation-queue.repository';
   imports: [DatabaseModule],
   controllers: [AutomationController],
   providers: [AutomationService, AutomationQueueRepository],
-  exports: [AutomationService],
+  exports: [AutomationService, AutomationQueueRepository],
 })
 export class AutomationModule {}

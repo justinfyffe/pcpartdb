@@ -6,7 +6,7 @@ export interface AutocompleteOptionProps {
   index: number;
 
   label: string;
-  value: string;
+  value: unknown;
   children?: React.ReactNode;
 
   className?: string;

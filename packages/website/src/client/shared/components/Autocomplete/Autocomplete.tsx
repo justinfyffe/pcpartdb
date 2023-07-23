@@ -14,12 +14,17 @@ import { AutocompleteContext } from './AutocompleteContext';
 import { AutocompleteOptionProps } from './AutocompleteOption';
 import { AutocompleteResult } from './types';
 
-export interface AutocompleteProps extends TextInputProps {
+export interface AutocompleteProps extends Omit<TextInputProps, 'value'> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  value?: any;
+
   // Allow arbitrary values
   freeSolo?: boolean;
 
   direction?: 'top' | 'bottom';
   onQuery: (query: string) => boolean | Promise<boolean>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onChange?: (value: any) => void;
 
   label?: string;
   prefix?: string | React.ReactElement;

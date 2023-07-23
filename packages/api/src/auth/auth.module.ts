@@ -1,11 +1,11 @@
 import { forwardRef, Module } from '@nestjs/common';
-import { ApiKeyRepository } from '@pcpartdb/database';
 import { DatabaseModule } from '../database';
 import { CookieModule } from '../shared/cookie';
 import { UserModule } from '../user/user.module';
 import { AccessTokenController } from './access-token.controller';
 import { AccessTokenRepository } from './access-token.repository';
 import { AccessTokenService } from './access-token.service';
+import { ApiKeyRepository } from './api-key.repository';
 import { ApiKeyService } from './api-key.service';
 import { GuestGuard } from './guest.guard';
 import { StaffGuard } from './staff.guard';

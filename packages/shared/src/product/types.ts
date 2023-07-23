@@ -1,4 +1,4 @@
-import { MeasurementUnit } from '../common';
+import { ListQuery, MeasurementUnit } from '../common';
 import { DateFormat } from '../format';
 import {
   Cpu,
@@ -65,14 +65,18 @@ export interface ProductSource {
   id?: number;
 
   productType: ProductType;
-  productName: string;
-  productCompany?: string;
+  sourceName: string;
 
   sourceKey: ProductSourceKey;
   sourceUrl: string;
 
-  archived: boolean;
+  archived?: boolean;
 }
+
+/**
+ * Group of product sources, usually grouped by source name.
+ */
+export type ProductSourceGroup = ProductSource[];
 
 /**
  * Data structure containing information regarding data updates for a
@@ -83,12 +87,16 @@ export interface ProductUpdate<T = unknown> {
 
   productType: ProductType;
   productName: string;
+  productCompany?: string;
 
-  description?: string;
   status: ProductUpdateStatus;
+  description?: string;
 
   data?: T;
   metadata?: ProductUpdateMeta;
+
+  cpuId?: number;
+  gpuId?: number;
 
   statusUpdatedAt?: number;
 }
@@ -120,9 +128,38 @@ export interface CreateProductSourcesRequest {
   sources: ProductSource[];
 }
 
-export interface CreateProductSourcesResponse {
-  totalNewSources: number;
-}
-
 export interface CreateProductUpdateRequest
   extends ProductUpdate<ProductDiff> {}
+
+export interface ListProductSourcesFilter {
+  productType?: ProductType;
+  includeArchived?: boolean;
+}
+
+export interface ListProductSourcesQuery
+  extends ListQuery<ListProductSourcesFilter> {}
+
+export interface ListProductSourceGroupsResponse {
+  query: ListProductSourcesQuery;
+  sourceGroups: ProductSourceGroup[];
+  totalSourceGroups: number;
+}
+
+export interface AutocompleteProductSourcesRequest {
+  productType: ProductType;
+  query?: string;
+}
+
+export interface AutocompleteProductSourcesResponse {
+  sources: ProductSource[];
+}
+
+export interface ApplyProductSourcesToProductRequest {
+  productType: ProductType;
+  productId: number;
+  sources: { id: number; archive: boolean }[];
+}
+
+export interface ArchiveProductSourcesRequest {
+  sources: number[];
+}

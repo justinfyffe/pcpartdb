@@ -7,6 +7,7 @@ import {
   CpuField,
   CreateProductUpdateRequest,
   FetchCpuDataAction,
+  generateCpuSlug,
   hasProductFieldValue,
   ProductDiff,
   productFieldValue,
@@ -18,6 +19,8 @@ import deepmerge from 'deepmerge';
 import { compare as generateJsonPatch } from 'fast-json-patch';
 import { AutomationContext } from '../types';
 
+// TODO: branch this into two methods from this one
+// One for handling source, and one for handling cpu id
 export async function fetchCpuDataAction(
   action: FetchCpuDataAction,
   context: AutomationContext,
@@ -32,18 +35,31 @@ export async function fetchCpuDataAction(
   }
 
   // Get sources from cpu or action
+  const sources = action.sources;
   const techPowerUpSource =
     originalCpu != null
       ? originalCpu.meta?.dataSources?.[CpuDataSourceKey.TechPowerUp] || null
-      : { url: action.techPowerUpUrl };
+      : {
+          url: sources?.filter(
+            (source) => source.sourceKey === CpuDataSourceKey.TechPowerUp,
+          )[0]?.sourceUrl,
+        };
   const passMarkSource =
     originalCpu != null
       ? originalCpu.meta?.dataSources?.[CpuDataSourceKey.PassMark] || null
-      : { url: action.passMarkUrl };
+      : {
+          url: sources?.filter(
+            (source) => source.sourceKey === CpuDataSourceKey.PassMark,
+          )[0]?.sourceUrl,
+        };
   const geekBenchSource =
     originalCpu != null
       ? originalCpu.meta?.dataSources?.[CpuDataSourceKey.GeekBench] || null
-      : { url: action.geekBenchUrl };
+      : {
+          url: sources?.filter(
+            (source) => source.sourceKey === CpuDataSourceKey.GeekBench,
+          )[0]?.sourceUrl,
+        };
 
   // Scrape the CPU data from our sources.
   const scrapedCpu = await fetchCpuData({
@@ -68,6 +84,20 @@ export async function fetchCpuDataAction(
 
   // Merge existing cpu with scraped data. Exclude auto-update disabled fields.
   const updatedCpu = mergeCpus(originalCpu, scrapedCpu);
+
+  // New CPUs have some additional data to be applied
+  if (originalCpu == null) {
+    // Preferred name from source
+    if (action?.preferredName) {
+      updatedCpu.name = action.preferredName;
+    }
+
+    // Generate slug, new CPU didn't have it yet.
+    updatedCpu.slug = generateCpuSlug(
+      updatedCpu.name,
+      updatedCpu.company?.value,
+    );
+  }
 
   // Check if we have changes. Upload the update.
   if (hasUpdates(originalCpu, updatedCpu)) {
@@ -165,21 +195,36 @@ async function updateBenchmarks(
   }
 }
 
-function mergeCpus(cpu: Cpu, scrapedCpu: Cpu) {
-  const filteredMerge = (target: unknown, source: unknown) => {
-    const field = target as CpuField;
+function mergeCpus(originalCpu: Cpu, scrapedCpu: Cpu) {
+  const filteredMerge = (x: unknown, y: unknown) => {
+    const field = x as CpuField;
 
     // Auto-updating is disabled. Skip merging.
     if (field?.meta?.autoUpdate != null && field.meta.autoUpdate === false) {
-      return target;
+      return x;
     }
 
-    return deepmerge(target, source, { customMerge: () => filteredMerge });
+    return deepmerge(x, y, { customMerge: () => filteredMerge });
   };
-  return deepmerge(cpu, scrapedCpu, { customMerge: () => filteredMerge });
+
+  const result = deepmerge(originalCpu, scrapedCpu, {
+    customMerge: () => filteredMerge,
+  });
+
+  // Reset name and slug as these might have been overwritten
+  if (originalCpu != null) {
+    result.name = originalCpu.name;
+    result.slug = originalCpu.slug;
+  }
+
+  return result;
 }
 
 function hasUpdates(before: Cpu, after: Cpu) {
+  if (before == null) {
+    return true;
+  }
+
   const jsonPatch = generateJsonPatch(before, after);
   return jsonPatch.length > 0;
 }
@@ -192,14 +237,15 @@ async function uploadProductUpdate(
   const update: ProductUpdate<ProductDiff> = {
     productType: ProductType.Cpu,
     productName: updatedCpu.name,
-    description: '',
+    productCompany: productFieldValue(updatedCpu.company),
+    description: `Data update for ${updatedCpu.name}`,
     status: ProductUpdateStatus.Pending,
     data: { original: originalCpu, updated: updatedCpu },
     metadata: {},
   };
 
   await context.api.post(
-    '/product/updates',
+    '/products/updates',
     update as CreateProductUpdateRequest,
   );
 }

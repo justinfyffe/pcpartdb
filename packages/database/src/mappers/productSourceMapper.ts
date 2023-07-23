@@ -9,12 +9,19 @@ export function mapToProductSourceDto(row: ProductSourceEntity): ProductSource {
   return {
     id: row.id,
     productType: row.productType as ProductType,
-    productName: row.productName,
-    productCompany: row.productCompany,
+    sourceName: row.sourceName,
     sourceKey: row.sourceKey as ProductSourceKey,
     sourceUrl: row.sourceUrl,
     archived: row.archived,
   };
+}
+
+export function mapToProductSourceDtos(entities: ProductSourceEntity[]) {
+  const ret: ProductSource[] = [];
+  for (let i = 0; i < entities.length; ++i) {
+    ret.push(mapToProductSourceDto(entities[i]));
+  }
+  return ret;
 }
 
 export function mapToProductSourceEntity(
@@ -27,8 +34,7 @@ export function mapToProductSourceEntity(
   return {
     id: undefined,
     productType: productSource.productType,
-    productName: productSource.productName,
-    productCompany: productSource.productCompany,
+    sourceName: productSource.sourceName,
     sourceKey: productSource.sourceKey,
     sourceUrl: productSource.sourceUrl,
     archived: productSource.archived,

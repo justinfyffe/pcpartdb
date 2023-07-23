@@ -1,8 +1,9 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
-import { ApiKeyRepository, mapToUserDto } from '@pcpartdb/database';
+import { mapToUserDto } from '@pcpartdb/database';
 import { Config, User } from '@pcpartdb/shared';
 import { NextFunction } from 'express';
 import { AccessTokenRepository } from '../../auth/access-token.repository';
+import { ApiKeyRepository } from '../../auth/api-key.repository';
 import { CookieService, SESSION_COOKIE } from '../cookie';
 import { hashToken } from '../crypto';
 import { ApiRequest, ApiResponse } from '../http';
@@ -16,9 +17,7 @@ export class ContextMiddleware implements NestMiddleware {
   ) {}
 
   async use(req: ApiRequest, res: ApiResponse, next: NextFunction) {
-    const { user, token } =
-      (await this.getUserFromCookie(req)) ||
-      (await this.getUserFromApiKey(req));
+    const { user, token } = await this.getUser(req);
 
     const config: Config = {
       enableGoogleAnalytics: process.env.ENABLE_GOOGLE_ANALYTICS === 'true',
@@ -36,6 +35,20 @@ export class ContextMiddleware implements NestMiddleware {
     };
 
     next();
+  }
+
+  private async getUser(request: ApiRequest) {
+    const cookieUser = await this.getUserFromCookie(request);
+    if (cookieUser.user != null) {
+      return cookieUser;
+    }
+
+    const apiUser = await this.getUserFromApiKey(request);
+    if (apiUser.user != null) {
+      return apiUser;
+    }
+
+    return { user: null, token: null };
   }
 
   private async getUserFromCookie(
@@ -65,7 +78,7 @@ export class ContextMiddleware implements NestMiddleware {
     }
 
     const [type, key] = authHeader.split(' ');
-    if (type !== 'Bearer') {
+    if (type.toLowerCase() !== 'bearer') {
       return { user: null, token: null };
     }
 

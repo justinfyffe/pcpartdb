@@ -1,10 +1,33 @@
-import { ProductUpdateStatus } from '@pcpartdb/shared';
+import { ProductType, ProductUpdateStatus } from '@pcpartdb/shared';
 import { DatabaseClient } from '../DatabaseClient';
 import { RepositoryConfig } from '../RepositoryConfig';
 import { ProductUpdateEntity } from './ProductUpdateEntity';
 
+export interface FindPendingOptions {
+  productType: ProductType;
+  productId?: number;
+  productCompany?: string;
+  productName?: string;
+}
+
 export class ProductUpdateRepository {
   constructor(protected db: DatabaseClient) {}
+
+  async findPending(options: FindPendingOptions, config?: RepositoryConfig) {
+    const { productType, productId, productCompany, productName } = options;
+
+    const trx = config?.trx ?? this.db;
+    return await trx.productUpdate.findMany({
+      where: {
+        productType,
+        productName,
+        productCompany,
+        cpuId: productType === ProductType.Cpu ? productId : undefined,
+        gpuId: productType === ProductType.Gpu ? productId : undefined,
+        status: ProductUpdateStatus.Pending,
+      },
+    });
+  }
 
   async create(
     data: Omit<ProductUpdateEntity, 'id'>,

@@ -1,5 +1,7 @@
-import { Command } from 'commander';
 import * as dotenv from 'dotenv';
+dotenv.config();
+
+import { Command } from 'commander';
 import { automationCommand } from './automation';
 import { gpuUpdaterCommand } from './gpu-updater';
 import { refreshRatingsCommand } from './refresh-ratings';
@@ -8,8 +10,6 @@ import { scrapeRetailModelsCommand } from './scrape-retail-models';
 import { scrapeSourcesCommand } from './scrape-sources';
 import { fixDataCommand } from './scratch-pad';
 import { sitemapUpdaterCommand } from './sitemap-updater';
-
-dotenv.config();
 
 const program = new Command();
 

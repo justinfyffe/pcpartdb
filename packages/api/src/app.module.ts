@@ -1,5 +1,6 @@
 import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { AuthModule } from './auth/auth.module';
+import { AutomationModule } from './automation/automation.module';
 import { ConfigModule } from './config/config.module';
 import { DatabaseModule } from './database';
 import { ImageModule } from './image/image.module';
@@ -14,6 +15,7 @@ import { ViewModelsModule } from './view-models/view-models.module';
 @Module({
   imports: [
     AuthModule,
+    AutomationModule,
     ConfigModule,
     DatabaseModule,
     ImageModule,

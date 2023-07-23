@@ -44,7 +44,7 @@ export async function scrapeTechPowerUpCpuSources(
     const query = QUERIES[i];
     console.log(`Scraping query: ${query}`);
     try {
-      const cpusForQuery = await scrapeCpuSources({ ...options, query });
+      const cpusForQuery = await scrapeCpuSources({ ...options, url: '' });
       console.log(`Scraped ${cpusForQuery.length}`);
       cpusForQuery.forEach((cpu) => {
         map[cpu.name] = cpu;

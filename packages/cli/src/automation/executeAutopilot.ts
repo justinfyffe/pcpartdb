@@ -1,4 +1,4 @@
-import { AutomationQueueAction } from '@pcpartdb/shared';
+import { AutomationAction } from '@pcpartdb/shared';
 import { fetchCpuDataAction, fetchCpuSourcesAction } from './actions';
 import { AutomationContext } from './types';
 
@@ -18,15 +18,15 @@ export async function executeAutopilot(context: AutomationContext) {
   //    Fetch new sources (approve/reject) (weekly? or bi-weekly?)
   //    Fetch new/updated specs (approve/reject except for benchmarks) // Non-stop
 
-  if (action === AutomationQueueAction.UpdateSitemaps) {
+  if (action === AutomationAction.UpdateSitemaps) {
     //
-  } else if (action === AutomationQueueAction.FetchCpuSources) {
-    await fetchCpuSourcesAction(null, context);
-  } else if (action === AutomationQueueAction.FetchGpuSources) {
+  } else if (action === AutomationAction.FetchCpuSources) {
+    await fetchCpuSourcesAction(context);
+  } else if (action === AutomationAction.FetchGpuSources) {
     //
-  } else if (action === AutomationQueueAction.FetchCpuData) {
+  } else if (action === AutomationAction.FetchCpuData) {
     await fetchCpuDataAction(null, context);
-  } else if (action === AutomationQueueAction.FetchGpuData) {
+  } else if (action === AutomationAction.FetchGpuData) {
     //
   } else {
     console.error(`Unsupported Action: ${action}`);
@@ -38,5 +38,5 @@ export async function executeAutopilot(context: AutomationContext) {
 function getNextAction(context: AutomationContext) {
   // TODO: get next action, first check from priority queue,
   // then determine based on staleness, then update gpus/cpus
-  return null as AutomationQueueAction;
+  return AutomationAction.FetchCpuSources as AutomationAction;
 }

@@ -1,4 +1,3 @@
-import { HeartIcon } from '@heroicons/react/24/solid';
 import {
   Config,
   getAboutPath,
@@ -108,10 +107,6 @@ export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
 
         <FooterSection className={classNames('flex-none text-center w-full')}>
           Copyright &copy; {WEBSITE_NAME}
-          <br />
-          Made with{' '}
-          <HeartIcon className={classNames('inline-block h-4 w-4 mb-0.5')} /> in
-          New York
         </FooterSection>
 
         {props.config?.isStaff && props.editThisPageHref != null && (

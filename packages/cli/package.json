@@ -8,6 +8,8 @@
     "clean": "rm -rf ./dist && rm -f tsconfig.tsbuildinfo",
     "build": "tsc",
     "scratch-pad": "node ./dist/main.js scratch-pad",
+    "automation": "node ./dist/main.js automation",
+    "automation:schedule": "node ./dist/main.js automation --schedule",
     "gpu-updater": "node ./dist/main.js gpu-updater",
     "gpu-updater:schedule": "node ./dist/main.js gpu-updater --schedule",
     "refresh-ratings": "node ./dist/main.js refresh-ratings",

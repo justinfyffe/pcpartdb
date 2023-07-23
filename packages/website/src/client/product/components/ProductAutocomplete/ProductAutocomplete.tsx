@@ -28,6 +28,7 @@ interface ProductAutocompleteProps {
 
   excludeProductId?: number;
 
+  placeholder?: string;
   className?: string;
 }
 
@@ -41,6 +42,7 @@ export const ProductAutocomplete = forwardRef<
     onChange,
     onChangeProduct,
     excludeProductId,
+    placeholder: propsPlaceholder,
     className,
   } = props;
 
@@ -71,6 +73,10 @@ export const ProductAutocomplete = forwardRef<
     [productType, product?.company],
   );
   const placeHolder = useMemo(() => {
+    if (propsPlaceholder != null) {
+      return propsPlaceholder;
+    }
+
     if (productType === ProductType.Cpu) {
       return 'Select CPU';
     } else if (productType === ProductType.Gpu) {
@@ -78,7 +84,7 @@ export const ProductAutocomplete = forwardRef<
     } else {
       return 'Select Product';
     }
-  }, [productType]);
+  }, [propsPlaceholder, productType]);
 
   useEffect(() => {
     async function fetchProduct() {
@@ -109,7 +115,7 @@ export const ProductAutocomplete = forwardRef<
   );
 
   const handleChange = useCallback(
-    async (value: string) => {
+    async (value: unknown) => {
       if (value == null) {
         setProduct(null);
         onChange?.(null);
