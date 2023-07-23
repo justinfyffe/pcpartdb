@@ -1,10 +1,6 @@
 HIGH LEVEL TODO:
 - Finish automation
 - code cleanup
-  - clean up components, api code
-  - reduce inconsistencies
-  - remove all classes from client code.
-    - api can have them
 - Improve performance score (not just g3d mark or cpu mark)
 - Affiliate Ads
 - More list filters
@@ -13,6 +9,45 @@ HIGH LEVEL TODO:
 - Soft delete everything. Hard delete should be rare.
 - auto-backup system
 
+CODE CLEANUP TASKS
+- View Models
+  - Single "model" or "viewModel" prop on each page props
+    - Why? Improve consistency/simplicity of page props. Easy to find
+      which data comes from view model. Errors can be in a separate "errors"
+      property
+- React components
+  - Simplify components that loop through. Each loop element should be a component.
+    - Why? Simplifies the parent component code signficantly, not having to juggle indexes
+  - Improve consistency of where state, memo, callbacks, effects are placed in component code
+    - Order: States, Memos, Callbacks, Effects
+    - Why? Consistency across components
+- Pagination
+  - Pagination component should automatically handle adding url parameters to page url
+    - Why? Implementing this is the most annoying part of pagination. Slows DX
+- ListQuery
+  - Move list cpus and gpus to use the generalized listquery ttype
+- API Code
+  - Improve consistency of service method parameters. For example, should we use
+    *Request and *Response objects for parameters?
+    - Why? Consistency makes it easier to define new code.
+  - Improve consistency of parameters for GET calls? For example, a jsonified request object?
+    - Why? Consistency makes it easier to define new code.
+- Client Code
+  - Remove all classes, replace with functions
+    - Exceptions: API Client
+    - Why? Improves tree shaking
+  - Move common utilities to shared
+    - Why? API, CLI needs to use some of them.
+- Shared Code
+  - Remove all classes
+    - Why? Better for tree shaking. API can still use classes.
+  - Move common utilities to shared
+    - Why? Often used between packages.
+  - Minimize third party dependencies
+    - Why? Some packages are client-only or server-only
+- Folder Structure
+  - Use a consistent structure across client code
+    - Why? 
 
 - cpu and gpu data
   - next source model cpu: 1175
