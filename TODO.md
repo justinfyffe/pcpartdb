@@ -35,6 +35,7 @@ CODE CLEANUP TASKS
   - Improve consistency of parameters for GET calls? For example, a jsonified request object?
     - Why? Consistency makes it easier to define new code.
 - Client Code
+  - Remove barrel files for client code, especially components
   - Remove all classes, replace with functions
     - Exceptions: API Client
     - Why? Improves tree shaking
