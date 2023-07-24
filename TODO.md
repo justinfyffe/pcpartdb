@@ -1,5 +1,7 @@
 HIGH LEVEL TODO:
 - Finish automation
+  - archive sources that are already in use in the database. run command
+    after finishing uploading them. Pull all gpus, pull all sources, cross-check
 - code cleanup
 - Improve performance score (not just g3d mark or cpu mark)
 - Affiliate Ads

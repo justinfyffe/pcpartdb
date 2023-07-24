@@ -6,14 +6,16 @@ import {
 } from '@pcpartdb/shared';
 import { productSourceService } from 'packages/website/src/client/product';
 import {
-  Alert,
-  AlertVariant,
   Button,
   ButtonVariant,
   Checkbox,
   Pagination,
   PaginationResult,
 } from 'packages/website/src/client/shared/components';
+import {
+  Alert,
+  AlertVariant,
+} from 'packages/website/src/client/shared/components/Alert';
 import React, { useCallback, useEffect, useState } from 'react';
 import { CpuSourceCard } from './CpuSourceCard';
 

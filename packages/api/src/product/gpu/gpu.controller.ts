@@ -9,6 +9,7 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
+import { GpuEntity } from '@pcpartdb/database';
 import {
   CreateGpuRequest,
   ListGpusOrder,
@@ -16,22 +17,34 @@ import {
   ListGpusResponse,
   ListGpusSort,
   ListRetailModelsResponse,
+  ScrapeProductRequest,
   UpdateGpuRequest,
 } from '@pcpartdb/shared';
 import { StaffGuard } from '../../auth/staff.guard';
 import { Database } from '../../database';
 import { Context, Ctx } from '../../shared/context';
 import { validate } from '../../shared/types/validate';
+import {
+  autocompleteGpusRequestValidator,
+  autocompleteSpecsRequestValidator,
+} from './autocomplete/gpu-autcomplete.validators';
+import { GpuAutocompleteService } from './autocomplete/gpu-autocomplete.service';
 import { GpuService } from './gpu.service';
 import {
   createGpuRequestValidator,
   listGpusQueryValidator,
   updateGpuRequestValidator,
 } from './gpu.validators';
+import { GpuScrapeService } from './scrape/gpu-scrape.service';
 
 @Controller('products/gpus')
 export class GpuController {
-  constructor(private db: Database, private gpuService: GpuService) {}
+  constructor(
+    private db: Database,
+    private gpuService: GpuService,
+    private gpuAutocompleteService: GpuAutocompleteService,
+    private gpuScrapeService: GpuScrapeService,
+  ) {}
 
   @Get()
   async list(@Query('q') q: string, @Ctx() ctx: Context) {
@@ -69,6 +82,46 @@ export class GpuController {
           contentData: { retailModelCounts },
         } as ListGpusResponse;
       },
+      { ctx },
+    );
+  }
+
+  @Get('autocomplete')
+  async autocomplete(@Query('query') query: string, @Ctx() ctx: Context) {
+    return await this.db.transaction(
+      async () => {
+        validate({ query }, autocompleteGpusRequestValidator);
+        return await this.gpuAutocompleteService.autocomplete(query ?? '', ctx);
+      },
+      { ctx },
+    );
+  }
+
+  @Get('autocomplete/specs')
+  @UseGuards(StaffGuard)
+  async autocompleteSpecs(
+    @Query('key') key: string,
+    @Query('value') query: string,
+    @Ctx() ctx: Context,
+  ) {
+    return await this.db.transaction(
+      async () => {
+        validate({ key, query }, autocompleteSpecsRequestValidator);
+        return await this.gpuAutocompleteService.autocompleteSpec(
+          key as keyof Omit<GpuEntity, 'chipset' | 'retailModels' | 'images'>,
+          query ?? '',
+          ctx,
+        );
+      },
+      { ctx },
+    );
+  }
+
+  @Post('scrape')
+  @UseGuards(StaffGuard)
+  async scrape(@Body() body: ScrapeProductRequest, @Ctx() ctx: Context) {
+    return await this.db.transaction(
+      () => this.gpuScrapeService.scrapeGpu(body, ctx),
       { ctx },
     );
   }

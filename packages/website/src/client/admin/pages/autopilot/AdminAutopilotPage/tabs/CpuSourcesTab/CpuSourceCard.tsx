@@ -1,3 +1,4 @@
+import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline';
 import {
   AutomationAction,
   CpuDataSourceKey,
@@ -143,12 +144,12 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
 
   return (
     <Card>
-      <div className="flex justify-between items-start">
-        <div className="flex flex-col gap-1">
+      <div className="flex justify-between items-center gap-4">
+        <div className="flex flex-1 flex-col gap-1">
           <CardTitle>{preferredName}</CardTitle>
         </div>
 
-        <div className="flex gap-4">
+        <div className="flex flex-1 gap-4">
           <ProductAutocomplete
             productType={ProductType.Cpu}
             placeholder="Apply to CPU"
@@ -187,11 +188,17 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
                 </FieldOptional>
               )}
             </div>
-            <ProductSourceAutocomplete
-              productType={ProductType.Cpu}
-              value={techPowerUp}
-              onChange={setTechPowerUp}
-            />
+            <div className="flex gap-4 items-center">
+              <ProductSourceAutocomplete
+                productType={ProductType.Cpu}
+                value={techPowerUp}
+                onChange={setTechPowerUp}
+                className="flex-1"
+              />
+              <Button href="" variant={ButtonVariant.Link}>
+                <ArrowTopRightOnSquareIcon className="w-4" />
+              </Button>
+            </div>
             <div className="flex justify-between">
               <FieldHint>{techPowerUpHint}</FieldHint>
               <Checkbox

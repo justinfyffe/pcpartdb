@@ -4,8 +4,6 @@ import { AutomationModule } from './automation/automation.module';
 import { ConfigModule } from './config/config.module';
 import { DatabaseModule } from './database';
 import { ImageModule } from './image/image.module';
-import { CpuModule } from './product/cpu/cpu.module';
-import { GpuModule } from './product/gpu/gpu.module';
 import { ProductModule } from './product/product.module';
 import { ContextMiddleware } from './shared/context';
 import { CookieModule } from './shared/cookie';
@@ -20,8 +18,6 @@ import { ViewModelsModule } from './view-models/view-models.module';
     DatabaseModule,
     ImageModule,
     ProductModule,
-    CpuModule,
-    GpuModule,
     CookieModule,
     UserModule,
     ViewModelsModule,
