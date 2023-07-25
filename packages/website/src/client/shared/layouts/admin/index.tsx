@@ -12,7 +12,14 @@ import {
 import { useRouter } from 'next/router';
 import React, { FunctionComponent, useCallback } from 'react';
 import { authService } from '../../../auth';
-import { Button, ButtonVariant, Img, Toolbar } from '../../components';
+import {
+  Button,
+  ButtonVariant,
+  Img,
+  MetaReferrer,
+  Seo,
+  Toolbar,
+} from '../../components';
 import { classNames } from '../../ui';
 
 interface AdminLayoutProps {
@@ -30,6 +37,7 @@ export const AdminLayout: FunctionComponent<AdminLayoutProps> = (props) => {
 
   return (
     <>
+      <Seo referrer={MetaReferrer.None} />
       <div className="container bg-content p-container flex font-bold items-center text-5xl md:text-3xl text-content">
         <Img
           src="/images/logo.svg"

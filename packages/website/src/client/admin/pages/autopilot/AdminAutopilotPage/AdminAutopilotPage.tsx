@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import { AdminAutopilotViewModel } from '@pcpartdb/shared';
 import React from 'react';
 import {
+  MetaReferrer,
   MetaRobots,
   Seo,
   Tab,

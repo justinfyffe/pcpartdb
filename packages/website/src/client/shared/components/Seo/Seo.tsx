@@ -11,6 +11,13 @@ export enum MetaRobots {
   NOSNIPPET = 'nosnippet',
 }
 
+export enum MetaReferrer {
+  None = 'none',
+  NoneWhenDowngrade = 'none-when-downgrade',
+  Origin = 'origin',
+  OriginWhenCrossOrigin = 'origin-when-crossorigin',
+}
+
 export interface SeoProps {
   title?: string;
   rawTitle?: string;
@@ -18,6 +25,7 @@ export interface SeoProps {
   description?: string;
   robots?: MetaRobots[];
   canonical?: string;
+  referrer?: MetaReferrer;
 }
 
 function getSeoTitle(title: string) {
@@ -33,7 +41,15 @@ function getSeoCanonical(path: string) {
 }
 
 export const Seo: FunctionComponent<SeoProps> = (props) => {
-  const { title, rawTitle, keywords, description, robots, canonical } = props;
+  const {
+    title,
+    rawTitle,
+    keywords,
+    description,
+    robots,
+    canonical,
+    referrer,
+  } = props;
 
   const seoTitle = useMemo(
     () => (rawTitle || title ? rawTitle || getSeoTitle(title) : null),
@@ -51,6 +67,10 @@ export const Seo: FunctionComponent<SeoProps> = (props) => {
     () => (canonical != null ? getSeoCanonical(canonical) : null),
     [canonical],
   );
+  const metaReferrer = useMemo(
+    () => (referrer != null ? referrer : null),
+    [referrer],
+  );
 
   return (
     <Head>
@@ -66,6 +86,7 @@ export const Seo: FunctionComponent<SeoProps> = (props) => {
         <meta name="description" content={description} key="metaDescription" />
       )}
       {seoRobots && <meta name="robots" content={seoRobots} key="metaRobots" />}
+      {metaReferrer && <meta name="referrer" content={metaReferrer} />}
       {seoCanonical && (
         <link rel="canonical" href={seoCanonical} key="linkCanonical" />
       )}
