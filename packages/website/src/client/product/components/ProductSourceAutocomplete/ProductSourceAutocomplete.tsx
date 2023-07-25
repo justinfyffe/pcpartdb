@@ -1,5 +1,5 @@
 import { ChevronDownIcon } from '@heroicons/react/24/outline';
-import { ProductSource, ProductType } from '@pcpartdb/shared';
+import { ProductSource, ProductSourceKey, ProductType } from '@pcpartdb/shared';
 import React, {
   forwardRef,
   useCallback,
@@ -15,6 +15,7 @@ import { ProductSourceAutocompleteOption } from './ProductSourceAutocompleteOpti
 
 interface ProductSourceAutocompleteProps {
   productType: ProductType;
+  source?: ProductSourceKey;
 
   value?: ProductSource;
   onChange?: (value: ProductSource) => void;
@@ -29,6 +30,7 @@ export const ProductSourceAutocomplete = forwardRef<
 >((props, ref) => {
   const {
     productType,
+    source,
     value,
     onChange,
     placeholder: propsPlaceholder,
@@ -54,6 +56,7 @@ export const ProductSourceAutocomplete = forwardRef<
     async (query: string) => {
       const response = await productSourceService.autocomplete({
         productType,
+        source,
         query,
       });
       const filtered = response.sources.filter((source) => source != null);
@@ -61,7 +64,7 @@ export const ProductSourceAutocomplete = forwardRef<
       setResults(filtered);
       return filtered.length > 0;
     },
-    [productType],
+    [productType, source],
   );
 
   const handleChange = useCallback(

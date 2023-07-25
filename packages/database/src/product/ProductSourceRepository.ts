@@ -2,6 +2,7 @@ import {
   ListOrder,
   ListProductSourcesFilter,
   ListProductSourcesQuery,
+  ProductSourceKey,
   ProductType,
 } from '@pcpartdb/shared';
 import { Prisma } from '@prisma/client';
@@ -27,6 +28,7 @@ interface CountBySourceNameOptions {
 
 interface AutocompleteOptions {
   productType: ProductType;
+  sourceKey?: ProductSourceKey;
   query: string;
 }
 
@@ -121,9 +123,12 @@ export class ProductSourceRepository {
 
     const rawSourceNames = await trx.productSource.groupBy({
       by: ['productType', 'sourceName'],
+      _count: {
+        id: true,
+      },
       where: this.generateWhere(filter),
       orderBy: [
-        { productType: ListOrder.Asc },
+        { _count: { id: ListOrder.Desc } },
         { sourceName: orderBy?.order ?? ListOrder.Asc },
       ],
       skip: offset ?? DEFAULT_LIST_OFFSET,
@@ -153,7 +158,7 @@ export class ProductSourceRepository {
   async autocomplete(options: AutocompleteOptions, config?: RepositoryConfig) {
     const trx = config?.trx ?? this.db;
 
-    const { productType, query } = options;
+    const { productType, sourceKey, query } = options;
     const tokens = query
       .split(' ')
       .map((value) => value.trim().toLowerCase())
@@ -162,6 +167,7 @@ export class ProductSourceRepository {
     return await trx.productSource.findMany({
       where: {
         productType,
+        sourceKey,
         AND: {
           OR: [
             {
@@ -197,8 +203,9 @@ export class ProductSourceRepository {
     const includeArchived = filter?.includeArchived ?? false;
 
     // Product Type
-    const productTypeWhere: Prisma.StringFilter =
-      productType != null ? { equals: productType } : undefined;
+    const productTypeWhere: Prisma.StringFilter = productType
+      ? { equals: productType }
+      : undefined;
 
     // Archived
     const archivedWhere: Prisma.BoolNullableFilter =

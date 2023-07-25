@@ -1,5 +1,7 @@
 import 'reflect-metadata';
 import {
+  ListPagination,
+  ListProductSourcesFilter,
   ListProductSourcesQuery,
   ProductSourceGroup,
   ProductType,
@@ -22,12 +24,12 @@ import { CpuSourceCard } from './CpuSourceCard';
 interface CpuSourcesTabProps {}
 
 export const CpuSourcesTab = (_props: CpuSourcesTabProps) => {
-  const [showArchived, setShowArchived] = useState(false);
+  const [includeArchived, setIncludeArchived] = useState(false);
 
   const [sourceGroups, setSourceGroups] = useState<ProductSourceGroup[]>([]);
   const [totalResults, setTotalResults] = useState(0);
   const [query, setQuery] = useState<ListProductSourcesQuery>({
-    filter: { productType: ProductType.Cpu, includeArchived: showArchived },
+    filter: { productType: ProductType.Cpu, includeArchived: includeArchived },
     pagination: { offset: 0, limit: 10 },
   });
 
@@ -44,25 +46,30 @@ export const CpuSourcesTab = (_props: CpuSourcesTabProps) => {
 
   const handleShowArchivedToggle = useCallback(
     (checked: boolean) => {
-      setShowArchived(checked);
-      query.filter.includeArchived = checked;
-      fetchSourceGroups(query);
+      const filter: ListProductSourcesFilter = {
+        ...query.filter,
+        includeArchived: checked,
+      };
+      setIncludeArchived(checked);
+      setQuery({ ...query, filter });
     },
-    [fetchSourceGroups, query],
+    [query],
   );
 
   const handleRefresh = useCallback(() => {
-    query.pagination.offset = 0;
-    fetchSourceGroups(query);
-  }, [fetchSourceGroups, query]);
+    const pagination: ListPagination = { ...query.pagination, offset: 0 };
+    setQuery({ ...query, pagination });
+  }, [query]);
 
   const handlePagination = useCallback(
     (result: PaginationResult) => {
-      query.pagination.offset = result.offset;
-      query.pagination.limit = result.limit;
-      fetchSourceGroups(query);
+      const pagination: ListPagination = {
+        offset: result.offset,
+        limit: result.limit,
+      };
+      setQuery({ ...query, pagination });
     },
-    [fetchSourceGroups, query],
+    [query],
   );
 
   useEffect(() => {
@@ -71,17 +78,22 @@ export const CpuSourcesTab = (_props: CpuSourcesTabProps) => {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex justify-end gap-4">
-        <Checkbox value={showArchived} onChange={handleShowArchivedToggle}>
-          Show Archived
-        </Checkbox>
+      <div className="flex justify-between gap-4">
+        <div className="flex flex-1 gap-4">
+          <Checkbox value={includeArchived} onChange={handleShowArchivedToggle}>
+            Include Archived
+          </Checkbox>
+        </div>
         <Button variant={ButtonVariant.Generic} onClick={handleRefresh}>
           Refresh
         </Button>
       </div>
 
       {sourceGroups.map((sources, i) => (
-        <CpuSourceCard key={i} sources={sources} />
+        <CpuSourceCard
+          key={`${sources[0]?.id}-${sources[1]?.id}-${sources[2]?.id}`}
+          sources={sources}
+        />
       ))}
 
       {totalResults === 0 && (

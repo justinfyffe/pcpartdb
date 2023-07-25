@@ -147,6 +147,7 @@ export interface ListProductSourceGroupsResponse {
 
 export interface AutocompleteProductSourcesRequest {
   productType: ProductType;
+  source?: ProductSourceKey;
   query?: string;
 }
 

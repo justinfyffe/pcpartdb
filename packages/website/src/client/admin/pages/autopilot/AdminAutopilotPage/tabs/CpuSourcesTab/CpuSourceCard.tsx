@@ -10,9 +10,9 @@ import {
 import { automationService } from 'packages/website/src/client/automation/services';
 import {
   ProductAutocomplete,
-  ProductSourceAutocomplete,
   productSourceService,
 } from 'packages/website/src/client/product';
+import { ProductSourceAutocomplete } from 'packages/website/src/client/product/components/ProductSourceAutocomplete';
 import {
   Button,
   ButtonVariant,
@@ -62,25 +62,28 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
   );
   const [appliedCpuId, setAppliedCpuId] = useState<number>(null);
 
-  const techPowerUpHint = useMemo(
+  const subtitle = useMemo(
     () =>
-      techPowerUp != null
-        ? `ID: ${techPowerUp.id} ${techPowerUp.archived ? '(Archived)' : ''}`
-        : '',
+      [
+        techPowerUp ? 'TechPowerUp' : null,
+        passMark ? 'PassMark' : null,
+        geekBench ? 'GeekBench' : null,
+      ]
+        .filter((source) => source != null)
+        .join(', '),
+    [geekBench, passMark, techPowerUp],
+  );
+
+  const techPowerUpHint = useMemo(
+    () => (techPowerUp != null ? `ID: ${techPowerUp.id}` : ''),
     [techPowerUp],
   );
   const passMarkHint = useMemo(
-    () =>
-      passMark != null
-        ? `ID: ${passMark.id} ${passMark.archived ? '(Archived)' : ''}`
-        : '',
+    () => (passMark != null ? `ID: ${passMark.id}` : ''),
     [passMark],
   );
   const geekBenchHint = useMemo(
-    () =>
-      geekBench != null
-        ? `ID: ${geekBench.id} ${geekBench.archived ? '(Archived)' : ''}`
-        : '',
+    () => (geekBench != null ? `ID: ${geekBench.id}` : ''),
     [geekBench],
   );
 
@@ -104,14 +107,11 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
   const handleArchiveToggle = useCallback(
     (key: CpuDataSourceKey, value: boolean) => {
       if (key === CpuDataSourceKey.TechPowerUp) {
-        techPowerUp.archived = value;
-        setTechPowerUp(techPowerUp);
+        setTechPowerUp({ ...techPowerUp, archived: value });
       } else if (key === CpuDataSourceKey.PassMark) {
-        passMark.archived = value;
-        setPassMark(passMark);
+        setPassMark({ ...passMark, archived: value });
       } else if (key === CpuDataSourceKey.GeekBench) {
-        geekBench.archived = value;
-        setGeekBench(geekBench);
+        setGeekBench({ ...geekBench, archived: value });
       }
     },
     [geekBench, passMark, techPowerUp],
@@ -146,13 +146,13 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
     <Card>
       <div className="flex justify-between items-center gap-4">
         <div className="flex flex-1 flex-col gap-1">
+          <span className="text-xs">{subtitle}</span>
           <CardTitle>{preferredName}</CardTitle>
         </div>
 
         <div className="flex flex-1 gap-4">
           <ProductAutocomplete
             productType={ProductType.Cpu}
-            placeholder="Apply to CPU"
             onChange={setAppliedCpuId}
           />
           <Button
@@ -160,7 +160,7 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
             disabled={appliedCpuId == null}
             onClick={handleApplyToCpu}
           >
-            Apply
+            Apply to CPU
           </Button>
         </div>
       </div>
@@ -176,11 +176,26 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
         <div className="flex gap-4 items-center">
           <Field className="flex-1">
             <div className="flex justify-between">
-              TechPowerUp
+              <div className="flex gap-2">
+                <span>TechPowerUp</span>
+                {techPowerUp != null && (
+                  <a
+                    href={techPowerUp.sourceUrl}
+                    target="_blank"
+                    rel="noreferrer nofollow"
+                  >
+                    <ArrowTopRightOnSquareIcon className="w-4 inline mb-1" />
+                  </a>
+                )}
+              </div>
+
               {techPowerUp != null && (
                 <FieldOptional>
                   <a
-                    onClick={() => handleSetNameFromSource(techPowerUp)}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleSetNameFromSource(techPowerUp);
+                    }}
                     className="cursor-pointer"
                   >
                     use name
@@ -188,16 +203,14 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
                 </FieldOptional>
               )}
             </div>
-            <div className="flex gap-4 items-center">
+            <div className="flex flex-col flex-1 gap-2">
               <ProductSourceAutocomplete
                 productType={ProductType.Cpu}
+                source={CpuDataSourceKey.TechPowerUp}
                 value={techPowerUp}
                 onChange={setTechPowerUp}
-                className="flex-1"
               />
-              <Button href="" variant={ButtonVariant.Link}>
-                <ArrowTopRightOnSquareIcon className="w-4" />
-              </Button>
+              <TextInput value={techPowerUp?.sourceUrl} disabled />
             </div>
             <div className="flex justify-between">
               <FieldHint>{techPowerUpHint}</FieldHint>
@@ -214,20 +227,42 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
           </Field>
           <Field className="flex-1">
             <div className="flex justify-between">
-              PassMark
+              <div className="flex gap-2">
+                <span>PassMark</span>
+                {passMark != null && (
+                  <a
+                    href={passMark.sourceUrl}
+                    target="_blank"
+                    rel="noreferrer nofollow"
+                  >
+                    <ArrowTopRightOnSquareIcon className="w-4 inline mb-1" />
+                  </a>
+                )}
+              </div>
+
               {passMark != null && (
                 <FieldOptional>
-                  <a onClick={() => handleSetNameFromSource(passMark)}>
+                  <a
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleSetNameFromSource(passMark);
+                    }}
+                    className="cursor-pointer"
+                  >
                     use name
                   </a>
                 </FieldOptional>
               )}
             </div>
-            <ProductSourceAutocomplete
-              productType={ProductType.Cpu}
-              value={passMark}
-              onChange={setPassMark}
-            />
+            <div className="flex flex-col flex-1 gap-2">
+              <ProductSourceAutocomplete
+                productType={ProductType.Cpu}
+                source={CpuDataSourceKey.PassMark}
+                value={passMark}
+                onChange={setPassMark}
+              />
+              <TextInput value={passMark?.sourceUrl} disabled />
+            </div>
             <div className="flex justify-between">
               <FieldHint>{passMarkHint}</FieldHint>
               <Checkbox
@@ -243,20 +278,42 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
           </Field>
           <Field className="flex-1">
             <div className="flex justify-between">
-              GeekBench
+              <div className="flex gap-2">
+                <span>GeekBench</span>
+                {geekBench != null && (
+                  <a
+                    href={geekBench.sourceUrl}
+                    target="_blank"
+                    rel="noreferrer nofollow"
+                  >
+                    <ArrowTopRightOnSquareIcon className="w-4 inline mb-1" />
+                  </a>
+                )}
+              </div>
+
               {geekBench != null && (
                 <FieldOptional>
-                  <a onClick={() => handleSetNameFromSource(geekBench)}>
+                  <a
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleSetNameFromSource(geekBench);
+                    }}
+                    className="cursor-pointer"
+                  >
                     use name
                   </a>
                 </FieldOptional>
               )}
             </div>
-            <ProductSourceAutocomplete
-              productType={ProductType.Cpu}
-              value={geekBench}
-              onChange={setGeekBench}
-            />
+            <div className="flex flex-col flex-1 gap-2">
+              <ProductSourceAutocomplete
+                productType={ProductType.Cpu}
+                source={CpuDataSourceKey.GeekBench}
+                value={geekBench}
+                onChange={setGeekBench}
+              />
+              <TextInput value={geekBench?.sourceUrl} disabled />
+            </div>
             <div className="flex justify-between">
               <FieldHint>{geekBenchHint}</FieldHint>
               <Checkbox
@@ -274,13 +331,13 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
 
         <div className="flex justify-between gap-4">
           <Button variant={ButtonVariant.Generic} onClick={handleArchive}>
-            Skip
+            Save Sources
           </Button>
           <Button
             variant={ButtonVariant.Generic}
             onClick={handleEnqueueAutomation}
           >
-            Enqueue
+            Enqueue CPU Creation
           </Button>
         </div>
       </CardContent>

@@ -10,11 +10,11 @@ export function parseProductName(fullName: string) {
   const lcFullName = fullName.toLowerCase();
   for (const lcCompany of companies) {
     if (lcFullName.startsWith(lcCompany)) {
-      const company = lcFullName.substring(0, lcCompany.length).trim();
-      const name = lcFullName.substring(lcCompany.length).trim();
+      const company = fullName.substring(0, lcCompany.length).trim();
+      const name = fullName.substring(lcCompany.length).trim();
       return { company, name };
     }
   }
 
-  return { company: null, name: lcFullName };
+  return { company: null, name: fullName };
 }

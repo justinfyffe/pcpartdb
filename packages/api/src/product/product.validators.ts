@@ -38,6 +38,7 @@ export const createProductUpdateValidator = Joi.object({
 
 export const autocompleteProductSourcesRequestValidator = Joi.object({
   productType: Joi.string().required(),
+  source: Joi.string().allow(null, ''),
   query: Joi.string().allow(null, ''),
 }).options({ abortEarly: false });
 

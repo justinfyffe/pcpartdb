@@ -74,7 +74,11 @@ export class ProductSourceService {
    */
   async autocomplete(request: AutocompleteProductSourcesRequest, ctx: Context) {
     const entities = await this.repository.autocomplete(
-      { productType: request.productType, query: request.query ?? '' },
+      {
+        productType: request.productType,
+        sourceKey: request.source,
+        query: request.query ?? '',
+      },
       ctx,
     );
     const sources = mapToProductSourceDtos(entities);
