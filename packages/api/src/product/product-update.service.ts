@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import {
+  mapToProductUpdateDto,
   mapToProductUpdateDtos,
   mapToProductUpdateEntity,
 } from '@pcpartdb/database';
@@ -14,13 +15,15 @@ import {
   ValidationErrorType,
 } from '@pcpartdb/shared';
 import { Context } from '../shared/context';
-import { badRequestError } from '../shared/error';
+import { badRequestError, notFoundError } from '../shared/error';
 import { validate } from '../shared/validation/validate';
 import { CpuService } from './cpu/cpu.service';
 import { GpuService } from './gpu/gpu.service';
 import {
+  approveProductUpdateRequestValidator,
   createProductUpdateRequestValidator,
   listProductSourcesRequestValidator,
+  rejectProductUpdateRequestValidator,
 } from './product.validators';
 import { ProductUpdateRepository } from './product-update.repository';
 
@@ -88,7 +91,13 @@ export class ProductUpdateService {
     request: ApproveProductUpdateRequest,
     ctx: Context,
   ) {
-    const update = await this.repository.findById(id, ctx);
+    validate(request, approveProductUpdateRequestValidator);
+
+    const entity = await this.repository.findById(id, ctx);
+    if (entity == null) {
+      throw notFoundError({ id });
+    }
+    const update = await mapToProductUpdateDto(entity);
 
     if (update.status !== ProductUpdateStatus.Pending) {
       // Cannot approve a pending update
@@ -99,7 +108,7 @@ export class ProductUpdateService {
     }
 
     if (update.productType == ProductType.Cpu) {
-      //
+      await this.cpuService.applyProductUpdate(update, request, ctx);
     } else if (update.productType === ProductType.Gpu) {
       //
     } else {
@@ -120,9 +129,13 @@ export class ProductUpdateService {
    * Reject the pending update.
    */
   async reject(id: number, request: RejectProductUpdateRequest, ctx: Context) {
-    const update = await this.repository.findById(id, ctx);
+    validate(request, rejectProductUpdateRequestValidator);
+    const entity = await this.repository.findById(id, ctx);
+    if (entity == null) {
+      throw notFoundError({ id });
+    }
 
-    if (update.status !== ProductUpdateStatus.Pending) {
+    if (entity.status !== ProductUpdateStatus.Pending) {
       // Cannot approve a pending update
       throw badRequestError({
         property: 'id',

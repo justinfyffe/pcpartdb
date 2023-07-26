@@ -46,6 +46,10 @@ interface GetComparisonOptions {
   includeRanks?: CpuRank[];
 }
 
+interface ApplyProductUpdateOptions {
+  slug?: string;
+}
+
 @Injectable()
 export class CpuService {
   constructor(
@@ -232,7 +236,11 @@ export class CpuService {
     await this.update(id, cpu, ctx);
   }
 
-  async applyProductUpdate(update: CpuUpdate, ctx: Context) {
+  async applyProductUpdate(
+    update: CpuUpdate,
+    options: ApplyProductUpdateOptions,
+    ctx: Context,
+  ) {
     if (update.productType !== ProductType.Cpu) {
       throw badRequestError({
         property: 'productType',
@@ -244,7 +252,11 @@ export class CpuService {
     if (update.cpuId != null) {
       await this.update(update.cpuId, updated, ctx);
     } else {
-      await this.create(updated, ctx);
+      const cpu = {
+        ...updated,
+        slug: options.slug || updated.slug,
+      };
+      await this.create(cpu, ctx);
     }
   }
 }

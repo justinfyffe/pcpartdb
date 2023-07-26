@@ -71,3 +71,11 @@ export const createProductUpdateRequestValidator = Joi.object({
   data: Joi.any().allow(null),
   metadata: Joi.any().allow(null),
 }).options({ abortEarly: false });
+
+export const approveProductUpdateRequestValidator = Joi.object({
+  slug: Joi.string().allow(null),
+}).options({ abortEarly: false });
+
+export const rejectProductUpdateRequestValidator = Joi.object({}).options({
+  abortEarly: false,
+});

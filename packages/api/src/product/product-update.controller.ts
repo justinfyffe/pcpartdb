@@ -8,8 +8,10 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import {
+  ApproveProductUpdateRequest,
   CreateProductUpdateRequest,
   ListProductUpdatesRequest,
+  RejectProductUpdateRequest,
 } from '@pcpartdb/shared';
 import { StaffGuard } from '../auth/staff.guard';
 import { Database } from '../database';
@@ -46,11 +48,15 @@ export class ProductUpdateController {
 
   @Post(':id/approve')
   @UseGuards(StaffGuard)
-  async approve(@Param() idStr: string, @Ctx() ctx: Context) {
+  async approve(
+    @Param() idStr: string,
+    @Body() body: ApproveProductUpdateRequest,
+    @Ctx() ctx: Context,
+  ) {
     return await this.db.transaction(
       async () => {
         const id = Number(idStr);
-        await this.service.approve(id, ctx);
+        await this.service.approve(id, body, ctx);
       },
       { ctx },
     );
@@ -58,11 +64,15 @@ export class ProductUpdateController {
 
   @Post(':id/reject')
   @UseGuards(StaffGuard)
-  async reject(@Param() idStr: string, @Ctx() ctx: Context) {
+  async reject(
+    @Param() idStr: string,
+    @Body() body: RejectProductUpdateRequest,
+    @Ctx() ctx: Context,
+  ) {
     return await this.db.transaction(
       async () => {
         const id = Number(idStr);
-        await this.service.reject(id, ctx);
+        await this.service.reject(id, body, ctx);
       },
       { ctx },
     );

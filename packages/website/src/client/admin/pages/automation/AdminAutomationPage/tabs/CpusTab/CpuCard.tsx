@@ -16,7 +16,7 @@ import {
   TextInput,
 } from 'packages/website/src/client/shared/components';
 import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 
 interface CpuCardTabProps {
   update: CpuUpdate;
@@ -32,12 +32,13 @@ export const CpuCard = (props: CpuCardTabProps) => {
   const [expanded, setExpanded] = useState(false);
   const [status, setStatus] = useState(update.status);
 
-  const [preferredName, setPreferredName] = useState(() =>
-    formatCpuName(updatedCpu),
-  );
-  const [preferredSlug, setPreferredSlug] = useState(() =>
+  const [slug, setSlug] = useState(() =>
     generateCpuSlug(updatedCpu.name, updatedCpu.slug),
   );
+
+  // Memos
+
+  const name = useMemo(() => formatCpuName(updatedCpu), [updatedCpu]);
 
   // Callbacks
 
@@ -52,11 +53,10 @@ export const CpuCard = (props: CpuCardTabProps) => {
 
   const approve = useCallback(async () => {
     await productUpdateService.approve(update.id, {
-      preferredName,
-      preferredSlug,
+      slug: slug,
     });
     setStatus(ProductUpdateStatus.Approved);
-  }, [preferredName, preferredSlug, update.id]);
+  }, [slug, update.id]);
 
   return (
     <Card>
@@ -71,7 +71,7 @@ export const CpuCard = (props: CpuCardTabProps) => {
         </div>
 
         <div className="flex flex-col gap-1">
-          <CardTitle>Intel i7-12345k</CardTitle>
+          <CardTitle>{name}</CardTitle>
           <span className="text-sm text-dimmed">
             {isUpdate ? <>Update</> : <>New</>}: {update.id}
           </span>
@@ -85,26 +85,8 @@ export const CpuCard = (props: CpuCardTabProps) => {
         <CardContent>
           <div className="flex gap-4 items-center">
             <Field className="flex-1">
-              <div className="flex justify-between">Name</div>
-              <TextInput
-                value={preferredName}
-                onChange={setPreferredName}
-                disabled={isUpdate}
-              />
-              {!isUpdate && (
-                <FieldHint>
-                  This will be used as the CPU&apos;s name when it is created.
-                </FieldHint>
-              )}
-            </Field>
-
-            <Field className="flex-1">
               <div className="flex justify-between">Slug</div>
-              <TextInput
-                value={preferredSlug}
-                onChange={setPreferredSlug}
-                disabled={isUpdate}
-              />
+              <TextInput value={slug} onChange={setSlug} disabled={isUpdate} />
               {!isUpdate && (
                 <FieldHint>
                   This will be used as the CPU&apos;s URL when it is created.

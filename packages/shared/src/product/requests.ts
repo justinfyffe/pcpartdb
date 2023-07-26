@@ -41,8 +41,7 @@ export interface ListProductUpdatesResponse
   extends ListResponse<ListProductUpdatesQuery, ProductUpdate> {}
 
 export interface ApproveProductUpdateRequest {
-  preferredName?: string;
-  preferredSlug?: string;
+  slug?: string;
 }
 
 export interface RejectProductUpdateRequest {}
