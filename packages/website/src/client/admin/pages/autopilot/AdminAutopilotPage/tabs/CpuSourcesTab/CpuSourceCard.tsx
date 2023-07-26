@@ -100,19 +100,29 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
     [geekBench],
   );
 
-  // TODO: NEED TO COMBINE ARCHIVE FIELDS WITH SOURCES
-
   const handleSave = useCallback(async () => {
-    // TODO: update archived
-    const sources = [techPowerUp, passMark, geekBench].filter(
+    // Apply archived to the sources.
+    const techPowerUpSource =
+      techPowerUp != null
+        ? { ...techPowerUp, archived: archiveTechPowerUp }
+        : null;
+    const passMarkSource =
+      passMark != null ? { ...passMark, archived: passMark.archived } : null;
+    const geekBenchSource =
+      geekBench != null ? { ...geekBench, archived: geekBench.archived } : null;
+
+    const sources = [techPowerUpSource, passMarkSource, geekBenchSource].filter(
       (source) => source != null && source.id != null,
     );
 
     await productSourceService.upsert({ sources: sources });
-  }, [geekBench, passMark, techPowerUp]);
+
+    setTechPowerUp(techPowerUpSource);
+    setTechPowerUp(passMarkSource);
+    setTechPowerUp(passMarkSource);
+  }, [archiveTechPowerUp, geekBench, passMark, techPowerUp]);
 
   const handleApplyToCpu = useCallback(async () => {
-    // TODO: update archived
     const sources = [techPowerUp, passMark, geekBench]
       .filter((source) => source != null && source.id != null)
       .map((source) => source.id);
@@ -132,8 +142,7 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
     setPreferredName(name);
   }, []);
 
-  const handleEnqueueAutomation = useCallback(async () => {
-    // TODO: update archived
+  const handleEnqueueCpuAutomation = useCallback(async () => {
     const sources = [techPowerUp, passMark, geekBench].filter(
       (source) => source != null,
     );
@@ -331,11 +340,11 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
 
         <div className="flex justify-between gap-4">
           <Button variant={ButtonVariant.Generic} onClick={handleSave}>
-            Save Sources
+            Save
           </Button>
           <Button
             variant={ButtonVariant.Generic}
-            onClick={handleEnqueueAutomation}
+            onClick={handleEnqueueCpuAutomation}
           >
             Enqueue CPU Creation
           </Button>
