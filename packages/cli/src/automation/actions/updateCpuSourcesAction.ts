@@ -167,6 +167,12 @@ export async function updateCpuSourcesAction(context: AutomationContext) {
 
   // Trigger auto-archive
   await context.api.post('products/sources/auto-archive', null);
+
+  // Update execution details
+  context.metadata = {
+    ...(context.metadata ?? {}),
+    updateCpuSourcesDate: new Date().getTime(),
+  };
 }
 
 async function getTechPowerUpSources() {

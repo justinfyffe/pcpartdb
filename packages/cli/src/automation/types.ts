@@ -1,12 +1,19 @@
+import { AutomationAction, AutomationQueueItem } from '@pcpartdb/shared';
 import { ApiClient } from '../shared/ApiClient';
 
-export interface AutomationConfig {
+export interface AutomationExecution<TPayload = unknown> {
+  action: AutomationAction;
+  payload?: TPayload;
+  queueItem?: AutomationQueueItem;
+}
+
+export interface AutomationMetadata {
   updateSitemapsDate?: number;
-  fetchCpuSourcesDate?: number;
-  fetchGpuSourcesDate?: number;
+  updateCpuSourcesDate?: number;
+  updateGpuSourcesDate?: number;
 }
 
 export interface AutomationContext {
   api: ApiClient;
-  config?: AutomationConfig;
+  metadata?: AutomationMetadata;
 }

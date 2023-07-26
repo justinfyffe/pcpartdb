@@ -3,7 +3,7 @@ import * as scheduler from 'node-schedule';
 import { ApiClient } from '../shared/ApiClient';
 import { executeAutomation } from './executeAutomation';
 import { AutomationContext } from './types';
-import { automationDataPath, loadAutomationConfig } from './utils';
+import { loadAutomationMetadata } from './utils/metadata';
 
 const AUTOMATION_CRON = '0-59 * * * *';
 
@@ -40,7 +40,6 @@ async function createContext() {
     baseUrl: process.env.AUTOMATION_URL,
     apiKey: process.env.AUTOMATION_KEY,
   });
-  const config = await loadAutomationConfig(automationDataPath('config.json'));
-
-  return { api, config } as AutomationContext;
+  const metadata = await loadAutomationMetadata();
+  return { api, metadata } as AutomationContext;
 }

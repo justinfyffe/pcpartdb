@@ -2,6 +2,11 @@ import { AutomationAction, AutomationQueueItem } from '@pcpartdb/shared';
 import { createCpuAction } from './actions/createCpuAction';
 import { updateCpuSourcesAction } from './actions/updateCpuSourcesAction';
 import { AutomationContext } from './types';
+import { saveAutomationMetadata } from './utils/metadata';
+
+const UPDATE_SITEMAPS_FREQUENCY = 1000 * 60 * 60 * 24; // Daily
+const UPDATE_CPU_SOURCES_FREQUENCY = 1000 * 60 * 60 * 24 * 7; // Weekly
+const UPDATE_GPU_SOURCES_FREQUENCY = 1000 * 60 * 60 * 24 * 7; // Weekly
 
 let executing = false;
 export async function executeAutomation(context: AutomationContext) {
@@ -11,13 +16,9 @@ export async function executeAutomation(context: AutomationContext) {
   }
   executing = true;
 
-  const { action, payload } = await getNextAction(context);
+  const { action, payload, queueItem } = await getNextAction(context);
 
-  // Pull next entry from priority queue, if no entry, then determine next general task
-  //    Check local config file for last time sitemaps and sources was run
-  //    Update sitemaps (fully automated) (daily? or weekly?)
-  //    Fetch new sources (approve/reject) (weekly? or bi-weekly?)
-  //    Fetch new/updated specs (approve/reject except for benchmarks) // Non-stop
+  // TODO: mark queue item as running
 
   if (action === AutomationAction.UpdateSitemaps) {
     //
@@ -26,34 +27,43 @@ export async function executeAutomation(context: AutomationContext) {
   } else if (action === AutomationAction.UpdateGpuSources) {
     //
   } else if (action === AutomationAction.CreateCpu) {
-    await createCpuAction(null, context);
+    await createCpuAction(payload, context);
   } else if (action === AutomationAction.CreateGpu) {
     //
   } else {
     console.error(`Unsupported Action: ${action}`);
   }
 
-  // TODO: close queue item
+  // TODO: mark queue item as closed or failed
+
+  await saveAutomationMetadata(context.metadata);
 
   executing = false;
 }
 
 async function getNextAction(context: AutomationContext) {
-  const queueAction = await getActionFromQueue(context);
+  // Action baesd on Priority Queue
+  const queueAction = await getQueueAction(context);
   if (queueAction != null) {
     return queueAction;
   }
 
-  // TODO: get next action, first check from priority queue,
-  // then determine based on staleness, then update gpus/cpus
-  return {
-    action: AutomationAction.UpdateCpuSources,
-    payload: null,
-    queueItem: null,
-  };
+  // Action based on staleness (e.g. stale sitemaps, product sources)
+  const stalenessAction = await getStalenessAction(context);
+  if (stalenessAction != null) {
+    return stalenessAction;
+  }
+
+  // No actions remaining, fallback to continuous ones (e.g. product updates)
+  const fallbackAction = await getFallbackAction(context);
+  if (fallbackAction != null) {
+    return fallbackAction;
+  }
+
+  return { action: null, payload: null, queueItem: null };
 }
 
-async function getActionFromQueue(context: AutomationContext) {
+async function getQueueAction(context: AutomationContext) {
   const queueItem = await context.api.get<AutomationQueueItem>(
     'automation/queue/next',
   );
@@ -67,4 +77,36 @@ async function getActionFromQueue(context: AutomationContext) {
   return null;
 }
 
-async function getActionFromStaleness() {}
+async function getStalenessAction(context: AutomationContext) {
+  const { metadata: executions } = context;
+
+  if (isStale(executions?.updateSitemapsDate, UPDATE_SITEMAPS_FREQUENCY)) {
+    //
+  }
+
+  if (isStale(executions?.updateCpuSourcesDate, UPDATE_CPU_SOURCES_FREQUENCY)) {
+    //
+  }
+
+  if (isStale(executions?.updateGpuSourcesDate, UPDATE_GPU_SOURCES_FREQUENCY)) {
+    //
+  }
+
+  return null;
+}
+
+async function getFallbackAction(context: AutomationContext) {
+  return null;
+}
+
+function isStale(lastExecutionTime: number, frequency: number) {
+  if (lastExecutionTime == null) {
+    return true;
+  }
+
+  if (new Date().getTime() > lastExecutionTime + frequency) {
+    return true;
+  }
+
+  return false;
+}
