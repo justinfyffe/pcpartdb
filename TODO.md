@@ -52,6 +52,11 @@ CODE CLEANUP TASKS
 - Folder Structure
   - Use a consistent structure across client code
     - Why? 
+- Validation
+  - Move validation to controller
+- List requests
+  - handle getting count in same method as fetching results. Controller just
+    routes request, service constructs reponse.
 
 - cpu and gpu data
   - next source model cpu: 1175
