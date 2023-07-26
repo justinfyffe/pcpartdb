@@ -37,8 +37,6 @@ export async function executeAutomation(context: AutomationContext) {
       //
     } else if (action === AutomationActionType.UpdateCpuSources) {
       await updateCpuSourcesAction(execution, context);
-    } else if (action === AutomationActionType.UpdateGpuSources) {
-      //
     } else if (action === AutomationActionType.CreateCpu) {
       await createCpuAction(execution, context);
     } else if (action === AutomationActionType.UpdateCpu) {
@@ -46,6 +44,10 @@ export async function executeAutomation(context: AutomationContext) {
     } else if (action === AutomationActionType.CreateGpu) {
       //
     } else if (action === AutomationActionType.UpdateGpu) {
+      //
+    } else if (action === AutomationActionType.UpdateGpuChipsetSources) {
+      //
+    } else if (action === AutomationActionType.UpdateGpuRetailModelSources) {
       //
     } else {
       console.error(`Unsupported Action: ${action}`);
@@ -153,7 +155,7 @@ async function getActionFromStalenessCheck(
   if (isStale(metadata?.updateGpuSourcesDate, UPDATE_GPU_SOURCES_FREQUENCY)) {
     return {
       status: AutomationActionStatus.Pending,
-      type: AutomationActionType.UpdateGpuSources,
+      type: AutomationActionType.UpdateGpuChipsetSources,
     };
   }
 
