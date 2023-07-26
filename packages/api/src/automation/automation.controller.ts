@@ -15,12 +15,7 @@ import {
 import { StaffGuard } from '../auth/staff.guard';
 import { Database } from '../database';
 import { Context, Ctx } from '../shared/context';
-import { validate } from '../shared/validation/validate';
 import { AutomationService } from './automation.service';
-import {
-  enqueueAutomationRequestValidator,
-  listAutomationQueueRequestValidator,
-} from './automation.validators';
 
 @Controller('automation')
 export class AutomationController {
@@ -42,8 +37,7 @@ export class AutomationController {
             ? (JSON.parse(request) as ListAutomationQueueRequest)
             : null;
 
-        validate(request, listAutomationQueueRequestValidator);
-        // return await this.service.listQueue(body, ctx);
+        return await this.service.listQueue(body, ctx);
       },
       { ctx },
     );
@@ -54,7 +48,6 @@ export class AutomationController {
   async enqueue(@Body() body: EnqueueAutomationRequest, @Ctx() ctx: Context) {
     return await this.db.transaction(
       async () => {
-        validate(body, enqueueAutomationRequestValidator);
         await this.service.enqueue(body, ctx);
       },
       { ctx },
