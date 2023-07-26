@@ -1,9 +1,11 @@
 HIGH LEVEL TODO:
 - Automation
-  - duplicate group names
-    - just ignore it for now, 
-    - show multiple on source card, so it's clear (done on cpu, need to do on gpu)
-    - 
+  - Finish PickSourceDialog
+    - finish ui
+    - Choose better name
+    - integrate
+  - hide data sources in exposed source code.
+    - better separation of files
   - clean up name of columns/data structures
   - clean up names of indexes/uniques
   - group key to group sources together after saving?
@@ -15,6 +17,7 @@ HIGH LEVEL TODO:
   - validate that source urls are valid urls (includes domain) before creating sources
     - also validate any other things coming in
 - code cleanup
+  - ui components
 - Improve performance score (not just g3d mark or cpu mark)
 - Affiliate Ads
 - More list filters

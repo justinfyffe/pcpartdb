@@ -29,10 +29,12 @@ import {
   Field,
   FieldHint,
   FieldOptional,
+  showDialog,
   TextInput,
 } from 'packages/website/src/client/shared/components';
 import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
 import React, { useCallback, useMemo, useState } from 'react';
+import { PickSourceDialogDialog } from '../../components/PickSourceDialog';
 
 interface GpuChipsetSourceCardProps {
   sources: GpuProductSourceGroup;
@@ -41,45 +43,36 @@ interface GpuChipsetSourceCardProps {
 export const GpuChipsetSourceCard = (props: GpuChipsetSourceCardProps) => {
   const { sources } = props;
 
-  // States
+  // States & Memos
 
   const [expanded, setExpanded] = useState(false);
 
-  // Extract each individual source from the group
-  const [techPowerUp, setTechPowerUp] = useState(() => {
-    return (
+  const techPowerUpSources = useMemo(
+    () =>
       sources.filter(
         (source) => source.sourceKey === GpuDataSourceKey.TechPowerUp,
-      )[0] || null
-    );
-  });
-  const [passMark, setPassMark] = useState(() => {
-    return (
+      ),
+    [sources],
+  );
+  const [techPowerUp, setTechPowerUp] = useState(techPowerUpSources[0] || null);
+
+  const passMarkSources = useMemo(
+    () =>
       sources.filter(
         (source) => source.sourceKey === GpuDataSourceKey.VideocardBenchmarks,
-      )[0] || null
-    );
-  });
-  const [ulBenchmark, setUlBenchmark] = useState(() => {
-    return (
+      ),
+    [sources],
+  );
+  const [passMark, setPassMark] = useState(passMarkSources[0] || null);
+
+  const ulBenchmarkSources = useMemo(
+    () =>
       sources.filter(
         (source) => source.sourceKey === GpuDataSourceKey.UlBenchmarks,
-      )[0] || null
-    );
-  });
-
-  const [archiveTechPowerUp, setArchiveTechPowerUp] = useState(!!techPowerUp);
-  const [archivePassMark, setArchivePassMark] = useState(!!passMark);
-  const [archiveUlBenchmark, setArchiveUlBenchmark] = useState(!!ulBenchmark);
-
-  const [preferredName, setPreferredName] = useState(
-    () => sources[0].sourceName,
+      ),
+    [sources],
   );
-  const [appliedGpu, setAppliedGpu] = useState<Product>(null);
-
-  const [groupKey] = useState(
-    () => techPowerUp?.groupKey || passMark?.groupKey || ulBenchmark?.groupKey,
-  );
+  const [ulBenchmark, setUlBenchmark] = useState(ulBenchmarkSources[0] || null);
 
   const techPowerUpId = techPowerUp?.id;
   const passMarkId = passMark?.id;
@@ -92,28 +85,16 @@ export const GpuChipsetSourceCard = (props: GpuChipsetSourceCardProps) => {
     (passMarkArchived ?? true) &&
     (ulBenchmarkArchived ?? true);
 
-  // Memos
+  const [archiveTechPowerUp, setArchiveTechPowerUp] = useState(!!techPowerUp);
+  const [archivePassMark, setArchivePassMark] = useState(!!passMark);
+  const [archiveUlBenchmark, setArchiveUlBenchmark] = useState(!!ulBenchmark);
 
-  const totalTechPowerUpInGroup = useMemo(
-    () =>
-      sources.filter(
-        (source) => source.sourceKey === GpuDataSourceKey.TechPowerUp,
-      ).length,
-    [sources],
+  const [preferredName, setPreferredName] = useState(
+    () => sources[0].sourceName,
   );
-  const totalPassMarkInGroup = useMemo(
-    () =>
-      sources.filter(
-        (source) => source.sourceKey === GpuDataSourceKey.VideocardBenchmarks,
-      ).length,
-    [sources],
-  );
-  const totalUlBenchmarkInGroup = useMemo(
-    () =>
-      sources.filter(
-        (source) => source.sourceKey === GpuDataSourceKey.UlBenchmarks,
-      ).length,
-    [sources],
+  const [appliedGpu, setAppliedGpu] = useState<Product>(null);
+  const [groupKey] = useState(
+    () => techPowerUp?.groupKey || passMark?.groupKey || ulBenchmark?.groupKey,
   );
 
   const sourcesList = useMemo(
@@ -121,20 +102,20 @@ export const GpuChipsetSourceCard = (props: GpuChipsetSourceCardProps) => {
       [
         techPowerUp
           ? `TechPowerUp${
-              totalTechPowerUpInGroup > 1
-                ? ` (x${totalTechPowerUpInGroup})`
+              techPowerUpSources.length > 1
+                ? ` (x${techPowerUpSources.length})`
                 : ''
             }`
           : null,
         passMark
           ? `PassMark${
-              totalPassMarkInGroup > 1 ? ` (x${totalPassMarkInGroup})` : ''
+              passMarkSources.length > 1 ? ` (x${passMarkSources.length})` : ''
             }`
           : null,
         ulBenchmark
           ? `UL Benchmarks${
-              totalUlBenchmarkInGroup > 1
-                ? ` (x${totalUlBenchmarkInGroup})`
+              ulBenchmarkSources.length > 1
+                ? ` (x${ulBenchmarkSources.length})`
                 : ''
             }`
           : null,
@@ -143,11 +124,11 @@ export const GpuChipsetSourceCard = (props: GpuChipsetSourceCardProps) => {
         .join(', '),
     [
       passMark,
+      passMarkSources.length,
       techPowerUp,
-      totalPassMarkInGroup,
-      totalTechPowerUpInGroup,
-      totalUlBenchmarkInGroup,
+      techPowerUpSources.length,
       ulBenchmark,
+      ulBenchmarkSources.length,
     ],
   );
 
@@ -260,6 +241,18 @@ export const GpuChipsetSourceCard = (props: GpuChipsetSourceCardProps) => {
     await save();
   }, [ulBenchmark, save, passMark, preferredName, techPowerUp]);
 
+  const showPickSourceDialog = useCallback(
+    (sources: ProductSource[], currentSource: ProductSource) => {
+      showDialog(
+        <PickSourceDialogDialog
+          currentSource={currentSource}
+          sources={sources}
+        />,
+      );
+    },
+    [],
+  );
+
   // Render
 
   return (
@@ -303,14 +296,20 @@ export const GpuChipsetSourceCard = (props: GpuChipsetSourceCardProps) => {
             <Field className="flex-1">
               <div className="flex justify-between">
                 <div className="flex gap-2">
-                  <span>
+                  <div
+                    className="cursor-pointer"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      showPickSourceDialog(techPowerUpSources, techPowerUp);
+                    }}
+                  >
                     TechPowerUp{' '}
-                    {totalTechPowerUpInGroup > 1 ? (
-                      <>(x{totalTechPowerUpInGroup})</>
+                    {techPowerUpSources.length > 1 ? (
+                      <>(x{techPowerUpSources.length})</>
                     ) : (
                       <></>
                     )}
-                  </span>
+                  </div>
                   {techPowerUp != null && (
                     <a
                       href={techPowerUp.sourceUrl}
@@ -367,8 +366,8 @@ export const GpuChipsetSourceCard = (props: GpuChipsetSourceCardProps) => {
                 <div className="flex gap-2">
                   <span>
                     PassMark{' '}
-                    {totalPassMarkInGroup > 1 ? (
-                      <>(x{totalPassMarkInGroup})</>
+                    {passMarkSources.length > 1 ? (
+                      <>(x{passMarkSources.length})</>
                     ) : (
                       <></>
                     )}
@@ -430,8 +429,8 @@ export const GpuChipsetSourceCard = (props: GpuChipsetSourceCardProps) => {
                 <div className="flex gap-2">
                   <span>
                     UL Benchmarks{' '}
-                    {totalUlBenchmarkInGroup > 1 ? (
-                      <>(x{totalUlBenchmarkInGroup})</>
+                    {ulBenchmarkSources.length > 1 ? (
+                      <>(x{ulBenchmarkSources.length})</>
                     ) : (
                       <></>
                     )}
