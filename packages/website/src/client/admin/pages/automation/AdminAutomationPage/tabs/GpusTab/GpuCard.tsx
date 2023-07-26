@@ -1,12 +1,12 @@
 import 'reflect-metadata';
 import { ChevronDownIcon, ChevronLeftIcon } from '@heroicons/react/24/outline';
 import {
-  CpuUpdate,
-  getViewCpuPath,
+  getViewGpuPath,
+  GpuUpdate,
   ProductUpdateStatus,
 } from '@pcpartdb/shared';
-import { CpuDiffDialog } from 'packages/website/src/client/admin/components';
-import { formatCpuName } from 'packages/website/src/client/product';
+import { GpuDiffDialog } from 'packages/website/src/client/admin/components';
+import { formatGpuName } from 'packages/website/src/client/product';
 import { productUpdateService } from 'packages/website/src/client/product/services/productUpdateService';
 import {
   Card,
@@ -20,31 +20,31 @@ import {
 import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
 import React, { useCallback, useMemo, useState } from 'react';
 
-interface CpuCardTabProps {
-  update: CpuUpdate;
+interface GpuCardTabProps {
+  update: GpuUpdate;
 }
 
-export const CpuCard = (props: CpuCardTabProps) => {
+export const GpuCard = (props: GpuCardTabProps) => {
   const { update } = props;
-  const isUpdate = update.cpuId ? true : false;
-  const updatedCpu = update.data.updated;
+  const isUpdate = update.gpuId ? true : false;
+  const updatedGpu = update.data.updated;
 
   // States
 
   const [expanded, setExpanded] = useState(false);
   const [status, setStatus] = useState(update.status);
 
-  const [slug, setSlug] = useState(updatedCpu.slug);
+  const [slug, setSlug] = useState(updatedGpu.slug);
 
   // Memos
 
-  const name = useMemo(() => formatCpuName(updatedCpu), [updatedCpu]);
-  const viewHref = useMemo(() => getViewCpuPath(updatedCpu), [updatedCpu]);
+  const name = useMemo(() => formatGpuName(updatedGpu), [updatedGpu]);
+  const viewHref = useMemo(() => getViewGpuPath(updatedGpu), [updatedGpu]);
 
   // Callbacks
 
   const viewDiff = useCallback(() => {
-    showDialog(<CpuDiffDialog diff={update.data} />);
+    showDialog(<GpuDiffDialog diff={update.data} />);
   }, [update.data]);
 
   const reject = useCallback(async () => {
@@ -90,7 +90,7 @@ export const CpuCard = (props: CpuCardTabProps) => {
               <TextInput value={slug} onChange={setSlug} disabled={isUpdate} />
               {!isUpdate && (
                 <FieldHint>
-                  This will be used as the CPU&apos;s URL when it is created.
+                  This will be used as the GPU&apos;s URL when it is created.
                 </FieldHint>
               )}
             </Field>

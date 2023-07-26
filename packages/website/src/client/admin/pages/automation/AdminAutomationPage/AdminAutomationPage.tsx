@@ -12,7 +12,7 @@ import {
 import { AdminLayout } from '../../../../shared/layouts';
 import {
   CpuSourcesTab,
-  CpusTab,
+  GpusTab,
   GpuSourcesTab,
   GpusTab,
   QueueTab,
@@ -34,7 +34,7 @@ export const AdminAutomationPage = (props: AdminAutomationViewModel) => {
             <CpuSourcesTab />
           </Tab>
           <Tab label="CPUs">
-            <CpusTab />
+            <GpusTab />
           </Tab>
           <Tab label="GPU Sources">
             <GpuSourcesTab />
