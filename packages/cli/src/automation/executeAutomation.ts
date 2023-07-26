@@ -78,17 +78,17 @@ async function getQueueAction(context: AutomationContext) {
 }
 
 async function getStalenessAction(context: AutomationContext) {
-  const { metadata: executions } = context;
+  const { metadata } = context;
 
-  if (isStale(executions?.updateSitemapsDate, UPDATE_SITEMAPS_FREQUENCY)) {
+  if (isStale(metadata?.updateSitemapsDate, UPDATE_SITEMAPS_FREQUENCY)) {
     //
   }
 
-  if (isStale(executions?.updateCpuSourcesDate, UPDATE_CPU_SOURCES_FREQUENCY)) {
+  if (isStale(metadata?.updateCpuSourcesDate, UPDATE_CPU_SOURCES_FREQUENCY)) {
     //
   }
 
-  if (isStale(executions?.updateGpuSourcesDate, UPDATE_GPU_SOURCES_FREQUENCY)) {
+  if (isStale(metadata?.updateGpuSourcesDate, UPDATE_GPU_SOURCES_FREQUENCY)) {
     //
   }
 
