@@ -1,18 +1,23 @@
 import 'reflect-metadata';
 import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline';
 import { formatProductSourceName, ProductSource } from '@pcpartdb/shared';
+import { closeDialog } from 'packages/website/src/client/shared/components';
 import { PrimaryButton } from 'packages/website/src/client/shared/components/Button/PrimaryButton';
 import { Dialog } from 'packages/website/src/client/shared/components/Dialog/Dialog';
 import { classNames } from 'packages/website/src/client/shared/ui';
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 
 interface PickSourceDialogProps {
   sources: ProductSource[];
   currentSource?: ProductSource;
+
+  onSelected?: (selected: ProductSource) => void;
 }
 
-export const PickSourceDialogDialog = (props: PickSourceDialogProps) => {
-  const { sources, currentSource } = props;
+export const PickSourceDialog = (props: PickSourceDialogProps) => {
+  const { sources, currentSource, onSelected } = props;
+
+  const [selected, setSelected] = useState(currentSource || null);
 
   // Memos
 
@@ -20,6 +25,13 @@ export const PickSourceDialogDialog = (props: PickSourceDialogProps) => {
     () => formatProductSourceName(sources[0].sourceKey),
     [sources],
   );
+
+  // Callbacks
+
+  const handleApply = useCallback(() => {
+    onSelected?.(selected);
+    closeDialog();
+  }, [onSelected, selected]);
 
   // Render
 
@@ -30,23 +42,31 @@ export const PickSourceDialogDialog = (props: PickSourceDialogProps) => {
           <div
             key={source.id}
             className={classNames(
-              'border-px cursor-pointer flex p-2 items-center',
-              currentSource?.id === source.id ? 'bg-neutral' : '',
+              'border-px  flex p-2 items-center gap-4',
+              selected?.id === source.id ? 'bg-primary text-default' : '',
             )}
           >
-            <div className="flex-1 font-semibold">{source.sourceName}</div>
+            <div
+              className="flex-1 font-semibold cursor-pointer"
+              onClick={() => setSelected(source)}
+            >
+              {source.sourceName}
+            </div>
 
             <a
               href={source.sourceUrl}
               target="_blank"
               rel="noreferrer nofollow"
+              className="text-inherit"
             >
               <ArrowTopRightOnSquareIcon className="w-6 inline mb-1" />
             </a>
           </div>
         ))}
 
-        <PrimaryButton className="self-end">Apply</PrimaryButton>
+        <PrimaryButton className="self-end" onClick={handleApply}>
+          Apply
+        </PrimaryButton>
       </div>
     </Dialog>
   );

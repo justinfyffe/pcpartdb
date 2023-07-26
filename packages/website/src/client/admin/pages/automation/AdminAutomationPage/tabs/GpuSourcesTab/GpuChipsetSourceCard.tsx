@@ -34,7 +34,7 @@ import {
 } from 'packages/website/src/client/shared/components';
 import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
 import React, { useCallback, useMemo, useState } from 'react';
-import { PickSourceDialogDialog } from '../../components/PickSourceDialog';
+import { PickSourceDialog } from '../../components/PickSourceDialog';
 
 interface GpuChipsetSourceCardProps {
   sources: GpuProductSourceGroup;
@@ -242,11 +242,20 @@ export const GpuChipsetSourceCard = (props: GpuChipsetSourceCardProps) => {
   }, [ulBenchmark, save, passMark, preferredName, techPowerUp]);
 
   const showPickSourceDialog = useCallback(
-    (sources: ProductSource[], currentSource: ProductSource) => {
+    (
+      sources: ProductSource[],
+      currentSource: ProductSource,
+      setter: (value: GpuProductSource) => void,
+    ) => {
+      if (sources.length === 0) {
+        return;
+      }
+
       showDialog(
-        <PickSourceDialogDialog
+        <PickSourceDialog
           currentSource={currentSource}
           sources={sources}
+          onSelected={(selected) => setter(selected as GpuProductSource)}
         />,
       );
     },
@@ -296,13 +305,7 @@ export const GpuChipsetSourceCard = (props: GpuChipsetSourceCardProps) => {
             <Field className="flex-1">
               <div className="flex justify-between">
                 <div className="flex gap-2">
-                  <div
-                    className="cursor-pointer"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      showPickSourceDialog(techPowerUpSources, techPowerUp);
-                    }}
-                  >
+                  <div>
                     TechPowerUp{' '}
                     {techPowerUpSources.length > 1 ? (
                       <>(x{techPowerUpSources.length})</>
@@ -321,8 +324,27 @@ export const GpuChipsetSourceCard = (props: GpuChipsetSourceCardProps) => {
                   )}
                 </div>
 
-                {techPowerUp != null && (
-                  <FieldOptional>
+                <FieldOptional className="flex gap-2">
+                  {techPowerUpSources.length > 0 && (
+                    <>
+                      <a
+                        className="cursor-pointer"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          showPickSourceDialog(
+                            techPowerUpSources,
+                            techPowerUp,
+                            setTechPowerUp,
+                          );
+                        }}
+                      >
+                        picker
+                      </a>
+
+                      {techPowerUp != null && <>&bull;</>}
+                    </>
+                  )}
+                  {techPowerUp != null && (
                     <a
                       onClick={(e) => {
                         e.preventDefault();
@@ -332,8 +354,8 @@ export const GpuChipsetSourceCard = (props: GpuChipsetSourceCardProps) => {
                     >
                       use name
                     </a>
-                  </FieldOptional>
-                )}
+                  )}
+                </FieldOptional>
               </div>
               <div className="flex flex-col flex-1 gap-2">
                 <ProductSourceAutocomplete
@@ -364,14 +386,14 @@ export const GpuChipsetSourceCard = (props: GpuChipsetSourceCardProps) => {
             <Field className="flex-1">
               <div className="flex justify-between">
                 <div className="flex gap-2">
-                  <span>
+                  <div>
                     PassMark{' '}
                     {passMarkSources.length > 1 ? (
                       <>(x{passMarkSources.length})</>
                     ) : (
                       <></>
                     )}
-                  </span>
+                  </div>
                   {passMark != null && (
                     <a
                       href={passMark.sourceUrl}
@@ -383,8 +405,27 @@ export const GpuChipsetSourceCard = (props: GpuChipsetSourceCardProps) => {
                   )}
                 </div>
 
-                {passMark != null && (
-                  <FieldOptional>
+                <FieldOptional className="flex gap-2">
+                  {passMarkSources.length > 0 && (
+                    <>
+                      <a
+                        className="cursor-pointer"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          showPickSourceDialog(
+                            passMarkSources,
+                            passMark,
+                            setPassMark,
+                          );
+                        }}
+                      >
+                        picker
+                      </a>
+
+                      {passMark != null && <>&bull;</>}
+                    </>
+                  )}
+                  {passMark != null && (
                     <a
                       onClick={(e) => {
                         e.preventDefault();
@@ -394,8 +435,8 @@ export const GpuChipsetSourceCard = (props: GpuChipsetSourceCardProps) => {
                     >
                       use name
                     </a>
-                  </FieldOptional>
-                )}
+                  )}
+                </FieldOptional>
               </div>
               <div className="flex flex-col flex-1 gap-2">
                 <ProductSourceAutocomplete
@@ -427,14 +468,14 @@ export const GpuChipsetSourceCard = (props: GpuChipsetSourceCardProps) => {
             <Field className="flex-1">
               <div className="flex justify-between">
                 <div className="flex gap-2">
-                  <span>
+                  <div>
                     UL Benchmarks{' '}
                     {ulBenchmarkSources.length > 1 ? (
                       <>(x{ulBenchmarkSources.length})</>
                     ) : (
                       <></>
                     )}
-                  </span>
+                  </div>
                   {ulBenchmark != null && (
                     <a
                       href={ulBenchmark.sourceUrl}
@@ -446,8 +487,27 @@ export const GpuChipsetSourceCard = (props: GpuChipsetSourceCardProps) => {
                   )}
                 </div>
 
-                {ulBenchmark != null && (
-                  <FieldOptional>
+                <FieldOptional className="flex gap-2">
+                  {ulBenchmarkSources.length > 0 && (
+                    <>
+                      <a
+                        className="cursor-pointer"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          showPickSourceDialog(
+                            ulBenchmarkSources,
+                            ulBenchmark,
+                            setUlBenchmark,
+                          );
+                        }}
+                      >
+                        picker
+                      </a>
+
+                      {passMark != null && <>&bull;</>}
+                    </>
+                  )}
+                  {passMark != null && (
                     <a
                       onClick={(e) => {
                         e.preventDefault();
@@ -457,8 +517,8 @@ export const GpuChipsetSourceCard = (props: GpuChipsetSourceCardProps) => {
                     >
                       use name
                     </a>
-                  </FieldOptional>
-                )}
+                  )}
+                </FieldOptional>
               </div>
               <div className="flex flex-col flex-1 gap-2">
                 <ProductSourceAutocomplete

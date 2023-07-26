@@ -41,9 +41,8 @@ export const ProductSourceAutocomplete = forwardRef<
   useImperativeHandle(ref, () => inputRef.current);
 
   const [results, setResults] = useState<ProductSource[]>([]);
-  const [productSource, setProductSource] = useState<ProductSource>(value);
 
-  const label = productSource?.sourceName;
+  const label = value?.sourceName;
   const placeHolder = useMemo(() => {
     if (propsPlaceholder != null) {
       return propsPlaceholder;
@@ -69,7 +68,6 @@ export const ProductSourceAutocomplete = forwardRef<
 
   const handleChange = useCallback(
     async (value: ProductSource) => {
-      setProductSource(value);
       onChange?.(value);
 
       // Need to delay, otherwise it seems like forms sometimes re-focuses.
