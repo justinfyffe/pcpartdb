@@ -7,9 +7,9 @@ import {
 } from '@pcpartdb/scraper';
 import {
   CpuDataSourceKey,
-  CreateProductSourcesRequest,
   ProductSource,
   ProductType,
+  UpsertProductSourcesRequest,
 } from '@pcpartdb/shared';
 import { sleep } from '../../shared/process';
 import { AutomationContext } from '../types';
@@ -279,7 +279,7 @@ async function uploadCpuSources(
     try {
       await context.api.post('products/sources', {
         sources: batch,
-      } as CreateProductSourcesRequest);
+      } as UpsertProductSourcesRequest);
       totalSources += batch.length;
       console.log(`Uploaded ${batch.length} sources`);
     } catch (e) {

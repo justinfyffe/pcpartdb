@@ -54,7 +54,7 @@ export class CpuAutocompleteRepository {
       take: 6,
     });
 
-    // Get results based on pattern matching.
+    // Get results based on regex.
     let fillerCpus: { id: number }[] = [];
     if (regexTokens !== '.*') {
       fillerCpus = await db.$queryRaw`

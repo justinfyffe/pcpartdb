@@ -22,7 +22,7 @@ const productSourceValidator = Joi.object({
   archived: Joi.boolean(),
 }).options({ abortEarly: false });
 
-export const createProductSourcesValidator = Joi.object({
+export const upsertProductSourcesValidator = Joi.object({
   sources: Joi.array().allow(productSourceValidator),
 }).options({ abortEarly: false });
 
@@ -45,9 +45,5 @@ export const autocompleteProductSourcesRequestValidator = Joi.object({
 export const applyProductSourcesToProductRequestValidator = Joi.object({
   productType: Joi.string().required(),
   productId: Joi.number().required(),
-  sources: Joi.array().allow(Joi.number()),
-}).options({ abortEarly: false });
-
-export const archiveProductSourcesToProductRequestValidator = Joi.object({
   sources: Joi.array().allow(Joi.number()),
 }).options({ abortEarly: false });

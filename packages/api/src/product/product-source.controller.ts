@@ -9,11 +9,10 @@ import {
 } from '@nestjs/common';
 import {
   ApplyProductSourcesToProductRequest,
-  ArchiveProductSourcesRequest,
   AutocompleteProductSourcesRequest,
-  CreateProductSourcesRequest,
   ListProductSourceGroupsResponse,
   ListProductSourcesQuery,
+  UpsertProductSourcesRequest,
 } from '@pcpartdb/shared';
 import { StaffGuard } from '../auth/staff.guard';
 import { Database } from '../database';
@@ -21,10 +20,9 @@ import { Context, Ctx } from '../shared/context';
 import { validate } from '../shared/types/validate';
 import {
   applyProductSourcesToProductRequestValidator,
-  archiveProductSourcesToProductRequestValidator,
   autocompleteProductSourcesRequestValidator,
-  createProductSourcesValidator,
   listProductSourcesQueryValidator,
+  upsertProductSourcesValidator,
 } from './product.validators';
 import { ProductSourceService } from './product-source.service';
 
@@ -75,10 +73,10 @@ export class ProductSourceController {
 
   @Post()
   @UseGuards(StaffGuard)
-  async create(@Body() body: CreateProductSourcesRequest, @Ctx() ctx: Context) {
+  async create(@Body() body: UpsertProductSourcesRequest, @Ctx() ctx: Context) {
     return await this.db.transaction(
       async () => {
-        validate(body, createProductSourcesValidator);
+        validate(body, upsertProductSourcesValidator);
         await this.service.upsert(body, ctx);
       },
       { ctx },
@@ -95,21 +93,6 @@ export class ProductSourceController {
       async () => {
         validate(body, applyProductSourcesToProductRequestValidator);
         await this.service.applyToProduct(body, ctx);
-      },
-      { ctx },
-    );
-  }
-
-  @Put('archive')
-  @UseGuards(StaffGuard)
-  async archive(
-    @Body() body: ArchiveProductSourcesRequest,
-    @Ctx() ctx: Context,
-  ) {
-    return await this.db.transaction(
-      async () => {
-        validate(body, archiveProductSourcesToProductRequestValidator);
-        await this.service.archive(body, ctx);
       },
       { ctx },
     );

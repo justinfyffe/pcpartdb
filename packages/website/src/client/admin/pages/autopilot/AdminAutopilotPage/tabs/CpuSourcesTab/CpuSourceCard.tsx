@@ -57,6 +57,10 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
     );
   });
 
+  const [archiveTechPowerUp, setArchiveTechPowerUp] = useState(!!techPowerUp);
+  const [archivePassMark, setArchivePassMark] = useState(!!passMark);
+  const [archiveGeekBench, setArchiveGeekBench] = useState(!!geekBench);
+
   const [preferredName, setPreferredName] = useState(
     () => sources[0].sourceName,
   );
@@ -75,60 +79,61 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
   );
 
   const techPowerUpHint = useMemo(
-    () => (techPowerUp != null ? `ID: ${techPowerUp.id}` : ''),
+    () =>
+      techPowerUp != null
+        ? `ID: ${techPowerUp.id}${techPowerUp.archived ? ' (Archived)' : ''}`
+        : '',
     [techPowerUp],
   );
   const passMarkHint = useMemo(
-    () => (passMark != null ? `ID: ${passMark.id}` : ''),
+    () =>
+      passMark != null
+        ? `ID: ${passMark.id}${passMark.archived ? ' (Archived)' : ''}`
+        : '',
     [passMark],
   );
   const geekBenchHint = useMemo(
-    () => (geekBench != null ? `ID: ${geekBench.id}` : ''),
+    () =>
+      geekBench != null
+        ? `ID: ${geekBench.id}${geekBench.archived ? ' (Archived)' : ''}`
+        : '',
     [geekBench],
   );
 
+  // TODO: NEED TO COMBINE ARCHIVE FIELDS WITH SOURCES
+
+  const handleSave = useCallback(async () => {
+    // TODO: update archived
+    const sources = [techPowerUp, passMark, geekBench].filter(
+      (source) => source != null && source.id != null,
+    );
+
+    await productSourceService.upsert({ sources: sources });
+  }, [geekBench, passMark, techPowerUp]);
+
   const handleApplyToCpu = useCallback(async () => {
+    // TODO: update archived
     const sources = [techPowerUp, passMark, geekBench]
       .filter((source) => source != null && source.id != null)
-      .map((source) => ({ id: source.id, archive: source.archived }));
+      .map((source) => source.id);
 
     await productSourceService.applyToProduct({
       productType: ProductType.Cpu,
       productId: appliedCpuId,
       sources,
     });
-  }, [appliedCpuId, geekBench, passMark, techPowerUp]);
+
+    // Update sources to archive them.
+    await handleSave();
+  }, [handleSave, appliedCpuId, geekBench, passMark, techPowerUp]);
 
   const handleSetNameFromSource = useCallback((source: ProductSource) => {
     const name = source.sourceName;
     setPreferredName(name);
   }, []);
 
-  const handleArchiveToggle = useCallback(
-    (key: CpuDataSourceKey, value: boolean) => {
-      if (key === CpuDataSourceKey.TechPowerUp) {
-        setTechPowerUp({ ...techPowerUp, archived: value });
-      } else if (key === CpuDataSourceKey.PassMark) {
-        setPassMark({ ...passMark, archived: value });
-      } else if (key === CpuDataSourceKey.GeekBench) {
-        setGeekBench({ ...geekBench, archived: value });
-      }
-    },
-    [geekBench, passMark, techPowerUp],
-  );
-
-  const handleArchive = useCallback(async () => {
-    const sourcesToArchive = [techPowerUp, passMark, geekBench]
-      .filter(
-        (source) =>
-          source != null && source.id != null && source.archived === true,
-      )
-      .map((source) => source.id);
-
-    await productSourceService.archive({ sources: sourcesToArchive });
-  }, [geekBench, passMark, techPowerUp]);
-
   const handleEnqueueAutomation = useCallback(async () => {
+    // TODO: update archived
     const sources = [techPowerUp, passMark, geekBench].filter(
       (source) => source != null,
     );
@@ -139,8 +144,9 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
       data: { preferredName, sources } as FetchCpuDataAction,
     });
 
-    await handleArchive();
-  }, [geekBench, handleArchive, passMark, preferredName, techPowerUp]);
+    // Update sources to archive them.
+    await handleSave();
+  }, [geekBench, handleSave, passMark, preferredName, techPowerUp]);
 
   return (
     <Card>
@@ -216,10 +222,8 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
               <FieldHint>{techPowerUpHint}</FieldHint>
               <Checkbox
                 disabled={techPowerUp == null}
-                value={techPowerUp?.archived ?? false}
-                onChange={(checked) =>
-                  handleArchiveToggle(CpuDataSourceKey.TechPowerUp, checked)
-                }
+                value={archiveTechPowerUp}
+                onChange={(checked) => setArchiveTechPowerUp(checked)}
               >
                 Archive?
               </Checkbox>
@@ -267,10 +271,8 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
               <FieldHint>{passMarkHint}</FieldHint>
               <Checkbox
                 disabled={passMark == null}
-                value={passMark?.archived ?? false}
-                onChange={(checked) =>
-                  handleArchiveToggle(CpuDataSourceKey.PassMark, checked)
-                }
+                value={archivePassMark}
+                onChange={(checked) => setArchivePassMark(checked)}
               >
                 Archive?
               </Checkbox>
@@ -318,10 +320,8 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
               <FieldHint>{geekBenchHint}</FieldHint>
               <Checkbox
                 disabled={geekBench == null}
-                value={geekBench?.archived ?? false}
-                onChange={(checked) =>
-                  handleArchiveToggle(CpuDataSourceKey.GeekBench, checked)
-                }
+                value={archiveGeekBench}
+                onChange={(checked) => setArchiveGeekBench(checked)}
               >
                 Archive?
               </Checkbox>
@@ -330,7 +330,7 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
         </div>
 
         <div className="flex justify-between gap-4">
-          <Button variant={ButtonVariant.Generic} onClick={handleArchive}>
+          <Button variant={ButtonVariant.Generic} onClick={handleSave}>
             Save Sources
           </Button>
           <Button

@@ -1,11 +1,11 @@
 import {
   ApplyProductSourcesToProductRequest,
-  ArchiveProductSourcesRequest,
   AutocompleteProductSourcesRequest,
   AutocompleteProductSourcesResponse,
   joinUrlParts,
   ListProductSourceGroupsResponse,
   ListProductSourcesQuery,
+  UpsertProductSourcesRequest,
 } from '@pcpartdb/shared';
 import { ApiClient, apiClient } from '../../shared/api';
 
@@ -38,8 +38,8 @@ export class ProductSourceService {
     await this.api.put(joinUrlParts(PATH, 'apply'), request);
   }
 
-  async archive(request: ArchiveProductSourcesRequest) {
-    await this.api.put(joinUrlParts(PATH, 'archive'), request);
+  async upsert(request: UpsertProductSourcesRequest) {
+    await this.api.post(joinUrlParts(PATH), request);
   }
 }
 

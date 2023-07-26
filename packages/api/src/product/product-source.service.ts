@@ -5,13 +5,12 @@ import {
 } from '@pcpartdb/database';
 import {
   ApplyProductSourcesToProductRequest,
-  ArchiveProductSourcesRequest,
   AutocompleteProductSourcesRequest,
   AutocompleteProductSourcesResponse,
-  CreateProductSourcesRequest,
   ListProductSourcesQuery,
   ProductSourceGroup,
   ProductType,
+  UpsertProductSourcesRequest,
   ValidationErrorType,
 } from '@pcpartdb/shared';
 import { Context } from '../shared/context';
@@ -89,7 +88,7 @@ export class ProductSourceService {
   /**
    * Upserts a list of product sources.
    */
-  async upsert(request: CreateProductSourcesRequest, ctx: Context) {
+  async upsert(request: UpsertProductSourcesRequest, ctx: Context) {
     const sources = request.sources;
     for (let i = 0; i < sources.length; ++i) {
       const source = sources[i];
@@ -102,11 +101,9 @@ export class ProductSourceService {
     request: ApplyProductSourcesToProductRequest,
     ctx: Context,
   ) {
-    const { productType, productId, sources: idsAndArchive } = request;
+    const { productType, productId, sources } = request;
 
-    const ids = idsAndArchive.map((source) => source.id);
-
-    const entities = await this.repository.findByIds(ids, ctx);
+    const entities = await this.repository.findByIds(sources, ctx);
     const productSources = mapToProductSourceDtos(entities);
 
     // Update product
@@ -123,19 +120,5 @@ export class ProductSourceService {
 
     // Enqueue action to update product
     // Call automation queue service to do this.
-
-    // Archive sources that we want to archive
-    const idsToArchive = idsAndArchive
-      .filter((source) => source.archive)
-      .map((source) => source.id);
-    await this.archive({ sources: idsToArchive }, ctx);
-  }
-
-  async archive(request: ArchiveProductSourcesRequest, ctx: Context) {
-    const { sources: ids } = request;
-
-    for (const id of ids) {
-      await this.repository.archive(id, ctx);
-    }
   }
 }

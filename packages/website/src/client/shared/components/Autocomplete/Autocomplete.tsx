@@ -7,12 +7,15 @@ import React, {
   useEffect,
   useState,
 } from 'react';
+import { useDebounce } from '../../hooks/useDebounce';
 import { classNames } from '../../ui';
 import { TextInput, TextInputProps } from '../Input';
 import { Spinner } from '../Spinner';
 import { AutocompleteContext } from './AutocompleteContext';
 import { AutocompleteOptionProps } from './AutocompleteOption';
 import { AutocompleteResult } from './types';
+
+const DEFAULT_DEBOUNCE = 300;
 
 export interface AutocompleteProps extends Omit<TextInputProps, 'value'> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -29,6 +32,7 @@ export interface AutocompleteProps extends Omit<TextInputProps, 'value'> {
   label?: string;
   prefix?: string | React.ReactElement;
   placeholder?: string;
+  debounceTimeout?: number;
 
   children?: React.ReactElement<React.ReactElement<AutocompleteOptionProps>>[];
 }
@@ -44,6 +48,7 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
       prefix,
       suffix,
       placeholder,
+      debounceTimeout,
       freeSolo,
       onChange,
       onQuery,
@@ -83,6 +88,10 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
         setOpen(hasResults);
       },
       [freeSolo, onChange, onQuery],
+    );
+    const debouncedHandleQuery = useDebounce(
+      handleQuery,
+      debounceTimeout ?? DEFAULT_DEBOUNCE,
     );
 
     const handleKeyDown = useCallback(
@@ -162,7 +171,7 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
             suffix={isLoading ? <Spinner /> : suffix}
             placeholder={placeholder}
             value={query || ''}
-            onChange={handleQuery}
+            onChange={debouncedHandleQuery}
             onKeyDown={handleKeyDown}
             onBlur={handleBlur}
             onFocus={handleFocus}

@@ -209,7 +209,7 @@ export class ProductSourceRepository {
 
     // Archived
     const archivedWhere: Prisma.BoolNullableFilter =
-      includeArchived === false ? { equals: false } : undefined;
+      includeArchived !== true ? { equals: false } : undefined;
 
     return {
       AND: {

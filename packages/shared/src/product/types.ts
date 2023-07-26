@@ -124,7 +124,7 @@ export interface ImportProductsRequest {
   products: Product[];
 }
 
-export interface CreateProductSourcesRequest {
+export interface UpsertProductSourcesRequest {
   sources: ProductSource[];
 }
 
@@ -158,9 +158,5 @@ export interface AutocompleteProductSourcesResponse {
 export interface ApplyProductSourcesToProductRequest {
   productType: ProductType;
   productId: number;
-  sources: { id: number; archive: boolean }[];
-}
-
-export interface ArchiveProductSourcesRequest {
   sources: number[];
 }
