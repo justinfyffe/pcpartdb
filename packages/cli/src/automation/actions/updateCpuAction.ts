@@ -6,7 +6,6 @@ import {
   CpuDataSourceKey,
   CpuField,
   CreateProductUpdateRequest,
-  generateCpuSlug,
   hasProductFieldValue,
   ProductDiff,
   productFieldValue,
@@ -19,8 +18,6 @@ import deepmerge from 'deepmerge';
 import { compare as generateJsonPatch } from 'fast-json-patch';
 import { AutomationContext } from '../types';
 
-// TODO: branch this into two methods from this one
-// One for handling source, and one for handling cpu id
 export async function updateCpuAction(
   action: UpdateCpuActionData,
   context: AutomationContext,
@@ -59,9 +56,7 @@ export async function updateCpuAction(
   }
 
   // Update benchmarks for existing CPU. These do not require approval.
-  if (originalCpu != null) {
-    await updateBenchmarks(originalCpu, scrapedCpu, context);
-  }
+  await updateBenchmarks(originalCpu, scrapedCpu, context);
 
   // Merge existing cpu with scraped data. Exclude auto-update disabled fields.
   const updatedCpu = mergeCpus(originalCpu, scrapedCpu);
@@ -195,7 +190,7 @@ async function uploadProductUpdate(
     productType: ProductType.Cpu,
     productName: updatedCpu.name,
     productCompany: productFieldValue(updatedCpu.company),
-    description: `Data update for ${updatedCpu.name}`,
+    description: `Update CPU for ${updatedCpu.name}`,
     status: ProductUpdateStatus.Pending,
     data: { original: originalCpu, updated: updatedCpu },
     metadata: {},

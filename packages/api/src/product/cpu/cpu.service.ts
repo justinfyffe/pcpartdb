@@ -17,7 +17,9 @@ import {
   populateCpuPerformanceScoreBenchmark,
   populateCpuValueScoreBenchmark,
   ProductDataUpdate,
+  ProductDiff,
   ProductSourceGroup,
+  ProductUpdate,
   UpdateCpuRequest,
 } from '@pcpartdb/shared';
 import deepmerge from 'deepmerge';
@@ -190,6 +192,7 @@ export class CpuService {
     return id;
   }
 
+  // TODO: delete
   async applyDataUpdate(dataUpdate: ProductDataUpdate, ctx: Context) {
     const updated = dataUpdate.data.updated as Cpu;
     await this.update(dataUpdate.cpuId, updated, ctx);
@@ -226,5 +229,10 @@ export class CpuService {
     } as CpuMeta);
 
     await this.update(id, cpu, ctx);
+  }
+
+  async applyProductUpdate(update: ProductUpdate<ProductDiff>, ctx: Context) {
+    const updated = update.data.updated as Cpu;
+    await this.update(update.cpuId, updated, ctx);
   }
 }
