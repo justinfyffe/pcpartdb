@@ -1,11 +1,10 @@
 HIGH LEVEL TODO:
 - Automation
+  - Simplify source card code
+    - make a component for source input
   - Finish PickSourceDialog
     - finish ui
-    - Choose better name
-    - integrate
-  - hide data sources in exposed source code.
-    - better separation of files
+    - integrate with cpus
   - clean up name of columns/data structures
   - clean up names of indexes/uniques
   - group key to group sources together after saving?
@@ -76,6 +75,8 @@ CODE CLEANUP TASKS
   - Improve consistency of parameters for GET calls? For example, a jsonified request object?
     - Why? Consistency makes it easier to define new code.
 - Client Code
+  - Improve tree shaking
+    - Files should have a single concern.
   - Remove barrel files for client code, especially components
   - Remove all classes, replace with functions
     - Exceptions: API Client
