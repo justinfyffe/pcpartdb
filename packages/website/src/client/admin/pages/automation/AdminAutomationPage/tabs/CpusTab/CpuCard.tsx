@@ -5,6 +5,7 @@ import {
   generateCpuSlug,
   ProductUpdateStatus,
 } from '@pcpartdb/shared';
+import { CpuDiffDialog } from 'packages/website/src/client/admin/components';
 import { formatCpuName } from 'packages/website/src/client/product';
 import { productUpdateService } from 'packages/website/src/client/product/services/productUpdateService';
 import {
@@ -13,6 +14,7 @@ import {
   CardTitle,
   Field,
   FieldHint,
+  showDialog,
   TextInput,
 } from 'packages/website/src/client/shared/components';
 import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
@@ -43,8 +45,8 @@ export const CpuCard = (props: CpuCardTabProps) => {
   // Callbacks
 
   const viewDiff = useCallback(() => {
-    // TODO
-  }, []);
+    showDialog(<CpuDiffDialog diff={update.data} />);
+  }, [update.data]);
 
   const reject = useCallback(async () => {
     await productUpdateService.reject(update.id, {});
