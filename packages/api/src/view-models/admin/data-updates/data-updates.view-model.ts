@@ -6,7 +6,7 @@ import {
 import { DataUpdateService } from '../../../data-update/data-update.service';
 import { listUpdatesRequestValidator } from '../../../data-update/data-update.validators';
 import { Context } from '../../../shared/context';
-import { validate } from '../../../shared/types/validate';
+import { validate } from '../../../shared/validation/validate';
 
 @Injectable()
 export class AdminDataUpdatesViewModelService {

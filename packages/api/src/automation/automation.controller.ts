@@ -5,15 +5,22 @@ import {
   Get,
   Post,
   Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
-import { EnqueueAutomationRequest } from '@pcpartdb/shared';
+import {
+  EnqueueAutomationRequest,
+  ListAutomationQueueRequest,
+} from '@pcpartdb/shared';
 import { StaffGuard } from '../auth/staff.guard';
 import { Database } from '../database';
 import { Context, Ctx } from '../shared/context';
-import { validate } from '../shared/types/validate';
+import { validate } from '../shared/validation/validate';
 import { AutomationService } from './automation.service';
-import { enqueueAutomationRequestValidator } from './automation.validators';
+import {
+  enqueueAutomationRequestValidator,
+  listAutomationQueueRequestValidator,
+} from './automation.validators';
 
 @Controller('automation')
 export class AutomationController {
@@ -27,8 +34,19 @@ export class AutomationController {
 
   @Get('queue')
   @UseGuards(StaffGuard)
-  async getQueue(@Ctx() ctx: Context) {
-    // TODO
+  async listQueue(@Query('req') request: string, @Ctx() ctx: Context) {
+    return await this.db.transaction(
+      async () => {
+        const body: ListAutomationQueueRequest =
+          request != null
+            ? (JSON.parse(request) as ListAutomationQueueRequest)
+            : null;
+
+        validate(request, listAutomationQueueRequestValidator);
+        // return await this.service.listQueue(body, ctx);
+      },
+      { ctx },
+    );
   }
 
   @Post('queue')

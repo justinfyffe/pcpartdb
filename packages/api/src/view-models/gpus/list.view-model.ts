@@ -4,7 +4,7 @@ import deepmerge from 'deepmerge';
 import { GpuService } from '../../product/gpu/gpu.service';
 import { listGpusQueryValidator } from '../../product/gpu/gpu.validators';
 import { Context } from '../../shared/context';
-import { validate } from '../../shared/types/validate';
+import { validate } from '../../shared/validation/validate';
 
 @Injectable()
 export class ListGpusViewModelService {

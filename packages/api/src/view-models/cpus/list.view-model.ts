@@ -3,7 +3,7 @@ import { ListCpusQuery, ListCpusResponse } from '@pcpartdb/shared';
 import { CpuService } from '../../product/cpu/cpu.service';
 import { listCpusQueryValidator } from '../../product/cpu/cpu.validators';
 import { Context } from '../../shared/context';
-import { validate } from '../../shared/types/validate';
+import { validate } from '../../shared/validation/validate';
 
 @Injectable()
 export class ListCpusViewModelService {

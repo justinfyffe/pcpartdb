@@ -11,7 +11,7 @@ import { StaffGuard } from '../auth/staff.guard';
 import { UserGuard } from '../auth/user.guard';
 import { Database } from '../database';
 import { Context, Ctx } from '../shared/context';
-import { validate } from '../shared/types/validate';
+import { validate } from '../shared/validation/validate';
 import { UserService } from './user.service';
 import {
   createUserRequestValidator,

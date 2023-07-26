@@ -20,7 +20,7 @@ import {
 import { StaffGuard } from '../../auth/staff.guard';
 import { Database } from '../../database';
 import { Context, Ctx } from '../../shared/context';
-import { validate } from '../../shared/types/validate';
+import { validate } from '../../shared/validation/validate';
 import {
   autocompleteCpuDataRequestValidator,
   autocompleteCpusRequestValidator,

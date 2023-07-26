@@ -23,3 +23,9 @@ export interface ListQuery<TFilter = unknown> {
   orderBy?: ListOrderBy;
   pagination?: ListPagination;
 }
+
+export interface ListResponse<TQuery = unknown, TResult = unknown> {
+  query: TQuery;
+  results: TResult[];
+  totalResults: number;
+}

@@ -6,7 +6,7 @@ import {
 import { StaffGuard } from '../auth/staff.guard';
 import { Database } from '../database';
 import { Context, Ctx } from '../shared/context';
-import { validate } from '../shared/types/validate';
+import { validate } from '../shared/validation/validate';
 import { DataUpdateService } from './data-update.service';
 import { listUpdatesRequestValidator } from './data-update.validators';
 

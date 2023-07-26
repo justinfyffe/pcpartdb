@@ -8,8 +8,8 @@ import {
 } from '@pcpartdb/shared';
 import { Context } from '../shared/context';
 import { badRequestError, notFoundError } from '../shared/error';
-import { validate } from '../shared/types/validate';
 import * as fileUtils from '../shared/utils';
+import { validate } from '../shared/validation/validate';
 import { ImageRepository } from './image.repository';
 
 const imageValidator = Joi.object({
