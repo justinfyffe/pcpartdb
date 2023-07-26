@@ -4,8 +4,10 @@ import {
   AutomationActionType,
 } from '@pcpartdb/shared';
 import { createCpuAction } from './actions/createCpuAction';
+import { createGpuAction } from './actions/createGpuAction';
 import { updateCpuAction } from './actions/updateCpuAction';
 import { updateCpuSourcesAction } from './actions/updateCpuSourcesAction';
+import { updateGpuAction } from './actions/updateGpuAction';
 import { updateGpuSourcesAction } from './actions/updateGpuSourcesAction';
 import { AutomationContext } from './types';
 import { saveAutomationContext } from './utils/context';
@@ -43,9 +45,9 @@ export async function executeAutomation(context: AutomationContext) {
     } else if (type === AutomationActionType.UpdateCpu) {
       await updateCpuAction(action, context);
     } else if (type === AutomationActionType.CreateGpu) {
-      //
+      await createGpuAction(action, context);
     } else if (type === AutomationActionType.UpdateGpu) {
-      //
+      await updateGpuAction(action, context);
     } else if (type === AutomationActionType.UpdateGpuSources) {
       await updateGpuSourcesAction(action, context);
     } else {

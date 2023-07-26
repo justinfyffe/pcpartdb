@@ -87,6 +87,14 @@ export interface UpdateCpuActionData {
   cpuId?: number;
 }
 
+export interface CreateGpuActionData {
+  // Name to use when creating GPU
+  preferredName?: string;
+
+  // For fetching data based on a new GPU.
+  sources?: ProductSourceGroup;
+}
+
 export interface UpdateGpuActionData {
   // For fetching data based on an existing GPU.
   gpuId?: number;

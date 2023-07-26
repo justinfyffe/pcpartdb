@@ -1,9 +1,10 @@
 HIGH LEVEL TODO:
 - Automation
-  - gpu sources
+  - add preferred slug with generate slug button. uses preferred name
   - gpu retail model sources
-  - create gpu
-  - update gpu
+    - how to set chipset id? as a source?
+  - create gpu retail models
+  - update gpu retail models
   - add edit button after approving
   - Mobile friendly so can approve anywhere
   - how to terminate without breaking?
