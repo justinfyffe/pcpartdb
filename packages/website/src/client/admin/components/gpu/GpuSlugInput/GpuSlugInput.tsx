@@ -1,4 +1,4 @@
-import { generateGpuSlug, GpuField } from '@pcpartdb/shared';
+import { generateGpuSlug, GpuField, productFieldValue } from '@pcpartdb/shared';
 import React, { forwardRef, useCallback, useState } from 'react';
 import { Control, useWatch } from 'react-hook-form';
 import { Button } from '../../../../shared/components';
@@ -29,7 +29,7 @@ export const GpuSlugInput = forwardRef<HTMLInputElement, GpuSlugInputProps>(
     );
 
     const handleGenerate = useCallback(() => {
-      const slug = generateGpuSlug(name, company?.value);
+      const slug = generateGpuSlug(name, productFieldValue(company));
       setSlug(slug);
       onChange?.(slug);
     }, [onChange, name, company]);

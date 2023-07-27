@@ -7,19 +7,24 @@ import { Dialog } from 'packages/website/src/client/shared/components/Dialog/Dia
 import { classNames } from 'packages/website/src/client/shared/ui';
 import React, { useCallback, useMemo, useState } from 'react';
 
-interface PickSourceDialogProps {
+interface SourcePickerDialogProps {
   sources: ProductSource[];
   currentSource?: ProductSource;
 
   onSelected?: (selected: ProductSource) => void;
 }
 
-export const PickSourceDialog = (props: PickSourceDialogProps) => {
+export const SourcePickerDialog = (props: SourcePickerDialogProps) => {
   const { sources, currentSource, onSelected } = props;
 
   const [selected, setSelected] = useState(currentSource || null);
 
   // Memos
+
+  const sourceList = useMemo(
+    () => [...sources].sort((a, b) => a.sourceName.localeCompare(b.sourceName)),
+    [sources],
+  );
 
   const sourceKeyName = useMemo(
     () => formatProductSourceName(sources[0].sourceKey),
@@ -38,7 +43,7 @@ export const PickSourceDialog = (props: PickSourceDialogProps) => {
   return (
     <Dialog title={`Choose Source for ${sourceKeyName}`} showClose={true}>
       <div className="flex flex-col gap-2">
-        {sources.map((source, _i) => (
+        {sourceList.map((source, _i) => (
           <div
             key={source.id}
             className={classNames(
@@ -47,10 +52,11 @@ export const PickSourceDialog = (props: PickSourceDialogProps) => {
             )}
           >
             <div
-              className="flex-1 font-semibold cursor-pointer"
+              className="flex-1 cursor-pointer"
               onClick={() => setSelected(source)}
             >
-              {source.sourceName}
+              <div className="font-semibold">{source.sourceName}</div>
+              <div>{source.archived ? <>Archived</> : <>Not Archived</>}</div>
             </div>
 
             <a

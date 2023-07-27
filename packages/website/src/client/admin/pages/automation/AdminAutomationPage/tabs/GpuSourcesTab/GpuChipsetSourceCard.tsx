@@ -1,16 +1,12 @@
-import {
-  ArrowTopRightOnSquareIcon,
-  ChevronDownIcon,
-  ChevronLeftIcon,
-} from '@heroicons/react/24/outline';
+import { ChevronDownIcon, ChevronLeftIcon } from '@heroicons/react/24/outline';
 import {
   AutomationActionType,
   CreateGpuActionData,
+  formatProductSourceName,
   GpuDataSourceKey,
   GpuProductSource,
   GpuProductSourceGroup,
   Product,
-  ProductSource,
   ProductType,
   UpdateGpuActionData,
 } from '@pcpartdb/shared';
@@ -20,21 +16,17 @@ import {
   ProductAutocomplete,
   productSourceService,
 } from 'packages/website/src/client/product';
-import { ProductSourceAutocomplete } from 'packages/website/src/client/product/components/ProductSourceAutocomplete';
 import {
   Card,
   CardContent,
   CardTitle,
-  Checkbox,
   Field,
   FieldHint,
-  FieldOptional,
-  showDialog,
   TextInput,
 } from 'packages/website/src/client/shared/components';
 import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
 import React, { useCallback, useMemo, useState } from 'react';
-import { PickSourceDialog } from '../../components/PickSourceDialog';
+import { SourceInputField } from '../../components/SourceInputField';
 
 interface GpuChipsetSourceCardProps {
   sources: GpuProductSourceGroup;
@@ -49,48 +41,64 @@ export const GpuChipsetSourceCard = (props: GpuChipsetSourceCardProps) => {
 
   const techPowerUpSources = useMemo(
     () =>
-      sources.filter(
-        (source) => source.sourceKey === GpuDataSourceKey.TechPowerUp,
-      ),
+      sources
+        .filter((source) => source.sourceKey === GpuDataSourceKey.TechPowerUp)
+        .sort((a, b) => a.sourceName.localeCompare(b.sourceName)),
     [sources],
   );
-  const [techPowerUp, setTechPowerUp] = useState(techPowerUpSources[0] || null);
+  const [techPowerUp, setTechPowerUp] = useState(
+    () =>
+      techPowerUpSources.find((value) => value.archived) ||
+      techPowerUpSources[0] ||
+      null,
+  );
+  const [archiveTechPowerUp, setArchiveTechPowerUp] = useState(!!techPowerUp);
 
   const passMarkSources = useMemo(
     () =>
-      sources.filter(
-        (source) => source.sourceKey === GpuDataSourceKey.VideocardBenchmarks,
-      ),
+      sources
+        .filter(
+          (source) => source.sourceKey === GpuDataSourceKey.VideocardBenchmarks,
+        )
+        .sort((a, b) => a.sourceName.localeCompare(b.sourceName)),
     [sources],
   );
-  const [passMark, setPassMark] = useState(passMarkSources[0] || null);
+  const [passMark, setPassMark] = useState(
+    () =>
+      passMarkSources.find((value) => value.archived) ||
+      passMarkSources[0] ||
+      null,
+  );
+  const [archivePassMark, setArchivePassMark] = useState(!!passMark);
 
   const ulBenchmarkSources = useMemo(
     () =>
-      sources.filter(
-        (source) => source.sourceKey === GpuDataSourceKey.UlBenchmarks,
-      ),
+      sources
+        .filter((source) => source.sourceKey === GpuDataSourceKey.UlBenchmarks)
+        .sort((a, b) => a.sourceName.localeCompare(b.sourceName)),
     [sources],
   );
-  const [ulBenchmark, setUlBenchmark] = useState(ulBenchmarkSources[0] || null);
+  const [ulBenchmark, setUlBenchmark] = useState(
+    () =>
+      ulBenchmarkSources.find((value) => value.archived) ||
+      ulBenchmarkSources[0] ||
+      null,
+  );
+  const [archiveUlBenchmark, setArchiveUlBenchmark] = useState(!!passMark);
 
-  const techPowerUpId = techPowerUp?.id;
-  const passMarkId = passMark?.id;
-  const ulBenchmarkId = ulBenchmark?.id;
-  const techPowerUpArchived = techPowerUp?.archived;
-  const passMarkArchived = passMark?.archived;
-  const ulBenchmarkArchived = ulBenchmark?.archived;
-  const allArchived =
-    (techPowerUpArchived ?? true) &&
-    (passMarkArchived ?? true) &&
-    (ulBenchmarkArchived ?? true);
-
-  const [archiveTechPowerUp, setArchiveTechPowerUp] = useState(!!techPowerUp);
-  const [archivePassMark, setArchivePassMark] = useState(!!passMark);
-  const [archiveUlBenchmark, setArchiveUlBenchmark] = useState(!!ulBenchmark);
+  const allArchived = useMemo(() => {
+    return (
+      (techPowerUp?.archived ?? true) &&
+      (passMark?.archived ?? true) &&
+      (ulBenchmark?.archived ?? true)
+    );
+  }, [techPowerUp?.archived, passMark?.archived, ulBenchmark?.archived]);
 
   const [preferredName, setPreferredName] = useState(
-    () => sources[0].sourceName,
+    () =>
+      techPowerUp?.sourceName ||
+      passMark?.sourceName ||
+      ulBenchmark?.sourceName,
   );
   const [appliedGpu, setAppliedGpu] = useState<Product>(null);
   const [groupKey] = useState(
@@ -101,23 +109,23 @@ export const GpuChipsetSourceCard = (props: GpuChipsetSourceCardProps) => {
     () =>
       [
         techPowerUp
-          ? `TechPowerUp${
+          ? `${formatProductSourceName(GpuDataSourceKey.TechPowerUp)} ${
               techPowerUpSources.length > 1
-                ? ` (x${techPowerUpSources.length})`
+                ? `(x${techPowerUpSources.length})`
                 : ''
-            }`
+            }`.trim()
           : null,
         passMark
-          ? `PassMark${
-              passMarkSources.length > 1 ? ` (x${passMarkSources.length})` : ''
-            }`
+          ? `${formatProductSourceName(GpuDataSourceKey.VideocardBenchmarks)} ${
+              passMarkSources.length > 1 ? `(x${passMarkSources.length})` : ''
+            }`.trim()
           : null,
         ulBenchmark
-          ? `UL Benchmarks${
+          ? `${formatProductSourceName(GpuDataSourceKey.UlBenchmarks)} ${
               ulBenchmarkSources.length > 1
-                ? ` (x${ulBenchmarkSources.length})`
+                ? `(x${ulBenchmarkSources.length})`
                 : ''
-            }`
+            }`.trim()
           : null,
       ]
         .filter((source) => source != null)
@@ -134,32 +142,16 @@ export const GpuChipsetSourceCard = (props: GpuChipsetSourceCardProps) => {
 
   // Callbacks
 
-  const setNameFromSource = useCallback((source: GpuProductSource) => {
-    const name = source.sourceName;
-    setPreferredName(name);
-  }, []);
-
-  const save = useCallback(async () => {
-    const newTechPowerUp: GpuProductSource =
+  const handleSave = useCallback(async () => {
+    const newTechPowerUp =
       techPowerUp != null
-        ? {
-            ...techPowerUp,
-            archived: archiveTechPowerUp,
-          }
+        ? { ...techPowerUp, archived: archiveTechPowerUp }
         : null;
-    const newPassMark: GpuProductSource =
-      passMark != null
-        ? {
-            ...passMark,
-            archived: archivePassMark,
-          }
-        : null;
-    const newUlBenchmark: GpuProductSource =
+    const newPassMark =
+      passMark != null ? { ...passMark, archived: archivePassMark } : null;
+    const newUlBenchmark =
       ulBenchmark != null
-        ? {
-            ...ulBenchmark,
-            archived: archiveUlBenchmark,
-          }
+        ? { ...ulBenchmark, archived: archiveUlBenchmark }
         : null;
 
     const sources = [newTechPowerUp, newPassMark, newUlBenchmark].filter(
@@ -168,9 +160,9 @@ export const GpuChipsetSourceCard = (props: GpuChipsetSourceCardProps) => {
 
     await productSourceService.upsert({ sources: sources });
 
-    await setTechPowerUp(newTechPowerUp);
-    await setPassMark(newPassMark);
-    await setUlBenchmark(newUlBenchmark);
+    setTechPowerUp(newTechPowerUp);
+    setPassMark(newPassMark);
+    setUlBenchmark(newUlBenchmark);
 
     // Close the card
     await setExpanded(false);
@@ -183,26 +175,7 @@ export const GpuChipsetSourceCard = (props: GpuChipsetSourceCardProps) => {
     archiveUlBenchmark,
   ]);
 
-  const setTechPowerUpFromAutocomplete = useCallback(
-    (source: ProductSource) => {
-      setTechPowerUp(source as GpuProductSource);
-      setArchiveTechPowerUp(!!source);
-    },
-    [],
-  );
-  const setPassMarkFromAutocomplete = useCallback((source: ProductSource) => {
-    setPassMark(source as GpuProductSource);
-    setArchivePassMark(!!source);
-  }, []);
-  const setUlBenchmarkFromAutocomplete = useCallback(
-    (source: ProductSource) => {
-      setUlBenchmark(source as GpuProductSource);
-      setArchiveUlBenchmark(!!source);
-    },
-    [],
-  );
-
-  const applyToGpu = useCallback(async () => {
+  const handleApplyToGpu = useCallback(async () => {
     const sources = [techPowerUp, passMark, ulBenchmark]
       .filter((source) => source != null && source.id != null)
       .map((source) => source.id);
@@ -222,10 +195,10 @@ export const GpuChipsetSourceCard = (props: GpuChipsetSourceCardProps) => {
     });
 
     // Update sources
-    await save();
-  }, [techPowerUp, passMark, ulBenchmark, appliedGpu, save]);
+    await handleSave();
+  }, [techPowerUp, passMark, ulBenchmark, appliedGpu, handleSave]);
 
-  const createGpu = useCallback(async () => {
+  const handleCreateGpu = useCallback(async () => {
     const sources = [techPowerUp, passMark, ulBenchmark].filter(
       (source) => source != null,
     );
@@ -238,29 +211,8 @@ export const GpuChipsetSourceCard = (props: GpuChipsetSourceCardProps) => {
     });
 
     // Update sources to archive them.
-    await save();
-  }, [ulBenchmark, save, passMark, preferredName, techPowerUp]);
-
-  const showPickSourceDialog = useCallback(
-    (
-      sources: ProductSource[],
-      currentSource: ProductSource,
-      setter: (value: GpuProductSource) => void,
-    ) => {
-      if (sources.length === 0) {
-        return;
-      }
-
-      showDialog(
-        <PickSourceDialog
-          currentSource={currentSource}
-          sources={sources}
-          onSelected={(selected) => setter(selected as GpuProductSource)}
-        />,
-      );
-    },
-    [],
-  );
+    await handleSave();
+  }, [ulBenchmark, handleSave, passMark, preferredName, techPowerUp]);
 
   // Render
 
@@ -302,250 +254,38 @@ export const GpuChipsetSourceCard = (props: GpuChipsetSourceCardProps) => {
           </Field>
 
           <div className="flex gap-4 items-start">
-            <Field className="flex-1">
-              <div className="flex justify-between">
-                <div className="flex gap-2">
-                  <div>
-                    TechPowerUp{' '}
-                    {techPowerUpSources.length > 1 ? (
-                      <>(x{techPowerUpSources.length})</>
-                    ) : (
-                      <></>
-                    )}
-                  </div>
-                  {techPowerUp != null && (
-                    <a
-                      href={techPowerUp.sourceUrl}
-                      target="_blank"
-                      rel="noreferrer nofollow"
-                    >
-                      <ArrowTopRightOnSquareIcon className="w-4 inline mb-1" />
-                    </a>
-                  )}
-                </div>
+            <SourceInputField
+              productType={ProductType.Gpu}
+              sourceKey={GpuDataSourceKey.TechPowerUp}
+              sources={techPowerUpSources}
+              currentSource={techPowerUp}
+              archive={archiveTechPowerUp}
+              setArchive={setArchiveTechPowerUp}
+              onUseName={setPreferredName}
+              onChange={(source) => setTechPowerUp(source as GpuProductSource)}
+            />
 
-                <FieldOptional className="flex gap-2">
-                  {techPowerUpSources.length > 0 && (
-                    <>
-                      <a
-                        className="cursor-pointer"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          showPickSourceDialog(
-                            techPowerUpSources,
-                            techPowerUp,
-                            setTechPowerUp,
-                          );
-                        }}
-                      >
-                        picker
-                      </a>
+            <SourceInputField
+              productType={ProductType.Gpu}
+              sourceKey={GpuDataSourceKey.VideocardBenchmarks}
+              sources={passMarkSources}
+              currentSource={passMark}
+              archive={archivePassMark}
+              setArchive={setArchivePassMark}
+              onUseName={setPreferredName}
+              onChange={(source) => setPassMark(source as GpuProductSource)}
+            />
 
-                      {techPowerUp != null && <>&bull;</>}
-                    </>
-                  )}
-                  {techPowerUp != null && (
-                    <a
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setNameFromSource(techPowerUp);
-                      }}
-                      className="cursor-pointer"
-                    >
-                      use name
-                    </a>
-                  )}
-                </FieldOptional>
-              </div>
-              <div className="flex flex-col flex-1 gap-2">
-                <ProductSourceAutocomplete
-                  productType={ProductType.Gpu}
-                  source={GpuDataSourceKey.TechPowerUp}
-                  value={techPowerUp}
-                  onChange={setTechPowerUpFromAutocomplete}
-                />
-                <TextInput value={techPowerUp?.sourceUrl} disabled />
-              </div>
-              {techPowerUp != null && (
-                <div className="flex justify-between">
-                  <FieldHint>
-                    {techPowerUpId}:{' '}
-                    {techPowerUpArchived ? <>Archived</> : <>Not Archived</>}
-                  </FieldHint>
-                  <Checkbox
-                    disabled={techPowerUp == null}
-                    value={archiveTechPowerUp}
-                    onChange={(checked) => setArchiveTechPowerUp(checked)}
-                  >
-                    Archive
-                  </Checkbox>
-                </div>
-              )}
-            </Field>
-
-            <Field className="flex-1">
-              <div className="flex justify-between">
-                <div className="flex gap-2">
-                  <div>
-                    PassMark{' '}
-                    {passMarkSources.length > 1 ? (
-                      <>(x{passMarkSources.length})</>
-                    ) : (
-                      <></>
-                    )}
-                  </div>
-                  {passMark != null && (
-                    <a
-                      href={passMark.sourceUrl}
-                      target="_blank"
-                      rel="noreferrer nofollow"
-                    >
-                      <ArrowTopRightOnSquareIcon className="w-4 inline mb-1" />
-                    </a>
-                  )}
-                </div>
-
-                <FieldOptional className="flex gap-2">
-                  {passMarkSources.length > 0 && (
-                    <>
-                      <a
-                        className="cursor-pointer"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          showPickSourceDialog(
-                            passMarkSources,
-                            passMark,
-                            setPassMark,
-                          );
-                        }}
-                      >
-                        picker
-                      </a>
-
-                      {passMark != null && <>&bull;</>}
-                    </>
-                  )}
-                  {passMark != null && (
-                    <a
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setNameFromSource(passMark);
-                      }}
-                      className="cursor-pointer"
-                    >
-                      use name
-                    </a>
-                  )}
-                </FieldOptional>
-              </div>
-              <div className="flex flex-col flex-1 gap-2">
-                <ProductSourceAutocomplete
-                  productType={ProductType.Gpu}
-                  source={GpuDataSourceKey.VideocardBenchmarks}
-                  value={passMark}
-                  onChange={setPassMarkFromAutocomplete}
-                />
-                <TextInput value={passMark?.sourceUrl} disabled />
-              </div>
-              {passMark != null && (
-                <div className="flex justify-between">
-                  <FieldHint>
-                    {passMarkId}:{' '}
-                    {passMarkArchived ? <>Archived</> : <>Not Archived</>}
-                  </FieldHint>
-
-                  <Checkbox
-                    disabled={passMark == null}
-                    value={archivePassMark}
-                    onChange={(checked) => setArchivePassMark(checked)}
-                  >
-                    Archive
-                  </Checkbox>
-                </div>
-              )}
-            </Field>
-
-            <Field className="flex-1">
-              <div className="flex justify-between">
-                <div className="flex gap-2">
-                  <div>
-                    UL Benchmarks{' '}
-                    {ulBenchmarkSources.length > 1 ? (
-                      <>(x{ulBenchmarkSources.length})</>
-                    ) : (
-                      <></>
-                    )}
-                  </div>
-                  {ulBenchmark != null && (
-                    <a
-                      href={ulBenchmark.sourceUrl}
-                      target="_blank"
-                      rel="noreferrer nofollow"
-                    >
-                      <ArrowTopRightOnSquareIcon className="w-4 inline mb-1" />
-                    </a>
-                  )}
-                </div>
-
-                <FieldOptional className="flex gap-2">
-                  {ulBenchmarkSources.length > 0 && (
-                    <>
-                      <a
-                        className="cursor-pointer"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          showPickSourceDialog(
-                            ulBenchmarkSources,
-                            ulBenchmark,
-                            setUlBenchmark,
-                          );
-                        }}
-                      >
-                        picker
-                      </a>
-
-                      {passMark != null && <>&bull;</>}
-                    </>
-                  )}
-                  {passMark != null && (
-                    <a
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setNameFromSource(ulBenchmark);
-                      }}
-                      className="cursor-pointer"
-                    >
-                      use name
-                    </a>
-                  )}
-                </FieldOptional>
-              </div>
-              <div className="flex flex-col flex-1 gap-2">
-                <ProductSourceAutocomplete
-                  productType={ProductType.Gpu}
-                  source={GpuDataSourceKey.UlBenchmarks}
-                  value={ulBenchmark}
-                  onChange={setUlBenchmarkFromAutocomplete}
-                />
-                <TextInput value={ulBenchmark?.sourceUrl} disabled />
-              </div>
-              {ulBenchmark != null && (
-                <div className="flex justify-between">
-                  <FieldHint>
-                    {ulBenchmarkId}:{' '}
-                    {ulBenchmarkArchived ? <>Archived</> : <>Not Archived</>}
-                  </FieldHint>
-
-                  <Checkbox
-                    disabled={ulBenchmark == null}
-                    value={archiveUlBenchmark}
-                    onChange={(checked) => setArchiveUlBenchmark(checked)}
-                  >
-                    Archive
-                  </Checkbox>
-                </div>
-              )}
-            </Field>
+            <SourceInputField
+              productType={ProductType.Gpu}
+              sourceKey={GpuDataSourceKey.UlBenchmarks}
+              sources={ulBenchmarkSources}
+              currentSource={ulBenchmark}
+              archive={archiveUlBenchmark}
+              setArchive={setArchiveUlBenchmark}
+              onUseName={setPreferredName}
+              onChange={(source) => setUlBenchmark(source as GpuProductSource)}
+            />
           </div>
 
           <div className="flex justify-between gap-4">
@@ -554,14 +294,19 @@ export const GpuChipsetSourceCard = (props: GpuChipsetSourceCardProps) => {
                 productType={ProductType.Gpu}
                 onChangeProduct={setAppliedGpu}
               />
-              <GenericButton disabled={appliedGpu == null} onClick={applyToGpu}>
+              <GenericButton
+                disabled={appliedGpu == null}
+                onClick={handleApplyToGpu}
+              >
                 Apply
               </GenericButton>
             </div>
 
             <div className="flex gap-4">
-              <GenericButton onClick={save}>Save</GenericButton>
-              <GenericButton onClick={createGpu}>Create GPU</GenericButton>
+              <GenericButton onClick={handleSave}>Save</GenericButton>
+              <GenericButton onClick={handleCreateGpu}>
+                Create GPU
+              </GenericButton>
             </div>
           </div>
         </CardContent>

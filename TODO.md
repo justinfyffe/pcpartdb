@@ -1,9 +1,12 @@
 HIGH LEVEL TODO:
 - Automation
+  - fix bug when running createGpuAction
+      Error occurred during automation execution TypeError: company.replaceAll is not a function
+        at generateGpuSlug (/home/justin/dev/pcpartdb/packages/shared/dist/cjs/product/gpu/utils.js:17:14)
+        at createGpuAction (/home/justin/dev/pcpartdb/packages/cli/dist/automation/actions/createGpuAction.js:41:45)
   - Simplify source card code
-    - make a component for source input
+    - use source input on cpus and gpu retail model
   - Finish PickSourceDialog
-    - finish ui
     - integrate with cpus
   - clean up name of columns/data structures
   - clean up names of indexes/uniques
