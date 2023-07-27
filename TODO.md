@@ -1,6 +1,7 @@
 HIGH LEVEL TODO:
 - Automation
   - fix bug when running createGpuAction
+      - Upgrade node, node 14 lacks this.
       Error occurred during automation execution TypeError: company.replaceAll is not a function
         at generateGpuSlug (/home/justin/dev/pcpartdb/packages/shared/dist/cjs/product/gpu/utils.js:17:14)
         at createGpuAction (/home/justin/dev/pcpartdb/packages/cli/dist/automation/actions/createGpuAction.js:41:45)
