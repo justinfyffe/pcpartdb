@@ -1,5 +1,9 @@
 import { ProductSourceGroup } from '../product';
 
+// TODO: Rename to
+// UPDATE_CPU_SOURCES
+// UPDATE_CPU
+// CREATE_CPU
 export enum AutomationAction {
   /**
    * Update sitemaps on the website. Pull CPUs and GPUs from API,
@@ -32,7 +36,7 @@ export enum AutomationAction {
   FetchGpuData = 'FETCH_GPU_DATA',
 }
 
-export interface FetchCpuDataAction {
+export interface FetchCpuDataActionData {
   // Name to use when creating CPU
   preferredName?: string;
 

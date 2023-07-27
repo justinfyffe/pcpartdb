@@ -79,7 +79,7 @@ export class CpuService {
     if (cpu == null) {
       throw notFoundError({ cpu: id });
     }
-    if (options.includeRanks) {
+    if (options?.includeRanks) {
       await this.cpuRanksService.populateRanks(
         options.includeRanks,
         [cpu],
@@ -196,28 +196,32 @@ export class CpuService {
   }
 
   async applySources(id: number, sources: ProductSourceGroup, ctx: Context) {
-    const cpu = await this.getById(id, null, ctx);
+    const cpu = await this.getById(id, {}, ctx);
 
-    // Extract individual sources from group
-    const techPowerUp =
-      sources.filter(
-        (source) => source.sourceKey === CpuDataSourceKey.TechPowerUp,
-      )[0] || null;
-    const passMark =
-      sources.filter(
-        (source) => source.sourceKey === CpuDataSourceKey.PassMark,
-      )[0] || null;
-    const geekBench =
-      sources.filter(
-        (source) => source.sourceKey === CpuDataSourceKey.GeekBench,
-      )[0] || null;
+    // Extract URLs from new sources
+    const techPowerUpUrl = sources.filter(
+      (source) => source.sourceKey === CpuDataSourceKey.TechPowerUp,
+    )[0]?.sourceUrl;
+    const passMarkUrl = sources.filter(
+      (source) => source.sourceKey === CpuDataSourceKey.PassMark,
+    )[0]?.sourceUrl;
+    const geekBenchUrl = sources.filter(
+      (source) => source.sourceKey === CpuDataSourceKey.GeekBench,
+    )[0]?.sourceUrl;
 
-    // We don't want to delete sources, only overwrite them.
+    // Extract data sources from existing cpu
+    const techPowerUp = cpu.meta?.dataSources?.[CpuDataSourceKey.TechPowerUp];
+    const passMark = cpu.meta?.dataSources?.[CpuDataSourceKey.PassMark];
+    const geekBench = cpu.meta?.dataSources?.[CpuDataSourceKey.GeekBench];
+
+    // Merge - We don't want to delete sources, only overwrite them.
     cpu.meta = deepmerge(cpu.meta, {
       dataSources: {
-        [CpuDataSourceKey.TechPowerUp]: { url: techPowerUp?.sourceUrl },
-        [CpuDataSourceKey.PassMark]: { url: passMark?.sourceUrl },
-        [CpuDataSourceKey.GeekBench]: { url: geekBench?.sourceUrl },
+        [CpuDataSourceKey.TechPowerUp]: {
+          url: techPowerUpUrl || techPowerUp?.url,
+        },
+        [CpuDataSourceKey.PassMark]: { url: passMarkUrl || passMark?.url },
+        [CpuDataSourceKey.GeekBench]: { url: geekBenchUrl || geekBench?.url },
       },
     } as CpuMeta);
 

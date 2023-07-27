@@ -82,7 +82,7 @@ export class CpuRepository {
 
   async findById(
     id: number,
-    options: FindCpuOptions,
+    options?: FindCpuOptions,
     config?: RepositoryConfig,
   ): Promise<CpuEntity> {
     const trx = config?.trx ?? this.db;
@@ -99,7 +99,7 @@ export class CpuRepository {
 
   async findBySlug(
     slug: string,
-    options: FindCpuOptions,
+    options?: FindCpuOptions,
     config?: RepositoryConfig,
   ): Promise<CpuEntity> {
     const trx = config?.trx ?? this.db;

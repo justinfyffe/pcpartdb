@@ -20,8 +20,8 @@ export interface AutomationQueueItem<T = unknown> {
   id?: number;
 
   description?: string;
-  status?: AutomationQueueStatus;
-  action?: AutomationAction;
+  status: AutomationQueueStatus;
+  action: AutomationAction;
 
   data?: T;
   metadata?: AutomationQueueItemMeta;

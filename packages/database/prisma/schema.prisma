@@ -332,8 +332,8 @@ model AutomationQueueItem {
   id Int @id @default(autoincrement())
 
   description String?
-  status      String?
-  action      String?
+  status      String
+  action      String
 
   data     Bytes?
   metadata Json?

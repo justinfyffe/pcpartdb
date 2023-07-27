@@ -1,14 +1,17 @@
 import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline';
 import {
   AutomationAction,
+  Cpu,
   CpuDataSourceKey,
-  FetchCpuDataAction,
+  FetchCpuDataActionData,
+  Product,
   ProductSource,
   ProductSourceGroup,
   ProductType,
 } from '@pcpartdb/shared';
 import { automationService } from 'packages/website/src/client/automation/services';
 import {
+  formatProductName,
   ProductAutocomplete,
   productSourceService,
 } from 'packages/website/src/client/product';
@@ -64,7 +67,7 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
   const [preferredName, setPreferredName] = useState(
     () => sources[0].sourceName,
   );
-  const [appliedCpuId, setAppliedCpuId] = useState<number>(null);
+  const [appliedCpu, setAppliedCpu] = useState<Product>(null);
 
   const subtitle = useMemo(
     () =>
@@ -100,57 +103,79 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
     [geekBench],
   );
 
-  const handleSave = useCallback(async () => {
-    // Apply archived to the sources.
-    const techPowerUpSource =
-      techPowerUp != null
-        ? { ...techPowerUp, archived: archiveTechPowerUp }
-        : null;
-    const passMarkSource =
-      passMark != null ? { ...passMark, archived: passMark.archived } : null;
-    const geekBenchSource =
-      geekBench != null ? { ...geekBench, archived: geekBench.archived } : null;
+  const handleSetNameFromSource = useCallback((source: ProductSource) => {
+    const name = source.sourceName;
+    setPreferredName(name);
+  }, []);
 
-    const sources = [techPowerUpSource, passMarkSource, geekBenchSource].filter(
+  const handleSave = useCallback(async () => {
+    const newTechPowerUp: ProductSource = {
+      ...techPowerUp,
+      archived: archiveTechPowerUp,
+    };
+    const newPassMark: ProductSource = {
+      ...passMark,
+      archived: archivePassMark,
+    };
+    const newGeekBench: ProductSource = {
+      ...geekBench,
+      archived: archiveGeekBench,
+    };
+
+    const sources = [newTechPowerUp, newPassMark, newGeekBench].filter(
       (source) => source != null && source.id != null,
     );
 
     await productSourceService.upsert({ sources: sources });
 
-    setTechPowerUp(techPowerUpSource);
-    setTechPowerUp(passMarkSource);
-    setTechPowerUp(passMarkSource);
-  }, [archiveTechPowerUp, geekBench, passMark, techPowerUp]);
+    await setTechPowerUp(newTechPowerUp);
+    await setPassMark(newPassMark);
+    await setGeekBench(newGeekBench);
+  }, [
+    archiveGeekBench,
+    archivePassMark,
+    archiveTechPowerUp,
+    geekBench,
+    passMark,
+    techPowerUp,
+  ]);
 
   const handleApplyToCpu = useCallback(async () => {
     const sources = [techPowerUp, passMark, geekBench]
       .filter((source) => source != null && source.id != null)
       .map((source) => source.id);
 
+    // Add sources to existing product.
     await productSourceService.applyToProduct({
       productType: ProductType.Cpu,
-      productId: appliedCpuId,
+      productId: appliedCpu.id,
       sources,
     });
 
-    // Update sources to archive them.
+    // Enqueue action to update existing product.
+    await automationService.enqueue({
+      action: AutomationAction.FetchCpuData,
+      description: `Update CPU: ${formatProductName(
+        ProductType.Cpu,
+        appliedCpu,
+      )}`,
+      data: { cpuId: appliedCpu.id } as FetchCpuDataActionData,
+    });
+
+    // Update sources
     await handleSave();
-  }, [handleSave, appliedCpuId, geekBench, passMark, techPowerUp]);
+  }, [techPowerUp, passMark, geekBench, appliedCpu, handleSave]);
 
-  const handleSetNameFromSource = useCallback((source: ProductSource) => {
-    const name = source.sourceName;
-    setPreferredName(name);
-  }, []);
-
-  const handleEnqueueCpuAutomation = useCallback(async () => {
+  const handleEnqueueAutomation = useCallback(async () => {
     const sources = [techPowerUp, passMark, geekBench].filter(
       (source) => source != null,
     );
 
+    // Enqueue action to create new CPU
     await automationService.enqueue({
       action: AutomationAction.FetchCpuData,
       description: `Create CPU: ${preferredName}`,
-      data: { preferredName, sources } as FetchCpuDataAction,
+      data: { preferredName, sources } as FetchCpuDataActionData,
     });
 
     // Update sources to archive them.
@@ -168,11 +193,11 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
         <div className="flex flex-1 gap-4">
           <ProductAutocomplete
             productType={ProductType.Cpu}
-            onChange={setAppliedCpuId}
+            onChangeProduct={setAppliedCpu}
           />
           <Button
             variant={ButtonVariant.Generic}
-            disabled={appliedCpuId == null}
+            disabled={appliedCpu == null}
             onClick={handleApplyToCpu}
           >
             Apply to CPU
@@ -340,11 +365,11 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
 
         <div className="flex justify-between gap-4">
           <Button variant={ButtonVariant.Generic} onClick={handleSave}>
-            Save
+            Save Sources
           </Button>
           <Button
             variant={ButtonVariant.Generic}
-            onClick={handleEnqueueCpuAutomation}
+            onClick={handleEnqueueAutomation}
           >
             Enqueue CPU Creation
           </Button>

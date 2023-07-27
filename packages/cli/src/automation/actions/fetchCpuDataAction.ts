@@ -6,7 +6,7 @@ import {
   CpuDataSourceKey,
   CpuField,
   CreateProductUpdateRequest,
-  FetchCpuDataAction,
+  FetchCpuDataActionData,
   generateCpuSlug,
   hasProductFieldValue,
   ProductDiff,
@@ -22,7 +22,7 @@ import { AutomationContext } from '../types';
 // TODO: branch this into two methods from this one
 // One for handling source, and one for handling cpu id
 export async function fetchCpuDataAction(
-  action: FetchCpuDataAction,
+  action: FetchCpuDataActionData,
   context: AutomationContext,
 ) {
   // Get existing CPU (if cpuId is provided)

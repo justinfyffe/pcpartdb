@@ -123,14 +123,11 @@ export class ProductSourceRepository {
 
     const rawSourceNames = await trx.productSource.groupBy({
       by: ['productType', 'sourceName'],
-      _count: {
-        id: true,
+      _max: {
+        createdAt: true,
       },
       where: this.generateWhere(filter),
-      orderBy: [
-        { _count: { id: ListOrder.Desc } },
-        { sourceName: orderBy?.order ?? ListOrder.Asc },
-      ],
+      orderBy: { _max: { createdAt: 'desc' } },
       skip: offset ?? DEFAULT_LIST_OFFSET,
       take: limit ?? DEFAULT_LIST_LIMIT,
     });

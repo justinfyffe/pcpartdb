@@ -110,15 +110,12 @@ export class ProductSourceService {
     if (productType === ProductType.Cpu) {
       await this.cpuService.applySources(productId, productSources, ctx);
     } else if (productType === ProductType.Gpu) {
-      // TODO
+      // TODO: Update GPU
     } else {
       throw badRequestError({
         property: 'productType',
         constraint: ValidationErrorType.InvalidProductType,
       });
     }
-
-    // Enqueue action to update product
-    // Call automation queue service to do this.
   }
 }

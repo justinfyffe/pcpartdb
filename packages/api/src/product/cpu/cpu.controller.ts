@@ -88,7 +88,7 @@ export class CpuController {
     );
   }
 
-  @Get('autocompletefield')
+  @Get('autocomplete/field')
   @UseGuards(StaffGuard)
   async autocompleteField(
     @Query('key') key: string,

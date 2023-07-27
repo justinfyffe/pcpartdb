@@ -64,8 +64,8 @@ export async function mapToAutomationQueueItemEntity(
     action: dto.action,
     data,
     metadata: dto.metadata,
-    priority: dto.priority,
-    timestamp: dto.timestamp != null ? new Date(dto.timestamp) : null,
+    priority: dto.priority || 0,
+    timestamp: dto.timestamp != null ? new Date(dto.timestamp) : undefined,
     statusUpdatedAt:
       dto.statusUpdatedAt != null ? new Date(dto.statusUpdatedAt) : null,
   };
