@@ -6,7 +6,6 @@ import {
   CpuDataSourceKey,
   CpuField,
   CreateProductUpdateRequest,
-  FetchCpuDataActionData,
   generateCpuSlug,
   hasProductFieldValue,
   ProductDiff,
@@ -14,6 +13,7 @@ import {
   ProductType,
   ProductUpdate,
   ProductUpdateStatus,
+  UpdateCpuActionData,
 } from '@pcpartdb/shared';
 import deepmerge from 'deepmerge';
 import { compare as generateJsonPatch } from 'fast-json-patch';
@@ -21,8 +21,8 @@ import { AutomationContext } from '../types';
 
 // TODO: branch this into two methods from this one
 // One for handling source, and one for handling cpu id
-export async function fetchCpuDataAction(
-  action: FetchCpuDataActionData,
+export async function updateCpuAction(
+  action: UpdateCpuActionData,
   context: AutomationContext,
 ) {
   // Get existing CPU (if cpuId is provided)
@@ -34,32 +34,13 @@ export async function fetchCpuDataAction(
     return;
   }
 
-  // Get sources from cpu or action
-  const sources = action.sources;
+  // Get sources from cpu
   const techPowerUpSource =
-    originalCpu != null
-      ? originalCpu.meta?.dataSources?.[CpuDataSourceKey.TechPowerUp] || null
-      : {
-          url: sources?.filter(
-            (source) => source.sourceKey === CpuDataSourceKey.TechPowerUp,
-          )[0]?.sourceUrl,
-        };
+    originalCpu.meta?.dataSources?.[CpuDataSourceKey.TechPowerUp] || null;
   const passMarkSource =
-    originalCpu != null
-      ? originalCpu.meta?.dataSources?.[CpuDataSourceKey.PassMark] || null
-      : {
-          url: sources?.filter(
-            (source) => source.sourceKey === CpuDataSourceKey.PassMark,
-          )[0]?.sourceUrl,
-        };
+    originalCpu.meta?.dataSources?.[CpuDataSourceKey.PassMark] || null;
   const geekBenchSource =
-    originalCpu != null
-      ? originalCpu.meta?.dataSources?.[CpuDataSourceKey.GeekBench] || null
-      : {
-          url: sources?.filter(
-            (source) => source.sourceKey === CpuDataSourceKey.GeekBench,
-          )[0]?.sourceUrl,
-        };
+    originalCpu.meta?.dataSources?.[CpuDataSourceKey.GeekBench] || null;
 
   // Scrape the CPU data from our sources.
   const scrapedCpu = await fetchCpuData({
@@ -85,20 +66,6 @@ export async function fetchCpuDataAction(
   // Merge existing cpu with scraped data. Exclude auto-update disabled fields.
   const updatedCpu = mergeCpus(originalCpu, scrapedCpu);
 
-  // New CPUs have some additional data to be applied
-  if (originalCpu == null) {
-    // Preferred name from source
-    if (action?.preferredName) {
-      updatedCpu.name = action.preferredName;
-    }
-
-    // Generate slug, new CPU didn't have it yet.
-    updatedCpu.slug = generateCpuSlug(
-      updatedCpu.name,
-      updatedCpu.company?.value,
-    );
-  }
-
   // Check if we have changes. Upload the update.
   if (hasUpdates(originalCpu, updatedCpu)) {
     await uploadProductUpdate(originalCpu, updatedCpu, context);
@@ -107,7 +74,7 @@ export async function fetchCpuDataAction(
 
 async function getCpu(cpuId: number, context: AutomationContext) {
   if (cpuId == null) {
-    return null;
+    throw new Error('Cannot update cpu, missing cpu id');
   }
 
   const cpu = await context.api.get<Cpu>(`/products/cpu/${cpuId}`);
@@ -140,10 +107,6 @@ async function updateBenchmarks(
   scrapedCpu: Cpu,
   context: AutomationContext,
 ) {
-  if (originalCpu == null) {
-    return;
-  }
-
   let updated = false;
 
   // Update CPU Mark (multi-thread)
@@ -212,19 +175,13 @@ function mergeCpus(originalCpu: Cpu, scrapedCpu: Cpu) {
   });
 
   // Reset name and slug as these might have been overwritten
-  if (originalCpu != null) {
-    result.name = originalCpu.name;
-    result.slug = originalCpu.slug;
-  }
+  result.name = originalCpu.name;
+  result.slug = originalCpu.slug;
 
   return result;
 }
 
 function hasUpdates(before: Cpu, after: Cpu) {
-  if (before == null) {
-    return true;
-  }
-
   const jsonPatch = generateJsonPatch(before, after);
   return jsonPatch.length > 0;
 }

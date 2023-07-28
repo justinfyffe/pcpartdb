@@ -154,7 +154,7 @@ const PASSMARK_URLS = [
   'https://www.cpubenchmark.net/low_end_cpus.html', // low end
 ];
 
-export async function fetchCpuSourcesAction(context: AutomationContext) {
+export async function updateCpuSourcesAction(context: AutomationContext) {
   // Scrape CPU Sources
   const techPowerUpSources = await getTechPowerUpSources();
   const passMarkSources = await getPassMarkSources();

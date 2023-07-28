@@ -124,10 +124,10 @@ export class ProductSourceRepository {
     const rawSourceNames = await trx.productSource.groupBy({
       by: ['productType', 'sourceName'],
       _max: {
-        createdAt: true,
+        updatedAt: true,
       },
       where: this.generateWhere(filter),
-      orderBy: { _max: { createdAt: 'desc' } },
+      orderBy: { _max: { updatedAt: 'desc' } },
       skip: offset ?? DEFAULT_LIST_OFFSET,
       take: limit ?? DEFAULT_LIST_LIMIT,
     });
@@ -145,7 +145,7 @@ export class ProductSourceRepository {
     // This could be slow
     // https://github.com/prisma/prisma/issues/4228#issuecomment-1405042711
     const results = await trx.productSource.findMany({
-      distinct: ['sourceName'],
+      distinct: ['productType', 'sourceName'],
       select: { sourceName: true },
       where: this.generateWhere(filter),
     });

@@ -25,6 +25,12 @@ export class AutomationController {
     // TODO
   }
 
+  @Get('queue')
+  @UseGuards(StaffGuard)
+  async getQueue(@Ctx() ctx: Context) {
+    // TODO
+  }
+
   @Post('queue')
   @UseGuards(StaffGuard)
   async enqueue(@Body() body: EnqueueAutomationRequest, @Ctx() ctx: Context) {

@@ -1,12 +1,5 @@
 import 'reflect-metadata';
-import {
-  ChevronDoubleDownIcon,
-  ChevronDoubleUpIcon,
-  ChevronDownIcon,
-  ChevronUpIcon,
-  InformationCircleIcon,
-  XMarkIcon,
-} from '@heroicons/react/24/outline';
+import { InformationCircleIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import {
   Button,
   ButtonVariant,
@@ -23,7 +16,11 @@ interface QueueTabProps {}
 
 export const QueueTab = (props: QueueTabProps) => {
   return (
-    <>
+    <div className="flex flex-col gap-4">
+      <div className="flex justify-end">
+        <Button variant={ButtonVariant.Generic}>Refresh</Button>
+      </div>
+
       <Table>
         <THead>
           <Tr>
@@ -43,18 +40,6 @@ export const QueueTab = (props: QueueTabProps) => {
                 <InformationCircleIcon className="w-4" />
               </Button>
               <Button variant={ButtonVariant.Generic}>
-                <ChevronUpIcon className="w-4" />
-              </Button>
-              <Button variant={ButtonVariant.Generic}>
-                <ChevronDownIcon className="w-4" />
-              </Button>
-              <Button variant={ButtonVariant.Generic}>
-                <ChevronDoubleUpIcon className="w-4" />
-              </Button>
-              <Button variant={ButtonVariant.Generic}>
-                <ChevronDoubleDownIcon className="w-4" />
-              </Button>
-              <Button variant={ButtonVariant.Generic}>
                 <XMarkIcon className="w-4" />
               </Button>
             </Td>
@@ -67,18 +52,6 @@ export const QueueTab = (props: QueueTabProps) => {
             <Td className="flex justify-end gap-2">
               <Button variant={ButtonVariant.Generic}>
                 <InformationCircleIcon className="w-4" />
-              </Button>
-              <Button variant={ButtonVariant.Generic}>
-                <ChevronUpIcon className="w-4" />
-              </Button>
-              <Button variant={ButtonVariant.Generic}>
-                <ChevronDownIcon className="w-4" />
-              </Button>
-              <Button variant={ButtonVariant.Generic}>
-                <ChevronDoubleUpIcon className="w-4" />
-              </Button>
-              <Button variant={ButtonVariant.Generic}>
-                <ChevronDoubleDownIcon className="w-4" />
               </Button>
               <Button variant={ButtonVariant.Generic}>
                 <XMarkIcon className="w-4" />
@@ -95,18 +68,6 @@ export const QueueTab = (props: QueueTabProps) => {
                 <InformationCircleIcon className="w-4" />
               </Button>
               <Button variant={ButtonVariant.Generic}>
-                <ChevronUpIcon className="w-4" />
-              </Button>
-              <Button variant={ButtonVariant.Generic}>
-                <ChevronDownIcon className="w-4" />
-              </Button>
-              <Button variant={ButtonVariant.Generic}>
-                <ChevronDoubleUpIcon className="w-4" />
-              </Button>
-              <Button variant={ButtonVariant.Generic}>
-                <ChevronDoubleDownIcon className="w-4" />
-              </Button>
-              <Button variant={ButtonVariant.Generic}>
                 <XMarkIcon className="w-4" />
               </Button>
             </Td>
@@ -121,24 +82,12 @@ export const QueueTab = (props: QueueTabProps) => {
                 <InformationCircleIcon className="w-4" />
               </Button>
               <Button variant={ButtonVariant.Generic}>
-                <ChevronUpIcon className="w-4" />
-              </Button>
-              <Button variant={ButtonVariant.Generic}>
-                <ChevronDownIcon className="w-4" />
-              </Button>
-              <Button variant={ButtonVariant.Generic}>
-                <ChevronDoubleUpIcon className="w-4" />
-              </Button>
-              <Button variant={ButtonVariant.Generic}>
-                <ChevronDoubleDownIcon className="w-4" />
-              </Button>
-              <Button variant={ButtonVariant.Generic}>
                 <XMarkIcon className="w-4" />
               </Button>
             </Td>
           </Tr>
         </TBody>
       </Table>
-    </>
+    </div>
   );
 };

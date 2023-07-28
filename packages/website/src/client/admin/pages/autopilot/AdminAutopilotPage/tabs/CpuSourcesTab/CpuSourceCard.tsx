@@ -3,7 +3,7 @@ import {
   AutomationAction,
   Cpu,
   CpuDataSourceKey,
-  FetchCpuDataActionData,
+  CreateCpuActionData,
   Product,
   ProductSource,
   ProductSourceGroup,
@@ -154,12 +154,12 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
 
     // Enqueue action to update existing product.
     await automationService.enqueue({
-      action: AutomationAction.FetchCpuData,
+      action: AutomationAction.CreateCpu,
       description: `Update CPU: ${formatProductName(
         ProductType.Cpu,
         appliedCpu,
       )}`,
-      data: { cpuId: appliedCpu.id } as FetchCpuDataActionData,
+      data: { cpuId: appliedCpu.id } as CreateCpuActionData,
     });
 
     // Update sources
@@ -173,9 +173,9 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
 
     // Enqueue action to create new CPU
     await automationService.enqueue({
-      action: AutomationAction.FetchCpuData,
+      action: AutomationAction.CreateCpu,
       description: `Create CPU: ${preferredName}`,
-      data: { preferredName, sources } as FetchCpuDataActionData,
+      data: { preferredName, sources } as CreateCpuActionData,
     });
 
     // Update sources to archive them.
