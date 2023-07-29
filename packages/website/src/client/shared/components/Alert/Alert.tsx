@@ -7,7 +7,7 @@ export enum AlertVariant {
   Error = 'error',
 }
 
-interface AlertProps {
+export interface AlertProps {
   as?: React.ElementType;
   className?: string;
   variant?: AlertVariant;

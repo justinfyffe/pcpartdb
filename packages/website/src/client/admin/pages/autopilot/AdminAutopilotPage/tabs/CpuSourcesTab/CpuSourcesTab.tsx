@@ -11,8 +11,8 @@ import {
   Button,
   ButtonVariant,
   Checkbox,
-  Pagination,
-  PaginationResult,
+  LegacyPagination,
+  LegacyPaginationResult,
 } from 'packages/website/src/client/shared/components';
 import {
   Alert,
@@ -62,7 +62,7 @@ export const CpuSourcesTab = (_props: CpuSourcesTabProps) => {
   }, [query]);
 
   const handlePagination = useCallback(
-    (result: PaginationResult) => {
+    (result: LegacyPaginationResult) => {
       const pagination: ListPagination = {
         offset: result.offset,
         limit: result.limit,
@@ -100,7 +100,7 @@ export const CpuSourcesTab = (_props: CpuSourcesTabProps) => {
         <Alert variant={AlertVariant.Info}>No sources.</Alert>
       )}
 
-      <Pagination
+      <LegacyPagination
         resultsOffset={query.pagination.offset}
         resultsPerPage={query.pagination.limit}
         totalResults={totalResults}

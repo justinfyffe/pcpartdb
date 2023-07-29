@@ -1,5 +1,6 @@
 import { AutomationAction } from '@pcpartdb/shared';
-import { createCpuAction, updateCpuSourcesAction } from './actions';
+import { createCpuAction } from './actions/createCpuAction';
+import { updateCpuSourcesAction } from './actions/updateCpuSourcesAction';
 import { AutomationContext } from './types';
 
 let executing = false;

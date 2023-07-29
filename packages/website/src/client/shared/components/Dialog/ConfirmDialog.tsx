@@ -31,7 +31,7 @@ export const ConfirmDialog: FunctionComponent<ConfirmDialogProps> = (props) => {
   return (
     <div
       className={classNames(
-        'bg-white flex flex-col w-96 max-w-[80%] p-8 overflow-auto max-w-247 rounded shadow gap-2',
+        'bg-white flex flex-col w-96 max-w-[80%] p-8 overflow-auto rounded shadow gap-2',
         className,
       )}
     >

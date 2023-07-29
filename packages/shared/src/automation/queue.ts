@@ -7,13 +7,8 @@ export enum AutomationQueueStatus {
 
 /**
  * Automation actions that we want to prioritize in a queue. Some actions may
- * result in additional actions or require approvals Examples:
- * - FETCH_CPU_SOURCES creates a CPU_SOURCE approval entry.
- * - Approving a CPU_SOURCE entry queues a FETCH_CPU_DATA action.
- * - FETCH_CPU_DATA creates a CPU_DATA approval entry.
- *   - Note: UPDATE_CPU does not always create an approval entry, depending on
- *     what data is being updated.
- * -
+ * result in additional actions or require approvals
+ *
  * Priority queue is ordered by `priority DESC, timestamp ASC`
  */
 export interface AutomationQueueItem<T = unknown> {

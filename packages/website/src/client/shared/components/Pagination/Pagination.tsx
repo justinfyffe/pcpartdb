@@ -1,191 +1,63 @@
+import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import React, { FunctionComponent, useCallback, useMemo } from 'react';
 import { classNames } from '../../ui';
-
-export interface PaginationResult {
-  offset: number;
-  limit: number;
-}
+import { GenericButton } from '../Button/GenericButton';
 
 interface PaginationProps {
   className?: string;
-  neighborPagesClassName?: string;
 
-  neighborPagesDisplayed?: number;
-  marginPagesDisplayed?: number;
+  displayTotal?: boolean;
 
-  hidePages?: boolean;
+  offset: number;
+  limit: number;
+  total: number;
 
-  resultsOffset: number;
-  resultsPerPage: number;
-  totalResults: number;
-
-  hrefBuilder?: (result: PaginationResult) => string;
-  onPageClick?: (result: PaginationResult, event?: React.MouseEvent) => void;
+  onChange?: (offset: number, limit: number, event?: React.MouseEvent) => void;
 }
 
 export const Pagination: FunctionComponent<PaginationProps> = (props) => {
-  const {
-    className,
-    neighborPagesClassName,
-    resultsOffset,
-    resultsPerPage,
-    totalResults,
-    hrefBuilder,
-    onPageClick,
-  } = props;
+  const { className, displayTotal, offset, limit, total, onChange } = props;
 
-  const hidePages = props.hidePages ?? false;
-  const neighborPagesDisplayed = props.neighborPagesDisplayed ?? 2;
-  const marginPagesDisplayed = props.marginPagesDisplayed ?? 2;
+  const hasPrev = offset > 0;
+  const hasNext = offset + limit < total;
 
-  const getPaginationResult = useCallback(
-    (page: number) => {
-      const limit = resultsPerPage;
-      const offset = limit * (page - 1);
-      return { limit, offset };
+  // Memos
+
+  const label = useMemo(() => {
+    const start = Math.max(offset, 0) + 1;
+    const end = Math.min(offset + limit, total);
+    return `${start}-${end} of ${total}`;
+  }, [limit, offset, total]);
+
+  // Callbacks
+
+  const previousPage = useCallback(
+    (evt: React.MouseEvent) => {
+      const newOffset = offset - limit;
+      onChange?.(newOffset, limit, evt);
     },
-    [resultsPerPage],
+    [limit, offset, onChange],
   );
 
-  const currentPage = useMemo(
-    () => Math.ceil(1 + resultsOffset / resultsPerPage),
-    [resultsOffset, resultsPerPage],
+  const nextPage = useCallback(
+    (evt: React.MouseEvent) => {
+      const newOffset = offset + limit;
+      onChange?.(newOffset, limit, evt);
+    },
+    [limit, offset, onChange],
   );
-
-  const totalPages = useMemo(
-    () => Math.ceil(totalResults / resultsPerPage),
-    [totalResults, resultsPerPage],
-  );
-
-  const left = useMemo(() => {
-    const pages: number[] = [];
-    for (let i = 1; i <= marginPagesDisplayed && i <= totalPages; ++i) {
-      pages.push(i);
-    }
-    return pages;
-  }, [marginPagesDisplayed, totalPages]);
-
-  const middle = useMemo(() => {
-    const start = Math.max(1, currentPage - neighborPagesDisplayed);
-    const end = Math.min(totalPages, currentPage + neighborPagesDisplayed);
-
-    const pages: number[] = [];
-    for (let i = start; i <= end; ++i) {
-      pages.push(i);
-    }
-    return pages;
-  }, [currentPage, neighborPagesDisplayed, totalPages]);
-
-  const right = useMemo(() => {
-    const start = Math.max(1, totalPages - marginPagesDisplayed + 1);
-    const pages: number[] = [];
-    for (let i = start; i <= totalPages; ++i) {
-      pages.push(i);
-    }
-    return pages;
-  }, [totalPages, marginPagesDisplayed]);
-
-  const pages = useMemo(() => {
-    const existingPages = new Set<number>(left);
-
-    const pages: number[] = [...left];
-    for (let i = 0; i < middle.length; ++i) {
-      const page = middle[i];
-      if (existingPages.has(page)) {
-        continue;
-      }
-
-      if (page - 1 !== pages[pages.length - 1]) {
-        pages.push(null);
-      }
-
-      pages.push(page);
-      existingPages.add(page);
-    }
-
-    for (let i = 0; i < right.length; ++i) {
-      const page = right[i];
-      if (existingPages.has(page)) {
-        continue;
-      }
-
-      if (page - 1 !== pages[pages.length - 1]) {
-        pages.push(null);
-      }
-
-      pages.push(page);
-      existingPages.add(page);
-    }
-
-    return pages;
-  }, [left, middle, right]);
-
-  if (pages.length === 1) {
-    return <></>;
-  }
 
   return (
-    <nav
-      className={classNames(
-        'flex gap-6 justify-between items-center font-semibold p-2',
-        className,
-      )}
-    >
-      {currentPage > 1 ? (
-        <a
-          className="cursor-pointer"
-          href={hrefBuilder?.(getPaginationResult(currentPage - 1))}
-          onClick={(evt) =>
-            onPageClick?.(getPaginationResult(currentPage - 1), evt)
-          }
-        >
-          Previous
-        </a>
-      ) : (
-        <div></div>
-      )}
+    <nav className={classNames('flex gap-4 items-center', className)}>
+      {displayTotal && <>{label}</>}
 
-      {!hidePages && (
-        <ul className={classNames('flex gap-8', neighborPagesClassName)}>
-          {pages.map((page, i) => (
-            <li key={page || `null-${i}`}>
-              {page == null ? (
-                <>&hellip;</>
-              ) : (
-                <>
-                  {page === currentPage ? (
-                    <>{page}</>
-                  ) : (
-                    <a
-                      className="cursor-pointer"
-                      href={hrefBuilder?.(getPaginationResult(page))}
-                      onClick={(evt) =>
-                        onPageClick?.(getPaginationResult(page), evt)
-                      }
-                    >
-                      {page}
-                    </a>
-                  )}
-                </>
-              )}
-            </li>
-          ))}
-        </ul>
-      )}
+      <GenericButton onClick={previousPage} disabled={!hasPrev}>
+        <ChevronLeftIcon className="w-4" />
+      </GenericButton>
 
-      {currentPage < totalPages ? (
-        <a
-          className="cursor-pointer"
-          href={hrefBuilder?.(getPaginationResult(currentPage + 1))}
-          onClick={(evt) =>
-            onPageClick?.(getPaginationResult(currentPage + 1), evt)
-          }
-        >
-          Next
-        </a>
-      ) : (
-        <div></div>
-      )}
+      <GenericButton onClick={nextPage} disabled={!hasNext}>
+        <ChevronRightIcon className="w-4" />
+      </GenericButton>
     </nav>
   );
 };

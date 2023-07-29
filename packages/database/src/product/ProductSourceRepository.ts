@@ -1,5 +1,4 @@
 import {
-  ListOrder,
   ListProductSourcesFilter,
   ListProductSourcesQuery,
   ProductSourceKey,
@@ -118,7 +117,7 @@ export class ProductSourceRepository {
   ) {
     const trx = config?.trx ?? this.db;
 
-    const { filter, orderBy, pagination } = options.query ?? {};
+    const { filter, orderBy: _orderBy, pagination } = options.query ?? {};
     const { limit, offset } = pagination ?? {};
 
     const rawSourceNames = await trx.productSource.groupBy({

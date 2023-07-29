@@ -27,5 +27,5 @@ export interface ListQuery<TFilter = unknown> {
 export interface ListResponse<TQuery = unknown, TResult = unknown> {
   query: TQuery;
   results: TResult[];
-  totalResults: number;
+  total: number;
 }

@@ -6,8 +6,8 @@ import {
 } from '@pcpartdb/shared';
 import { adminService } from 'packages/website/src/client/admin/adminService';
 import {
-  Pagination,
-  PaginationResult,
+  LegacyPagination,
+  LegacyPaginationResult,
 } from 'packages/website/src/client/shared/components';
 import {
   Alert,
@@ -50,10 +50,13 @@ export const UpdatesTab: FunctionComponent<UpdatesTabProps> = (props) => {
     fetchUpdates();
   }, [status, limit, offset]);
 
-  const paginationPageClick = useCallback(async (result: PaginationResult) => {
-    setLimit(result.limit);
-    setOffset(result.offset);
-  }, []);
+  const paginationPageClick = useCallback(
+    async (result: LegacyPaginationResult) => {
+      setLimit(result.limit);
+      setOffset(result.offset);
+    },
+    [],
+  );
 
   const context = useDataUpdatesPageContextProps({
     status,
@@ -68,7 +71,7 @@ export const UpdatesTab: FunctionComponent<UpdatesTabProps> = (props) => {
           <>
             <UpdatesTable />
 
-            <Pagination
+            <LegacyPagination
               resultsOffset={offset}
               resultsPerPage={limit}
               totalResults={totalUpdates}

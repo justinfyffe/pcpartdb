@@ -1,9 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { mapToAutomationQueueItemEntity } from '@pcpartdb/database';
+import {
+  mapToAutomationQueueItemDtos,
+  mapToAutomationQueueItemEntity,
+} from '@pcpartdb/database';
 import {
   AutomationQueueStatus,
   EnqueueAutomationRequest,
   ListAutomationQueueRequest,
+  ListAutomationQueueResponse,
 } from '@pcpartdb/shared';
 import { Context } from '../shared/context';
 import { validate } from '../shared/validation/validate';
@@ -17,12 +21,22 @@ import { AutomationQueueRepository } from './automation-queue.repository';
 export class AutomationService {
   constructor(private repository: AutomationQueueRepository) {}
 
-  async listQueue(request: ListAutomationQueueRequest, ctx: Context) {
+  async listPending(request: ListAutomationQueueRequest, ctx: Context) {
     validate(request, listAutomationQueueRequestValidator);
+    const { query } = request;
 
-    // Fetch queue
-    // Count results
-    // Return
+    const { results, total } = await this.repository.listPending(
+      { query },
+      ctx,
+    );
+
+    return {
+      query,
+      results: await mapToAutomationQueueItemDtos(results, {
+        includeData: true,
+      }),
+      total,
+    } as ListAutomationQueueResponse;
   }
 
   async enqueue(request: EnqueueAutomationRequest, ctx: Context) {
@@ -33,5 +47,9 @@ export class AutomationService {
       status: AutomationQueueStatus.Pending,
     });
     await this.repository.create(entity, ctx);
+  }
+
+  async deleteItem(id: number, ctx: Context) {
+    await this.repository.delete(id, ctx);
   }
 }

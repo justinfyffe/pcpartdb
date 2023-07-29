@@ -345,5 +345,7 @@ model AutomationQueueItem {
   createdAt       DateTime  @default(now()) @map("created_at") @ignore @db.Timestamptz(6)
   updatedAt       DateTime  @default(now()) @updatedAt @map("updated_at") @ignore @db.Timestamptz(6)
 
+  @@index([status, priority(sort: Desc), timestamp(sort: Asc)], name: "status_priority_timestamp") 
+
   @@map("automation_queue")
 }

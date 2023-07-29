@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Param,
   Post,
   Put,
   Query,
@@ -27,9 +28,9 @@ export class AutomationController {
     // TODO
   }
 
-  @Get('queue')
+  @Get('queue/pending')
   @UseGuards(StaffGuard)
-  async listQueue(@Query('req') request: string, @Ctx() ctx: Context) {
+  async listPending(@Query('req') request: string, @Ctx() ctx: Context) {
     return await this.db.transaction(
       async () => {
         const body: ListAutomationQueueRequest =
@@ -37,7 +38,7 @@ export class AutomationController {
             ? (JSON.parse(request) as ListAutomationQueueRequest)
             : null;
 
-        return await this.service.listQueue(body, ctx);
+        return await this.service.listPending(body, ctx);
       },
       { ctx },
     );
@@ -54,7 +55,7 @@ export class AutomationController {
     );
   }
 
-  @Put('queue')
+  @Put('queue/:id')
   @UseGuards(StaffGuard)
   async updateEntry(@Ctx() ctx: Context) {
     // TODO
@@ -62,7 +63,13 @@ export class AutomationController {
 
   @Delete('queue/:id')
   @UseGuards(StaffGuard)
-  async deleteEntry(@Ctx() ctx: Context) {
-    // TODO
+  async deleteEntry(@Param('id') idStr: string, @Ctx() ctx: Context) {
+    return await this.db.transaction(
+      async () => {
+        const id = Number(idStr);
+        await this.service.deleteItem(id, ctx);
+      },
+      { ctx },
+    );
   }
 }

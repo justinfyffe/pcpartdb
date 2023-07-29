@@ -1,9 +1,5 @@
 import { ProductSourceGroup } from '../product';
 
-// TODO: Rename to
-// UPDATE_CPU_SOURCES
-// UPDATE_CPU
-// CREATE_CPU
 export enum AutomationAction {
   /**
    * Update sitemaps on the website. Pull CPUs and GPUs from API,

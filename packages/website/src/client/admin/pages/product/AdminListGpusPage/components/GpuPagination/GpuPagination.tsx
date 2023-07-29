@@ -1,8 +1,8 @@
 import { getAdminListGpusPath, ListGpusQuery } from '@pcpartdb/shared';
 import React, { FunctionComponent, useCallback } from 'react';
 import {
-  Pagination,
-  PaginationResult,
+  LegacyPagination,
+  LegacyPaginationResult,
 } from '../../../../../../shared/components';
 
 interface GpuPaginationProps {
@@ -16,7 +16,7 @@ export const GpuPagination: FunctionComponent<GpuPaginationProps> = (props) => {
   const { query, totalGpus, onPageClick } = props;
 
   const paginationPageClick = useCallback(
-    (result: PaginationResult, evt: React.MouseEvent) => {
+    (result: LegacyPaginationResult, evt: React.MouseEvent) => {
       evt.preventDefault();
       evt.stopPropagation();
       onPageClick?.({
@@ -28,7 +28,7 @@ export const GpuPagination: FunctionComponent<GpuPaginationProps> = (props) => {
   );
 
   const paginationHrefBuilder = useCallback(
-    (result: PaginationResult) =>
+    (result: LegacyPaginationResult) =>
       getAdminListGpusPath({
         ...query,
         pagination: { offset: result.offset, limit: result.limit },
@@ -37,7 +37,7 @@ export const GpuPagination: FunctionComponent<GpuPaginationProps> = (props) => {
   );
 
   return (
-    <Pagination
+    <LegacyPagination
       resultsOffset={query.pagination?.offset}
       resultsPerPage={query.pagination?.limit}
       totalResults={totalGpus}

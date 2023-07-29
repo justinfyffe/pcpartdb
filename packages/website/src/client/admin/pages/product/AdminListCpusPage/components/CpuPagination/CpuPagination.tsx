@@ -1,8 +1,8 @@
 import { getAdminListCpusPath, ListCpusQuery } from '@pcpartdb/shared';
 import React, { FunctionComponent, useCallback } from 'react';
 import {
-  Pagination,
-  PaginationResult,
+  LegacyPagination,
+  LegacyPaginationResult,
 } from '../../../../../../shared/components';
 
 interface CpuPaginationProps {
@@ -16,7 +16,7 @@ export const CpuPagination: FunctionComponent<CpuPaginationProps> = (props) => {
   const { query, totalCpus, onPageClick } = props;
 
   const paginationPageClick = useCallback(
-    (result: PaginationResult, evt: React.MouseEvent) => {
+    (result: LegacyPaginationResult, evt: React.MouseEvent) => {
       evt.preventDefault();
       evt.stopPropagation();
       onPageClick?.({
@@ -28,7 +28,7 @@ export const CpuPagination: FunctionComponent<CpuPaginationProps> = (props) => {
   );
 
   const paginationHrefBuilder = useCallback(
-    (result: PaginationResult) =>
+    (result: LegacyPaginationResult) =>
       getAdminListCpusPath({
         ...query,
         pagination: { offset: result.offset, limit: result.limit },
@@ -37,7 +37,7 @@ export const CpuPagination: FunctionComponent<CpuPaginationProps> = (props) => {
   );
 
   return (
-    <Pagination
+    <LegacyPagination
       resultsOffset={query.pagination?.offset}
       resultsPerPage={query.pagination?.limit}
       totalResults={totalCpus}

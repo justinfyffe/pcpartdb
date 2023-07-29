@@ -1,8 +1,8 @@
 import { getListGpusPath } from '@pcpartdb/shared';
 import React, { FunctionComponent, useCallback, useContext } from 'react';
 import {
-  Pagination,
-  PaginationResult,
+  LegacyPagination,
+  LegacyPaginationResult,
 } from '../../../../../../shared/components';
 import { ListPageContext } from '../../context';
 
@@ -14,7 +14,7 @@ export const ListPagination: FunctionComponent = () => {
   } = useContext(ListPageContext);
 
   const paginationPageClick = useCallback(
-    (result: PaginationResult, evt: React.MouseEvent) => {
+    (result: LegacyPaginationResult, evt: React.MouseEvent) => {
       evt.preventDefault();
       evt.stopPropagation();
       updateQuery({
@@ -26,7 +26,7 @@ export const ListPagination: FunctionComponent = () => {
   );
 
   const paginationHrefBuilder = useCallback(
-    (result: PaginationResult) =>
+    (result: LegacyPaginationResult) =>
       getListGpusPath({
         ...query,
         pagination: { offset: result.offset, limit: result.limit },
@@ -35,7 +35,7 @@ export const ListPagination: FunctionComponent = () => {
   );
 
   return (
-    <Pagination
+    <LegacyPagination
       resultsOffset={query.pagination?.offset}
       resultsPerPage={query.pagination?.limit}
       totalResults={totalResults}

@@ -7,7 +7,7 @@ const listAutomationQueueFilterValidator = Joi.object({}).options({
 
 export const listAutomationQueueQueryValidator = listQueryValidator({
   filterValidator: listAutomationQueueFilterValidator,
-  maxLimit: 25,
+  maxLimit: 100,
 });
 
 export const listAutomationQueueRequestValidator = Joi.object({

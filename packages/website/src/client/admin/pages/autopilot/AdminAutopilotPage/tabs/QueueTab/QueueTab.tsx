@@ -1,93 +1,116 @@
 import 'reflect-metadata';
-import { InformationCircleIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { ArrowPathIcon } from '@heroicons/react/24/outline';
 import {
-  Button,
-  ButtonVariant,
+  AutomationQueueItem,
+  ListAutomationQueueQuery,
+} from '@pcpartdb/shared';
+import { automationService } from 'packages/website/src/client/automation';
+import {
   Table,
   TBody,
-  Td,
   Th,
   THead,
   Tr,
 } from 'packages/website/src/client/shared/components';
-import React from 'react';
+import { InfoAlert } from 'packages/website/src/client/shared/components/Alert/InfoAlert';
+import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
+import { Pagination } from 'packages/website/src/client/shared/components/Pagination/Pagination';
+import React, { useCallback, useEffect, useState } from 'react';
+import { QueueRow } from './QueueRow';
+
+const LIMIT = 50;
 
 interface QueueTabProps {}
 
-export const QueueTab = (props: QueueTabProps) => {
+export const QueueTab = (_props: QueueTabProps) => {
+  // States
+
+  const [loading, setLoading] = useState(false);
+  const [items, setItems] = useState<AutomationQueueItem[]>([]);
+  const [total, setTotal] = useState(0);
+  const [query, setQuery] = useState<ListAutomationQueueQuery>({
+    pagination: { offset: 0, limit: LIMIT },
+  });
+
+  // Callbacks
+
+  const fetchPendingItems = useCallback(async (q: ListAutomationQueueQuery) => {
+    setLoading(true);
+    setQuery(q);
+    const response = await automationService.listPending({ query: q });
+    setQuery(response.query);
+    setItems(response.results);
+    setTotal(response.total);
+    setLoading(false);
+  }, []);
+
+  const refresh = useCallback(() => {
+    fetchPendingItems({ ...query });
+  }, [fetchPendingItems, query]);
+
+  const changePage = useCallback(
+    (offset: number, limit: number) => {
+      const pagination = { offset, limit };
+      fetchPendingItems({ ...query, pagination });
+    },
+    [fetchPendingItems, query],
+  );
+
+  // Effects
+
+  useEffect(() => {
+    fetchPendingItems(query);
+    // Only run this once
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Render
+
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex justify-end">
-        <Button variant={ButtonVariant.Generic}>Refresh</Button>
+      <div className="flex gap-4 justify-end">
+        {total > 0 && (
+          <Pagination
+            displayTotal={true}
+            offset={query.pagination.offset}
+            limit={query.pagination.limit}
+            total={total}
+            onChange={changePage}
+          ></Pagination>
+        )}
+
+        <GenericButton onClick={refresh}>
+          <ArrowPathIcon className="w-4" />
+        </GenericButton>
       </div>
 
-      <Table>
-        <THead>
-          <Tr>
-            <Th>ID</Th>
-            <Th>Type</Th>
-            <Th>Entry</Th>
-            <Th></Th>
-          </Tr>
-        </THead>
-        <TBody>
-          <Tr>
-            <Td>1</Td>
-            <Td>New CPU</Td>
-            <Td>Intel i7-12345k</Td>
-            <Td className="flex justify-end gap-2">
-              <Button variant={ButtonVariant.Generic}>
-                <InformationCircleIcon className="w-4" />
-              </Button>
-              <Button variant={ButtonVariant.Generic}>
-                <XMarkIcon className="w-4" />
-              </Button>
-            </Td>
-          </Tr>
+      {loading && total === 0 && (
+        <InfoAlert>Fetching pending queue items. Please wait.</InfoAlert>
+      )}
 
-          <Tr>
-            <Td>2</Td>
-            <Td>New GPU</Td>
-            <Td>NVIDIA RTX 3070</Td>
-            <Td className="flex justify-end gap-2">
-              <Button variant={ButtonVariant.Generic}>
-                <InformationCircleIcon className="w-4" />
-              </Button>
-              <Button variant={ButtonVariant.Generic}>
-                <XMarkIcon className="w-4" />
-              </Button>
-            </Td>
-          </Tr>
+      {!loading && total === 0 && (
+        <InfoAlert>No pending queue items. Try refreshing.</InfoAlert>
+      )}
 
-          <Tr>
-            <Td>3</Td>
-            <Td>Update GPU</Td>
-            <Td>NVIDIA RTX 4070</Td>
-            <Td className="flex justify-end gap-2">
-              <Button variant={ButtonVariant.Generic}>
-                <InformationCircleIcon className="w-4" />
-              </Button>
-              <Button variant={ButtonVariant.Generic}>
-                <XMarkIcon className="w-4" />
-              </Button>
-            </Td>
-          </Tr>
-
-          <Tr>
-            <Td>4</Td>
-            <Td>New GPU</Td>
-            <Td>Acer RTX 3070 (NVIDIA RTX 3070)</Td>
-            <Td className="flex justify-end gap-2">
-              <Button variant={ButtonVariant.Generic}>
-                <InformationCircleIcon className="w-4" />
-              </Button>
-              <Button variant={ButtonVariant.Generic}>
-                <XMarkIcon className="w-4" />
-              </Button>
-            </Td>
-          </Tr>
-        </TBody>
-      </Table>
+      {total > 0 && (
+        <>
+          <Table>
+            <THead>
+              <Tr>
+                <Th>ID</Th>
+                <Th>Type</Th>
+                <Th>Entry</Th>
+                <Th></Th>
+              </Tr>
+            </THead>
+            <TBody>
+              {items.map((item) => (
+                <QueueRow key={item.id} item={item} />
+              ))}
+            </TBody>
+          </Table>
+        </>
+      )}
     </div>
   );
 };

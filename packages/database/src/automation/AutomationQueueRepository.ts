@@ -1,9 +1,35 @@
+import {
+  AutomationQueueStatus,
+  ListAutomationQueueQuery,
+} from '@pcpartdb/shared';
 import { DatabaseClient } from '../DatabaseClient';
 import { RepositoryConfig } from '../RepositoryConfig';
 import { AutomationQueueItemEntity } from './AutomationQueueItemEntity';
 
+interface ListOptions {
+  query: ListAutomationQueueQuery;
+}
+
 export class AutomationQueueRepository {
   constructor(protected db: DatabaseClient) {}
+
+  async listPending(options: ListOptions, config?: RepositoryConfig) {
+    const trx = config?.trx ?? this.db;
+    const { pagination } = options.query ?? {};
+
+    const results = await trx.automationQueueItem.findMany({
+      where: { status: AutomationQueueStatus.Pending },
+      orderBy: [{ priority: 'desc' }, { timestamp: 'asc' }],
+      skip: pagination?.offset ?? 0,
+      take: pagination?.limit ?? 50,
+    });
+
+    const total = await trx.automationQueueItem.count({
+      where: { status: AutomationQueueStatus.Pending },
+    });
+
+    return { results, total };
+  }
 
   async create(
     data: Omit<AutomationQueueItemEntity, 'id'>,
