@@ -24,6 +24,10 @@ export interface ListQuery<TFilter = unknown> {
   pagination?: ListPagination;
 }
 
+export interface ListRequest<TQuery = ListQuery> {
+  query: TQuery;
+}
+
 export interface ListResponse<TQuery = unknown, TResult = unknown> {
   query: TQuery;
   results: TResult[];

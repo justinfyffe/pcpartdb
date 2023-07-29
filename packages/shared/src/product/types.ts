@@ -52,9 +52,9 @@ export type ProductImages = CpuImages | GpuImages;
 export type ProductDataSource = CpuDataSource | GpuDataSource;
 export type ProductSourceKey = CpuDataSourceKey | GpuDataSourceKey;
 
-export interface ProductDiff {
-  original?: Product;
-  updated?: Product;
+export interface ProductDiff<TProduct = Product> {
+  original?: TProduct;
+  updated?: TProduct;
 }
 
 /**

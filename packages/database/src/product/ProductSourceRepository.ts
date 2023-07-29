@@ -218,7 +218,7 @@ export class ProductSourceRepository {
   ): Prisma.ProductSourceWhereInput {
     const productType = filter?.productType || null;
     const includeArchived = filter?.includeArchived ?? false;
-    const sourceNameContains = filter?.sourceNameContains || null;
+    const search = filter?.search || null;
 
     // Product Type
     const productTypeWhere: Prisma.StringFilter = productType
@@ -230,8 +230,8 @@ export class ProductSourceRepository {
       includeArchived !== true ? { equals: false } : undefined;
 
     // Source name
-    const sourceNameWhere: Prisma.StringFilter = sourceNameContains
-      ? { contains: sourceNameContains, mode: 'insensitive' }
+    const sourceNameWhere: Prisma.StringFilter = search
+      ? { contains: search, mode: 'insensitive' }
       : undefined;
 
     return {

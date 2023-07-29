@@ -174,7 +174,7 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
     await save();
   }, [techPowerUp, passMark, geekBench, appliedCpu, save]);
 
-  const enqueueAutomation = useCallback(async () => {
+  const createCpu = useCallback(async () => {
     const sources = [techPowerUp, passMark, geekBench].filter(
       (source) => source != null,
     );
@@ -405,9 +405,7 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
 
             <div className="flex gap-4">
               <GenericButton onClick={save}>Save</GenericButton>
-              <GenericButton onClick={enqueueAutomation}>
-                Create CPU
-              </GenericButton>
+              <GenericButton onClick={createCpu}>Create CPU</GenericButton>
             </div>
           </div>
         </CardContent>

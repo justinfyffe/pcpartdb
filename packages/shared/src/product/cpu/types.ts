@@ -1,5 +1,11 @@
 import { Image } from '../../image';
-import { CpuDataSourceKey, ProductField, ProductFieldMeta } from '..';
+import {
+  CpuDataSourceKey,
+  ProductDiff,
+  ProductField,
+  ProductFieldMeta,
+  ProductUpdate,
+} from '..';
 
 export type CpuFieldKey = keyof CpuFields;
 
@@ -229,3 +235,5 @@ export interface ListCpusResponse {
   totalCpus: number;
   contentData: ListCpusContentData;
 }
+
+export interface CpuUpdate extends ProductUpdate<ProductDiff<Cpu>> {}

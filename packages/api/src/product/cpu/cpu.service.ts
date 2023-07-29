@@ -13,14 +13,15 @@ import {
   CpuFieldKey,
   CpuMeta,
   CpuRank,
+  CpuUpdate,
   CreateCpuRequest,
   populateCpuPerformanceScoreBenchmark,
   populateCpuValueScoreBenchmark,
   ProductDataUpdate,
-  ProductDiff,
   ProductSourceGroup,
-  ProductUpdate,
+  ProductType,
   UpdateCpuRequest,
+  ValidationErrorType,
 } from '@pcpartdb/shared';
 import deepmerge from 'deepmerge';
 import { Context } from '../../shared/context';
@@ -231,8 +232,19 @@ export class CpuService {
     await this.update(id, cpu, ctx);
   }
 
-  async applyProductUpdate(update: ProductUpdate<ProductDiff>, ctx: Context) {
+  async applyProductUpdate(update: CpuUpdate, ctx: Context) {
+    if (update.productType !== ProductType.Cpu) {
+      throw badRequestError({
+        property: 'productType',
+        constraint: ValidationErrorType.InvalidProductType,
+      });
+    }
+
     const updated = update.data.updated as Cpu;
-    await this.update(update.cpuId, updated, ctx);
+    if (update.cpuId != null) {
+      await this.update(update.cpuId, updated, ctx);
+    } else {
+      await this.create(updated, ctx);
+    }
   }
 }

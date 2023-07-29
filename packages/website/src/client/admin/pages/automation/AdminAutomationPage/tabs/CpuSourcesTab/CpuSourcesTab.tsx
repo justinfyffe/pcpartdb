@@ -50,7 +50,7 @@ export const CpuSourcesTab = (_props: CpuSourcesTabProps) => {
     (value: string) => {
       const filter: ListProductSourcesFilter = {
         ...query.filter,
-        sourceNameContains: value || undefined,
+        search: value || undefined,
       };
       fetchSourceGroups({ ...query, filter });
     },

@@ -50,4 +50,5 @@ export enum ValidationErrorType {
   MissingProductType = 'MISSING_PRODUCT_TYPE',
   MissingRequiredAny = 'any.required',
   MissingStringValue = 'string.empty',
+  NotPendingProductUpdate = 'NOT_PENDING_PRODUCT_UPDATE',
 }

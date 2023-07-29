@@ -19,7 +19,7 @@ import {
 } from './tabs';
 
 export const AdminAutomationPage = (props: AdminAutomationViewModel) => {
-  const seoTitle = 'Autopilot - Admin Panel';
+  const seoTitle = 'Automation - Admin Panel';
   const seoRobots = [MetaRobots.NOINDEX, MetaRobots.NOFOLLOW];
 
   return (
@@ -27,7 +27,7 @@ export const AdminAutomationPage = (props: AdminAutomationViewModel) => {
       <Seo title={seoTitle} robots={seoRobots} />
 
       <article>
-        <h1 className="font-semibold mb-4">Autopilot</h1>
+        <h1 className="font-semibold mb-4">Automation</h1>
 
         <Tabs loadOnDemand variant={TabsVariant.Buttons}>
           <Tab label="CPU Sources">

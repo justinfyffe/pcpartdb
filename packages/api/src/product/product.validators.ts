@@ -6,7 +6,7 @@ import { listQueryValidator, ProductType } from '@pcpartdb/shared';
 const listProductSourcesFilterValidator = Joi.object({
   productType: Joi.string().allow(ProductType.Cpu, ProductType.Gpu).required(),
   includeArchived: Joi.boolean(),
-  sourceNameContains: Joi.string(),
+  search: Joi.string(),
 }).options({ abortEarly: false });
 
 export const listProductSourcesQueryValidator = listQueryValidator({
@@ -47,7 +47,22 @@ export const applyProductSourcesToProductRequestValidator = Joi.object({
 
 // Product Updates
 
-export const createProductUpdateValidator = Joi.object({
+const listProductUpdatesFilterValidator = Joi.object({
+  productType: Joi.string().allow(ProductType.Cpu, ProductType.Gpu).required(),
+  status: Joi.string(),
+  search: Joi.string(),
+}).options({ abortEarly: false });
+
+export const listProductUpdatesQueryValidator = listQueryValidator({
+  filterValidator: listProductUpdatesFilterValidator,
+  maxLimit: 25,
+});
+
+export const listProductUpdatesRequestValidator = Joi.object({
+  query: listProductUpdatesQueryValidator,
+}).options({ abortEarly: false });
+
+export const createProductUpdateRequestValidator = Joi.object({
   productType: Joi.string(),
   productCompany: Joi.string().allow(null),
   productName: Joi.string(),

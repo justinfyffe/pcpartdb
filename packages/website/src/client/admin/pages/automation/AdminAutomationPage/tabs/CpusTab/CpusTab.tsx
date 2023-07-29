@@ -1,94 +1,124 @@
 import 'reflect-metadata';
+import { ArrowPathIcon } from '@heroicons/react/24/outline';
 import {
-  Button,
-  ButtonVariant,
-  Card,
-  CardContent,
-  CardTitle,
-  Checkbox,
-  Field,
-  FieldHint,
-  TextInput,
-} from 'packages/website/src/client/shared/components';
-import React from 'react';
+  CpuUpdate,
+  ListProductUpdatesFilter,
+  ListProductUpdatesQuery,
+  ProductType,
+  ProductUpdateStatus,
+} from '@pcpartdb/shared';
+import { productUpdateService } from 'packages/website/src/client/product/services/productUpdateService';
+import { TextInput } from 'packages/website/src/client/shared/components';
+import { InfoAlert } from 'packages/website/src/client/shared/components/Alert/InfoAlert';
+import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
+import { Pagination } from 'packages/website/src/client/shared/components/Pagination/Pagination';
+import { useDebounce } from 'packages/website/src/client/shared/hooks/useDebounce';
+import React, { useCallback, useEffect, useState } from 'react';
+import { CpuCard } from './CpuCard';
+
+const LIMIT = 10;
+const FILTER_DEBOUNCE = 300;
 
 interface CpusTabProps {}
 
-export const CpusTab = (props: CpusTabProps) => {
+export const CpusTab = (_props: CpusTabProps) => {
+  // States
+
+  const [loading, setLoading] = useState(false);
+  const [updates, setUpdates] = useState<CpuUpdate[]>([]);
+  const [total, setTotal] = useState(0);
+  const [query, setQuery] = useState<ListProductUpdatesQuery>({
+    filter: {
+      productType: ProductType.Cpu,
+      status: ProductUpdateStatus.Pending,
+    },
+    pagination: { offset: 0, limit: LIMIT },
+  });
+
+  // Callbacks
+
+  const fetchCpuUpdates = useCallback(async (q: ListProductUpdatesQuery) => {
+    setLoading(true);
+    const response = await productUpdateService.listUpdates({ query: q });
+    setQuery(response.query);
+    setUpdates(response.results);
+    setTotal(response.total);
+    setLoading(false);
+  }, []);
+
+  const filterUpdates = useCallback(
+    (value: string) => {
+      const filter: ListProductUpdatesFilter = {
+        ...query.filter,
+        search: value || undefined,
+      };
+      fetchCpuUpdates({ ...query, filter });
+    },
+    [fetchCpuUpdates, query],
+  );
+  const debouncedFilterUpdates = useDebounce(filterUpdates, FILTER_DEBOUNCE);
+
+  const refresh = useCallback(() => {
+    fetchCpuUpdates({ ...query });
+  }, [fetchCpuUpdates, query]);
+
+  const changePage = useCallback(
+    (offset: number, limit: number) => {
+      const pagination = { offset, limit };
+      fetchCpuUpdates({ ...query, pagination });
+    },
+    [fetchCpuUpdates, query],
+  );
+
+  // Effects
+
+  useEffect(() => {
+    fetchCpuUpdates(query);
+    // Only run this once
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Render
+
   return (
     <>
       <div className="flex flex-col gap-4">
         <div className="flex justify-between gap-4">
-          <TextInput placeholder="Search CPUs" />
-          <div className="flex gap-4">
-            <Checkbox className="flex-1">New</Checkbox>{' '}
-            <Checkbox className="flex-1">Updates</Checkbox>
+          <div className="flex flex-1 gap-4 max-w-[50%]">
+            <TextInput
+              placeholder="Search CPUs"
+              onChange={debouncedFilterUpdates}
+            />
           </div>
-          <Button variant={ButtonVariant.Generic}>Refresh</Button>
+
+          <div className="flex gap-4 items-center">
+            {total > 0 && (
+              <Pagination
+                displayTotal={true}
+                offset={query.pagination.offset}
+                limit={query.pagination.limit}
+                total={total}
+                onChange={changePage}
+              ></Pagination>
+            )}
+
+            <GenericButton onClick={refresh}>
+              <ArrowPathIcon className="w-4" />
+            </GenericButton>
+          </div>
         </div>
 
-        <Card>
-          <div className="flex flex-col gap-1">
-            <CardTitle>Intel i7-12345k</CardTitle>
-            <span className="text-sm text-dimmed">New: 123456</span>
-          </div>
+        {loading && total === 0 && (
+          <InfoAlert>Fetching CPU updates. Please wait.</InfoAlert>
+        )}
 
-          <CardContent>
-            <div className="flex gap-4 items-center">
-              <Field className="flex-1">
-                <div className="flex justify-between">Name</div>
-                <TextInput value="Intel i7-12345k" />
-                <FieldHint>
-                  This will be used as the CPU&apos;s name when it is created.
-                </FieldHint>
-              </Field>
+        {!loading && total === 0 && (
+          <InfoAlert>No CPU updates. Try refreshing.</InfoAlert>
+        )}
 
-              <Field className="flex-1">
-                <div className="flex justify-between">Slug</div>
-                <TextInput value="Intel i7-12345k" />
-                <FieldHint>
-                  This will be used for the CPU&apos;s URL when it is created.
-                </FieldHint>
-              </Field>
-
-              <Button variant={ButtonVariant.Generic}>View</Button>
-            </div>
-
-            <div className="flex justify-between gap-4">
-              <Button variant={ButtonVariant.Generic}>Reject</Button>
-              <Button variant={ButtonVariant.Generic}>Approve</Button>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardTitle>
-            <div className="flex justify-between gap-4">
-              <span>Intel i7-12345k</span> <span>Update: 234620</span>
-            </div>
-          </CardTitle>
-          <CardContent>
-            <div className="flex gap-4 items-center">
-              <Field className="flex-1">
-                <div className="flex justify-between">Name</div>
-                <TextInput value="Intel i7-12345k" disabled />
-              </Field>
-
-              <Field className="flex-1">
-                <div className="flex justify-between">Slug</div>
-                <TextInput value="Intel i7-12345k" disabled />
-              </Field>
-
-              <Button variant={ButtonVariant.Generic}>Diff (3)</Button>
-            </div>
-
-            <div className="flex justify-between gap-4">
-              <Button variant={ButtonVariant.Generic}>Reject</Button>
-              <Button variant={ButtonVariant.Generic}>View Page</Button>
-              <Button variant={ButtonVariant.Generic}>Approve</Button>
-            </div>
-          </CardContent>
-        </Card>
+        {updates.map((update) => (
+          <CpuCard key={update.id} update={update} />
+        ))}
       </div>
     </>
   );

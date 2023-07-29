@@ -1,18 +1,59 @@
 import { Injectable } from '@nestjs/common';
-import { mapToProductUpdateEntity } from '@pcpartdb/database';
 import {
+  mapToProductUpdateDtos,
+  mapToProductUpdateEntity,
+} from '@pcpartdb/database';
+import {
+  ApproveProductUpdateRequest,
   CreateProductUpdateRequest,
+  ListProductUpdatesRequest,
+  ListProductUpdatesResponse,
   ProductType,
   ProductUpdateStatus,
+  RejectProductUpdateRequest,
+  ValidationErrorType,
 } from '@pcpartdb/shared';
 import { Context } from '../shared/context';
+import { badRequestError } from '../shared/error';
+import { validate } from '../shared/validation/validate';
+import { CpuService } from './cpu/cpu.service';
+import { GpuService } from './gpu/gpu.service';
+import {
+  createProductUpdateRequestValidator,
+  listProductSourcesRequestValidator,
+} from './product.validators';
 import { ProductUpdateRepository } from './product-update.repository';
 
 @Injectable()
 export class ProductUpdateService {
-  constructor(private repository: ProductUpdateRepository) {}
+  constructor(
+    private repository: ProductUpdateRepository,
+    private cpuService: CpuService,
+    private gpuService: GpuService,
+  ) {}
 
+  /**
+   * Returns a list of product updates that match the filter.
+   */
+  async list(request: ListProductUpdatesRequest, ctx: Context) {
+    validate(request, listProductSourcesRequestValidator);
+    const { query } = request;
+
+    const { results, total } = await this.repository.list({ query }, ctx);
+
+    return {
+      query,
+      results: await mapToProductUpdateDtos(results),
+      total,
+    } as ListProductUpdatesResponse;
+  }
+
+  /**
+   * Creates a product update
+   */
   async create(request: CreateProductUpdateRequest, ctx: Context) {
+    validate(request, createProductUpdateRequestValidator);
+
     const entity = await mapToProductUpdateEntity(request);
 
     // Can only have one pending update
@@ -28,10 +69,71 @@ export class ProductUpdateService {
 
       // Reject existing pending updates
       for (const update of existingPendingUpdates) {
-        await this.repository.reject(update.id, ctx);
+        await this.repository.update(
+          update.id,
+          { status: ProductUpdateStatus.Rejected, statusUpdatedAt: new Date() },
+          ctx,
+        );
       }
     }
 
     await this.repository.create(entity, ctx);
+  }
+
+  /**
+   * Approve the pending update. Apply it to the product.
+   */
+  async approve(
+    id: number,
+    request: ApproveProductUpdateRequest,
+    ctx: Context,
+  ) {
+    const update = await this.repository.findById(id, ctx);
+
+    if (update.status !== ProductUpdateStatus.Pending) {
+      // Cannot approve a pending update
+      throw badRequestError({
+        property: 'id',
+        constraint: ValidationErrorType.NotPendingProductUpdate,
+      });
+    }
+
+    if (update.productType == ProductType.Cpu) {
+      //
+    } else if (update.productType === ProductType.Gpu) {
+      //
+    } else {
+      throw badRequestError({
+        property: 'id',
+        constraint: ValidationErrorType.MissingProductType,
+      });
+    }
+
+    await this.repository.update(
+      id,
+      { status: ProductUpdateStatus.Approved, statusUpdatedAt: new Date() },
+      ctx,
+    );
+  }
+
+  /**
+   * Reject the pending update.
+   */
+  async reject(id: number, request: RejectProductUpdateRequest, ctx: Context) {
+    const update = await this.repository.findById(id, ctx);
+
+    if (update.status !== ProductUpdateStatus.Pending) {
+      // Cannot approve a pending update
+      throw badRequestError({
+        property: 'id',
+        constraint: ValidationErrorType.NotPendingProductUpdate,
+      });
+    }
+
+    await this.repository.update(
+      id,
+      { status: ProductUpdateStatus.Rejected, statusUpdatedAt: new Date() },
+      ctx,
+    );
   }
 }
