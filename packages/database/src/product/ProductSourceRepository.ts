@@ -9,19 +9,7 @@ import { DatabaseClient } from '../DatabaseClient';
 import { RepositoryConfig } from '../RepositoryConfig';
 import { ProductSourceEntity } from './ProductSourceEntity';
 
-const DEFAULT_LIST_OFFSET = 0;
-const DEFAULT_LIST_LIMIT = 10;
-
-interface FindBySourceNamesOptions {
-  productType: ProductType;
-  sourceNames: string[];
-}
-
-interface GroupBySourceNameOptions {
-  query: ListProductSourcesQuery;
-}
-
-interface CountBySourceNameOptions {
+interface ListGroupsOptions {
   query: ListProductSourcesQuery;
 }
 
@@ -39,22 +27,6 @@ export class ProductSourceRepository {
 
     return await trx.productSource.findMany({
       where: { id: { in: ids } },
-    });
-  }
-
-  async findBySourceNames(
-    options: FindBySourceNamesOptions,
-    config?: RepositoryConfig,
-  ) {
-    const trx = config?.trx ?? this.db;
-
-    const { productType, sourceNames } = options;
-
-    return await trx.productSource.findMany({
-      where: {
-        productType,
-        sourceName: { in: sourceNames, mode: 'insensitive' },
-      },
     });
   }
 
@@ -102,24 +74,21 @@ export class ProductSourceRepository {
     });
   }
 
-  async archive(id: number, config?: RepositoryConfig) {
-    return await this.update(id, { archived: true }, config);
-  }
-
   async delete(id: number, config?: RepositoryConfig) {
     const trx = config?.trx ?? this.db;
     await trx.productSource.delete({ where: { id } });
   }
 
-  async groupBySourceName(
-    options: GroupBySourceNameOptions,
-    config?: RepositoryConfig,
-  ) {
+  /**
+   * Return a list of product source entities, grouped together based on
+   * product type and source name.
+   */
+  async listGroups(options: ListGroupsOptions, config?: RepositoryConfig) {
     const trx = config?.trx ?? this.db;
 
-    const { filter, orderBy: _orderBy, pagination } = options.query ?? {};
-    const { limit, offset } = pagination ?? {};
+    const { filter, pagination } = options.query ?? {};
 
+    // Get source names that match the filter
     const rawSourceNames = await trx.productSource.groupBy({
       by: ['productType', 'sourceName'],
       _max: {
@@ -127,28 +96,39 @@ export class ProductSourceRepository {
       },
       where: this.generateWhere(filter),
       orderBy: { _max: { updatedAt: 'desc' } },
-      skip: offset ?? DEFAULT_LIST_OFFSET,
-      take: limit ?? DEFAULT_LIST_LIMIT,
+      skip: pagination?.offset ?? 0,
+      take: pagination?.limit ?? 50,
     });
-    return rawSourceNames.map((value) => value.sourceName);
-  }
+    const sourceNames = rawSourceNames.map((value) => value.sourceName);
 
-  async countSourceNames(
-    options: CountBySourceNameOptions,
-    config?: RepositoryConfig,
-  ) {
-    const trx = config?.trx ?? this.db;
+    // Group by source name
+    const groups = new Map<string, ProductSourceEntity[]>();
+    for (const sourceName of sourceNames) {
+      groups.set(sourceName.toLowerCase(), []);
+    }
 
-    const { filter } = options.query ?? {};
-
-    // This could be slow
-    // https://github.com/prisma/prisma/issues/4228#issuecomment-1405042711
-    const results = await trx.productSource.findMany({
-      distinct: ['productType', 'sourceName'],
-      select: { sourceName: true },
-      where: this.generateWhere(filter),
+    // Get results based on the source names.
+    const sources = await trx.productSource.findMany({
+      where: {
+        productType: filter?.productType,
+        sourceName: { in: sourceNames, mode: 'insensitive' },
+      },
     });
-    return results.length;
+    for (const source of sources) {
+      const key = source.sourceName.toLowerCase();
+      groups.get(key).push(source);
+    }
+
+    // Count total groups
+    const total = (
+      await trx.productSource.findMany({
+        distinct: ['productType', 'sourceName'],
+        select: { sourceName: true },
+        where: this.generateWhere(filter),
+      })
+    ).length;
+
+    return { results: [...groups.values()], total };
   }
 
   async autocomplete(options: AutocompleteOptions, config?: RepositoryConfig) {

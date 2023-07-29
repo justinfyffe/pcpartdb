@@ -7,24 +7,18 @@ import {
   ApplyProductSourcesToProductRequest,
   AutocompleteProductSourcesRequest,
   AutocompleteProductSourcesResponse,
-  ListProductSourcesQuery,
-  ProductSourceGroup,
+  ListProductSourceGroupsResponse,
+  ListProductSourcesRequest,
   ProductType,
   UpsertProductSourcesRequest,
   ValidationErrorType,
 } from '@pcpartdb/shared';
 import { Context } from '../shared/context';
 import { badRequestError } from '../shared/error';
+import { validate } from '../shared/validation/validate';
 import { CpuService } from './cpu/cpu.service';
+import { listProductSourcesRequestValidator } from './product.validators';
 import { ProductSourceRepository } from './product-source.repository';
-
-interface ListGroupsOptions {
-  query: ListProductSourcesQuery;
-}
-
-interface CountGroupsOptions {
-  query: ListProductSourcesQuery;
-}
 
 @Injectable()
 export class ProductSourceService {
@@ -37,35 +31,17 @@ export class ProductSourceService {
    * Return a list of product sources, grouped together based on product type
    * and source name.
    */
-  async listGroups(options: ListGroupsOptions, ctx: Context) {
-    const productType = options.query.filter?.productType;
-    const sourceNames = await this.repository.groupBySourceName(options, ctx);
+  async listGroups(request: ListProductSourcesRequest, ctx: Context) {
+    validate(request, listProductSourcesRequestValidator);
+    const { query } = request;
 
-    // Set up groups to populate
-    const groups = new Map<string, ProductSourceGroup>();
-    for (const sourceName of sourceNames) {
-      groups.set(sourceName.toLowerCase(), []);
-    }
+    const { results, total } = await this.repository.listGroups({ query }, ctx);
 
-    const entities = await this.repository.findBySourceNames(
-      { productType, sourceNames },
-      ctx,
-    );
-    const sources = mapToProductSourceDtos(entities);
-    for (const source of sources) {
-      const key = source.sourceName.toLowerCase();
-      groups.get(key).push(source);
-    }
-
-    return [...groups.values()];
-  }
-
-  /**
-   * Returns the total number of product source groups, grouped together based
-   * on product type and source name.
-   */
-  async countGroups(options: CountGroupsOptions, ctx: Context) {
-    return await this.repository.countSourceNames(options, ctx);
+    return {
+      query,
+      results: results.map((result) => mapToProductSourceDtos(result)),
+      total,
+    } as ListProductSourceGroupsResponse;
   }
 
   /**

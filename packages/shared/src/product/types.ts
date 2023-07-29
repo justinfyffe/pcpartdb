@@ -1,4 +1,4 @@
-import { ListQuery, MeasurementUnit } from '../common';
+import { MeasurementUnit } from '../common';
 import { DateFormat } from '../format';
 import {
   Cpu,
@@ -130,20 +130,6 @@ export interface UpsertProductSourcesRequest {
 
 export interface CreateProductUpdateRequest
   extends ProductUpdate<ProductDiff> {}
-
-export interface ListProductSourcesFilter {
-  productType?: ProductType;
-  includeArchived?: boolean;
-}
-
-export interface ListProductSourcesQuery
-  extends ListQuery<ListProductSourcesFilter> {}
-
-export interface ListProductSourceGroupsResponse {
-  query: ListProductSourcesQuery;
-  sourceGroups: ProductSourceGroup[];
-  totalSourceGroups: number;
-}
 
 export interface AutocompleteProductSourcesRequest {
   productType: ProductType;

@@ -34,9 +34,7 @@ export class AutomationController {
     return await this.db.transaction(
       async () => {
         const body: ListAutomationQueueRequest =
-          request != null
-            ? (JSON.parse(request) as ListAutomationQueueRequest)
-            : null;
+          request != null ? JSON.parse(request) : null;
 
         return await this.service.listPending(body, ctx);
       },

@@ -4,7 +4,7 @@ import {
   AutocompleteProductSourcesResponse,
   joinUrlParts,
   ListProductSourceGroupsResponse,
-  ListProductSourcesQuery,
+  ListProductSourcesRequest,
   UpsertProductSourcesRequest,
 } from '@pcpartdb/shared';
 import { ApiClient, apiClient } from '../../shared/api';
@@ -14,12 +14,10 @@ const PATH = 'products/sources';
 export class ProductSourceService {
   constructor(private api: ApiClient) {}
 
-  async listGroups(query: ListProductSourcesQuery) {
+  async listGroups(request: ListProductSourcesRequest) {
     const response = await this.api.get<ListProductSourceGroupsResponse>(
       joinUrlParts(PATH, 'groups'),
-      {
-        params: { q: JSON.stringify(query) },
-      },
+      { params: { req: JSON.stringify(request) } },
     );
     return response;
   }

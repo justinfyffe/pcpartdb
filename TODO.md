@@ -25,8 +25,8 @@ CODE CLEANUP TASKS
     - Order: States, Memos, Callbacks, Effects
     - Why? Consistency across components
 - Pagination
-  - Pagination component should automatically handle adding url parameters to page url
-    - Why? Implementing this is the most annoying part of pagination. Slows DX
+  - use new pagination; simpler.
+    - add ability to treat each like a new page
 - ListQuery
   - Move list cpus and gpus to use the generalized listquery ttype
 - API Code

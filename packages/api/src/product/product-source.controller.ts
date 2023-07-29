@@ -10,8 +10,7 @@ import {
 import {
   ApplyProductSourcesToProductRequest,
   AutocompleteProductSourcesRequest,
-  ListProductSourceGroupsResponse,
-  ListProductSourcesQuery,
+  ListProductSourcesRequest,
   UpsertProductSourcesRequest,
 } from '@pcpartdb/shared';
 import { StaffGuard } from '../auth/staff.guard';
@@ -21,7 +20,6 @@ import { validate } from '../shared/validation/validate';
 import {
   applyProductSourcesToProductRequestValidator,
   autocompleteProductSourcesRequestValidator,
-  listProductSourcesQueryValidator,
   upsertProductSourcesValidator,
 } from './product.validators';
 import { ProductSourceService } from './product-source.service';
@@ -32,23 +30,12 @@ export class ProductSourceController {
 
   @Get('groups')
   @UseGuards(StaffGuard)
-  async list(@Query('q') q: string, @Ctx() ctx: Context) {
+  async list(@Query('req') req: string, @Ctx() ctx: Context) {
     return await this.db.transaction(
       async () => {
-        const query =
-          q != null ? (JSON.parse(q) as ListProductSourcesQuery) : {};
-        validate(query, listProductSourcesQueryValidator);
-        const sourceGroups = await this.service.listGroups({ query }, ctx);
-        const totalSourceGroups = await this.service.countGroups(
-          { query },
-          ctx,
-        );
-
-        return {
-          query,
-          sourceGroups,
-          totalSourceGroups,
-        } as ListProductSourceGroupsResponse;
+        const request: ListProductSourcesRequest =
+          req != null ? JSON.parse(req) : null;
+        return await this.service.listGroups(request, ctx);
       },
       { ctx },
     );

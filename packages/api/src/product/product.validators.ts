@@ -1,6 +1,8 @@
 import Joi from '@hapi/joi';
 import { listQueryValidator, ProductType } from '@pcpartdb/shared';
 
+// Product Sources
+
 const listProductSourcesFilterValidator = Joi.object({
   productType: Joi.string().allow(ProductType.Cpu, ProductType.Gpu).required(),
   includeArchived: Joi.boolean(),
@@ -10,6 +12,10 @@ export const listProductSourcesQueryValidator = listQueryValidator({
   filterValidator: listProductSourcesFilterValidator,
   maxLimit: 25,
 });
+
+export const listProductSourcesRequestValidator = Joi.object({
+  query: listProductSourcesQueryValidator,
+}).options({ abortEarly: false });
 
 const productSourceValidator = Joi.object({
   productType: Joi.string(),
@@ -26,16 +32,6 @@ export const upsertProductSourcesValidator = Joi.object({
   sources: Joi.array().allow(productSourceValidator),
 }).options({ abortEarly: false });
 
-export const createProductUpdateValidator = Joi.object({
-  productType: Joi.string(),
-  productCompany: Joi.string().allow(null),
-  productName: Joi.string(),
-  description: Joi.string().allow(null),
-  status: Joi.string(),
-  data: Joi.any().allow(null),
-  metadata: Joi.any().allow(null),
-}).options({ abortEarly: false });
-
 export const autocompleteProductSourcesRequestValidator = Joi.object({
   productType: Joi.string().required(),
   source: Joi.string().allow(null, ''),
@@ -46,4 +42,16 @@ export const applyProductSourcesToProductRequestValidator = Joi.object({
   productType: Joi.string().required(),
   productId: Joi.number().required(),
   sources: Joi.array().allow(Joi.number()),
+}).options({ abortEarly: false });
+
+// Product Updates
+
+export const createProductUpdateValidator = Joi.object({
+  productType: Joi.string(),
+  productCompany: Joi.string().allow(null),
+  productName: Joi.string(),
+  description: Joi.string().allow(null),
+  status: Joi.string(),
+  data: Joi.any().allow(null),
+  metadata: Joi.any().allow(null),
 }).options({ abortEarly: false });

@@ -1,111 +1,120 @@
 import 'reflect-metadata';
+import { ArrowPathIcon } from '@heroicons/react/24/outline';
 import {
-  ListPagination,
   ListProductSourcesFilter,
   ListProductSourcesQuery,
   ProductSourceGroup,
   ProductType,
 } from '@pcpartdb/shared';
 import { productSourceService } from 'packages/website/src/client/product';
-import {
-  Button,
-  ButtonVariant,
-  Checkbox,
-  LegacyPagination,
-  LegacyPaginationResult,
-} from 'packages/website/src/client/shared/components';
-import {
-  Alert,
-  AlertVariant,
-} from 'packages/website/src/client/shared/components/Alert';
+import { Checkbox } from 'packages/website/src/client/shared/components';
+import { InfoAlert } from 'packages/website/src/client/shared/components/Alert/InfoAlert';
+import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
+import { Pagination } from 'packages/website/src/client/shared/components/Pagination/Pagination';
 import React, { useCallback, useEffect, useState } from 'react';
 import { CpuSourceCard } from './CpuSourceCard';
+
+const LIMIT = 10;
 
 interface CpuSourcesTabProps {}
 
 export const CpuSourcesTab = (_props: CpuSourcesTabProps) => {
-  const [includeArchived, setIncludeArchived] = useState(false);
+  // States
 
-  const [sourceGroups, setSourceGroups] = useState<ProductSourceGroup[]>([]);
-  const [totalResults, setTotalResults] = useState(0);
+  const [includeArchived, setIncludeArchived] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [items, setItems] = useState<ProductSourceGroup[]>([]);
+  const [total, setTotal] = useState(0);
   const [query, setQuery] = useState<ListProductSourcesQuery>({
     filter: { productType: ProductType.Cpu, includeArchived: includeArchived },
-    pagination: { offset: 0, limit: 10 },
+    pagination: { offset: 0, limit: LIMIT },
   });
 
-  const [_loading, setLoading] = useState(false);
+  // Callbacks
 
   const fetchSourceGroups = useCallback(async (q: ListProductSourcesQuery) => {
     setLoading(true);
-    const response = await productSourceService.listGroups(q);
-    setQuery(q);
-    setSourceGroups(response.sourceGroups);
-    setTotalResults(response.totalSourceGroups);
+    const response = await productSourceService.listGroups({ query: q });
+    setQuery(response.query);
+    setItems(response.results);
+    setTotal(response.total);
     setLoading(false);
   }, []);
 
-  const handleShowArchivedToggle = useCallback(
+  const showArchived = useCallback(
     (checked: boolean) => {
       const filter: ListProductSourcesFilter = {
         ...query.filter,
         includeArchived: checked,
       };
       setIncludeArchived(checked);
-      setQuery({ ...query, filter });
+      fetchSourceGroups({ ...query, filter });
     },
-    [query],
+    [fetchSourceGroups, query],
   );
 
-  const handleRefresh = useCallback(() => {
-    const pagination: ListPagination = { ...query.pagination, offset: 0 };
-    setQuery({ ...query, pagination });
-  }, [query]);
+  const refresh = useCallback(() => {
+    fetchSourceGroups({ ...query });
+  }, [fetchSourceGroups, query]);
 
-  const handlePagination = useCallback(
-    (result: LegacyPaginationResult) => {
-      const pagination: ListPagination = {
-        offset: result.offset,
-        limit: result.limit,
-      };
-      setQuery({ ...query, pagination });
+  const changePage = useCallback(
+    (offset: number, limit: number) => {
+      const pagination = { offset, limit };
+      fetchSourceGroups({ ...query, pagination });
     },
-    [query],
+    [fetchSourceGroups, query],
   );
+
+  // Effects
 
   useEffect(() => {
     fetchSourceGroups(query);
-  }, [fetchSourceGroups, query]);
+    // Only run this once
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Render
 
   return (
     <div className="flex flex-col gap-4">
       <div className="flex justify-between gap-4">
         <div className="flex flex-1 gap-4">
-          <Checkbox value={includeArchived} onChange={handleShowArchivedToggle}>
+          <Checkbox value={includeArchived} onChange={showArchived}>
             Include Archived
           </Checkbox>
         </div>
-        <Button variant={ButtonVariant.Generic} onClick={handleRefresh}>
-          Refresh
-        </Button>
+
+        <div className="flex gap-4">
+          {total > 0 && (
+            <Pagination
+              displayTotal={true}
+              offset={query.pagination.offset}
+              limit={query.pagination.limit}
+              total={total}
+              onChange={changePage}
+            ></Pagination>
+          )}
+
+          <GenericButton onClick={refresh}>
+            <ArrowPathIcon className="w-4" />
+          </GenericButton>
+        </div>
       </div>
 
-      {sourceGroups.map((sources, i) => (
+      {loading && total === 0 && (
+        <InfoAlert>Fetching CPU Sources. Please wait.</InfoAlert>
+      )}
+
+      {!loading && total === 0 && (
+        <InfoAlert>No CPU sources. Try refreshing.</InfoAlert>
+      )}
+
+      {items.map((sources) => (
         <CpuSourceCard
           key={`${sources[0]?.id}-${sources[1]?.id}-${sources[2]?.id}`}
           sources={sources}
         />
       ))}
-
-      {totalResults === 0 && (
-        <Alert variant={AlertVariant.Info}>No sources.</Alert>
-      )}
-
-      <LegacyPagination
-        resultsOffset={query.pagination.offset}
-        resultsPerPage={query.pagination.limit}
-        totalResults={totalResults}
-        onPageClick={handlePagination}
-      />
     </div>
   );
 };
