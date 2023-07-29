@@ -1,5 +1,5 @@
 export * from './auth';
-export * from './autopilot';
+export * from './automation';
 export * from './cpus';
 export * from './data-updates';
 export * from './gpus';

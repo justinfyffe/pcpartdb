@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { AdminAutopilotViewModel } from '@pcpartdb/shared';
+import { AdminAutomationViewModel } from '@pcpartdb/shared';
 import React from 'react';
 import {
   MetaReferrer,
@@ -18,7 +18,7 @@ import {
   QueueTab,
 } from './tabs';
 
-export const AdminAutopilotPage = (props: AdminAutopilotViewModel) => {
+export const AdminAutomationPage = (props: AdminAutomationViewModel) => {
   const seoTitle = 'Autopilot - Admin Panel';
   const seoRobots = [MetaRobots.NOINDEX, MetaRobots.NOFOLLOW];
 

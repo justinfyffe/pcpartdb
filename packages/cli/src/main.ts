@@ -27,7 +27,7 @@ program.command('scratch-pad').action(async () => {
 // Run from another machine than the web server. Requires AUTOMATION_KEY and
 // AUTOMATION_URL in env file.
 //
-// npm run cli autopilot
+// npm run cli automation
 program
   .command('automation')
   .option('--schedule')

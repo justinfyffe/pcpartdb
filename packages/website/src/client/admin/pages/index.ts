@@ -1,4 +1,4 @@
-export * from './autopilot';
+export * from './automation';
 export * from './data-update';
 export * from './image';
 export * from './product';

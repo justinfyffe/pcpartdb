@@ -4,6 +4,7 @@ import { ProductSourceGroup, ProductType } from './types';
 export interface ListProductSourcesFilter {
   productType?: ProductType;
   includeArchived?: boolean;
+  sourceNameContains?: string;
 }
 
 export interface ListProductSourcesQuery

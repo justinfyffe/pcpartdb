@@ -75,6 +75,17 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
   );
   const [appliedCpu, setAppliedCpu] = useState<Product>(null);
 
+  const techPowerUpId = techPowerUp?.id;
+  const passMarkId = passMark?.id;
+  const geekBenchId = geekBench?.id;
+  const techPowerUpArchived = techPowerUp?.archived;
+  const passMarkArchived = passMark?.archived;
+  const geekBenchArchived = geekBench?.archived;
+  const allArchived =
+    (techPowerUpArchived ?? true) &&
+    (passMarkArchived ?? true) &&
+    (geekBenchArchived ?? true);
+
   // Memos
 
   const subtitle = useMemo(
@@ -89,28 +100,6 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
     [geekBench, passMark, techPowerUp],
   );
 
-  const techPowerUpHint = useMemo(
-    () =>
-      techPowerUp != null
-        ? `ID: ${techPowerUp.id}${techPowerUp.archived ? ' (Archived)' : ''}`
-        : '',
-    [techPowerUp],
-  );
-  const passMarkHint = useMemo(
-    () =>
-      passMark != null
-        ? `ID: ${passMark.id}${passMark.archived ? ' (Archived)' : ''}`
-        : '',
-    [passMark],
-  );
-  const geekBenchHint = useMemo(
-    () =>
-      geekBench != null
-        ? `ID: ${geekBench.id}${geekBench.archived ? ' (Archived)' : ''}`
-        : '',
-    [geekBench],
-  );
-
   // Callbacks
 
   const setNameFromSource = useCallback((source: ProductSource) => {
@@ -119,18 +108,27 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
   }, []);
 
   const save = useCallback(async () => {
-    const newTechPowerUp: ProductSource = {
-      ...techPowerUp,
-      archived: archiveTechPowerUp,
-    };
-    const newPassMark: ProductSource = {
-      ...passMark,
-      archived: archivePassMark,
-    };
-    const newGeekBench: ProductSource = {
-      ...geekBench,
-      archived: archiveGeekBench,
-    };
+    const newTechPowerUp: ProductSource =
+      techPowerUp != null
+        ? {
+            ...techPowerUp,
+            archived: archiveTechPowerUp,
+          }
+        : null;
+    const newPassMark: ProductSource =
+      passMark != null
+        ? {
+            ...passMark,
+            archived: archivePassMark,
+          }
+        : null;
+    const newGeekBench: ProductSource =
+      geekBench != null
+        ? {
+            ...geekBench,
+            archived: archiveGeekBench,
+          }
+        : null;
 
     const sources = [newTechPowerUp, newPassMark, newGeekBench].filter(
       (source) => source != null && source.id != null,
@@ -141,6 +139,9 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
     await setTechPowerUp(newTechPowerUp);
     await setPassMark(newPassMark);
     await setGeekBench(newGeekBench);
+
+    // Close the card
+    await setExpanded(false);
   }, [
     archiveGeekBench,
     archivePassMark,
@@ -194,9 +195,15 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
   return (
     <Card>
       <div
-        className="flex justify-between items-center gap-4 cursor-pointer"
+        className="relative flex justify-between items-center gap-4 cursor-pointer"
         onClick={() => setExpanded(!expanded)}
       >
+        {allArchived && (
+          <div className="absolute left-0 right-0 flex justify-center text-3xl text-dimmed">
+            Archived
+          </div>
+        )}
+
         <div className="flex flex-1 flex-col gap-1">
           <CardTitle>{preferredName}</CardTitle>
           <span className="text-xs">{subtitle}</span>
@@ -216,7 +223,7 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
             </FieldHint>
           </Field>
 
-          <div className="flex gap-4 items-center">
+          <div className="flex gap-4 items-start">
             <Field className="flex-1">
               <div className="flex justify-between">
                 <div className="flex gap-2">
@@ -255,17 +262,23 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
                 />
                 <TextInput value={techPowerUp?.sourceUrl} disabled />
               </div>
-              <div className="flex justify-between">
-                <FieldHint>{techPowerUpHint}</FieldHint>
-                <Checkbox
-                  disabled={techPowerUp == null}
-                  value={archiveTechPowerUp}
-                  onChange={(checked) => setArchiveTechPowerUp(checked)}
-                >
-                  Archive?
-                </Checkbox>
-              </div>
+              {techPowerUp != null && (
+                <div className="flex justify-between">
+                  <FieldHint>
+                    {techPowerUpId}:{' '}
+                    {techPowerUpArchived ? <>Archived</> : <>Not Archived</>}
+                  </FieldHint>
+                  <Checkbox
+                    disabled={techPowerUp == null}
+                    value={archiveTechPowerUp}
+                    onChange={(checked) => setArchiveTechPowerUp(checked)}
+                  >
+                    Archive
+                  </Checkbox>
+                </div>
+              )}
             </Field>
+
             <Field className="flex-1">
               <div className="flex justify-between">
                 <div className="flex gap-2">
@@ -304,17 +317,24 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
                 />
                 <TextInput value={passMark?.sourceUrl} disabled />
               </div>
-              <div className="flex justify-between">
-                <FieldHint>{passMarkHint}</FieldHint>
-                <Checkbox
-                  disabled={passMark == null}
-                  value={archivePassMark}
-                  onChange={(checked) => setArchivePassMark(checked)}
-                >
-                  Archive?
-                </Checkbox>
-              </div>
+              {passMark != null && (
+                <div className="flex justify-between">
+                  <FieldHint>
+                    {passMarkId}:{' '}
+                    {passMarkArchived ? <>Archived</> : <>Not Archived</>}
+                  </FieldHint>
+
+                  <Checkbox
+                    disabled={passMark == null}
+                    value={archivePassMark}
+                    onChange={(checked) => setArchivePassMark(checked)}
+                  >
+                    Archive
+                  </Checkbox>
+                </div>
+              )}
             </Field>
+
             <Field className="flex-1">
               <div className="flex justify-between">
                 <div className="flex gap-2">
@@ -353,34 +373,40 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
                 />
                 <TextInput value={geekBench?.sourceUrl} disabled />
               </div>
-              <div className="flex justify-between">
-                <FieldHint>{geekBenchHint}</FieldHint>
-                <Checkbox
-                  disabled={geekBench == null}
-                  value={archiveGeekBench}
-                  onChange={(checked) => setArchiveGeekBench(checked)}
-                >
-                  Archive?
-                </Checkbox>
-              </div>
+              {geekBench != null && (
+                <div className="flex justify-between">
+                  <FieldHint>
+                    {geekBenchId}:{' '}
+                    {geekBenchArchived ? <>Archived</> : <>Not Archived</>}
+                  </FieldHint>
+
+                  <Checkbox
+                    disabled={geekBench == null}
+                    value={archiveGeekBench}
+                    onChange={(checked) => setArchiveGeekBench(checked)}
+                  >
+                    Archive
+                  </Checkbox>
+                </div>
+              )}
             </Field>
           </div>
 
-          <div className="flex justify-between gap-32">
-            <div className="flex flex-1 gap-4">
+          <div className="flex justify-between gap-4">
+            <div className="flex flex-1 gap-4 max-w-[50%]">
               <ProductAutocomplete
                 productType={ProductType.Cpu}
                 onChangeProduct={setAppliedCpu}
               />
               <GenericButton disabled={appliedCpu == null} onClick={applyToCpu}>
-                Apply to CPU
+                Apply
               </GenericButton>
             </div>
 
             <div className="flex gap-4">
               <GenericButton onClick={save}>Save</GenericButton>
               <GenericButton onClick={enqueueAutomation}>
-                Enqueue CPU Creation
+                Create CPU
               </GenericButton>
             </div>
           </div>

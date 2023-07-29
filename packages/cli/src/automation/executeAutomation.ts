@@ -4,7 +4,7 @@ import { updateCpuSourcesAction } from './actions/updateCpuSourcesAction';
 import { AutomationContext } from './types';
 
 let executing = false;
-export async function executeAutopilot(context: AutomationContext) {
+export async function executeAutomation(context: AutomationContext) {
   if (executing) {
     // Already executing a task.
     return;

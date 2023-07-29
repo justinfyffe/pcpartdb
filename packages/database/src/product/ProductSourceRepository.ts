@@ -95,7 +95,7 @@ export class ProductSourceRepository {
         updatedAt: true,
       },
       where: this.generateWhere(filter),
-      orderBy: { _max: { updatedAt: 'desc' } },
+      orderBy: { _max: { createdAt: 'desc' } },
       skip: pagination?.offset ?? 0,
       take: pagination?.limit ?? 50,
     });
@@ -135,12 +135,19 @@ export class ProductSourceRepository {
     const trx = config?.trx ?? this.db;
 
     const { productType, sourceKey, query } = options;
-    const tokens = query
+    const searchTokens = query
       .split(' ')
       .map((value) => value.trim().toLowerCase())
       .filter((value) => value.length > 1);
+    let regexTokens = query
+      .split(' ')
+      .filter((value) => value.trim().length > 1)
+      .map((value) => `(?=.*${value.trim().toLowerCase()})`)
+      .join('');
+    regexTokens = `${regexTokens}.*`;
 
-    return await trx.productSource.findMany({
+    // Get results based on relevancy
+    const priorityResults = await trx.productSource.findMany({
       where: {
         productType,
         sourceKey,
@@ -148,13 +155,13 @@ export class ProductSourceRepository {
           OR: [
             {
               sourceName: {
-                search: tokens.join(' & '),
+                search: searchTokens.join(' & '),
                 mode: 'insensitive',
               },
             },
             {
               sourceUrl: {
-                search: tokens.join(' & '),
+                search: searchTokens.join(' & '),
                 mode: 'insensitive',
               },
             },
@@ -164,12 +171,46 @@ export class ProductSourceRepository {
       orderBy: {
         _relevance: {
           fields: ['sourceName', 'sourceUrl'],
-          search: tokens.join(' | '),
+          search: searchTokens.join(' | '),
           sort: 'desc',
         },
       },
-      take: 10,
+      take: 6,
     });
+
+    // Get results based on regex
+    let fillerResultIds: { id: number }[] = [];
+    if (regexTokens !== '.*') {
+      fillerResultIds = await trx.$queryRaw`
+        SELECT id FROM product_sources
+        WHERE
+          product_type=${productType} AND
+          source_key=${sourceKey} AND
+          CONCAT(source_name, ' ', source_url) ~* (${regexTokens})
+        ORDER BY source_name ASC NULLS LAST
+        LIMIT 6
+      `;
+    } else {
+      fillerResultIds = await trx.$queryRaw`
+        SELECT id FROM product_sources
+        WHERE
+          product_type=${productType} AND
+          source_key=${sourceKey}
+        ORDER BY source_name ASC NULLS LAST
+        LIMIT 6
+      `;
+    }
+    const fillerResults = await trx.productSource.findMany({
+      where: { id: { in: fillerResultIds.map((json) => json.id) } },
+      orderBy: { sourceName: 'desc' },
+    });
+
+    // Return top results.
+    return [
+      ...new Map(
+        [...priorityResults, ...fillerResults].map((v) => [v.id, v]),
+      ).values(),
+    ].slice(0, 6);
   }
 
   private generateWhere(
@@ -177,6 +218,7 @@ export class ProductSourceRepository {
   ): Prisma.ProductSourceWhereInput {
     const productType = filter?.productType || null;
     const includeArchived = filter?.includeArchived ?? false;
+    const sourceNameContains = filter?.sourceNameContains || null;
 
     // Product Type
     const productTypeWhere: Prisma.StringFilter = productType
@@ -187,10 +229,16 @@ export class ProductSourceRepository {
     const archivedWhere: Prisma.BoolNullableFilter =
       includeArchived !== true ? { equals: false } : undefined;
 
+    // Source name
+    const sourceNameWhere: Prisma.StringFilter = sourceNameContains
+      ? { contains: sourceNameContains, mode: 'insensitive' }
+      : undefined;
+
     return {
       AND: {
         productType: productTypeWhere,
         archived: archivedWhere,
+        sourceName: sourceNameWhere,
       },
     };
   }

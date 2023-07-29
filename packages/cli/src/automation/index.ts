@@ -1,7 +1,7 @@
 import axios from 'axios';
 import * as scheduler from 'node-schedule';
 import { ApiClient } from '../shared/ApiClient';
-import { executeAutopilot } from './executeAutopilot';
+import { executeAutomation } from './executeAutomation';
 import { AutomationContext } from './types';
 import { automationDataPath, loadAutomationConfig } from './utils';
 
@@ -17,10 +17,10 @@ export async function automationCommand(args: AutomationCommandArgs) {
   const context = await createContext();
   if (args.schedule) {
     scheduler.scheduleJob(AUTOMATION_CRON, async () => {
-      await executeAutopilot(context);
+      await executeAutomation(context);
     });
   } else {
-    await executeAutopilot(context);
+    await executeAutomation(context);
   }
 }
 

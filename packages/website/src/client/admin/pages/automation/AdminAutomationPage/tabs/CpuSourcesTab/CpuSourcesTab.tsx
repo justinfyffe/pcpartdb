@@ -7,26 +7,31 @@ import {
   ProductType,
 } from '@pcpartdb/shared';
 import { productSourceService } from 'packages/website/src/client/product';
-import { Checkbox } from 'packages/website/src/client/shared/components';
+import {
+  Checkbox,
+  TextInput,
+} from 'packages/website/src/client/shared/components';
 import { InfoAlert } from 'packages/website/src/client/shared/components/Alert/InfoAlert';
 import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
 import { Pagination } from 'packages/website/src/client/shared/components/Pagination/Pagination';
+import { useDebounce } from 'packages/website/src/client/shared/hooks/useDebounce';
 import React, { useCallback, useEffect, useState } from 'react';
 import { CpuSourceCard } from './CpuSourceCard';
 
 const LIMIT = 10;
+const FILTER_DEBOUNCE = 300;
 
 interface CpuSourcesTabProps {}
 
 export const CpuSourcesTab = (_props: CpuSourcesTabProps) => {
   // States
 
-  const [includeArchived, setIncludeArchived] = useState(false);
+  const [showArchived, setShowArchived] = useState(false);
   const [loading, setLoading] = useState(false);
   const [items, setItems] = useState<ProductSourceGroup[]>([]);
   const [total, setTotal] = useState(0);
   const [query, setQuery] = useState<ListProductSourcesQuery>({
-    filter: { productType: ProductType.Cpu, includeArchived: includeArchived },
+    filter: { productType: ProductType.Cpu, includeArchived: showArchived },
     pagination: { offset: 0, limit: LIMIT },
   });
 
@@ -41,13 +46,25 @@ export const CpuSourcesTab = (_props: CpuSourcesTabProps) => {
     setLoading(false);
   }, []);
 
-  const showArchived = useCallback(
+  const filterSources = useCallback(
+    (value: string) => {
+      const filter: ListProductSourcesFilter = {
+        ...query.filter,
+        sourceNameContains: value || undefined,
+      };
+      fetchSourceGroups({ ...query, filter });
+    },
+    [fetchSourceGroups, query],
+  );
+  const debouncedFilterSources = useDebounce(filterSources, FILTER_DEBOUNCE);
+
+  const toggleArchived = useCallback(
     (checked: boolean) => {
       const filter: ListProductSourcesFilter = {
         ...query.filter,
         includeArchived: checked,
       };
-      setIncludeArchived(checked);
+      setShowArchived(checked);
       fetchSourceGroups({ ...query, filter });
     },
     [fetchSourceGroups, query],
@@ -78,13 +95,21 @@ export const CpuSourcesTab = (_props: CpuSourcesTabProps) => {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex justify-between gap-4">
-        <div className="flex flex-1 gap-4">
-          <Checkbox value={includeArchived} onChange={showArchived}>
-            Include Archived
+        <div className="flex flex-1 gap-4 max-w-[50%]">
+          <TextInput
+            placeholder="Filter sources"
+            onChange={debouncedFilterSources}
+          />
+          <Checkbox
+            value={showArchived}
+            onChange={toggleArchived}
+            className="flex-1 whitespace-nowrap"
+          >
+            Show Archived
           </Checkbox>
         </div>
 
-        <div className="flex gap-4">
+        <div className="flex gap-4 items-center">
           {total > 0 && (
             <Pagination
               displayTotal={true}

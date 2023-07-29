@@ -6,6 +6,7 @@ import { listQueryValidator, ProductType } from '@pcpartdb/shared';
 const listProductSourcesFilterValidator = Joi.object({
   productType: Joi.string().allow(ProductType.Cpu, ProductType.Gpu).required(),
   includeArchived: Joi.boolean(),
+  sourceNameContains: Joi.string(),
 }).options({ abortEarly: false });
 
 export const listProductSourcesQueryValidator = listQueryValidator({

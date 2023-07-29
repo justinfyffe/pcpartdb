@@ -2,6 +2,6 @@ export function getAdminOverviewPath() {
   return '/admin/';
 }
 
-export function getAdminAutopilotPath() {
-  return '/admin/autopilot/';
+export function getAdminAutomationPath() {
+  return '/admin/automation/';
 }
