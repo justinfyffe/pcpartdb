@@ -58,6 +58,18 @@ export class AutomationController {
     );
   }
 
+  @Post('queue/:id/cancel')
+  @UseGuards(StaffGuard)
+  async cancel(@Param('id') idStr: string, @Ctx() ctx: Context) {
+    return await this.db.transaction(
+      async () => {
+        const id = Number(idStr);
+        await this.service.cancel(id, ctx);
+      },
+      { ctx },
+    );
+  }
+
   @Post('queue/:id/processing')
   @UseGuards(StaffGuard)
   async markAsProcessing(@Param('id') idStr: string, @Ctx() ctx: Context) {
@@ -88,19 +100,7 @@ export class AutomationController {
     return await this.db.transaction(
       async () => {
         const id = Number(idStr);
-        await this.service.markAsProcessed(id, ctx);
-      },
-      { ctx },
-    );
-  }
-
-  @Post('queue/:id/cancel')
-  @UseGuards(StaffGuard)
-  async cancel(@Param('id') idStr: string, @Ctx() ctx: Context) {
-    return await this.db.transaction(
-      async () => {
-        const id = Number(idStr);
-        await this.service.cancel(id, ctx);
+        await this.service.markAsFailed(id, ctx);
       },
       { ctx },
     );

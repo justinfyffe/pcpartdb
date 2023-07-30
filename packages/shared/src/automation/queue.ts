@@ -26,8 +26,6 @@ export interface AutomationQueueItem<T = unknown> {
 
   priority?: number;
   timestamp?: number;
-
-  statusUpdatedAt?: number;
 }
 
 export interface AutomationQueueItemMeta {}

@@ -97,8 +97,6 @@ export interface ProductUpdate<T = unknown> {
 
   cpuId?: number;
   gpuId?: number;
-
-  statusUpdatedAt?: number;
 }
 
 export interface ProductUpdateMeta {}

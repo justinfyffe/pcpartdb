@@ -37,8 +37,6 @@ export async function mapToProductUpdateDto<TUpdateData = unknown>(
 
     cpuId: entity.cpuId,
     gpuId: entity.gpuId,
-
-    statusUpdatedAt: entity.statusUpdatedAt?.getTime() || null,
   };
 }
 
@@ -78,8 +76,6 @@ export async function mapToProductUpdateEntity(
     cpuId: dto.cpuId,
     gpuId: dto.gpuId,
 
-    statusUpdatedAt:
-      dto.statusUpdatedAt != null ? new Date(dto.statusUpdatedAt) : null,
     createdAt: undefined,
     updatedAt: undefined,
   };

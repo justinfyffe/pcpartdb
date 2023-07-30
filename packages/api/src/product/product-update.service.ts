@@ -74,7 +74,7 @@ export class ProductUpdateService {
       for (const update of existingPendingUpdates) {
         await this.repository.update(
           update.id,
-          { status: ProductUpdateStatus.Rejected, statusUpdatedAt: new Date() },
+          { status: ProductUpdateStatus.Rejected },
           ctx,
         );
       }
@@ -120,7 +120,7 @@ export class ProductUpdateService {
 
     await this.repository.update(
       id,
-      { status: ProductUpdateStatus.Approved, statusUpdatedAt: new Date() },
+      { status: ProductUpdateStatus.Approved },
       ctx,
     );
   }
@@ -145,7 +145,7 @@ export class ProductUpdateService {
 
     await this.repository.update(
       id,
-      { status: ProductUpdateStatus.Rejected, statusUpdatedAt: new Date() },
+      { status: ProductUpdateStatus.Rejected },
       ctx,
     );
   }

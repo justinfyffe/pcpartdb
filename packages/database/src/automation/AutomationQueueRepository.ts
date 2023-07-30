@@ -13,6 +13,14 @@ interface ListOptions {
 export class AutomationQueueRepository {
   constructor(protected db: DatabaseClient) {}
 
+  async findById(id: number, config?: RepositoryConfig) {
+    const trx = config?.trx ?? this.db;
+
+    return await trx.automationQueueItem.findUnique({
+      where: { id },
+    });
+  }
+
   async findNextPending(config?: RepositoryConfig) {
     const trx = config?.trx ?? this.db;
 
@@ -61,18 +69,6 @@ export class AutomationQueueRepository {
     return await trx.automationQueueItem.update({
       where: { id },
       data: entity,
-    });
-  }
-
-  async updateStatus(
-    id: number,
-    status: AutomationQueueStatus,
-    config?: RepositoryConfig,
-  ) {
-    const trx = config?.trx ?? this.db;
-    await trx.automationQueueItem.update({
-      where: { id },
-      data: { status, statusUpdatedAt: new Date() },
     });
   }
 }

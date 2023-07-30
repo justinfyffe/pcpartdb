@@ -31,7 +31,6 @@ export async function mapToAutomationQueueItemDto<TUpdateData = unknown>(
     metadata: entity.metadata as AutomationQueueItemMeta,
     priority: entity.priority,
     timestamp: entity.timestamp.getTime(),
-    statusUpdatedAt: entity.statusUpdatedAt?.getTime() || null,
   };
 }
 
@@ -66,7 +65,5 @@ export async function mapToAutomationQueueItemEntity(
     metadata: dto.metadata,
     priority: dto.priority || 0,
     timestamp: dto.timestamp != null ? new Date(dto.timestamp) : undefined,
-    statusUpdatedAt:
-      dto.statusUpdatedAt != null ? new Date(dto.statusUpdatedAt) : null,
   };
 }

@@ -9,8 +9,10 @@ import {
   EnqueueAutomationRequest,
   ListAutomationQueueRequest,
   ListAutomationQueueResponse,
+  ValidationErrorType,
 } from '@pcpartdb/shared';
 import { Context } from '../shared/context';
+import { badRequestError, notFoundError } from '../shared/error';
 import { validate } from '../shared/validation/validate';
 import {
   enqueueAutomationRequestValidator,
@@ -60,26 +62,77 @@ export class AutomationService {
   }
 
   async cancel(id: number, ctx: Context) {
-    await this.repository.updateStatus(id, AutomationQueueStatus.Canceled, ctx);
+    const entity = await this.repository.findById(id, ctx);
+    if (entity == null) {
+      throw notFoundError({ id });
+    } else if (entity.status !== AutomationQueueStatus.Pending) {
+      throw badRequestError({
+        property: 'status',
+        constraint: ValidationErrorType.InvalidStatus,
+      });
+    }
+
+    await this.repository.update(
+      id,
+      { status: AutomationQueueStatus.Canceled },
+      ctx,
+    );
   }
 
   async markAsProcessing(id: number, ctx: Context) {
-    await this.repository.updateStatus(
+    const entity = await this.repository.findById(id, ctx);
+    if (entity == null) {
+      throw notFoundError({ id });
+    } else if (entity.status !== AutomationQueueStatus.Pending) {
+      throw badRequestError({
+        property: 'status',
+        constraint: ValidationErrorType.InvalidStatus,
+      });
+    }
+
+    await this.repository.update(
       id,
-      AutomationQueueStatus.Processing,
+      { status: AutomationQueueStatus.Processing },
       ctx,
     );
   }
 
   async markAsProcessed(id: number, ctx: Context) {
-    await this.repository.updateStatus(
+    const entity = await this.repository.findById(id, ctx);
+    if (entity == null) {
+      throw notFoundError({ id });
+    } else if (entity.status !== AutomationQueueStatus.Processing) {
+      throw badRequestError({
+        property: 'status',
+        constraint: ValidationErrorType.InvalidStatus,
+      });
+    }
+
+    await this.repository.update(
       id,
-      AutomationQueueStatus.Processed,
+      { status: AutomationQueueStatus.Processed },
       ctx,
     );
   }
 
   async markAsFailed(id: number, ctx: Context) {
-    await this.repository.updateStatus(id, AutomationQueueStatus.Failed, ctx);
+    const entity = await this.repository.findById(id, ctx);
+    if (entity == null) {
+      throw notFoundError({ id });
+    } else if (
+      entity.status !== AutomationQueueStatus.Pending &&
+      entity.status !== AutomationQueueStatus.Processing
+    ) {
+      throw badRequestError({
+        property: 'status',
+        constraint: ValidationErrorType.InvalidStatus,
+      });
+    }
+
+    await this.repository.update(
+      id,
+      { status: AutomationQueueStatus.Failed },
+      ctx,
+    );
   }
 }

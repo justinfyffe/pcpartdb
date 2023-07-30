@@ -318,7 +318,6 @@ model ProductUpdate {
   cpuId Int? @map("cpu_id")
   gpuId Int? @map("gpu_id")
 
-  statusUpdatedAt DateTime? @map("status_updated_at") @db.Timestamptz(6)
   createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt       DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
 
@@ -344,7 +343,6 @@ model AutomationQueueItem {
   priority  Int      @default(0)
   timestamp DateTime @default(now())
 
-  statusUpdatedAt DateTime?
   createdAt       DateTime  @default(now()) @map("created_at") @ignore @db.Timestamptz(6)
   updatedAt       DateTime  @default(now()) @updatedAt @map("updated_at") @ignore @db.Timestamptz(6)
 
