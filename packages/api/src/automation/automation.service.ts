@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import {
+  mapToAutomationQueueItemDto,
   mapToAutomationQueueItemDtos,
   mapToAutomationQueueItemEntity,
 } from '@pcpartdb/database';
@@ -20,6 +21,15 @@ import { AutomationQueueRepository } from './automation-queue.repository';
 @Injectable()
 export class AutomationService {
   constructor(private repository: AutomationQueueRepository) {}
+
+  async getNextPending(ctx: Context) {
+    const entity = await this.repository.findNextPending(ctx);
+    if (entity == null) {
+      return null;
+    }
+
+    return mapToAutomationQueueItemDto(entity);
+  }
 
   async listPending(request: ListAutomationQueueRequest, ctx: Context) {
     validate(request, listAutomationQueueRequestValidator);

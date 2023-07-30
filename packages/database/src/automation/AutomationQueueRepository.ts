@@ -13,6 +13,15 @@ interface ListOptions {
 export class AutomationQueueRepository {
   constructor(protected db: DatabaseClient) {}
 
+  async findNextPending(config?: RepositoryConfig) {
+    const trx = config?.trx ?? this.db;
+
+    return await trx.automationQueueItem.findFirst({
+      where: { status: AutomationQueueStatus.Pending },
+      orderBy: [{ priority: 'desc' }, { timestamp: 'asc' }],
+    });
+  }
+
   async listPending(options: ListOptions, config?: RepositoryConfig) {
     const trx = config?.trx ?? this.db;
     const { pagination } = options.query ?? {};

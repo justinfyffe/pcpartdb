@@ -33,6 +33,8 @@ export async function executeAutomation(context: AutomationContext) {
     console.error(`Unsupported Action: ${action}`);
   }
 
+  // TODO: close queue item
+
   executing = false;
 }
 
@@ -42,16 +44,6 @@ async function getNextAction(context: AutomationContext) {
     return queueAction;
   }
 
-  // Fetch next action from priority queue
-  const queueItem = await context.api.get<AutomationQueueItem>(
-    'automation/queue/next',
-  );
-  if (queueItem)
-    if (queueItem != null) {
-      const action = queueItem.action;
-      const payload = queueItem.data;
-      return { action, payload, queueItem };
-    }
   // TODO: get next action, first check from priority queue,
   // then determine based on staleness, then update gpus/cpus
   return {

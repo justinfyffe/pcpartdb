@@ -27,7 +27,7 @@ export class AutomationController {
   async getNextEntry(@Ctx() ctx: Context) {
     return await this.db.transaction(
       async () => {
-        //return await this.service.getNextEntry(ctx);
+        return await this.service.getNextPending(ctx);
       },
       { ctx },
     );
