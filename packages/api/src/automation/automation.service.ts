@@ -59,7 +59,27 @@ export class AutomationService {
     await this.repository.create(entity, ctx);
   }
 
-  async deleteItem(id: number, ctx: Context) {
-    await this.repository.delete(id, ctx);
+  async cancel(id: number, ctx: Context) {
+    await this.repository.updateStatus(id, AutomationQueueStatus.Canceled, ctx);
+  }
+
+  async markAsProcessing(id: number, ctx: Context) {
+    await this.repository.updateStatus(
+      id,
+      AutomationQueueStatus.Processing,
+      ctx,
+    );
+  }
+
+  async markAsProcessed(id: number, ctx: Context) {
+    await this.repository.updateStatus(
+      id,
+      AutomationQueueStatus.Processed,
+      ctx,
+    );
+  }
+
+  async markAsFailed(id: number, ctx: Context) {
+    await this.repository.updateStatus(id, AutomationQueueStatus.Failed, ctx);
   }
 }

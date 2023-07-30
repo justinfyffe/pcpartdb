@@ -13,14 +13,16 @@ import {
   ProductUpdate,
   ProductUpdateStatus,
 } from '@pcpartdb/shared';
-import { AutomationContext } from '../types';
+import { AutomationContext, AutomationExecution } from '../types';
 
 export async function createCpuAction(
-  action: CreateCpuActionData,
+  execution: AutomationExecution<CreateCpuActionData>,
   context: AutomationContext,
 ) {
+  const { payload } = execution;
+
   // Get sources from cpu or action
-  const sources = action.sources;
+  const sources = payload.sources;
   const techPowerUpSource = {
     url: sources?.filter(
       (source) => source.sourceKey === CpuDataSourceKey.TechPowerUp,
@@ -48,15 +50,15 @@ export async function createCpuAction(
   if (cpu == null) {
     // No results for scraping. Skip.
     console.error(
-      `No scraped data when scraping CPU during automation for action=${action}`,
+      `No scraped data when scraping CPU during automation for action=${execution}`,
     );
     return;
   }
 
   // New CPUs have some additional data to be applied
   // Preferred name from source
-  if (action?.preferredName) {
-    const { company, name } = parseProductName(action.preferredName);
+  if (payload?.preferredName) {
+    const { company, name } = parseProductName(payload.preferredName);
     cpu.name = name;
     if (company != null) {
       if (

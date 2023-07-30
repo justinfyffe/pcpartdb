@@ -2,7 +2,10 @@ import { AutomationAction } from './actions';
 
 export enum AutomationQueueStatus {
   Pending = 'PENDING',
+  Processing = 'PROCESSING',
   Processed = 'PROCESSED',
+  Failed = 'FAILED',
+  Canceled = 'CANCELED',
 }
 
 /**

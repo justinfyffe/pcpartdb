@@ -58,19 +58,49 @@ export class AutomationController {
     );
   }
 
-  @Put('queue/:id')
+  @Post('queue/:id/processing')
   @UseGuards(StaffGuard)
-  async updateEntry(@Ctx() ctx: Context) {
-    // TODO
-  }
-
-  @Delete('queue/:id')
-  @UseGuards(StaffGuard)
-  async deleteEntry(@Param('id') idStr: string, @Ctx() ctx: Context) {
+  async markAsProcessing(@Param('id') idStr: string, @Ctx() ctx: Context) {
     return await this.db.transaction(
       async () => {
         const id = Number(idStr);
-        await this.service.deleteItem(id, ctx);
+        await this.service.markAsProcessing(id, ctx);
+      },
+      { ctx },
+    );
+  }
+
+  @Post('queue/:id/processed')
+  @UseGuards(StaffGuard)
+  async markAsProcessed(@Param('id') idStr: string, @Ctx() ctx: Context) {
+    return await this.db.transaction(
+      async () => {
+        const id = Number(idStr);
+        await this.service.markAsProcessed(id, ctx);
+      },
+      { ctx },
+    );
+  }
+
+  @Post('queue/:id/failed')
+  @UseGuards(StaffGuard)
+  async markAsFailed(@Param('id') idStr: string, @Ctx() ctx: Context) {
+    return await this.db.transaction(
+      async () => {
+        const id = Number(idStr);
+        await this.service.markAsProcessed(id, ctx);
+      },
+      { ctx },
+    );
+  }
+
+  @Post('queue/:id/cancel')
+  @UseGuards(StaffGuard)
+  async cancel(@Param('id') idStr: string, @Ctx() ctx: Context) {
+    return await this.db.transaction(
+      async () => {
+        const id = Number(idStr);
+        await this.service.cancel(id, ctx);
       },
       { ctx },
     );

@@ -12,7 +12,7 @@ import {
   UpsertProductSourcesRequest,
 } from '@pcpartdb/shared';
 import { sleep } from '../../shared/process';
-import { AutomationContext } from '../types';
+import { AutomationContext, AutomationExecution } from '../types';
 
 const BATCH_SIZE = 10;
 const DELAY_BETWEEN_SOURCE_REQUEST = 10_000;
@@ -154,7 +154,10 @@ const PASSMARK_URLS = [
   'https://www.cpubenchmark.net/low_end_cpus.html', // low end
 ];
 
-export async function updateCpuSourcesAction(context: AutomationContext) {
+export async function updateCpuSourcesAction(
+  _execution: AutomationExecution,
+  context: AutomationContext,
+) {
   // Scrape CPU Sources
   const techPowerUpSources = await getTechPowerUpSources();
   const passMarkSources = await getPassMarkSources();

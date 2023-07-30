@@ -64,8 +64,15 @@ export class AutomationQueueRepository {
     });
   }
 
-  async delete(id: number, config?: RepositoryConfig) {
+  async updateStatus(
+    id: number,
+    status: AutomationQueueStatus,
+    config?: RepositoryConfig,
+  ) {
     const trx = config?.trx ?? this.db;
-    await trx.automationQueueItem.delete({ where: { id } });
+    await trx.automationQueueItem.update({
+      where: { id },
+      data: { status, statusUpdatedAt: new Date() },
+    });
   }
 }

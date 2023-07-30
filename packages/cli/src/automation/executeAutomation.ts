@@ -1,8 +1,9 @@
 import { AutomationAction, AutomationQueueItem } from '@pcpartdb/shared';
 import { createCpuAction } from './actions/createCpuAction';
 import { updateCpuSourcesAction } from './actions/updateCpuSourcesAction';
-import { AutomationContext } from './types';
-import { saveAutomationMetadata } from './utils/metadata';
+import { AutomationContext, AutomationExecution } from './types';
+import { saveAutomationContext } from './utils/context';
+import { createExecutionError } from './utils/error';
 
 const UPDATE_SITEMAPS_FREQUENCY = 1000 * 60 * 60 * 24; // Daily
 const UPDATE_CPU_SOURCES_FREQUENCY = 1000 * 60 * 60 * 24 * 7; // Weekly
@@ -16,46 +17,99 @@ export async function executeAutomation(context: AutomationContext) {
   }
   executing = true;
 
-  const { action, payload, queueItem } = await getNextAction(context);
+  let execution: AutomationExecution = null;
+  try {
+    execution = await getNextExecution(context);
+    const { action } = execution;
 
-  // TODO: mark queue item as running
+    await markAsProcessing(execution, context);
 
-  if (action === AutomationAction.UpdateSitemaps) {
-    //
-  } else if (action === AutomationAction.UpdateCpuSources) {
-    await updateCpuSourcesAction(context);
-  } else if (action === AutomationAction.UpdateGpuSources) {
-    //
-  } else if (action === AutomationAction.CreateCpu) {
-    await createCpuAction(payload, context);
-  } else if (action === AutomationAction.CreateGpu) {
-    //
-  } else {
-    console.error(`Unsupported Action: ${action}`);
+    if (action === AutomationAction.UpdateSitemaps) {
+      //
+    } else if (action === AutomationAction.UpdateCpuSources) {
+      await updateCpuSourcesAction(execution, context);
+    } else if (action === AutomationAction.UpdateGpuSources) {
+      //
+    } else if (action === AutomationAction.CreateCpu) {
+      await createCpuAction(execution, context);
+    } else if (action === AutomationAction.CreateGpu) {
+      //
+    } else {
+      console.error(`Unsupported Action: ${action}`);
+    }
+
+    await saveAutomationContext(context);
+
+    await markAsProcessed(execution, context);
+  } catch (e) {
+    console.error('Error occurred during automation execution', e);
+    await markAsFailed(execution, e as Error, context);
   }
-
-  // TODO: mark queue item as closed or failed
-
-  await saveAutomationMetadata(context.metadata);
 
   executing = false;
 }
 
-async function getNextAction(context: AutomationContext) {
+async function markAsProcessing(
+  execution: AutomationExecution,
+  context: AutomationContext,
+) {
+  if (execution.queueItem != null) {
+    await context.api.post(
+      `automation/queue/${execution.queueItem.id}/processing`,
+      null,
+    );
+  }
+
+  console.info('Automation execution has started', execution);
+}
+
+async function markAsProcessed(
+  execution: AutomationExecution,
+  context: AutomationContext,
+) {
+  if (execution.queueItem != null) {
+    await context.api.post(
+      `automation/queue/${execution.queueItem.id}/processed`,
+      null,
+    );
+  }
+
+  console.info('Automation execution has completed');
+}
+
+async function markAsFailed(
+  execution: AutomationExecution,
+  error: Error,
+  context: AutomationContext,
+) {
+  const executionError = createExecutionError(error);
+  if (execution?.queueItem != null) {
+    await context.api.post(
+      `automation/queue/${execution.queueItem.id}/failed`,
+      null,
+    );
+  }
+
+  console.error('Automation execution has failed', executionError);
+}
+
+async function getNextExecution(
+  context: AutomationContext,
+): Promise<AutomationExecution> {
   // Action baesd on Priority Queue
-  const queueAction = await getQueueAction(context);
+  const queueAction = await getQueueExecution(context);
   if (queueAction != null) {
     return queueAction;
   }
 
   // Action based on staleness (e.g. stale sitemaps, product sources)
-  const stalenessAction = await getStalenessAction(context);
+  const stalenessAction = await getStalenessExecution(context);
   if (stalenessAction != null) {
     return stalenessAction;
   }
 
   // No actions remaining, fallback to continuous ones (e.g. product updates)
-  const fallbackAction = await getFallbackAction(context);
+  const fallbackAction = await getFallbackExecution(context);
   if (fallbackAction != null) {
     return fallbackAction;
   }
@@ -63,7 +117,9 @@ async function getNextAction(context: AutomationContext) {
   return { action: null, payload: null, queueItem: null };
 }
 
-async function getQueueAction(context: AutomationContext) {
+async function getQueueExecution(
+  context: AutomationContext,
+): Promise<AutomationExecution> {
   const queueItem = await context.api.get<AutomationQueueItem>(
     'automation/queue/next',
   );
@@ -77,25 +133,31 @@ async function getQueueAction(context: AutomationContext) {
   return null;
 }
 
-async function getStalenessAction(context: AutomationContext) {
+async function getStalenessExecution(
+  context: AutomationContext,
+): Promise<AutomationExecution> {
   const { metadata } = context;
 
   if (isStale(metadata?.updateSitemapsDate, UPDATE_SITEMAPS_FREQUENCY)) {
-    //
+    return { action: AutomationAction.UpdateSitemaps };
   }
 
   if (isStale(metadata?.updateCpuSourcesDate, UPDATE_CPU_SOURCES_FREQUENCY)) {
-    //
+    return { action: AutomationAction.UpdateCpuSources };
   }
 
   if (isStale(metadata?.updateGpuSourcesDate, UPDATE_GPU_SOURCES_FREQUENCY)) {
-    //
+    return { action: AutomationAction.UpdateGpuSources };
   }
 
   return null;
 }
 
-async function getFallbackAction(context: AutomationContext) {
+// TODO: determine order by last auto-updated
+async function getFallbackExecution(
+  context: AutomationContext,
+): Promise<AutomationExecution> {
+  // Determine which next thing to update.
   return null;
 }
 

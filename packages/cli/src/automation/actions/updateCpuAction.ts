@@ -16,18 +16,20 @@ import {
 } from '@pcpartdb/shared';
 import deepmerge from 'deepmerge';
 import { compare as generateJsonPatch } from 'fast-json-patch';
-import { AutomationContext } from '../types';
+import { AutomationContext, AutomationExecution } from '../types';
 
 export async function updateCpuAction(
-  action: UpdateCpuActionData,
+  execution: AutomationExecution<UpdateCpuActionData>,
   context: AutomationContext,
 ) {
+  const { payload } = execution;
+
   // Get existing CPU (if cpuId is provided)
   let originalCpu: Cpu;
   try {
-    originalCpu = await getCpu(action.cpuId, context);
+    originalCpu = await getCpu(payload.cpuId, context);
   } catch (e) {
-    console.error(`Error getting existing CPU for action=${action}`);
+    console.error(`Error getting existing CPU for action=${payload}`);
     return;
   }
 
@@ -50,7 +52,7 @@ export async function updateCpuAction(
   if (scrapedCpu == null) {
     // No results for scraping. Skip.
     console.error(
-      `No scraped data when scraping CPU during automation for action=${action}`,
+      `No scraped data when scraping CPU during automation for action=${payload}`,
     );
     return;
   }

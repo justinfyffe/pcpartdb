@@ -7,6 +7,12 @@ export interface AutomationExecution<TPayload = unknown> {
   queueItem?: AutomationQueueItem;
 }
 
+export interface AutomationExecutionError {
+  name: string;
+  message: string;
+  stack?: string;
+}
+
 export interface AutomationMetadata {
   updateSitemapsDate?: number;
   updateCpuSourcesDate?: number;
