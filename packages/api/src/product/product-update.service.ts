@@ -22,7 +22,7 @@ import { GpuService } from './gpu/gpu.service';
 import {
   approveProductUpdateRequestValidator,
   createProductUpdateRequestValidator,
-  listProductSourcesRequestValidator,
+  listProductUpdatesRequestValidator,
   rejectProductUpdateRequestValidator,
 } from './product.validators';
 import { ProductUpdateRepository } from './product-update.repository';
@@ -39,7 +39,7 @@ export class ProductUpdateService {
    * Returns a list of product updates that match the filter.
    */
   async list(request: ListProductUpdatesRequest, ctx: Context) {
-    validate(request, listProductSourcesRequestValidator);
+    validate(request, listProductUpdatesRequestValidator);
     const { query } = request;
 
     const { results, total } = await this.repository.list({ query }, ctx);

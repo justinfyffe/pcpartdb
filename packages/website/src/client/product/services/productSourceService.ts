@@ -33,7 +33,7 @@ export class ProductSourceService {
   }
 
   async applyToProduct(request: ApplyProductSourcesToProductRequest) {
-    await this.api.put(joinUrlParts(PATH, 'apply'), request);
+    await this.api.post(joinUrlParts(PATH, 'apply'), request);
   }
 
   async upsert(request: UpsertProductSourcesRequest) {

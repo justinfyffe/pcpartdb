@@ -60,10 +60,7 @@ export class CpuRepository {
     });
   }
 
-  async listAll(
-    options: ListCpusOptions,
-    config?: RepositoryConfig,
-  ): Promise<CpuEntity[]> {
+  async listAll(options: ListCpusOptions, config?: RepositoryConfig) {
     const db = config?.trx ?? this.db;
 
     const includeImages = options?.includeImages ?? false;

@@ -1,4 +1,4 @@
-import { AutomationAction } from '@pcpartdb/shared';
+import { AutomationAction, AutomationQueueItem } from '@pcpartdb/shared';
 import { createCpuAction } from './actions/createCpuAction';
 import { updateCpuSourcesAction } from './actions/updateCpuSourcesAction';
 import { AutomationContext } from './types';
@@ -11,7 +11,7 @@ export async function executeAutomation(context: AutomationContext) {
   }
   executing = true;
 
-  const action = getNextAction(context);
+  const { action, payload } = await getNextAction(context);
 
   // Pull next entry from priority queue, if no entry, then determine next general task
   //    Check local config file for last time sitemaps and sources was run
@@ -36,8 +36,43 @@ export async function executeAutomation(context: AutomationContext) {
   executing = false;
 }
 
-function getNextAction(context: AutomationContext) {
+async function getNextAction(context: AutomationContext) {
+  const queueAction = await getActionFromQueue(context);
+  if (queueAction != null) {
+    return queueAction;
+  }
+
+  // Fetch next action from priority queue
+  const queueItem = await context.api.get<AutomationQueueItem>(
+    'automation/queue/next',
+  );
+  if (queueItem)
+    if (queueItem != null) {
+      const action = queueItem.action;
+      const payload = queueItem.data;
+      return { action, payload, queueItem };
+    }
   // TODO: get next action, first check from priority queue,
   // then determine based on staleness, then update gpus/cpus
-  return AutomationAction.UpdateCpuSources as AutomationAction;
+  return {
+    action: AutomationAction.UpdateCpuSources,
+    payload: null,
+    queueItem: null,
+  };
 }
+
+async function getActionFromQueue(context: AutomationContext) {
+  const queueItem = await context.api.get<AutomationQueueItem>(
+    'automation/queue/next',
+  );
+
+  if (queueItem != null) {
+    const action = queueItem.action;
+    const payload = queueItem.data;
+    return { action, payload, queueItem };
+  }
+
+  return null;
+}
+
+async function getActionFromStaleness() {}

@@ -164,6 +164,9 @@ export async function updateCpuSourcesAction(context: AutomationContext) {
   await uploadCpuSources(techPowerUpSources, context);
   await uploadCpuSources(passMarkSources, context);
   await uploadCpuSources(geekBenchSources, context);
+
+  // Trigger auto-archive
+  await context.api.post('products/sources/auto-archive', null);
 }
 
 async function getTechPowerUpSources() {

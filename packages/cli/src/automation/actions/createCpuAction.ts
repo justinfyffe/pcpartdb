@@ -6,6 +6,7 @@ import {
   CreateCpuActionData,
   CreateProductUpdateRequest,
   generateCpuSlug,
+  parseProductName,
   ProductDiff,
   productFieldValue,
   ProductType,
@@ -55,11 +56,23 @@ export async function createCpuAction(
   // New CPUs have some additional data to be applied
   // Preferred name from source
   if (action?.preferredName) {
-    cpu.name = action.preferredName;
+    const { company, name } = parseProductName(action.preferredName);
+    cpu.name = name;
+    if (company != null) {
+      if (
+        company.toLowerCase() !==
+        productFieldValue<string>(cpu.company)?.toLowerCase()
+      ) {
+        cpu.company = {
+          value: company,
+          meta: { fieldKey: 'company', autoUpdate: false },
+        };
+      }
+    }
   }
 
   // Generate slug, new CPU didn't have it yet.
-  cpu.slug = generateCpuSlug(cpu.name, cpu.company?.value);
+  cpu.slug = generateCpuSlug(cpu.name, productFieldValue(cpu.company));
 
   // Upload update
   await uploadProductUpdate(cpu, context);

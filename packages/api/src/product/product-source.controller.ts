@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Post,
-  Put,
-  Query,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
 import {
   ApplyProductSourcesToProductRequest,
   AutocompleteProductSourcesRequest,
@@ -23,6 +15,8 @@ import {
   upsertProductSourcesValidator,
 } from './product.validators';
 import { ProductSourceService } from './product-source.service';
+
+const AUTO_ARCHIVE_TIMEOUT = 30_000;
 
 @Controller('products/sources')
 export class ProductSourceController {
@@ -60,7 +54,7 @@ export class ProductSourceController {
 
   @Post()
   @UseGuards(StaffGuard)
-  async create(@Body() body: UpsertProductSourcesRequest, @Ctx() ctx: Context) {
+  async upsert(@Body() body: UpsertProductSourcesRequest, @Ctx() ctx: Context) {
     return await this.db.transaction(
       async () => {
         validate(body, upsertProductSourcesValidator);
@@ -70,7 +64,7 @@ export class ProductSourceController {
     );
   }
 
-  @Put('apply')
+  @Post('apply')
   @UseGuards(StaffGuard)
   async applyToProduct(
     @Body() body: ApplyProductSourcesToProductRequest,
@@ -82,6 +76,17 @@ export class ProductSourceController {
         await this.service.applyToProduct(body, ctx);
       },
       { ctx },
+    );
+  }
+
+  @Post('auto-archive')
+  @UseGuards(StaffGuard)
+  async autoArchive(@Ctx() ctx: Context) {
+    return await this.db.transaction(
+      async () => {
+        await this.service.autoArchive(ctx);
+      },
+      { ctx, timeout: AUTO_ARCHIVE_TIMEOUT },
     );
   }
 }

@@ -9,6 +9,10 @@ import { DatabaseClient } from '../DatabaseClient';
 import { RepositoryConfig } from '../RepositoryConfig';
 import { ProductSourceEntity } from './ProductSourceEntity';
 
+interface ListOptions {
+  query?: ListProductSourcesQuery;
+}
+
 interface ListGroupsOptions {
   query: ListProductSourcesQuery;
 }
@@ -79,6 +83,16 @@ export class ProductSourceRepository {
     await trx.productSource.delete({ where: { id } });
   }
 
+  async listAll(options: ListOptions, config?: RepositoryConfig) {
+    const trx = config?.trx ?? this.db;
+
+    const { filter } = options.query ?? {};
+
+    return await trx.productSource.findMany({
+      where: { ...this.generateWhere(filter) },
+    });
+  }
+
   /**
    * Return a list of product source entities, grouped together based on
    * product type and source name.
@@ -92,7 +106,7 @@ export class ProductSourceRepository {
     const rawSourceNames = await trx.productSource.groupBy({
       by: ['productType', 'sourceName'],
       _max: {
-        updatedAt: true,
+        createdAt: true,
       },
       where: this.generateWhere(filter),
       orderBy: { _max: { createdAt: 'desc' } },

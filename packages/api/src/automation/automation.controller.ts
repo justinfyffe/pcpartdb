@@ -25,7 +25,12 @@ export class AutomationController {
   @Get('queue/next')
   @UseGuards(StaffGuard)
   async getNextEntry(@Ctx() ctx: Context) {
-    // TODO
+    return await this.db.transaction(
+      async () => {
+        //return await this.service.getNextEntry(ctx);
+      },
+      { ctx },
+    );
   }
 
   @Get('queue/pending')

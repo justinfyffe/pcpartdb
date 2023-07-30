@@ -5,12 +5,13 @@ import { GpuModule } from './gpu/gpu.module';
 import { ProductSourceController } from './product-source.controller';
 import { ProductSourceRepository } from './product-source.repository';
 import { ProductSourceService } from './product-source.service';
+import { ProductUpdateController } from './product-update.controller';
 import { ProductUpdateRepository } from './product-update.repository';
 import { ProductUpdateService } from './product-update.service';
 
 @Module({
   imports: [DatabaseModule, CpuModule, GpuModule],
-  controllers: [ProductSourceController],
+  controllers: [ProductSourceController, ProductUpdateController],
   providers: [
     ProductSourceRepository,
     ProductSourceService,
