@@ -131,7 +131,7 @@ model Cpu {
   dataUpdates DataUpdate[]
   productUpdates ProductUpdate[]
 
-  @@index([automationTimestamp], name: "automation_timestamp")
+  @@index([automationTimestamp], name: "cpus_automation_timestamp_index")
   @@unique([company, name], name: "cpus_company_name_unique")
   @@map("cpus")
 }
@@ -221,7 +221,7 @@ model Gpu {
 
   // Automation Data
 
-  automationTimestamp DateTime @default(now()) @map("automation_timestamp")
+  automationTimestamp DateTime @default(now()) @map("cpus_automation_timestamp_index")
 
   // Relations
 
@@ -232,7 +232,7 @@ model Gpu {
   dataUpdates DataUpdate[]
   productUpdates ProductUpdate[]
 
-  @@index([automationTimestamp], name: "automation_timestamp")
+  @@index([automationTimestamp], name: "gpus_automation_timestamp_index")
   @@unique([company, name], name: "gpus_company_name_unique")
   @@map("gpus")
 }
@@ -311,8 +311,8 @@ model ProductSource {
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
 
-  @@index([productType, sourceName], name: "type_name") 
-  @@unique([productType, sourceKey, sourceUrl], name: "type_key_url")
+  @@index([productType, sourceName], name: "product_sources_type_name_index") 
+  @@unique([productType, sourceKey, sourceUrl], name: "product_sources_type_key_url")
 
   @@map("product_sources")
 }
@@ -339,8 +339,8 @@ model ProductUpdate {
   cpu Cpu? @relation(fields: [cpuId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "product_updates_cpu_id_foreign")
   gpu Gpu? @relation(fields: [gpuId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "product_updates_gpu_id_foreign")
 
-  @@index([productType, status, productCompany, productName], name: "type_status_company_name") 
-  @@index([createdAt], name: "created_at")
+  @@index([productType, status, productCompany, productName], name: "product_updates_type_status_company_name_index") 
+  @@index([createdAt], name: "product_updates_created_at_index")
 
   @@map("product_updates")
 }
@@ -361,7 +361,7 @@ model AutomationAction {
   createdAt DateTime  @default(now()) @map("created_at") @ignore @db.Timestamptz(6)
   updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @ignore @db.Timestamptz(6)
 
-  @@index([status, priority(sort: Desc), timestamp(sort: Asc)], name: "status_priority_timestamp") 
+  @@index([status, priority(sort: Desc), timestamp(sort: Asc)], name: "automation_actions_status_priority_timestamp_index") 
 
   @@map("automation_actions")
 }

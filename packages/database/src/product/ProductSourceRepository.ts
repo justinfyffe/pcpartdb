@@ -67,7 +67,7 @@ export class ProductSourceRepository {
 
     return await trx.productSource.upsert({
       where: {
-        type_key_url: {
+        product_sources_type_key_url: {
           productType: entity.productType,
           sourceKey: entity.sourceKey,
           sourceUrl: entity.sourceUrl,
