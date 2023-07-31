@@ -1,6 +1,19 @@
-import { Cpu, getAdminEditCpuPath } from '@pcpartdb/shared';
+import { ArrowPathIcon } from '@heroicons/react/24/outline';
+import {
+  AutomationActionType,
+  Cpu,
+  getAdminEditCpuPath,
+  UpdateCpuActionData,
+} from '@pcpartdb/shared';
+import { automationService } from 'packages/website/src/client/automation';
 import { formatCpuName } from 'packages/website/src/client/product';
-import React, { FunctionComponent, useMemo } from 'react';
+import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
+import React, {
+  FunctionComponent,
+  useCallback,
+  useMemo,
+  useState,
+} from 'react';
 import {
   Table,
   TBody,
@@ -25,6 +38,7 @@ export const CpuTable: FunctionComponent<CpuTableProps> = (props) => {
           <Th className="text-left">ID</Th>
           <Th className="text-left">Name</Th>
           <Th></Th>
+          <Th></Th>
         </Tr>
       </THead>
       <TBody>
@@ -46,6 +60,14 @@ const CpuTableRow: FunctionComponent<CpuTableRowProps> = (props) => {
   const href = useMemo(() => getAdminEditCpuPath(cpu), [cpu]);
   const name = useMemo(() => formatCpuName(cpu), [cpu]);
 
+  const enqueueCpuUpdate = useCallback(async () => {
+    await automationService.createAction<UpdateCpuActionData>({
+      type: AutomationActionType.UpdateCpu,
+      description: formatCpuName(cpu),
+      data: { cpuId: cpu.id },
+    });
+  }, [cpu]);
+
   return (
     <Tr key={cpu.id}>
       <Td className="text-left">{cpu.id}</Td>
@@ -54,6 +76,15 @@ const CpuTableRow: FunctionComponent<CpuTableRowProps> = (props) => {
       </Td>
       <Td className="p-0">
         <MissingCpuDataChip cpu={cpu} />
+      </Td>
+      <Td className="text-right">
+        <GenericButton
+          disableAfterClickSeconds={5}
+          showDisabledTimer
+          onClick={enqueueCpuUpdate}
+        >
+          <ArrowPathIcon className="w-4" />
+        </GenericButton>
       </Td>
     </Tr>
   );

@@ -13,6 +13,23 @@ HIGH LEVEL TODO:
 - Soft delete everything. Hard delete should be rare.
 - auto-backup system
 
+AUTOMATION TESTING:
+- [] Terminate during action
+- [] CLI
+  - [] verify only auto-updated fields get updated
+  - [] Fetches New CPU Sources
+  - [] Auto-archives CPU sources after fetching
+  - [] Saving archives without action creation
+  - [] Create CPU can archive, and creates action
+  - [] Apply to CPU updates it on cpu, and creates action
+  - [] Create CPU action fetches data and creates a product update
+  - [] Update CPU action fetches data and creates a product update
+  - [] Approving update for new cpu creates cpu
+  - [] Approving update for updating cpu updates cpu
+  - [] Gets backlog entry returns the next cpu to update
+  - [] Gets next entry gets next item in queue
+  - [] Test automation queue
+
 CODE CLEANUP TASKS
 - View Models
   - Single "model" or "viewModel" prop on each page props

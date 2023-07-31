@@ -5,11 +5,11 @@ import {
   AutomationActionType,
 } from './actions';
 
-export interface CreateAutomationActionRequest<T = unknown> {
+export interface CreateAutomationActionRequest<TPayload = unknown> {
   type: AutomationActionType;
   description?: string;
 
-  data?: T;
+  data?: TPayload;
   metadata?: AutomationActionMeta;
 
   priority?: number;

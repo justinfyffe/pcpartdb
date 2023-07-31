@@ -13,7 +13,7 @@ export class AutomationService {
 
   async listPending(request: ListAutomationActionsRequest) {
     return await this.api.get<ListAutomationActionsResponse>(
-      joinUrlParts(PATH, 'queue/pending'),
+      joinUrlParts(PATH, 'actions/pending'),
       {
         params: {
           req: JSON.stringify(request),
@@ -22,12 +22,14 @@ export class AutomationService {
     );
   }
 
-  async enqueue(request: CreateAutomationActionRequest) {
-    await this.api.post(joinUrlParts(PATH, 'queue'), request);
+  async createAction<TPayload = unknown>(
+    request: CreateAutomationActionRequest<TPayload>,
+  ) {
+    await this.api.post(joinUrlParts(PATH, 'actions'), request);
   }
 
-  async deleteItem(id: number) {
-    await this.api.delete(joinUrlParts(PATH, `queue/${id}`));
+  async cancelAction(id: number) {
+    await this.api.post(joinUrlParts(PATH, `actions/${id}/cancel`), null);
   }
 }
 

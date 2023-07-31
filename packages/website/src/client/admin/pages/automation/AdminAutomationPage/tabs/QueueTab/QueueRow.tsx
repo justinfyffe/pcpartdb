@@ -33,7 +33,7 @@ export const QueueRow = (props: QueueRowProps) => {
   }, [item]);
 
   const deleteItem = useCallback(async () => {
-    await automationService.deleteItem(item.id);
+    await automationService.cancelAction(item.id);
     setDeleted(true);
   }, [item.id]);
 

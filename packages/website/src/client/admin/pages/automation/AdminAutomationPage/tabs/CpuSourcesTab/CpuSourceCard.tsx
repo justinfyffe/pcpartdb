@@ -163,8 +163,8 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
       sources,
     });
 
-    // Enqueue action to update existing product.
-    await automationService.enqueue({
+    // Create automation action to update existing cpu.
+    await automationService.createAction({
       type: AutomationActionType.CreateCpu,
       description: formatProductName(ProductType.Cpu, appliedCpu),
       data: { cpuId: appliedCpu.id } as CreateCpuActionData,
@@ -179,8 +179,8 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
       (source) => source != null,
     );
 
-    // Enqueue action to create new CPU
-    await automationService.enqueue({
+    // Create automation action to create new CPU
+    await automationService.createAction({
       type: AutomationActionType.CreateCpu,
       description: preferredName,
       data: { preferredName, sources } as CreateCpuActionData,
