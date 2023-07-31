@@ -157,6 +157,7 @@ async function updateBenchmarks(
 }
 
 function mergeCpus(originalCpu: Cpu, scrapedCpu: Cpu) {
+  const arrayMerge = (x: unknown[], y: unknown[]) => y;
   const filteredMerge = (x: unknown, y: unknown) => {
     const field = x as CpuField;
 
@@ -165,11 +166,15 @@ function mergeCpus(originalCpu: Cpu, scrapedCpu: Cpu) {
       return x;
     }
 
-    return deepmerge(x, y, { customMerge: () => filteredMerge });
+    return deepmerge(x, y, {
+      customMerge: () => filteredMerge,
+      arrayMerge,
+    });
   };
 
   const result = deepmerge(originalCpu, scrapedCpu, {
     customMerge: () => filteredMerge,
+    arrayMerge,
   });
 
   // Reset name and slug as these might have been overwritten
@@ -190,6 +195,7 @@ async function uploadProductUpdate(
   context: AutomationContext,
 ) {
   const update: ProductUpdate<ProductDiff> = {
+    cpuId: originalCpu.id,
     productType: ProductType.Cpu,
     productName: updatedCpu.name,
     productCompany: productFieldValue(updatedCpu.company),

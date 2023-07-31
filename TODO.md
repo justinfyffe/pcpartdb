@@ -1,8 +1,9 @@
 HIGH LEVEL TODO:
 - Automation
-  - add more logging to automation
   - Fix bugs:
-    - CPU array chip fields get concatenated added, fix that merge
+    - actions marked as processed after failure
+    - not enough logging
+    - view page on cpu update not working
   - how to terminate without breaking?
 - code cleanup
 - Improve performance score (not just g3d mark or cpu mark)
@@ -16,7 +17,7 @@ HIGH LEVEL TODO:
 AUTOMATION TESTING:
 - [] Terminate during action
 - [] CLI
-  - [] verify only auto-updated fields get updated
+  - [x] verify only auto-updated fields get updated
   - [] Fetches New CPU Sources
   - [] Auto-archives CPU sources after fetching
   - [] Saving archives without action creation

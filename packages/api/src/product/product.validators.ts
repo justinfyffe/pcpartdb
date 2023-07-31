@@ -70,6 +70,9 @@ export const createProductUpdateRequestValidator = Joi.object({
   status: Joi.string(),
   data: Joi.any().allow(null),
   metadata: Joi.any().allow(null),
+
+  cpuId: Joi.number().allow(null),
+  gpuId: Joi.number().allow(null),
 }).options({ abortEarly: false });
 
 export const approveProductUpdateRequestValidator = Joi.object({

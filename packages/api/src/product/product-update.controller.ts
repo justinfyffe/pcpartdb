@@ -49,7 +49,7 @@ export class ProductUpdateController {
   @Post(':id/approve')
   @UseGuards(StaffGuard)
   async approve(
-    @Param() idStr: string,
+    @Param('id') idStr: string,
     @Body() body: ApproveProductUpdateRequest,
     @Ctx() ctx: Context,
   ) {
@@ -65,7 +65,7 @@ export class ProductUpdateController {
   @Post(':id/reject')
   @UseGuards(StaffGuard)
   async reject(
-    @Param() idStr: string,
+    @Param('id') idStr: string,
     @Body() body: RejectProductUpdateRequest,
     @Ctx() ctx: Context,
   ) {

@@ -1,10 +1,6 @@
 import 'reflect-metadata';
 import { ChevronDownIcon, ChevronLeftIcon } from '@heroicons/react/24/outline';
-import {
-  CpuUpdate,
-  generateCpuSlug,
-  ProductUpdateStatus,
-} from '@pcpartdb/shared';
+import { CpuUpdate, ProductUpdateStatus } from '@pcpartdb/shared';
 import { CpuDiffDialog } from 'packages/website/src/client/admin/components';
 import { formatCpuName } from 'packages/website/src/client/product';
 import { productUpdateService } from 'packages/website/src/client/product/services/productUpdateService';
@@ -26,6 +22,7 @@ interface CpuCardTabProps {
 
 export const CpuCard = (props: CpuCardTabProps) => {
   const { update } = props;
+  console.log(update);
   const isUpdate = update.cpuId ? true : false;
   const updatedCpu = update.data.updated;
 
@@ -34,9 +31,7 @@ export const CpuCard = (props: CpuCardTabProps) => {
   const [expanded, setExpanded] = useState(false);
   const [status, setStatus] = useState(update.status);
 
-  const [slug, setSlug] = useState(() =>
-    generateCpuSlug(updatedCpu.name, updatedCpu.slug),
-  );
+  const [slug, setSlug] = useState(updatedCpu.slug);
 
   // Memos
 
