@@ -24,11 +24,12 @@ AUTOMATION TESTING:
   - [] Create CPU can archive, and creates action
   - [] Apply to CPU updates it on cpu, and creates action
   - [] Create CPU action fetches data and creates a product update
-  - [] Update CPU action fetches data and creates a product update
+  - [x] Update CPU action fetches data and creates a product update
   - [] Approving update for new cpu creates cpu
-  - [] Approving update for updating cpu updates cpu
+  - [x] Approving update for updating cpu updates cpu
+  - [x] rejecting doesnt apply
   - [] Gets backlog entry returns the next cpu to update
-  - [] Gets next entry gets next item in queue
+  - [x] Gets next entry gets next item in queue
   - [] Test automation queue
 
 CODE CLEANUP TASKS
