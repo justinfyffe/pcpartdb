@@ -1,10 +1,10 @@
 import 'reflect-metadata';
-import { AutomationQueueItem } from '@pcpartdb/shared';
+import { AutomationAction } from '@pcpartdb/shared';
 import { Dialog } from 'packages/website/src/client/shared/components/Dialog/Dialog';
 import React, { useMemo } from 'react';
 
 interface QueueDetailsDialogProps {
-  item: AutomationQueueItem;
+  item: AutomationAction;
 }
 
 export const QueueDetailsDialog = (props: QueueDetailsDialogProps) => {

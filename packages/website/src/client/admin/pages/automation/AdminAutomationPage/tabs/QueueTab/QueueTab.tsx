@@ -1,9 +1,6 @@
 import 'reflect-metadata';
 import { ArrowPathIcon } from '@heroicons/react/24/outline';
-import {
-  AutomationQueueItem,
-  ListAutomationQueueQuery,
-} from '@pcpartdb/shared';
+import { AutomationAction, ListAutomationActionsQuery } from '@pcpartdb/shared';
 import { automationService } from 'packages/website/src/client/automation';
 import {
   Table,
@@ -26,23 +23,26 @@ export const QueueTab = (_props: QueueTabProps) => {
   // States
 
   const [loading, setLoading] = useState(false);
-  const [items, setItems] = useState<AutomationQueueItem[]>([]);
+  const [items, setItems] = useState<AutomationAction[]>([]);
   const [total, setTotal] = useState(0);
-  const [query, setQuery] = useState<ListAutomationQueueQuery>({
+  const [query, setQuery] = useState<ListAutomationActionsQuery>({
     pagination: { offset: 0, limit: LIMIT },
   });
 
   // Callbacks
 
-  const fetchPendingItems = useCallback(async (q: ListAutomationQueueQuery) => {
-    setLoading(true);
-    setQuery(q);
-    const response = await automationService.listPending({ query: q });
-    setQuery(response.query);
-    setItems(response.results);
-    setTotal(response.total);
-    setLoading(false);
-  }, []);
+  const fetchPendingItems = useCallback(
+    async (q: ListAutomationActionsQuery) => {
+      setLoading(true);
+      setQuery(q);
+      const response = await automationService.listPending({ query: q });
+      setQuery(response.query);
+      setItems(response.results);
+      setTotal(response.total);
+      setLoading(false);
+    },
+    [],
+  );
 
   const refresh = useCallback(() => {
     fetchPendingItems({ ...query });

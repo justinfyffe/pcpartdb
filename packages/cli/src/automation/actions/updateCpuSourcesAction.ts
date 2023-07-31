@@ -6,13 +6,14 @@ import {
   TechPowerUpCpuSource,
 } from '@pcpartdb/scraper';
 import {
+  AutomationAction,
   CpuDataSourceKey,
   ProductSource,
   ProductType,
   UpsertProductSourcesRequest,
 } from '@pcpartdb/shared';
 import { sleep } from '../../shared/process';
-import { AutomationContext, AutomationExecution } from '../types';
+import { AutomationContext } from '../types';
 
 const BATCH_SIZE = 10;
 const DELAY_BETWEEN_SOURCE_REQUEST = 10_000;
@@ -155,7 +156,7 @@ const PASSMARK_URLS = [
 ];
 
 export async function updateCpuSourcesAction(
-  _execution: AutomationExecution,
+  _execution: AutomationAction,
   context: AutomationContext,
 ) {
   // Scrape CPU Sources

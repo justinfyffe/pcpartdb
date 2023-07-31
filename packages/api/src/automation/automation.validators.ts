@@ -1,21 +1,21 @@
 import Joi from '@hapi/joi';
 import { listQueryValidator } from '@pcpartdb/shared';
 
-const listAutomationQueueFilterValidator = Joi.object({}).options({
+const listAutomationActionsFilterValidator = Joi.object({}).options({
   abortEarly: false,
 });
 
-export const listAutomationQueueQueryValidator = listQueryValidator({
-  filterValidator: listAutomationQueueFilterValidator,
+export const listAutomationActionsQueryValidator = listQueryValidator({
+  filterValidator: listAutomationActionsFilterValidator,
   maxLimit: 100,
 });
 
-export const listAutomationQueueRequestValidator = Joi.object({
-  query: listAutomationQueueQueryValidator,
+export const listAutomationActionsRequestValidator = Joi.object({
+  query: listAutomationActionsQueryValidator,
 }).options({ abortEarly: false });
 
-export const enqueueAutomationRequestValidator = Joi.object({
-  action: Joi.string().required(),
+export const createAutomationActionRequestValidator = Joi.object({
+  type: Joi.string().required(),
   description: Joi.string().allow(''),
 
   data: Joi.any(),

@@ -1,40 +1,46 @@
 import { Injectable } from '@nestjs/common';
 import {
-  mapToAutomationQueueItemDto,
-  mapToAutomationQueueItemDtos,
-  mapToAutomationQueueItemEntity,
+  mapToAutomationActionDto,
+  mapToAutomationActionDtos,
+  mapToAutomationActionEntity,
 } from '@pcpartdb/database';
 import {
-  AutomationQueueStatus,
-  EnqueueAutomationRequest,
-  ListAutomationQueueRequest,
-  ListAutomationQueueResponse,
+  AutomationAction,
+  AutomationActionStatus,
+  AutomationActionType,
+  CreateAutomationActionRequest,
+  ListAutomationActionsRequest,
+  ListAutomationActionsResponse,
+  ProductType,
+  UpdateCpuActionData,
+  UpdateGpuActionData,
   ValidationErrorType,
 } from '@pcpartdb/shared';
+import { CpuRepository } from '../product/cpu/cpu.repository';
+import { GpuRepository } from '../product/gpu/gpu.repository';
 import { Context } from '../shared/context';
-import { badRequestError, notFoundError } from '../shared/error';
-import { validate } from '../shared/validation/validate';
 import {
-  enqueueAutomationRequestValidator,
-  listAutomationQueueRequestValidator,
+  badRequestError,
+  internalServerError,
+  notFoundError,
+} from '../shared/error';
+import { validate } from '../shared/validation/validate';
+import { AutomationRepository } from './automation.repository';
+import {
+  createAutomationActionRequestValidator,
+  listAutomationActionsRequestValidator,
 } from './automation.validators';
-import { AutomationQueueRepository } from './automation-queue.repository';
 
 @Injectable()
 export class AutomationService {
-  constructor(private repository: AutomationQueueRepository) {}
+  constructor(
+    private repository: AutomationRepository,
+    private cpuRepository: CpuRepository,
+    private gpuRepository: GpuRepository,
+  ) {}
 
-  async getNextPending(ctx: Context) {
-    const entity = await this.repository.findNextPending(ctx);
-    if (entity == null) {
-      return null;
-    }
-
-    return mapToAutomationQueueItemDto(entity);
-  }
-
-  async listPending(request: ListAutomationQueueRequest, ctx: Context) {
-    validate(request, listAutomationQueueRequestValidator);
+  async listPending(request: ListAutomationActionsRequest, ctx: Context) {
+    validate(request, listAutomationActionsRequestValidator);
     const { query } = request;
 
     const { results, total } = await this.repository.listPending(
@@ -44,19 +50,19 @@ export class AutomationService {
 
     return {
       query,
-      results: await mapToAutomationQueueItemDtos(results, {
+      results: await mapToAutomationActionDtos(results, {
         includeData: true,
       }),
       total,
-    } as ListAutomationQueueResponse;
+    } as ListAutomationActionsResponse;
   }
 
-  async enqueue(request: EnqueueAutomationRequest, ctx: Context) {
-    validate(request, enqueueAutomationRequestValidator);
+  async create(request: CreateAutomationActionRequest, ctx: Context) {
+    validate(request, createAutomationActionRequestValidator);
 
-    const entity = await mapToAutomationQueueItemEntity({
+    const entity = await mapToAutomationActionEntity({
       ...request,
-      status: AutomationQueueStatus.Pending,
+      status: AutomationActionStatus.Pending,
     });
     await this.repository.create(entity, ctx);
   }
@@ -65,7 +71,7 @@ export class AutomationService {
     const entity = await this.repository.findById(id, ctx);
     if (entity == null) {
       throw notFoundError({ id });
-    } else if (entity.status !== AutomationQueueStatus.Pending) {
+    } else if (entity.status !== AutomationActionStatus.Pending) {
       throw badRequestError({
         property: 'status',
         constraint: ValidationErrorType.InvalidStatus,
@@ -74,7 +80,7 @@ export class AutomationService {
 
     await this.repository.update(
       id,
-      { status: AutomationQueueStatus.Canceled },
+      { status: AutomationActionStatus.Canceled },
       ctx,
     );
   }
@@ -83,7 +89,7 @@ export class AutomationService {
     const entity = await this.repository.findById(id, ctx);
     if (entity == null) {
       throw notFoundError({ id });
-    } else if (entity.status !== AutomationQueueStatus.Pending) {
+    } else if (entity.status !== AutomationActionStatus.Pending) {
       throw badRequestError({
         property: 'status',
         constraint: ValidationErrorType.InvalidStatus,
@@ -92,7 +98,7 @@ export class AutomationService {
 
     await this.repository.update(
       id,
-      { status: AutomationQueueStatus.Processing },
+      { status: AutomationActionStatus.Processing },
       ctx,
     );
   }
@@ -101,7 +107,7 @@ export class AutomationService {
     const entity = await this.repository.findById(id, ctx);
     if (entity == null) {
       throw notFoundError({ id });
-    } else if (entity.status !== AutomationQueueStatus.Processing) {
+    } else if (entity.status !== AutomationActionStatus.Processing) {
       throw badRequestError({
         property: 'status',
         constraint: ValidationErrorType.InvalidStatus,
@@ -110,7 +116,7 @@ export class AutomationService {
 
     await this.repository.update(
       id,
-      { status: AutomationQueueStatus.Processed },
+      { status: AutomationActionStatus.Processed },
       ctx,
     );
   }
@@ -120,8 +126,8 @@ export class AutomationService {
     if (entity == null) {
       throw notFoundError({ id });
     } else if (
-      entity.status !== AutomationQueueStatus.Pending &&
-      entity.status !== AutomationQueueStatus.Processing
+      entity.status !== AutomationActionStatus.Pending &&
+      entity.status !== AutomationActionStatus.Processing
     ) {
       throw badRequestError({
         property: 'status',
@@ -131,8 +137,65 @@ export class AutomationService {
 
     await this.repository.update(
       id,
-      { status: AutomationQueueStatus.Failed },
+      { status: AutomationActionStatus.Failed },
       ctx,
     );
+  }
+
+  /**
+   * Gets the next pending queued/prioritized automation task to do.
+   */
+  async getNextPending(ctx: Context) {
+    const entity = await this.repository.findNextPending(ctx);
+    if (entity == null) {
+      return null;
+    }
+
+    return mapToAutomationActionDto(entity);
+  }
+
+  /**
+   * Gets the next general automation task to do. These are not stored in the
+   * database and should be done after all queued tasks are done.
+   */
+  async getNextBacklog(ctx: Context) {
+    // Find next products to update
+    const nextCpuToUpdate = await this.cpuRepository.findNextToBeUpdated(ctx);
+    const nextGpuToUpdate = await this.gpuRepository.findNextToBeUpdated(ctx);
+    const nextProductsToUpdate = [
+      { type: ProductType.Cpu, product: nextCpuToUpdate },
+      { type: ProductType.Gpu, product: nextGpuToUpdate },
+    ];
+
+    // Compare automation timestamps, choose earliest one.
+    const { type: typeToUpdate, product: productToUpdate } =
+      nextProductsToUpdate.sort(
+        (a, b) =>
+          a.product.automationTimestamp.getTime() -
+          b.product.automationTimestamp.getTime(),
+      )[0];
+
+    // Get action details, and update product's automation timestamp
+    let actionType: AutomationActionType;
+    let payload: UpdateCpuActionData | UpdateGpuActionData;
+    productToUpdate.automationTimestamp = new Date();
+    if (typeToUpdate === ProductType.Cpu) {
+      actionType = AutomationActionType.UpdateCpu;
+      payload = { cpuId: productToUpdate.id };
+      await this.cpuRepository.update(productToUpdate.id, productToUpdate, ctx);
+    } else if (typeToUpdate === ProductType.Gpu) {
+      actionType = AutomationActionType.UpdateGpu;
+      payload = { gpuId: productToUpdate.id };
+      await this.gpuRepository.update(productToUpdate.id, productToUpdate, ctx);
+    } else {
+      throw internalServerError();
+    }
+
+    // Create and return action.
+    return {
+      type: actionType,
+      status: AutomationActionStatus.Pending,
+      data: payload,
+    } as AutomationAction;
   }
 }

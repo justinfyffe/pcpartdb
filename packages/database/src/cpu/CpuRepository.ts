@@ -139,6 +139,14 @@ export class CpuRepository {
     });
   }
 
+  async findNextToBeUpdated(config?: RepositoryConfig) {
+    const trx = config?.trx ?? this.db;
+
+    return await trx.cpu.findFirst({
+      orderBy: { automationTimestamp: 'asc' },
+    });
+  }
+
   async create(data: Omit<CpuEntity, 'id'>, config?: RepositoryConfig) {
     const trx = config?.trx ?? this.db;
 

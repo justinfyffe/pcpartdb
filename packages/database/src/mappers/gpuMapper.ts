@@ -9,6 +9,7 @@ interface MapToDtoOptions {
   chipsetFields?: Set<string>;
   retailModelFields?: Set<string>;
   includeSources?: boolean;
+  includeAutomation?: boolean;
 }
 
 export function mapToGpuDto(entity: GpuEntity, options?: MapToDtoOptions): Gpu {
@@ -97,6 +98,9 @@ export function mapToGpuDto(entity: GpuEntity, options?: MapToDtoOptions): Gpu {
     valueScore: mapToGpuDataDto(entity, 'valueScore', options),
 
     meta: mapToGpuMetaDto(entity.metadata as GpuMetaJson, options),
+    automationTimestamp: options.includeAutomation
+      ? entity.automationTimestamp?.getTime()
+      : undefined,
     updatedAt:
       entity.updatedAt != null ? entity.updatedAt.getTime() : undefined,
 
@@ -217,6 +221,11 @@ export function mapToGpuEntity(gpu: Partial<Gpu>): GpuEntity {
     timespyGraphics: mapToGpuDataEntity(gpu, 'timespyGraphics', metadata),
   };
 
+  let automationTimestamp: Date = undefined;
+  if (gpu.automationTimestamp != null) {
+    automationTimestamp = new Date(gpu.automationTimestamp);
+  }
+
   return {
     ...mappedFields,
 
@@ -228,6 +237,7 @@ export function mapToGpuEntity(gpu: Partial<Gpu>): GpuEntity {
     affiliateUrl: gpu.affiliateUrl,
 
     metadata: metadata as Prisma.JsonObject,
+    automationTimestamp,
 
     images: mapToGpuImageEntities(gpu.images),
   } as GpuEntity;

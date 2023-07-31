@@ -1,6 +1,6 @@
 export * from './accessTokenMapper';
 export * from './apiKeyMapper';
-export * from './automationQueueItemMapper';
+export * from './automationActionMapper';
 export * from './dataUpdateMapper';
 export * from './cpuDataMapper';
 export * from './cpuImageMapper';

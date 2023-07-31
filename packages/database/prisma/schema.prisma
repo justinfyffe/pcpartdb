@@ -114,14 +114,24 @@ model Cpu {
   geekbenchSingleCore Float? @map("geekbench_single_core")
   geekbenchMultiCore  Float? @map("geekbench_multi_core")
 
+
+  // Extra Details
+
   metadata  Json?
   createdAt DateTime @default(now()) @map("created_at") @ignore @db.Timestamptz(6)
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  // Automation Data
+  
+  automationTimestamp DateTime @default(now()) @map("automation_timestamp")
+
+  // Relations
 
   images      CpuImage[]
   dataUpdates DataUpdate[]
   productUpdates ProductUpdate[]
 
+  @@index([automationTimestamp], name: "automation_timestamp")
   @@unique([company, name], name: "cpus_company_name_unique")
   @@map("cpus")
 }
@@ -209,6 +219,10 @@ model Gpu {
   createdAt DateTime @default(now()) @map("created_at") @ignore @db.Timestamptz(6)
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
 
+  // Automation Data
+
+  automationTimestamp DateTime @default(now()) @map("automation_timestamp")
+
   // Relations
 
   images       GpuImage[]
@@ -218,6 +232,7 @@ model Gpu {
   dataUpdates DataUpdate[]
   productUpdates ProductUpdate[]
 
+  @@index([automationTimestamp], name: "automation_timestamp")
   @@unique([company, name], name: "gpus_company_name_unique")
   @@map("gpus")
 }
@@ -325,28 +340,28 @@ model ProductUpdate {
   gpu Gpu? @relation(fields: [gpuId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "product_updates_gpu_id_foreign")
 
   @@index([productType, status, productCompany, productName], name: "type_status_company_name") 
-  @@index([createdAt], name: "created_at") 
+  @@index([createdAt], name: "created_at")
 
   @@map("product_updates")
 }
 
-model AutomationQueueItem {
+model AutomationAction {
   id Int @id @default(autoincrement())
 
-  description String?
+  type        String
   status      String
-  action      String
-
+  description String?
+  
   data     Bytes?
   metadata Json?
 
   priority  Int      @default(0)
   timestamp DateTime @default(now())
 
-  createdAt       DateTime  @default(now()) @map("created_at") @ignore @db.Timestamptz(6)
-  updatedAt       DateTime  @default(now()) @updatedAt @map("updated_at") @ignore @db.Timestamptz(6)
+  createdAt DateTime  @default(now()) @map("created_at") @ignore @db.Timestamptz(6)
+  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @ignore @db.Timestamptz(6)
 
   @@index([status, priority(sort: Desc), timestamp(sort: Asc)], name: "status_priority_timestamp") 
 
-  @@map("automation_queue")
+  @@map("automation_actions")
 }

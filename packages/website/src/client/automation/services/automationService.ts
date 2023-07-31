@@ -1,8 +1,8 @@
 import {
-  EnqueueAutomationRequest,
+  CreateAutomationActionRequest,
   joinUrlParts,
-  ListAutomationQueueRequest,
-  ListAutomationQueueResponse,
+  ListAutomationActionsRequest,
+  ListAutomationActionsResponse,
 } from '@pcpartdb/shared';
 import { ApiClient, apiClient } from '../../shared/api';
 
@@ -11,8 +11,8 @@ const PATH = 'automation';
 export class AutomationService {
   constructor(private api: ApiClient) {}
 
-  async listPending(request: ListAutomationQueueRequest) {
-    return await this.api.get<ListAutomationQueueResponse>(
+  async listPending(request: ListAutomationActionsRequest) {
+    return await this.api.get<ListAutomationActionsResponse>(
       joinUrlParts(PATH, 'queue/pending'),
       {
         params: {
@@ -22,7 +22,7 @@ export class AutomationService {
     );
   }
 
-  async enqueue(request: EnqueueAutomationRequest) {
+  async enqueue(request: CreateAutomationActionRequest) {
     await this.api.post(joinUrlParts(PATH, 'queue'), request);
   }
 

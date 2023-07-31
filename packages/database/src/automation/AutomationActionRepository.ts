@@ -1,22 +1,22 @@
 import {
-  AutomationQueueStatus,
-  ListAutomationQueueQuery,
+  AutomationActionStatus,
+  ListAutomationActionsQuery,
 } from '@pcpartdb/shared';
 import { DatabaseClient } from '../DatabaseClient';
 import { RepositoryConfig } from '../RepositoryConfig';
-import { AutomationQueueItemEntity } from './AutomationQueueItemEntity';
+import { AutomationActionEntity } from './AutomationActionEntity';
 
 interface ListOptions {
-  query: ListAutomationQueueQuery;
+  query: ListAutomationActionsQuery;
 }
 
-export class AutomationQueueRepository {
+export class AutomationActionRepository {
   constructor(protected db: DatabaseClient) {}
 
   async findById(id: number, config?: RepositoryConfig) {
     const trx = config?.trx ?? this.db;
 
-    return await trx.automationQueueItem.findUnique({
+    return await trx.automationAction.findUnique({
       where: { id },
     });
   }
@@ -24,8 +24,8 @@ export class AutomationQueueRepository {
   async findNextPending(config?: RepositoryConfig) {
     const trx = config?.trx ?? this.db;
 
-    return await trx.automationQueueItem.findFirst({
-      where: { status: AutomationQueueStatus.Pending },
+    return await trx.automationAction.findFirst({
+      where: { status: AutomationActionStatus.Pending },
       orderBy: [{ priority: 'desc' }, { timestamp: 'asc' }],
     });
   }
@@ -34,39 +34,39 @@ export class AutomationQueueRepository {
     const trx = config?.trx ?? this.db;
     const { pagination } = options.query ?? {};
 
-    const results = await trx.automationQueueItem.findMany({
-      where: { status: AutomationQueueStatus.Pending },
+    const results = await trx.automationAction.findMany({
+      where: { status: AutomationActionStatus.Pending },
       orderBy: [{ priority: 'desc' }, { timestamp: 'asc' }],
       skip: pagination?.offset ?? 0,
       take: pagination?.limit ?? 50,
     });
 
-    const total = await trx.automationQueueItem.count({
-      where: { status: AutomationQueueStatus.Pending },
+    const total = await trx.automationAction.count({
+      where: { status: AutomationActionStatus.Pending },
     });
 
     return { results, total };
   }
 
   async create(
-    data: Omit<AutomationQueueItemEntity, 'id'>,
+    data: Omit<AutomationActionEntity, 'id'>,
     config?: RepositoryConfig,
   ) {
     const trx = config?.trx ?? this.db;
     const { ...entity } = data;
 
-    return await trx.automationQueueItem.create({ data: entity });
+    return await trx.automationAction.create({ data: entity });
   }
 
   async update(
     id: number,
-    data: Partial<AutomationQueueItemEntity>,
+    data: Partial<AutomationActionEntity>,
     config?: RepositoryConfig,
   ) {
     const trx = config?.trx ?? this.db;
     const { ...entity } = data;
 
-    return await trx.automationQueueItem.update({
+    return await trx.automationAction.update({
       where: { id },
       data: entity,
     });

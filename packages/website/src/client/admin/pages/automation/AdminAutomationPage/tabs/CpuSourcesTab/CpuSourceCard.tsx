@@ -4,7 +4,7 @@ import {
   ChevronLeftIcon,
 } from '@heroicons/react/24/outline';
 import {
-  AutomationAction,
+  AutomationActionType,
   CpuDataSourceKey,
   CreateCpuActionData,
   Product,
@@ -165,7 +165,7 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
 
     // Enqueue action to update existing product.
     await automationService.enqueue({
-      action: AutomationAction.CreateCpu,
+      type: AutomationActionType.CreateCpu,
       description: formatProductName(ProductType.Cpu, appliedCpu),
       data: { cpuId: appliedCpu.id } as CreateCpuActionData,
     });
@@ -181,7 +181,7 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
 
     // Enqueue action to create new CPU
     await automationService.enqueue({
-      action: AutomationAction.CreateCpu,
+      type: AutomationActionType.CreateCpu,
       description: preferredName,
       data: { preferredName, sources } as CreateCpuActionData,
     });

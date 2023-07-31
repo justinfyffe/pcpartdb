@@ -1,20 +1,20 @@
 import {
   AutomationAction,
-  AutomationQueueItem,
-  AutomationQueueItemMeta,
-  AutomationQueueStatus,
+  AutomationActionMeta,
+  AutomationActionStatus,
+  AutomationActionType,
 } from '@pcpartdb/shared';
-import { AutomationQueueItemEntity } from '../automation';
+import { AutomationActionEntity } from '../automation';
 import { gzipData, unzipData } from './utils';
 
 interface MapToDtoOptions {
   includeData?: boolean;
 }
 
-export async function mapToAutomationQueueItemDto<TUpdateData = unknown>(
-  entity: AutomationQueueItemEntity,
+export async function mapToAutomationActionDto<TUpdateData = unknown>(
+  entity: AutomationActionEntity,
   options?: MapToDtoOptions,
-): Promise<AutomationQueueItem> {
+): Promise<AutomationAction> {
   const includeData = options?.includeData ?? true;
 
   let data: TUpdateData = null;
@@ -25,10 +25,10 @@ export async function mapToAutomationQueueItemDto<TUpdateData = unknown>(
   return {
     id: entity.id,
     description: entity.description,
-    status: entity.status as AutomationQueueStatus,
-    action: entity.action as AutomationAction,
+    status: entity.status as AutomationActionStatus,
+    type: entity.type as AutomationActionType,
     data,
-    metadata: entity.metadata as AutomationQueueItemMeta,
+    metadata: entity.metadata as AutomationActionMeta,
     priority: entity.priority,
     timestamp: entity.timestamp.getTime(),
   };
@@ -38,29 +38,27 @@ interface MapToDtoOptions {
   includeData?: boolean;
 }
 
-export async function mapToAutomationQueueItemDtos<TUpdateData = unknown>(
-  entities: AutomationQueueItemEntity[],
+export async function mapToAutomationActionDtos<TUpdateData = unknown>(
+  entities: AutomationActionEntity[],
   options?: MapToDtoOptions,
 ) {
-  const ret: AutomationQueueItem[] = [];
+  const ret: AutomationAction[] = [];
   for (let i = 0; i < entities.length; ++i) {
-    ret.push(
-      await mapToAutomationQueueItemDto<TUpdateData>(entities[i], options),
-    );
+    ret.push(await mapToAutomationActionDto<TUpdateData>(entities[i], options));
   }
   return ret;
 }
 
-export async function mapToAutomationQueueItemEntity(
-  dto: AutomationQueueItem,
-): Promise<AutomationQueueItemEntity> {
+export async function mapToAutomationActionEntity(
+  dto: AutomationAction,
+): Promise<AutomationActionEntity> {
   const data = await gzipData(dto.data);
 
   return {
     id: dto.id,
     description: dto.description,
     status: dto.status,
-    action: dto.action,
+    type: dto.type,
     data,
     metadata: dto.metadata,
     priority: dto.priority || 0,

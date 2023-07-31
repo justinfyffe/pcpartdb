@@ -154,6 +154,8 @@ export interface Gpu extends GpuFields {
   affiliateUrl?: string;
 
   meta?: GpuMeta;
+  automationTimestamp?: number;
+
   updatedAt?: number;
 
   // Relations

@@ -1,5 +1,6 @@
 import { scrapeCpu } from '@pcpartdb/scraper';
 import {
+  AutomationAction,
   canAutoUpdateProductField,
   Cpu,
   CpuDataSource,
@@ -16,13 +17,13 @@ import {
 } from '@pcpartdb/shared';
 import deepmerge from 'deepmerge';
 import { compare as generateJsonPatch } from 'fast-json-patch';
-import { AutomationContext, AutomationExecution } from '../types';
+import { AutomationContext } from '../types';
 
 export async function updateCpuAction(
-  execution: AutomationExecution<UpdateCpuActionData>,
+  execution: AutomationAction<UpdateCpuActionData>,
   context: AutomationContext,
 ) {
-  const { payload } = execution;
+  const { data: payload } = execution;
 
   // Get existing CPU (if cpuId is provided)
   let originalCpu: Cpu;

@@ -184,6 +184,14 @@ export class GpuRepository {
     });
   }
 
+  async findNextToBeUpdated(config?: RepositoryConfig) {
+    const trx = config?.trx ?? this.db;
+
+    return await trx.cpu.findFirst({
+      orderBy: { automationTimestamp: 'asc' },
+    });
+  }
+
   async create(data: Omit<GpuEntity, 'id'>, config?: RepositoryConfig) {
     const trx = config?.trx ?? this.db;
 

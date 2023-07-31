@@ -7,6 +7,7 @@ import { mapToCpuImageDtos, mapToCpuImageEntities } from './cpuImageMapper';
 interface MapToDtoOptions {
   fields?: Set<string>;
   includeSources?: boolean;
+  includeAutomation?: boolean;
 }
 
 export function mapToCpuDto(entity: CpuEntity, options?: MapToDtoOptions): Cpu {
@@ -127,6 +128,9 @@ export function mapToCpuDto(entity: CpuEntity, options?: MapToDtoOptions): Cpu {
     geekbenchMultiCore: mapToCpuDataDto(entity, 'geekbenchMultiCore', options),
 
     meta: mapToCpuMetaDto(entity.metadata as CpuMetaJson, options),
+    automationTimestamp: options.includeAutomation
+      ? entity.automationTimestamp?.getTime()
+      : undefined,
     updatedAt:
       entity.updatedAt != null ? entity.updatedAt.getTime() : undefined,
 
@@ -269,6 +273,11 @@ export function mapToCpuEntity(cpu: Partial<Cpu>): CpuEntity {
     geekbenchMultiCore: mapToCpuDataEntity(cpu, 'geekbenchMultiCore', metadata),
   };
 
+  let automationTimestamp: Date = undefined;
+  if (cpu.automationTimestamp != null) {
+    automationTimestamp = new Date(cpu.automationTimestamp);
+  }
+
   return {
     ...mappedFields,
 
@@ -279,6 +288,7 @@ export function mapToCpuEntity(cpu: Partial<Cpu>): CpuEntity {
     affiliateUrl: cpu.affiliateUrl,
 
     metadata: metadata as Prisma.JsonObject,
+    automationTimestamp,
 
     images: mapToCpuImageEntities(cpu.images),
   } as CpuEntity;

@@ -1,5 +1,6 @@
 import { scrapeCpu } from '@pcpartdb/scraper';
 import {
+  AutomationAction,
   Cpu,
   CpuDataSource,
   CpuDataSourceKey,
@@ -13,13 +14,13 @@ import {
   ProductUpdate,
   ProductUpdateStatus,
 } from '@pcpartdb/shared';
-import { AutomationContext, AutomationExecution } from '../types';
+import { AutomationContext } from '../types';
 
 export async function createCpuAction(
-  execution: AutomationExecution<CreateCpuActionData>,
+  execution: AutomationAction<CreateCpuActionData>,
   context: AutomationContext,
 ) {
-  const { payload } = execution;
+  const { data: payload } = execution;
 
   // Get sources from cpu or action
   const sources = payload.sources;

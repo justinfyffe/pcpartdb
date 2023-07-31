@@ -1,2 +1,2 @@
-export * from './AutomationQueueItemEntity';
-export * from './AutomationQueueRepository';
+export * from './AutomationActionEntity';
+export * from './AutomationActionRepository';

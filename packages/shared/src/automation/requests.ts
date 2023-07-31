@@ -1,23 +1,26 @@
 import { ListQuery, ListResponse } from '../common';
-import { AutomationAction } from './actions';
-import { AutomationQueueItem, AutomationQueueItemMeta } from './queue';
+import {
+  AutomationAction,
+  AutomationActionMeta,
+  AutomationActionType,
+} from './actions';
 
-export interface EnqueueAutomationRequest<T = unknown> {
-  action: AutomationAction;
+export interface CreateAutomationActionRequest<T = unknown> {
+  type: AutomationActionType;
   description?: string;
 
   data?: T;
-  metadata?: AutomationQueueItemMeta;
+  metadata?: AutomationActionMeta;
 
   priority?: number;
 }
 
-export interface ListAutomationQueueQuery
+export interface ListAutomationActionsQuery
   extends Omit<ListQuery<never>, 'filter' | 'orderBy'> {}
 
-export interface ListAutomationQueueRequest {
-  query: ListAutomationQueueQuery;
+export interface ListAutomationActionsRequest {
+  query: ListAutomationActionsQuery;
 }
 
-export interface ListAutomationQueueResponse
-  extends ListResponse<ListAutomationQueueQuery, AutomationQueueItem> {}
+export interface ListAutomationActionsResponse
+  extends ListResponse<ListAutomationActionsQuery, AutomationAction> {}

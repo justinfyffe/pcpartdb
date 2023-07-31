@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import { InformationCircleIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import { AutomationAction, AutomationQueueItem } from '@pcpartdb/shared';
+import { AutomationAction, AutomationActionType } from '@pcpartdb/shared';
 import { automationService } from 'packages/website/src/client/automation';
 import {
   showDialog,
@@ -12,7 +12,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { QueueDetailsDialog } from './QueueDetailsDialog';
 
 interface QueueRowProps {
-  item: AutomationQueueItem;
+  item: AutomationAction;
 }
 
 export const QueueRow = (props: QueueRowProps) => {
@@ -24,7 +24,7 @@ export const QueueRow = (props: QueueRowProps) => {
 
   // Memos
 
-  const action = useMemo(() => formatAction(item.action), [item.action]);
+  const action = useMemo(() => formatAction(item.type), [item.type]);
 
   // Callbacks
 
@@ -56,21 +56,21 @@ export const QueueRow = (props: QueueRowProps) => {
   );
 };
 
-function formatAction(action: AutomationAction) {
+function formatAction(action: AutomationActionType) {
   switch (action) {
-    case AutomationAction.UpdateSitemaps:
+    case AutomationActionType.UpdateSitemaps:
       return 'Update Sitemap';
-    case AutomationAction.UpdateCpuSources:
+    case AutomationActionType.UpdateCpuSources:
       return 'Update CPU Sources';
-    case AutomationAction.UpdateGpuSources:
+    case AutomationActionType.UpdateGpuSources:
       return 'Update GPU Sources';
-    case AutomationAction.CreateCpu:
+    case AutomationActionType.CreateCpu:
       return 'Create CPU';
-    case AutomationAction.UpdateCpu:
+    case AutomationActionType.UpdateCpu:
       return 'Update CPU';
-    case AutomationAction.CreateGpu:
+    case AutomationActionType.CreateGpu:
       return 'Create GPU';
-    case AutomationAction.UpdateGpu:
+    case AutomationActionType.UpdateGpu:
       return 'Update GPU';
     default:
       return 'Unknown';

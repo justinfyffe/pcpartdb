@@ -148,6 +148,8 @@ export interface Cpu extends CpuFields {
   affiliateUrl?: string;
 
   meta?: CpuMeta;
+  automationTimestamp?: number;
+
   updatedAt?: number;
 
   // Relations

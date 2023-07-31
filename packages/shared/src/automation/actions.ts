@@ -1,6 +1,6 @@
 import { ProductSourceGroup } from '../product';
 
-export enum AutomationAction {
+export enum AutomationActionType {
   /**
    * Update sitemaps on the website. Pull CPUs and GPUs from API,
    * creates sitemap files, and uploads to the website.
@@ -44,6 +44,36 @@ export enum AutomationAction {
   UpdateGpu = 'UPDATE_GPU',
 }
 
+export enum AutomationActionStatus {
+  Pending = 'PENDING',
+  Processing = 'PROCESSING',
+  Processed = 'PROCESSED',
+  Failed = 'FAILED',
+  Canceled = 'CANCELED',
+}
+
+/**
+ * Automation actions that we want to prioritize in a queue. Some actions may
+ * result in additional actions or require approvals
+ *
+ * Priority queue is ordered by `priority DESC, timestamp ASC`
+ */
+export interface AutomationAction<T = unknown> {
+  id?: number;
+
+  type: AutomationActionType;
+  status: AutomationActionStatus;
+  description?: string;
+
+  data?: T;
+  metadata?: AutomationActionMeta;
+
+  priority?: number;
+  timestamp?: number;
+}
+
+export interface AutomationActionMeta {}
+
 export interface CreateCpuActionData {
   // Name to use when creating CPU
   preferredName?: string;
@@ -55,4 +85,9 @@ export interface CreateCpuActionData {
 export interface UpdateCpuActionData {
   // For fetching data based on an existing CPU.
   cpuId?: number;
+}
+
+export interface UpdateGpuActionData {
+  // For fetching data based on an existing GPU.
+  gpuId?: number;
 }
