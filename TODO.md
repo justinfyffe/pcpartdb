@@ -1,9 +1,9 @@
 HIGH LEVEL TODO:
-- how to terminate without breaking?
-- Finish automation
-  - archive sources that are already in use in the database. run command
-    after finishing uploading them. Pull all gpus, pull all sources, cross-check
-  - dont bother with priority until it's needed
+- Automation
+  - add more logging to automation
+  - Fix bugs:
+    - CPU array chip fields get concatenated added, fix that merge
+  - how to terminate without breaking?
 - code cleanup
 - Improve performance score (not just g3d mark or cpu mark)
 - Affiliate Ads

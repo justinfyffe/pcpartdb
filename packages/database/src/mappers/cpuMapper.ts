@@ -128,7 +128,7 @@ export function mapToCpuDto(entity: CpuEntity, options?: MapToDtoOptions): Cpu {
     geekbenchMultiCore: mapToCpuDataDto(entity, 'geekbenchMultiCore', options),
 
     meta: mapToCpuMetaDto(entity.metadata as CpuMetaJson, options),
-    automationTimestamp: options.includeAutomation
+    automationTimestamp: options?.includeAutomation
       ? entity.automationTimestamp?.getTime()
       : undefined,
     updatedAt:

@@ -75,7 +75,7 @@ async function getCpu(cpuId: number, context: AutomationContext) {
     throw new Error('Cannot update cpu, missing cpu id');
   }
 
-  const cpu = await context.api.get<Cpu>(`/products/cpu/${cpuId}`);
+  const cpu = await context.api.get<Cpu>(`/products/cpus/${cpuId}`);
   if (cpu == null) {
     throw new Error(`Cannot find cpu for id=${cpuId}`);
   }
@@ -152,7 +152,7 @@ async function updateBenchmarks(
   }
 
   if (updated) {
-    await context.api.put(`/products/cpu/${originalCpu.id}`, originalCpu);
+    await context.api.put(`/products/cpus/${originalCpu.id}`, originalCpu);
   }
 }
 

@@ -131,6 +131,8 @@ async function getStalenessExecution(
 ): Promise<AutomationAction> {
   const { metadata } = context;
 
+  return null; // TODO: remove
+
   if (isStale(metadata?.updateSitemapsDate, UPDATE_SITEMAPS_FREQUENCY)) {
     return {
       status: AutomationActionStatus.Pending,

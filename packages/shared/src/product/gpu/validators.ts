@@ -21,9 +21,12 @@ export const gpuMetaValidator = Joi.object({
 }).options({ abortEarly: false });
 
 export const gpuValidator = Joi.object({
+  id: Joi.number().allow(null),
+
   chipsetId: Joi.number().allow(null),
   slug: Joi.string().required(),
   name: Joi.string().required(),
+  affiliateUrl: Joi.string().allow(null),
 
   partNumber: gpuDataValidator.allow(null),
   company: gpuDataValidator.allow(null),
@@ -89,4 +92,6 @@ export const gpuValidator = Joi.object({
 
   images: Joi.array().allow(Joi.any()),
   meta: gpuMetaValidator.allow(null),
+
+  updatedAt: Joi.date().allow(null),
 }).options({ abortEarly: false });

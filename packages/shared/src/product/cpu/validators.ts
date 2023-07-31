@@ -21,8 +21,11 @@ export const cpuMetaValidator = Joi.object({
 }).options({ abortEarly: false });
 
 export const cpuValidator = Joi.object({
+  id: Joi.number().allow(null),
+
   slug: Joi.string().required(),
   name: Joi.string().required(),
+  affiliateUrl: Joi.string().allow(null),
 
   partNumber: cpuDataValidator.allow(null),
   company: cpuDataValidator.allow(null),
@@ -87,4 +90,6 @@ export const cpuValidator = Joi.object({
 
   images: Joi.array().allow(Joi.any()),
   meta: cpuMetaValidator.allow(null),
+
+  updatedAt: Joi.date().allow(null),
 }).options({ abortEarly: false });
