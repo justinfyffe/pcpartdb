@@ -1,7 +1,7 @@
 HIGH LEVEL TODO:
 - Automation
   - add edit button after approving
-  - should we reject pending updates when editing cpu/gpu?
+  - reject pending updates when we edit cpu/gpu?
   - Mobile friendly so can approve anywhere
   - how to terminate without breaking?
 - code cleanup
