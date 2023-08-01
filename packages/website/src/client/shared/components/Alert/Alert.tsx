@@ -5,6 +5,7 @@ export enum AlertVariant {
   Info = 'info',
   Success = 'success',
   Error = 'error',
+  Warning = 'warning',
 }
 
 export interface AlertProps {
@@ -19,6 +20,7 @@ const ALERT_VARIANTS = {
   [AlertVariant.Error]: 'bg-danger text-default',
   [AlertVariant.Info]: 'bg-info text-default',
   [AlertVariant.Success]: 'bg-success text-default',
+  [AlertVariant.Warning]: 'bg-warning text-default',
 };
 
 export const Alert: FunctionComponent<AlertProps> = (props) => {

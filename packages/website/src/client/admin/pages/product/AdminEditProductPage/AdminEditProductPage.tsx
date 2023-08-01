@@ -1,5 +1,10 @@
 import 'reflect-metadata';
 import {
+  CheckIcon,
+  MagnifyingGlassIcon,
+  TrashIcon,
+} from '@heroicons/react/24/outline';
+import {
   AdminEditProductViewModel,
   AutomationActionType,
   Cpu,
@@ -13,15 +18,22 @@ import {
 } from '@pcpartdb/shared';
 import { automationService } from 'packages/website/src/client/automation';
 import { formatProductName } from 'packages/website/src/client/product';
+import { productUpdateService } from 'packages/website/src/client/product/services/productUpdateService';
+import { WarningAlert } from 'packages/website/src/client/shared/components/Alert/WarningAlert';
 import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
-import React, { useCallback, useMemo } from 'react';
-import { MetaRobots, Seo } from '../../../../shared/components';
+import React, { useCallback, useMemo, useState } from 'react';
+import { MetaRobots, Seo, showDialog } from '../../../../shared/components';
 import { AdminLayout } from '../../../../shared/layouts';
-import { GpuForm } from '../../../components';
-import { CpuForm } from '../../../components/cpu';
+import { GpuDiffDialog, GpuForm } from '../../../components';
+import { CpuDiffDialog, CpuForm } from '../../../components/cpu';
 
 export const AdminEditProductPage = (props: AdminEditProductViewModel) => {
   const { productType, product } = props;
+
+  // States
+
+  const [pendingUpdate, setPendingUpdate] = useState(props.pendingUpdate);
+  const [isTriggeringUpdate, setIsTriggeringUpdate] = useState(false);
 
   // Memos
 
@@ -66,6 +78,40 @@ export const AdminEditProductPage = (props: AdminEditProductViewModel) => {
     }
   }, [productType, product]);
 
+  const rejectUpdate = useCallback(async () => {
+    if (pendingUpdate == null) {
+      return;
+    }
+
+    setIsTriggeringUpdate(true);
+    await productUpdateService.reject(pendingUpdate.id, {});
+    setPendingUpdate(null);
+    setIsTriggeringUpdate(false);
+  }, [pendingUpdate]);
+
+  const approveUpdate = useCallback(async () => {
+    if (pendingUpdate == null) {
+      return;
+    }
+
+    setIsTriggeringUpdate(true);
+    await productUpdateService.approve(pendingUpdate.id, {});
+    setPendingUpdate(null);
+    setIsTriggeringUpdate(false);
+  }, [pendingUpdate]);
+
+  const viewUpdate = useCallback(async () => {
+    if (pendingUpdate == null) {
+      return;
+    }
+
+    if (productType === ProductType.Cpu) {
+      showDialog(<CpuDiffDialog diff={pendingUpdate.data} />);
+    } else if (productType === ProductType.Gpu) {
+      showDialog(<GpuDiffDialog diff={pendingUpdate.data} />);
+    }
+  }, [pendingUpdate, productType]);
+
   return (
     <AdminLayout>
       <Seo title={seoTitle} robots={seoRobots} />
@@ -85,6 +131,32 @@ export const AdminEditProductPage = (props: AdminEditProductViewModel) => {
 
           <GenericButton href={adminListHref}>Back</GenericButton>
         </div>
+
+        {pendingUpdate != null && (
+          <WarningAlert className="flex items-center">
+            <div className="flex-1">
+              The {product.name} has a pending update. Saving will auto-reject
+              that update.
+            </div>
+            <div className="flex gap-4">
+              <GenericButton
+                onClick={approveUpdate}
+                disabled={isTriggeringUpdate}
+              >
+                <CheckIcon className="w-4" />
+              </GenericButton>
+              <GenericButton
+                onClick={rejectUpdate}
+                disabled={isTriggeringUpdate}
+              >
+                <TrashIcon className="w-4" />
+              </GenericButton>
+              <GenericButton onClick={viewUpdate}>
+                <MagnifyingGlassIcon className="w-4" />
+              </GenericButton>
+            </div>
+          </WarningAlert>
+        )}
 
         {productType === ProductType.Cpu && <CpuForm cpu={product as Cpu} />}
         {productType === ProductType.Gpu && <GpuForm gpu={product as Gpu} />}

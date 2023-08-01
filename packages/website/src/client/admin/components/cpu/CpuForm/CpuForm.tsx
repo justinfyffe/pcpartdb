@@ -192,7 +192,7 @@ export const CpuForm: FunctionComponent<CpuFormProps> = (props) => {
           />
         </Field>
 
-        <Button variant={ButtonVariant.Warning} onClick={handleScrapeClick}>
+        <Button variant={ButtonVariant.Info} onClick={handleScrapeClick}>
           Scrape Details
         </Button>
       </section>

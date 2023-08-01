@@ -5,6 +5,7 @@ import { DatabaseModule } from '../database';
 import { ImageModule } from '../image/image.module';
 import { CpuModule } from '../product/cpu/cpu.module';
 import { GpuModule } from '../product/gpu/gpu.module';
+import { ProductModule } from '../product/product.module';
 import { UserModule } from '../user/user.module';
 import { AdminDataUpdatesViewModelService } from './admin/data-updates/data-updates.view-model';
 import { AdminEditImageViewModelService } from './admin/images/edit.view-model';
@@ -30,6 +31,7 @@ import { ViewModelsController } from './view-models.controller';
     DataUpdateModule,
     CpuModule,
     GpuModule,
+    ProductModule,
     ImageModule,
     UserModule,
   ],

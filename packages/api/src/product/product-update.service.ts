@@ -27,6 +27,11 @@ import {
 } from './product.validators';
 import { ProductUpdateRepository } from './product-update.repository';
 
+interface FindByProductIdOptions {
+  productType: ProductType;
+  productId: number;
+}
+
 @Injectable()
 export class ProductUpdateService {
   constructor(
@@ -49,6 +54,18 @@ export class ProductUpdateService {
       results: await mapToProductUpdateDtos(results),
       total,
     } as ListProductUpdatesResponse;
+  }
+
+  /**
+   * Finds a product update for the given product id.
+   */
+  async findByProductId(options: FindByProductIdOptions, ctx: Context) {
+    const entity = await this.repository.findPending(options, ctx);
+    if (entity[0] == null) {
+      return null;
+    }
+
+    return await mapToProductUpdateDto(entity[0]);
   }
 
   /**
