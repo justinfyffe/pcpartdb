@@ -55,26 +55,6 @@ export class GpuAutocompleteRepository {
       },
       take: 6,
     });
-    // const priorityResultsRetailModels = await db.gpu.findMany({
-    //   where: {
-    //     AND: [{ chipsetId: { not: null } }],
-    //     OR: [
-    //       { name: { search: nameTokens.join(' & '), mode: 'insensitive' } },
-    //       {
-    //         company: { search: companyTokens.join(' & '), mode: 'insensitive' },
-    //       },
-    //     ],
-    //   },
-    //   include: { chipset: true },
-    //   orderBy: {
-    //     _relevance: {
-    //       fields: ['name', 'company'],
-    //       search: tokens.join(' | '),
-    //       sort: 'desc',
-    //     },
-    //   },
-    //   take: 6,
-    // });
 
     // Get results based on pattern matching. Prioritize chipsets over retail models
     let fillerChipsetIds: { id: number }[] = [];
@@ -95,16 +75,7 @@ export class GpuAutocompleteRepository {
       `;
     }
 
-    // const fillerRetailModelIds: { id: number }[] = await db.$queryRaw`
-    //   SELECT id FROM gpus
-    //   WHERE chipset_id IS NOT NULL AND CONCAT(company, ' ', name) ~* (${regexTokens})
-    //   ORDER BY release_date DESC
-    //   LIMIT 6
-    // `;
-    const fillerResultIds = [
-      ...fillerChipsetIds,
-      // ...fillerRetailModelIds,
-    ].slice(0, 6);
+    const fillerResultIds = [...fillerChipsetIds].slice(0, 6);
 
     const fillerResults = await db.gpu.findMany({
       where: { id: { in: fillerResultIds.map((json) => json.id) } },

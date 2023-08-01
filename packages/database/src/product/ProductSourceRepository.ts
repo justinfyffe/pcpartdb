@@ -163,24 +163,26 @@ export class ProductSourceRepository {
     // Get results based on relevancy
     const priorityResults = await trx.productSource.findMany({
       where: {
-        productType,
-        sourceKey,
-        AND: {
-          OR: [
-            {
-              sourceName: {
-                search: searchTokens.join(' & '),
-                mode: 'insensitive',
+        AND: [
+          { productType },
+          { sourceKey },
+          {
+            OR: [
+              {
+                sourceName: {
+                  search: searchTokens.join(' & '),
+                  mode: 'insensitive',
+                },
               },
-            },
-            {
-              sourceUrl: {
-                search: searchTokens.join(' & '),
-                mode: 'insensitive',
+              {
+                sourceUrl: {
+                  search: searchTokens.join(' & '),
+                  mode: 'insensitive',
+                },
               },
-            },
-          ],
-        },
+            ],
+          },
+        ],
       },
       orderBy: {
         _relevance: {
@@ -249,11 +251,11 @@ export class ProductSourceRepository {
       : undefined;
 
     return {
-      AND: {
-        productType: productTypeWhere,
-        archived: archivedWhere,
-        sourceName: sourceNameWhere,
-      },
+      AND: [
+        { productType: productTypeWhere },
+        { archived: archivedWhere },
+        { sourceName: sourceNameWhere },
+      ],
     };
   }
 }

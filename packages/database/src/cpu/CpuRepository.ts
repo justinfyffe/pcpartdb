@@ -260,14 +260,14 @@ export class CpuRepository {
     }));
 
     return {
-      AND: {
-        id: idWhere,
-        company: companyWhere,
-        marketSegments: segmentsWhere,
-        performanceScore: performanceWhere,
-        valueScore: valueWhere,
-        OR: yearWhere,
-      },
+      AND: [
+        { id: idWhere },
+        { company: companyWhere },
+        { marketSegments: segmentsWhere },
+        { performanceScore: performanceWhere },
+        { valueScore: valueWhere },
+        { OR: yearWhere },
+      ],
     };
   }
 

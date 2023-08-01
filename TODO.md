@@ -1,9 +1,8 @@
 HIGH LEVEL TODO:
 - Automation
-  - Fix bugs:
-    - actions marked as processed after failure
-    - not enough logging
-    - view page on cpu update not working
+  - add edit button after approving
+  - should we reject pending updates when editing cpu/gpu?
+  - Mobile friendly so can approve anywhere
   - how to terminate without breaking?
 - code cleanup
 - Improve performance score (not just g3d mark or cpu mark)

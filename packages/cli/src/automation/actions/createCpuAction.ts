@@ -17,10 +17,12 @@ import {
 import { AutomationContext } from '../types';
 
 export async function createCpuAction(
-  execution: AutomationAction<CreateCpuActionData>,
+  action: AutomationAction<CreateCpuActionData>,
   context: AutomationContext,
 ) {
-  const { data: payload } = execution;
+  const { data: payload } = action;
+
+  console.log('Executing createCpuAction', payload);
 
   // Get sources from cpu or action
   const sources = payload.sources;
@@ -51,7 +53,7 @@ export async function createCpuAction(
   if (cpu == null) {
     // No results for scraping. Skip.
     console.error(
-      `No scraped data when scraping CPU during automation for action=${execution}`,
+      `No scraped data when scraping CPU during automation for action=${action}`,
     );
     return;
   }
@@ -84,11 +86,15 @@ export async function createCpuAction(
 async function fetchCpuData(options: {
   sources: Record<string, CpuDataSource>;
 }) {
+  console.info('Fetching CPU data', options.sources);
+
   // Scrape the CPU data from our sources.
   let scrapedCpu: Cpu;
   try {
     const result = await scrapeCpu(options);
     scrapedCpu = result.product as Cpu;
+
+    console.log('Finished fetching data.');
     return scrapedCpu;
   } catch (e) {
     // Could not scrape the CPU. Skip as we do not have data.
@@ -109,8 +115,10 @@ async function uploadProductUpdate(cpu: Cpu, context: AutomationContext) {
     metadata: {},
   };
 
+  console.info('Uploading pending creation for CPU');
   await context.api.post(
     '/products/updates',
     update as CreateProductUpdateRequest,
   );
+  console.info('Finshed uploading pending creation for CPU');
 }

@@ -156,9 +156,11 @@ const PASSMARK_URLS = [
 ];
 
 export async function updateCpuSourcesAction(
-  _execution: AutomationAction,
+  _action: AutomationAction,
   context: AutomationContext,
 ) {
+  console.log('Executing updateCpuSourcesAction');
+
   // Scrape CPU Sources
   const techPowerUpSources = await getTechPowerUpSources();
   const passMarkSources = await getPassMarkSources();

@@ -20,12 +20,14 @@ import { compare as generateJsonPatch } from 'fast-json-patch';
 import { AutomationContext } from '../types';
 
 export async function updateCpuAction(
-  execution: AutomationAction<UpdateCpuActionData>,
+  action: AutomationAction<UpdateCpuActionData>,
   context: AutomationContext,
 ) {
-  const { data: payload } = execution;
+  const { data: payload } = action;
 
-  // Get existing CPU (if cpuId is provided)
+  console.log('Executing updateCpuAction', payload);
+
+  // Get existing CPU
   let originalCpu: Cpu;
   try {
     originalCpu = await getCpu(payload.cpuId, context);
@@ -67,6 +69,8 @@ export async function updateCpuAction(
   // Check if we have changes. Upload the update.
   if (hasUpdates(originalCpu, updatedCpu)) {
     await uploadProductUpdate(originalCpu, updatedCpu, context);
+  } else {
+    console.info('CPU does not have any pending updates. Not uploading.');
   }
 }
 
@@ -75,10 +79,12 @@ async function getCpu(cpuId: number, context: AutomationContext) {
     throw new Error('Cannot update cpu, missing cpu id');
   }
 
+  console.info(`Getting existing CPU for id=${cpuId}`);
   const cpu = await context.api.get<Cpu>(`/products/cpus/${cpuId}`);
   if (cpu == null) {
     throw new Error(`Cannot find cpu for id=${cpuId}`);
   }
+  console.info(`Fetched CPU: ${cpu.name}`);
 
   return cpu;
 }
@@ -86,15 +92,19 @@ async function getCpu(cpuId: number, context: AutomationContext) {
 async function fetchCpuData(options: {
   sources: Record<string, CpuDataSource>;
 }) {
+  console.info('Fetching CPU data', options.sources);
+
   // Scrape the CPU data from our sources.
   let scrapedCpu: Cpu;
   try {
     const result = await scrapeCpu(options);
     scrapedCpu = result.product as Cpu;
+
+    console.log('Finished fetching data.');
     return scrapedCpu;
   } catch (e) {
     // Could not scrape the CPU. Skip as we do not have data.
-    console.error('Error when scraping CPU during automation');
+    console.error('Error when fetching CPU data during automation');
     console.error(e);
     return null;
   }
@@ -105,6 +115,7 @@ async function updateBenchmarks(
   scrapedCpu: Cpu,
   context: AutomationContext,
 ) {
+  console.info('Checking for updated benchmarks');
   let updated = false;
 
   // Update CPU Mark (multi-thread)
@@ -152,7 +163,9 @@ async function updateBenchmarks(
   }
 
   if (updated) {
+    console.info('Update CPU with updated benchmarks');
     await context.api.put(`/products/cpus/${originalCpu.id}`, originalCpu);
+    console.info('Finished updating CPU with updated benchmarks');
   }
 }
 
@@ -205,8 +218,10 @@ async function uploadProductUpdate(
     metadata: {},
   };
 
+  console.info('Uploading pending update for CPU');
   await context.api.post(
     '/products/updates',
     update as CreateProductUpdateRequest,
   );
+  console.info('Finshed uploading pending update for CPU');
 }

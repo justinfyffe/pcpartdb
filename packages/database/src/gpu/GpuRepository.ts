@@ -329,16 +329,16 @@ export class GpuRepository {
     }));
 
     return {
-      AND: {
-        id: idWhere,
-        chipsetId: parentWhere,
-        company: companyWhere,
-        marketSegment: segmentWhere,
-        architecture: architectureWhere,
-        performanceScore: performanceWhere,
-        valueScore: valueWhere,
-        OR: yearWhere,
-      },
+      AND: [
+        { id: idWhere },
+        { chipsetId: parentWhere },
+        { company: companyWhere },
+        { marketSegment: segmentWhere },
+        { architecture: architectureWhere },
+        { performanceScore: performanceWhere },
+        { valueScore: valueWhere },
+        { OR: yearWhere },
+      ],
     };
   }
 

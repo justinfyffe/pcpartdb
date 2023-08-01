@@ -85,6 +85,7 @@ export class AutomationController {
   @Post('actions/:id/processing')
   @UseGuards(StaffGuard)
   async markAsProcessing(@Param('id') idStr: string, @Ctx() ctx: Context) {
+    console.log('processing', idStr);
     return await this.db.transaction(
       async () => {
         const id = Number(idStr);

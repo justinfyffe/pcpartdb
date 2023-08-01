@@ -1,6 +1,10 @@
 import 'reflect-metadata';
 import { ChevronDownIcon, ChevronLeftIcon } from '@heroicons/react/24/outline';
-import { CpuUpdate, ProductUpdateStatus } from '@pcpartdb/shared';
+import {
+  CpuUpdate,
+  getViewCpuPath,
+  ProductUpdateStatus,
+} from '@pcpartdb/shared';
 import { CpuDiffDialog } from 'packages/website/src/client/admin/components';
 import { formatCpuName } from 'packages/website/src/client/product';
 import { productUpdateService } from 'packages/website/src/client/product/services/productUpdateService';
@@ -36,6 +40,7 @@ export const CpuCard = (props: CpuCardTabProps) => {
   // Memos
 
   const name = useMemo(() => formatCpuName(updatedCpu), [updatedCpu]);
+  const viewHref = useMemo(() => getViewCpuPath(updatedCpu), [updatedCpu]);
 
   // Callbacks
 
@@ -101,7 +106,11 @@ export const CpuCard = (props: CpuCardTabProps) => {
             >
               Reject
             </GenericButton>
-            {isUpdate && <GenericButton>View Page</GenericButton>}
+            {isUpdate && (
+              <GenericButton href={viewHref} target="_blank">
+                View Page
+              </GenericButton>
+            )}
             <GenericButton
               onClick={approve}
               disabled={status !== ProductUpdateStatus.Pending}

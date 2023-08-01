@@ -23,7 +23,7 @@ export async function executeAutomation(context: AutomationContext) {
 
   let execution: AutomationAction = null;
   try {
-    execution = await getNextExecution(context);
+    execution = await getNextAction(context);
     if (execution == null) {
       executing = false;
       return;
@@ -102,31 +102,34 @@ async function markAsFailed(
   console.error('Automation execution has failed', error);
 }
 
-async function getNextExecution(
+async function getNextAction(
   context: AutomationContext,
 ): Promise<AutomationAction> {
   // Action based on staleness (e.g. stale sitemaps, product sources)
-  const stalenessExecution = await getStalenessExecution(context);
-  if (stalenessExecution != null) {
-    return stalenessExecution;
+  const staleAction = await getActionFromStalenessCheck(context);
+  if (staleAction != null) {
+    console.info('Found next action based on staleness', staleAction);
+    return staleAction;
   }
 
   // Action baesd on Priority Queue
-  const queueExecution = await getQueueExecution(context);
-  if (queueExecution != null) {
-    return queueExecution;
+  const queueAction = await getActionFromQueue(context);
+  if (queueAction != null) {
+    console.info('Found next action based on queue', queueAction);
+    return queueAction;
   }
 
   // No actions remaining, fallback to continuous ones (e.g. product updates)
-  const backlogExecution = await getBacklogExecution(context);
-  if (backlogExecution != null) {
-    return backlogExecution;
+  const backlogAction = await getActionFromBacklog(context);
+  if (backlogAction != null) {
+    console.info('Found next action based on backlog', staleAction);
+    return backlogAction;
   }
 
   return null;
 }
 
-async function getStalenessExecution(
+async function getActionFromStalenessCheck(
   context: AutomationContext,
 ): Promise<AutomationAction> {
   const { metadata } = context;
@@ -157,7 +160,7 @@ async function getStalenessExecution(
   return null;
 }
 
-async function getQueueExecution(
+async function getActionFromQueue(
   context: AutomationContext,
 ): Promise<AutomationAction> {
   const execution = await context.api.get<AutomationAction>(
@@ -167,7 +170,7 @@ async function getQueueExecution(
   return execution || null;
 }
 
-async function getBacklogExecution(
+async function getActionFromBacklog(
   context: AutomationContext,
 ): Promise<AutomationAction> {
   const execution = await context.api.post<AutomationAction>(
@@ -178,12 +181,12 @@ async function getBacklogExecution(
   return execution || null;
 }
 
-function isStale(lastExecutionTime: number, frequency: number) {
-  if (lastExecutionTime == null) {
+function isStale(lastActionTime: number, frequency: number) {
+  if (lastActionTime == null) {
     return true;
   }
 
-  if (new Date().getTime() > lastExecutionTime + frequency) {
+  if (new Date().getTime() > lastActionTime + frequency) {
     return true;
   }
 

@@ -117,12 +117,16 @@ export class ProductUpdateRepository {
       : undefined;
 
     return {
-      AND: {
-        productType: productTypeWhere,
-        status: statusWhere,
-        productCompany: productCompanyWhere,
-        productName: productNameWhere,
-      },
+      AND: [
+        { productType: productTypeWhere },
+        { status: statusWhere },
+        {
+          OR: [
+            { productCompany: productCompanyWhere },
+            { productName: productNameWhere },
+          ],
+        },
+      ],
     };
   }
 }
