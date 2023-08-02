@@ -15,7 +15,7 @@ import {
 import { sleep } from '../../shared/process';
 import { AutomationContext } from '../types';
 
-const BATCH_SIZE = 10;
+const BATCH_SIZE = 50;
 const DELAY_BETWEEN_SOURCE_REQUEST = 10_000;
 const DELAY_BETWEEN_TECHPOWERUP_REQUEST = 30_000;
 const DELAY_BETWEEN_UPLOAD = 3_000;

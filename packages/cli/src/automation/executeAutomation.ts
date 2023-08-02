@@ -6,6 +6,7 @@ import {
 import { createCpuAction } from './actions/createCpuAction';
 import { updateCpuAction } from './actions/updateCpuAction';
 import { updateCpuSourcesAction } from './actions/updateCpuSourcesAction';
+import { updateGpuSourcesAction } from './actions/updateGpuSourcesAction';
 import { AutomationContext } from './types';
 import { saveAutomationContext } from './utils/context';
 
@@ -21,44 +22,42 @@ export async function executeAutomation(context: AutomationContext) {
   }
   executing = true;
 
-  let execution: AutomationAction = null;
+  let action: AutomationAction = null;
   try {
-    execution = await getNextAction(context);
-    if (execution == null) {
+    action = await getNextAction(context);
+    if (action == null) {
       executing = false;
       return;
     }
 
-    const { type: action } = execution;
+    const { type } = action;
 
-    await markAsProcessing(execution, context);
+    await markAsProcessing(action, context);
 
-    if (action === AutomationActionType.UpdateSitemaps) {
+    if (type === AutomationActionType.UpdateSitemaps) {
       //
-    } else if (action === AutomationActionType.UpdateCpuSources) {
-      await updateCpuSourcesAction(execution, context);
-    } else if (action === AutomationActionType.CreateCpu) {
-      await createCpuAction(execution, context);
-    } else if (action === AutomationActionType.UpdateCpu) {
-      await updateCpuAction(execution, context);
-    } else if (action === AutomationActionType.CreateGpu) {
+    } else if (type === AutomationActionType.UpdateCpuSources) {
+      await updateCpuSourcesAction(action, context);
+    } else if (type === AutomationActionType.CreateCpu) {
+      await createCpuAction(action, context);
+    } else if (type === AutomationActionType.UpdateCpu) {
+      await updateCpuAction(action, context);
+    } else if (type === AutomationActionType.CreateGpu) {
       //
-    } else if (action === AutomationActionType.UpdateGpu) {
+    } else if (type === AutomationActionType.UpdateGpu) {
       //
-    } else if (action === AutomationActionType.UpdateGpuChipsetSources) {
-      //
-    } else if (action === AutomationActionType.UpdateGpuRetailModelSources) {
-      //
+    } else if (type === AutomationActionType.UpdateGpuSources) {
+      await updateGpuSourcesAction(action, context);
     } else {
       console.error(`Unsupported Action: ${action}`);
     }
 
     await saveAutomationContext(context);
 
-    await markAsProcessed(execution, context);
+    await markAsProcessed(action, context);
   } catch (e) {
     console.error('Error occurred during automation execution', e);
-    await markAsFailed(execution, e as Error, context);
+    await markAsFailed(action, e as Error, context);
   }
 
   executing = false;
@@ -155,7 +154,7 @@ async function getActionFromStalenessCheck(
   if (isStale(metadata?.updateGpuSourcesDate, UPDATE_GPU_SOURCES_FREQUENCY)) {
     return {
       status: AutomationActionStatus.Pending,
-      type: AutomationActionType.UpdateGpuChipsetSources,
+      type: AutomationActionType.UpdateGpuSources,
     };
   }
 

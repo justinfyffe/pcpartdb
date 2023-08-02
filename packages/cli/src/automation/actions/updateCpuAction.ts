@@ -6,12 +6,11 @@ import {
   CpuDataSource,
   CpuDataSourceKey,
   CpuField,
+  CpuUpdate,
   CreateProductUpdateRequest,
   hasProductFieldValue,
-  ProductDiff,
   productFieldValue,
   ProductType,
-  ProductUpdate,
   ProductUpdateStatus,
   UpdateCpuActionData,
 } from '@pcpartdb/shared';
@@ -207,7 +206,7 @@ async function uploadProductUpdate(
   updatedCpu: Cpu,
   context: AutomationContext,
 ) {
-  const update: ProductUpdate<ProductDiff> = {
+  const update: CpuUpdate = {
     cpuId: originalCpu.id,
     productType: ProductType.Cpu,
     productName: updatedCpu.name,

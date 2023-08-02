@@ -4,14 +4,21 @@ import {
   CreateGpuRequest,
   Gpu,
   GpuComparison,
+  GpuDataSourceKey,
   GpuFieldKey,
+  GpuMeta,
   GpuRank,
+  GpuUpdate,
   ListGpusQuery,
   populateGpuPerformanceScoreBenchmark,
   populateGpuValueScoreBenchmark,
   ProductDataUpdate,
+  ProductSourceGroup,
+  ProductType,
   UpdateGpuRequest,
+  ValidationErrorType,
 } from '@pcpartdb/shared';
+import deepmerge from 'deepmerge';
 import { Context } from '../../shared/context';
 import { badRequestError, notFoundError } from '../../shared/error';
 import { GpuRepository } from './gpu.repository';
@@ -55,6 +62,10 @@ interface GetComparisonOptions {
   includeImages?: boolean;
   includeRetailModels?: boolean;
   includeRanks?: GpuRank[];
+}
+
+interface ApplyProductUpdateOptions {
+  slug?: string;
 }
 
 @Injectable()
@@ -241,8 +252,71 @@ export class GpuService {
     return id;
   }
 
+  // TODO: delete
   async applyDataUpdate(dataUpdate: ProductDataUpdate, ctx: Context) {
     const updated = dataUpdate.data.updated as Gpu;
     await this.update(dataUpdate.gpuId, updated, ctx);
+  }
+
+  async applySources(id: number, sources: ProductSourceGroup, ctx: Context) {
+    const gpu = await this.getById(id, {}, ctx);
+
+    // Extract URLs from new sources
+    const techPowerUpUrl = sources.filter(
+      (source) => source.sourceKey === GpuDataSourceKey.TechPowerUp,
+    )[0]?.sourceUrl;
+    const passMarkUrl = sources.filter(
+      (source) => source.sourceKey === GpuDataSourceKey.VideocardBenchmarks,
+    )[0]?.sourceUrl;
+    const ulBenchmarksUrl = sources.filter(
+      (source) => source.sourceKey === GpuDataSourceKey.UlBenchmarks,
+    )[0]?.sourceUrl;
+
+    // Extract data sources from existing cpu
+    const techPowerUp = gpu.meta?.dataSources?.[GpuDataSourceKey.TechPowerUp];
+    const passMark =
+      gpu.meta?.dataSources?.[GpuDataSourceKey.VideocardBenchmarks];
+    const ulBenchmark = gpu.meta?.dataSources?.[GpuDataSourceKey.UlBenchmarks];
+
+    // Merge - We don't want to delete sources, only overwrite them.
+    gpu.meta = deepmerge(gpu.meta, {
+      dataSources: {
+        [GpuDataSourceKey.TechPowerUp]: {
+          url: techPowerUpUrl || techPowerUp?.url,
+        },
+        [GpuDataSourceKey.VideocardBenchmarks]: {
+          url: passMarkUrl || passMark?.url,
+        },
+        [GpuDataSourceKey.UlBenchmarks]: {
+          url: ulBenchmarksUrl || ulBenchmark?.url,
+        },
+      },
+    } as GpuMeta);
+
+    await this.update(id, gpu, ctx);
+  }
+
+  async applyProductUpdate(
+    update: GpuUpdate,
+    options: ApplyProductUpdateOptions,
+    ctx: Context,
+  ) {
+    if (update.productType !== ProductType.Gpu) {
+      throw badRequestError({
+        property: 'productType',
+        constraint: ValidationErrorType.InvalidProductType,
+      });
+    }
+
+    const updated = update.data.updated as Gpu;
+    if (update.gpuId != null) {
+      await this.update(update.cpuId, updated, ctx);
+    } else {
+      const cpu = {
+        ...updated,
+        slug: options.slug || updated.slug,
+      };
+      await this.create(cpu, ctx);
+    }
   }
 }

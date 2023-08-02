@@ -1,9 +1,9 @@
-import { ProductDiff, ProductType } from '@pcpartdb/shared';
+import { CpuDiff, ProductType } from '@pcpartdb/shared';
 import React, { FunctionComponent } from 'react';
 import { ProductDiffDialog } from '../../product';
 
 interface CpuDiffDialogProps {
-  diff: ProductDiff;
+  diff: CpuDiff;
 }
 
 export const CpuDiffDialog: FunctionComponent<CpuDiffDialogProps> = (props) => {

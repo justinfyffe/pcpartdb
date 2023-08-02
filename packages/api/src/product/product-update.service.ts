@@ -127,7 +127,7 @@ export class ProductUpdateService {
     if (update.productType == ProductType.Cpu) {
       await this.cpuService.applyProductUpdate(update, request, ctx);
     } else if (update.productType === ProductType.Gpu) {
-      //
+      await this.gpuService.applyProductUpdate(update, request, ctx);
     } else {
       throw badRequestError({
         property: 'id',

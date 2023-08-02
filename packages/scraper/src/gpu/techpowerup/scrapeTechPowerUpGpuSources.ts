@@ -1,16 +1,16 @@
+import { parseProductName } from '@pcpartdb/shared';
 import * as cheerio from 'cheerio';
 import { scraper } from '../../scraper';
 import { TechPowerUpGpuSource } from '../types';
 import { sanitizeGpuSourceName } from '../utils';
 
 export interface ScrapeTechPowerUpGpuUrlsOptions {
-  query: string;
+  url: string;
+  company?: string;
   noProxy?: boolean;
 }
 
 const BASE_URL = 'https://www.techpowerup.com';
-const SEARCH_URL =
-  'https://www.techpowerup.com/gpu-specs/?ajaxsrch={query}&_={timestamp}';
 
 export async function scrapeTechPowerUpGpuSources(
   options: ScrapeTechPowerUpGpuUrlsOptions,
@@ -27,36 +27,25 @@ async function scrapeSearchData(options: ScrapeTechPowerUpGpuUrlsOptions) {
   el.each((i, td) => {
     const $td = $(td);
 
-    const className = $td.attr('class');
-    let company = '';
-    if (className === 'vendor-NVIDIA') {
-      company = 'NVIDIA';
-    } else if (className === 'vendor-AMD') {
-      company = 'AMD';
-    } else if (className === 'vendor-Intel') {
-      company = 'Intel';
-    }
-
     const url = BASE_URL + $td.find('a').attr('href').trim();
-    const name = sanitizeGpuSourceName($td.text().trim());
+    const { company: companyFromName, name } = parseProductName(
+      $td.text().trim(),
+    );
+    const sanitizedName = sanitizeGpuSourceName(name);
 
-    gpus.push({ name, company, url });
+    gpus.push({
+      name: sanitizedName,
+      company: companyFromName || options.company,
+      url,
+    });
   });
 
   return gpus;
 }
 
 async function fetchSearchPage(options: ScrapeTechPowerUpGpuUrlsOptions) {
-  const { query, noProxy } = options;
+  const { url, noProxy } = options;
 
-  const searchUrl = buildSearchUrl(query);
-  const response = await scraper.scrape(searchUrl, { retries: 1, noProxy });
+  const response = await scraper.scrape(url, { retries: 1, noProxy });
   return response.data;
-}
-
-function buildSearchUrl(query: string) {
-  return SEARCH_URL.replace('{query}', encodeURIComponent(query)).replace(
-    '{timestamp}',
-    `${new Date().getTime()}`,
-  );
 }

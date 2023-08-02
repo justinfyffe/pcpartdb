@@ -12,6 +12,8 @@ HIGH LEVEL TODO:
 - Glossary
 - Soft delete everything. Hard delete should be rare.
 - auto-backup system
+- seamless deployment
+- accessibility
 
 
 - auto-updates

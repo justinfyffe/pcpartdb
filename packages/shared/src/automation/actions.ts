@@ -17,13 +17,7 @@ export enum AutomationActionType {
    * Downloads and parses GPU chipset sources that later gets used for to fetch
    * GPU data. Sources require approval after being fetched.
    */
-  UpdateGpuChipsetSources = 'UPDATE_GPU_CHIPSET_SOURCES',
-
-  /**
-   * Downloads and parses GPU chipset sources that later gets used for to fetch
-   * GPU data. Sources require approval after being fetched.
-   */
-  UpdateGpuRetailModelSources = 'UPDATE_GPU_RETAIL_MODEL_SOURCES',
+  UpdateGpuSources = 'UPDATE_GPU_SOURCES',
 
   /**
    * Downloads and parses CPU data from the provided sources. Creates a

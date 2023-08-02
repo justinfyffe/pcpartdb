@@ -2,10 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { mapToCpuDto } from '@pcpartdb/database';
 import {
   Cpu,
+  CpuDiff,
   ImportProductsRequest,
   PreviewImportProductsRequest,
   PreviewImportProductsResponse,
-  ProductDiff,
 } from '@pcpartdb/shared';
 import * as fsPromises from 'fs/promises';
 import { Context } from '../../../shared/context';
@@ -28,7 +28,7 @@ export class CpuBulkService {
     const cpusToImport: Cpu[] = JSON.parse(json);
     await fileUtils.remove(path);
 
-    const diffs: ProductDiff[] = [];
+    const diffs: CpuDiff[] = [];
 
     for (let i = 0; i < cpusToImport.length; ++i) {
       const cpuToImport = cpusToImport[i];

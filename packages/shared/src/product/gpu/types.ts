@@ -1,5 +1,11 @@
 import { Image } from '../../image';
-import { GpuDataSourceKey, ProductField, ProductFieldMeta } from '..';
+import {
+  GpuDataSourceKey,
+  ProductDiff,
+  ProductField,
+  ProductFieldMeta,
+  ProductUpdate,
+} from '..';
 
 export enum ListGpusPresetSlug {
   BestPerformance = 'best-performance',
@@ -246,10 +252,7 @@ export interface ListRetailModelsResponse {
   retailModels: Gpu[];
 }
 
-export interface GpuDiff {
-  original?: Gpu;
-  updated?: Gpu;
-}
+export type GpuDiff = ProductDiff<Gpu>;
 
 export interface PreviewImportGpusResponse {
   diffs: GpuDiff[];
@@ -258,3 +261,5 @@ export interface PreviewImportGpusResponse {
 export interface ImportGpusRequest {
   gpus: Gpu[];
 }
+
+export interface GpuUpdate extends ProductUpdate<GpuDiff> {}

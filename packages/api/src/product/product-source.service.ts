@@ -23,6 +23,7 @@ import { validate } from '../shared/validation/validate';
 import { CpuRepository } from './cpu/cpu.repository';
 import { CpuService } from './cpu/cpu.service';
 import { GpuRepository } from './gpu/gpu.repository';
+import { GpuService } from './gpu/gpu.service';
 import { listProductSourcesRequestValidator } from './product.validators';
 import { ProductSourceRepository } from './product-source.repository';
 
@@ -33,6 +34,7 @@ export class ProductSourceService {
     private cpuRepository: CpuRepository,
     private cpuService: CpuService,
     private gpuRepository: GpuRepository,
+    private gpuService: GpuService,
   ) {}
 
   /**
@@ -100,7 +102,7 @@ export class ProductSourceService {
     if (productType === ProductType.Cpu) {
       await this.cpuService.applySources(productId, productSources, ctx);
     } else if (productType === ProductType.Gpu) {
-      // TODO: Update GPU
+      await this.gpuService.applySources(productId, productSources, ctx);
     } else {
       throw badRequestError({
         property: 'productType',

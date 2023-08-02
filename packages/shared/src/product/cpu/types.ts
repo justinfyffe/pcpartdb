@@ -238,4 +238,6 @@ export interface ListCpusResponse {
   contentData: ListCpusContentData;
 }
 
-export interface CpuUpdate extends ProductUpdate<ProductDiff<Cpu>> {}
+export type CpuDiff = ProductDiff<Cpu>;
+
+export interface CpuUpdate extends ProductUpdate<CpuDiff> {}
