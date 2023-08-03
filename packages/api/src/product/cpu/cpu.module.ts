@@ -1,5 +1,6 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { DatabaseModule } from '../../database';
+import { ProductModule } from '../product.module';
 import { CpuAutocompleteModule } from './autocomplete/cpu-autocomplete.module';
 import { CpuBulkModule } from './bulk/cpu-bulk.module';
 import { CpuController } from './cpu.controller';
@@ -15,6 +16,7 @@ import { CpuScrapeModule } from './scrape/cpu-scrape.module';
     CpuBulkModule,
     CpuRanksModule,
     CpuScrapeModule,
+    forwardRef(() => ProductModule),
   ],
   controllers: [CpuController],
   providers: [CpuService, CpuRepository],

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { DatabaseModule } from '../database';
 import { CpuModule } from './cpu/cpu.module';
 import { GpuModule } from './gpu/gpu.module';
@@ -10,7 +10,11 @@ import { ProductUpdateRepository } from './product-update.repository';
 import { ProductUpdateService } from './product-update.service';
 
 @Module({
-  imports: [DatabaseModule, CpuModule, GpuModule],
+  imports: [
+    DatabaseModule,
+    forwardRef(() => CpuModule),
+    forwardRef(() => GpuModule),
+  ],
   controllers: [ProductSourceController, ProductUpdateController],
   providers: [
     ProductSourceRepository,

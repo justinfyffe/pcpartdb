@@ -44,7 +44,7 @@ export async function scrapeTechPowerUpGpuSources(
     const query = QUERIES[i];
     console.log(`Scraping query: ${query}`);
     try {
-      const gpusForQuery = await scrapeGpuSources({ ...options, query });
+      const gpusForQuery = await scrapeGpuSources({ ...options, url: '' });
       console.log(`Scraped ${gpusForQuery.length}`);
       gpusForQuery.forEach((gpu) => {
         map[gpu.name] = gpu;

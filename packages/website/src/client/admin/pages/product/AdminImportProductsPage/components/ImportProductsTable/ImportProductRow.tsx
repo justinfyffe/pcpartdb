@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { ProductDiff, ProductType } from '@pcpartdb/shared';
+import { CpuDiff, GpuDiff, ProductDiff, ProductType } from '@pcpartdb/shared';
 import { formatProductName } from 'packages/website/src/client/product';
 import {
   Checkbox,
@@ -35,9 +35,9 @@ export const ImportProductRow = (props: ImportProductRowProps) => {
 
   const handlePreviewProduct = useCallback(() => {
     if (productType === ProductType.Cpu) {
-      showDialog(<CpuDiffDialog diff={diff} />);
+      showDialog(<CpuDiffDialog diff={diff as CpuDiff} />);
     } else if (productType === ProductType.Gpu) {
-      showDialog(<GpuDiffDialog diff={diff} />);
+      showDialog(<GpuDiffDialog diff={diff as GpuDiff} />);
     } else {
       throw new Error(
         `Missing preview product diff support for ${productType}`,

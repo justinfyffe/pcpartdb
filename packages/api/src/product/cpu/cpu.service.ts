@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import {
   CountCpusOptions,
   ListCpusOptions,
@@ -26,6 +26,7 @@ import {
 import deepmerge from 'deepmerge';
 import { Context } from '../../shared/context';
 import { badRequestError, notFoundError } from '../../shared/error';
+import { ProductUpdateService } from '../product-update.service';
 import { CpuRepository } from './cpu.repository';
 import { CpuRanksService } from './ranks/cpu-ranks.service';
 
@@ -55,6 +56,8 @@ export class CpuService {
   constructor(
     private cpuRepository: CpuRepository,
     private cpuRanksService: CpuRanksService,
+    @Inject(forwardRef(() => ProductUpdateService))
+    private productUpdateService: ProductUpdateService,
   ) {}
 
   async count(options: CountCpusOptions, ctx: Context) {
@@ -179,6 +182,18 @@ export class CpuService {
       throw notFoundError({ cpu: id });
     }
 
+    // Auto-reject any existing pending updates, we assume this update is more
+    // updated than what is pending.
+    const pendingUpdate =
+      await this.productUpdateService.findPendingByProductId(
+        { productType: ProductType.Cpu, productId: id },
+        ctx,
+      );
+    if (pendingUpdate != null) {
+      await this.productUpdateService.reject(pendingUpdate.id, {}, ctx);
+    }
+
+    // Update benchmarks
     populateCpuPerformanceScoreBenchmark(data);
     populateCpuValueScoreBenchmark(data);
 

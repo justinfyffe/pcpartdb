@@ -1,7 +1,10 @@
 HIGH LEVEL TODO:
 - Automation
+  - gpu sources
+  - gpu retail model sources
+  - create gpu
+  - update gpu
   - add edit button after approving
-  - reject pending updates when we edit cpu/gpu?
   - Mobile friendly so can approve anywhere
   - how to terminate without breaking?
 - code cleanup

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { mapToGpuDto, mapToGpuDtos, mapToGpuEntity } from '@pcpartdb/database';
 import {
   CreateGpuRequest,
@@ -21,6 +21,7 @@ import {
 import deepmerge from 'deepmerge';
 import { Context } from '../../shared/context';
 import { badRequestError, notFoundError } from '../../shared/error';
+import { ProductUpdateService } from '../product-update.service';
 import { GpuRepository } from './gpu.repository';
 import { GpuRanksService } from './ranks/gpu-ranks.service';
 
@@ -73,6 +74,8 @@ export class GpuService {
   constructor(
     private gpuRepository: GpuRepository,
     private gpuRanksService: GpuRanksService,
+    @Inject(forwardRef(() => ProductUpdateService))
+    private productUpdateService: ProductUpdateService,
   ) {}
 
   async count(options: CountOptions, ctx: Context) {
@@ -234,6 +237,18 @@ export class GpuService {
       throw notFoundError({ gpu: id });
     }
 
+    // Auto-reject any existing pending updates, we assume this update is more
+    // updated than what is pending.
+    const pendingUpdate =
+      await this.productUpdateService.findPendingByProductId(
+        { productType: ProductType.Cpu, productId: id },
+        ctx,
+      );
+    if (pendingUpdate != null) {
+      await this.productUpdateService.reject(pendingUpdate.id, {}, ctx);
+    }
+
+    // Update benchmarks
     populateGpuPerformanceScoreBenchmark(data);
     populateGpuValueScoreBenchmark(data);
 

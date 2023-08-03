@@ -15,7 +15,7 @@ export async function scrapePassMarkGpuSources(
 ) {
   console.log('Scraping GPU Sources from PassMark');
 
-  const sources = await scrapeGpuSources(options);
+  const sources = await scrapeGpuSources({ ...options, url: '' });
   await sleep(SLEEP_DELAY);
   console.log(`Scraped ${sources.length} sources`);
 

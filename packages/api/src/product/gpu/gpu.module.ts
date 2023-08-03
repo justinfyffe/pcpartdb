@@ -1,5 +1,6 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { DatabaseModule } from '../../database';
+import { ProductModule } from '../product.module';
 import { GpuAutocompleteModule } from './autocomplete/gpu-autocomplete.module';
 import { GpuBulkModule } from './bulk/gpu-bulk.module';
 import { GpuController } from './gpu.controller';
@@ -15,6 +16,7 @@ import { GpuScrapeModule } from './scrape/gpu-scrape.module';
     GpuBulkModule,
     GpuRanksModule,
     GpuScrapeModule,
+    forwardRef(() => ProductModule),
   ],
   controllers: [GpuController],
   providers: [GpuService, GpuRepository],

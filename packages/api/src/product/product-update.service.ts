@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import {
   mapToProductUpdateDto,
   mapToProductUpdateDtos,
@@ -36,7 +36,9 @@ interface FindByProductIdOptions {
 export class ProductUpdateService {
   constructor(
     private repository: ProductUpdateRepository,
+    @Inject(forwardRef(() => CpuService))
     private cpuService: CpuService,
+    @Inject(forwardRef(() => GpuService))
     private gpuService: GpuService,
   ) {}
 
@@ -57,9 +59,9 @@ export class ProductUpdateService {
   }
 
   /**
-   * Finds a product update for the given product id.
+   * Finds a pending product update for the given product id.
    */
-  async findByProductId(options: FindByProductIdOptions, ctx: Context) {
+  async findPendingByProductId(options: FindByProductIdOptions, ctx: Context) {
     const entity = await this.repository.findPending(options, ctx);
     if (entity[0] == null) {
       return null;

@@ -40,7 +40,7 @@ export class AdminEditProductViewModelService {
     productId: number,
     ctx: Context,
   ) {
-    return await this.productUpdateService.findByProductId(
+    return await this.productUpdateService.findPendingByProductId(
       { productType, productId },
       ctx,
     );
