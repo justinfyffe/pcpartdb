@@ -5,13 +5,13 @@ import {
 } from '@heroicons/react/24/outline';
 import {
   AutomationActionType,
-  CpuDataSourceKey,
-  CreateCpuActionData,
+  CreateGpuActionData,
+  GpuDataSourceKey,
   Product,
   ProductSource,
   ProductSourceGroup,
   ProductType,
-  UpdateCpuActionData,
+  UpdateGpuActionData,
 } from '@pcpartdb/shared';
 import { automationService } from 'packages/website/src/client/automation/services';
 import {
@@ -33,11 +33,11 @@ import {
 import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
 import React, { useCallback, useMemo, useState } from 'react';
 
-interface CpuSourceCardProps {
+interface GpuSourceCardProps {
   sources: ProductSourceGroup;
 }
 
-export const CpuSourceCard = (props: CpuSourceCardProps) => {
+export const GpuSourceCard = (props: GpuSourceCardProps) => {
   const { sources } = props;
 
   // States
@@ -48,44 +48,44 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
   const [techPowerUp, setTechPowerUp] = useState(() => {
     return (
       sources.filter(
-        (source) => source.sourceKey === CpuDataSourceKey.TechPowerUp,
+        (source) => source.sourceKey === GpuDataSourceKey.TechPowerUp,
       )[0] || null
     );
   });
   const [passMark, setPassMark] = useState(() => {
     return (
       sources.filter(
-        (source) => source.sourceKey === CpuDataSourceKey.PassMark,
+        (source) => source.sourceKey === GpuDataSourceKey.VideocardBenchmarks,
       )[0] || null
     );
   });
-  const [geekBench, setGeekBench] = useState(() => {
+  const [ulBenchmark, setUlBenchmark] = useState(() => {
     return (
       sources.filter(
-        (source) => source.sourceKey === CpuDataSourceKey.GeekBench,
+        (source) => source.sourceKey === GpuDataSourceKey.UlBenchmarks,
       )[0] || null
     );
   });
 
   const [archiveTechPowerUp, setArchiveTechPowerUp] = useState(!!techPowerUp);
   const [archivePassMark, setArchivePassMark] = useState(!!passMark);
-  const [archiveGeekBench, setArchiveGeekBench] = useState(!!geekBench);
+  const [archiveUlBenchmark, setArchiveUlBenchmark] = useState(!!ulBenchmark);
 
   const [preferredName, setPreferredName] = useState(
     () => sources[0].sourceName,
   );
-  const [appliedCpu, setAppliedCpu] = useState<Product>(null);
+  const [appliedGpu, setAppliedGpu] = useState<Product>(null);
 
   const techPowerUpId = techPowerUp?.id;
   const passMarkId = passMark?.id;
-  const geekBenchId = geekBench?.id;
+  const ulBenchmarkId = ulBenchmark?.id;
   const techPowerUpArchived = techPowerUp?.archived;
   const passMarkArchived = passMark?.archived;
-  const geekBenchArchived = geekBench?.archived;
+  const ulBenchmarkArchived = ulBenchmark?.archived;
   const allArchived =
     (techPowerUpArchived ?? true) &&
     (passMarkArchived ?? true) &&
-    (geekBenchArchived ?? true);
+    (ulBenchmarkArchived ?? true);
 
   // Memos
 
@@ -94,11 +94,11 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
       [
         techPowerUp ? 'TechPowerUp' : null,
         passMark ? 'PassMark' : null,
-        geekBench ? 'GeekBench' : null,
+        ulBenchmark ? 'UL Benchmarks' : null,
       ]
         .filter((source) => source != null)
         .join(', '),
-    [geekBench, passMark, techPowerUp],
+    [ulBenchmark, passMark, techPowerUp],
   );
 
   // Callbacks
@@ -123,15 +123,15 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
             archived: archivePassMark,
           }
         : null;
-    const newGeekBench: ProductSource =
-      geekBench != null
+    const newUlBenchmark: ProductSource =
+      ulBenchmark != null
         ? {
-            ...geekBench,
-            archived: archiveGeekBench,
+            ...ulBenchmark,
+            archived: archiveUlBenchmark,
           }
         : null;
 
-    const sources = [newTechPowerUp, newPassMark, newGeekBench].filter(
+    const sources = [newTechPowerUp, newPassMark, newUlBenchmark].filter(
       (source) => source != null && source.id != null,
     );
 
@@ -139,57 +139,57 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
 
     await setTechPowerUp(newTechPowerUp);
     await setPassMark(newPassMark);
-    await setGeekBench(newGeekBench);
+    await setUlBenchmark(newUlBenchmark);
 
     // Close the card
     await setExpanded(false);
   }, [
-    archiveGeekBench,
+    archiveUlBenchmark,
     archivePassMark,
     archiveTechPowerUp,
-    geekBench,
+    ulBenchmark,
     passMark,
     techPowerUp,
   ]);
 
-  const applyToCpu = useCallback(async () => {
-    const sources = [techPowerUp, passMark, geekBench]
+  const applyToGpu = useCallback(async () => {
+    const sources = [techPowerUp, passMark, ulBenchmark]
       .filter((source) => source != null && source.id != null)
       .map((source) => source.id);
 
     // Add sources to existing product.
     await productSourceService.applyToProduct({
-      productType: ProductType.Cpu,
-      productId: appliedCpu.id,
+      productType: ProductType.Gpu,
+      productId: appliedGpu.id,
       sources,
     });
 
-    // Create automation action to update existing cpu.
+    // Create automation action to update existing gpu.
     await automationService.createAction({
-      type: AutomationActionType.UpdateCpu,
-      description: formatProductName(ProductType.Cpu, appliedCpu),
-      data: { cpuId: appliedCpu.id } as UpdateCpuActionData,
+      type: AutomationActionType.UpdateGpu,
+      description: formatProductName(ProductType.Gpu, appliedGpu),
+      data: { gpuId: appliedGpu.id } as UpdateGpuActionData,
     });
 
     // Update sources
     await save();
-  }, [techPowerUp, passMark, geekBench, appliedCpu, save]);
+  }, [techPowerUp, passMark, ulBenchmark, appliedGpu, save]);
 
-  const createCpu = useCallback(async () => {
-    const sources = [techPowerUp, passMark, geekBench].filter(
+  const createGpu = useCallback(async () => {
+    const sources = [techPowerUp, passMark, ulBenchmark].filter(
       (source) => source != null,
     );
 
-    // Create automation action to create new CPU
+    // Create automation action to create new GPU
     await automationService.createAction({
-      type: AutomationActionType.CreateCpu,
+      type: AutomationActionType.CreateGpu,
       description: preferredName,
-      data: { preferredName, sources } as CreateCpuActionData,
+      data: { preferredName, sources } as CreateGpuActionData,
     });
 
     // Update sources to archive them.
     await save();
-  }, [geekBench, save, passMark, preferredName, techPowerUp]);
+  }, [ulBenchmark, save, passMark, preferredName, techPowerUp]);
 
   // Render
 
@@ -217,10 +217,10 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
       {expanded && (
         <CardContent>
           <Field className="flex-1">
-            <div className="flex justify-between">CPU Name</div>
+            <div className="flex justify-between">GPU Name</div>
             <TextInput value={preferredName} onChange={setPreferredName} />
             <FieldHint>
-              This will be used as the CPU&apos;s name when it is created.
+              This will be used as the GPU&apos;s name when it is created.
             </FieldHint>
           </Field>
 
@@ -256,8 +256,8 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
               </div>
               <div className="flex flex-col flex-1 gap-2">
                 <ProductSourceAutocomplete
-                  productType={ProductType.Cpu}
-                  source={CpuDataSourceKey.TechPowerUp}
+                  productType={ProductType.Gpu}
+                  source={GpuDataSourceKey.TechPowerUp}
                   value={techPowerUp}
                   onChange={setTechPowerUp}
                 />
@@ -311,8 +311,8 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
               </div>
               <div className="flex flex-col flex-1 gap-2">
                 <ProductSourceAutocomplete
-                  productType={ProductType.Cpu}
-                  source={CpuDataSourceKey.PassMark}
+                  productType={ProductType.Gpu}
+                  source={GpuDataSourceKey.VideocardBenchmarks}
                   value={passMark}
                   onChange={setPassMark}
                 />
@@ -339,10 +339,10 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
             <Field className="flex-1">
               <div className="flex justify-between">
                 <div className="flex gap-2">
-                  <span>GeekBench</span>
-                  {geekBench != null && (
+                  <span>UL Benchmarks</span>
+                  {ulBenchmark != null && (
                     <a
-                      href={geekBench.sourceUrl}
+                      href={ulBenchmark.sourceUrl}
                       target="_blank"
                       rel="noreferrer nofollow"
                     >
@@ -351,12 +351,12 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
                   )}
                 </div>
 
-                {geekBench != null && (
+                {ulBenchmark != null && (
                   <FieldOptional>
                     <a
                       onClick={(e) => {
                         e.preventDefault();
-                        setNameFromSource(geekBench);
+                        setNameFromSource(ulBenchmark);
                       }}
                       className="cursor-pointer"
                     >
@@ -367,24 +367,24 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
               </div>
               <div className="flex flex-col flex-1 gap-2">
                 <ProductSourceAutocomplete
-                  productType={ProductType.Cpu}
-                  source={CpuDataSourceKey.GeekBench}
-                  value={geekBench}
-                  onChange={setGeekBench}
+                  productType={ProductType.Gpu}
+                  source={GpuDataSourceKey.UlBenchmarks}
+                  value={ulBenchmark}
+                  onChange={setUlBenchmark}
                 />
-                <TextInput value={geekBench?.sourceUrl} disabled />
+                <TextInput value={ulBenchmark?.sourceUrl} disabled />
               </div>
-              {geekBench != null && (
+              {ulBenchmark != null && (
                 <div className="flex justify-between">
                   <FieldHint>
-                    {geekBenchId}:{' '}
-                    {geekBenchArchived ? <>Archived</> : <>Not Archived</>}
+                    {ulBenchmarkId}:{' '}
+                    {ulBenchmarkArchived ? <>Archived</> : <>Not Archived</>}
                   </FieldHint>
 
                   <Checkbox
-                    disabled={geekBench == null}
-                    value={archiveGeekBench}
-                    onChange={(checked) => setArchiveGeekBench(checked)}
+                    disabled={ulBenchmark == null}
+                    value={archiveUlBenchmark}
+                    onChange={(checked) => setArchiveUlBenchmark(checked)}
                   >
                     Archive
                   </Checkbox>
@@ -396,17 +396,17 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
           <div className="flex justify-between gap-4">
             <div className="flex flex-1 gap-4 max-w-[50%]">
               <ProductAutocomplete
-                productType={ProductType.Cpu}
-                onChangeProduct={setAppliedCpu}
+                productType={ProductType.Gpu}
+                onChangeProduct={setAppliedGpu}
               />
-              <GenericButton disabled={appliedCpu == null} onClick={applyToCpu}>
+              <GenericButton disabled={appliedGpu == null} onClick={applyToGpu}>
                 Apply
               </GenericButton>
             </div>
 
             <div className="flex gap-4">
               <GenericButton onClick={save}>Save</GenericButton>
-              <GenericButton onClick={createCpu}>Create CPU</GenericButton>
+              <GenericButton onClick={createGpu}>Create GPU</GenericButton>
             </div>
           </div>
         </CardContent>

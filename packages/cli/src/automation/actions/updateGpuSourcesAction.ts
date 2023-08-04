@@ -107,9 +107,25 @@ const TECHPOWERUP_URLS = [
   },
 ];
 
-const PASSMARK_URLS = [''];
+const PASSMARK_URLS = [
+  'https://www.videocardbenchmark.net/high_end_gpus.html', // High End
+  'https://www.videocardbenchmark.net/mid_range_gpus.html', // High Mid End
+  'https://www.videocardbenchmark.net/midlow_range_gpus.html', // Low Mid End
+  'https://www.videocardbenchmark.net/low_end_gpus.html', // Low End
+];
 
-const UL_BENCHMARK_QUERIES = [''];
+const UL_BENCHMARK_QUERIES = [
+  'https://benchmarks.ul.com/compare/best-gpus?search=intel',
+  'https://benchmarks.ul.com/compare/best-gpus?search=nvidia',
+  'https://benchmarks.ul.com/compare/best-gpus?search=amd',
+  'https://benchmarks.ul.com/compare/best-gpus?search=arc',
+  'https://benchmarks.ul.com/compare/best-gpus?search=rtx',
+  'https://benchmarks.ul.com/compare/best-gpus?search=geforce',
+  'https://benchmarks.ul.com/compare/best-gpus?search=graphics',
+  'https://benchmarks.ul.com/compare/best-gpus?search=radeon',
+  'https://benchmarks.ul.com/compare/best-gpus?search=vega',
+  'https://benchmarks.ul.com/compare/best-gpus?search=titan',
+];
 
 export async function updateGpuSourcesAction(
   _action: AutomationAction,
