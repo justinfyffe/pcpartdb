@@ -24,45 +24,39 @@ export async function executeAutomation(context: AutomationContext) {
   }
   executing = true;
 
-  const action: AutomationAction = null;
+  let action: AutomationAction = null;
   try {
-    const action = {
-      status: AutomationActionStatus.Pending,
-      type: AutomationActionType.UpdateGpuSources,
-    };
-    await updateGpuSourcesAction(action, context);
+    action = await getNextAction(context);
+    if (action == null) {
+      executing = false;
+      return;
+    }
 
-    // action = await getNextAction(context);
-    // if (action == null) {
-    //   executing = false;
-    //   return;
-    // }
+    const { type } = action;
 
-    // const { type } = action;
+    await markAsProcessing(action, context);
 
-    // await markAsProcessing(action, context);
+    if (type === AutomationActionType.UpdateSitemaps) {
+      //
+    } else if (type === AutomationActionType.UpdateCpuSources) {
+      await updateCpuSourcesAction(action, context);
+    } else if (type === AutomationActionType.CreateCpu) {
+      await createCpuAction(action, context);
+    } else if (type === AutomationActionType.UpdateCpu) {
+      await updateCpuAction(action, context);
+    } else if (type === AutomationActionType.CreateGpu) {
+      await createGpuAction(action, context);
+    } else if (type === AutomationActionType.UpdateGpu) {
+      await updateGpuAction(action, context);
+    } else if (type === AutomationActionType.UpdateGpuSources) {
+      await updateGpuSourcesAction(action, context);
+    } else {
+      console.error(`Unsupported Action: ${action}`);
+    }
 
-    // if (type === AutomationActionType.UpdateSitemaps) {
-    //   //
-    // } else if (type === AutomationActionType.UpdateCpuSources) {
-    //   await updateCpuSourcesAction(action, context);
-    // } else if (type === AutomationActionType.CreateCpu) {
-    //   await createCpuAction(action, context);
-    // } else if (type === AutomationActionType.UpdateCpu) {
-    //   await updateCpuAction(action, context);
-    // } else if (type === AutomationActionType.CreateGpu) {
-    //   await createGpuAction(action, context);
-    // } else if (type === AutomationActionType.UpdateGpu) {
-    //   await updateGpuAction(action, context);
-    // } else if (type === AutomationActionType.UpdateGpuSources) {
-    //   await updateGpuSourcesAction(action, context);
-    // } else {
-    //   console.error(`Unsupported Action: ${action}`);
-    // }
+    await saveAutomationContext(context);
 
-    // await saveAutomationContext(context);
-
-    // await markAsProcessed(action, context);
+    await markAsProcessed(action, context);
   } catch (e) {
     console.error('Error occurred during automation execution', e);
     await markAsFailed(action, e as Error, context);

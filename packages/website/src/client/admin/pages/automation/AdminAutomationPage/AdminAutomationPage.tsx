@@ -2,7 +2,6 @@ import 'reflect-metadata';
 import { AdminAutomationViewModel } from '@pcpartdb/shared';
 import React from 'react';
 import {
-  MetaReferrer,
   MetaRobots,
   Seo,
   Tab,
@@ -10,13 +9,7 @@ import {
   TabsVariant,
 } from '../../../../shared/components';
 import { AdminLayout } from '../../../../shared/layouts';
-import {
-  CpuSourcesTab,
-  GpusTab,
-  GpuSourcesTab,
-  GpusTab,
-  QueueTab,
-} from './tabs';
+import { CpuSourcesTab, GpuSourcesTab, GpusTab, QueueTab } from './tabs';
 
 export const AdminAutomationPage = (props: AdminAutomationViewModel) => {
   const seoTitle = 'Automation - Admin Panel';

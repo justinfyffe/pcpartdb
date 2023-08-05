@@ -155,7 +155,7 @@ async function getTechPowerUpSources() {
 
   const sources: ProductSource[] = Object.values(map).map((value) => ({
     productType: ProductType.Cpu,
-    sourceName: `${value.company} ${value.name}`.trim(),
+    sourceName: `${value.company || ''} ${value.name}`.trim(),
     sourceKey: CpuDataSourceKey.TechPowerUp,
     sourceUrl: value.url,
   }));
@@ -189,7 +189,7 @@ async function getPassMarkSources() {
 
   const sources: ProductSource[] = Object.values(map).map((value) => ({
     productType: ProductType.Cpu,
-    sourceName: `${value.company} ${value.name}`.trim(),
+    sourceName: `${value.company || ''} ${value.name}`.trim(),
     sourceKey: CpuDataSourceKey.PassMark,
     sourceUrl: value.url,
   }));
@@ -208,7 +208,7 @@ async function getGeekBenchSources() {
   const sources: ProductSource[] = Object.values(geekBenchSources).map(
     (value) => ({
       productType: ProductType.Cpu,
-      sourceName: `${value.company} ${value.name}`.trim(),
+      sourceName: `${value.company || ''} ${value.name}`.trim(),
       sourceKey: CpuDataSourceKey.GeekBench,
       sourceUrl: value.url,
     }),

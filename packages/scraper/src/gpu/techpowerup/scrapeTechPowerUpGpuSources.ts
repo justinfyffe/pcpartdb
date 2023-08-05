@@ -23,7 +23,7 @@ async function scrapeSearchData(options: ScrapeTechPowerUpGpuUrlsOptions) {
 
   const gpus: TechPowerUpGpuSource[] = [];
 
-  const el = $('table tbody tr td:first-child + td');
+  const el = $('table tbody tr td:first-child');
   el.each((i, td) => {
     const $td = $(td);
 

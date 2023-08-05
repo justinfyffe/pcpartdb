@@ -115,16 +115,16 @@ const PASSMARK_URLS = [
 ];
 
 const UL_BENCHMARK_QUERIES = [
-  'https://benchmarks.ul.com/compare/best-gpus?search=intel',
-  'https://benchmarks.ul.com/compare/best-gpus?search=nvidia',
-  'https://benchmarks.ul.com/compare/best-gpus?search=amd',
-  'https://benchmarks.ul.com/compare/best-gpus?search=arc',
-  'https://benchmarks.ul.com/compare/best-gpus?search=rtx',
-  'https://benchmarks.ul.com/compare/best-gpus?search=geforce',
-  'https://benchmarks.ul.com/compare/best-gpus?search=graphics',
-  'https://benchmarks.ul.com/compare/best-gpus?search=radeon',
-  'https://benchmarks.ul.com/compare/best-gpus?search=vega',
-  'https://benchmarks.ul.com/compare/best-gpus?search=titan',
+  'intel',
+  'nvidia',
+  'amd',
+  'arc',
+  'rtx',
+  'geforce',
+  'graphics',
+  'radeon',
+  'vega',
+  'titan',
 ];
 
 export async function updateGpuSourcesAction(
@@ -134,14 +134,23 @@ export async function updateGpuSourcesAction(
   console.log('Executing updateGpuSourcesAction');
 
   // Scrape GPU Sources
-  const techPowerUpSources = await getTechPowerUpSources();
-  const passMarkSources = await getPassMarkSources();
-  const ulBenchmarkSources = await getUlBenchmarkSources();
+  const { sources: techPowerUpSources, companies: techPowerUpCompanies } =
+    await getTechPowerUpSources();
+  const { sources: ulBenchmarkSources, companies: ulBenchmarkCompanies } =
+    await getUlBenchmarkSources();
+  // PassMark doesn't have company names, so let's try to find them from the
+  // other sources.
+  const passMarkSources = await getPassMarkSources({
+    ...ulBenchmarkCompanies,
+    ...techPowerUpCompanies,
+  });
 
   // Upload CPU Sources
   await uploadGpuSources(techPowerUpSources, context);
-  await uploadGpuSources(passMarkSources, context);
   await uploadGpuSources(ulBenchmarkSources, context);
+  // PassMark doesn't have company names, so let's try to find them from the
+  // other sources.
+  await uploadGpuSources(passMarkSources, context);
 
   // Trigger auto-archive
   await context.api.post('products/sources/auto-archive', null);
@@ -157,6 +166,7 @@ async function getTechPowerUpSources() {
   console.log('Scraping GPU chipset sources from TechPowerUp');
 
   const map: Record<string, TechPowerUpGpuSource> = {};
+  const companies: Record<string, string> = {};
   for (let i = 0; i < TECHPOWERUP_URLS.length; ++i) {
     const { company, urls } = TECHPOWERUP_URLS[i];
 
@@ -170,8 +180,9 @@ async function getTechPowerUpSources() {
       try {
         const sources = await scrapeTechPowerUpGpuSources({ url, company });
         console.log(`Scraped ${sources.length} sources`);
-        sources.forEach((cpu) => {
-          map[cpu.name] = cpu;
+        sources.forEach((gpu) => {
+          map[gpu.name] = gpu;
+          companies[gpu.name.toLowerCase()] = company;
         });
       } catch (err) {
         console.error('Encountered error when scraping.');
@@ -183,17 +194,53 @@ async function getTechPowerUpSources() {
 
   const sources: ProductSource[] = Object.values(map).map((value) => ({
     productType: ProductType.Gpu,
-    sourceName: `${value.company} ${value.name}`.trim(),
+    sourceName: `${value.company || ''} ${value.name}`.trim(),
     sourceKey: GpuDataSourceKey.TechPowerUp,
     sourceUrl: value.url,
   }));
 
   console.log(`Scraped ${sources.length} TechPowerUp sources`);
 
-  return sources;
+  return { sources, companies };
 }
 
-async function getPassMarkSources() {
+async function getUlBenchmarkSources() {
+  console.log('Scraping CPU Sources from UL');
+
+  const map: Record<string, UlBenchmarkGpuSource> = {};
+  const companies: Record<string, string> = {};
+  for (let i = 0; i < UL_BENCHMARK_QUERIES.length; ++i) {
+    const query = UL_BENCHMARK_QUERIES[i];
+    console.log(`Scraping sources for query: ${query}`);
+
+    try {
+      const sources = await scrapeUlBenchmarkGpuSources({ query });
+      console.log(`Scraped ${sources.length} sources`);
+      sources.forEach((gpu) => {
+        map[gpu.name] = gpu;
+        companies[gpu.name.toLowerCase()] = gpu.company;
+      });
+    } catch (err) {
+      console.error('Encountered error when scraping.');
+      console.error(err);
+    }
+
+    await sleep(DELAY_BETWEEN_SOURCE_REQUEST);
+  }
+
+  const sources: ProductSource[] = Object.values(map).map((value) => ({
+    productType: ProductType.Gpu,
+    sourceName: `${value.company || ''} ${value.name}`.trim(),
+    sourceKey: GpuDataSourceKey.UlBenchmarks,
+    sourceUrl: value.url,
+  }));
+
+  console.log(`Scraped ${sources.length} UL Benchmark sources`);
+
+  return { sources, companies };
+}
+
+async function getPassMarkSources(companies: Record<string, string>) {
   console.log('Scraping CPU Sources from PassMark');
 
   const map: Record<string, PassMarkGpuSource> = {};
@@ -206,6 +253,11 @@ async function getPassMarkSources() {
       console.log(`Scraped ${sources.length} sources`);
       sources.forEach((gpu) => {
         map[gpu.name] = gpu;
+        gpu.company =
+          gpu.company ||
+          guessPassMarkCompanyName(gpu.name) ||
+          companies[gpu.name] ||
+          null;
       });
     } catch (err) {
       console.error('Encountered error when scraping.');
@@ -217,42 +269,8 @@ async function getPassMarkSources() {
 
   const sources: ProductSource[] = Object.values(map).map((value) => ({
     productType: ProductType.Gpu,
-    sourceName: `${value.company} ${value.name}`.trim(),
+    sourceName: `${value.company || ''} ${value.name}`.trim(),
     sourceKey: GpuDataSourceKey.VideocardBenchmarks,
-    sourceUrl: value.url,
-  }));
-
-  console.log(`Scraped ${sources.length} PassMark sources`);
-
-  return sources;
-}
-
-async function getUlBenchmarkSources() {
-  console.log('Scraping CPU Sources from UL');
-
-  const map: Record<string, UlBenchmarkGpuSource> = {};
-  for (let i = 0; i < UL_BENCHMARK_QUERIES.length; ++i) {
-    const query = UL_BENCHMARK_QUERIES[i];
-    console.log(`Scraping sources for query: ${query}`);
-
-    try {
-      const sources = await scrapeUlBenchmarkGpuSources({ query });
-      console.log(`Scraped ${sources.length} sources`);
-      sources.forEach((gpu) => {
-        map[gpu.name] = gpu;
-      });
-    } catch (err) {
-      console.error('Encountered error when scraping.');
-      console.error(err);
-    }
-
-    await sleep(DELAY_BETWEEN_SOURCE_REQUEST);
-  }
-
-  const sources: ProductSource[] = Object.values(map).map((value) => ({
-    productType: ProductType.Gpu,
-    sourceName: `${value.company} ${value.name}`.trim(),
-    sourceKey: GpuDataSourceKey.UlBenchmarks,
     sourceUrl: value.url,
   }));
 
@@ -291,4 +309,38 @@ async function uploadGpuSources(
   }
 
   console.log(`Uploaded ${totalSources} sources`);
+}
+
+const PASSMARK_NVIDIA_HINTS = [
+  'rtx ',
+  ' rtx',
+  'geforce',
+  'quadro',
+  'titan ',
+  'tesla ',
+  'grid',
+  'gtx ',
+  'nvs ',
+  'nforce',
+];
+const PASSMARK_AMD_HINTS = [
+  'radeon',
+  'ryzen',
+  'firepro',
+  'firestream',
+  'firegl',
+];
+const PASSMARK_INTEL_HINTS = ['arc ', 'uhd graphics'];
+function guessPassMarkCompanyName(name: string) {
+  const lcName = name.toLowerCase();
+  if (PASSMARK_NVIDIA_HINTS.some((hint) => lcName.includes(hint))) {
+    return 'NVIDIA';
+  }
+  if (PASSMARK_AMD_HINTS.some((hint) => lcName.includes(hint))) {
+    return 'AMD';
+  }
+  if (PASSMARK_INTEL_HINTS.some((hint) => lcName.includes(hint))) {
+    return 'Intel';
+  }
+  return null;
 }
