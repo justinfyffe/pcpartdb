@@ -7,6 +7,7 @@ import {
   Gpu,
   GpuDataSource,
   GpuDataSourceKey,
+  GpuProductType,
   GpuUpdate,
   parseProductName,
   productFieldValue,
@@ -41,21 +42,18 @@ export async function createGpuAction(
     )[0]?.sourceUrl,
   };
 
+  // Get chipset source (if applicable)
+  const chipset = await getChipset(payload.chipsetId, context);
+
   // Scrape the GPU data from our sources.
   const gpu = await fetchGpuData({
+    chipset,
     sources: {
       [GpuDataSourceKey.TechPowerUp]: techPowerUpSource,
       [GpuDataSourceKey.VideocardBenchmarks]: passMarkSource,
       [GpuDataSourceKey.UlBenchmarks]: ulBenchmarkSource,
     },
   });
-  if (gpu == null) {
-    // No results for scraping. Skip.
-    console.error(
-      `No scraped data when scraping GPU during automation for action=${action}`,
-    );
-    return;
-  }
 
   // New GPUs have some additional data to be applied
   // Preferred name from source data.
@@ -83,36 +81,49 @@ export async function createGpuAction(
   await uploadProductUpdate(gpu, context);
 }
 
+async function getChipset(chipsetId: number, context: AutomationContext) {
+  if (chipsetId == null) {
+    return null;
+  }
+
+  console.info('Getting Chipset GPU');
+  const chipset = await context.api.get<Gpu>(`/products/gpus/${chipsetId}`);
+  if (chipset == null) {
+    throw new Error('Could not get chipset');
+  }
+  console.log(`Finished getting chipset GPU: ${chipset.name}`);
+  return chipset;
+}
+
 async function fetchGpuData(options: {
+  chipset?: Gpu;
   sources: Record<string, GpuDataSource>;
 }) {
   console.info('Fetching GPU data', options.sources);
 
   // Scrape the GPU data from our sources.
-  let scrapedGpu: Gpu;
-  try {
-    const result = await scrapeGpu(options);
-    scrapedGpu = result.product as Gpu;
+  const result = await scrapeGpu(options);
+  const product = result.product as Gpu;
 
-    console.log('Finished fetching data.');
-    return scrapedGpu;
-  } catch (e) {
-    // Could not scrape the GPU. Skip as we do not have data.
-    console.error('Error when scraping GPU during automation');
-    console.error(e);
-    return null;
-  }
+  console.log('Finished fetching data.');
+  return product;
 }
 
 async function uploadProductUpdate(gpu: Gpu, context: AutomationContext) {
+  const productName = `${productFieldValue(gpu.company) || ''} ${
+    gpu.name
+  }`.trim();
   const update: GpuUpdate = {
     productType: ProductType.Gpu,
-    productName: gpu.name,
-    productCompany: productFieldValue(gpu.company),
-    description: `Create GPU for ${gpu.name}`,
+    productName,
+    description: `Create GPU for ${productName}`,
     status: ProductUpdateStatus.Pending,
     data: { original: null, updated: gpu },
     metadata: {},
+    gpuProductType:
+      gpu.chipsetId == null
+        ? GpuProductType.Chipset
+        : GpuProductType.RetailModel,
   };
 
   console.info('Uploading pending creation for GPU');

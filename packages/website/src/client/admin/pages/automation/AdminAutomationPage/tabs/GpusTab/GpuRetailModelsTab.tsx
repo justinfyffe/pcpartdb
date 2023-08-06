@@ -1,7 +1,8 @@
 import 'reflect-metadata';
 import { ArrowPathIcon } from '@heroicons/react/24/outline';
 import {
-  CpuUpdate,
+  GpuProductType,
+  GpuUpdate,
   ListProductUpdatesFilter,
   ListProductUpdatesQuery,
   ProductType,
@@ -14,34 +15,35 @@ import { GenericButton } from 'packages/website/src/client/shared/components/But
 import { Pagination } from 'packages/website/src/client/shared/components/Pagination/Pagination';
 import { useDebounce } from 'packages/website/src/client/shared/hooks/useDebounce';
 import React, { useCallback, useEffect, useState } from 'react';
-import { CpuCard } from './CpuCard';
+import { GpuRetailModelCard } from './GpuRetailModelCard';
 
 const LIMIT = 10;
 const FILTER_DEBOUNCE = 300;
 
-interface CpusTabProps {}
+interface GpuRetailModelsTabProps {}
 
-export const CpusTab = (_props: CpusTabProps) => {
+export const GpuRetailModelsTab = (_props: GpuRetailModelsTabProps) => {
   // States
 
   const [loading, setLoading] = useState(false);
-  const [updates, setUpdates] = useState<CpuUpdate[]>([]);
+  const [updates, setUpdates] = useState<GpuUpdate[]>([]);
   const [total, setTotal] = useState(0);
   const [query, setQuery] = useState<ListProductUpdatesQuery>({
     filter: {
-      productType: ProductType.Cpu,
+      productType: ProductType.Gpu,
       status: ProductUpdateStatus.Pending,
+      gpuProductType: GpuProductType.RetailModel,
     },
     pagination: { offset: 0, limit: LIMIT },
   });
 
   // Callbacks
 
-  const fetchCpuUpdates = useCallback(async (q: ListProductUpdatesQuery) => {
+  const fetchGpuUpdates = useCallback(async (q: ListProductUpdatesQuery) => {
     setLoading(true);
     const response = await productUpdateService.listUpdates({ query: q });
     setQuery(response.query);
-    setUpdates(response.results as CpuUpdate[]);
+    setUpdates(response.results as GpuUpdate[]);
     setTotal(response.total);
     setLoading(false);
   }, []);
@@ -52,28 +54,28 @@ export const CpusTab = (_props: CpusTabProps) => {
         ...query.filter,
         search: value || undefined,
       };
-      fetchCpuUpdates({ ...query, filter });
+      fetchGpuUpdates({ ...query, filter });
     },
-    [fetchCpuUpdates, query],
+    [fetchGpuUpdates, query],
   );
   const debouncedFilterUpdates = useDebounce(filterUpdates, FILTER_DEBOUNCE);
 
   const refresh = useCallback(() => {
-    fetchCpuUpdates({ ...query });
-  }, [fetchCpuUpdates, query]);
+    fetchGpuUpdates({ ...query });
+  }, [fetchGpuUpdates, query]);
 
   const changePage = useCallback(
     (offset: number, limit: number) => {
       const pagination = { offset, limit };
-      fetchCpuUpdates({ ...query, pagination });
+      fetchGpuUpdates({ ...query, pagination });
     },
-    [fetchCpuUpdates, query],
+    [fetchGpuUpdates, query],
   );
 
   // Effects
 
   useEffect(() => {
-    fetchCpuUpdates(query);
+    fetchGpuUpdates(query);
     // Only run this once
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -109,15 +111,15 @@ export const CpusTab = (_props: CpusTabProps) => {
         </div>
 
         {loading && total === 0 && (
-          <InfoAlert>Fetching CPU updates. Please wait.</InfoAlert>
+          <InfoAlert>Fetching GPU updates. Please wait.</InfoAlert>
         )}
 
         {!loading && total === 0 && (
-          <InfoAlert>No CPU updates. Try refreshing.</InfoAlert>
+          <InfoAlert>No GPU updates. Try refreshing.</InfoAlert>
         )}
 
         {updates.map((update) => (
-          <CpuCard key={update.id} update={update} />
+          <GpuRetailModelCard key={update.id} update={update} />
         ))}
       </div>
     </>

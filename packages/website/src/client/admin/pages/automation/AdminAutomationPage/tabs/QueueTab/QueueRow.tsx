@@ -62,8 +62,10 @@ function formatAction(action: AutomationActionType) {
       return 'Update Sitemap';
     case AutomationActionType.UpdateCpuSources:
       return 'Update CPU Sources';
-    case AutomationActionType.UpdateGpuSources:
-      return 'Update GPU Sources';
+    case AutomationActionType.UpdateGpuChipsetSources:
+      return 'Update GPU Chipset Sources';
+    case AutomationActionType.UpdateGpuRetailModelSources:
+      return 'Update GPU Retail Model Sources';
     case AutomationActionType.CreateCpu:
       return 'Create CPU';
     case AutomationActionType.UpdateCpu:

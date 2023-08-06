@@ -7,6 +7,9 @@ import {
   CpuFieldKey,
   CpuImage,
   CpuImages,
+  CpuProductSource,
+  CpuProductSourceGroup,
+  CpuUpdate,
 } from './cpu';
 import {
   Gpu,
@@ -15,6 +18,9 @@ import {
   GpuFieldKey,
   GpuImage,
   GpuImages,
+  GpuProductSource,
+  GpuProductSourceGroup,
+  GpuUpdate,
 } from './gpu';
 
 export enum ProductType {
@@ -61,43 +67,43 @@ export interface ProductDiff<TProduct = Product> {
  * Data structure containing information regarding a single source for a
  * product.
  */
-export interface ProductSource {
+export interface BaseProductSource {
   id?: number;
 
+  groupKey: string;
   productType: ProductType;
-  sourceName: string;
-
   sourceKey: ProductSourceKey;
+  externalKey: string;
+
+  sourceName: string;
   sourceUrl: string;
 
   archived?: boolean;
 }
+export type ProductSource = CpuProductSource | GpuProductSource;
 
 /**
  * Group of product sources, usually grouped by source name.
  */
-export type ProductSourceGroup = ProductSource[];
+export type ProductSourceGroup = CpuProductSourceGroup | GpuProductSourceGroup;
 
 /**
  * Data structure containing information regarding data updates for a
  * product. This could include a new or existing product.
  */
-export interface ProductUpdate<T = unknown> {
+export interface BaseProductUpdate<T = unknown> {
   id?: number;
 
   productType: ProductType;
   productName: string;
-  productCompany?: string;
 
   status: ProductUpdateStatus;
   description?: string;
 
   data?: T;
   metadata?: ProductUpdateMeta;
-
-  cpuId?: number;
-  gpuId?: number;
 }
+export type ProductUpdate = CpuUpdate | GpuUpdate;
 
 export interface ProductUpdateMeta {}
 
@@ -126,8 +132,7 @@ export interface UpsertProductSourcesRequest {
   sources: ProductSource[];
 }
 
-export interface CreateProductUpdateRequest
-  extends ProductUpdate<ProductDiff> {}
+export type CreateProductUpdateRequest = ProductUpdate;
 
 export interface AutocompleteProductSourcesRequest {
   productType: ProductType;

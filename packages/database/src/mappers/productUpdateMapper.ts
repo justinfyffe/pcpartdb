@@ -1,4 +1,8 @@
 import {
+  BaseProductUpdate,
+  CpuUpdate,
+  GpuProductType,
+  GpuUpdate,
   ProductType,
   ProductUpdate,
   ProductUpdateMeta,
@@ -22,22 +26,28 @@ export async function mapToProductUpdateDto<TUpdateData = unknown>(
     data = await unzipData(entity.data);
   }
 
-  return {
+  const dto: BaseProductUpdate = {
     id: entity.id,
 
     productType: entity.productType as ProductType,
     productName: entity.productName,
-    productCompany: entity.productCompany,
 
     description: entity.description,
     status: entity.status as ProductUpdateStatus,
 
     data,
     metadata: entity.metadata as ProductUpdateMeta,
-
-    cpuId: entity.cpuId,
-    gpuId: entity.gpuId,
   };
+
+  // Handle type-specific fields
+  if (entity.productType === ProductType.Cpu) {
+    (dto as CpuUpdate).cpuId = entity.cpuId;
+  } else if (entity.productType === ProductType.Gpu) {
+    (dto as GpuUpdate).gpuId = entity.gpuId;
+    (dto as GpuUpdate).gpuProductType = entity.gpuProductType as GpuProductType;
+  }
+
+  return dto as ProductUpdate;
 }
 
 interface MapToDtoOptions {
@@ -65,7 +75,6 @@ export async function mapToProductUpdateEntity(
 
     productType: dto.productType,
     productName: dto.productName,
-    productCompany: dto.productCompany,
 
     description: dto.description,
     status: dto.status,
@@ -73,10 +82,17 @@ export async function mapToProductUpdateEntity(
     data,
     metadata: dto.metadata,
 
-    cpuId: dto.cpuId,
-    gpuId: dto.gpuId,
-
     createdAt: undefined,
     updatedAt: undefined,
+
+    // CPU specialized fields
+    cpuId: dto.productType === ProductType.Cpu ? dto.cpuId : null,
+
+    // GPU specialized fields
+    gpuId: dto.productType === ProductType.Gpu ? dto.gpuId : null,
+    gpuProductType:
+      dto.productType === ProductType.Gpu
+        ? (dto as GpuUpdate).gpuProductType
+        : null,
   };
 }

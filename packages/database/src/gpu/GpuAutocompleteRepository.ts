@@ -59,7 +59,6 @@ export class GpuAutocompleteRepository {
     // Get results based on pattern matching. Prioritize chipsets over retail models
     let fillerChipsetIds: { id: number }[] = [];
     if (regexTokens !== '.*') {
-      console.log('here');
       fillerChipsetIds = await db.$queryRaw`
         SELECT id FROM gpus
         WHERE chipset_id IS NULL AND CONCAT(company, ' ', name) ~* (${regexTokens})

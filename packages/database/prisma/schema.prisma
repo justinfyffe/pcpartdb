@@ -16,7 +16,7 @@ model AccessToken {
   createdAt DateTime  @default(now()) @map("created_at") @ignore @db.Timestamptz(6)
   updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @ignore @db.Timestamptz(6)
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "access_tokens_user_id_foreign")
+  user User @relation("accessTokenToUser", fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "access_tokens_user_id_foreign")
 
   @@index([expiresAt], map: "access_tokens_expires_at_index")
   @@map("access_tokens")
@@ -29,7 +29,7 @@ model ApiKey {
   createdAt DateTime @default(now()) @map("created_at") @ignore @db.Timestamptz(6)
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @ignore @db.Timestamptz(6)
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "api_keys_user_id_foreign")
+  user User @relation("apiKeyToUser", fields: [userId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "api_keys_user_id_foreign")
 
   @@map("api_keys")
 }
@@ -40,8 +40,8 @@ model CpuImage {
   createdAt DateTime @default(now()) @map("created_at") @ignore @db.Timestamptz(6)
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @ignore @db.Timestamptz(6)
 
-  cpu   Cpu   @relation(fields: [cpuId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "cpu_images_cpu_id_foreign")
-  image Image @relation(fields: [imageId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "cpu_images_image_id_foreign")
+  cpu   Cpu   @relation("cpuImageToCpu", fields: [cpuId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "cpu_images_cpu_id_foreign")
+  image Image @relation("cpuImageToImage", fields: [imageId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "cpu_images_image_id_foreign")
 
   @@id([cpuId, imageId])
   @@map("cpu_images")
@@ -127,9 +127,9 @@ model Cpu {
 
   // Relations
 
-  images      CpuImage[]
-  dataUpdates DataUpdate[]
-  productUpdates ProductUpdate[]
+  images      CpuImage[] @relation("cpuImageToCpu")
+  dataUpdates DataUpdate[] // TODO: delete
+  productUpdates ProductUpdate[] @relation("productUpdateToCpu")
 
   @@index([automationTimestamp], name: "cpus_automation_timestamp_index")
   @@unique([company, name], name: "cpus_company_name_unique")
@@ -142,8 +142,8 @@ model GpuImage {
   createdAt DateTime @default(now()) @map("created_at") @ignore @db.Timestamptz(6)
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @ignore @db.Timestamptz(6)
 
-  gpu   Gpu   @relation(fields: [gpuId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "gpu_images_gpu_id_foreign")
-  image Image @relation(fields: [imageId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "gpu_images_image_id_foreign")
+  gpu   Gpu   @relation("gpuImageToGpu", fields: [gpuId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "gpu_images_gpu_id_foreign")
+  image Image @relation("gpuImageToImage", fields: [imageId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "gpu_images_image_id_foreign")
 
   @@id([gpuId, imageId])
   @@map("gpu_images")
@@ -225,12 +225,13 @@ model Gpu {
 
   // Relations
 
-  images       GpuImage[]
-  chipset      Gpu?       @relation("gpusToGpus", fields: [chipsetId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "gpus_chipset_id_foreign")
-  retailModels Gpu[]      @relation("gpusToGpus")
+  images       GpuImage[] @relation("gpuImageToGpu")
+  chipset      Gpu?  @relation("gpuToGpu", fields: [chipsetId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "gpus_chipset_id_foreign")
+  retailModels Gpu[] @relation("gpuToGpu")
 
-  dataUpdates DataUpdate[]
-  productUpdates ProductUpdate[]
+  dataUpdates DataUpdate[] // TODO: delete
+  productUpdates ProductUpdate[] @relation("productUpdateToGpu")
+  retailModelSources ProductSource[] @relation("productSourceToGpuChipset")
 
   @@index([automationTimestamp], name: "gpus_automation_timestamp_index")
   @@unique([company, name], name: "gpus_company_name_unique")
@@ -250,8 +251,8 @@ model Image {
   createdAt  DateTime  @default(now()) @map("created_at") @ignore @db.Timestamptz(6)
   updatedAt  DateTime  @default(now()) @map("updated_at") @ignore @db.Timestamptz(6)
 
-  cpuImages CpuImage[]
-  gpuImages GpuImage[]
+  cpuImages CpuImage[] @relation("cpuImageToImage")
+  gpuImages GpuImage[] @relation("gpuImageToImage")
 
   @@map("images")
 }
@@ -265,9 +266,9 @@ model User {
   createdAt    DateTime  @default(now()) @map("created_at") @ignore @db.Timestamptz(6)
   updatedAt    DateTime  @default(now()) @updatedAt @map("updated_at") @ignore @db.Timestamptz(6)
 
-  accessTokens          AccessToken[]
-  dataUpdates           DataUpdate[]
-  apiKey                ApiKey?
+  accessTokens AccessToken[] @relation("accessTokenToUser")
+  dataUpdates  DataUpdate[] // TODO: delete
+  apiKey       ApiKey? @relation("apiKeyToUser")
 
   @@map("users")
 }
@@ -299,48 +300,93 @@ model DataUpdate {
 }
 
 model ProductSource {
+  // Fields
+
   id Int @id @default(autoincrement())
 
-  productType String  @map("product_type")
-  sourceName  String  @map("source_name")
-  sourceKey   String  @map("source_key")
-  sourceUrl   String  @map("source_url")
+  // Key used to group sources together. Only purpose is for grouping.
+  groupKey String @map("group_key")
+
+  // Enum value to identify which type of product this ProductSource represents.
+  productType String @map("product_type")
+
+  // Enum value to identify which source provider this ProductSource represents.
+  sourceKey String @map("source_key")
+
+  // A key/id that uniquely represents the external product source.
+  // Could be its id, slug, etc. Usually pulled from the URL.
+  externalKey String @map("external_key")
+
+  // The product name that the source uses.
+  sourceName String @map("source_name")
+
+  // The url to access the source.
+  sourceUrl String @map("source_url")
 
   archived Boolean @default(false)
+
+  // Identifies which GPU chipset this source is related to.
+  // Only for GPU retail model sources.
+  gpuChipsetId Int? @map("gpu_chipset_id")
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
 
-  @@index([productType, sourceName], name: "product_sources_type_name_index") 
-  @@unique([productType, sourceKey, sourceUrl], name: "product_sources_type_key_url")
+  // Relations
+
+  gpuChipset Gpu? @relation("productSourceToGpuChipset", fields: [gpuChipsetId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "product_updates_gpu_chipset_id_foreign")
+
+  @@index([productType, sourceName], name: "product_sources_productType_sourceName_index") 
+  @@unique([productType, sourceKey, externalKey], name: "product_sources_productType_sourceKey_externalKey_unique")
 
   @@map("product_sources")
 }
 
 model ProductUpdate {
+  // Fields
+
   id Int @id @default(autoincrement())
 
-  productType    String  @map("product_type")
-  productName    String  @map("product_name")
-  productCompany String? @map("product_company")
+  // Enum value to identify which type of product this ProductUpdate represents.
+  productType String @map("product_type")
 
-  status      String
+  // Name of the product that is being created/updated.
+  // Used primarily for querying.
+  productName String @map("product_name")
+
+  // Enum value representing the status of this update.
+  status String
+
+  // Description to identify what the update is doing.
   description String?
   
-  data     Bytes?
+  // Update Data
+  data Bytes?
+
+  // General metadata for the update. Additional data about the update
+  // that can be read, but should not be queried.
   metadata Json?
 
+  // Product ids for updates.
   cpuId Int? @map("cpu_id")
   gpuId Int? @map("gpu_id")
 
-  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt       DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  // Enum value that represents which type of GPU this is updating.
+  // Only for GPUs, to identify if its a chipset or retail model.
+  gpuProductType String? @map("gpu_product_type")
 
-  cpu Cpu? @relation(fields: [cpuId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "product_updates_cpu_id_foreign")
-  gpu Gpu? @relation(fields: [gpuId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "product_updates_gpu_id_foreign")
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
 
-  @@index([productType, status, productCompany, productName], name: "product_updates_type_status_company_name_index") 
-  @@index([createdAt], name: "product_updates_created_at_index")
+  // Relations
+
+  cpu Cpu? @relation("productUpdateToCpu", fields: [cpuId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "product_updates_cpu_id_foreign")
+  gpu Gpu? @relation("productUpdateToGpu", fields: [gpuId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "product_updates_gpu_id_foreign")
+
+  @@index([productType, cpuId], name: "product_updates_productType_cpuId_index")
+  @@index([productType, gpuId], name: "product_updates_productType_gpuId_index")
+  @@index([productType, gpuProductType, status], name: "product_updates_productType_gpuProductType_status_index") 
+  @@index([createdAt], name: "product_updates_createdAt_index")
 
   @@map("product_updates")
 }

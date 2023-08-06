@@ -10,6 +10,8 @@ import {
   ApplyProductSourcesToProductRequest,
   AutocompleteProductSourcesRequest,
   AutocompleteProductSourcesResponse,
+  CpuProductSourceGroup,
+  GpuProductSourceGroup,
   ListProductSourceGroupsResponse,
   ListProductSourcesRequest,
   ProductSource,
@@ -100,9 +102,17 @@ export class ProductSourceService {
 
     // Update product
     if (productType === ProductType.Cpu) {
-      await this.cpuService.applySources(productId, productSources, ctx);
+      await this.cpuService.applySources(
+        productId,
+        productSources as CpuProductSourceGroup,
+        ctx,
+      );
     } else if (productType === ProductType.Gpu) {
-      await this.gpuService.applySources(productId, productSources, ctx);
+      await this.gpuService.applySources(
+        productId,
+        productSources as GpuProductSourceGroup,
+        ctx,
+      );
     } else {
       throw badRequestError({
         property: 'productType',

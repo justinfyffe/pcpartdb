@@ -12,13 +12,13 @@ import {
   CpuDataSourceKey,
   CpuFieldKey,
   CpuMeta,
+  CpuProductSourceGroup,
   CpuRank,
   CpuUpdate,
   CreateCpuRequest,
   populateCpuPerformanceScoreBenchmark,
   populateCpuValueScoreBenchmark,
   ProductDataUpdate,
-  ProductSourceGroup,
   ProductType,
   UpdateCpuRequest,
   ValidationErrorType,
@@ -218,7 +218,7 @@ export class CpuService {
     await this.update(dataUpdate.cpuId, updated, ctx);
   }
 
-  async applySources(id: number, sources: ProductSourceGroup, ctx: Context) {
+  async applySources(id: number, sources: CpuProductSourceGroup, ctx: Context) {
     const cpu = await this.getById(id, {}, ctx);
 
     // Extract URLs from new sources

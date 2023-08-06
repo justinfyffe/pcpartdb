@@ -1,7 +1,8 @@
+import { GpuProductType } from '@pcpartdb/shared';
 import * as cheerio from 'cheerio';
 import { scraper } from '../../scraper';
 import { UlBenchmarkGpuSource } from '../types';
-import { sanitizeGpuSourceName } from '../utils';
+import { generateGpuGroupKey } from '../utils';
 
 export interface ScrapeUlBenchmarkGpuSourcesOptions {
   query: string;
@@ -18,7 +19,7 @@ export async function scrapeUlBenchmarkGpuSources(
 async function scrapeSearchData(options: ScrapeUlBenchmarkGpuSourcesOptions) {
   const $ = cheerio.load(await fetchSearchPage(options));
 
-  const gpus: UlBenchmarkGpuSource[] = [];
+  const sources: UlBenchmarkGpuSource[] = [];
 
   const el = $('table#productTable tbody tr');
   el.each((_i, tr) => {
@@ -27,15 +28,22 @@ async function scrapeSearchData(options: ScrapeUlBenchmarkGpuSourcesOptions) {
     const $deviceEl = $tr.find('a.OneLinkNoTx');
     const url = $deviceEl.attr('href').trim();
     const { company, name } = parseGpuName($deviceEl.text().trim());
-    const sanitizedName = sanitizeGpuSourceName(name);
 
     const $scoreEl = $tr.find('span.bar-score');
     const timespyScore = Number($scoreEl.text().trim().replace(',', ''));
 
-    gpus.push({ name: sanitizedName, company, timespyScore, url });
+    const externalKey = getExternalKey(url);
+    if (company && externalKey) {
+      const groupKey = generateGpuGroupKey({
+        gpuType: GpuProductType.Chipset,
+        name,
+        company,
+      });
+      sources.push({ groupKey, externalKey, name, company, timespyScore, url });
+    }
   });
 
-  return gpus;
+  return sources;
 }
 
 async function fetchSearchPage(options: ScrapeUlBenchmarkGpuSourcesOptions) {
@@ -59,4 +67,14 @@ function parseGpuName(gpuName: string) {
   }
 
   return { company: null, name: null };
+}
+
+function getExternalKey(url: string) {
+  const startIndex = url.lastIndexOf('/');
+  const endIndex = url.lastIndexOf('+review');
+  if (endIndex <= startIndex) {
+    return null;
+  }
+
+  return url.substring(startIndex, endIndex);
 }

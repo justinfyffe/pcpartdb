@@ -17,6 +17,16 @@ export function mapToGpuDto(entity: GpuEntity, options?: MapToDtoOptions): Gpu {
     return null;
   }
 
+  const images = mapToGpuImageDtos(entity.images);
+  const chipset = mapToGpuDto(entity.chipset, {
+    ...options,
+    fields: options?.chipsetFields,
+  });
+  const retailModels = mapToGpuDtos(entity.retailModels, {
+    ...options,
+    fields: options?.retailModelFields,
+  });
+
   return {
     id: entity.id,
     chipsetId: entity.chipsetId,
@@ -98,21 +108,15 @@ export function mapToGpuDto(entity: GpuEntity, options?: MapToDtoOptions): Gpu {
     valueScore: mapToGpuDataDto(entity, 'valueScore', options),
 
     meta: mapToGpuMetaDto(entity.metadata as GpuMetaJson, options),
-    automationTimestamp: options.includeAutomation
+    automationTimestamp: options?.includeAutomation
       ? entity.automationTimestamp?.getTime()
       : undefined,
     updatedAt:
       entity.updatedAt != null ? entity.updatedAt.getTime() : undefined,
 
-    images: mapToGpuImageDtos(entity.images),
-    chipset: mapToGpuDto(entity.chipset, {
-      ...options,
-      fields: options?.chipsetFields,
-    }),
-    retailModels: mapToGpuDtos(entity.retailModels, {
-      ...options,
-      fields: options?.retailModelFields,
-    }),
+    images: images.length > 0 ? images : undefined,
+    chipset: chipset != null ? chipset : undefined,
+    retailModels: retailModels.length > 0 ? retailModels : undefined,
   };
 }
 

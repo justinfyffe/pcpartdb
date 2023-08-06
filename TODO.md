@@ -1,13 +1,19 @@
 HIGH LEVEL TODO:
 - Automation
+  - duplicate group names
+    - just ignore it for now, 
+    - show multiple on source card, so it's clear (done on cpu, need to do on gpu)
+    - 
+  - clean up name of columns/data structures
+  - clean up names of indexes/uniques
+  - group key to group sources together after saving?
+    - can use the sanitize name function for this
   - add preferred slug with generate slug button. uses preferred name
-  - gpu retail model sources
-    - how to set chipset id? as a source?
-  - create gpu retail models
-  - update gpu retail models
   - add edit button after approving
   - Mobile friendly so can approve anywhere
-  - how to terminate without breaking?
+  - how to terminate without breaking? also terminate remotely
+  - validate that source urls are valid urls (includes domain) before creating sources
+    - also validate any other things coming in
 - code cleanup
 - Improve performance score (not just g3d mark or cpu mark)
 - Affiliate Ads
@@ -17,6 +23,7 @@ HIGH LEVEL TODO:
 - Soft delete everything. Hard delete should be rare.
 - auto-backup system
 - seamless deployment
+  - use docker to build on pc instead of server
 - accessibility
 
 

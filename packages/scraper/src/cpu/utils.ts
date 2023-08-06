@@ -1,62 +1,59 @@
-export function sanitizeCpuSourceName(name: string) {
-  let sanitized = name.toLowerCase();
+import { ProductType } from '@pcpartdb/shared';
 
-  if (sanitized.endsWith(' apu')) {
-    sanitized = sanitized.substring(0, sanitized.length - 3).trim();
+interface GenerateCpuGroupKeyOptions {
+  company: string;
+  name: string;
+}
+
+export function generateCpuGroupKey(options: GenerateCpuGroupKeyOptions) {
+  const type = ProductType.Cpu;
+  const company = options.company.toUpperCase();
+  let name = options.name.toUpperCase();
+
+  if (name.endsWith(' APU')) {
+    name = name.substring(0, name.length - 3).trim();
+  }
+  if (name.indexOf(' @ ') >= 0) {
+    name = name.substring(0, name.indexOf(' @ ')).trim();
+  }
+  if (name.includes('CORE2')) {
+    name = name.replace('CORE2', 'CORE 2').trim();
+  }
+  if (name.includes('DUAL-CORE MOBILE')) {
+    name = name.replace('DUAL-CORE MOBILE', '');
+  }
+  if (name.includes('DUAL CORE MOBILE')) {
+    name = name.replace('DUAL CORE MOBILE', '');
+  }
+  if (name.includes('DUAL-CORE')) {
+    name = name.replace('DUAL-CORE', '');
+  }
+  if (name.includes('DUAL CORE')) {
+    name = name.replace('DUAL CORE', '');
+  }
+  if (name.includes('QUAD-CORE')) {
+    name = name.replace('QUAD-CORE', '');
+  }
+  if (name.includes('QUAD CORE')) {
+    name = name.replace('QUAD CORE', '');
+  }
+  if (name.includes('SIX-CORE')) {
+    name = name.replace('SIX-CORE', '');
+  }
+  if (name.includes('SIX CORE')) {
+    name = name.replace('SIX CORE', '');
+  }
+  if (name.includes('EIGHT-CORE')) {
+    name = name.replace('EIGHT-CORE', '');
+  }
+  if (name.includes('EIGHT CORE')) {
+    name = name.replace('EIGHT CORE', '');
   }
 
-  if (sanitized.indexOf('@') >= 0) {
-    sanitized = sanitized.substring(0, sanitized.indexOf('@')).trim();
-  }
-
-  if (sanitized.includes('core2')) {
-    sanitized = sanitized.replace('core2', 'core 2').trim();
-  }
-
-  if (sanitized.includes('dual-core mobile')) {
-    sanitized = sanitized.replace('dual-core mobile', ' ').trim();
-  }
-
-  if (sanitized.includes('dual core mobile')) {
-    sanitized = sanitized.replace('dual core mobile', ' ').trim();
-  }
-
-  if (sanitized.includes('dual-core')) {
-    sanitized = sanitized.replace('dual-core', ' ').trim();
-  }
-
-  if (sanitized.includes('dual core')) {
-    sanitized = sanitized.replace('dual core', ' ').trim();
-  }
-
-  if (sanitized.includes('quad-core')) {
-    sanitized = sanitized.replace('quad-core', ' ').trim();
-  }
-
-  if (sanitized.includes('quad core')) {
-    sanitized = sanitized.replace('quad core', ' ').trim();
-  }
-
-  if (sanitized.includes('six-core')) {
-    sanitized = sanitized.replace('six-core', ' ').trim();
-  }
-
-  if (sanitized.includes('six core')) {
-    sanitized = sanitized.replace('six core', ' ').trim();
-  }
-
-  if (sanitized.includes('eight-core')) {
-    sanitized = sanitized.replace('eight-core', ' ').trim();
-  }
-
-  if (sanitized.includes('eight core')) {
-    sanitized = sanitized.replace('eight core', ' ').trim();
-  }
-
-  sanitized = sanitized
+  name = name
     .split(' ')
     .filter((word) => word.trim().length > 0)
-    .join(' ');
+    .join('_');
 
-  return sanitized.trim();
+  return `${type}__${company}__${name}`;
 }

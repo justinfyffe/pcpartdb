@@ -3,7 +3,7 @@ import { ApiClient } from '../shared/ApiClient';
 export interface AutomationMetadata {
   updateSitemapsDate?: number;
   updateCpuSourcesDate?: number;
-  updateGpuSourcesDate?: number;
+  updateGpuChipsetSourcesDate?: number;
 }
 
 export interface AutomationContext {

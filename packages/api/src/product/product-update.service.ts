@@ -62,7 +62,7 @@ export class ProductUpdateService {
    * Finds a pending product update for the given product id.
    */
   async findPendingByProductId(options: FindByProductIdOptions, ctx: Context) {
-    const entity = await this.repository.findPending(options, ctx);
+    const entity = await this.repository.findPendingByProductId(options, ctx);
     if (entity[0] == null) {
       return null;
     }
@@ -78,24 +78,20 @@ export class ProductUpdateService {
 
     const entity = await mapToProductUpdateEntity(request);
 
-    // Can only have one pending update
-    if (request.status === ProductUpdateStatus.Pending) {
-      const existingPendingUpdates = await this.repository.findPending(
+    // Reject existing pending update (if exists)
+    if (
+      request.status === ProductUpdateStatus.Pending &&
+      (entity.cpuId || entity.gpuId)
+    ) {
+      const pendingUpdate = await this.findPendingByProductId(
         {
           productType: entity.productType as ProductType,
-          productCompany: entity.productCompany,
-          productName: entity.productName,
+          productId: entity.cpuId || entity.gpuId,
         },
         ctx,
       );
-
-      // Reject existing pending updates
-      for (const update of existingPendingUpdates) {
-        await this.repository.update(
-          update.id,
-          { status: ProductUpdateStatus.Rejected },
-          ctx,
-        );
+      if (pendingUpdate) {
+        await this.reject(pendingUpdate.id, {}, ctx);
       }
     }
 

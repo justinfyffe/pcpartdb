@@ -7,6 +7,7 @@ const listProductSourcesFilterValidator = Joi.object({
   productType: Joi.string().allow(ProductType.Cpu, ProductType.Gpu).required(),
   includeArchived: Joi.boolean(),
   search: Joi.string(),
+  gpuProductType: Joi.string(),
 }).options({ abortEarly: false });
 
 export const listProductSourcesQueryValidator = listQueryValidator({
@@ -19,11 +20,11 @@ export const listProductSourcesRequestValidator = Joi.object({
 }).options({ abortEarly: false });
 
 const productSourceValidator = Joi.object({
-  productType: Joi.string(),
-  productCompany: Joi.string().allow(null),
-  productName: Joi.string(),
+  productType: Joi.string().required(),
+  sourceKey: Joi.string().required(),
+  externalKey: Joi.string().required(),
 
-  sourceKey: Joi.string(),
+  sourceName: Joi.string(),
   sourceUrl: Joi.string(),
 
   archived: Joi.boolean(),
@@ -51,6 +52,7 @@ const listProductUpdatesFilterValidator = Joi.object({
   productType: Joi.string().allow(ProductType.Cpu, ProductType.Gpu).required(),
   status: Joi.string(),
   search: Joi.string(),
+  gpuProductType: Joi.string(),
 }).options({ abortEarly: false });
 
 export const listProductUpdatesQueryValidator = listQueryValidator({
@@ -72,7 +74,9 @@ export const createProductUpdateRequestValidator = Joi.object({
   metadata: Joi.any().allow(null),
 
   cpuId: Joi.number().allow(null),
+
   gpuId: Joi.number().allow(null),
+  gpuProductType: Joi.string().allow(null),
 }).options({ abortEarly: false });
 
 export const approveProductUpdateRequestValidator = Joi.object({

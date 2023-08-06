@@ -1,7 +1,8 @@
 import 'reflect-metadata';
 import { ArrowPathIcon } from '@heroicons/react/24/outline';
 import {
-  CpuProductSourceGroup,
+  GpuProductSourceGroup,
+  GpuProductType,
   ListProductSourcesFilter,
   ListProductSourcesQuery,
   ProductType,
@@ -16,22 +17,26 @@ import { GenericButton } from 'packages/website/src/client/shared/components/But
 import { Pagination } from 'packages/website/src/client/shared/components/Pagination/Pagination';
 import { useDebounce } from 'packages/website/src/client/shared/hooks/useDebounce';
 import React, { useCallback, useEffect, useState } from 'react';
-import { CpuSourceCard } from './CpuSourceCard';
+import { GpuChipsetSourceCard } from './GpuChipsetSourceCard';
 
 const LIMIT = 10;
 const FILTER_DEBOUNCE = 300;
 
-interface CpuSourcesTabProps {}
+interface GpuChipsetSourcesTabProps {}
 
-export const CpuSourcesTab = (_props: CpuSourcesTabProps) => {
+export const GpuChipsetSourcesTab = (_props: GpuChipsetSourcesTabProps) => {
   // States
 
   const [showArchived, setShowArchived] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [items, setItems] = useState<CpuProductSourceGroup[]>([]);
+  const [items, setItems] = useState<GpuProductSourceGroup[]>([]);
   const [total, setTotal] = useState(0);
   const [query, setQuery] = useState<ListProductSourcesQuery>({
-    filter: { productType: ProductType.Cpu, includeArchived: showArchived },
+    filter: {
+      productType: ProductType.Gpu,
+      includeArchived: showArchived,
+      gpuProductType: GpuProductType.Chipset,
+    },
     pagination: { offset: 0, limit: LIMIT },
   });
 
@@ -41,7 +46,7 @@ export const CpuSourcesTab = (_props: CpuSourcesTabProps) => {
     setLoading(true);
     const response = await productSourceService.listGroups({ query: q });
     setQuery(response.query);
-    setItems(response.results as CpuProductSourceGroup[]);
+    setItems(response.results as GpuProductSourceGroup[]);
     setTotal(response.total);
     setLoading(false);
   }, []);
@@ -52,11 +57,7 @@ export const CpuSourcesTab = (_props: CpuSourcesTabProps) => {
         ...query.filter,
         search: value || undefined,
       };
-      fetchSourceGroups({
-        ...query,
-        pagination: { offset: 0, limit: LIMIT },
-        filter,
-      });
+      fetchSourceGroups({ ...query, filter });
     },
     [fetchSourceGroups, query],
   );
@@ -109,7 +110,7 @@ export const CpuSourcesTab = (_props: CpuSourcesTabProps) => {
             onChange={toggleArchived}
             className="flex-1 whitespace-nowrap"
           >
-            Show Archived
+            Include Archived
           </Checkbox>
         </div>
 
@@ -131,15 +132,15 @@ export const CpuSourcesTab = (_props: CpuSourcesTabProps) => {
       </div>
 
       {loading && total === 0 && (
-        <InfoAlert>Fetching CPU Sources. Please wait.</InfoAlert>
+        <InfoAlert>Fetching GPU Sources. Please wait.</InfoAlert>
       )}
 
       {!loading && total === 0 && (
-        <InfoAlert>No CPU sources. Try refreshing.</InfoAlert>
+        <InfoAlert>No GPU sources. Try refreshing.</InfoAlert>
       )}
 
       {items.map((sources) => (
-        <CpuSourceCard
+        <GpuChipsetSourceCard
           key={`${sources[0]?.id}-${sources[1]?.id}-${sources[2]?.id}`}
           sources={sources}
         />

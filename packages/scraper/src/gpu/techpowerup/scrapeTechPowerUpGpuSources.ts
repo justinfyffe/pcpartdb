@@ -1,8 +1,8 @@
-import { parseProductName } from '@pcpartdb/shared';
+import { cleanUrl, GpuProductType, parseProductName } from '@pcpartdb/shared';
 import * as cheerio from 'cheerio';
 import { scraper } from '../../scraper';
 import { TechPowerUpGpuSource } from '../types';
-import { sanitizeGpuSourceName } from '../utils';
+import { generateGpuGroupKey } from '../utils';
 
 export interface ScrapeTechPowerUpGpuUrlsOptions {
   url: string;
@@ -10,7 +10,7 @@ export interface ScrapeTechPowerUpGpuUrlsOptions {
   noProxy?: boolean;
 }
 
-const BASE_URL = 'https://www.techpowerup.com';
+const BASE_URL = 'https://www.techpowerup.com/';
 
 export async function scrapeTechPowerUpGpuSources(
   options: ScrapeTechPowerUpGpuUrlsOptions,
@@ -21,26 +21,30 @@ export async function scrapeTechPowerUpGpuSources(
 async function scrapeSearchData(options: ScrapeTechPowerUpGpuUrlsOptions) {
   const $ = cheerio.load(await fetchSearchPage(options));
 
-  const gpus: TechPowerUpGpuSource[] = [];
+  const sources: TechPowerUpGpuSource[] = [];
 
   const el = $('table tbody tr td:first-child');
   el.each((i, td) => {
     const $td = $(td);
 
-    const url = BASE_URL + $td.find('a').attr('href').trim();
+    const url = cleanUrl(BASE_URL + $td.find('a').attr('href').trim());
     const { company: companyFromName, name } = parseProductName(
       $td.text().trim(),
     );
-    const sanitizedName = sanitizeGpuSourceName(name);
 
-    gpus.push({
-      name: sanitizedName,
-      company: companyFromName || options.company,
-      url,
-    });
+    const company = companyFromName || options.company;
+    const externalKey = getExternalKey(url);
+    if (company) {
+      const groupKey = generateGpuGroupKey({
+        gpuType: GpuProductType.Chipset,
+        name,
+        company,
+      });
+      sources.push({ groupKey, externalKey, name, company, url });
+    }
   });
 
-  return gpus;
+  return sources;
 }
 
 async function fetchSearchPage(options: ScrapeTechPowerUpGpuUrlsOptions) {
@@ -48,4 +52,10 @@ async function fetchSearchPage(options: ScrapeTechPowerUpGpuUrlsOptions) {
 
   const response = await scraper.scrape(url, { retries: 1, noProxy });
   return response.data;
+}
+
+function getExternalKey(url: string) {
+  const keyIndex = url.lastIndexOf('.');
+  const externalKey = url.substring(keyIndex).trim();
+  return externalKey;
 }

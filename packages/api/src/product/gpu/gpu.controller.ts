@@ -158,6 +158,19 @@ export class GpuController {
     );
   }
 
+  @Get(':id')
+  @UseGuards(StaffGuard)
+  async getGpu(@Param('id') idStr: string, @Ctx() ctx: Context) {
+    return await this.db.transaction(
+      async () => {
+        const id = Number(idStr);
+        const gpu = await this.gpuService.getById(id, {}, ctx);
+        return gpu;
+      },
+      { ctx },
+    );
+  }
+
   @Post()
   @UseGuards(StaffGuard)
   async create(@Body() body: CreateGpuRequest, @Ctx() ctx: Context) {

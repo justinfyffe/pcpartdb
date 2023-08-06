@@ -1,10 +1,12 @@
 import { Image } from '../../image';
 import {
+  BaseProductSource,
+  BaseProductUpdate,
   CpuDataSourceKey,
   ProductDiff,
   ProductField,
   ProductFieldMeta,
-  ProductUpdate,
+  ProductType,
 } from '..';
 
 export type CpuFieldKey = keyof CpuFields;
@@ -240,4 +242,20 @@ export interface ListCpusResponse {
 
 export type CpuDiff = ProductDiff<Cpu>;
 
-export interface CpuUpdate extends ProductUpdate<CpuDiff> {}
+/**
+ * Data structure containing information regarding a single source for a
+ * CPU. Extends ProductSource as it contains some gpu-specific data.
+ */
+export interface CpuProductSource extends BaseProductSource {
+  productType: ProductType.Cpu;
+}
+
+/**
+ * Group of CPU product sources, usually grouped by source name.
+ */
+export type CpuProductSourceGroup = CpuProductSource[];
+
+export interface CpuUpdate extends BaseProductUpdate<CpuDiff> {
+  productType: ProductType.Cpu;
+  cpuId?: number;
+}

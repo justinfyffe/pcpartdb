@@ -27,13 +27,7 @@ export async function updateCpuAction(
   console.log('Executing updateCpuAction', payload);
 
   // Get existing CPU
-  let originalCpu: Cpu;
-  try {
-    originalCpu = await getCpu(payload.cpuId, context);
-  } catch (e) {
-    console.error(`Error getting existing CPU for action=${payload}`);
-    return;
-  }
+  const originalCpu = await getCpu(payload.cpuId, context);
 
   // Get sources from cpu
   const techPowerUpSource =
@@ -51,13 +45,6 @@ export async function updateCpuAction(
       [CpuDataSourceKey.GeekBench]: geekBenchSource,
     },
   });
-  if (scrapedCpu == null) {
-    // No results for scraping. Skip.
-    console.error(
-      `No scraped data when scraping CPU during automation for action=${payload}`,
-    );
-    return;
-  }
 
   // Update benchmarks for existing CPU. These do not require approval.
   await updateBenchmarks(originalCpu, scrapedCpu, context);
@@ -94,19 +81,11 @@ async function fetchCpuData(options: {
   console.info('Fetching CPU data', options.sources);
 
   // Scrape the CPU data from our sources.
-  let scrapedCpu: Cpu;
-  try {
-    const result = await scrapeCpu(options);
-    scrapedCpu = result.product as Cpu;
+  const result = await scrapeCpu(options);
+  const scrapedCpu = result.product as Cpu;
 
-    console.log('Finished fetching data.');
-    return scrapedCpu;
-  } catch (e) {
-    // Could not scrape the CPU. Skip as we do not have data.
-    console.error('Error when fetching CPU data during automation');
-    console.error(e);
-    return null;
-  }
+  console.log('Finished fetching data.');
+  return scrapedCpu;
 }
 
 async function updateBenchmarks(
@@ -206,15 +185,17 @@ async function uploadProductUpdate(
   updatedCpu: Cpu,
   context: AutomationContext,
 ) {
+  const productName = `${productFieldValue(updatedCpu.company) || ''} ${
+    updatedCpu.name
+  }`.trim();
   const update: CpuUpdate = {
-    cpuId: originalCpu.id,
     productType: ProductType.Cpu,
-    productName: updatedCpu.name,
-    productCompany: productFieldValue(updatedCpu.company),
-    description: `Update CPU for ${updatedCpu.name}`,
+    productName,
+    description: `Update CPU for ${productName}`,
     status: ProductUpdateStatus.Pending,
     data: { original: originalCpu, updated: updatedCpu },
     metadata: {},
+    cpuId: originalCpu.id,
   };
 
   console.info('Uploading pending update for CPU');

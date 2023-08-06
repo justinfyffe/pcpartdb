@@ -6,10 +6,11 @@ import {
 import {
   AutomationActionType,
   CpuDataSourceKey,
+  CpuProductSource,
+  CpuProductSourceGroup,
   CreateCpuActionData,
   Product,
   ProductSource,
-  ProductSourceGroup,
   ProductType,
   UpdateCpuActionData,
 } from '@pcpartdb/shared';
@@ -34,7 +35,7 @@ import { GenericButton } from 'packages/website/src/client/shared/components/But
 import React, { useCallback, useMemo, useState } from 'react';
 
 interface CpuSourceCardProps {
-  sources: ProductSourceGroup;
+  sources: CpuProductSourceGroup;
 }
 
 export const CpuSourceCard = (props: CpuSourceCardProps) => {
@@ -76,6 +77,10 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
   );
   const [appliedCpu, setAppliedCpu] = useState<Product>(null);
 
+  const [groupKey] = useState(
+    () => techPowerUp?.groupKey || passMark?.groupKey || geekBench?.groupKey,
+  );
+
   const techPowerUpId = techPowerUp?.id;
   const passMarkId = passMark?.id;
   const geekBenchId = geekBench?.id;
@@ -89,12 +94,47 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
 
   // Memos
 
-  const subtitle = useMemo(
+  const totalTechPowerUpInGroup = useMemo(
+    () =>
+      sources.filter(
+        (source) => source.sourceKey === CpuDataSourceKey.TechPowerUp,
+      ).length,
+    [sources],
+  );
+  const totalPassMarkInGroup = useMemo(
+    () =>
+      sources.filter((source) => source.sourceKey === CpuDataSourceKey.PassMark)
+        .length,
+    [sources],
+  );
+  const totalGeekBenchInGroup = useMemo(
+    () =>
+      sources.filter(
+        (source) => source.sourceKey === CpuDataSourceKey.GeekBench,
+      ).length,
+    [sources],
+  );
+
+  const sourcesList = useMemo(
     () =>
       [
-        techPowerUp ? 'TechPowerUp' : null,
-        passMark ? 'PassMark' : null,
-        geekBench ? 'GeekBench' : null,
+        techPowerUp
+          ? `TechPowerUp${
+              totalTechPowerUpInGroup > 1
+                ? ` (x${totalTechPowerUpInGroup})`
+                : ''
+            }`
+          : null,
+        passMark
+          ? `PassMark${
+              totalPassMarkInGroup > 1 ? ` (x${totalPassMarkInGroup})` : ''
+            }`
+          : null,
+        geekBench
+          ? `GeekBench${
+              totalGeekBenchInGroup > 1 ? ` (x${totalGeekBenchInGroup})` : ''
+            }`
+          : null,
       ]
         .filter((source) => source != null)
         .join(', '),
@@ -103,27 +143,27 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
 
   // Callbacks
 
-  const setNameFromSource = useCallback((source: ProductSource) => {
+  const setNameFromSource = useCallback((source: CpuProductSource) => {
     const name = source.sourceName;
     setPreferredName(name);
   }, []);
 
   const save = useCallback(async () => {
-    const newTechPowerUp: ProductSource =
+    const newTechPowerUp: CpuProductSource =
       techPowerUp != null
         ? {
             ...techPowerUp,
             archived: archiveTechPowerUp,
           }
         : null;
-    const newPassMark: ProductSource =
+    const newPassMark: CpuProductSource =
       passMark != null
         ? {
             ...passMark,
             archived: archivePassMark,
           }
         : null;
-    const newGeekBench: ProductSource =
+    const newGeekBench: CpuProductSource =
       geekBench != null
         ? {
             ...geekBench,
@@ -151,6 +191,24 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
     passMark,
     techPowerUp,
   ]);
+
+  const setTechPowerUpFromAutocomplete = useCallback(
+    (source: ProductSource) => {
+      setTechPowerUp(source as CpuProductSource);
+      setArchiveTechPowerUp(!!source);
+    },
+    [],
+  );
+
+  const setPassMarkFromAutocomplete = useCallback((source: ProductSource) => {
+    setPassMark(source as CpuProductSource);
+    setArchivePassMark(!!source);
+  }, []);
+
+  const setGeekBenchFromAutocomplete = useCallback((source: ProductSource) => {
+    setGeekBench(source as CpuProductSource);
+    setArchiveGeekBench(!!source);
+  }, []);
 
   const applyToCpu = useCallback(async () => {
     const sources = [techPowerUp, passMark, geekBench]
@@ -207,7 +265,12 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
 
         <div className="flex flex-1 flex-col gap-1">
           <CardTitle>{preferredName}</CardTitle>
-          <span className="text-xs">{subtitle}</span>
+          <span className="text-xs">
+            <span className="font-semibold">Grouping:</span> {groupKey}
+          </span>
+          <span className="text-xs">
+            <span className="font-semibold">Sources:</span> {sourcesList}
+          </span>
         </div>
 
         {expanded && <ChevronDownIcon className="w-8" />}
@@ -228,7 +291,14 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
             <Field className="flex-1">
               <div className="flex justify-between">
                 <div className="flex gap-2">
-                  <span>TechPowerUp</span>
+                  <span>
+                    TechPowerUp{' '}
+                    {totalTechPowerUpInGroup > 1 ? (
+                      <>(x{totalTechPowerUpInGroup})</>
+                    ) : (
+                      <></>
+                    )}
+                  </span>
                   {techPowerUp != null && (
                     <a
                       href={techPowerUp.sourceUrl}
@@ -259,7 +329,7 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
                   productType={ProductType.Cpu}
                   source={CpuDataSourceKey.TechPowerUp}
                   value={techPowerUp}
-                  onChange={setTechPowerUp}
+                  onChange={setTechPowerUpFromAutocomplete}
                 />
                 <TextInput value={techPowerUp?.sourceUrl} disabled />
               </div>
@@ -283,7 +353,14 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
             <Field className="flex-1">
               <div className="flex justify-between">
                 <div className="flex gap-2">
-                  <span>PassMark</span>
+                  <span>
+                    PassMark{' '}
+                    {totalPassMarkInGroup > 1 ? (
+                      <>(x{totalPassMarkInGroup})</>
+                    ) : (
+                      <></>
+                    )}
+                  </span>
                   {passMark != null && (
                     <a
                       href={passMark.sourceUrl}
@@ -314,7 +391,7 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
                   productType={ProductType.Cpu}
                   source={CpuDataSourceKey.PassMark}
                   value={passMark}
-                  onChange={setPassMark}
+                  onChange={setPassMarkFromAutocomplete}
                 />
                 <TextInput value={passMark?.sourceUrl} disabled />
               </div>
@@ -339,7 +416,14 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
             <Field className="flex-1">
               <div className="flex justify-between">
                 <div className="flex gap-2">
-                  <span>GeekBench</span>
+                  <span>
+                    GeekBench{' '}
+                    {totalGeekBenchInGroup > 1 ? (
+                      <>(x{totalGeekBenchInGroup})</>
+                    ) : (
+                      <></>
+                    )}
+                  </span>
                   {geekBench != null && (
                     <a
                       href={geekBench.sourceUrl}
@@ -370,7 +454,7 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
                   productType={ProductType.Cpu}
                   source={CpuDataSourceKey.GeekBench}
                   value={geekBench}
-                  onChange={setGeekBench}
+                  onChange={setGeekBenchFromAutocomplete}
                 />
                 <TextInput value={geekBench?.sourceUrl} disabled />
               </div>
@@ -405,7 +489,7 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
             </div>
 
             <div className="flex gap-4">
-              <GenericButton onClick={save}>Save</GenericButton>
+              <GenericButton onClick={save}>Archive</GenericButton>
               <GenericButton onClick={createCpu}>Create CPU</GenericButton>
             </div>
           </div>

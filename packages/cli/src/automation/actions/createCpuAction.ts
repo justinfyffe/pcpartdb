@@ -49,13 +49,6 @@ export async function createCpuAction(
       [CpuDataSourceKey.GeekBench]: geekBenchSource,
     },
   });
-  if (cpu == null) {
-    // No results for scraping. Skip.
-    console.error(
-      `No scraped data when scraping CPU during automation for action=${action}`,
-    );
-    return;
-  }
 
   // New CPUs have some additional data to be applied
   // Preferred name from source
@@ -89,27 +82,21 @@ async function fetchCpuData(options: {
   console.info('Fetching CPU data', options.sources);
 
   // Scrape the CPU data from our sources.
-  let scrapedCpu: Cpu;
-  try {
-    const result = await scrapeCpu(options);
-    scrapedCpu = result.product as Cpu;
+  const result = await scrapeCpu(options);
+  const scrapedCpu = result.product as Cpu;
 
-    console.log('Finished fetching data.');
-    return scrapedCpu;
-  } catch (e) {
-    // Could not scrape the CPU. Skip as we do not have data.
-    console.error('Error when scraping CPU during automation');
-    console.error(e);
-    return null;
-  }
+  console.log('Finished fetching data.');
+  return scrapedCpu;
 }
 
 async function uploadProductUpdate(cpu: Cpu, context: AutomationContext) {
+  const productName = `${productFieldValue(cpu.company) || ''} ${
+    cpu.name
+  }`.trim();
   const update: CpuUpdate = {
     productType: ProductType.Cpu,
-    productName: cpu.name,
-    productCompany: productFieldValue(cpu.company),
-    description: `Create CPU for ${cpu.name}`,
+    productName,
+    description: `Create CPU for ${productName}`,
     status: ProductUpdateStatus.Pending,
     data: { original: null, updated: cpu },
     metadata: {},

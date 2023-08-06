@@ -1,18 +1,21 @@
-import { scrapeGpu } from '@pcpartdb/scraper';
+import { scrapeGpu, ScrapeGpuOptions } from '@pcpartdb/scraper';
 import {
   AutomationAction,
+  AutomationActionType,
   canAutoUpdateProductField,
+  CreateAutomationActionRequest,
   CreateProductUpdateRequest,
   Gpu,
-  GpuDataSource,
   GpuDataSourceKey,
   GpuField,
+  GpuProductType,
   GpuUpdate,
   hasProductFieldValue,
   productFieldValue,
   ProductType,
   ProductUpdateStatus,
   UpdateGpuActionData,
+  UpdateGpuRetailModelSourcesActionData,
 } from '@pcpartdb/shared';
 import deepmerge from 'deepmerge';
 import { compare as generateJsonPatch } from 'fast-json-patch';
@@ -27,15 +30,12 @@ export async function updateGpuAction(
   console.log('Executing updateGpuAction', payload);
 
   // Get existing GPU
-  let originalGpu: Gpu;
-  try {
-    originalGpu = await getGpu(payload.gpuId, context);
-  } catch (e) {
-    console.error(`Error getting existing GPU for action=${payload}`);
-    return;
-  }
+  const originalGpu: Gpu = await getGpu(payload.gpuId, context);
+  console.log(originalGpu);
 
   // Get sources from gpu
+  const chipsetSource =
+    originalGpu?.meta?.dataSources?.[GpuDataSourceKey.Chipset] || null;
   const techPowerUpSource =
     originalGpu.meta?.dataSources?.[GpuDataSourceKey.TechPowerUp] || null;
   const passMarkSource =
@@ -44,21 +44,21 @@ export async function updateGpuAction(
   const ulBenchmarkSource =
     originalGpu.meta?.dataSources?.[GpuDataSourceKey.UlBenchmarks] || null;
 
+  // Get chipset source (if applicable)
+  let chipset: Gpu;
+  if (chipsetSource?.chipsetId != null) {
+    chipset = await getGpu(chipsetSource?.chipsetId, context);
+  }
+
   // Scrape the GPU data from our sources.
-  const scrapedGpu = await fetchGpuData({
+  const { product: scrapedGpu, hasRetailModels } = await fetchGpuData({
+    chipset,
     sources: {
       [GpuDataSourceKey.TechPowerUp]: techPowerUpSource,
       [GpuDataSourceKey.VideocardBenchmarks]: passMarkSource,
       [GpuDataSourceKey.UlBenchmarks]: ulBenchmarkSource,
     },
   });
-  if (scrapedGpu == null) {
-    // No results for scraping. Skip.
-    console.error(
-      `No scraped data when scraping GPU during automation for action=${payload}`,
-    );
-    return;
-  }
 
   // Update benchmarks for existing GPU. These do not require approval.
   await updateBenchmarks(originalGpu, scrapedGpu, context);
@@ -71,6 +71,13 @@ export async function updateGpuAction(
     await uploadProductUpdate(originalGpu, updatedGpu, context);
   } else {
     console.info('GPU does not have any pending updates. Not uploading.');
+  }
+
+  // If the updated gpu is a chipset and has retail models, then we should
+  // request to update its retail model sources.
+  if (hasRetailModels && updatedGpu.chipsetId == null) {
+    console.info('GPU has retail models. Request updating its sources');
+    await createUpdateRetailModelSourcesAction(updatedGpu, context);
   }
 }
 
@@ -89,25 +96,16 @@ async function getGpu(gpuId: number, context: AutomationContext) {
   return gpu;
 }
 
-async function fetchGpuData(options: {
-  sources: Record<string, GpuDataSource>;
-}) {
+async function fetchGpuData(options: ScrapeGpuOptions) {
   console.info('Fetching GPU data', options.sources);
 
   // Scrape the CPU data from our sources.
-  let scrapedGpu: Gpu;
-  try {
-    const result = await scrapeGpu(options);
-    scrapedGpu = result.product as Gpu;
+  const result = await scrapeGpu(options);
+  const product = result.product as Gpu;
+  const hasRetailModels = result.hasRetailModels;
 
-    console.log('Finished fetching data.');
-    return scrapedGpu;
-  } catch (e) {
-    // Could not scrape the GPU. Skip as we do not have data.
-    console.error('Error when fetching GPU data during automation');
-    console.error(e);
-    return null;
-  }
+  console.log('Finished fetching data.');
+  return { product, hasRetailModels };
 }
 
 async function updateBenchmarks(
@@ -194,15 +192,21 @@ async function uploadProductUpdate(
   updatedGpu: Gpu,
   context: AutomationContext,
 ) {
+  const productName = `${productFieldValue(updatedGpu.company) || ''} ${
+    updatedGpu.name
+  }`.trim();
   const update: GpuUpdate = {
-    gpuId: originalGpu.id,
     productType: ProductType.Gpu,
-    productName: updatedGpu.name,
-    productCompany: productFieldValue(updatedGpu.company),
-    description: `Update GPU for ${updatedGpu.name}`,
+    productName,
+    description: `Update GPU for ${productName}`,
     status: ProductUpdateStatus.Pending,
     data: { original: originalGpu, updated: updatedGpu },
     metadata: {},
+    gpuId: originalGpu.id,
+    gpuProductType:
+      updatedGpu.chipsetId == null
+        ? GpuProductType.Chipset
+        : GpuProductType.RetailModel,
   };
 
   console.info('Uploading pending update for GPU');
@@ -211,4 +215,18 @@ async function uploadProductUpdate(
     update as CreateProductUpdateRequest,
   );
   console.info('Finshed uploading pending update for GPU');
+}
+
+async function createUpdateRetailModelSourcesAction(
+  chipset: Gpu,
+  context: AutomationContext,
+) {
+  const name = `${productFieldValue(chipset.company) || ''} ${
+    chipset.name
+  }`.trim();
+  await context.api.post('/automation/actions', {
+    type: AutomationActionType.UpdateGpuRetailModelSources,
+    description: `Update GPU Retail Model Sources for ${name}`,
+    data: { chipsetId: chipset.id } as UpdateGpuRetailModelSourcesActionData,
+  } as CreateAutomationActionRequest);
 }

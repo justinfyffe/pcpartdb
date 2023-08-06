@@ -2,7 +2,7 @@ import { cleanUrl, parseProductName } from '@pcpartdb/shared';
 import * as cheerio from 'cheerio';
 import { scraper } from '../../scraper';
 import { PassMarkCpuSource } from '../types';
-import { sanitizeCpuSourceName } from '../utils';
+import { generateCpuGroupKey } from '../utils';
 
 export interface ScrapePassMarkCpuSourcesOptions {
   url: string;
@@ -15,7 +15,7 @@ export async function scrapePassMarkCpuSources(
   options: ScrapePassMarkCpuSourcesOptions,
 ) {
   const { url } = options;
-  const sources: Record<string, PassMarkCpuSource> = {};
+  const sources: PassMarkCpuSource[] = [];
 
   const $ = cheerio.load(await fetchListPage(url, options));
   const el = $('.main ul.chartlist li');
@@ -27,19 +27,24 @@ export async function scrapePassMarkCpuSources(
       $li.find('a span.prdname').text().trim(),
     );
 
-    const sanitizedName = sanitizeCpuSourceName(name);
     const scoreText = $li.find('a span.count').text().trim().replace(',', '');
     const score = scoreText ? Number(scoreText) : null;
 
-    sources[sanitizedName] = {
-      name: sanitizedName,
-      company,
-      url,
-      cpuMarkMultiThread: !Number.isNaN(score) ? score : null,
-    };
+    const externalKey = getExternalKey(url);
+    if (externalKey && company) {
+      const groupKey = generateCpuGroupKey({ company, name });
+      sources.push({
+        groupKey,
+        externalKey,
+        name,
+        company,
+        url,
+        cpuMarkMultiThread: !Number.isNaN(score) ? score : null,
+      });
+    }
   });
 
-  return Object.values(sources);
+  return sources;
 }
 
 async function fetchListPage(
@@ -50,4 +55,12 @@ async function fetchListPage(
 
   const response = await scraper.scrape(url, { retries: 1, noProxy });
   return response.data;
+}
+
+function getExternalKey(url: string) {
+  const obj = new URL(url);
+  if (!obj.searchParams.has('id')) {
+    return null;
+  }
+  return obj.searchParams.get('id');
 }

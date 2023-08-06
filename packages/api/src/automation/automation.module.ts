@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { DatabaseModule } from '../database';
 import { CpuModule } from '../product/cpu/cpu.module';
 import { GpuModule } from '../product/gpu/gpu.module';
@@ -7,7 +7,11 @@ import { AutomationRepository } from './automation.repository';
 import { AutomationService } from './automation.service';
 
 @Module({
-  imports: [DatabaseModule, CpuModule, GpuModule],
+  imports: [
+    DatabaseModule,
+    forwardRef(() => CpuModule),
+    forwardRef(() => GpuModule),
+  ],
   controllers: [AutomationController],
   providers: [AutomationService, AutomationRepository],
   exports: [AutomationService, AutomationRepository],

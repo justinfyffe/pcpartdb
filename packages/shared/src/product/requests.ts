@@ -1,4 +1,5 @@
 import { ListQuery, ListRequest, ListResponse } from '../common';
+import { GpuProductType } from './gpu';
 import {
   ProductSourceGroup,
   ProductType,
@@ -12,6 +13,9 @@ export interface ListProductSourcesFilter {
   productType?: ProductType;
   includeArchived?: boolean;
   search?: string;
+
+  // GPU Specific
+  gpuProductType?: GpuProductType;
 }
 
 export interface ListProductSourcesQuery
@@ -29,6 +33,9 @@ export interface ListProductUpdatesFilter {
   productType: ProductType;
   status?: ProductUpdateStatus;
   search?: string;
+
+  // GPU Specific
+  gpuProductType?: GpuProductType;
 }
 
 export interface ListProductUpdatesQuery

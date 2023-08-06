@@ -2,7 +2,7 @@ import { parseProductName } from '@pcpartdb/shared';
 import * as cheerio from 'cheerio';
 import { scraper } from '../../scraper';
 import { TechPowerUpCpuSource } from '../types';
-import { sanitizeCpuSourceName } from '../utils';
+import { generateCpuGroupKey } from '../utils';
 
 export interface ScrapeTechPowerUpCpuSourcesOptions {
   url: string;
@@ -17,7 +17,7 @@ export async function scrapeTechPowerUpCpuSources(
 ) {
   const $ = cheerio.load(await fetchSearchPage(options));
 
-  const cpus: TechPowerUpCpuSource[] = [];
+  const sources: TechPowerUpCpuSource[] = [];
 
   const el = $('table tbody tr td:first-child');
   el.each((i, td) => {
@@ -27,16 +27,16 @@ export async function scrapeTechPowerUpCpuSources(
     const { company: companyFromName, name } = parseProductName(
       $td.text().trim(),
     );
-    const sanitizedName = sanitizeCpuSourceName(name);
 
-    cpus.push({
-      name: sanitizedName,
-      company: companyFromName || options.company,
-      url,
-    });
+    const company = companyFromName || options.company;
+    const externalKey = getExternalKey(url);
+    if (company && externalKey) {
+      const groupKey = generateCpuGroupKey({ company, name });
+      sources.push({ groupKey, externalKey, name, company, url });
+    }
   });
 
-  return cpus;
+  return sources;
 }
 
 async function fetchSearchPage(options: ScrapeTechPowerUpCpuSourcesOptions) {
@@ -44,4 +44,10 @@ async function fetchSearchPage(options: ScrapeTechPowerUpCpuSourcesOptions) {
 
   const response = await scraper.scrape(url, { retries: 1, noProxy });
   return response.data;
+}
+
+function getExternalKey(url: string) {
+  const keyIndex = url.lastIndexOf('.');
+  const externalKey = url.substring(keyIndex).trim();
+  return externalKey;
 }

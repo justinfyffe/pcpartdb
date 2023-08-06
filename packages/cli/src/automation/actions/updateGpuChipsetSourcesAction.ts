@@ -9,7 +9,7 @@ import {
 import {
   AutomationAction,
   GpuDataSourceKey,
-  ProductSource,
+  GpuProductSource,
   ProductType,
   UpsertProductSourcesRequest,
 } from '@pcpartdb/shared';
@@ -127,30 +127,21 @@ const UL_BENCHMARK_QUERIES = [
   'titan',
 ];
 
-export async function updateGpuSourcesAction(
+export async function updateGpuChipsetSourcesAction(
   _action: AutomationAction,
   context: AutomationContext,
 ) {
-  console.log('Executing updateGpuSourcesAction');
+  console.log('Executing updateGpuChipsetSourcesAction');
 
   // Scrape GPU Sources
-  const { sources: techPowerUpSources, companies: techPowerUpCompanies } =
-    await getTechPowerUpSources();
-  const { sources: ulBenchmarkSources, companies: ulBenchmarkCompanies } =
-    await getUlBenchmarkSources();
-  // PassMark doesn't have company names, so let's try to find them from the
-  // other sources.
-  const passMarkSources = await getPassMarkSources({
-    ...ulBenchmarkCompanies,
-    ...techPowerUpCompanies,
-  });
+  const { sources: techPowerUpSources } = await getTechPowerUpSources();
+  const { sources: passMarkSources } = await getPassMarkSources();
+  const { sources: ulBenchmarkSources } = await getUlBenchmarkSources();
 
   // Upload CPU Sources
   await uploadGpuSources(techPowerUpSources, context);
-  await uploadGpuSources(ulBenchmarkSources, context);
-  // PassMark doesn't have company names, so let's try to find them from the
-  // other sources.
   await uploadGpuSources(passMarkSources, context);
+  await uploadGpuSources(ulBenchmarkSources, context);
 
   // Trigger auto-archive
   await context.api.post('products/sources/auto-archive', null);
@@ -158,7 +149,7 @@ export async function updateGpuSourcesAction(
   // Update execution details
   context.metadata = {
     ...(context.metadata ?? {}),
-    updateGpuSourcesDate: new Date().getTime(),
+    updateGpuChipsetSourcesDate: new Date().getTime(),
   };
 }
 
@@ -166,7 +157,6 @@ async function getTechPowerUpSources() {
   console.log('Scraping GPU chipset sources from TechPowerUp');
 
   const map: Record<string, TechPowerUpGpuSource> = {};
-  const companies: Record<string, string> = {};
   for (let i = 0; i < TECHPOWERUP_URLS.length; ++i) {
     const { company, urls } = TECHPOWERUP_URLS[i];
 
@@ -182,7 +172,6 @@ async function getTechPowerUpSources() {
         console.log(`Scraped ${sources.length} sources`);
         sources.forEach((gpu) => {
           map[gpu.name] = gpu;
-          companies[gpu.name.toLowerCase()] = company;
         });
       } catch (err) {
         console.error('Encountered error when scraping.');
@@ -192,7 +181,9 @@ async function getTechPowerUpSources() {
     }
   }
 
-  const sources: ProductSource[] = Object.values(map).map((value) => ({
+  const sources: GpuProductSource[] = Object.values(map).map((value) => ({
+    groupKey: value.groupKey,
+    externalKey: value.externalKey,
     productType: ProductType.Gpu,
     sourceName: `${value.company || ''} ${value.name}`.trim(),
     sourceKey: GpuDataSourceKey.TechPowerUp,
@@ -201,14 +192,13 @@ async function getTechPowerUpSources() {
 
   console.log(`Scraped ${sources.length} TechPowerUp sources`);
 
-  return { sources, companies };
+  return { sources };
 }
 
 async function getUlBenchmarkSources() {
   console.log('Scraping CPU Sources from UL');
 
   const map: Record<string, UlBenchmarkGpuSource> = {};
-  const companies: Record<string, string> = {};
   for (let i = 0; i < UL_BENCHMARK_QUERIES.length; ++i) {
     const query = UL_BENCHMARK_QUERIES[i];
     console.log(`Scraping sources for query: ${query}`);
@@ -218,7 +208,6 @@ async function getUlBenchmarkSources() {
       console.log(`Scraped ${sources.length} sources`);
       sources.forEach((gpu) => {
         map[gpu.name] = gpu;
-        companies[gpu.name.toLowerCase()] = gpu.company;
       });
     } catch (err) {
       console.error('Encountered error when scraping.');
@@ -228,7 +217,9 @@ async function getUlBenchmarkSources() {
     await sleep(DELAY_BETWEEN_SOURCE_REQUEST);
   }
 
-  const sources: ProductSource[] = Object.values(map).map((value) => ({
+  const sources: GpuProductSource[] = Object.values(map).map((value) => ({
+    groupKey: value.groupKey,
+    externalKey: value.externalKey,
     productType: ProductType.Gpu,
     sourceName: `${value.company || ''} ${value.name}`.trim(),
     sourceKey: GpuDataSourceKey.UlBenchmarks,
@@ -237,10 +228,10 @@ async function getUlBenchmarkSources() {
 
   console.log(`Scraped ${sources.length} UL Benchmark sources`);
 
-  return { sources, companies };
+  return { sources };
 }
 
-async function getPassMarkSources(companies: Record<string, string>) {
+async function getPassMarkSources() {
   console.log('Scraping CPU Sources from PassMark');
 
   const map: Record<string, PassMarkGpuSource> = {};
@@ -253,11 +244,6 @@ async function getPassMarkSources(companies: Record<string, string>) {
       console.log(`Scraped ${sources.length} sources`);
       sources.forEach((gpu) => {
         map[gpu.name] = gpu;
-        gpu.company =
-          gpu.company ||
-          guessPassMarkCompanyName(gpu.name) ||
-          companies[gpu.name] ||
-          null;
       });
     } catch (err) {
       console.error('Encountered error when scraping.');
@@ -267,7 +253,9 @@ async function getPassMarkSources(companies: Record<string, string>) {
     await sleep(DELAY_BETWEEN_SOURCE_REQUEST);
   }
 
-  const sources: ProductSource[] = Object.values(map).map((value) => ({
+  const sources: GpuProductSource[] = Object.values(map).map((value) => ({
+    groupKey: value.groupKey,
+    externalKey: value.externalKey,
     productType: ProductType.Gpu,
     sourceName: `${value.company || ''} ${value.name}`.trim(),
     sourceKey: GpuDataSourceKey.VideocardBenchmarks,
@@ -276,17 +264,17 @@ async function getPassMarkSources(companies: Record<string, string>) {
 
   console.log(`Scraped ${sources.length} PassMark sources`);
 
-  return sources;
+  return { sources };
 }
 
 async function uploadGpuSources(
-  sources: ProductSource[],
+  sources: GpuProductSource[],
   context: AutomationContext,
 ) {
   console.log('Upload GPU sources to API.');
 
   // Create batches so we can upload multiple ones at a time.
-  const batches: ProductSource[][] = [];
+  const batches: GpuProductSource[][] = [];
   for (let i = 0; i < sources.length; i += BATCH_SIZE) {
     const batch = sources.slice(i, i + BATCH_SIZE);
     batches.push(batch);
@@ -309,38 +297,4 @@ async function uploadGpuSources(
   }
 
   console.log(`Uploaded ${totalSources} sources`);
-}
-
-const PASSMARK_NVIDIA_HINTS = [
-  'rtx ',
-  ' rtx',
-  'geforce',
-  'quadro',
-  'titan ',
-  'tesla ',
-  'grid',
-  'gtx ',
-  'nvs ',
-  'nforce',
-];
-const PASSMARK_AMD_HINTS = [
-  'radeon',
-  'ryzen',
-  'firepro',
-  'firestream',
-  'firegl',
-];
-const PASSMARK_INTEL_HINTS = ['arc ', 'uhd graphics'];
-function guessPassMarkCompanyName(name: string) {
-  const lcName = name.toLowerCase();
-  if (PASSMARK_NVIDIA_HINTS.some((hint) => lcName.includes(hint))) {
-    return 'NVIDIA';
-  }
-  if (PASSMARK_AMD_HINTS.some((hint) => lcName.includes(hint))) {
-    return 'AMD';
-  }
-  if (PASSMARK_INTEL_HINTS.some((hint) => lcName.includes(hint))) {
-    return 'Intel';
-  }
-  return null;
 }

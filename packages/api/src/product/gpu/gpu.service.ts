@@ -7,13 +7,13 @@ import {
   GpuDataSourceKey,
   GpuFieldKey,
   GpuMeta,
+  GpuProductSourceGroup,
   GpuRank,
   GpuUpdate,
   ListGpusQuery,
   populateGpuPerformanceScoreBenchmark,
   populateGpuValueScoreBenchmark,
   ProductDataUpdate,
-  ProductSourceGroup,
   ProductType,
   UpdateGpuRequest,
   ValidationErrorType,
@@ -273,10 +273,12 @@ export class GpuService {
     await this.update(dataUpdate.gpuId, updated, ctx);
   }
 
-  async applySources(id: number, sources: ProductSourceGroup, ctx: Context) {
+  async applySources(id: number, sources: GpuProductSourceGroup, ctx: Context) {
     const gpu = await this.getById(id, {}, ctx);
 
     // Extract URLs from new sources
+    const chipsetId = sources.filter((source) => source.gpuChipsetId != null)[0]
+      ?.gpuChipsetId;
     const techPowerUpUrl = sources.filter(
       (source) => source.sourceKey === GpuDataSourceKey.TechPowerUp,
     )[0]?.sourceUrl;
@@ -288,6 +290,7 @@ export class GpuService {
     )[0]?.sourceUrl;
 
     // Extract data sources from existing cpu
+    const chipset = gpu.meta?.dataSources?.[GpuDataSourceKey.Chipset];
     const techPowerUp = gpu.meta?.dataSources?.[GpuDataSourceKey.TechPowerUp];
     const passMark =
       gpu.meta?.dataSources?.[GpuDataSourceKey.VideocardBenchmarks];
@@ -296,6 +299,9 @@ export class GpuService {
     // Merge - We don't want to delete sources, only overwrite them.
     gpu.meta = deepmerge(gpu.meta, {
       dataSources: {
+        [GpuDataSourceKey.Chipset]: {
+          chipsetId: chipsetId || chipset?.chipsetId,
+        },
         [GpuDataSourceKey.TechPowerUp]: {
           url: techPowerUpUrl || techPowerUp?.url,
         },
@@ -325,7 +331,7 @@ export class GpuService {
 
     const updated = update.data.updated as Gpu;
     if (update.gpuId != null) {
-      await this.update(update.cpuId, updated, ctx);
+      await this.update(update.gpuId, updated, ctx);
     } else {
       const cpu = {
         ...updated,

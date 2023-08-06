@@ -11,6 +11,7 @@ import {
   LengthUnit,
   MemorySizeUnit,
   NumericUnit,
+  parseProductName,
   PixelFillRateUnit,
   ScrapeProductResponse,
   TextureFillRateUnit,
@@ -19,7 +20,6 @@ import {
 import * as cheerio from 'cheerio';
 import { format as formatDate, parse as parseDate } from 'date-fns';
 import { scraper } from '../../scraper';
-import { parseTechPowerUpGpuName } from './utils';
 
 export interface ScrapeTechPowerGpuDataOptions {
   url: string;
@@ -80,7 +80,12 @@ export async function scrapeTechPowerUpGpuData(
     width: getWidth($),
   };
 
-  return { product } as ScrapeProductResponse;
+  return {
+    product,
+    hasRetailModels: hasRetailModels($),
+  } as ScrapeProductResponse & {
+    hasRetailModels: boolean;
+  };
 }
 
 function getName($: cheerio.CheerioAPI) {
@@ -127,7 +132,7 @@ function getCodename($: cheerio.CheerioAPI): GpuField<string> {
 
 function getCompany($: cheerio.CheerioAPI): GpuField<string> {
   const fullName = $('.gpudb-name').text();
-  const { company: value } = parseTechPowerUpGpuName(fullName);
+  const { company: value } = parseProductName(fullName);
   if (value != null) {
     return {
       value,
@@ -840,6 +845,17 @@ function getWidth($: cheerio.CheerioAPI): GpuField<number> {
       autoUpdate: true,
     },
   };
+}
+
+function hasRetailModels($: cheerio.CheerioAPI) {
+  const retailModelLink = $('.board-table-title__inner a');
+  const total = retailModelLink.filter((_i, el) => {
+    const fullName = $(el).text().trim();
+    const { company } = parseProductName(fullName);
+    return company != null;
+  }).length;
+
+  return total > 0;
 }
 
 function tokenizeSpecValues($: cheerio.CheerioAPI, label: string) {

@@ -13,11 +13,9 @@ interface ListOptions {
   query: ListProductUpdatesQuery;
 }
 
-export interface FindPendingOptions {
+export interface FindPendingByProductIdOptions {
   productType: ProductType;
-  productId?: number;
-  productCompany?: string;
-  productName?: string;
+  productId: number;
 }
 
 export class ProductUpdateRepository {
@@ -42,18 +40,21 @@ export class ProductUpdateRepository {
     return { results, total };
   }
 
-  async findPending(options: FindPendingOptions, config?: RepositoryConfig) {
-    const { productType, productId, productCompany, productName } = options;
+  async findPendingByProductId(
+    options: FindPendingByProductIdOptions,
+    config?: RepositoryConfig,
+  ) {
+    const { productType, productId } = options;
 
     const trx = config?.trx ?? this.db;
     return await trx.productUpdate.findMany({
       where: {
-        productType,
-        productName,
-        productCompany,
-        cpuId: productType === ProductType.Cpu ? productId : undefined,
-        gpuId: productType === ProductType.Gpu ? productId : undefined,
-        status: ProductUpdateStatus.Pending,
+        AND: [
+          { productType },
+          { cpuId: productType === ProductType.Cpu ? productId : undefined },
+          { gpuId: productType === ProductType.Gpu ? productId : undefined },
+          { status: ProductUpdateStatus.Pending },
+        ],
       },
     });
   }
@@ -108,24 +109,26 @@ export class ProductUpdateRepository {
       : undefined;
 
     // Source name
-    const productCompanyWhere: Prisma.StringFilter = search
-      ? { contains: search, mode: 'insensitive' }
-      : undefined;
-
     const productNameWhere: Prisma.StringFilter = search
       ? { contains: search, mode: 'insensitive' }
       : undefined;
 
+    // Handle GPU-specific filters
+    let gpuProductTypeWhere: Prisma.StringNullableFilter;
+    if (productType === ProductType.Gpu) {
+      const gpuProductType = filter?.gpuProductType || null;
+      if (gpuProductType == null) {
+        throw new Error('Missing gpu product type');
+      }
+      gpuProductTypeWhere = { equals: gpuProductType };
+    }
+
     return {
       AND: [
         { productType: productTypeWhere },
+        { gpuProductType: gpuProductTypeWhere },
         { status: statusWhere },
-        {
-          OR: [
-            { productCompany: productCompanyWhere },
-            { productName: productNameWhere },
-          ],
-        },
+        { productName: productNameWhere },
       ],
     };
   }

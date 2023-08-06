@@ -20,11 +20,11 @@ import {
 import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
 import React, { useCallback, useMemo, useState } from 'react';
 
-interface GpuCardTabProps {
+interface GpuRetailModelCardTabProps {
   update: GpuUpdate;
 }
 
-export const GpuCard = (props: GpuCardTabProps) => {
+export const GpuRetailModelCard = (props: GpuRetailModelCardTabProps) => {
   const { update } = props;
   const isUpdate = update.gpuId ? true : false;
   const updatedGpu = update.data.updated;

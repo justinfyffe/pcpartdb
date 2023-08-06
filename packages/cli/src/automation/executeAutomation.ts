@@ -8,13 +8,14 @@ import { createGpuAction } from './actions/createGpuAction';
 import { updateCpuAction } from './actions/updateCpuAction';
 import { updateCpuSourcesAction } from './actions/updateCpuSourcesAction';
 import { updateGpuAction } from './actions/updateGpuAction';
-import { updateGpuSourcesAction } from './actions/updateGpuSourcesAction';
+import { updateGpuChipsetSourcesAction } from './actions/updateGpuChipsetSourcesAction';
+import { updateGpuRetailModelSourcesAction } from './actions/updateGpuRetailModelSourcesAction';
 import { AutomationContext } from './types';
 import { saveAutomationContext } from './utils/context';
 
 const UPDATE_SITEMAPS_FREQUENCY = 1000 * 60 * 60 * 24; // Daily
 const UPDATE_CPU_SOURCES_FREQUENCY = 1000 * 60 * 60 * 24 * 7; // Weekly
-const UPDATE_GPU_SOURCES_FREQUENCY = 1000 * 60 * 60 * 24 * 7; // Weekly
+const UPDATE_GPU_CHIPSET_SOURCES_FREQUENCY = 1000 * 60 * 60 * 24 * 7; // Weekly
 
 let executing = false;
 export async function executeAutomation(context: AutomationContext) {
@@ -48,8 +49,10 @@ export async function executeAutomation(context: AutomationContext) {
       await createGpuAction(action, context);
     } else if (type === AutomationActionType.UpdateGpu) {
       await updateGpuAction(action, context);
-    } else if (type === AutomationActionType.UpdateGpuSources) {
-      await updateGpuSourcesAction(action, context);
+    } else if (type === AutomationActionType.UpdateGpuChipsetSources) {
+      await updateGpuChipsetSourcesAction(action, context);
+    } else if (type === AutomationActionType.UpdateGpuRetailModelSources) {
+      await updateGpuRetailModelSourcesAction(action, context);
     } else {
       console.error(`Unsupported Action: ${action}`);
     }
@@ -137,14 +140,12 @@ async function getActionFromStalenessCheck(
 ): Promise<AutomationAction> {
   const { metadata } = context;
 
-  return null; // TODO: remove
-
-  if (isStale(metadata?.updateSitemapsDate, UPDATE_SITEMAPS_FREQUENCY)) {
-    return {
-      status: AutomationActionStatus.Pending,
-      type: AutomationActionType.UpdateSitemaps,
-    };
-  }
+  // if (isStale(metadata?.updateSitemapsDate, UPDATE_SITEMAPS_FREQUENCY)) {
+  //   return {
+  //     status: AutomationActionStatus.Pending,
+  //     type: AutomationActionType.UpdateSitemaps,
+  //   };
+  // }
 
   if (isStale(metadata?.updateCpuSourcesDate, UPDATE_CPU_SOURCES_FREQUENCY)) {
     return {
@@ -153,10 +154,15 @@ async function getActionFromStalenessCheck(
     };
   }
 
-  if (isStale(metadata?.updateGpuSourcesDate, UPDATE_GPU_SOURCES_FREQUENCY)) {
+  if (
+    isStale(
+      metadata?.updateGpuChipsetSourcesDate,
+      UPDATE_GPU_CHIPSET_SOURCES_FREQUENCY,
+    )
+  ) {
     return {
       status: AutomationActionStatus.Pending,
-      type: AutomationActionType.UpdateGpuSources,
+      type: AutomationActionType.UpdateGpuChipsetSources,
     };
   }
 

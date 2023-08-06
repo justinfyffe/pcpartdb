@@ -1,10 +1,12 @@
 import { Image } from '../../image';
 import {
+  BaseProductSource,
+  BaseProductUpdate,
   GpuDataSourceKey,
   ProductDiff,
   ProductField,
   ProductFieldMeta,
-  ProductUpdate,
+  ProductType,
 } from '..';
 
 export enum ListGpusPresetSlug {
@@ -16,6 +18,11 @@ export enum ListGpusPresetSlug {
   BestValueNvidia = 'best-value-nvidia',
   Newest = 'newest',
   Oldest = 'oldest',
+}
+
+export enum GpuProductType {
+  Chipset = 'CHIPSET',
+  RetailModel = 'RETAIL_MODEL',
 }
 
 export type GpuFieldKey = keyof GpuFields;
@@ -262,4 +269,27 @@ export interface ImportGpusRequest {
   gpus: Gpu[];
 }
 
-export interface GpuUpdate extends ProductUpdate<GpuDiff> {}
+/**
+ * Data structure containing information regarding a single source for a
+ * GPU. Extends ProductSource as it contains some gpu-specific data.
+ */
+export interface GpuProductSource extends BaseProductSource {
+  productType: ProductType.Gpu;
+
+  // Retail model sources are only relevant when associated with a chipset
+  gpuChipsetId?: number;
+
+  // Relations
+  gpuChipset?: Gpu;
+}
+
+/**
+ * Group of GPU product sources, usually grouped by source name.
+ */
+export type GpuProductSourceGroup = GpuProductSource[];
+
+export interface GpuUpdate extends BaseProductUpdate<GpuDiff> {
+  productType: ProductType.Gpu;
+  gpuProductType: GpuProductType;
+  gpuId?: number;
+}

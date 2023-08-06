@@ -3,7 +3,7 @@ import * as cheerio from 'cheerio';
 import deepmerge from 'deepmerge';
 import { scraper } from '../../scraper';
 import { GeekBenchCpuSource } from '../types';
-import { sanitizeCpuSourceName } from '../utils';
+import { generateCpuGroupKey } from '../utils';
 
 export interface ScrapeGeekBenchCpuSourcesOptions {
   noProxy?: boolean;
@@ -33,17 +33,22 @@ function parseSingleCoreTable($: cheerio.CheerioAPI) {
     const $name = $tr.find('td.name a');
 
     const { company, name } = parseProductName($name.text().trim());
-    const sanitizedName = sanitizeCpuSourceName(name);
     const url = cleanUrl(BASE_URL + $name.attr('href').trim());
     const scoreText = $tr.find('td.score').text().trim().replace(',', '');
     const score = scoreText ? Number(scoreText) : null;
 
-    sources[sanitizedName] = {
-      name: sanitizedName,
-      company,
-      url,
-      geekBenchSingleCore: score,
-    };
+    const externalKey = getExternalKey(url);
+    if (company && externalKey) {
+      const groupKey = generateCpuGroupKey({ company, name });
+      sources[name] = {
+        groupKey,
+        externalKey,
+        name,
+        company,
+        url,
+        geekBenchSingleCore: score,
+      };
+    }
   });
 
   return sources;
@@ -62,7 +67,18 @@ function parseMultiCoreTable($: cheerio.CheerioAPI) {
     const scoreText = $tr.find('td.score').text().trim().replace(',', '');
     const score = scoreText ? Number(scoreText) : null;
 
-    sources[name] = { name, company, url, geekBenchMultiCore: score };
+    const externalKey = getExternalKey(url);
+    const groupKey = generateCpuGroupKey({ company, name });
+    if (company && externalKey) {
+      sources[name] = {
+        groupKey,
+        externalKey,
+        name,
+        company,
+        url,
+        geekBenchMultiCore: score,
+      };
+    }
   });
 
   return sources;
@@ -73,4 +89,9 @@ async function fetchListPage(options: ScrapeGeekBenchCpuSourcesOptions) {
 
   const response = await scraper.scrape(URL, { retries: 1, noProxy });
   return response.data;
+}
+
+function getExternalKey(url: string) {
+  const index = url.lastIndexOf('/');
+  return url.substring(index);
 }

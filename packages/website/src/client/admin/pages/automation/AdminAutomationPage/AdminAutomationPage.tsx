@@ -9,9 +9,15 @@ import {
   TabsVariant,
 } from '../../../../shared/components';
 import { AdminLayout } from '../../../../shared/layouts';
-import { CpuSourcesTab, GpuSourcesTab, GpusTab, QueueTab } from './tabs';
+import {
+  CpuSourcesTab,
+  CpusTab,
+  GpuSourcesTab,
+  GpusTab,
+  QueueTab,
+} from './tabs';
 
-export const AdminAutomationPage = (props: AdminAutomationViewModel) => {
+export const AdminAutomationPage = (_props: AdminAutomationViewModel) => {
   const seoTitle = 'Automation - Admin Panel';
   const seoRobots = [MetaRobots.NOINDEX, MetaRobots.NOFOLLOW];
 
@@ -27,7 +33,7 @@ export const AdminAutomationPage = (props: AdminAutomationViewModel) => {
             <CpuSourcesTab />
           </Tab>
           <Tab label="CPUs">
-            <GpusTab />
+            <CpusTab />
           </Tab>
           <Tab label="GPU Sources">
             <GpuSourcesTab />
@@ -39,13 +45,6 @@ export const AdminAutomationPage = (props: AdminAutomationViewModel) => {
             <QueueTab />
           </Tab>
         </Tabs>
-
-        {/* General - Status, Updates */}
-        {/* CPU - Sources - Status, View, Edit, Approve, Reject, Combine */}
-        {/* CPU - CPUs - Status, View, Edit, Approve, Approve and Edit, Reject */}
-        {/* GPU - Sources - Status, View, Edit, Approve, Reject, Combine */}
-        {/* GPU - Chipsets - Status, View, Edit, Approve, Approve and Edit, Reject */}
-        {/* GPU - Retail Models - Status, View, Edit, Approve, Approve and Edit, Reject */}
       </article>
     </AdminLayout>
   );

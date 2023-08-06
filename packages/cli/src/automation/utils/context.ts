@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import * as fsPromises from 'fs/promises';
-import { AutomationContext, AutomationMetadata } from '../types';
+import { AutomationContext } from '../types';
 import { automationDataPath } from './file';
 
 const FILE_PATH = automationDataPath('context.json');
@@ -19,12 +19,7 @@ export async function loadAutomationContext() {
 }
 
 export async function saveAutomationContext(context: AutomationContext) {
-  const { metadata } = context;
-  const data: AutomationMetadata = {
-    updateSitemapsDate: metadata?.updateSitemapsDate,
-    updateCpuSourcesDate: metadata?.updateCpuSourcesDate,
-    updateGpuSourcesDate: metadata?.updateGpuSourcesDate,
-  };
+  const { api: _api, ...data } = context;
 
   const json = JSON.stringify(data, undefined, 2);
   await fsPromises.writeFile(FILE_PATH, json, 'utf-8');

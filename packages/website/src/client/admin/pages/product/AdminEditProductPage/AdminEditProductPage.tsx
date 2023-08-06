@@ -8,10 +8,12 @@ import {
   AdminEditProductViewModel,
   AutomationActionType,
   Cpu,
+  CpuUpdate,
   getAdminListCpusPath,
   getAdminListGpusPath,
   getViewProductPath,
   Gpu,
+  GpuUpdate,
   ProductType,
   UpdateCpuActionData,
   UpdateGpuActionData,
@@ -71,7 +73,7 @@ export const AdminEditProductPage = (props: AdminEditProductViewModel) => {
       });
     } else if (productType === ProductType.Gpu) {
       await automationService.createAction<UpdateGpuActionData>({
-        type: AutomationActionType.UpdateCpu,
+        type: AutomationActionType.UpdateGpu,
         description: formatProductName(productType, product),
         data: { gpuId: product.id },
       });
@@ -106,9 +108,9 @@ export const AdminEditProductPage = (props: AdminEditProductViewModel) => {
     }
 
     if (productType === ProductType.Cpu) {
-      showDialog(<CpuDiffDialog diff={pendingUpdate.data} />);
+      showDialog(<CpuDiffDialog diff={(pendingUpdate as CpuUpdate).data} />);
     } else if (productType === ProductType.Gpu) {
-      showDialog(<GpuDiffDialog diff={pendingUpdate.data} />);
+      showDialog(<GpuDiffDialog diff={(pendingUpdate as GpuUpdate).data} />);
     }
   }, [pendingUpdate, productType]);
 

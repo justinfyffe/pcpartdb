@@ -1,4 +1,5 @@
 import {
+  GpuProductType,
   ListProductSourcesFilter,
   ListProductSourcesQuery,
   ProductSourceKey,
@@ -39,7 +40,7 @@ export class ProductSourceRepository {
     config?: RepositoryConfig,
   ) {
     const trx = config?.trx ?? this.db;
-    const { ...entity } = data;
+    const { gpuChipset: _gpuChipset, ...entity } = data;
 
     return await trx.productSource.create({ data: entity });
   }
@@ -50,7 +51,7 @@ export class ProductSourceRepository {
     config?: RepositoryConfig,
   ) {
     const trx = config?.trx ?? this.db;
-    const { ...entity } = data;
+    const { gpuChipset: _gpuChipset, ...entity } = data;
 
     return await trx.productSource.update({
       where: { id },
@@ -63,14 +64,14 @@ export class ProductSourceRepository {
     config?: RepositoryConfig,
   ) {
     const trx = config?.trx ?? this.db;
-    const { ...entity } = data;
+    const { gpuChipset: _gpuChipset, ...entity } = data;
 
     return await trx.productSource.upsert({
       where: {
-        product_sources_type_key_url: {
+        product_sources_productType_sourceKey_externalKey_unique: {
           productType: entity.productType,
           sourceKey: entity.sourceKey,
-          sourceUrl: entity.sourceUrl,
+          externalKey: entity.externalKey,
         },
       },
       update: entity,
@@ -102,42 +103,48 @@ export class ProductSourceRepository {
 
     const { filter, pagination } = options.query ?? {};
 
-    // Get source names that match the filter
-    const rawSourceNames = await trx.productSource.groupBy({
-      by: ['productType', 'sourceName'],
-      _max: {
-        createdAt: true,
+    // Get group keys that match the filter
+    const rawGroupKeys = await trx.productSource.groupBy({
+      by: ['groupKey'],
+      _count: {
+        groupKey: true,
       },
       where: this.generateWhere(filter),
-      orderBy: { _max: { createdAt: 'desc' } },
+      orderBy: [
+        { _count: { groupKey: 'desc' } },
+        { _max: { sourceName: 'asc' } },
+      ],
       skip: pagination?.offset ?? 0,
       take: pagination?.limit ?? 50,
     });
-    const sourceNames = rawSourceNames.map((value) => value.sourceName);
+    const groupKeys = rawGroupKeys.map((value) => value.groupKey);
 
     // Group by source name
     const groups = new Map<string, ProductSourceEntity[]>();
-    for (const sourceName of sourceNames) {
-      groups.set(sourceName.toLowerCase(), []);
+    for (const groupKey of groupKeys) {
+      groups.set(groupKey, []);
     }
 
     // Get results based on the source names.
     const sources = await trx.productSource.findMany({
       where: {
         productType: filter?.productType,
-        sourceName: { in: sourceNames, mode: 'insensitive' },
+        groupKey: { in: groupKeys, mode: 'insensitive' },
+      },
+      include: {
+        gpuChipset: filter?.gpuProductType === GpuProductType.RetailModel,
       },
     });
     for (const source of sources) {
-      const key = source.sourceName.toLowerCase();
+      const key = source.groupKey;
       groups.get(key).push(source);
     }
 
     // Count total groups
     const total = (
       await trx.productSource.findMany({
-        distinct: ['productType', 'sourceName'],
-        select: { sourceName: true },
+        distinct: ['groupKey'],
+        select: { groupKey: true },
         where: this.generateWhere(filter),
       })
     ).length;
@@ -166,6 +173,7 @@ export class ProductSourceRepository {
         AND: [
           { productType },
           { sourceKey },
+          { gpuChipsetId: { equals: null } },
           {
             OR: [
               {
@@ -250,11 +258,25 @@ export class ProductSourceRepository {
       ? { contains: search, mode: 'insensitive' }
       : undefined;
 
+    // Handle GPU-specific filters
+    let gpuChipsetIdWhere: Prisma.IntNullableFilter;
+    if (productType === ProductType.Gpu) {
+      const gpuProductType = filter?.gpuProductType || null;
+      if (gpuProductType === GpuProductType.Chipset) {
+        gpuChipsetIdWhere = { equals: null };
+      } else if (gpuProductType === GpuProductType.RetailModel) {
+        gpuChipsetIdWhere = { not: null };
+      } else {
+        throw new Error('Invalid gpu product type');
+      }
+    }
+
     return {
       AND: [
         { productType: productTypeWhere },
-        { archived: archivedWhere },
         { sourceName: sourceNameWhere },
+        { gpuChipsetId: gpuChipsetIdWhere },
+        { archived: archivedWhere },
       ],
     };
   }

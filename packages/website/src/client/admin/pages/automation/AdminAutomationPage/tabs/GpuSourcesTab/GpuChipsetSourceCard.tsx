@@ -7,9 +7,10 @@ import {
   AutomationActionType,
   CreateGpuActionData,
   GpuDataSourceKey,
+  GpuProductSource,
+  GpuProductSourceGroup,
   Product,
   ProductSource,
-  ProductSourceGroup,
   ProductType,
   UpdateGpuActionData,
 } from '@pcpartdb/shared';
@@ -33,11 +34,11 @@ import {
 import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
 import React, { useCallback, useMemo, useState } from 'react';
 
-interface GpuSourceCardProps {
-  sources: ProductSourceGroup;
+interface GpuChipsetSourceCardProps {
+  sources: GpuProductSourceGroup;
 }
 
-export const GpuSourceCard = (props: GpuSourceCardProps) => {
+export const GpuChipsetSourceCard = (props: GpuChipsetSourceCardProps) => {
   const { sources } = props;
 
   // States
@@ -76,6 +77,10 @@ export const GpuSourceCard = (props: GpuSourceCardProps) => {
   );
   const [appliedGpu, setAppliedGpu] = useState<Product>(null);
 
+  const [groupKey] = useState(
+    () => techPowerUp?.groupKey || passMark?.groupKey || ulBenchmark?.groupKey,
+  );
+
   const techPowerUpId = techPowerUp?.id;
   const passMarkId = passMark?.id;
   const ulBenchmarkId = ulBenchmark?.id;
@@ -103,27 +108,27 @@ export const GpuSourceCard = (props: GpuSourceCardProps) => {
 
   // Callbacks
 
-  const setNameFromSource = useCallback((source: ProductSource) => {
+  const setNameFromSource = useCallback((source: GpuProductSource) => {
     const name = source.sourceName;
     setPreferredName(name);
   }, []);
 
   const save = useCallback(async () => {
-    const newTechPowerUp: ProductSource =
+    const newTechPowerUp: GpuProductSource =
       techPowerUp != null
         ? {
             ...techPowerUp,
             archived: archiveTechPowerUp,
           }
         : null;
-    const newPassMark: ProductSource =
+    const newPassMark: GpuProductSource =
       passMark != null
         ? {
             ...passMark,
             archived: archivePassMark,
           }
         : null;
-    const newUlBenchmark: ProductSource =
+    const newUlBenchmark: GpuProductSource =
       ulBenchmark != null
         ? {
             ...ulBenchmark,
@@ -144,13 +149,32 @@ export const GpuSourceCard = (props: GpuSourceCardProps) => {
     // Close the card
     await setExpanded(false);
   }, [
-    archiveUlBenchmark,
-    archivePassMark,
-    archiveTechPowerUp,
-    ulBenchmark,
-    passMark,
     techPowerUp,
+    archiveTechPowerUp,
+    passMark,
+    archivePassMark,
+    ulBenchmark,
+    archiveUlBenchmark,
   ]);
+
+  const setTechPowerUpFromAutocomplete = useCallback(
+    (source: ProductSource) => {
+      setTechPowerUp(source as GpuProductSource);
+      setArchiveTechPowerUp(!!source);
+    },
+    [],
+  );
+  const setPassMarkFromAutocomplete = useCallback((source: ProductSource) => {
+    setPassMark(source as GpuProductSource);
+    setArchivePassMark(!!source);
+  }, []);
+  const setUlBenchmarkFromAutocomplete = useCallback(
+    (source: ProductSource) => {
+      setUlBenchmark(source as GpuProductSource);
+      setArchiveUlBenchmark(!!source);
+    },
+    [],
+  );
 
   const applyToGpu = useCallback(async () => {
     const sources = [techPowerUp, passMark, ulBenchmark]
@@ -184,7 +208,7 @@ export const GpuSourceCard = (props: GpuSourceCardProps) => {
     await automationService.createAction({
       type: AutomationActionType.CreateGpu,
       description: preferredName,
-      data: { preferredName, sources } as CreateGpuActionData,
+      data: { preferredName, sources, chipsetId: null } as CreateGpuActionData,
     });
 
     // Update sources to archive them.
@@ -208,6 +232,7 @@ export const GpuSourceCard = (props: GpuSourceCardProps) => {
         <div className="flex flex-1 flex-col gap-1">
           <CardTitle>{preferredName}</CardTitle>
           <span className="text-xs">{subtitle}</span>
+          <span className="text-xs">{groupKey}</span>
         </div>
 
         {expanded && <ChevronDownIcon className="w-8" />}
@@ -259,7 +284,7 @@ export const GpuSourceCard = (props: GpuSourceCardProps) => {
                   productType={ProductType.Gpu}
                   source={GpuDataSourceKey.TechPowerUp}
                   value={techPowerUp}
-                  onChange={setTechPowerUp}
+                  onChange={setTechPowerUpFromAutocomplete}
                 />
                 <TextInput value={techPowerUp?.sourceUrl} disabled />
               </div>
@@ -314,7 +339,7 @@ export const GpuSourceCard = (props: GpuSourceCardProps) => {
                   productType={ProductType.Gpu}
                   source={GpuDataSourceKey.VideocardBenchmarks}
                   value={passMark}
-                  onChange={setPassMark}
+                  onChange={setPassMarkFromAutocomplete}
                 />
                 <TextInput value={passMark?.sourceUrl} disabled />
               </div>
@@ -370,7 +395,7 @@ export const GpuSourceCard = (props: GpuSourceCardProps) => {
                   productType={ProductType.Gpu}
                   source={GpuDataSourceKey.UlBenchmarks}
                   value={ulBenchmark}
-                  onChange={setUlBenchmark}
+                  onChange={setUlBenchmarkFromAutocomplete}
                 />
                 <TextInput value={ulBenchmark?.sourceUrl} disabled />
               </div>
