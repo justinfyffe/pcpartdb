@@ -94,16 +94,61 @@ export const GpuChipsetSourceCard = (props: GpuChipsetSourceCardProps) => {
 
   // Memos
 
-  const subtitle = useMemo(
+  const totalTechPowerUpInGroup = useMemo(
+    () =>
+      sources.filter(
+        (source) => source.sourceKey === GpuDataSourceKey.TechPowerUp,
+      ).length,
+    [sources],
+  );
+  const totalPassMarkInGroup = useMemo(
+    () =>
+      sources.filter(
+        (source) => source.sourceKey === GpuDataSourceKey.VideocardBenchmarks,
+      ).length,
+    [sources],
+  );
+  const totalUlBenchmarkInGroup = useMemo(
+    () =>
+      sources.filter(
+        (source) => source.sourceKey === GpuDataSourceKey.UlBenchmarks,
+      ).length,
+    [sources],
+  );
+
+  const sourcesList = useMemo(
     () =>
       [
-        techPowerUp ? 'TechPowerUp' : null,
-        passMark ? 'PassMark' : null,
-        ulBenchmark ? 'UL Benchmarks' : null,
+        techPowerUp
+          ? `TechPowerUp${
+              totalTechPowerUpInGroup > 1
+                ? ` (x${totalTechPowerUpInGroup})`
+                : ''
+            }`
+          : null,
+        passMark
+          ? `PassMark${
+              totalPassMarkInGroup > 1 ? ` (x${totalPassMarkInGroup})` : ''
+            }`
+          : null,
+        ulBenchmark
+          ? `UL Benchmarks${
+              totalUlBenchmarkInGroup > 1
+                ? ` (x${totalUlBenchmarkInGroup})`
+                : ''
+            }`
+          : null,
       ]
         .filter((source) => source != null)
         .join(', '),
-    [ulBenchmark, passMark, techPowerUp],
+    [
+      passMark,
+      techPowerUp,
+      totalPassMarkInGroup,
+      totalTechPowerUpInGroup,
+      totalUlBenchmarkInGroup,
+      ulBenchmark,
+    ],
   );
 
   // Callbacks
@@ -231,8 +276,13 @@ export const GpuChipsetSourceCard = (props: GpuChipsetSourceCardProps) => {
 
         <div className="flex flex-1 flex-col gap-1">
           <CardTitle>{preferredName}</CardTitle>
-          <span className="text-xs">{subtitle}</span>
-          <span className="text-xs">{groupKey}</span>
+
+          <span className="text-xs">
+            <span className="font-semibold">Grouping:</span> {groupKey}
+          </span>
+          <span className="text-xs">
+            <span className="font-semibold">Sources:</span> {sourcesList}
+          </span>
         </div>
 
         {expanded && <ChevronDownIcon className="w-8" />}
@@ -253,7 +303,14 @@ export const GpuChipsetSourceCard = (props: GpuChipsetSourceCardProps) => {
             <Field className="flex-1">
               <div className="flex justify-between">
                 <div className="flex gap-2">
-                  <span>TechPowerUp</span>
+                  <span>
+                    TechPowerUp{' '}
+                    {totalTechPowerUpInGroup > 1 ? (
+                      <>(x{totalTechPowerUpInGroup})</>
+                    ) : (
+                      <></>
+                    )}
+                  </span>
                   {techPowerUp != null && (
                     <a
                       href={techPowerUp.sourceUrl}
@@ -308,7 +365,14 @@ export const GpuChipsetSourceCard = (props: GpuChipsetSourceCardProps) => {
             <Field className="flex-1">
               <div className="flex justify-between">
                 <div className="flex gap-2">
-                  <span>PassMark</span>
+                  <span>
+                    PassMark{' '}
+                    {totalPassMarkInGroup > 1 ? (
+                      <>(x{totalPassMarkInGroup})</>
+                    ) : (
+                      <></>
+                    )}
+                  </span>
                   {passMark != null && (
                     <a
                       href={passMark.sourceUrl}
@@ -364,7 +428,14 @@ export const GpuChipsetSourceCard = (props: GpuChipsetSourceCardProps) => {
             <Field className="flex-1">
               <div className="flex justify-between">
                 <div className="flex gap-2">
-                  <span>UL Benchmarks</span>
+                  <span>
+                    UL Benchmarks{' '}
+                    {totalUlBenchmarkInGroup > 1 ? (
+                      <>(x{totalUlBenchmarkInGroup})</>
+                    ) : (
+                      <></>
+                    )}
+                  </span>
                   {ulBenchmark != null && (
                     <a
                       href={ulBenchmark.sourceUrl}

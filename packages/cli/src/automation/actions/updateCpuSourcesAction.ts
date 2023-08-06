@@ -106,14 +106,14 @@ export async function updateCpuSourcesAction(
   console.log('Executing updateCpuSourcesAction');
 
   // Scrape CPU Sources
-  // const techPowerUpSources = await getTechPowerUpSources();
+  const techPowerUpSources = await getTechPowerUpSources();
   const passMarkSources = await getPassMarkSources();
-  // const geekBenchSources = await getGeekBenchSources();
+  const geekBenchSources = await getGeekBenchSources();
 
   // Upload CPU Sources
-  // await uploadCpuSources(techPowerUpSources, context);
+  await uploadCpuSources(techPowerUpSources, context);
   await uploadCpuSources(passMarkSources, context);
-  // await uploadCpuSources(geekBenchSources, context);
+  await uploadCpuSources(geekBenchSources, context);
 
   // Trigger auto-archive
   await context.api.post('products/sources/auto-archive', null);

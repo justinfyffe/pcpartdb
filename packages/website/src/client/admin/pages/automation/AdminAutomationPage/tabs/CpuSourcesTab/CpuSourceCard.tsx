@@ -138,7 +138,14 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
       ]
         .filter((source) => source != null)
         .join(', '),
-    [geekBench, passMark, techPowerUp],
+    [
+      geekBench,
+      passMark,
+      techPowerUp,
+      totalGeekBenchInGroup,
+      totalPassMarkInGroup,
+      totalTechPowerUpInGroup,
+    ],
   );
 
   // Callbacks

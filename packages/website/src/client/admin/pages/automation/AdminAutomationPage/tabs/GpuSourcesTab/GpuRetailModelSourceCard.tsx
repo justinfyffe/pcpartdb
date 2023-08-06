@@ -60,12 +60,28 @@ export const GpuRetailModelSourceCard = (
 
   // Memos
 
-  const subtitle = useMemo(
+  const totalTechPowerUpInGroup = useMemo(
     () =>
-      [techPowerUp ? 'TechPowerUp' : null]
+      sources.filter(
+        (source) => source.sourceKey === GpuDataSourceKey.TechPowerUp,
+      ).length,
+    [sources],
+  );
+
+  const sourcesList = useMemo(
+    () =>
+      [
+        techPowerUp
+          ? `TechPowerUp${
+              totalTechPowerUpInGroup > 1
+                ? ` (x${totalTechPowerUpInGroup})`
+                : ''
+            }`
+          : null,
+      ]
         .filter((source) => source != null)
         .join(', '),
-    [techPowerUp],
+    [techPowerUp, totalTechPowerUpInGroup],
   );
 
   // Callbacks
@@ -130,8 +146,13 @@ export const GpuRetailModelSourceCard = (
 
         <div className="flex flex-1 flex-col gap-1">
           <CardTitle>{preferredName}</CardTitle>
-          <span className="text-xs">{subtitle}</span>
-          <span className="text-xs">{groupKey}</span>
+
+          <span className="text-xs">
+            <span className="font-semibold">Grouping:</span> {groupKey}
+          </span>
+          <span className="text-xs">
+            <span className="font-semibold">Sources:</span> {sourcesList}
+          </span>
         </div>
 
         {expanded && <ChevronDownIcon className="w-8" />}
@@ -152,7 +173,14 @@ export const GpuRetailModelSourceCard = (
             <Field className="flex-1">
               <div className="flex justify-between">
                 <div className="flex gap-2">
-                  <span>TechPowerUp</span>
+                  <span>
+                    TechPowerUp{' '}
+                    {totalTechPowerUpInGroup > 1 ? (
+                      <>(x{totalTechPowerUpInGroup})</>
+                    ) : (
+                      <></>
+                    )}
+                  </span>
                   {techPowerUp != null && (
                     <a
                       href={techPowerUp.sourceUrl}
