@@ -6,24 +6,29 @@ import {
 import {
   AutomationActionType,
   CreateGpuActionData,
+  formatProductSourceName,
+  getViewGpuPath,
   GpuDataSourceKey,
   GpuProductSource,
   GpuProductSourceGroup,
+  ProductType,
 } from '@pcpartdb/shared';
 import { automationService } from 'packages/website/src/client/automation/services';
-import { productSourceService } from 'packages/website/src/client/product';
+import {
+  formatGpuName,
+  productSourceService,
+} from 'packages/website/src/client/product';
 import {
   Card,
   CardContent,
   CardTitle,
-  Checkbox,
   Field,
   FieldHint,
-  FieldOptional,
   TextInput,
 } from 'packages/website/src/client/shared/components';
 import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
 import React, { useCallback, useMemo, useState } from 'react';
+import { SourceInputField } from '../../components/SourceInputField';
 
 interface GpuRetailModelSourceCardProps {
   sources: GpuProductSourceGroup;
@@ -38,60 +43,57 @@ export const GpuRetailModelSourceCard = (
 
   const [expanded, setExpanded] = useState(false);
 
-  // Extract each individual source from the group
-  const [techPowerUp, setTechPowerUp] = useState(() => {
-    return (
-      sources.filter(
-        (source) => source.sourceKey === GpuDataSourceKey.TechPowerUp,
-      )[0] || null
-    );
-  });
-
+  const techPowerUpSources = useMemo(
+    () =>
+      sources
+        .filter((source) => source.sourceKey === GpuDataSourceKey.TechPowerUp)
+        .sort((a, b) => a.sourceName.localeCompare(b.sourceName)),
+    [sources],
+  );
+  const [techPowerUp, setTechPowerUp] = useState(
+    () =>
+      techPowerUpSources.find((value) => value.archived) ||
+      techPowerUpSources[0] ||
+      null,
+  );
   const [archiveTechPowerUp, setArchiveTechPowerUp] = useState(!!techPowerUp);
 
   const [preferredName, setPreferredName] = useState(
     () => sources[0].sourceName,
   );
-
   const [groupKey] = useState(() => techPowerUp?.groupKey);
-
-  const techPowerUpId = techPowerUp?.id;
-  const techPowerUpArchived = techPowerUp?.archived;
 
   // Memos
 
-  const totalTechPowerUpInGroup = useMemo(
-    () =>
-      sources.filter(
-        (source) => source.sourceKey === GpuDataSourceKey.TechPowerUp,
-      ).length,
-    [sources],
-  );
+  const [chipsetName, chipsetHref] = useMemo(() => {
+    if (techPowerUp?.gpuChipset == null) {
+      return [null, null];
+    }
+
+    const name = formatGpuName(techPowerUp.gpuChipset);
+    const href = getViewGpuPath(techPowerUp.gpuChipset);
+    return [name, href];
+  }, [techPowerUp?.gpuChipset]);
 
   const sourcesList = useMemo(
     () =>
       [
         techPowerUp
-          ? `TechPowerUp${
-              totalTechPowerUpInGroup > 1
-                ? ` (x${totalTechPowerUpInGroup})`
+          ? `${formatProductSourceName(GpuDataSourceKey.TechPowerUp)} ${
+              techPowerUpSources.length > 1
+                ? `(x${techPowerUpSources.length})`
                 : ''
-            }`
+            }`.trim()
           : null,
       ]
         .filter((source) => source != null)
         .join(', '),
-    [techPowerUp, totalTechPowerUpInGroup],
+    [techPowerUp, techPowerUpSources.length],
   );
 
   // Callbacks
 
-  const setNameFromSource = useCallback((source: GpuProductSource) => {
-    const name = source.sourceName;
-    setPreferredName(name);
-  }, []);
-
-  const save = useCallback(async () => {
+  const handleSave = useCallback(async () => {
     const newTechPowerUp: GpuProductSource =
       techPowerUp != null
         ? {
@@ -112,7 +114,7 @@ export const GpuRetailModelSourceCard = (
     await setExpanded(false);
   }, [archiveTechPowerUp, techPowerUp]);
 
-  const createGpu = useCallback(async () => {
+  const handleCreateGpu = useCallback(async () => {
     const sources = [techPowerUp].filter((source) => source != null);
 
     // Create automation action to create new GPU
@@ -127,8 +129,8 @@ export const GpuRetailModelSourceCard = (
     });
 
     // Update sources to archive them.
-    await save();
-  }, [save, preferredName, techPowerUp]);
+    await handleSave();
+  }, [handleSave, preferredName, techPowerUp]);
 
   // Render
 
@@ -138,7 +140,7 @@ export const GpuRetailModelSourceCard = (
         className="relative flex justify-between items-center gap-4 cursor-pointer"
         onClick={() => setExpanded(!expanded)}
       >
-        {techPowerUpArchived && (
+        {techPowerUp?.archived && (
           <div className="absolute left-0 right-0 flex justify-center text-3xl text-dimmed">
             Archived
           </div>
@@ -171,67 +173,36 @@ export const GpuRetailModelSourceCard = (
 
           <div className="flex gap-4 items-start">
             <Field className="flex-1">
-              <div className="flex justify-between">
-                <div className="flex gap-2">
-                  <span>
-                    TechPowerUp{' '}
-                    {totalTechPowerUpInGroup > 1 ? (
-                      <>(x{totalTechPowerUpInGroup})</>
-                    ) : (
-                      <></>
-                    )}
-                  </span>
-                  {techPowerUp != null && (
-                    <a
-                      href={techPowerUp.sourceUrl}
-                      target="_blank"
-                      rel="noreferrer nofollow"
-                    >
-                      <ArrowTopRightOnSquareIcon className="w-4 inline mb-1" />
-                    </a>
-                  )}
-                </div>
-
-                {techPowerUp != null && (
-                  <FieldOptional>
-                    <a
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setNameFromSource(techPowerUp);
-                      }}
-                      className="cursor-pointer"
-                    >
-                      use name
-                    </a>
-                  </FieldOptional>
+              <div className="flex gap-2">
+                Chipset{' '}
+                {chipsetHref != null && (
+                  <a href={chipsetHref} target="_blank" rel="noreferrer">
+                    <ArrowTopRightOnSquareIcon className="w-4 inline mb-1" />
+                  </a>
                 )}
               </div>
-              <div className="flex flex-col flex-1 gap-2">
-                <TextInput value={techPowerUp.sourceName} disabled />
-                <TextInput value={techPowerUp.sourceUrl} disabled />
-              </div>
-              {techPowerUp != null && (
-                <div className="flex justify-between">
-                  <FieldHint>
-                    {techPowerUpId}:{' '}
-                    {techPowerUpArchived ? <>Archived</> : <>Not Archived</>}
-                  </FieldHint>
-                  <Checkbox
-                    disabled={techPowerUp == null}
-                    value={archiveTechPowerUp}
-                    onChange={(checked) => setArchiveTechPowerUp(checked)}
-                  >
-                    Archive
-                  </Checkbox>
-                </div>
-              )}
+              <TextInput value={chipsetName} disabled />
             </Field>
+
+            <SourceInputField
+              productType={ProductType.Gpu}
+              sourceKey={GpuDataSourceKey.TechPowerUp}
+              sources={techPowerUpSources}
+              currentSource={techPowerUp}
+              archive={archiveTechPowerUp}
+              setArchive={setArchiveTechPowerUp}
+              onUseName={setPreferredName}
+              onChange={(source) => setTechPowerUp(source as GpuProductSource)}
+              sourceDisabled
+            />
           </div>
 
           <div className="flex justify-end">
             <div className="flex gap-4">
-              <GenericButton onClick={save}>Save</GenericButton>
-              <GenericButton onClick={createGpu}>Create GPU</GenericButton>
+              <GenericButton onClick={handleSave}>Save</GenericButton>
+              <GenericButton onClick={handleCreateGpu}>
+                Create GPU
+              </GenericButton>
             </div>
           </div>
         </CardContent>

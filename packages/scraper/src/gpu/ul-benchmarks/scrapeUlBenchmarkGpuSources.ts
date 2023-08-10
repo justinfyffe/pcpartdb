@@ -70,7 +70,7 @@ function parseGpuName(gpuName: string) {
 }
 
 function getExternalKey(url: string) {
-  const startIndex = url.lastIndexOf('/');
+  const startIndex = url.lastIndexOf('/') + 1;
   const endIndex = url.lastIndexOf('+review');
   if (endIndex <= startIndex) {
     return null;

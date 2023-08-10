@@ -1,22 +1,15 @@
 HIGH LEVEL TODO:
 - Automation
-  - fix bug when running createGpuAction
-      - Upgrade node, node 14 lacks this.
-      Error occurred during automation execution TypeError: company.replaceAll is not a function
-        at generateGpuSlug (/home/justin/dev/pcpartdb/packages/shared/dist/cjs/product/gpu/utils.js:17:14)
-        at createGpuAction (/home/justin/dev/pcpartdb/packages/cli/dist/automation/actions/createGpuAction.js:41:45)
-  - Simplify source card code
-    - use source input on cpus and gpu retail model
-  - Finish PickSourceDialog
-    - integrate with cpus
+  - Install node 20 on desktop and server
+  - graceful failures
+    - handle 500s; should they retry, or error out?
+      - Maybe retry X number of times before failing
   - clean up name of columns/data structures
   - clean up names of indexes/uniques
-  - group key to group sources together after saving?
-    - can use the sanitize name function for this
   - add preferred slug with generate slug button. uses preferred name
   - add edit button after approving
   - Mobile friendly so can approve anywhere
-  - how to terminate without breaking? also terminate remotely
+  - ability to terminate from website so i can do it anywhere 
   - validate that source urls are valid urls (includes domain) before creating sources
     - also validate any other things coming in
 - code cleanup
@@ -30,6 +23,7 @@ HIGH LEVEL TODO:
 - auto-backup system
 - seamless deployment
   - use docker to build on pc instead of server
+  - use docker in general
 - accessibility
 
 

@@ -23,6 +23,7 @@ interface SourceInputFieldProps {
   sourceKey: ProductSourceKey;
   sources: ProductSource[];
   currentSource?: ProductSource;
+  sourceDisabled?: boolean;
 
   archive?: boolean;
   setArchive?: (archive: boolean) => void;
@@ -37,6 +38,7 @@ export const SourceInputField = (props: SourceInputFieldProps) => {
     sourceKey,
     sources,
     currentSource,
+    sourceDisabled,
     archive,
     setArchive,
     onUseName,
@@ -125,6 +127,7 @@ export const SourceInputField = (props: SourceInputFieldProps) => {
           source={sourceKey}
           value={currentSource}
           onChange={onChange}
+          disabled={sourceDisabled}
         />
         <TextInput value={currentSource?.sourceUrl} disabled />
       </div>

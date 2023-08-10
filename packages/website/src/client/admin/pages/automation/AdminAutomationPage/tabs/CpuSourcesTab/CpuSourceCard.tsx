@@ -1,16 +1,12 @@
-import {
-  ArrowTopRightOnSquareIcon,
-  ChevronDownIcon,
-  ChevronLeftIcon,
-} from '@heroicons/react/24/outline';
+import { ChevronDownIcon, ChevronLeftIcon } from '@heroicons/react/24/outline';
 import {
   AutomationActionType,
   CpuDataSourceKey,
   CpuProductSource,
   CpuProductSourceGroup,
   CreateCpuActionData,
+  formatProductSourceName,
   Product,
-  ProductSource,
   ProductType,
   UpdateCpuActionData,
 } from '@pcpartdb/shared';
@@ -20,19 +16,17 @@ import {
   ProductAutocomplete,
   productSourceService,
 } from 'packages/website/src/client/product';
-import { ProductSourceAutocomplete } from 'packages/website/src/client/product/components/ProductSourceAutocomplete';
 import {
   Card,
   CardContent,
   CardTitle,
-  Checkbox,
   Field,
   FieldHint,
-  FieldOptional,
   TextInput,
 } from 'packages/website/src/client/shared/components';
 import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
 import React, { useCallback, useMemo, useState } from 'react';
+import { SourceInputField } from '../../components/SourceInputField';
 
 interface CpuSourceCardProps {
   sources: CpuProductSourceGroup;
@@ -41,121 +35,107 @@ interface CpuSourceCardProps {
 export const CpuSourceCard = (props: CpuSourceCardProps) => {
   const { sources } = props;
 
-  // States
+  // States & Memos
 
   const [expanded, setExpanded] = useState(false);
 
-  // Extract each individual source from the group
-  const [techPowerUp, setTechPowerUp] = useState(() => {
-    return (
-      sources.filter(
-        (source) => source.sourceKey === CpuDataSourceKey.TechPowerUp,
-      )[0] || null
-    );
-  });
-  const [passMark, setPassMark] = useState(() => {
-    return (
-      sources.filter(
-        (source) => source.sourceKey === CpuDataSourceKey.PassMark,
-      )[0] || null
-    );
-  });
-  const [geekBench, setGeekBench] = useState(() => {
-    return (
-      sources.filter(
-        (source) => source.sourceKey === CpuDataSourceKey.GeekBench,
-      )[0] || null
-    );
-  });
-
+  const techPowerUpSources = useMemo(
+    () =>
+      sources
+        .filter((source) => source.sourceKey === CpuDataSourceKey.TechPowerUp)
+        .sort((a, b) => a.sourceName.localeCompare(b.sourceName)),
+    [sources],
+  );
+  const [techPowerUp, setTechPowerUp] = useState(
+    () =>
+      techPowerUpSources.find((value) => value.archived) ||
+      techPowerUpSources[0] ||
+      null,
+  );
   const [archiveTechPowerUp, setArchiveTechPowerUp] = useState(!!techPowerUp);
+
+  const passMarkSources = useMemo(
+    () =>
+      sources
+        .filter((source) => source.sourceKey === CpuDataSourceKey.PassMark)
+        .sort((a, b) => a.sourceName.localeCompare(b.sourceName)),
+    [sources],
+  );
+  const [passMark, setPassMark] = useState(
+    () =>
+      passMarkSources.find((value) => value.archived) ||
+      passMarkSources[0] ||
+      null,
+  );
   const [archivePassMark, setArchivePassMark] = useState(!!passMark);
+
+  const geekBenchSources = useMemo(
+    () =>
+      sources
+        .filter((source) => source.sourceKey === CpuDataSourceKey.GeekBench)
+        .sort((a, b) => a.sourceName.localeCompare(b.sourceName)),
+    [sources],
+  );
+  const [geekBench, setGeekBench] = useState(
+    () =>
+      geekBenchSources.find((value) => value.archived) ||
+      geekBenchSources[0] ||
+      null,
+  );
   const [archiveGeekBench, setArchiveGeekBench] = useState(!!geekBench);
+
+  const allArchived = useMemo(() => {
+    return (
+      (techPowerUp?.archived ?? true) &&
+      (passMark?.archived ?? true) &&
+      (geekBench?.archived ?? true)
+    );
+  }, [geekBench?.archived, passMark?.archived, techPowerUp?.archived]);
 
   const [preferredName, setPreferredName] = useState(
     () => sources[0].sourceName,
   );
   const [appliedCpu, setAppliedCpu] = useState<Product>(null);
-
   const [groupKey] = useState(
     () => techPowerUp?.groupKey || passMark?.groupKey || geekBench?.groupKey,
-  );
-
-  const techPowerUpId = techPowerUp?.id;
-  const passMarkId = passMark?.id;
-  const geekBenchId = geekBench?.id;
-  const techPowerUpArchived = techPowerUp?.archived;
-  const passMarkArchived = passMark?.archived;
-  const geekBenchArchived = geekBench?.archived;
-  const allArchived =
-    (techPowerUpArchived ?? true) &&
-    (passMarkArchived ?? true) &&
-    (geekBenchArchived ?? true);
-
-  // Memos
-
-  const totalTechPowerUpInGroup = useMemo(
-    () =>
-      sources.filter(
-        (source) => source.sourceKey === CpuDataSourceKey.TechPowerUp,
-      ).length,
-    [sources],
-  );
-  const totalPassMarkInGroup = useMemo(
-    () =>
-      sources.filter((source) => source.sourceKey === CpuDataSourceKey.PassMark)
-        .length,
-    [sources],
-  );
-  const totalGeekBenchInGroup = useMemo(
-    () =>
-      sources.filter(
-        (source) => source.sourceKey === CpuDataSourceKey.GeekBench,
-      ).length,
-    [sources],
   );
 
   const sourcesList = useMemo(
     () =>
       [
         techPowerUp
-          ? `TechPowerUp${
-              totalTechPowerUpInGroup > 1
-                ? ` (x${totalTechPowerUpInGroup})`
+          ? `${formatProductSourceName(CpuDataSourceKey.TechPowerUp)} ${
+              techPowerUpSources.length > 1
+                ? `(x${techPowerUpSources.length})`
                 : ''
-            }`
+            }`.trim()
           : null,
         passMark
-          ? `PassMark${
-              totalPassMarkInGroup > 1 ? ` (x${totalPassMarkInGroup})` : ''
-            }`
+          ? `${formatProductSourceName(CpuDataSourceKey.PassMark)} ${
+              passMarkSources.length > 1 ? `(x${passMarkSources.length})` : ''
+            }`.trim()
           : null,
         geekBench
-          ? `GeekBench${
-              totalGeekBenchInGroup > 1 ? ` (x${totalGeekBenchInGroup})` : ''
-            }`
+          ? `${formatProductSourceName(CpuDataSourceKey.GeekBench)} ${
+              geekBenchSources.length > 1 ? `(x${geekBenchSources.length})` : ''
+            }`.trim()
           : null,
       ]
         .filter((source) => source != null)
         .join(', '),
     [
-      geekBench,
       passMark,
+      passMarkSources.length,
       techPowerUp,
-      totalGeekBenchInGroup,
-      totalPassMarkInGroup,
-      totalTechPowerUpInGroup,
+      techPowerUpSources.length,
+      geekBench,
+      geekBenchSources.length,
     ],
   );
 
   // Callbacks
 
-  const setNameFromSource = useCallback((source: CpuProductSource) => {
-    const name = source.sourceName;
-    setPreferredName(name);
-  }, []);
-
-  const save = useCallback(async () => {
+  const handleSave = useCallback(async () => {
     const newTechPowerUp: CpuProductSource =
       techPowerUp != null
         ? {
@@ -199,25 +179,7 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
     techPowerUp,
   ]);
 
-  const setTechPowerUpFromAutocomplete = useCallback(
-    (source: ProductSource) => {
-      setTechPowerUp(source as CpuProductSource);
-      setArchiveTechPowerUp(!!source);
-    },
-    [],
-  );
-
-  const setPassMarkFromAutocomplete = useCallback((source: ProductSource) => {
-    setPassMark(source as CpuProductSource);
-    setArchivePassMark(!!source);
-  }, []);
-
-  const setGeekBenchFromAutocomplete = useCallback((source: ProductSource) => {
-    setGeekBench(source as CpuProductSource);
-    setArchiveGeekBench(!!source);
-  }, []);
-
-  const applyToCpu = useCallback(async () => {
+  const handleApplyToCpu = useCallback(async () => {
     const sources = [techPowerUp, passMark, geekBench]
       .filter((source) => source != null && source.id != null)
       .map((source) => source.id);
@@ -237,10 +199,10 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
     });
 
     // Update sources
-    await save();
-  }, [techPowerUp, passMark, geekBench, appliedCpu, save]);
+    await handleSave();
+  }, [techPowerUp, passMark, geekBench, appliedCpu, handleSave]);
 
-  const createCpu = useCallback(async () => {
+  const handleCreateCpu = useCallback(async () => {
     const sources = [techPowerUp, passMark, geekBench].filter(
       (source) => source != null,
     );
@@ -253,8 +215,8 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
     });
 
     // Update sources to archive them.
-    await save();
-  }, [geekBench, save, passMark, preferredName, techPowerUp]);
+    await handleSave();
+  }, [geekBench, handleSave, passMark, preferredName, techPowerUp]);
 
   // Render
 
@@ -295,193 +257,38 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
           </Field>
 
           <div className="flex gap-4 items-start">
-            <Field className="flex-1">
-              <div className="flex justify-between">
-                <div className="flex gap-2">
-                  <span>
-                    TechPowerUp{' '}
-                    {totalTechPowerUpInGroup > 1 ? (
-                      <>(x{totalTechPowerUpInGroup})</>
-                    ) : (
-                      <></>
-                    )}
-                  </span>
-                  {techPowerUp != null && (
-                    <a
-                      href={techPowerUp.sourceUrl}
-                      target="_blank"
-                      rel="noreferrer nofollow"
-                    >
-                      <ArrowTopRightOnSquareIcon className="w-4 inline mb-1" />
-                    </a>
-                  )}
-                </div>
+            <SourceInputField
+              productType={ProductType.Cpu}
+              sourceKey={CpuDataSourceKey.TechPowerUp}
+              sources={techPowerUpSources}
+              currentSource={techPowerUp}
+              archive={archiveTechPowerUp}
+              setArchive={setArchiveTechPowerUp}
+              onUseName={setPreferredName}
+              onChange={(source) => setTechPowerUp(source as CpuProductSource)}
+            />
 
-                {techPowerUp != null && (
-                  <FieldOptional>
-                    <a
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setNameFromSource(techPowerUp);
-                      }}
-                      className="cursor-pointer"
-                    >
-                      use name
-                    </a>
-                  </FieldOptional>
-                )}
-              </div>
-              <div className="flex flex-col flex-1 gap-2">
-                <ProductSourceAutocomplete
-                  productType={ProductType.Cpu}
-                  source={CpuDataSourceKey.TechPowerUp}
-                  value={techPowerUp}
-                  onChange={setTechPowerUpFromAutocomplete}
-                />
-                <TextInput value={techPowerUp?.sourceUrl} disabled />
-              </div>
-              {techPowerUp != null && (
-                <div className="flex justify-between">
-                  <FieldHint>
-                    {techPowerUpId}:{' '}
-                    {techPowerUpArchived ? <>Archived</> : <>Not Archived</>}
-                  </FieldHint>
-                  <Checkbox
-                    disabled={techPowerUp == null}
-                    value={archiveTechPowerUp}
-                    onChange={(checked) => setArchiveTechPowerUp(checked)}
-                  >
-                    Archive
-                  </Checkbox>
-                </div>
-              )}
-            </Field>
+            <SourceInputField
+              productType={ProductType.Cpu}
+              sourceKey={CpuDataSourceKey.PassMark}
+              sources={passMarkSources}
+              currentSource={passMark}
+              archive={archivePassMark}
+              setArchive={setArchivePassMark}
+              onUseName={setPreferredName}
+              onChange={(source) => setPassMark(source as CpuProductSource)}
+            />
 
-            <Field className="flex-1">
-              <div className="flex justify-between">
-                <div className="flex gap-2">
-                  <span>
-                    PassMark{' '}
-                    {totalPassMarkInGroup > 1 ? (
-                      <>(x{totalPassMarkInGroup})</>
-                    ) : (
-                      <></>
-                    )}
-                  </span>
-                  {passMark != null && (
-                    <a
-                      href={passMark.sourceUrl}
-                      target="_blank"
-                      rel="noreferrer nofollow"
-                    >
-                      <ArrowTopRightOnSquareIcon className="w-4 inline mb-1" />
-                    </a>
-                  )}
-                </div>
-
-                {passMark != null && (
-                  <FieldOptional>
-                    <a
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setNameFromSource(passMark);
-                      }}
-                      className="cursor-pointer"
-                    >
-                      use name
-                    </a>
-                  </FieldOptional>
-                )}
-              </div>
-              <div className="flex flex-col flex-1 gap-2">
-                <ProductSourceAutocomplete
-                  productType={ProductType.Cpu}
-                  source={CpuDataSourceKey.PassMark}
-                  value={passMark}
-                  onChange={setPassMarkFromAutocomplete}
-                />
-                <TextInput value={passMark?.sourceUrl} disabled />
-              </div>
-              {passMark != null && (
-                <div className="flex justify-between">
-                  <FieldHint>
-                    {passMarkId}:{' '}
-                    {passMarkArchived ? <>Archived</> : <>Not Archived</>}
-                  </FieldHint>
-
-                  <Checkbox
-                    disabled={passMark == null}
-                    value={archivePassMark}
-                    onChange={(checked) => setArchivePassMark(checked)}
-                  >
-                    Archive
-                  </Checkbox>
-                </div>
-              )}
-            </Field>
-
-            <Field className="flex-1">
-              <div className="flex justify-between">
-                <div className="flex gap-2">
-                  <span>
-                    GeekBench{' '}
-                    {totalGeekBenchInGroup > 1 ? (
-                      <>(x{totalGeekBenchInGroup})</>
-                    ) : (
-                      <></>
-                    )}
-                  </span>
-                  {geekBench != null && (
-                    <a
-                      href={geekBench.sourceUrl}
-                      target="_blank"
-                      rel="noreferrer nofollow"
-                    >
-                      <ArrowTopRightOnSquareIcon className="w-4 inline mb-1" />
-                    </a>
-                  )}
-                </div>
-
-                {geekBench != null && (
-                  <FieldOptional>
-                    <a
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setNameFromSource(geekBench);
-                      }}
-                      className="cursor-pointer"
-                    >
-                      use name
-                    </a>
-                  </FieldOptional>
-                )}
-              </div>
-              <div className="flex flex-col flex-1 gap-2">
-                <ProductSourceAutocomplete
-                  productType={ProductType.Cpu}
-                  source={CpuDataSourceKey.GeekBench}
-                  value={geekBench}
-                  onChange={setGeekBenchFromAutocomplete}
-                />
-                <TextInput value={geekBench?.sourceUrl} disabled />
-              </div>
-              {geekBench != null && (
-                <div className="flex justify-between">
-                  <FieldHint>
-                    {geekBenchId}:{' '}
-                    {geekBenchArchived ? <>Archived</> : <>Not Archived</>}
-                  </FieldHint>
-
-                  <Checkbox
-                    disabled={geekBench == null}
-                    value={archiveGeekBench}
-                    onChange={(checked) => setArchiveGeekBench(checked)}
-                  >
-                    Archive
-                  </Checkbox>
-                </div>
-              )}
-            </Field>
+            <SourceInputField
+              productType={ProductType.Cpu}
+              sourceKey={CpuDataSourceKey.GeekBench}
+              sources={geekBenchSources}
+              currentSource={geekBench}
+              archive={archiveGeekBench}
+              setArchive={setArchiveGeekBench}
+              onUseName={setPreferredName}
+              onChange={(source) => setGeekBench(source as CpuProductSource)}
+            />
           </div>
 
           <div className="flex justify-between gap-4">
@@ -490,14 +297,19 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
                 productType={ProductType.Cpu}
                 onChangeProduct={setAppliedCpu}
               />
-              <GenericButton disabled={appliedCpu == null} onClick={applyToCpu}>
+              <GenericButton
+                disabled={appliedCpu == null}
+                onClick={handleApplyToCpu}
+              >
                 Apply
               </GenericButton>
             </div>
 
             <div className="flex gap-4">
-              <GenericButton onClick={save}>Archive</GenericButton>
-              <GenericButton onClick={createCpu}>Create CPU</GenericButton>
+              <GenericButton onClick={handleSave}>Archive</GenericButton>
+              <GenericButton onClick={handleCreateCpu}>
+                Create CPU
+              </GenericButton>
             </div>
           </div>
         </CardContent>

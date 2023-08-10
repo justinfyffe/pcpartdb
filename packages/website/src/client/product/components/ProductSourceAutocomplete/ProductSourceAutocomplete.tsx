@@ -20,6 +20,7 @@ interface ProductSourceAutocompleteProps {
   value?: ProductSource;
   onChange?: (value: ProductSource) => void;
 
+  disabled?: boolean;
   placeholder?: string;
   className?: string;
 }
@@ -33,6 +34,7 @@ export const ProductSourceAutocomplete = forwardRef<
     source,
     value,
     onChange,
+    disabled,
     placeholder: propsPlaceholder,
     className,
   } = props;
@@ -93,6 +95,7 @@ export const ProductSourceAutocomplete = forwardRef<
       suffix={value == null ? <ChevronDownIcon className="w-4" /> : null}
       placeholder={placeHolder}
       ref={inputRef}
+      disabled={disabled}
     >
       {results.map((result, i) => (
         <ProductSourceAutocompleteOption
