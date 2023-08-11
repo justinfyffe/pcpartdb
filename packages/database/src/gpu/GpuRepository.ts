@@ -1,5 +1,4 @@
 import {
-  DataUpdateStatus,
   DEFAULT_LIST_GPUS_LIMIT,
   DEFAULT_LIST_GPUS_OFFSET,
   DEFAULT_LIST_GPUS_SORT,
@@ -9,6 +8,7 @@ import {
   ListGpusOrderBy,
   ListGpusQuery,
   ListGpusSort,
+  ProductUpdateStatus,
 } from '@pcpartdb/shared';
 import { Prisma } from '@prisma/client';
 import { DatabaseClient } from '../DatabaseClient';
@@ -218,11 +218,10 @@ export class GpuRepository {
     const trx = config?.trx ?? this.db;
 
     // Reject any pending updates.
-    await trx.dataUpdate.updateMany({
-      where: { gpuId: id, status: DataUpdateStatus.Pending },
+    await trx.productUpdate.updateMany({
+      where: { cpuId: id, status: ProductUpdateStatus.Pending },
       data: {
-        decisionMadeAt: new Date(),
-        status: DataUpdateStatus.Rejected,
+        status: ProductUpdateStatus.Rejected,
       },
     });
 

@@ -1,7 +1,6 @@
 export * from './auth';
 export * from './automation';
 export * from './cpus';
-export * from './data-updates';
 export * from './gpus';
 export * from './home';
 export * from './images';

@@ -15,7 +15,6 @@ HIGH LEVEL TODO:
   - Install node 20 on server
   - clean up name of columns/data structures
   - clean up names of indexes/uniques
-  - clean up data-updates
   - add edit button after approving
   - validate that source urls are valid urls (includes domain) before creating sources
     - also validate any other things coming in

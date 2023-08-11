@@ -18,7 +18,6 @@ import {
   CreateCpuRequest,
   populateCpuPerformanceScoreBenchmark,
   populateCpuValueScoreBenchmark,
-  ProductDataUpdate,
   ProductType,
   UpdateCpuRequest,
   ValidationErrorType,
@@ -210,12 +209,6 @@ export class CpuService {
 
     await this.cpuRepository.delete(id, ctx);
     return id;
-  }
-
-  // TODO: delete
-  async applyDataUpdate(dataUpdate: ProductDataUpdate, ctx: Context) {
-    const updated = dataUpdate.data.updated as Cpu;
-    await this.update(dataUpdate.cpuId, updated, ctx);
   }
 
   async applySources(id: number, sources: CpuProductSourceGroup, ctx: Context) {

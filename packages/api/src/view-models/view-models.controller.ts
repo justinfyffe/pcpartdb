@@ -1,15 +1,9 @@
 import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
-import {
-  ListCpusQuery,
-  ListDataUpdatesRequest,
-  ListGpusQuery,
-  ProductType,
-} from '@pcpartdb/shared';
+import { ListCpusQuery, ListGpusQuery, ProductType } from '@pcpartdb/shared';
 import { StaffGuard } from '../auth/staff.guard';
 import { Database } from '../database';
 import { Context, Ctx } from '../shared/context';
 import { AdminAutomationViewModelService } from './admin/automation/automation.view-model';
-import { AdminDataUpdatesViewModelService } from './admin/data-updates/data-updates.view-model';
 import { AdminEditImageViewModelService } from './admin/images/edit.view-model';
 import { AdminListImagesViewModelService } from './admin/images/list.view-model';
 import { AdminOverviewViewModelService } from './admin/overview/overview.view-model';
@@ -36,7 +30,6 @@ export class ViewModelsController {
     private adminListImagesViewModelService: AdminListImagesViewModelService,
     private adminEditUserViewModelService: AdminEditUserViewModelService,
     private adminListUsersViewModelService: AdminListUsersViewModelService,
-    private adminDataUpdatesViewModelService: AdminDataUpdatesViewModelService,
     private compareCpusViewModelService: CompareCpusViewModelService,
     private listCpusViewModelService: ListCpusViewModelService,
     private viewCpuViewModelService: ViewCpuViewModelService,
@@ -127,18 +120,6 @@ export class ViewModelsController {
   async adminListUsers(@Ctx() ctx: Context) {
     return await this.db.transaction(
       () => this.adminListUsersViewModelService.viewModel(ctx),
-      { ctx },
-    );
-  }
-
-  @Get('admin/data-updates')
-  @UseGuards(StaffGuard)
-  async adminDataUpdates(@Query('q') q: string, @Ctx() ctx: Context) {
-    return await this.db.transaction(
-      () => {
-        const data = JSON.parse(q) as ListDataUpdatesRequest;
-        return this.adminDataUpdatesViewModelService.viewModel(data, ctx);
-      },
       { ctx },
     );
   }

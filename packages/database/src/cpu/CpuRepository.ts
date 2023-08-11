@@ -1,5 +1,4 @@
 import {
-  DataUpdateStatus,
   DEFAULT_LIST_CPUS_LIMIT,
   DEFAULT_LIST_CPUS_OFFSET,
   DEFAULT_LIST_CPUS_SORT,
@@ -8,6 +7,7 @@ import {
   ListCpusOrderBy,
   ListCpusQuery,
   ListCpusSort,
+  ProductUpdateStatus,
 } from '@pcpartdb/shared';
 import { Prisma } from '@prisma/client';
 import { DatabaseClient } from '../DatabaseClient';
@@ -171,11 +171,10 @@ export class CpuRepository {
     const trx = config?.trx ?? this.db;
 
     // Reject any pending updates.
-    await trx.dataUpdate.updateMany({
-      where: { cpuId: id, status: DataUpdateStatus.Pending },
+    await trx.productUpdate.updateMany({
+      where: { cpuId: id, status: ProductUpdateStatus.Pending },
       data: {
-        decisionMadeAt: new Date(),
-        status: DataUpdateStatus.Rejected,
+        status: ProductUpdateStatus.Rejected,
       },
     });
 

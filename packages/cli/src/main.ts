@@ -3,7 +3,6 @@ dotenv.config();
 
 import { Command } from 'commander';
 import { automationCommand } from './automation';
-import { gpuUpdaterCommand } from './gpu-updater';
 import { refreshRatingsCommand } from './refresh-ratings';
 import { scrapeDataCommand } from './scrape-data';
 import { scrapeRetailModelsCommand } from './scrape-retail-models';
@@ -33,14 +32,6 @@ program
   .option('--schedule')
   .action(async (options) => {
     await automationCommand({ schedule: options.schedule });
-  });
-
-// Gpu Updater
-program
-  .command('gpu-updater')
-  .option('--schedule')
-  .action(async (options) => {
-    await gpuUpdaterCommand({ schedule: options.schedule });
   });
 
 // Sitemap Updater

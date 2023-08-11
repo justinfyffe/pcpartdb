@@ -13,7 +13,6 @@ import {
   ListGpusQuery,
   populateGpuPerformanceScoreBenchmark,
   populateGpuValueScoreBenchmark,
-  ProductDataUpdate,
   ProductType,
   UpdateGpuRequest,
   ValidationErrorType,
@@ -265,12 +264,6 @@ export class GpuService {
 
     await this.gpuRepository.delete(id, ctx);
     return id;
-  }
-
-  // TODO: delete
-  async applyDataUpdate(dataUpdate: ProductDataUpdate, ctx: Context) {
-    const updated = dataUpdate.data.updated as Gpu;
-    await this.update(dataUpdate.gpuId, updated, ctx);
   }
 
   async applySources(id: number, sources: GpuProductSourceGroup, ctx: Context) {

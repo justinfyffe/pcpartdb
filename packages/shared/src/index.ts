@@ -2,7 +2,6 @@ export * from './auth';
 export * from './automation';
 export * from './common';
 export * from './config';
-export * from './data-update';
 export * from './error';
 export * from './format';
 export * from './image';
