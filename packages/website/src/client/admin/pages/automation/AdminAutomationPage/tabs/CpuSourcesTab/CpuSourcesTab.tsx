@@ -14,12 +14,12 @@ import {
 import { InfoAlert } from 'packages/website/src/client/shared/components/Alert/InfoAlert';
 import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
 import { Pagination } from 'packages/website/src/client/shared/components/Pagination/Pagination';
-import { useDebounce } from 'packages/website/src/client/shared/hooks/useDebounce';
+import { useThrottle } from 'packages/website/src/client/shared/hooks/useThrottle';
 import React, { useCallback, useEffect, useState } from 'react';
 import { CpuSourceCard } from './CpuSourceCard';
 
 const LIMIT = 10;
-const FILTER_DEBOUNCE = 300;
+const FILTER_THROTTLE_MS = 300;
 
 interface CpuSourcesTabProps {}
 
@@ -60,7 +60,7 @@ export const CpuSourcesTab = (_props: CpuSourcesTabProps) => {
     },
     [fetchSourceGroups, query],
   );
-  const debouncedFilterSources = useDebounce(filterSources, FILTER_DEBOUNCE);
+  const throttledFilterSources = useThrottle(filterSources, FILTER_THROTTLE_MS);
 
   const toggleArchived = useCallback(
     (checked: boolean) => {
@@ -98,22 +98,23 @@ export const CpuSourcesTab = (_props: CpuSourcesTabProps) => {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex justify-between gap-4">
-        <div className="flex flex-1 gap-4 max-w-[50%]">
+      <div className="flex justify-between gap-4 flex-wrap">
+        <div className="flex flex-1 gap-4 max-w-125">
           <TextInput
             placeholder="Filter sources"
-            onChange={debouncedFilterSources}
+            className="min-w-50 flex-1"
+            onChange={throttledFilterSources}
           />
           <Checkbox
             value={showArchived}
             onChange={toggleArchived}
-            className="flex-1 whitespace-nowrap"
+            className="whitespace-nowrap"
           >
             Show Archived
           </Checkbox>
         </div>
 
-        <div className="flex gap-4 items-center">
+        <div className="flex gap-4 items-center ml-auto">
           {total > 0 && (
             <Pagination
               displayTotal={true}

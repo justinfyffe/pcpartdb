@@ -84,6 +84,9 @@ export interface CreateCpuActionData {
   // Name to use when creating CPU
   preferredName?: string;
 
+  // Slug to use when creating CPU
+  preferredSlug?: string;
+
   // For fetching data based on a new CPU.
   sources?: CpuProductSourceGroup;
 }
@@ -96,6 +99,9 @@ export interface UpdateCpuActionData {
 export interface CreateGpuActionData {
   // Name to use when creating GPU
   preferredName?: string;
+
+  // Slug to use when creating GPU
+  preferredSlug?: string;
 
   // For fetching data based on a new GPU.
   sources?: GpuProductSourceGroup;

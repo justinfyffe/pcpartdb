@@ -13,12 +13,12 @@ import { TextInput } from 'packages/website/src/client/shared/components';
 import { InfoAlert } from 'packages/website/src/client/shared/components/Alert/InfoAlert';
 import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
 import { Pagination } from 'packages/website/src/client/shared/components/Pagination/Pagination';
-import { useDebounce } from 'packages/website/src/client/shared/hooks/useDebounce';
+import { useThrottle } from 'packages/website/src/client/shared/hooks/useThrottle';
 import React, { useCallback, useEffect, useState } from 'react';
 import { GpuChipsetCard } from './GpuChipsetCard';
 
 const LIMIT = 10;
-const FILTER_DEBOUNCE = 300;
+const FILTER_THROTTLE_MS = 300;
 
 interface GpuChipsetsTabProps {}
 
@@ -58,7 +58,7 @@ export const GpuChipsetsTab = (_props: GpuChipsetsTabProps) => {
     },
     [fetchGpuUpdates, query],
   );
-  const debouncedFilterUpdates = useDebounce(filterUpdates, FILTER_DEBOUNCE);
+  const throttledFilterUpdates = useThrottle(filterUpdates, FILTER_THROTTLE_MS);
 
   const refresh = useCallback(() => {
     fetchGpuUpdates({ ...query });
@@ -89,7 +89,7 @@ export const GpuChipsetsTab = (_props: GpuChipsetsTabProps) => {
           <div className="flex flex-1 gap-4 max-w-[50%]">
             <TextInput
               placeholder="Search CPUs"
-              onChange={debouncedFilterUpdates}
+              onChange={throttledFilterUpdates}
             />
           </div>
 

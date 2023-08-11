@@ -241,7 +241,7 @@ export class GpuService {
     // updated than what is pending.
     const pendingUpdate =
       await this.productUpdateService.findPendingByProductId(
-        { productType: ProductType.Cpu, productId: id },
+        { productType: ProductType.Gpu, productId: id },
         ctx,
       );
     if (pendingUpdate != null) {

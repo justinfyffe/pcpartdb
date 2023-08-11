@@ -12,12 +12,12 @@ import { TextInput } from 'packages/website/src/client/shared/components';
 import { InfoAlert } from 'packages/website/src/client/shared/components/Alert/InfoAlert';
 import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
 import { Pagination } from 'packages/website/src/client/shared/components/Pagination/Pagination';
-import { useDebounce } from 'packages/website/src/client/shared/hooks/useDebounce';
+import { useThrottle } from 'packages/website/src/client/shared/hooks/useThrottle';
 import React, { useCallback, useEffect, useState } from 'react';
 import { CpuCard } from './CpuCard';
 
 const LIMIT = 10;
-const FILTER_DEBOUNCE = 300;
+const FILTER_THROTTLE_MS = 300;
 
 interface CpusTabProps {}
 
@@ -56,7 +56,7 @@ export const CpusTab = (_props: CpusTabProps) => {
     },
     [fetchCpuUpdates, query],
   );
-  const debouncedFilterUpdates = useDebounce(filterUpdates, FILTER_DEBOUNCE);
+  const throttledFilterUpdates = useThrottle(filterUpdates, FILTER_THROTTLE_MS);
 
   const refresh = useCallback(() => {
     fetchCpuUpdates({ ...query });
@@ -83,15 +83,16 @@ export const CpusTab = (_props: CpusTabProps) => {
   return (
     <>
       <div className="flex flex-col gap-4">
-        <div className="flex justify-between gap-4">
-          <div className="flex flex-1 gap-4 max-w-[50%]">
+        <div className="flex justify-between gap-4 flex-wrap">
+          <div className="flex flex-1 gap-4 max-w-125">
             <TextInput
-              placeholder="Search CPUs"
-              onChange={debouncedFilterUpdates}
+              placeholder="Filter"
+              className="min-w-50 flex-1"
+              onChange={throttledFilterUpdates}
             />
           </div>
 
-          <div className="flex gap-4 items-center">
+          <div className="flex gap-4 items-center ml-auto">
             {total > 0 && (
               <Pagination
                 displayTotal={true}

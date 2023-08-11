@@ -7,6 +7,7 @@ import {
   AutomationActionType,
   CreateGpuActionData,
   formatProductSourceName,
+  generateGpuSlug,
   getViewGpuPath,
   GpuDataSourceKey,
   GpuProductSource,
@@ -19,6 +20,7 @@ import {
   productSourceService,
 } from 'packages/website/src/client/product';
 import {
+  Button,
   Card,
   CardContent,
   CardTitle,
@@ -61,6 +63,9 @@ export const GpuRetailModelSourceCard = (
   const [preferredName, setPreferredName] = useState(
     () => sources[0].sourceName,
   );
+  const [preferredSlug, setPreferredSlug] = useState(() =>
+    generateGpuSlug(preferredName, null),
+  );
   const [groupKey] = useState(() => techPowerUp?.groupKey);
 
   // Memos
@@ -93,6 +98,10 @@ export const GpuRetailModelSourceCard = (
 
   // Callbacks
 
+  const handleGenerateSlug = useCallback(() => {
+    setPreferredSlug(generateGpuSlug(preferredName, null));
+  }, [preferredName]);
+
   const handleSave = useCallback(async () => {
     const newTechPowerUp: GpuProductSource =
       techPowerUp != null
@@ -123,6 +132,7 @@ export const GpuRetailModelSourceCard = (
       description: preferredName,
       data: {
         preferredName,
+        preferredSlug,
         sources,
         chipsetId: techPowerUp.gpuChipsetId,
       } as CreateGpuActionData,
@@ -130,7 +140,7 @@ export const GpuRetailModelSourceCard = (
 
     // Update sources to archive them.
     await handleSave();
-  }, [handleSave, preferredName, techPowerUp]);
+  }, [handleSave, preferredName, preferredSlug, techPowerUp]);
 
   // Render
 
@@ -163,13 +173,27 @@ export const GpuRetailModelSourceCard = (
 
       {expanded && (
         <CardContent>
-          <Field className="flex-1">
-            <div className="flex justify-between">GPU Name</div>
-            <TextInput value={preferredName} onChange={setPreferredName} />
-            <FieldHint>
-              This will be used as the GPU&apos;s name when it is created.
-            </FieldHint>
-          </Field>
+          <div className="flex-1 flex gap-4">
+            <Field className="flex-1">
+              <div className="flex justify-between">Name</div>
+              <TextInput value={preferredName} onChange={setPreferredName} />
+              <FieldHint>
+                This will be used as the GPU&apos;s name when it is created.
+              </FieldHint>
+            </Field>
+
+            <Field className="flex-1">
+              <div className="flex justify-between">Slug</div>
+              <TextInput
+                value={preferredSlug}
+                onChange={setPreferredSlug}
+                suffix={<Button onClick={handleGenerateSlug}>Generate</Button>}
+              />
+              <FieldHint>
+                This will be used as the GPU&apos;s slug when it is created.
+              </FieldHint>
+            </Field>
+          </div>
 
           <div className="flex gap-4 items-start">
             <Field className="flex-1">

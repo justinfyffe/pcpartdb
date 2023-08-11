@@ -1,12 +1,24 @@
 HIGH LEVEL TODO:
 - Automation
-  - Install node 20 on desktop and server
+  - auto-archive retail models
+    - only check for chipset id
+  - UX improvements
+    - show source's names in the collapsed view on source cards
+    - add archive, create button in collapsed view on source card
+    - show slug, diff button, approve, reject on update card
+    - improve look of Pending/Archived (maybe a different card color instead?)
+    - mobile friendly:
+      - gpu chipset sources
+      - gpu retail model sources
+      - gpu chipset updates
+      - gpu retail model updates
+      - queue
+  - Install node 20 on server
   - graceful failures
     - handle 500s; should they retry, or error out?
       - Maybe retry X number of times before failing
   - clean up name of columns/data structures
   - clean up names of indexes/uniques
-  - add preferred slug with generate slug button. uses preferred name
   - add edit button after approving
   - Mobile friendly so can approve anywhere
   - ability to terminate from website so i can do it anywhere 

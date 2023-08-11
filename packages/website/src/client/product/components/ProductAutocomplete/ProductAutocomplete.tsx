@@ -29,6 +29,7 @@ interface ProductAutocompleteProps {
   excludeProductId?: number;
 
   placeholder?: string;
+  clearable?: boolean;
   className?: string;
 }
 

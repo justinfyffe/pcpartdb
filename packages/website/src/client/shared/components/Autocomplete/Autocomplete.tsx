@@ -7,7 +7,7 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import { useDebounce } from '../../hooks/useDebounce';
+import { useThrottle } from '../../hooks/useThrottle';
 import { classNames } from '../../ui';
 import { TextInput, TextInputProps } from '../Input';
 import { Spinner } from '../Spinner';
@@ -15,7 +15,7 @@ import { AutocompleteContext } from './AutocompleteContext';
 import { AutocompleteOptionProps } from './AutocompleteOption';
 import { AutocompleteResult } from './types';
 
-const DEFAULT_DEBOUNCE = 300;
+const DEFAULT_THROTTLE_MS = 300;
 
 export interface AutocompleteProps extends Omit<TextInputProps, 'value'> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -32,7 +32,7 @@ export interface AutocompleteProps extends Omit<TextInputProps, 'value'> {
   label?: string;
   prefix?: string | React.ReactElement;
   placeholder?: string;
-  debounceTimeout?: number;
+  throttleTimeout?: number;
 
   children?: React.ReactElement<React.ReactElement<AutocompleteOptionProps>>[];
 }
@@ -48,7 +48,7 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
       prefix,
       suffix,
       placeholder,
-      debounceTimeout,
+      throttleTimeout,
       freeSolo,
       onChange,
       onQuery,
@@ -89,9 +89,9 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
       },
       [freeSolo, onChange, onQuery],
     );
-    const debouncedHandleQuery = useDebounce(
+    const throttled = useThrottle(
       handleQuery,
-      debounceTimeout ?? DEFAULT_DEBOUNCE,
+      throttleTimeout ?? DEFAULT_THROTTLE_MS,
     );
 
     const handleKeyDown = useCallback(
@@ -171,7 +171,7 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
             suffix={isLoading ? <Spinner /> : suffix}
             placeholder={placeholder}
             value={query || ''}
-            onChange={debouncedHandleQuery}
+            onChange={throttled}
             onKeyDown={handleKeyDown}
             onBlur={handleBlur}
             onFocus={handleFocus}

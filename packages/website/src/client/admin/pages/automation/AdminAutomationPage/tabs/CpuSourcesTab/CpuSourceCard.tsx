@@ -1,4 +1,8 @@
-import { ChevronDownIcon, ChevronLeftIcon } from '@heroicons/react/24/outline';
+import {
+  ArrowPathRoundedSquareIcon,
+  ChevronDownIcon,
+  ChevronLeftIcon,
+} from '@heroicons/react/24/outline';
 import {
   AutomationActionType,
   CpuDataSourceKey,
@@ -6,6 +10,7 @@ import {
   CpuProductSourceGroup,
   CreateCpuActionData,
   formatProductSourceName,
+  generateCpuSlug,
   Product,
   ProductType,
   UpdateCpuActionData,
@@ -95,6 +100,9 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
   const [preferredName, setPreferredName] = useState(
     () => sources[0].sourceName,
   );
+  const [preferredSlug, setPreferredSlug] = useState(() =>
+    generateCpuSlug(preferredName, null),
+  );
   const [appliedCpu, setAppliedCpu] = useState<Product>(null);
   const [groupKey] = useState(
     () => techPowerUp?.groupKey || passMark?.groupKey || geekBench?.groupKey,
@@ -134,6 +142,10 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
   );
 
   // Callbacks
+
+  const handleGenerateSlug = useCallback(() => {
+    setPreferredSlug(generateCpuSlug(preferredName, null));
+  }, [preferredName]);
 
   const handleSave = useCallback(async () => {
     const newTechPowerUp: CpuProductSource =
@@ -211,12 +223,19 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
     await automationService.createAction({
       type: AutomationActionType.CreateCpu,
       description: preferredName,
-      data: { preferredName, sources } as CreateCpuActionData,
+      data: { preferredName, preferredSlug, sources } as CreateCpuActionData,
     });
 
     // Update sources to archive them.
     await handleSave();
-  }, [geekBench, handleSave, passMark, preferredName, techPowerUp]);
+  }, [
+    geekBench,
+    handleSave,
+    passMark,
+    preferredName,
+    preferredSlug,
+    techPowerUp,
+  ]);
 
   // Render
 
@@ -233,7 +252,7 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
         )}
 
         <div className="flex flex-1 flex-col gap-1">
-          <CardTitle>{preferredName}</CardTitle>
+          <CardTitle>{sources[0].sourceName}</CardTitle>
           <span className="text-xs">
             <span className="font-semibold">Grouping:</span> {groupKey}
           </span>
@@ -248,15 +267,35 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
 
       {expanded && (
         <CardContent>
-          <Field className="flex-1">
-            <div className="flex justify-between">CPU Name</div>
-            <TextInput value={preferredName} onChange={setPreferredName} />
-            <FieldHint>
-              This will be used as the CPU&apos;s name when it is created.
-            </FieldHint>
-          </Field>
+          <div className="flex-1 flex gap-4 flex-wrap">
+            <Field className="flex-1">
+              <div className="flex justify-between">Name</div>
+              <TextInput
+                value={preferredName}
+                onChange={setPreferredName}
+                className="min-w-50"
+              />
+              <FieldHint>
+                This will be used as the CPU&apos;s name when it is created.
+              </FieldHint>
+            </Field>
 
-          <div className="flex gap-4 items-start">
+            <Field className="flex-1">
+              <div className="flex justify-between">Slug</div>
+              <TextInput
+                value={preferredSlug}
+                onChange={setPreferredSlug}
+                onSuffixClick={handleGenerateSlug}
+                suffix={<ArrowPathRoundedSquareIcon className="w-4" />}
+                className="min-w-50"
+              />
+              <FieldHint>
+                This will be used as the CPU&apos;s slug when it is created.
+              </FieldHint>
+            </Field>
+          </div>
+
+          <div className="flex flex-wrap gap-4 items-start">
             <SourceInputField
               productType={ProductType.Cpu}
               sourceKey={CpuDataSourceKey.TechPowerUp}
@@ -291,11 +330,12 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
             />
           </div>
 
-          <div className="flex justify-between gap-4">
-            <div className="flex flex-1 gap-4 max-w-[50%]">
+          <div className="flex flex-wrap justify-between gap-4">
+            <div className="flex flex-1 gap-4 max-w-125">
               <ProductAutocomplete
                 productType={ProductType.Cpu}
                 onChangeProduct={setAppliedCpu}
+                className="min-w-50"
               />
               <GenericButton
                 disabled={appliedCpu == null}
@@ -305,7 +345,7 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
               </GenericButton>
             </div>
 
-            <div className="flex gap-4">
+            <div className="ml-auto flex gap-4">
               <GenericButton onClick={handleSave}>Archive</GenericButton>
               <GenericButton onClick={handleCreateCpu}>
                 Create CPU

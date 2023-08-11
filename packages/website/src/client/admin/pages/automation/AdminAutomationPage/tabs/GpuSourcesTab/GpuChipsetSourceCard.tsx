@@ -3,6 +3,7 @@ import {
   AutomationActionType,
   CreateGpuActionData,
   formatProductSourceName,
+  generateGpuSlug,
   GpuDataSourceKey,
   GpuProductSource,
   GpuProductSourceGroup,
@@ -17,6 +18,7 @@ import {
   productSourceService,
 } from 'packages/website/src/client/product';
 import {
+  Button,
   Card,
   CardContent,
   CardTitle,
@@ -100,6 +102,9 @@ export const GpuChipsetSourceCard = (props: GpuChipsetSourceCardProps) => {
       passMark?.sourceName ||
       ulBenchmark?.sourceName,
   );
+  const [preferredSlug, setPreferredSlug] = useState(() =>
+    generateGpuSlug(preferredName, null),
+  );
   const [appliedGpu, setAppliedGpu] = useState<Product>(null);
   const [groupKey] = useState(
     () => techPowerUp?.groupKey || passMark?.groupKey || ulBenchmark?.groupKey,
@@ -141,6 +146,10 @@ export const GpuChipsetSourceCard = (props: GpuChipsetSourceCardProps) => {
   );
 
   // Callbacks
+
+  const handleGenerateSlug = useCallback(() => {
+    setPreferredSlug(generateGpuSlug(preferredName, null));
+  }, [preferredName]);
 
   const handleSave = useCallback(async () => {
     const newTechPowerUp =
@@ -207,12 +216,24 @@ export const GpuChipsetSourceCard = (props: GpuChipsetSourceCardProps) => {
     await automationService.createAction({
       type: AutomationActionType.CreateGpu,
       description: preferredName,
-      data: { preferredName, sources, chipsetId: null } as CreateGpuActionData,
+      data: {
+        preferredName,
+        preferredSlug,
+        sources,
+        chipsetId: null,
+      } as CreateGpuActionData,
     });
 
     // Update sources to archive them.
     await handleSave();
-  }, [ulBenchmark, handleSave, passMark, preferredName, techPowerUp]);
+  }, [
+    techPowerUp,
+    passMark,
+    ulBenchmark,
+    preferredName,
+    preferredSlug,
+    handleSave,
+  ]);
 
   // Render
 
@@ -229,7 +250,7 @@ export const GpuChipsetSourceCard = (props: GpuChipsetSourceCardProps) => {
         )}
 
         <div className="flex flex-1 flex-col gap-1">
-          <CardTitle>{preferredName}</CardTitle>
+          <CardTitle>{sources[0]?.sourceName}</CardTitle>
 
           <span className="text-xs">
             <span className="font-semibold">Grouping:</span> {groupKey}
@@ -245,13 +266,27 @@ export const GpuChipsetSourceCard = (props: GpuChipsetSourceCardProps) => {
 
       {expanded && (
         <CardContent>
-          <Field className="flex-1">
-            <div className="flex justify-between">GPU Name</div>
-            <TextInput value={preferredName} onChange={setPreferredName} />
-            <FieldHint>
-              This will be used as the GPU&apos;s name when it is created.
-            </FieldHint>
-          </Field>
+          <div className="flex-1 flex gap-4">
+            <Field className="flex-1">
+              <div className="flex justify-between">Name</div>
+              <TextInput value={preferredName} onChange={setPreferredName} />
+              <FieldHint>
+                This will be used as the GPU&apos;s name when it is created.
+              </FieldHint>
+            </Field>
+
+            <Field className="flex-1">
+              <div className="flex justify-between">Slug</div>
+              <TextInput
+                value={preferredSlug}
+                onChange={setPreferredSlug}
+                suffix={<Button onClick={handleGenerateSlug}>Generate</Button>}
+              />
+              <FieldHint>
+                This will be used as the GPU&apos;s slug when it is created.
+              </FieldHint>
+            </Field>
+          </div>
 
           <div className="flex gap-4 items-start">
             <SourceInputField

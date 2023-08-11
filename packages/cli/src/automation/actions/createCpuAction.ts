@@ -68,9 +68,10 @@ export async function createCpuAction(
     }
   }
 
-  // TODO: add preferred slug
   // Generate slug, new CPU didn't have it yet.
-  cpu.slug = generateCpuSlug(cpu.name, productFieldValue(cpu.company));
+  cpu.slug =
+    payload?.preferredSlug ||
+    generateCpuSlug(cpu.name, productFieldValue(cpu.company));
 
   // Upload update
   await uploadProductUpdate(cpu, context);

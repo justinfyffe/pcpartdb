@@ -73,9 +73,10 @@ export async function createGpuAction(
     }
   }
 
-  // TODO: add preferred slug
-  // Generate slug, new GPU didn't have it yet.
-  gpu.slug = generateGpuSlug(gpu.name, productFieldValue(gpu.company));
+  // Generate slug, new GPU doesn't have one yet.
+  gpu.slug =
+    payload?.preferredSlug ||
+    generateGpuSlug(gpu.name, productFieldValue(gpu.company));
 
   // Upload update
   await uploadProductUpdate(gpu, context);

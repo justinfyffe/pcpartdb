@@ -185,7 +185,13 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 
       <div className="absolute flex items-stretch right-0 inset-y-0 z-1">
         {props.suffix && (
-          <div className="flex items-center px-4" onClick={handleSuffixClick}>
+          <div
+            className={classNames(
+              'flex items-center px-4',
+              handleSuffixClick ? 'cursor-pointer' : '',
+            )}
+            onClick={handleSuffixClick}
+          >
             {suffix}
           </div>
         )}

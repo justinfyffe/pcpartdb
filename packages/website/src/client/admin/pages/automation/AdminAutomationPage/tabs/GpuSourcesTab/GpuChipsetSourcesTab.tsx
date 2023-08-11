@@ -15,12 +15,12 @@ import {
 import { InfoAlert } from 'packages/website/src/client/shared/components/Alert/InfoAlert';
 import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
 import { Pagination } from 'packages/website/src/client/shared/components/Pagination/Pagination';
-import { useDebounce } from 'packages/website/src/client/shared/hooks/useDebounce';
+import { useThrottle } from 'packages/website/src/client/shared/hooks/useThrottle';
 import React, { useCallback, useEffect, useState } from 'react';
 import { GpuChipsetSourceCard } from './GpuChipsetSourceCard';
 
 const LIMIT = 10;
-const FILTER_DEBOUNCE = 300;
+const FILTER_THROTTLE_MS = 300;
 
 interface GpuChipsetSourcesTabProps {}
 
@@ -61,7 +61,7 @@ export const GpuChipsetSourcesTab = (_props: GpuChipsetSourcesTabProps) => {
     },
     [fetchSourceGroups, query],
   );
-  const debouncedFilterSources = useDebounce(filterSources, FILTER_DEBOUNCE);
+  const throttledFilterSources = useThrottle(filterSources, FILTER_THROTTLE_MS);
 
   const toggleArchived = useCallback(
     (checked: boolean) => {
@@ -103,7 +103,7 @@ export const GpuChipsetSourcesTab = (_props: GpuChipsetSourcesTabProps) => {
         <div className="flex flex-1 gap-4 max-w-[50%]">
           <TextInput
             placeholder="Filter sources"
-            onChange={debouncedFilterSources}
+            onChange={throttledFilterSources}
           />
           <Checkbox
             value={showArchived}

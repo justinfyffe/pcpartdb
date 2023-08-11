@@ -1,3 +1,4 @@
+import { Bars3Icon } from '@heroicons/react/24/outline';
 import {
   getAdminAutomationPath,
   getAdminListCpusPath,
@@ -16,6 +17,8 @@ import {
   Button,
   ButtonVariant,
   Img,
+  Menu,
+  MenuLinkItem,
   MetaReferrer,
   Seo,
   Toolbar,
@@ -47,13 +50,30 @@ export const AdminLayout: FunctionComponent<AdminLayoutProps> = (props) => {
         {WEBSITE_NAME}
       </div>
 
-      <Toolbar>
-        <Button variant={ButtonVariant.None} href={getHomePath()}>
-          Back to Website
-        </Button>
-        <Button variant={ButtonVariant.None} onClick={handleLogout}>
-          Sign Out
-        </Button>
+      <Toolbar className="justify-between">
+        <div className="flex">
+          <Button variant={ButtonVariant.None} href={getHomePath()}>
+            Back to Website
+          </Button>
+          <Button variant={ButtonVariant.None} onClick={handleLogout}>
+            Sign Out
+          </Button>
+        </div>
+
+        <Menu
+          label={<Bars3Icon className="w-8" />}
+          ariaLabel="Admin Menu"
+          overlayClassName="w-62 max-h-125 overflow-x-hidden overflow-y-auto"
+        >
+          <MenuLinkItem href={getAdminOverviewPath()}>Overview</MenuLinkItem>
+          <MenuLinkItem href={getAdminAutomationPath()}>
+            Automation
+          </MenuLinkItem>
+          <MenuLinkItem href={getAdminListCpusPath()}>CPUs</MenuLinkItem>
+          <MenuLinkItem href={getAdminListGpusPath()}>GPUs</MenuLinkItem>
+          <MenuLinkItem href={getAdminListImagesPath()}>Images</MenuLinkItem>
+          <MenuLinkItem href={getAdminListUsersPath()}>Users</MenuLinkItem>
+        </Menu>
       </Toolbar>
 
       <div className="bg-html">
@@ -63,7 +83,7 @@ export const AdminLayout: FunctionComponent<AdminLayoutProps> = (props) => {
             props.className,
           )}
         >
-          <aside className="w-50">
+          <aside className="w-50 md:hidden">
             <nav className="flex flex-col gap-2">
               <Button
                 variant={ButtonVariant.Generic}
