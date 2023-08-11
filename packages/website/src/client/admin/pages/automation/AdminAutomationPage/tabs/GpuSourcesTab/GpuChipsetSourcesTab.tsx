@@ -99,10 +99,11 @@ export const GpuChipsetSourcesTab = (_props: GpuChipsetSourcesTabProps) => {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex justify-between gap-4">
-        <div className="flex flex-1 gap-4 max-w-[50%]">
+      <div className="flex justify-between gap-4 flex-wrap">
+        <div className="flex flex-1 gap-4 max-w-125">
           <TextInput
             placeholder="Filter sources"
+            className="min-w-30 flex-1"
             onChange={throttledFilterSources}
           />
           <Checkbox
@@ -114,7 +115,7 @@ export const GpuChipsetSourcesTab = (_props: GpuChipsetSourcesTabProps) => {
           </Checkbox>
         </div>
 
-        <div className="flex gap-4 items-center">
+        <div className="flex gap-4 items-center ml-auto">
           {total > 0 && (
             <Pagination
               displayTotal={true}

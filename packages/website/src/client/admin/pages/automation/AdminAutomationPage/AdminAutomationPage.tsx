@@ -43,8 +43,8 @@ export const AdminAutomationPage = (props: AdminAutomationViewModel) => {
       <Seo title={seoTitle} robots={seoRobots} />
 
       <article>
-        <div className="flex justify-between items-center flex-wrap">
-          <h1 className="font-semibold mb-4">Automation</h1>
+        <div className="flex justify-between items-center flex-wrap mb-4">
+          <h1 className="font-semibold mb-0">Automation</h1>
 
           <div className="flex gap-4 items-center ml-auto">
             <span>Status: {status.enabled ? 'Enabled' : 'Disabled'}</span>

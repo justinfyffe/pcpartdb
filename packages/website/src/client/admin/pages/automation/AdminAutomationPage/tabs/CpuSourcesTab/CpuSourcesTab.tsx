@@ -102,7 +102,7 @@ export const CpuSourcesTab = (_props: CpuSourcesTabProps) => {
         <div className="flex flex-1 gap-4 max-w-125">
           <TextInput
             placeholder="Filter sources"
-            className="min-w-50 flex-1"
+            className="min-w-30 flex-1"
             onChange={throttledFilterSources}
           />
           <Checkbox
