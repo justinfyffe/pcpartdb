@@ -253,12 +253,14 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
 
         <div className="flex flex-1 flex-col gap-1">
           <CardTitle>{sources[0].sourceName}</CardTitle>
-          <span className="text-xs">
-            <span className="font-semibold">Grouping:</span> {groupKey}
-          </span>
-          <span className="text-xs">
-            <span className="font-semibold">Sources:</span> {sourcesList}
-          </span>
+          <div className="text-xs">
+            <span className="font-semibold">Grouping:</span>{' '}
+            <span className="[overflow-wrap:anywhere]">{groupKey}</span>
+          </div>
+          <div className="text-xs">
+            <span className="font-semibold">Sources:</span>{' '}
+            <span>{sourcesList}</span>
+          </div>
         </div>
 
         {expanded && <ChevronDownIcon className="w-8" />}
@@ -335,7 +337,7 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
               <ProductAutocomplete
                 productType={ProductType.Cpu}
                 onChangeProduct={setAppliedCpu}
-                className="min-w-50"
+                className="min-w-30"
               />
               <GenericButton
                 disabled={appliedCpu == null}

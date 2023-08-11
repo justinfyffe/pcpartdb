@@ -1,4 +1,5 @@
 import {
+  ArrowPathRoundedSquareIcon,
   ArrowTopRightOnSquareIcon,
   ChevronDownIcon,
   ChevronLeftIcon,
@@ -20,7 +21,6 @@ import {
   productSourceService,
 } from 'packages/website/src/client/product';
 import {
-  Button,
   Card,
   CardContent,
   CardTitle,
@@ -159,12 +159,14 @@ export const GpuRetailModelSourceCard = (
         <div className="flex flex-1 flex-col gap-1">
           <CardTitle>{preferredName}</CardTitle>
 
-          <span className="text-xs">
-            <span className="font-semibold">Grouping:</span> {groupKey}
-          </span>
-          <span className="text-xs">
-            <span className="font-semibold">Sources:</span> {sourcesList}
-          </span>
+          <div className="text-xs">
+            <span className="font-semibold">Grouping:</span>{' '}
+            <span className="[overflow-wrap:anywhere]">{groupKey}</span>
+          </div>
+          <div className="text-xs">
+            <span className="font-semibold">Sources:</span>{' '}
+            <span>{sourcesList}</span>
+          </div>
         </div>
 
         {expanded && <ChevronDownIcon className="w-8" />}
@@ -173,10 +175,14 @@ export const GpuRetailModelSourceCard = (
 
       {expanded && (
         <CardContent>
-          <div className="flex-1 flex gap-4">
+          <div className="flex-1 flex gap-4 flex-wrap">
             <Field className="flex-1">
               <div className="flex justify-between">Name</div>
-              <TextInput value={preferredName} onChange={setPreferredName} />
+              <TextInput
+                value={preferredName}
+                onChange={setPreferredName}
+                className="min-w-50"
+              />
               <FieldHint>
                 This will be used as the GPU&apos;s name when it is created.
               </FieldHint>
@@ -187,7 +193,9 @@ export const GpuRetailModelSourceCard = (
               <TextInput
                 value={preferredSlug}
                 onChange={setPreferredSlug}
-                suffix={<Button onClick={handleGenerateSlug}>Generate</Button>}
+                onSuffixClick={handleGenerateSlug}
+                suffix={<ArrowPathRoundedSquareIcon className="w-4" />}
+                className="min-w-50"
               />
               <FieldHint>
                 This will be used as the GPU&apos;s slug when it is created.
@@ -195,7 +203,7 @@ export const GpuRetailModelSourceCard = (
             </Field>
           </div>
 
-          <div className="flex gap-4 items-start">
+          <div className="flex flex-wrap gap-4 items-start">
             <Field className="flex-1">
               <div className="flex gap-2">
                 Chipset{' '}
@@ -221,7 +229,7 @@ export const GpuRetailModelSourceCard = (
             />
           </div>
 
-          <div className="flex justify-end">
+          <div className="flex flex-wrap justify-end">
             <div className="flex gap-4">
               <GenericButton onClick={handleSave}>Save</GenericButton>
               <GenericButton onClick={handleCreateGpu}>
