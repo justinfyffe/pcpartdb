@@ -1,4 +1,5 @@
 import {
+  AutomationStatus,
   CreateAutomationActionRequest,
   joinUrlParts,
   ListAutomationActionsRequest,
@@ -30,6 +31,10 @@ export class AutomationService {
 
   async cancelAction(id: number) {
     await this.api.post(joinUrlParts(PATH, `actions/${id}/cancel`), null);
+  }
+
+  async updateStatus(status: AutomationStatus) {
+    await this.api.put(joinUrlParts(PATH, 'status'), status);
   }
 }
 

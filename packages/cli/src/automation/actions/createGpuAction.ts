@@ -88,7 +88,9 @@ async function getChipset(chipsetId: number, context: AutomationContext) {
   }
 
   console.info('Getting Chipset GPU');
-  const chipset = await context.api.get<Gpu>(`/products/gpus/${chipsetId}`);
+  const chipset = await context.api.get<Gpu>(`/products/gpus/${chipsetId}`, {
+    retries: 2,
+  });
   if (chipset == null) {
     throw new Error('Could not get chipset');
   }
@@ -131,6 +133,7 @@ async function uploadProductUpdate(gpu: Gpu, context: AutomationContext) {
   await context.api.post(
     '/products/updates',
     update as CreateProductUpdateRequest,
+    { retries: 2 },
   );
   console.info('Finshed uploading pending creation for GPU');
 }

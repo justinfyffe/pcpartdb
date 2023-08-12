@@ -1,11 +1,11 @@
 HIGH LEVEL TODO:
 - Automation
-  - auto-archive retail models
-    - only check for chipset id
+  - update sitemap action
+  - test remote status
   - UX improvements
     - show source's names in the collapsed view on source cards
     - add archive, create button in collapsed view on source card
-    - show slug, diff button, approve, reject on update card
+    - show slug, diff button, approve, reject on collapsed update card
     - improve look of Pending/Archived (maybe a different card color instead?)
     - mobile friendly:
       - gpu chipset sources
@@ -14,14 +14,10 @@ HIGH LEVEL TODO:
       - gpu retail model updates
       - queue
   - Install node 20 on server
-  - graceful failures
-    - handle 500s; should they retry, or error out?
-      - Maybe retry X number of times before failing
   - clean up name of columns/data structures
   - clean up names of indexes/uniques
+  - clean up data-updates
   - add edit button after approving
-  - Mobile friendly so can approve anywhere
-  - ability to terminate from website so i can do it anywhere 
   - validate that source urls are valid urls (includes domain) before creating sources
     - also validate any other things coming in
 - code cleanup

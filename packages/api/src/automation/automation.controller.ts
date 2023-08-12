@@ -4,10 +4,12 @@ import {
   Get,
   Param,
   Post,
+  Put,
   Query,
   UseGuards,
 } from '@nestjs/common';
 import {
+  AutomationStatus,
   CreateAutomationActionRequest,
   ListAutomationActionsRequest,
 } from '@pcpartdb/shared';
@@ -19,6 +21,18 @@ import { AutomationService } from './automation.service';
 @Controller('automation')
 export class AutomationController {
   constructor(private service: AutomationService, private db: Database) {}
+
+  @Get('status')
+  @UseGuards(StaffGuard)
+  async getStatus(@Ctx() ctx: Context) {
+    return await this.service.getStatus(ctx);
+  }
+
+  @Put('status')
+  @UseGuards(StaffGuard)
+  async updateStatus(@Body() status: AutomationStatus, @Ctx() ctx: Context) {
+    await this.service.updateStatus(status, ctx);
+  }
 
   @Get('actions/next')
   @UseGuards(StaffGuard)

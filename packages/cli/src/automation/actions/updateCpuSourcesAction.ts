@@ -6,6 +6,7 @@ import {
   TechPowerUpCpuSource,
 } from '@pcpartdb/scraper';
 import {
+  AutoArchiveProductSourcesRequest,
   AutomationAction,
   CpuDataSourceKey,
   CpuProductSource,
@@ -116,7 +117,13 @@ export async function updateCpuSourcesAction(
   await uploadCpuSources(geekBenchSources, context);
 
   // Trigger auto-archive
-  await context.api.post('products/sources/auto-archive', null);
+  await context.api.post(
+    'products/sources/auto-archive',
+    {
+      productType: ProductType.Cpu,
+    } as AutoArchiveProductSourcesRequest,
+    { retries: 2 },
+  );
 
   // Update execution details
   context.metadata = {
@@ -242,9 +249,13 @@ async function uploadCpuSources(
   let totalSources = 0;
   for (const batch of batches) {
     try {
-      await context.api.post('products/sources', {
-        sources: batch,
-      } as UpsertProductSourcesRequest);
+      await context.api.post(
+        'products/sources',
+        {
+          sources: batch,
+        } as UpsertProductSourcesRequest,
+        { retries: 2 },
+      );
       totalSources += batch.length;
       console.log(`Uploaded ${batch.length} sources`);
     } catch (e) {

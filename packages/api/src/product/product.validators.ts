@@ -46,6 +46,11 @@ export const applyProductSourcesToProductRequestValidator = Joi.object({
   sources: Joi.array().allow(Joi.number()),
 }).options({ abortEarly: false });
 
+export const autoArchiveProductSourcesRequestValidator = Joi.object({
+  productType: Joi.string().required(),
+  gpuChipsetId: Joi.number().allow(null),
+}).options({ abortEarly: false });
+
 // Product Updates
 
 const listProductUpdatesFilterValidator = Joi.object({

@@ -107,6 +107,7 @@ async function uploadProductUpdate(cpu: Cpu, context: AutomationContext) {
   await context.api.post(
     '/products/updates',
     update as CreateProductUpdateRequest,
+    { retries: 2 },
   );
   console.info('Finshed uploading pending creation for CPU');
 }

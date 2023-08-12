@@ -87,7 +87,9 @@ async function getGpu(gpuId: number, context: AutomationContext) {
   }
 
   console.info(`Getting existing GPU for id=${gpuId}`);
-  const gpu = await context.api.get<Gpu>(`/products/gpus/${gpuId}`);
+  const gpu = await context.api.get<Gpu>(`/products/gpus/${gpuId}`, {
+    retries: 2,
+  });
   if (gpu == null) {
     throw new Error(`Cannot find gpu for id=${gpuId}`);
   }
@@ -149,7 +151,9 @@ async function updateBenchmarks(
 
   if (updated) {
     console.info('Update GPU with updated benchmarks');
-    await context.api.put(`/products/gpus/${originalGpu.id}`, originalGpu);
+    await context.api.put(`/products/gpus/${originalGpu.id}`, originalGpu, {
+      retries: 2,
+    });
     console.info('Finished updating GPU with updated benchmarks');
   }
 }
@@ -213,6 +217,7 @@ async function uploadProductUpdate(
   await context.api.post(
     '/products/updates',
     update as CreateProductUpdateRequest,
+    { retries: 2 },
   );
   console.info('Finshed uploading pending update for GPU');
 }
@@ -224,9 +229,13 @@ async function createUpdateRetailModelSourcesAction(
   const name = `${productFieldValue(chipset.company) || ''} ${
     chipset.name
   }`.trim();
-  await context.api.post('/automation/actions', {
-    type: AutomationActionType.UpdateGpuRetailModelSources,
-    description: `Update GPU Retail Model Sources for ${name}`,
-    data: { chipsetId: chipset.id } as UpdateGpuRetailModelSourcesActionData,
-  } as CreateAutomationActionRequest);
+  await context.api.post(
+    '/automation/actions',
+    {
+      type: AutomationActionType.UpdateGpuRetailModelSources,
+      description: `Update GPU Retail Model Sources for ${name}`,
+      data: { chipsetId: chipset.id } as UpdateGpuRetailModelSourcesActionData,
+    } as CreateAutomationActionRequest,
+    { retries: 2 },
+  );
 }

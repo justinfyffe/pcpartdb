@@ -149,3 +149,14 @@ export interface ApplyProductSourcesToProductRequest {
   productId: number;
   sources: number[];
 }
+
+export interface AutoArchiveProductSourcesRequest {
+  // Auto-archive by pulling products of the provided type. Check which source
+  // URLs are already associated with existing products in our database.
+  productType: ProductType;
+
+  // Auto-archive by pulling all GPU retail models that are associated with the
+  // chipset ID. Check which source URLs are already associated with existing
+  // retail models in our database.
+  gpuChipsetId?: number;
+}

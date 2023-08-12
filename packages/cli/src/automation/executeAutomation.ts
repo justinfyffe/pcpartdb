@@ -17,19 +17,11 @@ const UPDATE_SITEMAPS_FREQUENCY = 1000 * 60 * 60 * 24; // Daily
 const UPDATE_CPU_SOURCES_FREQUENCY = 1000 * 60 * 60 * 24 * 7; // Weekly
 const UPDATE_GPU_CHIPSET_SOURCES_FREQUENCY = 1000 * 60 * 60 * 24 * 7; // Weekly
 
-let executing = false;
 export async function executeAutomation(context: AutomationContext) {
-  if (executing) {
-    // Already executing a task.
-    return;
-  }
-  executing = true;
-
   let action: AutomationAction = null;
   try {
     action = await getNextAction(context);
     if (action == null) {
-      executing = false;
       return;
     }
 
@@ -64,8 +56,6 @@ export async function executeAutomation(context: AutomationContext) {
     console.error('Error occurred during automation execution', e);
     await markAsFailed(action, e as Error, context);
   }
-
-  executing = false;
 }
 
 async function markAsProcessing(
@@ -76,6 +66,7 @@ async function markAsProcessing(
     await context.api.post(
       `automation/actions/${execution.id}/processing`,
       null,
+      { retries: 2 },
     );
   }
 
@@ -90,6 +81,7 @@ async function markAsProcessed(
     await context.api.post(
       `automation/actions/${execution.id}/processed`,
       null,
+      { retries: 2 },
     );
   }
 
@@ -102,7 +94,9 @@ async function markAsFailed(
   context: AutomationContext,
 ) {
   if (execution?.id != null) {
-    await context.api.post(`automation/actions/${execution.id}/failed`, null);
+    await context.api.post(`automation/actions/${execution.id}/failed`, null, {
+      retries: 2,
+    });
   }
 
   console.error('Automation execution has failed', error);
@@ -174,6 +168,7 @@ async function getActionFromQueue(
 ): Promise<AutomationAction> {
   const execution = await context.api.get<AutomationAction>(
     'automation/actions/next',
+    { retries: 2 },
   );
 
   return execution || null;
@@ -185,6 +180,7 @@ async function getActionFromBacklog(
   const execution = await context.api.post<AutomationAction>(
     'automation/actions/next-backlog',
     null,
+    { retries: 2 },
   );
 
   return execution || null;

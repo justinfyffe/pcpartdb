@@ -1,6 +1,9 @@
 import 'reflect-metadata';
 import { AdminAutomationViewModel } from '@pcpartdb/shared';
-import React from 'react';
+import { automationService } from 'packages/website/src/client/automation';
+import { DangerButton } from 'packages/website/src/client/shared/components/Button/DangerButton';
+import { SuccessButton } from 'packages/website/src/client/shared/components/Button/SuccessButton';
+import React, { useCallback, useState } from 'react';
 import {
   MetaRobots,
   Seo,
@@ -17,16 +20,42 @@ import {
   QueueTab,
 } from './tabs';
 
-export const AdminAutomationPage = (_props: AdminAutomationViewModel) => {
+export const AdminAutomationPage = (props: AdminAutomationViewModel) => {
   const seoTitle = 'Automation - Admin Panel';
   const seoRobots = [MetaRobots.NOINDEX, MetaRobots.NOFOLLOW];
+
+  const [status, setStatus] = useState(props.status);
+
+  const handleEnable = useCallback(async () => {
+    const updatedStatus = { ...status, enabled: true };
+    await automationService.updateStatus(updatedStatus);
+    setStatus(updatedStatus);
+  }, [status]);
+
+  const handleDisable = useCallback(async () => {
+    const updatedStatus = { ...status, enabled: false };
+    await automationService.updateStatus(updatedStatus);
+    setStatus(updatedStatus);
+  }, [status]);
 
   return (
     <AdminLayout>
       <Seo title={seoTitle} robots={seoRobots} />
 
       <article>
-        <h1 className="font-semibold mb-4">Automation</h1>
+        <div className="flex justify-between items-center flex-wrap">
+          <h1 className="font-semibold mb-4">Automation</h1>
+
+          <div className="flex gap-4 items-center ml-auto">
+            <span>Status: {status.enabled ? 'Enabled' : 'Disabled'}</span>
+            {status.enabled && (
+              <DangerButton onClick={handleDisable}>Disable</DangerButton>
+            )}
+            {!status.enabled && (
+              <SuccessButton onClick={handleEnable}>Enable</SuccessButton>
+            )}
+          </div>
+        </div>
 
         <Tabs loadOnDemand variant={TabsVariant.Buttons}>
           <Tab label="CPU Sources">

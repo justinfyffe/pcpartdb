@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AuthModule } from '../auth/auth.module';
+import { AutomationModule } from '../automation/automation.module';
 import { DataUpdateModule } from '../data-update/data-update.module';
 import { DatabaseModule } from '../database';
 import { ImageModule } from '../image/image.module';
@@ -7,6 +8,7 @@ import { CpuModule } from '../product/cpu/cpu.module';
 import { GpuModule } from '../product/gpu/gpu.module';
 import { ProductModule } from '../product/product.module';
 import { UserModule } from '../user/user.module';
+import { AdminAutomationViewModelService } from './admin/automation/automation.view-model';
 import { AdminDataUpdatesViewModelService } from './admin/data-updates/data-updates.view-model';
 import { AdminEditImageViewModelService } from './admin/images/edit.view-model';
 import { AdminListImagesViewModelService } from './admin/images/list.view-model';
@@ -28,6 +30,7 @@ import { ViewModelsController } from './view-models.controller';
   imports: [
     DatabaseModule,
     AuthModule,
+    AutomationModule,
     DataUpdateModule,
     CpuModule,
     GpuModule,
@@ -37,6 +40,9 @@ import { ViewModelsController } from './view-models.controller';
   ],
   controllers: [ViewModelsController],
   providers: [
+    // Admin Automation Pages
+    AdminAutomationViewModelService,
+
     // Admin Edit Pages
     AdminEditProductViewModelService,
     AdminEditImageViewModelService,

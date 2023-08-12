@@ -7,6 +7,7 @@ import {
   UlBenchmarkGpuSource,
 } from '@pcpartdb/scraper';
 import {
+  AutoArchiveProductSourcesRequest,
   AutomationAction,
   GpuDataSourceKey,
   GpuProductSource,
@@ -144,7 +145,13 @@ export async function updateGpuChipsetSourcesAction(
   await uploadGpuSources(ulBenchmarkSources, context);
 
   // Trigger auto-archive
-  await context.api.post('products/sources/auto-archive', null);
+  await context.api.post(
+    'products/sources/auto-archive',
+    {
+      productType: ProductType.Gpu,
+    } as AutoArchiveProductSourcesRequest,
+    { retries: 2 },
+  );
 
   // Update execution details
   context.metadata = {
@@ -284,9 +291,13 @@ async function uploadGpuSources(
   let totalSources = 0;
   for (const batch of batches) {
     try {
-      await context.api.post('products/sources', {
-        sources: batch,
-      } as UpsertProductSourcesRequest);
+      await context.api.post(
+        'products/sources',
+        {
+          sources: batch,
+        } as UpsertProductSourcesRequest,
+        { retries: 2 },
+      );
       totalSources += batch.length;
       console.log(`Uploaded ${batch.length} sources`);
     } catch (e) {

@@ -261,11 +261,14 @@ export class ProductSourceRepository {
     // Handle GPU-specific filters
     let gpuChipsetIdWhere: Prisma.IntNullableFilter;
     if (productType === ProductType.Gpu) {
+      const gpuChipsetId = filter?.gpuChipsetId || null;
       const gpuProductType = filter?.gpuProductType || null;
+
       if (gpuProductType === GpuProductType.Chipset) {
         gpuChipsetIdWhere = { equals: null };
       } else if (gpuProductType === GpuProductType.RetailModel) {
-        gpuChipsetIdWhere = { not: null };
+        gpuChipsetIdWhere =
+          gpuChipsetId != null ? { equals: gpuChipsetId } : { not: null };
       } else {
         throw new Error('Invalid gpu product type');
       }

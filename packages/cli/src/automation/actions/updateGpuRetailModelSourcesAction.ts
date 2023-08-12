@@ -1,5 +1,6 @@
 import { scrapeTechPowerUpGpuRetailModelSources } from '@pcpartdb/scraper';
 import {
+  AutoArchiveProductSourcesRequest,
   AutomationAction,
   Gpu,
   GpuDataSourceKey,
@@ -31,7 +32,14 @@ export async function updateGpuRetailModelSourcesAction(
   await uploadGpuSources(techPowerUpSources, context);
 
   // Trigger auto-archive
-  await context.api.post('products/sources/auto-archive', null);
+  await context.api.post(
+    'products/sources/auto-archive',
+    {
+      productType: ProductType.Gpu,
+      gpuChipsetId: payload.chipsetId,
+    } as AutoArchiveProductSourcesRequest,
+    { retries: 2 },
+  );
 
   // Update execution details
   context.metadata = {
@@ -48,7 +56,9 @@ async function getChipset(chipsetId: number, context: AutomationContext) {
   }
 
   console.info(`Getting existing GPU for id=${chipsetId}`);
-  const gpu = await context.api.get<Gpu>(`/products/gpus/${chipsetId}`);
+  const gpu = await context.api.get<Gpu>(`/products/gpus/${chipsetId}`, {
+    retries: 2,
+  });
   if (gpu == null) {
     throw new Error(`Cannot find gpu for id=${chipsetId}`);
   }
@@ -101,9 +111,13 @@ async function uploadGpuSources(
   let totalSources = 0;
   for (const batch of batches) {
     try {
-      await context.api.post('products/sources', {
-        sources: batch,
-      } as UpsertProductSourcesRequest);
+      await context.api.post(
+        'products/sources',
+        {
+          sources: batch,
+        } as UpsertProductSourcesRequest,
+        { retries: 2 },
+      );
       totalSources += batch.length;
       console.log(`Uploaded ${batch.length} sources`);
     } catch (e) {

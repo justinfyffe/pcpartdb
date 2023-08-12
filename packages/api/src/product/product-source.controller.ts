@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
 import {
   ApplyProductSourcesToProductRequest,
+  AutoArchiveProductSourcesRequest,
   AutocompleteProductSourcesRequest,
   ListProductSourcesRequest,
   UpsertProductSourcesRequest,
@@ -81,10 +82,13 @@ export class ProductSourceController {
 
   @Post('auto-archive')
   @UseGuards(StaffGuard)
-  async autoArchive(@Ctx() ctx: Context) {
+  async autoArchive(
+    @Body() body: AutoArchiveProductSourcesRequest,
+    @Ctx() ctx: Context,
+  ) {
     return await this.db.transaction(
       async () => {
-        await this.service.autoArchive(ctx);
+        await this.service.autoArchive(body, ctx);
       },
       { ctx, timeout: AUTO_ARCHIVE_TIMEOUT },
     );

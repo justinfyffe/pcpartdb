@@ -16,6 +16,7 @@ export interface ListProductSourcesFilter {
 
   // GPU Specific
   gpuProductType?: GpuProductType;
+  gpuChipsetId?: number;
 }
 
 export interface ListProductSourcesQuery

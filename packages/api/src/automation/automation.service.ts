@@ -8,6 +8,7 @@ import {
   AutomationAction,
   AutomationActionStatus,
   AutomationActionType,
+  AutomationStatus,
   CreateAutomationActionRequest,
   ListAutomationActionsRequest,
   ListAutomationActionsResponse,
@@ -16,6 +17,8 @@ import {
   UpdateGpuActionData,
   ValidationErrorType,
 } from '@pcpartdb/shared';
+import * as fs from 'fs';
+import * as fsPromises from 'fs/promises';
 import { CpuRepository } from '../product/cpu/cpu.repository';
 import { GpuRepository } from '../product/gpu/gpu.repository';
 import { Context } from '../shared/context';
@@ -24,12 +27,16 @@ import {
   internalServerError,
   notFoundError,
 } from '../shared/error';
+import { configPath } from '../shared/utils';
 import { validate } from '../shared/validation/validate';
 import { AutomationRepository } from './automation.repository';
 import {
   createAutomationActionRequestValidator,
   listAutomationActionsRequestValidator,
+  updateAutomationStatusValidaor,
 } from './automation.validators';
+
+const CONFIG_FILE = 'automation.json';
 
 @Injectable()
 export class AutomationService {
@@ -38,6 +45,29 @@ export class AutomationService {
     private cpuRepository: CpuRepository,
     private gpuRepository: GpuRepository,
   ) {}
+
+  async getStatus(_ctx: Context) {
+    const statusJson = fs.existsSync(configPath(CONFIG_FILE))
+      ? await fsPromises.readFile(configPath(CONFIG_FILE), 'utf-8')
+      : '{}';
+
+    const status: AutomationStatus = {
+      enabled: false,
+      ...(JSON.parse(statusJson) || {}),
+    };
+
+    return status;
+  }
+
+  async updateStatus(status: AutomationStatus, _ctx: Context) {
+    validate(status, updateAutomationStatusValidaor);
+
+    await fsPromises.writeFile(
+      configPath(CONFIG_FILE),
+      JSON.stringify(status, undefined, 2),
+      'utf-8',
+    );
+  }
 
   async listPending(request: ListAutomationActionsRequest, ctx: Context) {
     validate(request, listAutomationActionsRequestValidator);

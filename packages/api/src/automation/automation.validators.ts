@@ -23,3 +23,7 @@ export const createAutomationActionRequestValidator = Joi.object({
 
   priority: Joi.number(),
 }).options({ abortEarly: false });
+
+export const updateAutomationStatusValidaor = Joi.object({
+  enabled: Joi.boolean().required(),
+}).options({ abortEarly: false });

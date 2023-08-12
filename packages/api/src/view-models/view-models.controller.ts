@@ -8,6 +8,7 @@ import {
 import { StaffGuard } from '../auth/staff.guard';
 import { Database } from '../database';
 import { Context, Ctx } from '../shared/context';
+import { AdminAutomationViewModelService } from './admin/automation/automation.view-model';
 import { AdminDataUpdatesViewModelService } from './admin/data-updates/data-updates.view-model';
 import { AdminEditImageViewModelService } from './admin/images/edit.view-model';
 import { AdminListImagesViewModelService } from './admin/images/list.view-model';
@@ -29,6 +30,7 @@ export class ViewModelsController {
   constructor(
     private db: Database,
     private adminOverviewViewModelService: AdminOverviewViewModelService,
+    private adminAutomationViewModelService: AdminAutomationViewModelService,
     private adminEditProductViewModelService: AdminEditProductViewModelService,
     private adminEditImageViewModelService: AdminEditImageViewModelService,
     private adminListImagesViewModelService: AdminListImagesViewModelService,
@@ -51,6 +53,17 @@ export class ViewModelsController {
     return await this.db.transaction(
       () => {
         return this.adminOverviewViewModelService.viewModel(ctx);
+      },
+      { ctx },
+    );
+  }
+
+  @Get('admin/automation')
+  @UseGuards(StaffGuard)
+  async adminAutomation(@Ctx() ctx: Context) {
+    return await this.db.transaction(
+      () => {
+        return this.adminAutomationViewModelService.viewModel(ctx);
       },
       { ctx },
     );

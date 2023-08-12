@@ -66,7 +66,9 @@ async function getCpu(cpuId: number, context: AutomationContext) {
   }
 
   console.info(`Getting existing CPU for id=${cpuId}`);
-  const cpu = await context.api.get<Cpu>(`/products/cpus/${cpuId}`);
+  const cpu = await context.api.get<Cpu>(`/products/cpus/${cpuId}`, {
+    retries: 2,
+  });
   if (cpu == null) {
     throw new Error(`Cannot find cpu for id=${cpuId}`);
   }
@@ -142,7 +144,9 @@ async function updateBenchmarks(
 
   if (updated) {
     console.info('Update CPU with updated benchmarks');
-    await context.api.put(`/products/cpus/${originalCpu.id}`, originalCpu);
+    await context.api.put(`/products/cpus/${originalCpu.id}`, originalCpu, {
+      retries: 2,
+    });
     console.info('Finished updating CPU with updated benchmarks');
   }
 }
@@ -202,6 +206,7 @@ async function uploadProductUpdate(
   await context.api.post(
     '/products/updates',
     update as CreateProductUpdateRequest,
+    { retries: 2 },
   );
   console.info('Finshed uploading pending update for CPU');
 }
