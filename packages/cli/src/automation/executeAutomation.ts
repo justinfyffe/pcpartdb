@@ -10,6 +10,7 @@ import { updateCpuSourcesAction } from './actions/updateCpuSourcesAction';
 import { updateGpuAction } from './actions/updateGpuAction';
 import { updateGpuChipsetSourcesAction } from './actions/updateGpuChipsetSourcesAction';
 import { updateGpuRetailModelSourcesAction } from './actions/updateGpuRetailModelSourcesAction';
+import { updateSitemapsAction } from './actions/updateSitemapsAction';
 import { AutomationContext } from './types';
 import { saveAutomationContext } from './utils/context';
 
@@ -30,7 +31,7 @@ export async function executeAutomation(context: AutomationContext) {
     await markAsProcessing(action, context);
 
     if (type === AutomationActionType.UpdateSitemaps) {
-      //
+      await updateSitemapsAction(action, context);
     } else if (type === AutomationActionType.UpdateCpuSources) {
       await updateCpuSourcesAction(action, context);
     } else if (type === AutomationActionType.CreateCpu) {
@@ -134,12 +135,12 @@ async function getActionFromStalenessCheck(
 ): Promise<AutomationAction> {
   const { metadata } = context;
 
-  // if (isStale(metadata?.updateSitemapsDate, UPDATE_SITEMAPS_FREQUENCY)) {
-  //   return {
-  //     status: AutomationActionStatus.Pending,
-  //     type: AutomationActionType.UpdateSitemaps,
-  //   };
-  // }
+  if (isStale(metadata?.updateSitemapsDate, UPDATE_SITEMAPS_FREQUENCY)) {
+    return {
+      status: AutomationActionStatus.Pending,
+      type: AutomationActionType.UpdateSitemaps,
+    };
+  }
 
   if (isStale(metadata?.updateCpuSourcesDate, UPDATE_CPU_SOURCES_FREQUENCY)) {
     return {

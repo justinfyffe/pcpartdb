@@ -56,20 +56,25 @@ export function getViewGpuPath(gpuOrSlug: Gpu | string) {
 }
 
 export function getCompareGpusPath(
-  comparisonOrSlug: GpuComparison | string,
+  comparisonOrSlug: GpuComparison | [string, string],
   options?: GetCompareProductsPathOptions,
 ) {
-  if (typeof comparisonOrSlug === 'string') {
-    return joinUrlParts('/gpus/compare/', comparisonOrSlug, '/');
+  let gpu1Slug: string;
+  let gpu2Slug: string;
+  if (typeof comparisonOrSlug[0] === 'string') {
+    gpu1Slug = comparisonOrSlug[0];
+    gpu2Slug = comparisonOrSlug[1] as string;
+  } else {
+    const comparison = comparisonOrSlug as GpuComparison;
+    const [gpu1, gpu2] =
+      options?.ordered === true
+        ? [...comparison].sort((p1, p2) => p1.id - p2.id)
+        : comparison;
+    gpu1Slug = gpu1.slug;
+    gpu2Slug = gpu2.slug;
   }
 
-  const comparison = comparisonOrSlug;
-  const [gpu1, gpu2] =
-    options?.ordered === true
-      ? [...comparison].sort((p1, p2) => p1.id - p2.id)
-      : comparison;
-
-  return joinUrlParts('/gpus/compare/', `${gpu1.slug}--vs--${gpu2.slug}`, '/');
+  return joinUrlParts('/gpus/compare/', `${gpu1Slug}--vs--${gpu2Slug}`, '/');
 }
 
 export function getAdminListGpusPath(query?: ListGpusQuery) {

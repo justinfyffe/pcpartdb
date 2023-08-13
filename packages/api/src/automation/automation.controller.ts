@@ -45,7 +45,7 @@ export class AutomationController {
     );
   }
 
-  @Get('actions/next-backlog')
+  @Post('actions/next-backlog')
   @UseGuards(StaffGuard)
   async getNextBacklogEntry(@Ctx() ctx: Context) {
     return await this.db.transaction(

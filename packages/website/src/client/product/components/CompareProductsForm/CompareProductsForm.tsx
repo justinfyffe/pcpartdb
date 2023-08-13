@@ -1,8 +1,5 @@
 import {
-  CpuComparison,
-  getCompareCpusPath,
   getCompareProductsPath,
-  getViewCpuPath,
   getViewProductPath,
   ProductComparison,
   ProductType,
@@ -14,10 +11,10 @@ import React, {
   useMemo,
   useState,
 } from 'react';
+import { useProductCache } from '../../../shared/cache';
 import { Button, ButtonVariant, Form } from '../../../shared/components';
 import { classNames } from '../../../shared/ui';
 import { ProductAutocomplete } from '../ProductAutocomplete';
-import { useProductCache } from '../../../shared/cache';
 
 interface CompareProductsFormProps {
   productType: ProductType;

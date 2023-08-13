@@ -187,7 +187,7 @@ export class GpuRepository {
   async findNextToBeUpdated(config?: RepositoryConfig) {
     const trx = config?.trx ?? this.db;
 
-    return await trx.cpu.findFirst({
+    return await trx.gpu.findFirst({
       orderBy: { automationTimestamp: 'asc' },
     });
   }

@@ -85,20 +85,25 @@ export function getViewCpuPath(cpuOrSlug: Cpu | string) {
 }
 
 export function getCompareCpusPath(
-  comparisonOrSlug: CpuComparison | string,
+  comparisonOrSlug: CpuComparison | [string, string],
   options?: GetCompareProductsPathOptions,
 ) {
-  if (typeof comparisonOrSlug === 'string') {
-    return joinUrlParts('/cpus/compare/', comparisonOrSlug, '/');
+  let cpu1Slug: string;
+  let cpu2Slug: string;
+  if (typeof comparisonOrSlug[0] === 'string') {
+    cpu1Slug = comparisonOrSlug[0];
+    cpu2Slug = comparisonOrSlug[1] as string;
+  } else {
+    const comparison = comparisonOrSlug as CpuComparison;
+    const [cpu1, cpu2] =
+      options?.ordered === true
+        ? [...comparison].sort((p1, p2) => p1.id - p2.id)
+        : comparison;
+    cpu1Slug = cpu1.slug;
+    cpu2Slug = cpu2.slug;
   }
 
-  const comparison = comparisonOrSlug;
-  const [cpu1, cpu2] =
-    options?.ordered === true
-      ? [...comparison].sort((p1, p2) => p1.id - p2.id)
-      : comparison;
-
-  return joinUrlParts('/cpus/compare/', `${cpu1.slug}--vs--${cpu2.slug}`, '/');
+  return joinUrlParts('/cpus/compare/', `${cpu1Slug}--vs--${cpu2Slug}`, '/');
 }
 
 export function getAdminImportCpusPath() {

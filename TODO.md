@@ -24,7 +24,10 @@ HIGH LEVEL TODO:
   - ui components
 - Improve performance score (not just g3d mark or cpu mark)
 - Affiliate Ads
+  - live price checking for performance/price ranks, cache if it's been recent
+    - can show a spinner when fetching the price
 - More list filters
+- DDoS / Scraping protection
 - More benchmarks, fps averages (can have actual and estimated based on similar)
 - Glossary
 - Soft delete everything. Hard delete should be rare.
