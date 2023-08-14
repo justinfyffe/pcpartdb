@@ -6,23 +6,14 @@ import {
   ProductType,
   UploadSitemapRequest,
 } from '@pcpartdb/shared';
-import extract from 'extract-zip';
-import * as fs from 'fs';
-import path from 'path';
+import * as tar from 'tar';
 import { CpuRepository } from '../product/cpu/cpu.repository';
 import { GpuRepository } from '../product/gpu/gpu.repository';
 import { Context } from '../shared/context';
 import { notFoundError } from '../shared/error';
+import * as fileUtils from '../shared/utils';
 import { validate } from '../shared/validation/validate';
 import { getSitemapProductSlugsValidator } from './website.validators';
-
-const CWD_PATH = path.resolve(process.cwd());
-const SITEMAPS_PATH = path.resolve(
-  path.join(CWD_PATH, '../..', 'data', 'sitemaps'),
-);
-const SITEMAPS_STAGING_PATH = path.resolve(
-  path.join(CWD_PATH, '../..', 'data', 'sitemaps-staging'),
-);
 
 @Injectable()
 export class WebsiteService {
@@ -32,9 +23,12 @@ export class WebsiteService {
   ) {}
 
   async uploadSitemap(request: UploadSitemapRequest, _ctx: Context) {
-    await extract(request.tempPath, { dir: SITEMAPS_STAGING_PATH });
-    await fs.rmdirSync(SITEMAPS_PATH);
-    await fs.renameSync(SITEMAPS_STAGING_PATH, SITEMAPS_PATH);
+    // TODO: not extracting
+    await tar.x({
+      cwd: '../data/sitemaps',
+      file: fileUtils.uploadsPath(request.tempPath),
+    });
+    await fileUtils.remove(fileUtils.uploadsPath(request.tempPath));
   }
 
   async getSitemapProductSlugs(

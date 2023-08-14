@@ -17,9 +17,10 @@ import {
   SitemapProductSlug,
   WEBSITE_URL,
 } from '@pcpartdb/shared';
-import archiver from 'archiver';
+import FormData from 'form-data';
 import * as fs from 'fs';
 import * as fsPromises from 'fs/promises';
+import * as tar from 'tar';
 import xml from 'xml';
 import * as zlib from 'zlib';
 import { AutomationContext } from '../types';
@@ -83,10 +84,10 @@ export async function updateSitemapsAction(
   await writeSitemapIndex(sitemapUrls);
 
   // Create zip file
-  const archivePath = await createZipArchive();
+  const archivePath = await createTarArchive();
 
   // Upload sitemap zip file
-  await uploadSitemaps(archivePath, context);
+  // await uploadSitemaps(archivePath, context);
 
   // Update execution details
   context.metadata = {
@@ -464,22 +465,18 @@ async function compressSitemap(path: string, output: string) {
   await fsPromises.rm(path);
 }
 
-async function createZipArchive() {
-  const zipPath = sitemapPath('sitemap.zip');
-  const archive = archiver('zip');
-  const stream = fs.createWriteStream(zipPath);
-  const paths = await fsPromises.readdir(sitemapPath());
-
-  return new Promise<string>((resolve, reject) => {
-    archive.on('error', (err) => reject(err));
-    archive.pipe(stream);
-    for (const path of paths) {
-      archive.append(fs.createReadStream(sitemapPath(path)), { name: path });
-    }
-
-    stream.on('close', () => resolve(zipPath));
-    archive.finalize();
-  });
+async function createTarArchive() {
+  const files = await fsPromises.readdir(sitemapPath());
+  await tar.c(
+    {
+      cwd: '../../data/automation/sitemaps',
+      gzip: true,
+      file: 'sitemap.tgz',
+    },
+    files,
+  );
+  await fsPromises.rename('./sitemap.tgz', sitemapPath('sitemap.tgz'));
+  return sitemapPath('sitemap.tgz');
 }
 
 async function fetchProductSlugs(
@@ -495,15 +492,8 @@ async function fetchProductSlugs(
 }
 
 async function uploadSitemaps(archivePath: string, context: AutomationContext) {
-  const blob = new Blob([await fsPromises.readFile(archivePath)], {
-    type: 'application/zip',
-  });
-  const name = archivePath.substring(archivePath.lastIndexOf('/') + 1);
-
-  // TODO: this is broken
-
   const data = new FormData();
-  data.append('file', blob, name);
+  data.append('file', fs.createReadStream(archivePath));
   await context.api.post(
     'website/sitemap',
     data,

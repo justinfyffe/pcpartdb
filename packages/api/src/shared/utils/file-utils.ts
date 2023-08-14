@@ -12,6 +12,10 @@ const UPLOADS_PATH = path.join(TMP_PATH, 'uploads');
 const EXPORTS_PATH = path.join(TMP_PATH, 'exports');
 const PUBLIC_IMAGES_PATH = path.join(WEBSITE_PATH, 'public/u/images');
 
+const SITEMAPS_PATH = path.resolve(
+  path.join(CWD_PATH, '../..', 'data', 'sitemaps'),
+);
+
 if (!fs.existsSync(CONFIG_PATH)) {
   fs.mkdirSync(CONFIG_PATH, { recursive: true });
 }
@@ -26,6 +30,9 @@ if (!fs.existsSync(EXPORTS_PATH)) {
 }
 if (!fs.existsSync(PUBLIC_IMAGES_PATH)) {
   fs.mkdirSync(PUBLIC_IMAGES_PATH, { recursive: true });
+}
+if (!fs.existsSync(SITEMAPS_PATH)) {
+  fs.mkdirSync(SITEMAPS_PATH, { recursive: true });
 }
 
 export const MULTER_OPTIONS: multer.Options = {
@@ -54,6 +61,10 @@ export function uploadsPath(file?: string) {
 
 export function exportsPath(file?: string) {
   return file != null ? path.join(EXPORTS_PATH, file) : EXPORTS_PATH;
+}
+
+export function sitemapsPath(file?: string) {
+  return file != null ? path.join(SITEMAPS_PATH, file) : SITEMAPS_PATH;
 }
 
 export function imagePath(file?: string) {
