@@ -6,13 +6,18 @@ import {
   getListCpusPath,
   getListGpusPath,
   getPrivacyPath,
+  GetSitemapProductSlugsRequest,
+  GetSitemapProductSlugsResponse,
   getViewCpuPath,
   getViewGpuPath,
+  GpuProductType,
   LIST_CPUS_PRESETS,
   LIST_GPUS_PRESETS,
-  ProductSlug,
+  ProductType,
+  SitemapProductSlug,
   WEBSITE_URL,
 } from '@pcpartdb/shared';
+import archiver from 'archiver';
 import * as fs from 'fs';
 import * as fsPromises from 'fs/promises';
 import xml from 'xml';
@@ -43,13 +48,25 @@ export async function updateSitemapsAction(
   context: AutomationContext,
 ) {
   // Fetch cpu slugs
-  const cpuSlugs: ProductSlug[] = [];
+  const cpuSlugs = await fetchProductSlugs(
+    { productType: ProductType.Cpu },
+    context,
+  );
 
   // Fetch gpu chipset slugs
-  const gpuChipsetSlugs: ProductSlug[] = [];
+  const gpuChipsetSlugs = await fetchProductSlugs(
+    { productType: ProductType.Gpu, gpuProductType: GpuProductType.Chipset },
+    context,
+  );
 
   // Fetch gpu retail model slugs
-  const gpuRetailModelSlugs: ProductSlug[] = [];
+  const gpuRetailModelSlugs = await fetchProductSlugs(
+    {
+      productType: ProductType.Gpu,
+      gpuProductType: GpuProductType.RetailModel,
+    },
+    context,
+  );
 
   // Construct sitemaps
   await removeExistingSitemaps();
@@ -65,7 +82,11 @@ export async function updateSitemapsAction(
   ];
   await writeSitemapIndex(sitemapUrls);
 
-  // Upload sitemap gzipped file
+  // Create zip file
+  const archivePath = await createZipArchive();
+
+  // Upload sitemap zip file
+  await uploadSitemaps(archivePath, context);
 
   // Update execution details
   context.metadata = {
@@ -108,7 +129,7 @@ async function writeCpuListsSitemap() {
   return sitemapUrl(CPU_LISTS_FILENAME, { compressed: true });
 }
 
-async function writeCpusSitemap(cpuSlugs: ProductSlug[]) {
+async function writeCpusSitemap(cpuSlugs: SitemapProductSlug[]) {
   console.log('Generating CPUs sitemap');
 
   let fileCounter = 0;
@@ -120,7 +141,7 @@ async function writeCpusSitemap(cpuSlugs: ProductSlug[]) {
     const cpuSlug = cpuSlugs[i];
 
     const url = websiteUrl(getViewCpuPath(cpuSlug.slug));
-    const lastModTimestamp = Math.max(cpuSlug.productModifiedAt ?? 0, 0);
+    const lastModTimestamp = Math.max(cpuSlug.lastModification ?? 0, 0);
     const lastModification =
       lastModTimestamp != 0 ? new Date(lastModTimestamp) : undefined;
 
@@ -150,7 +171,7 @@ async function writeCpusSitemap(cpuSlugs: ProductSlug[]) {
   return sitemapUrls;
 }
 
-async function writeCpuComparisonsSitemap(cpuSlugs: ProductSlug[]) {
+async function writeCpuComparisonsSitemap(cpuSlugs: SitemapProductSlug[]) {
   console.log('Generating CPU Comparison sitemap');
 
   let fileCounter = 0;
@@ -170,8 +191,8 @@ async function writeCpuComparisonsSitemap(cpuSlugs: ProductSlug[]) {
         getCompareCpusPath([cpuSlug2.slug, cpuSlug1.slug]),
       );
       const lastModTimestamp = Math.max(
-        cpuSlug1.productModifiedAt ?? 0,
-        cpuSlug2.productModifiedAt ?? 0,
+        cpuSlug1.lastModification ?? 0,
+        cpuSlug2.lastModification ?? 0,
       );
       const lastModification =
         lastModTimestamp != 0 ? new Date(lastModTimestamp) : undefined;
@@ -224,7 +245,7 @@ async function writeGpuListsSitemap() {
   return sitemapUrl(GPU_LISTS_FILENAME, { compressed: true });
 }
 
-async function writeGpuChipsetsSitemap(gpuSlugs: ProductSlug[]) {
+async function writeGpuChipsetsSitemap(gpuSlugs: SitemapProductSlug[]) {
   console.log('Generating GPU Chipsets sitemap');
 
   let fileCounter = 0;
@@ -236,7 +257,7 @@ async function writeGpuChipsetsSitemap(gpuSlugs: ProductSlug[]) {
     const gpuSlug = gpuSlugs[i];
 
     const url = websiteUrl(getViewGpuPath(gpuSlug.slug));
-    const lastModTimestamp = Math.max(gpuSlug.productModifiedAt ?? 0, 0);
+    const lastModTimestamp = Math.max(gpuSlug.lastModification ?? 0, 0);
     const lastModification =
       lastModTimestamp != 0 ? new Date(lastModTimestamp) : undefined;
 
@@ -266,7 +287,7 @@ async function writeGpuChipsetsSitemap(gpuSlugs: ProductSlug[]) {
   return sitemapUrls;
 }
 
-async function writeGpuRetailModelsSitemap(gpuSlugs: ProductSlug[]) {
+async function writeGpuRetailModelsSitemap(gpuSlugs: SitemapProductSlug[]) {
   console.log('Generating GPU Retail Models sitemap');
 
   let fileCounter = 0;
@@ -278,7 +299,7 @@ async function writeGpuRetailModelsSitemap(gpuSlugs: ProductSlug[]) {
     const gpuSlug = gpuSlugs[i];
 
     const url = websiteUrl(getViewGpuPath(gpuSlug.slug));
-    const lastModTimestamp = Math.max(gpuSlug.productModifiedAt ?? 0, 0);
+    const lastModTimestamp = Math.max(gpuSlug.lastModification ?? 0, 0);
     const lastModification =
       lastModTimestamp != 0 ? new Date(lastModTimestamp) : undefined;
 
@@ -314,7 +335,7 @@ async function writeGpuRetailModelsSitemap(gpuSlugs: ProductSlug[]) {
   return sitemapUrls;
 }
 
-async function writeGpuComparisonsSitemap(gpuSlugs: ProductSlug[]) {
+async function writeGpuComparisonsSitemap(gpuSlugs: SitemapProductSlug[]) {
   console.log('Generating GPU Comparison sitemap');
 
   let fileCounter = 0;
@@ -334,8 +355,8 @@ async function writeGpuComparisonsSitemap(gpuSlugs: ProductSlug[]) {
         getCompareGpusPath([gpuSlug2.slug, gpuSlug1.slug]),
       );
       const lastModTimestamp = Math.max(
-        gpuSlug1.productModifiedAt ?? 0,
-        gpuSlug2.productModifiedAt ?? 0,
+        gpuSlug1?.lastModification ?? 0,
+        gpuSlug2?.lastModification ?? 0,
       );
       const lastModification =
         lastModTimestamp != 0 ? new Date(lastModTimestamp) : undefined;
@@ -389,8 +410,10 @@ async function writeSitemapIndex(sitemapUrls: string[]) {
   )}`;
 
   const path = sitemapPath(INDEX_FILENAME);
+  const compressedPath = `${path}.gz`;
   await fsPromises.writeFile(path, sitemapIndex, 'utf-8');
-  await compressSitemap(path);
+  await compressSitemap(path, compressedPath);
+  console.log(`Generated sitemap index at ${compressedPath}`);
 }
 
 async function writeSitemap(path: string, entries: SitemapEntry[]) {
@@ -408,7 +431,9 @@ async function writeSitemap(path: string, entries: SitemapEntry[]) {
     { indent: ' ' },
   )}`;
   await fsPromises.writeFile(path, sitemap, 'utf-8');
-  await compressSitemap(path);
+  const compressedPath = `${path}.gz`;
+  await compressSitemap(path, compressedPath);
+  return compressedPath;
 }
 
 async function removeExistingSitemaps() {
@@ -432,9 +457,57 @@ function generateSitemapUrlObject(entry: SitemapEntry) {
   return { url: [{ loc: entry.url }] };
 }
 
-async function compressSitemap(path: string) {
+async function compressSitemap(path: string, output: string) {
   fs.createReadStream(path)
     .pipe(zlib.createGzip())
-    .pipe(fs.createWriteStream(`${path}.gz`));
+    .pipe(fs.createWriteStream(output));
   await fsPromises.rm(path);
+}
+
+async function createZipArchive() {
+  const zipPath = sitemapPath('sitemap.zip');
+  const archive = archiver('zip');
+  const stream = fs.createWriteStream(zipPath);
+  const paths = await fsPromises.readdir(sitemapPath());
+
+  return new Promise<string>((resolve, reject) => {
+    archive.on('error', (err) => reject(err));
+    archive.pipe(stream);
+    for (const path of paths) {
+      archive.append(fs.createReadStream(sitemapPath(path)), { name: path });
+    }
+
+    stream.on('close', () => resolve(zipPath));
+    archive.finalize();
+  });
+}
+
+async function fetchProductSlugs(
+  request: GetSitemapProductSlugsRequest,
+  context: AutomationContext,
+) {
+  const response = await context.api.get<GetSitemapProductSlugsResponse>(
+    'website/sitemap/product-slugs',
+    {},
+    { params: { req: JSON.stringify(request) } },
+  );
+  return response.slugs;
+}
+
+async function uploadSitemaps(archivePath: string, context: AutomationContext) {
+  const blob = new Blob([await fsPromises.readFile(archivePath)], {
+    type: 'application/zip',
+  });
+  const name = archivePath.substring(archivePath.lastIndexOf('/') + 1);
+
+  // TODO: this is broken
+
+  const data = new FormData();
+  data.append('file', blob, name);
+  await context.api.post(
+    'website/sitemap',
+    data,
+    {},
+    { headers: { 'content-type': 'multipart/form-data' } },
+  );
 }

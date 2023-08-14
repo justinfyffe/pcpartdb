@@ -1,6 +1,9 @@
 HIGH LEVEL TODO:
 - Automation
   - update sitemap action
+    - upload zip archive
+      - archiver
+      - extract-zip
   - test remote status
   - UX improvements
     - show source's names in the collapsed view on source cards

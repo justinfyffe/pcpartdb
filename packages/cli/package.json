@@ -31,6 +31,7 @@
   "license": "UNLICENSED",
   "homepage": "https://pcpartdb.com",
   "devDependencies": {
+    "@types/archiver": "^5.3.2",
     "@types/node": "^17.0.36",
     "@types/node-schedule": "^2.1.0",
     "@types/xml": "^1.0.8",
@@ -40,6 +41,7 @@
     "@pcpartdb/database": "*",
     "@pcpartdb/scraper": "*",
     "@pcpartdb/shared": "*",
+    "archiver": "^5.3.1",
     "axios": "^0.27.2",
     "commander": "^10.0.0",
     "date-fns": "^2.28.0",

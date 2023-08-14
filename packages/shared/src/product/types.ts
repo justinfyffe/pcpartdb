@@ -160,8 +160,3 @@ export interface AutoArchiveProductSourcesRequest {
   // retail models in our database.
   gpuChipsetId?: number;
 }
-
-export interface ProductSlug {
-  slug: string;
-  productModifiedAt: number;
-}

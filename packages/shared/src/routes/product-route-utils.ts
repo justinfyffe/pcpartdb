@@ -30,18 +30,18 @@ export interface GetCompareProductsPathOptions {
 
 export function getCompareProductsPath(
   productType: ProductType,
-  comparisonOrSlug: ProductComparison | string,
+  comparisonOrSlug: ProductComparison | [string, string],
   options?: GetCompareProductsPathOptions,
 ) {
   switch (productType) {
     case ProductType.Cpu:
       return getCompareCpusPath(
-        comparisonOrSlug as CpuComparison | string,
+        comparisonOrSlug as CpuComparison | [string, string],
         options,
       );
     case ProductType.Gpu:
       return getCompareGpusPath(
-        comparisonOrSlug as GpuComparison | string,
+        comparisonOrSlug as GpuComparison | [string, string],
         options,
       );
     default:

@@ -1,7 +1,6 @@
 import { ListQuery, ListRequest, ListResponse } from '../common';
 import { GpuProductType } from './gpu';
 import {
-  ProductSlug,
   ProductSourceGroup,
   ProductType,
   ProductUpdate,
@@ -54,14 +53,3 @@ export interface ApproveProductUpdateRequest {
 }
 
 export interface RejectProductUpdateRequest {}
-
-// Product Slugs
-
-export interface ListProductSlugsRequest {
-  productType: ProductType;
-}
-
-export interface ListProductSlugsResponse {
-  productType: ProductType;
-  slugs: ProductSlug[];
-}

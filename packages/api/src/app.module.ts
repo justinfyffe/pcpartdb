@@ -9,6 +9,7 @@ import { ContextMiddleware } from './shared/context';
 import { CookieModule } from './shared/cookie';
 import { UserModule } from './user/user.module';
 import { ViewModelsModule } from './view-models/view-models.module';
+import { WebsiteModule } from './website/website.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { ViewModelsModule } from './view-models/view-models.module';
     ProductModule,
     CookieModule,
     UserModule,
+    WebsiteModule,
     ViewModelsModule,
   ],
 })

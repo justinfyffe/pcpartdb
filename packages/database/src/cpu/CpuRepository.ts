@@ -200,6 +200,16 @@ export class CpuRepository {
     await trx.cpu.delete({ where: { id } });
   }
 
+  async listSitemapProductSlugs(config?: RepositoryConfig) {
+    const trx = config?.trx ?? this.db;
+    return await trx.cpu.findMany({
+      select: {
+        slug: true,
+        updatedAt: true,
+      },
+    });
+  }
+
   private generateWhere(filter: ListCpusFilter): Prisma.CpuWhereInput {
     const performanceRated = filter?.performanceRated ?? false;
     const valueRated = filter?.valueRated;

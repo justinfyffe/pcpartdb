@@ -3,6 +3,7 @@ import {
   DEFAULT_LIST_GPUS_LIMIT,
   DEFAULT_LIST_GPUS_OFFSET,
   DEFAULT_LIST_GPUS_SORT,
+  GpuProductType,
   ListGpusFilter,
   ListGpusOrder,
   ListGpusOrderBy,
@@ -245,6 +246,25 @@ export class GpuRepository {
   async delete(id: number, config?: RepositoryConfig) {
     const trx = config?.trx ?? this.db;
     await trx.gpu.delete({ where: { id } });
+  }
+
+  async listSitemapProductSlugs(
+    gpuProductType: GpuProductType,
+    config?: RepositoryConfig,
+  ) {
+    const trx = config?.trx ?? this.db;
+    return await trx.gpu.findMany({
+      select: {
+        slug: true,
+        updatedAt: true,
+      },
+      where: {
+        chipsetId:
+          gpuProductType === GpuProductType.Chipset
+            ? { equals: null }
+            : { not: null },
+      },
+    });
   }
 
   private generateWhere(filter: ListGpusFilter): Prisma.GpuWhereInput {
