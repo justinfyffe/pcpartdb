@@ -23,12 +23,14 @@ export class WebsiteService {
   ) {}
 
   async uploadSitemap(request: UploadSitemapRequest, _ctx: Context) {
-    // TODO: not extracting
+    const originalPath = fileUtils.uploadsPath(request.tempPath);
+    const sitemapPath = fileUtils.sitemapsPath('sitemap.tgz');
+
+    await fileUtils.move(originalPath, sitemapPath);
     await tar.x({
-      cwd: '../data/sitemaps',
-      file: fileUtils.uploadsPath(request.tempPath),
+      cwd: fileUtils.sitemapsPath(),
+      file: sitemapPath,
     });
-    await fileUtils.remove(fileUtils.uploadsPath(request.tempPath));
   }
 
   async getSitemapProductSlugs(

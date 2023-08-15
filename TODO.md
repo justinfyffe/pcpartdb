@@ -1,11 +1,5 @@
 HIGH LEVEL TODO:
 - Automation
-  - update sitemap action
-    - issues with zipping/unzipping
-      - comparison files not unzipping
-      - tar extract not working
-    - upload zip archive
-      - gzipped -comparisons file are not unziping.
   - test remote status
   - UX improvements
     - show source's names in the collapsed view on source cards

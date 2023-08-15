@@ -87,7 +87,7 @@ export async function updateSitemapsAction(
   const archivePath = await createTarArchive();
 
   // Upload sitemap zip file
-  // await uploadSitemaps(archivePath, context);
+  await uploadSitemaps(archivePath, context);
 
   // Update execution details
   context.metadata = {
@@ -432,9 +432,7 @@ async function writeSitemap(path: string, entries: SitemapEntry[]) {
     { indent: ' ' },
   )}`;
   await fsPromises.writeFile(path, sitemap, 'utf-8');
-  const compressedPath = `${path}.gz`;
-  await compressSitemap(path, compressedPath);
-  return compressedPath;
+  await compressSitemap(path, `${path}.gz`);
 }
 
 async function removeExistingSitemaps() {
@@ -459,9 +457,13 @@ function generateSitemapUrlObject(entry: SitemapEntry) {
 }
 
 async function compressSitemap(path: string, output: string) {
-  fs.createReadStream(path)
-    .pipe(zlib.createGzip())
-    .pipe(fs.createWriteStream(output));
+  await new Promise<void>((resolve, reject) => {
+    fs.createReadStream(path)
+      .pipe(zlib.createGzip())
+      .pipe(fs.createWriteStream(output))
+      .on('error', () => reject())
+      .on('finish', () => resolve());
+  });
   await fsPromises.rm(path);
 }
 
