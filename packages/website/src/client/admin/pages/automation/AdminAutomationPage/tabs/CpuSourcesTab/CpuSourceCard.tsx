@@ -1,7 +1,9 @@
 import {
+  ArchiveBoxIcon,
   ArrowPathRoundedSquareIcon,
   ChevronDownIcon,
-  ChevronLeftIcon,
+  ChevronRightIcon,
+  PlusCircleIcon,
 } from '@heroicons/react/24/outline';
 import {
   AutomationActionType,
@@ -9,7 +11,6 @@ import {
   CpuProductSource,
   CpuProductSourceGroup,
   CreateCpuActionData,
-  formatProductSourceName,
   generateCpuSlug,
   Product,
   ProductType,
@@ -98,7 +99,11 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
   }, [geekBench?.archived, passMark?.archived, techPowerUp?.archived]);
 
   const [preferredName, setPreferredName] = useState(
-    () => sources[0].sourceName,
+    () =>
+      techPowerUp?.sourceName ||
+      passMark?.sourceName ||
+      geekBench?.sourceName ||
+      null,
   );
   const [preferredSlug, setPreferredSlug] = useState(() =>
     generateCpuSlug(preferredName, null),
@@ -106,39 +111,6 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
   const [appliedCpu, setAppliedCpu] = useState<Product>(null);
   const [groupKey] = useState(
     () => techPowerUp?.groupKey || passMark?.groupKey || geekBench?.groupKey,
-  );
-
-  const sourcesList = useMemo(
-    () =>
-      [
-        techPowerUp
-          ? `${formatProductSourceName(CpuDataSourceKey.TechPowerUp)} ${
-              techPowerUpSources.length > 1
-                ? `(x${techPowerUpSources.length})`
-                : ''
-            }`.trim()
-          : null,
-        passMark
-          ? `${formatProductSourceName(CpuDataSourceKey.PassMark)} ${
-              passMarkSources.length > 1 ? `(x${passMarkSources.length})` : ''
-            }`.trim()
-          : null,
-        geekBench
-          ? `${formatProductSourceName(CpuDataSourceKey.GeekBench)} ${
-              geekBenchSources.length > 1 ? `(x${geekBenchSources.length})` : ''
-            }`.trim()
-          : null,
-      ]
-        .filter((source) => source != null)
-        .join(', '),
-    [
-      passMark,
-      passMarkSources.length,
-      techPowerUp,
-      techPowerUpSources.length,
-      geekBench,
-      geekBenchSources.length,
-    ],
   );
 
   // Callbacks
@@ -242,29 +214,117 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
   return (
     <Card>
       <div
-        className="relative flex justify-between items-center gap-4 cursor-pointer"
+        className="relative flex justify-between items-stretch gap-4 cursor-pointer"
         onClick={() => setExpanded(!expanded)}
       >
-        {allArchived && (
-          <div className="absolute left-0 right-0 flex justify-center text-3xl text-dimmed">
-            Archived
-          </div>
-        )}
+        {expanded && <ChevronDownIcon className="w-4" />}
+        {!expanded && <ChevronRightIcon className="w-4" />}
 
         <div className="flex flex-1 flex-col gap-1">
-          <CardTitle>{sources[0].sourceName}</CardTitle>
+          <CardTitle>{preferredName}</CardTitle>
+
           <div className="text-xs">
             <span className="font-semibold">Grouping:</span>{' '}
             <span className="[overflow-wrap:anywhere]">{groupKey}</span>
           </div>
-          <div className="text-xs">
-            <span className="font-semibold">Sources:</span>{' '}
-            <span>{sourcesList}</span>
+          <div className="text-xs flex flex-wrap gap-x-4 gap-y-1">
+            <div>
+              <span className="font-semibold">
+                TechPowerUp
+                {techPowerUpSources.length > 1
+                  ? ` (x${techPowerUpSources.length})`
+                  : ''}
+                :
+              </span>{' '}
+              {techPowerUp != null ? (
+                <a
+                  href={techPowerUp.sourceUrl}
+                  target="_blank"
+                  onClick={(e) => e.stopPropagation()}
+                  rel="noreferrer"
+                >
+                  {techPowerUp.sourceName}
+                </a>
+              ) : (
+                '--'
+              )}
+            </div>
+            <div>
+              <span className="font-semibold">
+                PassMark
+                {passMarkSources.length > 1
+                  ? ` (x${passMarkSources.length})`
+                  : ''}
+                :
+              </span>{' '}
+              {passMark != null ? (
+                <a
+                  href={passMark.sourceUrl}
+                  target="_blank"
+                  onClick={(e) => e.stopPropagation()}
+                  rel="noreferrer"
+                >
+                  {passMark.sourceName}
+                </a>
+              ) : (
+                '--'
+              )}
+            </div>
+            <div>
+              <span className="font-semibold">
+                GeekBench
+                {geekBenchSources.length > 1
+                  ? ` (x${geekBenchSources.length})`
+                  : ''}
+                :
+              </span>{' '}
+              {geekBench != null ? (
+                <a
+                  href={geekBench.sourceUrl}
+                  target="_blank"
+                  onClick={(e) => e.stopPropagation()}
+                  rel="noreferrer"
+                >
+                  {geekBench.sourceName}
+                </a>
+              ) : (
+                '--'
+              )}
+            </div>
           </div>
         </div>
 
-        {expanded && <ChevronDownIcon className="w-8" />}
-        {!expanded && <ChevronLeftIcon className="w-8" />}
+        {allArchived ? (
+          <div className="flex flex-col items-center justify-center gap-1">
+            <ArchiveBoxIcon className="w-8" />
+            Archived
+          </div>
+        ) : (
+          <div className="flex flex-col justify-between gap-4">
+            <GenericButton
+              disabled={allArchived}
+              title="Archive"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleSave();
+              }}
+            >
+              <ArchiveBoxIcon className="w-4" />
+            </GenericButton>
+            <GenericButton
+              disabled={allArchived}
+              title="Create"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleCreateCpu();
+              }}
+            >
+              <PlusCircleIcon className="w-4" />
+            </GenericButton>
+          </div>
+        )}
       </div>
 
       {expanded && (
@@ -349,7 +409,10 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
 
             <div className="ml-auto flex gap-4">
               <GenericButton onClick={handleSave}>Archive</GenericButton>
-              <GenericButton onClick={handleCreateCpu}>
+              <GenericButton
+                onClick={handleCreateCpu}
+                className="flex gap-2 items-center"
+              >
                 Create CPU
               </GenericButton>
             </div>
