@@ -2,13 +2,11 @@ HIGH LEVEL TODO:
 - Automation
   - test remote status
   - UX improvements
-    - show source's names in the collapsed view on source cards
-    - add archive, create button in collapsed view on source card
     - show slug, diff button, approve, reject on collapsed update card
-    - improve look of Pending/Archived (maybe a different card color instead?)
+      - [x] CPU
+      - [ ] GPU Chipsets
+      - [ ] GPU Retail Models
     - mobile friendly:
-      - gpu chipset sources
-      - gpu retail model sources
       - gpu chipset updates
       - gpu retail model updates
       - queue

@@ -1,12 +1,13 @@
 import {
+  ArchiveBoxIcon,
   ArrowPathRoundedSquareIcon,
   ChevronDownIcon,
-  ChevronLeftIcon,
+  ChevronRightIcon,
+  PlusCircleIcon,
 } from '@heroicons/react/24/outline';
 import {
   AutomationActionType,
   CreateGpuActionData,
-  formatProductSourceName,
   generateGpuSlug,
   GpuDataSourceKey,
   GpuProductSource,
@@ -113,41 +114,6 @@ export const GpuChipsetSourceCard = (props: GpuChipsetSourceCardProps) => {
     () => techPowerUp?.groupKey || passMark?.groupKey || ulBenchmark?.groupKey,
   );
 
-  const sourcesList = useMemo(
-    () =>
-      [
-        techPowerUp
-          ? `${formatProductSourceName(GpuDataSourceKey.TechPowerUp)} ${
-              techPowerUpSources.length > 1
-                ? `(x${techPowerUpSources.length})`
-                : ''
-            }`.trim()
-          : null,
-        passMark
-          ? `${formatProductSourceName(GpuDataSourceKey.VideocardBenchmarks)} ${
-              passMarkSources.length > 1 ? `(x${passMarkSources.length})` : ''
-            }`.trim()
-          : null,
-        ulBenchmark
-          ? `${formatProductSourceName(GpuDataSourceKey.UlBenchmarks)} ${
-              ulBenchmarkSources.length > 1
-                ? `(x${ulBenchmarkSources.length})`
-                : ''
-            }`.trim()
-          : null,
-      ]
-        .filter((source) => source != null)
-        .join(', '),
-    [
-      passMark,
-      passMarkSources.length,
-      techPowerUp,
-      techPowerUpSources.length,
-      ulBenchmark,
-      ulBenchmarkSources.length,
-    ],
-  );
-
   // Callbacks
 
   const handleGenerateSlug = useCallback(() => {
@@ -243,30 +209,117 @@ export const GpuChipsetSourceCard = (props: GpuChipsetSourceCardProps) => {
   return (
     <Card>
       <div
-        className="relative flex justify-between items-center gap-4 cursor-pointer"
+        className="relative flex justify-between items-stretch gap-4 cursor-pointer"
         onClick={() => setExpanded(!expanded)}
       >
-        {allArchived && (
-          <div className="absolute left-0 right-0 flex justify-center text-3xl text-dimmed">
-            Archived
-          </div>
-        )}
+        {expanded && <ChevronDownIcon className="w-4" />}
+        {!expanded && <ChevronRightIcon className="w-4" />}
 
         <div className="flex flex-1 flex-col gap-1">
-          <CardTitle>{sources[0]?.sourceName}</CardTitle>
+          <CardTitle>{preferredName}</CardTitle>
 
           <div className="text-xs">
             <span className="font-semibold">Grouping:</span>{' '}
             <span className="[overflow-wrap:anywhere]">{groupKey}</span>
           </div>
-          <div className="text-xs">
-            <span className="font-semibold">Sources:</span>{' '}
-            <span>{sourcesList}</span>
+          <div className="text-xs flex flex-wrap gap-x-4 gap-y-1">
+            <div>
+              <span className="font-semibold">
+                TechPowerUp
+                {techPowerUpSources.length > 1
+                  ? ` (x${techPowerUpSources.length})`
+                  : ''}
+                :
+              </span>{' '}
+              {techPowerUp != null ? (
+                <a
+                  href={techPowerUp.sourceUrl}
+                  target="_blank"
+                  onClick={(e) => e.stopPropagation()}
+                  rel="noreferrer"
+                >
+                  {techPowerUp.sourceName}
+                </a>
+              ) : (
+                '--'
+              )}
+            </div>
+            <div>
+              <span className="font-semibold">
+                PassMark
+                {passMarkSources.length > 1
+                  ? ` (x${passMarkSources.length})`
+                  : ''}
+                :
+              </span>{' '}
+              {passMark != null ? (
+                <a
+                  href={passMark.sourceUrl}
+                  target="_blank"
+                  onClick={(e) => e.stopPropagation()}
+                  rel="noreferrer"
+                >
+                  {passMark.sourceName}
+                </a>
+              ) : (
+                '--'
+              )}
+            </div>
+            <div>
+              <span className="font-semibold">
+                UL Benchmarks
+                {ulBenchmarkSources.length > 1
+                  ? ` (x${ulBenchmarkSources.length})`
+                  : ''}
+                :
+              </span>{' '}
+              {ulBenchmark != null ? (
+                <a
+                  href={ulBenchmark.sourceUrl}
+                  target="_blank"
+                  onClick={(e) => e.stopPropagation()}
+                  rel="noreferrer"
+                >
+                  {ulBenchmark.sourceName}
+                </a>
+              ) : (
+                '--'
+              )}
+            </div>
           </div>
         </div>
 
-        {expanded && <ChevronDownIcon className="w-8" />}
-        {!expanded && <ChevronLeftIcon className="w-8" />}
+        {allArchived ? (
+          <div className="flex flex-col items-center justify-center gap-1">
+            <ArchiveBoxIcon className="w-8" />
+            Archived
+          </div>
+        ) : (
+          <div className="flex flex-col justify-between gap-4">
+            <GenericButton
+              disabled={allArchived}
+              title="Archive"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleSave();
+              }}
+            >
+              <ArchiveBoxIcon className="w-4" />
+            </GenericButton>
+            <GenericButton
+              disabled={allArchived}
+              title="Create"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleCreateGpu();
+              }}
+            >
+              <PlusCircleIcon className="w-4" />
+            </GenericButton>
+          </div>
+        )}
       </div>
 
       {expanded && (
