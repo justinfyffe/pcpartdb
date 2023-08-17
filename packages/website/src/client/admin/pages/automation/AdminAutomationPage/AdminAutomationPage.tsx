@@ -27,15 +27,13 @@ export const AdminAutomationPage = (props: AdminAutomationViewModel) => {
   const [status, setStatus] = useState(props.status);
 
   const handleEnable = useCallback(async () => {
-    const updatedStatus = { ...status, enabled: true };
-    await automationService.updateStatus(updatedStatus);
-    setStatus(updatedStatus);
+    await automationService.updateStatus({ enabled: true });
+    setStatus({ ...status, enabled: true });
   }, [status]);
 
   const handleDisable = useCallback(async () => {
-    const updatedStatus = { ...status, enabled: false };
-    await automationService.updateStatus(updatedStatus);
-    setStatus(updatedStatus);
+    await automationService.updateStatus({ enabled: false });
+    setStatus({ ...status, enabled: false });
   }, [status]);
 
   return (

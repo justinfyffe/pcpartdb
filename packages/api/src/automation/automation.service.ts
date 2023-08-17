@@ -10,6 +10,7 @@ import {
   AutomationActionType,
   AutomationStatus,
   CreateAutomationActionRequest,
+  GpuProductType,
   ListAutomationActionsRequest,
   ListAutomationActionsResponse,
   ProductType,
@@ -21,6 +22,8 @@ import * as fs from 'fs';
 import * as fsPromises from 'fs/promises';
 import { CpuRepository } from '../product/cpu/cpu.repository';
 import { GpuRepository } from '../product/gpu/gpu.repository';
+import { ProductSourceRepository } from '../product/product-source.repository';
+import { ProductUpdateRepository } from '../product/product-update.repository';
 import { Context } from '../shared/context';
 import {
   badRequestError,
@@ -44,9 +47,11 @@ export class AutomationService {
     private repository: AutomationRepository,
     private cpuRepository: CpuRepository,
     private gpuRepository: GpuRepository,
+    private productSourceRepository: ProductSourceRepository,
+    private productUpdateRepository: ProductUpdateRepository,
   ) {}
 
-  async getStatus(_ctx: Context) {
+  async getStatus(ctx: Context) {
     const statusJson = fs.existsSync(configPath(CONFIG_FILE))
       ? await fsPromises.readFile(configPath(CONFIG_FILE), 'utf-8')
       : '{}';
@@ -54,17 +59,26 @@ export class AutomationService {
     const status: AutomationStatus = {
       enabled: false,
       ...(JSON.parse(statusJson) || {}),
+      ...this.getPendingSources(ctx),
     };
 
     return status;
   }
 
-  async updateStatus(status: AutomationStatus, _ctx: Context) {
+  async updateStatus(status: Partial<AutomationStatus>, _ctx: Context) {
     validate(status, updateAutomationStatusValidaor);
+
+    if (status.enabled == null) {
+      throw badRequestError();
+    }
+
+    const statusToSave = {
+      enabled: status.enabled,
+    };
 
     await fsPromises.writeFile(
       configPath(CONFIG_FILE),
-      JSON.stringify(status, undefined, 2),
+      JSON.stringify(statusToSave, undefined, 2),
       'utf-8',
     );
   }
@@ -227,5 +241,74 @@ export class AutomationService {
       status: AutomationActionStatus.Pending,
       data: payload,
     } as AutomationAction;
+  }
+
+  private async getPendingSources(ctx: Context) {
+    const pendingCpuSources =
+      await this.productSourceRepository.countPendingGroups(
+        {
+          query: { filter: { productType: ProductType.Cpu } },
+        },
+        ctx,
+      );
+    const pendingGpuChipsetSources =
+      await this.productSourceRepository.countPendingGroups(
+        {
+          query: {
+            filter: {
+              productType: ProductType.Gpu,
+              gpuProductType: GpuProductType.Chipset,
+            },
+          },
+        },
+        ctx,
+      );
+    const pendingGpuRetailModelSources =
+      await this.productSourceRepository.countPendingGroups(
+        {
+          query: {
+            filter: {
+              productType: ProductType.Gpu,
+              gpuProductType: GpuProductType.RetailModel,
+            },
+          },
+        },
+        ctx,
+      );
+
+    return {
+      pendingCpuSources,
+      pendingGpuChipsetSources,
+      pendingGpuRetailModelSources,
+    } as Partial<AutomationStatus>;
+  }
+
+  private async getPendingUpdates(ctx: Context) {
+    const pendingCpuUpdates = await this.productUpdateRepository.countPending(
+      { productType: ProductType.Cpu },
+      ctx,
+    );
+    const pendingGpuChipsetUpdates =
+      await this.productUpdateRepository.countPending(
+        {
+          productType: ProductType.Gpu,
+          gpuProductType: GpuProductType.Chipset,
+        },
+        ctx,
+      );
+    const pendingGpuRetailModelUpdates =
+      await this.productUpdateRepository.countPending(
+        {
+          productType: ProductType.Gpu,
+          gpuProductType: GpuProductType.RetailModel,
+        },
+        ctx,
+      );
+
+    return {
+      pendingCpuUpdates,
+      pendingGpuChipsetUpdates,
+      pendingGpuRetailModelUpdates,
+    } as Partial<AutomationStatus>;
   }
 }

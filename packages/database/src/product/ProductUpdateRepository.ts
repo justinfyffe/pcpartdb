@@ -1,4 +1,5 @@
 import {
+  GpuProductType,
   ListProductUpdatesFilter,
   ListProductUpdatesQuery,
   ProductType,
@@ -16,6 +17,11 @@ interface ListOptions {
 export interface FindPendingByProductIdOptions {
   productType: ProductType;
   productId: number;
+}
+
+export interface CountPendingOptions {
+  productType: ProductType;
+  gpuProductType?: GpuProductType;
 }
 
 export class ProductUpdateRepository {
@@ -63,6 +69,21 @@ export class ProductUpdateRepository {
     const trx = config?.trx ?? this.db;
 
     return await trx.productUpdate.findUnique({ where: { id } });
+  }
+
+  async countPending(options: CountPendingOptions, config?: RepositoryConfig) {
+    const { productType, gpuProductType } = options;
+
+    const trx = config?.trx ?? this.db;
+    return await trx.productUpdate.count({
+      where: {
+        AND: [
+          { productType },
+          { gpuProductType },
+          { status: ProductUpdateStatus.Pending },
+        ],
+      },
+    });
   }
 
   async create(

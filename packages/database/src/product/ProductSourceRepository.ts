@@ -18,6 +18,10 @@ interface ListGroupsOptions {
   query: ListProductSourcesQuery;
 }
 
+interface CountUnarchivedGroupsOptions {
+  query: ListProductSourcesQuery;
+}
+
 interface AutocompleteOptions {
   productType: ProductType;
   sourceKey?: ProductSourceKey;
@@ -150,6 +154,22 @@ export class ProductSourceRepository {
     ).length;
 
     return { results: [...groups.values()], total };
+  }
+
+  async countPendingGroups(
+    options: CountUnarchivedGroupsOptions,
+    config?: RepositoryConfig,
+  ) {
+    const { filter } = options.query ?? {};
+
+    const trx = config?.trx ?? this.db;
+    return (
+      await trx.productSource.findMany({
+        distinct: ['groupKey'],
+        select: { groupKey: true },
+        where: this.generateWhere({ ...filter, includeArchived: false }),
+      })
+    ).length;
   }
 
   async autocomplete(options: AutocompleteOptions, config?: RepositoryConfig) {

@@ -30,7 +30,10 @@ export class AutomationController {
 
   @Put('status')
   @UseGuards(StaffGuard)
-  async updateStatus(@Body() status: AutomationStatus, @Ctx() ctx: Context) {
+  async updateStatus(
+    @Body() status: Partial<AutomationStatus>,
+    @Ctx() ctx: Context,
+  ) {
     await this.service.updateStatus(status, ctx);
   }
 

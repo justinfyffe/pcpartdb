@@ -1,11 +1,9 @@
 HIGH LEVEL TODO:
 - Automation
   - Install node 20 on server
+  - badge showing how many pending updates, non-archived groups
   - clean up name of columns/data structures
-  - clean up names of indexes/uniques
-  - add edit button after approving
-  - validate that source urls are valid urls (includes domain) before creating sources
-    - also validate any other things coming in
+    - groupKey -> grouping?
 - code cleanup
   - ui components
 - Improve performance score (not just g3d mark or cpu mark)

@@ -294,6 +294,7 @@ model ProductSource {
   // The url to access the source.
   sourceUrl String @map("source_url")
 
+  // Flag to indicate we've already handled this source.
   archived Boolean @default(false)
 
   // Identifies which GPU chipset this source is related to.
