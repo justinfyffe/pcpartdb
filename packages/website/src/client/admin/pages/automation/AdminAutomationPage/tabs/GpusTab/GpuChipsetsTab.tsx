@@ -87,10 +87,7 @@ export const GpuChipsetsTab = (_props: GpuChipsetsTabProps) => {
       <div className="flex flex-col gap-4">
         <div className="flex justify-between gap-4">
           <div className="flex flex-1 gap-4 max-w-[50%]">
-            <TextInput
-              placeholder="Search CPUs"
-              onChange={throttledFilterUpdates}
-            />
+            <TextInput placeholder="Filter" onChange={throttledFilterUpdates} />
           </div>
 
           <div className="flex gap-4 items-center">

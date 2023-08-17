@@ -1,5 +1,10 @@
 import 'reflect-metadata';
-import { ChevronDownIcon, ChevronLeftIcon } from '@heroicons/react/24/outline';
+import {
+  CheckIcon,
+  ChevronDownIcon,
+  ChevronRightIcon,
+  XMarkIcon,
+} from '@heroicons/react/24/outline';
 import {
   getViewGpuPath,
   GpuUpdate,
@@ -65,21 +70,64 @@ export const GpuRetailModelCard = (props: GpuRetailModelCardTabProps) => {
         className="relative flex justify-between items-center gap-4 cursor-pointer"
         onClick={() => setExpanded(!expanded)}
       >
-        <div className="absolute left-0 right-0 flex justify-center text-3xl text-dimmed">
-          {status === ProductUpdateStatus.Approved && <>Approved</>}
-          {status === ProductUpdateStatus.Rejected && <>Rejected</>}
-          {status === ProductUpdateStatus.Pending && <>Pending</>}
-        </div>
+        {expanded && <ChevronDownIcon className="w-4" />}
+        {!expanded && <ChevronRightIcon className="w-4" />}
 
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-1 flex-col gap-1">
           <CardTitle>{name}</CardTitle>
-          <span className="text-sm text-dimmed">
-            {isUpdate ? <>Update</> : <>New</>}: {update.id}
-          </span>
+          <div className="text-xs">
+            <span className="font-semibold">
+              {isUpdate ? <>Update</> : <>New</>}:
+            </span>{' '}
+            {update.id}
+          </div>
+          <div className="text-xs">
+            <span className="font-semibold">Slug:</span> {slug}
+          </div>
         </div>
 
-        {expanded && <ChevronDownIcon className="w-8" />}
-        {!expanded && <ChevronLeftIcon className="w-8" />}
+        <div className="flex gap-4">
+          <GenericButton
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              viewDiff();
+            }}
+          >
+            Diff
+          </GenericButton>
+
+          {status === ProductUpdateStatus.Approved && (
+            <CheckIcon className="w-8" />
+          )}
+          {status === ProductUpdateStatus.Rejected && (
+            <XMarkIcon className="w-8" />
+          )}
+          {status === ProductUpdateStatus.Pending && (
+            <div className="flex flex-col justify-between gap-4">
+              <GenericButton
+                title="Approve"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  approve();
+                }}
+              >
+                <CheckIcon className="w-4" />
+              </GenericButton>
+              <GenericButton
+                title="Reject"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  reject();
+                }}
+              >
+                <XMarkIcon className="w-4" />
+              </GenericButton>
+            </div>
+          )}
+        </div>
       </div>
 
       {expanded && (

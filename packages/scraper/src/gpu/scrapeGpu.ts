@@ -28,9 +28,6 @@ export async function scrapeGpu(options: ScrapeGpuOptions) {
   if (chipset != null) {
     const { product } = await scrapeFromChipsetGpu({ chipset });
     scrapedProduct = deepmerge(scrapedProduct, product);
-    scrapedProduct.meta.dataSources[GpuDataSourceKey.Chipset] = {
-      chipsetId: chipset.id,
-    };
   }
   if (techPowerUp?.url != null) {
     const response = await scrapeTechPowerUpGpuData({ url: techPowerUp.url });

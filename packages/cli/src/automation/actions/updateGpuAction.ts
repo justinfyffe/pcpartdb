@@ -31,11 +31,8 @@ export async function updateGpuAction(
 
   // Get existing GPU
   const originalGpu: Gpu = await getGpu(payload.gpuId, context);
-  console.log(originalGpu);
 
   // Get sources from gpu
-  const chipsetSource =
-    originalGpu?.meta?.dataSources?.[GpuDataSourceKey.Chipset] || null;
   const techPowerUpSource =
     originalGpu.meta?.dataSources?.[GpuDataSourceKey.TechPowerUp] || null;
   const passMarkSource =
@@ -46,8 +43,8 @@ export async function updateGpuAction(
 
   // Get chipset source (if applicable)
   let chipset: Gpu;
-  if (chipsetSource?.chipsetId != null) {
-    chipset = await getGpu(chipsetSource?.chipsetId, context);
+  if (originalGpu?.chipsetId != null) {
+    chipset = await getGpu(originalGpu?.chipsetId, context);
   }
 
   // Scrape the GPU data from our sources.

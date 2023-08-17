@@ -20,11 +20,16 @@ export async function automationCommand(args: AutomationCommandArgs) {
   let executing = false;
   let terminate = false;
   // Handle graceful shutdown
-  process.on('SIGTERM', () => {
-    console.log(
-      'Received termination signal. Shutting down after execution finishes.',
-    );
-    terminate = true;
+  process.on('SIGINT', () => {
+    if (terminate) {
+      console.log('Received another termination signal. Killing the process.');
+      process.exit();
+    } else {
+      console.log(
+        'Received termination signal. Shutting down after execution finishes.',
+      );
+      terminate = true;
+    }
   });
 
   const context = await createContext();
@@ -36,7 +41,7 @@ export async function automationCommand(args: AutomationCommandArgs) {
       }
 
       if (terminate) {
-        console.log('Process terminating');
+        console.log('Process terminated');
         process.exit();
       }
 

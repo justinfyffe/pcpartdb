@@ -1,15 +1,5 @@
 HIGH LEVEL TODO:
 - Automation
-  - test remote status
-  - UX improvements
-    - show slug, diff button, approve, reject on collapsed update card
-      - [x] CPU
-      - [ ] GPU Chipsets
-      - [ ] GPU Retail Models
-    - mobile friendly:
-      - gpu chipset updates
-      - gpu retail model updates
-      - queue
   - Install node 20 on server
   - clean up name of columns/data structures
   - clean up names of indexes/uniques

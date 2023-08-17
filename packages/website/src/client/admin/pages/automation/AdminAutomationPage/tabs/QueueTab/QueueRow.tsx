@@ -44,7 +44,7 @@ export const QueueRow = (props: QueueRowProps) => {
       <Td>{item.id}</Td>
       <Td>{action}</Td>
       <Td>{item.description}</Td>
-      <Td className="flex justify-end gap-2">
+      <Td className="flex justify-end gap-4 flex-wrap">
         <GenericButton onClick={viewItemDetails} disabled={deleted}>
           <InformationCircleIcon className="w-4" />
         </GenericButton>
