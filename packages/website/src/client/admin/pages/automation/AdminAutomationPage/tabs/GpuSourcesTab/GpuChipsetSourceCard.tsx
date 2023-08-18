@@ -31,7 +31,8 @@ import {
   TextInput,
 } from 'packages/website/src/client/shared/components';
 import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
-import React, { useCallback, useMemo, useState } from 'react';
+import { AutomationStatusContext } from 'packages/website/src/client/shared/layouts/admin/AutomationStatusContext';
+import React, { useCallback, useContext, useMemo, useState } from 'react';
 import { SourceInputField } from '../../components/SourceInputField';
 
 interface GpuChipsetSourceCardProps {
@@ -40,6 +41,8 @@ interface GpuChipsetSourceCardProps {
 
 export const GpuChipsetSourceCard = (props: GpuChipsetSourceCardProps) => {
   const { sources } = props;
+
+  const automationStatusContext = useContext(AutomationStatusContext);
 
   // States & Memos
 
@@ -144,6 +147,8 @@ export const GpuChipsetSourceCard = (props: GpuChipsetSourceCardProps) => {
 
     // Close the card
     await setExpanded(false);
+
+    await automationStatusContext.refreshStatus();
   }, [
     techPowerUp,
     archiveTechPowerUp,
@@ -151,6 +156,7 @@ export const GpuChipsetSourceCard = (props: GpuChipsetSourceCardProps) => {
     archivePassMark,
     ulBenchmark,
     archiveUlBenchmark,
+    automationStatusContext,
   ]);
 
   const handleApplyToGpu = useCallback(async () => {

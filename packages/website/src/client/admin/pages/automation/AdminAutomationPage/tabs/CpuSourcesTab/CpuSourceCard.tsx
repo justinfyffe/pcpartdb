@@ -31,7 +31,8 @@ import {
   TextInput,
 } from 'packages/website/src/client/shared/components';
 import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
-import React, { useCallback, useMemo, useState } from 'react';
+import { AutomationStatusContext } from 'packages/website/src/client/shared/layouts/admin/AutomationStatusContext';
+import React, { useCallback, useContext, useMemo, useState } from 'react';
 import { SourceInputField } from '../../components/SourceInputField';
 
 interface CpuSourceCardProps {
@@ -40,6 +41,8 @@ interface CpuSourceCardProps {
 
 export const CpuSourceCard = (props: CpuSourceCardProps) => {
   const { sources } = props;
+
+  const automationStatusContext = useContext(AutomationStatusContext);
 
   // States & Memos
 
@@ -154,10 +157,13 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
 
     // Close the card
     await setExpanded(false);
+
+    await automationStatusContext.refreshStatus();
   }, [
     archiveGeekBench,
     archivePassMark,
     archiveTechPowerUp,
+    automationStatusContext,
     geekBench,
     passMark,
     techPowerUp,

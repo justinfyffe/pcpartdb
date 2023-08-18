@@ -23,7 +23,8 @@ import {
   TextInput,
 } from 'packages/website/src/client/shared/components';
 import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
-import React, { useCallback, useMemo, useState } from 'react';
+import { AutomationStatusContext } from 'packages/website/src/client/shared/layouts/admin/AutomationStatusContext';
+import React, { useCallback, useContext, useMemo, useState } from 'react';
 
 interface CpuCardTabProps {
   update: CpuUpdate;
@@ -33,6 +34,8 @@ export const CpuCard = (props: CpuCardTabProps) => {
   const { update } = props;
   const isUpdate = update.cpuId ? true : false;
   const updatedCpu = update.data.updated;
+
+  const automationStatusContext = useContext(AutomationStatusContext);
 
   // States
 
@@ -55,14 +58,16 @@ export const CpuCard = (props: CpuCardTabProps) => {
   const reject = useCallback(async () => {
     await productUpdateService.reject(update.id, {});
     setStatus(ProductUpdateStatus.Rejected);
-  }, [update.id]);
+    await automationStatusContext.refreshStatus();
+  }, [automationStatusContext, update.id]);
 
   const approve = useCallback(async () => {
     await productUpdateService.approve(update.id, {
       slug: slug,
     });
     setStatus(ProductUpdateStatus.Approved);
-  }, [slug, update.id]);
+    await automationStatusContext.refreshStatus();
+  }, [automationStatusContext, slug, update.id]);
 
   return (
     <Card>

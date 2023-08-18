@@ -1,9 +1,7 @@
 HIGH LEVEL TODO:
 - Automation
   - Install node 20 on server
-  - badge showing how many pending updates, non-archived groups
-  - clean up name of columns/data structures
-    - groupKey -> grouping?
+  - Remove old cli tasks
 - code cleanup
   - ui components
 - Improve performance score (not just g3d mark or cpu mark)

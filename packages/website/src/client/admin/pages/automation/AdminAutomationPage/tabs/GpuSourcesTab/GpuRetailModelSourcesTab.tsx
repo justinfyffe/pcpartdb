@@ -16,7 +16,8 @@ import { InfoAlert } from 'packages/website/src/client/shared/components/Alert/I
 import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
 import { Pagination } from 'packages/website/src/client/shared/components/Pagination/Pagination';
 import { useThrottle } from 'packages/website/src/client/shared/hooks/useThrottle';
-import React, { useCallback, useEffect, useState } from 'react';
+import { AutomationStatusContext } from 'packages/website/src/client/shared/layouts/admin/AutomationStatusContext';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { GpuRetailModelSourceCard } from './GpuRetailModelSourceCard';
 
 const LIMIT = 10;
@@ -27,6 +28,8 @@ interface GpuRetailModelSourcesTabProps {}
 export const GpuRetailModelSourcesTab = (
   _props: GpuRetailModelSourcesTabProps,
 ) => {
+  const automationStatusContext = useContext(AutomationStatusContext);
+
   // States
 
   const [showArchived, setShowArchived] = useState(false);
@@ -77,9 +80,10 @@ export const GpuRetailModelSourcesTab = (
     [fetchSourceGroups, query],
   );
 
-  const refresh = useCallback(() => {
-    fetchSourceGroups({ ...query });
-  }, [fetchSourceGroups, query]);
+  const refresh = useCallback(async () => {
+    await fetchSourceGroups({ ...query });
+    await automationStatusContext.refreshStatus();
+  }, [automationStatusContext, fetchSourceGroups, query]);
 
   const changePage = useCallback(
     (offset: number, limit: number) => {

@@ -1,0 +1,60 @@
+import 'reflect-metadata';
+import { AutomationStatusContext } from 'packages/website/src/client/shared/layouts/admin/AutomationStatusContext';
+import React, { useContext, useMemo } from 'react';
+import { Tab, Tabs, TabsVariant } from '../../../../../shared/components';
+import { CpuSourcesTab, CpusTab, GpuSourcesTab, GpusTab, QueueTab } from '.';
+
+export interface AutomationTabsProps {}
+
+export const AutomationTabs = (_props: AutomationTabsProps) => {
+  const automationStatusContext = useContext(AutomationStatusContext);
+  const automationStatus = automationStatusContext.status;
+
+  // States & Memos
+
+  const cpuSourcesLabel = useMemo(() => {
+    const pending = automationStatus?.pendingCpuSources || 0;
+    return ['CPU Sources', pending ? `(${pending})` : ''].join(' ').trim();
+  }, [automationStatus]);
+
+  const cpusLabel = useMemo(() => {
+    const pending = automationStatus?.pendingCpuUpdates || 0;
+    return ['CPUs', pending ? `(${pending})` : ''].join(' ').trim();
+  }, [automationStatus]);
+
+  const gpuSourcesLabel = useMemo(() => {
+    const pending1 = automationStatus?.pendingGpuChipsetSources || 0;
+    const pending2 = automationStatus?.pendingGpuRetailModelSources || 0;
+    const pending = pending1 + pending2;
+    return ['GPU Sources', pending ? `(${pending})` : ''].join(' ').trim();
+  }, [automationStatus]);
+
+  const gpusLabel = useMemo(() => {
+    const pending1 = automationStatus?.pendingGpuChipsetUpdates || 0;
+    const pending2 = automationStatus?.pendingGpuRetailModelUpdates || 0;
+    const pending = pending1 + pending2;
+    return ['CPUs', pending ? `(${pending})` : ''].join(' ').trim();
+  }, [automationStatus]);
+
+  // Render
+
+  return (
+    <Tabs loadOnDemand variant={TabsVariant.Buttons}>
+      <Tab label={cpuSourcesLabel}>
+        <CpuSourcesTab />
+      </Tab>
+      <Tab label={cpusLabel}>
+        <CpusTab />
+      </Tab>
+      <Tab label={gpuSourcesLabel}>
+        <GpuSourcesTab />
+      </Tab>
+      <Tab label={gpusLabel}>
+        <GpusTab />
+      </Tab>
+      <Tab label="Queue">
+        <QueueTab />
+      </Tab>
+    </Tabs>
+  );
+};

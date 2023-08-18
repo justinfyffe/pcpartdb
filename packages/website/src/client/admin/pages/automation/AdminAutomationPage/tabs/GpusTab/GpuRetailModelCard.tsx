@@ -23,7 +23,8 @@ import {
   TextInput,
 } from 'packages/website/src/client/shared/components';
 import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
-import React, { useCallback, useMemo, useState } from 'react';
+import { AutomationStatusContext } from 'packages/website/src/client/shared/layouts/admin/AutomationStatusContext';
+import React, { useCallback, useContext, useMemo, useState } from 'react';
 
 interface GpuRetailModelCardTabProps {
   update: GpuUpdate;
@@ -33,6 +34,8 @@ export const GpuRetailModelCard = (props: GpuRetailModelCardTabProps) => {
   const { update } = props;
   const isUpdate = update.gpuId ? true : false;
   const updatedGpu = update.data.updated;
+
+  const automationStatusContext = useContext(AutomationStatusContext);
 
   // States
 
@@ -55,14 +58,16 @@ export const GpuRetailModelCard = (props: GpuRetailModelCardTabProps) => {
   const reject = useCallback(async () => {
     await productUpdateService.reject(update.id, {});
     setStatus(ProductUpdateStatus.Rejected);
-  }, [update.id]);
+    await automationStatusContext.refreshStatus();
+  }, [automationStatusContext, update.id]);
 
   const approve = useCallback(async () => {
     await productUpdateService.approve(update.id, {
       slug: slug,
     });
     setStatus(ProductUpdateStatus.Approved);
-  }, [slug, update.id]);
+    await automationStatusContext.refreshStatus();
+  }, [automationStatusContext, slug, update.id]);
 
   return (
     <Card>

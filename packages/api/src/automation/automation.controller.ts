@@ -25,7 +25,12 @@ export class AutomationController {
   @Get('status')
   @UseGuards(StaffGuard)
   async getStatus(@Ctx() ctx: Context) {
-    return await this.service.getStatus(ctx);
+    return await this.db.transaction(
+      async () => {
+        return await this.service.getStatus(ctx);
+      },
+      { ctx },
+    );
   }
 
   @Put('status')

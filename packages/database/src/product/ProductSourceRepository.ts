@@ -163,13 +163,14 @@ export class ProductSourceRepository {
     const { filter } = options.query ?? {};
 
     const trx = config?.trx ?? this.db;
-    return (
+    const total = (
       await trx.productSource.findMany({
         distinct: ['groupKey'],
         select: { groupKey: true },
-        where: this.generateWhere({ ...filter, includeArchived: false }),
+        where: this.generateWhere(filter),
       })
     ).length;
+    return total;
   }
 
   async autocomplete(options: AutocompleteOptions, config?: RepositoryConfig) {

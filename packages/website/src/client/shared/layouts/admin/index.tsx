@@ -1,5 +1,6 @@
 import { Bars3Icon } from '@heroicons/react/24/outline';
 import {
+  AutomationStatus,
   getAdminAutomationPath,
   getAdminListCpusPath,
   getAdminListGpusPath,
@@ -10,8 +11,15 @@ import {
   WEBSITE_NAME,
 } from '@pcpartdb/shared';
 import { useRouter } from 'next/router';
-import React, { FunctionComponent, useCallback } from 'react';
+import React, {
+  FunctionComponent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { authService } from '../../../auth';
+import { automationService } from '../../../automation';
 import {
   Button,
   ButtonVariant,
@@ -23,8 +31,10 @@ import {
   Toolbar,
 } from '../../components';
 import { classNames } from '../../ui';
+import { AutomationStatusContext } from './AutomationStatusContext';
 
 interface AdminLayoutProps {
+  status?: AutomationStatus;
   className?: string;
   children?: React.ReactNode;
 }
@@ -32,13 +42,60 @@ interface AdminLayoutProps {
 export const AdminLayout: FunctionComponent<AdminLayoutProps> = (props) => {
   const router = useRouter();
 
+  // States & Memos
+
+  const [automationStatus, setAutomationStatus] = useState<AutomationStatus>(
+    props.status || null,
+  );
+
+  const pendingUpdates = useMemo(() => {
+    return (
+      (automationStatus?.pendingCpuSources ?? 0) +
+      (automationStatus?.pendingGpuChipsetSources ?? 0) +
+      (automationStatus?.pendingGpuRetailModelSources ?? 0) +
+      (automationStatus?.pendingCpuUpdates ?? 0) +
+      (automationStatus?.pendingGpuChipsetUpdates ?? 0) +
+      (automationStatus?.pendingGpuRetailModelUpdates ?? 0)
+    );
+  }, [
+    automationStatus?.pendingCpuSources,
+    automationStatus?.pendingCpuUpdates,
+    automationStatus?.pendingGpuChipsetSources,
+    automationStatus?.pendingGpuChipsetUpdates,
+    automationStatus?.pendingGpuRetailModelSources,
+    automationStatus?.pendingGpuRetailModelUpdates,
+  ]);
+
+  // Callbacks
+
+  const refreshAutomationStatus = useCallback(async () => {
+    const status = await automationService.getStatus();
+    setAutomationStatus({ ...status });
+  }, []);
+
   const handleLogout = useCallback(async () => {
     await authService.logout();
     router.push(getHomePath());
   }, [router]);
 
+  // Effects
+
+  // Get automation status on load.
+  useEffect(() => {
+    if (automationStatus == null) {
+      refreshAutomationStatus();
+    }
+  }, [automationStatus, refreshAutomationStatus]);
+
+  // Render
+
   return (
-    <>
+    <AutomationStatusContext.Provider
+      value={{
+        status: automationStatus,
+        refreshStatus: refreshAutomationStatus,
+      }}
+    >
       <Seo referrer={MetaReferrer.None} />
       <div className="container bg-content p-container flex font-bold items-center text-5xl md:text-3xl text-content">
         <Img
@@ -94,7 +151,7 @@ export const AdminLayout: FunctionComponent<AdminLayoutProps> = (props) => {
                 variant={ButtonVariant.Generic}
                 href={getAdminAutomationPath()}
               >
-                Automation
+                Automation{pendingUpdates > 0 && <> ({pendingUpdates})</>}
               </Button>
               <Button
                 variant={ButtonVariant.Generic}
@@ -127,6 +184,6 @@ export const AdminLayout: FunctionComponent<AdminLayoutProps> = (props) => {
           </div>
         </main>
       </div>
-    </>
+    </AutomationStatusContext.Provider>
   );
 };

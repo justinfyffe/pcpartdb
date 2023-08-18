@@ -11,7 +11,7 @@ const AUTOMATION_CRON = '0-59 * * * *';
 const FIVE_MINUTES_MS = 1000 * 60 * 5;
 
 export interface AutomationCommandArgs {
-  schedule?: boolean;
+  continuous?: boolean;
 }
 
 export async function automationCommand(args: AutomationCommandArgs) {
@@ -33,7 +33,7 @@ export async function automationCommand(args: AutomationCommandArgs) {
   });
 
   const context = await createContext();
-  if (args.schedule) {
+  if (args.continuous) {
     scheduler.scheduleJob(AUTOMATION_CRON, async () => {
       if (executing) {
         // In the middle of executing, don't execute another.

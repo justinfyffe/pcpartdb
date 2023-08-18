@@ -33,6 +33,10 @@ export class AutomationService {
     await this.api.post(joinUrlParts(PATH, `actions/${id}/cancel`), null);
   }
 
+  async getStatus() {
+    return await this.api.get<AutomationStatus>(joinUrlParts(PATH, 'status'));
+  }
+
   async updateStatus(status: Partial<AutomationStatus>) {
     await this.api.put(joinUrlParts(PATH, 'status'), status);
   }

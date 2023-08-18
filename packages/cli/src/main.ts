@@ -29,17 +29,17 @@ program.command('scratch-pad').action(async () => {
 // npm run cli automation
 program
   .command('automation')
-  .option('--schedule')
+  .option('--continuous')
   .action(async (options) => {
-    await automationCommand({ schedule: options.schedule });
+    await automationCommand({ continuous: options.continuous });
   });
 
 // Sitemap Updater
 program
   .command('sitemap-updater')
-  .option('--schedule')
+  .option('--continuous')
   .action(async (options) => {
-    await sitemapUpdaterCommand({ schedule: options.schedule });
+    await sitemapUpdaterCommand({ continuous: options.continuous });
   });
 
 // Scrape Sources command

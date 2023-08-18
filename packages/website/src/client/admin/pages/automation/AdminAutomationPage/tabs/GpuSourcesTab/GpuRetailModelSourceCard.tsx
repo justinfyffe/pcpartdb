@@ -30,7 +30,8 @@ import {
   TextInput,
 } from 'packages/website/src/client/shared/components';
 import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
-import React, { useCallback, useMemo, useState } from 'react';
+import { AutomationStatusContext } from 'packages/website/src/client/shared/layouts/admin/AutomationStatusContext';
+import React, { useCallback, useContext, useMemo, useState } from 'react';
 import { SourceInputField } from '../../components/SourceInputField';
 
 interface GpuRetailModelSourceCardProps {
@@ -41,6 +42,8 @@ export const GpuRetailModelSourceCard = (
   props: GpuRetailModelSourceCardProps,
 ) => {
   const { sources } = props;
+
+  const automationStatusContext = useContext(AutomationStatusContext);
 
   // States
 
@@ -106,7 +109,9 @@ export const GpuRetailModelSourceCard = (
 
     // Close the card
     await setExpanded(false);
-  }, [archiveTechPowerUp, techPowerUp]);
+
+    await automationStatusContext.refreshStatus();
+  }, [archiveTechPowerUp, automationStatusContext, techPowerUp]);
 
   const handleCreateGpu = useCallback(async () => {
     const sources = [techPowerUp].filter((source) => source != null);

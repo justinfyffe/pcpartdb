@@ -14,7 +14,8 @@ import { InfoAlert } from 'packages/website/src/client/shared/components/Alert/I
 import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
 import { Pagination } from 'packages/website/src/client/shared/components/Pagination/Pagination';
 import { useThrottle } from 'packages/website/src/client/shared/hooks/useThrottle';
-import React, { useCallback, useEffect, useState } from 'react';
+import { AutomationStatusContext } from 'packages/website/src/client/shared/layouts/admin/AutomationStatusContext';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { GpuRetailModelCard } from './GpuRetailModelCard';
 
 const LIMIT = 10;
@@ -23,6 +24,8 @@ const FILTER_THROTTLE_MS = 300;
 interface GpuRetailModelsTabProps {}
 
 export const GpuRetailModelsTab = (_props: GpuRetailModelsTabProps) => {
+  const automationStatusContext = useContext(AutomationStatusContext);
+
   // States
 
   const [loading, setLoading] = useState(false);
@@ -60,9 +63,10 @@ export const GpuRetailModelsTab = (_props: GpuRetailModelsTabProps) => {
   );
   const throttledFilterUpdates = useThrottle(filterUpdates, FILTER_THROTTLE_MS);
 
-  const refresh = useCallback(() => {
-    fetchGpuUpdates({ ...query });
-  }, [fetchGpuUpdates, query]);
+  const refresh = useCallback(async () => {
+    await fetchGpuUpdates({ ...query });
+    await automationStatusContext.refreshStatus();
+  }, [automationStatusContext, fetchGpuUpdates, query]);
 
   const changePage = useCallback(
     (offset: number, limit: number) => {

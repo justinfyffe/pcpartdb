@@ -59,7 +59,8 @@ export class AutomationService {
     const status: AutomationStatus = {
       enabled: false,
       ...(JSON.parse(statusJson) || {}),
-      ...this.getPendingSources(ctx),
+      ...(await this.getPendingSources(ctx)),
+      ...(await this.getPendingUpdates(ctx)),
     };
 
     return status;
@@ -246,9 +247,7 @@ export class AutomationService {
   private async getPendingSources(ctx: Context) {
     const pendingCpuSources =
       await this.productSourceRepository.countPendingGroups(
-        {
-          query: { filter: { productType: ProductType.Cpu } },
-        },
+        { query: { filter: { productType: ProductType.Cpu } } },
         ctx,
       );
     const pendingGpuChipsetSources =
