@@ -1,5 +1,6 @@
 HIGH LEVEL TODO:
 - Automation
+  - Show missing data chips on cards? add a save and edit?
   - Install node 20 on server
 - code cleanup
   - ui components

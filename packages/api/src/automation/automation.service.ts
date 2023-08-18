@@ -30,7 +30,7 @@ import {
   internalServerError,
   notFoundError,
 } from '../shared/error';
-import { configPath } from '../shared/utils';
+import { dataPath } from '../shared/utils';
 import { validate } from '../shared/validation/validate';
 import { AutomationRepository } from './automation.repository';
 import {
@@ -52,8 +52,8 @@ export class AutomationService {
   ) {}
 
   async getStatus(ctx: Context) {
-    const statusJson = fs.existsSync(configPath(CONFIG_FILE))
-      ? await fsPromises.readFile(configPath(CONFIG_FILE), 'utf-8')
+    const statusJson = fs.existsSync(dataPath(CONFIG_FILE))
+      ? await fsPromises.readFile(dataPath(CONFIG_FILE), 'utf-8')
       : '{}';
 
     const status: AutomationStatus = {
@@ -78,7 +78,7 @@ export class AutomationService {
     };
 
     await fsPromises.writeFile(
-      configPath(CONFIG_FILE),
+      dataPath(CONFIG_FILE),
       JSON.stringify(statusToSave, undefined, 2),
       'utf-8',
     );

@@ -7,7 +7,7 @@ const CWD_PATH = path.resolve(process.cwd());
 const TMP_PATH = path.join(CWD_PATH, 'tmp');
 const WEBSITE_PATH = path.join(CWD_PATH, '../website');
 
-const CONFIG_PATH = path.join(CWD_PATH, '../..', 'api/config');
+const DATA_PATH = path.join(CWD_PATH, '../..', 'data', 'api');
 const UPLOADS_PATH = path.join(TMP_PATH, 'uploads');
 const EXPORTS_PATH = path.join(TMP_PATH, 'exports');
 const PUBLIC_IMAGES_PATH = path.join(WEBSITE_PATH, 'public/u/images');
@@ -16,8 +16,8 @@ const SITEMAPS_PATH = path.resolve(
   path.join(CWD_PATH, '../..', 'data', 'sitemaps'),
 );
 
-if (!fs.existsSync(CONFIG_PATH)) {
-  fs.mkdirSync(CONFIG_PATH, { recursive: true });
+if (!fs.existsSync(DATA_PATH)) {
+  fs.mkdirSync(DATA_PATH, { recursive: true });
 }
 if (!fs.existsSync(TMP_PATH)) {
   fs.mkdirSync(TMP_PATH, { recursive: true });
@@ -47,8 +47,8 @@ export const MULTER_OPTIONS: multer.Options = {
   }),
 };
 
-export function configPath(file?: string) {
-  return file != null ? path.join(CONFIG_PATH, file) : CONFIG_PATH;
+export function dataPath(file?: string) {
+  return file != null ? path.join(DATA_PATH, file) : DATA_PATH;
 }
 
 export function tmpPath(file?: string) {
