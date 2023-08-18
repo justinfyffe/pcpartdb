@@ -33,7 +33,7 @@ export const AutomationTabs = (_props: AutomationTabsProps) => {
     const pending1 = automationStatus?.pendingGpuChipsetUpdates || 0;
     const pending2 = automationStatus?.pendingGpuRetailModelUpdates || 0;
     const pending = pending1 + pending2;
-    return ['CPUs', pending ? `(${pending})` : ''].join(' ').trim();
+    return ['GPUs', pending ? `(${pending})` : ''].join(' ').trim();
   }, [automationStatus]);
 
   // Render
