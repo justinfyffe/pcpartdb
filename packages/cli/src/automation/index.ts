@@ -9,13 +9,15 @@ import { loadAutomationContext } from './utils/context';
 
 const AUTOMATION_CRON = '0-59 * * * *';
 const FIVE_MINUTES_MS = 1000 * 60 * 5;
+const DEFAULT_ENV = 'dev';
 
 export interface AutomationCommandArgs {
   continuous?: boolean;
+  env?: string;
 }
 
 export async function automationCommand(args: AutomationCommandArgs) {
-  checkRequiredParameters();
+  checkRequiredParameters(args.env || DEFAULT_ENV);
 
   let executing = false;
   let terminate = false;
@@ -32,7 +34,7 @@ export async function automationCommand(args: AutomationCommandArgs) {
     }
   });
 
-  const context = await createContext();
+  const context = await createContext(args.env || DEFAULT_ENV);
   if (args.continuous) {
     scheduler.scheduleJob(AUTOMATION_CRON, async () => {
       if (executing) {
@@ -74,22 +76,36 @@ export async function automationCommand(args: AutomationCommandArgs) {
   }
 }
 
-function checkRequiredParameters() {
-  if (!process.env.AUTOMATION_KEY) {
-    throw new Error('Missing required env variable: AUTOMATION_KEY');
+function checkRequiredParameters(env: string) {
+  if (!getAutomationKey(env)) {
+    throw new Error(
+      `Missing required env variable: AUTOMATION_KEY_${env.toUpperCase()}`,
+    );
   }
 
-  if (!process.env.AUTOMATION_URL) {
-    throw new Error('Missing required env variable: AUTOMATION_URL');
+  if (!getAutomationUrl(env)) {
+    throw new Error(
+      `Missing required env variable: AUTOMATION_URL_${env.toUpperCase()}`,
+    );
   }
 }
 
-async function createContext() {
+async function createContext(env: string) {
   const api = new ApiClient({
     axios,
-    baseUrl: process.env.AUTOMATION_URL,
-    apiKey: process.env.AUTOMATION_KEY,
+    baseUrl: getAutomationUrl(env),
+    apiKey: getAutomationKey(env),
   });
   const savedContext = await loadAutomationContext();
   return { api, ...savedContext } as AutomationContext;
+}
+
+function getAutomationUrl(env: string) {
+  const ucEnv = env.toUpperCase();
+  return process.env[`AUTOMATION_URL_${ucEnv}`];
+}
+
+function getAutomationKey(env: string) {
+  const ucEnv = env.toUpperCase();
+  return process.env[`AUTOMATION_KEY${ucEnv}`];
 }

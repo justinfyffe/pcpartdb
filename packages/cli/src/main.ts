@@ -25,8 +25,12 @@ program.command('scratch-pad').action(async () => {
 program
   .command('automation')
   .option('--continuous')
+  .option('--env [value]')
   .action(async (options) => {
-    await automationCommand({ continuous: options.continuous });
+    await automationCommand({
+      continuous: options.continuous,
+      env: options.env,
+    });
   });
 
 program.parse(process.argv);

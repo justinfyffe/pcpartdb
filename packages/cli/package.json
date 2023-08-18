@@ -9,7 +9,11 @@
     "build": "tsc",
     "scratch-pad": "node ./dist/main.js scratch-pad",
     "automation": "node ./dist/main.js automation",
-    "automation:continuous": "node ./dist/main.js automation --continuous"
+    "automation:dev": "node ./dist/main.js automation --env=dev",
+    "automation:prod": "node ./dist/main.js automation --env=prod",
+    "automation:continuous": "node ./dist/main.js automation --continuous",
+    "automation:continuous:dev": "node ./dist/main.js automation --continuous --env=dev",
+    "automation:continuous:prod": "node ./dist/main.js automation --continuous --env=prod"
   },
   "author": "Justin Fyffe <test@example.com>",
   "license": "UNLICENSED",
