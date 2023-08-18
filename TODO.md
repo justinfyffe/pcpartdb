@@ -1,7 +1,6 @@
 HIGH LEVEL TODO:
 - Automation
   - Install node 20 on server
-  - Remove old cli tasks
 - code cleanup
   - ui components
 - Improve performance score (not just g3d mark or cpu mark)
