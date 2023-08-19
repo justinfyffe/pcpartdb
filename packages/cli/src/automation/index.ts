@@ -107,5 +107,5 @@ function getAutomationUrl(env: string) {
 
 function getAutomationKey(env: string) {
   const ucEnv = env.toUpperCase();
-  return process.env[`AUTOMATION_KEY${ucEnv}`];
+  return process.env[`AUTOMATION_KEY_${ucEnv}`];
 }

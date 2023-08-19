@@ -1,6 +1,8 @@
 HIGH LEVEL TODO:
-- Automation
-  - Install node 20 on server
+- Security
+  - DDoS protection with Cloudflare
+  - Rate limit non-staff api calls?
+  - Add recaptcha?
 - code cleanup
   - ui components
 - Improve performance score (not just g3d mark or cpu mark)
