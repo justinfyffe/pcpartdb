@@ -1,5 +1,14 @@
 HIGH LEVEL TODO:
+- Automation
+  - ul benchmarks scraping sources
+    - search is broken, try again another time
+  - improve speed
+    - subscribe to scrapingant
+    - reduce delays
+- Dependencies
+  - Update dependencies
 - Security
+  - Max file limit on sitemap patyh only
   - DDoS protection with Cloudflare
   - Rate limit non-staff api calls?
   - Add recaptcha?
@@ -19,6 +28,12 @@ HIGH LEVEL TODO:
   - use docker to build on pc instead of server
   - use docker in general
 - accessibility
+- automation improvements
+  - better handling of failures
+    - improve uis
+      - view failed, processing queue items
+      - allow ability to requeue
+    - allow us to requeue it
 
 
 - auto-updates

@@ -104,6 +104,18 @@ export class AutomationController {
     );
   }
 
+  @Post('actions/:id/pending')
+  @UseGuards(StaffGuard)
+  async markAsPending(@Param('id') idStr: string, @Ctx() ctx: Context) {
+    return await this.db.transaction(
+      async () => {
+        const id = Number(idStr);
+        await this.service.markAsPending(id, ctx);
+      },
+      { ctx },
+    );
+  }
+
   @Post('actions/:id/processing')
   @UseGuards(StaffGuard)
   async markAsProcessing(@Param('id') idStr: string, @Ctx() ctx: Context) {

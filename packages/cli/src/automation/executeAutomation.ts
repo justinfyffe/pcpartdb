@@ -55,7 +55,7 @@ export async function executeAutomation(context: AutomationContext) {
     await markAsProcessed(action, context);
   } catch (e) {
     console.error('Error occurred during automation execution', e);
-    await markAsFailed(action, e as Error, context);
+    await markAsPending(action, e as Error, context);
   }
 }
 
@@ -89,13 +89,13 @@ async function markAsProcessed(
   console.info('Automation execution has completed');
 }
 
-async function markAsFailed(
+async function markAsPending(
   execution: AutomationAction,
   error: Error,
   context: AutomationContext,
 ) {
   if (execution?.id != null) {
-    await context.api.post(`automation/actions/${execution.id}/failed`, null, {
+    await context.api.post(`automation/actions/${execution.id}/pending`, null, {
       retries: 2,
     });
   }

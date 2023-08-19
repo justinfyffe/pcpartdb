@@ -15,8 +15,7 @@ async function bootstrap() {
   app.use(cookieParser());
   app.use(compression());
 
-  // Increase max payload size.
-  app.use(bodyParser.json({ limit: '25mb' }));
+  app.use(bodyParser.json({ limit: '1mb' }));
 
   const database = app.get(Database);
   await database.enableShutdownHooks(app);

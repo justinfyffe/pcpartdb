@@ -130,6 +130,24 @@ export class AutomationService {
     );
   }
 
+  async markAsPending(id: number, ctx: Context) {
+    const entity = await this.repository.findById(id, ctx);
+    if (entity == null) {
+      throw notFoundError({ id });
+    } else if (entity.status !== AutomationActionStatus.Pending) {
+      throw badRequestError({
+        property: 'status',
+        constraint: ValidationErrorType.InvalidStatus,
+      });
+    }
+
+    await this.repository.update(
+      id,
+      { status: AutomationActionStatus.Pending },
+      ctx,
+    );
+  }
+
   async markAsProcessing(id: number, ctx: Context) {
     const entity = await this.repository.findById(id, ctx);
     if (entity == null) {

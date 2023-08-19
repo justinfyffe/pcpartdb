@@ -459,7 +459,7 @@ function generateSitemapUrlObject(entry: SitemapEntry) {
 async function compressSitemap(path: string, output: string) {
   await new Promise<void>((resolve, reject) => {
     fs.createReadStream(path)
-      .pipe(zlib.createGzip())
+      .pipe(zlib.createGzip({ level: 9 }))
       .pipe(fs.createWriteStream(output))
       .on('error', () => reject())
       .on('finish', () => resolve());
@@ -472,7 +472,7 @@ async function createTarArchive() {
   await tar.c(
     {
       cwd: '../../data/automation/sitemaps',
-      gzip: true,
+      gzip: { level: 9 },
       file: 'sitemap.tgz',
     },
     files,
