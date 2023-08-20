@@ -71,6 +71,20 @@ export const SourceInputField = (props: SourceInputFieldProps) => {
     [onChange],
   );
 
+  const handleUrlChange = useCallback(
+    (url: string) => {
+      onChange?.({
+        productType,
+        sourceKey,
+        sourceUrl: url,
+        groupKey: '',
+        externalKey: '',
+        sourceName: '',
+      });
+    },
+    [onChange, productType, sourceKey],
+  );
+
   // Render
 
   return (
@@ -108,7 +122,7 @@ export const SourceInputField = (props: SourceInputFieldProps) => {
               {currentSource != null && <>&bull;</>}
             </>
           )}
-          {currentSource != null && (
+          {currentSource?.sourceName && (
             <a
               onClick={(e) => {
                 e.preventDefault();
@@ -129,9 +143,13 @@ export const SourceInputField = (props: SourceInputFieldProps) => {
           onChange={onChange}
           disabled={sourceDisabled}
         />
-        <TextInput value={currentSource?.sourceUrl} disabled />
+        <TextInput
+          value={currentSource?.sourceUrl}
+          disabled={currentSource?.id != null}
+          onChange={handleUrlChange}
+        />
       </div>
-      {currentSource != null && (
+      {currentSource?.id != null && (
         <div className="flex justify-between">
           <FieldHint>
             {currentSource.id} (

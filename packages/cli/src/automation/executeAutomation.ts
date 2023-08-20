@@ -123,7 +123,7 @@ async function getNextAction(
   // No actions remaining, fallback to continuous ones (e.g. product updates)
   const backlogAction = await getActionFromBacklog(context);
   if (backlogAction != null) {
-    console.info('Found next action based on backlog', staleAction);
+    console.info('Found next action based on backlog', backlogAction);
     return backlogAction;
   }
 

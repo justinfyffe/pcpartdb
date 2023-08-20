@@ -13,9 +13,14 @@ export function getAdminNewCpuPath() {
   return '/admin/cpus/new/';
 }
 
-export function getAdminEditCpuPath(cpuOrId: Cpu | number) {
-  const id = typeof cpuOrId === 'number' ? cpuOrId : cpuOrId.id;
-  return joinUrlParts('/admin/cpus/', String(id), '/');
+export function getAdminEditCpuPath(cpuOrIdOrSlug: Cpu | number | string) {
+  if (typeof cpuOrIdOrSlug === 'number') {
+    return joinUrlParts('/admin/cpus/', String(cpuOrIdOrSlug), '/');
+  } else if (typeof cpuOrIdOrSlug === 'string') {
+    return joinUrlParts('/admin/cpus/', cpuOrIdOrSlug, '/');
+  } else {
+    return joinUrlParts('/admin/cpus/', String(cpuOrIdOrSlug.id), '/');
+  }
 }
 
 export function getAdminListCpusPath(query?: ListCpusQuery) {

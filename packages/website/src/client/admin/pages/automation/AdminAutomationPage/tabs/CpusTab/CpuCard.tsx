@@ -3,10 +3,13 @@ import {
   CheckIcon,
   ChevronDownIcon,
   ChevronRightIcon,
+  InformationCircleIcon,
+  PencilIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline';
 import {
   CpuUpdate,
+  getAdminEditCpuPath,
   getViewCpuPath,
   ProductUpdateStatus,
 } from '@pcpartdb/shared';
@@ -69,6 +72,11 @@ export const CpuCard = (props: CpuCardTabProps) => {
     await automationStatusContext.refreshStatus();
   }, [automationStatusContext, slug, update.id]);
 
+  const approveAndEdit = useCallback(async () => {
+    await approve();
+    window.open(getAdminEditCpuPath(slug), '_blank');
+  }, [approve, slug]);
+
   return (
     <Card>
       <div
@@ -78,7 +86,7 @@ export const CpuCard = (props: CpuCardTabProps) => {
         {expanded && <ChevronDownIcon className="w-4" />}
         {!expanded && <ChevronRightIcon className="w-4" />}
 
-        <div className="flex flex-1 flex-col gap-1">
+        <div className="flex flex-1 flex-col gap-1 min-w-30">
           <CardTitle>{name}</CardTitle>
           <div className="text-xs">
             <span className="font-semibold">
@@ -91,15 +99,16 @@ export const CpuCard = (props: CpuCardTabProps) => {
           </div>
         </div>
 
-        <div className="flex gap-4">
+        <div className="flex gap-4 flex-wrap">
           <GenericButton
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
               viewDiff();
             }}
+            className="ml-auto"
           >
-            Diff
+            <InformationCircleIcon className="w-4" />
           </GenericButton>
 
           {status === ProductUpdateStatus.Approved && (
@@ -109,17 +118,33 @@ export const CpuCard = (props: CpuCardTabProps) => {
             <XMarkIcon className="w-8" />
           )}
           {status === ProductUpdateStatus.Pending && (
-            <div className="flex flex-col justify-between gap-4">
-              <GenericButton
-                title="Approve"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  approve();
-                }}
-              >
-                <CheckIcon className="w-4" />
-              </GenericButton>
+            <>
+              <div className="flex flex-wrap gap-4 ml-auto">
+                <GenericButton
+                  title="Approve"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    approve();
+                  }}
+                  className="ml-auto"
+                >
+                  <CheckIcon className="w-4" />
+                </GenericButton>
+
+                <GenericButton
+                  title="Approve and Edit"
+                  className="flex items-center gap-2 ml-auto"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    approveAndEdit();
+                  }}
+                >
+                  <CheckIcon className="w-4" /> + <PencilIcon className="w-4" />
+                </GenericButton>
+              </div>
+
               <GenericButton
                 title="Reject"
                 onClick={(e) => {
@@ -127,10 +152,11 @@ export const CpuCard = (props: CpuCardTabProps) => {
                   e.stopPropagation();
                   reject();
                 }}
+                className="ml-auto"
               >
                 <XMarkIcon className="w-4" />
               </GenericButton>
-            </div>
+            </>
           )}
         </div>
       </div>
@@ -151,7 +177,7 @@ export const CpuCard = (props: CpuCardTabProps) => {
             <GenericButton onClick={viewDiff}>Diff</GenericButton>
           </div>
 
-          <div className="flex justify-between gap-4">
+          <div className="flex flex-wrap justify-between gap-4">
             <GenericButton
               onClick={reject}
               disabled={status !== ProductUpdateStatus.Pending}
@@ -163,12 +189,21 @@ export const CpuCard = (props: CpuCardTabProps) => {
                 View Page
               </GenericButton>
             )}
-            <GenericButton
-              onClick={approve}
-              disabled={status !== ProductUpdateStatus.Pending}
-            >
-              Approve
-            </GenericButton>
+            <div className="flex gap-4 ml-auto">
+              <GenericButton
+                onClick={approve}
+                disabled={status !== ProductUpdateStatus.Pending}
+              >
+                Approve
+              </GenericButton>
+
+              <GenericButton
+                onClick={approveAndEdit}
+                disabled={status !== ProductUpdateStatus.Pending}
+              >
+                Approve &amp; Edit
+              </GenericButton>
+            </div>
           </div>
         </CardContent>
       )}

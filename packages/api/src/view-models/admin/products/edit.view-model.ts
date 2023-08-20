@@ -13,20 +13,64 @@ export class AdminEditProductViewModelService {
     private productUpdateService: ProductUpdateService,
   ) {}
 
-  async viewModel(productType: ProductType, productId: number, ctx: Context) {
+  async viewModel(
+    productType: ProductType,
+    productIdOrSlug: string,
+    ctx: Context,
+  ) {
+    const product = await this.getProduct(productType, productIdOrSlug, ctx);
     return {
       productType,
-      product: await this.getProduct(productType, productId, ctx),
-      pendingUpdate: await this.getPendingUpdate(productType, productId, ctx),
+      product,
+      pendingUpdate: await this.getPendingUpdate(productType, product?.id, ctx),
     } as AdminEditProductViewModel;
   }
 
-  private async getProduct(productType: ProductType, id: number, ctx: Context) {
+  private async getProduct(
+    productType: ProductType,
+    productIdOrSlug: string,
+    ctx: Context,
+  ) {
+    const id = Number(productIdOrSlug);
+    if (isNaN(id)) {
+      return await this.getProductBySlug(productType, productIdOrSlug, ctx);
+    } else {
+      return await this.getProductById(productType, id, ctx);
+    }
+  }
+
+  private async getProductById(
+    productType: ProductType,
+    id: number,
+    ctx: Context,
+  ) {
     if (productType === ProductType.Cpu) {
       return await this.cpuService.getById(id, { includeImages: true }, ctx);
     } else if (productType === ProductType.Gpu) {
       return await this.gpuService.getById(
         id,
+        { includeChipset: true, includeImages: true },
+        ctx,
+      );
+    } else {
+      throw new Error('Invalid product type');
+    }
+  }
+
+  private async getProductBySlug(
+    productType: ProductType,
+    slug: string,
+    ctx: Context,
+  ) {
+    if (productType === ProductType.Cpu) {
+      return await this.cpuService.getBySlug(
+        slug,
+        { includeImages: true },
+        ctx,
+      );
+    } else if (productType === ProductType.Gpu) {
+      return await this.gpuService.getBySlug(
+        slug,
         { includeChipset: true, includeImages: true },
         ctx,
       );

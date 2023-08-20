@@ -3,9 +3,12 @@ import {
   CheckIcon,
   ChevronDownIcon,
   ChevronRightIcon,
+  InformationCircleIcon,
+  PencilIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline';
 import {
+  getAdminEditGpuPath,
   getViewGpuPath,
   GpuUpdate,
   ProductUpdateStatus,
@@ -69,6 +72,11 @@ export const GpuRetailModelCard = (props: GpuRetailModelCardTabProps) => {
     await automationStatusContext.refreshStatus();
   }, [automationStatusContext, slug, update.id]);
 
+  const approveAndEdit = useCallback(async () => {
+    await approve();
+    window.open(getAdminEditGpuPath(slug), '_blank');
+  }, [approve, slug]);
+
   return (
     <Card>
       <div
@@ -91,7 +99,7 @@ export const GpuRetailModelCard = (props: GpuRetailModelCardTabProps) => {
           </div>
         </div>
 
-        <div className="flex gap-4">
+        <div className="flex gap-4 flex-wrap">
           <GenericButton
             onClick={(e) => {
               e.preventDefault();
@@ -99,7 +107,7 @@ export const GpuRetailModelCard = (props: GpuRetailModelCardTabProps) => {
               viewDiff();
             }}
           >
-            Diff
+            <InformationCircleIcon className="w-4" />
           </GenericButton>
 
           {status === ProductUpdateStatus.Approved && (
@@ -109,17 +117,33 @@ export const GpuRetailModelCard = (props: GpuRetailModelCardTabProps) => {
             <XMarkIcon className="w-8" />
           )}
           {status === ProductUpdateStatus.Pending && (
-            <div className="flex flex-col justify-between gap-4">
-              <GenericButton
-                title="Approve"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  approve();
-                }}
-              >
-                <CheckIcon className="w-4" />
-              </GenericButton>
+            <>
+              <div className="flex flex-wrap gap-4 ml-auto">
+                <GenericButton
+                  title="Approve"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    approve();
+                  }}
+                  className="ml-auto"
+                >
+                  <CheckIcon className="w-4" />
+                </GenericButton>
+
+                <GenericButton
+                  title="Approve and Edit"
+                  className="flex items-center gap-2 ml-auto"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    approveAndEdit();
+                  }}
+                >
+                  <CheckIcon className="w-4" /> + <PencilIcon className="w-4" />
+                </GenericButton>
+              </div>
+
               <GenericButton
                 title="Reject"
                 onClick={(e) => {
@@ -127,10 +151,11 @@ export const GpuRetailModelCard = (props: GpuRetailModelCardTabProps) => {
                   e.stopPropagation();
                   reject();
                 }}
+                className="ml-auto"
               >
                 <XMarkIcon className="w-4" />
               </GenericButton>
-            </div>
+            </>
           )}
         </div>
       </div>
@@ -163,12 +188,21 @@ export const GpuRetailModelCard = (props: GpuRetailModelCardTabProps) => {
                 View Page
               </GenericButton>
             )}
-            <GenericButton
-              onClick={approve}
-              disabled={status !== ProductUpdateStatus.Pending}
-            >
-              Approve
-            </GenericButton>
+            <div className="flex gap-4 ml-auto">
+              <GenericButton
+                onClick={approve}
+                disabled={status !== ProductUpdateStatus.Pending}
+              >
+                Approve
+              </GenericButton>
+
+              <GenericButton
+                onClick={approveAndEdit}
+                disabled={status !== ProductUpdateStatus.Pending}
+              >
+                Approve &amp; Edit
+              </GenericButton>
+            </div>
           </div>
         </CardContent>
       )}

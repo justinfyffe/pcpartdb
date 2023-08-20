@@ -19,7 +19,12 @@ export async function loadAutomationContext() {
 }
 
 export async function saveAutomationContext(context: AutomationContext) {
-  const { api: _api, ...data } = context;
+  const {
+    api: _api,
+    concurrency: _concurrency,
+    requestChunkDelay: _requestChunkDelay,
+    ...data
+  } = context;
 
   const json = JSON.stringify(data, undefined, 2);
   await fsPromises.writeFile(FILE_PATH, json, 'utf-8');

@@ -7,6 +7,9 @@ import { executeAutomation } from './executeAutomation';
 import { AutomationContext } from './types';
 import { loadAutomationContext } from './utils/context';
 
+const REQUEST_CHUNK_DELAY = 5_000;
+const CONCURRENCY = false;
+
 const AUTOMATION_CRON = '0-59 * * * *';
 const FIVE_MINUTES_MS = 1000 * 60 * 5;
 const DEFAULT_ENV = 'dev';
@@ -97,7 +100,12 @@ async function createContext(env: string) {
     apiKey: getAutomationKey(env),
   });
   const savedContext = await loadAutomationContext();
-  return { api, ...savedContext } as AutomationContext;
+  return {
+    api,
+    concurrency: CONCURRENCY,
+    requestChunkDelay: REQUEST_CHUNK_DELAY,
+    ...savedContext,
+  } as AutomationContext;
 }
 
 function getAutomationUrl(env: string) {

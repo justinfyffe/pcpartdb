@@ -1,10 +1,10 @@
 HIGH LEVEL TODO:
 - Automation
-  - ul benchmarks scraping sources
-    - search is broken, try again another time
   - improve speed
     - subscribe to scrapingant
     - reduce delays
+    - increase concurrency
+      - test
 - Dependencies
   - Update dependencies
 - Security

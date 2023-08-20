@@ -1,4 +1,5 @@
 import {
+  concurrent,
   Gpu,
   GpuDataSource,
   GpuDataSourceKey,
@@ -14,47 +15,88 @@ import { scrapeUlBenchmarksGpuData } from './ul-benchmarks';
 export interface ScrapeGpuOptions {
   sources: Record<string, GpuDataSource>;
   chipset?: Gpu;
+  concurrency?: number;
 }
 
 export async function scrapeGpu(options: ScrapeGpuOptions) {
-  const { chipset, sources } = options;
+  const { chipset, sources, concurrency } = options;
 
   const techPowerUp = sources[GpuDataSourceKey.TechPowerUp];
+  const passMark = sources[GpuDataSourceKey.VideocardBenchmarks];
   const ulBenchmarks = sources[GpuDataSourceKey.UlBenchmarks];
-  const videocardBenchmark = sources[GpuDataSourceKey.VideocardBenchmarks];
 
+  // Fetch gpu data (concurrently if desired)
+  const [chipsetResult, techPowerUpResult, passMarkResult, ulBenchmarkResult] =
+    await concurrent(
+      [
+        scrapeChipset(chipset),
+        scrapeTechPowerUp(techPowerUp),
+        scrapePassMark(passMark),
+        scrapeUlBenchmarks(ulBenchmarks),
+      ],
+      {
+        limit: concurrency || 1,
+      },
+    );
+
+  // Merge scraped results
   let hasRetailModels = false;
   let scrapedProduct: Partial<Product> = { meta: { dataSources: {} } };
-  if (chipset != null) {
-    const { product } = await scrapeFromChipsetGpu({ chipset });
+  if (chipsetResult != null) {
+    const { product } = chipsetResult;
     scrapedProduct = deepmerge(scrapedProduct, product);
   }
-  if (techPowerUp?.url != null) {
-    const response = await scrapeTechPowerUpGpuData({ url: techPowerUp.url });
-    const product = response.product;
+  if (techPowerUpResult != null) {
+    const response = techPowerUpResult as ScrapeProductResponse & {
+      hasRetailModels: boolean;
+    };
     hasRetailModels = response.hasRetailModels;
-    scrapedProduct = deepmerge(scrapedProduct, product);
+    scrapedProduct = deepmerge(scrapedProduct, response.product);
     scrapedProduct.meta.dataSources[GpuDataSourceKey.TechPowerUp] = techPowerUp;
   }
-  if (ulBenchmarks?.url != null) {
-    const { product } = await scrapeUlBenchmarksGpuData({
-      url: ulBenchmarks.url,
-    });
+  if (passMarkResult != null) {
+    const { product } = passMarkResult;
+    scrapedProduct = deepmerge(scrapedProduct, product);
+    scrapedProduct.meta.dataSources[GpuDataSourceKey.VideocardBenchmarks] =
+      passMark;
+  }
+  if (ulBenchmarkResult != null) {
+    const { product } = ulBenchmarkResult;
     scrapedProduct = deepmerge(scrapedProduct, product);
     scrapedProduct.meta.dataSources[GpuDataSourceKey.UlBenchmarks] =
       ulBenchmarks;
-  }
-  if (videocardBenchmark?.url != null) {
-    const { product } = await scrapePassMarkGpuData({
-      url: videocardBenchmark.url,
-    });
-    scrapedProduct = deepmerge(scrapedProduct, product);
-    scrapedProduct.meta.dataSources[GpuDataSourceKey.VideocardBenchmarks] =
-      videocardBenchmark;
   }
 
   return {
     product: scrapedProduct,
     hasRetailModels,
   } as ScrapeProductResponse & { hasRetailModels: boolean };
+}
+
+async function scrapeChipset(chipset: Gpu) {
+  if (chipset == null) {
+    return null;
+  }
+  return await scrapeFromChipsetGpu({ chipset });
+}
+
+async function scrapeTechPowerUp(source: GpuDataSource) {
+  if (source?.url == null) {
+    return null;
+  }
+  return await scrapeTechPowerUpGpuData({ url: source.url });
+}
+
+async function scrapePassMark(source: GpuDataSource) {
+  if (source?.url == null) {
+    return null;
+  }
+  return await scrapePassMarkGpuData({ url: source.url });
+}
+
+async function scrapeUlBenchmarks(source: GpuDataSource) {
+  if (source?.url == null) {
+    return null;
+  }
+  return await scrapeUlBenchmarksGpuData({ url: source.url });
 }

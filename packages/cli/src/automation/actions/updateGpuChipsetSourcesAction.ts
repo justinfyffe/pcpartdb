@@ -9,6 +9,7 @@ import {
 import {
   AutoArchiveProductSourcesRequest,
   AutomationAction,
+  concurrent,
   GpuDataSourceKey,
   GpuProductSource,
   ProductType,
@@ -18,9 +19,9 @@ import { sleep } from '../../shared/process';
 import { AutomationContext } from '../types';
 
 const BATCH_SIZE = 50;
-const DELAY_BETWEEN_SOURCE_REQUEST = 10_000;
-const DELAY_BETWEEN_TECHPOWERUP_REQUEST = 30_000;
+const DEFAULT_CHUNK_DELAY = 30_000;
 const DELAY_BETWEEN_UPLOAD = 3_000;
+const CONCURRENCY_CHUNK_SIZE = 3;
 
 const TECHPOWERUP_URLS = [
   {
@@ -134,10 +135,18 @@ export async function updateGpuChipsetSourcesAction(
 ) {
   console.log('Executing updateGpuChipsetSourcesAction');
 
-  // Scrape GPU Sources
-  const { sources: techPowerUpSources } = await getTechPowerUpSources();
-  const { sources: passMarkSources } = await getPassMarkSources();
-  const { sources: ulBenchmarkSources } = await getUlBenchmarkSources();
+  // Scrape GPU Sources (concurrently if desired)
+  const [techPowerUp, passMark, ulBenchmarks] = await concurrent(
+    [
+      getTechPowerUpSources(context),
+      getPassMarkSources(context),
+      getUlBenchmarkSources(context),
+    ],
+    { limit: context.concurrency ? 3 : 1 },
+  );
+  const { sources: techPowerUpSources } = techPowerUp;
+  const { sources: passMarkSources } = passMark;
+  const { sources: ulBenchmarkSources } = ulBenchmarks;
 
   // Upload CPU Sources
   await uploadGpuSources(techPowerUpSources, context);
@@ -160,10 +169,13 @@ export async function updateGpuChipsetSourcesAction(
   };
 }
 
-async function getTechPowerUpSources() {
+async function getTechPowerUpSources(context: AutomationContext) {
   console.log('Scraping GPU chipset sources from TechPowerUp');
 
   const map: Record<string, TechPowerUpGpuSource> = {};
+
+  // Construct requests
+  const promises: Promise<void>[] = [];
   for (let i = 0; i < TECHPOWERUP_URLS.length; ++i) {
     const { company, urls } = TECHPOWERUP_URLS[i];
 
@@ -173,21 +185,17 @@ async function getTechPowerUpSources() {
       .map(({ value }) => value);
 
     for (const url of randomizedUrls) {
-      console.log(`Scraping sources for url: ${url}`);
-      try {
-        const sources = await scrapeTechPowerUpGpuSources({ url, company });
-        console.log(`Scraped ${sources.length} sources`);
-        sources.forEach((gpu) => {
-          map[gpu.name] = gpu;
-        });
-      } catch (err) {
-        console.error('Encountered error when scraping.');
-        console.error(err);
-      }
-      await sleep(DELAY_BETWEEN_TECHPOWERUP_REQUEST);
+      promises.push(scrapeTechPowerUp(url, company, map));
     }
   }
 
+  // Execute concurrently
+  await concurrent(promises, {
+    limit: context.concurrency ? CONCURRENCY_CHUNK_SIZE : 1,
+    delayBetweenChunksMs: context.requestChunkDelay || DEFAULT_CHUNK_DELAY,
+  });
+
+  // Convert to source object
   const sources: GpuProductSource[] = Object.values(map).map((value) => ({
     groupKey: value.groupKey,
     externalKey: value.externalKey,
@@ -202,28 +210,94 @@ async function getTechPowerUpSources() {
   return { sources };
 }
 
-async function getUlBenchmarkSources() {
+async function scrapeTechPowerUp(
+  url: string,
+  company: string,
+  map: Record<string, TechPowerUpGpuSource>,
+) {
+  console.log(`Scraping sources for url: ${url}`);
+  try {
+    const sources = await scrapeTechPowerUpGpuSources({ url, company });
+    console.log(`Scraped ${sources.length} sources`);
+    sources.forEach((gpu) => {
+      map[gpu.name] = gpu;
+    });
+  } catch (err) {
+    console.error('Encountered error when scraping.');
+    console.error(err);
+  }
+}
+
+async function getPassMarkSources(context: AutomationContext) {
+  console.log('Scraping CPU Sources from PassMark');
+
+  const map: Record<string, PassMarkGpuSource> = {};
+
+  // Construct requests
+  const promises: Promise<void>[] = [];
+  for (let i = 0; i < PASSMARK_URLS.length; ++i) {
+    const url = PASSMARK_URLS[i];
+    promises.push(scrapePassMark(url, map));
+  }
+
+  // Execute concurrently
+  await concurrent(promises, {
+    limit: context.concurrency ? CONCURRENCY_CHUNK_SIZE : 1,
+    delayBetweenChunksMs: context.requestChunkDelay || DEFAULT_CHUNK_DELAY,
+  });
+
+  // Convert to source object
+  const sources: GpuProductSource[] = Object.values(map).map((value) => ({
+    groupKey: value.groupKey,
+    externalKey: value.externalKey,
+    productType: ProductType.Gpu,
+    sourceName: `${value.company || ''} ${value.name}`.trim(),
+    sourceKey: GpuDataSourceKey.VideocardBenchmarks,
+    sourceUrl: value.url,
+  }));
+
+  console.log(`Scraped ${sources.length} PassMark sources`);
+
+  return { sources };
+}
+
+async function scrapePassMark(
+  url: string,
+  map: Record<string, PassMarkGpuSource>,
+) {
+  console.log(`Scraping sources for URL: ${url}`);
+
+  try {
+    const sources = await scrapePassMarkGpuSources({ url });
+    console.log(`Scraped ${sources.length} sources`);
+    sources.forEach((gpu) => {
+      map[gpu.name] = gpu;
+    });
+  } catch (err) {
+    console.error('Encountered error when scraping.');
+    console.error(err);
+  }
+}
+
+async function getUlBenchmarkSources(context: AutomationContext) {
   console.log('Scraping CPU Sources from UL');
 
   const map: Record<string, UlBenchmarkGpuSource> = {};
+
+  // Construct requests
+  const promises: Promise<void>[] = [];
   for (let i = 0; i < UL_BENCHMARK_QUERIES.length; ++i) {
     const query = UL_BENCHMARK_QUERIES[i];
-    console.log(`Scraping sources for query: ${query}`);
-
-    try {
-      const sources = await scrapeUlBenchmarkGpuSources({ query });
-      console.log(`Scraped ${sources.length} sources`);
-      sources.forEach((gpu) => {
-        map[gpu.name] = gpu;
-      });
-    } catch (err) {
-      console.error('Encountered error when scraping.');
-      console.error(err);
-    }
-
-    await sleep(DELAY_BETWEEN_SOURCE_REQUEST);
+    promises.push(scrapeUlBenchmark(query, map));
   }
 
+  // Execute concurrently
+  await concurrent(promises, {
+    limit: context.concurrency ? CONCURRENCY_CHUNK_SIZE : 1,
+    delayBetweenChunksMs: context.requestChunkDelay || DEFAULT_CHUNK_DELAY,
+  });
+
+  // Convert to source object
   const sources: GpuProductSource[] = Object.values(map).map((value) => ({
     groupKey: value.groupKey,
     externalKey: value.externalKey,
@@ -238,40 +312,22 @@ async function getUlBenchmarkSources() {
   return { sources };
 }
 
-async function getPassMarkSources() {
-  console.log('Scraping CPU Sources from PassMark');
+async function scrapeUlBenchmark(
+  query: string,
+  map: Record<string, UlBenchmarkGpuSource>,
+) {
+  console.log(`Scraping sources for query: ${query}`);
 
-  const map: Record<string, PassMarkGpuSource> = {};
-  for (let i = 0; i < PASSMARK_URLS.length; ++i) {
-    const url = PASSMARK_URLS[i];
-    console.log(`Scraping sources for URL: ${url}`);
-
-    try {
-      const sources = await scrapePassMarkGpuSources({ url });
-      console.log(`Scraped ${sources.length} sources`);
-      sources.forEach((gpu) => {
-        map[gpu.name] = gpu;
-      });
-    } catch (err) {
-      console.error('Encountered error when scraping.');
-      console.error(err);
-    }
-
-    await sleep(DELAY_BETWEEN_SOURCE_REQUEST);
+  try {
+    const sources = await scrapeUlBenchmarkGpuSources({ query });
+    console.log(`Scraped ${sources.length} sources`);
+    sources.forEach((gpu) => {
+      map[gpu.name] = gpu;
+    });
+  } catch (err) {
+    console.error('Encountered error when scraping.');
+    console.error(err);
   }
-
-  const sources: GpuProductSource[] = Object.values(map).map((value) => ({
-    groupKey: value.groupKey,
-    externalKey: value.externalKey,
-    productType: ProductType.Gpu,
-    sourceName: `${value.company || ''} ${value.name}`.trim(),
-    sourceKey: GpuDataSourceKey.VideocardBenchmarks,
-    sourceUrl: value.url,
-  }));
-
-  console.log(`Scraped ${sources.length} PassMark sources`);
-
-  return { sources };
 }
 
 async function uploadGpuSources(

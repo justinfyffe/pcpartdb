@@ -62,19 +62,18 @@ export class ViewModelsController {
     );
   }
 
-  @Get('admin/products/:id')
+  @Get('admin/products/:idOrSlug')
   @UseGuards(StaffGuard)
   async adminEditProduct(
     @Query('productType') productType: ProductType,
-    @Param('id') idStr: string,
+    @Param('idOrSlug') idOrSlug: string,
     @Ctx() ctx: Context,
   ) {
     return await this.db.transaction(
       () => {
-        const id = Number(idStr);
         return this.adminEditProductViewModelService.viewModel(
           productType,
-          id,
+          idOrSlug,
           ctx,
         );
       },

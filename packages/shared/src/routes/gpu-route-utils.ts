@@ -101,9 +101,14 @@ export function getAdminNewGpuPath() {
   return '/admin/gpus/new/';
 }
 
-export function getAdminEditGpuPath(gpuOrId: Gpu | number) {
-  const id = typeof gpuOrId === 'number' ? gpuOrId : gpuOrId.id;
-  return joinUrlParts('/admin/gpus/', String(id), '/');
+export function getAdminEditGpuPath(gpuOrIdOrSlug: Gpu | number | string) {
+  if (typeof gpuOrIdOrSlug === 'number') {
+    return joinUrlParts('/admin/gpus/', String(gpuOrIdOrSlug), '/');
+  } else if (typeof gpuOrIdOrSlug === 'string') {
+    return joinUrlParts('/admin/gpus/', gpuOrIdOrSlug, '/');
+  } else {
+    return joinUrlParts('/admin/gpus/', String(gpuOrIdOrSlug.id), '/');
+  }
 }
 
 function generatePaginationParamsFromGpusQuery(query: ListGpusQuery) {

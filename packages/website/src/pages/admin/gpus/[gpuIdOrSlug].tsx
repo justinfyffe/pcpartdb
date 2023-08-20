@@ -5,10 +5,9 @@ import { AdminEditProductPage } from '../../../client/admin/pages';
 import { viewModelsClient } from '../../../client/shared/api';
 
 export async function getServerSideProps(ctx: NextPageContext) {
-  const query = ctx.query as { gpuId: string };
-  const gpuId = Number(query.gpuId);
+  const query = ctx.query as { gpuIdOrSlug: string };
 
-  const endpoint = joinUrlParts('admin/products', String(gpuId));
+  const endpoint = joinUrlParts('admin/products', query.gpuIdOrSlug);
   return await viewModelsClient.get(endpoint, {
     params: { productType: ProductType.Gpu },
   });

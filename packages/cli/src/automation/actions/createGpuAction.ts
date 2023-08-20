@@ -1,11 +1,10 @@
-import { scrapeGpu } from '@pcpartdb/scraper';
+import { scrapeGpu, ScrapeGpuOptions } from '@pcpartdb/scraper';
 import {
   AutomationAction,
   CreateGpuActionData,
   CreateProductUpdateRequest,
   generateGpuSlug,
   Gpu,
-  GpuDataSource,
   GpuDataSourceKey,
   GpuProductType,
   GpuUpdate,
@@ -53,6 +52,7 @@ export async function createGpuAction(
       [GpuDataSourceKey.VideocardBenchmarks]: passMarkSource,
       [GpuDataSourceKey.UlBenchmarks]: ulBenchmarkSource,
     },
+    concurrency: context.concurrency ? 3 : 1,
   });
 
   // New GPUs have some additional data to be applied
@@ -98,10 +98,7 @@ async function getChipset(chipsetId: number, context: AutomationContext) {
   return chipset;
 }
 
-async function fetchGpuData(options: {
-  chipset?: Gpu;
-  sources: Record<string, GpuDataSource>;
-}) {
+async function fetchGpuData(options: ScrapeGpuOptions) {
   console.info('Fetching GPU data', options.sources);
 
   // Scrape the GPU data from our sources.

@@ -8,6 +8,7 @@ import {
 import {
   AutoArchiveProductSourcesRequest,
   AutomationAction,
+  concurrent,
   CpuDataSourceKey,
   CpuProductSource,
   ProductType,
@@ -17,9 +18,9 @@ import { sleep } from '../../shared/process';
 import { AutomationContext } from '../types';
 
 const BATCH_SIZE = 50;
-const DELAY_BETWEEN_SOURCE_REQUEST = 10_000;
-const DELAY_BETWEEN_TECHPOWERUP_REQUEST = 30_000;
+const DEFAULT_CHUNK_DELAY = 30_000;
 const DELAY_BETWEEN_UPLOAD = 3_000;
+const CONCURRENCY_CHUNK_SIZE = 3;
 
 const TECHPOWERUP_URLS = [
   {
@@ -107,9 +108,15 @@ export async function updateCpuSourcesAction(
   console.log('Executing updateCpuSourcesAction');
 
   // Scrape CPU Sources
-  const techPowerUpSources = await getTechPowerUpSources();
-  const passMarkSources = await getPassMarkSources();
-  const geekBenchSources = await getGeekBenchSources();
+  const [techPowerUpSources, passMarkSources, geekBenchSources] =
+    await concurrent(
+      [
+        getTechPowerUpSources(context),
+        getPassMarkSources(context),
+        getGeekBenchSources(context),
+      ],
+      { limit: context.concurrency ? 3 : 1 },
+    );
 
   // Upload CPU Sources
   await uploadCpuSources(techPowerUpSources, context);
@@ -132,10 +139,13 @@ export async function updateCpuSourcesAction(
   };
 }
 
-async function getTechPowerUpSources() {
+async function getTechPowerUpSources(context: AutomationContext) {
   console.log('Scraping CPU Sources from TechPowerUp');
 
   const map: Record<string, TechPowerUpCpuSource> = {};
+
+  // Construct requests
+  const promises: Promise<void>[] = [];
   for (let i = 0; i < TECHPOWERUP_URLS.length; ++i) {
     const { company, urls } = TECHPOWERUP_URLS[i];
 
@@ -145,21 +155,17 @@ async function getTechPowerUpSources() {
       .map(({ value }) => value);
 
     for (const url of randomizedUrls) {
-      console.log(`Scraping sources for url: ${url}`);
-      try {
-        const sources = await scrapeTechPowerUpCpuSources({ url, company });
-        console.log(`Scraped ${sources.length} sources`);
-        sources.forEach((cpu) => {
-          map[cpu.name] = cpu;
-        });
-      } catch (err) {
-        console.error('Encountered error when scraping.');
-        console.error(err);
-      }
-      await sleep(DELAY_BETWEEN_TECHPOWERUP_REQUEST);
+      promises.push(scrapeTechPowerUp(url, company, map));
     }
   }
 
+  // Execute concurrently
+  await concurrent(promises, {
+    limit: context.concurrency ? CONCURRENCY_CHUNK_SIZE : 1,
+    delayBetweenChunksMs: context.requestChunkDelay || DEFAULT_CHUNK_DELAY,
+  });
+
+  // Convert to source object
   const sources: CpuProductSource[] = Object.values(map).map((value) => ({
     groupKey: value.groupKey,
     externalKey: value.externalKey,
@@ -174,28 +180,43 @@ async function getTechPowerUpSources() {
   return sources;
 }
 
-async function getPassMarkSources() {
+async function scrapeTechPowerUp(
+  url: string,
+  company: string,
+  map: Record<string, TechPowerUpCpuSource>,
+) {
+  console.log(`Scraping sources for url: ${url}`);
+  try {
+    const sources = await scrapeTechPowerUpCpuSources({ url, company });
+    console.log(`Scraped ${sources.length} sources`);
+    sources.forEach((cpu) => {
+      map[cpu.name] = cpu;
+    });
+  } catch (err) {
+    console.error('Encountered error when scraping.');
+    console.error(err);
+  }
+}
+
+async function getPassMarkSources(context: AutomationContext) {
   console.log('Scraping CPU Sources from PassMark');
 
   const map: Record<string, PassMarkCpuSource> = {};
+
+  // Construct requests
+  const promises: Promise<void>[] = [];
   for (let i = 0; i < PASSMARK_URLS.length; ++i) {
     const url = PASSMARK_URLS[i];
-    console.log(`Scraping sources for URL: ${url}`);
-
-    try {
-      const sources = await scrapePassMarkCpuSources({ url });
-      console.log(`Scraped ${sources.length} sources`);
-      sources.forEach((cpu) => {
-        map[cpu.name] = cpu;
-      });
-    } catch (err) {
-      console.error('Encountered error when scraping.');
-      console.error(err);
-    }
-
-    await sleep(DELAY_BETWEEN_SOURCE_REQUEST);
+    promises.push(scrapePassMark(url, map));
   }
 
+  // Execute concurrently
+  await concurrent(promises, {
+    limit: context.concurrency ? CONCURRENCY_CHUNK_SIZE : 1,
+    delayBetweenChunksMs: context.requestChunkDelay || DEFAULT_CHUNK_DELAY,
+  });
+
+  // Convert to source object
   const sources: CpuProductSource[] = Object.values(map).map((value) => ({
     groupKey: value.groupKey,
     externalKey: value.externalKey,
@@ -210,12 +231,30 @@ async function getPassMarkSources() {
   return sources;
 }
 
-async function getGeekBenchSources() {
+async function scrapePassMark(
+  url: string,
+  map: Record<string, PassMarkCpuSource>,
+) {
+  console.log(`Scraping sources for URL: ${url}`);
+
+  try {
+    const sources = await scrapePassMarkCpuSources({ url });
+    console.log(`Scraped ${sources.length} sources`);
+    sources.forEach((cpu) => {
+      map[cpu.name] = cpu;
+    });
+  } catch (err) {
+    console.error('Encountered error when scraping.');
+    console.error(err);
+  }
+}
+
+async function getGeekBenchSources(_context: AutomationContext) {
   console.log('Scraping CPU Sources from GeekBench');
 
   const geekBenchSources = await scrapeGeekBenchCpuSources({});
-  await sleep(DELAY_BETWEEN_SOURCE_REQUEST);
 
+  // Convert to source object
   const sources: CpuProductSource[] = Object.values(geekBenchSources).map(
     (value) => ({
       groupKey: value.groupKey,

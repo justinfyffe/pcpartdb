@@ -1,9 +1,8 @@
-import { scrapeCpu } from '@pcpartdb/scraper';
+import { scrapeCpu, ScrapeCpuOptions } from '@pcpartdb/scraper';
 import {
   AutomationAction,
   canAutoUpdateProductField,
   Cpu,
-  CpuDataSource,
   CpuDataSourceKey,
   CpuField,
   CpuUpdate,
@@ -44,6 +43,7 @@ export async function updateCpuAction(
       [CpuDataSourceKey.PassMark]: passMarkSource,
       [CpuDataSourceKey.GeekBench]: geekBenchSource,
     },
+    concurrency: context.concurrency ? 3 : 1,
   });
 
   // Update benchmarks for existing CPU. These do not require approval.
@@ -77,9 +77,7 @@ async function getCpu(cpuId: number, context: AutomationContext) {
   return cpu;
 }
 
-async function fetchCpuData(options: {
-  sources: Record<string, CpuDataSource>;
-}) {
+async function fetchCpuData(options: ScrapeCpuOptions) {
   console.info('Fetching CPU data', options.sources);
 
   // Scrape the CPU data from our sources.
