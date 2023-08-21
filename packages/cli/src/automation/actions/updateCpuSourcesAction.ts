@@ -115,7 +115,10 @@ export async function updateCpuSourcesAction(
         getPassMarkSources(context),
         getGeekBenchSources(context),
       ],
-      { limit: context.concurrency ? 3 : 1 },
+      {
+        limit: context.concurrency ? 3 : 1,
+        delayBetweenChunksMs: context.requestChunkDelay || DEFAULT_CHUNK_DELAY,
+      },
     );
 
   // Upload CPU Sources

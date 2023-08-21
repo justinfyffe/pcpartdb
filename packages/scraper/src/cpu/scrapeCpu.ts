@@ -13,10 +13,11 @@ import { scrapeTechPowerUpCpuData } from './techpowerup';
 export interface ScrapeCpuOptions {
   sources: Record<string, CpuDataSource>;
   concurrency?: number;
+  delayBetweenChunksMs?: number;
 }
 
 export async function scrapeCpu(options: ScrapeCpuOptions) {
-  const { sources, concurrency } = options;
+  const { sources, concurrency, delayBetweenChunksMs } = options;
 
   const techPowerUp = sources[CpuDataSourceKey.TechPowerUp];
   const passMark = sources[CpuDataSourceKey.PassMark];
@@ -31,6 +32,7 @@ export async function scrapeCpu(options: ScrapeCpuOptions) {
     ],
     {
       limit: concurrency || 1,
+      delayBetweenChunksMs: delayBetweenChunksMs || 0,
     },
   );
 

@@ -10,6 +10,7 @@ interface TransactionOptions {
   ctx?: Context;
   isolationLevel?: IsolationLevel;
   timeout?: number;
+  maxWait?: number;
 }
 
 @Injectable()
@@ -36,7 +37,11 @@ export class Database extends DatabaseClient implements OnModuleInit {
 
         return await callback(trx);
       },
-      { isolationLevel: options?.isolationLevel, timeout: options?.timeout },
+      {
+        isolationLevel: options?.isolationLevel,
+        maxWait: options?.maxWait,
+        timeout: options?.timeout,
+      },
     );
   }
 }

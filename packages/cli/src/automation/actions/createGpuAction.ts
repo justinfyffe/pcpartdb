@@ -15,6 +15,8 @@ import {
 } from '@pcpartdb/shared';
 import { AutomationContext } from '../types';
 
+const DEFAULT_DELAY = 30_000;
+
 export async function createGpuAction(
   action: AutomationAction<CreateGpuActionData>,
   context: AutomationContext,
@@ -53,6 +55,7 @@ export async function createGpuAction(
       [GpuDataSourceKey.UlBenchmarks]: ulBenchmarkSource,
     },
     concurrency: context.concurrency ? 3 : 1,
+    delayBetweenChunksMs: context.requestChunkDelay || DEFAULT_DELAY,
   });
 
   // New GPUs have some additional data to be applied

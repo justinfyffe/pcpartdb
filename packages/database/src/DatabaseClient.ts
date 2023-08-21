@@ -3,9 +3,13 @@ import { Prisma, PrismaClient } from '@prisma/client';
 export type IsolationLevel = Prisma.TransactionIsolationLevel;
 export type Transaction = Prisma.TransactionClient;
 
+const DEFAULT_MAX_WAIT = 5_000;
+const DEFAULT_TIMEOUT = 10_000;
+
 interface TransactionOptions {
   isolationLevel?: IsolationLevel;
   timeout?: number;
+  maxWait?: number;
 }
 
 export class DatabaseClient extends PrismaClient {
@@ -21,7 +25,11 @@ export class DatabaseClient extends PrismaClient {
       async (trx) => {
         return await callback(trx);
       },
-      { isolationLevel: options?.isolationLevel, timeout: options?.timeout },
+      {
+        isolationLevel: options?.isolationLevel,
+        timeout: options?.timeout || DEFAULT_TIMEOUT,
+        maxWait: options?.maxWait || DEFAULT_MAX_WAIT,
+      },
     );
   }
 }

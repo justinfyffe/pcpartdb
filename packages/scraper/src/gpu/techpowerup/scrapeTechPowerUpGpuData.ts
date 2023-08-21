@@ -876,7 +876,11 @@ function tokenizeSpecValues($: cheerio.CheerioAPI, label: string) {
     .split(';;')
     .map((val) => val.trim());
 
-  return values.filter((value) => !!value);
+  return values
+    .filter((value) => !!value)
+    .filter((value) => value.toLowerCase() !== 'none')
+    .filter((value) => value.toLowerCase() !== 'unknown')
+    .filter((value) => value.toLowerCase() !== 'n/a');
 }
 
 function parseNumberValue(value: string): [number, string] {

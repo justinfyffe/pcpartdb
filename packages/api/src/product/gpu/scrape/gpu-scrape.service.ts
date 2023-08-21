@@ -20,9 +20,9 @@ export class GpuScrapeService {
     const response: ScrapeProductResponse = { product: {} };
 
     let chipset: Gpu;
-    if (sources[GpuDataSourceKey.Chipset] != null) {
-      const source = sources[GpuDataSourceKey.Chipset] as GpuDataSource;
-      chipset = await this.getChipset(source.chipsetId, ctx);
+    const chipsetSource = sources[GpuDataSourceKey.Chipset] as GpuDataSource;
+    if (chipsetSource?.chipsetId != null) {
+      chipset = await this.getChipset(chipsetSource.chipsetId, ctx);
     }
 
     const scraped = await scrapeGpu({ sources, chipset });

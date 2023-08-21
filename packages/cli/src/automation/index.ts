@@ -7,8 +7,8 @@ import { executeAutomation } from './executeAutomation';
 import { AutomationContext } from './types';
 import { loadAutomationContext } from './utils/context';
 
-const REQUEST_CHUNK_DELAY = 5_000;
-const CONCURRENCY = false;
+const REQUEST_CHUNK_DELAY = 10_000;
+const CONCURRENCY = true;
 
 const AUTOMATION_CRON = '0-59 * * * *';
 const FIVE_MINUTES_MS = 1000 * 60 * 5;

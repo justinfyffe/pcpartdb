@@ -125,10 +125,7 @@ function getBaseClock($: cheerio.CheerioAPI) {
 
 function getBundledCooler($: cheerio.CheerioAPI) {
   const values = tokenizeMultiLine($, 'Bundled Cooler');
-  let value = values.join(', ');
-  if (value.toLowerCase() === 'n/a') {
-    value = null;
-  }
+  const value = values.join(', ') || null;
 
   return createCpuField('bundledCooler', value);
 }
@@ -166,7 +163,7 @@ function getClock($: cheerio.CheerioAPI) {
 
 function getCodename($: cheerio.CheerioAPI) {
   const values = tokenizeMultiLine($, 'Codename');
-  const value = values.join(', ');
+  const value = values.join(', ') || null;
 
   return createCpuField('codename', value);
 }
@@ -318,7 +315,7 @@ function getExtensionsTechnologies($: cheerio.CheerioAPI) {
 
 function getFoundry($: cheerio.CheerioAPI) {
   const values = tokenizeMultiLine($, 'Foundry');
-  const value = values.join(', ');
+  const value = values.join(', ') || null;
 
   return createCpuField('foundry', value);
 }
@@ -635,9 +632,7 @@ function getName($: cheerio.CheerioAPI) {
 
 function getPartNumber($: cheerio.CheerioAPI) {
   const values = tokenizeMultiLine($, 'Part#');
-  const value = values
-    .filter((value) => value?.toLowerCase() != 'unknown' && value != null)
-    .join(', ');
+  const value = values.join(', ') || null;
 
   return createCpuField('partNumber', value);
 }
@@ -837,7 +832,7 @@ function getReleaseDate($: cheerio.CheerioAPI) {
 
 function getSocket($: cheerio.CheerioAPI) {
   const values = tokenizeMultiLine($, 'Socket');
-  const value = values.join(', ');
+  const value = values.join(', ') || null;
 
   return createCpuField('socket', value);
 }
@@ -942,7 +937,11 @@ function tokenizeMultiLine($: cheerio.CheerioAPI, label: string) {
     .split(';;')
     .map((val) => val.trim());
 
-  return values.filter((value) => !!value);
+  return values
+    .filter((value) => !!value)
+    .filter((value) => value.toLowerCase() !== 'none')
+    .filter((value) => value.toLowerCase() !== 'unknown')
+    .filter((value) => value.toLowerCase() !== 'n/a');
 }
 
 function parseNumber(value: string): [number, string] {

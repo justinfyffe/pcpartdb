@@ -1,10 +1,4 @@
 HIGH LEVEL TODO:
-- Automation
-  - improve speed
-    - subscribe to scrapingant
-    - reduce delays
-    - increase concurrency
-      - test
 - Dependencies
   - Update dependencies
 - Security
@@ -12,8 +6,13 @@ HIGH LEVEL TODO:
   - DDoS protection with Cloudflare
   - Rate limit non-staff api calls?
   - Add recaptcha?
-- code cleanup
-  - ui components
+- increase transaction length to 10 seconds
+- performance
+  - clean up ui components
+  - reduce usages of index.ts for ui components
+  - minimize time spent in a interactive transaction:
+    - not everything needs a transaction
+    - https://www.prisma.io/docs/concepts/components/prisma-client/transactions#interactive-transactions
 - Improve performance score (not just g3d mark or cpu mark)
 - Affiliate Ads
   - live price checking for performance/price ranks, cache if it's been recent

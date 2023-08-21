@@ -17,6 +17,8 @@ import deepmerge from 'deepmerge';
 import { compare as generateJsonPatch } from 'fast-json-patch';
 import { AutomationContext } from '../types';
 
+const DEFAULT_DELAY = 30_000;
+
 export async function updateCpuAction(
   action: AutomationAction<UpdateCpuActionData>,
   context: AutomationContext,
@@ -44,6 +46,7 @@ export async function updateCpuAction(
       [CpuDataSourceKey.GeekBench]: geekBenchSource,
     },
     concurrency: context.concurrency ? 3 : 1,
+    delayBetweenChunksMs: context.requestChunkDelay || DEFAULT_DELAY,
   });
 
   // Update benchmarks for existing CPU. These do not require approval.

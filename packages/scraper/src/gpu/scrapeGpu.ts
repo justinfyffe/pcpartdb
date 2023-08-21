@@ -16,10 +16,11 @@ export interface ScrapeGpuOptions {
   sources: Record<string, GpuDataSource>;
   chipset?: Gpu;
   concurrency?: number;
+  delayBetweenChunksMs?: number;
 }
 
 export async function scrapeGpu(options: ScrapeGpuOptions) {
-  const { chipset, sources, concurrency } = options;
+  const { chipset, sources, concurrency, delayBetweenChunksMs } = options;
 
   const techPowerUp = sources[GpuDataSourceKey.TechPowerUp];
   const passMark = sources[GpuDataSourceKey.VideocardBenchmarks];
@@ -36,6 +37,7 @@ export async function scrapeGpu(options: ScrapeGpuOptions) {
       ],
       {
         limit: concurrency || 1,
+        delayBetweenChunksMs: delayBetweenChunksMs || 0,
       },
     );
 

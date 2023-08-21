@@ -14,6 +14,8 @@ import {
 } from '@pcpartdb/shared';
 import { AutomationContext } from '../types';
 
+const DEFAULT_DELAY = 30_000;
+
 export async function createCpuAction(
   action: AutomationAction<CreateCpuActionData>,
   context: AutomationContext,
@@ -48,6 +50,7 @@ export async function createCpuAction(
       [CpuDataSourceKey.GeekBench]: geekBenchSource,
     },
     concurrency: context.concurrency ? 3 : 1,
+    delayBetweenChunksMs: context.requestChunkDelay || DEFAULT_DELAY,
   });
 
   // New CPUs have some additional data to be applied

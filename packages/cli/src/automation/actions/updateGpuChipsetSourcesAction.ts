@@ -142,7 +142,10 @@ export async function updateGpuChipsetSourcesAction(
       getPassMarkSources(context),
       getUlBenchmarkSources(context),
     ],
-    { limit: context.concurrency ? 3 : 1 },
+    {
+      limit: context.concurrency ? 3 : 1,
+      delayBetweenChunksMs: context.requestChunkDelay || DEFAULT_CHUNK_DELAY,
+    },
   );
   const { sources: techPowerUpSources } = techPowerUp;
   const { sources: passMarkSources } = passMark;
