@@ -26,12 +26,7 @@ export class WebsiteController {
   @UseGuards(StaffGuard)
   @UseInterceptors(FileInterceptor('file', MULTER_OPTIONS))
   async uploadSitemap(@Body() body: UploadSitemapRequest, @Ctx() ctx: Context) {
-    return await this.db.transaction(
-      async () => {
-        return await this.service.uploadSitemap(body, ctx);
-      },
-      { ctx },
-    );
+    return await this.service.uploadSitemap(body, ctx);
   }
 
   @Get('sitemap/product-slugs')

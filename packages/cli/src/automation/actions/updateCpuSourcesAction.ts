@@ -17,9 +17,8 @@ import {
 import { sleep } from '../../shared/process';
 import { AutomationContext } from '../types';
 
-const BATCH_SIZE = 50;
-const DEFAULT_CHUNK_DELAY = 30_000;
-const DELAY_BETWEEN_UPLOAD = 3_000;
+const BATCH_SIZE = 10;
+const DELAY_BETWEEN_UPLOAD = 10_000;
 const CONCURRENCY_CHUNK_SIZE = 3;
 
 const TECHPOWERUP_URLS = [
@@ -117,7 +116,7 @@ export async function updateCpuSourcesAction(
       ],
       {
         limit: context.concurrency ? 3 : 1,
-        delayBetweenChunksMs: context.requestChunkDelay || DEFAULT_CHUNK_DELAY,
+        delayBetweenChunksMs: context.requestChunkDelay,
       },
     );
 
@@ -165,7 +164,7 @@ async function getTechPowerUpSources(context: AutomationContext) {
   // Execute concurrently
   await concurrent(promises, {
     limit: context.concurrency ? CONCURRENCY_CHUNK_SIZE : 1,
-    delayBetweenChunksMs: context.requestChunkDelay || DEFAULT_CHUNK_DELAY,
+    delayBetweenChunksMs: context.requestChunkDelay,
   });
 
   // Convert to source object
@@ -216,7 +215,7 @@ async function getPassMarkSources(context: AutomationContext) {
   // Execute concurrently
   await concurrent(promises, {
     limit: context.concurrency ? CONCURRENCY_CHUNK_SIZE : 1,
-    delayBetweenChunksMs: context.requestChunkDelay || DEFAULT_CHUNK_DELAY,
+    delayBetweenChunksMs: context.requestChunkDelay,
   });
 
   // Convert to source object

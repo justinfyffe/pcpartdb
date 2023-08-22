@@ -62,7 +62,10 @@ function createCpuField<T = unknown>(
   };
 
   if (!hasProductFieldValue(productField)) {
-    productField.value = null;
+    // Arrays cannot be null
+    if (!Array.isArray(productField.value)) {
+      productField.value = null;
+    }
   }
 
   return productField;

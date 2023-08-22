@@ -93,7 +93,7 @@ export const GpuChipsetSourceCard = (props: GpuChipsetSourceCardProps) => {
       ulBenchmarkSources[0] ||
       null,
   );
-  const [archiveUlBenchmark, setArchiveUlBenchmark] = useState(!!passMark);
+  const [archiveUlBenchmark, setArchiveUlBenchmark] = useState(!!ulBenchmark);
 
   const allArchived = useMemo(() => {
     return (

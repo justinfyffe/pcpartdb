@@ -22,6 +22,8 @@ export interface AutomationCommandArgs {
 export async function automationCommand(args: AutomationCommandArgs) {
   checkRequiredParameters(args.env || DEFAULT_ENV);
 
+  let successCount = 0;
+  let failureCount = 0;
   let executing = false;
   let terminate = false;
   // Handle graceful shutdown
@@ -51,28 +53,35 @@ export async function automationCommand(args: AutomationCommandArgs) {
       }
 
       try {
+        executing = true;
+
         const status = await context.api.get<AutomationStatus>(
           'automation/status',
           { retries: 2 },
         );
-        if (!status.enabled) {
+
+        if (status.enabled) {
+          await executeAutomation(context);
+          successCount++;
+        } else {
           console.log(
             'Received disabled signal from API. Sleeping for 5 minutes and trying again.',
           );
           await sleep(FIVE_MINUTES_MS);
-          return;
         }
       } catch (error) {
+        failureCount++;
         console.log(
-          'Encountered error when checking status. Sleeping for 5 minutes and trying again.',
+          'Encountered error when running. Sleeping for 5 minutes and trying again.',
         );
         await sleep(FIVE_MINUTES_MS);
-        return;
-      }
+      } finally {
+        console.log(
+          `Run Stats: ${successCount} successes, ${failureCount} failures`,
+        );
 
-      executing = true;
-      await executeAutomation(context);
-      executing = false;
+        executing = false;
+      }
     });
   } else {
     await executeAutomation(context);

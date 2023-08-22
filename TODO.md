@@ -1,12 +1,15 @@
 HIGH LEVEL TODO:
+- Automation improvements
+  - gpu retail models don't need to update as much. except for price?
+  - double check indexes and looping sql queries
 - Dependencies
-  - Update dependencies
+  - Update framework dependencies
 - Security
-  - Max file limit on sitemap patyh only
+  - Max file limit on sitemap path only
   - DDoS protection with Cloudflare
   - Rate limit non-staff api calls?
   - Add recaptcha?
-- increase transaction length to 10 seconds
+  - database auto-backup
 - performance
   - clean up ui components
   - reduce usages of index.ts for ui components

@@ -9,6 +9,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import {
+  AutomationActionStatus,
   AutomationStatus,
   CreateAutomationActionRequest,
   ListAutomationActionsRequest,
@@ -98,7 +99,11 @@ export class AutomationController {
     return await this.db.transaction(
       async () => {
         const id = Number(idStr);
-        await this.service.cancel(id, ctx);
+        await this.service.updateActionStatus(
+          id,
+          AutomationActionStatus.Canceled,
+          ctx,
+        );
       },
       { ctx },
     );
@@ -110,7 +115,11 @@ export class AutomationController {
     return await this.db.transaction(
       async () => {
         const id = Number(idStr);
-        await this.service.markAsPending(id, ctx);
+        await this.service.updateActionStatus(
+          id,
+          AutomationActionStatus.Pending,
+          ctx,
+        );
       },
       { ctx },
     );
@@ -122,7 +131,11 @@ export class AutomationController {
     return await this.db.transaction(
       async () => {
         const id = Number(idStr);
-        await this.service.markAsProcessing(id, ctx);
+        await this.service.updateActionStatus(
+          id,
+          AutomationActionStatus.Processing,
+          ctx,
+        );
       },
       { ctx },
     );
@@ -134,7 +147,11 @@ export class AutomationController {
     return await this.db.transaction(
       async () => {
         const id = Number(idStr);
-        await this.service.markAsProcessed(id, ctx);
+        await this.service.updateActionStatus(
+          id,
+          AutomationActionStatus.Processed,
+          ctx,
+        );
       },
       { ctx },
     );
@@ -146,7 +163,11 @@ export class AutomationController {
     return await this.db.transaction(
       async () => {
         const id = Number(idStr);
-        await this.service.markAsFailed(id, ctx);
+        await this.service.updateActionStatus(
+          id,
+          AutomationActionStatus.Failed,
+          ctx,
+        );
       },
       { ctx },
     );

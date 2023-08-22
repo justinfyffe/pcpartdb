@@ -31,7 +31,7 @@ const productSourceValidator = Joi.object({
 }).options({ abortEarly: false });
 
 export const upsertProductSourcesValidator = Joi.object({
-  sources: Joi.array().allow(productSourceValidator),
+  sources: Joi.array().allow(productSourceValidator).max(10),
 }).options({ abortEarly: false });
 
 export const autocompleteProductSourcesRequestValidator = Joi.object({

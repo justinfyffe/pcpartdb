@@ -21,8 +21,6 @@ import deepmerge from 'deepmerge';
 import { compare as generateJsonPatch } from 'fast-json-patch';
 import { AutomationContext } from '../types';
 
-const DEFAULT_DELAY = 30_000;
-
 export async function updateGpuAction(
   action: AutomationAction<UpdateGpuActionData>,
   context: AutomationContext,
@@ -58,7 +56,7 @@ export async function updateGpuAction(
       [GpuDataSourceKey.UlBenchmarks]: ulBenchmarkSource,
     },
     concurrency: context.concurrency ? 3 : 1,
-    delayBetweenChunksMs: context.requestChunkDelay || DEFAULT_DELAY,
+    delayBetweenChunksMs: context.requestChunkDelay,
   });
 
   // Update benchmarks for existing GPU. These do not require approval.

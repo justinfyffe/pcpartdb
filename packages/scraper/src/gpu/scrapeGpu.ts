@@ -100,5 +100,11 @@ async function scrapeUlBenchmarks(source: GpuDataSource) {
   if (source?.url == null) {
     return null;
   }
-  return await scrapeUlBenchmarksGpuData({ url: source.url });
+
+  try {
+    return await scrapeUlBenchmarksGpuData({ url: source.url });
+  } catch (e) {
+    console.error('Fetching GPU data from UL Benchmarks failed. Ignoring it.');
+    return null;
+  }
 }

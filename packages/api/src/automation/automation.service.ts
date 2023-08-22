@@ -16,7 +16,6 @@ import {
   ProductType,
   UpdateCpuActionData,
   UpdateGpuActionData,
-  ValidationErrorType,
 } from '@pcpartdb/shared';
 import * as fs from 'fs';
 import * as fsPromises from 'fs/promises';
@@ -112,97 +111,17 @@ export class AutomationService {
     await this.repository.create(entity, ctx);
   }
 
-  async cancel(id: number, ctx: Context) {
+  async updateActionStatus(
+    id: number,
+    status: AutomationActionStatus,
+    ctx: Context,
+  ) {
     const entity = await this.repository.findById(id, ctx);
     if (entity == null) {
       throw notFoundError({ id });
-    } else if (entity.status !== AutomationActionStatus.Pending) {
-      throw badRequestError({
-        property: 'status',
-        constraint: ValidationErrorType.InvalidStatus,
-      });
     }
 
-    await this.repository.update(
-      id,
-      { status: AutomationActionStatus.Canceled },
-      ctx,
-    );
-  }
-
-  async markAsPending(id: number, ctx: Context) {
-    const entity = await this.repository.findById(id, ctx);
-    if (entity == null) {
-      throw notFoundError({ id });
-    } else if (entity.status !== AutomationActionStatus.Pending) {
-      throw badRequestError({
-        property: 'status',
-        constraint: ValidationErrorType.InvalidStatus,
-      });
-    }
-
-    await this.repository.update(
-      id,
-      { status: AutomationActionStatus.Pending },
-      ctx,
-    );
-  }
-
-  async markAsProcessing(id: number, ctx: Context) {
-    const entity = await this.repository.findById(id, ctx);
-    if (entity == null) {
-      throw notFoundError({ id });
-    } else if (entity.status !== AutomationActionStatus.Pending) {
-      throw badRequestError({
-        property: 'status',
-        constraint: ValidationErrorType.InvalidStatus,
-      });
-    }
-
-    await this.repository.update(
-      id,
-      { status: AutomationActionStatus.Processing },
-      ctx,
-    );
-  }
-
-  async markAsProcessed(id: number, ctx: Context) {
-    const entity = await this.repository.findById(id, ctx);
-    if (entity == null) {
-      throw notFoundError({ id });
-    } else if (entity.status !== AutomationActionStatus.Processing) {
-      throw badRequestError({
-        property: 'status',
-        constraint: ValidationErrorType.InvalidStatus,
-      });
-    }
-
-    await this.repository.update(
-      id,
-      { status: AutomationActionStatus.Processed },
-      ctx,
-    );
-  }
-
-  async markAsFailed(id: number, ctx: Context) {
-    const entity = await this.repository.findById(id, ctx);
-    if (entity == null) {
-      throw notFoundError({ id });
-    } else if (
-      entity.status !== AutomationActionStatus.Pending &&
-      entity.status !== AutomationActionStatus.Processing
-    ) {
-      throw badRequestError({
-        property: 'status',
-        constraint: ValidationErrorType.InvalidStatus,
-      });
-    }
-
-    await this.repository.update(
-      id,
-      { status: AutomationActionStatus.Failed },
-      ctx,
-    );
+    await this.repository.update(id, { status }, ctx);
   }
 
   /**

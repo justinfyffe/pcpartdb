@@ -1008,8 +1008,12 @@ function createCpuField<T = unknown>(
     meta: { ...(meta ?? {}), fieldKey, autoUpdate: true },
   };
 
+  // Reset to null if a non-value
   if (!hasProductFieldValue(productField)) {
-    productField.value = null;
+    // Arrays cannot be null
+    if (!Array.isArray(productField.value)) {
+      productField.value = null;
+    }
   }
 
   return productField;

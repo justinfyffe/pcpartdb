@@ -469,6 +469,7 @@ async function compressSitemap(path: string, output: string) {
 
 async function createTarArchive() {
   const files = await fsPromises.readdir(sitemapPath());
+  console.log('Creating tar archive');
   await tar.c(
     {
       cwd: '../../data/automation/sitemaps',
@@ -496,10 +497,15 @@ async function fetchProductSlugs(
 async function uploadSitemaps(archivePath: string, context: AutomationContext) {
   const data = new FormData();
   data.append('file', fs.createReadStream(archivePath));
+  console.log('Uploading sitemaps');
   await context.api.post(
     'website/sitemap',
     data,
     {},
-    { headers: { 'content-type': 'multipart/form-data' } },
+    {
+      headers: { 'content-type': 'multipart/form-data' },
+      maxBodyLength: Infinity,
+      maxContentLength: Infinity,
+    },
   );
 }

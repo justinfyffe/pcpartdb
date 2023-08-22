@@ -12,7 +12,10 @@ export async function loadAutomationContext() {
 
   const json = await fsPromises.readFile(FILE_PATH, 'utf-8');
   if (json) {
-    return JSON.parse(json) as Omit<AutomationContext, 'api'>;
+    return JSON.parse(json) as Omit<
+      AutomationContext,
+      'api' | 'concurrency' | 'requestChunkDelay'
+    >;
   }
 
   return {} as Omit<AutomationContext, 'api'>;

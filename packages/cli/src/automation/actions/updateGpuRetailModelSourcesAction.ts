@@ -12,8 +12,8 @@ import {
 import { sleep } from '../../shared/process';
 import { AutomationContext } from '../types';
 
-const BATCH_SIZE = 50;
-const DELAY_BETWEEN_UPLOAD = 3_000;
+const BATCH_SIZE = 10;
+const DELAY_BETWEEN_UPLOAD = 10_000;
 
 export async function updateGpuRetailModelSourcesAction(
   action: AutomationAction<UpdateGpuRetailModelSourcesActionData>,
@@ -113,9 +113,7 @@ async function uploadGpuSources(
     try {
       await context.api.post(
         'products/sources',
-        {
-          sources: batch,
-        } as UpsertProductSourcesRequest,
+        { sources: batch } as UpsertProductSourcesRequest,
         { retries: 2 },
       );
       totalSources += batch.length;

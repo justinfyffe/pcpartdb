@@ -127,7 +127,7 @@ export class ViewModelsController {
   async compareCpus(@Param('slug') slug: string, @Ctx() ctx: Context) {
     return await this.db.transaction(
       () => this.compareCpusViewModelService.viewModel(slug, ctx),
-      { ctx },
+      { ctx, isolationLevel: 'ReadUncommitted' },
     );
   }
 
@@ -138,7 +138,7 @@ export class ViewModelsController {
         const data = JSON.parse(q) as ListCpusQuery;
         return await this.listCpusViewModelService.viewModel(data, ctx);
       },
-      { ctx },
+      { ctx, isolationLevel: 'ReadUncommitted' },
     );
   }
 
@@ -146,7 +146,7 @@ export class ViewModelsController {
   async viewCpu(@Param('slug') slug: string, @Ctx() ctx: Context) {
     return await this.db.transaction(
       () => this.viewCpuViewModelService.viewModel(slug, ctx),
-      { ctx },
+      { ctx, isolationLevel: 'ReadUncommitted' },
     );
   }
 
@@ -154,7 +154,7 @@ export class ViewModelsController {
   async compareGpus(@Param('slug') slug: string, @Ctx() ctx: Context) {
     return await this.db.transaction(
       () => this.compareGpusViewModelService.viewModel(slug, ctx),
-      { ctx },
+      { ctx, isolationLevel: 'ReadUncommitted' },
     );
   }
 
@@ -165,7 +165,7 @@ export class ViewModelsController {
         const data = JSON.parse(q) as ListGpusQuery;
         return await this.listGpusViewModelService.viewModel(data, ctx);
       },
-      { ctx },
+      { ctx, isolationLevel: 'ReadUncommitted' },
     );
   }
 
@@ -173,7 +173,7 @@ export class ViewModelsController {
   async viewGpu(@Param('slug') slug: string, @Ctx() ctx: Context) {
     return await this.db.transaction(
       () => this.viewGpuViewModelService.viewModel(slug, ctx),
-      { ctx },
+      { ctx, isolationLevel: 'ReadUncommitted' },
     );
   }
 
@@ -189,7 +189,7 @@ export class ViewModelsController {
   async home(@Ctx() ctx: Context) {
     return await this.db.transaction(
       () => this.homeViewModelService.viewModel(ctx),
-      { ctx },
+      { ctx, isolationLevel: 'ReadUncommitted' },
     );
   }
 }

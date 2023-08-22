@@ -8,8 +8,8 @@ export interface AutomationMetadata {
 
 export interface AutomationContext {
   api: ApiClient;
-  requestChunkDelay?: number;
-  concurrency?: boolean;
+  requestChunkDelay: number;
+  concurrency: boolean;
 
   metadata?: AutomationMetadata;
 }
