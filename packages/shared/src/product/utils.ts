@@ -93,6 +93,7 @@ export function canAutoUpdateProductField(field: ProductField) {
   return field?.meta?.autoUpdate ?? true;
 }
 
+// TODO: replace deepmerge
 export function mergeProducts<TProduct extends Product>(
   original: TProduct,
   updated: TProduct,
