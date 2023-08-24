@@ -92,7 +92,7 @@ export interface GpuDataSource {
   url?: string;
 }
 
-interface GpuFields {
+export interface GpuFields {
   // General Info
   partNumber?: GpuField<string>;
   company?: GpuField<string>;

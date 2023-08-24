@@ -44,10 +44,6 @@ export async function scrapeGpu(options: ScrapeGpuOptions) {
   // Merge scraped results
   let hasRetailModels = false;
   let scrapedProduct: Partial<Product> = { meta: { dataSources: {} } };
-  if (chipsetResult != null) {
-    const { product } = chipsetResult;
-    scrapedProduct = deepmerge(scrapedProduct, product);
-  }
   if (techPowerUpResult != null) {
     const response = techPowerUpResult as ScrapeProductResponse & {
       hasRetailModels: boolean;
@@ -67,6 +63,10 @@ export async function scrapeGpu(options: ScrapeGpuOptions) {
     scrapedProduct = deepmerge(scrapedProduct, product);
     scrapedProduct.meta.dataSources[GpuDataSourceKey.UlBenchmarks] =
       ulBenchmarks;
+  }
+  if (chipsetResult != null) {
+    const { product } = chipsetResult;
+    scrapedProduct = deepmerge(scrapedProduct, product);
   }
 
   return {

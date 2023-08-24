@@ -4,16 +4,15 @@ import {
   canAutoUpdateProductField,
   Cpu,
   CpuDataSourceKey,
-  CpuField,
   CpuUpdate,
   CreateProductUpdateRequest,
   hasProductFieldValue,
+  mergeProducts,
   productFieldValue,
   ProductType,
   ProductUpdateStatus,
   UpdateCpuActionData,
 } from '@pcpartdb/shared';
-import deepmerge from 'deepmerge';
 import { compare as generateJsonPatch } from 'fast-json-patch';
 import { AutomationContext } from '../types';
 
@@ -151,25 +150,7 @@ async function updateBenchmarks(
 }
 
 function mergeCpus(originalCpu: Cpu, scrapedCpu: Cpu) {
-  const arrayMerge = (x: unknown[], y: unknown[]) => y;
-  const filteredMerge = (x: unknown, y: unknown) => {
-    const field = x as CpuField;
-
-    // Auto-updating is disabled. Skip merging.
-    if (field?.meta?.autoUpdate != null && field.meta.autoUpdate === false) {
-      return x;
-    }
-
-    return deepmerge(x, y, {
-      customMerge: () => filteredMerge,
-      arrayMerge,
-    });
-  };
-
-  const result = deepmerge(originalCpu, scrapedCpu, {
-    customMerge: () => filteredMerge,
-    arrayMerge,
-  });
+  const result = mergeProducts(originalCpu, scrapedCpu);
 
   // Reset name and slug as these might have been overwritten
   result.name = originalCpu.name;

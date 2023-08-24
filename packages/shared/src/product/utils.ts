@@ -1,5 +1,6 @@
+import deepmerge from 'deepmerge';
 import { PRODUCT_FIELD_LABELS } from './consts';
-import { ProductField, ProductFieldKey, ProductType } from './types';
+import { Product, ProductField, ProductFieldKey, ProductType } from './types';
 
 export function getProductFieldLabel(
   productType: ProductType,
@@ -90,4 +91,33 @@ export function compareProductFields(
 
 export function canAutoUpdateProductField(field: ProductField) {
   return field?.meta?.autoUpdate ?? true;
+}
+
+export function mergeProducts<TProduct extends Product>(
+  original: TProduct,
+  updated: TProduct,
+): TProduct {
+  const arrayMerge = (x: unknown[], y: unknown[]) => y;
+  const filteredMerge = (x: unknown, y: unknown) => {
+    const fieldX = x as ProductField;
+
+    // Auto-updating is disabled. Skip merging.
+    if (
+      isProductField(fieldX) &&
+      fieldX?.meta?.autoUpdate != null &&
+      fieldX.meta.autoUpdate === false
+    ) {
+      return fieldX;
+    }
+
+    return deepmerge(x, y, {
+      customMerge: () => filteredMerge,
+      arrayMerge,
+    });
+  };
+
+  return deepmerge(original as unknown, updated as unknown, {
+    customMerge: () => filteredMerge,
+    arrayMerge,
+  }) as TProduct;
 }

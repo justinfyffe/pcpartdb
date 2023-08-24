@@ -1,12 +1,7 @@
-import {
-  Cpu,
-  CpuFieldKey,
-  CpuFieldMeta,
-  hasProductFieldValue,
-  ScrapeProductResponse,
-} from '@pcpartdb/shared';
+import { Cpu, ScrapeProductResponse } from '@pcpartdb/shared';
 import * as cheerio from 'cheerio';
 import { scraper } from '../../scraper';
+import { createCpuField } from '../utils';
 
 export interface ScrapePassMarkCpuDataOptions {
   url: string;
@@ -49,24 +44,4 @@ function getSingleThreadScore($: cheerio.CheerioAPI) {
 
   const value = singleThreadScore ? Number(singleThreadScore) : null;
   return createCpuField('cpuMarkSingleThread', value);
-}
-
-function createCpuField<T = unknown>(
-  fieldKey: CpuFieldKey,
-  value: T,
-  meta?: CpuFieldMeta,
-) {
-  const productField = {
-    value,
-    meta: { ...(meta ?? {}), fieldKey, autoUpdate: true },
-  };
-
-  if (!hasProductFieldValue(productField)) {
-    // Arrays cannot be null
-    if (!Array.isArray(productField.value)) {
-      productField.value = null;
-    }
-  }
-
-  return productField;
 }

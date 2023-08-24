@@ -6,6 +6,7 @@ import {
 } from '@pcpartdb/shared';
 import * as cheerio from 'cheerio';
 import { scraper } from '../../scraper';
+import { createGpuField } from '../utils';
 
 export interface ScrapePassMarkGpuDataOptions {
   url: string;
@@ -33,13 +34,7 @@ export async function scrapePassMarkGpuData(
 function getG3dMark($: cheerio.CheerioAPI): GpuField<number> {
   const g3dMark = $('.speedicon').siblings('span').first().text();
   const value = g3dMark ? Number(g3dMark) : null;
-  return {
-    value,
-    meta: {
-      fieldKey: 'g3dMark',
-      autoUpdate: true,
-    },
-  };
+  return createGpuField('g3dMark', value);
 }
 
 function getG2dMark($: cheerio.CheerioAPI): GpuField<number> {
@@ -53,13 +48,7 @@ function getG2dMark($: cheerio.CheerioAPI): GpuField<number> {
     .trim();
 
   const value = g2dMark ? Number(g2dMark) : null;
-  return {
-    value,
-    meta: {
-      fieldKey: 'g2dMark',
-      autoUpdate: true,
-    },
-  };
+  return createGpuField('g2dMark', value);
 }
 
 function getMarketSegment(
@@ -83,11 +72,5 @@ function getMarketSegment(
     value = GpuMarketSegmentValue.Workstation;
   }
 
-  return {
-    value,
-    meta: {
-      fieldKey: 'marketSegment',
-      autoUpdate: true,
-    },
-  };
+  return createGpuField('marketSegment', value);
 }

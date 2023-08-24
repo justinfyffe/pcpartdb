@@ -1,4 +1,10 @@
-import { GpuProductType, ProductType } from '@pcpartdb/shared';
+import {
+  GpuFieldKey,
+  GpuFieldMeta,
+  GpuProductType,
+  hasProductFieldValue,
+  ProductType,
+} from '@pcpartdb/shared';
 
 interface GenerateGpuGroupKeyOptions {
   gpuType: GpuProductType;
@@ -40,4 +46,25 @@ export function generateGpuGroupKey(options: GenerateGpuGroupKeyOptions) {
     .join('_');
 
   return `${type}__${gpuType}__${company}__${name}`;
+}
+
+export function createGpuField<T = unknown>(
+  fieldKey: GpuFieldKey,
+  value: T,
+  meta?: GpuFieldMeta,
+) {
+  const productField = {
+    value,
+    meta: { ...(meta ?? {}), fieldKey, autoUpdate: true },
+  };
+
+  // Reset to null if a non-value
+  if (!hasProductFieldValue(productField)) {
+    // Arrays cannot be null
+    if (!Array.isArray(productField.value)) {
+      productField.value = null;
+    }
+  }
+
+  return productField;
 }

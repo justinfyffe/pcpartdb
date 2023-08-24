@@ -2,8 +2,6 @@ import {
   ClockSpeedUnit,
   convertToCpuMemoryChannelNumber,
   Cpu,
-  CpuFieldKey,
-  CpuFieldMeta,
   CpuMarketSegmentValue,
   CpuProductionStatusValue,
   DateFormat,
@@ -20,6 +18,7 @@ import {
 import * as cheerio from 'cheerio';
 import { format as formatDateFn, parse as parseDateFn } from 'date-fns';
 import { scraper } from '../../scraper';
+import { createCpuField } from '../utils';
 
 export interface ScrapeTechPowerUpCpuDataOptions {
   url: string;
@@ -996,25 +995,4 @@ function parseDate(
   } catch (e) {
     return null;
   }
-}
-
-function createCpuField<T = unknown>(
-  fieldKey: CpuFieldKey,
-  value: T,
-  meta?: CpuFieldMeta,
-) {
-  const productField = {
-    value,
-    meta: { ...(meta ?? {}), fieldKey, autoUpdate: true },
-  };
-
-  // Reset to null if a non-value
-  if (!hasProductFieldValue(productField)) {
-    // Arrays cannot be null
-    if (!Array.isArray(productField.value)) {
-      productField.value = null;
-    }
-  }
-
-  return productField;
 }

@@ -1,4 +1,9 @@
-import { ProductType } from '@pcpartdb/shared';
+import {
+  CpuFieldKey,
+  CpuFieldMeta,
+  hasProductFieldValue,
+  ProductType,
+} from '@pcpartdb/shared';
 
 interface GenerateCpuGroupKeyOptions {
   company: string;
@@ -56,4 +61,25 @@ export function generateCpuGroupKey(options: GenerateCpuGroupKeyOptions) {
     .join('_');
 
   return `${type}__${company}__${name}`;
+}
+
+export function createCpuField<T = unknown>(
+  fieldKey: CpuFieldKey,
+  value: T,
+  meta?: CpuFieldMeta,
+) {
+  const productField = {
+    value,
+    meta: { ...(meta ?? {}), fieldKey, autoUpdate: true },
+  };
+
+  // Reset to null if a non-value
+  if (!hasProductFieldValue(productField)) {
+    // Arrays cannot be null
+    if (!Array.isArray(productField.value)) {
+      productField.value = null;
+    }
+  }
+
+  return productField;
 }

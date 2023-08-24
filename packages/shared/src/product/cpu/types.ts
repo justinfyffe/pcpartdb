@@ -73,7 +73,7 @@ export interface CpuDataSource {
   url?: string;
 }
 
-interface CpuFields {
+export interface CpuFields {
   // General Info
   partNumber?: CpuField<string>;
   company?: CpuField<string>;

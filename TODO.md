@@ -1,16 +1,25 @@
 HIGH LEVEL TODO:
 - Automation improvements
+  - improve merging logic
+    - write a custom deep merge, don't rely on deepmerge library
+      - (custom merge is broken)
+    - if field is undefined, then choose the non-undefined one
+  - upload multiple files for sitemap instead of 1 big archive
   - gpu retail models don't need to update as much. except for price?
   - double check indexes and looping sql queries
+  - some slowdown when upserting sources
 - Dependencies
   - Update framework dependencies
+  - replace axios with fetch
 - Security
+  - setup weekly backups on digital ocean
   - Max file limit on sitemap path only
   - DDoS protection with Cloudflare
   - Rate limit non-staff api calls?
   - Add recaptcha?
   - database auto-backup
 - performance
+  - add caching
   - clean up ui components
   - reduce usages of index.ts for ui components
   - minimize time spent in a interactive transaction:
@@ -25,7 +34,6 @@ HIGH LEVEL TODO:
 - More benchmarks, fps averages (can have actual and estimated based on similar)
 - Glossary
 - Soft delete everything. Hard delete should be rare.
-- auto-backup system
 - seamless deployment
   - use docker to build on pc instead of server
   - use docker in general
@@ -41,24 +49,6 @@ HIGH LEVEL TODO:
 - auto-updates
   - gpu sources - chipsets and retail models
     - two separate tasks: one for chipsets, and one for retail models
-
-AUTOMATION TESTING:
-- [] Terminate during action
-- [] CLI
-  - [x] verify only auto-updated fields get updated
-  - [] Fetches New CPU Sources
-  - [] Auto-archives CPU sources after fetching
-  - [] Saving archives without action creation
-  - [] Create CPU can archive, and creates action
-  - [] Apply to CPU updates it on cpu, and creates action
-  - [] Create CPU action fetches data and creates a product update
-  - [x] Update CPU action fetches data and creates a product update
-  - [] Approving update for new cpu creates cpu
-  - [x] Approving update for updating cpu updates cpu
-  - [x] rejecting doesnt apply
-  - [] Gets backlog entry returns the next cpu to update
-  - [x] Gets next entry gets next item in queue
-  - [] Test automation queue
 
 CODE CLEANUP TASKS
 - View Models

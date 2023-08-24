@@ -1,6 +1,7 @@
 import { Gpu, GpuField, ScrapeProductResponse } from '@pcpartdb/shared';
 import * as cheerio from 'cheerio';
 import { scraper } from '../../scraper';
+import { createGpuField } from '../utils';
 
 export interface ScrapeUlBenchmarksGpuDataOptions {
   url: string;
@@ -27,8 +28,5 @@ function getTimespyGraphics($: cheerio.CheerioAPI): GpuField<number> {
   const timespyGraphics = $('.result-pimp-badge-score-item').first().text();
 
   const value = timespyGraphics ? Number(timespyGraphics) : null;
-  return {
-    value,
-    meta: { fieldKey: 'timespyGraphics', autoUpdate: true },
-  };
+  return createGpuField('timespyGraphics', value);
 }

@@ -7,17 +7,16 @@ import {
   CreateProductUpdateRequest,
   Gpu,
   GpuDataSourceKey,
-  GpuField,
   GpuProductType,
   GpuUpdate,
   hasProductFieldValue,
+  mergeProducts,
   productFieldValue,
   ProductType,
   ProductUpdateStatus,
   UpdateGpuActionData,
   UpdateGpuRetailModelSourcesActionData,
 } from '@pcpartdb/shared';
-import deepmerge from 'deepmerge';
 import { compare as generateJsonPatch } from 'fast-json-patch';
 import { AutomationContext } from '../types';
 
@@ -158,25 +157,7 @@ async function updateBenchmarks(
 }
 
 function mergeGpus(originalGpu: Gpu, scrapedGpu: Gpu) {
-  const arrayMerge = (x: unknown[], y: unknown[]) => y;
-  const filteredMerge = (x: unknown, y: unknown) => {
-    const field = x as GpuField;
-
-    // Auto-updating is disabled. Skip merging.
-    if (field?.meta?.autoUpdate != null && field.meta.autoUpdate === false) {
-      return x;
-    }
-
-    return deepmerge(x, y, {
-      customMerge: () => filteredMerge,
-      arrayMerge,
-    });
-  };
-
-  const result = deepmerge(originalGpu, scrapedGpu, {
-    customMerge: () => filteredMerge,
-    arrayMerge,
-  });
+  const result = mergeProducts(originalGpu, scrapedGpu);
 
   // Reset name and slug as these might have been overwritten
   result.name = originalGpu.name;
