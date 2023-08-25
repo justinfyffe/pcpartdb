@@ -281,7 +281,7 @@ function getLength($: cheerio.CheerioAPI): GpuField<number> {
 function getMarketSegment(
   $: cheerio.CheerioAPI,
 ): GpuField<GpuMarketSegmentValue> {
-  let value: GpuMarketSegmentValue;
+  let value: GpuMarketSegmentValue = null;
 
   const description = $('.desc.p').text().toLowerCase();
   if (description.includes('mobile graphics chip')) {
@@ -300,11 +300,7 @@ function getMarketSegment(
     value = GpuMarketSegmentValue.Desktop;
   }
 
-  if (value != null) {
-    return createGpuField('marketSegment', value);
-  }
-
-  return undefined;
+  return createGpuField('marketSegment', value);
 }
 
 function getMemoryBandwidth($: cheerio.CheerioAPI): GpuField<number> {

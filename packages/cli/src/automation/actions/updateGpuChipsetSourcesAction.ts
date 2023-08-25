@@ -10,6 +10,7 @@ import {
   AutoArchiveProductSourcesRequest,
   AutomationAction,
   concurrent,
+  ConcurrentFn,
   GpuDataSourceKey,
   GpuProductSource,
   ProductType,
@@ -137,9 +138,9 @@ export async function updateGpuChipsetSourcesAction(
   // Scrape GPU Sources (concurrently if desired)
   const [techPowerUp, passMark, ulBenchmarks] = await concurrent(
     [
-      getTechPowerUpSources(context),
-      getPassMarkSources(context),
-      getUlBenchmarkSources(context),
+      () => getTechPowerUpSources(context),
+      () => getPassMarkSources(context),
+      () => getUlBenchmarkSources(context),
     ],
     {
       limit: context.concurrency ? 3 : 1,
@@ -177,7 +178,7 @@ async function getTechPowerUpSources(context: AutomationContext) {
   const map: Record<string, TechPowerUpGpuSource> = {};
 
   // Construct requests
-  const promises: Promise<void>[] = [];
+  const promises: ConcurrentFn[] = [];
   for (let i = 0; i < TECHPOWERUP_URLS.length; ++i) {
     const { company, urls } = TECHPOWERUP_URLS[i];
 
@@ -187,7 +188,7 @@ async function getTechPowerUpSources(context: AutomationContext) {
       .map(({ value }) => value);
 
     for (const url of randomizedUrls) {
-      promises.push(scrapeTechPowerUp(url, company, map));
+      promises.push(() => scrapeTechPowerUp(url, company, map));
     }
   }
 
@@ -236,10 +237,10 @@ async function getPassMarkSources(context: AutomationContext) {
   const map: Record<string, PassMarkGpuSource> = {};
 
   // Construct requests
-  const promises: Promise<void>[] = [];
+  const promises: ConcurrentFn[] = [];
   for (let i = 0; i < PASSMARK_URLS.length; ++i) {
     const url = PASSMARK_URLS[i];
-    promises.push(scrapePassMark(url, map));
+    promises.push(() => scrapePassMark(url, map));
   }
 
   // Execute concurrently
@@ -287,10 +288,10 @@ async function getUlBenchmarkSources(context: AutomationContext) {
   const map: Record<string, UlBenchmarkGpuSource> = {};
 
   // Construct requests
-  const promises: Promise<void>[] = [];
+  const promises: ConcurrentFn[] = [];
   for (let i = 0; i < UL_BENCHMARK_QUERIES.length; ++i) {
     const query = UL_BENCHMARK_QUERIES[i];
-    promises.push(scrapeUlBenchmark(query, map));
+    promises.push(() => scrapeUlBenchmark(query, map));
   }
 
   // Execute concurrently

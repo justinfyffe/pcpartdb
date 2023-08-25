@@ -11,6 +11,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import {
   GetSitemapProductSlugsRequest,
   UploadSitemapRequest,
+  UploadSitemapsRequest,
 } from '@pcpartdb/shared';
 import { StaffGuard } from '../auth/staff.guard';
 import { Database } from '../database';
@@ -21,6 +22,16 @@ import { WebsiteService } from './website.service';
 @Controller('website')
 export class WebsiteController {
   constructor(private service: WebsiteService, private db: Database) {}
+
+  @Post('sitemaps')
+  @UseGuards(StaffGuard)
+  @UseInterceptors(FileInterceptor('file', MULTER_OPTIONS))
+  async uploadSitemaps(
+    @Body() body: UploadSitemapsRequest,
+    @Ctx() ctx: Context,
+  ) {
+    return await this.service.uploadSitemaps(body, ctx);
+  }
 
   @Post('sitemap')
   @UseGuards(StaffGuard)

@@ -26,9 +26,9 @@ export async function scrapeCpu(options: ScrapeCpuOptions) {
   // Fetch cpu data (concurrently if desired)
   const [techPowerUpResult, passMarkResult, geekBenchResult] = await concurrent(
     [
-      scrapeTechPowerUp(techPowerUp),
-      scrapePassMark(passMark),
-      scrapeGeekBench(geekBench),
+      () => scrapeTechPowerUp(techPowerUp),
+      () => scrapePassMark(passMark),
+      () => scrapeGeekBench(geekBench),
     ],
     {
       limit: concurrency || 1,

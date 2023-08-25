@@ -5,6 +5,7 @@ import {
   GpuProductType,
   ProductType,
   UploadSitemapRequest,
+  UploadSitemapsRequest,
 } from '@pcpartdb/shared';
 import * as tar from 'tar';
 import { CpuRepository } from '../product/cpu/cpu.repository';
@@ -22,15 +23,22 @@ export class WebsiteService {
     private gpuRepository: GpuRepository,
   ) {}
 
-  async uploadSitemap(request: UploadSitemapRequest, _ctx: Context) {
+  async uploadSitemaps(request: UploadSitemapsRequest, _ctx: Context) {
     const originalPath = fileUtils.uploadsPath(request.tempPath);
-    const sitemapPath = fileUtils.sitemapsPath('sitemap.tgz');
+    const sitemapPath = fileUtils.sitemapsPath('sitemaps.tgz');
 
     await fileUtils.move(originalPath, sitemapPath);
     await tar.x({
       cwd: fileUtils.sitemapsPath(),
       file: sitemapPath,
     });
+  }
+
+  async uploadSitemap(request: UploadSitemapRequest, _ctx: Context) {
+    const originalPath = fileUtils.uploadsPath(request.tempPath);
+    const sitemapPath = fileUtils.sitemapsPath(request.originalFileName);
+
+    await fileUtils.move(originalPath, sitemapPath);
   }
 
   async getSitemapProductSlugs(

@@ -9,6 +9,7 @@ import {
   AutoArchiveProductSourcesRequest,
   AutomationAction,
   concurrent,
+  ConcurrentFn,
   CpuDataSourceKey,
   CpuProductSource,
   ProductType,
@@ -110,9 +111,9 @@ export async function updateCpuSourcesAction(
   const [techPowerUpSources, passMarkSources, geekBenchSources] =
     await concurrent(
       [
-        getTechPowerUpSources(context),
-        getPassMarkSources(context),
-        getGeekBenchSources(context),
+        () => getTechPowerUpSources(context),
+        () => getPassMarkSources(context),
+        () => getGeekBenchSources(context),
       ],
       {
         limit: context.concurrency ? 3 : 1,
@@ -147,7 +148,7 @@ async function getTechPowerUpSources(context: AutomationContext) {
   const map: Record<string, TechPowerUpCpuSource> = {};
 
   // Construct requests
-  const promises: Promise<void>[] = [];
+  const promises: ConcurrentFn[] = [];
   for (let i = 0; i < TECHPOWERUP_URLS.length; ++i) {
     const { company, urls } = TECHPOWERUP_URLS[i];
 
@@ -157,7 +158,7 @@ async function getTechPowerUpSources(context: AutomationContext) {
       .map(({ value }) => value);
 
     for (const url of randomizedUrls) {
-      promises.push(scrapeTechPowerUp(url, company, map));
+      promises.push(() => scrapeTechPowerUp(url, company, map));
     }
   }
 
@@ -206,10 +207,10 @@ async function getPassMarkSources(context: AutomationContext) {
   const map: Record<string, PassMarkCpuSource> = {};
 
   // Construct requests
-  const promises: Promise<void>[] = [];
+  const promises: ConcurrentFn[] = [];
   for (let i = 0; i < PASSMARK_URLS.length; ++i) {
     const url = PASSMARK_URLS[i];
-    promises.push(scrapePassMark(url, map));
+    promises.push(() => scrapePassMark(url, map));
   }
 
   // Execute concurrently

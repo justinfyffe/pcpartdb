@@ -1,5 +1,7 @@
 import {
   AutomationAction,
+  concurrent,
+  ConcurrentFn,
   getAboutPath,
   getCompareCpusPath,
   getCompareGpusPath,
@@ -20,7 +22,6 @@ import {
 import FormData from 'form-data';
 import * as fs from 'fs';
 import * as fsPromises from 'fs/promises';
-import * as tar from 'tar';
 import xml from 'xml';
 import * as zlib from 'zlib';
 import { AutomationContext } from '../types';
@@ -28,6 +29,7 @@ import { sitemapPath, sitemapUrl, websiteUrl } from '../utils/sitemap';
 
 const COMPARISONS_PER_SITEMAP = 49_000;
 const PRODUCTS_PER_SITEMAP = 49_000;
+const DELAY_BETWEEN_UPLOAD = 4_000;
 
 const INDEX_FILENAME = 'sitemap-index.xml';
 const GENERAL_FILENAME = 'sitemap-general.xml';
@@ -83,11 +85,8 @@ export async function updateSitemapsAction(
   ];
   await writeSitemapIndex(sitemapUrls);
 
-  // Create zip file
-  const archivePath = await createTarArchive();
-
-  // Upload sitemap zip file
-  await uploadSitemaps(archivePath, context);
+  // Upload sitemap files
+  await uploadSitemaps(context);
 
   // Update execution details
   context.metadata = {
@@ -467,21 +466,6 @@ async function compressSitemap(path: string, output: string) {
   await fsPromises.rm(path);
 }
 
-async function createTarArchive() {
-  const files = await fsPromises.readdir(sitemapPath());
-  console.log('Creating tar archive');
-  await tar.c(
-    {
-      cwd: '../../data/automation/sitemaps',
-      gzip: { level: 9 },
-      file: 'sitemap.tgz',
-    },
-    files,
-  );
-  await fsPromises.rename('./sitemap.tgz', sitemapPath('sitemap.tgz'));
-  return sitemapPath('sitemap.tgz');
-}
-
 async function fetchProductSlugs(
   request: GetSitemapProductSlugsRequest,
   context: AutomationContext,
@@ -494,10 +478,22 @@ async function fetchProductSlugs(
   return response.slugs;
 }
 
-async function uploadSitemaps(archivePath: string, context: AutomationContext) {
+async function uploadSitemaps(context: AutomationContext) {
+  const files = await fsPromises.readdir(sitemapPath());
+  const promises: ConcurrentFn[] = [];
+  for (const file of files) {
+    promises.push(() => uploadSitemap(sitemapPath(file), context));
+  }
+  await concurrent(promises, {
+    limit: 5,
+    delayBetweenChunksMs: DELAY_BETWEEN_UPLOAD,
+  });
+}
+
+async function uploadSitemap(path: string, context: AutomationContext) {
   const data = new FormData();
-  data.append('file', fs.createReadStream(archivePath));
-  console.log('Uploading sitemaps');
+  data.append('file', fs.createReadStream(path));
+  console.log(`Uploading sitemap: ${path}`);
   await context.api.post(
     'website/sitemap',
     data,
@@ -508,4 +504,5 @@ async function uploadSitemaps(archivePath: string, context: AutomationContext) {
       maxContentLength: Infinity,
     },
   );
+  console.log(`Uploaded ${path}`);
 }

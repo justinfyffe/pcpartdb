@@ -1,10 +1,20 @@
 HIGH LEVEL TODO:
+- replace deepmerge
+  - two types of merges
+    - applying updates (respecting auto-update)
+    - created scraped object (respecting primary sources)
+- fix market segment merging
+  - maybe instead of merging, we pass in the current constructed object when scraping?
+  - primary source -> a source the takes precedence if there is data
+- data cleanup
+  - fill in missing performance scores
+  - fix up any misisng quarter release dates
+  - consistent naming "(OEM)", "(Mobile)"
 - Automation improvements
   - improve merging logic
     - write a custom deep merge, don't rely on deepmerge library
       - (custom merge is broken)
     - if field is undefined, then choose the non-undefined one
-  - upload multiple files for sitemap instead of 1 big archive
   - gpu retail models don't need to update as much. except for price?
   - double check indexes and looping sql queries
   - some slowdown when upserting sources
@@ -18,6 +28,11 @@ HIGH LEVEL TODO:
   - Rate limit non-staff api calls?
   - Add recaptcha?
   - database auto-backup
+- human error protection
+  - confirm on:
+    - delete cpu
+    - delete gpu
+    - delete user
 - performance
   - add caching
   - clean up ui components

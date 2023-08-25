@@ -30,10 +30,10 @@ export async function scrapeGpu(options: ScrapeGpuOptions) {
   const [chipsetResult, techPowerUpResult, passMarkResult, ulBenchmarkResult] =
     await concurrent(
       [
-        scrapeChipset(chipset),
-        scrapeTechPowerUp(techPowerUp),
-        scrapePassMark(passMark),
-        scrapeUlBenchmarks(ulBenchmarks),
+        () => scrapeChipset(chipset),
+        () => scrapeTechPowerUp(techPowerUp),
+        () => scrapePassMark(passMark),
+        () => scrapeUlBenchmarks(ulBenchmarks),
       ],
       {
         limit: concurrency || 1,

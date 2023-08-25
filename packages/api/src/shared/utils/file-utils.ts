@@ -41,6 +41,7 @@ export const MULTER_OPTIONS: multer.Options = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     filename: (req: any, file: any, cb: any) => {
       const tempPath = generateUploadTmpFilename(file);
+      req.body.originalFileName = file.originalname;
       req.body.tempPath = tempPath;
       cb(null, tempPath);
     },

@@ -1,31 +1,33 @@
 import { sleep } from './sleep';
 
+export type ConcurrentFn<T = unknown> = () => Promise<T>;
+
 interface ConcurrentOptions {
   limit: number;
   delayBetweenChunksMs?: number;
 }
 
 export async function concurrent<T = unknown>(
-  promises: Promise<T>[],
+  promiseFns: ConcurrentFn<T>[],
   options: ConcurrentOptions,
 ) {
   const limit = options.limit;
-  const chunks: Promise<T>[][] = promises.reduce(
-    (acc, promise) => {
+  const chunks: ConcurrentFn<T>[][] = promiseFns.reduce(
+    (acc, promiseFn) => {
       const chunk = acc[acc.length - 1];
       if (chunk.length >= limit) {
-        acc.push([promise]);
+        acc.push([promiseFn]);
       } else {
-        chunk.push(promise);
+        chunk.push(promiseFn);
       }
       return acc;
     },
-    [[]] as Promise<T>[][],
+    [[]] as ConcurrentFn<T>[][],
   );
 
   const results: T[] = [];
   for (const chunk of chunks) {
-    const chunkResults = await Promise.all(chunk);
+    const chunkResults = await Promise.all(chunk.map((fn) => fn()));
     results.push(...chunkResults);
 
     if (options.delayBetweenChunksMs) {

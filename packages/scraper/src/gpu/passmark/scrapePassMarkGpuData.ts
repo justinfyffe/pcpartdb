@@ -23,7 +23,7 @@ export async function scrapePassMarkGpuData(
   const $ = cheerio.load(response.data);
 
   const product: Partial<Gpu> = {
-    marketSegment: getMarketSegment($),
+    // marketSegment: getMarketSegment($),
     g3dMark: getG3dMark($),
     g2dMark: getG2dMark($),
   };
