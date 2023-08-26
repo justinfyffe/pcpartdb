@@ -18,6 +18,17 @@ HIGH LEVEL TODO:
   - gpu retail models don't need to update as much. except for price?
   - double check indexes and looping sql queries
   - some slowdown when upserting sources
+  - add more scrapers (e.g. intel website)
+- easier to spot missing data
+  - audit page
+    - have tabs for seeing missing:
+      - techpowerup
+      - passmark
+      - geekbench
+      - market segment
+      - release date
+      - launch price
+      - company
 - Dependencies
   - Update framework dependencies
   - replace axios with fetch
