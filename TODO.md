@@ -1,5 +1,8 @@
 HIGH LEVEL TODO:
 - scraping cpu/gpu:
+  - add a ignoreFields array to scraper functions
+    - if fieldKey is in that ignoreFields array, return undefined
+    - if the source wants to lock fields, it should add to ignoreFields
   - figure out a way to handle preferred sources for fields
     - maybe pass in scraped object being built and build off of that?
       - and then non-preferred sources can the field if it's set
