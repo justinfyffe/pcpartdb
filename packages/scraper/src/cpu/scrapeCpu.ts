@@ -1,11 +1,12 @@
 import {
+  ArrayMerge,
   concurrent,
   CpuDataSource,
   CpuDataSourceKey,
+  deepmerge,
   Product,
   ScrapeProductResponse,
 } from '@pcpartdb/shared';
-import deepmerge from 'deepmerge';
 import { scrapeGeekBenchCpuData } from './geekbench';
 import { scrapePassMarkCpuData } from './passmark';
 import { scrapeTechPowerUpCpuData } from './techpowerup';
@@ -40,17 +41,17 @@ export async function scrapeCpu(options: ScrapeCpuOptions) {
   let scrapedProduct: Partial<Product> = { meta: { dataSources: {} } };
   if (techPowerUpResult != null) {
     const { product } = techPowerUpResult;
-    scrapedProduct = deepmerge(scrapedProduct, product);
+    scrapedProduct = deepmerge({}, scrapedProduct, product);
     scrapedProduct.meta.dataSources[CpuDataSourceKey.TechPowerUp] = techPowerUp;
   }
   if (passMarkResult != null) {
     const { product } = passMarkResult;
-    scrapedProduct = deepmerge(scrapedProduct, product);
+    scrapedProduct = deepmerge({}, scrapedProduct, product);
     scrapedProduct.meta.dataSources[CpuDataSourceKey.PassMark] = passMark;
   }
   if (geekBenchResult != null) {
     const { product } = geekBenchResult;
-    scrapedProduct = deepmerge(scrapedProduct, product);
+    scrapedProduct = deepmerge({}, scrapedProduct, product);
     scrapedProduct.meta.dataSources[CpuDataSourceKey.GeekBench] = geekBench;
   }
 

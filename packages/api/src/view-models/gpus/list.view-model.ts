@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ListGpusQuery, ListGpusResponse } from '@pcpartdb/shared';
-import deepmerge from 'deepmerge';
+import { deepmerge, ListGpusQuery, ListGpusResponse } from '@pcpartdb/shared';
 import { GpuService } from '../../product/gpu/gpu.service';
 import { listGpusQueryValidator } from '../../product/gpu/gpu.validators';
 import { Context } from '../../shared/context';
@@ -14,6 +13,7 @@ export class ListGpusViewModelService {
     validate(query, listGpusQueryValidator);
 
     const chipsetsQuery = deepmerge(
+      {},
       { filter: { isChipset: true } } as ListGpusQuery,
       query,
     );

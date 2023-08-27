@@ -1,6 +1,5 @@
-import { cleanUrl, parseProductName } from '@pcpartdb/shared';
+import { cleanUrl, deepmerge, parseProductName } from '@pcpartdb/shared';
 import * as cheerio from 'cheerio';
-import deepmerge from 'deepmerge';
 import { scraper } from '../../scraper';
 import { GeekBenchCpuSource } from '../types';
 import { generateCpuGroupKey } from '../utils';
@@ -20,7 +19,7 @@ export async function scrapeGeekBenchCpuSources(
   const singleThreadSources = parseSingleCoreTable($);
   const multiThreadSources = parseMultiCoreTable($);
 
-  const combined = deepmerge(singleThreadSources, multiThreadSources);
+  const combined = deepmerge({}, singleThreadSources, multiThreadSources);
   return Object.values(combined);
 }
 

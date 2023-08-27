@@ -3,7 +3,6 @@
   "description": "Frontend service for the PC Part DB website. No packages should depend on this.",
   "private": "true",
   "version": "1.0.0",
-
   "scripts": {
     "clean": "rm -rf .next && rm -f tsconfig.tsbuildinfo && rm -rf ./tmp",
     "build": "next build",
@@ -50,7 +49,6 @@
     "classnames": "^2.3.1",
     "cookies-next": "^2.1.1",
     "date-fns": "^2.28.0",
-    "deepmerge": "^4.3.1",
     "http-proxy-middleware": "^2.0.6",
     "jsonwebtoken": "^9.0.0",
     "module-alias": "^2.2.2",

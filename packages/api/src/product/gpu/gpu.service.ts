@@ -2,6 +2,7 @@ import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { mapToGpuDto, mapToGpuDtos, mapToGpuEntity } from '@pcpartdb/database';
 import {
   CreateGpuRequest,
+  deepmerge,
   Gpu,
   GpuComparison,
   GpuDataSourceKey,
@@ -17,7 +18,6 @@ import {
   UpdateGpuRequest,
   ValidationErrorType,
 } from '@pcpartdb/shared';
-import deepmerge from 'deepmerge';
 import { Context } from '../../shared/context';
 import { badRequestError, notFoundError } from '../../shared/error';
 import { ProductUpdateService } from '../product-update.service';
@@ -287,7 +287,7 @@ export class GpuService {
     const ulBenchmark = gpu.meta?.dataSources?.[GpuDataSourceKey.UlBenchmarks];
 
     // Merge - We don't want to delete sources, only overwrite them.
-    gpu.meta = deepmerge(gpu.meta, {
+    gpu.meta = deepmerge({}, gpu.meta, {
       dataSources: {
         [GpuDataSourceKey.TechPowerUp]: {
           url: techPowerUpUrl || techPowerUp?.url,

@@ -1,12 +1,12 @@
 import {
   concurrent,
+  deepmerge,
   Gpu,
   GpuDataSource,
   GpuDataSourceKey,
   Product,
   ScrapeProductResponse,
 } from '@pcpartdb/shared';
-import deepmerge from 'deepmerge';
 import { scrapePassMarkGpuData } from './passmark';
 import { scrapeFromChipsetGpu } from './scrapeFromChipsetGpu';
 import { scrapeTechPowerUpGpuData } from './techpowerup';
@@ -49,24 +49,24 @@ export async function scrapeGpu(options: ScrapeGpuOptions) {
       hasRetailModels: boolean;
     };
     hasRetailModels = response.hasRetailModels;
-    scrapedProduct = deepmerge(scrapedProduct, response.product);
+    scrapedProduct = deepmerge({}, scrapedProduct, response.product);
     scrapedProduct.meta.dataSources[GpuDataSourceKey.TechPowerUp] = techPowerUp;
   }
   if (passMarkResult != null) {
     const { product } = passMarkResult;
-    scrapedProduct = deepmerge(scrapedProduct, product);
+    scrapedProduct = deepmerge({}, scrapedProduct, product);
     scrapedProduct.meta.dataSources[GpuDataSourceKey.VideocardBenchmarks] =
       passMark;
   }
   if (ulBenchmarkResult != null) {
     const { product } = ulBenchmarkResult;
-    scrapedProduct = deepmerge(scrapedProduct, product);
+    scrapedProduct = deepmerge({}, scrapedProduct, product);
     scrapedProduct.meta.dataSources[GpuDataSourceKey.UlBenchmarks] =
       ulBenchmarks;
   }
   if (chipsetResult != null) {
     const { product } = chipsetResult;
-    scrapedProduct = deepmerge(scrapedProduct, product);
+    scrapedProduct = deepmerge({}, scrapedProduct, product);
   }
 
   return {

@@ -16,13 +16,13 @@ import {
   CpuRank,
   CpuUpdate,
   CreateCpuRequest,
+  deepmerge,
   populateCpuPerformanceScoreBenchmark,
   populateCpuValueScoreBenchmark,
   ProductType,
   UpdateCpuRequest,
   ValidationErrorType,
 } from '@pcpartdb/shared';
-import deepmerge from 'deepmerge';
 import { Context } from '../../shared/context';
 import { badRequestError, notFoundError } from '../../shared/error';
 import { ProductUpdateService } from '../product-update.service';
@@ -231,7 +231,7 @@ export class CpuService {
     const geekBench = cpu.meta?.dataSources?.[CpuDataSourceKey.GeekBench];
 
     // Merge - We don't want to delete sources, only overwrite them.
-    cpu.meta = deepmerge(cpu.meta, {
+    cpu.meta = deepmerge({}, cpu.meta, {
       dataSources: {
         [CpuDataSourceKey.TechPowerUp]: {
           url: techPowerUpUrl || techPowerUp?.url,

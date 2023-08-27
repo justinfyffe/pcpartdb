@@ -1,10 +1,9 @@
 HIGH LEVEL TODO:
 - misc adjustments
   - explore linking to retail models instead of dialog
-- replace deepmerge
-  - two types of merges
-    - applying updates (respecting auto-update)
-    - created scraped object (respecting primary sources)
+- improve deepmerge
+  - support primary sources
+  - if field is undefined, then choose the non-undefined one
 - fix market segment merging
   - maybe instead of merging, we pass in the current constructed object when scraping?
   - primary source -> a source the takes precedence if there is data
@@ -13,10 +12,6 @@ HIGH LEVEL TODO:
   - fix up any misisng quarter release dates
   - consistent naming "(OEM)", "(Mobile)"
 - Automation improvements
-  - improve merging logic
-    - write a custom deep merge, don't rely on deepmerge library
-      - (custom merge is broken)
-    - if field is undefined, then choose the non-undefined one
   - gpu retail models don't need to update as much. except for price?
   - double check indexes and looping sql queries
   - some slowdown when upserting sources
