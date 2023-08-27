@@ -5,7 +5,7 @@ export enum ArrayMerge {
   Combine,
 }
 
-export interface DeepmergeOptions<T = unknown> {
+export interface DeepmergeOptions {
   arrayMerge?: ArrayMerge;
   canMergeStrategy?: (key: string, source: unknown, obj: unknown) => boolean;
 
@@ -21,7 +21,7 @@ export function deepmerge<T = unknown>(
   const pathKey = options.pathKey || 'root';
 
   // Create a clone of the first item in the objs array
-  let source: any = structuredClone(objs.shift());
+  let source: T = structuredClone(objs.shift());
 
   // Loop through each item
   for (const obj of objs) {
@@ -55,6 +55,7 @@ function getType<T>(obj: T) {
   return Object.prototype.toString.call(obj).slice(8, -1).toLowerCase();
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function mergeObj(source: any, obj: any, options: DeepmergeOptions) {
   const canMergeFn = options.canMergeStrategy || CanMergeDefaultStrategy;
 
@@ -78,6 +79,7 @@ function mergeObj(source: any, obj: any, options: DeepmergeOptions) {
   return source;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function mergeArray(source: any, obj: any, options: DeepmergeOptions) {
   const arrayMerge = options.arrayMerge || ArrayMerge.UseTarget;
   const canMergeFn = options.canMergeStrategy || CanMergeDefaultStrategy;
@@ -87,21 +89,24 @@ function mergeArray(source: any, obj: any, options: DeepmergeOptions) {
   }
 
   if (arrayMerge === ArrayMerge.Combine) {
-    return [...source, ...structuredClone(obj as any)];
+    return [...source, ...structuredClone(obj)];
   } else if (arrayMerge === ArrayMerge.UseTarget) {
-    return [...structuredClone(obj as any)];
+    return [...structuredClone(obj)];
   }
 
   throw new Error('Invalid array merge strategy');
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function CanMergeDefaultStrategy(_key: string, _source: any, _obj: any) {
   return true;
 }
 
 export function CanMergeAutoUpdateStrategy(
   _key: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   source: any,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   _obj: any,
 ) {
   if (
