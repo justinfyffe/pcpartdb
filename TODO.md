@@ -1,6 +1,8 @@
 HIGH LEVEL TODO:
-- improve deepmerge
-  - lock product fields so other scrapers don't overwrite it
+- scraping cpu/gpu:
+  - figure out a way to handle preferred sources for fields
+    - maybe pass in scraped object being built and build off of that?
+      - and then non-preferred sources can the field if it's set
 - misc adjustments
   - explore linking to retail models instead of dialog
 - fix market segment merging
