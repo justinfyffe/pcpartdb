@@ -1,9 +1,8 @@
 HIGH LEVEL TODO:
+- improve deepmerge
+  - lock product fields so other scrapers don't overwrite it
 - misc adjustments
   - explore linking to retail models instead of dialog
-- improve deepmerge
-  - support primary sources
-  - if field is undefined, then choose the non-undefined one
 - fix market segment merging
   - maybe instead of merging, we pass in the current constructed object when scraping?
   - primary source -> a source the takes precedence if there is data

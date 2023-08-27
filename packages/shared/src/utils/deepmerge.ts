@@ -98,7 +98,11 @@ function mergeArray(source: any, obj: any, options: DeepmergeOptions) {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function CanMergeDefaultStrategy(_key: string, _source: any, _obj: any) {
+export function CanMergeDefaultStrategy(_key: string, _source: any, obj: any) {
+  if (obj === undefined) {
+    return false;
+  }
+
   return true;
 }
 
@@ -107,8 +111,12 @@ export function CanMergeAutoUpdateStrategy(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   source: any,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  _obj: any,
+  obj: any,
 ) {
+  if (obj === undefined) {
+    return false;
+  }
+
   if (
     isProductField(source) &&
     source?.meta?.autoUpdate != null &&
