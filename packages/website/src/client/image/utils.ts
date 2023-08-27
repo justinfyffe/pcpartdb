@@ -29,6 +29,8 @@ export function getCompanyLogoAutocompletePath(product: Product): string {
       return '/images/autocomplete/acer.png';
     case 'amd':
       return '/images/autocomplete/amd.svg';
+    case 'ati':
+      return '/images/autocomplete/ati.svg';
     case 'asrock':
       return '/images/autocomplete/asrock.png';
     case 'asus':

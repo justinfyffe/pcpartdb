@@ -59,8 +59,6 @@ const TECHPOWERUP_URLS = [
       'https://www.techpowerup.com/cpu-specs/?mfgr=Intel&released=2002&sort=name', // Intel, 2002
       'https://www.techpowerup.com/cpu-specs/?mfgr=Intel&released=2001&sort=name', // Intel, 2001
       'https://www.techpowerup.com/cpu-specs/?mfgr=Intel&released=2000&sort=name', // Intel, 2000
-      'https://www.techpowerup.com/cpu-specs/?mfgr=Intel&released=1999&sort=name', // Intel, 1999
-      'https://www.techpowerup.com/cpu-specs/?mfgr=Intel&released=1998&sort=name', // Intel, 1998
     ],
   },
   {

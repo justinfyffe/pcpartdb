@@ -47,6 +47,7 @@ export const ListFilterComnpany: FunctionComponent<ListFilterComnpanyProps> = (
     <div className={classNames('flex flex-col', props.className)}>
       <div className="font-bold m-2">Manufacturer:</div>
       <ListFilterComnpanyItem company="amd" onChange={handleCompanyToggle} />
+      <ListFilterComnpanyItem company="ati" onChange={handleCompanyToggle} />
       <ListFilterComnpanyItem company="intel" onChange={handleCompanyToggle} />
       <ListFilterComnpanyItem company="nvidia" onChange={handleCompanyToggle} />
     </div>

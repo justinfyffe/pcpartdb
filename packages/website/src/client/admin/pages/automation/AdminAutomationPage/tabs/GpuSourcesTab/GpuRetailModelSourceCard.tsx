@@ -241,7 +241,7 @@ export const GpuRetailModelSourceCard = (
             </Field>
           </div>
 
-          <div className="flex flex-wrap gap-4 items-start">
+          <div className="flex flex-col">
             <Field className="flex-1">
               <div className="flex gap-2">
                 Chipset{' '}

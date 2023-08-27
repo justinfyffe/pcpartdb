@@ -1,4 +1,6 @@
 HIGH LEVEL TODO:
+- misc adjustments
+  - explore linking to retail models instead of dialog
 - replace deepmerge
   - two types of merges
     - applying updates (respecting auto-update)
@@ -34,10 +36,11 @@ HIGH LEVEL TODO:
   - replace axios with fetch
 - Security
   - setup weekly backups on digital ocean
-  - Max file limit on sitemap path only
+  - reduce max file size
   - DDoS protection with Cloudflare
   - Rate limit non-staff api calls?
   - Add recaptcha?
+  - security headers (csp, hsts)
   - database auto-backup
 - human error protection
   - confirm on:

@@ -123,7 +123,7 @@ export const AdminLayout: FunctionComponent<AdminLayoutProps> = (props) => {
         >
           <MenuLinkItem href={getAdminOverviewPath()}>Overview</MenuLinkItem>
           <MenuLinkItem href={getAdminAutomationPath()}>
-            Automation
+            Automation{pendingUpdates > 0 && <> ({pendingUpdates})</>}
           </MenuLinkItem>
           <MenuLinkItem href={getAdminListCpusPath()}>CPUs</MenuLinkItem>
           <MenuLinkItem href={getAdminListGpusPath()}>GPUs</MenuLinkItem>

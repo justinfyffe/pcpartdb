@@ -59,6 +59,7 @@ export const SUPPORTED_GPU_COMPANIES = [
   'amd',
   'asrock',
   'asus',
+  'ati',
   'evga',
   'gainward',
   'galax',

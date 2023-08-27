@@ -62,7 +62,13 @@ function parseGpuName(gpuName: string) {
   const idx = gpuName.indexOf(' ');
   const company = gpuName.substring(0, idx);
   const name = gpuName.substring(idx + 1);
-  if (company === 'AMD' || company === 'Intel' || company === 'NVIDIA') {
+  const lcCompany = company.toLowerCase();
+  if (
+    lcCompany === 'amd' ||
+    lcCompany === 'intel' ||
+    lcCompany === 'nvidia' ||
+    lcCompany === 'ati'
+  ) {
     return { company, name };
   }
 

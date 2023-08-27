@@ -363,7 +363,7 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
             </Field>
           </div>
 
-          <div className="flex flex-wrap gap-4 items-start">
+          <div className="flex flex-col">
             <SourceInputField
               productType={ProductType.Cpu}
               sourceKey={CpuDataSourceKey.TechPowerUp}

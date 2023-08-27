@@ -50,8 +50,6 @@ const TECHPOWERUP_URLS = [
       'https://www.techpowerup.com/gpu-specs/?mfgr=Intel&released=2002&sort=name', // Intel, 2002
       'https://www.techpowerup.com/gpu-specs/?mfgr=Intel&released=2001&sort=name', // Intel, 2001
       'https://www.techpowerup.com/gpu-specs/?mfgr=Intel&released=2000&sort=name', // Intel, 2000
-      'https://www.techpowerup.com/gpu-specs/?mfgr=Intel&released=1999&sort=name', // Intel, 1999
-      'https://www.techpowerup.com/gpu-specs/?mfgr=Intel&released=1998&sort=name', // Intel, 1998
     ],
   },
   {
@@ -107,6 +105,24 @@ const TECHPOWERUP_URLS = [
       'https://www.techpowerup.com/gpu-specs/?mfgr=NVIDIA&released=2000&sort=name', // NVIDIA, 2000
     ],
   },
+  {
+    company: 'ATI',
+    urls: [
+      'https://www.techpowerup.com/gpu-specs/?mfgr=ATI&released=2012&sort=name', // ATI, 2012
+      'https://www.techpowerup.com/gpu-specs/?mfgr=ATI&released=2011&sort=name', // ATI, 2011
+      'https://www.techpowerup.com/gpu-specs/?mfgr=ATI&released=2010&sort=name', // ATI, 2010
+      'https://www.techpowerup.com/gpu-specs/?mfgr=ATI&released=2009&sort=name', // ATI, 2009
+      'https://www.techpowerup.com/gpu-specs/?mfgr=ATI&released=2008&sort=name', // ATI, 2008
+      'https://www.techpowerup.com/gpu-specs/?mfgr=ATI&released=2007&sort=name', // ATI, 2007
+      'https://www.techpowerup.com/gpu-specs/?mfgr=ATI&released=2006&sort=name', // ATI, 2006
+      'https://www.techpowerup.com/gpu-specs/?mfgr=ATI&released=2005&sort=name', // ATI, 2005
+      'https://www.techpowerup.com/gpu-specs/?mfgr=ATI&released=2004&sort=name', // ATI, 2004
+      'https://www.techpowerup.com/gpu-specs/?mfgr=ATI&released=2003&sort=name', // ATI, 2003
+      'https://www.techpowerup.com/gpu-specs/?mfgr=ATI&released=2002&sort=name', // ATI, 2002
+      'https://www.techpowerup.com/gpu-specs/?mfgr=ATI&released=2001&sort=name', // ATI, 2001
+      'https://www.techpowerup.com/gpu-specs/?mfgr=ATI&released=2000&sort=name', // ATI, 2000
+    ],
+  },
 ];
 
 const PASSMARK_URLS = [
@@ -120,6 +136,7 @@ const UL_BENCHMARK_QUERIES = [
   'intel',
   'nvidia',
   'amd',
+  'ati',
   'arc',
   'rtx',
   'geforce',
@@ -181,13 +198,7 @@ async function getTechPowerUpSources(context: AutomationContext) {
   const promises: ConcurrentFn[] = [];
   for (let i = 0; i < TECHPOWERUP_URLS.length; ++i) {
     const { company, urls } = TECHPOWERUP_URLS[i];
-
-    const randomizedUrls = urls
-      .map((value) => ({ value, sort: Math.random() }))
-      .sort((a, b) => a.sort - b.sort)
-      .map(({ value }) => value);
-
-    for (const url of randomizedUrls) {
+    for (const url of urls) {
       promises.push(() => scrapeTechPowerUp(url, company, map));
     }
   }

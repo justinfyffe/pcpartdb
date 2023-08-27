@@ -55,6 +55,8 @@ export function formatGpuCompany(company: string) {
   switch (company.toLowerCase()) {
     case 'amd':
       return 'AMD';
+    case 'ati':
+      return 'ATI';
     case 'intel':
       return 'Intel';
     case 'nvidia':

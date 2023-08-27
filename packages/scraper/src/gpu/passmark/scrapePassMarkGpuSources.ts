@@ -82,8 +82,9 @@ const NVIDIA_HINTS = [
   'nvs ',
   'nforce',
 ];
-const AMD_HINTS = ['radeon', 'ryzen', 'firepro', 'firestream', 'firegl'];
+const AMD_HINTS = ['radeon', 'ryzen', 'firepro', 'firestream'];
 const INTEL_HINTS = ['arc ', 'uhd graphics'];
+const ATI_HINTS = ['firegl'];
 function guessCompanyName(name: string) {
   const lcName = name.toLowerCase();
   if (NVIDIA_HINTS.some((hint) => lcName.includes(hint))) {
@@ -94,6 +95,9 @@ function guessCompanyName(name: string) {
   }
   if (INTEL_HINTS.some((hint) => lcName.includes(hint))) {
     return 'Intel';
+  }
+  if (ATI_HINTS.some((hint) => lcName.includes(hint))) {
+    return 'ATI';
   }
   return null;
 }
