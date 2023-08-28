@@ -18,81 +18,81 @@ import {
 import * as cheerio from 'cheerio';
 import { format as formatDateFn, parse as parseDateFn } from 'date-fns';
 import { scraper } from '../../scraper';
+import { CommonScraperOptions, ScraperContext } from '../../types';
 import { createCpuField } from '../utils';
 
-export interface ScrapeTechPowerUpCpuDataOptions {
+export interface ScrapeTechPowerUpCpuDataOptions extends CommonScraperOptions {
   url: string;
-  noProxy?: boolean;
 }
 
 export async function scrapeTechPowerUpCpuData(
   options: ScrapeTechPowerUpCpuDataOptions,
 ) {
-  const { url, noProxy } = options;
+  const { url, noProxy, ctx } = options;
 
   const response = await scraper.scrape(url, { retries: 1, noProxy });
   const $ = cheerio.load(response.data);
 
   const product: Partial<Cpu> = {
     name: getName($),
-    partNumber: getPartNumber($),
-    company: getCompany($),
-    marketSegments: getMarketSegments($),
-    launchPrice: getLaunchPrice($),
-    releaseDate: getReleaseDate($),
-    productionStatus: getProductionStatus($),
-    bundledCooler: getBundledCooler($),
+    partNumber: getPartNumber($, ctx),
+    company: getCompany($, ctx),
+    marketSegments: getMarketSegments($, ctx),
+    launchPrice: getLaunchPrice($, ctx),
+    releaseDate: getReleaseDate($, ctx),
+    productionStatus: getProductionStatus($, ctx),
+    bundledCooler: getBundledCooler($, ctx),
 
-    socket: getSocket($),
-    foundry: getFoundry($),
-    processSize: getProcessSize($),
-    transistors: getTransistors($),
-    tCaseMax: getTCaseMax($),
-    tjMax: getTjMax($),
+    socket: getSocket($, ctx),
+    foundry: getFoundry($, ctx),
+    processSize: getProcessSize($, ctx),
+    transistors: getTransistors($, ctx),
+    tCaseMax: getTCaseMax($, ctx),
+    tjMax: getTjMax($, ctx),
 
-    architecture: getArchitecture($),
-    codename: getCodename($),
-    generation: getGeneration($),
-    pciExpress: getPciExpress($),
-    chipsets: getChipsets($),
+    architecture: getArchitecture($, ctx),
+    codename: getCodename($, ctx),
+    generation: getGeneration($, ctx),
+    pciExpress: getPciExpress($, ctx),
+    chipsets: getChipsets($, ctx),
 
-    memorySupport: getMemorySupport($),
-    memoryChannels: getMemoryChannels($),
-    hasEccMemory: getEccMemory($),
+    memorySupport: getMemorySupport($, ctx),
+    memoryChannels: getMemoryChannels($, ctx),
+    hasEccMemory: getEccMemory($, ctx),
 
-    coresCount: getCoresCount($),
-    threadsCount: getThreadsCount($),
-    performanceCoresCount: getPerformanceCoresCount($),
-    efficientCoresCount: getEfficientCoresCount($),
-    clock: getClock($),
-    turboClock: getTurboClock($),
-    performanceCoreClock: getPerformanceCoreClock($),
-    performanceCoreTurboClock: getPerformanceCoreTurboClock($),
-    efficientCoreClock: getEfficientCoreClock($),
-    efficientCoreTurboClock: getEfficientCoreTurboClock($),
-    baseClock: getBaseClock($),
-    multiplier: getMultiplier($),
-    isMultiplierUnlocked: getMultiplierUnlocked($),
+    coresCount: getCoresCount($, ctx),
+    threadsCount: getThreadsCount($, ctx),
+    performanceCoresCount: getPerformanceCoresCount($, ctx),
+    efficientCoresCount: getEfficientCoresCount($, ctx),
+    clock: getClock($, ctx),
+    turboClock: getTurboClock($, ctx),
+    performanceCoreClock: getPerformanceCoreClock($, ctx),
+    performanceCoreTurboClock: getPerformanceCoreTurboClock($, ctx),
+    efficientCoreClock: getEfficientCoreClock($, ctx),
+    efficientCoreTurboClock: getEfficientCoreTurboClock($, ctx),
+    baseClock: getBaseClock($, ctx),
+    multiplier: getMultiplier($, ctx),
+    isMultiplierUnlocked: getMultiplierUnlocked($, ctx),
 
-    tdp: getTdp($),
-    pl1: getPl1($),
-    pl2: getPl2($),
-    ppt: getPpt($),
+    tdp: getTdp($, ctx),
+    pl1: getPl1($, ctx),
+    pl2: getPl2($, ctx),
+    ppt: getPpt($, ctx),
 
-    l1Cache: getL1Cache($),
-    l2Cache: getL2Cache($),
-    l3Cache: getL3Cache($),
-    efficientCoreL1Cache: getEfficientCoreL1Cache($),
-    efficientCoreL2Cache: getEfficientCoreL2Cache($),
+    l1Cache: getL1Cache($, ctx),
+    l2Cache: getL2Cache($, ctx),
+    l3Cache: getL3Cache($, ctx),
+    efficientCoreL1Cache: getEfficientCoreL1Cache($, ctx),
+    efficientCoreL2Cache: getEfficientCoreL2Cache($, ctx),
 
-    integratedGraphics: getIntegratedGraphics($),
-    extensionsTechnologies: getExtensionsTechnologies($),
+    integratedGraphics: getIntegratedGraphics($, ctx),
+    extensionsTechnologies: getExtensionsTechnologies($, ctx),
   };
 
   return { product } as ScrapeProductResponse;
 }
 
-function getArchitecture($: cheerio.CheerioAPI) {
+function getArchitecture($: cheerio.CheerioAPI, ctx?: ScraperContext) {
   const values = tokenizeMultiLine($, 'Generation');
   let value = values[1]?.trim();
   if (value?.startsWith('(')) {
@@ -103,10 +103,10 @@ function getArchitecture($: cheerio.CheerioAPI) {
   }
   value = value.replaceAll(/\(.*\)/g, '').trim();
 
-  return createCpuField('architecture', value);
+  return createCpuField({ field: 'architecture', value, ctx });
 }
 
-function getBaseClock($: cheerio.CheerioAPI) {
+function getBaseClock($: cheerio.CheerioAPI, ctx?: ScraperContext) {
   const values = tokenizeMultiLine($, 'Base Clock');
   const [displayValue, displayUnit] = parseNumber(values[0] || null);
 
@@ -119,17 +119,17 @@ function getBaseClock($: cheerio.CheerioAPI) {
   const unit = formats[displayUnit] || null;
   const value = getBaseUnitValue(displayValue, unit);
 
-  return createCpuField('baseClock', value, { unit });
+  return createCpuField({ field: 'baseClock', value, meta: { unit }, ctx });
 }
 
-function getBundledCooler($: cheerio.CheerioAPI) {
+function getBundledCooler($: cheerio.CheerioAPI, ctx?: ScraperContext) {
   const values = tokenizeMultiLine($, 'Bundled Cooler');
   const value = values.join(', ') || null;
 
-  return createCpuField('bundledCooler', value);
+  return createCpuField({ field: 'bundledCooler', value, ctx });
 }
 
-function getChipsets($: cheerio.CheerioAPI) {
+function getChipsets($: cheerio.CheerioAPI, ctx?: ScraperContext) {
   const values1 = tokenizeMultiLine($, 'Chipset');
   const values2 = tokenizeMultiLine($, 'Chipsets');
   const values = values1.length > 0 ? values1 : values2;
@@ -141,10 +141,10 @@ function getChipsets($: cheerio.CheerioAPI) {
       .filter((value) => value.length > 0) || [];
   const value = chipsets;
 
-  return createCpuField('chipsets', value);
+  return createCpuField({ field: 'chipsets', value, ctx });
 }
 
-function getClock($: cheerio.CheerioAPI) {
+function getClock($: cheerio.CheerioAPI, ctx?: ScraperContext) {
   const values = tokenizeMultiLine($, 'Frequency');
   const [displayValue, displayUnit] = parseNumber(values[0] || null);
 
@@ -157,32 +157,32 @@ function getClock($: cheerio.CheerioAPI) {
   const unit = formats[displayUnit] || null;
   const value = getBaseUnitValue(displayValue, unit);
 
-  return createCpuField('clock', value, { unit });
+  return createCpuField({ field: 'clock', value, meta: { unit }, ctx });
 }
 
-function getCodename($: cheerio.CheerioAPI) {
+function getCodename($: cheerio.CheerioAPI, ctx?: ScraperContext) {
   const values = tokenizeMultiLine($, 'Codename');
   const value = values.join(', ') || null;
 
-  return createCpuField('codename', value);
+  return createCpuField({ field: 'codename', value, ctx });
 }
 
-function getCompany($: cheerio.CheerioAPI) {
+function getCompany($: cheerio.CheerioAPI, ctx?: ScraperContext) {
   const fullName = $('.cpuname').text();
   const { company } = parseProductName(fullName);
 
-  return createCpuField('company', company);
+  return createCpuField({ field: 'company', value: company, ctx });
 }
 
-function getCoresCount($: cheerio.CheerioAPI) {
+function getCoresCount($: cheerio.CheerioAPI, ctx?: ScraperContext) {
   const values = tokenizeMultiLine($, '# of Cores');
   const [displayValue] = parseNumber(values[0] || null);
   const value = displayValue;
 
-  return createCpuField('coresCount', value);
+  return createCpuField({ field: 'coresCount', value, ctx });
 }
 
-function getEccMemory($: cheerio.CheerioAPI) {
+function getEccMemory($: cheerio.CheerioAPI, ctx?: ScraperContext) {
   const text = tokenizeMultiLine($, 'ECC Memory');
   const textTrimmed = text[0]?.trim().toLowerCase();
 
@@ -193,10 +193,10 @@ function getEccMemory($: cheerio.CheerioAPI) {
     value = false;
   }
 
-  return createCpuField('hasEccMemory', value);
+  return createCpuField({ field: 'hasEccMemory', value, ctx });
 }
 
-function getEfficientCoreL1Cache($: cheerio.CheerioAPI) {
+function getEfficientCoreL1Cache($: cheerio.CheerioAPI, ctx?: ScraperContext) {
   const values = tokenizeMultiLine($, 'E-Core L1');
   const sanitizedValue = values[0]?.split(' ')[0];
   const [displayValue, displayUnit] = parseNumber(sanitizedValue || null);
@@ -209,10 +209,15 @@ function getEfficientCoreL1Cache($: cheerio.CheerioAPI) {
   const unit = formats[displayUnit] || null;
   const value = getBaseUnitValue(displayValue, unit);
 
-  return createCpuField('efficientCoreL1Cache', value, { unit });
+  return createCpuField({
+    field: 'efficientCoreL1Cache',
+    value,
+    meta: { unit },
+    ctx,
+  });
 }
 
-function getEfficientCoreL2Cache($: cheerio.CheerioAPI) {
+function getEfficientCoreL2Cache($: cheerio.CheerioAPI, ctx?: ScraperContext) {
   const values = tokenizeMultiLine($, 'E-Core L2');
   const sanitizedValue = values[0]?.split(' ')[0];
   const [displayValue, displayUnit] = parseNumber(sanitizedValue || null);
@@ -225,12 +230,17 @@ function getEfficientCoreL2Cache($: cheerio.CheerioAPI) {
   const unit = formats[displayUnit] || null;
   const value = getBaseUnitValue(displayValue, unit);
 
-  return createCpuField('efficientCoreL2Cache', value, { unit });
+  return createCpuField({
+    field: 'efficientCoreL2Cache',
+    value,
+    meta: { unit },
+    ctx,
+  });
 }
 
-function getEfficientCoreClock($: cheerio.CheerioAPI) {
-  if (!hasProductFieldValue(getEfficientCoresCount($))) {
-    return createCpuField('efficientCoreClock', null);
+function getEfficientCoreClock($: cheerio.CheerioAPI, ctx?: ScraperContext) {
+  if (!hasProductFieldValue(getEfficientCoresCount($, ctx))) {
+    return createCpuField({ field: 'efficientCoreClock', value: null, ctx });
   }
 
   const values = tokenizeMultiLine($, 'E-Core Frequency').map((value) =>
@@ -239,7 +249,7 @@ function getEfficientCoreClock($: cheerio.CheerioAPI) {
 
   // Doesn't have 2 values for this field. Cannot determine clock
   if (values.length !== 2) {
-    return createCpuField('efficientCoreClock', null);
+    return createCpuField({ field: 'efficientCoreClock', value: null, ctx });
   }
 
   const [displayValue, displayUnit] = parseNumber(values[0] || null);
@@ -253,12 +263,24 @@ function getEfficientCoreClock($: cheerio.CheerioAPI) {
   const unit = formats[displayUnit] || null;
   const value = getBaseUnitValue(displayValue, unit);
 
-  return createCpuField('efficientCoreClock', value, { unit });
+  return createCpuField({
+    field: 'efficientCoreClock',
+    value,
+    meta: { unit },
+    ctx,
+  });
 }
 
-function getEfficientCoreTurboClock($: cheerio.CheerioAPI) {
-  if (!hasProductFieldValue(getEfficientCoresCount($))) {
-    return createCpuField('efficientCoreTurboClock', null);
+function getEfficientCoreTurboClock(
+  $: cheerio.CheerioAPI,
+  ctx?: ScraperContext,
+) {
+  if (!hasProductFieldValue(getEfficientCoresCount($, ctx))) {
+    return createCpuField({
+      field: 'efficientCoreTurboClock',
+      value: null,
+      ctx,
+    });
   }
 
   const values = tokenizeMultiLine($, 'E-Core Frequency').map((value) =>
@@ -267,7 +289,11 @@ function getEfficientCoreTurboClock($: cheerio.CheerioAPI) {
 
   // Doesn't have 2 values for this field. Cannot determine clock
   if (values.length !== 2) {
-    return createCpuField('efficientCoreTurboClock', null);
+    return createCpuField({
+      field: 'efficientCoreTurboClock',
+      value: null,
+      ctx,
+    });
   }
 
   const [displayValue, displayUnit] = parseNumber(values[1] || null);
@@ -281,10 +307,15 @@ function getEfficientCoreTurboClock($: cheerio.CheerioAPI) {
   const unit = formats[displayUnit] || null;
   const value = getBaseUnitValue(displayValue, unit);
 
-  return createCpuField('efficientCoreTurboClock', value, { unit });
+  return createCpuField({
+    field: 'efficientCoreTurboClock',
+    value,
+    meta: { unit },
+    ctx,
+  });
 }
 
-function getEfficientCoresCount($: cheerio.CheerioAPI) {
+function getEfficientCoresCount($: cheerio.CheerioAPI, ctx?: ScraperContext) {
   const values = tokenizeMultiLine($, 'Hybrid Cores');
 
   let textValue: string = null;
@@ -299,44 +330,47 @@ function getEfficientCoresCount($: cheerio.CheerioAPI) {
   const [displayValue] = parseNumber(textValue || null);
   const value = displayValue;
 
-  return createCpuField('efficientCoresCount', value);
+  return createCpuField({ field: 'efficientCoresCount', value, ctx });
 }
 
-function getExtensionsTechnologies($: cheerio.CheerioAPI) {
+function getExtensionsTechnologies(
+  $: cheerio.CheerioAPI,
+  ctx?: ScraperContext,
+) {
   const items =
     $('ul.features li')
       .map((_i, li) => $(li).text().trim())
       .get()
       .filter((text) => text != null && text.length > 0) || [];
 
-  return createCpuField('extensionsTechnologies', items);
+  return createCpuField({ field: 'extensionsTechnologies', value: items, ctx });
 }
 
-function getFoundry($: cheerio.CheerioAPI) {
+function getFoundry($: cheerio.CheerioAPI, ctx?: ScraperContext) {
   const values = tokenizeMultiLine($, 'Foundry');
   const value = values.join(', ') || null;
 
-  return createCpuField('foundry', value);
+  return createCpuField({ field: 'foundry', value, ctx });
 }
 
-function getGeneration($: cheerio.CheerioAPI) {
+function getGeneration($: cheerio.CheerioAPI, ctx?: ScraperContext) {
   const values = tokenizeMultiLine($, 'Generation');
   const value = values[0]?.trim();
 
-  return createCpuField('generation', value);
+  return createCpuField({ field: 'generation', value, ctx });
 }
 
-function getIntegratedGraphics($: cheerio.CheerioAPI) {
+function getIntegratedGraphics($: cheerio.CheerioAPI, ctx?: ScraperContext) {
   const values = tokenizeMultiLine($, 'Integrated Graphics');
   const value = values[0]?.trim();
   if (value?.toLowerCase() === 'n/a') {
-    return createCpuField('integratedGraphics', null);
+    return createCpuField({ field: 'integratedGraphics', value: null, ctx });
   }
 
-  return createCpuField('integratedGraphics', value);
+  return createCpuField({ field: 'integratedGraphics', value, ctx });
 }
 
-function getL1Cache($: cheerio.CheerioAPI) {
+function getL1Cache($: cheerio.CheerioAPI, ctx?: ScraperContext) {
   const values = tokenizeMultiLine($, 'Cache L1');
   const sanitizedValue = values[0]?.split(' ')[0];
   const [displayValue, displayUnit] = parseNumber(sanitizedValue || null);
@@ -349,10 +383,10 @@ function getL1Cache($: cheerio.CheerioAPI) {
   const unit = formats[displayUnit] || null;
   const value = getBaseUnitValue(displayValue, unit);
 
-  return createCpuField('l1Cache', value, { unit });
+  return createCpuField({ field: 'l1Cache', value, meta: { unit }, ctx });
 }
 
-function getL2Cache($: cheerio.CheerioAPI) {
+function getL2Cache($: cheerio.CheerioAPI, ctx?: ScraperContext) {
   const values = tokenizeMultiLine($, 'Cache L2');
   const sanitizedValue = values[0]?.split(' ')[0];
   const [displayValue, displayUnit] = parseNumber(sanitizedValue || null);
@@ -365,10 +399,10 @@ function getL2Cache($: cheerio.CheerioAPI) {
   const unit = formats[displayUnit] || null;
   const value = getBaseUnitValue(displayValue, unit);
 
-  return createCpuField('l2Cache', value, { unit });
+  return createCpuField({ field: 'l2Cache', value, meta: { unit }, ctx });
 }
 
-function getL3Cache($: cheerio.CheerioAPI) {
+function getL3Cache($: cheerio.CheerioAPI, ctx?: ScraperContext) {
   const values = tokenizeMultiLine($, 'Cache L3');
   const sanitizedValue = values[0]?.split(' ')[0];
   const [displayValue, displayUnit] = parseNumber(sanitizedValue || null);
@@ -381,10 +415,10 @@ function getL3Cache($: cheerio.CheerioAPI) {
   const unit = formats[displayUnit] || null;
   const value = getBaseUnitValue(displayValue, unit);
 
-  return createCpuField('l3Cache', value, { unit });
+  return createCpuField({ field: 'l3Cache', value, meta: { unit }, ctx });
 }
 
-function getLaunchPrice($: cheerio.CheerioAPI) {
+function getLaunchPrice($: cheerio.CheerioAPI, ctx?: ScraperContext) {
   const values = tokenizeMultiLine($, 'Launch Price');
   const [displayValue, displayCurrency] = parseNumber(values[0] || null);
 
@@ -395,10 +429,15 @@ function getLaunchPrice($: cheerio.CheerioAPI) {
   const currency = formats[displayCurrency] || null;
   const value = displayValue;
 
-  return createCpuField('launchPrice', value, { currency });
+  return createCpuField({
+    field: 'launchPrice',
+    value,
+    meta: { currency },
+    ctx,
+  });
 }
 
-function getMarketSegments($: cheerio.CheerioAPI) {
+function getMarketSegments($: cheerio.CheerioAPI, ctx?: ScraperContext) {
   const marketSegments: CpuMarketSegmentValue[] = [];
   if (isDesktopMarketSegment($)) {
     marketSegments.push(CpuMarketSegmentValue.Desktop);
@@ -416,7 +455,11 @@ function getMarketSegments($: cheerio.CheerioAPI) {
     marketSegments.push(CpuMarketSegmentValue.Embedded);
   }
 
-  return createCpuField('marketSegments', marketSegments);
+  return createCpuField({
+    field: 'marketSegments',
+    value: marketSegments,
+    ctx,
+  });
 }
 
 function isDesktopMarketSegment($: cheerio.CheerioAPI) {
@@ -545,7 +588,7 @@ function isEmbeddedMarketSegment($: cheerio.CheerioAPI) {
   return false;
 }
 
-function getMemoryChannels($: cheerio.CheerioAPI) {
+function getMemoryChannels($: cheerio.CheerioAPI, ctx?: ScraperContext) {
   const values = tokenizeMultiLine($, 'Memory Support');
 
   let value: number = null;
@@ -557,10 +600,10 @@ function getMemoryChannels($: cheerio.CheerioAPI) {
     }
   }
 
-  return createCpuField('memoryChannels', value);
+  return createCpuField({ field: 'memoryChannels', value, ctx });
 }
 
-function getMemorySupport($: cheerio.CheerioAPI) {
+function getMemorySupport($: cheerio.CheerioAPI, ctx?: ScraperContext) {
   const value: string[] = [];
   const memoryTypes = new Set<string>();
 
@@ -597,18 +640,18 @@ function getMemorySupport($: cheerio.CheerioAPI) {
     }
   }
 
-  return createCpuField('memorySupport', value);
+  return createCpuField({ field: 'memorySupport', value, ctx });
 }
 
-function getMultiplier($: cheerio.CheerioAPI) {
+function getMultiplier($: cheerio.CheerioAPI, ctx?: ScraperContext) {
   const values = tokenizeMultiLine($, 'Multiplier');
   const [displayValue] = parseNumber(values[0] || null);
   const value = displayValue;
 
-  return createCpuField('multiplier', value);
+  return createCpuField({ field: 'multiplier', value, ctx });
 }
 
-function getMultiplierUnlocked($: cheerio.CheerioAPI) {
+function getMultiplierUnlocked($: cheerio.CheerioAPI, ctx?: ScraperContext) {
   const text = tokenizeMultiLine($, 'Multiplier Unlocked');
   const textTrimmed = text[0]?.trim().toLowerCase();
 
@@ -619,24 +662,24 @@ function getMultiplierUnlocked($: cheerio.CheerioAPI) {
     value = false;
   }
 
-  return createCpuField('isMultiplierUnlocked', value);
+  return createCpuField({ field: 'isMultiplierUnlocked', value, ctx });
 }
 
 function getName($: cheerio.CheerioAPI) {
   const fullName = $('.cpuname').text();
-  const company = getCompany($)?.value ?? '';
+  const { company } = parseProductName(fullName);
 
-  return fullName.substring(company.length).trim();
+  return fullName.substring(company?.length || 0).trim();
 }
 
-function getPartNumber($: cheerio.CheerioAPI) {
+function getPartNumber($: cheerio.CheerioAPI, ctx?: ScraperContext) {
   const values = tokenizeMultiLine($, 'Part#');
   const value = values.join(', ') || null;
 
-  return createCpuField('partNumber', value);
+  return createCpuField({ field: 'partNumber', value, ctx });
 }
 
-function getPciExpress($: cheerio.CheerioAPI) {
+function getPciExpress($: cheerio.CheerioAPI, ctx?: ScraperContext) {
   const primaryPciValues = tokenizeMultiLine($, 'PCI-Express');
   const secondaryPciValues = tokenizeMultiLine($, 'Secondary PCIe');
   const pciExpressData = [...primaryPciValues, ...secondaryPciValues];
@@ -664,34 +707,41 @@ function getPciExpress($: cheerio.CheerioAPI) {
     value.push(pciExpressValue);
   }
 
-  return createCpuField('pciExpress', value);
+  return createCpuField({ field: 'pciExpress', value, ctx });
 }
 
-function getPerformanceCoreClock($: cheerio.CheerioAPI) {
-  if (!hasProductFieldValue(getPerformanceCoresCount($))) {
-    return createCpuField('performanceCoreClock', null);
+function getPerformanceCoreClock($: cheerio.CheerioAPI, ctx?: ScraperContext) {
+  if (!hasProductFieldValue(getPerformanceCoresCount($, ctx))) {
+    return createCpuField({ field: 'performanceCoreClock', value: null, ctx });
   }
 
-  const ret = getClock($);
+  const ret = getClock($, ctx);
   if (ret != null) {
     ret.meta.fieldKey = 'performanceCoreClock';
   }
   return ret;
 }
 
-function getPerformanceCoreTurboClock($: cheerio.CheerioAPI) {
-  if (!hasProductFieldValue(getPerformanceCoresCount($))) {
-    return createCpuField('performanceCoreTurboClock', null);
+function getPerformanceCoreTurboClock(
+  $: cheerio.CheerioAPI,
+  ctx?: ScraperContext,
+) {
+  if (!hasProductFieldValue(getPerformanceCoresCount($, ctx))) {
+    return createCpuField({
+      field: 'performanceCoreTurboClock',
+      value: null,
+      ctx,
+    });
   }
 
-  const ret = getTurboClock($);
+  const ret = getTurboClock($, ctx);
   if (ret != null) {
     ret.meta.fieldKey = 'performanceCoreTurboClock';
   }
   return ret;
 }
 
-function getPerformanceCoresCount($: cheerio.CheerioAPI) {
+function getPerformanceCoresCount($: cheerio.CheerioAPI, ctx?: ScraperContext) {
   const values = tokenizeMultiLine($, 'Hybrid Cores');
 
   let textValue: string = null;
@@ -706,10 +756,10 @@ function getPerformanceCoresCount($: cheerio.CheerioAPI) {
   const [displayValue] = parseNumber(textValue || null);
   const value = displayValue;
 
-  return createCpuField('performanceCoresCount', value);
+  return createCpuField({ field: 'performanceCoresCount', value, ctx });
 }
 
-function getPl1($: cheerio.CheerioAPI) {
+function getPl1($: cheerio.CheerioAPI, ctx?: ScraperContext) {
   const values = tokenizeMultiLine($, 'PL1');
   const [displayValue, displayUnit] = parseNumber(values[0] || null);
 
@@ -720,10 +770,10 @@ function getPl1($: cheerio.CheerioAPI) {
   const unit = formats[displayUnit] || null;
   const value = getBaseUnitValue(displayValue, unit);
 
-  return createCpuField('pl1', value, { unit });
+  return createCpuField({ field: 'pl1', value, meta: { unit }, ctx });
 }
 
-function getPl2($: cheerio.CheerioAPI) {
+function getPl2($: cheerio.CheerioAPI, ctx?: ScraperContext) {
   const values = tokenizeMultiLine($, 'PL2');
   const [displayValue, displayUnit] = parseNumber(values[0] || null);
 
@@ -734,10 +784,10 @@ function getPl2($: cheerio.CheerioAPI) {
   const unit = formats[displayUnit] || null;
   const value = getBaseUnitValue(displayValue, unit);
 
-  return createCpuField('pl2', value, { unit });
+  return createCpuField({ field: 'pl2', value, meta: { unit }, ctx });
 }
 
-function getPpt($: cheerio.CheerioAPI) {
+function getPpt($: cheerio.CheerioAPI, ctx?: ScraperContext) {
   const values = tokenizeMultiLine($, 'PPT');
   const [displayValue, displayUnit] = parseNumber(values[0] || null);
 
@@ -748,10 +798,10 @@ function getPpt($: cheerio.CheerioAPI) {
   const unit = formats[displayUnit] || null;
   const value = getBaseUnitValue(displayValue, unit);
 
-  return createCpuField('ppt', value, { unit });
+  return createCpuField({ field: 'ppt', value, meta: { unit }, ctx });
 }
 
-function getProcessSize($: cheerio.CheerioAPI) {
+function getProcessSize($: cheerio.CheerioAPI, ctx?: ScraperContext) {
   const values = tokenizeMultiLine($, 'Process Size');
   const [displayValue, displayUnit] = parseNumber(values[0] || null);
 
@@ -763,10 +813,10 @@ function getProcessSize($: cheerio.CheerioAPI) {
   const unit = formats[displayUnit] || null;
   const value = getBaseUnitValue(displayValue, unit);
 
-  return createCpuField('processSize', value, { unit });
+  return createCpuField({ field: 'processSize', value, meta: { unit }, ctx });
 }
 
-function getProductionStatus($: cheerio.CheerioAPI) {
+function getProductionStatus($: cheerio.CheerioAPI, ctx?: ScraperContext) {
   const values = tokenizeMultiLine($, 'Production Status');
   const productionStatus = values
     .map((value) => {
@@ -783,10 +833,14 @@ function getProductionStatus($: cheerio.CheerioAPI) {
     })
     .filter((value) => value != null);
 
-  return createCpuField('productionStatus', productionStatus[0] || null);
+  return createCpuField({
+    field: 'productionStatus',
+    value: productionStatus[0] || null,
+    ctx,
+  });
 }
 
-function getReleaseDate($: cheerio.CheerioAPI) {
+function getReleaseDate($: cheerio.CheerioAPI, ctx?: ScraperContext) {
   const availabilityValues = tokenizeMultiLine($, 'Availability');
   const releaseDateValues = tokenizeMultiLine($, 'Release Date');
 
@@ -826,17 +880,22 @@ function getReleaseDate($: cheerio.CheerioAPI) {
     format = value != null ? DateFormat.Year : null;
   }
 
-  return createCpuField('releaseDate', value, { dateFormat: format });
+  return createCpuField({
+    field: 'releaseDate',
+    value,
+    meta: { dateFormat: format },
+    ctx,
+  });
 }
 
-function getSocket($: cheerio.CheerioAPI) {
+function getSocket($: cheerio.CheerioAPI, ctx?: ScraperContext) {
   const values = tokenizeMultiLine($, 'Socket');
   const value = values.join(', ') || null;
 
-  return createCpuField('socket', value);
+  return createCpuField({ field: 'socket', value, ctx });
 }
 
-function getTCaseMax($: cheerio.CheerioAPI) {
+function getTCaseMax($: cheerio.CheerioAPI, ctx?: ScraperContext) {
   const values = tokenizeMultiLine($, 'tCaseMax');
   const [displayValue, displayUnit] = parseNumber(values[0] || null);
 
@@ -847,10 +906,10 @@ function getTCaseMax($: cheerio.CheerioAPI) {
   const unit = formats[displayUnit] || null;
   const value = getBaseUnitValue(displayValue, unit);
 
-  return createCpuField('tCaseMax', value, { unit });
+  return createCpuField({ field: 'tCaseMax', value, meta: { unit }, ctx });
 }
 
-function getTdp($: cheerio.CheerioAPI) {
+function getTdp($: cheerio.CheerioAPI, ctx?: ScraperContext) {
   const values = tokenizeMultiLine($, 'TDP');
   const [displayValue, displayUnit] = parseNumber(values[0] || null);
 
@@ -861,18 +920,18 @@ function getTdp($: cheerio.CheerioAPI) {
   const unit = formats[displayUnit] || null;
   const value = getBaseUnitValue(displayValue, unit);
 
-  return createCpuField('tdp', value, { unit });
+  return createCpuField({ field: 'tdp', value, meta: { unit }, ctx });
 }
 
-function getThreadsCount($: cheerio.CheerioAPI) {
+function getThreadsCount($: cheerio.CheerioAPI, ctx?: ScraperContext) {
   const values = tokenizeMultiLine($, '# of Threads');
   const [displayValue] = parseNumber(values[0] || null);
   const value = displayValue;
 
-  return createCpuField('threadsCount', value);
+  return createCpuField({ field: 'threadsCount', value, ctx });
 }
 
-function getTjMax($: cheerio.CheerioAPI) {
+function getTjMax($: cheerio.CheerioAPI, ctx?: ScraperContext) {
   const values = tokenizeMultiLine($, 'tJMax');
   const [displayValue, displayUnit] = parseNumber(values[0] || null);
 
@@ -883,10 +942,10 @@ function getTjMax($: cheerio.CheerioAPI) {
   const unit = formats[displayUnit] || null;
   const value = getBaseUnitValue(displayValue, unit);
 
-  return createCpuField('tjMax', value, { unit });
+  return createCpuField({ field: 'tjMax', value, meta: { unit }, ctx });
 }
 
-function getTransistors($: cheerio.CheerioAPI) {
+function getTransistors($: cheerio.CheerioAPI, ctx?: ScraperContext) {
   const values = tokenizeMultiLine($, 'Transistors');
   const [displayValue, displayUnit] = parseNumber(values[0] || null);
 
@@ -897,10 +956,10 @@ function getTransistors($: cheerio.CheerioAPI) {
   const unit = formats[displayUnit] || null;
   const value = getBaseUnitValue(displayValue, unit);
 
-  return createCpuField('transistors', value, { unit });
+  return createCpuField({ field: 'transistors', value, meta: { unit }, ctx });
 }
 
-function getTurboClock($: cheerio.CheerioAPI) {
+function getTurboClock($: cheerio.CheerioAPI, ctx?: ScraperContext) {
   const values = tokenizeMultiLine($, 'Turbo Clock').map((value) =>
     value.replace('up to', '').trim(),
   );
@@ -915,7 +974,7 @@ function getTurboClock($: cheerio.CheerioAPI) {
   const unit = formats[displayUnit] || null;
   const value = getBaseUnitValue(displayValue, unit);
 
-  return createCpuField('turboClock', value, { unit });
+  return createCpuField({ field: 'turboClock', value, meta: { unit }, ctx });
 }
 
 function tokenizeMultiLine($: cheerio.CheerioAPI, label: string) {

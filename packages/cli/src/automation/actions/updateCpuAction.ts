@@ -42,8 +42,6 @@ export async function updateCpuAction(
       [CpuDataSourceKey.PassMark]: passMarkSource,
       [CpuDataSourceKey.GeekBench]: geekBenchSource,
     },
-    concurrency: context.concurrency ? 3 : 1,
-    delayBetweenChunksMs: context.requestChunkDelay,
   });
 
   // Update benchmarks for existing CPU. These do not require approval.

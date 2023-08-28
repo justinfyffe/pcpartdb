@@ -54,8 +54,6 @@ export async function updateGpuAction(
       [GpuDataSourceKey.VideocardBenchmarks]: passMarkSource,
       [GpuDataSourceKey.UlBenchmarks]: ulBenchmarkSource,
     },
-    concurrency: context.concurrency ? 3 : 1,
-    delayBetweenChunksMs: context.requestChunkDelay,
   });
 
   // Update benchmarks for existing GPU. These do not require approval.

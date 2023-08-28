@@ -6,38 +6,44 @@ import {
 } from '@pcpartdb/shared';
 import * as cheerio from 'cheerio';
 import { scraper } from '../../scraper';
+import { CommonScraperOptions, ScraperContext } from '../../types';
 import { createGpuField } from '../utils';
 
-export interface ScrapePassMarkGpuDataOptions {
+export interface ScrapePassMarkGpuDataOptions extends CommonScraperOptions {
   url: string;
-  noProxy?: boolean;
 }
 
 // Example: https://www.videocardbenchmark.net/gpu.php?gpu=GeForce+RTX+4090&id=4606
 export async function scrapePassMarkGpuData(
   options: ScrapePassMarkGpuDataOptions,
 ) {
-  const { url, noProxy } = options;
+  const { url, noProxy, ctx } = options;
 
   const response = await scraper.scrape(url, { retries: 1, noProxy });
   const $ = cheerio.load(response.data);
 
   const product: Partial<Gpu> = {
-    // marketSegment: getMarketSegment($),
-    g3dMark: getG3dMark($),
-    g2dMark: getG2dMark($),
+    marketSegment: getMarketSegment($, ctx),
+    g3dMark: getG3dMark($, ctx),
+    g2dMark: getG2dMark($, ctx),
   };
 
   return { product } as ScrapeProductResponse;
 }
 
-function getG3dMark($: cheerio.CheerioAPI): GpuField<number> {
+function getG3dMark(
+  $: cheerio.CheerioAPI,
+  ctx: ScraperContext,
+): GpuField<number> {
   const g3dMark = $('.speedicon').siblings('span').first().text();
   const value = g3dMark ? Number(g3dMark) : null;
-  return createGpuField('g3dMark', value);
+  return createGpuField({ field: 'g3dMark', value, ctx });
 }
 
-function getG2dMark($: cheerio.CheerioAPI): GpuField<number> {
+function getG2dMark(
+  $: cheerio.CheerioAPI,
+  ctx: ScraperContext,
+): GpuField<number> {
   const g2dMark = $('strong')
     .filter((_i, el) => $(el).text().trim() === 'Average G2D Mark:')
     .parent()
@@ -48,11 +54,12 @@ function getG2dMark($: cheerio.CheerioAPI): GpuField<number> {
     .trim();
 
   const value = g2dMark ? Number(g2dMark) : null;
-  return createGpuField('g2dMark', value);
+  return createGpuField({ field: 'g2dMark', value, ctx });
 }
 
 function getMarketSegment(
   $: cheerio.CheerioAPI,
+  ctx: ScraperContext,
 ): GpuField<GpuMarketSegmentValue> {
   const text = $('.desc-foot p strong')
     .filter((_i, strong) => $(strong).text().trim() === 'Videocard Category:')
@@ -72,5 +79,5 @@ function getMarketSegment(
     value = GpuMarketSegmentValue.Workstation;
   }
 
-  return createGpuField('marketSegment', value);
+  return createGpuField({ field: 'marketSegment', value, ctx });
 }

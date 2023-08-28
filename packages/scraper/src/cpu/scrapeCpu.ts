@@ -1,40 +1,31 @@
 import {
-  concurrent,
   CpuDataSource,
   CpuDataSourceKey,
   deepmerge,
   Product,
   ScrapeProductResponse,
 } from '@pcpartdb/shared';
+import { ScraperContext } from '../types';
 import { scrapeGeekBenchCpuData } from './geekbench';
 import { scrapePassMarkCpuData } from './passmark';
 import { scrapeTechPowerUpCpuData } from './techpowerup';
 
 export interface ScrapeCpuOptions {
   sources: Record<string, CpuDataSource>;
-  concurrency?: number;
-  delayBetweenChunksMs?: number;
 }
 
 export async function scrapeCpu(options: ScrapeCpuOptions) {
-  const { sources, concurrency, delayBetweenChunksMs } = options;
+  const { sources } = options;
 
   const techPowerUp = sources[CpuDataSourceKey.TechPowerUp];
   const passMark = sources[CpuDataSourceKey.PassMark];
   const geekBench = sources[CpuDataSourceKey.GeekBench];
 
-  // Fetch cpu data (concurrently if desired)
-  const [techPowerUpResult, passMarkResult, geekBenchResult] = await concurrent(
-    [
-      () => scrapeTechPowerUp(techPowerUp),
-      () => scrapePassMark(passMark),
-      () => scrapeGeekBench(geekBench),
-    ],
-    {
-      limit: concurrency || 1,
-      delayBetweenChunksMs: delayBetweenChunksMs || 0,
-    },
-  );
+  // Fetch cpu data
+  const ctx: ScraperContext = { memoizedFields: {} };
+  const techPowerUpResult = await scrapeTechPowerUp(techPowerUp, ctx);
+  const passMarkResult = await scrapePassMark(techPowerUp, ctx);
+  const geekBenchResult = await scrapeGeekBench(geekBench, ctx);
 
   // Merge scraped results
   let scrapedProduct: Partial<Product> = { meta: { dataSources: {} } };
@@ -57,23 +48,23 @@ export async function scrapeCpu(options: ScrapeCpuOptions) {
   return { product: scrapedProduct } as ScrapeProductResponse;
 }
 
-async function scrapeTechPowerUp(source: CpuDataSource) {
+async function scrapeTechPowerUp(source: CpuDataSource, ctx: ScraperContext) {
   if (source?.url == null) {
     return null;
   }
-  return await scrapeTechPowerUpCpuData({ url: source.url });
+  return await scrapeTechPowerUpCpuData({ url: source.url, ctx });
 }
 
-async function scrapePassMark(source: CpuDataSource) {
+async function scrapePassMark(source: CpuDataSource, ctx: ScraperContext) {
   if (source?.url == null) {
     return null;
   }
-  return await scrapePassMarkCpuData({ url: source.url });
+  return await scrapePassMarkCpuData({ url: source.url, ctx });
 }
 
-async function scrapeGeekBench(source: CpuDataSource) {
+async function scrapeGeekBench(source: CpuDataSource, ctx: ScraperContext) {
   if (source?.url == null) {
     return null;
   }
-  return await scrapeGeekBenchCpuData({ url: source.url });
+  return await scrapeGeekBenchCpuData({ url: source.url, ctx });
 }

@@ -47,8 +47,6 @@ export async function createCpuAction(
       [CpuDataSourceKey.PassMark]: passMarkSource,
       [CpuDataSourceKey.GeekBench]: geekBenchSource,
     },
-    concurrency: context.concurrency ? 3 : 1,
-    delayBetweenChunksMs: context.requestChunkDelay,
   });
 
   // New CPUs have some additional data to be applied

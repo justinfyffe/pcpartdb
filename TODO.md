@@ -1,24 +1,13 @@
 HIGH LEVEL TODO:
-- scraping cpu/gpu:
-  - add a ignoreFields array to scraper functions
-    - if fieldKey is in that ignoreFields array, return undefined
-    - if the source wants to lock fields, it should add to ignoreFields
-  - figure out a way to handle preferred sources for fields
-    - maybe pass in scraped object being built and build off of that?
-      - and then non-preferred sources can the field if it's set
 - misc adjustments
   - explore linking to retail models instead of dialog
-- fix market segment merging
-  - maybe instead of merging, we pass in the current constructed object when scraping?
-  - primary source -> a source the takes precedence if there is data
 - data cleanup
   - fill in missing performance scores
-  - fix up any misisng quarter release dates
+  - fix up any missing quarter release dates
   - consistent naming "(OEM)", "(Mobile)"
 - Automation improvements
   - gpu retail models don't need to update as much. except for price?
   - double check indexes and looping sql queries
-  - some slowdown when upserting sources
   - add more scrapers (e.g. intel website)
 - easier to spot missing data
   - audit page
@@ -35,7 +24,6 @@ HIGH LEVEL TODO:
   - replace axios with fetch
 - Security
   - setup weekly backups on digital ocean
-  - reduce max file size
   - DDoS protection with Cloudflare
   - Rate limit non-staff api calls?
   - Add recaptcha?
@@ -54,6 +42,7 @@ HIGH LEVEL TODO:
     - not everything needs a transaction
     - https://www.prisma.io/docs/concepts/components/prisma-client/transactions#interactive-transactions
 - Improve performance score (not just g3d mark or cpu mark)
+  - estimate
 - Affiliate Ads
   - live price checking for performance/price ranks, cache if it's been recent
     - can show a spinner when fetching the price

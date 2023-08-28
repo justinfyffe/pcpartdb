@@ -1,9 +1,11 @@
 import {
+  CpuField,
   CpuFieldKey,
   CpuFieldMeta,
   hasProductFieldValue,
   ProductType,
 } from '@pcpartdb/shared';
+import { ScraperContext } from '../types';
 
 interface GenerateCpuGroupKeyOptions {
   company: string;
@@ -63,18 +65,34 @@ export function generateCpuGroupKey(options: GenerateCpuGroupKeyOptions) {
   return `${type}__${company}__${name}`;
 }
 
-export function createCpuField<T = unknown>(
-  fieldKey: CpuFieldKey,
-  value: T,
-  meta?: CpuFieldMeta,
-) {
+interface CreateCpuFieldOptions<T = unknown> {
+  field: CpuFieldKey;
+  value: T;
+  meta?: CpuFieldMeta;
+  ctx?: ScraperContext;
+  overwriteMemo?: boolean;
+}
+
+export function createCpuField<T = unknown>(options: CreateCpuFieldOptions<T>) {
+  const { field, value, meta, ctx, overwriteMemo } = options;
+
+  if (overwriteMemo !== true && ctx?.memoizedFields?.[field] != null) {
+    // Field was previously set, use that one unless we're skipping memoization.
+    return ctx.memoizedFields[field] as CpuField<T>;
+  }
+
   const productField = {
     value,
-    meta: { ...(meta ?? {}), fieldKey, autoUpdate: true },
+    meta: { ...(meta ?? {}), fieldKey: field, autoUpdate: true },
   };
 
-  // Reset to null if a non-value
-  if (!hasProductFieldValue(productField)) {
+  if (hasProductFieldValue(productField)) {
+    // Memoize field
+    if (ctx?.memoizedFields != null) {
+      ctx.memoizedFields[field] = productField;
+    }
+  } else {
+    // Reset to null if a non-value
     // Arrays cannot be null
     if (!Array.isArray(productField.value)) {
       productField.value = null;

@@ -18,9 +18,9 @@ import {
 import { sleep } from '../../shared/process';
 import { AutomationContext } from '../types';
 
-const BATCH_SIZE = 10;
-const DELAY_BETWEEN_UPLOAD = 10_000;
-const CONCURRENCY_CHUNK_SIZE = 3;
+const BATCH_SIZE = 8;
+const DELAY_BETWEEN_UPLOAD = 5_000;
+const CONCURRENCY_CHUNK_SIZE = 5;
 
 const TECHPOWERUP_URLS = [
   {

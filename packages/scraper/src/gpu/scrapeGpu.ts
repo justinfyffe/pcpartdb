@@ -1,5 +1,4 @@
 import {
-  concurrent,
   deepmerge,
   Gpu,
   GpuDataSource,
@@ -7,6 +6,7 @@ import {
   Product,
   ScrapeProductResponse,
 } from '@pcpartdb/shared';
+import { ScraperContext } from '../types';
 import { scrapePassMarkGpuData } from './passmark';
 import { scrapeFromChipsetGpu } from './scrapeFromChipsetGpu';
 import { scrapeTechPowerUpGpuData } from './techpowerup';
@@ -15,31 +15,21 @@ import { scrapeUlBenchmarksGpuData } from './ul-benchmarks';
 export interface ScrapeGpuOptions {
   sources: Record<string, GpuDataSource>;
   chipset?: Gpu;
-  concurrency?: number;
-  delayBetweenChunksMs?: number;
 }
 
 export async function scrapeGpu(options: ScrapeGpuOptions) {
-  const { chipset, sources, concurrency, delayBetweenChunksMs } = options;
+  const { chipset, sources } = options;
 
   const techPowerUp = sources[GpuDataSourceKey.TechPowerUp];
   const passMark = sources[GpuDataSourceKey.VideocardBenchmarks];
   const ulBenchmarks = sources[GpuDataSourceKey.UlBenchmarks];
 
-  // Fetch gpu data (concurrently if desired)
-  const [chipsetResult, techPowerUpResult, passMarkResult, ulBenchmarkResult] =
-    await concurrent(
-      [
-        () => scrapeChipset(chipset),
-        () => scrapeTechPowerUp(techPowerUp),
-        () => scrapePassMark(passMark),
-        () => scrapeUlBenchmarks(ulBenchmarks),
-      ],
-      {
-        limit: concurrency || 1,
-        delayBetweenChunksMs: delayBetweenChunksMs || 0,
-      },
-    );
+  // Fetch gpu data
+  const ctx: ScraperContext = { memoizedFields: {} };
+  const chipsetResult = await scrapeChipset(chipset, ctx);
+  const techPowerUpResult = await scrapeTechPowerUp(techPowerUp, ctx);
+  const passMarkResult = await scrapePassMark(passMark, ctx);
+  const ulBenchmarkResult = await scrapeUlBenchmarks(ulBenchmarks, ctx);
 
   // Merge scraped results
   let hasRetailModels = false;
@@ -75,34 +65,34 @@ export async function scrapeGpu(options: ScrapeGpuOptions) {
   } as ScrapeProductResponse & { hasRetailModels: boolean };
 }
 
-async function scrapeChipset(chipset: Gpu) {
+async function scrapeChipset(chipset: Gpu, ctx: ScraperContext) {
   if (chipset == null) {
     return null;
   }
-  return await scrapeFromChipsetGpu({ chipset });
+  return await scrapeFromChipsetGpu({ chipset, ctx });
 }
 
-async function scrapeTechPowerUp(source: GpuDataSource) {
+async function scrapeTechPowerUp(source: GpuDataSource, ctx: ScraperContext) {
   if (source?.url == null) {
     return null;
   }
-  return await scrapeTechPowerUpGpuData({ url: source.url });
+  return await scrapeTechPowerUpGpuData({ url: source.url, ctx });
 }
 
-async function scrapePassMark(source: GpuDataSource) {
+async function scrapePassMark(source: GpuDataSource, ctx: ScraperContext) {
   if (source?.url == null) {
     return null;
   }
-  return await scrapePassMarkGpuData({ url: source.url });
+  return await scrapePassMarkGpuData({ url: source.url, ctx });
 }
 
-async function scrapeUlBenchmarks(source: GpuDataSource) {
+async function scrapeUlBenchmarks(source: GpuDataSource, ctx: ScraperContext) {
   if (source?.url == null) {
     return null;
   }
 
   try {
-    return await scrapeUlBenchmarksGpuData({ url: source.url });
+    return await scrapeUlBenchmarksGpuData({ url: source.url, ctx });
   } catch (e) {
     console.error('Fetching GPU data from UL Benchmarks failed. Ignoring it.');
     return null;

@@ -52,8 +52,6 @@ export async function createGpuAction(
       [GpuDataSourceKey.VideocardBenchmarks]: passMarkSource,
       [GpuDataSourceKey.UlBenchmarks]: ulBenchmarkSource,
     },
-    concurrency: context.concurrency ? 3 : 1,
-    delayBetweenChunksMs: context.requestChunkDelay,
   });
 
   // New GPUs have some additional data to be applied
