@@ -176,9 +176,7 @@ export async function updateGpuChipsetSourcesAction(
   // Trigger auto-archive
   await context.api.post(
     'products/sources/auto-archive',
-    {
-      productType: ProductType.Gpu,
-    } as AutoArchiveProductSourcesRequest,
+    { productType: ProductType.Gpu } as AutoArchiveProductSourcesRequest,
     { retries: 2 },
   );
 

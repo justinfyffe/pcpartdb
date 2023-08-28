@@ -24,7 +24,7 @@ export async function scrapeCpu(options: ScrapeCpuOptions) {
   // Fetch cpu data
   const ctx: ScraperContext = { memoizedFields: {} };
   const techPowerUpResult = await scrapeTechPowerUp(techPowerUp, ctx);
-  const passMarkResult = await scrapePassMark(techPowerUp, ctx);
+  const passMarkResult = await scrapePassMark(passMark, ctx);
   const geekBenchResult = await scrapeGeekBench(geekBench, ctx);
 
   // Merge scraped results

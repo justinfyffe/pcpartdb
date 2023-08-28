@@ -150,12 +150,7 @@ async function getTechPowerUpSources(context: AutomationContext) {
   for (let i = 0; i < TECHPOWERUP_URLS.length; ++i) {
     const { company, urls } = TECHPOWERUP_URLS[i];
 
-    const randomizedUrls = urls
-      .map((value) => ({ value, sort: Math.random() }))
-      .sort((a, b) => a.sort - b.sort)
-      .map(({ value }) => value);
-
-    for (const url of randomizedUrls) {
+    for (const url of urls) {
       promises.push(() => scrapeTechPowerUp(url, company, map));
     }
   }

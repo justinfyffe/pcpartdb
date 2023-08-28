@@ -6,9 +6,10 @@ HIGH LEVEL TODO:
   - fix up any missing quarter release dates
   - consistent naming "(OEM)", "(Mobile)"
 - Automation improvements
+  - auto archive when uploading sources
   - gpu retail models don't need to update as much. except for price?
   - double check indexes and looping sql queries
-  - add more scrapers (e.g. intel website)
+  - add more scrapers (e.g. intel website, amd website, wikichip)
 - easier to spot missing data
   - audit page
     - have tabs for seeing missing:

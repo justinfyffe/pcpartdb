@@ -17,8 +17,6 @@ import {
 } from './product.validators';
 import { ProductSourceService } from './product-source.service';
 
-const AUTO_ARCHIVE_TIMEOUT = 30_000;
-
 @Controller('products/sources')
 export class ProductSourceController {
   constructor(private db: Database, private service: ProductSourceService) {}
@@ -86,11 +84,6 @@ export class ProductSourceController {
     @Body() body: AutoArchiveProductSourcesRequest,
     @Ctx() ctx: Context,
   ) {
-    return await this.db.transaction(
-      async () => {
-        await this.service.autoArchive(body, ctx);
-      },
-      { ctx, timeout: AUTO_ARCHIVE_TIMEOUT },
-    );
+    await this.service.autoArchive(body, ctx);
   }
 }
