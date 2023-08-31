@@ -21,7 +21,7 @@ import { AutomationContext } from '../types';
 
 const BATCH_SIZE = 8;
 const DELAY_BETWEEN_UPLOAD = 5_000;
-const CONCURRENCY_CHUNK_SIZE = 5;
+const CONCURRENCY_CHUNK_SIZE = 4;
 
 const TECHPOWERUP_URLS = [
   {

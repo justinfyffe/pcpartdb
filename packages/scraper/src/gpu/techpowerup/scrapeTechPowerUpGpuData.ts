@@ -358,7 +358,8 @@ function getMarketSegment(
 ): GpuField<GpuMarketSegmentValue> {
   let value: GpuMarketSegmentValue = null;
 
-  const description = $('.desc.p').text().toLowerCase();
+  let description = $('.desc.p').text().toLowerCase();
+  description = description.replace(/\s+/g, ' ');
   if (description.includes('mobile graphics chip')) {
     value = GpuMarketSegmentValue.Mobile;
   } else if (description.includes('professional graphics card')) {

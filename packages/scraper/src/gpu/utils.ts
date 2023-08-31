@@ -41,6 +41,24 @@ export function generateGpuGroupKey(options: GenerateGpuGroupKeyOptions) {
   if (name.includes(' OEM')) {
     name = name.replace(' OEM', '').trim();
   }
+  if (name.includes(' AGP')) {
+    name = name.replace(' AGP', '').trim();
+  }
+  if (name.includes(' IGP')) {
+    name = name.replace(' IGP', '').trim();
+  }
+  if (name.includes(' PCIE')) {
+    name = name.replace(' PCIE', '').trim();
+  }
+  if (name.includes(' PCI')) {
+    name = name.replace(' PCI', '').trim();
+  }
+  if (name.includes(' MXM')) {
+    name = name.replace(' MXM', '').trim();
+  }
+  if (name.includes(' MCM')) {
+    name = name.replace(' MCM', '').trim();
+  }
 
   name = name
     .split(' ')

@@ -120,10 +120,7 @@ export class GpuController {
   @Post('scrape')
   @UseGuards(StaffGuard)
   async scrape(@Body() body: ScrapeProductRequest, @Ctx() ctx: Context) {
-    return await this.db.transaction(
-      () => this.gpuScrapeService.scrapeGpu(body, ctx),
-      { ctx },
-    );
+    return await this.gpuScrapeService.scrapeGpu(body, ctx);
   }
 
   @Get(':id/retail-models')

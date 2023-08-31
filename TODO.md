@@ -1,15 +1,28 @@
 HIGH LEVEL TODO:
+- quick improvements
+  - gpu chipset search -> remove retail models
+  - more autocomplete options
+  - better autocomplete sort? maybe by name?
+  - source autocomplete should should non-archived first
+- bugs:
+  - cannot compare different fields on cpu approvals?
 - misc adjustments
   - explore linking to retail models instead of dialog
 - data cleanup
   - fill in missing performance scores
+    - have a combined synthetic score
   - fix up any missing quarter release dates
   - consistent naming "(OEM)", "(Mobile)"
 - Automation improvements
-  - auto archive when uploading sources
+  - auto archive when uploading sources, not as a separate route
   - gpu retail models don't need to update as much. except for price?
   - double check indexes and looping sql queries
   - add more scrapers (e.g. intel website, amd website, wikichip)
+  - handle cpus/gpus with multiple passmark pages?
+    - is this worth it? mostly an issue with older cards with less data
+    - better handling of duplicate sources?
+    - use combination to get better scores?
+      - useful for integrated which will have many variations
 - easier to spot missing data
   - audit page
     - have tabs for seeing missing:

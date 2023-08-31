@@ -20,41 +20,53 @@ export function generateCpuGroupKey(options: GenerateCpuGroupKeyOptions) {
   if (name.endsWith(' APU')) {
     name = name.substring(0, name.length - 3).trim();
   }
+  if (name.endsWith(' SOC')) {
+    name = name.substring(0, name.length - 3).trim();
+  }
   if (name.indexOf(' @ ') >= 0) {
     name = name.substring(0, name.indexOf(' @ ')).trim();
   }
   if (name.includes('CORE2')) {
     name = name.replace('CORE2', 'CORE 2').trim();
   }
+  if (name.includes('DUALCORE MOBILE')) {
+    name = name.replace('DUALCORE MOBILE', '').trim();
+  }
   if (name.includes('DUAL-CORE MOBILE')) {
-    name = name.replace('DUAL-CORE MOBILE', '');
+    name = name.replace('DUAL-CORE MOBILE', '').trim();
   }
   if (name.includes('DUAL CORE MOBILE')) {
-    name = name.replace('DUAL CORE MOBILE', '');
+    name = name.replace('DUAL CORE MOBILE', '').trim();
   }
   if (name.includes('DUAL-CORE')) {
-    name = name.replace('DUAL-CORE', '');
+    name = name.replace('DUAL-CORE', '').trim();
   }
   if (name.includes('DUAL CORE')) {
-    name = name.replace('DUAL CORE', '');
+    name = name.replace('DUAL CORE', '').trim();
+  }
+  if (name.includes('TRIPLE-CORE')) {
+    name = name.replace('TRIPLE-CORE', '').trim();
+  }
+  if (name.includes('TRIPLE CORE')) {
+    name = name.replace('TRIPLE CORE', '').trim();
   }
   if (name.includes('QUAD-CORE')) {
-    name = name.replace('QUAD-CORE', '');
+    name = name.replace('QUAD-CORE', '').trim();
   }
   if (name.includes('QUAD CORE')) {
-    name = name.replace('QUAD CORE', '');
+    name = name.replace('QUAD CORE', '').trim();
   }
   if (name.includes('SIX-CORE')) {
-    name = name.replace('SIX-CORE', '');
+    name = name.replace('SIX-CORE', '').trim();
   }
   if (name.includes('SIX CORE')) {
-    name = name.replace('SIX CORE', '');
+    name = name.replace('SIX CORE', '').trim();
   }
   if (name.includes('EIGHT-CORE')) {
-    name = name.replace('EIGHT-CORE', '');
+    name = name.replace('EIGHT-CORE', '').trim();
   }
   if (name.includes('EIGHT CORE')) {
-    name = name.replace('EIGHT CORE', '');
+    name = name.replace('EIGHT CORE', '').trim();
   }
 
   name = name
