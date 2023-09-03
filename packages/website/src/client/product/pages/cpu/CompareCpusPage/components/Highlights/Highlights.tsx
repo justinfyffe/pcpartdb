@@ -4,13 +4,20 @@ import {
   ClockIcon,
   CpuChipIcon,
   CurrencyDollarIcon,
+  ShoppingCartIcon,
   StarIcon,
 } from '@heroicons/react/24/outline';
-import { DateFormat } from '@pcpartdb/shared';
+import {
+  DateFormat,
+  formatCpuField,
+  formatCpuName,
+  getCpuAffiliateUrl,
+} from '@pcpartdb/shared';
 import { ProductHighlightComparison } from 'packages/website/src/client/product';
+import { AffiliateDisclaimer } from 'packages/website/src/client/shared/components/AffiliateDisclaimer/AffiliateDisclaimer';
+import { WarningButton } from 'packages/website/src/client/shared/components/Button/WarningButton';
 import { classNames } from 'packages/website/src/client/shared/ui';
 import React, { FunctionComponent, useContext, useMemo } from 'react';
-import { formatCpuField, formatCpuName } from '../../../../../utils/cpuUtils';
 import { ComparePageContext } from '../../context';
 
 interface HighlightsProps {
@@ -24,11 +31,11 @@ export const Highlights: FunctionComponent<HighlightsProps> = (props) => {
   const [cpu1, cpu2] = context.comparison;
 
   const cpu1Name = useMemo(
-    () => formatCpuName(cpu1, { company: false, brand: false }),
+    () => formatCpuName(cpu1, { company: false, brand: true }),
     [cpu1],
   );
   const cpu2Name = useMemo(
-    () => formatCpuName(cpu2, { company: false, brand: false }),
+    () => formatCpuName(cpu2, { company: false, brand: true }),
     [cpu2],
   );
 
@@ -138,48 +145,107 @@ export const Highlights: FunctionComponent<HighlightsProps> = (props) => {
     ];
   }, [cpu1.releaseDate, cpu1Name, cpu2.releaseDate, cpu2Name]);
 
+  const cpuAffiliateUrl1 = useMemo(() => getCpuAffiliateUrl(cpu1), [cpu1]);
+  const cpuAffiliateUrl2 = useMemo(() => getCpuAffiliateUrl(cpu2), [cpu2]);
+
   return (
-    <div
-      className={classNames(
-        'grid grid-cols-2 lg:flex flex-col md:gap-3 gap-4',
-        className,
-      )}
-    >
-      <ProductHighlightComparison
-        icon={<StarIcon />}
-        label="Performance"
-        values={highlightPerformance}
-      />
+    <div>
+      <div
+        className={classNames(
+          'grid grid-cols-2 lg:flex flex-col md:gap-3 gap-4',
+          className,
+        )}
+      >
+        <ProductHighlightComparison
+          icon={<StarIcon />}
+          label="Performance"
+          values={highlightPerformance}
+        />
 
-      <ProductHighlightComparison
-        icon={<CurrencyDollarIcon />}
-        label="Performance / $"
-        values={highlightValue}
-      />
+        <ProductHighlightComparison
+          icon={<CurrencyDollarIcon />}
+          label="Performance / $ (MSRP)"
+          values={highlightValue}
+        />
 
-      <ProductHighlightComparison
-        icon={<CpuChipIcon />}
-        label="Cores / Threads"
-        values={highlightCoresThreads}
-      />
+        <ProductHighlightComparison
+          icon={<CpuChipIcon />}
+          label="Cores / Threads"
+          values={highlightCoresThreads}
+        />
 
-      <ProductHighlightComparison
-        icon={<CircleStackIcon />}
-        label="Memory"
-        values={highlightMemory}
-      />
+        <ProductHighlightComparison
+          icon={<CircleStackIcon />}
+          label="Memory"
+          values={highlightMemory}
+        />
 
-      <ProductHighlightComparison
-        icon={<ClockIcon />}
-        label="Clock"
-        values={highlightClock}
-      />
+        <ProductHighlightComparison
+          icon={<ClockIcon />}
+          label="Clock"
+          values={highlightClock}
+        />
 
-      <ProductHighlightComparison
-        icon={<CalendarDaysIcon />}
-        label="Release Date"
-        values={highlightReleaseDate}
-      />
+        <ProductHighlightComparison
+          icon={<CalendarDaysIcon />}
+          label="Release Date"
+          values={highlightReleaseDate}
+        />
+
+        {cpuAffiliateUrl1 && (
+          <div className="flex flex-col">
+            <div className="bg-light-shades flex flex-col px-4 py-2 rounded shadow gap-4">
+              <div className="flex-1 flex gap-2 items-center mr-auto">
+                <div className="mr-1">
+                  <ShoppingCartIcon className="w-5" />
+                </div>
+
+                <div className="font-medium md:text-base text-xl">
+                  Shop {cpu1Name}
+                </div>
+              </div>
+
+              <div className="flex-1 md:text-base text-content text-right whitespace-nowrap ml-auto">
+                <WarningButton
+                  href={cpuAffiliateUrl1}
+                  target="_blank"
+                  rel="noopener nofollow"
+                >
+                  Check Price on Amazon
+                </WarningButton>
+              </div>
+            </div>
+            {!cpuAffiliateUrl2 && <AffiliateDisclaimer />}
+          </div>
+        )}
+
+        {cpuAffiliateUrl2 && (
+          <div className="flex flex-col">
+            <div className="bg-light-shades flex flex-col px-4 py-2 rounded shadow gap-4">
+              <div className="flex-1 flex gap-2 items-center mr-auto">
+                <div className="mr-1">
+                  <ShoppingCartIcon className="w-5" />
+                </div>
+
+                <div className="font-medium md:text-base text-xl">
+                  Shop {cpu2Name}
+                </div>
+              </div>
+
+              <div className="flex-1 md:text-base text-content text-right whitespace-nowrap ml-auto">
+                <WarningButton
+                  href={cpuAffiliateUrl2}
+                  target="_blank"
+                  rel="noopener nofollow"
+                >
+                  Check Price on Amazon
+                </WarningButton>
+              </div>
+            </div>
+            <AffiliateDisclaimer />
+          </div>
+        )}
+      </div>
     </div>
   );
 };

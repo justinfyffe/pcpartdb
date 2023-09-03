@@ -1,12 +1,13 @@
-import { ProductType } from '@pcpartdb/shared';
+import {
+  formatGpuField,
+  formatGpuName,
+  getGpuAffiliateUrl,
+  ProductType,
+} from '@pcpartdb/shared';
 import {
   ProductCustomRow,
   ProductFieldRow,
 } from 'packages/website/src/client/product/components';
-import {
-  formatGpuField,
-  formatGpuName,
-} from 'packages/website/src/client/product/utils';
 import React, { FunctionComponent, useContext, useMemo } from 'react';
 import { Table, TBody } from '../../../../../../shared/components';
 import { ViewPageContext } from '../../context';
@@ -53,28 +54,49 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
     }
   }, [gpu.valueScore, parent?.valueScore, valueRank]);
 
+  const gpuAffiliateUrl = useMemo(() => getGpuAffiliateUrl(gpu), [gpu]);
+
   return (
-    <Table border responsive className={className}>
-      <TBody>
-        <ProductCustomRow
-          label="Performance Rating (Rank)*"
-          values={[performanceScoreValue]}
-        />
-        <ProductCustomRow
-          label="Performance Per Dollar (Rank)*"
-          values={[valueScoreValue]}
-        />
-        <ProductCustomRow label="Chipset" values={[chipset]} />
-        <ProductFieldRow type={ProductType.Gpu} fields={[gpu.company]} />
-        <ProductFieldRow type={ProductType.Gpu} fields={[gpu.architecture]} />
-        <ProductFieldRow type={ProductType.Gpu} fields={[gpu.marketSegment]} />
-        <ProductFieldRow type={ProductType.Gpu} fields={[gpu.releaseDate]} />
-        <ProductFieldRow type={ProductType.Gpu} fields={[gpu.launchPrice]} />
-        <ProductFieldRow
-          type={ProductType.Gpu}
-          fields={[gpu.productionStatus]}
-        />
-      </TBody>
-    </Table>
+    <div className={className}>
+      <Table border responsive>
+        <TBody>
+          {gpuAffiliateUrl && (
+            <ProductCustomRow
+              label="Shop"
+              value={
+                <a
+                  href={gpuAffiliateUrl}
+                  target="_blank"
+                  rel="noopener nofollow"
+                >
+                  Check Price
+                </a>
+              }
+            />
+          )}
+          <ProductCustomRow
+            label="Performance Rating (Rank)*"
+            values={[performanceScoreValue]}
+          />
+          <ProductCustomRow
+            label="Performance Per Dollar (Rank)*"
+            values={[valueScoreValue]}
+          />
+          <ProductCustomRow label="Chipset" values={[chipset]} />
+          <ProductFieldRow type={ProductType.Gpu} fields={[gpu.company]} />
+          <ProductFieldRow type={ProductType.Gpu} fields={[gpu.architecture]} />
+          <ProductFieldRow
+            type={ProductType.Gpu}
+            fields={[gpu.marketSegment]}
+          />
+          <ProductFieldRow type={ProductType.Gpu} fields={[gpu.releaseDate]} />
+          <ProductFieldRow type={ProductType.Gpu} fields={[gpu.launchPrice]} />
+          <ProductFieldRow
+            type={ProductType.Gpu}
+            fields={[gpu.productionStatus]}
+          />
+        </TBody>
+      </Table>
+    </div>
   );
 };

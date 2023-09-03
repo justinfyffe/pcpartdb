@@ -1,9 +1,11 @@
-import { getGpuChipset, getViewGpuPath, Gpu } from '@pcpartdb/shared';
-import { ProductCustomRow } from 'packages/website/src/client/product/components';
 import {
   formatGpuField,
   formatGpuName,
-} from 'packages/website/src/client/product/utils';
+  getGpuChipset,
+  getViewGpuPath,
+  Gpu,
+} from '@pcpartdb/shared';
+import { ProductCustomRow } from 'packages/website/src/client/product/components';
 import React, { FunctionComponent, useContext, useMemo } from 'react';
 import {
   Table,

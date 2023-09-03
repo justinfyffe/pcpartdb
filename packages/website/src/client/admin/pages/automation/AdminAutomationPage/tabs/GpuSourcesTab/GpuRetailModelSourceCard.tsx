@@ -9,6 +9,7 @@ import {
 import {
   AutomationActionType,
   CreateGpuActionData,
+  formatGpuName,
   generateGpuSlug,
   getViewGpuPath,
   GpuDataSourceKey,
@@ -17,10 +18,7 @@ import {
   ProductType,
 } from '@pcpartdb/shared';
 import { automationService } from 'packages/website/src/client/automation/services';
-import {
-  formatGpuName,
-  productSourceService,
-} from 'packages/website/src/client/product';
+import { productSourceService } from 'packages/website/src/client/product';
 import {
   Card,
   CardContent,

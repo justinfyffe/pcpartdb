@@ -1,5 +1,6 @@
 import {
   Config,
+  formatGpuName,
   getAdminEditGpuPath,
   getGpuChipset,
   getHomePath,
@@ -18,7 +19,6 @@ import {
   SidenavRelatedProducts,
 } from '../../../../sidenav';
 import { CompareProductsForm } from '../../../components';
-import { formatGpuName } from '../../../utils';
 import {
   Benchmarks,
   Disclaimer,
@@ -67,9 +67,12 @@ export const ViewGpuPage = (props: ViewGpuViewModel & { config: Config }) => {
 
   const homeHref = useMemo(() => getHomePath(), []);
   const listGpusHref = useMemo(() => getListGpusPath(), []);
-  const editHref = useMemo(
-    () => (config.isStaff ? getAdminEditGpuPath(gpu) : null),
-    [config.isStaff, gpu],
+  const editThisPage = useMemo(
+    () =>
+      config.isStaff
+        ? [{ href: getAdminEditGpuPath(gpu), name: gpuShortName }]
+        : null,
+    [config.isStaff, gpu, gpuShortName],
   );
 
   return (
@@ -81,7 +84,7 @@ export const ViewGpuPage = (props: ViewGpuViewModel & { config: Config }) => {
         canonical={seoCanonical}
       />
 
-      <WebsiteLayout config={config} editThisPageHref={editHref}>
+      <WebsiteLayout config={config} editThisPage={editThisPage}>
         <Breadcrumbs className="mb-4">
           <Breadcrumb href={homeHref}>Home</Breadcrumb>
           <Breadcrumb href={listGpusHref}>Graphics Cards</Breadcrumb>

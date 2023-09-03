@@ -1,4 +1,10 @@
-import { Cpu, getViewCpuPath, hasProductFieldValue } from '@pcpartdb/shared';
+import {
+  Cpu,
+  formatCpuField,
+  formatCpuName,
+  getViewCpuPath,
+  hasProductFieldValue,
+} from '@pcpartdb/shared';
 import { ProductCustomRow } from 'packages/website/src/client/product';
 import React, {
   FunctionComponent,
@@ -18,7 +24,6 @@ import {
   THead,
   Tr,
 } from '../../../../../../shared/components';
-import { formatCpuField, formatCpuName } from '../../../../../utils/cpuUtils';
 import { ComparePageContext } from '../../context';
 
 interface PerformanceTableProps {

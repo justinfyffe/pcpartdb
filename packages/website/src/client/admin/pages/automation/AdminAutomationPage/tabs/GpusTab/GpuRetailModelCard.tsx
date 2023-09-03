@@ -8,13 +8,13 @@ import {
   XMarkIcon,
 } from '@heroicons/react/24/outline';
 import {
+  formatGpuName,
   getAdminEditGpuPath,
   getViewGpuPath,
   GpuUpdate,
   ProductUpdateStatus,
 } from '@pcpartdb/shared';
 import { GpuDiffDialog } from 'packages/website/src/client/admin/components';
-import { formatGpuName } from 'packages/website/src/client/product';
 import { productUpdateService } from 'packages/website/src/client/product/services/productUpdateService';
 import {
   Card,

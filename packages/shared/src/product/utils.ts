@@ -1,3 +1,4 @@
+import { formatProductName } from '../format';
 import { CanMergeAutoUpdateStrategy, deepmerge } from '../utils';
 import { PRODUCT_FIELD_LABELS } from './consts';
 import { Product, ProductField, ProductFieldKey, ProductType } from './types';
@@ -98,7 +99,6 @@ export function canAutoUpdateProductField(field: ProductField) {
   return field?.meta?.autoUpdate ?? true;
 }
 
-// TODO: replace deepmerge
 export function mergeProducts<TProduct extends Product>(
   original: TProduct,
   updated: TProduct,
@@ -108,4 +108,24 @@ export function mergeProducts<TProduct extends Product>(
     original,
     updated,
   );
+}
+
+export function getAffiliateUrl<TProduct extends Product>(
+  productType: ProductType,
+  product: TProduct,
+) {
+  const associateKey = process.env.NEXT_PUBLIC_AMAZON_ASSOCIATES_KEY;
+  if (product.affiliateUrl) {
+    const url = new URL(product.affiliateUrl);
+    if (!url.searchParams.has('tag')) {
+      url.searchParams.append('tag', associateKey);
+    }
+    return url.toString();
+  }
+
+  const productName = formatProductName(productType, product);
+  const query = productName.replaceAll(' ', '+');
+
+  // Return generated affiliate url based on search results
+  return `https://www.amazon.com/s?k=${query}&tag=${associateKey}`;
 }

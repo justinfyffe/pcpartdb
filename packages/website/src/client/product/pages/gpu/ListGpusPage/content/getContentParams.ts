@@ -1,6 +1,10 @@
-import { ListGpusOrder, ListGpusQuery } from '@pcpartdb/shared';
+import {
+  formatGpuCompany,
+  formatGpuMarketSegment,
+  ListGpusOrder,
+  ListGpusQuery,
+} from '@pcpartdb/shared';
 import { ContentParams } from 'packages/website/src/client/shared/content';
-import { formatGpuCompany, formatGpuMarketSegment } from '../../../../utils';
 
 export interface ListGpusContentParams {
   bestOrWorstTitle?: string;

@@ -1,5 +1,9 @@
-import { getGpuChipset, getViewGpuPath, Gpu } from '@pcpartdb/shared';
-import { formatGpuName } from 'packages/website/src/client/product/utils';
+import {
+  formatGpuName,
+  getGpuChipset,
+  getViewGpuPath,
+  Gpu,
+} from '@pcpartdb/shared';
 import { classNames } from 'packages/website/src/client/shared/ui';
 import React, { FunctionComponent, useContext, useMemo } from 'react';
 import {

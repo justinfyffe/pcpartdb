@@ -1,5 +1,7 @@
-import { GpuMarketSegmentValue } from '@pcpartdb/shared';
-import { formatGpuMarketSegment } from 'packages/website/src/client/product/utils';
+import {
+  formatGpuMarketSegment,
+  GpuMarketSegmentValue,
+} from '@pcpartdb/shared';
 import React, {
   FunctionComponent,
   useCallback,

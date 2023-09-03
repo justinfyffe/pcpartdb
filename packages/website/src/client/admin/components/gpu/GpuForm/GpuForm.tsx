@@ -65,6 +65,7 @@ interface GpuFormData {
 
   slug: string;
   name: string;
+  affiliateUrl?: string;
 
   // Data Sources
   techPowerUpSource?: GpuDataSource;
@@ -142,6 +143,7 @@ const gpuValidator = Joi.object({
 
   slug: Joi.string().required(),
   name: Joi.string().required(),
+  affiliateUrl: Joi.string().allow(null),
 
   // Data Sources
   techPowerUpSource: gpuDataSourceValidator.allow(null),
@@ -227,6 +229,7 @@ function formOptions(gpu?: Gpu): UseFormProps<GpuFormData> {
     defaultValues: {
       slug: gpu?.slug || null,
       name: gpu?.name || null,
+      affiliateUrl: gpu?.affiliateUrl || null,
 
       chipsetId: gpu?.chipsetId || null,
 
@@ -504,6 +507,15 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           {errors.slug?.type === ValidationErrorType.MissingStringValue && (
             <FieldError>Required</FieldError>
           )}
+        </Field>
+
+        <Field>
+          Amazon URL
+          <Controller
+            name="affiliateUrl"
+            control={control}
+            render={({ field }) => <TextInput {...field} ref={null} />}
+          />
         </Field>
       </section>
 
@@ -1323,6 +1335,7 @@ function toGpuRequest(
     chipsetId: formData.chipsetId,
     slug: formData.slug,
     name: formData.name,
+    affiliateUrl: formData.affiliateUrl,
 
     // General Info
     partNumber: formData.partNumber,

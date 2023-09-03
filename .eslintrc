@@ -55,6 +55,7 @@
     "prettier/prettier": "warn",
     "quotes": ["error", "single", { "avoidEscape": true }],
     "react/prop-types": "off",
+    "react/jsx-no-target-blank": "off",
     "simple-import-sort/imports": ["warn", {
       "groups": [["^\\u0000", "^@?\\w", "^[^.]", "^\\."]]
     }]

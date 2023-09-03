@@ -1,9 +1,10 @@
-import { getViewGpuPath, Gpu } from '@pcpartdb/shared';
 import {
   formatGpuDimensions,
   formatGpuField,
   formatGpuName,
-} from 'packages/website/src/client/product/utils';
+  getViewGpuPath,
+  Gpu,
+} from '@pcpartdb/shared';
 import {
   Table,
   TBody,

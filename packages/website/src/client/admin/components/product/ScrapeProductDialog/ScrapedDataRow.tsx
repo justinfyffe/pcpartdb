@@ -1,10 +1,10 @@
 import {
+  formatProductField,
   getProductFieldLabel,
   isProductField,
   ProductField,
   ProductType,
 } from '@pcpartdb/shared';
-import { formatProductField } from 'packages/website/src/client/product';
 import React, {
   FunctionComponent,
   useCallback,

@@ -1,9 +1,11 @@
-import { Cpu, getViewCpuPath, hasProductFieldValue } from '@pcpartdb/shared';
 import {
+  Cpu,
   formatCpuField,
   formatCpuName,
-  ProductCustomRow,
-} from 'packages/website/src/client/product';
+  getViewCpuPath,
+  hasProductFieldValue,
+} from '@pcpartdb/shared';
+import { ProductCustomRow } from 'packages/website/src/client/product';
 import React, {
   FunctionComponent,
   useCallback,

@@ -1,11 +1,9 @@
 import {
   CpuMarketSegmentValue,
   CpuProductionStatusValue,
-} from '@pcpartdb/shared';
-import {
   formatCpuMarketSegment,
   formatCpuProductionStatus,
-} from 'packages/website/src/client/product';
+} from '@pcpartdb/shared';
 import { ProductEnumItem } from '../../product';
 
 const MARKET_SEGMENTS: ProductEnumItem[] = [

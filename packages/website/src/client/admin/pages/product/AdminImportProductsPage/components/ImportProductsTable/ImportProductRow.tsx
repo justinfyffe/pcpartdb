@@ -1,6 +1,11 @@
 import 'reflect-metadata';
-import { CpuDiff, GpuDiff, ProductDiff, ProductType } from '@pcpartdb/shared';
-import { formatProductName } from 'packages/website/src/client/product';
+import {
+  CpuDiff,
+  formatProductName,
+  GpuDiff,
+  ProductDiff,
+  ProductType,
+} from '@pcpartdb/shared';
 import {
   Checkbox,
   showDialog,

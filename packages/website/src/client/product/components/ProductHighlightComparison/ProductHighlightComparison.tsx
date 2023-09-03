@@ -23,11 +23,11 @@ export const ProductHighlightComparison = (
   return (
     <div
       className={classNames(
-        'bg-light-shades flex flex-wrap px-4 py-1 rounded shadow items-center gap-2',
+        'bg-light-shades flex flex-col px-4 py-1 rounded shadow items-center gap-2',
         className,
       )}
     >
-      <div className={classNames('flex-1 flex gap-2 items-center', className)}>
+      <div className={classNames('flex gap-2 items-center mr-auto', className)}>
         {icon && (
           <div className="mr-1">{cloneElement(icon, { className: 'w-5' })}</div>
         )}
@@ -39,7 +39,7 @@ export const ProductHighlightComparison = (
 
       <div
         className={classNames(
-          'flex-1 grid grid-cols-[auto_min-content] grid-rows-2 gap-x-2',
+          'ml-auto grid grid-cols-[auto_auto] grid-rows-2 gap-x-2 items-center',
           className,
         )}
       >
@@ -47,7 +47,7 @@ export const ProductHighlightComparison = (
           <React.Fragment key={`idx-${i}`}>
             <div
               className={classNames(
-                'text-right whitespace-nowrap text-ellipsis',
+                'text-right text-ellipsis',
                 bold ? 'font-bold' : '',
                 className,
               )}

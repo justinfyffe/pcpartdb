@@ -10,8 +10,8 @@ const DisclaimerParagraph = compileContentComponent({
   deps: ['shortCpuName'],
   component: (props) => (
     <p className="text-dimmed mb-0">
-      *Performance rating, performance per dollar, rankings, and benchmarks are
-      approximate values based on {props.shortCpuName}&apos;s benchmarks.
+      *Performance rating, performance per dollar, and rankings are approximate
+      values based on the {props.shortCpuName}&apos;s benchmarks and MSRP.
     </p>
   ),
 });

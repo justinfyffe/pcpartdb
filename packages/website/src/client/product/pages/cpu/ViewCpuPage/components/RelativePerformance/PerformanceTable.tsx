@@ -1,9 +1,10 @@
-import { Cpu, getViewCpuPath } from '@pcpartdb/shared';
 import {
+  Cpu,
   formatCpuField,
   formatCpuName,
-  ProductCustomRow,
-} from 'packages/website/src/client/product';
+  getViewCpuPath,
+} from '@pcpartdb/shared';
+import { ProductCustomRow } from 'packages/website/src/client/product';
 import React, { FunctionComponent, useContext, useMemo } from 'react';
 import {
   Table,

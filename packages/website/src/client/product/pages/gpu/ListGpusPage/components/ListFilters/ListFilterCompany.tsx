@@ -1,4 +1,4 @@
-import { formatGpuCompany } from 'packages/website/src/client/product/utils';
+import { formatGpuCompany } from '@pcpartdb/shared';
 import React, {
   FunctionComponent,
   useCallback,

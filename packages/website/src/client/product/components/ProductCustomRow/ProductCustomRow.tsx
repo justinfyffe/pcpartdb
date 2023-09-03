@@ -7,7 +7,8 @@ type ValueType = string | React.ReactNode;
 
 interface ProductCustomRowProps {
   label: LabelType;
-  values: ValueType[];
+  value?: ValueType;
+  values?: ValueType[];
   highlight?: 'primary' | 'secondary';
 
   className?: string;
@@ -18,15 +19,12 @@ interface ProductCustomRowProps {
 export const ProductCustomRow: FunctionComponent<ProductCustomRowProps> = (
   props,
 ) => {
-  const {
-    label,
-    values,
-    className,
-    labelClassName,
-    valueClassName,
-    highlight,
-  } = props;
+  const { label, className, labelClassName, valueClassName, highlight } = props;
 
+  const values = useMemo(
+    () => props.values || [props.value],
+    [props.value, props.values],
+  );
   const hasValues = useMemo(
     () => values.some((value) => value != null),
     [values],

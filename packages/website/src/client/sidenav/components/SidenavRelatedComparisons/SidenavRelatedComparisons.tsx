@@ -1,10 +1,10 @@
 import {
+  formatProductComparisonName,
   getCompareProductsPath,
   ProductComparison,
   ProductType,
 } from '@pcpartdb/shared';
 import React, { FunctionComponent, useMemo } from 'react';
-import { formatProductComparisonName } from '../../../product';
 import { classNames } from '../../../shared/ui';
 import { SidenavSection, SidenavSectionTitle } from '../Sidenav';
 

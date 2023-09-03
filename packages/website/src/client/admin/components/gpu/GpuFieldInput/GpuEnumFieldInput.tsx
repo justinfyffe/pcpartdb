@@ -1,14 +1,12 @@
 import {
+  formatGpuField,
+  formatGpuMarketSegment,
+  formatGpuProductionStatus,
   GpuField,
   GpuFieldKey,
   GpuMarketSegmentValue,
   GpuProductionStatusValue,
 } from '@pcpartdb/shared';
-import {
-  formatGpuField,
-  formatGpuMarketSegment,
-  formatGpuProductionStatus,
-} from 'packages/website/src/client/product';
 import React, { forwardRef, useCallback, useMemo } from 'react';
 import {
   Select,

@@ -1,9 +1,6 @@
 import { CircleStackIcon } from '@heroicons/react/24/outline';
+import { formatGpuField, formatGpuName } from '@pcpartdb/shared';
 import { ProductHighlightComparison } from 'packages/website/src/client/product/components';
-import {
-  formatGpuField,
-  formatGpuName,
-} from 'packages/website/src/client/product/utils';
 import React, { FunctionComponent, useContext, useMemo } from 'react';
 import { ComparePageContext } from '../../context';
 
@@ -20,8 +17,8 @@ export const MemoryHighlightListItem: FunctionComponent<
   const [gpu1, gpu2] = context.comparison;
 
   const values = useMemo(() => {
-    const name1 = formatGpuName(gpu1, { company: false, brand: false });
-    const name2 = formatGpuName(gpu2, { company: false, brand: false });
+    const name1 = formatGpuName(gpu1, { company: false, brand: true });
+    const name2 = formatGpuName(gpu2, { company: false, brand: true });
 
     const memorySize1 = formatGpuField(gpu1.memorySize);
     const memoryType1 = formatGpuField(gpu1.memoryType);

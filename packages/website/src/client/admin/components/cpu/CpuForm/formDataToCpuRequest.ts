@@ -11,6 +11,7 @@ export function formDataToCpuRequest(
   return {
     slug: formData.slug,
     name: formData.name,
+    affiliateUrl: formData.affiliateUrl,
 
     // General Info
     partNumber: formData.partNumber || null,

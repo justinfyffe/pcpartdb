@@ -1,4 +1,7 @@
 HIGH LEVEL TODO:
+- performance improvements
+  - audit database indexes on cpus and gpus
+    - tables frequently written too shouldnt have indexes
 - quick improvements
   - gpu chipset search -> remove retail models
   - more autocomplete options
@@ -77,9 +80,50 @@ HIGH LEVEL TODO:
     - allow us to requeue it
 
 
-- auto-updates
-  - gpu sources - chipsets and retail models
-    - two separate tasks: one for chipsets, and one for retail models
+AFFILIATE TODO
+- [] Create affiliate account
+- [] Data Strucutre
+  - [] Add price as of date to db
+  - [] add latest price to db
+- [] Automation
+  - [] Fetch prices automatically from amazon (on demand, and periodically)
+  - [] Create script to populate existing chipsets and retail models with prices
+- [X] Add disclaimers
+  - [X] About Page
+  - [X] Footer
+- [] View GPU Page
+  - [X] Create Template UI
+  - [] Add latest price
+  - [X] Add affiliate urls
+- [] Compare GPU Page
+  - [X] Create Template UI
+  - [] Add latest price
+  - [X] Add affiliate urls
+- [] View CPU Page
+  - [X] Create Template UI
+  - [] Add latest price
+  - [X] Add affiliate urls
+- [] Compare CPU Page
+  - [X] Create Template UI
+  - [] Add latest price
+  - [X] Add affiliate urls
+- [] List GPU Page
+  - [] Add buy links?
+  - [X] Rename to Performance / $ (MSRP)
+  - [] Add Performance / $ (Latest) sort
+- [] List CPU Page
+  - [] Add buy links?
+  - [X] Rename to Performance / $ (MSRP)
+  - [] Add Performance / $ (Latest) sort
+- [X] Admin panel
+  - [X] Add affiliate url to form
+- [] Nice to haves
+  - [X] Add indexes for list page sorts
+  - [] Add Availability Filter to List pages
+  - [] Add Price Filter to List pages
+  - [] Add Most Expensive Sort to List pages
+  - [] Add Cheapest Sort to List pages
+
 
 CODE CLEANUP TASKS
 - View Models

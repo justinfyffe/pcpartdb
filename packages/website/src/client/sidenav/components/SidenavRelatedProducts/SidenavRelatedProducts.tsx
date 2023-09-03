@@ -1,6 +1,10 @@
-import { getViewProductPath, Product, ProductType } from '@pcpartdb/shared';
+import {
+  formatProductName,
+  getViewProductPath,
+  Product,
+  ProductType,
+} from '@pcpartdb/shared';
 import React, { FunctionComponent, useMemo } from 'react';
-import { formatProductName } from '../../../product';
 import { classNames } from '../../../shared/ui';
 import { SidenavSection, SidenavSectionTitle } from '../Sidenav';
 

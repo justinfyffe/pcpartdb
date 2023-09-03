@@ -1,14 +1,12 @@
 import { PhotoIcon } from '@heroicons/react/24/outline';
 import {
+  formatProductField,
+  formatProductName,
   getCompareProductsPath,
   Product,
   ProductComparison,
   ProductType,
 } from '@pcpartdb/shared';
-import {
-  formatProductField,
-  formatProductName,
-} from 'packages/website/src/client/product';
 import React, { FunctionComponent, useMemo } from 'react';
 import { getCompanyLogoFeedPath } from '../../../../../image';
 import { Card, Img } from '../../../../../shared/components';

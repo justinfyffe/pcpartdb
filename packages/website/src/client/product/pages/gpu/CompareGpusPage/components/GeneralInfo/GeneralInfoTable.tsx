@@ -1,12 +1,13 @@
-import { ProductType } from '@pcpartdb/shared';
+import {
+  formatGpuField,
+  formatGpuName,
+  getGpuAffiliateUrl,
+  ProductType,
+} from '@pcpartdb/shared';
 import {
   ProductCustomRow,
   ProductFieldRow,
 } from 'packages/website/src/client/product/components';
-import {
-  formatGpuField,
-  formatGpuName,
-} from 'packages/website/src/client/product/utils';
 import React, { FunctionComponent, useContext, useMemo } from 'react';
 import {
   Table,
@@ -93,6 +94,9 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
     return [formatGpuName(parent1 || gpu1), formatGpuName(parent2 || gpu2)];
   }, [gpu1, gpu2, parent1, parent2]);
 
+  const gpuAffiliateUrl1 = useMemo(() => getGpuAffiliateUrl(gpu1), [gpu1]);
+  const gpuAffiliateUrl2 = useMemo(() => getGpuAffiliateUrl(gpu2), [gpu2]);
+
   return (
     <Table border responsive className={className}>
       <THead>
@@ -103,6 +107,39 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
         </Tr>
       </THead>
       <TBody>
+        {(gpuAffiliateUrl1 || gpuAffiliateUrl2) && (
+          <ProductCustomRow
+            label="Shop"
+            values={[
+              <>
+                {gpuAffiliateUrl1 ? (
+                  <a
+                    href={gpuAffiliateUrl1}
+                    target="_blank"
+                    rel="noopener nofollow"
+                  >
+                    Check Price
+                  </a>
+                ) : (
+                  <>N/A</>
+                )}
+              </>,
+              <>
+                {gpuAffiliateUrl2 ? (
+                  <a
+                    href={gpuAffiliateUrl2}
+                    target="_blank"
+                    rel="noopener nofollow"
+                  >
+                    Check Price
+                  </a>
+                ) : (
+                  <>N/A</>
+                )}
+              </>,
+            ]}
+          />
+        )}
         <ProductCustomRow
           label="Performance Rating (Rank)*"
           values={performanceScoreValues}

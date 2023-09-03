@@ -1,5 +1,10 @@
 import { ChevronDownIcon } from '@heroicons/react/24/outline';
-import { Product, ProductType } from '@pcpartdb/shared';
+import {
+  formatProductField,
+  formatProductName,
+  Product,
+  ProductType,
+} from '@pcpartdb/shared';
 import React, {
   forwardRef,
   useCallback,
@@ -14,10 +19,6 @@ import { useProductCache } from '../../../shared/cache';
 import { Autocomplete, Img } from '../../../shared/components';
 import { classNames } from '../../../shared/ui';
 import { productService } from '../../services/productService';
-import {
-  formatProductField,
-  formatProductName,
-} from '../../utils/productUtils';
 import { ProductAutocompleteOption } from './ProductAutocompleteOption';
 
 interface ProductAutocompleteProps {

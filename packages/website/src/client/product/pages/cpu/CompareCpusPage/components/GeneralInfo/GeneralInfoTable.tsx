@@ -1,4 +1,9 @@
-import { ProductType } from '@pcpartdb/shared';
+import {
+  formatCpuField,
+  formatCpuName,
+  getCpuAffiliateUrl,
+  ProductType,
+} from '@pcpartdb/shared';
 import {
   ProductCustomRow,
   ProductFieldRow,
@@ -11,7 +16,6 @@ import {
   THead,
   Tr,
 } from '../../../../../../shared/components';
-import { formatCpuField, formatCpuName } from '../../../../../utils/cpuUtils';
 import { ComparePageContext } from '../../context';
 
 interface GeneralInfoTableProps {
@@ -66,6 +70,9 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
     cpu2.valueScore,
   ]);
 
+  const cpuAffiliateUrl1 = useMemo(() => getCpuAffiliateUrl(cpu1), [cpu1]);
+  const cpuAffiliateUrl2 = useMemo(() => getCpuAffiliateUrl(cpu2), [cpu2]);
+
   return (
     <Table border responsive className={className}>
       <THead>
@@ -76,6 +83,39 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
         </Tr>
       </THead>
       <TBody>
+        {(cpuAffiliateUrl1 || cpuAffiliateUrl2) && (
+          <ProductCustomRow
+            label="Shop"
+            values={[
+              <>
+                {cpuAffiliateUrl1 ? (
+                  <a
+                    href={cpuAffiliateUrl1}
+                    target="_blank"
+                    rel="noopener nofollow"
+                  >
+                    Check Price
+                  </a>
+                ) : (
+                  <>N/A</>
+                )}
+              </>,
+              <>
+                {cpuAffiliateUrl2 ? (
+                  <a
+                    href={cpuAffiliateUrl2}
+                    target="_blank"
+                    rel="noopener nofollow"
+                  >
+                    Check Price
+                  </a>
+                ) : (
+                  <>N/A</>
+                )}
+              </>,
+            ]}
+          />
+        )}
         <ProductCustomRow
           label="Performance Rating (Rank)*"
           values={performanceScoreValues}

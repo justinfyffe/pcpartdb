@@ -1,16 +1,14 @@
 import {
   Cpu,
   CpuProductionStatusValue,
+  formatCpuField,
+  formatCpuName,
+  formatProductField,
   hasCpuLaunched,
   isPastCpuLaunchDate,
   ProductType,
   ViewCpuContentData,
 } from '@pcpartdb/shared';
-import {
-  formatCpuField,
-  formatCpuName,
-  formatProductField,
-} from 'packages/website/src/client/product';
 import { ContentParams } from 'packages/website/src/client/shared/content';
 import { formatOrdinalNumber } from 'packages/website/src/client/shared/format';
 

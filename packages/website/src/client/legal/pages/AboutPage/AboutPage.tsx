@@ -59,6 +59,15 @@ export const AboutPage = (_props: AboutPageProps) => {
           <p>hello@pcpartdb.com</p>
         </section>
 
+        <section>
+          <h2 className="font-semibold">Affilliate Disclaimer</h2>
+          <p>
+            {WEBSITE_NAME} is a participant in the Amazon Services LLC
+            Associates Program, an affiliate advertising program. We earn from
+            qualifying purchases made through Amazon.com.
+          </p>
+        </section>
+
         {/* <section>
           <h2 className="font-semibold">Affiliate Disclaimer</h2>
           <p>

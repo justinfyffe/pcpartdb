@@ -9,12 +9,12 @@ import {
 } from '@heroicons/react/24/outline';
 import {
   CpuUpdate,
+  formatCpuName,
   getAdminEditCpuPath,
   getViewCpuPath,
   ProductUpdateStatus,
 } from '@pcpartdb/shared';
 import { CpuDiffDialog } from 'packages/website/src/client/admin/components';
-import { formatCpuName } from 'packages/website/src/client/product';
 import { productUpdateService } from 'packages/website/src/client/product/services/productUpdateService';
 import {
   Card,

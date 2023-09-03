@@ -1,4 +1,4 @@
-import { formatCpuCompany } from 'packages/website/src/client/product/utils';
+import { formatCpuCompany } from '@pcpartdb/shared';
 import React, {
   FunctionComponent,
   useCallback,

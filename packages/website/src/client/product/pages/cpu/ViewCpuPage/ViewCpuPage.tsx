@@ -1,5 +1,6 @@
 import {
   Config,
+  formatCpuName,
   getAdminEditCpuPath,
   getHomePath,
   getListCpusPath,
@@ -17,7 +18,6 @@ import {
   SidenavRelatedProducts,
 } from '../../../../sidenav';
 import { CompareProductsForm } from '../../../components';
-import { formatCpuName } from '../../../utils';
 import {
   Benchmarks,
   Disclaimer,
@@ -56,9 +56,12 @@ export const ViewCpuPage = (props: ViewCpuViewModel & { config: Config }) => {
 
   const homeHref = useMemo(() => getHomePath(), []);
   const listCpusHref = useMemo(() => getListCpusPath(), []);
-  const editHref = useMemo(
-    () => (config.isStaff ? getAdminEditCpuPath(cpu) : null),
-    [config.isStaff, cpu],
+  const editThisPage = useMemo(
+    () =>
+      config.isStaff
+        ? [{ href: getAdminEditCpuPath(cpu), name: shortCpuName }]
+        : null,
+    [config.isStaff, cpu, shortCpuName],
   );
 
   return (
@@ -70,7 +73,7 @@ export const ViewCpuPage = (props: ViewCpuViewModel & { config: Config }) => {
         canonical={seoCanonical}
       />
 
-      <WebsiteLayout config={config} editThisPageHref={editHref}>
+      <WebsiteLayout config={config} editThisPage={editThisPage}>
         <Breadcrumbs className="mb-4">
           <Breadcrumb href={homeHref}>Home</Breadcrumb>
           <Breadcrumb href={listCpusHref}>Processors</Breadcrumb>

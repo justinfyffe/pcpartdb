@@ -1,8 +1,12 @@
-import { DateFormat, Gpu } from '@pcpartdb/shared';
+import {
+  DateFormat,
+  formatGpuField,
+  formatGpuName,
+  Gpu,
+} from '@pcpartdb/shared';
 import React, { FunctionComponent, useMemo } from 'react';
 import { getCompanyLogoAutocompletePath } from '../../../image';
 import { AutocompleteOption, Img } from '../../../shared/components';
-import { formatGpuField, formatGpuName } from '../../utils';
 
 interface GpuAutocompleteOptionProps {
   index: number;

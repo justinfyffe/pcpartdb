@@ -1,5 +1,7 @@
-import { CpuMarketSegmentValue } from '@pcpartdb/shared';
-import { formatCpuMarketSegment } from 'packages/website/src/client/product/utils';
+import {
+  CpuMarketSegmentValue,
+  formatCpuMarketSegment,
+} from '@pcpartdb/shared';
 import React, {
   FunctionComponent,
   useCallback,

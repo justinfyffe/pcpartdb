@@ -1,6 +1,7 @@
 import { parseISO } from 'date-fns';
 import { getListCpusPath } from '../../routes';
-import { hasProductFieldValue } from '../utils';
+import { ProductType } from '../types';
+import { getAffiliateUrl, hasProductFieldValue } from '../utils';
 import {
   DEFAULT_LIST_CPUS_LIMIT,
   DEFAULT_LIST_CPUS_OFFSET,
@@ -40,6 +41,10 @@ export function generateCpuSlug(name: string, company: string) {
   }
 
   return slugParts.join('-');
+}
+
+export function getCpuAffiliateUrl(cpu: Cpu) {
+  return getAffiliateUrl(ProductType.Cpu, cpu);
 }
 
 export function generateListCpusQueryFromPath(path: string) {

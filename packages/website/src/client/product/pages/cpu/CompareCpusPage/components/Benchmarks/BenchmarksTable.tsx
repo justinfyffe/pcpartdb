@@ -1,4 +1,4 @@
-import { ProductType } from '@pcpartdb/shared';
+import { formatCpuName, ProductType } from '@pcpartdb/shared';
 import { ProductFieldRow } from 'packages/website/src/client/product';
 import React, { FunctionComponent, useContext, useMemo } from 'react';
 import {
@@ -8,7 +8,6 @@ import {
   THead,
   Tr,
 } from '../../../../../../shared/components';
-import { formatCpuName } from '../../../../../utils/cpuUtils';
 import { ComparePageContext } from '../../context';
 
 interface BenchmarksTableProps {

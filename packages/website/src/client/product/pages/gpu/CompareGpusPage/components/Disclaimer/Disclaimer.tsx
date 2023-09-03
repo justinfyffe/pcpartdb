@@ -10,9 +10,9 @@ const RatingDisclaimer = compileContentComponent({
   deps: ['chipsetShortName1', 'chipsetShortName2'],
   component: (props) => (
     <p className="text-dimmed mb-0">
-      *Performance rating, performance per dollar, rankings, and benchmarks are
-      approximate values based on the {props.chipsetShortName1} and{' '}
-      {props.chipsetShortName2} chipsets.
+      *Performance rating, performance per dollar, and rankings are approximate
+      values based on the {props.chipsetShortName1} and{' '}
+      {props.chipsetShortName2}&apos;s benchmarks and MSRP.
     </p>
   ),
 });

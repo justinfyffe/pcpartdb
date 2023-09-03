@@ -1,6 +1,9 @@
-import { ProductType } from '@pcpartdb/shared';
 import {
   formatCpuField,
+  getCpuAffiliateUrl,
+  ProductType,
+} from '@pcpartdb/shared';
+import {
   ProductCustomRow,
   ProductFieldRow,
 } from 'packages/website/src/client/product';
@@ -41,9 +44,21 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
     }
   }, [cpu.valueScore, valueRank]);
 
+  const cpuAffiliateUrl = useMemo(() => getCpuAffiliateUrl(cpu), [cpu]);
+
   return (
     <Table border responsive className={className}>
       <TBody>
+        {cpuAffiliateUrl && (
+          <ProductCustomRow
+            label="Shop"
+            value={
+              <a href={cpuAffiliateUrl} target="_blank" rel="noopener nofollow">
+                Check Price
+              </a>
+            }
+          />
+        )}
         <ProductCustomRow
           label="Performance Rating (Rank)*"
           values={[performanceScoreValue]}

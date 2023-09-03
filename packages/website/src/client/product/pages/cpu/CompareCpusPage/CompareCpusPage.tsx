@@ -1,5 +1,9 @@
 import {
   CompareCpusViewModel,
+  Config,
+  formatCpuComparisonName,
+  formatCpuName,
+  getAdminEditCpuPath,
   getCompareCpusPath,
   getHomePath,
   getListCpusPath,
@@ -16,10 +20,6 @@ import {
 } from '../../../../sidenav';
 import { CompareProductsForm } from '../../../components/CompareProductsForm';
 import {
-  formatCpuComparisonName,
-  formatCpuName,
-} from '../../../utils/cpuUtils';
-import {
   Benchmarks,
   Disclaimer,
   GeneralInfo,
@@ -32,8 +32,11 @@ import {
 import { ComparePageContext } from './context';
 import { useComparePageContextProps } from './hooks';
 
-export const CompareCpusPage = (props: CompareCpusViewModel) => {
-  const { comparison, contentData, relatedCpus, relatedComparisons } = props;
+export const CompareCpusPage = (
+  props: CompareCpusViewModel & { config: Config },
+) => {
+  const { comparison, contentData, relatedCpus, relatedComparisons, config } =
+    props;
   const [cpu1, cpu2] = comparison;
   useProductCache(ProductType.Cpu, cpu1, cpu2);
 
@@ -47,6 +50,16 @@ export const CompareCpusPage = (props: CompareCpusViewModel) => {
     () => formatCpuComparisonName(comparison, { company: false }),
     [comparison],
   );
+
+  const shortCpuName1 = useMemo(
+    () => formatCpuName(cpu1, { company: false, brand: true }),
+    [cpu1],
+  );
+  const shortCpuName2 = useMemo(
+    () => formatCpuName(cpu2, { company: false, brand: true }),
+    [cpu2],
+  );
+
   const seoTitle = useMemo(
     () =>
       `${formatCpuComparisonName(comparison, {
@@ -62,11 +75,17 @@ export const CompareCpusPage = (props: CompareCpusViewModel) => {
     formatCpuName(cpu2, { company: false }),
   ];
   const seoDescription = useMemo(() => {
-    const shortCpuName1 = formatCpuName(cpu1, { company: false, brand: false });
-    const shortCpuName2 = formatCpuName(cpu2, { company: false, brand: false });
+    const shortestCpuName1 = formatCpuName(cpu1, {
+      company: false,
+      brand: false,
+    });
+    const shortestCpuName2 = formatCpuName(cpu2, {
+      company: false,
+      brand: false,
+    });
 
     return (
-      `Compare the specs, benchmarks, and performance per dollar of the ${shortCpuName1} and ${shortCpuName2}. ` +
+      `Compare the specs, benchmarks, and performance per dollar of the ${shortestCpuName1} and ${shortestCpuName2}. ` +
       'Our database of processors will help you choose the best CPU for your computer.'
     );
   }, [cpu1, cpu2]);
@@ -74,6 +93,16 @@ export const CompareCpusPage = (props: CompareCpusViewModel) => {
 
   const homeHref = useMemo(() => getHomePath(), []);
   const listHref = useMemo(() => getListCpusPath(), []);
+  const editThisPage = useMemo(
+    () =>
+      config.isStaff
+        ? [
+            { href: getAdminEditCpuPath(cpu1), name: shortCpuName1 },
+            { href: getAdminEditCpuPath(cpu2), name: shortCpuName2 },
+          ]
+        : null,
+    [config.isStaff, cpu1, cpu2, shortCpuName1, shortCpuName2],
+  );
 
   return (
     <ComparePageContext.Provider value={context}>
@@ -83,7 +112,7 @@ export const CompareCpusPage = (props: CompareCpusViewModel) => {
         description={seoDescription}
         canonical={seoCanonical}
       />
-      <WebsiteLayout>
+      <WebsiteLayout config={config} editThisPage={editThisPage}>
         <Breadcrumbs className="mb-4">
           <Breadcrumb href={homeHref}>Home</Breadcrumb>
           <Breadcrumb href={listHref}>Processors</Breadcrumb>

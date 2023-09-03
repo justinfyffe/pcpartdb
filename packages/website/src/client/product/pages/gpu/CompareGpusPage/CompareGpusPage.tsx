@@ -1,5 +1,9 @@
 import {
   CompareGpusViewModel,
+  Config,
+  formatGpuComparisonName,
+  formatGpuName,
+  getAdminEditGpuPath,
   getCompareGpusPath,
   getHomePath,
   getListGpusPath,
@@ -15,7 +19,6 @@ import {
   SidenavRelatedProducts,
 } from '../../../../sidenav';
 import { CompareProductsForm } from '../../../components';
-import { formatGpuComparisonName, formatGpuName } from '../../../utils';
 import {
   Benchmarks,
   Disclaimer,
@@ -30,8 +33,11 @@ import {
 import { ComparePageContext } from './context';
 import { useComparePageContextProps } from './hooks';
 
-export const CompareGpusPage = (props: CompareGpusViewModel) => {
-  const { comparison, contentData, relatedGpus, relatedComparisons } = props;
+export const CompareGpusPage = (
+  props: CompareGpusViewModel & { config: Config },
+) => {
+  const { comparison, contentData, relatedGpus, relatedComparisons, config } =
+    props;
   const [gpu1, gpu2] = comparison;
   useProductCache(ProductType.Gpu, gpu1, gpu2);
 
@@ -41,6 +47,16 @@ export const CompareGpusPage = (props: CompareGpusViewModel) => {
   const shortPageTitle = formatGpuComparisonName(comparison, {
     company: false,
   });
+
+  const shortGpuName1 = useMemo(
+    () => formatGpuName(gpu1, { company: false, brand: true }),
+    [gpu1],
+  );
+  const shortGpuName2 = useMemo(
+    () => formatGpuName(gpu2, { company: false, brand: true }),
+    [gpu2],
+  );
+
   const seoTitle = `${formatGpuComparisonName(comparison, {
     company: false,
   })}: Compare specs, performance, and value`;
@@ -52,15 +68,32 @@ export const CompareGpusPage = (props: CompareGpusViewModel) => {
     formatGpuName(comparison[1], { company: false }),
   ];
   const seoDescription = useMemo(() => {
-    const shortGpuName1 = formatGpuName(gpu1, { company: false, brand: false });
-    const shortGpuName2 = formatGpuName(gpu2, { company: false, brand: false });
+    const shortestGpuName1 = formatGpuName(gpu1, {
+      company: false,
+      brand: false,
+    });
+    const shortestGpuName2 = formatGpuName(gpu2, {
+      company: false,
+      brand: false,
+    });
 
     return (
-      `Compare the specs, benchmarks, and performance per dollar of the ${shortGpuName1} and ${shortGpuName2}. ` +
+      `Compare the specs, benchmarks, and performance per dollar of the ${shortestGpuName1} and ${shortestGpuName2}. ` +
       'Our database of graphics cards will help you choose the best GPU for your computer.'
     );
   }, [gpu1, gpu2]);
   const seoCanonical = getCompareGpusPath(comparison);
+
+  const editThisPage = useMemo(
+    () =>
+      config.isStaff
+        ? [
+            { href: getAdminEditGpuPath(gpu1), name: shortGpuName1 },
+            { href: getAdminEditGpuPath(gpu2), name: shortGpuName2 },
+          ]
+        : null,
+    [config.isStaff, gpu1, gpu2, shortGpuName1, shortGpuName2],
+  );
 
   return (
     <ComparePageContext.Provider value={context}>
@@ -70,7 +103,7 @@ export const CompareGpusPage = (props: CompareGpusViewModel) => {
         description={seoDescription}
         canonical={seoCanonical}
       />
-      <WebsiteLayout>
+      <WebsiteLayout config={config} editThisPage={editThisPage}>
         <Breadcrumbs className="mb-4">
           <Breadcrumb href={getHomePath()}>Home</Breadcrumb>
           <Breadcrumb href={getListGpusPath()}>Graphics Cards</Breadcrumb>

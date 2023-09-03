@@ -1,7 +1,6 @@
 import { XMarkIcon } from '@heroicons/react/24/outline';
-import { Gpu } from '@pcpartdb/shared';
+import { formatGpuName, Gpu } from '@pcpartdb/shared';
 import { gpuService } from 'packages/website/src/client/product/services';
-import { formatGpuName } from 'packages/website/src/client/product/utils';
 import {
   Button,
   ButtonVariant,
@@ -41,7 +40,7 @@ export const RetailModelsDialog: FunctionComponent<RetailModelsDialogProps> = (
   }, [chipsetId]);
 
   return (
-    <div className="bg-white flex flex-col gap-4 h-[80%] w-[80%] md:h-[90%] md:w-[90%] p-4 overflow-auto max-w-247 rounded shadow">
+    <div className="bg-white flex flex-col gap-4 h-[80%] max-w-[80%] md:h-[90%] md:w-[90%] p-4 overflow-auto rounded shadow">
       <div className="flex justify-between items-center gap-2">
         <h3 className="mb-0">
           {retailModels.length} {chipsetName} cards

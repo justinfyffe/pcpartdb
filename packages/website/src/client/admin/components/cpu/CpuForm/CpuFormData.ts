@@ -9,6 +9,7 @@ import {
 export interface CpuFormData {
   slug: string;
   name: string;
+  affiliateUrl?: string;
 
   // Data Sourcese
   techPowerUpSource?: CpuDataSource;

@@ -1,8 +1,9 @@
-import { getViewGpuPath, Gpu } from '@pcpartdb/shared';
 import {
   formatGpuField,
   formatGpuName,
-} from 'packages/website/src/client/product/utils';
+  getViewGpuPath,
+  Gpu,
+} from '@pcpartdb/shared';
 import React, {
   FunctionComponent,
   useCallback,
@@ -33,7 +34,7 @@ export const ListTable: FunctionComponent = () => {
           <Th>GPU</Th>
           <Th className="text-left">Retail Models</Th>
           <Th className="text-right">Performance</Th>
-          <Th className="text-right">Performance / $</Th>
+          <Th className="text-right">Performance / $ (MSRP)</Th>
           <Th className="text-right">Release Date</Th>
         </Tr>
       </THead>

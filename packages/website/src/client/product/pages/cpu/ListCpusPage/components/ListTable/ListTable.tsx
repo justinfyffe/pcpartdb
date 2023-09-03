@@ -1,8 +1,9 @@
-import { Cpu, getViewCpuPath } from '@pcpartdb/shared';
 import {
+  Cpu,
   formatCpuField,
   formatCpuName,
-} from 'packages/website/src/client/product/utils';
+  getViewCpuPath,
+} from '@pcpartdb/shared';
 import React, { FunctionComponent, useContext, useMemo } from 'react';
 import {
   Table,
@@ -23,7 +24,7 @@ export const ListTable: FunctionComponent = () => {
         <Tr>
           <Th>CPU</Th>
           <Th className="text-right">Performance</Th>
-          <Th className="text-right">Performance / $</Th>
+          <Th className="text-right">Performance / $ (MSRP)</Th>
           <Th className="text-right">Release Date</Th>
         </Tr>
       </THead>

@@ -1,5 +1,4 @@
-import { GpuField, GpuFieldKey } from '@pcpartdb/shared';
-import { formatGpuField } from 'packages/website/src/client/product';
+import { formatGpuField, GpuField, GpuFieldKey } from '@pcpartdb/shared';
 import React, { forwardRef, useCallback, useMemo, useState } from 'react';
 import { gpuService } from '../../../../product/services/gpuService';
 import {

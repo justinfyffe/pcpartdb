@@ -11,6 +11,7 @@ import {
   CpuProductSource,
   CpuProductSourceGroup,
   CreateCpuActionData,
+  formatProductName,
   generateCpuSlug,
   Product,
   ProductType,
@@ -18,7 +19,6 @@ import {
 } from '@pcpartdb/shared';
 import { automationService } from 'packages/website/src/client/automation/services';
 import {
-  formatProductName,
   ProductAutocomplete,
   productSourceService,
 } from 'packages/website/src/client/product';

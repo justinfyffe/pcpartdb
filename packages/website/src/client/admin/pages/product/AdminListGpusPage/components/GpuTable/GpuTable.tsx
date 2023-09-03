@@ -1,5 +1,4 @@
-import { getAdminEditGpuPath, Gpu } from '@pcpartdb/shared';
-import { formatGpuName } from 'packages/website/src/client/product';
+import { formatGpuName, getAdminEditGpuPath, Gpu } from '@pcpartdb/shared';
 import React, { FunctionComponent, useMemo } from 'react';
 import {
   Table,

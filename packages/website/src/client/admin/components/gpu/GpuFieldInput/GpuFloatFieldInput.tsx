@@ -4,6 +4,7 @@ import {
   ClockSpeedUnit,
   CurrencyUnit,
   FlopsUnit,
+  formatGpuField,
   getBaseUnitValue,
   getDisplayUnitValue,
   getUnitFormat,
@@ -19,7 +20,6 @@ import {
   WattageUnit,
   WeightUnit,
 } from '@pcpartdb/shared';
-import { formatGpuField } from 'packages/website/src/client/product';
 import React, { forwardRef, useCallback, useMemo, useState } from 'react';
 import { NumberInput } from '../../../../shared/components';
 

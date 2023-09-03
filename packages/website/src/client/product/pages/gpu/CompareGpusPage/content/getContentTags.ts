@@ -1,11 +1,11 @@
 import {
+  formatGpuField,
   getGpuChipset,
   GpuComparison,
   GpuField,
   GpuMarketSegmentValue,
   hasProductFieldValue,
 } from '@pcpartdb/shared';
-import { formatGpuField } from '../../../../utils';
 
 export enum CompareGpusContentTag {
   DifferentCompany = 'DIFFERENT_COMPANY',

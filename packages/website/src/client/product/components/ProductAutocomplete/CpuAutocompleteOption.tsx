@@ -1,8 +1,12 @@
-import { Cpu, DateFormat } from '@pcpartdb/shared';
+import {
+  Cpu,
+  DateFormat,
+  formatCpuField,
+  formatCpuName,
+} from '@pcpartdb/shared';
 import React, { FunctionComponent, useMemo } from 'react';
 import { getCompanyLogoAutocompletePath } from '../../../image';
 import { AutocompleteOption, Img } from '../../../shared/components';
-import { formatCpuField, formatCpuName } from '../../utils/cpuUtils';
 
 interface CpuAutocompleteOptionProps {
   index: number;

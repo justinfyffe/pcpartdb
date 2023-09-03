@@ -13,6 +13,7 @@ import { CpuFormData } from './CpuFormData';
 const cpuValidator = Joi.object({
   slug: Joi.string().required(),
   name: Joi.string().required(),
+  affiliateUrl: Joi.string().allow(null),
 
   // Data Sources
   techPowerUpSource: cpuDataSourceValidator.allow(null),
@@ -101,6 +102,7 @@ export function cpuFormOptions(cpu?: Cpu): UseFormProps<CpuFormData> {
     defaultValues: {
       slug: cpu?.slug || null,
       name: cpu?.name || null,
+      affiliateUrl: cpu?.affiliateUrl || null,
 
       // Data Sources
       techPowerUpSource:

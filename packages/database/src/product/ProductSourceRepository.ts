@@ -298,9 +298,9 @@ export class ProductSourceRepository {
     return {
       AND: [
         { productType: productTypeWhere },
-        { sourceName: sourceNameWhere },
-        { gpuChipsetId: gpuChipsetIdWhere },
         { archived: archivedWhere },
+        { gpuChipsetId: gpuChipsetIdWhere },
+        { sourceName: sourceNameWhere },
       ],
     };
   }

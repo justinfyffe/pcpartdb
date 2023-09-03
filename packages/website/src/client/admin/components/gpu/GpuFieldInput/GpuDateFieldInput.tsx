@@ -1,5 +1,9 @@
-import { DateFormat, GpuField, GpuFieldKey } from '@pcpartdb/shared';
-import { formatGpuField } from 'packages/website/src/client/product';
+import {
+  DateFormat,
+  formatGpuField,
+  GpuField,
+  GpuFieldKey,
+} from '@pcpartdb/shared';
 import React, { forwardRef, useCallback, useMemo } from 'react';
 import {
   DateInput,

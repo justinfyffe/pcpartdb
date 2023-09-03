@@ -1,6 +1,10 @@
-import { ListCpusOrder, ListCpusQuery } from '@pcpartdb/shared';
+import {
+  formatCpuCompany,
+  formatCpuMarketSegment,
+  ListCpusOrder,
+  ListCpusQuery,
+} from '@pcpartdb/shared';
 import { ContentParams } from 'packages/website/src/client/shared/content';
-import { formatCpuCompany, formatCpuMarketSegment } from '../../../../utils';
 
 export interface ListCpusContentParams {
   bestOrWorstTitle?: string;

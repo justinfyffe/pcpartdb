@@ -223,6 +223,15 @@ export const CpuForm: FunctionComponent<CpuFormProps> = (props) => {
             <FieldError>Required</FieldError>
           )}
         </Field>
+
+        <Field>
+          Amazon URL
+          <Controller
+            name="affiliateUrl"
+            control={control}
+            render={({ field }) => <TextInput {...field} ref={null} />}
+          />
+        </Field>
       </section>
 
       <section>

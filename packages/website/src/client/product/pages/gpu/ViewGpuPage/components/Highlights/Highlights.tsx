@@ -4,13 +4,17 @@ import {
   CircleStackIcon,
   CubeTransparentIcon,
   CurrencyDollarIcon,
+  ShoppingCartIcon,
   StarIcon,
 } from '@heroicons/react/24/outline';
-import { ProductHighlight } from 'packages/website/src/client/product/components';
 import {
   formatGpuDimensions,
   formatGpuField,
-} from 'packages/website/src/client/product/utils';
+  getGpuAffiliateUrl,
+} from '@pcpartdb/shared';
+import { ProductHighlight } from 'packages/website/src/client/product/components';
+import { AffiliateDisclaimer } from 'packages/website/src/client/shared/components/AffiliateDisclaimer/AffiliateDisclaimer';
+import { WarningButton } from 'packages/website/src/client/shared/components/Button/WarningButton';
 import { classNames } from 'packages/website/src/client/shared/ui';
 import React, { FunctionComponent, useContext, useMemo } from 'react';
 import { ViewPageContext } from '../../context';
@@ -67,6 +71,8 @@ export const Highlights: FunctionComponent<HighlightsProps> = (props) => {
     return formatGpuField(gpu.releaseDate) || '--';
   }, [gpu.releaseDate]);
 
+  const gpuAffiliateUrl = useMemo(() => getGpuAffiliateUrl(gpu), [gpu]);
+
   return (
     <div
       className={classNames(
@@ -81,15 +87,15 @@ export const Highlights: FunctionComponent<HighlightsProps> = (props) => {
       />
 
       <ProductHighlight
-        icon={<CurrencyDollarIcon />}
-        label="Performance / $"
-        value={highlightValue}
-      />
-
-      <ProductHighlight
         icon={<CircleStackIcon />}
         label="Memory"
         value={highlightMemory}
+      />
+
+      <ProductHighlight
+        icon={<CurrencyDollarIcon />}
+        label="Performance / $ (MSRP)"
+        value={highlightValue}
       />
 
       <ProductHighlight
@@ -105,6 +111,25 @@ export const Highlights: FunctionComponent<HighlightsProps> = (props) => {
         label="Release Date"
         value={highlightReleaseDate}
       />
+
+      {gpuAffiliateUrl && (
+        <div className="flex flex-col">
+          <ProductHighlight
+            icon={<ShoppingCartIcon />}
+            label="Shop"
+            value={
+              <WarningButton
+                href={gpuAffiliateUrl}
+                target="_blank"
+                rel="noopener nofollow"
+              >
+                Check Price on Amazon
+              </WarningButton>
+            }
+          />
+          {gpuAffiliateUrl && <AffiliateDisclaimer />}
+        </div>
+      )}
     </div>
   );
 };

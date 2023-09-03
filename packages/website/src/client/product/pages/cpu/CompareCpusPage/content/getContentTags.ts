@@ -1,9 +1,9 @@
 import {
   CpuComparison,
   CpuField,
+  formatCpuField,
   hasProductFieldValue,
 } from '@pcpartdb/shared';
-import { formatCpuField } from '../../../../utils';
 
 export enum CompareCpusContentTag {
   DifferentCompany = 'DIFFERENT_COMPANY',

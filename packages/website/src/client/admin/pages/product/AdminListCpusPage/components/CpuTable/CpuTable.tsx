@@ -2,18 +2,13 @@ import { ArrowPathIcon } from '@heroicons/react/24/outline';
 import {
   AutomationActionType,
   Cpu,
+  formatCpuName,
   getAdminEditCpuPath,
   UpdateCpuActionData,
 } from '@pcpartdb/shared';
 import { automationService } from 'packages/website/src/client/automation';
-import { formatCpuName } from 'packages/website/src/client/product';
 import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
-import React, {
-  FunctionComponent,
-  useCallback,
-  useMemo,
-  useState,
-} from 'react';
+import React, { FunctionComponent, useCallback, useMemo } from 'react';
 import {
   Table,
   TBody,

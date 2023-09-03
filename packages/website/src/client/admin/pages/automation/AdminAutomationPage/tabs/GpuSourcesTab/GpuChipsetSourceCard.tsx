@@ -8,6 +8,7 @@ import {
 import {
   AutomationActionType,
   CreateGpuActionData,
+  formatProductName,
   generateGpuSlug,
   GpuDataSourceKey,
   GpuProductSource,
@@ -18,7 +19,6 @@ import {
 } from '@pcpartdb/shared';
 import { automationService } from 'packages/website/src/client/automation/services';
 import {
-  formatProductName,
   ProductAutocomplete,
   productSourceService,
 } from 'packages/website/src/client/product';

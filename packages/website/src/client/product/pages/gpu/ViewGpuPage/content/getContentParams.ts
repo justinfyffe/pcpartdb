@@ -1,5 +1,8 @@
 import {
   DateFormat,
+  formatGpuDimensions,
+  formatGpuField,
+  formatGpuName,
   getGpuChipset,
   getViewGpuPath,
   Gpu,
@@ -10,11 +13,6 @@ import {
 } from '@pcpartdb/shared';
 import { ContentParams } from 'packages/website/src/client/shared/content';
 import { formatOrdinalNumber } from 'packages/website/src/client/shared/format';
-import {
-  formatGpuDimensions,
-  formatGpuField,
-  formatGpuName,
-} from '../../../../utils';
 
 export interface ViewGpuContentParams {
   architecture?: string;

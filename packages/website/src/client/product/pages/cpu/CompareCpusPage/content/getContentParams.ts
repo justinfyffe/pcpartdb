@@ -1,10 +1,11 @@
 import {
   CpuComparison,
+  formatCpuField,
+  formatCpuName,
   hasProductFieldValue,
   isPastCpuLaunchDate,
 } from '@pcpartdb/shared';
 import { ContentParams } from 'packages/website/src/client/shared/content';
-import { formatCpuField, formatCpuName } from '../../../../utils/cpuUtils';
 
 export interface CompareCpusContentParams {
   company1?: string;

@@ -1,10 +1,6 @@
 import { CurrencyDollarIcon } from '@heroicons/react/24/outline';
-import { getGpuChipset } from '@pcpartdb/shared';
+import { formatGpuField, formatGpuName, getGpuChipset } from '@pcpartdb/shared';
 import { ProductHighlightComparison } from 'packages/website/src/client/product/components';
-import {
-  formatGpuField,
-  formatGpuName,
-} from 'packages/website/src/client/product/utils';
 import React, { FunctionComponent, useContext, useMemo } from 'react';
 import { ComparePageContext } from '../../context';
 
@@ -23,8 +19,8 @@ export const ValueHighlightListItem: FunctionComponent<
   const chipset2 = getGpuChipset(gpu2);
 
   const values = useMemo(() => {
-    const name1 = formatGpuName(gpu1, { company: false, brand: false });
-    const name2 = formatGpuName(gpu2, { company: false, brand: false });
+    const name1 = formatGpuName(gpu1, { company: false, brand: true });
+    const name2 = formatGpuName(gpu2, { company: false, brand: true });
 
     const value1 = formatGpuField(chipset1.valueScore) || '--';
     const value2 = formatGpuField(chipset2.valueScore) || '--';
@@ -41,7 +37,7 @@ export const ValueHighlightListItem: FunctionComponent<
   return (
     <ProductHighlightComparison
       icon={<CurrencyDollarIcon />}
-      label="Performance / $"
+      label="Performance / $ (MSRP)"
       values={values}
       className={className}
     ></ProductHighlightComparison>

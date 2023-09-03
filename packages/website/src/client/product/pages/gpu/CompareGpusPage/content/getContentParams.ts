@@ -1,4 +1,7 @@
 import {
+  formatGpuDimensions,
+  formatGpuField,
+  formatGpuName,
   getGpuChipset,
   Gpu,
   GpuComparison,
@@ -7,11 +10,6 @@ import {
   isPastGpuLaunchDate,
 } from '@pcpartdb/shared';
 import { ContentParams } from 'packages/website/src/client/shared/content';
-import {
-  formatGpuDimensions,
-  formatGpuField,
-  formatGpuName,
-} from '../../../../utils';
 
 export interface CompareGpusContentParams {
   company1?: string;

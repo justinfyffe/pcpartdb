@@ -21,15 +21,22 @@ import {
 } from '../../components';
 import { classNames } from '../../ui';
 
+interface EditThisPage {
+  href: string;
+  name: string;
+}
+
 interface WebsiteLayoutProps {
   config?: Config;
-  editThisPageHref?: string;
+  editThisPage?: EditThisPage[];
 
   className?: string;
   children?: React.ReactNode;
 }
 
 export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
+  const { config, editThisPage } = props;
+
   return (
     <>
       <div className="container bg-content p-container md:px-4 flex font-bold items-center text-5xl md:text-3xl text-dark-shades">
@@ -99,24 +106,30 @@ export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
             .
           </p>
 
-          {/* <p>
-            {WEBSITE_NAME} is a participant of affiliate programs and earns
-            commission from qualifying purchases.
-          </p> */}
+          <p>
+            {WEBSITE_NAME} is a participant in the Amazon Services LLC
+            Associates Program, an affiliate advertising program. We earn from
+            qualifying purchases.
+          </p>
         </FooterSection>
 
         <FooterSection className={classNames('flex-none text-center w-full')}>
           Copyright &copy; {WEBSITE_NAME}
         </FooterSection>
 
-        {props.config?.isStaff && props.editThisPageHref != null && (
-          <FooterSection className={classNames('flex-none text-center w-full')}>
-            <a
-              href={props.editThisPageHref}
-              className="text-light-shades underline"
-            >
-              edit this page
-            </a>
+        {config?.isStaff && editThisPage != null && (
+          <FooterSection
+            className={classNames('flex flex-wrap justify-center gap-2')}
+          >
+            {editThisPage.map((page, i) => (
+              <a
+                key={i}
+                href={page.href}
+                className="text-light-shades underline"
+              >
+                Edit {page.name}
+              </a>
+            ))}
           </FooterSection>
         )}
       </Footer>

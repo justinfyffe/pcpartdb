@@ -1,14 +1,12 @@
 import {
+  formatGpuField,
+  formatGpuName,
   getGpuChipset,
   getViewGpuPath,
   Gpu,
   hasProductFieldValue,
 } from '@pcpartdb/shared';
 import { ProductCustomRow } from 'packages/website/src/client/product/components';
-import {
-  formatGpuField,
-  formatGpuName,
-} from 'packages/website/src/client/product/utils';
 import React, {
   FunctionComponent,
   useCallback,

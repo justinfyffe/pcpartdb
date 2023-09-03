@@ -130,7 +130,12 @@ model Cpu {
   images      CpuImage[] @relation("cpuImageToCpu")
   productUpdates ProductUpdate[] @relation("productUpdateToCpu")
 
-  @@index([automationTimestamp], name: "cpus_automation_timestamp_index")
+
+  @@index([generation], name: "cpus_generation_index")
+  @@index([marketSegments], name: "cpus_marketSegments_index")
+  @@index([releaseDate], name: "cpus_releaseDate_index")
+  @@index([performanceScore], name: "cpus_performanceScore_index")
+  @@index([valueScore], name: "cpus_valueScore_index")
   @@unique([company, name], name: "cpus_company_name_unique")
   @@map("cpus")
 }
@@ -231,7 +236,11 @@ model Gpu {
   productUpdates ProductUpdate[] @relation("productUpdateToGpu")
   retailModelSources ProductSource[] @relation("productSourceToGpuChipset")
 
-  @@index([automationTimestamp], name: "gpus_automation_timestamp_index")
+  @@index([architecture], name: "gpus_architecture_index")
+  @@index([marketSegment], name: "gpus_marketSegment_index")
+  @@index([releaseDate], name: "gpus_releaseDate_index")
+  @@index([performanceScore], name: "gpus_performanceScore_index")
+  @@index([valueScore], name: "gpus_valueScore_index")
   @@unique([company, name], name: "gpus_company_name_unique")
   @@map("gpus")
 }
@@ -308,7 +317,7 @@ model ProductSource {
 
   gpuChipset Gpu? @relation("productSourceToGpuChipset", fields: [gpuChipsetId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "product_updates_gpu_chipset_id_foreign")
 
-  @@index([productType, sourceName], name: "product_sources_productType_sourceName_index") 
+  @@index([productType, archived, gpuChipsetId], name: "product_sources_productType_archived_gpu_chipset_id_index") 
   @@unique([productType, sourceKey, externalKey], name: "product_sources_productType_sourceKey_externalKey_unique")
 
   @@map("product_sources")
@@ -355,10 +364,7 @@ model ProductUpdate {
   cpu Cpu? @relation("productUpdateToCpu", fields: [cpuId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "product_updates_cpu_id_foreign")
   gpu Gpu? @relation("productUpdateToGpu", fields: [gpuId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "product_updates_gpu_id_foreign")
 
-  @@index([productType, cpuId], name: "product_updates_productType_cpuId_index")
-  @@index([productType, gpuId], name: "product_updates_productType_gpuId_index")
-  @@index([productType, gpuProductType, status], name: "product_updates_productType_gpuProductType_status_index") 
-  @@index([createdAt], name: "product_updates_createdAt_index")
+  @@index([productType, gpuProductType, status, createdAt], name: "product_updates_type_gpuType_status_createdAt_index") 
 
   @@map("product_updates")
 }

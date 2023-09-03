@@ -9,6 +9,7 @@ import {
   AutomationActionType,
   Cpu,
   CpuUpdate,
+  formatProductName,
   getAdminListCpusPath,
   getAdminListGpusPath,
   getViewProductPath,
@@ -19,7 +20,6 @@ import {
   UpdateGpuActionData,
 } from '@pcpartdb/shared';
 import { automationService } from 'packages/website/src/client/automation';
-import { formatProductName } from 'packages/website/src/client/product';
 import { productUpdateService } from 'packages/website/src/client/product/services/productUpdateService';
 import { WarningAlert } from 'packages/website/src/client/shared/components/Alert/WarningAlert';
 import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';

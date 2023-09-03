@@ -1,6 +1,7 @@
 import { parseISO } from 'date-fns';
 import { getListGpusPath } from '../../routes';
-import { hasProductFieldValue } from '../utils';
+import { ProductType } from '../types';
+import { getAffiliateUrl, hasProductFieldValue } from '../utils';
 import {
   DEFAULT_LIST_GPUS_LIMIT,
   DEFAULT_LIST_GPUS_OFFSET,
@@ -20,6 +21,10 @@ import {
 
 export function getGpuChipset(gpu: Gpu) {
   return gpu?.chipset || gpu;
+}
+
+export function getGpuAffiliateUrl(gpu: Gpu) {
+  return getAffiliateUrl(ProductType.Gpu, gpu);
 }
 
 export function generateGpuSlug(name: string, company: string) {
