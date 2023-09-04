@@ -13,14 +13,13 @@ const IntroMarketSegment = compileContentComponent(
       'anUnreleasedOrAnEndOfLife',
       'coresCount',
       'threadsCount',
-      'marketSegments',
+      'marketSegment',
     ],
     component: (props) => (
       <>
         The {props.cpuName} is {props.anUnreleasedOrAnEndOfLife}{' '}
-        {props.coresCount}-core ({props.threadsCount}-thread){' '}
-        {props.marketSegments} processor built for the {props.marketSegments}{' '}
-        market.
+        {props.coresCount}-core ({props.threadsCount}-thread) processor built
+        for the {props.marketSegment} market.
       </>
     ),
   },
@@ -37,11 +36,11 @@ const IntroMarketSegment = compileContentComponent(
   },
   {
     tags: [],
-    deps: ['anUnreleasedOrAnEndOfLife', 'coresCount', 'marketSegments'],
+    deps: ['anUnreleasedOrAnEndOfLife', 'coresCount', 'marketSegment'],
     component: (props) => (
       <>
         The {props.cpuName} is {props.anUnreleasedOrAnEndOfLife}{' '}
-        {props.coresCount}-core processor built for the {props.marketSegments}{' '}
+        {props.coresCount}-core processor built for the {props.marketSegment}{' '}
         market.
       </>
     ),
@@ -58,11 +57,11 @@ const IntroMarketSegment = compileContentComponent(
   },
   {
     tags: [],
-    deps: ['coresCount', 'threadsCount', 'marketSegments'],
+    deps: ['coresCount', 'threadsCount', 'marketSegment'],
     component: (props) => (
       <>
         The {props.cpuName} is a {props.coresCount}-core ({props.threadsCount}
-        -thread) processor built for the {props.marketSegments} market.
+        -thread) processor built for the {props.marketSegment} market.
       </>
     ),
   },
@@ -78,11 +77,11 @@ const IntroMarketSegment = compileContentComponent(
   },
   {
     tags: [],
-    deps: ['coresCount', 'marketSegments'],
+    deps: ['coresCount', 'marketSegment'],
     component: (props) => (
       <>
         The {props.cpuName} is a {props.coresCount}-core processor built for the{' '}
-        {props.marketSegments} market.
+        {props.marketSegment} market.
       </>
     ),
   },
@@ -101,7 +100,7 @@ const IntroMarketSegment = compileContentComponent(
     deps: [],
     component: (props) => (
       <>
-        The {props.shortCpuName} is a {props.marketSegments} processor by{' '}
+        The {props.shortCpuName} is a {props.marketSegment} processor by{' '}
         {props.company}.
       </>
     ),

@@ -37,7 +37,7 @@ export async function scrapeTechPowerUpCpuData(
     name: getName($),
     partNumber: getPartNumber($, ctx),
     company: getCompany($, ctx),
-    marketSegments: getMarketSegments($, ctx),
+    marketSegment: getMarketSegment($, ctx),
     launchPrice: getLaunchPrice($, ctx),
     releaseDate: getReleaseDate($, ctx),
     productionStatus: getProductionStatus($, ctx),
@@ -437,38 +437,37 @@ function getLaunchPrice($: cheerio.CheerioAPI, ctx?: ScraperContext) {
   });
 }
 
-function getMarketSegments($: cheerio.CheerioAPI, ctx?: ScraperContext) {
-  const marketSegments: CpuMarketSegmentValue[] = [];
+function getMarketSegment($: cheerio.CheerioAPI, ctx?: ScraperContext) {
+  let marketSegment: CpuMarketSegmentValue = null;
   if (isDesktopMarketSegment($)) {
-    marketSegments.push(CpuMarketSegmentValue.Desktop);
-  }
-  if (isMobileMarketSegment($)) {
-    marketSegments.push(CpuMarketSegmentValue.Mobile);
+    marketSegment = CpuMarketSegmentValue.Desktop;
+  } else if (isMobileMarketSegment($)) {
+    marketSegment = CpuMarketSegmentValue.Mobile;
   }
   if (isWorkstationMarketSegment($)) {
-    marketSegments.push(CpuMarketSegmentValue.Workstation);
+    marketSegment = CpuMarketSegmentValue.Workstation;
   }
   if (isServerMarketSegment($)) {
-    marketSegments.push(CpuMarketSegmentValue.Server);
+    marketSegment = CpuMarketSegmentValue.Server;
   }
   if (isEmbeddedMarketSegment($)) {
-    marketSegments.push(CpuMarketSegmentValue.Embedded);
+    marketSegment = CpuMarketSegmentValue.Embedded;
   }
 
   return createCpuField({
-    field: 'marketSegments',
-    value: marketSegments,
+    field: 'marketSegment',
+    value: marketSegment,
     ctx,
   });
 }
 
 function isDesktopMarketSegment($: cheerio.CheerioAPI) {
   const name = getName($).toLowerCase();
-  const marketSegments = tokenizeMultiLine($, 'Market')
+  const marketSegment = tokenizeMultiLine($, 'Market')
     .map((value) => value.toLowerCase())
     .filter((value) => value != null);
 
-  if (marketSegments.includes('desktop')) {
+  if (marketSegment.includes('desktop')) {
     if (
       name.includes(' pro-') ||
       name.startsWith('pro-') ||
@@ -485,11 +484,11 @@ function isDesktopMarketSegment($: cheerio.CheerioAPI) {
 }
 
 function isMobileMarketSegment($: cheerio.CheerioAPI) {
-  const marketSegments = tokenizeMultiLine($, 'Market')
+  const marketSegment = tokenizeMultiLine($, 'Market')
     .map((value) => value.toLowerCase())
     .filter((value) => value != null);
 
-  if (marketSegments.includes('mobile')) {
+  if (marketSegment.includes('mobile')) {
     return true;
   }
 
@@ -498,12 +497,12 @@ function isMobileMarketSegment($: cheerio.CheerioAPI) {
 
 function isWorkstationMarketSegment($: cheerio.CheerioAPI) {
   const name = getName($).toLowerCase();
-  const marketSegments = tokenizeMultiLine($, 'Market')
+  const marketSegment = tokenizeMultiLine($, 'Market')
     .map((value) => value.toLowerCase())
     .filter((value) => value != null);
 
   // Handle edge cases where desktop cpus are mislabeled as workstations
-  if (marketSegments.includes('desktop')) {
+  if (marketSegment.includes('desktop')) {
     if (name.includes(' pro-') || name.includes(' pro ')) {
       return true;
     }
@@ -511,7 +510,7 @@ function isWorkstationMarketSegment($: cheerio.CheerioAPI) {
     return false;
   }
 
-  if (!marketSegments.includes('server/workstation')) {
+  if (!marketSegment.includes('server/workstation')) {
     // Does not have server/workstation, we can assume it's not.
     return false;
   }
@@ -540,11 +539,11 @@ function isWorkstationMarketSegment($: cheerio.CheerioAPI) {
 
 function isServerMarketSegment($: cheerio.CheerioAPI) {
   const name = getName($).toLowerCase();
-  const marketSegments = tokenizeMultiLine($, 'Market')
+  const marketSegment = tokenizeMultiLine($, 'Market')
     .map((value) => value.toLowerCase())
     .filter((value) => value != null);
 
-  if (!marketSegments.includes('server/workstation')) {
+  if (!marketSegment.includes('server/workstation')) {
     // Does not have server/workstation, we can assume it's not.
     return false;
   }

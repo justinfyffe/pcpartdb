@@ -23,7 +23,7 @@ const cpuValidator = Joi.object({
   // General Info
   partNumber: cpuDataValidator.allow(null),
   company: cpuDataValidator.allow(null),
-  marketSegments: cpuDataValidator.allow(null),
+  marketSegment: cpuDataValidator.allow(null),
   launchPrice: cpuDataValidator.allow(null),
   releaseDate: cpuDataValidator.allow(null),
   productionStatus: cpuDataValidator.allow(null),
@@ -115,7 +115,7 @@ export function cpuFormOptions(cpu?: Cpu): UseFormProps<CpuFormData> {
       // General Info
       partNumber: cpu?.partNumber || null,
       company: cpu?.company || null,
-      marketSegments: cpu?.marketSegments || null,
+      marketSegment: cpu?.marketSegment || null,
       launchPrice: cpu?.launchPrice || null,
       releaseDate: cpu?.releaseDate || null,
       productionStatus: cpu?.productionStatus || null,

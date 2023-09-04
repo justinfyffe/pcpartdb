@@ -16,7 +16,7 @@ export function formDataToCpuRequest(
     // General Info
     partNumber: formData.partNumber || null,
     company: formData.company || null,
-    marketSegments: formData.marketSegments || null,
+    marketSegment: formData.marketSegment || null,
     launchPrice: formData.launchPrice || null,
     releaseDate: formData.releaseDate || null,
     productionStatus: formData.productionStatus || null,

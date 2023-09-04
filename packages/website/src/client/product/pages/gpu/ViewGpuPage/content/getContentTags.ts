@@ -24,12 +24,7 @@ export enum ViewGpuContentTag {
   SmallSize = 'SMALL_SIZE',
   CompactSize = 'COMPACT_SIZE',
 
-  BestPerformance = 'BEST_PERFORMANCE',
-  BestPerformanceForArchitectureSegment = 'BEST_PERFORMANCE_FOR_ARCHITECTURE_SEGMENT',
-  BestPerformanceForCompanySegment = 'BEST_PERFORMANCE_FOR_COMPANY_SEGMENT',
   BestPerformanceForSegment = 'BEST_PERFORMANCE_FOR_SEGMENT',
-  BestValue = 'BEST_VALUE',
-  BestValueForSegment = 'BEST_VALUE_FOR_SEGMENT',
 }
 
 export function getContentTags(gpu: Gpu, contentData: ViewGpuContentData) {
@@ -76,13 +71,7 @@ export function getCompatibilityTags(gpu: Gpu) {
 
 export function getPerformanceTags(gpu: Gpu) {
   return {
-    [ViewGpuContentTag.BestPerformance]: gpu.ranks?.performanceRank === 1,
-    [ViewGpuContentTag.BestPerformanceForArchitectureSegment]:
-      gpu.ranks?.performanceRankForArchitectureSegment === 1,
-    [ViewGpuContentTag.BestPerformanceForCompanySegment]:
-      gpu.ranks?.performanceRankForCompanySegment === 1,
     [ViewGpuContentTag.BestPerformanceForSegment]:
       gpu.ranks?.performanceRankForSegment === 1,
-    [ViewGpuContentTag.BestValue]: gpu.ranks?.valueRank === 1,
   };
 }

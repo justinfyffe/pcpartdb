@@ -80,34 +80,11 @@ export class CpuRanksRepository {
     const where: string[] = [];
     let nextParameterIndex = 1;
 
-    const company = filter?.company?.filter((value) => value != null) ?? [];
-    const year = filter?.year?.filter((value) => value != null) ?? [];
     const segment = filter?.segment?.filter((value) => value != null) ?? [];
-    const codename = filter?.codename?.filter((value) => value != null) ?? [];
-    const generation =
-      filter?.generation?.filter((value) => value != null) ?? [];
 
-    if (company.length > 0) {
-      where.push(`cpu.company = ANY ($${nextParameterIndex++})`);
-      parameters.push(company);
-    }
-    if (year.length > 0) {
-      where.push(
-        `DATE_PART('year', cpu.release_date::date) = ANY ($${nextParameterIndex++})`,
-      );
-      parameters.push(year);
-    }
     if (segment.length > 0) {
       where.push(`cpu.market_segments && $${nextParameterIndex++}`);
       parameters.push(segment);
-    }
-    if (codename.length > 0) {
-      where.push(`cpu.codename = ANY ($${nextParameterIndex++})`);
-      parameters.push(codename);
-    }
-    if (generation.length > 0) {
-      where.push(`cpu.generation = ANY ($${nextParameterIndex++})`);
-      parameters.push(generation);
     }
 
     return {

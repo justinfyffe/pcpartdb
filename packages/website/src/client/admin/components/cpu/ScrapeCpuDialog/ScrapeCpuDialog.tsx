@@ -19,7 +19,7 @@ export const ScrapeCpuDialog: FunctionComponent<ScrapeCpuDialogProps> = (
         'name',
         'partNumber',
         'company',
-        'marketSegments',
+        'marketSegment',
         'launchPrice',
         'releaseDate',
         'productionStatus',

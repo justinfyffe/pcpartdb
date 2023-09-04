@@ -259,8 +259,8 @@ export class CpuRepository {
       companies.length > 0 ? { in: companies, mode: 'insensitive' } : undefined;
 
     // Segment
-    const segmentsWhere: Prisma.StringNullableListFilter =
-      segments.length > 0 ? { hasSome: segments } : undefined;
+    const segmentsWhere: Prisma.StringNullableFilter =
+      segments.length > 0 ? { in: segments } : undefined;
 
     // Year
     const yearWhere: Prisma.CpuWhereInput[] = years.map((year) => ({
@@ -274,7 +274,7 @@ export class CpuRepository {
       AND: [
         { id: idWhere },
         { company: companyWhere },
-        { marketSegments: segmentsWhere },
+        { marketSegment: segmentsWhere },
         { performanceScore: performanceWhere },
         { valueScore: valueWhere },
         { OR: yearWhere },

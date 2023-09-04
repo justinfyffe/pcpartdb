@@ -159,7 +159,9 @@ export class CompareCpusViewModelService {
       {
         query: {
           filter: {
-            segment: cpu.marketSegments?.value ?? [],
+            segment: hasProductFieldValue(cpu.marketSegment)
+              ? [cpu.marketSegment.value]
+              : [],
             excludeIds: [cpu.id],
             minPerformanceScore: cpu.performanceScore?.value,
             performanceRated: true,
@@ -180,7 +182,9 @@ export class CompareCpusViewModelService {
       {
         query: {
           filter: {
-            segment: cpu.marketSegments?.value ?? [],
+            segment: hasProductFieldValue(cpu.marketSegment)
+              ? [cpu.marketSegment.value]
+              : [],
             excludeIds: [cpu.id],
             maxPerformanceScore: cpu.performanceScore?.value,
             performanceRated: true,
@@ -215,7 +219,9 @@ export class CompareCpusViewModelService {
       {
         query: {
           filter: {
-            segment: cpu.marketSegments?.value ?? [],
+            segment: hasProductFieldValue(cpu.marketSegment)
+              ? [cpu.marketSegment.value]
+              : [],
             excludeIds: [cpu.id],
             minValueScore: cpu.valueScore?.value,
             valueRated: true,
@@ -233,7 +239,9 @@ export class CompareCpusViewModelService {
       {
         query: {
           filter: {
-            segment: cpu.marketSegments?.value ?? [],
+            segment: hasProductFieldValue(cpu.marketSegment)
+              ? [cpu.marketSegment.value]
+              : [],
             excludeIds: [cpu.id],
             maxValueScore: cpu.valueScore?.value,
             valueRated: true,

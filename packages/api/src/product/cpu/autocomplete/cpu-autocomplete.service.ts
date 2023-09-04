@@ -22,7 +22,7 @@ export class CpuAutocompleteService {
       fields: new Set([
         'company',
         'launchPrice',
-        'marketSegments',
+        'marketSegment',
         'releaseDate',
       ]),
     });

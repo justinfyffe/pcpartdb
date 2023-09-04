@@ -80,36 +80,14 @@ export class GpuRanksRepository {
     const where: string[] = [];
     let nextParameterIndex = 1;
 
-    const isChipset = filter?.isChipset ?? false;
-    const isRetailModel = filter?.isRetailModel ?? false;
     const architecture =
       filter?.architecture?.filter((value) => value != null) ?? [];
-    const company = filter?.company?.filter((value) => value != null) ?? [];
-    const year = filter?.year?.filter((value) => value != null) ?? [];
     const segment = filter?.segment?.filter((value) => value != null) ?? [];
 
-    // Only include ranks for chipsets
-    if (isChipset) {
-      where.push('gpu.chipset_id IS NULL');
-    }
-    if (isRetailModel) {
-      where.push('gpu.chipset_id IS NOT NULL');
-    }
-
+    where.push('gpu.chipset_id IS NULL');
     if (architecture.length > 0) {
       where.push(`gpu.architecture = ANY ($${nextParameterIndex++})`);
       parameters.push(architecture);
-    }
-    if (company.length > 0) {
-      where.push(`gpu.company = ANY ($${nextParameterIndex++})`);
-      parameters.push(company);
-    }
-    if (year.length > 0) {
-      // TODO: use where or
-      where.push(
-        `DATE_PART('year', gpu.release_date::date) = ANY ($${nextParameterIndex++})`,
-      );
-      parameters.push(year);
     }
     if (segment.length > 0) {
       where.push(`gpu.market_segment = ANY ($${nextParameterIndex++})`);

@@ -38,9 +38,8 @@ export interface GpuField<T = unknown> extends ProductField<T> {
 
 export interface GpuRanks {
   performanceRank?: number;
-  performanceRankForArchitectureSegment?: number;
-  performanceRankForCompanySegment?: number;
   performanceRankForSegment?: number;
+  performanceRankForArchitectureSegment?: number;
 
   valueRank?: number;
   valueRankForSegment?: number;
@@ -48,12 +47,7 @@ export interface GpuRanks {
 
 export interface GpuRanksFilter {
   architecture?: string[];
-  company?: string[];
-  year?: number[];
   segment?: GpuMarketSegmentValue[];
-
-  isChipset?: boolean;
-  isRetailModel?: boolean;
 }
 
 export type GpuRank = keyof GpuRanks;

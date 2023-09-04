@@ -39,7 +39,7 @@ const INPUT_TYPES: Record<string, InputType> = {
   // General
   partNumber: 'text',
   company: 'autocomplete',
-  marketSegments: 'enum_multiple',
+  marketSegment: 'enum',
   launchPrice: 'currency',
   releaseDate: 'date',
   productionStatus: 'enum',

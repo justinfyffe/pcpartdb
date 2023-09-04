@@ -27,12 +27,10 @@ export const CpuAutocompleteOption: FunctionComponent<
   const image = useMemo(() => getCompanyLogoAutocompletePath(cpu), [cpu]);
   const company = useMemo(() => formatCpuField(cpu.company), [cpu]);
 
-  const companyAndMarketSegments = useMemo(() => {
-    const marketSegments = formatCpuField(cpu.marketSegments);
-    return [company, marketSegments]
-      .filter((value) => value != null)
-      .join(', ');
-  }, [company, cpu.marketSegments]);
+  const companyAndMarketSegment = useMemo(() => {
+    const marketSegment = formatCpuField(cpu.marketSegment);
+    return [company, marketSegment].filter((value) => value != null).join(', ');
+  }, [company, cpu.marketSegment]);
   const releaseDate = useMemo(
     () =>
       formatCpuField(cpu.releaseDate, {
@@ -55,7 +53,7 @@ export const CpuAutocompleteOption: FunctionComponent<
         <div className="flex flex-1 flex-col gap-1 items-start">
           <span className="flex-1 text-base">{name}</span>
           <span className="flex-1 text-sm text-dimmed">
-            {companyAndMarketSegments}
+            {companyAndMarketSegment}
           </span>
         </div>
 

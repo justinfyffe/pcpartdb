@@ -12,15 +12,14 @@ export enum ViewCpuContentTag {
   HasUnlockedMultiplier = 'HAS_UNLOCKED_MULTIPLIER',
 }
 
-export function getContentTags(cpu: Cpu, contentData: ViewCpuContentData) {
+export function getContentTags(cpu: Cpu, _contentData: ViewCpuContentData) {
   return {
     [ViewCpuContentTag.BestPerformance]: cpu.ranks?.performanceRank === 1,
     [ViewCpuContentTag.HasBundledCooler]: hasProductFieldValue(
       cpu.bundledCooler,
     ),
     [ViewCpuContentTag.IsDesktop]:
-      cpu.marketSegments?.value?.includes(CpuMarketSegmentValue.Desktop) ??
-      false,
+      cpu.marketSegment?.value === CpuMarketSegmentValue.Desktop,
     [ViewCpuContentTag.HasUnlockedMultiplier]:
       cpu.isMultiplierUnlocked?.value ?? false,
   };

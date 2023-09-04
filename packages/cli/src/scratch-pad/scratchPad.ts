@@ -1,30 +1,46 @@
-import { GpuRepository, mapToGpuDto, mapToGpuEntity } from '@pcpartdb/database';
-import { ListGpusOrder, ListGpusSort } from '@pcpartdb/shared';
+import { CpuRepository, mapToCpuDto, mapToCpuEntity } from '@pcpartdb/database';
+import { CpuFields, ListCpusOrder, ListCpusSort } from '@pcpartdb/shared';
 import { getDatabase } from '../shared/database';
 
 export async function scratchPad() {
   const db = await getDatabase();
-  const gpuRepository = new GpuRepository(db);
-  const totalGpus = await db.transaction(async (trx) => {
+  const cpuRepository = new CpuRepository(db);
+  const totalCpus = await db.transaction(async (trx) => {
     const ctx = { trx };
-    return await gpuRepository.count({}, ctx);
+    return await cpuRepository.count({}, ctx);
   });
-  for (let i = 0; i < totalGpus; ++i) {
-    await db.transaction(async (trx) => {
-      const ctx = { trx };
-      const gpus = await gpuRepository.list(
-        {
-          query: {
-            pagination: { offset: i, limit: 1 },
-            orderBy: { sort: ListGpusSort.Id, order: ListGpusOrder.Asc },
+  for (let i = 0; i < totalCpus; i += 10) {
+    await db.transaction(
+      async (trx) => {
+        const ctx = { trx };
+        const cpus = await cpuRepository.list(
+          {
+            query: {
+              pagination: { offset: i, limit: 10 },
+              orderBy: { sort: ListCpusSort.Id, order: ListCpusOrder.Asc },
+            },
           },
-        },
-        ctx,
-      );
-      const gpuEntity = gpus[0];
-      const gpu = mapToGpuDto(gpuEntity, { includeSources: true });
-      const data = mapToGpuEntity(gpu);
-      await gpuRepository.update(gpu.id, data, ctx);
-    });
+          ctx,
+        );
+        for (let j = 0; j < cpus.length; ++j) {
+          const cpuEntity = cpus[j];
+          const cpu = mapToCpuDto(cpuEntity, { includeSources: true });
+          console.log(
+            `${cpu.id}: ${JSON.stringify(cpu.marketSegments, undefined, 2)}`,
+          );
+          const value = cpu.marketSegments?.value?.[0] || null;
+          const meta = {
+            ...(cpu.marketSegments?.meta ?? {}),
+            fieldKey: 'marketSegment' as keyof CpuFields,
+          };
+          cpu.marketSegment = { value, meta };
+          console.log(cpu.marketSegment);
+          const data = mapToCpuEntity(cpu);
+          await cpuRepository.update(cpu.id, data, ctx);
+        }
+        console.log(`Finished updating cpus ${i} - ${i + 9}`);
+      },
+      { timeout: 20_000 },
+    );
   }
 }

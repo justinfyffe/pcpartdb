@@ -60,7 +60,7 @@ export const SUPPORTED_CPU_COMPANIES = ['amd', 'intel'];
 export const CPU_FIELD_LABELS: Partial<Record<CpuFieldKey, string>> = {
   partNumber: 'Part Number',
   company: 'Company',
-  marketSegments: 'Market Segments',
+  marketSegment: 'Market Segment',
   launchPrice: 'Launch Price (MSRP)',
   releaseDate: 'Release Date',
   productionStatus: 'Production Status',

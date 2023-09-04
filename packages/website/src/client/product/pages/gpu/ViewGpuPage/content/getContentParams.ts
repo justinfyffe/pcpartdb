@@ -54,8 +54,6 @@ export interface ViewGpuContentParams {
   bestPerformanceSegmentGpuShortName?: string;
   bestPerformanceSegmentGpuPath?: string;
   performanceRankForArchitectureSegment?: string;
-  performanceRankForCompanySegment?: string;
-  performanceRankForSegmentYear?: string;
   totalPerformanceGpus?: string;
 
   valueRating?: string;
@@ -210,12 +208,6 @@ function getPerformanceParams(gpu: Gpu, contentData: ViewGpuContentData) {
     bestPerformanceSegmentGpu != null
       ? getViewGpuPath(bestPerformanceSegmentGpu)
       : null;
-  const performanceRankForCompanySegment =
-    gpu.ranks?.performanceRankForCompanySegment != null
-      ? gpu.ranks.performanceRankForCompanySegment > 1
-        ? formatOrdinalNumber(gpu.ranks.performanceRankForCompanySegment)
-        : ''
-      : null;
   const performanceRankForSegment =
     gpu.ranks?.performanceRankForSegment != null
       ? gpu.ranks.performanceRankForSegment > 1
@@ -232,7 +224,6 @@ function getPerformanceParams(gpu: Gpu, contentData: ViewGpuContentData) {
     bestPerformanceSegmentGpuShortName,
     bestPerformanceSegmentGpuPath,
     performanceRankForArchitectureSegment,
-    performanceRankForCompanySegment,
     performanceRankForSegment,
     totalPerformanceGpus,
   } as ViewGpuContentParams as ContentParams;

@@ -57,7 +57,7 @@ export class CpuController {
               'performanceScore',
               'valueScore',
               'releaseDate',
-              'marketSegments',
+              'marketSegment',
               'launchPrice',
             ],
             includeRanks: ['performanceRank', 'valueRank'],

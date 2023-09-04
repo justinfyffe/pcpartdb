@@ -115,8 +115,8 @@ export function formatSpecialCpuField(
     return formatPrice(value, { ...options, currency: field.meta?.currency });
   }
 
-  if (fieldKey === 'marketSegments') {
-    return formatCpuMarketSegments(value as CpuMarketSegmentValue[]);
+  if (fieldKey === 'marketSegment') {
+    return formatCpuMarketSegment(value as CpuMarketSegmentValue);
   }
 
   if (fieldKey === 'productionStatus') {
@@ -177,10 +177,6 @@ export function formatCpuCompany(company: string) {
     default:
       return company;
   }
-}
-
-export function formatCpuMarketSegments(value: CpuMarketSegmentValue[]) {
-  return value.map((segment) => formatCpuMarketSegment(segment)).join(', ');
 }
 
 export function formatCpuMarketSegment(value: CpuMarketSegmentValue) {

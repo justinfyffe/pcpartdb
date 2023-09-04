@@ -29,7 +29,7 @@ export const cpuValidator = Joi.object({
 
   partNumber: cpuDataValidator.allow(null),
   company: cpuDataValidator.allow(null),
-  marketSegments: cpuDataValidator.allow(null),
+  marketSegment: cpuDataValidator.allow(null),
   launchPrice: cpuDataValidator.allow(null),
   releaseDate: cpuDataValidator.allow(null),
   productionStatus: cpuDataValidator.allow(null),

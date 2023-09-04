@@ -104,12 +104,12 @@ function hasSameCompany(comparison: CpuComparison) {
 
 function hasDifferentMarketSegment(comparison: CpuComparison) {
   const [cpu1, cpu2] = comparison;
-  return cpu1.marketSegments?.value?.[0] !== cpu2.marketSegments?.value[0];
+  return hasDifferentValue(cpu1.marketSegment, cpu2.marketSegment);
 }
 
 function hasSameMarketSegment(comparison: CpuComparison) {
   const [cpu1, cpu2] = comparison;
-  return cpu1.marketSegments?.value?.[0] === cpu2.marketSegments?.value[0];
+  return hasSameValue(cpu1.marketSegment, cpu2.marketSegment);
 }
 
 function hasDifferentReleaseDate(comparison: CpuComparison) {

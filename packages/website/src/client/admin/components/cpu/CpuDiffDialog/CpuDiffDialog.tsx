@@ -19,7 +19,7 @@ export const CpuDiffDialog: FunctionComponent<CpuDiffDialogProps> = (props) => {
 
         'partNumber',
         'company',
-        'marketSegments',
+        'marketSegment',
         'launchPrice',
         'releaseDate',
         'productionStatus',

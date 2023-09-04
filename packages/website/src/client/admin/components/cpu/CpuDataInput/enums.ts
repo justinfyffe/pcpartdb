@@ -45,6 +45,6 @@ const PRODUCTION_STATUS: ProductEnumItem[] = [
 ];
 
 export const ENUMS: Record<string, ProductEnumItem[]> = {
-  marketSegments: MARKET_SEGMENTS,
+  marketSegment: MARKET_SEGMENTS,
   productionStatus: PRODUCTION_STATUS,
 };

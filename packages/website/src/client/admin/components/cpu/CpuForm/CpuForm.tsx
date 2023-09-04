@@ -255,12 +255,12 @@ export const CpuForm: FunctionComponent<CpuFormProps> = (props) => {
         </Field>
 
         <Field>
-          Market Segments
+          Market Segment
           <Controller
-            name="marketSegments"
+            name="marketSegment"
             control={control}
             render={({ field }) => (
-              <CpuDataInput field="marketSegments" {...field} ref={null} />
+              <CpuDataInput field="marketSegment" {...field} ref={null} />
             )}
           />
         </Field>

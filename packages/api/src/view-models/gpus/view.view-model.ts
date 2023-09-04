@@ -63,7 +63,6 @@ export class ViewGpuViewModelService {
         includeRanks: [
           'performanceRank',
           'performanceRankForArchitectureSegment',
-          'performanceRankForCompanySegment',
           'performanceRankForSegment',
           'valueRank',
           'valueRankForSegment',

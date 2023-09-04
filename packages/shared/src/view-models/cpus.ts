@@ -26,7 +26,6 @@ export interface ListCpusViewModel extends ListCpusResponse {}
 
 export interface ViewCpuContentData {
   totalPerformanceCpus: number;
-  totalPerformanceSegmentYearCpus: number;
 
   relativePerformanceCpus?: Cpu[];
   relativeValueCpus?: Cpu[];

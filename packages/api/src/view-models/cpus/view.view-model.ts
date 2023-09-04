@@ -9,7 +9,6 @@ import {
   ViewCpuContentData,
   ViewCpuViewModel,
 } from '@pcpartdb/shared';
-import { parseISO } from 'date-fns';
 import { CpuService } from '../../product/cpu/cpu.service';
 import { Context } from '../../shared/context';
 import { getSurroundingValues } from '../../shared/utils';
@@ -53,8 +52,6 @@ export class ViewCpuViewModelService {
         includeRanks: [
           'performanceRank',
           'performanceRankForSegment',
-          'performanceRankForCodename',
-          'performanceRankForGeneration',
           'valueRank',
           'valueRankForSegment',
         ],
@@ -64,19 +61,8 @@ export class ViewCpuViewModelService {
   }
 
   private async getContentData(cpu: Cpu, ctx: Context) {
-    const year = parseISO(cpu.releaseDate?.value).getFullYear();
-    const segments = cpu.marketSegments?.value;
-
     const totalPerformanceCpus = await this.cpuService.count(
       { query: { filter: { performanceRated: true } } },
-      ctx,
-    );
-    const totalPerformanceSegmentYearCpus = await this.cpuService.count(
-      {
-        query: {
-          filter: { year: [year], segment: segments, performanceRated: true },
-        },
-      },
       ctx,
     );
     const relativePerformanceCpus = await this.getRelativePerformanceCpus(
@@ -109,7 +95,6 @@ export class ViewCpuViewModelService {
 
     return {
       totalPerformanceCpus: totalPerformanceCpus || [],
-      totalPerformanceSegmentYearCpus: totalPerformanceSegmentYearCpus || [],
       relativePerformanceCpus: relativePerformanceCpus || [],
       relativeValueCpus: relativeValueCpus || [],
       bestPerformanceCpu: bestPerformanceCpus?.[0],
@@ -126,7 +111,9 @@ export class ViewCpuViewModelService {
       {
         query: {
           filter: {
-            segment: seed.marketSegments?.value ?? [],
+            segment: hasProductFieldValue(seed.marketSegment)
+              ? [seed.marketSegment.value]
+              : [],
             excludeIds: [seed.id],
             minPerformanceScore: seed.performanceScore?.value,
             performanceRated: true,
@@ -147,7 +134,9 @@ export class ViewCpuViewModelService {
       {
         query: {
           filter: {
-            segment: seed.marketSegments?.value ?? [],
+            segment: hasProductFieldValue(seed.marketSegment)
+              ? [seed.marketSegment.value]
+              : [],
             excludeIds: [seed.id],
             maxPerformanceScore: seed.performanceScore?.value,
             performanceRated: true,
@@ -187,7 +176,9 @@ export class ViewCpuViewModelService {
       {
         query: {
           filter: {
-            segment: seed.marketSegments?.value ?? [],
+            segment: hasProductFieldValue(seed.marketSegment)
+              ? [seed.marketSegment.value]
+              : [],
             excludeIds: [seed.id],
             minValueScore: seed.valueScore?.value,
             valueRated: true,
@@ -205,7 +196,9 @@ export class ViewCpuViewModelService {
       {
         query: {
           filter: {
-            segment: seed.marketSegments?.value ?? [],
+            segment: hasProductFieldValue(seed.marketSegment)
+              ? [seed.marketSegment.value]
+              : [],
             excludeIds: [seed.id],
             maxValueScore: seed.valueScore?.value,
             valueRated: true,

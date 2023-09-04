@@ -1,12 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import {
-  getGpuChipset,
-  Gpu,
-  GpuRank,
-  GpuRanksFilter,
-  hasProductFieldValue,
-} from '@pcpartdb/shared';
-import { parseISO } from 'date-fns';
+import { getGpuChipset, Gpu, GpuRank, GpuRanksFilter } from '@pcpartdb/shared';
 import { Context } from '../../../shared/context';
 import { GpuRanksRepository } from './gpu-ranks.repository';
 
@@ -39,16 +32,6 @@ export class GpuRanksService {
         )
       : null;
 
-    const performanceRankForCompanySegment = enabledRanks.has(
-      'performanceRankForCompanySegment',
-    )
-      ? await this.gpuRanksRepository.getPerformanceRanks(
-          ids,
-          { company: filter.company, segment: filter.segment },
-          ctx,
-        )
-      : null;
-
     const performanceRankForSegment = enabledRanks.has(
       'performanceRankForSegment',
     )
@@ -77,7 +60,6 @@ export class GpuRanksService {
         performanceRank: performanceRanks?.[i],
         performanceRankForArchitectureSegment:
           performanceRankForArchitectureSegment?.[i],
-        performanceRankForCompanySegment: performanceRankForCompanySegment?.[i],
         performanceRankForSegment: performanceRankForSegment?.[i],
         valueRank: valueRanks?.[i],
         valueRankForSegment: valueRankForSegment?.[i],
@@ -98,20 +80,6 @@ export class GpuRanksService {
       ),
     ];
 
-    const company = [
-      ...new Set(
-        gpus.map((gpu) => gpu.company?.value).filter((value) => value != null),
-      ),
-    ];
-
-    const year = [
-      ...new Set(
-        gpus
-          .filter((gpu) => hasProductFieldValue(gpu?.releaseDate))
-          .map((gpu) => parseISO(gpu.releaseDate.value).getFullYear()),
-      ),
-    ];
-
     const segment = [
       ...new Set(
         gpus
@@ -120,6 +88,6 @@ export class GpuRanksService {
       ),
     ];
 
-    return { architecture, company, year, segment };
+    return { architecture, segment };
   }
 }

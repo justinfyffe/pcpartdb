@@ -63,7 +63,7 @@ function checkMissingCpuData(cpu: Cpu): MissingData[] {
     missingData.push(MissingData.GeekBench);
   }
 
-  if (!hasProductFieldValue(cpu.marketSegments)) {
+  if (!hasProductFieldValue(cpu.marketSegment)) {
     missingData.push(MissingData.MarketSegment);
   }
   if (!hasProductFieldValue(cpu.releaseDate)) {

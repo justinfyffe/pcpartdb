@@ -68,7 +68,7 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
           values={[valueScoreValue]}
         />
         <ProductFieldRow type={ProductType.Cpu} fields={[cpu.company]} />
-        <ProductFieldRow type={ProductType.Cpu} fields={[cpu.marketSegments]} />
+        <ProductFieldRow type={ProductType.Cpu} fields={[cpu.marketSegment]} />
         <ProductFieldRow type={ProductType.Cpu} fields={[cpu.releaseDate]} />
         <ProductFieldRow type={ProductType.Cpu} fields={[cpu.launchPrice]} />
         <ProductFieldRow

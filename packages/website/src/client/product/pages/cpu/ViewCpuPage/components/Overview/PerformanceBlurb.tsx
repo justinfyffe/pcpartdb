@@ -24,11 +24,7 @@ const PerformanceBestDiff = compileContentComponent(
     component: (_props) => <></>,
   },
   {
-    deps: [
-      'bestPerformanceDifference',
-      'bestPerformanceShortCpuName',
-      'marketSegments',
-    ],
+    deps: ['bestPerformanceDifference', 'bestPerformanceShortCpuName'],
     // It is approximately 67.18% as fast as the Core i7 12345, the fastest desktop CPU in our database.
     component: (props) => (
       <>

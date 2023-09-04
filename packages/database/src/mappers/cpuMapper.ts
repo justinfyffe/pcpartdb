@@ -24,7 +24,8 @@ export function mapToCpuDto(entity: CpuEntity, options?: MapToDtoOptions): Cpu {
 
     partNumber: mapToCpuDataDto(entity, 'partNumber', options),
     company: mapToCpuDataDto(entity, 'company', options),
-    marketSegments: mapToCpuDataDto(entity, 'marketSegments', options),
+    marketSegment: mapToCpuDataDto(entity, 'marketSegment', options),
+    marketSegments: mapToCpuDataDto(entity, 'marketSegments', options), // TODO: delete
     launchPrice: mapToCpuDataDto(entity, 'launchPrice', options),
     releaseDate: mapToCpuDataDto(entity, 'releaseDate', options),
     productionStatus: mapToCpuDataDto(entity, 'productionStatus', options),
@@ -172,7 +173,8 @@ export function mapToCpuEntity(cpu: Partial<Cpu>): CpuEntity {
   const mappedFields: Partial<CpuEntity> = {
     partNumber: mapToCpuDataEntity(cpu, 'partNumber', metadata),
     company: mapToCpuDataEntity(cpu, 'company', metadata),
-    marketSegments: mapToCpuDataEntity(cpu, 'marketSegments', metadata) || [],
+    marketSegment: mapToCpuDataEntity(cpu, 'marketSegment', metadata),
+    marketSegments: mapToCpuDataEntity(cpu, 'marketSegments', metadata) || [], // TODO: delete
     launchPrice: mapToCpuDataEntity(cpu, 'launchPrice', metadata),
     releaseDate: mapToCpuDataEntity(cpu, 'releaseDate', metadata),
     productionStatus: mapToCpuDataEntity(cpu, 'productionStatus', metadata),

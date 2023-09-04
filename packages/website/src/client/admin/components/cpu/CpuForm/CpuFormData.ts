@@ -19,7 +19,7 @@ export interface CpuFormData {
   // General Info
   partNumber?: CpuField<string>;
   company?: CpuField<string>;
-  marketSegments?: CpuField<CpuMarketSegmentValue[]>;
+  marketSegment?: CpuField<CpuMarketSegmentValue>;
   launchPrice?: CpuField<number>;
   releaseDate?: CpuField<string>;
   productionStatus?: CpuField<CpuProductionStatusValue>;

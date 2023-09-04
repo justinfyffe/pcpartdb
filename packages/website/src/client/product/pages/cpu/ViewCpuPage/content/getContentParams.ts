@@ -17,7 +17,7 @@ export interface ViewCpuContentParams {
   shortCpuName?: string;
   launchPrice?: string;
   releaseDate?: string;
-  marketSegments?: string;
+  marketSegment?: string;
   architecture?: string;
   codename?: string;
   generation?: string;
@@ -42,8 +42,6 @@ export interface ViewCpuContentParams {
 
   performanceRating?: string;
   performanceRank?: string;
-  performanceRankForCodename?: string;
-  performanceRankForGeneration?: string;
   bestPerformanceDifference?: string;
   bestPerformanceCpuName?: string;
   bestPerformanceShortCpuName?: string;
@@ -88,7 +86,7 @@ function getGeneralParams(cpu: Cpu, _contentData: ViewCpuContentData) {
     shortCpuName: formatCpuName(cpu, { company: false }),
     launchPrice: formatCpuField(cpu.launchPrice),
     releaseDate: formatCpuField(cpu.releaseDate),
-    marketSegments: formatCpuField(cpu.marketSegments)?.toLowerCase(),
+    marketSegment: formatCpuField(cpu.marketSegment)?.toLowerCase(),
     architecture: formatCpuField(cpu.architecture),
     codename: formatCpuField(cpu.codename),
     generation: formatCpuField(cpu.generation),
@@ -117,19 +115,6 @@ function getPerformanceParams(cpu: Cpu, contentData: ViewCpuContentData) {
     company: false,
   });
 
-  const performanceRankForCodename =
-    cpu.ranks?.performanceRankForCodename != null
-      ? cpu.ranks.performanceRankForCodename > 1
-        ? formatOrdinalNumber(cpu.ranks.performanceRankForCodename)
-        : ''
-      : null;
-  const performanceRankForGeneration =
-    cpu.ranks?.performanceRankForGeneration != null
-      ? cpu.ranks.performanceRankForGeneration > 1
-        ? formatOrdinalNumber(cpu.ranks.performanceRankForGeneration)
-        : ''
-      : null;
-
   const totalPerformanceCpus = String(contentData.totalPerformanceCpus);
 
   return {
@@ -138,8 +123,6 @@ function getPerformanceParams(cpu: Cpu, contentData: ViewCpuContentData) {
     bestPerformanceDifference,
     bestPerformanceCpuName,
     bestPerformanceShortCpuName,
-    performanceRankForCodename,
-    performanceRankForGeneration,
     totalPerformanceCpus,
   } as ViewCpuContentParams as ContentParams;
 }

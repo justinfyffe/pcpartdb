@@ -22,21 +22,14 @@ export interface CpuField<T = unknown> extends ProductField<T> {
 
 export interface CpuRanks {
   performanceRank?: number;
-  performanceRankForCompanySegment?: number;
   performanceRankForSegment?: number;
-  performanceRankForCodename?: number;
-  performanceRankForGeneration?: number;
 
   valueRank?: number;
   valueRankForSegment?: number;
 }
 
 export interface CpuRanksFilter {
-  company?: string[];
-  year?: number[];
   segment?: CpuMarketSegmentValue[];
-  codename?: string[];
-  generation?: string[];
 }
 
 export type CpuRank = keyof CpuRanks;
@@ -77,7 +70,8 @@ export interface CpuFields {
   // General Info
   partNumber?: CpuField<string>;
   company?: CpuField<string>;
-  marketSegments?: CpuField<CpuMarketSegmentValue[]>;
+  marketSegment?: CpuField<CpuMarketSegmentValue>;
+  marketSegments?: CpuField<CpuMarketSegmentValue[]>; // TODO: delete
   launchPrice?: CpuField<number>;
   releaseDate?: CpuField<string>;
   productionStatus?: CpuField<CpuProductionStatusValue>;
