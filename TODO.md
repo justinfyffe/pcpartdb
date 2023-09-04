@@ -1,3 +1,9 @@
+Current Focus:
+- Tech Debt
+  - Explore combined products table
+  - Setup separate table for product sources instead of a meta column
+  - Setup separate table for fields
+
 Admin Improvements
 - Improved data auditing
   - Pages to easily see missing: sources, market segment, release date, launch price, company
@@ -81,7 +87,7 @@ Tech Debt:
   - Separate tables for specs, benchmarks, sources
 - Setup separate table for product sources instead of a meta column
   - Faster to auto-archive, can auto-archive as we find sources.
-- Setup separate table for benchmarks
+- Setup separate table for fields
   - Keep a general performance score and value score on products tables for better
     sorting. Can store other benchmark values
 - Update major dependencies
