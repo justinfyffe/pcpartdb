@@ -1,7 +1,9 @@
 HIGH LEVEL TODO:
-- performance improvements
-  - audit database indexes on cpus and gpus
-    - tables frequently written too shouldnt have indexes
+- fix indexes
+  - clean up most indexes
+    - most aren't used
+  - use explain, seems many arent used
+- expose associate key without NEXT_PUBLIC
 - quick improvements
   - gpu chipset search -> remove retail models
   - more autocomplete options

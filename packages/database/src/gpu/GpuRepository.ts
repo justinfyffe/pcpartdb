@@ -158,6 +158,7 @@ export class GpuRepository {
   }
 
   async findByName(
+    chipsetId: number | null,
     name: string,
     config?: RepositoryConfig,
   ): Promise<GpuEntity> {
@@ -165,12 +166,16 @@ export class GpuRepository {
 
     return await trx.gpu.findFirst({
       where: {
-        name: { equals: name, mode: 'insensitive' },
+        AND: [
+          { chipsetId: { equals: chipsetId } },
+          { name: { equals: name, mode: 'insensitive' } },
+        ],
       },
     });
   }
 
   async findByCompanyAndName(
+    chipsetId: number | null,
     company: string,
     name: string,
     config?: RepositoryConfig,
@@ -179,8 +184,11 @@ export class GpuRepository {
 
     return await trx.gpu.findFirst({
       where: {
-        company: { equals: company, mode: 'insensitive' },
-        name: { equals: name, mode: 'insensitive' },
+        AND: [
+          { chipsetId: { equals: chipsetId } },
+          { company: { equals: company, mode: 'insensitive' } },
+          { name: { equals: name, mode: 'insensitive' } },
+        ],
       },
     });
   }

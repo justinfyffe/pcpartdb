@@ -132,10 +132,8 @@ model Cpu {
 
 
   @@index([generation], name: "cpus_generation_index")
-  @@index([marketSegments], name: "cpus_marketSegments_index")
+  @@index([marketSegments], name: "cpus_marketSegments_index") // not working
   @@index([releaseDate], name: "cpus_releaseDate_index")
-  @@index([performanceScore], name: "cpus_performanceScore_index")
-  @@index([valueScore], name: "cpus_valueScore_index")
   @@unique([company, name], name: "cpus_company_name_unique")
   @@map("cpus")
 }
@@ -236,12 +234,10 @@ model Gpu {
   productUpdates ProductUpdate[] @relation("productUpdateToGpu")
   retailModelSources ProductSource[] @relation("productSourceToGpuChipset")
 
-  @@index([architecture], name: "gpus_architecture_index")
-  @@index([marketSegment], name: "gpus_marketSegment_index")
-  @@index([releaseDate], name: "gpus_releaseDate_index")
-  @@index([performanceScore], name: "gpus_performanceScore_index")
-  @@index([valueScore], name: "gpus_valueScore_index")
-  @@unique([company, name], name: "gpus_company_name_unique")
+  @@index([chipsetId, architecture], name: "gpus_chipsetId_architecture_index")
+  @@index([chipsetId, marketSegment], name: "gpus_chipsetId_marketSegment_index")
+  @@index([chipsetId, releaseDate], name: "gpus_chipsetId_releaseDate_index")
+  @@unique([chipsetId, company, name], name: "gpus_chipsetId_company_name_unique")
   @@map("gpus")
 }
 

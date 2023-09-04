@@ -8,6 +8,7 @@ import {
   ProductType,
 } from '@pcpartdb/shared';
 import { useRouter } from 'next/router';
+import { ErrorAlert } from 'packages/website/src/client/shared/components/Alert/ErrorAlert';
 import React, { useCallback, useMemo, useState } from 'react';
 import { productService } from '../../../../product';
 import {
@@ -20,7 +21,6 @@ import {
   Seo,
   Spinner,
 } from '../../../../shared/components';
-import { Alert, AlertVariant } from '../../../../shared/components/Alert';
 import { AdminLayout } from '../../../../shared/layouts';
 import { ImportProductsTable } from './components';
 import { ImportProductsPageContext } from './context';
@@ -151,9 +151,9 @@ export const AdminImportProductsPage = (
           </div>
 
           {requestError && (
-            <Alert variant={AlertVariant.Error}>
+            <ErrorAlert>
               An unknown error has occurred. Please try again later.
-            </Alert>
+            </ErrorAlert>
           )}
 
           <Field className="flex-1 mx-2">

@@ -19,7 +19,9 @@ export const ProductHighlight = (props: ProductHighlightProps) => {
         className,
       )}
     >
-      <div className={classNames('flex-1 flex gap-2 items-center', className)}>
+      <div
+        className={classNames('flex-auto flex gap-2 items-center', className)}
+      >
         {icon && (
           <div className="mr-1">{cloneElement(icon, { className: 'w-5' })}</div>
         )}
@@ -29,7 +31,7 @@ export const ProductHighlight = (props: ProductHighlightProps) => {
 
       <div
         className={classNames(
-          'flex-1 md:text-base text-content text-right whitespace-nowrap',
+          'flex-auto md:text-base text-content text-right whitespace-nowrap',
           className,
         )}
       >

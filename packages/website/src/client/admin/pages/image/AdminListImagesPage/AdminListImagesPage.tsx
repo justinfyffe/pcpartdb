@@ -5,10 +5,8 @@ import {
   getAdminNewImagePath,
 } from '@pcpartdb/shared';
 import { useRouter } from 'next/router';
-import {
-  Alert,
-  AlertVariant,
-} from 'packages/website/src/client/shared/components/Alert';
+import { InfoAlert } from 'packages/website/src/client/shared/components/Alert/InfoAlert';
+import { SuccessAlert } from 'packages/website/src/client/shared/components/Alert/SuccessAlert';
 import React, { useState } from 'react';
 import {
   formatFileSize,
@@ -48,17 +46,9 @@ export const AdminListImagesPage = (props: AdminListImagesViewModel) => {
 
       <article>
         <section>
-          {saved && (
-            <Alert variant={AlertVariant.Success}>
-              The image has been saved.
-            </Alert>
-          )}
+          {saved && <SuccessAlert>The image has been saved.</SuccessAlert>}
 
-          {deleted && (
-            <Alert variant={AlertVariant.Success}>
-              The image has been deleted.
-            </Alert>
-          )}
+          {deleted && <SuccessAlert>The image has been deleted.</SuccessAlert>}
         </section>
 
         <div className="flex items-center justify-between mb-4">
@@ -103,9 +93,7 @@ export const AdminListImagesPage = (props: AdminListImagesViewModel) => {
             </Table>
           )}
 
-          {images.length === 0 && (
-            <Alert variant={AlertVariant.Info}>There are no images.</Alert>
-          )}
+          {images.length === 0 && <InfoAlert>There are no images.</InfoAlert>}
         </section>
       </article>
     </AdminLayout>

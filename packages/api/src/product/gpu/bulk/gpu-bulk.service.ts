@@ -32,6 +32,7 @@ export class GpuBulkService {
 
     for (let i = 0; i < gpusToImport.length; ++i) {
       const gpuToImport = gpusToImport[i];
+      const chipsetId = gpuToImport.chipsetId || null;
       const company = gpuToImport.company?.value;
       const name = gpuToImport.name;
       const slug = gpuToImport.slug;
@@ -39,8 +40,15 @@ export class GpuBulkService {
       let gpuEntity = await this.gpuRepository.findBySlug(slug, {}, ctx);
       gpuEntity =
         gpuEntity ||
-        (await this.gpuRepository.findByCompanyAndName(company, name, ctx));
-      gpuEntity = gpuEntity || (await this.gpuRepository.findByName(name, ctx));
+        (await this.gpuRepository.findByCompanyAndName(
+          chipsetId,
+          company,
+          name,
+          ctx,
+        ));
+      gpuEntity =
+        gpuEntity ||
+        (await this.gpuRepository.findByName(chipsetId, name, ctx));
       const original = mapToGpuDto(gpuEntity, { includeSources: true });
 
       const updated = {

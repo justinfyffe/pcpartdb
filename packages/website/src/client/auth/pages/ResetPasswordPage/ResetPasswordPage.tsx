@@ -27,7 +27,7 @@ import {
   Seo,
   Spinner,
 } from '../../../shared/components';
-import { Alert, AlertVariant } from '../../../shared/components/Alert';
+import { ErrorAlert } from '../../../shared/components/Alert/ErrorAlert';
 import {
   isInternalServerError,
   setValidationErrors,
@@ -116,15 +116,15 @@ export const ResetPasswordPage = (props: ResetPasswordPageProps) => {
 
         <section>
           {errors.token?.type === ValidationErrorType.InvalidToken && (
-            <Alert variant={AlertVariant.Error}>
+            <ErrorAlert>
               The reset token is either invalid or has expired.
-            </Alert>
+            </ErrorAlert>
           )}
 
           {requestError && isInternalServerError(requestError) && (
-            <Alert variant={AlertVariant.Error}>
+            <ErrorAlert>
               An unknown error has occurred. Please try again later.
-            </Alert>
+            </ErrorAlert>
           )}
         </section>
 

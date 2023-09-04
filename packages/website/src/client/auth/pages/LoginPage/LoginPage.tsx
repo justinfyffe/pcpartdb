@@ -35,7 +35,8 @@ import {
   Spinner,
   TextInput,
 } from '../../../shared/components';
-import { Alert, AlertVariant } from '../../../shared/components/Alert';
+import { ErrorAlert } from '../../../shared/components/Alert/ErrorAlert';
+import { SuccessAlert } from '../../../shared/components/Alert/SuccessAlert';
 import { isForbiddenError, setValidationErrors } from '../../../shared/error';
 import { WebsiteLayout } from '../../../shared/layouts';
 import { authService } from '../../authService';
@@ -125,27 +126,25 @@ export const LoginPage: FunctionComponent<LoginPageProps> = (
 
         <section>
           {requestError && isForbiddenError(requestError) && (
-            <Alert variant={AlertVariant.Error}>
-              Your credentials are incorrect.
-            </Alert>
+            <ErrorAlert>Your credentials are incorrect.</ErrorAlert>
           )}
 
           {requestError && !isForbiddenError(requestError) && (
-            <Alert variant={AlertVariant.Error}>
+            <ErrorAlert>
               An unknown error has occurred. Please try again later.
-            </Alert>
+            </ErrorAlert>
           )}
 
           {!requestError && registered && (
-            <Alert variant={AlertVariant.Success}>
+            <SuccessAlert>
               You have successfully created an account. You can sign in below.
-            </Alert>
+            </SuccessAlert>
           )}
 
           {!requestError && resetPassword && (
-            <Alert variant={AlertVariant.Success}>
+            <SuccessAlert>
               Your password has changed. You can sign in below.
-            </Alert>
+            </SuccessAlert>
           )}
         </section>
 

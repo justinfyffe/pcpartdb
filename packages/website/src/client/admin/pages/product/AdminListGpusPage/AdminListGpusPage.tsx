@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 import { getAdminImportGpusPath, getAdminNewGpuPath } from '@pcpartdb/shared';
 import { useRouter } from 'next/router';
+import { SuccessAlert } from 'packages/website/src/client/shared/components/Alert/SuccessAlert';
 import React, { useState } from 'react';
 import {
   Button,
@@ -10,7 +11,6 @@ import {
   Tab,
   Tabs,
 } from '../../../../shared/components';
-import { Alert, AlertVariant } from '../../../../shared/components/Alert';
 import { AdminLayout } from '../../../../shared/layouts';
 import { ChipsetsTab, RetailModelsTab } from './components';
 
@@ -29,17 +29,9 @@ export const AdminListGpusPage = () => {
 
       <article>
         <section>
-          {saved && (
-            <Alert variant={AlertVariant.Success}>
-              The GPU has been saved.
-            </Alert>
-          )}
+          {saved && <SuccessAlert>The GPU has been saved.</SuccessAlert>}
 
-          {deleted && (
-            <Alert variant={AlertVariant.Success}>
-              The GPU has been deleted.
-            </Alert>
-          )}
+          {deleted && <SuccessAlert>The GPU has been deleted.</SuccessAlert>}
         </section>
 
         <div className="flex items-center justify-between mb-4">

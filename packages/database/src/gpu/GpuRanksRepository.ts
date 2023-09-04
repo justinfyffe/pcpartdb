@@ -105,6 +105,7 @@ export class GpuRanksRepository {
       parameters.push(company);
     }
     if (year.length > 0) {
+      // TODO: use where or
       where.push(
         `DATE_PART('year', gpu.release_date::date) = ANY ($${nextParameterIndex++})`,
       );

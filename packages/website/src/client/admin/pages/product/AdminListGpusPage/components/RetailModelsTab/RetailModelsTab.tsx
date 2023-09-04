@@ -12,13 +12,13 @@ import {
   gpuService,
   ProductAutocomplete,
 } from 'packages/website/src/client/product';
+import { InfoAlert } from 'packages/website/src/client/shared/components/Alert/InfoAlert';
 import React, {
   FunctionComponent,
   useCallback,
   useEffect,
   useState,
 } from 'react';
-import { Alert, AlertVariant } from '../../../../../../shared/components/Alert';
 import { GpuPagination } from '../GpuPagination';
 import { GpuTable } from '../GpuTable';
 
@@ -103,7 +103,7 @@ export const RetailModelsTab: FunctionComponent<RetailModelsTabProps> = () => {
       )}
 
       {retailModels.length === 0 && (
-        <Alert variant={AlertVariant.Info}>There are no chipsets.</Alert>
+        <InfoAlert>There are no chipsets.</InfoAlert>
       )}
     </section>
   );

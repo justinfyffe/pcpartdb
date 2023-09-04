@@ -6,6 +6,8 @@ import {
 } from '@pcpartdb/shared';
 import { format } from 'date-fns';
 import { useRouter } from 'next/router';
+import { InfoAlert } from 'packages/website/src/client/shared/components/Alert/InfoAlert';
+import { SuccessAlert } from 'packages/website/src/client/shared/components/Alert/SuccessAlert';
 import React, { useState } from 'react';
 import {
   Button,
@@ -19,7 +21,6 @@ import {
   THead,
   Tr,
 } from '../../../../shared/components';
-import { Alert, AlertVariant } from '../../../../shared/components/Alert';
 import { AdminLayout } from '../../../../shared/layouts';
 
 export const AdminListUsersPage = (props: AdminListUsersViewModel) => {
@@ -39,17 +40,9 @@ export const AdminListUsersPage = (props: AdminListUsersViewModel) => {
 
       <article>
         <section>
-          {saved && (
-            <Alert variant={AlertVariant.Success}>
-              The user has been saved.
-            </Alert>
-          )}
+          {saved && <SuccessAlert>The user has been saved.</SuccessAlert>}
 
-          {deleted && (
-            <Alert variant={AlertVariant.Success}>
-              The user has been deleted.
-            </Alert>
-          )}
+          {deleted && <SuccessAlert>The user has been deleted.</SuccessAlert>}
         </section>
 
         <div className="flex items-center justify-between mb-4">
@@ -86,9 +79,7 @@ export const AdminListUsersPage = (props: AdminListUsersViewModel) => {
             </Table>
           )}
 
-          {users.length === 0 && (
-            <Alert variant={AlertVariant.Info}>There are no users.</Alert>
-          )}
+          {users.length === 0 && <InfoAlert>There are no users.</InfoAlert>}
         </section>
       </article>
     </AdminLayout>

@@ -8,10 +8,7 @@ import {
   ValidationErrorType,
 } from '@pcpartdb/shared';
 import Router from 'next/router';
-import {
-  Alert,
-  AlertVariant,
-} from 'packages/website/src/client/shared/components/Alert';
+import { ErrorAlert } from 'packages/website/src/client/shared/components/Alert/ErrorAlert';
 import React, {
   FunctionComponent,
   useCallback,
@@ -178,15 +175,13 @@ export const ImageForm: FunctionComponent<ImageFormProps> = (props) => {
   return (
     <Form onSubmit={handleSubmit(handleSave)}>
       {requestError && isBadRequestError(requestError) && (
-        <Alert variant={AlertVariant.Error}>
-          Please fix the form errors and try again.
-        </Alert>
+        <ErrorAlert>Please fix the form errors and try again.</ErrorAlert>
       )}
 
       {requestError && !isBadRequestError(requestError) && (
-        <Alert variant={AlertVariant.Error}>
+        <ErrorAlert>
           An unknown error has occurred. Please try again later.
-        </Alert>
+        </ErrorAlert>
       )}
 
       <div className="flex -mx-2">

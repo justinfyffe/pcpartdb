@@ -10,6 +10,8 @@ import {
   ListCpusQuery,
 } from '@pcpartdb/shared';
 import { useRouter } from 'next/router';
+import { InfoAlert } from 'packages/website/src/client/shared/components/Alert/InfoAlert';
+import { SuccessAlert } from 'packages/website/src/client/shared/components/Alert/SuccessAlert';
 import React, { useCallback, useEffect, useState } from 'react';
 import { cpuService } from '../../../../product/services/cpuService';
 import {
@@ -18,7 +20,6 @@ import {
   MetaRobots,
   Seo,
 } from '../../../../shared/components';
-import { Alert, AlertVariant } from '../../../../shared/components/Alert';
 import { AdminLayout } from '../../../../shared/layouts';
 import { CpuPagination, CpuTable } from './components';
 
@@ -77,17 +78,9 @@ export const AdminListCpusPage = () => {
 
       <article>
         <section>
-          {saved && (
-            <Alert variant={AlertVariant.Success}>
-              The CPU has been saved.
-            </Alert>
-          )}
+          {saved && <SuccessAlert>The CPU has been saved.</SuccessAlert>}
 
-          {deleted && (
-            <Alert variant={AlertVariant.Success}>
-              The CPU has been deleted.
-            </Alert>
-          )}
+          {deleted && <SuccessAlert>The CPU has been deleted.</SuccessAlert>}
         </section>
 
         <div className="flex items-center justify-between mb-4">
@@ -118,9 +111,7 @@ export const AdminListCpusPage = () => {
             </>
           )}
 
-          {cpus.length === 0 && (
-            <Alert variant={AlertVariant.Info}>There are no CPUs.</Alert>
-          )}
+          {cpus.length === 0 && <InfoAlert>There are no CPUs.</InfoAlert>}
         </section>
       </article>
     </AdminLayout>

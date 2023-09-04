@@ -133,8 +133,10 @@ export class CpuRepository {
 
     return await trx.cpu.findFirst({
       where: {
-        company: { equals: company, mode: 'insensitive' },
-        name: { equals: name, mode: 'insensitive' },
+        AND: [
+          { company: { equals: company, mode: 'insensitive' } },
+          { name: { equals: name, mode: 'insensitive' } },
+        ],
       },
     });
   }

@@ -21,7 +21,8 @@ import {
   Spinner,
   TextInput,
 } from '../../../shared/components';
-import { Alert, AlertVariant } from '../../../shared/components/Alert';
+import { ErrorAlert } from '../../../shared/components/Alert/ErrorAlert';
+import { SuccessAlert } from '../../../shared/components/Alert/SuccessAlert';
 import {
   isInternalServerError,
   setValidationErrors,
@@ -89,17 +90,17 @@ export const ForgotPasswordPage = (_props: ForgotPasswordPageProps) => {
 
         <section>
           {requestError && isInternalServerError(requestError) && (
-            <Alert variant={AlertVariant.Error}>
+            <ErrorAlert>
               An unknown error has occurred. Please try again later.
-            </Alert>
+            </ErrorAlert>
           )}
 
           {success && (
-            <Alert variant={AlertVariant.Success}>
+            <SuccessAlert>
               We have received your request to reset your password. If you have
               an account, then an email should be sent shortly with instructions
               to reset the password.
-            </Alert>
+            </SuccessAlert>
           )}
         </section>
 

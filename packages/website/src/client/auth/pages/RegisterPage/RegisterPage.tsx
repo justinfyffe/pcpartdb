@@ -28,7 +28,7 @@ import {
   Spinner,
   TextInput,
 } from '../../../shared/components';
-import { Alert, AlertVariant } from '../../../shared/components/Alert';
+import { ErrorAlert } from '../../../shared/components/Alert/ErrorAlert';
 import { isBadRequestError, setValidationErrors } from '../../../shared/error';
 import { WebsiteLayout } from '../../../shared/layouts';
 import { authService } from '../../authService';
@@ -107,15 +107,13 @@ export const RegisterPage = (_props: RegisterPageProps) => {
 
         <section>
           {requestError && isBadRequestError(requestError) && (
-            <Alert variant={AlertVariant.Error}>
-              Please correct the errors and try again.
-            </Alert>
+            <ErrorAlert>Please correct the errors and try again.</ErrorAlert>
           )}
 
           {requestError && !isBadRequestError(requestError) && (
-            <Alert variant={AlertVariant.Error}>
+            <ErrorAlert>
               An unknown error has occurred. Please try again later.
-            </Alert>
+            </ErrorAlert>
           )}
         </section>
 
