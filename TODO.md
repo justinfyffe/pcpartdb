@@ -1,208 +1,139 @@
-HIGH LEVEL TODO:
-- audit db queries
-  - log db queries
-- expose associate key without NEXT_PUBLIC
-- quick improvements
-  - gpu chipset search -> remove retail models
-  - more autocomplete options
-  - better autocomplete sort? maybe by name?
-  - source autocomplete should should non-archived first
-- bugs:
-  - cannot compare different fields on cpu approvals?
-- misc adjustments
-  - explore linking to retail models instead of dialog
-- data cleanup
-  - fill in missing performance scores
-    - have a combined synthetic score
-  - fix up any missing quarter release dates
-  - consistent naming "(OEM)", "(Mobile)"
-- Automation improvements
-  - auto archive when uploading sources, not as a separate route
-  - gpu retail models don't need to update as much. except for price?
-  - double check indexes and looping sql queries
-  - add more scrapers (e.g. intel website, amd website, wikichip)
-  - handle cpus/gpus with multiple passmark pages?
-    - is this worth it? mostly an issue with older cards with less data
-    - better handling of duplicate sources?
-    - use combination to get better scores?
-      - useful for integrated which will have many variations
-- easier to spot missing data
-  - audit page
-    - have tabs for seeing missing:
-      - techpowerup
-      - passmark
-      - geekbench
-      - market segment
-      - release date
-      - launch price
-      - company
-- Dependencies
-  - Update framework dependencies
-  - replace axios with fetch
-- Security
-  - setup weekly backups on digital ocean
-  - DDoS protection with Cloudflare
-  - Rate limit non-staff api calls?
-  - Add recaptcha?
-  - security headers (csp, hsts)
-  - database auto-backup
-- human error protection
-  - confirm on:
-    - delete cpu
-    - delete gpu
-    - delete user
-- performance
-  - add caching
-  - clean up ui components
-  - reduce usages of index.ts for ui components
-  - minimize time spent in a interactive transaction:
-    - not everything needs a transaction
-    - https://www.prisma.io/docs/concepts/components/prisma-client/transactions#interactive-transactions
-- Improve performance score (not just g3d mark or cpu mark)
-  - estimate
-- Affiliate Ads
-  - live price checking for performance/price ranks, cache if it's been recent
-    - can show a spinner when fetching the price
-- More list filters
-- DDoS / Scraping protection
-- More benchmarks, fps averages (can have actual and estimated based on similar)
-- Glossary
-- Soft delete everything. Hard delete should be rare.
-- seamless deployment
-  - use docker to build on pc instead of server
-  - use docker in general
-- accessibility
-- automation improvements
-  - better handling of failures
-    - improve uis
-      - view failed, processing queue items
-      - allow ability to requeue
-    - allow us to requeue it
+Admin Improvements
+- Improved data auditing
+  - Pages to easily see missing: sources, market segment, release date, launch price, company
+- Add protections against human errors
+  - Add confirmations to deleting anything (cpu, gpu, user)
+  - Stricter validators
+- Better error handling
+  - Show errors on forms
+- Add soft delete functionality. Hard deleting should be rare
 
+Analytics:
+- More metrics
+  - Button clicks
 
-AFFILIATE TODO
-- [] Create affiliate account
-- [] Data Strucutre
-  - [] Add price as of date to db
-  - [] add latest price to db
-- [] Automation
-  - [] Fetch prices automatically from amazon (on demand, and periodically)
-  - [] Create script to populate existing chipsets and retail models with prices
-- [X] Add disclaimers
-  - [X] About Page
-  - [X] Footer
-- [] View GPU Page
-  - [X] Create Template UI
-  - [] Add latest price
-  - [X] Add affiliate urls
-- [] Compare GPU Page
-  - [X] Create Template UI
-  - [] Add latest price
-  - [X] Add affiliate urls
-- [] View CPU Page
-  - [X] Create Template UI
-  - [] Add latest price
-  - [X] Add affiliate urls
-- [] Compare CPU Page
-  - [X] Create Template UI
-  - [] Add latest price
-  - [X] Add affiliate urls
-- [] List GPU Page
-  - [] Add buy links?
-  - [X] Rename to Performance / $ (MSRP)
-  - [] Add Performance / $ (Latest) sort
-- [] List CPU Page
-  - [] Add buy links?
-  - [X] Rename to Performance / $ (MSRP)
-  - [] Add Performance / $ (Latest) sort
-- [X] Admin panel
-  - [X] Add affiliate url to form
-- [] Nice to haves
-  - [X] Add indexes for list page sorts
-  - [] Add Availability Filter to List pages
-  - [] Add Price Filter to List pages
-  - [] Add Most Expensive Sort to List pages
-  - [] Add Cheapest Sort to List pages
+Automation:
+- Add more scrapers as they're needed
+  - Intel website
+  - AMD Website
+  - Wikichip
+- Improve automation autocomplete
+  - Remove retail models from chipset autocomplete
+  - More options
+  - Better sort (maybe by name? non-archived first?)
+- Reduce update frequency of gpu retail models (except for price)
+- Reduce update frequency of old products
+- View processing / failed automation actions.
+  - Add ability to requeue
 
+Content:
+- Synthetic performance score. Compute a score based on available data.
+  - Can predict data based on gpus with similar scores in other benchmarks
+- Use consistent naming like "(OEM)" and "(Mobile)"
+- Fill in any missing release date quarters
+- Add articles
+- Add glossary
+- Add ability to overwrite generated summaries for view and compare
+  - Useful for common queries
+- Add popular searches below autocomplete on home and list pages.
+- Add more sorts and filters to list pages
+  - Sort: Most Expensive / Cheapest for MSRP & Current Price
+  - Filter: Year, Price Range, Availability
+- Add more benchmarks
+  - More 3D Mark benchmarks
+  - FPS averages for popluar games
+  - Estimate based on similar (if enough data is provided)
 
-CODE CLEANUP TASKS
-- View Models
-  - Single "model" or "viewModel" prop on each page props
-    - Why? Improve consistency/simplicity of page props. Easy to find
-      which data comes from view model. Errors can be in a separate "errors"
-      property
-- React components
-  - Simplify components that loop through. Each loop element should be a component.
-    - Why? Simplifies the parent component code signficantly, not having to juggle indexes
-  - Improve consistency of where state, memo, callbacks, effects are placed in component code
-    - Order: States, Memos, Callbacks, Effects
-    - Why? Consistency across components
-- Pagination
-  - use new pagination; simpler.
-    - add ability to treat each like a new page
-- ListQuery
-  - Move list cpus and gpus to use the generalized listquery ttype
-- API Code
-  - Improve consistency of service method parameters. For example, should we use
-    *Request and *Response objects for parameters?
-    - Why? Consistency makes it easier to define new code.
-  - Improve consistency of parameters for GET calls? For example, a jsonified request object?
-    - Why? Consistency makes it easier to define new code.
-- Client Code
-  - Improve tree shaking
-    - Files should have a single concern.
-  - Remove barrel files for client code, especially components
-  - Remove all classes, replace with functions
-    - Exceptions: API Client
-    - Why? Improves tree shaking
-  - Move common utilities to shared
-    - Why? API, CLI needs to use some of them.
-- Shared Code
-  - Remove all classes
-    - Why? Better for tree shaking. API can still use classes.
-  - Move common utilities to shared
-    - Why? Often used between packages.
-  - Minimize third party dependencies
-    - Why? Some packages are client-only or server-only
-- Folder Structure
-  - Use a consistent structure across client code
-    - Why? 
-- Validation
-  - Move validation to controller
-- List requests
-  - handle getting count in same method as fetching results. Controller just
-    routes request, service constructs reponse.
+Monetization:
+- Join amazon affiliate for other major countries
+- Sign up for Adsense
+- Expand content for more ads
+  - View page, Compare page, list page
+- Integrate with Amazon API (when qualified)
+  - Live pricing and availability
+  - Can add spinner for getting price
 
-- cpu and gpu data
-  - next source model cpu: 1175
-    - npm run cli scrape-data:cpu -- -- --count 25 --offset 0
-  - next source model gpu: 50
-    - npm run cli scrape-data:gpu -- -- --count 25 --offset 0
+Performance:
+- Audit and log DB Queries
+  - Use "EXPLAIN" on logged queries
+- Add caching to pages
+- Add caching to api calls
+- Improve usage of transactions
+  - Minimize usage of them for read-only operations.
 
-- improve deployments
-  - use docker, but not for database
+Security:
+- DDOS protection with Cloudflare
+  - Whitelist my own ips
+- Expose associate key without NEXT_PUBLIC
+  - Due to being injected at build time.
+- Setup weekly backups on host
+- Setup auto backups, particularly database
+- Add recaptcha to list page
+- Rate limit non-staff api calls
+
+Tech Debt:
+- Write README
+- Explore combined products table
+  - Write design doc for this
+  - Separate tables for specs, benchmarks, sources
+- Setup separate table for product sources instead of a meta column
+  - Faster to auto-archive, can auto-archive as we find sources.
+- Setup separate table for benchmarks
+  - Keep a general performance score and value score on products tables for better
+    sorting. Can store other benchmark values
+- Update major dependencies
+  - Nextjs, Nestjs, TypeScript
+- Replace axios with fetch
+- Get rid of index.ts barrel files on api and website (only needed for libraries)
+- Simplify UI components
+  - More shared components when we can.
+  - Simpler component code, no one component should do too much.
+  - Loops should always point to another component.
+- Add more logging to api and nextjs
+  - API calls
+  - Database queries
+  - Metrics (how long it took for a query to execute)
+- Seamless deployment
+  - Use docker to build on pc instead of server
+  - Use docker for running on production
+- Remove TS classes in client code. Only use functions (except for maybe api client).
+- Improve consistency of where state, memo, callbacks, effects are placed in component code
+  - Order: States, Memos, Callbacks, Effects
+- Improve DX of View Models
+  - One "model" or "viewModel" prop on each page props
+  - Separate "errors" property on each page props
+- Generalize product list objects:
+  - migrate gpu and cpu to use ListPagination, ListOrder, ListSort
+  - Update ListCpusQuery and ListGpusQuery to use generalized ListQuery type.
+- Move common utilities to shared
+- Minimize 3p dependencies in shared
+  - Due to some not working in browser or only working in server
+- Setup consistent folder structure in client code
+- Controller should be minimal
+  - Move validation to service.
+  - Getting count should be in same server method as fetching results.
+  - Service should handle constructing response
+- Improve API Consistency
+  - GET parameters (jsonify everything?)
+  - *Request, *Response naming?
+- Improve tailwind config:
+  - max/min media queries
+
+UX:
+- Improve product autocomplete
+  - More options - 6 is not enough
+  - Improve quality - sometimes not getting exact match first
+- Explore linking to retail models on gpu chipset page, instead of dialog.
+- More spinners when loading data.
+- Audit accessibility.
+- Improve pagination, get rid of legacy pagination.
+  - Treat each like a new page.
+
 
 Road Map:
-- add content
-  - new gpus
-    - 7600 xt
-  - retail models, chipsets
-    - latest gpu id: 400
-- clean up tech debt
-  - listChipsets call - KISS
-  - simplify components
-  - general cleanup
-  - max/min media queries
 - improve view/compare relative performance/value
   - toggle market segments, default to same market segment
-- cpus
-  - view
-  - compare
-  - list
-  - automation for importing/updating
-- affiliate ads
-- improve list page features
-  - filter by year (multiselect combobox)
+
 - improve list page style
   - list of cards, can show more data in a prettier way
   - better for fitting in ads
@@ -230,25 +161,6 @@ Road Map:
 OVERVIEW
 - Use "chip" instead of "card" for mobile and integrated gpus
 
-
-AUTOMATION IDEAS
-- Add "Update" button that updates next thing in queue
-- need to support new chipsets and retail models
-- how to add to crawler queue
-  - script that automatically adds to database?
-  - add buttons that add to queue?
-    - e.g. Edit GPU - "Add GPU / Retail Model to queue"
-    - e.g. Edit GPU - "Add Retail Models"
-- crawler queue database table?
-  - type
-    - e.g. GPU_CHIPSET, GPU_RETAIL_MODEL
-  - metadata
-    - i.e. extra data like parent chipset id
-  - urls
-    - i.e. multiple sets like techpowerup, videocardbenchmarks
-    - e.g. https://www.techpowerup.com/gpu-specs/asus-rog-strix-rtx-3070-gaming.b8030  
-  - status
-    - e.g. PENDING, CANCELED, IN_PROGRESS, COMPLETED 
 
 
 AMAZON AFFILIATE
