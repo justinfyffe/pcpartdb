@@ -1,4 +1,4 @@
-Current Focus:
+Primary Focus:
 - Finish Automation
   - Finish GPU Queue
   - Finish CPU Queue
@@ -8,10 +8,22 @@ Current Focus:
       - Ex: https://ark.intel.com/content/www/us/en/ark/products/75193/intel-celeron-processor-1005m-2m-cache-1-90-ghz.html
     - [CPU] Create scraper for AMD website
       - Ex: https://www.amd.com/en/products/apu/amd-ryzen-5-pro-6650h
+Secondary Focus:
 - Tech Debt
-  - Explore combined products table
-  - Setup separate table for product sources instead of a meta column
-  - Setup separate table for fields
+  - Products Tables
+    - Explore combined products table
+    - Setup separate table for product sources instead of a meta column
+    - Setup separate table for fields
+  - Use Kysely for database querying
+  - Use prisma for schema def and migrations
+When Bored:
+- Functionality
+  - Make autocomplete stricter, not looser when searching?
+- Tech Debt
+  - Remove barrel files
+  - Minimize controllers
+  - Generalize product list objects
+  - Simplify UI components
 
 Admin Improvements
 - Improved data auditing
@@ -64,6 +76,11 @@ Content:
 - Increase length of content
   - Add charts, more summarized text, etc.
   - Look at other comparison sites for inspiration
+- GPU Specs to Add
+  - Pixel Shaders
+  - Vertex Shaders
+  - Vertex Rate
+  - Die Size
 
 Monetization:
 - Join amazon affiliate for other major countries
