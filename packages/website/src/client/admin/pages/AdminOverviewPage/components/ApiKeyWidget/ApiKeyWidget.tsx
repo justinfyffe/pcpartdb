@@ -1,7 +1,5 @@
 import { ApiKey } from '@pcpartdb/shared';
 import {
-  Button,
-  ButtonVariant,
   Card,
   CardContent,
   CardTitle,
@@ -9,6 +7,7 @@ import {
   showDialog,
   TextInput,
 } from 'packages/website/src/client/shared/components';
+import { PrimaryButton } from 'packages/website/src/client/shared/components/Button/PrimaryButton';
 import { userService } from 'packages/website/src/client/user';
 import React, { useCallback, useState } from 'react';
 
@@ -41,13 +40,9 @@ export const ApiKeyWidget = (props: ApiKeyWidgetProps) => {
         Your API Key:
         <div className="flex gap-4">
           <TextInput value={apiKey?.apiKey || ''} disabled />
-          <Button
-            type="button"
-            variant={ButtonVariant.Primary}
-            onClick={handleRefresh}
-          >
+          <PrimaryButton type="button" onClick={handleRefresh}>
             Refresh
-          </Button>
+          </PrimaryButton>
         </div>
       </CardContent>
     </Card>

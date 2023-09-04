@@ -13,21 +13,17 @@ import { useRouter } from 'next/router';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import {
-  Breadcrumb,
-  Breadcrumbs,
-  Button,
-  ButtonVariant,
-  Field,
-  FieldError,
-  Form,
-  FormActions,
   HiddenInput,
-  MetaRobots,
   PasswordInput,
-  Seo,
   Spinner,
 } from '../../../shared/components';
 import { ErrorAlert } from '../../../shared/components/Alert/ErrorAlert';
+import { Breadcrumb } from '../../../shared/components/Breadcrumbs/Breadcrumb';
+import { Breadcrumbs } from '../../../shared/components/Breadcrumbs/Breadcrumbs';
+import { PrimaryButton } from '../../../shared/components/Button/PrimaryButton';
+import { Field, FieldError } from '../../../shared/components/Field/Field';
+import { Form, FormActions } from '../../../shared/components/Form/Form';
+import { MetaRobots, Seo } from '../../../shared/components/Seo/Seo';
 import {
   isInternalServerError,
   setValidationErrors,
@@ -158,14 +154,10 @@ export const ResetPasswordPage = (props: ResetPasswordPageProps) => {
             </Field>
 
             <FormActions>
-              <Button
-                type="submit"
-                variant={ButtonVariant.Primary}
-                disabled={loading}
-              >
+              <PrimaryButton type="submit" disabled={loading}>
                 {loading && <Spinner />}
                 <span>Change Password</span>
-              </Button>
+              </PrimaryButton>
             </FormActions>
           </Form>
         </section>

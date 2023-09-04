@@ -4,13 +4,12 @@ import {
   getAdminListGpusPath,
   ProductType,
 } from '@pcpartdb/shared';
-import React, { useMemo } from 'react';
+import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
 import {
-  Button,
-  ButtonVariant,
   MetaRobots,
   Seo,
-} from '../../../../shared/components';
+} from 'packages/website/src/client/shared/components/Seo/Seo';
+import React, { useMemo } from 'react';
 import { AdminLayout } from '../../../../shared/layouts';
 import { CpuForm, GpuForm } from '../../../components';
 
@@ -49,9 +48,7 @@ export const AdminNewProductPage = (props: AdminNewProductPageProps) => {
         <div className="flex items-center justify-between mb-4">
           <h1 className="font-semibold">{pageTitle}</h1>
 
-          <Button href={adminListHref} variant={ButtonVariant.Generic}>
-            Back
-          </Button>
+          <GenericButton href={adminListHref}>Back</GenericButton>
         </div>
 
         {productType === ProductType.Cpu && <CpuForm />}

@@ -14,8 +14,8 @@ import React, {
   WheelEvent,
 } from 'react';
 import { classNames } from '../../ui';
-import { Button } from '../Button';
-import { FieldContext } from '../Field';
+import { Button } from '../Button/Button';
+import { FieldContext } from '../Field/Field';
 
 export interface InputProps {
   type: string;

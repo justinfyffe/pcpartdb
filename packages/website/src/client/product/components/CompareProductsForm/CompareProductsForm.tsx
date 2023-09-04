@@ -12,7 +12,8 @@ import React, {
   useState,
 } from 'react';
 import { useProductCache } from '../../../shared/cache';
-import { Button, ButtonVariant, Form } from '../../../shared/components';
+import { PrimaryButton } from '../../../shared/components/Button/PrimaryButton';
+import { Form } from '../../../shared/components/Form/Form';
 import { classNames } from '../../../shared/ui';
 import { ProductAutocomplete } from '../ProductAutocomplete';
 
@@ -68,7 +69,7 @@ export const CompareProductsForm: FunctionComponent<
         return;
       }
     },
-    [values],
+    [productCache, productType, values],
   );
 
   return (
@@ -106,14 +107,13 @@ export const CompareProductsForm: FunctionComponent<
         />
       </div>
 
-      <Button
+      <PrimaryButton
         type="submit"
-        variant={ButtonVariant.Primary}
         disabled={filteredValues.length === 0}
         className="min-w-25"
       >
         {filteredValues.length === 1 ? 'View' : 'Compare'}
-      </Button>
+      </PrimaryButton>
     </Form>
   );
 };

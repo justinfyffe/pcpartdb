@@ -4,6 +4,10 @@ import {
   getViewGpuPath,
   Gpu,
 } from '@pcpartdb/shared';
+import {
+  Button,
+  ButtonVariant,
+} from 'packages/website/src/client/shared/components/Button/Button';
 import React, {
   FunctionComponent,
   useCallback,
@@ -11,8 +15,6 @@ import React, {
   useMemo,
 } from 'react';
 import {
-  Button,
-  ButtonVariant,
   showDialog,
   Table,
   TBody,

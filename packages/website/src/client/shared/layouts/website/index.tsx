@@ -8,17 +8,15 @@ import {
   WEBSITE_NAME,
 } from '@pcpartdb/shared';
 import React, { FunctionComponent } from 'react';
+import { Button, ButtonVariant } from '../../components/Button/Button';
 import {
-  Button,
-  ButtonVariant,
   Footer,
   FooterSection,
   FooterSectionTitle,
-  Img,
-  List,
-  ListItem,
-  Toolbar,
-} from '../../components';
+} from '../../components/Footer/Footer';
+import { Img } from '../../components/Img/Img';
+import { List, ListItem } from '../../components/List/List';
+import { Toolbar } from '../../components/Toolbar/Toolbar';
 import { classNames } from '../../ui';
 
 interface EditThisPage {

@@ -11,17 +11,22 @@ import { useRouter } from 'next/router';
 import { cpuService } from 'packages/website/src/client/product';
 import { useProductCache } from 'packages/website/src/client/shared/cache';
 import {
-  Button,
-  ButtonVariant,
-  Field,
-  FieldError,
-  Form,
-  FormActions,
   showDialog,
   Spinner,
   TextInput,
 } from 'packages/website/src/client/shared/components';
 import { ErrorAlert } from 'packages/website/src/client/shared/components/Alert/ErrorAlert';
+import { DangerButton } from 'packages/website/src/client/shared/components/Button/DangerButton';
+import { InfoButton } from 'packages/website/src/client/shared/components/Button/InfoButton';
+import { PrimaryButton } from 'packages/website/src/client/shared/components/Button/PrimaryButton';
+import {
+  Field,
+  FieldError,
+} from 'packages/website/src/client/shared/components/Field/Field';
+import {
+  Form,
+  FormActions,
+} from 'packages/website/src/client/shared/components/Form/Form';
 import {
   isBadRequestError,
   setValidationErrors,
@@ -187,9 +192,7 @@ export const CpuForm: FunctionComponent<CpuFormProps> = (props) => {
           />
         </Field>
 
-        <Button variant={ButtonVariant.Info} onClick={handleScrapeClick}>
-          Scrape Details
-        </Button>
+        <InfoButton onClick={handleScrapeClick}>Scrape Details</InfoButton>
       </section>
 
       <section>
@@ -848,26 +851,21 @@ export const CpuForm: FunctionComponent<CpuFormProps> = (props) => {
 
       <FormActions className={isUpdate ? 'justify-between' : 'justify-end'}>
         {isUpdate && (
-          <Button
+          <DangerButton
             type="button"
-            variant={ButtonVariant.Danger}
             onClick={handleDelete}
             disabled={saving || deleting}
             className="mr-4"
           >
             {deleting && <Spinner />}
             <span>Delete</span>
-          </Button>
+          </DangerButton>
         )}
 
-        <Button
-          type="submit"
-          variant={ButtonVariant.Primary}
-          disabled={saving || deleting}
-        >
+        <PrimaryButton type="submit" disabled={saving || deleting}>
           {saving && <Spinner />}
           {!saving && <span>Save</span>}
-        </Button>
+        </PrimaryButton>
       </FormActions>
     </Form>
   );

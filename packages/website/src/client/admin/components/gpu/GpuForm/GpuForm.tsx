@@ -26,6 +26,17 @@ import {
 } from 'packages/website/src/client/product';
 import { useProductCache } from 'packages/website/src/client/shared/cache';
 import { ErrorAlert } from 'packages/website/src/client/shared/components/Alert/ErrorAlert';
+import { DangerButton } from 'packages/website/src/client/shared/components/Button/DangerButton';
+import { PrimaryButton } from 'packages/website/src/client/shared/components/Button/PrimaryButton';
+import { WarningButton } from 'packages/website/src/client/shared/components/Button/WarningButton';
+import {
+  Field,
+  FieldError,
+} from 'packages/website/src/client/shared/components/Field/Field';
+import {
+  Form,
+  FormActions,
+} from 'packages/website/src/client/shared/components/Form/Form';
 import React, {
   FunctionComponent,
   useCallback,
@@ -33,17 +44,7 @@ import React, {
   useState,
 } from 'react';
 import { Controller, useForm, UseFormProps, useWatch } from 'react-hook-form';
-import {
-  Button,
-  ButtonVariant,
-  Field,
-  FieldError,
-  Form,
-  FormActions,
-  showDialog,
-  Spinner,
-  TextInput,
-} from '../../../../shared/components';
+import { showDialog, Spinner, TextInput } from '../../../../shared/components';
 import {
   isBadRequestError,
   setValidationErrors,
@@ -454,9 +455,9 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           />
         </Field>
 
-        <Button variant={ButtonVariant.Warning} onClick={handleScrapeClick}>
+        <WarningButton onClick={handleScrapeClick}>
           Scrape Details
-        </Button>
+        </WarningButton>
       </section>
 
       <section>
@@ -1298,26 +1299,21 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
 
       <FormActions className={isUpdate ? 'justify-between' : 'justify-end'}>
         {isUpdate && (
-          <Button
+          <DangerButton
             type="button"
-            variant={ButtonVariant.Danger}
             onClick={handleDelete}
             disabled={saving || deleting}
             className="mr-4"
           >
             {deleting && <Spinner />}
             <span>Delete</span>
-          </Button>
+          </DangerButton>
         )}
 
-        <Button
-          type="submit"
-          variant={ButtonVariant.Primary}
-          disabled={saving || deleting}
-        >
+        <PrimaryButton type="submit" disabled={saving || deleting}>
           {saving && <Spinner />}
           {!saving && <span>Save</span>}
-        </Button>
+        </PrimaryButton>
       </FormActions>
     </Form>
   );

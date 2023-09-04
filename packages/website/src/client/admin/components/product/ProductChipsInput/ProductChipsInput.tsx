@@ -3,7 +3,7 @@ import { ProductField, ProductFieldKey } from '@pcpartdb/shared';
 import {
   Button,
   ButtonVariant,
-} from 'packages/website/src/client/shared/components';
+} from 'packages/website/src/client/shared/components/Button/Button';
 import { classNames } from 'packages/website/src/client/shared/ui';
 import React, {
   FocusEvent,

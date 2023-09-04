@@ -20,12 +20,14 @@ import {
   Card,
   CardContent,
   CardTitle,
-  Field,
-  FieldHint,
   showDialog,
   TextInput,
 } from 'packages/website/src/client/shared/components';
 import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
+import {
+  Field,
+  FieldHint,
+} from 'packages/website/src/client/shared/components/Field/Field';
 import { AutomationStatusContext } from 'packages/website/src/client/shared/layouts/admin/AutomationStatusContext';
 import React, { useCallback, useContext, useMemo, useState } from 'react';
 

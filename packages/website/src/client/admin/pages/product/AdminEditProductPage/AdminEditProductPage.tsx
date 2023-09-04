@@ -23,8 +23,12 @@ import { automationService } from 'packages/website/src/client/automation';
 import { productUpdateService } from 'packages/website/src/client/product/services/productUpdateService';
 import { WarningAlert } from 'packages/website/src/client/shared/components/Alert/WarningAlert';
 import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
+import {
+  MetaRobots,
+  Seo,
+} from 'packages/website/src/client/shared/components/Seo/Seo';
 import React, { useCallback, useMemo, useState } from 'react';
-import { MetaRobots, Seo, showDialog } from '../../../../shared/components';
+import { showDialog } from '../../../../shared/components';
 import { AdminLayout } from '../../../../shared/layouts';
 import { GpuDiffDialog, GpuForm } from '../../../components';
 import { CpuDiffDialog, CpuForm } from '../../../components/cpu';

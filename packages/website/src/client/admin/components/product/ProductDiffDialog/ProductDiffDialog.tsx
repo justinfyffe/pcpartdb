@@ -2,7 +2,7 @@ import { ProductDiff, ProductType } from '@pcpartdb/shared';
 import {
   Button,
   ButtonVariant,
-} from 'packages/website/src/client/shared/components';
+} from 'packages/website/src/client/shared/components/Button/Button';
 import React, { FunctionComponent, useState } from 'react';
 import { FormattedDiffTab } from './FormattedDiffTab';
 import { RawDiffTab } from './RawDiffTab';

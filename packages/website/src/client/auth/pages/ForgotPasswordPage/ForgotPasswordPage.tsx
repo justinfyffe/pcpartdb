@@ -9,20 +9,13 @@ import {
 } from '@pcpartdb/shared';
 import React, { useCallback, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import {
-  Button,
-  ButtonVariant,
-  Field,
-  FieldError,
-  Form,
-  FormActions,
-  MetaRobots,
-  Seo,
-  Spinner,
-  TextInput,
-} from '../../../shared/components';
+import { Spinner, TextInput } from '../../../shared/components';
 import { ErrorAlert } from '../../../shared/components/Alert/ErrorAlert';
 import { SuccessAlert } from '../../../shared/components/Alert/SuccessAlert';
+import { PrimaryButton } from '../../../shared/components/Button/PrimaryButton';
+import { Field, FieldError } from '../../../shared/components/Field/Field';
+import { Form, FormActions } from '../../../shared/components/Form/Form';
+import { MetaRobots, Seo } from '../../../shared/components/Seo/Seo';
 import {
   isInternalServerError,
   setValidationErrors,
@@ -128,14 +121,10 @@ export const ForgotPasswordPage = (_props: ForgotPasswordPageProps) => {
             </Field>
 
             <FormActions>
-              <Button
-                type="submit"
-                variant={ButtonVariant.Primary}
-                disabled={loading}
-              >
+              <PrimaryButton type="submit" disabled={loading}>
                 {loading && <Spinner />}
                 <span>Submit</span>
-              </Button>
+              </PrimaryButton>
             </FormActions>
           </Form>
         </section>

@@ -6,6 +6,10 @@ import {
   hasProductFieldValue,
 } from '@pcpartdb/shared';
 import { ProductCustomRow } from 'packages/website/src/client/product';
+import {
+  Button,
+  ButtonVariant,
+} from 'packages/website/src/client/shared/components/Button/Button';
 import React, {
   FunctionComponent,
   useCallback,
@@ -15,8 +19,6 @@ import React, {
   useState,
 } from 'react';
 import {
-  Button,
-  ButtonVariant,
   Table,
   TBody,
   Td,

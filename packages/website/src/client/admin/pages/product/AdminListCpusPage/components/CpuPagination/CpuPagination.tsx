@@ -1,9 +1,9 @@
 import { getAdminListCpusPath, ListCpusQuery } from '@pcpartdb/shared';
-import React, { FunctionComponent, useCallback } from 'react';
 import {
   LegacyPagination,
   LegacyPaginationResult,
-} from '../../../../../../shared/components';
+} from 'packages/website/src/client/shared/components/Pagination/LegacyPagination';
+import React, { FunctionComponent, useCallback } from 'react';
 
 interface CpuPaginationProps {
   query: ListCpusQuery;

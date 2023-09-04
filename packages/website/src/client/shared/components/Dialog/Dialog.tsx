@@ -1,7 +1,7 @@
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import React, { FunctionComponent } from 'react';
 import { classNames } from '../../ui';
-import { Button } from '../Button';
+import { Button } from '../Button/Button';
 import { closeDialog } from './dialog';
 
 export interface DialogProps {

@@ -2,15 +2,14 @@ import 'reflect-metadata';
 import { getAdminImportGpusPath, getAdminNewGpuPath } from '@pcpartdb/shared';
 import { useRouter } from 'next/router';
 import { SuccessAlert } from 'packages/website/src/client/shared/components/Alert/SuccessAlert';
-import React, { useState } from 'react';
+import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
 import {
-  Button,
-  ButtonVariant,
   MetaRobots,
   Seo,
-  Tab,
-  Tabs,
-} from '../../../../shared/components';
+} from 'packages/website/src/client/shared/components/Seo/Seo';
+import { Tab } from 'packages/website/src/client/shared/components/Tabs/Tab';
+import { Tabs } from 'packages/website/src/client/shared/components/Tabs/Tabs';
+import React, { useState } from 'react';
 import { AdminLayout } from '../../../../shared/layouts';
 import { ChipsetsTab, RetailModelsTab } from './components';
 
@@ -38,15 +37,10 @@ export const AdminListGpusPage = () => {
           <h1 className="font-semibold">{pageTitle}</h1>
 
           <div className="flex gap-4">
-            <Button
-              href={getAdminImportGpusPath()}
-              variant={ButtonVariant.Generic}
-            >
+            <GenericButton href={getAdminImportGpusPath()}>
               Import
-            </Button>
-            <Button href={getAdminNewGpuPath()} variant={ButtonVariant.Generic}>
-              Add
-            </Button>
+            </GenericButton>
+            <GenericButton href={getAdminNewGpuPath()}>Add</GenericButton>
           </div>
         </div>
 

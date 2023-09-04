@@ -1,7 +1,8 @@
 import 'reflect-metadata';
 import { AdminOverviewViewModel } from '@pcpartdb/shared';
 import React from 'react';
-import { Card, CardTitle, MetaRobots, Seo } from '../../../shared/components';
+import { Card, CardTitle } from '../../../shared/components';
+import { MetaRobots, Seo } from '../../../shared/components/Seo/Seo';
 import { AdminLayout } from '../../../shared/layouts';
 import { ApiKeyWidget } from './components';
 

@@ -1,13 +1,10 @@
 import { PhotoIcon } from '@heroicons/react/24/outline';
 import { Image } from '@pcpartdb/shared';
+import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
+import { Img } from 'packages/website/src/client/shared/components/Img/Img';
 import React, { FunctionComponent, useCallback, useState } from 'react';
 import { formatFileSize, formatImageDimensions } from '../../../../image';
-import {
-  Button,
-  ButtonVariant,
-  Img,
-  showDialog,
-} from '../../../../shared/components';
+import { showDialog } from '../../../../shared/components';
 import { classNames } from '../../../../shared/ui';
 import { ImageDialog } from '../ImageDialog';
 
@@ -76,14 +73,9 @@ const SelectedImageInput = (
           )}
         </div>
 
-        <Button
-          type="button"
-          variant={ButtonVariant.Generic}
-          onClick={onClear}
-          className="mt-5"
-        >
+        <GenericButton type="button" onClick={onClear} className="mt-5">
           Remove
-        </Button>
+        </GenericButton>
       </div>
     </div>
   );

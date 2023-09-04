@@ -9,18 +9,20 @@ import {
 } from '@pcpartdb/shared';
 import { useRouter } from 'next/router';
 import { ErrorAlert } from 'packages/website/src/client/shared/components/Alert/ErrorAlert';
-import React, { useCallback, useMemo, useState } from 'react';
-import { productService } from '../../../../product';
+import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
+import { PrimaryButton } from 'packages/website/src/client/shared/components/Button/PrimaryButton';
 import {
-  Button,
-  ButtonVariant,
   Field,
   FieldHint,
-  File,
+} from 'packages/website/src/client/shared/components/Field/Field';
+import { File } from 'packages/website/src/client/shared/components/File/File';
+import {
   MetaRobots,
   Seo,
-  Spinner,
-} from '../../../../shared/components';
+} from 'packages/website/src/client/shared/components/Seo/Seo';
+import React, { useCallback, useMemo, useState } from 'react';
+import { productService } from '../../../../product';
+import { Spinner } from '../../../../shared/components';
 import { AdminLayout } from '../../../../shared/layouts';
 import { ImportProductsTable } from './components';
 import { ImportProductsPageContext } from './context';
@@ -142,12 +144,7 @@ export const AdminImportProductsPage = (
           <div className="flex items-center justify-between mb-4">
             <h1 className="font-semibold">{pageTitle}</h1>
 
-            <Button
-              href={getAdminListGpusPath()}
-              variant={ButtonVariant.Generic}
-            >
-              Back
-            </Button>
+            <GenericButton href={getAdminListGpusPath()}>Back</GenericButton>
           </div>
 
           {requestError && (
@@ -198,8 +195,7 @@ export const AdminImportProductsPage = (
                 </section>
               </div>
 
-              <Button
-                variant={ButtonVariant.Primary}
+              <PrimaryButton
                 disabled={importing || productsToImportList.length === 0}
                 className="self-end"
                 onClick={handleImportClicked}
@@ -208,7 +204,7 @@ export const AdminImportProductsPage = (
                 {!importing && (
                   <span>Import {productsToImportList.length} GPUs</span>
                 )}
-              </Button>
+              </PrimaryButton>
             </div>
           )}
         </article>

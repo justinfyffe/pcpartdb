@@ -2,11 +2,13 @@ import { XMarkIcon } from '@heroicons/react/24/outline';
 import { formatGpuName, Gpu } from '@pcpartdb/shared';
 import { gpuService } from 'packages/website/src/client/product/services';
 import {
-  Button,
-  ButtonVariant,
   closeDialog,
   Spinner,
 } from 'packages/website/src/client/shared/components';
+import {
+  Button,
+  ButtonVariant,
+} from 'packages/website/src/client/shared/components/Button/Button';
 import React, { FunctionComponent, useEffect, useMemo, useState } from 'react';
 import { RetailModelsTable } from './RetailModelsTable';
 

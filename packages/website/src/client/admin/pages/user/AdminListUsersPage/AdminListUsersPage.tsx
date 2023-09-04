@@ -8,19 +8,13 @@ import { format } from 'date-fns';
 import { useRouter } from 'next/router';
 import { InfoAlert } from 'packages/website/src/client/shared/components/Alert/InfoAlert';
 import { SuccessAlert } from 'packages/website/src/client/shared/components/Alert/SuccessAlert';
-import React, { useState } from 'react';
+import { PrimaryButton } from 'packages/website/src/client/shared/components/Button/PrimaryButton';
 import {
-  Button,
-  ButtonVariant,
   MetaRobots,
   Seo,
-  Table,
-  TBody,
-  Td,
-  Th,
-  THead,
-  Tr,
-} from '../../../../shared/components';
+} from 'packages/website/src/client/shared/components/Seo/Seo';
+import React, { useState } from 'react';
+import { Table, TBody, Td, Th, THead, Tr } from '../../../../shared/components';
 import { AdminLayout } from '../../../../shared/layouts';
 
 export const AdminListUsersPage = (props: AdminListUsersViewModel) => {
@@ -48,9 +42,7 @@ export const AdminListUsersPage = (props: AdminListUsersViewModel) => {
         <div className="flex items-center justify-between mb-4">
           <h1 className="font-semibold">{pageTitle}</h1>
 
-          <Button variant={ButtonVariant.Primary} href={getAdminNewUserPath()}>
-            Add
-          </Button>
+          <PrimaryButton href={getAdminNewUserPath()}>Add</PrimaryButton>
         </div>
 
         <section>

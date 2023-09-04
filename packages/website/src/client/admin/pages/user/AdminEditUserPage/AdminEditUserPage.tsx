@@ -1,12 +1,11 @@
 import 'reflect-metadata';
 import { AdminEditUserViewModel } from '@pcpartdb/shared';
-import React from 'react';
+import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
 import {
-  Button,
-  ButtonVariant,
   MetaRobots,
   Seo,
-} from '../../../../shared/components';
+} from 'packages/website/src/client/shared/components/Seo/Seo';
+import React from 'react';
 import { AdminLayout } from '../../../../shared/layouts';
 import { UserForm } from '../../../components';
 
@@ -25,9 +24,7 @@ export const AdminEditUserPage = (props: AdminEditUserViewModel) => {
         <div className="flex items-center justify-between mb-4">
           <h1 className="font-semibold">{pageTitle}</h1>
 
-          <Button href="/admin/users" variant={ButtonVariant.Generic}>
-            Back
-          </Button>
+          <GenericButton href="/admin/users">Back</GenericButton>
         </div>
 
         <UserForm user={user} />

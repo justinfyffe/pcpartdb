@@ -16,7 +16,8 @@ import React, {
 } from 'react';
 import { getCompanyLogoAutocompletePath } from '../../../image';
 import { useProductCache } from '../../../shared/cache';
-import { Autocomplete, Img } from '../../../shared/components';
+import { Autocomplete } from '../../../shared/components';
+import { Img } from '../../../shared/components/Img/Img';
 import { classNames } from '../../../shared/ui';
 import { productService } from '../../services/productService';
 import { ProductAutocompleteOption } from './ProductAutocompleteOption';

@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import { classNames } from '../../ui';
-import { Img, ImgProps } from '../Img';
+import { Img, ImgProps } from '../Img/Img';
 
 export interface CardProps {
   as?: React.ElementType;

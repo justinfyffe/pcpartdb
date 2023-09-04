@@ -9,6 +9,19 @@ import {
 } from '@pcpartdb/shared';
 import Router from 'next/router';
 import { ErrorAlert } from 'packages/website/src/client/shared/components/Alert/ErrorAlert';
+import { PrimaryButton } from 'packages/website/src/client/shared/components/Button/PrimaryButton';
+import { WarningButton } from 'packages/website/src/client/shared/components/Button/WarningButton';
+import {
+  Field,
+  FieldError,
+  FieldHint,
+  FieldOptional,
+} from 'packages/website/src/client/shared/components/Field/Field';
+import { File } from 'packages/website/src/client/shared/components/File/File';
+import {
+  Form,
+  FormActions,
+} from 'packages/website/src/client/shared/components/Form/Form';
 import React, {
   FunctionComponent,
   useCallback,
@@ -28,19 +41,7 @@ import {
   getImageMeta,
   imageService,
 } from '../../../../image';
-import {
-  Button,
-  ButtonVariant,
-  Field,
-  FieldError,
-  FieldHint,
-  FieldOptional,
-  File,
-  Form,
-  FormActions,
-  Spinner,
-  TextInput,
-} from '../../../../shared/components';
+import { Spinner, TextInput } from '../../../../shared/components';
 import {
   isBadRequestError,
   setValidationErrors,
@@ -267,35 +268,26 @@ export const ImageForm: FunctionComponent<ImageFormProps> = (props) => {
 
       <FormActions>
         {isUpdate && (
-          <Button
+          <WarningButton
             type="button"
-            variant={ButtonVariant.Warning}
             disabled={saving || deleting}
             onClick={handleDelete}
           >
             {deleting && <Spinner />}
             <span>Delete</span>
-          </Button>
+          </WarningButton>
         )}
         {isUpdate && (
-          <Button
-            type="submit"
-            variant={ButtonVariant.Primary}
-            disabled={saving || deleting}
-          >
+          <PrimaryButton type="submit" disabled={saving || deleting}>
             {saving && <Spinner />}
             <span>Save</span>
-          </Button>
+          </PrimaryButton>
         )}
         {!isUpdate && (
-          <Button
-            type="submit"
-            variant={ButtonVariant.Primary}
-            disabled={saving}
-          >
+          <PrimaryButton type="submit" disabled={saving}>
             {saving && <Spinner />}
             <span>Upload</span>
-          </Button>
+          </PrimaryButton>
         )}
       </FormActions>
     </Form>

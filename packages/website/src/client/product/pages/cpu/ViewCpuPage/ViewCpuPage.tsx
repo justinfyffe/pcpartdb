@@ -9,8 +9,10 @@ import {
   ViewCpuViewModel,
 } from '@pcpartdb/shared';
 import { useProductCache } from 'packages/website/src/client/shared/cache';
+import { Breadcrumb } from 'packages/website/src/client/shared/components/Breadcrumbs/Breadcrumb';
+import { Breadcrumbs } from 'packages/website/src/client/shared/components/Breadcrumbs/Breadcrumbs';
+import { Seo } from 'packages/website/src/client/shared/components/Seo/Seo';
 import React, { useMemo } from 'react';
-import { Breadcrumb, Breadcrumbs, Seo } from '../../../../shared/components';
 import { WebsiteLayout } from '../../../../shared/layouts';
 import {
   Sidenav,

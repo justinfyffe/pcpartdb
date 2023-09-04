@@ -7,9 +7,11 @@ import {
   ProductType,
 } from '@pcpartdb/shared';
 import { useRouter } from 'next/router';
+import { Breadcrumb } from 'packages/website/src/client/shared/components/Breadcrumbs/Breadcrumb';
+import { Breadcrumbs } from 'packages/website/src/client/shared/components/Breadcrumbs/Breadcrumbs';
+import { Seo } from 'packages/website/src/client/shared/components/Seo/Seo';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useProductCache } from '../../../../shared/cache';
-import { Breadcrumb, Breadcrumbs, Seo } from '../../../../shared/components';
 import { WebsiteLayout } from '../../../../shared/layouts';
 import { classNames } from '../../../../shared/ui';
 import { CompareProductsForm } from '../../../components';

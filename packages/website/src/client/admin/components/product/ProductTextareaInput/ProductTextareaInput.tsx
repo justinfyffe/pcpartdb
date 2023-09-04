@@ -1,6 +1,6 @@
 import { ProductField, ProductFieldKey } from '@pcpartdb/shared';
+import { Textarea } from 'packages/website/src/client/shared/components/Textarea/Textarea';
 import React, { forwardRef, useCallback, useMemo } from 'react';
-import { Textarea } from '../../../../shared/components';
 
 interface ProductTextareaInputProps {
   fieldKey: ProductFieldKey;
@@ -38,4 +38,4 @@ export const ProductTextareaInput = forwardRef<
     />
   );
 });
-ProductTextareaInput.displayName = 'GpuTextFieldInput';
+ProductTextareaInput.displayName = 'ProductTextareaInput';

@@ -4,6 +4,8 @@ import {
   XMarkIcon,
 } from '@heroicons/react/24/outline';
 import { ProductImage, ProductImages } from '@pcpartdb/shared';
+import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
+import { WarningButton } from 'packages/website/src/client/shared/components/Button/WarningButton';
 import React, {
   FunctionComponent,
   useCallback,
@@ -11,7 +13,6 @@ import React, {
   useState,
 } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { Button, ButtonVariant } from '../../../../shared/components';
 import { ProductImageInput } from './ProductImageInput';
 
 interface ProductImagesInputProps {
@@ -102,40 +103,31 @@ export const ProductImagesInput: FunctionComponent<ProductImagesInputProps> = (
 
           <div className="flex flex-col gap-2 mx-2 justify-between">
             <div className="flex flex-col gap-2">
-              <Button
-                variant={ButtonVariant.Generic}
+              <GenericButton
                 disabled={i === 0}
                 onClick={() => handleShiftUp(i)}
               >
                 <ChevronUpIcon className="w-4" />
-              </Button>
-              <Button
-                variant={ButtonVariant.Generic}
+              </GenericButton>
+              <GenericButton
                 disabled={i === value.length - 1}
                 onClick={() => handleShiftDown(i)}
               >
                 <ChevronDownIcon className="w-4" />
-              </Button>
+              </GenericButton>
             </div>
             <div>
-              <Button
-                variant={ButtonVariant.Generic}
-                onClick={() => handleRemove(i)}
-              >
+              <GenericButton onClick={() => handleRemove(i)}>
                 <XMarkIcon className="w-4" />
-              </Button>
+              </GenericButton>
             </div>
           </div>
         </div>
       ))}
 
-      <Button
-        className="self-end"
-        variant={ButtonVariant.Warning}
-        onClick={() => handleAppend()}
-      >
+      <WarningButton className="self-end" onClick={() => handleAppend()}>
         Add Image
-      </Button>
+      </WarningButton>
     </div>
   );
 };

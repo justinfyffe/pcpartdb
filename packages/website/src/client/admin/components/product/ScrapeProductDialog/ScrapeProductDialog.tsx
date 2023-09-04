@@ -1,5 +1,7 @@
 import { ProductDataSource, ProductType } from '@pcpartdb/shared';
 import { productService } from 'packages/website/src/client/product';
+import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
+import { PrimaryButton } from 'packages/website/src/client/shared/components/Button/PrimaryButton';
 import React, {
   FunctionComponent,
   useCallback,
@@ -7,8 +9,6 @@ import React, {
   useState,
 } from 'react';
 import {
-  Button,
-  ButtonVariant,
   closeDialog,
   Spinner,
   Table,
@@ -95,12 +95,8 @@ export const ScrapeProductDialog: FunctionComponent<
       )}
 
       <div className="flex justify-between">
-        <Button variant={ButtonVariant.Generic} onClick={handleCancel}>
-          Cancel
-        </Button>
-        <Button variant={ButtonVariant.Primary} onClick={handleApply}>
-          Apply
-        </Button>
+        <GenericButton onClick={handleCancel}>Cancel</GenericButton>
+        <PrimaryButton onClick={handleApply}>Apply</PrimaryButton>
       </div>
     </div>
   );

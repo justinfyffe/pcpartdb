@@ -1,9 +1,9 @@
 import { getListCpusPath } from '@pcpartdb/shared';
-import React, { FunctionComponent, useCallback, useContext } from 'react';
 import {
   LegacyPagination,
   LegacyPaginationResult,
-} from '../../../../../../shared/components';
+} from 'packages/website/src/client/shared/components/Pagination/LegacyPagination';
+import React, { FunctionComponent, useCallback, useContext } from 'react';
 import { ListPageContext } from '../../context';
 
 export const ListPagination: FunctionComponent = () => {

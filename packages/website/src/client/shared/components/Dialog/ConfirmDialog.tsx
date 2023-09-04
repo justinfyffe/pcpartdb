@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useCallback } from 'react';
 import { classNames } from '../../ui';
-import { Button, ButtonVariant } from '../Button';
+import { Button, ButtonVariant } from '../Button/Button';
 import { closeDialog } from './dialog';
 
 export interface ConfirmDialogProps {

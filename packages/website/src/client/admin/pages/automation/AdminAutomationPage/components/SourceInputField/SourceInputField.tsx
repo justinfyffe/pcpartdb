@@ -9,12 +9,14 @@ import {
 import { ProductSourceAutocomplete } from 'packages/website/src/client/product/components/ProductSourceAutocomplete';
 import {
   Checkbox,
-  Field,
-  FieldHint,
-  FieldOptional,
   showDialog,
   TextInput,
 } from 'packages/website/src/client/shared/components';
+import {
+  Field,
+  FieldHint,
+  FieldOptional,
+} from 'packages/website/src/client/shared/components/Field/Field';
 import React, { useCallback, useMemo } from 'react';
 import { SourcePickerDialog } from '../SourcePickerDialog';
 

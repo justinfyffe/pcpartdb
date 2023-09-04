@@ -7,6 +7,12 @@ import {
 import { useRouter } from 'next/router';
 import { InfoAlert } from 'packages/website/src/client/shared/components/Alert/InfoAlert';
 import { SuccessAlert } from 'packages/website/src/client/shared/components/Alert/SuccessAlert';
+import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
+import { Img } from 'packages/website/src/client/shared/components/Img/Img';
+import {
+  MetaRobots,
+  Seo,
+} from 'packages/website/src/client/shared/components/Seo/Seo';
 import React, { useState } from 'react';
 import {
   formatFileSize,
@@ -14,11 +20,6 @@ import {
   getImagePath,
 } from '../../../../image';
 import {
-  Button,
-  ButtonVariant,
-  Img,
-  MetaRobots,
-  Seo,
   Table,
   TBody,
   Td,
@@ -54,9 +55,7 @@ export const AdminListImagesPage = (props: AdminListImagesViewModel) => {
         <div className="flex items-center justify-between mb-4">
           <h1 className="font-semibold">{pageTitle}</h1>
 
-          <Button href={getAdminNewImagePath()} variant={ButtonVariant.Generic}>
-            Add
-          </Button>
+          <GenericButton href={getAdminNewImagePath()}>Add</GenericButton>
         </div>
 
         <section>

@@ -6,7 +6,8 @@ import {
 } from '@pcpartdb/shared';
 import React, { FunctionComponent, useMemo } from 'react';
 import { getCompanyLogoAutocompletePath } from '../../../image';
-import { AutocompleteOption, Img } from '../../../shared/components';
+import { AutocompleteOption } from '../../../shared/components';
+import { Img } from '../../../shared/components/Img/Img';
 
 interface CpuAutocompleteOptionProps {
   index: number;

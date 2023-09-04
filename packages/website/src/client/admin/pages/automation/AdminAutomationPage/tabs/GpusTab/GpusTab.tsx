@@ -1,9 +1,9 @@
 import 'reflect-metadata';
+import { Tab } from 'packages/website/src/client/shared/components/Tabs/Tab';
 import {
-  Tab,
   Tabs,
   TabsVariant,
-} from 'packages/website/src/client/shared/components';
+} from 'packages/website/src/client/shared/components/Tabs/Tabs';
 import { AutomationStatusContext } from 'packages/website/src/client/shared/layouts/admin/AutomationStatusContext';
 import React, { useContext, useMemo } from 'react';
 import { GpuChipsetsTab } from './GpuChipsetsTab';

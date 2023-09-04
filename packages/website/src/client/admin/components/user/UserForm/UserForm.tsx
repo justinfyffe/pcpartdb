@@ -10,6 +10,18 @@ import {
 } from '@pcpartdb/shared';
 import { useRouter } from 'next/router';
 import { ErrorAlert } from 'packages/website/src/client/shared/components/Alert/ErrorAlert';
+import { PrimaryButton } from 'packages/website/src/client/shared/components/Button/PrimaryButton';
+import { WarningButton } from 'packages/website/src/client/shared/components/Button/WarningButton';
+import {
+  Field,
+  FieldError,
+  FieldHint,
+  FieldOptional,
+} from 'packages/website/src/client/shared/components/Field/Field';
+import {
+  Form,
+  FormActions,
+} from 'packages/website/src/client/shared/components/Form/Form';
 import React, {
   FunctionComponent,
   useCallback,
@@ -18,15 +30,7 @@ import React, {
 } from 'react';
 import { Controller, useForm, UseFormProps } from 'react-hook-form';
 import {
-  Button,
-  ButtonVariant,
   Checkbox,
-  Field,
-  FieldError,
-  FieldHint,
-  FieldOptional,
-  Form,
-  FormActions,
   PasswordInput,
   Spinner,
   TextInput,
@@ -191,26 +195,21 @@ export const UserForm: FunctionComponent<UserFormProps> = (props) => {
 
       <FormActions>
         {isUpdate && (
-          <Button
+          <WarningButton
             type="button"
-            variant={ButtonVariant.Warning}
             onClick={handleDelete}
             disabled={saving || deleting}
             className="mr-4"
           >
             {deleting && <Spinner />}
             <span>Delete</span>
-          </Button>
+          </WarningButton>
         )}
 
-        <Button
-          type="submit"
-          variant={ButtonVariant.Primary}
-          disabled={saving || deleting}
-        >
+        <PrimaryButton type="submit" disabled={saving || deleting}>
           {saving && <Spinner />}
           <span>Save</span>
-        </Button>
+        </PrimaryButton>
       </FormActions>
     </Form>
   );

@@ -1,7 +1,10 @@
 import 'reflect-metadata';
 import { AdminAutomationViewModel } from '@pcpartdb/shared';
+import {
+  MetaRobots,
+  Seo,
+} from 'packages/website/src/client/shared/components/Seo/Seo';
 import React from 'react';
-import { MetaRobots, Seo } from '../../../../shared/components';
 import { AdminLayout } from '../../../../shared/layouts';
 import { EnableDisableToggle } from './components/EnableDisableToggle';
 import { AutomationTabs } from './tabs/AutomationTabs';

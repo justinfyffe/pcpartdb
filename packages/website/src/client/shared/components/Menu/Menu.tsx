@@ -6,7 +6,7 @@ import React, {
   useState,
 } from 'react';
 import { classNames } from '../../ui';
-import { Button } from '../Button';
+import { Button } from '../Button/Button';
 
 export interface MenuProps {
   ariaLabel?: string;

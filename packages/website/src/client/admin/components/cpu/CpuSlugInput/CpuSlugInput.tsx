@@ -1,7 +1,7 @@
 import { CpuField, generateCpuSlug } from '@pcpartdb/shared';
+import { Button } from 'packages/website/src/client/shared/components/Button/Button';
 import React, { forwardRef, useCallback, useState } from 'react';
 import { Control, useWatch } from 'react-hook-form';
-import { Button } from '../../../../shared/components';
 import { Input } from '../../../../shared/components/Input/Input';
 
 interface CpuSlugInputProps {

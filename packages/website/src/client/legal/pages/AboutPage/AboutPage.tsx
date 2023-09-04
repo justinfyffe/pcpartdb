@@ -1,7 +1,9 @@
 import 'reflect-metadata';
 import { getAboutPath, getHomePath, WEBSITE_NAME } from '@pcpartdb/shared';
 import React, { useMemo } from 'react';
-import { Breadcrumb, Breadcrumbs, Seo } from '../../../shared/components';
+import { Breadcrumb } from '../../../shared/components/Breadcrumbs/Breadcrumb';
+import { Breadcrumbs } from '../../../shared/components/Breadcrumbs/Breadcrumbs';
+import { Seo } from '../../../shared/components/Seo/Seo';
 import { WebsiteLayout } from '../../../shared/layouts';
 
 interface AboutPageProps {}

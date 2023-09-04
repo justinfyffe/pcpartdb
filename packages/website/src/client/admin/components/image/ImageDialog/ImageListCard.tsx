@@ -1,7 +1,8 @@
 import { Image } from '@pcpartdb/shared';
+import { Img } from 'packages/website/src/client/shared/components/Img/Img';
 import React, { FunctionComponent, useCallback } from 'react';
 import { formatFileSize, formatImageDimensions } from '../../../../image';
-import { Card, Img, TextInput } from '../../../../shared/components';
+import { Card, TextInput } from '../../../../shared/components';
 
 interface ImageListCardProps {
   image: Image;

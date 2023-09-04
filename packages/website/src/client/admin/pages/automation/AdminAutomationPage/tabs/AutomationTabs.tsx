@@ -1,7 +1,11 @@
 import 'reflect-metadata';
+import { Tab } from 'packages/website/src/client/shared/components/Tabs/Tab';
+import {
+  Tabs,
+  TabsVariant,
+} from 'packages/website/src/client/shared/components/Tabs/Tabs';
 import { AutomationStatusContext } from 'packages/website/src/client/shared/layouts/admin/AutomationStatusContext';
 import React, { useContext, useMemo } from 'react';
-import { Tab, Tabs, TabsVariant } from '../../../../../shared/components';
 import { CpuSourcesTab, CpusTab, GpuSourcesTab, GpusTab, QueueTab } from '.';
 
 export interface AutomationTabsProps {}

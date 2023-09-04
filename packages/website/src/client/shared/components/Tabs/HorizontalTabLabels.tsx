@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useCallback } from 'react';
 import { classNames } from '../../ui';
-import { Button, ButtonVariant } from '../Button';
+import { Button, ButtonVariant } from '../Button/Button';
 
 export interface HorizontalTabLabelsProps {
   labels?: string[];

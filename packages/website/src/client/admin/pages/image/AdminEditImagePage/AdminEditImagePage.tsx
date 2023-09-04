@@ -3,13 +3,12 @@ import {
   AdminEditImageViewModel,
   getAdminListImagesPath,
 } from '@pcpartdb/shared';
-import React from 'react';
+import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
 import {
-  Button,
-  ButtonVariant,
   MetaRobots,
   Seo,
-} from '../../../../shared/components';
+} from 'packages/website/src/client/shared/components/Seo/Seo';
+import React from 'react';
 import { AdminLayout } from '../../../../shared/layouts';
 import { ImageForm } from '../../../components';
 
@@ -28,12 +27,7 @@ export const AdminEditImagePage = (props: AdminEditImageViewModel) => {
         <div className="flex items-center justify-between mb-4">
           <h1 className="font-semibold">{pageTitle}</h1>
 
-          <Button
-            href={getAdminListImagesPath()}
-            variant={ButtonVariant.Generic}
-          >
-            Back
-          </Button>
+          <GenericButton href={getAdminListImagesPath()}>Back</GenericButton>
         </div>
 
         <ImageForm image={image} />

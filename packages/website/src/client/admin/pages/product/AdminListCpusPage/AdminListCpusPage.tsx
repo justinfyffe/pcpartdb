@@ -12,14 +12,13 @@ import {
 import { useRouter } from 'next/router';
 import { InfoAlert } from 'packages/website/src/client/shared/components/Alert/InfoAlert';
 import { SuccessAlert } from 'packages/website/src/client/shared/components/Alert/SuccessAlert';
-import React, { useCallback, useEffect, useState } from 'react';
-import { cpuService } from '../../../../product/services/cpuService';
+import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
 import {
-  Button,
-  ButtonVariant,
   MetaRobots,
   Seo,
-} from '../../../../shared/components';
+} from 'packages/website/src/client/shared/components/Seo/Seo';
+import React, { useCallback, useEffect, useState } from 'react';
+import { cpuService } from '../../../../product/services/cpuService';
 import { AdminLayout } from '../../../../shared/layouts';
 import { CpuPagination, CpuTable } from './components';
 
@@ -87,15 +86,10 @@ export const AdminListCpusPage = () => {
           <h1 className="font-semibold">{pageTitle}</h1>
 
           <div className="flex gap-4">
-            <Button
-              href={getAdminImportCpusPath()}
-              variant={ButtonVariant.Generic}
-            >
+            <GenericButton href={getAdminImportCpusPath()}>
               Import Bulk
-            </Button>
-            <Button href={getAdminNewCpuPath()} variant={ButtonVariant.Generic}>
-              Add
-            </Button>
+            </GenericButton>
+            <GenericButton href={getAdminNewCpuPath()}>Add</GenericButton>
           </div>
         </div>
 

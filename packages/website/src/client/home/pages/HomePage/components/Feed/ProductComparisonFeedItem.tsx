@@ -7,9 +7,10 @@ import {
   ProductComparison,
   ProductType,
 } from '@pcpartdb/shared';
+import { Img } from 'packages/website/src/client/shared/components/Img/Img';
 import React, { FunctionComponent, useMemo } from 'react';
 import { getCompanyLogoFeedPath } from '../../../../../image';
-import { Card, Img } from '../../../../../shared/components';
+import { Card } from '../../../../../shared/components';
 import {
   compileContentComponent,
   ContentComponentParams,

@@ -7,7 +7,7 @@ import React, {
 } from 'react';
 import { useLayout } from '../../layouts';
 import { classNames } from '../../ui';
-import { Button, ButtonVariant } from '../Button';
+import { Button, ButtonVariant } from '../Button/Button';
 import { TextInput } from '../Input';
 
 export interface FileProps {
@@ -17,12 +17,6 @@ export interface FileProps {
   children?: React.ReactNode;
 
   className?: string;
-}
-
-export interface FileLabelProps {
-  for?: string;
-
-  children?: React.ReactNode;
 }
 
 export const File: FunctionComponent<FileProps> = (props) => {
@@ -65,7 +59,13 @@ export const File: FunctionComponent<FileProps> = (props) => {
   );
 };
 
-export const FileLabel: FunctionComponent<FileLabelProps> = (props) => {
+interface FileLabelProps {
+  for?: string;
+
+  children?: React.ReactNode;
+}
+
+const FileLabel: FunctionComponent<FileLabelProps> = (props) => {
   return (
     <Button
       as="label"

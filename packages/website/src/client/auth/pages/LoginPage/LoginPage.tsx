@@ -20,23 +20,19 @@ import React, {
 } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import {
-  Breadcrumb,
-  Breadcrumbs,
-  Button,
-  ButtonVariant,
   Checkbox,
-  Field,
-  FieldError,
-  Form,
-  FormActions,
-  MetaRobots,
   PasswordInput,
-  Seo,
   Spinner,
   TextInput,
 } from '../../../shared/components';
 import { ErrorAlert } from '../../../shared/components/Alert/ErrorAlert';
 import { SuccessAlert } from '../../../shared/components/Alert/SuccessAlert';
+import { Breadcrumb } from '../../../shared/components/Breadcrumbs/Breadcrumb';
+import { Breadcrumbs } from '../../../shared/components/Breadcrumbs/Breadcrumbs';
+import { PrimaryButton } from '../../../shared/components/Button/PrimaryButton';
+import { Field, FieldError } from '../../../shared/components/Field/Field';
+import { Form, FormActions } from '../../../shared/components/Form/Form';
+import { MetaRobots, Seo } from '../../../shared/components/Seo/Seo';
 import { isForbiddenError, setValidationErrors } from '../../../shared/error';
 import { WebsiteLayout } from '../../../shared/layouts';
 import { authService } from '../../authService';
@@ -192,14 +188,10 @@ export const LoginPage: FunctionComponent<LoginPageProps> = (
             />
 
             <FormActions>
-              <Button
-                type="submit"
-                variant={ButtonVariant.Primary}
-                disabled={loading}
-              >
+              <PrimaryButton type="submit" disabled={loading}>
                 {loading && <Spinner />}
                 <span>Sign in</span>
-              </Button>
+              </PrimaryButton>
             </FormActions>
           </Form>
         </section>
