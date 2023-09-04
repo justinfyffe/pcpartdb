@@ -1,4 +1,6 @@
 HIGH LEVEL TODO:
+- audit db queries
+  - log db queries
 - expose associate key without NEXT_PUBLIC
 - quick improvements
   - gpu chipset search -> remove retail models
