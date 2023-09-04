@@ -1,8 +1,4 @@
 HIGH LEVEL TODO:
-- fix indexes
-  - convert cpu market_segments to market_segment
-  - clean up order by indexes
-  - use explain, seems many arent used
 - expose associate key without NEXT_PUBLIC
 - quick improvements
   - gpu chipset search -> remove retail models
