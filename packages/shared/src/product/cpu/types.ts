@@ -71,7 +71,6 @@ export interface CpuFields {
   partNumber?: CpuField<string>;
   company?: CpuField<string>;
   marketSegment?: CpuField<CpuMarketSegmentValue>;
-  marketSegments?: CpuField<CpuMarketSegmentValue[]>; // TODO: delete
   launchPrice?: CpuField<number>;
   releaseDate?: CpuField<string>;
   productionStatus?: CpuField<CpuProductionStatusValue>;

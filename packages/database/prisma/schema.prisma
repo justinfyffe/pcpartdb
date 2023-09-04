@@ -57,7 +57,6 @@ model Cpu {
   partNumber       String?  @map("part_number")
   company          String?
   marketSegment    String?  @map("market_segment")
-  marketSegments   String[] @map("market_segments") // TODO: delete
   launchPrice      Float?   @map("launch_price")
   releaseDate      String?  @map("release_date")
   productionStatus String?  @map("production_status")
