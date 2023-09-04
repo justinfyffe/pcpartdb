@@ -6,7 +6,7 @@ import {
 } from '@pcpartdb/shared';
 import { ProductEnumItem } from '../../product';
 
-const MARKET_SEGMENTS: ProductEnumItem[] = [
+const MARKET_SEGMENT: ProductEnumItem[] = [
   {
     label: formatCpuMarketSegment(CpuMarketSegmentValue.Desktop),
     value: CpuMarketSegmentValue.Desktop,
@@ -45,6 +45,6 @@ const PRODUCTION_STATUS: ProductEnumItem[] = [
 ];
 
 export const ENUMS: Record<string, ProductEnumItem[]> = {
-  marketSegment: MARKET_SEGMENTS,
+  marketSegment: MARKET_SEGMENT,
   productionStatus: PRODUCTION_STATUS,
 };

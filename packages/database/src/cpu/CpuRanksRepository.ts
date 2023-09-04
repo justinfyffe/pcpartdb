@@ -83,7 +83,7 @@ export class CpuRanksRepository {
     const segment = filter?.segment?.filter((value) => value != null) ?? [];
 
     if (segment.length > 0) {
-      where.push(`cpu.market_segments && $${nextParameterIndex++}`);
+      where.push(`cpu.market_segment = ANY ($${nextParameterIndex++})`);
       parameters.push(segment);
     }
 

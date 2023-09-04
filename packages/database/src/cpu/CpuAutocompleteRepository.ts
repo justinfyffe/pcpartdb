@@ -66,7 +66,7 @@ export class CpuAutocompleteRepository {
     } else {
       fillerCpus = await db.$queryRaw`
         SELECT id FROM cpus
-        WHERE 'DESKTOP' = ANY(market_segments)
+        WHERE 'DESKTOP' = ANY(market_segment)
         ORDER BY performance_score DESC NULLS LAST
         LIMIT 6
       `;

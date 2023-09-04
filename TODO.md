@@ -43,6 +43,9 @@ Content:
   - More 3D Mark benchmarks
   - FPS averages for popluar games
   - Estimate based on similar (if enough data is provided)
+- Toggle market segment for relative performance/value tables
+- Use "chip" instead of card for mobile and integrated graphics
+- Add tooltips explaining specs from glossary
 
 Monetization:
 - Join amazon affiliate for other major countries
@@ -118,6 +121,9 @@ Tech Debt:
   - *Request, *Response naming?
 - Improve tailwind config:
   - max/min media queries
+- symlink public folder to outside of packages?
+- remove usage of router.push
+- get rid of, or improve gpu and image cache
 
 UX:
 - Improve product autocomplete
@@ -130,160 +136,45 @@ UX:
   - Treat each like a new page.
 
 
-Road Map:
-- improve view/compare relative performance/value
-  - toggle market segments, default to same market segment
+Folder Structure Ideas
+  - look at List GPUs page for example
+  - <feature>/pages/<page-name>/components/
+    - Components only used on the page for this feature.
+  - <feature>/pages/<page-name>/hooks/
+    - Hooks only used on the page for this feature.
+  - <feature>/components/
+    - Components used across multiple pages for this feature.
+  - <feature>/hooks/
+    - Hooks used across multiple pages for this feature.
+  - TODO: where to place utils and services?
+  - folders and files should use PascalCase and camelCase except for package folders
 
-- improve list page style
-  - list of cards, can show more data in a prettier way
-  - better for fitting in ads
-- improve automation
-  - pull in new data
-  - two core DO server
-- compare page overview improvements
-  - add architecture
-  - add ranks?
-  - add cores?
-- view page overview improvements
-  - Use ai to reword sentences
-  - Restructure code to similar to the compare page.
-- audit data
-  - turn off auto-update on static specs
-    - maybe a freeze button which toggles off auto-update
-- view page overview
-  - use ai to reword sentences.
-  - add memory
-  - add cores?
-  - Restructure code to similar to the compare page.
-
-
-
-OVERVIEW
-- Use "chip" instead of "card" for mobile and integrated gpus
-
-
-
-AMAZON AFFILIATE
-- Can cache pricing, but must show as-of date.
-- Use Product Advertising API to get pricing and link
-- Automation for pricing
-- Cannot do price tracking
-- Chipset goes to lowest price new retail model
-
-
-CODE CLEANUP IDEAS
-- migrate gpu and cpu to use ListPagination, ListOrder, ListSort
-- cleanup shared
-  - pure utilities
-  - no dependencies that are browser or backend only
-- centralized location for company names
-- centralized location for field key -> label
-- cleanup utilities
-  - more gpu field utils
-    - are equal, compare, has value
-- scraping
-  - Don't call individual scrape functions, pass data sources instead.
-  - Don't include ScrapeGpuDetailsResponse in scraper.
-    - Just use scrape results type.
-- symlink public folder to outside of packages?
-- change "base" text value to 16px, not 18px.
-- improve folder structure
-    - look at List GPUs page for example
-    - <feature>/pages/<page-name>/components/
-      - Components only used on the page for this feature.
-    - <feature>/pages/<page-name>/hooks/
-      - Hooks only used on the page for this feature.
-    - <feature>/components/
-      - Components used across multiple pages for this feature.
-    - <feature>/hooks/
-      - Hooks used across multiple pages for this feature.
-    - TODO: where to place utils and services?
-    - folders and files should use PascalCase and camelCase except for package folders
-- improve usage of react components - break down into smaller
-- remove usage of router.push
-- get rid of, or improve gpu and image cache
-
-CONTENT IMPROVEMENTS
-- "targets the <segment> GPU market"
-- relative performance and relative value should be filtering based on market segment
-- content: add rank for company performance. Figure out how to do db query
-- Add FPS benchmarks
-
-
- 
-
-Post-launch:
-- remove usage of router.push.
-- set up auto backups
-- add audit events table
-  - track all changes to content
-- List Page
-  - filtered rank
-  - infinite scroll
-- View and Compare Page
-  - Add tooltips for each spec
-  - look into using useController
-- on-site SEO
-  - Add alt tags
-  - html semantics
-  - sitemap
-  - improve canonicals
-- improve related parts
-- improve admin panel
+SEO Ideas
+  - Off-site:
+    - Create backlinks
+      - Github repos, helping on forums, write articles
+    - Post to Reddit and other similar social media
 
 
 Roadmap:
-Legend:
 - CTNT = Content
 - LEGL = Legal
 - EFFY = Efficiency
 - MRKT = Marketing
 - LYLT = Loyalty
 - DIFF = Differentiator
-- MVP
-  - [CTNT] GPUs
-  - [CTNT] Compare
-  - [CTNT] Home Page
-  - [LEGL] About
-  - [LEGL] Privacy
-  - [EFFY] Basic admin panel
-- 1.0.1
-  - [EFFY] Set sources on pc parts, automate pulling data (but require approval)
-  - [CTNT] Summaries for view/compare
-- 1.1
-  - [CTNT] CPUs
-- 1.2
-  - [EFFY] Admin Task Queue & Simple Flows
-  - [EFFY] Pseudo-automation
-  - [CTNT] Articles / Blog
-  - [MRKT] Start offsite SEO
-- 1.3 
-  - [DIFF] More Parts - MOBO, RAM
-  - [LYLT] Accounts
-  - [LYLT] Save Parts
-  - [CTNT] Build Tutorials
-- 1.4
-  - [DIFF] More Parts - HDD, PSU, Case
-  - [CTNT] Builds
-  - [LYLT] User-created builds
-- 1.5
-  - [DIFF] Build Wizard Generator
-    - Answer questionaire, build gets generated
-  - [MRKT] Share Builds
-- 1.6
-  - [DIFF] Laptops
-  - [MRKT] Start social media campaigns
-- 1.7
-  - [LYLT] Community / Forum
-
-Start small
-
-SEO Ideas
-  - On-site:
-    - Improve performance
-    - Create sitemap
-  - Off-site:
-    - Create backlinks
-      - Github repos, couple legitimate directories, write articles
-    - Post to Reddit and other similar social media
-
+- [CTNT] Articles / Blog
+- [MRKT] Start offsite SEO
+- [DIFF] More Parts - MOBO, RAM
+- [LYLT] Accounts
+- [LYLT] Save Parts
+- [CTNT] Build Tutorials
+- [DIFF] More Parts - HDD, PSU, Case
+- [CTNT] Builds
+- [LYLT] User-created builds
+- [DIFF] Build Wizard Generator
+  - Answer questionaire, build gets generated
+- [MRKT] Share Builds
+- [DIFF] Laptops
+- [MRKT] Start social media campaigns
+- [LYLT] Community / Forum
