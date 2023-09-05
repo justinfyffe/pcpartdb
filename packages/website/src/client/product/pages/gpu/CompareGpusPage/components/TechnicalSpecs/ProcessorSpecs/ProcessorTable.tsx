@@ -1,5 +1,5 @@
 import { formatGpuName, ProductType } from '@pcpartdb/shared';
-import { ProductFieldRow } from 'packages/website/src/client/product/components';
+import { ProductFieldRow } from 'packages/website/src/client/product/components/ProductFieldRow/ProductFieldRow';
 import React, { FunctionComponent, useContext, useMemo } from 'react';
 import {
   Table,

@@ -7,13 +7,11 @@ import {
   ListProductSourcesQuery,
   ProductType,
 } from '@pcpartdb/shared';
-import { productSourceService } from 'packages/website/src/client/product';
-import {
-  Checkbox,
-  TextInput,
-} from 'packages/website/src/client/shared/components';
+import { productSourceService } from 'packages/website/src/client/product/services/productSourceService';
 import { InfoAlert } from 'packages/website/src/client/shared/components/Alert/InfoAlert';
 import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
+import { Checkbox } from 'packages/website/src/client/shared/components/Checkbox/Checkbox';
+import { TextInput } from 'packages/website/src/client/shared/components/Input/TextInput';
 import { Pagination } from 'packages/website/src/client/shared/components/Pagination/Pagination';
 import { useThrottle } from 'packages/website/src/client/shared/hooks/useThrottle';
 import { AutomationStatusContext } from 'packages/website/src/client/shared/layouts/admin/AutomationStatusContext';

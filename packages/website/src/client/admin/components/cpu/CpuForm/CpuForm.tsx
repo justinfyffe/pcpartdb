@@ -8,17 +8,13 @@ import {
   ValidationErrorType,
 } from '@pcpartdb/shared';
 import { useRouter } from 'next/router';
-import { cpuService } from 'packages/website/src/client/product';
-import { useProductCache } from 'packages/website/src/client/shared/cache';
-import {
-  showDialog,
-  Spinner,
-  TextInput,
-} from 'packages/website/src/client/shared/components';
+import { cpuService } from 'packages/website/src/client/product/services/cpuService';
+import { useProductCache } from 'packages/website/src/client/shared/cache/ProductCache';
 import { ErrorAlert } from 'packages/website/src/client/shared/components/Alert/ErrorAlert';
 import { DangerButton } from 'packages/website/src/client/shared/components/Button/DangerButton';
 import { InfoButton } from 'packages/website/src/client/shared/components/Button/InfoButton';
 import { PrimaryButton } from 'packages/website/src/client/shared/components/Button/PrimaryButton';
+import { showDialog } from 'packages/website/src/client/shared/components/Dialog/dialog';
 import {
   Field,
   FieldError,
@@ -27,10 +23,12 @@ import {
   Form,
   FormActions,
 } from 'packages/website/src/client/shared/components/Form/Form';
+import { TextInput } from 'packages/website/src/client/shared/components/Input/TextInput';
+import { Spinner } from 'packages/website/src/client/shared/components/Spinner/Spinner';
 import {
   isBadRequestError,
   setValidationErrors,
-} from 'packages/website/src/client/shared/error';
+} from 'packages/website/src/client/shared/error/utils';
 import React, {
   FunctionComponent,
   useCallback,
@@ -38,14 +36,12 @@ import React, {
   useState,
 } from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
-import {
-  ProductDataSourceInput,
-  ProductImagesInput,
-  ScrapedProduct,
-} from '../../product';
-import { CpuDataInput } from '../CpuDataInput';
-import { CpuSlugInput } from '../CpuSlugInput';
-import { ScrapeCpuDialog } from '../ScrapeCpuDialog';
+import { ProductDataSourceInput } from '../../product/ProductDataSourceInput/ProductDataSourceInput';
+import { ProductImagesInput } from '../../product/ProductImageInput/ProductImagesInput';
+import { ScrapedProduct } from '../../product/ScrapeProductDialog/types';
+import { CpuDataInput } from '../CpuDataInput/CpuDataInput';
+import { CpuSlugInput } from '../CpuSlugInput/CpuSlugInput';
+import { ScrapeCpuDialog } from '../ScrapeCpuDialog/ScrapeCpuDialog';
 import { CpuFormData } from './CpuFormData';
 import { cpuFormOptions } from './cpuFormOptions';
 import { formDataToCpuRequest } from './formDataToCpuRequest';

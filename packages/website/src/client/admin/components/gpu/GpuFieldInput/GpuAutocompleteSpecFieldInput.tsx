@@ -1,10 +1,8 @@
 import { formatGpuField, GpuField, GpuFieldKey } from '@pcpartdb/shared';
+import { gpuService } from 'packages/website/src/client/product/services/gpuService';
+import { Autocomplete } from 'packages/website/src/client/shared/components/Autocomplete/Autocomplete';
+import { AutocompleteOption } from 'packages/website/src/client/shared/components/Autocomplete/AutocompleteOption';
 import React, { forwardRef, useCallback, useMemo, useState } from 'react';
-import { gpuService } from '../../../../product/services/gpuService';
-import {
-  Autocomplete,
-  AutocompleteOption,
-} from '../../../../shared/components';
 
 interface GpuAutocompleteSpecFieldInputProps {
   field: GpuFieldKey;

@@ -1,5 +1,5 @@
 import { ProductType } from '@pcpartdb/shared';
-import { ProductFieldRow } from 'packages/website/src/client/product/components';
+import { ProductFieldRow } from 'packages/website/src/client/product/components/ProductFieldRow/ProductFieldRow';
 import React, { FunctionComponent, useContext } from 'react';
 import { Table, TBody } from '../../../../../../shared/components';
 import { ViewPageContext } from '../../context';

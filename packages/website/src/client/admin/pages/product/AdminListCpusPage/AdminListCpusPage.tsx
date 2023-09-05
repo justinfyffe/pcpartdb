@@ -10,6 +10,7 @@ import {
   ListCpusQuery,
 } from '@pcpartdb/shared';
 import { useRouter } from 'next/router';
+import { cpuService } from 'packages/website/src/client/product/services/cpuService';
 import { InfoAlert } from 'packages/website/src/client/shared/components/Alert/InfoAlert';
 import { SuccessAlert } from 'packages/website/src/client/shared/components/Alert/SuccessAlert';
 import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
@@ -17,9 +18,8 @@ import {
   MetaRobots,
   Seo,
 } from 'packages/website/src/client/shared/components/Seo/Seo';
+import { AdminLayout } from 'packages/website/src/client/shared/layouts/admin/AdminLayout';
 import React, { useCallback, useEffect, useState } from 'react';
-import { cpuService } from '../../../../product/services/cpuService';
-import { AdminLayout } from '../../../../shared/layouts';
 import { CpuPagination, CpuTable } from './components';
 
 export const AdminListCpusPage = () => {

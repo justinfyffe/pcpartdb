@@ -18,7 +18,7 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import { authService } from '../../../auth';
+import { authService } from '../../../auth/authService';
 import { automationService } from '../../../automation';
 import { Button, ButtonVariant } from '../../components/Button/Button';
 import { Img } from '../../components/Img/Img';

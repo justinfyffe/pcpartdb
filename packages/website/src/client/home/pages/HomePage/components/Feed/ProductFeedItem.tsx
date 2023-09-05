@@ -6,10 +6,10 @@ import {
   Product,
   ProductType,
 } from '@pcpartdb/shared';
+import { Card } from 'packages/website/src/client/shared/components/Card/Card';
 import { Img } from 'packages/website/src/client/shared/components/Img/Img';
 import React, { FunctionComponent, useMemo } from 'react';
-import { getCompanyLogoFeedPath } from '../../../../../image';
-import { Card } from '../../../../../shared/components';
+import { getCompanyLogoFeedPath } from '../../../../../image/utils';
 import {
   compileContentComponent,
   ContentComponentParams,

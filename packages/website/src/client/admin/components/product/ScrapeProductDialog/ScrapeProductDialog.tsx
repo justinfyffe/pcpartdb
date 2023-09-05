@@ -1,22 +1,16 @@
 import { ProductDataSource, ProductType } from '@pcpartdb/shared';
-import { productService } from 'packages/website/src/client/product';
+import { productService } from 'packages/website/src/client/product/services/productService';
 import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
 import { PrimaryButton } from 'packages/website/src/client/shared/components/Button/PrimaryButton';
+import { closeDialog } from 'packages/website/src/client/shared/components/Dialog/dialog';
+import { Spinner } from 'packages/website/src/client/shared/components/Spinner/Spinner';
 import React, {
   FunctionComponent,
   useCallback,
   useEffect,
   useState,
 } from 'react';
-import {
-  closeDialog,
-  Spinner,
-  Table,
-  TBody,
-  Th,
-  THead,
-  Tr,
-} from '../../../../shared/components';
+import { Table, TBody, Th, THead, Tr } from '../../../../shared/components';
 import { ScrapedDataRow } from './ScrapedDataRow';
 import {
   createScrapeContext,

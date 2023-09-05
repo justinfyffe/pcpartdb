@@ -4,8 +4,8 @@ import {
   joinUrlParts,
   UpdateImageRequest,
 } from '@pcpartdb/shared';
-import { ApiClient, apiClient } from '../shared/api';
-import { ImageCache } from '../shared/cache';
+import { ApiClient, apiClient } from '../shared/api/apiClient';
+import { ImageCache } from '../shared/cache/ImageCache';
 
 const PATH = 'images';
 

@@ -1,6 +1,7 @@
 import { CpuDataSource, ProductType } from '@pcpartdb/shared';
 import React, { FunctionComponent } from 'react';
-import { ScrapedProduct, ScrapeProductDialog } from '../../product';
+import { ScrapeProductDialog } from '../../product/ScrapeProductDialog/ScrapeProductDialog';
+import { ScrapedProduct } from '../../product/ScrapeProductDialog/types';
 
 interface ScrapeCpuDialogProps {
   sources: Record<string, CpuDataSource>;

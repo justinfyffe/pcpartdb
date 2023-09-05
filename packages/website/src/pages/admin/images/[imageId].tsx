@@ -1,8 +1,8 @@
 import { joinUrlParts } from '@pcpartdb/shared';
 import { NextPageContext } from 'next';
-import { withStaffGuard } from 'packages/website/src/client/shared/guards';
-import { AdminEditImagePage } from '../../../client/admin/pages';
-import { viewModelsClient } from '../../../client/shared/api';
+import { AdminEditImagePage } from 'packages/website/src/client/admin/pages/image/AdminEditImagePage/AdminEditImagePage';
+import { withStaffGuard } from 'packages/website/src/client/shared/guards/withStaffGuard';
+import { viewModelsClient } from '../../../client/shared/api/viewModelsClient';
 
 export async function getServerSideProps(ctx: NextPageContext) {
   const query = ctx.query as { imageId: string };

@@ -1,9 +1,9 @@
 import 'reflect-metadata';
 import { AdminOverviewViewModel } from '@pcpartdb/shared';
 import React from 'react';
-import { Card, CardTitle } from '../../../shared/components';
+import { Card, CardTitle } from '../../../shared/components/Card/Card';
 import { MetaRobots, Seo } from '../../../shared/components/Seo/Seo';
-import { AdminLayout } from '../../../shared/layouts';
+import { AdminLayout } from '../../../shared/layouts/admin/AdminLayout';
 import { ApiKeyWidget } from './components';
 
 export const AdminOverviewPage = (props: AdminOverviewViewModel) => {

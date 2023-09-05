@@ -1,4 +1,5 @@
 import {
+  BooleanFormatter,
   formatProductField,
   getProductFieldLabel,
   ProductField,
@@ -6,7 +7,6 @@ import {
 } from '@pcpartdb/shared';
 import React, { FunctionComponent, useMemo } from 'react';
 import { Td, Tr } from '../../../shared/components';
-import { BooleanFormatter } from '../../../shared/format';
 import { classNames } from '../../../shared/ui';
 
 interface ProductFieldRowProps {

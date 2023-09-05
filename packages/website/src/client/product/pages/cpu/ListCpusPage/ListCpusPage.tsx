@@ -7,14 +7,14 @@ import {
   ProductType,
 } from '@pcpartdb/shared';
 import { useRouter } from 'next/router';
-import { useProductCache } from 'packages/website/src/client/shared/cache';
+import { useProductCache } from 'packages/website/src/client/shared/cache/ProductCache';
 import { Breadcrumb } from 'packages/website/src/client/shared/components/Breadcrumbs/Breadcrumb';
 import { Breadcrumbs } from 'packages/website/src/client/shared/components/Breadcrumbs/Breadcrumbs';
 import { Seo } from 'packages/website/src/client/shared/components/Seo/Seo';
+import { WebsiteLayout } from 'packages/website/src/client/shared/layouts/website/WebsiteLayout';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { WebsiteLayout } from '../../../../shared/layouts';
 import { classNames } from '../../../../shared/ui';
-import { CompareProductsForm } from '../../../components';
+import { CompareProductsForm } from '../../../components/CompareProductsForm/CompareProductsForm';
 import { cpuService } from '../../../services/cpuService';
 import {
   ListFilters,

@@ -1,5 +1,5 @@
 import { AccessToken, LoginRequest, RegisterRequest } from '@pcpartdb/shared';
-import { ApiClient, apiClient } from '../shared/api';
+import { ApiClient, apiClient } from '../shared/api/apiClient';
 
 export class AuthService {
   constructor(private api: ApiClient) {}

@@ -1,9 +1,9 @@
 import 'reflect-metadata';
 import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline';
 import { formatProductSourceName, ProductSource } from '@pcpartdb/shared';
-import { closeDialog } from 'packages/website/src/client/shared/components';
 import { PrimaryButton } from 'packages/website/src/client/shared/components/Button/PrimaryButton';
 import { Dialog } from 'packages/website/src/client/shared/components/Dialog/Dialog';
+import { closeDialog } from 'packages/website/src/client/shared/components/Dialog/dialog';
 import { classNames } from 'packages/website/src/client/shared/ui';
 import React, { useCallback, useMemo, useState } from 'react';
 

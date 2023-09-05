@@ -5,10 +5,10 @@ import App, { AppContext, AppProps } from 'next/app';
 import Head from 'next/head';
 import Script from 'next/script';
 import React from 'react';
-import { ErrorPage } from '../client/errors';
-import { apiClient } from '../client/shared/api';
-import { CacheHydration } from '../client/shared/cache';
-import { LayoutContext } from '../client/shared/layouts';
+import { ErrorPage } from '../client/errors/pages/ErrorPage/ErrorPage';
+import { apiClient } from '../client/shared/api/apiClient';
+import { CacheHydration } from '../client/shared/cache/CacheHydration';
+import { LayoutContext } from '../client/shared/layouts/layout-context';
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

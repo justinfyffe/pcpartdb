@@ -8,6 +8,7 @@ import {
   ProductType,
 } from '@pcpartdb/shared';
 import { useRouter } from 'next/router';
+import { productService } from 'packages/website/src/client/product/services/productService';
 import { ErrorAlert } from 'packages/website/src/client/shared/components/Alert/ErrorAlert';
 import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
 import { PrimaryButton } from 'packages/website/src/client/shared/components/Button/PrimaryButton';
@@ -20,10 +21,9 @@ import {
   MetaRobots,
   Seo,
 } from 'packages/website/src/client/shared/components/Seo/Seo';
+import { Spinner } from 'packages/website/src/client/shared/components/Spinner/Spinner';
+import { AdminLayout } from 'packages/website/src/client/shared/layouts/admin/AdminLayout';
 import React, { useCallback, useMemo, useState } from 'react';
-import { productService } from '../../../../product';
-import { Spinner } from '../../../../shared/components';
-import { AdminLayout } from '../../../../shared/layouts';
 import { ImportProductsTable } from './components';
 import { ImportProductsPageContext } from './context';
 import { useImportProductsPageContextProps } from './hooks';

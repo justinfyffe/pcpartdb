@@ -13,6 +13,12 @@ interface TransactionOptions {
 }
 
 export class DatabaseClient extends PrismaClient {
+  constructor() {
+    super({
+      // log: ['query', 'info', 'warn', 'error'],
+    });
+  }
+
   async connect() {
     await this.$connect();
   }

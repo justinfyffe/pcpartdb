@@ -7,8 +7,8 @@ import {
   ProductField,
   ProductFieldKey,
 } from '@pcpartdb/shared';
+import { NumberInput } from 'packages/website/src/client/shared/components/Input/NumberInput';
 import React, { forwardRef, useCallback, useMemo, useState } from 'react';
-import { NumberInput } from '../../../../shared/components';
 
 interface ProductFloatInputProps {
   fieldKey: ProductFieldKey;

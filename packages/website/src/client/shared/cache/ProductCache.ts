@@ -1,6 +1,7 @@
 import { Product, ProductType } from '@pcpartdb/shared';
 import { useContext } from 'react';
-import { CacheContext, ImageCache } from '../cache';
+import { CacheContext } from './CacheContext';
+import { ImageCache } from './ImageCache';
 
 export type ProductCacheState = Record<string, Record<number, Product>>;
 
@@ -69,7 +70,7 @@ export function useProductCache(
   productType?: ProductType,
   ...products: (Product | Product[])[]
 ) {
-  const { productCache } = useContext(CacheContext);
+  const productCache = useContext(CacheContext).getProductCache();
   if (productType == null) {
     return productCache;
   }

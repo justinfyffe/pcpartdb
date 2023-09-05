@@ -6,7 +6,7 @@ import {
   Gpu,
   hasProductFieldValue,
 } from '@pcpartdb/shared';
-import { ProductCustomRow } from 'packages/website/src/client/product/components';
+import { ProductCustomRow } from 'packages/website/src/client/product/components/ProductCustomRow/ProductCustomRow';
 import {
   Button,
   ButtonVariant,

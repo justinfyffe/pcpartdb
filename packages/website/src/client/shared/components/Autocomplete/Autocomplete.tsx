@@ -9,8 +9,8 @@ import React, {
 } from 'react';
 import { useThrottle } from '../../hooks/useThrottle';
 import { classNames } from '../../ui';
-import { TextInput, TextInputProps } from '../Input';
-import { Spinner } from '../Spinner';
+import { TextInput, TextInputProps } from '../Input/TextInput';
+import { Spinner } from '../Spinner/Spinner';
 import { AutocompleteContext } from './AutocompleteContext';
 import { AutocompleteOptionProps } from './AutocompleteOption';
 import { AutocompleteResult } from './types';

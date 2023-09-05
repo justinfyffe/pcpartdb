@@ -9,26 +9,19 @@ import { InfoAlert } from 'packages/website/src/client/shared/components/Alert/I
 import { SuccessAlert } from 'packages/website/src/client/shared/components/Alert/SuccessAlert';
 import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
 import { Img } from 'packages/website/src/client/shared/components/Img/Img';
+import { TextInput } from 'packages/website/src/client/shared/components/Input/TextInput';
 import {
   MetaRobots,
   Seo,
 } from 'packages/website/src/client/shared/components/Seo/Seo';
+import { AdminLayout } from 'packages/website/src/client/shared/layouts/admin/AdminLayout';
 import React, { useState } from 'react';
 import {
   formatFileSize,
   formatImageDimensions,
   getImagePath,
-} from '../../../../image';
-import {
-  Table,
-  TBody,
-  Td,
-  TextInput,
-  Th,
-  THead,
-  Tr,
-} from '../../../../shared/components';
-import { AdminLayout } from '../../../../shared/layouts';
+} from '../../../../image/utils';
+import { Table, TBody, Td, Th, THead, Tr } from '../../../../shared/components';
 
 export const AdminListImagesPage = (props: AdminListImagesViewModel) => {
   const { images } = props;

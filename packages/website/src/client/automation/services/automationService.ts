@@ -5,7 +5,7 @@ import {
   ListAutomationActionsRequest,
   ListAutomationActionsResponse,
 } from '@pcpartdb/shared';
-import { ApiClient, apiClient } from '../../shared/api';
+import { ApiClient, apiClient } from '../../shared/api/apiClient';
 
 const PATH = 'automation';
 

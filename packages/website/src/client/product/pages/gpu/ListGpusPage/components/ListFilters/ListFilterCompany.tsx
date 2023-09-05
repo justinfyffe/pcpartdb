@@ -1,11 +1,11 @@
 import { formatGpuCompany } from '@pcpartdb/shared';
+import { Checkbox } from 'packages/website/src/client/shared/components/Checkbox/Checkbox';
 import React, {
   FunctionComponent,
   useCallback,
   useContext,
   useMemo,
 } from 'react';
-import { Checkbox } from '../../../../../../shared/components';
 import { classNames } from '../../../../../../shared/ui';
 import { ListPageContext } from '../../context';
 

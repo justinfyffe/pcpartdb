@@ -1,3 +1,3 @@
-import { PrivacyPage } from '../client/legal/pages';
+import { PrivacyPage } from '../client/legal/pages/PrivacyPage/PrivacyPage';
 
 export default PrivacyPage;

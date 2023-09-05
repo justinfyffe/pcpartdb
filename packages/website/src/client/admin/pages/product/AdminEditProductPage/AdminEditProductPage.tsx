@@ -23,15 +23,17 @@ import { automationService } from 'packages/website/src/client/automation';
 import { productUpdateService } from 'packages/website/src/client/product/services/productUpdateService';
 import { WarningAlert } from 'packages/website/src/client/shared/components/Alert/WarningAlert';
 import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
+import { showDialog } from 'packages/website/src/client/shared/components/Dialog/dialog';
 import {
   MetaRobots,
   Seo,
 } from 'packages/website/src/client/shared/components/Seo/Seo';
+import { AdminLayout } from 'packages/website/src/client/shared/layouts/admin/AdminLayout';
 import React, { useCallback, useMemo, useState } from 'react';
-import { showDialog } from '../../../../shared/components';
-import { AdminLayout } from '../../../../shared/layouts';
-import { GpuDiffDialog, GpuForm } from '../../../components';
-import { CpuDiffDialog, CpuForm } from '../../../components/cpu';
+import { CpuDiffDialog } from '../../../components/cpu/CpuDiffDialog/CpuDiffDialog';
+import { CpuForm } from '../../../components/cpu/CpuForm/CpuForm';
+import { GpuDiffDialog } from '../../../components/gpu/GpuDiffDialog/GpuDiffDialog';
+import { GpuForm } from '../../../components/gpu/GpuForm/GpuForm';
 
 export const AdminEditProductPage = (props: AdminEditProductViewModel) => {
   const { productType, product } = props;

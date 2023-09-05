@@ -6,15 +6,12 @@ import {
   ProductDiff,
   ProductType,
 } from '@pcpartdb/shared';
-import {
-  Checkbox,
-  showDialog,
-  Td,
-  Tr,
-} from 'packages/website/src/client/shared/components';
+import { CpuDiffDialog } from 'packages/website/src/client/admin/components/cpu/CpuDiffDialog/CpuDiffDialog';
+import { GpuDiffDialog } from 'packages/website/src/client/admin/components/gpu/GpuDiffDialog/GpuDiffDialog';
+import { Td, Tr } from 'packages/website/src/client/shared/components';
+import { Checkbox } from 'packages/website/src/client/shared/components/Checkbox/Checkbox';
+import { showDialog } from 'packages/website/src/client/shared/components/Dialog/dialog';
 import React, { useCallback, useContext, useMemo } from 'react';
-import { CpuDiffDialog } from '../../../../../components/cpu';
-import { GpuDiffDialog } from '../../../../../components/gpu/GpuDiffDialog';
 import { ImportProductsPageContext } from '../../context';
 
 interface ImportProductRowProps {

@@ -9,11 +9,11 @@ import {
   ProductType,
 } from '@pcpartdb/shared';
 import React, { useMemo } from 'react';
-import { CompareProductsForm } from '../../../product/components/CompareProductsForm';
+import { CompareProductsForm } from '../../../product/components/CompareProductsForm/CompareProductsForm';
 import { Seo } from '../../../shared/components/Seo/Seo';
 import { Tab } from '../../../shared/components/Tabs/Tab';
 import { Tabs } from '../../../shared/components/Tabs/Tabs';
-import { WebsiteLayout } from '../../../shared/layouts';
+import { WebsiteLayout } from '../../../shared/layouts/website/WebsiteLayout';
 import { classNames } from '../../../shared/ui';
 import {
   Feed,

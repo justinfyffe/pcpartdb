@@ -1,6 +1,6 @@
 import { GpuDiff, GpuFieldKey, ProductType } from '@pcpartdb/shared';
 import React, { FunctionComponent } from 'react';
-import { ProductDiffDialog } from '../../product';
+import { ProductDiffDialog } from '../../product/ProductDiffDialog/ProductDiffDialog';
 
 const FIELDS_TO_PREVIEW: (GpuFieldKey | 'name' | 'slug')[] = [
   'name',

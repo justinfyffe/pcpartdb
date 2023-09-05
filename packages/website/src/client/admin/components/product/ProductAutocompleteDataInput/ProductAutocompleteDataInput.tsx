@@ -1,9 +1,7 @@
 import { ProductField, ProductFieldKey } from '@pcpartdb/shared';
+import { Autocomplete } from 'packages/website/src/client/shared/components/Autocomplete/Autocomplete';
+import { AutocompleteOption } from 'packages/website/src/client/shared/components/Autocomplete/AutocompleteOption';
 import React, { forwardRef, useCallback, useMemo, useState } from 'react';
-import {
-  Autocomplete,
-  AutocompleteOption,
-} from '../../../../shared/components';
 
 interface ProductAutocompleteDataInputProps {
   fieldKey: ProductFieldKey;

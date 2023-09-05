@@ -3,6 +3,7 @@ import {
   CpuProductionStatusValue,
   formatCpuField,
   formatCpuName,
+  formatOrdinalNumber,
   formatProductField,
   hasCpuLaunched,
   isPastCpuLaunchDate,
@@ -10,7 +11,6 @@ import {
   ViewCpuContentData,
 } from '@pcpartdb/shared';
 import { ContentParams } from 'packages/website/src/client/shared/content';
-import { formatOrdinalNumber } from 'packages/website/src/client/shared/format';
 
 export interface ViewCpuContentParams {
   company?: string;

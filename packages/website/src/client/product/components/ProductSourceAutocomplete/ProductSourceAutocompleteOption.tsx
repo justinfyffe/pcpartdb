@@ -1,6 +1,6 @@
 import { ProductSource } from '@pcpartdb/shared';
 import React, { FunctionComponent } from 'react';
-import { AutocompleteOption } from '../../../shared/components';
+import { AutocompleteOption } from '../../../shared/components/Autocomplete/AutocompleteOption';
 
 interface ProductSourceAutocompleteOptionProps {
   index: number;

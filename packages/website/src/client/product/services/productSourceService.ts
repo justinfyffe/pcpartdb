@@ -7,7 +7,7 @@ import {
   ListProductSourcesRequest,
   UpsertProductSourcesRequest,
 } from '@pcpartdb/shared';
-import { ApiClient, apiClient } from '../../shared/api';
+import { ApiClient, apiClient } from '../../shared/api/apiClient';
 
 const PATH = 'products/sources';
 

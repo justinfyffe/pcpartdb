@@ -1,4 +1,4 @@
-import { withStaffGuard } from 'packages/website/src/client/shared/guards';
-import { AdminListGpusPage } from '../../../client/admin/pages';
+import { AdminListGpusPage } from 'packages/website/src/client/admin/pages/product/AdminListGpusPage/AdminListGpusPage';
+import { withStaffGuard } from 'packages/website/src/client/shared/guards/withStaffGuard';
 
 export default withStaffGuard(AdminListGpusPage);

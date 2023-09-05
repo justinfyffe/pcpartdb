@@ -5,7 +5,7 @@ import {
   getViewCpuPath,
   hasProductFieldValue,
 } from '@pcpartdb/shared';
-import { ProductCustomRow } from 'packages/website/src/client/product';
+import { ProductCustomRow } from 'packages/website/src/client/product/components/ProductCustomRow/ProductCustomRow';
 import {
   Button,
   ButtonVariant,

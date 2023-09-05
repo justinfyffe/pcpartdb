@@ -1,4 +1,5 @@
 import { GpuField, GpuFieldKey } from '@pcpartdb/shared';
+import { Checkbox } from 'packages/website/src/client/shared/components/Checkbox/Checkbox';
 import React, {
   forwardRef,
   Ref,
@@ -6,7 +7,6 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import { Checkbox } from '../../../../shared/components';
 import { GpuAutocompleteSpecFieldInput } from './GpuAutocompleteSpecFieldInput';
 import { GpuBooleanFieldInput } from './GpuBooleanFieldInput';
 import { GpuCurrencyFieldInput } from './GpuCurrencyFieldInput';

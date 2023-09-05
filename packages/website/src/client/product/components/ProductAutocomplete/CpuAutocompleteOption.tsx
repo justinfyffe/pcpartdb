@@ -5,8 +5,8 @@ import {
   formatCpuName,
 } from '@pcpartdb/shared';
 import React, { FunctionComponent, useMemo } from 'react';
-import { getCompanyLogoAutocompletePath } from '../../../image';
-import { AutocompleteOption } from '../../../shared/components';
+import { getCompanyLogoAutocompletePath } from '../../../image/utils';
+import { AutocompleteOption } from '../../../shared/components/Autocomplete/AutocompleteOption';
 import { Img } from '../../../shared/components/Img/Img';
 
 interface CpuAutocompleteOptionProps {

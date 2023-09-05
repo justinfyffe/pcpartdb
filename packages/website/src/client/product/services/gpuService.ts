@@ -13,8 +13,8 @@ import {
   ScrapeProductResponse,
   UpdateGpuRequest,
 } from '@pcpartdb/shared';
-import { ApiClient, apiClient } from '../../shared/api';
-import { ProductCache } from '../../shared/cache';
+import { ApiClient, apiClient } from '../../shared/api/apiClient';
+import { ProductCache } from '../../shared/cache/ProductCache';
 
 const PATH = 'products/gpus';
 

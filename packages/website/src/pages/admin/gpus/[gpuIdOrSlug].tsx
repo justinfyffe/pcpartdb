@@ -1,8 +1,8 @@
 import { joinUrlParts, ProductType } from '@pcpartdb/shared';
 import { NextPageContext } from 'next';
-import { withStaffGuard } from 'packages/website/src/client/shared/guards';
-import { AdminEditProductPage } from '../../../client/admin/pages';
-import { viewModelsClient } from '../../../client/shared/api';
+import { AdminEditProductPage } from 'packages/website/src/client/admin/pages/product/AdminEditProductPage/AdminEditProductPage';
+import { withStaffGuard } from 'packages/website/src/client/shared/guards/withStaffGuard';
+import { viewModelsClient } from '../../../client/shared/api/viewModelsClient';
 
 export async function getServerSideProps(ctx: NextPageContext) {
   const query = ctx.query as { gpuIdOrSlug: string };

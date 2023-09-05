@@ -5,9 +5,9 @@ import {
   MetaRobots,
   Seo,
 } from 'packages/website/src/client/shared/components/Seo/Seo';
+import { AdminLayout } from 'packages/website/src/client/shared/layouts/admin/AdminLayout';
 import React from 'react';
-import { AdminLayout } from '../../../../shared/layouts';
-import { UserForm } from '../../../components';
+import { UserForm } from '../../../components/user/UserForm/UserForm';
 
 export interface NewUserPageProps {}
 

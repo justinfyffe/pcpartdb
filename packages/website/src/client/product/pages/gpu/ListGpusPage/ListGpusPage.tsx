@@ -10,11 +10,11 @@ import { useRouter } from 'next/router';
 import { Breadcrumb } from 'packages/website/src/client/shared/components/Breadcrumbs/Breadcrumb';
 import { Breadcrumbs } from 'packages/website/src/client/shared/components/Breadcrumbs/Breadcrumbs';
 import { Seo } from 'packages/website/src/client/shared/components/Seo/Seo';
+import { WebsiteLayout } from 'packages/website/src/client/shared/layouts/website/WebsiteLayout';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { useProductCache } from '../../../../shared/cache';
-import { WebsiteLayout } from '../../../../shared/layouts';
+import { useProductCache } from '../../../../shared/cache/ProductCache';
 import { classNames } from '../../../../shared/ui';
-import { CompareProductsForm } from '../../../components';
+import { CompareProductsForm } from '../../../components/CompareProductsForm/CompareProductsForm';
 import { gpuService } from '../../../services/gpuService';
 import {
   ListFilters,

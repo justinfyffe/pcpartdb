@@ -8,6 +8,7 @@ import {
   Button,
   ButtonVariant,
 } from 'packages/website/src/client/shared/components/Button/Button';
+import { showDialog } from 'packages/website/src/client/shared/components/Dialog/dialog';
 import React, {
   FunctionComponent,
   useCallback,
@@ -15,7 +16,6 @@ import React, {
   useMemo,
 } from 'react';
 import {
-  showDialog,
   Table,
   TBody,
   Td,

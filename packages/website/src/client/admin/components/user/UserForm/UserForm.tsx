@@ -12,6 +12,7 @@ import { useRouter } from 'next/router';
 import { ErrorAlert } from 'packages/website/src/client/shared/components/Alert/ErrorAlert';
 import { PrimaryButton } from 'packages/website/src/client/shared/components/Button/PrimaryButton';
 import { WarningButton } from 'packages/website/src/client/shared/components/Button/WarningButton';
+import { Checkbox } from 'packages/website/src/client/shared/components/Checkbox/Checkbox';
 import {
   Field,
   FieldError,
@@ -22,6 +23,10 @@ import {
   Form,
   FormActions,
 } from 'packages/website/src/client/shared/components/Form/Form';
+import { PasswordInput } from 'packages/website/src/client/shared/components/Input/PasswordInput';
+import { TextInput } from 'packages/website/src/client/shared/components/Input/TextInput';
+import { Spinner } from 'packages/website/src/client/shared/components/Spinner/Spinner';
+import { userService } from 'packages/website/src/client/user/userService';
 import React, {
   FunctionComponent,
   useCallback,
@@ -30,16 +35,9 @@ import React, {
 } from 'react';
 import { Controller, useForm, UseFormProps } from 'react-hook-form';
 import {
-  Checkbox,
-  PasswordInput,
-  Spinner,
-  TextInput,
-} from '../../../../shared/components';
-import {
   isBadRequestError,
   setValidationErrors,
-} from '../../../../shared/error';
-import { userService } from '../../../../user';
+} from '../../../../shared/error/utils';
 
 interface UserFormData {
   email: string;

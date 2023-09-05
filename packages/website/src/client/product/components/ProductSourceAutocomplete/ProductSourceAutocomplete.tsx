@@ -8,9 +8,9 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { Autocomplete } from '../../../shared/components';
+import { Autocomplete } from '../../../shared/components/Autocomplete/Autocomplete';
 import { classNames } from '../../../shared/ui';
-import { productSourceService } from '../../services';
+import { productSourceService } from '../../services/productSourceService';
 import { ProductSourceAutocompleteOption } from './ProductSourceAutocompleteOption';
 
 interface ProductSourceAutocompleteProps {

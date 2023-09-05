@@ -20,8 +20,8 @@ import {
   WattageUnit,
   WeightUnit,
 } from '@pcpartdb/shared';
+import { NumberInput } from 'packages/website/src/client/shared/components/Input/NumberInput';
 import React, { forwardRef, useCallback, useMemo, useState } from 'react';
-import { NumberInput } from '../../../../shared/components';
 
 const UNITS: Record<string, MeasurementUnit[]> = {
   launchPrice: [CurrencyUnit.USD],

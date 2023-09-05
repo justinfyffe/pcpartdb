@@ -1,8 +1,9 @@
 import { Image } from '@pcpartdb/shared';
+import { Card } from 'packages/website/src/client/shared/components/Card/Card';
 import { Img } from 'packages/website/src/client/shared/components/Img/Img';
+import { TextInput } from 'packages/website/src/client/shared/components/Input/TextInput';
 import React, { FunctionComponent, useCallback } from 'react';
-import { formatFileSize, formatImageDimensions } from '../../../../image';
-import { Card, TextInput } from '../../../../shared/components';
+import { formatFileSize, formatImageDimensions } from '../../../../image/utils';
 
 interface ImageListCardProps {
   image: Image;

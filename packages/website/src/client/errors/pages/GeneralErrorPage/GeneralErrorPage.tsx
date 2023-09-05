@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import { getHomePath } from '@pcpartdb/shared';
 import React from 'react';
 import { MetaRobots, Seo } from '../../../shared/components/Seo/Seo';
-import { WebsiteLayout } from '../../../shared/layouts';
+import { WebsiteLayout } from '../../../shared/layouts/website/WebsiteLayout';
 
 export interface GeneralErrorPageProps {}
 

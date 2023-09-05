@@ -9,19 +9,20 @@ import {
 } from '@pcpartdb/shared';
 import React, { useCallback, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { Spinner, TextInput } from '../../../shared/components';
 import { ErrorAlert } from '../../../shared/components/Alert/ErrorAlert';
 import { SuccessAlert } from '../../../shared/components/Alert/SuccessAlert';
 import { PrimaryButton } from '../../../shared/components/Button/PrimaryButton';
 import { Field, FieldError } from '../../../shared/components/Field/Field';
 import { Form, FormActions } from '../../../shared/components/Form/Form';
+import { TextInput } from '../../../shared/components/Input/TextInput';
 import { MetaRobots, Seo } from '../../../shared/components/Seo/Seo';
+import { Spinner } from '../../../shared/components/Spinner/Spinner';
 import {
   isInternalServerError,
   setValidationErrors,
-} from '../../../shared/error';
-import { WebsiteLayout } from '../../../shared/layouts';
-import { userService } from '../../../user';
+} from '../../../shared/error/utils';
+import { WebsiteLayout } from '../../../shared/layouts/website/WebsiteLayout';
+import { userService } from '../../../user/userService';
 
 interface RequestPasswordResetFormData {
   email: string;

@@ -20,15 +20,14 @@ import {
   ValidationErrorType,
 } from '@pcpartdb/shared';
 import { useRouter } from 'next/router';
-import {
-  gpuService,
-  ProductAutocomplete,
-} from 'packages/website/src/client/product';
-import { useProductCache } from 'packages/website/src/client/shared/cache';
+import { ProductAutocomplete } from 'packages/website/src/client/product/components/ProductAutocomplete/ProductAutocomplete';
+import { gpuService } from 'packages/website/src/client/product/services/gpuService';
+import { useProductCache } from 'packages/website/src/client/shared/cache/ProductCache';
 import { ErrorAlert } from 'packages/website/src/client/shared/components/Alert/ErrorAlert';
 import { DangerButton } from 'packages/website/src/client/shared/components/Button/DangerButton';
 import { PrimaryButton } from 'packages/website/src/client/shared/components/Button/PrimaryButton';
 import { WarningButton } from 'packages/website/src/client/shared/components/Button/WarningButton';
+import { showDialog } from 'packages/website/src/client/shared/components/Dialog/dialog';
 import {
   Field,
   FieldError,
@@ -37,6 +36,8 @@ import {
   Form,
   FormActions,
 } from 'packages/website/src/client/shared/components/Form/Form';
+import { TextInput } from 'packages/website/src/client/shared/components/Input/TextInput';
+import { Spinner } from 'packages/website/src/client/shared/components/Spinner/Spinner';
 import React, {
   FunctionComponent,
   useCallback,
@@ -44,18 +45,17 @@ import React, {
   useState,
 } from 'react';
 import { Controller, useForm, UseFormProps, useWatch } from 'react-hook-form';
-import { showDialog, Spinner, TextInput } from '../../../../shared/components';
 import {
   isBadRequestError,
   setValidationErrors,
-} from '../../../../shared/error';
-import { ScrapedProduct } from '../../product';
-import { GpuBenchmarkInput } from '../GpuBenchmarkInput';
-import { GpuDataSourceInput } from '../GpuDataSourceInput';
-import { GpuFieldInput } from '../GpuFieldInput';
-import { GpuImagesInput } from '../GpuImageInput';
-import { GpuSlugInput } from '../GpuSlugInput';
-import { ScrapeGpuDialog } from '../ScrapeGpuDialog';
+} from '../../../../shared/error/utils';
+import { ScrapedProduct } from '../../product/ScrapeProductDialog/types';
+import { GpuBenchmarkInput } from '../GpuBenchmarkInput/GpuBenchmarkInput';
+import { GpuDataSourceInput } from '../GpuDataSourceInput/GpuDataSourceInput';
+import { GpuFieldInput } from '../GpuFieldInput/GpuFieldInput';
+import { GpuImagesInput } from '../GpuImageInput/GpuImagesInput';
+import { GpuSlugInput } from '../GpuSlugInput/GpuSlugInput';
+import { ScrapeGpuDialog } from '../ScrapeGpuDialog/ScrapeGpuDialog';
 
 interface GpuFormData {
   // GPU Parent / Chipset ID

@@ -9,7 +9,7 @@ import React, {
   useState,
 } from 'react';
 import { classNames } from '../../ui';
-import { Checkbox } from '../Checkbox';
+import { Checkbox } from '../Checkbox/Checkbox';
 import { SelectOptionProps } from './SelectOption';
 
 export type SelectValue = string | ReadonlyArray<string>;

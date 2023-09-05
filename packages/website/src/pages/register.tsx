@@ -4,9 +4,9 @@ import {
   RegisterViewModel,
 } from '@pcpartdb/shared';
 import { NextPageContext } from 'next';
-import { RegisterPage } from '../client/auth/pages';
-import { viewModelsClient } from '../client/shared/api';
-import { withGuestGuard } from '../client/shared/guards';
+import { RegisterPage } from '../client/auth/pages/RegisterPage/RegisterPage';
+import { viewModelsClient } from '../client/shared/api/viewModelsClient';
+import { withGuestGuard } from '../client/shared/guards/withGuestGuard';
 
 export async function getServerSideProps(_ctx: NextPageContext) {
   const response = await viewModelsClient.get<RegisterViewModel>('register');

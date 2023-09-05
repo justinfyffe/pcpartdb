@@ -13,7 +13,7 @@ import {
   formatCpuName,
   getCpuAffiliateUrl,
 } from '@pcpartdb/shared';
-import { ProductHighlightComparison } from 'packages/website/src/client/product';
+import { ProductHighlightComparison } from 'packages/website/src/client/product/components/ProductHighlightComparison/ProductHighlightComparison';
 import { AffiliateDisclaimer } from 'packages/website/src/client/shared/components/AffiliateDisclaimer/AffiliateDisclaimer';
 import { WarningButton } from 'packages/website/src/client/shared/components/Button/WarningButton';
 import { classNames } from 'packages/website/src/client/shared/ui';

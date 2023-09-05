@@ -1,14 +1,14 @@
 import { ApiKey } from '@pcpartdb/shared';
+import { PrimaryButton } from 'packages/website/src/client/shared/components/Button/PrimaryButton';
 import {
   Card,
   CardContent,
   CardTitle,
-  ConfirmDialog,
-  showDialog,
-  TextInput,
-} from 'packages/website/src/client/shared/components';
-import { PrimaryButton } from 'packages/website/src/client/shared/components/Button/PrimaryButton';
-import { userService } from 'packages/website/src/client/user';
+} from 'packages/website/src/client/shared/components/Card/Card';
+import { ConfirmDialog } from 'packages/website/src/client/shared/components/Dialog/ConfirmDialog';
+import { showDialog } from 'packages/website/src/client/shared/components/Dialog/dialog';
+import { TextInput } from 'packages/website/src/client/shared/components/Input/TextInput';
+import { userService } from 'packages/website/src/client/user/userService';
 import React, { useCallback, useState } from 'react';
 
 export interface ApiKeyWidgetProps {

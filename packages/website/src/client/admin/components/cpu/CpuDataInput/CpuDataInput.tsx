@@ -1,5 +1,6 @@
 import { CpuField, CpuFieldKey, ProductField } from '@pcpartdb/shared';
-import { cpuService } from 'packages/website/src/client/product';
+import { cpuService } from 'packages/website/src/client/product/services/cpuService';
+import { Checkbox } from 'packages/website/src/client/shared/components/Checkbox/Checkbox';
 import React, {
   forwardRef,
   Ref,
@@ -8,18 +9,15 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import { Checkbox } from '../../../../shared/components';
-import {
-  ProductAutocompleteDataInput,
-  ProductBooleanInput,
-  ProductChipsInput,
-  ProductCurrencyInput,
-  ProductDateInput,
-  ProductEnumInput,
-  ProductFloatInput,
-  ProductTextareaInput,
-  ProductTextInput,
-} from '../../product';
+import { ProductAutocompleteDataInput } from '../../product/ProductAutocompleteDataInput/ProductAutocompleteDataInput';
+import { ProductBooleanInput } from '../../product/ProductBooleanInput/ProductBooleanInput';
+import { ProductChipsInput } from '../../product/ProductChipsInput/ProductChipsInput';
+import { ProductCurrencyInput } from '../../product/ProductCurrencyInput/ProductCurrencyInput';
+import { ProductDateInput } from '../../product/ProductDateInput/ProductDateInput';
+import { ProductEnumInput } from '../../product/ProductEnumInput/ProductEnumInput';
+import { ProductFloatInput } from '../../product/ProductFloatInput/ProductFloatInput';
+import { ProductTextareaInput } from '../../product/ProductTextareaInput/ProductTextareaInput';
+import { ProductTextInput } from '../../product/ProductTextInput/ProductTextInput';
 import { ENUMS } from './enums';
 import { MEASUREMENT_UNITS } from './units';
 

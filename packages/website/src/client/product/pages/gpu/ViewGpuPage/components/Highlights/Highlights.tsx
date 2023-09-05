@@ -12,7 +12,7 @@ import {
   formatGpuField,
   getGpuAffiliateUrl,
 } from '@pcpartdb/shared';
-import { ProductHighlight } from 'packages/website/src/client/product/components';
+import { ProductHighlight } from 'packages/website/src/client/product/components/ProductHighlight/ProductHighlight';
 import { AffiliateDisclaimer } from 'packages/website/src/client/shared/components/AffiliateDisclaimer/AffiliateDisclaimer';
 import { WarningButton } from 'packages/website/src/client/shared/components/Button/WarningButton';
 import { classNames } from 'packages/website/src/client/shared/ui';

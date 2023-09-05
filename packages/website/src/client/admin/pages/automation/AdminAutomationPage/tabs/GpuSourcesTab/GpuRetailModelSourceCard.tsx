@@ -18,18 +18,18 @@ import {
   ProductType,
 } from '@pcpartdb/shared';
 import { automationService } from 'packages/website/src/client/automation/services';
-import { productSourceService } from 'packages/website/src/client/product';
+import { productSourceService } from 'packages/website/src/client/product/services/productSourceService';
+import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
 import {
   Card,
   CardContent,
   CardTitle,
-  TextInput,
-} from 'packages/website/src/client/shared/components';
-import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
+} from 'packages/website/src/client/shared/components/Card/Card';
 import {
   Field,
   FieldHint,
 } from 'packages/website/src/client/shared/components/Field/Field';
+import { TextInput } from 'packages/website/src/client/shared/components/Input/TextInput';
 import { AutomationStatusContext } from 'packages/website/src/client/shared/layouts/admin/AutomationStatusContext';
 import React, { useCallback, useContext, useMemo, useState } from 'react';
 import { SourceInputField } from '../../components/SourceInputField';

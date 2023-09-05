@@ -4,7 +4,7 @@ import React, { useMemo } from 'react';
 import { Breadcrumb } from '../../../shared/components/Breadcrumbs/Breadcrumb';
 import { Breadcrumbs } from '../../../shared/components/Breadcrumbs/Breadcrumbs';
 import { Seo } from '../../../shared/components/Seo/Seo';
-import { WebsiteLayout } from '../../../shared/layouts';
+import { WebsiteLayout } from '../../../shared/layouts/website/WebsiteLayout';
 
 interface AboutPageProps {}
 

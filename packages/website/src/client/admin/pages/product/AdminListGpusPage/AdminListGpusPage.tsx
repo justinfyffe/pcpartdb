@@ -9,8 +9,8 @@ import {
 } from 'packages/website/src/client/shared/components/Seo/Seo';
 import { Tab } from 'packages/website/src/client/shared/components/Tabs/Tab';
 import { Tabs } from 'packages/website/src/client/shared/components/Tabs/Tabs';
+import { AdminLayout } from 'packages/website/src/client/shared/layouts/admin/AdminLayout';
 import React, { useState } from 'react';
-import { AdminLayout } from '../../../../shared/layouts';
 import { ChipsetsTab, RetailModelsTab } from './components';
 
 export const AdminListGpusPage = () => {

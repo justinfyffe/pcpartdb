@@ -1,6 +1,6 @@
 import { CpuDiff, ProductType } from '@pcpartdb/shared';
 import React, { FunctionComponent } from 'react';
-import { ProductDiffDialog } from '../../product';
+import { ProductDiffDialog } from '../../product/ProductDiffDialog/ProductDiffDialog';
 
 interface CpuDiffDialogProps {
   diff: CpuDiff;

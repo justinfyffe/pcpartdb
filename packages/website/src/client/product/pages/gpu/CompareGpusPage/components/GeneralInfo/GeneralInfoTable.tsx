@@ -4,10 +4,8 @@ import {
   getGpuAffiliateUrl,
   ProductType,
 } from '@pcpartdb/shared';
-import {
-  ProductCustomRow,
-  ProductFieldRow,
-} from 'packages/website/src/client/product/components';
+import { ProductCustomRow } from 'packages/website/src/client/product/components/ProductCustomRow/ProductCustomRow';
+import { ProductFieldRow } from 'packages/website/src/client/product/components/ProductFieldRow/ProductFieldRow';
 import React, { FunctionComponent, useContext, useMemo } from 'react';
 import {
   Table,

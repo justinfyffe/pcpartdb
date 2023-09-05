@@ -14,20 +14,20 @@ import {
   getViewCpuPath,
   ProductUpdateStatus,
 } from '@pcpartdb/shared';
-import { CpuDiffDialog } from 'packages/website/src/client/admin/components';
+import { CpuDiffDialog } from 'packages/website/src/client/admin/components/cpu/CpuDiffDialog/CpuDiffDialog';
 import { productUpdateService } from 'packages/website/src/client/product/services/productUpdateService';
+import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
 import {
   Card,
   CardContent,
   CardTitle,
-  showDialog,
-  TextInput,
-} from 'packages/website/src/client/shared/components';
-import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
+} from 'packages/website/src/client/shared/components/Card/Card';
+import { showDialog } from 'packages/website/src/client/shared/components/Dialog/dialog';
 import {
   Field,
   FieldHint,
 } from 'packages/website/src/client/shared/components/Field/Field';
+import { TextInput } from 'packages/website/src/client/shared/components/Input/TextInput';
 import { AutomationStatusContext } from 'packages/website/src/client/shared/layouts/admin/AutomationStatusContext';
 import React, { useCallback, useContext, useMemo, useState } from 'react';
 

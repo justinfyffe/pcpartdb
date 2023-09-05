@@ -11,11 +11,11 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import { useProductCache } from '../../../shared/cache';
+import { useProductCache } from '../../../shared/cache/ProductCache';
 import { PrimaryButton } from '../../../shared/components/Button/PrimaryButton';
 import { Form } from '../../../shared/components/Form/Form';
 import { classNames } from '../../../shared/ui';
-import { ProductAutocomplete } from '../ProductAutocomplete';
+import { ProductAutocomplete } from '../ProductAutocomplete/ProductAutocomplete';
 
 interface CompareProductsFormProps {
   productType: ProductType;

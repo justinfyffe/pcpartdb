@@ -1,8 +1,8 @@
 import 'reflect-metadata';
 import { ApiError, HttpErrorType } from '@pcpartdb/shared';
 import React from 'react';
-import { GeneralErrorPage } from '../GeneralErrorPage';
-import { NotFoundPage } from '../NotFoundPage';
+import { GeneralErrorPage } from '../GeneralErrorPage/GeneralErrorPage';
+import { NotFoundPage } from '../NotFoundPage/NotFoundPage';
 
 export interface ErrorPageProps {
   error: ApiError;

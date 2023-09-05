@@ -3,6 +3,7 @@ import {
   formatGpuDimensions,
   formatGpuField,
   formatGpuName,
+  formatOrdinalNumber,
   getGpuChipset,
   getViewGpuPath,
   Gpu,
@@ -12,7 +13,6 @@ import {
   ViewGpuContentData,
 } from '@pcpartdb/shared';
 import { ContentParams } from 'packages/website/src/client/shared/content';
-import { formatOrdinalNumber } from 'packages/website/src/client/shared/format';
 
 export interface ViewGpuContentParams {
   architecture?: string;

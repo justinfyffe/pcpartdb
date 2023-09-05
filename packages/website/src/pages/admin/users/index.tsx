@@ -1,7 +1,7 @@
 import { NextPageContext } from 'next';
-import { withStaffGuard } from 'packages/website/src/client/shared/guards';
-import { AdminListUsersPage } from '../../../client/admin/pages';
-import { viewModelsClient } from '../../../client/shared/api';
+import { AdminListUsersPage } from 'packages/website/src/client/admin/pages/user/AdminListUsersPage/AdminListUsersPage';
+import { withStaffGuard } from 'packages/website/src/client/shared/guards/withStaffGuard';
+import { viewModelsClient } from '../../../client/shared/api/viewModelsClient';
 
 export async function getServerSideProps(_ctx: NextPageContext) {
   return await viewModelsClient.get('admin/users/list');

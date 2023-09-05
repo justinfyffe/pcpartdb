@@ -1,6 +1,6 @@
 import { ProductDataSource } from '@pcpartdb/shared';
+import { TextInput } from 'packages/website/src/client/shared/components/Input/TextInput';
 import React, { forwardRef, useCallback } from 'react';
-import { TextInput } from '../../../../shared/components';
 
 interface ProductDataSourceInputProps {
   value?: ProductDataSource;

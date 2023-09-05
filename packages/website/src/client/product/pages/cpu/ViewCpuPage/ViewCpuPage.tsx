@@ -8,18 +8,18 @@ import {
   ProductType,
   ViewCpuViewModel,
 } from '@pcpartdb/shared';
-import { useProductCache } from 'packages/website/src/client/shared/cache';
+import { useProductCache } from 'packages/website/src/client/shared/cache/ProductCache';
 import { Breadcrumb } from 'packages/website/src/client/shared/components/Breadcrumbs/Breadcrumb';
 import { Breadcrumbs } from 'packages/website/src/client/shared/components/Breadcrumbs/Breadcrumbs';
 import { Seo } from 'packages/website/src/client/shared/components/Seo/Seo';
+import { WebsiteLayout } from 'packages/website/src/client/shared/layouts/website/WebsiteLayout';
 import React, { useMemo } from 'react';
-import { WebsiteLayout } from '../../../../shared/layouts';
 import {
   Sidenav,
   SidenavRelatedComparisons,
   SidenavRelatedProducts,
 } from '../../../../sidenav';
-import { CompareProductsForm } from '../../../components';
+import { CompareProductsForm } from '../../../components/CompareProductsForm/CompareProductsForm';
 import {
   Benchmarks,
   Disclaimer,

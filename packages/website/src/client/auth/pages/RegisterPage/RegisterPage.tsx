@@ -13,16 +13,21 @@ import {
 import { useRouter } from 'next/router';
 import React, { useCallback, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { PasswordInput, Spinner, TextInput } from '../../../shared/components';
 import { ErrorAlert } from '../../../shared/components/Alert/ErrorAlert';
 import { Breadcrumb } from '../../../shared/components/Breadcrumbs/Breadcrumb';
 import { Breadcrumbs } from '../../../shared/components/Breadcrumbs/Breadcrumbs';
 import { PrimaryButton } from '../../../shared/components/Button/PrimaryButton';
 import { Field, FieldError } from '../../../shared/components/Field/Field';
 import { Form, FormActions } from '../../../shared/components/Form/Form';
+import { PasswordInput } from '../../../shared/components/Input/PasswordInput';
+import { TextInput } from '../../../shared/components/Input/TextInput';
 import { MetaRobots, Seo } from '../../../shared/components/Seo/Seo';
-import { isBadRequestError, setValidationErrors } from '../../../shared/error';
-import { WebsiteLayout } from '../../../shared/layouts';
+import { Spinner } from '../../../shared/components/Spinner/Spinner';
+import {
+  isBadRequestError,
+  setValidationErrors,
+} from '../../../shared/error/utils';
+import { WebsiteLayout } from '../../../shared/layouts/website/WebsiteLayout';
 import { authService } from '../../authService';
 
 interface RegisterFormData {

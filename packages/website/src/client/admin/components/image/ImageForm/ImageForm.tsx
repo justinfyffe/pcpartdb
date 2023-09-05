@@ -8,6 +8,7 @@ import {
   ValidationErrorType,
 } from '@pcpartdb/shared';
 import Router from 'next/router';
+import { imageService } from 'packages/website/src/client/image/imageService';
 import { ErrorAlert } from 'packages/website/src/client/shared/components/Alert/ErrorAlert';
 import { PrimaryButton } from 'packages/website/src/client/shared/components/Button/PrimaryButton';
 import { WarningButton } from 'packages/website/src/client/shared/components/Button/WarningButton';
@@ -22,6 +23,8 @@ import {
   Form,
   FormActions,
 } from 'packages/website/src/client/shared/components/Form/Form';
+import { TextInput } from 'packages/website/src/client/shared/components/Input/TextInput';
+import { Spinner } from 'packages/website/src/client/shared/components/Spinner/Spinner';
 import React, {
   FunctionComponent,
   useCallback,
@@ -39,13 +42,11 @@ import {
   formatFileSize,
   formatImageDimensions,
   getImageMeta,
-  imageService,
-} from '../../../../image';
-import { Spinner, TextInput } from '../../../../shared/components';
+} from '../../../../image/utils';
 import {
   isBadRequestError,
   setValidationErrors,
-} from '../../../../shared/error';
+} from '../../../../shared/error/utils';
 
 interface ImageFormData {
   path: string;

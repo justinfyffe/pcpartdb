@@ -14,9 +14,9 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { getCompanyLogoAutocompletePath } from '../../../image';
-import { useProductCache } from '../../../shared/cache';
-import { Autocomplete } from '../../../shared/components';
+import { getCompanyLogoAutocompletePath } from '../../../image/utils';
+import { useProductCache } from '../../../shared/cache/ProductCache';
+import { Autocomplete } from '../../../shared/components/Autocomplete/Autocomplete';
 import { Img } from '../../../shared/components/Img/Img';
 import { classNames } from '../../../shared/ui';
 import { productService } from '../../services/productService';

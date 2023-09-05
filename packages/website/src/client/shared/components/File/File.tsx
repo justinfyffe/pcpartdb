@@ -5,10 +5,10 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { useLayout } from '../../layouts';
+import { useLayout } from '../../layouts/layout-context';
 import { classNames } from '../../ui';
 import { Button, ButtonVariant } from '../Button/Button';
-import { TextInput } from '../Input';
+import { TextInput } from '../Input/TextInput';
 
 export interface FileProps {
   name?: string;

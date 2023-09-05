@@ -1,7 +1,7 @@
 import { joinUrlParts } from '@pcpartdb/shared';
 import { NextPageContext } from 'next';
-import { ViewCpuPage } from 'packages/website/src/client/product';
-import { viewModelsClient } from '../../../client/shared/api';
+import { ViewCpuPage } from 'packages/website/src/client/product/pages/cpu/ViewCpuPage/ViewCpuPage';
+import { viewModelsClient } from '../../../client/shared/api/viewModelsClient';
 
 export async function getServerSideProps(ctx: NextPageContext) {
   const slug = ctx.query.slug as string;

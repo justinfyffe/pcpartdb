@@ -7,7 +7,7 @@ import {
   ListGpusQuery,
 } from '@pcpartdb/shared';
 import { useRouter } from 'next/router';
-import { gpuService } from 'packages/website/src/client/product';
+import { gpuService } from 'packages/website/src/client/product/services/gpuService';
 import { InfoAlert } from 'packages/website/src/client/shared/components/Alert/InfoAlert';
 import React, {
   FunctionComponent,

@@ -6,17 +6,15 @@ import {
   ProductSourceKey,
   ProductType,
 } from '@pcpartdb/shared';
-import { ProductSourceAutocomplete } from 'packages/website/src/client/product/components/ProductSourceAutocomplete';
-import {
-  Checkbox,
-  showDialog,
-  TextInput,
-} from 'packages/website/src/client/shared/components';
+import { ProductSourceAutocomplete } from 'packages/website/src/client/product/components/ProductSourceAutocomplete/ProductSourceAutocomplete';
+import { Checkbox } from 'packages/website/src/client/shared/components/Checkbox/Checkbox';
+import { showDialog } from 'packages/website/src/client/shared/components/Dialog/dialog';
 import {
   Field,
   FieldHint,
   FieldOptional,
 } from 'packages/website/src/client/shared/components/Field/Field';
+import { TextInput } from 'packages/website/src/client/shared/components/Input/TextInput';
 import React, { useCallback, useMemo } from 'react';
 import { SourcePickerDialog } from '../SourcePickerDialog';
 

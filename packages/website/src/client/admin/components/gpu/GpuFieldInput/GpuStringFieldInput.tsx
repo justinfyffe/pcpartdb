@@ -1,6 +1,6 @@
 import { formatGpuField, GpuField, GpuFieldKey } from '@pcpartdb/shared';
+import { TextInput } from 'packages/website/src/client/shared/components/Input/TextInput';
 import React, { forwardRef, useCallback, useMemo } from 'react';
-import { TextInput } from '../../../../shared/components';
 
 interface GpuStringFieldInputProps {
   field: GpuFieldKey;

@@ -1,6 +1,6 @@
 import { CircleStackIcon } from '@heroicons/react/24/outline';
 import { formatGpuField, formatGpuName } from '@pcpartdb/shared';
-import { ProductHighlightComparison } from 'packages/website/src/client/product/components';
+import { ProductHighlightComparison } from 'packages/website/src/client/product/components/ProductHighlightComparison/ProductHighlightComparison';
 import React, { FunctionComponent, useContext, useMemo } from 'react';
 import { ComparePageContext } from '../../context';
 

@@ -1,11 +1,7 @@
 import Script from 'next/script';
 import React, { FunctionComponent } from 'react';
-import {
-  ImageCacheState,
-  ProductCacheState,
-  useImageCache,
-  useProductCache,
-} from '.';
+import { ImageCacheState, useImageCache } from './ImageCache';
+import { ProductCacheState, useProductCache } from './ProductCache';
 
 interface CacheState {
   images: ImageCacheState;

@@ -9,9 +9,10 @@ import {
   MetaRobots,
   Seo,
 } from 'packages/website/src/client/shared/components/Seo/Seo';
+import { AdminLayout } from 'packages/website/src/client/shared/layouts/admin/AdminLayout';
 import React, { useMemo } from 'react';
-import { AdminLayout } from '../../../../shared/layouts';
-import { CpuForm, GpuForm } from '../../../components';
+import { CpuForm } from '../../../components/cpu/CpuForm/CpuForm';
+import { GpuForm } from '../../../components/gpu/GpuForm/GpuForm';
 
 interface AdminNewProductPageProps {
   productType: ProductType;

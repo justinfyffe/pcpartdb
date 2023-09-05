@@ -3,6 +3,8 @@ Current Focus:
   - Explore combined products table
   - Setup separate table for product sources instead of a meta column
   - Setup separate table for fields
+- Tech Debt
+  - Removing barrel files from website package
 
 Admin Improvements
 - Improved data auditing

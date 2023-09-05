@@ -4,7 +4,7 @@ import {
   formatCpuName,
   getViewCpuPath,
 } from '@pcpartdb/shared';
-import { ProductCustomRow } from 'packages/website/src/client/product';
+import { ProductCustomRow } from 'packages/website/src/client/product/components/ProductCustomRow/ProductCustomRow';
 import React, { FunctionComponent, useContext, useMemo } from 'react';
 import {
   Table,

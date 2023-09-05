@@ -1,4 +1,5 @@
 import {
+  BooleanFormatter,
   compareProductFields,
   formatProductField,
   getProductFieldLabel,
@@ -7,7 +8,6 @@ import {
   ProductType,
 } from '@pcpartdb/shared';
 import { Td, Tr } from 'packages/website/src/client/shared/components';
-import { BooleanFormatter } from 'packages/website/src/client/shared/format';
 import React, { FunctionComponent, useMemo } from 'react';
 import { ProductDiffKey } from './types';
 

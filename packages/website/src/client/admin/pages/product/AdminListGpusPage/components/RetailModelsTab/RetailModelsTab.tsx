@@ -8,10 +8,8 @@ import {
   ProductType,
 } from '@pcpartdb/shared';
 import { useRouter } from 'next/router';
-import {
-  gpuService,
-  ProductAutocomplete,
-} from 'packages/website/src/client/product';
+import { ProductAutocomplete } from 'packages/website/src/client/product/components/ProductAutocomplete/ProductAutocomplete';
+import { gpuService } from 'packages/website/src/client/product/services/gpuService';
 import { InfoAlert } from 'packages/website/src/client/shared/components/Alert/InfoAlert';
 import React, {
   FunctionComponent,

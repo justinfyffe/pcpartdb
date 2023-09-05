@@ -40,7 +40,7 @@ class ImageCacheImpl {
 export const ImageCache = new ImageCacheImpl();
 
 export function useImageCache(...images: (Image | Image[])[]) {
-  const { imageCache } = useContext(CacheContext);
+  const imageCache = useContext(CacheContext).getImageCache();
   if (images.length > 0) {
     imageCache.save(...images);
   }

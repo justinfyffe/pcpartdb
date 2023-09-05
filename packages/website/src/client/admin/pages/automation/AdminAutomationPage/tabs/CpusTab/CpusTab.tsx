@@ -8,9 +8,9 @@ import {
   ProductUpdateStatus,
 } from '@pcpartdb/shared';
 import { productUpdateService } from 'packages/website/src/client/product/services/productUpdateService';
-import { TextInput } from 'packages/website/src/client/shared/components';
 import { InfoAlert } from 'packages/website/src/client/shared/components/Alert/InfoAlert';
 import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
+import { TextInput } from 'packages/website/src/client/shared/components/Input/TextInput';
 import { Pagination } from 'packages/website/src/client/shared/components/Pagination/Pagination';
 import { useThrottle } from 'packages/website/src/client/shared/hooks/useThrottle';
 import { AutomationStatusContext } from 'packages/website/src/client/shared/layouts/admin/AutomationStatusContext';

@@ -3,9 +3,9 @@ import {
   Button,
   ButtonVariant,
 } from 'packages/website/src/client/shared/components/Button/Button';
+import { closeDialog } from 'packages/website/src/client/shared/components/Dialog/dialog';
 import React, { FunctionComponent, useCallback, useState } from 'react';
-import { closeDialog } from '../../../../shared/components';
-import { ImageForm } from '../ImageForm';
+import { ImageForm } from '../ImageForm/ImageForm';
 import { ImageList } from './ImageList';
 
 enum Tabs {

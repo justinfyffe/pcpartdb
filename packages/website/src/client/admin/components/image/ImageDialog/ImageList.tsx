@@ -1,12 +1,12 @@
 import { Image } from '@pcpartdb/shared';
+import { imageService } from 'packages/website/src/client/image/imageService';
+import { Spinner } from 'packages/website/src/client/shared/components/Spinner/Spinner';
 import React, {
   FunctionComponent,
   useCallback,
   useEffect,
   useState,
 } from 'react';
-import { imageService } from '../../../../image';
-import { Spinner } from '../../../../shared/components';
 import { ImageListCard } from './ImageListCard';
 
 interface ImageListProps {

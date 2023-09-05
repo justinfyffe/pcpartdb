@@ -1,10 +1,12 @@
 import {
+  BooleanFormatter,
   formatProductField,
   getProductFieldLabel,
   isProductField,
   ProductField,
   ProductType,
 } from '@pcpartdb/shared';
+import { Checkbox } from 'packages/website/src/client/shared/components/Checkbox/Checkbox';
 import React, {
   FunctionComponent,
   useCallback,
@@ -13,8 +15,7 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import { Checkbox, Td, Tr } from '../../../../shared/components';
-import { BooleanFormatter } from '../../../../shared/format';
+import { Td, Tr } from '../../../../shared/components';
 import { ScrapeProductContext } from './ScrapeProductContext';
 import { ScrapedDataKey } from './types';
 

@@ -260,7 +260,7 @@ export class CpuRepository {
 
     // Segment
     const segmentsWhere: Prisma.StringNullableFilter =
-      segments.length > 0 ? { in: segments } : undefined;
+      segments.length > 0 ? { in: segments, mode: 'insensitive' } : undefined;
 
     // Year
     const yearWhere: Prisma.CpuWhereInput[] = years.map((year) => ({

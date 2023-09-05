@@ -7,12 +7,12 @@ import {
   GpuMarketSegmentValue,
   GpuProductionStatusValue,
 } from '@pcpartdb/shared';
-import React, { forwardRef, useCallback, useMemo } from 'react';
 import {
   Select,
-  SelectOption,
   SelectValue,
-} from '../../../../shared/components';
+} from 'packages/website/src/client/shared/components/Select/Select';
+import { SelectOption } from 'packages/website/src/client/shared/components/Select/SelectOption';
+import React, { forwardRef, useCallback, useMemo } from 'react';
 
 const ITEMS: { [key: string]: { label: string; value: string }[] } = {
   marketSegment: [
