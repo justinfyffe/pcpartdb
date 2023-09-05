@@ -9,12 +9,6 @@ import {
   ButtonVariant,
 } from 'packages/website/src/client/shared/components/Button/Button';
 import { showDialog } from 'packages/website/src/client/shared/components/Dialog/dialog';
-import React, {
-  FunctionComponent,
-  useCallback,
-  useContext,
-  useMemo,
-} from 'react';
 import {
   Table,
   TBody,
@@ -22,7 +16,13 @@ import {
   Th,
   THead,
   Tr,
-} from '../../../../../../shared/components';
+} from 'packages/website/src/client/shared/components/Table/Table';
+import React, {
+  FunctionComponent,
+  useCallback,
+  useContext,
+  useMemo,
+} from 'react';
 import { ListPageContext } from '../../context';
 import { RetailModelsDialog } from '../RetailModelsDialog';
 

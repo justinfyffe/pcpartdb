@@ -2,9 +2,12 @@ import 'reflect-metadata';
 import { InformationCircleIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { AutomationAction, AutomationActionType } from '@pcpartdb/shared';
 import { automationService } from 'packages/website/src/client/automation';
-import { Td, Tr } from 'packages/website/src/client/shared/components';
 import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
 import { showDialog } from 'packages/website/src/client/shared/components/Dialog/dialog';
+import {
+  Td,
+  Tr,
+} from 'packages/website/src/client/shared/components/Table/Table';
 import React, { useCallback, useMemo, useState } from 'react';
 import { QueueDetailsDialog } from './QueueDetailsDialog';
 

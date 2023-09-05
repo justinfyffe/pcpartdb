@@ -5,8 +5,11 @@ import {
   ProductField,
   ProductType,
 } from '@pcpartdb/shared';
+import {
+  Td,
+  Tr,
+} from 'packages/website/src/client/shared/components/Table/Table';
 import React, { FunctionComponent, useMemo } from 'react';
-import { Td, Tr } from '../../../shared/components';
 import { classNames } from '../../../shared/ui';
 
 interface ProductFieldRowProps {

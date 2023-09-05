@@ -1,6 +1,9 @@
 import 'reflect-metadata';
 import { ProductDiff, ProductType } from '@pcpartdb/shared';
-import { Table, TBody } from 'packages/website/src/client/shared/components';
+import {
+  Table,
+  TBody,
+} from 'packages/website/src/client/shared/components/Table/Table';
 import React from 'react';
 import { ImportProductRow } from './ImportProductRow';
 

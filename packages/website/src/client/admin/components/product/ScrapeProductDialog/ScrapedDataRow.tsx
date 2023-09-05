@@ -7,6 +7,10 @@ import {
   ProductType,
 } from '@pcpartdb/shared';
 import { Checkbox } from 'packages/website/src/client/shared/components/Checkbox/Checkbox';
+import {
+  Td,
+  Tr,
+} from 'packages/website/src/client/shared/components/Table/Table';
 import React, {
   FunctionComponent,
   useCallback,
@@ -15,7 +19,6 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import { Td, Tr } from '../../../../shared/components';
 import { ScrapeProductContext } from './ScrapeProductContext';
 import { ScrapedDataKey } from './types';
 

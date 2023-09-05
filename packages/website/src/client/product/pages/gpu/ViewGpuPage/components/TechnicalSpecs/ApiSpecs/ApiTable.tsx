@@ -1,7 +1,10 @@
 import { ProductType } from '@pcpartdb/shared';
 import { ProductFieldRow } from 'packages/website/src/client/product/components/ProductFieldRow/ProductFieldRow';
+import {
+  Table,
+  TBody,
+} from 'packages/website/src/client/shared/components/Table/Table';
 import React, { FunctionComponent, useContext } from 'react';
-import { Table, TBody } from '../../../../../../../shared/components';
 import { ViewPageContext } from '../../../context';
 
 interface ApiTableProps {

@@ -4,13 +4,19 @@ import { GenericButton } from 'packages/website/src/client/shared/components/But
 import { PrimaryButton } from 'packages/website/src/client/shared/components/Button/PrimaryButton';
 import { closeDialog } from 'packages/website/src/client/shared/components/Dialog/dialog';
 import { Spinner } from 'packages/website/src/client/shared/components/Spinner/Spinner';
+import {
+  Table,
+  TBody,
+  Th,
+  THead,
+  Tr,
+} from 'packages/website/src/client/shared/components/Table/Table';
 import React, {
   FunctionComponent,
   useCallback,
   useEffect,
   useState,
 } from 'react';
-import { Table, TBody, Th, THead, Tr } from '../../../../shared/components';
 import { ScrapedDataRow } from './ScrapedDataRow';
 import {
   createScrapeContext,

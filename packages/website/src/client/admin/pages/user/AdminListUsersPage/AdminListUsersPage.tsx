@@ -13,9 +13,16 @@ import {
   MetaRobots,
   Seo,
 } from 'packages/website/src/client/shared/components/Seo/Seo';
+import {
+  Table,
+  TBody,
+  Td,
+  Th,
+  THead,
+  Tr,
+} from 'packages/website/src/client/shared/components/Table/Table';
 import { AdminLayout } from 'packages/website/src/client/shared/layouts/admin/AdminLayout';
 import React, { useState } from 'react';
-import { Table, TBody, Td, Th, THead, Tr } from '../../../../shared/components';
 
 export const AdminListUsersPage = (props: AdminListUsersViewModel) => {
   const { users } = props;

@@ -1,5 +1,4 @@
 import { formatGpuName, getAdminEditGpuPath, Gpu } from '@pcpartdb/shared';
-import React, { FunctionComponent, useMemo } from 'react';
 import {
   Table,
   TBody,
@@ -7,7 +6,8 @@ import {
   Th,
   THead,
   Tr,
-} from '../../../../../../shared/components';
+} from 'packages/website/src/client/shared/components/Table/Table';
+import React, { FunctionComponent, useMemo } from 'react';
 import { MissingDataChip } from '../MissingDataChip';
 
 interface GpuTableProps {

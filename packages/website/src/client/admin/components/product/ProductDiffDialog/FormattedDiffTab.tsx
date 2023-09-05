@@ -1,6 +1,12 @@
 import { ProductDiff, ProductType } from '@pcpartdb/shared';
+import {
+  Table,
+  TBody,
+  Th,
+  THead,
+  Tr,
+} from 'packages/website/src/client/shared/components/Table/Table';
 import React, { FunctionComponent } from 'react';
-import { Table, TBody, Th, THead, Tr } from '../../../../shared/components';
 import { FormattedDiffRow } from './FormattedDiffRow';
 import { ProductDiffKey } from './types';
 

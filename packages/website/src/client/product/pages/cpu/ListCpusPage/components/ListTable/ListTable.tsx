@@ -4,7 +4,6 @@ import {
   formatCpuName,
   getViewCpuPath,
 } from '@pcpartdb/shared';
-import React, { FunctionComponent, useContext, useMemo } from 'react';
 import {
   Table,
   TBody,
@@ -12,7 +11,8 @@ import {
   Th,
   THead,
   Tr,
-} from '../../../../../../shared/components';
+} from 'packages/website/src/client/shared/components/Table/Table';
+import React, { FunctionComponent, useContext, useMemo } from 'react';
 import { ListPageContext } from '../../context';
 
 export const ListTable: FunctionComponent = () => {

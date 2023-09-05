@@ -11,6 +11,14 @@ import {
   Button,
   ButtonVariant,
 } from 'packages/website/src/client/shared/components/Button/Button';
+import {
+  Table,
+  TBody,
+  Td,
+  Th,
+  THead,
+  Tr,
+} from 'packages/website/src/client/shared/components/Table/Table';
 import React, {
   FunctionComponent,
   useCallback,
@@ -19,14 +27,6 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import {
-  Table,
-  TBody,
-  Td,
-  Th,
-  THead,
-  Tr,
-} from '../../../../../../shared/components';
 import { ComparePageContext } from '../../context';
 
 interface ValueTableProps {

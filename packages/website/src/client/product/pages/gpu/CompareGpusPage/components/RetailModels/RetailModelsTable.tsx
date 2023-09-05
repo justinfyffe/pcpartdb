@@ -4,8 +4,6 @@ import {
   getViewGpuPath,
   Gpu,
 } from '@pcpartdb/shared';
-import { classNames } from 'packages/website/src/client/shared/ui';
-import React, { FunctionComponent, useContext, useMemo } from 'react';
 import {
   Table,
   TBody,
@@ -13,7 +11,9 @@ import {
   Th,
   THead,
   Tr,
-} from '../../../../../../shared/components';
+} from 'packages/website/src/client/shared/components/Table/Table';
+import { classNames } from 'packages/website/src/client/shared/ui';
+import React, { FunctionComponent, useContext, useMemo } from 'react';
 import { ComparePageContext } from '../../context';
 
 interface RetailModelsTableProps {

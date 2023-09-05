@@ -6,14 +6,14 @@ import {
   Gpu,
 } from '@pcpartdb/shared';
 import { ProductCustomRow } from 'packages/website/src/client/product/components/ProductCustomRow/ProductCustomRow';
-import React, { FunctionComponent, useContext, useMemo } from 'react';
 import {
   Table,
   TBody,
   Th,
   THead,
   Tr,
-} from '../../../../../../shared/components';
+} from 'packages/website/src/client/shared/components/Table/Table';
+import React, { FunctionComponent, useContext, useMemo } from 'react';
 import { ViewPageContext } from '../../context';
 
 interface RetailModelsTableProps {

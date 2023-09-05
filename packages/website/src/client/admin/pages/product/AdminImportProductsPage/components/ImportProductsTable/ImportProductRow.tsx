@@ -8,9 +8,12 @@ import {
 } from '@pcpartdb/shared';
 import { CpuDiffDialog } from 'packages/website/src/client/admin/components/cpu/CpuDiffDialog/CpuDiffDialog';
 import { GpuDiffDialog } from 'packages/website/src/client/admin/components/gpu/GpuDiffDialog/GpuDiffDialog';
-import { Td, Tr } from 'packages/website/src/client/shared/components';
 import { Checkbox } from 'packages/website/src/client/shared/components/Checkbox/Checkbox';
 import { showDialog } from 'packages/website/src/client/shared/components/Dialog/dialog';
+import {
+  Td,
+  Tr,
+} from 'packages/website/src/client/shared/components/Table/Table';
 import React, { useCallback, useContext, useMemo } from 'react';
 import { ImportProductsPageContext } from '../../context';
 

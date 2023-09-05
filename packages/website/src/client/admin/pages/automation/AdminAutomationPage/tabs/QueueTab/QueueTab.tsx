@@ -2,16 +2,16 @@ import 'reflect-metadata';
 import { ArrowPathIcon } from '@heroicons/react/24/outline';
 import { AutomationAction, ListAutomationActionsQuery } from '@pcpartdb/shared';
 import { automationService } from 'packages/website/src/client/automation';
+import { InfoAlert } from 'packages/website/src/client/shared/components/Alert/InfoAlert';
+import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
+import { Pagination } from 'packages/website/src/client/shared/components/Pagination/Pagination';
 import {
   Table,
   TBody,
   Th,
   THead,
   Tr,
-} from 'packages/website/src/client/shared/components';
-import { InfoAlert } from 'packages/website/src/client/shared/components/Alert/InfoAlert';
-import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
-import { Pagination } from 'packages/website/src/client/shared/components/Pagination/Pagination';
+} from 'packages/website/src/client/shared/components/Table/Table';
 import React, { useCallback, useEffect, useState } from 'react';
 import { QueueRow } from './QueueRow';
 

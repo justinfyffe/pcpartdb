@@ -92,10 +92,10 @@ Tech Debt:
 - Setup separate table for fields
   - Keep a general performance score and value score on products tables for better
     sorting. Can store other benchmark values
+- Get rid of index.ts barrel files on api and website (only needed for libraries)
 - Update major dependencies
   - Nextjs, Nestjs, TypeScript
 - Replace axios with fetch
-- Get rid of index.ts barrel files on api and website (only needed for libraries)
 - Simplify UI components
   - More shared components when we can.
   - Simpler component code, no one component should do too much.

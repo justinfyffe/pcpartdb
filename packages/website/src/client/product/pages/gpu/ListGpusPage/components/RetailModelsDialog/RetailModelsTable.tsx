@@ -12,7 +12,7 @@ import {
   Th,
   THead,
   Tr,
-} from 'packages/website/src/client/shared/components';
+} from 'packages/website/src/client/shared/components/Table/Table';
 import React, { FunctionComponent, useMemo } from 'react';
 
 interface RetailModelsTableProps {
