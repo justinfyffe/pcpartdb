@@ -13,7 +13,7 @@ import React, {
   useState,
   WheelEvent,
 } from 'react';
-import { classNames } from '../../ui';
+import { classNames } from '../../ui/classNames';
 import { Button } from '../Button/Button';
 import { FieldContext } from '../Field/Field';
 

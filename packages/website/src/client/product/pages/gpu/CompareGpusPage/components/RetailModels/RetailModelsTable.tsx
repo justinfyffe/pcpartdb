@@ -12,9 +12,9 @@ import {
   THead,
   Tr,
 } from 'packages/website/src/client/shared/components/Table/Table';
-import { classNames } from 'packages/website/src/client/shared/ui';
+import { classNames } from 'packages/website/src/client/shared/ui/classNames';
 import React, { FunctionComponent, useContext, useMemo } from 'react';
-import { ComparePageContext } from '../../context';
+import { ComparePageContext } from '../../context/ComparePageContext';
 
 interface RetailModelsTableProps {
   className?: string;

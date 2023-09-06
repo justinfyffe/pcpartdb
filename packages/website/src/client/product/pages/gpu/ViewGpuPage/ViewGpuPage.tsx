@@ -30,8 +30,8 @@ import {
   RetailModels,
   TechnicalSpecs,
 } from './components';
-import { ViewPageContext } from './context';
-import { useViewPageContextProps } from './hooks';
+import { ViewPageContext } from './context/ViewPageContext';
+import { useViewPageContextProps } from './hooks/useViewPageContextProps';
 
 export const ViewGpuPage = (props: ViewGpuViewModel & { config: Config }) => {
   const { gpu, relatedGpus, relatedComparisons, contentData, config } = props;

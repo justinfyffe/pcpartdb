@@ -5,7 +5,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { classNames } from '../../ui';
+import { classNames } from '../../ui/classNames';
 import { Button } from '../Button/Button';
 
 export interface MenuProps {

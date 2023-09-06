@@ -18,7 +18,7 @@ import { getCompanyLogoAutocompletePath } from '../../../image/utils';
 import { useProductCache } from '../../../shared/cache/ProductCache';
 import { Autocomplete } from '../../../shared/components/Autocomplete/Autocomplete';
 import { Img } from '../../../shared/components/Img/Img';
-import { classNames } from '../../../shared/ui';
+import { classNames } from '../../../shared/ui/classNames';
 import { productService } from '../../services/productService';
 import { ProductAutocompleteOption } from './ProductAutocompleteOption';
 

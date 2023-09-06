@@ -1,7 +1,7 @@
 import { CompareGpusContentData, GpuComparison } from '@pcpartdb/shared';
 import { useMemo } from 'react';
 import { getContentParams, getContentTags } from '../content';
-import { ComparePageContextProps } from '../context';
+import { ComparePageContextProps } from '../context/ComparePageContext';
 
 export function useComparePageContextProps(input: {
   comparison: GpuComparison;

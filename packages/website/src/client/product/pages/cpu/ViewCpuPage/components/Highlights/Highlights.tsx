@@ -11,9 +11,9 @@ import { formatCpuField, getCpuAffiliateUrl } from '@pcpartdb/shared';
 import { ProductHighlight } from 'packages/website/src/client/product/components/ProductHighlight/ProductHighlight';
 import { AffiliateDisclaimer } from 'packages/website/src/client/shared/components/AffiliateDisclaimer/AffiliateDisclaimer';
 import { WarningButton } from 'packages/website/src/client/shared/components/Button/WarningButton';
-import { classNames } from 'packages/website/src/client/shared/ui';
+import { classNames } from 'packages/website/src/client/shared/ui/classNames';
 import React, { FunctionComponent, useContext, useMemo } from 'react';
-import { ViewPageContext } from '../../context';
+import { ViewPageContext } from '../../context/ViewPageContext';
 
 interface HighlightsProps {
   className?: string;

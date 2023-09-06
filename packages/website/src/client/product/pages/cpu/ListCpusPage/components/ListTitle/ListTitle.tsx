@@ -1,10 +1,8 @@
+import { ContentContext } from 'packages/website/src/client/shared/content/ContentContext';
+import { compileContentComponent } from 'packages/website/src/client/shared/content/utils';
 import React, { FunctionComponent, useContext } from 'react';
-import {
-  compileContentComponent,
-  ContentContext,
-} from '../../../../../../shared/content';
-import { ListCpusContentTag } from '../../content';
-import { ListPageContext } from '../../context';
+import { ListCpusContentTag } from '../../content/getContentTags';
+import { ListPageContext } from '../../context/ListPageContext';
 
 const TitleSentence = compileContentComponent(
   {

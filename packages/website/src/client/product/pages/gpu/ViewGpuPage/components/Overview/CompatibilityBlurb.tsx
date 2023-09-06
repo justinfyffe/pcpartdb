@@ -1,11 +1,9 @@
 import { hasProductFieldValue } from '@pcpartdb/shared';
+import { ContentContext } from 'packages/website/src/client/shared/content/ContentContext';
+import { compileContentComponent } from 'packages/website/src/client/shared/content/utils';
 import React, { useContext } from 'react';
-import {
-  compileContentComponent,
-  ContentContext,
-} from '../../../../../../shared/content';
-import { ViewGpuContentTag } from '../../content';
-import { ViewPageContext } from '../../context';
+import { ViewGpuContentTag } from '../../content/getContentTags';
+import { ViewPageContext } from '../../context/ViewPageContext';
 
 const CompatibilitySlotWidth = compileContentComponent({
   deps: ['slotWidthNoUnits', 'slotWidthUnits'],

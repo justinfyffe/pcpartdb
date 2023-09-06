@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useCallback, useMemo } from 'react';
-import { classNames } from '../../ui';
+import { classNames } from '../../ui/classNames';
 
 export interface LegacyPaginationResult {
   offset: number;

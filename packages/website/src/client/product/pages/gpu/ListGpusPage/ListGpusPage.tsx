@@ -11,9 +11,9 @@ import { Breadcrumb } from 'packages/website/src/client/shared/components/Breadc
 import { Breadcrumbs } from 'packages/website/src/client/shared/components/Breadcrumbs/Breadcrumbs';
 import { Seo } from 'packages/website/src/client/shared/components/Seo/Seo';
 import { WebsiteLayout } from 'packages/website/src/client/shared/layouts/website/WebsiteLayout';
+import { classNames } from 'packages/website/src/client/shared/ui/classNames';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useProductCache } from '../../../../shared/cache/ProductCache';
-import { classNames } from '../../../../shared/ui';
 import { CompareProductsForm } from '../../../components/CompareProductsForm/CompareProductsForm';
 import { gpuService } from '../../../services/gpuService';
 import {
@@ -24,12 +24,10 @@ import {
   ListTable,
   ListTitle,
 } from './components';
-import { ListPageContext } from './context';
-import {
-  useListPageContextProps,
-  useSeoDescription,
-  useSeoTitle,
-} from './hooks';
+import { ListPageContext } from './context/ListPageContext';
+import { useListPageContextProps } from './hooks/useListPageContextProps';
+import { useSeoDescription } from './hooks/useSeoDescription';
+import { useSeoTitle } from './hooks/useSeoTitle';
 
 export const ListGpusPage = (props: ListGpusViewModel) => {
   useProductCache(ProductType.Gpu, props.gpus);

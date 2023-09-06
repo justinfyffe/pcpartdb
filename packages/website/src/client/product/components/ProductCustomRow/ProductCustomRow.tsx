@@ -3,7 +3,7 @@ import {
   Tr,
 } from 'packages/website/src/client/shared/components/Table/Table';
 import React, { FunctionComponent, useMemo } from 'react';
-import { classNames } from '../../../shared/ui';
+import { classNames } from '../../../shared/ui/classNames';
 
 type LabelType = string | React.ReactNode;
 type ValueType = string | React.ReactNode;

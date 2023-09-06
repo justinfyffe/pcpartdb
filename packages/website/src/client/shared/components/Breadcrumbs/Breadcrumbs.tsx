@@ -1,5 +1,5 @@
 import React, { Children, FunctionComponent } from 'react';
-import { classNames } from '../../ui';
+import { classNames } from '../../ui/classNames';
 import { BreadcrumbProps } from './Breadcrumb';
 
 interface BreadcrumbsProps {

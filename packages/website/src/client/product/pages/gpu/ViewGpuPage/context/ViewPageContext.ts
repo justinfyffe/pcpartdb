@@ -1,6 +1,9 @@
 import { Gpu, ViewGpuContentData } from '@pcpartdb/shared';
+import {
+  ContentParams,
+  ContentTags,
+} from 'packages/website/src/client/shared/content/types';
 import { createContext } from 'react';
-import { ContentParams, ContentTags } from '../../../../../shared/content';
 
 export interface ViewPageContextProps {
   gpu: Gpu;

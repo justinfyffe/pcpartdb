@@ -1,7 +1,8 @@
 import { Cpu, ListCpusContentData, ListCpusQuery } from '@pcpartdb/shared';
 import { useMemo } from 'react';
-import { getContentParams, getContentTags } from '../content';
-import { ListPageContextProps } from '../context';
+import { getContentParams } from '../content/getContentParams';
+import { getContentTags } from '../content/getContentTags';
+import { ListPageContextProps } from '../context/ListPageContext';
 
 export function useListPageContextProps(input: {
   query: ListCpusQuery;

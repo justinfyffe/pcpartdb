@@ -1,7 +1,8 @@
 import { Cpu, ViewCpuContentData } from '@pcpartdb/shared';
 import { useMemo } from 'react';
-import { getContentParams, getContentTags } from '../content';
-import { ViewPageContextProps } from '../context';
+import { getContentParams } from '../content/getContentParams';
+import { getContentTags } from '../content/getContentTags';
+import { ViewPageContextProps } from '../context/ViewPageContext';
 
 export function useViewPageContextProps(input: {
   cpu: Cpu;

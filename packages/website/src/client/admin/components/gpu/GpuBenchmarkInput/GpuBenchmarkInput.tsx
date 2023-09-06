@@ -1,6 +1,7 @@
 import { formatGpuField, GpuField, GpuFieldKey } from '@pcpartdb/shared';
 import { Checkbox } from 'packages/website/src/client/shared/components/Checkbox/Checkbox';
 import { NumberInput } from 'packages/website/src/client/shared/components/Input/NumberInput';
+import { classNames } from 'packages/website/src/client/shared/ui/classNames';
 import React, {
   FunctionComponent,
   useCallback,
@@ -8,7 +9,6 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import { classNames } from '../../../../shared/ui';
 
 interface GpuBenchmarkInputProps {
   field: GpuFieldKey;

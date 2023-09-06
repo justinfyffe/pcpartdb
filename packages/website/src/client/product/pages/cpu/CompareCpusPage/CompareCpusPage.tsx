@@ -29,8 +29,8 @@ import {
   RelativeValue,
   TechnicalSpecs,
 } from './components';
-import { ComparePageContext } from './context';
-import { useComparePageContextProps } from './hooks';
+import { ComparePageContext } from './context/ComparePageContext';
+import { useComparePageContextProps } from './hooks/useComparePageContextProps';
 
 export const CompareCpusPage = (
   props: CompareCpusViewModel & { config: Config },

@@ -1,5 +1,5 @@
 import React, { FormEvent, FunctionComponent } from 'react';
-import { classNames } from '../../ui';
+import { classNames } from '../../ui/classNames';
 
 interface FormProps {
   className?: string;

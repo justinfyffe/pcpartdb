@@ -8,7 +8,7 @@ import React, {
   useState,
 } from 'react';
 import { useThrottle } from '../../hooks/useThrottle';
-import { classNames } from '../../ui';
+import { classNames } from '../../ui/classNames';
 import { TextInput, TextInputProps } from '../Input/TextInput';
 import { Spinner } from '../Spinner/Spinner';
 import { AutocompleteContext } from './AutocompleteContext';

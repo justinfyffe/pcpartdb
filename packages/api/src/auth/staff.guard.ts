@@ -1,5 +1,5 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
-import { ApiRequest } from '../shared/http';
+import { ApiRequest } from '../shared/http/types';
 
 @Injectable()
 export class StaffGuard implements CanActivate {

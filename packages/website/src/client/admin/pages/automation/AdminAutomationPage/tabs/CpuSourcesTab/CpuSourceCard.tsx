@@ -17,7 +17,7 @@ import {
   ProductType,
   UpdateCpuActionData,
 } from '@pcpartdb/shared';
-import { automationService } from 'packages/website/src/client/automation/services';
+import { automationService } from 'packages/website/src/client/automation/services/automationService';
 import { ProductAutocomplete } from 'packages/website/src/client/product/components/ProductAutocomplete/ProductAutocomplete';
 import { productSourceService } from 'packages/website/src/client/product/services/productSourceService';
 import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';

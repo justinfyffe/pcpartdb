@@ -1,7 +1,7 @@
 import { ListCpusOrder, ListCpusSort } from '@pcpartdb/shared';
+import { classNames } from 'packages/website/src/client/shared/ui/classNames';
 import React, { FunctionComponent, useCallback, useContext } from 'react';
-import { classNames } from '../../../../../../shared/ui';
-import { ListPageContext } from '../../context';
+import { ListPageContext } from '../../context/ListPageContext';
 
 interface ListFilterSortProps {
   className?: string;

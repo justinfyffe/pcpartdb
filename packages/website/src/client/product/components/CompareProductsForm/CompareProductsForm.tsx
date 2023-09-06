@@ -14,7 +14,7 @@ import React, {
 import { useProductCache } from '../../../shared/cache/ProductCache';
 import { PrimaryButton } from '../../../shared/components/Button/PrimaryButton';
 import { Form } from '../../../shared/components/Form/Form';
-import { classNames } from '../../../shared/ui';
+import { classNames } from '../../../shared/ui/classNames';
 import { ProductAutocomplete } from '../ProductAutocomplete/ProductAutocomplete';
 
 interface CompareProductsFormProps {

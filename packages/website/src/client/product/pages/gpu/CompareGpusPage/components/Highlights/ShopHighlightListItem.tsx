@@ -3,7 +3,7 @@ import { formatGpuName, getGpuAffiliateUrl } from '@pcpartdb/shared';
 import { AffiliateDisclaimer } from 'packages/website/src/client/shared/components/AffiliateDisclaimer/AffiliateDisclaimer';
 import { WarningButton } from 'packages/website/src/client/shared/components/Button/WarningButton';
 import React, { FunctionComponent, useContext, useMemo } from 'react';
-import { ComparePageContext } from '../../context';
+import { ComparePageContext } from '../../context/ComparePageContext';
 
 interface ShopHighlightListItemProps {
   className?: string;

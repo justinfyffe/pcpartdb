@@ -1,6 +1,6 @@
 import { hasProductFieldValue } from '@pcpartdb/shared';
 import React, { FunctionComponent, useContext } from 'react';
-import { ComparePageContext } from '../../../context';
+import { ComparePageContext } from '../../../context/ComparePageContext';
 import { ArchitectureIntro } from './ArchitectureIntro';
 import { ArchitectureTable } from './ArchitectureTable';
 

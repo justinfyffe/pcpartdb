@@ -1,5 +1,5 @@
 import React, { forwardRef, HTMLProps, useCallback } from 'react';
-import { classNames } from '../../ui';
+import { classNames } from '../../ui/classNames';
 
 interface CheckboxProps
   extends Omit<HTMLProps<HTMLInputElement>, 'onChange' | 'value'> {

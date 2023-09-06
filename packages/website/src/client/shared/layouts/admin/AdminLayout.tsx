@@ -19,14 +19,14 @@ import React, {
   useState,
 } from 'react';
 import { authService } from '../../../auth/authService';
-import { automationService } from '../../../automation';
+import { automationService } from '../../../automation/services/automationService';
 import { Button, ButtonVariant } from '../../components/Button/Button';
 import { Img } from '../../components/Img/Img';
 import { Menu } from '../../components/Menu/Menu';
 import { MenuLinkItem } from '../../components/Menu/MenuLinkItem';
 import { MetaReferrer, Seo } from '../../components/Seo/Seo';
 import { Toolbar } from '../../components/Toolbar/Toolbar';
-import { classNames } from '../../ui';
+import { classNames } from '../../ui/classNames';
 import { AutomationStatusContext } from './AutomationStatusContext';
 
 interface AdminLayoutProps {

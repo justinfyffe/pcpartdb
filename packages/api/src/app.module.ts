@@ -6,7 +6,7 @@ import { DatabaseModule } from './database';
 import { ImageModule } from './image/image.module';
 import { ProductModule } from './product/product.module';
 import { ContextMiddleware } from './shared/context';
-import { CookieModule } from './shared/cookie';
+import { CookieModule } from './shared/cookie/cookie.module';
 import { UserModule } from './user/user.module';
 import { ViewModelsModule } from './view-models/view-models.module';
 import { WebsiteModule } from './website/website.module';

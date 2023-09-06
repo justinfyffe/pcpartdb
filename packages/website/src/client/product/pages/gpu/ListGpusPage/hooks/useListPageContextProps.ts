@@ -1,7 +1,8 @@
 import { Gpu, ListGpusContentData, ListGpusQuery } from '@pcpartdb/shared';
 import { useMemo } from 'react';
-import { getContentParams, getContentTags } from '../content';
-import { ListPageContextProps } from '../context';
+import { getContentParams } from '../content/getContentParams';
+import { getContentTags } from '../content/getContentTags';
+import { ListPageContextProps } from '../context/ListPageContext';
 
 export function useListPageContextProps(input: {
   query: ListGpusQuery;
@@ -30,5 +31,11 @@ export function useListPageContextProps(input: {
       contentTags,
       contentParams,
     } as ListPageContextProps;
-  }, [input.gpus, input.query, input.totalGpus, input.updateQuery]);
+  }, [
+    input.contentData,
+    input.gpus,
+    input.query,
+    input.totalGpus,
+    input.updateQuery,
+  ]);
 }

@@ -1,6 +1,6 @@
 import { hasProductFieldValue } from '@pcpartdb/shared';
 import React, { FunctionComponent, useContext } from 'react';
-import { ViewPageContext } from '../../../context';
+import { ViewPageContext } from '../../../context/ViewPageContext';
 import { MemoryIntro } from './MemoryIntro';
 import { MemoryTable } from './MemoryTable';
 

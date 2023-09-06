@@ -1,5 +1,5 @@
 import React, { forwardRef, HTMLProps, useCallback, useState } from 'react';
-import { classNames } from '../../ui';
+import { classNames } from '../../ui/classNames';
 
 export enum ButtonVariant {
   None = 'none',

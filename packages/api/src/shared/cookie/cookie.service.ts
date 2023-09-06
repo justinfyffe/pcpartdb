@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Context } from '../context';
-import { ApiRequest } from '../http';
+import { ApiRequest } from '../http/types';
 
 interface CookieOptions {
   expires?: number;

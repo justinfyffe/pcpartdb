@@ -1,6 +1,6 @@
 import { getGpuChipset, hasProductFieldValue } from '@pcpartdb/shared';
 import React, { FunctionComponent, useContext, useMemo } from 'react';
-import { ComparePageContext } from '../../context';
+import { ComparePageContext } from '../../context/ComparePageContext';
 import { ValueIntro } from './ValueIntro';
 import { ValueTable } from './ValueTable';
 

@@ -8,7 +8,7 @@ import {
   Tr,
 } from 'packages/website/src/client/shared/components/Table/Table';
 import React, { FunctionComponent, useContext, useMemo } from 'react';
-import { ComparePageContext } from '../../../context';
+import { ComparePageContext } from '../../../context/ComparePageContext';
 
 interface PhysicalTableProps {
   className?: string;

@@ -6,7 +6,7 @@ import React, {
   useState,
 } from 'react';
 import { useLayout } from '../../layouts/layout-context';
-import { classNames } from '../../ui';
+import { classNames } from '../../ui/classNames';
 import { Button, ButtonVariant } from '../Button/Button';
 import { TextInput } from '../Input/TextInput';
 

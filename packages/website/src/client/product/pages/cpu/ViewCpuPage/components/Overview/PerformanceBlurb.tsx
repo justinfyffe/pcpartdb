@@ -1,10 +1,8 @@
+import { ContentContext } from 'packages/website/src/client/shared/content/ContentContext';
+import { compileContentComponent } from 'packages/website/src/client/shared/content/utils';
 import React, { useContext } from 'react';
-import {
-  compileContentComponent,
-  ContentContext,
-} from '../../../../../../shared/content';
-import { ViewCpuContentTag } from '../../content';
-import { ViewPageContext } from '../../context';
+import { ViewCpuContentTag } from '../../content/getContentTags';
+import { ViewPageContext } from '../../context/ViewPageContext';
 
 const PerformanceRankPlacement = compileContentComponent({
   deps: ['shortCpuName', 'performanceRank', 'totalPerformanceCpus'],

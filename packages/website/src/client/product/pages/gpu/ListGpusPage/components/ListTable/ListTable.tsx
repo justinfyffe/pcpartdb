@@ -23,7 +23,7 @@ import React, {
   useContext,
   useMemo,
 } from 'react';
-import { ListPageContext } from '../../context';
+import { ListPageContext } from '../../context/ListPageContext';
 import { RetailModelsDialog } from '../RetailModelsDialog';
 
 export const ListTable: FunctionComponent = () => {

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { mapToApiKeyDto } from '@pcpartdb/database';
 import { Context } from '../shared/context';
-import { generateToken } from '../shared/crypto';
+import { generateToken } from '../shared/crypto/utils';
 import { forbiddenError } from '../shared/error';
 import { ApiKeyRepository } from './api-key.repository';
 

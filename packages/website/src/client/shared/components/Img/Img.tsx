@@ -1,7 +1,7 @@
 import { Image } from '@pcpartdb/shared';
 import React, { FunctionComponent, HTMLProps } from 'react';
 import { getImagePath } from '../../../image/utils';
-import { classNames } from '../../ui';
+import { classNames } from '../../ui/classNames';
 
 export interface ImgProps
   extends Omit<HTMLProps<HTMLImageElement>, 'src' | 'crossOrigin'> {

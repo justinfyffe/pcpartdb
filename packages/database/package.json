@@ -10,8 +10,7 @@
     "diff": "prisma migrate diff",
     "migrate": "prisma migrate deploy",
     "client": "prisma generate",
-    "migration": "prisma migrate dev",
-    "migration:createOnly": "prisma migrate dev --create-only",
+    "migration": "prisma migrate dev --create-only",
     "format": "prisma format",
     "pull": "prisma db pull",
     "push": "prisma db push"

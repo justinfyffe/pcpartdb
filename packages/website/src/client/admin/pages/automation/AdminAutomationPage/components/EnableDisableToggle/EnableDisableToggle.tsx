@@ -1,4 +1,4 @@
-import { automationService } from 'packages/website/src/client/automation';
+import { automationService } from 'packages/website/src/client/automation/services/automationService';
 import { DangerButton } from 'packages/website/src/client/shared/components/Button/DangerButton';
 import { SuccessButton } from 'packages/website/src/client/shared/components/Button/SuccessButton';
 import { AutomationStatusContext } from 'packages/website/src/client/shared/layouts/admin/AutomationStatusContext';

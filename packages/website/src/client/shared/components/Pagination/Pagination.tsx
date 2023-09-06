@@ -1,6 +1,6 @@
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import React, { FunctionComponent, useCallback, useMemo } from 'react';
-import { classNames } from '../../ui';
+import { classNames } from '../../ui/classNames';
 import { GenericButton } from '../Button/GenericButton';
 
 interface PaginationProps {

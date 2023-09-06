@@ -5,7 +5,7 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import { classNames } from '../../ui';
+import { classNames } from '../../ui/classNames';
 import { ButtonTabLabels } from './ButtonTabLabels';
 import { HorizontalTabLabels } from './HorizontalTabLabels';
 import { TabProps } from './Tab';

@@ -10,7 +10,7 @@ import {
   TBody,
 } from 'packages/website/src/client/shared/components/Table/Table';
 import React, { FunctionComponent, useContext, useMemo } from 'react';
-import { ViewPageContext } from '../../context';
+import { ViewPageContext } from '../../context/ViewPageContext';
 
 interface GeneralInfoTableProps {
   className?: string;

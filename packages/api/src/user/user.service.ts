@@ -10,14 +10,19 @@ import {
 } from '@pcpartdb/shared';
 import * as bcrypt from 'bcryptjs';
 import { Context } from '../shared/context';
-import { generateToken } from '../shared/crypto';
+import { generateToken } from '../shared/crypto/utils';
 import { sendEmail } from '../shared/email';
 import {
   badRequestError,
   internalServerError,
   notFoundError,
 } from '../shared/error';
-import { decodeJwt, generateJwt, JwtType, verifyJwt } from '../shared/jwt';
+import {
+  decodeJwt,
+  generateJwt,
+  JwtType,
+  verifyJwt,
+} from '../shared/jwt/utils';
 import { UserRepository } from './user.repository';
 
 @Injectable()

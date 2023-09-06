@@ -1,6 +1,6 @@
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import React, { FunctionComponent } from 'react';
-import { classNames } from '../../ui';
+import { classNames } from '../../ui/classNames';
 import { Button } from '../Button/Button';
 import { closeDialog } from './dialog';
 

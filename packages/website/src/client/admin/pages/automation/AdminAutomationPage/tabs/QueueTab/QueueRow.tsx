@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { InformationCircleIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { AutomationAction, AutomationActionType } from '@pcpartdb/shared';
-import { automationService } from 'packages/website/src/client/automation';
+import { automationService } from 'packages/website/src/client/automation/services/automationService';
 import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
 import { showDialog } from 'packages/website/src/client/shared/components/Dialog/dialog';
 import {

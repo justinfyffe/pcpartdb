@@ -1,10 +1,8 @@
-import {
-  compileContentFunction,
-  ContentFunctionParams,
-} from 'packages/website/src/client/shared/content';
+import { ContentFunctionParams } from 'packages/website/src/client/shared/content/types';
+import { compileContentFunction } from 'packages/website/src/client/shared/content/utils';
 import { useMemo } from 'react';
-import { ListGpusContentTag } from '../content';
-import { ListPageContextProps } from '../context';
+import { ListGpusContentTag } from '../content/getContentTags';
+import { ListPageContextProps } from '../context/ListPageContext';
 
 const seoTitle = compileContentFunction(
   {

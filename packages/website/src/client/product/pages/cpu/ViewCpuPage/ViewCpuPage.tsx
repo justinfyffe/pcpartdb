@@ -28,8 +28,8 @@ import {
   RelativeValue,
   TechnicalSpecs,
 } from './components';
-import { ViewPageContext } from './context';
-import { useViewPageContextProps } from './hooks';
+import { ViewPageContext } from './context/ViewPageContext';
+import { useViewPageContextProps } from './hooks/useViewPageContextProps';
 
 export const ViewCpuPage = (props: ViewCpuViewModel & { config: Config }) => {
   const { cpu, relatedCpus, relatedComparisons, contentData, config } = props;

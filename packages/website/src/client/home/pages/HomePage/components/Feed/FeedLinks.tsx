@@ -1,5 +1,5 @@
+import { classNames } from 'packages/website/src/client/shared/ui/classNames';
 import React, { FunctionComponent } from 'react';
-import { classNames } from '../../../../../shared/ui';
 
 interface FeedLinksProps {
   className?: string;

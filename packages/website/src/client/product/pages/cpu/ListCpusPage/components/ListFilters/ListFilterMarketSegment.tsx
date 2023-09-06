@@ -3,14 +3,14 @@ import {
   formatCpuMarketSegment,
 } from '@pcpartdb/shared';
 import { Checkbox } from 'packages/website/src/client/shared/components/Checkbox/Checkbox';
+import { classNames } from 'packages/website/src/client/shared/ui/classNames';
 import React, {
   FunctionComponent,
   useCallback,
   useContext,
   useMemo,
 } from 'react';
-import { classNames } from '../../../../../../shared/ui';
-import { ListPageContext } from '../../context';
+import { ListPageContext } from '../../context/ListPageContext';
 
 interface ListFilterMarketSegmentProps {
   className?: string;

@@ -1,6 +1,6 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { DatabaseModule } from '../database';
-import { CookieModule } from '../shared/cookie';
+import { CookieModule } from '../shared/cookie/cookie.module';
 import { UserModule } from '../user/user.module';
 import { AccessTokenController } from './access-token.controller';
 import { AccessTokenRepository } from './access-token.repository';

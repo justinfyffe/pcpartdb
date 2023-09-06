@@ -1,7 +1,7 @@
 import { Bars3Icon } from '@heroicons/react/24/outline';
 import { Menu } from 'packages/website/src/client/shared/components/Menu/Menu';
+import { classNames } from 'packages/website/src/client/shared/ui/classNames';
 import React, { FunctionComponent } from 'react';
-import { classNames } from '../../../../../../shared/ui';
 import { ListFilters } from '../ListFilters';
 import { ListPresets } from '../ListPresets';
 

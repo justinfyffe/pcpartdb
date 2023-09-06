@@ -1,10 +1,17 @@
 Current Focus:
+- Finish Automation
+  - Finish GPU Queue
+  - Finish CPU Queue
+  - Scraping
+    - [CPU] Create scraper for Intel Website
+      - Ex: https://www.intel.com/content/www/us/en/products/sku/80267/intel-atom-processor-z3795-2m-cache-up-to-2-39-ghz/specifications.html
+      - Ex: https://ark.intel.com/content/www/us/en/ark/products/75193/intel-celeron-processor-1005m-2m-cache-1-90-ghz.html
+    - [CPU] Create scraper for AMD website
+      - Ex: https://www.amd.com/en/products/apu/amd-ryzen-5-pro-6650h
 - Tech Debt
   - Explore combined products table
   - Setup separate table for product sources instead of a meta column
   - Setup separate table for fields
-- Tech Debt
-  - Removing barrel files from website package
 
 Admin Improvements
 - Improved data auditing
@@ -54,6 +61,9 @@ Content:
 - Toggle market segment for relative performance/value tables
 - Use "chip" instead of card for mobile and integrated graphics
 - Add tooltips explaining specs from glossary
+- Increase length of content
+  - Add charts, more summarized text, etc.
+  - Look at other comparison sites for inspiration
 
 Monetization:
 - Join amazon affiliate for other major countries
@@ -63,6 +73,8 @@ Monetization:
 - Integrate with Amazon API (when qualified)
   - Live pricing and availability
   - Can add spinner for getting price
+- Improve affiliate link locations
+  - Move to above scroll
 
 Performance:
 - Audit and log DB Queries
@@ -92,9 +104,10 @@ Tech Debt:
 - Setup separate table for fields
   - Keep a general performance score and value score on products tables for better
     sorting. Can store other benchmark values
-- Get rid of index.ts barrel files on api and website (only needed for libraries)
+- Get rid of index.ts barrel files
+- Use prisma for migrations and schemas, use kysely for querying, use prisma-kysely for generating types
 - Update major dependencies
-  - Nextjs, Nestjs, TypeScript
+  - Nextjs, Nestjs, TypeScript, Prisma
 - Replace axios with fetch
 - Simplify UI components
   - More shared components when we can.
@@ -107,7 +120,8 @@ Tech Debt:
 - Seamless deployment
   - Use docker to build on pc instead of server
   - Use docker for running on production
-- Remove TS classes in client code. Only use functions (except for maybe api client).
+  - can we just build prisma client on server, nothing else
+- Remove TS classes in client code. Only use functions
 - Improve consistency of where state, memo, callbacks, effects are placed in component code
   - Order: States, Memos, Callbacks, Effects
 - Improve DX of View Models
@@ -132,6 +146,7 @@ Tech Debt:
 - symlink public folder to outside of packages?
 - remove usage of router.push
 - get rid of, or improve gpu and image cache
+- Create seed scripts for dev database
 
 UX:
 - Improve product autocomplete
@@ -154,7 +169,10 @@ Folder Structure Ideas
     - Components used across multiple pages for this feature.
   - <feature>/hooks/
     - Hooks used across multiple pages for this feature.
-  - TODO: where to place utils and services?
+  - <feature>/utils/
+    - Utils used across multiple pages for this feature.
+  - <feature>/services/
+    - Services used across multiple pages for this feature.
   - folders and files should use PascalCase and camelCase except for package folders
 
 SEO Ideas

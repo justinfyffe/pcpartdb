@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from 'react';
-import { classNames } from '../../ui';
+import { classNames } from '../../ui/classNames';
 
 interface FooterProps {
   as?: React.ElementType;

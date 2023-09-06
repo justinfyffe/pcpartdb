@@ -3,9 +3,9 @@ import { Image } from '@pcpartdb/shared';
 import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
 import { showDialog } from 'packages/website/src/client/shared/components/Dialog/dialog';
 import { Img } from 'packages/website/src/client/shared/components/Img/Img';
+import { classNames } from 'packages/website/src/client/shared/ui/classNames';
 import React, { FunctionComponent, useCallback, useState } from 'react';
 import { formatFileSize, formatImageDimensions } from '../../../../image/utils';
-import { classNames } from '../../../../shared/ui';
 import { ImageDialog } from '../ImageDialog/ImageDialog';
 
 interface ImageInputProps {

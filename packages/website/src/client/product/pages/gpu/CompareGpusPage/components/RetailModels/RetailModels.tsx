@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useContext } from 'react';
-import { ComparePageContext } from '../../context';
+import { ComparePageContext } from '../../context/ComparePageContext';
 import { RetailModelsIntro } from './RetailModelsIntro';
 import { RetailModelsTable } from './RetailModelsTable';
 import { RetailModelsTitle } from './RetailModelsTitle';

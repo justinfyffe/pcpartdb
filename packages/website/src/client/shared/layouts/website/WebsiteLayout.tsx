@@ -17,7 +17,7 @@ import {
 import { Img } from '../../components/Img/Img';
 import { List, ListItem } from '../../components/List/List';
 import { Toolbar } from '../../components/Toolbar/Toolbar';
-import { classNames } from '../../ui';
+import { classNames } from '../../ui/classNames';
 
 interface EditThisPage {
   href: string;

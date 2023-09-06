@@ -4,9 +4,10 @@ import { Config, User } from '@pcpartdb/shared';
 import { NextFunction } from 'express';
 import { AccessTokenRepository } from '../../auth/access-token.repository';
 import { ApiKeyRepository } from '../../auth/api-key.repository';
-import { CookieService, SESSION_COOKIE } from '../cookie';
-import { hashToken } from '../crypto';
-import { ApiRequest, ApiResponse } from '../http';
+import { CookieService } from '../cookie/cookie.service';
+import { SESSION_COOKIE } from '../cookie/cookies';
+import { hashToken } from '../crypto/utils';
+import { ApiRequest, ApiResponse } from '../http/types';
 
 @Injectable()
 export class ContextMiddleware implements NestMiddleware {

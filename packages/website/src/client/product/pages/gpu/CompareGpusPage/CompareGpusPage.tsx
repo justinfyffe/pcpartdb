@@ -30,8 +30,8 @@ import {
   RetailModels,
   TechnicalSpecs,
 } from './components';
-import { ComparePageContext } from './context';
-import { useComparePageContextProps } from './hooks';
+import { ComparePageContext } from './context/ComparePageContext';
+import { useComparePageContextProps } from './hooks/useComparePageContextProps';
 
 export const CompareGpusPage = (
   props: CompareGpusViewModel & { config: Config },

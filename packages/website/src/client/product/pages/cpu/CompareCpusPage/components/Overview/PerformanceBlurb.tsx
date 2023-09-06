@@ -1,10 +1,8 @@
-import {
-  compileContentComponent,
-  ContentContext,
-} from 'packages/website/src/client/shared/content';
+import { ContentContext } from 'packages/website/src/client/shared/content/ContentContext';
+import { compileContentComponent } from 'packages/website/src/client/shared/content/utils';
 import React, { useContext } from 'react';
 import { CompareCpusContentTag } from '../../content';
-import { ComparePageContext } from '../../context';
+import { ComparePageContext } from '../../context/ComparePageContext';
 
 const PerformanceSentence = compileContentComponent(
   {

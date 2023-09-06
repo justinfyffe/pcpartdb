@@ -1,5 +1,5 @@
 import React, { cloneElement } from 'react';
-import { classNames } from '../../../shared/ui';
+import { classNames } from '../../../shared/ui/classNames';
 
 type Value = {
   name: string;

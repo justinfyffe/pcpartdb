@@ -9,7 +9,7 @@ import React, {
   useState,
 } from 'react';
 import { Autocomplete } from '../../../shared/components/Autocomplete/Autocomplete';
-import { classNames } from '../../../shared/ui';
+import { classNames } from '../../../shared/ui/classNames';
 import { productSourceService } from '../../services/productSourceService';
 import { ProductSourceAutocompleteOption } from './ProductSourceAutocompleteOption';
 

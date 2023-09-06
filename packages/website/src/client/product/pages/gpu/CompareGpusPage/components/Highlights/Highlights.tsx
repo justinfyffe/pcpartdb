@@ -1,4 +1,4 @@
-import { classNames } from 'packages/website/src/client/shared/ui';
+import { classNames } from 'packages/website/src/client/shared/ui/classNames';
 import React, { FunctionComponent } from 'react';
 import { ClockHighlightListItem } from './ClockHighlightListItem';
 import { MemoryHighlightListItem } from './MemoryHighlightListItem';

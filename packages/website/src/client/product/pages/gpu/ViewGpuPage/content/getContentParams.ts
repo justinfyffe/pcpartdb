@@ -12,7 +12,7 @@ import {
   isPastGpuLaunchDate,
   ViewGpuContentData,
 } from '@pcpartdb/shared';
-import { ContentParams } from 'packages/website/src/client/shared/content';
+import { ContentParams } from 'packages/website/src/client/shared/content/types';
 
 export interface ViewGpuContentParams {
   architecture?: string;

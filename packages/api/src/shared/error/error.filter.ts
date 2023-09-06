@@ -6,7 +6,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { ApiError, HttpErrorType } from '@pcpartdb/shared';
-import { getErrorStatusCode, ServerError } from './error-utils';
+import { getErrorStatusCode, ServerError } from './utils';
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {

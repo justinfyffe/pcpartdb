@@ -5,7 +5,7 @@ import {
   ProductType,
 } from '@pcpartdb/shared';
 import React, { FunctionComponent, useMemo } from 'react';
-import { classNames } from '../../../shared/ui';
+import { classNames } from '../../../shared/ui/classNames';
 import { SidenavSection, SidenavSectionTitle } from '../Sidenav/Sidenav';
 
 interface SidenavRelatedProductsProps {

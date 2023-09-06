@@ -17,7 +17,7 @@ import {
   GpuProductSourceGroup,
   ProductType,
 } from '@pcpartdb/shared';
-import { automationService } from 'packages/website/src/client/automation/services';
+import { automationService } from 'packages/website/src/client/automation/services/automationService';
 import { productSourceService } from 'packages/website/src/client/product/services/productSourceService';
 import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
 import {

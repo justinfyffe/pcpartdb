@@ -1,6 +1,6 @@
 import React, { createContext, FunctionComponent, useMemo } from 'react';
 import { useLayout } from '../../layouts/layout-context';
-import { classNames } from '../../ui';
+import { classNames } from '../../ui/classNames';
 
 interface FieldState {
   fieldId: string;

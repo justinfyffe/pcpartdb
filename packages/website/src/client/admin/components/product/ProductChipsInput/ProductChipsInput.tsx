@@ -4,7 +4,7 @@ import {
   Button,
   ButtonVariant,
 } from 'packages/website/src/client/shared/components/Button/Button';
-import { classNames } from 'packages/website/src/client/shared/ui';
+import { classNames } from 'packages/website/src/client/shared/ui/classNames';
 import React, {
   FocusEvent,
   forwardRef,

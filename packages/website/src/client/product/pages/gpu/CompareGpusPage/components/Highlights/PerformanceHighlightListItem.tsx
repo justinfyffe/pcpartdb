@@ -2,7 +2,7 @@ import { StarIcon } from '@heroicons/react/24/outline';
 import { formatGpuField, formatGpuName, getGpuChipset } from '@pcpartdb/shared';
 import { ProductHighlightComparison } from 'packages/website/src/client/product/components/ProductHighlightComparison/ProductHighlightComparison';
 import React, { FunctionComponent, useContext, useMemo } from 'react';
-import { ComparePageContext } from '../../context';
+import { ComparePageContext } from '../../context/ComparePageContext';
 
 interface PerformanceHighlightListItemProps {
   className?: string;

@@ -5,7 +5,7 @@ import {
   TBody,
 } from 'packages/website/src/client/shared/components/Table/Table';
 import React, { FunctionComponent, useContext } from 'react';
-import { ViewPageContext } from '../../../context';
+import { ViewPageContext } from '../../../context/ViewPageContext';
 
 interface PowerTableProps {
   className?: string;

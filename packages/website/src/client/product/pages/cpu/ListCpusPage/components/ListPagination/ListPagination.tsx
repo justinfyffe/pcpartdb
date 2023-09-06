@@ -4,7 +4,7 @@ import {
   LegacyPaginationResult,
 } from 'packages/website/src/client/shared/components/Pagination/LegacyPagination';
 import React, { FunctionComponent, useCallback, useContext } from 'react';
-import { ListPageContext } from '../../context';
+import { ListPageContext } from '../../context/ListPageContext';
 
 export const ListPagination: FunctionComponent = () => {
   const {

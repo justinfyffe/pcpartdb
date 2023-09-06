@@ -13,7 +13,7 @@ import {
   Tr,
 } from 'packages/website/src/client/shared/components/Table/Table';
 import React, { FunctionComponent, useContext, useMemo } from 'react';
-import { ListPageContext } from '../../context';
+import { ListPageContext } from '../../context/ListPageContext';
 
 export const ListTable: FunctionComponent = () => {
   const { cpus } = useContext(ListPageContext);

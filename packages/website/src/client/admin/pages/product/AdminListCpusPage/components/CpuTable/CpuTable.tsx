@@ -6,7 +6,7 @@ import {
   getAdminEditCpuPath,
   UpdateCpuActionData,
 } from '@pcpartdb/shared';
-import { automationService } from 'packages/website/src/client/automation';
+import { automationService } from 'packages/website/src/client/automation/services/automationService';
 import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
 import {
   Table,

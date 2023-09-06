@@ -9,14 +9,12 @@ import {
 } from '@pcpartdb/shared';
 import { Card } from 'packages/website/src/client/shared/components/Card/Card';
 import { Img } from 'packages/website/src/client/shared/components/Img/Img';
+import { ContentContext } from 'packages/website/src/client/shared/content/ContentContext';
+import { ContentComponentParams } from 'packages/website/src/client/shared/content/types';
+import { compileContentComponent } from 'packages/website/src/client/shared/content/utils';
+import { classNames } from 'packages/website/src/client/shared/ui/classNames';
 import React, { FunctionComponent, useMemo } from 'react';
 import { getCompanyLogoFeedPath } from '../../../../../image/utils';
-import {
-  compileContentComponent,
-  ContentComponentParams,
-  ContentContext,
-} from '../../../../../shared/content';
-import { classNames } from '../../../../../shared/ui';
 
 export enum ProductComparisonFeedTag {
   ComparePerformance = 'COMPARE_PERFORMANCE',

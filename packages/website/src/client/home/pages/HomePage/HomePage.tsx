@@ -14,17 +14,18 @@ import { Seo } from '../../../shared/components/Seo/Seo';
 import { Tab } from '../../../shared/components/Tabs/Tab';
 import { Tabs } from '../../../shared/components/Tabs/Tabs';
 import { WebsiteLayout } from '../../../shared/layouts/website/WebsiteLayout';
-import { classNames } from '../../../shared/ui';
+import { classNames } from '../../../shared/ui/classNames';
+import { Feed } from './components/Feed/Feed';
+import { FeedItems } from './components/Feed/FeedItems';
+import { FeedLink, FeedLinks } from './components/Feed/FeedLinks';
 import {
-  Feed,
-  FeedItems,
-  FeedLink,
-  FeedLinks,
   ProductComparisonFeedItem,
   ProductComparisonFeedTag,
+} from './components/Feed/ProductComparisonFeedItem';
+import {
   ProductFeedItem,
   ProductFeedTag,
-} from './components';
+} from './components/Feed/ProductFeedItem';
 
 export const HomePage = (props: HomeViewModel) => {
   const { nvidiaVsAmdGpus, popularGpus, intelVsAmdCpus, popularCpus } = props;
