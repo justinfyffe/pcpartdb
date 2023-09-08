@@ -4,6 +4,7 @@ Primary Focus:
   - Finish CPU Queue
   - Scraping
     - [CPU] Create scraper for Intel Website
+      - Don't get sources, just accept regular input
       - Ex: https://www.intel.com/content/www/us/en/products/sku/80267/intel-atom-processor-z3795-2m-cache-up-to-2-39-ghz/specifications.html
       - Ex: https://ark.intel.com/content/www/us/en/ark/products/75193/intel-celeron-processor-1005m-2m-cache-1-90-ghz.html
     - [CPU] Create scraper for AMD website
@@ -24,6 +25,11 @@ When Bored:
   - Minimize controllers
   - Generalize product list objects
   - Simplify UI components
+- Bug fixes
+  - check debounce on autocomplete
+  - non-updated data being included when checking updates
+    - "System Shared" for number values
+    - maybe store string, formatted value, and then a separate sort value
 
 Admin Improvements
 - Improved data auditing
