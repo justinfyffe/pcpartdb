@@ -1036,7 +1036,8 @@ function parseNumberValue(options: ParseNumberOptions): ParseNumberResult {
     return null;
   }
 
-  const rawValue = unit != null ? getBaseUnitValue(base, unit) : base;
+  const rawValue =
+    unit != null ? getBaseUnitValue(base, unit, { decimals: 2 }) : base;
   const formattedValue = formatProductField(
     ProductType.Gpu,
     fieldKey,

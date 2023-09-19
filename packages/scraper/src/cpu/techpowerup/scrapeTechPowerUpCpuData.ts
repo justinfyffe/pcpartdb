@@ -23,7 +23,9 @@ import {
   MultiplierUnit,
   NumericUnit,
   parseProductName,
+  productFieldFormattedValue,
   ProductFieldKey,
+  productFieldRawValue,
   ProductionStatus,
   ProductType,
   ScrapeProductResponse,
@@ -457,7 +459,7 @@ function getIntegratedGraphics($: cheerio.CheerioAPI, ctx?: ScraperContext) {
     return createCpuField({
       field: 'integratedGraphics',
       raw: null,
-      formatted: '',
+      formatted: null,
       ctx,
     });
   }
@@ -881,16 +883,18 @@ function getPerformanceCoreClock($: cheerio.CheerioAPI, ctx?: ScraperContext) {
     return createCpuField({
       field: 'pCoreClock',
       raw: null,
-      formatted: '',
+      formatted: null,
       ctx,
     });
   }
 
   const ret = getClock($, ctx);
-  if (ret != null) {
-    ret.meta.fieldKey = 'pCoreClock';
-  }
-  return ret;
+  return createCpuField({
+    field: 'pCoreClock',
+    raw: productFieldRawValue(ret),
+    formatted: productFieldFormattedValue(ret),
+    ctx,
+  });
 }
 
 function getPerformanceCoreTurboClock(
@@ -901,16 +905,18 @@ function getPerformanceCoreTurboClock(
     return createCpuField({
       field: 'pCoreTurboClock',
       raw: null,
-      formatted: '',
+      formatted: null,
       ctx,
     });
   }
 
   const ret = getTurboClock($, ctx);
-  if (ret != null) {
-    ret.meta.fieldKey = 'pCoreTurboClock';
-  }
-  return ret;
+  return createCpuField({
+    field: 'pCoreTurboClock',
+    raw: productFieldRawValue(ret),
+    formatted: productFieldFormattedValue(ret),
+    ctx,
+  });
 }
 
 function getPerformanceCoresCount($: cheerio.CheerioAPI, ctx?: ScraperContext) {
@@ -1280,7 +1286,8 @@ function parseNumber(options: ParseNumberOptions): ParseNumberResult {
     return null;
   }
 
-  const rawValue = unit != null ? getBaseUnitValue(base, unit) : base;
+  const rawValue =
+    unit != null ? getBaseUnitValue(base, unit, { decimals: 2 }) : base;
   const formattedValue = formatProductField(
     ProductType.Cpu,
     fieldKey,
