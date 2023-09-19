@@ -165,7 +165,16 @@ export function canAutoUpdateProductField(field: ProductField) {
 export function mergeProducts(original: Product, updated: Product): Product {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const canMergeStrategy = (key: string, source: any, obj: any) => {
-    if (key === 'root.benchmarks') {
+    if (key === 'root.name') {
+      // Product names are not updated.
+      return false;
+    } else if (key === 'root.slug') {
+      // Slugs are not updated
+      return false;
+    } else if (key === 'root.company') {
+      // Company shouldn't be updated
+      return false;
+    } else if (key === 'root.benchmarks') {
       // Product Benchmarks are merged elsewhere
       return false;
     }

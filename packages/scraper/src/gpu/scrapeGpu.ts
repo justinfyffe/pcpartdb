@@ -1,6 +1,7 @@
 import {
   ArrayMerge,
   deepmerge,
+  generateProductOtherNames,
   GpuProduct,
   Product,
   ProductSource,
@@ -43,6 +44,11 @@ export async function scrapeGpu(options: ScrapeGpuOptions) {
       response.product,
     );
   }
+
+  scrapedProduct.otherNames = generateProductOtherNames({
+    company: scrapedProduct.company,
+    name: scrapedProduct.name,
+  });
 
   return {
     product: scrapedProduct,

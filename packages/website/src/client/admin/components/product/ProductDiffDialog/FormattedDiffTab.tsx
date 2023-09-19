@@ -118,6 +118,52 @@ export const FormattedDiffTab: FunctionComponent<FormattedDiffTabProps> = (
             </Td>
           </Tr>
 
+          <Tr>
+            <Td
+              className={classNames(
+                'border-r-px',
+                hasCompanyChange ? 'bg-yellow-100' : '',
+              )}
+            >
+              Search Text
+            </Td>
+            <Td
+              className={classNames(
+                'border-r-px',
+                hasCompanyChange ? 'bg-yellow-100' : '',
+              )}
+              colSpan={2}
+            >
+              {diff.original?.searchText ?? '--'}
+            </Td>
+            <Td className={hasCompanyChange ? 'bg-yellow-100' : ''} colSpan={2}>
+              {diff.updated?.searchText ?? '--'}
+            </Td>
+          </Tr>
+
+          <Tr>
+            <Td
+              className={classNames(
+                'border-r-px',
+                hasCompanyChange ? 'bg-yellow-100' : '',
+              )}
+            >
+              Search Text
+            </Td>
+            <Td
+              className={classNames(
+                'border-r-px',
+                hasCompanyChange ? 'bg-yellow-100' : '',
+              )}
+              colSpan={2}
+            >
+              {diff.original?.otherNames?.join(', ') ?? '--'}
+            </Td>
+            <Td className={hasCompanyChange ? 'bg-yellow-100' : ''} colSpan={2}>
+              {diff.updated?.otherNames?.join(', ') ?? '--'}
+            </Td>
+          </Tr>
+
           {dataToPreview.map((previewKey) => (
             <FieldDiffRow
               key={previewKey}

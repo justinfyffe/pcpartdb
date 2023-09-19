@@ -23,6 +23,7 @@ import React, {
   useState,
 } from 'react';
 import { ScrapedBenchmarkRow } from './ScrapedBenchmarkRow';
+import { ScrapedCompanyRow } from './ScrapedCompanyRow';
 import { ScrapedFieldRow } from './ScrapedFieldRow';
 import { ScrapedNameRow } from './ScrapedNameRow';
 import { ScrapedOtherNamesRow } from './ScrapedOtherNamesRow';
@@ -106,6 +107,7 @@ export const ScrapeProductDialog: FunctionComponent<
               </THead>
               <TBody>
                 <ScrapedNameRow />
+                <ScrapedCompanyRow />
                 <ScrapedSearchTextRow />
                 <ScrapedOtherNamesRow />
                 {fieldsToScrape?.map((field) => (
