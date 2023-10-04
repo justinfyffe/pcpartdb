@@ -100,6 +100,6 @@ export class CpuAutocompleteRepository {
       },
     });
 
-    return results.map((result) => result[key]);
+    return results.map((result) => result[key]) as any as string[];
   }
 }
