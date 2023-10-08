@@ -1,12 +1,12 @@
 import 'reflect-metadata';
 import { ArrowPathIcon } from '@heroicons/react/24/outline';
 import {
-  GpuProductType,
-  GpuUpdate,
   ListProductUpdatesFilter,
   ListProductUpdatesQuery,
   ProductType,
+  ProductUpdate,
   ProductUpdateStatus,
+  SubProductType,
 } from '@pcpartdb/shared';
 import { productUpdateService } from 'packages/website/src/client/product/services/productUpdateService';
 import { InfoAlert } from 'packages/website/src/client/shared/components/Alert/InfoAlert';
@@ -29,13 +29,13 @@ export const GpuRetailModelsTab = (_props: GpuRetailModelsTabProps) => {
   // States
 
   const [loading, setLoading] = useState(false);
-  const [updates, setUpdates] = useState<GpuUpdate[]>([]);
+  const [updates, setUpdates] = useState<ProductUpdate[]>([]);
   const [total, setTotal] = useState(0);
   const [query, setQuery] = useState<ListProductUpdatesQuery>({
     filter: {
       productType: ProductType.Gpu,
       status: ProductUpdateStatus.Pending,
-      gpuProductType: GpuProductType.RetailModel,
+      subProductType: SubProductType.GpuRetailModel,
     },
     pagination: { offset: 0, limit: LIMIT },
   });
@@ -46,7 +46,7 @@ export const GpuRetailModelsTab = (_props: GpuRetailModelsTabProps) => {
     setLoading(true);
     const response = await productUpdateService.listUpdates({ query: q });
     setQuery(response.query);
-    setUpdates(response.results as GpuUpdate[]);
+    setUpdates(response.results as ProductUpdate[]);
     setTotal(response.total);
     setLoading(false);
   }, []);

@@ -1,31 +1,19 @@
-import { MeasurementUnit } from '../common';
-import { DateFormat } from '../format';
-import {
-  Cpu,
-  CpuDataSource,
-  CpuDataSourceKey,
-  CpuFieldKey,
-  CpuImage,
-  CpuImages,
-  CpuProductSource,
-  CpuProductSourceGroup,
-  CpuUpdate,
-} from './cpu';
-import {
-  Gpu,
-  GpuDataSource,
-  GpuDataSourceKey,
-  GpuFieldKey,
-  GpuImage,
-  GpuImages,
-  GpuProductSource,
-  GpuProductSourceGroup,
-  GpuUpdate,
-} from './gpu';
+import { AutomationSource } from '../automation';
+import { ListQuery } from '../common';
+import { ProductBenchmark } from './benchmarks';
+import { CpuFieldKey, CpuFields, ListCpusFilter } from './cpu';
+import { GpuFieldKey, GpuFields, ListGpusFilter } from './gpu';
+import { ProductImage } from './images';
+import { ProductSource } from './sources';
 
 export enum ProductType {
   Cpu = 'CPU',
   Gpu = 'GPU',
+}
+
+export enum SubProductType {
+  GpuChipset = 'GPU_CHIPSET',
+  GpuRetailModel = 'GPU_RETAIL_MODEL',
 }
 
 export enum ProductUpdateStatus {
@@ -34,17 +22,63 @@ export enum ProductUpdateStatus {
   Approved = 'APPROVED',
 }
 
-export type Product = Cpu | Gpu;
+export interface ProductMeta {}
+
+export interface ProductRanks {
+  performanceRating?: number;
+  performanceRatingForArchitectureAndMarketSegment?: number;
+  performanceRatingForMarketSegment?: number;
+
+  performancePerMsrp?: number;
+  performancePerMsrpForMarketSegment?: number;
+}
+export type ProductRankKey = keyof ProductRanks;
+
+export type ProductRanksFilter = {
+  productType: ProductType;
+
+  architecture?: string[];
+  segment?: string[];
+};
+
+export interface Product {
+  id?: number;
+  parentId?: number;
+
+  productType: ProductType;
+  slug: string;
+  name: string;
+  otherNames: string[];
+  company?: string;
+  searchText: string;
+  affiliateUrl?: string;
+
+  metadata?: ProductMeta;
+
+  automatedAt?: number;
+
+  fields?: ProductFields;
+  benchmarks?: ProductBenchmark[];
+  sources?: ProductSource[];
+  updates?: ProductUpdate[];
+  images?: ProductImage[];
+  relatedAutomationSources?: AutomationSource[];
+  parent?: Product;
+  children?: Product[];
+
+  ranks?: ProductRanks;
+}
+
 export type ProductComparison = [Product, Product];
 
 export type ProductFieldKey = CpuFieldKey | GpuFieldKey;
+export type ProductFields = CpuFields | GpuFields;
 
 export interface ProductFieldMeta {
-  fieldKey?: ProductFieldKey;
-  currency?: string;
-  unit?: MeasurementUnit;
-  dateFormat?: DateFormat;
+  formattedValue?: string;
   autoUpdate?: boolean;
+  fieldKey?: ProductFieldKey;
+  fieldLabel?: string;
 }
 
 export interface ProductField<T = unknown> {
@@ -52,49 +86,20 @@ export interface ProductField<T = unknown> {
   meta?: ProductFieldMeta;
 }
 
-export type ProductImage = CpuImage | GpuImage;
-export type ProductImages = CpuImages | GpuImages;
-
-export type ProductDataSource = CpuDataSource | GpuDataSource;
-export type ProductSourceKey = CpuDataSourceKey | GpuDataSourceKey;
-
-export interface ProductDiff<TProduct = Product> {
-  original?: TProduct;
-  updated?: TProduct;
+export interface ProductDiff {
+  original?: Product;
+  updated?: Product;
 }
-
-/**
- * Data structure containing information regarding a single source for a
- * product.
- */
-export interface BaseProductSource {
-  id?: number;
-
-  groupKey: string;
-  productType: ProductType;
-  sourceKey: ProductSourceKey;
-  externalKey: string;
-
-  sourceName: string;
-  sourceUrl: string;
-
-  archived?: boolean;
-}
-export type ProductSource = CpuProductSource | GpuProductSource;
-
-/**
- * Group of product sources, usually grouped by source name.
- */
-export type ProductSourceGroup = CpuProductSourceGroup | GpuProductSourceGroup;
 
 /**
  * Data structure containing information regarding data updates for a
  * product. This could include a new or existing product.
  */
-export interface BaseProductUpdate<T = unknown> {
+export interface ProductUpdate<T = ProductDiff> {
   id?: number;
 
   productType: ProductType;
+  subProductType?: SubProductType;
   productName: string;
 
   status: ProductUpdateStatus;
@@ -102,61 +107,46 @@ export interface BaseProductUpdate<T = unknown> {
 
   data?: T;
   metadata?: ProductUpdateMeta;
+
+  productId?: number;
+
+  startedAt?: number;
+  finishedAt?: number;
 }
-export type ProductUpdate = CpuUpdate | GpuUpdate;
+// export type ProductUpdate = CpuUpdate | GpuUpdate;
 
 export interface ProductUpdateMeta {}
 
-export interface ScrapeProductRequest {
-  sources: Record<string, ProductDataSource>;
-}
-
-export interface ScrapeProductResponse {
-  product?: Partial<Product>;
-}
-
-export interface PreviewImportProductsRequest {
-  file?: File;
-  tempPath?: string;
-}
-
-export interface PreviewImportProductsResponse {
-  diffs: ProductDiff[];
-}
-
-export interface ImportProductsRequest {
-  products: Product[];
-}
-
-export interface UpsertProductSourcesRequest {
-  sources: ProductSource[];
-}
-
 export type CreateProductUpdateRequest = ProductUpdate;
 
-export interface AutocompleteProductSourcesRequest {
-  productType: ProductType;
-  source?: ProductSourceKey;
-  query?: string;
-}
-
-export interface AutocompleteProductSourcesResponse {
-  sources: ProductSource[];
-}
-
-export interface ApplyProductSourcesToProductRequest {
+export interface ApplyAutomationSourcesToProductRequest {
   productType: ProductType;
   productId: number;
   sources: number[];
 }
 
-export interface AutoArchiveProductSourcesRequest {
-  // Auto-archive by pulling products of the provided type. Check which source
-  // URLs are already associated with existing products in our database.
-  productType: ProductType;
+export enum MarketSegment {
+  Desktop = 'DESKTOP',
+  Embedded = 'EMBEDDED',
+  Integrated = 'INTEGRATED',
+  Mobile = 'MOBILE',
+  Server = 'SERVER',
+  Workstation = 'WORKSTATION',
+}
 
-  // Auto-archive by pulling all GPU retail models that are associated with the
-  // chipset ID. Check which source URLs are already associated with existing
-  // retail models in our database.
-  gpuChipsetId?: number;
+export enum ProductionStatus {
+  Active = 'ACTIVE',
+  EndOfLife = 'END_OF_LIFE',
+  Unreleased = 'UNRELEASED',
+}
+
+export type ListProductsFilter = ListCpusFilter | ListGpusFilter;
+export interface ListProductsQuery extends ListQuery<ListProductsFilter> {}
+
+export interface RelatedProducts {
+  products: Product[];
+}
+
+export interface RelatedProductComparisons {
+  comparisons: ProductComparison[];
 }

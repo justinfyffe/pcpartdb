@@ -1,4 +1,4 @@
-import { hasProductFieldValue } from '@pcpartdb/shared';
+import { hasProductFieldFormattedValue } from '@pcpartdb/shared';
 import React, { FunctionComponent, useContext } from 'react';
 import { ComparePageContext } from '../../context/ComparePageContext';
 import { GeneralInfoIntro } from './GeneralInfoIntro';
@@ -9,20 +9,20 @@ export const GeneralInfo: FunctionComponent = () => {
   const [gpu1, gpu2] = comparison;
 
   if (
-    !hasProductFieldValue(gpu1.performanceScore) &&
-    !hasProductFieldValue(gpu2.performanceScore) &&
-    !hasProductFieldValue(gpu1.valueScore) &&
-    !hasProductFieldValue(gpu2.valueScore) &&
-    !hasProductFieldValue(gpu1.company) &&
-    !hasProductFieldValue(gpu2.company) &&
-    !hasProductFieldValue(gpu1.marketSegment) &&
-    !hasProductFieldValue(gpu2.marketSegment) &&
-    !hasProductFieldValue(gpu1.releaseDate) &&
-    !hasProductFieldValue(gpu2.releaseDate) &&
-    !hasProductFieldValue(gpu1.launchPrice) &&
-    !hasProductFieldValue(gpu2.launchPrice) &&
-    !hasProductFieldValue(gpu1.releaseDate) &&
-    !hasProductFieldValue(gpu2.releaseDate)
+    !hasProductFieldFormattedValue(gpu1.fields?.performanceRating) &&
+    !hasProductFieldFormattedValue(gpu2.fields?.performanceRating) &&
+    !hasProductFieldFormattedValue(gpu1.fields?.performancePerMsrp) &&
+    !hasProductFieldFormattedValue(gpu2.fields?.performancePerMsrp) &&
+    !gpu1.company &&
+    !gpu2.company &&
+    !hasProductFieldFormattedValue(gpu1.fields?.marketSegment) &&
+    !hasProductFieldFormattedValue(gpu2.fields?.marketSegment) &&
+    !hasProductFieldFormattedValue(gpu1.fields?.releaseDate) &&
+    !hasProductFieldFormattedValue(gpu2.fields?.releaseDate) &&
+    !hasProductFieldFormattedValue(gpu1.fields?.msrp) &&
+    !hasProductFieldFormattedValue(gpu2.fields?.msrp) &&
+    !hasProductFieldFormattedValue(gpu1.fields?.productionStatus) &&
+    !hasProductFieldFormattedValue(gpu2.fields?.productionStatus)
   ) {
     return <></>;
   }

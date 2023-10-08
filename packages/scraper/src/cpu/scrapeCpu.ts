@@ -1,8 +1,9 @@
 import {
-  CpuDataSource,
-  CpuDataSourceKey,
+  ArrayMerge,
   deepmerge,
   Product,
+  ProductSource,
+  ProductSourceKey,
   ScrapeProductResponse,
 } from '@pcpartdb/shared';
 import { ScraperContext } from '../types';
@@ -11,60 +12,68 @@ import { scrapePassMarkCpuData } from './passmark';
 import { scrapeTechPowerUpCpuData } from './techpowerup';
 
 export interface ScrapeCpuOptions {
-  sources: Record<string, CpuDataSource>;
+  sources?: Partial<ProductSource>[];
 }
 
 export async function scrapeCpu(options: ScrapeCpuOptions) {
   const { sources } = options;
 
-  const techPowerUp = sources[CpuDataSourceKey.TechPowerUp];
-  const passMark = sources[CpuDataSourceKey.PassMark];
-  const geekBench = sources[CpuDataSourceKey.GeekBench];
-
-  // Fetch cpu data
   const ctx: ScraperContext = { memoizedFields: {} };
-  const techPowerUpResult = await scrapeTechPowerUp(techPowerUp, ctx);
-  const passMarkResult = await scrapePassMark(passMark, ctx);
-  const geekBenchResult = await scrapeGeekBench(geekBench, ctx);
-
-  // Merge scraped results
-  let scrapedProduct: Partial<Product> = { meta: { dataSources: {} } };
-  if (techPowerUpResult != null) {
-    const { product } = techPowerUpResult;
-    scrapedProduct = deepmerge({}, scrapedProduct, product);
-    scrapedProduct.meta.dataSources[CpuDataSourceKey.TechPowerUp] = techPowerUp;
-  }
-  if (passMarkResult != null) {
-    const { product } = passMarkResult;
-    scrapedProduct = deepmerge({}, scrapedProduct, product);
-    scrapedProduct.meta.dataSources[CpuDataSourceKey.PassMark] = passMark;
-  }
-  if (geekBenchResult != null) {
-    const { product } = geekBenchResult;
-    scrapedProduct = deepmerge({}, scrapedProduct, product);
-    scrapedProduct.meta.dataSources[CpuDataSourceKey.GeekBench] = geekBench;
+  let scrapedProduct: Partial<Product> = {};
+  for (let i = 0; i < sources.length; ++i) {
+    const source = sources[i];
+    const response = await scrapeSource(source, ctx);
+    scrapedProduct = deepmerge(
+      { arrayMerge: ArrayMerge.UseTarget },
+      scrapedProduct,
+      response.product,
+    );
   }
 
   return { product: scrapedProduct } as ScrapeProductResponse;
 }
 
-async function scrapeTechPowerUp(source: CpuDataSource, ctx: ScraperContext) {
-  if (source?.url == null) {
-    return null;
+async function scrapeSource(
+  source: Partial<ProductSource>,
+  ctx: ScraperContext,
+): Promise<ScrapeProductResponse & { hasRetailModels?: boolean }> {
+  if (source?.sourceKey === ProductSourceKey.TechPowerUp) {
+    return await scrapeTechPowerUp(source, ctx);
+  } else if (source?.sourceKey === ProductSourceKey.PassMark) {
+    return await scrapePassMark(source, ctx);
+  } else if (source?.sourceKey === ProductSourceKey.GeekBench) {
+    return await scrapeGeekBench(source, ctx);
   }
-  return await scrapeTechPowerUpCpuData({ url: source.url, ctx });
+
+  throw new Error('Unsupported product source to scrape');
 }
 
-async function scrapePassMark(source: CpuDataSource, ctx: ScraperContext) {
-  if (source?.url == null) {
+async function scrapeTechPowerUp(
+  source: Partial<ProductSource>,
+  ctx: ScraperContext,
+) {
+  if (source?.sourceUrl == null) {
     return null;
   }
-  return await scrapePassMarkCpuData({ url: source.url, ctx });
+  return await scrapeTechPowerUpCpuData({ url: source.sourceUrl, ctx });
 }
 
-async function scrapeGeekBench(source: CpuDataSource, ctx: ScraperContext) {
-  if (source?.url == null) {
+async function scrapePassMark(
+  source: Partial<ProductSource>,
+  ctx: ScraperContext,
+) {
+  if (source?.sourceUrl == null) {
     return null;
   }
-  return await scrapeGeekBenchCpuData({ url: source.url, ctx });
+  return await scrapePassMarkCpuData({ url: source.sourceUrl, ctx });
+}
+
+async function scrapeGeekBench(
+  source: Partial<ProductSource>,
+  ctx: ScraperContext,
+) {
+  if (source?.sourceUrl == null) {
+    return null;
+  }
+  return await scrapeGeekBenchCpuData({ url: source.sourceUrl, ctx });
 }

@@ -1,5 +1,4 @@
 import {
-  getGpuChipset,
   Image as ImageDto,
   ImageMeta,
   joinUrlParts,
@@ -19,7 +18,7 @@ export function getCompanyLogoAutocompletePath(product: Product): string {
     return null;
   }
 
-  const company = product.company?.value;
+  const company = product.company;
   if (company == null) {
     return null;
   }
@@ -64,7 +63,7 @@ export function getCompanyLogoAutocompletePath(product: Product): string {
     default:
       // No logo found, try the chipset
       return getCompanyLogoAutocompletePath(
-        'chipset' in product ? product.chipset : null,
+        'parent' in product ? product.parent : null,
       );
   }
 }
@@ -75,10 +74,10 @@ export function getCompanyLogoFeedPath(product: Product): string {
   }
 
   let company: string = null;
-  if ('chipset' in product) {
-    company = getGpuChipset(product)?.company?.value;
+  if (product.parent != null) {
+    company = product.parent.company;
   } else {
-    company = product.company?.value;
+    company = product.company;
   }
 
   if (company == null) {

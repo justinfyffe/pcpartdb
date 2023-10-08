@@ -1,4 +1,8 @@
-import { Cpu, ListCpusContentData, ListCpusQuery } from '@pcpartdb/shared';
+import {
+  CpuProduct,
+  ListCpusAdditionalData,
+  ListCpusQuery,
+} from '@pcpartdb/shared';
 import { useMemo } from 'react';
 import { getContentParams } from '../content/getContentParams';
 import { getContentTags } from '../content/getContentTags';
@@ -7,16 +11,16 @@ import { ListPageContextProps } from '../context/ListPageContext';
 export function useListPageContextProps(input: {
   query: ListCpusQuery;
   updateQuery: (query: ListCpusQuery) => void;
-  cpus: Cpu[];
+  cpus: CpuProduct[];
   totalCpus: number;
-  contentData: ListCpusContentData;
+  additionalData: ListCpusAdditionalData;
 }) {
   return useMemo(() => {
     const query = { ...input.query };
     const updateQuery = input.updateQuery;
     const cpus = [...input.cpus];
     const totalCpus = input.totalCpus;
-    const contentData = input.contentData;
+    const additionalData = input.additionalData;
 
     const contentTags = getContentTags(query);
     const contentParams = getContentParams(query);
@@ -26,13 +30,13 @@ export function useListPageContextProps(input: {
       updateQuery,
       cpus,
       totalCpus,
-      contentData,
+      additionalData,
 
       contentTags,
       contentParams,
     } as ListPageContextProps;
   }, [
-    input.contentData,
+    input.additionalData,
     input.cpus,
     input.query,
     input.totalCpus,

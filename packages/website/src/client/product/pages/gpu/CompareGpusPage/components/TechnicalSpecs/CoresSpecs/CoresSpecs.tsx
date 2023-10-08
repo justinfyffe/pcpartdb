@@ -1,4 +1,4 @@
-import { hasProductFieldValue } from '@pcpartdb/shared';
+import { hasProductFieldFormattedValue } from '@pcpartdb/shared';
 import React, { FunctionComponent, useContext } from 'react';
 import { ComparePageContext } from '../../../context/ComparePageContext';
 import { CoresIntro } from './CoresIntro';
@@ -14,34 +14,34 @@ export const CoresSpecs: FunctionComponent<CoresSpecsProps> = (props) => {
   const [gpu1, gpu2] = comparison;
 
   if (
-    !hasProductFieldValue(gpu1.shaderUnitsCudaCores) &&
-    !hasProductFieldValue(gpu2.shaderUnitsCudaCores) &&
-    !hasProductFieldValue(gpu1.computeUnitsSmCount) &&
-    !hasProductFieldValue(gpu2.computeUnitsSmCount) &&
-    !hasProductFieldValue(gpu1.textureMappingUnits) &&
-    !hasProductFieldValue(gpu2.textureMappingUnits) &&
-    !hasProductFieldValue(gpu1.renderOutputUnits) &&
-    !hasProductFieldValue(gpu2.renderOutputUnits) &&
-    !hasProductFieldValue(gpu1.tensorCores) &&
-    !hasProductFieldValue(gpu2.tensorCores) &&
-    !hasProductFieldValue(gpu1.rayTracingCores) &&
-    !hasProductFieldValue(gpu2.rayTracingCores) &&
-    !hasProductFieldValue(gpu1.coreClockSpeedBase) &&
-    !hasProductFieldValue(gpu2.coreClockSpeedBase) &&
-    !hasProductFieldValue(gpu1.coreClockSpeedBoost) &&
-    !hasProductFieldValue(gpu2.coreClockSpeedBoost) &&
-    !hasProductFieldValue(gpu1.l1Cache) &&
-    !hasProductFieldValue(gpu2.l1Cache) &&
-    !hasProductFieldValue(gpu1.l2Cache) &&
-    !hasProductFieldValue(gpu2.l2Cache) &&
-    !hasProductFieldValue(gpu1.pixelFillRate) &&
-    !hasProductFieldValue(gpu2.pixelFillRate) &&
-    !hasProductFieldValue(gpu1.textureFillRate) &&
-    !hasProductFieldValue(gpu2.textureFillRate) &&
-    !hasProductFieldValue(gpu1.fp32Performance) &&
-    !hasProductFieldValue(gpu2.fp32Performance) &&
-    !hasProductFieldValue(gpu1.fp64Performance) &&
-    !hasProductFieldValue(gpu2.fp64Performance)
+    !hasProductFieldFormattedValue(gpu1.fields?.gpuCores) &&
+    !hasProductFieldFormattedValue(gpu2.fields?.gpuCores) &&
+    !hasProductFieldFormattedValue(gpu1.fields?.computeUnits) &&
+    !hasProductFieldFormattedValue(gpu2.fields?.computeUnits) &&
+    !hasProductFieldFormattedValue(gpu1.fields?.tmus) &&
+    !hasProductFieldFormattedValue(gpu2.fields?.tmus) &&
+    !hasProductFieldFormattedValue(gpu1.fields?.rops) &&
+    !hasProductFieldFormattedValue(gpu2.fields?.rops) &&
+    !hasProductFieldFormattedValue(gpu1.fields?.tensorCores) &&
+    !hasProductFieldFormattedValue(gpu2.fields?.tensorCores) &&
+    !hasProductFieldFormattedValue(gpu1.fields?.rtCores) &&
+    !hasProductFieldFormattedValue(gpu2.fields?.rtCores) &&
+    !hasProductFieldFormattedValue(gpu1.fields?.gpuCoreBaseClock) &&
+    !hasProductFieldFormattedValue(gpu2.fields?.gpuCoreBaseClock) &&
+    !hasProductFieldFormattedValue(gpu1.fields?.gpuCoreBoostClock) &&
+    !hasProductFieldFormattedValue(gpu2.fields?.gpuCoreBoostClock) &&
+    !hasProductFieldFormattedValue(gpu1.fields?.l1Cache) &&
+    !hasProductFieldFormattedValue(gpu2.fields?.l1Cache) &&
+    !hasProductFieldFormattedValue(gpu1.fields?.l2Cache) &&
+    !hasProductFieldFormattedValue(gpu2.fields?.l2Cache) &&
+    !hasProductFieldFormattedValue(gpu1.fields?.pixelRate) &&
+    !hasProductFieldFormattedValue(gpu2.fields?.pixelRate) &&
+    !hasProductFieldFormattedValue(gpu1.fields?.textureRate) &&
+    !hasProductFieldFormattedValue(gpu2.fields?.textureRate) &&
+    !hasProductFieldFormattedValue(gpu1.fields?.fp32) &&
+    !hasProductFieldFormattedValue(gpu2.fields?.fp32) &&
+    !hasProductFieldFormattedValue(gpu1.fields?.fp64) &&
+    !hasProductFieldFormattedValue(gpu2.fields?.fp64)
   ) {
     return <></>;
   }

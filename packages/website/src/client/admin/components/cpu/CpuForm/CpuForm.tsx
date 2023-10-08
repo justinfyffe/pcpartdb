@@ -1,14 +1,25 @@
 import {
   ApiError,
-  Cpu,
-  CpuDataSource,
-  CpuDataSourceKey,
+  ClockSpeedUnit,
+  CpuProduct,
+  CurrencyUnit,
+  formatMarketSegment,
+  formatProductionStatus,
   getAdminListCpusPath,
+  LengthUnit,
+  MarketSegment,
+  MemorySizeUnit,
+  NumericUnit,
+  ProductBenchmark,
+  ProductionStatus,
+  ProductSource,
   ProductType,
+  TemperatureUnit,
   ValidationErrorType,
+  WattageUnit,
 } from '@pcpartdb/shared';
 import { useRouter } from 'next/router';
-import { cpuService } from 'packages/website/src/client/product/services/cpuService';
+import { productService } from 'packages/website/src/client/product/services/productService';
 import { useProductCache } from 'packages/website/src/client/shared/cache/ProductCache';
 import { ErrorAlert } from 'packages/website/src/client/shared/components/Alert/ErrorAlert';
 import { DangerButton } from 'packages/website/src/client/shared/components/Button/DangerButton';
@@ -36,18 +47,25 @@ import React, {
   useState,
 } from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
-import { ProductDataSourceInput } from '../../product/ProductDataSourceInput/ProductDataSourceInput';
+import { ProductBenchmarksInput } from '../../product/ProductBenchmarkInput/ProductBenchmarksInput';
+import { ProductBooleanInput } from '../../product/ProductBooleanInput/ProductBooleanInput';
+import { ProductDateInput } from '../../product/ProductDateInput/ProductDateInput';
+import { ProductEnumInput } from '../../product/ProductEnumInput/ProductEnumInput';
+import { ProductFloatInput } from '../../product/ProductFloatInput/ProductFloatInput';
 import { ProductImagesInput } from '../../product/ProductImageInput/ProductImagesInput';
+import { ProductOtherNamesInput } from '../../product/ProductOtherNamesInput/ProductOtherNamesInput';
+import { ProductSearchTextInput } from '../../product/ProductSearchTextInput/ProductSearchTextInput';
+import { ProductSlugInput } from '../../product/ProductSlugInput/ProductSlugInput';
+import { ProductSourcesInput } from '../../product/ProductSourceInput/ProductSourcesInput';
+import { ProductTextInput } from '../../product/ProductTextInput/ProductTextInput';
 import { ScrapedProduct } from '../../product/ScrapeProductDialog/types';
-import { CpuDataInput } from '../CpuDataInput/CpuDataInput';
-import { CpuSlugInput } from '../CpuSlugInput/CpuSlugInput';
 import { ScrapeCpuDialog } from '../ScrapeCpuDialog/ScrapeCpuDialog';
 import { CpuFormData } from './CpuFormData';
 import { cpuFormOptions } from './cpuFormOptions';
 import { formDataToCpuRequest } from './formDataToCpuRequest';
 
 interface CpuFormProps {
-  cpu?: Cpu;
+  cpu?: CpuProduct;
 }
 
 export const CpuForm: FunctionComponent<CpuFormProps> = (props) => {
@@ -80,9 +98,9 @@ export const CpuForm: FunctionComponent<CpuFormProps> = (props) => {
 
       try {
         if (isUpdate) {
-          await cpuService.update(cpu.id, request);
+          await productService.update(ProductType.Cpu, cpu.id, request);
         } else {
-          await cpuService.create(request);
+          await productService.create(ProductType.Cpu, request);
         }
         router.push(getAdminListCpusPath());
       } catch (err) {
@@ -100,7 +118,7 @@ export const CpuForm: FunctionComponent<CpuFormProps> = (props) => {
     setDeleting(true);
 
     try {
-      await cpuService.delete(cpu.id);
+      await productService.delete(cpu.id);
       router.push(getAdminListCpusPath());
     } catch (err) {
       setRequestError(err as ApiError);
@@ -112,33 +130,62 @@ export const CpuForm: FunctionComponent<CpuFormProps> = (props) => {
 
   const importSources = useWatch({
     control,
-    name: ['techPowerUpSource', 'passMarkSource', 'geekBenchSource'],
+    name: ['sources'],
   });
 
   const handleScrape = useCallback(
     (scraped: ScrapedProduct) => {
-      const { scrapedData: data } = scraped;
+      const { data } = scraped;
+      const name = data.name;
+      const searchText = data.searchText;
+      const otherNames = data.otherNames;
+      const company = data.company;
+      const fields = data.fields;
+      const benchmarks = data.benchmarks;
 
-      Object.keys(data || {}).forEach((field) => {
-        if (data[field].enabled) {
+      // Name
+      if (name.enabled) {
+        setValue('name', name.value as string);
+      }
+
+      // Search Text
+      if (searchText.enabled) {
+        setValue('searchText', searchText.value as string);
+      }
+
+      // Other Names
+      if (otherNames.enabled) {
+        setValue('otherNames', otherNames.value as string[]);
+      }
+
+      // Company
+      if (company.enabled) {
+        setValue('company', company.value as string);
+      }
+
+      // Fields
+      Object.keys(fields || {}).forEach((field) => {
+        if (fields[field].enabled) {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          setValue(field as any, data[field].value);
+          setValue(field as any, fields[field].value);
         }
       });
+
+      // Benchmarks
+      const scrapedBenchmarks = Object.keys(benchmarks || {})
+        .filter((benchmark) => benchmarks[benchmark].enabled)
+        .map((benchmark) => benchmarks[benchmark].value as ProductBenchmark);
+      setValue('benchmarks', scrapedBenchmarks);
     },
     [setValue],
   );
 
   const handleScrapeClick = useCallback(() => {
-    const sources: Record<string, CpuDataSource> = {
-      [CpuDataSourceKey.TechPowerUp]: importSources[0],
-      [CpuDataSourceKey.PassMark]: importSources[1],
-      [CpuDataSourceKey.GeekBench]: importSources[2],
-    };
+    const sources: Partial<ProductSource>[] = importSources?.[0] || [];
     showDialog(<ScrapeCpuDialog sources={sources} onImport={handleScrape} />, {
       disableClose: true,
     });
-  }, [handleScrape, importSources]);
+  }, [importSources, handleScrape]);
 
   return (
     <Form onSubmit={handleSubmit(handleSave)}>
@@ -153,42 +200,23 @@ export const CpuForm: FunctionComponent<CpuFormProps> = (props) => {
       )}
 
       <section className="border-b-px border-b-slate-300 mb-6 pb-6">
-        <h2 className="mb-4">Data Sources</h2>
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="mb-0">Data Sources</h2>
 
-        <Field>
-          TechPowerUp
-          <Controller
-            name="techPowerUpSource"
-            control={control}
-            render={({ field }) => (
-              <ProductDataSourceInput {...field} ref={null} />
-            )}
-          />
-        </Field>
+          <InfoButton onClick={handleScrapeClick}>Scrape</InfoButton>
+        </div>
 
-        <Field>
-          PassMark
-          <Controller
-            name="passMarkSource"
-            control={control}
-            render={({ field }) => (
-              <ProductDataSourceInput {...field} ref={null} />
-            )}
-          />
-        </Field>
-
-        <Field>
-          GeekBench
-          <Controller
-            name="geekBenchSource"
-            control={control}
-            render={({ field }) => (
-              <ProductDataSourceInput {...field} ref={null} />
-            )}
-          />
-        </Field>
-
-        <InfoButton onClick={handleScrapeClick}>Scrape Details</InfoButton>
+        <Controller
+          name="sources"
+          control={control}
+          render={({ field }) => (
+            <ProductSourcesInput
+              {...field}
+              productType={ProductType.Cpu}
+              ref={null}
+            />
+          )}
+        />
       </section>
 
       <section>
@@ -210,12 +238,34 @@ export const CpuForm: FunctionComponent<CpuFormProps> = (props) => {
             name="slug"
             control={control}
             render={({ field }) => (
-              <CpuSlugInput control={control} {...field} ref={null} />
+              <ProductSlugInput {...field} control={control} ref={null} />
             )}
           />
           {errors.slug?.type === ValidationErrorType.MissingStringValue && (
             <FieldError>Required</FieldError>
           )}
+        </Field>
+
+        <Field>
+          Searchable Text
+          <Controller
+            name="searchText"
+            control={control}
+            render={({ field }) => (
+              <ProductSearchTextInput {...field} control={control} ref={null} />
+            )}
+          />
+        </Field>
+
+        <Field>
+          Other Names
+          <Controller
+            name="otherNames"
+            control={control}
+            render={({ field }) => (
+              <ProductOtherNamesInput {...field} control={control} ref={null} />
+            )}
+          />
         </Field>
 
         <Field>
@@ -232,12 +282,16 @@ export const CpuForm: FunctionComponent<CpuFormProps> = (props) => {
         <h2 className="mb-4">General Info</h2>
 
         <Field>
-          Part Number
           <Controller
             name="partNumber"
             control={control}
             render={({ field }) => (
-              <CpuDataInput field="partNumber" {...field} ref={null} />
+              <ProductTextInput
+                {...field}
+                label="Part Number"
+                fieldKey="partNumber"
+                ref={null}
+              />
             )}
           />
         </Field>
@@ -247,63 +301,125 @@ export const CpuForm: FunctionComponent<CpuFormProps> = (props) => {
           <Controller
             name="company"
             control={control}
-            render={({ field }) => (
-              <CpuDataInput field="company" {...field} ref={null} />
-            )}
+            render={({ field }) => <TextInput {...field} ref={null} />}
           />
         </Field>
 
         <Field>
-          Market Segment
           <Controller
             name="marketSegment"
             control={control}
             render={({ field }) => (
-              <CpuDataInput field="marketSegment" {...field} ref={null} />
+              <ProductEnumInput
+                {...field}
+                ref={null}
+                label="Market Segment"
+                fieldKey="marketSegment"
+                items={[
+                  {
+                    label: formatMarketSegment(MarketSegment.Desktop),
+                    value: MarketSegment.Desktop,
+                  },
+                  {
+                    label: formatMarketSegment(MarketSegment.Mobile),
+                    value: MarketSegment.Mobile,
+                  },
+                  {
+                    label: formatMarketSegment(MarketSegment.Workstation),
+                    value: MarketSegment.Workstation,
+                  },
+                  {
+                    label: formatMarketSegment(MarketSegment.Server),
+                    value: MarketSegment.Server,
+                  },
+                  {
+                    label: formatMarketSegment(MarketSegment.Embedded),
+                    value: MarketSegment.Server,
+                  },
+                ]}
+                formatter={(value) =>
+                  formatMarketSegment(value as MarketSegment)
+                }
+              />
             )}
           />
         </Field>
 
         <Field>
-          Launch Price (MSRP)
           <Controller
-            name="launchPrice"
+            name="msrp"
             control={control}
             render={({ field }) => (
-              <CpuDataInput field="launchPrice" {...field} ref={null} />
+              <ProductFloatInput
+                {...field}
+                ref={null}
+                productType={ProductType.Cpu}
+                label="Launch Price (MSRP)"
+                fieldKey="msrp"
+                units={[CurrencyUnit.USD]}
+              />
             )}
           />
         </Field>
 
         <Field>
-          Release Date &amp; Format
           <Controller
             name="releaseDate"
             control={control}
             render={({ field }) => (
-              <CpuDataInput field="releaseDate" {...field} ref={null} />
+              <ProductDateInput
+                {...field}
+                ref={null}
+                label="Release Date"
+                fieldKey="releaseDate"
+              />
             )}
           />
         </Field>
 
         <Field>
-          Production Status
           <Controller
             name="productionStatus"
             control={control}
             render={({ field }) => (
-              <CpuDataInput field="productionStatus" {...field} ref={null} />
+              <ProductEnumInput
+                {...field}
+                ref={null}
+                label="Production Status"
+                fieldKey="productionStatus"
+                items={[
+                  {
+                    label: formatProductionStatus(ProductionStatus.Unreleased),
+                    value: ProductionStatus.Unreleased,
+                  },
+                  {
+                    label: formatProductionStatus(ProductionStatus.Active),
+                    value: ProductionStatus.Active,
+                  },
+                  {
+                    label: formatProductionStatus(ProductionStatus.EndOfLife),
+                    value: ProductionStatus.EndOfLife,
+                  },
+                ]}
+                formatter={(value) =>
+                  formatProductionStatus(value as ProductionStatus)
+                }
+              />
             )}
           />
         </Field>
 
         <Field>
-          Bundled Cooler
           <Controller
             name="bundledCooler"
             control={control}
             render={({ field }) => (
-              <CpuDataInput field="bundledCooler" {...field} ref={null} />
+              <ProductTextInput
+                {...field}
+                label="Bundled Cooler"
+                fieldKey="bundledCooler"
+                ref={null}
+              />
             )}
           />
         </Field>
@@ -313,67 +429,99 @@ export const CpuForm: FunctionComponent<CpuFormProps> = (props) => {
         <h2 className="mb-4">Physical</h2>
 
         <Field>
-          Socket
           <Controller
             name="socket"
             control={control}
             render={({ field }) => (
-              <CpuDataInput field="socket" {...field} ref={null} />
+              <ProductTextInput
+                {...field}
+                label="Socket"
+                fieldKey="socket"
+                ref={null}
+              />
             )}
           />
         </Field>
 
         <Field>
-          Foundry
           <Controller
             name="foundry"
             control={control}
             render={({ field }) => (
-              <CpuDataInput field="foundry" {...field} ref={null} />
+              <ProductTextInput
+                {...field}
+                label="Foundry"
+                fieldKey="foundry"
+                ref={null}
+              />
             )}
           />
         </Field>
 
         <Field>
-          Process Size
           <Controller
             name="processSize"
             control={control}
             render={({ field }) => (
-              <CpuDataInput field="processSize" {...field} ref={null} />
+              <ProductFloatInput
+                {...field}
+                ref={null}
+                label="Process Size"
+                fieldKey="processSize"
+                productType={ProductType.Cpu}
+                units={[LengthUnit.nm, LengthUnit.um]}
+              />
             )}
           />
         </Field>
 
         <Field>
-          Transistors
           <Controller
             name="transistors"
             control={control}
             render={({ field }) => (
-              <CpuDataInput field="transistors" {...field} ref={null} />
+              <ProductFloatInput
+                {...field}
+                ref={null}
+                label="Transistors"
+                fieldKey="transistors"
+                productType={ProductType.Cpu}
+                units={[NumericUnit.million]}
+              />
             )}
           />
         </Field>
 
         <Field>
-          TCase Max Temperature
           <Controller
             name="tCaseMax"
             control={control}
             render={({ field }) => (
-              <CpuDataInput field="tCaseMax" {...field} ref={null} />
+              <ProductFloatInput
+                {...field}
+                ref={null}
+                label="TCase Max Temperature"
+                fieldKey="tCaseMax"
+                productType={ProductType.Cpu}
+                units={[TemperatureUnit.c]}
+              />
             )}
           />
         </Field>
 
         <Field>
-          TJ Max Temperature
           <Controller
             name="tjMax"
             control={control}
             render={({ field }) => (
-              <CpuDataInput field="tjMax" {...field} ref={null} />
+              <ProductFloatInput
+                {...field}
+                ref={null}
+                label="TJ Max Temperature"
+                fieldKey="tjMax"
+                productType={ProductType.Cpu}
+                units={[TemperatureUnit.c]}
+              />
             )}
           />
         </Field>
@@ -383,56 +531,76 @@ export const CpuForm: FunctionComponent<CpuFormProps> = (props) => {
         <h2 className="mb-4">Technical</h2>
 
         <Field>
-          Architecture
           <Controller
             name="architecture"
             control={control}
             render={({ field }) => (
-              <CpuDataInput field="architecture" {...field} ref={null} />
+              <ProductTextInput
+                {...field}
+                ref={null}
+                label="Architecture"
+                fieldKey="architecture"
+              />
             )}
           />
         </Field>
 
         <Field>
-          Codename
           <Controller
             name="codename"
             control={control}
             render={({ field }) => (
-              <CpuDataInput field="codename" {...field} ref={null} />
+              <ProductTextInput
+                {...field}
+                ref={null}
+                label="Codename"
+                fieldKey="codename"
+              />
             )}
           />
         </Field>
 
         <Field>
-          Generation
           <Controller
             name="generation"
             control={control}
             render={({ field }) => (
-              <CpuDataInput field="generation" {...field} ref={null} />
+              <ProductTextInput
+                {...field}
+                ref={null}
+                label="Generation"
+                fieldKey="generation"
+              />
             )}
           />
         </Field>
 
         <Field>
-          PCI Express
           <Controller
             name="pciExpress"
             control={control}
             render={({ field }) => (
-              <CpuDataInput field="pciExpress" {...field} ref={null} />
+              <ProductTextInput
+                {...field}
+                ref={null}
+                label="PCI Express"
+                fieldKey="pciExpress"
+              />
             )}
           />
         </Field>
 
         <Field>
-          Chipsets
           <Controller
             name="chipsets"
             control={control}
             render={({ field }) => (
-              <CpuDataInput field="chipsets" {...field} ref={null} />
+              <ProductTextInput
+                {...field}
+                ref={null}
+                label="Chipsets"
+                fieldKey="chipsets"
+              />
             )}
           />
         </Field>
@@ -442,34 +610,48 @@ export const CpuForm: FunctionComponent<CpuFormProps> = (props) => {
         <h2 className="mb-4">Memory</h2>
 
         <Field>
-          Memory Support
           <Controller
             name="memorySupport"
             control={control}
             render={({ field }) => (
-              <CpuDataInput field="memorySupport" {...field} ref={null} />
+              <ProductTextInput
+                {...field}
+                ref={null}
+                label="Memory Support"
+                fieldKey="memorySupport"
+              />
             )}
           />
         </Field>
 
         <Field>
-          Memory Channels
           <Controller
             name="memoryChannels"
             control={control}
             render={({ field }) => (
-              <CpuDataInput field="memoryChannels" {...field} ref={null} />
+              <ProductFloatInput
+                {...field}
+                ref={null}
+                label="Memory Channels"
+                fieldKey="memoryChannels"
+                productType={ProductType.Cpu}
+              />
             )}
           />
         </Field>
 
         <Field>
-          ECC Memory
           <Controller
-            name="hasEccMemory"
+            name="eccMemory"
             control={control}
             render={({ field }) => (
-              <CpuDataInput field="hasEccMemory" {...field} ref={null} />
+              <ProductBooleanInput
+                {...field}
+                ref={null}
+                label="ECC Memory"
+                fieldKey="eccMemory"
+                productType={ProductType.Cpu}
+              />
             )}
           />
         </Field>
@@ -479,163 +661,215 @@ export const CpuForm: FunctionComponent<CpuFormProps> = (props) => {
         <h2 className="mb-4">Cores &amp; Clock Speed</h2>
 
         <Field>
-          Cores Count
           <Controller
-            name="coresCount"
+            name="cores"
             control={control}
             render={({ field }) => (
-              <CpuDataInput field="coresCount" {...field} ref={null} />
-            )}
-          />
-        </Field>
-
-        <Field>
-          Threads Count
-          <Controller
-            name="threadsCount"
-            control={control}
-            render={({ field }) => (
-              <CpuDataInput field="threadsCount" {...field} ref={null} />
-            )}
-          />
-        </Field>
-
-        <Field>
-          Performance Cores (P-Cores) Count
-          <Controller
-            name="performanceCoresCount"
-            control={control}
-            render={({ field }) => (
-              <CpuDataInput
-                field="performanceCoresCount"
+              <ProductFloatInput
                 {...field}
                 ref={null}
+                label="Cores Count"
+                fieldKey="cores"
+                productType={ProductType.Cpu}
               />
             )}
           />
         </Field>
 
         <Field>
-          Efficient Cores (E-Cores) Count
           <Controller
-            name="efficientCoresCount"
+            name="threads"
             control={control}
             render={({ field }) => (
-              <CpuDataInput field="efficientCoresCount" {...field} ref={null} />
+              <ProductFloatInput
+                {...field}
+                ref={null}
+                label="Threads Count"
+                fieldKey="threads"
+                productType={ProductType.Cpu}
+              />
             )}
           />
         </Field>
 
         <Field>
-          Clock
+          <Controller
+            name="pCores"
+            control={control}
+            render={({ field }) => (
+              <ProductFloatInput
+                {...field}
+                ref={null}
+                label="Performance Cores (P-Cores) Count"
+                fieldKey="pCores"
+                productType={ProductType.Cpu}
+              />
+            )}
+          />
+        </Field>
+
+        <Field>
+          <Controller
+            name="eCores"
+            control={control}
+            render={({ field }) => (
+              <ProductFloatInput
+                {...field}
+                ref={null}
+                label="Efficient Cores (E-Cores) Count"
+                fieldKey="eCores"
+                productType={ProductType.Cpu}
+              />
+            )}
+          />
+        </Field>
+
+        <Field>
           <Controller
             name="clock"
             control={control}
             render={({ field }) => (
-              <CpuDataInput field="clock" {...field} ref={null} />
+              <ProductFloatInput
+                {...field}
+                ref={null}
+                label="Clock"
+                fieldKey="clock"
+                productType={ProductType.Cpu}
+                units={[ClockSpeedUnit.ghz, ClockSpeedUnit.mhz]}
+              />
             )}
           />
         </Field>
 
         <Field>
-          Turbo Clock
           <Controller
             name="turboClock"
             control={control}
             render={({ field }) => (
-              <CpuDataInput field="turboClock" {...field} ref={null} />
-            )}
-          />
-        </Field>
-
-        <Field>
-          Performance Core (P-Core) Clock
-          <Controller
-            name="performanceCoreClock"
-            control={control}
-            render={({ field }) => (
-              <CpuDataInput
-                field="performanceCoreClock"
+              <ProductFloatInput
                 {...field}
                 ref={null}
+                label="Turbo Clock"
+                fieldKey="turboClock"
+                productType={ProductType.Cpu}
+                units={[ClockSpeedUnit.ghz, ClockSpeedUnit.mhz]}
               />
             )}
           />
         </Field>
 
         <Field>
-          Performance Core (P-Core) Turbo Clock
           <Controller
-            name="performanceCoreTurboClock"
+            name="pCoreClock"
             control={control}
             render={({ field }) => (
-              <CpuDataInput
-                field="performanceCoreTurboClock"
+              <ProductFloatInput
                 {...field}
                 ref={null}
+                label="Performance Core (P-Core) Clock"
+                fieldKey="pCoreClock"
+                productType={ProductType.Cpu}
+                units={[ClockSpeedUnit.ghz, ClockSpeedUnit.mhz]}
               />
             )}
           />
         </Field>
 
         <Field>
-          Efficient Core (E-Core) Clock
           <Controller
-            name="efficientCoreClock"
+            name="pCoreTurboClock"
             control={control}
             render={({ field }) => (
-              <CpuDataInput field="efficientCoreClock" {...field} ref={null} />
-            )}
-          />
-        </Field>
-
-        <Field>
-          Efficient Core (E-Core) Turbo Clock
-          <Controller
-            name="efficientCoreTurboClock"
-            control={control}
-            render={({ field }) => (
-              <CpuDataInput
-                field="efficientCoreTurboClock"
+              <ProductFloatInput
                 {...field}
                 ref={null}
+                label="Performance Core (P-Core) Turbo Clock"
+                fieldKey="pCoreTurboClock"
+                productType={ProductType.Cpu}
+                units={[ClockSpeedUnit.ghz, ClockSpeedUnit.mhz]}
               />
             )}
           />
         </Field>
 
         <Field>
-          Base Clock
+          <Controller
+            name="eCoreClock"
+            control={control}
+            render={({ field }) => (
+              <ProductFloatInput
+                {...field}
+                ref={null}
+                label="Efficient Core (E-Core) Clock"
+                fieldKey="eCoreClock"
+                productType={ProductType.Cpu}
+                units={[ClockSpeedUnit.ghz, ClockSpeedUnit.mhz]}
+              />
+            )}
+          />
+        </Field>
+
+        <Field>
+          <Controller
+            name="eCoreTurboClock"
+            control={control}
+            render={({ field }) => (
+              <ProductFloatInput
+                {...field}
+                ref={null}
+                label="Efficient Core (E-Core) Turbo Clock"
+                fieldKey="eCoreTurboClock"
+                productType={ProductType.Cpu}
+                units={[ClockSpeedUnit.ghz, ClockSpeedUnit.mhz]}
+              />
+            )}
+          />
+        </Field>
+
+        <Field>
           <Controller
             name="baseClock"
             control={control}
             render={({ field }) => (
-              <CpuDataInput field="baseClock" {...field} ref={null} />
+              <ProductFloatInput
+                {...field}
+                ref={null}
+                label="Base Clock"
+                fieldKey="baseClock"
+                productType={ProductType.Cpu}
+                units={[ClockSpeedUnit.mhz]}
+              />
             )}
           />
         </Field>
 
         <Field>
-          Clock Multiplier
           <Controller
             name="multiplier"
             control={control}
             render={({ field }) => (
-              <CpuDataInput field="multiplier" {...field} ref={null} />
+              <ProductFloatInput
+                {...field}
+                ref={null}
+                label="Clock Multiplier"
+                fieldKey="multiplier"
+                productType={ProductType.Cpu}
+              />
             )}
           />
         </Field>
 
         <Field>
-          Multiplier Unlocked
           <Controller
-            name="isMultiplierUnlocked"
+            name="multiplierUnlocked"
             control={control}
             render={({ field }) => (
-              <CpuDataInput
-                field="isMultiplierUnlocked"
+              <ProductBooleanInput
                 {...field}
                 ref={null}
+                label="Multiplier Unlocked"
+                fieldKey="multiplierUnlocked"
+                productType={ProductType.Cpu}
               />
             )}
           />
@@ -646,45 +880,69 @@ export const CpuForm: FunctionComponent<CpuFormProps> = (props) => {
         <h2 className="mb-4">Power Consumption</h2>
 
         <Field>
-          TDP
           <Controller
             name="tdp"
             control={control}
             render={({ field }) => (
-              <CpuDataInput field="tdp" {...field} ref={null} />
+              <ProductFloatInput
+                {...field}
+                ref={null}
+                label="TDP"
+                fieldKey="tdp"
+                productType={ProductType.Cpu}
+                units={[WattageUnit.w]}
+              />
             )}
           />
         </Field>
 
         <Field>
-          PL1
           <Controller
             name="pl1"
             control={control}
             render={({ field }) => (
-              <CpuDataInput field="pl1" {...field} ref={null} />
+              <ProductFloatInput
+                {...field}
+                ref={null}
+                label="PL1"
+                fieldKey="pl1"
+                productType={ProductType.Cpu}
+                units={[WattageUnit.w]}
+              />
             )}
           />
         </Field>
 
         <Field>
-          PL2
           <Controller
             name="pl2"
             control={control}
             render={({ field }) => (
-              <CpuDataInput field="pl2" {...field} ref={null} />
+              <ProductFloatInput
+                {...field}
+                ref={null}
+                label="PL2"
+                fieldKey="pl2"
+                productType={ProductType.Cpu}
+                units={[WattageUnit.w]}
+              />
             )}
           />
         </Field>
 
         <Field>
-          PPT
           <Controller
             name="ppt"
             control={control}
             render={({ field }) => (
-              <CpuDataInput field="ppt" {...field} ref={null} />
+              <ProductFloatInput
+                {...field}
+                ref={null}
+                label="PPT"
+                fieldKey="ppt"
+                productType={ProductType.Cpu}
+                units={[WattageUnit.w]}
+              />
             )}
           />
         </Field>
@@ -694,63 +952,85 @@ export const CpuForm: FunctionComponent<CpuFormProps> = (props) => {
         <h2 className="mb-4">Cache</h2>
 
         <Field>
-          L1 Cache
           <Controller
             name="l1Cache"
             control={control}
             render={({ field }) => (
-              <CpuDataInput field="l1Cache" {...field} ref={null} />
-            )}
-          />
-        </Field>
-
-        <Field>
-          L2 Cache
-          <Controller
-            name="l2Cache"
-            control={control}
-            render={({ field }) => (
-              <CpuDataInput field="l2Cache" {...field} ref={null} />
-            )}
-          />
-        </Field>
-
-        <Field>
-          L3 Cache
-          <Controller
-            name="l3Cache"
-            control={control}
-            render={({ field }) => (
-              <CpuDataInput field="l3Cache" {...field} ref={null} />
-            )}
-          />
-        </Field>
-
-        <Field>
-          Efficient Core (E-Core) L1 Cache
-          <Controller
-            name="efficientCoreL1Cache"
-            control={control}
-            render={({ field }) => (
-              <CpuDataInput
-                field="efficientCoreL1Cache"
+              <ProductFloatInput
                 {...field}
                 ref={null}
+                label="L1 Cache"
+                fieldKey="l1Cache"
+                productType={ProductType.Cpu}
+                units={[MemorySizeUnit.kb, MemorySizeUnit.mb]}
               />
             )}
           />
         </Field>
 
         <Field>
-          Efficient Core (E-Core) L2 Cache
           <Controller
-            name="efficientCoreL2Cache"
+            name="l2Cache"
             control={control}
             render={({ field }) => (
-              <CpuDataInput
-                field="efficientCoreL2Cache"
+              <ProductFloatInput
                 {...field}
                 ref={null}
+                label="L2 Cache"
+                fieldKey="l2Cache"
+                productType={ProductType.Cpu}
+                units={[MemorySizeUnit.kb, MemorySizeUnit.mb]}
+              />
+            )}
+          />
+        </Field>
+
+        <Field>
+          <Controller
+            name="l3Cache"
+            control={control}
+            render={({ field }) => (
+              <ProductFloatInput
+                {...field}
+                ref={null}
+                label="L3 Cache"
+                fieldKey="l3Cache"
+                productType={ProductType.Cpu}
+                units={[MemorySizeUnit.kb, MemorySizeUnit.mb]}
+              />
+            )}
+          />
+        </Field>
+
+        <Field>
+          <Controller
+            name="eCoreL1Cache"
+            control={control}
+            render={({ field }) => (
+              <ProductFloatInput
+                {...field}
+                ref={null}
+                label="Efficient Core (E-Core) L1 Cache"
+                fieldKey="eCoreL1Cache"
+                productType={ProductType.Cpu}
+                units={[MemorySizeUnit.kb, MemorySizeUnit.mb]}
+              />
+            )}
+          />
+        </Field>
+
+        <Field>
+          <Controller
+            name="eCoreL2Cache"
+            control={control}
+            render={({ field }) => (
+              <ProductFloatInput
+                {...field}
+                ref={null}
+                label="Efficient Core (E-Core) L2 Cache"
+                fieldKey="eCoreL2Cache"
+                productType={ProductType.Cpu}
+                units={[MemorySizeUnit.kb, MemorySizeUnit.mb]}
               />
             )}
           />
@@ -761,26 +1041,30 @@ export const CpuForm: FunctionComponent<CpuFormProps> = (props) => {
         <h2 className="mb-4">Graphics & Features</h2>
 
         <Field>
-          Integrated Graphics
           <Controller
             name="integratedGraphics"
             control={control}
             render={({ field }) => (
-              <CpuDataInput field="integratedGraphics" {...field} ref={null} />
+              <ProductTextInput
+                {...field}
+                ref={null}
+                label="Integrated Graphics"
+                fieldKey="integratedGraphics"
+              />
             )}
           />
         </Field>
 
         <Field>
-          Extenisons / Technologies
           <Controller
             name="extensionsTechnologies"
             control={control}
             render={({ field }) => (
-              <CpuDataInput
-                field="extensionsTechnologies"
+              <ProductTextInput
                 {...field}
                 ref={null}
+                label="Extenisons / Technologies"
+                fieldKey="extensionsTechnologies"
               />
             )}
           />
@@ -790,49 +1074,17 @@ export const CpuForm: FunctionComponent<CpuFormProps> = (props) => {
       <section>
         <h2 className="mb-4">Benchmarks</h2>
 
-        <Field>
-          CPU Mark Multi Thread
-          <Controller
-            name="cpuMarkMultiThread"
-            control={control}
-            render={({ field }) => (
-              <CpuDataInput field="cpuMarkMultiThread" {...field} ref={null} />
-            )}
-          />
-        </Field>
-
-        <Field>
-          CPU Mark Single Thread
-          <Controller
-            name="cpuMarkSingleThread"
-            control={control}
-            render={({ field }) => (
-              <CpuDataInput field="cpuMarkSingleThread" {...field} ref={null} />
-            )}
-          />
-        </Field>
-
-        <Field>
-          GeekBench 6 Single Core
-          <Controller
-            name="geekbenchSingleCore"
-            control={control}
-            render={({ field }) => (
-              <CpuDataInput field="geekbenchSingleCore" {...field} ref={null} />
-            )}
-          />
-        </Field>
-
-        <Field>
-          GeekBench 6 Multi Core
-          <Controller
-            name="geekbenchMultiCore"
-            control={control}
-            render={({ field }) => (
-              <CpuDataInput field="geekbenchMultiCore" {...field} ref={null} />
-            )}
-          />
-        </Field>
+        <Controller
+          name="benchmarks"
+          control={control}
+          render={({ field }) => (
+            <ProductBenchmarksInput
+              {...field}
+              productType={ProductType.Cpu}
+              ref={null}
+            />
+          )}
+        />
       </section>
 
       <section>

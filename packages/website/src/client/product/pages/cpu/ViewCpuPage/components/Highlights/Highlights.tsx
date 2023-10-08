@@ -7,7 +7,10 @@ import {
   ShoppingCartIcon,
   StarIcon,
 } from '@heroicons/react/24/outline';
-import { formatCpuField, getCpuAffiliateUrl } from '@pcpartdb/shared';
+import {
+  getCpuAffiliateUrl,
+  productFieldFormattedValue,
+} from '@pcpartdb/shared';
 import { ProductHighlight } from 'packages/website/src/client/product/components/ProductHighlight/ProductHighlight';
 import { AffiliateDisclaimer } from 'packages/website/src/client/shared/components/AffiliateDisclaimer/AffiliateDisclaimer';
 import { WarningButton } from 'packages/website/src/client/shared/components/Button/WarningButton';
@@ -26,44 +29,49 @@ export const Highlights: FunctionComponent<HighlightsProps> = (props) => {
   const cpu = context.cpu;
 
   const highlightPerformance = useMemo(() => {
-    const performanceScore = formatCpuField(cpu.performanceScore);
+    const performanceScore = productFieldFormattedValue(
+      cpu.fields?.performanceRating,
+    );
 
     if (performanceScore != null) {
       return `${performanceScore}`;
     } else {
       return '--';
     }
-  }, [cpu.performanceScore]);
+  }, [cpu.fields?.performanceRating]);
 
   const highlightValue = useMemo(() => {
-    const valueScore = formatCpuField(cpu.valueScore);
+    const valueScore = productFieldFormattedValue(
+      cpu.fields?.performancePerMsrp,
+    );
 
     if (valueScore != null) {
       return `${valueScore}`;
     } else {
       return '--';
     }
-  }, [cpu.valueScore]);
+  }, [cpu.fields?.performancePerMsrp]);
 
   const highlightCoresThreads = useMemo(() => {
-    const cores = formatCpuField(cpu.coresCount) || '--';
-    const threads = formatCpuField(cpu.threadsCount) || '--';
+    const cores = productFieldFormattedValue(cpu.fields?.cores) ?? '--';
+    const threads = productFieldFormattedValue(cpu.fields?.threads) ?? '--';
     return `${cores} / ${threads}`;
   }, [cpu]);
 
   const highlightClock = useMemo(() => {
-    const clock = formatCpuField(cpu.clock) || '--';
-    const turboClock = formatCpuField(cpu.turboClock) || '--';
+    const clock = productFieldFormattedValue(cpu.fields?.clock) ?? '--';
+    const turboClock =
+      productFieldFormattedValue(cpu.fields?.turboClock) ?? '--';
     return `${clock} / ${turboClock}`;
   }, [cpu]);
 
   const highlightMemory = useMemo(() => {
-    return formatCpuField(cpu.memorySupport) || '--';
+    return productFieldFormattedValue(cpu.fields?.memorySupport) ?? '--';
   }, [cpu]);
 
   const highlightReleaseDate = useMemo(() => {
-    return formatCpuField(cpu.releaseDate) || '--';
-  }, [cpu.releaseDate]);
+    return productFieldFormattedValue(cpu.fields?.releaseDate) ?? '--';
+  }, [cpu.fields?.releaseDate]);
 
   const cpuAffiliateUrl = useMemo(() => getCpuAffiliateUrl(cpu), [cpu]);
 

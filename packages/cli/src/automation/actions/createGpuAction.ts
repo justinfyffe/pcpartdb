@@ -3,15 +3,16 @@ import {
   AutomationAction,
   CreateGpuActionData,
   CreateProductUpdateRequest,
+  formatProductName,
   generateGpuSlug,
-  Gpu,
-  GpuDataSourceKey,
-  GpuProductType,
-  GpuUpdate,
+  GetProductRequest,
+  GpuProduct,
   parseProductName,
-  productFieldValue,
+  ProductSource,
   ProductType,
+  ProductUpdate,
   ProductUpdateStatus,
+  SubProductType,
 } from '@pcpartdb/shared';
 import { AutomationContext } from '../types';
 
@@ -24,35 +25,20 @@ export async function createGpuAction(
   console.log('Executing createGpuAction', payload);
 
   // Get sources from gpu or action
-  const sources = payload.sources;
-  const techPowerUpSource = {
-    url: sources?.filter(
-      (source) => source.sourceKey === GpuDataSourceKey.TechPowerUp,
-    )[0]?.sourceUrl,
-  };
-  const passMarkSource = {
-    url: sources?.filter(
-      (source) => source.sourceKey === GpuDataSourceKey.VideocardBenchmarks,
-    )[0]?.sourceUrl,
-  };
-  const ulBenchmarkSource = {
-    url: sources?.filter(
-      (source) => source.sourceKey === GpuDataSourceKey.UlBenchmarks,
-    )[0]?.sourceUrl,
-  };
+  const sources: ProductSource[] = payload.sources.map((source) => ({
+    sourceKey: source.sourceKey,
+    sourceUrl: source.sourceUrl,
+  }));
 
   // Get chipset source (if applicable)
-  const chipset = await getChipset(payload.chipsetId, context);
+  const chipset = await getChipset(payload.relatedProductId, context);
 
   // Scrape the GPU data from our sources.
   const gpu = await fetchGpuData({
     chipset,
-    sources: {
-      [GpuDataSourceKey.TechPowerUp]: techPowerUpSource,
-      [GpuDataSourceKey.VideocardBenchmarks]: passMarkSource,
-      [GpuDataSourceKey.UlBenchmarks]: ulBenchmarkSource,
-    },
+    sources,
   });
+  gpu.sources = sources;
 
   // New GPUs have some additional data to be applied
   // Preferred name from source data.
@@ -60,22 +46,14 @@ export async function createGpuAction(
     const { company, name } = parseProductName(payload.preferredName);
     gpu.name = name;
     if (company != null) {
-      if (
-        company.toLowerCase() !==
-        productFieldValue<string>(gpu.company)?.toLowerCase()
-      ) {
-        gpu.company = {
-          value: company,
-          meta: { fieldKey: 'company', autoUpdate: false },
-        };
+      if (company.toLowerCase() !== gpu.company?.toLowerCase()) {
+        gpu.company = company;
       }
     }
   }
 
   // Generate slug, new GPU doesn't have one yet.
-  gpu.slug =
-    payload?.preferredSlug ||
-    generateGpuSlug(gpu.name, productFieldValue(gpu.company));
+  gpu.slug = payload?.preferredSlug || generateGpuSlug(gpu.name, gpu.company);
 
   // Upload update
   await uploadProductUpdate(gpu, context);
@@ -87,9 +65,21 @@ async function getChipset(chipsetId: number, context: AutomationContext) {
   }
 
   console.info('Getting Chipset GPU');
-  const chipset = await context.api.get<Gpu>(`/products/gpus/${chipsetId}`, {
-    retries: 2,
-  });
+  const chipset = await context.api.get<GpuProduct>(
+    `/products/${chipsetId}`,
+    {
+      retries: 2,
+    },
+    {
+      params: {
+        req: {
+          includeBenchmarks: true,
+          includeImages: true,
+          includeSources: true,
+        } as GetProductRequest,
+      },
+    },
+  );
   if (chipset == null) {
     throw new Error('Could not get chipset');
   }
@@ -102,27 +92,28 @@ async function fetchGpuData(options: ScrapeGpuOptions) {
 
   // Scrape the GPU data from our sources.
   const result = await scrapeGpu(options);
-  const product = result.product as Gpu;
+  const product = result.product as GpuProduct;
 
   console.log('Finished fetching data.');
   return product;
 }
 
-async function uploadProductUpdate(gpu: Gpu, context: AutomationContext) {
-  const productName = `${productFieldValue(gpu.company) || ''} ${
-    gpu.name
-  }`.trim();
-  const update: GpuUpdate = {
+async function uploadProductUpdate(
+  gpu: GpuProduct,
+  context: AutomationContext,
+) {
+  const productName = formatProductName(gpu);
+  const update: ProductUpdate = {
     productType: ProductType.Gpu,
+    subProductType:
+      gpu.parentId == null
+        ? SubProductType.GpuChipset
+        : SubProductType.GpuRetailModel,
     productName,
     description: `Create GPU for ${productName}`,
     status: ProductUpdateStatus.Pending,
     data: { original: null, updated: gpu },
     metadata: {},
-    gpuProductType:
-      gpu.chipsetId == null
-        ? GpuProductType.Chipset
-        : GpuProductType.RetailModel,
   };
 
   console.info('Uploading pending creation for GPU');

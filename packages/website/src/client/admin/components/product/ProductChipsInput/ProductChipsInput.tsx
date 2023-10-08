@@ -34,9 +34,9 @@ export const ProductChipsInput = forwardRef<
 >((props, ref) => {
   const { fieldKey, value, onChange, disabled, ...restProps } = props;
 
-  const rawValue = value?.value || null;
+  const rawValue = value?.value ?? null;
   const meta = useMemo(() => value?.meta, [value?.meta]);
-  const chips = useMemo(() => rawValue || [], [rawValue]);
+  const chips = useMemo(() => rawValue ?? [], [rawValue]);
 
   const [inputValue, setInputValue] = useState('');
 

@@ -1,41 +1,39 @@
 import { Injectable } from '@nestjs/common';
 import {
-  CpuMarketSegmentValue,
-  GpuMarketSegmentValue,
   HomeViewModel,
   ListCpusFilter,
-  ListCpusSort,
   ListGpusFilter,
-  ListGpusSort,
+  ListSort,
+  MarketSegment,
   ProductComparison,
+  ProductType,
 } from '@pcpartdb/shared';
-import { CpuService } from '../../product/cpu/cpu.service';
-import { GpuService } from '../../product/gpu/gpu.service';
+import { ProductService } from '../../product/product.service';
 import { Context } from '../../shared/context';
 
 const RANDOMLY_CHOOSE_FROM_COMPARISON = 5;
 
 const NVIDIA_GPU_FILTER: ListGpusFilter = {
   company: ['nvidia'],
-  segment: [GpuMarketSegmentValue.Desktop],
+  segment: [MarketSegment.Desktop],
 };
 const AMD_GPU_FILTER: ListGpusFilter = {
   company: ['amd'],
-  segment: [GpuMarketSegmentValue.Desktop],
+  segment: [MarketSegment.Desktop],
 };
 
 const INTEL_CPU_FILTER: ListCpusFilter = {
   company: ['intel'],
-  segment: [CpuMarketSegmentValue.Desktop],
+  segment: [MarketSegment.Desktop],
 };
 const AMD_CPU_FILTER: ListCpusFilter = {
   company: ['amd'],
-  segment: [CpuMarketSegmentValue.Desktop],
+  segment: [MarketSegment.Desktop],
 };
 
 @Injectable()
 export class HomeViewModelService {
-  constructor(private gpuService: GpuService, private cpuService: CpuService) {}
+  constructor(private productService: ProductService) {}
 
   async viewModel(ctx: Context) {
     const nvidiaVsAmdGpus = await this.getNvidiaVsAmdGpus(ctx);
@@ -101,18 +99,18 @@ export class HomeViewModelService {
 
   private async getPopularGpus(ctx: Context) {
     const gpu1 = await this.getPerformanceGpu(
-      { segment: [GpuMarketSegmentValue.Desktop] },
+      { segment: [MarketSegment.Desktop] },
       5,
       ctx,
     );
     const gpu2 = await this.getValueGpu(
-      { segment: [GpuMarketSegmentValue.Desktop], excludeIds: [gpu1.id] },
+      { segment: [MarketSegment.Desktop], excludeIds: [gpu1.id] },
       5,
       ctx,
     );
     const gpu3 = await this.getPerformanceGpu(
       {
-        segment: [GpuMarketSegmentValue.Desktop],
+        segment: [MarketSegment.Desktop],
         excludeIds: [gpu1.id, gpu2.id],
       },
       5,
@@ -169,18 +167,18 @@ export class HomeViewModelService {
 
   private async getPopularCpus(ctx: Context) {
     const cpu1 = await this.getPerformanceCpu(
-      { segment: [CpuMarketSegmentValue.Desktop] },
+      { segment: [MarketSegment.Desktop] },
       5,
       ctx,
     );
     const cpu2 = await this.getValueCpu(
-      { segment: [CpuMarketSegmentValue.Desktop], excludeIds: [cpu1.id] },
+      { segment: [MarketSegment.Desktop], excludeIds: [cpu1.id] },
       5,
       ctx,
     );
     const cpu3 = await this.getPerformanceCpu(
       {
-        segment: [CpuMarketSegmentValue.Desktop],
+        segment: [MarketSegment.Desktop],
         excludeIds: [cpu1.id, cpu2.id],
       },
       5,
@@ -195,24 +193,25 @@ export class HomeViewModelService {
     chooseFrom: number,
     ctx: Context,
   ) {
-    const bestPerformance =
-      (await this.gpuService.list(
-        {
-          query: {
-            filter: {
-              ...filter,
-              performanceRated: true,
-            },
-            orderBy: { sort: ListGpusSort.PerformanceRating },
-            pagination: { limit: chooseFrom },
+    const response = await this.productService.list(
+      {
+        productType: ProductType.Gpu,
+        query: {
+          filter: {
+            ...filter,
+            performanceRated: true,
           },
-          includeImages: true,
+          orderBy: { sort: ListSort.PerformanceRating },
+          pagination: { limit: chooseFrom },
         },
-        ctx,
-      )) || [];
+      },
+      { includeImages: true },
+      ctx,
+    );
+    const results = response.results;
 
-    const idx = Math.floor(Math.random() * bestPerformance.length);
-    return bestPerformance[idx];
+    const idx = Math.floor(Math.random() * results.length);
+    return results[idx];
   }
 
   private async getValueGpu(
@@ -220,24 +219,25 @@ export class HomeViewModelService {
     chooseFrom: number,
     ctx: Context,
   ) {
-    const bestPerformance =
-      (await this.gpuService.list(
-        {
-          query: {
-            filter: {
-              ...filter,
-              valueRated: true,
-            },
-            orderBy: { sort: ListGpusSort.ValueRating },
-            pagination: { limit: chooseFrom },
+    const response = await this.productService.list(
+      {
+        productType: ProductType.Gpu,
+        query: {
+          filter: {
+            ...filter,
+            valueRated: true,
           },
-          includeImages: true,
+          orderBy: { sort: ListSort.PerformancePerMsrp },
+          pagination: { limit: chooseFrom },
         },
-        ctx,
-      )) || [];
+      },
+      { includeImages: true },
+      ctx,
+    );
+    const results = response.results;
 
-    const idx = Math.floor(Math.random() * bestPerformance.length);
-    return bestPerformance[idx];
+    const idx = Math.floor(Math.random() * results.length);
+    return results[idx];
   }
 
   private async getPerformanceCpu(
@@ -245,24 +245,25 @@ export class HomeViewModelService {
     chooseFrom: number,
     ctx: Context,
   ) {
-    const bestPerformance =
-      (await this.cpuService.list(
-        {
-          query: {
-            filter: {
-              ...filter,
-              performanceRated: true,
-            },
-            orderBy: { sort: ListCpusSort.PerformanceRating },
-            pagination: { limit: chooseFrom },
+    const response = await this.productService.list(
+      {
+        productType: ProductType.Cpu,
+        query: {
+          filter: {
+            ...filter,
+            performanceRated: true,
           },
-          includeImages: true,
+          orderBy: { sort: ListSort.PerformanceRating },
+          pagination: { limit: chooseFrom },
         },
-        ctx,
-      )) || [];
+      },
+      { includeImages: true },
+      ctx,
+    );
+    const results = response.results;
 
-    const idx = Math.floor(Math.random() * bestPerformance.length);
-    return bestPerformance[idx];
+    const idx = Math.floor(Math.random() * results.length);
+    return results[idx];
   }
 
   private async getValueCpu(
@@ -270,23 +271,24 @@ export class HomeViewModelService {
     chooseFrom: number,
     ctx: Context,
   ) {
-    const bestPerformance =
-      (await this.cpuService.list(
-        {
-          query: {
-            filter: {
-              ...filter,
-              valueRated: true,
-            },
-            orderBy: { sort: ListCpusSort.ValueRating },
-            pagination: { limit: chooseFrom },
+    const response = await this.productService.list(
+      {
+        productType: ProductType.Cpu,
+        query: {
+          filter: {
+            ...filter,
+            valueRated: true,
           },
-          includeImages: true,
+          orderBy: { sort: ListSort.PerformancePerMsrp },
+          pagination: { limit: chooseFrom },
         },
-        ctx,
-      )) || [];
+      },
+      { includeImages: true },
+      ctx,
+    );
+    const results = response.results;
 
-    const idx = Math.floor(Math.random() * bestPerformance.length);
-    return bestPerformance[idx];
+    const idx = Math.floor(Math.random() * results.length);
+    return results[idx];
   }
 }

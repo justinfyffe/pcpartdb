@@ -2,6 +2,6 @@ import { scratchPad } from './scratchPad';
 
 export interface ScratchPadCommandArgs {}
 
-export async function fixDataCommand(_args: ScratchPadCommandArgs) {
+export async function scratchPadCommand(_args: ScratchPadCommandArgs) {
   await scratchPad();
 }

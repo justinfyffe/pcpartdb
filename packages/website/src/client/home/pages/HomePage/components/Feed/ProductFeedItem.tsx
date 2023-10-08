@@ -1,11 +1,11 @@
 import { PhotoIcon } from '@heroicons/react/24/outline';
 import {
-  formatProductField,
   formatProductName,
   getViewProductPath,
   Product,
-  ProductType,
+  productFieldFormattedValue,
 } from '@pcpartdb/shared';
+import { getCompanyLogoFeedPath } from 'packages/website/src/client/image/utils';
 import { Card } from 'packages/website/src/client/shared/components/Card/Card';
 import { Img } from 'packages/website/src/client/shared/components/Img/Img';
 import { ContentContext } from 'packages/website/src/client/shared/content/ContentContext';
@@ -13,7 +13,6 @@ import { ContentComponentParams } from 'packages/website/src/client/shared/conte
 import { compileContentComponent } from 'packages/website/src/client/shared/content/utils';
 import { classNames } from 'packages/website/src/client/shared/ui/classNames';
 import React, { FunctionComponent, useMemo } from 'react';
-import { getCompanyLogoFeedPath } from '../../../../../image/utils';
 
 export enum ProductFeedTag {
   GreatPerformance = 'GREAT_PERFORMANCE',
@@ -21,7 +20,6 @@ export enum ProductFeedTag {
 }
 
 interface ProductFeedItemProps {
-  productType: ProductType;
   product: Product;
   tag?: ProductFeedTag;
 
@@ -32,15 +30,12 @@ interface ProductFeedItemProps {
 export const ProductFeedItem: FunctionComponent<ProductFeedItemProps> = (
   props,
 ) => {
-  const { productType, product, tag } = props;
+  const { product, tag } = props;
 
-  const name = useMemo(
-    () => formatProductName(productType, product),
-    [productType, product],
-  );
+  const name = useMemo(() => formatProductName(product), [product]);
   const price = useMemo(
-    () => formatProductField(productType, product.launchPrice),
-    [productType, product],
+    () => productFieldFormattedValue(product.fields.msrp),
+    [product],
   );
 
   const label = useMemo(() => {
@@ -67,7 +62,7 @@ export const ProductFeedItem: FunctionComponent<ProductFeedItemProps> = (
 
   return (
     <a
-      href={getViewProductPath(productType, product)}
+      href={getViewProductPath(product)}
       className={classNames(
         'flex-1',
         'mx-4 mb-6',
@@ -152,9 +147,9 @@ export const ProductFeedItem: FunctionComponent<ProductFeedItemProps> = (
 
         <div className={classNames('flex flex-col gap-2 text-base')}>
           <h3 className="font-semibold text-lg text-link">
-            {formatProductName(productType, product)}
+            {formatProductName(product)}
           </h3>
-          <Subtitle productType={productType} product={product} tag={tag} />
+          <Subtitle product={product} tag={tag} />
         </div>
       </Card>
     </a>
@@ -162,19 +157,18 @@ export const ProductFeedItem: FunctionComponent<ProductFeedItemProps> = (
 };
 
 interface SubtitleProps {
-  productType: ProductType;
   product: Product;
   tag?: ProductFeedTag;
 }
 
 const Subtitle: FunctionComponent<SubtitleProps> = (props) => {
-  const { productType, product, tag } = props;
+  const { product, tag } = props;
 
   const params: ContentComponentParams = useMemo(
     () => ({
-      name: formatProductName(productType, product, { company: false }),
+      name: formatProductName(product, { company: false }),
     }),
-    [productType, product],
+    [product],
   );
 
   return (

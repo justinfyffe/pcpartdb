@@ -6,6 +6,9 @@ export interface ListPagination {
 export enum ListSort {
   Id = 'id',
   Name = 'name',
+  ReleaseDate = 'release_date',
+  PerformanceRating = 'performance_rating',
+  PerformancePerMsrp = 'performance_per_msrp',
 }
 
 export enum ListOrder {
@@ -28,8 +31,13 @@ export interface ListRequest<TQuery = ListQuery> {
   query: TQuery;
 }
 
-export interface ListResponse<TQuery = unknown, TResult = unknown> {
-  query: TQuery;
+export interface ListResponse<
+  TQuery = unknown,
+  TResult = unknown,
+  TAdditionalData = unknown,
+> {
+  query?: TQuery;
   results: TResult[];
   total: number;
+  additionalData?: TAdditionalData;
 }

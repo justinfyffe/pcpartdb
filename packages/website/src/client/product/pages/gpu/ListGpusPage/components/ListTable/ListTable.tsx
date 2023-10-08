@@ -1,8 +1,8 @@
 import {
-  formatGpuField,
-  formatGpuName,
+  formatProductName,
   getViewGpuPath,
-  Gpu,
+  GpuProduct,
+  productFieldFormattedValue,
 } from '@pcpartdb/shared';
 import {
   Button,
@@ -51,25 +51,25 @@ export const ListTable: FunctionComponent = () => {
 };
 
 interface ListTableRowProps {
-  gpu: Gpu;
+  gpu: GpuProduct;
 }
 
 const ListTableRow: FunctionComponent<ListTableRowProps> = (props) => {
   const { gpu } = props;
-  const { contentData } = useContext(ListPageContext);
-  const retailModelsCount = contentData?.retailModelCounts?.[gpu.id] ?? 0;
+  const { additionalData } = useContext(ListPageContext);
+  const retailModelsCount = additionalData?.retailModelCounts?.[gpu.id] ?? 0;
 
   const href = useMemo(() => getViewGpuPath(gpu), [gpu]);
-  const name = useMemo(() => formatGpuName(gpu), [gpu]);
+  const name = useMemo(() => formatProductName(gpu), [gpu]);
   const performance = useMemo(() => {
-    return formatGpuField(gpu.performanceScore) || '--';
-  }, [gpu.performanceScore]);
+    return productFieldFormattedValue(gpu.fields.performanceRating) ?? '--';
+  }, [gpu.fields.performanceRating]);
   const performancePerDollar = useMemo(() => {
-    return formatGpuField(gpu.valueScore) || '--';
-  }, [gpu.valueScore]);
+    return productFieldFormattedValue(gpu.fields.performancePerMsrp) ?? '--';
+  }, [gpu.fields.performancePerMsrp]);
   const releaseDate = useMemo(
-    () => formatGpuField(gpu.releaseDate) || '--',
-    [gpu.releaseDate],
+    () => productFieldFormattedValue(gpu.fields.releaseDate) ?? '--',
+    [gpu.fields.releaseDate],
   );
 
   const openProductsDialog = useCallback(() => {

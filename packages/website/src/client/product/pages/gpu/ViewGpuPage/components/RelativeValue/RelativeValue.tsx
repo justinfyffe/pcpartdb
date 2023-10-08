@@ -5,10 +5,13 @@ import { ValueIntro } from './ValueIntro';
 import { ValueTable } from './ValueTable';
 
 export const RelativeValue: FunctionComponent = () => {
-  const { gpu, contentData } = useContext(ViewPageContext);
+  const { gpu, additionalData: contentData } = useContext(ViewPageContext);
   const { relativeValueGpus } = contentData;
 
-  if (!hasProductFieldValue(gpu.valueScore) || !relativeValueGpus?.length) {
+  if (
+    !hasProductFieldValue(gpu.fields?.performancePerMsrp) ||
+    !relativeValueGpus?.length
+  ) {
     return <></>;
   }
 

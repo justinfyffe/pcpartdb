@@ -1,8 +1,8 @@
 import {
-  Cpu,
-  DateFormat,
-  formatCpuField,
-  formatCpuName,
+  CpuProduct,
+  formatCompanyName,
+  formatProductName,
+  productFieldFormattedValue,
 } from '@pcpartdb/shared';
 import React, { FunctionComponent, useMemo } from 'react';
 import { getCompanyLogoAutocompletePath } from '../../../image/utils';
@@ -11,7 +11,7 @@ import { Img } from '../../../shared/components/Img/Img';
 
 interface CpuAutocompleteOptionProps {
   index: number;
-  cpu: Cpu;
+  cpu: CpuProduct;
 }
 
 export const CpuAutocompleteOption: FunctionComponent<
@@ -20,28 +20,25 @@ export const CpuAutocompleteOption: FunctionComponent<
   const { index, cpu } = props;
 
   const id = cpu.id;
-  const name = useMemo(() => formatCpuName(cpu, { company: false }), [cpu]);
+  const name = useMemo(() => formatProductName(cpu, { company: false }), [cpu]);
   const shortName = useMemo(
-    () => formatCpuName(cpu, { company: false }),
+    () => formatProductName(cpu, { company: false }),
     [cpu],
   );
   const image = useMemo(() => getCompanyLogoAutocompletePath(cpu), [cpu]);
-  const company = useMemo(() => formatCpuField(cpu.company), [cpu]);
+  const company = useMemo(() => formatCompanyName(cpu.company), [cpu]);
 
   const companyAndMarketSegment = useMemo(() => {
-    const marketSegment = formatCpuField(cpu.marketSegment);
+    const marketSegment = productFieldFormattedValue(cpu.fields.marketSegment);
     return [company, marketSegment].filter((value) => value != null).join(', ');
-  }, [company, cpu.marketSegment]);
+  }, [company, cpu.fields.marketSegment]);
   const releaseDate = useMemo(
-    () =>
-      formatCpuField(cpu.releaseDate, {
-        dateFormat: DateFormat.QuarterYear,
-      }),
-    [cpu.releaseDate],
+    () => productFieldFormattedValue(cpu.fields.releaseDate),
+    [cpu.fields.releaseDate],
   );
   const price = useMemo(
-    () => formatCpuField(cpu.launchPrice),
-    [cpu.launchPrice],
+    () => productFieldFormattedValue(cpu.fields.msrp),
+    [cpu.fields.msrp],
   );
 
   return (

@@ -1,4 +1,4 @@
-import { ListGpusOrder, ListGpusSort } from '@pcpartdb/shared';
+import { ListOrder, ListSort } from '@pcpartdb/shared';
 import { classNames } from 'packages/website/src/client/shared/ui/classNames';
 import React, { FunctionComponent, useCallback, useContext } from 'react';
 import { ListPageContext } from '../../context/ListPageContext';
@@ -14,20 +14,20 @@ export const ListFilterSort: FunctionComponent<ListFilterSortProps> = (
     <div className={classNames('flex flex-col', props.className)}>
       <div className="font-bold m-2">Sort:</div>
       <ListFilterSortItem
-        sort={ListGpusSort.PerformanceRating}
-        defaultOrder={ListGpusOrder.Desc}
+        sort={ListSort.PerformanceRating}
+        defaultOrder={ListOrder.Desc}
       >
         Best Performance
       </ListFilterSortItem>
       <ListFilterSortItem
-        sort={ListGpusSort.ValueRating}
-        defaultOrder={ListGpusOrder.Desc}
+        sort={ListSort.PerformancePerMsrp}
+        defaultOrder={ListOrder.Desc}
       >
         Best Value
       </ListFilterSortItem>
       <ListFilterSortItem
-        sort={ListGpusSort.ReleaseDate}
-        defaultOrder={ListGpusOrder.Desc}
+        sort={ListSort.ReleaseDate}
+        defaultOrder={ListOrder.Desc}
       >
         Release Date
       </ListFilterSortItem>
@@ -36,8 +36,8 @@ export const ListFilterSort: FunctionComponent<ListFilterSortProps> = (
 };
 
 interface ListFilterSortItemProps {
-  sort: ListGpusSort;
-  defaultOrder?: ListGpusOrder;
+  sort: ListSort;
+  defaultOrder?: ListOrder;
   children?: React.ReactNode;
 }
 
@@ -51,10 +51,10 @@ const ListFilterSortItem: FunctionComponent<ListFilterSortItemProps> = (
 
   const handleSortClick = useCallback(() => {
     let newOrder = defaultOrder;
-    if (order === ListGpusOrder.Asc) {
-      newOrder = ListGpusOrder.Desc;
-    } else if (order === ListGpusOrder.Desc) {
-      newOrder = ListGpusOrder.Asc;
+    if (order === ListOrder.Asc) {
+      newOrder = ListOrder.Desc;
+    } else if (order === ListOrder.Desc) {
+      newOrder = ListOrder.Asc;
     }
 
     updateQuery({
@@ -72,8 +72,8 @@ const ListFilterSortItem: FunctionComponent<ListFilterSortItemProps> = (
         query.orderBy?.sort === sort ? 'font-bold' : '',
       )}
     >
-      {props.children} {order === ListGpusOrder.Asc ? <>&#9650;</> : <></>}{' '}
-      {order === ListGpusOrder.Desc ? <>&#9660;</> : <></>}
+      {props.children} {order === ListOrder.Asc ? <>&#9650;</> : <></>}{' '}
+      {order === ListOrder.Desc ? <>&#9660;</> : <></>}
     </button>
   );
 };

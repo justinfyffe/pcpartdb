@@ -1,9 +1,10 @@
 import {
-  formatGpuField,
-  formatGpuName,
+  formatProductName,
   getGpuChipset,
   getViewGpuPath,
-  Gpu,
+  GpuProduct,
+  productFieldFormattedValue,
+  productFieldRawValue,
 } from '@pcpartdb/shared';
 import { ProductCustomRow } from 'packages/website/src/client/product/components/ProductCustomRow/ProductCustomRow';
 import {
@@ -22,8 +23,8 @@ interface ValueTableProps {
 
 export const ValueTable: FunctionComponent<ValueTableProps> = (props) => {
   const { className } = props;
-  const { gpu, contentData } = useContext(ViewPageContext);
-  const { relativeValueGpus } = contentData;
+  const { gpu, additionalData } = useContext(ViewPageContext);
+  const { relativeValueGpus } = additionalData;
 
   return (
     <Table border responsive className={className}>
@@ -48,28 +49,35 @@ export const ValueTable: FunctionComponent<ValueTableProps> = (props) => {
 };
 
 interface ValueTableRowProps {
-  baselineGpu: Gpu;
-  relativeGpu: Gpu;
+  baselineGpu: GpuProduct;
+  relativeGpu: GpuProduct;
 }
 
 const ValueTableRow: FunctionComponent<ValueTableRowProps> = (props) => {
   const { baselineGpu, relativeGpu } = props;
 
   const relativeValuePct = useMemo(() => {
-    const baseline = baselineGpu.valueScore.value;
-    const relatedValue = relativeGpu.valueScore.value;
+    const baseline = productFieldRawValue(
+      baselineGpu.fields?.performancePerMsrp,
+    );
+    const relatedValue = productFieldRawValue(
+      relativeGpu.fields?.performancePerMsrp,
+    );
 
     return ((relatedValue / baseline) * 100).toFixed(0);
-  }, [baselineGpu.valueScore.value, relativeGpu.valueScore.value]);
+  }, [
+    baselineGpu.fields?.performancePerMsrp,
+    relativeGpu.fields?.performancePerMsrp,
+  ]);
 
   const rating = useMemo(
-    () => formatGpuField(relativeGpu.valueScore),
+    () => productFieldFormattedValue(relativeGpu.fields?.performancePerMsrp),
     [relativeGpu],
   );
 
   const href = useMemo(() => getViewGpuPath(relativeGpu), [relativeGpu]);
   const gpuName = useMemo(
-    () => formatGpuName(relativeGpu, { company: false }),
+    () => formatProductName(relativeGpu, { company: false }),
     [relativeGpu],
   );
 

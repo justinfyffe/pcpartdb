@@ -1,4 +1,4 @@
-import { ListCpusOrder, ListCpusQuery, ListCpusSort } from '@pcpartdb/shared';
+import { ListCpusQuery, ListOrder, ListSort } from '@pcpartdb/shared';
 
 export enum ListCpusContentTag {
   OrderedAsc = 'ORDERED_ASC',
@@ -11,16 +11,15 @@ export enum ListCpusContentTag {
 
 export function getContentTags(query: ListCpusQuery) {
   return {
-    [ListCpusContentTag.OrderedAsc]: query.orderBy?.order === ListCpusOrder.Asc,
+    [ListCpusContentTag.OrderedAsc]: query.orderBy?.order === ListOrder.Asc,
     [ListCpusContentTag.OrderedDesc]:
-      query.orderBy?.order == null ||
-      query.orderBy?.order === ListCpusOrder.Desc,
+      query.orderBy?.order == null || query.orderBy?.order === ListOrder.Desc,
     [ListCpusContentTag.SortedBestPerformance]:
       query.orderBy?.sort == null ||
-      query.orderBy?.sort === ListCpusSort.PerformanceRating,
+      query.orderBy?.sort === ListSort.PerformanceRating,
     [ListCpusContentTag.SortedBestValue]:
-      query.orderBy?.sort === ListCpusSort.ValueRating,
+      query.orderBy?.sort === ListSort.PerformancePerMsrp,
     [ListCpusContentTag.SortedReleaseDate]:
-      query.orderBy?.sort === ListCpusSort.ReleaseDate,
+      query.orderBy?.sort === ListSort.ReleaseDate,
   };
 }

@@ -1,7 +1,8 @@
 import {
-  formatCpuField,
-  formatCpuName,
+  formatCompanyName,
+  formatProductName,
   getCpuAffiliateUrl,
+  productFieldFormattedValue,
   ProductType,
 } from '@pcpartdb/shared';
 import { ProductCustomRow } from 'packages/website/src/client/product/components/ProductCustomRow/ProductCustomRow';
@@ -29,43 +30,43 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
 
   const [name1, name2] = useMemo(() => {
     return [
-      formatCpuName(cpu1, { company: false }),
-      formatCpuName(cpu2, { company: false }),
+      formatProductName(cpu1, { company: false }),
+      formatProductName(cpu2, { company: false }),
     ];
   }, [cpu1, cpu2]);
 
   const performanceScoreValues = useMemo(() => {
-    const score1 = formatCpuField(cpu1.performanceScore);
-    const score2 = formatCpuField(cpu2.performanceScore);
-    const rank1 = cpu1.ranks.performanceRank || null;
-    const rank2 = cpu2.ranks.performanceRank || null;
+    const score1 = productFieldFormattedValue(cpu1.fields?.performanceRating);
+    const score2 = productFieldFormattedValue(cpu2.fields?.performanceRating);
+    const rank1 = cpu1.ranks.performanceRating;
+    const rank2 = cpu2.ranks.performanceRating;
 
     return [
       score1 != null && rank1 != null ? `${score1} (${rank1})` : '--',
       score2 != null && rank2 != null ? `${score2} (${rank2})` : '--',
     ];
   }, [
-    cpu1.performanceScore,
-    cpu1.ranks.performanceRank,
-    cpu2.performanceScore,
-    cpu2.ranks.performanceRank,
+    cpu1.fields?.performanceRating,
+    cpu1.ranks.performanceRating,
+    cpu2.fields?.performanceRating,
+    cpu2.ranks.performanceRating,
   ]);
 
   const valueScoreValues = useMemo(() => {
-    const score1 = formatCpuField(cpu1.valueScore);
-    const score2 = formatCpuField(cpu2.valueScore);
-    const rank1 = cpu1.ranks.valueRank || null;
-    const rank2 = cpu2.ranks.valueRank || null;
+    const score1 = productFieldFormattedValue(cpu1.fields?.performancePerMsrp);
+    const score2 = productFieldFormattedValue(cpu2.fields?.performancePerMsrp);
+    const rank1 = cpu1.ranks.performancePerMsrp;
+    const rank2 = cpu2.ranks.performancePerMsrp;
 
     return [
       score1 != null && rank1 != null ? `${score1} (${rank1})` : '--',
       score2 != null && rank2 != null ? `${score2} (${rank2})` : '--',
     ];
   }, [
-    cpu1.ranks.valueRank,
-    cpu1.valueScore,
-    cpu2.ranks.valueRank,
-    cpu2.valueScore,
+    cpu1.fields?.performancePerMsrp,
+    cpu1.ranks.performancePerMsrp,
+    cpu2.fields?.performancePerMsrp,
+    cpu2.ranks.performancePerMsrp,
   ]);
 
   const cpuAffiliateUrl1 = useMemo(() => getCpuAffiliateUrl(cpu1), [cpu1]);
@@ -122,25 +123,31 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
           label="Performance Per Dollar (Rank)*"
           values={valueScoreValues}
         />
-        <ProductFieldRow
-          type={ProductType.Cpu}
-          fields={[cpu1.company, cpu2.company]}
+        <ProductCustomRow
+          label="Company"
+          values={[
+            formatCompanyName(cpu1.company) ?? '--',
+            formatCompanyName(cpu2.company) ?? '--',
+          ]}
         />
         <ProductFieldRow
           type={ProductType.Cpu}
-          fields={[cpu1.marketSegment, cpu2.marketSegment]}
+          fields={[cpu1.fields?.marketSegment, cpu2.fields?.marketSegment]}
         />
         <ProductFieldRow
           type={ProductType.Cpu}
-          fields={[cpu1.releaseDate, cpu2.releaseDate]}
+          fields={[cpu1.fields?.releaseDate, cpu2.fields?.releaseDate]}
         />
         <ProductFieldRow
           type={ProductType.Cpu}
-          fields={[cpu1.launchPrice, cpu2.launchPrice]}
+          fields={[cpu1.fields?.msrp, cpu2.fields?.msrp]}
         />
         <ProductFieldRow
           type={ProductType.Cpu}
-          fields={[cpu1.productionStatus, cpu2.productionStatus]}
+          fields={[
+            cpu1.fields?.productionStatus,
+            cpu2.fields?.productionStatus,
+          ]}
         />
       </TBody>
     </Table>

@@ -1,19 +1,23 @@
 import {
-  Cpu,
-  CpuComparison,
+  CpuProduct,
   DEFAULT_LIST_CPUS_LIMIT,
   DEFAULT_LIST_CPUS_OFFSET,
   LIST_CPUS_PRESETS,
   ListCpusQuery,
 } from '../product';
 import { joinUrlParts } from '../utils';
-import { GetCompareProductsPathOptions } from './product-route-utils';
+import {
+  GetCompareProductsPathOptions,
+  GetViewProductPathOptions,
+} from './product-route-utils';
 
 export function getAdminNewCpuPath() {
   return '/admin/cpus/new/';
 }
 
-export function getAdminEditCpuPath(cpuOrIdOrSlug: Cpu | number | string) {
+export function getAdminEditCpuPath(
+  cpuOrIdOrSlug: CpuProduct | number | string,
+) {
   if (typeof cpuOrIdOrSlug === 'number') {
     return joinUrlParts('/admin/cpus/', String(cpuOrIdOrSlug), '/');
   } else if (typeof cpuOrIdOrSlug === 'string') {
@@ -80,39 +84,37 @@ export function getListCpusPath(presetOrQuery?: ListCpusQuery | string) {
   return joinUrlParts(basePath, combinedParams ? `?${combinedParams}` : '');
 }
 
-export function getViewCpuPath(cpuOrSlug: Cpu | string) {
-  if (cpuOrSlug == null) {
-    return null;
+export function getViewCpuPath(options: GetViewProductPathOptions) {
+  let slug: string;
+  if (options.product != null) {
+    slug = options.product.slug;
+  } else if (options.slug != null) {
+    slug = options.slug;
+  } else {
+    throw new Error('Need to set product or slug for getting view cpu path');
   }
 
-  const slug = typeof cpuOrSlug === 'string' ? cpuOrSlug : cpuOrSlug.slug;
   return joinUrlParts('/cpus/view/', slug, '/');
 }
 
-export function getCompareCpusPath(
-  comparisonOrSlug: CpuComparison | [string, string],
-  options?: GetCompareProductsPathOptions,
-) {
-  let cpu1Slug: string;
-  let cpu2Slug: string;
-  if (typeof comparisonOrSlug[0] === 'string') {
-    cpu1Slug = comparisonOrSlug[0];
-    cpu2Slug = comparisonOrSlug[1] as string;
+export function getCompareCpusPath(options: GetCompareProductsPathOptions) {
+  const { comparison, slugs } = options;
+
+  let slug1: string;
+  let slug2: string;
+  if (comparison != null) {
+    slug1 = comparison[0].slug;
+    slug2 = comparison[1].slug;
+  } else if (slugs != null) {
+    slug1 = slugs[0];
+    slug2 = slugs[1];
   } else {
-    const comparison = comparisonOrSlug as CpuComparison;
-    const [cpu1, cpu2] =
-      options?.ordered === true
-        ? [...comparison].sort((p1, p2) => p1.id - p2.id)
-        : comparison;
-    cpu1Slug = cpu1.slug;
-    cpu2Slug = cpu2.slug;
+    throw new Error(
+      'Need to set comparison or slugs for getting compare cpus path',
+    );
   }
 
-  return joinUrlParts('/cpus/compare/', `${cpu1Slug}--vs--${cpu2Slug}`, '/');
-}
-
-export function getAdminImportCpusPath() {
-  return '/admin/cpus/import';
+  return joinUrlParts('/cpus/compare/', `${slug1}--vs--${slug2}`, '/');
 }
 
 function generatePaginationParamsFromCpusQuery(query: ListCpusQuery) {

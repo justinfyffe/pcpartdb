@@ -1,4 +1,4 @@
-import { formatCpuName, ProductType } from '@pcpartdb/shared';
+import { formatProductName, ProductType } from '@pcpartdb/shared';
 import { ProductFieldRow } from 'packages/website/src/client/product/components/ProductFieldRow/ProductFieldRow';
 import {
   Table,
@@ -22,8 +22,8 @@ export const PhysicalTable: FunctionComponent<PhysicalTableProps> = (props) => {
 
   const [name1, name2] = useMemo(() => {
     return [
-      formatCpuName(cpu1, { company: false }),
-      formatCpuName(cpu2, { company: false }),
+      formatProductName(cpu1, { company: false }),
+      formatProductName(cpu2, { company: false }),
     ];
   }, [cpu1, cpu2]);
 
@@ -39,27 +39,27 @@ export const PhysicalTable: FunctionComponent<PhysicalTableProps> = (props) => {
       <TBody>
         <ProductFieldRow
           type={ProductType.Cpu}
-          fields={[cpu1.socket, cpu2.socket]}
+          fields={[cpu1.fields?.socket, cpu2.fields?.socket]}
         />
         <ProductFieldRow
           type={ProductType.Cpu}
-          fields={[cpu1.foundry, cpu2.foundry]}
+          fields={[cpu1.fields?.foundry, cpu2.fields?.foundry]}
         />
         <ProductFieldRow
           type={ProductType.Cpu}
-          fields={[cpu1.processSize, cpu2.processSize]}
+          fields={[cpu1.fields?.processSize, cpu2.fields?.processSize]}
         />
         <ProductFieldRow
           type={ProductType.Cpu}
-          fields={[cpu1.transistors, cpu2.transistors]}
+          fields={[cpu1.fields?.transistors, cpu2.fields?.transistors]}
         />
         <ProductFieldRow
           type={ProductType.Cpu}
-          fields={[cpu1.tCaseMax, cpu2.tCaseMax]}
+          fields={[cpu1.fields?.tCaseMax, cpu2.fields?.tCaseMax]}
         />
         <ProductFieldRow
           type={ProductType.Cpu}
-          fields={[cpu1.tjMax, cpu2.tjMax]}
+          fields={[cpu1.fields?.tjMax, cpu2.fields?.tjMax]}
         />
       </TBody>
     </Table>

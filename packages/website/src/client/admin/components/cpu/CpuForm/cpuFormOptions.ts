@@ -1,190 +1,181 @@
 import Joi from '@hapi/joi';
 import { joiResolver } from '@hookform/resolvers/joi';
 import {
-  Cpu,
-  CpuDataSourceKey,
-  cpuDataSourceValidator,
-  cpuDataValidator,
-  cpuImageValidator,
+  CpuProduct,
+  productBenchmarkSchema,
+  productFieldSchema,
+  productImageSchema,
+  productSourceSchema,
 } from '@pcpartdb/shared';
 import { UseFormProps } from 'react-hook-form';
 import { CpuFormData } from './CpuFormData';
 
-const cpuValidator = Joi.object({
-  slug: Joi.string().required(),
+const cpuFormSchema = Joi.object({
   name: Joi.string().required(),
+  slug: Joi.string().required(),
+  company: Joi.string(),
+  otherNames: Joi.array().items(Joi.string()).allow(null),
+  searchText: Joi.string().allow(null),
   affiliateUrl: Joi.string().allow(null),
 
-  // Data Sources
-  techPowerUpSource: cpuDataSourceValidator.allow(null),
-  passMarkSource: cpuDataSourceValidator.allow(null),
-  geekBenchSource: cpuDataSourceValidator.allow(null),
-
   // General Info
-  partNumber: cpuDataValidator.allow(null),
-  company: cpuDataValidator.allow(null),
-  marketSegment: cpuDataValidator.allow(null),
-  launchPrice: cpuDataValidator.allow(null),
-  releaseDate: cpuDataValidator.allow(null),
-  productionStatus: cpuDataValidator.allow(null),
-  bundledCooler: cpuDataValidator.allow(null),
+  partNumber: productFieldSchema.allow(null),
+  marketSegment: productFieldSchema.allow(null),
+  msrp: productFieldSchema.allow(null),
+  releaseDate: productFieldSchema.allow(null),
+  productionStatus: productFieldSchema.allow(null),
+  bundledCooler: productFieldSchema.allow(null),
 
   // Physical
-  socket: cpuDataValidator.allow(null),
-  foundry: cpuDataValidator.allow(null),
-  processSize: cpuDataValidator.allow(null),
-  transistors: cpuDataValidator.allow(null),
-  tCaseMax: cpuDataValidator.allow(null),
-  tjMax: cpuDataValidator.allow(null),
+  socket: productFieldSchema.allow(null),
+  foundry: productFieldSchema.allow(null),
+  processSize: productFieldSchema.allow(null),
+  transistors: productFieldSchema.allow(null),
+  tCaseMax: productFieldSchema.allow(null),
+  tjMax: productFieldSchema.allow(null),
 
   // Technical
-  architecture: cpuDataValidator.allow(null),
-  codename: cpuDataValidator.allow(null),
-  generation: cpuDataValidator.allow(null),
-  pciExpress: cpuDataValidator.allow(null),
-  chipsets: cpuDataValidator.allow(null),
+  architecture: productFieldSchema.allow(null),
+  codename: productFieldSchema.allow(null),
+  generation: productFieldSchema.allow(null),
+  pciExpress: productFieldSchema.allow(null),
+  chipsets: productFieldSchema.allow(null),
 
   // Memory
-  memorySupport: cpuDataValidator.allow(null),
-  memoryChannels: cpuDataValidator.allow(null),
-  hasEccMemory: cpuDataValidator.allow(null),
+  memorySupport: productFieldSchema.allow(null),
+  memoryChannels: productFieldSchema.allow(null),
+  eccMemory: productFieldSchema.allow(null),
 
   // Cores & Clock Speed
-  coresCount: cpuDataValidator.allow(null),
-  threadsCount: cpuDataValidator.allow(null),
-  performanceCoresCount: cpuDataValidator.allow(null),
-  efficientCoresCount: cpuDataValidator.allow(null),
-  clock: cpuDataValidator.allow(null),
-  turboClock: cpuDataValidator.allow(null),
-  performanceCoreClock: cpuDataValidator.allow(null),
-  performanceCoreTurboClock: cpuDataValidator.allow(null),
-  efficientCoreClock: cpuDataValidator.allow(null),
-  efficientCoreTurboClock: cpuDataValidator.allow(null),
-  baseClock: cpuDataValidator.allow(null),
-  multiplier: cpuDataValidator.allow(null),
-  isMultiplierUnlocked: cpuDataValidator.allow(null),
+  cores: productFieldSchema.allow(null),
+  threads: productFieldSchema.allow(null),
+  pCores: productFieldSchema.allow(null),
+  eCores: productFieldSchema.allow(null),
+  clock: productFieldSchema.allow(null),
+  turboClock: productFieldSchema.allow(null),
+  pCoreClock: productFieldSchema.allow(null),
+  pCoreTurboClock: productFieldSchema.allow(null),
+  eCoreClock: productFieldSchema.allow(null),
+  eCoreTurboClock: productFieldSchema.allow(null),
+  baseClock: productFieldSchema.allow(null),
+  multiplier: productFieldSchema.allow(null),
+  multiplierUnlocked: productFieldSchema.allow(null),
 
   // Power Consumption
-  tdp: cpuDataValidator.allow(null),
-  pl1: cpuDataValidator.allow(null),
-  pl2: cpuDataValidator.allow(null),
-  ppt: cpuDataValidator.allow(null),
+  tdp: productFieldSchema.allow(null),
+  pl1: productFieldSchema.allow(null),
+  pl2: productFieldSchema.allow(null),
+  ppt: productFieldSchema.allow(null),
 
   // Cache
-  l1Cache: cpuDataValidator.allow(null),
-  l2Cache: cpuDataValidator.allow(null),
-  l3Cache: cpuDataValidator.allow(null),
-  efficientCoreL1Cache: cpuDataValidator.allow(null),
-  efficientCoreL2Cache: cpuDataValidator.allow(null),
+  l1Cache: productFieldSchema.allow(null),
+  l2Cache: productFieldSchema.allow(null),
+  l3Cache: productFieldSchema.allow(null),
+  eCoreL1Cache: productFieldSchema.allow(null),
+  eCoreL2Cache: productFieldSchema.allow(null),
 
   // Graphics
-  integratedGraphics: cpuDataValidator.allow(null),
+  integratedGraphics: productFieldSchema.allow(null),
 
   // Features
-  extensionsTechnologies: cpuDataValidator.allow(null),
+  extensionsTechnologies: productFieldSchema.allow(null),
+
+  // Sources
+  sources: Joi.array().items(productSourceSchema),
 
   // Benchmarks
-  performanceScore: cpuDataValidator.allow(null),
-  valueScore: cpuDataValidator.allow(null),
-  cpuMarkMultiThread: cpuDataValidator.allow(null),
-  cpuMarkSingleThread: cpuDataValidator.allow(null),
-  geekbenchSingleCore: cpuDataValidator.allow(null),
-  geekbenchMultiCore: cpuDataValidator.allow(null),
+  benchmarks: Joi.array().items(productBenchmarkSchema),
 
   // Images
-  images: Joi.array().allow(cpuImageValidator),
+  images: Joi.array().items(productImageSchema),
 }).options({ abortEarly: false });
 
-export function cpuFormOptions(cpu?: Cpu): UseFormProps<CpuFormData> {
+export function cpuFormOptions(cpu?: CpuProduct): UseFormProps<CpuFormData> {
+  const benchmarks = cpu?.benchmarks || [];
+  const sources = cpu?.sources || [];
+  const images = cpu?.images || [];
+
   return {
-    resolver: joiResolver(cpuValidator),
+    resolver: joiResolver(cpuFormSchema),
     mode: 'onBlur',
     defaultValues: {
-      slug: cpu?.slug || null,
-      name: cpu?.name || null,
-      affiliateUrl: cpu?.affiliateUrl || null,
+      name: cpu?.name ?? null,
+      slug: cpu?.slug ?? null,
+      company: cpu?.company ?? null,
+      otherNames: cpu?.otherNames || [],
+      searchText: cpu?.searchText ?? null,
+      affiliateUrl: cpu?.affiliateUrl ?? null,
 
       // Data Sources
-      techPowerUpSource:
-        cpu?.meta?.dataSources?.[CpuDataSourceKey.TechPowerUp] || null,
-      passMarkSource:
-        cpu?.meta?.dataSources?.[CpuDataSourceKey.PassMark] || null,
-      geekBenchSource:
-        cpu?.meta?.dataSources?.[CpuDataSourceKey.GeekBench] || null,
+      sources,
 
       // General Info
-      partNumber: cpu?.partNumber || null,
-      company: cpu?.company || null,
-      marketSegment: cpu?.marketSegment || null,
-      launchPrice: cpu?.launchPrice || null,
-      releaseDate: cpu?.releaseDate || null,
-      productionStatus: cpu?.productionStatus || null,
-      bundledCooler: cpu?.bundledCooler || null,
+      partNumber: cpu?.fields?.partNumber ?? null,
+      marketSegment: cpu?.fields?.marketSegment ?? null,
+      msrp: cpu?.fields?.msrp ?? null,
+      releaseDate: cpu?.fields?.releaseDate ?? null,
+      productionStatus: cpu?.fields?.productionStatus ?? null,
+      bundledCooler: cpu?.fields?.bundledCooler ?? null,
 
       // Physical Specs
-      socket: cpu?.socket || null,
-      foundry: cpu?.foundry || null,
-      processSize: cpu?.processSize || null,
-      transistors: cpu?.transistors || null,
-      tCaseMax: cpu?.tCaseMax || null,
-      tjMax: cpu?.tjMax || null,
+      socket: cpu?.fields?.socket ?? null,
+      foundry: cpu?.fields?.foundry ?? null,
+      processSize: cpu?.fields?.processSize ?? null,
+      transistors: cpu?.fields?.transistors ?? null,
+      tCaseMax: cpu?.fields?.tCaseMax ?? null,
+      tjMax: cpu?.fields?.tjMax ?? null,
 
       // Technical Specs
-      architecture: cpu?.architecture || null,
-      codename: cpu?.codename || null,
-      generation: cpu?.generation || null,
-      pciExpress: cpu?.pciExpress || null,
-      chipsets: cpu?.chipsets || null,
+      architecture: cpu?.fields?.architecture ?? null,
+      codename: cpu?.fields?.codename ?? null,
+      generation: cpu?.fields?.generation ?? null,
+      pciExpress: cpu?.fields?.pciExpress ?? null,
+      chipsets: cpu?.fields?.chipsets ?? null,
 
       // Memory Specs
-      memorySupport: cpu?.memorySupport || null,
-      memoryChannels: cpu?.memoryChannels || null,
-      hasEccMemory: cpu?.hasEccMemory || null,
+      memorySupport: cpu?.fields?.memorySupport ?? null,
+      memoryChannels: cpu?.fields?.memoryChannels ?? null,
+      eccMemory: cpu?.fields?.eccMemory ?? null,
 
       // Processing Specs
-      coresCount: cpu?.coresCount || null,
-      threadsCount: cpu?.threadsCount || null,
-      performanceCoresCount: cpu?.performanceCoresCount || null,
-      efficientCoresCount: cpu?.efficientCoresCount || null,
+      cores: cpu?.fields?.cores ?? null,
+      threads: cpu?.fields?.threads ?? null,
+      pCores: cpu?.fields?.pCores ?? null,
+      eCores: cpu?.fields?.eCores ?? null,
 
       // Clock Speed Specs
-      clock: cpu?.clock || null,
-      turboClock: cpu?.turboClock || null,
-      performanceCoreClock: cpu?.performanceCoreClock || null,
-      performanceCoreTurboClock: cpu?.performanceCoreTurboClock || null,
-      efficientCoreClock: cpu?.efficientCoreClock || null,
-      efficientCoreTurboClock: cpu?.efficientCoreTurboClock || null,
-      baseClock: cpu?.baseClock || null,
-      multiplier: cpu?.multiplier || null,
-      isMultiplierUnlocked: cpu?.isMultiplierUnlocked || null,
+      clock: cpu?.fields?.clock ?? null,
+      turboClock: cpu?.fields?.turboClock ?? null,
+      pCoreClock: cpu?.fields?.pCoreClock ?? null,
+      pCoreTurboClock: cpu?.fields?.pCoreTurboClock ?? null,
+      eCoreClock: cpu?.fields?.eCoreClock ?? null,
+      eCoreTurboClock: cpu?.fields?.eCoreTurboClock ?? null,
+      baseClock: cpu?.fields?.baseClock ?? null,
+      multiplier: cpu?.fields?.multiplier ?? null,
+      multiplierUnlocked: cpu?.fields?.multiplierUnlocked ?? null,
 
       // Power Specs
-      tdp: cpu?.tdp || null,
-      pl1: cpu?.pl1 || null,
-      pl2: cpu?.pl2 || null,
-      ppt: cpu?.ppt || null,
+      tdp: cpu?.fields?.tdp ?? null,
+      pl1: cpu?.fields?.pl1 ?? null,
+      pl2: cpu?.fields?.pl2 ?? null,
+      ppt: cpu?.fields?.ppt ?? null,
 
       // Cache Specs
-      l1Cache: cpu?.l1Cache || null,
-      l2Cache: cpu?.l2Cache || null,
-      l3Cache: cpu?.l3Cache || null,
-      efficientCoreL1Cache: cpu?.efficientCoreL1Cache || null,
-      efficientCoreL2Cache: cpu?.efficientCoreL2Cache || null,
+      l1Cache: cpu?.fields?.l1Cache ?? null,
+      l2Cache: cpu?.fields?.l2Cache ?? null,
+      l3Cache: cpu?.fields?.l3Cache ?? null,
+      eCoreL1Cache: cpu?.fields?.eCoreL1Cache ?? null,
+      eCoreL2Cache: cpu?.fields?.eCoreL2Cache ?? null,
 
       // Graphics & Features
-      integratedGraphics: cpu?.integratedGraphics || null,
-      extensionsTechnologies: cpu?.extensionsTechnologies || null,
+      integratedGraphics: cpu?.fields?.integratedGraphics ?? null,
+      extensionsTechnologies: cpu?.fields?.extensionsTechnologies ?? null,
 
       // Benchmarks
-      performanceScore: cpu?.performanceScore || null,
-      valueScore: cpu?.valueScore || null,
-      cpuMarkMultiThread: cpu?.cpuMarkMultiThread || null,
-      cpuMarkSingleThread: cpu?.cpuMarkSingleThread || null,
-      geekbenchSingleCore: cpu?.geekbenchSingleCore || null,
-      geekbenchMultiCore: cpu?.geekbenchMultiCore || null,
+      benchmarks,
 
       // Images
-      images: cpu?.images || [],
+      images,
     },
   };
 }

@@ -2,31 +2,48 @@ import Joi from '@hapi/joi';
 import { joiResolver } from '@hookform/resolvers/joi';
 import {
   ApiError,
-  CreateGpuRequest,
+  BandwidthUnit,
+  BitUnit,
+  ClockSpeedUnit,
+  CreateProductRequest,
+  CurrencyUnit,
+  FlopsUnit,
+  formatMarketSegment,
+  formatProductionStatus,
   getAdminListGpusPath,
-  Gpu,
-  GpuDataSource,
-  GpuDataSourceKey,
-  gpuDataSourceValidator,
-  gpuDataValidator,
   GpuField,
-  GpuImages,
-  gpuImageValidator,
-  GpuMarketSegmentValue,
-  GpuProductionStatusValue,
+  GpuFields,
+  GpuProduct,
+  LengthUnit,
+  MarketSegment,
+  MemorySizeUnit,
+  NumericUnit,
+  PixelFillRateUnit,
   Product,
+  ProductBenchmark,
+  productBenchmarkSchema,
+  productFieldFormattedValue,
+  productFieldSchema,
+  ProductImage,
+  productImageSchema,
+  ProductionStatus,
+  ProductSource,
+  productSourceSchema,
   ProductType,
-  UpdateGpuRequest,
+  TextureFillRateUnit,
+  UpdateProductRequest,
   ValidationErrorType,
+  WattageUnit,
+  WeightUnit,
 } from '@pcpartdb/shared';
 import { useRouter } from 'next/router';
 import { ProductAutocomplete } from 'packages/website/src/client/product/components/ProductAutocomplete/ProductAutocomplete';
-import { gpuService } from 'packages/website/src/client/product/services/gpuService';
+import { productService } from 'packages/website/src/client/product/services/productService';
 import { useProductCache } from 'packages/website/src/client/shared/cache/ProductCache';
 import { ErrorAlert } from 'packages/website/src/client/shared/components/Alert/ErrorAlert';
 import { DangerButton } from 'packages/website/src/client/shared/components/Button/DangerButton';
+import { InfoButton } from 'packages/website/src/client/shared/components/Button/InfoButton';
 import { PrimaryButton } from 'packages/website/src/client/shared/components/Button/PrimaryButton';
-import { WarningButton } from 'packages/website/src/client/shared/components/Button/WarningButton';
 import { showDialog } from 'packages/website/src/client/shared/components/Dialog/dialog';
 import {
   Field,
@@ -49,34 +66,37 @@ import {
   isBadRequestError,
   setValidationErrors,
 } from '../../../../shared/error/utils';
+import { ProductBenchmarksInput } from '../../product/ProductBenchmarkInput/ProductBenchmarksInput';
+import { ProductDateInput } from '../../product/ProductDateInput/ProductDateInput';
+import { ProductEnumInput } from '../../product/ProductEnumInput/ProductEnumInput';
+import { ProductFloatInput } from '../../product/ProductFloatInput/ProductFloatInput';
+import { ProductImagesInput } from '../../product/ProductImageInput/ProductImagesInput';
+import { ProductOtherNamesInput } from '../../product/ProductOtherNamesInput/ProductOtherNamesInput';
+import { ProductSearchTextInput } from '../../product/ProductSearchTextInput/ProductSearchTextInput';
+import { ProductSlugInput } from '../../product/ProductSlugInput/ProductSlugInput';
+import { ProductSourcesInput } from '../../product/ProductSourceInput/ProductSourcesInput';
+import { ProductTextInput } from '../../product/ProductTextInput/ProductTextInput';
 import { ScrapedProduct } from '../../product/ScrapeProductDialog/types';
-import { GpuBenchmarkInput } from '../GpuBenchmarkInput/GpuBenchmarkInput';
-import { GpuDataSourceInput } from '../GpuDataSourceInput/GpuDataSourceInput';
-import { GpuFieldInput } from '../GpuFieldInput/GpuFieldInput';
-import { GpuImagesInput } from '../GpuImageInput/GpuImagesInput';
-import { GpuSlugInput } from '../GpuSlugInput/GpuSlugInput';
 import { ScrapeGpuDialog } from '../ScrapeGpuDialog/ScrapeGpuDialog';
 
 interface GpuFormData {
   // GPU Parent / Chipset ID
-  chipsetId?: number;
+  parentId?: number;
 
-  slug: string;
   name: string;
-  affiliateUrl?: string;
+  slug: string;
 
-  // Data Sources
-  techPowerUpSource?: GpuDataSource;
-  videocardBenchmarksSource?: GpuDataSource;
-  ulBenchmarksSource?: GpuDataSource;
+  company?: string;
+  otherNames?: string[];
+  searchText?: string;
+  affiliateUrl?: string;
 
   // General
   partNumber?: GpuField<string>;
-  company?: GpuField<string>;
-  marketSegment?: GpuField<GpuMarketSegmentValue>;
-  launchPrice?: GpuField<number>;
+  marketSegment?: GpuField<MarketSegment>;
+  msrp?: GpuField<number>;
   releaseDate?: GpuField<string>;
-  productionStatus?: GpuField<GpuProductionStatusValue>;
+  productionStatus?: GpuField<ProductionStatus>;
 
   // Processor
   codename?: GpuField<string>;
@@ -91,28 +111,28 @@ interface GpuFormData {
   height?: GpuField<number>;
   weight?: GpuField<number>;
   busInterface?: GpuField<string>;
-  thermalDesignPower?: GpuField<number>;
+  tdp?: GpuField<number>;
   suggestedPsu?: GpuField<number>;
   powerConnectors?: GpuField<string>;
   outputs?: GpuField<string>;
 
   // Cores & Clock Speeds
-  shaderUnitsCudaCores?: GpuField<number>;
-  computeUnitsSmCount?: GpuField<number>;
-  textureMappingUnits?: GpuField<number>;
-  renderOutputUnits?: GpuField<number>;
+  gpuCores?: GpuField<number>;
+  computeUnits?: GpuField<number>;
+  tmus?: GpuField<number>;
+  rops?: GpuField<number>;
   tensorCores?: GpuField<number>;
-  rayTracingCores?: GpuField<number>;
-  coreClockSpeedBase?: GpuField<number>;
-  coreClockSpeedBoost?: GpuField<number>;
+  rtCores?: GpuField<number>;
+  gpuCoreBaseClock?: GpuField<number>;
+  gpuCoreBoostClock?: GpuField<number>;
   l1Cache?: GpuField<number>;
   l2Cache?: GpuField<number>;
 
   // Theoretical Performance
-  pixelFillRate?: GpuField<number>;
-  textureFillRate?: GpuField<number>;
-  fp32Performance?: GpuField<number>;
-  fp64Performance?: GpuField<number>;
+  pixelRate?: GpuField<number>;
+  textureRate?: GpuField<number>;
+  fp32?: GpuField<number>;
+  fp64?: GpuField<number>;
 
   // Memory
   memorySize?: GpuField<number>;
@@ -128,181 +148,177 @@ interface GpuFormData {
   shaderModelVersion?: GpuField<string>;
 
   // Benchmarks
-  g2dMark?: GpuField<number>;
-  g3dMark?: GpuField<number>;
-  timespyGraphics?: GpuField<number>;
+  benchmarks?: ProductBenchmark[];
+
+  // Sources
+  sources?: ProductSource[];
 
   // Images
-  images?: GpuImages;
+  images?: ProductImage[];
 }
 
-const gpuValidator = Joi.object({
-  chipsetId: Joi.number().allow(null),
+const gpuFormSchema = Joi.object({
+  parentId: Joi.number().allow(null),
 
-  slug: Joi.string().required(),
   name: Joi.string().required(),
+  slug: Joi.string().required(),
+  company: Joi.string(),
+  otherNames: Joi.array().items(Joi.string()).allow(null),
+  searchText: Joi.string().allow(null),
   affiliateUrl: Joi.string().allow(null),
 
-  // Data Sources
-  techPowerUpSource: gpuDataSourceValidator.allow(null),
-  videocardBenchmarksSource: gpuDataSourceValidator.allow(null),
-  ulBenchmarksSource: gpuDataSourceValidator.allow(null),
+  // Sources
+  sources: Joi.array().items(productSourceSchema),
 
   // General
-  partNumber: gpuDataValidator.allow(null),
-  company: gpuDataValidator.allow(null),
-  marketSegment: gpuDataValidator.allow(null),
-  launchPrice: gpuDataValidator.allow(null),
-  releaseDate: gpuDataValidator.allow(null),
-  productionStatus: gpuDataValidator.allow(null),
+  partNumber: productFieldSchema.allow(null),
+  marketSegment: productFieldSchema.allow(null),
+  msrp: productFieldSchema.allow(null),
+  releaseDate: productFieldSchema.allow(null),
+  productionStatus: productFieldSchema.allow(null),
 
   // Processor
-  codename: gpuDataValidator.allow(null),
-  architecture: gpuDataValidator.allow(null),
-  processSize: gpuDataValidator.allow(null),
-  transistors: gpuDataValidator.allow(null),
+  codename: productFieldSchema.allow(null),
+  architecture: productFieldSchema.allow(null),
+  processSize: productFieldSchema.allow(null),
+  transistors: productFieldSchema.allow(null),
 
   // Board Compatibility & Dimensions
-  slotWidth: gpuDataValidator.allow(null),
-  length: gpuDataValidator.allow(null),
-  width: gpuDataValidator.allow(null),
-  height: gpuDataValidator.allow(null),
-  weight: gpuDataValidator.allow(null),
-  busInterface: gpuDataValidator.allow(null),
-  thermalDesignPower: gpuDataValidator.allow(null),
-  suggestedPsu: gpuDataValidator.allow(null),
-  powerConnectors: gpuDataValidator.allow(null),
-  outputs: gpuDataValidator.allow(null),
+  slotWidth: productFieldSchema.allow(null),
+  length: productFieldSchema.allow(null),
+  width: productFieldSchema.allow(null),
+  height: productFieldSchema.allow(null),
+  weight: productFieldSchema.allow(null),
+  busInterface: productFieldSchema.allow(null),
+  tdp: productFieldSchema.allow(null),
+  suggestedPsu: productFieldSchema.allow(null),
+  powerConnectors: productFieldSchema.allow(null),
+  outputs: productFieldSchema.allow(null),
 
   // Cores & Clock Speed
-  shaderUnitsCudaCores: gpuDataValidator.allow(null),
-  computeUnitsSmCount: gpuDataValidator.allow(null),
-  textureMappingUnits: gpuDataValidator.allow(null),
-  renderOutputUnits: gpuDataValidator.allow(null),
-  tensorCores: gpuDataValidator.allow(null),
-  rayTracingCores: gpuDataValidator.allow(null),
-  coreClockSpeedBase: gpuDataValidator.allow(null),
-  coreClockSpeedBoost: gpuDataValidator.allow(null),
-  l1Cache: gpuDataValidator.allow(null),
-  l2Cache: gpuDataValidator.allow(null),
+  gpuCores: productFieldSchema.allow(null),
+  computeUnits: productFieldSchema.allow(null),
+  tmus: productFieldSchema.allow(null),
+  rops: productFieldSchema.allow(null),
+  tensorCores: productFieldSchema.allow(null),
+  rtCores: productFieldSchema.allow(null),
+  gpuCoreBaseClock: productFieldSchema.allow(null),
+  gpuCoreBoostClock: productFieldSchema.allow(null),
+  l1Cache: productFieldSchema.allow(null),
+  l2Cache: productFieldSchema.allow(null),
 
   // Theoretical Performance
-  pixelFillRate: gpuDataValidator.allow(null),
-  textureFillRate: gpuDataValidator.allow(null),
-  fp32Performance: gpuDataValidator.allow(null),
-  fp64Performance: gpuDataValidator.allow(null),
+  pixelRate: productFieldSchema.allow(null),
+  textureRate: productFieldSchema.allow(null),
+  fp32: productFieldSchema.allow(null),
+  fp64: productFieldSchema.allow(null),
 
   // Memory
-  memorySize: gpuDataValidator.allow(null),
-  memoryType: gpuDataValidator.allow(null),
-  memoryClock: gpuDataValidator.allow(null),
-  memoryInterface: gpuDataValidator.allow(null),
-  memoryBandwidth: gpuDataValidator.allow(null),
+  memorySize: productFieldSchema.allow(null),
+  memoryType: productFieldSchema.allow(null),
+  memoryClock: productFieldSchema.allow(null),
+  memoryInterface: productFieldSchema.allow(null),
+  memoryBandwidth: productFieldSchema.allow(null),
 
   // API Support
-  directxVersion: gpuDataValidator.allow(null),
-  openClVersion: gpuDataValidator.allow(null),
-  openGlVersion: gpuDataValidator.allow(null),
-  shaderModelVersion: gpuDataValidator.allow(null),
+  directxVersion: productFieldSchema.allow(null),
+  openClVersion: productFieldSchema.allow(null),
+  openGlVersion: productFieldSchema.allow(null),
+  shaderModelVersion: productFieldSchema.allow(null),
 
   // Benchmarks
-  g2dMark: gpuDataValidator.allow(null),
-  g3dMark: gpuDataValidator.allow(null),
-  timespyGraphics: gpuDataValidator.allow(null),
+  benchmarks: Joi.array().items(productBenchmarkSchema),
 
   // Images
-  images: Joi.array().allow(gpuImageValidator),
+  images: Joi.array().items(productImageSchema),
 }).options({ abortEarly: false });
 
 interface GpuFormProps {
-  gpu?: Gpu;
+  gpu?: GpuProduct;
 }
 
-function formOptions(gpu?: Gpu): UseFormProps<GpuFormData> {
+function formOptions(gpu?: GpuProduct): UseFormProps<GpuFormData> {
+  const benchmarks = gpu?.benchmarks || [];
+  const sources = gpu?.sources || [];
   const images = gpu?.images || [];
 
   return {
-    resolver: joiResolver(gpuValidator),
+    resolver: joiResolver(gpuFormSchema),
     mode: 'onBlur',
     defaultValues: {
-      slug: gpu?.slug || null,
-      name: gpu?.name || null,
-      affiliateUrl: gpu?.affiliateUrl || null,
+      name: gpu?.name ?? null,
+      slug: gpu?.slug ?? null,
+      otherNames: gpu?.otherNames || [],
+      searchText: gpu?.searchText ?? null,
+      affiliateUrl: gpu?.affiliateUrl ?? null,
 
-      chipsetId: gpu?.chipsetId || null,
+      parentId: gpu?.parentId ?? null,
 
       // Data Sources
-      techPowerUpSource:
-        gpu?.meta?.dataSources?.[GpuDataSourceKey.TechPowerUp] || null,
-      videocardBenchmarksSource:
-        gpu?.meta?.dataSources?.[GpuDataSourceKey.VideocardBenchmarks] || null,
-      ulBenchmarksSource:
-        gpu?.meta?.dataSources?.[GpuDataSourceKey.UlBenchmarks] || null,
+      sources,
 
       // General
-      partNumber: gpu?.partNumber || null,
-      company: gpu?.company || null,
-      marketSegment: gpu?.marketSegment || null,
-      launchPrice: gpu?.launchPrice || null,
-      releaseDate: gpu?.releaseDate || null,
-      productionStatus: gpu?.productionStatus || null,
+      partNumber: gpu?.fields?.partNumber ?? null,
+      company: gpu?.company ?? null,
+      marketSegment: gpu?.fields?.marketSegment ?? null,
+      msrp: gpu?.fields?.msrp ?? null,
+      releaseDate: gpu?.fields?.releaseDate ?? null,
+      productionStatus: gpu?.fields?.productionStatus ?? null,
 
       // Processor
-      codename: gpu?.codename || null,
-      architecture: gpu?.architecture || null,
-      processSize: gpu?.processSize || null,
-      transistors: gpu?.transistors || null,
+      codename: gpu?.fields?.codename ?? null,
+      architecture: gpu?.fields?.architecture ?? null,
+      processSize: gpu?.fields?.processSize ?? null,
+      transistors: gpu?.fields?.transistors ?? null,
 
       // Board Compatibility & Dimensions
-      slotWidth: gpu?.slotWidth || null,
-      length: gpu?.length || null,
-      width: gpu?.width || null,
-      height: gpu?.height || null,
-      weight: gpu?.weight || null,
-      busInterface: gpu?.busInterface || null,
-      thermalDesignPower: gpu?.thermalDesignPower || null,
-      suggestedPsu: gpu?.suggestedPsu || null,
-      powerConnectors: gpu?.powerConnectors || null,
-      outputs: gpu?.outputs || null,
+      slotWidth: gpu?.fields?.slotWidth ?? null,
+      length: gpu?.fields?.length ?? null,
+      width: gpu?.fields?.width ?? null,
+      height: gpu?.fields?.height ?? null,
+      weight: gpu?.fields?.weight ?? null,
+      busInterface: gpu?.fields?.busInterface ?? null,
+      tdp: gpu?.fields?.tdp ?? null,
+      suggestedPsu: gpu?.fields?.suggestedPsu ?? null,
+      powerConnectors: gpu?.fields?.powerConnectors ?? null,
+      outputs: gpu?.fields?.outputs ?? null,
 
       // Cores & Clock Speeds
-      shaderUnitsCudaCores: gpu?.shaderUnitsCudaCores || null,
-      computeUnitsSmCount: gpu?.computeUnitsSmCount || null,
-      textureMappingUnits: gpu?.textureMappingUnits || null,
-      renderOutputUnits: gpu?.renderOutputUnits || null,
-      tensorCores: gpu?.tensorCores || null,
-      rayTracingCores: gpu?.rayTracingCores || null,
-      coreClockSpeedBase: gpu?.coreClockSpeedBase || null,
-      coreClockSpeedBoost: gpu?.coreClockSpeedBoost || null,
-      l1Cache: gpu?.l1Cache || null,
-      l2Cache: gpu?.l2Cache || null,
+      gpuCores: gpu?.fields?.gpuCores ?? null,
+      computeUnits: gpu?.fields?.computeUnits ?? null,
+      tmus: gpu?.fields?.tmus ?? null,
+      rops: gpu?.fields?.rops ?? null,
+      tensorCores: gpu?.fields?.tensorCores ?? null,
+      rtCores: gpu?.fields?.rtCores ?? null,
+      gpuCoreBaseClock: gpu?.fields?.gpuCoreBaseClock ?? null,
+      gpuCoreBoostClock: gpu?.fields?.gpuCoreBoostClock ?? null,
+      l1Cache: gpu?.fields?.l1Cache ?? null,
+      l2Cache: gpu?.fields?.l2Cache ?? null,
 
       // Theoretical Performance
-      pixelFillRate: gpu?.pixelFillRate || null,
-      textureFillRate: gpu?.textureFillRate || null,
-      fp32Performance: gpu?.fp32Performance || null,
-      fp64Performance: gpu?.fp64Performance || null,
+      pixelRate: gpu?.fields?.pixelRate ?? null,
+      textureRate: gpu?.fields?.textureRate ?? null,
+      fp32: gpu?.fields?.fp32 ?? null,
+      fp64: gpu?.fields?.fp64 ?? null,
 
       // Memory
-      memorySize: gpu?.memorySize || null,
-      memoryType: gpu?.memoryType || null,
-      memoryClock: gpu?.memoryClock || null,
-      memoryInterface: gpu?.memoryInterface || null,
-      memoryBandwidth: gpu?.memoryBandwidth || null,
+      memorySize: gpu?.fields?.memorySize ?? null,
+      memoryType: gpu?.fields?.memoryType ?? null,
+      memoryClock: gpu?.fields?.memoryClock ?? null,
+      memoryInterface: gpu?.fields?.memoryInterface ?? null,
+      memoryBandwidth: gpu?.fields?.memoryBandwidth ?? null,
 
       // API Support
-      directxVersion: gpu?.directxVersion || null,
-      openClVersion: gpu?.openClVersion || null,
-      openGlVersion: gpu?.openGlVersion || null,
-      shaderModelVersion: gpu?.shaderModelVersion || null,
+      directxVersion: gpu?.fields?.directxVersion ?? null,
+      openClVersion: gpu?.fields?.openClVersion ?? null,
+      openGlVersion: gpu?.fields?.openGlVersion ?? null,
+      shaderModelVersion: gpu?.fields?.shaderModelVersion ?? null,
 
       // Benchmarks
-      g2dMark: gpu?.g2dMark || null,
-      g3dMark: gpu?.g3dMark || null,
-      timespyGraphics: gpu?.timespyGraphics || null,
+      benchmarks,
 
       // Images
-      images: images,
+      images,
     },
   };
 }
@@ -310,13 +326,13 @@ function formOptions(gpu?: Gpu): UseFormProps<GpuFormData> {
 export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
   const { gpu } = props;
   const isUpdate = gpu != null;
-  useProductCache(ProductType.Gpu, gpu, gpu?.chipset);
+  useProductCache(ProductType.Gpu, gpu);
 
   const router = useRouter();
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [requestError, setRequestError] = useState<ApiError>(null);
-  const [parentGpu, setParentGpu] = useState<Gpu>(gpu?.chipset);
+  const [parentGpu, setParentGpu] = useState<GpuProduct>(gpu?.parent);
 
   const form = useMemo(() => formOptions(gpu), [gpu]);
 
@@ -338,9 +354,9 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
 
       try {
         if (isUpdate) {
-          await gpuService.update(gpu.id, request);
+          await productService.update(ProductType.Gpu, gpu.id, request);
         } else {
-          await gpuService.create(request);
+          await productService.create(ProductType.Gpu, request);
         }
 
         router.push(getAdminListGpusPath());
@@ -359,7 +375,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
     setDeleting(true);
 
     try {
-      await gpuService.delete(gpu.id);
+      await productService.delete(gpu.id);
       router.push(getAdminListGpusPath());
     } catch (err) {
       setRequestError(err as ApiError);
@@ -370,48 +386,75 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
   }, [gpu, router, setError]);
 
   const handleParentGpuChange = useCallback((product: Product) => {
-    setParentGpu(product as Gpu);
+    setParentGpu(product as GpuProduct);
   }, []);
 
   const handleScrape = useCallback(
     (scraped: ScrapedProduct) => {
-      const { scrapedData: data } = scraped;
+      const { data } = scraped;
+      const name = data.name;
+      const searchText = data.searchText;
+      const otherNames = data.otherNames;
+      const company = data.company;
+      const fields = data.fields;
+      const benchmarks = data.benchmarks;
 
-      Object.keys(data || {}).forEach((field) => {
-        if (data[field].enabled) {
+      // Name
+      if (name.enabled) {
+        setValue('name', name.value as string);
+      }
+
+      // Search Text
+      if (searchText.enabled) {
+        setValue('searchText', searchText.value as string);
+      }
+
+      // Other Names
+      if (otherNames.enabled) {
+        setValue('otherNames', otherNames.value as string[]);
+      }
+
+      // Other Names
+      if (company.enabled) {
+        setValue('company', company.value as string);
+      }
+
+      // Fields
+      Object.keys(fields || {}).forEach((field) => {
+        if (fields[field].enabled) {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          setValue(field as any, data[field].value);
+          setValue(field as any, fields[field].value);
         }
       });
+
+      // Benchmarks
+      const scrapedBenchmarks = Object.keys(benchmarks || {})
+        .filter((benchmark) => benchmarks[benchmark].enabled)
+        .map((benchmark) => benchmarks[benchmark].value as ProductBenchmark);
+      setValue('benchmarks', scrapedBenchmarks);
     },
     [setValue],
   );
 
-  const importChipsetId = useWatch({
+  const importParentId = useWatch({
     control,
-    name: ['chipsetId'],
+    name: ['parentId'],
   });
 
   const importSources = useWatch({
     control,
-    name: [
-      'techPowerUpSource',
-      'videocardBenchmarksSource',
-      'ulBenchmarksSource',
-    ],
+    name: ['sources'],
   });
 
   const handleScrapeClick = useCallback(() => {
-    const sources: Record<string, GpuDataSource> = {
-      [GpuDataSourceKey.Chipset]: { chipsetId: importChipsetId[0] },
-      [GpuDataSourceKey.TechPowerUp]: importSources[0],
-      [GpuDataSourceKey.VideocardBenchmarks]: importSources[1],
-      [GpuDataSourceKey.UlBenchmarks]: importSources[2],
-    };
+    const sources: Partial<ProductSource>[] = importSources?.[0] || [];
+    if (importParentId?.[0]) {
+      sources.push({ sourceProductId: importParentId[0] });
+    }
     showDialog(<ScrapeGpuDialog sources={sources} onImport={handleScrape} />, {
       disableClose: true,
     });
-  }, [importChipsetId, importSources, handleScrape]);
+  }, [importParentId, importSources, handleScrape]);
 
   return (
     <Form onSubmit={handleSubmit(handleSave)}>
@@ -426,45 +469,30 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
       )}
 
       <section className="border-b-px border-b-slate-300 mb-6 pb-6">
-        <h2 className="mb-4">Data Sources</h2>
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="mb-0">Data Sources</h2>
 
-        <Field>
-          TechPowerUp
-          <Controller
-            name="techPowerUpSource"
-            control={control}
-            render={({ field }) => <GpuDataSourceInput {...field} ref={null} />}
-          />
-        </Field>
+          <InfoButton onClick={handleScrapeClick}>Scrape</InfoButton>
+        </div>
 
-        <Field>
-          Videocard Benchmarks
-          <Controller
-            name="videocardBenchmarksSource"
-            control={control}
-            render={({ field }) => <GpuDataSourceInput {...field} ref={null} />}
-          />
-        </Field>
-
-        <Field>
-          UL Benchmarks
-          <Controller
-            name="ulBenchmarksSource"
-            control={control}
-            render={({ field }) => <GpuDataSourceInput {...field} ref={null} />}
-          />
-        </Field>
-
-        <WarningButton onClick={handleScrapeClick}>
-          Scrape Details
-        </WarningButton>
+        <Controller
+          name="sources"
+          control={control}
+          render={({ field }) => (
+            <ProductSourcesInput
+              {...field}
+              productType={ProductType.Gpu}
+              ref={null}
+            />
+          )}
+        />
       </section>
 
       <section>
         <Field>
           Chipset
           <Controller
-            name="chipsetId"
+            name="parentId"
             control={control}
             render={({ field }) => (
               <ProductAutocomplete
@@ -497,12 +525,34 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
             name="slug"
             control={control}
             render={({ field }) => (
-              <GpuSlugInput control={control} {...field} ref={null} />
+              <ProductSlugInput {...field} control={control} ref={null} />
             )}
           />
           {errors.slug?.type === ValidationErrorType.MissingStringValue && (
             <FieldError>Required</FieldError>
           )}
+        </Field>
+
+        <Field>
+          Searchable Text
+          <Controller
+            name="searchText"
+            control={control}
+            render={({ field }) => (
+              <ProductSearchTextInput {...field} control={control} ref={null} />
+            )}
+          />
+        </Field>
+
+        <Field>
+          Other Names
+          <Controller
+            name="otherNames"
+            control={control}
+            render={({ field }) => (
+              <ProductOtherNamesInput {...field} control={control} ref={null} />
+            )}
+          />
         </Field>
 
         <Field>
@@ -519,16 +569,18 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
         <h2 className="mb-4">General Info</h2>
 
         <Field>
-          Part Number
           <Controller
             name="partNumber"
             control={control}
             render={({ field }) => (
-              <GpuFieldInput
-                field="partNumber"
+              <ProductTextInput
                 {...field}
                 ref={null}
-                parentValue={parentGpu?.partNumber}
+                label="Part Number"
+                fieldKey="partNumber"
+                placeholder={productFieldFormattedValue(
+                  parentGpu?.fields?.partNumber ?? undefined,
+                )}
               />
             )}
           />
@@ -540,75 +592,122 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
             name="company"
             control={control}
             render={({ field }) => (
-              <GpuFieldInput
-                field="company"
+              <TextInput
                 {...field}
                 ref={null}
-                parentValue={parentGpu?.company}
+                placeholder={parentGpu?.company ?? undefined}
               />
             )}
           />
         </Field>
 
         <Field>
-          Market Segment
           <Controller
             name="marketSegment"
             control={control}
             render={({ field }) => (
-              <GpuFieldInput
-                field="marketSegment"
+              <ProductEnumInput
                 {...field}
                 ref={null}
-                parentValue={parentGpu?.marketSegment}
+                label="Market Segment"
+                fieldKey="marketSegment"
+                items={[
+                  {
+                    label: formatMarketSegment(MarketSegment.Desktop),
+                    value: MarketSegment.Desktop,
+                  },
+                  {
+                    label: formatMarketSegment(MarketSegment.Mobile),
+                    value: MarketSegment.Mobile,
+                  },
+                  {
+                    label: formatMarketSegment(MarketSegment.Workstation),
+                    value: MarketSegment.Workstation,
+                  },
+                  {
+                    label: formatMarketSegment(MarketSegment.Integrated),
+                    value: MarketSegment.Integrated,
+                  },
+                ]}
+                placeholder={productFieldFormattedValue(
+                  parentGpu?.fields?.marketSegment ?? undefined,
+                )}
+                formatter={(value) =>
+                  formatMarketSegment(value as MarketSegment)
+                }
               />
             )}
           />
         </Field>
 
         <Field>
-          Launch Price (MSRP)
           <Controller
-            name="launchPrice"
+            name="msrp"
             control={control}
             render={({ field }) => (
-              <GpuFieldInput
-                field="launchPrice"
+              <ProductFloatInput
                 {...field}
                 ref={null}
-                parentValue={parentGpu?.launchPrice}
+                productType={ProductType.Gpu}
+                label="Launch Price (MSRP)"
+                fieldKey="msrp"
+                units={[CurrencyUnit.USD]}
+                placeholder={productFieldFormattedValue(
+                  parentGpu?.fields?.msrp ?? undefined,
+                )}
               />
             )}
           />
         </Field>
 
         <Field>
-          Release Date &amp; Format
           <Controller
             name="releaseDate"
             control={control}
             render={({ field }) => (
-              <GpuFieldInput
-                field="releaseDate"
+              <ProductDateInput
                 {...field}
                 ref={null}
-                parentValue={parentGpu?.releaseDate}
+                label="Release Date"
+                fieldKey="releaseDate"
+                placeholder={productFieldFormattedValue(
+                  parentGpu?.fields?.releaseDate ?? undefined,
+                )}
               />
             )}
           />
         </Field>
 
         <Field>
-          Production Status
           <Controller
             name="productionStatus"
             control={control}
             render={({ field }) => (
-              <GpuFieldInput
-                field="productionStatus"
+              <ProductEnumInput
                 {...field}
                 ref={null}
-                parentValue={parentGpu?.productionStatus}
+                label="Production Status"
+                fieldKey="productionStatus"
+                items={[
+                  {
+                    label: formatProductionStatus(ProductionStatus.Unreleased),
+                    value: ProductionStatus.Unreleased,
+                  },
+                  {
+                    label: formatProductionStatus(ProductionStatus.Active),
+                    value: ProductionStatus.Active,
+                  },
+                  {
+                    label: formatProductionStatus(ProductionStatus.EndOfLife),
+                    value: ProductionStatus.EndOfLife,
+                  },
+                ]}
+                placeholder={productFieldFormattedValue(
+                  parentGpu?.fields?.productionStatus ?? undefined,
+                )}
+                formatter={(value) =>
+                  formatProductionStatus(value as ProductionStatus)
+                }
               />
             )}
           />
@@ -622,64 +721,76 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           <h3 className="mb-4">Processor</h3>
 
           <Field>
-            GPU Codename
             <Controller
               name="codename"
               control={control}
               render={({ field }) => (
-                <GpuFieldInput
-                  field="codename"
+                <ProductTextInput
                   {...field}
                   ref={null}
-                  parentValue={parentGpu?.codename}
+                  label="GPU Codename"
+                  fieldKey="codename"
+                  placeholder={productFieldFormattedValue(
+                    parentGpu?.fields?.codename ?? undefined,
+                  )}
                 />
               )}
             />
           </Field>
 
           <Field>
-            Architecture
             <Controller
               name="architecture"
               control={control}
               render={({ field }) => (
-                <GpuFieldInput
-                  field="architecture"
+                <ProductTextInput
                   {...field}
                   ref={null}
-                  parentValue={parentGpu?.architecture}
+                  label="Architecture"
+                  fieldKey="architecture"
+                  placeholder={productFieldFormattedValue(
+                    parentGpu?.fields?.architecture ?? undefined,
+                  )}
                 />
               )}
             />
           </Field>
 
           <Field>
-            Process Size
             <Controller
               name="processSize"
               control={control}
               render={({ field }) => (
-                <GpuFieldInput
-                  field="processSize"
+                <ProductFloatInput
+                  label="Process Size"
+                  fieldKey="processSize"
+                  productType={ProductType.Gpu}
+                  units={[LengthUnit.nm, LengthUnit.um]}
                   {...field}
                   ref={null}
-                  parentValue={parentGpu?.processSize}
+                  placeholder={productFieldFormattedValue(
+                    parentGpu?.fields?.processSize ?? undefined,
+                  )}
                 />
               )}
             />
           </Field>
 
           <Field>
-            Transistors
             <Controller
               name="transistors"
               control={control}
               render={({ field }) => (
-                <GpuFieldInput
-                  field="transistors"
+                <ProductFloatInput
                   {...field}
                   ref={null}
-                  parentValue={parentGpu?.transistors}
+                  label="Transistors"
+                  fieldKey="transistors"
+                  productType={ProductType.Gpu}
+                  units={[NumericUnit.million]}
+                  placeholder={productFieldFormattedValue(
+                    parentGpu?.fields?.transistors ?? undefined,
+                  )}
                 />
               )}
             />
@@ -690,80 +801,102 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           <h3 className="mb-4">Memory</h3>
 
           <Field>
-            Memory Size
             <Controller
               name="memorySize"
               control={control}
               render={({ field }) => (
-                <GpuFieldInput
-                  field="memorySize"
+                <ProductFloatInput
                   {...field}
                   ref={null}
-                  parentValue={parentGpu?.memorySize}
+                  label="Memory Size"
+                  fieldKey="memorySize"
+                  productType={ProductType.Gpu}
+                  units={[
+                    MemorySizeUnit.gb,
+                    MemorySizeUnit.mb,
+                    MemorySizeUnit.kb,
+                  ]}
+                  placeholder={productFieldFormattedValue(
+                    parentGpu?.fields?.memorySize ?? undefined,
+                  )}
                 />
               )}
             />
           </Field>
 
           <Field>
-            Memory Type
             <Controller
               name="memoryType"
               control={control}
               render={({ field }) => (
-                <GpuFieldInput
-                  field="memoryType"
+                <ProductTextInput
                   {...field}
                   ref={null}
-                  parentValue={parentGpu?.memoryType}
+                  label="Memory Type"
+                  fieldKey="memoryType"
+                  placeholder={productFieldFormattedValue(
+                    parentGpu?.fields?.memoryType ?? undefined,
+                  )}
                 />
               )}
             />
           </Field>
 
           <Field>
-            Memory Clock
             <Controller
               name="memoryClock"
               control={control}
               render={({ field }) => (
-                <GpuFieldInput
-                  field="memoryClock"
+                <ProductFloatInput
                   {...field}
                   ref={null}
-                  parentValue={parentGpu?.memoryClock}
+                  label="Memory Clock"
+                  fieldKey="memoryClock"
+                  productType={ProductType.Gpu}
+                  units={[ClockSpeedUnit.mhz]}
+                  placeholder={productFieldFormattedValue(
+                    parentGpu?.fields?.memoryClock ?? undefined,
+                  )}
                 />
               )}
             />
           </Field>
 
           <Field>
-            Memory Interface
             <Controller
               name="memoryInterface"
               control={control}
               render={({ field }) => (
-                <GpuFieldInput
-                  field="memoryInterface"
+                <ProductFloatInput
                   {...field}
                   ref={null}
-                  parentValue={parentGpu?.memoryInterface}
+                  label="Memory Interface"
+                  fieldKey="memoryInterface"
+                  productType={ProductType.Gpu}
+                  units={[BitUnit.bit]}
+                  placeholder={productFieldFormattedValue(
+                    parentGpu?.fields?.memoryInterface ?? undefined,
+                  )}
                 />
               )}
             />
           </Field>
 
           <Field>
-            Memory Bandwidth
             <Controller
               name="memoryBandwidth"
               control={control}
               render={({ field }) => (
-                <GpuFieldInput
-                  field="memoryBandwidth"
+                <ProductFloatInput
                   {...field}
                   ref={null}
-                  parentValue={parentGpu?.memoryBandwidth}
+                  label="Memory Bandwidth"
+                  fieldKey="memoryBandwidth"
+                  productType={ProductType.Gpu}
+                  units={[BandwidthUnit.gbps, BandwidthUnit.mbps]}
+                  placeholder={productFieldFormattedValue(
+                    parentGpu?.fields?.memoryBandwidth ?? undefined,
+                  )}
                 />
               )}
             />
@@ -774,160 +907,193 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           <h3 className="mb-4">Board Compatibility &amp; Dimensions</h3>
 
           <Field>
-            Slots
             <Controller
               name="slotWidth"
               control={control}
               render={({ field }) => (
-                <GpuFieldInput
-                  field="slotWidth"
+                <ProductFloatInput
                   {...field}
                   ref={null}
-                  parentValue={parentGpu?.slotWidth}
+                  label="Slots"
+                  fieldKey="slotWidth"
+                  productType={ProductType.Gpu}
+                  placeholder={productFieldFormattedValue(
+                    parentGpu?.fields?.slotWidth ?? undefined,
+                  )}
                 />
               )}
             />
           </Field>
 
           <Field>
-            Length
             <Controller
               name="length"
               control={control}
               render={({ field }) => (
-                <GpuFieldInput
-                  field="length"
+                <ProductFloatInput
                   {...field}
                   ref={null}
-                  parentValue={parentGpu?.length}
+                  label="Length"
+                  fieldKey="length"
+                  productType={ProductType.Gpu}
+                  units={[LengthUnit.mm]}
+                  placeholder={productFieldFormattedValue(
+                    parentGpu?.fields?.length ?? undefined,
+                  )}
                 />
               )}
             />
           </Field>
 
           <Field>
-            Width
             <Controller
               name="width"
               control={control}
               render={({ field }) => (
-                <GpuFieldInput
-                  field="width"
+                <ProductFloatInput
                   {...field}
                   ref={null}
-                  parentValue={parentGpu?.width}
+                  label="Width"
+                  fieldKey="width"
+                  productType={ProductType.Gpu}
+                  units={[LengthUnit.mm]}
+                  placeholder={productFieldFormattedValue(
+                    parentGpu?.fields?.width ?? undefined,
+                  )}
                 />
               )}
             />
           </Field>
 
           <Field>
-            Height
             <Controller
               name="height"
               control={control}
               render={({ field }) => (
-                <GpuFieldInput
-                  field="height"
+                <ProductFloatInput
                   {...field}
                   ref={null}
-                  parentValue={parentGpu?.height}
+                  label="Height"
+                  fieldKey="height"
+                  productType={ProductType.Gpu}
+                  units={[LengthUnit.mm]}
+                  placeholder={productFieldFormattedValue(
+                    parentGpu?.fields?.height ?? undefined,
+                  )}
                 />
               )}
             />
           </Field>
 
           <Field>
-            Weight
             <Controller
               name="weight"
               control={control}
               render={({ field }) => (
-                <GpuFieldInput
-                  field="weight"
+                <ProductFloatInput
                   {...field}
                   ref={null}
-                  parentValue={parentGpu?.weight}
+                  label="Weight"
+                  fieldKey="weight"
+                  productType={ProductType.Gpu}
+                  units={[WeightUnit.kg]}
+                  placeholder={productFieldFormattedValue(
+                    parentGpu?.fields?.weight ?? undefined,
+                  )}
                 />
               )}
             />
           </Field>
 
           <Field>
-            Bus Interface
             <Controller
               name="busInterface"
               control={control}
               render={({ field }) => (
-                <GpuFieldInput
-                  field="busInterface"
+                <ProductTextInput
                   {...field}
                   ref={null}
-                  parentValue={parentGpu?.busInterface}
+                  label="Bus Interface"
+                  fieldKey="busInterface"
+                  placeholder={productFieldFormattedValue(
+                    parentGpu?.fields?.busInterface ?? undefined,
+                  )}
                 />
               )}
             />
           </Field>
 
           <Field>
-            Thermal Design Power (TDP)
             <Controller
-              name="thermalDesignPower"
+              name="tdp"
               control={control}
               render={({ field }) => (
-                <GpuFieldInput
-                  field="thermalDesignPower"
+                <ProductFloatInput
                   {...field}
                   ref={null}
-                  parentValue={parentGpu?.thermalDesignPower}
+                  label="Thermal Design Power (TDP)"
+                  fieldKey="tdp"
+                  productType={ProductType.Gpu}
+                  units={[WattageUnit.w]}
+                  placeholder={productFieldFormattedValue(
+                    parentGpu?.fields?.tdp ?? undefined,
+                  )}
                 />
               )}
             />
           </Field>
 
           <Field>
-            Suggested PSU
             <Controller
               name="suggestedPsu"
               control={control}
               render={({ field }) => (
-                <GpuFieldInput
-                  field="suggestedPsu"
+                <ProductFloatInput
                   {...field}
                   ref={null}
-                  parentValue={parentGpu?.suggestedPsu}
+                  label="Suggested PSU"
+                  fieldKey="suggestedPsu"
+                  productType={ProductType.Gpu}
+                  units={[WattageUnit.w]}
+                  placeholder={productFieldFormattedValue(
+                    parentGpu?.fields?.suggestedPsu ?? undefined,
+                  )}
                 />
               )}
             />
           </Field>
 
           <Field>
-            Power Connecters
             <Controller
               name="powerConnectors"
               control={control}
               render={({ field }) => (
-                <GpuFieldInput
-                  field="powerConnectors"
+                <ProductTextInput
                   {...field}
                   ref={null}
-                  parentValue={parentGpu?.powerConnectors}
+                  label="Power Connecters"
+                  fieldKey="powerConnectors"
+                  placeholder={productFieldFormattedValue(
+                    parentGpu?.fields?.powerConnectors ?? undefined,
+                  )}
                 />
               )}
             />
           </Field>
 
           <Field>
-            Outputs
             <Controller
               name="outputs"
               control={control}
               render={({ field }) => (
-                <GpuFieldInput
-                  field="outputs"
+                <ProductTextInput
                   {...field}
                   ref={null}
-                  parentValue={parentGpu?.outputs}
+                  label="Outputs"
+                  fieldKey="outputs"
+                  placeholder={productFieldFormattedValue(
+                    parentGpu?.fields?.outputs ?? undefined,
+                  )}
                 />
               )}
             />
@@ -938,160 +1104,194 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           <h3 className="mb-4">Cores &amp; Clock Speeds</h3>
 
           <Field>
-            Shader Units / CUDA Cores
             <Controller
-              name="shaderUnitsCudaCores"
+              name="gpuCores"
               control={control}
               render={({ field }) => (
-                <GpuFieldInput
-                  field="shaderUnitsCudaCores"
+                <ProductFloatInput
                   {...field}
                   ref={null}
-                  parentValue={parentGpu?.shaderUnitsCudaCores}
+                  label="GPU Cores (Shader Units / CUDA Cores)"
+                  fieldKey="gpuCores"
+                  productType={ProductType.Gpu}
+                  placeholder={productFieldFormattedValue(
+                    parentGpu?.fields?.gpuCores ?? undefined,
+                  )}
                 />
               )}
             />
           </Field>
 
           <Field>
-            Compute Units / SM Count
             <Controller
-              name="computeUnitsSmCount"
+              name="computeUnits"
               control={control}
               render={({ field }) => (
-                <GpuFieldInput
-                  field="computeUnitsSmCount"
+                <ProductFloatInput
                   {...field}
                   ref={null}
-                  parentValue={parentGpu?.computeUnitsSmCount}
+                  label="Compute Units / SM Count"
+                  fieldKey="computeUnits"
+                  productType={ProductType.Gpu}
+                  placeholder={productFieldFormattedValue(
+                    parentGpu?.fields?.computeUnits ?? undefined,
+                  )}
                 />
               )}
             />
           </Field>
 
           <Field>
-            Texture Mapping Units (TMUs)
             <Controller
-              name="textureMappingUnits"
+              name="tmus"
               control={control}
               render={({ field }) => (
-                <GpuFieldInput
-                  field="textureMappingUnits"
+                <ProductFloatInput
                   {...field}
                   ref={null}
-                  parentValue={parentGpu?.textureMappingUnits}
+                  label="Texture Mapping Units (TMUs)"
+                  fieldKey="tmus"
+                  productType={ProductType.Gpu}
+                  placeholder={productFieldFormattedValue(
+                    parentGpu?.fields?.tmus ?? undefined,
+                  )}
                 />
               )}
             />
           </Field>
 
           <Field>
-            Render Output Units (ROPs)
             <Controller
-              name="renderOutputUnits"
+              name="rops"
               control={control}
               render={({ field }) => (
-                <GpuFieldInput
-                  field="renderOutputUnits"
+                <ProductFloatInput
                   {...field}
                   ref={null}
-                  parentValue={parentGpu?.renderOutputUnits}
+                  label="Render Output Units (ROPs)"
+                  fieldKey="rops"
+                  productType={ProductType.Gpu}
+                  placeholder={productFieldFormattedValue(
+                    parentGpu?.fields?.rops ?? undefined,
+                  )}
                 />
               )}
             />
           </Field>
 
           <Field>
-            Tensor Cores
             <Controller
               name="tensorCores"
               control={control}
               render={({ field }) => (
-                <GpuFieldInput
-                  field="tensorCores"
+                <ProductFloatInput
                   {...field}
                   ref={null}
-                  parentValue={parentGpu?.tensorCores}
+                  label="Tensor Cores"
+                  fieldKey="tensorCores"
+                  productType={ProductType.Gpu}
+                  placeholder={productFieldFormattedValue(
+                    parentGpu?.fields?.tensorCores ?? undefined,
+                  )}
                 />
               )}
             />
           </Field>
 
           <Field>
-            Ray Tracing Cores (RT Cores)
             <Controller
-              name="rayTracingCores"
+              name="rtCores"
               control={control}
               render={({ field }) => (
-                <GpuFieldInput
-                  field="rayTracingCores"
+                <ProductFloatInput
                   {...field}
                   ref={null}
-                  parentValue={parentGpu?.rayTracingCores}
+                  label="Ray Tracing Cores (RT Cores)"
+                  fieldKey="rtCores"
+                  productType={ProductType.Gpu}
+                  placeholder={productFieldFormattedValue(
+                    parentGpu?.fields?.rtCores ?? undefined,
+                  )}
                 />
               )}
             />
           </Field>
 
           <Field>
-            Clock Speed (Base)
             <Controller
-              name="coreClockSpeedBase"
+              name="gpuCoreBaseClock"
               control={control}
               render={({ field }) => (
-                <GpuFieldInput
-                  field="coreClockSpeedBase"
+                <ProductFloatInput
                   {...field}
                   ref={null}
-                  parentValue={parentGpu?.coreClockSpeedBase}
+                  label="Clock Speed (Base)"
+                  fieldKey="gpuCoreBaseClock"
+                  productType={ProductType.Gpu}
+                  units={[ClockSpeedUnit.mhz, ClockSpeedUnit.ghz]}
+                  placeholder={productFieldFormattedValue(
+                    parentGpu?.fields?.gpuCoreBaseClock ?? undefined,
+                  )}
                 />
               )}
             />
           </Field>
 
           <Field>
-            Clock Speed (Boost)
             <Controller
-              name="coreClockSpeedBoost"
+              name="gpuCoreBoostClock"
               control={control}
               render={({ field }) => (
-                <GpuFieldInput
-                  field="coreClockSpeedBoost"
+                <ProductFloatInput
                   {...field}
                   ref={null}
-                  parentValue={parentGpu?.coreClockSpeedBoost}
+                  label="Clock Speed (Boost)"
+                  fieldKey="gpuCoreBoostClock"
+                  productType={ProductType.Gpu}
+                  units={[ClockSpeedUnit.mhz, ClockSpeedUnit.ghz]}
+                  placeholder={productFieldFormattedValue(
+                    parentGpu?.fields?.gpuCoreBoostClock ?? undefined,
+                  )}
                 />
               )}
             />
           </Field>
 
           <Field>
-            L1 Cache
             <Controller
               name="l1Cache"
               control={control}
               render={({ field }) => (
-                <GpuFieldInput
-                  field="l1Cache"
+                <ProductFloatInput
                   {...field}
                   ref={null}
-                  parentValue={parentGpu?.l1Cache}
+                  label="L1 Cache"
+                  fieldKey="l1Cache"
+                  productType={ProductType.Gpu}
+                  units={[MemorySizeUnit.kb, MemorySizeUnit.mb]}
+                  placeholder={productFieldFormattedValue(
+                    parentGpu?.fields?.l1Cache ?? undefined,
+                  )}
                 />
               )}
             />
           </Field>
 
           <Field>
-            L2 Cache
             <Controller
               name="l2Cache"
               control={control}
               render={({ field }) => (
-                <GpuFieldInput
-                  field="l2Cache"
+                <ProductFloatInput
                   {...field}
                   ref={null}
-                  parentValue={parentGpu?.l2Cache}
+                  label="L2 Cache"
+                  fieldKey="l2Cache"
+                  productType={ProductType.Gpu}
+                  units={[MemorySizeUnit.kb, MemorySizeUnit.mb]}
+                  placeholder={productFieldFormattedValue(
+                    parentGpu?.fields?.l2Cache ?? undefined,
+                  )}
                 />
               )}
             />
@@ -1102,64 +1302,80 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           <h3 className="mb-4">Theoretical Performance</h3>
 
           <Field>
-            Pixel Fill Rate
             <Controller
-              name="pixelFillRate"
+              name="pixelRate"
               control={control}
               render={({ field }) => (
-                <GpuFieldInput
-                  field="pixelFillRate"
+                <ProductFloatInput
                   {...field}
                   ref={null}
-                  parentValue={parentGpu?.pixelFillRate}
+                  label="Pixel Fill Rate"
+                  fieldKey="pixelRate"
+                  productType={ProductType.Gpu}
+                  units={[PixelFillRateUnit.gpixelps]}
+                  placeholder={productFieldFormattedValue(
+                    parentGpu?.fields?.pixelRate ?? undefined,
+                  )}
                 />
               )}
             />
           </Field>
 
           <Field>
-            Texture Fill Rate
             <Controller
-              name="textureFillRate"
+              name="textureRate"
               control={control}
               render={({ field }) => (
-                <GpuFieldInput
-                  field="textureFillRate"
+                <ProductFloatInput
                   {...field}
                   ref={null}
-                  parentValue={parentGpu?.textureFillRate}
+                  label="Texture Fill Rate"
+                  fieldKey="textureRate"
+                  productType={ProductType.Gpu}
+                  units={[TextureFillRateUnit.gtexelps]}
+                  placeholder={productFieldFormattedValue(
+                    parentGpu?.fields?.textureRate ?? undefined,
+                  )}
                 />
               )}
             />
           </Field>
 
           <Field>
-            FP32 Performance
             <Controller
-              name="fp32Performance"
+              name="fp32"
               control={control}
               render={({ field }) => (
-                <GpuFieldInput
-                  field="fp32Performance"
+                <ProductFloatInput
                   {...field}
                   ref={null}
-                  parentValue={parentGpu?.fp32Performance}
+                  label="FP32 Performance"
+                  fieldKey="fp32"
+                  productType={ProductType.Gpu}
+                  units={[FlopsUnit.tflops, FlopsUnit.gflops]}
+                  placeholder={productFieldFormattedValue(
+                    parentGpu?.fields?.fp32 ?? undefined,
+                  )}
                 />
               )}
             />
           </Field>
 
           <Field>
-            FP64 Performance
             <Controller
-              name="fp64Performance"
+              name="fp64"
               control={control}
               render={({ field }) => (
-                <GpuFieldInput
-                  field="fp64Performance"
+                <ProductFloatInput
                   {...field}
                   ref={null}
-                  parentValue={parentGpu?.fp64Performance}
+                  label="FP64 Performance"
+                  fieldKey="fp64"
+                  productType={ProductType.Gpu}
+                  units={[FlopsUnit.gflops, FlopsUnit.tflops]}
+                  placeholder={productFieldFormattedValue(
+                    parentGpu?.fields?.fp64 ?? undefined,
+                  )}
                 />
               )}
             />
@@ -1170,64 +1386,72 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           <h3 className="mb-4">API Support</h3>
 
           <Field>
-            Direct X Version
             <Controller
               name="directxVersion"
               control={control}
               render={({ field }) => (
-                <GpuFieldInput
-                  field="directxVersion"
+                <ProductTextInput
                   {...field}
                   ref={null}
-                  parentValue={parentGpu?.directxVersion}
+                  label="DirectX Version"
+                  fieldKey="directxVersion"
+                  placeholder={productFieldFormattedValue(
+                    parentGpu?.fields?.directxVersion ?? undefined,
+                  )}
                 />
               )}
             />
           </Field>
 
           <Field>
-            Open CL Version
             <Controller
               name="openClVersion"
               control={control}
               render={({ field }) => (
-                <GpuFieldInput
-                  field="openClVersion"
+                <ProductTextInput
                   {...field}
                   ref={null}
-                  parentValue={parentGpu?.openClVersion}
+                  label="Open CL Version"
+                  fieldKey="openClVersion"
+                  placeholder={productFieldFormattedValue(
+                    parentGpu?.fields?.openClVersion ?? undefined,
+                  )}
                 />
               )}
             />
           </Field>
 
           <Field>
-            Open GL Version
             <Controller
               name="openGlVersion"
               control={control}
               render={({ field }) => (
-                <GpuFieldInput
-                  field="openGlVersion"
+                <ProductTextInput
                   {...field}
                   ref={null}
-                  parentValue={parentGpu?.openGlVersion}
+                  label="Open GL Version"
+                  fieldKey="openGlVersion"
+                  placeholder={productFieldFormattedValue(
+                    parentGpu?.fields?.openGlVersion ?? undefined,
+                  )}
                 />
               )}
             />
           </Field>
 
           <Field>
-            Shader Model Version
             <Controller
               name="shaderModelVersion"
               control={control}
               render={({ field }) => (
-                <GpuFieldInput
-                  field="shaderModelVersion"
+                <ProductTextInput
                   {...field}
                   ref={null}
-                  parentValue={parentGpu?.shaderModelVersion}
+                  label="Shader Model Version"
+                  fieldKey="shaderModelVersion"
+                  placeholder={productFieldFormattedValue(
+                    parentGpu?.fields?.shaderModelVersion ?? undefined,
+                  )}
                 />
               )}
             />
@@ -1238,53 +1462,17 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
       <section>
         <h2 className="mb-4">Benchmarks</h2>
 
-        <Field>
-          G3D Mark
-          <Controller
-            name="g3dMark"
-            control={control}
-            render={({ field }) => (
-              <GpuBenchmarkInput
-                field="g3dMark"
-                {...field}
-                ref={null}
-                parentValue={parentGpu?.g3dMark}
-              />
-            )}
-          />
-        </Field>
-
-        <Field>
-          G2D Mark
-          <Controller
-            name="g2dMark"
-            control={control}
-            render={({ field }) => (
-              <GpuBenchmarkInput
-                field="g2dMark"
-                {...field}
-                ref={null}
-                parentValue={parentGpu?.g2dMark}
-              />
-            )}
-          />
-        </Field>
-
-        <Field>
-          3DMark Time Spy Graphics
-          <Controller
-            name="timespyGraphics"
-            control={control}
-            render={({ field }) => (
-              <GpuBenchmarkInput
-                field="timespyGraphics"
-                {...field}
-                ref={null}
-                parentValue={parentGpu?.timespyGraphics}
-              />
-            )}
-          />
-        </Field>
+        <Controller
+          name="benchmarks"
+          control={control}
+          render={({ field }) => (
+            <ProductBenchmarksInput
+              {...field}
+              productType={ProductType.Gpu}
+              ref={null}
+            />
+          )}
+        />
       </section>
 
       <section>
@@ -1293,7 +1481,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
         <Controller
           name="images"
           control={control}
-          render={({ field }) => <GpuImagesInput {...field} ref={null} />}
+          render={({ field }) => <ProductImagesInput {...field} ref={null} />}
         />
       </section>
 
@@ -1321,88 +1509,92 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
 
 function toGpuRequest(
   formData: GpuFormData,
-): CreateGpuRequest | UpdateGpuRequest {
+): CreateProductRequest | UpdateProductRequest {
   return {
-    chipsetId: formData.chipsetId,
-    slug: formData.slug,
-    name: formData.name,
-    affiliateUrl: formData.affiliateUrl,
+    product: {
+      productType: ProductType.Gpu,
+      parentId: formData.parentId,
+      slug: formData.slug,
+      name: formData.name,
+      company: formData.company,
+      otherNames: formData.otherNames,
+      searchText: formData.searchText,
+      affiliateUrl: formData.affiliateUrl,
 
-    // General Info
-    partNumber: formData.partNumber,
-    company: formData.company,
-    marketSegment: formData.marketSegment,
-    launchPrice: formData.launchPrice,
-    releaseDate: formData.releaseDate,
-    productionStatus: formData.productionStatus,
+      // Product Fields
+      fields: {
+        // General Info
+        partNumber: formData.partNumber,
+        marketSegment: formData.marketSegment,
+        msrp: formData.msrp,
+        releaseDate: formData.releaseDate,
+        productionStatus: formData.productionStatus,
 
-    // Processor
-    codename: formData.codename || null,
-    architecture: formData.architecture || null,
-    processSize: formData.processSize || null,
-    transistors: formData.transistors || null,
+        // Processor
+        codename: formData.codename ?? null,
+        architecture: formData.architecture ?? null,
+        processSize: formData.processSize ?? null,
+        transistors: formData.transistors ?? null,
 
-    // Board Compatibility & Dimensions
-    slotWidth: formData.slotWidth || null,
-    length: formData.length || null,
-    width: formData.width || null,
-    height: formData.height || null,
-    weight: formData.weight || null,
-    busInterface: formData.busInterface || null,
-    thermalDesignPower: formData.thermalDesignPower || null,
-    suggestedPsu: formData.suggestedPsu || null,
-    powerConnectors: formData.powerConnectors || null,
-    outputs: formData.outputs || null,
+        // Board Compatibility & Dimensions
+        slotWidth: formData.slotWidth ?? null,
+        length: formData.length ?? null,
+        width: formData.width ?? null,
+        height: formData.height ?? null,
+        weight: formData.weight ?? null,
+        busInterface: formData.busInterface ?? null,
+        tdp: formData.tdp ?? null,
+        suggestedPsu: formData.suggestedPsu ?? null,
+        powerConnectors: formData.powerConnectors ?? null,
+        outputs: formData.outputs ?? null,
 
-    // Cores & Clock Speeds
-    shaderUnitsCudaCores: formData.shaderUnitsCudaCores || null,
-    computeUnitsSmCount: formData.computeUnitsSmCount || null,
-    textureMappingUnits: formData.textureMappingUnits || null,
-    renderOutputUnits: formData.renderOutputUnits || null,
-    tensorCores: formData.tensorCores || null,
-    rayTracingCores: formData.rayTracingCores || null,
-    coreClockSpeedBase: formData.coreClockSpeedBase || null,
-    coreClockSpeedBoost: formData.coreClockSpeedBoost || null,
-    l1Cache: formData.l1Cache || null,
-    l2Cache: formData.l2Cache || null,
+        // Cores & Clock Speeds
+        gpuCores: formData.gpuCores ?? null,
+        computeUnits: formData.computeUnits ?? null,
+        tmus: formData.tmus ?? null,
+        rops: formData.rops ?? null,
+        tensorCores: formData.tensorCores ?? null,
+        rtCores: formData.rtCores ?? null,
+        gpuCoreBaseClock: formData.gpuCoreBaseClock ?? null,
+        gpuCoreBoostClock: formData.gpuCoreBoostClock ?? null,
+        l1Cache: formData.l1Cache ?? null,
+        l2Cache: formData.l2Cache ?? null,
 
-    // Theoretical Performance
-    pixelFillRate: formData.pixelFillRate || null,
-    textureFillRate: formData.textureFillRate || null,
-    fp32Performance: formData.fp32Performance || null,
-    fp64Performance: formData.fp64Performance || null,
+        // Theoretical Performance
+        pixelRate: formData.pixelRate ?? null,
+        textureRate: formData.textureRate ?? null,
+        fp32: formData.fp32 ?? null,
+        fp64: formData.fp64 ?? null,
 
-    // Memory
-    memorySize: formData.memorySize || null,
-    memoryType: formData.memoryType || null,
-    memoryClock: formData.memoryClock || null,
-    memoryInterface: formData.memoryInterface || null,
-    memoryBandwidth: formData.memoryBandwidth || null,
+        // Memory
+        memorySize: formData.memorySize ?? null,
+        memoryType: formData.memoryType ?? null,
+        memoryClock: formData.memoryClock ?? null,
+        memoryInterface: formData.memoryInterface ?? null,
+        memoryBandwidth: formData.memoryBandwidth ?? null,
 
-    // API Support
-    directxVersion: formData.directxVersion || null,
-    openClVersion: formData.openClVersion || null,
-    openGlVersion: formData.openGlVersion || null,
-    shaderModelVersion: formData.shaderModelVersion || null,
+        // API Support
+        directxVersion: formData.directxVersion ?? null,
+        openClVersion: formData.openClVersion ?? null,
+        openGlVersion: formData.openGlVersion ?? null,
+        shaderModelVersion: formData.shaderModelVersion ?? null,
+      } as GpuFields,
 
-    // Benchmarks
-    g2dMark: formData.g2dMark || null,
-    g3dMark: formData.g3dMark || null,
-    timespyGraphics: formData.timespyGraphics || null,
+      // Meta
+      metadata: {},
 
-    // Meta
-    meta: {
-      dataSources: {
-        [GpuDataSourceKey.TechPowerUp]: formData.techPowerUpSource,
-        [GpuDataSourceKey.VideocardBenchmarks]:
-          formData.videocardBenchmarksSource,
-        [GpuDataSourceKey.UlBenchmarks]: formData.ulBenchmarksSource,
-      },
+      benchmarks: formData.benchmarks?.filter(
+        (benchmark) => benchmark != null && benchmark.value != null,
+      ),
+
+      images:
+        formData.images
+          ?.filter((image) => image != null)
+          .map((image) => ({ imageId: image.imageId })) ?? [],
+
+      sources: formData.sources?.filter(
+        (source) => source != null && source.sourceUrl != null,
+      ),
     },
-
-    images:
-      formData.images
-        ?.filter((image) => image != null)
-        .map((image) => ({ imageId: image.imageId })) ?? [],
   };
 }

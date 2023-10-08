@@ -63,7 +63,7 @@ export const ProductCustomRow: FunctionComponent<ProductCustomRowProps> = (
             highlight === 'secondary' ? 'font-bold !bg-fuchsia-100' : '',
           )}
         >
-          {value || '--'}
+          {value ?? '--'}
         </Td>
       ))}
     </Tr>

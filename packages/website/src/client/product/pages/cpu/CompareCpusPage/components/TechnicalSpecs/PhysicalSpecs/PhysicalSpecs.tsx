@@ -1,4 +1,4 @@
-import { hasProductFieldValue } from '@pcpartdb/shared';
+import { hasProductFieldFormattedValue } from '@pcpartdb/shared';
 import React, { FunctionComponent, useContext } from 'react';
 import { ComparePageContext } from '../../../context/ComparePageContext';
 import { PhysicalIntro } from './PhysicalIntro';
@@ -14,18 +14,18 @@ export const PhysicalSpecs: FunctionComponent<PhysicalSpecsProps> = (props) => {
   const [cpu1, cpu2] = comparison;
 
   if (
-    !hasProductFieldValue(cpu1.socket) &&
-    !hasProductFieldValue(cpu2.socket) &&
-    !hasProductFieldValue(cpu1.foundry) &&
-    !hasProductFieldValue(cpu2.foundry) &&
-    !hasProductFieldValue(cpu1.processSize) &&
-    !hasProductFieldValue(cpu2.processSize) &&
-    !hasProductFieldValue(cpu1.transistors) &&
-    !hasProductFieldValue(cpu2.transistors) &&
-    !hasProductFieldValue(cpu1.tCaseMax) &&
-    !hasProductFieldValue(cpu2.tCaseMax) &&
-    !hasProductFieldValue(cpu1.tjMax) &&
-    !hasProductFieldValue(cpu2.tjMax)
+    !hasProductFieldFormattedValue(cpu1.fields?.socket) &&
+    !hasProductFieldFormattedValue(cpu2.fields?.socket) &&
+    !hasProductFieldFormattedValue(cpu1.fields?.foundry) &&
+    !hasProductFieldFormattedValue(cpu2.fields?.foundry) &&
+    !hasProductFieldFormattedValue(cpu1.fields?.processSize) &&
+    !hasProductFieldFormattedValue(cpu2.fields?.processSize) &&
+    !hasProductFieldFormattedValue(cpu1.fields?.transistors) &&
+    !hasProductFieldFormattedValue(cpu2.fields?.transistors) &&
+    !hasProductFieldFormattedValue(cpu1.fields?.tCaseMax) &&
+    !hasProductFieldFormattedValue(cpu2.fields?.tCaseMax) &&
+    !hasProductFieldFormattedValue(cpu1.fields?.tjMax) &&
+    !hasProductFieldFormattedValue(cpu2.fields?.tjMax)
   ) {
     return <></>;
   }

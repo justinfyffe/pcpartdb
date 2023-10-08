@@ -19,12 +19,24 @@ export const PhysicalTable: FunctionComponent<PhysicalTableProps> = (props) => {
   return (
     <Table border responsive className={className}>
       <TBody>
-        <ProductFieldRow type={ProductType.Cpu} fields={[cpu.socket]} />
-        <ProductFieldRow type={ProductType.Cpu} fields={[cpu.foundry]} />
-        <ProductFieldRow type={ProductType.Cpu} fields={[cpu.processSize]} />
-        <ProductFieldRow type={ProductType.Cpu} fields={[cpu.transistors]} />
-        <ProductFieldRow type={ProductType.Cpu} fields={[cpu.tCaseMax]} />
-        <ProductFieldRow type={ProductType.Cpu} fields={[cpu.tjMax]} />
+        <ProductFieldRow type={ProductType.Cpu} fields={[cpu.fields?.socket]} />
+        <ProductFieldRow
+          type={ProductType.Cpu}
+          fields={[cpu.fields?.foundry]}
+        />
+        <ProductFieldRow
+          type={ProductType.Cpu}
+          fields={[cpu.fields?.processSize]}
+        />
+        <ProductFieldRow
+          type={ProductType.Cpu}
+          fields={[cpu.fields?.transistors]}
+        />
+        <ProductFieldRow
+          type={ProductType.Cpu}
+          fields={[cpu.fields?.tCaseMax]}
+        />
+        <ProductFieldRow type={ProductType.Cpu} fields={[cpu.fields?.tjMax]} />
       </TBody>
     </Table>
   );

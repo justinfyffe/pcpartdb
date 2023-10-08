@@ -1,4 +1,4 @@
-import { hasProductFieldValue } from '@pcpartdb/shared';
+import { hasProductFieldFormattedValue } from '@pcpartdb/shared';
 import React, { FunctionComponent, useContext } from 'react';
 import { ViewPageContext } from '../../../context/ViewPageContext';
 import { CoresIntro } from './CoresIntro';
@@ -13,20 +13,20 @@ export const CoresSpecs: FunctionComponent<CoresSpecsProps> = (props) => {
   const { gpu } = useContext(ViewPageContext);
 
   if (
-    !hasProductFieldValue(gpu.shaderUnitsCudaCores) &&
-    !hasProductFieldValue(gpu.computeUnitsSmCount) &&
-    !hasProductFieldValue(gpu.textureMappingUnits) &&
-    !hasProductFieldValue(gpu.renderOutputUnits) &&
-    !hasProductFieldValue(gpu.tensorCores) &&
-    !hasProductFieldValue(gpu.rayTracingCores) &&
-    !hasProductFieldValue(gpu.coreClockSpeedBase) &&
-    !hasProductFieldValue(gpu.coreClockSpeedBoost) &&
-    !hasProductFieldValue(gpu.l1Cache) &&
-    !hasProductFieldValue(gpu.l2Cache) &&
-    !hasProductFieldValue(gpu.pixelFillRate) &&
-    !hasProductFieldValue(gpu.textureFillRate) &&
-    !hasProductFieldValue(gpu.fp32Performance) &&
-    !hasProductFieldValue(gpu.fp64Performance)
+    !hasProductFieldFormattedValue(gpu.fields?.gpuCores) &&
+    !hasProductFieldFormattedValue(gpu.fields?.computeUnits) &&
+    !hasProductFieldFormattedValue(gpu.fields?.tmus) &&
+    !hasProductFieldFormattedValue(gpu.fields?.rops) &&
+    !hasProductFieldFormattedValue(gpu.fields?.tensorCores) &&
+    !hasProductFieldFormattedValue(gpu.fields?.rtCores) &&
+    !hasProductFieldFormattedValue(gpu.fields?.gpuCoreBaseClock) &&
+    !hasProductFieldFormattedValue(gpu.fields?.gpuCoreBoostClock) &&
+    !hasProductFieldFormattedValue(gpu.fields?.l1Cache) &&
+    !hasProductFieldFormattedValue(gpu.fields?.l2Cache) &&
+    !hasProductFieldFormattedValue(gpu.fields?.pixelRate) &&
+    !hasProductFieldFormattedValue(gpu.fields?.textureRate) &&
+    !hasProductFieldFormattedValue(gpu.fields?.fp32) &&
+    !hasProductFieldFormattedValue(gpu.fields?.fp64)
   ) {
     return <></>;
   }

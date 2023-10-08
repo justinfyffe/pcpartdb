@@ -41,7 +41,7 @@ export const AdminLayout: FunctionComponent<AdminLayoutProps> = (props) => {
   // States & Memos
 
   const [automationStatus, setAutomationStatus] = useState<AutomationStatus>(
-    props.status || null,
+    props.status ?? null,
   );
 
   const pendingUpdates = useMemo(() => {

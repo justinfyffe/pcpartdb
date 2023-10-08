@@ -1,4 +1,4 @@
-import { hasProductFieldValue } from '@pcpartdb/shared';
+import { BenchmarKey, hasProductBenchmark } from '@pcpartdb/shared';
 import React, { FunctionComponent, useContext } from 'react';
 import { ComparePageContext } from '../../context/ComparePageContext';
 import { BenchmarksIntro } from './BenchmarksIntro';
@@ -9,12 +9,12 @@ export const Benchmarks: FunctionComponent = () => {
   const [gpu1, gpu2] = comparison;
 
   if (
-    !hasProductFieldValue(gpu1.g3dMark) &&
-    !hasProductFieldValue(gpu2.g3dMark) &&
-    !hasProductFieldValue(gpu1.g2dMark) &&
-    !hasProductFieldValue(gpu2.g2dMark) &&
-    !hasProductFieldValue(gpu1.timespyGraphics) &&
-    !hasProductFieldValue(gpu2.timespyGraphics)
+    !hasProductBenchmark(gpu1, BenchmarKey.G3dMark) &&
+    !hasProductBenchmark(gpu2, BenchmarKey.G3dMark) &&
+    !hasProductBenchmark(gpu1, BenchmarKey.G2dMark) &&
+    !hasProductBenchmark(gpu2, BenchmarKey.G2dMark) &&
+    !hasProductBenchmark(gpu1, BenchmarKey.TimespyGraphics) &&
+    !hasProductBenchmark(gpu2, BenchmarKey.TimespyGraphics)
   ) {
     return <></>;
   }

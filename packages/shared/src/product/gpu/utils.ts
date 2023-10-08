@@ -1,7 +1,18 @@
 import { parseISO } from 'date-fns';
+import { ListOrder, ListSort } from '../../common';
 import { getListGpusPath } from '../../routes';
-import { ProductType } from '../types';
-import { getAffiliateUrl, hasProductFieldValue } from '../utils';
+import {
+  ListProductsQuery,
+  MarketSegment,
+  Product,
+  ProductionStatus,
+  ProductType,
+} from '../types';
+import {
+  getAffiliateUrl,
+  hasProductFieldRawValue,
+  productFieldRawValue,
+} from '../utils';
 import {
   DEFAULT_LIST_GPUS_LIMIT,
   DEFAULT_LIST_GPUS_OFFSET,
@@ -9,22 +20,18 @@ import {
   DEFAULT_LIST_GPUS_SORT,
   LIST_GPUS_PRESETS,
 } from './consts';
-import {
-  Gpu,
-  GpuMarketSegmentValue,
-  GpuProductionStatusValue,
-  ListGpusOrder,
-  ListGpusPresetSlug,
-  ListGpusQuery,
-  ListGpusSort,
-} from './types';
+import { GpuProduct, ListGpusPresetSlug } from './types';
 
-export function getGpuChipset(gpu: Gpu) {
-  return gpu?.chipset || gpu;
+export function isGpuProduct(product: Product): product is GpuProduct {
+  return product.productType === ProductType.Gpu;
 }
 
-export function getGpuAffiliateUrl(gpu: Gpu) {
-  return getAffiliateUrl(ProductType.Gpu, gpu);
+export function getGpuChipset(gpu: GpuProduct) {
+  return (gpu?.parent || gpu) as GpuProduct;
+}
+
+export function getGpuAffiliateUrl(gpu: GpuProduct) {
+  return getAffiliateUrl(gpu);
 }
 
 export function generateGpuSlug(name: string, company: string) {
@@ -69,16 +76,16 @@ export function generateListGpusQueryFromPath(path: string) {
 
 export function generateListGpusQueryFromSearchParams(
   query: Record<string, string | string[]>,
-): ListGpusQuery {
+): ListProductsQuery {
   const offset = Number(query.offset ?? DEFAULT_LIST_GPUS_OFFSET);
   const limit = Number(query.limit ?? DEFAULT_LIST_GPUS_LIMIT);
 
   const company = (query.company as string)?.split(',');
   const segment = (query.segment as string)
     ?.toUpperCase()
-    .split(',') as GpuMarketSegmentValue[];
-  const sort = (query.sort as ListGpusSort) || DEFAULT_LIST_GPUS_SORT;
-  const order = (query.order as ListGpusOrder) || DEFAULT_LIST_GPUS_ORDER;
+    .split(',') as MarketSegment[];
+  const sort = (query.sort as ListSort) || DEFAULT_LIST_GPUS_SORT;
+  const order = (query.order as ListOrder) || DEFAULT_LIST_GPUS_ORDER;
   const preset = query.preset as ListGpusPresetSlug;
 
   if (preset != null && LIST_GPUS_PRESETS[preset] != null) {
@@ -92,73 +99,24 @@ export function generateListGpusQueryFromSearchParams(
   }
 }
 
-export function isPastGpuLaunchDate(gpu: Gpu) {
-  if (!hasProductFieldValue(gpu?.releaseDate)) {
+export function isPastGpuLaunchDate(gpu: GpuProduct) {
+  if (!hasProductFieldRawValue(gpu?.fields?.releaseDate)) {
     return false;
   }
 
   const date = new Date();
-  const releaseDate = parseISO(gpu.releaseDate?.value);
+  const releaseDate = parseISO(productFieldRawValue(gpu?.fields.releaseDate));
   return date.getTime() >= releaseDate.getTime();
 }
 
-export function hasGpuLaunched(gpu: Gpu) {
+export function hasGpuLaunched(gpu: GpuProduct) {
   if (
-    gpu?.productionStatus?.value === GpuProductionStatusValue.Unreleased ||
+    productFieldRawValue(gpu?.fields?.productionStatus) ===
+      ProductionStatus.Unreleased ||
     !isPastGpuLaunchDate(gpu)
   ) {
     return false;
   }
 
   return true;
-}
-
-export function populateGpuPerformanceScoreBenchmark(gpu: Gpu) {
-  const performance = calculatePerformanceScore(gpu);
-  if (performance != null) {
-    gpu.performanceScore = {
-      value: performance,
-      meta: { fieldKey: 'performanceScore', autoUpdate: false },
-    };
-  }
-}
-
-export function populateGpuValueScoreBenchmark(gpu: Gpu) {
-  const value = calculateValueScore(gpu);
-  if (value != null) {
-    gpu.valueScore = {
-      value,
-      meta: { fieldKey: 'valueScore', autoUpdate: false },
-    };
-  }
-}
-
-function calculatePerformanceScore(gpu: Gpu) {
-  // Get inputs
-  const g3dMark = gpu.g3dMark?.value;
-
-  // Validate inputs
-  if (g3dMark == null || typeof g3dMark !== 'number') {
-    return null;
-  }
-
-  // Compute score
-  return g3dMark;
-}
-
-function calculateValueScore(gpu: Gpu) {
-  // Get inputs
-  const performanceScore = gpu.performanceScore?.value;
-  const launchPrice = gpu.launchPrice?.value;
-
-  // Validate inputs
-  if (performanceScore == null) {
-    return null;
-  }
-  if (launchPrice == null || typeof launchPrice !== 'number') {
-    return null;
-  }
-
-  // Compute score
-  return performanceScore / launchPrice;
 }

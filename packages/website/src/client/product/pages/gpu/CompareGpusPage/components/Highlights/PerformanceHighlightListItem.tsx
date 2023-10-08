@@ -1,5 +1,10 @@
 import { StarIcon } from '@heroicons/react/24/outline';
-import { formatGpuField, formatGpuName, getGpuChipset } from '@pcpartdb/shared';
+import {
+  formatProductName,
+  getGpuChipset,
+  productFieldFormattedValue,
+  productFieldRawValue,
+} from '@pcpartdb/shared';
 import { ProductHighlightComparison } from 'packages/website/src/client/product/components/ProductHighlightComparison/ProductHighlightComparison';
 import React, { FunctionComponent, useContext, useMemo } from 'react';
 import { ComparePageContext } from '../../context/ComparePageContext';
@@ -19,22 +24,31 @@ export const PerformanceHighlightListItem: FunctionComponent<
   const chipset2 = getGpuChipset(gpu2);
 
   const values = useMemo(() => {
-    const name1 = formatGpuName(gpu1, { company: false, brand: true });
-    const name2 = formatGpuName(gpu2, { company: false, brand: true });
+    const name1 = formatProductName(gpu1, { company: false, brand: true });
+    const name2 = formatProductName(gpu2, { company: false, brand: true });
 
-    const perf1 = formatGpuField(chipset1.performanceScore) || '--';
-    const perf2 = formatGpuField(chipset2.performanceScore) || '--';
+    const perf1 =
+      productFieldFormattedValue(chipset1.fields?.performanceRating) ?? '--';
+    const perf2 =
+      productFieldFormattedValue(chipset2.fields?.performanceRating) ?? '--';
 
     const bold1 =
-      chipset1.performanceScore?.value > chipset2.performanceScore?.value;
+      productFieldRawValue(chipset1.fields?.performanceRating) >
+      productFieldRawValue(chipset2.fields?.performanceRating);
     const bold2 =
-      chipset1.performanceScore?.value < chipset2.performanceScore?.value;
+      productFieldRawValue(chipset1.fields?.performanceRating) <
+      productFieldRawValue(chipset2.fields?.performanceRating);
 
     return [
       { name: name1, value: perf1, bold: bold1 },
       { name: name2, value: perf2, bold: bold2 },
     ];
-  }, [chipset1.performanceScore, chipset2.performanceScore, gpu1, gpu2]);
+  }, [
+    chipset1.fields?.performanceRating,
+    chipset2.fields?.performanceRating,
+    gpu1,
+    gpu2,
+  ]);
 
   return (
     <ProductHighlightComparison

@@ -1,4 +1,4 @@
-import { hasProductFieldValue } from '@pcpartdb/shared';
+import { hasProductFieldFormattedValue } from '@pcpartdb/shared';
 import React, { FunctionComponent, useContext } from 'react';
 import { ViewPageContext } from '../../../context/ViewPageContext';
 import { CompatibilityIntro } from './CompatibilityIntro';
@@ -15,16 +15,16 @@ export const CompatibilitySpecs: FunctionComponent<CompatibilitySpecsProps> = (
   const { gpu } = useContext(ViewPageContext);
 
   if (
-    !hasProductFieldValue(gpu.slotWidth) &&
-    !hasProductFieldValue(gpu.length) &&
-    !hasProductFieldValue(gpu.width) &&
-    !hasProductFieldValue(gpu.height) &&
-    !hasProductFieldValue(gpu.weight) &&
-    !hasProductFieldValue(gpu.busInterface) &&
-    !hasProductFieldValue(gpu.thermalDesignPower) &&
-    !hasProductFieldValue(gpu.suggestedPsu) &&
-    !hasProductFieldValue(gpu.powerConnectors) &&
-    !hasProductFieldValue(gpu.outputs)
+    !hasProductFieldFormattedValue(gpu.fields?.slotWidth) &&
+    !hasProductFieldFormattedValue(gpu.fields?.length) &&
+    !hasProductFieldFormattedValue(gpu.fields?.width) &&
+    !hasProductFieldFormattedValue(gpu.fields?.height) &&
+    !hasProductFieldFormattedValue(gpu.fields?.weight) &&
+    !hasProductFieldFormattedValue(gpu.fields?.busInterface) &&
+    !hasProductFieldFormattedValue(gpu.fields?.tdp) &&
+    !hasProductFieldFormattedValue(gpu.fields?.suggestedPsu) &&
+    !hasProductFieldFormattedValue(gpu.fields?.powerConnectors) &&
+    !hasProductFieldFormattedValue(gpu.fields?.outputs)
   ) {
     return <></>;
   }

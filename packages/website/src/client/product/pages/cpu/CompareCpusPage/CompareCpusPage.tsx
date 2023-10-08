@@ -1,14 +1,15 @@
 import {
   CompareCpusViewModel,
   Config,
-  formatCpuComparisonName,
-  formatCpuName,
+  formatProductComparisonName,
+  formatProductName,
   getAdminEditCpuPath,
   getCompareCpusPath,
   getHomePath,
   getListCpusPath,
   ProductType,
 } from '@pcpartdb/shared';
+import { useProductCache } from 'packages/website/src/client/shared/cache/ProductCache';
 import { Breadcrumb } from 'packages/website/src/client/shared/components/Breadcrumbs/Breadcrumb';
 import { Breadcrumbs } from 'packages/website/src/client/shared/components/Breadcrumbs/Breadcrumbs';
 import { Seo } from 'packages/website/src/client/shared/components/Seo/Seo';
@@ -17,7 +18,6 @@ import { Sidenav } from 'packages/website/src/client/sidenav/components/Sidenav/
 import { SidenavRelatedComparisons } from 'packages/website/src/client/sidenav/components/SidenavRelatedComparisons/SidenavRelatedComparisons';
 import { SidenavRelatedProducts } from 'packages/website/src/client/sidenav/components/SidenavRelatedProducts/SidenavRelatedProducts';
 import React, { useMemo } from 'react';
-import { useProductCache } from '../../../../shared/cache/ProductCache';
 import { CompareProductsForm } from '../../../components/CompareProductsForm/CompareProductsForm';
 import {
   Benchmarks,
@@ -35,51 +35,59 @@ import { useComparePageContextProps } from './hooks/useComparePageContextProps';
 export const CompareCpusPage = (
   props: CompareCpusViewModel & { config: Config },
 ) => {
-  const { comparison, contentData, relatedCpus, relatedComparisons, config } =
-    props;
+  const {
+    comparison,
+    additionalData: contentData,
+    relatedCpus,
+    relatedCpuComparisons: relatedComparisons,
+    config,
+  } = props;
   const [cpu1, cpu2] = comparison;
   useProductCache(ProductType.Cpu, cpu1, cpu2);
 
-  const context = useComparePageContextProps({ comparison, contentData });
+  const context = useComparePageContextProps({
+    comparison,
+    additionalData: contentData,
+  });
 
   const pageTitle = useMemo(
-    () => formatCpuComparisonName(comparison),
+    () => formatProductComparisonName(comparison),
     [comparison],
   );
   const shortPageTitle = useMemo(
-    () => formatCpuComparisonName(comparison, { company: false }),
+    () => formatProductComparisonName(comparison, { company: false }),
     [comparison],
   );
 
   const shortCpuName1 = useMemo(
-    () => formatCpuName(cpu1, { company: false, brand: true }),
+    () => formatProductName(cpu1, { company: false, brand: true }),
     [cpu1],
   );
   const shortCpuName2 = useMemo(
-    () => formatCpuName(cpu2, { company: false, brand: true }),
+    () => formatProductName(cpu2, { company: false, brand: true }),
     [cpu2],
   );
 
   const seoTitle = useMemo(
     () =>
-      `${formatCpuComparisonName(comparison, {
+      `${formatProductComparisonName(comparison, {
         company: false,
       })}: Compare specs, performance, and value`,
     [comparison],
   );
   const seoKeywords = [
     pageTitle,
-    formatCpuName(cpu1),
-    formatCpuName(cpu2),
-    formatCpuName(cpu1, { company: false }),
-    formatCpuName(cpu2, { company: false }),
+    formatProductName(cpu1),
+    formatProductName(cpu2),
+    formatProductName(cpu1, { company: false }),
+    formatProductName(cpu2, { company: false }),
   ];
   const seoDescription = useMemo(() => {
-    const shortestCpuName1 = formatCpuName(cpu1, {
+    const shortestCpuName1 = formatProductName(cpu1, {
       company: false,
       brand: false,
     });
-    const shortestCpuName2 = formatCpuName(cpu2, {
+    const shortestCpuName2 = formatProductName(cpu2, {
       company: false,
       brand: false,
     });
@@ -89,7 +97,7 @@ export const CompareCpusPage = (
       'Our database of processors will help you choose the best CPU for your computer.'
     );
   }, [cpu1, cpu2]);
-  const seoCanonical = getCompareCpusPath(comparison);
+  const seoCanonical = getCompareCpusPath({ comparison });
 
   const homeHref = useMemo(() => getHomePath(), []);
   const listHref = useMemo(() => getListCpusPath(), []);
@@ -147,7 +155,7 @@ export const CompareCpusPage = (
             />
             <SidenavRelatedProducts
               productType={ProductType.Cpu}
-              products={relatedCpus.cpus}
+              products={relatedCpus.products}
             />
           </Sidenav>
         </div>

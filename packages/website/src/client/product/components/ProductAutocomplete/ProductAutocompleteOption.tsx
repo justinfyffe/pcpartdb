@@ -1,10 +1,9 @@
-import { Cpu, Gpu, Product, ProductType } from '@pcpartdb/shared';
+import { isCpuProduct, isGpuProduct, Product } from '@pcpartdb/shared';
 import React, { FunctionComponent } from 'react';
 import { CpuAutocompleteOption } from './CpuAutocompleteOption';
 import { GpuAutocompleteOption } from './GpuAutocompleteOption';
 
 interface ProductAutocompleteOptionProps {
-  productType: ProductType;
   product: Product;
   index: number;
 }
@@ -12,12 +11,12 @@ interface ProductAutocompleteOptionProps {
 export const ProductAutocompleteOption: FunctionComponent<
   ProductAutocompleteOptionProps
 > = (props) => {
-  const { index, product, productType } = props;
+  const { index, product } = props;
 
-  if (productType === ProductType.Cpu) {
-    return <CpuAutocompleteOption cpu={product as Cpu} index={index} />;
-  } else if (productType === ProductType.Gpu) {
-    return <GpuAutocompleteOption gpu={product as Gpu} index={index} />;
+  if (isCpuProduct(product)) {
+    return <CpuAutocompleteOption cpu={product} index={index} />;
+  } else if (isGpuProduct(product)) {
+    return <GpuAutocompleteOption gpu={product} index={index} />;
   }
 
   return <></>;

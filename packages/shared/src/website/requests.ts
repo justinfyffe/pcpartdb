@@ -1,4 +1,4 @@
-import { GpuProductType, ProductType } from '../product';
+import { ProductType } from '../product';
 import { SitemapProductSlug } from './sitemap';
 
 /**
@@ -23,9 +23,7 @@ export interface UploadSitemapRequest {
  */
 export interface GetSitemapProductSlugsRequest {
   productType: ProductType;
-
-  // GPU-only
-  gpuProductType?: GpuProductType;
+  hasParent?: boolean;
 }
 
 /**

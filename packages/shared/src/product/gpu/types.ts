@@ -1,11 +1,11 @@
-import { Image } from '../../image';
+import { AutomationSource } from '../../automation';
+import { ListQuery } from '../../common';
 import {
-  BaseProductSource,
-  BaseProductUpdate,
-  GpuDataSourceKey,
-  ProductDiff,
+  MarketSegment,
+  Product,
   ProductField,
   ProductFieldMeta,
+  ProductionStatus,
   ProductType,
 } from '..';
 
@@ -29,170 +29,94 @@ export type GpuFieldKey = keyof GpuFields;
 
 export interface GpuFieldMeta extends ProductFieldMeta {
   fieldKey?: GpuFieldKey;
-  source?: GpuDataSourceKey;
 }
 
 export interface GpuField<T = unknown> extends ProductField<T> {
   meta?: GpuFieldMeta;
 }
 
-export interface GpuRanks {
-  performanceRank?: number;
-  performanceRankForSegment?: number;
-  performanceRankForArchitectureSegment?: number;
-
-  valueRank?: number;
-  valueRankForSegment?: number;
-}
-
-export interface GpuRanksFilter {
-  architecture?: string[];
-  segment?: GpuMarketSegmentValue[];
-}
-
-export type GpuRank = keyof GpuRanks;
-
-export interface GpuImage {
-  gpuId?: number;
-  imageId?: number;
-
-  image?: Image;
-}
-
-export type GpuImages = GpuImage[];
-
-export enum GpuMarketSegmentValue {
-  Desktop = 'DESKTOP',
-  Mobile = 'MOBILE',
-  Workstation = 'WORKSTATION',
-  Integrated = 'INTEGRATED',
-}
-
-export enum GpuProductionStatusValue {
-  Unreleased = 'UNRELEASED',
-  Active = 'ACTIVE',
-  EndOfLife = 'END_OF_LIFE',
-}
-
-export interface GpuMeta {
-  dataSources?: Record<string, GpuDataSource>;
-}
-
-export interface GpuDataSource {
-  // Chipset ID to extract some data from like market segment.
-  chipsetId?: number;
-
-  // External URL to extract data from.
-  url?: string;
-}
+export interface GpuFieldsMeta {}
 
 export interface GpuFields {
+  id?: number;
+  productId?: number;
+
   // General Info
-  partNumber?: GpuField<string>;
-  company?: GpuField<string>;
-  marketSegment?: GpuField<GpuMarketSegmentValue>;
-  launchPrice?: GpuField<number>;
-  releaseDate?: GpuField<string>;
-  productionStatus?: GpuField<GpuProductionStatusValue>;
-
-  // Processor
-  codename?: GpuField<string>;
   architecture?: GpuField<string>;
-  processSize?: GpuField<number>;
-  transistors?: GpuField<number>;
-
-  // Memory
-  memorySize?: GpuField<number>;
-  memoryType?: GpuField<string>;
-  memoryClock?: GpuField<number>;
-  memoryInterface?: GpuField<number>;
-  memoryBandwidth?: GpuField<number>;
-
-  // Board Design & Compatibility
-  slotWidth?: GpuField<number>;
-  length?: GpuField<number>;
-  width?: GpuField<number>;
-  height?: GpuField<number>;
-  weight?: GpuField<number>;
-  thermalDesignPower?: GpuField<number>;
-  suggestedPsu?: GpuField<number>;
   busInterface?: GpuField<string>;
-  powerConnectors?: GpuField<string>;
-  outputs?: GpuField<string>;
-
-  // Cores & Clock Speeds
-  shaderUnitsCudaCores?: GpuField<number>;
-  computeUnitsSmCount?: GpuField<number>;
-  textureMappingUnits?: GpuField<number>;
-  renderOutputUnits?: GpuField<number>;
-  tensorCores?: GpuField<number>;
-  rayTracingCores?: GpuField<number>;
-  coreClockSpeedBase?: GpuField<number>;
-  coreClockSpeedBoost?: GpuField<number>;
+  codename?: GpuField<string>;
+  computeUnits?: GpuField<number>; // aka Stream Multiprocessor (SM),
+  cudaVersion?: GpuField<string>;
+  density?: GpuField<number>;
+  dieSize?: GpuField<number>;
+  directxVersion?: GpuField<string>;
+  foundry?: GpuField<string>;
+  fp16?: GpuField<number>;
+  fp32?: GpuField<number>;
+  fp64?: GpuField<number>;
+  generation?: GpuField<string>;
+  gpuCoreBaseClock?: GpuField<number>;
+  gpuCoreBoostClock?: GpuField<number>;
+  gpuCores?: GpuField<number>; // aka CUDA Cores, Stream Processors
+  height?: GpuField<number>;
   l1Cache?: GpuField<number>;
   l2Cache?: GpuField<number>;
-
-  // Theoretical Performance
-  pixelFillRate?: GpuField<number>;
-  textureFillRate?: GpuField<number>;
-  fp32Performance?: GpuField<number>;
-  fp64Performance?: GpuField<number>;
-
-  // API Support
-  directxVersion?: GpuField<string>;
+  length?: GpuField<number>;
+  marketSegment?: GpuField<MarketSegment>;
+  memoryBandwidth?: GpuField<number>;
+  memoryClock?: GpuField<number>;
+  memoryClockEffective?: GpuField<number>;
+  memoryInterface?: GpuField<number>;
+  memorySize?: GpuField<number>;
+  memoryType?: GpuField<string>;
+  msrp?: GpuField<number>;
   openClVersion?: GpuField<string>;
   openGlVersion?: GpuField<string>;
+  outputs?: GpuField<string>;
+  partNumber?: GpuField<string>;
+  pixelRate?: GpuField<number>;
+  pixelShaders?: GpuField<number>;
+  powerConnectors?: GpuField<string>;
+  predecessorGeneration?: GpuField<string>;
+  processSize?: GpuField<number>;
+  productionStatus?: GpuField<ProductionStatus>;
+  releaseDate?: GpuField<string>;
+  rops?: GpuField<number>; // aka Render Output Units
+  rtCores?: GpuField<number>; // aka Ray Tracing Cores
+  shaderClock?: GpuField<number>;
   shaderModelVersion?: GpuField<string>;
+  slotWidth?: GpuField<number>;
+  successorGeneration?: GpuField<string>;
+  suggestedPsu?: GpuField<number>;
+  tdp?: GpuField<number>; // aka Thermal Design Power
+  tensorCores?: GpuField<number>;
+  textureRate?: GpuField<number>;
+  tmus?: GpuField<number>; // aka Texture Mapping Units
+  transistors?: GpuField<number>;
+  vertexRate?: GpuField<number>;
+  vertexShaders?: GpuField<number>;
+  vulkanVersion?: GpuField<string>;
+  weight?: GpuField<number>;
+  width?: GpuField<number>;
 
-  // Benchmarks
-  performanceScore?: GpuField<number>;
-  valueScore?: GpuField<number>;
-  g3dMark?: GpuField<number>;
-  g2dMark?: GpuField<number>;
-  timespyGraphics?: GpuField<number>;
+  performanceRating?: GpuField<number>;
+  performancePerMsrp?: GpuField<number>;
+
+  metadata?: GpuFieldsMeta;
 }
 
-export interface Gpu extends GpuFields {
-  id?: number;
-  chipsetId?: number;
-  slug: string;
-
-  name: string;
-  affiliateUrl?: string;
-
-  meta?: GpuMeta;
-  automationTimestamp?: number;
-
-  updatedAt?: number;
-
-  // Relations
-  chipset?: Gpu;
-  retailModels?: Gpu[];
-  images?: GpuImages;
-
-  // Ranks - Non-DB Field
-  ranks?: GpuRanks;
+export interface GpuProduct extends Product {
+  productType: ProductType.Gpu;
+  fields?: GpuFields;
+  parent?: GpuProduct;
 }
 
-export type GpuComparison = [Gpu, Gpu];
-
-export enum ListGpusSort {
-  Id = 'id',
-  Name = 'name',
-  PerformanceRating = 'performance-rating',
-  ValueRating = 'value-rating',
-  ReleaseDate = 'release-date',
-}
-
-export enum ListGpusOrder {
-  Asc = 'asc',
-  Desc = 'desc',
-}
+export type GpuProductComparison = [GpuProduct, GpuProduct];
 
 export interface ListGpusFilter {
   company?: string[];
   year?: number[];
-  segment?: GpuMarketSegmentValue[];
+  segment?: MarketSegment[];
 
   maxPerformanceScore?: number;
   minPerformanceScore?: number;
@@ -208,81 +132,13 @@ export interface ListGpusFilter {
 
   excludeIds?: number[];
 }
+export interface ListGpusQuery extends ListQuery<ListGpusFilter> {}
 
-export interface ListGpusOrderBy {
-  sort: ListGpusSort;
-  order?: ListGpusOrder;
-}
-
-export interface ListGpusPagination {
-  limit?: number;
-  offset?: number;
-}
-
-export interface ListGpusQuery {
-  filter?: ListGpusFilter;
-  orderBy?: ListGpusOrderBy;
-  pagination?: ListGpusPagination;
-}
-
-export interface CreateGpuRequest extends Omit<Gpu, 'id'> {}
-
-export interface UpdateGpuRequest extends Omit<Gpu, 'id'> {}
-
-export interface RelatedGpus {
-  gpus?: Gpu[];
-}
-
-export interface RelatedGpuComparisons {
-  comparisons?: GpuComparison[];
-}
-
-export interface ListGpusContentData {
+export interface ListGpusAdditionalData {
   retailModelCounts?: Record<number, number>;
 }
 
-export interface ListGpusResponse {
-  query: ListGpusQuery;
-  gpus: Gpu[];
-  totalGpus: number;
-  contentData: ListGpusContentData;
-}
-
-export interface ListRetailModelsResponse {
-  retailModels: Gpu[];
-}
-
-export type GpuDiff = ProductDiff<Gpu>;
-
-export interface PreviewImportGpusResponse {
-  diffs: GpuDiff[];
-}
-
-export interface ImportGpusRequest {
-  gpus: Gpu[];
-}
-
 /**
- * Data structure containing information regarding a single source for a
- * GPU. Extends ProductSource as it contains some gpu-specific data.
+ * Group of GPU automation sources, usually grouped by source name.
  */
-export interface GpuProductSource extends BaseProductSource {
-  productType: ProductType.Gpu;
-
-  // Retail model sources are only relevant when associated with a chipset
-  gpuChipsetId?: number;
-
-  // Relations
-  gpuChipset?: Gpu;
-}
-
-/**
- * Group of GPU product sources, usually grouped by source name.
- */
-export type GpuProductSourceGroup = GpuProductSource[];
-
-export interface GpuUpdate extends BaseProductUpdate<GpuDiff> {
-  productType: ProductType.Gpu;
-  gpuProductType: GpuProductType;
-  gpuId?: number;
-}
+export type GpuAutomationSourceGroup = AutomationSource[];

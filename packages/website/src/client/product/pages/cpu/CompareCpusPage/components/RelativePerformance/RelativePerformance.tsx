@@ -5,13 +5,14 @@ import { PerformanceIntro } from './PerformanceIntro';
 import { PerformanceTable } from './PerformanceTable';
 
 export const RelativePerformance: FunctionComponent = () => {
-  const { comparison, contentData } = useContext(ComparePageContext);
+  const { comparison, additionalData: contentData } =
+    useContext(ComparePageContext);
   const [cpu1, cpu2] = comparison;
   const { relativePerformanceCpus } = contentData;
 
   if (
-    !hasProductFieldValue(cpu1.performanceScore) &&
-    !hasProductFieldValue(cpu2.performanceScore)
+    !hasProductFieldValue(cpu1.fields?.performanceRating) &&
+    !hasProductFieldValue(cpu2.fields?.performanceRating)
   ) {
     return <></>;
   }

@@ -1,4 +1,4 @@
-import { formatGpuName, ProductType } from '@pcpartdb/shared';
+import { formatProductName, ProductType } from '@pcpartdb/shared';
 import { ProductFieldRow } from 'packages/website/src/client/product/components/ProductFieldRow/ProductFieldRow';
 import {
   Table,
@@ -22,8 +22,8 @@ export const MemoryTable: FunctionComponent<MemoryTableProps> = (props) => {
 
   const [name1, name2] = useMemo(() => {
     return [
-      formatGpuName(gpu1, { company: false }),
-      formatGpuName(gpu2, { company: false }),
+      formatProductName(gpu1, { company: false }),
+      formatProductName(gpu2, { company: false }),
     ];
   }, [gpu1, gpu2]);
 
@@ -39,23 +39,23 @@ export const MemoryTable: FunctionComponent<MemoryTableProps> = (props) => {
       <TBody>
         <ProductFieldRow
           type={ProductType.Gpu}
-          fields={[gpu1.memorySize, gpu2.memorySize]}
+          fields={[gpu1.fields?.memorySize, gpu2.fields?.memorySize]}
         />
         <ProductFieldRow
           type={ProductType.Gpu}
-          fields={[gpu1.memoryType, gpu2.memoryType]}
+          fields={[gpu1.fields?.memoryType, gpu2.fields?.memoryType]}
         />
         <ProductFieldRow
           type={ProductType.Gpu}
-          fields={[gpu1.memoryBandwidth, gpu2.memoryBandwidth]}
+          fields={[gpu1.fields?.memoryBandwidth, gpu2.fields?.memoryBandwidth]}
         />
         <ProductFieldRow
           type={ProductType.Gpu}
-          fields={[gpu1.memoryClock, gpu2.memoryClock]}
+          fields={[gpu1.fields?.memoryClock, gpu2.fields?.memoryClock]}
         />
         <ProductFieldRow
           type={ProductType.Gpu}
-          fields={[gpu1.memoryInterface, gpu2.memoryInterface]}
+          fields={[gpu1.fields?.memoryInterface, gpu2.fields?.memoryInterface]}
         />
       </TBody>
     </Table>

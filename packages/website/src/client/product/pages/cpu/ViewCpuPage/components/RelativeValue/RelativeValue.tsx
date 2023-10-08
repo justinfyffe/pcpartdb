@@ -5,10 +5,13 @@ import { ValueIntro } from './ValueIntro';
 import { ValueTable } from './ValueTable';
 
 export const RelativeValue: FunctionComponent = () => {
-  const { cpu, contentData } = useContext(ViewPageContext);
+  const { cpu, additionalData: contentData } = useContext(ViewPageContext);
   const { relativeValueCpus } = contentData;
 
-  if (!hasProductFieldValue(cpu.valueScore) || !relativeValueCpus?.length) {
+  if (
+    !hasProductFieldValue(cpu.fields?.performancePerMsrp) ||
+    !relativeValueCpus?.length
+  ) {
     return <></>;
   }
 

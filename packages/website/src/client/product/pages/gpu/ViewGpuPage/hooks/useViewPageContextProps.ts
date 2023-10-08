@@ -1,24 +1,24 @@
-import { Gpu, ViewGpuContentData } from '@pcpartdb/shared';
+import { GpuProduct, ViewGpuAdditionalData } from '@pcpartdb/shared';
 import { useMemo } from 'react';
 import { getContentParams } from '../content/getContentParams';
 import { getContentTags } from '../content/getContentTags';
 import { ViewPageContextProps } from '../context/ViewPageContext';
 
 export function useViewPageContextProps(input: {
-  gpu: Gpu;
-  contentData: ViewGpuContentData;
+  gpu: GpuProduct;
+  additionalData: ViewGpuAdditionalData;
 }) {
   return useMemo(() => {
     const gpu = { ...input.gpu };
-    const contentData = { ...input.contentData };
-    const contentTags = getContentTags(gpu, contentData);
-    const contentParams = getContentParams(gpu, contentData);
+    const additionalData = { ...input.additionalData };
+    const contentTags = getContentTags(gpu, additionalData);
+    const contentParams = getContentParams(gpu, additionalData);
 
     return {
       gpu,
-      contentData,
+      additionalData,
       contentTags,
       contentParams,
     } as ViewPageContextProps;
-  }, [input.contentData, input.gpu]);
+  }, [input.additionalData, input.gpu]);
 }

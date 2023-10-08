@@ -18,16 +18,25 @@ export const MemoryTable: FunctionComponent<MemoryTableProps> = (props) => {
   return (
     <Table border responsive className={className}>
       <TBody>
-        <ProductFieldRow type={ProductType.Gpu} fields={[gpu.memorySize]} />
-        <ProductFieldRow type={ProductType.Gpu} fields={[gpu.memoryType]} />
         <ProductFieldRow
           type={ProductType.Gpu}
-          fields={[gpu.memoryBandwidth]}
+          fields={[gpu.fields?.memorySize]}
         />
-        <ProductFieldRow type={ProductType.Gpu} fields={[gpu.memoryClock]} />
         <ProductFieldRow
           type={ProductType.Gpu}
-          fields={[gpu.memoryInterface]}
+          fields={[gpu.fields?.memoryType]}
+        />
+        <ProductFieldRow
+          type={ProductType.Gpu}
+          fields={[gpu.fields?.memoryBandwidth]}
+        />
+        <ProductFieldRow
+          type={ProductType.Gpu}
+          fields={[gpu.fields?.memoryClock]}
+        />
+        <ProductFieldRow
+          type={ProductType.Gpu}
+          fields={[gpu.fields?.memoryInterface]}
         />
       </TBody>
     </Table>

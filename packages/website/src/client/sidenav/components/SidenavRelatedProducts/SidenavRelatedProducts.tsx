@@ -59,16 +59,10 @@ interface ProductListingProps {
 }
 
 const ProductListing: FunctionComponent<ProductListingProps> = (props) => {
-  const { product, productType } = props;
+  const { product } = props;
 
-  const name = useMemo(
-    () => formatProductName(productType, product),
-    [productType, product],
-  );
-  const href = useMemo(
-    () => getViewProductPath(productType, product),
-    [productType, product],
-  );
+  const name = useMemo(() => formatProductName(product), [product]);
+  const href = useMemo(() => getViewProductPath({ product }), [product]);
 
   return (
     <a

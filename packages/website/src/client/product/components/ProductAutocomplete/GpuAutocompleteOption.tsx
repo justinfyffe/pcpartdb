@@ -1,8 +1,8 @@
 import {
-  DateFormat,
-  formatGpuField,
-  formatGpuName,
-  Gpu,
+  formatCompanyName,
+  formatProductName,
+  GpuProduct,
+  productFieldFormattedValue,
 } from '@pcpartdb/shared';
 import React, { FunctionComponent, useMemo } from 'react';
 import { getCompanyLogoAutocompletePath } from '../../../image/utils';
@@ -11,7 +11,7 @@ import { Img } from '../../../shared/components/Img/Img';
 
 interface GpuAutocompleteOptionProps {
   index: number;
-  gpu: Gpu;
+  gpu: GpuProduct;
 }
 
 export const GpuAutocompleteOption: FunctionComponent<
@@ -20,28 +20,25 @@ export const GpuAutocompleteOption: FunctionComponent<
   const { index, gpu } = props;
 
   const id = gpu.id;
-  const name = useMemo(() => formatGpuName(gpu, { company: false }), [gpu]);
+  const name = useMemo(() => formatProductName(gpu, { company: false }), [gpu]);
   const shortName = useMemo(
-    () => formatGpuName(gpu, { company: false }),
+    () => formatProductName(gpu, { company: false }),
     [gpu],
   );
   const image = useMemo(() => getCompanyLogoAutocompletePath(gpu), [gpu]);
-  const company = useMemo(() => formatGpuField(gpu.company), [gpu]);
+  const company = useMemo(() => formatCompanyName(gpu.company), [gpu]);
 
   const companyAndMarketSegment = useMemo(() => {
-    const marketSegment = formatGpuField(gpu.marketSegment);
+    const marketSegment = productFieldFormattedValue(gpu.fields.marketSegment);
     return [company, marketSegment].filter((value) => value != null).join(', ');
-  }, [company, gpu.marketSegment]);
+  }, [company, gpu.fields.marketSegment]);
   const releaseDate = useMemo(
-    () =>
-      formatGpuField(gpu.releaseDate, {
-        dateFormat: DateFormat.QuarterYear,
-      }),
-    [gpu.releaseDate],
+    () => productFieldFormattedValue(gpu.fields.releaseDate),
+    [gpu.fields.releaseDate],
   );
   const price = useMemo(
-    () => formatGpuField(gpu.launchPrice),
-    [gpu.launchPrice],
+    () => productFieldFormattedValue(gpu.fields.msrp),
+    [gpu.fields.msrp],
   );
 
   return (

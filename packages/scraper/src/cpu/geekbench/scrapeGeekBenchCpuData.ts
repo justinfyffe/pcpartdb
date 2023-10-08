@@ -1,8 +1,13 @@
-import { Cpu, ScrapeProductResponse } from '@pcpartdb/shared';
+import {
+  BenchmarKey,
+  CpuProduct,
+  ProductBenchmark,
+  ProductType,
+  ScrapeProductResponse,
+} from '@pcpartdb/shared';
 import * as cheerio from 'cheerio';
 import { scraper } from '../../scraper';
-import { CommonScraperOptions, ScraperContext } from '../../types';
-import { createCpuField } from '../utils';
+import { CommonScraperOptions } from '../../types';
 
 export interface ScrapeGeekBenchCpuDataOptions extends CommonScraperOptions {
   url: string;
@@ -12,20 +17,25 @@ export interface ScrapeGeekBenchCpuDataOptions extends CommonScraperOptions {
 export async function scrapeGeekBenchCpuData(
   options: ScrapeGeekBenchCpuDataOptions,
 ) {
-  const { url, noProxy, ctx } = options;
+  const { url, noProxy } = options;
 
   const response = await scraper.scrape(url, { retries: 1, noProxy });
   const $ = cheerio.load(response.data);
 
-  const product: Partial<Cpu> = {
-    geekbenchSingleCore: getSingleCoreScore($, ctx),
-    geekbenchMultiCore: getMultiCoreScore($, ctx),
+  const benchmarks: ProductBenchmark[] = [
+    getSingleCoreScore($),
+    getMultiCoreScore($),
+  ].filter((value) => value != null);
+
+  const product: Partial<CpuProduct> = {
+    productType: ProductType.Cpu,
+    benchmarks,
   };
 
   return { product } as ScrapeProductResponse;
 }
 
-function getSingleCoreScore($: cheerio.CheerioAPI, ctx?: ScraperContext) {
+function getSingleCoreScore($: cheerio.CheerioAPI): ProductBenchmark {
   const el = $('.score-container .note')
     .filter(
       (_i, div) => $(div).text().trim().toLowerCase() === 'single-core score',
@@ -33,11 +43,14 @@ function getSingleCoreScore($: cheerio.CheerioAPI, ctx?: ScraperContext) {
     .siblings('.score')
     .first();
   const value = Number(el.text());
-
-  return createCpuField({ field: 'geekbenchSingleCore', value, ctx });
+  return {
+    benchmarkKey: BenchmarKey.GeekBenchSingleCore,
+    value,
+    metadata: null,
+  };
 }
 
-function getMultiCoreScore($: cheerio.CheerioAPI, ctx?: ScraperContext) {
+function getMultiCoreScore($: cheerio.CheerioAPI): ProductBenchmark {
   const el = $('.score-container .note')
     .filter(
       (_i, div) => $(div).text().trim().toLowerCase() === 'multi-core score',
@@ -46,5 +59,9 @@ function getMultiCoreScore($: cheerio.CheerioAPI, ctx?: ScraperContext) {
     .first();
   const value = Number(el.text());
 
-  return createCpuField({ field: 'geekbenchMultiCore', value, ctx });
+  return {
+    benchmarkKey: BenchmarKey.GeekBenchMultiCore,
+    value,
+    metadata: null,
+  };
 }

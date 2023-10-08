@@ -19,16 +19,25 @@ export const CacheTable: FunctionComponent<CacheTableProps> = (props) => {
   return (
     <Table border responsive className={className}>
       <TBody>
-        <ProductFieldRow type={ProductType.Cpu} fields={[cpu.l1Cache]} />
-        <ProductFieldRow type={ProductType.Cpu} fields={[cpu.l2Cache]} />
-        <ProductFieldRow type={ProductType.Cpu} fields={[cpu.l3Cache]} />
         <ProductFieldRow
           type={ProductType.Cpu}
-          fields={[cpu.efficientCoreL1Cache]}
+          fields={[cpu.fields?.l1Cache]}
         />
         <ProductFieldRow
           type={ProductType.Cpu}
-          fields={[cpu.efficientCoreL2Cache]}
+          fields={[cpu.fields?.l2Cache]}
+        />
+        <ProductFieldRow
+          type={ProductType.Cpu}
+          fields={[cpu.fields?.l3Cache]}
+        />
+        <ProductFieldRow
+          type={ProductType.Cpu}
+          fields={[cpu.fields?.eCoreL1Cache]}
+        />
+        <ProductFieldRow
+          type={ProductType.Cpu}
+          fields={[cpu.fields?.eCoreL2Cache]}
         />
       </TBody>
     </Table>

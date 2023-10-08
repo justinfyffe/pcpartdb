@@ -12,7 +12,6 @@ import {
   GetSitemapProductSlugsResponse,
   getViewCpuPath,
   getViewGpuPath,
-  GpuProductType,
   LIST_CPUS_PRESETS,
   LIST_GPUS_PRESETS,
   ProductType,
@@ -58,16 +57,13 @@ export async function updateSitemapsAction(
 
   // Fetch gpu chipset slugs
   const gpuChipsetSlugs = await fetchProductSlugs(
-    { productType: ProductType.Gpu, gpuProductType: GpuProductType.Chipset },
+    { productType: ProductType.Gpu, hasParent: false },
     context,
   );
 
   // Fetch gpu retail model slugs
   const gpuRetailModelSlugs = await fetchProductSlugs(
-    {
-      productType: ProductType.Gpu,
-      gpuProductType: GpuProductType.RetailModel,
-    },
+    { productType: ProductType.Gpu, hasParent: true },
     context,
   );
 
@@ -140,7 +136,7 @@ async function writeCpusSitemap(cpuSlugs: SitemapProductSlug[]) {
   for (let i = 0; i < cpuSlugs.length - 1; ++i) {
     const cpuSlug = cpuSlugs[i];
 
-    const url = websiteUrl(getViewCpuPath(cpuSlug.slug));
+    const url = websiteUrl(getViewCpuPath({ slug: cpuSlug.slug }));
     const lastModTimestamp = Math.max(cpuSlug.lastModification ?? 0, 0);
     const lastModification =
       lastModTimestamp != 0 ? new Date(lastModTimestamp) : undefined;
@@ -185,10 +181,10 @@ async function writeCpuComparisonsSitemap(cpuSlugs: SitemapProductSlug[]) {
       const cpuSlug2 = cpuSlugs[j];
 
       const url1 = websiteUrl(
-        getCompareCpusPath([cpuSlug1.slug, cpuSlug2.slug]),
+        getCompareCpusPath({ slugs: [cpuSlug1.slug, cpuSlug2.slug] }),
       );
       const url2 = websiteUrl(
-        getCompareCpusPath([cpuSlug2.slug, cpuSlug1.slug]),
+        getCompareCpusPath({ slugs: [cpuSlug2.slug, cpuSlug1.slug] }),
       );
       const lastModTimestamp = Math.max(
         cpuSlug1.lastModification ?? 0,
@@ -256,7 +252,7 @@ async function writeGpuChipsetsSitemap(gpuSlugs: SitemapProductSlug[]) {
   for (let i = 0; i < gpuSlugs.length - 1; ++i) {
     const gpuSlug = gpuSlugs[i];
 
-    const url = websiteUrl(getViewGpuPath(gpuSlug.slug));
+    const url = websiteUrl(getViewGpuPath({ slug: gpuSlug.slug }));
     const lastModTimestamp = Math.max(gpuSlug.lastModification ?? 0, 0);
     const lastModification =
       lastModTimestamp != 0 ? new Date(lastModTimestamp) : undefined;
@@ -298,7 +294,7 @@ async function writeGpuRetailModelsSitemap(gpuSlugs: SitemapProductSlug[]) {
   for (let i = 0; i < gpuSlugs.length - 1; ++i) {
     const gpuSlug = gpuSlugs[i];
 
-    const url = websiteUrl(getViewGpuPath(gpuSlug.slug));
+    const url = websiteUrl(getViewGpuPath({ slug: gpuSlug.slug }));
     const lastModTimestamp = Math.max(gpuSlug.lastModification ?? 0, 0);
     const lastModification =
       lastModTimestamp != 0 ? new Date(lastModTimestamp) : undefined;
@@ -349,10 +345,10 @@ async function writeGpuComparisonsSitemap(gpuSlugs: SitemapProductSlug[]) {
       const gpuSlug2 = gpuSlugs[j];
 
       const url1 = websiteUrl(
-        getCompareGpusPath([gpuSlug1.slug, gpuSlug2.slug]),
+        getCompareGpusPath({ slugs: [gpuSlug1.slug, gpuSlug2.slug] }),
       );
       const url2 = websiteUrl(
-        getCompareGpusPath([gpuSlug2.slug, gpuSlug1.slug]),
+        getCompareGpusPath({ slugs: [gpuSlug2.slug, gpuSlug1.slug] }),
       );
       const lastModTimestamp = Math.max(
         gpuSlug1?.lastModification ?? 0,

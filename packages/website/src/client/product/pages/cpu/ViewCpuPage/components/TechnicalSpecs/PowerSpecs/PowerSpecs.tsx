@@ -1,4 +1,4 @@
-import { hasProductFieldValue } from '@pcpartdb/shared';
+import { hasProductFieldFormattedValue } from '@pcpartdb/shared';
 import React, { FunctionComponent, useContext } from 'react';
 import { ViewPageContext } from '../../../context/ViewPageContext';
 import { PowerIntro } from './PowerIntro';
@@ -13,10 +13,10 @@ export const PowerSpecs: FunctionComponent<PowerSpecsProps> = (props) => {
   const { cpu } = useContext(ViewPageContext);
 
   if (
-    !hasProductFieldValue(cpu.tdp) &&
-    !hasProductFieldValue(cpu.pl1) &&
-    !hasProductFieldValue(cpu.pl2) &&
-    !hasProductFieldValue(cpu.ppt)
+    !hasProductFieldFormattedValue(cpu.fields?.tdp) &&
+    !hasProductFieldFormattedValue(cpu.fields?.pl1) &&
+    !hasProductFieldFormattedValue(cpu.fields?.pl2) &&
+    !hasProductFieldFormattedValue(cpu.fields?.ppt)
   ) {
     return <></>;
   }

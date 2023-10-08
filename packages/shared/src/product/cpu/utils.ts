@@ -1,7 +1,17 @@
 import { parseISO } from 'date-fns';
+import { ListOrder, ListSort } from '../../common';
 import { getListCpusPath } from '../../routes';
-import { ProductType } from '../types';
-import { getAffiliateUrl, hasProductFieldValue } from '../utils';
+import {
+  MarketSegment,
+  Product,
+  ProductionStatus,
+  ProductType,
+} from '../types';
+import {
+  getAffiliateUrl,
+  hasProductFieldRawValue,
+  productFieldRawValue,
+} from '../utils';
 import {
   DEFAULT_LIST_CPUS_LIMIT,
   DEFAULT_LIST_CPUS_OFFSET,
@@ -9,15 +19,11 @@ import {
   DEFAULT_LIST_CPUS_SORT,
   LIST_CPUS_PRESETS,
 } from './consts';
-import {
-  Cpu,
-  CpuMarketSegmentValue,
-  CpuProductionStatusValue,
-  ListCpusOrder,
-  ListCpusPresetSlug,
-  ListCpusQuery,
-  ListCpusSort,
-} from './types';
+import { CpuProduct, ListCpusPresetSlug, ListCpusQuery } from './types';
+
+export function isCpuProduct(product: Product): product is CpuProduct {
+  return product.productType === ProductType.Cpu;
+}
 
 export function generateCpuSlug(name: string, company: string) {
   const slugParts = [];
@@ -43,8 +49,8 @@ export function generateCpuSlug(name: string, company: string) {
   return slugParts.join('-');
 }
 
-export function getCpuAffiliateUrl(cpu: Cpu) {
-  return getAffiliateUrl(ProductType.Cpu, cpu);
+export function getCpuAffiliateUrl(cpu: CpuProduct) {
+  return getAffiliateUrl(cpu);
 }
 
 export function generateListCpusQueryFromPath(path: string) {
@@ -72,9 +78,9 @@ export function generateListCpusQueryFromSearchParams(
   const company = (query.company as string)?.split(',');
   const segment = (query.segment as string)
     ?.toUpperCase()
-    .split(',') as CpuMarketSegmentValue[];
-  const sort = (query.sort as ListCpusSort) || DEFAULT_LIST_CPUS_SORT;
-  const order = (query.order as ListCpusOrder) || DEFAULT_LIST_CPUS_ORDER;
+    .split(',') as MarketSegment[];
+  const sort = (query.sort as ListSort) || DEFAULT_LIST_CPUS_SORT;
+  const order = (query.order as ListOrder) || DEFAULT_LIST_CPUS_ORDER;
   const preset = query.preset as ListCpusPresetSlug;
 
   if (preset != null && LIST_CPUS_PRESETS[preset] != null) {
@@ -88,75 +94,26 @@ export function generateListCpusQueryFromSearchParams(
   }
 }
 
-export function isPastCpuLaunchDate(cpu: Cpu) {
-  if (!hasProductFieldValue(cpu?.releaseDate)) {
+export function isPastCpuLaunchDate(cpu: CpuProduct) {
+  if (!hasProductFieldRawValue(cpu?.fields?.releaseDate)) {
     return false;
   }
 
   const date = new Date();
-  const releaseDate = parseISO(cpu.releaseDate?.value);
+  const releaseDate = parseISO(productFieldRawValue(cpu.fields?.releaseDate));
   return date.getTime() >= releaseDate.getTime();
 }
 
-export function hasCpuLaunched(cpu: Cpu) {
+export function hasCpuLaunched(cpu: CpuProduct) {
   if (
-    cpu?.productionStatus?.value === CpuProductionStatusValue.Unreleased ||
+    productFieldRawValue(cpu?.fields?.productionStatus) ===
+      ProductionStatus.Unreleased ||
     !isPastCpuLaunchDate(cpu)
   ) {
     return false;
   }
 
   return true;
-}
-
-export function populateCpuPerformanceScoreBenchmark(cpu: Cpu) {
-  const performance = calculatePerformanceScore(cpu);
-  if (performance != null) {
-    cpu.performanceScore = {
-      value: performance,
-      meta: { fieldKey: 'performanceScore', autoUpdate: false },
-    };
-  }
-}
-
-export function populateCpuValueScoreBenchmark(cpu: Cpu) {
-  const value = calculateValueScore(cpu);
-  if (value != null) {
-    cpu.valueScore = {
-      value,
-      meta: { fieldKey: 'valueScore', autoUpdate: false },
-    };
-  }
-}
-
-function calculatePerformanceScore(cpu: Cpu) {
-  // Get inputs
-  const cpuMarkMultiThread = cpu.cpuMarkMultiThread?.value;
-
-  // Validate inputs
-  if (cpuMarkMultiThread == null || typeof cpuMarkMultiThread !== 'number') {
-    return null;
-  }
-
-  // Compute score
-  return cpuMarkMultiThread;
-}
-
-function calculateValueScore(cpu: Cpu) {
-  // Get inputs
-  const performanceScore = cpu.performanceScore?.value;
-  const launchPrice = cpu.launchPrice?.value;
-
-  // Validate inputs
-  if (performanceScore == null) {
-    return null;
-  }
-  if (launchPrice == null || typeof launchPrice !== 'number') {
-    return null;
-  }
-
-  // Compute score
-  return performanceScore / launchPrice;
 }
 
 export function convertToCpuMemoryChannelText(memoryChannel: number) {

@@ -1,6 +1,6 @@
 import { ChevronDownIcon } from '@heroicons/react/24/outline';
 import {
-  formatProductField,
+  formatCompanyName,
   formatProductName,
   Product,
   ProductType,
@@ -64,16 +64,16 @@ export const ProductAutocomplete = forwardRef<
   });
 
   const label = useMemo(
-    () => formatProductName(productType, product, { company: false }),
-    [productType, product],
+    () => formatProductName(product, { company: false }),
+    [product],
   );
   const prefixImage = useMemo(
     () => getCompanyLogoAutocompletePath(product),
     [product],
   );
   const company = useMemo(
-    () => formatProductField(productType, product?.company),
-    [productType, product?.company],
+    () => formatCompanyName(product?.company),
+    [product?.company],
   );
   const placeHolder = useMemo(() => {
     if (propsPlaceholder != null) {
@@ -161,12 +161,7 @@ export const ProductAutocomplete = forwardRef<
       ref={inputRef}
     >
       {results.map((result, i) => (
-        <ProductAutocompleteOption
-          key={result.id}
-          index={i}
-          productType={productType}
-          product={result}
-        />
+        <ProductAutocompleteOption key={result.id} index={i} product={result} />
       ))}
     </Autocomplete>
   );

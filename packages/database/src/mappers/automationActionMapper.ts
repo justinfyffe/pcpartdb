@@ -14,7 +14,7 @@ interface MapToDtoOptions {
 export async function mapToAutomationActionDto<TUpdateData = unknown>(
   entity: AutomationActionEntity,
   options?: MapToDtoOptions,
-): Promise<AutomationAction> {
+) {
   const includeData = options?.includeData ?? true;
 
   let data: TUpdateData = null;
@@ -31,7 +31,7 @@ export async function mapToAutomationActionDto<TUpdateData = unknown>(
     metadata: entity.metadata as AutomationActionMeta,
     priority: entity.priority,
     timestamp: entity.timestamp.getTime(),
-  };
+  } as AutomationAction;
 }
 
 interface MapToDtoOptions {
@@ -49,9 +49,7 @@ export async function mapToAutomationActionDtos<TUpdateData = unknown>(
   return ret;
 }
 
-export async function mapToAutomationActionEntity(
-  dto: AutomationAction,
-): Promise<AutomationActionEntity> {
+export async function mapToAutomationActionEntity(dto: AutomationAction) {
   const data = await gzipData(dto.data);
 
   return {
@@ -63,5 +61,5 @@ export async function mapToAutomationActionEntity(
     metadata: dto.metadata,
     priority: dto.priority || 0,
     timestamp: dto.timestamp != null ? new Date(dto.timestamp) : undefined,
-  };
+  } as AutomationActionEntity;
 }

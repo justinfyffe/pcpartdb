@@ -1,4 +1,4 @@
-import { hasProductFieldValue } from '@pcpartdb/shared';
+import { hasProductFieldFormattedValue } from '@pcpartdb/shared';
 import React, { FunctionComponent, useContext } from 'react';
 import { ViewPageContext } from '../../../context/ViewPageContext';
 import { MemoryIntro } from './MemoryIntro';
@@ -13,11 +13,11 @@ export const MemorySpecs: FunctionComponent<MemorySpecsProps> = (props) => {
   const { gpu } = useContext(ViewPageContext);
 
   if (
-    !hasProductFieldValue(gpu.memorySize) &&
-    !hasProductFieldValue(gpu.memoryType) &&
-    !hasProductFieldValue(gpu.memoryBandwidth) &&
-    !hasProductFieldValue(gpu.memoryClock) &&
-    !hasProductFieldValue(gpu.memoryInterface)
+    !hasProductFieldFormattedValue(gpu.fields?.memorySize) &&
+    !hasProductFieldFormattedValue(gpu.fields?.memoryType) &&
+    !hasProductFieldFormattedValue(gpu.fields?.memoryBandwidth) &&
+    !hasProductFieldFormattedValue(gpu.fields?.memoryClock) &&
+    !hasProductFieldFormattedValue(gpu.fields?.memoryInterface)
   ) {
     return <></>;
   }

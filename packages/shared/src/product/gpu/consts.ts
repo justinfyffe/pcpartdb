@@ -1,58 +1,56 @@
-import {
-  ListGpusOrder,
-  ListGpusPresetSlug,
-  ListGpusQuery,
-  ListGpusSort,
-} from './types';
+import { ListOrder, ListSort } from '../../common';
+import { ListProductsQuery } from '../types';
+import { ListGpusPresetSlug } from './types';
 
 export const DEFAULT_LIST_GPUS_LIMIT = 50;
 export const DEFAULT_LIST_GPUS_OFFSET = 0;
-export const DEFAULT_LIST_GPUS_SORT = ListGpusSort.PerformanceRating;
-export const DEFAULT_LIST_GPUS_ORDER = ListGpusOrder.Desc;
+export const DEFAULT_LIST_GPUS_SORT = ListSort.PerformanceRating;
+export const DEFAULT_LIST_GPUS_ORDER = ListOrder.Desc;
 
-export const LIST_GPUS_PRESETS: Record<ListGpusPresetSlug, ListGpusQuery> = {
-  [ListGpusPresetSlug.BestPerformance]: {
-    filter: {},
-    orderBy: {
-      sort: ListGpusSort.PerformanceRating,
-      order: ListGpusOrder.Desc,
+export const LIST_GPUS_PRESETS: Record<ListGpusPresetSlug, ListProductsQuery> =
+  {
+    [ListGpusPresetSlug.BestPerformance]: {
+      filter: {},
+      orderBy: {
+        sort: ListSort.PerformanceRating,
+        order: ListOrder.Desc,
+      },
     },
-  },
-  [ListGpusPresetSlug.BestPerformanceAmd]: {
-    filter: { company: ['amd'] },
-    orderBy: {
-      sort: ListGpusSort.PerformanceRating,
-      order: ListGpusOrder.Desc,
+    [ListGpusPresetSlug.BestPerformanceAmd]: {
+      filter: { company: ['amd'] },
+      orderBy: {
+        sort: ListSort.PerformanceRating,
+        order: ListOrder.Desc,
+      },
     },
-  },
-  [ListGpusPresetSlug.BestPerformanceNvidia]: {
-    filter: { company: ['nvidia'] },
-    orderBy: {
-      sort: ListGpusSort.PerformanceRating,
-      order: ListGpusOrder.Desc,
+    [ListGpusPresetSlug.BestPerformanceNvidia]: {
+      filter: { company: ['nvidia'] },
+      orderBy: {
+        sort: ListSort.PerformanceRating,
+        order: ListOrder.Desc,
+      },
     },
-  },
-  [ListGpusPresetSlug.BestValue]: {
-    filter: {},
-    orderBy: { sort: ListGpusSort.ValueRating, order: ListGpusOrder.Desc },
-  },
-  [ListGpusPresetSlug.BestValueAmd]: {
-    filter: { company: ['amd'] },
-    orderBy: { sort: ListGpusSort.ValueRating, order: ListGpusOrder.Desc },
-  },
-  [ListGpusPresetSlug.BestValueNvidia]: {
-    filter: { company: ['nvidia'] },
-    orderBy: { sort: ListGpusSort.ValueRating, order: ListGpusOrder.Desc },
-  },
-  [ListGpusPresetSlug.Newest]: {
-    filter: {},
-    orderBy: { sort: ListGpusSort.ReleaseDate, order: ListGpusOrder.Desc },
-  },
-  [ListGpusPresetSlug.Oldest]: {
-    filter: {},
-    orderBy: { sort: ListGpusSort.ReleaseDate, order: ListGpusOrder.Asc },
-  },
-};
+    [ListGpusPresetSlug.BestValue]: {
+      filter: {},
+      orderBy: { sort: ListSort.PerformancePerMsrp, order: ListOrder.Desc },
+    },
+    [ListGpusPresetSlug.BestValueAmd]: {
+      filter: { company: ['amd'] },
+      orderBy: { sort: ListSort.PerformancePerMsrp, order: ListOrder.Desc },
+    },
+    [ListGpusPresetSlug.BestValueNvidia]: {
+      filter: { company: ['nvidia'] },
+      orderBy: { sort: ListSort.PerformancePerMsrp, order: ListOrder.Desc },
+    },
+    [ListGpusPresetSlug.Newest]: {
+      filter: {},
+      orderBy: { sort: ListSort.ReleaseDate, order: ListOrder.Desc },
+    },
+    [ListGpusPresetSlug.Oldest]: {
+      filter: {},
+      orderBy: { sort: ListSort.ReleaseDate, order: ListOrder.Asc },
+    },
+  };
 
 export const SUPPORTED_GPU_COMPANIES = [
   'acer',
@@ -80,9 +78,8 @@ export const GPU_FIELD_LABELS: Record<string, string> = {
 
   // General
   partNumber: 'Part Number',
-  company: 'Manufacturer',
   marketSegment: 'Market Segment',
-  launchPrice: 'Launch Price (MSRP)',
+  msrp: 'Launch Price (MSRP)',
   releaseDate: 'Release Date',
   productionStatus: 'Production Status',
 
@@ -105,38 +102,34 @@ export const GPU_FIELD_LABELS: Record<string, string> = {
   width: 'Width',
   height: 'Height',
   weight: 'Weight',
-  thermalDesignPower: 'Thermal Design Power (TDP)',
+  tdp: 'Thermal Design Power (TDP)',
+
   suggestedPsu: 'Suggested PSU',
   busInterface: 'Bus Interface',
   powerConnectors: 'Power Connectors',
   outputs: 'Outputs',
 
   // Cores & Clock Speeds
-  shaderUnitsCudaCores: 'Shader Units / CUDA Cores',
-  computeUnitsSmCount: 'Compute Units / SM Count',
-  textureMappingUnits: 'Texture Mapping Units (TMUs)',
-  renderOutputUnits: 'Render Output Units (ROPs)',
+  gpuCores: 'GPU Cores',
+  computeUnits: 'Compute Units',
+  tmus: 'Texture Mapping Units (TMUs)',
+  rops: 'Render Output Units (ROPs)',
   tensorCores: 'Tensor Cores',
-  rayTracingCores: 'Ray Tracing Cores',
-  coreClockSpeedBase: 'Clock Speed (Base)',
-  coreClockSpeedBoost: 'Clock Speed (Boost)',
+  rtCores: 'Ray Tracing Cores',
+  gpuCoreBaseClock: 'Clock Speed (Base)',
+  gpuCoreBoostClock: 'Clock Speed (Boost)',
   l1Cache: 'L1 Cache',
   l2Cache: 'L2 Cache',
 
   // Theoretical Performance
-  pixelFillRate: 'Pixel Fill Rate',
-  textureFillRate: 'Texture Fill Rate',
-  fp32Performance: 'FP32 Performance',
-  fp64Performance: 'FP64 Performance',
+  pixelRate: 'Pixel Fill Rate',
+  textureRate: 'Texture Fill Rate',
+  fp32: 'FP32 Performance',
+  fp64: 'FP64 Performance',
 
   // API Support
   directxVersion: 'DirectX',
   openClVersion: 'OpenCL',
   openGlVersion: 'OpenGL',
   shaderModelVersion: 'Shader Model',
-
-  // Benchmarks
-  g3dMark: 'G3D Mark',
-  g2dMark: 'G2D Mark',
-  timespyGraphics: '3DMark Time Spy Graphics',
 };

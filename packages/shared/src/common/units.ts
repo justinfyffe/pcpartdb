@@ -39,6 +39,10 @@ export enum MemorySpeedUnit {
   mtps = 'mtps',
 }
 
+export enum MultiplierUnit {
+  x = 'x',
+}
+
 export enum NumericUnit {
   million = 'million',
 }
@@ -86,6 +90,7 @@ export type MeasurementUnit =
   | LengthUnit
   | MemorySizeUnit
   | MemorySpeedUnit
+  | MultiplierUnit
   | NumericUnit
   | PixelFillRateUnit
   | SquareUnit
@@ -125,6 +130,10 @@ const CLOCK_SPEED_UNIT_FORMATS: Record<ClockSpeedUnit, string> = {
   [ClockSpeedUnit.khz]: 'KHz',
   [ClockSpeedUnit.mhz]: 'MHz',
   [ClockSpeedUnit.ghz]: 'GHz',
+};
+
+const CURRENCY_UNIT_FORMATS: Record<CurrencyUnit, string> = {
+  [CurrencyUnit.USD]: 'USD',
 };
 
 const FLOPS_UNIT_MULTIPLIERS: Record<FlopsUnit, number> = {
@@ -167,6 +176,14 @@ const MEMORY_SPEED_UNIT_MULTIPLIERS: Record<MemorySpeedUnit, number> = {
 
 const MEMORY_SPEED_UNIT_FORMATS: Record<MemorySpeedUnit, string> = {
   [MemorySpeedUnit.mtps]: 'MT/s',
+};
+
+const MULTIPLIER_MULTIPLIERS: Record<MultiplierUnit, number> = {
+  [MultiplierUnit.x]: 1,
+};
+
+const MULTIPLIER_FORMATS: Record<MultiplierUnit, string> = {
+  [MultiplierUnit.x]: 'x',
 };
 
 const NUMERIC_UNIT_MULTIPLIERS: Record<NumericUnit, number> = {
@@ -275,6 +292,8 @@ function getUnitMultiplier(unit: MeasurementUnit) {
       return MEMORY_SIZE_UNIT_MULTIPLIERS[unit];
     case MemorySpeedUnit.mtps:
       return MEMORY_SPEED_UNIT_MULTIPLIERS[unit];
+    case MultiplierUnit.x:
+      return MULTIPLIER_MULTIPLIERS[unit];
     case NumericUnit.million:
       return NUMERIC_UNIT_MULTIPLIERS[unit];
     case PixelFillRateUnit.gpixelps:
@@ -351,6 +370,8 @@ export function getUnitFormat(unit: MeasurementUnit) {
     case ClockSpeedUnit.mhz:
     case ClockSpeedUnit.ghz:
       return CLOCK_SPEED_UNIT_FORMATS[unit];
+    case CurrencyUnit.USD:
+      return CURRENCY_UNIT_FORMATS[unit];
     case FlopsUnit.gflops:
     case FlopsUnit.tflops:
       return FLOPS_UNIT_FORMATS[unit];
@@ -364,6 +385,8 @@ export function getUnitFormat(unit: MeasurementUnit) {
       return MEMORY_SIZE_UNIT_FORMATS[unit];
     case MemorySpeedUnit.mtps:
       return MEMORY_SPEED_UNIT_FORMATS[unit];
+    case MultiplierUnit.x:
+      return MULTIPLIER_FORMATS[unit];
     case NumericUnit.million:
       return NUMERIC_UNIT_FORMATS[unit];
     case PixelFillRateUnit.gpixelps:

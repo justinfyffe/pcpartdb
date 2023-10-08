@@ -8,17 +8,19 @@ import {
 } from '@heroicons/react/24/outline';
 import {
   AutomationActionType,
+  AutomationSource,
+  AutomationSourceGroup,
   CreateGpuActionData,
-  formatGpuName,
+  formatAutomationSourceName,
+  formatProductName,
   generateGpuSlug,
   getViewGpuPath,
-  GpuDataSourceKey,
-  GpuProductSource,
-  GpuProductSourceGroup,
+  GpuAutomationSourceGroup,
+  ProductSourceKey,
   ProductType,
 } from '@pcpartdb/shared';
 import { automationService } from 'packages/website/src/client/automation/services/automationService';
-import { productSourceService } from 'packages/website/src/client/product/services/productSourceService';
+import { automationSourceService } from 'packages/website/src/client/product/services/automationSourceService';
 import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
 import {
   Card,
@@ -34,87 +36,121 @@ import { AutomationStatusContext } from 'packages/website/src/client/shared/layo
 import React, { useCallback, useContext, useMemo, useState } from 'react';
 import { SourceInputField } from '../../components/SourceInputField';
 
+const SUPPORTED_KEYS = [ProductSourceKey.TechPowerUp];
+
 interface GpuRetailModelSourceCardProps {
-  sources: GpuProductSourceGroup;
+  sources: GpuAutomationSourceGroup;
 }
 
 export const GpuRetailModelSourceCard = (
   props: GpuRetailModelSourceCardProps,
 ) => {
-  const { sources } = props;
-
   const automationStatusContext = useContext(AutomationStatusContext);
 
   // States
 
   const [expanded, setExpanded] = useState(false);
+  const [sources] = useState(props.sources);
 
-  const techPowerUpSources = useMemo(
-    () =>
-      sources
-        .filter((source) => source.sourceKey === GpuDataSourceKey.TechPowerUp)
-        .sort((a, b) => a.sourceName.localeCompare(b.sourceName)),
-    [sources],
-  );
-  const [techPowerUp, setTechPowerUp] = useState(
-    () =>
-      techPowerUpSources.find((value) => value.archived) ||
-      techPowerUpSources[0] ||
-      null,
-  );
-  const [archiveTechPowerUp, setArchiveTechPowerUp] = useState(!!techPowerUp);
+  const subgroups = useMemo(() => {
+    const ret: Partial<Record<ProductSourceKey, AutomationSourceGroup>> = {};
+    for (const supportedKey of SUPPORTED_KEYS) {
+      ret[supportedKey] = sources?.filter(
+        (source) => source.sourceKey === supportedKey,
+      ) as AutomationSourceGroup;
+    }
+    return ret;
+  }, [sources]);
 
-  const [preferredName, setPreferredName] = useState(
-    () => sources[0].sourceName,
-  );
+  const [currentSources, setCurrentSources] = useState(() => {
+    const ret: Partial<Record<ProductSourceKey, AutomationSource>> = {};
+    for (const supportedKey of SUPPORTED_KEYS) {
+      const initial =
+        subgroups[supportedKey].find((source) => !source.archived) ||
+        subgroups[supportedKey][0];
+
+      if (initial == null) {
+        ret[supportedKey] = null;
+      } else {
+        ret[supportedKey] = initial;
+      }
+    }
+    return ret;
+  });
+
+  const allArchived = useMemo(() => {
+    return SUPPORTED_KEYS.every((key) => currentSources[key]?.archived ?? true);
+  }, [currentSources]);
+
+  const [preferredName, setPreferredName] = useState(() => {
+    const key = SUPPORTED_KEYS.find((key) => currentSources[key] != null);
+    return currentSources[key]?.sourceName;
+  });
   const [preferredSlug, setPreferredSlug] = useState(() =>
     generateGpuSlug(preferredName, null),
   );
-  const [groupKey] = useState(() => techPowerUp?.groupKey);
+  const [groupKey] = useState(() => {
+    const key = SUPPORTED_KEYS.find((key) => currentSources[key] != null);
+    return currentSources[key]?.groupKey;
+  });
 
   // Memos
 
   const [chipsetName, chipsetHref] = useMemo(() => {
-    if (techPowerUp?.gpuChipset == null) {
+    const chipset =
+      currentSources[ProductSourceKey.TechPowerUp]?.relatedProduct;
+    if (chipset == null) {
       return [null, null];
     }
 
-    const name = formatGpuName(techPowerUp.gpuChipset);
-    const href = getViewGpuPath(techPowerUp.gpuChipset);
+    const name = formatProductName(chipset);
+    const href = getViewGpuPath(chipset);
     return [name, href];
-  }, [techPowerUp?.gpuChipset]);
+  }, [currentSources]);
 
   // Callbacks
+
+  const handleSourceInputChange = useCallback(
+    (key: ProductSourceKey, source: AutomationSource) => {
+      currentSources[key] = source;
+      setCurrentSources({ ...currentSources });
+    },
+    [currentSources],
+  );
 
   const handleGenerateSlug = useCallback(() => {
     setPreferredSlug(generateGpuSlug(preferredName, null));
   }, [preferredName]);
 
   const handleSave = useCallback(async () => {
-    const newTechPowerUp: GpuProductSource =
-      techPowerUp != null
-        ? {
-            ...techPowerUp,
-            archived: archiveTechPowerUp,
-          }
-        : null;
-
-    const sources = [newTechPowerUp].filter(
+    const sources = SUPPORTED_KEYS.map((key) => currentSources[key]).filter(
       (source) => source != null && source.id != null,
     );
 
-    await productSourceService.upsert({ sources: sources });
+    const archivedSources = sources.map((source) => ({
+      ...source,
+      archived: true,
+    }));
 
-    await setTechPowerUp(newTechPowerUp);
+    await automationSourceService.upsert({ sources: archivedSources });
+
+    sources.forEach((source) => {
+      source.archived = true;
+    });
+    setCurrentSources({ ...currentSources });
 
     // Close the card
     await setExpanded(false);
 
     await automationStatusContext.refreshStatus();
-  }, [archiveTechPowerUp, automationStatusContext, techPowerUp]);
+  }, [automationStatusContext, currentSources]);
 
   const handleCreateGpu = useCallback(async () => {
-    const sources = [techPowerUp].filter((source) => source != null);
+    const sources = SUPPORTED_KEYS.map((key) => currentSources[key]).filter(
+      (source) => source != null,
+    );
+    const chipsetId =
+      currentSources[ProductSourceKey.TechPowerUp]?.relatedProductId;
 
     // Create automation action to create new GPU
     await automationService.createAction({
@@ -124,13 +160,13 @@ export const GpuRetailModelSourceCard = (
         preferredName,
         preferredSlug,
         sources,
-        chipsetId: techPowerUp.gpuChipsetId,
+        relatedProductId: chipsetId,
       } as CreateGpuActionData,
     });
 
     // Update sources to archive them.
     await handleSave();
-  }, [handleSave, preferredName, preferredSlug, techPowerUp]);
+  }, [currentSources, handleSave, preferredName, preferredSlug]);
 
   // Render
 
@@ -151,34 +187,37 @@ export const GpuRetailModelSourceCard = (
             <span className="[overflow-wrap:anywhere]">{groupKey}</span>
           </div>
           <div className="text-xs flex flex-wrap gap-x-4 gap-y-1">
-            <div>
-              <span className="font-semibold">
-                TechPowerUp
-                {techPowerUpSources.length > 1
-                  ? ` (x${techPowerUpSources.length})`
-                  : ''}
-                :
-              </span>{' '}
-              {techPowerUp != null ? (
-                <a
-                  href={techPowerUp.sourceUrl}
-                  target="_blank"
-                  onClick={(e) => e.stopPropagation()}
-                  rel="noreferrer"
-                >
-                  {techPowerUp.sourceName}
-                </a>
-              ) : (
-                '--'
-              )}
-            </div>
+            {SUPPORTED_KEYS.map((supportedKey) => (
+              <div key={supportedKey}>
+                <span className="font-semibold">
+                  {formatAutomationSourceName(supportedKey)}
+                  {subgroups[supportedKey].length > 1
+                    ? ` (x${subgroups[supportedKey].length})`
+                    : ''}
+                  :
+                </span>{' '}
+                {currentSources[supportedKey] != null ? (
+                  <a
+                    href={currentSources[supportedKey].sourceUrl}
+                    target="_blank"
+                    onClick={(e) => e.stopPropagation()}
+                    rel="noreferrer"
+                  >
+                    {currentSources[supportedKey].sourceName}
+                  </a>
+                ) : (
+                  '--'
+                )}
+              </div>
+            ))}
+
             <div>
               <span className="font-semibold">Chipset:</span> {chipsetName}
             </div>
           </div>
         </div>
 
-        {techPowerUp.archived ? (
+        {allArchived ? (
           <div className="flex flex-col items-center justify-center gap-1">
             <ArchiveBoxIcon className="w-8" />
             Archived
@@ -186,7 +225,7 @@ export const GpuRetailModelSourceCard = (
         ) : (
           <div className="flex flex-col justify-between gap-4">
             <GenericButton
-              disabled={techPowerUp.archived}
+              disabled={allArchived}
               title="Archive"
               onClick={(e) => {
                 e.preventDefault();
@@ -197,7 +236,7 @@ export const GpuRetailModelSourceCard = (
               <ArchiveBoxIcon className="w-4" />
             </GenericButton>
             <GenericButton
-              disabled={techPowerUp.archived}
+              disabled={allArchived}
               title="Create"
               onClick={(e) => {
                 e.preventDefault();
@@ -254,17 +293,23 @@ export const GpuRetailModelSourceCard = (
               <TextInput value={chipsetName} disabled />
             </Field>
 
-            <SourceInputField
-              productType={ProductType.Gpu}
-              sourceKey={GpuDataSourceKey.TechPowerUp}
-              sources={techPowerUpSources}
-              currentSource={techPowerUp}
-              archive={archiveTechPowerUp}
-              setArchive={setArchiveTechPowerUp}
-              onUseName={setPreferredName}
-              onChange={(source) => setTechPowerUp(source as GpuProductSource)}
-              sourceDisabled
-            />
+            {SUPPORTED_KEYS.map((supportedKey) => (
+              <SourceInputField
+                key={supportedKey}
+                productType={ProductType.Gpu}
+                sourceKey={supportedKey}
+                sources={subgroups[supportedKey] as AutomationSourceGroup}
+                currentSource={currentSources[supportedKey] as AutomationSource}
+                onUseName={setPreferredName}
+                onChange={(source) =>
+                  handleSourceInputChange(
+                    supportedKey,
+                    source as AutomationSource,
+                  )
+                }
+                sourceDisabled
+              />
+            ))}
           </div>
 
           <div className="flex flex-wrap justify-end">

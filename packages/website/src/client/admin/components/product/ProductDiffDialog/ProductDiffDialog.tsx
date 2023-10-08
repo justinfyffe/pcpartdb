@@ -1,4 +1,9 @@
-import { ProductDiff, ProductType } from '@pcpartdb/shared';
+import {
+  BenchmarKey,
+  ProductDiff,
+  ProductFieldKey,
+  ProductType,
+} from '@pcpartdb/shared';
 import {
   Button,
   ButtonVariant,
@@ -6,7 +11,6 @@ import {
 import React, { FunctionComponent, useState } from 'react';
 import { FormattedDiffTab } from './FormattedDiffTab';
 import { RawDiffTab } from './RawDiffTab';
-import { ProductDiffKey } from './types';
 
 enum Tab {
   Formatted,
@@ -15,14 +19,15 @@ enum Tab {
 
 interface ProductDiffViewProps {
   productType: ProductType;
-  dataToPreview: ProductDiffKey[];
+  dataToPreview: ProductFieldKey[];
+  benchmarksToPreview?: BenchmarKey[];
   diff: ProductDiff;
 }
 
 export const ProductDiffDialog: FunctionComponent<ProductDiffViewProps> = (
   props,
 ) => {
-  const { productType, dataToPreview, diff } = props;
+  const { productType, dataToPreview, benchmarksToPreview, diff } = props;
   const [tab, setTab] = useState(Tab.Formatted);
 
   return (
@@ -56,6 +61,7 @@ export const ProductDiffDialog: FunctionComponent<ProductDiffViewProps> = (
             <FormattedDiffTab
               productType={productType}
               dataToPreview={dataToPreview}
+              benchmarksToPreview={benchmarksToPreview}
               diff={diff}
             />
           ) : (

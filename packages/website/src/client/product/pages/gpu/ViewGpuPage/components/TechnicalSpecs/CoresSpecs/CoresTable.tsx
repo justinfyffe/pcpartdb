@@ -20,48 +20,48 @@ export const CoresTable: FunctionComponent<CoresTableProps> = (props) => {
       <TBody>
         <ProductFieldRow
           type={ProductType.Gpu}
-          fields={[gpu.shaderUnitsCudaCores]}
+          fields={[gpu.fields?.gpuCores]}
         />
         <ProductFieldRow
           type={ProductType.Gpu}
-          fields={[gpu.computeUnitsSmCount]}
+          fields={[gpu.fields?.computeUnits]}
+        />
+        <ProductFieldRow type={ProductType.Gpu} fields={[gpu.fields?.tmus]} />
+        <ProductFieldRow type={ProductType.Gpu} fields={[gpu.fields?.rops]} />
+        <ProductFieldRow
+          type={ProductType.Gpu}
+          fields={[gpu.fields?.tensorCores]}
         />
         <ProductFieldRow
           type={ProductType.Gpu}
-          fields={[gpu.textureMappingUnits]}
+          fields={[gpu.fields?.rtCores]}
         />
         <ProductFieldRow
           type={ProductType.Gpu}
-          fields={[gpu.renderOutputUnits]}
-        />
-        <ProductFieldRow type={ProductType.Gpu} fields={[gpu.tensorCores]} />
-        <ProductFieldRow
-          type={ProductType.Gpu}
-          fields={[gpu.rayTracingCores]}
+          fields={[gpu.fields?.gpuCoreBaseClock]}
         />
         <ProductFieldRow
           type={ProductType.Gpu}
-          fields={[gpu.coreClockSpeedBase]}
+          fields={[gpu.fields?.gpuCoreBoostClock]}
         />
         <ProductFieldRow
           type={ProductType.Gpu}
-          fields={[gpu.coreClockSpeedBoost]}
-        />
-        <ProductFieldRow type={ProductType.Gpu} fields={[gpu.l1Cache]} />
-        <ProductFieldRow type={ProductType.Gpu} fields={[gpu.l2Cache]} />
-        <ProductFieldRow type={ProductType.Gpu} fields={[gpu.pixelFillRate]} />
-        <ProductFieldRow
-          type={ProductType.Gpu}
-          fields={[gpu.textureFillRate]}
+          fields={[gpu.fields?.l1Cache]}
         />
         <ProductFieldRow
           type={ProductType.Gpu}
-          fields={[gpu.fp32Performance]}
+          fields={[gpu.fields?.l2Cache]}
         />
         <ProductFieldRow
           type={ProductType.Gpu}
-          fields={[gpu.fp64Performance]}
+          fields={[gpu.fields?.pixelRate]}
         />
+        <ProductFieldRow
+          type={ProductType.Gpu}
+          fields={[gpu.fields?.textureRate]}
+        />
+        <ProductFieldRow type={ProductType.Gpu} fields={[gpu.fields?.fp32]} />
+        <ProductFieldRow type={ProductType.Gpu} fields={[gpu.fields?.fp64]} />
       </TBody>
     </Table>
   );

@@ -42,11 +42,7 @@ export const SidenavRelatedComparisons: FunctionComponent<
 
       <div className="flex flex-col gap-4">
         {comparisons.map((comparison, i) => (
-          <ComparisonListing
-            key={i}
-            productType={productType}
-            comparison={comparison}
-          />
+          <ComparisonListing key={i} comparison={comparison} />
         ))}
       </div>
     </SidenavSection>
@@ -54,23 +50,20 @@ export const SidenavRelatedComparisons: FunctionComponent<
 };
 
 interface ComparisonListingProps {
-  productType: ProductType;
   comparison: ProductComparison;
 }
 
 const ComparisonListing: FunctionComponent<ComparisonListingProps> = (
   props,
 ) => {
-  const { productType, comparison } = props;
+  const { comparison } = props;
 
   return (
     <a
-      href={getCompareProductsPath(productType, comparison)}
+      href={getCompareProductsPath({ comparison })}
       className="flex items-center gap-3 px-3 py-3 border-px rounded"
     >
-      <div className="flex-1">
-        {formatProductComparisonName(productType, comparison)}
-      </div>
+      <div className="flex-1">{formatProductComparisonName(comparison)}</div>
     </a>
   );
 };

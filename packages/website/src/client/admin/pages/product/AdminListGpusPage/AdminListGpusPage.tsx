@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { getAdminImportGpusPath, getAdminNewGpuPath } from '@pcpartdb/shared';
+import { getAdminNewGpuPath } from '@pcpartdb/shared';
 import { useRouter } from 'next/router';
 import { SuccessAlert } from 'packages/website/src/client/shared/components/Alert/SuccessAlert';
 import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
@@ -37,9 +37,6 @@ export const AdminListGpusPage = () => {
           <h1 className="font-semibold">{pageTitle}</h1>
 
           <div className="flex gap-4">
-            <GenericButton href={getAdminImportGpusPath()}>
-              Import
-            </GenericButton>
             <GenericButton href={getAdminNewGpuPath()}>Add</GenericButton>
           </div>
         </div>

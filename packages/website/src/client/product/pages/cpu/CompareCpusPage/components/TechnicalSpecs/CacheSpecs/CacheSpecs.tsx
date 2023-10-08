@@ -1,4 +1,4 @@
-import { hasProductFieldValue } from '@pcpartdb/shared';
+import { hasProductFieldFormattedValue } from '@pcpartdb/shared';
 import React, { FunctionComponent, useContext } from 'react';
 import { ComparePageContext } from '../../../context/ComparePageContext';
 import { CacheIntro } from './CacheIntro';
@@ -14,16 +14,16 @@ export const CacheSpecs: FunctionComponent<CacheSpecsProps> = (props) => {
   const [cpu1, cpu2] = comparison;
 
   if (
-    !hasProductFieldValue(cpu1.l1Cache) &&
-    !hasProductFieldValue(cpu2.l1Cache) &&
-    !hasProductFieldValue(cpu1.l2Cache) &&
-    !hasProductFieldValue(cpu2.l2Cache) &&
-    !hasProductFieldValue(cpu1.l3Cache) &&
-    !hasProductFieldValue(cpu2.l3Cache) &&
-    !hasProductFieldValue(cpu1.efficientCoreL1Cache) &&
-    !hasProductFieldValue(cpu2.efficientCoreL1Cache) &&
-    !hasProductFieldValue(cpu1.efficientCoreL2Cache) &&
-    !hasProductFieldValue(cpu2.efficientCoreL2Cache)
+    !hasProductFieldFormattedValue(cpu1.fields?.l1Cache) &&
+    !hasProductFieldFormattedValue(cpu2.fields?.l1Cache) &&
+    !hasProductFieldFormattedValue(cpu1.fields?.l2Cache) &&
+    !hasProductFieldFormattedValue(cpu2.fields?.l2Cache) &&
+    !hasProductFieldFormattedValue(cpu1.fields?.l3Cache) &&
+    !hasProductFieldFormattedValue(cpu2.fields?.l3Cache) &&
+    !hasProductFieldFormattedValue(cpu1.fields?.eCoreL1Cache) &&
+    !hasProductFieldFormattedValue(cpu2.fields?.eCoreL1Cache) &&
+    !hasProductFieldFormattedValue(cpu1.fields?.eCoreL2Cache) &&
+    !hasProductFieldFormattedValue(cpu2.fields?.eCoreL2Cache)
   ) {
     return <></>;
   }

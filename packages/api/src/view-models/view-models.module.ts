@@ -3,8 +3,6 @@ import { AuthModule } from '../auth/auth.module';
 import { AutomationModule } from '../automation/automation.module';
 import { DatabaseModule } from '../database';
 import { ImageModule } from '../image/image.module';
-import { CpuModule } from '../product/cpu/cpu.module';
-import { GpuModule } from '../product/gpu/gpu.module';
 import { ProductModule } from '../product/product.module';
 import { UserModule } from '../user/user.module';
 import { AdminAutomationViewModelService } from './admin/automation/automation.view-model';
@@ -29,8 +27,6 @@ import { ViewModelsController } from './view-models.controller';
     DatabaseModule,
     AuthModule,
     AutomationModule,
-    CpuModule,
-    GpuModule,
     ProductModule,
     ImageModule,
     UserModule,

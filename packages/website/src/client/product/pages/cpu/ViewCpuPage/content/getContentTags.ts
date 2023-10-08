@@ -1,7 +1,8 @@
 import {
-  Cpu,
-  CpuMarketSegmentValue,
-  hasProductFieldValue,
+  CpuProduct,
+  hasProductFieldRawValue,
+  MarketSegment,
+  productFieldRawValue,
   ViewCpuContentData,
 } from '@pcpartdb/shared';
 
@@ -12,15 +13,18 @@ export enum ViewCpuContentTag {
   HasUnlockedMultiplier = 'HAS_UNLOCKED_MULTIPLIER',
 }
 
-export function getContentTags(cpu: Cpu, _contentData: ViewCpuContentData) {
+export function getContentTags(
+  cpu: CpuProduct,
+  _additionalData: ViewCpuContentData,
+) {
   return {
-    [ViewCpuContentTag.BestPerformance]: cpu.ranks?.performanceRank === 1,
-    [ViewCpuContentTag.HasBundledCooler]: hasProductFieldValue(
-      cpu.bundledCooler,
+    [ViewCpuContentTag.BestPerformance]: cpu.ranks?.performanceRating === 1,
+    [ViewCpuContentTag.HasBundledCooler]: hasProductFieldRawValue(
+      cpu.fields?.bundledCooler,
     ),
     [ViewCpuContentTag.IsDesktop]:
-      cpu.marketSegment?.value === CpuMarketSegmentValue.Desktop,
+      productFieldRawValue(cpu.fields?.marketSegment) === MarketSegment.Desktop,
     [ViewCpuContentTag.HasUnlockedMultiplier]:
-      cpu.isMultiplierUnlocked?.value ?? false,
+      productFieldRawValue(cpu.fields?.multiplierUnlocked) || false,
   };
 }

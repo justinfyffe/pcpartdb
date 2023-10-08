@@ -1,14 +1,13 @@
-import { getDisplayUnitValue, getUnitFormat } from '../common';
+import { getDisplayUnitValue, getUnitFormat, MeasurementUnit } from '../common';
 import {
   convertToCpuMemoryChannelText,
-  CpuField,
-  CpuMarketSegmentValue,
-  CpuProductionStatusValue,
-  Gpu,
-  GpuField,
-  GpuMarketSegmentValue,
-  GpuProductionStatusValue,
-  ProductField,
+  CpuFieldKey,
+  GpuFieldKey,
+  GpuProduct,
+  MarketSegment,
+  productFieldFormattedValue,
+  ProductFieldKey,
+  ProductionStatus,
   ProductType,
 } from '../product';
 import { BooleanFormatter, formatBooleanValue } from './formatBooleanValue';
@@ -18,37 +17,41 @@ import { formatPrice } from './formatPrice';
 export interface FormatProductFieldOptions {
   minDecimals?: number;
   maxDecimals?: number;
+
   booleanFormatter?: BooleanFormatter;
   dateFormat?: DateFormat;
+
   showUnits?: boolean;
+  displayUnit?: MeasurementUnit;
+
+  currency?: string;
 }
 
-export function formatProductField(
+export function formatProductField<T = unknown>(
   productType: ProductType,
-  productField: ProductField,
+  fieldKey: ProductFieldKey,
+  rawValue: T,
   options?: FormatProductFieldOptions,
 ) {
-  if (productField == null) {
-    return null;
-  }
-
-  const { value, meta } = productField;
-  if (value == null) {
-    return null;
-  }
-
   let formattedValue: string = null;
 
-  // Try handling specialized fields first.
   switch (productType) {
     case ProductType.Cpu:
-      formattedValue = formatSpecialCpuField(productField as CpuField, options);
+      formattedValue = formatSpecialCpuField(
+        fieldKey as CpuFieldKey,
+        rawValue,
+        options,
+      );
       break;
     case ProductType.Gpu:
-      formattedValue = formatSpecialGpuField(productField as GpuField);
+      formattedValue = formatSpecialGpuField(
+        fieldKey as GpuFieldKey,
+        rawValue,
+        options,
+      );
       break;
     default:
-      throw new Error('Unsupported product type for formatting field.');
+      throw new Error('Unsupported product type for formatting field value.');
   }
 
   if (formattedValue != null) {
@@ -59,20 +62,23 @@ export function formatProductField(
   // Compute string to return
 
   let returnValue: string = null;
-  const unit = meta?.unit ?? null;
-  if (typeof value === 'boolean') {
-    returnValue = formatBooleanValue(value, {
+  const unit = options?.displayUnit ?? null;
+  if (typeof rawValue === 'boolean') {
+    returnValue = formatBooleanValue(rawValue, {
       formatter: options?.booleanFormatter,
     });
-  } else if (typeof value === 'number') {
-    returnValue = getDisplayUnitValue(value, unit).toLocaleString(undefined, {
-      minimumFractionDigits: options?.minDecimals ?? 0,
-      maximumFractionDigits: options?.maxDecimals ?? 2,
-    });
-  } else if (typeof value === 'string') {
-    returnValue = value;
-  } else if (Array.isArray(value)) {
-    returnValue = value.join(', ');
+  } else if (typeof rawValue === 'number') {
+    returnValue = getDisplayUnitValue(rawValue, unit).toLocaleString(
+      undefined,
+      {
+        minimumFractionDigits: options?.minDecimals ?? 0,
+        maximumFractionDigits: options?.maxDecimals ?? 2,
+      },
+    );
+  } else if (typeof rawValue === 'string') {
+    returnValue = rawValue;
+  } else if (Array.isArray(rawValue)) {
+    returnValue = rawValue.join(', ');
   } else {
     return null;
   }
@@ -92,194 +98,124 @@ export function formatProductField(
 
 // CPU
 
-export function formatCpuField(
-  field: CpuField,
+export function formatCpuField<T = unknown>(
+  fieldKey: CpuFieldKey,
+  rawValue: T,
   options?: FormatProductFieldOptions,
 ) {
-  return formatProductField(ProductType.Cpu, field, options);
+  return formatProductField(ProductType.Cpu, fieldKey, rawValue, options);
 }
 
-export function formatSpecialCpuField(
-  field: CpuField,
+export function formatSpecialCpuField<T = unknown>(
+  fieldKey: CpuFieldKey,
+  rawValue: T,
   options?: FormatProductFieldOptions,
 ) {
-  const { value, meta } = field;
-  const fieldKey = meta?.fieldKey;
-  const unit = meta?.unit ?? null;
+  const showUnits = options?.showUnits ?? true;
+  const unit = options?.displayUnit ?? null;
+  const currency = options?.currency ?? null;
 
-  if (fieldKey === 'company' && typeof value === 'string') {
-    return formatCpuCompany(value);
-  }
-
-  if (fieldKey === 'launchPrice' && typeof value === 'number') {
-    return formatPrice(value, { ...options, currency: field.meta?.currency });
+  if (fieldKey === 'msrp' && typeof rawValue === 'number') {
+    return formatPrice(rawValue, { ...options, currency });
   }
 
   if (fieldKey === 'marketSegment') {
-    return formatCpuMarketSegment(value as CpuMarketSegmentValue);
+    return formatMarketSegment(rawValue as MarketSegment);
   }
 
   if (fieldKey === 'productionStatus') {
-    return formatCpuProductionStatus(value as CpuProductionStatusValue);
+    return formatProductionStatus(rawValue as ProductionStatus);
   }
 
-  if (fieldKey === 'memoryChannels' && typeof value === 'number') {
-    return convertToCpuMemoryChannelText(value);
-  }
-
-  if (fieldKey === 'memorySupport' && Array.isArray(value)) {
-    return [...value].sort((v1, v2) => v2.localeCompare(v1)).join(', ');
+  if (fieldKey === 'memoryChannels' && typeof rawValue === 'number') {
+    return convertToCpuMemoryChannelText(rawValue);
   }
 
   if (
     (fieldKey === 'clock' ||
       fieldKey === 'turboClock' ||
-      fieldKey === 'performanceCoreClock' ||
-      fieldKey === 'performanceCoreTurboClock' ||
-      fieldKey === 'efficientCoreClock' ||
-      fieldKey === 'efficientCoreTurboClock') &&
-    typeof value === 'number'
+      fieldKey === 'pCoreClock' ||
+      fieldKey === 'pCoreTurboClock' ||
+      fieldKey === 'eCoreClock' ||
+      fieldKey === 'eCoreTurboClock') &&
+    typeof rawValue === 'number'
   ) {
-    let formattedValue = getDisplayUnitValue(value, unit).toFixed(1);
-    if ((options?.showUnits ?? true) && unit != null) {
+    let formattedValue = getDisplayUnitValue(rawValue, unit).toFixed(1);
+    if (showUnits && unit != null) {
       formattedValue = `${formattedValue} ${getUnitFormat(unit)}`;
     }
     return formattedValue;
   }
 
-  if (fieldKey === 'multiplier' && typeof value === 'number') {
-    return `${value.toFixed(1)}x`;
+  if (fieldKey === 'multiplier' && typeof rawValue === 'number') {
+    return `${rawValue.toFixed(1)}${getUnitFormat(unit)}`;
   }
 
-  if (fieldKey === 'releaseDate' && typeof value === 'string') {
-    const format = options?.dateFormat ?? meta?.dateFormat;
-    return formatDate(value, { format });
+  if (fieldKey === 'releaseDate' && typeof rawValue === 'string') {
+    const format = options?.dateFormat;
+    return formatDate(rawValue, { format });
   }
 
-  if (fieldKey === 'valueScore' && typeof value === 'number') {
-    return value.toFixed(2);
+  if (fieldKey === 'performancePerMsrp' && typeof rawValue === 'number') {
+    return rawValue.toFixed(2);
   }
 
   // Not a special case.
   return null;
-}
-
-export function formatCpuCompany(company: string) {
-  if (company == null) {
-    return null;
-  }
-
-  switch (company.toLowerCase()) {
-    case 'amd':
-      return 'AMD';
-    case 'intel':
-      return 'Intel';
-    default:
-      return company;
-  }
-}
-
-export function formatCpuMarketSegment(value: CpuMarketSegmentValue) {
-  switch (value) {
-    case CpuMarketSegmentValue.Desktop:
-      return 'Desktop';
-    case CpuMarketSegmentValue.Mobile:
-      return 'Mobile';
-    case CpuMarketSegmentValue.Workstation:
-      return 'Workstation';
-    case CpuMarketSegmentValue.Server:
-      return 'Server';
-    case CpuMarketSegmentValue.Embedded:
-      return 'Embedded';
-    default:
-      throw new Error(`Invalid market segment value: ${value}`);
-  }
-}
-
-export function formatCpuProductionStatus(value: CpuProductionStatusValue) {
-  switch (value) {
-    case CpuProductionStatusValue.Unreleased:
-      return 'Unreleased';
-    case CpuProductionStatusValue.Active:
-      return 'Active';
-    case CpuProductionStatusValue.EndOfLife:
-      return 'End-of-life';
-    default:
-      throw new Error(`Invalid production status value: ${value}`);
-  }
 }
 
 // GPU
 
-export function formatGpuField(
-  field: GpuField,
+export function formatGpuField<T = unknown>(
+  fieldKey: GpuFieldKey,
+  rawValue: T,
   options?: FormatProductFieldOptions,
 ) {
-  return formatProductField(ProductType.Gpu, field, options);
+  return formatProductField(ProductType.Gpu, fieldKey, rawValue, options);
 }
 
-export function formatSpecialGpuField(
-  field: GpuField,
+export function formatSpecialGpuField<T = unknown>(
+  fieldKey: GpuFieldKey,
+  rawValue: T,
   options?: FormatProductFieldOptions,
 ) {
-  const { value, meta } = field;
-  const fieldKey = meta?.fieldKey;
+  const showUnits = options?.showUnits ?? true;
+  const currency = options?.currency ?? null;
 
-  if (fieldKey === 'company' && typeof value === 'string') {
-    return formatGpuCompany(value);
-  } else if (fieldKey === 'launchPrice' && typeof value === 'number') {
-    return formatPrice(value, { ...options, currency: field.meta?.currency });
+  if (fieldKey === 'msrp' && typeof rawValue === 'number') {
+    return formatPrice(rawValue, { ...options, currency });
   }
-  if (fieldKey === 'slotWidth' && typeof value === 'number') {
-    if (options?.showUnits === false) {
-      return `${value}`;
+  if (fieldKey === 'slotWidth' && typeof rawValue === 'number') {
+    if (showUnits === false) {
+      return `${rawValue}`;
     }
-    return value === 1 ? `${value} slot` : `${value} slots`;
+    return rawValue === 1 ? `${rawValue} slot` : `${rawValue} slots`;
   }
   if (fieldKey === 'marketSegment') {
-    return formatGpuMarketSegment(value as GpuMarketSegmentValue);
+    return formatMarketSegment(rawValue as MarketSegment);
   }
   if (fieldKey === 'productionStatus') {
-    return formatGpuProductionStatus(value as GpuProductionStatusValue);
+    return formatProductionStatus(rawValue as ProductionStatus);
   }
-  if (fieldKey === 'releaseDate' && typeof value === 'string') {
-    const format = options?.dateFormat ?? meta?.dateFormat;
-    return formatDate(value, { format });
+  if (fieldKey === 'releaseDate' && typeof rawValue === 'string') {
+    const format = options?.dateFormat;
+    return formatDate(rawValue, { format });
   }
-  if (fieldKey === 'openClVersion' && typeof value === 'number') {
-    return value.toFixed(1);
+  if (fieldKey === 'openClVersion' && typeof rawValue === 'number') {
+    return rawValue.toFixed(1);
   }
-  if (fieldKey === 'openGlVersion' && typeof value === 'number') {
-    return value.toFixed(1);
+  if (fieldKey === 'openGlVersion' && typeof rawValue === 'number') {
+    return rawValue.toFixed(1);
   }
-  if (fieldKey === 'shaderModelVersion' && typeof value === 'number') {
-    return value.toFixed(1);
+  if (fieldKey === 'shaderModelVersion' && typeof rawValue === 'number') {
+    return rawValue.toFixed(1);
   }
-  if (fieldKey === 'valueScore' && typeof value === 'number') {
-    return value.toFixed(2);
+  if (fieldKey === 'performancePerMsrp' && typeof rawValue === 'number') {
+    return rawValue.toFixed(2);
   }
 
   // Not a special case.
   return null;
-}
-
-export function formatGpuCompany(company: string) {
-  if (company == null) {
-    return null;
-  }
-
-  switch (company.toLowerCase()) {
-    case 'amd':
-      return 'AMD';
-    case 'ati':
-      return 'ATI';
-    case 'intel':
-      return 'Intel';
-    case 'nvidia':
-      return 'NVIDIA';
-    default:
-      return company;
-  }
 }
 
 interface FormatGpuDimensionsOptions {
@@ -287,13 +223,13 @@ interface FormatGpuDimensionsOptions {
 }
 
 export function formatGpuDimensions(
-  gpu: Gpu,
+  gpu: GpuProduct,
   options?: FormatGpuDimensionsOptions,
 ) {
-  const length = formatGpuField(gpu.length);
-  const height = formatGpuField(gpu.height);
-  const width = formatGpuField(gpu.width);
-  const slots = formatGpuField(gpu.slotWidth);
+  const length = productFieldFormattedValue(gpu.fields?.length);
+  const height = productFieldFormattedValue(gpu.fields?.height);
+  const width = productFieldFormattedValue(gpu.fields?.width);
+  const slots = productFieldFormattedValue(gpu.fields?.slotWidth);
 
   const dimensions: string[] = [];
   dimensions.push(length != null ? `${length}` : null);
@@ -311,29 +247,80 @@ export function formatGpuDimensions(
   return dimensions.filter((value) => value != null).join(' x ') || null;
 }
 
-export function formatGpuMarketSegment(value: GpuMarketSegmentValue) {
-  switch (value) {
-    case GpuMarketSegmentValue.Desktop:
-      return 'Desktop';
-    case GpuMarketSegmentValue.Mobile:
-      return 'Mobile';
-    case GpuMarketSegmentValue.Workstation:
-      return 'Workstation';
-    case GpuMarketSegmentValue.Integrated:
-      return 'Integrated';
+export function formatCompanyName(company: string) {
+  if (company == null || company.length === 0) {
+    return null;
+  }
+
+  switch (company.toLowerCase()) {
+    case 'acer':
+      return 'Acer';
+    case 'amd':
+      return 'AMD';
+    case 'asrock':
+      return 'ASRock';
+    case 'asus':
+      return 'ASUS';
+    case 'ati':
+      return 'ATI';
+    case 'evga':
+      return 'EVGA';
+    case 'gainward':
+      return 'Gainward';
+    case 'galax':
+      return 'GALAX';
+    case 'gigabyte':
+      return 'GIGABYTE';
+    case 'inno3d':
+      return 'INNO3D';
+    case 'intel':
+      return 'Intel';
+    case 'msi':
+      return 'MSI';
+    case 'nvidia':
+      return 'NVIDIA';
+    case 'pny':
+      return 'PNY';
+    case 'powercolor':
+      return 'PowerColor';
+    case 'sapphire':
+      return 'SAPPHIRE';
+    case 'xfx':
+      return 'XFX';
+    case 'zotac':
+      return 'ZOTAC';
     default:
-      throw new Error(`Invalid market segment value: ${value}`);
+      return company;
   }
 }
 
-export function formatGpuProductionStatus(value: GpuProductionStatusValue) {
+export function formatMarketSegment(segment: MarketSegment) {
+  switch (segment) {
+    case MarketSegment.Desktop:
+      return 'Desktop';
+    case MarketSegment.Embedded:
+      return 'Embedded';
+    case MarketSegment.Integrated:
+      return 'Integrated';
+    case MarketSegment.Mobile:
+      return 'Mobile';
+    case MarketSegment.Server:
+      return 'Server';
+    case MarketSegment.Workstation:
+      return 'Workstation';
+    default:
+      throw new Error(`Invalid market segment value: ${segment}`);
+  }
+}
+
+export function formatProductionStatus(value: ProductionStatus) {
   switch (value) {
-    case GpuProductionStatusValue.Unreleased:
-      return 'Unreleased';
-    case GpuProductionStatusValue.Active:
+    case ProductionStatus.Active:
       return 'Active';
-    case GpuProductionStatusValue.EndOfLife:
+    case ProductionStatus.EndOfLife:
       return 'End-of-life';
+    case ProductionStatus.Unreleased:
+      return 'Unreleased';
     default:
       throw new Error(`Invalid production status value: ${value}`);
   }

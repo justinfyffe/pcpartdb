@@ -1,7 +1,10 @@
 import {
-  hasProductFieldValue,
+  formatProductField,
+  hasProductFieldRawValue,
   ProductField,
   ProductFieldKey,
+  productFieldRawValue,
+  ProductType,
 } from '@pcpartdb/shared';
 import {
   Select,
@@ -9,25 +12,29 @@ import {
 } from 'packages/website/src/client/shared/components/Select/Select';
 import { SelectOption } from 'packages/website/src/client/shared/components/Select/SelectOption';
 import React, { forwardRef, useCallback, useMemo } from 'react';
+import { ProductFieldInput } from '../ProductFieldInput/ProductFieldInput';
 
 interface ProductBooleanInputProps {
+  productType: ProductType;
   fieldKey: ProductFieldKey;
 
+  label?: string;
   value?: ProductField<boolean>;
   onChange?: (value: ProductField<boolean>) => void;
 
-  placeholder?: string;
   disabled?: boolean;
+
+  formatter?: (value: boolean) => string;
 }
 
 export const ProductBooleanInput = forwardRef<
   HTMLSelectElement,
   ProductBooleanInputProps
 >((props, ref) => {
-  const { fieldKey, value, placeholder, disabled, onChange } = props;
+  const { productType, fieldKey, value, disabled, onChange, formatter } = props;
 
   const rawValue = useMemo(() => {
-    if (hasProductFieldValue(value)) {
+    if (hasProductFieldRawValue(value)) {
       return value.value ? 'true' : 'false';
     } else {
       return null;
@@ -35,32 +42,51 @@ export const ProductBooleanInput = forwardRef<
   }, [value]);
   const meta = useMemo(() => value?.meta || {}, [value?.meta]);
 
-  const handleChange = useCallback(
-    (newValue: SelectValue) => {
-      onChange?.({
-        value: newValue === 'true',
-        meta: { ...meta, fieldKey },
-      });
+  const suggestedFormats = useMemo(() => {
+    if (!hasProductFieldRawValue(value)) {
+      return [];
+    }
+
+    const set = new Set<string>();
+    set.add(formatter?.(productFieldRawValue(value)));
+    set.add(
+      formatProductField(productType, fieldKey, productFieldRawValue(value)),
+    );
+
+    return [...set.values()].filter((value) => value != null);
+  }, [fieldKey, formatter, productType, value]);
+
+  const handleValueChange = useCallback(
+    (value: SelectValue) => {
+      onChange?.({ value: value === 'true', meta: { ...meta, fieldKey } });
     },
-    [fieldKey, meta, onChange],
+    [onChange, meta, fieldKey],
   );
 
   return (
-    <Select
-      placeholder={placeholder}
+    <ProductFieldInput
+      fieldKey={fieldKey}
       disabled={disabled}
-      value={rawValue}
-      onChange={handleChange}
-      clearable
-      ref={ref}
+      value={value}
+      onChange={(field) => onChange?.(field as ProductField<boolean>)}
+      suggestedFormats={suggestedFormats}
     >
-      <SelectOption label="True" value="true">
-        True
-      </SelectOption>
-      <SelectOption label="False" value="false">
-        False
-      </SelectOption>
-    </Select>
+      <Select
+        placeholder="Raw Value"
+        disabled={disabled}
+        value={rawValue}
+        onChange={handleValueChange}
+        clearable
+        ref={ref}
+      >
+        <SelectOption label="True" value="true">
+          True
+        </SelectOption>
+        <SelectOption label="False" value="false">
+          False
+        </SelectOption>
+      </Select>
+    </ProductFieldInput>
   );
 });
 ProductBooleanInput.displayName = 'ProductBooleanInput';

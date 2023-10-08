@@ -1,4 +1,4 @@
-import { hasProductFieldValue } from '@pcpartdb/shared';
+import { hasProductFieldFormattedValue } from '@pcpartdb/shared';
 import React, { FunctionComponent, useContext } from 'react';
 import { ViewPageContext } from '../../context/ViewPageContext';
 import { GeneralInfoIntro } from './GeneralInfoIntro';
@@ -8,12 +8,12 @@ export const GeneralInfo: FunctionComponent = () => {
   const { cpu } = useContext(ViewPageContext);
 
   if (
-    !hasProductFieldValue(cpu.performanceScore) &&
-    !hasProductFieldValue(cpu.valueScore) &&
-    !hasProductFieldValue(cpu.company) &&
-    !hasProductFieldValue(cpu.marketSegment) &&
-    !hasProductFieldValue(cpu.launchPrice) &&
-    !hasProductFieldValue(cpu.productionStatus)
+    !hasProductFieldFormattedValue(cpu.fields?.performanceRating) &&
+    !hasProductFieldFormattedValue(cpu.fields?.performancePerMsrp) &&
+    !cpu.company &&
+    !hasProductFieldFormattedValue(cpu.fields?.marketSegment) &&
+    !hasProductFieldFormattedValue(cpu.fields?.msrp) &&
+    !hasProductFieldFormattedValue(cpu.fields?.productionStatus)
   ) {
     return <></>;
   }

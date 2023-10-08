@@ -1,48 +1,47 @@
 import {
-  Gpu,
-  GpuComparison,
+  GpuProduct,
+  GpuProductComparison,
   ListGpusResponse,
-  RelatedGpuComparisons,
-  RelatedGpus,
+  RelatedProductComparisons,
+  RelatedProducts,
 } from '../product';
 
-export interface AdminEditGpuViewModel {
-  gpu: Gpu;
-}
+export interface CompareGpusAdditionalData {
+  relativePerformanceGpus: GpuProduct[];
+  relativeValueGpus: GpuProduct[];
 
-export interface CompareGpusContentData {
-  relativePerformanceGpus: Gpu[];
-  relativeValueGpus: Gpu[];
-
-  retailModels1?: Gpu[];
-  retailModels2?: Gpu[];
+  retailModels1?: GpuProduct[];
+  retailModels2?: GpuProduct[];
 }
 
 export interface CompareGpusViewModel {
-  comparison: GpuComparison;
-  contentData: CompareGpusContentData;
-  relatedGpus: RelatedGpus;
-  relatedComparisons: RelatedGpuComparisons;
+  comparison: GpuProductComparison;
+
+  relatedGpus: RelatedProducts;
+  relatedComparisons: RelatedProductComparisons;
+
+  additionalData: CompareGpusAdditionalData;
 }
 
 export interface ListGpusViewModel extends ListGpusResponse {}
 
-export interface ViewGpuContentData {
+export interface ViewGpuAdditionalData {
   totalPerformanceGpus: number;
 
-  relativePerformanceGpus?: Gpu[];
-  relativeValueGpus?: Gpu[];
+  relativePerformanceGpus?: GpuProduct[];
+  relativeValueGpus?: GpuProduct[];
 
-  bestPerformanceGpuForSegment?: Gpu;
-  bestValueGpuForSegment?: Gpu;
+  bestPerformanceGpuForSegment?: GpuProduct;
+  bestValueGpuForSegment?: GpuProduct;
 
-  retailModels?: Gpu[];
+  retailModels?: GpuProduct[];
 }
 
 export interface ViewGpuViewModel {
-  gpu: Gpu;
+  gpu: GpuProduct;
 
-  contentData: ViewGpuContentData;
-  relatedGpus: RelatedGpus;
-  relatedComparisons: RelatedGpuComparisons;
+  relatedGpus: RelatedProducts;
+  relatedGpuComparisons: RelatedProductComparisons;
+
+  additionalData: ViewGpuAdditionalData;
 }

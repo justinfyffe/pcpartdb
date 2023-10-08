@@ -2,20 +2,21 @@ import {
   generateListGpusQueryFromPath,
   getHomePath,
   getListGpusPath,
+  GpuProduct,
   ListGpusQuery,
   ListGpusViewModel,
   ProductType,
 } from '@pcpartdb/shared';
 import { useRouter } from 'next/router';
+import { useProductCache } from 'packages/website/src/client/shared/cache/ProductCache';
 import { Breadcrumb } from 'packages/website/src/client/shared/components/Breadcrumbs/Breadcrumb';
 import { Breadcrumbs } from 'packages/website/src/client/shared/components/Breadcrumbs/Breadcrumbs';
 import { Seo } from 'packages/website/src/client/shared/components/Seo/Seo';
 import { WebsiteLayout } from 'packages/website/src/client/shared/layouts/website/WebsiteLayout';
 import { classNames } from 'packages/website/src/client/shared/ui/classNames';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { useProductCache } from '../../../../shared/cache/ProductCache';
 import { CompareProductsForm } from '../../../components/CompareProductsForm/CompareProductsForm';
-import { gpuService } from '../../../services/gpuService';
+import { productService } from '../../../services/productService';
 import {
   ListFilters,
   ListMenu,
@@ -30,19 +31,19 @@ import { useSeoDescription } from './hooks/useSeoDescription';
 import { useSeoTitle } from './hooks/useSeoTitle';
 
 export const ListGpusPage = (props: ListGpusViewModel) => {
-  useProductCache(ProductType.Gpu, props.gpus);
+  useProductCache(ProductType.Gpu, props.results);
   const router = useRouter();
 
-  const [gpus, setGpus] = useState(props.gpus);
-  const [totalGpus, setTotalGpus] = useState(props.totalGpus);
+  const [gpus, setGpus] = useState(props.results);
+  const [total, setTotal] = useState(props.total);
   const [query, setQuery] = useState(props.query);
-  const [contentData, setContentData] = useState(props.contentData);
+  const [additionalData, setAdditionalData] = useState(props.additionalData);
 
   const fetchGpus = useCallback(async (query: ListGpusQuery) => {
-    const response = await gpuService.list(query);
-    setGpus(response.gpus);
-    setTotalGpus(response.totalGpus);
-    setContentData(response.contentData);
+    const response = await productService.list(ProductType.Gpu, query);
+    setGpus(response.results as GpuProduct[]);
+    setTotal(response.total);
+    setAdditionalData(response.additionalData);
     setQuery(query);
   }, []);
 
@@ -66,8 +67,8 @@ export const ListGpusPage = (props: ListGpusViewModel) => {
     query,
     updateQuery,
     gpus,
-    totalGpus,
-    contentData,
+    totalGpus: total,
+    additionalData: additionalData,
   });
 
   const seoTitle = useSeoTitle(context);

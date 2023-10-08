@@ -1,8 +1,8 @@
 import { ArrowPathIcon } from '@heroicons/react/24/outline';
 import {
   AutomationActionType,
-  Cpu,
-  formatCpuName,
+  CpuProduct,
+  formatProductName,
   getAdminEditCpuPath,
   UpdateCpuActionData,
 } from '@pcpartdb/shared';
@@ -20,7 +20,7 @@ import React, { FunctionComponent, useCallback, useMemo } from 'react';
 import { MissingCpuDataChip } from '../MissingCpuDataChip';
 
 interface CpuTableProps {
-  cpus: Cpu[];
+  cpus: CpuProduct[];
 }
 
 export const CpuTable: FunctionComponent<CpuTableProps> = (props) => {
@@ -46,19 +46,19 @@ export const CpuTable: FunctionComponent<CpuTableProps> = (props) => {
 };
 
 interface CpuTableRowProps {
-  cpu: Cpu;
+  cpu: CpuProduct;
 }
 
 const CpuTableRow: FunctionComponent<CpuTableRowProps> = (props) => {
   const { cpu } = props;
 
   const href = useMemo(() => getAdminEditCpuPath(cpu), [cpu]);
-  const name = useMemo(() => formatCpuName(cpu), [cpu]);
+  const name = useMemo(() => formatProductName(cpu), [cpu]);
 
   const enqueueCpuUpdate = useCallback(async () => {
     await automationService.createAction<UpdateCpuActionData>({
       type: AutomationActionType.UpdateCpu,
-      description: formatCpuName(cpu),
+      description: formatProductName(cpu),
       data: { cpuId: cpu.id },
     });
   }, [cpu]);

@@ -1,13 +1,14 @@
 import {
-  Gpu,
-  productFieldValue,
+  GpuProduct,
+  productFieldFormattedValue,
+  productFieldRawValue,
   ScrapeProductResponse,
 } from '@pcpartdb/shared';
 import { CommonScraperOptions } from '../types';
 import { createGpuField } from './utils';
 
 export interface ScrapeFromChipsetGpuOptions extends CommonScraperOptions {
-  chipset: Gpu;
+  chipset: GpuProduct;
 }
 
 export async function scrapeFromChipsetGpu(
@@ -15,13 +16,16 @@ export async function scrapeFromChipsetGpu(
 ) {
   const { chipset, ctx } = options;
 
-  const product: Partial<Gpu> = {
-    chipsetId: chipset.id,
-    marketSegment: createGpuField({
-      field: 'marketSegment',
-      value: productFieldValue(chipset?.marketSegment),
-      ctx,
-    }),
+  const product: Partial<GpuProduct> = {
+    parentId: chipset.id,
+    fields: {
+      marketSegment: createGpuField({
+        field: 'marketSegment',
+        raw: productFieldRawValue(chipset?.fields?.marketSegment),
+        formatted: productFieldFormattedValue(chipset.fields?.marketSegment),
+        ctx,
+      }),
+    },
   };
 
   return { product } as ScrapeProductResponse;

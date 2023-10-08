@@ -1,4 +1,4 @@
-import { hasProductFieldValue } from '@pcpartdb/shared';
+import { hasProductFieldFormattedValue } from '@pcpartdb/shared';
 import React, { FunctionComponent, useContext } from 'react';
 import { ViewPageContext } from '../../context/ViewPageContext';
 import { GeneralInfoIntro } from './GeneralInfoIntro';
@@ -8,13 +8,13 @@ export const GeneralInfo: FunctionComponent = () => {
   const { gpu } = useContext(ViewPageContext);
 
   if (
-    !hasProductFieldValue(gpu.performanceScore) &&
-    !hasProductFieldValue(gpu.valueScore) &&
-    !hasProductFieldValue(gpu.company) &&
-    !hasProductFieldValue(gpu.architecture) &&
-    !hasProductFieldValue(gpu.marketSegment) &&
-    !hasProductFieldValue(gpu.launchPrice) &&
-    !hasProductFieldValue(gpu.productionStatus)
+    !hasProductFieldFormattedValue(gpu.fields?.performanceRating) &&
+    !hasProductFieldFormattedValue(gpu.fields?.performancePerMsrp) &&
+    !gpu.company &&
+    !hasProductFieldFormattedValue(gpu.fields?.architecture) &&
+    !hasProductFieldFormattedValue(gpu.fields?.marketSegment) &&
+    !hasProductFieldFormattedValue(gpu.fields?.msrp) &&
+    !hasProductFieldFormattedValue(gpu.fields?.productionStatus)
   ) {
     return <></>;
   }

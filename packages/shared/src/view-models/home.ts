@@ -1,9 +1,14 @@
-import { Cpu, CpuComparison, Gpu, GpuComparison } from '../product';
+import {
+  GpuProduct,
+  GpuProductComparison,
+  Product,
+  ProductComparison,
+} from '../product';
 
 export interface HomeViewModel {
-  nvidiaVsAmdGpus: GpuComparison[];
-  popularGpus: Gpu[];
+  nvidiaVsAmdGpus: GpuProductComparison[];
+  popularGpus: GpuProduct[];
 
-  intelVsAmdCpus: CpuComparison[];
-  popularCpus: Cpu[];
+  intelVsAmdCpus: ProductComparison[];
+  popularCpus: Product[];
 }

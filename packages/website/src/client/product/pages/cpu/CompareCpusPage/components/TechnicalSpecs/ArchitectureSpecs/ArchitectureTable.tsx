@@ -1,4 +1,4 @@
-import { formatCpuName, ProductType } from '@pcpartdb/shared';
+import { formatProductName, ProductType } from '@pcpartdb/shared';
 import { ProductFieldRow } from 'packages/website/src/client/product/components/ProductFieldRow/ProductFieldRow';
 import {
   Table,
@@ -24,8 +24,8 @@ export const ArchitectureTable: FunctionComponent<ArchitectureTableProps> = (
 
   const [name1, name2] = useMemo(() => {
     return [
-      formatCpuName(cpu1, { company: false }),
-      formatCpuName(cpu2, { company: false }),
+      formatProductName(cpu1, { company: false }),
+      formatProductName(cpu2, { company: false }),
     ];
   }, [cpu1, cpu2]);
 
@@ -41,35 +41,35 @@ export const ArchitectureTable: FunctionComponent<ArchitectureTableProps> = (
       <TBody>
         <ProductFieldRow
           type={ProductType.Cpu}
-          fields={[cpu1.architecture, cpu2.architecture]}
+          fields={[cpu1.fields?.architecture, cpu2.fields?.architecture]}
         />
         <ProductFieldRow
           type={ProductType.Cpu}
-          fields={[cpu1.codename, cpu2.codename]}
+          fields={[cpu1.fields?.codename, cpu2.fields?.codename]}
         />
         <ProductFieldRow
           type={ProductType.Cpu}
-          fields={[cpu1.generation, cpu2.generation]}
+          fields={[cpu1.fields?.generation, cpu2.fields?.generation]}
         />
         <ProductFieldRow
           type={ProductType.Cpu}
-          fields={[cpu1.memorySupport, cpu2.memorySupport]}
+          fields={[cpu1.fields?.memorySupport, cpu2.fields?.memorySupport]}
         />
         <ProductFieldRow
           type={ProductType.Cpu}
-          fields={[cpu1.memoryChannels, cpu2.memoryChannels]}
+          fields={[cpu1.fields?.memoryChannels, cpu2.fields?.memoryChannels]}
         />
         <ProductFieldRow
           type={ProductType.Cpu}
-          fields={[cpu1.hasEccMemory, cpu2.hasEccMemory]}
+          fields={[cpu1.fields?.eccMemory, cpu2.fields?.eccMemory]}
         />
         <ProductFieldRow
           type={ProductType.Cpu}
-          fields={[cpu1.pciExpress, cpu2.pciExpress]}
+          fields={[cpu1.fields?.pciExpress, cpu2.fields?.pciExpress]}
         />
         <ProductFieldRow
           type={ProductType.Cpu}
-          fields={[cpu1.chipsets, cpu2.chipsets]}
+          fields={[cpu1.fields?.chipsets, cpu2.fields?.chipsets]}
         />
       </TBody>
     </Table>

@@ -1,5 +1,9 @@
-import { formatCpuName, ProductType } from '@pcpartdb/shared';
-import { ProductFieldRow } from 'packages/website/src/client/product/components/ProductFieldRow/ProductFieldRow';
+import {
+  BenchmarKey,
+  formatProductName,
+  getProductBenchmark,
+} from '@pcpartdb/shared';
+import { ProductBenchmarkRow } from 'packages/website/src/client/product/components/ProductBenchmarkRow/ProductBenchmarkRow';
 import {
   Table,
   TBody,
@@ -24,8 +28,8 @@ export const BenchmarksTable: FunctionComponent<BenchmarksTableProps> = (
 
   const [name1, name2] = useMemo(() => {
     return [
-      formatCpuName(cpu1, { company: false }),
-      formatCpuName(cpu2, { company: false }),
+      formatProductName(cpu1, { company: false }),
+      formatProductName(cpu2, { company: false }),
     ];
   }, [cpu1, cpu2]);
 
@@ -39,21 +43,29 @@ export const BenchmarksTable: FunctionComponent<BenchmarksTableProps> = (
         </Tr>
       </THead>
       <TBody>
-        <ProductFieldRow
-          type={ProductType.Cpu}
-          fields={[cpu1.cpuMarkMultiThread, cpu2.cpuMarkMultiThread]}
+        <ProductBenchmarkRow
+          benchmarks={[
+            getProductBenchmark(cpu1, BenchmarKey.CpuMarkMultiThread),
+            getProductBenchmark(cpu2, BenchmarKey.CpuMarkMultiThread),
+          ]}
         />
-        <ProductFieldRow
-          type={ProductType.Cpu}
-          fields={[cpu1.cpuMarkSingleThread, cpu2.cpuMarkSingleThread]}
+        <ProductBenchmarkRow
+          benchmarks={[
+            getProductBenchmark(cpu1, BenchmarKey.CpuMarkSingleThread),
+            getProductBenchmark(cpu2, BenchmarKey.CpuMarkSingleThread),
+          ]}
         />
-        <ProductFieldRow
-          type={ProductType.Cpu}
-          fields={[cpu1.geekbenchMultiCore, cpu2.geekbenchMultiCore]}
+        <ProductBenchmarkRow
+          benchmarks={[
+            getProductBenchmark(cpu1, BenchmarKey.GeekBenchMultiCore),
+            getProductBenchmark(cpu2, BenchmarKey.GeekBenchMultiCore),
+          ]}
         />
-        <ProductFieldRow
-          type={ProductType.Cpu}
-          fields={[cpu1.geekbenchSingleCore, cpu2.geekbenchSingleCore]}
+        <ProductBenchmarkRow
+          benchmarks={[
+            getProductBenchmark(cpu1, BenchmarKey.GeekBenchSingleCore),
+            getProductBenchmark(cpu2, BenchmarKey.GeekBenchSingleCore),
+          ]}
         />
       </TBody>
     </Table>

@@ -1,23 +1,26 @@
-import { CompareCpusContentData, CpuComparison } from '@pcpartdb/shared';
+import {
+  CompareCpusAdditionalData,
+  CpuProductComparison,
+} from '@pcpartdb/shared';
 import { useMemo } from 'react';
 import { getContentParams, getContentTags } from '../content';
 import { ComparePageContextProps } from '../context/ComparePageContext';
 
 export function useComparePageContextProps(input: {
-  comparison: CpuComparison;
-  contentData: CompareCpusContentData;
+  comparison: CpuProductComparison;
+  additionalData: CompareCpusAdditionalData;
 }) {
   return useMemo(() => {
-    const comparison: CpuComparison = [...input.comparison];
-    const contentData = { ...input.contentData };
+    const comparison: CpuProductComparison = [...input.comparison];
+    const additionalData = { ...input.additionalData };
     const contentTags = getContentTags(comparison);
     const contentParams = getContentParams(comparison);
 
     return {
       comparison,
-      contentData,
+      additionalData,
       contentTags,
       contentParams,
     } as ComparePageContextProps;
-  }, [input.comparison, input.contentData]);
+  }, [input.comparison, input.additionalData]);
 }

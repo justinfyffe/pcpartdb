@@ -1,15 +1,17 @@
-import { GpuDataSource, GpuFieldKey, ProductType } from '@pcpartdb/shared';
+import {
+  BenchmarKey,
+  GpuFieldKey,
+  ProductSource,
+  ProductType,
+} from '@pcpartdb/shared';
 import React, { FunctionComponent } from 'react';
 import { ScrapeProductDialog } from '../../product/ScrapeProductDialog/ScrapeProductDialog';
 import { ScrapedProduct } from '../../product/ScrapeProductDialog/types';
 
-const FIELDS_TO_SCRAPE: (GpuFieldKey | 'name')[] = [
-  'name',
-
+const FIELDS_TO_SCRAPE: GpuFieldKey[] = [
   'partNumber',
-  'company',
   'marketSegment',
-  'launchPrice',
+  'msrp',
   'releaseDate',
   'productionStatus',
 
@@ -29,39 +31,41 @@ const FIELDS_TO_SCRAPE: (GpuFieldKey | 'name')[] = [
   'width',
   'height',
   'weight',
-  'thermalDesignPower',
+  'tdp',
   'suggestedPsu',
   'busInterface',
   'powerConnectors',
   'outputs',
 
-  'shaderUnitsCudaCores',
-  'computeUnitsSmCount',
-  'textureMappingUnits',
-  'renderOutputUnits',
-  'rayTracingCores',
-  'coreClockSpeedBase',
-  'coreClockSpeedBoost',
+  'gpuCores',
+  'computeUnits',
+  'tmus',
+  'rops',
+  'rtCores',
+  'gpuCoreBaseClock',
+  'gpuCoreBoostClock',
   'l1Cache',
   'l2Cache',
 
-  'pixelFillRate',
-  'textureFillRate',
-  'fp32Performance',
-  'fp64Performance',
+  'pixelRate',
+  'textureRate',
+  'fp32',
+  'fp64',
 
   'directxVersion',
   'openClVersion',
   'openGlVersion',
   'shaderModelVersion',
+];
 
-  'g3dMark',
-  'g2dMark',
-  'timespyGraphics',
+const BENCHMARKS_TO_SCRAPE: BenchmarKey[] = [
+  BenchmarKey.G3dMark,
+  BenchmarKey.G2dMark,
+  BenchmarKey.TimespyGraphics,
 ];
 
 interface ScrapeGpuDialogProps {
-  sources: Record<string, GpuDataSource>;
+  sources: Partial<ProductSource>[];
   onImport: (data: ScrapedProduct) => void;
 }
 
@@ -73,7 +77,8 @@ export const ScrapeGpuDialog: FunctionComponent<ScrapeGpuDialogProps> = (
   return (
     <ScrapeProductDialog
       productType={ProductType.Gpu}
-      dataToScrape={FIELDS_TO_SCRAPE}
+      fieldsToScrape={FIELDS_TO_SCRAPE}
+      benchmarksToScrape={BENCHMARKS_TO_SCRAPE}
       sources={sources}
       onImport={onImport}
     />

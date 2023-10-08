@@ -1,4 +1,4 @@
-import { hasProductFieldValue } from '@pcpartdb/shared';
+import { hasProductFieldFormattedValue } from '@pcpartdb/shared';
 import React, { FunctionComponent, useContext } from 'react';
 import { ViewPageContext } from '../../../context/ViewPageContext';
 import { CoresIntro } from './CoresIntro';
@@ -13,19 +13,19 @@ export const CoresSpecs: FunctionComponent<CoresSpecsProps> = (props) => {
   const { cpu } = useContext(ViewPageContext);
 
   if (
-    !hasProductFieldValue(cpu.coresCount) &&
-    !hasProductFieldValue(cpu.threadsCount) &&
-    !hasProductFieldValue(cpu.performanceCoresCount) &&
-    !hasProductFieldValue(cpu.efficientCoresCount) &&
-    !hasProductFieldValue(cpu.clock) &&
-    !hasProductFieldValue(cpu.turboClock) &&
-    !hasProductFieldValue(cpu.performanceCoreClock) &&
-    !hasProductFieldValue(cpu.performanceCoreTurboClock) &&
-    !hasProductFieldValue(cpu.efficientCoreClock) &&
-    !hasProductFieldValue(cpu.efficientCoreTurboClock) &&
-    !hasProductFieldValue(cpu.baseClock) &&
-    !hasProductFieldValue(cpu.multiplier) &&
-    !hasProductFieldValue(cpu.isMultiplierUnlocked)
+    !hasProductFieldFormattedValue(cpu.fields?.cores) &&
+    !hasProductFieldFormattedValue(cpu.fields?.threads) &&
+    !hasProductFieldFormattedValue(cpu.fields?.pCores) &&
+    !hasProductFieldFormattedValue(cpu.fields?.eCores) &&
+    !hasProductFieldFormattedValue(cpu.fields?.clock) &&
+    !hasProductFieldFormattedValue(cpu.fields?.turboClock) &&
+    !hasProductFieldFormattedValue(cpu.fields?.pCoreClock) &&
+    !hasProductFieldFormattedValue(cpu.fields?.pCoreTurboClock) &&
+    !hasProductFieldFormattedValue(cpu.fields?.eCoreClock) &&
+    !hasProductFieldFormattedValue(cpu.fields?.eCoreTurboClock) &&
+    !hasProductFieldFormattedValue(cpu.fields?.baseClock) &&
+    !hasProductFieldFormattedValue(cpu.fields?.multiplier) &&
+    !hasProductFieldFormattedValue(cpu.fields?.multiplierUnlocked)
   ) {
     return <></>;
   }

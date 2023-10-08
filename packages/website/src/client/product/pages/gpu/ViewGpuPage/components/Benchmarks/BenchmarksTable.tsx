@@ -1,5 +1,5 @@
-import { ProductType } from '@pcpartdb/shared';
-import { ProductFieldRow } from 'packages/website/src/client/product/components/ProductFieldRow/ProductFieldRow';
+import { BenchmarKey, getProductBenchmark } from '@pcpartdb/shared';
+import { ProductBenchmarkRow } from 'packages/website/src/client/product/components/ProductBenchmarkRow/ProductBenchmarkRow';
 import {
   Table,
   TBody,
@@ -20,11 +20,14 @@ export const BenchmarksTable: FunctionComponent<BenchmarksTableProps> = (
   return (
     <Table border responsive className={className}>
       <TBody>
-        <ProductFieldRow type={ProductType.Gpu} fields={[gpu.g3dMark]} />
-        <ProductFieldRow type={ProductType.Gpu} fields={[gpu.g2dMark]} />
-        <ProductFieldRow
-          type={ProductType.Gpu}
-          fields={[gpu.timespyGraphics]}
+        <ProductBenchmarkRow
+          benchmarks={[getProductBenchmark(gpu, BenchmarKey.G3dMark)]}
+        />
+        <ProductBenchmarkRow
+          benchmarks={[getProductBenchmark(gpu, BenchmarKey.G2dMark)]}
+        />
+        <ProductBenchmarkRow
+          benchmarks={[getProductBenchmark(gpu, BenchmarKey.TimespyGraphics)]}
         />
       </TBody>
     </Table>

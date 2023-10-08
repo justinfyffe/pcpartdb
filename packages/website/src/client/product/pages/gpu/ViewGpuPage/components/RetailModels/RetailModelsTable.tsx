@@ -1,9 +1,9 @@
 import {
   formatGpuDimensions,
-  formatGpuField,
-  formatGpuName,
+  formatProductName,
   getViewGpuPath,
-  Gpu,
+  GpuProduct,
+  productFieldFormattedValue,
 } from '@pcpartdb/shared';
 import { ProductCustomRow } from 'packages/website/src/client/product/components/ProductCustomRow/ProductCustomRow';
 import {
@@ -24,7 +24,7 @@ export const RetailModelsTable: FunctionComponent<RetailModelsTableProps> = (
   props,
 ) => {
   const { className } = props;
-  const { gpu, contentData } = useContext(ViewPageContext);
+  const { gpu, additionalData: contentData } = useContext(ViewPageContext);
   const { retailModels } = contentData;
 
   const currentRetailModel = gpu;
@@ -53,8 +53,8 @@ export const RetailModelsTable: FunctionComponent<RetailModelsTableProps> = (
 };
 
 interface RetailModelsTableRowProps {
-  currentRetailModel: Gpu;
-  retailModel: Gpu;
+  currentRetailModel: GpuProduct;
+  retailModel: GpuProduct;
 }
 
 const RetailModelsTableRow: FunctionComponent<RetailModelsTableRowProps> = (
@@ -62,22 +62,27 @@ const RetailModelsTableRow: FunctionComponent<RetailModelsTableRowProps> = (
 ) => {
   const { currentRetailModel, retailModel } = props;
 
-  const name = useMemo(() => formatGpuName(retailModel), [retailModel]);
+  const name = useMemo(() => formatProductName(retailModel), [retailModel]);
   const href = useMemo(() => getViewGpuPath(retailModel), [retailModel]);
   const clock = useMemo(
     () =>
-      `${formatGpuField(retailModel.coreClockSpeedBase)} / ${formatGpuField(
-        retailModel.coreClockSpeedBoost,
+      `${productFieldFormattedValue(
+        retailModel.fields?.gpuCoreBaseClock,
+      )} / ${productFieldFormattedValue(
+        retailModel.fields?.gpuCoreBoostClock,
       )}`,
-    [retailModel.coreClockSpeedBase, retailModel.coreClockSpeedBoost],
+    [
+      retailModel.fields?.gpuCoreBaseClock,
+      retailModel.fields?.gpuCoreBoostClock,
+    ],
   );
   const dimensions = useMemo(
     () => formatGpuDimensions(retailModel),
     [retailModel],
   );
   const tdp = useMemo(
-    () => formatGpuField(retailModel.thermalDesignPower),
-    [retailModel.thermalDesignPower],
+    () => productFieldFormattedValue(retailModel.fields?.tdp),
+    [retailModel.fields?.tdp],
   );
 
   return (

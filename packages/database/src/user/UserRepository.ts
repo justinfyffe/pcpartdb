@@ -2,13 +2,6 @@ import { DatabaseClient } from '../DatabaseClient';
 import { RepositoryConfig } from '../RepositoryConfig';
 import { UserEntity } from './UserEntity';
 
-interface CreateUserOptions {
-  email: string;
-  passwordHash: string;
-  isStaff: boolean;
-}
-type UpdateUserOptions = Partial<CreateUserOptions>;
-
 export class UserRepository {
   constructor(protected db: DatabaseClient) {}
 

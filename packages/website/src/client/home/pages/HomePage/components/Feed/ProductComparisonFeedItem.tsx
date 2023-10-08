@@ -1,11 +1,10 @@
 import { PhotoIcon } from '@heroicons/react/24/outline';
 import {
-  formatProductField,
   formatProductName,
   getCompareProductsPath,
   Product,
   ProductComparison,
-  ProductType,
+  productFieldFormattedValue,
 } from '@pcpartdb/shared';
 import { Card } from 'packages/website/src/client/shared/components/Card/Card';
 import { Img } from 'packages/website/src/client/shared/components/Img/Img';
@@ -22,7 +21,6 @@ export enum ProductComparisonFeedTag {
 }
 
 interface ProductComparisonFeedItemProps {
-  productType: ProductType;
   comparison: ProductComparison;
   tag?: ProductComparisonFeedTag;
 
@@ -33,22 +31,19 @@ interface ProductComparisonFeedItemProps {
 export const ProductComparisonFeedItem: FunctionComponent<
   ProductComparisonFeedItemProps
 > = (props) => {
-  const { productType, comparison, tag } = props;
+  const { comparison, tag } = props;
   const [product1, product2] = comparison;
 
   const [name1, name2] = useMemo(() => {
-    return [
-      formatProductName(productType, product1),
-      formatProductName(productType, product2),
-    ];
-  }, [productType, product1, product2]);
+    return [formatProductName(product1), formatProductName(product2)];
+  }, [product1, product2]);
 
   const [price1, price2] = useMemo(
     () => [
-      formatProductField(productType, product1.launchPrice),
-      formatProductField(productType, product2.launchPrice),
+      productFieldFormattedValue(product1.fields.msrp),
+      productFieldFormattedValue(product2.fields.msrp),
     ],
-    [productType, product1, product2],
+    [product1, product2],
   );
 
   const [image1, image2] = useMemo(() => {
@@ -67,7 +62,7 @@ export const ProductComparisonFeedItem: FunctionComponent<
 
   return (
     <a
-      href={getCompareProductsPath(productType, comparison)}
+      href={getCompareProductsPath({ comparison })}
       className={classNames(
         'flex-1 mx-4 mb-6 max-w-96 min-w-70',
         props.className,
@@ -121,12 +116,10 @@ export const ProductComparisonFeedItem: FunctionComponent<
 
           <div className="flex flex-1 w-full h-full absolute items-end">
             <Banner
-              productType={productType}
               product={product1}
               className="mr-[23px] max-w-[calc(50%-23px)]"
             />
             <Banner
-              productType={productType}
               product={product2}
               className="ml-[23px] max-w-[calc(50%-23px)]"
             />
@@ -156,11 +149,7 @@ export const ProductComparisonFeedItem: FunctionComponent<
           <h3 className="font-medium text-lg text-link">
             {name1} vs {name2}
           </h3>
-          <Subtitle
-            productType={productType}
-            comparison={comparison}
-            tag={tag}
-          />
+          <Subtitle comparison={comparison} tag={tag} />
         </div>
       </Card>
     </a>
@@ -168,17 +157,13 @@ export const ProductComparisonFeedItem: FunctionComponent<
 };
 
 interface BannerProps {
-  productType: ProductType;
   product: Product;
   className?: string;
 }
 
 const Banner: FunctionComponent<BannerProps> = (props) => {
-  const { productType, product, className } = props;
-  const company = useMemo(
-    () => product.company?.value?.toLowerCase(),
-    [product],
-  );
+  const { product, className } = props;
+  const company = useMemo(() => product.company?.toLowerCase(), [product]);
 
   return (
     <div
@@ -192,27 +177,26 @@ const Banner: FunctionComponent<BannerProps> = (props) => {
         className,
       )}
     >
-      {formatProductName(productType, product, { company: false })}
+      {formatProductName(product, { company: false })}
     </div>
   );
 };
 
 interface SubtitleProps {
-  productType: ProductType;
   comparison: ProductComparison;
   tag?: ProductComparisonFeedTag;
 }
 
 const Subtitle: FunctionComponent<SubtitleProps> = (props) => {
-  const { productType, comparison, tag } = props;
+  const { comparison, tag } = props;
   const [product1, product2] = comparison;
 
   const params: ContentComponentParams = useMemo(
     () => ({
-      name1: formatProductName(productType, product1, { company: false }),
-      name2: formatProductName(productType, product2, { company: false }),
+      name1: formatProductName(product1, { company: false }),
+      name2: formatProductName(product2, { company: false }),
     }),
-    [productType, product1, product2],
+    [product1, product2],
   );
 
   return (

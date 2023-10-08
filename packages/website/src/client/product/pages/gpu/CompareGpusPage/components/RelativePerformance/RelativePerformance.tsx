@@ -5,7 +5,8 @@ import { PerformanceIntro } from './PerformanceIntro';
 import { PerformanceTable } from './PerformanceTable';
 
 export const RelativePerformance: FunctionComponent = () => {
-  const { comparison, contentData } = useContext(ComparePageContext);
+  const { comparison, additionalData: contentData } =
+    useContext(ComparePageContext);
   const [gpu1, gpu2] = comparison;
   const { relativePerformanceGpus } = contentData;
 
@@ -13,8 +14,8 @@ export const RelativePerformance: FunctionComponent = () => {
   const chipset2 = useMemo(() => getGpuChipset(gpu2), [gpu2]);
 
   if (
-    !hasProductFieldValue(chipset1.performanceScore) &&
-    !hasProductFieldValue(chipset2.performanceScore)
+    !hasProductFieldValue(chipset1.fields?.performanceRating) &&
+    !hasProductFieldValue(chipset2.fields?.performanceRating)
   ) {
     return <></>;
   }

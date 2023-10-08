@@ -1,6 +1,7 @@
 import {
-  formatCpuField,
+  formatCompanyName,
   getCpuAffiliateUrl,
+  productFieldFormattedValue,
   ProductType,
 } from '@pcpartdb/shared';
 import { ProductCustomRow } from 'packages/website/src/client/product/components/ProductCustomRow/ProductCustomRow';
@@ -22,28 +23,32 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
   const { className } = props;
   const { cpu } = useContext(ViewPageContext);
 
-  const performanceRank = cpu.ranks.performanceRank || null;
-  const valueRank = cpu.ranks.valueRank || null;
+  const performanceRank = cpu.ranks.performanceRating ?? null;
+  const valueRank = cpu.ranks.performancePerMsrp ?? null;
 
   const performanceScoreValue = useMemo(() => {
-    const performanceScore = formatCpuField(cpu.performanceScore);
+    const performanceScore = productFieldFormattedValue(
+      cpu.fields?.performanceRating,
+    );
 
     if (performanceScore != null && performanceRank != null) {
       return `${performanceScore} (${performanceRank})`;
     } else {
       return '--';
     }
-  }, [cpu.performanceScore, performanceRank]);
+  }, [cpu.fields?.performanceRating, performanceRank]);
 
   const valueScoreValue = useMemo(() => {
-    const valueScore = formatCpuField(cpu.valueScore);
+    const valueScore = productFieldFormattedValue(
+      cpu.fields?.performancePerMsrp,
+    );
 
     if (valueScore != null && valueRank != null) {
       return `${valueScore} (${valueRank})`;
     } else {
       return '--';
     }
-  }, [cpu.valueScore, valueRank]);
+  }, [cpu.fields?.performancePerMsrp, valueRank]);
 
   const cpuAffiliateUrl = useMemo(() => getCpuAffiliateUrl(cpu), [cpu]);
 
@@ -68,13 +73,22 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
           label="Performance Per Dollar (Rank)*"
           values={[valueScoreValue]}
         />
-        <ProductFieldRow type={ProductType.Cpu} fields={[cpu.company]} />
-        <ProductFieldRow type={ProductType.Cpu} fields={[cpu.marketSegment]} />
-        <ProductFieldRow type={ProductType.Cpu} fields={[cpu.releaseDate]} />
-        <ProductFieldRow type={ProductType.Cpu} fields={[cpu.launchPrice]} />
+        <ProductCustomRow
+          label="Company"
+          values={[formatCompanyName(cpu.company) ?? '--']}
+        />
         <ProductFieldRow
           type={ProductType.Cpu}
-          fields={[cpu.productionStatus]}
+          fields={[cpu.fields?.marketSegment]}
+        />
+        <ProductFieldRow
+          type={ProductType.Cpu}
+          fields={[cpu.fields?.releaseDate]}
+        />
+        <ProductFieldRow type={ProductType.Cpu} fields={[cpu.fields?.msrp]} />
+        <ProductFieldRow
+          type={ProductType.Cpu}
+          fields={[cpu.fields?.productionStatus]}
         />
       </TBody>
     </Table>

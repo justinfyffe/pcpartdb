@@ -1,4 +1,4 @@
-import { Gpu, ViewGpuContentData } from '@pcpartdb/shared';
+import { GpuProduct, ViewGpuAdditionalData } from '@pcpartdb/shared';
 import {
   ContentParams,
   ContentTags,
@@ -6,15 +6,15 @@ import {
 import { createContext } from 'react';
 
 export interface ViewPageContextProps {
-  gpu: Gpu;
-  contentData: ViewGpuContentData;
+  gpu: GpuProduct;
+  additionalData: ViewGpuAdditionalData;
   contentTags: ContentTags;
   contentParams: ContentParams;
 }
 
 export const ViewPageContext = createContext<ViewPageContextProps>({
   gpu: null,
-  contentData: null,
+  additionalData: null,
   contentTags: null,
   contentParams: null,
 });

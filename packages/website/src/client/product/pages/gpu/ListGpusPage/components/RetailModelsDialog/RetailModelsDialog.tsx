@@ -1,6 +1,11 @@
 import { XMarkIcon } from '@heroicons/react/24/outline';
-import { formatGpuName, Gpu } from '@pcpartdb/shared';
-import { gpuService } from 'packages/website/src/client/product/services/gpuService';
+import {
+  formatProductName,
+  GpuProduct,
+  ListGpusFilter,
+  ProductType,
+} from '@pcpartdb/shared';
+import { productService } from 'packages/website/src/client/product/services/productService';
 import {
   Button,
   ButtonVariant,
@@ -11,7 +16,7 @@ import React, { FunctionComponent, useEffect, useMemo, useState } from 'react';
 import { RetailModelsTable } from './RetailModelsTable';
 
 interface RetailModelsDialogProps {
-  chipset: Gpu;
+  chipset: GpuProduct;
 }
 
 export const RetailModelsDialog: FunctionComponent<RetailModelsDialogProps> = (
@@ -20,19 +25,21 @@ export const RetailModelsDialog: FunctionComponent<RetailModelsDialogProps> = (
   const { chipset } = props;
 
   const chipsetId = chipset.id;
-  const [retailModels, setRetailModels] = useState<Gpu[]>([]);
+  const [retailModels, setRetailModels] = useState<GpuProduct[]>([]);
   const [loading, setLoading] = useState(false);
 
   const chipsetName = useMemo(
-    () => formatGpuName(chipset, { company: false }),
+    () => formatProductName(chipset, { company: false }),
     [chipset],
   );
 
   useEffect(() => {
     async function fetchRetailModels() {
       setLoading(true);
-      const { retailModels } = await gpuService.listRetailModels(chipsetId);
-      setRetailModels(retailModels);
+      const { results } = await productService.list(ProductType.Gpu, {
+        filter: { chipsetId } as ListGpusFilter,
+      });
+      setRetailModels(results as GpuProduct[]);
       setLoading(false);
     }
 

@@ -7,19 +7,21 @@ import {
 } from '@heroicons/react/24/outline';
 import {
   AutomationActionType,
+  AutomationSource,
+  AutomationSourceGroup,
   CreateGpuActionData,
+  formatAutomationSourceName,
   formatProductName,
   generateGpuSlug,
-  GpuDataSourceKey,
-  GpuProductSource,
-  GpuProductSourceGroup,
+  GpuAutomationSourceGroup,
   Product,
+  ProductSourceKey,
   ProductType,
   UpdateGpuActionData,
 } from '@pcpartdb/shared';
 import { automationService } from 'packages/website/src/client/automation/services/automationService';
 import { ProductAutocomplete } from 'packages/website/src/client/product/components/ProductAutocomplete/ProductAutocomplete';
-import { productSourceService } from 'packages/website/src/client/product/services/productSourceService';
+import { automationSourceService } from 'packages/website/src/client/product/services/automationSourceService';
 import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
 import {
   Card,
@@ -35,137 +37,111 @@ import { AutomationStatusContext } from 'packages/website/src/client/shared/layo
 import React, { useCallback, useContext, useMemo, useState } from 'react';
 import { SourceInputField } from '../../components/SourceInputField';
 
+const SUPPORTED_KEYS = [
+  ProductSourceKey.TechPowerUp,
+  ProductSourceKey.PassMark,
+  ProductSourceKey.UlBenchmarks,
+];
+
 interface GpuChipsetSourceCardProps {
-  sources: GpuProductSourceGroup;
+  sources: GpuAutomationSourceGroup;
 }
 
 export const GpuChipsetSourceCard = (props: GpuChipsetSourceCardProps) => {
-  const { sources } = props;
-
   const automationStatusContext = useContext(AutomationStatusContext);
 
   // States & Memos
 
   const [expanded, setExpanded] = useState(false);
+  const [sources] = useState(props.sources);
 
-  const techPowerUpSources = useMemo(
-    () =>
-      sources
-        .filter((source) => source.sourceKey === GpuDataSourceKey.TechPowerUp)
-        .sort((a, b) => a.sourceName.localeCompare(b.sourceName)),
-    [sources],
-  );
-  const [techPowerUp, setTechPowerUp] = useState(
-    () =>
-      techPowerUpSources.find((value) => value.archived) ||
-      techPowerUpSources[0] ||
-      null,
-  );
-  const [archiveTechPowerUp, setArchiveTechPowerUp] = useState(!!techPowerUp);
+  const subgroups = useMemo(() => {
+    const ret: Partial<Record<ProductSourceKey, AutomationSourceGroup>> = {};
+    for (const supportedKey of SUPPORTED_KEYS) {
+      ret[supportedKey] = sources?.filter(
+        (source) => source.sourceKey === supportedKey,
+      ) as AutomationSourceGroup;
+    }
+    return ret;
+  }, [sources]);
 
-  const passMarkSources = useMemo(
-    () =>
-      sources
-        .filter(
-          (source) => source.sourceKey === GpuDataSourceKey.VideocardBenchmarks,
-        )
-        .sort((a, b) => a.sourceName.localeCompare(b.sourceName)),
-    [sources],
-  );
-  const [passMark, setPassMark] = useState(
-    () =>
-      passMarkSources.find((value) => value.archived) ||
-      passMarkSources[0] ||
-      null,
-  );
-  const [archivePassMark, setArchivePassMark] = useState(!!passMark);
+  const [currentSources, setCurrentSources] = useState(() => {
+    const ret: Partial<Record<ProductSourceKey, AutomationSource>> = {};
+    for (const supportedKey of SUPPORTED_KEYS) {
+      const initial =
+        subgroups[supportedKey].find((source) => !source.archived) ||
+        subgroups[supportedKey][0];
 
-  const ulBenchmarkSources = useMemo(
-    () =>
-      sources
-        .filter((source) => source.sourceKey === GpuDataSourceKey.UlBenchmarks)
-        .sort((a, b) => a.sourceName.localeCompare(b.sourceName)),
-    [sources],
-  );
-  const [ulBenchmark, setUlBenchmark] = useState(
-    () =>
-      ulBenchmarkSources.find((value) => value.archived) ||
-      ulBenchmarkSources[0] ||
-      null,
-  );
-  const [archiveUlBenchmark, setArchiveUlBenchmark] = useState(!!ulBenchmark);
+      if (initial == null) {
+        ret[supportedKey] = null;
+      } else {
+        ret[supportedKey] = initial;
+      }
+    }
+    return ret;
+  });
 
   const allArchived = useMemo(() => {
-    return (
-      (techPowerUp?.archived ?? true) &&
-      (passMark?.archived ?? true) &&
-      (ulBenchmark?.archived ?? true)
-    );
-  }, [techPowerUp?.archived, passMark?.archived, ulBenchmark?.archived]);
+    return SUPPORTED_KEYS.every((key) => currentSources[key]?.archived ?? true);
+  }, [currentSources]);
 
-  const [preferredName, setPreferredName] = useState(
-    () =>
-      techPowerUp?.sourceName ||
-      passMark?.sourceName ||
-      ulBenchmark?.sourceName,
-  );
+  const [preferredName, setPreferredName] = useState(() => {
+    const key = SUPPORTED_KEYS.find((key) => currentSources[key] != null);
+    return currentSources[key]?.sourceName;
+  });
   const [preferredSlug, setPreferredSlug] = useState(() =>
     generateGpuSlug(preferredName, null),
   );
   const [appliedGpu, setAppliedGpu] = useState<Product>(null);
-  const [groupKey] = useState(
-    () => techPowerUp?.groupKey || passMark?.groupKey || ulBenchmark?.groupKey,
-  );
+  const [groupKey] = useState(() => {
+    const key = SUPPORTED_KEYS.find((key) => currentSources[key] != null);
+    return currentSources[key]?.groupKey;
+  });
 
   // Callbacks
+
+  const handleSourceInputChange = useCallback(
+    (key: ProductSourceKey, source: AutomationSource) => {
+      currentSources[key] = source;
+      setCurrentSources({ ...currentSources });
+    },
+    [currentSources],
+  );
 
   const handleGenerateSlug = useCallback(() => {
     setPreferredSlug(generateGpuSlug(preferredName, null));
   }, [preferredName]);
 
   const handleSave = useCallback(async () => {
-    const newTechPowerUp =
-      techPowerUp != null
-        ? { ...techPowerUp, archived: archiveTechPowerUp }
-        : null;
-    const newPassMark =
-      passMark != null ? { ...passMark, archived: archivePassMark } : null;
-    const newUlBenchmark =
-      ulBenchmark != null
-        ? { ...ulBenchmark, archived: archiveUlBenchmark }
-        : null;
-
-    const sources = [newTechPowerUp, newPassMark, newUlBenchmark].filter(
+    const sources = SUPPORTED_KEYS.map((key) => currentSources[key]).filter(
       (source) => source != null && source.id != null,
     );
 
-    await productSourceService.upsert({ sources: sources });
+    const archivedSources = sources.map((source) => ({
+      ...source,
+      archived: true,
+    }));
 
-    setTechPowerUp(newTechPowerUp);
-    setPassMark(newPassMark);
-    setUlBenchmark(newUlBenchmark);
+    await automationSourceService.upsert({ sources: archivedSources });
+
+    sources.forEach((source) => {
+      source.archived = true;
+    });
+    setCurrentSources({ ...currentSources });
 
     // Close the card
     await setExpanded(false);
 
     await automationStatusContext.refreshStatus();
-  }, [
-    techPowerUp,
-    archiveTechPowerUp,
-    passMark,
-    archivePassMark,
-    ulBenchmark,
-    archiveUlBenchmark,
-    automationStatusContext,
-  ]);
+  }, [automationStatusContext, currentSources]);
 
   const handleApplyToGpu = useCallback(async () => {
-    const sources = [techPowerUp, passMark, ulBenchmark]
+    const sources = SUPPORTED_KEYS.map((key) => currentSources[key])
       .filter((source) => source != null && source.id != null)
       .map((source) => source.id);
 
     // Add sources to existing product.
-    await productSourceService.applyToProduct({
+    await automationSourceService.applyToProduct({
       productType: ProductType.Gpu,
       productId: appliedGpu.id,
       sources,
@@ -174,16 +150,16 @@ export const GpuChipsetSourceCard = (props: GpuChipsetSourceCardProps) => {
     // Create automation action to update existing gpu.
     await automationService.createAction({
       type: AutomationActionType.UpdateGpu,
-      description: formatProductName(ProductType.Gpu, appliedGpu),
+      description: formatProductName(appliedGpu),
       data: { gpuId: appliedGpu.id } as UpdateGpuActionData,
     });
 
     // Update sources
     await handleSave();
-  }, [techPowerUp, passMark, ulBenchmark, appliedGpu, handleSave]);
+  }, [appliedGpu, handleSave, currentSources]);
 
   const handleCreateGpu = useCallback(async () => {
-    const sources = [techPowerUp, passMark, ulBenchmark].filter(
+    const sources = SUPPORTED_KEYS.map((key) => currentSources[key]).filter(
       (source) => source != null,
     );
 
@@ -195,20 +171,13 @@ export const GpuChipsetSourceCard = (props: GpuChipsetSourceCardProps) => {
         preferredName,
         preferredSlug,
         sources,
-        chipsetId: null,
+        relatedProductId: null,
       } as CreateGpuActionData,
     });
 
     // Update sources to archive them.
     await handleSave();
-  }, [
-    techPowerUp,
-    passMark,
-    ulBenchmark,
-    preferredName,
-    preferredSlug,
-    handleSave,
-  ]);
+  }, [preferredName, preferredSlug, handleSave, currentSources]);
 
   // Render
 
@@ -229,69 +198,29 @@ export const GpuChipsetSourceCard = (props: GpuChipsetSourceCardProps) => {
             <span className="[overflow-wrap:anywhere]">{groupKey}</span>
           </div>
           <div className="text-xs flex flex-wrap gap-x-4 gap-y-1">
-            <div>
-              <span className="font-semibold">
-                TechPowerUp
-                {techPowerUpSources.length > 1
-                  ? ` (x${techPowerUpSources.length})`
-                  : ''}
-                :
-              </span>{' '}
-              {techPowerUp != null ? (
-                <a
-                  href={techPowerUp.sourceUrl}
-                  target="_blank"
-                  onClick={(e) => e.stopPropagation()}
-                  rel="noreferrer"
-                >
-                  {techPowerUp.sourceName}
-                </a>
-              ) : (
-                '--'
-              )}
-            </div>
-            <div>
-              <span className="font-semibold">
-                PassMark
-                {passMarkSources.length > 1
-                  ? ` (x${passMarkSources.length})`
-                  : ''}
-                :
-              </span>{' '}
-              {passMark != null ? (
-                <a
-                  href={passMark.sourceUrl}
-                  target="_blank"
-                  onClick={(e) => e.stopPropagation()}
-                  rel="noreferrer"
-                >
-                  {passMark.sourceName}
-                </a>
-              ) : (
-                '--'
-              )}
-            </div>
-            <div>
-              <span className="font-semibold">
-                UL Benchmarks
-                {ulBenchmarkSources.length > 1
-                  ? ` (x${ulBenchmarkSources.length})`
-                  : ''}
-                :
-              </span>{' '}
-              {ulBenchmark != null ? (
-                <a
-                  href={ulBenchmark.sourceUrl}
-                  target="_blank"
-                  onClick={(e) => e.stopPropagation()}
-                  rel="noreferrer"
-                >
-                  {ulBenchmark.sourceName}
-                </a>
-              ) : (
-                '--'
-              )}
-            </div>
+            {SUPPORTED_KEYS.map((supportedKey) => (
+              <div key={supportedKey}>
+                <span className="font-semibold">
+                  {formatAutomationSourceName(supportedKey)}
+                  {subgroups[supportedKey].length > 1
+                    ? ` (x${subgroups[supportedKey].length})`
+                    : ''}
+                  :
+                </span>{' '}
+                {currentSources[supportedKey] != null ? (
+                  <a
+                    href={currentSources[supportedKey].sourceUrl}
+                    target="_blank"
+                    onClick={(e) => e.stopPropagation()}
+                    rel="noreferrer"
+                  >
+                    {currentSources[supportedKey].sourceName}
+                  </a>
+                ) : (
+                  '--'
+                )}
+              </div>
+            ))}
           </div>
         </div>
 
@@ -359,38 +288,22 @@ export const GpuChipsetSourceCard = (props: GpuChipsetSourceCardProps) => {
           </div>
 
           <div className="flex flex-col">
-            <SourceInputField
-              productType={ProductType.Gpu}
-              sourceKey={GpuDataSourceKey.TechPowerUp}
-              sources={techPowerUpSources}
-              currentSource={techPowerUp}
-              archive={archiveTechPowerUp}
-              setArchive={setArchiveTechPowerUp}
-              onUseName={setPreferredName}
-              onChange={(source) => setTechPowerUp(source as GpuProductSource)}
-            />
-
-            <SourceInputField
-              productType={ProductType.Gpu}
-              sourceKey={GpuDataSourceKey.VideocardBenchmarks}
-              sources={passMarkSources}
-              currentSource={passMark}
-              archive={archivePassMark}
-              setArchive={setArchivePassMark}
-              onUseName={setPreferredName}
-              onChange={(source) => setPassMark(source as GpuProductSource)}
-            />
-
-            <SourceInputField
-              productType={ProductType.Gpu}
-              sourceKey={GpuDataSourceKey.UlBenchmarks}
-              sources={ulBenchmarkSources}
-              currentSource={ulBenchmark}
-              archive={archiveUlBenchmark}
-              setArchive={setArchiveUlBenchmark}
-              onUseName={setPreferredName}
-              onChange={(source) => setUlBenchmark(source as GpuProductSource)}
-            />
+            {SUPPORTED_KEYS.map((supportedKey) => (
+              <SourceInputField
+                key={supportedKey}
+                productType={ProductType.Gpu}
+                sourceKey={supportedKey}
+                sources={subgroups[supportedKey] as AutomationSourceGroup}
+                currentSource={currentSources[supportedKey] as AutomationSource}
+                onUseName={setPreferredName}
+                onChange={(source) =>
+                  handleSourceInputChange(
+                    supportedKey,
+                    source as AutomationSource,
+                  )
+                }
+              />
+            ))}
           </div>
 
           <div className="flex flex-wrap justify-between gap-4">

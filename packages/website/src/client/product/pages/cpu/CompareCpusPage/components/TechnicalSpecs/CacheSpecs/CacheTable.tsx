@@ -1,4 +1,4 @@
-import { formatCpuName, ProductType } from '@pcpartdb/shared';
+import { formatProductName, ProductType } from '@pcpartdb/shared';
 import { ProductFieldRow } from 'packages/website/src/client/product/components/ProductFieldRow/ProductFieldRow';
 import {
   Table,
@@ -22,8 +22,8 @@ export const CacheTable: FunctionComponent<CacheTableProps> = (props) => {
 
   const [name1, name2] = useMemo(() => {
     return [
-      formatCpuName(cpu1, { company: false }),
-      formatCpuName(cpu2, { company: false }),
+      formatProductName(cpu1, { company: false }),
+      formatProductName(cpu2, { company: false }),
     ];
   }, [cpu1, cpu2]);
 
@@ -39,23 +39,23 @@ export const CacheTable: FunctionComponent<CacheTableProps> = (props) => {
       <TBody>
         <ProductFieldRow
           type={ProductType.Cpu}
-          fields={[cpu1.l1Cache, cpu2.l1Cache]}
+          fields={[cpu1.fields?.l1Cache, cpu2.fields?.l1Cache]}
         />
         <ProductFieldRow
           type={ProductType.Cpu}
-          fields={[cpu1.l2Cache, cpu2.l2Cache]}
+          fields={[cpu1.fields?.l2Cache, cpu2.fields?.l2Cache]}
         />
         <ProductFieldRow
           type={ProductType.Cpu}
-          fields={[cpu1.l3Cache, cpu2.l3Cache]}
+          fields={[cpu1.fields?.l3Cache, cpu2.fields?.l3Cache]}
         />
         <ProductFieldRow
           type={ProductType.Cpu}
-          fields={[cpu1.efficientCoreL1Cache, cpu2.efficientCoreL1Cache]}
+          fields={[cpu1.fields?.eCoreL1Cache, cpu2.fields?.eCoreL1Cache]}
         />
         <ProductFieldRow
           type={ProductType.Cpu}
-          fields={[cpu1.efficientCoreL2Cache, cpu2.efficientCoreL2Cache]}
+          fields={[cpu1.fields?.eCoreL2Cache, cpu2.fields?.eCoreL2Cache]}
         />
       </TBody>
     </Table>

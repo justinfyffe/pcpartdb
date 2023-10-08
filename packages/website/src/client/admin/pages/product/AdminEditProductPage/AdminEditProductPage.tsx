@@ -7,15 +7,14 @@ import {
 import {
   AdminEditProductViewModel,
   AutomationActionType,
-  Cpu,
-  CpuUpdate,
+  CpuProduct,
   formatProductName,
   getAdminListCpusPath,
   getAdminListGpusPath,
   getViewProductPath,
-  Gpu,
-  GpuUpdate,
+  GpuProduct,
   ProductType,
+  ProductUpdate,
   UpdateCpuActionData,
   UpdateGpuActionData,
 } from '@pcpartdb/shared';
@@ -46,7 +45,7 @@ export const AdminEditProductPage = (props: AdminEditProductViewModel) => {
   // Memos
 
   const { viewHref, adminListHref, typeName } = useMemo(() => {
-    const viewHref = getViewProductPath(productType, product);
+    const viewHref = getViewProductPath(product);
     if (productType === ProductType.Cpu) {
       return {
         viewHref,
@@ -74,13 +73,13 @@ export const AdminEditProductPage = (props: AdminEditProductViewModel) => {
     if (productType === ProductType.Cpu) {
       await automationService.createAction<UpdateCpuActionData>({
         type: AutomationActionType.UpdateCpu,
-        description: formatProductName(productType, product),
+        description: formatProductName(product),
         data: { cpuId: product.id },
       });
     } else if (productType === ProductType.Gpu) {
       await automationService.createAction<UpdateGpuActionData>({
         type: AutomationActionType.UpdateGpu,
-        description: formatProductName(productType, product),
+        description: formatProductName(product),
         data: { gpuId: product.id },
       });
     }
@@ -114,9 +113,13 @@ export const AdminEditProductPage = (props: AdminEditProductViewModel) => {
     }
 
     if (productType === ProductType.Cpu) {
-      showDialog(<CpuDiffDialog diff={(pendingUpdate as CpuUpdate).data} />);
+      showDialog(
+        <CpuDiffDialog diff={(pendingUpdate as ProductUpdate).data} />,
+      );
     } else if (productType === ProductType.Gpu) {
-      showDialog(<GpuDiffDialog diff={(pendingUpdate as GpuUpdate).data} />);
+      showDialog(
+        <GpuDiffDialog diff={(pendingUpdate as ProductUpdate).data} />,
+      );
     }
   }, [pendingUpdate, productType]);
 
@@ -166,8 +169,12 @@ export const AdminEditProductPage = (props: AdminEditProductViewModel) => {
           </WarningAlert>
         )}
 
-        {productType === ProductType.Cpu && <CpuForm cpu={product as Cpu} />}
-        {productType === ProductType.Gpu && <GpuForm gpu={product as Gpu} />}
+        {productType === ProductType.Cpu && (
+          <CpuForm cpu={product as CpuProduct} />
+        )}
+        {productType === ProductType.Gpu && (
+          <GpuForm gpu={product as GpuProduct} />
+        )}
       </article>
     </AdminLayout>
   );

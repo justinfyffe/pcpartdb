@@ -10,5 +10,6 @@ export * from './routes';
 export * from './scraper';
 export * from './user';
 export * from './utils';
+export * from './validation';
 export * from './view-models';
 export * from './website';

@@ -5,3 +5,6 @@ export * from './utils';
 
 export * from './cpu';
 export * from './gpu';
+export * from './benchmarks';
+export * from './images';
+export * from './sources';

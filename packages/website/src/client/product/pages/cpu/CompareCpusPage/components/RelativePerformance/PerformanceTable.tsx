@@ -1,9 +1,10 @@
 import {
-  Cpu,
-  formatCpuField,
-  formatCpuName,
+  CpuProduct,
+  formatProductName,
   getViewCpuPath,
   hasProductFieldValue,
+  productFieldFormattedValue,
+  productFieldRawValue,
 } from '@pcpartdb/shared';
 import { ProductCustomRow } from 'packages/website/src/client/product/components/ProductCustomRow/ProductCustomRow';
 import {
@@ -36,17 +37,18 @@ export const PerformanceTable: FunctionComponent<PerformanceTableProps> = (
   props,
 ) => {
   const { className } = props;
-  const { comparison, contentData } = useContext(ComparePageContext);
+  const { comparison, additionalData: contentData } =
+    useContext(ComparePageContext);
   const [cpu1, cpu2] = comparison;
   const { relativePerformanceCpus } = contentData;
 
   const [baselineCpu, setBaselineCpu] = useState(() => {
-    return hasProductFieldValue(cpu1.performanceScore) ? cpu1 : cpu2;
+    return hasProductFieldValue(cpu1.fields?.performanceRating) ? cpu1 : cpu2;
   });
   const [secondaryCpu, setSecondaryCpu] = useState(() => {
     if (
-      !hasProductFieldValue(cpu1.performanceScore) ||
-      !hasProductFieldValue(cpu2.performanceScore)
+      !hasProductFieldValue(cpu1.fields?.performanceRating) ||
+      !hasProductFieldValue(cpu2.fields?.performanceRating)
     ) {
       return null;
     } else {
@@ -56,13 +58,13 @@ export const PerformanceTable: FunctionComponent<PerformanceTableProps> = (
 
   // Add nulls to rank gaps
   const cpus = useMemo(() => {
-    const ret: Cpu[] = [];
+    const ret: CpuProduct[] = [];
     let dontGap = false;
     for (let i = 0; i < relativePerformanceCpus.length; ++i) {
       if (i > 0) {
         const rankDiff =
-          relativePerformanceCpus[i].ranks.performanceRank -
-          relativePerformanceCpus[i - 1].ranks.performanceRank;
+          relativePerformanceCpus[i].ranks.performanceRating -
+          relativePerformanceCpus[i - 1].ranks.performanceRating;
 
         if (rankDiff !== 1) {
           if (rankDiff === 0) {
@@ -81,12 +83,14 @@ export const PerformanceTable: FunctionComponent<PerformanceTableProps> = (
   }, [relativePerformanceCpus]);
 
   useEffect(() => {
-    setBaselineCpu(hasProductFieldValue(cpu1.performanceScore) ? cpu1 : cpu2);
+    setBaselineCpu(
+      hasProductFieldValue(cpu1.fields?.performanceRating) ? cpu1 : cpu2,
+    );
 
     if (
       cpu1.id === cpu2.id ||
-      !hasProductFieldValue(cpu1.performanceScore) ||
-      !hasProductFieldValue(cpu2.performanceScore)
+      !hasProductFieldValue(cpu1.fields?.performanceRating) ||
+      !hasProductFieldValue(cpu2.fields?.performanceRating)
     ) {
       // Same cpu, or one performance is missing.
       setSecondaryCpu(null);
@@ -96,7 +100,7 @@ export const PerformanceTable: FunctionComponent<PerformanceTableProps> = (
   }, [cpu1, cpu2]);
 
   const toggleBaselineCpu = useCallback(
-    (cpu: Cpu) => {
+    (cpu: CpuProduct) => {
       setSecondaryCpu(baselineCpu);
       setBaselineCpu(cpu);
     },
@@ -158,9 +162,9 @@ export const PerformanceTable: FunctionComponent<PerformanceTableProps> = (
 };
 
 interface PerformanceTableRowProps {
-  relativeCpu: Cpu;
-  baselineCpu: Cpu;
-  secondaryCpu?: Cpu;
+  relativeCpu: CpuProduct;
+  baselineCpu: CpuProduct;
+  secondaryCpu?: CpuProduct;
 }
 
 const PerformanceTableRow: FunctionComponent<PerformanceTableRowProps> = (
@@ -169,20 +173,27 @@ const PerformanceTableRow: FunctionComponent<PerformanceTableRowProps> = (
   const { baselineCpu, secondaryCpu, relativeCpu } = props;
 
   const relativePerformancePct = useMemo(() => {
-    const baseline = baselineCpu.performanceScore.value;
-    const relatedPerformance = relativeCpu.performanceScore.value;
+    const baseline = productFieldRawValue(
+      baselineCpu.fields?.performanceRating,
+    );
+    const relatedPerformance = productFieldRawValue(
+      relativeCpu?.fields?.performanceRating,
+    );
 
     return ((relatedPerformance / baseline) * 100).toFixed(0);
-  }, [baselineCpu.performanceScore.value, relativeCpu.performanceScore.value]);
+  }, [
+    baselineCpu.fields?.performanceRating,
+    relativeCpu?.fields?.performanceRating,
+  ]);
 
   const rating = useMemo(
-    () => formatCpuField(relativeCpu.performanceScore),
+    () => productFieldFormattedValue(relativeCpu.fields?.performanceRating),
     [relativeCpu],
   );
 
   const href = useMemo(() => getViewCpuPath(relativeCpu), [relativeCpu]);
   const cpuName = useMemo(
-    () => formatCpuName(relativeCpu, { company: false }),
+    () => formatProductName(relativeCpu, { company: false }),
     [relativeCpu],
   );
 
@@ -207,7 +218,7 @@ const PerformanceTableRow: FunctionComponent<PerformanceTableRowProps> = (
 };
 
 interface BaselineToggleProps {
-  cpu: Cpu;
+  cpu: CpuProduct;
   active: boolean;
   onClick: () => void;
 }
@@ -217,9 +228,12 @@ export const BaselineToggle: FunctionComponent<BaselineToggleProps> = (
 ) => {
   const { cpu, active, onClick } = props;
 
-  const cpuName = useMemo(() => formatCpuName(cpu, { company: false }), [cpu]);
+  const cpuName = useMemo(
+    () => formatProductName(cpu, { company: false }),
+    [cpu],
+  );
 
-  if (!hasProductFieldValue(cpu.performanceScore)) {
+  if (!hasProductFieldValue(cpu.fields?.performanceRating)) {
     return <span className="text-dimmed cursor-not-allowed">{cpuName}</span>;
   }
 

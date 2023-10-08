@@ -1,4 +1,4 @@
-import { hasProductFieldValue } from '@pcpartdb/shared';
+import { hasProductFieldFormattedValue } from '@pcpartdb/shared';
 import React, { FunctionComponent, useContext } from 'react';
 import { ComparePageContext } from '../../../context/ComparePageContext';
 import { ArchitectureIntro } from './ArchitectureIntro';
@@ -16,22 +16,22 @@ export const ArchitectureSpecs: FunctionComponent<ArchitectureSpecsProps> = (
   const [cpu1, cpu2] = comparison;
 
   if (
-    !hasProductFieldValue(cpu1.architecture) &&
-    !hasProductFieldValue(cpu2.architecture) &&
-    !hasProductFieldValue(cpu1.codename) &&
-    !hasProductFieldValue(cpu2.codename) &&
-    !hasProductFieldValue(cpu1.generation) &&
-    !hasProductFieldValue(cpu2.generation) &&
-    !hasProductFieldValue(cpu1.memorySupport) &&
-    !hasProductFieldValue(cpu2.memorySupport) &&
-    !hasProductFieldValue(cpu1.memoryChannels) &&
-    !hasProductFieldValue(cpu2.memoryChannels) &&
-    !hasProductFieldValue(cpu1.hasEccMemory) &&
-    !hasProductFieldValue(cpu2.hasEccMemory) &&
-    !hasProductFieldValue(cpu1.pciExpress) &&
-    !hasProductFieldValue(cpu2.pciExpress) &&
-    !hasProductFieldValue(cpu1.chipsets) &&
-    !hasProductFieldValue(cpu2.chipsets)
+    !hasProductFieldFormattedValue(cpu1.fields?.architecture) &&
+    !hasProductFieldFormattedValue(cpu2.fields?.architecture) &&
+    !hasProductFieldFormattedValue(cpu1.fields?.codename) &&
+    !hasProductFieldFormattedValue(cpu2.fields?.codename) &&
+    !hasProductFieldFormattedValue(cpu1.fields?.generation) &&
+    !hasProductFieldFormattedValue(cpu2.fields?.generation) &&
+    !hasProductFieldFormattedValue(cpu1.fields?.memorySupport) &&
+    !hasProductFieldFormattedValue(cpu2.fields?.memorySupport) &&
+    !hasProductFieldFormattedValue(cpu1.fields?.memoryChannels) &&
+    !hasProductFieldFormattedValue(cpu2.fields?.memoryChannels) &&
+    !hasProductFieldFormattedValue(cpu1.fields?.eccMemory) &&
+    !hasProductFieldFormattedValue(cpu2.fields?.eccMemory) &&
+    !hasProductFieldFormattedValue(cpu1.fields?.pciExpress) &&
+    !hasProductFieldFormattedValue(cpu2.fields?.pciExpress) &&
+    !hasProductFieldFormattedValue(cpu1.fields?.chipsets) &&
+    !hasProductFieldFormattedValue(cpu2.fields?.chipsets)
   ) {
     return <></>;
   }

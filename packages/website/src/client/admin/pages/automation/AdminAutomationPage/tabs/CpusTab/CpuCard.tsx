@@ -8,10 +8,10 @@ import {
   XMarkIcon,
 } from '@heroicons/react/24/outline';
 import {
-  CpuUpdate,
-  formatCpuName,
+  formatProductName,
   getAdminEditCpuPath,
   getViewCpuPath,
+  ProductUpdate,
   ProductUpdateStatus,
 } from '@pcpartdb/shared';
 import { CpuDiffDialog } from 'packages/website/src/client/admin/components/cpu/CpuDiffDialog/CpuDiffDialog';
@@ -32,12 +32,12 @@ import { AutomationStatusContext } from 'packages/website/src/client/shared/layo
 import React, { useCallback, useContext, useMemo, useState } from 'react';
 
 interface CpuCardTabProps {
-  update: CpuUpdate;
+  update: ProductUpdate;
 }
 
 export const CpuCard = (props: CpuCardTabProps) => {
   const { update } = props;
-  const isUpdate = update.cpuId ? true : false;
+  const isUpdate = update.productId ? true : false;
   const updatedCpu = update.data.updated;
 
   const automationStatusContext = useContext(AutomationStatusContext);
@@ -51,7 +51,7 @@ export const CpuCard = (props: CpuCardTabProps) => {
 
   // Memos
 
-  const name = useMemo(() => formatCpuName(updatedCpu), [updatedCpu]);
+  const name = useMemo(() => formatProductName(updatedCpu), [updatedCpu]);
   const viewHref = useMemo(() => getViewCpuPath(updatedCpu), [updatedCpu]);
 
   // Callbacks

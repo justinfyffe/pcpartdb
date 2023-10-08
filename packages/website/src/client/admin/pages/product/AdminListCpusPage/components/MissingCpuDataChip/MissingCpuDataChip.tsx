@@ -1,4 +1,9 @@
-import { Cpu, CpuDataSourceKey, hasProductFieldValue } from '@pcpartdb/shared';
+import {
+  CpuProduct,
+  hasProductFieldValue,
+  hasProductSource,
+  ProductSourceKey,
+} from '@pcpartdb/shared';
 import React, { FunctionComponent, useMemo } from 'react';
 
 enum MissingData {
@@ -20,7 +25,7 @@ const LABELS = {
 };
 
 interface MissingCpuDataChipProps {
-  cpu: Cpu;
+  cpu: CpuProduct;
 }
 
 export const MissingCpuDataChip: FunctionComponent<MissingCpuDataChipProps> = (
@@ -48,28 +53,28 @@ export const MissingCpuDataChip: FunctionComponent<MissingCpuDataChipProps> = (
   );
 };
 
-function checkMissingCpuData(cpu: Cpu): MissingData[] {
+function checkMissingCpuData(cpu: CpuProduct): MissingData[] {
   const missingData: MissingData[] = [];
 
-  if (cpu.meta?.dataSources?.[CpuDataSourceKey.TechPowerUp]?.url == null) {
+  if (!hasProductSource(cpu, ProductSourceKey.TechPowerUp)) {
     missingData.push(MissingData.TechPowerUp);
   }
 
-  if (cpu.meta?.dataSources?.[CpuDataSourceKey.PassMark]?.url == null) {
+  if (!hasProductSource(cpu, ProductSourceKey.PassMark)) {
     missingData.push(MissingData.PassMark);
   }
 
-  if (cpu.meta?.dataSources?.[CpuDataSourceKey.GeekBench]?.url == null) {
+  if (!hasProductSource(cpu, ProductSourceKey.GeekBench)) {
     missingData.push(MissingData.GeekBench);
   }
 
-  if (!hasProductFieldValue(cpu.marketSegment)) {
+  if (!hasProductFieldValue(cpu.fields?.marketSegment)) {
     missingData.push(MissingData.MarketSegment);
   }
-  if (!hasProductFieldValue(cpu.releaseDate)) {
+  if (!hasProductFieldValue(cpu.fields?.releaseDate)) {
     missingData.push(MissingData.ReleaseDate);
   }
-  if (!hasProductFieldValue(cpu.launchPrice)) {
+  if (!hasProductFieldValue(cpu.fields?.msrp)) {
     missingData.push(MissingData.LaunchPrice);
   }
 

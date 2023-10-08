@@ -1,6 +1,6 @@
 import {
   Config,
-  formatGpuName,
+  formatProductName,
   getAdminEditGpuPath,
   getGpuChipset,
   getHomePath,
@@ -9,6 +9,7 @@ import {
   ProductType,
   ViewGpuViewModel,
 } from '@pcpartdb/shared';
+import { useProductCache } from 'packages/website/src/client/shared/cache/ProductCache';
 import { Breadcrumb } from 'packages/website/src/client/shared/components/Breadcrumbs/Breadcrumb';
 import { Breadcrumbs } from 'packages/website/src/client/shared/components/Breadcrumbs/Breadcrumbs';
 import { Seo } from 'packages/website/src/client/shared/components/Seo/Seo';
@@ -17,7 +18,6 @@ import { Sidenav } from 'packages/website/src/client/sidenav/components/Sidenav/
 import { SidenavRelatedComparisons } from 'packages/website/src/client/sidenav/components/SidenavRelatedComparisons/SidenavRelatedComparisons';
 import { SidenavRelatedProducts } from 'packages/website/src/client/sidenav/components/SidenavRelatedProducts/SidenavRelatedProducts';
 import React, { useMemo } from 'react';
-import { useProductCache } from '../../../../shared/cache/ProductCache';
 import { CompareProductsForm } from '../../../components/CompareProductsForm/CompareProductsForm';
 import {
   Benchmarks,
@@ -34,28 +34,34 @@ import { ViewPageContext } from './context/ViewPageContext';
 import { useViewPageContextProps } from './hooks/useViewPageContextProps';
 
 export const ViewGpuPage = (props: ViewGpuViewModel & { config: Config }) => {
-  const { gpu, relatedGpus, relatedComparisons, contentData, config } = props;
-  useProductCache(ProductType.Gpu, gpu.chipset, gpu);
+  const {
+    gpu,
+    relatedGpus,
+    relatedGpuComparisons,
+    additionalData: contentData,
+    config,
+  } = props;
+  useProductCache(ProductType.Gpu, gpu);
 
-  const context = useViewPageContextProps({ gpu, contentData });
-  const isRetailModel = gpu.chipset != null;
+  const context = useViewPageContextProps({ gpu, additionalData: contentData });
+  const isRetailModel = gpu.parent != null;
 
   const chipset = useMemo(() => getGpuChipset(gpu), [gpu]);
   const chipsetShortName = useMemo(
-    () => formatGpuName(chipset, { company: false }),
+    () => formatProductName(chipset, { company: false }),
     [chipset],
   );
   const chipsetHref = useMemo(() => getViewGpuPath(chipset), [chipset]);
-  const gpuName = useMemo(() => formatGpuName(gpu), [gpu]);
+  const gpuName = useMemo(() => formatProductName(gpu), [gpu]);
   const gpuShortName = useMemo(
-    () => formatGpuName(gpu, { company: false }),
+    () => formatProductName(gpu, { company: false }),
     [gpu],
   );
 
   const pageTitle = useMemo(() => gpuName, [gpuName]);
-  const seoTitle = `${formatGpuName(gpu)}: Specs, performance, and value`;
+  const seoTitle = `${formatProductName(gpu)}: Specs, performance, and value`;
   const seoDescription = useMemo(() => {
-    const fullGpuName = formatGpuName(gpu);
+    const fullGpuName = formatProductName(gpu);
 
     return (
       `View the specs, benchmarks, and performance per dollar of the ${fullGpuName}. ` +
@@ -63,7 +69,7 @@ export const ViewGpuPage = (props: ViewGpuViewModel & { config: Config }) => {
     );
   }, [gpu]);
   const seoCanonical = useMemo(() => getViewGpuPath(gpu), [gpu]);
-  const seoKeywords = useMemo(() => [formatGpuName(gpu)], [gpu]);
+  const seoKeywords = useMemo(() => [formatProductName(gpu)], [gpu]);
 
   const homeHref = useMemo(() => getHomePath(), []);
   const listGpusHref = useMemo(() => getListGpusPath(), []);
@@ -126,11 +132,11 @@ export const ViewGpuPage = (props: ViewGpuViewModel & { config: Config }) => {
           <Sidenav>
             <SidenavRelatedProducts
               productType={ProductType.Gpu}
-              products={relatedGpus.gpus}
+              products={relatedGpus.products}
             />
             <SidenavRelatedComparisons
               productType={ProductType.Gpu}
-              comparisons={relatedComparisons.comparisons}
+              comparisons={relatedGpuComparisons.comparisons}
             />
           </Sidenav>
         </div>

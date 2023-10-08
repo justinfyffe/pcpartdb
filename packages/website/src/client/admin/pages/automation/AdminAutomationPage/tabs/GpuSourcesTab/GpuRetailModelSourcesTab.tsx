@@ -1,13 +1,12 @@
 import 'reflect-metadata';
 import { ArrowPathIcon } from '@heroicons/react/24/outline';
 import {
-  GpuProductSourceGroup,
-  GpuProductType,
-  ListProductSourcesFilter,
-  ListProductSourcesQuery,
+  GpuAutomationSourceGroup,
+  ListAutomationSourcesFilter,
+  ListAutomationSourcesQuery,
   ProductType,
 } from '@pcpartdb/shared';
-import { productSourceService } from 'packages/website/src/client/product/services/productSourceService';
+import { automationSourceService } from 'packages/website/src/client/product/services/automationSourceService';
 import { InfoAlert } from 'packages/website/src/client/shared/components/Alert/InfoAlert';
 import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
 import { Checkbox } from 'packages/website/src/client/shared/components/Checkbox/Checkbox';
@@ -32,31 +31,34 @@ export const GpuRetailModelSourcesTab = (
 
   const [showArchived, setShowArchived] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [items, setItems] = useState<GpuProductSourceGroup[]>([]);
+  const [items, setItems] = useState<GpuAutomationSourceGroup[]>([]);
   const [total, setTotal] = useState(0);
-  const [query, setQuery] = useState<ListProductSourcesQuery>({
+  const [query, setQuery] = useState<ListAutomationSourcesQuery>({
     filter: {
       productType: ProductType.Gpu,
       includeArchived: showArchived,
-      gpuProductType: GpuProductType.RetailModel,
+      isChild: true,
     },
     pagination: { offset: 0, limit: LIMIT },
   });
 
   // Callbacks
 
-  const fetchSourceGroups = useCallback(async (q: ListProductSourcesQuery) => {
-    setLoading(true);
-    const response = await productSourceService.listGroups({ query: q });
-    setQuery(response.query);
-    setItems(response.results as GpuProductSourceGroup[]);
-    setTotal(response.total);
-    setLoading(false);
-  }, []);
+  const fetchSourceGroups = useCallback(
+    async (q: ListAutomationSourcesQuery) => {
+      setLoading(true);
+      const response = await automationSourceService.listGroups({ query: q });
+      setQuery(response.query);
+      setItems(response.results as GpuAutomationSourceGroup[]);
+      setTotal(response.total);
+      setLoading(false);
+    },
+    [],
+  );
 
   const filterSources = useCallback(
     (value: string) => {
-      const filter: ListProductSourcesFilter = {
+      const filter: ListAutomationSourcesFilter = {
         ...query.filter,
         search: value || undefined,
       };
@@ -68,7 +70,7 @@ export const GpuRetailModelSourcesTab = (
 
   const toggleArchived = useCallback(
     (checked: boolean) => {
-      const filter: ListProductSourcesFilter = {
+      const filter: ListAutomationSourcesFilter = {
         ...query.filter,
         includeArchived: checked,
       };

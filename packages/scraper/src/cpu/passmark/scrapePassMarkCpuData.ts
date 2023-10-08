@@ -1,8 +1,13 @@
-import { Cpu, ScrapeProductResponse } from '@pcpartdb/shared';
+import {
+  BenchmarKey,
+  CpuProduct,
+  ProductBenchmark,
+  ProductType,
+  ScrapeProductResponse,
+} from '@pcpartdb/shared';
 import * as cheerio from 'cheerio';
 import { scraper } from '../../scraper';
-import { CommonScraperOptions, ScraperContext } from '../../types';
-import { createCpuField } from '../utils';
+import { CommonScraperOptions } from '../../types';
 
 export interface ScrapePassMarkCpuDataOptions extends CommonScraperOptions {
   url: string;
@@ -12,27 +17,36 @@ export interface ScrapePassMarkCpuDataOptions extends CommonScraperOptions {
 export async function scrapePassMarkCpuData(
   options: ScrapePassMarkCpuDataOptions,
 ) {
-  const { url, noProxy, ctx } = options;
+  const { url, noProxy } = options;
 
   const response = await scraper.scrape(url, { retries: 1, noProxy });
   const $ = cheerio.load(response.data);
 
-  const product: Partial<Cpu> = {
-    cpuMarkMultiThread: getMultiThreadScore($, ctx),
-    cpuMarkSingleThread: getSingleThreadScore($, ctx),
+  const benchmarks: ProductBenchmark[] = [
+    getMultiThreadScore($),
+    getSingleThreadScore($),
+  ].filter((value) => value != null);
+
+  const product: Partial<CpuProduct> = {
+    productType: ProductType.Cpu,
+    benchmarks,
   };
 
   return { product } as ScrapeProductResponse;
 }
 
-function getMultiThreadScore($: cheerio.CheerioAPI, ctx?: ScraperContext) {
+function getMultiThreadScore($: cheerio.CheerioAPI): ProductBenchmark {
   const cpuMarkMultiThread = $('.speedicon').siblings('span').first().text();
 
   const value = cpuMarkMultiThread ? Number(cpuMarkMultiThread) : null;
-  return createCpuField({ field: 'cpuMarkMultiThread', value, ctx });
+  return {
+    benchmarkKey: BenchmarKey.CpuMarkMultiThread,
+    value,
+    metadata: null,
+  };
 }
 
-function getSingleThreadScore($: cheerio.CheerioAPI, ctx?: ScraperContext) {
+function getSingleThreadScore($: cheerio.CheerioAPI): ProductBenchmark {
   const singleThreadScore = $('strong')
     .filter((_i, el) => $(el).text().trim() === 'Single Thread Rating:')
     .parent()
@@ -43,5 +57,9 @@ function getSingleThreadScore($: cheerio.CheerioAPI, ctx?: ScraperContext) {
     .trim();
 
   const value = singleThreadScore ? Number(singleThreadScore) : null;
-  return createCpuField({ field: 'cpuMarkSingleThread', value, ctx });
+  return {
+    benchmarkKey: BenchmarKey.CpuMarkSingleThread,
+    value,
+    metadata: null,
+  };
 }

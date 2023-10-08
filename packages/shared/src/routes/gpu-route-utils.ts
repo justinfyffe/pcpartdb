@@ -1,15 +1,17 @@
 import {
   DEFAULT_LIST_GPUS_LIMIT,
   DEFAULT_LIST_GPUS_OFFSET,
-  Gpu,
-  GpuComparison,
+  GpuProduct,
   LIST_GPUS_PRESETS,
-  ListGpusQuery,
+  ListProductsQuery,
 } from '../product';
 import { joinUrlParts } from '../utils';
-import { GetCompareProductsPathOptions } from './product-route-utils';
+import {
+  GetCompareProductsPathOptions,
+  GetViewProductPathOptions,
+} from './product-route-utils';
 
-export function getListGpusPath(presetOrQuery?: ListGpusQuery | string) {
+export function getListGpusPath(presetOrQuery?: ListProductsQuery | string) {
   const basePath = '/gpus/list/';
 
   if (presetOrQuery == null) {
@@ -46,38 +48,40 @@ export function getListGpusPath(presetOrQuery?: ListGpusQuery | string) {
   return joinUrlParts(basePath, combinedParams ? `?${combinedParams}` : '');
 }
 
-export function getViewGpuPath(gpuOrSlug: Gpu | string) {
-  if (gpuOrSlug == null) {
-    return null;
+export function getViewGpuPath(options: GetViewProductPathOptions) {
+  let slug: string;
+  if (options.product != null) {
+    slug = options.product.slug;
+  } else if (options.slug != null) {
+    slug = options.slug;
+  } else {
+    throw new Error('Need to set product or slug for getting view gpu path');
   }
 
-  const slug = typeof gpuOrSlug === 'string' ? gpuOrSlug : gpuOrSlug.slug;
   return joinUrlParts('/gpus/view/', slug, '/');
 }
 
-export function getCompareGpusPath(
-  comparisonOrSlug: GpuComparison | [string, string],
-  options?: GetCompareProductsPathOptions,
-) {
-  let gpu1Slug: string;
-  let gpu2Slug: string;
-  if (typeof comparisonOrSlug[0] === 'string') {
-    gpu1Slug = comparisonOrSlug[0];
-    gpu2Slug = comparisonOrSlug[1] as string;
+export function getCompareGpusPath(options: GetCompareProductsPathOptions) {
+  const { comparison, slugs } = options;
+
+  let slug1: string;
+  let slug2: string;
+  if (comparison != null) {
+    slug1 = comparison[0].slug;
+    slug2 = comparison[1].slug;
+  } else if (slugs != null) {
+    slug1 = slugs[0];
+    slug2 = slugs[1];
   } else {
-    const comparison = comparisonOrSlug as GpuComparison;
-    const [gpu1, gpu2] =
-      options?.ordered === true
-        ? [...comparison].sort((p1, p2) => p1.id - p2.id)
-        : comparison;
-    gpu1Slug = gpu1.slug;
-    gpu2Slug = gpu2.slug;
+    throw new Error(
+      'Need to set comparison or slugs for getting compare gpus path',
+    );
   }
 
-  return joinUrlParts('/gpus/compare/', `${gpu1Slug}--vs--${gpu2Slug}`, '/');
+  return joinUrlParts('/gpus/compare/', `${slug1}--vs--${slug2}`, '/');
 }
 
-export function getAdminListGpusPath(query?: ListGpusQuery) {
+export function getAdminListGpusPath(query?: ListProductsQuery) {
   const path = '/admin/gpus/';
 
   const paginationParams =
@@ -101,7 +105,9 @@ export function getAdminNewGpuPath() {
   return '/admin/gpus/new/';
 }
 
-export function getAdminEditGpuPath(gpuOrIdOrSlug: Gpu | number | string) {
+export function getAdminEditGpuPath(
+  gpuOrIdOrSlug: GpuProduct | number | string,
+) {
   if (typeof gpuOrIdOrSlug === 'number') {
     return joinUrlParts('/admin/gpus/', String(gpuOrIdOrSlug), '/');
   } else if (typeof gpuOrIdOrSlug === 'string') {
@@ -111,7 +117,7 @@ export function getAdminEditGpuPath(gpuOrIdOrSlug: Gpu | number | string) {
   }
 }
 
-function generatePaginationParamsFromGpusQuery(query: ListGpusQuery) {
+function generatePaginationParamsFromGpusQuery(query: ListProductsQuery) {
   const params = new URLSearchParams();
 
   if (
@@ -131,11 +137,7 @@ function generatePaginationParamsFromGpusQuery(query: ListGpusQuery) {
   return params;
 }
 
-export function getAdminImportGpusPath() {
-  return '/admin/gpus/import';
-}
-
-function generateSearchParamsFromGpusQuery(query: ListGpusQuery) {
+function generateSearchParamsFromGpusQuery(query: ListProductsQuery) {
   const params = new URLSearchParams();
 
   if (query.filter?.company?.length > 0) {
@@ -157,7 +159,7 @@ function generateSearchParamsFromGpusQuery(query: ListGpusQuery) {
   return params;
 }
 
-function getListGpusPresetEquivalent(query: ListGpusQuery) {
+function getListGpusPresetEquivalent(query: ListProductsQuery) {
   const presets = Object.entries(LIST_GPUS_PRESETS);
 
   for (const [key, preset] of presets) {
@@ -169,7 +171,10 @@ function getListGpusPresetEquivalent(query: ListGpusQuery) {
   return null;
 }
 
-function areGpuQueriesEqual(query1: ListGpusQuery, query2: ListGpusQuery) {
+function areGpuQueriesEqual(
+  query1: ListProductsQuery,
+  query2: ListProductsQuery,
+) {
   const sort1 = query1.orderBy?.sort;
   const sort2 = query2.orderBy?.sort;
   const order1 = query1.orderBy?.order;

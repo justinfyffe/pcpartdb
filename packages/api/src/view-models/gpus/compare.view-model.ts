@@ -1,17 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import {
-  CompareGpusContentData,
+  CompareGpusAdditionalData,
   CompareGpusViewModel,
   getGpuChipset,
-  Gpu,
-  GpuComparison,
-  hasProductFieldValue,
-  ListGpusOrder,
-  ListGpusSort,
-  RelatedGpuComparisons,
-  RelatedGpus,
+  GpuProduct,
+  GpuProductComparison,
+  hasProductFieldRawValue,
+  ListOrder,
+  ListSort,
+  productFieldRawValue,
+  ProductType,
+  RelatedProductComparisons,
+  RelatedProducts,
 } from '@pcpartdb/shared';
-import { GpuService } from '../../product/gpu/gpu.service';
+import { ProductService } from '../../product/product.service';
 import { Context } from '../../shared/context';
 import { getSurroundingValues } from '../../shared/utils';
 
@@ -19,69 +21,86 @@ const TOTAL_COMPARED_GPUS = 10;
 
 @Injectable()
 export class CompareGpusViewModelService {
-  constructor(private gpuService: GpuService) {}
+  constructor(private productService: ProductService) {}
 
   async viewModel(slug: string, ctx: Context) {
     const comparison = await this.getComparison(slug, ctx);
-    const contentData = await this.getContentData(comparison, ctx);
+    const additionalData = await this.getAdditionalData(comparison, ctx);
 
     const relatedGpus = await this.getRelatedGpus(
       3,
-      contentData.relativePerformanceGpus,
-      contentData.relativeValueGpus,
+      additionalData.relativePerformanceGpus,
+      additionalData.relativeValueGpus,
       comparison,
     );
     const relatedComparisons = await this.getRelatedComparisons(
       3,
-      contentData.relativePerformanceGpus,
-      contentData.relativeValueGpus,
+      additionalData.relativePerformanceGpus,
+      additionalData.relativeValueGpus,
       comparison,
     );
 
     return {
       comparison,
-      contentData,
+      additionalData: additionalData,
       relatedGpus,
       relatedComparisons,
     } as CompareGpusViewModel;
   }
 
   private async getComparison(slug: string, ctx: Context) {
-    return await this.gpuService.getComparison(
+    const comparison = await this.productService.getComparison(
       {
+        productType: ProductType.Gpu,
         slug,
-        includeRetailModels: true,
+
+        includeParent: true,
+        includeChildren: false,
+        includeAutomation: false,
+        includeBenchmarks: true,
         includeImages: true,
-        includeRanks: ['performanceRank', 'valueRank'],
+        includeSources: false,
+        includeUpdates: false,
+
+        includeRanks: ['performanceRating', 'performancePerMsrp'],
       },
       ctx,
     );
+    return comparison as GpuProductComparison;
   }
 
-  private async getContentData(comparison: GpuComparison, ctx: Context) {
+  private async getAdditionalData(
+    comparison: GpuProductComparison,
+    ctx: Context,
+  ) {
     const chipset1 = getGpuChipset(comparison[0]);
     const chipset2 = getGpuChipset(comparison[1]);
 
-    const retailModels1 = await this.gpuService.list(
+    const retailModelsResponse1 = await this.productService.list(
       {
+        productType: ProductType.Gpu,
         query: {
           filter: { chipsetId: chipset1.id, isRetailModel: true },
-          orderBy: { sort: ListGpusSort.Name },
+          orderBy: { sort: ListSort.Name },
         },
-        fields: ['company'],
       },
+      {},
       ctx,
     );
-    const retailModels2 = await this.gpuService.list(
+    const retailModels1 = retailModelsResponse1.results;
+
+    const retailModelsResponse2 = await this.productService.list(
       {
+        productType: ProductType.Gpu,
         query: {
           filter: { chipsetId: chipset2.id, isRetailModel: true },
-          orderBy: { sort: ListGpusSort.Name },
+          orderBy: { sort: ListSort.Name },
         },
-        fields: ['company'],
       },
+      {},
       ctx,
     );
+    const retailModels2 = retailModelsResponse2.results;
 
     return {
       relativePerformanceGpus: await this.getRelativePerformanceGpus(
@@ -91,11 +110,11 @@ export class CompareGpusViewModelService {
       relativeValueGpus: await this.getRelativeValueGpus(comparison, ctx),
       retailModels1,
       retailModels2,
-    } as CompareGpusContentData;
+    } as CompareGpusAdditionalData;
   }
 
   private async getRelativePerformanceGpus(
-    comparison: GpuComparison,
+    comparison: GpuProductComparison,
     ctx: Context,
   ) {
     const [gpu1, gpu2] = comparison;
@@ -122,7 +141,7 @@ export class CompareGpusViewModelService {
     // Both GPUS have neighbors
     const hasGapBetweenNeighbors =
       Math.abs(
-        chipset1.ranks?.performanceRank - chipset2.ranks?.performanceRank,
+        chipset1.ranks?.performanceRating - chipset2.ranks?.performanceRating,
       ) >
       TOTAL_COMPARED_GPUS / 2 + 1;
 
@@ -131,19 +150,22 @@ export class CompareGpusViewModelService {
         [chipset1, chipset2],
         neighbors1,
         neighbors2,
-        (g1, g2) => g1.ranks?.performanceRank - g2.ranks?.performanceRank,
+        (g1, g2) => g1.ranks?.performanceRating - g2.ranks?.performanceRating,
       );
     } else {
       return this.mergeNeighbors(
         [chipset1, chipset2],
         neighbors1,
         neighbors2,
-        (g1, g2) => g1.ranks?.performanceRank - g2.ranks?.performanceRank,
+        (g1, g2) => g1.ranks?.performanceRating - g2.ranks?.performanceRating,
       );
     }
   }
 
-  private async getRelativeValueGpus(comparison: GpuComparison, ctx: Context) {
+  private async getRelativeValueGpus(
+    comparison: GpuProductComparison,
+    ctx: Context,
+  ) {
     const [gpu1, gpu2] = comparison;
     const chipset1 = getGpuChipset(gpu1);
     const chipset2 = getGpuChipset(gpu2);
@@ -167,7 +189,9 @@ export class CompareGpusViewModelService {
 
     // Both GPUs have neighbors. Need to combine them.
     const hasGapBetweenNeighbors =
-      Math.abs(chipset1.ranks?.valueRank - chipset2.ranks?.valueRank) >
+      Math.abs(
+        chipset1.ranks?.performancePerMsrp - chipset2.ranks?.performancePerMsrp,
+      ) >
       TOTAL_COMPARED_GPUS / 2 + 1;
 
     if (hasGapBetweenNeighbors) {
@@ -175,129 +199,169 @@ export class CompareGpusViewModelService {
         [chipset1, chipset2],
         neighbors1,
         neighbors2,
-        (g1, g2) => g1.ranks?.valueRank - g2.ranks?.valueRank,
+        (g1, g2) => g1.ranks?.performancePerMsrp - g2.ranks?.performancePerMsrp,
       );
     } else {
       return this.mergeNeighbors(
         [chipset1, chipset2],
         neighbors1,
         neighbors2,
-        (g1, g2) => g1.ranks?.valueRank - g2.ranks?.valueRank,
+        (g1, g2) => g1.ranks?.performancePerMsrp - g2.ranks?.performancePerMsrp,
       );
     }
   }
 
-  private async getPerformanceNeighbors(gpu: Gpu, ctx: Context) {
+  private async getPerformanceNeighbors(gpu: GpuProduct, ctx: Context) {
     // Missing value. Cannot have neighbors.
-    if (!hasProductFieldValue(gpu.performanceScore)) {
+    if (!hasProductFieldRawValue(gpu.fields?.performanceRating)) {
       return [];
     }
 
-    const above = await this.gpuService.list(
+    const aboveResponse = await this.productService.list(
       {
+        productType: ProductType.Gpu,
         query: {
           filter: {
-            segment: [gpu.marketSegment?.value],
+            segment: hasProductFieldRawValue(gpu.fields?.marketSegment)
+              ? [productFieldRawValue(gpu.fields?.marketSegment)]
+              : [],
             excludeIds: [gpu.id],
-            minPerformanceScore: gpu.performanceScore?.value,
+            minPerformanceScore: productFieldRawValue(
+              gpu.fields?.performanceRating,
+            ),
             performanceRated: true,
           },
           orderBy: {
-            sort: ListGpusSort.PerformanceRating,
-            order: ListGpusOrder.Asc,
+            sort: ListSort.PerformanceRating,
+            order: ListOrder.Asc,
           },
           pagination: { limit: TOTAL_COMPARED_GPUS },
         },
-        fields: ['company', 'performanceScore'],
-        includeRanks: ['performanceRank'],
+      },
+      {
+        fields: ['performanceRating'],
+        includeRanks: ['performanceRating'],
       },
       ctx,
     );
+    const aboveGpus = aboveResponse.results;
 
-    const below = await this.gpuService.list(
+    const belowResponse = await this.productService.list(
       {
+        productType: ProductType.Gpu,
         query: {
           filter: {
-            segment: [gpu.marketSegment?.value],
+            segment: hasProductFieldRawValue(gpu.fields?.marketSegment)
+              ? [productFieldRawValue(gpu.fields?.marketSegment)]
+              : [],
             excludeIds: [gpu.id],
-            maxPerformanceScore: gpu.performanceScore?.value,
+            maxPerformanceScore: productFieldRawValue(
+              gpu.fields?.performanceRating,
+            ),
             performanceRated: true,
           },
           orderBy: {
-            sort: ListGpusSort.PerformanceRating,
-            order: ListGpusOrder.Desc,
+            sort: ListSort.PerformanceRating,
+            order: ListOrder.Desc,
           },
           pagination: { limit: TOTAL_COMPARED_GPUS },
         },
-        fields: ['company', 'performanceScore'],
-        includeRanks: ['performanceRank'],
+      },
+      {
+        fields: ['performanceRating'],
+        includeRanks: ['performanceRating'],
       },
       ctx,
     );
+    const belowGpus = belowResponse.results;
 
     return [
-      ...new Map([...above, gpu, ...below].map((n) => [n.id, n])).values(),
+      ...new Map(
+        [...aboveGpus, gpu, ...belowGpus].map((n) => [n.id, n]),
+      ).values(),
     ].sort(
       (gpu1, gpu2) =>
-        gpu2.performanceScore?.value - gpu1.performanceScore?.value,
-    );
+        productFieldRawValue(gpu2.fields?.performanceRating) -
+        productFieldRawValue(gpu1.fields?.performanceRating),
+    ) as GpuProduct[];
   }
 
-  private async getValueNeighbors(gpu: Gpu, ctx: Context) {
+  private async getValueNeighbors(gpu: GpuProduct, ctx: Context) {
     // Missing value. Cannot have neighbors.
-    if (!hasProductFieldValue(gpu.valueScore)) {
+    if (!hasProductFieldRawValue(gpu.fields?.performancePerMsrp)) {
       return [];
     }
 
-    const above = await this.gpuService.list(
+    const aboveResponse = await this.productService.list(
       {
+        productType: ProductType.Gpu,
         query: {
           filter: {
-            segment: [gpu.marketSegment?.value],
+            segment: hasProductFieldRawValue(gpu.fields?.marketSegment)
+              ? [productFieldRawValue(gpu.fields?.marketSegment)]
+              : [],
             excludeIds: [gpu.id],
-            minValueScore: gpu.valueScore?.value,
-            valueRated: true,
-          },
-          orderBy: { sort: ListGpusSort.ValueRating, order: ListGpusOrder.Asc },
-          pagination: { limit: TOTAL_COMPARED_GPUS },
-        },
-        fields: ['company', 'valueScore'],
-        includeRanks: ['valueRank'],
-      },
-      ctx,
-    );
-
-    const below = await this.gpuService.list(
-      {
-        query: {
-          filter: {
-            segment: [gpu.marketSegment?.value],
-            excludeIds: [gpu.id],
-            maxValueScore: gpu.valueScore?.value,
+            minValueScore: productFieldRawValue(gpu.fields?.performancePerMsrp),
             valueRated: true,
           },
           orderBy: {
-            sort: ListGpusSort.ValueRating,
-            order: ListGpusOrder.Desc,
+            sort: ListSort.PerformancePerMsrp,
+            order: ListOrder.Asc,
           },
           pagination: { limit: TOTAL_COMPARED_GPUS },
         },
-        fields: ['company', 'valueScore'],
-        includeRanks: ['valueRank'],
+      },
+      {
+        fields: ['performancePerMsrp'],
+        includeRanks: ['performancePerMsrp'],
       },
       ctx,
     );
+    const aboveGpus = aboveResponse.results;
+
+    const belowResponse = await this.productService.list(
+      {
+        productType: ProductType.Gpu,
+        query: {
+          filter: {
+            segment: hasProductFieldRawValue(gpu.fields?.marketSegment)
+              ? [productFieldRawValue(gpu.fields?.marketSegment)]
+              : [],
+            excludeIds: [gpu.id],
+            maxValueScore: productFieldRawValue(gpu.fields?.performancePerMsrp),
+            valueRated: true,
+          },
+          orderBy: {
+            sort: ListSort.PerformancePerMsrp,
+            order: ListOrder.Desc,
+          },
+          pagination: { limit: TOTAL_COMPARED_GPUS },
+        },
+      },
+      {
+        fields: ['performancePerMsrp'],
+        includeRanks: ['performancePerMsrp'],
+      },
+      ctx,
+    );
+    const belowGpus = belowResponse.results;
 
     return [
-      ...new Map([...above, gpu, ...below].map((n) => [n.id, n])).values(),
-    ].sort((gpu1, gpu2) => gpu2.valueScore?.value - gpu1.valueScore?.value);
+      ...new Map(
+        [...aboveGpus, gpu, ...belowGpus].map((n) => [n.id, n]),
+      ).values(),
+    ].sort(
+      (gpu1, gpu2) =>
+        productFieldRawValue(gpu2.fields?.performancePerMsrp) -
+        productFieldRawValue(gpu1.fields?.performancePerMsrp),
+    ) as GpuProduct[];
   }
 
   private concatNeighbors(
-    comparison: GpuComparison,
-    neighbors1: Gpu[],
-    neighbors2: Gpu[],
-    compareFn: (gpu1: Gpu, gpu2: Gpu) => number,
+    comparison: GpuProductComparison,
+    neighbors1: GpuProduct[],
+    neighbors2: GpuProduct[],
+    compareFn: (gpu1: GpuProduct, gpu2: GpuProduct) => number,
   ) {
     const [gpu1, gpu2] = comparison;
 
@@ -314,14 +378,18 @@ export class CompareGpusViewModelService {
     );
 
     // Combine them and sort.
-    return [...surrounding1, ...surrounding2].sort(compareFn);
+    const set = [...surrounding1, ...surrounding2].reduce((acc, cpu) => {
+      acc[cpu.id] = cpu;
+      return acc;
+    }, {} as Record<number, GpuProduct>);
+    return Object.values(set).sort(compareFn);
   }
 
   private mergeNeighbors(
-    comparison: GpuComparison,
-    neighbors1: Gpu[],
-    neighbors2: Gpu[],
-    compareFn: (gpu1: Gpu, gpu2: Gpu) => number,
+    comparison: GpuProductComparison,
+    neighbors1: GpuProduct[],
+    neighbors2: GpuProduct[],
+    compareFn: (gpu1: GpuProduct, gpu2: GpuProduct) => number,
   ) {
     const [gpu1, gpu2] = comparison;
 
@@ -341,7 +409,7 @@ export class CompareGpusViewModelService {
     const set = [...surrounding1, ...surrounding2].reduce((acc, gpu) => {
       acc[gpu.id] = gpu;
       return acc;
-    }, {} as Record<number, Gpu>);
+    }, {} as Record<number, GpuProduct>);
     const merged = Object.values(set).sort(compareFn);
 
     // Find the middle point between the two GPUs that are being compared.
@@ -355,14 +423,14 @@ export class CompareGpusViewModelService {
 
   private async getRelatedGpus(
     total: number,
-    performanceGpus: Gpu[],
-    valueGpus: Gpu[],
-    excludeGpus: Gpu[],
+    performanceGpus: GpuProduct[],
+    valueGpus: GpuProduct[],
+    excludeGpus: GpuProduct[],
   ) {
     const map = [...performanceGpus, ...valueGpus].reduce((acc, gpu) => {
       acc[gpu.id] = gpu;
       return acc;
-    }, {} as Record<number, Gpu>);
+    }, {} as Record<number, GpuProduct>);
 
     const performanceIds = performanceGpus.map((gpu) => gpu.id);
     const valueIds = valueGpus.map((gpu) => gpu.id);
@@ -370,7 +438,7 @@ export class CompareGpusViewModelService {
     const set = new Set([...performanceIds, ...valueIds]);
     excludeGpus.forEach((gpu) => set.delete(gpu.id));
 
-    const related: Gpu[] = [];
+    const related: GpuProduct[] = [];
     for (let i = 0; i < total && set.size > 0; ++i) {
       const randIdx = Math.floor(Math.random() * set.size);
       const id = [...set.values()][randIdx];
@@ -379,19 +447,19 @@ export class CompareGpusViewModelService {
       related.push(map[id]);
     }
 
-    return { gpus: related } as RelatedGpus;
+    return { products: related } as RelatedProducts;
   }
 
   private async getRelatedComparisons(
     total: number,
-    performanceGpus: Gpu[],
-    valueGpus: Gpu[],
-    pageComparison: GpuComparison,
+    performanceGpus: GpuProduct[],
+    valueGpus: GpuProduct[],
+    pageComparison: GpuProductComparison,
   ) {
     const map = [...performanceGpus, ...valueGpus].reduce((acc, gpu) => {
       acc[gpu.id] = gpu;
       return acc;
-    }, {} as Record<number, Gpu>);
+    }, {} as Record<number, GpuProduct>);
 
     const performanceIds = performanceGpus.map((gpu) => gpu.id);
     const valueIds = valueGpus.map((gpu) => gpu.id);
@@ -399,7 +467,7 @@ export class CompareGpusViewModelService {
     const set = new Set([...performanceIds, ...valueIds]);
     pageComparison.forEach((gpu) => set.delete(gpu.id));
 
-    const related: Gpu[] = [];
+    const related: GpuProduct[] = [];
     for (let i = 0; i < total && set.size > 0; ++i) {
       const randIdx = Math.floor(Math.random() * set.size);
       const id = [...set.values()][randIdx];
@@ -413,6 +481,6 @@ export class CompareGpusViewModelService {
       relatedGpu,
     ]);
 
-    return { comparisons } as RelatedGpuComparisons;
+    return { comparisons } as RelatedProductComparisons;
   }
 }

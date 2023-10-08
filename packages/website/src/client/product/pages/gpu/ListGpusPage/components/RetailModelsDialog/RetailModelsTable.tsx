@@ -1,9 +1,9 @@
 import {
   formatGpuDimensions,
-  formatGpuField,
-  formatGpuName,
+  formatProductName,
   getViewGpuPath,
-  Gpu,
+  GpuProduct,
+  productFieldFormattedValue,
 } from '@pcpartdb/shared';
 import {
   Table,
@@ -16,7 +16,7 @@ import {
 import React, { FunctionComponent, useMemo } from 'react';
 
 interface RetailModelsTableProps {
-  retailModels: Gpu[];
+  retailModels: GpuProduct[];
 }
 
 export const RetailModelsTable: FunctionComponent<RetailModelsTableProps> = (
@@ -46,7 +46,7 @@ export const RetailModelsTable: FunctionComponent<RetailModelsTableProps> = (
 };
 
 interface RetailModelRowProps {
-  retailModel: Gpu;
+  retailModel: GpuProduct;
 }
 
 export const RetailModelRow: FunctionComponent<RetailModelRowProps> = (
@@ -54,23 +54,23 @@ export const RetailModelRow: FunctionComponent<RetailModelRowProps> = (
 ) => {
   const { retailModel } = props;
 
-  const name = useMemo(() => formatGpuName(retailModel), [retailModel]);
+  const name = useMemo(() => formatProductName(retailModel), [retailModel]);
   const href = useMemo(() => getViewGpuPath(retailModel), [retailModel]);
 
   const clock = useMemo(
     () =>
-      `${formatGpuField(retailModel.coreClockSpeedBase)} / ${formatGpuField(
-        retailModel.coreClockSpeedBoost,
-      )}`,
-    [retailModel.coreClockSpeedBase, retailModel.coreClockSpeedBoost],
+      `${productFieldFormattedValue(
+        retailModel.fields.gpuCoreBaseClock,
+      )} / ${productFieldFormattedValue(retailModel.fields.gpuCoreBoostClock)}`,
+    [retailModel.fields.gpuCoreBaseClock, retailModel.fields.gpuCoreBoostClock],
   );
   const dimensions = useMemo(
     () => formatGpuDimensions(retailModel),
     [retailModel],
   );
   const tdp = useMemo(
-    () => formatGpuField(retailModel.thermalDesignPower),
-    [retailModel.thermalDesignPower],
+    () => productFieldFormattedValue(retailModel.fields.tdp),
+    [retailModel.fields.tdp],
   );
 
   return (

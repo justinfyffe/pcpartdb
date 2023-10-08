@@ -1,25 +1,31 @@
 import {
-  CpuComparison,
-  GpuComparison,
+  CpuProductComparison,
+  GpuProductComparison,
   ProductComparison,
   ProductType,
 } from '../product';
-import { formatCpuName, formatGpuName } from './formatProductName';
+import { formatProductName } from './formatProductName';
 
 export interface FormatProductComparisonNameOptions {
   company?: boolean;
 }
 
 export function formatProductComparisonName(
-  productType: ProductType,
   comparison: ProductComparison,
   options?: FormatProductComparisonNameOptions,
 ) {
+  const productType = comparison[0]?.productType || comparison[1]?.productType;
   switch (productType) {
     case ProductType.Cpu:
-      return formatCpuComparisonName(comparison as CpuComparison, options);
+      return formatCpuComparisonName(
+        comparison as CpuProductComparison,
+        options,
+      );
     case ProductType.Gpu:
-      return formatGpuComparisonName(comparison as GpuComparison, options);
+      return formatGpuComparisonName(
+        comparison as GpuProductComparison,
+        options,
+      );
     default:
       throw new Error(
         'Unsupported product tpye for formatting comparison name.',
@@ -28,7 +34,7 @@ export function formatProductComparisonName(
 }
 
 export function formatCpuComparisonName(
-  comparison: CpuComparison,
+  comparison: CpuProductComparison,
   options?: FormatProductComparisonNameOptions,
 ) {
   const [cpu1, cpu2] = comparison;
@@ -36,11 +42,14 @@ export function formatCpuComparisonName(
     return null;
   }
 
-  return `${formatCpuName(cpu1, options)} vs ${formatCpuName(cpu2, options)}`;
+  return `${formatProductName(cpu1, options)} vs ${formatProductName(
+    cpu2,
+    options,
+  )}`;
 }
 
 export function formatGpuComparisonName(
-  comparison: GpuComparison,
+  comparison: GpuProductComparison,
   options?: FormatProductComparisonNameOptions,
 ) {
   const [gpu1, gpu2] = comparison;
@@ -48,5 +57,8 @@ export function formatGpuComparisonName(
     return null;
   }
 
-  return `${formatGpuName(gpu1, options)} vs ${formatGpuName(gpu2, options)}`;
+  return `${formatProductName(gpu1, options)} vs ${formatProductName(
+    gpu2,
+    options,
+  )}`;
 }

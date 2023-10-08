@@ -7,14 +7,14 @@ import {
   UlBenchmarkGpuSource,
 } from '@pcpartdb/scraper';
 import {
-  AutoArchiveProductSourcesRequest,
   AutomationAction,
+  AutomationSource,
   concurrent,
   ConcurrentFn,
-  GpuDataSourceKey,
-  GpuProductSource,
+  formatProductName,
+  ProductSourceKey,
   ProductType,
-  UpsertProductSourcesRequest,
+  UpsertAutomationSourcesRequest,
 } from '@pcpartdb/shared';
 import { sleep } from '../../shared/process';
 import { AutomationContext } from '../types';
@@ -173,13 +173,6 @@ export async function updateGpuChipsetSourcesAction(
   await uploadGpuSources(passMarkSources, context);
   await uploadGpuSources(ulBenchmarkSources, context);
 
-  // Trigger auto-archive
-  await context.api.post(
-    'products/sources/auto-archive',
-    { productType: ProductType.Gpu } as AutoArchiveProductSourcesRequest,
-    { retries: 2 },
-  );
-
   // Update execution details
   context.metadata = {
     ...(context.metadata ?? {}),
@@ -208,12 +201,12 @@ async function getTechPowerUpSources(context: AutomationContext) {
   });
 
   // Convert to source object
-  const sources: GpuProductSource[] = Object.values(map).map((value) => ({
+  const sources: AutomationSource[] = Object.values(map).map((value) => ({
     groupKey: value.groupKey,
     externalKey: value.externalKey,
     productType: ProductType.Gpu,
-    sourceName: `${value.company || ''} ${value.name}`.trim(),
-    sourceKey: GpuDataSourceKey.TechPowerUp,
+    sourceName: formatProductName({ company: value.company, name: value.name }),
+    sourceKey: ProductSourceKey.TechPowerUp,
     sourceUrl: value.url,
   }));
 
@@ -230,7 +223,7 @@ async function scrapeTechPowerUp(
   console.log(`Scraping sources for url: ${url}`);
   try {
     const sources = await scrapeTechPowerUpGpuSources({ url, company });
-    console.log(`Scraped ${sources.length} sources`);
+    console.log(`Scraped ${sources.length} sources from ${url}`);
     sources.forEach((gpu) => {
       map[gpu.name] = gpu;
     });
@@ -259,12 +252,12 @@ async function getPassMarkSources(context: AutomationContext) {
   });
 
   // Convert to source object
-  const sources: GpuProductSource[] = Object.values(map).map((value) => ({
+  const sources: AutomationSource[] = Object.values(map).map((value) => ({
     groupKey: value.groupKey,
     externalKey: value.externalKey,
     productType: ProductType.Gpu,
-    sourceName: `${value.company || ''} ${value.name}`.trim(),
-    sourceKey: GpuDataSourceKey.VideocardBenchmarks,
+    sourceName: formatProductName({ company: value.company, name: value.name }),
+    sourceKey: ProductSourceKey.PassMark,
     sourceUrl: value.url,
   }));
 
@@ -281,7 +274,7 @@ async function scrapePassMark(
 
   try {
     const sources = await scrapePassMarkGpuSources({ url });
-    console.log(`Scraped ${sources.length} sources`);
+    console.log(`Scraped ${sources.length} sources from ${url}`);
     sources.forEach((gpu) => {
       map[gpu.name] = gpu;
     });
@@ -310,12 +303,12 @@ async function getUlBenchmarkSources(context: AutomationContext) {
   });
 
   // Convert to source object
-  const sources: GpuProductSource[] = Object.values(map).map((value) => ({
+  const sources: AutomationSource[] = Object.values(map).map((value) => ({
     groupKey: value.groupKey,
     externalKey: value.externalKey,
     productType: ProductType.Gpu,
-    sourceName: `${value.company || ''} ${value.name}`.trim(),
-    sourceKey: GpuDataSourceKey.UlBenchmarks,
+    sourceName: formatProductName({ company: value.company, name: value.name }),
+    sourceKey: ProductSourceKey.UlBenchmarks,
     sourceUrl: value.url,
   }));
 
@@ -332,7 +325,7 @@ async function scrapeUlBenchmark(
 
   try {
     const sources = await scrapeUlBenchmarkGpuSources({ query });
-    console.log(`Scraped ${sources.length} sources`);
+    console.log(`Scraped ${sources.length} sources for ${query}`);
     sources.forEach((gpu) => {
       map[gpu.name] = gpu;
     });
@@ -343,13 +336,13 @@ async function scrapeUlBenchmark(
 }
 
 async function uploadGpuSources(
-  sources: GpuProductSource[],
+  sources: AutomationSource[],
   context: AutomationContext,
 ) {
   console.log('Upload GPU sources to API.');
 
   // Create batches so we can upload multiple ones at a time.
-  const batches: GpuProductSource[][] = [];
+  const batches: AutomationSource[][] = [];
   for (let i = 0; i < sources.length; i += BATCH_SIZE) {
     const batch = sources.slice(i, i + BATCH_SIZE);
     batches.push(batch);
@@ -360,10 +353,8 @@ async function uploadGpuSources(
   for (const batch of batches) {
     try {
       await context.api.post(
-        'products/sources',
-        {
-          sources: batch,
-        } as UpsertProductSourcesRequest,
+        'automation/sources',
+        { sources: batch, autoArchive: true } as UpsertAutomationSourcesRequest,
         { retries: 2 },
       );
       totalSources += batch.length;

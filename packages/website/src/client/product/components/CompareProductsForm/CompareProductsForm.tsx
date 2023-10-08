@@ -57,13 +57,12 @@ export const CompareProductsForm: FunctionComponent<
         .map((value) => productCache.get(productType, value));
 
       if (products.length === 2 && products[0].id !== products[1].id) {
-        window.location.href = getCompareProductsPath(
-          productType,
-          products as ProductComparison,
-        );
+        window.location.href = getCompareProductsPath({
+          comparison: products as ProductComparison,
+        });
         return;
       } else if (products.length === 1 || products[0].id === products[1].id) {
-        window.location.href = getViewProductPath(productType, products[0]);
+        window.location.href = getViewProductPath({ product: products[0] });
         return;
       } else {
         return;

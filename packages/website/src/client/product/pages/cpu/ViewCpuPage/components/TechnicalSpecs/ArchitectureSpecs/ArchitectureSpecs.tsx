@@ -1,4 +1,4 @@
-import { hasProductFieldValue } from '@pcpartdb/shared';
+import { hasProductFieldFormattedValue } from '@pcpartdb/shared';
 import React, { FunctionComponent, useContext } from 'react';
 import { ViewPageContext } from '../../../context/ViewPageContext';
 import { ArchitectureIntro } from './ArchitectureIntro';
@@ -15,14 +15,14 @@ export const ArchitectureSpecs: FunctionComponent<ArchitectureSpecsProps> = (
   const { cpu } = useContext(ViewPageContext);
 
   if (
-    !hasProductFieldValue(cpu.architecture) &&
-    !hasProductFieldValue(cpu.codename) &&
-    !hasProductFieldValue(cpu.generation) &&
-    !hasProductFieldValue(cpu.memorySupport) &&
-    !hasProductFieldValue(cpu.memoryChannels) &&
-    !hasProductFieldValue(cpu.hasEccMemory) &&
-    !hasProductFieldValue(cpu.pciExpress) &&
-    !hasProductFieldValue(cpu.chipsets)
+    !hasProductFieldFormattedValue(cpu.fields?.architecture) &&
+    !hasProductFieldFormattedValue(cpu.fields?.codename) &&
+    !hasProductFieldFormattedValue(cpu.fields?.generation) &&
+    !hasProductFieldFormattedValue(cpu.fields?.memorySupport) &&
+    !hasProductFieldFormattedValue(cpu.fields?.memoryChannels) &&
+    !hasProductFieldFormattedValue(cpu.fields?.eccMemory) &&
+    !hasProductFieldFormattedValue(cpu.fields?.pciExpress) &&
+    !hasProductFieldFormattedValue(cpu.fields?.chipsets)
   ) {
     return <></>;
   }

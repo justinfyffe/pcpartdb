@@ -1,42 +1,72 @@
 import { ListQuery, ListRequest, ListResponse } from '../common';
-import { GpuProductType } from './gpu';
+import { ProductSource } from './sources';
 import {
-  ProductSourceGroup,
+  ListProductsQuery,
+  Product,
   ProductType,
   ProductUpdate,
   ProductUpdateStatus,
+  SubProductType,
 } from './types';
 
-// Product Sources
-
-export interface ListProductSourcesFilter {
-  productType?: ProductType;
-  includeArchived?: boolean;
-  search?: string;
-
-  // GPU Specific
-  gpuProductType?: GpuProductType;
-  gpuChipsetId?: number;
+// Products
+export interface ListProductsRequest<
+  TQuery extends ListProductsQuery = ListProductsQuery,
+> extends ListRequest<TQuery> {
+  productType: ProductType;
 }
 
-export interface ListProductSourcesQuery
-  extends ListQuery<ListProductSourcesFilter> {}
+export interface ListProductsResponse<
+  TQuery extends ListProductsQuery = ListProductsQuery,
+  TResult extends Product = Product,
+> extends ListResponse<TQuery, TResult> {
+  productType: ProductType;
+  additionalData?: unknown;
+}
 
-export interface ListProductSourcesRequest
-  extends ListRequest<ListProductSourcesQuery> {}
+export interface AutocompleteProductsRequest {
+  productType: ProductType;
+  query?: string;
+}
 
-export interface ListProductSourceGroupsResponse
-  extends ListResponse<ListProductSourcesQuery, ProductSourceGroup> {}
+export interface AutocompleteProductsResponse {
+  results: Product[];
+}
+
+export interface ScrapeProductRequest {
+  productType: ProductType;
+  sources: Partial<ProductSource>[];
+}
+
+export interface ScrapeProductResponse {
+  product?: Partial<Product>;
+}
+
+export interface CreateProductRequest {
+  product: Product;
+}
+
+export interface UpdateProductRequest {
+  product: Product;
+}
+
+export interface GetProductRequest {
+  includeAutomation?: boolean;
+  includeBenchmarks?: boolean;
+  includeChildren?: boolean;
+  includeImages?: boolean;
+  includeParent?: boolean;
+  includeSources?: boolean;
+  includeUpdates?: boolean;
+}
 
 // Product Updates
 
 export interface ListProductUpdatesFilter {
   productType: ProductType;
+  subProductType?: SubProductType;
   status?: ProductUpdateStatus;
   search?: string;
-
-  // GPU Specific
-  gpuProductType?: GpuProductType;
 }
 
 export interface ListProductUpdatesQuery

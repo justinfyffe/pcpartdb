@@ -86,18 +86,18 @@ async function markAsProcessed(
 async function getNextAction(
   context: AutomationContext,
 ): Promise<AutomationAction> {
-  // Action based on staleness (e.g. stale sitemaps, product sources)
-  const staleAction = await getActionFromStalenessCheck(context);
-  if (staleAction != null) {
-    console.info('Found next action based on staleness', staleAction);
-    return staleAction;
-  }
-
   // Action baesd on Priority Queue
   const queueAction = await getActionFromQueue(context);
   if (queueAction != null) {
     console.info('Found next action based on queue', queueAction);
     return queueAction;
+  }
+
+  // Action based on staleness (e.g. stale sitemaps, automation sources)
+  const staleAction = await getActionFromStalenessCheck(context);
+  if (staleAction != null) {
+    console.info('Found next action based on staleness', staleAction);
+    return staleAction;
   }
 
   // No actions remaining, fallback to continuous ones (e.g. product updates)

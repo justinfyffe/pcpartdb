@@ -19,39 +19,45 @@ export const CoresTable: FunctionComponent<CoresTableProps> = (props) => {
   return (
     <Table border responsive className={className}>
       <TBody>
-        <ProductFieldRow type={ProductType.Cpu} fields={[cpu.coresCount]} />
-        <ProductFieldRow type={ProductType.Cpu} fields={[cpu.threadsCount]} />
+        <ProductFieldRow type={ProductType.Cpu} fields={[cpu.fields?.cores]} />
         <ProductFieldRow
           type={ProductType.Cpu}
-          fields={[cpu.performanceCoresCount]}
+          fields={[cpu.fields?.threads]}
+        />
+        <ProductFieldRow type={ProductType.Cpu} fields={[cpu.fields?.pCores]} />
+        <ProductFieldRow type={ProductType.Cpu} fields={[cpu.fields?.eCores]} />
+        <ProductFieldRow type={ProductType.Cpu} fields={[cpu.fields?.clock]} />
+        <ProductFieldRow
+          type={ProductType.Cpu}
+          fields={[cpu.fields?.turboClock]}
         />
         <ProductFieldRow
           type={ProductType.Cpu}
-          fields={[cpu.efficientCoresCount]}
-        />
-        <ProductFieldRow type={ProductType.Cpu} fields={[cpu.clock]} />
-        <ProductFieldRow type={ProductType.Cpu} fields={[cpu.turboClock]} />
-        <ProductFieldRow
-          type={ProductType.Cpu}
-          fields={[cpu.performanceCoreClock]}
+          fields={[cpu.fields?.pCoreClock]}
         />
         <ProductFieldRow
           type={ProductType.Cpu}
-          fields={[cpu.performanceCoreTurboClock]}
+          fields={[cpu.fields?.pCoreTurboClock]}
         />
         <ProductFieldRow
           type={ProductType.Cpu}
-          fields={[cpu.efficientCoreClock]}
+          fields={[cpu.fields?.eCoreClock]}
         />
         <ProductFieldRow
           type={ProductType.Cpu}
-          fields={[cpu.efficientCoreTurboClock]}
+          fields={[cpu.fields?.eCoreTurboClock]}
         />
-        <ProductFieldRow type={ProductType.Cpu} fields={[cpu.baseClock]} />
-        <ProductFieldRow type={ProductType.Cpu} fields={[cpu.multiplier]} />
         <ProductFieldRow
           type={ProductType.Cpu}
-          fields={[cpu.isMultiplierUnlocked]}
+          fields={[cpu.fields?.baseClock]}
+        />
+        <ProductFieldRow
+          type={ProductType.Cpu}
+          fields={[cpu.fields?.multiplier]}
+        />
+        <ProductFieldRow
+          type={ProductType.Cpu}
+          fields={[cpu.fields?.multiplierUnlocked]}
         />
       </TBody>
     </Table>

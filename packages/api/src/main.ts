@@ -6,7 +6,6 @@ import bodyParser from 'body-parser';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
-import { Database } from './database';
 import { AllExceptionsFilter } from './shared/error';
 
 async function bootstrap() {
@@ -17,8 +16,7 @@ async function bootstrap() {
 
   app.use(bodyParser.json({ limit: '1mb' }));
 
-  const database = app.get(Database);
-  await database.enableShutdownHooks(app);
+  app.enableShutdownHooks();
 
   app.useGlobalFilters(new AllExceptionsFilter());
   app.setGlobalPrefix('/api');

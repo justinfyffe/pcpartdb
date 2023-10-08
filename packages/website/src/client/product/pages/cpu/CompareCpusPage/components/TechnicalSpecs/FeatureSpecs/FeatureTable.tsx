@@ -1,4 +1,4 @@
-import { formatCpuName, ProductType } from '@pcpartdb/shared';
+import { formatProductName, ProductType } from '@pcpartdb/shared';
 import { ProductFieldRow } from 'packages/website/src/client/product/components/ProductFieldRow/ProductFieldRow';
 import {
   Table,
@@ -24,8 +24,8 @@ export const FeatureTable: FunctionComponent<ArchitectureTableProps> = (
 
   const [name1, name2] = useMemo(() => {
     return [
-      formatCpuName(cpu1, { company: false }),
-      formatCpuName(cpu2, { company: false }),
+      formatProductName(cpu1, { company: false }),
+      formatProductName(cpu2, { company: false }),
     ];
   }, [cpu1, cpu2]);
 
@@ -41,15 +41,21 @@ export const FeatureTable: FunctionComponent<ArchitectureTableProps> = (
       <TBody>
         <ProductFieldRow
           type={ProductType.Cpu}
-          fields={[cpu1.bundledCooler, cpu2.bundledCooler]}
+          fields={[cpu1.fields?.bundledCooler, cpu2.fields?.bundledCooler]}
         />
         <ProductFieldRow
           type={ProductType.Cpu}
-          fields={[cpu1.integratedGraphics, cpu2.integratedGraphics]}
+          fields={[
+            cpu1.fields?.integratedGraphics,
+            cpu2.fields?.integratedGraphics,
+          ]}
         />
         <ProductFieldRow
           type={ProductType.Cpu}
-          fields={[cpu1.extensionsTechnologies, cpu2.extensionsTechnologies]}
+          fields={[
+            cpu1.fields?.extensionsTechnologies,
+            cpu2.fields?.extensionsTechnologies,
+          ]}
         />
       </TBody>
     </Table>

@@ -20,10 +20,22 @@ export const ProcessorTable: FunctionComponent<ProcessorTableProps> = (
   return (
     <Table border responsive className={className}>
       <TBody>
-        <ProductFieldRow type={ProductType.Gpu} fields={[gpu.codename]} />
-        <ProductFieldRow type={ProductType.Gpu} fields={[gpu.architecture]} />
-        <ProductFieldRow type={ProductType.Gpu} fields={[gpu.processSize]} />
-        <ProductFieldRow type={ProductType.Gpu} fields={[gpu.transistors]} />
+        <ProductFieldRow
+          type={ProductType.Gpu}
+          fields={[gpu.fields?.codename]}
+        />
+        <ProductFieldRow
+          type={ProductType.Gpu}
+          fields={[gpu.fields?.architecture]}
+        />
+        <ProductFieldRow
+          type={ProductType.Gpu}
+          fields={[gpu.fields?.processSize]}
+        />
+        <ProductFieldRow
+          type={ProductType.Gpu}
+          fields={[gpu.fields?.transistors]}
+        />
       </TBody>
     </Table>
   );

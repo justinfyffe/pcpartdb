@@ -13,8 +13,9 @@ const CompatibilityIntro = compileContentComponent(
     component: (props) => (
       <>
         The {props.shortGpuName1} is a {props.gpu1ThickerOrThinner} card that
-        spans {props.slotWidth1} PCIe slots, compared to the{' '}
-        {props.shortGpuName2}, which takes up {props.slotWidth2} slots.
+        spans {props.slotWidth1} PCIe {props.slotOrSlots1}, compared to the{' '}
+        {props.shortGpuName2}, which takes up {props.slotWidth2}{' '}
+        {props.slotOrSlots2}.
       </>
     ),
   },
@@ -24,8 +25,8 @@ const CompatibilityIntro = compileContentComponent(
     // The GeForce RTX 2070 and Radeon RX 7900 XTX are both 2-slot graphics cards.
     component: (props) => (
       <>
-        The {props.gpuName1} and {props.gpuName2} are both {props.slotWidth1}
-        -slot graphics cards.
+        The {props.shortGpuName1} and {props.shortGpuName2} cards span{' '}
+        {props.slotWidth1} PCIe {props.slotOrSlots1}.
       </>
     ),
   },

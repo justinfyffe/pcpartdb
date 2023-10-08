@@ -1,4 +1,7 @@
-import { CompareGpusContentData, GpuComparison } from '@pcpartdb/shared';
+import {
+  CompareGpusAdditionalData,
+  GpuProductComparison,
+} from '@pcpartdb/shared';
 import {
   ContentParams,
   ContentTags,
@@ -6,15 +9,15 @@ import {
 import { createContext } from 'react';
 
 export interface ComparePageContextProps {
-  comparison: GpuComparison;
-  contentData: CompareGpusContentData;
+  comparison: GpuProductComparison;
+  additionalData: CompareGpusAdditionalData;
   contentTags: ContentTags;
   contentParams: ContentParams;
 }
 
 export const ComparePageContext = createContext<ComparePageContextProps>({
   comparison: null,
-  contentData: null,
+  additionalData: null,
   contentTags: null,
   contentParams: null,
 });

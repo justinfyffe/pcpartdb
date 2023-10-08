@@ -5,7 +5,8 @@ import { ValueIntro } from './ValueIntro';
 import { ValueTable } from './ValueTable';
 
 export const RelativeValue: FunctionComponent = () => {
-  const { comparison, contentData } = useContext(ComparePageContext);
+  const { comparison, additionalData: contentData } =
+    useContext(ComparePageContext);
   const [gpu1, gpu2] = comparison;
   const { relativeValueGpus } = contentData;
 
@@ -13,8 +14,8 @@ export const RelativeValue: FunctionComponent = () => {
   const chipset2 = useMemo(() => getGpuChipset(gpu2), [gpu2]);
 
   if (
-    !hasProductFieldValue(chipset1.valueScore) &&
-    !hasProductFieldValue(chipset2.valueScore)
+    !hasProductFieldValue(chipset1.fields?.performancePerMsrp) &&
+    !hasProductFieldValue(chipset2.fields?.performancePerMsrp)
   ) {
     return <></>;
   }

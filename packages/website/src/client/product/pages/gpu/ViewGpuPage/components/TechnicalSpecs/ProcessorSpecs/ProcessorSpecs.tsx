@@ -1,4 +1,4 @@
-import { hasProductFieldValue } from '@pcpartdb/shared';
+import { hasProductFieldFormattedValue } from '@pcpartdb/shared';
 import React, { FunctionComponent, useContext } from 'react';
 import { ViewPageContext } from '../../../context/ViewPageContext';
 import { ProcessorIntro } from './ProcessorIntro';
@@ -15,10 +15,10 @@ export const ProcessorSpecs: FunctionComponent<ProcessorSpecsProps> = (
   const { gpu } = useContext(ViewPageContext);
 
   if (
-    !hasProductFieldValue(gpu.codename) &&
-    !hasProductFieldValue(gpu.architecture) &&
-    !hasProductFieldValue(gpu.processSize) &&
-    !hasProductFieldValue(gpu.transistors)
+    !hasProductFieldFormattedValue(gpu.fields?.codename) &&
+    !hasProductFieldFormattedValue(gpu.fields?.architecture) &&
+    !hasProductFieldFormattedValue(gpu.fields?.processSize) &&
+    !hasProductFieldFormattedValue(gpu.fields?.transistors)
   ) {
     return <></>;
   }

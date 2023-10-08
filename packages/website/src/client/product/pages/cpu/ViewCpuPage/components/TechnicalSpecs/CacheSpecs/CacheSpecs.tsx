@@ -1,4 +1,4 @@
-import { hasProductFieldValue } from '@pcpartdb/shared';
+import { hasProductFieldFormattedValue } from '@pcpartdb/shared';
 import React, { FunctionComponent, useContext } from 'react';
 import { ViewPageContext } from '../../../context/ViewPageContext';
 import { CacheIntro } from './CacheIntro';
@@ -13,11 +13,11 @@ export const CacheSpecs: FunctionComponent<CacheSpecsProps> = (props) => {
   const { cpu } = useContext(ViewPageContext);
 
   if (
-    !hasProductFieldValue(cpu.l1Cache) &&
-    !hasProductFieldValue(cpu.l2Cache) &&
-    !hasProductFieldValue(cpu.l3Cache) &&
-    !hasProductFieldValue(cpu.efficientCoreL1Cache) &&
-    !hasProductFieldValue(cpu.efficientCoreL2Cache)
+    !hasProductFieldFormattedValue(cpu.fields?.l1Cache) &&
+    !hasProductFieldFormattedValue(cpu.fields?.l2Cache) &&
+    !hasProductFieldFormattedValue(cpu.fields?.l3Cache) &&
+    !hasProductFieldFormattedValue(cpu.fields?.eCoreL1Cache) &&
+    !hasProductFieldFormattedValue(cpu.fields?.eCoreL2Cache)
   ) {
     return <></>;
   }

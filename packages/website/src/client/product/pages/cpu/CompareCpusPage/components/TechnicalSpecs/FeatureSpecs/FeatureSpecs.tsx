@@ -1,4 +1,4 @@
-import { hasProductFieldValue } from '@pcpartdb/shared';
+import { hasProductFieldFormattedValue } from '@pcpartdb/shared';
 import React, { FunctionComponent, useContext } from 'react';
 import { ComparePageContext } from '../../../context/ComparePageContext';
 import { FeatureIntro } from './FeatureIntro';
@@ -14,12 +14,12 @@ export const FeatureSpecs: FunctionComponent<FeatureSpecsProps> = (props) => {
   const [cpu1, cpu2] = comparison;
 
   if (
-    !hasProductFieldValue(cpu1.bundledCooler) &&
-    !hasProductFieldValue(cpu2.bundledCooler) &&
-    !hasProductFieldValue(cpu1.integratedGraphics) &&
-    !hasProductFieldValue(cpu2.integratedGraphics) &&
-    !hasProductFieldValue(cpu1.extensionsTechnologies) &&
-    !hasProductFieldValue(cpu2.extensionsTechnologies)
+    !hasProductFieldFormattedValue(cpu1.fields?.bundledCooler) &&
+    !hasProductFieldFormattedValue(cpu2.fields?.bundledCooler) &&
+    !hasProductFieldFormattedValue(cpu1.fields?.integratedGraphics) &&
+    !hasProductFieldFormattedValue(cpu2.fields?.integratedGraphics) &&
+    !hasProductFieldFormattedValue(cpu1.fields?.extensionsTechnologies) &&
+    !hasProductFieldFormattedValue(cpu2.fields?.extensionsTechnologies)
   ) {
     return <></>;
   }

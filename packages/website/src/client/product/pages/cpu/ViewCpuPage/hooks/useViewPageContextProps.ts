@@ -1,24 +1,24 @@
-import { Cpu, ViewCpuContentData } from '@pcpartdb/shared';
+import { CpuProduct, ViewCpuContentData } from '@pcpartdb/shared';
 import { useMemo } from 'react';
 import { getContentParams } from '../content/getContentParams';
 import { getContentTags } from '../content/getContentTags';
 import { ViewPageContextProps } from '../context/ViewPageContext';
 
 export function useViewPageContextProps(input: {
-  cpu: Cpu;
-  contentData: ViewCpuContentData;
+  cpu: CpuProduct;
+  additionalData: ViewCpuContentData;
 }) {
   return useMemo(() => {
     const cpu = { ...input.cpu };
-    const contentData = { ...input.contentData };
-    const contentTags = getContentTags(cpu, contentData);
-    const contentParams = getContentParams(cpu, contentData);
+    const additionalData = { ...input.additionalData };
+    const contentTags = getContentTags(cpu, additionalData);
+    const contentParams = getContentParams(cpu, additionalData);
 
     return {
       cpu,
-      contentData,
+      additionalData: additionalData,
       contentTags,
       contentParams,
     } as ViewPageContextProps;
-  }, [input.contentData, input.cpu]);
+  }, [input.additionalData, input.cpu]);
 }

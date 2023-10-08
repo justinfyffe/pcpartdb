@@ -1,0 +1,49 @@
+import {
+  generateProductSlug,
+  GpuField,
+  productFieldRawValue,
+} from '@pcpartdb/shared';
+import { Button } from 'packages/website/src/client/shared/components/Button/Button';
+import React, { forwardRef, useCallback } from 'react';
+import { Control, useWatch } from 'react-hook-form';
+import { Input } from '../../../../shared/components/Input/Input';
+
+interface ProductSlugInputProps {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  control: Control<any, any>;
+
+  value?: string;
+  onChange?: (value: string) => void;
+}
+
+export const ProductSlugInput = forwardRef<
+  HTMLInputElement,
+  ProductSlugInputProps
+>((props, ref) => {
+  const { control, onChange, value } = props;
+
+  const name: string = useWatch({ control, name: 'name' });
+  const company: GpuField<string> = useWatch({
+    control,
+    name: 'company',
+  });
+
+  const handleGenerate = useCallback(() => {
+    const slug = generateProductSlug({
+      name,
+      company: productFieldRawValue(company),
+    });
+    onChange?.(slug);
+  }, [onChange, name, company]);
+
+  return (
+    <Input
+      type="string"
+      value={value || ''}
+      onChange={onChange}
+      ref={ref}
+      suffix={<Button onClick={handleGenerate}>Generate</Button>}
+    />
+  );
+});
+ProductSlugInput.displayName = 'ProductSlugInput';

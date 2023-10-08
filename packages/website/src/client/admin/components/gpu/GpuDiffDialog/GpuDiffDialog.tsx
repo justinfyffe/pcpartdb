@@ -1,15 +1,16 @@
-import { GpuDiff, GpuFieldKey, ProductType } from '@pcpartdb/shared';
+import {
+  BenchmarKey,
+  GpuFieldKey,
+  ProductDiff,
+  ProductType,
+} from '@pcpartdb/shared';
 import React, { FunctionComponent } from 'react';
 import { ProductDiffDialog } from '../../product/ProductDiffDialog/ProductDiffDialog';
 
-const FIELDS_TO_PREVIEW: (GpuFieldKey | 'name' | 'slug')[] = [
-  'name',
-  'slug',
-
+const FIELDS_TO_PREVIEW: GpuFieldKey[] = [
   'partNumber',
-  'company',
   'marketSegment',
-  'launchPrice',
+  'msrp',
   'releaseDate',
   'productionStatus',
 
@@ -29,39 +30,35 @@ const FIELDS_TO_PREVIEW: (GpuFieldKey | 'name' | 'slug')[] = [
   'width',
   'height',
   'weight',
-  'thermalDesignPower',
+  'tdp',
   'suggestedPsu',
   'busInterface',
   'powerConnectors',
   'outputs',
 
-  'shaderUnitsCudaCores',
-  'computeUnitsSmCount',
-  'textureMappingUnits',
-  'renderOutputUnits',
-  'rayTracingCores',
-  'coreClockSpeedBase',
-  'coreClockSpeedBoost',
+  'gpuCores',
+  'computeUnits',
+  'tmus',
+  'rops',
+  'rtCores',
+  'gpuCoreBaseClock',
+  'gpuCoreBoostClock',
   'l1Cache',
   'l2Cache',
 
-  'pixelFillRate',
-  'textureFillRate',
-  'fp32Performance',
-  'fp64Performance',
+  'pixelRate',
+  'textureRate',
+  'fp32',
+  'fp64',
 
   'directxVersion',
   'openClVersion',
   'openGlVersion',
   'shaderModelVersion',
-
-  'g3dMark',
-  'g2dMark',
-  'timespyGraphics',
 ];
 
 interface GpuDiffDialogProps {
-  diff: GpuDiff;
+  diff: ProductDiff;
 }
 
 export const GpuDiffDialog: FunctionComponent<GpuDiffDialogProps> = (props) => {
@@ -72,6 +69,11 @@ export const GpuDiffDialog: FunctionComponent<GpuDiffDialogProps> = (props) => {
       productType={ProductType.Gpu}
       diff={diff}
       dataToPreview={FIELDS_TO_PREVIEW}
+      benchmarksToPreview={[
+        BenchmarKey.G3dMark,
+        BenchmarKey.G2dMark,
+        BenchmarKey.TimespyGraphics,
+      ]}
     />
   );
 };

@@ -6,29 +6,24 @@ import {
 } from '@pcpartdb/database';
 import {
   ApproveProductUpdateRequest,
+  approveProductUpdateRequestSchema,
   CreateProductUpdateRequest,
+  createProductUpdateRequestSchema,
   ListProductUpdatesRequest,
+  listProductUpdatesRequestSchema,
   ListProductUpdatesResponse,
-  ProductType,
   ProductUpdateStatus,
   RejectProductUpdateRequest,
+  rejectProductUpdateRequestSchema,
   ValidationErrorType,
 } from '@pcpartdb/shared';
 import { Context } from '../shared/context';
 import { badRequestError, notFoundError } from '../shared/error';
 import { validate } from '../shared/validation/validate';
-import { CpuService } from './cpu/cpu.service';
-import { GpuService } from './gpu/gpu.service';
-import {
-  approveProductUpdateRequestValidator,
-  createProductUpdateRequestValidator,
-  listProductUpdatesRequestValidator,
-  rejectProductUpdateRequestValidator,
-} from './product.validators';
+import { ProductService } from './product.service';
 import { ProductUpdateRepository } from './product-update.repository';
 
 interface FindByProductIdOptions {
-  productType: ProductType;
   productId: number;
 }
 
@@ -36,17 +31,15 @@ interface FindByProductIdOptions {
 export class ProductUpdateService {
   constructor(
     private repository: ProductUpdateRepository,
-    @Inject(forwardRef(() => CpuService))
-    private cpuService: CpuService,
-    @Inject(forwardRef(() => GpuService))
-    private gpuService: GpuService,
+    @Inject(forwardRef(() => ProductService))
+    private productService: ProductService,
   ) {}
 
   /**
    * Returns a list of product updates that match the filter.
    */
   async list(request: ListProductUpdatesRequest, ctx: Context) {
-    validate(request, listProductUpdatesRequestValidator);
+    validate(request, listProductUpdatesRequestSchema);
     const { query } = request;
 
     const { results, total } = await this.repository.list({ query }, ctx);
@@ -74,20 +67,14 @@ export class ProductUpdateService {
    * Creates a product update
    */
   async create(request: CreateProductUpdateRequest, ctx: Context) {
-    validate(request, createProductUpdateRequestValidator);
+    validate(request, createProductUpdateRequestSchema);
 
     const entity = await mapToProductUpdateEntity(request);
 
     // Reject existing pending update (if exists)
-    if (
-      request.status === ProductUpdateStatus.Pending &&
-      (entity.cpuId || entity.gpuId)
-    ) {
+    if (request.status === ProductUpdateStatus.Pending && entity.productId) {
       const pendingUpdate = await this.findPendingByProductId(
-        {
-          productType: entity.productType as ProductType,
-          productId: entity.cpuId || entity.gpuId,
-        },
+        { productId: entity.productId },
         ctx,
       );
       if (pendingUpdate) {
@@ -106,7 +93,7 @@ export class ProductUpdateService {
     request: ApproveProductUpdateRequest,
     ctx: Context,
   ) {
-    validate(request, approveProductUpdateRequestValidator);
+    validate(request, approveProductUpdateRequestSchema);
 
     const entity = await this.repository.findById(id, ctx);
     if (entity == null) {
@@ -122,16 +109,7 @@ export class ProductUpdateService {
       });
     }
 
-    if (update.productType == ProductType.Cpu) {
-      await this.cpuService.applyProductUpdate(update, request, ctx);
-    } else if (update.productType === ProductType.Gpu) {
-      await this.gpuService.applyProductUpdate(update, request, ctx);
-    } else {
-      throw badRequestError({
-        property: 'id',
-        constraint: ValidationErrorType.MissingProductType,
-      });
-    }
+    await this.productService.applyProductUpdate(update, request, ctx);
 
     await this.repository.update(
       id,
@@ -144,7 +122,7 @@ export class ProductUpdateService {
    * Reject the pending update.
    */
   async reject(id: number, request: RejectProductUpdateRequest, ctx: Context) {
-    validate(request, rejectProductUpdateRequestValidator);
+    validate(request, rejectProductUpdateRequestSchema);
     const entity = await this.repository.findById(id, ctx);
     if (entity == null) {
       throw notFoundError({ id });

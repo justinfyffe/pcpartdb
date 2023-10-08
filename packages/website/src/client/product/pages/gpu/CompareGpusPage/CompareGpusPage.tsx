@@ -1,14 +1,15 @@
 import {
   CompareGpusViewModel,
   Config,
-  formatGpuComparisonName,
-  formatGpuName,
+  formatProductComparisonName,
+  formatProductName,
   getAdminEditGpuPath,
   getCompareGpusPath,
   getHomePath,
   getListGpusPath,
   ProductType,
 } from '@pcpartdb/shared';
+import { useProductCache } from 'packages/website/src/client/shared/cache/ProductCache';
 import { Breadcrumb } from 'packages/website/src/client/shared/components/Breadcrumbs/Breadcrumb';
 import { Breadcrumbs } from 'packages/website/src/client/shared/components/Breadcrumbs/Breadcrumbs';
 import { Seo } from 'packages/website/src/client/shared/components/Seo/Seo';
@@ -17,7 +18,6 @@ import { Sidenav } from 'packages/website/src/client/sidenav/components/Sidenav/
 import { SidenavRelatedComparisons } from 'packages/website/src/client/sidenav/components/SidenavRelatedComparisons/SidenavRelatedComparisons';
 import { SidenavRelatedProducts } from 'packages/website/src/client/sidenav/components/SidenavRelatedProducts/SidenavRelatedProducts';
 import React, { useMemo } from 'react';
-import { useProductCache } from '../../../../shared/cache/ProductCache';
 import { CompareProductsForm } from '../../../components/CompareProductsForm/CompareProductsForm';
 import {
   Benchmarks,
@@ -36,43 +36,51 @@ import { useComparePageContextProps } from './hooks/useComparePageContextProps';
 export const CompareGpusPage = (
   props: CompareGpusViewModel & { config: Config },
 ) => {
-  const { comparison, contentData, relatedGpus, relatedComparisons, config } =
-    props;
+  const {
+    comparison,
+    additionalData: additionalData,
+    relatedGpus,
+    relatedComparisons,
+    config,
+  } = props;
   const [gpu1, gpu2] = comparison;
   useProductCache(ProductType.Gpu, gpu1, gpu2);
 
-  const context = useComparePageContextProps({ comparison, contentData });
+  const context = useComparePageContextProps({
+    comparison,
+    additionalData: additionalData,
+  });
 
-  const pageTitle = formatGpuComparisonName(comparison);
-  const shortPageTitle = formatGpuComparisonName(comparison, {
+  const pageTitle = formatProductComparisonName(comparison);
+  const shortPageTitle = formatProductComparisonName(comparison, {
     company: false,
   });
 
   const shortGpuName1 = useMemo(
-    () => formatGpuName(gpu1, { company: false, brand: true }),
+    () => formatProductName(gpu1, { company: false, brand: true }),
     [gpu1],
   );
   const shortGpuName2 = useMemo(
-    () => formatGpuName(gpu2, { company: false, brand: true }),
+    () => formatProductName(gpu2, { company: false, brand: true }),
     [gpu2],
   );
 
-  const seoTitle = `${formatGpuComparisonName(comparison, {
+  const seoTitle = `${formatProductComparisonName(comparison, {
     company: false,
   })}: Compare specs, performance, and value`;
   const seoKeywords = [
     pageTitle,
-    formatGpuName(comparison[0]),
-    formatGpuName(comparison[1]),
-    formatGpuName(comparison[0], { company: false }),
-    formatGpuName(comparison[1], { company: false }),
+    formatProductName(comparison[0]),
+    formatProductName(comparison[1]),
+    formatProductName(comparison[0], { company: false }),
+    formatProductName(comparison[1], { company: false }),
   ];
   const seoDescription = useMemo(() => {
-    const shortestGpuName1 = formatGpuName(gpu1, {
+    const shortestGpuName1 = formatProductName(gpu1, {
       company: false,
       brand: false,
     });
-    const shortestGpuName2 = formatGpuName(gpu2, {
+    const shortestGpuName2 = formatProductName(gpu2, {
       company: false,
       brand: false,
     });
@@ -82,7 +90,7 @@ export const CompareGpusPage = (
       'Our database of graphics cards will help you choose the best GPU for your computer.'
     );
   }, [gpu1, gpu2]);
-  const seoCanonical = getCompareGpusPath(comparison);
+  const seoCanonical = getCompareGpusPath({ comparison });
 
   const editThisPage = useMemo(
     () =>
@@ -146,7 +154,7 @@ export const CompareGpusPage = (
             />
             <SidenavRelatedProducts
               productType={ProductType.Gpu}
-              products={relatedGpus.gpus}
+              products={relatedGpus.products}
             />
           </Sidenav>
         </div>

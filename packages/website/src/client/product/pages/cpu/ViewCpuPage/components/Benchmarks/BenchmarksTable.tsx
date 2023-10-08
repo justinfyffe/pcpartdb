@@ -1,5 +1,5 @@
-import { ProductType } from '@pcpartdb/shared';
-import { ProductFieldRow } from 'packages/website/src/client/product/components/ProductFieldRow/ProductFieldRow';
+import { BenchmarKey, getProductBenchmark } from '@pcpartdb/shared';
+import { ProductBenchmarkRow } from 'packages/website/src/client/product/components/ProductBenchmarkRow/ProductBenchmarkRow';
 import {
   Table,
   TBody,
@@ -21,21 +21,25 @@ export const BenchmarksTable: FunctionComponent<BenchmarksTableProps> = (
   return (
     <Table border responsive className={className}>
       <TBody>
-        <ProductFieldRow
-          type={ProductType.Cpu}
-          fields={[cpu.cpuMarkMultiThread]}
+        <ProductBenchmarkRow
+          benchmarks={[
+            getProductBenchmark(cpu, BenchmarKey.CpuMarkMultiThread),
+          ]}
         />
-        <ProductFieldRow
-          type={ProductType.Cpu}
-          fields={[cpu.cpuMarkSingleThread]}
+        <ProductBenchmarkRow
+          benchmarks={[
+            getProductBenchmark(cpu, BenchmarKey.CpuMarkSingleThread),
+          ]}
         />
-        <ProductFieldRow
-          type={ProductType.Cpu}
-          fields={[cpu.geekbenchMultiCore]}
+        <ProductBenchmarkRow
+          benchmarks={[
+            getProductBenchmark(cpu, BenchmarKey.GeekBenchMultiCore),
+          ]}
         />
-        <ProductFieldRow
-          type={ProductType.Cpu}
-          fields={[cpu.geekbenchSingleCore]}
+        <ProductBenchmarkRow
+          benchmarks={[
+            getProductBenchmark(cpu, BenchmarKey.GeekBenchSingleCore),
+          ]}
         />
       </TBody>
     </Table>

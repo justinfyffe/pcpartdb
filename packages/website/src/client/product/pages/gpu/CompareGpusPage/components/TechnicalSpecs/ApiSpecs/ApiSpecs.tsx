@@ -1,4 +1,4 @@
-import { hasProductFieldValue } from '@pcpartdb/shared';
+import { hasProductFieldFormattedValue } from '@pcpartdb/shared';
 import React, { FunctionComponent, useContext } from 'react';
 import { ComparePageContext } from '../../../context/ComparePageContext';
 import { ApiIntro } from './ApiIntro';
@@ -14,14 +14,14 @@ export const ApiSpecs: FunctionComponent<ApiSpecsProps> = (props) => {
   const [gpu1, gpu2] = comparison;
 
   if (
-    !hasProductFieldValue(gpu1.directxVersion) &&
-    !hasProductFieldValue(gpu2.directxVersion) &&
-    !hasProductFieldValue(gpu1.openClVersion) &&
-    !hasProductFieldValue(gpu2.openClVersion) &&
-    !hasProductFieldValue(gpu1.openGlVersion) &&
-    !hasProductFieldValue(gpu2.openGlVersion) &&
-    !hasProductFieldValue(gpu1.shaderModelVersion) &&
-    !hasProductFieldValue(gpu2.shaderModelVersion)
+    !hasProductFieldFormattedValue(gpu1.fields?.directxVersion) &&
+    !hasProductFieldFormattedValue(gpu2.fields?.directxVersion) &&
+    !hasProductFieldFormattedValue(gpu1.fields?.openClVersion) &&
+    !hasProductFieldFormattedValue(gpu2.fields?.openClVersion) &&
+    !hasProductFieldFormattedValue(gpu1.fields?.openGlVersion) &&
+    !hasProductFieldFormattedValue(gpu2.fields?.openGlVersion) &&
+    !hasProductFieldFormattedValue(gpu1.fields?.shaderModelVersion) &&
+    !hasProductFieldFormattedValue(gpu2.fields?.shaderModelVersion)
   ) {
     return <></>;
   }

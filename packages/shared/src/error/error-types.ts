@@ -42,6 +42,7 @@ export interface UnauthorizedError extends ApiError {
 export enum ValidationErrorType {
   EmailExists = 'emailExists',
   FileExists = 'fileExists',
+  ProductExistsAtSlug = 'PRODUCT_EXISTS_AT_SLUG',
   InvalidEmail = 'string.email',
   InvalidProductType = 'INVALID_PRODUCT_TYPE',
   InvalidStatus = 'INVALID_STATUS',

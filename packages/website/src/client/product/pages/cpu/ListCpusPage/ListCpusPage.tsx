@@ -1,4 +1,5 @@
 import {
+  CpuProduct,
   generateListCpusQueryFromPath,
   getHomePath,
   getListCpusPath,
@@ -15,7 +16,7 @@ import { WebsiteLayout } from 'packages/website/src/client/shared/layouts/websit
 import { classNames } from 'packages/website/src/client/shared/ui/classNames';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { CompareProductsForm } from '../../../components/CompareProductsForm/CompareProductsForm';
-import { cpuService } from '../../../services/cpuService';
+import { productService } from '../../../services/productService';
 import {
   ListFilters,
   ListMenu,
@@ -30,19 +31,19 @@ import { useSeoDescription } from './hooks/useSeoDescription';
 import { useSeoTitle } from './hooks/useSeoTitle';
 
 export const ListCpusPage = (props: ListCpusViewModel) => {
-  useProductCache(ProductType.Cpu, props.cpus);
+  useProductCache(ProductType.Cpu, props.results);
   const router = useRouter();
 
-  const [cpus, setCpus] = useState(props.cpus);
-  const [totalCpus, setTotalCpus] = useState(props.totalCpus);
+  const [cpus, setCpus] = useState(props.results);
+  const [total, setTotal] = useState(props.total);
   const [query, setQuery] = useState(props.query);
-  const [contentData, setContentData] = useState(props.contentData);
+  const [additionalData, setAdditionalData] = useState(props.additionalData);
 
   const fetchCpus = useCallback(async (query: ListCpusQuery) => {
-    const response = await cpuService.list(query);
-    setCpus(response.cpus);
-    setTotalCpus(response.totalCpus);
-    setContentData(response.contentData);
+    const response = await productService.list(ProductType.Cpu, query);
+    setCpus(response.results as CpuProduct[]);
+    setTotal(response.total);
+    setAdditionalData(response.additionalData);
     setQuery(query);
   }, []);
 
@@ -66,8 +67,8 @@ export const ListCpusPage = (props: ListCpusViewModel) => {
     query,
     updateQuery,
     cpus,
-    totalCpus,
-    contentData,
+    totalCpus: total,
+    additionalData: additionalData,
   });
 
   const seoTitle = useSeoTitle(context);

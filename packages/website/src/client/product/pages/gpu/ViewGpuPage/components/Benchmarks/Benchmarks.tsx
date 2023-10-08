@@ -1,4 +1,4 @@
-import { hasProductFieldValue } from '@pcpartdb/shared';
+import { BenchmarKey, hasProductBenchmark } from '@pcpartdb/shared';
 import React, { FunctionComponent, useContext } from 'react';
 import { ViewPageContext } from '../../context/ViewPageContext';
 import { BenchmarksIntro } from './BenchmarksIntro';
@@ -8,9 +8,9 @@ export const Benchmarks: FunctionComponent = () => {
   const { gpu } = useContext(ViewPageContext);
 
   if (
-    !hasProductFieldValue(gpu.g3dMark) &&
-    !hasProductFieldValue(gpu.g2dMark) &&
-    !hasProductFieldValue(gpu.timespyGraphics)
+    !hasProductBenchmark(gpu, BenchmarKey.G3dMark) &&
+    !hasProductBenchmark(gpu, BenchmarKey.G2dMark) &&
+    !hasProductBenchmark(gpu, BenchmarKey.TimespyGraphics)
   ) {
     return <></>;
   }

@@ -1,4 +1,4 @@
-import { getGpuChipset } from '@pcpartdb/shared';
+import { getGpuChipset, hasProductFieldValue } from '@pcpartdb/shared';
 import { ContentContext } from 'packages/website/src/client/shared/content/ContentContext';
 import { compileContentComponent } from 'packages/website/src/client/shared/content/utils';
 import React, { useContext } from 'react';
@@ -58,7 +58,7 @@ export const PerformanceBlurb = () => {
   const { gpu, contentParams, contentTags } = useContext(ViewPageContext);
   const context = { tags: contentTags, params: contentParams };
 
-  if (getGpuChipset(gpu).performanceScore == null) {
+  if (!hasProductFieldValue(getGpuChipset(gpu).fields?.performanceRating)) {
     return <></>;
   }
 

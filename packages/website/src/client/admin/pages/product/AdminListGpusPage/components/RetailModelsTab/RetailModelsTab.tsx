@@ -3,13 +3,13 @@ import {
   DEFAULT_LIST_GPUS_OFFSET,
   generateListGpusQueryFromPath,
   getAdminListGpusPath,
-  Gpu,
+  GpuProduct,
   ListGpusQuery,
   ProductType,
 } from '@pcpartdb/shared';
 import { useRouter } from 'next/router';
 import { ProductAutocomplete } from 'packages/website/src/client/product/components/ProductAutocomplete/ProductAutocomplete';
-import { gpuService } from 'packages/website/src/client/product/services/gpuService';
+import { productService } from 'packages/website/src/client/product/services/productService';
 import { InfoAlert } from 'packages/website/src/client/shared/components/Alert/InfoAlert';
 import React, {
   FunctionComponent,
@@ -27,7 +27,7 @@ export const RetailModelsTab: FunctionComponent<RetailModelsTabProps> = () => {
   const offset = Number(router.query.offset || DEFAULT_LIST_GPUS_OFFSET);
   const limit = Number(router.query.limit || DEFAULT_LIST_GPUS_LIMIT);
 
-  const [retailModels, setRetailModels] = useState<Gpu[]>([]);
+  const [retailModels, setRetailModels] = useState<GpuProduct[]>([]);
   const [totalResults, setTotalResults] = useState(0);
   const [query, setQuery] = useState<ListGpusQuery>({
     filter: { isRetailModel: true },
@@ -38,9 +38,9 @@ export const RetailModelsTab: FunctionComponent<RetailModelsTabProps> = () => {
 
   const fetchChipsets = useCallback(async (q: ListGpusQuery) => {
     setLoading(true);
-    const response = await gpuService.list(q);
-    setRetailModels(response.gpus);
-    setTotalResults(response.totalGpus);
+    const response = await productService.list(ProductType.Gpu, q);
+    setRetailModels(response.results as GpuProduct[]);
+    setTotalResults(response.total);
     setQuery(q);
     setLoading(false);
   }, []);

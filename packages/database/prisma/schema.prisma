@@ -1,6 +1,6 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["fullTextSearch", "orderByNulls"]
+  previewFeatures = ["fullTextSearch"]
 }
 
 datasource db {
@@ -34,212 +34,6 @@ model ApiKey {
   @@map("api_keys")
 }
 
-model CpuImage {
-  cpuId     Int      @map("cpu_id")
-  imageId   Int      @map("image_id")
-  createdAt DateTime @default(now()) @map("created_at") @ignore @db.Timestamptz(6)
-  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @ignore @db.Timestamptz(6)
-
-  cpu   Cpu   @relation("cpuImageToCpu", fields: [cpuId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "cpu_images_cpu_id_foreign")
-  image Image @relation("cpuImageToImage", fields: [imageId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "cpu_images_image_id_foreign")
-
-  @@id([cpuId, imageId])
-  @@map("cpu_images")
-}
-
-model Cpu {
-  id Int @id @default(autoincrement())
-
-  slug         String  @unique(map: "cpus_slug_unique") @db.VarChar(255)
-  name         String  @db.VarChar(255)
-  affiliateUrl String? @map("affiliate_url") @db.VarChar(255)
-
-  partNumber       String?  @map("part_number")
-  company          String?
-  marketSegment    String?  @map("market_segment")
-  launchPrice      Float?   @map("launch_price")
-  releaseDate      String?  @map("release_date")
-  productionStatus String?  @map("production_status")
-  bundledCooler    String?  @map("bundled_cooler")
-
-  socket      String?
-  foundry     String?
-  processSize Float?  @map("process_size")
-  transistors Float?
-  tCaseMax    Float?  @map("t_case_max")
-  tjMax       Float?  @map("tj_max")
-
-  architecture String?
-  codename     String?
-  generation   String?
-  pciExpress   String[] @map("pci_express")
-  chipsets     String[]
-
-  memorySupport  String[] @map("memory_support")
-  memoryChannels Float?   @map("memory_channels")
-  hasEccMemory   Boolean? @map("has_ecc_memory")
-
-  coresCount                Float?   @map("cores_count")
-  threadsCount              Float?   @map("threads_count")
-  performanceCoresCount     Float?   @map("performance_cores_count")
-  efficientCoresCount       Float?   @map("efficient_cores_count")
-  clock                     Float?   @map("clock")
-  turboClock                Float?   @map("turbo_clock")
-  performanceCoreClock      Float?   @map("performance_core_clock")
-  performanceCoreTurboClock Float?   @map("performance_core_turbo_clock")
-  efficientCoreClock        Float?   @map("efficient_core_clock")
-  efficientCoreTurboClock   Float?   @map("efficient_core_turbo_clock")
-  baseClock                 Float?   @map("base_clock")
-  multiplier                Float?
-  isMultiplierUnlocked      Boolean? @map("is_multiplier_unlocked")
-
-  tdp Float? @map("tdp")
-  pl1 Float? @map("pl1")
-  pl2 Float? @map("pl2")
-  ppt Float? @map("ppt")
-
-  l1Cache              Float? @map("l1_cache")
-  l2Cache              Float? @map("l2_cache")
-  l3Cache              Float? @map("l3_cache")
-  efficientCoreL1Cache Float? @map("efficient_core_l1_cache")
-  efficientCoreL2Cache Float? @map("efficient_core_l2_cache")
-
-  integratedGraphics     String?  @map("integrated_graphics")
-  extensionsTechnologies String[] @map("extensions_technologies")
-
-  performanceScore    Float? @map("performance_score")
-  valueScore          Float? @map("value_score")
-  cpuMarkSingleThread Float? @map("cpu_mark_single_thread")
-  cpuMarkMultiThread  Float? @map("cpu_mark_multi_thread")
-  geekbenchSingleCore Float? @map("geekbench_single_core")
-  geekbenchMultiCore  Float? @map("geekbench_multi_core")
-
-
-  // Extra Details
-
-  metadata  Json?
-  createdAt DateTime @default(now()) @map("created_at") @ignore @db.Timestamptz(6)
-  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
-
-  // Automation Data
-  
-  automationTimestamp DateTime @default(now()) @map("automation_timestamp")
-
-  // Relations
-
-  images      CpuImage[] @relation("cpuImageToCpu")
-  productUpdates ProductUpdate[] @relation("productUpdateToCpu")
-
-
-  @@index([marketSegment], name: "cpus_marketSegment_index")
-  @@index([releaseDate], name: "cpus_releaseDate_index")
-  @@unique([company, name], name: "cpus_company_name_unique")
-  @@map("cpus")
-}
-
-model GpuImage {
-  gpuId     Int      @map("gpu_id")
-  imageId   Int      @map("image_id")
-  createdAt DateTime @default(now()) @map("created_at") @ignore @db.Timestamptz(6)
-  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @ignore @db.Timestamptz(6)
-
-  gpu   Gpu   @relation("gpuImageToGpu", fields: [gpuId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "gpu_images_gpu_id_foreign")
-  image Image @relation("gpuImageToImage", fields: [imageId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "gpu_images_image_id_foreign")
-
-  @@id([gpuId, imageId])
-  @@map("gpu_images")
-}
-
-model Gpu {
-  id           Int     @id @default(autoincrement())
-  chipsetId    Int?    @map("chipset_id")
-  slug         String  @unique(map: "gpus_slug_unique") @db.VarChar(255)
-  name         String  @db.VarChar(255)
-  affiliateUrl String? @map("affiliate_url") @db.VarChar(255)
-
-  // General Info 
-
-  partNumber       String? @map("part_number")
-  company          String?
-  marketSegment    String? @map("market_segment")
-  launchPrice      Float?  @map("launch_price")
-  releaseDate      String? @map("release_date")
-  productionStatus String? @map("production_status")
-
-  // Specs
-
-  codename             String?
-  architecture         String?
-  processSize          Float?  @map("process_size")
-  transistors          Float?
-  memorySize           Float?  @map("memory_size")
-  memoryType           String? @map("memory_type")
-  memoryClock          Float?  @map("memory_clock")
-  memoryInterface      Float?  @map("memory_interface")
-  memoryBandwidth      Float?  @map("memory_bandwidth")
-  slotWidth            Float?  @map("slot_width")
-  length               Float?
-  width                Float?
-  height               Float?
-  weight               Float?
-  thermalDesignPower   Float?  @map("thermal_design_power")
-  suggestedPsu         Float?  @map("suggested_psu")
-  busInterface         String? @map("bus_interface")
-  powerConnectors      String? @map("power_connectors")
-  outputs              String?
-  shaderUnitsCudaCores Float?  @map("shader_units_cuda_cores")
-  computeUnitsSmCount  Float?  @map("compute_units_sm_count")
-  textureMappingUnits  Float?  @map("texture_mapping_units")
-  renderOutputUnits    Float?  @map("render_output_units")
-  tensorCores          Float?  @map("tensor_cores")
-  rayTracingCores      Float?  @map("ray_tracing_cores")
-  coreClockSpeedBase   Float?  @map("core_clock_speed_base")
-  coreClockSpeedBoost  Float?  @map("core_clock_speed_boost")
-  l1Cache              Float?  @map("l1_cache ")
-  l2Cache              Float?  @map("l2_cache")
-  pixelFillRate        Float?  @map("pixel_fill_rate")
-  textureFillRate      Float?  @map("texture_fill_rate")
-  fp32Performance      Float?  @map("fp32_performance")
-  fp64Performance      Float?  @map("fp64_performance")
-  directxVersion       String? @map("directx_version")
-  openClVersion        String? @map("open_cl_version")
-  openGlVersion        String? @map("open_gl_version")
-  shaderModelVersion   String? @map("shader_model_version")
-
-  // Benchmarks
-
-  performanceScore Float? @map("performance_score")
-  valueScore       Float? @map("value_score")
-  g3dMark          Float? @map("g3d_mark")
-  g2dMark          Float? @map("g2d_mark")
-  timespyGraphics  Float? @map("timespy_graphics")
-
-  // Extra Details
-
-  metadata  Json?
-  createdAt DateTime @default(now()) @map("created_at") @ignore @db.Timestamptz(6)
-  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
-
-  // Automation Data
-
-  automationTimestamp DateTime @default(now()) @map("cpus_automation_timestamp_index")
-
-  // Relations
-
-  images       GpuImage[] @relation("gpuImageToGpu")
-  chipset      Gpu?  @relation("gpuToGpu", fields: [chipsetId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "gpus_chipset_id_foreign")
-  retailModels Gpu[] @relation("gpuToGpu")
-
-  productUpdates ProductUpdate[] @relation("productUpdateToGpu")
-  retailModelSources ProductSource[] @relation("productSourceToGpuChipset")
-
-  @@index([chipsetId, architecture], name: "gpus_chipsetId_architecture_index")
-  @@index([chipsetId, marketSegment], name: "gpus_chipsetId_marketSegment_index")
-  @@index([chipsetId, releaseDate], name: "gpus_chipsetId_releaseDate_index")
-  @@unique([chipsetId, company, name], name: "gpus_chipsetId_company_name_unique")
-  @@map("gpus")
-}
-
 model Image {
   id         Int       @id @default(autoincrement())
   path       String    @unique(map: "images_path_unique") @db.VarChar(255)
@@ -253,8 +47,7 @@ model Image {
   createdAt  DateTime  @default(now()) @map("created_at") @ignore @db.Timestamptz(6)
   updatedAt  DateTime  @default(now()) @map("updated_at") @ignore @db.Timestamptz(6)
 
-  cpuImages CpuImage[] @relation("cpuImageToImage")
-  gpuImages GpuImage[] @relation("gpuImageToImage")
+  productImages ProductImage[] @relation("productImageToImage")
 
   @@map("images")
 }
@@ -274,60 +67,139 @@ model User {
   @@map("users")
 }
 
-model ProductSource {
-  // Fields
+//
+// Product Tables
+//
 
+model Product {
   id Int @id @default(autoincrement())
 
-  // Key used to group sources together. Only purpose is for grouping.
-  groupKey String @map("group_key")
+  // ID of parent product (if it exists, e.g. gpu chipset)
+  parentId Int? @map("parent_id")
 
-  // Enum value to identify which type of product this ProductSource represents.
+  // URL slug to identify the product.
+  slug String
+
+  // Enum value to identify which type of product this Product represents.
+  // E.g. CPU, GPU
   productType String @map("product_type")
 
-  // Enum value to identify which source provider this ProductSource represents.
-  sourceKey String @map("source_key")
+  // Name of the Product.
+  name String
 
-  // A key/id that uniquely represents the external product source.
-  // Could be its id, slug, etc. Usually pulled from the URL.
-  externalKey String @map("external_key")
+  // Other names used with this product. Useful for generated content.
+  otherNames String[] @map("other_names")
 
-  // The product name that the source uses.
-  sourceName String @map("source_name")
+  // Company that makes the product.
+  company String?
 
-  // The url to access the source.
-  sourceUrl String @map("source_url")
+  // Text string for autocomplete search.
+  // Usually a full name of the product.
+  searchText String @map("search_text")
 
-  // Flag to indicate we've already handled this source.
-  archived Boolean @default(false)
+  // Affiliate URL
+  affiliateUrl String? @map("affiliate_url")
 
-  // Identifies which GPU chipset this source is related to.
-  // Only for GPU retail model sources.
-  gpuChipsetId Int? @map("gpu_chipset_id")
+  // Misc. additional data about the product. Not meant to be filtered on.
+  metadata Json?
 
-  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  // Timestamp when this product was last updated automatically.
+  automatedAt DateTime? @map("automated_at") @db.Timestamptz(6)
+
+  // Timestamps
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6) @ignore
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
 
   // Relations
+  cpuFields CpuFields? @relation("cpuFieldsToProduct")
+  gpuFields GpuFields? @relation("gpuFieldsToProduct")
+  benchmarks ProductBenchmark[] @relation("productBenchmarkToProduct")
+  sources ProductSource[] @relation("productSourceToProduct")
+  updates ProductUpdate[] @relation("productUpdateToProduct")
+  images ProductImage[] @relation("productImageToProduct")
+  relatedAutomationSources AutomationSource[] @relation("automationSourceToRelatedProduct")
+  
+  parent Product? @relation("productToProduct", fields: [parentId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "products_parent_foreign")
+  children Product[] @relation("productToProduct")
 
-  gpuChipset Gpu? @relation("productSourceToGpuChipset", fields: [gpuChipsetId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "product_updates_gpu_chipset_id_foreign")
+  // Indexes
+  @@unique([productType, slug], map: "products_productType_slug_unique")
 
-  @@index([productType, archived, gpuChipsetId], name: "product_sources_productType_archived_gpu_chipset_id_index") 
-  @@unique([productType, sourceKey, externalKey], name: "product_sources_productType_sourceKey_externalKey_unique")
+  @@map("products")
+}
+
+model ProductBenchmark {
+  id Int @id @default(autoincrement())
+  
+  // Product that this benchmark belongs to.
+  productId Int? @map("product_id")
+
+  // Enum identifier for the benchmark.
+  benchmarkKey String @map("benchmark_key")
+
+  // Numeric value for benchmark
+  value Float?
+
+  // Misc. additional data about the benchmark. Not meant to be filtered on.
+  metadata Json?
+
+  // Timestamps
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6) @ignore
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6) @ignore
+
+  // Relations
+  product Product? @relation("productBenchmarkToProduct", fields: [productId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "productBenchmarks_product_foreign")
+  
+  // Indexes
+  @@unique([productId, benchmarkKey], map: "productBenchmarks_productId_benchmarkKey_unique")
+
+  @@map("product_benchmarks")
+}
+
+model ProductSource {
+  id Int @id @default(autoincrement())
+
+  // Product that this source belongs to.
+  productId Int? @map("product_id")
+
+  // Enum identifier for the source
+  sourceKey String @map("source_key")
+  
+  // URL for the source
+  sourceUrl String @map("source_url")
+
+  // Misc. additional data about the source. Not meant to be filtered on.
+  metadata Json?
+
+  // Timestamp for when this source was last scraped.
+  scrapedAt DateTime? @map("scraped_at") @db.Timestamptz(6)
+
+  // Timestamps
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6) @ignore
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6) @ignore
+
+  // Relations
+  product Product? @relation("productSourceToProduct", fields: [productId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "productSources_product_foreign")
+
+  // Indexes
+  @@unique([productId, sourceKey], map: "productSources_productId_sourceKey_unique")
+  @@unique([sourceUrl, productId], map: "productSources_sourceUrl_productId_unique")
 
   @@map("product_sources")
 }
 
 model ProductUpdate {
-  // Fields
-
   id Int @id @default(autoincrement())
 
   // Enum value to identify which type of product this ProductUpdate represents.
   productType String @map("product_type")
 
+  // Enum value to identify which subtype of product this ProductUpdate represents.
+  // Useful for retail models
+  subProductType String? @map("sub_product_type")
+
   // Name of the product that is being created/updated.
-  // Used primarily for querying.
+  // Useful when there is no product id
   productName String @map("product_name")
 
   // Enum value representing the status of this update.
@@ -344,25 +216,45 @@ model ProductUpdate {
   metadata Json?
 
   // Product ids for updates.
-  cpuId Int? @map("cpu_id")
-  gpuId Int? @map("gpu_id")
+  productId Int? @map("product_id")
 
-  // Enum value that represents which type of GPU this is updating.
-  // Only for GPUs, to identify if its a chipset or retail model.
-  gpuProductType String? @map("gpu_product_type")
+  // Timestamps related to when the action started and stopped. Useful for debugging.
+  startedAt DateTime? @map("started_at") @db.Timestamptz(6)
+  finishedAt DateTime? @map("finished_at") @db.Timestamptz(6)
 
+  // Timestamps
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
 
   // Relations
 
-  cpu Cpu? @relation("productUpdateToCpu", fields: [cpuId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "product_updates_cpu_id_foreign")
-  gpu Gpu? @relation("productUpdateToGpu", fields: [gpuId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "product_updates_gpu_id_foreign")
-
-  @@index([productType, gpuProductType, status, createdAt], name: "product_updates_type_gpuType_status_createdAt_index") 
+  product Product? @relation("productUpdateToProduct", fields: [productId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "productUpdates_product_foreign")
+  
+  @@index([productType, subProductType, status, createdAt], name: "product_updates_type_subProductType_status_createdAt_index") 
 
   @@map("product_updates")
 }
+
+model ProductImage {
+  // IDs identifying the product and image we are joining.
+  productId Int @map("product_id")
+  imageId   Int @map("image_id")
+
+  // Timestamps
+  createdAt DateTime @default(now()) @map("created_at") @ignore @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @ignore @db.Timestamptz(6)
+
+  product Product @relation("productImageToProduct", fields: [productId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "productImages_product_foreign")
+  image Image @relation("productImageToImage", fields: [imageId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "productImages_image_foreign")
+
+  @@id([productId, imageId])
+
+  @@map("product_images")
+}
+
+//
+// Automation Tables
+//
 
 model AutomationAction {
   id Int @id @default(autoincrement())
@@ -383,4 +275,426 @@ model AutomationAction {
   @@index([status, priority(sort: Desc), timestamp(sort: Asc)], name: "automation_actions_status_priority_timestamp_index") 
 
   @@map("automation_actions")
+}
+
+model AutomationSource {
+  // Fields
+
+  id Int @id @default(autoincrement())
+
+  // Key used to group sources together. Only purpose is for grouping.
+  groupKey String @map("group_key")
+
+  // Enum value to identify which type of product this AutomationSource represents.
+  productType String @map("product_type")
+
+  // Enum value to identify which source provider this AutomationSource represents.
+  sourceKey String @map("source_key")
+
+  // A key/id that uniquely represents the external automation source.
+  // Could be its id, slug, etc. Usually pulled from the URL.
+  externalKey String @map("external_key")
+
+  // The product name that the source uses.
+  sourceName String @map("source_name")
+
+  // The url to access the source.
+  sourceUrl String @map("source_url")
+
+  // Flag to indicate we've already handled this source.
+  archived Boolean @default(false)
+
+  // Identifies which GPU chipset this source is related to.
+  // Only for GPU retail model sources.
+  relatedProductId Int? @map("related_product_id")
+
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  // Relations
+
+  relatedProduct Product? @relation("automationSourceToRelatedProduct", fields: [relatedProductId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "automationSources_relatedProduct_foreign")
+
+  @@index([productType, archived, relatedProductId], map: "automationSources_productType_archived_relatedProductId_index")
+  @@unique([productType, sourceKey, externalKey], map: "automationSources_productType_sourceKey_externalKey_unique")
+
+  @@map("automation_sources")
+}
+
+//
+// CPU-specific
+//
+
+model CpuFields {
+  id Int @id @default(autoincrement())
+
+  // Product that these fields belong to.
+  productId Int @map("product_id")
+
+  // Fields
+  // Value = Raw value that can be compared and sorted.
+  // Meta = Metadata about the field. E.g. formatted value to display, autoUpdate
+
+  architectureValue String? @map("architecture_value")
+  architectureMeta Json? @map("architecture_meta")
+
+  baseClockValue Float? @map("base_clock_value")
+  baseClockMeta Json? @map("base_clock_meta")
+
+  bundledCoolerValue String? @map("bundled_cooler_value")
+  bundledCoolerMeta Json? @map("bundled_cooler_meta")
+
+  chipsetsValue String? @map("chipsets_value")
+  chipsetsMeta Json? @map("chipsets_meta")
+
+  clockValue Float? @map("clock_value")
+  clockMeta Json? @map("clock_meta")
+
+  codenameValue String? @map("codename_value")
+  codenameMeta Json? @map("codename_meta")
+
+  coresValue Float? @map("cores_value")
+  coresMeta Json? @map("cores_meta")
+
+  dieSizeValue Float? @map("die_size_value")
+  dieSizeMeta Json? @map("die_size_meta")
+
+  eccMemoryValue Boolean? @map("ecc_memory_value")
+  eccMemoryMeta Json? @map("ecc_memory_meta")
+
+  eCoresValue Float? @map("e_cores_value") // Efficient Cores
+  eCoresMeta Json? @map("e_cores_meta")
+
+  eCoreClockValue Float? @map("e_core_clock_value") // Efficient Core Clock
+  eCoreClockMeta Json? @map("e_core_clock_meta")
+
+  eCoreL1CacheValue Float? @map("e_core_l1_cache_value") // Efficient Core L1 Cache
+  eCoreL1CacheMeta Json? @map("e_core_l1_cache_meta")
+
+  eCoreL2CacheValue Float? @map("e_core_l2_cache_value") // Efficient Core L2 Cache
+  eCoreL2CacheMeta Json? @map("e_core_l2_cache_meta")
+
+  eCoreTurboClockValue Float? @map("e_core_turbo_clock_value") // Efficient Cores Turbo Clock
+  eCoreTurboClockMeta Json? @map("e_core_turbo_clock_meta")
+
+  extensionsTechnologiesValue String? @map("extensions_technologies_value")
+  extensionsTechnologiesMeta Json? @map("extensions_technologies_meta")
+
+  foundryValue String? @map("foundry_value")
+  foundryMeta Json? @map("foundry_meta")
+
+  generationValue String? @map("generation_value")
+  generationMeta Json? @map("generation_meta")
+
+  integratedGraphicsValue String? @map("integrated_graphics_value")
+  integratedGraphicsMeta Json? @map("integrated_graphics_meta")
+
+  l1CacheValue Float? @map("l1_cache_value")
+  l1CacheMeta Json? @map("l1_cache_meta")
+
+  l2CacheValue Float? @map("l2_cache_value")
+  l2CacheMeta Json? @map("l2_cache_meta")
+
+  l3CacheValue Float? @map("l3_cache_value")
+  l3CacheMeta Json? @map("l3_cache_meta")
+
+  marketSegmentValue String? @map("market_segment_value")
+  marketSegmentMeta Json? @map("market_segment_meta")
+
+  memoryChannelsValue Float? @map("memory_channels_value")
+  memoryChannelsMeta Json? @map("memory_channels_meta")
+
+  memorySupportValue String? @map("memory_support_value")
+  memorySupportMeta Json? @map("memory_support_meta")
+
+  msrpValue Float? @map("msrp_value")
+  msrpMeta Json? @map("msrp_meta")
+
+  multiplierValue Float? @map("multiplier_value")
+  multiplierMeta Json? @map("multiplier_meta")
+
+  multiplierUnlockedValue Boolean? @map("multiplier_unlocked_value")
+  multiplierUnlockedMeta Json? @map("multiplier_unlocked_meta")
+
+  partNumberValue String? @map("part_number_value")
+  partNumberMeta Json? @map("part_number_meta")
+
+  pciExpressValue String? @map("pci_express_value")
+  pciExpressMeta Json? @map("pci_express_meta")
+
+  pCoresValue Float? @map("p_cores_value") // Performance Cores
+  pCoresMeta Json? @map("p_cores_meta")
+
+  pCoreClockValue Float? @map("p_core_clock_value") // Performance Cores Clock
+  pCoreClockMeta Json? @map("p_core_clock_meta")
+
+  pCoreTurboClockValue Float? @map("p_core_turbo_clock_value") // Performance Cores Turbo Clock
+  pCoreTurboClockMeta Json? @map("p_core_turbo_clock_meta")
+
+  pl1Value Float? @map("pl1_value") // Power Level 1 - stock (marketed) power state
+  pl1Meta Json? @map("pl1_meta")
+
+  pl2Value Float? @map("pl2_value") // Power Level 2 - Power state when CPU uses turbo frequencies.
+  pl2Meta Json? @map("pl2_meta")
+
+  pptValue Float? @map("ppt_value") // Package Power Tracking - Measurement of power to the CPU Socket on the mobo
+  pptMeta Json? @map("ppt_meta")
+
+  processSizeValue Float?  @map("process_size_value")
+  processSizeMeta Json?  @map("process_size_meta")
+
+  productionStatusValue String? @map("production_status_value")
+  productionStatusMeta Json? @map("production_status_meta")
+
+  releaseDateValue String? @map("release_date_value")
+  releaseDateMeta Json? @map("release_date_meta")
+
+  smpValue Float? @map("smp_value") // Symmetric Multiprocessing
+  smpMeta Json? @map("smp_meta")
+
+  socketValue String? @map("socket_value")
+  socketMeta Json? @map("socket_meta")
+
+  tCaseMaxValue Float? @map("t_case_max_value")
+  tCaseMaxMeta Json? @map("t_case_max_meta")
+
+  tdpValue Float? @map("tdp_value") // Thermal Design Power
+  tdpMeta Json? @map("tdp_meta")
+
+  threadsValue Float? @map("threads_value")
+  threadsMeta Json? @map("threads_meta")
+
+  tjMaxValue Float? @map("tj_max_value")
+  tjMaxMeta Json? @map("tj_max_meta")
+
+  transistorsValue Float? @map("transistors_value")
+  transistorsMeta Json? @map("transistors_meta")
+
+  turboClockValue Float? @map("turbo_clock_value")
+  turboClockMeta Json? @map("turbo_clock_meta")
+
+  // High-level Ratings
+  // Value = Raw value that can be compared and sorted.
+  // Meta = Metadata about the rating. E.g. formatted value to display, autoUpdate
+
+  performanceRatingValue Float? @map("performance_rating_value")
+  performanceRatingMeta Json? @map("performance_rating_meta")
+
+  performancePerMsrpValue Float? @map("performance_per_msrp_value")
+  performancePerMsrpMeta Json? @map("performance_per_msrp_meta")
+
+  // Misc. data for the fields. This data should not be filtered on.
+  metadata Json?
+
+  // Relations
+  product Product? @relation("cpuFieldsToProduct", fields: [productId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "cpuFields_product_foreign")
+
+  // Indexes
+  @@unique([productId], map: "cpuFields_productId_unique")
+
+  @@map("cpu_fields")
+}
+
+//
+// GPU-specific
+//
+
+model GpuFields {
+  id Int @id @default(autoincrement())
+
+  // Product that these fields belong to.
+  productId Int @map("product_id")
+
+  // Fields
+  // Value = Raw value that can be compared and sorted.
+  // Meta = Metadata about the field. E.g. formatted value to display, autoUpdate
+
+  architectureValue String? @map("architecture_value")
+  architectureMeta Json? @map("architecture_meta")
+
+  busInterfaceValue String? @map("bus_interface_value")
+  busInterfaceMeta Json? @map("bus_interface_meta")
+
+  codenameValue String? @map("codename_value")
+  codenameMeta Json? @map("codename_meta")
+
+  computeUnitsValue Float? @map("compute_units_value") // aka Stream Multiprocessor (SM), 
+  computeUnitsMeta Json? @map("compute_units_meta")
+
+  cudaVersionValue String? @map("cuda_version_value")
+  cudaVersionMeta Json? @map("cuda_version_meta")
+
+  densityValue Float? @map("density_value")
+  densityMeta Json? @map("density_meta")
+
+  dieSizeValue Float? @map("die_size_value")
+  dieSizeMeta Json? @map("die_size_meta")
+
+  directxVersionValue String? @map("directx_version_value")
+  directxVersionMeta Json? @map("directx_version_meta")
+
+  foundryValue String? @map("foundry_value")
+  foundryMeta Json? @map("foundry_meta")
+
+  fp16Value Float? @map("fp16_value")
+  fp16Meta Json? @map("fp16_meta")
+
+  fp32Value Float? @map("fp32_value")
+  fp32Meta Json? @map("fp32_meta")
+
+  fp64Value Float? @map("fp64_value")
+  fp64Meta Json? @map("fp64_meta")
+
+  generationValue String? @map("generation_value")
+  generationMeta Json? @map("generation_meta")
+
+  gpuCoresValue Float? @map("gpu_cores_value") // aka CUDA Cores, Stream Processors
+  gpuCoresMeta Json? @map("gpu_cores_meta")
+
+  gpuCoreBaseClockValue Float? @map("gpu_core_base_clock_value")
+  gpuCoreBaseClockMeta Json? @map("gpu_core_base_clock_meta")
+
+  gpuCoreBoostClockValue Float? @map("gpu_core_boost_clock_value")
+  gpuCoreBoostClockMeta Json? @map("gpu_core_boost_clock_meta")
+
+  heightValue Float? @map("height_value")
+  heightMeta Json? @map("height_meta")
+
+  l1CacheValue Float? @map("l1_cache_value")
+  l1CacheMeta Json? @map("l1_cache_meta")
+
+  l2CacheValue Float? @map("l2_cache_value")
+  l2CacheMeta Json? @map("l2_cache_meta")
+
+  lengthValue Float? @map("length_value")
+  lengthMeta Json? @map("length_meta")
+
+  marketSegmentValue String? @map("market_segment_value")
+  marketSegmentMeta Json? @map("market_segment_meta")
+
+  memoryBandwidthValue Float? @map("memory_bandwidth_value")
+  memoryBandwidthMeta Json? @map("memory_bandwidth_meta")
+
+  memoryClockValue Float? @map("memory_clock_value")
+  memoryClockMeta Json? @map("memory_clock_meta")
+
+  memoryClockEffectiveValue Float? @map("memory_clock_effective_value")
+  memoryClockEffectiveMeta Json? @map("memory_clock_effective_meta")
+
+  memoryInterfaceValue Float? @map("memory_interface_value")
+  memoryInterfaceMeta Json? @map("memory_interface_meta")
+
+  memorySizeValue Float? @map("memory_size_value")
+  memorySizeMeta Json? @map("memory_size_meta")
+
+  memoryTypeValue String? @map("memory_type_value")
+  memoryTypeMeta Json? @map("memory_type_meta")
+
+  msrpValue Float? @map("msrp_value")
+  msrpMeta Json? @map("msrp_meta")
+
+  openClVersionValue String? @map("open_cl_version_value")
+  openClVersionMeta Json? @map("open_cl_version_meta")
+
+  openGlVersionValue String? @map("open_gl_version_value")
+  openGlVersionMeta Json? @map("open_gl_version_meta")
+
+  outputsValue String? @map("outputs_value")
+  outputsMeta Json? @map("outputs_meta")
+
+  partNumberValue String? @map("part_number_value")
+  partNumberMeta Json? @map("part_number_meta")
+
+  pixelRateValue Float? @map("pixel_rate_value")
+  pixelRateMeta Json? @map("pixel_rate_meta")
+
+  pixelShadersValue Float? @map("pixel_shaders_value")
+  pixelShadersMeta Json? @map("pixel_shaders_meta")
+
+  powerConnectorsValue String? @map("power_connectors_value")
+  powerConnectorsMeta Json? @map("power_connectors_meta")
+
+  predecessorGenerationValue String? @map("predecessor_generation_value")
+  predecessorGenerationMeta Json? @map("predecessor_generation_meta")
+
+  processSizeValue Float? @map("process_size_value")
+  processSizeMeta Json? @map("process_size_meta")
+
+  productionStatusValue String? @map("production_status_value")
+  productionStatusMeta Json? @map("production_status_meta")
+
+  releaseDateValue String? @map("release_date_value")
+  releaseDateMeta Json? @map("release_date_meta")
+
+  ropsValue Float? @map("rops_value") // aka Render Output Units
+  ropsMeta Json? @map("rops_meta")
+
+  rtCoresValue Float? @map("rt_cores_value") // aka Ray Tracing Cores
+  rtCoresMeta Json? @map("rt_cores_meta")
+  
+  shaderClockValue Float? @map("shader_clock_value")
+  shaderClockMeta Json? @map("shader_clock_meta")
+
+  shaderModelVersionValue String? @map("shader_model_version_value")
+  shaderModelVersionMeta Json? @map("shader_model_version_meta")
+
+  slotWidthValue Float? @map("slot_width_value")
+  slotWidthMeta Json? @map("slot_width_meta")
+
+  successorGenerationValue String? @map("successor_generation_value")
+  successorGenerationMeta Json? @map("successor_generation_meta")
+
+  suggestedPsuValue Float? @map("suggested_psu_value")
+  suggestedPsuMeta Json? @map("suggested_psu_meta")
+
+  tdpValue Float? @map("tdp_value") // aka Thermal Design Power
+  tdpMeta Json? @map("tdp_meta")
+
+  tensorCoresValue Float? @map("tensor_cores_value")
+  tensorCoresMeta Json? @map("tensor_cores_meta")
+
+  textureRateValue Float? @map("texture_rate_value")
+  textureRateMeta Json? @map("texture_rate_meta")
+
+  tmusValue Float? @map("tmus_value") // aka Texture Mapping Units
+  tmusMeta Json? @map("tmus_meta")
+
+  transistorsValue Float? @map("transistors_value")
+  transistorsMeta Json? @map("transistors_meta")
+
+  vertexRateValue Float? @map("vertex_rate_value")
+  vertexRateMeta Json? @map("vertex_rate_meta")
+
+  vertexShadersValue Float? @map("vertex_shaders_value")
+  vertexShadersMeta Json? @map("vertex_shaders_meta")
+
+  vulkanVersionValue String? @map("vulkan_version_value")
+  vulkanVersionMeta Json? @map("vulkan_version_meta")
+
+  weightValue Float? @map("weight_value")
+  weightMeta Json? @map("weight_meta")
+
+  widthValue Float? @map("width_value")
+  widthMeta Json? @map("width_meta")
+
+  // High-level Ratings
+  // Value = Raw value that can be compared and sorted.
+  // Meta = Metadata about the rating. E.g. formatted value to display, autoUpdate
+
+  performanceRatingValue Float? @map("performance_rating_value")
+  performanceRatingMeta Json? @map("performance_rating_meta")
+
+  performancePerMsrpValue Float? @map("performance_per_msrp_value")
+  performancePerMsrpMeta Json? @map("performance_per_msrp_meta")
+
+  // Misc. data for the fields. This data should not be filtered on.
+  metadata Json?
+
+  // Relations
+  product Product @relation("gpuFieldsToProduct", fields: [productId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "gpuFields_product_foreign")
+
+  // Indexes
+  @@unique([productId], map: "gpuFields_productId_unique")
+
+  @@map("gpu_fields")
 }

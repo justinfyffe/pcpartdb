@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline';
-import { formatProductSourceName, ProductSource } from '@pcpartdb/shared';
+import { AutomationSource, formatAutomationSourceName } from '@pcpartdb/shared';
 import { PrimaryButton } from 'packages/website/src/client/shared/components/Button/PrimaryButton';
 import { Dialog } from 'packages/website/src/client/shared/components/Dialog/Dialog';
 import { closeDialog } from 'packages/website/src/client/shared/components/Dialog/dialog';
@@ -8,16 +8,16 @@ import { classNames } from 'packages/website/src/client/shared/ui/classNames';
 import React, { useCallback, useMemo, useState } from 'react';
 
 interface SourcePickerDialogProps {
-  sources: ProductSource[];
-  currentSource?: ProductSource;
+  sources: AutomationSource[];
+  currentSource?: AutomationSource;
 
-  onSelected?: (selected: ProductSource) => void;
+  onSelected?: (selected: AutomationSource) => void;
 }
 
 export const SourcePickerDialog = (props: SourcePickerDialogProps) => {
   const { sources, currentSource, onSelected } = props;
 
-  const [selected, setSelected] = useState(currentSource || null);
+  const [selected, setSelected] = useState(currentSource);
 
   // Memos
 
@@ -27,7 +27,7 @@ export const SourcePickerDialog = (props: SourcePickerDialogProps) => {
   );
 
   const sourceKeyName = useMemo(
-    () => formatProductSourceName(sources[0].sourceKey),
+    () => formatAutomationSourceName(sources[0].sourceKey),
     [sources],
   );
 

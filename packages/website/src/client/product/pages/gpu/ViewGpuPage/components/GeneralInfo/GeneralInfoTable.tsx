@@ -1,7 +1,8 @@
 import {
-  formatGpuField,
-  formatGpuName,
+  formatCompanyName,
+  formatProductName,
   getGpuAffiliateUrl,
+  productFieldFormattedValue,
   ProductType,
 } from '@pcpartdb/shared';
 import { ProductCustomRow } from 'packages/website/src/client/product/components/ProductCustomRow/ProductCustomRow';
@@ -22,38 +23,48 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
 ) => {
   const { className } = props;
   const { gpu } = useContext(ViewPageContext);
-  const { chipset: parent } = gpu;
+  const { parent } = gpu;
 
   const performanceRank =
-    gpu.ranks.performanceRank || parent?.ranks?.performanceRank || null;
-  const valueRank = gpu.ranks.valueRank || parent?.ranks?.valueRank || null;
+    gpu.ranks.performanceRating ?? parent?.ranks?.performanceRating ?? null;
+  const valueRank =
+    gpu.ranks.performancePerMsrp ?? parent?.ranks?.performancePerMsrp ?? null;
 
   const chipset = useMemo(() => {
-    return formatGpuName(parent || gpu);
+    return formatProductName(parent || gpu);
   }, [parent, gpu]);
 
   const performanceScoreValue = useMemo(() => {
     const performanceScore =
-      formatGpuField(gpu.performanceScore) ||
-      formatGpuField(parent?.performanceScore);
+      productFieldFormattedValue(gpu.fields?.performanceRating) ||
+      productFieldFormattedValue(parent?.fields?.performanceRating);
 
     if (performanceScore != null && performanceRank != null) {
       return `${performanceScore} (${performanceRank})`;
     } else {
       return '--';
     }
-  }, [gpu.performanceScore, parent?.performanceScore, performanceRank]);
+  }, [
+    gpu.fields?.performanceRating,
+    parent?.fields?.performanceRating,
+    performanceRank,
+  ]);
 
   const valueScoreValue = useMemo(() => {
     const valueScore =
-      formatGpuField(gpu.valueScore) || formatGpuField(parent?.valueScore);
+      productFieldFormattedValue(gpu.fields?.performancePerMsrp) ||
+      productFieldFormattedValue(parent?.fields?.performancePerMsrp);
 
     if (valueScore != null && valueRank != null) {
       return `${valueScore} (${valueRank})`;
     } else {
       return '--';
     }
-  }, [gpu.valueScore, parent?.valueScore, valueRank]);
+  }, [
+    gpu.fields?.performancePerMsrp,
+    parent?.fields?.performancePerMsrp,
+    valueRank,
+  ]);
 
   const gpuAffiliateUrl = useMemo(() => getGpuAffiliateUrl(gpu), [gpu]);
 
@@ -84,17 +95,26 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
             values={[valueScoreValue]}
           />
           <ProductCustomRow label="Chipset" values={[chipset]} />
-          <ProductFieldRow type={ProductType.Gpu} fields={[gpu.company]} />
-          <ProductFieldRow type={ProductType.Gpu} fields={[gpu.architecture]} />
-          <ProductFieldRow
-            type={ProductType.Gpu}
-            fields={[gpu.marketSegment]}
+          <ProductCustomRow
+            label="Company"
+            values={[formatCompanyName(gpu.company) ?? '--']}
           />
-          <ProductFieldRow type={ProductType.Gpu} fields={[gpu.releaseDate]} />
-          <ProductFieldRow type={ProductType.Gpu} fields={[gpu.launchPrice]} />
           <ProductFieldRow
             type={ProductType.Gpu}
-            fields={[gpu.productionStatus]}
+            fields={[gpu.fields?.architecture]}
+          />
+          <ProductFieldRow
+            type={ProductType.Gpu}
+            fields={[gpu.fields?.marketSegment]}
+          />
+          <ProductFieldRow
+            type={ProductType.Gpu}
+            fields={[gpu.fields?.releaseDate]}
+          />
+          <ProductFieldRow type={ProductType.Gpu} fields={[gpu.fields?.msrp]} />
+          <ProductFieldRow
+            type={ProductType.Gpu}
+            fields={[gpu.fields?.productionStatus]}
           />
         </TBody>
       </Table>

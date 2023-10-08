@@ -1,5 +1,9 @@
 import { BoltIcon } from '@heroicons/react/24/outline';
-import { formatGpuField, formatGpuName } from '@pcpartdb/shared';
+import {
+  formatProductName,
+  productFieldFormattedValue,
+  productFieldRawValue,
+} from '@pcpartdb/shared';
 import { ProductHighlightComparison } from 'packages/website/src/client/product/components/ProductHighlightComparison/ProductHighlightComparison';
 import React, { FunctionComponent, useContext, useMemo } from 'react';
 import { ComparePageContext } from '../../context/ComparePageContext';
@@ -17,16 +21,18 @@ export const TdpHighlightListItem: FunctionComponent<
   const [gpu1, gpu2] = context.comparison;
 
   const values = useMemo(() => {
-    const name1 = formatGpuName(gpu1, { company: false, brand: true });
-    const name2 = formatGpuName(gpu2, { company: false, brand: true });
+    const name1 = formatProductName(gpu1, { company: false, brand: true });
+    const name2 = formatProductName(gpu2, { company: false, brand: true });
 
-    const value1 = formatGpuField(gpu1.thermalDesignPower) || '--';
-    const value2 = formatGpuField(gpu2.thermalDesignPower) || '--';
+    const value1 = productFieldFormattedValue(gpu1.fields?.tdp) ?? '--';
+    const value2 = productFieldFormattedValue(gpu2.fields?.tdp) ?? '--';
 
     const bold1 =
-      gpu1.thermalDesignPower?.value > gpu2.thermalDesignPower?.value;
+      productFieldRawValue(gpu1.fields?.tdp) >
+      productFieldRawValue(gpu2.fields?.tdp);
     const bold2 =
-      gpu1.thermalDesignPower?.value < gpu2.thermalDesignPower?.value;
+      productFieldRawValue(gpu1.fields?.tdp) <
+      productFieldRawValue(gpu2.fields?.tdp);
 
     return [
       { name: name1, value: value1, bold: bold1 },

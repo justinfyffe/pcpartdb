@@ -1,4 +1,4 @@
-import { formatGpuName, ProductType } from '@pcpartdb/shared';
+import { formatProductName, ProductType } from '@pcpartdb/shared';
 import { ProductFieldRow } from 'packages/website/src/client/product/components/ProductFieldRow/ProductFieldRow';
 import {
   Table,
@@ -24,8 +24,8 @@ export const CompatibilityTable: FunctionComponent<CompatibilityTableProps> = (
 
   const [name1, name2] = useMemo(() => {
     return [
-      formatGpuName(gpu1, { company: false }),
-      formatGpuName(gpu2, { company: false }),
+      formatProductName(gpu1, { company: false }),
+      formatProductName(gpu2, { company: false }),
     ];
   }, [gpu1, gpu2]);
 
@@ -41,43 +41,43 @@ export const CompatibilityTable: FunctionComponent<CompatibilityTableProps> = (
       <TBody>
         <ProductFieldRow
           type={ProductType.Gpu}
-          fields={[gpu1.slotWidth, gpu2.slotWidth]}
+          fields={[gpu1.fields?.slotWidth, gpu2.fields?.slotWidth]}
         />
         <ProductFieldRow
           type={ProductType.Gpu}
-          fields={[gpu1.length, gpu2.length]}
+          fields={[gpu1.fields?.length, gpu2.fields?.length]}
         />
         <ProductFieldRow
           type={ProductType.Gpu}
-          fields={[gpu1.width, gpu2.width]}
+          fields={[gpu1.fields?.width, gpu2.fields?.width]}
         />
         <ProductFieldRow
           type={ProductType.Gpu}
-          fields={[gpu1.height, gpu2.height]}
+          fields={[gpu1.fields?.height, gpu2.fields?.height]}
         />
         <ProductFieldRow
           type={ProductType.Gpu}
-          fields={[gpu1.weight, gpu2.weight]}
+          fields={[gpu1.fields?.weight, gpu2.fields?.weight]}
         />
         <ProductFieldRow
           type={ProductType.Gpu}
-          fields={[gpu1.busInterface, gpu2.busInterface]}
+          fields={[gpu1.fields?.busInterface, gpu2.fields?.busInterface]}
         />
         <ProductFieldRow
           type={ProductType.Gpu}
-          fields={[gpu1.thermalDesignPower, gpu2.thermalDesignPower]}
+          fields={[gpu1.fields?.tdp, gpu2.fields?.tdp]}
         />
         <ProductFieldRow
           type={ProductType.Gpu}
-          fields={[gpu1.suggestedPsu, gpu2.suggestedPsu]}
+          fields={[gpu1.fields?.suggestedPsu, gpu2.fields?.suggestedPsu]}
         />
         <ProductFieldRow
           type={ProductType.Gpu}
-          fields={[gpu1.powerConnectors, gpu2.powerConnectors]}
+          fields={[gpu1.fields?.powerConnectors, gpu2.fields?.powerConnectors]}
         />
         <ProductFieldRow
           type={ProductType.Gpu}
-          fields={[gpu1.outputs, gpu2.outputs]}
+          fields={[gpu1.fields?.outputs, gpu2.fields?.outputs]}
         />
       </TBody>
     </Table>

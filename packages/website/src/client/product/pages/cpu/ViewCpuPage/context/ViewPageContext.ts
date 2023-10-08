@@ -1,4 +1,4 @@
-import { Cpu, ViewCpuContentData } from '@pcpartdb/shared';
+import { CpuProduct, ViewCpuContentData } from '@pcpartdb/shared';
 import {
   ContentParams,
   ContentTags,
@@ -6,15 +6,15 @@ import {
 import { createContext } from 'react';
 
 export interface ViewPageContextProps {
-  cpu: Cpu;
-  contentData: ViewCpuContentData;
+  cpu: CpuProduct;
+  additionalData: ViewCpuContentData;
   contentTags: ContentTags;
   contentParams: ContentParams;
 }
 
 export const ViewPageContext = createContext<ViewPageContextProps>({
   cpu: null,
-  contentData: null,
+  additionalData: null,
   contentTags: null,
   contentParams: null,
 });

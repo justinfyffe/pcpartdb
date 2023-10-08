@@ -1,160 +1,89 @@
-import { Image } from '../../image';
+import { AutomationSource } from '../../automation';
+import { ListQuery } from '../../common';
 import {
-  BaseProductSource,
-  BaseProductUpdate,
-  CpuDataSourceKey,
-  ProductDiff,
+  MarketSegment,
+  Product,
   ProductField,
   ProductFieldMeta,
+  ProductionStatus,
   ProductType,
 } from '..';
 
-export type CpuFieldKey = keyof CpuFields;
+export type CpuFieldKey = keyof Omit<CpuFields, 'id' | 'productId'>;
 
 export interface CpuFieldMeta extends ProductFieldMeta {
   fieldKey?: CpuFieldKey;
-  source?: CpuDataSourceKey;
 }
+
+export interface CpuFieldsMeta {}
 
 export interface CpuField<T = unknown> extends ProductField<T> {
   meta?: CpuFieldMeta;
 }
 
-export interface CpuRanks {
-  performanceRank?: number;
-  performanceRankForSegment?: number;
-
-  valueRank?: number;
-  valueRankForSegment?: number;
-}
-
-export interface CpuRanksFilter {
-  segment?: CpuMarketSegmentValue[];
-}
-
-export type CpuRank = keyof CpuRanks;
-
-export interface CpuImage {
-  cpuId?: number;
-  imageId?: number;
-
-  image?: Image;
-}
-
-export type CpuImages = CpuImage[];
-
-export enum CpuMarketSegmentValue {
-  Desktop = 'DESKTOP',
-  Mobile = 'MOBILE',
-  Workstation = 'WORKSTATION',
-  Server = 'SERVER',
-  Embedded = 'EMBEDDED',
-}
-
-export enum CpuProductionStatusValue {
-  Unreleased = 'UNRELEASED',
-  Active = 'ACTIVE',
-  EndOfLife = 'END_OF_LIFE',
-}
-
-export interface CpuMeta {
-  dataSources?: Record<string, CpuDataSource>;
-}
-
-export interface CpuDataSource {
-  // External URL to extract data from.
-  url?: string;
-}
-
 export interface CpuFields {
-  // General Info
-  partNumber?: CpuField<string>;
-  company?: CpuField<string>;
-  marketSegment?: CpuField<CpuMarketSegmentValue>;
-  launchPrice?: CpuField<number>;
-  releaseDate?: CpuField<string>;
-  productionStatus?: CpuField<CpuProductionStatusValue>;
+  id?: number;
+  productId?: number;
 
-  // Physical
-  socket?: CpuField<string>;
-  foundry?: CpuField<string>;
-  processSize?: CpuField<number>;
-  transistors?: CpuField<number>;
-  tCaseMax?: CpuField<number>; // Max case temperature
-  tjMax?: CpuField<number>; // Max core temperature
-
-  // Architecture Specs
   architecture?: CpuField<string>;
-  codename?: CpuField<string>;
-  generation?: CpuField<string>;
-  memorySupport?: CpuField<string[]>; // Example: DDR4-3200, DDR5-5600
-  memoryChannels?: CpuField<number>;
-  hasEccMemory?: CpuField<boolean>;
-  pciExpress?: CpuField<string[]>; // Example: PCIe 4.0 x4, PCIe 5.0 x16
-  chipsets?: CpuField<string[]>;
-
-  // Cores & Clock Speed Specs
-  coresCount?: CpuField<number>;
-  threadsCount?: CpuField<number>;
-  performanceCoresCount?: CpuField<number>;
-  efficientCoresCount?: CpuField<number>;
-  clock?: CpuField<number>;
-  turboClock?: CpuField<number>;
-  performanceCoreClock?: CpuField<number>;
-  performanceCoreTurboClock?: CpuField<number>;
-  efficientCoreClock?: CpuField<number>;
-  efficientCoreTurboClock?: CpuField<number>;
   baseClock?: CpuField<number>;
-  multiplier?: CpuField<number>;
-  isMultiplierUnlocked?: CpuField<boolean>;
-
-  // Cache Specs
+  bundledCooler?: CpuField<string>;
+  chipsets?: CpuField<string>;
+  clock?: CpuField<number>;
+  codename?: CpuField<string>;
+  cores?: CpuField<number>;
+  dieSize?: CpuField<number>;
+  eccMemory?: CpuField<boolean>;
+  eCores?: CpuField<number>; // Efficient Cores
+  eCoreClock?: CpuField<number>; // Efficient Cores Clock
+  eCoreL1Cache?: CpuField<number>; // Efficient Core L1 Cache
+  eCoreL2Cache?: CpuField<number>; // Efficient Core L2 Cache
+  eCoreTurboClock?: CpuField<number>; // Efficient Cores Turbo Clock
+  extensionsTechnologies?: CpuField<string>;
+  foundry?: CpuField<string>;
+  generation?: CpuField<string>;
+  integratedGraphics?: CpuField<string>;
   l1Cache?: CpuField<number>;
   l2Cache?: CpuField<number>;
   l3Cache?: CpuField<number>;
-  efficientCoreL1Cache?: CpuField<number>;
-  efficientCoreL2Cache?: CpuField<number>;
-
-  // Power Consumption Specs
+  marketSegment?: CpuField<MarketSegment>;
+  memoryChannels?: CpuField<number>;
+  memorySupport?: CpuField<string>; // Example: DDR4-3200, DDR5-5600
+  msrp?: CpuField<number>;
+  multiplier?: CpuField<number>;
+  multiplierUnlocked?: CpuField<boolean>;
+  partNumber?: CpuField<string>;
+  pciExpress?: CpuField<string>; // Example: PCIe 4.0 x4, PCIe 5.0 x16
+  pCores?: CpuField<number>; // Performance Cores
+  pCoreClock?: CpuField<number>; // Performance Cores Clock
+  pCoreTurboClock?: CpuField<number>; // Performance Cores Turbo Clock
+  pl1?: CpuField<number>; // Power Level 1 - stock (marketed) power state
+  pl2?: CpuField<number>; // Power Level 2 - Power state when CPU uses turbo frequencies.
+  ppt?: CpuField<number>; // Package Power Tracking - Measurement of power to the CPU Socket on the mobo
+  processSize?: CpuField<number>;
+  productionStatus?: CpuField<ProductionStatus>;
+  releaseDate?: CpuField<string>;
+  smp?: CpuField<number>; // Symmetric Multiprocessing
+  socket?: CpuField<string>;
+  tCaseMax?: CpuField<number>; // Max case temperature
   tdp?: CpuField<number>;
-  pl1?: CpuField<number>; // Power Limit 1
-  pl2?: CpuField<number>; // Power Limit 2
-  ppt?: CpuField<number>; // Package Power Tracking
+  threads?: CpuField<number>;
+  tjMax?: CpuField<number>; // Max core temperature
+  transistors?: CpuField<number>;
+  turboClock?: CpuField<number>;
 
-  // Graphics & Features
-  bundledCooler?: CpuField<string>;
-  integratedGraphics?: CpuField<string>;
-  extensionsTechnologies?: CpuField<string[]>;
+  performanceRating?: CpuField<number>;
+  performancePerMsrp?: CpuField<number>;
 
-  // Benchmarks
-  performanceScore?: CpuField<number>;
-  valueScore?: CpuField<number>;
-  cpuMarkMultiThread?: CpuField<number>;
-  cpuMarkSingleThread?: CpuField<number>;
-  geekbenchSingleCore?: CpuField<number>;
-  geekbenchMultiCore?: CpuField<number>;
+  metadata?: CpuFieldsMeta;
 }
 
-export interface Cpu extends CpuFields {
-  id?: number;
-  slug: string;
-
-  name: string;
-  affiliateUrl?: string;
-
-  meta?: CpuMeta;
-  automationTimestamp?: number;
-
-  updatedAt?: number;
-
-  // Relations
-  images?: CpuImages;
-
-  // Ranks - Non-DB Field
-  ranks?: CpuRanks;
+export interface CpuProduct extends Product {
+  productType: ProductType.Cpu;
+  fields?: CpuFields;
 }
 
-export type CpuComparison = [Cpu, Cpu];
+export type CpuProductComparison = [CpuProduct, CpuProduct];
 
 export enum ListCpusPresetSlug {
   BestPerformance = 'best-performance',
@@ -167,23 +96,10 @@ export enum ListCpusPresetSlug {
   Oldest = 'oldest',
 }
 
-export enum ListCpusSort {
-  Id = 'id',
-  Name = 'name',
-  PerformanceRating = 'performance-rating',
-  ValueRating = 'value-rating',
-  ReleaseDate = 'release-date',
-}
-
-export enum ListCpusOrder {
-  Asc = 'asc',
-  Desc = 'desc',
-}
-
 export interface ListCpusFilter {
   company?: string[];
   year?: number[];
-  segment?: CpuMarketSegmentValue[];
+  segment?: MarketSegment[];
 
   maxPerformanceScore?: number;
   minPerformanceScore?: number;
@@ -195,60 +111,11 @@ export interface ListCpusFilter {
 
   excludeIds?: number[];
 }
+export interface ListCpusQuery extends ListQuery<ListCpusFilter> {}
 
-export interface ListCpusOrderBy {
-  sort: ListCpusSort;
-  order?: ListCpusOrder;
-}
-
-export interface ListCpusPagination {
-  limit?: number;
-  offset?: number;
-}
-
-export interface ListCpusQuery {
-  filter?: ListCpusFilter;
-  orderBy?: ListCpusOrderBy;
-  pagination?: ListCpusPagination;
-}
-
-export interface CreateCpuRequest extends Omit<Cpu, 'id'> {}
-
-export interface UpdateCpuRequest extends Omit<Cpu, 'id'> {}
-
-export interface RelatedCpus {
-  cpus?: Cpu[];
-}
-
-export interface RelatedCpuComparisons {
-  comparisons?: CpuComparison[];
-}
-
-export interface ListCpusContentData {}
-
-export interface ListCpusResponse {
-  query: ListCpusQuery;
-  cpus: Cpu[];
-  totalCpus: number;
-  contentData: ListCpusContentData;
-}
-
-export type CpuDiff = ProductDiff<Cpu>;
+export interface ListCpusAdditionalData {}
 
 /**
- * Data structure containing information regarding a single source for a
- * CPU. Extends ProductSource as it contains some gpu-specific data.
+ * Group of CPU automation sources, usually grouped by source name.
  */
-export interface CpuProductSource extends BaseProductSource {
-  productType: ProductType.Cpu;
-}
-
-/**
- * Group of CPU product sources, usually grouped by source name.
- */
-export type CpuProductSourceGroup = CpuProductSource[];
-
-export interface CpuUpdate extends BaseProductUpdate<CpuDiff> {
-  productType: ProductType.Cpu;
-  cpuId?: number;
-}
+export type CpuAutomationSourceGroup = AutomationSource[];

@@ -18,12 +18,21 @@ export const ApiTable: FunctionComponent<ApiTableProps> = (props) => {
   return (
     <Table border responsive className={className}>
       <TBody>
-        <ProductFieldRow type={ProductType.Gpu} fields={[gpu.directxVersion]} />
-        <ProductFieldRow type={ProductType.Gpu} fields={[gpu.openClVersion]} />
-        <ProductFieldRow type={ProductType.Gpu} fields={[gpu.openGlVersion]} />
         <ProductFieldRow
           type={ProductType.Gpu}
-          fields={[gpu.shaderModelVersion]}
+          fields={[gpu.fields?.directxVersion]}
+        />
+        <ProductFieldRow
+          type={ProductType.Gpu}
+          fields={[gpu.fields?.openClVersion]}
+        />
+        <ProductFieldRow
+          type={ProductType.Gpu}
+          fields={[gpu.fields?.openGlVersion]}
+        />
+        <ProductFieldRow
+          type={ProductType.Gpu}
+          fields={[gpu.fields?.shaderModelVersion]}
         />
       </TBody>
     </Table>

@@ -1,4 +1,4 @@
-import { hasProductFieldValue } from '@pcpartdb/shared';
+import { hasProductFieldFormattedValue } from '@pcpartdb/shared';
 import React, { FunctionComponent, useContext } from 'react';
 import { ViewPageContext } from '../../../context/ViewPageContext';
 import { ApiIntro } from './ApiIntro';
@@ -13,10 +13,10 @@ export const ApiSpecs: FunctionComponent<ApiSpecsProps> = (props) => {
   const { gpu } = useContext(ViewPageContext);
 
   if (
-    !hasProductFieldValue(gpu.directxVersion) &&
-    !hasProductFieldValue(gpu.openClVersion) &&
-    !hasProductFieldValue(gpu.openGlVersion) &&
-    !hasProductFieldValue(gpu.shaderModelVersion)
+    !hasProductFieldFormattedValue(gpu.fields?.directxVersion) &&
+    !hasProductFieldFormattedValue(gpu.fields?.openClVersion) &&
+    !hasProductFieldFormattedValue(gpu.fields?.openGlVersion) &&
+    !hasProductFieldFormattedValue(gpu.fields?.shaderModelVersion)
   ) {
     return <></>;
   }

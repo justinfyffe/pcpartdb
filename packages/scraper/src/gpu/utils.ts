@@ -70,23 +70,29 @@ export function generateGpuGroupKey(options: GenerateGpuGroupKeyOptions) {
 
 interface CreateGpuFieldOptions<T = unknown> {
   field: GpuFieldKey;
-  value: T;
+  raw: T;
+  formatted: string;
   meta?: GpuFieldMeta;
   ctx?: ScraperContext;
   overwriteMemo?: boolean;
 }
 
 export function createGpuField<T = unknown>(options: CreateGpuFieldOptions<T>) {
-  const { field, value, meta, ctx, overwriteMemo } = options;
+  const { field, raw, formatted, meta, ctx, overwriteMemo } = options;
 
   if (overwriteMemo !== true && ctx?.memoizedFields?.[field] != null) {
     // Field was previously set, use that one unless we're skipping memoization.
     return ctx.memoizedFields[field] as GpuField<T>;
   }
 
-  const productField = {
-    value,
-    meta: { ...(meta ?? {}), fieldKey: field, autoUpdate: true },
+  const productField: GpuField<T> = {
+    value: raw,
+    meta: {
+      ...(meta ?? {}),
+      fieldKey: field,
+      autoUpdate: true,
+      formattedValue: formatted,
+    },
   };
 
   if (hasProductFieldValue(productField)) {

@@ -20,22 +20,31 @@ export const CompatibilityTable: FunctionComponent<CompatibilityTableProps> = (
   return (
     <Table border responsive className={className}>
       <TBody>
-        <ProductFieldRow type={ProductType.Gpu} fields={[gpu.slotWidth]} />
-        <ProductFieldRow type={ProductType.Gpu} fields={[gpu.length]} />
-        <ProductFieldRow type={ProductType.Gpu} fields={[gpu.width]} />
-        <ProductFieldRow type={ProductType.Gpu} fields={[gpu.height]} />
-        <ProductFieldRow type={ProductType.Gpu} fields={[gpu.weight]} />
-        <ProductFieldRow type={ProductType.Gpu} fields={[gpu.busInterface]} />
         <ProductFieldRow
           type={ProductType.Gpu}
-          fields={[gpu.thermalDesignPower]}
+          fields={[gpu.fields?.slotWidth]}
         />
-        <ProductFieldRow type={ProductType.Gpu} fields={[gpu.suggestedPsu]} />
+        <ProductFieldRow type={ProductType.Gpu} fields={[gpu.fields?.length]} />
+        <ProductFieldRow type={ProductType.Gpu} fields={[gpu.fields?.width]} />
+        <ProductFieldRow type={ProductType.Gpu} fields={[gpu.fields?.height]} />
+        <ProductFieldRow type={ProductType.Gpu} fields={[gpu.fields?.weight]} />
         <ProductFieldRow
           type={ProductType.Gpu}
-          fields={[gpu.powerConnectors]}
+          fields={[gpu.fields?.busInterface]}
         />
-        <ProductFieldRow type={ProductType.Gpu} fields={[gpu.outputs]} />
+        <ProductFieldRow type={ProductType.Gpu} fields={[gpu.fields?.tdp]} />
+        <ProductFieldRow
+          type={ProductType.Gpu}
+          fields={[gpu.fields?.suggestedPsu]}
+        />
+        <ProductFieldRow
+          type={ProductType.Gpu}
+          fields={[gpu.fields?.powerConnectors]}
+        />
+        <ProductFieldRow
+          type={ProductType.Gpu}
+          fields={[gpu.fields?.outputs]}
+        />
       </TBody>
     </Table>
   );

@@ -8,10 +8,10 @@ import {
   XMarkIcon,
 } from '@heroicons/react/24/outline';
 import {
-  formatGpuName,
+  formatProductName,
   getAdminEditGpuPath,
   getViewGpuPath,
-  GpuUpdate,
+  ProductUpdate,
   ProductUpdateStatus,
 } from '@pcpartdb/shared';
 import { GpuDiffDialog } from 'packages/website/src/client/admin/components/gpu/GpuDiffDialog/GpuDiffDialog';
@@ -32,12 +32,12 @@ import { AutomationStatusContext } from 'packages/website/src/client/shared/layo
 import React, { useCallback, useContext, useMemo, useState } from 'react';
 
 interface GpuChipsetCardTabProps {
-  update: GpuUpdate;
+  update: ProductUpdate;
 }
 
 export const GpuChipsetCard = (props: GpuChipsetCardTabProps) => {
   const { update } = props;
-  const isUpdate = update.gpuId ? true : false;
+  const isUpdate = update.productId ? true : false;
   const updatedGpu = update.data.updated;
 
   const automationStatusContext = useContext(AutomationStatusContext);
@@ -51,7 +51,7 @@ export const GpuChipsetCard = (props: GpuChipsetCardTabProps) => {
 
   // Memos
 
-  const name = useMemo(() => formatGpuName(updatedGpu), [updatedGpu]);
+  const name = useMemo(() => formatProductName(updatedGpu), [updatedGpu]);
   const viewHref = useMemo(() => getViewGpuPath(updatedGpu), [updatedGpu]);
 
   // Callbacks

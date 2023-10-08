@@ -1,7 +1,4 @@
-import {
-  formatGpuMarketSegment,
-  GpuMarketSegmentValue,
-} from '@pcpartdb/shared';
+import { formatMarketSegment, MarketSegment } from '@pcpartdb/shared';
 import { Checkbox } from 'packages/website/src/client/shared/components/Checkbox/Checkbox';
 import { classNames } from 'packages/website/src/client/shared/ui/classNames';
 import React, {
@@ -22,12 +19,12 @@ export const ListFilterMarketSegment: FunctionComponent<
   const { query, updateQuery } = useContext(ListPageContext);
 
   const segments = useMemo(
-    () => new Set<GpuMarketSegmentValue>(query.filter?.segment),
+    () => new Set<MarketSegment>(query.filter?.segment),
     [query.filter?.segment],
   );
 
   const handleMarketSegmentToggle = useCallback(
-    (segment: GpuMarketSegmentValue, enabled: boolean) => {
+    (segment: MarketSegment, enabled: boolean) => {
       if (enabled) {
         segments.add(segment);
       } else {
@@ -50,19 +47,19 @@ export const ListFilterMarketSegment: FunctionComponent<
     <div className={classNames('flex flex-col', props.className)}>
       <div className="font-bold m-2">Market Segment:</div>
       <ListFilterMarketSegmentItem
-        marketSegment={GpuMarketSegmentValue.Desktop}
+        marketSegment={MarketSegment.Desktop}
         onChange={handleMarketSegmentToggle}
       />
       <ListFilterMarketSegmentItem
-        marketSegment={GpuMarketSegmentValue.Mobile}
+        marketSegment={MarketSegment.Mobile}
         onChange={handleMarketSegmentToggle}
       />
       <ListFilterMarketSegmentItem
-        marketSegment={GpuMarketSegmentValue.Workstation}
+        marketSegment={MarketSegment.Workstation}
         onChange={handleMarketSegmentToggle}
       />
       <ListFilterMarketSegmentItem
-        marketSegment={GpuMarketSegmentValue.Integrated}
+        marketSegment={MarketSegment.Integrated}
         onChange={handleMarketSegmentToggle}
       />
     </div>
@@ -70,8 +67,8 @@ export const ListFilterMarketSegment: FunctionComponent<
 };
 
 interface ListFilterMarketSegmentItemProps {
-  marketSegment: GpuMarketSegmentValue;
-  onChange: (segment: GpuMarketSegmentValue, value: boolean) => void;
+  marketSegment: MarketSegment;
+  onChange: (segment: MarketSegment, value: boolean) => void;
 }
 
 const ListFilterMarketSegmentItem: FunctionComponent<
@@ -85,7 +82,7 @@ const ListFilterMarketSegmentItem: FunctionComponent<
     [marketSegment, query.filter?.segment],
   );
   const name = useMemo(
-    () => formatGpuMarketSegment(marketSegment),
+    () => formatMarketSegment(marketSegment),
     [marketSegment],
   );
 

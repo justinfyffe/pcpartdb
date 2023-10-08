@@ -1,9 +1,10 @@
 import {
-  Gpu,
-  GpuMarketSegmentValue,
-  GpuProductionStatusValue,
+  GpuProduct,
   hasGpuLaunched,
-  ViewGpuContentData,
+  MarketSegment,
+  productFieldRawValue,
+  ProductionStatus,
+  ViewGpuAdditionalData,
 } from '@pcpartdb/shared';
 
 export enum ViewGpuContentTag {
@@ -27,38 +28,48 @@ export enum ViewGpuContentTag {
   BestPerformanceForSegment = 'BEST_PERFORMANCE_FOR_SEGMENT',
 }
 
-export function getContentTags(gpu: Gpu, contentData: ViewGpuContentData) {
+export function getContentTags(
+  gpu: GpuProduct,
+  additionalData: ViewGpuAdditionalData,
+) {
   return {
-    ...getGeneralTags(gpu, contentData),
+    ...getGeneralTags(gpu, additionalData),
     ...getCompatibilityTags(gpu),
     ...getPerformanceTags(gpu),
   };
 }
 
-export function getGeneralTags(gpu: Gpu, contentData: ViewGpuContentData) {
+export function getGeneralTags(
+  gpu: GpuProduct,
+  contentData: ViewGpuAdditionalData,
+) {
   return {
     [ViewGpuContentTag.Launched]: hasGpuLaunched(gpu),
-    [ViewGpuContentTag.IsChipset]: gpu.chipset == null,
-    [ViewGpuContentTag.IsRetailModel]: gpu.chipset != null,
+    [ViewGpuContentTag.IsChipset]: gpu.parent == null,
+    [ViewGpuContentTag.IsRetailModel]: gpu.parent != null,
     [ViewGpuContentTag.OnlyRetailModel]:
-      gpu.chipset != null && contentData.retailModels?.length === 1,
+      gpu.parent != null && contentData.retailModels?.length === 1,
     [ViewGpuContentTag.IsDesktop]:
-      gpu.marketSegment?.value === GpuMarketSegmentValue.Desktop,
+      productFieldRawValue(gpu.fields?.marketSegment) === MarketSegment.Desktop,
     [ViewGpuContentTag.IsWorkstation]:
-      gpu.marketSegment?.value === GpuMarketSegmentValue.Workstation,
+      productFieldRawValue(gpu.fields?.marketSegment) ===
+      MarketSegment.Workstation,
     [ViewGpuContentTag.IsMobile]:
-      gpu.marketSegment?.value === GpuMarketSegmentValue.Mobile,
+      productFieldRawValue(gpu.fields?.marketSegment) === MarketSegment.Mobile,
     [ViewGpuContentTag.IsIntegrated]:
-      gpu.marketSegment?.value === GpuMarketSegmentValue.Integrated,
+      productFieldRawValue(gpu.fields?.marketSegment) ===
+      MarketSegment.Integrated,
     [ViewGpuContentTag.IsUnreleased]:
-      gpu.productionStatus?.value === GpuProductionStatusValue.Unreleased,
+      productFieldRawValue(gpu.fields?.productionStatus) ===
+      ProductionStatus.Unreleased,
     [ViewGpuContentTag.IsEndOfLife]:
-      gpu.productionStatus?.value === GpuProductionStatusValue.EndOfLife,
+      productFieldRawValue(gpu.fields?.productionStatus) ===
+      ProductionStatus.EndOfLife,
   };
 }
 
-export function getCompatibilityTags(gpu: Gpu) {
-  const slots = gpu.slotWidth?.value;
+export function getCompatibilityTags(gpu: GpuProduct) {
+  const slots = productFieldRawValue(gpu.fields?.slotWidth);
 
   return {
     [ViewGpuContentTag.ExtraLargeSize]: slots > 3,
@@ -69,9 +80,9 @@ export function getCompatibilityTags(gpu: Gpu) {
   };
 }
 
-export function getPerformanceTags(gpu: Gpu) {
+export function getPerformanceTags(gpu: GpuProduct) {
   return {
     [ViewGpuContentTag.BestPerformanceForSegment]:
-      gpu.ranks?.performanceRankForSegment === 1,
+      gpu.ranks?.performanceRatingForMarketSegment === 1,
   };
 }

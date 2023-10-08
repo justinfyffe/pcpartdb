@@ -1,9 +1,9 @@
-import { CpuDiff, ProductType } from '@pcpartdb/shared';
+import { BenchmarKey, ProductDiff, ProductType } from '@pcpartdb/shared';
 import React, { FunctionComponent } from 'react';
 import { ProductDiffDialog } from '../../product/ProductDiffDialog/ProductDiffDialog';
 
 interface CpuDiffDialogProps {
-  diff: CpuDiff;
+  diff: ProductDiff;
 }
 
 export const CpuDiffDialog: FunctionComponent<CpuDiffDialogProps> = (props) => {
@@ -14,13 +14,9 @@ export const CpuDiffDialog: FunctionComponent<CpuDiffDialogProps> = (props) => {
       productType={ProductType.Cpu}
       diff={diff}
       dataToPreview={[
-        'name',
-        'slug',
-
         'partNumber',
-        'company',
         'marketSegment',
-        'launchPrice',
+        'msrp',
         'releaseDate',
         'productionStatus',
         'bundledCooler',
@@ -40,21 +36,21 @@ export const CpuDiffDialog: FunctionComponent<CpuDiffDialogProps> = (props) => {
 
         'memorySupport',
         'memoryChannels',
-        'hasEccMemory',
+        'eccMemory',
 
-        'coresCount',
-        'threadsCount',
-        'performanceCoresCount',
-        'efficientCoresCount',
+        'cores',
+        'threads',
+        'pCores',
+        'eCores',
         'clock',
         'turboClock',
-        'performanceCoreClock',
-        'performanceCoreTurboClock',
-        'efficientCoreClock',
-        'efficientCoreTurboClock',
+        'pCoreClock',
+        'pCoreTurboClock',
+        'eCoreClock',
+        'eCoreTurboClock',
         'baseClock',
         'multiplier',
-        'isMultiplierUnlocked',
+        'multiplierUnlocked',
 
         'tdp',
         'pl1',
@@ -64,16 +60,17 @@ export const CpuDiffDialog: FunctionComponent<CpuDiffDialogProps> = (props) => {
         'l1Cache',
         'l2Cache',
         'l3Cache',
-        'efficientCoreL1Cache',
-        'efficientCoreL2Cache',
+        'eCoreL1Cache',
+        'eCoreL2Cache',
 
         'integratedGraphics',
         'extensionsTechnologies',
-
-        'cpuMarkMultiThread',
-        'cpuMarkSingleThread',
-        'geekbenchMultiCore',
-        'geekbenchSingleCore',
+      ]}
+      benchmarksToPreview={[
+        BenchmarKey.CpuMarkMultiThread,
+        BenchmarKey.CpuMarkSingleThread,
+        BenchmarKey.GeekBenchMultiCore,
+        BenchmarKey.GeekBenchSingleCore,
       ]}
     />
   );

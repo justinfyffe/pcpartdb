@@ -1,10 +1,10 @@
 import 'reflect-metadata';
 import { ArrowPathIcon } from '@heroicons/react/24/outline';
 import {
-  CpuUpdate,
   ListProductUpdatesFilter,
   ListProductUpdatesQuery,
   ProductType,
+  ProductUpdate,
   ProductUpdateStatus,
 } from '@pcpartdb/shared';
 import { productUpdateService } from 'packages/website/src/client/product/services/productUpdateService';
@@ -28,7 +28,7 @@ export const CpusTab = (_props: CpusTabProps) => {
   // States
 
   const [loading, setLoading] = useState(false);
-  const [updates, setUpdates] = useState<CpuUpdate[]>([]);
+  const [updates, setUpdates] = useState<ProductUpdate[]>([]);
   const [total, setTotal] = useState(0);
   const [query, setQuery] = useState<ListProductUpdatesQuery>({
     filter: {
@@ -44,7 +44,7 @@ export const CpusTab = (_props: CpusTabProps) => {
     setLoading(true);
     const response = await productUpdateService.listUpdates({ query: q });
     setQuery(response.query);
-    setUpdates(response.results as CpuUpdate[]);
+    setUpdates(response.results as ProductUpdate[]);
     setTotal(response.total);
     setLoading(false);
   }, []);

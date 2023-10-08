@@ -1,8 +1,7 @@
 import {
-  BooleanFormatter,
-  formatProductField,
   getProductFieldLabel,
   ProductField,
+  productFieldFormattedValue,
   ProductType,
 } from '@pcpartdb/shared';
 import {
@@ -34,14 +33,8 @@ export const ProductFieldRow: FunctionComponent<ProductFieldRowProps> = (
   }, [type, field1?.meta?.fieldKey, field2?.meta?.fieldKey]);
 
   const fieldValues = useMemo(() => {
-    return (
-      fields.map((field) =>
-        formatProductField(type, field, {
-          booleanFormatter: BooleanFormatter.YesNo,
-        }),
-      ) || []
-    );
-  }, [fields, type]);
+    return fields.map((field) => productFieldFormattedValue(field)) || [];
+  }, [fields]);
 
   const hasValues = useMemo(
     () => fieldValues.some((value) => value != null && value !== ''),
@@ -72,7 +65,7 @@ export const ProductFieldRow: FunctionComponent<ProductFieldRowProps> = (
             fields.length === 2 ? 'w-[33%]' : '',
           )}
         >
-          {value || '--'}
+          {value ?? '--'}
         </Td>
       ))}
     </Tr>

@@ -1,4 +1,4 @@
-import { formatGpuName, ProductType } from '@pcpartdb/shared';
+import { formatProductName, ProductType } from '@pcpartdb/shared';
 import { ProductFieldRow } from 'packages/website/src/client/product/components/ProductFieldRow/ProductFieldRow';
 import {
   Table,
@@ -24,8 +24,8 @@ export const ProcessorTable: FunctionComponent<ProcessorTableProps> = (
 
   const [name1, name2] = useMemo(() => {
     return [
-      formatGpuName(gpu1, { company: false }),
-      formatGpuName(gpu2, { company: false }),
+      formatProductName(gpu1, { company: false }),
+      formatProductName(gpu2, { company: false }),
     ];
   }, [gpu1, gpu2]);
 
@@ -41,19 +41,19 @@ export const ProcessorTable: FunctionComponent<ProcessorTableProps> = (
       <TBody>
         <ProductFieldRow
           type={ProductType.Gpu}
-          fields={[gpu1.codename, gpu2.codename]}
+          fields={[gpu1.fields?.codename, gpu2.fields?.codename]}
         />
         <ProductFieldRow
           type={ProductType.Gpu}
-          fields={[gpu1.architecture, gpu2.architecture]}
+          fields={[gpu1.fields?.architecture, gpu2.fields?.architecture]}
         />
         <ProductFieldRow
           type={ProductType.Gpu}
-          fields={[gpu1.processSize, gpu2.processSize]}
+          fields={[gpu1.fields?.processSize, gpu2.fields?.processSize]}
         />
         <ProductFieldRow
           type={ProductType.Gpu}
-          fields={[gpu1.transistors, gpu2.transistors]}
+          fields={[gpu1.fields?.transistors, gpu2.fields?.transistors]}
         />
       </TBody>
     </Table>

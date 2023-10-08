@@ -5,13 +5,14 @@ import { ValueIntro } from './ValueIntro';
 import { ValueTable } from './ValueTable';
 
 export const RelativeValue: FunctionComponent = () => {
-  const { comparison, contentData } = useContext(ComparePageContext);
+  const { comparison, additionalData: contentData } =
+    useContext(ComparePageContext);
   const [cpu1, cpu2] = comparison;
   const { relativeValueCpus } = contentData;
 
   if (
-    !hasProductFieldValue(cpu1.valueScore) &&
-    !hasProductFieldValue(cpu2.valueScore)
+    !hasProductFieldValue(cpu1.fields?.performancePerMsrp) &&
+    !hasProductFieldValue(cpu2.fields?.performancePerMsrp)
   ) {
     return <></>;
   }

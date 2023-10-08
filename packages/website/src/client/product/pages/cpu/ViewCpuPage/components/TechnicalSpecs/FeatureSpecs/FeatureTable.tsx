@@ -21,14 +21,17 @@ export const FeatureTable: FunctionComponent<ArchitectureTableProps> = (
   return (
     <Table border responsive className={className}>
       <TBody>
-        <ProductFieldRow type={ProductType.Cpu} fields={[cpu.bundledCooler]} />
         <ProductFieldRow
           type={ProductType.Cpu}
-          fields={[cpu.integratedGraphics]}
+          fields={[cpu.fields?.bundledCooler]}
         />
         <ProductFieldRow
           type={ProductType.Cpu}
-          fields={[cpu.extensionsTechnologies]}
+          fields={[cpu.fields?.integratedGraphics]}
+        />
+        <ProductFieldRow
+          type={ProductType.Cpu}
+          fields={[cpu.fields?.extensionsTechnologies]}
         />
       </TBody>
     </Table>

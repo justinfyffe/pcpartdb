@@ -1,8 +1,9 @@
 import {
-  Cpu,
-  formatCpuField,
-  formatCpuName,
+  CpuProduct,
+  formatProductName,
   getViewCpuPath,
+  productFieldFormattedValue,
+  productFieldRawValue,
 } from '@pcpartdb/shared';
 import { ProductCustomRow } from 'packages/website/src/client/product/components/ProductCustomRow/ProductCustomRow';
 import {
@@ -23,7 +24,7 @@ export const PerformanceTable: FunctionComponent<PerformanceTableProps> = (
   props,
 ) => {
   const { className } = props;
-  const { cpu, contentData } = useContext(ViewPageContext);
+  const { cpu, additionalData: contentData } = useContext(ViewPageContext);
   const { relativePerformanceCpus } = contentData;
 
   return (
@@ -49,8 +50,8 @@ export const PerformanceTable: FunctionComponent<PerformanceTableProps> = (
 };
 
 interface PerformanceTableRowProps {
-  baselineCpu: Cpu;
-  relativeCpu: Cpu;
+  baselineCpu: CpuProduct;
+  relativeCpu: CpuProduct;
 }
 
 const PerformanceTableRow: FunctionComponent<PerformanceTableRowProps> = (
@@ -59,20 +60,27 @@ const PerformanceTableRow: FunctionComponent<PerformanceTableRowProps> = (
   const { baselineCpu, relativeCpu } = props;
 
   const relativePerformancePct = useMemo(() => {
-    const baseline = baselineCpu.performanceScore.value;
-    const relatedPerformance = relativeCpu.performanceScore.value;
+    const baseline = productFieldRawValue(
+      baselineCpu.fields?.performanceRating,
+    );
+    const relatedPerformance = productFieldRawValue(
+      relativeCpu.fields?.performanceRating,
+    );
 
     return ((relatedPerformance / baseline) * 100).toFixed(0);
-  }, [baselineCpu.performanceScore.value, relativeCpu.performanceScore.value]);
+  }, [
+    baselineCpu.fields?.performanceRating,
+    relativeCpu.fields?.performanceRating,
+  ]);
 
   const rating = useMemo(
-    () => formatCpuField(relativeCpu.performanceScore),
+    () => productFieldFormattedValue(relativeCpu.fields?.performanceRating),
     [relativeCpu],
   );
 
   const href = useMemo(() => getViewCpuPath(relativeCpu), [relativeCpu]);
   const cpuName = useMemo(
-    () => formatCpuName(relativeCpu, { company: false }),
+    () => formatProductName(relativeCpu, { company: false }),
     [relativeCpu],
   );
 

@@ -1,12 +1,11 @@
 import { Module } from '@nestjs/common';
 import { DatabaseModule } from '../database';
-import { CpuModule } from '../product/cpu/cpu.module';
-import { GpuModule } from '../product/gpu/gpu.module';
+import { ProductModule } from '../product/product.module';
 import { WebsiteController } from './website.controller';
 import { WebsiteService } from './website.service';
 
 @Module({
-  imports: [DatabaseModule, CpuModule, GpuModule],
+  imports: [DatabaseModule, ProductModule],
   controllers: [WebsiteController],
   providers: [WebsiteService],
   exports: [WebsiteService],

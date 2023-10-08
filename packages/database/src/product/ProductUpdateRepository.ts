@@ -1,9 +1,9 @@
 import {
-  GpuProductType,
   ListProductUpdatesFilter,
   ListProductUpdatesQuery,
   ProductType,
   ProductUpdateStatus,
+  SubProductType,
 } from '@pcpartdb/shared';
 import { Prisma } from '@prisma/client';
 import { DatabaseClient } from '../DatabaseClient';
@@ -15,13 +15,12 @@ interface ListOptions {
 }
 
 export interface FindPendingByProductIdOptions {
-  productType: ProductType;
   productId: number;
 }
 
 export interface CountPendingOptions {
   productType: ProductType;
-  gpuProductType?: GpuProductType;
+  subProductType?: SubProductType;
 }
 
 export class ProductUpdateRepository {
@@ -50,17 +49,12 @@ export class ProductUpdateRepository {
     options: FindPendingByProductIdOptions,
     config?: RepositoryConfig,
   ) {
-    const { productType, productId } = options;
+    const { productId } = options;
 
     const trx = config?.trx ?? this.db;
     return await trx.productUpdate.findMany({
       where: {
-        AND: [
-          { productType },
-          { cpuId: productType === ProductType.Cpu ? productId : undefined },
-          { gpuId: productType === ProductType.Gpu ? productId : undefined },
-          { status: ProductUpdateStatus.Pending },
-        ],
+        AND: [{ productId }, { status: ProductUpdateStatus.Pending }],
       },
     });
   }
@@ -72,14 +66,14 @@ export class ProductUpdateRepository {
   }
 
   async countPending(options: CountPendingOptions, config?: RepositoryConfig) {
-    const { productType, gpuProductType } = options;
+    const { productType, subProductType } = options;
 
     const trx = config?.trx ?? this.db;
     return await trx.productUpdate.count({
       where: {
         AND: [
           { productType },
-          { gpuProductType },
+          { subProductType },
           { status: ProductUpdateStatus.Pending },
         ],
       },
@@ -115,9 +109,9 @@ export class ProductUpdateRepository {
   private generateWhere(
     filter: ListProductUpdatesFilter,
   ): Prisma.ProductUpdateWhereInput {
-    const productType = filter?.productType || null;
-    const status = filter?.status || null;
-    const search = filter?.search || null;
+    const productType = filter?.productType;
+    const status = filter?.status;
+    const search = filter?.search;
 
     // Product Type
     const productTypeWhere: Prisma.StringFilter = productType
@@ -135,19 +129,19 @@ export class ProductUpdateRepository {
       : undefined;
 
     // Handle GPU-specific filters
-    let gpuProductTypeWhere: Prisma.StringNullableFilter;
+    let subProductTypeWhere: Prisma.StringNullableFilter;
     if (productType === ProductType.Gpu) {
-      const gpuProductType = filter?.gpuProductType || null;
-      if (gpuProductType == null) {
-        throw new Error('Missing gpu product type');
+      const subProductType = filter?.subProductType;
+      if (subProductType == null) {
+        throw new Error('Missing sub product type');
       }
-      gpuProductTypeWhere = { equals: gpuProductType };
+      subProductTypeWhere = { equals: subProductType };
     }
 
     return {
       AND: [
         { productType: productTypeWhere },
-        { gpuProductType: gpuProductTypeWhere },
+        { subProductType: subProductTypeWhere },
         { status: statusWhere },
         { productName: productNameWhere },
       ],

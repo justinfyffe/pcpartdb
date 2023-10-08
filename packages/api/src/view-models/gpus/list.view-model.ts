@@ -1,56 +1,49 @@
 import { Injectable } from '@nestjs/common';
-import { deepmerge, ListGpusQuery, ListGpusResponse } from '@pcpartdb/shared';
-import { GpuService } from '../../product/gpu/gpu.service';
-import { listGpusQueryValidator } from '../../product/gpu/gpu.validators';
+import {
+  deepmerge,
+  DEFAULT_LIST_GPUS_LIMIT,
+  DEFAULT_LIST_GPUS_OFFSET,
+  ListGpusQuery,
+  ListGpusRequest,
+  listProductsRequestSchema,
+  ProductType,
+} from '@pcpartdb/shared';
+import { ProductService } from '../../product/product.service';
 import { Context } from '../../shared/context';
 import { validate } from '../../shared/validation/validate';
 
 @Injectable()
 export class ListGpusViewModelService {
-  constructor(private gpuService: GpuService) {}
+  constructor(private productService: ProductService) {}
 
-  async viewModel(query: ListGpusQuery, ctx: Context) {
-    validate(query, listGpusQueryValidator);
+  async viewModel(request: ListGpusRequest, ctx: Context) {
+    validate(request, listProductsRequestSchema);
+    const query = request.query;
 
     const chipsetsQuery = deepmerge(
       {},
-      { filter: { isChipset: true } } as ListGpusQuery,
+      {
+        filter: { isChipset: true, isRetailModel: false },
+        pagination: {
+          offset: DEFAULT_LIST_GPUS_OFFSET,
+          limit: DEFAULT_LIST_GPUS_LIMIT,
+        },
+      } as ListGpusQuery,
       query,
     );
 
-    const gpus = await this.getGpusForQuery(chipsetsQuery, ctx);
-    const totalGpus = await this.getTotalGpusForQuery(chipsetsQuery, ctx);
-
-    const retailModelCounts = await this.gpuService.countRetailModels(
-      { chipsetIds: gpus.map((gpu) => gpu.id) },
-      ctx,
-    );
-
-    return {
-      query: chipsetsQuery,
-      gpus,
-      totalGpus,
-      contentData: { retailModelCounts },
-    } as ListGpusResponse;
-  }
-
-  private async getGpusForQuery(query: ListGpusQuery, ctx: Context) {
-    return await this.getGpus(query, ctx);
-  }
-
-  private async getTotalGpusForQuery(query: ListGpusQuery, ctx: Context) {
-    return await this.gpuService.count({ query }, ctx);
-  }
-
-  private async getGpus(query: ListGpusQuery, ctx: Context) {
-    return await this.gpuService.list(
+    const response = await this.productService.list(
       {
-        query,
-        fields: ['company', 'performanceScore', 'valueScore', 'releaseDate'],
-        includeRanks: ['performanceRank', 'valueRank'],
-        includeImages: false,
+        productType: ProductType.Gpu,
+        query: chipsetsQuery,
+      },
+      {
+        fields: ['releaseDate', 'performanceRating', 'performancePerMsrp'],
+        includeAdditionalData: true,
       },
       ctx,
     );
+
+    return response;
   }
 }

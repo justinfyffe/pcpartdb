@@ -1,4 +1,9 @@
-import { ProductDataSource, ProductType } from '@pcpartdb/shared';
+import {
+  BenchmarKey,
+  ProductFieldKey,
+  ProductSource,
+  ProductType,
+} from '@pcpartdb/shared';
 import { productService } from 'packages/website/src/client/product/services/productService';
 import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
 import { PrimaryButton } from 'packages/website/src/client/shared/components/Button/PrimaryButton';
@@ -17,34 +22,48 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import { ScrapedDataRow } from './ScrapedDataRow';
+import { ScrapedBenchmarkRow } from './ScrapedBenchmarkRow';
+import { ScrapedFieldRow } from './ScrapedFieldRow';
+import { ScrapedNameRow } from './ScrapedNameRow';
+import { ScrapedOtherNamesRow } from './ScrapedOtherNamesRow';
+import { ScrapedSearchTextRow } from './ScrapedSearchTextRow';
 import {
   createScrapeContext,
   ScrapeProductContext,
 } from './ScrapeProductContext';
-import { ScrapedDataKey, ScrapedProduct } from './types';
+import { ScrapedProduct } from './types';
 
 interface ScrapeProductDialogProps {
   productType: ProductType;
-  dataToScrape: ScrapedDataKey[];
-  sources: Record<string, ProductDataSource>;
+  fieldsToScrape?: ProductFieldKey[];
+  benchmarksToScrape?: BenchmarKey[];
+  sources: Partial<ProductSource>[];
   onImport: (data: ScrapedProduct) => void;
 }
 
 export const ScrapeProductDialog: FunctionComponent<
   ScrapeProductDialogProps
 > = (props) => {
-  const { productType, dataToScrape, sources, onImport } = props;
+  const { productType, fieldsToScrape, benchmarksToScrape, sources, onImport } =
+    props;
 
   const [loading, setLoading] = useState<boolean>(true);
   const [context, setContext] = useState<ScrapedProduct>(null);
 
   useEffect(() => {
     async function scrapeProduct() {
-      const response = await productService.scrapeProduct(productType, {
+      const response = await productService.scrape({
+        productType,
         sources,
       });
-      setContext(createScrapeContext(productType, dataToScrape, response));
+      setContext(
+        createScrapeContext(
+          productType,
+          fieldsToScrape ?? [],
+          benchmarksToScrape ?? [],
+          response,
+        ),
+      );
       setLoading(false);
     }
     scrapeProduct();
@@ -80,13 +99,23 @@ export const ScrapeProductDialog: FunctionComponent<
               <THead>
                 <Tr sticky>
                   <Th>Field</Th>
-                  <Th>Value</Th>
+                  <Th>Raw</Th>
+                  <Th>Formatted</Th>
                   <Th className="text-right">Import?</Th>
                 </Tr>
               </THead>
               <TBody>
-                {dataToScrape.map((field) => (
-                  <ScrapedDataRow key={field} field={field} />
+                <ScrapedNameRow />
+                <ScrapedSearchTextRow />
+                <ScrapedOtherNamesRow />
+                {fieldsToScrape?.map((field) => (
+                  <ScrapedFieldRow key={field} fieldKey={field} />
+                ))}
+                {benchmarksToScrape?.map((benchmarkKey) => (
+                  <ScrapedBenchmarkRow
+                    key={benchmarkKey}
+                    benchmarkKey={benchmarkKey}
+                  />
                 ))}
               </TBody>
             </Table>

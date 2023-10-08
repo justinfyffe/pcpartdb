@@ -10,18 +10,20 @@ import {
   AutomationActionType,
   AutomationStatus,
   CreateAutomationActionRequest,
-  GpuProductType,
+  createAutomationActionRequestSchema,
   ListAutomationActionsRequest,
+  listAutomationActionsRequestSchema,
   ListAutomationActionsResponse,
   ProductType,
+  SubProductType,
+  updateAutomationStatusSchema,
   UpdateCpuActionData,
   UpdateGpuActionData,
 } from '@pcpartdb/shared';
 import * as fs from 'fs';
 import * as fsPromises from 'fs/promises';
-import { CpuRepository } from '../product/cpu/cpu.repository';
-import { GpuRepository } from '../product/gpu/gpu.repository';
-import { ProductSourceRepository } from '../product/product-source.repository';
+import { AutomationSourceRepository } from '../product/automation-source.repository';
+import { ProductRepository } from '../product/product.repository';
 import { ProductUpdateRepository } from '../product/product-update.repository';
 import { Context } from '../shared/context';
 import {
@@ -32,11 +34,6 @@ import {
 import { dataPath } from '../shared/utils';
 import { validate } from '../shared/validation/validate';
 import { AutomationRepository } from './automation.repository';
-import {
-  createAutomationActionRequestValidator,
-  listAutomationActionsRequestValidator,
-  updateAutomationStatusValidaor,
-} from './automation.validators';
 
 const CONFIG_FILE = 'automation.json';
 
@@ -44,9 +41,8 @@ const CONFIG_FILE = 'automation.json';
 export class AutomationService {
   constructor(
     private repository: AutomationRepository,
-    private cpuRepository: CpuRepository,
-    private gpuRepository: GpuRepository,
-    private productSourceRepository: ProductSourceRepository,
+    private productRepository: ProductRepository,
+    private automationSourceRepository: AutomationSourceRepository,
     private productUpdateRepository: ProductUpdateRepository,
   ) {}
 
@@ -66,7 +62,7 @@ export class AutomationService {
   }
 
   async updateStatus(status: Partial<AutomationStatus>, _ctx: Context) {
-    validate(status, updateAutomationStatusValidaor);
+    validate(status, updateAutomationStatusSchema);
 
     if (status.enabled == null) {
       throw badRequestError();
@@ -84,7 +80,7 @@ export class AutomationService {
   }
 
   async listPending(request: ListAutomationActionsRequest, ctx: Context) {
-    validate(request, listAutomationActionsRequestValidator);
+    validate(request, listAutomationActionsRequestSchema);
     const { query } = request;
 
     const { results, total } = await this.repository.listPending(
@@ -102,7 +98,7 @@ export class AutomationService {
   }
 
   async create(request: CreateAutomationActionRequest, ctx: Context) {
-    validate(request, createAutomationActionRequestValidator);
+    validate(request, createAutomationActionRequestSchema);
 
     const entity = await mapToAutomationActionEntity({
       ...request,
@@ -141,34 +137,19 @@ export class AutomationService {
    * database and should be done after all queued tasks are done.
    */
   async getNextBacklog(ctx: Context) {
-    // Find next products to update
-    const nextCpuToUpdate = await this.cpuRepository.findNextToBeUpdated(ctx);
-    const nextGpuToUpdate = await this.gpuRepository.findNextToBeUpdated(ctx);
-    const nextProductsToUpdate = [
-      { type: ProductType.Cpu, product: nextCpuToUpdate },
-      { type: ProductType.Gpu, product: nextGpuToUpdate },
-    ];
-
-    // Compare automation timestamps, choose earliest one.
-    const { type: typeToUpdate, product: productToUpdate } =
-      nextProductsToUpdate.sort(
-        (a, b) =>
-          a.product.automationTimestamp.getTime() -
-          b.product.automationTimestamp.getTime(),
-      )[0];
+    // Find next id to update
+    const { id: nextId, productType: nextProductType } =
+      await this.productRepository.popNextIdToBeUpdated(ctx);
 
     // Get action details, and update product's automation timestamp
     let actionType: AutomationActionType;
     let payload: UpdateCpuActionData | UpdateGpuActionData;
-    productToUpdate.automationTimestamp = new Date();
-    if (typeToUpdate === ProductType.Cpu) {
+    if (nextProductType === ProductType.Cpu) {
       actionType = AutomationActionType.UpdateCpu;
-      payload = { cpuId: productToUpdate.id };
-      await this.cpuRepository.update(productToUpdate.id, productToUpdate, ctx);
-    } else if (typeToUpdate === ProductType.Gpu) {
+      payload = { cpuId: nextId };
+    } else if (nextProductType === ProductType.Gpu) {
       actionType = AutomationActionType.UpdateGpu;
-      payload = { gpuId: productToUpdate.id };
-      await this.gpuRepository.update(productToUpdate.id, productToUpdate, ctx);
+      payload = { gpuId: nextId };
     } else {
       throw internalServerError();
     }
@@ -183,29 +164,29 @@ export class AutomationService {
 
   private async getPendingSources(ctx: Context) {
     const pendingCpuSources =
-      await this.productSourceRepository.countPendingGroups(
+      await this.automationSourceRepository.countPendingGroups(
         { query: { filter: { productType: ProductType.Cpu } } },
         ctx,
       );
     const pendingGpuChipsetSources =
-      await this.productSourceRepository.countPendingGroups(
+      await this.automationSourceRepository.countPendingGroups(
         {
           query: {
             filter: {
               productType: ProductType.Gpu,
-              gpuProductType: GpuProductType.Chipset,
+              isParent: true,
             },
           },
         },
         ctx,
       );
     const pendingGpuRetailModelSources =
-      await this.productSourceRepository.countPendingGroups(
+      await this.automationSourceRepository.countPendingGroups(
         {
           query: {
             filter: {
               productType: ProductType.Gpu,
-              gpuProductType: GpuProductType.RetailModel,
+              isChild: true,
             },
           },
         },
@@ -228,7 +209,7 @@ export class AutomationService {
       await this.productUpdateRepository.countPending(
         {
           productType: ProductType.Gpu,
-          gpuProductType: GpuProductType.Chipset,
+          subProductType: SubProductType.GpuChipset,
         },
         ctx,
       );
@@ -236,7 +217,7 @@ export class AutomationService {
       await this.productUpdateRepository.countPending(
         {
           productType: ProductType.Gpu,
-          gpuProductType: GpuProductType.RetailModel,
+          subProductType: SubProductType.GpuRetailModel,
         },
         ctx,
       );

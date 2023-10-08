@@ -1,5 +1,9 @@
 import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
-import { ListCpusQuery, ListGpusQuery, ProductType } from '@pcpartdb/shared';
+import {
+  ListCpusRequest,
+  ListGpusRequest,
+  ProductType,
+} from '@pcpartdb/shared';
 import { StaffGuard } from '../auth/staff.guard';
 import { Database } from '../database';
 import { Context, Ctx } from '../shared/context';
@@ -123,21 +127,21 @@ export class ViewModelsController {
     );
   }
 
-  @Get('cpus/compare/:slug')
-  async compareCpus(@Param('slug') slug: string, @Ctx() ctx: Context) {
+  @Get('cpus/list')
+  async listCpus(@Query('req') reqJson: string, @Ctx() ctx: Context) {
     return await this.db.transaction(
-      () => this.compareCpusViewModelService.viewModel(slug, ctx),
+      async () => {
+        const data = JSON.parse(reqJson) as ListCpusRequest;
+        return await this.listCpusViewModelService.viewModel(data, ctx);
+      },
       { ctx, isolationLevel: 'ReadUncommitted' },
     );
   }
 
-  @Get('cpus/list')
-  async listCpus(@Query('q') q: string, @Ctx() ctx: Context) {
+  @Get('cpus/compare/:slug')
+  async compareCpus(@Param('slug') slug: string, @Ctx() ctx: Context) {
     return await this.db.transaction(
-      async () => {
-        const data = JSON.parse(q) as ListCpusQuery;
-        return await this.listCpusViewModelService.viewModel(data, ctx);
-      },
+      () => this.compareCpusViewModelService.viewModel(slug, ctx),
       { ctx, isolationLevel: 'ReadUncommitted' },
     );
   }
@@ -150,21 +154,21 @@ export class ViewModelsController {
     );
   }
 
-  @Get('gpus/compare/:slug')
-  async compareGpus(@Param('slug') slug: string, @Ctx() ctx: Context) {
+  @Get('gpus/list')
+  async listProducts(@Query('req') reqJson: string, @Ctx() ctx: Context) {
     return await this.db.transaction(
-      () => this.compareGpusViewModelService.viewModel(slug, ctx),
+      async () => {
+        const data = JSON.parse(reqJson) as ListGpusRequest;
+        return await this.listGpusViewModelService.viewModel(data, ctx);
+      },
       { ctx, isolationLevel: 'ReadUncommitted' },
     );
   }
 
-  @Get('gpus/list')
-  async listGpus(@Query('q') q: string, @Ctx() ctx: Context) {
+  @Get('gpus/compare/:slug')
+  async compareGpus(@Param('slug') slug: string, @Ctx() ctx: Context) {
     return await this.db.transaction(
-      async () => {
-        const data = JSON.parse(q) as ListGpusQuery;
-        return await this.listGpusViewModelService.viewModel(data, ctx);
-      },
+      () => this.compareGpusViewModelService.viewModel(slug, ctx),
       { ctx, isolationLevel: 'ReadUncommitted' },
     );
   }

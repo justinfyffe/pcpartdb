@@ -1,10 +1,10 @@
-import { CpuDataSource, ProductType } from '@pcpartdb/shared';
+import { BenchmarKey, ProductSource, ProductType } from '@pcpartdb/shared';
 import React, { FunctionComponent } from 'react';
 import { ScrapeProductDialog } from '../../product/ScrapeProductDialog/ScrapeProductDialog';
 import { ScrapedProduct } from '../../product/ScrapeProductDialog/types';
 
 interface ScrapeCpuDialogProps {
-  sources: Record<string, CpuDataSource>;
+  sources: Partial<ProductSource>[];
   onImport: (data: ScrapedProduct) => void;
 }
 
@@ -16,12 +16,10 @@ export const ScrapeCpuDialog: FunctionComponent<ScrapeCpuDialogProps> = (
   return (
     <ScrapeProductDialog
       productType={ProductType.Cpu}
-      dataToScrape={[
-        'name',
+      fieldsToScrape={[
         'partNumber',
-        'company',
         'marketSegment',
-        'launchPrice',
+        'msrp',
         'releaseDate',
         'productionStatus',
         'bundledCooler',
@@ -41,21 +39,21 @@ export const ScrapeCpuDialog: FunctionComponent<ScrapeCpuDialogProps> = (
 
         'memorySupport',
         'memoryChannels',
-        'hasEccMemory',
+        'eccMemory',
 
-        'coresCount',
-        'threadsCount',
-        'performanceCoresCount',
-        'efficientCoresCount',
+        'cores',
+        'threads',
+        'pCores',
+        'eCores',
         'clock',
         'turboClock',
-        'performanceCoreClock',
-        'performanceCoreTurboClock',
-        'efficientCoreClock',
-        'efficientCoreTurboClock',
+        'pCoreClock',
+        'pCoreTurboClock',
+        'eCoreClock',
+        'eCoreTurboClock',
         'baseClock',
         'multiplier',
-        'isMultiplierUnlocked',
+        'multiplierUnlocked',
 
         'tdp',
         'pl1',
@@ -65,16 +63,17 @@ export const ScrapeCpuDialog: FunctionComponent<ScrapeCpuDialogProps> = (
         'l1Cache',
         'l2Cache',
         'l3Cache',
-        'efficientCoreL1Cache',
-        'efficientCoreL2Cache',
+        'eCoreL1Cache',
+        'eCoreL2Cache',
 
         'integratedGraphics',
         'extensionsTechnologies',
-
-        'cpuMarkMultiThread',
-        'cpuMarkSingleThread',
-        'geekbenchMultiCore',
-        'geekbenchSingleCore',
+      ]}
+      benchmarksToScrape={[
+        BenchmarKey.CpuMarkMultiThread,
+        BenchmarKey.CpuMarkSingleThread,
+        BenchmarKey.GeekBenchMultiCore,
+        BenchmarKey.GeekBenchSingleCore,
       ]}
       sources={sources}
       onImport={onImport}

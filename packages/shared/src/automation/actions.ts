@@ -1,4 +1,4 @@
-import { CpuProductSourceGroup, GpuProductSourceGroup } from '../product';
+import { CpuAutomationSourceGroup, GpuAutomationSourceGroup } from '../product';
 
 export enum AutomationActionType {
   /**
@@ -88,7 +88,7 @@ export interface CreateCpuActionData {
   preferredSlug?: string;
 
   // For fetching data based on a new CPU.
-  sources?: CpuProductSourceGroup;
+  sources?: CpuAutomationSourceGroup;
 }
 
 export interface UpdateCpuActionData {
@@ -104,8 +104,8 @@ export interface CreateGpuActionData {
   preferredSlug?: string;
 
   // For fetching data based on a new GPU.
-  sources?: GpuProductSourceGroup;
-  chipsetId?: number;
+  sources?: GpuAutomationSourceGroup;
+  relatedProductId?: number;
 }
 
 export interface UpdateGpuActionData {
@@ -114,5 +114,5 @@ export interface UpdateGpuActionData {
 }
 
 export interface UpdateGpuRetailModelSourcesActionData {
-  chipsetId?: number;
+  relatedProductId?: number;
 }

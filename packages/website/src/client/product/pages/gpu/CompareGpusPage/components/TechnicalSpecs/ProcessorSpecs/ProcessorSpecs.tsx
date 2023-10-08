@@ -1,4 +1,4 @@
-import { hasProductFieldValue } from '@pcpartdb/shared';
+import { hasProductFieldFormattedValue } from '@pcpartdb/shared';
 import React, { FunctionComponent, useContext } from 'react';
 import { ComparePageContext } from '../../../context/ComparePageContext';
 import { ProcessorIntro } from './ProcessorIntro';
@@ -16,14 +16,14 @@ export const ProcessorSpecs: FunctionComponent<ProcessorSpecsProps> = (
   const [gpu1, gpu2] = comparison;
 
   if (
-    !hasProductFieldValue(gpu1.codename) &&
-    !hasProductFieldValue(gpu2.codename) &&
-    !hasProductFieldValue(gpu1.architecture) &&
-    !hasProductFieldValue(gpu2.architecture) &&
-    !hasProductFieldValue(gpu1.processSize) &&
-    !hasProductFieldValue(gpu2.processSize) &&
-    !hasProductFieldValue(gpu1.transistors) &&
-    !hasProductFieldValue(gpu2.transistors)
+    !hasProductFieldFormattedValue(gpu1.fields?.codename) &&
+    !hasProductFieldFormattedValue(gpu2.fields?.codename) &&
+    !hasProductFieldFormattedValue(gpu1.fields?.architecture) &&
+    !hasProductFieldFormattedValue(gpu2.fields?.architecture) &&
+    !hasProductFieldFormattedValue(gpu1.fields?.processSize) &&
+    !hasProductFieldFormattedValue(gpu2.fields?.processSize) &&
+    !hasProductFieldFormattedValue(gpu1.fields?.transistors) &&
+    !hasProductFieldFormattedValue(gpu2.fields?.transistors)
   ) {
     return <></>;
   }

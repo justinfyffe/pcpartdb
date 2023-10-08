@@ -3,11 +3,12 @@ import {
   DEFAULT_LIST_GPUS_OFFSET,
   generateListGpusQueryFromPath,
   getAdminListGpusPath,
-  Gpu,
+  GpuProduct,
   ListGpusQuery,
+  ProductType,
 } from '@pcpartdb/shared';
 import { useRouter } from 'next/router';
-import { gpuService } from 'packages/website/src/client/product/services/gpuService';
+import { productService } from 'packages/website/src/client/product/services/productService';
 import { InfoAlert } from 'packages/website/src/client/shared/components/Alert/InfoAlert';
 import React, {
   FunctionComponent,
@@ -25,7 +26,7 @@ export const ChipsetsTab: FunctionComponent<ChipsetsTabProps> = () => {
   const offset = Number(router.query.offset || DEFAULT_LIST_GPUS_OFFSET);
   const limit = Number(router.query.limit || DEFAULT_LIST_GPUS_LIMIT);
 
-  const [chipsets, setChipsets] = useState<Gpu[]>([]);
+  const [chipsets, setChipsets] = useState<GpuProduct[]>([]);
   const [totalResults, setTotalResults] = useState(0);
   const [query, setQuery] = useState<ListGpusQuery>({
     filter: { isChipset: true },
@@ -36,9 +37,9 @@ export const ChipsetsTab: FunctionComponent<ChipsetsTabProps> = () => {
 
   const fetchChipsets = useCallback(async (q: ListGpusQuery) => {
     setLoading(true);
-    const response = await gpuService.list(q);
-    setChipsets(response.gpus);
-    setTotalResults(response.totalGpus);
+    const response = await productService.list(ProductType.Gpu, q);
+    setChipsets(response.results as GpuProduct[]);
+    setTotalResults(response.total);
     setQuery(q);
     setLoading(false);
   }, []);

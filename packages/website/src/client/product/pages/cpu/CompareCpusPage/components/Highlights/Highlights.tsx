@@ -8,10 +8,10 @@ import {
   StarIcon,
 } from '@heroicons/react/24/outline';
 import {
-  DateFormat,
-  formatCpuField,
-  formatCpuName,
+  formatProductName,
   getCpuAffiliateUrl,
+  productFieldFormattedValue,
+  productFieldRawValue,
 } from '@pcpartdb/shared';
 import { ProductHighlightComparison } from 'packages/website/src/client/product/components/ProductHighlightComparison/ProductHighlightComparison';
 import { AffiliateDisclaimer } from 'packages/website/src/client/shared/components/AffiliateDisclaimer/AffiliateDisclaimer';
@@ -31,67 +31,96 @@ export const Highlights: FunctionComponent<HighlightsProps> = (props) => {
   const [cpu1, cpu2] = context.comparison;
 
   const cpu1Name = useMemo(
-    () => formatCpuName(cpu1, { company: false, brand: true }),
+    () => formatProductName(cpu1, { company: false, brand: true }),
     [cpu1],
   );
   const cpu2Name = useMemo(
-    () => formatCpuName(cpu2, { company: false, brand: true }),
+    () => formatProductName(cpu2, { company: false, brand: true }),
     [cpu2],
   );
 
   const highlightPerformance = useMemo(() => {
-    const value1 = formatCpuField(cpu1.performanceScore) || '--';
-    const value2 = formatCpuField(cpu2.performanceScore) || '--';
-    const bold1 = cpu1.performanceScore?.value > cpu2.performanceScore?.value;
-    const bold2 = cpu2.performanceScore?.value > cpu1.performanceScore?.value;
+    const value1 =
+      productFieldFormattedValue(cpu1.fields?.performanceRating) ?? '--';
+    const value2 =
+      productFieldFormattedValue(cpu2.fields?.performanceRating) ?? '--';
+    const bold1 =
+      productFieldRawValue(cpu1.fields?.performanceRating) >
+      productFieldRawValue(cpu2.fields?.performanceRating);
+    const bold2 =
+      productFieldRawValue(cpu1.fields?.performanceRating) <
+      productFieldRawValue(cpu2.fields?.performanceRating);
 
     return [
       { name: cpu1Name, value: value1, bold: bold1 },
       { name: cpu2Name, value: value2, bold: bold2 },
-    ];
-  }, [cpu1.performanceScore, cpu1Name, cpu2.performanceScore, cpu2Name]);
-
-  const highlightValue = useMemo(() => {
-    const value1 = formatCpuField(cpu1.valueScore) || '--';
-    const value2 = formatCpuField(cpu2.valueScore) || '--';
-    const bold1 = cpu1.valueScore?.value > cpu2.valueScore?.value;
-    const bold2 = cpu2.valueScore?.value > cpu1.valueScore?.value;
-
-    return [
-      { name: cpu1Name, value: value1, bold: bold1 },
-      { name: cpu2Name, value: value2, bold: bold2 },
-    ];
-  }, [cpu1.valueScore, cpu1Name, cpu2.valueScore, cpu2Name]);
-
-  const highlightCoresThreads = useMemo(() => {
-    const cores1 = formatCpuField(cpu1.coresCount) || '--';
-    const threads1 = formatCpuField(cpu1.threadsCount) || '--';
-    const value1 = `${cores1} / ${threads1}`;
-
-    const cores2 = formatCpuField(cpu2.coresCount) || '--';
-    const threads2 = formatCpuField(cpu2.threadsCount) || '--';
-    const value2 = `${cores2} / ${threads2}`;
-
-    return [
-      { name: cpu1Name, value: value1, bold: value1 > value2 },
-      { name: cpu2Name, value: value2, bold: value2 > value1 },
     ];
   }, [
-    cpu1.coresCount,
-    cpu1.threadsCount,
+    cpu1.fields?.performanceRating,
     cpu1Name,
-    cpu2.coresCount,
-    cpu2.threadsCount,
+    cpu2.fields?.performanceRating,
+    cpu2Name,
+  ]);
+
+  const highlightValue = useMemo(() => {
+    const value1 =
+      productFieldFormattedValue(cpu1.fields?.performancePerMsrp) ?? '--';
+    const value2 =
+      productFieldFormattedValue(cpu2.fields?.performancePerMsrp) ?? '--';
+    const bold1 =
+      productFieldRawValue(cpu1.fields.performancePerMsrp) >
+      productFieldRawValue(cpu2.fields.performancePerMsrp);
+    const bold2 =
+      productFieldRawValue(cpu1.fields.performancePerMsrp) <
+      productFieldRawValue(cpu2.fields.performancePerMsrp);
+
+    return [
+      { name: cpu1Name, value: value1, bold: bold1 },
+      { name: cpu2Name, value: value2, bold: bold2 },
+    ];
+  }, [
+    cpu1.fields.performancePerMsrp,
+    cpu1Name,
+    cpu2.fields.performancePerMsrp,
+    cpu2Name,
+  ]);
+
+  const highlightCoresThreads = useMemo(() => {
+    const cores1 = productFieldFormattedValue(cpu1.fields?.cores) ?? '--';
+    const threads1 = productFieldFormattedValue(cpu1.fields?.threads) ?? '--';
+    const value1 = `${cores1} / ${threads1}`;
+
+    const cores2 = productFieldFormattedValue(cpu2.fields?.cores) ?? '--';
+    const threads2 = productFieldFormattedValue(cpu2.fields?.threads) ?? '--';
+    const value2 = `${cores2} / ${threads2}`;
+
+    const bold1 =
+      productFieldRawValue(cpu1.fields?.cores) >
+      productFieldRawValue(cpu2.fields?.cores);
+    const bold2 =
+      productFieldRawValue(cpu1.fields?.cores) <
+      productFieldRawValue(cpu2.fields?.cores);
+
+    return [
+      { name: cpu1Name, value: value1, bold: bold1 },
+      { name: cpu2Name, value: value2, bold: bold2 },
+    ];
+  }, [
+    cpu1.fields?.cores,
+    cpu1.fields?.threads,
+    cpu1Name,
+    cpu2.fields?.cores,
+    cpu2.fields?.threads,
     cpu2Name,
   ]);
 
   const highlightMemory = useMemo(() => {
-    let value1 = formatCpuField(cpu1.memorySupport) || '--';
+    let value1 = productFieldFormattedValue(cpu1.fields?.memorySupport) ?? '--';
     if (value1.indexOf(',') >= 0) {
       value1 = value1.substring(0, value1.indexOf(','));
     }
 
-    let value2 = formatCpuField(cpu2.memorySupport) || '--';
+    let value2 = productFieldFormattedValue(cpu2.fields?.memorySupport) ?? '--';
     if (value2.indexOf(',') >= 0) {
       value2 = value2.substring(0, value2.indexOf(','));
     }
@@ -100,20 +129,29 @@ export const Highlights: FunctionComponent<HighlightsProps> = (props) => {
       { name: cpu1Name, value: value1, bold: false },
       { name: cpu2Name, value: value2, bold: false },
     ];
-  }, [cpu1.memorySupport, cpu1Name, cpu2.memorySupport, cpu2Name]);
+  }, [
+    cpu1.fields?.memorySupport,
+    cpu1Name,
+    cpu2.fields?.memorySupport,
+    cpu2Name,
+  ]);
 
   const highlightClock = useMemo(() => {
-    const clock1 = formatCpuField(cpu1.clock) || '--';
-    const turboClock1 = formatCpuField(cpu1.turboClock) || '--';
+    const clock1 = productFieldFormattedValue(cpu1.fields?.clock) ?? '--';
+    const turboClock1 =
+      productFieldFormattedValue(cpu1.fields?.turboClock) ?? '--';
     const value1 = `${clock1} / ${turboClock1}`;
-    const rawClock1 = cpu1.clock?.value ?? 0;
-    const rawTurbo1 = cpu1.turboClock?.value ?? rawClock1;
+    const rawClock1 = productFieldRawValue(cpu1.fields?.clock) ?? 0;
+    const rawTurbo1 =
+      productFieldRawValue(cpu1.fields?.turboClock) ?? rawClock1;
 
-    const clock2 = formatCpuField(cpu2.clock) || '--';
-    const turboClock2 = formatCpuField(cpu2.turboClock) || '--';
+    const clock2 = productFieldFormattedValue(cpu2.fields?.clock) ?? '--';
+    const turboClock2 =
+      productFieldFormattedValue(cpu2.fields?.turboClock) ?? '--';
     const value2 = `${clock2} / ${turboClock2}`;
-    const rawClock2 = cpu2.clock?.value ?? 0;
-    const rawTurbo2 = cpu2.turboClock?.value ?? rawClock2;
+    const rawClock2 = productFieldRawValue(cpu2.fields?.clock) ?? 0;
+    const rawTurbo2 =
+      productFieldRawValue(cpu2.fields?.turboClock) ?? rawClock2;
 
     const bold1 = rawClock1 > rawClock2 && rawTurbo1 > rawTurbo2;
     const bold2 = rawClock2 > rawClock1 && rawTurbo2 > rawTurbo1;
@@ -123,27 +161,26 @@ export const Highlights: FunctionComponent<HighlightsProps> = (props) => {
       { name: cpu2Name, value: value2, bold: bold2 },
     ];
   }, [
-    cpu1.clock,
-    cpu1.turboClock,
+    cpu1.fields?.clock,
+    cpu1.fields?.turboClock,
     cpu1Name,
-    cpu2.clock,
-    cpu2.turboClock,
+    cpu2.fields?.clock,
+    cpu2.fields?.turboClock,
     cpu2Name,
   ]);
 
   const highlightReleaseDate = useMemo(() => {
-    const value1 = formatCpuField(cpu1.releaseDate) || '--';
-    const value2 = formatCpuField(cpu2.releaseDate) || '--';
+    const value1 = productFieldFormattedValue(cpu1.fields?.releaseDate) ?? '--';
+    const value2 = productFieldFormattedValue(cpu2.fields?.releaseDate) ?? '--';
 
-    const dateFormat = DateFormat.YearQuarter;
-    const date1 = formatCpuField(cpu1.releaseDate, { dateFormat });
-    const date2 = formatCpuField(cpu2.releaseDate, { dateFormat });
+    const date1 = productFieldRawValue(cpu1.fields?.releaseDate);
+    const date2 = productFieldRawValue(cpu2.fields?.releaseDate);
 
     return [
       { name: cpu1Name, value: value1, bold: date1 > date2 },
       { name: cpu2Name, value: value2, bold: date2 > date1 },
     ];
-  }, [cpu1.releaseDate, cpu1Name, cpu2.releaseDate, cpu2Name]);
+  }, [cpu1.fields?.releaseDate, cpu1Name, cpu2.fields?.releaseDate, cpu2Name]);
 
   const cpuAffiliateUrl1 = useMemo(() => getCpuAffiliateUrl(cpu1), [cpu1]);
   const cpuAffiliateUrl2 = useMemo(() => getCpuAffiliateUrl(cpu2), [cpu2]);

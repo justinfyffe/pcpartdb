@@ -11,18 +11,141 @@ Primary Focus:
       - Ex: https://www.amd.com/en/products/apu/amd-ryzen-5-pro-6650h
 Secondary Focus:
 - Tech Debt
-  - Products Tables
-    - Explore combined products table
-    - Setup separate table for product sources instead of a meta column
-    - Setup separate table for fields
+  - Better Products Tables
+    - [] Migration
+      - [] Backup database
+      - [] Deployment script
+      - [] Run scratch pad
+      - []
+    - [] BUGS
+      - [] Scraping CPUs
+        - []
+        - [X] bundledCooler "None" not set to null
+        - [x] scraping multiplier as a number (no gap between unit and number, use regex)
+        - [X] memory channels set to null
+        - [x] tj max set to null (no gap between unit and number)
+    - [X] Rename Current Product Sources to Automation Sources
+    - [X] Create schema
+    - [X] Create mappers
+    - [X] Create repositories
+    - [X] add search field to product
+    - [] Scraper improvmeents
+      - [X] Improve parsing of numbers, check for units in parseNumberValue
+        - [X] CPU
+        - [X] GPU
+      - [X] Handle "System Shared" and other 0-value but formattable values in scraper
+        - [X] CPU
+        - [X] GPU
+      - [X] Don't include 0-value values in summary/overview
+        - [X] CPU
+        - [X] GPU
+      - [X] Fix update diff when no changes
+    - [X] rename cpuFields/gpuFields to "fields" on product for easier access
+      - [X] mapper should simplify
+    - [X] Create services for product
+      - [X] populate performance per msrp, performance rating in service
+      - [X] autocomplete
+      - [X] apply automation sources
+      - [X] scrape
+      - [X] validations in service
+        - [X] automation service
+        - [X] automation-source service
+        - [X] product update service
+        - [X] website service
+        - [X] view models
+        - [X] forms
+    - [X] Create Product Controller
+    - [X] Migrate UI to new types and endpoints
+      - [X] Home Page
+      - [X] List GPUs Page
+      - [X] List CPUs Page
+      - [X] View GPU Page
+      - [X] View CPU Page
+      - [X] Compare GPUs Page
+      - [X] Compare CPUs Page
+      - [X] Admin pages
+        - [X] List GPUs Page
+        - [X] List CPUs Page
+        - [X] New GPU Page
+        - [X] New CPU Page
+        - [X] Edit GPU Page
+        - [X] Edit CPU Page
+        - [X] Delete Import Page. Not needed anymore
+        - [X] Automation pages
+          - [] TEST
+          - [X] Fix Apply to Product
+          - [X] CPU
+          - [X] GPU Chipsets
+          - [X] GPU Retail Models sources
+          - [X] CPUs Updates
+          - [X] GPUs Chipsets Updates
+          - [X] GPU Retail Models Updates
+            - Need to check subProductType on ProductUpdate for this.
+          - [X] Product Diff Dialog
+            - [X] FormattedDiffRow -> add benchmarks, name, slug
+    - [] migration script
+      - [] Test with Prod data
+      - [X] CPUs
+      - [X] GPU chipsets
+      - [X] GPU Retail models
+      - [] delete sources with chipset id
+    - [X] Search Text
+      - [X] Generate
+      - [X] CPU When scraping
+      - [X] CPU Input field
+      - [X] GPU When scraping
+      - [X] GPU Input field
+      - [X] migration script
+    - [X] Other names
+      - [X] Generate Function
+      - [X] CPU When scraping
+      - [X] CPU Input field (chips)
+      - [X] GPU When scraping
+      - [X] GPU Input field
+    - [X] Improved utility and type code around products.
+      - [X] Format function should just take value and field key, not field
+        - Might not be needed
+    - [X] improve inputs
+      - [X] input for Formatted Value
+      - [X] input for raw value, auto-filled when editing formatted
+           with lock button
+    - [] Update automation actions
+      - [X] Update automation service
+        - [X] getNextBacklog
+      - [X] Update fetching sitemap slugs on controller
+      - [X] Implement Auto-archive
+      - [] Remove usage of gpuProductType
+        - Replaced with SubProductType when needed (only for product updates)
+    - [] TEST EVERYTHING
+      - [] create products from admin panel
+      - [] update products from admin panel
+      - [] scraping from admin panel
+      - [] automation scripts
+        - [] update sources
+        - [] update products
+        - [] update sitemaps
+      - [] product updates
+      - [] view cpu
+      - [] compare cpu
+      - [] list cpu
+      - [] cpu autocomplete
+      - [] view gpu
+      - [] compare gpu
+      - [] list gpu
+      - [] gpu autocomplete
+    - [] code cleanup
+      - [] Combine market segment values and production status values. same for each product
+      - [] removed unused code
+      - [] move files to correct location
+      - [] move functions to correct location
+      - [] delete after migration
   - Use Kysely for database querying
-  - Use prisma for schema def and migrations
 When Bored:
 - Functionality
   - Make autocomplete stricter, not looser when searching?
 - Tech Debt
   - Remove barrel files
-  - Minimize controllers
+  - Minimize controllers (move validations to services)
   - Generalize product list objects
   - Simplify UI components
 - Bug fixes

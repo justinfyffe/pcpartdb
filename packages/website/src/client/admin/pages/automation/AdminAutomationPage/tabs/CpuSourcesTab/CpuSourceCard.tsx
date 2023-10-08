@@ -7,19 +7,21 @@ import {
 } from '@heroicons/react/24/outline';
 import {
   AutomationActionType,
-  CpuDataSourceKey,
-  CpuProductSource,
-  CpuProductSourceGroup,
+  AutomationSource,
+  AutomationSourceGroup,
+  CpuAutomationSourceGroup,
   CreateCpuActionData,
+  formatAutomationSourceName,
   formatProductName,
   generateCpuSlug,
   Product,
+  ProductSourceKey,
   ProductType,
   UpdateCpuActionData,
 } from '@pcpartdb/shared';
 import { automationService } from 'packages/website/src/client/automation/services/automationService';
 import { ProductAutocomplete } from 'packages/website/src/client/product/components/ProductAutocomplete/ProductAutocomplete';
-import { productSourceService } from 'packages/website/src/client/product/services/productSourceService';
+import { automationSourceService } from 'packages/website/src/client/product/services/automationSourceService';
 import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
 import {
   Card,
@@ -35,147 +37,111 @@ import { AutomationStatusContext } from 'packages/website/src/client/shared/layo
 import React, { useCallback, useContext, useMemo, useState } from 'react';
 import { SourceInputField } from '../../components/SourceInputField';
 
+const SUPPORTED_KEYS = [
+  ProductSourceKey.TechPowerUp,
+  ProductSourceKey.PassMark,
+  ProductSourceKey.GeekBench,
+];
+
 interface CpuSourceCardProps {
-  sources: CpuProductSourceGroup;
+  sources: CpuAutomationSourceGroup;
 }
 
 export const CpuSourceCard = (props: CpuSourceCardProps) => {
-  const { sources } = props;
-
   const automationStatusContext = useContext(AutomationStatusContext);
 
   // States & Memos
 
   const [expanded, setExpanded] = useState(false);
+  const [sources] = useState(props.sources);
 
-  const techPowerUpSources = useMemo(
-    () =>
-      sources
-        .filter((source) => source.sourceKey === CpuDataSourceKey.TechPowerUp)
-        .sort((a, b) => a.sourceName.localeCompare(b.sourceName)),
-    [sources],
-  );
-  const [techPowerUp, setTechPowerUp] = useState(
-    () =>
-      techPowerUpSources.find((value) => value.archived) ||
-      techPowerUpSources[0] ||
-      null,
-  );
-  const [archiveTechPowerUp, setArchiveTechPowerUp] = useState(!!techPowerUp);
+  const subgroups = useMemo(() => {
+    const ret: Partial<Record<ProductSourceKey, AutomationSourceGroup>> = {};
+    for (const supportedKey of SUPPORTED_KEYS) {
+      ret[supportedKey] = sources?.filter(
+        (source) => source.sourceKey === supportedKey,
+      ) as AutomationSourceGroup;
+    }
+    return ret;
+  }, [sources]);
 
-  const passMarkSources = useMemo(
-    () =>
-      sources
-        .filter((source) => source.sourceKey === CpuDataSourceKey.PassMark)
-        .sort((a, b) => a.sourceName.localeCompare(b.sourceName)),
-    [sources],
-  );
-  const [passMark, setPassMark] = useState(
-    () =>
-      passMarkSources.find((value) => value.archived) ||
-      passMarkSources[0] ||
-      null,
-  );
-  const [archivePassMark, setArchivePassMark] = useState(!!passMark);
+  const [currentSources, setCurrentSources] = useState(() => {
+    const ret: Partial<Record<ProductSourceKey, AutomationSource>> = {};
+    for (const supportedKey of SUPPORTED_KEYS) {
+      const initial =
+        subgroups[supportedKey].find((source) => !source.archived) ||
+        subgroups[supportedKey][0];
 
-  const geekBenchSources = useMemo(
-    () =>
-      sources
-        .filter((source) => source.sourceKey === CpuDataSourceKey.GeekBench)
-        .sort((a, b) => a.sourceName.localeCompare(b.sourceName)),
-    [sources],
-  );
-  const [geekBench, setGeekBench] = useState(
-    () =>
-      geekBenchSources.find((value) => value.archived) ||
-      geekBenchSources[0] ||
-      null,
-  );
-  const [archiveGeekBench, setArchiveGeekBench] = useState(!!geekBench);
+      if (initial == null) {
+        ret[supportedKey] = null;
+      } else {
+        ret[supportedKey] = initial;
+      }
+    }
+    return ret;
+  });
 
   const allArchived = useMemo(() => {
-    return (
-      (techPowerUp?.archived ?? true) &&
-      (passMark?.archived ?? true) &&
-      (geekBench?.archived ?? true)
-    );
-  }, [geekBench?.archived, passMark?.archived, techPowerUp?.archived]);
+    return SUPPORTED_KEYS.every((key) => currentSources[key]?.archived ?? true);
+  }, [currentSources]);
 
-  const [preferredName, setPreferredName] = useState(
-    () =>
-      techPowerUp?.sourceName ||
-      passMark?.sourceName ||
-      geekBench?.sourceName ||
-      null,
-  );
+  const [preferredName, setPreferredName] = useState(() => {
+    const key = SUPPORTED_KEYS.find((key) => currentSources[key] != null);
+    return currentSources[key]?.sourceName ?? null;
+  });
   const [preferredSlug, setPreferredSlug] = useState(() =>
     generateCpuSlug(preferredName, null),
   );
   const [appliedCpu, setAppliedCpu] = useState<Product>(null);
-  const [groupKey] = useState(
-    () => techPowerUp?.groupKey || passMark?.groupKey || geekBench?.groupKey,
-  );
+  const [groupKey] = useState(() => {
+    const key = SUPPORTED_KEYS.find((key) => currentSources[key] != null);
+    return currentSources[key]?.groupKey ?? null;
+  });
 
   // Callbacks
+
+  const handleSourceInputChange = useCallback(
+    (key: ProductSourceKey, source: AutomationSource) => {
+      currentSources[key] = source;
+      setCurrentSources({ ...currentSources });
+    },
+    [currentSources],
+  );
 
   const handleGenerateSlug = useCallback(() => {
     setPreferredSlug(generateCpuSlug(preferredName, null));
   }, [preferredName]);
 
   const handleSave = useCallback(async () => {
-    const newTechPowerUp: CpuProductSource =
-      techPowerUp != null
-        ? {
-            ...techPowerUp,
-            archived: archiveTechPowerUp,
-          }
-        : null;
-    const newPassMark: CpuProductSource =
-      passMark != null
-        ? {
-            ...passMark,
-            archived: archivePassMark,
-          }
-        : null;
-    const newGeekBench: CpuProductSource =
-      geekBench != null
-        ? {
-            ...geekBench,
-            archived: archiveGeekBench,
-          }
-        : null;
-
-    const sources = [newTechPowerUp, newPassMark, newGeekBench].filter(
+    const sources = SUPPORTED_KEYS.map((key) => currentSources[key]).filter(
       (source) => source != null && source.id != null,
     );
 
-    await productSourceService.upsert({ sources: sources });
+    const archivedSources = sources.map((source) => ({
+      ...source,
+      archived: true,
+    }));
 
-    await setTechPowerUp(newTechPowerUp);
-    await setPassMark(newPassMark);
-    await setGeekBench(newGeekBench);
+    await automationSourceService.upsert({ sources: archivedSources });
+
+    sources.forEach((source) => {
+      source.archived = true;
+    });
+    setCurrentSources({ ...currentSources });
 
     // Close the card
     await setExpanded(false);
 
     await automationStatusContext.refreshStatus();
-  }, [
-    archiveGeekBench,
-    archivePassMark,
-    archiveTechPowerUp,
-    automationStatusContext,
-    geekBench,
-    passMark,
-    techPowerUp,
-  ]);
+  }, [automationStatusContext, currentSources]);
 
   const handleApplyToCpu = useCallback(async () => {
-    const sources = [techPowerUp, passMark, geekBench]
+    const sources = SUPPORTED_KEYS.map((key) => currentSources[key])
       .filter((source) => source != null && source.id != null)
       .map((source) => source.id);
 
     // Add sources to existing product.
-    await productSourceService.applyToProduct({
+    await automationSourceService.applyToProduct({
       productType: ProductType.Cpu,
       productId: appliedCpu.id,
       sources,
@@ -184,16 +150,16 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
     // Create automation action to update existing cpu.
     await automationService.createAction({
       type: AutomationActionType.UpdateCpu,
-      description: formatProductName(ProductType.Cpu, appliedCpu),
+      description: formatProductName(appliedCpu),
       data: { cpuId: appliedCpu.id } as UpdateCpuActionData,
     });
 
     // Update sources
     await handleSave();
-  }, [techPowerUp, passMark, geekBench, appliedCpu, handleSave]);
+  }, [appliedCpu, handleSave, currentSources]);
 
   const handleCreateCpu = useCallback(async () => {
-    const sources = [techPowerUp, passMark, geekBench].filter(
+    const sources = SUPPORTED_KEYS.map((key) => currentSources[key]).filter(
       (source) => source != null,
     );
 
@@ -206,14 +172,7 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
 
     // Update sources to archive them.
     await handleSave();
-  }, [
-    geekBench,
-    handleSave,
-    passMark,
-    preferredName,
-    preferredSlug,
-    techPowerUp,
-  ]);
+  }, [currentSources, handleSave, preferredName, preferredSlug]);
 
   // Render
 
@@ -234,69 +193,29 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
             <span className="[overflow-wrap:anywhere]">{groupKey}</span>
           </div>
           <div className="text-xs flex flex-wrap gap-x-4 gap-y-1">
-            <div>
-              <span className="font-semibold">
-                TechPowerUp
-                {techPowerUpSources.length > 1
-                  ? ` (x${techPowerUpSources.length})`
-                  : ''}
-                :
-              </span>{' '}
-              {techPowerUp != null ? (
-                <a
-                  href={techPowerUp.sourceUrl}
-                  target="_blank"
-                  onClick={(e) => e.stopPropagation()}
-                  rel="noreferrer"
-                >
-                  {techPowerUp.sourceName}
-                </a>
-              ) : (
-                '--'
-              )}
-            </div>
-            <div>
-              <span className="font-semibold">
-                PassMark
-                {passMarkSources.length > 1
-                  ? ` (x${passMarkSources.length})`
-                  : ''}
-                :
-              </span>{' '}
-              {passMark != null ? (
-                <a
-                  href={passMark.sourceUrl}
-                  target="_blank"
-                  onClick={(e) => e.stopPropagation()}
-                  rel="noreferrer"
-                >
-                  {passMark.sourceName}
-                </a>
-              ) : (
-                '--'
-              )}
-            </div>
-            <div>
-              <span className="font-semibold">
-                GeekBench
-                {geekBenchSources.length > 1
-                  ? ` (x${geekBenchSources.length})`
-                  : ''}
-                :
-              </span>{' '}
-              {geekBench != null ? (
-                <a
-                  href={geekBench.sourceUrl}
-                  target="_blank"
-                  onClick={(e) => e.stopPropagation()}
-                  rel="noreferrer"
-                >
-                  {geekBench.sourceName}
-                </a>
-              ) : (
-                '--'
-              )}
-            </div>
+            {SUPPORTED_KEYS.map((supportedKey) => (
+              <div key={supportedKey}>
+                <span className="font-semibold">
+                  {formatAutomationSourceName(supportedKey)}
+                  {subgroups[supportedKey].length > 1
+                    ? ` (x${subgroups[supportedKey].length})`
+                    : ''}
+                  :
+                </span>{' '}
+                {currentSources[supportedKey] != null ? (
+                  <a
+                    href={currentSources[supportedKey].sourceUrl}
+                    target="_blank"
+                    onClick={(e) => e.stopPropagation()}
+                    rel="noreferrer"
+                  >
+                    {currentSources[supportedKey].sourceName}
+                  </a>
+                ) : (
+                  '--'
+                )}
+              </div>
+            ))}
           </div>
         </div>
 
@@ -364,38 +283,22 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
           </div>
 
           <div className="flex flex-col">
-            <SourceInputField
-              productType={ProductType.Cpu}
-              sourceKey={CpuDataSourceKey.TechPowerUp}
-              sources={techPowerUpSources}
-              currentSource={techPowerUp}
-              archive={archiveTechPowerUp}
-              setArchive={setArchiveTechPowerUp}
-              onUseName={setPreferredName}
-              onChange={(source) => setTechPowerUp(source as CpuProductSource)}
-            />
-
-            <SourceInputField
-              productType={ProductType.Cpu}
-              sourceKey={CpuDataSourceKey.PassMark}
-              sources={passMarkSources}
-              currentSource={passMark}
-              archive={archivePassMark}
-              setArchive={setArchivePassMark}
-              onUseName={setPreferredName}
-              onChange={(source) => setPassMark(source as CpuProductSource)}
-            />
-
-            <SourceInputField
-              productType={ProductType.Cpu}
-              sourceKey={CpuDataSourceKey.GeekBench}
-              sources={geekBenchSources}
-              currentSource={geekBench}
-              archive={archiveGeekBench}
-              setArchive={setArchiveGeekBench}
-              onUseName={setPreferredName}
-              onChange={(source) => setGeekBench(source as CpuProductSource)}
-            />
+            {SUPPORTED_KEYS.map((supportedKey) => (
+              <SourceInputField
+                key={supportedKey}
+                productType={ProductType.Cpu}
+                sourceKey={supportedKey}
+                sources={subgroups[supportedKey] as AutomationSourceGroup}
+                currentSource={currentSources[supportedKey] as AutomationSource}
+                onUseName={setPreferredName}
+                onChange={(source) =>
+                  handleSourceInputChange(
+                    supportedKey,
+                    source as AutomationSource,
+                  )
+                }
+              />
+            ))}
           </div>
 
           <div className="flex flex-wrap justify-between gap-4">

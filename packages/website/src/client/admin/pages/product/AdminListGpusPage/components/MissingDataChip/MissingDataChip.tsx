@@ -1,4 +1,9 @@
-import { Gpu, GpuDataSourceKey, hasProductFieldValue } from '@pcpartdb/shared';
+import {
+  GpuProduct,
+  hasProductFieldValue,
+  hasProductSource,
+  ProductSourceKey,
+} from '@pcpartdb/shared';
 import React, { FunctionComponent, useMemo } from 'react';
 
 enum MissingData {
@@ -20,7 +25,7 @@ const LABELS = {
 };
 
 interface MissingDataChipProps {
-  gpu: Gpu;
+  gpu: GpuProduct;
 }
 
 export const MissingDataChip: FunctionComponent<MissingDataChipProps> = (
@@ -48,30 +53,28 @@ export const MissingDataChip: FunctionComponent<MissingDataChipProps> = (
   );
 };
 
-function checkMissingData(gpu: Gpu): MissingData[] {
+function checkMissingData(gpu: GpuProduct): MissingData[] {
   const missingData: MissingData[] = [];
 
-  if (gpu.meta?.dataSources?.[GpuDataSourceKey.TechPowerUp]?.url == null) {
+  if (!hasProductSource(gpu, ProductSourceKey.TechPowerUp)) {
     missingData.push(MissingData.TechPowerUp);
   }
 
-  if (
-    gpu.meta?.dataSources?.[GpuDataSourceKey.VideocardBenchmarks]?.url == null
-  ) {
+  if (!hasProductSource(gpu, ProductSourceKey.PassMark)) {
     missingData.push(MissingData.VideocardBenchmark);
   }
 
-  if (gpu.meta?.dataSources?.[GpuDataSourceKey.UlBenchmarks]?.url == null) {
+  if (!hasProductSource(gpu, ProductSourceKey.UlBenchmarks)) {
     missingData.push(MissingData.UlBenchmarks);
   }
 
-  if (!hasProductFieldValue(gpu.marketSegment)) {
+  if (!hasProductFieldValue(gpu.fields?.marketSegment)) {
     missingData.push(MissingData.MarketSegment);
   }
-  if (!hasProductFieldValue(gpu.releaseDate)) {
+  if (!hasProductFieldValue(gpu.fields?.releaseDate)) {
     missingData.push(MissingData.ReleaseDate);
   }
-  if (!hasProductFieldValue(gpu.launchPrice)) {
+  if (!hasProductFieldValue(gpu.fields?.msrp)) {
     missingData.push(MissingData.LaunchPrice);
   }
 

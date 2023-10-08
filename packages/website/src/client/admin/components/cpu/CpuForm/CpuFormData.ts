@@ -1,28 +1,26 @@
 import {
-  CpuDataSource,
   CpuField,
-  CpuImages,
-  CpuMarketSegmentValue,
-  CpuProductionStatusValue,
+  MarketSegment,
+  ProductBenchmark,
+  ProductImage,
+  ProductionStatus,
+  ProductSource,
 } from '@pcpartdb/shared';
 
 export interface CpuFormData {
-  slug: string;
   name: string;
+  slug: string;
+  company?: string;
+  otherNames?: string[];
+  searchText?: string;
   affiliateUrl?: string;
-
-  // Data Sourcese
-  techPowerUpSource?: CpuDataSource;
-  passMarkSource?: CpuDataSource;
-  geekBenchSource?: CpuDataSource;
 
   // General Info
   partNumber?: CpuField<string>;
-  company?: CpuField<string>;
-  marketSegment?: CpuField<CpuMarketSegmentValue>;
-  launchPrice?: CpuField<number>;
+  marketSegment?: CpuField<MarketSegment>;
+  msrp?: CpuField<number>;
   releaseDate?: CpuField<string>;
-  productionStatus?: CpuField<CpuProductionStatusValue>;
+  productionStatus?: CpuField<ProductionStatus>;
   bundledCooler?: CpuField<string>;
 
   //
@@ -37,28 +35,28 @@ export interface CpuFormData {
   architecture?: CpuField<string>;
   codename?: CpuField<string>;
   generation?: CpuField<string>;
-  pciExpress?: CpuField<string[]>;
-  chipsets?: CpuField<string[]>;
+  pciExpress?: CpuField<string>;
+  chipsets?: CpuField<string>;
 
   //
-  memorySupport?: CpuField<string[]>;
+  memorySupport?: CpuField<string>;
   memoryChannels?: CpuField<number>;
-  hasEccMemory?: CpuField<boolean>;
+  eccMemory?: CpuField<boolean>;
 
   //
-  coresCount?: CpuField<number>;
-  threadsCount?: CpuField<number>;
-  performanceCoresCount?: CpuField<number>;
-  efficientCoresCount?: CpuField<number>;
+  cores?: CpuField<number>;
+  threads?: CpuField<number>;
+  pCores?: CpuField<number>;
+  eCores?: CpuField<number>;
   clock?: CpuField<number>;
   turboClock?: CpuField<number>;
-  performanceCoreClock?: CpuField<number>;
-  performanceCoreTurboClock?: CpuField<number>;
-  efficientCoreClock?: CpuField<number>;
-  efficientCoreTurboClock?: CpuField<number>;
+  pCoreClock?: CpuField<number>;
+  pCoreTurboClock?: CpuField<number>;
+  eCoreClock?: CpuField<number>;
+  eCoreTurboClock?: CpuField<number>;
   baseClock?: CpuField<number>;
   multiplier?: CpuField<number>;
-  isMultiplierUnlocked?: CpuField<boolean>;
+  multiplierUnlocked?: CpuField<boolean>;
 
   //
   tdp?: CpuField<number>;
@@ -70,23 +68,21 @@ export interface CpuFormData {
   l1Cache?: CpuField<number>;
   l2Cache?: CpuField<number>;
   l3Cache?: CpuField<number>;
-  efficientCoreL1Cache?: CpuField<number>;
-  efficientCoreL2Cache?: CpuField<number>;
+  eCoreL1Cache?: CpuField<number>;
+  eCoreL2Cache?: CpuField<number>;
 
   // Graphics
   integratedGraphics?: CpuField<string>;
 
   // Features
-  extensionsTechnologies?: CpuField<string[]>;
+  extensionsTechnologies?: CpuField<string>;
 
   // Benchmarks
-  performanceScore?: CpuField<number>;
-  valueScore?: CpuField<number>;
-  cpuMarkMultiThread?: CpuField<number>;
-  cpuMarkSingleThread?: CpuField<number>;
-  geekbenchSingleCore?: CpuField<number>;
-  geekbenchMultiCore?: CpuField<number>;
+  benchmarks?: ProductBenchmark[];
+
+  // Sources
+  sources?: ProductSource[];
 
   // Images
-  images?: CpuImages;
+  images?: ProductImage[];
 }

@@ -19,10 +19,10 @@ export const PowerTable: FunctionComponent<PowerTableProps> = (props) => {
   return (
     <Table border responsive className={className}>
       <TBody>
-        <ProductFieldRow type={ProductType.Cpu} fields={[cpu.tdp]} />
-        <ProductFieldRow type={ProductType.Cpu} fields={[cpu.pl1]} />
-        <ProductFieldRow type={ProductType.Cpu} fields={[cpu.pl2]} />
-        <ProductFieldRow type={ProductType.Cpu} fields={[cpu.ppt]} />
+        <ProductFieldRow type={ProductType.Cpu} fields={[cpu.fields?.tdp]} />
+        <ProductFieldRow type={ProductType.Cpu} fields={[cpu.fields?.pl1]} />
+        <ProductFieldRow type={ProductType.Cpu} fields={[cpu.fields?.pl2]} />
+        <ProductFieldRow type={ProductType.Cpu} fields={[cpu.fields?.ppt]} />
       </TBody>
     </Table>
   );

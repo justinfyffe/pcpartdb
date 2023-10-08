@@ -1,25 +1,27 @@
 import {
-  Cpu,
-  CpuComparison,
+  CpuProduct,
+  CpuProductComparison,
   ListCpusResponse,
-  RelatedCpuComparisons,
-  RelatedCpus,
+  RelatedProductComparisons,
+  RelatedProducts,
 } from '../product';
 
 export interface AdminEditCpuViewModel {
-  cpu: Cpu;
+  cpu: CpuProduct;
 }
 
-export interface CompareCpusContentData {
-  relativePerformanceCpus: Cpu[];
-  relativeValueCpus: Cpu[];
+export interface CompareCpusAdditionalData {
+  relativePerformanceCpus: CpuProduct[];
+  relativeValueCpus: CpuProduct[];
 }
 
 export interface CompareCpusViewModel {
-  comparison: CpuComparison;
-  contentData: CompareCpusContentData;
-  relatedCpus: RelatedCpus;
-  relatedComparisons: RelatedCpuComparisons;
+  comparison: CpuProductComparison;
+
+  relatedCpus: RelatedProducts;
+  relatedCpuComparisons: RelatedProductComparisons;
+
+  additionalData: CompareCpusAdditionalData;
 }
 
 export interface ListCpusViewModel extends ListCpusResponse {}
@@ -27,17 +29,18 @@ export interface ListCpusViewModel extends ListCpusResponse {}
 export interface ViewCpuContentData {
   totalPerformanceCpus: number;
 
-  relativePerformanceCpus?: Cpu[];
-  relativeValueCpus?: Cpu[];
+  relativePerformanceCpus?: CpuProduct[];
+  relativeValueCpus?: CpuProduct[];
 
-  bestPerformanceCpu?: Cpu;
-  bestValueCpu?: Cpu;
+  bestPerformanceCpu?: CpuProduct;
+  bestValueCpu?: CpuProduct;
 }
 
 export interface ViewCpuViewModel {
-  cpu: Cpu;
+  cpu: CpuProduct;
 
-  contentData: ViewCpuContentData;
-  relatedCpus: RelatedCpus;
-  relatedComparisons: RelatedCpuComparisons;
+  relatedCpus: RelatedProducts;
+  relatedCpuComparisons: RelatedProductComparisons;
+
+  additionalData: ViewCpuContentData;
 }

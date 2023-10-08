@@ -1,13 +1,16 @@
 import {
+  formatCompanyName,
   formatGpuDimensions,
-  formatGpuField,
-  formatGpuName,
+  formatProductName,
   getGpuChipset,
-  Gpu,
-  GpuComparison,
   GpuFieldKey,
+  GpuProduct,
+  GpuProductComparison,
+  hasProductFieldRawValue,
   hasProductFieldValue,
   isPastGpuLaunchDate,
+  productFieldFormattedValue,
+  productFieldRawValue,
 } from '@pcpartdb/shared';
 import { ContentParams } from 'packages/website/src/client/shared/content/types';
 
@@ -53,6 +56,8 @@ export interface CompareGpusContentParams {
   gpu1ThickerOrThinner?: string;
   slotWidth1?: string;
   slotWidth2?: string;
+  slotOrSlots1?: string;
+  slotOrSlots2?: string;
   dimensions1?: string;
   dimensions2?: string;
 
@@ -63,7 +68,7 @@ export interface CompareGpusContentParams {
   psu2?: string;
 }
 
-export function getContentParams(comparison: GpuComparison) {
+export function getContentParams(comparison: GpuProductComparison) {
   return {
     ...getGeneralParams(comparison),
     ...getPerformanceParams(comparison),
@@ -73,17 +78,23 @@ export function getContentParams(comparison: GpuComparison) {
   } as CompareGpusContentParams as ContentParams;
 }
 
-function getGeneralParams(comparison: GpuComparison) {
+function getGeneralParams(comparison: GpuProductComparison) {
   const [gpu1, gpu2] = comparison;
 
   let gpu1NewerOrOlder: string;
   if (
-    hasProductFieldValue(gpu1.releaseDate) &&
-    hasProductFieldValue(gpu2.releaseDate)
+    hasProductFieldRawValue(gpu1.fields?.releaseDate) &&
+    hasProductFieldRawValue(gpu2.fields?.releaseDate)
   ) {
-    if (gpu1.releaseDate?.value > gpu2.releaseDate?.value) {
+    if (
+      productFieldRawValue(gpu1.fields?.releaseDate) >
+      productFieldRawValue(gpu2.fields?.releaseDate)
+    ) {
       gpu1NewerOrOlder = 'newer';
-    } else if (gpu1.releaseDate?.value < gpu2.releaseDate?.value) {
+    } else if (
+      productFieldRawValue(gpu1.fields?.releaseDate) <
+      productFieldRawValue(gpu2.fields?.releaseDate)
+    ) {
       gpu1NewerOrOlder = 'older';
     }
   }
@@ -97,42 +108,70 @@ function getGeneralParams(comparison: GpuComparison) {
 
   let gpu1LaunchPriceHigherOrLower: string;
   if (
-    hasProductFieldValue(gpu1.launchPrice) &&
-    hasProductFieldValue(gpu2.launchPrice)
+    hasProductFieldValue(gpu1.fields?.msrp) &&
+    hasProductFieldRawValue(gpu2.fields?.msrp)
   ) {
-    if (gpu1.launchPrice?.value > gpu2.launchPrice?.value) {
+    if (
+      productFieldRawValue(gpu1.fields?.msrp) >
+      productFieldRawValue(gpu2.fields?.msrp)
+    ) {
       gpu1LaunchPriceHigherOrLower = 'higher';
-    } else if (gpu1.launchPrice?.value < gpu2.launchPrice?.value) {
+    } else if (
+      productFieldRawValue(gpu1.fields?.msrp) <
+      productFieldRawValue(gpu2.fields?.msrp)
+    ) {
       gpu1LaunchPriceHigherOrLower = 'lower';
     }
   }
 
   return {
-    company1: formatGpuField(gpu1.company),
-    company2: formatGpuField(gpu2.company),
-    gpuName1: formatGpuName(gpu1),
-    gpuName2: formatGpuName(gpu2),
-    shortGpuName1: formatGpuName(gpu1, { company: false }),
-    shortGpuName2: formatGpuName(gpu2, { company: false }),
-    shortestGpuName1: formatGpuName(gpu1, { company: false, brand: false }),
-    shortestGpuName2: formatGpuName(gpu2, { company: false, brand: false }),
-    chipsetName1: formatGpuName(getGpuChipset(gpu1)),
-    chipsetName2: formatGpuName(getGpuChipset(gpu2)),
-    chipsetShortName1: formatGpuName(getGpuChipset(gpu1), { company: false }),
-    chipsetShortName2: formatGpuName(getGpuChipset(gpu2), { company: false }),
-    marketSegment1: formatGpuField(gpu1.marketSegment)?.toLowerCase(),
-    marketSegment2: formatGpuField(gpu2.marketSegment)?.toLowerCase(),
+    company1: formatCompanyName(gpu1.company),
+    company2: formatCompanyName(gpu2.company),
+    gpuName1: formatProductName(gpu1),
+    gpuName2: formatProductName(gpu2),
+    shortGpuName1: formatProductName(gpu1, { company: false }),
+    shortGpuName2: formatProductName(gpu2, { company: false }),
+    shortestGpuName1: formatProductName(gpu1, {
+      company: false,
+      brand: false,
+    }),
+    shortestGpuName2: formatProductName(gpu2, {
+      company: false,
+      brand: false,
+    }),
+    chipsetName1: formatProductName(getGpuChipset(gpu1)),
+    chipsetName2: formatProductName(getGpuChipset(gpu2)),
+    chipsetShortName1: formatProductName(getGpuChipset(gpu1), {
+      company: false,
+    }),
+    chipsetShortName2: formatProductName(getGpuChipset(gpu2), {
+      company: false,
+    }),
+    marketSegment1: hasProductFieldRawValue(gpu1.fields?.marketSegment)
+      ? productFieldFormattedValue(gpu1.fields?.marketSegment)?.toLowerCase()
+      : null,
+    marketSegment2: hasProductFieldRawValue(gpu2.fields?.marketSegment)
+      ? productFieldFormattedValue(gpu2.fields?.marketSegment)?.toLowerCase()
+      : null,
     gpu1NewerOrOlder,
     gpu2WillReleaseOrWasReleased,
-    releaseDate1: formatGpuField(gpu1.releaseDate),
-    releaseDate2: formatGpuField(gpu2.releaseDate),
+    releaseDate1: hasProductFieldRawValue(gpu1.fields?.releaseDate)
+      ? productFieldFormattedValue(gpu1.fields?.releaseDate)
+      : null,
+    releaseDate2: hasProductFieldRawValue(gpu2.fields?.releaseDate)
+      ? productFieldFormattedValue(gpu2.fields?.releaseDate)
+      : null,
     gpu1LaunchPriceHigherOrLower,
-    launchPrice1: formatGpuField(gpu1.launchPrice),
-    launchPrice2: formatGpuField(gpu2.launchPrice),
+    launchPrice1: hasProductFieldRawValue(gpu1.fields?.msrp)
+      ? productFieldFormattedValue(gpu1.fields?.msrp)
+      : null,
+    launchPrice2: hasProductFieldRawValue(gpu2.fields?.msrp)
+      ? productFieldFormattedValue(gpu2.fields?.msrp)
+      : null,
   } as CompareGpusContentParams as ContentParams;
 }
 
-function getPerformanceParams(comparison: GpuComparison) {
+function getPerformanceParams(comparison: GpuProductComparison) {
   const [gpu1, gpu2] = comparison;
   const chipset1 = getGpuChipset(gpu1);
   const chipset2 = getGpuChipset(gpu2);
@@ -141,11 +180,15 @@ function getPerformanceParams(comparison: GpuComparison) {
   let gpu1PerformanceHigherOrLower: string;
   let gpu1PerformanceDifferencePct: string;
   if (
-    hasProductFieldValue(chipset1.performanceScore) &&
-    hasProductFieldValue(chipset2.performanceScore)
+    hasProductFieldRawValue(chipset1.fields?.performanceRating) &&
+    hasProductFieldRawValue(chipset2.fields?.performanceRating)
   ) {
-    const performanceScore1 = chipset1.performanceScore.value;
-    const performanceScore2 = chipset2.performanceScore.value;
+    const performanceScore1 = productFieldRawValue(
+      chipset1.fields?.performanceRating,
+    );
+    const performanceScore2 = productFieldRawValue(
+      chipset2.fields?.performanceRating,
+    );
     if (performanceScore1 > performanceScore2) {
       gpu1PerformanceMoreOrLess = 'more';
       gpu1PerformanceHigherOrLower = 'higher';
@@ -161,11 +204,15 @@ function getPerformanceParams(comparison: GpuComparison) {
 
   let gpu1ValueHigherOrLower: string;
   if (
-    hasProductFieldValue(chipset1.valueScore) &&
-    hasProductFieldValue(chipset2.valueScore)
+    hasProductFieldRawValue(chipset1.fields?.performancePerMsrp) &&
+    hasProductFieldRawValue(chipset2.fields?.performancePerMsrp)
   ) {
-    const valueScore1 = chipset1.valueScore.value;
-    const valueScore2 = chipset2.valueScore.value;
+    const valueScore1 = productFieldRawValue(
+      chipset1.fields?.performancePerMsrp,
+    );
+    const valueScore2 = productFieldRawValue(
+      chipset2.fields?.performancePerMsrp,
+    );
     if (valueScore1 > valueScore2) {
       gpu1ValueHigherOrLower = 'higher';
     } else if (valueScore1 < valueScore2) {
@@ -178,34 +225,54 @@ function getPerformanceParams(comparison: GpuComparison) {
     gpu1PerformanceHigherOrLower,
     gpu1PerformanceDifferencePct,
     gpu1ValueHigherOrLower,
-    performancePerDollar1: formatGpuField(chipset1.valueScore),
-    performancePerDollar2: formatGpuField(chipset2.valueScore),
+    performancePerDollar1: hasProductFieldRawValue(
+      chipset1.fields?.performancePerMsrp,
+    )
+      ? productFieldFormattedValue(chipset1.fields?.performancePerMsrp)
+      : null,
+    performancePerDollar2: hasProductFieldRawValue(
+      chipset2.fields?.performancePerMsrp,
+    )
+      ? productFieldFormattedValue(chipset2.fields?.performancePerMsrp)
+      : null,
   } as CompareGpusContentParams as ContentParams;
 }
 
-function getMemoryParams(comparison: GpuComparison) {
+function getMemoryParams(comparison: GpuProductComparison) {
   const [gpu1, gpu2] = comparison;
 
   let gpu1MemorySizeMoreOrLess: string;
   if (
-    hasProductFieldValue(gpu1.memorySize) &&
-    hasProductFieldValue(gpu2.memorySize)
+    hasProductFieldRawValue(gpu1.fields?.memorySize) &&
+    hasProductFieldRawValue(gpu2.fields?.memorySize)
   ) {
-    if (gpu1.memorySize?.value > gpu2.memorySize?.value) {
+    if (
+      productFieldRawValue(gpu1.fields?.memorySize) >
+      productFieldRawValue(gpu2.fields?.memorySize)
+    ) {
       gpu1MemorySizeMoreOrLess = 'more';
-    } else if (gpu1.memorySize?.value < gpu2.memorySize?.value) {
+    } else if (
+      productFieldRawValue(gpu1.fields?.memorySize) <
+      productFieldRawValue(gpu2.fields?.memorySize)
+    ) {
       gpu1MemorySizeMoreOrLess = 'less';
     }
   }
 
   let gpu1MemoryBandwidthFasterOrSlower: string;
   if (
-    hasProductFieldValue(gpu1.memoryBandwidth) &&
-    hasProductFieldValue(gpu2.memoryBandwidth)
+    hasProductFieldRawValue(gpu1.fields?.memoryBandwidth) &&
+    hasProductFieldRawValue(gpu2.fields?.memoryBandwidth)
   ) {
-    if (gpu1.memoryBandwidth?.value > gpu2.memoryBandwidth?.value) {
+    if (
+      productFieldRawValue(gpu1.fields?.memoryBandwidth) >
+      productFieldRawValue(gpu2.fields?.memoryBandwidth)
+    ) {
       gpu1MemoryBandwidthFasterOrSlower = 'faster';
-    } else if (gpu1.memoryBandwidth?.value < gpu2.memoryBandwidth?.value) {
+    } else if (
+      productFieldRawValue(gpu1.fields?.memoryBandwidth) <
+      productFieldRawValue(gpu2.fields?.memoryBandwidth)
+    ) {
       gpu1MemoryBandwidthFasterOrSlower = 'slower';
     }
   }
@@ -213,42 +280,76 @@ function getMemoryParams(comparison: GpuComparison) {
   return {
     gpu1MemorySizeMoreOrLess,
     gpu1MemoryBandwidthFasterOrSlower,
-    memorySize1: formatGpuField(gpu1.memorySize),
-    memorySize2: formatGpuField(gpu2.memorySize),
-    memoryType1: formatGpuField(gpu1.memoryType),
-    memoryType2: formatGpuField(gpu2.memoryType),
-    memoryBandwidth1: formatGpuField(gpu1.memoryBandwidth),
-    memoryBandwidth2: formatGpuField(gpu2.memoryBandwidth),
+    memorySize1: hasProductFieldRawValue(gpu1.fields?.memorySize)
+      ? productFieldFormattedValue(gpu1.fields?.memorySize)
+      : null,
+    memorySize2: hasProductFieldRawValue(gpu2.fields?.memorySize)
+      ? productFieldFormattedValue(gpu2.fields?.memorySize)
+      : null,
+    memoryType1: hasProductFieldRawValue(gpu1.fields?.memoryType)
+      ? productFieldFormattedValue(gpu1.fields?.memoryType)
+      : null,
+    memoryType2: hasProductFieldRawValue(gpu2.fields?.memoryType)
+      ? productFieldFormattedValue(gpu2.fields?.memoryType)
+      : null,
+    memoryBandwidth1: hasProductFieldRawValue(gpu1.fields?.memoryBandwidth)
+      ? productFieldFormattedValue(gpu1.fields?.memoryBandwidth)
+      : null,
+    memoryBandwidth2: hasProductFieldRawValue(gpu2.fields?.memoryBandwidth)
+      ? productFieldFormattedValue(gpu2.fields?.memoryBandwidth)
+      : null,
   } as CompareGpusContentParams as ContentParams;
 }
 
-function getCompatibilityParams(comparison: GpuComparison) {
+function getCompatibilityParams(comparison: GpuProductComparison) {
   const [gpu1, gpu2] = comparison;
 
   let gpu1ThickerOrThinner: string;
   if (
-    hasProductFieldValue(gpu1.slotWidth) &&
-    hasProductFieldValue(gpu2.slotWidth)
+    hasProductFieldRawValue(gpu1.fields?.slotWidth) &&
+    hasProductFieldRawValue(gpu2.fields?.slotWidth)
   ) {
-    if (gpu1.slotWidth?.value > gpu2.slotWidth?.value) {
+    if (
+      productFieldRawValue(gpu1.fields?.slotWidth) >
+      productFieldRawValue(gpu2.fields?.slotWidth)
+    ) {
       gpu1ThickerOrThinner = 'thicker';
-    } else if (gpu1.slotWidth?.value < gpu2.slotWidth?.value) {
+    } else if (
+      productFieldRawValue(gpu1.fields?.slotWidth) <
+      productFieldRawValue(gpu2.fields?.slotWidth)
+    ) {
       gpu1ThickerOrThinner = 'thinner';
     }
   }
 
   return {
     gpu1ThickerOrThinner,
-    slotWidth1: formatGpuField(gpu1.slotWidth, { showUnits: false }),
-    slotWidth2: formatGpuField(gpu2.slotWidth, { showUnits: false }),
-    dimensions1: formatGpuDimensions(gpu1, { allowMissingDimensions: false }),
-    dimensions2: formatGpuDimensions(gpu2, { allowMissingDimensions: false }),
-    outputs1: formatGpuField(gpu1.outputs),
-    outputs2: formatGpuField(gpu2.outputs),
+    slotWidth1: hasProductFieldRawValue(gpu1.fields?.slotWidth)
+      ? `${productFieldRawValue(gpu1.fields?.slotWidth)}`
+      : null,
+    slotWidth2: hasProductFieldRawValue(gpu2.fields?.slotWidth)
+      ? `${productFieldRawValue(gpu2.fields?.slotWidth)}`
+      : null,
+    slotOrSlots1:
+      productFieldRawValue(gpu1.fields?.slotWidth) === 1 ? 'slot' : 'slots',
+    slotOrSlots2:
+      productFieldRawValue(gpu2.fields?.slotWidth) === 1 ? 'slot' : 'slots',
+    dimensions1: formatGpuDimensions(gpu1, {
+      allowMissingDimensions: false,
+    }),
+    dimensions2: formatGpuDimensions(gpu2, {
+      allowMissingDimensions: false,
+    }),
+    outputs1: hasProductFieldRawValue(gpu1.fields?.outputs)
+      ? productFieldFormattedValue(gpu1.fields?.outputs)
+      : null,
+    outputs2: hasProductFieldRawValue(gpu2.fields?.outputs)
+      ? productFieldFormattedValue(gpu2.fields?.outputs)
+      : null,
   } as CompareGpusContentParams as ContentParams;
 }
 
-function getPowerSupplyParams(comparison: GpuComparison) {
+function getPowerSupplyParams(comparison: GpuProductComparison) {
   const [gpu1, gpu2] = comparison;
 
   const [higherPsuGpu] = getGreaterAndLesserGpuFromField(
@@ -258,24 +359,32 @@ function getPowerSupplyParams(comparison: GpuComparison) {
   );
 
   return {
-    tdp1: formatGpuField(gpu1.thermalDesignPower),
-    tdp2: formatGpuField(gpu2.thermalDesignPower),
-    higherPsuGpuName: formatGpuName(higherPsuGpu, {
+    tdp1: hasProductFieldRawValue(gpu1.fields?.tdp)
+      ? productFieldFormattedValue(gpu1.fields?.tdp)
+      : null,
+    tdp2: hasProductFieldRawValue(gpu2.fields?.tdp)
+      ? productFieldFormattedValue(gpu2.fields?.tdp)
+      : null,
+    higherPsuGpuName: formatProductName(higherPsuGpu, {
       company: false,
       brand: false,
     }),
-    psu1: formatGpuField(gpu1.suggestedPsu),
-    psu2: formatGpuField(gpu2.suggestedPsu),
+    psu1: hasProductFieldRawValue(gpu1.fields?.suggestedPsu)
+      ? productFieldFormattedValue(gpu1.fields?.suggestedPsu)
+      : null,
+    psu2: hasProductFieldRawValue(gpu2.fields?.suggestedPsu)
+      ? productFieldFormattedValue(gpu2.fields?.suggestedPsu)
+      : null,
   } as CompareGpusContentParams as ContentParams;
 }
 
 export function getGreaterAndLesserGpuFromField(
-  gpu1: Gpu,
-  gpu2: Gpu,
+  gpu1: GpuProduct,
+  gpu2: GpuProduct,
   fieldKey: GpuFieldKey,
 ) {
-  const field1 = gpu1?.[fieldKey];
-  const field2 = gpu2?.[fieldKey];
+  const field1 = gpu1?.fields?.[fieldKey];
+  const field2 = gpu2?.fields?.[fieldKey];
   if (typeof field1 !== 'object' || typeof field2 !== 'object') {
     return [null, null];
   }

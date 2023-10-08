@@ -1,8 +1,8 @@
 import {
-  Cpu,
-  formatCpuField,
-  formatCpuName,
+  CpuProduct,
+  formatProductName,
   getViewCpuPath,
+  productFieldFormattedValue,
 } from '@pcpartdb/shared';
 import {
   Table,
@@ -39,23 +39,23 @@ export const ListTable: FunctionComponent = () => {
 };
 
 interface ListTableRowProps {
-  cpu: Cpu;
+  cpu: CpuProduct;
 }
 
 const ListTableRow: FunctionComponent<ListTableRowProps> = (props) => {
   const { cpu } = props;
 
   const href = useMemo(() => getViewCpuPath(cpu), [cpu]);
-  const name = useMemo(() => formatCpuName(cpu), [cpu]);
+  const name = useMemo(() => formatProductName(cpu), [cpu]);
   const performance = useMemo(() => {
-    return formatCpuField(cpu.performanceScore) || '--';
-  }, [cpu.performanceScore]);
+    return productFieldFormattedValue(cpu.fields?.performanceRating) ?? '--';
+  }, [cpu.fields?.performanceRating]);
   const performancePerDollar = useMemo(() => {
-    return formatCpuField(cpu.valueScore) || '--';
-  }, [cpu.valueScore]);
+    return productFieldFormattedValue(cpu.fields?.performancePerMsrp) ?? '--';
+  }, [cpu.fields?.performancePerMsrp]);
   const releaseDate = useMemo(
-    () => formatCpuField(cpu.releaseDate) || '--',
-    [cpu.releaseDate],
+    () => productFieldFormattedValue(cpu.fields?.releaseDate) ?? '--',
+    [cpu.fields?.releaseDate],
   );
 
   return (

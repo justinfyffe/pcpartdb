@@ -1,4 +1,4 @@
-import { hasProductFieldValue } from '@pcpartdb/shared';
+import { hasProductFieldFormattedValue } from '@pcpartdb/shared';
 import React, { FunctionComponent, useContext } from 'react';
 import { ViewPageContext } from '../../../context/ViewPageContext';
 import { FeatureIntro } from './FeatureIntro';
@@ -13,9 +13,9 @@ export const FeatureSpecs: FunctionComponent<FeatureSpecsProps> = (props) => {
   const { cpu } = useContext(ViewPageContext);
 
   if (
-    !hasProductFieldValue(cpu.bundledCooler) &&
-    !hasProductFieldValue(cpu.integratedGraphics) &&
-    !hasProductFieldValue(cpu.extensionsTechnologies)
+    !hasProductFieldFormattedValue(cpu.fields?.bundledCooler) &&
+    !hasProductFieldFormattedValue(cpu.fields?.integratedGraphics) &&
+    !hasProductFieldFormattedValue(cpu.fields?.extensionsTechnologies)
   ) {
     return <></>;
   }

@@ -1,5 +1,5 @@
 import { ShoppingCartIcon } from '@heroicons/react/24/outline';
-import { formatGpuName, getGpuAffiliateUrl } from '@pcpartdb/shared';
+import { formatProductName, getGpuAffiliateUrl } from '@pcpartdb/shared';
 import { AffiliateDisclaimer } from 'packages/website/src/client/shared/components/AffiliateDisclaimer/AffiliateDisclaimer';
 import { WarningButton } from 'packages/website/src/client/shared/components/Button/WarningButton';
 import React, { FunctionComponent, useContext, useMemo } from 'react';
@@ -16,11 +16,11 @@ export const ShopHighlightListItem: FunctionComponent<
   const [gpu1, gpu2] = context.comparison;
 
   const name1 = useMemo(
-    () => formatGpuName(gpu1, { company: false, brand: true }),
+    () => formatProductName(gpu1, { company: false, brand: true }),
     [gpu1],
   );
   const name2 = useMemo(
-    () => formatGpuName(gpu2, { company: false, brand: true }),
+    () => formatProductName(gpu2, { company: false, brand: true }),
     [gpu2],
   );
 

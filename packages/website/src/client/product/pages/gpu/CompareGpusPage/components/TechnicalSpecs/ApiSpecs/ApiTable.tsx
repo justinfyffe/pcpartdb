@@ -1,4 +1,4 @@
-import { formatGpuName, ProductType } from '@pcpartdb/shared';
+import { formatProductName, ProductType } from '@pcpartdb/shared';
 import { ProductFieldRow } from 'packages/website/src/client/product/components/ProductFieldRow/ProductFieldRow';
 import {
   Table,
@@ -22,8 +22,8 @@ export const ApiTable: FunctionComponent<ApiTableProps> = (props) => {
 
   const [name1, name2] = useMemo(() => {
     return [
-      formatGpuName(gpu1, { company: false }),
-      formatGpuName(gpu2, { company: false }),
+      formatProductName(gpu1, { company: false }),
+      formatProductName(gpu2, { company: false }),
     ];
   }, [gpu1, gpu2]);
 
@@ -39,19 +39,22 @@ export const ApiTable: FunctionComponent<ApiTableProps> = (props) => {
       <TBody>
         <ProductFieldRow
           type={ProductType.Gpu}
-          fields={[gpu1.directxVersion, gpu2.directxVersion]}
+          fields={[gpu1.fields?.directxVersion, gpu2.fields?.directxVersion]}
         />
         <ProductFieldRow
           type={ProductType.Gpu}
-          fields={[gpu1.openClVersion, gpu2.openClVersion]}
+          fields={[gpu1.fields?.openClVersion, gpu2.fields?.openClVersion]}
         />
         <ProductFieldRow
           type={ProductType.Gpu}
-          fields={[gpu1.openGlVersion, gpu2.openGlVersion]}
+          fields={[gpu1.fields?.openGlVersion, gpu2.fields?.openGlVersion]}
         />
         <ProductFieldRow
           type={ProductType.Gpu}
-          fields={[gpu1.shaderModelVersion, gpu2.shaderModelVersion]}
+          fields={[
+            gpu1.fields?.shaderModelVersion,
+            gpu2.fields?.shaderModelVersion,
+          ]}
         />
       </TBody>
     </Table>

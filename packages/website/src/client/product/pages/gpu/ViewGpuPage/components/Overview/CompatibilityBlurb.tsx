@@ -1,4 +1,4 @@
-import { hasProductFieldValue } from '@pcpartdb/shared';
+import { hasProductFieldFormattedValue } from '@pcpartdb/shared';
 import { ContentContext } from 'packages/website/src/client/shared/content/ContentContext';
 import { compileContentComponent } from 'packages/website/src/client/shared/content/utils';
 import React, { useContext } from 'react';
@@ -6,12 +6,11 @@ import { ViewGpuContentTag } from '../../content/getContentTags';
 import { ViewPageContext } from '../../context/ViewPageContext';
 
 const CompatibilitySlotWidth = compileContentComponent({
-  deps: ['slotWidthNoUnits', 'slotWidthUnits'],
+  deps: ['slotWidth', 'slotOrSlots'],
   component: (props) => (
     <>
       The {props.shortGpuName} is a {props.thickness} {props.marketSegment}{' '}
-      graphics card, taking up {props.slotWidthNoUnits} PCIe{' '}
-      {props.slotWidthUnits}.
+      graphics card, taking up {props.slotWidth} PCIe {props.slotOrSlots}.
     </>
   ),
 });
@@ -59,7 +58,7 @@ export const CompatibilityBlurb = () => {
   const { gpu, contentParams, contentTags } = useContext(ViewPageContext);
   const context = { tags: contentTags, params: contentParams };
 
-  if (!hasProductFieldValue(gpu.slotWidth)) {
+  if (!hasProductFieldFormattedValue(gpu.fields?.slotWidth)) {
     return <></>;
   }
 

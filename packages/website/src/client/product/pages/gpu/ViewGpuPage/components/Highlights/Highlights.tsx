@@ -9,8 +9,9 @@ import {
 } from '@heroicons/react/24/outline';
 import {
   formatGpuDimensions,
-  formatGpuField,
   getGpuAffiliateUrl,
+  getGpuChipset,
+  productFieldFormattedValue,
 } from '@pcpartdb/shared';
 import { ProductHighlight } from 'packages/website/src/client/product/components/ProductHighlight/ProductHighlight';
 import { AffiliateDisclaimer } from 'packages/website/src/client/shared/components/AffiliateDisclaimer/AffiliateDisclaimer';
@@ -28,48 +29,51 @@ export const Highlights: FunctionComponent<HighlightsProps> = (props) => {
 
   const context = useContext(ViewPageContext);
   const gpu = context.gpu;
-  const parent = gpu.chipset;
+  const parent = getGpuChipset(gpu);
 
   const highlightPerformance = useMemo(() => {
     const performanceScore =
-      formatGpuField(gpu.performanceScore) ||
-      formatGpuField(parent?.performanceScore);
+      productFieldFormattedValue(gpu.fields?.performanceRating) ||
+      productFieldFormattedValue(parent.fields?.performanceRating);
 
     if (performanceScore != null) {
       return `${performanceScore}`;
     } else {
       return '--';
     }
-  }, [gpu.performanceScore, parent?.performanceScore]);
+  }, [gpu.fields?.performanceRating, parent.fields?.performanceRating]);
 
   const highlightValue = useMemo(() => {
     const valueScore =
-      formatGpuField(gpu.valueScore) || formatGpuField(parent?.valueScore);
+      productFieldFormattedValue(gpu.fields?.performancePerMsrp) ||
+      productFieldFormattedValue(parent?.fields?.performancePerMsrp);
 
     if (valueScore != null) {
       return `${valueScore}`;
     } else {
       return '--';
     }
-  }, [gpu.valueScore, parent?.valueScore]);
+  }, [gpu.fields?.performancePerMsrp, parent?.fields?.performancePerMsrp]);
 
   const highlightMemory = useMemo(() => {
-    const memorySize = formatGpuField(gpu.memorySize);
-    const memoryType = formatGpuField(gpu.memoryType);
-    return [memorySize, memoryType].filter((value) => value != null).join(' ');
+    const memorySet = new Set([
+      productFieldFormattedValue(gpu.fields?.memorySize),
+      productFieldFormattedValue(gpu.fields?.memoryType),
+    ]);
+    return [...memorySet.values()].filter((value) => value != null).join(' ');
   }, [gpu]);
 
   const highlightDimensions = useMemo(() => {
-    return formatGpuDimensions(gpu, { allowMissingDimensions: true }) || '--';
+    return formatGpuDimensions(gpu, { allowMissingDimensions: true }) ?? '--';
   }, [gpu]);
 
   const highlightTdp = useMemo(() => {
-    return formatGpuField(gpu.thermalDesignPower) || '--';
-  }, [gpu.thermalDesignPower]);
+    return productFieldFormattedValue(gpu.fields?.tdp) ?? '--';
+  }, [gpu.fields?.tdp]);
 
   const highlightReleaseDate = useMemo(() => {
-    return formatGpuField(gpu.releaseDate) || '--';
-  }, [gpu.releaseDate]);
+    return productFieldFormattedValue(gpu.fields?.releaseDate) ?? '--';
+  }, [gpu.fields?.releaseDate]);
 
   const gpuAffiliateUrl = useMemo(() => getGpuAffiliateUrl(gpu), [gpu]);
 

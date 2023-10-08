@@ -1,4 +1,4 @@
-import { hasProductFieldValue } from '@pcpartdb/shared';
+import { hasProductFieldFormattedValue } from '@pcpartdb/shared';
 import React, { FunctionComponent, useContext } from 'react';
 import { ViewPageContext } from '../../../context/ViewPageContext';
 import { PhysicalIntro } from './PhysicalIntro';
@@ -13,12 +13,12 @@ export const PhysicalSpecs: FunctionComponent<PhysicalSpecsProps> = (props) => {
   const { cpu } = useContext(ViewPageContext);
 
   if (
-    !hasProductFieldValue(cpu.socket) &&
-    !hasProductFieldValue(cpu.foundry) &&
-    !hasProductFieldValue(cpu.processSize) &&
-    !hasProductFieldValue(cpu.transistors) &&
-    !hasProductFieldValue(cpu.tCaseMax) &&
-    !hasProductFieldValue(cpu.tjMax)
+    !hasProductFieldFormattedValue(cpu.fields?.socket) &&
+    !hasProductFieldFormattedValue(cpu.fields?.foundry) &&
+    !hasProductFieldFormattedValue(cpu.fields?.processSize) &&
+    !hasProductFieldFormattedValue(cpu.fields?.transistors) &&
+    !hasProductFieldFormattedValue(cpu.fields?.tCaseMax) &&
+    !hasProductFieldFormattedValue(cpu.fields?.tjMax)
   ) {
     return <></>;
   }

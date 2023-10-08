@@ -1,4 +1,4 @@
-import { hasProductFieldValue } from '@pcpartdb/shared';
+import { hasProductFieldFormattedValue } from '@pcpartdb/shared';
 import React, { FunctionComponent, useContext } from 'react';
 import { ComparePageContext } from '../../../context/ComparePageContext';
 import { CoresIntro } from './CoresIntro';
@@ -14,32 +14,32 @@ export const CoresSpecs: FunctionComponent<CoresSpecsProps> = (props) => {
   const [cpu1, cpu2] = comparison;
 
   if (
-    !hasProductFieldValue(cpu1.coresCount) &&
-    !hasProductFieldValue(cpu2.coresCount) &&
-    !hasProductFieldValue(cpu1.threadsCount) &&
-    !hasProductFieldValue(cpu2.threadsCount) &&
-    !hasProductFieldValue(cpu1.performanceCoresCount) &&
-    !hasProductFieldValue(cpu2.performanceCoresCount) &&
-    !hasProductFieldValue(cpu1.efficientCoresCount) &&
-    !hasProductFieldValue(cpu2.efficientCoresCount) &&
-    !hasProductFieldValue(cpu1.clock) &&
-    !hasProductFieldValue(cpu2.clock) &&
-    !hasProductFieldValue(cpu1.turboClock) &&
-    !hasProductFieldValue(cpu2.turboClock) &&
-    !hasProductFieldValue(cpu1.performanceCoreClock) &&
-    !hasProductFieldValue(cpu2.performanceCoreClock) &&
-    !hasProductFieldValue(cpu1.performanceCoreTurboClock) &&
-    !hasProductFieldValue(cpu2.performanceCoreTurboClock) &&
-    !hasProductFieldValue(cpu1.efficientCoreClock) &&
-    !hasProductFieldValue(cpu2.efficientCoreClock) &&
-    !hasProductFieldValue(cpu1.efficientCoreTurboClock) &&
-    !hasProductFieldValue(cpu2.efficientCoreTurboClock) &&
-    !hasProductFieldValue(cpu1.baseClock) &&
-    !hasProductFieldValue(cpu2.baseClock) &&
-    !hasProductFieldValue(cpu1.multiplier) &&
-    !hasProductFieldValue(cpu2.multiplier) &&
-    !hasProductFieldValue(cpu1.isMultiplierUnlocked) &&
-    !hasProductFieldValue(cpu2.isMultiplierUnlocked)
+    !hasProductFieldFormattedValue(cpu1.fields?.cores) &&
+    !hasProductFieldFormattedValue(cpu2.fields?.cores) &&
+    !hasProductFieldFormattedValue(cpu1.fields?.threads) &&
+    !hasProductFieldFormattedValue(cpu2.fields?.threads) &&
+    !hasProductFieldFormattedValue(cpu1.fields?.pCores) &&
+    !hasProductFieldFormattedValue(cpu2.fields?.pCores) &&
+    !hasProductFieldFormattedValue(cpu1.fields?.eCores) &&
+    !hasProductFieldFormattedValue(cpu2.fields?.eCores) &&
+    !hasProductFieldFormattedValue(cpu1.fields?.clock) &&
+    !hasProductFieldFormattedValue(cpu2.fields?.clock) &&
+    !hasProductFieldFormattedValue(cpu1.fields?.turboClock) &&
+    !hasProductFieldFormattedValue(cpu2.fields?.turboClock) &&
+    !hasProductFieldFormattedValue(cpu1.fields?.pCoreClock) &&
+    !hasProductFieldFormattedValue(cpu2.fields?.pCoreClock) &&
+    !hasProductFieldFormattedValue(cpu1.fields?.pCoreTurboClock) &&
+    !hasProductFieldFormattedValue(cpu2.fields?.pCoreTurboClock) &&
+    !hasProductFieldFormattedValue(cpu1.fields?.eCoreClock) &&
+    !hasProductFieldFormattedValue(cpu2.fields?.eCoreClock) &&
+    !hasProductFieldFormattedValue(cpu1.fields?.eCoreTurboClock) &&
+    !hasProductFieldFormattedValue(cpu2.fields?.eCoreTurboClock) &&
+    !hasProductFieldFormattedValue(cpu1.fields?.baseClock) &&
+    !hasProductFieldFormattedValue(cpu2.fields?.baseClock) &&
+    !hasProductFieldFormattedValue(cpu1.fields?.multiplier) &&
+    !hasProductFieldFormattedValue(cpu2.fields?.multiplier) &&
+    !hasProductFieldFormattedValue(cpu1.fields?.multiplierUnlocked) &&
+    !hasProductFieldFormattedValue(cpu2.fields?.multiplierUnlocked)
   ) {
     return <></>;
   }

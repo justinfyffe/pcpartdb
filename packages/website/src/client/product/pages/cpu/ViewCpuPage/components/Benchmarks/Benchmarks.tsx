@@ -1,4 +1,4 @@
-import { hasProductFieldValue } from '@pcpartdb/shared';
+import { BenchmarKey, hasProductBenchmark } from '@pcpartdb/shared';
 import React, { FunctionComponent, useContext } from 'react';
 import { ViewPageContext } from '../../context/ViewPageContext';
 import { BenchmarksIntro } from './BenchmarksIntro';
@@ -8,10 +8,10 @@ export const Benchmarks: FunctionComponent = () => {
   const { cpu } = useContext(ViewPageContext);
 
   if (
-    !hasProductFieldValue(cpu.cpuMarkMultiThread) &&
-    !hasProductFieldValue(cpu.cpuMarkSingleThread) &&
-    !hasProductFieldValue(cpu.geekbenchMultiCore) &&
-    !hasProductFieldValue(cpu.geekbenchSingleCore)
+    !hasProductBenchmark(cpu, BenchmarKey.CpuMarkMultiThread) &&
+    !hasProductBenchmark(cpu, BenchmarKey.CpuMarkSingleThread) &&
+    !hasProductBenchmark(cpu, BenchmarKey.GeekBenchMultiCore) &&
+    !hasProductBenchmark(cpu, BenchmarKey.GeekBenchSingleCore)
   ) {
     return <></>;
   }

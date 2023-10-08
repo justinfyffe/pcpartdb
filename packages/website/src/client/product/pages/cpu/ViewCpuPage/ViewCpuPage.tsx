@@ -1,6 +1,6 @@
 import {
   Config,
-  formatCpuName,
+  formatProductName,
   getAdminEditCpuPath,
   getHomePath,
   getListCpusPath,
@@ -32,14 +32,18 @@ import { ViewPageContext } from './context/ViewPageContext';
 import { useViewPageContextProps } from './hooks/useViewPageContextProps';
 
 export const ViewCpuPage = (props: ViewCpuViewModel & { config: Config }) => {
-  const { cpu, relatedCpus, relatedComparisons, contentData, config } = props;
+  const { cpu, relatedCpus, relatedCpuComparisons, additionalData, config } =
+    props;
   useProductCache(ProductType.Cpu, cpu);
 
-  const context = useViewPageContextProps({ cpu, contentData });
+  const context = useViewPageContextProps({
+    cpu,
+    additionalData: additionalData,
+  });
 
-  const cpuName = useMemo(() => formatCpuName(cpu), [cpu]);
+  const cpuName = useMemo(() => formatProductName(cpu), [cpu]);
   const shortCpuName = useMemo(
-    () => formatCpuName(cpu, { company: false }),
+    () => formatProductName(cpu, { company: false }),
     [cpu],
   );
 
@@ -107,11 +111,11 @@ export const ViewCpuPage = (props: ViewCpuViewModel & { config: Config }) => {
           <Sidenav>
             <SidenavRelatedProducts
               productType={ProductType.Cpu}
-              products={relatedCpus.cpus}
+              products={relatedCpus.products}
             />
             <SidenavRelatedComparisons
               productType={ProductType.Cpu}
-              comparisons={relatedComparisons.comparisons}
+              comparisons={relatedCpuComparisons.comparisons}
             />
           </Sidenav>
         </div>

@@ -1,5 +1,9 @@
 import { ClockIcon } from '@heroicons/react/24/outline';
-import { formatGpuField, formatGpuName } from '@pcpartdb/shared';
+import {
+  formatProductName,
+  productFieldFormattedValue,
+  productFieldRawValue,
+} from '@pcpartdb/shared';
 import { ProductHighlightComparison } from 'packages/website/src/client/product/components/ProductHighlightComparison/ProductHighlightComparison';
 import React, { FunctionComponent, useContext, useMemo } from 'react';
 import { ComparePageContext } from '../../context/ComparePageContext';
@@ -17,29 +21,48 @@ export const ClockHighlightListItem: FunctionComponent<
   const [gpu1, gpu2] = context.comparison;
 
   const values = useMemo(() => {
-    const name1 = formatGpuName(gpu1, { company: false, brand: true });
-    const name2 = formatGpuName(gpu2, { company: false, brand: true });
+    const name1 = formatProductName(gpu1, { company: false, brand: true });
+    const name2 = formatProductName(gpu2, { company: false, brand: true });
 
-    const clockBase1 = formatGpuField(gpu1.coreClockSpeedBase);
-    const clockBoost1 = formatGpuField(gpu1.coreClockSpeedBoost);
+    const clockBase1 = productFieldFormattedValue(
+      gpu1.fields?.gpuCoreBaseClock,
+    );
+    const clockBoost1 = productFieldFormattedValue(
+      gpu1.fields?.gpuCoreBoostClock,
+    );
     const clock1 =
       [clockBase1, clockBoost1].filter((value) => value != null).join(' / ') ||
       '--';
 
-    const clockBase2 = formatGpuField(gpu2.coreClockSpeedBase);
-    const clockBoost2 = formatGpuField(gpu2.coreClockSpeedBoost);
+    const clockBase2 = productFieldFormattedValue(
+      gpu2.fields?.gpuCoreBaseClock,
+    );
+    const clockBoost2 = productFieldFormattedValue(
+      gpu2.fields?.gpuCoreBoostClock,
+    );
     const clock2 =
       [clockBase2, clockBoost2].filter((value) => value != null).join(' / ') ||
       '--';
 
     let bold1 = false;
     let bold2 = false;
-    if (gpu1.coreClockSpeedBase?.value === gpu2.coreClockSpeedBase?.value) {
-      bold1 = gpu1.coreClockSpeedBoost?.value > gpu2.coreClockSpeedBoost?.value;
-      bold2 = gpu1.coreClockSpeedBoost?.value < gpu2.coreClockSpeedBoost?.value;
+    if (
+      productFieldRawValue(gpu1.fields?.gpuCoreBaseClock) ===
+      productFieldRawValue(gpu2.fields?.gpuCoreBaseClock)
+    ) {
+      bold1 =
+        productFieldRawValue(gpu1.fields?.gpuCoreBoostClock) >
+        productFieldRawValue(gpu2.fields?.gpuCoreBoostClock);
+      bold2 =
+        productFieldRawValue(gpu1.fields?.gpuCoreBoostClock) <
+        productFieldRawValue(gpu2.fields?.gpuCoreBoostClock);
     } else {
-      bold1 = gpu1.coreClockSpeedBase?.value > gpu2.coreClockSpeedBase?.value;
-      bold2 = gpu1.coreClockSpeedBase?.value < gpu2.coreClockSpeedBase?.value;
+      bold1 =
+        productFieldRawValue(gpu1.fields?.gpuCoreBaseClock) >
+        productFieldRawValue(gpu2.fields?.gpuCoreBaseClock);
+      bold2 =
+        productFieldRawValue(gpu1.fields?.gpuCoreBaseClock) <
+        productFieldRawValue(gpu2.fields?.gpuCoreBaseClock);
     }
 
     return [

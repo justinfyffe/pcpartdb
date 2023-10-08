@@ -21,14 +21,38 @@ export const ArchitectureTable: FunctionComponent<ArchitectureTableProps> = (
   return (
     <Table border responsive className={className}>
       <TBody>
-        <ProductFieldRow type={ProductType.Cpu} fields={[cpu.architecture]} />
-        <ProductFieldRow type={ProductType.Cpu} fields={[cpu.codename]} />
-        <ProductFieldRow type={ProductType.Cpu} fields={[cpu.generation]} />
-        <ProductFieldRow type={ProductType.Cpu} fields={[cpu.memorySupport]} />
-        <ProductFieldRow type={ProductType.Cpu} fields={[cpu.memoryChannels]} />
-        <ProductFieldRow type={ProductType.Cpu} fields={[cpu.hasEccMemory]} />
-        <ProductFieldRow type={ProductType.Cpu} fields={[cpu.pciExpress]} />
-        <ProductFieldRow type={ProductType.Cpu} fields={[cpu.chipsets]} />
+        <ProductFieldRow
+          type={ProductType.Cpu}
+          fields={[cpu.fields?.architecture]}
+        />
+        <ProductFieldRow
+          type={ProductType.Cpu}
+          fields={[cpu.fields?.codename]}
+        />
+        <ProductFieldRow
+          type={ProductType.Cpu}
+          fields={[cpu.fields?.generation]}
+        />
+        <ProductFieldRow
+          type={ProductType.Cpu}
+          fields={[cpu.fields?.memorySupport]}
+        />
+        <ProductFieldRow
+          type={ProductType.Cpu}
+          fields={[cpu.fields?.memoryChannels]}
+        />
+        <ProductFieldRow
+          type={ProductType.Cpu}
+          fields={[cpu.fields?.eccMemory]}
+        />
+        <ProductFieldRow
+          type={ProductType.Cpu}
+          fields={[cpu.fields?.pciExpress]}
+        />
+        <ProductFieldRow
+          type={ProductType.Cpu}
+          fields={[cpu.fields?.chipsets]}
+        />
       </TBody>
     </Table>
   );

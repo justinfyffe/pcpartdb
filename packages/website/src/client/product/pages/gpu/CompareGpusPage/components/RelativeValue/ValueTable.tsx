@@ -1,10 +1,11 @@
 import {
-  formatGpuField,
-  formatGpuName,
+  formatProductName,
   getGpuChipset,
   getViewGpuPath,
-  Gpu,
+  GpuProduct,
   hasProductFieldValue,
+  productFieldFormattedValue,
+  productFieldRawValue,
 } from '@pcpartdb/shared';
 import { ProductCustomRow } from 'packages/website/src/client/product/components/ProductCustomRow/ProductCustomRow';
 import {
@@ -35,19 +36,22 @@ interface ValueTableProps {
 
 export const ValueTable: FunctionComponent<ValueTableProps> = (props) => {
   const { className } = props;
-  const { comparison, contentData } = useContext(ComparePageContext);
+  const { comparison, additionalData: contentData } =
+    useContext(ComparePageContext);
   const chipset1 = getGpuChipset(comparison[0]);
   const chipset2 = getGpuChipset(comparison[1]);
   const { relativeValueGpus } = contentData;
 
   const [baselineChipset, setBaselineChipset] = useState(() => {
-    return hasProductFieldValue(chipset1.valueScore) ? chipset1 : chipset2;
+    return hasProductFieldValue(chipset1.fields?.performancePerMsrp)
+      ? chipset1
+      : chipset2;
   });
   const [secondaryChipset, setSecondaryChipset] = useState(() => {
     if (
       chipset1.id === chipset2.id ||
-      !hasProductFieldValue(chipset1.valueScore) ||
-      !hasProductFieldValue(chipset2.valueScore)
+      !hasProductFieldValue(chipset1.fields?.performancePerMsrp) ||
+      !hasProductFieldValue(chipset2.fields?.performancePerMsrp)
     ) {
       return null;
     } else {
@@ -57,13 +61,13 @@ export const ValueTable: FunctionComponent<ValueTableProps> = (props) => {
 
   // Add nulls to rank gaps
   const chipsets = useMemo(() => {
-    const ret: Gpu[] = [];
+    const ret: GpuProduct[] = [];
     let dontGap = false;
     for (let i = 0; i < relativeValueGpus.length; ++i) {
       if (i > 0) {
         const rankDiff =
-          relativeValueGpus[i].ranks.valueRank -
-          relativeValueGpus[i - 1].ranks.valueRank;
+          relativeValueGpus[i].ranks.performancePerMsrp -
+          relativeValueGpus[i - 1].ranks.performancePerMsrp;
 
         if (rankDiff !== 1) {
           if (rankDiff === 0) {
@@ -83,13 +87,15 @@ export const ValueTable: FunctionComponent<ValueTableProps> = (props) => {
 
   useEffect(() => {
     setBaselineChipset(
-      hasProductFieldValue(chipset1.valueScore) ? chipset1 : chipset2,
+      hasProductFieldValue(chipset1.fields?.performancePerMsrp)
+        ? chipset1
+        : chipset2,
     );
 
     if (
       chipset1.id === chipset2.id ||
-      !hasProductFieldValue(chipset1.valueScore) ||
-      !hasProductFieldValue(chipset2.valueScore)
+      !hasProductFieldValue(chipset1.fields?.performancePerMsrp) ||
+      !hasProductFieldValue(chipset2.fields?.performancePerMsrp)
     ) {
       // Same chipset, or one performance is missing.
       setSecondaryChipset(null);
@@ -99,7 +105,7 @@ export const ValueTable: FunctionComponent<ValueTableProps> = (props) => {
   }, [chipset1, chipset2]);
 
   const toggleBaselineChipset = useCallback(
-    (chipset: Gpu) => {
+    (chipset: GpuProduct) => {
       setSecondaryChipset(baselineChipset);
       setBaselineChipset(chipset);
     },
@@ -158,29 +164,36 @@ export const ValueTable: FunctionComponent<ValueTableProps> = (props) => {
 };
 
 interface ValueTableRowProps {
-  relativeGpu: Gpu;
-  baselineGpu: Gpu;
-  secondaryGpu?: Gpu;
+  relativeGpu: GpuProduct;
+  baselineGpu: GpuProduct;
+  secondaryGpu?: GpuProduct;
 }
 
 const ValueTableRow: FunctionComponent<ValueTableRowProps> = (props) => {
   const { baselineGpu, secondaryGpu, relativeGpu } = props;
 
   const relativeValuePct = useMemo(() => {
-    const baseline = baselineGpu.valueScore.value;
-    const relatedValue = relativeGpu.valueScore.value;
+    const baseline = productFieldRawValue(
+      baselineGpu.fields?.performancePerMsrp,
+    );
+    const relatedValue = productFieldRawValue(
+      relativeGpu.fields?.performancePerMsrp,
+    );
 
     return ((relatedValue / baseline) * 100).toFixed(0);
-  }, [baselineGpu.valueScore.value, relativeGpu.valueScore.value]);
+  }, [
+    baselineGpu.fields?.performancePerMsrp,
+    relativeGpu.fields?.performancePerMsrp,
+  ]);
 
   const rating = useMemo(
-    () => formatGpuField(relativeGpu.valueScore),
+    () => productFieldFormattedValue(relativeGpu.fields?.performancePerMsrp),
     [relativeGpu],
   );
 
   const href = useMemo(() => getViewGpuPath(relativeGpu), [relativeGpu]);
   const gpuName = useMemo(
-    () => formatGpuName(relativeGpu, { company: false }),
+    () => formatProductName(relativeGpu, { company: false }),
     [relativeGpu],
   );
 
@@ -205,7 +218,7 @@ const ValueTableRow: FunctionComponent<ValueTableRowProps> = (props) => {
 };
 
 interface BaselineToggleProps {
-  chipset: Gpu;
+  chipset: GpuProduct;
   active: boolean;
   onClick: () => void;
 }
@@ -216,11 +229,11 @@ export const BaselineToggle: FunctionComponent<BaselineToggleProps> = (
   const { chipset, active, onClick } = props;
 
   const chipsetName = useMemo(
-    () => formatGpuName(chipset, { company: false }),
+    () => formatProductName(chipset, { company: false }),
     [chipset],
   );
 
-  if (!hasProductFieldValue(chipset.valueScore)) {
+  if (!hasProductFieldValue(chipset.fields?.performancePerMsrp)) {
     return (
       <span className="text-dimmed cursor-not-allowed">{chipsetName}</span>
     );

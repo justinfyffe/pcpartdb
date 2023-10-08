@@ -6,14 +6,14 @@ import {
   TechPowerUpCpuSource,
 } from '@pcpartdb/scraper';
 import {
-  AutoArchiveProductSourcesRequest,
   AutomationAction,
+  AutomationSource,
   concurrent,
   ConcurrentFn,
-  CpuDataSourceKey,
-  CpuProductSource,
+  formatProductName,
+  ProductSourceKey,
   ProductType,
-  UpsertProductSourcesRequest,
+  UpsertAutomationSourcesRequest,
 } from '@pcpartdb/shared';
 import { sleep } from '../../shared/process';
 import { AutomationContext } from '../types';
@@ -124,15 +124,6 @@ export async function updateCpuSourcesAction(
   await uploadCpuSources(passMarkSources, context);
   await uploadCpuSources(geekBenchSources, context);
 
-  // Trigger auto-archive
-  await context.api.post(
-    'products/sources/auto-archive',
-    {
-      productType: ProductType.Cpu,
-    } as AutoArchiveProductSourcesRequest,
-    { retries: 2 },
-  );
-
   // Update execution details
   context.metadata = {
     ...(context.metadata ?? {}),
@@ -162,12 +153,12 @@ async function getTechPowerUpSources(context: AutomationContext) {
   });
 
   // Convert to source object
-  const sources: CpuProductSource[] = Object.values(map).map((value) => ({
+  const sources: AutomationSource[] = Object.values(map).map((value) => ({
     groupKey: value.groupKey,
     externalKey: value.externalKey,
     productType: ProductType.Cpu,
-    sourceName: `${value.company || ''} ${value.name}`.trim(),
-    sourceKey: CpuDataSourceKey.TechPowerUp,
+    sourceName: formatProductName({ company: value.company, name: value.name }),
+    sourceKey: ProductSourceKey.TechPowerUp,
     sourceUrl: value.url,
   }));
 
@@ -184,7 +175,7 @@ async function scrapeTechPowerUp(
   console.log(`Scraping sources for url: ${url}`);
   try {
     const sources = await scrapeTechPowerUpCpuSources({ url, company });
-    console.log(`Scraped ${sources.length} sources`);
+    console.log(`Scraped ${sources.length} sources from ${url}`);
     sources.forEach((cpu) => {
       map[cpu.name] = cpu;
     });
@@ -213,12 +204,12 @@ async function getPassMarkSources(context: AutomationContext) {
   });
 
   // Convert to source object
-  const sources: CpuProductSource[] = Object.values(map).map((value) => ({
+  const sources: AutomationSource[] = Object.values(map).map((value) => ({
     groupKey: value.groupKey,
     externalKey: value.externalKey,
     productType: ProductType.Cpu,
-    sourceName: `${value.company || ''} ${value.name}`.trim(),
-    sourceKey: CpuDataSourceKey.PassMark,
+    sourceName: formatProductName({ company: value.company, name: value.name }),
+    sourceKey: ProductSourceKey.PassMark,
     sourceUrl: value.url,
   }));
 
@@ -235,7 +226,7 @@ async function scrapePassMark(
 
   try {
     const sources = await scrapePassMarkCpuSources({ url });
-    console.log(`Scraped ${sources.length} sources`);
+    console.log(`Scraped ${sources.length} sources from ${url}`);
     sources.forEach((cpu) => {
       map[cpu.name] = cpu;
     });
@@ -251,13 +242,16 @@ async function getGeekBenchSources(_context: AutomationContext) {
   const geekBenchSources = await scrapeGeekBenchCpuSources({});
 
   // Convert to source object
-  const sources: CpuProductSource[] = Object.values(geekBenchSources).map(
+  const sources: AutomationSource[] = Object.values(geekBenchSources).map(
     (value) => ({
       groupKey: value.groupKey,
       externalKey: value.externalKey,
       productType: ProductType.Cpu,
-      sourceName: `${value.company || ''} ${value.name}`.trim(),
-      sourceKey: CpuDataSourceKey.GeekBench,
+      sourceName: formatProductName({
+        company: value.company,
+        name: value.name,
+      }),
+      sourceKey: ProductSourceKey.GeekBench,
       sourceUrl: value.url,
     }),
   );
@@ -268,13 +262,13 @@ async function getGeekBenchSources(_context: AutomationContext) {
 }
 
 async function uploadCpuSources(
-  sources: CpuProductSource[],
+  sources: AutomationSource[],
   context: AutomationContext,
 ) {
   console.log('Upload CPU sources to API.');
 
   // Create batches so we can upload multiple ones at a time.
-  const batches: CpuProductSource[][] = [];
+  const batches: AutomationSource[][] = [];
   for (let i = 0; i < sources.length; i += BATCH_SIZE) {
     const batch = sources.slice(i, i + BATCH_SIZE);
     batches.push(batch);
@@ -285,10 +279,11 @@ async function uploadCpuSources(
   for (const batch of batches) {
     try {
       await context.api.post(
-        'products/sources',
+        'automation/sources',
         {
           sources: batch,
-        } as UpsertProductSourcesRequest,
+          autoArchive: true,
+        } as UpsertAutomationSourcesRequest,
         { retries: 2 },
       );
       totalSources += batch.length;

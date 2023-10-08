@@ -79,14 +79,15 @@ export function generateCpuGroupKey(options: GenerateCpuGroupKeyOptions) {
 
 interface CreateCpuFieldOptions<T = unknown> {
   field: CpuFieldKey;
-  value: T;
+  raw: T;
+  formatted: string;
   meta?: CpuFieldMeta;
   ctx?: ScraperContext;
   overwriteMemo?: boolean;
 }
 
 export function createCpuField<T = unknown>(options: CreateCpuFieldOptions<T>) {
-  const { field, value, meta, ctx, overwriteMemo } = options;
+  const { field, raw, formatted, meta, ctx, overwriteMemo } = options;
 
   if (overwriteMemo !== true && ctx?.memoizedFields?.[field] != null) {
     // Field was previously set, use that one unless we're skipping memoization.
@@ -94,8 +95,13 @@ export function createCpuField<T = unknown>(options: CreateCpuFieldOptions<T>) {
   }
 
   const productField = {
-    value,
-    meta: { ...(meta ?? {}), fieldKey: field, autoUpdate: true },
+    value: raw,
+    meta: {
+      ...(meta ?? {}),
+      fieldKey: field,
+      autoUpdate: true,
+      formattedValue: formatted,
+    },
   };
 
   if (hasProductFieldValue(productField)) {

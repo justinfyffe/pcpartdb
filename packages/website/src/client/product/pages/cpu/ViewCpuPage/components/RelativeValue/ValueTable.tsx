@@ -1,8 +1,9 @@
 import {
-  Cpu,
-  formatCpuField,
-  formatCpuName,
+  CpuProduct,
+  formatProductName,
   getViewCpuPath,
+  productFieldFormattedValue,
+  productFieldRawValue,
 } from '@pcpartdb/shared';
 import { ProductCustomRow } from 'packages/website/src/client/product/components/ProductCustomRow/ProductCustomRow';
 import {
@@ -21,7 +22,7 @@ interface ValueTableProps {
 
 export const ValueTable: FunctionComponent<ValueTableProps> = (props) => {
   const { className } = props;
-  const { cpu, contentData } = useContext(ViewPageContext);
+  const { cpu, additionalData: contentData } = useContext(ViewPageContext);
   const { relativeValueCpus } = contentData;
 
   return (
@@ -47,28 +48,35 @@ export const ValueTable: FunctionComponent<ValueTableProps> = (props) => {
 };
 
 interface ValueTableRowProps {
-  baselineCpu: Cpu;
-  relativeCpu: Cpu;
+  baselineCpu: CpuProduct;
+  relativeCpu: CpuProduct;
 }
 
 const ValueTableRow: FunctionComponent<ValueTableRowProps> = (props) => {
   const { baselineCpu, relativeCpu } = props;
 
   const relativeValuePct = useMemo(() => {
-    const baseline = baselineCpu.valueScore.value;
-    const relatedValue = relativeCpu.valueScore.value;
+    const baseline = productFieldRawValue(
+      baselineCpu.fields?.performancePerMsrp,
+    );
+    const relatedValue = productFieldRawValue(
+      relativeCpu.fields?.performancePerMsrp,
+    );
 
     return ((relatedValue / baseline) * 100).toFixed(0);
-  }, [baselineCpu.valueScore.value, relativeCpu.valueScore.value]);
+  }, [
+    baselineCpu.fields?.performancePerMsrp,
+    relativeCpu.fields?.performancePerMsrp,
+  ]);
 
   const rating = useMemo(
-    () => formatCpuField(relativeCpu.valueScore),
+    () => productFieldFormattedValue(relativeCpu.fields?.performancePerMsrp),
     [relativeCpu],
   );
 
   const href = useMemo(() => getViewCpuPath(relativeCpu), [relativeCpu]);
   const cpuName = useMemo(
-    () => formatCpuName(relativeCpu, { company: false }),
+    () => formatProductName(relativeCpu, { company: false }),
     [relativeCpu],
   );
 

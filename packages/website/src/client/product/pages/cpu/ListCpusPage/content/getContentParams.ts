@@ -1,8 +1,8 @@
 import {
-  formatCpuCompany,
-  formatCpuMarketSegment,
-  ListCpusOrder,
+  formatCompanyName,
+  formatMarketSegment,
   ListCpusQuery,
+  ListOrder,
 } from '@pcpartdb/shared';
 import { ContentParams } from 'packages/website/src/client/shared/content/types';
 
@@ -27,11 +27,11 @@ function getOrderedParams(query: ListCpusQuery) {
   let bestOrWorstTitle: string;
   let newestOrOldestTitle: string;
 
-  const sort = query.orderBy?.order || ListCpusOrder.Desc;
-  if (sort === ListCpusOrder.Asc) {
+  const sort = query.orderBy?.order || ListOrder.Desc;
+  if (sort === ListOrder.Asc) {
     bestOrWorstTitle = 'Worst';
     newestOrOldestTitle = 'Oldest';
-  } else if (sort === ListCpusOrder.Desc) {
+  } else if (sort === ListOrder.Desc) {
     bestOrWorstTitle = 'Best';
     newestOrOldestTitle = 'Newest';
   }
@@ -49,7 +49,7 @@ function getCompanyParam(query: ListCpusQuery) {
   }
 
   const formatted = companies
-    .map((company) => formatCpuCompany(company))
+    .map((company) => formatCompanyName(company))
     .sort();
 
   if (formatted.length > 2) {
@@ -68,7 +68,7 @@ function getMarketSegmentParam(query: ListCpusQuery) {
   }
 
   if (segments.length === 1) {
-    return formatCpuMarketSegment(segments[0])?.toLowerCase();
+    return formatMarketSegment(segments[0])?.toLowerCase();
   }
 
   return null;
@@ -80,11 +80,12 @@ function getFiltersListParam(query: ListCpusQuery) {
   }
 
   const companies =
-    query.filter?.company?.map((company) => formatCpuCompany(company)).sort() ||
-    [];
+    query.filter?.company
+      ?.map((company) => formatCompanyName(company))
+      .sort() || [];
   const segments =
     query.filter?.segment
-      ?.map((segment) => formatCpuMarketSegment(segment)?.toLowerCase())
+      ?.map((segment) => formatMarketSegment(segment)?.toLowerCase())
       .sort() || [];
 
   const filters = [...companies, ...segments];

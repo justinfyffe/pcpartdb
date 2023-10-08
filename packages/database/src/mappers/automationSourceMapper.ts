@@ -1,0 +1,68 @@
+import {
+  AutomationSource,
+  ProductSourceKey,
+  ProductType,
+} from '@pcpartdb/shared';
+import { AutomationSourceEntity } from '../automation';
+import { mapToProductDto } from '../product';
+
+export async function mapToAutomationSourceDto(
+  row: AutomationSourceEntity,
+): Promise<AutomationSource> {
+  if (row == null) {
+    return null;
+  }
+
+  const dto: AutomationSource = {
+    id: row.id,
+    groupKey: row.groupKey,
+    productType: row.productType as ProductType,
+    sourceKey: row.sourceKey as ProductSourceKey,
+    externalKey: row.externalKey,
+    sourceName: row.sourceName,
+    sourceUrl: row.sourceUrl,
+    archived: row.archived,
+    relatedProductId: row.relatedProductId,
+    relatedProduct: await mapToProductDto(row.relatedProduct),
+  };
+
+  return dto as AutomationSource;
+}
+
+export async function mapToAutomationSourceDtos(
+  entities: AutomationSourceEntity[],
+) {
+  if (entities == null) {
+    return null;
+  }
+
+  const ret: AutomationSource[] = [];
+  for (let i = 0; i < entities.length; ++i) {
+    ret.push(await mapToAutomationSourceDto(entities[i]));
+  }
+  return ret;
+}
+
+export function mapToAutomationSourceEntity(
+  automationSource: Partial<AutomationSource>,
+): AutomationSourceEntity {
+  if (automationSource == null) {
+    return null;
+  }
+
+  return {
+    id: undefined,
+    groupKey: automationSource.groupKey,
+    productType: automationSource.productType,
+    sourceKey: automationSource.sourceKey,
+    externalKey: automationSource.externalKey,
+    sourceName: automationSource.sourceName,
+    sourceUrl: automationSource.sourceUrl,
+    archived: automationSource.archived,
+
+    relatedProductId: automationSource.relatedProductId,
+
+    createdAt: undefined,
+    updatedAt: undefined,
+  };
+}

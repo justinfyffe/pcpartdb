@@ -1,4 +1,4 @@
-import { formatCpuName, ProductType } from '@pcpartdb/shared';
+import { formatProductName, ProductType } from '@pcpartdb/shared';
 import { ProductFieldRow } from 'packages/website/src/client/product/components/ProductFieldRow/ProductFieldRow';
 import {
   Table,
@@ -22,8 +22,8 @@ export const PowerTable: FunctionComponent<PowerTableProps> = (props) => {
 
   const [name1, name2] = useMemo(() => {
     return [
-      formatCpuName(cpu1, { company: false }),
-      formatCpuName(cpu2, { company: false }),
+      formatProductName(cpu1, { company: false }),
+      formatProductName(cpu2, { company: false }),
     ];
   }, [cpu1, cpu2]);
 
@@ -37,10 +37,22 @@ export const PowerTable: FunctionComponent<PowerTableProps> = (props) => {
         </Tr>
       </THead>
       <TBody>
-        <ProductFieldRow type={ProductType.Cpu} fields={[cpu1.tdp, cpu2.tdp]} />
-        <ProductFieldRow type={ProductType.Cpu} fields={[cpu1.pl1, cpu2.pl1]} />
-        <ProductFieldRow type={ProductType.Cpu} fields={[cpu1.pl2, cpu2.pl2]} />
-        <ProductFieldRow type={ProductType.Cpu} fields={[cpu1.ppt, cpu2.ppt]} />
+        <ProductFieldRow
+          type={ProductType.Cpu}
+          fields={[cpu1.fields?.tdp, cpu2.fields?.tdp]}
+        />
+        <ProductFieldRow
+          type={ProductType.Cpu}
+          fields={[cpu1.fields?.pl1, cpu2.fields?.pl1]}
+        />
+        <ProductFieldRow
+          type={ProductType.Cpu}
+          fields={[cpu1.fields?.pl2, cpu2.fields?.pl2]}
+        />
+        <ProductFieldRow
+          type={ProductType.Cpu}
+          fields={[cpu1.fields?.ppt, cpu2.fields?.ppt]}
+        />
       </TBody>
     </Table>
   );

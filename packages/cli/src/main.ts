@@ -3,13 +3,13 @@ dotenv.config();
 
 import { Command } from 'commander';
 import { automationCommand } from './automation';
-import { fixDataCommand } from './scratch-pad';
+import { scratchPadCommand } from './scratch-pad';
 
 const program = new Command();
 
 // Scratch Pad script for one-off scripts.
 program.command('scratch-pad').action(async () => {
-  await fixDataCommand({});
+  await scratchPadCommand({});
 });
 
 // Automation program

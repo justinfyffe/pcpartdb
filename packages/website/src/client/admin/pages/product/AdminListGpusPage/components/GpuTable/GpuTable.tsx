@@ -1,4 +1,8 @@
-import { formatGpuName, getAdminEditGpuPath, Gpu } from '@pcpartdb/shared';
+import {
+  formatProductName,
+  getAdminEditGpuPath,
+  GpuProduct,
+} from '@pcpartdb/shared';
 import {
   Table,
   TBody,
@@ -11,7 +15,7 @@ import React, { FunctionComponent, useMemo } from 'react';
 import { MissingDataChip } from '../MissingDataChip';
 
 interface GpuTableProps {
-  gpus: Gpu[];
+  gpus: GpuProduct[];
 }
 
 export const GpuTable: FunctionComponent<GpuTableProps> = (props) => {
@@ -36,14 +40,14 @@ export const GpuTable: FunctionComponent<GpuTableProps> = (props) => {
 };
 
 interface GpuTableRowProps {
-  gpu: Gpu;
+  gpu: GpuProduct;
 }
 
 const GpuTableRow: FunctionComponent<GpuTableRowProps> = (props) => {
   const { gpu } = props;
 
   const href = useMemo(() => getAdminEditGpuPath(gpu), [gpu]);
-  const name = useMemo(() => formatGpuName(gpu), [gpu]);
+  const name = useMemo(() => formatProductName(gpu), [gpu]);
 
   return (
     <Tr key={gpu.id}>

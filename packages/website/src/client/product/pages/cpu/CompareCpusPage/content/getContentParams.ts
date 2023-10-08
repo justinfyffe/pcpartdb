@@ -1,9 +1,11 @@
 import {
-  CpuComparison,
-  formatCpuField,
-  formatCpuName,
-  hasProductFieldValue,
+  CpuProductComparison,
+  formatCompanyName,
+  formatProductName,
+  hasProductFieldRawValue,
   isPastCpuLaunchDate,
+  productFieldFormattedValue,
+  productFieldRawValue,
 } from '@pcpartdb/shared';
 import { ContentParams } from 'packages/website/src/client/shared/content/types';
 
@@ -57,23 +59,29 @@ export interface CompareCpusContentParams {
   performancePerDollar2?: string;
 }
 
-export function getContentParams(comparison: CpuComparison) {
+export function getContentParams(comparison: CpuProductComparison) {
   return {
     ...getGeneralParams(comparison),
   } as CompareCpusContentParams as ContentParams;
 }
 
-function getGeneralParams(comparison: CpuComparison) {
+function getGeneralParams(comparison: CpuProductComparison) {
   const [cpu1, cpu2] = comparison;
 
   let cpu1NewerOrOlder: string;
   if (
-    hasProductFieldValue(cpu1.releaseDate) &&
-    hasProductFieldValue(cpu2.releaseDate)
+    hasProductFieldRawValue(cpu1.fields?.releaseDate) &&
+    hasProductFieldRawValue(cpu2.fields?.releaseDate)
   ) {
-    if (cpu1.releaseDate?.value > cpu2.releaseDate?.value) {
+    if (
+      productFieldRawValue(cpu1.fields?.releaseDate) >
+      productFieldRawValue(cpu2.fields?.releaseDate)
+    ) {
       cpu1NewerOrOlder = 'newer';
-    } else if (cpu1.releaseDate?.value < cpu2.releaseDate?.value) {
+    } else if (
+      productFieldRawValue(cpu1.fields?.releaseDate) <
+      productFieldRawValue(cpu2.fields?.releaseDate)
+    ) {
       cpu1NewerOrOlder = 'older';
     }
   }
@@ -87,12 +95,18 @@ function getGeneralParams(comparison: CpuComparison) {
 
   let cpu1LaunchPriceHigherOrLower: string;
   if (
-    hasProductFieldValue(cpu1.launchPrice) &&
-    hasProductFieldValue(cpu2.launchPrice)
+    hasProductFieldRawValue(cpu1.fields?.msrp) &&
+    hasProductFieldRawValue(cpu2.fields?.msrp)
   ) {
-    if (cpu1.launchPrice?.value > cpu2.launchPrice?.value) {
+    if (
+      productFieldRawValue(cpu1.fields?.msrp) >
+      productFieldRawValue(cpu2.fields?.msrp)
+    ) {
       cpu1LaunchPriceHigherOrLower = 'higher';
-    } else if (cpu1.launchPrice?.value < cpu2.launchPrice?.value) {
+    } else if (
+      productFieldRawValue(cpu1.fields?.msrp) <
+      productFieldRawValue(cpu2.fields?.msrp)
+    ) {
       cpu1LaunchPriceHigherOrLower = 'lower';
     }
   }
@@ -101,11 +115,15 @@ function getGeneralParams(comparison: CpuComparison) {
   let cpu1PerformanceHigherOrLower: string;
   let cpu1PerformanceDifferencePct: string;
   if (
-    hasProductFieldValue(cpu1.performanceScore) &&
-    hasProductFieldValue(cpu2.performanceScore)
+    hasProductFieldRawValue(cpu1.fields?.performanceRating) &&
+    hasProductFieldRawValue(cpu2.fields?.performanceRating)
   ) {
-    const performanceScore1 = cpu1.performanceScore.value;
-    const performanceScore2 = cpu2.performanceScore.value;
+    const performanceScore1 = productFieldRawValue(
+      cpu1.fields?.performanceRating,
+    );
+    const performanceScore2 = productFieldRawValue(
+      cpu2.fields?.performanceRating,
+    );
     if (performanceScore1 > performanceScore2) {
       cpu1PerformanceMoreOrLess = 'more';
       cpu1PerformanceHigherOrLower = 'higher';
@@ -121,11 +139,11 @@ function getGeneralParams(comparison: CpuComparison) {
 
   let cpu1ValueHigherOrLower: string;
   if (
-    hasProductFieldValue(cpu1.valueScore) &&
-    hasProductFieldValue(cpu2.valueScore)
+    hasProductFieldRawValue(cpu1.fields?.performancePerMsrp) &&
+    hasProductFieldRawValue(cpu2.fields?.performancePerMsrp)
   ) {
-    const valueScore1 = cpu1.valueScore.value;
-    const valueScore2 = cpu2.valueScore.value;
+    const valueScore1 = productFieldRawValue(cpu1.fields?.performancePerMsrp);
+    const valueScore2 = productFieldRawValue(cpu2.fields?.performancePerMsrp);
     if (valueScore1 > valueScore2) {
       cpu1ValueHigherOrLower = 'higher';
     } else if (valueScore1 < valueScore2) {
@@ -134,56 +152,142 @@ function getGeneralParams(comparison: CpuComparison) {
   }
 
   return {
-    company1: formatCpuField(cpu1.company) || null,
-    company2: formatCpuField(cpu2.company) || null,
-    cpuName1: formatCpuName(cpu1),
-    cpuName2: formatCpuName(cpu2),
-    shortCpuName1: formatCpuName(cpu1, { company: false }),
-    shortCpuName2: formatCpuName(cpu2, { company: false }),
-    shortestCpuName1: formatCpuName(cpu1, { company: false, brand: false }),
-    shortestCpuName2: formatCpuName(cpu2, { company: false, brand: false }),
-    marketSegment1: formatCpuField(cpu1.marketSegment)?.toLowerCase(),
-    marketSegment2: formatCpuField(cpu2.marketSegment)?.toLowerCase(),
+    company1: formatCompanyName(cpu1.company) || null,
+    company2: formatCompanyName(cpu2.company) || null,
+    cpuName1: formatProductName(cpu1),
+    cpuName2: formatProductName(cpu2),
+    shortCpuName1: formatProductName(cpu1, { company: false }),
+    shortCpuName2: formatProductName(cpu2, { company: false }),
+    shortestCpuName1: formatProductName(cpu1, {
+      company: false,
+      brand: false,
+    }),
+    shortestCpuName2: formatProductName(cpu2, {
+      company: false,
+      brand: false,
+    }),
+    marketSegment1: hasProductFieldRawValue(cpu1.fields?.marketSegment)
+      ? productFieldFormattedValue(cpu1.fields?.marketSegment)?.toLowerCase()
+      : null,
+    marketSegment2: hasProductFieldRawValue(cpu2.fields?.marketSegment)
+      ? productFieldFormattedValue(cpu2.fields?.marketSegment)?.toLowerCase()
+      : null,
     cpu1NewerOrOlder,
     cpu2WillReleaseOrWasReleased,
-    releaseDate1: formatCpuField(cpu1.releaseDate) || null,
-    releaseDate2: formatCpuField(cpu2.releaseDate) || null,
+    releaseDate1: hasProductFieldRawValue(cpu1.fields?.releaseDate)
+      ? productFieldFormattedValue(cpu1.fields?.releaseDate)
+      : null,
+    releaseDate2: hasProductFieldRawValue(cpu2.fields?.releaseDate)
+      ? productFieldFormattedValue(cpu2.fields?.releaseDate)
+      : null,
     cpu1LaunchPriceHigherOrLower,
-    launchPrice1: formatCpuField(cpu1.launchPrice) || null,
-    launchPrice2: formatCpuField(cpu2.launchPrice) || null,
-    coresCount1: formatCpuField(cpu1.coresCount) || null,
-    coresCount2: formatCpuField(cpu2.coresCount) || null,
-    threadsCount1: formatCpuField(cpu1.threadsCount) || null,
-    threadsCount2: formatCpuField(cpu2.threadsCount) || null,
-    architecture1: formatCpuField(cpu1.architecture) || null,
-    architecture2: formatCpuField(cpu2.architecture) || null,
-    generation1: formatCpuField(cpu1.generation) || null,
-    generation2: formatCpuField(cpu2.generation) || null,
-    socket1: formatCpuField(cpu1.socket) || null,
-    socket2: formatCpuField(cpu2.socket) || null,
-    integratedGraphics1: formatCpuField(cpu1.integratedGraphics) || null,
-    integratedGraphics2: formatCpuField(cpu2.integratedGraphics) || null,
-    bundledCooler1: formatCpuField(cpu1.bundledCooler) || null,
-    bundledCooler2: formatCpuField(cpu2.bundledCooler) || null,
-    clock1: formatCpuField(cpu1.clock) || null,
-    clock2: formatCpuField(cpu2.clock) || null,
-    turboClock1: formatCpuField(cpu1.turboClock) || null,
-    turboClock2: formatCpuField(cpu2.turboClock) || null,
-    l1Cache1: formatCpuField(cpu1.l1Cache) || null,
-    l1Cache2: formatCpuField(cpu2.l1Cache) || null,
-    l2Cache1: formatCpuField(cpu1.l2Cache) || null,
-    l2Cache2: formatCpuField(cpu2.l2Cache) || null,
-    memorySupport1: formatCpuField(cpu1.memorySupport) || null,
-    memorySupport2: formatCpuField(cpu2.memorySupport) || null,
-    pciExpress1: formatCpuField(cpu1.pciExpress) || null,
-    pciExpress2: formatCpuField(cpu2.pciExpress) || null,
-    tdp1: formatCpuField(cpu1.tdp) || null,
-    tdp2: formatCpuField(cpu2.tdp) || null,
+    launchPrice1: hasProductFieldRawValue(cpu1.fields?.msrp)
+      ? productFieldFormattedValue(cpu1.fields?.msrp)
+      : null,
+    launchPrice2: hasProductFieldRawValue(cpu2.fields?.msrp)
+      ? productFieldFormattedValue(cpu2.fields?.msrp)
+      : null,
+    coresCount1: hasProductFieldRawValue(cpu1.fields?.cores)
+      ? productFieldFormattedValue(cpu1.fields?.cores)
+      : null,
+    coresCount2: hasProductFieldRawValue(cpu2.fields?.cores)
+      ? productFieldFormattedValue(cpu2.fields?.cores)
+      : null,
+    threadsCount1: hasProductFieldRawValue(cpu1.fields?.threads)
+      ? productFieldFormattedValue(cpu1.fields?.threads)
+      : null,
+    threadsCount2: hasProductFieldRawValue(cpu2.fields?.threads)
+      ? productFieldFormattedValue(cpu2.fields?.threads)
+      : null,
+    architecture1: hasProductFieldRawValue(cpu1.fields?.architecture)
+      ? productFieldFormattedValue(cpu1.fields?.architecture)
+      : null,
+    architecture2: hasProductFieldRawValue(cpu2.fields?.architecture)
+      ? productFieldFormattedValue(cpu2.fields?.architecture)
+      : null,
+    generation1: hasProductFieldRawValue(cpu1.fields?.generation)
+      ? productFieldFormattedValue(cpu1.fields?.generation)
+      : null,
+    generation2: hasProductFieldRawValue(cpu2.fields?.generation)
+      ? productFieldFormattedValue(cpu2.fields?.generation)
+      : null,
+    socket1: hasProductFieldRawValue(cpu1.fields?.socket)
+      ? productFieldFormattedValue(cpu1.fields?.socket)
+      : null,
+    socket2: hasProductFieldRawValue(cpu2.fields?.socket)
+      ? productFieldFormattedValue(cpu2.fields?.socket)
+      : null,
+    integratedGraphics1: hasProductFieldRawValue(
+      cpu1.fields?.integratedGraphics,
+    )
+      ? productFieldFormattedValue(cpu1.fields?.integratedGraphics)
+      : null,
+    integratedGraphics2: hasProductFieldRawValue(
+      cpu2.fields?.integratedGraphics,
+    )
+      ? productFieldFormattedValue(cpu2.fields?.integratedGraphics)
+      : null,
+    bundledCooler1: hasProductFieldRawValue(cpu1.fields?.bundledCooler)
+      ? productFieldFormattedValue(cpu1.fields?.bundledCooler)
+      : null,
+    bundledCooler2: hasProductFieldRawValue(cpu2.fields?.bundledCooler)
+      ? productFieldFormattedValue(cpu2.fields?.bundledCooler)
+      : null,
+    clock1: hasProductFieldRawValue(cpu1.fields?.clock)
+      ? productFieldFormattedValue(cpu1.fields?.clock)
+      : null,
+    clock2: hasProductFieldRawValue(cpu2.fields?.clock)
+      ? productFieldFormattedValue(cpu2.fields?.clock)
+      : null,
+    turboClock1: hasProductFieldRawValue(cpu1.fields?.turboClock)
+      ? productFieldFormattedValue(cpu1.fields?.turboClock)
+      : null,
+    turboClock2: hasProductFieldRawValue(cpu2.fields?.turboClock)
+      ? productFieldFormattedValue(cpu2.fields?.turboClock)
+      : null,
+    l1Cache1: hasProductFieldRawValue(cpu1.fields?.l1Cache)
+      ? productFieldFormattedValue(cpu1.fields?.l1Cache)
+      : null,
+    l1Cache2: hasProductFieldRawValue(cpu2.fields?.l1Cache)
+      ? productFieldFormattedValue(cpu2.fields?.l1Cache)
+      : null,
+    l2Cache1: hasProductFieldRawValue(cpu1.fields?.l2Cache)
+      ? productFieldFormattedValue(cpu1.fields?.l2Cache)
+      : null,
+    l2Cache2: hasProductFieldRawValue(cpu2.fields?.l2Cache)
+      ? productFieldFormattedValue(cpu2.fields?.l2Cache)
+      : null,
+    memorySupport1: hasProductFieldRawValue(cpu1.fields?.memorySupport)
+      ? productFieldFormattedValue(cpu1.fields?.memorySupport)
+      : null,
+    memorySupport2: hasProductFieldRawValue(cpu2.fields?.memorySupport)
+      ? productFieldFormattedValue(cpu2.fields?.memorySupport)
+      : null,
+    pciExpress1: hasProductFieldRawValue(cpu1.fields?.pciExpress)
+      ? productFieldFormattedValue(cpu1.fields?.pciExpress)
+      : null,
+    pciExpress2: hasProductFieldRawValue(cpu2.fields?.pciExpress)
+      ? productFieldFormattedValue(cpu2.fields?.pciExpress)
+      : null,
+    tdp1: hasProductFieldRawValue(cpu1.fields?.tdp)
+      ? productFieldFormattedValue(cpu1.fields?.tdp)
+      : null,
+    tdp2: hasProductFieldRawValue(cpu2.fields?.tdp)
+      ? productFieldFormattedValue(cpu2.fields?.tdp)
+      : null,
     cpu1PerformanceMoreOrLess,
     cpu1PerformanceHigherOrLower,
     cpu1PerformanceDifferencePct,
     cpu1ValueHigherOrLower,
-    performancePerDollar1: formatCpuField(cpu1.valueScore) || null,
-    performancePerDollar2: formatCpuField(cpu2.valueScore) || null,
+    performancePerDollar1: hasProductFieldRawValue(
+      cpu1.fields?.performancePerMsrp,
+    )
+      ? productFieldFormattedValue(cpu1.fields?.performancePerMsrp)
+      : null,
+    performancePerDollar2: hasProductFieldRawValue(
+      cpu2.fields?.performancePerMsrp,
+    )
+      ? productFieldFormattedValue(cpu2.fields?.performancePerMsrp)
+      : null,
   } as CompareCpusContentParams as ContentParams;
 }

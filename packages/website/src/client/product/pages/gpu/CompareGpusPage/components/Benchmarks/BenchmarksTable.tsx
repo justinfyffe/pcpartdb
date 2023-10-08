@@ -1,5 +1,9 @@
-import { formatGpuName, ProductType } from '@pcpartdb/shared';
-import { ProductFieldRow } from 'packages/website/src/client/product/components/ProductFieldRow/ProductFieldRow';
+import {
+  BenchmarKey,
+  formatProductName,
+  getProductBenchmark,
+} from '@pcpartdb/shared';
+import { ProductBenchmarkRow } from 'packages/website/src/client/product/components/ProductBenchmarkRow/ProductBenchmarkRow';
 import {
   Table,
   TBody,
@@ -23,8 +27,8 @@ export const BenchmarksTable: FunctionComponent<BenchmarksTableProps> = (
 
   const [name1, name2] = useMemo(() => {
     return [
-      formatGpuName(gpu1, { company: false }),
-      formatGpuName(gpu2, { company: false }),
+      formatProductName(gpu1, { company: false }),
+      formatProductName(gpu2, { company: false }),
     ];
   }, [gpu1, gpu2]);
 
@@ -38,17 +42,23 @@ export const BenchmarksTable: FunctionComponent<BenchmarksTableProps> = (
         </Tr>
       </THead>
       <TBody>
-        <ProductFieldRow
-          type={ProductType.Gpu}
-          fields={[gpu1.g3dMark, gpu2.g3dMark]}
+        <ProductBenchmarkRow
+          benchmarks={[
+            getProductBenchmark(gpu1, BenchmarKey.G3dMark),
+            getProductBenchmark(gpu2, BenchmarKey.G3dMark),
+          ]}
         />
-        <ProductFieldRow
-          type={ProductType.Gpu}
-          fields={[gpu1.g2dMark, gpu2.g2dMark]}
+        <ProductBenchmarkRow
+          benchmarks={[
+            getProductBenchmark(gpu1, BenchmarKey.G2dMark),
+            getProductBenchmark(gpu2, BenchmarKey.G2dMark),
+          ]}
         />
-        <ProductFieldRow
-          type={ProductType.Gpu}
-          fields={[gpu1.timespyGraphics, gpu2.timespyGraphics]}
+        <ProductBenchmarkRow
+          benchmarks={[
+            getProductBenchmark(gpu1, BenchmarKey.TimespyGraphics),
+            getProductBenchmark(gpu2, BenchmarKey.TimespyGraphics),
+          ]}
         />
       </TBody>
     </Table>

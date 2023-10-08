@@ -1,8 +1,8 @@
 import {
-  formatGpuName,
+  formatProductName,
   getGpuChipset,
   getViewGpuPath,
-  Gpu,
+  GpuProduct,
 } from '@pcpartdb/shared';
 import {
   Table,
@@ -25,18 +25,19 @@ export const RetailModelsTable: FunctionComponent<RetailModelsTableProps> = (
 ) => {
   const { className } = props;
 
-  const { comparison, contentData } = useContext(ComparePageContext);
+  const { comparison, additionalData: contentData } =
+    useContext(ComparePageContext);
   const [currentGpu1, currentGpu2] = comparison;
   const chipset1 = getGpuChipset(comparison[0]);
   const chipset2 = getGpuChipset(comparison[1]);
   const { retailModels1, retailModels2 } = contentData;
 
   const chipsetShortName1 = useMemo(
-    () => formatGpuName(chipset1, { company: false }),
+    () => formatProductName(chipset1, { company: false }),
     [chipset1],
   );
   const chipsetShortName2 = useMemo(
-    () => formatGpuName(chipset2, { company: false }),
+    () => formatProductName(chipset2, { company: false }),
     [chipset2],
   );
 
@@ -80,8 +81,8 @@ export const RetailModelsTable: FunctionComponent<RetailModelsTableProps> = (
 };
 
 interface RetailModelsTableRowProps {
-  currentGpu: Gpu;
-  retailModel: Gpu;
+  currentGpu: GpuProduct;
+  retailModel: GpuProduct;
 }
 
 const RetailModelsTableRow: FunctionComponent<RetailModelsTableRowProps> = (
@@ -89,7 +90,7 @@ const RetailModelsTableRow: FunctionComponent<RetailModelsTableRowProps> = (
 ) => {
   const { currentGpu, retailModel } = props;
 
-  const name = useMemo(() => formatGpuName(retailModel), [retailModel]);
+  const name = useMemo(() => formatProductName(retailModel), [retailModel]);
   const viewHref = useMemo(() => getViewGpuPath(retailModel), [retailModel]);
 
   return (

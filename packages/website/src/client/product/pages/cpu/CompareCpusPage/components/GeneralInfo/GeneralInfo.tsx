@@ -1,4 +1,4 @@
-import { hasProductFieldValue } from '@pcpartdb/shared';
+import { hasProductFieldFormattedValue } from '@pcpartdb/shared';
 import React, { FunctionComponent, useContext } from 'react';
 import { ComparePageContext } from '../../context/ComparePageContext';
 import { GeneralInfoIntro } from './GeneralInfoIntro';
@@ -9,18 +9,18 @@ export const GeneralInfo: FunctionComponent = () => {
   const [cpu1, cpu2] = comparison;
 
   if (
-    !hasProductFieldValue(cpu1.performanceScore) &&
-    !hasProductFieldValue(cpu2.performanceScore) &&
-    !hasProductFieldValue(cpu1.valueScore) &&
-    !hasProductFieldValue(cpu2.valueScore) &&
-    !hasProductFieldValue(cpu1.company) &&
-    !hasProductFieldValue(cpu2.company) &&
-    !hasProductFieldValue(cpu1.marketSegment) &&
-    !hasProductFieldValue(cpu2.marketSegment) &&
-    !hasProductFieldValue(cpu1.launchPrice) &&
-    !hasProductFieldValue(cpu2.launchPrice) &&
-    !hasProductFieldValue(cpu1.productionStatus) &&
-    !hasProductFieldValue(cpu2.productionStatus)
+    !hasProductFieldFormattedValue(cpu1.fields?.performanceRating) &&
+    !hasProductFieldFormattedValue(cpu2.fields?.performanceRating) &&
+    !hasProductFieldFormattedValue(cpu1.fields?.performancePerMsrp) &&
+    !hasProductFieldFormattedValue(cpu2.fields?.performancePerMsrp) &&
+    !cpu1.company &&
+    !cpu2.company &&
+    !hasProductFieldFormattedValue(cpu1.fields?.marketSegment) &&
+    !hasProductFieldFormattedValue(cpu2.fields?.marketSegment) &&
+    !hasProductFieldFormattedValue(cpu1.fields?.msrp) &&
+    !hasProductFieldFormattedValue(cpu2.fields?.msrp) &&
+    !hasProductFieldFormattedValue(cpu1.fields?.productionStatus) &&
+    !hasProductFieldFormattedValue(cpu2.fields?.productionStatus)
   ) {
     return <></>;
   }

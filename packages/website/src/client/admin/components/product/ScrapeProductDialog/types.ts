@@ -1,8 +1,18 @@
-import { ProductField, ProductFieldKey, ProductType } from '@pcpartdb/shared';
+import {
+  ProductBenchmark,
+  ProductField,
+  ProductFieldKey,
+  ProductType,
+} from '@pcpartdb/shared';
 
 export type ScrapedDataKey = ProductFieldKey | 'name';
 
-export type ScrapedDataType = number | string | ProductField;
+export type ScrapedDataType =
+  | number
+  | string
+  | string[]
+  | ProductField
+  | ProductBenchmark;
 
 export interface ScrapedData {
   enabled: boolean;
@@ -11,5 +21,12 @@ export interface ScrapedData {
 
 export interface ScrapedProduct {
   productType: ProductType;
-  scrapedData: Record<string, ScrapedData>;
+  data: {
+    name: ScrapedData;
+    searchText: ScrapedData;
+    otherNames: ScrapedData;
+    company: ScrapedData;
+    fields: Record<string, ScrapedData>;
+    benchmarks: Record<string, ScrapedData>;
+  };
 }

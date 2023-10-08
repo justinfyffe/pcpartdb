@@ -1,8 +1,9 @@
 import {
-  CpuComparison,
   CpuField,
-  formatCpuField,
-  hasProductFieldValue,
+  CpuProductComparison,
+  formatCompanyName,
+  hasProductFieldRawValue,
+  productFieldFormattedValue,
 } from '@pcpartdb/shared';
 
 export enum CompareCpusContentTag {
@@ -39,13 +40,13 @@ export enum CompareCpusContentTag {
   SamePerformancePerDollar = 'SAME_PERFORMANCE_PER_DOLLAR',
 }
 
-export function getContentTags(comparison: CpuComparison) {
+export function getContentTags(comparison: CpuProductComparison) {
   return {
     ...getGeneralTags(comparison),
   };
 }
 
-function getGeneralTags(comparison: CpuComparison) {
+function getGeneralTags(comparison: CpuProductComparison) {
   return {
     [CompareCpusContentTag.DifferentCompany]: hasDifferentCompany(comparison),
     [CompareCpusContentTag.SameCompany]: hasSameCompany(comparison),
@@ -92,193 +93,204 @@ function getGeneralTags(comparison: CpuComparison) {
   };
 }
 
-function hasDifferentCompany(comparison: CpuComparison) {
+function hasDifferentCompany(comparison: CpuProductComparison) {
   const [cpu1, cpu2] = comparison;
-  return hasDifferentValue(cpu1.company, cpu2.company);
+  return formatCompanyName(cpu1.company) !== formatCompanyName(cpu2.company);
 }
 
-function hasSameCompany(comparison: CpuComparison) {
+function hasSameCompany(comparison: CpuProductComparison) {
   const [cpu1, cpu2] = comparison;
-  return hasSameValue(cpu1.company, cpu2.company);
+  return formatCompanyName(cpu1.company) === formatCompanyName(cpu2.company);
 }
 
-function hasDifferentMarketSegment(comparison: CpuComparison) {
+function hasDifferentMarketSegment(comparison: CpuProductComparison) {
   const [cpu1, cpu2] = comparison;
-  return hasDifferentValue(cpu1.marketSegment, cpu2.marketSegment);
+  return hasDifferentValue(
+    cpu1.fields?.marketSegment,
+    cpu2.fields?.marketSegment,
+  );
 }
 
-function hasSameMarketSegment(comparison: CpuComparison) {
+function hasSameMarketSegment(comparison: CpuProductComparison) {
   const [cpu1, cpu2] = comparison;
-  return hasSameValue(cpu1.marketSegment, cpu2.marketSegment);
+  return hasSameValue(cpu1.fields?.marketSegment, cpu2.fields?.marketSegment);
 }
 
-function hasDifferentReleaseDate(comparison: CpuComparison) {
+function hasDifferentReleaseDate(comparison: CpuProductComparison) {
   const [cpu1, cpu2] = comparison;
-  if (cpu1.releaseDate == null || cpu2.releaseDate == null) {
+  if (cpu1.fields?.releaseDate == null || cpu2.fields?.releaseDate == null) {
     return false;
   }
 
-  return formatCpuField(cpu1.releaseDate) !== formatCpuField(cpu2.releaseDate);
+  return (
+    productFieldFormattedValue(cpu1.fields?.releaseDate) !==
+    productFieldFormattedValue(cpu2.fields?.releaseDate)
+  );
 }
 
-function hasSameReleaseDate(comparison: CpuComparison) {
+function hasSameReleaseDate(comparison: CpuProductComparison) {
   const [cpu1, cpu2] = comparison;
-  if (cpu1.releaseDate == null || cpu2.releaseDate == null) {
+  if (cpu1.fields?.releaseDate == null || cpu2.fields?.releaseDate == null) {
     return false;
   }
 
-  return formatCpuField(cpu1.releaseDate) === formatCpuField(cpu2.releaseDate);
+  return (
+    productFieldFormattedValue(cpu1.fields?.releaseDate) ===
+    productFieldFormattedValue(cpu2.fields?.releaseDate)
+  );
 }
 
-function hasDifferentLaunchPrice(comparison: CpuComparison) {
+function hasDifferentLaunchPrice(comparison: CpuProductComparison) {
   const [cpu1, cpu2] = comparison;
-  return hasDifferentValue(cpu1.launchPrice, cpu2.launchPrice);
+  return hasDifferentValue(cpu1.fields?.msrp, cpu2.fields?.msrp);
 }
 
-function hasSameLaunchPrice(comparison: CpuComparison) {
+function hasSameLaunchPrice(comparison: CpuProductComparison) {
   const [cpu1, cpu2] = comparison;
-  return hasSameValue(cpu1.launchPrice, cpu2.launchPrice);
+  return hasSameValue(cpu1.fields?.msrp, cpu2.fields?.msrp);
 }
 
-function hasDifferentArchitecture(comparison: CpuComparison) {
+function hasDifferentArchitecture(comparison: CpuProductComparison) {
   const [cpu1, cpu2] = comparison;
-  return hasDifferentValue(cpu1.architecture, cpu2.architecture);
+  return hasDifferentValue(
+    cpu1.fields?.architecture,
+    cpu2.fields?.architecture,
+  );
 }
 
-function hasSameArchitecture(comparison: CpuComparison) {
+function hasSameArchitecture(comparison: CpuProductComparison) {
   const [cpu1, cpu2] = comparison;
-  return hasSameValue(cpu1.architecture, cpu2.architecture);
+  return hasSameValue(cpu1.fields?.architecture, cpu2.fields?.architecture);
 }
 
-function hasDifferentGeneration(comparison: CpuComparison) {
+function hasDifferentGeneration(comparison: CpuProductComparison) {
   const [cpu1, cpu2] = comparison;
-  return hasDifferentValue(cpu1.generation, cpu2.generation);
+  return hasDifferentValue(cpu1.fields?.generation, cpu2.fields?.generation);
 }
 
-function hasSameGeneration(comparison: CpuComparison) {
+function hasSameGeneration(comparison: CpuProductComparison) {
   const [cpu1, cpu2] = comparison;
-  return hasSameValue(cpu1.generation, cpu2.generation);
+  return hasSameValue(cpu1.fields?.generation, cpu2.fields?.generation);
 }
 
-function hasDifferentSocket(comparison: CpuComparison) {
+function hasDifferentSocket(comparison: CpuProductComparison) {
   const [cpu1, cpu2] = comparison;
-  return hasDifferentValue(cpu1.socket, cpu2.socket);
+  return hasDifferentValue(cpu1.fields?.socket, cpu2.fields?.socket);
 }
 
-function hasSameSocket(comparison: CpuComparison) {
+function hasSameSocket(comparison: CpuProductComparison) {
   const [cpu1, cpu2] = comparison;
-  return hasSameValue(cpu1.socket, cpu2.socket);
+  return hasSameValue(cpu1.fields?.socket, cpu2.fields?.socket);
 }
 
-function hasDifferentIntegratedGraphics(comparison: CpuComparison) {
+function hasDifferentIntegratedGraphics(comparison: CpuProductComparison) {
   const [cpu1, cpu2] = comparison;
-  return hasDifferentValue(cpu1.integratedGraphics, cpu2.integratedGraphics);
+  return hasDifferentValue(
+    cpu1.fields?.integratedGraphics,
+    cpu2.fields?.integratedGraphics,
+  );
 }
 
-function hasSameIntegratedGraphics(comparison: CpuComparison) {
+function hasSameIntegratedGraphics(comparison: CpuProductComparison) {
   const [cpu1, cpu2] = comparison;
-  return hasSameValue(cpu1.integratedGraphics, cpu2.integratedGraphics);
+  return hasSameValue(
+    cpu1.fields?.integratedGraphics,
+    cpu2.fields?.integratedGraphics,
+  );
 }
 
-function hasDifferentBundledCooler(comparison: CpuComparison) {
+function hasDifferentBundledCooler(comparison: CpuProductComparison) {
   const [cpu1, cpu2] = comparison;
-  return hasDifferentValue(cpu1.bundledCooler, cpu2.bundledCooler);
+  return hasDifferentValue(
+    cpu1.fields?.bundledCooler,
+    cpu2.fields?.bundledCooler,
+  );
 }
 
-function hasSameBundledCooler(comparison: CpuComparison) {
+function hasSameBundledCooler(comparison: CpuProductComparison) {
   const [cpu1, cpu2] = comparison;
-  return hasSameValue(cpu1.bundledCooler, cpu2.bundledCooler);
+  return hasSameValue(cpu1.fields?.bundledCooler, cpu2.fields?.bundledCooler);
 }
 
-function hasDifferentClock(comparison: CpuComparison) {
+function hasDifferentClock(comparison: CpuProductComparison) {
   const [cpu1, cpu2] = comparison;
-  return hasDifferentValue(cpu1.clock, cpu2.clock);
+  return hasDifferentValue(cpu1.fields?.clock, cpu2.fields?.clock);
 }
 
-function hasSameClock(comparison: CpuComparison) {
+function hasSameClock(comparison: CpuProductComparison) {
   const [cpu1, cpu2] = comparison;
-  return hasSameValue(cpu1.clock, cpu2.clock);
+  return hasSameValue(cpu1.fields?.clock, cpu2.fields?.clock);
 }
 
-function hasDifferentTurboClock(comparison: CpuComparison) {
+function hasDifferentTurboClock(comparison: CpuProductComparison) {
   const [cpu1, cpu2] = comparison;
-  return hasDifferentValue(cpu1.turboClock, cpu2.turboClock);
+  return hasDifferentValue(cpu1.fields?.turboClock, cpu2.fields?.turboClock);
 }
 
-function hasSameTurboClock(comparison: CpuComparison) {
+function hasSameTurboClock(comparison: CpuProductComparison) {
   const [cpu1, cpu2] = comparison;
-  return hasSameValue(cpu1.turboClock, cpu2.turboClock);
+  return hasSameValue(cpu1.fields?.turboClock, cpu2.fields?.turboClock);
 }
 
-function canOverclockCpu1(comparison: CpuComparison) {
+function canOverclockCpu1(comparison: CpuProductComparison) {
   const [cpu1, _cpu2] = comparison;
-  return cpu1.isMultiplierUnlocked?.value === true;
+  return cpu1.fields?.multiplierUnlocked?.value === true;
 }
 
-function canOverclockCpu2(comparison: CpuComparison) {
+function canOverclockCpu2(comparison: CpuProductComparison) {
   const [_cpu1, cpu2] = comparison;
-  return cpu2.isMultiplierUnlocked?.value === true;
+  return cpu2.fields?.multiplierUnlocked?.value === true;
 }
 
-function hasDifferentL1L2Cache(comparison: CpuComparison) {
+function hasDifferentL1L2Cache(comparison: CpuProductComparison) {
   const [cpu1, cpu2] = comparison;
   return (
-    hasDifferentValue(cpu1.l1Cache, cpu2.l1Cache) &&
-    hasDifferentValue(cpu1.l2Cache, cpu2.l2Cache)
+    hasDifferentValue(cpu1.fields?.l1Cache, cpu2.fields?.l1Cache) &&
+    hasDifferentValue(cpu1.fields?.l2Cache, cpu2.fields?.l2Cache)
   );
 }
 
-function hasSameL1L2Cache(comparison: CpuComparison) {
+function hasSameL1L2Cache(comparison: CpuProductComparison) {
   const [cpu1, cpu2] = comparison;
   return (
-    hasSameValue(cpu1.l1Cache, cpu2.l1Cache) &&
-    hasSameValue(cpu1.l2Cache, cpu2.l2Cache)
+    hasSameValue(cpu1.fields?.l1Cache, cpu2.fields?.l1Cache) &&
+    hasSameValue(cpu1.fields?.l2Cache, cpu2.fields?.l2Cache)
   );
 }
 
-function hasSameMemorySupport(comparison: CpuComparison) {
+function hasSameMemorySupport(comparison: CpuProductComparison) {
   const [cpu1, cpu2] = comparison;
-  const areEqual1 =
-    cpu1.memorySupport?.value?.every(
-      (value) => cpu2.memorySupport?.value?.includes(value) ?? false,
-    ) ?? false;
-  const areEqual2 =
-    cpu2.memorySupport?.value?.every(
-      (value) => cpu1.memorySupport?.value?.includes(value) ?? false,
-    ) ?? false;
-  return areEqual1 && areEqual2;
+  return hasSameValue(cpu1.fields?.memorySupport, cpu2.fields?.memorySupport);
 }
 
-function hasSamePciExpress(comparison: CpuComparison) {
+function hasSamePciExpress(comparison: CpuProductComparison) {
   const [cpu1, cpu2] = comparison;
-  const areEqual1 =
-    cpu1.pciExpress?.value?.every(
-      (value) => cpu2.pciExpress?.value?.includes(value) ?? false,
-    ) ?? false;
-  const areEqual2 =
-    cpu2.pciExpress?.value?.every(
-      (value) => cpu1.pciExpress?.value?.includes(value) ?? false,
-    ) ?? false;
-  return areEqual1 && areEqual2;
+  return hasSameValue(cpu1.fields?.pciExpress, cpu2.fields?.pciExpress);
 }
 
-function hasSameTdp(comparison: CpuComparison) {
+function hasSameTdp(comparison: CpuProductComparison) {
   const [cpu1, cpu2] = comparison;
-  return hasSameValue(cpu1.tdp, cpu2.tdp);
+  return hasSameValue(cpu1.fields?.tdp, cpu2.fields?.tdp);
 }
 
-function hasSamePerformance(comparison: CpuComparison) {
+function hasSamePerformance(comparison: CpuProductComparison) {
   const [cpu1, cpu2] = comparison;
-  return hasSameValue(cpu1.performanceScore, cpu2.performanceScore);
+  return hasSameValue(
+    cpu1.fields?.performanceRating,
+    cpu2.fields?.performanceRating,
+  );
 }
 
-function hasSamePerformancePerDollar(comparison: CpuComparison) {
+function hasSamePerformancePerDollar(comparison: CpuProductComparison) {
   const [cpu1, cpu2] = comparison;
-  return hasSameValue(cpu1.valueScore, cpu2.valueScore);
+  return hasSameValue(
+    cpu1.fields?.performancePerMsrp,
+    cpu2.fields?.performancePerMsrp,
+  );
 }
 
 function hasDifferentValue(field1?: CpuField, field2?: CpuField) {
-  if (!hasProductFieldValue(field1) || !hasProductFieldValue(field2)) {
+  if (!hasProductFieldRawValue(field1) || !hasProductFieldRawValue(field2)) {
     return false;
   }
 
@@ -286,7 +298,7 @@ function hasDifferentValue(field1?: CpuField, field2?: CpuField) {
 }
 
 function hasSameValue(field1?: CpuField, field2?: CpuField) {
-  if (!hasProductFieldValue(field1) || !hasProductFieldValue(field2)) {
+  if (!hasProductFieldRawValue(field1) || !hasProductFieldRawValue(field2)) {
     return false;
   }
 

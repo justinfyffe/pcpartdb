@@ -1,13 +1,12 @@
 import 'reflect-metadata';
 import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline';
 import {
-  formatProductSourceName,
-  ProductSource,
+  AutomationSource,
+  formatAutomationSourceName,
   ProductSourceKey,
   ProductType,
 } from '@pcpartdb/shared';
-import { ProductSourceAutocomplete } from 'packages/website/src/client/product/components/ProductSourceAutocomplete/ProductSourceAutocomplete';
-import { Checkbox } from 'packages/website/src/client/shared/components/Checkbox/Checkbox';
+import { AutomationSourceAutocomplete } from 'packages/website/src/client/product/components/AutomationSourceAutocomplete/AutomationSourceAutocomplete';
 import { showDialog } from 'packages/website/src/client/shared/components/Dialog/dialog';
 import {
   Field,
@@ -21,15 +20,12 @@ import { SourcePickerDialog } from '../SourcePickerDialog';
 interface SourceInputFieldProps {
   productType: ProductType;
   sourceKey: ProductSourceKey;
-  sources: ProductSource[];
-  currentSource?: ProductSource;
+  sources: AutomationSource[];
+  currentSource?: AutomationSource;
   sourceDisabled?: boolean;
 
-  archive?: boolean;
-  setArchive?: (archive: boolean) => void;
-
   onUseName?: (name: string) => void;
-  onChange?: (source: ProductSource) => void;
+  onChange?: (source: AutomationSource) => void;
 }
 
 export const SourceInputField = (props: SourceInputFieldProps) => {
@@ -39,8 +35,6 @@ export const SourceInputField = (props: SourceInputFieldProps) => {
     sources,
     currentSource,
     sourceDisabled,
-    archive,
-    setArchive,
     onUseName,
     onChange,
   } = props;
@@ -48,14 +42,14 @@ export const SourceInputField = (props: SourceInputFieldProps) => {
   // Memos
 
   const sourceKeyName = useMemo(
-    () => formatProductSourceName(sourceKey),
+    () => formatAutomationSourceName(sourceKey),
     [sourceKey],
   );
 
   // Callbacks
 
   const showSourcePickerDialog = useCallback(
-    (sources: ProductSource[], currentSource: ProductSource) => {
+    (sources: AutomationSource[], currentSource: AutomationSource) => {
       if (sources.length === 0) {
         return;
       }
@@ -74,7 +68,7 @@ export const SourceInputField = (props: SourceInputFieldProps) => {
   const handleUrlChange = useCallback(
     (url: string) => {
       onChange?.({
-        productType,
+        productType: productType as ProductType.Cpu | ProductType.Gpu,
         sourceKey,
         sourceUrl: url,
         groupKey: '',
@@ -136,7 +130,7 @@ export const SourceInputField = (props: SourceInputFieldProps) => {
         </FieldOptional>
       </div>
       <div className="flex flex-col flex-1 gap-2">
-        <ProductSourceAutocomplete
+        <AutomationSourceAutocomplete
           productType={productType}
           source={sourceKey}
           value={currentSource}
@@ -155,9 +149,6 @@ export const SourceInputField = (props: SourceInputFieldProps) => {
             {currentSource.id} (
             {currentSource.archived ? <>Archived</> : <>Not Archived</>})
           </FieldHint>
-          <Checkbox value={archive} onChange={setArchive}>
-            Archive
-          </Checkbox>
         </div>
       )}
     </Field>

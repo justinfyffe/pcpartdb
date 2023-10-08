@@ -1,7 +1,8 @@
 import {
-  formatGpuField,
-  formatGpuName,
+  formatCompanyName,
+  formatProductName,
   getGpuAffiliateUrl,
+  productFieldFormattedValue,
   ProductType,
 } from '@pcpartdb/shared';
 import { ProductCustomRow } from 'packages/website/src/client/product/components/ProductCustomRow/ProductCustomRow';
@@ -26,25 +27,27 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
   const { className } = props;
   const { comparison } = useContext(ComparePageContext);
   const [gpu1, gpu2] = comparison;
-  const { chipset: parent1 } = gpu1;
-  const { chipset: parent2 } = gpu2;
+  const { parent: parent1 } = gpu1;
+  const { parent: parent2 } = gpu2;
 
   const [name1, name2] = useMemo(() => {
     return [
-      formatGpuName(gpu1, { company: false }),
-      formatGpuName(gpu2, { company: false }),
+      formatProductName(gpu1, { company: false }),
+      formatProductName(gpu2, { company: false }),
     ];
   }, [gpu1, gpu2]);
 
   const performanceScoreValues = useMemo(() => {
     const score1 =
-      formatGpuField(gpu1.performanceScore) ||
-      formatGpuField(parent1?.performanceScore);
+      productFieldFormattedValue(gpu1.fields?.performanceRating) ||
+      productFieldFormattedValue(parent1?.fields?.performanceRating);
     const score2 =
-      formatGpuField(gpu2.performanceScore) ||
-      formatGpuField(parent2?.performanceScore);
-    const rank1 = gpu1.ranks.performanceRank || parent1?.ranks?.performanceRank;
-    const rank2 = gpu2.ranks.performanceRank || parent2?.ranks?.performanceRank;
+      productFieldFormattedValue(gpu2.fields?.performanceRating) ||
+      productFieldFormattedValue(parent2?.fields?.performanceRating);
+    const rank1 =
+      gpu1.ranks.performanceRating || parent1?.ranks?.performanceRating;
+    const rank2 =
+      gpu2.ranks.performanceRating || parent2?.ranks?.performanceRating;
 
     const formatted1 =
       score1 != null && rank1 != null ? `${score1} (${rank1})` : '--';
@@ -53,23 +56,27 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
 
     return [formatted1, formatted2];
   }, [
-    gpu1.performanceScore,
-    gpu1.ranks.performanceRank,
-    gpu2.performanceScore,
-    gpu2.ranks.performanceRank,
-    parent1?.performanceScore,
-    parent1?.ranks?.performanceRank,
-    parent2?.performanceScore,
-    parent2?.ranks?.performanceRank,
+    gpu1.fields?.performanceRating,
+    gpu1.ranks.performanceRating,
+    gpu2.fields?.performanceRating,
+    gpu2.ranks.performanceRating,
+    parent1?.fields?.performanceRating,
+    parent1?.ranks?.performanceRating,
+    parent2?.fields?.performanceRating,
+    parent2?.ranks?.performanceRating,
   ]);
 
   const valueScoreValues = useMemo(() => {
     const score1 =
-      formatGpuField(gpu1.valueScore) || formatGpuField(parent1?.valueScore);
+      productFieldFormattedValue(gpu1.fields?.performancePerMsrp) ||
+      productFieldFormattedValue(parent1?.fields?.performancePerMsrp);
     const score2 =
-      formatGpuField(gpu2.valueScore) || formatGpuField(parent2?.valueScore);
-    const rank1 = gpu1.ranks.valueRank || parent1?.ranks?.valueRank;
-    const rank2 = gpu2.ranks.valueRank || parent2?.ranks?.valueRank;
+      productFieldFormattedValue(gpu2.fields?.performancePerMsrp) ||
+      productFieldFormattedValue(parent2?.fields?.performancePerMsrp);
+    const rank1 =
+      gpu1.ranks.performancePerMsrp || parent1?.ranks?.performancePerMsrp;
+    const rank2 =
+      gpu2.ranks.performancePerMsrp || parent2?.ranks?.performancePerMsrp;
 
     const formatted1 =
       score1 != null && rank1 != null ? `${score1} (${rank1})` : '--';
@@ -78,18 +85,21 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
 
     return [formatted1, formatted2];
   }, [
-    gpu1.ranks.valueRank,
-    gpu1.valueScore,
-    gpu2.ranks.valueRank,
-    gpu2.valueScore,
-    parent1?.ranks?.valueRank,
-    parent1?.valueScore,
-    parent2?.ranks?.valueRank,
-    parent2?.valueScore,
+    gpu1.fields?.performancePerMsrp,
+    gpu1.ranks.performancePerMsrp,
+    gpu2.fields?.performancePerMsrp,
+    gpu2.ranks.performancePerMsrp,
+    parent1?.fields?.performancePerMsrp,
+    parent1?.ranks?.performancePerMsrp,
+    parent2?.fields?.performancePerMsrp,
+    parent2?.ranks?.performancePerMsrp,
   ]);
 
   const chipsetValues = useMemo(() => {
-    return [formatGpuName(parent1 || gpu1), formatGpuName(parent2 || gpu2)];
+    return [
+      formatProductName(parent1 || gpu1),
+      formatProductName(parent2 || gpu2),
+    ];
   }, [gpu1, gpu2, parent1, parent2]);
 
   const gpuAffiliateUrl1 = useMemo(() => getGpuAffiliateUrl(gpu1), [gpu1]);
@@ -147,25 +157,31 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
           values={valueScoreValues}
         />
         <ProductCustomRow label="Chipset" values={chipsetValues} />
-        <ProductFieldRow
-          type={ProductType.Gpu}
-          fields={[gpu1.company, gpu2.company]}
+        <ProductCustomRow
+          label="Company"
+          values={[
+            formatCompanyName(gpu1.company) ?? '--',
+            formatCompanyName(gpu2.company) ?? '--',
+          ]}
         />
         <ProductFieldRow
           type={ProductType.Gpu}
-          fields={[gpu1.marketSegment, gpu2.marketSegment]}
+          fields={[gpu1.fields?.marketSegment, gpu2.fields?.marketSegment]}
         />
         <ProductFieldRow
           type={ProductType.Gpu}
-          fields={[gpu1.releaseDate, gpu2.releaseDate]}
+          fields={[gpu1.fields?.releaseDate, gpu2.fields?.releaseDate]}
         />
         <ProductFieldRow
           type={ProductType.Gpu}
-          fields={[gpu1.launchPrice, gpu2.launchPrice]}
+          fields={[gpu1.fields?.msrp, gpu2.fields?.releaseDate]}
         />
         <ProductFieldRow
           type={ProductType.Gpu}
-          fields={[gpu1.productionStatus, gpu2.productionStatus]}
+          fields={[
+            gpu1.fields?.productionStatus,
+            gpu2.fields?.productionStatus,
+          ]}
         />
       </TBody>
     </Table>

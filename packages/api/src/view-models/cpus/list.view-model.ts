@@ -1,45 +1,48 @@
 import { Injectable } from '@nestjs/common';
-import { ListCpusQuery, ListCpusResponse } from '@pcpartdb/shared';
-import { CpuService } from '../../product/cpu/cpu.service';
-import { listCpusQueryValidator } from '../../product/cpu/cpu.validators';
+import {
+  deepmerge,
+  DEFAULT_LIST_CPUS_LIMIT,
+  DEFAULT_LIST_CPUS_OFFSET,
+  ListCpusQuery,
+  ListCpusRequest,
+  listProductsRequestSchema,
+  ProductType,
+} from '@pcpartdb/shared';
+import { ProductService } from '../../product/product.service';
 import { Context } from '../../shared/context';
 import { validate } from '../../shared/validation/validate';
 
 @Injectable()
 export class ListCpusViewModelService {
-  constructor(private cpuService: CpuService) {}
+  constructor(private productService: ProductService) {}
 
-  async viewModel(query: ListCpusQuery, ctx: Context) {
-    validate(query, listCpusQueryValidator);
+  async viewModel(request: ListCpusRequest, ctx: Context) {
+    validate(request, listProductsRequestSchema);
+    const query = request.query;
 
-    const cpus = await this.getCpusForQuery(query, ctx);
-    const totalCpus = await this.getTotalCpusForQuery(query, ctx);
-
-    return {
-      query,
-      cpus,
-      totalCpus,
-      contentData: {},
-    } as ListCpusResponse;
-  }
-
-  private async getCpusForQuery(query: ListCpusQuery, ctx: Context) {
-    return await this.getCpus(query, ctx);
-  }
-
-  private async getTotalCpusForQuery(query: ListCpusQuery, ctx: Context) {
-    return await this.cpuService.count({ query }, ctx);
-  }
-
-  private async getCpus(query: ListCpusQuery, ctx: Context) {
-    return await this.cpuService.list(
+    const cpusQuery = deepmerge(
+      {},
       {
-        query,
-        fields: ['company', 'performanceScore', 'valueScore', 'releaseDate'],
-        includeRanks: ['performanceRank', 'valueRank'],
-        includeImages: false,
+        filter: {},
+        pagination: {
+          offset: DEFAULT_LIST_CPUS_OFFSET,
+          limit: DEFAULT_LIST_CPUS_LIMIT,
+        },
+      } as ListCpusQuery,
+      query,
+    );
+
+    const response = await this.productService.list(
+      {
+        productType: ProductType.Cpu,
+        query: cpusQuery,
+      },
+      {
+        fields: ['releaseDate', 'performanceRating', 'performancePerMsrp'],
       },
       ctx,
     );
+
+    return response;
   }
 }

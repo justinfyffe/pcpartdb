@@ -1,4 +1,4 @@
-import { hasProductFieldValue } from '@pcpartdb/shared';
+import { hasProductFieldFormattedValue } from '@pcpartdb/shared';
 import React, { FunctionComponent, useContext } from 'react';
 import { ComparePageContext } from '../../../context/ComparePageContext';
 import { CompatibilityIntro } from './CompatibilityIntro';
@@ -16,26 +16,26 @@ export const CompatibilitySpecs: FunctionComponent<CompatibilitySpecsProps> = (
   const [gpu1, gpu2] = comparison;
 
   if (
-    !hasProductFieldValue(gpu1.slotWidth) &&
-    !hasProductFieldValue(gpu2.slotWidth) &&
-    !hasProductFieldValue(gpu1.length) &&
-    !hasProductFieldValue(gpu2.length) &&
-    !hasProductFieldValue(gpu1.width) &&
-    !hasProductFieldValue(gpu2.width) &&
-    !hasProductFieldValue(gpu1.height) &&
-    !hasProductFieldValue(gpu2.height) &&
-    !hasProductFieldValue(gpu1.weight) &&
-    !hasProductFieldValue(gpu2.weight) &&
-    !hasProductFieldValue(gpu1.busInterface) &&
-    !hasProductFieldValue(gpu2.busInterface) &&
-    !hasProductFieldValue(gpu1.thermalDesignPower) &&
-    !hasProductFieldValue(gpu2.thermalDesignPower) &&
-    !hasProductFieldValue(gpu1.suggestedPsu) &&
-    !hasProductFieldValue(gpu2.suggestedPsu) &&
-    !hasProductFieldValue(gpu1.powerConnectors) &&
-    !hasProductFieldValue(gpu2.powerConnectors) &&
-    !hasProductFieldValue(gpu1.outputs) &&
-    !hasProductFieldValue(gpu2.outputs)
+    !hasProductFieldFormattedValue(gpu1.fields?.slotWidth) &&
+    !hasProductFieldFormattedValue(gpu2.fields?.slotWidth) &&
+    !hasProductFieldFormattedValue(gpu1.fields?.length) &&
+    !hasProductFieldFormattedValue(gpu2.fields?.length) &&
+    !hasProductFieldFormattedValue(gpu1.fields?.width) &&
+    !hasProductFieldFormattedValue(gpu2.fields?.width) &&
+    !hasProductFieldFormattedValue(gpu1.fields?.height) &&
+    !hasProductFieldFormattedValue(gpu2.fields?.height) &&
+    !hasProductFieldFormattedValue(gpu1.fields?.weight) &&
+    !hasProductFieldFormattedValue(gpu2.fields?.weight) &&
+    !hasProductFieldFormattedValue(gpu1.fields?.busInterface) &&
+    !hasProductFieldFormattedValue(gpu2.fields?.busInterface) &&
+    !hasProductFieldFormattedValue(gpu1.fields?.tdp) &&
+    !hasProductFieldFormattedValue(gpu2.fields?.tdp) &&
+    !hasProductFieldFormattedValue(gpu1.fields?.suggestedPsu) &&
+    !hasProductFieldFormattedValue(gpu2.fields?.suggestedPsu) &&
+    !hasProductFieldFormattedValue(gpu1.fields?.powerConnectors) &&
+    !hasProductFieldFormattedValue(gpu2.fields?.powerConnectors) &&
+    !hasProductFieldFormattedValue(gpu1.fields?.outputs) &&
+    !hasProductFieldFormattedValue(gpu2.fields?.outputs)
   ) {
     return <></>;
   }

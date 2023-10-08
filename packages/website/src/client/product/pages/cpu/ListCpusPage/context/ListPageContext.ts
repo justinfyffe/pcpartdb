@@ -1,4 +1,8 @@
-import { Cpu, ListCpusContentData, ListCpusQuery } from '@pcpartdb/shared';
+import {
+  CpuProduct,
+  ListCpusAdditionalData,
+  ListCpusQuery,
+} from '@pcpartdb/shared';
 import {
   ContentParams,
   ContentTags,
@@ -8,9 +12,9 @@ import { createContext } from 'react';
 export interface ListPageContextProps {
   query?: ListCpusQuery;
   updateQuery: (query: ListCpusQuery) => void;
-  cpus: Cpu[];
+  cpus: CpuProduct[];
   totalCpus: number;
-  contentData: ListCpusContentData;
+  additionalData: ListCpusAdditionalData;
 
   contentTags: ContentTags;
   contentParams: ContentParams;
@@ -21,7 +25,7 @@ export const ListPageContext = createContext<ListPageContextProps>({
   updateQuery: null,
   cpus: null,
   totalCpus: null,
-  contentData: null,
+  additionalData: null,
 
   contentTags: null,
   contentParams: null,

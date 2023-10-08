@@ -1,16 +1,18 @@
 import {
-  DateFormat,
+  formatCompanyName,
   formatGpuDimensions,
-  formatGpuField,
-  formatGpuName,
   formatOrdinalNumber,
+  formatProductName,
   getGpuChipset,
   getViewGpuPath,
-  Gpu,
-  GpuProductionStatusValue,
+  GpuProduct,
   hasGpuLaunched,
+  hasProductFieldRawValue,
   isPastGpuLaunchDate,
-  ViewGpuContentData,
+  productFieldFormattedValue,
+  productFieldRawValue,
+  ProductionStatus,
+  ViewGpuAdditionalData,
 } from '@pcpartdb/shared';
 import { ContentParams } from 'packages/website/src/client/shared/content/types';
 
@@ -31,7 +33,6 @@ export interface ViewGpuContentParams {
   marketSegment?: string;
   processSize?: string;
   releaseDate?: string;
-  year?: string;
   totalRetailModels?: string;
   wasPlannedToLaunchOrLaunchedOrWillLaunch?: string;
   anUnreleasedOrAnEndOfLife?: string;
@@ -39,8 +40,7 @@ export interface ViewGpuContentParams {
   dimensions?: string;
   height?: string;
   slotWidth?: string;
-  slotWidthNoUnits?: string;
-  slotWidthUnits?: string;
+  slotOrSlots?: string;
   outputs?: string;
   thickness?: string;
 
@@ -67,19 +67,22 @@ export interface ViewGpuContentParams {
   memoryBandwidth?: string;
 }
 
-export function getContentParams(gpu: Gpu, contentData: ViewGpuContentData) {
+export function getContentParams(
+  gpu: GpuProduct,
+  additionalData: ViewGpuAdditionalData,
+) {
   return {
-    ...getGeneralParams(gpu, contentData),
+    ...getGeneralParams(gpu, additionalData),
     ...getCompatibilityParams(gpu),
     ...getPowerSupplyParams(gpu),
-    ...getPerformanceParams(gpu, contentData),
+    ...getPerformanceParams(gpu, additionalData),
     ...getValueParams(gpu),
     ...getMemoryParams(gpu),
   } as ViewGpuContentParams as ContentParams;
 }
 
-function getGeneralParams(gpu: Gpu, contentData: ViewGpuContentData) {
-  const chipset = getGpuChipset(gpu);
+function getGeneralParams(gpu: GpuProduct, contentData: ViewGpuAdditionalData) {
+  const chipset = gpu.parent || gpu;
 
   let wasPlannedToLaunchOrLaunchedOrWillLaunch: string = null;
   if (hasGpuLaunched(gpu)) {
@@ -91,43 +94,60 @@ function getGeneralParams(gpu: Gpu, contentData: ViewGpuContentData) {
   }
 
   let anUnreleasedOrAnEndOfLife: string = null;
-  if (gpu.productionStatus?.value === GpuProductionStatusValue.EndOfLife) {
+  if (
+    productFieldRawValue(gpu.fields?.productionStatus) ===
+    ProductionStatus.EndOfLife
+  ) {
     anUnreleasedOrAnEndOfLife = 'an end-of-life';
   } else if (
-    gpu.productionStatus?.value === GpuProductionStatusValue.Unreleased
+    productFieldRawValue(gpu.fields?.productionStatus) ===
+    ProductionStatus.Unreleased
   ) {
     anUnreleasedOrAnEndOfLife = 'an unreleased';
   }
 
   return {
-    architecture: formatGpuField(gpu.architecture),
-    chipsetCompany: formatGpuField(chipset.company),
-    chipsetLaunchPrice: formatGpuField(chipset.launchPrice),
-    chipsetName: formatGpuName(chipset),
-    chipsetShortName: formatGpuName(chipset, { company: false }),
-    chipsetShortestName: formatGpuName(chipset, {
+    architecture: hasProductFieldRawValue(gpu.fields?.architecture)
+      ? productFieldFormattedValue(gpu.fields?.architecture)
+      : null,
+    chipsetCompany: formatCompanyName(chipset.company),
+    chipsetLaunchPrice: hasProductFieldRawValue(chipset.fields?.msrp)
+      ? productFieldFormattedValue(chipset.fields?.msrp)
+      : null,
+    chipsetName: formatProductName(chipset),
+    chipsetShortName: formatProductName(chipset, { company: false }),
+    chipsetShortestName: formatProductName(chipset, {
       company: false,
       brand: false,
     }),
-    codename: formatGpuField(gpu.codename),
-    company: formatGpuField(gpu.company),
-    gpuName: formatGpuName(gpu),
-    shortGpuName: formatGpuName(gpu, { company: false }),
-    shortestGpuName: formatGpuName(gpu, { company: false, brand: false }),
-    launchPrice: formatGpuField(gpu.launchPrice),
-    launchWindow: formatGpuField(gpu.releaseDate),
-    marketSegment: formatGpuField(gpu.marketSegment)?.toLowerCase(),
-    processSize: formatGpuField(gpu.processSize),
-    releaseDate: formatGpuField(gpu.releaseDate),
-    year: formatGpuField(gpu.releaseDate, { dateFormat: DateFormat.Year }),
+    codename: hasProductFieldRawValue(gpu.fields?.codename)
+      ? productFieldFormattedValue(gpu.fields?.codename)
+      : null,
+    company: formatCompanyName(gpu.company),
+    gpuName: formatProductName(gpu),
+    shortGpuName: formatProductName(gpu, { company: false }),
+    shortestGpuName: formatProductName(gpu, { company: false, brand: false }),
+    launchPrice: hasProductFieldRawValue(gpu.fields?.msrp)
+      ? productFieldFormattedValue(gpu.fields?.msrp)
+      : null,
+    launchWindow: productFieldFormattedValue(gpu.fields?.releaseDate),
+    marketSegment: hasProductFieldRawValue(gpu.fields?.marketSegment)
+      ? productFieldFormattedValue(gpu.fields?.marketSegment)?.toLowerCase()
+      : null,
+    processSize: hasProductFieldRawValue(gpu.fields?.processSize)
+      ? productFieldFormattedValue(gpu.fields?.processSize)
+      : null,
+    releaseDate: hasProductFieldRawValue(gpu.fields?.releaseDate)
+      ? productFieldFormattedValue(gpu.fields?.releaseDate)
+      : null,
     totalRetailModels: String(contentData.retailModels?.length || 0),
     wasPlannedToLaunchOrLaunchedOrWillLaunch,
     anUnreleasedOrAnEndOfLife,
   } as ViewGpuContentParams as ContentParams;
 }
 
-function getCompatibilityParams(gpu: Gpu) {
-  const slots = gpu.slotWidth?.value;
+function getCompatibilityParams(gpu: GpuProduct) {
+  const slots = productFieldRawValue(gpu.fields?.slotWidth);
   let thickness: string;
   if (slots > 3) {
     thickness = 'very large';
@@ -141,7 +161,7 @@ function getCompatibilityParams(gpu: Gpu) {
     thickness = 'compact, low-profile';
   }
 
-  let outputs = formatGpuField(gpu.outputs);
+  let outputs = productFieldFormattedValue(gpu.fields?.outputs);
   if (outputs === 'No outputs') {
     outputs = 'no';
   } else if (outputs === 'Portable Device Dependent') {
@@ -149,59 +169,87 @@ function getCompatibilityParams(gpu: Gpu) {
   }
 
   return {
-    dimensions: formatGpuDimensions(gpu, { allowMissingDimensions: false }),
-    height: formatGpuField(gpu.height),
-    slotWidth: formatGpuField(gpu.slotWidth),
-    slotWidthNoUnits: formatGpuField(gpu.slotWidth, { showUnits: false }),
-    slotWidthUnits: gpu.slotWidth?.value === 1 ? 'slot' : 'slots',
+    dimensions: formatGpuDimensions(gpu, {
+      allowMissingDimensions: false,
+    }),
+    height: hasProductFieldRawValue(gpu.fields?.height)
+      ? productFieldFormattedValue(gpu.fields?.height)
+      : null,
+    slotWidth: hasProductFieldRawValue
+      ? `${productFieldRawValue(gpu.fields?.slotWidth)}`
+      : null,
+    slotOrSlots: slots === 1 ? 'slot' : 'slots',
     outputs,
     thickness,
   } as ViewGpuContentParams as ContentParams;
 }
 
-function getPowerSupplyParams(gpu: Gpu) {
+function getPowerSupplyParams(gpu: GpuProduct) {
   return {
-    psu: formatGpuField(gpu.suggestedPsu),
-    tdp: formatGpuField(gpu.thermalDesignPower),
+    psu: hasProductFieldRawValue(gpu.fields?.suggestedPsu)
+      ? productFieldFormattedValue(gpu.fields?.suggestedPsu)
+      : null,
+    tdp: hasProductFieldRawValue(gpu.fields?.tdp)
+      ? productFieldFormattedValue(gpu.fields?.tdp)
+      : null,
   } as ViewGpuContentParams as ContentParams;
 }
 
-function getMemoryParams(gpu: Gpu) {
+function getMemoryParams(gpu: GpuProduct) {
   return {
-    memorySize: formatGpuField(gpu.memorySize),
-    memoryType: formatGpuField(gpu.memoryType),
-    memoryClock: formatGpuField(gpu.memoryClock),
-    memoryInterface: formatGpuField(gpu.memoryInterface),
-    memoryBandwidth: formatGpuField(gpu.memoryBandwidth),
+    memorySize: hasProductFieldRawValue(gpu.fields?.memorySize)
+      ? productFieldFormattedValue(gpu.fields?.memorySize)
+      : null,
+    memoryType: hasProductFieldRawValue(gpu.fields?.memoryType)
+      ? productFieldFormattedValue(gpu.fields?.memoryType)
+      : null,
+    memoryClock: hasProductFieldRawValue(gpu.fields?.memoryClock)
+      ? productFieldFormattedValue(gpu.fields?.memoryClock)
+      : null,
+    memoryInterface: hasProductFieldRawValue(gpu.fields?.memoryInterface)
+      ? productFieldFormattedValue(gpu.fields?.memoryInterface)
+      : null,
+    memoryBandwidth: hasProductFieldRawValue(gpu.fields?.memoryBandwidth)
+      ? productFieldFormattedValue(gpu.fields?.memoryBandwidth)
+      : null,
   } as ViewGpuContentParams as ContentParams;
 }
 
-function getPerformanceParams(gpu: Gpu, contentData: ViewGpuContentData) {
-  const chipset = getGpuChipset(gpu);
+function getPerformanceParams(
+  gpu: GpuProduct,
+  additionalData: ViewGpuAdditionalData,
+) {
+  const chipset = gpu.parent || gpu;
 
-  const bestPerformanceSegmentGpu = contentData.bestPerformanceGpuForSegment;
+  const bestPerformanceSegmentGpu = additionalData.bestPerformanceGpuForSegment;
   const bestPerformanceDifference = (
     100 *
-    (chipset.performanceScore?.value /
-      bestPerformanceSegmentGpu?.performanceScore?.value)
+    (productFieldRawValue(chipset?.fields?.performanceRating) /
+      productFieldRawValue(
+        bestPerformanceSegmentGpu?.fields?.performanceRating,
+      ))
   ).toFixed(2);
 
-  const performanceRating = formatGpuField(chipset.performanceScore);
+  const performanceRating = productFieldFormattedValue(
+    chipset.fields?.performanceRating,
+  );
   const performanceRank =
-    gpu.ranks?.performanceRank > 1
-      ? formatOrdinalNumber(gpu.ranks?.performanceRank)
+    gpu.ranks?.performanceRating > 1
+      ? formatOrdinalNumber(gpu.ranks?.performanceRating)
       : '';
-  const bestPerformanceSegmentGpuName = formatGpuName(
+  const bestPerformanceSegmentGpuName = formatProductName(
     bestPerformanceSegmentGpu,
   );
-  const bestPerformanceSegmentGpuShortName = formatGpuName(
+  const bestPerformanceSegmentGpuShortName = formatProductName(
     bestPerformanceSegmentGpu,
     { company: false },
   );
   const performanceRankForArchitectureSegment =
-    gpu.ranks?.performanceRankForArchitectureSegment != null
-      ? gpu.ranks.performanceRankForArchitectureSegment > 1
-        ? formatOrdinalNumber(gpu.ranks.performanceRankForArchitectureSegment)
+    gpu.ranks?.performanceRatingForArchitectureAndMarketSegment != null
+      ? gpu.ranks.performanceRatingForArchitectureAndMarketSegment > 1
+        ? formatOrdinalNumber(
+            gpu.ranks.performanceRatingForArchitectureAndMarketSegment,
+          )
         : ''
       : null;
   const bestPerformanceSegmentGpuPath =
@@ -209,12 +257,12 @@ function getPerformanceParams(gpu: Gpu, contentData: ViewGpuContentData) {
       ? getViewGpuPath(bestPerformanceSegmentGpu)
       : null;
   const performanceRankForSegment =
-    gpu.ranks?.performanceRankForSegment != null
-      ? gpu.ranks.performanceRankForSegment > 1
-        ? formatOrdinalNumber(gpu.ranks.performanceRankForSegment)
+    gpu.ranks?.performanceRatingForMarketSegment != null
+      ? gpu.ranks.performanceRatingForMarketSegment > 1
+        ? formatOrdinalNumber(gpu.ranks.performanceRatingForMarketSegment)
         : ''
       : null;
-  const totalPerformanceGpus = String(contentData.totalPerformanceGpus);
+  const totalPerformanceGpus = String(additionalData.totalPerformanceGpus);
 
   return {
     performanceRating,
@@ -229,14 +277,20 @@ function getPerformanceParams(gpu: Gpu, contentData: ViewGpuContentData) {
   } as ViewGpuContentParams as ContentParams;
 }
 
-function getValueParams(gpu: Gpu) {
+function getValueParams(gpu: GpuProduct) {
   const chipset = getGpuChipset(gpu);
-  const valueRating = formatGpuField(chipset.valueScore);
+  const valueRating = hasProductFieldRawValue(
+    chipset.fields?.performancePerMsrp,
+  )
+    ? productFieldFormattedValue(chipset.fields?.performancePerMsrp)
+    : null;
   const valueRank =
-    gpu.ranks?.valueRank > 1 ? formatOrdinalNumber(gpu.ranks?.valueRank) : '';
+    gpu.ranks?.performancePerMsrp > 1
+      ? formatOrdinalNumber(gpu.ranks?.performancePerMsrp)
+      : '';
   const valueRankForSegment =
-    gpu.ranks?.valueRankForSegment > 1
-      ? formatOrdinalNumber(gpu.ranks?.valueRankForSegment)
+    gpu.ranks?.performancePerMsrpForMarketSegment > 1
+      ? formatOrdinalNumber(gpu.ranks?.performancePerMsrpForMarketSegment)
       : '';
 
   return {

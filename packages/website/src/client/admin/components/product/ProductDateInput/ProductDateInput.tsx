@@ -1,18 +1,21 @@
-import { DateFormat, ProductField, ProductFieldKey } from '@pcpartdb/shared';
-import { DateInput } from 'packages/website/src/client/shared/components/Input/DateInput';
 import {
-  Select,
-  SelectValue,
-} from 'packages/website/src/client/shared/components/Select/Select';
-import { SelectOption } from 'packages/website/src/client/shared/components/Select/SelectOption';
+  DateFormat,
+  formatDate,
+  ProductField,
+  ProductFieldKey,
+} from '@pcpartdb/shared';
+import { DateInput } from 'packages/website/src/client/shared/components/Input/DateInput';
 import React, { forwardRef, useCallback, useMemo } from 'react';
+import { ProductFieldInput } from '../ProductFieldInput/ProductFieldInput';
 
 interface ProductDateInputProps {
   fieldKey: ProductFieldKey;
 
+  label?: string;
   value?: ProductField<string>;
   onChange?: (value: ProductField<string>) => void;
 
+  defaultFormat?: DateFormat;
   placeholder?: string;
   disabled?: boolean;
 }
@@ -21,62 +24,47 @@ export const ProductDateInput = forwardRef<
   HTMLInputElement,
   ProductDateInputProps
 >((props, ref) => {
-  const { fieldKey, placeholder, disabled, value, onChange } = props;
+  const {
+    fieldKey,
+    placeholder,
+    disabled,
+    label,
+    value,
+    defaultFormat,
+    onChange,
+  } = props;
 
-  const rawValue = value?.value || null;
+  const rawValue = value?.value ?? null;
   const meta = useMemo(() => value?.meta || {}, [value?.meta]);
-  const format = value?.meta?.dateFormat || null;
 
-  const handleValueChange = useCallback(
+  const handleRawValueChange = useCallback(
     (newValue: string) => {
+      const formattedValue = formatDate(newValue, { format: defaultFormat });
       onChange?.({
         value: newValue,
-        meta: { ...meta, fieldKey, dateFormat: format },
+        meta: { ...meta, fieldKey, formattedValue },
       });
     },
-    [fieldKey, format, onChange, meta],
-  );
-
-  const handleFormatChange = useCallback(
-    (format: SelectValue) => {
-      onChange?.({
-        value: rawValue,
-        meta: { ...meta, fieldKey, dateFormat: format as DateFormat },
-      });
-    },
-    [fieldKey, onChange, rawValue, meta],
+    [defaultFormat, onChange, meta, fieldKey],
   );
 
   return (
-    <div className="flex gap-4">
+    <ProductFieldInput
+      fieldKey={fieldKey}
+      disabled={disabled}
+      label={label}
+      value={value}
+      onChange={(field) => onChange?.(field as ProductField<string>)}
+    >
       <DateInput
         placeholder={placeholder}
         disabled={disabled}
         value={rawValue}
-        onChange={handleValueChange}
+        onChange={handleRawValueChange}
         className="flex-1"
         ref={ref}
       />
-
-      <Select
-        placeholder="Display Format"
-        disabled={disabled}
-        value={format}
-        onChange={handleFormatChange}
-        className="flex-1"
-        clearable
-      >
-        <SelectOption label="Quarter Year" value={DateFormat.QuarterYear}>
-          Quarter Year
-        </SelectOption>
-        <SelectOption label="Year" value={DateFormat.Year}>
-          Year
-        </SelectOption>
-        <SelectOption label="Year Quarter" value={DateFormat.YearQuarter}>
-          Year Quarter
-        </SelectOption>
-      </Select>
-    </div>
+    </ProductFieldInput>
   );
 });
 ProductDateInput.displayName = 'ProductDateInput';

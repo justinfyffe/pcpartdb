@@ -1,16 +1,16 @@
 import 'reflect-metadata';
 import {
-  Cpu,
+  CpuProduct,
   DEFAULT_LIST_CPUS_LIMIT,
   DEFAULT_LIST_CPUS_OFFSET,
   generateListCpusQueryFromPath,
-  getAdminImportCpusPath,
   getAdminListCpusPath,
   getAdminNewCpuPath,
   ListCpusQuery,
+  ProductType,
 } from '@pcpartdb/shared';
 import { useRouter } from 'next/router';
-import { cpuService } from 'packages/website/src/client/product/services/cpuService';
+import { productService } from 'packages/website/src/client/product/services/productService';
 import { InfoAlert } from 'packages/website/src/client/shared/components/Alert/InfoAlert';
 import { SuccessAlert } from 'packages/website/src/client/shared/components/Alert/SuccessAlert';
 import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
@@ -30,7 +30,7 @@ export const AdminListCpusPage = () => {
   const [saved] = useState(router.query.saved === 'true');
   const [deleted] = useState(router.query.deleted === 'true');
 
-  const [cpus, setCpus] = useState<Cpu[]>([]);
+  const [cpus, setCpus] = useState<CpuProduct[]>([]);
   const [totalResults, setTotalResults] = useState(0);
   const [query, setQuery] = useState<ListCpusQuery>({
     pagination: { offset, limit },
@@ -40,9 +40,9 @@ export const AdminListCpusPage = () => {
 
   const fetchCpus = useCallback(async (q: ListCpusQuery) => {
     setLoading(true);
-    const response = await cpuService.list(q);
-    setCpus(response.cpus);
-    setTotalResults(response.totalCpus);
+    const response = await productService.list(ProductType.Cpu, q);
+    setCpus(response.results as CpuProduct[]);
+    setTotalResults(response.total);
     setQuery(q);
     setLoading(false);
   }, []);
@@ -86,9 +86,6 @@ export const AdminListCpusPage = () => {
           <h1 className="font-semibold">{pageTitle}</h1>
 
           <div className="flex gap-4">
-            <GenericButton href={getAdminImportCpusPath()}>
-              Import Bulk
-            </GenericButton>
             <GenericButton href={getAdminNewCpuPath()}>Add</GenericButton>
           </div>
         </div>

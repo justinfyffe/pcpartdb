@@ -1,22 +1,51 @@
 import { formatProductName } from '../format';
 import { CanMergeAutoUpdateStrategy, deepmerge } from '../utils';
+import { BenchmarKey } from './benchmarks';
 import { PRODUCT_FIELD_LABELS } from './consts';
+import { ProductSourceKey } from './sources';
 import { Product, ProductField, ProductFieldKey, ProductType } from './types';
 
 export function getProductFieldLabel(
   productType: ProductType,
   field: ProductFieldKey,
 ) {
-  return PRODUCT_FIELD_LABELS?.[productType]?.[field] || null;
+  return PRODUCT_FIELD_LABELS?.[productType]?.[field] ?? null;
 }
 
-export function hasProductFieldValue(field: ProductField) {
-  if (field?.value == null) {
+export function getProductBenchmarkLabel(benchmark: BenchmarKey) {
+  switch (benchmark) {
+    case BenchmarKey.CpuMarkMultiThread:
+      return 'CPU Mark (Multi-thread)';
+    case BenchmarKey.CpuMarkSingleThread:
+      return 'CPU Mark (Single-thread)';
+    case BenchmarKey.GeekBenchMultiCore:
+      return 'GeekBench (Multi-core)';
+    case BenchmarKey.GeekBenchSingleCore:
+      return 'GeekBench (Single-core)';
+    case BenchmarKey.G2dMark:
+      return 'G2D Mark';
+    case BenchmarKey.G3dMark:
+      return 'G3D Mark';
+    case BenchmarKey.TimespyGraphics:
+      return 'Time Spy Graphics';
+  }
+}
+
+export function hasProductFieldRawValue(field: ProductField) {
+  if (field == null) {
+    return false;
+  }
+
+  if (field.value == null) {
     return false;
   }
 
   if (typeof field.value === 'string') {
     return field.value.trim() !== '';
+  }
+
+  if (typeof field.value === 'number') {
+    return field.value !== 0;
   }
 
   if (Array.isArray(field.value)) {
@@ -28,12 +57,40 @@ export function hasProductFieldValue(field: ProductField) {
   return true;
 }
 
-export function productFieldValue<T = unknown>(field: ProductField) {
-  if (!hasProductFieldValue(field)) {
+export function hasProductFieldFormattedValue(field: ProductField) {
+  if (field == null) {
+    return false;
+  }
+
+  if (field.meta?.formattedValue == null) {
+    return false;
+  }
+
+  if (field.meta?.formattedValue === '') {
+    return false;
+  }
+
+  return true;
+}
+
+export function hasProductFieldValue(field: ProductField) {
+  return hasProductFieldRawValue(field) || hasProductFieldFormattedValue(field);
+}
+
+export function productFieldRawValue<T = unknown>(field: ProductField<T>) {
+  if (!hasProductFieldRawValue(field)) {
     return null;
   }
 
   return field.value as T;
+}
+
+export function productFieldFormattedValue(field: ProductField) {
+  if (!hasProductFieldFormattedValue(field)) {
+    return null;
+  }
+
+  return field.meta?.formattedValue ?? null;
 }
 
 export function isProductField(value: unknown): value is ProductField {
@@ -49,11 +106,17 @@ export function compareProductFields(
   field1: ProductField,
   field2: ProductField,
 ) {
-  if (hasProductFieldValue(field1) && !hasProductFieldValue(field2)) {
+  if (hasProductFieldRawValue(field1) && !hasProductFieldRawValue(field2)) {
     return -1;
-  } else if (!hasProductFieldValue(field1) && hasProductFieldValue(field2)) {
+  } else if (
+    !hasProductFieldRawValue(field1) &&
+    hasProductFieldRawValue(field2)
+  ) {
     return 1;
-  } else if (!hasProductFieldValue(field1) && !hasProductFieldValue(field2)) {
+  } else if (
+    !hasProductFieldRawValue(field1) &&
+    !hasProductFieldRawValue(field2)
+  ) {
     return 0;
   }
 
@@ -99,21 +162,21 @@ export function canAutoUpdateProductField(field: ProductField) {
   return field?.meta?.autoUpdate ?? true;
 }
 
-export function mergeProducts<TProduct extends Product>(
-  original: TProduct,
-  updated: TProduct,
-): TProduct {
-  return deepmerge(
-    { canMergeStrategy: CanMergeAutoUpdateStrategy },
-    original,
-    updated,
-  );
+export function mergeProducts(original: Product, updated: Product): Product {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const canMergeStrategy = (key: string, source: any, obj: any) => {
+    if (key === 'root.benchmarks') {
+      // Product Benchmarks are merged elsewhere
+      return false;
+    }
+
+    return CanMergeAutoUpdateStrategy(key, source, obj);
+  };
+
+  return deepmerge({ canMergeStrategy }, original, updated);
 }
 
-export function getAffiliateUrl<TProduct extends Product>(
-  productType: ProductType,
-  product: TProduct,
-) {
+export function getAffiliateUrl(product: Product) {
   const associateKey = process.env.NEXT_PUBLIC_AMAZON_ASSOCIATES_KEY;
   if (product.affiliateUrl) {
     const url = new URL(product.affiliateUrl);
@@ -123,9 +186,150 @@ export function getAffiliateUrl<TProduct extends Product>(
     return url.toString();
   }
 
-  const productName = formatProductName(productType, product);
+  const productName = formatProductName(product);
   const query = productName.replaceAll(' ', '+');
 
   // Return generated affiliate url based on search results
   return `https://www.amazon.com/s?k=${query}&tag=${associateKey}`;
+}
+
+export function hasProductBenchmark(
+  product: Product,
+  benchmarkKey: BenchmarKey,
+) {
+  return productBenchmarkValue(product, benchmarkKey) != null;
+}
+
+export function getProductBenchmark(
+  product: Product,
+  benchmarkKey: BenchmarKey,
+) {
+  return (
+    product?.benchmarks?.filter(
+      (benchmark) => benchmark.benchmarkKey === benchmarkKey,
+    )?.[0] || null
+  );
+}
+
+export function productBenchmarkValue(
+  product: Product,
+  benchmarkKey: BenchmarKey,
+) {
+  return getProductBenchmark(product, benchmarkKey)?.value;
+}
+
+export function setProductBenchmark(
+  product: Product,
+  benchmarkKey: BenchmarKey,
+  value: number,
+) {
+  const hasBenchmark = hasProductBenchmark(product, benchmarkKey);
+  if (!hasBenchmark && value != null) {
+    // Add benchmark
+    product.benchmarks.push({ benchmarkKey, value });
+  }
+
+  if (hasBenchmark) {
+    const idx = product.benchmarks.findIndex(
+      (benchmark) => benchmark.benchmarkKey === benchmarkKey,
+    );
+
+    if (value == null) {
+      // Delete benchmark
+      product.benchmarks.splice(idx, 1);
+    } else {
+      // Overwrite benchmark
+      product.benchmarks[idx].value = value;
+    }
+  }
+}
+
+export function hasProductSource(
+  product: Product,
+  sourceKey: ProductSourceKey,
+) {
+  return productSourceUrl(product, sourceKey) != null;
+}
+
+export function getProductSource(
+  product: Product,
+  sourceKey: ProductSourceKey,
+) {
+  return (
+    product?.sources?.filter((source) => source.sourceKey === sourceKey)?.[0] ||
+    null
+  );
+}
+
+export function productSourceUrl(
+  product: Product,
+  sourceKey: ProductSourceKey,
+) {
+  return getProductSource(product, sourceKey)?.sourceUrl;
+}
+
+export interface GenerateProductSearchableTextOptions {
+  company?: string;
+  name?: string;
+}
+
+export function generateProductSearchableText(
+  options: GenerateProductSearchableTextOptions,
+) {
+  const { company, name } = options;
+
+  return `${company || ''} ${name || ''}`.trim();
+}
+
+export interface GenerateProductOtherNamesOptions {
+  company?: string;
+  name?: string;
+}
+
+export function generateProductOtherNames(
+  options: GenerateProductOtherNamesOptions,
+) {
+  const { company, name } = options;
+  const fullName = formatProductName({ company, name });
+  const nameWithoutCompany = formatProductName(
+    { company, name },
+    { company: false },
+  );
+  const nameWithoutCompanyAndBrand = formatProductName(
+    { company, name },
+    { company: false, brand: false },
+  );
+
+  return [fullName, nameWithoutCompany, nameWithoutCompanyAndBrand];
+}
+
+export interface GenerateProductSlugOptions {
+  company?: string;
+  name?: string;
+}
+
+export function generateProductSlug(options: GenerateProductSlugOptions) {
+  const { company, name } = options;
+
+  const slugParts = [];
+  if (company != null) {
+    const companyParts = company
+      .replaceAll('+', ' plus ')
+      .replaceAll(/[^a-zA-Z0-9-_]+/g, ' ')
+      .split(' ')
+      .map((value) => value.toLowerCase().trim())
+      .filter((value) => value.length > 0);
+    slugParts.push(...companyParts);
+  }
+  if (name != null) {
+    const nameParts = name
+      .replaceAll('+', ' plus ')
+      .replaceAll(/[^a-zA-Z0-9-_]+/g, ' ')
+      .split(' ')
+      .map((value) => value.toLowerCase().trim())
+      .filter((value) => value.length > 0);
+    slugParts.push(...nameParts);
+  }
+
+  return slugParts.join('-');
 }

@@ -1,15 +1,15 @@
 import { scrapeCpu, ScrapeCpuOptions } from '@pcpartdb/scraper';
 import {
   AutomationAction,
-  Cpu,
-  CpuDataSourceKey,
-  CpuUpdate,
+  CpuProduct,
   CreateCpuActionData,
   CreateProductUpdateRequest,
+  formatProductName,
   generateCpuSlug,
   parseProductName,
-  productFieldValue,
+  ProductSource,
   ProductType,
+  ProductUpdate,
   ProductUpdateStatus,
 } from '@pcpartdb/shared';
 import { AutomationContext } from '../types';
@@ -23,31 +23,14 @@ export async function createCpuAction(
   console.log('Executing createCpuAction', payload);
 
   // Get sources from cpu or action
-  const sources = payload.sources;
-  const techPowerUpSource = {
-    url: sources?.filter(
-      (source) => source.sourceKey === CpuDataSourceKey.TechPowerUp,
-    )[0]?.sourceUrl,
-  };
-  const passMarkSource = {
-    url: sources?.filter(
-      (source) => source.sourceKey === CpuDataSourceKey.PassMark,
-    )[0]?.sourceUrl,
-  };
-  const geekBenchSource = {
-    url: sources?.filter(
-      (source) => source.sourceKey === CpuDataSourceKey.GeekBench,
-    )[0]?.sourceUrl,
-  };
+  const sources: ProductSource[] = payload.sources.map((source) => ({
+    sourceKey: source.sourceKey,
+    sourceUrl: source.sourceUrl,
+  }));
 
   // Scrape the CPU data from our sources.
-  const cpu = await fetchCpuData({
-    sources: {
-      [CpuDataSourceKey.TechPowerUp]: techPowerUpSource,
-      [CpuDataSourceKey.PassMark]: passMarkSource,
-      [CpuDataSourceKey.GeekBench]: geekBenchSource,
-    },
-  });
+  const cpu = await fetchCpuData({ sources });
+  cpu.sources = sources;
 
   // New CPUs have some additional data to be applied
   // Preferred name from source
@@ -55,22 +38,14 @@ export async function createCpuAction(
     const { company, name } = parseProductName(payload.preferredName);
     cpu.name = name;
     if (company != null) {
-      if (
-        company.toLowerCase() !==
-        productFieldValue<string>(cpu.company)?.toLowerCase()
-      ) {
-        cpu.company = {
-          value: company,
-          meta: { fieldKey: 'company', autoUpdate: false },
-        };
+      if (company.toLowerCase() !== cpu.company?.toLowerCase()) {
+        cpu.company = company;
       }
     }
   }
 
   // Generate slug, new CPU didn't have it yet.
-  cpu.slug =
-    payload?.preferredSlug ||
-    generateCpuSlug(cpu.name, productFieldValue(cpu.company));
+  cpu.slug = payload?.preferredSlug || generateCpuSlug(cpu.name, cpu.company);
 
   // Upload update
   await uploadProductUpdate(cpu, context);
@@ -81,17 +56,18 @@ async function fetchCpuData(options: ScrapeCpuOptions) {
 
   // Scrape the CPU data from our sources.
   const result = await scrapeCpu(options);
-  const scrapedCpu = result.product as Cpu;
+  const scrapedCpu = result.product as CpuProduct;
 
   console.log('Finished fetching data.');
   return scrapedCpu;
 }
 
-async function uploadProductUpdate(cpu: Cpu, context: AutomationContext) {
-  const productName = `${productFieldValue(cpu.company) || ''} ${
-    cpu.name
-  }`.trim();
-  const update: CpuUpdate = {
+async function uploadProductUpdate(
+  cpu: CpuProduct,
+  context: AutomationContext,
+) {
+  const productName = formatProductName(cpu);
+  const update: ProductUpdate = {
     productType: ProductType.Cpu,
     productName,
     description: `Create CPU for ${productName}`,

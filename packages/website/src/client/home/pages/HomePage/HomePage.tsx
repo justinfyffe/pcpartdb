@@ -95,23 +95,18 @@ export const HomePage = (props: HomeViewModel) => {
           <FeedItems>
             {bestPerformanceGpuComparison != null && (
               <ProductComparisonFeedItem
-                productType={ProductType.Gpu}
                 comparison={bestPerformanceGpuComparison}
                 tag={ProductComparisonFeedTag.ComparePerformance}
               />
             )}
             {bestValueGpuComparison != null && (
               <ProductComparisonFeedItem
-                productType={ProductType.Gpu}
                 comparison={bestValueGpuComparison}
                 tag={ProductComparisonFeedTag.CompareValue}
               />
             )}
             {randomGpuComparison != null && (
-              <ProductComparisonFeedItem
-                productType={ProductType.Gpu}
-                comparison={randomGpuComparison}
-              />
+              <ProductComparisonFeedItem comparison={randomGpuComparison} />
             )}
           </FeedItems>
 
@@ -143,24 +138,17 @@ export const HomePage = (props: HomeViewModel) => {
           <FeedItems>
             {bestPerformanceGpu != null && (
               <ProductFeedItem
-                productType={ProductType.Gpu}
                 product={bestPerformanceGpu}
                 tag={ProductFeedTag.GreatPerformance}
               />
             )}
             {bestValueGpu != null && (
               <ProductFeedItem
-                productType={ProductType.Gpu}
                 product={bestValueGpu}
                 tag={ProductFeedTag.GreatValue}
               />
             )}
-            {randomGpu != null && (
-              <ProductFeedItem
-                productType={ProductType.Gpu}
-                product={randomGpu}
-              />
-            )}
+            {randomGpu != null && <ProductFeedItem product={randomGpu} />}
           </FeedItems>
 
           <FeedLinks>
@@ -181,23 +169,18 @@ export const HomePage = (props: HomeViewModel) => {
           <FeedItems>
             {bestPerformanceCpuComparison != null && (
               <ProductComparisonFeedItem
-                productType={ProductType.Cpu}
                 comparison={bestPerformanceCpuComparison}
                 tag={ProductComparisonFeedTag.ComparePerformance}
               />
             )}
             {bestValueCpuComparison != null && (
               <ProductComparisonFeedItem
-                productType={ProductType.Cpu}
                 comparison={bestValueCpuComparison}
                 tag={ProductComparisonFeedTag.CompareValue}
               />
             )}
             {randomCpuComparison != null && (
-              <ProductComparisonFeedItem
-                productType={ProductType.Cpu}
-                comparison={randomCpuComparison}
-              />
+              <ProductComparisonFeedItem comparison={randomCpuComparison} />
             )}
           </FeedItems>
 
@@ -227,24 +210,17 @@ export const HomePage = (props: HomeViewModel) => {
           <FeedItems>
             {bestPerformanceCpu != null && (
               <ProductFeedItem
-                productType={ProductType.Cpu}
                 product={bestPerformanceCpu}
                 tag={ProductFeedTag.GreatPerformance}
               />
             )}
             {bestValueCpu != null && (
               <ProductFeedItem
-                productType={ProductType.Cpu}
                 product={bestValueCpu}
                 tag={ProductFeedTag.GreatValue}
               />
             )}
-            {randomCpu != null && (
-              <ProductFeedItem
-                productType={ProductType.Cpu}
-                product={randomCpu}
-              />
-            )}
+            {randomCpu != null && <ProductFeedItem product={randomCpu} />}
           </FeedItems>
 
           <FeedLinks>

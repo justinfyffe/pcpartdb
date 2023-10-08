@@ -1,4 +1,4 @@
-import { formatCpuCompany } from '@pcpartdb/shared';
+import { formatCompanyName } from '@pcpartdb/shared';
 import { Checkbox } from 'packages/website/src/client/shared/components/Checkbox/Checkbox';
 import { classNames } from 'packages/website/src/client/shared/ui/classNames';
 import React, {
@@ -67,7 +67,7 @@ const ListFilterComnpanyItem: FunctionComponent<ListFilterComnpanyItemProps> = (
     () => query.filter?.company?.includes(company) ?? false,
     [company, query.filter?.company],
   );
-  const name = useMemo(() => formatCpuCompany(company), [company]);
+  const name = useMemo(() => formatCompanyName(company), [company]);
 
   return (
     <Checkbox
