@@ -29,7 +29,7 @@ export async function scrapeGpu(options: ScrapeGpuOptions) {
     const response = await scrapeSource(source, ctx);
     hasRetailModels = response?.hasRetailModels ?? hasRetailModels;
     scrapedProduct = deepmerge(
-      { arrayMerge: ArrayMerge.UseTarget },
+      { arrayMerge: ArrayMerge.Combine },
       scrapedProduct,
       response.product,
     );
@@ -38,7 +38,7 @@ export async function scrapeGpu(options: ScrapeGpuOptions) {
   if (chipset != null) {
     const response = await scrapeChipset({ sourceProduct: chipset }, ctx);
     scrapedProduct = deepmerge(
-      { arrayMerge: ArrayMerge.UseTarget },
+      { arrayMerge: ArrayMerge.Combine },
       scrapedProduct,
       response.product,
     );

@@ -24,7 +24,7 @@ export async function scrapeCpu(options: ScrapeCpuOptions) {
     const source = sources[i];
     const response = await scrapeSource(source, ctx);
     scrapedProduct = deepmerge(
-      { arrayMerge: ArrayMerge.UseTarget },
+      { arrayMerge: ArrayMerge.Combine },
       scrapedProduct,
       response.product,
     );
