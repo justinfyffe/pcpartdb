@@ -44,7 +44,9 @@ interface ListOptions {
   childrenFields?: ProductFieldKey[];
 
   includeAdditionalData?: boolean;
+  includeSources?: boolean;
   includeImages?: boolean;
+  includeBenchmarks?: boolean;
   includeRanks?: ProductRankKey[];
 }
 
@@ -103,6 +105,15 @@ export class ProductService {
     private updateService: ProductUpdateService,
   ) {}
 
+  async count(request: ListProductsRequest, ctx: Context) {
+    validate(request, listProductsRequestSchema);
+
+    const { productType, query } = request;
+    const count = await this.repository.count({ ...query, productType }, ctx);
+
+    return count;
+  }
+
   async list(
     request: ListProductsRequest,
     options: ListOptions,
@@ -110,15 +121,20 @@ export class ProductService {
   ): Promise<ListProductsResponse> {
     validate(request, listProductsRequestSchema);
 
+    const includeBenchmarks = options?.includeBenchmarks ?? false;
+    const includeImages = options?.includeImages ?? false;
+    const includeSources =
+      (options?.includeSources ?? false) && (ctx.user?.isStaff ?? false);
+
     const { productType, query } = request;
     const productEntities = await this.repository.list(
       {
         ...query,
         ...options,
         productType,
-        includeBenchmarks: false,
-        includeImages: options?.includeImages ?? false,
-        includeSources: ctx.user?.isStaff ?? false,
+        includeBenchmarks,
+        includeImages,
+        includeSources,
         includeParent: false,
         includeChildren: false,
       },
@@ -139,7 +155,7 @@ export class ProductService {
       fields,
       parentFields,
       childrenFields,
-      includeSources: ctx.user?.isStaff,
+      includeSources,
       includeAutomation: ctx.user?.isStaff,
     });
 
@@ -168,11 +184,11 @@ export class ProductService {
     const includeChildren = options.includeChildren ?? false;
     const includeImages = options.includeImages ?? false;
     const includeSources =
-      (options.includeSources ?? false) && ctx.user?.isStaff;
+      (options.includeSources ?? false) && (ctx.user?.isStaff ?? false);
     const includeUpdates =
-      (options.includeUpdates ?? false) && ctx.user?.isStaff;
+      (options.includeUpdates ?? false) && (ctx.user?.isStaff ?? false);
     const includeAutomation =
-      (options.includeAutomation ?? false) && ctx.user?.isStaff;
+      (options.includeAutomation ?? false) && (ctx.user?.isStaff ?? false);
     const includeBenchmarks = options.includeBenchmarks ?? false;
 
     const parentFields =

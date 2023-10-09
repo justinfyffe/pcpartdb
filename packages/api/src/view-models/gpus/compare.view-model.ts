@@ -80,7 +80,7 @@ export class CompareGpusViewModelService {
       {
         productType: ProductType.Gpu,
         query: {
-          filter: { chipsetId: chipset1.id, isRetailModel: true },
+          filter: { chipsetId: chipset1.id },
           orderBy: { sort: ListSort.Name },
         },
       },
@@ -93,7 +93,7 @@ export class CompareGpusViewModelService {
       {
         productType: ProductType.Gpu,
         query: {
-          filter: { chipsetId: chipset2.id, isRetailModel: true },
+          filter: { chipsetId: chipset2.id },
           orderBy: { sort: ListSort.Name },
         },
       },

@@ -30,15 +30,13 @@ export class ProductAutocompleteRepository {
     // Get results based on search relevancy.
     const priorityProducts = await db.product.findMany({
       where: {
-        AND: [
-          { productType },
-          { parentId: null },
-          { searchText: { search: tokens.join(' & '), mode: 'insensitive' } },
-        ],
+        productType,
+        parentId: null,
+        searchText: { search: tokens.join(' & '), mode: 'insensitive' },
       },
       include: {
-        cpuFields: true,
-        gpuFields: true,
+        cpuFields: productType === ProductType.Cpu,
+        gpuFields: productType === ProductType.Gpu,
       },
       orderBy: {
         _relevance: {
@@ -60,7 +58,7 @@ export class ProductAutocompleteRepository {
       `;
     } else {
       fillerProducts = await db.product.findMany({
-        where: { AND: [{ productType }, { parentId: null }] },
+        where: { productType, parentId: null },
         take: AUTOCOMPLETE_LIMIT,
       });
     }

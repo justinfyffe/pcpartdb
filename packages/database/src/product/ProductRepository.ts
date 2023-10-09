@@ -81,19 +81,19 @@ export class ProductRepository {
   async findBySlug(options: FindBySlugOptions, config?: RepositoryConfig) {
     const db = config?.trx ?? this.db;
 
+    const productType = options.productType;
     const includeParent = options.includeParent ?? false;
     const includeChildren = options.includeChildren ?? false;
     const includeImages = options.includeImages ?? false;
     const includeSources = options.includeSources ?? false;
     const includeBenchmarks = options.includeBenchmarks ?? false;
 
-    const productType = options.productType;
     const slug = options.slug;
     return await db.product.findUnique({
       where: { productType_slug: { productType, slug } },
       include: {
-        cpuFields: true,
-        gpuFields: true,
+        cpuFields: productType === ProductType.Cpu,
+        gpuFields: productType === ProductType.Gpu,
         benchmarks: includeBenchmarks,
         sources: includeSources,
         parent: includeParent
@@ -111,12 +111,7 @@ export class ProductRepository {
     const db = config?.trx ?? this.db;
 
     return await db.product.count({
-      where: {
-        AND: [
-          { productType: options.productType },
-          { ...this.generateWhere(options.productType, options.filter) },
-        ],
-      },
+      where: { ...this.generateWhere(options.productType, options.filter) },
     });
   }
 
@@ -139,26 +134,27 @@ export class ProductRepository {
   }
 
   async list(options: ListOptions, config?: RepositoryConfig) {
+    const productType = options.productType;
+    const includeBenchmarks = options.includeBenchmarks ?? false;
+    const includeSources = options.includeBenchmarks ?? false;
+    const includeParent = options.includeParent ?? false;
+    const includeChildren = options.includeChildren ?? false;
+    const includeImages = options.includeImages ?? false;
+
     const db = config?.trx ?? this.db;
     return await db.product.findMany({
-      where: {
-        AND: [
-          { productType: options.productType },
-          { ...this.generateWhere(options.productType, options.filter) },
-        ],
-      },
-      orderBy: this.generateOrderBy(options.productType, options.orderBy),
+      where: { ...this.generateWhere(productType, options.filter) },
+      orderBy: this.generateOrderBy(productType, options.orderBy),
       skip: options.pagination?.offset,
       take: options.pagination?.limit,
       include: {
-        cpuFields: true,
-        gpuFields: true,
-        benchmarks: options.includeBenchmarks ?? false,
-        sources: options.includeSources ?? false,
-        parent: options.includeParent ?? false,
-        children: options.includeChildren ?? false,
-        images:
-          options.includeImages ?? false ? { include: { image: true } } : false,
+        cpuFields: productType === ProductType.Cpu,
+        gpuFields: productType === ProductType.Gpu,
+        benchmarks: includeBenchmarks,
+        sources: includeSources,
+        parent: includeParent,
+        children: includeChildren,
+        images: includeImages ? { include: { image: true } } : false,
       },
     });
   }
@@ -318,15 +314,18 @@ export class ProductRepository {
   ): Prisma.ProductWhereInput {
     switch (productType) {
       case ProductType.Cpu:
-        return this.generateCpuWhere(filter as ListCpusFilter);
+        return this.generateCpuWhere(productType, filter as ListCpusFilter);
       case ProductType.Gpu:
-        return this.generateGpuWhere(filter as ListGpusFilter);
+        return this.generateGpuWhere(productType, filter as ListGpusFilter);
       default:
         throw new Error('Invalid product type');
     }
   }
 
-  private generateCpuWhere(filter?: ListCpusFilter): Prisma.ProductWhereInput {
+  private generateCpuWhere(
+    productType: ProductType,
+    filter?: ListCpusFilter,
+  ): Prisma.ProductWhereInput {
     const performanceRated = filter?.performanceRated ?? false;
     const valueRated = filter?.valueRated;
     const maxPerformanceScore = filter?.maxPerformanceScore;
@@ -389,17 +388,25 @@ export class ProductRepository {
 
     return {
       AND: [
-        { id: idWhere },
-        { company: companyWhere },
-        { cpuFields: { marketSegmentValue: segmentsWhere } },
-        { cpuFields: { performanceRatingValue: performanceWhere } },
-        { cpuFields: { performancePerMsrpValue: valueWhere } },
+        {
+          productType,
+          id: idWhere,
+          company: companyWhere,
+          cpuFields: {
+            performanceRatingValue: performanceWhere,
+            performancePerMsrpValue: valueWhere,
+            marketSegmentValue: segmentsWhere,
+          },
+        },
         { OR: yearWhere },
       ],
     };
   }
 
-  private generateGpuWhere(filter?: ListGpusFilter): Prisma.ProductWhereInput {
+  private generateGpuWhere(
+    productType: ProductType,
+    filter?: ListGpusFilter,
+  ): Prisma.ProductWhereInput {
     const chipsetId = filter?.chipsetId;
     const isChipset = filter?.isChipset ?? false;
     const isRetailModel = filter?.isRetailModel ?? false;
@@ -476,12 +483,17 @@ export class ProductRepository {
 
     return {
       AND: [
-        { id: idWhere },
-        { parentId: parentWhere },
-        { company: companyWhere },
-        { gpuFields: { marketSegmentValue: segmentWhere } },
-        { gpuFields: { performanceRatingValue: performanceWhere } },
-        { gpuFields: { performancePerMsrpValue: valueWhere } },
+        {
+          productType,
+          id: idWhere,
+          parentId: parentWhere,
+          company: companyWhere,
+          gpuFields: {
+            performanceRatingValue: performanceWhere,
+            performancePerMsrpValue: valueWhere,
+            marketSegmentValue: segmentWhere,
+          },
+        },
         { OR: yearWhere },
       ],
     };
@@ -507,7 +519,7 @@ export class ProductRepository {
     if (sort === ListSort.Name) {
       // Default ASC
       const order = orderBy?.order ?? ListOrder.Asc;
-      return [{ company: { sort: order, nulls: 'last' } }, { name: order }];
+      return [{ searchText: order }];
     }
 
     if (sort === ListSort.ReleaseDate) {

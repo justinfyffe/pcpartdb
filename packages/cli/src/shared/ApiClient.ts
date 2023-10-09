@@ -86,6 +86,7 @@ export class ApiClient {
           url,
           data,
           headers: {
+            'x-cloudflare-bypass': process.env.CLOUDFLARE_BYPASS_KEY,
             authorization: `Bearer ${this.apiKey}`,
           },
         });

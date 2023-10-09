@@ -80,15 +80,13 @@ export class ViewCpuViewModelService {
     );
     const relativeValueCpus = await this.getRelativeValueCpus(cpu, ctx);
 
-    const totalPerformanceCpusResponse = await this.productService.list(
+    const totalPerformanceCpus = await this.productService.count(
       {
         productType: ProductType.Cpu,
         query: { filter: { performanceRated: true } },
       },
-      {},
       ctx,
     );
-    const totalPerformanceCpus = totalPerformanceCpusResponse.total;
 
     const bestPerformanceCpusResponse = await this.productService.list(
       {

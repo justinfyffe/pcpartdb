@@ -199,13 +199,14 @@ export class HomeViewModelService {
         query: {
           filter: {
             ...filter,
+            isChipset: true,
             performanceRated: true,
           },
           orderBy: { sort: ListSort.PerformanceRating },
           pagination: { limit: chooseFrom },
         },
       },
-      { includeImages: true },
+      {},
       ctx,
     );
     const results = response.results;
@@ -225,13 +226,14 @@ export class HomeViewModelService {
         query: {
           filter: {
             ...filter,
+            isChipset: true,
             valueRated: true,
           },
           orderBy: { sort: ListSort.PerformancePerMsrp },
           pagination: { limit: chooseFrom },
         },
       },
-      { includeImages: true },
+      {},
       ctx,
     );
     const results = response.results;
@@ -257,7 +259,7 @@ export class HomeViewModelService {
           pagination: { limit: chooseFrom },
         },
       },
-      { includeImages: true },
+      {},
       ctx,
     );
     const results = response.results;
@@ -283,7 +285,7 @@ export class HomeViewModelService {
           pagination: { limit: chooseFrom },
         },
       },
-      { includeImages: true },
+      {},
       ctx,
     );
     const results = response.results;

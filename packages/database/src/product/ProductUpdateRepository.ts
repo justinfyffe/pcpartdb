@@ -53,9 +53,7 @@ export class ProductUpdateRepository {
 
     const trx = config?.trx ?? this.db;
     return await trx.productUpdate.findMany({
-      where: {
-        AND: [{ productId }, { status: ProductUpdateStatus.Pending }],
-      },
+      where: { productId, status: ProductUpdateStatus.Pending },
     });
   }
 
@@ -71,11 +69,9 @@ export class ProductUpdateRepository {
     const trx = config?.trx ?? this.db;
     return await trx.productUpdate.count({
       where: {
-        AND: [
-          { productType },
-          { subProductType },
-          { status: ProductUpdateStatus.Pending },
-        ],
+        productType,
+        subProductType,
+        status: ProductUpdateStatus.Pending,
       },
     });
   }
@@ -139,12 +135,10 @@ export class ProductUpdateRepository {
     }
 
     return {
-      AND: [
-        { productType: productTypeWhere },
-        { subProductType: subProductTypeWhere },
-        { status: statusWhere },
-        { productName: productNameWhere },
-      ],
+      productType: productTypeWhere,
+      subProductType: subProductTypeWhere,
+      status: statusWhere,
+      productName: productNameWhere,
     };
   }
 }

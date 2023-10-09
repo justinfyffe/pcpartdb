@@ -191,9 +191,7 @@ export class AutomationSourceRepository {
     const priorityResults = await trx.automationSource.findMany({
       where: {
         AND: [
-          { productType },
-          { sourceKey },
-          { relatedProductId: { equals: null } },
+          { productType, sourceKey, relatedProductId: { equals: null } },
           {
             OR: [
               {
@@ -265,7 +263,7 @@ export class AutomationSourceRepository {
     const db = config?.trx ?? this.db;
     return (
       (await db.productSource.count({
-        where: { AND: [{ sourceKey: key }, { sourceUrl: url }] },
+        where: { sourceKey: key, sourceUrl: url },
       })) > 0
     );
   }
@@ -301,12 +299,10 @@ export class AutomationSourceRepository {
     }
 
     return {
-      AND: [
-        { productType: productTypeWhere },
-        { archived: archivedWhere },
-        { relatedProductId: relatedProductIdwhere },
-        { sourceName: sourceNameWhere },
-      ],
+      productType: productTypeWhere,
+      archived: archivedWhere,
+      relatedProductId: relatedProductIdwhere,
+      sourceName: sourceNameWhere,
     };
   }
 }

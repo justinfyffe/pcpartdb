@@ -86,16 +86,13 @@ export class ViewGpuViewModelService {
       (gpu.parent || gpu) as GpuProduct,
       ctx,
     );
-
-    const totalPerformanceGpusResponse = await this.productService.list(
+    const totalPerformanceGpus = await this.productService.count(
       {
         productType: ProductType.Gpu,
         query: { filter: { isChipset: true, performanceRated: true } },
       },
-      {},
       ctx,
     );
-    const totalPerformanceGpus = totalPerformanceGpusResponse.total;
 
     const bestPerformanceSegmentGpusResponse = await this.productService.list(
       {
