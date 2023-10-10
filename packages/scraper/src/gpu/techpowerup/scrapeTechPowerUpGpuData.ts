@@ -648,14 +648,18 @@ function getProductionStatus(
   ctx?: ScraperContext,
 ): GpuField<ProductionStatus> {
   const values = tokenizeSpecValues($, 'Production');
-  const production = values?.[0] ?? null;
+  const releaseDateValues = tokenizeSpecValues($, 'Release Date');
+  const production = values?.[0]?.toLowerCase() ?? null;
+  const releaseDate = releaseDateValues?.[0]?.toLowerCase() ?? null;
 
   let raw: ProductionStatus = null;
-  if (production === 'Active') {
+  if (releaseDate === 'never released') {
+    raw = ProductionStatus.Unreleased;
+  } else if (production === 'active') {
     raw = ProductionStatus.Active;
-  } else if (production === 'End-of-life') {
+  } else if (production === 'dnd-of-life') {
     raw = ProductionStatus.EndOfLife;
-  } else if (production === 'Unreleased') {
+  } else if (production === 'unreleased') {
     raw = ProductionStatus.Unreleased;
   }
   const formatted = raw != null ? formatProductionStatus(raw) : null;

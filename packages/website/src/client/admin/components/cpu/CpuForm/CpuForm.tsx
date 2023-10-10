@@ -334,7 +334,7 @@ export const CpuForm: FunctionComponent<CpuFormProps> = (props) => {
                   },
                   {
                     label: formatMarketSegment(MarketSegment.Embedded),
-                    value: MarketSegment.Server,
+                    value: MarketSegment.Embedded,
                   },
                 ]}
                 formatter={(value) =>
