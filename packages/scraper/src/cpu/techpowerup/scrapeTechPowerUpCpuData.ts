@@ -8,7 +8,6 @@ import {
   DateFormat,
   formatBooleanValue,
   formatCompanyName,
-  formatDate,
   formatMarketSegment,
   formatProductField,
   FormatProductFieldOptions,
@@ -1044,49 +1043,50 @@ function getReleaseDate($: cheerio.CheerioAPI, ctx?: ScraperContext) {
   const availabilityValues = tokenizeMultiLine($, 'Availability');
   const releaseDateValues = tokenizeMultiLine($, 'Release Date');
 
-  let value: string = null;
+  const availability = availabilityValues?.[0];
+  const releaseDate = releaseDateValues?.[0];
+
+  let raw: string = null;
   let format: DateFormat = null;
 
-  if (value == null) {
-    value = parseDate(availabilityValues?.[0], 'MMM do, yyyy');
-    format = value != null ? DateFormat.QuarterYear : null;
+  if (raw == null) {
+    raw = parseDate(availability, 'MMM do, yyyy');
+    format = raw != null ? DateFormat.QuarterYear : null;
   }
-  if (value == null) {
-    value = parseDate(releaseDateValues?.[0], 'MMM do, yyyy');
-    format = value != null ? DateFormat.QuarterYear : null;
-  }
-
-  if (value == null) {
-    value = parseDate(availabilityValues?.[0], 'MMM yyyy', {
-      endOfMonth: true,
-    });
-    format = value != null ? DateFormat.QuarterYear : null;
-  }
-  if (value == null) {
-    value = parseDate(releaseDateValues?.[0], 'MMM yyyy', {
-      endOfMonth: true,
-    });
-    format = value != null ? DateFormat.QuarterYear : null;
+  if (raw == null) {
+    raw = parseDate(releaseDate, 'MMM do, yyyy');
+    format = raw != null ? DateFormat.QuarterYear : null;
   }
 
-  if (value == null) {
-    value = parseDate(availabilityValues?.[0], 'yyyy', {
+  if (raw == null) {
+    raw = parseDate(availability, 'MMM yyyy', {
+      endOfMonth: true,
+    });
+    format = raw != null ? DateFormat.QuarterYear : null;
+  }
+  if (raw == null) {
+    raw = parseDate(releaseDate, 'MMM yyyy', {
+      endOfMonth: true,
+    });
+    format = raw != null ? DateFormat.QuarterYear : null;
+  }
+
+  if (raw == null) {
+    raw = parseDate(availability, 'yyyy', {
       endOfYear: true,
     });
-    format = value != null ? DateFormat.Year : null;
+    format = raw != null ? DateFormat.Year : null;
   }
-  if (value == null) {
-    value = parseDate(releaseDateValues?.[0], 'yyyy', { endOfYear: true });
-    format = value != null ? DateFormat.Year : null;
+  if (raw == null) {
+    raw = parseDate(releaseDate, 'yyyy', { endOfYear: true });
+    format = raw != null ? DateFormat.Year : null;
   }
-  const formatted = formatDate(value, { format });
 
-  return createCpuField({
-    field: 'releaseDate',
-    raw: value,
-    formatted,
-    ctx,
+  const formatted = formatProductField(ProductType.Gpu, 'releaseDate', raw, {
+    dateFormat: format,
   });
+
+  return createCpuField({ field: 'releaseDate', raw, formatted, ctx });
 }
 
 function getSocket($: cheerio.CheerioAPI, ctx?: ScraperContext) {

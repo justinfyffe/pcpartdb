@@ -657,7 +657,7 @@ function getProductionStatus(
     raw = ProductionStatus.Unreleased;
   } else if (production === 'active') {
     raw = ProductionStatus.Active;
-  } else if (production === 'dnd-of-life') {
+  } else if (production === 'end-of-life') {
     raw = ProductionStatus.EndOfLife;
   } else if (production === 'unreleased') {
     raw = ProductionStatus.Unreleased;
@@ -692,39 +692,42 @@ function getReleaseDate(
   const availabilityValues = tokenizeSpecValues($, 'Availability');
   const releaseDateValues = tokenizeSpecValues($, 'Release Date');
 
+  const availability = availabilityValues?.[0];
+  const releaseDate = releaseDateValues?.[0];
+
   let raw: string = null;
   let format: DateFormat = null;
 
   if (raw == null) {
-    raw = parseDateValue(availabilityValues?.[0], 'MMM do, yyyy');
+    raw = parseDateValue(availability, 'MMM do, yyyy');
     format = raw != null ? DateFormat.QuarterYear : null;
   }
   if (raw == null) {
-    raw = parseDateValue(releaseDateValues?.[0], 'MMM do, yyyy');
+    raw = parseDateValue(releaseDate, 'MMM do, yyyy');
     format = raw != null ? DateFormat.QuarterYear : null;
   }
 
   if (raw == null) {
-    raw = parseDateValue(availabilityValues?.[0], 'MMM yyyy', {
+    raw = parseDateValue(availability, 'MMM yyyy', {
       endOfMonth: true,
     });
     format = raw != null ? DateFormat.QuarterYear : null;
   }
   if (raw == null) {
-    raw = parseDateValue(releaseDateValues?.[0], 'MMM yyyy', {
+    raw = parseDateValue(releaseDate, 'MMM yyyy', {
       endOfMonth: true,
     });
     format = raw != null ? DateFormat.QuarterYear : null;
   }
 
   if (raw == null) {
-    raw = parseDateValue(availabilityValues?.[0], 'yyyy', {
+    raw = parseDateValue(availability, 'yyyy', {
       endOfYear: true,
     });
     format = raw != null ? DateFormat.Year : null;
   }
   if (raw == null) {
-    raw = parseDateValue(releaseDateValues?.[0], 'yyyy', { endOfYear: true });
+    raw = parseDateValue(releaseDate, 'yyyy', { endOfYear: true });
     format = raw != null ? DateFormat.Year : null;
   }
 
