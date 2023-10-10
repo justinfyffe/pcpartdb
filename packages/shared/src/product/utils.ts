@@ -162,20 +162,20 @@ export function canAutoUpdateProductField(field: ProductField) {
   return field?.meta?.autoUpdate ?? true;
 }
 
+const KEYS_TO_SKIP = [
+  'root.affiliateUrl',
+  'root.company',
+  'root.name',
+  'root.otherNames',
+  'root.searchText',
+  'root.slug',
+
+  'root.benchmarks',
+];
 export function mergeProducts(original: Product, updated: Product): Product {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const canMergeStrategy = (key: string, source: any, obj: any) => {
-    if (key === 'root.name') {
-      // Product names are not updated.
-      return false;
-    } else if (key === 'root.slug') {
-      // Slugs are not updated
-      return false;
-    } else if (key === 'root.company') {
-      // Company shouldn't be updated
-      return false;
-    } else if (key === 'root.benchmarks') {
-      // Product Benchmarks are merged elsewhere
+    if (KEYS_TO_SKIP.includes(key)) {
       return false;
     }
 

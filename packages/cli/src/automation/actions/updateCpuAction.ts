@@ -183,9 +183,14 @@ async function updateBenchmarks(
 function mergeCpus(originalCpu: CpuProduct, scrapedCpu: CpuProduct) {
   const result = mergeProducts(originalCpu, scrapedCpu) as CpuProduct;
 
-  // Reset name and slug as these might have been overwritten
+  // Reset as these might have been overwritten
   result.name = originalCpu.name;
   result.slug = originalCpu.slug;
+  result.company = originalCpu.company;
+  result.otherNames = originalCpu.otherNames;
+  result.searchText = originalCpu.searchText;
+  result.searchText = originalCpu.searchText;
+  result.affiliateUrl = originalCpu.affiliateUrl;
 
   return result;
 }

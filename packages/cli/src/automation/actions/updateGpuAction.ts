@@ -181,9 +181,14 @@ async function updateBenchmarks(
 function mergeGpus(originalGpu: GpuProduct, scrapedGpu: GpuProduct) {
   const result = mergeProducts(originalGpu, scrapedGpu) as GpuProduct;
 
-  // Reset name and slug as these might have been overwritten
+  // Reset these might have been overwritten
   result.name = originalGpu.name;
   result.slug = originalGpu.slug;
+  result.company = originalGpu.company;
+  result.otherNames = originalGpu.otherNames;
+  result.searchText = originalGpu.searchText;
+  result.searchText = originalGpu.searchText;
+  result.affiliateUrl = originalGpu.affiliateUrl;
 
   return result;
 }

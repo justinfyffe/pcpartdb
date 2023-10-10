@@ -6,6 +6,7 @@ import {
   CreateProductUpdateRequest,
   formatProductName,
   generateCpuSlug,
+  generateProductOtherNames,
   parseProductName,
   ProductSource,
   ProductType,
@@ -42,6 +43,9 @@ export async function createCpuAction(
         cpu.company = company;
       }
     }
+
+    cpu.otherNames = generateProductOtherNames({ company, name });
+    cpu.searchText = formatProductName(cpu);
   }
 
   // Generate slug, new CPU didn't have it yet.

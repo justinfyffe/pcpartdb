@@ -5,6 +5,7 @@ import {
   CreateProductUpdateRequest,
   formatProductName,
   generateGpuSlug,
+  generateProductOtherNames,
   GetProductRequest,
   GpuProduct,
   parseProductName,
@@ -50,6 +51,8 @@ export async function createGpuAction(
         gpu.company = company;
       }
     }
+    gpu.otherNames = generateProductOtherNames({ company, name });
+    gpu.searchText = formatProductName(gpu);
   }
 
   // Generate slug, new GPU doesn't have one yet.

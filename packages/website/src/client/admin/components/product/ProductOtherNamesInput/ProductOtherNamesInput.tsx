@@ -1,8 +1,4 @@
-import {
-  CpuField,
-  generateProductOtherNames,
-  productFieldFormattedValue,
-} from '@pcpartdb/shared';
+import { generateProductOtherNames } from '@pcpartdb/shared';
 import { Button } from 'packages/website/src/client/shared/components/Button/Button';
 import { ChipsInput } from 'packages/website/src/client/shared/components/Input/ChipsInput';
 import React, { forwardRef, useCallback } from 'react';
@@ -23,14 +19,14 @@ export const ProductOtherNamesInput = forwardRef<
   const { control, onChange, value } = props;
 
   const name: string = useWatch({ control, name: 'name' });
-  const company: CpuField<string> = useWatch({
+  const company: string = useWatch({
     control,
     name: 'company',
   });
 
   const handleGenerate = useCallback(() => {
     const otherNames = generateProductOtherNames({
-      company: productFieldFormattedValue(company),
+      company,
       name,
     });
     onChange?.(otherNames);

@@ -1,8 +1,4 @@
-import {
-  generateProductSlug,
-  GpuField,
-  productFieldRawValue,
-} from '@pcpartdb/shared';
+import { generateProductSlug } from '@pcpartdb/shared';
 import { Button } from 'packages/website/src/client/shared/components/Button/Button';
 import React, { forwardRef, useCallback } from 'react';
 import { Control, useWatch } from 'react-hook-form';
@@ -23,7 +19,7 @@ export const ProductSlugInput = forwardRef<
   const { control, onChange, value } = props;
 
   const name: string = useWatch({ control, name: 'name' });
-  const company: GpuField<string> = useWatch({
+  const company: string = useWatch({
     control,
     name: 'company',
   });
@@ -31,7 +27,7 @@ export const ProductSlugInput = forwardRef<
   const handleGenerate = useCallback(() => {
     const slug = generateProductSlug({
       name,
-      company: productFieldRawValue(company),
+      company,
     });
     onChange?.(slug);
   }, [onChange, name, company]);

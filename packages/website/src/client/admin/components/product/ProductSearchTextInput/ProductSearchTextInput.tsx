@@ -1,8 +1,4 @@
-import {
-  generateProductSearchableText,
-  ProductField,
-  productFieldFormattedValue,
-} from '@pcpartdb/shared';
+import { generateProductSearchableText } from '@pcpartdb/shared';
 import { Button } from 'packages/website/src/client/shared/components/Button/Button';
 import React, { forwardRef, useCallback } from 'react';
 import { Control, useWatch } from 'react-hook-form';
@@ -23,14 +19,14 @@ export const ProductSearchTextInput = forwardRef<
   const { control, onChange, value } = props;
 
   const name: string = useWatch({ control, name: 'name' });
-  const company: ProductField<string> = useWatch({
+  const company: string = useWatch({
     control,
     name: 'company',
   });
 
   const handleGenerate = useCallback(() => {
     const searchText = generateProductSearchableText({
-      company: productFieldFormattedValue(company),
+      company,
       name,
     });
     onChange?.(searchText);
