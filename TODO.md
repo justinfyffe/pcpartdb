@@ -1,37 +1,15 @@
 Primary Focus:
+- More Benchmarks Project
+
+Secondary Focus:
 - Finish Automation
   - Finish GPU Queue
   - Finish CPU Queue
-  - Scraping
-    - [CPU] Create scraper for Intel Website
-      - Don't get sources, just accept regular input
-      - Ex: https://www.intel.com/content/www/us/en/products/sku/80267/intel-atom-processor-z3795-2m-cache-up-to-2-39-ghz/specifications.html
-      - Ex: https://ark.intel.com/content/www/us/en/ark/products/75193/intel-celeron-processor-1005m-2m-cache-1-90-ghz.html
-    - [CPU] Create scraper for AMD website
-      - Ex: https://www.amd.com/en/products/apu/amd-ryzen-5-pro-6650h
-Secondary Focus:
-- Tech Debt
-  - Use Kysely for database querying
+
 When Bored:
-- Functionality
-  - Make autocomplete stricter, not looser when searching?
-- Tech Debt
-  - Remove barrel files
-  - Minimize controllers (move validations to services)
-  - Generalize product list objects
-  - Simplify UI components
-- Bug fixes
-  - check debounce on autocomplete
-  - non-updated data being included when checking updates
-    - "System Shared" for number values
-    - maybe store string, formatted value, and then a separate sort value
-
-CLOUDFLARE SETUP:
-- Add header for whitelisting
-
-PERFORMANCE TODO:
-- getAdditionalData is slow on compare pages (400-800ms)
-- home page, each row takes about 150-200ms
+- Make autocomplete stricter, not looser when searching?
+- Explore kysely for querying
+- Fix debounce on autocomplete
 
 Admin Improvements
 - Improved data auditing
