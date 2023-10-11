@@ -48,6 +48,7 @@ export enum NumericUnit {
 }
 
 export enum PixelFillRateUnit {
+  mpixelps = 'mpixelps',
   gpixelps = 'gpixelps',
 }
 
@@ -65,6 +66,7 @@ export enum SquareUnit {
 }
 
 export enum TextureFillRateUnit {
+  mtexelps = 'mtexelps',
   gtexelps = 'gtexelps',
 }
 
@@ -195,10 +197,12 @@ const NUMERIC_UNIT_FORMATS: Record<NumericUnit, string> = {
 };
 
 const PIXEL_FILL_RATE_UNIT_MULTIPLIERS: Record<PixelFillRateUnit, number> = {
+  [PixelFillRateUnit.mpixelps]: 1_000_000,
   [PixelFillRateUnit.gpixelps]: 1_000_000_000,
 };
 
 const PIXEL_FILL_RATE_UNIT_FORMATS: Record<PixelFillRateUnit, string> = {
+  [PixelFillRateUnit.mpixelps]: 'MPixel/s',
   [PixelFillRateUnit.gpixelps]: 'GPixel/s',
 };
 
@@ -240,10 +244,12 @@ const TEMPERATURE_UNIT_MULTIPLIERS: Record<TemperatureUnit, number> = {
 
 const TEXTURE_FILL_RATE_UNIT_MULTIPLIERS: Record<TextureFillRateUnit, number> =
   {
+    [TextureFillRateUnit.mtexelps]: 1_000_000,
     [TextureFillRateUnit.gtexelps]: 1_000_000_000,
   };
 
 const TEXTURE_FILL_RATE_UNIT_FORMATS: Record<TextureFillRateUnit, string> = {
+  [TextureFillRateUnit.mtexelps]: 'MTexel/s',
   [TextureFillRateUnit.gtexelps]: 'GTexel/s',
 };
 
@@ -296,6 +302,7 @@ function getUnitMultiplier(unit: MeasurementUnit) {
       return MULTIPLIER_MULTIPLIERS[unit];
     case NumericUnit.million:
       return NUMERIC_UNIT_MULTIPLIERS[unit];
+    case PixelFillRateUnit.mpixelps:
     case PixelFillRateUnit.gpixelps:
       return PIXEL_FILL_RATE_UNIT_MULTIPLIERS[unit];
     case SquareUnit.nm2:
@@ -310,6 +317,7 @@ function getUnitMultiplier(unit: MeasurementUnit) {
     case TemperatureUnit.c:
     case TemperatureUnit.f:
       return TEMPERATURE_UNIT_MULTIPLIERS[unit];
+    case TextureFillRateUnit.mtexelps:
     case TextureFillRateUnit.gtexelps:
       return TEXTURE_FILL_RATE_UNIT_MULTIPLIERS[unit];
     case WattageUnit.w:
@@ -389,6 +397,7 @@ export function getUnitFormat(unit: MeasurementUnit) {
       return MULTIPLIER_FORMATS[unit];
     case NumericUnit.million:
       return NUMERIC_UNIT_FORMATS[unit];
+    case PixelFillRateUnit.mpixelps:
     case PixelFillRateUnit.gpixelps:
       return PIXEL_FILL_RATE_UNIT_FORMATS[unit];
     case SquareUnit.mm2:
@@ -401,6 +410,7 @@ export function getUnitFormat(unit: MeasurementUnit) {
     case TemperatureUnit.c:
     case TemperatureUnit.f:
       return TEMPERATURE_UNIT_FORMATS[unit];
+    case TextureFillRateUnit.mtexelps:
     case TextureFillRateUnit.gtexelps:
       return TEXTURE_FILL_RATE_UNIT_FORMATS[unit];
     case WattageUnit.w:

@@ -597,6 +597,7 @@ function getPixelRate(
     fieldKey: 'pixelRate',
     value: values[0] || null,
     unitMapper: {
+      'MPixel/s': PixelFillRateUnit.mpixelps,
       'GPixel/s': PixelFillRateUnit.gpixelps,
     },
   });
@@ -859,6 +860,7 @@ function getTextureRate(
     fieldKey: 'textureRate',
     value: values[0] || null,
     unitMapper: {
+      'MTexel/s': TextureFillRateUnit.mtexelps,
       'GTexel/s': TextureFillRateUnit.gtexelps,
     },
   });
