@@ -295,6 +295,10 @@ export function formatCompanyName(company: string) {
 }
 
 export function formatMarketSegment(segment: MarketSegment) {
+  if (segment == null) {
+    return null;
+  }
+
   switch (segment) {
     case MarketSegment.Desktop:
       return 'Desktop';
@@ -314,6 +318,10 @@ export function formatMarketSegment(segment: MarketSegment) {
 }
 
 export function formatProductionStatus(value: ProductionStatus) {
+  if (value == null) {
+    return null;
+  }
+
   switch (value) {
     case ProductionStatus.Active:
       return 'Active';

@@ -74,6 +74,7 @@ export async function automationCommand(args: AutomationCommandArgs) {
         console.log(
           'Encountered error when running. Sleeping for 5 minutes and trying again.',
         );
+        console.error(error);
         await sleep(FIVE_MINUTES_MS);
       } finally {
         console.log(
