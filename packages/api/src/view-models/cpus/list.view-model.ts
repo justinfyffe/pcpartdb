@@ -8,13 +8,14 @@ import {
   listProductsRequestSchema,
   ProductType,
 } from '@pcpartdb/shared';
+import { Database } from '../../database';
 import { ProductService } from '../../product/product.service';
 import { Context } from '../../shared/context';
 import { validate } from '../../shared/validation/validate';
 
 @Injectable()
 export class ListCpusViewModelService {
-  constructor(private productService: ProductService) {}
+  constructor(private db: Database, private productService: ProductService) {}
 
   async viewModel(request: ListCpusRequest, ctx: Context) {
     validate(request, listProductsRequestSchema);
@@ -32,15 +33,19 @@ export class ListCpusViewModelService {
       query,
     );
 
-    const response = await this.productService.list(
-      {
-        productType: ProductType.Cpu,
-        query: cpusQuery,
-      },
-      {
-        fields: ['releaseDate', 'performanceRating', 'performancePerMsrp'],
-      },
-      ctx,
+    const response = await this.db.transaction(
+      () =>
+        this.productService.list(
+          {
+            productType: ProductType.Cpu,
+            query: cpusQuery,
+          },
+          {
+            fields: ['releaseDate', 'performanceRating', 'performancePerMsrp'],
+          },
+          ctx,
+        ),
+      { ctx, isolationLevel: 'ReadUncommitted' },
     );
 
     return response;

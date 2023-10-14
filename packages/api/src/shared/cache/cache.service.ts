@@ -5,6 +5,8 @@ import * as crypto from 'crypto';
 import deterministicStringify from 'json-stringify-deterministic';
 
 export enum CacheType {
+  Home = 'home',
+
   CpusList = 'cpus_list',
   CpuProduct = 'cpu_product',
   CpuComparison = 'cpu_comparison',
@@ -17,6 +19,8 @@ export enum CacheType {
 }
 
 export const CACHE_EXPIRE_TTLS: Record<CacheType, number> = {
+  [CacheType.Home]: 1000 * 60 * 5, // 5 minutes
+
   [CacheType.CpusList]: 1000 * 60 * 5, // 5 minutes
   [CacheType.CpuProduct]: 1000 * 60 * 5, // 5 minutes
   [CacheType.CpuComparison]: 1000 * 60 * 5, // 5 minutes

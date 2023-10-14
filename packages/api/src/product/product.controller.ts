@@ -31,7 +31,7 @@ export class ProductController {
   @Get()
   async list(@Query('req') reqJson: string, @Ctx() ctx: Context) {
     const req: ListProductsRequest = JSON.parse(reqJson);
-    return await this.db.transaction(
+    const ret = await this.db.transaction(
       async () => {
         return await this.service.list(
           req,
@@ -44,6 +44,7 @@ export class ProductController {
       },
       { ctx },
     );
+    return ret;
   }
 
   @Get('autocomplete')

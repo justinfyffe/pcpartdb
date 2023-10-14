@@ -1,21 +1,3 @@
-CACHE TODO:
-- solution to having consistent data across pages?
-  - store filtered lists in cache, paginate in memory.
-  - Store all cpus in cache, filter in memory
-    - different keys for where they're used: (list page, view/compare/product page)?
-    - different keys for what fields are limited?
-  - Store all chipset gpus in cache, filter in memory
-    - different keys for where they're used: (list page, view/compare/product page)?
-    - different keys for what fields are limited?
-  - Store all retail models by gpu id in cache
-    - different keys for where they're used: (list page, view/compare/product page)?
-    - different keys for what fields are limited?
-  - build key generator that takes in an object and stringify's it deterministically
-    - e.g. { segment }
-  
-  - don't bother invalidating programmatically. use shorter ttl.
-    - should be cached somewhat frequently from bot requests
-
 Primary Focus:
 - More Benchmarks Project
 

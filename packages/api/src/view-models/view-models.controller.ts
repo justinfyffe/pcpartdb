@@ -129,13 +129,8 @@ export class ViewModelsController {
 
   @Get('cpus/list')
   async listCpus(@Query('req') reqJson: string, @Ctx() ctx: Context) {
-    return await this.db.transaction(
-      async () => {
-        const data = JSON.parse(reqJson) as ListCpusRequest;
-        return await this.listCpusViewModelService.viewModel(data, ctx);
-      },
-      { ctx, isolationLevel: 'ReadUncommitted' },
-    );
+    const data = JSON.parse(reqJson) as ListCpusRequest;
+    return await this.listCpusViewModelService.viewModel(data, ctx);
   }
 
   @Get('cpus/compare/:slug')
@@ -149,14 +144,9 @@ export class ViewModelsController {
   }
 
   @Get('gpus/list')
-  async listProducts(@Query('req') reqJson: string, @Ctx() ctx: Context) {
-    return await this.db.transaction(
-      async () => {
-        const data = JSON.parse(reqJson) as ListGpusRequest;
-        return await this.listGpusViewModelService.viewModel(data, ctx);
-      },
-      { ctx, isolationLevel: 'ReadUncommitted' },
-    );
+  async listGpus(@Query('req') reqJson: string, @Ctx() ctx: Context) {
+    const data = JSON.parse(reqJson) as ListGpusRequest;
+    return await this.listGpusViewModelService.viewModel(data, ctx);
   }
 
   @Get('gpus/compare/:slug')
@@ -179,9 +169,6 @@ export class ViewModelsController {
 
   @Get('home')
   async home(@Ctx() ctx: Context) {
-    return await this.db.transaction(
-      () => this.homeViewModelService.viewModel(ctx),
-      { ctx, isolationLevel: 'ReadUncommitted' },
-    );
+    return await this.homeViewModelService.viewModel(ctx);
   }
 }

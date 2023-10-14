@@ -8,7 +8,9 @@ import {
   ProductComparison,
   ProductType,
 } from '@pcpartdb/shared';
+import { Database } from '../../database';
 import { ProductService } from '../../product/product.service';
+import { CacheService, CacheType } from '../../shared/cache/cache.service';
 import { Context } from '../../shared/context';
 
 const RANDOMLY_CHOOSE_FROM_COMPARISON = 5;
@@ -16,10 +18,12 @@ const RANDOMLY_CHOOSE_FROM_COMPARISON = 5;
 const NVIDIA_GPU_FILTER: ListGpusFilter = {
   company: ['nvidia'],
   segment: [MarketSegment.Desktop],
+  isChipset: true,
 };
 const AMD_GPU_FILTER: ListGpusFilter = {
   company: ['amd'],
   segment: [MarketSegment.Desktop],
+  isChipset: true,
 };
 
 const INTEL_CPU_FILTER: ListCpusFilter = {
@@ -33,20 +37,29 @@ const AMD_CPU_FILTER: ListCpusFilter = {
 
 @Injectable()
 export class HomeViewModelService {
-  constructor(private productService: ProductService) {}
+  constructor(
+    private db: Database,
+    private productService: ProductService,
+    private cacheService: CacheService,
+  ) {}
 
   async viewModel(ctx: Context) {
-    const nvidiaVsAmdGpus = await this.getNvidiaVsAmdGpus(ctx);
-    const popularGpus = await this.getPopularGpus(ctx);
-    const intelVsAmdCpus = await this.getIntelVsAmdCpus(ctx);
-    const popularCpus = await this.getPopularCpus(ctx);
+    return await this.cacheService.cache(
+      async () => {
+        const nvidiaVsAmdGpus = await this.getNvidiaVsAmdGpus(ctx);
+        const popularGpus = await this.getPopularGpus(ctx);
+        const intelVsAmdCpus = await this.getIntelVsAmdCpus(ctx);
+        const popularCpus = await this.getPopularCpus(ctx);
 
-    return {
-      nvidiaVsAmdGpus,
-      popularGpus,
-      intelVsAmdCpus,
-      popularCpus,
-    } as HomeViewModel;
+        return {
+          nvidiaVsAmdGpus,
+          popularGpus,
+          intelVsAmdCpus,
+          popularCpus,
+        } as HomeViewModel;
+      },
+      { type: CacheType.Home, key: {} },
+    );
   }
 
   private async getNvidiaVsAmdGpus(ctx: Context) {
@@ -193,21 +206,24 @@ export class HomeViewModelService {
     chooseFrom: number,
     ctx: Context,
   ) {
-    const response = await this.productService.list(
-      {
-        productType: ProductType.Gpu,
-        query: {
-          filter: {
-            ...filter,
-            isChipset: true,
-            performanceRated: true,
+    const response = await this.db.transaction(
+      () =>
+        this.productService.list(
+          {
+            productType: ProductType.Gpu,
+            query: {
+              filter: {
+                ...filter,
+                performanceRated: true,
+              },
+              orderBy: { sort: ListSort.PerformanceRating },
+              pagination: { limit: chooseFrom },
+            },
           },
-          orderBy: { sort: ListSort.PerformanceRating },
-          pagination: { limit: chooseFrom },
-        },
-      },
-      {},
-      ctx,
+          {},
+          ctx,
+        ),
+      { ctx, isolationLevel: 'ReadUncommitted' },
     );
     const results = response.results;
 
@@ -220,21 +236,24 @@ export class HomeViewModelService {
     chooseFrom: number,
     ctx: Context,
   ) {
-    const response = await this.productService.list(
-      {
-        productType: ProductType.Gpu,
-        query: {
-          filter: {
-            ...filter,
-            isChipset: true,
-            valueRated: true,
+    const response = await this.db.transaction(
+      () =>
+        this.productService.list(
+          {
+            productType: ProductType.Gpu,
+            query: {
+              filter: {
+                ...filter,
+                valueRated: true,
+              },
+              orderBy: { sort: ListSort.PerformancePerMsrp },
+              pagination: { limit: chooseFrom },
+            },
           },
-          orderBy: { sort: ListSort.PerformancePerMsrp },
-          pagination: { limit: chooseFrom },
-        },
-      },
-      {},
-      ctx,
+          {},
+          ctx,
+        ),
+      { ctx, isolationLevel: 'ReadUncommitted' },
     );
     const results = response.results;
 
@@ -247,20 +266,24 @@ export class HomeViewModelService {
     chooseFrom: number,
     ctx: Context,
   ) {
-    const response = await this.productService.list(
-      {
-        productType: ProductType.Cpu,
-        query: {
-          filter: {
-            ...filter,
-            performanceRated: true,
+    const response = await this.db.transaction(
+      () =>
+        this.productService.list(
+          {
+            productType: ProductType.Cpu,
+            query: {
+              filter: {
+                ...filter,
+                performanceRated: true,
+              },
+              orderBy: { sort: ListSort.PerformanceRating },
+              pagination: { limit: chooseFrom },
+            },
           },
-          orderBy: { sort: ListSort.PerformanceRating },
-          pagination: { limit: chooseFrom },
-        },
-      },
-      {},
-      ctx,
+          {},
+          ctx,
+        ),
+      { ctx, isolationLevel: 'ReadUncommitted' },
     );
     const results = response.results;
 
@@ -273,20 +296,24 @@ export class HomeViewModelService {
     chooseFrom: number,
     ctx: Context,
   ) {
-    const response = await this.productService.list(
-      {
-        productType: ProductType.Cpu,
-        query: {
-          filter: {
-            ...filter,
-            valueRated: true,
+    const response = await this.db.transaction(
+      () =>
+        this.productService.list(
+          {
+            productType: ProductType.Cpu,
+            query: {
+              filter: {
+                ...filter,
+                valueRated: true,
+              },
+              orderBy: { sort: ListSort.PerformancePerMsrp },
+              pagination: { limit: chooseFrom },
+            },
           },
-          orderBy: { sort: ListSort.PerformancePerMsrp },
-          pagination: { limit: chooseFrom },
-        },
-      },
-      {},
-      ctx,
+          {},
+          ctx,
+        ),
+      { ctx, isolationLevel: 'ReadUncommitted' },
     );
     const results = response.results;
 
