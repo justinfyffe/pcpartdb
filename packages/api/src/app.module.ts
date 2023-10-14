@@ -21,7 +21,7 @@ import { WebsiteModule } from './website/website.module';
       store: fsCacheStore,
       subdirs: true,
       zip: true,
-      path: dataPath('.cache'),
+      path: dataPath('cache'),
       isGlobal: true,
     }),
     CacheModule,

@@ -1,17 +1,23 @@
 import { Injectable } from '@nestjs/common';
 import {
+  binarySearch,
   CpuProduct,
   hasProductFieldRawValue,
   ListOrder,
+  ListProductsRequest,
   ListSort,
+  ProductFieldKey,
   productFieldRawValue,
+  ProductRankKey,
   ProductType,
   RelatedProductComparisons,
   RelatedProducts,
   ViewCpuContentData,
   ViewCpuViewModel,
 } from '@pcpartdb/shared';
+import { Database } from '../../database';
 import { ProductService } from '../../product/product.service';
+import { CacheService, CacheType } from '../../shared/cache/cache.service';
 import { Context } from '../../shared/context';
 import { getSurroundingValues } from '../../shared/utils';
 
@@ -19,7 +25,11 @@ const TOTAL_COMPARED_CPUS = 10;
 
 @Injectable()
 export class ViewCpuViewModelService {
-  constructor(private productService: ProductService) {}
+  constructor(
+    private db: Database,
+    private productService: ProductService,
+    private cacheService: CacheService,
+  ) {}
 
   async viewModel(slug: string, ctx: Context) {
     const cpu = await this.getCpu(slug, ctx);
@@ -47,220 +57,178 @@ export class ViewCpuViewModelService {
   }
 
   private async getCpu(slug: string, ctx: Context) {
-    const product = await this.productService.getBySlug(
-      {
-        productType: ProductType.Cpu,
-        slug,
+    const getRequest = {
+      productType: ProductType.Cpu,
+      slug,
 
-        includeParent: false,
-        includeChildren: false,
-        includeAutomation: false,
-        includeBenchmarks: true,
-        includeImages: true,
-        includeSources: false,
-        includeUpdates: false,
+      includeParent: false,
+      includeChildren: false,
+      includeAutomation: false,
+      includeBenchmarks: true,
+      includeImages: true,
+      includeSources: false,
+      includeUpdates: false,
 
-        includeRanks: [
-          'performanceRating',
-          'performanceRatingForMarketSegment',
-          'performancePerMsrp',
-          'performancePerMsrpForMarketSegment',
-        ],
-      },
-      ctx,
+      includeRanks: [
+        'performanceRating',
+        'performanceRatingForMarketSegment',
+        'performancePerMsrp',
+        'performancePerMsrpForMarketSegment',
+      ] as ProductRankKey[],
+    };
+    const cacheKey = getRequest;
+    const cpu = await this.cacheService.cache(
+      () =>
+        this.db.transaction(
+          () => this.productService.getBySlug(getRequest, ctx),
+          { ctx, isolationLevel: 'ReadUncommitted' },
+        ),
+      { type: CacheType.CpuComparison, key: cacheKey },
     );
-
-    return product as CpuProduct;
+    return cpu as CpuProduct;
   }
 
   private async getAdditionalData(cpu: CpuProduct, ctx: Context) {
-    const relativePerformanceCpus = await this.getRelativePerformanceCpus(
+    const [performanceCpus, valueCpus] = await this.getAllRelativeCpus(
       cpu,
       ctx,
     );
-    const relativeValueCpus = await this.getRelativeValueCpus(cpu, ctx);
 
-    const totalPerformanceCpus = await this.productService.count(
-      {
-        productType: ProductType.Cpu,
-        query: { filter: { performanceRated: true } },
-      },
-      ctx,
+    const relativePerformanceCpus = await this.getRelativePerformanceCpus(
+      cpu,
+      performanceCpus,
     );
+    const relativeValueCpus = await this.getRelativeValueCpus(cpu, valueCpus);
 
-    const bestPerformanceCpusResponse = await this.productService.list(
-      {
-        productType: ProductType.Cpu,
-        query: {
-          filter: { performanceRated: true },
-          orderBy: { sort: ListSort.PerformanceRating },
-          pagination: { limit: 1 },
-        },
-      },
-      {},
-      ctx,
-    );
-    const bestPerformanceCpus = bestPerformanceCpusResponse.results;
-
-    const bestValueCpusResponse = await this.productService.list(
-      {
-        productType: ProductType.Cpu,
-        query: {
-          filter: { valueRated: true },
-          orderBy: { sort: ListSort.PerformancePerMsrp },
-          pagination: { limit: 1 },
-        },
-      },
-      {},
-      ctx,
-    );
-    const bestValueCpus = bestValueCpusResponse.results;
+    const { totalPerformanceCpus, bestPerformanceCpu, bestValueCpu } =
+      await this.getCpuStats(ctx);
 
     return {
       totalPerformanceCpus: totalPerformanceCpus || [],
       relativePerformanceCpus: relativePerformanceCpus || [],
       relativeValueCpus: relativeValueCpus || [],
-      bestPerformanceCpu: bestPerformanceCpus?.[0],
-      bestValueCpu: bestValueCpus?.[0],
+      bestPerformanceCpu,
+      bestValueCpu,
     } as ViewCpuContentData;
   }
 
-  private async getRelativePerformanceCpus(seed: CpuProduct, ctx: Context) {
+  private async getAllRelativeCpus(cpu: CpuProduct, ctx: Context) {
+    // Missing performance. Cannot have neighbors.
+    if (!hasProductFieldRawValue(cpu.fields?.performanceRating)) {
+      return [[], []];
+    }
+
+    const segment = productFieldRawValue(cpu.fields?.marketSegment) || null;
+
+    const listRequest: ListProductsRequest = {
+      productType: ProductType.Cpu,
+      query: {
+        filter: {
+          isChipset: true,
+          segment: segment ? [segment] : [],
+          performanceRated: true,
+        },
+      },
+    };
+    const listOptions = {
+      fields: ['performanceRating', 'performancePerMsrp'] as ProductFieldKey[],
+      skipCount: true,
+    };
+
+    const cacheKey = { ...listRequest, ...listOptions };
+    const response = await this.cacheService.cache(
+      () =>
+        this.db.transaction(
+          () => this.productService.list(listRequest, listOptions, ctx),
+          { ctx, isolationLevel: 'ReadUncommitted' },
+        ),
+      { type: CacheType.CpusList, key: cacheKey },
+    );
+    const cpus = response.results as CpuProduct[];
+
+    const performance = cpus
+      .filter(
+        (cpu) => productFieldRawValue(cpu.fields?.performanceRating) != null,
+      )
+      .sort(
+        (c1, c2) =>
+          productFieldRawValue(c1.fields?.performanceRating) -
+          productFieldRawValue(c2.fields?.performanceRating),
+      );
+
+    const value = cpus
+      .filter(
+        (cpu) => productFieldRawValue(cpu.fields?.performancePerMsrp) != null,
+      )
+      .sort(
+        (c1, c2) =>
+          productFieldRawValue(c1.fields?.performancePerMsrp) -
+          productFieldRawValue(c2.fields?.performancePerMsrp),
+      );
+
+    return [performance, value];
+  }
+
+  private async getRelativePerformanceCpus(
+    seed: CpuProduct,
+    sortedCpus: CpuProduct[],
+  ) {
     if (!hasProductFieldRawValue(seed.fields?.performanceRating)) {
       return [];
     }
-
-    const aboveResponse = await this.productService.list(
-      {
-        productType: ProductType.Cpu,
-        query: {
-          filter: {
-            segment: hasProductFieldRawValue(seed.fields?.marketSegment)
-              ? [productFieldRawValue(seed.fields?.marketSegment)]
-              : [],
-            excludeIds: [seed.id],
-            minPerformanceScore: productFieldRawValue(
-              seed.fields?.performanceRating,
-            ),
-            performanceRated: true,
-          },
-          orderBy: { sort: ListSort.PerformanceRating, order: ListOrder.Asc },
-          pagination: { limit: TOTAL_COMPARED_CPUS },
-        },
-      },
-      { fields: ['performanceRating'] },
-      ctx,
+    const cpu1Idx = binarySearch(
+      sortedCpus,
+      seed,
+      (g1, g2) =>
+        productFieldRawValue(g1.fields?.performanceRating) -
+        productFieldRawValue(g2.fields?.performanceRating),
     );
-    const aboveCpus = aboveResponse.results;
-
-    const belowResponse = await this.productService.list(
-      {
-        productType: ProductType.Cpu,
-        query: {
-          filter: {
-            segment: hasProductFieldRawValue(seed.fields?.marketSegment)
-              ? [productFieldRawValue(seed.fields?.marketSegment)]
-              : [],
-            excludeIds: [seed.id],
-            maxPerformanceScore: productFieldRawValue(
-              seed.fields?.performanceRating,
-            ),
-            performanceRated: true,
-          },
-          orderBy: { sort: ListSort.PerformanceRating, order: ListOrder.Desc },
-          pagination: { limit: TOTAL_COMPARED_CPUS },
-        },
-      },
-      { fields: ['performanceRating'] },
-      ctx,
-    );
-    const belowCpus = belowResponse.results;
-
-    const neighbors = [
-      ...new Map(
-        [...aboveCpus, seed, ...belowCpus].map((n) => [n.id, n]),
-      ).values(),
-    ].sort(
-      (cpu1, cpu2) =>
-        productFieldRawValue(cpu2.fields?.performanceRating) -
-        productFieldRawValue(cpu1.fields?.performanceRating),
+    const neighbors = getSurroundingValues(
+      sortedCpus,
+      cpu1Idx,
+      TOTAL_COMPARED_CPUS,
     );
 
     return getSurroundingValues(
       neighbors,
       neighbors.findIndex((cpu) => cpu.id === seed.id),
       TOTAL_COMPARED_CPUS,
+    ).sort(
+      (c1, c2) =>
+        productFieldRawValue(c2.fields?.performanceRating) -
+        productFieldRawValue(c1.fields?.performanceRating),
     );
   }
 
-  private async getRelativeValueCpus(seed: CpuProduct, ctx: Context) {
+  private async getRelativeValueCpus(
+    seed: CpuProduct,
+    sortedCpus: CpuProduct[],
+  ) {
     if (!hasProductFieldRawValue(seed.fields?.performancePerMsrp)) {
       return [];
     }
 
-    const aboveResponse = await this.productService.list(
-      {
-        productType: ProductType.Cpu,
-        query: {
-          filter: {
-            segment: hasProductFieldRawValue(seed.fields?.marketSegment)
-              ? [productFieldRawValue(seed.fields?.marketSegment)]
-              : [],
-            excludeIds: [seed.id],
-            minValueScore: productFieldRawValue(
-              seed.fields?.performancePerMsrp,
-            ),
-            valueRated: true,
-          },
-          orderBy: { sort: ListSort.PerformancePerMsrp, order: ListOrder.Asc },
-          pagination: { limit: TOTAL_COMPARED_CPUS },
-        },
-      },
-      { fields: ['performancePerMsrp'] },
-      ctx,
+    const cpu1Idx = binarySearch(
+      sortedCpus,
+      seed,
+      (c1, c2) =>
+        productFieldRawValue(c1.fields?.performancePerMsrp) -
+        productFieldRawValue(c2.fields?.performancePerMsrp),
     );
-    const aboveCpus = aboveResponse.results;
-
-    const belowResponse = await this.productService.list(
-      {
-        productType: ProductType.Cpu,
-        query: {
-          filter: {
-            segment: hasProductFieldRawValue(seed.fields?.marketSegment)
-              ? [productFieldRawValue(seed.fields?.marketSegment)]
-              : [],
-            excludeIds: [seed.id],
-            maxValueScore: productFieldRawValue(
-              seed.fields?.performancePerMsrp,
-            ),
-            valueRated: true,
-          },
-          orderBy: {
-            sort: ListSort.PerformancePerMsrp,
-            order: ListOrder.Desc,
-          },
-          pagination: { limit: TOTAL_COMPARED_CPUS },
-        },
-      },
-      { fields: ['performancePerMsrp'] },
-      ctx,
-    );
-    const belowCpus = belowResponse.results;
-
-    const neighbors = [
-      ...new Map(
-        [...aboveCpus, seed, ...belowCpus].map((n) => [n.id, n]),
-      ).values(),
-    ].sort(
-      (cpu1, cpu2) =>
-        productFieldRawValue(cpu2.fields?.performancePerMsrp) -
-        productFieldRawValue(cpu1.fields?.performancePerMsrp),
+    const neighbors = getSurroundingValues(
+      sortedCpus,
+      cpu1Idx,
+      TOTAL_COMPARED_CPUS,
     );
 
     return getSurroundingValues(
       neighbors,
       neighbors.findIndex((cpu) => cpu.id === seed.id),
       TOTAL_COMPARED_CPUS,
+    ).sort(
+      (c1, c2) =>
+        productFieldRawValue(c2.fields?.performancePerMsrp) -
+        productFieldRawValue(c1.fields?.performancePerMsrp),
     );
   }
 
@@ -322,5 +290,77 @@ export class ViewCpuViewModelService {
     const comparisons = related.map((relatedCpu) => [pageCpu, relatedCpu]);
 
     return { comparisons } as RelatedProductComparisons;
+  }
+
+  private async getCpuStats(ctx: Context) {
+    // cache all of the following
+    const countRequest = {
+      productType: ProductType.Cpu,
+      query: { filter: { performanceRated: true } },
+    };
+    const totalPerformanceCpus = await this.cacheService.cache(
+      () =>
+        this.db.transaction(
+          () => this.productService.count(countRequest, ctx),
+          { ctx, isolationLevel: 'ReadUncommitted' },
+        ),
+      { type: CacheType.CpuStats, key: countRequest },
+    );
+
+    const bestInPerformanceRequest = {
+      productType: ProductType.Cpu,
+      query: {
+        filter: { performanceRated: true },
+        orderBy: { sort: ListSort.PerformanceRating, order: ListOrder.Desc },
+        pagination: { limit: 1 },
+      },
+    };
+    // TODO: convert to find instead of list
+    const bestPerformanceCpu = await this.cacheService.cache(
+      () =>
+        this.db.transaction(
+          async () => {
+            const response = await this.productService.list(
+              bestInPerformanceRequest,
+              {},
+              ctx,
+            );
+            return response.results?.[0] || null;
+          },
+          { ctx, isolationLevel: 'ReadUncommitted' },
+        ),
+      { type: CacheType.CpuStats, key: bestInPerformanceRequest },
+    );
+
+    const bestInValueRequest = {
+      productType: ProductType.Cpu,
+      query: {
+        filter: { valueRated: true },
+        orderBy: { sort: ListSort.PerformancePerMsrp, order: ListOrder.Desc },
+        pagination: { limit: 1 },
+      },
+    };
+    // TODO: convert to find instead of list
+    const bestValueCpu = await this.cacheService.cache(
+      () =>
+        this.db.transaction(
+          async () => {
+            const response = await this.productService.list(
+              bestInValueRequest,
+              {},
+              ctx,
+            );
+            return response.results?.[0] || null;
+          },
+          { ctx, isolationLevel: 'ReadUncommitted' },
+        ),
+      { type: CacheType.CpuStats, key: bestInValueRequest },
+    );
+
+    return {
+      totalPerformanceCpus,
+      bestPerformanceCpu,
+      bestValueCpu,
+    };
   }
 }

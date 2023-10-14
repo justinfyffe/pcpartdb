@@ -7,12 +7,16 @@ import {
   GpuProduct,
   GpuProductComparison,
   hasProductFieldRawValue,
+  ListProductsRequest,
   ListSort,
+  ProductFieldKey,
   productFieldRawValue,
+  ProductRankKey,
   ProductType,
   RelatedProductComparisons,
   RelatedProducts,
 } from '@pcpartdb/shared';
+import { Database } from '../../database';
 import { ProductService } from '../../product/product.service';
 import { CacheService, CacheType } from '../../shared/cache/cache.service';
 import { Context } from '../../shared/context';
@@ -23,6 +27,7 @@ const TOTAL_COMPARED_GPUS = 10;
 @Injectable()
 export class CompareGpusViewModelService {
   constructor(
+    private db: Database,
     private productService: ProductService,
     private cacheService: CacheService,
   ) {}
@@ -53,33 +58,34 @@ export class CompareGpusViewModelService {
   }
 
   private async getComparison(slug: string, ctx: Context) {
-    let comparison: GpuProductComparison = await this.cacheService.get(
-      CacheType.GpuComparison,
+    const comparisonRequest = {
+      productType: ProductType.Gpu,
       slug,
+
+      includeParent: true,
+      includeChildren: false,
+      includeBenchmarks: true,
+      includeImages: true,
+
+      includeAutomation: false,
+      includeSources: false,
+      includeUpdates: false,
+
+      includeRanks: [
+        'performanceRating',
+        'performancePerMsrp',
+      ] as ProductRankKey[],
+    };
+    const cacheKey = comparisonRequest;
+    const comparison = await this.cacheService.cache(
+      () =>
+        this.db.transaction(
+          () => this.productService.getComparison(comparisonRequest, ctx),
+          { ctx, isolationLevel: 'ReadUncommitted' },
+        ),
+      { type: CacheType.GpuComparison, key: cacheKey },
     );
-
-    if (comparison == null) {
-      comparison = (await this.productService.getComparison(
-        {
-          productType: ProductType.Gpu,
-          slug,
-
-          includeParent: true,
-          includeChildren: false,
-          includeBenchmarks: true,
-          includeImages: true,
-
-          includeAutomation: false,
-          includeSources: false,
-          includeUpdates: false,
-
-          includeRanks: ['performanceRating', 'performancePerMsrp'],
-        },
-        ctx,
-      )) as GpuProductComparison;
-      await this.cacheService.set(CacheType.GpuComparison, slug, comparison);
-    }
-    return comparison;
+    return comparison as GpuProductComparison;
   }
 
   private async getAdditionalData(
@@ -89,41 +95,25 @@ export class CompareGpusViewModelService {
     const chipset1 = getGpuChipset(comparison[0]);
     const chipset2 = getGpuChipset(comparison[1]);
 
-    const retailModelsResponse = await this.productService.list(
-      {
-        productType: ProductType.Gpu,
-        query: {
-          filter: { chipsetId: [chipset1.id, chipset2.id] },
-          orderBy: { sort: ListSort.Name },
-        },
-      },
-      { fields: [], skipCount: true },
-      ctx,
-    );
+    const retailModels1 = await this.getRetailModels(chipset1, ctx);
+    const retailModels2 = await this.getRetailModels(chipset2, ctx);
 
-    const retailModels1 = retailModelsResponse.results.filter(
-      (product) => product.parentId === chipset1.id,
-    );
-    const retailModels2 = retailModelsResponse.results.filter(
-      (product) => product.parentId === chipset2.id,
-    );
-
-    const allRelativeGpus = await this.getAllRelativeGpus(
+    const [performanceGpus, valueGpus] = await this.getAllRelativeGpus(
       chipset1,
       chipset2,
       ctx,
     );
 
-    const relativePerformanceGpus = await this.getRelativePerformanceGpus(
+    const relativePerformanceGpus = this.getRelativePerformanceGpus(
       chipset1,
       chipset2,
-      allRelativeGpus.performance,
+      performanceGpus,
     );
 
-    const relativeValueGpus = await this.getRelativeValueGpus(
+    const relativeValueGpus = this.getRelativeValueGpus(
       chipset1,
       chipset2,
-      allRelativeGpus.value,
+      valueGpus,
     );
 
     return {
@@ -132,6 +122,40 @@ export class CompareGpusViewModelService {
       retailModels1,
       retailModels2,
     } as CompareGpusAdditionalData;
+  }
+
+  private async getRetailModels(gpu: GpuProduct, ctx: Context) {
+    const chipset = getGpuChipset(gpu);
+
+    const listRequest: ListProductsRequest = {
+      productType: ProductType.Gpu,
+      query: {
+        filter: { chipsetId: [chipset.id] },
+        orderBy: { sort: ListSort.Name },
+      },
+    };
+    const listOptions = {
+      fields: [
+        'gpuCoreBaseClock',
+        'gpuCoreBoostClock',
+        'length',
+        'slotWidth',
+        'width',
+        'height',
+        'tdp',
+      ] as ProductFieldKey[],
+      skipCount: true,
+    };
+    const cacheKey = { ...listRequest, listOptions };
+    const response = await this.cacheService.cache(
+      () =>
+        this.db.transaction(
+          () => this.productService.list(listRequest, listOptions, ctx),
+          { ctx, isolationLevel: 'ReadUncommitted' },
+        ),
+      { type: CacheType.GpusList, key: cacheKey },
+    );
+    return response.results;
   }
 
   private async getAllRelativeGpus(
@@ -144,41 +168,39 @@ export class CompareGpusViewModelService {
       !hasProductFieldRawValue(gpu1.fields?.performanceRating) &&
       !hasProductFieldRawValue(gpu2.fields?.performanceRating)
     ) {
-      return { performance: [], value: [] };
+      return [[], []];
     }
 
     const segment = [
       productFieldRawValue(gpu1.fields?.marketSegment),
       productFieldRawValue(gpu2.fields?.marketSegment),
     ].filter((value) => value != null);
-    const cacheKey = segment.join('_');
 
-    let gpus: GpuProduct[] = await this.cacheService.get(
-      CacheType.GpusList,
-      cacheKey,
+    const listRequest: ListProductsRequest = {
+      productType: ProductType.Gpu,
+      query: {
+        filter: {
+          isChipset: true,
+          segment,
+          performanceRated: true,
+        },
+      },
+    };
+    const listOptions = {
+      fields: ['performanceRating', 'performancePerMsrp'] as ProductFieldKey[],
+      skipCount: true,
+    };
+
+    const cacheKey = { ...listRequest, ...listOptions };
+    const response = await this.cacheService.cache(
+      () =>
+        this.db.transaction(
+          () => this.productService.list(listRequest, listOptions, ctx),
+          { ctx, isolationLevel: 'ReadUncommitted' },
+        ),
+      { type: CacheType.GpusList, key: cacheKey },
     );
-
-    if (gpus == null) {
-      const response = await this.productService.list(
-        {
-          productType: ProductType.Gpu,
-          query: {
-            filter: {
-              isChipset: true,
-              segment,
-              performanceRated: true,
-            },
-          },
-        },
-        {
-          fields: ['performanceRating', 'performancePerMsrp'],
-          skipCount: true,
-        },
-        ctx,
-      );
-      gpus = response.results as GpuProduct[];
-      await this.cacheService.set(CacheType.GpusList, cacheKey, gpus);
-    }
+    const gpus = response.results as GpuProduct[];
 
     const performance = gpus
       .filter(
@@ -200,10 +222,10 @@ export class CompareGpusViewModelService {
           productFieldRawValue(g2.fields?.performancePerMsrp),
       );
 
-    return { performance, value };
+    return [performance, value];
   }
 
-  private async getRelativePerformanceGpus(
+  private getRelativePerformanceGpus(
     gpu1: GpuProduct,
     gpu2: GpuProduct,
     sortedGpus: GpuProduct[],
@@ -278,7 +300,7 @@ export class CompareGpusViewModelService {
     }
   }
 
-  private async getRelativeValueGpus(
+  private getRelativeValueGpus(
     gpu1: GpuProduct,
     gpu2: GpuProduct,
     sortedGpus: GpuProduct[],

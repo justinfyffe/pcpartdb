@@ -140,18 +140,12 @@ export class ViewModelsController {
 
   @Get('cpus/compare/:slug')
   async compareCpus(@Param('slug') slug: string, @Ctx() ctx: Context) {
-    return await this.db.transaction(
-      () => this.compareCpusViewModelService.viewModel(slug, ctx),
-      { ctx, isolationLevel: 'ReadUncommitted' },
-    );
+    return await this.compareCpusViewModelService.viewModel(slug, ctx);
   }
 
   @Get('cpus/view/:slug')
   async viewCpu(@Param('slug') slug: string, @Ctx() ctx: Context) {
-    return await this.db.transaction(
-      () => this.viewCpuViewModelService.viewModel(slug, ctx),
-      { ctx, isolationLevel: 'ReadUncommitted' },
-    );
+    return await this.viewCpuViewModelService.viewModel(slug, ctx);
   }
 
   @Get('gpus/list')
@@ -167,18 +161,12 @@ export class ViewModelsController {
 
   @Get('gpus/compare/:slug')
   async compareGpus(@Param('slug') slug: string, @Ctx() ctx: Context) {
-    return await this.db.transaction(
-      () => this.compareGpusViewModelService.viewModel(slug, ctx),
-      { ctx, isolationLevel: 'ReadUncommitted' },
-    );
+    return await this.compareGpusViewModelService.viewModel(slug, ctx);
   }
 
   @Get('gpus/view/:slug')
   async viewGpu(@Param('slug') slug: string, @Ctx() ctx: Context) {
-    return await this.db.transaction(
-      () => this.viewGpuViewModelService.viewModel(slug, ctx),
-      { ctx, isolationLevel: 'ReadUncommitted' },
-    );
+    return await this.viewGpuViewModelService.viewModel(slug, ctx);
   }
 
   @Get('register')
