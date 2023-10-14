@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Post,
   Query,
@@ -15,13 +16,18 @@ import {
 } from '@pcpartdb/shared';
 import { StaffGuard } from '../auth/staff.guard';
 import { Database } from '../database';
+import { CacheService } from '../shared/cache/cache.service';
 import { Context, Ctx } from '../shared/context';
 import { MULTER_OPTIONS } from '../shared/utils';
 import { WebsiteService } from './website.service';
 
 @Controller('website')
 export class WebsiteController {
-  constructor(private service: WebsiteService, private db: Database) {}
+  constructor(
+    private service: WebsiteService,
+    private cacheService: CacheService,
+    private db: Database,
+  ) {}
 
   @Post('sitemaps')
   @UseGuards(StaffGuard)
@@ -50,5 +56,14 @@ export class WebsiteController {
       },
       { ctx },
     );
+  }
+
+  @Delete('cache')
+  @UseGuards(StaffGuard)
+  async clearCache() {
+    await this.cacheService.invalidateAll();
+    return {
+      cacheSize: await this.cacheService.size(),
+    };
   }
 }

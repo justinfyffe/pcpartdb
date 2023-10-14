@@ -174,7 +174,9 @@ export class CompareGpusViewModelService {
     const segment = [
       productFieldRawValue(gpu1.fields?.marketSegment),
       productFieldRawValue(gpu2.fields?.marketSegment),
-    ].filter((value) => value != null);
+    ]
+      .filter((value) => value != null)
+      .sort();
 
     const listRequest: ListProductsRequest = {
       productType: ProductType.Gpu,

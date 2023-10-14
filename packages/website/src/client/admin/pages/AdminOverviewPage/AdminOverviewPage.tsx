@@ -5,6 +5,7 @@ import { Card, CardTitle } from '../../../shared/components/Card/Card';
 import { MetaRobots, Seo } from '../../../shared/components/Seo/Seo';
 import { AdminLayout } from '../../../shared/layouts/admin/AdminLayout';
 import { ApiKeyWidget } from './components';
+import { CacheWidget } from './components/CacheWidget/CacheWidget';
 
 export const AdminOverviewPage = (props: AdminOverviewViewModel) => {
   const pageTitle = 'Overview';
@@ -26,6 +27,8 @@ export const AdminOverviewPage = (props: AdminOverviewViewModel) => {
           </Card>
 
           <ApiKeyWidget apiKey={props.apiKey} />
+
+          <CacheWidget cacheSize={props.cacheSize} />
         </div>
       </article>
     </AdminLayout>

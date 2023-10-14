@@ -124,7 +124,9 @@ export class CompareCpusViewModelService {
     const segment = [
       productFieldRawValue(cpu1.fields?.marketSegment),
       productFieldRawValue(cpu2.fields?.marketSegment),
-    ].filter((value) => value != null);
+    ]
+      .filter((value) => value != null)
+      .sort();
 
     const listRequest: ListProductsRequest = {
       productType: ProductType.Cpu,
