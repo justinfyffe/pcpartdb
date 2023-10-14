@@ -228,7 +228,7 @@ export const listProductsRequestSchema = Joi.object({
   productType: productTypeSchema.required(),
   query: listQuerySchema({
     filterSchema: Joi.object({
-      chipsetId: Joi.number().allow(null),
+      chipsetId: Joi.array().items(Joi.number()).allow(null),
       company: Joi.array().items(Joi.string().allow('')).allow(null),
       excludeIds: Joi.array().items(Joi.number()).allow(null),
       isChipset: Joi.boolean().allow(null),

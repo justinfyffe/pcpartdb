@@ -4,6 +4,7 @@ import { AutomationModule } from '../automation/automation.module';
 import { DatabaseModule } from '../database';
 import { ImageModule } from '../image/image.module';
 import { ProductModule } from '../product/product.module';
+import { CacheModule } from '../shared/cache/cache.module';
 import { UserModule } from '../user/user.module';
 import { AdminAutomationViewModelService } from './admin/automation/automation.view-model';
 import { AdminEditImageViewModelService } from './admin/images/edit.view-model';
@@ -24,6 +25,7 @@ import { ViewModelsController } from './view-models.controller';
 
 @Module({
   imports: [
+    CacheModule,
     DatabaseModule,
     AuthModule,
     AutomationModule,

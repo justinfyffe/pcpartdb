@@ -71,7 +71,7 @@ export const RetailModelsTab: FunctionComponent<RetailModelsTabProps> = () => {
         ...query,
         filter: {
           ...query.filter,
-          chipsetId: chipsetId != null ? chipsetId : undefined,
+          chipsetId: chipsetId != null ? [chipsetId] : undefined,
         },
       };
       setQuery(q);

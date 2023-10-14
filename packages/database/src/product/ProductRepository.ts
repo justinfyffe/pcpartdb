@@ -40,6 +40,7 @@ interface ListOptions extends IncludeRelationsOptions {
 }
 
 interface IncludeRelationsOptions {
+  includeFields?: boolean;
   includeBenchmarks?: boolean;
   includeImages?: boolean;
   includeSources?: boolean;
@@ -135,6 +136,7 @@ export class ProductRepository {
 
   async list(options: ListOptions, config?: RepositoryConfig) {
     const productType = options.productType;
+    const includeFields = options.includeFields ?? true;
     const includeBenchmarks = options.includeBenchmarks ?? false;
     const includeSources = options.includeBenchmarks ?? false;
     const includeParent = options.includeParent ?? false;
@@ -148,8 +150,8 @@ export class ProductRepository {
       skip: options.pagination?.offset,
       take: options.pagination?.limit,
       include: {
-        cpuFields: productType === ProductType.Cpu,
-        gpuFields: productType === ProductType.Gpu,
+        cpuFields: includeFields && productType === ProductType.Cpu,
+        gpuFields: includeFields && productType === ProductType.Gpu,
         benchmarks: includeBenchmarks,
         sources: includeSources,
         parent: includeParent,
@@ -407,7 +409,7 @@ export class ProductRepository {
     productType: ProductType,
     filter?: ListGpusFilter,
   ): Prisma.ProductWhereInput {
-    const chipsetId = filter?.chipsetId;
+    const chipsetIds = filter?.chipsetId ?? [];
     const isChipset = filter?.isChipset ?? false;
     const isRetailModel = filter?.isRetailModel ?? false;
     const performanceRated = filter?.performanceRated ?? false;
@@ -419,12 +421,16 @@ export class ProductRepository {
     const companies = filter?.company?.filter((value) => value != null) ?? [];
     const years = filter?.year?.filter((value) => value != null) ?? [];
     const segments = filter?.segment?.filter((value) => value != null) ?? [];
+    const includeIds = filter?.ids?.filter((value) => value != null) ?? [];
     const excludeIds =
       filter?.excludeIds?.filter((value) => value != null) ?? [];
 
     // Exclude Ids
     let idWhere: Prisma.IntFilter = {};
-    if (excludeIds != null) {
+    if (includeIds && includeIds.length > 0) {
+      idWhere = { ...idWhere, in: includeIds };
+    }
+    if (excludeIds && excludeIds.length > 0) {
       idWhere = { ...idWhere, notIn: excludeIds };
     }
 
@@ -435,8 +441,8 @@ export class ProductRepository {
     } else if (!isChipset && isRetailModel) {
       parentWhere = { not: null };
     }
-    if (chipsetId != null) {
-      parentWhere = { ...parentWhere, equals: chipsetId };
+    if (chipsetIds != null && chipsetIds.length > 0) {
+      parentWhere = { ...parentWhere, in: chipsetIds };
     }
 
     // Performance Score

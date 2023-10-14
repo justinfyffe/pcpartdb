@@ -40,14 +40,15 @@ import { ProductUpdateService } from './product-update.service';
 
 interface ListOptions {
   fields?: ProductFieldKey[];
-  parentFields?: ProductFieldKey[];
-  childrenFields?: ProductFieldKey[];
 
   includeAdditionalData?: boolean;
   includeSources?: boolean;
+  includeAutomation?: boolean;
   includeImages?: boolean;
   includeBenchmarks?: boolean;
   includeRanks?: ProductRankKey[];
+
+  skipCount?: boolean;
 }
 
 interface GetOptions {
@@ -125,6 +126,13 @@ export class ProductService {
     const includeImages = options?.includeImages ?? false;
     const includeSources =
       (options?.includeSources ?? false) && (ctx.user?.isStaff ?? false);
+    const includeAutomation =
+      (options.includeAutomation ?? false) && (ctx.user?.isStaff ?? false);
+
+    const fields = options.fields != null ? new Set(options.fields) : null;
+    const includeFields = fields == null || fields.size > 0;
+
+    const skipCount = options.skipCount ?? false;
 
     const { productType, query } = request;
     const productEntities = await this.repository.list(
@@ -132,31 +140,23 @@ export class ProductService {
         ...query,
         ...options,
         productType,
+        includeFields,
         includeBenchmarks,
         includeImages,
         includeSources,
-        includeParent: false,
-        includeChildren: false,
       },
       ctx,
     );
-    const count = await this.repository.count(
-      { ...query, ...options, productType },
-      ctx,
-    );
 
-    const fields = options.fields != null ? new Set(options.fields) : null;
-    const parentFields =
-      options.parentFields != null ? new Set(options.parentFields) : null;
-    const childrenFields =
-      options.childrenFields != null ? new Set(options.childrenFields) : null;
+    let count: number;
+    if (!skipCount) {
+      count = await this.repository.count(request, ctx);
+    }
 
     const products: Product[] = await mapToProductDtos(productEntities, {
       fields,
-      parentFields,
-      childrenFields,
       includeSources,
-      includeAutomation: ctx.user?.isStaff,
+      includeAutomation,
     });
 
     if (options.includeRanks) {
@@ -237,15 +237,17 @@ export class ProductService {
     const productType = options.productType;
     const slug = options.slug;
 
+    // TODO: read from cache
+
     const includeParent = options.includeParent ?? false;
     const includeChildren = options.includeChildren ?? false;
     const includeImages = options.includeImages ?? false;
     const includeSources =
-      (options.includeSources ?? false) && ctx.user?.isStaff;
+      (options.includeSources ?? false) && (ctx.user?.isStaff ?? false);
     const includeUpdates =
-      (options.includeUpdates ?? false) && ctx.user?.isStaff;
+      (options.includeUpdates ?? false) && (ctx.user?.isStaff ?? false);
     const includeAutomation =
-      (options.includeAutomation ?? false) && ctx.user?.isStaff;
+      (options.includeAutomation ?? false) && (ctx.user?.isStaff ?? false);
     const includeBenchmarks = options.includeBenchmarks ?? false;
 
     const parentFields =
@@ -305,16 +307,9 @@ export class ProductService {
     for (const slug of slugs) {
       const product = await this.getBySlug(
         {
+          ...options,
           productType: options.productType,
           slug,
-          parentFields: options.parentFields,
-          childrenFields: options.childrenFields,
-          includeParent: options.includeParent ?? true,
-          includeChildren: options.includeChildren ?? true,
-          includeImages: options.includeImages ?? true,
-          includeSources: options.includeSources ?? ctx.user?.isStaff,
-          includeBenchmarks: options.includeBenchmarks ?? true,
-          includeRanks: options.includeRanks || null,
         },
         ctx,
       );
@@ -533,7 +528,7 @@ export class ProductService {
       meta: {
         fieldKey: 'performanceRating',
         autoUpdate: true,
-        formattedValue: `${performance}`,
+        formattedValue: performance.toLocaleString(),
       },
     };
 
@@ -571,7 +566,7 @@ export class ProductService {
       meta: {
         fieldKey: 'performanceRating',
         autoUpdate: true,
-        formattedValue: `${performance}`,
+        formattedValue: performance.toLocaleString(),
       },
     };
 

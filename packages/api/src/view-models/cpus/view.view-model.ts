@@ -148,10 +148,7 @@ export class ViewCpuViewModelService {
           pagination: { limit: TOTAL_COMPARED_CPUS },
         },
       },
-      {
-        fields: ['performanceRating'],
-        includeRanks: ['performanceRating'],
-      },
+      { fields: ['performanceRating'] },
       ctx,
     );
     const aboveCpus = aboveResponse.results;
@@ -174,10 +171,7 @@ export class ViewCpuViewModelService {
           pagination: { limit: TOTAL_COMPARED_CPUS },
         },
       },
-      {
-        fields: ['performanceRating'],
-        includeRanks: ['performanceRating'],
-      },
+      { fields: ['performanceRating'] },
       ctx,
     );
     const belowCpus = belowResponse.results;
@@ -222,10 +216,7 @@ export class ViewCpuViewModelService {
           pagination: { limit: TOTAL_COMPARED_CPUS },
         },
       },
-      {
-        fields: ['performancePerMsrp'],
-        includeRanks: ['performancePerMsrp'],
-      },
+      { fields: ['performancePerMsrp'] },
       ctx,
     );
     const aboveCpus = aboveResponse.results;
@@ -251,10 +242,7 @@ export class ViewCpuViewModelService {
           pagination: { limit: TOTAL_COMPARED_CPUS },
         },
       },
-      {
-        fields: ['performancePerMsrp'],
-        includeRanks: ['performancePerMsrp'],
-      },
+      { fields: ['performancePerMsrp'] },
       ctx,
     );
     const belowCpus = belowResponse.results;

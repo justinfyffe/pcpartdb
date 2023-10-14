@@ -59,10 +59,13 @@ export class ProductRanksService {
   }
 
   private buildCpuRanksFilter(products: Product[]) {
-    const flattenedSegments = products
-      .map((product) => product.fields?.marketSegment?.value)
-      .filter((value) => value != null);
-    const segment = [...new Set(flattenedSegments)];
+    const segment = [
+      ...new Set(
+        products
+          .map((product) => product.fields?.marketSegment?.value)
+          .filter((value) => value != null),
+      ),
+    ];
 
     return { productType: ProductType.Cpu, segment };
   }

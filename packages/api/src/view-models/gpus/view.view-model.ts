@@ -66,7 +66,7 @@ export class ViewGpuViewModelService {
           'performanceRatingForArchitectureAndMarketSegment',
           'performanceRatingForMarketSegment',
           'performancePerMsrp',
-          'performanceRatingForMarketSegment',
+          'performancePerMsrpForMarketSegment',
         ],
       },
       ctx,
@@ -135,7 +135,10 @@ export class ViewGpuViewModelService {
       {
         productType: ProductType.Gpu,
         query: {
-          filter: { chipsetId: gpu.parent?.id || gpu.id, isRetailModel: true },
+          filter: {
+            chipsetId: [gpu.parent?.id || gpu.id],
+            isRetailModel: true,
+          },
           orderBy: { sort: ListSort.Name },
         },
       },
@@ -191,10 +194,7 @@ export class ViewGpuViewModelService {
           pagination: { limit: TOTAL_COMPARED_GPUS },
         },
       },
-      {
-        fields: ['performanceRating'],
-        includeRanks: ['performanceRating'],
-      },
+      { fields: ['performanceRating'] },
       ctx,
     );
     const aboveGpus = aboveResponse.results;
@@ -221,10 +221,7 @@ export class ViewGpuViewModelService {
           pagination: { limit: TOTAL_COMPARED_GPUS },
         },
       },
-      {
-        fields: ['performanceRating'],
-        includeRanks: ['performanceRating'],
-      },
+      { fields: ['performanceRating'] },
       ctx,
     );
     const belowGpus = belowResponse.results;
@@ -273,10 +270,7 @@ export class ViewGpuViewModelService {
           pagination: { limit: TOTAL_COMPARED_GPUS },
         },
       },
-      {
-        fields: ['performancePerMsrp'],
-        includeRanks: ['performancePerMsrp'],
-      },
+      { fields: ['performancePerMsrp'] },
       ctx,
     );
     const aboveGpus = aboveResponse.results;
@@ -303,10 +297,7 @@ export class ViewGpuViewModelService {
           pagination: { limit: TOTAL_COMPARED_GPUS },
         },
       },
-      {
-        fields: ['performancePerMsrp'],
-        includeRanks: ['performancePerMsrp'],
-      },
+      { fields: ['performancePerMsrp'] },
       ctx,
     );
     const belowGpus = belowResponse.results;

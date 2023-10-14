@@ -60,31 +60,7 @@ export const PerformanceTable: FunctionComponent<PerformanceTableProps> = (
     }
   });
 
-  // Add nulls to rank gaps
-  const chipsets = useMemo(() => {
-    const ret: GpuProduct[] = [];
-    let dontGap = false;
-    for (let i = 0; i < relativePerformanceGpus.length; ++i) {
-      if (i > 0) {
-        const rankDiff =
-          relativePerformanceGpus[i].ranks.performanceRating -
-          relativePerformanceGpus[i - 1].ranks.performanceRating;
-
-        if (rankDiff !== 1) {
-          if (rankDiff === 0) {
-            dontGap = true;
-          } else if (dontGap) {
-            dontGap = false;
-          } else {
-            // Uncomment if you want to have a ... gap
-            // ret.push(null);
-          }
-        }
-      }
-      ret.push(relativePerformanceGpus[i]);
-    }
-    return ret;
-  }, [relativePerformanceGpus]);
+  const chipsets = relativePerformanceGpus;
 
   useEffect(() => {
     setBaselineChipset(

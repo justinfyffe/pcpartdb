@@ -103,23 +103,27 @@ export class CompareCpusViewModelService {
     }
 
     // Both CPUS have neighbors
-    const hasGapBetweenNeighbors =
-      Math.abs(cpu1.ranks?.performanceRating - cpu2.ranks?.performanceRating) >
-      TOTAL_COMPARED_CPUS / 2 + 1;
+    const hasNoGap =
+      neighbors1.find((p) => p.id === cpu2.id) ||
+      neighbors2.find((p) => p.id === cpu1.id);
 
-    if (hasGapBetweenNeighbors) {
-      return this.concatNeighbors(
-        [cpu1, cpu2],
-        neighbors1,
-        neighbors2,
-        (c1, c2) => c1.ranks?.performanceRating - c2.ranks?.performanceRating,
-      );
-    } else {
+    if (hasNoGap) {
       return this.mergeNeighbors(
         [cpu1, cpu2],
         neighbors1,
         neighbors2,
-        (c1, c2) => c1.ranks?.performanceRating - c2.ranks?.performanceRating,
+        (c1, c2) =>
+          productFieldRawValue(c2.fields?.performanceRating) -
+          productFieldRawValue(c1.fields?.performanceRating),
+      );
+    } else {
+      return this.concatNeighbors(
+        [cpu1, cpu2],
+        neighbors1,
+        neighbors2,
+        (c1, c2) =>
+          productFieldRawValue(c2.fields?.performanceRating) -
+          productFieldRawValue(c1.fields?.performanceRating),
       );
     }
   }
@@ -146,25 +150,27 @@ export class CompareCpusViewModelService {
     }
 
     // Both CPUs have neighbors. Need to combine them.
-    const hasGapBetweenNeighbors =
-      Math.abs(
-        cpu1.ranks?.performancePerMsrp - cpu2.ranks?.performancePerMsrp,
-      ) >
-      TOTAL_COMPARED_CPUS / 2 + 1;
+    const hasNoGap =
+      neighbors1.find((p) => p.id === cpu2.id) ||
+      neighbors2.find((p) => p.id === cpu1.id);
 
-    if (hasGapBetweenNeighbors) {
-      return this.concatNeighbors(
-        [cpu1, cpu2],
-        neighbors1,
-        neighbors2,
-        (c1, c2) => c1.ranks?.performancePerMsrp - c2.ranks?.performancePerMsrp,
-      );
-    } else {
+    if (hasNoGap) {
       return this.mergeNeighbors(
         [cpu1, cpu2],
         neighbors1,
         neighbors2,
-        (c1, c2) => c1.ranks?.performancePerMsrp - c2.ranks?.performancePerMsrp,
+        (c1, c2) =>
+          productFieldRawValue(c2.fields?.performancePerMsrp) -
+          productFieldRawValue(c1.fields?.performancePerMsrp),
+      );
+    } else {
+      return this.concatNeighbors(
+        [cpu1, cpu2],
+        neighbors1,
+        neighbors2,
+        (c1, c2) =>
+          productFieldRawValue(c2.fields?.performancePerMsrp) -
+          productFieldRawValue(c1.fields?.performancePerMsrp),
       );
     }
   }
@@ -196,10 +202,7 @@ export class CompareCpusViewModelService {
           pagination: { limit: TOTAL_COMPARED_CPUS },
         },
       },
-      {
-        fields: ['performanceRating'],
-        includeRanks: ['performanceRating'],
-      },
+      { fields: ['performanceRating'] },
       ctx,
     );
     const aboveCpus = aboveResponse.results;
@@ -225,10 +228,7 @@ export class CompareCpusViewModelService {
           pagination: { limit: TOTAL_COMPARED_CPUS },
         },
       },
-      {
-        fields: ['performanceRating'],
-        includeRanks: ['performanceRating'],
-      },
+      { fields: ['performanceRating'] },
       ctx,
     );
     const belowCpus = belowResponse.results;
@@ -266,10 +266,7 @@ export class CompareCpusViewModelService {
           pagination: { limit: TOTAL_COMPARED_CPUS },
         },
       },
-      {
-        fields: ['performancePerMsrp'],
-        includeRanks: ['performancePerMsrp'],
-      },
+      { fields: ['performancePerMsrp'] },
       ctx,
     );
     const aboveCpus = aboveResponse.results;
@@ -293,10 +290,7 @@ export class CompareCpusViewModelService {
           pagination: { limit: TOTAL_COMPARED_CPUS },
         },
       },
-      {
-        fields: ['performancePerMsrp'],
-        includeRanks: ['performancePerMsrp'],
-      },
+      { fields: ['performancePerMsrp'] },
       ctx,
     );
     const belowCpus = belowResponse.results;

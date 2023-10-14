@@ -126,10 +126,11 @@ export interface ListGpusFilter {
   performanceRated?: boolean;
   valueRated?: boolean;
 
-  chipsetId?: number;
+  chipsetId?: number[];
   isChipset?: boolean;
   isRetailModel?: boolean;
 
+  ids?: number[];
   excludeIds?: number[];
 }
 export interface ListGpusQuery extends ListQuery<ListGpusFilter> {}

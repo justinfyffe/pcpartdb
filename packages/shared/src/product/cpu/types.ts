@@ -109,6 +109,7 @@ export interface ListCpusFilter {
   performanceRated?: boolean;
   valueRated?: boolean;
 
+  ids?: number[];
   excludeIds?: number[];
 }
 export interface ListCpusQuery extends ListQuery<ListCpusFilter> {}

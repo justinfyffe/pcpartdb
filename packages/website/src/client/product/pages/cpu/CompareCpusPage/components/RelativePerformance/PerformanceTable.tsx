@@ -56,31 +56,7 @@ export const PerformanceTable: FunctionComponent<PerformanceTableProps> = (
     }
   });
 
-  // Add nulls to rank gaps
-  const cpus = useMemo(() => {
-    const ret: CpuProduct[] = [];
-    let dontGap = false;
-    for (let i = 0; i < relativePerformanceCpus.length; ++i) {
-      if (i > 0) {
-        const rankDiff =
-          relativePerformanceCpus[i].ranks.performanceRating -
-          relativePerformanceCpus[i - 1].ranks.performanceRating;
-
-        if (rankDiff !== 1) {
-          if (rankDiff === 0) {
-            dontGap = true;
-          } else if (dontGap) {
-            dontGap = false;
-          } else {
-            // Uncomment if you want to have a ... gap
-            // ret.push(null);
-          }
-        }
-      }
-      ret.push(relativePerformanceCpus[i]);
-    }
-    return ret;
-  }, [relativePerformanceCpus]);
+  const cpus = relativePerformanceCpus;
 
   useEffect(() => {
     setBaselineCpu(
