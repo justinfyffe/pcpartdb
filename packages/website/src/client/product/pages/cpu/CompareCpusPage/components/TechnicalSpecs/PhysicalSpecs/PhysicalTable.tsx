@@ -31,7 +31,7 @@ export const PhysicalTable: FunctionComponent<PhysicalTableProps> = (props) => {
     <Table border responsive className={className}>
       <THead>
         <Tr>
-          <Th></Th>
+          <Th>Spec</Th>
           <Th>{name1}</Th>
           <Th>{name2}</Th>
         </Tr>

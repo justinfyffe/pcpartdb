@@ -107,7 +107,7 @@ export const ValueTable: FunctionComponent<ValueTableProps> = (props) => {
       <Table border responsive className={className}>
         <THead>
           <Tr>
-            <Th></Th>
+            <Th>CPU</Th>
             <Th className="text-right">Performance Per Dollar</Th>
             <Th className="text-right">Relative Value</Th>
           </Tr>

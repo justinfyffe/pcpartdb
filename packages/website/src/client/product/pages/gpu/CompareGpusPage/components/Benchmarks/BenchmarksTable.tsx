@@ -36,7 +36,7 @@ export const BenchmarksTable: FunctionComponent<BenchmarksTableProps> = (
     <Table border responsive className={className}>
       <THead>
         <Tr>
-          <Th></Th>
+          <Th>Benchmark</Th>
           <Th>{name1}</Th>
           <Th>{name2}</Th>
         </Tr>

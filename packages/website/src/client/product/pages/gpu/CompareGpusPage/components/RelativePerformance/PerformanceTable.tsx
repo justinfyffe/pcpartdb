@@ -122,7 +122,7 @@ export const PerformanceTable: FunctionComponent<PerformanceTableProps> = (
       <Table border responsive className={className}>
         <THead>
           <Tr>
-            <Th></Th>
+            <Th>GPU</Th>
             <Th className="text-right">Performance Rating</Th>
             <Th className="text-right">Relative Performance</Th>
           </Tr>

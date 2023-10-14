@@ -109,7 +109,7 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
     <Table border responsive className={className}>
       <THead>
         <Tr>
-          <Th></Th>
+          <Th>Info</Th>
           <Th>{name1}</Th>
           <Th>{name2}</Th>
         </Tr>

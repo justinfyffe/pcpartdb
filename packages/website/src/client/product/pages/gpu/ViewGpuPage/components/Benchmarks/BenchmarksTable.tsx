@@ -3,6 +3,9 @@ import { ProductBenchmarkRow } from 'packages/website/src/client/product/compone
 import {
   Table,
   TBody,
+  Th,
+  THead,
+  Tr,
 } from 'packages/website/src/client/shared/components/Table/Table';
 import React, { FunctionComponent, useContext } from 'react';
 import { ViewPageContext } from '../../context/ViewPageContext';
@@ -19,6 +22,12 @@ export const BenchmarksTable: FunctionComponent<BenchmarksTableProps> = (
 
   return (
     <Table border responsive className={className}>
+      <THead>
+        <Tr>
+          <Th>Benchmark</Th>
+          <Th>Value</Th>
+        </Tr>
+      </THead>
       <TBody>
         <ProductBenchmarkRow
           benchmarks={[getProductBenchmark(gpu, BenchmarKey.G3dMark)]}

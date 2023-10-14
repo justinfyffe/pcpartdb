@@ -9,6 +9,9 @@ import { ProductFieldRow } from 'packages/website/src/client/product/components/
 import {
   Table,
   TBody,
+  Th,
+  THead,
+  Tr,
 } from 'packages/website/src/client/shared/components/Table/Table';
 import React, { FunctionComponent, useContext, useMemo } from 'react';
 import { ViewPageContext } from '../../context/ViewPageContext';
@@ -54,6 +57,12 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
 
   return (
     <Table border responsive className={className}>
+      <THead>
+        <Tr>
+          <Th>Info</Th>
+          <Th>Value</Th>
+        </Tr>
+      </THead>
       <TBody>
         {cpuAffiliateUrl && (
           <ProductCustomRow
