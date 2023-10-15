@@ -30,3 +30,6 @@ cd ../..
 
 # Restart server
 ./bin/prod/restart
+
+# Run post deployment scripts
+npm run cli post-deployment

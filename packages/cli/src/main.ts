@@ -3,6 +3,7 @@ dotenv.config();
 
 import { Command } from 'commander';
 import { automationCommand } from './automation';
+import { postDeploymentCommand } from './post-deployment';
 import { scratchPadCommand } from './scratch-pad';
 
 const program = new Command();
@@ -10,6 +11,11 @@ const program = new Command();
 // Scratch Pad script for one-off scripts.
 program.command('scratch-pad').action(async () => {
   await scratchPadCommand({});
+});
+
+// Script that executes after every deployment.
+program.command('post-deployment').action(async () => {
+  await postDeploymentCommand({});
 });
 
 // Automation program
