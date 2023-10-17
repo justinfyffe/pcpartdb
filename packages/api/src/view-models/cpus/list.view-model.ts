@@ -18,6 +18,7 @@ export class ListCpusViewModelService {
   constructor(private db: Database, private productService: ProductService) {}
 
   async viewModel(request: ListCpusRequest, ctx: Context) {
+    console.time('ListCpusViewModelService');
     validate(request, listProductsRequestSchema);
     const query = request.query;
 
@@ -47,6 +48,7 @@ export class ListCpusViewModelService {
         ),
       { ctx, isolationLevel: 'ReadUncommitted' },
     );
+    console.timeEnd('ListCpusViewModelService');
 
     return response;
   }
