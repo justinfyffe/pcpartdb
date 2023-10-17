@@ -33,8 +33,13 @@ export class ViewGpuViewModelService {
   ) {}
 
   async viewModel(slug: string, ctx: Context) {
+    console.time('ViewGpuViewModelService');
+    console.time('ViewGpuViewModelService.getGpu');
     const gpu = await this.getGpu(slug, ctx);
+    console.timeEnd('ViewGpuViewModelService.getGpu');
+    console.time('ViewGpuViewModelService.getAdditionalData');
     const additionalData = await this.getAdditionalData(gpu, ctx);
+    console.timeEnd('ViewGpuViewModelService.getAdditionalData');
 
     const relatedGpus = await this.getRelatedGpus(
       3,
@@ -48,6 +53,7 @@ export class ViewGpuViewModelService {
       additionalData.relativeValueGpus,
       gpu,
     );
+    console.timeEnd('ViewGpuViewModelService');
 
     return {
       gpu,

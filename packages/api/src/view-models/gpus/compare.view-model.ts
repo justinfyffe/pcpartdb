@@ -33,8 +33,14 @@ export class CompareGpusViewModelService {
   ) {}
 
   async viewModel(slug: string, ctx: Context) {
+    console.time('CompareGpusViewModelService');
+
+    console.time('CompareGpusViewModelService.getComparison');
     const comparison = await this.getComparison(slug, ctx);
+    console.timeEnd('CompareGpusViewModelService.getComparison');
+    console.time('CompareGpusViewModelService.getAdditionalData');
     const additionalData = await this.getAdditionalData(comparison, ctx);
+    console.timeEnd('CompareGpusViewModelService.getAdditionalData');
 
     const relatedGpus = await this.getRelatedGpus(
       3,
@@ -48,6 +54,8 @@ export class CompareGpusViewModelService {
       additionalData.relativeValueGpus,
       comparison,
     );
+
+    console.timeEnd('CompareGpusViewModelService');
 
     return {
       comparison,

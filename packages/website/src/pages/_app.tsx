@@ -52,6 +52,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
 };
 
 MyApp.getInitialProps = async (appContext: AppContext) => {
+  console.time('MyApp.getInitialProps');
   // Need to add cookie directly to all server-side calls
   if (appContext.ctx.req) {
     axios.defaults.headers.common.Cookie =
@@ -59,7 +60,9 @@ MyApp.getInitialProps = async (appContext: AppContext) => {
   }
 
   // Get app configuration used for all pages
+  console.time('MyApp.getInitialProps.config');
   const config = await apiClient.get('config');
+  console.timeEnd('MyApp.getInitialProps.config');
 
   // calls page's `getInitialProps` and fills `appProps.pageProps`
   let appProps;
@@ -69,6 +72,7 @@ MyApp.getInitialProps = async (appContext: AppContext) => {
   } catch (error) {
     appProps = { pageProps: { error, config } };
   }
+  console.timeEnd('MyApp.getInitialProps');
 
   return { ...appProps };
 };

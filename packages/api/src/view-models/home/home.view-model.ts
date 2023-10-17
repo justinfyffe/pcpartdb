@@ -46,10 +46,20 @@ export class HomeViewModelService {
   async viewModel(ctx: Context) {
     return await this.cacheService.cache(
       async () => {
+        console.time('HomeViewModelService');
+        console.time('HomeViewModelService.getNvidiaVsAmdGpus');
         const nvidiaVsAmdGpus = await this.getNvidiaVsAmdGpus(ctx);
+        console.timeEnd('HomeViewModelService.getNvidiaVsAmdGpus');
+        console.time('HomeViewModelService.getPopularGpus');
         const popularGpus = await this.getPopularGpus(ctx);
+        console.timeEnd('HomeViewModelService.getPopularGpus');
+        console.time('HomeViewModelService.getIntelVsAmdCpus');
         const intelVsAmdCpus = await this.getIntelVsAmdCpus(ctx);
+        console.timeEnd('HomeViewModelService.getIntelVsAmdCpus');
+        console.time('HomeViewModelService.getPopularCpus');
         const popularCpus = await this.getPopularCpus(ctx);
+        console.timeEnd('HomeViewModelService.getPopularCpus');
+        console.timeEnd('HomeViewModelService');
 
         return {
           nvidiaVsAmdGpus,

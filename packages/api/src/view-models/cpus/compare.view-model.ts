@@ -31,8 +31,13 @@ export class CompareCpusViewModelService {
   ) {}
 
   async viewModel(slug: string, ctx: Context) {
+    console.time('CompareCpusViewModelService');
+    console.time('CompareCpusViewModelService.getComparison');
     const comparison = await this.getComparison(slug, ctx);
+    console.timeEnd('CompareCpusViewModelService.getComparison');
+    console.time('CompareCpusViewModelService.getAdditionalData');
     const additionalData = await this.getAdditionalData(comparison, ctx);
+    console.timeEnd('CompareCpusViewModelService.getAdditionalData');
 
     const relatedCpus = await this.getRelatedCpus(
       3,
@@ -46,6 +51,8 @@ export class CompareCpusViewModelService {
       additionalData.relativeValueCpus,
       comparison,
     );
+
+    console.timeEnd('CompareCpusViewModelService');
 
     return {
       comparison,

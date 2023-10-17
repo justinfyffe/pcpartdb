@@ -4,10 +4,13 @@ import { ViewGpuPage } from 'packages/website/src/client/product/pages/gpu/ViewG
 import { viewModelsClient } from '../../../client/shared/api/viewModelsClient';
 
 export async function getServerSideProps(ctx: NextPageContext) {
+  console.time('ViewGpuPage.getServerSideProps');
   const slug = ctx.query.slug as string;
 
   const endpoint = joinUrlParts('gpus/view', slug);
-  return await viewModelsClient.get(endpoint);
+  const response = await viewModelsClient.get(endpoint);
+  console.timeEnd('ViewGpuPage.getServerSideProps');
+  return response;
 }
 
 export default ViewGpuPage;

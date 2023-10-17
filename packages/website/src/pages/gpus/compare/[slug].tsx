@@ -4,10 +4,13 @@ import { CompareGpusPage } from 'packages/website/src/client/product/pages/gpu/C
 import { viewModelsClient } from '../../../client/shared/api/viewModelsClient';
 
 export async function getServerSideProps(ctx: NextPageContext) {
+  console.time('CompareGpusPage.getServerSideProps');
   const slug = ctx.query.slug as string;
 
   const endpoint = joinUrlParts('gpus/compare', slug);
-  return await viewModelsClient.get(endpoint);
+  const response = await viewModelsClient.get(endpoint);
+  console.timeEnd('CompareGpusPage.getServerSideProps');
+  return response;
 }
 
 export default CompareGpusPage;

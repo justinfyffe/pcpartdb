@@ -18,6 +18,7 @@ export class ListGpusViewModelService {
   constructor(private db: Database, private productService: ProductService) {}
 
   async viewModel(request: ListGpusRequest, ctx: Context) {
+    console.time('ListGpusViewModelService');
     validate(request, listProductsRequestSchema);
     const query = request.query;
 
@@ -61,6 +62,7 @@ export class ListGpusViewModelService {
         ),
       { ctx, isolationLevel: 'ReadUncommitted' },
     );
+    console.timeEnd('ListGpusViewModelService');
 
     return response;
   }
