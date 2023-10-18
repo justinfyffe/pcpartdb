@@ -1,5 +1,5 @@
 import { debounce } from '@pcpartdb/shared';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const useDebounce = <T extends (...args: any[]) => ReturnType<T>>(
@@ -7,5 +7,6 @@ export const useDebounce = <T extends (...args: any[]) => ReturnType<T>>(
   timeout: number,
 ): ((...args: Parameters<T>) => void) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  return useCallback(debounce(callback, timeout), [callback, timeout]);
+  const fn = useMemo(() => debounce(callback, timeout), [callback, timeout]);
+  return useCallback(fn, [fn]);
 };

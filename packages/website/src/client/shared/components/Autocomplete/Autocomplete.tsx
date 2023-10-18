@@ -15,7 +15,7 @@ import { AutocompleteContext } from './AutocompleteContext';
 import { AutocompleteOptionProps } from './AutocompleteOption';
 import { AutocompleteResult } from './types';
 
-const DEFAULT_THROTTLE_MS = 300;
+const DEFAULT_THROTTLE_MS = 500;
 
 export interface AutocompleteProps extends Omit<TextInputProps, 'value'> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -89,7 +89,7 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
       },
       [freeSolo, onChange, onQuery],
     );
-    const throttled = useThrottle(
+    const throttledOnChange = useThrottle(
       handleQuery,
       throttleTimeout ?? DEFAULT_THROTTLE_MS,
     );
@@ -171,7 +171,7 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
             suffix={isLoading ? <Spinner /> : suffix}
             placeholder={placeholder}
             value={query || ''}
-            onChange={throttled}
+            onChange={throttledOnChange}
             onKeyDown={handleKeyDown}
             onBlur={handleBlur}
             onFocus={handleFocus}
