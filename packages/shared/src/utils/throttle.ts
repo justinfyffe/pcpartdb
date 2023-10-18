@@ -18,7 +18,6 @@ export const throttle = <T extends (...args: any[]) => ReturnType<T>>(
     } else {
       clearTimeout(timer);
       const timeSinceLastRun = Date.now() - lastRunTime;
-      console.log(timeSinceLastRun);
       if (timeSinceLastRun >= timeout) {
         await callback(...args);
         lastRunTime = Date.now();
