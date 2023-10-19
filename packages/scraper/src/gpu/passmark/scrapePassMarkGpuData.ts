@@ -1,18 +1,14 @@
 import {
   BenchmarKey,
-  formatMarketSegment,
-  GpuField,
   GpuFields,
   GpuProduct,
-  MarketSegment,
   ProductBenchmark,
   ProductType,
   ScrapeProductResponse,
 } from '@pcpartdb/shared';
 import * as cheerio from 'cheerio';
 import { scraper } from '../../scraper';
-import { CommonScraperOptions, ScraperContext } from '../../types';
-import { createGpuField } from '../utils';
+import { CommonScraperOptions } from '../../types';
 
 export interface ScrapePassMarkGpuDataOptions extends CommonScraperOptions {
   url: string;
@@ -22,14 +18,12 @@ export interface ScrapePassMarkGpuDataOptions extends CommonScraperOptions {
 export async function scrapePassMarkGpuData(
   options: ScrapePassMarkGpuDataOptions,
 ) {
-  const { url, noProxy, ctx } = options;
+  const { url, noProxy, ctx: _ctx } = options;
 
   const response = await scraper.scrape(url, { retries: 1, noProxy });
   const $ = cheerio.load(response.data);
 
-  const fields: GpuFields = {
-    marketSegment: getMarketSegment($, ctx),
-  };
+  const fields: GpuFields = {};
 
   const benchmarks: ProductBenchmark[] = [getG3dMark($), getG2dMark($)].filter(
     (value) => value != null,
@@ -70,30 +64,4 @@ function getG2dMark($: cheerio.CheerioAPI): ProductBenchmark {
     value,
     metadata: null,
   } as ProductBenchmark;
-}
-
-function getMarketSegment(
-  $: cheerio.CheerioAPI,
-  ctx: ScraperContext,
-): GpuField<MarketSegment> {
-  const text = $('.desc-foot p strong')
-    .filter((_i, strong) => $(strong).text().trim() === 'Videocard Category:')
-    .parent()
-    .contents()
-    .filter((_i, el) => el.type === 'text' && el.nodeValue.trim() !== '')
-    .first()
-    .text()
-    .trim();
-
-  let raw: MarketSegment = null;
-  if (text === 'Desktop') {
-    raw = MarketSegment.Desktop;
-  } else if (text === 'Mobile') {
-    raw = MarketSegment.Mobile;
-  } else if (text === 'Workstation') {
-    raw = MarketSegment.Workstation;
-  }
-  const formatted = raw != null ? formatMarketSegment(raw) : raw;
-
-  return createGpuField({ field: 'marketSegment', raw, formatted, ctx });
 }
