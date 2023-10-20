@@ -150,7 +150,7 @@ export class ProductService {
 
     let count: number;
     if (!skipCount) {
-      count = await this.repository.count(request, ctx);
+      count = await this.count(request, ctx);
     }
 
     const products: Product[] = await mapToProductDtos(productEntities, {
