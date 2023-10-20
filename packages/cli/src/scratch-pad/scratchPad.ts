@@ -6,49 +6,41 @@ interface Data {
   id: number;
   name: string;
   score: number;
+  msrp?: number;
+  scorePerMsrp?: number;
   benchmarks: Record<string, number>;
   estimates: Record<string, number>;
 }
 
-const REQUIRED_BENCHMARKS = [BenchmarKey.G3dMark, BenchmarKey.G2dMark];
-
-const PERFORMANCE_BENCHMARKS = [
-  BenchmarKey.G3dMark,
-  BenchmarKey.G2dMark,
-  BenchmarKey.TimespyGraphics,
-];
+const GPU_REQUIRED_BENCHMARKS = [BenchmarKey.G3dMark, BenchmarKey.G2dMark];
+const GPU_PERFORMANCE_BENCHMARKS = [BenchmarKey.G3dMark, BenchmarKey.G2dMark];
+const GPU_WEIGHTS = {
+  [BenchmarKey.G3dMark]: 1,
+  [BenchmarKey.G2dMark]: 0,
+};
 
 export async function scratchPad() {
   const db = await getDatabase();
   const productRepository = new ProductRepository(db);
 
-  const weights = {
-    [BenchmarKey.G3dMark]: 0.8,
-    [BenchmarKey.G2dMark]: 0.1,
-    [BenchmarKey.TimespyGraphics]: 0.1,
-  };
-
   const gpus = await productRepository.list({
     productType: ProductType.Gpu,
     filter: { isChipset: true },
     includeBenchmarks: true,
+    includeFields: true,
   });
 
   const dataList: Data[] = gpus
     .filter((gpu) =>
-      REQUIRED_BENCHMARKS.every((key) =>
+      GPU_REQUIRED_BENCHMARKS.every((key) =>
         gpu.benchmarks.some((b) => b.benchmarkKey === key),
       ),
     )
-    // .filter((gpu) =>
-    //   gpu.benchmarks.some((benchmark) =>
-    //     PERFORMANCE_BENCHMARKS.includes(benchmark.benchmarkKey as BenchmarKey),
-    //   ),
-    // )
     .map((gpu) => ({
       id: gpu.id,
       name: gpu.name,
       score: null,
+      msrp: gpu.gpuFields?.msrpValue ?? null,
       benchmarks: gpu.benchmarks.reduce((acc, benchmark) => {
         acc[benchmark.benchmarkKey] = benchmark.value;
         return acc;
@@ -56,53 +48,29 @@ export async function scratchPad() {
       estimates: {},
     }));
 
-  const maxes: Record<string, number> = {
-    [BenchmarKey.G3dMark]: 0,
-    [BenchmarKey.G2dMark]: 0,
-    [BenchmarKey.TimespyGraphics]: 0,
-  };
-  for (const data of dataList) {
-    maxes[BenchmarKey.G3dMark] = Math.max(
-      maxes[BenchmarKey.G3dMark],
-      data.benchmarks[BenchmarKey.G3dMark] || 0,
-    );
-    maxes[BenchmarKey.G2dMark] = Math.max(
-      maxes[BenchmarKey.G2dMark],
-      data.benchmarks[BenchmarKey.G2dMark] || 0,
-    );
-    maxes[BenchmarKey.TimespyGraphics] = Math.max(
-      maxes[BenchmarKey.TimespyGraphics],
-      data.benchmarks[BenchmarKey.TimespyGraphics] || 0,
-    );
-  }
+  const maxes = calculateMaxes(dataList, GPU_PERFORMANCE_BENCHMARKS);
 
-  // TODO: estimate missing values
   for (const data of dataList) {
-    const existingKeys = PERFORMANCE_BENCHMARKS.filter(
+    const existingKeys = GPU_PERFORMANCE_BENCHMARKS.filter(
       (key) => data.benchmarks[key] != null,
     );
-    const missingKeys = PERFORMANCE_BENCHMARKS.filter(
+    const missingKeys = GPU_PERFORMANCE_BENCHMARKS.filter(
       (key) => data.benchmarks[key] == null,
     );
 
     for (const missingKey of missingKeys) {
-      data.estimates[missingKey] = estimateScore(
+      data.estimates[missingKey] = predictScore(
         data,
         dataList,
         missingKey,
         existingKeys,
         maxes,
-        weights,
+        GPU_WEIGHTS,
       );
     }
   }
 
-  calculateScore(
-    dataList,
-    [BenchmarKey.G3dMark, BenchmarKey.G2dMark],
-    maxes,
-    weights,
-  );
+  calculateScore(dataList, GPU_PERFORMANCE_BENCHMARKS, maxes, GPU_WEIGHTS);
   const sortedData = dataList.sort((d1, d2) => d2.score - d1.score);
   sortedData.forEach((value) => {
     console.log(
@@ -113,15 +81,41 @@ export async function scratchPad() {
       },${value.estimates[BenchmarKey.TimespyGraphics] ?? ''}`,
     );
   });
+
+  console.log('\n\n\n');
+
+  const sortedByValue = dataList
+    .filter((d) => d.scorePerMsrp != null)
+    .sort((d1, d2) => (d2.scorePerMsrp || 0) - (d1.scorePerMsrp || 0));
+  sortedByValue.forEach((value) => {
+    console.log(
+      `${value.name}: ${value.scorePerMsrp} = ${value.score ?? ''} / ${
+        value.msrp ?? ''
+      }`,
+    );
+  });
 }
 
-function estimateScore(
+function calculateMaxes(dataList: Data[], benchmarks: BenchmarKey[]) {
+  const maxes: Partial<Record<BenchmarKey, number>> = {};
+  for (const data of dataList) {
+    for (const benchmark of benchmarks) {
+      maxes[benchmark] = Math.max(
+        maxes[benchmark] || 0,
+        data.benchmarks[benchmark] || 0,
+      );
+    }
+  }
+  return maxes;
+}
+
+function predictScore(
   dataToFix: Data,
   dataList: Data[],
   missingKey: BenchmarKey,
   existingKeys: BenchmarKey[],
-  maxes: Record<string, number>,
-  weights: Record<string, number>,
+  maxes: Partial<Record<BenchmarKey, number>>,
+  weights: Partial<Record<BenchmarKey, number>>,
 ) {
   let maxScore = 0;
   const scores: { data: Data; score: number }[] = [];
@@ -177,6 +171,7 @@ function calculateScore(
   weights: Record<string, number>,
 ) {
   let maxScore = 0;
+  let maxScorePerMsrp = 0;
   for (const data of dataList) {
     if (!hasBenchmarks(data, benchmarkKeys, true)) {
       continue;
@@ -188,9 +183,17 @@ function calculateScore(
     }
 
     maxScore = Math.max(maxScore, data.score);
+
+    if (data.msrp != null) {
+      data.scorePerMsrp = data.score / data.msrp;
+      maxScorePerMsrp = Math.max(maxScorePerMsrp, data.scorePerMsrp);
+    }
   }
   for (const data of dataList) {
     data.score = (data.score / maxScore) * 100;
+    if (data.scorePerMsrp != null) {
+      data.scorePerMsrp = (data.scorePerMsrp / maxScorePerMsrp) * 100;
+    }
   }
 }
 

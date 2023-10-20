@@ -12,6 +12,7 @@ import {
   BenchmarKey,
   CreateProductRequest,
   createProductRequestSchema,
+  listAllProductsRequestSchema,
   ListProductsRequest,
   listProductsRequestSchema,
   ListProductsResponse,
@@ -120,7 +121,11 @@ export class ProductService {
     options: ListOptions,
     ctx: Context,
   ): Promise<ListProductsResponse> {
-    validate(request, listProductsRequestSchema);
+    if (ctx.user?.isStaff) {
+      validate(request, listAllProductsRequestSchema);
+    } else {
+      validate(request, listProductsRequestSchema);
+    }
 
     const includeBenchmarks = options?.includeBenchmarks ?? false;
     const includeImages = options?.includeImages ?? false;
@@ -155,6 +160,7 @@ export class ProductService {
 
     const products: Product[] = await mapToProductDtos(productEntities, {
       fields,
+      includeBenchmarks,
       includeSources,
       includeAutomation,
     });

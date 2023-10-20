@@ -48,6 +48,11 @@ export enum AutomationActionType {
    * GPU_DATA approval entry for newly found data.
    */
   UpdateGpu = 'UPDATE_GPU',
+
+  /**
+   * Recalculates and saves performance-related ratings.
+   */
+  UpdatePerformanceScores = 'UPDATE_PERFORMANCE_SCORES',
 }
 
 export enum AutomationActionStatus {

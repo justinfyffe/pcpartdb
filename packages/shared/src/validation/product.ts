@@ -224,29 +224,37 @@ export const productUpdateSchema = Joi.object({
   abortEarly: false,
 });
 
+export const listProductsFilterSchema = Joi.object({
+  chipsetId: Joi.array().items(Joi.number()).allow(null),
+  company: Joi.array().items(Joi.string().allow('')).allow(null),
+  excludeIds: Joi.array().items(Joi.number()).allow(null),
+  isChipset: Joi.boolean().allow(null),
+  isRetailModel: Joi.boolean().allow(null),
+  maxPerformanceScore: Joi.number().allow(null),
+  maxValueScore: Joi.number().allow(null),
+  minPerformanceScore: Joi.number().allow(null),
+  minValueScore: Joi.number().allow(null),
+  performanceRated: Joi.boolean().allow(null),
+  segment: Joi.array().items(marketSegmentSchema).allow(null),
+  valueRated: Joi.boolean().allow(null),
+  year: Joi.array().items(Joi.number()).allow(null),
+});
+
 export const listProductsRequestSchema = Joi.object({
   productType: productTypeSchema.required(),
   query: listQuerySchema({
-    filterSchema: Joi.object({
-      chipsetId: Joi.array().items(Joi.number()).allow(null),
-      company: Joi.array().items(Joi.string().allow('')).allow(null),
-      excludeIds: Joi.array().items(Joi.number()).allow(null),
-      isChipset: Joi.boolean().allow(null),
-      isRetailModel: Joi.boolean().allow(null),
-      maxPerformanceScore: Joi.number().allow(null),
-      maxValueScore: Joi.number().allow(null),
-      minPerformanceScore: Joi.number().allow(null),
-      minValueScore: Joi.number().allow(null),
-      performanceRated: Joi.boolean().allow(null),
-      segment: Joi.array().items(marketSegmentSchema).allow(null),
-      valueRated: Joi.boolean().allow(null),
-      year: Joi.array().items(Joi.number()).allow(null),
-    }),
+    filterSchema: listProductsFilterSchema,
     maxLimit: 100,
   }),
-}).options({
-  abortEarly: false,
-});
+}).options({ abortEarly: false });
+
+export const listAllProductsRequestSchema = Joi.object({
+  productType: productTypeSchema.required(),
+  query: listQuerySchema({
+    filterSchema: listProductsFilterSchema,
+    maxLimit: Infinity,
+  }),
+}).options({ abortEarly: false });
 
 export const createProductRequestSchema = Joi.object({
   product: productSchema,

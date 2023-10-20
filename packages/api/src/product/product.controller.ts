@@ -57,6 +57,23 @@ export class ProductController {
     );
   }
 
+  @Get('all')
+  @UseGuards(StaffGuard)
+  async listAll(@Query('req') reqJson: string, @Ctx() ctx: Context) {
+    const req: ListProductsRequest = JSON.parse(reqJson);
+    const ret = await this.db.transaction(
+      async () => {
+        return await this.service.list(
+          req,
+          { fields: ['msrp'], includeBenchmarks: true, skipCount: true },
+          ctx,
+        );
+      },
+      { ctx, timeout: 60_000 },
+    );
+    return ret;
+  }
+
   @Post('scrape')
   @UseGuards(StaffGuard)
   async scrape(@Body() request: ScrapeProductRequest, @Ctx() ctx: Context) {

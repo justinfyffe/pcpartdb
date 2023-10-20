@@ -10,6 +10,7 @@ import { updateCpuSourcesAction } from './actions/updateCpuSourcesAction';
 import { updateGpuAction } from './actions/updateGpuAction';
 import { updateGpuChipsetSourcesAction } from './actions/updateGpuChipsetSourcesAction';
 import { updateGpuRetailModelSourcesAction } from './actions/updateGpuRetailModelSourcesAction';
+import { updateGpuPerformanceScores } from './actions/updatePerformanceScoresAction/updateGpuPerformanceScores';
 import { updateSitemapsAction } from './actions/updateSitemapsAction';
 import { AutomationContext } from './types';
 import { saveAutomationContext } from './utils/context';
@@ -20,6 +21,11 @@ const UPDATE_GPU_CHIPSET_SOURCES_FREQUENCY = 1000 * 60 * 60 * 24 * 7; // Weekly
 
 export async function executeAutomation(context: AutomationContext) {
   const action = await getNextAction(context);
+  // const action = {
+  //   type: AutomationActionType.UpdatePerformanceScores,
+  //   status: AutomationActionStatus.Pending,
+  // };
+
   if (action == null) {
     return;
   }
@@ -44,6 +50,8 @@ export async function executeAutomation(context: AutomationContext) {
     await updateGpuChipsetSourcesAction(action, context);
   } else if (type === AutomationActionType.UpdateGpuRetailModelSources) {
     await updateGpuRetailModelSourcesAction(action, context);
+  } else if (type === AutomationActionType.UpdatePerformanceScores) {
+    await updateGpuPerformanceScores(action, context);
   } else {
     console.error(`Unsupported Action: ${action}`);
   }
