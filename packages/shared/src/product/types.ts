@@ -150,3 +150,9 @@ export interface RelatedProducts {
 export interface RelatedProductComparisons {
   comparisons: ProductComparison[];
 }
+
+export interface ProductPerformanceScores {
+  productId: number;
+  performanceRating?: number;
+  performancePerMsrp?: number;
+}

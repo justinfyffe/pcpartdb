@@ -23,13 +23,23 @@ export class Database extends DatabaseClient implements OnModuleInit {
     callback: (trx: Transaction) => Promise<T>,
     options?: TransactionOptions,
   ) {
+    if (options?.ctx?.trx != null) {
+      return await callback(options.ctx.trx);
+    }
+
     return await super.transaction(
       async (trx) => {
         if (options?.ctx != null) {
           options.ctx.trx = trx;
         }
 
-        return await callback(trx);
+        const result = await callback(trx);
+
+        if (options?.ctx?.trx != null) {
+          options.ctx.trx = null;
+        }
+
+        return result;
       },
       {
         isolationLevel: options?.isolationLevel,

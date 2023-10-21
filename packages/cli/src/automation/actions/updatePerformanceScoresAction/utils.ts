@@ -5,13 +5,9 @@ import {
   Product,
   productBenchmarkValue,
   productFieldRawValue,
+  ProductPerformanceScores,
 } from '@pcpartdb/shared';
-import {
-  BenchmarkEstimates,
-  BenchmarkMaxes,
-  BenchmarkWeights,
-  PerformanceScores,
-} from './types';
+import { BenchmarkEstimates, BenchmarkMaxes, BenchmarkWeights } from './types';
 
 export function getBenchmarkMaxes(
   products: Product[],
@@ -31,10 +27,17 @@ export function getBenchmarkMaxes(
 
 export function filterProducts(
   products: Product[],
-  requiredBenchmarks: BenchmarKey[],
+  benchmarks: BenchmarKey[],
+  minRequired?: number,
 ) {
-  return products.filter((product) =>
-    requiredBenchmarks.every((rb) => hasProductBenchmark(product, rb)),
+  const requiredCount = minRequired || benchmarks.length;
+  return products.filter(
+    (product) =>
+      benchmarks.reduce(
+        (acc, benchmark) =>
+          (acc += hasProductBenchmark(product, benchmark) ? 1 : 0),
+        0,
+      ) >= requiredCount,
   );
 }
 
@@ -113,9 +116,10 @@ export function calculatePerformanceScores(
     });
   }
 
-  const ret: Record<number, PerformanceScores> = {};
+  const ret: ProductPerformanceScores[] = [];
   for (const result of results) {
-    ret[result.product.id] = {
+    ret.push({
+      productId: result.product.id,
       performanceRating:
         result.rawPerformanceRating != null
           ? (result.rawPerformanceRating / maxPerformanceRating) * 100
@@ -124,7 +128,7 @@ export function calculatePerformanceScores(
         result.rawPerformancePerMsrp != null
           ? (result.rawPerformancePerMsrp / maxPerformancePerMsrp) * 100
           : null,
-    };
+    });
   }
   return ret;
 }

@@ -11,6 +11,7 @@ export function mapToProductBenchmarkDto(entity: ProductBenchmarkEntity) {
     productId: entity.productId,
     benchmarkKey: entity.benchmarkKey,
     value: entity.value,
+    valuePerMsrp: entity.valuePerMsrp,
     metadata: entity.metadata,
   } as ProductBenchmark;
 }
@@ -33,6 +34,7 @@ export function mapToProductBenchmarkEntity(dto: ProductBenchmark) {
     productId: undefined,
     benchmarkKey: dto.benchmarkKey,
     value: dto.value,
+    valuePerMsrp: dto.valuePerMsrp,
     metadata: dto.metadata,
   } as ProductBenchmarkEntity;
 }

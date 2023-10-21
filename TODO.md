@@ -1,4 +1,5 @@
 Primary Focus:
+- Better Performance score
 - More Benchmarks Project
 
 Secondary Focus:
@@ -8,8 +9,19 @@ Secondary Focus:
 
 When Bored:
 - Make autocomplete stricter, not looser when searching?
-- Explore kysely for querying
-- Fix debounce on autocomplete
+- Improve db performance using queryRaw
+
+Better Performance Score
+- [] Display Performance Rating and Value Rating more prominently
+  - [] Larger font/section, maybe a donut chart
+- [] Rename Performance Score to "Performance Rating"
+- [] Rename Perf per MSRP to "Value Rating"
+- [] Add valuePerMsrp to ProductBenchmark
+- [] Add ability to sort by benchmark and benchmark per msrp
+- [] Performance and value tables
+- [] Code cleanup
+  - [] Move automation action-related controller methods to automation-actions.controller.ts
+  - [] Migrate automation-source code to automation folder
 
 Admin Improvements
 - Improved data auditing
@@ -27,14 +39,13 @@ Analytics:
 
 Automation:
 - Add more scrapers as they're needed
-  - Intel website
-  - AMD Website
-  - Wikichip
+  - Notebook Check
+  - Intel Website?
+  - AMD Website?
 - Improve automation autocomplete
   - Remove retail models from chipset autocomplete
-  - More options
   - Better sort (maybe by name? non-archived first?)
-- Reduce update frequency of gpu retail models (except for price)
+- Reduce update frequency of gpu retail models
 - Reduce update frequency of old products
 - View processing / failed automation actions.
   - Add ability to requeue

@@ -6,6 +6,8 @@ import {
   ListPagination,
   ListProductsFilter,
   ListSort,
+  ProductFieldMeta,
+  ProductPerformanceScores,
   ProductType,
   ProductUpdateStatus,
 } from '@pcpartdb/shared';
@@ -310,6 +312,99 @@ export class ProductRepository {
     });
   }
 
+  async applyPerformanceScores(
+    productType: ProductType,
+    scores: ProductPerformanceScores[],
+    config?: RepositoryConfig,
+  ) {
+    await this.resetPerformanceScores(productType, config);
+    await this.setPerformanceScores(productType, scores, config);
+  }
+
+  private async resetPerformanceScores(
+    productType: ProductType,
+    config?: RepositoryConfig,
+  ) {
+    const db = config?.trx ?? this.db;
+
+    const tableName: string = this.getFieldsTable(productType);
+    await db.$executeRaw(Prisma.sql`
+      UPDATE ${Prisma.raw(tableName)}
+      SET 
+        performance_rating_value = null,
+        performance_rating_meta = null,
+        performance_per_msrp_value = null,
+        performance_per_msrp_meta = null
+    `);
+  }
+
+  private async setPerformanceScores(
+    productType: ProductType,
+    scores: ProductPerformanceScores[],
+    config?: RepositoryConfig,
+  ) {
+    const db = config?.trx ?? this.db;
+
+    const productIds: number[] = [];
+    const performanceRatingValues: number[] = [];
+    const performanceRatingMetas: Partial<ProductFieldMeta>[] = [];
+    const performancePerMsrpValues: number[] = [];
+    const performancePerMsrpMetas: Partial<ProductFieldMeta>[] = [];
+    scores.forEach((value) => {
+      productIds.push(value.productId);
+      performanceRatingValues.push(value.performanceRating || null);
+      performancePerMsrpValues.push(value.performancePerMsrp || null);
+      performanceRatingMetas.push(
+        value.performanceRating != null
+          ? {
+              fieldKey: 'performanceRating',
+              formattedValue: `${value.performanceRating.toFixed(2)}`,
+              autoUpdate: true,
+            }
+          : null,
+      );
+      performancePerMsrpMetas.push(
+        value.performancePerMsrp != null
+          ? {
+              fieldKey: 'performancePerMsrp',
+              formattedValue: `${value.performancePerMsrp.toFixed(2)}`,
+              autoUpdate: true,
+            }
+          : null,
+      );
+    });
+
+    const tableName: string = this.getFieldsTable(productType);
+    await db.$executeRaw(Prisma.sql`
+      UPDATE ${Prisma.raw(tableName)} f
+      SET (
+        performance_rating_value,
+        performance_rating_meta,
+        performance_per_msrp_value,
+        performance_per_msrp_meta
+      ) = (
+        d.performance_rating_value,
+        d.performance_rating_meta,
+        d.performance_per_msrp_value,
+        d.performance_per_msrp_meta
+      )
+      FROM (
+        SELECT * FROM UNNEST(
+          ${productIds}::INT[],
+          ${performanceRatingValues}::FLOAT[],
+          ${performanceRatingMetas}::JSON[],
+          ${performancePerMsrpValues}::FLOAT[],
+          ${performancePerMsrpMetas}::JSON[]
+        ) AS t(product_id,
+                performance_rating_value,
+                performance_rating_meta,
+                performance_per_msrp_value,
+                performance_per_msrp_meta)
+      ) AS d
+      WHERE f.product_id = d.product_id
+    `);
+  }
+
   private generateWhere(
     productType: ProductType,
     filter?: ListProductsFilter,
@@ -585,5 +680,17 @@ export class ProductRepository {
     }
 
     return { id: 'desc' };
+  }
+
+  private getFieldsTable(productType: ProductType) {
+    if (productType === ProductType.Cpu) {
+      return 'cpu_fields';
+    } else if (productType === ProductType.Gpu) {
+      return 'gpu_fields';
+    } else {
+      throw new Error(
+        `Invalid product type (${productType}) for ProductRepository.getFieldsTableName`,
+      );
+    }
   }
 }

@@ -21,16 +21,19 @@ import {
   ProductDiff,
   ProductFieldKey,
   productFieldRawValue,
+  ProductPerformanceScores,
   ProductRankKey,
   ProductSource,
   ProductType,
   ProductUpdate,
   ScrapeProductRequest,
   scrapeProductRequestSchema,
+  sleep,
   UpdateProductRequest,
   updateProductRequestSchema,
   ValidationErrorType,
 } from '@pcpartdb/shared';
+import { Database } from '../database';
 import { Context } from '../shared/context';
 import { badRequestError, notFoundError } from '../shared/error';
 import { validate } from '../shared/validation/validate';
@@ -97,6 +100,11 @@ interface CountChildrenOptions {
   productIds: number[];
 }
 
+interface ApplyProductPerformanceScoresOption {
+  productType: ProductType;
+  scores: ProductPerformanceScores[];
+}
+
 @Injectable()
 export class ProductService {
   constructor(
@@ -105,6 +113,7 @@ export class ProductService {
     private autocompleteService: ProductAutocompleteService,
     @Inject(forwardRef(() => ProductUpdateService))
     private updateService: ProductUpdateService,
+    private db: Database,
   ) {}
 
   async count(request: ListProductsRequest, ctx: Context) {
@@ -501,6 +510,24 @@ export class ProductService {
 
   async countChildren(options: CountChildrenOptions, ctx: Context) {
     return await this.repository.countChildren(options, ctx);
+  }
+
+  async applyPerformanceScores(
+    options: ApplyProductPerformanceScoresOption,
+    ctx: Context,
+  ) {
+    const { productType, scores: scoresList } = options;
+
+    await this.db.transaction(
+      async () => {
+        await this.repository.applyPerformanceScores(
+          productType,
+          scoresList,
+          ctx,
+        );
+      },
+      { ctx, timeout: 120_000 },
+    );
   }
 
   private populatePerformanceRatings(product: Product) {

@@ -19,6 +19,7 @@ export interface ProductBenchmark {
 
   benchmarkKey: BenchmarKey;
   value?: number;
+  valuePerMsrp?: number;
 
   metadata?: ProductBenchmarkMeta;
 }

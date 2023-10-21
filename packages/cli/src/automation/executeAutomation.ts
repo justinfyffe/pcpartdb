@@ -2,6 +2,7 @@ import {
   AutomationAction,
   AutomationActionStatus,
   AutomationActionType,
+  ProductType,
 } from '@pcpartdb/shared';
 import { createCpuAction } from './actions/createCpuAction';
 import { createGpuAction } from './actions/createGpuAction';
@@ -10,7 +11,7 @@ import { updateCpuSourcesAction } from './actions/updateCpuSourcesAction';
 import { updateGpuAction } from './actions/updateGpuAction';
 import { updateGpuChipsetSourcesAction } from './actions/updateGpuChipsetSourcesAction';
 import { updateGpuRetailModelSourcesAction } from './actions/updateGpuRetailModelSourcesAction';
-import { updateGpuPerformanceScores } from './actions/updatePerformanceScoresAction/updateGpuPerformanceScores';
+import { updatePerformanceScoresAction } from './actions/updatePerformanceScoresAction/updatePerformanceScoresAction';
 import { updateSitemapsAction } from './actions/updateSitemapsAction';
 import { AutomationContext } from './types';
 import { saveAutomationContext } from './utils/context';
@@ -20,11 +21,14 @@ const UPDATE_CPU_SOURCES_FREQUENCY = 1000 * 60 * 60 * 24 * 7; // Weekly
 const UPDATE_GPU_CHIPSET_SOURCES_FREQUENCY = 1000 * 60 * 60 * 24 * 7; // Weekly
 
 export async function executeAutomation(context: AutomationContext) {
-  const action = await getNextAction(context);
-  // const action = {
-  //   type: AutomationActionType.UpdatePerformanceScores,
-  //   status: AutomationActionStatus.Pending,
-  // };
+  // const action = await getNextAction(context);
+  const action: any = {
+    type: AutomationActionType.UpdatePerformanceScores,
+    status: AutomationActionStatus.Pending,
+    data: {
+      productType: ProductType.Gpu,
+    },
+  };
 
   if (action == null) {
     return;
@@ -51,7 +55,7 @@ export async function executeAutomation(context: AutomationContext) {
   } else if (type === AutomationActionType.UpdateGpuRetailModelSources) {
     await updateGpuRetailModelSourcesAction(action, context);
   } else if (type === AutomationActionType.UpdatePerformanceScores) {
-    await updateGpuPerformanceScores(action, context);
+    await updatePerformanceScoresAction(action, context);
   } else {
     console.error(`Unsupported Action: ${action}`);
   }

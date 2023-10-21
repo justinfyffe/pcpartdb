@@ -29,6 +29,7 @@ export class WebsiteController {
     private db: Database,
   ) {}
 
+  // TODO: delete
   @Post('sitemaps')
   @UseGuards(StaffGuard)
   @UseInterceptors(FileInterceptor('file', MULTER_OPTIONS))

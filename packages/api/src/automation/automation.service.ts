@@ -1,47 +1,24 @@
 import { Injectable } from '@nestjs/common';
 import {
-  mapToAutomationActionDto,
-  mapToAutomationActionDtos,
-  mapToAutomationActionEntity,
-} from '@pcpartdb/database';
-import {
-  AutomationAction,
-  AutomationActionStatus,
-  AutomationActionType,
   AutomationStatus,
-  CreateAutomationActionRequest,
-  createAutomationActionRequestSchema,
-  ListAutomationActionsRequest,
-  listAutomationActionsRequestSchema,
-  ListAutomationActionsResponse,
   ProductType,
   SubProductType,
   updateAutomationStatusSchema,
-  UpdateCpuActionData,
-  UpdateGpuActionData,
 } from '@pcpartdb/shared';
 import * as fs from 'fs';
 import * as fsPromises from 'fs/promises';
 import { AutomationSourceRepository } from '../product/automation-source.repository';
-import { ProductRepository } from '../product/product.repository';
 import { ProductUpdateRepository } from '../product/product-update.repository';
 import { Context } from '../shared/context';
-import {
-  badRequestError,
-  internalServerError,
-  notFoundError,
-} from '../shared/error';
+import { badRequestError } from '../shared/error';
 import { dataPath } from '../shared/utils';
 import { validate } from '../shared/validation/validate';
-import { AutomationRepository } from './automation.repository';
 
 const CONFIG_FILE = 'automation.json';
 
 @Injectable()
 export class AutomationService {
   constructor(
-    private repository: AutomationRepository,
-    private productRepository: ProductRepository,
     private automationSourceRepository: AutomationSourceRepository,
     private productUpdateRepository: ProductUpdateRepository,
   ) {}
@@ -77,89 +54,6 @@ export class AutomationService {
       JSON.stringify(statusToSave, undefined, 2),
       'utf-8',
     );
-  }
-
-  async listPending(request: ListAutomationActionsRequest, ctx: Context) {
-    validate(request, listAutomationActionsRequestSchema);
-    const { query } = request;
-
-    const { results, total } = await this.repository.listPending(
-      { query },
-      ctx,
-    );
-
-    return {
-      query,
-      results: await mapToAutomationActionDtos(results, {
-        includeData: true,
-      }),
-      total,
-    } as ListAutomationActionsResponse;
-  }
-
-  async create(request: CreateAutomationActionRequest, ctx: Context) {
-    validate(request, createAutomationActionRequestSchema);
-
-    const entity = await mapToAutomationActionEntity({
-      ...request,
-      status: AutomationActionStatus.Pending,
-    });
-    await this.repository.create(entity, ctx);
-  }
-
-  async updateActionStatus(
-    id: number,
-    status: AutomationActionStatus,
-    ctx: Context,
-  ) {
-    const entity = await this.repository.findById(id, ctx);
-    if (entity == null) {
-      throw notFoundError({ id });
-    }
-
-    await this.repository.update(id, { status }, ctx);
-  }
-
-  /**
-   * Gets the next pending queued/prioritized automation task to do.
-   */
-  async getNextPending(ctx: Context) {
-    const entity = await this.repository.findNextPending(ctx);
-    if (entity == null) {
-      return null;
-    }
-
-    return mapToAutomationActionDto(entity);
-  }
-
-  /**
-   * Gets the next general automation task to do. These are not stored in the
-   * database and should be done after all queued tasks are done.
-   */
-  async getNextBacklog(ctx: Context) {
-    // Find next id to update
-    const { id: nextId, productType: nextProductType } =
-      await this.productRepository.popNextIdToBeUpdated(ctx);
-
-    // Get action details, and update product's automation timestamp
-    let actionType: AutomationActionType;
-    let payload: UpdateCpuActionData | UpdateGpuActionData;
-    if (nextProductType === ProductType.Cpu) {
-      actionType = AutomationActionType.UpdateCpu;
-      payload = { cpuId: nextId };
-    } else if (nextProductType === ProductType.Gpu) {
-      actionType = AutomationActionType.UpdateGpu;
-      payload = { gpuId: nextId };
-    } else {
-      throw internalServerError();
-    }
-
-    // Create and return action.
-    return {
-      type: actionType,
-      status: AutomationActionStatus.Pending,
-      data: payload,
-    } as AutomationAction;
   }
 
   private async getPendingSources(ctx: Context) {

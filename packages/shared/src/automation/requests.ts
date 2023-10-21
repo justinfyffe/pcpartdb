@@ -1,4 +1,5 @@
 import { ListQuery, ListResponse } from '../common';
+import { ProductType } from '../product';
 import {
   AutomationAction,
   AutomationActionMeta,
@@ -24,3 +25,11 @@ export interface ListAutomationActionsRequest {
 
 export interface ListAutomationActionsResponse
   extends ListResponse<ListAutomationActionsQuery, AutomationAction> {}
+
+export interface UploadPerformanceScoresRequest {
+  productType: ProductType;
+
+  // Added by interceptor. Don't populate manually.
+  originalFileName?: string;
+  tempPath?: string;
+}
