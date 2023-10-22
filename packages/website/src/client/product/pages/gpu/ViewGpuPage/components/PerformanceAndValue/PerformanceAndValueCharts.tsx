@@ -1,14 +1,8 @@
 import {
-  formatCompanyName,
   formatOrdinalNumber,
-  formatProductName,
-  getGpuAffiliateUrl,
   productFieldFormattedValue,
   productFieldRawValue,
-  ProductType,
 } from '@pcpartdb/shared';
-import { ProductCustomRow } from 'packages/website/src/client/product/components/ProductCustomRow/ProductCustomRow';
-import { ProductFieldRow } from 'packages/website/src/client/product/components/ProductFieldRow/ProductFieldRow';
 import { DonutChart } from 'packages/website/src/client/shared/charts/DonutChart';
 import {
   Card,
@@ -79,20 +73,21 @@ export const PerformanceAndValueCharts: FunctionComponent<
 
   return (
     <div className={classNames('flex flex-wrap gap-4', className)}>
+      {/* TODO: Move to a widget that can be shared between pages */}
       <Card className="flex-1 flex flex-row justify-between items-start">
         <CardTitle as="div" className="flex flex-col gap-2">
           <span>Performance Rating</span>
           <span className="text-dimmed text-sm font-normal">
-            Based on a combination of benchmarks. Measured on a scale of 0-100
-            with higher ratings indicating better performance.
+            Based on a combination of GPU benchmarks. Measured on a scale of
+            0-100 with higher ratings indicating better performance.
           </span>
         </CardTitle>
 
         <CardContent className="gap-0 items-center">
           <DonutChart
             centerLabel={performanceRating}
-            chartClass="w-24 h-24"
-            holeClass="w-[75%] h-[75%] bg-light-shades"
+            chartClass="w-24 h-24  rounded-full ring-1 ring-white"
+            holeClass="w-[75%] h-[75%] bg-light-shades rounded-full ring-1 ring-white"
             data={[
               { name: '', value: performanceRatingRaw, color: '#4c5c7c' },
               {
@@ -108,19 +103,20 @@ export const PerformanceAndValueCharts: FunctionComponent<
         </CardContent>
       </Card>
 
+      {/* TODO: Move to a widget that can be shared between pages */}
       <Card className="flex-1 flex flex-row justify-between items-start">
         <CardTitle as="div" className="flex flex-col gap-2">
           <span>Value Rating</span>
           <span className="text-dimmed text-sm font-normal">
-            Based on its performance per dollar (MSRP). Measured on a scale of
-            0-100 with higher ratings indicating better value.
+            Based on the GPU&apos;s performance per dollar (MSRP). Measured on a
+            scale of 0-100 with higher ratings indicating better value.
           </span>
         </CardTitle>
         <CardContent className="gap-1 items-center">
           <DonutChart
             centerLabel={valueRating}
-            chartClass="w-24 h-24"
-            holeClass="w-[75%] h-[75%] bg-light-shades"
+            chartClass="w-24 h-24 rounded-full ring-1 ring-white"
+            holeClass="w-[75%] h-[75%] bg-light-shades rounded-full ring-1 ring-white"
             data={[
               { name: '', value: valueRatingRaw, color: '#4c5c7c' },
               {

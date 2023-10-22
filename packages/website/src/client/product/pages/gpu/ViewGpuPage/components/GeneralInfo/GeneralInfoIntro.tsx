@@ -7,9 +7,8 @@ const GeneralInfoIntroSentence1 = compileContentComponent({
   deps: [],
   component: (props) => (
     <>
-      General information about the {props.shortGpuName} like its performance,
-      release date, launch price, and production status. Performance rating and
-      performance per dollar are based on its chipset.
+      General information about the {props.shortGpuName} like its manufacturer,
+      release date, launch price, and production status.
     </>
   ),
 });

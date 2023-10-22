@@ -2,7 +2,6 @@ import {
   formatCompanyName,
   formatProductName,
   getGpuAffiliateUrl,
-  productFieldFormattedValue,
   ProductType,
 } from '@pcpartdb/shared';
 import { ProductCustomRow } from 'packages/website/src/client/product/components/ProductCustomRow/ProductCustomRow';
@@ -28,46 +27,9 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
   const { gpu } = useContext(ViewPageContext);
   const { parent } = gpu;
 
-  const performanceRank =
-    gpu.ranks.performanceRating ?? parent?.ranks?.performanceRating ?? null;
-  const valueRank =
-    gpu.ranks.performancePerMsrp ?? parent?.ranks?.performancePerMsrp ?? null;
-
   const chipset = useMemo(() => {
     return formatProductName(parent || gpu);
   }, [parent, gpu]);
-
-  const performanceScoreValue = useMemo(() => {
-    const performanceScore =
-      productFieldFormattedValue(gpu.fields?.performanceRating) ||
-      productFieldFormattedValue(parent?.fields?.performanceRating);
-
-    if (performanceScore != null && performanceRank != null) {
-      return `${performanceScore} (${performanceRank})`;
-    } else {
-      return '--';
-    }
-  }, [
-    gpu.fields?.performanceRating,
-    parent?.fields?.performanceRating,
-    performanceRank,
-  ]);
-
-  const valueScoreValue = useMemo(() => {
-    const valueScore =
-      productFieldFormattedValue(gpu.fields?.performancePerMsrp) ||
-      productFieldFormattedValue(parent?.fields?.performancePerMsrp);
-
-    if (valueScore != null && valueRank != null) {
-      return `${valueScore} (${valueRank})`;
-    } else {
-      return '--';
-    }
-  }, [
-    gpu.fields?.performancePerMsrp,
-    parent?.fields?.performancePerMsrp,
-    valueRank,
-  ]);
 
   const gpuAffiliateUrl = useMemo(() => getGpuAffiliateUrl(gpu), [gpu]);
 
@@ -95,14 +57,6 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
               }
             />
           )}
-          <ProductCustomRow
-            label="Performance Rating (Rank)*"
-            values={[performanceScoreValue]}
-          />
-          <ProductCustomRow
-            label="Performance Per Dollar (Rank)*"
-            values={[valueScoreValue]}
-          />
           <ProductCustomRow label="Chipset" values={[chipset]} />
           <ProductCustomRow
             label="Company"

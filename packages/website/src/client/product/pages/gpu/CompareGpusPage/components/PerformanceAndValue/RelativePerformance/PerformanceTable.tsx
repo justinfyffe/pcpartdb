@@ -28,7 +28,7 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import { ComparePageContext } from '../../context/ComparePageContext';
+import { ComparePageContext } from '../../../context/ComparePageContext';
 
 interface PerformanceTableProps {
   className?: string;

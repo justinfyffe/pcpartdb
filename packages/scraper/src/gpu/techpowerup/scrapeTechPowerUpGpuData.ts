@@ -441,7 +441,8 @@ function getMarketSegment(
     description.includes('enthusiast-class graphics card') ||
     description.includes('performance-segment graphics card') ||
     description.includes('mid-range graphics card') ||
-    description.includes(' a graphics card')
+    description.includes(' a graphics card') ||
+    description.includes('an entry-level graphics card')
   ) {
     raw = MarketSegment.Desktop;
   }

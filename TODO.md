@@ -6,6 +6,7 @@ Secondary Focus:
 - Finish Automation
   - Finish GPU Queue
   - Finish CPU Queue
+  - sort list groups by date
 
 When Bored:
 - Make autocomplete stricter, not looser when searching?
@@ -13,9 +14,11 @@ When Bored:
 
 Better Performance Score
 - [] reset cache
+- [] add highlights under technical specs
 - [X] add widget to queue refreshing ratings
 - [] Display Performance Rating and Value Rating more prominently
   - [] Larger font/section, maybe a donut chart
+  - [] have text explaining why it's not populated
 - [] Rename Performance Score to "Performance Rating"
 - [] Rename Perf per MSRP to "Value Rating"
 - [] Add valuePerMsrp to ProductBenchmark
@@ -46,7 +49,7 @@ Automation:
   - AMD Website?
 - Improve automation autocomplete
   - Remove retail models from chipset autocomplete
-  - Better sort (maybe by name? non-archived first?)
+  - Better sort (by date added/updated? maybe by name? non-archived first?)
 - Reduce update frequency of gpu retail models
 - Reduce update frequency of old products
 - View processing / failed automation actions.

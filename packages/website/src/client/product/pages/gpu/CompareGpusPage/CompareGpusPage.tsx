@@ -20,18 +20,16 @@ import { SidenavRelatedProducts } from 'packages/website/src/client/sidenav/comp
 import React, { useMemo } from 'react';
 import { CompareProductsForm } from '../../../components/CompareProductsForm/CompareProductsForm';
 import {
-  Benchmarks,
   Disclaimer,
   GeneralInfo,
   Highlights,
   Overview,
-  RelativePerformance,
-  RelativeValue,
   RetailModels,
   TechnicalSpecs,
 } from './components';
 import { ComparePageContext } from './context/ComparePageContext';
 import { useComparePageContextProps } from './hooks/useComparePageContextProps';
+import { PerformanceAndValue } from './components/PerformanceAndValue/PerformanceAndValue';
 
 export const CompareGpusPage = (
   props: CompareGpusViewModel & { config: Config },
@@ -137,9 +135,7 @@ export const CompareGpusPage = (
             <Highlights />
             <Overview />
             <GeneralInfo />
-            <RelativePerformance />
-            <RelativeValue />
-            <Benchmarks />
+            <PerformanceAndValue />
             <TechnicalSpecs />
 
             <RetailModels />
