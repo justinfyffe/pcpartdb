@@ -227,6 +227,7 @@ export const productUpdateSchema = Joi.object({
 export const listProductsFilterSchema = Joi.object({
   chipsetId: Joi.array().items(Joi.number()).allow(null),
   company: Joi.array().items(Joi.string().allow('')).allow(null),
+  ids: Joi.array().items(Joi.number()).allow(null),
   excludeIds: Joi.array().items(Joi.number()).allow(null),
   isChipset: Joi.boolean().allow(null),
   isRetailModel: Joi.boolean().allow(null),

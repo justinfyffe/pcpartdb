@@ -90,8 +90,8 @@ export class ProductRepository {
     const includeImages = options.includeImages ?? false;
     const includeSources = options.includeSources ?? false;
     const includeBenchmarks = options.includeBenchmarks ?? false;
-
     const slug = options.slug;
+
     return await db.product.findUnique({
       where: { productType_slug: { productType, slug } },
       include: {
@@ -137,6 +137,8 @@ export class ProductRepository {
   }
 
   async list(options: ListOptions, config?: RepositoryConfig) {
+    const db = config?.trx ?? this.db;
+
     const productType = options.productType;
     const includeFields = options.includeFields ?? true;
     const includeBenchmarks = options.includeBenchmarks ?? false;
@@ -145,7 +147,6 @@ export class ProductRepository {
     const includeChildren = options.includeChildren ?? false;
     const includeImages = options.includeImages ?? false;
 
-    const db = config?.trx ?? this.db;
     return await db.product.findMany({
       where: { ...this.generateWhere(productType, options.filter) },
       orderBy: this.generateOrderBy(productType, options.orderBy),
@@ -432,12 +433,16 @@ export class ProductRepository {
     const companies = filter?.company?.filter((value) => value != null) ?? [];
     const years = filter?.year?.filter((value) => value != null) ?? [];
     const segments = filter?.segment?.filter((value) => value != null) ?? [];
+    const includeIds = filter?.ids?.filter((value) => value != null) ?? [];
     const excludeIds =
       filter?.excludeIds?.filter((value) => value != null) ?? [];
 
-    // Exclude Ids
+    // Include/Exclude Ids
     let idWhere: Prisma.IntFilter = {};
-    if (excludeIds != null) {
+    if (includeIds && includeIds.length > 0) {
+      idWhere = { ...idWhere, in: includeIds };
+    }
+    if (excludeIds && excludeIds.length > 0) {
       idWhere = { ...idWhere, notIn: excludeIds };
     }
 
@@ -520,7 +525,7 @@ export class ProductRepository {
     const excludeIds =
       filter?.excludeIds?.filter((value) => value != null) ?? [];
 
-    // Exclude Ids
+    // Include/Exclude Ids
     let idWhere: Prisma.IntFilter = {};
     if (includeIds && includeIds.length > 0) {
       idWhere = { ...idWhere, in: includeIds };

@@ -2,7 +2,6 @@ import {
   AutomationAction,
   AutomationActionStatus,
   AutomationActionType,
-  ProductType,
 } from '@pcpartdb/shared';
 import { createCpuAction } from './actions/createCpuAction';
 import { createGpuAction } from './actions/createGpuAction';
@@ -19,16 +18,10 @@ import { saveAutomationContext } from './utils/context';
 const UPDATE_SITEMAPS_FREQUENCY = 1000 * 60 * 60 * 24; // Daily
 const UPDATE_CPU_SOURCES_FREQUENCY = 1000 * 60 * 60 * 24 * 7; // Weekly
 const UPDATE_GPU_CHIPSET_SOURCES_FREQUENCY = 1000 * 60 * 60 * 24 * 7; // Weekly
+const UPDATE_PERFORMANCE_SCORES_FREQUENCY = 1000 * 60 * 60 * 12; // Twice a day
 
 export async function executeAutomation(context: AutomationContext) {
-  // const action = await getNextAction(context);
-  const action: any = {
-    type: AutomationActionType.UpdatePerformanceScores,
-    status: AutomationActionStatus.Pending,
-    data: {
-      productType: ProductType.Gpu,
-    },
-  };
+  const action = await getNextAction(context);
 
   if (action == null) {
     return;
@@ -150,6 +143,18 @@ async function getActionFromStalenessCheck(
     return {
       status: AutomationActionStatus.Pending,
       type: AutomationActionType.UpdateGpuChipsetSources,
+    };
+  }
+
+  if (
+    isStale(
+      metadata?.updatePerformanceScoresDate,
+      UPDATE_PERFORMANCE_SCORES_FREQUENCY,
+    )
+  ) {
+    return {
+      status: AutomationActionStatus.Pending,
+      type: AutomationActionType.UpdatePerformanceScores,
     };
   }
 

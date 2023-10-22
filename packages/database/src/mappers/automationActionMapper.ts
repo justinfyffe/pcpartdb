@@ -18,7 +18,7 @@ export async function mapToAutomationActionDto<TUpdateData = unknown>(
   const includeData = options?.includeData ?? true;
 
   let data: TUpdateData = null;
-  if (includeData) {
+  if (includeData && entity.data != null) {
     data = await unzipData(entity.data);
   }
 
@@ -50,7 +50,7 @@ export async function mapToAutomationActionDtos<TUpdateData = unknown>(
 }
 
 export async function mapToAutomationActionEntity(dto: AutomationAction) {
-  const data = await gzipData(dto.data);
+  const data = dto.data != null ? await gzipData(dto.data) : undefined;
 
   return {
     id: dto.id,

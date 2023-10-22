@@ -6,6 +6,7 @@ import { MetaRobots, Seo } from '../../../shared/components/Seo/Seo';
 import { AdminLayout } from '../../../shared/layouts/admin/AdminLayout';
 import { ApiKeyWidget } from './components';
 import { CacheWidget } from './components/CacheWidget/CacheWidget';
+import { UpdatePerformanceScoresWidget } from './components/UpdatePerformanceScoresWidget/RefreshPerformanceScoresWidget';
 
 export const AdminOverviewPage = (props: AdminOverviewViewModel) => {
   const pageTitle = 'Overview';
@@ -19,16 +20,18 @@ export const AdminOverviewPage = (props: AdminOverviewViewModel) => {
       <article>
         <h1 className="font-semibold mb-4">{pageTitle}</h1>
 
-        <div className="grid grid-flow-col gap-4">
-          <Card>
+        <div className="flex flex-wrap gap-4">
+          <Card className="flex-1">
             <CardTitle>Scraping Ant Usage:</CardTitle>
-            {props.scrapingAntUsage?.remainingCredits} /{' '}
-            {props.scrapingAntUsage?.totalCredits}
+            {props.scrapingAntUsage?.remainingCredits?.toLocaleString()} /{' '}
+            {props.scrapingAntUsage?.totalCredits?.toLocaleString()}
           </Card>
 
-          <ApiKeyWidget apiKey={props.apiKey} />
+          <UpdatePerformanceScoresWidget />
 
           <CacheWidget cacheSize={props.cacheSize} />
+
+          <ApiKeyWidget apiKey={props.apiKey} />
         </div>
       </article>
     </AdminLayout>

@@ -9,9 +9,11 @@ Secondary Focus:
 
 When Bored:
 - Make autocomplete stricter, not looser when searching?
-- Improve db performance using queryRaw
+- Improve db performance using queryRaw, but only in places where it'll help
 
 Better Performance Score
+- [] reset cache
+- [X] add widget to queue refreshing ratings
 - [] Display Performance Rating and Value Rating more prominently
   - [] Larger font/section, maybe a donut chart
 - [] Rename Performance Score to "Performance Rating"

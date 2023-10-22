@@ -127,7 +127,7 @@ module.exports = {
         warning: '#c98625',
         danger: '#f44336',
         disabled: '#aaa',
-        dimmed: '#9ca3af',
+        dimmed: '#6d788b',
         'light-shades': '#ebeff7',
         'light-accent': '#87A0AE',
         'main-brand': '#495C7B',

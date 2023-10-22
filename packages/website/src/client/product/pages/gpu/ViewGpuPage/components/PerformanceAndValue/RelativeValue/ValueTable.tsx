@@ -15,31 +15,29 @@ import {
   Tr,
 } from 'packages/website/src/client/shared/components/Table/Table';
 import React, { FunctionComponent, useContext, useMemo } from 'react';
-import { ViewPageContext } from '../../context/ViewPageContext';
+import { ViewPageContext } from '../../../context/ViewPageContext';
 
-interface PerformanceTableProps {
+interface ValueTableProps {
   className?: string;
 }
 
-export const PerformanceTable: FunctionComponent<PerformanceTableProps> = (
-  props,
-) => {
+export const ValueTable: FunctionComponent<ValueTableProps> = (props) => {
   const { className } = props;
-  const { gpu, additionalData: contentData } = useContext(ViewPageContext);
-  const { relativePerformanceGpus } = contentData;
+  const { gpu, additionalData } = useContext(ViewPageContext);
+  const { relativeValueGpus } = additionalData;
 
   return (
     <Table border responsive className={className}>
       <THead>
         <Tr>
           <Th>GPU</Th>
-          <Th className="text-right">Performance Rating</Th>
-          <Th className="text-right">Relative Performance</Th>
+          <Th className="text-right">Value Rating</Th>
+          <Th className="text-right">Relative Value</Th>
         </Tr>
       </THead>
       <TBody>
-        {relativePerformanceGpus.map((relativeGpu) => (
-          <PerformanceTableRow
+        {relativeValueGpus.map((relativeGpu) => (
+          <ValueTableRow
             key={relativeGpu.id}
             baselineGpu={getGpuChipset(gpu)}
             relativeGpu={relativeGpu}
@@ -50,32 +48,30 @@ export const PerformanceTable: FunctionComponent<PerformanceTableProps> = (
   );
 };
 
-interface PerformanceTableRowProps {
+interface ValueTableRowProps {
   baselineGpu: GpuProduct;
   relativeGpu: GpuProduct;
 }
 
-const PerformanceTableRow: FunctionComponent<PerformanceTableRowProps> = (
-  props,
-) => {
+const ValueTableRow: FunctionComponent<ValueTableRowProps> = (props) => {
   const { baselineGpu, relativeGpu } = props;
 
-  const relativePerformancePct = useMemo(() => {
+  const relativeValuePct = useMemo(() => {
     const baseline = productFieldRawValue(
-      baselineGpu.fields?.performanceRating,
+      baselineGpu.fields?.performancePerMsrp,
     );
-    const relatedPerformance = productFieldRawValue(
-      relativeGpu.fields?.performanceRating,
+    const relatedValue = productFieldRawValue(
+      relativeGpu.fields?.performancePerMsrp,
     );
 
-    return ((relatedPerformance / baseline) * 100).toFixed(0);
+    return ((relatedValue / baseline) * 100).toFixed(0);
   }, [
-    baselineGpu.fields?.performanceRating,
-    relativeGpu.fields?.performanceRating,
+    baselineGpu.fields?.performancePerMsrp,
+    relativeGpu.fields?.performancePerMsrp,
   ]);
 
   const rating = useMemo(
-    () => productFieldFormattedValue(relativeGpu.fields?.performanceRating),
+    () => productFieldFormattedValue(relativeGpu.fields?.performancePerMsrp),
     [relativeGpu],
   );
 
@@ -88,7 +84,7 @@ const PerformanceTableRow: FunctionComponent<PerformanceTableRowProps> = (
   return (
     <ProductCustomRow
       label={<a href={href}>{gpuName}</a>}
-      values={[rating, `${relativePerformancePct}%`]}
+      values={[rating, `${relativeValuePct}%`]}
       highlight={baselineGpu.id === relativeGpu.id ? 'primary' : null}
       valueClassName="text-right"
     />

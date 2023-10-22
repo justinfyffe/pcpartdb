@@ -1,8 +1,4 @@
-import {
-  CpuAutomationSourceGroup,
-  GpuAutomationSourceGroup,
-  ProductType,
-} from '../product';
+import { CpuAutomationSourceGroup, GpuAutomationSourceGroup } from '../product';
 
 export enum AutomationActionType {
   /**
@@ -124,8 +120,4 @@ export interface UpdateGpuActionData {
 
 export interface UpdateGpuRetailModelSourcesActionData {
   relatedProductId?: number;
-}
-
-export interface UpdatePerformanceScoresActionData {
-  productType: ProductType;
 }

@@ -34,7 +34,7 @@ export const CacheWidget = (props: CacheWidgetProps) => {
   }, []);
 
   return (
-    <Card>
+    <Card className="flex-1">
       <CardTitle>Cache</CardTitle>
       <CardContent>
         <div className="text-lg">

@@ -4,6 +4,7 @@ export interface AutomationMetadata {
   updateSitemapsDate?: number;
   updateCpuSourcesDate?: number;
   updateGpuChipsetSourcesDate?: number;
+  updatePerformanceScoresDate?: number;
 }
 
 export interface AutomationContext {

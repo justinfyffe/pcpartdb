@@ -20,16 +20,14 @@ import { SidenavRelatedProducts } from 'packages/website/src/client/sidenav/comp
 import React, { useMemo } from 'react';
 import { CompareProductsForm } from '../../../components/CompareProductsForm/CompareProductsForm';
 import {
-  Benchmarks,
   Disclaimer,
   GeneralInfo,
   Highlights,
   Overview,
-  RelativePerformance,
-  RelativeValue,
   RetailModels,
   TechnicalSpecs,
 } from './components';
+import { PerformanceAndValue } from './components/PerformanceAndValue/PerformanceAndValue';
 import { ViewPageContext } from './context/ViewPageContext';
 import { useViewPageContextProps } from './hooks/useViewPageContextProps';
 
@@ -119,9 +117,7 @@ export const ViewGpuPage = (props: ViewGpuViewModel & { config: Config }) => {
 
             <Overview />
             <GeneralInfo />
-            <RelativePerformance />
-            <RelativeValue />
-            <Benchmarks />
+            <PerformanceAndValue />
             <TechnicalSpecs />
 
             <RetailModels />

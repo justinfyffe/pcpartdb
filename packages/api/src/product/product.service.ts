@@ -28,7 +28,6 @@ import {
   ProductUpdate,
   ScrapeProductRequest,
   scrapeProductRequestSchema,
-  sleep,
   UpdateProductRequest,
   updateProductRequestSchema,
   ValidationErrorType,
@@ -251,8 +250,6 @@ export class ProductService {
   async getBySlug(options: GetBySlugOptions, ctx: Context) {
     const productType = options.productType;
     const slug = options.slug;
-
-    // TODO: read from cache
 
     const includeParent = options.includeParent ?? false;
     const includeChildren = options.includeChildren ?? false;

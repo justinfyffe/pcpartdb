@@ -60,7 +60,7 @@ export class ListGpusViewModelService {
           },
           ctx,
         ),
-      { ctx, isolationLevel: 'ReadUncommitted' },
+      { ctx, isolationLevel: 'ReadCommitted' },
     );
     console.timeEnd('ListGpusViewModelService');
 

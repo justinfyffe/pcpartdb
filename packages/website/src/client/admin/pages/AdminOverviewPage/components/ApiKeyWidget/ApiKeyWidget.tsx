@@ -34,12 +34,16 @@ export const ApiKeyWidget = (props: ApiKeyWidgetProps) => {
   }, []);
 
   return (
-    <Card>
+    <Card className="flex-1">
       <CardTitle>API Key</CardTitle>
       <CardContent>
         Your API Key:
         <div className="flex gap-4">
-          <TextInput value={apiKey?.apiKey || ''} disabled />
+          <TextInput
+            className="min-w-32"
+            value={apiKey?.apiKey || ''}
+            disabled
+          />
           <PrimaryButton type="button" onClick={handleRefresh}>
             Refresh
           </PrimaryButton>

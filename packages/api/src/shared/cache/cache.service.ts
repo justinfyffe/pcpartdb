@@ -10,31 +10,24 @@ import { dataPath } from '../utils';
 export enum CacheType {
   Home = 'home',
 
-  CpusList = 'cpus_list',
   CpuProduct = 'cpu_product',
   CpuComparison = 'cpu_comparison',
-  CpuStats = 'cpu_stats',
 
-  GpusList = 'gpus_list',
   GpuProduct = 'gpu_product',
   GpuComparison = 'gpu_comparison',
-  GpuStats = 'gpu_stats',
 }
 
 const FIFTEEN_MINUTES = 1_000 * 60 * 15;
+const SIXTY_MINUTES = 1_000 * 60 * 60;
 
 export const CACHE_EXPIRE_TTLS: Record<CacheType, number> = {
-  [CacheType.Home]: FIFTEEN_MINUTES,
+  [CacheType.Home]: SIXTY_MINUTES,
 
-  [CacheType.CpusList]: FIFTEEN_MINUTES,
-  [CacheType.CpuProduct]: FIFTEEN_MINUTES,
-  [CacheType.CpuComparison]: FIFTEEN_MINUTES,
-  [CacheType.CpuStats]: FIFTEEN_MINUTES,
+  [CacheType.CpuProduct]: SIXTY_MINUTES,
+  [CacheType.CpuComparison]: SIXTY_MINUTES,
 
-  [CacheType.GpusList]: FIFTEEN_MINUTES,
-  [CacheType.GpuProduct]: FIFTEEN_MINUTES,
-  [CacheType.GpuComparison]: FIFTEEN_MINUTES,
-  [CacheType.GpuStats]: FIFTEEN_MINUTES,
+  [CacheType.GpuProduct]: SIXTY_MINUTES,
+  [CacheType.GpuComparison]: SIXTY_MINUTES,
 };
 
 interface CacheOptions<TKey = unknown> {
@@ -61,6 +54,11 @@ export class CacheService {
     fn: () => Promise<TResult>,
     options: CacheOptions,
   ) {
+    if (process.env.ENABLE_CACHE === 'false') {
+      // Bypass cache
+      return await fn();
+    }
+
     const ttl = options.ttl ?? CACHE_EXPIRE_TTLS[options.type];
     const key = this.cacheKey(options.type, options.key);
     return await this.cacheManager.wrap(

@@ -1,26 +1,28 @@
 import { ContentContext } from 'packages/website/src/client/shared/content/ContentContext';
 import { compileContentComponent } from 'packages/website/src/client/shared/content/utils';
 import React, { useContext } from 'react';
-import { ViewPageContext } from '../../context/ViewPageContext';
+import { ViewPageContext } from '../../../context/ViewPageContext';
 
-const BenchmarksIntroSentence1 = compileContentComponent({
+const PerformanceIntroSentence1 = compileContentComponent({
   deps: [],
   component: (props) => (
     <>
-      Performance and benchmark metrics for the {props.shortGpuName}. These are
-      usually the best indicator for determing a GPUs performance. This data is
-      based on its chipset.
+      Compare {props.shortGpuName}&apos;s performance with similar{' '}
+      {props.marketSegment} GPUs. Relative performance provides insight into how
+      its benchmarks compare to its peers. This data is based on chipset
+      performance.
     </>
   ),
 });
-export const BenchmarksIntro = () => {
+
+export const PerformanceIntro = () => {
   const { contentParams, contentTags } = useContext(ViewPageContext);
   const context = { tags: contentTags, params: contentParams };
 
   return (
     <ContentContext.Provider value={context}>
       <p className="text-dimmed">
-        <BenchmarksIntroSentence1 />
+        <PerformanceIntroSentence1 />
       </p>
     </ContentContext.Provider>
   );

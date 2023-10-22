@@ -6,7 +6,6 @@ import {
   ListProductsResponse,
   ProductPerformanceScores,
   ProductType,
-  UpdatePerformanceScoresActionData,
 } from '@pcpartdb/shared';
 import FormData from 'form-data';
 import * as fs from 'fs';
@@ -70,11 +69,25 @@ const WEIGHTS: Partial<
 };
 
 export async function updatePerformanceScoresAction(
-  action: AutomationAction<UpdatePerformanceScoresActionData>,
+  _action: AutomationAction,
   context: AutomationContext,
 ) {
-  const { productType } = action.data;
+  await updatePerformanceScores(ProductType.Cpu, context);
+  await updatePerformanceScores(ProductType.Gpu, context);
 
+  // TODO: reset cache
+
+  // Update execution details
+  context.metadata = {
+    ...(context.metadata ?? {}),
+    updatePerformanceScoresDate: new Date().getTime(),
+  };
+}
+
+export async function updatePerformanceScores(
+  productType: ProductType,
+  context: AutomationContext,
+) {
   const scoreBenchmarks = SCORE_BENCHMARKS[productType];
   const minNumBenchmarks = MIN_NUM_BENCHMARKS[productType];
   const weights = WEIGHTS[productType];
@@ -107,9 +120,6 @@ export async function updatePerformanceScoresAction(
   // Create and upload scores file
   const path = await createScoresFile(productType, performanceScores);
   await uploadScoresFile(productType, path, context);
-
-  // Reset cache
-  // TODO
 }
 
 async function fetchProducts(
