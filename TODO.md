@@ -13,6 +13,7 @@ When Bored:
 - Improve db performance using queryRaw, but only in places where it'll help
 
 Better Performance Score
+- [] Test automation
 - [] reset cache in automation script
 - [] add highlights under technical specs? Next project
 - [X] add widget to queue refreshing ratings
