@@ -1,6 +1,6 @@
 import { hasProductFieldValue } from '@pcpartdb/shared';
 import React, { FunctionComponent, useContext } from 'react';
-import { ComparePageContext } from '../../context/ComparePageContext';
+import { ComparePageContext } from '../../../context/ComparePageContext';
 import { PerformanceIntro } from './PerformanceIntro';
 import { PerformanceTable } from './PerformanceTable';
 
@@ -23,7 +23,7 @@ export const RelativePerformance: FunctionComponent = () => {
 
   return (
     <section>
-      <h2 className="mb-0 font-semibold">Relative Performance</h2>
+      <h3 className="mb-0 font-semibold">Relative Performance</h3>
       <PerformanceIntro />
       <PerformanceTable className="mb-4" />
     </section>

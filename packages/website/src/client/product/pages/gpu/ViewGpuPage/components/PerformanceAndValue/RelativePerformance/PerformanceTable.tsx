@@ -68,7 +68,9 @@ const PerformanceTableRow: FunctionComponent<PerformanceTableRowProps> = (
       relativeGpu.fields?.performanceRating,
     );
 
-    return ((relatedPerformance / baseline) * 100).toFixed(0);
+    return Number(
+      ((relatedPerformance / baseline) * 100).toFixed(0),
+    ).toLocaleString();
   }, [
     baselineGpu.fields?.performanceRating,
     relativeGpu.fields?.performanceRating,

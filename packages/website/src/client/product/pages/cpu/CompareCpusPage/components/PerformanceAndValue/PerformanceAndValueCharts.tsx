@@ -1,8 +1,7 @@
 import {
   formatProductName,
-  getGpuChipset,
-  getListGpusPath,
-  LIST_GPUS_PRESETS,
+  getListCpusPath,
+  LIST_CPUS_PRESETS,
   ProductType,
 } from '@pcpartdb/shared';
 import { CompareProductRatingCard } from 'packages/website/src/client/product/components/ProductRatingCard/CompareProductRatingCard';
@@ -20,55 +19,52 @@ export const PerformanceAndValueCharts: FunctionComponent<
 > = (props) => {
   const { className } = props;
   const { comparison } = useContext(ComparePageContext);
-  const chipset1 = getGpuChipset(comparison[0]);
-  const chipset2 = getGpuChipset(comparison[1]);
+  const cpu1 = comparison[0];
+  const cpu2 = comparison[1];
 
   const performanceRankHref = useMemo(
-    () => getListGpusPath(LIST_GPUS_PRESETS['best-performance']),
+    () => getListCpusPath(LIST_CPUS_PRESETS['best-performance']),
     [],
   );
   const valueRankHref = useMemo(
-    () => getListGpusPath(LIST_GPUS_PRESETS['best-value']),
+    () => getListCpusPath(LIST_CPUS_PRESETS['best-value']),
     [],
   );
 
   const [name1, name2] = useMemo(() => {
     return [
-      formatProductName(chipset1, { company: false, brand: false }),
-      formatProductName(chipset2, { company: false, brand: false }),
+      formatProductName(cpu1, { company: false, brand: false }),
+      formatProductName(cpu2, { company: false, brand: false }),
     ];
-  }, [chipset1, chipset2]);
+  }, [cpu1, cpu2]);
 
   return (
     <div className={classNames('flex flex-col gap-4', className)}>
       <CompareProductRatingCard
-        productType={ProductType.Gpu}
+        productType={ProductType.Cpu}
         ratingType={ProductRatingType.PerformanceRating}
         names={[name1, name2]}
         maxRating={100}
         ratingFields={[
-          chipset1.fields?.performanceRating,
-          chipset2.fields?.performanceRating,
+          cpu1.fields?.performanceRating,
+          cpu2.fields?.performanceRating,
         ]}
-        ranks={[
-          chipset1?.ranks?.performanceRating,
-          chipset2?.ranks?.performanceRating,
-        ]}
+        ranks={[cpu1?.ranks?.performanceRating, cpu2?.ranks?.performanceRating]}
         rankHrefs={[performanceRankHref, performanceRankHref]}
       />
 
       <CompareProductRatingCard
-        productType={ProductType.Gpu}
+        productType={ProductType.Cpu}
         ratingType={ProductRatingType.ValueRating}
         names={[name1, name2]}
         maxRating={100}
         ratingFields={[
-          chipset1.fields?.performancePerMsrp,
-          chipset2.fields?.performancePerMsrp,
+          cpu1.fields?.performancePerMsrp,
+          cpu2.fields?.performancePerMsrp,
         ]}
         ranks={[
-          chipset1?.ranks?.performancePerMsrp,
-          chipset2?.ranks?.performancePerMsrp,
+          cpu1?.ranks?.performancePerMsrp,
+          cpu2?.ranks?.performancePerMsrp,
         ]}
         rankHrefs={[valueRankHref, valueRankHref]}
       />

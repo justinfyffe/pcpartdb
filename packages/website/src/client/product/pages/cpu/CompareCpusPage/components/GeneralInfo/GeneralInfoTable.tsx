@@ -2,7 +2,6 @@ import {
   formatCompanyName,
   formatProductName,
   getCpuAffiliateUrl,
-  productFieldFormattedValue,
   ProductType,
 } from '@pcpartdb/shared';
 import { ProductCustomRow } from 'packages/website/src/client/product/components/ProductCustomRow/ProductCustomRow';
@@ -34,40 +33,6 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
       formatProductName(cpu2, { company: false }),
     ];
   }, [cpu1, cpu2]);
-
-  const performanceScoreValues = useMemo(() => {
-    const score1 = productFieldFormattedValue(cpu1.fields?.performanceRating);
-    const score2 = productFieldFormattedValue(cpu2.fields?.performanceRating);
-    const rank1 = cpu1.ranks.performanceRating;
-    const rank2 = cpu2.ranks.performanceRating;
-
-    return [
-      score1 != null && rank1 != null ? `${score1} (${rank1})` : '--',
-      score2 != null && rank2 != null ? `${score2} (${rank2})` : '--',
-    ];
-  }, [
-    cpu1.fields?.performanceRating,
-    cpu1.ranks.performanceRating,
-    cpu2.fields?.performanceRating,
-    cpu2.ranks.performanceRating,
-  ]);
-
-  const valueScoreValues = useMemo(() => {
-    const score1 = productFieldFormattedValue(cpu1.fields?.performancePerMsrp);
-    const score2 = productFieldFormattedValue(cpu2.fields?.performancePerMsrp);
-    const rank1 = cpu1.ranks.performancePerMsrp;
-    const rank2 = cpu2.ranks.performancePerMsrp;
-
-    return [
-      score1 != null && rank1 != null ? `${score1} (${rank1})` : '--',
-      score2 != null && rank2 != null ? `${score2} (${rank2})` : '--',
-    ];
-  }, [
-    cpu1.fields?.performancePerMsrp,
-    cpu1.ranks.performancePerMsrp,
-    cpu2.fields?.performancePerMsrp,
-    cpu2.ranks.performancePerMsrp,
-  ]);
 
   const cpuAffiliateUrl1 = useMemo(() => getCpuAffiliateUrl(cpu1), [cpu1]);
   const cpuAffiliateUrl2 = useMemo(() => getCpuAffiliateUrl(cpu2), [cpu2]);
@@ -115,14 +80,6 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
             ]}
           />
         )}
-        <ProductCustomRow
-          label="Performance Rating (Rank)*"
-          values={performanceScoreValues}
-        />
-        <ProductCustomRow
-          label="Performance Per Dollar (Rank)*"
-          values={valueScoreValues}
-        />
         <ProductCustomRow
           label="Company"
           values={[

@@ -96,7 +96,9 @@ export const CompareProductRatingCard: FunctionComponent<
       betterWorseSame === BetterWorseSame.Better ||
       betterWorseSame === BetterWorseSame.Worse
     ) {
-      return Math.abs((ratingRaw1 / ratingRaw2 - 1) * 100).toFixed(0);
+      return Number(
+        Math.abs((ratingRaw1 / ratingRaw2 - 1) * 100).toFixed(0),
+      ).toLocaleString();
     }
     return null;
   }, [betterWorseSame, ratingRaw1, ratingRaw2]);

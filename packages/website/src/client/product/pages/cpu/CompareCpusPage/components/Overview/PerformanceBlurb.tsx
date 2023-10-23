@@ -56,9 +56,9 @@ const ValueSentence = compileContentComponent(
       <>
         Based on their performance and launch prices, the{' '}
         {props.shortestCpuName1} has a {props.cpu1ValueHigherOrLower}{' '}
-        performance per dollar than the {props.shortestCpuName2}. It has a
-        performance per dollar of {props.performancePerDollar1}, while the{' '}
-        {props.shortestCpuName2} has a performance per dollar of{' '}
+        performance per dollar than the {props.shortestCpuName2}. It has a value
+        rating of {props.performancePerDollar1}, while the{' '}
+        {props.shortestCpuName2} has a value rating of{' '}
         {props.performancePerDollar2}.
       </>
     ),

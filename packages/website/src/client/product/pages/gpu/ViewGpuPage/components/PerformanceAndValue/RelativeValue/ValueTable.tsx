@@ -64,7 +64,9 @@ const ValueTableRow: FunctionComponent<ValueTableRowProps> = (props) => {
       relativeGpu.fields?.performancePerMsrp,
     );
 
-    return ((relatedValue / baseline) * 100).toFixed(0);
+    return Number(
+      ((relatedValue / baseline) * 100).toFixed(0),
+    ).toLocaleString();
   }, [
     baselineGpu.fields?.performancePerMsrp,
     relativeGpu.fields?.performancePerMsrp,
