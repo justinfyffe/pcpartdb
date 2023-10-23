@@ -14,7 +14,7 @@ When Bored:
 
 Better Performance Score
 - [] Test automation
-- [] reset cache in automation script
+- [X] reset cache in automation script
 - [] add highlights under technical specs? Next project
 - [X] add widget to queue refreshing ratings
 - [X] Display Performance Rating and Value Rating more prominently

@@ -75,7 +75,8 @@ export async function updatePerformanceScoresAction(
   await updatePerformanceScores(ProductType.Cpu, context);
   await updatePerformanceScores(ProductType.Gpu, context);
 
-  // TODO: reset cache
+  // Reset cache
+  await context.api.delete('website/cache');
 
   // Update execution details
   context.metadata = {

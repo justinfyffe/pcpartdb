@@ -2,14 +2,6 @@ import { ProductType } from '../product';
 import { SitemapProductSlug } from './sitemap';
 
 /**
- * Request object to upload sitemaps tar archive.
- */
-export interface UploadSitemapsRequest {
-  // Added by interceptor. Don't populate manually.
-  tempPath?: string;
-}
-
-/**
  * Request object to upload sitemap file.
  */
 export interface UploadSitemapRequest {
