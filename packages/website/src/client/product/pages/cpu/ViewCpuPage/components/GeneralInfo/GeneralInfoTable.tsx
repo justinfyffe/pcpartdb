@@ -1,7 +1,6 @@
 import {
   formatCompanyName,
   getCpuAffiliateUrl,
-  productFieldFormattedValue,
   ProductType,
 } from '@pcpartdb/shared';
 import { ProductCustomRow } from 'packages/website/src/client/product/components/ProductCustomRow/ProductCustomRow';
@@ -26,33 +25,6 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
   const { className } = props;
   const { cpu } = useContext(ViewPageContext);
 
-  const performanceRank = cpu.ranks.performanceRating ?? null;
-  const valueRank = cpu.ranks.performancePerMsrp ?? null;
-
-  const performanceScoreValue = useMemo(() => {
-    const performanceScore = productFieldFormattedValue(
-      cpu.fields?.performanceRating,
-    );
-
-    if (performanceScore != null && performanceRank != null) {
-      return `${performanceScore} (${performanceRank})`;
-    } else {
-      return '--';
-    }
-  }, [cpu.fields?.performanceRating, performanceRank]);
-
-  const valueScoreValue = useMemo(() => {
-    const valueScore = productFieldFormattedValue(
-      cpu.fields?.performancePerMsrp,
-    );
-
-    if (valueScore != null && valueRank != null) {
-      return `${valueScore} (${valueRank})`;
-    } else {
-      return '--';
-    }
-  }, [cpu.fields?.performancePerMsrp, valueRank]);
-
   const cpuAffiliateUrl = useMemo(() => getCpuAffiliateUrl(cpu), [cpu]);
 
   return (
@@ -74,14 +46,6 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
             }
           />
         )}
-        <ProductCustomRow
-          label="Performance Rating (Rank)*"
-          values={[performanceScoreValue]}
-        />
-        <ProductCustomRow
-          label="Performance Per Dollar (Rank)*"
-          values={[valueScoreValue]}
-        />
         <ProductCustomRow
           label="Company"
           values={[formatCompanyName(cpu.company) ?? '--']}

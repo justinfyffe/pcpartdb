@@ -1,26 +1,27 @@
 import { ContentContext } from 'packages/website/src/client/shared/content/ContentContext';
 import { compileContentComponent } from 'packages/website/src/client/shared/content/utils';
 import React, { useContext } from 'react';
-import { ViewPageContext } from '../../context/ViewPageContext';
+import { ViewPageContext } from '../../../context/ViewPageContext';
 
-export const PerformanceIntroParagraph = compileContentComponent({
+const ValueIntroParagraph = compileContentComponent({
   deps: [],
   component: (props) => (
     <p className="text-dimmed">
-      Compare {props.shortCpuName}&apos;s performance with similar{' '}
-      {props.marketSegment} CPUs. Relative performance provides insight into how
-      its benchmarks compare to its peers.
+      Compare {props.shortCpuName}&apos;s value with similar{' '}
+      {props.marketSegment} CPUs. Relative value provides insight into which
+      CPUs gives the best bang for your buck. This data is based on performance
+      and MSRP.
     </p>
   ),
 });
 
-export const PerformanceIntro = () => {
+export const ValueIntro = () => {
   const { contentParams, contentTags } = useContext(ViewPageContext);
   const context = { tags: contentTags, params: contentParams };
 
   return (
     <ContentContext.Provider value={context}>
-      <PerformanceIntroParagraph />
+      <ValueIntroParagraph />
     </ContentContext.Provider>
   );
 };

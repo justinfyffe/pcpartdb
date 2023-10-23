@@ -1,27 +1,25 @@
 import { ContentContext } from 'packages/website/src/client/shared/content/ContentContext';
 import { compileContentComponent } from 'packages/website/src/client/shared/content/utils';
 import React, { useContext } from 'react';
-import { ViewPageContext } from '../../context/ViewPageContext';
+import { ViewPageContext } from '../../../context/ViewPageContext';
 
-const ValueIntroParagraph = compileContentComponent({
+const BenchmarksParagraph = compileContentComponent({
   deps: [],
   component: (props) => (
     <p className="text-dimmed">
-      Compare {props.shortCpuName}&apos;s value with similar{' '}
-      {props.marketSegment} CPUs. Relative value provides insight into which
-      CPUs gives the best bang for your buck. This data is based on performance
-      and MSRP.
+      Performance and benchmark metrics for the {props.shortCpuName}. These are
+      usually the best indicator for determing a CPUs performance.
     </p>
   ),
 });
 
-export const ValueIntro = () => {
+export const BenchmarksIntro = () => {
   const { contentParams, contentTags } = useContext(ViewPageContext);
   const context = { tags: contentTags, params: contentParams };
 
   return (
     <ContentContext.Provider value={context}>
-      <ValueIntroParagraph />
+      <BenchmarksParagraph />
     </ContentContext.Provider>
   );
 };

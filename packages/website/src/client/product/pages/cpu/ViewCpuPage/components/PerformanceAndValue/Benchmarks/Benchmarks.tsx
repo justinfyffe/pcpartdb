@@ -1,6 +1,6 @@
 import { BenchmarKey, hasProductBenchmark } from '@pcpartdb/shared';
 import React, { FunctionComponent, useContext } from 'react';
-import { ViewPageContext } from '../../context/ViewPageContext';
+import { ViewPageContext } from '../../../context/ViewPageContext';
 import { BenchmarksIntro } from './BenchmarksIntro';
 import { BenchmarksTable } from './BenchmarksTable';
 
@@ -18,7 +18,7 @@ export const Benchmarks: FunctionComponent = () => {
 
   return (
     <section>
-      <h2 className="mb-0 font-semibold">Benchmarks</h2>
+      <h3 className="mb-0 font-semibold">Benchmarks</h3>
       <BenchmarksIntro />
       <BenchmarksTable className="mb-4" />
     </section>

@@ -42,9 +42,8 @@ const PerformanceValue = compileContentComponent({
   component: (props) => (
     <>
       Its {props.performanceRating} performance rating and {props.launchPrice}{' '}
-      launch price (MSRP) gives it a performance per dollar of{' '}
-      {props.valueRating}, giving it the {props.valueRank} best value among CPUs
-      in our database.
+      launch price gives it a value rating of {props.valueRating}, giving it the{' '}
+      {props.valueRank} best value among CPUs in our database.
     </>
   ),
 });
