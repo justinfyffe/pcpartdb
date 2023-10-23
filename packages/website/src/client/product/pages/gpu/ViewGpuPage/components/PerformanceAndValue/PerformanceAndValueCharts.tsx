@@ -1,4 +1,5 @@
 import {
+  formatProductName,
   getGpuChipset,
   getListGpusPath,
   LIST_GPUS_PRESETS,
@@ -21,6 +22,10 @@ export const PerformanceAndValueCharts: FunctionComponent<
   const { gpu } = useContext(ViewPageContext);
   const chipset = getGpuChipset(gpu);
 
+  const name = useMemo(() => {
+    return formatProductName(chipset, { company: false, brand: false });
+  }, [chipset]);
+
   const performanceRankHref = useMemo(() => {
     if (chipset.ranks?.performanceRating) {
       return getListGpusPath(LIST_GPUS_PRESETS['best-performance']);
@@ -40,6 +45,7 @@ export const PerformanceAndValueCharts: FunctionComponent<
       <ViewProductRatingCard
         productType={ProductType.Gpu}
         ratingType={ProductRatingType.PerformanceRating}
+        name={name}
         maxRating={100}
         ratingField={chipset.fields?.performanceRating}
         rank={chipset.ranks?.performanceRating}
@@ -49,6 +55,7 @@ export const PerformanceAndValueCharts: FunctionComponent<
       <ViewProductRatingCard
         productType={ProductType.Gpu}
         ratingType={ProductRatingType.ValueRating}
+        name={name}
         maxRating={100}
         ratingField={chipset.fields?.performancePerMsrp}
         rank={chipset.ranks?.performancePerMsrp}

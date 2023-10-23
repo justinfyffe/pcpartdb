@@ -91,6 +91,11 @@ async function markAsProcessed(
 async function getNextAction(
   context: AutomationContext,
 ): Promise<AutomationAction> {
+  return {
+    status: AutomationActionStatus.Pending,
+    type: AutomationActionType.UpdatePerformanceScores,
+  };
+
   // Action baesd on Priority Queue
   const queueAction = await getActionFromQueue(context);
   if (queueAction != null) {

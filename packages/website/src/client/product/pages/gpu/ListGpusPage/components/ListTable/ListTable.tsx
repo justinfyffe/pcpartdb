@@ -35,8 +35,8 @@ export const ListTable: FunctionComponent = () => {
         <Tr>
           <Th>GPU</Th>
           <Th className="text-left">Retail Models</Th>
-          <Th className="text-right">Performance</Th>
-          <Th className="text-right">Performance / $ (MSRP)</Th>
+          <Th className="text-right">Performance Rating</Th>
+          <Th className="text-right">Value Rating</Th>
           <Th className="text-right">Release Date</Th>
         </Tr>
       </THead>

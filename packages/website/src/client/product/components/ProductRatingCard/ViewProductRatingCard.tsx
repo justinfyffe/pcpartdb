@@ -19,6 +19,7 @@ import { ProductRatingType } from './types';
 export interface ViewProductRatingCardProps {
   productType: ProductType;
   ratingType: ProductRatingType;
+  name: string;
 
   maxRating?: number;
   ratingField?: ProductField<number>;
@@ -30,8 +31,15 @@ export interface ViewProductRatingCardProps {
 export const ViewProductRatingCard: FunctionComponent<
   ViewProductRatingCardProps
 > = (props) => {
-  const { productType, ratingType, ratingField, maxRating, rank, rankHref } =
-    props;
+  const {
+    productType,
+    ratingType,
+    name,
+    ratingField,
+    maxRating,
+    rank,
+    rankHref,
+  } = props;
 
   const ratingRaw = useMemo(() => {
     return productFieldRawValue(ratingField);
@@ -39,21 +47,27 @@ export const ViewProductRatingCard: FunctionComponent<
   const ratingFormatted = useMemo(() => {
     return productFieldFormattedValue(ratingField);
   }, [ratingField]);
+  const notRated = ratingRaw == null;
 
   const rankFormatted = useMemo(() => formatOrdinalNumber(rank), [rank]);
 
   return (
-    <Card className="flex-1 flex flex-row justify-between items-start">
+    <Card className="flex-1 flex flex-row justify-between items-start gap-4">
       <CardTitle as="div" className="flex flex-col gap-2">
-        <span>
+        <span className="whitespace-nowrap">
           <Title tags={[ratingType]} />
         </span>
         <div className="text-base font-normal">
-          <Description tags={[ratingType, productType]} />
+          <Description
+            tags={[ratingType, productType, notRated && 'NOT_RATED']}
+            params={{
+              name,
+            }}
+          />
         </div>
       </CardTitle>
 
-      <CardContent className="gap-0 items-center">
+      <CardContent className="gap-2 items-center">
         <DonutChart
           totalValue={maxRating}
           centerLabel={ratingRaw ? ratingFormatted : 'N/A'}
@@ -61,10 +75,11 @@ export const ViewProductRatingCard: FunctionComponent<
           holeClass="w-[75%] h-[75%] bg-light-shades rounded-full ring-1 ring-white"
           data={[{ value: ratingRaw, color: '#4c5c7c' }]}
         ></DonutChart>
+
         {rank && (
           <div
             className={classNames(
-              'text-xs font-medium',
+              'text-base font-medium whitespace-nowrap',
               rankHref ? 'underline' : '',
             )}
           >
@@ -97,11 +112,20 @@ export const Title = compileContentComponent(
 export const Description = compileContentComponent(
   // Performance
   {
+    tags: [ProductRatingType.PerformanceRating, 'NOT_RATED'],
+    component: (props) => (
+      <p>
+        We do not have enough data to calculate the performance for the{' '}
+        {props.name}.
+      </p>
+    ),
+  },
+  {
     tags: [ProductRatingType.PerformanceRating, ProductType.Cpu],
     component: (_props) => (
       <p>
-        Based on a combination of CPU benchmarks. Measured on a scale of 0-100
-        with higher being better.
+        This rating is based on a combination of CPU benchmarks. It can have a
+        max value of 100. Higher is better.
       </p>
     ),
   },
@@ -109,18 +133,27 @@ export const Description = compileContentComponent(
     tags: [ProductRatingType.PerformanceRating, ProductType.Gpu],
     component: (_props) => (
       <p>
-        Based on a combination of GPU benchmarks. Measured on a scale of 0-100
-        with higher being better.
+        This rating is based on a combination of GPU benchmarks. It can have a
+        max value of 100. Higher is better.
       </p>
     ),
   },
   // Value
   {
+    tags: [ProductRatingType.ValueRating, 'NOT_RATED'],
+    component: (props) => (
+      <p>
+        We do not have enough data to calculate the performance per dollar
+        (MSRP) for the {props.name}.
+      </p>
+    ),
+  },
+  {
     tags: [ProductRatingType.ValueRating],
     component: (_props) => (
       <p>
-        Based on the performance per dollar (MSRP). Measured on a scale of 0-100
-        with higher being better.
+        This rating is based on the performance per dollar (MSRP). It can have a
+        max value of 100. Higher is better.
       </p>
     ),
   },

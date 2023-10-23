@@ -39,15 +39,15 @@ const TitleSentence = compileContentComponent(
 const SortedSentence = compileContentComponent(
   {
     tags: [ListGpusContentTag.SortedBestPerformance],
-    component: () => <>Sorted by performance benchmarks.</>,
+    component: () => <>Sorted by combined benchmark performance.</>,
   },
   {
     tags: [ListGpusContentTag.SortedBestValue],
-    component: () => <>Sorted by performance per dollar</>,
+    component: () => <>Sorted by performance per dollar (MSRP).</>,
   },
   {
     tags: [ListGpusContentTag.SortedReleaseDate],
-    component: () => <>Sorted by release date</>,
+    component: () => <>Sorted by release date.</>,
   },
 );
 

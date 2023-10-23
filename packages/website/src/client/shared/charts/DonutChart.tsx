@@ -80,7 +80,7 @@ export const DonutChart: FunctionComponent<DonutChartProps> = (props) => {
       <div className="absolute flex w-full h-full items-center justify-center">
         <div
           className={classNames(
-            'rounded-full bg-white flex items-center justify-center text-lg font-medium',
+            'rounded-full bg-white flex items-center justify-center text-xl font-medium',
             props.holeClass,
           )}
         >
