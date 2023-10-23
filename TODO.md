@@ -14,10 +14,10 @@ When Bored:
 
 Better Performance Score
 - [] reset cache
-- [] add highlights under technical specs
+- [] add highlights under technical specs?
 - [X] add widget to queue refreshing ratings
 - [] Display Performance Rating and Value Rating more prominently
-  - [] Larger font/section, maybe a donut chart
+  - [X] Larger font/section, maybe a donut chart
   - [] have text explaining why it's not populated
 - [] Rename Performance Score to "Performance Rating"
 - [] Rename Perf per MSRP to "Value Rating"

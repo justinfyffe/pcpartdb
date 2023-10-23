@@ -2,7 +2,6 @@ import React, { FunctionComponent, useMemo } from 'react';
 import { classNames } from '../ui/classNames';
 
 export interface DonutChartData {
-  name: string;
   value: number;
   color: string;
 }
@@ -15,8 +14,9 @@ interface DonutChartPart {
 }
 
 export interface DonutChartProps {
-  centerLabel?: string;
   data: DonutChartData[];
+  totalValue?: number;
+  centerLabel?: string;
 
   chartClass: string;
   holeClass: string;
@@ -25,14 +25,27 @@ export interface DonutChartProps {
 export const DonutChart: FunctionComponent<DonutChartProps> = (props) => {
   const data = props.data;
 
-  const totalValue = useMemo(
+  const sumOfParts = useMemo(
     () => data.reduce((acc, d) => acc + d.value, 0),
     [data],
   );
 
+  const totalValue = useMemo(
+    () => props.totalValue ?? sumOfParts,
+    [props.totalValue, sumOfParts],
+  );
+
+  const fillerData = useMemo(
+    () => ({
+      value: totalValue - sumOfParts,
+      color: '#aaa',
+    }),
+    [sumOfParts, totalValue],
+  );
+
   const cssString = useMemo(
     () =>
-      data
+      [...data, fillerData]
         .reduce((parts, item, i) => {
           const { value, color } = item;
 
@@ -59,7 +72,7 @@ export const DonutChart: FunctionComponent<DonutChartProps> = (props) => {
           return ` ${color} ${startDegrees}deg ${endDegrees}deg`;
         })
         .join(),
-    [data, totalValue],
+    [data, fillerData, totalValue],
   );
 
   return (
