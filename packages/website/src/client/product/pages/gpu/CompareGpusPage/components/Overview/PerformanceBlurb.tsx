@@ -9,7 +9,7 @@ const PerformanceIntro = compileContentComponent(
     tags: [CompareGpusContentTag.DifferentPerformance],
     deps: [
       'gpu1PerformanceMoreOrLess',
-      'gpu1PerformanceHigherOrLower',
+      'gpu1PerformanceMoreOrLess',
       'gpu1PerformanceDifferencePct',
     ],
     // The GeForce RTX 2070 is a less powerful graphics card than the Radeon RX 7900,
@@ -20,7 +20,7 @@ const PerformanceIntro = compileContentComponent(
         The {props.shortGpuName1} is a {props.gpu1PerformanceMoreOrLess}{' '}
         powerful graphics card than the {props.shortGpuName2}, delivering
         approximately {props.gpu1PerformanceDifferencePct}{' '}
-        {props.gpu1PerformanceHigherOrLower} performance than the{' '}
+        {props.gpu1PerformanceMoreOrLess} performance than the{' '}
         {props.shortestGpuName2} in the benchmarks that we track.
       </>
     ),
@@ -54,9 +54,9 @@ const PerformanceValue = compileContentComponent(
       <>
         Based on their performance and launch prices, the{' '}
         {props.shortestGpuName1} has a {props.gpu1ValueHigherOrLower}{' '}
-        performance per dollar than the {props.shortestGpuName2}. It has a
-        performance per dollar of {props.performancePerDollar1}, while the{' '}
-        {props.shortestGpuName2} has a performance per dollar of{' '}
+        performance per dollar than the {props.shortestGpuName2}. It has a value
+        rating of {props.performancePerDollar1}, while the{' '}
+        {props.shortestGpuName2} has a value rating of{' '}
         {props.performancePerDollar2}.
       </>
     ),

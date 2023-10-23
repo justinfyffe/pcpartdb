@@ -38,7 +38,6 @@ export interface CompareGpusContentParams {
   launchPrice2?: string;
 
   gpu1PerformanceMoreOrLess?: string;
-  gpu1PerformanceHigherOrLower?: string;
   gpu1PerformanceDifferencePct?: string;
   gpu1ValueHigherOrLower?: string;
   performancePerDollar1?: string;
@@ -177,7 +176,6 @@ function getPerformanceParams(comparison: GpuProductComparison) {
   const chipset2 = getGpuChipset(gpu2);
 
   let gpu1PerformanceMoreOrLess: string;
-  let gpu1PerformanceHigherOrLower: string;
   let gpu1PerformanceDifferencePct: string;
   if (
     hasProductFieldRawValue(chipset1.fields?.performanceRating) &&
@@ -191,12 +189,10 @@ function getPerformanceParams(comparison: GpuProductComparison) {
     );
     if (performanceScore1 > performanceScore2) {
       gpu1PerformanceMoreOrLess = 'more';
-      gpu1PerformanceHigherOrLower = 'higher';
       gpu1PerformanceDifferencePct =
         ((performanceScore1 / performanceScore2 - 1) * 100).toFixed(0) + '%';
     } else if (performanceScore1 < performanceScore2) {
       gpu1PerformanceMoreOrLess = 'less';
-      gpu1PerformanceHigherOrLower = 'lower';
       gpu1PerformanceDifferencePct =
         ((1 - performanceScore1 / performanceScore2) * 100).toFixed(0) + '%';
     }
@@ -222,7 +218,7 @@ function getPerformanceParams(comparison: GpuProductComparison) {
 
   return {
     gpu1PerformanceMoreOrLess,
-    gpu1PerformanceHigherOrLower,
+    gpu1PerformanceMoreOrLess,
     gpu1PerformanceDifferencePct,
     gpu1ValueHigherOrLower,
     performancePerDollar1: hasProductFieldRawValue(

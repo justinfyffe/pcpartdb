@@ -27,9 +27,9 @@ import {
   RetailModels,
   TechnicalSpecs,
 } from './components';
+import { PerformanceAndValue } from './components/PerformanceAndValue/PerformanceAndValue';
 import { ComparePageContext } from './context/ComparePageContext';
 import { useComparePageContextProps } from './hooks/useComparePageContextProps';
-import { PerformanceAndValue } from './components/PerformanceAndValue/PerformanceAndValue';
 
 export const CompareGpusPage = (
   props: CompareGpusViewModel & { config: Config },

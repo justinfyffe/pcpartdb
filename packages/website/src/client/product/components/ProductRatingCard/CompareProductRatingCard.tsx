@@ -74,6 +74,10 @@ export const CompareProductRatingCard: FunctionComponent<
   const rankFormatted2 = useMemo(() => formatOrdinalNumber(rank2), [rank2]);
 
   const betterWorseSame = useMemo(() => {
+    if (ratingRaw1 == null || ratingRaw2 == null) {
+      return null;
+    }
+
     if (ratingRaw1 > ratingRaw2) {
       return BetterWorseSame.Better;
     } else if (ratingRaw1 < ratingRaw2) {
@@ -87,8 +91,15 @@ export const CompareProductRatingCard: FunctionComponent<
     if (ratingRaw1 == null || ratingRaw2 == null) {
       return null;
     }
-    return ((ratingRaw1 / ratingRaw2) * 100).toFixed(2);
-  }, [ratingRaw1, ratingRaw2]);
+
+    if (
+      betterWorseSame === BetterWorseSame.Better ||
+      betterWorseSame === BetterWorseSame.Worse
+    ) {
+      return Math.abs((ratingRaw1 / ratingRaw2 - 1) * 100).toFixed(0);
+    }
+    return null;
+  }, [betterWorseSame, ratingRaw1, ratingRaw2]);
 
   return (
     <Card className="flex flex-row justify-between items-stretch flex-wrap gap-4">
@@ -98,7 +109,7 @@ export const CompareProductRatingCard: FunctionComponent<
         </span>
         <span className="text-base font-normal">
           <Description1
-            tags={[ratingType, productType, betterWorseSame]}
+            tags={[ratingType, productType]}
             params={{
               name1,
               name2,
@@ -106,7 +117,7 @@ export const CompareProductRatingCard: FunctionComponent<
             }}
           />
           <Description2
-            tags={[ratingType, productType]}
+            tags={[ratingType, productType, betterWorseSame]}
             params={{
               name1,
               name2,
@@ -238,8 +249,8 @@ export const Description2 = compileContentComponent(
     deps: ['name1', 'name2', 'percentDiff'],
     component: (props) => (
       <p>
-        The {props.name1} outperforms the {props.name2} by approximately{' '}
-        {props.percentDiff}%.
+        The {props.name1} has approximately {props.percentDiff}% better
+        performance than the {props.name2}.
       </p>
     ),
   },
@@ -248,8 +259,8 @@ export const Description2 = compileContentComponent(
     deps: ['name1', 'name2', 'percentDiff'],
     component: (props) => (
       <p>
-        This rating indicates that the {props.name1} underperforms the{' '}
-        {props.name2} by approximately {props.percentDiff}%.
+        The {props.name1} has approximately {props.percentDiff}% less
+        performance than the {props.name2}.
       </p>
     ),
   },
@@ -258,8 +269,7 @@ export const Description2 = compileContentComponent(
     deps: ['name1', 'name2'],
     component: (props) => (
       <p>
-        This rating indicates that the {props.name1} has similar performance as
-        the {props.name2}.
+        The {props.name1} has a similar performance as the {props.name2}.
       </p>
     ),
   },
@@ -279,9 +289,8 @@ export const Description2 = compileContentComponent(
     deps: ['name1', 'name2', 'percentDiff'],
     component: (props) => (
       <p>
-        This rating indicates that the {props.name1} has approximately{' '}
-        {props.percentDiff}% better performance per dollar than the{' '}
-        {props.name2}.
+        The {props.name1} has approximately {props.percentDiff}% better
+        performance per dollar (MSRP) than the {props.name2}.
       </p>
     ),
   },
@@ -290,9 +299,8 @@ export const Description2 = compileContentComponent(
     deps: ['name1', 'name2', 'percentDiff'],
     component: (props) => (
       <p>
-        This rating indicates that the {props.name1} has approximately{' '}
-        {props.percentDiff}% worse performance per dollar than the {props.name2}
-        .
+        The {props.name1} has approximately {props.percentDiff}% less
+        performance per dollar (MSRP) than the {props.name2}.
       </p>
     ),
   },
@@ -301,8 +309,8 @@ export const Description2 = compileContentComponent(
     deps: ['name1', 'name2'],
     component: (props) => (
       <p>
-        This rating indicates that the {props.name1} has similar performance per
-        dollar as the {props.name2}.
+        The {props.name1} has a similar performance per dollar as the{' '}
+        {props.name2}.
       </p>
     ),
   },
