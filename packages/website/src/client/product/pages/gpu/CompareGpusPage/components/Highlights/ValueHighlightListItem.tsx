@@ -53,7 +53,7 @@ export const ValueHighlightListItem: FunctionComponent<
   return (
     <ProductHighlightComparison
       icon={<CurrencyDollarIcon />}
-      label="Performance / $ (MSRP)"
+      label="Value Rating"
       values={values}
       className={className}
     ></ProductHighlightComparison>

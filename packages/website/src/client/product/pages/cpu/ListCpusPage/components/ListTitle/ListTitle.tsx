@@ -39,11 +39,11 @@ const TitleSentence = compileContentComponent(
 const SortedSentence = compileContentComponent(
   {
     tags: [ListCpusContentTag.SortedBestPerformance],
-    component: () => <>Sorted by performance benchmarks.</>,
+    component: () => <>Sorted by combined benchmark performance.</>,
   },
   {
     tags: [ListCpusContentTag.SortedBestValue],
-    component: () => <>Sorted by performance per dollar</>,
+    component: () => <>Sorted by performance per dollar (MSRP).</>,
   },
   {
     tags: [ListCpusContentTag.SortedReleaseDate],

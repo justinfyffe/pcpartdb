@@ -23,8 +23,8 @@ export const ListTable: FunctionComponent = () => {
       <THead>
         <Tr>
           <Th>CPU</Th>
-          <Th className="text-right">Performance</Th>
-          <Th className="text-right">Performance / $ (MSRP)</Th>
+          <Th className="text-right">Performance Rating</Th>
+          <Th className="text-right">Value Rating</Th>
           <Th className="text-right">Release Date</Th>
         </Tr>
       </THead>

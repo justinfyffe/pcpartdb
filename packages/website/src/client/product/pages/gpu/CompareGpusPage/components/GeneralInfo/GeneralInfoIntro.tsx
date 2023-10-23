@@ -8,9 +8,8 @@ export const GeneralInfoIntroSentence1 = compileContentComponent({
   component: (props) => (
     <>
       General information about the {props.shortGpuName1} and{' '}
-      {props.shortGpuName2} like their performance rating, release date, launch
-      price, and production status. Performance rating and performance per
-      dollar are based on their chipsets.
+      {props.shortGpuName2} like their manufacturer, release date, launch price,
+      and production status.
     </>
   ),
 });

@@ -53,7 +53,7 @@ export const PerformanceHighlightListItem: FunctionComponent<
   return (
     <ProductHighlightComparison
       icon={<StarIcon />}
-      label="Performance"
+      label="Performance Rating"
       values={values}
       className={className}
     ></ProductHighlightComparison>

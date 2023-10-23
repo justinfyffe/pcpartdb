@@ -195,13 +195,13 @@ export const Highlights: FunctionComponent<HighlightsProps> = (props) => {
       >
         <ProductHighlightComparison
           icon={<StarIcon />}
-          label="Performance"
+          label="Performance Rating"
           values={highlightPerformance}
         />
 
         <ProductHighlightComparison
           icon={<CurrencyDollarIcon />}
-          label="Performance / $ (MSRP)"
+          label="Value Rating"
           values={highlightValue}
         />
 

@@ -218,7 +218,6 @@ function getPerformanceParams(comparison: GpuProductComparison) {
 
   return {
     gpu1PerformanceMoreOrLess,
-    gpu1PerformanceMoreOrLess,
     gpu1PerformanceDifferencePct,
     gpu1ValueHigherOrLower,
     performancePerDollar1: hasProductFieldRawValue(

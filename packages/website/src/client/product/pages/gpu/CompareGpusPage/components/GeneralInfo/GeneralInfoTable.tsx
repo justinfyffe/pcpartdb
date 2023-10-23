@@ -2,7 +2,6 @@ import {
   formatCompanyName,
   formatProductName,
   getGpuAffiliateUrl,
-  productFieldFormattedValue,
   ProductType,
 } from '@pcpartdb/shared';
 import { ProductCustomRow } from 'packages/website/src/client/product/components/ProductCustomRow/ProductCustomRow';
@@ -36,64 +35,6 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
       formatProductName(gpu2, { company: false }),
     ];
   }, [gpu1, gpu2]);
-
-  const performanceScoreValues = useMemo(() => {
-    const score1 =
-      productFieldFormattedValue(gpu1.fields?.performanceRating) ||
-      productFieldFormattedValue(parent1?.fields?.performanceRating);
-    const score2 =
-      productFieldFormattedValue(gpu2.fields?.performanceRating) ||
-      productFieldFormattedValue(parent2?.fields?.performanceRating);
-    const rank1 =
-      gpu1.ranks.performanceRating || parent1?.ranks?.performanceRating;
-    const rank2 =
-      gpu2.ranks.performanceRating || parent2?.ranks?.performanceRating;
-
-    const formatted1 =
-      score1 != null && rank1 != null ? `${score1} (${rank1})` : '--';
-    const formatted2 =
-      score2 != null && rank2 != null ? `${score2} (${rank2})` : '--';
-
-    return [formatted1, formatted2];
-  }, [
-    gpu1.fields?.performanceRating,
-    gpu1.ranks.performanceRating,
-    gpu2.fields?.performanceRating,
-    gpu2.ranks.performanceRating,
-    parent1?.fields?.performanceRating,
-    parent1?.ranks?.performanceRating,
-    parent2?.fields?.performanceRating,
-    parent2?.ranks?.performanceRating,
-  ]);
-
-  const valueScoreValues = useMemo(() => {
-    const score1 =
-      productFieldFormattedValue(gpu1.fields?.performancePerMsrp) ||
-      productFieldFormattedValue(parent1?.fields?.performancePerMsrp);
-    const score2 =
-      productFieldFormattedValue(gpu2.fields?.performancePerMsrp) ||
-      productFieldFormattedValue(parent2?.fields?.performancePerMsrp);
-    const rank1 =
-      gpu1.ranks.performancePerMsrp || parent1?.ranks?.performancePerMsrp;
-    const rank2 =
-      gpu2.ranks.performancePerMsrp || parent2?.ranks?.performancePerMsrp;
-
-    const formatted1 =
-      score1 != null && rank1 != null ? `${score1} (${rank1})` : '--';
-    const formatted2 =
-      score2 != null && rank2 != null ? `${score2} (${rank2})` : '--';
-
-    return [formatted1, formatted2];
-  }, [
-    gpu1.fields?.performancePerMsrp,
-    gpu1.ranks.performancePerMsrp,
-    gpu2.fields?.performancePerMsrp,
-    gpu2.ranks.performancePerMsrp,
-    parent1?.fields?.performancePerMsrp,
-    parent1?.ranks?.performancePerMsrp,
-    parent2?.fields?.performancePerMsrp,
-    parent2?.ranks?.performancePerMsrp,
-  ]);
 
   const chipsetValues = useMemo(() => {
     return [
@@ -148,14 +89,6 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
             ]}
           />
         )}
-        <ProductCustomRow
-          label="Performance Rating (Rank)*"
-          values={performanceScoreValues}
-        />
-        <ProductCustomRow
-          label="Performance Per Dollar (Rank)*"
-          values={valueScoreValues}
-        />
         <ProductCustomRow label="Chipset" values={chipsetValues} />
         <ProductCustomRow
           label="Company"
