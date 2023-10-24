@@ -57,14 +57,14 @@ const WEIGHTS: Partial<
   Record<ProductType, Partial<Record<BenchmarKey, number>>>
 > = {
   [ProductType.Cpu]: {
-    [BenchmarKey.CpuMarkMultiThread]: 0.4,
-    [BenchmarKey.CpuMarkSingleThread]: 0.1,
-    [BenchmarKey.GeekBenchMultiCore]: 0.4,
-    [BenchmarKey.GeekBenchSingleCore]: 0.1,
+    [BenchmarKey.CpuMarkMultiThread]: 0.95,
+    [BenchmarKey.CpuMarkSingleThread]: 0.05,
+    [BenchmarKey.GeekBenchMultiCore]: 0.0,
+    [BenchmarKey.GeekBenchSingleCore]: 0.0,
   },
   [ProductType.Gpu]: {
-    [BenchmarKey.G3dMark]: 1,
-    [BenchmarKey.G2dMark]: 0,
+    [BenchmarKey.G3dMark]: 0.95,
+    [BenchmarKey.G2dMark]: 0.05,
   },
 };
 
@@ -94,11 +94,11 @@ export async function updatePerformanceScores(
   const weights = WEIGHTS[productType];
 
   // Fetch products
-  const products = filterProducts(
-    await fetchProducts(productType, context),
-    scoreBenchmarks,
-    minNumBenchmarks,
-  );
+  const products = filterProducts({
+    products: await fetchProducts(productType, context),
+    benchmarks: scoreBenchmarks,
+    minRequired: minNumBenchmarks,
+  });
 
   // Prepare data
   const maxes = getBenchmarkMaxes(products, scoreBenchmarks);

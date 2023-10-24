@@ -59,17 +59,19 @@ export const RetailModelRow: FunctionComponent<RetailModelRowProps> = (
 
   const clock = useMemo(
     () =>
-      `${productFieldFormattedValue(
-        retailModel.fields.gpuCoreBaseClock,
-      )} / ${productFieldFormattedValue(retailModel.fields.gpuCoreBoostClock)}`,
+      `${
+        productFieldFormattedValue(retailModel.fields.gpuCoreBaseClock) ?? '--'
+      } / ${
+        productFieldFormattedValue(retailModel.fields.gpuCoreBoostClock) ?? '--'
+      }`,
     [retailModel.fields.gpuCoreBaseClock, retailModel.fields.gpuCoreBoostClock],
   );
   const dimensions = useMemo(
-    () => formatGpuDimensions(retailModel),
+    () => formatGpuDimensions(retailModel) ?? '--',
     [retailModel],
   );
   const tdp = useMemo(
-    () => productFieldFormattedValue(retailModel.fields.tdp),
+    () => productFieldFormattedValue(retailModel.fields.tdp) ?? '--',
     [retailModel.fields.tdp],
   );
 

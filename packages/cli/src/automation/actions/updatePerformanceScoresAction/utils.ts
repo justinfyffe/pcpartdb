@@ -17,28 +17,34 @@ export function getBenchmarkMaxes(
   for (const product of products) {
     for (const benchmark of benchmarks) {
       benchmarkMaxes[benchmark] = Math.max(
-        benchmarkMaxes[benchmark] || 0,
-        productBenchmarkValue(product, benchmark) || 0,
+        benchmarkMaxes[benchmark] ?? 0,
+        productBenchmarkValue(product, benchmark) ?? 0,
       );
     }
   }
   return benchmarkMaxes;
 }
 
-export function filterProducts(
-  products: Product[],
-  benchmarks: BenchmarKey[],
-  minRequired?: number,
-) {
-  const requiredCount = minRequired || benchmarks.length;
-  return products.filter(
-    (product) =>
-      benchmarks.reduce(
-        (acc, benchmark) =>
-          (acc += hasProductBenchmark(product, benchmark) ? 1 : 0),
-        0,
-      ) >= requiredCount,
-  );
+interface FilterProductsOptions {
+  products: Product[];
+  estimates?: BenchmarkEstimates;
+
+  benchmarks: BenchmarKey[];
+  minRequired?: number;
+}
+
+export function filterProducts(options: FilterProductsOptions) {
+  const { products, estimates, minRequired, benchmarks } = options;
+  const requiredCount = minRequired ?? benchmarks.length;
+  return products.filter((product) => {
+    const filteredBenchmarks = benchmarks.filter(
+      (benchmark) =>
+        hasProductBenchmark(product, benchmark) ||
+        estimates?.[product.id][benchmark] != null,
+    );
+    const totalBenchmarks = filteredBenchmarks.length;
+    return totalBenchmarks >= requiredCount;
+  });
 }
 
 export function predictMissingBenchmarks(
@@ -82,7 +88,11 @@ export function calculatePerformanceScores(
 ) {
   let maxPerformanceRating = 0;
   let maxPerformancePerMsrp = 0;
-  const filteredProducts = filterProducts(products, scoreBenchmarks);
+  const filteredProducts = filterProducts({
+    products,
+    estimates,
+    benchmarks: scoreBenchmarks,
+  });
   const results: {
     product: Product;
     rawPerformanceRating: number;
@@ -142,7 +152,10 @@ function predictMissingBenchmark(
   weights: BenchmarkWeights,
 ) {
   let maxScore = 0;
-  const filteredProducts = filterProducts(products, existingKeys);
+  const filteredProducts = filterProducts({
+    products,
+    benchmarks: existingKeys,
+  });
   const scores: { product: Product; score: number }[] = [];
   for (const product of filteredProducts) {
     const score = getScore(product, existingKeys, maxes, weights);
@@ -181,7 +194,7 @@ function getWeightedBenchmark(
 ) {
   const estimate = estimates?.[product.id]?.[key];
 
-  const value = estimate || productBenchmarkValue(product, key) || 0;
+  const value = estimate ?? productBenchmarkValue(product, key) ?? 0;
   const max = maxes[key];
   const weight = weights[key];
 
