@@ -1,8 +1,5 @@
 import { Module } from '@nestjs/common';
 import { DatabaseModule } from '../database';
-import { AutomationSourceController } from './automation-source.controller';
-import { AutomationSourceRepository } from './automation-source.repository';
-import { AutomationSourceService } from './automation-source.service';
 import { ProductController } from './product.controller';
 import { ProductRepository } from './product.repository';
 import { ProductService } from './product.service';
@@ -16,14 +13,8 @@ import { ProductUpdateService } from './product-update.service';
 
 @Module({
   imports: [DatabaseModule],
-  controllers: [
-    AutomationSourceController,
-    ProductUpdateController,
-    ProductController,
-  ],
+  controllers: [ProductUpdateController, ProductController],
   providers: [
-    AutomationSourceRepository, // TODO: move to automation folder
-    AutomationSourceService, // TODO: move to automation folder
     ProductAutocompleteRepository,
     ProductAutocompleteService,
     ProductRanksRepository,
@@ -34,8 +25,6 @@ import { ProductUpdateService } from './product-update.service';
     ProductService,
   ],
   exports: [
-    AutomationSourceRepository, // TODO: move to automation folder
-    AutomationSourceService, // TODO: move to automation folder
     ProductAutocompleteRepository,
     ProductAutocompleteService,
     ProductRanksRepository,

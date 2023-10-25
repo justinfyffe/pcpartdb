@@ -16,10 +16,10 @@ import {
   UpsertAutomationSourcesRequest,
   upsertAutomationSourcesRequestSchema,
 } from '@pcpartdb/shared';
+import { ProductService } from '../product/product.service';
 import { Context } from '../shared/context';
 import { validate } from '../shared/validation/validate';
 import { AutomationSourceRepository } from './automation-source.repository';
-import { ProductService } from './product.service';
 
 @Injectable()
 export class AutomationSourceService {

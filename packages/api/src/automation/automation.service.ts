@@ -7,7 +7,7 @@ import {
 } from '@pcpartdb/shared';
 import * as fs from 'fs';
 import * as fsPromises from 'fs/promises';
-import { AutomationSourceRepository } from '../product/automation-source.repository';
+import { AutomationSourceRepository } from './automation-source.repository';
 import { ProductUpdateRepository } from '../product/product-update.repository';
 import { Context } from '../shared/context';
 import { badRequestError } from '../shared/error';
