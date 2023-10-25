@@ -39,7 +39,7 @@ export const PerformanceAndValueCharts: FunctionComponent<
   }, [cpu.ranks?.performancePerMsrp]);
 
   return (
-    <div className={classNames('flex flex-wrap gap-4', className)}>
+    <div className={classNames('flex flex-wrap gap-8', className)}>
       <ViewProductRatingCard
         productType={ProductType.Cpu}
         ratingType={ProductRatingType.PerformanceRating}

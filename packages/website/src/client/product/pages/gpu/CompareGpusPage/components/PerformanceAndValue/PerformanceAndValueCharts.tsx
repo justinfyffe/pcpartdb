@@ -40,7 +40,7 @@ export const PerformanceAndValueCharts: FunctionComponent<
   }, [chipset1, chipset2]);
 
   return (
-    <div className={classNames('flex flex-col gap-4', className)}>
+    <div className={classNames('flex flex-col gap-8', className)}>
       <CompareProductRatingCard
         productType={ProductType.Gpu}
         ratingType={ProductRatingType.PerformanceRating}
