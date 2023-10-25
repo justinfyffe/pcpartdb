@@ -13,18 +13,9 @@ When Bored:
 - Improve db performance using queryRaw, but only in places where it'll help
 
 Better Performance Score
-- [] Test automation
-- [X] reset cache in automation script
 - [] add highlights under technical specs? Next project
-- [X] add widget to queue refreshing ratings
-- [X] Display Performance Rating and Value Rating more prominently
-  - [X] Larger font/section, maybe a donut chart
-  - [X] have text explaining why it's not populated
-- [X] Rename Performance Score to "Performance Rating"
-- [X] Rename Perf per MSRP to "Value Rating"
 - [] Add valuePerMsrp to ProductBenchmark. Next project
 - [] Add ability to sort by benchmark and benchmark per msrp. Next project
-- [X] Performance and value tables
 - [] Code cleanup
   - [] Move automation action-related controller methods to automation-actions.controller.ts
   - [] Migrate automation-source code to automation folder

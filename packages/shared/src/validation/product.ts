@@ -153,6 +153,7 @@ export const productBenchmarkSchema = Joi.object({
     BenchmarKey.TimespyGraphics,
   ),
   value: Joi.number().allow(null),
+  valuePerMsrp: Joi.number().allow(null),
 
   metadata: Joi.any().allow(null),
 });
