@@ -16,9 +16,6 @@ Better Performance Score
 - [] add highlights under technical specs? Next project
 - [] Add valuePerMsrp to ProductBenchmark. Next project
 - [] Add ability to sort by benchmark and benchmark per msrp. Next project
-- [] Code cleanup
-  - [] Move automation action-related controller methods to automation-actions.controller.ts
-  - [] Migrate automation-source code to automation folder
 
 Admin Improvements
 - Improved data auditing
