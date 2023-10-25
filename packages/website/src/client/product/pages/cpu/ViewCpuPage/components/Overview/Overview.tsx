@@ -5,9 +5,7 @@ import { SpecsBlurb } from './SpecsBlurb';
 
 export const Overview: FunctionComponent = () => {
   return (
-    <section className="-mb-4">
-      <h2 className="font-semibold">Overview</h2>
-
+    <section className="mb-0">
       <IntroBlurb />
       <SpecsBlurb />
       <PerformanceBlurb />

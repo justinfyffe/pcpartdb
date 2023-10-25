@@ -30,7 +30,7 @@ export const PowerSpecs: FunctionComponent<PowerSpecsProps> = (props) => {
     <section className={className}>
       <h3 className="mb-0">Power Consumption</h3>
       <PowerIntro />
-      <PowerTable className="mb-4" />
+      <PowerTable />
     </section>
   );
 };

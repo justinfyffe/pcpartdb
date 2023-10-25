@@ -27,7 +27,7 @@ export const PhysicalSpecs: FunctionComponent<PhysicalSpecsProps> = (props) => {
     <section className={className}>
       <h3 className="mb-0">Physical</h3>
       <PhysicalIntro />
-      <PhysicalTable className="mb-4" />
+      <PhysicalTable />
     </section>
   );
 };

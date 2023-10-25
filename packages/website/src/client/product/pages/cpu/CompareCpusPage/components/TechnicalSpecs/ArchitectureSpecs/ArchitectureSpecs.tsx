@@ -40,7 +40,7 @@ export const ArchitectureSpecs: FunctionComponent<ArchitectureSpecsProps> = (
     <section className={className}>
       <h3 className="mb-0">Architecture</h3>
       <ArchitectureIntro />
-      <ArchitectureTable className="mb-4" />
+      <ArchitectureTable />
     </section>
   );
 };

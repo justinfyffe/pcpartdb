@@ -20,7 +20,7 @@ export const Benchmarks: FunctionComponent = () => {
     <section>
       <h3 className="mb-0 font-semibold">Benchmarks</h3>
       <BenchmarksIntro />
-      <BenchmarksTable className="mb-4" />
+      <BenchmarksTable />
     </section>
   );
 };

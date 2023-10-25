@@ -33,7 +33,7 @@ export const CompatibilitySpecs: FunctionComponent<CompatibilitySpecsProps> = (
     <section className={className}>
       <h3 className="mb-0">Board Compatibility &amp; Dimensions</h3>
       <CompatibilityIntro />
-      <CompatibilityTable className="mb-4" />
+      <CompatibilityTable />
     </section>
   );
 };

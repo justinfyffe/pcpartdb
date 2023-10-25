@@ -41,7 +41,7 @@ export const PerformanceAndValueCharts: FunctionComponent<
   }, [chipset.ranks?.performancePerMsrp]);
 
   return (
-    <div className={classNames('flex flex-wrap gap-4', className)}>
+    <div className={classNames('flex flex-wrap gap-8', className)}>
       <ViewProductRatingCard
         productType={ProductType.Gpu}
         ratingType={ProductRatingType.PerformanceRating}

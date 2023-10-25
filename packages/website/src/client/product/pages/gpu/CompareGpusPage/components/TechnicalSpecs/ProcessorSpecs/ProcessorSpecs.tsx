@@ -32,7 +32,7 @@ export const ProcessorSpecs: FunctionComponent<ProcessorSpecsProps> = (
     <section className={className}>
       <h3 className="mb-0">Processor</h3>
       <ProcessorIntro />
-      <ProcessorTable className="mb-4" />
+      <ProcessorTable />
     </section>
   );
 };

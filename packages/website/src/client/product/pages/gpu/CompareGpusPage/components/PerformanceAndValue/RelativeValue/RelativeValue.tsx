@@ -28,7 +28,7 @@ export const RelativeValue: FunctionComponent = () => {
     <section>
       <h3 className="mb-0 font-semibold">Relative Value</h3>
       <ValueIntro />
-      <ValueTable className="mb-4" />
+      <ValueTable />
     </section>
   );
 };

@@ -20,7 +20,7 @@ export const RelativeValue: FunctionComponent = () => {
       <h3 className="mb-0 font-semibold">Relative Value</h3>
       <ValueIntro />
 
-      <section className="flex flex-wrap gap-8 mb-4">
+      <section className="flex flex-wrap gap-8">
         <ValueTable />
       </section>
     </section>

@@ -19,7 +19,7 @@ export const RelativePerformance: FunctionComponent = () => {
     <section>
       <h3 className="mb-0 font-semibold">Relative Performance</h3>
       <PerformanceIntro />
-      <PerformanceTable className="mb-4" />
+      <PerformanceTable />
     </section>
   );
 };

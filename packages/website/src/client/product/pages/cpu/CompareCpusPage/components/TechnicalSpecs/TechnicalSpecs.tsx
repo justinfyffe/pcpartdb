@@ -8,15 +8,17 @@ import { PowerSpecs } from './PowerSpecs';
 
 export const TechnicalSpecs: FunctionComponent = () => {
   return (
-    <section className="flex flex-col gap-6">
-      <h2 className="mb-0 font-semibold">Technical Specs</h2>
+    <section className="flex flex-col mb-6">
+      <h2 className="mb-4 font-semibold">Technical Specs</h2>
 
-      <PhysicalSpecs />
-      <ArchitectureSpecs />
-      <CoresSpecs />
-      <CacheSpecs />
-      <PowerSpecs />
-      <FeatureSpecs />
+      <div className="flex flex-col gap-8">
+        <PhysicalSpecs />
+        <ArchitectureSpecs />
+        <CoresSpecs />
+        <CacheSpecs />
+        <PowerSpecs />
+        <FeatureSpecs />
+      </div>
     </section>
   );
 };
