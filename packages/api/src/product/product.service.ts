@@ -9,7 +9,6 @@ import {
   AutocompleteProductsRequest,
   autocompleteProductsRequestSchema,
   AutomationSource,
-  BenchmarKey,
   CreateProductRequest,
   createProductRequestSchema,
   listAllProductsRequestSchema,
@@ -20,7 +19,6 @@ import {
   ProductComparison,
   ProductDiff,
   ProductFieldKey,
-  productFieldRawValue,
   ProductPerformanceScores,
   ProductRankKey,
   ProductSource,
@@ -358,8 +356,6 @@ export class ProductService {
       });
     }
 
-    this.populatePerformanceRatings(product);
-
     const entity = mapToProductEntity({ id: undefined, ...product });
     const result = await this.repository.create(entity, ctx);
     return mapToProductDto(result);
@@ -391,8 +387,6 @@ export class ProductService {
     if (pendingUpdate != null) {
       await this.updateService.reject(pendingUpdate.id, {}, ctx);
     }
-
-    this.populatePerformanceRatings(product);
 
     const entity = mapToProductEntity({ id: undefined, ...product });
     const result = await this.repository.update(id, entity, ctx);
@@ -525,93 +519,6 @@ export class ProductService {
       },
       { ctx, timeout: 120_000 },
     );
-  }
-
-  private populatePerformanceRatings(product: Product) {
-    switch (product.productType) {
-      case ProductType.Cpu:
-        this.populateCpuPerformanceRatings(product);
-        break;
-      case ProductType.Gpu:
-        this.populateGpuPerformanceRatings(product);
-        break;
-    }
-  }
-
-  private populateCpuPerformanceRatings(product: Product) {
-    if (product.fields == null) {
-      throw new Error('Missing fields on product');
-    }
-
-    const cpuMarkMulti = product.benchmarks?.filter(
-      (benchmark) => benchmark.benchmarkKey === BenchmarKey.CpuMarkMultiThread,
-    )[0];
-
-    if (cpuMarkMulti?.value == null) {
-      // No performance rating to calculate
-      return;
-    }
-
-    const performance = cpuMarkMulti.value;
-    product.fields.performanceRating = {
-      value: performance,
-      meta: {
-        fieldKey: 'performanceRating',
-        autoUpdate: true,
-        formattedValue: performance.toLocaleString(),
-      },
-    };
-
-    const msrp = productFieldRawValue(product.fields.msrp);
-    if (msrp != null) {
-      const value = performance / msrp;
-      product.fields.performancePerMsrp = {
-        value,
-        meta: {
-          fieldKey: 'performancePerMsrp',
-          autoUpdate: true,
-          formattedValue: value.toFixed(2),
-        },
-      };
-    }
-  }
-
-  private populateGpuPerformanceRatings(product: Product) {
-    if (product.fields == null) {
-      throw new Error('Missing fields on product');
-    }
-
-    const g3dMark = product.benchmarks?.filter(
-      (benchmark) => benchmark.benchmarkKey === BenchmarKey.G3dMark,
-    )[0];
-
-    if (g3dMark?.value == null) {
-      // No performance rating to calculate
-      return;
-    }
-
-    const performance = g3dMark.value;
-    product.fields.performanceRating = {
-      value: performance,
-      meta: {
-        fieldKey: 'performanceRating',
-        autoUpdate: true,
-        formattedValue: performance.toLocaleString(),
-      },
-    };
-
-    const msrp = productFieldRawValue(product.fields.msrp);
-    if (msrp != null) {
-      const value = performance / msrp;
-      product.fields.performancePerMsrp = {
-        value,
-        meta: {
-          fieldKey: 'performancePerMsrp',
-          autoUpdate: true,
-          formattedValue: value.toFixed(2),
-        },
-      };
-    }
   }
 
   private async populateAdditionalListData(
