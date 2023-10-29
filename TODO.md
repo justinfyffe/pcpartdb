@@ -12,6 +12,10 @@ When Bored:
 - Make autocomplete stricter, not looser when searching?
 - Improve db performance using queryRaw, but only in places where it'll help
 
+Other:
+- Handle "On certain motherboards (Chipset feature)" from techpowerup cpu
+  integrated graphics. Should map to "Motherboard Dependent"
+
 Better Performance Score
 - [] add highlights under technical specs? Next project
 - [] Add valuePerMsrp to ProductBenchmark. Next project
