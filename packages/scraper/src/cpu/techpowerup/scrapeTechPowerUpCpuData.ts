@@ -38,12 +38,13 @@ import { scraper } from '../../scraper';
 import { CommonScraperOptions, ScraperContext } from '../../types';
 import { createCpuField } from '../utils';
 
-const SPECIAL_VALUES = [
-  'motherboard dependent',
-  'portable device dependent',
-  'system dependent',
-  'system shared',
-];
+const SPECIAL_VALUES: Record<string, string> = {
+  'motherboard dependent': 'Motherboard Dependent',
+  'on certain motherboards (chipset feature)': 'Motherboard Dependent',
+  'portable device dependent': 'Device Dependent',
+  'system dependent': 'System Dependent',
+  'system shared': 'System Shared',
+};
 const NULL_VALUES = ['n/a', 'none', 'unknown'];
 
 export interface ScrapeTechPowerUpCpuDataOptions extends CommonScraperOptions {
@@ -1232,7 +1233,8 @@ function tokenizeMultiLine($: cheerio.CheerioAPI, label: string) {
 
   return values
     .filter((value) => !!value)
-    .filter((value) => !NULL_VALUES.includes(value.toLowerCase()));
+    .filter((value) => !NULL_VALUES.includes(value.toLowerCase()))
+    .map((value) => SPECIAL_VALUES[value.toLowerCase()] || value);
 }
 
 interface ParseNumberOptions {
@@ -1262,10 +1264,10 @@ function parseNumber(options: ParseNumberOptions): ParseNumberResult {
     return null;
   }
 
-  if (SPECIAL_VALUES.includes(lcValue)) {
+  if (SPECIAL_VALUES[lcValue] != null) {
     return {
       rawValue: 0,
-      formattedValue: originalValue,
+      formattedValue: SPECIAL_VALUES[lcValue],
     };
   }
 
