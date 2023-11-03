@@ -12,6 +12,7 @@ import {
   ProductBenchmark,
   ProductType,
   ScrapeProductResponse,
+  WattageUnit,
 } from '@pcpartdb/shared';
 import * as cheerio from 'cheerio';
 import { scraper } from '../../scraper';
@@ -24,7 +25,6 @@ export interface ScrapePassMarkCpuDataOptions extends CommonScraperOptions {
   url: string;
 }
 
-// TODO: scrape fields
 // Example: https://www.cpubenchmark.net/cpu.php?cpu=AMD+EPYC+9654&id=5088
 export async function scrapePassMarkCpuData(
   options: ScrapePassMarkCpuDataOptions,
@@ -85,7 +85,7 @@ function getSingleThreadScore($: cheerio.CheerioAPI): ProductBenchmark {
 }
 
 interface ProductFieldScraper {
-  label: string;
+  labels: string[];
   regexes: RegExp[];
   unitMapper?: Record<string, MeasurementUnit>;
   formatOptions?: FormatProductFieldOptions;
@@ -94,7 +94,7 @@ interface ProductFieldScraper {
 
 const FIELDS: Partial<Record<CpuFieldKey, ProductFieldScraper>> = {
   clock: {
-    label: 'clockspeed:',
+    labels: ['clockspeed:'],
     regexes: [/^(?<value>[.\d]+) (?<unit>KHz|MHz|GHz)/i],
     unitMapper: {
       khz: ClockSpeedUnit.khz,
@@ -105,21 +105,39 @@ const FIELDS: Partial<Record<CpuFieldKey, ProductFieldScraper>> = {
       getBaseUnitValue(value, unit, { decimals: 2 }),
   },
   cores: {
-    label: 'cores:', // TODO: support multiple labels: https://www.cpubenchmark.net/cpu.php?cpu=Intel+Core+i9-12900KS&id=4813
-    regexes: [/^(?<value>[.\d]+)/i],
+    labels: ['cores:', 'total cores:'],
+    regexes: [/^(?<value>[.\d]+)/i, /(?<value>[.\d]+) Cores/i],
     parseValue: ({ value }) => (value != null ? Number(value) : null),
   },
   eCores: {
-    // TODO
+    labels: ['efficient cores:'],
+    regexes: [/(?<value>[.\d]+) Cores/i],
+    parseValue: ({ value }) => (value != null ? Number(value) : null),
   },
   eCoreClock: {
-    // TODO
+    labels: ['efficient cores:'],
+    regexes: [/(?<value>[.\d]+) (?<unit>KHz|MHz|GHz) Base/i],
+    unitMapper: {
+      khz: ClockSpeedUnit.khz,
+      mhz: ClockSpeedUnit.mhz,
+      ghz: ClockSpeedUnit.ghz,
+    },
+    parseValue: ({ value, unit }) =>
+      getBaseUnitValue(value, unit, { decimals: 2 }),
   },
   eCoreTurboClock: {
-    // TODO
+    labels: ['efficient cores:'],
+    regexes: [/(?<value>[.\d]+) (?<unit>KHz|MHz|GHz) Turbo/i],
+    unitMapper: {
+      khz: ClockSpeedUnit.khz,
+      mhz: ClockSpeedUnit.mhz,
+      ghz: ClockSpeedUnit.ghz,
+    },
+    parseValue: ({ value, unit }) =>
+      getBaseUnitValue(value, unit, { decimals: 2 }),
   },
   l1Cache: {
-    label: 'cache size:',
+    labels: ['cache size:'],
     regexes: [/L1: (?<value>[.\d]+) (?<unit>KB|MB|GB)/i],
     unitMapper: {
       kb: MemorySizeUnit.kb,
@@ -130,7 +148,7 @@ const FIELDS: Partial<Record<CpuFieldKey, ProductFieldScraper>> = {
       getBaseUnitValue(value, unit, { decimals: 2 }),
   },
   l2Cache: {
-    label: 'cache size:',
+    labels: ['cache size:'],
     regexes: [/L2: (?<value>[.\d]+) (?<unit>KB|MB|GB)/i],
     unitMapper: {
       kb: MemorySizeUnit.kb,
@@ -141,7 +159,7 @@ const FIELDS: Partial<Record<CpuFieldKey, ProductFieldScraper>> = {
       getBaseUnitValue(value, unit, { decimals: 2 }),
   },
   l3Cache: {
-    label: 'cache size:',
+    labels: ['cache size:'],
     regexes: [/L3: (?<value>[.\d]+) (?<unit>KB|MB|GB)/i],
     unitMapper: {
       kb: MemorySizeUnit.kb,
@@ -152,28 +170,52 @@ const FIELDS: Partial<Record<CpuFieldKey, ProductFieldScraper>> = {
       getBaseUnitValue(value, unit, { decimals: 2 }),
   },
   pCores: {
-    // TODO
+    labels: ['performance cores:'],
+    regexes: [/(?<value>[.\d]+) Cores/i],
+    parseValue: ({ value }) => (value != null ? Number(value) : null),
   },
   pCoreClock: {
-    // TODO
+    labels: ['performance cores:'],
+    regexes: [/(?<value>[.\d]+) (?<unit>KHz|MHz|GHz) Base/i],
+    unitMapper: {
+      khz: ClockSpeedUnit.khz,
+      mhz: ClockSpeedUnit.mhz,
+      ghz: ClockSpeedUnit.ghz,
+    },
+    parseValue: ({ value, unit }) =>
+      getBaseUnitValue(value, unit, { decimals: 2 }),
   },
   pCoreTurboClock: {
-    // TODO
+    labels: ['performance cores:'],
+    regexes: [/(?<value>[.\d]+) (?<unit>KHz|MHz|GHz) Turbo/i],
+    unitMapper: {
+      khz: ClockSpeedUnit.khz,
+      mhz: ClockSpeedUnit.mhz,
+      ghz: ClockSpeedUnit.ghz,
+    },
+    parseValue: ({ value, unit }) =>
+      getBaseUnitValue(value, unit, { decimals: 2 }),
   },
   socket: {
-    label: 'socket:',
+    labels: ['socket:'],
     regexes: [/^(?<value>.+)/i],
   },
   tdp: {
-    // TODO
+    labels: ['typical tdp:'],
+    regexes: [/(?<value>[.\d]+) (?<unit>W)/i],
+    unitMapper: {
+      watt: WattageUnit.w,
+    },
+    parseValue: ({ value, unit }) =>
+      getBaseUnitValue(value, unit, { decimals: 2 }),
   },
   threads: {
-    label: 'threads:',
-    regexes: [/^(?<value>[.\d]+)/i],
+    labels: ['threads:', 'total cores:'],
+    regexes: [/^(?<value>[.\d]+)/i, /(?<value>[.\d]+) Threads/i],
     parseValue: ({ value }) => (value != null ? Number(value) : null),
   },
   turboClock: {
-    label: 'turbo speed:',
+    labels: ['turbo speed:'],
     regexes: [/^(?<value>[.\d]+) (?<unit>KHz|MHz|GHz)/i],
     unitMapper: {
       khz: ClockSpeedUnit.khz,
@@ -186,7 +228,7 @@ const FIELDS: Partial<Record<CpuFieldKey, ProductFieldScraper>> = {
 };
 function scrapeFields($: cheerio.CheerioAPI, ctx: ScraperContext) {
   const fields = Object.entries(FIELDS).map(([fieldKey, scraper]) => {
-    const scraped = scrapeSpecRow($, scraper.label) || null;
+    const scraped = scrapeSpecRow($, scraper.labels) || null;
 
     let scrapedValue: string = null;
     let scrapedUnit: string = null;
@@ -226,12 +268,12 @@ function scrapeFields($: cheerio.CheerioAPI, ctx: ScraperContext) {
   }, {} as CpuFields);
 }
 
-function scrapeSpecRow($: cheerio.CheerioAPI, label: string) {
+function scrapeSpecRow($: cheerio.CheerioAPI, labels: string[]) {
   const el = $('.desc-body strong')
-    .filter(
-      (_i, strong) =>
-        $(strong).text().trim().toLowerCase() === label.toLowerCase(),
-    )
+    .filter((_i, strong) => {
+      const scrapedLabel = $(strong).text().trim().toLowerCase();
+      return labels.some((label) => scrapedLabel === label.toLowerCase());
+    })
     .map((_i, strong) => strong.nextSibling)
     .first();
 
