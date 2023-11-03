@@ -15,6 +15,7 @@ import {
   ViewCpuContentData,
   ViewCpuViewModel,
 } from '@pcpartdb/shared';
+import * as uuid from 'uuid';
 import { Database } from '../../database';
 import { ProductService } from '../../product/product.service';
 import { CacheService, CacheType } from '../../shared/cache/cache.service';
@@ -32,7 +33,8 @@ export class ViewCpuViewModelService {
   ) {}
 
   async viewModel(slug: string, ctx: Context) {
-    console.time('ViewCpuViewModelService');
+    const timer = `ViewCpuViewModelService (${uuid.v4()})`;
+    console.time(timer);
     const viewModel = await this.cacheService.cache(
       async () => {
         const cpu = await this.getCpu(slug, ctx);
@@ -60,7 +62,7 @@ export class ViewCpuViewModelService {
       },
       { type: CacheType.CpuProduct, key: `viewModel__${slug}` },
     );
-    console.timeEnd('ViewCpuViewModelService');
+    console.timeEnd(timer);
 
     return viewModel;
   }

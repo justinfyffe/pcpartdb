@@ -19,8 +19,8 @@ Summaries:
 
 More Benchmarks
 - [] CPU - Rename Generation to Lineup? (POST MVP)
-- [] Scrape more fields from geekbench (POST MVP)
-- [] Scrape more fields from passmark (POST MVP)
+- [X] Scrape more fields from geekbench (POST MVP)
+- [X] Scrape more fields from passmark (POST MVP)
 
 
 

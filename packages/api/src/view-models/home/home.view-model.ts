@@ -8,6 +8,7 @@ import {
   ProductComparison,
   ProductType,
 } from '@pcpartdb/shared';
+import * as uuid from 'uuid';
 import { Database } from '../../database';
 import { ProductService } from '../../product/product.service';
 import { CacheService, CacheType } from '../../shared/cache/cache.service';
@@ -44,7 +45,9 @@ export class HomeViewModelService {
   ) {}
 
   async viewModel(ctx: Context) {
-    console.time('HomeViewModelService');
+    const timer = `HomeViewModelService (${uuid.v4()})`;
+    console.time(timer);
+
     const result = await this.cacheService.cache(
       async () => {
         const nvidiaVsAmdGpus = await this.getNvidiaVsAmdGpus(ctx);
@@ -61,7 +64,7 @@ export class HomeViewModelService {
       },
       { type: CacheType.Home, key: {} },
     );
-    console.timeEnd('HomeViewModelService');
+    console.timeEnd(timer);
     return result;
   }
 

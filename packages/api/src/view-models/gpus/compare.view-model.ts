@@ -17,6 +17,7 @@ import {
   RelatedProductComparisons,
   RelatedProducts,
 } from '@pcpartdb/shared';
+import * as uuid from 'uuid';
 import { Database } from '../../database';
 import { ProductService } from '../../product/product.service';
 import { CacheService, CacheType } from '../../shared/cache/cache.service';
@@ -34,7 +35,9 @@ export class CompareGpusViewModelService {
   ) {}
 
   async viewModel(slug: string, ctx: Context) {
-    console.time('CompareGpusViewModelService');
+    const timer = `CompareGpusViewModelService (${uuid.v4()})`;
+    console.time(timer);
+
     const viewModel = await this.cacheService.cache(
       async () => {
         const comparison = await this.getComparison(slug, ctx);
@@ -62,7 +65,7 @@ export class CompareGpusViewModelService {
       },
       { type: CacheType.GpuComparison, key: `viewModel__${slug}` },
     );
-    console.timeEnd('CompareGpusViewModelService');
+    console.timeEnd(timer);
 
     return viewModel;
   }

@@ -16,6 +16,7 @@ import {
   ViewGpuAdditionalData,
   ViewGpuViewModel,
 } from '@pcpartdb/shared';
+import * as uuid from 'uuid';
 import { Database } from '../../database';
 import { ProductService } from '../../product/product.service';
 import { CacheService, CacheType } from '../../shared/cache/cache.service';
@@ -33,7 +34,8 @@ export class ViewGpuViewModelService {
   ) {}
 
   async viewModel(slug: string, ctx: Context) {
-    console.time('ViewGpuViewModelService');
+    const timer = `ViewGpuViewModelService (${uuid.v4()})`;
+    console.time(timer);
     const viewModel = await this.cacheService.cache(
       async () => {
         const gpu = await this.getGpu(slug, ctx);
@@ -61,7 +63,7 @@ export class ViewGpuViewModelService {
       },
       { type: CacheType.GpuProduct, key: `viewModel__${slug}` },
     );
-    console.timeEnd('ViewGpuViewModelService');
+    console.timeEnd(timer);
 
     return viewModel;
   }
