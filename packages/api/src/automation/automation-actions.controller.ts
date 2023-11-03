@@ -15,6 +15,7 @@ import {
   ListAutomationActionsRequest,
   UploadPerformanceScoresRequest,
 } from '@pcpartdb/shared';
+import * as uuid from 'uuid';
 import { StaffGuard } from '../auth/staff.guard';
 import { Context, Ctx } from '../shared/context';
 import { MULTER_OPTIONS } from '../shared/utils';
@@ -31,9 +32,10 @@ export class AutomationActionsController {
     @Body() body: UploadPerformanceScoresRequest,
     @Ctx() ctx: Context,
   ) {
-    console.time('AutomationActionsController.uploadPerformanceScores');
+    const timer = `AutomationActionsController.uploadPerformanceScores (${uuid.v4()})`;
+    console.time(timer);
     await this.service.uploadPerformanceScoresAction(body, ctx);
-    console.timeEnd('AutomationActionsController.uploadPerformanceScores');
+    console.timeEnd(timer);
   }
 
   @Get('next')

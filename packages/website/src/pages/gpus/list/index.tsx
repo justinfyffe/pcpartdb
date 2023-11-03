@@ -8,7 +8,6 @@ import { ListGpusPage } from 'packages/website/src/client/product/pages/gpu/List
 import { viewModelsClient } from '../../../client/shared/api/viewModelsClient';
 
 export async function getServerSideProps(ctx: NextPageContext) {
-  console.time('ListGpusPage.getServerSideProps');
   const query = generateListGpusQueryFromSearchParams(ctx.query);
 
   const response = await viewModelsClient.get('gpus/list', {
@@ -19,7 +18,6 @@ export async function getServerSideProps(ctx: NextPageContext) {
       } as ListGpusRequest),
     },
   });
-  console.timeEnd('ListGpusPage.getServerSideProps');
   return response;
 }
 

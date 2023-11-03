@@ -8,7 +8,6 @@ import { ListCpusPage } from 'packages/website/src/client/product/pages/cpu/List
 import { viewModelsClient } from '../../../client/shared/api/viewModelsClient';
 
 export async function getServerSideProps(ctx: NextPageContext) {
-  console.time('ListCpusPage.getServerSideProps');
   const query = generateListCpusQueryFromSearchParams(ctx.query);
 
   const response = await viewModelsClient.get('cpus/list', {
@@ -19,7 +18,6 @@ export async function getServerSideProps(ctx: NextPageContext) {
       } as ListCpusRequest),
     },
   });
-  console.timeEnd('ListCpusPage.getServerSideProps');
   return response;
 }
 

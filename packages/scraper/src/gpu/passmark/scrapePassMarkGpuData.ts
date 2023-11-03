@@ -93,7 +93,7 @@ const FIELDS: Partial<Record<GpuFieldKey, ProductFieldScraper>> = {
   },
   directxVersion: {
     labels: ['directx:'],
-    regexes: [/^(?<value>[_-,.\d]+)/i],
+    regexes: [/^(?<value>[-_,.\d]+)/i],
   },
   gpuCoreBaseClock: {
     labels: ['core clock(s):'],
@@ -119,7 +119,7 @@ const FIELDS: Partial<Record<GpuFieldKey, ProductFieldScraper>> = {
   },
   openGlVersion: {
     labels: ['opengl:'],
-    regexes: [/^(?<value>[_-,.\d]+)/i],
+    regexes: [/^(?<value>[-_,.\d]+)/i],
   },
   tdp: {
     labels: ['max tdp:'],

@@ -17,12 +17,14 @@ Summaries:
 - [] Add date it was last generated.
 
 
+Annoyances:
+- [] Figure out why admin panel sometimes give forbidden exception.
+  - Liekly has to do with async middleware
+
 More Benchmarks
 - [] CPU - Rename Generation to Lineup? (POST MVP)
 - [X] Scrape more fields from geekbench (POST MVP)
 - [X] Scrape more fields from passmark (POST MVP)
-
-
 
 Better Performance Score
 - [] add highlights under technical specs? Next project
