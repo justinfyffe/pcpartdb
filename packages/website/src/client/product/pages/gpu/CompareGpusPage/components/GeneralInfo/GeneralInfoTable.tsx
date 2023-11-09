@@ -107,7 +107,7 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
         />
         <ProductFieldRow
           type={ProductType.Gpu}
-          fields={[gpu1.fields?.msrp, gpu2.fields?.releaseDate]}
+          fields={[gpu1.fields?.msrp, gpu2.fields?.msrp]}
         />
         <ProductFieldRow
           type={ProductType.Gpu}
