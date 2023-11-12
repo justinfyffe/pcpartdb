@@ -1,5 +1,5 @@
 import {
-  BenchmarKey,
+  BenchmarkKey,
   getProductBenchmarkLabel,
   ProductBenchmark,
 } from '@pcpartdb/shared';
@@ -19,7 +19,7 @@ import React, {
 import { ScrapeProductContext } from './ScrapeProductContext';
 
 interface ScrapedBenchmarkRowProps {
-  benchmarkKey?: BenchmarKey;
+  benchmarkKey?: BenchmarkKey;
 }
 
 export const ScrapedBenchmarkRow: FunctionComponent<
@@ -73,6 +73,6 @@ export const ScrapedBenchmarkRow: FunctionComponent<
   );
 };
 
-function getEmptyValue(benchmarkKey: BenchmarKey): ProductBenchmark {
+function getEmptyValue(benchmarkKey: BenchmarkKey): ProductBenchmark {
   return { benchmarkKey };
 }

@@ -2,14 +2,14 @@ import {
   GpuField,
   GpuFieldKey,
   GpuFieldMeta,
-  GpuProductType,
   hasProductFieldValue,
   ProductType,
+  SubProductType,
 } from '@pcpartdb/shared';
 import { ScraperContext } from '../types';
 
 interface GenerateGpuGroupKeyOptions {
-  gpuType: GpuProductType;
+  gpuType: SubProductType;
   company: string;
   name: string;
 }
@@ -80,7 +80,8 @@ interface CreateGpuFieldOptions<T = unknown> {
 export function createGpuField<T = unknown>(options: CreateGpuFieldOptions<T>) {
   const { field, raw, formatted, meta, ctx, overwriteMemo } = options;
 
-  if (overwriteMemo !== true && ctx?.memoizedFields?.[field] != null) {
+  const memoized = ctx?.memoizedFields?.[field];
+  if (overwriteMemo !== true && memoized != null) {
     // Field was previously set, use that one unless we're skipping memoization.
     return ctx.memoizedFields[field] as GpuField<T>;
   }

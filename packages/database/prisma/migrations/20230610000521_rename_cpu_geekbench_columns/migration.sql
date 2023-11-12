@@ -9,4 +9,4 @@
 ALTER TABLE "cpus" DROP COLUMN "geekbench_6_multiple_core",
 DROP COLUMN "geekbench_6_single_core",
 ADD COLUMN     "geekbench_multiple_core" DOUBLE PRECISION,
-ADD COLUMN     "geekbench_single_core" DOUBLE PRECISION;
+ADD COLUMN     "GeekBench_Multi_Core" DOUBLE PRECISION;

@@ -67,7 +67,7 @@ export const CPU_FIELD_LABELS: Partial<Record<CpuFieldKey, string>> = {
   tCaseMax: 'Tcase Max',
   tjMax: 'TJ Max',
 
-  architecture: 'Architecture',
+  architecture: 'Microarchitecture',
   codename: 'Codename',
   generation: 'Generation',
   pciExpress: 'PCI Express',

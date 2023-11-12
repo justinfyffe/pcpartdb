@@ -1,5 +1,5 @@
 import {
-  BenchmarKey,
+  BenchmarkKey,
   formatCompanyName,
   ProductDiff,
   ProductFieldKey,
@@ -21,7 +21,7 @@ import { FieldDiffRow } from './FieldDiffRow';
 interface FormattedDiffTabProps {
   productType: ProductType;
   dataToPreview: ProductFieldKey[];
-  benchmarksToPreview?: BenchmarKey[];
+  benchmarksToPreview?: BenchmarkKey[];
   diff: ProductDiff;
 }
 

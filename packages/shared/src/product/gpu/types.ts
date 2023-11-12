@@ -20,11 +20,6 @@ export enum ListGpusPresetSlug {
   Oldest = 'oldest',
 }
 
-export enum GpuProductType {
-  Chipset = 'CHIPSET',
-  RetailModel = 'RETAIL_MODEL',
-}
-
 export type GpuFieldKey = keyof GpuFields;
 
 export interface GpuFieldMeta extends ProductFieldMeta {

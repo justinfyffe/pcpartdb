@@ -1,12 +1,4 @@
-export interface TechPowerUpGpuSource {
-  groupKey: string;
-  externalKey: string;
-  name: string;
-  company: string;
-  url: string;
-}
-
-export interface TechPowerUpGpuRetailModelSource {
+export interface NotebookCheckGpuSource {
   groupKey: string;
   externalKey: string;
   name: string;
@@ -20,6 +12,22 @@ export interface PassMarkGpuSource {
   name: string;
   company: string;
   g3dMark: number;
+  url: string;
+}
+
+export interface TechPowerUpGpuSource {
+  groupKey: string;
+  externalKey: string;
+  name: string;
+  company: string;
+  url: string;
+}
+
+export interface TechPowerUpGpuRetailModelSource {
+  groupKey: string;
+  externalKey: string;
+  name: string;
+  company: string;
   url: string;
 }
 

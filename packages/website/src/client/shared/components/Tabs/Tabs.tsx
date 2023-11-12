@@ -22,12 +22,16 @@ export interface TabsProps {
 
   as?: React.ElementType;
   className?: string;
+  tabClassName?: string;
 
-  children?: React.ReactElement<TabProps> | React.ReactElement<TabProps>[];
+  children?:
+    | React.ReactElement<TabProps>
+    | React.ReactElement<TabProps>[]
+    | any;
 }
 
 export const Tabs: FunctionComponent<TabsProps> = (props) => {
-  const { loadOnDemand, children } = props;
+  const { loadOnDemand, children, tabClassName } = props;
   const variant = props.variant || TabsVariant.Horizontal;
 
   const Element = props.as || 'section';
@@ -67,6 +71,7 @@ export const Tabs: FunctionComponent<TabsProps> = (props) => {
             ? 'bg-light-shades p-4 rounded-b'
             : '',
           variant === TabsVariant.Buttons ? 'py-8' : '',
+          tabClassName,
         )}
       >
         {Children.map(children, (child, i) => (

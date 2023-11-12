@@ -9,13 +9,14 @@ import { classNames } from '../../../shared/ui/classNames';
 interface ProductBenchmarkRowProps {
   benchmarks: ProductBenchmark[];
 
+  indent?: boolean;
   className?: string;
 }
 
 export const ProductBenchmarkRow: FunctionComponent<
   ProductBenchmarkRowProps
 > = (props) => {
-  const { benchmarks, className } = props;
+  const { benchmarks, indent, className } = props;
   const [benchmark1, benchmark2] = benchmarks;
 
   const label = useMemo(() => {
@@ -44,6 +45,7 @@ export const ProductBenchmarkRow: FunctionComponent<
           'text-left',
           benchmarks.length === 1 ? 'w-[50%]' : '',
           benchmarks.length === 2 ? 'w-[33%]' : '',
+          indent ? 'pl-6' : '',
         )}
       >
         {label}

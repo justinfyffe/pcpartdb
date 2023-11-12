@@ -1,5 +1,5 @@
 import {
-  BenchmarKey,
+  BenchmarkKey,
   CpuProduct,
   ProductBenchmark,
   ProductType,
@@ -13,13 +13,14 @@ export interface ScrapePassMarkCpuDataOptions extends CommonScraperOptions {
   url: string;
 }
 
+// TODO: scrape fields
 // Example: https://www.cpubenchmark.net/cpu.php?cpu=AMD+EPYC+9654&id=5088
 export async function scrapePassMarkCpuData(
   options: ScrapePassMarkCpuDataOptions,
 ) {
   const { url, noProxy } = options;
 
-  const response = await scraper.scrape(url, { retries: 1, noProxy });
+  const response = await scraper.scrapeGet(url, { retries: 1, noProxy });
   const $ = cheerio.load(response.data);
 
   const benchmarks: ProductBenchmark[] = [
@@ -36,11 +37,16 @@ export async function scrapePassMarkCpuData(
 }
 
 function getMultiThreadScore($: cheerio.CheerioAPI): ProductBenchmark {
-  const cpuMarkMultiThread = $('.speedicon').siblings('span').first().text();
+  const PassMark_CpuMark_Multi_Thread = $('.speedicon')
+    .siblings('span')
+    .first()
+    .text();
 
-  const value = cpuMarkMultiThread ? Number(cpuMarkMultiThread) : null;
+  const value = PassMark_CpuMark_Multi_Thread
+    ? Number(PassMark_CpuMark_Multi_Thread)
+    : null;
   return {
-    benchmarkKey: BenchmarKey.CpuMarkMultiThread,
+    benchmarkKey: BenchmarkKey.PassMark_CpuMark_Multi_Thread,
     value,
     metadata: null,
   };
@@ -58,7 +64,7 @@ function getSingleThreadScore($: cheerio.CheerioAPI): ProductBenchmark {
 
   const value = singleThreadScore ? Number(singleThreadScore) : null;
   return {
-    benchmarkKey: BenchmarKey.CpuMarkSingleThread,
+    benchmarkKey: BenchmarkKey.PassMark_CpuMark_Single_Thread,
     value,
     metadata: null,
   };

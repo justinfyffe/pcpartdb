@@ -36,12 +36,8 @@ export class ViewGpuViewModelService {
     console.time('ViewGpuViewModelService');
     const viewModel = await this.cacheService.cache(
       async () => {
-        console.time('ViewGpuViewModelService.getGpu');
         const gpu = await this.getGpu(slug, ctx);
-        console.timeEnd('ViewGpuViewModelService.getGpu');
-        console.time('ViewGpuViewModelService.getAdditionalData');
         const additionalData = await this.getAdditionalData(gpu, ctx);
-        console.timeEnd('ViewGpuViewModelService.getAdditionalData');
 
         const relatedGpus = await this.getRelatedGpus(
           3,

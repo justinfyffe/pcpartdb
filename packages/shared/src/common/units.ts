@@ -45,6 +45,7 @@ export enum MultiplierUnit {
 
 export enum NumericUnit {
   million = 'million',
+  billion = 'billion',
 }
 
 export enum PixelFillRateUnit {
@@ -190,10 +191,12 @@ const MULTIPLIER_FORMATS: Record<MultiplierUnit, string> = {
 
 const NUMERIC_UNIT_MULTIPLIERS: Record<NumericUnit, number> = {
   [NumericUnit.million]: 1_000_000,
+  [NumericUnit.billion]: 1_000_000_000,
 };
 
 const NUMERIC_UNIT_FORMATS: Record<NumericUnit, string> = {
   [NumericUnit.million]: 'million',
+  [NumericUnit.billion]: 'billion',
 };
 
 const PIXEL_FILL_RATE_UNIT_MULTIPLIERS: Record<PixelFillRateUnit, number> = {
@@ -301,6 +304,7 @@ function getUnitMultiplier(unit: MeasurementUnit) {
     case MultiplierUnit.x:
       return MULTIPLIER_MULTIPLIERS[unit];
     case NumericUnit.million:
+    case NumericUnit.billion:
       return NUMERIC_UNIT_MULTIPLIERS[unit];
     case PixelFillRateUnit.mpixelps:
     case PixelFillRateUnit.gpixelps:
@@ -335,7 +339,7 @@ interface GetBaseUnitValueOptions {
 }
 
 export function getBaseUnitValue(
-  displayValue: number,
+  displayValue: number | string,
   unit: MeasurementUnit,
   options?: GetBaseUnitValueOptions,
 ) {
@@ -343,8 +347,20 @@ export function getBaseUnitValue(
     return null;
   }
 
+  let rawValue = null;
+  if (typeof displayValue === 'string') {
+    const sanitized = displayValue.replace(',', '');
+    rawValue = sanitized.length > 0 ? Number(sanitized) : null;
+  } else {
+    rawValue = displayValue;
+  }
+
+  if (Number.isNaN(rawValue)) {
+    return null;
+  }
+
   const multiplier = getUnitMultiplier(unit);
-  const result = displayValue * multiplier;
+  const result = rawValue * multiplier;
 
   const decimals = options?.decimals ?? 0;
   return Number(result.toFixed(decimals));
@@ -396,6 +412,7 @@ export function getUnitFormat(unit: MeasurementUnit) {
     case MultiplierUnit.x:
       return MULTIPLIER_FORMATS[unit];
     case NumericUnit.million:
+    case NumericUnit.billion:
       return NUMERIC_UNIT_FORMATS[unit];
     case PixelFillRateUnit.mpixelps:
     case PixelFillRateUnit.gpixelps:

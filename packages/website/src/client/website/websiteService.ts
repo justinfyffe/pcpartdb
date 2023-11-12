@@ -8,7 +8,9 @@ export class WebsiteService {
 
   async clearCache() {
     const path = joinUrlParts(PATH, 'cache');
-    return await this.api.delete<{ cacheSize: number }>(path);
+    return await this.api.delete<{ cacheSize: number; cacheItems: number }>(
+      path,
+    );
   }
 }
 

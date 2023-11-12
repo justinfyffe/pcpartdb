@@ -39,6 +39,7 @@ import { SourceInputField } from '../../components/SourceInputField';
 
 const SUPPORTED_KEYS = [
   ProductSourceKey.TechPowerUp,
+  ProductSourceKey.NotebookCheck,
   ProductSourceKey.PassMark,
   ProductSourceKey.GeekBench,
 ];

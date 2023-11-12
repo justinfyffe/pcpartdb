@@ -64,10 +64,6 @@ function checkMissingData(gpu: GpuProduct): MissingData[] {
     missingData.push(MissingData.VideocardBenchmark);
   }
 
-  if (!hasProductSource(gpu, ProductSourceKey.UlBenchmarks)) {
-    missingData.push(MissingData.UlBenchmarks);
-  }
-
   if (!hasProductFieldValue(gpu.fields?.marketSegment)) {
     missingData.push(MissingData.MarketSegment);
   }

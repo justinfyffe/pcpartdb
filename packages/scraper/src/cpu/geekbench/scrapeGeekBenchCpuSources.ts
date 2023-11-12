@@ -45,7 +45,7 @@ function parseSingleCoreTable($: cheerio.CheerioAPI) {
         name,
         company,
         url,
-        geekBenchSingleCore: score,
+        GeekBench_Single_Core: score,
       };
     }
   });
@@ -75,7 +75,7 @@ function parseMultiCoreTable($: cheerio.CheerioAPI) {
         name,
         company,
         url,
-        geekBenchMultiCore: score,
+        GeekBench_Multi_Core: score,
       };
     }
   });
@@ -86,7 +86,7 @@ function parseMultiCoreTable($: cheerio.CheerioAPI) {
 async function fetchListPage(options: ScrapeGeekBenchCpuSourcesOptions) {
   const { noProxy } = options;
 
-  const response = await scraper.scrape(URL, { retries: 1, noProxy });
+  const response = await scraper.scrapeGet(URL, { retries: 1, noProxy });
   return response.data;
 }
 

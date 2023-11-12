@@ -1,5 +1,5 @@
 import {
-  BenchmarKey,
+  BenchmarkKey,
   hasProductBenchmark,
   hasProductFieldRawValue,
   Product,
@@ -11,7 +11,7 @@ import { BenchmarkEstimates, BenchmarkMaxes, BenchmarkWeights } from './types';
 
 export function getBenchmarkMaxes(
   products: Product[],
-  benchmarks: BenchmarKey[],
+  benchmarks: BenchmarkKey[],
 ) {
   const benchmarkMaxes: BenchmarkMaxes = {};
   for (const product of products) {
@@ -29,7 +29,7 @@ interface FilterProductsOptions {
   products: Product[];
   estimates?: BenchmarkEstimates;
 
-  benchmarks: BenchmarKey[];
+  benchmarks: BenchmarkKey[];
   minRequired?: number;
 }
 
@@ -49,7 +49,7 @@ export function filterProducts(options: FilterProductsOptions) {
 
 export function predictMissingBenchmarks(
   products: Product[],
-  benchmarks: BenchmarKey[],
+  benchmarks: BenchmarkKey[],
   maxes: BenchmarkMaxes,
   weights: BenchmarkWeights,
 ) {
@@ -81,7 +81,7 @@ export function predictMissingBenchmarks(
 
 export function calculatePerformanceScores(
   products: Product[],
-  scoreBenchmarks: BenchmarKey[],
+  scoreBenchmarks: BenchmarkKey[],
   maxes: BenchmarkMaxes,
   weights: BenchmarkWeights,
   estimates: BenchmarkEstimates,
@@ -146,8 +146,8 @@ export function calculatePerformanceScores(
 function predictMissingBenchmark(
   productId: number,
   products: Product[],
-  missingKey: BenchmarKey,
-  existingKeys: BenchmarKey[],
+  missingKey: BenchmarkKey,
+  existingKeys: BenchmarkKey[],
   maxes: BenchmarkMaxes,
   weights: BenchmarkWeights,
 ) {
@@ -187,7 +187,7 @@ function predictMissingBenchmark(
 
 function getWeightedBenchmark(
   product: Product,
-  key: BenchmarKey,
+  key: BenchmarkKey,
   maxes: BenchmarkMaxes,
   weights: BenchmarkWeights,
   estimates?: BenchmarkEstimates,
@@ -203,7 +203,7 @@ function getWeightedBenchmark(
 
 function getScore(
   product: Product,
-  keys: BenchmarKey[],
+  keys: BenchmarkKey[],
   maxes: BenchmarkMaxes,
   weights: BenchmarkWeights,
   estimates?: BenchmarkEstimates,

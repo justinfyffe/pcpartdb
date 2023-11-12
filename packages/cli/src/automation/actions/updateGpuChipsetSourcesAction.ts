@@ -1,10 +1,10 @@
 import {
+  NotebookCheckGpuSource,
   PassMarkGpuSource,
+  scrapeNotebookCheckGpuSources,
   scrapePassMarkGpuSources,
   scrapeTechPowerUpGpuSources,
-  scrapeUlBenchmarkGpuSources,
   TechPowerUpGpuSource,
-  UlBenchmarkGpuSource,
 } from '@pcpartdb/scraper';
 import {
   AutomationAction,
@@ -132,20 +132,6 @@ const PASSMARK_URLS = [
   'https://www.videocardbenchmark.net/low_end_gpus.html', // Low End
 ];
 
-const UL_BENCHMARK_QUERIES = [
-  'intel',
-  'nvidia',
-  'amd',
-  'ati',
-  'arc',
-  'rtx',
-  'geforce',
-  'graphics',
-  'radeon',
-  'vega',
-  'titan',
-];
-
 export async function updateGpuChipsetSourcesAction(
   _action: AutomationAction,
   context: AutomationContext,
@@ -153,25 +139,26 @@ export async function updateGpuChipsetSourcesAction(
   console.log('Executing updateGpuChipsetSourcesAction');
 
   // Scrape GPU Sources (concurrently if desired)
-  const [techPowerUp, passMark, ulBenchmarks] = await concurrent(
+  const [notebookCheck, techPowerUp, passMark] = await concurrent(
     [
-      () => getTechPowerUpSources(context),
+      () => getNotebookCheckSources(context),
       () => getPassMarkSources(context),
-      () => getUlBenchmarkSources(context),
+      () => getTechPowerUpSources(context),
     ],
     {
       limit: context.concurrency ? 3 : 1,
       delayBetweenChunksMs: context.requestChunkDelay,
     },
   );
+  const { sources: notebookCheckSources } = notebookCheck;
   const { sources: techPowerUpSources } = techPowerUp;
   const { sources: passMarkSources } = passMark;
-  const { sources: ulBenchmarkSources } = ulBenchmarks;
 
   // Upload CPU Sources
-  await uploadGpuSources(techPowerUpSources, context);
+
+  await uploadGpuSources(notebookCheckSources, context);
   await uploadGpuSources(passMarkSources, context);
-  await uploadGpuSources(ulBenchmarkSources, context);
+  await uploadGpuSources(techPowerUpSources, context);
 
   // Update execution details
   context.metadata = {
@@ -180,25 +167,12 @@ export async function updateGpuChipsetSourcesAction(
   };
 }
 
-async function getTechPowerUpSources(context: AutomationContext) {
-  console.log('Scraping GPU chipset sources from TechPowerUp');
+async function getNotebookCheckSources(context: AutomationContext) {
+  console.log('Scraping GPU chipset sources from NotebookCheck');
 
-  const map: Record<string, TechPowerUpGpuSource> = {};
+  const map: Record<string, NotebookCheckGpuSource> = {};
 
-  // Construct requests
-  const promises: ConcurrentFn[] = [];
-  for (let i = 0; i < TECHPOWERUP_URLS.length; ++i) {
-    const { company, urls } = TECHPOWERUP_URLS[i];
-    for (const url of urls) {
-      promises.push(() => scrapeTechPowerUp(url, company, map));
-    }
-  }
-
-  // Execute concurrently
-  await concurrent(promises, {
-    limit: context.concurrency ? CONCURRENCY_CHUNK_SIZE : 1,
-    delayBetweenChunksMs: context.requestChunkDelay,
-  });
+  await scrapeNotebookCheck(map);
 
   // Convert to source object
   const sources: AutomationSource[] = Object.values(map).map((value) => ({
@@ -206,24 +180,22 @@ async function getTechPowerUpSources(context: AutomationContext) {
     externalKey: value.externalKey,
     productType: ProductType.Gpu,
     sourceName: formatProductName({ company: value.company, name: value.name }),
-    sourceKey: ProductSourceKey.TechPowerUp,
+    sourceKey: ProductSourceKey.NotebookCheck,
     sourceUrl: value.url,
   }));
 
-  console.log(`Scraped ${sources.length} TechPowerUp sources`);
+  console.log(`Scraped ${sources.length} NotebookCheck sources`);
 
   return { sources };
 }
 
-async function scrapeTechPowerUp(
-  url: string,
-  company: string,
-  map: Record<string, TechPowerUpGpuSource>,
+async function scrapeNotebookCheck(
+  map: Record<string, NotebookCheckGpuSource>,
 ) {
-  console.log(`Scraping sources for url: ${url}`);
+  console.log('Scraping sources from NotebookCheck');
   try {
-    const sources = await scrapeTechPowerUpGpuSources({ url, company });
-    console.log(`Scraped ${sources.length} sources from ${url}`);
+    const sources = await scrapeNotebookCheckGpuSources({});
+    console.log(`Scraped ${sources.length} sources from NotebookCheck`);
     sources.forEach((gpu) => {
       map[gpu.name] = gpu;
     });
@@ -284,16 +256,18 @@ async function scrapePassMark(
   }
 }
 
-async function getUlBenchmarkSources(context: AutomationContext) {
-  console.log('Scraping CPU Sources from UL');
+async function getTechPowerUpSources(context: AutomationContext) {
+  console.log('Scraping GPU chipset sources from TechPowerUp');
 
-  const map: Record<string, UlBenchmarkGpuSource> = {};
+  const map: Record<string, TechPowerUpGpuSource> = {};
 
   // Construct requests
   const promises: ConcurrentFn[] = [];
-  for (let i = 0; i < UL_BENCHMARK_QUERIES.length; ++i) {
-    const query = UL_BENCHMARK_QUERIES[i];
-    promises.push(() => scrapeUlBenchmark(query, map));
+  for (let i = 0; i < TECHPOWERUP_URLS.length; ++i) {
+    const { company, urls } = TECHPOWERUP_URLS[i];
+    for (const url of urls) {
+      promises.push(() => scrapeTechPowerUp(url, company, map));
+    }
   }
 
   // Execute concurrently
@@ -308,24 +282,24 @@ async function getUlBenchmarkSources(context: AutomationContext) {
     externalKey: value.externalKey,
     productType: ProductType.Gpu,
     sourceName: formatProductName({ company: value.company, name: value.name }),
-    sourceKey: ProductSourceKey.UlBenchmarks,
+    sourceKey: ProductSourceKey.TechPowerUp,
     sourceUrl: value.url,
   }));
 
-  console.log(`Scraped ${sources.length} UL Benchmark sources`);
+  console.log(`Scraped ${sources.length} TechPowerUp sources`);
 
   return { sources };
 }
 
-async function scrapeUlBenchmark(
-  query: string,
-  map: Record<string, UlBenchmarkGpuSource>,
+async function scrapeTechPowerUp(
+  url: string,
+  company: string,
+  map: Record<string, TechPowerUpGpuSource>,
 ) {
-  console.log(`Scraping sources for query: ${query}`);
-
+  console.log(`Scraping sources for url: ${url}`);
   try {
-    const sources = await scrapeUlBenchmarkGpuSources({ query });
-    console.log(`Scraped ${sources.length} sources for ${query}`);
+    const sources = await scrapeTechPowerUpGpuSources({ url, company });
+    console.log(`Scraped ${sources.length} sources from ${url}`);
     sources.forEach((gpu) => {
       map[gpu.name] = gpu;
     });

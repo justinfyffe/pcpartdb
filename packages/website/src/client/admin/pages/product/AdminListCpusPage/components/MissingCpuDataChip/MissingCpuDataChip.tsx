@@ -18,7 +18,7 @@ enum MissingData {
 const LABELS = {
   [MissingData.TechPowerUp]: 'TechPowerUp',
   [MissingData.PassMark]: 'PassMark',
-  [MissingData.GeekBench]: 'GeekBench',
+  [MissingData.GeekBench]: 'Geekbench',
   [MissingData.MarketSegment]: 'Market Segment',
   [MissingData.ReleaseDate]: 'Release Date',
   [MissingData.LaunchPrice]: 'Launch Price',

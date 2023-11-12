@@ -1,6 +1,5 @@
 import Joi from '@hapi/joi';
 import {
-  BenchmarKey,
   MarketSegment,
   ProductType,
   ProductUpdateStatus,
@@ -143,15 +142,7 @@ export const productBenchmarkSchema = Joi.object({
   id: Joi.number().allow(null),
   productId: Joi.number().allow(null),
 
-  benchmarkKey: Joi.string().valid(
-    BenchmarKey.CpuMarkMultiThread,
-    BenchmarKey.CpuMarkSingleThread,
-    BenchmarKey.G2dMark,
-    BenchmarKey.G3dMark,
-    BenchmarKey.GeekBenchMultiCore,
-    BenchmarKey.GeekBenchSingleCore,
-    BenchmarKey.TimespyGraphics,
-  ),
+  benchmarkKey: Joi.string(),
   value: Joi.number().allow(null),
   valuePerMsrp: Joi.number().allow(null),
 

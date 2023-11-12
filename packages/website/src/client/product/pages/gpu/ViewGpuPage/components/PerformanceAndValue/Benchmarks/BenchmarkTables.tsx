@@ -1,7 +1,5 @@
 import {
   BenchmarkKey,
-  formatProductName,
-  getGpuChipset,
   getProductBenchmark,
   hasProductBenchmark,
 } from '@pcpartdb/shared';
@@ -17,7 +15,7 @@ import { Tab } from 'packages/website/src/client/shared/components/Tabs/Tab';
 import { Tabs } from 'packages/website/src/client/shared/components/Tabs/Tabs';
 import { classNames } from 'packages/website/src/client/shared/ui/classNames';
 import React, { FunctionComponent, useContext, useMemo } from 'react';
-import { ComparePageContext } from '../../../context/ComparePageContext';
+import { ViewPageContext } from '../../../context/ViewPageContext';
 
 const BENCHMARKS = [
   {
@@ -154,22 +152,18 @@ const BENCHMARKS = [
   },
 ];
 
-interface BenchmarksTableProps {
+interface BenchmarkTablesProps {
   className?: string;
 }
 
-export const BenchmarkTables: FunctionComponent<BenchmarksTableProps> = () => {
-  const { comparison } = useContext(ComparePageContext);
+export const BenchmarkTables: FunctionComponent<BenchmarkTablesProps> = () => {
+  const { gpu } = useContext(ViewPageContext);
 
   const filteredBenchmarks = useMemo(() => {
     return BENCHMARKS.filter((group) =>
-      comparison.some((gpu) =>
-        group.benchmarks.some((benchmark) =>
-          hasProductBenchmark(gpu, benchmark),
-        ),
-      ),
+      group.benchmarks.some((benchmark) => hasProductBenchmark(gpu, benchmark)),
     );
-  }, [comparison]);
+  }, [gpu]);
 
   return (
     <Tabs tabClassName="p-1">
@@ -194,22 +188,11 @@ interface BenchmarkTabProps {
 
 const BenchmarkTab: FunctionComponent<BenchmarkTabProps> = (props) => {
   const { name, benchmarks, className } = props;
-  const { comparison } = useContext(ComparePageContext);
-  const [gpu1, gpu2] = comparison;
-
-  const [name1, name2] = useMemo(() => {
-    return [
-      formatProductName(getGpuChipset(gpu1), { company: false }),
-      formatProductName(getGpuChipset(gpu2), { company: false }),
-    ];
-  }, [gpu1, gpu2]);
+  const { gpu } = useContext(ViewPageContext);
 
   const hasValues = useMemo(
-    () =>
-      comparison.some((gpu) =>
-        benchmarks.some((key) => hasProductBenchmark(gpu, key)),
-      ),
-    [benchmarks, comparison],
+    () => benchmarks.some((key) => hasProductBenchmark(gpu, key)),
+    [benchmarks, gpu],
   );
 
   if (!hasValues) {
@@ -222,8 +205,7 @@ const BenchmarkTab: FunctionComponent<BenchmarkTabProps> = (props) => {
         <THead>
           <Tr>
             <Th>Benchmark</Th>
-            <Th>{name1}</Th>
-            <Th>{name2}</Th>
+            <Th>Value</Th>
           </Tr>
         </THead>
         <TBody>
@@ -231,10 +213,7 @@ const BenchmarkTab: FunctionComponent<BenchmarkTabProps> = (props) => {
             <ProductBenchmarkRow
               key={benchmark}
               indent
-              benchmarks={[
-                getProductBenchmark(gpu1, benchmark),
-                getProductBenchmark(gpu2, benchmark),
-              ]}
+              benchmarks={[getProductBenchmark(gpu, benchmark)]}
             />
           ))}
         </TBody>

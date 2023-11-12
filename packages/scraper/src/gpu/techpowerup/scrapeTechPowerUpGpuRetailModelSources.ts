@@ -1,4 +1,4 @@
-import { cleanUrl, GpuProductType } from '@pcpartdb/shared';
+import { cleanUrl, SubProductType } from '@pcpartdb/shared';
 import * as cheerio from 'cheerio';
 import { scraper } from '../../scraper';
 import { TechPowerUpGpuRetailModelSource } from '../types';
@@ -18,7 +18,7 @@ export async function scrapeTechPowerUpGpuRetailModelSources(
 ) {
   const { url, noProxy } = options;
 
-  const response = await scraper.scrape(url, { retries: 1, noProxy });
+  const response = await scraper.scrapeGet(url, { retries: 1, noProxy });
   const $ = cheerio.load(response.data);
 
   const retailModels = getRetailModels($);
@@ -36,7 +36,7 @@ function getRetailModels($: cheerio.CheerioAPI) {
     const externalKey = getExternalKey(url);
     if (company && externalKey) {
       const groupKey = generateGpuGroupKey({
-        gpuType: GpuProductType.RetailModel,
+        gpuType: SubProductType.GpuRetailModel,
         name,
         company,
       });

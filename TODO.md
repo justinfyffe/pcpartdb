@@ -9,8 +9,53 @@ Secondary Focus:
   - sort list groups by date
 
 When Bored:
+- Migrate to react-query instead of axios
 - Make autocomplete stricter, not looser when searching?
 - Improve db performance using queryRaw, but only in places where it'll help
+
+Summaries:
+- [] Add date it was last generated.
+
+Performance:
+- [] Improve caching
+  - track how often they're being accessed
+  - Clear out outdated / less accessed ones
+  - Prevent admin page not loading
+    - maybe not load it every time?
+  - add file lock
+
+More Benchmarks
+- [X] Scraper
+  - [X] Create scrape regexes for notebookcheck cpu
+- [X] Automation
+  - [X] Add scrape sources to CPU
+  - [X] Add scrape sources to GPU
+  - [X] Update all benchmarks in update cpu action
+  - [X] Update all benchmarks in update gpu action
+  - [] Scrape more fields from geekbench (POST MVP)
+  - [] Scrape more fields from passmark (POST MVP)
+- [X] Source Groups
+  - [X] Add notebook check to cpu source group ui
+  - [X] Add notebook check to gpu source group ui
+- [X] CPU labels
+- [X] Forms
+  - [X] add to cpu form
+  - [X] add to gpu form
+- [X] UI
+  - [X] compare cpu
+  - [X] view cpu
+  - [X] compare gpu
+  - [X] view gpu
+  - [X] Popular CPU benchmarks
+  - [X] Popular GPU benchmarks
+- [] CPU - Rename Generation to Lineup?
+- [X] Scratch pad
+  - [X] Remove ulbenchmarks from automation scripts.
+- Caching
+  - Keep memory size in check
+- [X] Admin
+  - [X] Fix overview not working (probably due to cache widget)
+
 
 Better Performance Score
 - [] add highlights under technical specs? Next project

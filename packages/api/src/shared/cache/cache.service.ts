@@ -1,11 +1,10 @@
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Inject, Injectable } from '@nestjs/common';
+import { Mutex } from 'async-mutex';
 import { Cache } from 'cache-manager';
 import * as crypto from 'crypto';
-import * as fsPromises from 'fs/promises';
 import deterministicStringify from 'json-stringify-deterministic';
-import * as path from 'path';
-import { dataPath } from '../utils';
+import { FileHashStore } from './file-hash-store';
 
 export enum CacheType {
   Home = 'home',
@@ -17,7 +16,7 @@ export enum CacheType {
   GpuComparison = 'gpu_comparison',
 }
 
-const FIFTEEN_MINUTES = 1_000 * 60 * 15;
+const _FIFTEEN_MINUTES = 1_000 * 60 * 15;
 const SIXTY_MINUTES = 1_000 * 60 * 60;
 
 export const CACHE_EXPIRE_TTLS: Record<CacheType, number> = {
@@ -38,16 +37,18 @@ interface CacheOptions<TKey = unknown> {
 
 @Injectable()
 export class CacheService {
+  private mutex = new Mutex();
+
   constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache) {}
 
-  async size() {
-    const cacheFiles = await this.getCacheFiles(dataPath('cache'));
-    let totalSize = 0;
-    for (const cacheFile of cacheFiles) {
-      const stats = await fsPromises.stat(cacheFile);
-      totalSize += stats.size;
-    }
-    return totalSize;
+  totalSize() {
+    const store = this.cacheManager.store as FileHashStore;
+    return store.getTotalSize();
+  }
+
+  totalItems() {
+    const store = this.cacheManager.store as FileHashStore;
+    return store.getTotalItems();
   }
 
   async cache<TResult = unknown>(
@@ -59,19 +60,20 @@ export class CacheService {
       return await fn();
     }
 
-    const ttl = options.ttl ?? CACHE_EXPIRE_TTLS[options.type];
-    const key = this.cacheKey(options.type, options.key);
-    return await this.cacheManager.wrap(
-      key,
-      () => {
-        return fn();
-      },
-      ttl,
-    );
+    return await this.mutex.runExclusive(async () => {
+      const store = this.cacheManager.store as FileHashStore;
+      await store.clearExcessAndExpired();
+
+      const ttl = options.ttl ?? CACHE_EXPIRE_TTLS[options.type];
+      const key = this.cacheKey(options.type, options.key);
+      return await this.cacheManager.wrap(key, () => fn(), ttl);
+    });
   }
 
   async invalidateAll() {
-    await this.cacheManager.reset();
+    await this.mutex.runExclusive(async () => {
+      await this.cacheManager.reset();
+    });
   }
 
   private cacheKey<TKey = unknown>(type: CacheType, key: TKey) {
@@ -80,22 +82,5 @@ export class CacheService {
       .createHash('md5')
       .update(`${type}__${stringifiedKey}`)
       .digest('hex');
-  }
-
-  private async getCacheFiles(basePath: string, foundFiles?: string[]) {
-    const files = await fsPromises.readdir(basePath);
-
-    let cacheFiles = foundFiles || [];
-    for (const file of files) {
-      const cachePath = path.join(basePath, file);
-      const fileStats = await fsPromises.stat(cachePath);
-      if (fileStats.isDirectory()) {
-        cacheFiles = await this.getCacheFiles(cachePath, cacheFiles);
-      } else {
-        cacheFiles.push(cachePath);
-      }
-    }
-
-    return cacheFiles;
   }
 }

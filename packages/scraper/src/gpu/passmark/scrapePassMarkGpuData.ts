@@ -1,5 +1,5 @@
 import {
-  BenchmarKey,
+  BenchmarkKey,
   GpuFields,
   GpuProduct,
   ProductBenchmark,
@@ -14,13 +14,14 @@ export interface ScrapePassMarkGpuDataOptions extends CommonScraperOptions {
   url: string;
 }
 
+// TODO: scrape fields
 // Example: https://www.videocardbenchmark.net/gpu.php?gpu=GeForce+RTX+4090&id=4606
 export async function scrapePassMarkGpuData(
   options: ScrapePassMarkGpuDataOptions,
 ) {
   const { url, noProxy, ctx: _ctx } = options;
 
-  const response = await scraper.scrape(url, { retries: 1, noProxy });
+  const response = await scraper.scrapeGet(url, { retries: 1, noProxy });
   const $ = cheerio.load(response.data);
 
   const fields: GpuFields = {};
@@ -42,7 +43,7 @@ function getG3dMark($: cheerio.CheerioAPI): ProductBenchmark {
   const g3dMark = $('.speedicon').siblings('span').first().text();
   const value = g3dMark ? Number(g3dMark) : null;
   return {
-    benchmarkKey: BenchmarKey.G3dMark,
+    benchmarkKey: BenchmarkKey.PassMark_G3dMark,
     value,
     metadata: null,
   } as ProductBenchmark;
@@ -60,7 +61,7 @@ function getG2dMark($: cheerio.CheerioAPI): ProductBenchmark {
 
   const value = g2dMark ? Number(g2dMark) : null;
   return {
-    benchmarkKey: BenchmarKey.G2dMark,
+    benchmarkKey: BenchmarkKey.PassMark_G2dMark,
     value,
     metadata: null,
   } as ProductBenchmark;

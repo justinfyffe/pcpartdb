@@ -1,4 +1,4 @@
-import { cleanUrl, GpuProductType, parseProductName } from '@pcpartdb/shared';
+import { cleanUrl, parseProductName, SubProductType } from '@pcpartdb/shared';
 import * as cheerio from 'cheerio';
 import { scraper } from '../../scraper';
 import { TechPowerUpGpuSource } from '../types';
@@ -36,7 +36,7 @@ async function scrapeSearchData(options: ScrapeTechPowerUpGpuUrlsOptions) {
     const externalKey = getExternalKey(url);
     if (company) {
       const groupKey = generateGpuGroupKey({
-        gpuType: GpuProductType.Chipset,
+        gpuType: SubProductType.GpuChipset,
         name,
         company,
       });
@@ -50,7 +50,7 @@ async function scrapeSearchData(options: ScrapeTechPowerUpGpuUrlsOptions) {
 async function fetchSearchPage(options: ScrapeTechPowerUpGpuUrlsOptions) {
   const { url, noProxy } = options;
 
-  const response = await scraper.scrape(url, { retries: 1, noProxy });
+  const response = await scraper.scrapeGet(url, { retries: 1, noProxy });
   return response.data;
 }
 

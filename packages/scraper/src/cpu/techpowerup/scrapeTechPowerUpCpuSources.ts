@@ -42,7 +42,7 @@ export async function scrapeTechPowerUpCpuSources(
 async function fetchSearchPage(options: ScrapeTechPowerUpCpuSourcesOptions) {
   const { url, noProxy } = options;
 
-  const response = await scraper.scrape(url, { retries: 1, noProxy });
+  const response = await scraper.scrapeGet(url, { retries: 1, noProxy });
   return response.data;
 }
 

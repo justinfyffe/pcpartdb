@@ -10,8 +10,6 @@ import {
   formatProductField,
   FormatProductFieldOptions,
   formatProductionStatus,
-  generateProductOtherNames,
-  generateProductSearchableText,
   getBaseUnitValue,
   GpuField,
   GpuFields,
@@ -55,13 +53,11 @@ export async function scrapeTechPowerUpGpuData(
 ) {
   const { url, noProxy, ctx } = options;
 
-  const response = await scraper.scrape(url, { retries: 1, noProxy });
+  const response = await scraper.scrapeGet(url, { retries: 1, noProxy });
   const $ = cheerio.load(response.data);
 
   const name = getName($);
   const company = getCompany($);
-  const searchText = generateProductSearchableText({ company, name });
-  const otherNames = generateProductOtherNames({ company, name });
 
   const fields: GpuFields = {
     msrp: getMsrp($, ctx),
@@ -111,8 +107,6 @@ export async function scrapeTechPowerUpGpuData(
     productType: ProductType.Gpu,
     name,
     company,
-    searchText,
-    otherNames,
     fields,
   };
 

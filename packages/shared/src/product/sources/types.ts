@@ -2,6 +2,7 @@ import { Product } from '../types';
 
 export enum ProductSourceKey {
   GeekBench = 'GEEKBENCH',
+  NotebookCheck = 'NOTEBOOK_CHECK',
   PassMark = 'PASSMARK',
   TechPowerUp = 'TECHPOWERUP',
   UlBenchmarks = 'UL_BENCHMARKS',

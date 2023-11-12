@@ -35,12 +35,8 @@ export class ViewCpuViewModelService {
     console.time('ViewCpuViewModelService');
     const viewModel = await this.cacheService.cache(
       async () => {
-        console.time('ViewCpuViewModelService.getCpu');
         const cpu = await this.getCpu(slug, ctx);
-        console.timeEnd('ViewCpuViewModelService.getCpu');
-        console.time('ViewCpuViewModelService.getAdditionalData');
         const additionalData = await this.getAdditionalData(cpu, ctx);
-        console.timeEnd('ViewCpuViewModelService.getAdditionalData');
 
         const relatedCpus = await this.getRelatedCpus(
           3,

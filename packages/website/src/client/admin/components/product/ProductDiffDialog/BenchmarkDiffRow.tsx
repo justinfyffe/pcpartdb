@@ -1,5 +1,5 @@
 import {
-  BenchmarKey,
+  BenchmarkKey,
   compareProductFields,
   getProductBenchmark,
   getProductBenchmarkLabel,
@@ -15,7 +15,7 @@ import React, { FunctionComponent, useMemo } from 'react';
 
 interface BenchmarkDiffRowProps {
   diff: ProductDiff;
-  diffBenchmarkKey: BenchmarKey;
+  diffBenchmarkKey: BenchmarkKey;
 }
 
 export const BenchmarkDiffRow: FunctionComponent<BenchmarkDiffRowProps> = (

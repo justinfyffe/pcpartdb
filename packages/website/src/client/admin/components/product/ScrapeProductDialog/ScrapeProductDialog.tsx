@@ -1,5 +1,5 @@
 import {
-  BenchmarKey,
+  BenchmarkKey,
   ProductFieldKey,
   ProductSource,
   ProductType,
@@ -37,7 +37,7 @@ import { ScrapedProduct } from './types';
 interface ScrapeProductDialogProps {
   productType: ProductType;
   fieldsToScrape?: ProductFieldKey[];
-  benchmarksToScrape?: BenchmarKey[];
+  benchmarksToScrape?: BenchmarkKey[];
   sources: Partial<ProductSource>[];
   onImport: (data: ScrapedProduct) => void;
 }

@@ -12,8 +12,6 @@ import {
   formatProductField,
   FormatProductFieldOptions,
   formatProductionStatus,
-  generateProductOtherNames,
-  generateProductSearchableText,
   getBaseUnitValue,
   hasProductFieldValue,
   LengthUnit,
@@ -56,13 +54,11 @@ export async function scrapeTechPowerUpCpuData(
 ) {
   const { url, noProxy, ctx } = options;
 
-  const response = await scraper.scrape(url, { retries: 1, noProxy });
+  const response = await scraper.scrapeGet(url, { retries: 1, noProxy });
   const $ = cheerio.load(response.data);
 
   const name = getName($);
   const company = getCompany($);
-  const searchText = generateProductSearchableText({ company, name });
-  const otherNames = generateProductOtherNames({ company, name });
 
   const fields: CpuFields = {
     partNumber: getPartNumber($, ctx),
@@ -122,8 +118,6 @@ export async function scrapeTechPowerUpCpuData(
     productType: ProductType.Cpu,
     name,
     company,
-    searchText,
-    otherNames,
     fields,
   };
 

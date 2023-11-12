@@ -1,5 +1,5 @@
 import {
-  BenchmarKey,
+  BenchmarkKey,
   hasProductFieldValue,
   isProductField,
   ProductFieldKey,
@@ -15,7 +15,7 @@ export const ScrapeProductContext = createContext<ScrapedProduct>(null);
 export function createScrapeContext(
   productType: ProductType,
   fieldsToScrape: ProductFieldKey[],
-  benchmarksToScrape: BenchmarKey[],
+  benchmarksToScrape: BenchmarkKey[],
   response: ScrapeProductResponse,
 ) {
   const { product } = response;

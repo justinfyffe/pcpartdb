@@ -29,7 +29,10 @@ export const AdminOverviewPage = (props: AdminOverviewViewModel) => {
 
           <UpdatePerformanceScoresWidget />
 
-          <CacheWidget cacheSize={props.cacheSize} />
+          <CacheWidget
+            cacheSize={props.cacheSize}
+            cacheItems={props.cacheItems}
+          />
 
           <ApiKeyWidget apiKey={props.apiKey} />
         </div>

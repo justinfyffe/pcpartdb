@@ -2,12 +2,12 @@ import { scrapeGpu, ScrapeGpuOptions } from '@pcpartdb/scraper';
 import {
   AutomationAction,
   AutomationActionType,
-  BenchmarKey,
   CreateAutomationActionRequest,
   CreateProductUpdateRequest,
   formatCompanyName,
   formatProductName,
   GetProductRequest,
+  GPU_BENCHMARKS,
   GpuProduct,
   mergeProducts,
   productBenchmarkValue,
@@ -117,52 +117,18 @@ async function updateBenchmarks(
   console.info('Checking for updated benchmarks');
   let updated = false;
 
-  // Update G3D Mark
-  const originalG3dMark = productBenchmarkValue(
-    originalGpu,
-    BenchmarKey.G3dMark,
-  );
-  const scrapedG3dMark = productBenchmarkValue(scrapedGpu, BenchmarKey.G3dMark);
-  if (scrapedG3dMark != null && scrapedG3dMark > 0) {
-    setProductBenchmark(
-      originalGpu,
-      BenchmarKey.G3dMark,
-      scrapedG3dMark || originalG3dMark,
-    );
-    updated = true;
-  }
+  for (const benchmarkKey of GPU_BENCHMARKS) {
+    const originalValue = productBenchmarkValue(originalGpu, benchmarkKey);
+    const scrapedValue = productBenchmarkValue(scrapedGpu, benchmarkKey);
 
-  // Update G2D Mark
-  const originalG2dMark = productBenchmarkValue(
-    originalGpu,
-    BenchmarKey.G2dMark,
-  );
-  const scrapedG2dMark = productBenchmarkValue(scrapedGpu, BenchmarKey.G2dMark);
-  if (scrapedG2dMark != null && scrapedG2dMark > 0) {
-    setProductBenchmark(
-      originalGpu,
-      BenchmarKey.G2dMark,
-      scrapedG2dMark || originalG2dMark,
-    );
-    updated = true;
-  }
-
-  // Update TimeSpy Graphics
-  const originalTimeSpyGraphics = productBenchmarkValue(
-    originalGpu,
-    BenchmarKey.TimespyGraphics,
-  );
-  const scrapedTimeSpyGraphics = productBenchmarkValue(
-    scrapedGpu,
-    BenchmarKey.TimespyGraphics,
-  );
-  if (scrapedTimeSpyGraphics != null && scrapedTimeSpyGraphics > 0) {
-    setProductBenchmark(
-      originalGpu,
-      BenchmarKey.TimespyGraphics,
-      scrapedTimeSpyGraphics || originalTimeSpyGraphics,
-    );
-    updated = true;
+    if (scrapedValue != null && scrapedValue > 0) {
+      setProductBenchmark(
+        originalGpu,
+        benchmarkKey,
+        scrapedValue || originalValue,
+      );
+      updated = true;
+    }
   }
 
   if (updated) {

@@ -1,6 +1,6 @@
 import {
   AutomationAction,
-  BenchmarKey,
+  BenchmarkKey,
   ListProductsFilter,
   ListProductsRequest,
   ListProductsResponse,
@@ -31,14 +31,15 @@ const LIST_FILTERS: Partial<Record<ProductType, ListProductsFilter>> = {
  * List of benchmarks used to calculate the product's score.
  * Missing benchmarks will be predicted.
  */
-const SCORE_BENCHMARKS: Partial<Record<ProductType, BenchmarKey[]>> = {
+const SCORE_BENCHMARKS: Partial<Record<ProductType, BenchmarkKey[]>> = {
   [ProductType.Cpu]: [
-    BenchmarKey.CpuMarkMultiThread,
-    BenchmarKey.CpuMarkSingleThread,
-    BenchmarKey.GeekBenchMultiCore,
-    BenchmarKey.GeekBenchSingleCore,
+    BenchmarkKey.PassMark_CpuMark_Multi_Thread,
+    BenchmarkKey.PassMark_CpuMark_Single_Thread,
   ],
-  [ProductType.Gpu]: [BenchmarKey.G3dMark, BenchmarKey.G2dMark],
+  [ProductType.Gpu]: [
+    BenchmarkKey.PassMark_G3dMark,
+    BenchmarkKey.PassMark_G2dMark,
+  ],
 };
 
 /**
@@ -54,17 +55,15 @@ const MIN_NUM_BENCHMARKS: Partial<Record<ProductType, number>> = {
  * weights must add to 1 for each product type.
  */
 const WEIGHTS: Partial<
-  Record<ProductType, Partial<Record<BenchmarKey, number>>>
+  Record<ProductType, Partial<Record<BenchmarkKey, number>>>
 > = {
   [ProductType.Cpu]: {
-    [BenchmarKey.CpuMarkMultiThread]: 0.95,
-    [BenchmarKey.CpuMarkSingleThread]: 0.05,
-    [BenchmarKey.GeekBenchMultiCore]: 0.0,
-    [BenchmarKey.GeekBenchSingleCore]: 0.0,
+    [BenchmarkKey.PassMark_CpuMark_Multi_Thread]: 0.95,
+    [BenchmarkKey.PassMark_CpuMark_Single_Thread]: 0.05,
   },
   [ProductType.Gpu]: {
-    [BenchmarKey.G3dMark]: 0.95,
-    [BenchmarKey.G2dMark]: 0.05,
+    [BenchmarkKey.PassMark_G3dMark]: 0.95,
+    [BenchmarkKey.PassMark_G2dMark]: 0.05,
   },
 };
 

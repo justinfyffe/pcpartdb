@@ -23,11 +23,16 @@ export const HorizontalTabLabels: FunctionComponent<
   );
 
   return (
-    <ul className={classNames('flex items-center justify-start', className)}>
+    <ul
+      className={classNames(
+        'flex items-end justify-start flex-wrap',
+        className,
+      )}
+    >
       {labels.map((label, i) => (
         <li className="h-full" key={i}>
           {i === activeTab && (
-            <div className="bg-light-shades px-4 py-2 font-bold rounded-t">
+            <div className="bg-light-shades px-4 py-2 font-bold rounded-t whitespace-nowrap">
               {label}
             </div>
           )}
@@ -36,7 +41,7 @@ export const HorizontalTabLabels: FunctionComponent<
               disabled={i === activeTab}
               variant={ButtonVariant.None}
               onClick={() => handleLabelClick(i)}
-              className="bg-[#f8f8f8] hover:bg-mouse-hover"
+              className="bg-[#f8f8f8] hover:bg-mouse-hover rounded-t rounded-b-none whitespace-nowrap border-px mr-[-1px] mt-[-1px]"
             >
               {label}
             </Button>

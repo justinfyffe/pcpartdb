@@ -1,10 +1,10 @@
-import { BenchmarKey } from '@pcpartdb/shared';
+import { BenchmarkKey } from '@pcpartdb/shared';
 
 export type BenchmarkEstimates = Record<
   number,
-  Partial<Record<BenchmarKey, number>>
+  Partial<Record<BenchmarkKey, number>>
 >;
 
-export type BenchmarkMaxes = Partial<Record<BenchmarKey, number>>;
+export type BenchmarkMaxes = Partial<Record<BenchmarkKey, number>>;
 
-export type BenchmarkWeights = Partial<Record<BenchmarKey, number>>;
+export type BenchmarkWeights = Partial<Record<BenchmarkKey, number>>;

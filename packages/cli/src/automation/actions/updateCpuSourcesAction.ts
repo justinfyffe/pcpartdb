@@ -1,6 +1,8 @@
 import {
+  NotebookCheckCpuSource,
   PassMarkCpuSource,
   scrapeGeekBenchCpuSources,
+  scrapeNotebookCheckCpuSources,
   scrapePassMarkCpuSources,
   scrapeTechPowerUpCpuSources,
   TechPowerUpCpuSource,
@@ -106,20 +108,26 @@ export async function updateCpuSourcesAction(
   console.log('Executing updateCpuSourcesAction');
 
   // Scrape CPU Sources
-  const [techPowerUpSources, passMarkSources, geekBenchSources] =
-    await concurrent(
-      [
-        () => getTechPowerUpSources(context),
-        () => getPassMarkSources(context),
-        () => getGeekBenchSources(context),
-      ],
-      {
-        limit: context.concurrency ? 3 : 1,
-        delayBetweenChunksMs: context.requestChunkDelay,
-      },
-    );
+  const [
+    notebookCheckSources,
+    techPowerUpSources,
+    passMarkSources,
+    geekBenchSources,
+  ] = await concurrent(
+    [
+      () => getNotebookCheckSources(context),
+      () => getTechPowerUpSources(context),
+      () => getPassMarkSources(context),
+      () => getGeekBenchSources(context),
+    ],
+    {
+      limit: context.concurrency ? 3 : 1,
+      delayBetweenChunksMs: context.requestChunkDelay,
+    },
+  );
 
   // Upload CPU Sources
+  await uploadCpuSources(notebookCheckSources, context);
   await uploadCpuSources(techPowerUpSources, context);
   await uploadCpuSources(passMarkSources, context);
   await uploadCpuSources(geekBenchSources, context);
@@ -129,6 +137,44 @@ export async function updateCpuSourcesAction(
     ...(context.metadata ?? {}),
     updateCpuSourcesDate: new Date().getTime(),
   };
+}
+
+async function getNotebookCheckSources(context: AutomationContext) {
+  console.log('Scraping CPU sources from NotebookCheck');
+
+  const map: Record<string, NotebookCheckCpuSource> = {};
+
+  await scrapeNotebookCheck(map);
+
+  // Convert to source object
+  const sources: AutomationSource[] = Object.values(map).map((value) => ({
+    groupKey: value.groupKey,
+    externalKey: value.externalKey,
+    productType: ProductType.Cpu,
+    sourceName: formatProductName({ company: value.company, name: value.name }),
+    sourceKey: ProductSourceKey.NotebookCheck,
+    sourceUrl: value.url,
+  }));
+
+  console.log(`Scraped ${sources.length} NotebookCheck sources`);
+
+  return sources;
+}
+
+async function scrapeNotebookCheck(
+  map: Record<string, NotebookCheckCpuSource>,
+) {
+  console.log('Scraping sources from NotebookCheck');
+  try {
+    const sources = await scrapeNotebookCheckCpuSources({});
+    console.log(`Scraped ${sources.length} sources from NotebookCheck`);
+    sources.forEach((cpu) => {
+      map[cpu.name] = cpu;
+    });
+  } catch (err) {
+    console.error('Encountered error when scraping.');
+    console.error(err);
+  }
 }
 
 async function getTechPowerUpSources(context: AutomationContext) {

@@ -1,5 +1,5 @@
 import {
-  BenchmarKey,
+  BenchmarkKey,
   CpuProduct,
   ProductBenchmark,
   ProductType,
@@ -13,13 +13,14 @@ export interface ScrapeGeekBenchCpuDataOptions extends CommonScraperOptions {
   url: string;
 }
 
+// TODO: scrape fields
 // Example: https://browser.geekbench.com/processors/intel-core-i9-10900kf
 export async function scrapeGeekBenchCpuData(
   options: ScrapeGeekBenchCpuDataOptions,
 ) {
   const { url, noProxy } = options;
 
-  const response = await scraper.scrape(url, { retries: 1, noProxy });
+  const response = await scraper.scrapeGet(url, { retries: 1, noProxy });
   const $ = cheerio.load(response.data);
 
   const benchmarks: ProductBenchmark[] = [
@@ -44,7 +45,7 @@ function getSingleCoreScore($: cheerio.CheerioAPI): ProductBenchmark {
     .first();
   const value = Number(el.text());
   return {
-    benchmarkKey: BenchmarKey.GeekBenchSingleCore,
+    benchmarkKey: BenchmarkKey.Geekbench_6_2_Single_Core,
     value,
     metadata: null,
   };
@@ -60,7 +61,7 @@ function getMultiCoreScore($: cheerio.CheerioAPI): ProductBenchmark {
   const value = Number(el.text());
 
   return {
-    benchmarkKey: BenchmarKey.GeekBenchMultiCore,
+    benchmarkKey: BenchmarkKey.Geekbench_6_2_Multi_Core,
     value,
     metadata: null,
   };

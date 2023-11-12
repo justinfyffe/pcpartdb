@@ -1,7 +1,7 @@
 import { scrapeCpu, ScrapeCpuOptions } from '@pcpartdb/scraper';
 import {
   AutomationAction,
-  BenchmarKey,
+  CPU_BENCHMARKS,
   CpuProduct,
   CreateProductUpdateRequest,
   formatProductName,
@@ -95,76 +95,18 @@ async function updateBenchmarks(
   console.info('Checking for updated benchmarks');
   let updated = false;
 
-  // Update CPU Mark (multi-thread)
-  const originalCpuMarkMulti = productBenchmarkValue(
-    originalCpu,
-    BenchmarKey.CpuMarkMultiThread,
-  );
-  const scrapedCpuMarkMulti = productBenchmarkValue(
-    scrapedCpu,
-    BenchmarKey.CpuMarkMultiThread,
-  );
-  if (scrapedCpuMarkMulti != null && scrapedCpuMarkMulti > 0) {
-    setProductBenchmark(
-      originalCpu,
-      BenchmarKey.CpuMarkMultiThread,
-      scrapedCpuMarkMulti || originalCpuMarkMulti,
-    );
-    updated = true;
-  }
+  for (const benchmarkKey of CPU_BENCHMARKS) {
+    const originalValue = productBenchmarkValue(originalCpu, benchmarkKey);
+    const scrapedValue = productBenchmarkValue(scrapedCpu, benchmarkKey);
 
-  // Update CPU Mark (single-thread)
-  const originalCpuMarkSingle = productBenchmarkValue(
-    originalCpu,
-    BenchmarKey.CpuMarkSingleThread,
-  );
-  const scrapedCpuMarkSingle = productBenchmarkValue(
-    scrapedCpu,
-    BenchmarKey.CpuMarkSingleThread,
-  );
-  if (scrapedCpuMarkSingle != null && scrapedCpuMarkSingle > 0) {
-    setProductBenchmark(
-      originalCpu,
-      BenchmarKey.CpuMarkSingleThread,
-      scrapedCpuMarkSingle || originalCpuMarkSingle,
-    );
-    updated = true;
-  }
-
-  // Update GeekBench (multi-core)
-  const originalGeekBenchMulti = productBenchmarkValue(
-    originalCpu,
-    BenchmarKey.GeekBenchMultiCore,
-  );
-  const scrapedGeekBenchMulti = productBenchmarkValue(
-    scrapedCpu,
-    BenchmarKey.GeekBenchMultiCore,
-  );
-  if (scrapedGeekBenchMulti != null && scrapedGeekBenchMulti > 0) {
-    setProductBenchmark(
-      originalCpu,
-      BenchmarKey.GeekBenchMultiCore,
-      scrapedGeekBenchMulti || originalGeekBenchMulti,
-    );
-    updated = true;
-  }
-
-  // Update GeekBench (single-core)
-  const originalGeekBenchSingle = productBenchmarkValue(
-    originalCpu,
-    BenchmarKey.GeekBenchSingleCore,
-  );
-  const scrapedGeekBenchSingle = productBenchmarkValue(
-    scrapedCpu,
-    BenchmarKey.GeekBenchSingleCore,
-  );
-  if (scrapedGeekBenchSingle != null && scrapedGeekBenchSingle > 0) {
-    setProductBenchmark(
-      originalCpu,
-      BenchmarKey.GeekBenchSingleCore,
-      scrapedGeekBenchSingle || originalGeekBenchSingle,
-    );
-    updated = true;
+    if (scrapedValue != null && scrapedValue > 0) {
+      setProductBenchmark(
+        originalCpu,
+        benchmarkKey,
+        scrapedValue || originalValue,
+      );
+      updated = true;
+    }
   }
 
   if (updated) {

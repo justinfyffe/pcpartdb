@@ -1,5 +1,5 @@
 import {
-  BenchmarKey,
+  BenchmarkKey,
   ProductDiff,
   ProductFieldKey,
   ProductType,
@@ -20,7 +20,7 @@ enum Tab {
 interface ProductDiffViewProps {
   productType: ProductType;
   dataToPreview: ProductFieldKey[];
-  benchmarksToPreview?: BenchmarKey[];
+  benchmarksToPreview?: BenchmarkKey[];
   diff: ProductDiff;
 }
 

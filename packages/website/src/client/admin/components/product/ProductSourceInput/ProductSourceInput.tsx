@@ -10,14 +10,15 @@ import React, { FunctionComponent, useCallback } from 'react';
 
 const SOURCES = {
   [ProductType.Cpu]: [
-    { key: ProductSourceKey.TechPowerUp, label: 'TechPowerUp' },
+    { key: ProductSourceKey.GeekBench, label: 'Geekbench' },
+    { key: ProductSourceKey.NotebookCheck, label: 'Notebookcheck' },
     { key: ProductSourceKey.PassMark, label: 'PassMark' },
-    { key: ProductSourceKey.GeekBench, label: 'GeekBench' },
+    { key: ProductSourceKey.TechPowerUp, label: 'TechPowerUp' },
   ],
   [ProductType.Gpu]: [
-    { key: ProductSourceKey.TechPowerUp, label: 'TechPowerUp' },
+    { key: ProductSourceKey.NotebookCheck, label: 'Notebookcheck' },
     { key: ProductSourceKey.PassMark, label: 'PassMark' },
-    { key: ProductSourceKey.UlBenchmarks, label: 'UL Benchmarks' },
+    { key: ProductSourceKey.TechPowerUp, label: 'TechPowerUp' },
   ],
 };
 

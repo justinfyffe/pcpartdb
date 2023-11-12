@@ -22,10 +22,13 @@ export async function scrapePassMarkCpuSources(
   el.each((_i, li) => {
     const $li = $(li);
 
+    const $span = $li.find('a span.prdname');
+    if (!$span.length) {
+      return;
+    }
+
+    const { company, name } = parseProductName($span.text().trim());
     const url = cleanUrl(BASE_URL + $li.find('a').attr('href').trim());
-    const { company, name } = parseProductName(
-      $li.find('a span.prdname').text().trim(),
-    );
 
     const scoreText = $li.find('a span.count').text().trim().replace(',', '');
     const score = scoreText ? Number(scoreText) : null;
@@ -39,7 +42,7 @@ export async function scrapePassMarkCpuSources(
         name,
         company,
         url,
-        cpuMarkMultiThread: !Number.isNaN(score) ? score : null,
+        PassMark_CpuMark_Multi_Thread: !Number.isNaN(score) ? score : null,
       });
     }
   });
@@ -53,7 +56,7 @@ async function fetchListPage(
 ) {
   const { noProxy } = options;
 
-  const response = await scraper.scrape(url, { retries: 1, noProxy });
+  const response = await scraper.scrapeGet(url, { retries: 1, noProxy });
   return response.data;
 }
 
