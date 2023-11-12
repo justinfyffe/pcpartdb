@@ -523,7 +523,9 @@ export function generateProductOtherNames(
     { company: false, brand: false },
   );
 
-  return [fullName, nameWithoutCompany, nameWithoutCompanyAndBrand];
+  return [fullName, nameWithoutCompany, nameWithoutCompanyAndBrand].filter(
+    (value) => value,
+  );
 }
 
 export interface GenerateProductSlugOptions {

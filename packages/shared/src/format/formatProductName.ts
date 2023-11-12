@@ -30,7 +30,7 @@ export function formatProductName(
   product: Partial<Product>,
   options?: FormatProductNameOptions,
 ) {
-  if (product == null) {
+  if (product == null || product?.name == null) {
     return null;
   }
 
