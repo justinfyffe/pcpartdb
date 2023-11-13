@@ -8,8 +8,10 @@ import { RegisterPage } from '../client/auth/pages/RegisterPage/RegisterPage';
 import { viewModelsClient } from '../client/shared/api/viewModelsClient';
 import { withGuestGuard } from '../client/shared/guards/withGuestGuard';
 
-export async function getServerSideProps(_ctx: NextPageContext) {
-  const response = await viewModelsClient.get<RegisterViewModel>('register');
+export async function getServerSideProps(ctx: NextPageContext) {
+  const response = await viewModelsClient.get<RegisterViewModel>('register', {
+    headers: { cookie: ctx.req?.headers?.cookie ?? undefined },
+  });
   if ('error' in response.props) {
     return response;
   }

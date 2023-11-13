@@ -20,11 +20,12 @@ Summaries:
 Annoyances:
 - [] Figure out why admin panel sometimes give forbidden exception.
   - Liekly has to do with async middleware
+  - seems like nextjs might not be including the cookie in the call to the backend
+    - can call api directly without issue
+    - maybe due to _app.tsx
 
 More Benchmarks
 - [] CPU - Rename Generation to Lineup? (POST MVP)
-- [X] Scrape more fields from geekbench (POST MVP)
-- [X] Scrape more fields from passmark (POST MVP)
 
 Better Performance Score
 - [] add highlights under technical specs? Next project

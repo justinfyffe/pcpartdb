@@ -1,6 +1,5 @@
 import '../assets/styles/global.css';
 import 'reflect-metadata';
-import axios from 'axios';
 import App, { AppContext, AppProps } from 'next/app';
 import Head from 'next/head';
 import Script from 'next/script';
@@ -52,14 +51,10 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
 };
 
 MyApp.getInitialProps = async (appContext: AppContext) => {
-  // Need to add cookie directly to all server-side calls
-  if (appContext.ctx.req) {
-    axios.defaults.headers.common.Cookie =
-      appContext.ctx.req.headers?.cookie ?? null;
-  }
-
   // Get app configuration used for all pages
-  const config = await apiClient.get('config');
+  const config = await apiClient.get('config', {
+    headers: { cookie: appContext.ctx.req?.headers?.cookie ?? undefined },
+  });
 
   // calls page's `getInitialProps` and fills `appProps.pageProps`
   let appProps;

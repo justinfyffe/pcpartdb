@@ -9,7 +9,9 @@ export async function getServerSideProps(ctx: NextPageContext) {
   const imageId = Number(query.imageId);
 
   const endpoint = joinUrlParts('admin/images/edit', String(imageId));
-  return await viewModelsClient.get(endpoint);
+  return await viewModelsClient.get(endpoint, {
+    headers: { cookie: ctx.req?.headers?.cookie ?? undefined },
+  });
 }
 
 export default withStaffGuard(AdminEditImagePage);

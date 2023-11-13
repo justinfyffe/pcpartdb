@@ -10,6 +10,7 @@ export async function getServerSideProps(ctx: NextPageContext) {
   const endpoint = joinUrlParts('admin/products', query.cpuIdOrSlug);
   return await viewModelsClient.get(endpoint, {
     params: { productType: ProductType.Cpu },
+    headers: { cookie: ctx.req?.headers?.cookie ?? undefined },
   });
 }
 

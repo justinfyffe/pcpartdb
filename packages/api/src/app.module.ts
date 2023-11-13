@@ -39,8 +39,6 @@ import { WebsiteModule } from './website/website.module';
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(ContextMiddleware)
-      .forRoutes({ path: '*', method: RequestMethod.ALL });
+    consumer.apply(ContextMiddleware).forRoutes('*');
   }
 }

@@ -3,8 +3,10 @@ import { AdminListUsersPage } from 'packages/website/src/client/admin/pages/user
 import { withStaffGuard } from 'packages/website/src/client/shared/guards/withStaffGuard';
 import { viewModelsClient } from '../../../client/shared/api/viewModelsClient';
 
-export async function getServerSideProps(_ctx: NextPageContext) {
-  return await viewModelsClient.get('admin/users/list');
+export async function getServerSideProps(ctx: NextPageContext) {
+  return await viewModelsClient.get('admin/users/list', {
+    headers: { cookie: ctx.req?.headers?.cookie ?? undefined },
+  });
 }
 
 export default withStaffGuard(AdminListUsersPage);

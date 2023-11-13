@@ -17,6 +17,7 @@ export async function getServerSideProps(ctx: NextPageContext) {
         query,
       } as ListGpusRequest),
     },
+    headers: { cookie: ctx.req?.headers?.cookie ?? undefined },
   });
   return response;
 }

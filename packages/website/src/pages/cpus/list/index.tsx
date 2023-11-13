@@ -17,6 +17,7 @@ export async function getServerSideProps(ctx: NextPageContext) {
         query,
       } as ListCpusRequest),
     },
+    headers: { cookie: ctx.req?.headers?.cookie ?? undefined },
   });
   return response;
 }

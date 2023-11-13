@@ -9,7 +9,9 @@ export async function getServerSideProps(ctx: NextPageContext) {
   const userId = Number(query.userId);
 
   const endpoint = joinUrlParts('admin/users/edit', String(userId));
-  return await viewModelsClient.get(endpoint);
+  return await viewModelsClient.get(endpoint, {
+    headers: { cookie: ctx.req?.headers?.cookie ?? undefined },
+  });
 }
 
 export default withStaffGuard(AdminEditUserPage);

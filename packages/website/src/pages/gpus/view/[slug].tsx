@@ -7,7 +7,9 @@ export async function getServerSideProps(ctx: NextPageContext) {
   const slug = ctx.query.slug as string;
 
   const endpoint = joinUrlParts('gpus/view', slug);
-  const response = await viewModelsClient.get(endpoint);
+  const response = await viewModelsClient.get(endpoint, {
+    headers: { cookie: ctx.req?.headers?.cookie ?? undefined },
+  });
   return response;
 }
 
