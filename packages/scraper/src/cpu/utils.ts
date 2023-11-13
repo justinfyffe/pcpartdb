@@ -89,7 +89,10 @@ interface CreateCpuFieldOptions<T = unknown> {
 export function createCpuField<T = unknown>(options: CreateCpuFieldOptions<T>) {
   const { field, raw, formatted, meta, ctx, overwriteMemo } = options;
 
-  if (overwriteMemo !== true && ctx?.memoizedFields?.[field] != null) {
+  if (
+    overwriteMemo !== true &&
+    hasProductFieldValue(ctx?.memoizedFields?.[field])
+  ) {
     // Field was previously set, use that one unless we're skipping memoization.
     return ctx.memoizedFields[field] as CpuField<T>;
   }

@@ -449,7 +449,10 @@ export class ProductService {
     ctx: Context,
   ) {
     const { productId, sources } = options;
-    const product = await this.getById({ id: productId }, ctx);
+    const product = await this.getById(
+      { id: productId, includeSources: true, includeAutomation: true },
+      ctx,
+    );
 
     if (product == null) {
       throw notFoundError({ productId });

@@ -81,7 +81,7 @@ export function createGpuField<T = unknown>(options: CreateGpuFieldOptions<T>) {
   const { field, raw, formatted, meta, ctx, overwriteMemo } = options;
 
   const memoized = ctx?.memoizedFields?.[field];
-  if (overwriteMemo !== true && memoized != null) {
+  if (overwriteMemo !== true && hasProductFieldValue(memoized)) {
     // Field was previously set, use that one unless we're skipping memoization.
     return ctx.memoizedFields[field] as GpuField<T>;
   }
