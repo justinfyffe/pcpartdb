@@ -5,7 +5,7 @@ import { withStaffGuard } from '../../client/shared/guards/withStaffGuard';
 
 export async function getServerSideProps(ctx: NextPageContext) {
   return await viewModelsClient.get('admin/overview', {
-    headers: { cookie: ctx.req?.headers?.cookie ?? undefined },
+    headers: { cookie: ctx.req?.headers?.cookie ?? '' },
   });
 }
 

@@ -10,7 +10,7 @@ export async function getServerSideProps(ctx: NextPageContext) {
 
   const endpoint = joinUrlParts('admin/users/edit', String(userId));
   return await viewModelsClient.get(endpoint, {
-    headers: { cookie: ctx.req?.headers?.cookie ?? undefined },
+    headers: { cookie: ctx.req?.headers?.cookie ?? '' },
   });
 }
 

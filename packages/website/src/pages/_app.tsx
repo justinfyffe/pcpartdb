@@ -53,7 +53,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
 MyApp.getInitialProps = async (appContext: AppContext) => {
   // Get app configuration used for all pages
   const config = await apiClient.get('config', {
-    headers: { cookie: appContext.ctx.req?.headers?.cookie ?? undefined },
+    headers: { cookie: appContext.ctx.req?.headers?.cookie ?? '' },
   });
 
   // calls page's `getInitialProps` and fills `appProps.pageProps`

@@ -10,7 +10,7 @@ export async function getServerSideProps(ctx: NextPageContext) {
   const endpoint = joinUrlParts('admin/products', query.gpuIdOrSlug);
   return await viewModelsClient.get(endpoint, {
     params: { productType: ProductType.Gpu },
-    headers: { cookie: ctx.req?.headers?.cookie ?? undefined },
+    headers: { cookie: ctx.req?.headers?.cookie ?? '' },
   });
 }
 

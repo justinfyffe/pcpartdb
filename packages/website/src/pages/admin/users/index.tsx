@@ -5,7 +5,7 @@ import { viewModelsClient } from '../../../client/shared/api/viewModelsClient';
 
 export async function getServerSideProps(ctx: NextPageContext) {
   return await viewModelsClient.get('admin/users/list', {
-    headers: { cookie: ctx.req?.headers?.cookie ?? undefined },
+    headers: { cookie: ctx.req?.headers?.cookie ?? '' },
   });
 }
 
