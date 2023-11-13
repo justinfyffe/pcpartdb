@@ -16,14 +16,6 @@ When Bored:
 Summaries:
 - [] Add date it was last generated.
 
-
-Annoyances:
-- [] Figure out why admin panel sometimes give forbidden exception.
-  - Liekly has to do with async middleware
-  - seems like nextjs might not be including the cookie in the call to the backend
-    - can call api directly without issue
-    - maybe due to _app.tsx
-
 More Benchmarks
 - [] CPU - Rename Generation to Lineup? (POST MVP)
 
