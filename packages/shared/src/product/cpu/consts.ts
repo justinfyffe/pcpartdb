@@ -69,7 +69,7 @@ export const CPU_FIELD_LABELS: Partial<Record<CpuFieldKey, string>> = {
 
   architecture: 'Microarchitecture',
   codename: 'Codename',
-  generation: 'Generation',
+  generation: 'Series',
   pciExpress: 'PCI Express',
   chipsets: 'Chipsets',
 

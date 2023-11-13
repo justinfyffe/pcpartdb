@@ -568,7 +568,7 @@ export const CpuForm: FunctionComponent<CpuFormProps> = (props) => {
               <ProductTextInput
                 {...field}
                 ref={null}
-                label="Generation"
+                label="Series"
                 fieldKey="generation"
               />
             )}

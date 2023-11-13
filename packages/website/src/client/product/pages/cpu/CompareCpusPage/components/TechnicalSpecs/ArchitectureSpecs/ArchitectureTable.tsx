@@ -41,15 +41,15 @@ export const ArchitectureTable: FunctionComponent<ArchitectureTableProps> = (
       <TBody>
         <ProductFieldRow
           type={ProductType.Cpu}
+          fields={[cpu1.fields?.generation, cpu2.fields?.generation]}
+        />
+        <ProductFieldRow
+          type={ProductType.Cpu}
           fields={[cpu1.fields?.architecture, cpu2.fields?.architecture]}
         />
         <ProductFieldRow
           type={ProductType.Cpu}
           fields={[cpu1.fields?.codename, cpu2.fields?.codename]}
-        />
-        <ProductFieldRow
-          type={ProductType.Cpu}
-          fields={[cpu1.fields?.generation, cpu2.fields?.generation]}
         />
         <ProductFieldRow
           type={ProductType.Cpu}
