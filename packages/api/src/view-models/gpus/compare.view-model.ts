@@ -1,21 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import {
-  binarySearch,
   CompareGpusAdditionalData,
   CompareGpusViewModel,
   getGpuChipset,
   GpuProduct,
   GpuProductComparison,
   hasProductFieldRawValue,
-  ListOrder,
-  ListProductsRequest,
   ListSort,
   ProductFieldKey,
   productFieldRawValue,
-  ProductRankKey,
   ProductType,
   RelatedProductComparisons,
   RelatedProducts,
+  RelatedProductType,
 } from '@pcpartdb/shared';
 import * as uuid from 'uuid';
 import { Database } from '../../database';
@@ -71,26 +68,27 @@ export class CompareGpusViewModelService {
   }
 
   private async getComparison(slug: string, ctx: Context) {
-    const comparisonRequest = {
-      productType: ProductType.Gpu,
-      slug,
-
-      includeParent: true,
-      includeChildren: false,
-      includeBenchmarks: true,
-      includeImages: true,
-
-      includeAutomation: false,
-      includeSources: false,
-      includeUpdates: false,
-
-      includeRanks: [
-        'performanceRating',
-        'performancePerMsrp',
-      ] as ProductRankKey[],
-    };
     const comparison = await this.db.transaction(
-      () => this.productService.getComparison(comparisonRequest, ctx),
+      () =>
+        this.productService.getComparison(
+          {
+            productType: ProductType.Gpu,
+            slug,
+
+            includeParent: true,
+            includeChildren: false,
+            includeBenchmarks: true,
+            includeImages: true,
+            includeAutomation: false,
+            includeSources: false,
+            includeUpdates: false,
+            includeRanks: true,
+            includeRelated: true,
+
+            relatedFields: ['performanceRating', 'performancePerMsrp'],
+          },
+          ctx,
+        ),
       { ctx, isolationLevel: 'ReadCommitted' },
     );
     return comparison as GpuProductComparison;
@@ -109,13 +107,11 @@ export class CompareGpusViewModelService {
     const relativePerformanceGpus = await this.getRelativePerformanceGpus(
       chipset1,
       chipset2,
-      ctx,
     );
 
     const relativeValueGpus = await this.getRelativeValueGpus(
       chipset1,
       chipset2,
-      ctx,
     );
     return {
       relativePerformanceGpus,
@@ -158,43 +154,32 @@ export class CompareGpusViewModelService {
   private async getRelativePerformanceGpus(
     seed1: GpuProduct,
     seed2: GpuProduct,
-    ctx: Context,
   ) {
-    const relative1 = await this.fetchRelativePerformanceGpus(seed1, ctx);
-    const relative2 = await this.fetchRelativePerformanceGpus(seed2, ctx);
-
-    const gpu1Idx = binarySearch(
-      relative1,
-      seed1,
-      (g1, g2) =>
-        productFieldRawValue(g2.fields?.performanceRating) -
-        productFieldRawValue(g1.fields?.performanceRating),
-    );
-    const neighbors1 = getSurroundingValues(
-      relative1,
-      gpu1Idx,
-      TOTAL_COMPARED_GPUS,
-    );
-
-    const gpu2Idx = binarySearch(
-      relative2,
-      seed2,
-      (g1, g2) =>
-        productFieldRawValue(g2.fields?.performanceRating) -
-        productFieldRawValue(g1.fields?.performanceRating),
-    );
-    const neighbors2 = getSurroundingValues(
-      relative2,
-      gpu2Idx,
-      TOTAL_COMPARED_GPUS,
-    );
+    const relative1 = seed1.relatedProducts
+      ?.filter((rp) => rp.type === RelatedProductType.PerformanceRating)
+      .map((r) => r.relatedProduct)
+      .filter((p) => hasProductFieldRawValue(p?.fields?.performanceRating))
+      .sort(
+        (p1, p2) =>
+          productFieldRawValue(p2?.fields?.performanceRating) -
+          productFieldRawValue(p1?.fields?.performanceRating),
+      ) as Partial<GpuProduct>[];
+    const relative2 = seed2.relatedProducts
+      ?.filter((rp) => rp.type === RelatedProductType.PerformanceRating)
+      .map((r) => r.relatedProduct)
+      .filter((p) => hasProductFieldRawValue(p?.fields?.performanceRating))
+      .sort(
+        (p1, p2) =>
+          productFieldRawValue(p2?.fields?.performanceRating) -
+          productFieldRawValue(p1?.fields?.performanceRating),
+      ) as Partial<GpuProduct>[];
 
     // At least one GPU has no neighbors (missing rank)
-    if (neighbors1.length === 0 && neighbors2.length === 0) {
+    if (relative1.length === 0 && relative2.length === 0) {
       return [];
     }
-    if (neighbors1.length === 0 || neighbors2.length === 0) {
-      const neighbors = [...neighbors1, ...neighbors2];
+    if (relative1.length === 0 || relative2.length === 0) {
+      const neighbors = [...relative1, ...relative2];
       return getSurroundingValues(
         neighbors,
         neighbors.findIndex(
@@ -206,14 +191,14 @@ export class CompareGpusViewModelService {
 
     // Both GPUS have neighbors
     const hasNoGap =
-      neighbors1.find((p) => p.id === seed2.id) ||
-      neighbors2.find((p) => p.id === seed1.id);
+      relative1.find((p) => p.id === seed2.id) ||
+      relative2.find((p) => p.id === seed1.id);
 
     if (hasNoGap) {
       return this.mergeNeighbors(
         [seed1, seed2],
-        neighbors1,
-        neighbors2,
+        relative1,
+        relative2,
         (g1, g2) =>
           productFieldRawValue(g2.fields?.performanceRating) -
           productFieldRawValue(g1.fields?.performanceRating),
@@ -221,8 +206,8 @@ export class CompareGpusViewModelService {
     } else {
       return this.concatNeighbors(
         [seed1, seed2],
-        neighbors1,
-        neighbors2,
+        relative1,
+        relative2,
         (g1, g2) =>
           productFieldRawValue(g2.fields?.performanceRating) -
           productFieldRawValue(g1.fields?.performanceRating),
@@ -230,46 +215,32 @@ export class CompareGpusViewModelService {
     }
   }
 
-  private async getRelativeValueGpus(
-    seed1: GpuProduct,
-    seed2: GpuProduct,
-    ctx: Context,
-  ) {
-    const relative1 = await this.fetchRelativeValueGpus(seed1, ctx);
-    const relative2 = await this.fetchRelativeValueGpus(seed2, ctx);
-
-    const gpu1Idx = binarySearch(
-      relative1,
-      seed1,
-      (g1, g2) =>
-        productFieldRawValue(g2.fields?.performancePerMsrp) -
-        productFieldRawValue(g1.fields?.performancePerMsrp),
-    );
-    const neighbors1 = getSurroundingValues(
-      relative1,
-      gpu1Idx,
-      TOTAL_COMPARED_GPUS,
-    );
-
-    const gpu2Idx = binarySearch(
-      relative2,
-      seed2,
-      (g1, g2) =>
-        productFieldRawValue(g2.fields?.performancePerMsrp) -
-        productFieldRawValue(g1.fields?.performancePerMsrp),
-    );
-    const neighbors2 = getSurroundingValues(
-      relative2,
-      gpu2Idx,
-      TOTAL_COMPARED_GPUS,
-    );
+  private async getRelativeValueGpus(seed1: GpuProduct, seed2: GpuProduct) {
+    const relative1 = seed1.relatedProducts
+      ?.filter((rp) => rp.type === RelatedProductType.PerformancePerMsrp)
+      .map((r) => r.relatedProduct)
+      .filter((p) => hasProductFieldRawValue(p?.fields?.performancePerMsrp))
+      .sort(
+        (p1, p2) =>
+          productFieldRawValue(p2?.fields?.performancePerMsrp) -
+          productFieldRawValue(p1?.fields?.performancePerMsrp),
+      ) as Partial<GpuProduct>[];
+    const relative2 = seed2.relatedProducts
+      ?.filter((rp) => rp.type === RelatedProductType.PerformancePerMsrp)
+      .map((r) => r.relatedProduct)
+      .filter((p) => hasProductFieldRawValue(p?.fields?.performancePerMsrp))
+      .sort(
+        (p1, p2) =>
+          productFieldRawValue(p2?.fields?.performancePerMsrp) -
+          productFieldRawValue(p1?.fields?.performancePerMsrp),
+      ) as Partial<GpuProduct>[];
 
     // At least one GPU has no neighbors (missing rank)
-    if (neighbors1.length === 0 && neighbors2.length === 0) {
+    if (relative1.length === 0 && relative2.length === 0) {
       return [];
     }
-    if (neighbors1.length === 0 || neighbors2.length === 0) {
-      const neighbors = [...neighbors1, ...neighbors2];
+    if (relative1.length === 0 || relative2.length === 0) {
+      const neighbors = [...relative1, ...relative2];
       return getSurroundingValues(
         neighbors,
         neighbors.findIndex(
@@ -281,14 +252,14 @@ export class CompareGpusViewModelService {
 
     // Both GPUS have neighbors
     const hasNoGap =
-      neighbors1.find((p) => p.id === seed2.id) ||
-      neighbors2.find((p) => p.id === seed1.id);
+      relative1.find((p) => p.id === seed2.id) ||
+      relative2.find((p) => p.id === seed1.id);
 
     if (hasNoGap) {
       return this.mergeNeighbors(
         [seed1, seed2],
-        neighbors1,
-        neighbors2,
+        relative1,
+        relative2,
         (g1, g2) =>
           productFieldRawValue(g2.fields?.performancePerMsrp) -
           productFieldRawValue(g1.fields?.performancePerMsrp),
@@ -296,258 +267,20 @@ export class CompareGpusViewModelService {
     } else {
       return this.concatNeighbors(
         [seed1, seed2],
-        neighbors1,
-        neighbors2,
+        relative1,
+        relative2,
         (g1, g2) =>
           productFieldRawValue(g2.fields?.performancePerMsrp) -
           productFieldRawValue(g1.fields?.performancePerMsrp),
       );
     }
-  }
-
-  private async fetchRelativePerformanceGpus(seed: GpuProduct, ctx: Context) {
-    // Missing performance. Cannot have neighbors.
-    if (!hasProductFieldRawValue(seed.fields?.performanceRating)) {
-      return [];
-    }
-
-    const segment = productFieldRawValue(seed.fields?.marketSegment) || null;
-    const performanceScore = productFieldRawValue(
-      seed.fields.performanceRating,
-    );
-
-    // Get ids for relative gpus with a higher rating
-    const aboveRequest: ListProductsRequest = {
-      productType: ProductType.Gpu,
-      query: {
-        filter: {
-          isChipset: true,
-          segment: segment ? [segment] : [],
-          performanceRated: true,
-          minPerformanceScore: performanceScore,
-        },
-        pagination: {
-          limit: TOTAL_COMPARED_GPUS,
-        },
-        orderBy: {
-          order: ListOrder.Asc,
-          sort: ListSort.PerformanceRating,
-        },
-      },
-    };
-    const aboveOptions = {
-      fields: [] as ProductFieldKey[],
-      skipCount: true,
-    };
-    const aboveResponse = await this.productService.list(
-      aboveRequest,
-      aboveOptions,
-      ctx,
-    );
-
-    // Get ids for relative gpus with a lower rating
-    const belowRequest: ListProductsRequest = {
-      productType: ProductType.Gpu,
-      query: {
-        filter: {
-          isChipset: true,
-          segment: segment ? [segment] : [],
-          performanceRated: true,
-          maxPerformanceScore: performanceScore,
-        },
-        pagination: {
-          limit: TOTAL_COMPARED_GPUS,
-        },
-        orderBy: {
-          order: ListOrder.Desc,
-          sort: ListSort.PerformanceRating,
-        },
-      },
-    };
-    const belowOptions = {
-      fields: [] as ProductFieldKey[],
-      skipCount: true,
-    };
-    const belowResponse = await this.productService.list(
-      belowRequest,
-      belowOptions,
-      ctx,
-    );
-
-    // Fetch relative gpus by id
-    const relativeIds = [
-      ...aboveResponse.results,
-      ...belowResponse.results,
-    ].map((result) => result.id);
-    const relativeResponse = await this.productService.list(
-      {
-        productType: ProductType.Gpu,
-        query: {
-          filter: {
-            ids: relativeIds,
-            excludeIds: [seed.id],
-          },
-        },
-      },
-      { fields: ['performanceRating'], skipCount: true },
-      ctx,
-    );
-
-    // Sort related gpus by performance
-    const gpus = [...relativeResponse.results, seed]
-      .filter(
-        (gpu) => productFieldRawValue(gpu.fields?.performanceRating) != null,
-      )
-      .sort(
-        (g1, g2) =>
-          productFieldRawValue(g1.fields?.performanceRating) -
-          productFieldRawValue(g2.fields?.performanceRating),
-      ) as GpuProduct[];
-
-    // Build list of surrounding GPUs
-    const gpuIdx = binarySearch(
-      gpus,
-      seed,
-      (g1, g2) =>
-        productFieldRawValue(g1.fields?.performanceRating) -
-        productFieldRawValue(g2.fields?.performanceRating),
-    );
-    const neighbors = getSurroundingValues(gpus, gpuIdx, TOTAL_COMPARED_GPUS);
-
-    return getSurroundingValues(
-      neighbors,
-      neighbors.findIndex((gpu) => gpu.id === seed.id),
-      TOTAL_COMPARED_GPUS,
-    ).sort(
-      (g1, g2) =>
-        productFieldRawValue(g2.fields?.performanceRating) -
-        productFieldRawValue(g1.fields?.performanceRating),
-    );
-  }
-
-  private async fetchRelativeValueGpus(seed: GpuProduct, ctx: Context) {
-    // Missing value. Cannot have neighbors.
-    if (!hasProductFieldRawValue(seed.fields?.performancePerMsrp)) {
-      return [];
-    }
-
-    const segment = productFieldRawValue(seed.fields?.marketSegment) || null;
-    const valueScore = productFieldRawValue(seed.fields.performancePerMsrp);
-
-    // Get ids for relative gpus with a higher rating
-    const aboveRequest: ListProductsRequest = {
-      productType: ProductType.Gpu,
-      query: {
-        filter: {
-          isChipset: true,
-          segment: segment ? [segment] : [],
-          valueRated: true,
-          minValueScore: valueScore,
-        },
-        pagination: {
-          limit: TOTAL_COMPARED_GPUS,
-        },
-        orderBy: {
-          order: ListOrder.Asc,
-          sort: ListSort.PerformancePerMsrp,
-        },
-      },
-    };
-    const aboveOptions = {
-      fields: [] as ProductFieldKey[],
-      skipCount: true,
-    };
-    const aboveResponse = await this.productService.list(
-      aboveRequest,
-      aboveOptions,
-      ctx,
-    );
-
-    // Get ids for relative gpus with a lower rating
-    const belowRequest: ListProductsRequest = {
-      productType: ProductType.Gpu,
-      query: {
-        filter: {
-          isChipset: true,
-          segment: segment ? [segment] : [],
-          valueRated: true,
-          maxValueScore: valueScore,
-        },
-        pagination: {
-          limit: TOTAL_COMPARED_GPUS,
-        },
-        orderBy: {
-          order: ListOrder.Desc,
-          sort: ListSort.PerformancePerMsrp,
-        },
-      },
-    };
-    const belowOptions = {
-      fields: [] as ProductFieldKey[],
-      skipCount: true,
-    };
-    const belowResponse = await this.productService.list(
-      belowRequest,
-      belowOptions,
-      ctx,
-    );
-
-    // Fetch relative gpus by id
-    const relativeIds = [
-      ...aboveResponse.results,
-      ...belowResponse.results,
-    ].map((result) => result.id);
-    const relativeResponse = await this.productService.list(
-      {
-        productType: ProductType.Gpu,
-        query: {
-          filter: {
-            ids: relativeIds,
-            excludeIds: [seed.id],
-          },
-        },
-      },
-      { fields: ['performancePerMsrp'], skipCount: true },
-      ctx,
-    );
-
-    // Sort related gpus by value
-    const gpus = [...relativeResponse.results, seed]
-      .filter(
-        (gpu) => productFieldRawValue(gpu.fields?.performancePerMsrp) != null,
-      )
-      .sort(
-        (g1, g2) =>
-          productFieldRawValue(g1.fields?.performancePerMsrp) -
-          productFieldRawValue(g2.fields?.performancePerMsrp),
-      ) as GpuProduct[];
-
-    // Build list of surrounding GPUs
-    const gpu1Idx = binarySearch(
-      gpus,
-      seed,
-      (g1, g2) =>
-        productFieldRawValue(g1.fields?.performancePerMsrp) -
-        productFieldRawValue(g2.fields?.performancePerMsrp),
-    );
-    const neighbors = getSurroundingValues(gpus, gpu1Idx, TOTAL_COMPARED_GPUS);
-
-    return getSurroundingValues(
-      neighbors,
-      neighbors.findIndex((gpu) => gpu.id === seed.id),
-      TOTAL_COMPARED_GPUS,
-    ).sort(
-      (g1, g2) =>
-        productFieldRawValue(g2.fields?.performancePerMsrp) -
-        productFieldRawValue(g1.fields?.performancePerMsrp),
-    );
   }
 
   private concatNeighbors(
     comparison: GpuProductComparison,
-    neighbors1: GpuProduct[],
-    neighbors2: GpuProduct[],
-    compareFn: (gpu1: GpuProduct, gpu2: GpuProduct) => number,
+    neighbors1: Partial<GpuProduct>[],
+    neighbors2: Partial<GpuProduct>[],
+    compareFn: (gpu1: Partial<GpuProduct>, gpu2: Partial<GpuProduct>) => number,
   ) {
     const [gpu1, gpu2] = comparison;
 
@@ -567,15 +300,15 @@ export class CompareGpusViewModelService {
     const set = [...surrounding1, ...surrounding2].reduce((acc, cpu) => {
       acc[cpu.id] = cpu;
       return acc;
-    }, {} as Record<number, GpuProduct>);
+    }, {} as Record<number, Partial<GpuProduct>>);
     return Object.values(set).sort(compareFn);
   }
 
   private mergeNeighbors(
     comparison: GpuProductComparison,
-    neighbors1: GpuProduct[],
-    neighbors2: GpuProduct[],
-    compareFn: (gpu1: GpuProduct, gpu2: GpuProduct) => number,
+    neighbors1: Partial<GpuProduct>[],
+    neighbors2: Partial<GpuProduct>[],
+    compareFn: (gpu1: Partial<GpuProduct>, gpu2: Partial<GpuProduct>) => number,
   ) {
     const [gpu1, gpu2] = comparison;
 
@@ -595,7 +328,7 @@ export class CompareGpusViewModelService {
     const set = [...surrounding1, ...surrounding2].reduce((acc, gpu) => {
       acc[gpu.id] = gpu;
       return acc;
-    }, {} as Record<number, GpuProduct>);
+    }, {} as Record<number, Partial<GpuProduct>>);
     const merged = Object.values(set).sort(compareFn);
 
     // Find the middle point between the two GPUs that are being compared.

@@ -13,19 +13,14 @@ import {
   ListAutomationActionsRequest,
   listAutomationActionsRequestSchema,
   ListAutomationActionsResponse,
-  ProductPerformanceScores,
   ProductType,
   UpdateCpuActionData,
   UpdateGpuActionData,
-  UploadPerformanceScoresRequest,
 } from '@pcpartdb/shared';
-import * as fsPromises from 'fs/promises';
 import { Database } from '../database';
 import { ProductRepository } from '../product/product.repository';
-import { ProductService } from '../product/product.service';
 import { Context } from '../shared/context';
 import { internalServerError, notFoundError } from '../shared/error';
-import * as fileUtils from '../shared/utils';
 import { validate } from '../shared/validation/validate';
 import { AutomationRepository } from './automation.repository';
 
@@ -33,28 +28,9 @@ import { AutomationRepository } from './automation.repository';
 export class AutomationActionsService {
   constructor(
     private repository: AutomationRepository,
-    private productService: ProductService,
     private productRepository: ProductRepository,
     private db: Database,
   ) {}
-
-  async uploadPerformanceScoresAction(
-    request: UploadPerformanceScoresRequest,
-    ctx: Context,
-  ) {
-    const productType = request.productType;
-    const scoresPath = fileUtils.uploadsPath(request.tempPath);
-
-    const scores: ProductPerformanceScores[] = JSON.parse(
-      await fsPromises.readFile(scoresPath, 'utf-8'),
-    );
-    await fileUtils.remove(scoresPath);
-
-    await this.productService.applyPerformanceScores(
-      { productType, scores },
-      ctx,
-    );
-  }
 
   async listPending(request: ListAutomationActionsRequest, ctx: Context) {
     validate(request, listAutomationActionsRequestSchema);

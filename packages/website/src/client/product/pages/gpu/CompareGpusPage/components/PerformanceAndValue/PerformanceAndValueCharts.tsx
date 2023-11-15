@@ -3,7 +3,9 @@ import {
   getGpuChipset,
   getListGpusPath,
   LIST_GPUS_PRESETS,
+  productRankValue,
   ProductType,
+  RankKey,
 } from '@pcpartdb/shared';
 import { CompareProductRatingCard } from 'packages/website/src/client/product/components/ProductRatingCard/CompareProductRatingCard';
 import { ProductRatingType } from 'packages/website/src/client/product/components/ProductRatingCard/types';
@@ -51,8 +53,8 @@ export const PerformanceAndValueCharts: FunctionComponent<
           chipset2.fields?.performanceRating,
         ]}
         ranks={[
-          chipset1?.ranks?.performanceRating,
-          chipset2?.ranks?.performanceRating,
+          productRankValue(chipset1, RankKey.PerformanceRating),
+          productRankValue(chipset2, RankKey.PerformanceRating),
         ]}
         rankHrefs={[performanceRankHref, performanceRankHref]}
       />
@@ -67,8 +69,8 @@ export const PerformanceAndValueCharts: FunctionComponent<
           chipset2.fields?.performancePerMsrp,
         ]}
         ranks={[
-          chipset1?.ranks?.performancePerMsrp,
-          chipset2?.ranks?.performancePerMsrp,
+          productRankValue(chipset1, RankKey.PerformancePerMsrp),
+          productRankValue(chipset2, RankKey.PerformancePerMsrp),
         ]}
         rankHrefs={[valueRankHref, valueRankHref]}
       />

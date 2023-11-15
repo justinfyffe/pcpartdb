@@ -4,6 +4,8 @@ import {
   MarketSegment,
   productFieldRawValue,
   ProductionStatus,
+  productRankValue,
+  RankKey,
   ViewGpuAdditionalData,
 } from '@pcpartdb/shared';
 
@@ -83,6 +85,6 @@ export function getCompatibilityTags(gpu: GpuProduct) {
 export function getPerformanceTags(gpu: GpuProduct) {
   return {
     [ViewGpuContentTag.BestPerformanceForSegment]:
-      gpu.ranks?.performanceRatingForMarketSegment === 1,
+      productRankValue(gpu, RankKey.PerformanceRatingForMarketSegment) === 1,
   };
 }

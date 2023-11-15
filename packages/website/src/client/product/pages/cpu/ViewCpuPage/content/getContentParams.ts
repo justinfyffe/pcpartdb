@@ -9,6 +9,8 @@ import {
   productFieldFormattedValue,
   productFieldRawValue,
   ProductionStatus,
+  productRankValue,
+  RankKey,
   ViewCpuContentData,
 } from '@pcpartdb/shared';
 import { ContentParams } from 'packages/website/src/client/shared/content/types';
@@ -137,8 +139,8 @@ function getPerformanceParams(
     ? productFieldFormattedValue(cpu.fields?.performanceRating)
     : null;
   const performanceRank =
-    cpu.ranks?.performanceRating > 1
-      ? formatOrdinalNumber(cpu.ranks?.performanceRating)
+    productRankValue(cpu, RankKey.PerformanceRating) > 1
+      ? formatOrdinalNumber(productRankValue(cpu, RankKey.PerformanceRating))
       : '';
 
   const bestPerformanceCpu = additionalData.bestPerformanceCpu;
@@ -169,12 +171,14 @@ function getValueParams(cpu: CpuProduct) {
     ? productFieldFormattedValue(cpu.fields?.performancePerMsrp)
     : null;
   const valueRank =
-    cpu.ranks?.performancePerMsrp > 1
-      ? formatOrdinalNumber(cpu.ranks?.performancePerMsrp)
+    productRankValue(cpu, RankKey.PerformancePerMsrp) > 1
+      ? formatOrdinalNumber(productRankValue(cpu, RankKey.PerformancePerMsrp))
       : '';
   const valueRankForSegment =
-    cpu.ranks?.performancePerMsrpForMarketSegment > 1
-      ? formatOrdinalNumber(cpu.ranks?.performancePerMsrpForMarketSegment)
+    productRankValue(cpu, RankKey.PerformancePerMsrpForMarketSegment) > 1
+      ? formatOrdinalNumber(
+          productRankValue(cpu, RankKey.PerformancePerMsrpForMarketSegment),
+        )
       : '';
 
   return {

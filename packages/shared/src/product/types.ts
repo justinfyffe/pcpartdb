@@ -4,6 +4,8 @@ import { ProductBenchmark } from './benchmarks';
 import { CpuFieldKey, CpuFields, ListCpusFilter } from './cpu';
 import { GpuFieldKey, GpuFields, ListGpusFilter } from './gpu';
 import { ProductImage } from './images';
+import { ProductRank } from './ranks';
+import { RelatedProduct } from './related';
 import { ProductSource } from './sources';
 
 export enum ProductType {
@@ -24,23 +26,6 @@ export enum ProductUpdateStatus {
 
 export interface ProductMeta {}
 
-export interface ProductRanks {
-  performanceRating?: number;
-  performanceRatingForArchitectureAndMarketSegment?: number;
-  performanceRatingForMarketSegment?: number;
-
-  performancePerMsrp?: number;
-  performancePerMsrpForMarketSegment?: number;
-}
-export type ProductRankKey = keyof ProductRanks;
-
-export type ProductRanksFilter = {
-  productType: ProductType;
-
-  architecture?: string[];
-  segment?: string[];
-};
-
 export interface Product {
   id?: number;
   parentId?: number;
@@ -59,14 +44,14 @@ export interface Product {
 
   fields?: ProductFields;
   benchmarks?: ProductBenchmark[];
+  ranks?: ProductRank[];
   sources?: ProductSource[];
   updates?: ProductUpdate[];
   images?: ProductImage[];
+  relatedProducts?: RelatedProduct[];
   relatedAutomationSources?: AutomationSource[];
   parent?: Product;
   children?: Product[];
-
-  ranks?: ProductRanks;
 }
 
 export type ProductComparison = [Product, Product];
@@ -151,8 +136,14 @@ export interface RelatedProductComparisons {
   comparisons: ProductComparison[];
 }
 
+// TODO: delete
 export interface ProductPerformanceScores {
   productId: number;
+  performanceRating?: number;
+  performancePerMsrp?: number;
+}
+
+export interface ProductScoreCalculations {
   performanceRating?: number;
   performancePerMsrp?: number;
 }

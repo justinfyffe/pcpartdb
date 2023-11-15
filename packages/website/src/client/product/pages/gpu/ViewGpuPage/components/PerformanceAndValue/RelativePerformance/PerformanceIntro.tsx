@@ -7,7 +7,7 @@ const PerformanceIntroSentence1 = compileContentComponent({
   deps: [],
   component: (props) => (
     <>
-      Compare {props.shortGpuName}&apos;s performance with similar{' '}
+      Compare {props.chipsetShortName}&apos;s performance with similar{' '}
       {props.marketSegment} GPUs. Relative performance provides insight into how
       its benchmarks compare to its peers. This data is based on chipset
       performance.

@@ -7,4 +7,5 @@ export * from './deepmerge';
 export * from './joinUrlParts';
 export * from './sleep';
 export * from './snakeCaseToCamelCase';
+export * from './surroundingValues';
 export * from './throttle';

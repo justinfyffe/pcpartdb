@@ -1,8 +1,11 @@
 import {
   formatProductName,
   getListCpusPath,
+  hasProductRank,
   LIST_CPUS_PRESETS,
+  productRankValue,
   ProductType,
+  RankKey,
 } from '@pcpartdb/shared';
 import { ProductRatingType } from 'packages/website/src/client/product/components/ProductRatingCard/types';
 import { ViewProductRatingCard } from 'packages/website/src/client/product/components/ProductRatingCard/ViewProductRatingCard';
@@ -25,18 +28,18 @@ export const PerformanceAndValueCharts: FunctionComponent<
   }, [cpu]);
 
   const performanceRankHref = useMemo(() => {
-    if (cpu.ranks?.performanceRating) {
+    if (hasProductRank(cpu, RankKey.PerformanceRating)) {
       return getListCpusPath(LIST_CPUS_PRESETS['best-performance']);
     }
     return undefined;
-  }, [cpu.ranks?.performanceRating]);
+  }, [cpu]);
 
   const valueRankHref = useMemo(() => {
-    if (cpu.ranks?.performancePerMsrp) {
+    if (hasProductRank(cpu, RankKey.PerformancePerMsrp)) {
       return getListCpusPath(LIST_CPUS_PRESETS['best-value']);
     }
     return undefined;
-  }, [cpu.ranks?.performancePerMsrp]);
+  }, [cpu]);
 
   return (
     <div className={classNames('flex flex-wrap gap-8', className)}>
@@ -46,7 +49,7 @@ export const PerformanceAndValueCharts: FunctionComponent<
         name={name}
         maxRating={100}
         ratingField={cpu.fields?.performanceRating}
-        rank={cpu.ranks?.performanceRating}
+        rank={productRankValue(cpu, RankKey.PerformanceRating)}
         rankHref={performanceRankHref}
       />
 
@@ -56,7 +59,7 @@ export const PerformanceAndValueCharts: FunctionComponent<
         name={name}
         maxRating={100}
         ratingField={cpu.fields?.performancePerMsrp}
-        rank={cpu.ranks?.performancePerMsrp}
+        rank={productRankValue(cpu, RankKey.PerformancePerMsrp)}
         rankHref={valueRankHref}
       />
     </div>

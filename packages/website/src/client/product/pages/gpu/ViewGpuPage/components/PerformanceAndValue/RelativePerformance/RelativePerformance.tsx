@@ -1,4 +1,4 @@
-import { hasProductFieldValue } from '@pcpartdb/shared';
+import { getGpuChipset, hasProductFieldValue } from '@pcpartdb/shared';
 import React, { FunctionComponent, useContext } from 'react';
 import { ViewPageContext } from '../../../context/ViewPageContext';
 import { PerformanceIntro } from './PerformanceIntro';
@@ -7,9 +7,10 @@ import { PerformanceTable } from './PerformanceTable';
 export const RelativePerformance: FunctionComponent = () => {
   const { gpu, additionalData: contentData } = useContext(ViewPageContext);
   const { relativePerformanceGpus } = contentData;
+  const chipset = getGpuChipset(gpu);
 
   if (
-    !hasProductFieldValue(gpu.fields?.performanceRating) ||
+    !hasProductFieldValue(chipset.fields?.performanceRating) ||
     !relativePerformanceGpus?.length
   ) {
     return <></>;

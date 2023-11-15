@@ -10,7 +10,7 @@ import { updateCpuSourcesAction } from './actions/updateCpuSourcesAction';
 import { updateGpuAction } from './actions/updateGpuAction';
 import { updateGpuChipsetSourcesAction } from './actions/updateGpuChipsetSourcesAction';
 import { updateGpuRetailModelSourcesAction } from './actions/updateGpuRetailModelSourcesAction';
-import { updatePerformanceScoresAction } from './actions/updatePerformanceScoresAction/updatePerformanceScoresAction';
+import { updateProductCalculationsAction } from './actions/updateProductCalculationsAction/updateProductCalculationsAction';
 import { updateSitemapsAction } from './actions/updateSitemapsAction';
 import { AutomationContext } from './types';
 import { saveAutomationContext } from './utils/context';
@@ -18,7 +18,7 @@ import { saveAutomationContext } from './utils/context';
 const UPDATE_SITEMAPS_FREQUENCY = 1000 * 60 * 60 * 24; // Daily
 const UPDATE_CPU_SOURCES_FREQUENCY = 1000 * 60 * 60 * 24 * 7; // Weekly
 const UPDATE_GPU_CHIPSET_SOURCES_FREQUENCY = 1000 * 60 * 60 * 24 * 7; // Weekly
-const UPDATE_PERFORMANCE_SCORES_FREQUENCY = 1000 * 60 * 60 * 24; // Daily
+const UPDATE_PRODUCT_CALCULATIONS_FREQUENCY = 1000 * 60 * 60 * 24; // Daily
 
 export async function executeAutomation(context: AutomationContext) {
   const action = await getNextAction(context);
@@ -47,8 +47,8 @@ export async function executeAutomation(context: AutomationContext) {
     await updateGpuChipsetSourcesAction(action, context);
   } else if (type === AutomationActionType.UpdateGpuRetailModelSources) {
     await updateGpuRetailModelSourcesAction(action, context);
-  } else if (type === AutomationActionType.UpdatePerformanceScores) {
-    await updatePerformanceScoresAction(action, context);
+  } else if (type === AutomationActionType.UpdateProductCalculations) {
+    await updateProductCalculationsAction(action, context);
   } else {
     console.error(`Unsupported Action: ${action}`);
   }
@@ -148,13 +148,13 @@ async function getActionFromStalenessCheck(
 
   if (
     isStale(
-      metadata?.updatePerformanceScoresDate,
-      UPDATE_PERFORMANCE_SCORES_FREQUENCY,
+      metadata?.updateProductCalculationsDate,
+      UPDATE_PRODUCT_CALCULATIONS_FREQUENCY,
     )
   ) {
     return {
       status: AutomationActionStatus.Pending,
-      type: AutomationActionType.UpdatePerformanceScores,
+      type: AutomationActionType.UpdateProductCalculations,
     };
   }
 

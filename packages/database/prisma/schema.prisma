@@ -114,10 +114,13 @@ model Product {
   cpuFields CpuFields? @relation("cpuFieldsToProduct")
   gpuFields GpuFields? @relation("gpuFieldsToProduct")
   benchmarks ProductBenchmark[] @relation("productBenchmarkToProduct")
+  ranks ProductRank[] @relation("productRankToProduct")
   sources ProductSource[] @relation("productSourceToProduct")
   updates ProductUpdate[] @relation("productUpdateToProduct")
   images ProductImage[] @relation("productImageToProduct")
   relatedAutomationSources AutomationSource[] @relation("automationSourceToRelatedProduct")
+  relatedProducts RelatedProduct[] @relation("relatedProductToProductA")
+  asRelatedProducts RelatedProduct[] @relation("relatedProductToProductB")
   
   parent Product? @relation("productToProduct", fields: [parentId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "products_parent_foreign")
   children Product[] @relation("productToProduct")
@@ -157,6 +160,33 @@ model ProductBenchmark {
   @@unique([productId, benchmarkKey], map: "productBenchmarks_productId_benchmarkKey_unique")
 
   @@map("product_benchmarks")
+}
+
+model ProductRank {
+  id Int @id @default(autoincrement())
+  
+  // Product that this benchmark belongs to.
+  productId Int? @map("product_id")
+
+  // Enum identifier for the rank.
+  rankKey String @map("rank_key")
+
+  // Numeric value for benchmark
+  rank Int?
+
+  // Misc. additional data about the benchmark. Not meant to be filtered on.
+  metadata Json?
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6) @ignore
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6) @ignore
+
+  // Relations
+  product Product? @relation("productRankToProduct", fields: [productId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "productRanks_product_foreign")
+
+  // Indexes
+  @@unique([productId, rankKey], map: "productRanks_productId_rankKey_unique")
+
+  @@map("product_ranks")
 }
 
 model ProductSource {
@@ -253,6 +283,25 @@ model ProductImage {
   @@id([productId, imageId])
 
   @@map("product_images")
+}
+
+model RelatedProduct {
+  // IDs identifying the product and its relative product
+  productId Int @map("product_id")
+  relatedProductId Int @map("related_product_id")
+
+  // Type of related product. Should identify how they're related.
+  type String
+
+  createdAt DateTime  @default(now()) @map("created_at") @ignore @db.Timestamptz(6)
+  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @ignore @db.Timestamptz(6)
+
+  product Product @relation("relatedProductToProductA", fields: [productId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "relatedProducts_product_foreign")
+  relatedProduct Product @relation("relatedProductToProductB", fields: [relatedProductId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "relatedProducts_relatedProduct_foreign")
+
+  @@id([type, productId, relatedProductId])
+
+  @@map("related_products")
 }
 
 //

@@ -5,27 +5,105 @@ import {
   Product,
   productBenchmarkValue,
   productFieldRawValue,
-  ProductPerformanceScores,
+  ProductScoreCalculations,
+  ProductType,
 } from '@pcpartdb/shared';
-import { BenchmarkEstimates, BenchmarkMaxes, BenchmarkWeights } from './types';
+import { ProductCalculations } from './types';
 
-export function getBenchmarkMaxes(
-  products: Product[],
-  benchmarks: BenchmarkKey[],
-) {
-  const benchmarkMaxes: BenchmarkMaxes = {};
-  for (const product of products) {
-    for (const benchmark of benchmarks) {
-      benchmarkMaxes[benchmark] = Math.max(
-        benchmarkMaxes[benchmark] ?? 0,
-        productBenchmarkValue(product, benchmark) ?? 0,
-      );
-    }
-  }
-  return benchmarkMaxes;
+type BenchmarkEstimates = Record<number, Partial<Record<BenchmarkKey, number>>>;
+type BenchmarkMaxes = Partial<Record<BenchmarkKey, number>>;
+type BenchmarkWeights = Partial<Record<BenchmarkKey, number>>;
+
+/**
+ * List of benchmarks used to calculate the product's score.
+ * Missing benchmarks will be predicted.
+ */
+const SCORE_BENCHMARKS: Partial<Record<ProductType, BenchmarkKey[]>> = {
+  [ProductType.Cpu]: [
+    BenchmarkKey.PassMark_CpuMark_Multi_Thread,
+    BenchmarkKey.PassMark_CpuMark_Single_Thread,
+  ],
+  [ProductType.Gpu]: [
+    BenchmarkKey.PassMark_G3dMark,
+    BenchmarkKey.PassMark_G2dMark,
+  ],
+};
+
+/**
+ * Minimum number of benchmarks required to calculate the score.
+ */
+const MIN_NUM_BENCHMARKS: Partial<Record<ProductType, number>> = {
+  [ProductType.Cpu]: 2,
+  [ProductType.Gpu]: 2,
+};
+
+/**
+ * Weights for each benchmark when calculating the score. The sum of
+ * weights must add to 1 for each product type.
+ */
+const WEIGHTS: Partial<
+  Record<ProductType, Partial<Record<BenchmarkKey, number>>>
+> = {
+  [ProductType.Cpu]: {
+    [BenchmarkKey.PassMark_CpuMark_Multi_Thread]: 0.95,
+    [BenchmarkKey.PassMark_CpuMark_Single_Thread]: 0.05,
+  },
+  [ProductType.Gpu]: {
+    [BenchmarkKey.PassMark_G3dMark]: 0.95,
+    [BenchmarkKey.PassMark_G2dMark]: 0.05,
+  },
+};
+
+interface PopulateScoresOptions {
+  productType: ProductType;
+
+  calculations: Record<number, ProductCalculations>;
 }
 
-interface FilterProductsOptions {
+export function populateScores(options: PopulateScoresOptions) {
+  const { calculations, productType } = options;
+
+  const scoreBenchmarks = SCORE_BENCHMARKS[productType];
+  const minNumBenchmarks = MIN_NUM_BENCHMARKS[productType];
+  const weights = WEIGHTS[productType];
+
+  // Determine products that can have scores.
+  const allProducts = Object.values(options.calculations).map((v) => v.product);
+  const products = filterScorableProducts({
+    products: allProducts,
+    benchmarks: scoreBenchmarks,
+    minRequired: minNumBenchmarks,
+  });
+
+  // Prepare data needed to calculate scores
+  const maxes = getBenchmarkMaxes(products, scoreBenchmarks);
+  const estimates = predictMissingBenchmarks(
+    products,
+    scoreBenchmarks,
+    maxes,
+    weights,
+  );
+
+  // Calculate Scores
+  const results = calculateScores(
+    products,
+    scoreBenchmarks,
+    maxes,
+    weights,
+    estimates,
+  );
+
+  // Populate calculations
+  for (const result of results) {
+    const { productId, ...scores } = result;
+    if (calculations[productId] == null) {
+      throw new Error(`Cannot find calculations for productId=${productId}`);
+    }
+    calculations[productId].scores = scores;
+  }
+}
+
+interface FilterScorableProductsOptions {
   products: Product[];
   estimates?: BenchmarkEstimates;
 
@@ -33,7 +111,7 @@ interface FilterProductsOptions {
   minRequired?: number;
 }
 
-export function filterProducts(options: FilterProductsOptions) {
+function filterScorableProducts(options: FilterScorableProductsOptions) {
   const { products, estimates, minRequired, benchmarks } = options;
   const requiredCount = minRequired ?? benchmarks.length;
   return products.filter((product) => {
@@ -47,7 +125,20 @@ export function filterProducts(options: FilterProductsOptions) {
   });
 }
 
-export function predictMissingBenchmarks(
+function getBenchmarkMaxes(products: Product[], benchmarks: BenchmarkKey[]) {
+  const benchmarkMaxes: BenchmarkMaxes = {};
+  for (const product of products) {
+    for (const benchmark of benchmarks) {
+      benchmarkMaxes[benchmark] = Math.max(
+        benchmarkMaxes[benchmark] ?? 0,
+        productBenchmarkValue(product, benchmark) ?? 0,
+      );
+    }
+  }
+  return benchmarkMaxes;
+}
+
+function predictMissingBenchmarks(
   products: Product[],
   benchmarks: BenchmarkKey[],
   maxes: BenchmarkMaxes,
@@ -79,7 +170,7 @@ export function predictMissingBenchmarks(
   return estimates;
 }
 
-export function calculatePerformanceScores(
+function calculateScores(
   products: Product[],
   scoreBenchmarks: BenchmarkKey[],
   maxes: BenchmarkMaxes,
@@ -88,7 +179,7 @@ export function calculatePerformanceScores(
 ) {
   let maxPerformanceRating = 0;
   let maxPerformancePerMsrp = 0;
-  const filteredProducts = filterProducts({
+  const filteredProducts = filterScorableProducts({
     products,
     estimates,
     benchmarks: scoreBenchmarks,
@@ -126,7 +217,7 @@ export function calculatePerformanceScores(
     });
   }
 
-  const ret: ProductPerformanceScores[] = [];
+  const ret: (ProductScoreCalculations & { productId: number })[] = [];
   for (const result of results) {
     ret.push({
       productId: result.product.id,
@@ -152,7 +243,7 @@ function predictMissingBenchmark(
   weights: BenchmarkWeights,
 ) {
   let maxScore = 0;
-  const filteredProducts = filterProducts({
+  const filteredProducts = filterScorableProducts({
     products,
     benchmarks: existingKeys,
   });

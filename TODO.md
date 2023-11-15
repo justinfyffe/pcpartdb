@@ -16,9 +16,6 @@ When Bored:
 Summaries:
 - [] Add date it was last generated.
 
-More Benchmarks
-- [] CPU - Rename Generation to Lineup? (POST MVP)
-
 Better Performance Score
 - [] add highlights under technical specs? Next project
 - [] Add valuePerMsrp to ProductBenchmark. Next project

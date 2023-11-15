@@ -2,7 +2,9 @@ import {
   formatProductName,
   getListCpusPath,
   LIST_CPUS_PRESETS,
+  productRankValue,
   ProductType,
+  RankKey,
 } from '@pcpartdb/shared';
 import { CompareProductRatingCard } from 'packages/website/src/client/product/components/ProductRatingCard/CompareProductRatingCard';
 import { ProductRatingType } from 'packages/website/src/client/product/components/ProductRatingCard/types';
@@ -49,7 +51,10 @@ export const PerformanceAndValueCharts: FunctionComponent<
           cpu1.fields?.performanceRating,
           cpu2.fields?.performanceRating,
         ]}
-        ranks={[cpu1?.ranks?.performanceRating, cpu2?.ranks?.performanceRating]}
+        ranks={[
+          productRankValue(cpu1, RankKey.PerformanceRating),
+          productRankValue(cpu2, RankKey.PerformanceRating),
+        ]}
         rankHrefs={[performanceRankHref, performanceRankHref]}
       />
 
@@ -63,8 +68,8 @@ export const PerformanceAndValueCharts: FunctionComponent<
           cpu2.fields?.performancePerMsrp,
         ]}
         ranks={[
-          cpu1?.ranks?.performancePerMsrp,
-          cpu2?.ranks?.performancePerMsrp,
+          productRankValue(cpu1, RankKey.PerformancePerMsrp),
+          productRankValue(cpu2, RankKey.PerformancePerMsrp),
         ]}
         rankHrefs={[valueRankHref, valueRankHref]}
       />

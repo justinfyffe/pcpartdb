@@ -6,37 +6,19 @@ import {
   Post,
   Query,
   UseGuards,
-  UseInterceptors,
 } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
 import {
   AutomationActionStatus,
   CreateAutomationActionRequest,
   ListAutomationActionsRequest,
-  UploadPerformanceScoresRequest,
 } from '@pcpartdb/shared';
-import * as uuid from 'uuid';
 import { StaffGuard } from '../auth/staff.guard';
 import { Context, Ctx } from '../shared/context';
-import { MULTER_OPTIONS } from '../shared/utils';
 import { AutomationActionsService } from './automation-actions.service';
 
 @Controller('automation/actions')
 export class AutomationActionsController {
   constructor(private service: AutomationActionsService) {}
-
-  @Post('performance-scores')
-  @UseGuards(StaffGuard)
-  @UseInterceptors(FileInterceptor('file', MULTER_OPTIONS))
-  async uploadPerformanceScores(
-    @Body() body: UploadPerformanceScoresRequest,
-    @Ctx() ctx: Context,
-  ) {
-    const timer = `AutomationActionsController.uploadPerformanceScores (${uuid.v4()})`;
-    console.time(timer);
-    await this.service.uploadPerformanceScoresAction(body, ctx);
-    console.timeEnd(timer);
-  }
 
   @Get('next')
   @UseGuards(StaffGuard)

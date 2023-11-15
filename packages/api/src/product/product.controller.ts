@@ -65,7 +65,11 @@ export class ProductController {
       async () => {
         return await this.service.list(
           req,
-          { fields: ['msrp'], includeBenchmarks: true, skipCount: true },
+          {
+            fields: ['marketSegment', 'msrp'],
+            includeBenchmarks: true,
+            skipCount: true,
+          },
           ctx,
         );
       },

@@ -3,6 +3,8 @@ import {
   hasProductFieldRawValue,
   MarketSegment,
   productFieldRawValue,
+  productRankValue,
+  RankKey,
   ViewCpuContentData,
 } from '@pcpartdb/shared';
 
@@ -18,7 +20,8 @@ export function getContentTags(
   _additionalData: ViewCpuContentData,
 ) {
   return {
-    [ViewCpuContentTag.BestPerformance]: cpu.ranks?.performanceRating === 1,
+    [ViewCpuContentTag.BestPerformance]:
+      productRankValue(cpu, RankKey.PerformanceRating) === 1,
     [ViewCpuContentTag.HasBundledCooler]: hasProductFieldRawValue(
       cpu.fields?.bundledCooler,
     ),

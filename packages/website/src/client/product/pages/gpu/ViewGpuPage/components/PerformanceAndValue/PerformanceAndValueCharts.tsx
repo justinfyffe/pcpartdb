@@ -2,8 +2,11 @@ import {
   formatProductName,
   getGpuChipset,
   getListGpusPath,
+  hasProductRank,
   LIST_GPUS_PRESETS,
+  productRankValue,
   ProductType,
+  RankKey,
 } from '@pcpartdb/shared';
 import { ProductRatingType } from 'packages/website/src/client/product/components/ProductRatingCard/types';
 import { ViewProductRatingCard } from 'packages/website/src/client/product/components/ProductRatingCard/ViewProductRatingCard';
@@ -27,18 +30,18 @@ export const PerformanceAndValueCharts: FunctionComponent<
   }, [chipset]);
 
   const performanceRankHref = useMemo(() => {
-    if (chipset.ranks?.performanceRating) {
+    if (hasProductRank(chipset, RankKey.PerformanceRating)) {
       return getListGpusPath(LIST_GPUS_PRESETS['best-performance']);
     }
     return undefined;
-  }, [chipset.ranks?.performanceRating]);
+  }, [chipset]);
 
   const valueRankHref = useMemo(() => {
-    if (chipset.ranks?.performancePerMsrp) {
+    if (hasProductRank(chipset, RankKey.PerformancePerMsrp)) {
       return getListGpusPath(LIST_GPUS_PRESETS['best-value']);
     }
     return undefined;
-  }, [chipset.ranks?.performancePerMsrp]);
+  }, [chipset]);
 
   return (
     <div className={classNames('flex flex-wrap gap-8', className)}>
@@ -48,7 +51,7 @@ export const PerformanceAndValueCharts: FunctionComponent<
         name={name}
         maxRating={100}
         ratingField={chipset.fields?.performanceRating}
-        rank={chipset.ranks?.performanceRating}
+        rank={productRankValue(chipset, RankKey.PerformanceRating)}
         rankHref={performanceRankHref}
       />
 
@@ -58,7 +61,7 @@ export const PerformanceAndValueCharts: FunctionComponent<
         name={name}
         maxRating={100}
         ratingField={chipset.fields?.performancePerMsrp}
-        rank={chipset.ranks?.performancePerMsrp}
+        rank={productRankValue(chipset, RankKey.PerformancePerMsrp)}
         rankHref={valueRankHref}
       />
     </div>

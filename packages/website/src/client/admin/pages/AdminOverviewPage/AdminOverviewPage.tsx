@@ -6,7 +6,7 @@ import { MetaRobots, Seo } from '../../../shared/components/Seo/Seo';
 import { AdminLayout } from '../../../shared/layouts/admin/AdminLayout';
 import { ApiKeyWidget } from './components';
 import { CacheWidget } from './components/CacheWidget/CacheWidget';
-import { UpdatePerformanceScoresWidget } from './components/UpdatePerformanceScoresWidget/RefreshPerformanceScoresWidget';
+import { RefreshProductCalculationsWidget } from './components/RefreshProductCalculationsWidget/RefreshProductCalculationsWidget';
 
 export const AdminOverviewPage = (props: AdminOverviewViewModel) => {
   const pageTitle = 'Overview';
@@ -27,7 +27,7 @@ export const AdminOverviewPage = (props: AdminOverviewViewModel) => {
             {props.scrapingAntUsage?.totalCredits?.toLocaleString()}
           </Card>
 
-          <UpdatePerformanceScoresWidget />
+          <RefreshProductCalculationsWidget />
 
           <CacheWidget
             cacheSize={props.cacheSize}

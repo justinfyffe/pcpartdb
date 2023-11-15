@@ -33,3 +33,11 @@ export interface UploadPerformanceScoresRequest {
   originalFileName?: string;
   tempPath?: string;
 }
+
+export interface UploadProductCalculationsRequest {
+  productType: ProductType;
+
+  // Added by interceptor. Don't populate manually.
+  originalFileName?: string;
+  tempPath?: string;
+}

@@ -2,6 +2,7 @@ import { formatProductName } from '../format';
 import { CanMergeAutoUpdateStrategy, deepmerge } from '../utils';
 import { BenchmarkKey } from './benchmarks';
 import { PRODUCT_FIELD_LABELS } from './consts';
+import { RankKey } from './ranks';
 import { ProductSourceKey } from './sources';
 import { Product, ProductField, ProductFieldKey, ProductType } from './types';
 
@@ -465,6 +466,20 @@ export function setProductBenchmark(
       product.benchmarks[idx].value = value;
     }
   }
+}
+
+export function hasProductRank(product: Product, rankKey: RankKey) {
+  return productRankValue(product, rankKey) != null;
+}
+
+export function getProductRank(product: Product, rankKey: RankKey) {
+  return (
+    product?.ranks?.filter((rank) => rank.rankKey === rankKey)?.[0] || null
+  );
+}
+
+export function productRankValue(product: Product, rankKey: RankKey) {
+  return getProductRank(product, rankKey)?.rank;
 }
 
 export function hasProductSource(

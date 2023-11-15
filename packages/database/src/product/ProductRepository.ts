@@ -6,8 +6,8 @@ import {
   ListPagination,
   ListProductsFilter,
   ListSort,
+  ProductCalculationsRequest,
   ProductFieldMeta,
-  ProductPerformanceScores,
   ProductType,
   ProductUpdateStatus,
 } from '@pcpartdb/shared';
@@ -15,6 +15,8 @@ import { Prisma } from '@prisma/client';
 import { DatabaseClient } from '../DatabaseClient';
 import { RepositoryConfig } from '../RepositoryConfig';
 import { ProductEntity } from './ProductEntity';
+import { ProductRankEntity } from './ProductRankEntity';
+import { RelatedProductEntity } from './RelatedProductEntity';
 
 interface FindByIdOptions extends IncludeRelationsOptions {
   id: number;
@@ -43,9 +45,12 @@ interface ListOptions extends IncludeRelationsOptions {
 
 interface IncludeRelationsOptions {
   includeFields?: boolean;
+  includeRelatedFields?: boolean;
   includeBenchmarks?: boolean;
+  includeRanks?: boolean;
   includeImages?: boolean;
   includeSources?: boolean;
+  includeRelated?: boolean;
   includeParent?: boolean;
   includeChildren?: boolean;
 }
@@ -56,22 +61,56 @@ export class ProductRepository {
   async findById(options: FindByIdOptions, config?: RepositoryConfig) {
     const db = config?.trx ?? this.db;
 
+    const includeFields = options.includeFields ?? true;
     const includeParent = options.includeParent ?? false;
     const includeChildren = options.includeChildren ?? false;
     const includeImages = options.includeImages ?? false;
     const includeSources = options.includeSources ?? false;
     const includeBenchmarks = options.includeBenchmarks ?? false;
+    const includeRanks = options.includeRanks ?? false;
+    const includeRelated = options.includeRelated ?? false;
+    const includeRelatedFields = options.includeRelatedFields ?? false;
 
     const id = options.id;
     return await db.product.findUnique({
       where: { id },
       include: {
-        cpuFields: true,
-        gpuFields: true,
+        cpuFields: includeFields,
+        gpuFields: includeFields,
         benchmarks: includeBenchmarks,
+        ranks: includeRanks,
         sources: includeSources,
+        relatedProducts: includeRelated
+          ? {
+              include: {
+                relatedProduct: {
+                  include: {
+                    cpuFields: includeRelatedFields,
+                    gpuFields: includeRelatedFields,
+                  },
+                },
+              },
+            }
+          : false,
         parent: includeParent
-          ? { include: { cpuFields: true, gpuFields: true } }
+          ? {
+              include: {
+                cpuFields: true,
+                gpuFields: true,
+                relatedProducts: includeRelated
+                  ? {
+                      include: {
+                        relatedProduct: {
+                          include: {
+                            cpuFields: includeRelatedFields,
+                            gpuFields: includeRelatedFields,
+                          },
+                        },
+                      },
+                    }
+                  : false,
+              },
+            }
           : false,
         children: includeChildren
           ? { include: { cpuFields: true, gpuFields: true } }
@@ -85,22 +124,63 @@ export class ProductRepository {
     const db = config?.trx ?? this.db;
 
     const productType = options.productType;
+    const includeFields = options.includeFields ?? true;
     const includeParent = options.includeParent ?? false;
     const includeChildren = options.includeChildren ?? false;
     const includeImages = options.includeImages ?? false;
     const includeSources = options.includeSources ?? false;
     const includeBenchmarks = options.includeBenchmarks ?? false;
+    const includeRanks = options.includeRanks ?? false;
+    const includeRelated = options.includeRelated ?? false;
+    const includeRelatedFields = options.includeRelatedFields ?? false;
+
     const slug = options.slug;
 
     return await db.product.findUnique({
       where: { productType_slug: { productType, slug } },
       include: {
-        cpuFields: productType === ProductType.Cpu,
-        gpuFields: productType === ProductType.Gpu,
+        cpuFields: includeFields && productType === ProductType.Cpu,
+        gpuFields: includeFields && productType === ProductType.Gpu,
         benchmarks: includeBenchmarks,
+        ranks: includeRanks,
         sources: includeSources,
+        relatedProducts: includeRelated
+          ? {
+              include: {
+                relatedProduct: {
+                  include: {
+                    cpuFields:
+                      includeRelatedFields && productType === ProductType.Cpu,
+                    gpuFields:
+                      includeRelatedFields && productType === ProductType.Gpu,
+                  },
+                },
+              },
+            }
+          : false,
         parent: includeParent
-          ? { include: { cpuFields: true, gpuFields: true } }
+          ? {
+              include: {
+                cpuFields: true,
+                gpuFields: true,
+                relatedProducts: includeRelated
+                  ? {
+                      include: {
+                        relatedProduct: {
+                          include: {
+                            cpuFields:
+                              includeRelatedFields &&
+                              productType === ProductType.Cpu,
+                            gpuFields:
+                              includeRelatedFields &&
+                              productType === ProductType.Gpu,
+                          },
+                        },
+                      },
+                    }
+                  : false,
+              },
+            }
           : false,
         children: includeChildren
           ? { include: { cpuFields: true, gpuFields: true } }
@@ -142,10 +222,13 @@ export class ProductRepository {
     const productType = options.productType;
     const includeFields = options.includeFields ?? true;
     const includeBenchmarks = options.includeBenchmarks ?? false;
+    const includeRanks = options.includeRanks ?? false;
     const includeSources = options.includeBenchmarks ?? false;
     const includeParent = options.includeParent ?? false;
     const includeChildren = options.includeChildren ?? false;
     const includeImages = options.includeImages ?? false;
+    const includeRelated = options.includeRelated ?? false;
+    const includeRelatedFields = options.includeRelatedFields ?? false;
 
     return await db.product.findMany({
       where: { ...this.generateWhere(productType, options.filter) },
@@ -156,8 +239,46 @@ export class ProductRepository {
         cpuFields: includeFields && productType === ProductType.Cpu,
         gpuFields: includeFields && productType === ProductType.Gpu,
         benchmarks: includeBenchmarks,
+        ranks: includeRanks,
         sources: includeSources,
-        parent: includeParent,
+        relatedProducts: includeRelated
+          ? {
+              include: {
+                relatedProduct: {
+                  include: {
+                    cpuFields:
+                      includeRelatedFields && productType === ProductType.Cpu,
+                    gpuFields:
+                      includeRelatedFields && productType === ProductType.Gpu,
+                  },
+                },
+              },
+            }
+          : false,
+        parent: includeParent
+          ? {
+              include: {
+                cpuFields: true,
+                gpuFields: true,
+                relatedProducts: includeRelated
+                  ? {
+                      include: {
+                        relatedProduct: {
+                          include: {
+                            cpuFields:
+                              includeRelatedFields &&
+                              productType === ProductType.Cpu,
+                            gpuFields:
+                              includeRelatedFields &&
+                              productType === ProductType.Gpu,
+                          },
+                        },
+                      },
+                    }
+                  : false,
+              },
+            }
+          : false,
         children: includeChildren,
         images: includeImages ? { include: { image: true } } : false,
       },
@@ -186,8 +307,10 @@ export class ProductRepository {
       cpuFields: cpuFields,
       gpuFields: gpuFields,
       benchmarks: benchmarks,
+      ranks: _ranks,
       sources: sources,
       updates: _updates,
+      relatedProducts: _relatedProducts,
       parent: _parent,
       children: _children,
       relatedAutomationSources: _related,
@@ -230,9 +353,11 @@ export class ProductRepository {
       cpuFields: cpuFields,
       gpuFields: gpuFields,
       benchmarks: benchmarks,
+      ranks: _ranks,
       sources: sources,
       id: _id,
       updates: _updates,
+      relatedProducts: _relatedProducts,
       parent: _parent,
       children: _children,
       relatedAutomationSources: _related,
@@ -313,21 +438,24 @@ export class ProductRepository {
     });
   }
 
-  async applyPerformanceScores(
+  async applyCalculations(
     productType: ProductType,
-    scores: ProductPerformanceScores[],
+    calculations: ProductCalculationsRequest[],
     config?: RepositoryConfig,
   ) {
-    await this.resetPerformanceScores(productType, config);
-    await this.setPerformanceScores(productType, scores, config);
+    await this.resetCalculations(productType, config);
+    await this.setScoreCalculations(productType, calculations, config);
+    await this.setRankCalculations(calculations, config);
+    await this.setRelatedProductCalculations(calculations, config);
   }
 
-  private async resetPerformanceScores(
+  private async resetCalculations(
     productType: ProductType,
     config?: RepositoryConfig,
   ) {
     const db = config?.trx ?? this.db;
 
+    // Clear out fields
     const tableName: string = this.getFieldsTable(productType);
     await db.$executeRaw(Prisma.sql`
       UPDATE ${Prisma.raw(tableName)}
@@ -337,11 +465,17 @@ export class ProductRepository {
         performance_per_msrp_value = null,
         performance_per_msrp_meta = null
     `);
+
+    // Clear out ranks
+    await db.productRank.deleteMany({ where: { product: { productType } } });
+
+    // Clear out related products
+    await db.relatedProduct.deleteMany({ where: { product: { productType } } });
   }
 
-  private async setPerformanceScores(
+  private async setScoreCalculations(
     productType: ProductType,
-    scores: ProductPerformanceScores[],
+    calculations: ProductCalculationsRequest[],
     config?: RepositoryConfig,
   ) {
     const db = config?.trx ?? this.db;
@@ -351,24 +485,29 @@ export class ProductRepository {
     const performanceRatingMetas: Partial<ProductFieldMeta>[] = [];
     const performancePerMsrpValues: number[] = [];
     const performancePerMsrpMetas: Partial<ProductFieldMeta>[] = [];
-    scores.forEach((value) => {
-      productIds.push(value.productId);
-      performanceRatingValues.push(value.performanceRating || null);
-      performancePerMsrpValues.push(value.performancePerMsrp || null);
+    calculations.forEach((calculation) => {
+      if (calculation.scores == null) {
+        return;
+      }
+      const { productId, scores } = calculation;
+
+      productIds.push(productId);
+      performanceRatingValues.push(scores.performanceRating || null);
+      performancePerMsrpValues.push(scores.performancePerMsrp || null);
       performanceRatingMetas.push(
-        value.performanceRating != null
+        scores.performanceRating != null
           ? {
               fieldKey: 'performanceRating',
-              formattedValue: `${value.performanceRating.toFixed(2)}`,
+              formattedValue: `${scores.performanceRating.toFixed(2)}`,
               autoUpdate: true,
             }
           : null,
       );
       performancePerMsrpMetas.push(
-        value.performancePerMsrp != null
+        scores.performancePerMsrp != null
           ? {
               fieldKey: 'performancePerMsrp',
-              formattedValue: `${value.performancePerMsrp.toFixed(2)}`,
+              formattedValue: `${scores.performancePerMsrp.toFixed(2)}`,
               autoUpdate: true,
             }
           : null,
@@ -404,6 +543,59 @@ export class ProductRepository {
       ) AS d
       WHERE f.product_id = d.product_id
     `);
+  }
+
+  private async setRankCalculations(
+    calculations: ProductCalculationsRequest[],
+    config?: RepositoryConfig,
+  ) {
+    const db = config?.trx ?? this.db;
+    const dataToInsert: ProductRankEntity[] = [];
+
+    const filtered = calculations.filter((c) => c.ranks != null);
+    for (const calculation of filtered) {
+      const entries = Object.entries(calculation.ranks).map(([key, rank]) => ({
+        id: undefined,
+        productId: calculation.productId,
+        rankKey: key,
+        rank,
+        metadata: null,
+      }));
+
+      dataToInsert.push(...entries);
+    }
+    await db.productRank.createMany({
+      data: dataToInsert,
+      skipDuplicates: true,
+    });
+  }
+
+  private async setRelatedProductCalculations(
+    calculations: ProductCalculationsRequest[],
+    config?: RepositoryConfig,
+  ) {
+    const db = config?.trx ?? this.db;
+    const dataToInsert: RelatedProductEntity[] = [];
+
+    const filtered = calculations.filter((c) => c.related != null);
+    for (const calculation of filtered) {
+      const groupedEntries = Object.entries(calculation.related).map(
+        ([type, relatedProductIds]) =>
+          relatedProductIds.map((relatedProductId) => ({
+            productId: calculation.productId,
+            relatedProductId,
+            type,
+          })),
+      );
+
+      for (const entries of groupedEntries) {
+        dataToInsert.push(...entries);
+      }
+    }
+    await db.relatedProduct.createMany({
+      data: dataToInsert,
+      skipDuplicates: true,
+    });
   }
 
   private generateWhere(

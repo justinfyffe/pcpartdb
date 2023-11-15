@@ -9,6 +9,8 @@ import { AutomationActionsService } from './automation-actions.service';
 import { AutomationSourceController } from './automation-source.controller';
 import { AutomationSourceRepository } from './automation-source.repository';
 import { AutomationSourceService } from './automation-source.service';
+import { AutomationTasksController } from './automation-tasks.controller';
+import { AutomationTasksService } from './automation-tasks.service';
 
 @Module({
   imports: [DatabaseModule, ProductModule],
@@ -16,12 +18,14 @@ import { AutomationSourceService } from './automation-source.service';
     AutomationController,
     AutomationActionsController,
     AutomationSourceController,
+    AutomationTasksController,
   ],
   providers: [
     AutomationSourceRepository,
     AutomationSourceService,
     AutomationService,
     AutomationActionsService,
+    AutomationTasksService,
     AutomationRepository,
   ],
   exports: [
@@ -29,6 +33,7 @@ import { AutomationSourceService } from './automation-source.service';
     AutomationSourceService,
     AutomationService,
     AutomationActionsService,
+    AutomationTasksService,
     AutomationRepository,
   ],
 })

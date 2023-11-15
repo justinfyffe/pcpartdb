@@ -7,7 +7,7 @@ const ValueIntroSentence1 = compileContentComponent({
   deps: [],
   component: (props) => (
     <>
-      Compare {props.shortGpuName}&apos;s value with similar{' '}
+      Compare {props.chipsetShortName}&apos;s value with similar{' '}
       {props.marketSegment} GPUs. Relative value provides insight into which GPU
       gives the best bang for your buck. This data is based on chipset
       performance and MSRP.

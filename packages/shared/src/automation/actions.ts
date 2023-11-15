@@ -50,9 +50,9 @@ export enum AutomationActionType {
   UpdateGpu = 'UPDATE_GPU',
 
   /**
-   * Recalculates and saves performance-related ratings.
+   * Recalculates and saves computed data for products.
    */
-  UpdatePerformanceScores = 'UPDATE_PERFORMANCE_SCORES',
+  UpdateProductCalculations = 'UPDATE_PRODUCT_CALCULATIONS',
 }
 
 export enum AutomationActionStatus {

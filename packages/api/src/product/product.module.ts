@@ -5,8 +5,6 @@ import { ProductRepository } from './product.repository';
 import { ProductService } from './product.service';
 import { ProductAutocompleteRepository } from './product-autocomplete.repository';
 import { ProductAutocompleteService } from './product-autocomplete.service';
-import { ProductRanksRepository } from './product-ranks.repository';
-import { ProductRanksService } from './product-ranks.service';
 import { ProductUpdateController } from './product-update.controller';
 import { ProductUpdateRepository } from './product-update.repository';
 import { ProductUpdateService } from './product-update.service';
@@ -17,8 +15,6 @@ import { ProductUpdateService } from './product-update.service';
   providers: [
     ProductAutocompleteRepository,
     ProductAutocompleteService,
-    ProductRanksRepository,
-    ProductRanksService,
     ProductUpdateRepository,
     ProductUpdateService,
     ProductRepository,
@@ -27,8 +23,6 @@ import { ProductUpdateService } from './product-update.service';
   exports: [
     ProductAutocompleteRepository,
     ProductAutocompleteService,
-    ProductRanksRepository,
-    ProductRanksService,
     ProductUpdateRepository,
     ProductUpdateService,
     ProductRepository,

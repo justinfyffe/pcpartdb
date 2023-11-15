@@ -12,6 +12,8 @@ import {
   productFieldFormattedValue,
   productFieldRawValue,
   ProductionStatus,
+  productRankValue,
+  RankKey,
   ViewGpuAdditionalData,
 } from '@pcpartdb/shared';
 import { ContentParams } from 'packages/website/src/client/shared/content/types';
@@ -234,8 +236,8 @@ function getPerformanceParams(
     chipset.fields?.performanceRating,
   );
   const performanceRank =
-    gpu.ranks?.performanceRating > 1
-      ? formatOrdinalNumber(gpu.ranks?.performanceRating)
+    productRankValue(gpu, RankKey.PerformanceRating) > 1
+      ? formatOrdinalNumber(productRankValue(gpu, RankKey.PerformanceRating))
       : '';
   const bestPerformanceSegmentGpuName = formatProductName(
     bestPerformanceSegmentGpu,
@@ -245,10 +247,19 @@ function getPerformanceParams(
     { company: false },
   );
   const performanceRankForArchitectureSegment =
-    gpu.ranks?.performanceRatingForArchitectureAndMarketSegment != null
-      ? gpu.ranks.performanceRatingForArchitectureAndMarketSegment > 1
+    productRankValue(
+      gpu,
+      RankKey.PerformanceRatingForArchitectureMarketSegment,
+    ) != null
+      ? productRankValue(
+          gpu,
+          RankKey.PerformanceRatingForArchitectureMarketSegment,
+        ) > 1
         ? formatOrdinalNumber(
-            gpu.ranks.performanceRatingForArchitectureAndMarketSegment,
+            productRankValue(
+              gpu,
+              RankKey.PerformanceRatingForArchitectureMarketSegment,
+            ),
           )
         : ''
       : null;
@@ -257,9 +268,11 @@ function getPerformanceParams(
       ? getViewGpuPath(bestPerformanceSegmentGpu)
       : null;
   const performanceRankForSegment =
-    gpu.ranks?.performanceRatingForMarketSegment != null
-      ? gpu.ranks.performanceRatingForMarketSegment > 1
-        ? formatOrdinalNumber(gpu.ranks.performanceRatingForMarketSegment)
+    productRankValue(gpu, RankKey.PerformanceRatingForMarketSegment) != null
+      ? productRankValue(gpu, RankKey.PerformanceRatingForMarketSegment) > 1
+        ? formatOrdinalNumber(
+            productRankValue(gpu, RankKey.PerformanceRatingForMarketSegment),
+          )
         : ''
       : null;
   const totalPerformanceGpus = String(additionalData.totalPerformanceGpus);
@@ -285,12 +298,14 @@ function getValueParams(gpu: GpuProduct) {
     ? productFieldFormattedValue(chipset.fields?.performancePerMsrp)
     : null;
   const valueRank =
-    gpu.ranks?.performancePerMsrp > 1
-      ? formatOrdinalNumber(gpu.ranks?.performancePerMsrp)
+    productRankValue(gpu, RankKey.PerformancePerMsrp) > 1
+      ? formatOrdinalNumber(productRankValue(gpu, RankKey.PerformancePerMsrp))
       : '';
   const valueRankForSegment =
-    gpu.ranks?.performancePerMsrpForMarketSegment > 1
-      ? formatOrdinalNumber(gpu.ranks?.performancePerMsrpForMarketSegment)
+    productRankValue(gpu, RankKey.PerformancePerMsrpForMarketSegment) > 1
+      ? formatOrdinalNumber(
+          productRankValue(gpu, RankKey.PerformancePerMsrpForMarketSegment),
+        )
       : '';
 
   return {

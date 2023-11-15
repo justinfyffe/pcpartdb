@@ -16,11 +16,10 @@ import {
   listProductsRequestSchema,
   ListProductsResponse,
   Product,
+  ProductCalculationsRequest,
   ProductComparison,
   ProductDiff,
   ProductFieldKey,
-  ProductPerformanceScores,
-  ProductRankKey,
   ProductSource,
   ProductType,
   ProductUpdate,
@@ -36,25 +35,28 @@ import { badRequestError, notFoundError } from '../shared/error';
 import { validate } from '../shared/validation/validate';
 import { ProductRepository } from './product.repository';
 import { ProductAutocompleteService } from './product-autocomplete.service';
-import { ProductRanksService } from './product-ranks.service';
 import { ProductUpdateService } from './product-update.service';
 
 interface ListOptions {
   fields?: ProductFieldKey[];
+  relatedFields?: ProductFieldKey[];
 
   includeAdditionalData?: boolean;
   includeSources?: boolean;
   includeAutomation?: boolean;
   includeImages?: boolean;
   includeBenchmarks?: boolean;
-  includeRanks?: ProductRankKey[];
+  includeRanks?: boolean;
+  includeRelated?: boolean;
 
   skipCount?: boolean;
 }
 
 interface GetOptions {
+  fields?: ProductFieldKey[];
   parentFields?: ProductFieldKey[];
   childrenFields?: ProductFieldKey[];
+  relatedFields?: ProductFieldKey[];
 
   includeParent?: boolean;
   includeChildren?: boolean;
@@ -63,7 +65,8 @@ interface GetOptions {
   includeSources?: boolean;
   includeImages?: boolean;
   includeBenchmarks?: boolean;
-  includeRanks?: ProductRankKey[];
+  includeRanks?: boolean;
+  includeRelated?: boolean;
 }
 
 interface GetByIdOptions extends GetOptions {
@@ -97,16 +100,15 @@ interface CountChildrenOptions {
   productIds: number[];
 }
 
-interface ApplyProductPerformanceScoresOption {
+interface ApplyProductCalculationsOptions {
   productType: ProductType;
-  scores: ProductPerformanceScores[];
+  calculations: ProductCalculationsRequest[];
 }
 
 @Injectable()
 export class ProductService {
   constructor(
     private repository: ProductRepository,
-    private rankService: ProductRanksService,
     private autocompleteService: ProductAutocompleteService,
     @Inject(forwardRef(() => ProductUpdateService))
     private updateService: ProductUpdateService,
@@ -134,14 +136,20 @@ export class ProductService {
     }
 
     const includeBenchmarks = options?.includeBenchmarks ?? false;
+    const includeRanks = options?.includeRanks ?? false;
     const includeImages = options?.includeImages ?? false;
+    const includeRelated = options?.includeRelated ?? false;
     const includeSources =
       (options?.includeSources ?? false) && (ctx.user?.isStaff ?? false);
     const includeAutomation =
       (options.includeAutomation ?? false) && (ctx.user?.isStaff ?? false);
 
     const fields = options.fields != null ? new Set(options.fields) : null;
+    const relatedFields =
+      options.relatedFields != null ? new Set(options.relatedFields) : null;
     const includeFields = fields == null || fields.size > 0;
+    const includeRelatedFields =
+      relatedFields == null || relatedFields.size > 0;
 
     const skipCount = options.skipCount ?? false;
 
@@ -152,7 +160,10 @@ export class ProductService {
         ...options,
         productType,
         includeFields,
+        includeRelatedFields,
         includeBenchmarks,
+        includeRanks,
+        includeRelated,
         includeImages,
         includeSources,
       },
@@ -166,14 +177,13 @@ export class ProductService {
 
     const products: Product[] = await mapToProductDtos(productEntities, {
       fields,
+      relatedFields,
       includeBenchmarks,
       includeSources,
       includeAutomation,
+      includeRanks,
+      includeRelated,
     });
-
-    if (options.includeRanks) {
-      await this.rankService.populateRanks(options.includeRanks, products, ctx);
-    }
 
     const response: ListProductsResponse = {
       query,
@@ -195,6 +205,7 @@ export class ProductService {
     const includeParent = options.includeParent ?? false;
     const includeChildren = options.includeChildren ?? false;
     const includeImages = options.includeImages ?? false;
+    const includeRanks = options.includeRanks ?? false;
     const includeSources =
       (options.includeSources ?? false) && (ctx.user?.isStaff ?? false);
     const includeUpdates =
@@ -202,44 +213,52 @@ export class ProductService {
     const includeAutomation =
       (options.includeAutomation ?? false) && (ctx.user?.isStaff ?? false);
     const includeBenchmarks = options.includeBenchmarks ?? false;
+    const includeRelated = options?.includeRelated ?? false;
 
+    const fields = options.fields != null ? new Set(options.fields) : null;
     const parentFields =
       options.parentFields != null ? new Set(options.parentFields) : null;
     const childrenFields =
       options.childrenFields != null ? new Set(options.childrenFields) : null;
+    const relatedFields =
+      options.relatedFields != null ? new Set(options.relatedFields) : null;
+
+    const includeFields = fields == null || fields.size > 0;
+    const includeRelatedFields =
+      relatedFields == null || relatedFields.size > 0;
 
     const entity = await this.repository.findById(
       {
         id,
+        includeFields,
         includeParent,
         includeChildren,
         includeImages,
         includeSources,
         includeBenchmarks,
+        includeRanks,
+        includeRelated,
+        includeRelatedFields,
       },
       ctx,
     );
     const product = await mapToProductDto(entity, {
+      fields,
       parentFields,
       childrenFields,
+      relatedFields,
       includeBenchmarks,
+      includeRanks,
       includeParent,
       includeChildren,
       includeSources,
       includeAutomation,
       includeUpdates,
+      includeRelated,
     });
 
     if (product == null) {
       throw notFoundError({ product: id });
-    }
-
-    if (options.includeRanks) {
-      await this.rankService.populateRanks(
-        options.includeRanks,
-        [product, product.parent],
-        ctx,
-      );
     }
 
     return product;
@@ -259,45 +278,54 @@ export class ProductService {
     const includeAutomation =
       (options.includeAutomation ?? false) && (ctx.user?.isStaff ?? false);
     const includeBenchmarks = options.includeBenchmarks ?? false;
+    const includeRanks = options.includeRanks ?? false;
+    const includeRelated = options?.includeRelated ?? false;
 
+    const fields = options.fields != null ? new Set(options.fields) : null;
     const parentFields =
       options.parentFields != null ? new Set(options.parentFields) : null;
     const childrenFields =
       options.childrenFields != null ? new Set(options.childrenFields) : null;
+    const relatedFields =
+      options.relatedFields != null ? new Set(options.relatedFields) : null;
+
+    const includeFields = fields == null || fields.size > 0;
+    const includeRelatedFields =
+      relatedFields == null || relatedFields.size > 0;
 
     const entity = await this.repository.findBySlug(
       {
         productType,
         slug,
+        includeFields,
         includeParent,
         includeChildren,
         includeImages,
         includeSources,
         includeBenchmarks,
+        includeRanks,
+        includeRelated,
+        includeRelatedFields,
       },
       ctx,
     );
     const product = await mapToProductDto(entity, {
+      fields,
       parentFields,
       childrenFields,
+      relatedFields,
       includeBenchmarks,
+      includeRanks,
       includeParent,
       includeChildren,
       includeSources,
       includeAutomation,
       includeUpdates,
+      includeRelated,
     });
 
     if (product == null) {
       throw notFoundError({ product: slug });
-    }
-
-    if (options.includeRanks) {
-      await this.rankService.populateRanks(
-        options.includeRanks,
-        [product, product.parent],
-        ctx,
-      );
     }
 
     return product;
@@ -506,21 +534,17 @@ export class ProductService {
     return await this.repository.countChildren(options, ctx);
   }
 
-  async applyPerformanceScores(
-    options: ApplyProductPerformanceScoresOption,
+  async applyCalculations(
+    options: ApplyProductCalculationsOptions,
     ctx: Context,
   ) {
-    const { productType, scores: scoresList } = options;
+    const { productType, calculations } = options;
 
     await this.db.transaction(
       async () => {
-        await this.repository.applyPerformanceScores(
-          productType,
-          scoresList,
-          ctx,
-        );
+        await this.repository.applyCalculations(productType, calculations, ctx);
       },
-      { ctx, timeout: 120_000 },
+      { ctx, timeout: 180_000 },
     );
   }
 
