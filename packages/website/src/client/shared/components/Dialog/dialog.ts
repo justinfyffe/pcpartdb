@@ -1,5 +1,5 @@
 import React from 'react';
-import * as ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 
 interface DialogOptions {
   disableClose?: boolean;
@@ -18,7 +18,8 @@ export const showDialog = (
 
   document.body.classList.add(BODY_DIALOG_OPEN_CLASS);
   document.body.appendChild(dialogElement);
-  ReactDOM.render(content, contentElement);
+  const root = createRoot(contentElement);
+  root.render(content);
 
   if (options?.disableClose !== true) {
     contentElement.addEventListener('click', (e) => {
