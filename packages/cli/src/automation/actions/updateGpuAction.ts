@@ -81,11 +81,11 @@ async function getGpu(gpuId: number, context: AutomationContext) {
     { retries: 2 },
     {
       params: {
-        req: {
+        req: JSON.stringify({
           includeBenchmarks: true,
           includeImages: true,
           includeSources: true,
-        } as GetProductRequest,
+        } as GetProductRequest),
       },
     },
   );

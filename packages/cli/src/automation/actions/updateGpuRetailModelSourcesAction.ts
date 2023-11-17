@@ -53,7 +53,7 @@ async function getChipset(chipsetId: number, context: AutomationContext) {
     { retries: 2 },
     {
       params: {
-        req: { includeSources: true } as GetProductRequest,
+        req: JSON.stringify({ includeSources: true } as GetProductRequest),
       },
     },
   );

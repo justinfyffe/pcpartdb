@@ -7,11 +7,18 @@ Disallow: /
 User-agent: MJ12bot
 Disallow: /
 
+User-agent: PetalBot
+Disallow: /
+
+User-agent: dotbot
+Disallow: /
+
 User-agent: *
 Disallow: /admin/
 Disallow: /forgot-password
 Disallow: /login
 Disallow: /register
 Disallow: /reset-password
+Crawl-delay: 30
 
 Sitemap: https://pcpartdb.com/sitemap-index.xml.gz
