@@ -13,6 +13,7 @@ import {
   formatAutomationSourceName,
   formatProductName,
   generateGpuSlug,
+  getViewGpuPath,
   GpuAutomationSourceGroup,
   Product,
   ProductSourceKey,
@@ -319,6 +320,15 @@ export const GpuChipsetSourceCard = (props: GpuChipsetSourceCardProps) => {
               >
                 Apply
               </GenericButton>
+              {appliedGpu != null && (
+                <GenericButton
+                  disabled={appliedGpu == null}
+                  href={getViewGpuPath({ product: appliedGpu })}
+                  target="_blank"
+                >
+                  View
+                </GenericButton>
+              )}
             </div>
 
             <div className="ml-auto flex gap-4">

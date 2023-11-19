@@ -14,6 +14,7 @@ import {
   formatAutomationSourceName,
   formatProductName,
   generateCpuSlug,
+  getViewCpuPath,
   Product,
   ProductSourceKey,
   ProductType,
@@ -315,6 +316,15 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
               >
                 Apply
               </GenericButton>
+              {appliedCpu != null && (
+                <GenericButton
+                  disabled={appliedCpu == null}
+                  href={getViewCpuPath({ product: appliedCpu })}
+                  target="_blank"
+                >
+                  View
+                </GenericButton>
+              )}
             </div>
 
             <div className="ml-auto flex gap-4">

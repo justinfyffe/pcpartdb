@@ -94,6 +94,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         href={url}
         className={classNames(
           'relative font-medium no-underline text-center cursor-pointer inline-block px-4 py-2 rounded shadow',
+          url != null ? 'flex items-center justify-center' : '',
           BUTTON_VARIANTS[variant ?? ButtonVariant.None],
           props.disabled || disabledAfterClick
             ? 'bg-disabled border-disabled text-disabled cursor-default'
