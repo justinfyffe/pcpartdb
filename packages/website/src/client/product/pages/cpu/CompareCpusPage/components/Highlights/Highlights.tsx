@@ -15,7 +15,7 @@ import {
 } from '@pcpartdb/shared';
 import { ProductHighlightComparison } from 'packages/website/src/client/product/components/ProductHighlightComparison/ProductHighlightComparison';
 import { AffiliateDisclaimer } from 'packages/website/src/client/shared/components/AffiliateDisclaimer/AffiliateDisclaimer';
-import { WarningButton } from 'packages/website/src/client/shared/components/Button/WarningButton';
+import { AmazonButton } from 'packages/website/src/client/shared/components/Button/AmazonButton';
 import { classNames } from 'packages/website/src/client/shared/ui/classNames';
 import React, { FunctionComponent, useContext, useMemo } from 'react';
 import { ComparePageContext } from '../../context/ComparePageContext';
@@ -243,13 +243,13 @@ export const Highlights: FunctionComponent<HighlightsProps> = (props) => {
               </div>
 
               <div className="flex-1 md:text-base text-content text-right whitespace-nowrap ml-auto">
-                <WarningButton
+                <AmazonButton
                   href={cpuAffiliateUrl1}
                   target="_blank"
                   rel="noopener nofollow"
                 >
                   Check Price on Amazon
-                </WarningButton>
+                </AmazonButton>
               </div>
             </div>
             {!cpuAffiliateUrl2 && <AffiliateDisclaimer />}
@@ -270,13 +270,13 @@ export const Highlights: FunctionComponent<HighlightsProps> = (props) => {
               </div>
 
               <div className="flex-1 md:text-base text-content text-right whitespace-nowrap ml-auto">
-                <WarningButton
+                <AmazonButton
                   href={cpuAffiliateUrl2}
                   target="_blank"
                   rel="noopener nofollow"
                 >
                   Check Price on Amazon
-                </WarningButton>
+                </AmazonButton>
               </div>
             </div>
             <AffiliateDisclaimer />

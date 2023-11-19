@@ -13,7 +13,7 @@ import {
 } from '@pcpartdb/shared';
 import { ProductHighlight } from 'packages/website/src/client/product/components/ProductHighlight/ProductHighlight';
 import { AffiliateDisclaimer } from 'packages/website/src/client/shared/components/AffiliateDisclaimer/AffiliateDisclaimer';
-import { WarningButton } from 'packages/website/src/client/shared/components/Button/WarningButton';
+import { AmazonButton } from 'packages/website/src/client/shared/components/Button/AmazonButton';
 import { classNames } from 'packages/website/src/client/shared/ui/classNames';
 import React, { FunctionComponent, useContext, useMemo } from 'react';
 import { ViewPageContext } from '../../context/ViewPageContext';
@@ -124,13 +124,13 @@ export const Highlights: FunctionComponent<HighlightsProps> = (props) => {
             icon={<ShoppingCartIcon />}
             label="Shop"
             value={
-              <WarningButton
+              <AmazonButton
                 href={cpuAffiliateUrl}
                 target="_blank"
                 rel="noopener nofollow"
               >
                 Check Price on Amazon
-              </WarningButton>
+              </AmazonButton>
             }
           />
           {cpuAffiliateUrl && <AffiliateDisclaimer />}

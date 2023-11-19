@@ -1,7 +1,7 @@
 import { ShoppingCartIcon } from '@heroicons/react/24/outline';
 import { formatProductName, getGpuAffiliateUrl } from '@pcpartdb/shared';
 import { AffiliateDisclaimer } from 'packages/website/src/client/shared/components/AffiliateDisclaimer/AffiliateDisclaimer';
-import { WarningButton } from 'packages/website/src/client/shared/components/Button/WarningButton';
+import { AmazonButton } from 'packages/website/src/client/shared/components/Button/AmazonButton';
 import React, { FunctionComponent, useContext, useMemo } from 'react';
 import { ComparePageContext } from '../../context/ComparePageContext';
 
@@ -47,13 +47,13 @@ export const ShopHighlightListItem: FunctionComponent<
             </div>
 
             <div className="flex-1 md:text-base text-content text-right whitespace-nowrap ml-auto">
-              <WarningButton
+              <AmazonButton
                 href={gpuAffiliateUrl1}
                 target="_blank"
                 rel="noopener nofollow"
               >
                 Check Price on Amazon
-              </WarningButton>
+              </AmazonButton>
             </div>
           </div>
           {!gpuAffiliateUrl2 && <AffiliateDisclaimer />}
@@ -74,13 +74,13 @@ export const ShopHighlightListItem: FunctionComponent<
             </div>
 
             <div className="flex-1 md:text-base text-content text-right whitespace-nowrap ml-auto">
-              <WarningButton
+              <AmazonButton
                 href={gpuAffiliateUrl2}
                 target="_blank"
                 rel="noopener nofollow"
               >
                 Check Price on Amazon
-              </WarningButton>
+              </AmazonButton>
             </div>
           </div>
           <AffiliateDisclaimer />
