@@ -4,19 +4,22 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "npm run shared build && npm run database build && npm run scraper build && npm run cli build && npm run api build && npm run website build",
+    "build": "npm run clean && npm run shared build && npm run database build && npm run scraper build && npm run cli build && npm run api build && npm run website build",
+    "watch": "npm run shared watch & npm run database watch & npm run scraper watch & npm run cli watch",
     "clean": "npm run api clean && npm run cli clean && npm run database clean && npm run scraper clean && npm run shared clean && npm run website clean",
     "deploy": "./bin/deploy",
+    "dev": "npm run watch & npm run api dev & npm run website dev",
+    "start": "npm run api start & npm run website start",
+    "start-dev": "npm run api start & npm run website start-dev",
     "api": "npm --workspace=@pcpartdb/api run",
     "cli": "npm --workspace=@pcpartdb/cli run",
     "database": "npm --workspace=@pcpartdb/database run",
     "scraper": "npm --workspace=@pcpartdb/scraper run",
     "shared": "npm --workspace=@pcpartdb/shared run",
     "website": "npm --workspace=@pcpartdb/website run",
+    "prod": "npm run start",
     "prod:api": "npm run api start",
-    "prod:website": "npm run website start",
-    "prod:gpu-updater": "npm run cli gpu-updater:schedule",
-    "prod:sitemap-updater": "npm run cli sitemap-updater:schedule"
+    "prod:website": "npm run website start"
   },
   "repository": {
     "type": "git",

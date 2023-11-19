@@ -13,10 +13,6 @@ When Bored:
 - Make autocomplete stricter, not looser when searching?
 - Improve db performance using queryRaw, but only in places where it'll help
 
-CPU Load Ideas:
-- 2 CPU Server
-- Convert to single nest server (like big bark club)
-
 Summaries:
 - [] Add date it was last generated.
 

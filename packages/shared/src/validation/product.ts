@@ -191,7 +191,9 @@ export const productSchema = Joi.object({
   sources: Joi.array().items(productSourceSchema).allow(null),
   images: Joi.array().items(productImageSchema).allow(null),
 
-  // Ignored
+  // TODO
+  ranks: Joi.any().allow(null),
+  relatedProducts: Joi.any().allow(null),
   relatedAutomationSources: Joi.any().allow(null),
   parent: Joi.any().allow(null),
   children: Joi.any().allow(null),

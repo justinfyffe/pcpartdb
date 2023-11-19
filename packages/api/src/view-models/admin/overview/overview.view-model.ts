@@ -15,8 +15,8 @@ export class AdminOverviewViewModelService {
   async viewModel(ctx: Context) {
     const apiKey = await this.apiKeyService.findForCurrentUser(ctx);
 
-    const cacheSize = this.cacheService.totalSize();
-    const cacheItems = this.cacheService.totalItems();
+    // const cacheSize = this.cacheService.totalSize();
+    const cacheItems = await this.cacheService.totalItems();
 
     let scrapingAntUsage: ScrapingAntUsage;
     try {
@@ -27,7 +27,6 @@ export class AdminOverviewViewModelService {
 
     return {
       apiKey,
-      cacheSize,
       cacheItems,
       scrapingAntUsage,
     } as AdminOverviewViewModel;

@@ -1,4 +1,4 @@
-import { createProxyMiddleware } from 'http-proxy-middleware'; // @2.0.6
+import { createProxyMiddleware } from 'http-proxy-middleware';
 
 export const config = {
   api: {

@@ -6,7 +6,6 @@ import Script from 'next/script';
 import React from 'react';
 import { ErrorPage } from '../client/errors/pages/ErrorPage/ErrorPage';
 import { apiClient } from '../client/shared/api/apiClient';
-import { CacheHydration } from '../client/shared/cache/CacheHydration';
 import { LayoutContext } from '../client/shared/layouts/layout-context';
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
@@ -40,7 +39,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
         </>
       )}
 
-      <CacheHydration />
+      {/* <CacheHydration /> */}
       {error != null ? (
         <ErrorPage error={error} />
       ) : (

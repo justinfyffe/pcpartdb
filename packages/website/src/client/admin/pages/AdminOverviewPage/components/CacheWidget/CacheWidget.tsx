@@ -10,20 +10,15 @@ import { websiteService } from 'packages/website/src/client/website/websiteServi
 import React, { useCallback, useState } from 'react';
 
 export interface CacheWidgetProps {
-  cacheSize: number;
   cacheItems: number;
 }
 
 export const CacheWidget = (props: CacheWidgetProps) => {
-  const [cacheSize, setCacheSize] = useState(
-    () => props.cacheSize / 1_000 / 1_000,
-  );
   const [cacheItems, setCacheItems] = useState(() => props.cacheItems);
 
   const handleClearCache = useCallback(() => {
     const confirm = async () => {
       const response = await websiteService.clearCache();
-      setCacheSize(response.cacheSize / 1_000 / 1_000);
       setCacheItems(response.cacheItems);
     };
 
@@ -40,10 +35,6 @@ export const CacheWidget = (props: CacheWidgetProps) => {
     <Card className="flex-1">
       <CardTitle>Cache</CardTitle>
       <CardContent>
-        <div className="text-lg">
-          Size:{' '}
-          {cacheSize.toLocaleString(undefined, { maximumFractionDigits: 2 })} MB
-        </div>
         <div className="text-lg">
           Items: {cacheItems.toLocaleString(undefined)}
         </div>

@@ -4,5 +4,6 @@ cd $DIRECTORY/../../
 
 pm2 stop all
 
-NODE_ENV=production pm2 start npm --node-args="--max_old_space_size=768" --name "pcpartdb-api" -- run "prod:api"
-NODE_ENV=production pm2 start npm --node-args="--max_old_space_size=768" --name "pcpartdb-website" -- run "prod:website"
+# NODE_ENV=production pm2 start npm --node-args="--max_old_space_size=1536" --name "pcpartdb" -- run "prod"
+NODE_ENV=production pm2 start npm --node-args="--max_old_space_size=1024" --name "pcpartdb-api" -- run "prod:api"
+NODE_ENV=production pm2 start npm --node-args="--max_old_space_size=512" --name "pcpartdb-website" -- run "prod:website"

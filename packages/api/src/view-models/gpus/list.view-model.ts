@@ -6,6 +6,7 @@ import {
   ListGpusQuery,
   ListGpusRequest,
   listProductsRequestSchema,
+  ListSort,
   ProductType,
 } from '@pcpartdb/shared';
 import * as uuid from 'uuid';
@@ -31,6 +32,9 @@ export class ListGpusViewModelService {
         pagination: {
           offset: DEFAULT_LIST_GPUS_OFFSET,
           limit: DEFAULT_LIST_GPUS_LIMIT,
+        },
+        orderBy: {
+          sort: ListSort.Name,
         },
       } as ListGpusQuery,
       query,

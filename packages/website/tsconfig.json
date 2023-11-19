@@ -13,8 +13,6 @@
     "./next-env.d.ts"
   ],
   "references": [
-    {
-      "path": "../shared"
-    }
+    { "path": "../shared" }
   ]
 }

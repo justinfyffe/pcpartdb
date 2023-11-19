@@ -29,10 +29,7 @@ export const AdminOverviewPage = (props: AdminOverviewViewModel) => {
 
           <RefreshProductCalculationsWidget />
 
-          <CacheWidget
-            cacheSize={props.cacheSize}
-            cacheItems={props.cacheItems}
-          />
+          <CacheWidget cacheItems={props.cacheItems} />
 
           <ApiKeyWidget apiKey={props.apiKey} />
         </div>

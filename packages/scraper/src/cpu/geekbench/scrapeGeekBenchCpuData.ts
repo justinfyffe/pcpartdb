@@ -140,7 +140,7 @@ const FIELDS: Partial<Record<CpuFieldKey, ProductFieldScraper>> = {
     label: 'tdp',
     regexes: [/(?<value>[.\d]+) (?<unit>W)/i],
     unitMapper: {
-      watt: WattageUnit.w,
+      w: WattageUnit.w,
     },
     parseValue: ({ value, unit }) =>
       getBaseUnitValue(value, unit, { decimals: 2 }),

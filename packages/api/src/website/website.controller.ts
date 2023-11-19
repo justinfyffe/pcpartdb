@@ -52,8 +52,7 @@ export class WebsiteController {
   async clearCache() {
     await this.cacheService.invalidateAll();
     return {
-      cacheSize: this.cacheService.totalSize(),
-      cacheItems: this.cacheService.totalItems(),
+      cacheItems: await this.cacheService.totalItems(),
     };
   }
 }

@@ -19,6 +19,6 @@ Disallow: /forgot-password
 Disallow: /login
 Disallow: /register
 Disallow: /reset-password
-Crawl-delay: 30
+Crawl-delay: 15
 
 Sitemap: https://pcpartdb.com/sitemap-index.xml.gz

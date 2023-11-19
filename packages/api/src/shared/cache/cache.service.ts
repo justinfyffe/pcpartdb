@@ -1,10 +1,8 @@
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Inject, Injectable } from '@nestjs/common';
-import { Mutex } from 'async-mutex';
 import { Cache } from 'cache-manager';
 import * as crypto from 'crypto';
 import deterministicStringify from 'json-stringify-deterministic';
-import { FileHashStore } from './file-hash-store';
 
 export enum CacheType {
   Home = 'home',
@@ -37,18 +35,10 @@ interface CacheOptions<TKey = unknown> {
 
 @Injectable()
 export class CacheService {
-  private mutex = new Mutex();
-
   constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache) {}
 
-  totalSize() {
-    const store = this.cacheManager.store as FileHashStore;
-    return store.getTotalSize();
-  }
-
-  totalItems() {
-    const store = this.cacheManager.store as FileHashStore;
-    return store.getTotalItems();
+  async totalItems() {
+    return (await this.cacheManager.store.keys()).length;
   }
 
   async cache<TResult = unknown>(
@@ -60,20 +50,13 @@ export class CacheService {
       return await fn();
     }
 
-    return await this.mutex.runExclusive(async () => {
-      const store = this.cacheManager.store as FileHashStore;
-      await store.clearExcessAndExpired();
-
-      const ttl = options.ttl ?? CACHE_EXPIRE_TTLS[options.type];
-      const key = this.cacheKey(options.type, options.key);
-      return await this.cacheManager.wrap(key, () => fn(), ttl);
-    });
+    const ttl = options.ttl ?? CACHE_EXPIRE_TTLS[options.type];
+    const key = this.cacheKey(options.type, options.key);
+    return await this.cacheManager.wrap(key, () => fn(), ttl);
   }
 
   async invalidateAll() {
-    await this.mutex.runExclusive(async () => {
-      await this.cacheManager.reset();
-    });
+    await this.cacheManager.reset();
   }
 
   private cacheKey<TKey = unknown>(type: CacheType, key: TKey) {
