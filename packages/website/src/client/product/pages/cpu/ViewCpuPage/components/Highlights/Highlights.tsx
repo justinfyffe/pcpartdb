@@ -132,6 +132,7 @@ export const Highlights: FunctionComponent<HighlightsProps> = (props) => {
                 Check Price on Amazon
               </AmazonButton>
             }
+            className="flex-none"
           />
           {cpuAffiliateUrl && <AffiliateDisclaimer />}
         </div>

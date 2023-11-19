@@ -16,12 +16,9 @@ export const ProductHighlight = (props: ProductHighlightProps) => {
     <div
       className={classNames(
         'bg-light-shades flex flex-wrap px-4 py-2 rounded shadow items-center',
-        className,
       )}
     >
-      <div
-        className={classNames('flex-auto flex gap-2 items-center', className)}
-      >
+      <div className={classNames('flex-auto flex gap-2 items-center')}>
         {icon && (
           <div className="mr-1">{cloneElement(icon, { className: 'w-5' })}</div>
         )}

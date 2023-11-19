@@ -46,7 +46,7 @@ export const ShopHighlightListItem: FunctionComponent<
               </div>
             </div>
 
-            <div className="flex-1 md:text-base text-content text-right whitespace-nowrap ml-auto">
+            <div className="flex-none md:text-base text-content text-right whitespace-nowrap ml-auto">
               <AmazonButton
                 href={gpuAffiliateUrl1}
                 target="_blank"
@@ -73,7 +73,7 @@ export const ShopHighlightListItem: FunctionComponent<
               </div>
             </div>
 
-            <div className="flex-1 md:text-base text-content text-right whitespace-nowrap ml-auto">
+            <div className="flex-none md:text-base text-content text-right whitespace-nowrap ml-auto">
               <AmazonButton
                 href={gpuAffiliateUrl2}
                 target="_blank"

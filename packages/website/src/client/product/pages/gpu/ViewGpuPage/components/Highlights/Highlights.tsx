@@ -130,6 +130,7 @@ export const Highlights: FunctionComponent<HighlightsProps> = (props) => {
                 Check Price on Amazon
               </AmazonButton>
             }
+            className="flex-none"
           />
           {gpuAffiliateUrl && <AffiliateDisclaimer />}
         </div>

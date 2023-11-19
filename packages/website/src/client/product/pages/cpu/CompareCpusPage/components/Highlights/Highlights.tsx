@@ -242,7 +242,7 @@ export const Highlights: FunctionComponent<HighlightsProps> = (props) => {
                 </div>
               </div>
 
-              <div className="flex-1 md:text-base text-content text-right whitespace-nowrap ml-auto">
+              <div className="flex-none md:text-base text-content text-right whitespace-nowrap ml-auto">
                 <AmazonButton
                   href={cpuAffiliateUrl1}
                   target="_blank"
@@ -269,7 +269,7 @@ export const Highlights: FunctionComponent<HighlightsProps> = (props) => {
                 </div>
               </div>
 
-              <div className="flex-1 md:text-base text-content text-right whitespace-nowrap ml-auto">
+              <div className="flex-none md:text-base text-content text-right whitespace-nowrap ml-auto">
                 <AmazonButton
                   href={cpuAffiliateUrl2}
                   target="_blank"
