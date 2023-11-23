@@ -1,6 +1,8 @@
 import { User } from '../user';
 
 export interface Config {
+  enableGtm?: boolean;
+  gtmId?: string;
   disableAds?: boolean;
   bingAdsSiteId?: string;
   bingAdsPublisherId?: string;

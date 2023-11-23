@@ -21,6 +21,8 @@ export class ContextMiddleware implements NestMiddleware {
     const { user, token } = await this.getUser(req);
 
     const config: Config = {
+      enableGtm: process.env.ENABLE_GTM === 'true',
+      gtmId: process.env.GTM_ID,
       bingAdsSiteId:
         process.env.ENABLE_ADS === 'true'
           ? process.env.BING_ADS_SITE_ID
