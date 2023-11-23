@@ -5,6 +5,7 @@ export * from './config';
 export * from './error';
 export * from './format';
 export * from './image';
+export * from './legal';
 export * from './product';
 export * from './routes';
 export * from './scraper';

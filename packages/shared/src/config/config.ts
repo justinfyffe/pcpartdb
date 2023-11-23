@@ -10,4 +10,7 @@ export interface Config {
   googleAnalyticsId?: string;
   isStaff?: boolean;
   user?: User;
+  requireCookieConsent?: boolean;
+  cookieConsent?: boolean;
+  userCountry?: string;
 }

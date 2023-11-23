@@ -1,11 +1,11 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { mapToUserDto } from '@pcpartdb/database';
-import { Config, sleep, User } from '@pcpartdb/shared';
+import { Config, User } from '@pcpartdb/shared';
 import { NextFunction } from 'express';
 import { AccessTokenRepository } from '../../auth/access-token.repository';
 import { ApiKeyRepository } from '../../auth/api-key.repository';
 import { CookieService } from '../cookie/cookie.service';
-import { SESSION_COOKIE } from '../cookie/cookies';
+import { COOKIE_CONSENT_COOKIE, SESSION_COOKIE } from '../cookie/cookies';
 import { hashToken } from '../crypto/utils';
 import { ApiRequest, ApiResponse } from '../http/types';
 
@@ -35,6 +35,9 @@ export class ContextMiddleware implements NestMiddleware {
       googleAnalyticsId: process.env.GOOGLE_ANALYTICS_ID,
       isStaff: user?.isStaff ?? false,
       user,
+      requireCookieConsent: this.getRequireCookieConsent(req),
+      cookieConsent: this.getCookieConsent(req),
+      userCountry: this.getUserCountry(req),
     };
 
     if (user?.isStaff || process.env.ENABLE_ADS !== 'true') {
@@ -50,6 +53,60 @@ export class ContextMiddleware implements NestMiddleware {
     };
 
     next();
+  }
+
+  private getCookieConsent(request: ApiRequest) {
+    const consent = this.cookies.get(request, COOKIE_CONSENT_COOKIE);
+    if (consent == null) {
+      return undefined;
+    }
+
+    return consent === '1';
+  }
+
+  private getRequireCookieConsent(request: ApiRequest) {
+    const country = this.getUserCountry(request);
+    if (country == null) {
+      return true;
+    }
+
+    return [
+      'at', // Austria
+      'be', // Belgium
+      'bg', // Bulgaria
+      'cy', // Cyprus
+      'dk', // Denmark
+      'ee', // Estonia
+      'fi', // Finland
+      'fr', // France
+      'hu', // Hungary
+      'ie', // Ireland
+      'it', // Italy
+      'lv', // Latvia
+      'lt', // Lithuania
+      'lu', // Luxembourg
+      'mt', // Malta
+      'nl', // Netherlands
+      'pl', // Poland
+      'pt', // Portugal
+      'sk', // Slovakia
+      'si', // Slovenia
+      'es', // Spain
+      'se', // Sweden
+      'gb', // United Kingdom
+    ].includes(country);
+  }
+
+  private getUserCountry(request: ApiRequest) {
+    const headers = request.headers;
+    const countryHeader = headers['cf-ipcountry'];
+    if (countryHeader == null) {
+      return undefined;
+    }
+
+    return Array.isArray(countryHeader)
+      ? countryHeader.join(',').toLowerCase()
+      : countryHeader.toLowerCase();
   }
 
   private async getUser(request: ApiRequest) {

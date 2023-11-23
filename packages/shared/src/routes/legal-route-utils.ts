@@ -5,3 +5,7 @@ export function getAboutPath() {
 export function getPrivacyPath() {
   return '/privacy/';
 }
+
+export function getCookiePolicyPath() {
+  return '/cookies/';
+}

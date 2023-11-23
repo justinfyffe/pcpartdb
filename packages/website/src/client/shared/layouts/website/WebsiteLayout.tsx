@@ -1,6 +1,7 @@
 import {
   Config,
   getAboutPath,
+  getCookiePolicyPath,
   getHomePath,
   getListCpusPath,
   getListGpusPath,
@@ -9,6 +10,7 @@ import {
 } from '@pcpartdb/shared';
 import React, { FunctionComponent } from 'react';
 import { Button, ButtonVariant } from '../../components/Button/Button';
+import { CookieConsent } from '../../components/CookieConsent/CookieConsent';
 import {
   Footer,
   FooterSection,
@@ -27,13 +29,14 @@ interface EditThisPage {
 interface WebsiteLayoutProps {
   config?: Config;
   editThisPage?: EditThisPage[];
+  disableCookieConsent?: boolean;
 
   className?: string;
   children?: React.ReactNode;
 }
 
 export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
-  const { config, editThisPage } = props;
+  const { config, editThisPage, disableCookieConsent } = props;
 
   return (
     <>
@@ -89,6 +92,14 @@ export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
                 Privacy
               </a>
             </ListItem>
+            <ListItem>
+              <a
+                href={getCookiePolicyPath()}
+                className="text-light-shades underline"
+              >
+                Cookie Policy
+              </a>
+            </ListItem>
           </List>
         </FooterSection>
 
@@ -137,6 +148,8 @@ export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
           </FooterSection>
         )}
       </Footer>
+
+      {disableCookieConsent !== true && <CookieConsent />}
     </>
   );
 };

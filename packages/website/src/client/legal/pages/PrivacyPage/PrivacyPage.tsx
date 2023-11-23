@@ -164,7 +164,7 @@ export const PrivacyPage = (_props: PrivacyPageProps) => {
             We may update this policy as needed to comply with relevant
             regulations and reflect any new practices. Whenever we make a
             significant change to our policies, we will refresh the date at the
-            top of this page and take any other appropriate steps to notify
+            bottom of this page and take any other appropriate steps to notify
             users.
           </p>
 
@@ -175,6 +175,8 @@ export const PrivacyPage = (_props: PrivacyPageProps) => {
             <a href="mailto:hello@pcpartdb.com">hello@pcpartdb.com</a> and
             we&apos;ll be happy to try to answer them!
           </p>
+
+          <p className="italic">Last modified: November 23, 2023</p>
         </section>
       </article>
     </WebsiteLayout>
