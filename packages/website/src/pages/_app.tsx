@@ -17,13 +17,53 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
       <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
+      {/* Bing Ads */}
+      {!config?.disableAds && (
+        <>
+          <Script
+            key="ms-ads1"
+            dangerouslySetInnerHTML={{
+              __html: `
+                window.msAdsQueue = window.msAdsQueue || [];
+              `,
+            }}
+          />
+          <Script
+            key="ms-ads2"
+            async
+            src={`https://adsdk.microsoft.com/pubcenter/sdk.js?siteId=${config.bingAdsSiteId}&publisherId=${config.bingAdsPublisherId}`}
+            crossOrigin="anonymous"
+          ></Script>
+        </>
+      )}
+      {/* Microsoft Clarity */}
+      {config?.isStaff !== true && config?.enableClarity && (
+        <>
+          <Script
+            key="ms-clarity1"
+            type="text/javascript"
+            dangerouslySetInnerHTML={{
+              __html: `
+            (function(c,l,a,r,i,t,y){
+              c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+              t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+              y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+            })(window, document, "clarity", "script", "${config?.clarityId}");
+          `,
+            }}
+          />
+        </>
+      )}
+      {/* Analytics */}
       {config?.isStaff !== true && config?.enableGoogleAnalytics && (
         <>
           <Script
+            key="analytics1"
             strategy="afterInteractive"
             src={`https://www.googletagmanager.com/gtag/js?id=${config.googleAnalyticsId}`}
           />
           <Script
+            key="analytics2"
             id="google-analytics"
             strategy="afterInteractive"
             dangerouslySetInnerHTML={{

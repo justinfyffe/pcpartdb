@@ -21,11 +21,25 @@ export class ContextMiddleware implements NestMiddleware {
     const { user, token } = await this.getUser(req);
 
     const config: Config = {
+      bingAdsSiteId:
+        process.env.ENABLE_ADS === 'true'
+          ? process.env.BING_ADS_SITE_ID
+          : undefined,
+      bingAdsPublisherId:
+        process.env.ENABLE_ADS === 'true'
+          ? process.env.BING_ADS_PUBLISHER_ID
+          : undefined,
+      enableClarity: process.env.ENABLE_CLARITY === 'true',
+      clarityId: process.env.CLARITY_ID,
       enableGoogleAnalytics: process.env.ENABLE_GOOGLE_ANALYTICS === 'true',
       googleAnalyticsId: process.env.GOOGLE_ANALYTICS_ID,
       isStaff: user?.isStaff ?? false,
       user,
     };
+
+    if (user?.isStaff || process.env.ENABLE_ADS !== 'true') {
+      config.disableAds = true;
+    }
 
     req.context = {
       req,

@@ -109,6 +109,12 @@ export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
             Associates Program, an affiliate advertising program. We earn from
             qualifying purchases.
           </p>
+
+          <p>
+            We improve our products and advertising by using Microsoft Clarity
+            to see how you use our website. By using our site, you agree that we
+            and Microsoft can collect and use this data.
+          </p>
         </FooterSection>
 
         <FooterSection className={classNames('flex-none text-center w-full')}>
