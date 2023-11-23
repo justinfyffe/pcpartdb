@@ -22,6 +22,7 @@ const FIELDS_TO_PREVIEW: GpuFieldKey[] = [
   'memorySize',
   'memoryType',
   'memoryClock',
+  'memoryClockEffective',
   'memoryInterface',
   'memoryBandwidth',
 

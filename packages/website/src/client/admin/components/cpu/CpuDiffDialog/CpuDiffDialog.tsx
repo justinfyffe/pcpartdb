@@ -25,6 +25,7 @@ export const CpuDiffDialog: FunctionComponent<CpuDiffDialogProps> = (props) => {
         'foundry',
         'processSize',
         'transistors',
+        'dieSize',
         'tCaseMax',
         'tjMax',
 
@@ -38,6 +39,7 @@ export const CpuDiffDialog: FunctionComponent<CpuDiffDialogProps> = (props) => {
         'memoryChannels',
         'eccMemory',
 
+        'smp',
         'cores',
         'threads',
         'pCores',

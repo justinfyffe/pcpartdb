@@ -18,7 +18,7 @@ import { WebsiteModule } from './website/website.module';
   imports: [
     NestCacheModule.register({
       isGlobal: true,
-      max: 1_000,
+      max: process.env.CACHE_SIZE ? Number(process.env.CACHE_SIZE) : 1_000,
     }),
     CacheModule,
     AuthModule,

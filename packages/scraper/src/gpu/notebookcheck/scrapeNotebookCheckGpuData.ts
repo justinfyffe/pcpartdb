@@ -5,6 +5,7 @@ import {
   ClockSpeedUnit,
   FlopsUnit,
   formatCompanyName,
+  formatMarketSegment,
   formatProductField,
   FormatProductFieldOptions,
   getBaseUnitValue,
@@ -12,6 +13,7 @@ import {
   GpuFields,
   GpuProduct,
   LengthUnit,
+  MarketSegment,
   MeasurementUnit,
   MemorySizeUnit,
   NumericUnit,
@@ -43,7 +45,11 @@ export async function scrapeNotebookCheckGpuData(
   const response = await scraper.scrapeGet(url, { retries: 1, noProxy });
   const $ = cheerio.load(response.data);
 
-  const fields = scrapeFields($, ctx);
+  const fields = {
+    ...scrapeFields($, ctx),
+    marketSegment: getMarketSegment($, ctx),
+  };
+
   const benchmarks = scrapeBenchmarks($);
 
   const { company, name } = scrapeNameAndCompany($);
@@ -66,6 +72,64 @@ function scrapeNameAndCompany($: cheerio.CheerioAPI) {
     company: formatCompanyName(company),
     name: name.trim(),
   };
+}
+
+const DESKTOP_HINTS = ['desktop', 'desktops', 'nettop', 'nettops'];
+const MOBILE_HINTS = [
+  'laptop',
+  'laptops',
+  'macbook',
+  'netbook',
+  'netbooks',
+  'notebook',
+  'notebooks',
+  'subnotebook',
+  'subnotebooks',
+  'ultrabook',
+  'ultrabooks',
+];
+const WORKSTATION_HINTS = ['workstation', 'workstations'];
+function getMarketSegment($: cheerio.CheerioAPI, ctx?: ScraperContext) {
+  const segmentCounts: Record<string, number> = {
+    [MarketSegment.Desktop]: 0,
+    [MarketSegment.Mobile]: 0,
+    [MarketSegment.Workstation]: 0,
+  };
+  $('#content p').each((_i, p) => {
+    const text = $(p).text()?.trim()?.toLowerCase() ?? '';
+    const textArr = text
+      .split(' ')
+      .map((value) => value.replace(/[^a-zA-Z0-9_-]/gi, ''))
+      .filter((value) => value.length > 0);
+
+    segmentCounts[MarketSegment.Desktop] = textArr.filter((value) =>
+      DESKTOP_HINTS.includes(value),
+    ).length;
+    segmentCounts[MarketSegment.Mobile] += textArr.filter((value) =>
+      MOBILE_HINTS.includes(value),
+    ).length;
+    segmentCounts[MarketSegment.Workstation] += textArr.filter((value) =>
+      WORKSTATION_HINTS.includes(value),
+    ).length;
+  });
+
+  const ordered = Object.keys(segmentCounts).sort(
+    (a, b) => segmentCounts[b] - segmentCounts[a],
+  );
+
+  const marketSegment = ordered[0] as MarketSegment;
+  if (segmentCounts[marketSegment] === 0) {
+    return undefined;
+  }
+
+  const formatted = formatMarketSegment(marketSegment);
+
+  return createGpuField({
+    field: 'marketSegment',
+    raw: marketSegment,
+    formatted,
+    ctx,
+  });
 }
 
 interface ProductFieldScraper {

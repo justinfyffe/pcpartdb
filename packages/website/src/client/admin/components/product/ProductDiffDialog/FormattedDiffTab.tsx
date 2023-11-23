@@ -1,5 +1,6 @@
 import {
   BenchmarkKey,
+  formatAutomationSourceName,
   formatCompanyName,
   ProductDiff,
   ProductFieldKey,
@@ -33,6 +34,7 @@ export const FormattedDiffTab: FunctionComponent<FormattedDiffTabProps> = (
   const hasNameChange = diff.original?.name !== diff.updated?.name;
   const hasSlugChange = diff.original?.slug !== diff.updated?.slug;
   const hasCompanyChange = diff.original?.company !== diff.updated?.company;
+  const sources = diff.updated?.sources;
 
   return (
     <div className="bg-white flex flex-col overflow-auto">
@@ -179,6 +181,22 @@ export const FormattedDiffTab: FunctionComponent<FormattedDiffTabProps> = (
               diffBenchmarkKey={benchmarkKey}
               diff={diff}
             />
+          ))}
+
+          {sources.map((source) => (
+            <Tr key={source.sourceKey}>
+              <Td>{formatAutomationSourceName(source.sourceKey)}</Td>
+              <Td colSpan={2} />
+              <Td colSpan={2}>
+                <a
+                  href={source.sourceUrl}
+                  target="_blank"
+                  rel="noreferrer nofollow"
+                >
+                  Open in new tab
+                </a>
+              </Td>
+            </Tr>
           ))}
         </TBody>
       </Table>
