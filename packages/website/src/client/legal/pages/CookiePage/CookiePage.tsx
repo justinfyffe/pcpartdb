@@ -8,7 +8,6 @@ import { PrimaryButton } from '../../../shared/components/Button/PrimaryButton';
 import { Seo } from '../../../shared/components/Seo/Seo';
 import { useConfig } from '../../../shared/config/config-context';
 import { WebsiteLayout } from '../../../shared/layouts/website/WebsiteLayout';
-import { legalService } from '../../services/legalService';
 
 interface CookiePageProps {}
 
@@ -28,12 +27,12 @@ export const CookiePage = (_props: CookiePageProps) => {
   const [consent, setConsent] = useState<boolean>(config.cookieConsent);
 
   const handleReject = useCallback(async () => {
-    await legalService.updateCookieConsent({ consent: false });
+    // await legalService.updateCookieConsent({ consent: false });
     setConsent(false);
   }, []);
 
   const handleAccept = useCallback(async () => {
-    await legalService.updateCookieConsent({ consent: true });
+    // await legalService.updateCookieConsent({ consent: true });
     setConsent(true);
   }, []);
 

@@ -22,12 +22,23 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
             <>
               <script>
                 {`
-              (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-              new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-              j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-              'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-              })(window,document,'script','dataLayer','${config.gtmId}');
-            `}
+                  window.dataLayer = window.dataLayer || [];
+                  window.dataLayer.push({
+                    'isStaffUser': ${config.isStaff ?? false}
+                  })
+                  window.dataLayer.push({
+                    'env': '${config.env ?? 'dev'}'
+                  })
+                `}
+              </script>
+              <script>
+                {`
+                  (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+                  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+                  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+                  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+                  })(window,document,'script','dataLayer','${config.gtmId}');
+                `}
               </script>
             </>
           )}
@@ -44,67 +55,6 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
                 className="hidden invisible"
               ></iframe>
             </noscript>
-          </>
-        )}
-        {/* Bing Ads */}
-        {!config?.disableAds && (
-          <>
-            <Script
-              key="ms-ads1"
-              dangerouslySetInnerHTML={{
-                __html: `
-                window.msAdsQueue = window.msAdsQueue || [];
-              `,
-              }}
-            />
-            <Script
-              key="ms-ads2"
-              async
-              src={`https://adsdk.microsoft.com/pubcenter/sdk.js?siteId=${config.bingAdsSiteId}&publisherId=${config.bingAdsPublisherId}`}
-              crossOrigin="anonymous"
-            ></Script>
-          </>
-        )}
-        {/* Microsoft Clarity */}
-        {config?.isStaff !== true && config?.enableClarity && (
-          <>
-            <Script
-              key="ms-clarity1"
-              type="text/javascript"
-              dangerouslySetInnerHTML={{
-                __html: `
-            (function(c,l,a,r,i,t,y){
-              c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-              t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-              y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-            })(window, document, "clarity", "script", "${config?.clarityId}");
-          `,
-              }}
-            />
-          </>
-        )}
-        {/* Analytics */}
-        {config?.isStaff !== true && config?.enableGoogleAnalytics && (
-          <>
-            <Script
-              key="analytics1"
-              strategy="afterInteractive"
-              src={`https://www.googletagmanager.com/gtag/js?id=${config.googleAnalyticsId}`}
-            />
-            <Script
-              key="analytics2"
-              id="google-analytics"
-              strategy="afterInteractive"
-              dangerouslySetInnerHTML={{
-                __html: `
-                  window.dataLayer = window.dataLayer || [];
-                  function gtag(){dataLayer.push(arguments);}
-                  gtag('js', new Date());
-
-                  gtag('config', '${config.googleAnalyticsId}');
-                `,
-              }}
-            />
           </>
         )}
 

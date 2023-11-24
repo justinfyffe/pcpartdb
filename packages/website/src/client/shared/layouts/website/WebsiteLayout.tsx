@@ -92,14 +92,6 @@ export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
                 Privacy
               </a>
             </ListItem>
-            <ListItem>
-              <a
-                href={getCookiePolicyPath()}
-                className="text-light-shades underline"
-              >
-                Cookie Policy
-              </a>
-            </ListItem>
           </List>
         </FooterSection>
 
@@ -149,7 +141,9 @@ export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
         )}
       </Footer>
 
-      {disableCookieConsent !== true && <CookieConsent />}
+      <div className="container" id="choice-footer-msg"></div>
+
+      {/* {disableCookieConsent !== true && <CookieConsent />} */}
     </>
   );
 };

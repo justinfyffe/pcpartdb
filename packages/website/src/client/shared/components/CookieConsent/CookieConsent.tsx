@@ -1,6 +1,5 @@
 import { getCookiePolicyPath } from '@pcpartdb/shared';
 import React, { FunctionComponent, useCallback, useState } from 'react';
-import { legalService } from '../../../legal/services/legalService';
 import { useConfig } from '../../config/config-context';
 import { GenericButton } from '../Button/GenericButton';
 import { PrimaryButton } from '../Button/PrimaryButton';
@@ -15,12 +14,12 @@ export const CookieConsent: FunctionComponent<CookieConsentProps> = (props) => {
   );
 
   const handleReject = useCallback(async () => {
-    await legalService.updateCookieConsent({ consent: false });
+    // await legalService.updateCookieConsent({ consent: false });
     setVisible(false);
   }, []);
 
   const handleAccept = useCallback(async () => {
-    await legalService.updateCookieConsent({ consent: true });
+    // await legalService.updateCookieConsent({ consent: true });
     setVisible(false);
   }, []);
 
