@@ -10,6 +10,7 @@ At least 2 vCPUs and 2GB RAM
 - Digital Ocean - hosting
 - ScrapingAnt - Web Scraper
 - Cloudflare - DDoS Protection
+- InMobi (Consent Management Platform)
 
 # Production Info
 - Create swap file (4gb)

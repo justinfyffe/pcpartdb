@@ -1,16 +1,19 @@
 import {
   Config,
   getAboutPath,
-  getCookiePolicyPath,
   getHomePath,
   getListCpusPath,
   getListGpusPath,
   getPrivacyPath,
   WEBSITE_NAME,
 } from '@pcpartdb/shared';
-import React, { FunctionComponent } from 'react';
+import React, {
+  FunctionComponent,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import { Button, ButtonVariant } from '../../components/Button/Button';
-import { CookieConsent } from '../../components/CookieConsent/CookieConsent';
 import {
   Footer,
   FooterSection,
@@ -19,6 +22,8 @@ import {
 import { Img } from '../../components/Img/Img';
 import { List, ListItem } from '../../components/List/List';
 import { Toolbar } from '../../components/Toolbar/Toolbar';
+import { CookieConsentScript } from '../../scripts/CookieConsentScript';
+import { GoogleTagManagerScript } from '../../scripts/GoogleTagManagerScript';
 import { classNames } from '../../ui/classNames';
 
 interface EditThisPage {
@@ -29,17 +34,32 @@ interface EditThisPage {
 interface WebsiteLayoutProps {
   config?: Config;
   editThisPage?: EditThisPage[];
-  disableCookieConsent?: boolean;
 
   className?: string;
   children?: React.ReactNode;
+
+  disableConsent?: boolean;
 }
 
 export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
-  const { config, editThisPage, disableCookieConsent } = props;
+  const { config, editThisPage, disableConsent } = props;
+
+  const [showManageCookies, setShowManageCookies] = useState(false);
+  useEffect(() => {
+    (window as any)?.__tcfapi?.('ping', 2, (res: any) => {
+      setShowManageCookies(res?.gdprApplies ?? false);
+    });
+  });
+
+  const handleManageCookies = useCallback(async () => {
+    (window as any).__tcfapi('displayConsentUi', 2, function () {});
+  }, []);
 
   return (
     <>
+      {disableConsent !== false && <CookieConsentScript />}
+      {disableConsent !== false && <GoogleTagManagerScript />}
+
       <div className="container bg-content p-container md:px-4 flex font-bold items-center text-5xl md:text-3xl text-dark-shades">
         <Img
           src="/images/logo.svg"
@@ -89,9 +109,20 @@ export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
                 href={getPrivacyPath()}
                 className="text-light-shades underline"
               >
-                Privacy
+                Privacy Policy
               </a>
             </ListItem>
+
+            {showManageCookies && (
+              <ListItem>
+                <a
+                  onClick={handleManageCookies}
+                  className="text-light-shades underline cursor-pointer"
+                >
+                  Manage Cookies
+                </a>
+              </ListItem>
+            )}
           </List>
         </FooterSection>
 
@@ -140,10 +171,6 @@ export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
           </FooterSection>
         )}
       </Footer>
-
-      <div className="container" id="choice-footer-msg"></div>
-
-      {/* {disableCookieConsent !== true && <CookieConsent />} */}
     </>
   );
 };
