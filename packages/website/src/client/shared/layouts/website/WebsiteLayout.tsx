@@ -7,12 +7,7 @@ import {
   getPrivacyPath,
   WEBSITE_NAME,
 } from '@pcpartdb/shared';
-import React, {
-  FunctionComponent,
-  useCallback,
-  useEffect,
-  useState,
-} from 'react';
+import React, { FunctionComponent, useCallback } from 'react';
 import { Button, ButtonVariant } from '../../components/Button/Button';
 import {
   Footer,
@@ -44,21 +39,14 @@ interface WebsiteLayoutProps {
 export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
   const { config, editThisPage, disableConsent } = props;
 
-  const [showManageCookies, setShowManageCookies] = useState(false);
-  useEffect(() => {
-    (window as any)?.__tcfapi?.('ping', 2, (res: any) => {
-      setShowManageCookies(res?.gdprApplies ?? false);
-    });
-  });
-
   const handleManageCookies = useCallback(async () => {
     (window as any).__tcfapi('displayConsentUi', 2, function () {});
   }, []);
 
   return (
     <>
-      {disableConsent !== false && <CookieConsentScript />}
-      {disableConsent !== false && <GoogleTagManagerScript />}
+      {disableConsent !== true && <CookieConsentScript />}
+      {disableConsent !== true && <GoogleTagManagerScript />}
 
       <div className="container bg-content p-container md:px-4 flex font-bold items-center text-5xl md:text-3xl text-dark-shades">
         <Img
@@ -113,7 +101,7 @@ export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
               </a>
             </ListItem>
 
-            {showManageCookies && (
+            {disableConsent !== true && (
               <ListItem>
                 <a
                   onClick={handleManageCookies}
