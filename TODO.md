@@ -13,16 +13,15 @@ When Bored:
 - Make autocomplete stricter, not looser when searching?
 - Improve db performance using queryRaw, but only in places where it'll help
 
-Cookie Consent:
-- [X] Don't show manage cookies when gdpr does not apply (privacy)
-  - don't load script?
-- [X] don't show gdpr pop-up on privacy policy
-- [] Update Privacy Policy
-  - use bard
-- [X] Remove cookie policy
-  - [X] use footer link, only when gdpr applies
-
 Summaries:
+- [] Common Product Input component
+- [] Generate AI Prompt
+  - Common component
+- [] CPU Form
+- [] GPU Form
+- [] View Page
+- [] Compare Page
+  - [] One-way canonical
 - [] Add date it was last generated.
 
 Better Performance Score
