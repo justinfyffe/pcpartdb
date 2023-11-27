@@ -17,6 +17,7 @@ const cpuFormSchema = Joi.object({
   otherNames: Joi.array().items(Joi.string()).allow(null),
   searchText: Joi.string().allow(null),
   affiliateUrl: Joi.string().allow(null),
+  summary: Joi.string().allow(null),
 
   // General Info
   partNumber: productFieldSchema.allow(null),

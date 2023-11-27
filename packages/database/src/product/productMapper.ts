@@ -44,6 +44,7 @@ interface MapToDtoOptions {
   includeSources?: boolean;
   includeUpdates?: boolean;
   includeImages?: boolean;
+  includeSummary?: boolean;
 }
 
 export async function mapToProductDto(
@@ -63,6 +64,7 @@ export async function mapToProductDto(
   const includeUpdates = options?.includeUpdates ?? false;
   const includeAutomation = options?.includeAutomation ?? false;
   const includeRelated = options?.includeRelated ?? false;
+  const includeSummary = options?.includeSummary ?? false;
 
   let fields: ProductFields;
   switch (entity.productType) {
@@ -122,6 +124,7 @@ export async function mapToProductDto(
     company: entity.company,
     searchText: entity.searchText,
     affiliateUrl: entity.affiliateUrl,
+    summary: includeSummary ? entity.summary : undefined,
 
     metadata: entity.metadata,
 
@@ -193,6 +196,7 @@ export function mapToProductEntity(dto: Product) {
     company: dto.company,
     searchText: dto.searchText,
     affiliateUrl: dto.affiliateUrl,
+    summary: dto.summary,
 
     metadata: dto.metadata,
 

@@ -255,6 +255,7 @@ export class ProductService {
       includeAutomation,
       includeUpdates,
       includeRelated,
+      includeSummary: true,
     });
 
     if (product == null) {
@@ -322,6 +323,7 @@ export class ProductService {
       includeAutomation,
       includeUpdates,
       includeRelated,
+      includeSummary: true,
     });
 
     if (product == null) {

@@ -181,6 +181,7 @@ export const productSchema = Joi.object({
   company: Joi.string().allow(null),
   searchText: Joi.string().allow('').required(),
   affiliateUrl: Joi.string().allow('', null),
+  summary: Joi.string().allow('', null),
 
   metadata: Joi.any().allow(null),
 

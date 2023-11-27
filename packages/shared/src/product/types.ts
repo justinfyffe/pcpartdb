@@ -37,6 +37,7 @@ export interface Product {
   company?: string;
   searchText: string;
   affiliateUrl?: string;
+  summary?: string;
 
   metadata?: ProductMeta;
 

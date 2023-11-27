@@ -27,7 +27,7 @@ export const GoogleTagManagerScript: FunctionComponent<
               'env': '${config.env ?? 'dev'}'
             });
             window.dataLayer.push({
-              'disableAds': '${config.disableAds}'
+              'disableAds': ${config.disableAds ?? false}
             });
           `,
         }}

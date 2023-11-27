@@ -166,6 +166,7 @@ const gpuFormSchema = Joi.object({
   otherNames: Joi.array().items(Joi.string()).allow(null),
   searchText: Joi.string().allow(null),
   affiliateUrl: Joi.string().allow(null),
+  summary: Joi.string().allow(null),
 
   // Sources
   sources: Joi.array().items(productSourceSchema),
