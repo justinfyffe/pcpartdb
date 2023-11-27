@@ -22,10 +22,13 @@ export const GoogleTagManagerScript: FunctionComponent<
             window.dataLayer = window.dataLayer || [];
             window.dataLayer.push({
               'isStaffUser': ${config.isStaff ?? false}
-            })
+            });
             window.dataLayer.push({
               'env': '${config.env ?? 'dev'}'
-            })
+            });
+            window.dataLayer.push({
+              'disableAds': '${config.disableAds}'
+            });
           `,
         }}
       />

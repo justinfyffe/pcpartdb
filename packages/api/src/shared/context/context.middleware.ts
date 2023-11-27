@@ -28,7 +28,7 @@ export class ContextMiddleware implements NestMiddleware {
       user,
     };
 
-    if (user?.isStaff || process.env.ENABLE_ADS !== 'true') {
+    if (process.env.DISABLE_ADS === 'true' || user?.isStaff) {
       config.disableAds = true;
     }
 
