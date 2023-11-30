@@ -2,6 +2,7 @@ import {
   GpuProduct,
   GpuProductComparison,
   ListGpusResponse,
+  ProductType,
   RelatedProductComparisons,
   RelatedProducts,
 } from '../product';
@@ -44,4 +45,19 @@ export interface ViewGpuViewModel {
   relatedGpuComparisons: RelatedProductComparisons;
 
   additionalData: ViewGpuAdditionalData;
+}
+
+export interface GpuAdditionalData {
+  productType: ProductType.Gpu;
+
+  countPerformanceRanks?: number;
+  countPerformanceRanksForMarketSegment?: number;
+
+  bestPerformanceGpu?: GpuProduct;
+
+  relativePerformanceGpus: GpuProduct[];
+  relativeValueGpus: GpuProduct[];
+
+  retailModels1?: GpuProduct[];
+  retailModels2?: GpuProduct[];
 }

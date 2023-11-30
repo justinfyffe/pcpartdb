@@ -67,6 +67,7 @@ export const Tabs: FunctionComponent<TabsProps> = (props) => {
 
       <div
         className={classNames(
+          'h-full',
           variant === TabsVariant.Horizontal
             ? 'bg-light-shades p-4 rounded-b'
             : '',
@@ -79,7 +80,10 @@ export const Tabs: FunctionComponent<TabsProps> = (props) => {
             {(loadOnDemand !== true || activeTab === i) && (
               <div
                 key={i}
-                className={classNames(activeTab !== i ? 'hidden' : '')}
+                className={classNames(
+                  'h-full',
+                  activeTab !== i ? 'hidden' : '',
+                )}
               >
                 {child}
               </div>

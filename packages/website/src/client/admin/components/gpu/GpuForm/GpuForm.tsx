@@ -75,6 +75,7 @@ import { ProductOtherNamesInput } from '../../product/ProductOtherNamesInput/Pro
 import { ProductSearchTextInput } from '../../product/ProductSearchTextInput/ProductSearchTextInput';
 import { ProductSlugInput } from '../../product/ProductSlugInput/ProductSlugInput';
 import { ProductSourcesInput } from '../../product/ProductSourceInput/ProductSourcesInput';
+import { ProductSummaryInput } from '../../product/ProductSummaryInput/ProductSummaryInput';
 import { ProductTextInput } from '../../product/ProductTextInput/ProductTextInput';
 import { ScrapedProduct } from '../../product/ScrapeProductDialog/types';
 import { ScrapeGpuDialog } from '../ScrapeGpuDialog/ScrapeGpuDialog';
@@ -90,6 +91,7 @@ interface GpuFormData {
   otherNames?: string[];
   searchText?: string;
   affiliateUrl?: string;
+  summary?: string;
 
   // General
   partNumber?: GpuField<string>;
@@ -252,6 +254,7 @@ function formOptions(gpu?: GpuProduct): UseFormProps<GpuFormData> {
       otherNames: gpu?.otherNames || [],
       searchText: gpu?.searchText ?? null,
       affiliateUrl: gpu?.affiliateUrl ?? null,
+      summary: gpu?.summary ?? null,
 
       parentId: gpu?.parentId ?? null,
 
@@ -564,6 +567,23 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
             render={({ field }) => <TextInput {...field} ref={null} />}
           />
         </Field>
+      </section>
+
+      <section>
+        <h2 className="mb-4">Summary</h2>
+
+        <Controller
+          name="summary"
+          control={control}
+          render={({ field }) => (
+            <ProductSummaryInput
+              {...field}
+              control={control}
+              productType={ProductType.Gpu}
+              placeholder="Add product summary"
+            />
+          )}
+        />
       </section>
 
       <section>

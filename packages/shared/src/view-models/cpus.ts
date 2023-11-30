@@ -2,6 +2,7 @@ import {
   CpuProduct,
   CpuProductComparison,
   ListCpusResponse,
+  ProductType,
   RelatedProductComparisons,
   RelatedProducts,
 } from '../product';
@@ -43,4 +44,16 @@ export interface ViewCpuViewModel {
   relatedCpuComparisons: RelatedProductComparisons;
 
   additionalData: ViewCpuContentData;
+}
+
+export interface CpuAdditionalData {
+  productType: ProductType.Cpu;
+
+  countPerformanceRanks?: number;
+  countPerformanceRanksForMarketSegment?: number;
+
+  bestPerformanceCpu?: CpuProduct;
+
+  relativePerformanceCpus: CpuProduct[];
+  relativeValueCpus: CpuProduct[];
 }

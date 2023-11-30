@@ -26,6 +26,14 @@ export function isGpuProduct(product: Product): product is GpuProduct {
   return product.productType === ProductType.Gpu;
 }
 
+export function isGpuChipset(product: Product): product is GpuProduct {
+  return isGpuProduct(product) && product.parentId == null;
+}
+
+export function isGpuRetaillModel(product: Product): product is GpuProduct {
+  return isGpuProduct(product) && product.parentId != null;
+}
+
 export function getGpuChipset(gpu: GpuProduct) {
   return (gpu?.parent || gpu) as GpuProduct;
 }

@@ -1,10 +1,17 @@
+import { parseISO } from 'date-fns';
 import { formatProductName } from '../format';
 import { CanMergeAutoUpdateStrategy, deepmerge } from '../utils';
 import { BenchmarkKey } from './benchmarks';
 import { PRODUCT_FIELD_LABELS } from './consts';
 import { RankKey } from './ranks';
 import { ProductSourceKey } from './sources';
-import { Product, ProductField, ProductFieldKey, ProductType } from './types';
+import {
+  Product,
+  ProductField,
+  ProductFieldKey,
+  ProductionStatus,
+  ProductType,
+} from './types';
 
 export function getProductFieldLabel(
   productType: ProductType,
@@ -572,4 +579,28 @@ export function generateProductSlug(options: GenerateProductSlugOptions) {
   }
 
   return slugParts.join('-');
+}
+
+export function isPastLaunchDate(product: Product) {
+  if (!hasProductFieldRawValue(product?.fields?.releaseDate)) {
+    return false;
+  }
+
+  const date = new Date();
+  const releaseDate = parseISO(
+    productFieldRawValue(product?.fields.releaseDate),
+  );
+  return date.getTime() >= releaseDate.getTime();
+}
+
+export function hasLaunched(product: Product) {
+  if (
+    productFieldRawValue(product?.fields?.productionStatus) ===
+      ProductionStatus.Unreleased ||
+    !isPastLaunchDate(product)
+  ) {
+    return false;
+  }
+
+  return true;
 }

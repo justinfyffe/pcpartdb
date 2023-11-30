@@ -14,15 +14,30 @@ When Bored:
 - Improve db performance using queryRaw, but only in places where it'll help
 
 Summaries:
-- [] Common Product Input component
 - [] Generate AI Prompt
-  - Common component
+  - [] CPU
+    - [] Variables
+    - [] Template
+  - [] GPU
+    - [] Variables
+    - [] Template
 - [] CPU Form
+  - [] Input component
+  - [] Save
 - [] GPU Form
+  - [] Input component
+  - [] Save
+- [] Product Summary
+  - [] Variables
 - [] View Page
 - [] Compare Page
   - [] One-way canonical
+  - [] Show each product summary
 - [] Add date it was last generated.
+- [] Show legacy summary if one isn't available
+  - [] Improve upon it.
+- [] Cleanup comparison summaries
+- [] Cleanup unused ranks
 
 Better Performance Score
 - [] add highlights under technical specs? Next project
