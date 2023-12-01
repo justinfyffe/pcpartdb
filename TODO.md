@@ -34,8 +34,16 @@ Summaries:
   - [] One-way canonical
   - [] Show each product summary
 - [] Add date it was last generated.
-- [] Show legacy summary if one isn't available
-  - [] Improve upon it.
+- [] Show generated summary if one isn't available
+  - [] Improve CPU
+    - [] Write
+    - [] Test
+  - [] Improve GPU Chipset
+    - [X] Write
+    - [] Test
+  - [] Improve GPU Retail Model
+    - [] Write
+    - [] Test
 - [] Cleanup comparison summaries
 - [] Cleanup unused ranks
 
