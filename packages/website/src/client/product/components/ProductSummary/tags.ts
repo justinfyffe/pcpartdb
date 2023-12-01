@@ -1,4 +1,5 @@
 import {
+  CpuProduct,
   formatGpuDimensions,
   GpuProduct,
   hasProductFieldRawValue,
@@ -46,8 +47,13 @@ export enum ProductTypeTag {
 
 export enum SpecsTag {
   Architecture = 'SPECS__ARCHITECTURE',
+  BundledCooler = 'SPECS__BUNDLED_COOLER',
   Codename = 'SPECS__CODENAME',
+  Cores = 'SPECS__CORES',
   Dimensions = 'SPECS__DIMENSIONS',
+  Foundry = 'SPECS__FOUNDRY',
+  Generation = 'SPECS__GENERATION',
+  IntegratedGraphics = 'SPECS__INTEGRATED_GRAPHICS',
   MarketSegment = 'SPECS__MARKET_SEGMENT',
   MemoryBandwidth = 'SPECS__MEMORY_BANDWIDTH',
   MemoryClock = 'SPECS__MEMORY_CLOCK',
@@ -56,10 +62,12 @@ export enum SpecsTag {
   Msrp = 'SPECS__MSRP',
   Outputs = 'SPECS__OUTPUTS',
   ProcessSize = 'SPECS__PROCESS_SIZE',
+  Socket = 'SPECS__SOCKET',
   ReleaseDate = 'SPECS__RELEASE_DATE',
   SlotWidth = 'SPECS__SLOT_WIDTH',
   SuggestedPsu = 'SPECS__SUGGESTED_PSU',
   Tdp = 'SPECS__TDP',
+  Threads = 'SPECS__THREADS',
 }
 
 export enum SubProductTypeTag {
@@ -130,8 +138,30 @@ export function buildContentTags(product: Product) {
 
   return {
     ...tags,
+    ...buildCpuContentTags(product as CpuProduct),
     ...buildGpuContentTags(product as GpuProduct),
   };
+}
+
+function buildCpuContentTags(product: CpuProduct) {
+  const tags: ContentTags = {};
+  if (!isCpuProduct(product)) {
+    return {};
+  }
+
+  tags[SpecsTag.BundledCooler] = hasProductFieldValue(
+    product.fields.bundledCooler,
+  );
+  tags[SpecsTag.Cores] = hasProductFieldValue(product.fields.cores);
+  tags[SpecsTag.Foundry] = hasProductFieldValue(product.fields.foundry);
+  tags[SpecsTag.Generation] = hasProductFieldValue(product.fields.generation);
+  tags[SpecsTag.IntegratedGraphics] = hasProductFieldValue(
+    product.fields.integratedGraphics,
+  );
+  tags[SpecsTag.Socket] = hasProductFieldValue(product.fields.socket);
+  tags[SpecsTag.Threads] = hasProductFieldRawValue(product.fields.threads);
+
+  return tags;
 }
 
 function buildGpuContentTags(product: GpuProduct) {

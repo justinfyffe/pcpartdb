@@ -1,4 +1,6 @@
 import {
+  CpuAdditionalData,
+  CpuProduct,
   formatGpuDimensions,
   formatProductName,
   getGpuChipset,
@@ -6,6 +8,7 @@ import {
   GpuProduct,
   hasLaunched,
   hasProductFieldRawValue,
+  isCpuProduct,
   isGpuProduct,
   isPastLaunchDate,
   Product,
@@ -65,11 +68,39 @@ export function buildContentParams(
 
   return {
     ...params,
+    ...buildCpuContentParams(
+      product as CpuProduct,
+      additionalData as CpuAdditionalData,
+    ),
     ...buildGpuContentParams(
       product as GpuProduct,
       additionalData as GpuAdditionalData,
     ),
   };
+}
+
+function buildCpuContentParams(
+  product: CpuProduct,
+  _additionalData: CpuAdditionalData,
+) {
+  const params: ContentParams = {};
+  if (!isCpuProduct(product)) {
+    return {};
+  }
+
+  params['bundledCooler'] = productFieldFormattedValue(
+    product.fields.bundledCooler,
+  );
+  params['cores'] = productFieldRawValue(product.fields.cores);
+  params['foundry'] = productFieldFormattedValue(product.fields.foundry);
+  params['generation'] = productFieldFormattedValue(product.fields.generation);
+  params['integratedGraphics'] = productFieldFormattedValue(
+    product.fields.integratedGraphics,
+  );
+  params['socket'] = productFieldFormattedValue(product.fields.socket);
+  params['threads'] = productFieldRawValue(product.fields.threads);
+
+  return params;
 }
 
 function buildGpuContentParams(
