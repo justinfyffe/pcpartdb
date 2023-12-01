@@ -15,6 +15,7 @@ When Bored:
 
 Summaries:
 - [] Generate AI Prompt
+  - [] Look into Prompt engineering
   - [] CPU
     - [] Variables
     - [] Template
@@ -28,7 +29,8 @@ Summaries:
   - [] Input component
   - [] Save
 - [] Product Summary
-  - [] Variables
+  - [] Provide as many variables as possibles
+    - Should we reuse variables from content to simplify?
 - [] View Page
 - [] Compare Page
   - [] One-way canonical
@@ -36,7 +38,7 @@ Summaries:
 - [] Add date it was last generated.
 - [] Show generated summary if one isn't available
   - [] Improve CPU
-    - [] Write
+    - [X] Write
     - [] Test
   - [] Improve GPU Chipset
     - [X] Write
@@ -44,8 +46,17 @@ Summaries:
   - [] Improve GPU Retail Model
     - [] Write
     - [] Test
+- [] Cleanup GPU Section Intros
+  - Reuse same content params/tags code as summary.
+- [] Cleanup CPU Section Intros
+  - Reuse same content params/tags code as summary
+- [] Cleanup CPU Section Intros
 - [] Cleanup comparison summaries
 - [] Cleanup unused ranks
+- [] TEST
+  - [] AI Prompt
+  - [] Custom summary with variables
+  - [] Generated summary
 
 Better Performance Score
 - [] add highlights under technical specs? Next project

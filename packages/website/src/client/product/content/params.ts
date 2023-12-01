@@ -18,7 +18,7 @@ import {
   productRankValue,
   RankKey,
 } from '@pcpartdb/shared';
-import { ContentParams } from '../../../shared/content/types';
+import { ContentParams } from '../../shared/content/types';
 
 export function buildContentParams(
   product: Product,
@@ -81,22 +81,48 @@ export function buildContentParams(
 
 function buildCpuContentParams(
   product: CpuProduct,
-  _additionalData: CpuAdditionalData,
+  additionalData: CpuAdditionalData,
 ) {
   const params: ContentParams = {};
   if (!isCpuProduct(product)) {
     return {};
   }
 
+  const bestPerformanceDifferencePct = (
+    100 *
+    (productFieldRawValue(product?.fields?.performanceRating) /
+      productFieldRawValue(
+        additionalData?.bestPerformanceCpu?.fields?.performanceRating,
+      ))
+  ).toFixed(2);
+
+  params['bestPerformanceDifferencePct'] = bestPerformanceDifferencePct;
+  params['bestPerformanceName'] = formatProductName(
+    additionalData?.bestPerformanceCpu,
+  );
+  params['countPerformanceRanks'] = additionalData?.countPerformanceRanks;
+
+  params['boostClock'] = productFieldFormattedValue(product.fields.turboClock);
   params['bundledCooler'] = productFieldFormattedValue(
     product.fields.bundledCooler,
   );
+  params['clock'] = productFieldFormattedValue(product.fields.clock);
   params['cores'] = productFieldRawValue(product.fields.cores);
   params['foundry'] = productFieldFormattedValue(product.fields.foundry);
   params['generation'] = productFieldFormattedValue(product.fields.generation);
   params['integratedGraphics'] = productFieldFormattedValue(
     product.fields.integratedGraphics,
   );
+  params['l1Cache'] = productFieldFormattedValue(product.fields.l1Cache);
+  params['l2Cache'] = productFieldFormattedValue(product.fields.l2Cache);
+  params['l3Cache'] = productFieldFormattedValue(product.fields.l3Cache);
+  params['memoryChannels'] = productFieldFormattedValue(
+    product.fields.memoryChannels,
+  );
+  params['memorySupport'] = productFieldFormattedValue(
+    product.fields.memorySupport,
+  );
+  params['pciExpress'] = productFieldFormattedValue(product.fields.pciExpress);
   params['socket'] = productFieldFormattedValue(product.fields.socket);
   params['threads'] = productFieldRawValue(product.fields.threads);
 

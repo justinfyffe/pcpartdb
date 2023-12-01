@@ -5,7 +5,11 @@ import {
 } from 'packages/website/src/client/shared/content/types';
 import { compileContentComponent } from 'packages/website/src/client/shared/content/utils';
 import React, { FunctionComponent } from 'react';
-import { MarketSegmentTag, ProductionStatusTag, SpecsTag } from '../tags';
+import {
+  MarketSegmentTag,
+  ProductionStatusTag,
+  SpecsTag,
+} from '../../../content/tags';
 
 const IntroAudience = compileContentComponent(
   {

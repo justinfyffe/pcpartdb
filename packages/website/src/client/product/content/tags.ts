@@ -28,12 +28,6 @@ export enum MarketSegmentTag {
   Workstation = 'MARKET_SEGMENT__WORKSTATION',
 }
 
-export enum PerformanceTag {
-  Best = 'PERFORMANCE__BEST',
-
-  MarketSegment = 'PERFORMANCE__MARKET_SEGMENT',
-}
-
 export enum ProductionStatusTag {
   Active = 'PRODUCTION_STATUS__ACTIVE',
   EndOfLife = 'PRODUCTION_STATUS__END_OF_LIFE',
@@ -45,22 +39,39 @@ export enum ProductTypeTag {
   Gpu = 'PRODUCT_TYPE__GPU',
 }
 
+export enum RankTag {
+  BestPerformance = 'RANK__BEST_PERFORMANCE',
+
+  Performance = 'RANK__PERFORMANCE',
+  PerformanceForMarketSegment = 'RANK__PERFORMANCE_FOR_MARKET_SEGMENT',
+  Value = 'RANK__VALUE',
+}
+
 export enum SpecsTag {
   Architecture = 'SPECS__ARCHITECTURE',
+  BoostClock = 'SPECS__BOOST_CLOCK',
   BundledCooler = 'SPECS__BUNDLED_COOLER',
+  Clock = 'SPECS__CLOCK',
   Codename = 'SPECS__CODENAME',
   Cores = 'SPECS__CORES',
   Dimensions = 'SPECS__DIMENSIONS',
   Foundry = 'SPECS__FOUNDRY',
   Generation = 'SPECS__GENERATION',
   IntegratedGraphics = 'SPECS__INTEGRATED_GRAPHICS',
+  L1Cache = 'SPECS_L1_CACHE',
+  L2Cache = 'SPECS_L2_CACHE',
+  L3Cache = 'SPECS_L3_CACHE',
+  LockedMultiplier = 'SPECS__LOCKED_MULTIPLIER',
   MarketSegment = 'SPECS__MARKET_SEGMENT',
   MemoryBandwidth = 'SPECS__MEMORY_BANDWIDTH',
+  MemoryChannels = 'SPECS__MEMORY_CHANNELS',
   MemoryClock = 'SPECS__MEMORY_CLOCK',
   MemoryInterface = 'SPECS__MEMORY_INTERFACE',
   MemorySize = 'SPECS__MEMORY_SIZE',
+  MemorySupport = 'SPECS__MEMORY_SUPPORT',
   Msrp = 'SPECS__MSRP',
   Outputs = 'SPECS__OUTPUTS',
+  PciExpress = 'SPECS__PCI_EXPRESS',
   ProcessSize = 'SPECS__PROCESS_SIZE',
   Socket = 'SPECS__SOCKET',
   ReleaseDate = 'SPECS__RELEASE_DATE',
@@ -68,6 +79,7 @@ export enum SpecsTag {
   SuggestedPsu = 'SPECS__SUGGESTED_PSU',
   Tdp = 'SPECS__TDP',
   Threads = 'SPECS__THREADS',
+  UnlockedMultiplier = 'SPECS__UNLOCKED_MULTIPLIER',
 }
 
 export enum SubProductTypeTag {
@@ -96,14 +108,6 @@ export function buildContentTags(product: Product) {
     productFieldRawValue(product.fields.marketSegment) ===
     MarketSegment.Workstation;
 
-  // Performance
-  tags[PerformanceTag.Best] =
-    productRankValue(product, RankKey.PerformanceRating) === 1;
-  tags[PerformanceTag.MarketSegment] = hasProductRank(
-    product,
-    RankKey.PerformanceRatingForMarketSegment,
-  );
-
   // Production Status
   tags[ProductionStatusTag.Active] =
     productFieldRawValue(product.fields.productionStatus) ===
@@ -118,6 +122,19 @@ export function buildContentTags(product: Product) {
   // Product Type
   tags[ProductTypeTag.Cpu] = isCpuProduct(product);
   tags[ProductTypeTag.Gpu] = isGpuProduct(product);
+
+  // Ranks
+  tags[RankTag.BestPerformance] =
+    productRankValue(product, RankKey.PerformanceRating) === 1;
+  tags[RankTag.Performance] = hasProductRank(
+    product,
+    RankKey.PerformanceRating,
+  );
+  tags[RankTag.PerformanceForMarketSegment] = hasProductRank(
+    product,
+    RankKey.PerformanceRatingForMarketSegment,
+  );
+  tags[RankTag.Value] = hasProductRank(product, RankKey.PerformancePerMsrp);
 
   // Specs
   tags[SpecsTag.Architecture] = hasProductFieldValue(
@@ -149,17 +166,34 @@ function buildCpuContentTags(product: CpuProduct) {
     return {};
   }
 
+  tags[SpecsTag.BoostClock] = hasProductFieldRawValue(
+    product.fields.turboClock,
+  );
   tags[SpecsTag.BundledCooler] = hasProductFieldValue(
     product.fields.bundledCooler,
   );
+  tags[SpecsTag.Clock] = hasProductFieldRawValue(product.fields.clock);
   tags[SpecsTag.Cores] = hasProductFieldValue(product.fields.cores);
   tags[SpecsTag.Foundry] = hasProductFieldValue(product.fields.foundry);
   tags[SpecsTag.Generation] = hasProductFieldValue(product.fields.generation);
   tags[SpecsTag.IntegratedGraphics] = hasProductFieldValue(
     product.fields.integratedGraphics,
   );
+  tags[SpecsTag.L1Cache] = hasProductFieldValue(product.fields.l1Cache);
+  tags[SpecsTag.L2Cache] = hasProductFieldValue(product.fields.l2Cache);
+  tags[SpecsTag.L3Cache] = hasProductFieldValue(product.fields.l3Cache);
+  tags[SpecsTag.LockedMultiplier] =
+    productFieldRawValue(product.fields.multiplierUnlocked) === false;
+  tags[SpecsTag.MemoryChannels] = hasProductFieldValue(
+    product.fields.memorySupport,
+  );
+  tags[SpecsTag.MemorySupport] = hasProductFieldValue(
+    product.fields.memorySupport,
+  );
   tags[SpecsTag.Socket] = hasProductFieldValue(product.fields.socket);
   tags[SpecsTag.Threads] = hasProductFieldRawValue(product.fields.threads);
+  tags[SpecsTag.UnlockedMultiplier] =
+    productFieldRawValue(product.fields.multiplierUnlocked) === true;
 
   return tags;
 }

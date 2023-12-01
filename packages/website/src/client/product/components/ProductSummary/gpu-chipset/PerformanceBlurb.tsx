@@ -6,13 +6,13 @@ import {
 } from 'packages/website/src/client/shared/content/types';
 import { compileContentComponent } from 'packages/website/src/client/shared/content/utils';
 import React from 'react';
-import { PerformanceTag } from '../tags';
+import { RankTag } from '../../../content/tags';
 
 const PerformanceRankPlacement = compileContentComponent(
   {
     // Example: The RTX 4070 delivers the 11th best performance
     //          among the 123 benchmarked desktop GPUs in our database.
-    tags: [PerformanceTag.MarketSegment],
+    tags: [RankTag.PerformanceForMarketSegment],
     component: (props) => {
       return (
         <>
@@ -28,7 +28,7 @@ const PerformanceRankPlacement = compileContentComponent(
   {
     // Example: The RTX 4070 delivers the 11th best performance
     //          among the 123 benchmarked GPUs in our database.
-    tags: [],
+    tags: [RankTag.Performance],
     component: (props) => {
       return (
         <>
@@ -45,14 +45,14 @@ const PerformanceRankPlacement = compileContentComponent(
 const PerformanceBestDiff = compileContentComponent(
   {
     // Example:
-    tags: [PerformanceTag.Best],
+    tags: [RankTag.BestPerformance],
     deps: [],
     component: (_props) => <></>,
   },
   {
     // Example: It is approximately 67.18% as fast as the GeForce RTX 4090,
     //          the most powerful GPU in our database.
-    tags: [],
+    tags: [RankTag.Performance],
     component: (props) => (
       <>
         It is approximately {props.bestPerformanceDifferencePct}% as fast as the{' '}
@@ -63,7 +63,7 @@ const PerformanceBestDiff = compileContentComponent(
 );
 
 const PerformanceValue = compileContentComponent({
-  tags: [],
+  tags: [RankTag.Performance, RankTag.Value],
   // Its 99.8 performance rating and $599 launch price (MSRP) gives it a
   // value rating of 44.47, making it the 12th best in performance per dollar.
   component: (props) => (

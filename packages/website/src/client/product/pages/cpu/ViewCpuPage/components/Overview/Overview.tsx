@@ -1,14 +1,15 @@
-import React, { FunctionComponent } from 'react';
-import { IntroBlurb } from './IntroBlurb';
-import { PerformanceBlurb } from './PerformanceBlurb';
-import { SpecsBlurb } from './SpecsBlurb';
+import { formatProductName } from '@pcpartdb/shared';
+import { ProductSummary } from 'packages/website/src/client/product/components/ProductSummary/ProductSummary';
+import React, { FunctionComponent, useContext } from 'react';
+import { ViewPageContext } from '../../context/ViewPageContext';
 
 export const Overview: FunctionComponent = () => {
+  const { cpu, additionalData } = useContext(ViewPageContext);
+
   return (
     <section className="mb-0">
-      <IntroBlurb />
-      <SpecsBlurb />
-      <PerformanceBlurb />
+      <h2>About the {formatProductName(cpu, { company: false })}</h2>
+      <ProductSummary product={cpu} additionalData={additionalData} />
     </section>
   );
 };

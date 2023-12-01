@@ -5,7 +5,7 @@ import {
 } from 'packages/website/src/client/shared/content/types';
 import { compileContentComponent } from 'packages/website/src/client/shared/content/utils';
 import React, { FunctionComponent } from 'react';
-import { SpecsTag } from '../tags';
+import { SpecsTag } from '../../../content/tags';
 
 const CompatibilitySlotWidth = compileContentComponent({
   // Example: The Geforce RTX 3070 is a large desktop graphics card,

@@ -5,7 +5,7 @@ import {
 } from 'packages/website/src/client/shared/content/types';
 import { compileContentComponent } from 'packages/website/src/client/shared/content/utils';
 import React, { FunctionComponent } from 'react';
-import { SpecsTag } from '../tags';
+import { SpecsTag } from '../../../content/tags';
 
 const MemorySize = compileContentComponent({
   // Example: The NVIDIA GeForce RTX 3070 has 12 GB of GDDR6X VRAM.

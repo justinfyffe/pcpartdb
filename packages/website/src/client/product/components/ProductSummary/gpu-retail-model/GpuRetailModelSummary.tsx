@@ -1,7 +1,7 @@
 import { GpuAdditionalData, GpuProduct } from '@pcpartdb/shared';
 import React, { FunctionComponent } from 'react';
-import { buildContentParams } from '../params';
-import { buildContentTags } from '../tags';
+import { buildContentParams } from '../../../content/params';
+import { buildContentTags } from '../../../content/tags';
 
 interface GpuRetailModelSummaryProps {
   gpu: GpuProduct;
