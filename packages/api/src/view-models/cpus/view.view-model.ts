@@ -42,13 +42,13 @@ export class ViewCpuViewModelService {
         const relativeValueCpus = await this.getRelativeValueCpus(cpu);
 
         const relatedCpus = await this.getRelatedCpus(
-          3,
+          5,
           relativePerformanceCpus,
           relativeValueCpus,
           cpu,
         );
         const relatedComparisons = await this.getRelatedComparisons(
-          3,
+          5,
           relativePerformanceCpus,
           relativeValueCpus,
           cpu,

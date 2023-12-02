@@ -4,10 +4,8 @@ import React, { useContext } from 'react';
 import { ViewPageContext } from '../../context/ViewPageContext';
 
 const DisclaimerParagraph = compileContentComponent({
-  tags: [],
-  deps: ['shortCpuName'],
   component: (props) => (
-    <p className="text-dimmed mb-0">
+    <p className="text-dimmed">
       *Performance rating, performance per dollar, and rankings are approximate
       values based on the {props.name}&apos;s benchmarks and MSRP.
     </p>

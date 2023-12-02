@@ -4,7 +4,6 @@ import React, { useContext } from 'react';
 import { ViewPageContext } from '../../context/ViewPageContext';
 
 const GeneralInfoParagraph = compileContentComponent({
-  deps: [],
   component: (props) => (
     <p className="text-dimmed">
       General information about the {props.nameWithNoCompany} like its

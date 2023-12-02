@@ -7,7 +7,7 @@ import { ComparePageContext } from '../../context/ComparePageContext';
 const RatingDisclaimer = compileContentComponent({
   tags: [],
   component: (props) => (
-    <p className="text-dimmed mb-0">
+    <p className="text-dimmed">
       *Performance rating, performance per dollar, and rankings are approximate
       values based on the {props.chipsetName1} and {props.chipsetName2}&apos;s
       benchmarks and MSRP.

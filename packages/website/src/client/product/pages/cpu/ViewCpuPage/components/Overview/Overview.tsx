@@ -7,7 +7,7 @@ export const Overview: FunctionComponent = () => {
   const { cpu, contentTags, contentParams } = useContext(ViewPageContext);
 
   return (
-    <section className="mb-0">
+    <section>
       <h2>About the {formatProductName(cpu, { company: false })}</h2>
       <ProductSummary product={cpu} tags={contentTags} params={contentParams} />
     </section>

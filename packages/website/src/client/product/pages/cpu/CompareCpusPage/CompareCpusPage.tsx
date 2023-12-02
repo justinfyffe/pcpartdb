@@ -14,9 +14,6 @@ import { Breadcrumb } from 'packages/website/src/client/shared/components/Breadc
 import { Breadcrumbs } from 'packages/website/src/client/shared/components/Breadcrumbs/Breadcrumbs';
 import { Seo } from 'packages/website/src/client/shared/components/Seo/Seo';
 import { WebsiteLayout } from 'packages/website/src/client/shared/layouts/website/WebsiteLayout';
-import { Sidenav } from 'packages/website/src/client/sidenav/components/Sidenav/Sidenav';
-import { SidenavRelatedComparisons } from 'packages/website/src/client/sidenav/components/SidenavRelatedComparisons/SidenavRelatedComparisons';
-import { SidenavRelatedProducts } from 'packages/website/src/client/sidenav/components/SidenavRelatedProducts/SidenavRelatedProducts';
 import React, { useMemo } from 'react';
 import { CompareProductsForm } from '../../../components/CompareProductsForm/CompareProductsForm';
 import {
@@ -38,7 +35,7 @@ export const CompareCpusPage = (
   props: CompareCpusViewModel & { config: Config },
 ) => {
   const { config, ...viewModel } = props;
-  const { comparison, relatedCpus, relatedCpuComparisons } = viewModel;
+  const { comparison } = viewModel;
 
   const [cpu1, cpu2] = comparison;
   useProductCache(ProductType.Cpu, cpu1, cpu2);

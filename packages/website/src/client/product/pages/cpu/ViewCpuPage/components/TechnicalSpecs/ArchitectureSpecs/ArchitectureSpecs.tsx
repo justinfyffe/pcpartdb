@@ -29,7 +29,7 @@ export const ArchitectureSpecs: FunctionComponent<ArchitectureSpecsProps> = (
 
   return (
     <section className={className}>
-      <h3 className="mb-0">Architecture</h3>
+      <h3 className="mb-1">Architecture</h3>
       <ArchitectureIntro />
       <ArchitectureTable />
     </section>

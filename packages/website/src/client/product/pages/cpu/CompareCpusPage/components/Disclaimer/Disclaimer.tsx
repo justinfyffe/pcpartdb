@@ -8,7 +8,7 @@ const DisclaimerParagraph = compileContentComponent({
   tags: [],
   deps: [],
   component: (props) => (
-    <p className="text-dimmed mb-0">
+    <p className="text-dimmed">
       *Performance rating, performance per dollar, and rankings are approximate
       values based on the {props.name1} and {props.name2}&apos;s benchmarks and
       MSRP.

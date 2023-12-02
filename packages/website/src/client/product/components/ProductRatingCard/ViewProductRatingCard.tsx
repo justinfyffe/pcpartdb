@@ -26,6 +26,8 @@ export interface ViewProductRatingCardProps {
 
   rank?: number;
   rankHref?: string;
+
+  className?: string;
 }
 
 export const ViewProductRatingCard: FunctionComponent<
@@ -39,6 +41,7 @@ export const ViewProductRatingCard: FunctionComponent<
     maxRating,
     rank,
     rankHref,
+    className,
   } = props;
 
   const ratingRaw = useMemo(() => {
@@ -52,7 +55,12 @@ export const ViewProductRatingCard: FunctionComponent<
   const rankFormatted = useMemo(() => formatOrdinalNumber(rank), [rank]);
 
   return (
-    <Card className="flex-1 flex flex-row justify-between items-start gap-4">
+    <Card
+      className={classNames(
+        'flex-1 flex flex-row justify-between items-start gap-4',
+        className,
+      )}
+    >
       <CardTitle as="div" className="flex flex-col gap-2">
         <span className="whitespace-nowrap">
           <Title tags={[ratingType]} />

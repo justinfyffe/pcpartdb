@@ -53,6 +53,7 @@ export const PerformanceAndValueCharts: FunctionComponent<
         ratingField={chipset.fields?.performanceRating}
         rank={productRankValue(chipset, RankKey.PerformanceRating)}
         rankHref={performanceRankHref}
+        className="flex-1"
       />
 
       <ViewProductRatingCard
@@ -63,6 +64,7 @@ export const PerformanceAndValueCharts: FunctionComponent<
         ratingField={chipset.fields?.performancePerMsrp}
         rank={productRankValue(chipset, RankKey.PerformancePerMsrp)}
         rankHref={valueRankHref}
+        className="flex-1"
       />
     </div>
   );
