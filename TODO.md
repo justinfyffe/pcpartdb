@@ -17,7 +17,7 @@ Summaries:
 - [] Update UI
   - [X] Compare Gpu
   - [X] Compare CPU
-  - [] View Gpu
+  - [X] View Gpu
   - [] View Cpu
 - [] Generate AI Prompt
   - [] Look into Prompt engineering

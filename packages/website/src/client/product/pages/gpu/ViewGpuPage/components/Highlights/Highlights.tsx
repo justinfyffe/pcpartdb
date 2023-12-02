@@ -80,7 +80,7 @@ export const Highlights: FunctionComponent<HighlightsProps> = (props) => {
   return (
     <div
       className={classNames(
-        'grid grid-cols-2 lg:flex flex-col md:gap-3 gap-4 mb-4',
+        'grid grid-cols-2 sm:flex flex-col md:gap-2 gap-4',
         className,
       )}
     >

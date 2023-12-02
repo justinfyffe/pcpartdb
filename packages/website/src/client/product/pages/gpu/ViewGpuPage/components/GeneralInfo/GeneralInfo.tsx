@@ -21,9 +21,9 @@ export const GeneralInfo: FunctionComponent = () => {
 
   return (
     <section>
-      <h2 className="mb-0 font-semibold">General Info</h2>
+      <h2 className="mb-1 font-semibold">General Info</h2>
       <GeneralInfoIntro />
-      <GeneralInfoTable className="mb-4" />
+      <GeneralInfoTable />
     </section>
   );
 };

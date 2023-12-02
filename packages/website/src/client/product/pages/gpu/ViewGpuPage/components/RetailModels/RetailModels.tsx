@@ -15,10 +15,7 @@ export const RetailModels: FunctionComponent = () => {
     <section>
       <RetailModelsTitle />
       <RetailModelsIntro />
-
-      <section className="flex flex-wrap gap-8 mb-4">
-        <RetailModelsTable />
-      </section>
+      <RetailModelsTable />
     </section>
   );
 };

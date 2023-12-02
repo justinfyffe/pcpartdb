@@ -12,7 +12,7 @@ export const Benchmarks: FunctionComponent = () => {
 
   return (
     <section>
-      <h3 className="mb-0 font-semibold">Benchmarks</h3>
+      <h3 className="mb-1 font-semibold">Benchmarks</h3>
       <BenchmarksIntro />
       <BenchmarkTables />
     </section>

@@ -24,7 +24,7 @@ export const MemorySpecs: FunctionComponent<MemorySpecsProps> = (props) => {
 
   return (
     <section className={className}>
-      <h3 className="mb-0">Memory</h3>
+      <h3 className="mb-1">Memory</h3>
       <MemoryIntro />
       <MemoryTable />
     </section>

@@ -31,7 +31,7 @@ export const CompatibilitySpecs: FunctionComponent<CompatibilitySpecsProps> = (
 
   return (
     <section className={className}>
-      <h3 className="mb-0">Board Compatibility &amp; Dimensions</h3>
+      <h3 className="mb-1">Board Compatibility &amp; Dimensions</h3>
       <CompatibilityIntro />
       <CompatibilityTable />
     </section>

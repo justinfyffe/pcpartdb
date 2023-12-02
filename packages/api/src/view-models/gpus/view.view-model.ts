@@ -46,13 +46,13 @@ export class ViewGpuViewModelService {
         const retailModels = await this.getRetailModels(chipset, ctx);
 
         const relatedGpus = await this.getRelatedGpus(
-          3,
+          5,
           relativePerformanceGpus,
           relativeValueGpus,
           gpu,
         );
         const relatedGpuComparisons = await this.getRelatedComparisons(
-          3,
+          5,
           relativePerformanceGpus,
           relativeValueGpus,
           gpu,

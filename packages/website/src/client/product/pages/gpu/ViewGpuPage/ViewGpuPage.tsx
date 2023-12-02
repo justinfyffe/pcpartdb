@@ -14,9 +14,6 @@ import { Breadcrumb } from 'packages/website/src/client/shared/components/Breadc
 import { Breadcrumbs } from 'packages/website/src/client/shared/components/Breadcrumbs/Breadcrumbs';
 import { Seo } from 'packages/website/src/client/shared/components/Seo/Seo';
 import { WebsiteLayout } from 'packages/website/src/client/shared/layouts/website/WebsiteLayout';
-import { Sidenav } from 'packages/website/src/client/sidenav/components/Sidenav/Sidenav';
-import { SidenavRelatedComparisons } from 'packages/website/src/client/sidenav/components/SidenavRelatedComparisons/SidenavRelatedComparisons';
-import { SidenavRelatedProducts } from 'packages/website/src/client/sidenav/components/SidenavRelatedProducts/SidenavRelatedProducts';
 import React, { useMemo } from 'react';
 import { CompareProductsForm } from '../../../components/CompareProductsForm/CompareProductsForm';
 import {
@@ -28,6 +25,8 @@ import {
   TechnicalSpecs,
 } from './components';
 import { PerformanceAndValue } from './components/PerformanceAndValue/PerformanceAndValue';
+import { RelatedComparisons } from './components/Related/RelatedComparisons';
+import { RelatedGpus } from './components/Related/RelatedGpus';
 import {
   createViewPageContext,
   ViewPageContext,
@@ -35,7 +34,7 @@ import {
 
 export const ViewGpuPage = (props: ViewGpuViewModel & { config: Config }) => {
   const { config, ...viewModel } = props;
-  const { gpu, relatedGpus, relatedGpuComparisons } = viewModel;
+  const { gpu } = viewModel;
 
   useProductCache(ProductType.Gpu, gpu);
 
@@ -98,41 +97,25 @@ export const ViewGpuPage = (props: ViewGpuViewModel & { config: Config }) => {
 
         <div className="flex flex-wrap justify-center gap-8">
           <section className="flex flex-col w-full">
-            <div className="mb-4">
-              <h1 className="md:text-2xl text-3xl mb-0">{pageTitle}</h1>
-            </div>
+            <h1 className="font-semibold">{pageTitle}</h1>
+
             <CompareProductsForm
               productType={ProductType.Gpu}
               values={[chipset?.id]}
             />
           </section>
 
-          <article className="md:min-w-full flex-1 flex flex-col gap-4">
-            <section className="flex flex-wrap justify-start gap-4">
-              {/* <GpuImages gpu={gpu} className="flex-1 min-w-80" /> */}
-              <Highlights className="flex-1" />
-            </section>
-
+          <article className="md:min-w-full flex-1 flex flex-col gap-8">
+            <Highlights />
             <Overview />
             <GeneralInfo />
             <PerformanceAndValue />
             <TechnicalSpecs />
-
             <RetailModels />
-
+            <RelatedGpus />
+            <RelatedComparisons />
             <Disclaimer />
           </article>
-
-          <Sidenav>
-            <SidenavRelatedProducts
-              productType={ProductType.Gpu}
-              products={relatedGpus.products}
-            />
-            <SidenavRelatedComparisons
-              productType={ProductType.Gpu}
-              comparisons={relatedGpuComparisons.comparisons}
-            />
-          </Sidenav>
         </div>
       </WebsiteLayout>
     </ViewPageContext.Provider>
