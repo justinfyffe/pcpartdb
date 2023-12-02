@@ -19,7 +19,7 @@ const PerformanceRankPlacement = compileContentComponent(
           The {props.nameWithNoCompanyNoBrand} delivers the{' '}
           {formatOrdinalNumber(props.performanceRankForMarketSegment as number)}{' '}
           best performance among the{' '}
-          {props.countPerformanceRanksForMarketSegment} rated{' '}
+          {props.countPerformanceRanksForMarketSegment.toLocaleString()} rated{' '}
           {props.marketSegment} GPUs in our database.
         </>
       );
@@ -34,8 +34,8 @@ const PerformanceRankPlacement = compileContentComponent(
         <>
           The {props.nameWithNoCompanyNoBrand} delivers the{' '}
           {formatOrdinalNumber(props.performanceRank as number)} best
-          performance among the {props.countPerformanceRanks} rated GPUs in our
-          database.
+          performance among the {props.countPerformanceRanks.toLocaleString()}{' '}
+          rated GPUs in our database.
         </>
       );
     },
@@ -70,7 +70,7 @@ const PerformanceValue = compileContentComponent({
     <>
       Its {props.performanceRating} performance rating and {props.msrp} launch
       price (MSRP) gives it a value rating of {props.valueRating}, making it the{' '}
-      {props.valueRank} best in performance per dollar.
+      {formatOrdinalNumber(props.valueRank)} best in performance per dollar.
     </>
   ),
 });

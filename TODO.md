@@ -15,7 +15,6 @@ When Bored:
 
 Summaries:
 - [] Update UI
-  - [] Move side nav to bottom of site to improve internal linking of comparisons
   - [X] Compare Gpu
   - [] Compare CPU
   - [] View Gpu

@@ -16,8 +16,8 @@ const PerformanceRankPlacement = compileContentComponent({
     <>
       {props.company}&apos;s {props.nameWithNoCompanyNoBrand} delivers the{' '}
       {formatOrdinalNumber(props.performanceRank as number)} best performance
-      among the {props.countPerformanceRanks} benchmarked processors in our
-      database.
+      among the {props.countPerformanceRanks.toLocaleString()} benchmarked
+      processors in our database.
     </>
   ),
 });
@@ -32,7 +32,7 @@ const PerformanceBestDiff = compileContentComponent(
     // It is approximately 67.18% as fast as the Core i7 12345, the fastest desktop CPU in our database.
     component: (props) => (
       <>
-        It is approximately {props.bestPerformanceDifference}% as fast as the{' '}
+        It is approximately {props.bestPerformanceDifferencePct}% as fast as the{' '}
         {props.bestPerformanceName}, the fastest CPU in our database.
       </>
     ),
@@ -45,7 +45,8 @@ const PerformanceValue = compileContentComponent({
     <>
       Its {props.performanceRating} performance rating and {props.msrp} launch
       price gives it a value rating of {props.valueRating}, giving it the{' '}
-      {props.valueRank} best value among CPUs in our database.
+      {formatOrdinalNumber(props.valueRank)} best value among CPUs in our
+      database.
     </>
   ),
 });
