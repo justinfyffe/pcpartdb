@@ -4,12 +4,12 @@ import React, { FunctionComponent, useContext } from 'react';
 import { ViewPageContext } from '../../context/ViewPageContext';
 
 export const Overview: FunctionComponent = () => {
-  const { gpu, additionalData } = useContext(ViewPageContext);
+  const { gpu, contentTags, contentParams } = useContext(ViewPageContext);
 
   return (
     <section className="mb-0">
       <h2>About the {formatProductName(gpu, { company: false })}</h2>
-      <ProductSummary product={gpu} additionalData={additionalData} />
+      <ProductSummary product={gpu} tags={contentTags} params={contentParams} />
     </section>
   );
 };

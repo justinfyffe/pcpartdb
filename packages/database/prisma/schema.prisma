@@ -174,8 +174,11 @@ model ProductRank {
   // Enum identifier for the rank.
   rankKey String @map("rank_key")
 
-  // Numeric value for benchmark
+  // Numeric value for rank
   rank Int?
+
+  // Total ranked
+  totalRanked Int? @map("total_ranked")
 
   // Misc. additional data about the benchmark. Not meant to be filtered on.
   metadata Json?

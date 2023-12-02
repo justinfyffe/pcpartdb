@@ -7,10 +7,10 @@ export const CompatibilityIntroSentence1 = compileContentComponent({
   deps: [],
   component: (props) => (
     <>
-      {props.shortGpuName}&apos;s dimensions, bus interface, power consumption,
-      and output ports. These specs are useful for verifying that the{' '}
-      {props.shortGpuName} fits within your case and is compatible with your
-      motherboard, power supply, and monitor.
+      {props.nameWithNoCompany}&apos;s dimensions, bus interface, power
+      consumption, and output ports. These specs are useful for verifying that
+      the {props.nameWithNoCompanyNoBrand} fits within your case and is
+      compatible with your motherboard, power supply, and monitor.
     </>
   ),
 });

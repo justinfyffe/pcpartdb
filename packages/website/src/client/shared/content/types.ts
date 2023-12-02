@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from 'react';
 
 export type ContentTags = string[] | Record<string, boolean>;
-export type ContentComponentParams = Record<string, string | React.ReactNode>;
+export type ContentComponentParams = Record<string, any>;
 export type ContentFunctionParams = Record<string, string>;
 export type ContentParams = ContentComponentParams | ContentFunctionParams;
 

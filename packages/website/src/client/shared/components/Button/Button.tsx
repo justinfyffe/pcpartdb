@@ -10,6 +10,7 @@ export enum ButtonVariant {
   Warning = 'warning',
   Danger = 'danger',
   Link = 'link',
+  Card = 'card',
 }
 
 export interface ButtonProps
@@ -32,6 +33,7 @@ const BUTTON_VARIANTS = {
   [ButtonVariant.Danger]: 'bg-danger text-default',
   [ButtonVariant.Link]:
     'bg-transparent text-content shadow-none mx-[-16px] my-[-8px] text-link',
+  [ButtonVariant.Card]: 'bg-light-shades text-content py-4 px-6',
 };
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(

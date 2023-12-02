@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import {
-  CompareCpusAdditionalData,
   CompareCpusViewModel,
+  CpuContentData,
   CpuProduct,
   CpuProductComparison,
   hasProductFieldRawValue,
+  ListOrder,
+  ListSort,
   productFieldRawValue,
   ProductType,
   RelatedProductComparisons,
@@ -35,26 +37,44 @@ export class CompareCpusViewModelService {
     const viewModel = await this.cacheService.cache(
       async () => {
         const comparison = await this.getComparison(slug, ctx);
-        const additionalData = await this.getAdditionalData(comparison);
+
+        const relativePerformanceCpus = await this.getRelativePerformanceCpus(
+          comparison[0],
+          comparison[1],
+        );
+
+        const relativeValueCpus = await this.getRelativeValueCpus(
+          comparison[0],
+          comparison[1],
+        );
 
         const relatedCpus = await this.getRelatedCpus(
           3,
-          additionalData.relativePerformanceCpus,
-          additionalData.relativeValueCpus,
+          relativePerformanceCpus,
+          relativeValueCpus,
           comparison,
         );
         const relatedComparisons = await this.getRelatedComparisons(
           3,
-          additionalData.relativePerformanceCpus,
-          additionalData.relativeValueCpus,
+          relativePerformanceCpus,
+          relativeValueCpus,
           comparison,
         );
 
+        const contentData: CpuContentData = {
+          bestPerformanceCpu: await this.getBestPerformanceCpu(ctx),
+        };
+
         return {
           comparison,
-          additionalData,
+
+          relativePerformanceCpus,
+          relativeValueCpus,
+
           relatedCpus,
           relatedCpuComparisons: relatedComparisons,
+
+          contentData,
         } as CompareCpusViewModel;
       },
       { type: CacheType.CpuComparison, key: `viewModel__${slug}` },
@@ -89,23 +109,6 @@ export class CompareCpusViewModelService {
       { ctx, isolationLevel: 'ReadCommitted' },
     );
     return comparison as CpuProductComparison;
-  }
-
-  private async getAdditionalData(comparison: CpuProductComparison) {
-    const relativePerformanceCpus = await this.getRelativePerformanceCpus(
-      comparison[0],
-      comparison[1],
-    );
-
-    const relativeValueCpus = await this.getRelativeValueCpus(
-      comparison[0],
-      comparison[1],
-    );
-
-    return {
-      relativePerformanceCpus,
-      relativeValueCpus,
-    } as CompareCpusAdditionalData;
   }
 
   private async getRelativePerformanceCpus(
@@ -299,14 +302,14 @@ export class CompareCpusViewModelService {
 
   private async getRelatedCpus(
     total: number,
-    performanceCpus: CpuProduct[],
-    valueCpus: CpuProduct[],
-    excludeCpus: CpuProduct[],
+    performanceCpus: Partial<CpuProduct>[],
+    valueCpus: Partial<CpuProduct>[],
+    excludeCpus: Partial<CpuProduct>[],
   ) {
     const map = [...performanceCpus, ...valueCpus].reduce((acc, cpu) => {
       acc[cpu.id] = cpu;
       return acc;
-    }, {} as Record<number, CpuProduct>);
+    }, {} as Record<number, Partial<CpuProduct>>);
 
     const performanceIds = performanceCpus.map((cpu) => cpu.id);
     const valueIds = valueCpus.map((cpu) => cpu.id);
@@ -314,7 +317,7 @@ export class CompareCpusViewModelService {
     const set = new Set([...performanceIds, ...valueIds]);
     excludeCpus.forEach((cpu) => set.delete(cpu.id));
 
-    const related: CpuProduct[] = [];
+    const related: Partial<CpuProduct>[] = [];
     for (let i = 0; i < total && set.size > 0; ++i) {
       const randIdx = Math.floor(Math.random() * set.size);
       const id = [...set.values()][randIdx];
@@ -328,14 +331,14 @@ export class CompareCpusViewModelService {
 
   private async getRelatedComparisons(
     total: number,
-    performanceCpus: CpuProduct[],
-    valueCpus: CpuProduct[],
+    performanceCpus: Partial<CpuProduct>[],
+    valueCpus: Partial<CpuProduct>[],
     pageComparison: CpuProductComparison,
   ) {
     const map = [...performanceCpus, ...valueCpus].reduce((acc, cpu) => {
       acc[cpu.id] = cpu;
       return acc;
-    }, {} as Record<number, CpuProduct>);
+    }, {} as Record<number, Partial<CpuProduct>>);
 
     const performanceIds = performanceCpus.map((cpu) => cpu.id);
     const valueIds = valueCpus.map((cpu) => cpu.id);
@@ -343,7 +346,7 @@ export class CompareCpusViewModelService {
     const set = new Set([...performanceIds, ...valueIds]);
     pageComparison.forEach((cpu) => set.delete(cpu.id));
 
-    const related: CpuProduct[] = [];
+    const related: Partial<CpuProduct>[] = [];
     for (let i = 0; i < total && set.size > 0; ++i) {
       const randIdx = Math.floor(Math.random() * set.size);
       const id = [...set.values()][randIdx];
@@ -358,5 +361,29 @@ export class CompareCpusViewModelService {
     ]);
 
     return { comparisons } as RelatedProductComparisons;
+  }
+
+  private async getBestPerformanceCpu(ctx: Context) {
+    return await this.db.transaction(
+      async () => {
+        const response = await this.productService.list(
+          {
+            productType: ProductType.Cpu,
+            query: {
+              filter: { performanceRated: true },
+              orderBy: {
+                sort: ListSort.PerformanceRating,
+                order: ListOrder.Desc,
+              },
+              pagination: { limit: 1 },
+            },
+          },
+          {},
+          ctx,
+        );
+        return (response.results?.[0] || null) as CpuProduct;
+      },
+      { ctx, isolationLevel: 'ReadCommitted' },
+    );
   }
 }

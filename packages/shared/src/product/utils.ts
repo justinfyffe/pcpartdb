@@ -480,13 +480,16 @@ export function hasProductRank(product: Product, rankKey: RankKey) {
 }
 
 export function getProductRank(product: Product, rankKey: RankKey) {
-  return (
-    product?.ranks?.filter((rank) => rank.rankKey === rankKey)?.[0] || null
-  );
+  const parent = product?.parent ?? product;
+  return parent?.ranks?.filter((rank) => rank.rankKey === rankKey)?.[0] || null;
 }
 
 export function productRankValue(product: Product, rankKey: RankKey) {
   return getProductRank(product, rankKey)?.rank;
+}
+
+export function productRankTotalRanked(product: Product, rankKey: RankKey) {
+  return getProductRank(product, rankKey)?.totalRanked;
 }
 
 export function hasProductSource(

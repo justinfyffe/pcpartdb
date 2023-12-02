@@ -137,13 +137,6 @@ export interface RelatedProductComparisons {
   comparisons: ProductComparison[];
 }
 
-// TODO: delete
-export interface ProductPerformanceScores {
-  productId: number;
-  performanceRating?: number;
-  performancePerMsrp?: number;
-}
-
 export interface ProductScoreCalculations {
   performanceRating?: number;
   performancePerMsrp?: number;

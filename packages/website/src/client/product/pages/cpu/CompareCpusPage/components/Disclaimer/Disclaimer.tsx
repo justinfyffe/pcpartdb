@@ -1,6 +1,7 @@
+import { formatProductName } from '@pcpartdb/shared';
 import { ContentContext } from 'packages/website/src/client/shared/content/ContentContext';
 import { compileContentComponent } from 'packages/website/src/client/shared/content/utils';
-import React, { useContext } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { ComparePageContext } from '../../context/ComparePageContext';
 
 const DisclaimerParagraph = compileContentComponent({
@@ -9,15 +10,20 @@ const DisclaimerParagraph = compileContentComponent({
   component: (props) => (
     <p className="text-dimmed mb-0">
       *Performance rating, performance per dollar, and rankings are approximate
-      values based on the {props.shortCpuName1} and {props.shortCpuName2}&apos;s
-      benchmarks and MSRP.
+      values based on the {props.name1} and {props.name2}&apos;s benchmarks and
+      MSRP.
     </p>
   ),
 });
 
 export const Disclaimer = () => {
-  const { contentParams, contentTags } = useContext(ComparePageContext);
-  const context = { tags: contentTags, params: contentParams };
+  const { comparison } = useContext(ComparePageContext);
+  const [cpu1, cpu2] = comparison;
+
+  const name1 = useMemo(() => formatProductName(cpu1), [cpu1]);
+  const name2 = useMemo(() => formatProductName(cpu2), [cpu2]);
+
+  const context = useMemo(() => ({ params: { name1, name2 } }), [name1, name2]);
 
   return (
     <ContentContext.Provider value={context}>

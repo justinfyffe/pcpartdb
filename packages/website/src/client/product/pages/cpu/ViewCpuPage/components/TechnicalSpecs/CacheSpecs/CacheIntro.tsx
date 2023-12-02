@@ -7,7 +7,8 @@ export const CacheIntroParagraph = compileContentComponent({
   deps: [],
   component: (props) => (
     <p className="text-dimmed">
-      {props.shortCpuName}&apos;s cache specs like its L1 cache and L2 cache.
+      {props.nameWithNoCompany}&apos;s cache specs like its L1 cache and L2
+      cache.
     </p>
   ),
 });

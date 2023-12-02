@@ -5,8 +5,7 @@ import { RetailModelsTable } from './RetailModelsTable';
 import { RetailModelsTitle } from './RetailModelsTitle';
 
 export const RetailModels: FunctionComponent = () => {
-  const { additionalData: contentData } = useContext(ComparePageContext);
-  const { retailModels1, retailModels2 } = contentData;
+  const { retailModels1, retailModels2 } = useContext(ComparePageContext);
 
   if (retailModels1?.length === 0 && retailModels2?.length === 0) {
     return <></>;
@@ -16,10 +15,7 @@ export const RetailModels: FunctionComponent = () => {
     <section>
       <RetailModelsTitle />
       <RetailModelsIntro />
-
-      <section className="mb-4">
-        <RetailModelsTable />
-      </section>
+      <RetailModelsTable />
     </section>
   );
 };

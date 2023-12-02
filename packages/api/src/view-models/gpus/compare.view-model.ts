@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import {
-  CompareGpusAdditionalData,
   CompareGpusViewModel,
   getGpuChipset,
+  GpuContentData,
   GpuProduct,
   GpuProductComparison,
   hasProductFieldRawValue,
+  ListOrder,
   ListSort,
   ProductFieldKey,
   productFieldRawValue,
@@ -38,26 +39,48 @@ export class CompareGpusViewModelService {
     const viewModel = await this.cacheService.cache(
       async () => {
         const comparison = await this.getComparison(slug, ctx);
-        const additionalData = await this.getAdditionalData(comparison, ctx);
+        const chipset1 = getGpuChipset(comparison[0]);
+        const chipset2 = getGpuChipset(comparison[1]);
+
+        const relativePerformanceGpus = await this.getRelativePerformanceGpus(
+          chipset1,
+          chipset2,
+        );
+
+        const relativeValueGpus = await this.getRelativeValueGpus(
+          chipset1,
+          chipset2,
+        );
+
+        const retailModels1 = await this.getRetailModels(chipset1, ctx);
+        const retailModels2 = await this.getRetailModels(chipset2, ctx);
 
         const relatedGpus = await this.getRelatedGpus(
-          3,
-          additionalData.relativePerformanceGpus,
-          additionalData.relativeValueGpus,
+          5,
+          relativePerformanceGpus,
+          relativeValueGpus,
           comparison,
         );
         const relatedComparisons = await this.getRelatedComparisons(
-          3,
-          additionalData.relativePerformanceGpus,
-          additionalData.relativeValueGpus,
+          5,
+          relativePerformanceGpus,
+          relativeValueGpus,
           comparison,
         );
 
+        const contentData: GpuContentData = {
+          bestPerformanceGpu: await this.getBestPerformanceGpu(ctx),
+        };
+
         return {
           comparison,
-          additionalData: additionalData,
+          relativePerformanceGpus,
+          relativeValueGpus,
+          retailModels1,
+          retailModels2,
           relatedGpus,
           relatedComparisons,
+          contentData,
         } as CompareGpusViewModel;
       },
       { type: CacheType.GpuComparison, key: `viewModel__${slug}` },
@@ -92,33 +115,6 @@ export class CompareGpusViewModelService {
       { ctx, isolationLevel: 'ReadCommitted' },
     );
     return comparison as GpuProductComparison;
-  }
-
-  private async getAdditionalData(
-    comparison: GpuProductComparison,
-    ctx: Context,
-  ) {
-    const chipset1 = getGpuChipset(comparison[0]);
-    const chipset2 = getGpuChipset(comparison[1]);
-
-    const retailModels1 = await this.getRetailModels(chipset1, ctx);
-    const retailModels2 = await this.getRetailModels(chipset2, ctx);
-
-    const relativePerformanceGpus = await this.getRelativePerformanceGpus(
-      chipset1,
-      chipset2,
-    );
-
-    const relativeValueGpus = await this.getRelativeValueGpus(
-      chipset1,
-      chipset2,
-    );
-    return {
-      relativePerformanceGpus,
-      relativeValueGpus,
-      retailModels1,
-      retailModels2,
-    } as CompareGpusAdditionalData;
   }
 
   private async getRetailModels(chipset: GpuProduct, ctx: Context) {
@@ -342,14 +338,14 @@ export class CompareGpusViewModelService {
 
   private async getRelatedGpus(
     total: number,
-    performanceGpus: GpuProduct[],
-    valueGpus: GpuProduct[],
-    excludeGpus: GpuProduct[],
+    performanceGpus: Partial<GpuProduct>[],
+    valueGpus: Partial<GpuProduct>[],
+    excludeGpus: Partial<GpuProduct>[],
   ) {
     const map = [...performanceGpus, ...valueGpus].reduce((acc, gpu) => {
       acc[gpu.id] = gpu;
       return acc;
-    }, {} as Record<number, GpuProduct>);
+    }, {} as Record<number, Partial<GpuProduct>>);
 
     const performanceIds = performanceGpus.map((gpu) => gpu.id);
     const valueIds = valueGpus.map((gpu) => gpu.id);
@@ -357,7 +353,7 @@ export class CompareGpusViewModelService {
     const set = new Set([...performanceIds, ...valueIds]);
     excludeGpus.forEach((gpu) => set.delete(gpu.id));
 
-    const related: GpuProduct[] = [];
+    const related: Partial<GpuProduct>[] = [];
     for (let i = 0; i < total && set.size > 0; ++i) {
       const randIdx = Math.floor(Math.random() * set.size);
       const id = [...set.values()][randIdx];
@@ -371,14 +367,14 @@ export class CompareGpusViewModelService {
 
   private async getRelatedComparisons(
     total: number,
-    performanceGpus: GpuProduct[],
-    valueGpus: GpuProduct[],
+    performanceGpus: Partial<GpuProduct>[],
+    valueGpus: Partial<GpuProduct>[],
     pageComparison: GpuProductComparison,
   ) {
     const map = [...performanceGpus, ...valueGpus].reduce((acc, gpu) => {
       acc[gpu.id] = gpu;
       return acc;
-    }, {} as Record<number, GpuProduct>);
+    }, {} as Record<number, Partial<GpuProduct>>);
 
     const performanceIds = performanceGpus.map((gpu) => gpu.id);
     const valueIds = valueGpus.map((gpu) => gpu.id);
@@ -386,7 +382,7 @@ export class CompareGpusViewModelService {
     const set = new Set([...performanceIds, ...valueIds]);
     pageComparison.forEach((gpu) => set.delete(gpu.id));
 
-    const related: GpuProduct[] = [];
+    const related: Partial<GpuProduct>[] = [];
     for (let i = 0; i < total && set.size > 0; ++i) {
       const randIdx = Math.floor(Math.random() * set.size);
       const id = [...set.values()][randIdx];
@@ -401,5 +397,29 @@ export class CompareGpusViewModelService {
     ]);
 
     return { comparisons } as RelatedProductComparisons;
+  }
+
+  private async getBestPerformanceGpu(ctx: Context) {
+    return await this.db.transaction(
+      async () => {
+        const response = await this.productService.list(
+          {
+            productType: ProductType.Gpu,
+            query: {
+              filter: { isChipset: true, performanceRated: true },
+              orderBy: {
+                sort: ListSort.PerformanceRating,
+                order: ListOrder.Desc,
+              },
+              pagination: { limit: 1 },
+            },
+          },
+          {},
+          ctx,
+        );
+        return (response.results?.[0] || null) as GpuProduct;
+      },
+      { ctx, isolationLevel: 'ReadCommitted' },
+    );
   }
 }

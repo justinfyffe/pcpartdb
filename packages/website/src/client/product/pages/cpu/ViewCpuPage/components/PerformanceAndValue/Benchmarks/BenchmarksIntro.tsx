@@ -7,8 +7,8 @@ const BenchmarksParagraph = compileContentComponent({
   deps: [],
   component: (props) => (
     <p className="text-dimmed">
-      Performance and benchmark metrics for the {props.shortCpuName}. These are
-      usually the best indicator for determing a CPUs performance.
+      Performance and benchmark metrics for the {props.nameWithNoCompany}. These
+      are usually the best indicator for determing a CPUs performance.
     </p>
   ),
 });

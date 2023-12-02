@@ -2,7 +2,6 @@ import {
   CpuProduct,
   CpuProductComparison,
   ListCpusResponse,
-  ProductType,
   RelatedProductComparisons,
   RelatedProducts,
 } from '../product';
@@ -11,49 +10,32 @@ export interface AdminEditCpuViewModel {
   cpu: CpuProduct;
 }
 
-export interface CompareCpusAdditionalData {
-  relativePerformanceCpus: CpuProduct[];
-  relativeValueCpus: CpuProduct[];
-}
-
 export interface CompareCpusViewModel {
   comparison: CpuProductComparison;
+
+  relativePerformanceCpus: CpuProduct[];
+  relativeValueCpus: CpuProduct[];
 
   relatedCpus: RelatedProducts;
   relatedCpuComparisons: RelatedProductComparisons;
 
-  additionalData: CompareCpusAdditionalData;
+  contentData: CpuContentData;
 }
 
 export interface ListCpusViewModel extends ListCpusResponse {}
 
-export interface ViewCpuContentData {
-  totalPerformanceCpus: number;
-
-  relativePerformanceCpus?: CpuProduct[];
-  relativeValueCpus?: CpuProduct[];
-
-  bestPerformanceCpu?: CpuProduct;
-  bestValueCpu?: CpuProduct;
-}
-
 export interface ViewCpuViewModel {
   cpu: CpuProduct;
+
+  relativePerformanceCpus: CpuProduct[];
+  relativeValueCpus: CpuProduct[];
 
   relatedCpus: RelatedProducts;
   relatedCpuComparisons: RelatedProductComparisons;
 
-  additionalData: ViewCpuContentData;
+  contentData: CpuContentData;
 }
 
-export interface CpuAdditionalData {
-  productType: ProductType.Cpu;
-
-  countPerformanceRanks?: number;
-  countPerformanceRanksForMarketSegment?: number;
-
+export interface CpuContentData {
   bestPerformanceCpu?: CpuProduct;
-
-  relativePerformanceCpus: CpuProduct[];
-  relativeValueCpus: CpuProduct[];
 }

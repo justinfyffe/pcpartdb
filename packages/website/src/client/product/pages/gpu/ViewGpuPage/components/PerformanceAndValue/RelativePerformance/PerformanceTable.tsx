@@ -25,8 +25,7 @@ export const PerformanceTable: FunctionComponent<PerformanceTableProps> = (
   props,
 ) => {
   const { className } = props;
-  const { gpu, additionalData: contentData } = useContext(ViewPageContext);
-  const { relativePerformanceGpus } = contentData;
+  const { gpu, relativePerformanceGpus } = useContext(ViewPageContext);
 
   return (
     <Table border responsive className={className}>

@@ -7,7 +7,7 @@ export const FeatureIntroParagraph = compileContentComponent({
   deps: [],
   component: (props) => (
     <p className="text-dimmed">
-      {props.shortCpuName}&apos;s features like bundled cooler, integrated
+      {props.nameWithNoCompany}&apos;s features like bundled cooler, integrated
       graphics, and extensions/technologies.
     </p>
   ),

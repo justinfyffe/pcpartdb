@@ -17,8 +17,8 @@ const PowerSupplySuggestedPsu = compileContentComponent({
   component: (props) => (
     <>
       {props.company} recommends using a power supply of at least{' '}
-      {props.suggestedPsu} with this card. A power supply lower than this can
-      result in system crashes and potentially damaging your hardware.
+      {props.suggestedPsu} with this card. A power supply lower than this might
+      result in system crashes and potentially damage your hardware.
     </>
   ),
 });

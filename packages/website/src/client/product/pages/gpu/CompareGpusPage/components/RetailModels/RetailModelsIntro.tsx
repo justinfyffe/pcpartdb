@@ -1,6 +1,7 @@
+import { formatProductName, getGpuChipset } from '@pcpartdb/shared';
 import { ContentContext } from 'packages/website/src/client/shared/content/ContentContext';
 import { compileContentComponent } from 'packages/website/src/client/shared/content/utils';
-import React, { useContext } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { ComparePageContext } from '../../context/ComparePageContext';
 
 const RetailModelsIntroSentence1 = compileContentComponent({
@@ -8,14 +9,29 @@ const RetailModelsIntroSentence1 = compileContentComponent({
   deps: ['chipsetShortName1', 'chipsetShortName2'],
   component: (props) => (
     <>
-      Retail models based on the {props.chipsetShortName1} and{' '}
-      {props.chipsetShortName2} chipsets.
+      Retail models based on the {props.chipsetName1} and {props.chipsetName2}{' '}
+      chipsets.
     </>
   ),
 });
 export const RetailModelsIntro = () => {
-  const { contentParams, contentTags } = useContext(ComparePageContext);
-  const context = { tags: contentTags, params: contentParams };
+  const { comparison } = useContext(ComparePageContext);
+  const [gpu1, gpu2] = comparison;
+  const [chipset1, chipset2] = [getGpuChipset(gpu1), getGpuChipset(gpu2)];
+
+  const chipsetName1 = useMemo(
+    () => formatProductName(chipset1, { company: false }),
+    [chipset1],
+  );
+  const chipsetName2 = useMemo(
+    () => formatProductName(chipset2, { company: false }),
+    [chipset2],
+  );
+
+  const context = useMemo(
+    () => ({ params: { chipsetName1, chipsetName2 } }),
+    [chipsetName1, chipsetName2],
+  );
 
   return (
     <ContentContext.Provider value={context}>

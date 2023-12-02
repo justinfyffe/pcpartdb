@@ -7,7 +7,7 @@ export const PowerIntroParagraph = compileContentComponent({
   deps: [],
   component: (props) => (
     <p className="text-dimmed">
-      {props.shortCpuName}&apos;s power consumption specs like its thermal
+      {props.nameWithNoCompany}&apos;s power consumption specs like its thermal
       design power and power limits.
     </p>
   ),

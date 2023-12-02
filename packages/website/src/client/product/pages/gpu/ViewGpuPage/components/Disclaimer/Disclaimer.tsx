@@ -5,11 +5,10 @@ import { ViewPageContext } from '../../context/ViewPageContext';
 
 const RatingDisclaimer = compileContentComponent({
   tags: [],
-  deps: ['chipsetShortName'],
   component: (props) => (
     <p className="text-dimmed mb-0">
       *Performance rating, performance per dollar, and rankings are approximate
-      values based on the {props.chipsetShortName}&apos;s benchmarks and MSRP.
+      values based on the {props.chipsetName}&apos;s benchmarks and MSRP.
     </p>
   ),
 });

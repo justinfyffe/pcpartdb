@@ -5,10 +5,8 @@ import { ValueIntro } from './ValueIntro';
 import { ValueTable } from './ValueTable';
 
 export const RelativeValue: FunctionComponent = () => {
-  const { comparison, additionalData: contentData } =
-    useContext(ComparePageContext);
+  const { comparison, relativeValueGpus } = useContext(ComparePageContext);
   const [gpu1, gpu2] = comparison;
-  const { relativeValueGpus } = contentData;
 
   const chipset1 = useMemo(() => getGpuChipset(gpu1), [gpu1]);
   const chipset2 = useMemo(() => getGpuChipset(gpu2), [gpu2]);
@@ -26,7 +24,7 @@ export const RelativeValue: FunctionComponent = () => {
 
   return (
     <section>
-      <h3 className="mb-0 font-semibold">Relative Value</h3>
+      <h3 className="mb-1 font-semibold">Relative Value</h3>
       <ValueIntro />
       <ValueTable />
     </section>

@@ -7,7 +7,7 @@ export const PhysicalIntroParagraph = compileContentComponent({
   deps: [],
   component: (props) => (
     <p className="text-dimmed">
-      {props.shortCpuName}&apos;s physical and architecture specs like its
+      {props.nameWithNoCompany}&apos;s physical and architecture specs like its
       codename, generation, PCI Express versions, and chipsets.
     </p>
   ),

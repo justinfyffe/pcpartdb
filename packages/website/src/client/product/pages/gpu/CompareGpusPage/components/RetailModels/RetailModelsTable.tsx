@@ -25,12 +25,11 @@ export const RetailModelsTable: FunctionComponent<RetailModelsTableProps> = (
 ) => {
   const { className } = props;
 
-  const { comparison, additionalData: contentData } =
+  const { comparison, retailModels1, retailModels2 } =
     useContext(ComparePageContext);
   const [currentGpu1, currentGpu2] = comparison;
   const chipset1 = getGpuChipset(comparison[0]);
   const chipset2 = getGpuChipset(comparison[1]);
-  const { retailModels1, retailModels2 } = contentData;
 
   const chipsetShortName1 = useMemo(
     () => formatProductName(chipset1, { company: false }),
@@ -42,7 +41,7 @@ export const RetailModelsTable: FunctionComponent<RetailModelsTableProps> = (
   );
 
   return (
-    <div className="flex md:flex-wrap gap-4">
+    <div className="flex flex-row md:flex-col gap-8">
       <Table border responsive className={classNames('flex-1', className)}>
         <THead>
           <Tr>

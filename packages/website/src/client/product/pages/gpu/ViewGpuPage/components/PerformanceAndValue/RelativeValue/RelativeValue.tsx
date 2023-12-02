@@ -5,8 +5,7 @@ import { ValueIntro } from './ValueIntro';
 import { ValueTable } from './ValueTable';
 
 export const RelativeValue: FunctionComponent = () => {
-  const { gpu, additionalData: contentData } = useContext(ViewPageContext);
-  const { relativeValueGpus } = contentData;
+  const { gpu, relativeValueGpus } = useContext(ViewPageContext);
   const chipset = getGpuChipset(gpu);
 
   if (

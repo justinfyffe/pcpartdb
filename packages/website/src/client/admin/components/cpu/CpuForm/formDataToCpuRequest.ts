@@ -18,6 +18,7 @@ export function formDataToCpuRequest(
       otherNames: formData.otherNames,
       searchText: formData.searchText,
       affiliateUrl: formData.affiliateUrl,
+      summary: formData.summary,
 
       // Product Fields
       fields: {

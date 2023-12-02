@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import {
+  CpuContentData,
   CpuProduct,
   hasProductFieldRawValue,
   ListOrder,
@@ -9,7 +10,6 @@ import {
   RelatedProductComparisons,
   RelatedProducts,
   RelatedProductType,
-  ViewCpuContentData,
   ViewCpuViewModel,
 } from '@pcpartdb/shared';
 import * as uuid from 'uuid';
@@ -35,26 +35,39 @@ export class ViewCpuViewModelService {
     const viewModel = await this.cacheService.cache(
       async () => {
         const cpu = await this.getCpu(slug, ctx);
-        const additionalData = await this.getAdditionalData(cpu, ctx);
+
+        const relativePerformanceCpus = await this.getRelativePerformanceCpus(
+          cpu,
+        );
+        const relativeValueCpus = await this.getRelativeValueCpus(cpu);
 
         const relatedCpus = await this.getRelatedCpus(
           3,
-          additionalData.relativePerformanceCpus,
-          additionalData.relativeValueCpus,
+          relativePerformanceCpus,
+          relativeValueCpus,
           cpu,
         );
         const relatedComparisons = await this.getRelatedComparisons(
           3,
-          additionalData.relativePerformanceCpus,
-          additionalData.relativeValueCpus,
+          relativePerformanceCpus,
+          relativeValueCpus,
           cpu,
         );
 
+        const contentData: CpuContentData = {
+          bestPerformanceCpu: await this.getBestPerformanceCpu(ctx),
+        };
+
         return {
           cpu,
-          additionalData: additionalData,
+
+          relativePerformanceCpus,
+          relativeValueCpus,
+
           relatedCpus,
           relatedCpuComparisons: relatedComparisons,
+
+          contentData,
         } as ViewCpuViewModel;
       },
       { type: CacheType.CpuProduct, key: `viewModel__${slug}` },
@@ -88,22 +101,6 @@ export class ViewCpuViewModelService {
       { ctx, isolationLevel: 'ReadCommitted' },
     );
     return cpu as CpuProduct;
-  }
-
-  private async getAdditionalData(cpu: CpuProduct, ctx: Context) {
-    const relativePerformanceCpus = await this.getRelativePerformanceCpus(cpu);
-    const relativeValueCpus = await this.getRelativeValueCpus(cpu);
-
-    const { totalPerformanceCpus, bestPerformanceCpu, bestValueCpu } =
-      await this.getCpuStats(ctx);
-
-    return {
-      totalPerformanceCpus: totalPerformanceCpus || [],
-      relativePerformanceCpus: relativePerformanceCpus || [],
-      relativeValueCpus: relativeValueCpus || [],
-      bestPerformanceCpu,
-      bestValueCpu,
-    } as ViewCpuContentData;
   }
 
   private async getRelativePerformanceCpus(seed: CpuProduct) {
@@ -161,14 +158,14 @@ export class ViewCpuViewModelService {
 
   private async getRelatedCpus(
     total: number,
-    performanceCpus: CpuProduct[],
-    valueCpus: CpuProduct[],
-    excludeCpu: CpuProduct,
+    performanceCpus: Partial<CpuProduct>[],
+    valueCpus: Partial<CpuProduct>[],
+    excludeCpu: Partial<CpuProduct>,
   ) {
     const map = [...performanceCpus, ...valueCpus].reduce((acc, cpu) => {
       acc[cpu.id] = cpu;
       return acc;
-    }, {} as Record<number, CpuProduct>);
+    }, {} as Record<number, Partial<CpuProduct>>);
 
     const performanceIds = performanceCpus.map((cpu) => cpu.id);
     const valueIds = valueCpus.map((cpu) => cpu.id);
@@ -176,7 +173,7 @@ export class ViewCpuViewModelService {
     const set = new Set([...performanceIds, ...valueIds]);
     set.delete(excludeCpu.id);
 
-    const related: CpuProduct[] = [];
+    const related: Partial<CpuProduct>[] = [];
     for (let i = 0; i < total && set.size > 0; ++i) {
       const randIdx = Math.floor(Math.random() * set.size);
       const id = [...set.values()][randIdx];
@@ -190,14 +187,14 @@ export class ViewCpuViewModelService {
 
   private async getRelatedComparisons(
     total: number,
-    performanceCpus: CpuProduct[],
-    valueCpus: CpuProduct[],
-    pageCpu: CpuProduct,
+    performanceCpus: Partial<CpuProduct>[],
+    valueCpus: Partial<CpuProduct>[],
+    pageCpu: Partial<CpuProduct>,
   ) {
     const map = [...performanceCpus, ...valueCpus].reduce((acc, cpu) => {
       acc[cpu.id] = cpu;
       return acc;
-    }, {} as Record<number, CpuProduct>);
+    }, {} as Record<number, Partial<CpuProduct>>);
 
     const performanceIds = performanceCpus.map((cpu) => cpu.id);
     const valueIds = valueCpus.map((cpu) => cpu.id);
@@ -205,7 +202,7 @@ export class ViewCpuViewModelService {
     const set = new Set([...performanceIds, ...valueIds]);
     set.delete(pageCpu.id);
 
-    const related: CpuProduct[] = [];
+    const related: Partial<CpuProduct>[] = [];
     for (let i = 0; i < total && set.size > 0; ++i) {
       const randIdx = Math.floor(Math.random() * set.size);
       const id = [...set.values()][randIdx];
@@ -219,19 +216,8 @@ export class ViewCpuViewModelService {
     return { comparisons } as RelatedProductComparisons;
   }
 
-  private async getCpuStats(ctx: Context) {
-    // cache all of the following
-    const countRequest = {
-      productType: ProductType.Cpu,
-      query: { filter: { performanceRated: true } },
-    };
-    const totalPerformanceCpus = await this.db.transaction(
-      () => this.productService.count(countRequest, ctx),
-      { ctx, isolationLevel: 'ReadCommitted' },
-    );
-
-    // TODO: convert to find instead of list
-    const bestPerformanceCpu = await this.db.transaction(
+  private async getBestPerformanceCpu(ctx: Context) {
+    return await this.db.transaction(
       async () => {
         const response = await this.productService.list(
           {
@@ -245,41 +231,12 @@ export class ViewCpuViewModelService {
               pagination: { limit: 1 },
             },
           },
-          { skipCount: true },
+          {},
           ctx,
         );
-        return response.results?.[0] || null;
+        return (response.results?.[0] || null) as CpuProduct;
       },
       { ctx, isolationLevel: 'ReadCommitted' },
     );
-
-    // TODO: convert to find instead of list
-    const bestValueCpu = await this.db.transaction(
-      async () => {
-        const response = await this.productService.list(
-          {
-            productType: ProductType.Cpu,
-            query: {
-              filter: { valueRated: true },
-              orderBy: {
-                sort: ListSort.PerformancePerMsrp,
-                order: ListOrder.Desc,
-              },
-              pagination: { limit: 1 },
-            },
-          },
-          { skipCount: true },
-          ctx,
-        );
-        return response.results?.[0] || null;
-      },
-      { ctx, isolationLevel: 'ReadCommitted' },
-    );
-
-    return {
-      totalPerformanceCpus,
-      bestPerformanceCpu,
-      bestValueCpu,
-    };
   }
 }

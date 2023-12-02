@@ -7,7 +7,7 @@ const ValueIntroParagraph = compileContentComponent({
   deps: [],
   component: (props) => (
     <p className="text-dimmed">
-      Compare {props.shortCpuName}&apos;s value with similar{' '}
+      Compare {props.nameWithNoCompany}&apos;s value with similar{' '}
       {props.marketSegment} CPUs. Relative value provides insight into which
       CPUs gives the best bang for your buck. This data is based on performance
       and MSRP.

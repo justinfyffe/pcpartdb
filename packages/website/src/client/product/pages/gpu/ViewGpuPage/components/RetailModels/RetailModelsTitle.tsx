@@ -4,8 +4,7 @@ import React, { useContext } from 'react';
 import { ViewPageContext } from '../../context/ViewPageContext';
 
 const Title = compileContentComponent({
-  deps: ['chipsetShortName'],
-  component: (props) => <>{props.chipsetShortName} Graphics Cards</>,
+  component: (props) => <>{props.chipsetNameWithNoCompany} Graphics Cards</>,
 });
 
 export const RetailModelsTitle = () => {

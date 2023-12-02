@@ -1,60 +1,40 @@
 import {
-  CpuAdditionalData,
-  GpuAdditionalData,
   isCpuProduct,
   isGpuChipset,
-  isGpuRetaillModel,
+  isGpuRetailModel,
   Product,
-  ProductAdditionalData,
 } from '@pcpartdb/shared';
 import Markdown from 'markdown-to-jsx';
 import React, { useMemo } from 'react';
+import { ContentParams, ContentTags } from '../../../shared/content/types';
 import { CpuSummary } from './cpu/CpuSummary';
 import { GpuChipsetSummary } from './gpu-chipset/GpuChipsetSummary';
 import { GpuRetailModelSummary } from './gpu-retail-model/GpuRetailModelSummary';
-import { populateSummaryVariables } from './variables';
 
 interface ProductSummaryProps {
   product: Product;
-  additionalData: ProductAdditionalData;
+  tags: ContentTags;
+  params: ContentParams;
 }
 
 export const ProductSummary = (props: ProductSummaryProps) => {
-  const { product, additionalData } = props;
+  const { product, tags, params } = props;
 
   const rawSummary = product?.summary;
 
-  // Replace variables denoted as "{{variable_name}}"
+  // Replace variables denoted as "{{variableName}}"
   const summary = useMemo(
-    () =>
-      rawSummary
-        ? populateSummaryVariables(rawSummary, product, additionalData)
-        : null,
-    [product, rawSummary, additionalData],
+    () => (rawSummary ? populateSummaryVariables(rawSummary, params) : null),
+    [rawSummary, params],
   );
 
   if (!summary) {
     if (isGpuChipset(product)) {
-      return (
-        <GpuChipsetSummary
-          gpu={product}
-          additionalData={additionalData as GpuAdditionalData}
-        />
-      );
-    } else if (isGpuRetaillModel(product)) {
-      return (
-        <GpuRetailModelSummary
-          gpu={product}
-          additionalData={additionalData as GpuAdditionalData}
-        />
-      );
+      return <GpuChipsetSummary tags={tags} params={params} />;
+    } else if (isGpuRetailModel(product)) {
+      return <GpuRetailModelSummary tags={tags} params={params} />;
     } else if (isCpuProduct(product)) {
-      return (
-        <CpuSummary
-          cpu={product}
-          additionalData={additionalData as CpuAdditionalData}
-        />
-      );
+      return <CpuSummary tags={tags} params={params} />;
     }
 
     return <></>;
@@ -62,3 +42,14 @@ export const ProductSummary = (props: ProductSummaryProps) => {
 
   return <Markdown>{summary}</Markdown>;
 };
+
+function populateSummaryVariables(rawOverview: string, params: ContentParams) {
+  let overview = rawOverview;
+
+  const keys = Object.keys(params);
+  for (const key of keys) {
+    overview = overview.replaceAll(`{{${key}}}`, params[key]);
+  }
+
+  return overview;
+}

@@ -24,8 +24,7 @@ export const RetailModelsTable: FunctionComponent<RetailModelsTableProps> = (
   props,
 ) => {
   const { className } = props;
-  const { gpu, additionalData: contentData } = useContext(ViewPageContext);
-  const { retailModels } = contentData;
+  const { gpu, retailModels } = useContext(ViewPageContext);
 
   const currentRetailModel = gpu;
 

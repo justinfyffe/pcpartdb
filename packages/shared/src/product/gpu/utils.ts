@@ -30,7 +30,7 @@ export function isGpuChipset(product: Product): product is GpuProduct {
   return isGpuProduct(product) && product.parentId == null;
 }
 
-export function isGpuRetaillModel(product: Product): product is GpuProduct {
+export function isGpuRetailModel(product: Product): product is GpuProduct {
   return isGpuProduct(product) && product.parentId != null;
 }
 

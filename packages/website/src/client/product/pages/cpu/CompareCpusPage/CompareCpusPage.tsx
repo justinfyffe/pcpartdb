@@ -27,26 +27,24 @@ import {
   TechnicalSpecs,
 } from './components';
 import { PerformanceAndValue } from './components/PerformanceAndValue/PerformanceAndValue';
-import { ComparePageContext } from './context/ComparePageContext';
-import { useComparePageContextProps } from './hooks/useComparePageContextProps';
+import {
+  ComparePageContext,
+  createComparePageContext,
+} from './context/ComparePageContext';
 
 export const CompareCpusPage = (
   props: CompareCpusViewModel & { config: Config },
 ) => {
-  const {
-    comparison,
-    additionalData: contentData,
-    relatedCpus,
-    relatedCpuComparisons: relatedComparisons,
-    config,
-  } = props;
+  const { config, ...viewModel } = props;
+  const { comparison, relatedCpus, relatedCpuComparisons } = viewModel;
+
   const [cpu1, cpu2] = comparison;
   useProductCache(ProductType.Cpu, cpu1, cpu2);
 
-  const context = useComparePageContextProps({
-    comparison,
-    additionalData: contentData,
-  });
+  const context = useMemo(
+    () => createComparePageContext(viewModel),
+    [viewModel],
+  );
 
   const pageTitle = useMemo(
     () => formatProductComparisonName(comparison),
@@ -147,7 +145,7 @@ export const CompareCpusPage = (
           <Sidenav>
             <SidenavRelatedComparisons
               productType={ProductType.Cpu}
-              comparisons={relatedComparisons.comparisons}
+              comparisons={relatedCpuComparisons.comparisons}
             />
             <SidenavRelatedProducts
               productType={ProductType.Cpu}

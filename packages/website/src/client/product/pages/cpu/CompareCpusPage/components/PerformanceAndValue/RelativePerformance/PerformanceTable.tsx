@@ -37,10 +37,9 @@ export const PerformanceTable: FunctionComponent<PerformanceTableProps> = (
   props,
 ) => {
   const { className } = props;
-  const { comparison, additionalData: contentData } =
+  const { comparison, relativePerformanceCpus } =
     useContext(ComparePageContext);
   const [cpu1, cpu2] = comparison;
-  const { relativePerformanceCpus } = contentData;
 
   const [baselineCpu, setBaselineCpu] = useState(() => {
     return hasProductFieldValue(cpu1.fields?.performanceRating) ? cpu1 : cpu2;

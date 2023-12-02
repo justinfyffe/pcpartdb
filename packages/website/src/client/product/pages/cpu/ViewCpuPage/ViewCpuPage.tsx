@@ -26,19 +26,18 @@ import {
   TechnicalSpecs,
 } from './components';
 import { PerformanceAndValue } from './components/PerformanceAndValue/PerformanceAndValue';
-import { ViewPageContext } from './context/ViewPageContext';
-import { useViewPageContextProps } from './hooks/useViewPageContextProps';
+import {
+  createViewPageContext,
+  ViewPageContext,
+} from './context/ViewPageContext';
 
 export const ViewCpuPage = (props: ViewCpuViewModel & { config: Config }) => {
-  const { cpu, relatedCpus, relatedCpuComparisons, additionalData, config } =
-    props;
+  const { config, ...viewModel } = props;
+  const { cpu, relatedCpus, relatedCpuComparisons } = viewModel;
+
   useProductCache(ProductType.Cpu, cpu);
 
-  const context = useViewPageContextProps({
-    cpu,
-    additionalData: additionalData,
-  });
-
+  const context = useMemo(() => createViewPageContext(viewModel), [viewModel]);
   const cpuName = useMemo(() => formatProductName(cpu), [cpu]);
   const shortCpuName = useMemo(
     () => formatProductName(cpu, { company: false }),

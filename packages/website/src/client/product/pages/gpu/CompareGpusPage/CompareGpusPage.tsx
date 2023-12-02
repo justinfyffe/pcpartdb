@@ -14,9 +14,6 @@ import { Breadcrumb } from 'packages/website/src/client/shared/components/Breadc
 import { Breadcrumbs } from 'packages/website/src/client/shared/components/Breadcrumbs/Breadcrumbs';
 import { Seo } from 'packages/website/src/client/shared/components/Seo/Seo';
 import { WebsiteLayout } from 'packages/website/src/client/shared/layouts/website/WebsiteLayout';
-import { Sidenav } from 'packages/website/src/client/sidenav/components/Sidenav/Sidenav';
-import { SidenavRelatedComparisons } from 'packages/website/src/client/sidenav/components/SidenavRelatedComparisons/SidenavRelatedComparisons';
-import { SidenavRelatedProducts } from 'packages/website/src/client/sidenav/components/SidenavRelatedProducts/SidenavRelatedProducts';
 import React, { useMemo } from 'react';
 import { CompareProductsForm } from '../../../components/CompareProductsForm/CompareProductsForm';
 import {
@@ -28,31 +25,31 @@ import {
   TechnicalSpecs,
 } from './components';
 import { PerformanceAndValue } from './components/PerformanceAndValue/PerformanceAndValue';
-import { ComparePageContext } from './context/ComparePageContext';
-import { useComparePageContextProps } from './hooks/useComparePageContextProps';
+import { RelatedComparisons } from './components/Related/RelatedComparisons';
+import { RelatedGpus } from './components/Related/RelatedGpus';
+import {
+  ComparePageContext,
+  createComparePageContext,
+} from './context/ComparePageContext';
 
 export const CompareGpusPage = (
   props: CompareGpusViewModel & { config: Config },
 ) => {
-  const {
-    comparison,
-    additionalData: additionalData,
-    relatedGpus,
-    relatedComparisons,
-    config,
-  } = props;
+  const { config, ...viewModel } = props;
+  const { comparison } = viewModel;
+
   const [gpu1, gpu2] = comparison;
   useProductCache(ProductType.Gpu, gpu1, gpu2);
-
-  const context = useComparePageContextProps({
-    comparison,
-    additionalData: additionalData,
-  });
 
   const pageTitle = formatProductComparisonName(comparison);
   const shortPageTitle = formatProductComparisonName(comparison, {
     company: false,
   });
+
+  const context = useMemo(
+    () => createComparePageContext(viewModel),
+    [viewModel],
+  );
 
   const shortGpuName1 = useMemo(
     () => formatProductName(gpu1, { company: false, brand: true }),
@@ -126,12 +123,7 @@ export const CompareGpusPage = (
             />
           </section>
 
-          <article className="flex-1 flex flex-col gap-4">
-            {/* <section className="flex md:flex-wrap gap-8 justify-evenly">
-              <GpuHeader gpu={gpu1} />
-              <GpuHeader gpu={gpu2} />
-            </section> */}
-
+          <article className="flex-1 flex flex-col gap-8">
             <Highlights />
             <Overview />
             <GeneralInfo />
@@ -140,19 +132,11 @@ export const CompareGpusPage = (
 
             <RetailModels />
 
+            <RelatedComparisons />
+            <RelatedGpus />
+
             <Disclaimer />
           </article>
-
-          <Sidenav>
-            <SidenavRelatedComparisons
-              productType={ProductType.Gpu}
-              comparisons={relatedComparisons.comparisons}
-            />
-            <SidenavRelatedProducts
-              productType={ProductType.Gpu}
-              products={relatedGpus.products}
-            />
-          </Sidenav>
         </div>
       </WebsiteLayout>
     </ComparePageContext.Provider>

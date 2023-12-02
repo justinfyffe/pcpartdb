@@ -4,9 +4,8 @@ import React, { useContext } from 'react';
 import { ViewPageContext } from '../../context/ViewPageContext';
 
 const RetailModelsIntroSentence1 = compileContentComponent({
-  deps: ['chipsetShortName'],
   component: (props) => (
-    <>Retail models based on the {props.chipsetShortName} chipset.</>
+    <>Retail models based on the {props.chipsetNameWithNoCompany} chipset.</>
   ),
 });
 export const RetailModelsIntro = () => {

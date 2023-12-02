@@ -7,7 +7,7 @@ export const CoresIntroParagraph = compileContentComponent({
   deps: [],
   component: (props) => (
     <p className="text-dimmed">
-      {props.shortCpuName}&apos;s core and clock speed specs like its core
+      {props.nameWithNoCompany}&apos;s core and clock speed specs like its core
       count, thread count, clock frequency, and turbo clock.
     </p>
   ),

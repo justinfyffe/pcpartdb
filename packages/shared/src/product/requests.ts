@@ -1,5 +1,5 @@
 import { ListQuery, ListRequest, ListResponse } from '../common';
-import { RankKey } from './ranks';
+import { ProductRank, RankKey } from './ranks';
 import { RelatedProductType } from './related';
 import { ProductSource } from './sources';
 import {
@@ -90,6 +90,6 @@ export interface RejectProductUpdateRequest {}
 export interface ProductCalculationsRequest {
   productId: number;
   scores?: ProductScoreCalculations;
-  ranks?: Partial<Record<RankKey, number>>;
+  ranks?: Partial<Record<RankKey, Pick<ProductRank, 'rank' | 'totalRanked'>>>;
   related?: Partial<Record<RelatedProductType, number[]>>;
 }

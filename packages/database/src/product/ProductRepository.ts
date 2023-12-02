@@ -558,7 +558,8 @@ export class ProductRepository {
         id: undefined,
         productId: calculation.productId,
         rankKey: key,
-        rank,
+        rank: rank.rank,
+        totalRanked: rank.totalRanked,
         metadata: null,
       }));
 

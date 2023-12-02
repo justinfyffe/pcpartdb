@@ -106,6 +106,7 @@ export function cpuFormOptions(cpu?: CpuProduct): UseFormProps<CpuFormData> {
       otherNames: cpu?.otherNames || [],
       searchText: cpu?.searchText ?? null,
       affiliateUrl: cpu?.affiliateUrl ?? null,
+      summary: cpu?.summary ?? null,
 
       // Data Sources
       sources,

@@ -1,10 +1,10 @@
 import {
-  CpuAdditionalData,
+  CpuContentData,
   CpuProduct,
   formatGpuDimensions,
   formatProductName,
   getGpuChipset,
-  GpuAdditionalData,
+  GpuContentData,
   GpuProduct,
   hasLaunched,
   hasProductFieldRawValue,
@@ -12,9 +12,10 @@ import {
   isGpuProduct,
   isPastLaunchDate,
   Product,
-  ProductAdditionalData,
+  ProductContentData,
   productFieldFormattedValue,
   productFieldRawValue,
+  productRankTotalRanked,
   productRankValue,
   RankKey,
 } from '@pcpartdb/shared';
@@ -22,12 +23,20 @@ import { ContentParams } from '../../shared/content/types';
 
 export function buildContentParams(
   product: Product,
-  additionalData: ProductAdditionalData,
+  contentData: ProductContentData,
 ) {
   const params: ContentParams = {};
 
   params['architecture'] = productFieldFormattedValue(
     product.fields.architecture,
+  );
+  params['countPerformanceRanks'] = productRankTotalRanked(
+    product,
+    RankKey.PerformanceRating,
+  );
+  params['countPerformanceRanksForMarketSegment'] = productRankTotalRanked(
+    product,
+    RankKey.PerformanceRatingForMarketSegment,
   );
   params['codename'] = productFieldFormattedValue(product.fields.codename);
   params['company'] = product.company;
@@ -70,18 +79,18 @@ export function buildContentParams(
     ...params,
     ...buildCpuContentParams(
       product as CpuProduct,
-      additionalData as CpuAdditionalData,
+      contentData as CpuContentData,
     ),
     ...buildGpuContentParams(
       product as GpuProduct,
-      additionalData as GpuAdditionalData,
+      contentData as GpuContentData,
     ),
   };
 }
 
 function buildCpuContentParams(
   product: CpuProduct,
-  additionalData: CpuAdditionalData,
+  additionalData: CpuContentData,
 ) {
   const params: ContentParams = {};
   if (!isCpuProduct(product)) {
@@ -100,7 +109,6 @@ function buildCpuContentParams(
   params['bestPerformanceName'] = formatProductName(
     additionalData?.bestPerformanceCpu,
   );
-  params['countPerformanceRanks'] = additionalData?.countPerformanceRanks;
 
   params['boostClock'] = productFieldFormattedValue(product.fields.turboClock);
   params['bundledCooler'] = productFieldFormattedValue(
@@ -131,7 +139,7 @@ function buildCpuContentParams(
 
 function buildGpuContentParams(
   product: GpuProduct,
-  additionalData: GpuAdditionalData,
+  additionalData: GpuContentData,
 ) {
   const params: ContentParams = {};
   if (!isGpuProduct(product)) {
@@ -151,9 +159,11 @@ function buildGpuContentParams(
   params['bestPerformanceName'] = formatProductName(
     additionalData?.bestPerformanceGpu,
   );
-  params['countPerformanceRanks'] = additionalData?.countPerformanceRanks;
-  params['countPerformanceRanksForMarketSegment'] =
-    additionalData?.countPerformanceRanksForMarketSegment;
+
+  params['chipsetName'] = formatProductName(chipset);
+  params['chipsetNameWithNoCompany'] = formatProductName(chipset, {
+    company: false,
+  });
   params['dimensions'] = formatGpuDimensions(product);
   params['memoryBandwidth'] = hasProductFieldRawValue(
     product.fields.memoryBandwidth,

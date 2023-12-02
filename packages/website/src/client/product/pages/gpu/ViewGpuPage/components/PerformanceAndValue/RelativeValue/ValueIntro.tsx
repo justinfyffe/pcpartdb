@@ -4,10 +4,9 @@ import React, { useContext } from 'react';
 import { ViewPageContext } from '../../../context/ViewPageContext';
 
 const ValueIntroSentence1 = compileContentComponent({
-  deps: [],
   component: (props) => (
     <>
-      Compare {props.chipsetShortName}&apos;s value with similar{' '}
+      Compare {props.chipsetNameWithNoCompany}&apos;s value with similar{' '}
       {props.marketSegment} GPUs. Relative value provides insight into which GPU
       gives the best bang for your buck. This data is based on chipset
       performance and MSRP.

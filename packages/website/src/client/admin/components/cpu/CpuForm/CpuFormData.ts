@@ -14,6 +14,7 @@ export interface CpuFormData {
   otherNames?: string[];
   searchText?: string;
   affiliateUrl?: string;
+  summary?: string;
 
   // General Info
   partNumber?: CpuField<string>;

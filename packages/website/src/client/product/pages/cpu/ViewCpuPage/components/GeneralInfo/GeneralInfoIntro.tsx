@@ -7,8 +7,8 @@ const GeneralInfoParagraph = compileContentComponent({
   deps: [],
   component: (props) => (
     <p className="text-dimmed">
-      General information about the {props.shortCpuName} like its manufacturer,
-      release date, launch price, and production status.
+      General information about the {props.nameWithNoCompany} like its
+      manufacturer, release date, launch price, and production status.
     </p>
   ),
 });

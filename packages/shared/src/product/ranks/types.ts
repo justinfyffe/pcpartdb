@@ -18,6 +18,7 @@ export interface ProductRank {
 
   rankKey: RankKey;
   rank?: number;
+  totalRanked?: number;
 
   metadata?: ProductRankMeta;
 }

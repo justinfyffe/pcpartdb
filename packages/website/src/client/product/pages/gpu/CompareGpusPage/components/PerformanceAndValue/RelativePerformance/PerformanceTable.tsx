@@ -38,11 +38,10 @@ export const PerformanceTable: FunctionComponent<PerformanceTableProps> = (
   props,
 ) => {
   const { className } = props;
-  const { comparison, additionalData: contentData } =
+  const { comparison, relativePerformanceGpus } =
     useContext(ComparePageContext);
   const chipset1 = getGpuChipset(comparison[0]);
   const chipset2 = getGpuChipset(comparison[1]);
-  const { relativePerformanceGpus } = contentData;
 
   const [baselineChipset, setBaselineChipset] = useState(() => {
     return hasProductFieldValue(chipset1.fields?.performanceRating)

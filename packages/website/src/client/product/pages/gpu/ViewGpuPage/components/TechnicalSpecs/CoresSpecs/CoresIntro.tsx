@@ -7,9 +7,10 @@ export const CoresIntroSentence1 = compileContentComponent({
   deps: [],
   component: (props) => (
     <>
-      {props.shortGpuName}&apos;s cores, clock speed, and cache. These specs
-      have an impact on how fast the {props.shortGpuName} can process graphics.
-      Each type of core serves a specific computational purpose.
+      {props.nameWithNoCompany}&apos;s cores, clock speed, and cache. These
+      specs have an impact on how fast the {props.nameWithNoCompanyNoBrand} can
+      process graphics. Each type of core serves a specific computational
+      purpose.
     </>
   ),
 });

@@ -119,6 +119,17 @@ async function getActionFromStalenessCheck(
   context: AutomationContext,
 ): Promise<AutomationAction> {
   const { metadata } = context;
+  if (
+    isStale(
+      metadata?.updateProductCalculationsDate,
+      UPDATE_PRODUCT_CALCULATIONS_FREQUENCY,
+    )
+  ) {
+    return {
+      status: AutomationActionStatus.Pending,
+      type: AutomationActionType.UpdateProductCalculations,
+    };
+  }
 
   if (isStale(metadata?.updateSitemapsDate, UPDATE_SITEMAPS_FREQUENCY)) {
     return {
@@ -143,18 +154,6 @@ async function getActionFromStalenessCheck(
     return {
       status: AutomationActionStatus.Pending,
       type: AutomationActionType.UpdateGpuChipsetSources,
-    };
-  }
-
-  if (
-    isStale(
-      metadata?.updateProductCalculationsDate,
-      UPDATE_PRODUCT_CALCULATIONS_FREQUENCY,
-    )
-  ) {
-    return {
-      status: AutomationActionStatus.Pending,
-      type: AutomationActionType.UpdateProductCalculations,
     };
   }
 

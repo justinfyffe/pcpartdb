@@ -7,7 +7,7 @@ export const PerformanceIntroParagraph = compileContentComponent({
   deps: [],
   component: (props) => (
     <p className="text-dimmed">
-      Compare {props.shortCpuName}&apos;s performance with similar{' '}
+      Compare {props.nameWithNoCompany}&apos;s performance with similar{' '}
       {props.marketSegment} CPUs. Relative performance provides insight into how
       its benchmarks compare to its peers.
     </p>

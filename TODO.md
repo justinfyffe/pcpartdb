@@ -14,48 +14,51 @@ When Bored:
 - Improve db performance using queryRaw, but only in places where it'll help
 
 Summaries:
+- [] Update UI
+  - [] Move side nav to bottom of site to improve internal linking of comparisons
+  - [X] Compare Gpu
+  - [] Compare CPU
+  - [] View Gpu
+  - [] View Cpu
 - [] Generate AI Prompt
   - [] Look into Prompt engineering
   - [] CPU
-    - [] Variables
     - [] Template
   - [] GPU
-    - [] Variables
     - [] Template
-- [] CPU Form
-  - [] Input component
-  - [] Save
-- [] GPU Form
-  - [] Input component
-  - [] Save
-- [] Product Summary
-  - [] Provide as many variables as possibles
-    - Should we reuse variables from content to simplify?
-- [] View Page
+- [X] CPU Form
+  - [X] Input component
+  - [X] Clear when empty
+  - [X] Save
+- [X] GPU Form
+  - [X] Input component
+  - [X] Clear when empty
+  - [X] Save
+- [X] Product Summary
 - [] Compare Page
   - [] One-way canonical
   - [] Show each product summary
-- [] Add date it was last generated.
+- [] Add date it was last generated?
 - [] Show generated summary if one isn't available
-  - [] Improve CPU
+  - [X] Improve CPU
     - [X] Write
     - [] Test
-  - [] Improve GPU Chipset
+      - [] Check percentages and variables
+  - [X] Improve GPU Chipset
     - [X] Write
     - [] Test
-  - [] Improve GPU Retail Model
-    - [] Write
+      - [] Check percentages and variables
+  - [X] Improve GPU Retail Model
+    - [X] Write
     - [] Test
-- [] Cleanup GPU Section Intros
+      - [] Check percentages and variables
+- [X] Cleanup GPU Section Intros
   - Reuse same content params/tags code as summary.
-- [] Cleanup CPU Section Intros
+- [X] Cleanup CPU Section Intros
   - Reuse same content params/tags code as summary
-- [] Cleanup CPU Section Intros
-- [] Cleanup comparison summaries
-- [] Cleanup unused ranks
 - [] TEST
   - [] AI Prompt
-  - [] Custom summary with variables
+  - [X] Custom summary with variables
   - [] Generated summary
 
 Better Performance Score

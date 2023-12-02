@@ -4,12 +4,11 @@ import React, { useContext } from 'react';
 import { ViewPageContext } from '../../../context/ViewPageContext';
 
 const BenchmarksIntroSentence1 = compileContentComponent({
-  deps: [],
   component: (props) => (
     <>
-      Performance and benchmark metrics for the {props.shortGpuName}. These are
-      usually the best indicator for determing a GPUs performance. This data is
-      based on its chipset.
+      Performance and benchmark metrics for the {props.chipsetNameWithNoCompany}
+      . These are usually the best indicator for determing a GPUs performance.
+      This data is based on its chipset.
     </>
   ),
 });

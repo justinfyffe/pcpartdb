@@ -1,7 +1,8 @@
-import { GpuAdditionalData, GpuProduct } from '@pcpartdb/shared';
+import {
+  ContentParams,
+  ContentTags,
+} from 'packages/website/src/client/shared/content/types';
 import React, { FunctionComponent } from 'react';
-import { buildContentParams } from '../../../content/params';
-import { buildContentTags } from '../../../content/tags';
 import { CompatibilityBlurb } from './CompatibilityBlurb';
 import { IntroBlurb } from './IntroBlurb';
 import { MemoryBlurb } from './MemoryBlurb';
@@ -9,17 +10,14 @@ import { PerformanceBlurb } from './PerformanceBlurb';
 import { PowerSupplyBlurb } from './PowerSupplyBlurb';
 
 interface GpuChipsetSummaryProps {
-  gpu: GpuProduct;
-  additionalData: GpuAdditionalData;
+  tags: ContentTags;
+  params: ContentParams;
 }
 
 export const GpuChipsetSummary: FunctionComponent<GpuChipsetSummaryProps> = (
   props,
 ) => {
-  const { gpu, additionalData } = props;
-
-  const tags = buildContentTags(gpu);
-  const params = buildContentParams(gpu, additionalData);
+  const { tags, params } = props;
 
   return (
     <section className="mb-0">

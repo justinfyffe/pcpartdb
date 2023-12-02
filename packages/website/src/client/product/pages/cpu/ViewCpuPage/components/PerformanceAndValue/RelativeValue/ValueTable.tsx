@@ -22,8 +22,7 @@ interface ValueTableProps {
 
 export const ValueTable: FunctionComponent<ValueTableProps> = (props) => {
   const { className } = props;
-  const { cpu, additionalData: contentData } = useContext(ViewPageContext);
-  const { relativeValueCpus } = contentData;
+  const { cpu, relativeValueCpus } = useContext(ViewPageContext);
 
   return (
     <Table border responsive className={className}>

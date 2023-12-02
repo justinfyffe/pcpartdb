@@ -11,6 +11,7 @@ export function mapToProductRankDto(entity: ProductRankEntity) {
     productId: entity.productId,
     rankKey: entity.rankKey,
     rank: entity.rank,
+    totalRanked: entity.totalRanked,
     metadata: entity.metadata,
   } as ProductRank;
 }
@@ -33,6 +34,7 @@ export function mapToProductRankEntity(dto: ProductRank) {
     productId: undefined,
     rankKey: dto.rankKey,
     rank: dto.rank,
+    totalRanked: dto.totalRanked,
     metadata: dto.metadata,
   } as ProductRankEntity;
 }

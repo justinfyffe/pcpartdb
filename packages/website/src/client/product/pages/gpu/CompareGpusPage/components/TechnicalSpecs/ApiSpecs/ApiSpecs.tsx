@@ -28,7 +28,7 @@ export const ApiSpecs: FunctionComponent<ApiSpecsProps> = (props) => {
 
   return (
     <section className={className}>
-      <h3 className="mb-0">API Support</h3>
+      <h3 className="mb-1">API Support</h3>
       <ApiIntro />
       <ApiTable />
     </section>

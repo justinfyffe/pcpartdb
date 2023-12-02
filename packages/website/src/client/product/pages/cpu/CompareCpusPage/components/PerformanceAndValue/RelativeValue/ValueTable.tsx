@@ -35,10 +35,8 @@ interface ValueTableProps {
 
 export const ValueTable: FunctionComponent<ValueTableProps> = (props) => {
   const { className } = props;
-  const { comparison, additionalData: contentData } =
-    useContext(ComparePageContext);
+  const { comparison, relativeValueCpus } = useContext(ComparePageContext);
   const [cpu1, cpu2] = comparison;
-  const { relativeValueCpus } = contentData;
 
   const [baselineCpu, setBaselineCpu] = useState(() => {
     return hasProductFieldValue(cpu1.fields?.performancePerMsrp) ? cpu1 : cpu2;

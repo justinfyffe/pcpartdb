@@ -4,11 +4,10 @@ import React, { useContext } from 'react';
 import { ViewPageContext } from '../../context/ViewPageContext';
 
 const GeneralInfoIntroSentence1 = compileContentComponent({
-  deps: [],
   component: (props) => (
     <>
-      General information about the {props.shortGpuName} like its manufacturer,
-      release date, launch price, and production status.
+      General information about the {props.nameWithNoCompany} like its
+      manufacturer, release date, launch price, and production status.
     </>
   ),
 });

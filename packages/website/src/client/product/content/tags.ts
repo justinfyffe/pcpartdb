@@ -8,7 +8,7 @@ import {
   isCpuProduct,
   isGpuChipset,
   isGpuProduct,
-  isGpuRetaillModel,
+  isGpuRetailModel,
   MarketSegment,
   Product,
   productFieldFormattedValue,
@@ -151,7 +151,7 @@ export function buildContentTags(product: Product) {
 
   // Sub Product Type
   tags[SubProductTypeTag.GpuChipset] = isGpuChipset(product);
-  tags[SubProductTypeTag.GpuRetailModel] = isGpuRetaillModel(product);
+  tags[SubProductTypeTag.GpuRetailModel] = isGpuRetailModel(product);
 
   return {
     ...tags,

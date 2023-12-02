@@ -5,9 +5,9 @@ import { RetailModelsTable } from './RetailModelsTable';
 import { RetailModelsTitle } from './RetailModelsTitle';
 
 export const RetailModels: FunctionComponent = () => {
-  const { additionalData } = useContext(ViewPageContext);
+  const { retailModels } = useContext(ViewPageContext);
 
-  if (additionalData.retailModels?.length === 0) {
+  if (retailModels?.length === 0) {
     return <></>;
   }
 

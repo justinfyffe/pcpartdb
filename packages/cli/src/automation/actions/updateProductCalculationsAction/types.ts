@@ -1,6 +1,7 @@
 import {
   BenchmarkKey,
   Product,
+  ProductRank,
   ProductScoreCalculations,
   RankKey,
   RelatedProductType,
@@ -9,7 +10,7 @@ import {
 export interface ProductCalculations {
   product: Product;
   scores?: ProductScoreCalculations;
-  ranks?: Partial<Record<RankKey, number>>;
+  ranks?: Partial<Record<RankKey, Pick<ProductRank, 'rank' | 'totalRanked'>>>;
   related?: Partial<Record<RelatedProductType, number[]>>;
 }
 

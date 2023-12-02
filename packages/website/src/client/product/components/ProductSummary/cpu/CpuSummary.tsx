@@ -1,21 +1,19 @@
-import { CpuAdditionalData, CpuProduct } from '@pcpartdb/shared';
+import {
+  ContentParams,
+  ContentTags,
+} from 'packages/website/src/client/shared/content/types';
 import React, { FunctionComponent } from 'react';
-import { buildContentParams } from '../../../content/params';
-import { buildContentTags } from '../../../content/tags';
 import { IntroBlurb } from './IntroBlurb';
 import { PerformanceBlurb } from './PerformanceBlurb';
 import { SpecsBlurb } from './SpecsBlurb';
 
 interface CpuSummaryProps {
-  cpu: CpuProduct;
-  additionalData: CpuAdditionalData;
+  tags: ContentTags;
+  params: ContentParams;
 }
 
 export const CpuSummary: FunctionComponent<CpuSummaryProps> = (props) => {
-  const { cpu, additionalData } = props;
-
-  const tags = buildContentTags(cpu);
-  const params = buildContentParams(cpu, additionalData);
+  const { tags, params } = props;
 
   return (
     <section className="mb-0">

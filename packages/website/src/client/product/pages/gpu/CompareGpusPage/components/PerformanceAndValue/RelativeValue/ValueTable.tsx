@@ -36,11 +36,9 @@ interface ValueTableProps {
 
 export const ValueTable: FunctionComponent<ValueTableProps> = (props) => {
   const { className } = props;
-  const { comparison, additionalData: contentData } =
-    useContext(ComparePageContext);
+  const { comparison, relativeValueGpus } = useContext(ComparePageContext);
   const chipset1 = getGpuChipset(comparison[0]);
   const chipset2 = getGpuChipset(comparison[1]);
-  const { relativeValueGpus } = contentData;
 
   const [baselineChipset, setBaselineChipset] = useState(() => {
     return hasProductFieldValue(chipset1.fields?.performancePerMsrp)

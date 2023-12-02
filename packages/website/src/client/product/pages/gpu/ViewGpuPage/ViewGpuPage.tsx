@@ -28,22 +28,20 @@ import {
   TechnicalSpecs,
 } from './components';
 import { PerformanceAndValue } from './components/PerformanceAndValue/PerformanceAndValue';
-import { ViewPageContext } from './context/ViewPageContext';
-import { useViewPageContextProps } from './hooks/useViewPageContextProps';
+import {
+  createViewPageContext,
+  ViewPageContext,
+} from './context/ViewPageContext';
 
 export const ViewGpuPage = (props: ViewGpuViewModel & { config: Config }) => {
-  const {
-    gpu,
-    relatedGpus,
-    relatedGpuComparisons,
-    additionalData: contentData,
-    config,
-  } = props;
+  const { config, ...viewModel } = props;
+  const { gpu, relatedGpus, relatedGpuComparisons } = viewModel;
+
   useProductCache(ProductType.Gpu, gpu);
 
-  const context = useViewPageContextProps({ gpu, additionalData: contentData });
   const isRetailModel = gpu.parent != null;
 
+  const context = useMemo(() => createViewPageContext(viewModel), [viewModel]);
   const chipset = useMemo(() => getGpuChipset(gpu), [gpu]);
   const chipsetShortName = useMemo(
     () => formatProductName(chipset, { company: false }),

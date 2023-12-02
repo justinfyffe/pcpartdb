@@ -38,7 +38,10 @@ function populatePerformanceRatingRanks(options: PopulateRanksOptions) {
     }
     previousScore = value.scores.performanceRating;
 
-    value.ranks[RankKey.PerformanceRating] = rank;
+    value.ranks[RankKey.PerformanceRating] = {
+      rank,
+      totalRanked: calculations.length,
+    };
   }
 }
 
@@ -72,7 +75,10 @@ function populatePerformanceRatingForMarketSegmentRanks(
       }
       previousScore = value.scores.performanceRating;
 
-      value.ranks[RankKey.PerformanceRatingForMarketSegment] = rank;
+      value.ranks[RankKey.PerformanceRatingForMarketSegment] = {
+        rank,
+        totalRanked: filtered.length,
+      };
     }
   }
 }
@@ -118,8 +124,10 @@ function populatePerformanceRatingForArchitectureMarketSegmentRanks(
         }
         previousScore = value.scores.performanceRating;
 
-        value.ranks[RankKey.PerformanceRatingForArchitectureMarketSegment] =
-          rank;
+        value.ranks[RankKey.PerformanceRatingForArchitectureMarketSegment] = {
+          rank,
+          totalRanked: filtered.length,
+        };
       }
     }
   }
@@ -139,7 +147,10 @@ function populatePerformancePerMsrpRanks(options: PopulateRanksOptions) {
     if (value.scores.performancePerMsrp !== previousScore) {
       rank++;
     }
-    value.ranks[RankKey.PerformancePerMsrp] = rank;
+    value.ranks[RankKey.PerformancePerMsrp] = {
+      rank,
+      totalRanked: filtered.length,
+    };
     previousScore = value.scores.performancePerMsrp;
   }
 }
@@ -174,7 +185,10 @@ function populatePerformancePerMsrpForMarketSegmentRanks(
       }
       previousScore = value.scores.performancePerMsrp;
 
-      value.ranks[RankKey.PerformancePerMsrpForMarketSegment] = rank;
+      value.ranks[RankKey.PerformancePerMsrpForMarketSegment] = {
+        rank,
+        totalRanked: filtered.length,
+      };
     }
   }
 }

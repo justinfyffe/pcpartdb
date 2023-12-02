@@ -5,8 +5,7 @@ import { PerformanceIntro } from './PerformanceIntro';
 import { PerformanceTable } from './PerformanceTable';
 
 export const RelativePerformance: FunctionComponent = () => {
-  const { gpu, additionalData: contentData } = useContext(ViewPageContext);
-  const { relativePerformanceGpus } = contentData;
+  const { gpu, relativePerformanceGpus } = useContext(ViewPageContext);
   const chipset = getGpuChipset(gpu);
 
   if (

@@ -57,6 +57,7 @@ import { ProductOtherNamesInput } from '../../product/ProductOtherNamesInput/Pro
 import { ProductSearchTextInput } from '../../product/ProductSearchTextInput/ProductSearchTextInput';
 import { ProductSlugInput } from '../../product/ProductSlugInput/ProductSlugInput';
 import { ProductSourcesInput } from '../../product/ProductSourceInput/ProductSourcesInput';
+import { ProductSummaryInput } from '../../product/ProductSummaryInput/ProductSummaryInput';
 import { ProductTextInput } from '../../product/ProductTextInput/ProductTextInput';
 import { ScrapedProduct } from '../../product/ScrapeProductDialog/types';
 import { ScrapeCpuDialog } from '../ScrapeCpuDialog/ScrapeCpuDialog';
@@ -276,6 +277,23 @@ export const CpuForm: FunctionComponent<CpuFormProps> = (props) => {
             render={({ field }) => <TextInput {...field} ref={null} />}
           />
         </Field>
+      </section>
+
+      <section>
+        <h2 className="mb-4">Summary</h2>
+
+        <Controller
+          name="summary"
+          control={control}
+          render={({ field }) => (
+            <ProductSummaryInput
+              {...field}
+              control={control}
+              productType={ProductType.Cpu}
+              placeholder="Add product summary"
+            />
+          )}
+        />
       </section>
 
       <section>

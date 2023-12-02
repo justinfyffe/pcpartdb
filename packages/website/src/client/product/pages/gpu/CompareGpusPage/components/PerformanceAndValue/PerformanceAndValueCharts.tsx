@@ -42,7 +42,7 @@ export const PerformanceAndValueCharts: FunctionComponent<
   }, [chipset1, chipset2]);
 
   return (
-    <div className={classNames('flex flex-col gap-8', className)}>
+    <div className={classNames('flex flex-row md:flex-col gap-4', className)}>
       <CompareProductRatingCard
         productType={ProductType.Gpu}
         ratingType={ProductRatingType.PerformanceRating}
@@ -57,6 +57,7 @@ export const PerformanceAndValueCharts: FunctionComponent<
           productRankValue(chipset2, RankKey.PerformanceRating),
         ]}
         rankHrefs={[performanceRankHref, performanceRankHref]}
+        className="flex-1"
       />
 
       <CompareProductRatingCard
@@ -73,6 +74,7 @@ export const PerformanceAndValueCharts: FunctionComponent<
           productRankValue(chipset2, RankKey.PerformancePerMsrp),
         ]}
         rankHrefs={[valueRankHref, valueRankHref]}
+        className="flex-1"
       />
     </div>
   );

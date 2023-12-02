@@ -5,10 +5,9 @@ import { PerformanceIntro } from './PerformanceIntro';
 import { PerformanceTable } from './PerformanceTable';
 
 export const RelativePerformance: FunctionComponent = () => {
-  const { comparison, additionalData: contentData } =
+  const { comparison, relativePerformanceGpus } =
     useContext(ComparePageContext);
   const [gpu1, gpu2] = comparison;
-  const { relativePerformanceGpus } = contentData;
 
   const chipset1 = useMemo(() => getGpuChipset(gpu1), [gpu1]);
   const chipset2 = useMemo(() => getGpuChipset(gpu2), [gpu2]);
@@ -26,7 +25,7 @@ export const RelativePerformance: FunctionComponent = () => {
 
   return (
     <section>
-      <h3 className="mb-0 font-semibold">Relative Performance</h3>
+      <h3 className="mb-1 font-semibold">Relative Performance</h3>
       <PerformanceIntro />
       <PerformanceTable />
     </section>

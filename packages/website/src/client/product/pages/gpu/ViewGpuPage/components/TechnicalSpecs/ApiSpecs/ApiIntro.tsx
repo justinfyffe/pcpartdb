@@ -4,11 +4,10 @@ import React, { useContext } from 'react';
 import { ViewPageContext } from '../../../context/ViewPageContext';
 
 export const ApiIntroSentence1 = compileContentComponent({
-  deps: [],
   component: (props) => (
     <>
-      API versions that the {props.shortGpuName} supports. Older GPUs may not
-      support recent versions.
+      API versions that the {props.nameWithNoCompany} supports. Older GPUs may
+      not support recent versions.
     </>
   ),
 });

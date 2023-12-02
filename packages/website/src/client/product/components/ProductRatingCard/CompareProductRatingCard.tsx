@@ -33,6 +33,8 @@ export interface CompareProductRatingCardProps {
 
   ranks?: [number, number];
   rankHrefs?: [string, string];
+
+  className?: string;
 }
 
 export const CompareProductRatingCard: FunctionComponent<
@@ -46,6 +48,7 @@ export const CompareProductRatingCard: FunctionComponent<
     ranks,
     rankHrefs,
     maxRating,
+    className,
   } = props;
 
   const [name1, name2] = names;
@@ -104,12 +107,17 @@ export const CompareProductRatingCard: FunctionComponent<
   }, [betterWorseSame, ratingRaw1, ratingRaw2]);
 
   return (
-    <Card className="flex flex-row justify-between items-stretch flex-wrap gap-4">
+    <Card
+      className={classNames(
+        'flex flex-row justify-between items-stretch flex-wrap gap-4',
+        className,
+      )}
+    >
       <CardTitle as="div" className="grow basis-0 flex flex-col gap-2">
         <span className="whitespace-nowrap">
           <Title tags={[ratingType]} />
         </span>
-        <span className="text-base font-normal">
+        <span className="text-base font-normal min-w-50">
           <Description1
             tags={[ratingType, productType]}
             params={{
