@@ -32,7 +32,7 @@ export const PhysicalSpecs: FunctionComponent<PhysicalSpecsProps> = (props) => {
 
   return (
     <section className={className}>
-      <h3 className="mb-0">Physical</h3>
+      <h3 className="mb-1">Physical</h3>
       <PhysicalIntro />
       <PhysicalTable />
     </section>

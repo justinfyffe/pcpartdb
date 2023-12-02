@@ -16,7 +16,7 @@ When Bored:
 Summaries:
 - [] Update UI
   - [X] Compare Gpu
-  - [] Compare CPU
+  - [X] Compare CPU
   - [] View Gpu
   - [] View Cpu
 - [] Generate AI Prompt

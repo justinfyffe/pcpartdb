@@ -46,7 +46,7 @@ export const CoresSpecs: FunctionComponent<CoresSpecsProps> = (props) => {
 
   return (
     <section className={className}>
-      <h3 className="mb-0">Cores &amp; Clock Speeds</h3>
+      <h3 className="mb-1">Cores &amp; Clock Speeds</h3>
       <CoresIntro />
       <CoresTable />
     </section>

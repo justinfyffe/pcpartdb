@@ -26,9 +26,9 @@ export const FeatureSpecs: FunctionComponent<FeatureSpecsProps> = (props) => {
 
   return (
     <section className={className}>
-      <h3 className="mb-0">Graphics, Features, &amp; Extensions</h3>
+      <h3 className="mb-1">Graphics, Features, &amp; Extensions</h3>
       <FeatureIntro />
-      <FeatureTable className="mb-4" />
+      <FeatureTable />
     </section>
   );
 };

@@ -129,12 +129,9 @@ export const CompareGpusPage = (
             <GeneralInfo />
             <PerformanceAndValue />
             <TechnicalSpecs />
-
             <RetailModels />
-
             <RelatedComparisons />
             <RelatedGpus />
-
             <Disclaimer />
           </article>
         </div>

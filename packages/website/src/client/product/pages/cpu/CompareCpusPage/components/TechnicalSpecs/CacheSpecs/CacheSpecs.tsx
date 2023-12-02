@@ -30,7 +30,7 @@ export const CacheSpecs: FunctionComponent<CacheSpecsProps> = (props) => {
 
   return (
     <section className={className}>
-      <h3 className="mb-0">Cache</h3>
+      <h3 className="mb-1">Cache</h3>
       <CacheIntro />
       <CacheTable />
     </section>

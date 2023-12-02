@@ -27,6 +27,8 @@ import {
   TechnicalSpecs,
 } from './components';
 import { PerformanceAndValue } from './components/PerformanceAndValue/PerformanceAndValue';
+import { RelatedComparisons } from './components/Related/RelatedComparisons';
+import { RelatedCpus } from './components/Related/RelatedCpus';
 import {
   ComparePageContext,
   createComparePageContext,
@@ -139,19 +141,10 @@ export const CompareCpusPage = (
             <GeneralInfo />
             <PerformanceAndValue />
             <TechnicalSpecs />
+            <RelatedComparisons />
+            <RelatedCpus />
             <Disclaimer />
           </article>
-
-          <Sidenav>
-            <SidenavRelatedComparisons
-              productType={ProductType.Cpu}
-              comparisons={relatedCpuComparisons.comparisons}
-            />
-            <SidenavRelatedProducts
-              productType={ProductType.Cpu}
-              products={relatedCpus.products}
-            />
-          </Sidenav>
         </div>
       </WebsiteLayout>
     </ComparePageContext.Provider>
