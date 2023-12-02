@@ -135,7 +135,7 @@ export const CompareCpusPage = (
             />
           </section>
 
-          <article className="md:min-w-full flex-1 flex flex-col gap-4">
+          <article className="md:min-w-full flex-1 flex flex-col gap-8">
             <Highlights />
             <Overview />
             <GeneralInfo />
