@@ -17,29 +17,14 @@ Summaries:
 - [] Generate AI Prompt
   - [] Look into Prompt engineering
   - [] CPU
-    - [] Template
-  - [] GPU
-    - [] Template
+  - [X] GPU
 - [] Compare Page
   - [] One-way canonical
-- [] Add date it was last generated?
-- [] Show generated summary if one isn't available
-  - [X] Improve CPU
-    - [X] Write
-    - [] Test
-      - [] Check percentages and variables
-  - [X] Improve GPU Chipset
-    - [X] Write
-    - [] Test
-      - [] Check percentages and variables
-  - [X] Improve GPU Retail Model
-    - [X] Write
-    - [] Test
-      - [] Check percentages and variables
+- [] Add summary date
 - [] TEST
   - [] AI Prompt
   - [X] Custom summary with variables
-  - [] Generated summary
+  - [X] Generated summary
 
 Better Performance Score
 - [] add highlights under technical specs? Next project

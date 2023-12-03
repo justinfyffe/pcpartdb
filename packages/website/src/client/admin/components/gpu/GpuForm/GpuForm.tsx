@@ -1,18 +1,13 @@
-import Joi from '@hapi/joi';
-import { joiResolver } from '@hookform/resolvers/joi';
 import {
   ApiError,
   BandwidthUnit,
   BitUnit,
   ClockSpeedUnit,
-  CreateProductRequest,
   CurrencyUnit,
   FlopsUnit,
   formatMarketSegment,
   formatProductionStatus,
   getAdminListGpusPath,
-  GpuField,
-  GpuFields,
   GpuProduct,
   LengthUnit,
   MarketSegment,
@@ -21,17 +16,11 @@ import {
   PixelFillRateUnit,
   Product,
   ProductBenchmark,
-  productBenchmarkSchema,
   productFieldFormattedValue,
-  productFieldSchema,
-  ProductImage,
-  productImageSchema,
   ProductionStatus,
   ProductSource,
-  productSourceSchema,
   ProductType,
   TextureFillRateUnit,
-  UpdateProductRequest,
   ValidationErrorType,
   WattageUnit,
   WeightUnit,
@@ -61,7 +50,7 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import { Controller, useForm, UseFormProps, useWatch } from 'react-hook-form';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 import {
   isBadRequestError,
   setValidationErrors,
@@ -79,252 +68,12 @@ import { ProductSummaryInput } from '../../product/ProductSummaryInput/ProductSu
 import { ProductTextInput } from '../../product/ProductTextInput/ProductTextInput';
 import { ScrapedProduct } from '../../product/ScrapeProductDialog/types';
 import { ScrapeGpuDialog } from '../ScrapeGpuDialog/ScrapeGpuDialog';
-
-interface GpuFormData {
-  // GPU Parent / Chipset ID
-  parentId?: number;
-
-  name: string;
-  slug: string;
-
-  company?: string;
-  otherNames?: string[];
-  searchText?: string;
-  affiliateUrl?: string;
-  summary?: string;
-
-  // General
-  partNumber?: GpuField<string>;
-  marketSegment?: GpuField<MarketSegment>;
-  msrp?: GpuField<number>;
-  releaseDate?: GpuField<string>;
-  productionStatus?: GpuField<ProductionStatus>;
-
-  // Processor
-  codename?: GpuField<string>;
-  architecture?: GpuField<string>;
-  processSize?: GpuField<number>;
-  transistors?: GpuField<number>;
-
-  // Board Compatibility & Dimensions
-  slotWidth?: GpuField<number>;
-  length?: GpuField<number>;
-  width?: GpuField<number>;
-  height?: GpuField<number>;
-  weight?: GpuField<number>;
-  busInterface?: GpuField<string>;
-  tdp?: GpuField<number>;
-  suggestedPsu?: GpuField<number>;
-  powerConnectors?: GpuField<string>;
-  outputs?: GpuField<string>;
-
-  // Cores & Clock Speeds
-  gpuCores?: GpuField<number>;
-  computeUnits?: GpuField<number>;
-  tmus?: GpuField<number>;
-  rops?: GpuField<number>;
-  tensorCores?: GpuField<number>;
-  rtCores?: GpuField<number>;
-  gpuCoreBaseClock?: GpuField<number>;
-  gpuCoreBoostClock?: GpuField<number>;
-  l1Cache?: GpuField<number>;
-  l2Cache?: GpuField<number>;
-
-  // Theoretical Performance
-  pixelRate?: GpuField<number>;
-  textureRate?: GpuField<number>;
-  fp32?: GpuField<number>;
-  fp64?: GpuField<number>;
-
-  // Memory
-  memorySize?: GpuField<number>;
-  memoryType?: GpuField<string>;
-  memoryClock?: GpuField<number>;
-  memoryInterface?: GpuField<number>;
-  memoryBandwidth?: GpuField<number>;
-
-  // API Support
-  directxVersion?: GpuField<string>;
-  openClVersion?: GpuField<string>;
-  openGlVersion?: GpuField<string>;
-  shaderModelVersion?: GpuField<string>;
-
-  // Benchmarks
-  benchmarks?: ProductBenchmark[];
-
-  // Sources
-  sources?: ProductSource[];
-
-  // Images
-  images?: ProductImage[];
-}
-
-const gpuFormSchema = Joi.object({
-  parentId: Joi.number().allow(null),
-
-  name: Joi.string().required(),
-  slug: Joi.string().required(),
-  company: Joi.string(),
-  otherNames: Joi.array().items(Joi.string()).allow(null),
-  searchText: Joi.string().allow(null),
-  affiliateUrl: Joi.string().allow(null),
-  summary: Joi.string().allow(null),
-
-  // Sources
-  sources: Joi.array().items(productSourceSchema),
-
-  // General
-  partNumber: productFieldSchema.allow(null),
-  marketSegment: productFieldSchema.allow(null),
-  msrp: productFieldSchema.allow(null),
-  releaseDate: productFieldSchema.allow(null),
-  productionStatus: productFieldSchema.allow(null),
-
-  // Processor
-  codename: productFieldSchema.allow(null),
-  architecture: productFieldSchema.allow(null),
-  processSize: productFieldSchema.allow(null),
-  transistors: productFieldSchema.allow(null),
-
-  // Board Compatibility & Dimensions
-  slotWidth: productFieldSchema.allow(null),
-  length: productFieldSchema.allow(null),
-  width: productFieldSchema.allow(null),
-  height: productFieldSchema.allow(null),
-  weight: productFieldSchema.allow(null),
-  busInterface: productFieldSchema.allow(null),
-  tdp: productFieldSchema.allow(null),
-  suggestedPsu: productFieldSchema.allow(null),
-  powerConnectors: productFieldSchema.allow(null),
-  outputs: productFieldSchema.allow(null),
-
-  // Cores & Clock Speed
-  gpuCores: productFieldSchema.allow(null),
-  computeUnits: productFieldSchema.allow(null),
-  tmus: productFieldSchema.allow(null),
-  rops: productFieldSchema.allow(null),
-  tensorCores: productFieldSchema.allow(null),
-  rtCores: productFieldSchema.allow(null),
-  gpuCoreBaseClock: productFieldSchema.allow(null),
-  gpuCoreBoostClock: productFieldSchema.allow(null),
-  l1Cache: productFieldSchema.allow(null),
-  l2Cache: productFieldSchema.allow(null),
-
-  // Theoretical Performance
-  pixelRate: productFieldSchema.allow(null),
-  textureRate: productFieldSchema.allow(null),
-  fp32: productFieldSchema.allow(null),
-  fp64: productFieldSchema.allow(null),
-
-  // Memory
-  memorySize: productFieldSchema.allow(null),
-  memoryType: productFieldSchema.allow(null),
-  memoryClock: productFieldSchema.allow(null),
-  memoryInterface: productFieldSchema.allow(null),
-  memoryBandwidth: productFieldSchema.allow(null),
-
-  // API Support
-  directxVersion: productFieldSchema.allow(null),
-  openClVersion: productFieldSchema.allow(null),
-  openGlVersion: productFieldSchema.allow(null),
-  shaderModelVersion: productFieldSchema.allow(null),
-
-  // Benchmarks
-  benchmarks: Joi.array().items(productBenchmarkSchema),
-
-  // Images
-  images: Joi.array().items(productImageSchema),
-}).options({ abortEarly: false });
+import { formDataToGpuRequest } from './formDataToGpuRequest';
+import { GpuFormData } from './GpuFormData';
+import { gpuFormOptions } from './gpuFormOptions';
 
 interface GpuFormProps {
   gpu?: GpuProduct;
-}
-
-function formOptions(gpu?: GpuProduct): UseFormProps<GpuFormData> {
-  const benchmarks = gpu?.benchmarks || [];
-  const sources = gpu?.sources || [];
-  const images = gpu?.images || [];
-
-  return {
-    resolver: joiResolver(gpuFormSchema),
-    mode: 'onBlur',
-    defaultValues: {
-      name: gpu?.name ?? null,
-      slug: gpu?.slug ?? null,
-      otherNames: gpu?.otherNames || [],
-      searchText: gpu?.searchText ?? null,
-      affiliateUrl: gpu?.affiliateUrl ?? null,
-      summary: gpu?.summary ?? null,
-
-      parentId: gpu?.parentId ?? null,
-
-      // Data Sources
-      sources,
-
-      // General
-      partNumber: gpu?.fields?.partNumber ?? null,
-      company: gpu?.company ?? null,
-      marketSegment: gpu?.fields?.marketSegment ?? null,
-      msrp: gpu?.fields?.msrp ?? null,
-      releaseDate: gpu?.fields?.releaseDate ?? null,
-      productionStatus: gpu?.fields?.productionStatus ?? null,
-
-      // Processor
-      codename: gpu?.fields?.codename ?? null,
-      architecture: gpu?.fields?.architecture ?? null,
-      processSize: gpu?.fields?.processSize ?? null,
-      transistors: gpu?.fields?.transistors ?? null,
-
-      // Board Compatibility & Dimensions
-      slotWidth: gpu?.fields?.slotWidth ?? null,
-      length: gpu?.fields?.length ?? null,
-      width: gpu?.fields?.width ?? null,
-      height: gpu?.fields?.height ?? null,
-      weight: gpu?.fields?.weight ?? null,
-      busInterface: gpu?.fields?.busInterface ?? null,
-      tdp: gpu?.fields?.tdp ?? null,
-      suggestedPsu: gpu?.fields?.suggestedPsu ?? null,
-      powerConnectors: gpu?.fields?.powerConnectors ?? null,
-      outputs: gpu?.fields?.outputs ?? null,
-
-      // Cores & Clock Speeds
-      gpuCores: gpu?.fields?.gpuCores ?? null,
-      computeUnits: gpu?.fields?.computeUnits ?? null,
-      tmus: gpu?.fields?.tmus ?? null,
-      rops: gpu?.fields?.rops ?? null,
-      tensorCores: gpu?.fields?.tensorCores ?? null,
-      rtCores: gpu?.fields?.rtCores ?? null,
-      gpuCoreBaseClock: gpu?.fields?.gpuCoreBaseClock ?? null,
-      gpuCoreBoostClock: gpu?.fields?.gpuCoreBoostClock ?? null,
-      l1Cache: gpu?.fields?.l1Cache ?? null,
-      l2Cache: gpu?.fields?.l2Cache ?? null,
-
-      // Theoretical Performance
-      pixelRate: gpu?.fields?.pixelRate ?? null,
-      textureRate: gpu?.fields?.textureRate ?? null,
-      fp32: gpu?.fields?.fp32 ?? null,
-      fp64: gpu?.fields?.fp64 ?? null,
-
-      // Memory
-      memorySize: gpu?.fields?.memorySize ?? null,
-      memoryType: gpu?.fields?.memoryType ?? null,
-      memoryClock: gpu?.fields?.memoryClock ?? null,
-      memoryInterface: gpu?.fields?.memoryInterface ?? null,
-      memoryBandwidth: gpu?.fields?.memoryBandwidth ?? null,
-
-      // API Support
-      directxVersion: gpu?.fields?.directxVersion ?? null,
-      openClVersion: gpu?.fields?.openClVersion ?? null,
-      openGlVersion: gpu?.fields?.openGlVersion ?? null,
-      shaderModelVersion: gpu?.fields?.shaderModelVersion ?? null,
-
-      // Benchmarks
-      benchmarks,
-
-      // Images
-      images,
-    },
-  };
 }
 
 export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
@@ -338,7 +87,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
   const [requestError, setRequestError] = useState<ApiError>(null);
   const [parentGpu, setParentGpu] = useState<GpuProduct>(gpu?.parent);
 
-  const form = useMemo(() => formOptions(gpu), [gpu]);
+  const form = useMemo(() => gpuFormOptions(gpu), [gpu]);
 
   const {
     control,
@@ -354,7 +103,7 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
     async (formData: GpuFormData) => {
       setSaving(true);
 
-      const request = toGpuRequest(formData);
+      const request = formDataToGpuRequest(formData);
 
       try {
         if (isUpdate) {
@@ -578,9 +327,10 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
           render={({ field }) => (
             <ProductSummaryInput
               {...field}
-              control={control}
               productType={ProductType.Gpu}
+              product={gpu}
               placeholder="Add product summary"
+              ref={null}
             />
           )}
         />
@@ -1527,96 +1277,3 @@ export const GpuForm: FunctionComponent<GpuFormProps> = (props) => {
     </Form>
   );
 };
-
-function toGpuRequest(
-  formData: GpuFormData,
-): CreateProductRequest | UpdateProductRequest {
-  return {
-    product: {
-      productType: ProductType.Gpu,
-      parentId: formData.parentId,
-      slug: formData.slug,
-      name: formData.name,
-      company: formData.company,
-      otherNames: formData.otherNames,
-      searchText: formData.searchText,
-      affiliateUrl: formData.affiliateUrl,
-      summary: formData.summary,
-
-      // Product Fields
-      fields: {
-        // General Info
-        partNumber: formData.partNumber,
-        marketSegment: formData.marketSegment,
-        msrp: formData.msrp,
-        releaseDate: formData.releaseDate,
-        productionStatus: formData.productionStatus,
-
-        // Processor
-        codename: formData.codename ?? null,
-        architecture: formData.architecture ?? null,
-        processSize: formData.processSize ?? null,
-        transistors: formData.transistors ?? null,
-
-        // Board Compatibility & Dimensions
-        slotWidth: formData.slotWidth ?? null,
-        length: formData.length ?? null,
-        width: formData.width ?? null,
-        height: formData.height ?? null,
-        weight: formData.weight ?? null,
-        busInterface: formData.busInterface ?? null,
-        tdp: formData.tdp ?? null,
-        suggestedPsu: formData.suggestedPsu ?? null,
-        powerConnectors: formData.powerConnectors ?? null,
-        outputs: formData.outputs ?? null,
-
-        // Cores & Clock Speeds
-        gpuCores: formData.gpuCores ?? null,
-        computeUnits: formData.computeUnits ?? null,
-        tmus: formData.tmus ?? null,
-        rops: formData.rops ?? null,
-        tensorCores: formData.tensorCores ?? null,
-        rtCores: formData.rtCores ?? null,
-        gpuCoreBaseClock: formData.gpuCoreBaseClock ?? null,
-        gpuCoreBoostClock: formData.gpuCoreBoostClock ?? null,
-        l1Cache: formData.l1Cache ?? null,
-        l2Cache: formData.l2Cache ?? null,
-
-        // Theoretical Performance
-        pixelRate: formData.pixelRate ?? null,
-        textureRate: formData.textureRate ?? null,
-        fp32: formData.fp32 ?? null,
-        fp64: formData.fp64 ?? null,
-
-        // Memory
-        memorySize: formData.memorySize ?? null,
-        memoryType: formData.memoryType ?? null,
-        memoryClock: formData.memoryClock ?? null,
-        memoryInterface: formData.memoryInterface ?? null,
-        memoryBandwidth: formData.memoryBandwidth ?? null,
-
-        // API Support
-        directxVersion: formData.directxVersion ?? null,
-        openClVersion: formData.openClVersion ?? null,
-        openGlVersion: formData.openGlVersion ?? null,
-        shaderModelVersion: formData.shaderModelVersion ?? null,
-      } as GpuFields,
-
-      // Meta
-      metadata: {},
-
-      benchmarks: formData.benchmarks?.filter(
-        (benchmark) => benchmark != null && benchmark.value != null,
-      ),
-
-      images:
-        formData.images
-          ?.filter((image) => image != null)
-          .map((image) => ({ imageId: image.imageId })) ?? [],
-
-      sources: formData.sources?.filter(
-        (source) => source != null && source.sourceUrl != null,
-      ),
-    },
-  };
-}

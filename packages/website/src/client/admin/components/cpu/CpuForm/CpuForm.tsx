@@ -288,8 +288,8 @@ export const CpuForm: FunctionComponent<CpuFormProps> = (props) => {
           render={({ field }) => (
             <ProductSummaryInput
               {...field}
-              control={control}
               productType={ProductType.Cpu}
+              product={cpu}
               placeholder="Add product summary"
             />
           )}

@@ -1,27 +1,27 @@
-import { ProductType } from '@pcpartdb/shared';
+import { Product, ProductType } from '@pcpartdb/shared';
 import Markdown from 'markdown-to-jsx';
 import { Tab } from 'packages/website/src/client/shared/components/Tabs/Tab';
 import { Tabs } from 'packages/website/src/client/shared/components/Tabs/Tabs';
 import { Textarea } from 'packages/website/src/client/shared/components/Textarea/Textarea';
 import React, { FunctionComponent, useCallback } from 'react';
-import { Control } from 'react-hook-form';
 import { AiPrompt } from './AiPrompt/AiPrompt';
 
 interface ProductSummaryInputProps {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  control: Control<any, any>;
   productType: ProductType;
+  product?: Product;
 
   value?: string;
   onChange?: (value: string) => void;
 
   placeholder?: string;
+
+  ref?: unknown;
 }
 
 export const ProductSummaryInput: FunctionComponent<
   ProductSummaryInputProps
 > = (props) => {
-  const { control, productType, onChange, value, placeholder } = props;
+  const { productType, onChange, value, placeholder, product } = props;
 
   const handleValueChange = useCallback(
     (newValue: string) => {
@@ -29,8 +29,6 @@ export const ProductSummaryInput: FunctionComponent<
     },
     [onChange],
   );
-
-  // TODO: input should verify valid variables (variable has value)
 
   return (
     <Tabs className="h-120">
@@ -46,7 +44,7 @@ export const ProductSummaryInput: FunctionComponent<
         <Markdown>{value ?? ''}</Markdown>
       </Tab>
       <Tab label="AI Prompt">
-        <AiPrompt control={control} productType={productType} />
+        <AiPrompt productType={productType} product={product} />
       </Tab>
     </Tabs>
   );

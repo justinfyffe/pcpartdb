@@ -48,6 +48,7 @@ export class AdminEditProductViewModelService {
         includeImages: true,
         includeSources: true,
         includeUpdates: true,
+        includeRanks: true,
       },
       ctx,
     );
@@ -70,6 +71,7 @@ export class AdminEditProductViewModelService {
         includeImages: true,
         includeSources: true,
         includeUpdates: true,
+        includeRanks: true,
       },
       ctx,
     );
