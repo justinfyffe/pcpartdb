@@ -19,9 +19,9 @@ import {
 import { sleep } from '../../shared/process';
 import { AutomationContext } from '../types';
 
-const BATCH_SIZE = 8;
+const BATCH_SIZE = 20;
 const DELAY_BETWEEN_UPLOAD = 5_000;
-const CONCURRENCY_CHUNK_SIZE = 4;
+const CONCURRENCY_CHUNK_SIZE = 10;
 
 const TECHPOWERUP_URLS = [
   {
@@ -167,7 +167,7 @@ export async function updateGpuChipsetSourcesAction(
   };
 }
 
-async function getNotebookCheckSources(context: AutomationContext) {
+async function getNotebookCheckSources(_context: AutomationContext) {
   console.log('Scraping GPU chipset sources from NotebookCheck');
 
   const map: Record<string, NotebookCheckGpuSource> = {};

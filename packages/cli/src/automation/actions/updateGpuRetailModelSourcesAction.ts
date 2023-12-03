@@ -14,7 +14,7 @@ import {
 import { sleep } from '../../shared/process';
 import { AutomationContext } from '../types';
 
-const BATCH_SIZE = 8;
+const BATCH_SIZE = 20;
 const DELAY_BETWEEN_UPLOAD = 5_000;
 
 export async function updateGpuRetailModelSourcesAction(

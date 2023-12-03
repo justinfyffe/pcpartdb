@@ -20,9 +20,9 @@ import {
 import { sleep } from '../../shared/process';
 import { AutomationContext } from '../types';
 
-const BATCH_SIZE = 8;
+const BATCH_SIZE = 20;
 const DELAY_BETWEEN_UPLOAD = 5_000;
-const CONCURRENCY_CHUNK_SIZE = 5;
+const CONCURRENCY_CHUNK_SIZE = 10;
 
 const TECHPOWERUP_URLS = [
   {
@@ -139,7 +139,7 @@ export async function updateCpuSourcesAction(
   };
 }
 
-async function getNotebookCheckSources(context: AutomationContext) {
+async function getNotebookCheckSources(_context: AutomationContext) {
   console.log('Scraping CPU sources from NotebookCheck');
 
   const map: Record<string, NotebookCheckCpuSource> = {};
