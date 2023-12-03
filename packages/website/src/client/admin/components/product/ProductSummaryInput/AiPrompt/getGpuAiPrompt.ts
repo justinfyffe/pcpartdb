@@ -36,6 +36,10 @@ const introData = (gpu: GpuProduct) => {
       description: 'process size',
       value: productFieldFormattedValue(gpu?.fields?.processSize),
     },
+    {
+      description: 'production status',
+      value: productFieldFormattedValue(gpu?.fields?.productionStatus),
+    },
   ] as { description: string; value: string }[];
 };
 
@@ -55,7 +59,7 @@ const performanceData = (gpu: GpuProduct) => {
     },
     {
       description: 'best performing gpu name',
-      value: '{{bestPerformanceName}}',
+      value: 'BEST GPU PLACEHOLDER',
     },
     {
       description: 'performance compared to best performaning gpu',
@@ -185,20 +189,21 @@ ${compatibility.join('\n')}
 ***** END COMPATIBILITY CSV DATA *****
 ***** START PERFOMRANCE DETAILS TO INCLUDE *****
 1. Performance rating is our estimate of how it performs compares to the best performing GPU in our database.
-2, Value rating is based on the performance per dollar compared to other GPUs in the database.
+2. Value rating is based on the performance per dollar compared to other GPUs in the database.
 ***** END PERFOMRANCE DETAILS TO INCLUDE *****
 ***** START COMPATIBILITY DETAILS TO INCLUDE *****
 1. Importance of having a large enough power supply.
 2. Enough space to fit the GPU if it's a desktop or workstation market segment GPU.
 ***** END COMPATIBILITY DETAILS TO INCLUDE *****
 ***** START SUMMARY INSTRUCTIONS *****
-1. Write an approximately 400 word summary about the GPU using the provided CSV data and details to include above.
-2. Do not write bullet points or lists. Do not write headings. Only write paragraphs.
-3. The summary target 4-5 paragraphs if possible.
-4. There should be an intro, a performance paragraph, a memory paragraph, a cores/clock paragraph, a compability paragraph.
-5. Each paragraph should be brief, only a few sentences based on the data above.
-6. Include additional descriptors that apply. For example, "small", "large", "high-end", "low-end".
-7. The summary should be unbiased, and future-proof.
+1. Write an unbiased summary about the GPU using only the provided CSV data and details to include above.  Do not include other data.
+2. Do not write a review.
+3. Do not write bullet points or lists. Do not write headings. Only write paragraphs.
+4. THe summary should be approximately 400 words long.
+5. The summary target 4-5 paragraphs if possible.
+6. There should be an intro, a performance paragraph, a memory paragraph, a cores/clock paragraph, a compability paragraph.
+7. Each paragraph should be brief, only a few sentences based on the data above.
+8. Include additional descriptors that apply. For example, "small", "large", "high-end", "low-end".
 ***** END SUMMARY INSTRUCTIONS *****
 `.trim();
 };

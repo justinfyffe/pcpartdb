@@ -58,18 +58,18 @@ export function buildContentParams(
     brand: false,
   });
   params['performanceRank'] = productRankValue(
-    product,
+    product?.parent || product,
     RankKey.PerformanceRating,
   );
   params['performanceRankOrdinal'] = formatOrdinalNumber(
-    productRankValue(product, RankKey.PerformanceRating),
+    productRankValue(product?.parent || product, RankKey.PerformanceRating),
   );
   params['performanceRankForMarketSegment'] = productRankValue(
-    product,
+    product?.parent || product,
     RankKey.PerformanceRatingForMarketSegment,
   );
   params['performanceRating'] = productFieldFormattedValue(
-    product?.fields?.performanceRating,
+    (product?.parent || product)?.fields?.performanceRating,
   );
   params['processSize'] = productFieldFormattedValue(
     product?.fields?.processSize,
@@ -81,12 +81,15 @@ export function buildContentParams(
   params['transistors'] = productFieldFormattedValue(
     product?.fields?.transistors,
   );
-  params['valueRank'] = productRankValue(product, RankKey.PerformancePerMsrp);
+  params['valueRank'] = productRankValue(
+    product?.parent || product,
+    RankKey.PerformancePerMsrp,
+  );
   params['valueRankOrdinal'] = formatOrdinalNumber(
-    productRankValue(product, RankKey.PerformancePerMsrp),
+    productRankValue(product?.parent || product, RankKey.PerformancePerMsrp),
   );
   params['valueRating'] = productFieldFormattedValue(
-    product?.fields?.performancePerMsrp,
+    (product?.parent || product)?.fields?.performancePerMsrp,
   );
 
   return {
@@ -138,6 +141,7 @@ function buildCpuContentParams(
   );
   params['clock'] = productFieldFormattedValue(product?.fields?.clock);
   params['cores'] = productFieldRawValue(product?.fields?.cores);
+  params['eCores'] = productFieldRawValue(product?.fields?.eCores);
   params['integratedGraphics'] = productFieldFormattedValue(
     product?.fields?.integratedGraphics,
   );
@@ -156,6 +160,7 @@ function buildCpuContentParams(
   params['pciExpress'] = productFieldFormattedValue(
     product?.fields?.pciExpress,
   );
+  params['pCores'] = productFieldRawValue(product?.fields?.pCores);
   params['pl1'] = productFieldFormattedValue(product?.fields?.pl1);
   params['pl2'] = productFieldFormattedValue(product?.fields?.pl2);
   params['ppt'] = productFieldFormattedValue(product?.fields?.ppt);
@@ -206,6 +211,10 @@ function buildGpuContentParams(
   params['chipsetName'] = formatProductName(chipset);
   params['chipsetNameWithNoCompany'] = formatProductName(chipset, {
     company: false,
+  });
+  params['chipsetNameWithNoCompanyNoBrand'] = formatProductName(chipset, {
+    company: false,
+    brand: false,
   });
   params['computeUnits'] = productFieldFormattedValue(
     product?.fields?.computeUnits,

@@ -13,18 +13,6 @@ When Bored:
 - Make autocomplete stricter, not looser when searching?
 - Improve db performance using queryRaw, but only in places where it'll help
 
-Summaries:
-- [] Generate AI Prompt
-  - [] Look into Prompt engineering
-  - [] CPU
-  - [X] GPU
-- [] Compare Page
-  - [] One-way canonical
-- [] Add summary date
-- [] TEST
-  - [] AI Prompt
-  - [X] Custom summary with variables
-  - [X] Generated summary
 
 Better Performance Score
 - [] add highlights under technical specs? Next project

@@ -163,6 +163,8 @@ export class ProductRepository {
               include: {
                 cpuFields: true,
                 gpuFields: true,
+                benchmarks: includeBenchmarks,
+                ranks: includeRanks,
                 relatedProducts: includeRelated
                   ? {
                       include: {

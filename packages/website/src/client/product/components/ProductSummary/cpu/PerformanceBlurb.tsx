@@ -10,17 +10,33 @@ import { RankTag, SpecsTag } from '../../../content/tags';
 
 // TODO
 
-const PerformanceRankPlacement = compileContentComponent({
-  tags: [RankTag.Performance],
-  component: (props) => (
-    <>
-      {props.company}&apos;s {props.nameWithNoCompanyNoBrand} delivers the{' '}
-      {formatOrdinalNumber(props.performanceRank as number)} best performance
-      among the {props.countPerformanceRanks.toLocaleString()} benchmarked
-      processors in our database.
-    </>
-  ),
-});
+const PerformanceRankPlacement = compileContentComponent(
+  {
+    tags: [RankTag.PerformanceForMarketSegment],
+    component: (props) => {
+      return (
+        <>
+          The combined performance rating estimates that it is{' '}
+          {formatOrdinalNumber(props.performanceRankForMarketSegment as number)}{' '}
+          in performance among the{' '}
+          {props.countPerformanceRanksForMarketSegment.toLocaleString()} rated{' '}
+          {props.marketSegment} CPUs in our database.
+        </>
+      );
+    },
+  },
+  {
+    tags: [RankTag.Performance],
+    component: (props) => (
+      <>
+        The combined performance rating estimates that it is{' '}
+        {formatOrdinalNumber(props.performanceRank as number)} in performance
+        among the {props.countPerformanceRanks.toLocaleString()} benchmarked
+        processors in our database.
+      </>
+    ),
+  },
+);
 const PerformanceBestDiff = compileContentComponent(
   {
     tags: [RankTag.BestPerformance],
@@ -32,8 +48,8 @@ const PerformanceBestDiff = compileContentComponent(
     // It is approximately 67.18% as fast as the Core i7 12345, the fastest desktop CPU in our database.
     component: (props) => (
       <>
-        It is approximately {props.bestPerformanceDifferencePct}% as fast as the{' '}
-        {props.bestPerformanceName}, the fastest CPU in our database.
+        It is approximately {props.bestPerformanceDifferencePct}% as strong as
+        the {props.bestPerformanceName}, the most powerful CPU in our database.
       </>
     ),
   },
@@ -43,10 +59,9 @@ const PerformanceValue = compileContentComponent({
   tags: [SpecsTag.Msrp, RankTag.Performance, RankTag.Value],
   component: (props) => (
     <>
-      Its {props.performanceRating} performance rating and {props.msrp} launch
-      price gives it a value rating of {props.valueRating}, giving it the{' '}
-      {formatOrdinalNumber(props.valueRank)} best value among CPUs in our
-      database.
+      Its {props.performanceRating} performance score and {props.msrp} launch
+      price gives it a value rating of {props.valueRating}, making it{' '}
+      {formatOrdinalNumber(props.valueRank)} in performance per dollar.
     </>
   ),
 });

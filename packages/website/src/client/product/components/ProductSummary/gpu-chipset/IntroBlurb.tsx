@@ -118,7 +118,7 @@ const IntroArchitecture = compileContentComponent(
       return (
         <>
           The {props.codename} chip that powers the GPU uses the{' '}
-          {props.architecture} architecture, and is fabricated on the{' '}
+          {props.architecture} architecture and is fabricated on the{' '}
           {props.processSize} process.
         </>
       );
@@ -144,7 +144,7 @@ const IntroArchitecture = compileContentComponent(
       return (
         <>
           The chip that powers the GPU uses the {props.architecture}{' '}
-          architecture, and is fabricated on the {props.processSize} process.
+          architecture and is fabricated on the {props.processSize} process.
         </>
       );
     },

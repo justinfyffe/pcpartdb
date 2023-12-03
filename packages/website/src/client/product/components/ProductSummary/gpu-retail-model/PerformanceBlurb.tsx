@@ -16,9 +16,10 @@ const PerformanceRankPlacement = compileContentComponent(
     component: (props) => {
       return (
         <>
-          The {props.chipsetNameWithNoCompany} chipset delivers the{' '}
+          The combined performance rating estimates that its chipset, the{' '}
+          {props.chipsetNameWithNoCompanyNoBrand}, is{' '}
           {formatOrdinalNumber(props.performanceRankForMarketSegment as number)}{' '}
-          best performance among the{' '}
+          in performance among the{' '}
           {props.countPerformanceRanksForMarketSegment.toLocaleString()} rated{' '}
           {props.marketSegment} GPUs in our database.
         </>
@@ -32,10 +33,11 @@ const PerformanceRankPlacement = compileContentComponent(
     component: (props) => {
       return (
         <>
-          The {props.chipsetNameWithNoCompany} chipset delivers the{' '}
-          {formatOrdinalNumber(props.performanceRank as number)} best
-          performance among the {props.countPerformanceRanks.toLocaleString()}{' '}
-          rated GPUs in our database.
+          The combined performance rating estimates that its chipset, the{' '}
+          {props.chipsetNameWithNoCompanyNoBrand} is{' '}
+          {formatOrdinalNumber(props.performanceRank as number)} in performance
+          among the {props.countPerformanceRanks.toLocaleString()} rated GPUs in
+          our database.
         </>
       );
     },
@@ -55,8 +57,8 @@ const PerformanceBestDiff = compileContentComponent(
     tags: [RankTag.Performance],
     component: (props) => (
       <>
-        It is approximately {props.bestPerformanceDifferencePct}% as fast as the{' '}
-        {props.bestPerformanceName}, the most powerful GPU in our database.
+        It is approximately {props.bestPerformanceDifferencePct}% as strong as
+        the {props.bestPerformanceName}, the most powerful GPU in our database.
       </>
     ),
   },
@@ -68,9 +70,9 @@ const PerformanceValue = compileContentComponent({
   // value rating of 44.47, making it the 12th best in performance per dollar.
   component: (props) => (
     <>
-      Its {props.performanceRating} performance rating and {props.msrp} launch
+      Its {props.performanceRating} performance score and {props.msrp} launch
       price (MSRP) gives it a value rating of {props.valueRating}, making it the{' '}
-      {formatOrdinalNumber(props.valueRank)} best in performance per dollar.
+      {formatOrdinalNumber(props.valueRank)} in performance per dollar.
     </>
   ),
 });
