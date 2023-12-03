@@ -166,8 +166,10 @@ const FIELDS: Partial<Record<CpuFieldKey, ProductFieldScraper>> = {
       mb: MemorySizeUnit.mb,
       gb: MemorySizeUnit.gb,
     },
-    parseValue: ({ value, unit }) =>
-      getBaseUnitValue(value, unit, { decimals: 2 }),
+    parseValue: ({ value, unit }) => {
+      const result = getBaseUnitValue(value, unit, { decimals: 2 });
+      return result !== 0 ? result : null;
+    },
   },
   pCores: {
     labels: ['performance cores:'],

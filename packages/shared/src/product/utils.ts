@@ -253,6 +253,15 @@ export function getProductBenchmarkLabel(benchmark: BenchmarkKey) {
   }
 }
 
+// These shouldn't be set on the raw value, but occasionally slip through.
+const INVALID_RAW_VALUES: unknown[] = [
+  'motherboard dependent',
+  'portable device dependent',
+  'device dependent',
+  'system dependent',
+  'system shared',
+];
+
 export function hasProductFieldRawValue(field: ProductField) {
   if (field == null) {
     return false;
@@ -263,7 +272,14 @@ export function hasProductFieldRawValue(field: ProductField) {
   }
 
   if (typeof field.value === 'string') {
-    return field.value.trim() !== '';
+    const trimmedValue = field.value.trim();
+    if (INVALID_RAW_VALUES.includes(trimmedValue.toLowerCase())) {
+      return false;
+    } else if (trimmedValue === '') {
+      return false;
+    }
+
+    return true;
   }
 
   if (typeof field.value === 'number') {

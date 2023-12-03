@@ -36,6 +36,8 @@ import { scraper } from '../../scraper';
 import { CommonScraperOptions, ScraperContext } from '../../types';
 import { createCpuField } from '../utils';
 
+// TODO: move to a shared location to be shared with other scrapers.
+// No raw value when it's these.
 const SPECIAL_VALUES: Record<string, string> = {
   'motherboard dependent': 'Motherboard Dependent',
   'on certain motherboards (chipset feature)': 'Motherboard Dependent',
@@ -43,6 +45,7 @@ const SPECIAL_VALUES: Record<string, string> = {
   'system dependent': 'System Dependent',
   'system shared': 'System Shared',
 };
+// No value at all when it's this.
 const NULL_VALUES = ['n/a', 'none', 'unknown'];
 
 export interface ScrapeTechPowerUpCpuDataOptions extends CommonScraperOptions {
@@ -134,9 +137,14 @@ function getArchitecture($: cheerio.CheerioAPI, ctx?: ScraperContext) {
     value = value.substring(0, value.length - 1);
   }
   value = value.replaceAll(/\(.*\)/g, '').trim();
-  const formatted = formatProductField(ProductType.Cpu, 'architecture', value);
+  const result = parseStringValue({ value, fieldKey: 'architecture' });
 
-  return createCpuField({ field: 'architecture', raw: value, formatted, ctx });
+  return createCpuField({
+    field: 'architecture',
+    raw: result?.rawValue ?? null,
+    formatted: result?.formattedValue ?? null,
+    ctx,
+  });
 }
 
 function getBaseClock($: cheerio.CheerioAPI, ctx?: ScraperContext) {
@@ -162,9 +170,14 @@ function getBaseClock($: cheerio.CheerioAPI, ctx?: ScraperContext) {
 function getBundledCooler($: cheerio.CheerioAPI, ctx?: ScraperContext) {
   const values = tokenizeMultiLine($, 'Bundled Cooler');
   const value = values.join(', ') || null;
-  const formatted = formatProductField(ProductType.Cpu, 'bundledCooler', value);
+  const result = parseStringValue({ value, fieldKey: 'bundledCooler' });
 
-  return createCpuField({ field: 'bundledCooler', raw: value, formatted, ctx });
+  return createCpuField({
+    field: 'bundledCooler',
+    raw: result?.rawValue ?? null,
+    formatted: result?.formattedValue ?? null,
+    ctx,
+  });
 }
 
 function getChipsets($: cheerio.CheerioAPI, ctx?: ScraperContext) {
@@ -178,9 +191,14 @@ function getChipsets($: cheerio.CheerioAPI, ctx?: ScraperContext) {
       .map((value) => value.trim().replace('*', ''))
       .filter((value) => value.length > 0) || [];
   const value = chipsets.join(', ');
-  const formatted = formatProductField(ProductType.Cpu, 'chipsets', value);
+  const result = parseStringValue({ value, fieldKey: 'chipsets' });
 
-  return createCpuField({ field: 'chipsets', raw: value, formatted, ctx });
+  return createCpuField({
+    field: 'chipsets',
+    raw: result?.rawValue ?? null,
+    formatted: result?.formattedValue ?? null,
+    ctx,
+  });
 }
 
 function getClock($: cheerio.CheerioAPI, ctx?: ScraperContext) {
@@ -206,9 +224,14 @@ function getClock($: cheerio.CheerioAPI, ctx?: ScraperContext) {
 function getCodename($: cheerio.CheerioAPI, ctx?: ScraperContext) {
   const values = tokenizeMultiLine($, 'Codename');
   const value = values.join(', ') || null;
-  const formatted = formatProductField(ProductType.Cpu, 'codename', value);
+  const result = parseStringValue({ value, fieldKey: 'codename' });
 
-  return createCpuField({ field: 'codename', raw: value, formatted, ctx });
+  return createCpuField({
+    field: 'codename',
+    raw: result?.rawValue,
+    formatted: result?.formattedValue,
+    ctx,
+  });
 }
 
 function getCompany($: cheerio.CheerioAPI) {
@@ -417,16 +440,15 @@ function getExtensionsTechnologies(
       .get()
       .filter((text) => text != null && text.length > 0) || [];
   const value = items.join(', ');
-  const formatted = formatProductField(
-    ProductType.Cpu,
-    'extensionsTechnologies',
+  const result = parseStringValue({
     value,
-  );
+    fieldKey: 'extensionsTechnologies',
+  });
 
   return createCpuField({
     field: 'extensionsTechnologies',
-    raw: value,
-    formatted,
+    raw: result?.rawValue,
+    formatted: result?.formattedValue,
     ctx,
   });
 }
@@ -434,40 +456,38 @@ function getExtensionsTechnologies(
 function getFoundry($: cheerio.CheerioAPI, ctx?: ScraperContext) {
   const values = tokenizeMultiLine($, 'Foundry');
   const value = values.join(', ') || null;
-  const formatted = formatProductField(ProductType.Cpu, 'foundry', value);
+  const result = parseStringValue({ value, fieldKey: 'foundry' });
 
-  return createCpuField({ field: 'foundry', raw: value, formatted, ctx });
+  return createCpuField({
+    field: 'foundry',
+    raw: result?.rawValue,
+    formatted: result?.formattedValue,
+    ctx,
+  });
 }
 
 function getGeneration($: cheerio.CheerioAPI, ctx?: ScraperContext) {
   const values = tokenizeMultiLine($, 'Generation');
   const value = values[0]?.trim();
-  const formatted = formatProductField(ProductType.Cpu, 'generation', value);
+  const result = parseStringValue({ value, fieldKey: 'generation' });
 
-  return createCpuField({ field: 'generation', raw: value, formatted, ctx });
+  return createCpuField({
+    field: 'generation',
+    raw: result?.rawValue ?? null,
+    formatted: result?.formattedValue ?? null,
+    ctx,
+  });
 }
 
 function getIntegratedGraphics($: cheerio.CheerioAPI, ctx?: ScraperContext) {
   const values = tokenizeMultiLine($, 'Integrated Graphics');
   const value = values[0]?.trim();
-  if (value?.toLowerCase() === 'n/a') {
-    return createCpuField({
-      field: 'integratedGraphics',
-      raw: null,
-      formatted: null,
-      ctx,
-    });
-  }
-  const formatted = formatProductField(
-    ProductType.Cpu,
-    'integratedGraphics',
-    value,
-  );
+  const result = parseStringValue({ value, fieldKey: 'integratedGraphics' });
 
   return createCpuField({
     field: 'integratedGraphics',
-    raw: value,
-    formatted,
+    raw: result?.rawValue ?? null,
+    formatted: result?.formattedValue ?? null,
     ctx,
   });
 }
@@ -780,9 +800,14 @@ function getMemorySupport($: cheerio.CheerioAPI, ctx?: ScraperContext) {
     }
   }
   const value = raw.join(', ');
-  const formatted = formatProductField(ProductType.Cpu, 'memorySupport', value);
+  const result = parseStringValue({ value, fieldKey: 'memorySupport' });
 
-  return createCpuField({ field: 'memorySupport', raw: value, formatted, ctx });
+  return createCpuField({
+    field: 'memorySupport',
+    raw: result?.rawValue ?? null,
+    formatted: result?.formattedValue ?? null,
+    ctx,
+  });
 }
 
 function getMultiplier($: cheerio.CheerioAPI, ctx?: ScraperContext) {
@@ -835,9 +860,14 @@ function getName($: cheerio.CheerioAPI) {
 function getPartNumber($: cheerio.CheerioAPI, ctx?: ScraperContext) {
   const values = tokenizeMultiLine($, 'Part#');
   const value = values.join(', ') || null;
-  const formatted = formatProductField(ProductType.Cpu, 'partNumber', value);
+  const result = parseStringValue({ value, fieldKey: 'partNumber' });
 
-  return createCpuField({ field: 'partNumber', raw: value, formatted, ctx });
+  return createCpuField({
+    field: 'partNumber',
+    raw: result?.rawValue ?? null,
+    formatted: result?.formattedValue ?? null,
+    ctx,
+  });
 }
 
 function getPciExpress($: cheerio.CheerioAPI, ctx?: ScraperContext) {
@@ -868,9 +898,14 @@ function getPciExpress($: cheerio.CheerioAPI, ctx?: ScraperContext) {
     raw.push(pciExpressValue);
   }
   const value = raw.join(', ');
-  const formatted = formatProductField(ProductType.Cpu, 'pciExpress', value);
+  const result = parseStringValue({ value, fieldKey: 'pciExpress' });
 
-  return createCpuField({ field: 'pciExpress', raw: value, formatted, ctx });
+  return createCpuField({
+    field: 'pciExpress',
+    raw: result?.rawValue ?? null,
+    formatted: result?.formattedValue ?? null,
+    ctx,
+  });
 }
 
 function getPerformanceCoreClock($: cheerio.CheerioAPI, ctx?: ScraperContext) {
@@ -1093,9 +1128,14 @@ function getReleaseDate($: cheerio.CheerioAPI, ctx?: ScraperContext) {
 function getSocket($: cheerio.CheerioAPI, ctx?: ScraperContext) {
   const values = tokenizeMultiLine($, 'Socket');
   const value = values.join(', ') || null;
-  const formatted = formatProductField(ProductType.Cpu, 'socket', value);
+  const result = parseStringValue({ value, fieldKey: 'socket' });
 
-  return createCpuField({ field: 'socket', raw: value, formatted, ctx });
+  return createCpuField({
+    field: 'socket',
+    raw: result?.rawValue,
+    formatted: result?.formattedValue,
+    ctx,
+  });
 }
 
 function getTCaseMax($: cheerio.CheerioAPI, ctx?: ScraperContext) {
@@ -1260,7 +1300,7 @@ function parseNumber(options: ParseNumberOptions): ParseNumberResult {
 
   if (SPECIAL_VALUES[lcValue] != null) {
     return {
-      rawValue: 0,
+      rawValue: null,
       formattedValue: SPECIAL_VALUES[lcValue],
     };
   }
@@ -1326,4 +1366,52 @@ function parseDate(
   } catch (e) {
     return null;
   }
+}
+
+interface ParseStringOptions {
+  value: string;
+
+  fieldKey: ProductFieldKey;
+  formatOptions?: FormatProductFieldOptions;
+}
+
+interface ParseStringResult {
+  rawValue: string;
+  formattedValue: string;
+}
+
+function parseStringValue(options: ParseStringOptions): ParseStringResult {
+  const { value, fieldKey, formatOptions } = options;
+  if (value == null) {
+    return null;
+  }
+
+  const lcValue = value.toLowerCase();
+  if (NULL_VALUES.includes(lcValue)) {
+    return null;
+  }
+
+  if (
+    Object.values(SPECIAL_VALUES)
+      .map((v) => v.toLowerCase())
+      .includes(lcValue)
+  ) {
+    return {
+      rawValue: null,
+      formattedValue: value,
+    };
+  }
+
+  const rawValue = value;
+  const formattedValue = formatProductField(
+    ProductType.Cpu,
+    fieldKey,
+    rawValue,
+    { ...formatOptions },
+  );
+
+  return {
+    rawValue,
+    formattedValue,
+  };
 }

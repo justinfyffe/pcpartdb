@@ -8,12 +8,14 @@ import {
   GpuContentData,
   GpuProduct,
   hasLaunched,
+  hasProductFieldFormattedValue,
   hasProductFieldRawValue,
   isCpuProduct,
   isGpuProduct,
   isPastLaunchDate,
   Product,
   ProductContentData,
+  ProductField,
   productFieldFormattedValue,
   productFieldRawValue,
   productRankTotalRanked,
@@ -28,9 +30,7 @@ export function buildContentParams(
 ) {
   const params: ContentParams = {};
 
-  params['architecture'] = productFieldFormattedValue(
-    product?.fields?.architecture,
-  );
+  params['architecture'] = getFormattedValue(product?.fields?.architecture);
   params['countPerformanceRanks'] = productRankTotalRanked(
     product,
     RankKey.PerformanceRating,
@@ -39,18 +39,16 @@ export function buildContentParams(
     product,
     RankKey.PerformanceRatingForMarketSegment,
   );
-  params['codename'] = productFieldFormattedValue(product?.fields?.codename);
-  params['company'] = product?.company;
-  params['foundry'] = productFieldFormattedValue(product?.fields?.foundry);
-  params['generation'] = productFieldFormattedValue(
-    product?.fields?.generation,
-  );
+  params['codename'] = getFormattedValue(product?.fields?.codename);
+  params['company'] = product?.company ?? null;
+  params['foundry'] = getFormattedValue(product?.fields?.foundry);
+  params['generation'] = getFormattedValue(product?.fields?.generation);
   params['hasLaunched'] = hasLaunched(product);
   params['isPastReleaseDate'] = isPastLaunchDate(product);
-  params['marketSegment'] = productFieldFormattedValue(
+  params['marketSegment'] = getFormattedValue(
     product?.fields?.marketSegment,
   )?.toLowerCase();
-  params['msrp'] = productFieldFormattedValue(product?.fields?.msrp);
+  params['msrp'] = getFormattedValue(product?.fields?.msrp);
   params['name'] = formatProductName(product);
   params['nameWithNoCompany'] = formatProductName(product, { company: false });
   params['nameWithNoCompanyNoBrand'] = formatProductName(product, {
@@ -68,19 +66,13 @@ export function buildContentParams(
     product?.parent || product,
     RankKey.PerformanceRatingForMarketSegment,
   );
-  params['performanceRating'] = productFieldFormattedValue(
+  params['performanceRating'] = getFormattedValue(
     (product?.parent || product)?.fields?.performanceRating,
   );
-  params['processSize'] = productFieldFormattedValue(
-    product?.fields?.processSize,
-  );
-  params['releaseDate'] = productFieldFormattedValue(
-    product?.fields?.releaseDate,
-  );
-  params['tdp'] = productFieldFormattedValue(product?.fields?.tdp);
-  params['transistors'] = productFieldFormattedValue(
-    product?.fields?.transistors,
-  );
+  params['processSize'] = getFormattedValue(product?.fields?.processSize);
+  params['releaseDate'] = getFormattedValue(product?.fields?.releaseDate);
+  params['tdp'] = getFormattedValue(product?.fields?.tdp);
+  params['transistors'] = getFormattedValue(product?.fields?.transistors);
   params['valueRank'] = productRankValue(
     product?.parent || product,
     RankKey.PerformancePerMsrp,
@@ -88,7 +80,7 @@ export function buildContentParams(
   params['valueRankOrdinal'] = formatOrdinalNumber(
     productRankValue(product?.parent || product, RankKey.PerformancePerMsrp),
   );
-  params['valueRating'] = productFieldFormattedValue(
+  params['valueRating'] = getFormattedValue(
     (product?.parent || product)?.fields?.performancePerMsrp,
   );
 
@@ -133,45 +125,33 @@ function buildCpuContentParams(
     additionalData?.bestPerformanceCpu,
   );
 
-  params['boostClock'] = productFieldFormattedValue(
-    product?.fields?.turboClock,
-  );
-  params['bundledCooler'] = productFieldFormattedValue(
-    product?.fields?.bundledCooler,
-  );
-  params['clock'] = productFieldFormattedValue(product?.fields?.clock);
-  params['cores'] = productFieldRawValue(product?.fields?.cores);
-  params['eCores'] = productFieldRawValue(product?.fields?.eCores);
-  params['integratedGraphics'] = productFieldFormattedValue(
+  params['boostClock'] = getFormattedValue(product?.fields?.turboClock);
+  params['bundledCooler'] = getFormattedValue(product?.fields?.bundledCooler);
+  params['clock'] = getFormattedValue(product?.fields?.clock);
+  params['cores'] = getRawValue(product?.fields?.cores);
+  params['eCores'] = getRawValue(product?.fields?.eCores);
+  params['integratedGraphics'] = getFormattedValue(
     product?.fields?.integratedGraphics,
   );
-  params['l1Cache'] = productFieldFormattedValue(product?.fields?.l1Cache);
-  params['l2Cache'] = productFieldFormattedValue(product?.fields?.l2Cache);
-  params['l3Cache'] = productFieldFormattedValue(product?.fields?.l3Cache);
-  params['memoryChannels'] = productFieldFormattedValue(
-    product?.fields?.memoryChannels,
-  );
-  params['memorySupport'] = productFieldFormattedValue(
-    product?.fields?.memorySupport,
-  );
-  params['multiplier'] = productFieldFormattedValue(
-    product?.fields?.multiplier,
-  );
-  params['pciExpress'] = productFieldFormattedValue(
-    product?.fields?.pciExpress,
-  );
-  params['pCores'] = productFieldRawValue(product?.fields?.pCores);
-  params['pl1'] = productFieldFormattedValue(product?.fields?.pl1);
-  params['pl2'] = productFieldFormattedValue(product?.fields?.pl2);
-  params['ppt'] = productFieldFormattedValue(product?.fields?.ppt);
-  params['productionStatus'] = productFieldFormattedValue(
+  params['l1Cache'] = getFormattedValue(product?.fields?.l1Cache);
+  params['l2Cache'] = getFormattedValue(product?.fields?.l2Cache);
+  params['l3Cache'] = getFormattedValue(product?.fields?.l3Cache);
+  params['memoryChannels'] = getFormattedValue(product?.fields?.memoryChannels);
+  params['memorySupport'] = getFormattedValue(product?.fields?.memorySupport);
+  params['multiplier'] = getFormattedValue(product?.fields?.multiplier);
+  params['pciExpress'] = getFormattedValue(product?.fields?.pciExpress);
+  params['pCores'] = getRawValue(product?.fields?.pCores);
+  params['pl1'] = getFormattedValue(product?.fields?.pl1);
+  params['pl2'] = getFormattedValue(product?.fields?.pl2);
+  params['ppt'] = getFormattedValue(product?.fields?.ppt);
+  params['productionStatus'] = getFormattedValue(
     product?.fields?.productionStatus,
   )?.toLowerCase();
-  params['smp'] = productFieldFormattedValue(product?.fields?.smp);
-  params['socket'] = productFieldFormattedValue(product?.fields?.socket);
-  params['tCaseMax'] = productFieldFormattedValue(product?.fields?.tCaseMax);
-  params['threads'] = productFieldRawValue(product?.fields?.threads);
-  params['tjMax'] = productFieldFormattedValue(product?.fields?.tjMax);
+  params['smp'] = getFormattedValue(product?.fields?.smp);
+  params['socket'] = getFormattedValue(product?.fields?.socket);
+  params['tCaseMax'] = getFormattedValue(product?.fields?.tCaseMax);
+  params['threads'] = getRawValue(product?.fields?.threads);
+  params['tjMax'] = getFormattedValue(product?.fields?.tjMax);
 
   return params;
 }
@@ -205,9 +185,7 @@ function buildGpuContentParams(
     additionalData?.bestPerformanceGpu,
   );
 
-  params['busInterface'] = productFieldFormattedValue(
-    product?.fields?.busInterface,
-  );
+  params['busInterface'] = getFormattedValue(product?.fields?.busInterface);
   params['chipsetName'] = formatProductName(chipset);
   params['chipsetNameWithNoCompany'] = formatProductName(chipset, {
     company: false,
@@ -216,58 +194,58 @@ function buildGpuContentParams(
     company: false,
     brand: false,
   });
-  params['computeUnits'] = productFieldFormattedValue(
-    product?.fields?.computeUnits,
-  );
-  params['gpuCores'] = productFieldFormattedValue(product?.fields?.gpuCores);
-  params['coreClock'] = productFieldFormattedValue(
-    product?.fields?.gpuCoreBaseClock,
-  );
-  params['coreBoostClock'] = productFieldFormattedValue(
+  params['computeUnits'] = getFormattedValue(product?.fields?.computeUnits);
+  params['gpuCores'] = getFormattedValue(product?.fields?.gpuCores);
+  params['coreClock'] = getFormattedValue(product?.fields?.gpuCoreBaseClock);
+  params['coreBoostClock'] = getFormattedValue(
     product?.fields?.gpuCoreBoostClock,
   );
   params['dimensions'] = formatGpuDimensions(product);
-  params['foundry'] = productFieldFormattedValue(product?.fields?.foundry);
-  params['fp16'] = productFieldFormattedValue(product?.fields?.fp16);
-  params['fp32'] = productFieldFormattedValue(product?.fields?.fp32);
-  params['fp64'] = productFieldFormattedValue(product?.fields?.fp64);
-  params['memoryBandwidth'] = hasProductFieldRawValue(
+  params['foundry'] = getFormattedValue(product?.fields?.foundry);
+  params['fp16'] = getFormattedValue(product?.fields?.fp16);
+  params['fp32'] = getFormattedValue(product?.fields?.fp32);
+  params['fp64'] = getFormattedValue(product?.fields?.fp64);
+  params['memoryBandwidth'] = getFormattedValue(
     product?.fields?.memoryBandwidth,
-  )
-    ? productFieldFormattedValue(product?.fields?.memoryBandwidth)
-    : null;
-  params['memoryClock'] = hasProductFieldRawValue(product?.fields?.memoryClock)
-    ? productFieldFormattedValue(product?.fields?.memoryClock)
-    : null;
-  params['memoryClockEffective'] = hasProductFieldRawValue(
+  );
+  params['memoryClock'] = getFormattedValue(product?.fields?.memoryClock);
+  params['memoryClockEffective'] = getFormattedValue(
     product?.fields?.memoryClockEffective,
-  )
-    ? productFieldFormattedValue(product?.fields?.memoryClockEffective)
-    : null;
-  params['memoryInterface'] = hasProductFieldRawValue(
+  );
+  params['memoryInterface'] = getFormattedValue(
     product?.fields?.memoryInterface,
-  )
-    ? productFieldFormattedValue(product?.fields?.memoryInterface)
-    : null;
-  params['memorySize'] = hasProductFieldRawValue(product?.fields?.memorySize)
-    ? productFieldFormattedValue(product?.fields?.memorySize)
-    : null;
-  params['memoryType'] = hasProductFieldRawValue(product?.fields?.memoryType)
-    ? productFieldFormattedValue(product?.fields?.memoryType)
-    : null;
-  params['outputs'] = productFieldFormattedValue(product?.fields?.outputs);
-  params['rops'] = productFieldFormattedValue(product?.fields?.rops);
-  params['rtCores'] = productFieldFormattedValue(product?.fields?.rtCores);
+  );
+  params['memorySize'] = getFormattedValue(product?.fields?.memorySize);
+  params['memoryType'] = getFormattedValue(product?.fields?.memoryType);
+  params['outputs'] = getFormattedValue(product?.fields?.outputs);
+  params['rops'] = getFormattedValue(product?.fields?.rops);
+  params['rtCores'] = getFormattedValue(product?.fields?.rtCores);
   params['slotWidth'] = Number(
     productFieldRawValue(product?.fields?.slotWidth),
   );
-  params['suggestedPsu'] = productFieldFormattedValue(
-    product?.fields?.suggestedPsu,
-  );
-  params['tensorCores'] = productFieldFormattedValue(
-    product?.fields?.tensorCores,
-  );
-  params['tmus'] = productFieldFormattedValue(product?.fields?.tmus);
+  params['suggestedPsu'] = getFormattedValue(product?.fields?.suggestedPsu);
+  params['tensorCores'] = getFormattedValue(product?.fields?.tensorCores);
+  params['tmus'] = getFormattedValue(product?.fields?.tmus);
 
   return params;
+}
+
+function getFormattedValue(field?: ProductField) {
+  if (!hasProductFieldRawValue(field)) {
+    return null;
+  }
+
+  if (!hasProductFieldFormattedValue(field)) {
+    return null;
+  }
+
+  return productFieldFormattedValue(field);
+}
+
+function getRawValue(field?: ProductField) {
+  if (!hasProductFieldRawValue(field)) {
+    return null;
+  }
+
+  return productFieldRawValue(field);
 }

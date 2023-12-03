@@ -34,6 +34,8 @@ import { scraper } from '../../scraper';
 import { CommonScraperOptions, ScraperContext } from '../../types';
 import { createGpuField } from '../utils';
 
+// TODO: move to a shared location to be shared with other scrapers.
+// No raw value when it's these.
 const SPECIAL_VALUES: Record<string, string> = {
   'motherboard dependent': 'Motherboard Dependent',
   'on certain motherboards (chipset feature)': 'Motherboard Dependent',
@@ -41,6 +43,7 @@ const SPECIAL_VALUES: Record<string, string> = {
   'system dependent': 'System Dependent',
   'system shared': 'System Shared',
 };
+// No value at all when it's this.
 const NULL_VALUES = ['n/a', 'none', 'unknown'];
 
 export interface ScrapeTechPowerGpuDataOptions extends CommonScraperOptions {
@@ -130,10 +133,15 @@ function getArchitecture(
   ctx?: ScraperContext,
 ): GpuField<string> {
   const values = tokenizeSpecValues($, 'Architecture');
-  const raw = values.join(', ') || null;
-  const formatted = formatProductField(ProductType.Gpu, 'architecture', raw);
+  const value = values.join(', ') || null;
+  const result = parseStringValue({ value, fieldKey: 'architecture' });
 
-  return createGpuField({ field: 'architecture', raw, formatted, ctx });
+  return createGpuField({
+    field: 'architecture',
+    raw: result?.rawValue ?? null,
+    formatted: result?.formattedValue ?? null,
+    ctx,
+  });
 }
 
 function getBusInterface(
@@ -141,10 +149,15 @@ function getBusInterface(
   ctx?: ScraperContext,
 ): GpuField<string> {
   const values = tokenizeSpecValues($, 'Bus Interface');
-  const raw = values.join(', ') || null;
-  const formatted = formatProductField(ProductType.Gpu, 'busInterface', raw);
+  const value = values.join(', ') || null;
+  const result = parseStringValue({ value, fieldKey: 'busInterface' });
 
-  return createGpuField({ field: 'busInterface', raw, formatted, ctx });
+  return createGpuField({
+    field: 'busInterface',
+    raw: result?.rawValue ?? null,
+    formatted: result?.formattedValue ?? null,
+    ctx,
+  });
 }
 
 function getCodename(
@@ -152,10 +165,15 @@ function getCodename(
   ctx?: ScraperContext,
 ): GpuField<string> {
   const values = tokenizeSpecValues($, 'GPU Name');
-  const raw = values.join(', ') || null;
-  const formatted = formatProductField(ProductType.Gpu, 'codename', raw);
+  const value = values.join(', ') || null;
+  const result = parseStringValue({ value, fieldKey: 'codename' });
 
-  return createGpuField({ field: 'codename', raw, formatted, ctx });
+  return createGpuField({
+    field: 'codename',
+    raw: result?.rawValue ?? null,
+    formatted: result?.formattedValue ?? null,
+    ctx,
+  });
 }
 
 function getCompany($: cheerio.CheerioAPI): string {
@@ -235,10 +253,15 @@ function getDirectxVersion(
   ctx?: ScraperContext,
 ): GpuField<string> {
   const values = tokenizeSpecValues($, 'DirectX');
-  const raw = values.join(', ') || null;
-  const formatted = formatProductField(ProductType.Gpu, 'directxVersion', raw);
+  const value = values.join(', ') || null;
+  const result = parseStringValue({ value, fieldKey: 'directxVersion' });
 
-  return createGpuField({ field: 'directxVersion', raw, formatted, ctx });
+  return createGpuField({
+    field: 'directxVersion',
+    raw: result?.rawValue ?? null,
+    formatted: result?.formattedValue ?? null,
+    ctx,
+  });
 }
 
 function getFp32(
@@ -545,10 +568,15 @@ function getMemoryType(
   ctx?: ScraperContext,
 ): GpuField<string> {
   const values = tokenizeSpecValues($, 'Memory Type');
-  const raw = values.join(', ') || null;
-  const formatted = formatProductField(ProductType.Gpu, 'memoryType', raw);
+  const value = values.join(', ') || null;
+  const result = parseStringValue({ value, fieldKey: 'memoryType' });
 
-  return createGpuField({ field: 'memoryType', raw, formatted, ctx });
+  return createGpuField({
+    field: 'memoryType',
+    raw: result?.rawValue ?? null,
+    formatted: result?.formattedValue ?? null,
+    ctx,
+  });
 }
 
 function getOpenClVersion(
@@ -556,10 +584,15 @@ function getOpenClVersion(
   ctx?: ScraperContext,
 ): GpuField<string> {
   const values = tokenizeSpecValues($, 'OpenCL');
-  const raw = values.join(', ') || null;
-  const formatted = formatProductField(ProductType.Gpu, 'openClVersion', raw);
+  const value = values.join(', ') || null;
+  const result = parseStringValue({ value, fieldKey: 'openClVersion' });
 
-  return createGpuField({ field: 'openClVersion', raw, formatted, ctx });
+  return createGpuField({
+    field: 'openClVersion',
+    raw: result?.rawValue ?? null,
+    formatted: result?.formattedValue ?? null,
+    ctx,
+  });
 }
 
 function getOpenGlVersion(
@@ -567,10 +600,15 @@ function getOpenGlVersion(
   ctx?: ScraperContext,
 ): GpuField<string> {
   const values = tokenizeSpecValues($, 'OpenGL');
-  const raw = values.join(', ') || null;
-  const formatted = formatProductField(ProductType.Gpu, 'openGlVersion', raw);
+  const value = values.join(', ') || null;
+  const result = parseStringValue({ value, fieldKey: 'openGlVersion' });
 
-  return createGpuField({ field: 'openGlVersion', raw, formatted, ctx });
+  return createGpuField({
+    field: 'openGlVersion',
+    raw: result?.rawValue ?? null,
+    formatted: result?.formattedValue ?? null,
+    ctx,
+  });
 }
 
 function getOutputs(
@@ -578,10 +616,15 @@ function getOutputs(
   ctx?: ScraperContext,
 ): GpuField<string> {
   const values = tokenizeSpecValues($, 'Outputs');
-  const raw = values.join(', ') || null;
-  const formatted = formatProductField(ProductType.Gpu, 'outputs', raw);
+  const value = values.join(', ') || null;
+  const result = parseStringValue({ value, fieldKey: 'outputs' });
 
-  return createGpuField({ field: 'outputs', raw, formatted, ctx });
+  return createGpuField({
+    field: 'outputs',
+    raw: result?.rawValue ?? null,
+    formatted: result?.formattedValue ?? null,
+    ctx,
+  });
 }
 
 function getPixelRate(
@@ -611,10 +654,15 @@ function getPowerConnectors(
   ctx?: ScraperContext,
 ): GpuField<string> {
   const values = tokenizeSpecValues($, 'Power Connectors');
-  const raw = values.join(', ') || null;
-  const formatted = formatProductField(ProductType.Gpu, 'powerConnectors', raw);
+  const value = values.join(', ') || null;
+  const result = parseStringValue({ value, fieldKey: 'powerConnectors' });
 
-  return createGpuField({ field: 'powerConnectors', raw, formatted, ctx });
+  return createGpuField({
+    field: 'powerConnectors',
+    raw: result?.rawValue ?? null,
+    formatted: result?.formattedValue ?? null,
+    ctx,
+  });
 }
 
 function getProcessSize(
@@ -758,14 +806,15 @@ function getShaderModelVersion(
   ctx?: ScraperContext,
 ): GpuField<string> {
   const values = tokenizeSpecValues($, 'Shader Model');
-  const raw = values.join(', ') || null;
-  const formatted = formatProductField(
-    ProductType.Gpu,
-    'shaderModelVersion',
-    raw,
-  );
+  const value = values.join(', ') || null;
+  const result = parseStringValue({ value, fieldKey: 'shaderModelVersion' });
 
-  return createGpuField({ field: 'shaderModelVersion', raw, formatted, ctx });
+  return createGpuField({
+    field: 'shaderModelVersion',
+    raw: result?.rawValue ?? null,
+    formatted: result?.formattedValue ?? null,
+    ctx,
+  });
 }
 
 function getGpuCores(
@@ -1013,7 +1062,7 @@ function parseNumberValue(options: ParseNumberOptions): ParseNumberResult {
 
   if (SPECIAL_VALUES[lcValue] != null) {
     return {
-      rawValue: 0,
+      rawValue: null,
       formattedValue: SPECIAL_VALUES[lcValue],
     };
   }
@@ -1079,4 +1128,52 @@ function parseDateValue(
   } catch (e) {
     return null;
   }
+}
+
+interface ParseStringOptions {
+  value: string;
+
+  fieldKey: ProductFieldKey;
+  formatOptions?: FormatProductFieldOptions;
+}
+
+interface ParseStringResult {
+  rawValue: string;
+  formattedValue: string;
+}
+
+function parseStringValue(options: ParseStringOptions): ParseStringResult {
+  const { value, fieldKey, formatOptions } = options;
+  if (value == null) {
+    return null;
+  }
+
+  const lcValue = value.toLowerCase();
+  if (NULL_VALUES.includes(lcValue)) {
+    return null;
+  }
+
+  if (
+    Object.values(SPECIAL_VALUES)
+      .map((v) => v.toLowerCase())
+      .includes(lcValue)
+  ) {
+    return {
+      rawValue: null,
+      formattedValue: value,
+    };
+  }
+
+  const rawValue = value;
+  const formattedValue = formatProductField(
+    ProductType.Gpu,
+    fieldKey,
+    rawValue,
+    { ...formatOptions },
+  );
+
+  return {
+    rawValue,
+    formattedValue,
+  };
 }

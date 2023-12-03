@@ -3,7 +3,6 @@ import {
   formatGpuDimensions,
   GpuProduct,
   hasProductFieldRawValue,
-  hasProductFieldValue,
   hasProductRank,
   isCpuProduct,
   isGpuChipset,
@@ -92,31 +91,33 @@ export function buildContentTags(product: Product) {
 
   // Market Segment
   tags[MarketSegmentTag.Desktop] =
-    productFieldRawValue(product.fields.marketSegment) ===
+    productFieldRawValue(product?.fields?.marketSegment) ===
     MarketSegment.Desktop;
   tags[MarketSegmentTag.Embedded] =
-    productFieldRawValue(product.fields.marketSegment) ===
+    productFieldRawValue(product?.fields?.marketSegment) ===
     MarketSegment.Embedded;
   tags[MarketSegmentTag.Integrated] =
-    productFieldRawValue(product.fields.marketSegment) ===
+    productFieldRawValue(product?.fields?.marketSegment) ===
     MarketSegment.Integrated;
   tags[MarketSegmentTag.Mobile] =
-    productFieldRawValue(product.fields.marketSegment) === MarketSegment.Mobile;
+    productFieldRawValue(product?.fields?.marketSegment) ===
+    MarketSegment.Mobile;
   tags[MarketSegmentTag.Server] =
-    productFieldRawValue(product.fields.marketSegment) === MarketSegment.Server;
+    productFieldRawValue(product?.fields?.marketSegment) ===
+    MarketSegment.Server;
   tags[MarketSegmentTag.Workstation] =
-    productFieldRawValue(product.fields.marketSegment) ===
+    productFieldRawValue(product?.fields?.marketSegment) ===
     MarketSegment.Workstation;
 
   // Production Status
   tags[ProductionStatusTag.Active] =
-    productFieldRawValue(product.fields.productionStatus) ===
+    productFieldRawValue(product?.fields?.productionStatus) ===
     ProductionStatus.Active;
   tags[ProductionStatusTag.EndOfLife] =
-    productFieldRawValue(product.fields.productionStatus) ===
+    productFieldRawValue(product?.fields?.productionStatus) ===
     ProductionStatus.EndOfLife;
   tags[ProductionStatusTag.Unreleased] =
-    productFieldRawValue(product.fields.productionStatus) ===
+    productFieldRawValue(product?.fields?.productionStatus) ===
     ProductionStatus.Unreleased;
 
   // Product Type
@@ -137,17 +138,21 @@ export function buildContentTags(product: Product) {
   tags[RankTag.Value] = hasProductRank(product, RankKey.PerformancePerMsrp);
 
   // Specs
-  tags[SpecsTag.Architecture] = hasProductFieldValue(
-    product.fields.architecture,
+  tags[SpecsTag.Architecture] = hasProductFieldRawValue(
+    product?.fields?.architecture,
   );
-  tags[SpecsTag.Codename] = hasProductFieldValue(product.fields.codename);
-  tags[SpecsTag.MarketSegment] = hasProductFieldValue(
-    product.fields.marketSegment,
+  tags[SpecsTag.Codename] = hasProductFieldRawValue(product?.fields?.codename);
+  tags[SpecsTag.MarketSegment] = hasProductFieldRawValue(
+    product?.fields?.marketSegment,
   );
-  tags[SpecsTag.Msrp] = hasProductFieldValue(product.fields.msrp);
-  tags[SpecsTag.ProcessSize] = hasProductFieldValue(product.fields.processSize);
-  tags[SpecsTag.ReleaseDate] = hasProductFieldValue(product.fields.releaseDate);
-  tags[SpecsTag.Tdp] = hasProductFieldValue(product.fields.tdp);
+  tags[SpecsTag.Msrp] = hasProductFieldRawValue(product?.fields?.msrp);
+  tags[SpecsTag.ProcessSize] = hasProductFieldRawValue(
+    product?.fields?.processSize,
+  );
+  tags[SpecsTag.ReleaseDate] = hasProductFieldRawValue(
+    product?.fields?.releaseDate,
+  );
+  tags[SpecsTag.Tdp] = hasProductFieldRawValue(product?.fields?.tdp);
 
   // Sub Product Type
   tags[SubProductTypeTag.GpuChipset] = isGpuChipset(product);
@@ -167,33 +172,35 @@ function buildCpuContentTags(product: CpuProduct) {
   }
 
   tags[SpecsTag.BoostClock] = hasProductFieldRawValue(
-    product.fields.turboClock,
+    product?.fields?.turboClock,
   );
-  tags[SpecsTag.BundledCooler] = hasProductFieldValue(
-    product.fields.bundledCooler,
+  tags[SpecsTag.BundledCooler] = hasProductFieldRawValue(
+    product?.fields?.bundledCooler,
   );
-  tags[SpecsTag.Clock] = hasProductFieldRawValue(product.fields.clock);
-  tags[SpecsTag.Cores] = hasProductFieldValue(product.fields.cores);
-  tags[SpecsTag.Foundry] = hasProductFieldValue(product.fields.foundry);
-  tags[SpecsTag.Generation] = hasProductFieldValue(product.fields.generation);
-  tags[SpecsTag.IntegratedGraphics] = hasProductFieldValue(
-    product.fields.integratedGraphics,
+  tags[SpecsTag.Clock] = hasProductFieldRawValue(product?.fields?.clock);
+  tags[SpecsTag.Cores] = hasProductFieldRawValue(product?.fields?.cores);
+  tags[SpecsTag.Foundry] = hasProductFieldRawValue(product?.fields?.foundry);
+  tags[SpecsTag.Generation] = hasProductFieldRawValue(
+    product?.fields?.generation,
   );
-  tags[SpecsTag.L1Cache] = hasProductFieldValue(product.fields.l1Cache);
-  tags[SpecsTag.L2Cache] = hasProductFieldValue(product.fields.l2Cache);
-  tags[SpecsTag.L3Cache] = hasProductFieldValue(product.fields.l3Cache);
+  tags[SpecsTag.IntegratedGraphics] = hasProductFieldRawValue(
+    product?.fields?.integratedGraphics,
+  );
+  tags[SpecsTag.L1Cache] = hasProductFieldRawValue(product?.fields?.l1Cache);
+  tags[SpecsTag.L2Cache] = hasProductFieldRawValue(product?.fields?.l2Cache);
+  tags[SpecsTag.L3Cache] = hasProductFieldRawValue(product?.fields?.l3Cache);
   tags[SpecsTag.LockedMultiplier] =
-    productFieldRawValue(product.fields.multiplierUnlocked) === false;
-  tags[SpecsTag.MemoryChannels] = hasProductFieldValue(
-    product.fields.memorySupport,
+    productFieldRawValue(product?.fields?.multiplierUnlocked) === false;
+  tags[SpecsTag.MemoryChannels] = hasProductFieldRawValue(
+    product?.fields?.memorySupport,
   );
-  tags[SpecsTag.MemorySupport] = hasProductFieldValue(
-    product.fields.memorySupport,
+  tags[SpecsTag.MemorySupport] = hasProductFieldRawValue(
+    product?.fields?.memorySupport,
   );
-  tags[SpecsTag.Socket] = hasProductFieldValue(product.fields.socket);
-  tags[SpecsTag.Threads] = hasProductFieldRawValue(product.fields.threads);
+  tags[SpecsTag.Socket] = hasProductFieldRawValue(product?.fields?.socket);
+  tags[SpecsTag.Threads] = hasProductFieldRawValue(product?.fields?.threads);
   tags[SpecsTag.UnlockedMultiplier] =
-    productFieldRawValue(product.fields.multiplierUnlocked) === true;
+    productFieldRawValue(product?.fields?.multiplierUnlocked) === true;
 
   return tags;
 }
@@ -204,12 +211,12 @@ function buildGpuContentTags(product: GpuProduct) {
     return {};
   }
 
-  const marketSegment = productFieldRawValue(product.fields.marketSegment);
+  const marketSegment = productFieldRawValue(product?.fields?.marketSegment);
 
-  let hasOutputs = hasProductFieldValue(product.fields.outputs);
+  let hasOutputs = hasProductFieldRawValue(product?.fields?.outputs);
   const outputs = productFieldFormattedValue(
-    product.fields.outputs,
-  ).toLowerCase();
+    product?.fields?.outputs,
+  )?.toLowerCase();
 
   if (
     marketSegment !== MarketSegment.Desktop &&
@@ -229,21 +236,23 @@ function buildGpuContentTags(product: GpuProduct) {
 
   tags[SpecsTag.Dimensions] = hasDimensions;
   tags[SpecsTag.MemoryBandwidth] = hasProductFieldRawValue(
-    product.fields.memoryBandwidth,
+    product?.fields?.memoryBandwidth,
   );
   tags[SpecsTag.MemoryClock] = hasProductFieldRawValue(
-    product.fields.memoryClock,
+    product?.fields?.memoryClock,
   );
   tags[SpecsTag.MemoryInterface] = hasProductFieldRawValue(
-    product.fields.memoryInterface,
+    product?.fields?.memoryInterface,
   );
   tags[SpecsTag.MemorySize] = hasProductFieldRawValue(
-    product.fields.memorySize,
+    product?.fields?.memorySize,
   );
   tags[SpecsTag.Outputs] = hasOutputs;
-  tags[SpecsTag.SlotWidth] = hasProductFieldRawValue(product.fields.slotWidth);
-  tags[SpecsTag.SuggestedPsu] = hasProductFieldValue(
-    product.fields.suggestedPsu,
+  tags[SpecsTag.SlotWidth] = hasProductFieldRawValue(
+    product?.fields?.slotWidth,
+  );
+  tags[SpecsTag.SuggestedPsu] = hasProductFieldRawValue(
+    product?.fields?.suggestedPsu,
   );
 
   return tags;

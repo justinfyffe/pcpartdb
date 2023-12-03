@@ -23,6 +23,7 @@ const FIELDS_TO_SCRAPE: GpuFieldKey[] = [
   'memorySize',
   'memoryType',
   'memoryClock',
+  'memoryClockEffective',
   'memoryInterface',
   'memoryBandwidth',
 

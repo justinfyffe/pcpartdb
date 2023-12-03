@@ -16,9 +16,9 @@ const PerformanceRankPlacement = compileContentComponent(
     component: (props) => {
       return (
         <>
-          The combined performance rating estimates that it is{' '}
+          Our combined performance rating estimates that it is{' '}
           {formatOrdinalNumber(props.performanceRankForMarketSegment as number)}{' '}
-          in performance among the{' '}
+          in performance compared to the{' '}
           {props.countPerformanceRanksForMarketSegment.toLocaleString()} rated{' '}
           {props.marketSegment} GPUs in our database.
         </>
@@ -32,10 +32,10 @@ const PerformanceRankPlacement = compileContentComponent(
     component: (props) => {
       return (
         <>
-          The combined performance rating estimates that it is
+          Our combined performance rating estimates that it is
           {formatOrdinalNumber(props.performanceRank as number)} in performance
-          among the {props.countPerformanceRanks.toLocaleString()} rated GPUs in
-          our database.
+          compared to the {props.countPerformanceRanks.toLocaleString()} rated
+          GPUs in our database.
         </>
       );
     },
