@@ -28,7 +28,7 @@ export const ProductHighlight = (props: ProductHighlightProps) => {
 
       <div
         className={classNames(
-          'flex-auto md:text-base text-content text-right whitespace-nowrap',
+          'flex-auto md:text-base text-content text-right',
           className,
         )}
       >

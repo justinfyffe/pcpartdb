@@ -62,7 +62,7 @@ export const ViewProductRatingCard: FunctionComponent<
       )}
     >
       <CardTitle as="div" className="flex flex-col gap-2">
-        <span className="whitespace-nowrap">
+        <span>
           <Title tags={[ratingType]} />
         </span>
         <div className="text-base font-normal">

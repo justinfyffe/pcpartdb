@@ -92,7 +92,7 @@ export const AdminLayout: FunctionComponent<AdminLayoutProps> = (props) => {
         refreshStatus: refreshAutomationStatus,
       }}
     >
-      <Seo referrer={MetaReferrer.None} />
+      <Seo referrer={MetaReferrer.NoReferrer} />
       <div className="container bg-content p-container flex font-bold items-center text-5xl md:text-3xl text-content">
         <Img
           src="/images/logo.svg"

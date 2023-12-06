@@ -38,6 +38,7 @@ export class ProductController {
           {
             fields: this.getListFields(req.productType),
             includeAdditionalData: true,
+            includeRanks: true,
           },
           ctx,
         );

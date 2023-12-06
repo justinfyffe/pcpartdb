@@ -81,7 +81,12 @@ export const Tr: FunctionComponent<TrProps> = (props) => {
 
   return (
     <tr
-      className={classNames(className, sticky ? 'sticky top-0' : '')}
+      className={classNames(
+        sticky
+          ? 'sticky shadow-[inset_0px_-1px_0px_0px_#e5e7eb] top-[-1px] z-10 '
+          : '',
+        className,
+      )}
       {...htmlProps}
     >
       {children}

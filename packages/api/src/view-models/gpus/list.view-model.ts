@@ -63,6 +63,7 @@ export class ListGpusViewModelService {
               'msrp',
             ],
             includeAdditionalData: true,
+            includeRanks: true,
           },
           ctx,
         ),

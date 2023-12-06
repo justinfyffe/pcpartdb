@@ -107,7 +107,7 @@ export const ListCpusPage = (props: ListCpusViewModel) => {
               <ListMenu
                 includeFilters
                 includePresets
-                className="hidden md:block"
+                className="hidden lg:block"
               />
             </div>
 
@@ -117,7 +117,7 @@ export const ListCpusPage = (props: ListCpusViewModel) => {
                 <ListPagination />
               </div>
 
-              <aside className="md:hidden flex flex-col gap-4">
+              <aside className="lg:hidden flex flex-col gap-4">
                 <div className="border-px">
                   <ListFilters />
                 </div>

@@ -44,7 +44,13 @@ export class ListCpusViewModelService {
             query: cpusQuery,
           },
           {
-            fields: ['releaseDate', 'performanceRating', 'performancePerMsrp'],
+            fields: [
+              'marketSegment',
+              'releaseDate',
+              'performanceRating',
+              'performancePerMsrp',
+            ],
+            includeRanks: true,
           },
           ctx,
         ),

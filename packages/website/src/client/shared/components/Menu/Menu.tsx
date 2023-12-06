@@ -55,7 +55,7 @@ export const Menu: FunctionComponent<MenuProps> = (props) => {
       <div
         ref={overlayRef}
         className={classNames(
-          'absolute bg-white border-px shadow-md z-10 mt-px right-0 top-full w-62 max-w-62',
+          'absolute bg-white border-px shadow-md z-20 mt-px right-0 top-full w-62 max-w-62',
           isOpen ? 'block' : 'hidden',
           overlayClassName,
         )}

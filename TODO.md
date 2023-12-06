@@ -1,18 +1,28 @@
 Primary Focus:
-- Better Performance score
-- More Benchmarks Project
+- List UI Improvements
+- Articles
+- Ads
 
-Secondary Focus:
-- Finish Automation
-  - Finish GPU Queue
-  - Finish CPU Queue
-  - sort list groups by date
+List UI Improvements:
+- Keep table for desktop view.
+- Improvements to table
+  - [] Remove pagination, use "Load more GPUs"?
+  - [X] Add rank to the left of gpu name
+  - [X] Add market segment
+- Improvements for mobile view?
+  - [] Less columns, densify
+- Add more verticality to page.
+  - [] Stuff above the table?
+  - [] Stuff below the table?
+
+Scraping Improvements:
+- Support GPU Clock from TechPowerUp:
+  - https://www.techpowerup.com/gpu-specs/geforce-gtx-460-v2.c356
 
 When Bored:
 - Migrate to react-query instead of axios
 - Make autocomplete stricter, not looser when searching?
 - Improve db performance using queryRaw, but only in places where it'll help
-
 
 Better Performance Score
 - [] add highlights under technical specs? Next project

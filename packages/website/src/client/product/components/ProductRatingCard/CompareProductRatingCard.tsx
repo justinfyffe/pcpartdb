@@ -114,7 +114,7 @@ export const CompareProductRatingCard: FunctionComponent<
       )}
     >
       <CardTitle as="div" className="grow basis-0 flex flex-col gap-2">
-        <span className="whitespace-nowrap">
+        <span>
           <Title tags={[ratingType]} />
         </span>
         <span className="text-base font-normal min-w-50">

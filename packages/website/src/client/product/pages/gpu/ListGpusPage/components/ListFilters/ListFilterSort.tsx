@@ -68,7 +68,7 @@ const ListFilterSortItem: FunctionComponent<ListFilterSortItemProps> = (
     <button
       onClick={handleSortClick}
       className={classNames(
-        'cursor-pointer p-2 hover:bg-mouse-hover text-link text-left',
+        'cursor-pointer p-2 hover:bg-mouse-hover text-link text-left whitespace-nowrap',
         query.orderBy?.sort === sort ? 'font-bold' : '',
       )}
     >

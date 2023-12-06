@@ -12,7 +12,7 @@ export enum MetaRobots {
 }
 
 export enum MetaReferrer {
-  None = 'none',
+  NoReferrer = 'no-referrer',
   NoneWhenDowngrade = 'none-when-downgrade',
   Origin = 'origin',
   OriginWhenCrossOrigin = 'origin-when-crossorigin',

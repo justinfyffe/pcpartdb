@@ -7,7 +7,7 @@ import { executeAutomation } from './executeAutomation';
 import { AutomationContext } from './types';
 import { loadAutomationContext } from './utils/context';
 
-const ACTIONS_PER_ITERATION = 5; // Execute X actions per iteraction.
+const ACTIONS_PER_ITERATION = 2; // 5; // Execute X actions per iteraction.
 
 const REQUEST_CHUNK_DELAY = 8_000;
 const CONCURRENCY = true;

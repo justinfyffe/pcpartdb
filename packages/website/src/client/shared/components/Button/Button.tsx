@@ -31,8 +31,7 @@ const BUTTON_VARIANTS = {
   [ButtonVariant.Success]: 'bg-success text-default',
   [ButtonVariant.Warning]: 'bg-warning text-default',
   [ButtonVariant.Danger]: 'bg-danger text-default',
-  [ButtonVariant.Link]:
-    'bg-transparent text-content shadow-none mx-[-16px] my-[-8px] text-link',
+  [ButtonVariant.Link]: 'bg-transparent text-content shadow-none p-0 text-link',
   [ButtonVariant.Card]: 'bg-light-shades text-content py-4 px-6',
 };
 

@@ -32,9 +32,7 @@ export const ProductHighlightComparison = (
           <div className="mr-1">{cloneElement(icon, { className: 'w-5' })}</div>
         )}
 
-        <div className="font-medium md:text-base text-xl whitespace-nowrap">
-          {label}
-        </div>
+        <div className="font-medium md:text-base text-xl">{label}</div>
       </div>
 
       <div
@@ -56,7 +54,7 @@ export const ProductHighlightComparison = (
             </div>
             <div
               className={classNames(
-                'text-right whitespace-nowrap',
+                'text-right',
                 bold ? 'font-bold' : '',
                 className,
               )}
