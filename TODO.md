@@ -4,13 +4,6 @@ Primary Focus:
 - Ads
 
 List UI Improvements:
-- Keep table for desktop view.
-- Improvements to table
-  - [] Remove pagination, use "Load more GPUs"?
-  - [X] Add rank to the left of gpu name
-  - [X] Add market segment
-- Improvements for mobile view?
-  - [] Less columns, densify
 - Add more verticality to page.
   - [] Stuff above the table?
   - [] Stuff below the table?
