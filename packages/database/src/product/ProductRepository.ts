@@ -350,6 +350,10 @@ export class ProductRepository {
       },
     });
 
+    await db.productImage.deleteMany({ where: { productId: id } });
+    await db.productBenchmark.deleteMany({ where: { productId: id } });
+    await db.productSource.deleteMany({ where: { productId: id } });
+
     // Update Product
     const {
       cpuFields: cpuFields,
@@ -367,52 +371,16 @@ export class ProductRepository {
       ...productData
     } = data;
 
-    // Unset relations
-    await db.product.update({
-      where: { id },
-      data: {
-        images: { set: [] },
-        benchmarks: { set: [] },
-        sources: { set: [] },
-      },
-    });
-
+    // Update product
     return await db.product.update({
       where: { id },
       data: {
         ...productData,
         cpuFields: cpuFields != null ? { update: cpuFields } : undefined,
         gpuFields: gpuFields != null ? { update: gpuFields } : undefined,
-        images: {
-          connectOrCreate: images?.map((image) => ({
-            create: { imageId: image.imageId },
-            where: {
-              productId_imageId: { productId: id, imageId: image.imageId },
-            },
-          })),
-        },
-        benchmarks: {
-          connectOrCreate: benchmarks?.map((benchmark) => ({
-            create: { ...benchmark, id: undefined, productId: undefined },
-            where: {
-              productId_benchmarkKey: {
-                productId: id,
-                benchmarkKey: benchmark.benchmarkKey,
-              },
-            },
-          })),
-        },
-        sources: {
-          connectOrCreate: sources?.map((source) => ({
-            create: { ...source, id: undefined, productId: undefined },
-            where: {
-              productId_sourceKey: {
-                productId: id,
-                sourceKey: source.sourceKey,
-              },
-            },
-          })),
-        },
+        images: { createMany: { data: images, skipDuplicates: true } },
+        benchmarks: { createMany: { data: benchmarks, skipDuplicates: true } },
+        sources: { createMany: { data: sources, skipDuplicates: true } },
       },
     });
   }
@@ -445,34 +413,9 @@ export class ProductRepository {
     calculations: ProductCalculationsRequest[],
     config?: RepositoryConfig,
   ) {
-    await this.resetCalculations(productType, config);
     await this.setScoreCalculations(productType, calculations, config);
-    await this.setRankCalculations(calculations, config);
-    await this.setRelatedProductCalculations(calculations, config);
-  }
-
-  private async resetCalculations(
-    productType: ProductType,
-    config?: RepositoryConfig,
-  ) {
-    const db = config?.trx ?? this.db;
-
-    // Clear out fields
-    const tableName: string = this.getFieldsTable(productType);
-    await db.$executeRaw(Prisma.sql`
-      UPDATE ${Prisma.raw(tableName)}
-      SET 
-        performance_rating_value = null,
-        performance_rating_meta = null,
-        performance_per_msrp_value = null,
-        performance_per_msrp_meta = null
-    `);
-
-    // Clear out ranks
-    await db.productRank.deleteMany({ where: { product: { productType } } });
-
-    // Clear out related products
-    await db.relatedProduct.deleteMany({ where: { product: { productType } } });
+    await this.setRankCalculations(productType, calculations, config);
+    await this.setRelatedProductCalculations(productType, calculations, config);
   }
 
   private async setScoreCalculations(
@@ -481,6 +424,18 @@ export class ProductRepository {
     config?: RepositoryConfig,
   ) {
     const db = config?.trx ?? this.db;
+
+    const tableName: string = this.getFieldsTable(productType);
+
+    // Reset scores in case some products no longer have any.
+    await db.$executeRaw(Prisma.sql`
+      UPDATE ${Prisma.raw(tableName)}
+      SET 
+        performance_rating_value = null,
+        performance_rating_meta = null,
+        performance_per_msrp_value = null,
+        performance_per_msrp_meta = null
+    `);
 
     const productIds: number[] = [];
     const performanceRatingValues: number[] = [];
@@ -516,7 +471,6 @@ export class ProductRepository {
       );
     });
 
-    const tableName: string = this.getFieldsTable(productType);
     await db.$executeRaw(Prisma.sql`
       UPDATE ${Prisma.raw(tableName)} f
       SET (
@@ -548,16 +502,20 @@ export class ProductRepository {
   }
 
   private async setRankCalculations(
+    productType: ProductType,
     calculations: ProductCalculationsRequest[],
     config?: RepositoryConfig,
   ) {
     const db = config?.trx ?? this.db;
     const dataToInsert: ProductRankEntity[] = [];
 
+    // Clear out and create ranks
+    await db.productRank.deleteMany({ where: { product: { productType } } });
+
     const filtered = calculations.filter((c) => c.ranks != null);
     for (const calculation of filtered) {
       const entries = Object.entries(calculation.ranks).map(([key, rank]) => ({
-        id: undefined,
+        uuid: undefined,
         productId: calculation.productId,
         rankKey: key,
         rank: rank.rank,
@@ -574,11 +532,15 @@ export class ProductRepository {
   }
 
   private async setRelatedProductCalculations(
+    productType: ProductType,
     calculations: ProductCalculationsRequest[],
     config?: RepositoryConfig,
   ) {
     const db = config?.trx ?? this.db;
     const dataToInsert: RelatedProductEntity[] = [];
+
+    // Clear out and create related products
+    await db.relatedProduct.deleteMany({ where: { product: { productType } } });
 
     const filtered = calculations.filter((c) => c.related != null);
     for (const calculation of filtered) {

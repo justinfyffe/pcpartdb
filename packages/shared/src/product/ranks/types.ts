@@ -13,10 +13,9 @@ export enum RankKey {
 export interface ProductRankMeta {}
 
 export interface ProductRank {
-  id?: number;
   productId?: number;
-
   rankKey: RankKey;
+
   rank?: number;
   totalRanked?: number;
 

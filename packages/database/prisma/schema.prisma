@@ -135,12 +135,8 @@ model Product {
 }
 
 model ProductBenchmark {
-  id Int @id @default(autoincrement())
-  
-  // Product that this benchmark belongs to.
-  productId Int? @map("product_id")
-
-  // Enum identifier for the benchmark.
+  // Primary identifier
+  productId Int @map("product_id")
   benchmarkKey String @map("benchmark_key")
 
   // Numeric value for benchmark
@@ -160,18 +156,14 @@ model ProductBenchmark {
   product Product? @relation("productBenchmarkToProduct", fields: [productId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "productBenchmarks_product_foreign")
   
   // Indexes
-  @@unique([productId, benchmarkKey], map: "productBenchmarks_productId_benchmarkKey_unique")
+  @@id([productId, benchmarkKey])
 
   @@map("product_benchmarks")
 }
 
 model ProductRank {
-  id Int @id @default(autoincrement())
-  
-  // Product that this benchmark belongs to.
-  productId Int? @map("product_id")
-
-  // Enum identifier for the rank.
+  // Primary identifier
+  productId Int @map("product_id")
   rankKey String @map("rank_key")
 
   // Numeric value for rank
@@ -190,18 +182,14 @@ model ProductRank {
   product Product? @relation("productRankToProduct", fields: [productId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "productRanks_product_foreign")
 
   // Indexes
-  @@unique([productId, rankKey], map: "productRanks_productId_rankKey_unique")
+  @@id([productId, rankKey])
 
   @@map("product_ranks")
 }
 
 model ProductSource {
-  id Int @id @default(autoincrement())
-
-  // Product that this source belongs to.
-  productId Int? @map("product_id")
-
-  // Enum identifier for the source
+  // Primary identifier
+  productId Int @map("product_id")
   sourceKey String @map("source_key")
   
   // URL for the source
@@ -221,7 +209,7 @@ model ProductSource {
   product Product? @relation("productSourceToProduct", fields: [productId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "productSources_product_foreign")
 
   // Indexes
-  @@unique([productId, sourceKey], map: "productSources_productId_sourceKey_unique")
+  @@id([productId, sourceKey])
   @@unique([sourceUrl, productId], map: "productSources_sourceUrl_productId_unique")
 
   @@map("product_sources")

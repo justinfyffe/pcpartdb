@@ -254,10 +254,9 @@ export const GPU_BENCHMARKS = [
 export interface ProductBenchmarkMeta {}
 
 export interface ProductBenchmark {
-  id?: number;
   productId?: number;
-
   benchmarkKey: BenchmarkKey;
+
   value?: number;
   valuePerMsrp?: number;
 

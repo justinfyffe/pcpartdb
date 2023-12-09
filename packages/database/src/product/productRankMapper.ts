@@ -7,7 +7,6 @@ export function mapToProductRankDto(entity: ProductRankEntity) {
   }
 
   return {
-    id: entity.id,
     productId: entity.productId,
     rankKey: entity.rankKey,
     rank: entity.rank,
@@ -30,7 +29,6 @@ export function mapToProductRankEntity(dto: ProductRank) {
   }
 
   return {
-    id: undefined,
     productId: undefined,
     rankKey: dto.rankKey,
     rank: dto.rank,

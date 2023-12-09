@@ -9,10 +9,9 @@ export enum ProductSourceKey {
 }
 
 export interface ProductSource {
-  id?: number;
   productId?: number;
-
   sourceKey: ProductSourceKey;
+
   sourceUrl: string;
 
   metadata?: any;

@@ -7,7 +7,6 @@ export function mapToProductBenchmarkDto(entity: ProductBenchmarkEntity) {
   }
 
   return {
-    id: entity.id,
     productId: entity.productId,
     benchmarkKey: entity.benchmarkKey,
     value: entity.value,
@@ -30,7 +29,6 @@ export function mapToProductBenchmarkEntity(dto: ProductBenchmark) {
   }
 
   return {
-    id: undefined,
     productId: undefined,
     benchmarkKey: dto.benchmarkKey,
     value: dto.value,

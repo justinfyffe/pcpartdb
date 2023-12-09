@@ -7,10 +7,9 @@ export function mapToProductSourceDto(entity: ProductSourceEntity) {
   }
 
   return {
-    id: entity.id,
     productId: entity.productId,
-
     sourceKey: entity.sourceKey,
+
     sourceUrl: entity.sourceUrl,
 
     metadata: entity.metadata,
@@ -29,10 +28,9 @@ export function mapToProductSourceEntity(dto: ProductSource) {
   }
 
   return {
-    id: undefined,
     productId: undefined,
-
     sourceKey: dto.sourceKey,
+
     sourceUrl: dto.sourceUrl,
 
     metadata: dto.metadata,
