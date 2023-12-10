@@ -35,7 +35,7 @@ export async function scrapeNotebookCheckCpuSources(
       return;
     }
 
-    const $a = $tr.find('.specs.fullname a');
+    const $a = $tr.find('.specs a');
 
     // Cannot find element.
     if (!$a.length) {
