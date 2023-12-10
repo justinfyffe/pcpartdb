@@ -74,8 +74,8 @@ export function getCompareGpusPath(options: GetCompareProductsPathOptions) {
     ? [...comparison].sort((a, b) => a.id - b.id)
     : comparison;
 
-  const slug1 = parts[0];
-  const slug2 = parts[1];
+  const slug1 = parts[0].slug;
+  const slug2 = parts[1].slug;
 
   return joinUrlParts('/gpus/compare/', `${slug1}--vs--${slug2}`, '/');
 }
