@@ -4,6 +4,7 @@ export interface SitemapEntry {
 }
 
 export interface SitemapProductSlug {
+  productId?: number;
   slug?: string;
   lastModification?: number;
 }

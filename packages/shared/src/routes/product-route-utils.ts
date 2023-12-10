@@ -1,4 +1,4 @@
-import { Product, ProductComparison, ProductType } from '../product';
+import { Product, ProductType } from '../product';
 import { getCompareCpusPath, getViewCpuPath } from './cpu-route-utils';
 import { getCompareGpusPath, getViewGpuPath } from './gpu-route-utils';
 
@@ -27,9 +27,8 @@ export function getViewProductPath(options: GetViewProductPathOptions) {
 
 export interface GetCompareProductsPathOptions {
   productType?: ProductType;
-  slugs?: [string, string];
-
-  comparison?: ProductComparison;
+  comparison?: (Pick<Product, 'id' | 'slug'> & { productType?: ProductType })[];
+  ordered?: boolean;
 }
 
 export function getCompareProductsPath(options: GetCompareProductsPathOptions) {

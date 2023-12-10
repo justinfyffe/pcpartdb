@@ -35,6 +35,7 @@ export class WebsiteService {
 
     return {
       slugs: results.map((value) => ({
+        productId: value.id,
         slug: value.slug,
         lastModification: value.updatedAt.getTime(),
       })),

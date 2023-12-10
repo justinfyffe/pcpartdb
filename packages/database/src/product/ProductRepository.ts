@@ -398,6 +398,7 @@ export class ProductRepository {
     const db = config?.trx ?? this.db;
     return await db.product.findMany({
       select: {
+        id: true,
         slug: true,
         updatedAt: true,
       },

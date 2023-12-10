@@ -72,12 +72,12 @@ export async function updateSitemapsAction(
   const sitemapUrls = [
     await writeGeneralSitemap(),
     await writeCpuListsSitemap(),
+    await writeGpuListsSitemap(),
     ...(await writeCpusSitemap(cpuSlugs)),
     ...(await writeCpuComparisonsSitemap(cpuSlugs)),
     ...(await writeGpuChipsetsSitemap(gpuChipsetSlugs)),
     ...(await writeGpuRetailModelsSitemap(gpuRetailModelSlugs)),
     ...(await writeGpuComparisonsSitemap(gpuChipsetSlugs)),
-    await writeGpuListsSitemap(),
   ];
   await writeSitemapIndex(sitemapUrls);
 
@@ -180,11 +180,15 @@ async function writeCpuComparisonsSitemap(cpuSlugs: SitemapProductSlug[]) {
       const cpuSlug1 = cpuSlugs[i];
       const cpuSlug2 = cpuSlugs[j];
 
-      const url1 = websiteUrl(
-        getCompareCpusPath({ slugs: [cpuSlug1.slug, cpuSlug2.slug] }),
-      );
-      const url2 = websiteUrl(
-        getCompareCpusPath({ slugs: [cpuSlug2.slug, cpuSlug1.slug] }),
+      const url = websiteUrl(
+        getCompareCpusPath({
+          productType: ProductType.Cpu,
+          comparison: [
+            { id: cpuSlug1.productId, slug: cpuSlug1.slug },
+            { id: cpuSlug2.productId, slug: cpuSlug2.slug },
+          ],
+          ordered: true,
+        }),
       );
       const lastModTimestamp = Math.max(
         cpuSlug1.lastModification ?? 0,
@@ -193,9 +197,8 @@ async function writeCpuComparisonsSitemap(cpuSlugs: SitemapProductSlug[]) {
       const lastModification =
         lastModTimestamp != 0 ? new Date(lastModTimestamp) : undefined;
 
-      entries.push({ url: url1, lastModification });
-      entries.push({ url: url2, lastModification });
-      totalEntries += 2;
+      entries.push({ url, lastModification });
+      totalEntries++;
 
       if (entries.length >= COMPARISONS_PER_SITEMAP) {
         const filename = CPU_COMPARISONS_FILENAME.replace(
@@ -344,11 +347,15 @@ async function writeGpuComparisonsSitemap(gpuSlugs: SitemapProductSlug[]) {
       const gpuSlug1 = gpuSlugs[i];
       const gpuSlug2 = gpuSlugs[j];
 
-      const url1 = websiteUrl(
-        getCompareGpusPath({ slugs: [gpuSlug1.slug, gpuSlug2.slug] }),
-      );
-      const url2 = websiteUrl(
-        getCompareGpusPath({ slugs: [gpuSlug2.slug, gpuSlug1.slug] }),
+      const url = websiteUrl(
+        getCompareGpusPath({
+          productType: ProductType.Gpu,
+          comparison: [
+            { id: gpuSlug1.productId, slug: gpuSlug1.slug },
+            { id: gpuSlug2.productId, slug: gpuSlug2.slug },
+          ],
+          ordered: true,
+        }),
       );
       const lastModTimestamp = Math.max(
         gpuSlug1?.lastModification ?? 0,
@@ -357,9 +364,8 @@ async function writeGpuComparisonsSitemap(gpuSlugs: SitemapProductSlug[]) {
       const lastModification =
         lastModTimestamp != 0 ? new Date(lastModTimestamp) : undefined;
 
-      entries.push({ url: url1, lastModification });
-      entries.push({ url: url2, lastModification });
-      totalEntries += 2;
+      entries.push({ url: url, lastModification });
+      totalEntries++;
 
       if (entries.length >= COMPARISONS_PER_SITEMAP) {
         const filename = GPU_COMPARISONS_FILENAME.replace(

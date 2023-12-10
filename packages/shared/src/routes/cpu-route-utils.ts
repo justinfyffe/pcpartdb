@@ -98,21 +98,20 @@ export function getViewCpuPath(options: GetViewProductPathOptions) {
 }
 
 export function getCompareCpusPath(options: GetCompareProductsPathOptions) {
-  const { comparison, slugs } = options;
+  const { comparison, ordered } = options;
 
-  let slug1: string;
-  let slug2: string;
-  if (comparison != null) {
-    slug1 = comparison[0].slug;
-    slug2 = comparison[1].slug;
-  } else if (slugs != null) {
-    slug1 = slugs[0];
-    slug2 = slugs[1];
-  } else {
+  if (comparison == null) {
     throw new Error(
-      'Need to set comparison or slugs for getting compare cpus path',
+      'Need to set comparison or slugs for getting compare gpus path',
     );
   }
+
+  const parts = ordered
+    ? [...comparison].sort((a, b) => a.id - b.id)
+    : comparison;
+
+  const slug1 = parts[0];
+  const slug2 = parts[1];
 
   return joinUrlParts('/cpus/compare/', `${slug1}--vs--${slug2}`, '/');
 }
