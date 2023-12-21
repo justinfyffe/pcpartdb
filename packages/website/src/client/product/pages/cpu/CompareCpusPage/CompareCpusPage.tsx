@@ -26,24 +26,17 @@ import {
 import { PerformanceAndValue } from './components/PerformanceAndValue/PerformanceAndValue';
 import { RelatedComparisons } from './components/Related/RelatedComparisons';
 import { RelatedCpus } from './components/Related/RelatedCpus';
-import {
-  ComparePageContext,
-  createComparePageContext,
-} from './context/ComparePageContext';
+import { ComparePageContextProvider } from './context/ComparePageContextProvider';
 
 export const CompareCpusPage = (
   props: CompareCpusViewModel & { config: Config },
 ) => {
   const { config, ...viewModel } = props;
+
   const { comparison } = viewModel;
 
   const [cpu1, cpu2] = comparison;
   useProductCache(ProductType.Cpu, cpu1, cpu2);
-
-  const context = useMemo(
-    () => createComparePageContext(viewModel),
-    [viewModel],
-  );
 
   const pageTitle = useMemo(
     () => formatProductComparisonName(comparison),
@@ -108,7 +101,7 @@ export const CompareCpusPage = (
   );
 
   return (
-    <ComparePageContext.Provider value={context}>
+    <ComparePageContextProvider viewModel={viewModel}>
       <Seo
         title={seoTitle}
         keywords={seoKeywords}
@@ -132,7 +125,7 @@ export const CompareCpusPage = (
             />
           </section>
 
-          <article className="md:min-w-full flex-1 flex flex-col gap-8">
+          <article className="flex-1 flex flex-col gap-8 max-w-full">
             <Highlights />
             <Overview />
             <GeneralInfo />
@@ -144,6 +137,6 @@ export const CompareCpusPage = (
           </article>
         </div>
       </WebsiteLayout>
-    </ComparePageContext.Provider>
+    </ComparePageContextProvider>
   );
 };

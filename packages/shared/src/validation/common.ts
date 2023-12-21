@@ -17,6 +17,7 @@ export const listSortSchema = Joi.string().valid(
 export const orderBySchema = Joi.object({
   sort: listSortSchema.allow('', null),
   order: listOrderSchema.allow('', null),
+  benchmark: Joi.string().allow('', null),
 }).options({ abortEarly: false });
 
 export const paginationSchema = (limit: number) =>

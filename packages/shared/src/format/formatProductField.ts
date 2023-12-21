@@ -156,10 +156,6 @@ export function formatSpecialCpuField<T = unknown>(
     return formatDate(rawValue, { format });
   }
 
-  if (fieldKey === 'performancePerMsrp' && typeof rawValue === 'number') {
-    return rawValue.toFixed(2);
-  }
-
   // Not a special case.
   return null;
 }
@@ -210,9 +206,6 @@ export function formatSpecialGpuField<T = unknown>(
   if (fieldKey === 'shaderModelVersion' && typeof rawValue === 'number') {
     return rawValue.toFixed(1);
   }
-  if (fieldKey === 'performancePerMsrp' && typeof rawValue === 'number') {
-    return rawValue.toFixed(2);
-  }
 
   // Not a special case.
   return null;
@@ -223,7 +216,7 @@ interface FormatGpuDimensionsOptions {
 }
 
 export function formatGpuDimensions(
-  gpu: GpuProduct,
+  gpu: Partial<GpuProduct>,
   options?: FormatGpuDimensionsOptions,
 ) {
   const length = productFieldFormattedValue(gpu.fields?.length);

@@ -8,6 +8,7 @@ import {
   GetProductRequest,
   mergeProducts,
   productBenchmarkValue,
+  productFieldRawValue,
   ProductType,
   ProductUpdate,
   ProductUpdateStatus,
@@ -95,15 +96,26 @@ async function updateBenchmarks(
   console.info('Checking for updated benchmarks');
   let updated = false;
 
+  // We go for original first as msrp wouldn't have been approved yet.
+  // It'll get recalculated when approved.
+  const msrp =
+    productFieldRawValue(originalCpu.fields?.msrp) ??
+    productFieldRawValue(scrapedCpu.fields?.msrp) ??
+    null;
+
   for (const benchmarkKey of CPU_BENCHMARKS) {
     const originalValue = productBenchmarkValue(originalCpu, benchmarkKey);
     const scrapedValue = productBenchmarkValue(scrapedCpu, benchmarkKey);
 
     if (scrapedValue != null && scrapedValue > 0) {
+      const scrapedValuePerMsrp =
+        msrp != null && msrp > 0 ? scrapedValue / msrp : null;
+
       setProductBenchmark(
         originalCpu,
         benchmarkKey,
         scrapedValue || originalValue,
+        scrapedValuePerMsrp,
       );
       updated = true;
     }

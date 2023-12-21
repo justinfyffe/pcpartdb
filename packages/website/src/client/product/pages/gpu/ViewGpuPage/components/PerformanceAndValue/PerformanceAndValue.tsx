@@ -11,8 +11,10 @@ export const PerformanceAndValue: FunctionComponent = () => {
 
       <div className="flex flex-col gap-8">
         <PerformanceAndValueCharts />
-        <RelativePerformance />
-        <RelativeValue />
+        <div className="flex gap-4 md:flex-col md:gap-8">
+          <RelativePerformance />
+          <RelativeValue />
+        </div>
         <Benchmarks />
       </div>
     </section>

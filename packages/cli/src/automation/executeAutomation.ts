@@ -10,7 +10,8 @@ import { updateCpuSourcesAction } from './actions/updateCpuSourcesAction';
 import { updateGpuAction } from './actions/updateGpuAction';
 import { updateGpuChipsetSourcesAction } from './actions/updateGpuChipsetSourcesAction';
 import { updateGpuRetailModelSourcesAction } from './actions/updateGpuRetailModelSourcesAction';
-import { updateProductCalculationsAction } from './actions/updateProductCalculationsAction/updateProductCalculationsAction';
+import { updateRanksAction } from './actions/updateRanksAction';
+import { updateRelatedProductsAction } from './actions/updateRelatedProductsAction';
 import { updateSitemapsAction } from './actions/updateSitemapsAction';
 import { AutomationContext } from './types';
 import { saveAutomationContext } from './utils/context';
@@ -18,7 +19,8 @@ import { saveAutomationContext } from './utils/context';
 const UPDATE_SITEMAPS_FREQUENCY = 1000 * 60 * 60 * 24; // Daily
 const UPDATE_CPU_SOURCES_FREQUENCY = 1000 * 60 * 60 * 24 * 7; // Weekly
 const UPDATE_GPU_CHIPSET_SOURCES_FREQUENCY = 1000 * 60 * 60 * 24 * 7; // Weekly
-const UPDATE_PRODUCT_CALCULATIONS_FREQUENCY = 1000 * 60 * 60 * 24; // Daily
+const UPDATE_RANKS_FREQUENCY = 1000 * 60 * 30; // Every 30 minutes
+const UPDATE_RELATED_PRODUCTS_FREQUENCY = 1000 * 60 * 60 * 24; // Daily
 
 export async function executeAutomation(context: AutomationContext) {
   const action = await getNextAction(context);
@@ -47,8 +49,10 @@ export async function executeAutomation(context: AutomationContext) {
     await updateGpuChipsetSourcesAction(action, context);
   } else if (type === AutomationActionType.UpdateGpuRetailModelSources) {
     await updateGpuRetailModelSourcesAction(action, context);
-  } else if (type === AutomationActionType.UpdateProductCalculations) {
-    await updateProductCalculationsAction(action, context);
+  } else if (type === AutomationActionType.UpdateRanks) {
+    await updateRanksAction(action, context);
+  } else if (type === AutomationActionType.UpdateRelatedProducts) {
+    await updateRelatedProductsAction(action, context);
   } else {
     console.error(`Unsupported Action: ${action}`);
   }
@@ -119,15 +123,22 @@ async function getActionFromStalenessCheck(
   context: AutomationContext,
 ): Promise<AutomationAction> {
   const { metadata } = context;
+  if (isStale(metadata?.updateRanksDate, UPDATE_RANKS_FREQUENCY)) {
+    return {
+      status: AutomationActionStatus.Pending,
+      type: AutomationActionType.UpdateRanks,
+    };
+  }
+
   if (
     isStale(
-      metadata?.updateProductCalculationsDate,
-      UPDATE_PRODUCT_CALCULATIONS_FREQUENCY,
+      metadata?.updateRelatedProductsDate,
+      UPDATE_RELATED_PRODUCTS_FREQUENCY,
     )
   ) {
     return {
       status: AutomationActionStatus.Pending,
-      type: AutomationActionType.UpdateProductCalculations,
+      type: AutomationActionType.UpdateRelatedProducts,
     };
   }
 

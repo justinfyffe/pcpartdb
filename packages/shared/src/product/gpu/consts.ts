@@ -43,11 +43,11 @@ export const LIST_GPUS_PRESETS: Record<ListGpusPresetSlug, ListProductsQuery> =
       orderBy: { sort: ListSort.PerformancePerMsrp, order: ListOrder.Desc },
     },
     [ListGpusPresetSlug.Newest]: {
-      filter: {},
+      filter: { hasReleaseDate: true },
       orderBy: { sort: ListSort.ReleaseDate, order: ListOrder.Desc },
     },
     [ListGpusPresetSlug.Oldest]: {
-      filter: {},
+      filter: { hasReleaseDate: true },
       orderBy: { sort: ListSort.ReleaseDate, order: ListOrder.Asc },
     },
   };

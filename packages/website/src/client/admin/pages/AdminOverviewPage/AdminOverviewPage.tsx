@@ -6,7 +6,8 @@ import { MetaRobots, Seo } from '../../../shared/components/Seo/Seo';
 import { AdminLayout } from '../../../shared/layouts/admin/AdminLayout';
 import { ApiKeyWidget } from './components';
 import { CacheWidget } from './components/CacheWidget/CacheWidget';
-import { RefreshProductCalculationsWidget } from './components/RefreshProductCalculationsWidget/RefreshProductCalculationsWidget';
+import { UpdateRanksWidget } from './components/UpdateRanksWidget/UpdateRanksWidget';
+import { UpdateRelatedProductsWidget } from './components/UpdateRelatedProductsWidget/UpdateRelatedProductsWidget';
 
 export const AdminOverviewPage = (props: AdminOverviewViewModel) => {
   const pageTitle = 'Overview';
@@ -22,12 +23,16 @@ export const AdminOverviewPage = (props: AdminOverviewViewModel) => {
 
         <div className="flex flex-wrap gap-4">
           <Card className="flex-1">
-            <CardTitle>Scraping Ant Usage:</CardTitle>
+            <CardTitle className="whitespace-nowrap">
+              Scraping Ant Usage:
+            </CardTitle>
             {props.scrapingAntUsage?.remainingCredits?.toLocaleString()} /{' '}
             {props.scrapingAntUsage?.totalCredits?.toLocaleString()}
           </Card>
 
-          <RefreshProductCalculationsWidget />
+          <UpdateRanksWidget />
+
+          <UpdateRelatedProductsWidget />
 
           <CacheWidget cacheItems={props.cacheItems} />
 

@@ -1,5 +1,5 @@
 import { CacheModule as NestCacheModule } from '@nestjs/cache-manager';
-import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { AuthModule } from './auth/auth.module';
 import { AutomationModule } from './automation/automation.module';
 import { ConfigModule } from './config/config.module';
@@ -9,7 +9,6 @@ import { ProductModule } from './product/product.module';
 import { CacheModule } from './shared/cache/cache.module';
 import { ContextMiddleware } from './shared/context';
 import { CookieModule } from './shared/cookie/cookie.module';
-import { dataPath } from './shared/utils';
 import { UserModule } from './user/user.module';
 import { ViewModelsModule } from './view-models/view-models.module';
 import { WebsiteModule } from './website/website.module';

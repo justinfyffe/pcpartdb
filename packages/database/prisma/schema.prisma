@@ -117,7 +117,7 @@ model Product {
   cpuFields CpuFields? @relation("cpuFieldsToProduct")
   gpuFields GpuFields? @relation("gpuFieldsToProduct")
   benchmarks ProductBenchmark[] @relation("productBenchmarkToProduct")
-  ranks ProductRank[] @relation("productRankToProduct")
+  ranks ProductRank? @relation("productRankToProduct")
   sources ProductSource[] @relation("productSourceToProduct")
   updates ProductUpdate[] @relation("productUpdateToProduct")
   images ProductImage[] @relation("productImageToProduct")
@@ -164,25 +164,18 @@ model ProductBenchmark {
 model ProductRank {
   // Primary identifier
   productId Int @map("product_id")
-  rankKey String @map("rank_key")
 
-  // Numeric value for rank
-  rank Int?
-
-  // Total ranked
-  totalRanked Int? @map("total_ranked")
-
-  // Misc. additional data about the benchmark. Not meant to be filtered on.
-  metadata Json?
+  // Rank JSON data.
+  ranks Json
 
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6) @ignore
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6) @ignore
 
   // Relations
-  product Product? @relation("productRankToProduct", fields: [productId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "productRanks_product_foreign")
+  product Product? @relation("productRankToProduct", fields: [productId], references: [id], map: "productRanks_product_foreign")
 
   // Indexes
-  @@id([productId, rankKey])
+  @@id([productId])
 
   @@map("product_ranks")
 }
@@ -283,9 +276,7 @@ model RelatedProduct {
   // IDs identifying the product and its relative product
   productId Int @map("product_id")
   relatedProductId Int @map("related_product_id")
-
-  // Type of related product. Should identify how they're related.
-  type String
+  relatedProductKey String @map("related_product_key")
 
   createdAt DateTime  @default(now()) @map("created_at") @ignore @db.Timestamptz(6)
   updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @ignore @db.Timestamptz(6)
@@ -293,7 +284,7 @@ model RelatedProduct {
   product Product @relation("relatedProductToProductA", fields: [productId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "relatedProducts_product_foreign")
   relatedProduct Product @relation("relatedProductToProductB", fields: [relatedProductId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "relatedProducts_relatedProduct_foreign")
 
-  @@id([type, productId, relatedProductId])
+  @@id([relatedProductKey, productId, relatedProductId])
 
   @@map("related_products")
 }
@@ -519,16 +510,6 @@ model CpuFields {
   turboClockValue Float? @map("turbo_clock_value")
   turboClockMeta Json? @map("turbo_clock_meta")
 
-  // High-level Ratings
-  // Value = Raw value that can be compared and sorted.
-  // Meta = Metadata about the rating. E.g. formatted value to display, autoUpdate
-
-  performanceRatingValue Float? @map("performance_rating_value")
-  performanceRatingMeta Json? @map("performance_rating_meta")
-
-  performancePerMsrpValue Float? @map("performance_per_msrp_value")
-  performancePerMsrpMeta Json? @map("performance_per_msrp_meta")
-
   // Misc. data for the fields. This data should not be filtered on.
   metadata Json?
 
@@ -722,16 +703,6 @@ model GpuFields {
 
   widthValue Float? @map("width_value")
   widthMeta Json? @map("width_meta")
-
-  // High-level Ratings
-  // Value = Raw value that can be compared and sorted.
-  // Meta = Metadata about the rating. E.g. formatted value to display, autoUpdate
-
-  performanceRatingValue Float? @map("performance_rating_value")
-  performanceRatingMeta Json? @map("performance_rating_meta")
-
-  performancePerMsrpValue Float? @map("performance_per_msrp_value")
-  performancePerMsrpMeta Json? @map("performance_per_msrp_meta")
 
   // Misc. data for the fields. This data should not be filtered on.
   metadata Json?

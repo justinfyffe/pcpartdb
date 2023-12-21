@@ -1,16 +1,17 @@
 import { ContentContext } from 'packages/website/src/client/shared/content/ContentContext';
 import { compileContentComponent } from 'packages/website/src/client/shared/content/utils';
 import React, { useContext } from 'react';
-import { ViewPageContext } from '../../../context/ViewPageContext';
+import { ViewPageContext } from '../../../context/ViewPageContextProvider';
 
 export const PerformanceIntroParagraph = compileContentComponent({
   deps: [],
   component: (props) => (
-    <p className="text-dimmed">
+    <>
       Compare {props.nameWithNoCompany}&apos;s performance with similar{' '}
       {props.marketSegment} CPUs. Relative performance provides insight into how
-      its benchmarks compare to its peers.
-    </p>
+      its benchmark compares to its peers. This data is based on its{' '}
+      {props.preferredBenchmarkName} performance.
+    </>
   ),
 });
 
@@ -20,7 +21,9 @@ export const PerformanceIntro = () => {
 
   return (
     <ContentContext.Provider value={context}>
-      <PerformanceIntroParagraph />
+      <p className="text-dimmed">
+        <PerformanceIntroParagraph />
+      </p>
     </ContentContext.Provider>
   );
 };

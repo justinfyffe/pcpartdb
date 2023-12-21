@@ -1,14 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import {
+  buildRelatedProductKey,
   CpuContentData,
   CpuProduct,
-  hasProductFieldRawValue,
+  getPreferredBenchmark,
   ListOrder,
   ListSort,
-  productFieldRawValue,
+  preferredBenchmarkOrDefault,
+  productBenchmarkValue,
+  productBenchmarkValuePerMsrp,
   ProductType,
-  RelatedProductComparisons,
-  RelatedProducts,
   RelatedProductType,
   ViewCpuViewModel,
 } from '@pcpartdb/shared';
@@ -32,14 +33,25 @@ export class ViewCpuViewModelService {
   async viewModel(slug: string, ctx: Context) {
     const timer = `ViewCpuViewModelService (${uuid.v4()})`;
     console.time(timer);
+
+    const preferredBenchmark = preferredBenchmarkOrDefault(
+      ProductType.Cpu,
+      ctx.config?.userSettings?.preferredBenchmarks?.[ProductType.Cpu],
+    ).toLowerCase();
+
     const viewModel = await this.cacheService.cache(
       async () => {
-        const cpu = await this.getCpu(slug, ctx);
+        const [cpu, bestPerformanceCpu, bestValueCpu] = await Promise.all([
+          this.getCpu(slug, ctx),
+          this.getBestPerformanceCpu(ctx),
+          this.getBestValueCpu(ctx),
+        ]);
 
         const relativePerformanceCpus = await this.getRelativePerformanceCpus(
           cpu,
+          ctx,
         );
-        const relativeValueCpus = await this.getRelativeValueCpus(cpu);
+        const relativeValueCpus = await this.getRelativeValueCpus(cpu, ctx);
 
         const relatedCpus = await this.getRelatedCpus(
           5,
@@ -55,7 +67,8 @@ export class ViewCpuViewModelService {
         );
 
         const contentData: CpuContentData = {
-          bestPerformanceCpu: await this.getBestPerformanceCpu(ctx),
+          bestPerformanceCpu,
+          bestValueCpu,
         };
 
         return {
@@ -70,7 +83,10 @@ export class ViewCpuViewModelService {
           contentData,
         } as ViewCpuViewModel;
       },
-      { type: CacheType.CpuProduct, key: `viewModel__${slug}` },
+      {
+        type: CacheType.CpuProduct,
+        key: `viewModel__${slug}__benchmark_${preferredBenchmark}`,
+      },
     );
     console.timeEnd(timer);
 
@@ -92,9 +108,14 @@ export class ViewCpuViewModelService {
             includeImages: true,
             includeSources: false,
             includeUpdates: false,
+
             includeRanks: true,
+
             includeRelated: true,
-            relatedFields: ['performanceRating', 'performancePerMsrp'],
+            includeRelatedBenchmarks: [
+              getPreferredBenchmark(ctx.config?.userSettings, ProductType.Cpu),
+            ],
+            includeRelatedRanks: true,
           },
           ctx,
         ),
@@ -103,56 +124,73 @@ export class ViewCpuViewModelService {
     return cpu as CpuProduct;
   }
 
-  private async getRelativePerformanceCpus(seed: CpuProduct) {
+  private async getRelativePerformanceCpus(seed: CpuProduct, ctx: Context) {
+    const benchmark = getPreferredBenchmark(
+      ctx.config?.userSettings,
+      ProductType.Cpu,
+    );
+
     // Missing performance. Cannot have neighbors.
-    if (!hasProductFieldRawValue(seed.fields?.performanceRating)) {
+    if (productBenchmarkValue(seed, benchmark) == null) {
       return [];
     }
-    const relative = seed.relatedProducts
-      ?.filter((rp) => rp.type === RelatedProductType.PerformanceRating)
-      .map((r) => r.relatedProduct)
-      .filter((p) => hasProductFieldRawValue(p?.fields?.performanceRating))
-      .sort(
-        (p1, p2) =>
-          productFieldRawValue(p2?.fields?.performanceRating) -
-          productFieldRawValue(p1?.fields?.performanceRating),
-      ) as Partial<CpuProduct>[];
+
+    const relatedProductKey = buildRelatedProductKey({
+      type: RelatedProductType.Performance,
+      benchmark,
+    });
+    const relative =
+      (seed.relatedProducts?.[relatedProductKey]
+        ?.filter((p) => productBenchmarkValue(p, benchmark) != null)
+        .sort(
+          (p1, p2) =>
+            productBenchmarkValue(p2, benchmark) -
+            productBenchmarkValue(p1, benchmark),
+        ) as Partial<CpuProduct>[]) ?? [];
 
     return getSurroundingValues(
       relative,
       relative.findIndex((cpu) => cpu.id === seed.id),
       TOTAL_COMPARED_CPUS,
     ).sort(
-      (c1, c2) =>
-        productFieldRawValue(c2.fields?.performanceRating) -
-        productFieldRawValue(c1.fields?.performanceRating),
+      (p1, p2) =>
+        productBenchmarkValue(p2, benchmark) -
+        productBenchmarkValue(p1, benchmark),
     );
   }
 
-  private async getRelativeValueCpus(seed: CpuProduct) {
+  private async getRelativeValueCpus(seed: CpuProduct, ctx: Context) {
+    const benchmark = getPreferredBenchmark(
+      ctx.config?.userSettings,
+      ProductType.Cpu,
+    );
+
     // Missing performance. Cannot have neighbors.
-    if (!hasProductFieldRawValue(seed.fields?.performancePerMsrp)) {
+    if (productBenchmarkValuePerMsrp(seed, benchmark) == null) {
       return [];
     }
 
-    const relative = seed.relatedProducts
-      ?.filter((rp) => rp.type === RelatedProductType.PerformancePerMsrp)
-      .map((r) => r.relatedProduct)
-      .filter((p) => hasProductFieldRawValue(p?.fields?.performancePerMsrp))
-      .sort(
-        (p1, p2) =>
-          productFieldRawValue(p2?.fields?.performancePerMsrp) -
-          productFieldRawValue(p1?.fields?.performancePerMsrp),
-      ) as Partial<CpuProduct>[];
+    const relatedProductKey = buildRelatedProductKey({
+      type: RelatedProductType.Value,
+      benchmark,
+    });
+    const relative =
+      (seed.relatedProducts?.[relatedProductKey]
+        ?.filter((p) => productBenchmarkValuePerMsrp(p, benchmark) != null)
+        .sort(
+          (p1, p2) =>
+            productBenchmarkValuePerMsrp(p2, benchmark) -
+            productBenchmarkValuePerMsrp(p1, benchmark),
+        ) as Partial<CpuProduct>[]) ?? [];
 
     return getSurroundingValues(
       relative,
       relative.findIndex((cpu) => cpu.id === seed.id),
       TOTAL_COMPARED_CPUS,
     ).sort(
-      (c1, c2) =>
-        productFieldRawValue(c2.fields?.performancePerMsrp) -
-        productFieldRawValue(c1.fields?.performancePerMsrp),
+      (p1, p2) =>
+        productBenchmarkValuePerMsrp(p2, benchmark) -
+        productBenchmarkValuePerMsrp(p1, benchmark),
     );
   }
 
@@ -182,7 +220,7 @@ export class ViewCpuViewModelService {
       related.push(map[id]);
     }
 
-    return { products: related } as RelatedProducts;
+    return related;
   }
 
   private async getRelatedComparisons(
@@ -212,8 +250,7 @@ export class ViewCpuViewModelService {
     }
 
     const comparisons = related.map((relatedCpu) => [pageCpu, relatedCpu]);
-
-    return { comparisons } as RelatedProductComparisons;
+    return comparisons;
   }
 
   private async getBestPerformanceCpu(ctx: Context) {
@@ -223,7 +260,7 @@ export class ViewCpuViewModelService {
           {
             productType: ProductType.Cpu,
             query: {
-              filter: { performanceRated: true },
+              filter: {},
               orderBy: {
                 sort: ListSort.PerformanceRating,
                 order: ListOrder.Desc,
@@ -231,7 +268,39 @@ export class ViewCpuViewModelService {
               pagination: { limit: 1 },
             },
           },
-          {},
+          {
+            includeBenchmarks: [
+              getPreferredBenchmark(ctx.config?.userSettings, ProductType.Cpu),
+            ],
+          },
+          ctx,
+        );
+        return (response.results?.[0] || null) as CpuProduct;
+      },
+      { ctx, isolationLevel: 'ReadCommitted' },
+    );
+  }
+
+  private async getBestValueCpu(ctx: Context) {
+    return await this.db.transaction(
+      async () => {
+        const response = await this.productService.list(
+          {
+            productType: ProductType.Cpu,
+            query: {
+              filter: {},
+              orderBy: {
+                sort: ListSort.PerformancePerMsrp,
+                order: ListOrder.Desc,
+              },
+              pagination: { limit: 1 },
+            },
+          },
+          {
+            includeBenchmarks: [
+              getPreferredBenchmark(ctx.config?.userSettings, ProductType.Cpu),
+            ],
+          },
           ctx,
         );
         return (response.results?.[0] || null) as CpuProduct;

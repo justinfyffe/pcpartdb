@@ -1,6 +1,6 @@
 import { hasProductFieldFormattedValue } from '@pcpartdb/shared';
 import React, { FunctionComponent, useContext } from 'react';
-import { ViewPageContext } from '../../../context/ViewPageContext';
+import { ViewPageContext } from '../../../context/ViewPageContextProvider';
 import { CoresIntro } from './CoresIntro';
 import { CoresTable } from './CoresTable';
 

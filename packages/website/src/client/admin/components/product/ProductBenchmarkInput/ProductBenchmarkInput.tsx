@@ -1,6 +1,6 @@
 import {
   BenchmarkKey,
-  getProductBenchmarkLabel,
+  getProductBenchmarkName,
   ProductBenchmark,
   ProductType,
 } from '@pcpartdb/shared';
@@ -181,10 +181,10 @@ export const ProductBenchmarkInput: FunctionComponent<
         {BENCHMARKS[productType].map((benchmark, i) => (
           <SelectOption
             key={i}
-            label={getProductBenchmarkLabel(benchmark)}
+            label={getProductBenchmarkName(benchmark)}
             value={benchmark}
           >
-            {getProductBenchmarkLabel(benchmark)}
+            {getProductBenchmarkName(benchmark)}
           </SelectOption>
         ))}
       </Select>

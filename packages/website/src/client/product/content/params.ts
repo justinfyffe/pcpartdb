@@ -1,10 +1,17 @@
 import {
+  BenchmarkKey,
   CpuContentData,
   CpuProduct,
   formatGpuDimensions,
   formatOrdinalNumber,
   formatProductName,
   getGpuChipset,
+  getProductBenchmarkAbbrev,
+  getProductBenchmarkName,
+  getProductBenchmarkShortName,
+  getProductPerformanceRank,
+  getProductPerformanceTotalRanked,
+  getProductValueRank,
   GpuContentData,
   GpuProduct,
   hasLaunched,
@@ -14,30 +21,29 @@ import {
   isGpuProduct,
   isPastLaunchDate,
   Product,
+  productBenchmarkValue,
+  productBenchmarkValuePerMsrp,
   ProductContentData,
   ProductField,
   productFieldFormattedValue,
   productFieldRawValue,
-  productRankTotalRanked,
-  productRankValue,
-  RankKey,
 } from '@pcpartdb/shared';
 import { ContentParams } from '../../shared/content/types';
 
-export function buildContentParams(
-  product: Product,
-  contentData: ProductContentData,
-) {
+interface BuildContentParamsOptions {
+  preferredBenchmark: BenchmarkKey;
+  product: Product;
+  contentData: ProductContentData;
+}
+
+export function buildContentParams(options: BuildContentParamsOptions) {
+  const { product, contentData, preferredBenchmark } = options;
   const params: ContentParams = {};
 
   params['architecture'] = getFormattedValue(product?.fields?.architecture);
-  params['countPerformanceRanks'] = productRankTotalRanked(
+  params['countPerformanceRanks'] = getProductPerformanceTotalRanked(
     product,
-    RankKey.PerformanceRating,
-  );
-  params['countPerformanceRanksForMarketSegment'] = productRankTotalRanked(
-    product,
-    RankKey.PerformanceRatingForMarketSegment,
+    preferredBenchmark,
   );
   params['codename'] = getFormattedValue(product?.fields?.codename);
   params['company'] = product?.company ?? null;
@@ -55,42 +61,50 @@ export function buildContentParams(
     company: false,
     brand: false,
   });
-  params['performanceRank'] = productRankValue(
+  params['performanceRank'] = getProductPerformanceRank(
     product?.parent || product,
-    RankKey.PerformanceRating,
+    preferredBenchmark,
   );
   params['performanceRankOrdinal'] = formatOrdinalNumber(
-    productRankValue(product?.parent || product, RankKey.PerformanceRating),
+    getProductPerformanceRank(product?.parent || product, preferredBenchmark),
   );
-  params['performanceRankForMarketSegment'] = productRankValue(
+  params['preferredBenchmark'] = preferredBenchmark;
+  params['preferredBenchmarkName'] =
+    getProductBenchmarkName(preferredBenchmark);
+  params['preferredBenchmarkShortName'] =
+    getProductBenchmarkShortName(preferredBenchmark);
+  params['preferredBenchmarkAbbrev'] =
+    getProductBenchmarkAbbrev(preferredBenchmark);
+
+  params['preferredBenchmarkPerformance'] = productBenchmarkValue(
     product?.parent || product,
-    RankKey.PerformanceRatingForMarketSegment,
-  );
-  params['performanceRating'] = getFormattedValue(
-    (product?.parent || product)?.fields?.performanceRating,
-  );
+    preferredBenchmark,
+  )?.toLocaleString('en-US', { maximumFractionDigits: 2 });
   params['processSize'] = getFormattedValue(product?.fields?.processSize);
   params['releaseDate'] = getFormattedValue(product?.fields?.releaseDate);
   params['tdp'] = getFormattedValue(product?.fields?.tdp);
   params['transistors'] = getFormattedValue(product?.fields?.transistors);
-  params['valueRank'] = productRankValue(
+  params['valueRank'] = getProductValueRank(
     product?.parent || product,
-    RankKey.PerformancePerMsrp,
+    preferredBenchmark,
   );
   params['valueRankOrdinal'] = formatOrdinalNumber(
-    productRankValue(product?.parent || product, RankKey.PerformancePerMsrp),
+    getProductValueRank(product?.parent || product, preferredBenchmark),
   );
-  params['valueRating'] = getFormattedValue(
-    (product?.parent || product)?.fields?.performancePerMsrp,
-  );
+  params['preferredBenchmarkValuePerMsrp'] = productBenchmarkValuePerMsrp(
+    product?.parent || product,
+    preferredBenchmark,
+  )?.toLocaleString('en-US', { maximumFractionDigits: 2 });
 
   return {
     ...params,
     ...buildCpuContentParams(
+      preferredBenchmark,
       product as CpuProduct,
       contentData as CpuContentData,
     ),
     ...buildGpuContentParams(
+      preferredBenchmark,
       product as GpuProduct,
       contentData as GpuContentData,
     ),
@@ -98,6 +112,7 @@ export function buildContentParams(
 }
 
 function buildCpuContentParams(
+  preferredBenchmark: BenchmarkKey,
   product: CpuProduct,
   additionalData: CpuContentData,
 ) {
@@ -107,15 +122,17 @@ function buildCpuContentParams(
   }
 
   const bestPerformanceDifferencePct =
-    hasProductFieldRawValue(product?.fields?.performanceRating) &&
-    hasProductFieldRawValue(
-      additionalData?.bestPerformanceCpu?.fields?.performanceRating,
-    )
+    productBenchmarkValue(product, preferredBenchmark) != null &&
+    productBenchmarkValue(
+      additionalData?.bestPerformanceCpu,
+      preferredBenchmark,
+    ) != null
       ? (
           100 *
-          (productFieldRawValue(product?.fields?.performanceRating) /
-            productFieldRawValue(
-              additionalData?.bestPerformanceCpu?.fields?.performanceRating,
+          (productBenchmarkValue(product, preferredBenchmark) /
+            productBenchmarkValue(
+              additionalData?.bestPerformanceCpu,
+              preferredBenchmark,
             ))
         ).toFixed(2)
       : null;
@@ -157,6 +174,7 @@ function buildCpuContentParams(
 }
 
 function buildGpuContentParams(
+  preferredBenchmark: BenchmarkKey,
   product: GpuProduct,
   additionalData: GpuContentData,
 ) {
@@ -167,15 +185,17 @@ function buildGpuContentParams(
 
   const chipset = getGpuChipset(product);
   const bestPerformanceDifferencePct =
-    hasProductFieldRawValue(product?.fields?.performanceRating) &&
-    hasProductFieldRawValue(
-      additionalData?.bestPerformanceGpu?.fields?.performanceRating,
-    )
+    productBenchmarkValue(chipset, preferredBenchmark) != null &&
+    productBenchmarkValue(
+      additionalData?.bestPerformanceGpu,
+      preferredBenchmark,
+    ) != null
       ? (
           100 *
-          (productFieldRawValue(chipset?.fields?.performanceRating) /
-            productFieldRawValue(
-              additionalData?.bestPerformanceGpu?.fields?.performanceRating,
+          (productBenchmarkValue(chipset, preferredBenchmark) /
+            productBenchmarkValue(
+              additionalData?.bestPerformanceGpu,
+              preferredBenchmark,
             ))
         ).toFixed(2)
       : null;

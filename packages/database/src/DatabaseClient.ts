@@ -20,7 +20,7 @@ export class DatabaseClient extends PrismaClient {
   }
 
   async connect() {
-    console.log('connect to db');
+    console.log('connecting to db');
     await this.$connect();
   }
 

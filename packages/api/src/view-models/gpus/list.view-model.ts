@@ -3,6 +3,7 @@ import {
   deepmerge,
   DEFAULT_LIST_GPUS_LIMIT,
   DEFAULT_LIST_GPUS_OFFSET,
+  getPreferredBenchmark,
   ListGpusQuery,
   ListGpusRequest,
   listProductsRequestSchema,
@@ -49,8 +50,6 @@ export class ListGpusViewModelService {
           },
           {
             fields: [
-              'performanceRating',
-              'performancePerMsrp',
               'releaseDate',
               'gpuCoreBaseClock',
               'gpuCoreBoostClock',
@@ -63,6 +62,9 @@ export class ListGpusViewModelService {
               'msrp',
             ],
             includeAdditionalData: true,
+            includeBenchmarks: [
+              getPreferredBenchmark(ctx.config?.userSettings, ProductType.Gpu),
+            ],
             includeRanks: true,
           },
           ctx,

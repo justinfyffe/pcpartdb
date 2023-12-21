@@ -1,11 +1,9 @@
 import {
+  BenchmarkKey,
   formatGpuDimensions,
   formatProductName,
   GpuProduct,
-  hasProductFieldValue,
   productFieldFormattedValue,
-  productRankValue,
-  RankKey,
 } from '@pcpartdb/shared';
 
 const introData = (gpu: GpuProduct) => {
@@ -39,33 +37,6 @@ const introData = (gpu: GpuProduct) => {
     {
       description: 'production status',
       value: productFieldFormattedValue(gpu?.fields?.productionStatus),
-    },
-  ] as { description: string; value: string }[];
-};
-
-const performanceData = (gpu: GpuProduct) => {
-  return [
-    {
-      description: 'performance rank',
-      value: productRankValue(gpu, RankKey.PerformanceRating),
-    },
-    {
-      description: 'performance rating',
-      value: productFieldFormattedValue(gpu?.fields?.performanceRating),
-    },
-    {
-      description: 'value rating',
-      value: productFieldFormattedValue(gpu?.fields?.performancePerMsrp),
-    },
-    {
-      description: 'best performing gpu name',
-      value: 'BEST GPU PLACEHOLDER',
-    },
-    {
-      description: 'performance compared to best performaning gpu',
-      value: hasProductFieldValue(gpu?.fields?.performanceRating)
-        ? `${productFieldFormattedValue(gpu?.fields?.performanceRating)}%`
-        : null,
     },
   ] as { description: string; value: string }[];
 };
@@ -150,11 +121,11 @@ const compatibilityData = (gpu: GpuProduct) => {
   ] as { description: string; value: string }[];
 };
 
-const aiPromptTemplate = (gpu: GpuProduct) => {
+const aiPromptTemplate = (
+  gpu: GpuProduct,
+  preferredBenchmark: BenchmarkKey,
+) => {
   const intro = introData(gpu)
-    .filter((v) => v.value)
-    .map((v) => `${v.description},"${v.value}"`);
-  const performance = performanceData(gpu)
     .filter((v) => v.value)
     .map((v) => `${v.description},"${v.value}"`);
   const memory = memoryData(gpu)
@@ -172,10 +143,6 @@ const aiPromptTemplate = (gpu: GpuProduct) => {
 description,value
 ${intro.join('\n')}
 ***** END INTRO CSV DATA *****
-***** START PERFORMANCE CSV DATA *****
-description,value
-${performance.join('\n')}
-***** END PERFORMANCE CSV DATA *****
 ***** START MEMORY CSV DATA *****
 description,value
 ${memory.join('\n')}
@@ -201,13 +168,16 @@ ${compatibility.join('\n')}
 3. Do not write bullet points or lists. Do not write headings. Only write paragraphs.
 4. THe summary should be approximately 400 words long.
 5. The summary target 4-5 paragraphs if possible.
-6. There should be an intro, a performance paragraph, a memory paragraph, a cores/clock paragraph, a compability paragraph.
+6. There should be an intro, a memory paragraph, a cores/clock paragraph, a compability paragraph.
 7. Each paragraph should be brief, only a few sentences based on the data above.
 8. Include additional descriptors that apply. For example, "small", "large", "high-end", "low-end".
 ***** END SUMMARY INSTRUCTIONS *****
 `.trim();
 };
 
-export function getGpuAiPrompt(gpu: GpuProduct) {
-  return aiPromptTemplate(gpu);
+export function getGpuAiPrompt(
+  gpu: GpuProduct,
+  preferredBenchmark: BenchmarkKey,
+) {
+  return aiPromptTemplate(gpu, preferredBenchmark);
 }

@@ -1,16 +1,32 @@
-import { hasProductFieldValue } from '@pcpartdb/shared';
-import React, { FunctionComponent, useContext } from 'react';
-import { ComparePageContext } from '../../../context/ComparePageContext';
+import {
+  getListCpusPath,
+  ListCpusPresetSlug,
+  productBenchmarkValuePerMsrp,
+  ProductType,
+} from '@pcpartdb/shared';
+import {
+  Button,
+  ButtonVariant,
+} from 'packages/website/src/client/shared/components/Button/Button';
+import { usePreferredBenchmark } from 'packages/website/src/client/user/hooks/usePreferredBenchmark';
+import React, { FunctionComponent, useContext, useMemo } from 'react';
+import { ComparePageContext } from '../../../context/ComparePageContextProvider';
 import { ValueIntro } from './ValueIntro';
 import { ValueTable } from './ValueTable';
 
 export const RelativeValue: FunctionComponent = () => {
+  const preferredBenchmark = usePreferredBenchmark(ProductType.Cpu);
   const { comparison, relativeValueCpus } = useContext(ComparePageContext);
   const [cpu1, cpu2] = comparison;
 
+  const listHref = useMemo(
+    () => getListCpusPath(ListCpusPresetSlug.BestValue),
+    [],
+  );
+
   if (
-    !hasProductFieldValue(cpu1.fields?.performancePerMsrp) &&
-    !hasProductFieldValue(cpu2.fields?.performancePerMsrp)
+    !productBenchmarkValuePerMsrp(cpu1, preferredBenchmark) &&
+    !productBenchmarkValuePerMsrp(cpu2, preferredBenchmark)
   ) {
     return <></>;
   }
@@ -24,6 +40,11 @@ export const RelativeValue: FunctionComponent = () => {
       <h3 className="mb-1 font-semibold">Relative Value</h3>
       <ValueIntro />
       <ValueTable />
+      <div className="text-right mt-2">
+        <Button href={listHref} variant={ButtonVariant.Link}>
+          View all CPUs by performance per dollar
+        </Button>
+      </div>
     </section>
   );
 };

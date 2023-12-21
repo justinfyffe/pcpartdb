@@ -101,7 +101,7 @@ export const ListGpusPage = (props: ListGpusViewModel) => {
             />
           </section>
 
-          <article className="flex-1 flex flex-col gap-4">
+          <article className="flex-1 flex flex-col gap-4 max-w-full">
             <div className="flex items-center justify-between">
               <ListTitle />
               <ListMenu

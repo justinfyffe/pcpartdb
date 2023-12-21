@@ -117,7 +117,7 @@ const IntroArchitecture = compileContentComponent(
     component: (props) => {
       return (
         <>
-          The {props.codename} chip that powers the GPU uses the{' '}
+          Its {props.codename} chip that powers the GPU uses the{' '}
           {props.architecture} architecture and is fabricated on the{' '}
           {props.processSize} process.
         </>
@@ -130,7 +130,7 @@ const IntroArchitecture = compileContentComponent(
     component: (props) => {
       return (
         <>
-          The {props.codename} chip that powers the GPU uses the{' '}
+          Its {props.codename} chip that powers the GPU uses the{' '}
           {props.architecture} architecture.
         </>
       );
@@ -143,7 +143,7 @@ const IntroArchitecture = compileContentComponent(
     component: (props) => {
       return (
         <>
-          The chip that powers the GPU uses the {props.architecture}{' '}
+          Its chip that powers the GPU uses the {props.architecture}{' '}
           architecture and is fabricated on the {props.processSize} process.
         </>
       );
@@ -155,7 +155,7 @@ const IntroArchitecture = compileContentComponent(
     component: (props) => {
       return (
         <>
-          The {props.codename} chip that powers the GPU is fabricated on the{' '}
+          Its {props.codename} chip that powers the GPU is fabricated on the{' '}
           {props.processSize} process.
         </>
       );
@@ -167,7 +167,7 @@ const IntroArchitecture = compileContentComponent(
     component: (props) => {
       return (
         <>
-          The chip that powers the GPU uses the {props.architecture}{' '}
+          Its chip that powers the GPU uses the {props.architecture}{' '}
           architecture.
         </>
       );
@@ -186,7 +186,7 @@ const IntroArchitecture = compileContentComponent(
     component: (props) => {
       return (
         <>
-          The chip that powers the GPU is fabricated on the {props.processSize}{' '}
+          Its chip that powers the GPU is fabricated on the {props.processSize}{' '}
           process.
         </>
       );

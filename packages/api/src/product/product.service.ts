@@ -9,17 +9,20 @@ import {
   AutocompleteProductsRequest,
   autocompleteProductsRequestSchema,
   AutomationSource,
+  BenchmarkKey,
   CreateProductRequest,
   createProductRequestSchema,
   listAllProductsRequestSchema,
   ListProductsRequest,
   listProductsRequestSchema,
   ListProductsResponse,
+  ListSort,
+  preferredBenchmarkOrDefault,
   Product,
-  ProductCalculationsRequest,
   ProductComparison,
   ProductDiff,
   ProductFieldKey,
+  productFieldRawValue,
   ProductSource,
   ProductType,
   ProductUpdate,
@@ -29,7 +32,6 @@ import {
   updateProductRequestSchema,
   ValidationErrorType,
 } from '@pcpartdb/shared';
-import { Database } from '../database';
 import { Context } from '../shared/context';
 import { badRequestError, notFoundError } from '../shared/error';
 import { validate } from '../shared/validation/validate';
@@ -39,15 +41,14 @@ import { ProductUpdateService } from './product-update.service';
 
 interface ListOptions {
   fields?: ProductFieldKey[];
-  relatedFields?: ProductFieldKey[];
 
   includeAdditionalData?: boolean;
   includeSources?: boolean;
   includeAutomation?: boolean;
   includeImages?: boolean;
-  includeBenchmarks?: boolean;
   includeRanks?: boolean;
-  includeRelated?: boolean;
+
+  includeBenchmarks?: boolean | BenchmarkKey[];
 
   skipCount?: boolean;
 }
@@ -64,9 +65,14 @@ interface GetOptions {
   includeAutomation?: boolean;
   includeSources?: boolean;
   includeImages?: boolean;
-  includeBenchmarks?: boolean;
   includeRanks?: boolean;
+
+  includeBenchmarks?: boolean | BenchmarkKey[];
+
   includeRelated?: boolean;
+  includeRelatedFields?: boolean | ProductFieldKey[];
+  includeRelatedBenchmarks?: boolean | BenchmarkKey[];
+  includeRelatedRanks?: boolean;
 }
 
 interface GetByIdOptions extends GetOptions {
@@ -100,11 +106,6 @@ interface CountChildrenOptions {
   productIds: number[];
 }
 
-interface ApplyProductCalculationsOptions {
-  productType: ProductType;
-  calculations: ProductCalculationsRequest[];
-}
-
 @Injectable()
 export class ProductService {
   constructor(
@@ -112,7 +113,6 @@ export class ProductService {
     private autocompleteService: ProductAutocompleteService,
     @Inject(forwardRef(() => ProductUpdateService))
     private updateService: ProductUpdateService,
-    private db: Database,
   ) {}
 
   async count(request: ListProductsRequest, ctx: Context) {
@@ -135,37 +135,44 @@ export class ProductService {
       validate(request, listProductsRequestSchema);
     }
 
-    const includeBenchmarks = options?.includeBenchmarks ?? false;
+    const includeBenchmarks = !!options?.includeBenchmarks ?? false;
     const includeRanks = options?.includeRanks ?? false;
     const includeImages = options?.includeImages ?? false;
-    const includeRelated = options?.includeRelated ?? false;
     const includeSources =
       (options?.includeSources ?? false) && (ctx.user?.isStaff ?? false);
     const includeAutomation =
       (options.includeAutomation ?? false) && (ctx.user?.isStaff ?? false);
 
     const fields = options.fields != null ? new Set(options.fields) : null;
-    const relatedFields =
-      options.relatedFields != null ? new Set(options.relatedFields) : null;
     const includeFields = fields == null || fields.size > 0;
-    const includeRelatedFields =
-      relatedFields == null || relatedFields.size > 0;
 
     const skipCount = options.skipCount ?? false;
 
     const { productType, query } = request;
+
+    // If list is sorted by perf or value, then we need to add the preferred
+    // benchmark to order by it.
+    if (
+      query?.orderBy?.sort === ListSort.PerformanceRating ||
+      query?.orderBy?.sort === ListSort.PerformancePerMsrp
+    ) {
+      const preferredBenchmark = preferredBenchmarkOrDefault(
+        productType,
+        ctx.config?.userSettings?.preferredBenchmarks?.[productType],
+      );
+      query.orderBy = { ...query.orderBy, benchmark: preferredBenchmark };
+    }
+
     const productEntities = await this.repository.list(
       {
         ...query,
         ...options,
         productType,
         includeFields,
-        includeRelatedFields,
         includeBenchmarks,
-        includeRanks,
-        includeRelated,
         includeImages,
         includeSources,
+        includeRanks,
       },
       ctx,
     );
@@ -175,14 +182,25 @@ export class ProductService {
       count = await this.count(request, ctx);
     }
 
+    // Filter out benchmarks we don't need
+    if (
+      Array.isArray(options?.includeBenchmarks) &&
+      options.includeBenchmarks.length > 0
+    ) {
+      const benchmarks = options.includeBenchmarks;
+      for (const entity of productEntities) {
+        entity.benchmarks = entity.benchmarks.filter((b) =>
+          benchmarks.includes(b.benchmarkKey as BenchmarkKey),
+        );
+      }
+    }
+
     const products: Product[] = await mapToProductDtos(productEntities, {
       fields,
-      relatedFields,
       includeBenchmarks,
       includeSources,
       includeAutomation,
       includeRanks,
-      includeRelated,
     });
 
     const response: ListProductsResponse = {
@@ -204,15 +222,15 @@ export class ProductService {
 
     const includeParent = options.includeParent ?? false;
     const includeChildren = options.includeChildren ?? false;
+    const includeRanks = options?.includeRanks ?? false;
     const includeImages = options.includeImages ?? false;
-    const includeRanks = options.includeRanks ?? false;
     const includeSources =
       (options.includeSources ?? false) && (ctx.user?.isStaff ?? false);
     const includeUpdates =
       (options.includeUpdates ?? false) && (ctx.user?.isStaff ?? false);
     const includeAutomation =
       (options.includeAutomation ?? false) && (ctx.user?.isStaff ?? false);
-    const includeBenchmarks = options.includeBenchmarks ?? false;
+    const includeBenchmarks = !!options?.includeBenchmarks ?? false;
     const includeRelated = options?.includeRelated ?? false;
 
     const fields = options.fields != null ? new Set(options.fields) : null;
@@ -224,8 +242,7 @@ export class ProductService {
       options.relatedFields != null ? new Set(options.relatedFields) : null;
 
     const includeFields = fields == null || fields.size > 0;
-    const includeRelatedFields =
-      relatedFields == null || relatedFields.size > 0;
+    const includeRelatedFields = !!options.includeRelatedFields ?? false;
 
     const entity = await this.repository.findById(
       {
@@ -242,6 +259,41 @@ export class ProductService {
       },
       ctx,
     );
+
+    // Filter out benchmarks we don't need
+    if (
+      Array.isArray(options?.includeBenchmarks) &&
+      options.includeBenchmarks.length > 0
+    ) {
+      const benchmarks = options.includeBenchmarks;
+      entity.benchmarks = entity.benchmarks.filter((b) =>
+        benchmarks.includes(b.benchmarkKey as BenchmarkKey),
+      );
+      if (entity.parent?.benchmarks) {
+        entity.parent.benchmarks = entity.parent.benchmarks.filter((b) =>
+          benchmarks.includes(b.benchmarkKey as BenchmarkKey),
+        );
+      }
+    }
+    if (
+      Array.isArray(options?.includeRelatedBenchmarks) &&
+      options.includeRelatedBenchmarks.length > 0
+    ) {
+      const relatedBenchmarks = options.includeRelatedBenchmarks;
+      entity.relatedProducts
+        ?.map((rp) => rp.relatedProduct)
+        .forEach((rp) => {
+          rp.benchmarks = rp.benchmarks.filter((b) =>
+            relatedBenchmarks.includes(b.benchmarkKey as BenchmarkKey),
+          );
+          if (rp.parent?.benchmarks) {
+            rp.parent.benchmarks = rp.parent.benchmarks.filter((b) =>
+              relatedBenchmarks.includes(b.benchmarkKey as BenchmarkKey),
+            );
+          }
+        });
+    }
+
     const product = await mapToProductDto(entity, {
       fields,
       parentFields,
@@ -271,6 +323,7 @@ export class ProductService {
 
     const includeParent = options.includeParent ?? false;
     const includeChildren = options.includeChildren ?? false;
+    const includeRanks = options?.includeRanks ?? false;
     const includeImages = options.includeImages ?? false;
     const includeSources =
       (options.includeSources ?? false) && (ctx.user?.isStaff ?? false);
@@ -278,8 +331,7 @@ export class ProductService {
       (options.includeUpdates ?? false) && (ctx.user?.isStaff ?? false);
     const includeAutomation =
       (options.includeAutomation ?? false) && (ctx.user?.isStaff ?? false);
-    const includeBenchmarks = options.includeBenchmarks ?? false;
-    const includeRanks = options.includeRanks ?? false;
+    const includeBenchmarks = !!options?.includeBenchmarks ?? false;
     const includeRelated = options?.includeRelated ?? false;
 
     const fields = options.fields != null ? new Set(options.fields) : null;
@@ -291,8 +343,10 @@ export class ProductService {
       options.relatedFields != null ? new Set(options.relatedFields) : null;
 
     const includeFields = fields == null || fields.size > 0;
-    const includeRelatedFields =
-      relatedFields == null || relatedFields.size > 0;
+    const includeRelatedFields = !!options?.includeRelatedFields ?? false;
+    const includeRelatedBenchmarks =
+      !!options?.includeRelatedBenchmarks ?? false;
+    const includeRelatedRanks = options?.includeRelatedRanks ?? false;
 
     const entity = await this.repository.findBySlug(
       {
@@ -303,27 +357,66 @@ export class ProductService {
         includeChildren,
         includeImages,
         includeSources,
-        includeBenchmarks,
         includeRanks,
+        includeBenchmarks,
         includeRelated,
         includeRelatedFields,
+        includeRelatedRanks,
+        includeRelatedBenchmarks,
       },
       ctx,
     );
+
+    // Filter out benchmarks we don't need
+    if (
+      Array.isArray(options?.includeBenchmarks) &&
+      options.includeBenchmarks.length > 0
+    ) {
+      const benchmarks = options.includeBenchmarks;
+      entity.benchmarks = entity.benchmarks.filter((b) =>
+        benchmarks.includes(b.benchmarkKey as BenchmarkKey),
+      );
+      if (entity.parent?.benchmarks) {
+        entity.parent.benchmarks = entity.parent.benchmarks.filter((b) =>
+          benchmarks.includes(b.benchmarkKey as BenchmarkKey),
+        );
+      }
+    }
+    if (
+      Array.isArray(options?.includeRelatedBenchmarks) &&
+      options.includeRelatedBenchmarks.length > 0
+    ) {
+      const relatedBenchmarks = options.includeRelatedBenchmarks;
+      entity.relatedProducts
+        ?.map((rp) => rp.relatedProduct)
+        .forEach((rp) => {
+          rp.benchmarks = rp.benchmarks.filter((b) =>
+            relatedBenchmarks.includes(b.benchmarkKey as BenchmarkKey),
+          );
+          if (rp.parent?.benchmarks) {
+            rp.parent.benchmarks = rp.parent.benchmarks.filter((b) =>
+              relatedBenchmarks.includes(b.benchmarkKey as BenchmarkKey),
+            );
+          }
+        });
+    }
+
     const product = await mapToProductDto(entity, {
       fields,
       parentFields,
       childrenFields,
       relatedFields,
       includeBenchmarks,
-      includeRanks,
       includeParent,
       includeChildren,
       includeSources,
       includeAutomation,
       includeUpdates,
       includeRelated,
+      includeRelatedBenchmarks,
+      includeRelatedRanks,
       includeSummary: true,
+      includeRanks,
     });
 
     if (product == null) {
@@ -343,21 +436,17 @@ export class ProductService {
       throw notFoundError({ comparison: comparisonSlug });
     }
 
-    const products: Product[] = [];
-    for (const slug of slugs) {
-      const product = await this.getBySlug(
+    const fetchPromises = slugs.map((slug) =>
+      this.getBySlug(
         {
           ...options,
           productType: options.productType,
           slug,
         },
         ctx,
-      );
-
-      if (product != null) {
-        products.push(product);
-      }
-    }
+      ),
+    );
+    const products = await Promise.all(fetchPromises);
 
     const [product1, product2] = products;
     if (product1.parentId != null || product2.parentId != null) {
@@ -384,6 +473,16 @@ export class ProductService {
         property: 'slug',
         constraint: ValidationErrorType.ProductExistsAtSlug,
       });
+    }
+
+    // Update benchmarks' value per msrp
+    const msrp = productFieldRawValue(product.fields?.msrp);
+    for (const benchmark of product.benchmarks ?? []) {
+      if (benchmark.value && msrp) {
+        benchmark.valuePerMsrp = benchmark.value / msrp;
+      } else {
+        benchmark.valuePerMsrp = null;
+      }
     }
 
     const entity = mapToProductEntity({ id: undefined, ...product });
@@ -416,6 +515,16 @@ export class ProductService {
     );
     if (pendingUpdate != null) {
       await this.updateService.reject(pendingUpdate.id, {}, ctx);
+    }
+
+    // Update benchmarks' value per msrp
+    const msrp = productFieldRawValue(product.fields?.msrp);
+    for (const benchmark of product.benchmarks ?? []) {
+      if (benchmark.value && msrp) {
+        benchmark.valuePerMsrp = benchmark.value / msrp;
+      } else {
+        benchmark.valuePerMsrp = null;
+      }
     }
 
     const entity = mapToProductEntity({ id: undefined, ...product });
@@ -534,20 +643,6 @@ export class ProductService {
 
   async countChildren(options: CountChildrenOptions, ctx: Context) {
     return await this.repository.countChildren(options, ctx);
-  }
-
-  async applyCalculations(
-    options: ApplyProductCalculationsOptions,
-    ctx: Context,
-  ) {
-    const { productType, calculations } = options;
-
-    await this.db.transaction(
-      async () => {
-        await this.repository.applyCalculations(productType, calculations, ctx);
-      },
-      { ctx, timeout: 180_000 },
-    );
   }
 
   private async populateAdditionalListData(

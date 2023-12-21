@@ -9,6 +9,7 @@ import { viewModelsClient } from '../../../client/shared/api/viewModelsClient';
 
 export async function getServerSideProps(ctx: NextPageContext) {
   const query = generateListGpusQueryFromSearchParams(ctx.query);
+  const benchmark = ctx.query.gpu_benchmark as string;
 
   const response = await viewModelsClient.get('gpus/list', {
     params: {
@@ -17,7 +18,8 @@ export async function getServerSideProps(ctx: NextPageContext) {
         query,
       } as ListGpusRequest),
     },
-    headers: { cookie: ctx.req?.headers?.cookie ?? '' },
+    nextPageContext: ctx,
+    preferredBenchmarks: { gpu: benchmark },
   });
   return response;
 }

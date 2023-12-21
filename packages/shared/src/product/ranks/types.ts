@@ -1,23 +1,7 @@
-export enum RankKey {
-  // CPU & GPU
-  PerformanceRating = 'PERFORMANCE_RATING',
-  PerformanceRatingForMarketSegment = 'PERFORMANCE_RATING_FOR_MARKET_SEGMENT',
-
-  PerformancePerMsrp = 'PERFORMANCE_PER_MSRP',
-  PerformancePerMsrpForMarketSegment = 'PERFORMANCE_PER_MSRP_FOR_MARKET_SEGMENT',
-
-  // GPU-only
-  PerformanceRatingForArchitectureMarketSegment = 'PERFORMANCE_RATING_FOR_ARCHITECTURE_MARKET_SEGMENT',
+export enum RankType {
+  Performance = 'performance',
+  Value = 'value',
 }
 
-export interface ProductRankMeta {}
-
-export interface ProductRank {
-  productId?: number;
-  rankKey: RankKey;
-
-  rank?: number;
-  totalRanked?: number;
-
-  metadata?: ProductRankMeta;
-}
+// Key -> { rank, total }
+export type ProductRanks = Record<string, { rank: number; total: number }>;

@@ -7,7 +7,7 @@ import {
   UpdateUserRequest,
   User,
 } from '@pcpartdb/shared';
-import { ApiClient, apiClient } from '../shared/api/apiClient';
+import { ApiClient, apiClient } from '../../shared/api/apiClient';
 
 const PATH = 'users';
 

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { AuthModule } from '../auth/auth.module';
 import { AutomationModule } from '../automation/automation.module';
 import { DatabaseModule } from '../database';
@@ -27,11 +27,11 @@ import { ViewModelsController } from './view-models.controller';
   imports: [
     CacheModule,
     DatabaseModule,
-    AuthModule,
+    forwardRef(() => AuthModule),
     AutomationModule,
     ProductModule,
     ImageModule,
-    UserModule,
+    forwardRef(() => UserModule),
   ],
   controllers: [ViewModelsController],
   providers: [
@@ -65,6 +65,13 @@ import { ViewModelsController } from './view-models.controller';
     // Other Pages
     RegisterViewModelService,
     HomeViewModelService,
+  ],
+
+  exports: [
+    CompareCpusViewModelService,
+    CompareGpusViewModelService,
+    ViewCpuViewModelService,
+    ViewGpuViewModelService,
   ],
 })
 export class ViewModelsModule {}

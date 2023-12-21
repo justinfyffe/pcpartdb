@@ -8,7 +8,7 @@ import {
 import { ConfirmDialog } from 'packages/website/src/client/shared/components/Dialog/ConfirmDialog';
 import { showDialog } from 'packages/website/src/client/shared/components/Dialog/dialog';
 import { TextInput } from 'packages/website/src/client/shared/components/Input/TextInput';
-import { userService } from 'packages/website/src/client/user/userService';
+import { userService } from 'packages/website/src/client/user/services/userService';
 import React, { useCallback, useState } from 'react';
 
 export interface ApiKeyWidgetProps {
@@ -35,7 +35,7 @@ export const ApiKeyWidget = (props: ApiKeyWidgetProps) => {
 
   return (
     <Card className="flex-1">
-      <CardTitle>API Key</CardTitle>
+      <CardTitle className="whitespace-nowrap">API Key</CardTitle>
       <CardContent>
         Your API Key:
         <div className="flex gap-4">

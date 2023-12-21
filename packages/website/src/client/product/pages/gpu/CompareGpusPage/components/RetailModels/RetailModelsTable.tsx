@@ -14,7 +14,7 @@ import {
 } from 'packages/website/src/client/shared/components/Table/Table';
 import { classNames } from 'packages/website/src/client/shared/ui/classNames';
 import React, { FunctionComponent, useContext, useMemo } from 'react';
-import { ComparePageContext } from '../../context/ComparePageContext';
+import { ComparePageContext } from '../../context/ComparePageContextProvider';
 
 interface RetailModelsTableProps {
   className?: string;
@@ -81,7 +81,7 @@ export const RetailModelsTable: FunctionComponent<RetailModelsTableProps> = (
 
 interface RetailModelsTableRowProps {
   currentGpu: GpuProduct;
-  retailModel: GpuProduct;
+  retailModel: Partial<GpuProduct>;
 }
 
 const RetailModelsTableRow: FunctionComponent<RetailModelsTableRowProps> = (

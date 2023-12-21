@@ -25,10 +25,7 @@ import {
 import { PerformanceAndValue } from './components/PerformanceAndValue/PerformanceAndValue';
 import { RelatedComparisons } from './components/Related/RelatedComparisons';
 import { RelatedCpus } from './components/Related/RelatedCpus';
-import {
-  createViewPageContext,
-  ViewPageContext,
-} from './context/ViewPageContext';
+import { ViewPageContextProvider } from './context/ViewPageContextProvider';
 
 export const ViewCpuPage = (props: ViewCpuViewModel & { config: Config }) => {
   const { config, ...viewModel } = props;
@@ -36,7 +33,6 @@ export const ViewCpuPage = (props: ViewCpuViewModel & { config: Config }) => {
 
   useProductCache(ProductType.Cpu, cpu);
 
-  const context = useMemo(() => createViewPageContext(viewModel), [viewModel]);
   const cpuName = useMemo(() => formatProductName(cpu), [cpu]);
   const shortCpuName = useMemo(
     () => formatProductName(cpu, { company: false }),
@@ -65,7 +61,7 @@ export const ViewCpuPage = (props: ViewCpuViewModel & { config: Config }) => {
   );
 
   return (
-    <ViewPageContext.Provider value={context}>
+    <ViewPageContextProvider viewModel={viewModel}>
       <Seo
         title={seoTitle}
         keywords={seoKeywords}
@@ -89,7 +85,7 @@ export const ViewCpuPage = (props: ViewCpuViewModel & { config: Config }) => {
             />
           </section>
 
-          <article className="md:min-w-full flex-1 flex flex-col gap-8">
+          <article className="flex-1 flex flex-col gap-8 max-w-full">
             <Highlights />
             <Overview />
             <GeneralInfo />
@@ -101,6 +97,6 @@ export const ViewCpuPage = (props: ViewCpuViewModel & { config: Config }) => {
           </article>
         </div>
       </WebsiteLayout>
-    </ViewPageContext.Provider>
+    </ViewPageContextProvider>
   );
 };

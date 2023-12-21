@@ -12,6 +12,7 @@ import {
 import {
   AutocompleteProductsRequest,
   CreateProductRequest,
+  getPreferredBenchmark,
   GetProductRequest,
   ListProductsRequest,
   ProductFieldKey,
@@ -38,6 +39,9 @@ export class ProductController {
           {
             fields: this.getListFields(req.productType),
             includeAdditionalData: true,
+            includeBenchmarks: [
+              getPreferredBenchmark(ctx.config?.userSettings, req.productType),
+            ],
             includeRanks: true,
           },
           ctx,
@@ -145,17 +149,9 @@ export class ProductController {
   private getListFields(productType: ProductType): ProductFieldKey[] {
     switch (productType) {
       case ProductType.Cpu:
-        return [
-          'performanceRating',
-          'performancePerMsrp',
-          'releaseDate',
-          'marketSegment',
-          'msrp',
-        ];
+        return ['releaseDate', 'marketSegment', 'msrp'];
       case ProductType.Gpu:
         return [
-          'performanceRating',
-          'performancePerMsrp',
           'releaseDate',
           'gpuCoreBaseClock',
           'gpuCoreBoostClock',

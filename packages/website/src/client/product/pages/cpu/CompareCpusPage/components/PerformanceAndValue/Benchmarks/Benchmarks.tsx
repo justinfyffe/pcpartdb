@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useContext } from 'react';
-import { ComparePageContext } from '../../../context/ComparePageContext';
+import { ComparePageContext } from '../../../context/ComparePageContextProvider';
 import { BenchmarksIntro } from './BenchmarksIntro';
 import { BenchmarkTables } from './BenchmarksTable';
 

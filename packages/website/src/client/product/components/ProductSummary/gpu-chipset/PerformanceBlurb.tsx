@@ -8,39 +8,22 @@ import { compileContentComponent } from 'packages/website/src/client/shared/cont
 import React from 'react';
 import { RankTag } from '../../../content/tags';
 
-const PerformanceRankPlacement = compileContentComponent(
-  {
-    // Example: The RTX 4070 delivers the 11th best performance
-    //          among the 123 benchmarked desktop GPUs in our database.
-    tags: [RankTag.PerformanceForMarketSegment],
-    component: (props) => {
-      return (
-        <>
-          Our combined performance rating estimates that it is{' '}
-          {formatOrdinalNumber(props.performanceRankForMarketSegment as number)}{' '}
-          in performance compared to the{' '}
-          {props.countPerformanceRanksForMarketSegment.toLocaleString()} rated{' '}
-          {props.marketSegment} GPUs in our database.
-        </>
-      );
-    },
+const PerformanceRankPlacement = compileContentComponent({
+  tags: [RankTag.Performance],
+  component: (props) => {
+    return (
+      <>
+        The {props.nameWithNoCompany} has the{' '}
+        {props.performanceRank > 1
+          ? formatOrdinalNumber(props.performanceRank as number)
+          : ''}{' '}
+        highest {props.preferredBenchmarkName} score among the{' '}
+        {props.countPerformanceRanks.toLocaleString()} benchmarked GPUs in our
+        database.
+      </>
+    );
   },
-  {
-    // Example: The RTX 4070 delivers the 11th best performance
-    //          among the 123 benchmarked GPUs in our database.
-    tags: [RankTag.Performance],
-    component: (props) => {
-      return (
-        <>
-          Our combined performance rating estimates that it is
-          {formatOrdinalNumber(props.performanceRank as number)} in performance
-          compared to the {props.countPerformanceRanks.toLocaleString()} rated
-          GPUs in our database.
-        </>
-      );
-    },
-  },
-);
+});
 
 const PerformanceBestDiff = compileContentComponent(
   {
@@ -50,13 +33,11 @@ const PerformanceBestDiff = compileContentComponent(
     component: (_props) => <></>,
   },
   {
-    // Example: It is approximately 67.18% as fast as the GeForce RTX 4090,
-    //          the most powerful GPU in our database.
     tags: [RankTag.Performance],
     component: (props) => (
       <>
-        It is approximately {props.bestPerformanceDifferencePct}% as strong as
-        the {props.bestPerformanceName}, the most powerful GPU in our database.
+        It achieves {props.bestPerformanceDifferencePct}% of the performance of
+        the best benchmarked GPU, the {props.bestPerformanceName}.
       </>
     ),
   },
@@ -64,13 +45,13 @@ const PerformanceBestDiff = compileContentComponent(
 
 const PerformanceValue = compileContentComponent({
   tags: [RankTag.Performance, RankTag.Value],
-  // Its 99.8 performance rating and $599 launch price (MSRP) gives it a
-  // value rating of 44.47, making it the 12th best in performance per dollar.
   component: (props) => (
     <>
-      Its {props.performanceRating} performance score and {props.msrp} launch
-      price (MSRP) gives it a value rating of {props.valueRating}, making it{' '}
-      {formatOrdinalNumber(props.valueRank)} in performance per dollar.
+      Its {props.preferredBenchmarkPerformance} score and {props.msrp} launch
+      price (MSRP) gives it a performance per dollar of{' '}
+      {props.preferredBenchmarkValuePerMsrp}. This is the{' '}
+      {props.valueRank > 1 ? props.valueRankOrdinal : ''} best in value for the{' '}
+      {props.preferredBenchmarkName} benchmark.
     </>
   ),
 });

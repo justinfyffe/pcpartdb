@@ -11,6 +11,7 @@ import {
   GpuProduct,
   mergeProducts,
   productBenchmarkValue,
+  productFieldRawValue,
   ProductType,
   ProductUpdate,
   ProductUpdateStatus,
@@ -117,15 +118,26 @@ async function updateBenchmarks(
   console.info('Checking for updated benchmarks');
   let updated = false;
 
+  // We go for original first as msrp wouldn't have been approved yet.
+  // It'll get recalculated when approved.
+  const msrp =
+    productFieldRawValue(originalGpu.fields?.msrp) ??
+    productFieldRawValue(scrapedGpu.fields?.msrp) ??
+    null;
+
   for (const benchmarkKey of GPU_BENCHMARKS) {
     const originalValue = productBenchmarkValue(originalGpu, benchmarkKey);
     const scrapedValue = productBenchmarkValue(scrapedGpu, benchmarkKey);
 
     if (scrapedValue != null && scrapedValue > 0) {
+      const scrapedValuePerMsrp =
+        msrp != null && msrp > 0 ? scrapedValue / msrp : null;
+
       setProductBenchmark(
         originalGpu,
         benchmarkKey,
         scrapedValue || originalValue,
+        scrapedValuePerMsrp,
       );
       updated = true;
     }

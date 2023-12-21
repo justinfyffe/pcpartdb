@@ -10,22 +10,22 @@ import { ConfirmDialog } from 'packages/website/src/client/shared/components/Dia
 import { showDialog } from 'packages/website/src/client/shared/components/Dialog/dialog';
 import React, { useCallback } from 'react';
 
-export interface RefreshProductCalculationsWidgetProps {}
+export interface UpdateRelatedProductsWidgetProps {}
 
-export const RefreshProductCalculationsWidget = (
-  _props: RefreshProductCalculationsWidgetProps,
+export const UpdateRelatedProductsWidget = (
+  _props: UpdateRelatedProductsWidgetProps,
 ) => {
   const handleUpdate = useCallback(() => {
     const confirm = async () => {
       await automationService.createAction({
-        type: AutomationActionType.UpdateProductCalculations,
-        description: 'Update product calculations',
+        type: AutomationActionType.UpdateRelatedProducts,
+        description: 'Update related products',
       });
     };
 
     showDialog(
       <ConfirmDialog
-        label="Are you sure you want to update product calculations?"
+        label="Are you sure you want to update related products?"
         onConfirm={confirm}
         className="w-120"
       />,
@@ -34,10 +34,12 @@ export const RefreshProductCalculationsWidget = (
 
   return (
     <Card className="flex-1">
-      <CardTitle>Update Product Calculations</CardTitle>
+      <CardTitle className="whitespace-nowrap">
+        Update Related Products
+      </CardTitle>
       <CardContent>
         <PrimaryButton type="button" onClick={handleUpdate}>
-          Enqueue Update
+          Add to Queue
         </PrimaryButton>
       </CardContent>
     </Card>

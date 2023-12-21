@@ -14,7 +14,7 @@ import {
   Tr,
 } from 'packages/website/src/client/shared/components/Table/Table';
 import React, { FunctionComponent, useContext, useMemo } from 'react';
-import { ComparePageContext } from '../../context/ComparePageContext';
+import { ComparePageContext } from '../../context/ComparePageContextProvider';
 
 interface GeneralInfoTableProps {
   className?: string;

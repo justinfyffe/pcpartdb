@@ -16,16 +16,16 @@ import { Tab } from 'packages/website/src/client/shared/components/Tabs/Tab';
 import { Tabs } from 'packages/website/src/client/shared/components/Tabs/Tabs';
 import { classNames } from 'packages/website/src/client/shared/ui/classNames';
 import React, { FunctionComponent, useContext, useMemo } from 'react';
-import { ComparePageContext } from '../../../context/ComparePageContext';
+import { ComparePageContext } from '../../../context/ComparePageContextProvider';
 
 const BENCHMARKS = [
   {
     name: 'Popular',
     benchmarks: [
-      BenchmarkKey._3dMark_Time_Spy_Cpu,
       BenchmarkKey._3dMark_11_Performance_Physics,
-      BenchmarkKey.Cinebench_R23_Multi_Core,
-      BenchmarkKey.Cinebench_R23_Single_Core,
+      BenchmarkKey._3dMark_Time_Spy_Cpu,
+      BenchmarkKey.Cinebench_R15_Multi_Core,
+      BenchmarkKey.Cinebench_R15_Single_Core,
       BenchmarkKey.Geekbench_6_2_Multi_Core,
       BenchmarkKey.Geekbench_6_2_Single_Core,
       BenchmarkKey.PassMark_CpuMark_Multi_Thread,
@@ -167,7 +167,6 @@ const BenchmarkTab: FunctionComponent<BenchmarkTabProps> = (props) => {
           {benchmarks.map((benchmark) => (
             <ProductBenchmarkRow
               key={benchmark}
-              indent
               benchmarks={[
                 getProductBenchmark(cpu1, benchmark),
                 getProductBenchmark(cpu2, benchmark),

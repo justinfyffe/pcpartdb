@@ -1,15 +1,15 @@
 import { ContentContext } from 'packages/website/src/client/shared/content/ContentContext';
 import { compileContentComponent } from 'packages/website/src/client/shared/content/utils';
 import React, { useContext } from 'react';
-import { ViewPageContext } from '../../../context/ViewPageContext';
+import { ViewPageContext } from '../../../context/ViewPageContextProvider';
 
 const PerformanceIntroSentence1 = compileContentComponent({
   component: (props) => (
     <>
       Compare {props.chipsetNameWithNoCompany}&apos;s performance with similar{' '}
       {props.marketSegment} GPUs. Relative performance provides insight into how
-      its benchmarks compare to its peers. This data is based on chipset
-      performance.
+      its benchmark compares to its peers. This data is based on{' '}
+      {props.preferredBenchmarkName} performance.
     </>
   ),
 });

@@ -1,3 +1,5 @@
+import { ProductType } from '../types';
+
 export enum BenchmarkKey {
   //
   // CPU Benchmarks
@@ -28,8 +30,6 @@ export enum BenchmarkKey {
   Cinebench_R23_Single_Core = 'CINEBENCH_R23_SINGLE_CORE',
 
   // CPU - Geekbench
-  GeekBench_Multi_Core = 'GEEKBENCH_MULTI_CORE', // TODO: DELETE
-  GeekBench_Single_Core = 'GEEKBENCH_SINGLE_CORE', // TODO: DELETE
   Geekbench_4_4_Multi_Core = 'GEEKBENCH_4_4_MULTI_CORE',
   Geekbench_4_4_Single_Core = 'GEEKBENCH_4_4_SINGLE_CORE',
   Geekbench_5_0_Multi_Core = 'GEEKBENCH_5_0_MULTI_CORE',
@@ -40,8 +40,10 @@ export enum BenchmarkKey {
   Geekbench_6_2_Single_Core = 'GEEKBENCH_6_2_SINGLE_CORE',
 
   // CPU - PassMark
-  PassMark_CpuMark_Multi_Thread = 'CPU_MARK_MULTI_THREAD',
-  PassMark_CpuMark_Single_Thread = 'CPU_MARK_SINGLE_THREAD',
+  PassMark_CpuMark_Multi_Thread = 'PASSMARK_CPU_MARK_MULTI_THREAD',
+  PassMark_CpuMark_Single_Thread = 'PASSMARK_CPU_MARK_SINGLE_THREAD',
+  CpuMark_Multi_Thread = 'CPU_MARK_MULTI_THREAD', // TODO: delete after removed from db
+  CpuMark_Single_Thread = 'CPU_MARK_SINGLE_THREAD', // TODO: delete after removed from db
 
   // CPU - WinRar
   WinRar_4_0 = 'WINRAR_4_0',
@@ -66,7 +68,8 @@ export enum BenchmarkKey {
   _3dMark_Ice_Storm_Unlimited_Graphics = '3DMARK_ICE_STORM_UNLIMITED_GRAPHICS',
   _3dMark_Night_Raid_Score = '3DMARK_NIGHT_RAID_SCORE',
   _3dMark_Night_Raid_Graphics = '3DMARK_NIGHT_RAID_GRAPHICS',
-  _3dMark_Timespy_Graphics = 'TIMESPY_GRAPHICS', // TODO: rename in scratchpad
+  Timespy_Graphics = 'TIMESPY_GRAPHICS', // TODO: delete after removed from db
+  _3dMark_Timespy_Graphics = '3DMARK_TIMESPY_GRAPHICS',
   _3dMark_Timespy_Score = '3DMARK_TIMESPY_SCORE',
   _3dMark_Vantage_Perf = '3DMARK_VANTAGE_PERF',
   _3dMark_Wild_Life_Extreme_Unlimited = '3DMARK_WILD_LIFE_EXTREME_UNLIMITED',
@@ -95,8 +98,10 @@ export enum BenchmarkKey {
   LuxMark_2_0_Sala_Gpu = 'LUXMARK_2_0_SALA_GPU',
 
   // GPU - PassMark
-  PassMark_G2dMark = 'G2D_MARK', // TODO: rename in scratchpad: PASSMARK_G2D_MARK
-  PassMark_G3dMark = 'G3D_MARK', // TODO: rename in scratchpad: PASSMARK_G3D_MARK
+  G2dMark = 'G2D_MARK', // TODO: delete after removed from db
+  G3dMark = 'G3D_MARK', // TODO: delete after removed from db
+  PassMark_G2dMark = 'PASSMARK_G2D_MARK',
+  PassMark_G3dMark = 'PASSMARK_G3D_MARK',
 
   // GPU - SPECviewperf
   Specvp11_Catia_03 = 'SPECVP11_CATIA_03',
@@ -261,4 +266,9 @@ export interface ProductBenchmark {
   valuePerMsrp?: number;
 
   metadata?: ProductBenchmarkMeta;
+}
+
+export interface PreferredBenchmarks {
+  [ProductType.Cpu]?: BenchmarkKey;
+  [ProductType.Gpu]?: BenchmarkKey;
 }

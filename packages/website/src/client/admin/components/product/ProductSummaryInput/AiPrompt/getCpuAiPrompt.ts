@@ -1,11 +1,15 @@
 import {
+  BenchmarkKey,
   CpuProduct,
   formatProductName,
-  hasProductFieldValue,
+  getProductPerformanceRank,
+  productBenchmarkValue,
+  productBenchmarkValuePerMsrp,
   productFieldFormattedValue,
-  productRankValue,
-  RankKey,
 } from '@pcpartdb/shared';
+
+// TODO: use user preferred benchmark
+const PREFERRED_BENCHMARK = BenchmarkKey.PassMark_CpuMark_Multi_Thread;
 
 const introData = (cpu: CpuProduct) => {
   return [
@@ -123,41 +127,38 @@ const specsData = (cpu: CpuProduct) => {
   ] as { description: string; value: string }[];
 };
 
-const performanceData = (cpu: CpuProduct) => {
+const performanceData = (cpu: CpuProduct, preferredBenchmark: BenchmarkKey) => {
   return [
     {
       description: 'performance rank',
-      value: productRankValue(cpu, RankKey.PerformanceRating),
+      value: getProductPerformanceRank(cpu, PREFERRED_BENCHMARK),
     },
     {
       description: 'performance rating',
-      value: productFieldFormattedValue(cpu?.fields?.performanceRating),
+      value: productBenchmarkValue(cpu, preferredBenchmark),
     },
     {
       description: 'value rating',
-      value: productFieldFormattedValue(cpu?.fields?.performancePerMsrp),
+      value: productBenchmarkValuePerMsrp(cpu, preferredBenchmark),
     },
     {
       description: 'best performing cpu name',
       value: 'BEST CPU PLACEHOLDER',
     },
-    {
-      description: 'performance compared to best performaning cpu',
-      value: hasProductFieldValue(cpu?.fields?.performanceRating)
-        ? `${productFieldFormattedValue(cpu?.fields?.performanceRating)}%`
-        : null,
-    },
   ] as { description: string; value: string }[];
 };
 
-const aiPromptTemplate = (cpu: CpuProduct) => {
+const aiPromptTemplate = (
+  cpu: CpuProduct,
+  preferredBenchmark: BenchmarkKey,
+) => {
   const intro = introData(cpu)
     .filter((v) => v.value)
     .map((v) => `${v.description},"${v.value}"`);
   const specs = specsData(cpu)
     .filter((v) => v.value)
     .map((v) => `${v.description},"${v.value}"`);
-  const performance = performanceData(cpu)
+  const performance = performanceData(cpu, preferredBenchmark)
     .filter((v) => v.value)
     .map((v) => `${v.description},"${v.value}"`);
 
@@ -191,6 +192,9 @@ ${performance.join('\n')}
 `.trim();
 };
 
-export function getCpuAiPrompt(cpu: CpuProduct) {
-  return aiPromptTemplate(cpu);
+export function getCpuAiPrompt(
+  cpu: CpuProduct,
+  preferredBenchmark: BenchmarkKey,
+) {
+  return aiPromptTemplate(cpu, preferredBenchmark);
 }

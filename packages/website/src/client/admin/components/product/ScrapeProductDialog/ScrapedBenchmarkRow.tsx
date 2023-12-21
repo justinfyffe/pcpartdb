@@ -1,6 +1,6 @@
 import {
   BenchmarkKey,
-  getProductBenchmarkLabel,
+  getProductBenchmarkName,
   ProductBenchmark,
 } from '@pcpartdb/shared';
 import { Checkbox } from 'packages/website/src/client/shared/components/Checkbox/Checkbox';
@@ -31,7 +31,7 @@ export const ScrapedBenchmarkRow: FunctionComponent<
   const benchmarks = context.data.benchmarks;
 
   const emptyValue = useMemo(() => getEmptyValue(benchmarkKey), [benchmarkKey]);
-  const label = getProductBenchmarkLabel(benchmarkKey);
+  const label = getProductBenchmarkName(benchmarkKey);
 
   const rawValue = useMemo(() => {
     const benchmark = benchmarks?.[benchmarkKey]?.value as ProductBenchmark;

@@ -9,6 +9,7 @@ import { viewModelsClient } from '../../../client/shared/api/viewModelsClient';
 
 export async function getServerSideProps(ctx: NextPageContext) {
   const query = generateListCpusQueryFromSearchParams(ctx.query);
+  const benchmark = ctx.query.cpu_benchmark as string;
 
   const response = await viewModelsClient.get('cpus/list', {
     params: {
@@ -17,7 +18,8 @@ export async function getServerSideProps(ctx: NextPageContext) {
         query,
       } as ListCpusRequest),
     },
-    headers: { cookie: ctx.req?.headers?.cookie ?? '' },
+    nextPageContext: ctx,
+    preferredBenchmarks: { cpu: benchmark },
   });
   return response;
 }

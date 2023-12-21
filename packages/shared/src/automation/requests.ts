@@ -26,6 +26,7 @@ export interface ListAutomationActionsRequest {
 export interface ListAutomationActionsResponse
   extends ListResponse<ListAutomationActionsQuery, AutomationAction> {}
 
+// TODO: delete
 export interface UploadPerformanceScoresRequest {
   productType: ProductType;
 
@@ -34,9 +35,22 @@ export interface UploadPerformanceScoresRequest {
   tempPath?: string;
 }
 
+// TODO: delete
 export interface UploadProductCalculationsRequest {
   productType: ProductType;
 
+  // Added by interceptor. Don't populate manually.
+  originalFileName?: string;
+  tempPath?: string;
+}
+
+export interface UploadProductRanksRequest {
+  // Added by interceptor. Don't populate manually.
+  originalFileName?: string;
+  tempPath?: string;
+}
+
+export interface UploadRelatedProductsRequest {
   // Added by interceptor. Don't populate manually.
   originalFileName?: string;
   tempPath?: string;

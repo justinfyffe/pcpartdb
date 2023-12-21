@@ -26,7 +26,7 @@ import {
 import { PasswordInput } from 'packages/website/src/client/shared/components/Input/PasswordInput';
 import { TextInput } from 'packages/website/src/client/shared/components/Input/TextInput';
 import { Spinner } from 'packages/website/src/client/shared/components/Spinner/Spinner';
-import { userService } from 'packages/website/src/client/user/userService';
+import { userService } from 'packages/website/src/client/user/services/userService';
 import React, {
   FunctionComponent,
   useCallback,

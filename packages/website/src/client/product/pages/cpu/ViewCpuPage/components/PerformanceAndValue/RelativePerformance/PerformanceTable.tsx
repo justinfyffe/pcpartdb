@@ -1,20 +1,23 @@
 import {
   CpuProduct,
   formatProductName,
+  getProductPerformanceRank,
   getViewCpuPath,
-  productFieldFormattedValue,
-  productFieldRawValue,
+  productBenchmarkValue,
+  ProductType,
 } from '@pcpartdb/shared';
-import { ProductCustomRow } from 'packages/website/src/client/product/components/ProductCustomRow/ProductCustomRow';
 import {
   Table,
   TBody,
+  Td,
   Th,
   THead,
   Tr,
 } from 'packages/website/src/client/shared/components/Table/Table';
+import { classNames } from 'packages/website/src/client/shared/ui/classNames';
+import { usePreferredBenchmark } from 'packages/website/src/client/user/hooks/usePreferredBenchmark';
 import React, { FunctionComponent, useContext, useMemo } from 'react';
-import { ViewPageContext } from '../../../context/ViewPageContext';
+import { ViewPageContext } from '../../../context/ViewPageContextProvider';
 
 interface PerformanceTableProps {
   className?: string;
@@ -30,8 +33,9 @@ export const PerformanceTable: FunctionComponent<PerformanceTableProps> = (
     <Table border responsive className={className}>
       <THead>
         <Tr>
+          <Th className="text-center">Rank</Th>
           <Th>CPU</Th>
-          <Th className="text-right">Performance Rating</Th>
+          <Th className="text-right">Performance</Th>
           <Th className="text-right">Relative Performance</Th>
         </Tr>
       </THead>
@@ -50,33 +54,40 @@ export const PerformanceTable: FunctionComponent<PerformanceTableProps> = (
 
 interface PerformanceTableRowProps {
   baselineCpu: CpuProduct;
-  relativeCpu: CpuProduct;
+  relativeCpu: Partial<CpuProduct>;
 }
 
 const PerformanceTableRow: FunctionComponent<PerformanceTableRowProps> = (
   props,
 ) => {
+  const preferredBenchmark = usePreferredBenchmark(ProductType.Cpu);
   const { baselineCpu, relativeCpu } = props;
 
   const relativePerformancePct = useMemo(() => {
-    const baseline = productFieldRawValue(
-      baselineCpu.fields?.performanceRating,
-    );
-    const relatedPerformance = productFieldRawValue(
-      relativeCpu.fields?.performanceRating,
+    const baseline = productBenchmarkValue(baselineCpu, preferredBenchmark);
+    const relatedPerformance = productBenchmarkValue(
+      relativeCpu,
+      preferredBenchmark,
     );
 
     return Number(
       ((relatedPerformance / baseline) * 100).toFixed(0),
     ).toLocaleString();
-  }, [
-    baselineCpu.fields?.performanceRating,
-    relativeCpu.fields?.performanceRating,
-  ]);
+  }, [baselineCpu, preferredBenchmark, relativeCpu]);
 
   const rating = useMemo(
-    () => productFieldFormattedValue(relativeCpu.fields?.performanceRating),
-    [relativeCpu],
+    () =>
+      productBenchmarkValue(relativeCpu, preferredBenchmark).toLocaleString(),
+    [preferredBenchmark, relativeCpu],
+  );
+
+  const rank = useMemo(
+    () =>
+      getProductPerformanceRank(
+        relativeCpu,
+        preferredBenchmark,
+      ).toLocaleString(),
+    [preferredBenchmark, relativeCpu],
   );
 
   const href = useMemo(() => getViewCpuPath(relativeCpu), [relativeCpu]);
@@ -86,11 +97,17 @@ const PerformanceTableRow: FunctionComponent<PerformanceTableRowProps> = (
   );
 
   return (
-    <ProductCustomRow
-      label={<a href={href}>{cpuName}</a>}
-      values={[rating, `${relativePerformancePct}%`]}
-      highlight={baselineCpu.id === relativeCpu.id ? 'primary' : null}
-      valueClassName="text-right"
-    />
+    <Tr
+      className={classNames(
+        baselineCpu.id === relativeCpu.id ? 'font-bold !bg-indigo-100' : '',
+      )}
+    >
+      <Td className="text-center">{rank}</Td>
+      <Td className="text-left">
+        <a href={href}>{cpuName}</a>
+      </Td>
+      <Td className="text-right">{rating}</Td>
+      <Td className="text-right">{relativePerformancePct}%</Td>
+    </Tr>
   );
 };

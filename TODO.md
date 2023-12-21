@@ -12,15 +12,28 @@ Scraping Improvements:
 - Support GPU Clock from TechPowerUp:
   - https://www.techpowerup.com/gpu-specs/geforce-gtx-460-v2.c356
 
+- ALTERNATIVE:
+  - Get rid of "Performance Score" and "Performance Per MSRP". Just use benchmarks and benchmark / $
+    - On list page, add option to select benchmark for "Best Performance" and "Best Value"
+      - Persist among each page (using local storage / cookie)
+      - Show raw number, don't bother with normalizing to 100.0?
+    - On View/Compare page, add ability to select benchmark, persist among each page.
+      - Persist among each page (using local storage / cookie)
+      - "Performance Rating" and "Value Rating" will be based off of this.
+      - Show raw number, don't bother with normalizing to 100.0?
+- figure out how to handle when the strongest product lacks some benchmarks
+- figure out if using existingPredictionKeys or existingPredictionKeys2
+- figure out weights
+- figure out estimate factor
+- figure out benchmarks to use
+
+- Delete hanging benchmarks
+  - where product_id is null. they're not deleting.
+
 When Bored:
 - Migrate to react-query instead of axios
 - Make autocomplete stricter, not looser when searching?
-- Improve db performance using queryRaw, but only in places where it'll help
-
-Better Performance Score
-- [] add highlights under technical specs? Next project
-- [] Add valuePerMsrp to ProductBenchmark. Next project
-- [] Add ability to sort by benchmark and benchmark per msrp. Next project
+- Improve db performance using queryRaw, but only in places where it'll help 
 
 Admin Improvements
 - Improved data auditing

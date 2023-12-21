@@ -50,10 +50,13 @@ export class HomeViewModelService {
 
     const result = await this.cacheService.cache(
       async () => {
-        const nvidiaVsAmdGpus = await this.getNvidiaVsAmdGpus(ctx);
-        const popularGpus = await this.getPopularGpus(ctx);
-        const intelVsAmdCpus = await this.getIntelVsAmdCpus(ctx);
-        const popularCpus = await this.getPopularCpus(ctx);
+        const [nvidiaVsAmdGpus, popularGpus, intelVsAmdCpus, popularCpus] =
+          await Promise.all([
+            this.getNvidiaVsAmdGpus(ctx),
+            this.getPopularGpus(ctx),
+            this.getIntelVsAmdCpus(ctx),
+            this.getPopularCpus(ctx),
+          ]);
 
         return {
           nvidiaVsAmdGpus,
@@ -69,46 +72,49 @@ export class HomeViewModelService {
   }
 
   private async getNvidiaVsAmdGpus(ctx: Context) {
-    const performanceNvidia = await this.getPerformanceGpu(
-      NVIDIA_GPU_FILTER,
-      RANDOMLY_CHOOSE_FROM_COMPARISON,
-      ctx,
-    );
-    const performanceAmd = await this.getPerformanceGpu(
-      AMD_GPU_FILTER,
-      RANDOMLY_CHOOSE_FROM_COMPARISON,
-      ctx,
-    );
+    const [performanceNvidia, performanceAmd, valueNvidia, valueAmd] =
+      await Promise.all([
+        this.getPerformanceGpu(
+          NVIDIA_GPU_FILTER,
+          RANDOMLY_CHOOSE_FROM_COMPARISON,
+          ctx,
+        ),
+        this.getPerformanceGpu(
+          AMD_GPU_FILTER,
+          RANDOMLY_CHOOSE_FROM_COMPARISON,
+          ctx,
+        ),
+        this.getValueGpu(
+          NVIDIA_GPU_FILTER,
+          RANDOMLY_CHOOSE_FROM_COMPARISON,
+          ctx,
+        ),
+        this.getValueGpu(AMD_GPU_FILTER, RANDOMLY_CHOOSE_FROM_COMPARISON, ctx),
+      ]);
+
     const performanceComp: ProductComparison = [
       performanceNvidia,
       performanceAmd,
     ];
-
-    const valueNvidia = await this.getValueGpu(
-      NVIDIA_GPU_FILTER,
-      RANDOMLY_CHOOSE_FROM_COMPARISON,
-      ctx,
-    );
-    const valueAmd = await this.getValueGpu(
-      AMD_GPU_FILTER,
-      RANDOMLY_CHOOSE_FROM_COMPARISON,
-      ctx,
-    );
     const valueComp: ProductComparison = [valueNvidia, valueAmd];
 
-    const randomNvidia = await this.getPerformanceGpu(
-      {
-        ...NVIDIA_GPU_FILTER,
-        excludeIds: [performanceNvidia.id, valueNvidia.id],
-      },
-      RANDOMLY_CHOOSE_FROM_COMPARISON,
-      ctx,
-    );
-    const randomAmd = await this.getPerformanceGpu(
-      { ...AMD_GPU_FILTER, excludeIds: [performanceAmd.id, valueAmd.id] },
-      RANDOMLY_CHOOSE_FROM_COMPARISON,
-      ctx,
-    );
+    // TODO: try to combine these with the above ones.
+    const [randomNvidia, randomAmd] = await Promise.all([
+      this.getPerformanceGpu(
+        {
+          ...NVIDIA_GPU_FILTER,
+          excludeIds: [performanceNvidia.id, valueNvidia.id],
+        },
+        RANDOMLY_CHOOSE_FROM_COMPARISON,
+        ctx,
+      ),
+      this.getPerformanceGpu(
+        { ...AMD_GPU_FILTER, excludeIds: [performanceAmd.id, valueAmd.id] },
+        RANDOMLY_CHOOSE_FROM_COMPARISON,
+        ctx,
+      ),
+    ]);
+
     const randomComp: ProductComparison = [randomNvidia, randomAmd];
 
     return [performanceComp, valueComp, randomComp].filter(
@@ -117,6 +123,7 @@ export class HomeViewModelService {
   }
 
   private async getPopularGpus(ctx: Context) {
+    // TODO: try to parallelize these.
     const gpu1 = await this.getPerformanceGpu(
       { segment: [MarketSegment.Desktop] },
       5,
@@ -140,43 +147,48 @@ export class HomeViewModelService {
   }
 
   private async getIntelVsAmdCpus(ctx: Context): Promise<ProductComparison[]> {
-    const performanceIntel = await this.getPerformanceCpu(
-      INTEL_CPU_FILTER,
-      RANDOMLY_CHOOSE_FROM_COMPARISON,
-      ctx,
-    );
-    const performanceAmd = await this.getPerformanceCpu(
-      AMD_CPU_FILTER,
-      RANDOMLY_CHOOSE_FROM_COMPARISON,
-      ctx,
-    );
+    const [performanceIntel, performanceAmd, valueIntel, valueAmd] =
+      await Promise.all([
+        this.getPerformanceCpu(
+          INTEL_CPU_FILTER,
+          RANDOMLY_CHOOSE_FROM_COMPARISON,
+          ctx,
+        ),
+        this.getPerformanceCpu(
+          AMD_CPU_FILTER,
+          RANDOMLY_CHOOSE_FROM_COMPARISON,
+          ctx,
+        ),
+        this.getValueCpu(
+          INTEL_CPU_FILTER,
+          RANDOMLY_CHOOSE_FROM_COMPARISON,
+          ctx,
+        ),
+        this.getValueCpu(AMD_CPU_FILTER, RANDOMLY_CHOOSE_FROM_COMPARISON, ctx),
+      ]);
+
     const performanceComp: ProductComparison = [
       performanceIntel,
       performanceAmd,
     ];
-
-    const valueIntel = await this.getValueCpu(
-      INTEL_CPU_FILTER,
-      RANDOMLY_CHOOSE_FROM_COMPARISON,
-      ctx,
-    );
-    const valueAmd = await this.getValueCpu(
-      AMD_CPU_FILTER,
-      RANDOMLY_CHOOSE_FROM_COMPARISON,
-      ctx,
-    );
     const valueComp: ProductComparison = [valueIntel, valueAmd];
 
-    const randomIntel = await this.getPerformanceCpu(
-      { ...INTEL_CPU_FILTER, excludeIds: [performanceIntel.id, valueIntel.id] },
-      RANDOMLY_CHOOSE_FROM_COMPARISON,
-      ctx,
-    );
-    const randomAmd = await this.getPerformanceCpu(
-      { ...AMD_CPU_FILTER, excludeIds: [performanceAmd.id, valueAmd.id] },
-      RANDOMLY_CHOOSE_FROM_COMPARISON,
-      ctx,
-    );
+    // TODO: try to combine these with the first db call
+    const [randomIntel, randomAmd] = await Promise.all([
+      this.getPerformanceCpu(
+        {
+          ...INTEL_CPU_FILTER,
+          excludeIds: [performanceIntel.id, valueIntel.id],
+        },
+        RANDOMLY_CHOOSE_FROM_COMPARISON,
+        ctx,
+      ),
+      this.getPerformanceCpu(
+        { ...AMD_CPU_FILTER, excludeIds: [performanceAmd.id, valueAmd.id] },
+        RANDOMLY_CHOOSE_FROM_COMPARISON,
+        ctx,
+      ),
+    ]);
     const randomComp: ProductComparison = [randomIntel, randomAmd];
 
     return [performanceComp, valueComp, randomComp].filter(
@@ -185,6 +197,7 @@ export class HomeViewModelService {
   }
 
   private async getPopularCpus(ctx: Context) {
+    // TODO: try to parallelize these.
     const cpu1 = await this.getPerformanceCpu(
       { segment: [MarketSegment.Desktop] },
       5,
@@ -218,10 +231,7 @@ export class HomeViewModelService {
           {
             productType: ProductType.Gpu,
             query: {
-              filter: {
-                ...filter,
-                performanceRated: true,
-              },
+              filter,
               orderBy: { sort: ListSort.PerformanceRating },
               pagination: { limit: chooseFrom },
             },
@@ -229,7 +239,7 @@ export class HomeViewModelService {
           {},
           ctx,
         ),
-      { ctx, isolationLevel: 'ReadUncommitted' },
+      { ctx, isolationLevel: 'ReadCommitted' },
     );
     const results = response.results;
 
@@ -248,10 +258,7 @@ export class HomeViewModelService {
           {
             productType: ProductType.Gpu,
             query: {
-              filter: {
-                ...filter,
-                valueRated: true,
-              },
+              filter,
               orderBy: { sort: ListSort.PerformancePerMsrp },
               pagination: { limit: chooseFrom },
             },
@@ -259,7 +266,7 @@ export class HomeViewModelService {
           {},
           ctx,
         ),
-      { ctx, isolationLevel: 'ReadUncommitted' },
+      { ctx, isolationLevel: 'ReadCommitted' },
     );
     const results = response.results;
 
@@ -278,10 +285,7 @@ export class HomeViewModelService {
           {
             productType: ProductType.Cpu,
             query: {
-              filter: {
-                ...filter,
-                performanceRated: true,
-              },
+              filter,
               orderBy: { sort: ListSort.PerformanceRating },
               pagination: { limit: chooseFrom },
             },
@@ -289,7 +293,7 @@ export class HomeViewModelService {
           {},
           ctx,
         ),
-      { ctx, isolationLevel: 'ReadUncommitted' },
+      { ctx, isolationLevel: 'ReadCommitted' },
     );
     const results = response.results;
 
@@ -308,10 +312,7 @@ export class HomeViewModelService {
           {
             productType: ProductType.Cpu,
             query: {
-              filter: {
-                ...filter,
-                valueRated: true,
-              },
+              filter,
               orderBy: { sort: ListSort.PerformancePerMsrp },
               pagination: { limit: chooseFrom },
             },
@@ -319,7 +320,7 @@ export class HomeViewModelService {
           {},
           ctx,
         ),
-      { ctx, isolationLevel: 'ReadUncommitted' },
+      { ctx, isolationLevel: 'ReadCommitted' },
     );
     const results = response.results;
 

@@ -1,32 +1,55 @@
 import { Injectable } from '@nestjs/common';
 import {
-  ProductCalculationsRequest,
-  UploadProductCalculationsRequest,
+  UpdateProductRanksRequest,
+  UpdateRelatedProductsRequest,
+  UploadProductRanksRequest,
+  UploadRelatedProductsRequest,
 } from '@pcpartdb/shared';
 import * as fsPromises from 'fs/promises';
-import { ProductService } from '../product/product.service';
+import { Database } from '../database';
+import { ProductRepository } from '../product/product.repository';
 import { Context } from '../shared/context';
 import * as fileUtils from '../shared/utils';
 
 @Injectable()
 export class AutomationTasksService {
-  constructor(private productService: ProductService) {}
+  constructor(
+    private db: Database,
+    private productRepository: ProductRepository,
+  ) {}
 
-  async uploadProductCalculations(
-    request: UploadProductCalculationsRequest,
+  async uploadProductRanks(request: UploadProductRanksRequest, ctx: Context) {
+    return await this.db.transaction(
+      async () => {
+        const path = fileUtils.uploadsPath(request.tempPath);
+
+        const updateRequest: UpdateProductRanksRequest = JSON.parse(
+          await fsPromises.readFile(path, 'utf-8'),
+        );
+        await fileUtils.remove(path);
+
+        await this.productRepository.applyRanks(updateRequest, ctx);
+      },
+      { ctx, timeout: 180_000 },
+    );
+  }
+
+  async uploadRelatedProducts(
+    request: UploadRelatedProductsRequest,
     ctx: Context,
   ) {
-    const productType = request.productType;
-    const calculationsPath = fileUtils.uploadsPath(request.tempPath);
+    return await this.db.transaction(
+      async () => {
+        const path = fileUtils.uploadsPath(request.tempPath);
 
-    const calculations: ProductCalculationsRequest[] = JSON.parse(
-      await fsPromises.readFile(calculationsPath, 'utf-8'),
-    );
-    await fileUtils.remove(calculationsPath);
+        const updateRequest: UpdateRelatedProductsRequest = JSON.parse(
+          await fsPromises.readFile(path, 'utf-8'),
+        );
+        await fileUtils.remove(path);
 
-    await this.productService.applyCalculations(
-      { productType, calculations },
-      ctx,
+        await this.productRepository.applyRelatedProducts(updateRequest, ctx);
+      },
+      { ctx, timeout: 180_000 },
     );
   }
 }

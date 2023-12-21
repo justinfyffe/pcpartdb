@@ -94,9 +94,6 @@ export interface GpuFields {
   weight?: GpuField<number>;
   width?: GpuField<number>;
 
-  performanceRating?: GpuField<number>;
-  performancePerMsrp?: GpuField<number>;
-
   metadata?: GpuFieldsMeta;
 }
 
@@ -113,7 +110,8 @@ export interface ListGpusFilter {
   year?: number[];
   segment?: MarketSegment[];
 
-  maxPerformanceScore?: number;
+  hasReleaseDate?: boolean;
+
   minPerformanceScore?: number;
   maxValueScore?: number;
   minValueScore?: number;

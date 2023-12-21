@@ -72,9 +72,6 @@ export interface CpuFields {
   transistors?: CpuField<number>;
   turboClock?: CpuField<number>;
 
-  performanceRating?: CpuField<number>;
-  performancePerMsrp?: CpuField<number>;
-
   metadata?: CpuFieldsMeta;
 }
 
@@ -101,10 +98,7 @@ export interface ListCpusFilter {
   year?: number[];
   segment?: MarketSegment[];
 
-  maxPerformanceScore?: number;
-  minPerformanceScore?: number;
-  maxValueScore?: number;
-  minValueScore?: number;
+  hasReleaseDate?: boolean;
 
   performanceRated?: boolean;
   valueRated?: boolean;

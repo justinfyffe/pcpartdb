@@ -57,8 +57,11 @@ const ListFilterSortItem: FunctionComponent<ListFilterSortItemProps> = (
       newOrder = ListOrder.Asc;
     }
 
+    const filter = { ...query.filter };
+    filter.hasReleaseDate = sort === ListSort.ReleaseDate ? true : undefined;
+
     updateQuery({
-      ...query,
+      filter,
       pagination: { ...(query.pagination ?? {}), offset: 0 },
       orderBy: { sort, order: newOrder },
     });

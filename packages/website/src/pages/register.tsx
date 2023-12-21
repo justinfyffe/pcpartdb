@@ -10,7 +10,7 @@ import { withGuestGuard } from '../client/shared/guards/withGuestGuard';
 
 export async function getServerSideProps(ctx: NextPageContext) {
   const response = await viewModelsClient.get<RegisterViewModel>('register', {
-    headers: { cookie: ctx.req?.headers?.cookie ?? '' },
+    nextPageContext: ctx,
   });
   if ('error' in response.props) {
     return response;

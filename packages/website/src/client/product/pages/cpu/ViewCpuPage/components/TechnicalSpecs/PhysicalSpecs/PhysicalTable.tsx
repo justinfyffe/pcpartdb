@@ -8,7 +8,7 @@ import {
   Tr,
 } from 'packages/website/src/client/shared/components/Table/Table';
 import React, { FunctionComponent, useContext } from 'react';
-import { ViewPageContext } from '../../../context/ViewPageContext';
+import { ViewPageContext } from '../../../context/ViewPageContextProvider';
 
 interface PhysicalTableProps {
   className?: string;

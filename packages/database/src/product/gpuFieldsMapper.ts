@@ -77,8 +77,6 @@ export function mapToGpuFieldsDto(
     ...mapGpuFieldToDto(entity, 'vulkanVersion', options),
     ...mapGpuFieldToDto(entity, 'weight', options),
     ...mapGpuFieldToDto(entity, 'width', options),
-    ...mapGpuFieldToDto(entity, 'performanceRating', options),
-    ...mapGpuFieldToDto(entity, 'performancePerMsrp', options),
   } as GpuFields;
 }
 
@@ -172,8 +170,6 @@ export function mapToGpuFieldsEntity(dto: GpuFields) {
     ...mapGpuFieldToEntity(dto, 'vulkanVersion'),
     ...mapGpuFieldToEntity(dto, 'weight'),
     ...mapGpuFieldToEntity(dto, 'width'),
-    ...mapGpuFieldToEntity(dto, 'performanceRating'),
-    ...mapGpuFieldToEntity(dto, 'performancePerMsrp'),
 
     metadata: dto.metadata,
   } as GpuFieldsEntity;

@@ -1,6 +1,6 @@
 import { hasProductFieldFormattedValue } from '@pcpartdb/shared';
 import React, { FunctionComponent, useContext } from 'react';
-import { ViewPageContext } from '../../context/ViewPageContext';
+import { ViewPageContext } from '../../context/ViewPageContextProvider';
 import { GeneralInfoIntro } from './GeneralInfoIntro';
 import { GeneralInfoTable } from './GeneralInfoTable';
 
@@ -8,8 +8,6 @@ export const GeneralInfo: FunctionComponent = () => {
   const { gpu } = useContext(ViewPageContext);
 
   if (
-    !hasProductFieldFormattedValue(gpu.fields?.performanceRating) &&
-    !hasProductFieldFormattedValue(gpu.fields?.performancePerMsrp) &&
     !gpu.company &&
     !hasProductFieldFormattedValue(gpu.fields?.architecture) &&
     !hasProductFieldFormattedValue(gpu.fields?.marketSegment) &&

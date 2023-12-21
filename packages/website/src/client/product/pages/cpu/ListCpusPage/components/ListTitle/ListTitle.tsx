@@ -1,5 +1,11 @@
+import {
+  getProductBenchmarkName,
+  getProductBenchmarkShortName,
+  ProductType,
+} from '@pcpartdb/shared';
 import { ContentContext } from 'packages/website/src/client/shared/content/ContentContext';
 import { compileContentComponent } from 'packages/website/src/client/shared/content/utils';
+import { usePreferredBenchmark } from 'packages/website/src/client/user/hooks/usePreferredBenchmark';
 import React, { FunctionComponent, useContext } from 'react';
 import { ListCpusContentTag } from '../../content/getContentTags';
 import { ListPageContext } from '../../context/ListPageContext';
@@ -39,11 +45,17 @@ const TitleSentence = compileContentComponent(
 const SortedSentence = compileContentComponent(
   {
     tags: [ListCpusContentTag.SortedBestPerformance],
-    component: () => <>Sorted by combined benchmark performance.</>,
+    component: (props) => (
+      <>Sorted by {props.preferredBenchmarkName} performance.</>
+    ),
   },
   {
     tags: [ListCpusContentTag.SortedBestValue],
-    component: () => <>Sorted by performance per dollar (MSRP).</>,
+    component: (props) => (
+      <>
+        Sorted by {props.preferredBenchmarkName} performance per dollar (MSRP).
+      </>
+    ),
   },
   {
     tags: [ListCpusContentTag.SortedReleaseDate],
@@ -59,7 +71,17 @@ const FilteredSentence = compileContentComponent({
 
 export const ListTitle: FunctionComponent = () => {
   const { contentParams, contentTags } = useContext(ListPageContext);
-  const context = { tags: contentTags, params: contentParams };
+  const preferredBenchmark = usePreferredBenchmark(ProductType.Cpu);
+
+  const context = {
+    tags: contentTags,
+    params: {
+      ...contentParams,
+      preferredBenchmarkName: getProductBenchmarkName(preferredBenchmark),
+      preferredBenchmarkShortName:
+        getProductBenchmarkShortName(preferredBenchmark),
+    },
+  };
 
   return (
     <ContentContext.Provider value={context}>

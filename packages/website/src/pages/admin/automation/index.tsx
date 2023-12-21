@@ -6,7 +6,7 @@ import { withStaffGuard } from 'packages/website/src/client/shared/guards/withSt
 export async function getServerSideProps(ctx: NextPageContext) {
   const endpoint = 'admin/automation';
   return await viewModelsClient.get(endpoint, {
-    headers: { cookie: ctx.req?.headers?.cookie ?? '' },
+    nextPageContext: ctx,
   });
 }
 

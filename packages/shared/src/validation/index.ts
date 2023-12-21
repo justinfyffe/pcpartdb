@@ -1,4 +1,5 @@
 export * from './automation';
 export * from './common';
 export * from './product';
+export * from './user';
 export * from './website';

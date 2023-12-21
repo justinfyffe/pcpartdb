@@ -3,9 +3,11 @@ import {
   deepmerge,
   DEFAULT_LIST_CPUS_LIMIT,
   DEFAULT_LIST_CPUS_OFFSET,
+  getPreferredBenchmark,
   ListCpusQuery,
   ListCpusRequest,
   listProductsRequestSchema,
+  ListSort,
   ProductType,
 } from '@pcpartdb/shared';
 import * as uuid from 'uuid';
@@ -32,6 +34,9 @@ export class ListCpusViewModelService {
           offset: DEFAULT_LIST_CPUS_OFFSET,
           limit: DEFAULT_LIST_CPUS_LIMIT,
         },
+        orderBy: {
+          sort: ListSort.Name,
+        },
       } as ListCpusQuery,
       query,
     );
@@ -44,17 +49,15 @@ export class ListCpusViewModelService {
             query: cpusQuery,
           },
           {
-            fields: [
-              'marketSegment',
-              'releaseDate',
-              'performanceRating',
-              'performancePerMsrp',
+            fields: ['marketSegment', 'releaseDate', 'msrp'],
+            includeBenchmarks: [
+              getPreferredBenchmark(ctx.config?.userSettings, ProductType.Cpu),
             ],
             includeRanks: true,
           },
           ctx,
         ),
-      { ctx, isolationLevel: 'ReadUncommitted' },
+      { ctx, isolationLevel: 'ReadCommitted' },
     );
     console.timeEnd(timer);
 

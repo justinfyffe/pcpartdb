@@ -68,8 +68,6 @@ export function mapToCpuFieldsDto(
     ...mapCpuFieldToDto(entity, 'tjMax', options),
     ...mapCpuFieldToDto(entity, 'transistors', options),
     ...mapCpuFieldToDto(entity, 'turboClock', options),
-    ...mapCpuFieldToDto(entity, 'performanceRating', options),
-    ...mapCpuFieldToDto(entity, 'performancePerMsrp', options),
   } as CpuFields;
 }
 
@@ -153,8 +151,6 @@ export function mapToCpuFieldsEntity(dto: CpuFields) {
     ...mapCpuFieldToEntity(dto, 'tjMax'),
     ...mapCpuFieldToEntity(dto, 'transistors'),
     ...mapCpuFieldToEntity(dto, 'turboClock'),
-    ...mapCpuFieldToEntity(dto, 'performanceRating'),
-    ...mapCpuFieldToEntity(dto, 'performancePerMsrp'),
 
     metadata: dto.metadata,
   } as CpuFieldsEntity;

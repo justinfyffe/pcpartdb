@@ -5,10 +5,12 @@ import { viewModelsClient } from '../../../client/shared/api/viewModelsClient';
 
 export async function getServerSideProps(ctx: NextPageContext) {
   const slug = ctx.query.slug as string;
+  const benchmark = ctx.query.gpu_benchmark as string;
 
   const endpoint = joinUrlParts('gpus/view', slug);
   const response = await viewModelsClient.get(endpoint, {
-    headers: { cookie: ctx.req?.headers?.cookie ?? '' },
+    nextPageContext: ctx,
+    preferredBenchmarks: { gpu: benchmark },
   });
   return response;
 }

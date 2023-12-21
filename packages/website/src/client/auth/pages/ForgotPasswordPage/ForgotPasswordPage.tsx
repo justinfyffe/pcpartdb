@@ -22,7 +22,7 @@ import {
   setValidationErrors,
 } from '../../../shared/error/utils';
 import { WebsiteLayout } from '../../../shared/layouts/website/WebsiteLayout';
-import { userService } from '../../../user/userService';
+import { userService } from '../../../user/services/userService';
 
 interface RequestPasswordResetFormData {
   email: string;

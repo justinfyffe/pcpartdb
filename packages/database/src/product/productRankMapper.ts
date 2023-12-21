@@ -1,4 +1,4 @@
-import { ProductRank } from '@pcpartdb/shared';
+import { ProductRanks } from '@pcpartdb/shared';
 import { ProductRankEntity } from './ProductRankEntity';
 
 export function mapToProductRankDto(entity: ProductRankEntity) {
@@ -6,13 +6,7 @@ export function mapToProductRankDto(entity: ProductRankEntity) {
     return null;
   }
 
-  return {
-    productId: entity.productId,
-    rankKey: entity.rankKey,
-    rank: entity.rank,
-    totalRanked: entity.totalRanked,
-    metadata: entity.metadata,
-  } as ProductRank;
+  return entity.ranks as ProductRanks;
 }
 
 export function mapToProductRankDtos(entities: ProductRankEntity[]) {
@@ -23,16 +17,13 @@ export function mapToProductRankDtos(entities: ProductRankEntity[]) {
   return entities.map((entity) => mapToProductRankDto(entity));
 }
 
-export function mapToProductRankEntity(dto: ProductRank) {
-  if (dto == null) {
+export function mapToProductRankEntity(ranks: ProductRanks) {
+  if (ranks == null) {
     return null;
   }
 
   return {
     productId: undefined,
-    rankKey: dto.rankKey,
-    rank: dto.rank,
-    totalRanked: dto.totalRanked,
-    metadata: dto.metadata,
+    ranks,
   } as ProductRankEntity;
 }

@@ -100,7 +100,11 @@ export function generateListGpusQueryFromSearchParams(
     return { ...LIST_GPUS_PRESETS[preset], pagination: { limit, offset } };
   } else {
     return {
-      filter: { company, segment },
+      filter: {
+        company,
+        segment,
+        hasReleaseDate: sort === ListSort.ReleaseDate ? true : undefined,
+      },
       orderBy: { sort, order },
       pagination: { offset, limit },
     };

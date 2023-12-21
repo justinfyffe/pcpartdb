@@ -1,40 +1,43 @@
 import {
   formatOrdinalNumber,
-  ProductField,
-  productFieldFormattedValue,
-  productFieldRawValue,
+  getProductBenchmarkName,
+  getProductBenchmarkShortName,
   ProductType,
 } from '@pcpartdb/shared';
 import React, { FunctionComponent, useMemo } from 'react';
 import { DonutChart } from '../../../shared/charts/DonutChart';
 import {
+  Button,
+  ButtonVariant,
+} from '../../../shared/components/Button/Button';
+import {
   Card,
   CardContent,
   CardTitle,
 } from '../../../shared/components/Card/Card';
+import { ContentContext } from '../../../shared/content/ContentContext';
 import { compileContentComponent } from '../../../shared/content/utils';
 import { classNames } from '../../../shared/ui/classNames';
+import { usePreferredBenchmark } from '../../../user/hooks/usePreferredBenchmark';
+import { usePreferredBenchmarkDialog } from '../../../user/hooks/usePreferredBenchmarkDialog';
 import { ProductRatingType } from './types';
-
-enum BetterWorseSame {
-  Better = 'BETTER',
-  Worse = 'WORSE',
-  Same = 'SAME',
-}
 
 export interface CompareProductRatingCardProps {
   ratingType: ProductRatingType;
   productType: ProductType;
+  productIds: number[];
 
   names: [string, string];
 
   maxRating?: number;
-  ratingFields?: [ProductField<number>, ProductField<number>];
+  ratings?: [number, number];
 
   ranks?: [number, number];
   rankHrefs?: [string, string];
 
   className?: string;
+
+  onBenchmarkChange?: (viewModel: any) => void;
 }
 
 export const CompareProductRatingCard: FunctionComponent<
@@ -42,240 +45,261 @@ export const CompareProductRatingCard: FunctionComponent<
 > = (props) => {
   const {
     ratingType,
+    productIds,
     productType,
     names,
-    ratingFields,
+    ratings,
     ranks,
     rankHrefs,
     maxRating,
     className,
+    onBenchmarkChange,
   } = props;
+  const preferredBenchmark = usePreferredBenchmark(productType);
+  const showPreferredBenchmarkDialog = usePreferredBenchmarkDialog({
+    productType,
+    softReload: true,
+    productIds,
+    onChange: onBenchmarkChange,
+  });
 
   const [name1, name2] = names;
 
-  const [ratingField1, ratingField2] = ratingFields;
-  const ratingFormatted1 = useMemo(
-    () => productFieldFormattedValue(ratingField1),
-    [ratingField1],
-  );
-  const ratingFormatted2 = useMemo(
-    () => productFieldFormattedValue(ratingField2),
-    [ratingField2],
-  );
-  const ratingRaw1 = useMemo(
-    () => productFieldRawValue(ratingField1),
-    [ratingField1],
-  );
-  const ratingRaw2 = useMemo(
-    () => productFieldRawValue(ratingField2),
-    [ratingField2],
-  );
+  const [rating1, rating2] = ratings;
+
+  const pctDiff1 =
+    rating1 && maxRating
+      ? `${((rating1 / maxRating) * 100).toFixed(0)}%`
+      : null;
+  const donutCenterLabel1 = rating1
+    ? `${rating1.toLocaleString('en-US', {
+        maximumFractionDigits: 2,
+      })}`
+    : 'N/A';
+
+  const donutCenterLabel2 = rating2
+    ? `${rating2.toLocaleString('en-US', {
+        maximumFractionDigits: 2,
+      })}`
+    : 'N/A';
+  const pctDiff2 =
+    rating2 && maxRating
+      ? `${((rating2 / maxRating) * 100).toFixed(0)}%`
+      : null;
 
   const [rank1, rank2] = ranks || [];
   const [rankHref1, rankHref2] = rankHrefs || [];
   const rankFormatted1 = useMemo(() => formatOrdinalNumber(rank1), [rank1]);
   const rankFormatted2 = useMemo(() => formatOrdinalNumber(rank2), [rank2]);
 
-  const betterWorseSame = useMemo(() => {
-    if (ratingRaw1 == null || ratingRaw2 == null) {
-      return null;
+  const contentContext = useMemo(() => {
+    const notRated = rating1 == null || rating2 == null;
+    const sameRating = !notRated && rating1 === rating2;
+
+    let betterName: string;
+    let worseName: string;
+    let percentDiff: string;
+    if (!notRated && !sameRating) {
+      betterName = rating1 > rating2 ? name1 : name2;
+      worseName = rating1 > rating2 ? name2 : name1;
+      percentDiff = (
+        (Math.max(rating1, rating2) / Math.min(rating1, rating2) - 1) *
+        100
+      ).toLocaleString('en-US', { maximumFractionDigits: 2 });
     }
 
-    if (ratingRaw1 > ratingRaw2) {
-      return BetterWorseSame.Better;
-    } else if (ratingRaw1 < ratingRaw2) {
-      return BetterWorseSame.Worse;
-    } else if (ratingRaw1 === ratingRaw2) {
-      return BetterWorseSame.Same;
-    }
-    return null;
-  }, [ratingRaw1, ratingRaw2]);
-  const percentDiff = useMemo(() => {
-    if (ratingRaw1 == null || ratingRaw2 == null) {
-      return null;
-    }
-
-    if (
-      betterWorseSame === BetterWorseSame.Better ||
-      betterWorseSame === BetterWorseSame.Worse
-    ) {
-      return Number(
-        Math.abs((ratingRaw1 / ratingRaw2 - 1) * 100).toFixed(0),
-      ).toLocaleString();
-    }
-    return null;
-  }, [betterWorseSame, ratingRaw1, ratingRaw2]);
+    return {
+      tags: [
+        ratingType,
+        productType,
+        notRated ? 'NOT_RATED' : null,
+        sameRating ? 'SAME_RATING' : null,
+      ],
+      params: {
+        name1,
+        name2,
+        betterName,
+        worseName,
+        percentDiff,
+        preferredBenchmarkName: getProductBenchmarkName(preferredBenchmark),
+        preferredBenchmarkShortName:
+          getProductBenchmarkShortName(preferredBenchmark),
+      },
+    };
+  }, [
+    name1,
+    name2,
+    preferredBenchmark,
+    productType,
+    rating1,
+    rating2,
+    ratingType,
+  ]);
 
   return (
-    <Card
-      className={classNames(
-        'flex flex-row justify-between items-stretch flex-wrap gap-4',
-        className,
-      )}
-    >
-      <CardTitle as="div" className="grow basis-0 flex flex-col gap-2">
-        <span>
-          <Title tags={[ratingType]} />
-        </span>
-        <span className="text-base font-normal min-w-50">
-          <Description1
-            tags={[ratingType, productType]}
-            params={{
-              name1,
-              name2,
-              percentDiff,
-            }}
-          />
-          <Description2
-            tags={[ratingType, productType, betterWorseSame]}
-            params={{
-              name1,
-              name2,
-              percentDiff,
-            }}
-          />
-        </span>
-      </CardTitle>
+    <ContentContext.Provider value={contentContext}>
+      <Card
+        className={classNames(
+          'flex flex-row justify-between items-stretch flex-wrap gap-4',
+          className,
+        )}
+      >
+        <CardTitle as="div" className="grow basis-0 flex flex-col gap-2">
+          <span>
+            <Title tags={[ratingType]} />
+          </span>
 
-      <CardContent className="grow basis-0 flex flex-row">
-        <div className="flex-1 grid items-stretch justify-items-center justify-evenly gap-x-8 gap-y-2">
-          <div className="col-start-1 col-end-2 text-base font-medium flex-1 flex items-center text-center">
-            {name1}
-          </div>
-          <div className="col-start-2 col-end-3 text-base font-medium flex-1 flex items-center text-center">
-            {name2}
+          <div className="mb-4">
+            <Button
+              variant={ButtonVariant.Link}
+              className="mr-auto flex flex-col"
+              onClick={showPreferredBenchmarkDialog}
+            >
+              <span className="text-base text-content">
+                {getProductBenchmarkName(preferredBenchmark)}
+              </span>
+              <span className="text-link text-2xs">(change benchmark)</span>
+            </Button>
           </div>
 
-          <div className="col-start-1 col-end-2 flex flex-1 items-center">
-            <DonutChart
-              totalValue={maxRating}
-              centerLabel={ratingRaw1 ? ratingFormatted1 : 'N/A'}
-              chartClass="w-24 h-24 rounded-full ring-1 ring-white"
-              holeClass="w-[75%] h-[75%] bg-light-shades rounded-full ring-1 ring-white"
-              data={[{ value: ratingRaw1, color: '#4c5c7c' }]}
-            ></DonutChart>
-          </div>
-          <div className="col-start-2 col-end-3 flex flex-1 items-center">
-            <DonutChart
-              totalValue={maxRating}
-              centerLabel={ratingRaw2 ? ratingFormatted2 : 'N/A'}
-              chartClass="w-24 h-24  rounded-full ring-1 ring-white"
-              holeClass="w-[75%] h-[75%] bg-light-shades rounded-full ring-1 ring-white"
-              data={[{ value: ratingRaw2, color: '#4c5c7c' }]}
-            ></DonutChart>
-          </div>
+          <span className="text-base font-normal min-w-50">
+            <Description />
+          </span>
+        </CardTitle>
 
-          <div className="col-start-1 col-end-2 flex flex-1 items-center">
-            {rank1 && (
-              <div
-                className={classNames(
-                  'text-base font-medium whitespace-nowrap',
-                  rankHref1 ? 'underline' : '',
+        <CardContent className="grow basis-0 flex flex-row">
+          <div className="flex-1 grid items-stretch justify-items-center justify-evenly gap-x-8 gap-y-2">
+            <div className="col-start-1 col-end-2 text-base font-medium flex-1 flex items-center text-center">
+              {name1}
+            </div>
+            <div className="col-start-2 col-end-3 text-base font-medium flex-1 flex items-center text-center">
+              {name2}
+            </div>
+
+            <div className="col-start-1 col-end-2 flex flex-1 flex-col gap-1 items-center">
+              <div className="flex flex-col gap-1 items-center">
+                <DonutChart
+                  totalValue={maxRating}
+                  centerLabel={donutCenterLabel1}
+                  chartClass="w-25 h-25 rounded-full ring-1 ring-white"
+                  holeClass="w-[75%] h-[75%] bg-light-shades rounded-full ring-1 ring-white text-lg"
+                  data={[{ value: rating1 || 0, color: '#4c5c7c' }]}
+                ></DonutChart>
+
+                {pctDiff1 ? (
+                  <div className="font-medium whitespace-nowrap">
+                    {pctDiff1} of{' '}
+                    {maxRating?.toLocaleString('en-US', {
+                      maximumFractionDigits: 2,
+                    })}
+                  </div>
+                ) : (
+                  <></>
                 )}
-              >
-                <Ranking
-                  tags={[productType]}
-                  params={{
-                    rank: rankFormatted1,
-                    rankHref: rankHref1,
-                    className: 'text-primary',
-                  }}
-                />
+
+                {/* {ratingDiff1 && (
+                <div className="font-medium">+{ratingDiff1}%</div>
+              )} */}
               </div>
-            )}
-          </div>
-          <div className="col-start-2 col-end-3 flex flex-1 items-center">
-            {rank2 && (
-              <div
-                className={classNames(
-                  'text-base font-medium whitespace-nowrap',
-                  rankHref1 ? 'underline' : '',
+            </div>
+
+            <div className="col-start-2 col-end-3 flex flex-1 flex-col gap-1 items-center">
+              <div className="flex flex-col gap-1 items-center">
+                <DonutChart
+                  totalValue={maxRating}
+                  centerLabel={donutCenterLabel2}
+                  chartClass="w-25 h-25 rounded-full ring-1 ring-white"
+                  holeClass="w-[75%] h-[75%] bg-light-shades rounded-full ring-1 ring-white text-lg"
+                  data={[{ value: rating2 || 0, color: '#4c5c7c' }]}
+                ></DonutChart>
+
+                {pctDiff2 ? (
+                  <div className="font-medium whitespace-nowrap">
+                    {pctDiff2} of{' '}
+                    {maxRating?.toLocaleString('en-US', {
+                      maximumFractionDigits: 2,
+                    })}
+                  </div>
+                ) : (
+                  <></>
                 )}
-              >
-                <Ranking
-                  tags={[productType]}
-                  params={{
-                    rank: rankFormatted2,
-                    rankHref: rankHref2,
-                    className: 'text-primary',
-                  }}
-                />
+
+                {/* {ratingDiff2 && (
+                <div className="font-medium">+{ratingDiff2}%</div>
+              )} */}
               </div>
-            )}
+            </div>
+
+            <div className="col-start-1 col-end-2 flex flex-1 flex-col items-center">
+              {rank1 && (
+                <div
+                  className={classNames(
+                    'text-base font-medium whitespace-nowrap',
+                    rankHref1 ? 'underline' : '',
+                  )}
+                >
+                  <Ranking
+                    tags={[productType]}
+                    params={{
+                      rank: rankFormatted1,
+                      rankHref: rankHref1,
+                      className: 'text-primary',
+                    }}
+                  />
+                </div>
+              )}
+            </div>
+            <div className="col-start-2 col-end-3 flex flex-1 flex-col items-center">
+              {rank2 && (
+                <div
+                  className={classNames(
+                    'text-base font-medium whitespace-nowrap',
+                    rankHref1 ? 'underline' : '',
+                  )}
+                >
+                  <Ranking
+                    tags={[productType]}
+                    params={{
+                      rank: rankFormatted2,
+                      rankHref: rankHref2,
+                      className: 'text-primary',
+                    }}
+                  />
+                </div>
+              )}
+            </div>
           </div>
-        </div>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+    </ContentContext.Provider>
   );
 };
 
 export const Title = compileContentComponent(
   {
     tags: [ProductRatingType.PerformanceRating],
-    component: (_props) => <>Performance Rating</>,
+    component: (_props) => <>Performance</>,
   },
   {
     tags: [ProductRatingType.ValueRating],
-    component: (_props) => <>Value Rating</>,
+    component: (_props) => <>Performance per dollar</>,
   },
 );
 
-export const Description1 = compileContentComponent(
+export const Description = compileContentComponent(
   // Performance
   {
-    tags: [ProductRatingType.PerformanceRating, ProductType.Cpu],
-    component: (_props) => (
-      <p>
-        This rating is based on a combination of CPU benchmarks. It can have a
-        max score of 100. Higher is better.
-      </p>
-    ),
-  },
-  {
-    tags: [ProductRatingType.PerformanceRating, ProductType.Gpu],
-    component: (_props) => (
-      <p>
-        This rating is based on a combination of GPU benchmarks. It can a max
-        score of 100. Higher is better.
-      </p>
-    ),
-  },
-  // Value
-  {
-    tags: [ProductRatingType.ValueRating],
-    component: (_props) => (
-      <p>
-        This rating is based on the performance per dollar (MSRP). It can have a
-        max value of 100. Higher is better.
-      </p>
-    ),
-  },
-);
-
-export const Description2 = compileContentComponent(
-  // Performance
-  {
-    tags: [ProductRatingType.PerformanceRating, BetterWorseSame.Better],
-    deps: ['name1', 'name2', 'percentDiff'],
+    tags: [ProductRatingType.PerformanceRating],
+    deps: ['betterName', 'worseName', 'percentDiff'],
     component: (props) => (
       <p>
-        The {props.name1} has approximately {props.percentDiff}% better
-        performance than the {props.name2}.
+        The {props.betterName} has {props.percentDiff}% better performance than
+        the {props.worseName}.
       </p>
     ),
   },
   {
-    tags: [ProductRatingType.PerformanceRating, BetterWorseSame.Worse],
-    deps: ['name1', 'name2', 'percentDiff'],
-    component: (props) => (
-      <p>
-        The {props.name1} has approximately {props.percentDiff}% less
-        performance than the {props.name2}.
-      </p>
-    ),
-  },
-  {
-    tags: [ProductRatingType.PerformanceRating, BetterWorseSame.Same],
+    tags: [ProductRatingType.PerformanceRating, 'SAME_RATING'],
     deps: ['name1', 'name2'],
     component: (props) => (
       <p>
@@ -284,38 +308,28 @@ export const Description2 = compileContentComponent(
     ),
   },
   {
-    tags: [ProductRatingType.PerformanceRating],
-    deps: ['name1', 'name2'],
+    tags: [ProductRatingType.PerformanceRating, 'NOT_RATED'],
+    deps: [],
     component: (props) => (
       <p>
-        We do not have enough data to compare the performance ratings of{' '}
+        We do not have enough data to compare the benchmark performance of the{' '}
         {props.name1} and {props.name2}.
       </p>
     ),
   },
   // Value
   {
-    tags: [ProductRatingType.ValueRating, BetterWorseSame.Better],
-    deps: ['name1', 'name2', 'percentDiff'],
+    tags: [ProductRatingType.ValueRating],
+    deps: ['betterName', 'worseName', 'percentDiff'],
     component: (props) => (
       <p>
-        The {props.name1} has approximately {props.percentDiff}% better
-        performance per dollar (MSRP) than the {props.name2}.
+        The {props.betterName} has {props.percentDiff}% better performance per
+        dollar (MSRP) than the {props.worseName}.
       </p>
     ),
   },
   {
-    tags: [ProductRatingType.ValueRating, BetterWorseSame.Worse],
-    deps: ['name1', 'name2', 'percentDiff'],
-    component: (props) => (
-      <p>
-        The {props.name1} has approximately {props.percentDiff}% less
-        performance per dollar (MSRP) than the {props.name2}.
-      </p>
-    ),
-  },
-  {
-    tags: [ProductRatingType.ValueRating, BetterWorseSame.Same],
+    tags: [ProductRatingType.ValueRating, 'SAME_RATING'],
     deps: ['name1', 'name2'],
     component: (props) => (
       <p>
@@ -325,12 +339,12 @@ export const Description2 = compileContentComponent(
     ),
   },
   {
-    tags: [ProductRatingType.ValueRating],
+    tags: [ProductRatingType.ValueRating, 'NOT_RATED'],
     deps: ['name1', 'name2'],
     component: (props) => (
       <p>
-        We do not have enough data to compare the value ratings of {props.name1}{' '}
-        and {props.name2}.
+        We do not have enough data to compare the performance per dollar of the{' '}
+        {props.name1} and {props.name2}.
       </p>
     ),
   },

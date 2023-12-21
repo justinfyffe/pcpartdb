@@ -4,8 +4,8 @@ import { ProductBenchmark } from './benchmarks';
 import { CpuFieldKey, CpuFields, ListCpusFilter } from './cpu';
 import { GpuFieldKey, GpuFields, ListGpusFilter } from './gpu';
 import { ProductImage } from './images';
-import { ProductRank } from './ranks';
-import { RelatedProduct } from './related';
+import { ProductRanks } from './ranks';
+import { RelatedProducts } from './related';
 import { ProductSource } from './sources';
 
 export enum ProductType {
@@ -44,15 +44,17 @@ export interface Product {
   automatedAt?: number;
 
   fields?: ProductFields;
+
   benchmarks?: ProductBenchmark[];
-  ranks?: ProductRank[];
   sources?: ProductSource[];
   updates?: ProductUpdate[];
   images?: ProductImage[];
-  relatedProducts?: RelatedProduct[];
   relatedAutomationSources?: AutomationSource[];
   parent?: Product;
   children?: Product[];
+
+  ranks?: ProductRanks;
+  relatedProducts?: RelatedProducts;
 }
 
 export type ProductComparison = [Product, Product];
@@ -129,15 +131,6 @@ export enum ProductionStatus {
 export type ListProductsFilter = ListCpusFilter | ListGpusFilter;
 export interface ListProductsQuery extends ListQuery<ListProductsFilter> {}
 
-export interface RelatedProducts {
-  products: Product[];
-}
-
 export interface RelatedProductComparisons {
   comparisons: ProductComparison[];
-}
-
-export interface ProductScoreCalculations {
-  performanceRating?: number;
-  performancePerMsrp?: number;
 }

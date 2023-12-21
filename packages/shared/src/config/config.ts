@@ -1,4 +1,4 @@
-import { User } from '../user';
+import { User, UserSettings } from '../user';
 
 export interface Config {
   env?: string;
@@ -10,4 +10,5 @@ export interface Config {
   requireCookieConsent?: boolean;
   cookieConsent?: boolean;
   userCountry?: string;
+  userSettings?: UserSettings;
 }

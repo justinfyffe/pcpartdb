@@ -1,7 +1,7 @@
 import { formatProductName } from '@pcpartdb/shared';
 import { ProductSummary } from 'packages/website/src/client/product/components/ProductSummary/ProductSummary';
 import React, { FunctionComponent, useContext } from 'react';
-import { ComparePageContext } from '../../context/ComparePageContext';
+import { ComparePageContext } from '../../context/ComparePageContextProvider';
 
 export const Overview: FunctionComponent = () => {
   const {

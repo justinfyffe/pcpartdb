@@ -13,7 +13,7 @@ export type ProductEntity = db.Product & {
   cpuFields?: CpuFieldsEntity;
   gpuFields?: GpuFieldsEntity;
   benchmarks?: ProductBenchmarkEntity[];
-  ranks?: ProductRankEntity[];
+  ranks?: ProductRankEntity;
   sources?: ProductSourceEntity[];
   updates?: ProductUpdateEntity[];
   images?: ProductImageEntity[];

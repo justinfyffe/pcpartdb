@@ -27,10 +27,7 @@ import {
 import { PerformanceAndValue } from './components/PerformanceAndValue/PerformanceAndValue';
 import { RelatedComparisons } from './components/Related/RelatedComparisons';
 import { RelatedGpus } from './components/Related/RelatedGpus';
-import {
-  createViewPageContext,
-  ViewPageContext,
-} from './context/ViewPageContext';
+import { ViewPageContextProvider } from './context/ViewPageContextProvider';
 
 export const ViewGpuPage = (props: ViewGpuViewModel & { config: Config }) => {
   const { config, ...viewModel } = props;
@@ -40,7 +37,6 @@ export const ViewGpuPage = (props: ViewGpuViewModel & { config: Config }) => {
 
   const isRetailModel = gpu.parent != null;
 
-  const context = useMemo(() => createViewPageContext(viewModel), [viewModel]);
   const chipset = useMemo(() => getGpuChipset(gpu), [gpu]);
   const chipsetShortName = useMemo(
     () => formatProductName(chipset, { company: false }),
@@ -77,7 +73,7 @@ export const ViewGpuPage = (props: ViewGpuViewModel & { config: Config }) => {
   );
 
   return (
-    <ViewPageContext.Provider value={context}>
+    <ViewPageContextProvider viewModel={viewModel}>
       <Seo
         title={seoTitle}
         keywords={seoKeywords}
@@ -105,7 +101,7 @@ export const ViewGpuPage = (props: ViewGpuViewModel & { config: Config }) => {
             />
           </section>
 
-          <article className="md:min-w-full flex-1 flex flex-col gap-8">
+          <article className="flex-1 flex flex-col gap-8 max-w-full">
             <Highlights />
             <Overview />
             <GeneralInfo />
@@ -118,6 +114,6 @@ export const ViewGpuPage = (props: ViewGpuViewModel & { config: Config }) => {
           </article>
         </div>
       </WebsiteLayout>
-    </ViewPageContext.Provider>
+    </ViewPageContextProvider>
   );
 };

@@ -1,16 +1,16 @@
 import { Product } from '../types';
 
 export enum RelatedProductType {
-  PerformanceRating = 'PERFORMANCE_RATING',
-  PerformancePerMsrp = 'PERFORMANCE_PER_MSRP',
+  Performance = 'performance',
+  Value = 'value',
 }
 
-export interface RelatedProduct {
-  id?: number;
-  productId?: number;
+export type RelatedProducts = Partial<Record<string, Partial<Product>[]>>;
 
-  type: RelatedProductType;
+export interface RelatedProduct {
+  productId?: number;
   relatedProductId: number;
+  relatedProductKey: string;
 
   relatedProduct?: Partial<Product>;
 }

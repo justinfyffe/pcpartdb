@@ -14,7 +14,7 @@ import {
   Tr,
 } from 'packages/website/src/client/shared/components/Table/Table';
 import React, { FunctionComponent, useContext, useMemo } from 'react';
-import { ViewPageContext } from '../../context/ViewPageContext';
+import { ViewPageContext } from '../../context/ViewPageContextProvider';
 
 interface RetailModelsTableProps {
   className?: string;
@@ -53,7 +53,7 @@ export const RetailModelsTable: FunctionComponent<RetailModelsTableProps> = (
 
 interface RetailModelsTableRowProps {
   currentRetailModel: GpuProduct;
-  retailModel: GpuProduct;
+  retailModel: Partial<GpuProduct>;
 }
 
 const RetailModelsTableRow: FunctionComponent<RetailModelsTableRowProps> = (

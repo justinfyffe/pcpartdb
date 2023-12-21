@@ -1,16 +1,19 @@
 import {
   formatProductName,
   getListCpusPath,
+  getProductPerformanceRank,
+  getProductValueRank,
   LIST_CPUS_PRESETS,
-  productRankValue,
+  productBenchmarkValue,
+  productBenchmarkValuePerMsrp,
   ProductType,
-  RankKey,
 } from '@pcpartdb/shared';
 import { CompareProductRatingCard } from 'packages/website/src/client/product/components/ProductRatingCard/CompareProductRatingCard';
 import { ProductRatingType } from 'packages/website/src/client/product/components/ProductRatingCard/types';
 import { classNames } from 'packages/website/src/client/shared/ui/classNames';
+import { usePreferredBenchmark } from 'packages/website/src/client/user/hooks/usePreferredBenchmark';
 import React, { FunctionComponent, useContext, useMemo } from 'react';
-import { ComparePageContext } from '../../context/ComparePageContext';
+import { ComparePageContext } from '../../context/ComparePageContextProvider';
 
 interface PerformanceAndValueChartsProps {
   className?: string;
@@ -20,9 +23,12 @@ export const PerformanceAndValueCharts: FunctionComponent<
   PerformanceAndValueChartsProps
 > = (props) => {
   const { className } = props;
-  const { comparison } = useContext(ComparePageContext);
+  const preferredBenchmark = usePreferredBenchmark(ProductType.Cpu);
+  const { comparison, contentData, updateViewModel } =
+    useContext(ComparePageContext);
   const cpu1 = comparison[0];
   const cpu2 = comparison[1];
+  const { bestPerformanceCpu, bestValueCpu } = contentData;
 
   const performanceRankHref = useMemo(
     () => getListCpusPath(LIST_CPUS_PRESETS['best-performance']),
@@ -44,36 +50,46 @@ export const PerformanceAndValueCharts: FunctionComponent<
     <div className={classNames('flex flex-row md:flex-col gap-4', className)}>
       <CompareProductRatingCard
         productType={ProductType.Cpu}
+        productIds={[cpu1.id, cpu2.id]}
         ratingType={ProductRatingType.PerformanceRating}
         names={[name1, name2]}
-        maxRating={100}
-        ratingFields={[
-          cpu1.fields?.performanceRating,
-          cpu2.fields?.performanceRating,
+        maxRating={productBenchmarkValue(
+          bestPerformanceCpu,
+          preferredBenchmark,
+        )}
+        ratings={[
+          productBenchmarkValue(cpu1, preferredBenchmark),
+          productBenchmarkValue(cpu2, preferredBenchmark),
         ]}
         ranks={[
-          productRankValue(cpu1, RankKey.PerformanceRating),
-          productRankValue(cpu2, RankKey.PerformanceRating),
+          getProductPerformanceRank(cpu1, preferredBenchmark),
+          getProductPerformanceRank(cpu2, preferredBenchmark),
         ]}
         rankHrefs={[performanceRankHref, performanceRankHref]}
         className="flex-1"
+        onBenchmarkChange={updateViewModel}
       />
 
       <CompareProductRatingCard
         productType={ProductType.Cpu}
+        productIds={[cpu1.id, cpu2.id]}
         ratingType={ProductRatingType.ValueRating}
         names={[name1, name2]}
-        maxRating={100}
-        ratingFields={[
-          cpu1.fields?.performancePerMsrp,
-          cpu2.fields?.performancePerMsrp,
+        maxRating={productBenchmarkValuePerMsrp(
+          bestValueCpu,
+          preferredBenchmark,
+        )}
+        ratings={[
+          productBenchmarkValuePerMsrp(cpu1, preferredBenchmark),
+          productBenchmarkValuePerMsrp(cpu2, preferredBenchmark),
         ]}
         ranks={[
-          productRankValue(cpu1, RankKey.PerformancePerMsrp),
-          productRankValue(cpu2, RankKey.PerformancePerMsrp),
+          getProductValueRank(cpu1, preferredBenchmark),
+          getProductValueRank(cpu2, preferredBenchmark),
         ]}
         rankHrefs={[valueRankHref, valueRankHref]}
         className="flex-1"
+        onBenchmarkChange={updateViewModel}
       />
     </div>
   );

@@ -5,6 +5,7 @@ type Value = {
   name: string;
   value: React.ReactElement | string;
   bold?: boolean;
+  extra?: React.ReactElement | string;
 };
 
 interface ProductHighlightComparisonProps {
@@ -23,7 +24,7 @@ export const ProductHighlightComparison = (
   return (
     <div
       className={classNames(
-        'bg-light-shades flex flex-col px-4 py-1 rounded shadow items-center gap-2',
+        'bg-light-shades flex flex-col px-4 py-2 rounded shadow items-center gap-2',
         className,
       )}
     >
@@ -32,34 +33,24 @@ export const ProductHighlightComparison = (
           <div className="mr-1">{cloneElement(icon, { className: 'w-5' })}</div>
         )}
 
-        <div className="font-medium md:text-base text-xl">{label}</div>
+        <div className="font-medium md:text-base text-lg">{label}</div>
       </div>
 
-      <div
-        className={classNames(
-          'ml-auto grid grid-cols-[auto_auto] grid-rows-2 gap-x-2 items-center',
-          className,
-        )}
-      >
-        {values?.map(({ name, value, bold }, i) => (
+      <div className="w-full flex flex-wrap justify-evenly gap-4">
+        {values?.map(({ name, value, bold, extra }, i) => (
           <React.Fragment key={`idx-${i}`}>
             <div
               className={classNames(
-                'text-right text-ellipsis',
+                'flex flex-col items-center justify-between gap-0.5',
                 bold ? 'font-bold' : '',
                 className,
               )}
             >
-              {name}:
-            </div>
-            <div
-              className={classNames(
-                'text-right',
-                bold ? 'font-bold' : '',
-                className,
-              )}
-            >
-              {value}
+              <span className="text-base">{name}</span>
+              <div className="text-base flex gap-2 justify-center items-center">
+                {value}
+                {extra != null && <span className="text-xs">{extra}</span>}
+              </div>
             </div>
           </React.Fragment>
         ))}

@@ -4,6 +4,7 @@ export * from './common';
 export * from './config';
 export * from './error';
 export * from './format';
+export * from './http';
 export * from './image';
 export * from './product';
 export * from './routes';

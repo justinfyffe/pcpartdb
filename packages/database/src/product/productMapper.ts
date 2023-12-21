@@ -5,6 +5,7 @@ import {
   ProductFieldKey,
   ProductFields,
   ProductType,
+  RelatedProducts,
 } from '@pcpartdb/shared';
 import { mapToAutomationSourceDtos } from '../mappers';
 import {
@@ -21,30 +22,27 @@ import {
   mapToProductUpdateDtos,
   ProductEntity,
 } from '.';
-import {
-  mapToProductRankDtos,
-  mapToProductRankEntity,
-} from './productRankMapper';
-import {
-  mapToRelatedProductDtos,
-  mapToRelatedProductEntity,
-} from './relatedProductMapper';
 
 interface MapToDtoOptions {
   fields?: Set<ProductFieldKey>;
   parentFields?: Set<ProductFieldKey>;
   childrenFields?: Set<ProductFieldKey>;
   relatedFields?: Set<ProductFieldKey>;
+
   includeParent?: boolean;
   includeChildren?: boolean;
   includeBenchmarks?: boolean;
   includeRanks?: boolean;
-  includeRelated?: boolean;
+
   includeAutomation?: boolean;
   includeSources?: boolean;
   includeUpdates?: boolean;
   includeImages?: boolean;
   includeSummary?: boolean;
+
+  includeRelated?: boolean;
+  includeRelatedBenchmarks?: boolean;
+  includeRelatedRanks?: boolean;
 }
 
 export async function mapToProductDto(
@@ -57,7 +55,6 @@ export async function mapToProductDto(
 
   const includeParent = options?.includeParent ?? false;
   const includeChildren = options?.includeChildren ?? false;
-  const includeBenchmarks = options?.includeBenchmarks ?? false;
   const includeRanks = options?.includeRanks ?? false;
   const includeImages = options?.includeImages ?? false;
   const includeSources = options?.includeSources ?? false;
@@ -65,6 +62,7 @@ export async function mapToProductDto(
   const includeAutomation = options?.includeAutomation ?? false;
   const includeRelated = options?.includeRelated ?? false;
   const includeSummary = options?.includeSummary ?? false;
+  const includeBenchmarks = options?.includeBenchmarks ?? false;
 
   let fields: ProductFields;
   switch (entity.productType) {
@@ -80,6 +78,10 @@ export async function mapToProductDto(
     ? await mapToProductDto(entity.parent, {
         ...options,
         fields: options?.parentFields,
+        includeBenchmarks: options?.includeBenchmarks,
+        includeRelated: options?.includeRelated,
+        includeRelatedBenchmarks: options?.includeRelatedBenchmarks,
+        includeRelatedRanks: options?.includeRelatedRanks,
       })
     : undefined;
   const children = includeChildren
@@ -90,9 +92,6 @@ export async function mapToProductDto(
     : undefined;
   const benchmarks = includeBenchmarks
     ? mapToProductBenchmarkDtos(entity.benchmarks ?? [])
-    : undefined;
-  const ranks = includeRanks
-    ? mapToProductRankDtos(entity.ranks ?? [])
     : undefined;
   const images = includeImages
     ? mapToProductImageDtos(entity.images ?? [])
@@ -106,12 +105,23 @@ export async function mapToProductDto(
   const relatedAutomationSources = includeAutomation
     ? await mapToAutomationSourceDtos(entity.relatedAutomationSources ?? [])
     : undefined;
-  const relatedProducts = includeRelated
-    ? await mapToRelatedProductDtos(
-        entity.relatedProducts ?? entity.parent?.relatedProducts ?? [],
-        { fields: options?.relatedFields },
-      )
-    : undefined;
+
+  const ranks = includeRanks ? entity.ranks?.ranks : undefined;
+  let relatedProducts: RelatedProducts = undefined;
+  if (includeRelated) {
+    relatedProducts = {};
+    for (const rp of entity.relatedProducts) {
+      const key = rp.relatedProductKey;
+      relatedProducts[key] = relatedProducts[key] || [];
+
+      const relatedProduct = await mapToProductDto(rp.relatedProduct, {
+        fields: options?.relatedFields,
+        includeBenchmarks: options?.includeRelatedBenchmarks,
+        includeRanks: options?.includeRelatedRanks,
+      });
+      relatedProducts[key].push(relatedProduct);
+    }
+  }
 
   return {
     id: entity.id,
@@ -175,15 +185,10 @@ export function mapToProductEntity(dto: Product) {
     dto.benchmarks?.map((benchmark) =>
       mapToProductBenchmarkEntity(benchmark),
     ) || [];
-  const ranks = dto.ranks?.map((rank) => mapToProductRankEntity(rank)) || [];
   const sources =
     dto.sources?.map((source) => mapToProductSourceEntity(source)) || [];
   const images =
     dto.images?.map((image) => mapToProductImageEntity(image)) || [];
-  const relatedProducts =
-    dto.relatedProducts?.map((relatedProduct) =>
-      mapToRelatedProductEntity(relatedProduct),
-    ) || [];
 
   return {
     id: undefined,
@@ -206,9 +211,7 @@ export function mapToProductEntity(dto: Product) {
     cpuFields,
     gpuFields,
     benchmarks,
-    ranks,
     sources,
     images,
-    relatedProducts,
   } as ProductEntity;
 }

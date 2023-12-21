@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useContext } from 'react';
-import { ViewPageContext } from '../../../context/ViewPageContext';
+import { ViewPageContext } from '../../../context/ViewPageContextProvider';
 import { BenchmarksIntro } from './BenchmarksIntro';
 import { BenchmarkTables } from './BenchmarksTable';
 

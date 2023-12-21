@@ -1,7 +1,7 @@
 import { ContentContext } from 'packages/website/src/client/shared/content/ContentContext';
 import { compileContentComponent } from 'packages/website/src/client/shared/content/utils';
 import React, { useContext } from 'react';
-import { ViewPageContext } from '../../../context/ViewPageContext';
+import { ViewPageContext } from '../../../context/ViewPageContextProvider';
 
 export const FeatureIntroParagraph = compileContentComponent({
   deps: [],

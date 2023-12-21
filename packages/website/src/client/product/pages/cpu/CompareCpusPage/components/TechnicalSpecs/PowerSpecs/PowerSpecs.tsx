@@ -1,6 +1,6 @@
 import { hasProductFieldFormattedValue } from '@pcpartdb/shared';
 import React, { FunctionComponent, useContext } from 'react';
-import { ComparePageContext } from '../../../context/ComparePageContext';
+import { ComparePageContext } from '../../../context/ComparePageContextProvider';
 import { PowerIntro } from './PowerIntro';
 import { PowerTable } from './PowerTable';
 

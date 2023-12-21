@@ -1,21 +1,24 @@
 import {
   formatProductName,
   getGpuChipset,
+  getProductValueRank,
   getViewGpuPath,
   GpuProduct,
-  productFieldFormattedValue,
-  productFieldRawValue,
+  productBenchmarkValuePerMsrp,
+  ProductType,
 } from '@pcpartdb/shared';
-import { ProductCustomRow } from 'packages/website/src/client/product/components/ProductCustomRow/ProductCustomRow';
 import {
   Table,
   TBody,
+  Td,
   Th,
   THead,
   Tr,
 } from 'packages/website/src/client/shared/components/Table/Table';
+import { classNames } from 'packages/website/src/client/shared/ui/classNames';
+import { usePreferredBenchmark } from 'packages/website/src/client/user/hooks/usePreferredBenchmark';
 import React, { FunctionComponent, useContext, useMemo } from 'react';
-import { ViewPageContext } from '../../../context/ViewPageContext';
+import { ViewPageContext } from '../../../context/ViewPageContextProvider';
 
 interface ValueTableProps {
   className?: string;
@@ -29,8 +32,9 @@ export const ValueTable: FunctionComponent<ValueTableProps> = (props) => {
     <Table border responsive className={className}>
       <THead>
         <Tr>
+          <Th className="text-center">Rank</Th>
           <Th>GPU</Th>
-          <Th className="text-right">Value Rating</Th>
+          <Th className="text-right">Performance Per Dollar</Th>
           <Th className="text-right">Relative Value</Th>
         </Tr>
       </THead>
@@ -49,31 +53,40 @@ export const ValueTable: FunctionComponent<ValueTableProps> = (props) => {
 
 interface ValueTableRowProps {
   baselineGpu: GpuProduct;
-  relativeGpu: GpuProduct;
+  relativeGpu: Partial<GpuProduct>;
 }
 
 const ValueTableRow: FunctionComponent<ValueTableRowProps> = (props) => {
   const { baselineGpu, relativeGpu } = props;
+  const preferredBenchmark = usePreferredBenchmark(ProductType.Gpu);
 
   const relativeValuePct = useMemo(() => {
-    const baseline = productFieldRawValue(
-      baselineGpu.fields?.performancePerMsrp,
+    const baseline = productBenchmarkValuePerMsrp(
+      baselineGpu,
+      preferredBenchmark,
     );
-    const relatedValue = productFieldRawValue(
-      relativeGpu.fields?.performancePerMsrp,
+    const relatedValue = productBenchmarkValuePerMsrp(
+      relativeGpu,
+      preferredBenchmark,
     );
 
     return Number(
       ((relatedValue / baseline) * 100).toFixed(0),
     ).toLocaleString();
-  }, [
-    baselineGpu.fields?.performancePerMsrp,
-    relativeGpu.fields?.performancePerMsrp,
-  ]);
+  }, [baselineGpu, preferredBenchmark, relativeGpu]);
 
   const rating = useMemo(
-    () => productFieldFormattedValue(relativeGpu.fields?.performancePerMsrp),
-    [relativeGpu],
+    () =>
+      productBenchmarkValuePerMsrp(
+        relativeGpu,
+        preferredBenchmark,
+      ).toLocaleString('en-US', { maximumFractionDigits: 2 }),
+    [preferredBenchmark, relativeGpu],
+  );
+
+  const rank = useMemo(
+    () => getProductValueRank(relativeGpu, preferredBenchmark).toLocaleString(),
+    [preferredBenchmark, relativeGpu],
   );
 
   const href = useMemo(() => getViewGpuPath(relativeGpu), [relativeGpu]);
@@ -83,11 +96,17 @@ const ValueTableRow: FunctionComponent<ValueTableRowProps> = (props) => {
   );
 
   return (
-    <ProductCustomRow
-      label={<a href={href}>{gpuName}</a>}
-      values={[rating, `${relativeValuePct}%`]}
-      highlight={baselineGpu.id === relativeGpu.id ? 'primary' : null}
-      valueClassName="text-right"
-    />
+    <Tr
+      className={classNames(
+        baselineGpu.id === relativeGpu.id ? 'font-bold !bg-indigo-100' : '',
+      )}
+    >
+      <Td className="text-center">{rank}</Td>
+      <Td className="text-left">
+        <a href={href}>{gpuName}</a>
+      </Td>
+      <Td className="text-right">{rating}</Td>
+      <Td className="text-right">{relativeValuePct}%</Td>
+    </Tr>
   );
 };

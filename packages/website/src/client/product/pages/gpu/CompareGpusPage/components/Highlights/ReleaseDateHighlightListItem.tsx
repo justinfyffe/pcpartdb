@@ -5,7 +5,7 @@ import {
 } from '@pcpartdb/shared';
 import { ProductHighlightComparison } from 'packages/website/src/client/product/components/ProductHighlightComparison/ProductHighlightComparison';
 import React, { FunctionComponent, useContext, useMemo } from 'react';
-import { ComparePageContext } from '../../context/ComparePageContext';
+import { ComparePageContext } from '../../context/ComparePageContextProvider';
 
 interface ReleaseDateHighlightListItemProps {
   className?: string;

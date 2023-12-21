@@ -1,22 +1,29 @@
-import { formatProductName, getGpuChipset } from '@pcpartdb/shared';
+import {
+  formatProductName,
+  getGpuChipset,
+  getProductBenchmarkShortName,
+  ProductType,
+} from '@pcpartdb/shared';
 import { ContentContext } from 'packages/website/src/client/shared/content/ContentContext';
 import { compileContentComponent } from 'packages/website/src/client/shared/content/utils';
+import { usePreferredBenchmark } from 'packages/website/src/client/user/hooks/usePreferredBenchmark';
 import React, { useContext, useMemo } from 'react';
-import { ComparePageContext } from '../../../context/ComparePageContext';
+import { ComparePageContext } from '../../../context/ComparePageContextProvider';
 
 export const ValueIntroSentence1 = compileContentComponent({
   component: (props) => (
     <>
-      Compare {props.chipsetName1} and {props.chipsetName2}&apos;s value with
-      similar GPUs. Relative value provides insight into which GPUs give the
-      better bang for your buck. This data is based on chipset performance and
-      MSRP.
+      Compare {props.chipsetName1} and {props.chipsetName2}&apos;s performance
+      per dollar with similar GPUs. Relative value provides insight into which
+      GPUs give the better bang for your buck. This data is based on{' '}
+      {props.preferredBenchmarkName} benchmark performance and MSRP.
     </>
   ),
 });
 
 export const ValueIntro = () => {
   const { comparison } = useContext(ComparePageContext);
+  const preferredBenchmark = usePreferredBenchmark(ProductType.Gpu);
   const [gpu1, gpu2] = comparison;
   const [chipset1, chipset2] = [getGpuChipset(gpu1), getGpuChipset(gpu2)];
 
@@ -29,10 +36,13 @@ export const ValueIntro = () => {
     [chipset2],
   );
 
-  const context = useMemo(
-    () => ({ params: { chipsetName1, chipsetName2 } }),
-    [chipsetName1, chipsetName2],
-  );
+  const context = useMemo(() => {
+    const preferredBenchmarkName =
+      getProductBenchmarkShortName(preferredBenchmark);
+    return {
+      params: { chipsetName1, chipsetName2, preferredBenchmarkName },
+    };
+  }, [chipsetName1, chipsetName2, preferredBenchmark]);
 
   return (
     <ContentContext.Provider value={context}>

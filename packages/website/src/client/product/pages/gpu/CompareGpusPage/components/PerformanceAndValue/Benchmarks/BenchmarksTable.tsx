@@ -17,7 +17,7 @@ import { Tab } from 'packages/website/src/client/shared/components/Tabs/Tab';
 import { Tabs } from 'packages/website/src/client/shared/components/Tabs/Tabs';
 import { classNames } from 'packages/website/src/client/shared/ui/classNames';
 import React, { FunctionComponent, useContext, useMemo } from 'react';
-import { ComparePageContext } from '../../../context/ComparePageContext';
+import { ComparePageContext } from '../../../context/ComparePageContextProvider';
 
 const BENCHMARKS = [
   {
@@ -25,10 +25,13 @@ const BENCHMARKS = [
     benchmarks: [
       BenchmarkKey._3dMark_Timespy_Graphics,
       BenchmarkKey._3dMark_Timespy_Score,
+      BenchmarkKey._3dMark_Cloud_Gate_Graphics,
       BenchmarkKey._3dMark_Fire_Strike_Standard_Graphics,
       BenchmarkKey._3dMark_Night_Raid_Graphics,
       BenchmarkKey._3dMark_11_Performance_Score,
+      BenchmarkKey.Cinebench_R15_OpenGl_64_Bit,
       BenchmarkKey.PassMark_G3dMark,
+      BenchmarkKey.PassMark_G2dMark,
       BenchmarkKey.UnigineHeaven_3_0_Dx_11,
       BenchmarkKey.UnigineHeaven_3_0_OpenGl,
     ],
@@ -230,7 +233,6 @@ const BenchmarkTab: FunctionComponent<BenchmarkTabProps> = (props) => {
           {benchmarks.map((benchmark) => (
             <ProductBenchmarkRow
               key={benchmark}
-              indent
               benchmarks={[
                 getProductBenchmark(gpu1, benchmark),
                 getProductBenchmark(gpu2, benchmark),

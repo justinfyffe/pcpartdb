@@ -74,8 +74,10 @@ function formatAction(action: AutomationActionType) {
       return 'Create GPU';
     case AutomationActionType.UpdateGpu:
       return 'Update GPU';
-    case AutomationActionType.UpdateProductCalculations:
-      return 'Update Performance Scores';
+    case AutomationActionType.UpdateRanks:
+      return 'Update Ranks';
+    case AutomationActionType.UpdateRelatedProducts:
+      return 'Update Related Products';
     default:
       return 'Unknown';
   }

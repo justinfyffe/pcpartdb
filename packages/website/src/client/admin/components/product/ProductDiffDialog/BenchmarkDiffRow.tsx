@@ -2,7 +2,7 @@ import {
   BenchmarkKey,
   compareProductFields,
   getProductBenchmark,
-  getProductBenchmarkLabel,
+  getProductBenchmarkName,
   ProductDiff,
   ProductField,
 } from '@pcpartdb/shared';
@@ -48,7 +48,7 @@ export const BenchmarkDiffRow: FunctionComponent<BenchmarkDiffRowProps> = (
   }, [after, before]);
 
   const label = useMemo(() => {
-    return getProductBenchmarkLabel(diffBenchmarkKey);
+    return getProductBenchmarkName(diffBenchmarkKey);
   }, [diffBenchmarkKey]);
 
   const beforeText = useMemo(() => {

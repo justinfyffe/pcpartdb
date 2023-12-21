@@ -1,13 +1,10 @@
-import {
-  ProductFieldKey,
-  RelatedProduct,
-  RelatedProductType,
-} from '@pcpartdb/shared';
+import { ProductFieldKey, RelatedProduct } from '@pcpartdb/shared';
 import { mapToProductDto } from './productMapper';
 import { RelatedProductEntity } from './RelatedProductEntity';
 
 interface MapToDtoOptions {
   fields?: Set<ProductFieldKey>;
+  includeBenchmarks?: boolean;
 }
 
 export async function mapToRelatedProductDto(
@@ -19,12 +16,13 @@ export async function mapToRelatedProductDto(
   }
 
   return {
-    type: entity.type as RelatedProductType,
     productId: entity.productId,
     relatedProductId: entity.relatedProductId,
+    relatedProductKey: entity.relatedProductKey,
 
     relatedProduct: await mapToProductDto(entity.relatedProduct, {
       fields: options?.fields,
+      includeBenchmarks: options?.includeBenchmarks,
     }),
   } as RelatedProduct;
 }
@@ -50,8 +48,14 @@ export function mapToRelatedProductEntity(dto: RelatedProduct) {
   }
 
   return {
-    type: dto.type,
     productId: undefined,
     relatedProductId: dto.relatedProductId,
+    relatedProductKey: dto.relatedProductKey,
   } as RelatedProductEntity;
+}
+
+export function mapToRelatedProductEntities(dtos: RelatedProduct[]) {
+  return dtos
+    .map((dto) => mapToRelatedProductEntity(dto))
+    .filter((e) => e != null);
 }

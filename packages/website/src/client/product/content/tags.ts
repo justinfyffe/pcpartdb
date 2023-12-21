@@ -1,9 +1,12 @@
 import {
+  BenchmarkKey,
   CpuProduct,
   formatGpuDimensions,
+  getProductPerformanceRank,
   GpuProduct,
+  hasBenchmarkPerformanceRank,
+  hasBenchmarkValueRank,
   hasProductFieldRawValue,
-  hasProductRank,
   isCpuProduct,
   isGpuChipset,
   isGpuProduct,
@@ -13,8 +16,6 @@ import {
   productFieldFormattedValue,
   productFieldRawValue,
   ProductionStatus,
-  productRankValue,
-  RankKey,
 } from '@pcpartdb/shared';
 import { ContentTags } from 'packages/website/src/client/shared/content/types';
 
@@ -42,7 +43,6 @@ export enum RankTag {
   BestPerformance = 'RANK__BEST_PERFORMANCE',
 
   Performance = 'RANK__PERFORMANCE',
-  PerformanceForMarketSegment = 'RANK__PERFORMANCE_FOR_MARKET_SEGMENT',
   Value = 'RANK__VALUE',
 }
 
@@ -86,7 +86,13 @@ export enum SubProductTypeTag {
   GpuRetailModel = 'SUB_PRODUCT_TYPE__GPU_RETAIL_MODEL',
 }
 
-export function buildContentTags(product: Product) {
+export interface BuildContentTagsOptions {
+  preferredBenchmark: BenchmarkKey;
+  product: Product;
+}
+
+export function buildContentTags(options: BuildContentTagsOptions) {
+  const { product, preferredBenchmark } = options;
   const tags: ContentTags = {};
 
   // Market Segment
@@ -126,16 +132,18 @@ export function buildContentTags(product: Product) {
 
   // Ranks
   tags[RankTag.BestPerformance] =
-    productRankValue(product, RankKey.PerformanceRating) === 1;
-  tags[RankTag.Performance] = hasProductRank(
-    product,
-    RankKey.PerformanceRating,
+    getProductPerformanceRank(
+      product?.parent || product,
+      preferredBenchmark,
+    ) === 1;
+  tags[RankTag.Performance] = hasBenchmarkPerformanceRank(
+    product?.parent || product,
+    preferredBenchmark,
   );
-  tags[RankTag.PerformanceForMarketSegment] = hasProductRank(
-    product,
-    RankKey.PerformanceRatingForMarketSegment,
+  tags[RankTag.Value] = hasBenchmarkValueRank(
+    product?.parent || product,
+    preferredBenchmark,
   );
-  tags[RankTag.Value] = hasProductRank(product, RankKey.PerformancePerMsrp);
 
   // Specs
   tags[SpecsTag.Architecture] = hasProductFieldRawValue(

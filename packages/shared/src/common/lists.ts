@@ -1,3 +1,5 @@
+import { BenchmarkKey } from '../product';
+
 export interface ListPagination {
   limit?: number;
   offset?: number;
@@ -19,6 +21,7 @@ export enum ListOrder {
 export interface ListOrderBy {
   sort?: ListSort;
   order?: ListOrder;
+  benchmark?: BenchmarkKey;
 }
 
 export interface ListQuery<TFilter = unknown> {

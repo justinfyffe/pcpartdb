@@ -1,0 +1,4 @@
+#!/bin/bash
+DIRECTORY=$(cd `dirname $0` && pwd)
+
+docker-compose exec -T db psql -U $1 < $2

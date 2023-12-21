@@ -132,9 +132,6 @@ export const productFieldsSchema = Joi.object({
   weight: productFieldSchema.allow(null),
   width: productFieldSchema.allow(null),
 
-  performanceRating: productFieldSchema.allow(null),
-  performancePerMsrp: productFieldSchema.allow(null),
-
   metadata: Joi.any().allow(null),
 });
 
@@ -226,14 +223,15 @@ export const listProductsFilterSchema = Joi.object({
   excludeIds: Joi.array().items(Joi.number()).allow(null),
   isChipset: Joi.boolean().allow(null),
   isRetailModel: Joi.boolean().allow(null),
-  maxPerformanceScore: Joi.number().allow(null),
-  maxValueScore: Joi.number().allow(null),
-  minPerformanceScore: Joi.number().allow(null),
-  minValueScore: Joi.number().allow(null),
+  maxPerformanceScore: Joi.number().allow(null), // TODO: delete
+  maxValueScore: Joi.number().allow(null), // TODO: delete
+  minPerformanceScore: Joi.number().allow(null), // TODO: delete
+  minValueScore: Joi.number().allow(null), // TODO: delete
   performanceRated: Joi.boolean().allow(null),
   segment: Joi.array().items(marketSegmentSchema).allow(null),
   valueRated: Joi.boolean().allow(null),
   year: Joi.array().items(Joi.number()).allow(null),
+  hasReleaseDate: Joi.boolean().allow(null),
 });
 
 export const listProductsRequestSchema = Joi.object({
@@ -276,9 +274,7 @@ export const autocompleteProductsRequestSchema = Joi.object({
 export const scrapeProductRequestSchema = Joi.object({
   productType: productTypeSchema.required(),
   sources: Joi.array().items(productSourceSchema).allow(null),
-}).options({
-  abortEarly: false,
-});
+}).options({ abortEarly: false });
 
 export const listProductUpdatesRequestSchema = Joi.object({
   query: listQuerySchema({

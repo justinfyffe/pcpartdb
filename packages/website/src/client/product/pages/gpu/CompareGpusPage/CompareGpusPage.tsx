@@ -27,10 +27,7 @@ import {
 import { PerformanceAndValue } from './components/PerformanceAndValue/PerformanceAndValue';
 import { RelatedComparisons } from './components/Related/RelatedComparisons';
 import { RelatedGpus } from './components/Related/RelatedGpus';
-import {
-  ComparePageContext,
-  createComparePageContext,
-} from './context/ComparePageContext';
+import { ComparePageContextProvider } from './context/ComparePageContextProvider';
 
 export const CompareGpusPage = (
   props: CompareGpusViewModel & { config: Config },
@@ -45,11 +42,6 @@ export const CompareGpusPage = (
   const shortPageTitle = formatProductComparisonName(comparison, {
     company: false,
   });
-
-  const context = useMemo(
-    () => createComparePageContext(viewModel),
-    [viewModel],
-  );
 
   const shortGpuName1 = useMemo(
     () => formatProductName(gpu1, { company: false, brand: true }),
@@ -99,7 +91,7 @@ export const CompareGpusPage = (
   );
 
   return (
-    <ComparePageContext.Provider value={context}>
+    <ComparePageContextProvider viewModel={viewModel}>
       <Seo
         title={seoTitle}
         keywords={seoKeywords}
@@ -123,7 +115,7 @@ export const CompareGpusPage = (
             />
           </section>
 
-          <article className="flex-1 flex flex-col gap-8">
+          <article className="flex-1 flex flex-col gap-8 max-w-full">
             <Highlights />
             <Overview />
             <GeneralInfo />
@@ -136,6 +128,6 @@ export const CompareGpusPage = (
           </article>
         </div>
       </WebsiteLayout>
-    </ComparePageContext.Provider>
+    </ComparePageContextProvider>
   );
 };

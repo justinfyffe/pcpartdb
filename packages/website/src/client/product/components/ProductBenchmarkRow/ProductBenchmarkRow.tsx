@@ -1,4 +1,4 @@
-import { getProductBenchmarkLabel, ProductBenchmark } from '@pcpartdb/shared';
+import { getProductBenchmarkName, ProductBenchmark } from '@pcpartdb/shared';
 import {
   Td,
   Tr,
@@ -22,7 +22,7 @@ export const ProductBenchmarkRow: FunctionComponent<
   const label = useMemo(() => {
     const benchmarkKey = benchmark1?.benchmarkKey || benchmark2?.benchmarkKey;
 
-    return getProductBenchmarkLabel(benchmarkKey);
+    return getProductBenchmarkName(benchmarkKey);
   }, [benchmark1?.benchmarkKey, benchmark2?.benchmarkKey]);
 
   const benchmarkValues = useMemo(() => {
@@ -33,6 +33,33 @@ export const ProductBenchmarkRow: FunctionComponent<
     () => benchmarkValues.some((value) => value != null),
     [benchmarkValues],
   );
+
+  const diffs = useMemo(() => {
+    const score1 = benchmarkValues[0];
+    const score2 = benchmarkValues[1];
+
+    if (!score1 || !score2) {
+      return [null, null];
+    }
+
+    if (score1 > score2) {
+      return [
+        ((score1 / score2 - 1) * 100).toLocaleString('en-US', {
+          maximumFractionDigits: 2,
+        }),
+        null,
+      ];
+    } else if (score2 > score1) {
+      return [
+        null,
+        ((score2 / score1 - 1) * 100).toLocaleString('en-US', {
+          maximumFractionDigits: 2,
+        }),
+      ];
+    }
+
+    return [null, null];
+  }, [benchmarkValues]);
 
   if (!hasValues) {
     return <></>;
@@ -59,7 +86,10 @@ export const ProductBenchmarkRow: FunctionComponent<
             benchmarks.length === 2 ? 'w-[33%]' : '',
           )}
         >
-          {value?.toLocaleString() ?? '--'}
+          <div className={classNames('flex gap-2 items-center')}>
+            <span>{value?.toLocaleString() ?? '--'}</span>
+            <span className="text-xs">{diffs[i] && <>(+{diffs[i]}%)</>}</span>
+          </div>
         </Td>
       ))}
     </Tr>
