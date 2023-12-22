@@ -24,21 +24,19 @@ import {
 } from '.';
 
 interface MapToDtoOptions {
-  fields?: Set<ProductFieldKey>;
-  parentFields?: Set<ProductFieldKey>;
-  childrenFields?: Set<ProductFieldKey>;
-  relatedFields?: Set<ProductFieldKey>;
+  fields?: ProductFieldKey[];
+  parentFields?: ProductFieldKey[];
+  relatedFields?: ProductFieldKey[];
 
   includeParent?: boolean;
-  includeChildren?: boolean;
-  includeBenchmarks?: boolean;
-  includeRanks?: boolean;
 
   includeAutomation?: boolean;
-  includeSources?: boolean;
-  includeUpdates?: boolean;
+  includeBenchmarks?: boolean;
   includeImages?: boolean;
+  includeRanks?: boolean;
+  includeSources?: boolean;
   includeSummary?: boolean;
+  includeUpdates?: boolean;
 
   includeRelated?: boolean;
   includeRelatedBenchmarks?: boolean;
@@ -54,15 +52,15 @@ export async function mapToProductDto(
   }
 
   const includeParent = options?.includeParent ?? false;
-  const includeChildren = options?.includeChildren ?? false;
-  const includeRanks = options?.includeRanks ?? false;
+
+  const includeAutomation = options?.includeAutomation ?? false;
+  const includeBenchmarks = options?.includeBenchmarks ?? false;
   const includeImages = options?.includeImages ?? false;
   const includeSources = options?.includeSources ?? false;
-  const includeUpdates = options?.includeUpdates ?? false;
-  const includeAutomation = options?.includeAutomation ?? false;
+  const includeRanks = options?.includeRanks ?? false;
   const includeRelated = options?.includeRelated ?? false;
   const includeSummary = options?.includeSummary ?? false;
-  const includeBenchmarks = options?.includeBenchmarks ?? false;
+  const includeUpdates = options?.includeUpdates ?? false;
 
   let fields: ProductFields;
   switch (entity.productType) {
@@ -78,23 +76,18 @@ export async function mapToProductDto(
     ? await mapToProductDto(entity.parent, {
         ...options,
         fields: options?.parentFields,
-        includeBenchmarks: options?.includeBenchmarks,
-        includeRelated: options?.includeRelated,
-        includeRelatedBenchmarks: options?.includeRelatedBenchmarks,
-        includeRelatedRanks: options?.includeRelatedRanks,
       })
     : undefined;
-  const children = includeChildren
-    ? await mapToProductDtos(entity.children, {
-        ...options,
-        fields: options?.childrenFields,
-      })
-    : undefined;
+
   const benchmarks = includeBenchmarks
     ? mapToProductBenchmarkDtos(entity.benchmarks ?? [])
     : undefined;
   const images = includeImages
     ? mapToProductImageDtos(entity.images ?? [])
+    : undefined;
+  const ranks = includeRanks ? entity.ranks?.ranks : undefined;
+  const relatedAutomationSources = includeAutomation
+    ? await mapToAutomationSourceDtos(entity.relatedAutomationSources ?? [])
     : undefined;
   const sources = includeSources
     ? mapToProductSourceDtos(entity.sources ?? [])
@@ -102,11 +95,7 @@ export async function mapToProductDto(
   const updates = includeUpdates
     ? await mapToProductUpdateDtos(entity.updates ?? [])
     : undefined;
-  const relatedAutomationSources = includeAutomation
-    ? await mapToAutomationSourceDtos(entity.relatedAutomationSources ?? [])
-    : undefined;
 
-  const ranks = includeRanks ? entity.ranks?.ranks : undefined;
   let relatedProducts: RelatedProducts = undefined;
   if (includeRelated) {
     relatedProducts = {};
@@ -149,7 +138,6 @@ export async function mapToProductDto(
     relatedAutomationSources,
     relatedProducts,
     parent,
-    children,
   } as Product;
 }
 

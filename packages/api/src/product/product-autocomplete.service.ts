@@ -33,7 +33,7 @@ export class ProductAutocompleteService {
     validate(options, autocompleteProductsOptionsSchema);
 
     const { productType, query } = options;
-    const fields = options.fields != null ? new Set(options.fields) : null;
+    const fields = options.fields;
 
     const rawResults = await this.repository.autocomplete(
       productType,

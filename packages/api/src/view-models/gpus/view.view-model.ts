@@ -110,14 +110,15 @@ export class ViewGpuViewModelService {
         includeUpdates: false,
 
         includeParent: true,
-        parentFields: ['msrp'] as ProductFieldKey[],
 
         includeRelated: true,
         includeRelatedBenchmarks: [
           getPreferredBenchmark(ctx.config?.userSettings, ProductType.Gpu),
         ],
-        includeRelatedFields: false,
         includeRelatedRanks: true,
+
+        parentFields: ['msrp'] as ProductFieldKey[],
+        relatedFields: [],
       },
       ctx,
     );
@@ -300,6 +301,7 @@ export class ViewGpuViewModelService {
         includeBenchmarks: [
           getPreferredBenchmark(ctx.config?.userSettings, ProductType.Gpu),
         ],
+        fields: [],
       },
       ctx,
     );
@@ -324,6 +326,7 @@ export class ViewGpuViewModelService {
         includeBenchmarks: [
           getPreferredBenchmark(ctx.config?.userSettings, ProductType.Gpu),
         ],
+        fields: [],
       },
       ctx,
     );

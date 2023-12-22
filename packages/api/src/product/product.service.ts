@@ -43,12 +43,11 @@ interface ListOptions {
   fields?: ProductFieldKey[];
 
   includeAdditionalData?: boolean;
-  includeSources?: boolean;
   includeAutomation?: boolean;
+  includeBenchmarks?: boolean | BenchmarkKey[];
   includeImages?: boolean;
   includeRanks?: boolean;
-
-  includeBenchmarks?: boolean | BenchmarkKey[];
+  includeSources?: boolean;
 
   skipCount?: boolean;
 }
@@ -68,7 +67,6 @@ interface GetOptions {
   includeBenchmarks?: boolean | BenchmarkKey[];
 
   includeRelated?: boolean;
-  includeRelatedFields?: boolean | ProductFieldKey[];
   includeRelatedBenchmarks?: boolean | BenchmarkKey[];
   includeRelatedRanks?: boolean;
 }
@@ -133,19 +131,18 @@ export class ProductService {
       validate(request, listProductsRequestSchema);
     }
 
-    const includeBenchmarks = !!options?.includeBenchmarks ?? false;
-    const includeRanks = options?.includeRanks ?? false;
-    const includeImages = options?.includeImages ?? false;
-    const includeSources =
-      (options?.includeSources ?? false) && (ctx.user?.isStaff ?? false);
+    const skipCount = options.skipCount ?? false;
+
     const includeAutomation =
       (options.includeAutomation ?? false) && (ctx.user?.isStaff ?? false);
+    const includeBenchmarks = !!options?.includeBenchmarks ?? false;
+    const includeImages = options?.includeImages ?? false;
+    const includeRanks = options?.includeRanks ?? false;
+    const includeSources =
+      (options?.includeSources ?? false) && (ctx.user?.isStaff ?? false);
 
-    const fields = options.fields != null ? new Set(options.fields) : null;
-
-    const includeFields = fields == null || fields.size > 0;
-
-    const skipCount = options.skipCount ?? false;
+    const fields = options.fields;
+    const includeFields = fields == null || fields.length > 0;
 
     const { productType, query } = request;
 
@@ -168,10 +165,11 @@ export class ProductService {
         ...options,
         productType,
         includeBenchmarks,
-        includeFields: options.fields ?? includeFields,
+        includeFields,
         includeImages,
-        includeSources,
         includeRanks,
+        includeSources,
+        fields,
       },
       ctx,
     );
@@ -230,28 +228,40 @@ export class ProductService {
       (options.includeAutomation ?? false) && (ctx.user?.isStaff ?? false);
     const includeBenchmarks = !!options?.includeBenchmarks ?? false;
     const includeRelated = options?.includeRelated ?? false;
+    const includeRelatedBenchmarks =
+      !!options?.includeRelatedBenchmarks ?? false;
+    const includeRelatedRanks = options?.includeRelatedRanks ?? false;
 
-    const fields = options.fields != null ? new Set(options.fields) : null;
-    const parentFields =
-      options.parentFields != null ? new Set(options.parentFields) : null;
-    const relatedFields =
-      options.relatedFields != null ? new Set(options.relatedFields) : null;
+    const fields = options.fields;
+    const parentFields = options.parentFields;
+    const relatedFields = options.relatedFields;
 
-    const includeFields = fields == null || fields.size > 0;
-    const includeRelatedFields = !!options.includeRelatedFields ?? false;
+    const includeFields = fields == null || fields.length > 0;
+    const includeParentFields = parentFields == null || parentFields.length > 0;
+    const includeRelatedFields =
+      relatedFields == null || relatedFields.length > 0;
 
     const entity = await this.repository.findById(
       {
         id,
-        includeFields: options.fields ?? includeFields,
-        includeParentFields: options.parentFields ?? includeParent,
+
         includeParent,
-        includeImages,
-        includeSources,
         includeBenchmarks,
+        includeImages,
         includeRanks,
+        includeSources,
+
         includeRelated,
-        includeRelatedFields: options.relatedFields ?? includeRelatedFields,
+        includeRelatedBenchmarks,
+        includeRelatedRanks,
+
+        includeFields,
+        includeParentFields,
+        includeRelatedFields,
+
+        fields,
+        parentFields,
+        relatedFields,
       },
       ctx,
     );
@@ -291,17 +301,22 @@ export class ProductService {
     }
 
     const product = await mapToProductDto(entity, {
+      includeParent,
+
+      includeAutomation,
+      includeBenchmarks,
+      includeImages,
+      includeRanks,
+      includeSources,
+      includeUpdates,
+      includeRelated,
+      includeRelatedBenchmarks,
+      includeRelatedRanks,
+      includeSummary: true,
+
       fields,
       parentFields,
       relatedFields,
-      includeBenchmarks,
-      includeRanks,
-      includeParent,
-      includeSources,
-      includeAutomation,
-      includeUpdates,
-      includeRelated,
-      includeSummary: true,
     });
 
     if (product == null) {
@@ -326,34 +341,41 @@ export class ProductService {
       (options.includeAutomation ?? false) && (ctx.user?.isStaff ?? false);
     const includeBenchmarks = !!options?.includeBenchmarks ?? false;
     const includeRelated = options?.includeRelated ?? false;
-
-    const fields = options.fields != null ? new Set(options.fields) : null;
-    const parentFields =
-      options.parentFields != null ? new Set(options.parentFields) : null;
-    const relatedFields =
-      options.relatedFields != null ? new Set(options.relatedFields) : null;
-
-    const includeFields = fields == null || fields.size > 0;
-    const includeRelatedFields = !!options?.includeRelatedFields ?? false;
     const includeRelatedBenchmarks =
       !!options?.includeRelatedBenchmarks ?? false;
     const includeRelatedRanks = options?.includeRelatedRanks ?? false;
+
+    const fields = options.fields;
+    const parentFields = options.parentFields;
+    const relatedFields = options.relatedFields;
+
+    const includeFields = fields == null || fields.length > 0;
+    const includeParentFields = parentFields == null || parentFields.length > 0;
+    const includeRelatedFields =
+      relatedFields == null || relatedFields.length > 0;
 
     const entity = await this.repository.findBySlug(
       {
         productType,
         slug,
-        includeFields: options.fields ?? includeFields,
-        includeParentFields: options.parentFields ?? includeParent,
+
         includeParent,
-        includeImages,
-        includeSources,
-        includeRanks,
         includeBenchmarks,
+        includeImages,
+        includeRanks,
+        includeSources,
+
         includeRelated,
-        includeRelatedFields: options.relatedFields ?? includeRelatedFields,
-        includeRelatedRanks,
         includeRelatedBenchmarks,
+        includeRelatedRanks,
+
+        includeFields,
+        includeParentFields,
+        includeRelatedFields,
+
+        fields,
+        parentFields,
+        relatedFields,
       },
       ctx,
     );
@@ -393,19 +415,22 @@ export class ProductService {
     }
 
     const product = await mapToProductDto(entity, {
-      fields,
-      parentFields,
-      relatedFields,
-      includeBenchmarks,
       includeParent,
-      includeSources,
+
       includeAutomation,
+      includeBenchmarks,
+      includeImages,
+      includeRanks,
+      includeSources,
       includeUpdates,
       includeRelated,
       includeRelatedBenchmarks,
       includeRelatedRanks,
       includeSummary: true,
-      includeRanks,
+
+      fields,
+      parentFields,
+      relatedFields,
     });
 
     if (product == null) {

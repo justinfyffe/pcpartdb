@@ -55,19 +55,23 @@ interface ListOptions extends IncludeRelationsOptions {
 }
 
 interface IncludeRelationsOptions {
-  includeFields?: boolean | ProductFieldKey[];
-  includeParentFields?: boolean | ProductFieldKey[];
-  includeRelatedFields?: boolean | ProductFieldKey[];
-
+  includeFields?: boolean;
+  includeSources?: boolean;
+  includeImages?: boolean;
   includeBenchmarks?: boolean;
+  includeRanks?: boolean;
+
+  includeRelated?: boolean;
+  includeRelatedFields?: boolean;
   includeRelatedBenchmarks?: boolean;
   includeRelatedRanks?: boolean;
-  includeRanks?: boolean;
-  includeImages?: boolean;
-  includeSources?: boolean;
-  includeRelated?: boolean;
+
   includeParent?: boolean;
-  includeChildren?: boolean;
+  includeParentFields?: boolean;
+
+  fields?: ProductFieldKey[];
+  parentFields?: ProductFieldKey[];
+  relatedFields?: ProductFieldKey[];
 }
 
 export class ProductRepository {
@@ -784,7 +788,7 @@ export class ProductRepository {
     // Products
     if (options.includeFields) {
       const ids = products.map((p) => p.id);
-      const selectFields = this.buildFieldsSelect(options.includeFields);
+      const selectFields = this.buildFieldsSelect(options.fields);
       let fields: CpuFieldsEntity[] | GpuFieldsEntity[];
       let fieldsMap:
         | Record<number, CpuFieldsEntity>
@@ -815,7 +819,7 @@ export class ProductRepository {
     // Parents
     if (options.includeParentFields) {
       const ids = parents.map((p) => p.id);
-      const selectFields = this.buildFieldsSelect(options.includeParentFields);
+      const selectFields = this.buildFieldsSelect(options.parentFields);
       let fields: CpuFieldsEntity[] | GpuFieldsEntity[];
       let fieldsMap:
         | Record<number, CpuFieldsEntity>
@@ -846,7 +850,7 @@ export class ProductRepository {
     // Related
     if (options.includeRelatedFields) {
       const ids = related.map((p) => p.id);
-      const selectFields = this.buildFieldsSelect(options.includeRelatedFields);
+      const selectFields = this.buildFieldsSelect(options.relatedFields);
       let fields: CpuFieldsEntity[] | GpuFieldsEntity[];
       let fieldsMap:
         | Record<number, CpuFieldsEntity>
@@ -875,17 +879,19 @@ export class ProductRepository {
     }
   }
 
-  private buildFieldsSelect(fields: boolean | ProductFieldKey[]) {
-    return Array.isArray(fields)
-      ? fields.reduce(
-          (acc, fieldKey) => {
-            acc[fieldKey + 'Value'] = true;
-            acc[fieldKey + 'Meta'] = true;
-            return acc;
-          },
-          { productId: true } as Record<string, boolean>,
-        )
-      : undefined;
+  private buildFieldsSelect(fields: ProductFieldKey[]) {
+    if (fields == null) {
+      return undefined;
+    }
+
+    return fields.reduce(
+      (acc, fieldKey) => {
+        acc[fieldKey + 'Value'] = true;
+        acc[fieldKey + 'Meta'] = true;
+        return acc;
+      },
+      { productId: true } as Record<string, boolean>,
+    );
   }
 
   private buildFieldsMap<T extends CpuFieldsEntity | GpuFieldsEntity>(

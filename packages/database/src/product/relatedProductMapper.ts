@@ -3,7 +3,7 @@ import { mapToProductDto } from './productMapper';
 import { RelatedProductEntity } from './RelatedProductEntity';
 
 interface MapToDtoOptions {
-  fields?: Set<ProductFieldKey>;
+  fields?: ProductFieldKey[];
   includeBenchmarks?: boolean;
 }
 

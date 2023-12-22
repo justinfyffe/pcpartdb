@@ -115,21 +115,22 @@ export class CompareGpusViewModelService {
         productType: ProductType.Gpu,
         slug,
 
-        includeParent: true,
         includeAutomation: false,
         includeBenchmarks: true,
         includeImages: true,
+        includeRanks: true,
         includeSources: false,
         includeUpdates: false,
 
-        includeRanks: true,
+        includeParent: true,
 
         includeRelated: true,
         includeRelatedBenchmarks: [
           getPreferredBenchmark(ctx.config?.userSettings, ProductType.Gpu),
         ],
-        includeRelatedFields: false,
         includeRelatedRanks: true,
+
+        relatedFields: [],
       },
       ctx,
     );
@@ -451,6 +452,7 @@ export class CompareGpusViewModelService {
         includeBenchmarks: [
           getPreferredBenchmark(ctx.config?.userSettings, ProductType.Gpu),
         ],
+        fields: [],
       },
       ctx,
     );
@@ -475,6 +477,7 @@ export class CompareGpusViewModelService {
         includeBenchmarks: [
           getPreferredBenchmark(ctx.config?.userSettings, ProductType.Gpu),
         ],
+        fields: [],
       },
       ctx,
     );

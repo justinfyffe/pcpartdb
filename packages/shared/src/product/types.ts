@@ -51,7 +51,6 @@ export interface Product {
   images?: ProductImage[];
   relatedAutomationSources?: AutomationSource[];
   parent?: Product;
-  children?: Product[];
 
   ranks?: ProductRanks;
   relatedProducts?: RelatedProducts;

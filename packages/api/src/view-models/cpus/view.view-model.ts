@@ -99,21 +99,22 @@ export class ViewCpuViewModelService {
         productType: ProductType.Cpu,
         slug,
 
-        includeParent: false,
         includeAutomation: false,
         includeBenchmarks: true,
         includeImages: true,
+        includeRanks: true,
         includeSources: false,
         includeUpdates: false,
 
-        includeRanks: true,
+        includeParent: false,
 
         includeRelated: true,
         includeRelatedBenchmarks: [
           getPreferredBenchmark(ctx.config?.userSettings, ProductType.Cpu),
         ],
-        includeRelatedFields: false,
         includeRelatedRanks: true,
+
+        relatedFields: [],
       },
       ctx,
     );
@@ -267,6 +268,7 @@ export class ViewCpuViewModelService {
         includeBenchmarks: [
           getPreferredBenchmark(ctx.config?.userSettings, ProductType.Cpu),
         ],
+        fields: [],
       },
       ctx,
     );
@@ -291,6 +293,7 @@ export class ViewCpuViewModelService {
         includeBenchmarks: [
           getPreferredBenchmark(ctx.config?.userSettings, ProductType.Cpu),
         ],
+        fields: [],
       },
       ctx,
     );

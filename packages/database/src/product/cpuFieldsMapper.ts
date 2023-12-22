@@ -7,7 +7,7 @@ import {
 import { CpuFieldsEntity } from '.';
 
 interface MapToDtoOptions {
-  fields?: Set<ProductFieldKey>;
+  fields?: ProductFieldKey[];
 }
 
 export function mapToCpuFieldsDto(
@@ -80,7 +80,8 @@ function mapCpuFieldToDto(
     return undefined;
   }
 
-  if (options?.fields != null && !options?.fields?.has(key)) {
+  const fieldsSet = new Set(...(options?.fields ?? []));
+  if (options?.fields != null && fieldsSet.has(key)) {
     // Excluded from fields param, ignore this value.
     return undefined;
   }
