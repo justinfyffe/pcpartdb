@@ -168,7 +168,7 @@ export class ProductService {
         ...query,
         ...options,
         productType,
-        includeFields,
+        includeFields: options.fields,
         includeBenchmarks,
         includeImages,
         includeSources,

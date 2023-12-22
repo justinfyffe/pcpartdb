@@ -35,7 +35,7 @@ export class ListGpusViewModelService {
           limit: DEFAULT_LIST_GPUS_LIMIT,
         },
         orderBy: {
-          sort: ListSort.Name,
+          sort: ListSort.PerformanceRating,
         },
       } as ListGpusQuery,
       query,

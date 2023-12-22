@@ -18,6 +18,8 @@ import { Prisma } from '@prisma/client';
 import * as uuid from 'uuid';
 import { DatabaseClient } from '../DatabaseClient';
 import { RepositoryConfig } from '../RepositoryConfig';
+import { CpuFieldsEntity } from './CpuFieldsEntity';
+import { GpuFieldsEntity } from './GpuFieldsEntity';
 import { ProductBenchmarkEntity } from './ProductBenchmarkEntity';
 import { ProductEntity } from './ProductEntity';
 import { ProductRankEntity } from './ProductRankEntity';
@@ -55,6 +57,8 @@ interface ListOptions extends IncludeRelationsOptions {
 
 interface IncludeRelationsOptions {
   includeFields?: boolean | ProductFieldKey[];
+  includeParentFields?: boolean | ProductFieldKey[];
+  includeChildrenFields?: boolean | ProductFieldKey[];
   includeRelatedFields?: boolean | ProductFieldKey[];
 
   includeBenchmarks?: boolean;
@@ -103,6 +107,7 @@ export class ProductRepository {
     const includeRelatedRanks = options.includeRelatedRanks;
 
     // Fetch base product entities for the ids
+
     let products: ProductEntity[] = await db.product.findMany({
       where: { id: { in: ids } },
     });
@@ -123,6 +128,8 @@ export class ProductRepository {
 
     let hasParent = false;
     const allProducts: ProductEntity[] = [...products];
+
+    // TODO: support children.
 
     // First set of queries: Fetching relevant products like parent and related
     // products.
@@ -166,23 +173,34 @@ export class ProductRepository {
       allProducts.push(...relatedProducts.map((rp) => rp.relatedProduct));
     }
 
-    // await Promise.all(queries1);
-
     // Second set of queries: Fetching related data to the base products.
     // For example: ranks, benchmarks, fields.
 
-    const queries2 = [];
+    const queries = [];
     if (includeFields && productType === ProductType.Cpu) {
-      queries2.push(
+      queries.push(
         (async () => {
           const ids = [...productIds, ...parentIds];
           if (includeRelatedFields) {
             ids.push(...relatedProductIds);
           }
 
-          const cpuFields = await db.cpuFields.findMany({
+          const selectFields = Array.isArray(includeFields)
+            ? includeFields.reduce(
+                (acc, fieldKey) => {
+                  acc[fieldKey + 'Value'] = true;
+                  acc[fieldKey + 'Meta'] = true;
+                  return acc;
+                },
+                { productId: true } as Record<string, boolean>,
+              )
+            : undefined;
+
+          // TODO: select explicit fields.
+          const cpuFields: CpuFieldsEntity[] = (await db.cpuFields.findMany({
             where: { productId: { in: ids } },
-          });
+            select: selectFields,
+          })) as any;
 
           for (const product of allProducts) {
             // TODO: use map
@@ -194,16 +212,29 @@ export class ProductRepository {
       );
     }
     if (includeFields && productType === ProductType.Gpu) {
-      queries2.push(
+      queries.push(
         (async () => {
           const ids = [...productIds, ...parentIds];
           if (includeRelatedFields) {
             ids.push(...relatedProductIds);
           }
 
-          const gpuFields = await db.gpuFields.findMany({
+          const selectFields = Array.isArray(includeFields)
+            ? includeFields.reduce(
+                (acc, fieldKey) => {
+                  acc[fieldKey + 'Value'] = true;
+                  acc[fieldKey + 'Meta'] = true;
+                  return acc;
+                },
+                { productId: true } as Record<string, boolean>,
+              )
+            : undefined;
+
+          // TODO: select explicit fields for related, parent,
+          const gpuFields: GpuFieldsEntity[] = (await db.gpuFields.findMany({
             where: { productId: { in: ids } },
-          });
+            select: selectFields,
+          })) as any;
 
           for (const product of allProducts) {
             // TODO: use map
@@ -214,8 +245,9 @@ export class ProductRepository {
         })(),
       );
     }
+
     if (includeBenchmarks) {
-      queries2.push(
+      queries.push(
         (async () => {
           const ids = [...productIds, ...parentIds];
           if (includeRelatedBenchmarks) {
@@ -235,8 +267,9 @@ export class ProductRepository {
         })(),
       );
     }
+
     if (includeRanks) {
-      queries2.push(
+      queries.push(
         (async () => {
           const ids = [...productIds, ...parentIds];
           if (includeRelatedRanks) {
@@ -254,7 +287,8 @@ export class ProductRepository {
         })(),
       );
     }
-    await Promise.all(queries2);
+
+    await Promise.all(queries);
 
     return products;
   }
@@ -531,17 +565,33 @@ export class ProductRepository {
         });
         return sortByIds(ids, products, (p) => p.id);
       } else {
-        // We are not sorting by benchmark, so we can fetch the products
-        // directly.
-        return await db.product.findMany({
-          where: {
-            ...this.generateWhere(productType, options.filter),
-          },
+        const productIdsResult = await db.product.findMany({
+          select: { id: true },
+          where: { ...this.generateWhere(productType, options.filter) },
           orderBy: this.generateOrderBy(productType, options.orderBy),
           skip: options.pagination?.offset,
           take: options.pagination?.limit,
-          select: this.generateProductSelect(options),
         });
+        const productIds = productIdsResult.map((p) => p.id);
+
+        const products = await this.findByIds(
+          { ...options, ids: productIds },
+          config,
+        );
+
+        return sortByIds(productIds, products, (p) => p.id);
+
+        // We are not sorting by benchmark, so we can fetch the products
+        // directly.
+        // return await db.product.findMany({
+        //   where: {
+        //     ...this.generateWhere(productType, options.filter),
+        //   },
+        //   orderBy: this.generateOrderBy(productType, options.orderBy),
+        //   skip: options.pagination?.offset,
+        //   take: options.pagination?.limit,
+        //   select: this.generateProductSelect(options),
+        // });
       }
     } finally {
       console.timeEnd(timer);

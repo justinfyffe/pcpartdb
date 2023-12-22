@@ -50,19 +50,19 @@ export class ViewGpuViewModelService {
         ]);
 
         const chipset = getGpuChipset(gpu);
-        const relativePerformanceGpus = await this.getRelativePerformanceGpus(
+        const relativePerformanceGpus = this.getRelativePerformanceGpus(
           chipset,
           ctx,
         );
-        const relativeValueGpus = await this.getRelativeValueGpus(chipset, ctx);
+        const relativeValueGpus = this.getRelativeValueGpus(chipset, ctx);
 
-        const relatedGpus = await this.getRelatedGpus(
+        const relatedGpus = this.getRelatedGpus(
           5,
           relativePerformanceGpus,
           relativeValueGpus,
           gpu,
         );
-        const relatedGpuComparisons = await this.getRelatedComparisons(
+        const relatedGpuComparisons = this.getRelatedComparisons(
           5,
           relativePerformanceGpus,
           relativeValueGpus,
@@ -125,7 +125,7 @@ export class ViewGpuViewModelService {
     return gpu as GpuProduct;
   }
 
-  private async getRelativePerformanceGpus(seed: GpuProduct, ctx: Context) {
+  private getRelativePerformanceGpus(seed: GpuProduct, ctx: Context) {
     const benchmark = getPreferredBenchmark(
       ctx.config?.userSettings,
       ProductType.Gpu,
@@ -160,7 +160,7 @@ export class ViewGpuViewModelService {
     );
   }
 
-  private async getRelativeValueGpus(seed: GpuProduct, ctx: Context) {
+  private getRelativeValueGpus(seed: GpuProduct, ctx: Context) {
     const benchmark = getPreferredBenchmark(
       ctx.config?.userSettings,
       ProductType.Gpu,
@@ -195,7 +195,7 @@ export class ViewGpuViewModelService {
     );
   }
 
-  private async getRelatedGpus(
+  private getRelatedGpus(
     total: number,
     performanceGpus: Partial<GpuProduct>[],
     valueGpus: Partial<GpuProduct>[],
@@ -224,7 +224,7 @@ export class ViewGpuViewModelService {
     return related;
   }
 
-  private async getRelatedComparisons(
+  private getRelatedComparisons(
     total: number,
     performanceGpus: Partial<GpuProduct>[],
     valueGpus: Partial<GpuProduct>[],
@@ -267,6 +267,7 @@ export class ViewGpuViewModelService {
         },
       },
       {
+        // fields: [],
         fields: [
           'gpuCoreBaseClock',
           'gpuCoreBoostClock',
