@@ -7,7 +7,7 @@ import { RetailModelsTitle } from './RetailModelsTitle';
 export const RetailModels: FunctionComponent = () => {
   const { retailModels } = useContext(ViewPageContext);
 
-  if (retailModels?.length === 0) {
+  if (retailModels == null || retailModels.length === 0) {
     return <></>;
   }
 

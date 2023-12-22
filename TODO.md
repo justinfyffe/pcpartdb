@@ -15,14 +15,6 @@ Scraping Improvements:
 JS ISSUE?
 - List page: VM482 cmp2.js:1 Uncaught TypeError: n is not a function
 
-PERFORMANCE IMPROVEMENTS:
-- Cache home page
-  - permanent, last longer
-- Cache best performance cpu
-  - permanent, last longer
-- cache best performance gpu
-  - permanent, last longer
-
 When Bored:
 - Migrate to react-query instead of axios
 - Make autocomplete stricter, not looser when searching?

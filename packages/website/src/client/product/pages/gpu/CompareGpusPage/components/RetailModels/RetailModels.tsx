@@ -7,7 +7,10 @@ import { RetailModelsTitle } from './RetailModelsTitle';
 export const RetailModels: FunctionComponent = () => {
   const { retailModels1, retailModels2 } = useContext(ComparePageContext);
 
-  if (retailModels1?.length === 0 && retailModels2?.length === 0) {
+  if (
+    (retailModels1 == null || retailModels1.length === 0) &&
+    (retailModels2 == null || retailModels2.length === 0)
+  ) {
     return <></>;
   }
 

@@ -17,7 +17,6 @@ import {
   RelatedProductType,
 } from '@pcpartdb/shared';
 import * as uuid from 'uuid';
-import { Database } from '../../database';
 import { ProductService } from '../../product/product.service';
 import { CacheService, CacheType } from '../../shared/cache/cache.service';
 import { Context } from '../../shared/context';
@@ -28,7 +27,6 @@ const TOTAL_COMPARED_GPUS = 10;
 @Injectable()
 export class CompareGpusViewModelService {
   constructor(
-    private db: Database,
     private productService: ProductService,
     private cacheService: CacheService,
   ) {}
@@ -138,29 +136,43 @@ export class CompareGpusViewModelService {
   }
 
   private async getRetailModels(chipset: GpuProduct, ctx: Context) {
-    const response = await this.productService.list(
-      {
-        productType: ProductType.Gpu,
-        query: {
-          filter: { chipsetId: [chipset.id] },
-          orderBy: { sort: ListSort.Name },
+    const retailModelsCacheKey = `retailModels__${chipset.id}`;
+
+    const fn = async () => {
+      const response = await this.productService.list(
+        {
+          productType: ProductType.Gpu,
+          query: {
+            filter: { chipsetId: [chipset.id] },
+            orderBy: { sort: ListSort.Name },
+          },
         },
-      },
-      {
-        fields: [
-          'gpuCoreBaseClock',
-          'gpuCoreBoostClock',
-          'length',
-          'slotWidth',
-          'width',
-          'height',
-          'tdp',
-        ] as ProductFieldKey[],
-        skipCount: true,
-      },
-      ctx,
-    );
-    return response.results;
+        {
+          fields: [
+            'gpuCoreBaseClock',
+            'gpuCoreBoostClock',
+            'length',
+            'slotWidth',
+            'width',
+            'height',
+            'tdp',
+          ] as ProductFieldKey[],
+          skipCount: true,
+        },
+        ctx,
+      );
+      return response.results;
+    };
+
+    if (process.env.ENABLE_RETAIL_MODELS_CACHE === 'true') {
+      return await this.cacheService.cache(fn, {
+        type: CacheType.GpuRetailModels,
+        key: retailModelsCacheKey,
+        excludeFromMaxItems: true,
+      });
+    } else {
+      return await fn();
+    }
   }
 
   private getRelativePerformanceGpus(
@@ -435,52 +447,84 @@ export class CompareGpusViewModelService {
   }
 
   private async getBestPerformanceGpu(ctx: Context) {
-    const response = await this.productService.list(
-      {
-        productType: ProductType.Gpu,
-        query: {
-          filter: { isChipset: true },
-          orderBy: {
-            sort: ListSort.PerformanceRating,
-            order: ListOrder.Desc,
+    const preferredBenchmark = preferredBenchmarkOrDefault(
+      ProductType.Gpu,
+      ctx.config?.userSettings?.preferredBenchmarks?.[ProductType.Gpu],
+    ).toLowerCase();
+    const bestPerformanceCacheKey = `bestPerformanceGpu__${preferredBenchmark}`;
+
+    const result = this.cacheService.cache(
+      async () => {
+        const response = await this.productService.list(
+          {
+            productType: ProductType.Gpu,
+            query: {
+              filter: { isChipset: true },
+              orderBy: {
+                sort: ListSort.PerformanceRating,
+                order: ListOrder.Desc,
+              },
+              pagination: { limit: 1 },
+            },
           },
-          pagination: { limit: 1 },
-        },
+          {
+            skipCount: true,
+            includeBenchmarks: [
+              getPreferredBenchmark(ctx.config?.userSettings, ProductType.Gpu),
+            ],
+            fields: [],
+          },
+          ctx,
+        );
+        return (response.results?.[0] || null) as GpuProduct;
       },
       {
-        skipCount: true,
-        includeBenchmarks: [
-          getPreferredBenchmark(ctx.config?.userSettings, ProductType.Gpu),
-        ],
-        fields: [],
+        type: CacheType.BestGpuProduct,
+        key: bestPerformanceCacheKey,
+        excludeFromMaxItems: true,
       },
-      ctx,
     );
-    return (response.results?.[0] || null) as GpuProduct;
+    return result;
   }
 
   private async getBestValueGpu(ctx: Context) {
-    const response = await this.productService.list(
-      {
-        productType: ProductType.Gpu,
-        query: {
-          filter: { isChipset: true },
-          orderBy: {
-            sort: ListSort.PerformancePerMsrp,
-            order: ListOrder.Desc,
+    const preferredBenchmark = preferredBenchmarkOrDefault(
+      ProductType.Gpu,
+      ctx.config?.userSettings?.preferredBenchmarks?.[ProductType.Gpu],
+    ).toLowerCase();
+    const bestValueCacheKey = `bestValueGpu__${preferredBenchmark}`;
+
+    const result = this.cacheService.cache(
+      async () => {
+        const response = await this.productService.list(
+          {
+            productType: ProductType.Gpu,
+            query: {
+              filter: { isChipset: true },
+              orderBy: {
+                sort: ListSort.PerformancePerMsrp,
+                order: ListOrder.Desc,
+              },
+              pagination: { limit: 1 },
+            },
           },
-          pagination: { limit: 1 },
-        },
+          {
+            skipCount: true,
+            includeBenchmarks: [
+              getPreferredBenchmark(ctx.config?.userSettings, ProductType.Gpu),
+            ],
+            fields: [],
+          },
+          ctx,
+        );
+        return (response.results?.[0] || null) as GpuProduct;
       },
       {
-        skipCount: true,
-        includeBenchmarks: [
-          getPreferredBenchmark(ctx.config?.userSettings, ProductType.Gpu),
-        ],
-        fields: [],
+        type: CacheType.BestGpuProduct,
+        key: bestValueCacheKey,
+        excludeFromMaxItems: true,
       },
-      ctx,
     );
-    return (response.results?.[0] || null) as GpuProduct;
+    return result;
   }
 }

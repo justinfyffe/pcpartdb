@@ -42,39 +42,47 @@ export const RetailModelsTable: FunctionComponent<RetailModelsTableProps> = (
 
   return (
     <div className="flex flex-row md:flex-col gap-8">
-      <Table border responsive className={classNames('flex-1', className)}>
-        <THead>
-          <Tr>
-            <Th>{chipsetShortName1}</Th>
-          </Tr>
-        </THead>
-        <TBody>
-          {retailModels1.map((retailModel) => (
-            <RetailModelsTableRow
-              key={currentGpu1?.id + '-' + retailModel?.id}
-              currentGpu={currentGpu1}
-              retailModel={retailModel}
-            />
-          ))}
-        </TBody>
-      </Table>
+      {retailModels1 != null && retailModels1.length > 0 ? (
+        <Table border responsive className={classNames('flex-1', className)}>
+          <THead>
+            <Tr>
+              <Th>{chipsetShortName1}</Th>
+            </Tr>
+          </THead>
+          <TBody>
+            {retailModels1.map((retailModel) => (
+              <RetailModelsTableRow
+                key={currentGpu1?.id + '-' + retailModel?.id}
+                currentGpu={currentGpu1}
+                retailModel={retailModel}
+              />
+            ))}
+          </TBody>
+        </Table>
+      ) : (
+        <></>
+      )}
 
-      <Table border responsive className={classNames('flex-1', className)}>
-        <THead>
-          <Tr>
-            <Th>{chipsetShortName2}</Th>
-          </Tr>
-        </THead>
-        <TBody>
-          {retailModels2.map((retailModel) => (
-            <RetailModelsTableRow
-              key={currentGpu2?.id + '-' + retailModel?.id}
-              currentGpu={currentGpu2}
-              retailModel={retailModel}
-            />
-          ))}
-        </TBody>
-      </Table>
+      {retailModels2 != null && retailModels2.length > 0 ? (
+        <Table border responsive className={classNames('flex-1', className)}>
+          <THead>
+            <Tr>
+              <Th>{chipsetShortName2}</Th>
+            </Tr>
+          </THead>
+          <TBody>
+            {retailModels2.map((retailModel) => (
+              <RetailModelsTableRow
+                key={currentGpu2?.id + '-' + retailModel?.id}
+                currentGpu={currentGpu2}
+                retailModel={retailModel}
+              />
+            ))}
+          </TBody>
+        </Table>
+      ) : (
+        <></>
+      )}
     </div>
   );
 };

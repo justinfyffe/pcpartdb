@@ -65,7 +65,7 @@ export class HomeViewModelService {
           popularCpus,
         } as HomeViewModel;
       },
-      { type: CacheType.Home, key: {} },
+      { type: CacheType.Home, key: {}, excludeFromMaxItems: true },
     );
     console.timeEnd(timer);
     return result;

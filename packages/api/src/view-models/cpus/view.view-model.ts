@@ -14,7 +14,6 @@ import {
   ViewCpuViewModel,
 } from '@pcpartdb/shared';
 import * as uuid from 'uuid';
-import { Database } from '../../database';
 import { ProductService } from '../../product/product.service';
 import { CacheService, CacheType } from '../../shared/cache/cache.service';
 import { Context } from '../../shared/context';
@@ -25,7 +24,6 @@ const TOTAL_COMPARED_CPUS = 10;
 @Injectable()
 export class ViewCpuViewModelService {
   constructor(
-    private db: Database,
     private productService: ProductService,
     private cacheService: CacheService,
   ) {}
@@ -251,52 +249,84 @@ export class ViewCpuViewModelService {
   }
 
   private async getBestPerformanceCpu(ctx: Context) {
-    const response = await this.productService.list(
-      {
-        productType: ProductType.Cpu,
-        query: {
-          filter: {},
-          orderBy: {
-            sort: ListSort.PerformanceRating,
-            order: ListOrder.Desc,
+    const preferredBenchmark = preferredBenchmarkOrDefault(
+      ProductType.Cpu,
+      ctx.config?.userSettings?.preferredBenchmarks?.[ProductType.Cpu],
+    ).toLowerCase();
+    const bestPerformanceCacheKey = `bestPerformanceCpu__${preferredBenchmark}`;
+
+    const result = this.cacheService.cache(
+      async () => {
+        const response = await this.productService.list(
+          {
+            productType: ProductType.Cpu,
+            query: {
+              filter: {},
+              orderBy: {
+                sort: ListSort.PerformanceRating,
+                order: ListOrder.Desc,
+              },
+              pagination: { limit: 1 },
+            },
           },
-          pagination: { limit: 1 },
-        },
+          {
+            skipCount: true,
+            includeBenchmarks: [
+              getPreferredBenchmark(ctx.config?.userSettings, ProductType.Cpu),
+            ],
+            fields: [],
+          },
+          ctx,
+        );
+        return (response.results?.[0] || null) as CpuProduct;
       },
       {
-        skipCount: true,
-        includeBenchmarks: [
-          getPreferredBenchmark(ctx.config?.userSettings, ProductType.Cpu),
-        ],
-        fields: [],
+        type: CacheType.BestCpuProduct,
+        key: bestPerformanceCacheKey,
+        excludeFromMaxItems: true,
       },
-      ctx,
     );
-    return (response.results?.[0] || null) as CpuProduct;
+    return result;
   }
 
   private async getBestValueCpu(ctx: Context) {
-    const response = await this.productService.list(
-      {
-        productType: ProductType.Cpu,
-        query: {
-          filter: {},
-          orderBy: {
-            sort: ListSort.PerformancePerMsrp,
-            order: ListOrder.Desc,
+    const preferredBenchmark = preferredBenchmarkOrDefault(
+      ProductType.Cpu,
+      ctx.config?.userSettings?.preferredBenchmarks?.[ProductType.Cpu],
+    ).toLowerCase();
+    const bestValueCacheKey = `bestValueCpu__${preferredBenchmark}`;
+
+    const result = this.cacheService.cache(
+      async () => {
+        const response = await this.productService.list(
+          {
+            productType: ProductType.Cpu,
+            query: {
+              filter: {},
+              orderBy: {
+                sort: ListSort.PerformancePerMsrp,
+                order: ListOrder.Desc,
+              },
+              pagination: { limit: 1 },
+            },
           },
-          pagination: { limit: 1 },
-        },
+          {
+            skipCount: true,
+            includeBenchmarks: [
+              getPreferredBenchmark(ctx.config?.userSettings, ProductType.Cpu),
+            ],
+            fields: [],
+          },
+          ctx,
+        );
+        return (response.results?.[0] || null) as CpuProduct;
       },
       {
-        skipCount: true,
-        includeBenchmarks: [
-          getPreferredBenchmark(ctx.config?.userSettings, ProductType.Cpu),
-        ],
-        fields: [],
+        type: CacheType.BestCpuProduct,
+        key: bestValueCacheKey,
+        excludeFromMaxItems: true,
       },
-      ctx,
     );
-    return (response.results?.[0] || null) as CpuProduct;
+    return result;
   }
 }
