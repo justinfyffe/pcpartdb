@@ -17,6 +17,7 @@ export enum CacheType {
   BestGpuProduct = 'best_gpu_product',
 }
 
+const _FIVE_MINUTES = 1_000 * 60 * 5;
 const FIFTEEN_MINUTES = 1_000 * 60 * 15;
 const SIXTY_MINUTES = 1_000 * 60 * 60;
 

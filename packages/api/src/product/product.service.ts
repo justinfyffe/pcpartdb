@@ -186,9 +186,10 @@ export class ProductService {
     ) {
       const benchmarks = options.includeBenchmarks;
       for (const entity of productEntities) {
-        entity.benchmarks = entity.benchmarks.filter((b) =>
-          benchmarks.includes(b.benchmarkKey as BenchmarkKey),
-        );
+        entity.benchmarks =
+          entity.benchmarks?.filter((b) =>
+            benchmarks.includes(b.benchmarkKey as BenchmarkKey),
+          ) ?? [];
       }
     }
 
@@ -289,9 +290,10 @@ export class ProductService {
       entity.relatedProducts
         ?.map((rp) => rp.relatedProduct)
         .forEach((rp) => {
-          rp.benchmarks = rp.benchmarks.filter((b) =>
-            relatedBenchmarks.includes(b.benchmarkKey as BenchmarkKey),
-          );
+          rp.benchmarks =
+            rp.benchmarks?.filter((b) =>
+              relatedBenchmarks.includes(b.benchmarkKey as BenchmarkKey),
+            ) ?? [];
           if (rp.parent?.benchmarks) {
             rp.parent.benchmarks = rp.parent.benchmarks.filter((b) =>
               relatedBenchmarks.includes(b.benchmarkKey as BenchmarkKey),
@@ -386,9 +388,10 @@ export class ProductService {
       options.includeBenchmarks.length > 0
     ) {
       const benchmarks = options.includeBenchmarks;
-      entity.benchmarks = entity.benchmarks.filter((b) =>
-        benchmarks.includes(b.benchmarkKey as BenchmarkKey),
-      );
+      entity.benchmarks =
+        entity.benchmarks?.filter((b) =>
+          benchmarks.includes(b.benchmarkKey as BenchmarkKey),
+        ) ?? [];
       if (entity.parent?.benchmarks) {
         entity.parent.benchmarks = entity.parent.benchmarks.filter((b) =>
           benchmarks.includes(b.benchmarkKey as BenchmarkKey),
@@ -403,9 +406,10 @@ export class ProductService {
       entity.relatedProducts
         ?.map((rp) => rp.relatedProduct)
         .forEach((rp) => {
-          rp.benchmarks = rp.benchmarks.filter((b) =>
-            relatedBenchmarks.includes(b.benchmarkKey as BenchmarkKey),
-          );
+          rp.benchmarks =
+            rp.benchmarks?.filter((b) =>
+              relatedBenchmarks.includes(b.benchmarkKey as BenchmarkKey),
+            ) ?? [];
           if (rp.parent?.benchmarks) {
             rp.parent.benchmarks = rp.parent.benchmarks.filter((b) =>
               relatedBenchmarks.includes(b.benchmarkKey as BenchmarkKey),
