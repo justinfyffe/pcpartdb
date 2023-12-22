@@ -16,28 +16,13 @@ JS ISSUE?
 - List page: VM482 cmp2.js:1 Uncaught TypeError: n is not a function
 
 PERFORMANCE IMPROVEMENTS:
-- [HIGH] Improve home page performance.
-  - less db calls, or save exactly which ids to call.
-  - or fetch like 10 best desktop products and use those.
-    - two db calls
-- [MED] Cache best performance cpu/gpu
-  - one less major db call on view/compare pages.
-- [MED] Cache best value cpu/gpu
-  - one less major db call on view/compare pages.
-- [LOW] Reduce use of transactions.
-  - Should only be used for more than one write
-  - Should only be used in services, services know how often we're writing.
-  - Not sure on impact.
-- [LOW] cache ranks in memory
-  - avoids 1-2 relation db calls
-- test one big db call vs multiple small ones
-- reduce db calls as much as possible.
-- parallelize db calls
-  - unknown how aggressive we should.
-- [UNKNOWN] reduce complexity of fetch products includes.
-- [UNKNOWN] replace prisma with raw sql for user-facing stuff so we can do joins
-- [UNKNOWN] increase cache size?
-- [UNKNOWN] explicitly select fields
+- Clean up ProductRepository inputs.
+- Cache home page
+  - permanent, last longer
+- Cache best performance cpu
+  - permanent, last longer
+- cache best performance gpu
+  - permanent, last longer
 
 - ALTERNATIVE:
   - Get rid of "Performance Score" and "Performance Per MSRP". Just use benchmarks and benchmark / $

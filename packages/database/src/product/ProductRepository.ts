@@ -15,7 +15,6 @@ import {
   UpdateRelatedProductsRequest,
 } from '@pcpartdb/shared';
 import { Prisma } from '@prisma/client';
-import * as uuid from 'uuid';
 import { DatabaseClient } from '../DatabaseClient';
 import { RepositoryConfig } from '../RepositoryConfig';
 import { CpuFieldsEntity } from './CpuFieldsEntity';
@@ -82,11 +81,6 @@ export class ProductRepository {
 
     const products = await this.findByIds({ ...options, ids: [id] }, config);
     return products[0] || null;
-
-    // return await db.product.findUnique({
-    //   where: { id },
-    //   select: this.generateProductSelect(options),
-    // });
   }
 
   async findByIds(
@@ -94,272 +88,52 @@ export class ProductRepository {
     config?: RepositoryConfig,
   ): Promise<ProductEntity[]> {
     const db = config?.trx ?? this.db;
-
     const ids = options.ids;
-    const includeParent = options.includeParent;
-    const includeParentFields = options.includeParentFields;
-    const includeFields = options.includeFields;
-    const includeBenchmarks = options.includeBenchmarks;
-    const includeRanks = options.includeRanks;
-    const includeRelated = options.includeRelated;
-    const includeRelatedFields = options.includeRelatedFields;
-    const includeRelatedBenchmarks = options.includeRelatedBenchmarks;
-    const includeRelatedRanks = options.includeRelatedRanks;
 
     // Fetch base product entities for the ids
-
-    let products: ProductEntity[] = await db.product.findMany({
+    const products: ProductEntity[] = await db.product.findMany({
       where: { id: { in: ids } },
     });
     if (products.length === 0) {
       return null;
     }
-    products = sortByIds(ids, products, (p) => p.id);
-
-    // TODO: When needed, support multiple product types.
-    const productType = products[0].productType;
-
-    // Build a list of relevant product ids (products, parents, related)
-    const productIds = products.map((p) => p.id);
-    const parentIds = products
-      .filter((p) => p.parentId)
-      .map((p) => Number(p.parentId));
-    const relatedProductIds: number[] = [];
-    let parents: ProductEntity[] = [];
-    let relatedProducts: ProductEntity[] = [];
-
-    const hasParent = false;
-    const allProducts: ProductEntity[] = [...products];
-
-    // TODO: support children.
 
     // First set of queries: Fetching relevant products like parent and related
-    // products.
+    // products. These will be needed to fetch the data for each relevant
+    // product.
 
-    // const queries1 = [];
-    if (includeParent && parentIds.length > 0) {
-      parents = await db.product.findMany({
-        where: { id: { in: parentIds } },
-      });
+    // Fetch parents
+    const parents = await this.populateParents(products, options, config);
 
-      for (const product of products) {
-        // TODO: use map
-        product.parent = parents.filter((p) => p.id === product.parentId)[0];
-      }
-      allProducts.push(...parents);
-    }
+    // Fetch related products
+    const relatedProductEntities = await this.populateRelated(
+      products,
+      parents,
+      options,
+      config,
+    );
+    const relatedProducts = relatedProductEntities.map(
+      (rpe) => rpe.relatedProduct,
+    );
 
-    if (includeRelated) {
-      const ids = [...productIds, ...parentIds];
-      const results: RelatedProductEntity[] = await db.relatedProduct.findMany({
-        select: {
-          productId: true,
-          relatedProductKey: true,
-          relatedProductId: true,
-          relatedProduct: true,
-        },
-        where: { productId: { in: ids } },
-      });
-      relatedProducts = results.map((rp) => rp.relatedProduct);
-      relatedProductIds.push(...results.map((rp) => rp.relatedProductId));
+    // Second set of queries: Fetching related data to the products fetched
+    // earlier. For example: ranks, benchmarks, fields.
 
-      for (const product of allProducts) {
-        // TODO: use map
-        product.relatedProducts = results.filter(
-          (rp) => rp.productId === product.id,
-        );
-      }
-      allProducts.push(...results.map((rp) => rp.relatedProduct));
-    }
-
-    // Second set of queries: Fetching related data to the base products.
-    // For example: ranks, benchmarks, fields.
-
-    const queries = [];
-    if (includeFields && productType === ProductType.Cpu) {
-      queries.push(
-        (async () => {
-          const ids = [...productIds, ...parentIds];
-          if (includeRelatedFields) {
-            ids.push(...relatedProductIds);
-          }
-
-          const selectFields = Array.isArray(includeFields)
-            ? includeFields.reduce(
-                (acc, fieldKey) => {
-                  acc[fieldKey + 'Value'] = true;
-                  acc[fieldKey + 'Meta'] = true;
-                  return acc;
-                },
-                { productId: true } as Record<string, boolean>,
-              )
-            : undefined;
-
-          // TODO: select explicit fields.
-          const cpuFields: CpuFieldsEntity[] = (await db.cpuFields.findMany({
-            where: { productId: { in: ids } },
-            select: selectFields,
-          })) as any;
-
-          for (const product of allProducts) {
-            // TODO: use map
-            product.cpuFields = cpuFields.find(
-              (cf) => cf.productId === product.id,
-            );
-          }
-        })(),
-      );
-    }
-    if (includeFields && productType === ProductType.Gpu) {
-      queries.push(
-        (async () => {
-          const selectProductFields = Array.isArray(includeFields)
-            ? includeFields.reduce(
-                (acc, fieldKey) => {
-                  acc[fieldKey + 'Value'] = true;
-                  acc[fieldKey + 'Meta'] = true;
-                  return acc;
-                },
-                { productId: true } as Record<string, boolean>,
-              )
-            : undefined;
-
-          const productFields: GpuFieldsEntity[] = (await db.gpuFields.findMany(
-            {
-              where: { productId: { in: productIds } },
-              select: selectProductFields,
-            },
-          )) as any;
-
-          for (const product of products) {
-            // TODO: use map
-            product.gpuFields = productFields.find(
-              (gf) => gf.productId === product.id,
-            );
-          }
-
-          if (includeParent) {
-            const selectParentFields = Array.isArray(includeParentFields)
-              ? includeParentFields.reduce(
-                  (acc, fieldKey) => {
-                    acc[fieldKey + 'Value'] = true;
-                    acc[fieldKey + 'Meta'] = true;
-                    return acc;
-                  },
-                  { productId: true } as Record<string, boolean>,
-                )
-              : undefined;
-            const parentFields: GpuFieldsEntity[] =
-              (await db.gpuFields.findMany({
-                where: { productId: { in: parentIds } },
-                select: selectParentFields,
-              })) as any;
-
-            for (const product of parents) {
-              // TODO: use map
-              product.gpuFields = parentFields.find(
-                (gf) => gf.productId === product.id,
-              );
-            }
-          }
-
-          if (includeRelated) {
-            const selectRelatedFields = Array.isArray(includeRelatedFields)
-              ? includeRelatedFields.reduce(
-                  (acc, fieldKey) => {
-                    acc[fieldKey + 'Value'] = true;
-                    acc[fieldKey + 'Meta'] = true;
-                    return acc;
-                  },
-                  { productId: true } as Record<string, boolean>,
-                )
-              : undefined;
-            const relatedFields: GpuFieldsEntity[] =
-              (await db.gpuFields.findMany({
-                where: { productId: { in: relatedProductIds } },
-                select: selectRelatedFields,
-              })) as any;
-
-            for (const product of relatedProducts) {
-              // TODO: use map
-              product.gpuFields = relatedFields.find(
-                (gf) => gf.productId === product.id,
-              );
-            }
-          }
-
-          // const selectFields = Array.isArray(includeFields)
-          //   ? includeFields.reduce(
-          //       (acc, fieldKey) => {
-          //         acc[fieldKey + 'Value'] = true;
-          //         acc[fieldKey + 'Meta'] = true;
-          //         return acc;
-          //       },
-          //       { productId: true } as Record<string, boolean>,
-          //     )
-          //   : undefined;
-
-          // TODO: select explicit fields for related, parent,
-          // const gpuFields: GpuFieldsEntity[] = (await db.gpuFields.findMany({
-          //   where: { productId: { in: ids } },
-          //   select: selectFields,
-          // })) as any;
-
-          // for (const product of allProducts) {
-          //   // TODO: use map
-          //   product.gpuFields = gpuFields.find(
-          //     (gf) => gf.productId === product.id,
-          //   );
-          // }
-        })(),
-      );
-    }
-
-    if (includeBenchmarks) {
-      queries.push(
-        (async () => {
-          const ids = [...productIds, ...parentIds];
-          if (includeRelatedBenchmarks) {
-            ids.push(...relatedProductIds);
-          }
-          const benchmarks: ProductBenchmarkEntity[] =
-            await db.productBenchmark.findMany({
-              where: { productId: { in: ids } },
-            });
-
-          for (const product of allProducts) {
-            // TODO: use map
-            product.benchmarks = benchmarks.filter(
-              (b) => b.productId === product.id,
-            );
-          }
-        })(),
-      );
-    }
-
-    if (includeRanks) {
-      queries.push(
-        (async () => {
-          const ids = [...productIds, ...parentIds];
-          if (includeRelatedRanks) {
-            ids.push(...relatedProductIds);
-          }
-
-          const ranks = await db.productRank.findMany({
-            where: { productId: { in: ids } },
-          });
-
-          for (const product of allProducts) {
-            // TODO: use map
-            product.ranks = ranks.find((r) => r.productId === product.id);
-          }
-        })(),
-      );
-    }
+    const queries = [
+      this.populateFields(products, parents, relatedProducts, options, config),
+      this.populateBenchmarks(
+        products,
+        parents,
+        relatedProducts,
+        options,
+        config,
+      ),
+      this.populateRanks(products, parents, relatedProducts, options, config),
+    ];
 
     await Promise.all(queries);
 
-    return products;
+    return sortByIds(ids, products, (p) => p.id);
   }
 
   async findBySlug(
@@ -381,135 +155,6 @@ export class ProductRepository {
     );
 
     return products[0] || null;
-
-    // const productId = product.id;
-    // const { parentId } = product;
-    // const productIds = [productId];
-
-    // let hasParent = false;
-    // if (includeParent && Number.isInteger(parentId)) {
-    //   const parent = await db.product.findUnique({
-    //     where: { id: parentId },
-    //   });
-    //   productIds.push(parent.id);
-    //   product.parent = parent;
-    //   hasParent = true;
-    // }
-
-    // const queries1 = [];
-    // if (includeFields && productType === ProductType.Gpu) {
-    //   queries1.push(
-    //     (async () => {
-    //       const [gpuFields, parentGpuFields] = await db.gpuFields.findMany({
-    //         where: { productId: { in: productIds } },
-    //       });
-    //       product.gpuFields = gpuFields;
-    //       if (hasParent) {
-    //         product.parent.gpuFields = parentGpuFields;
-    //       }
-    //     })(),
-    //   );
-    // }
-    // if (includeBenchmarks) {
-    //   queries1.push(
-    //     (async () => {
-    //       const benchmarks: ProductBenchmarkEntity[] =
-    //         await db.productBenchmark.findMany({
-    //           where: { productId: { in: productIds } },
-    //         });
-    //       product.benchmarks = benchmarks.filter(
-    //         (b) => b.productId === productId,
-    //       );
-    //       if (hasParent) {
-    //         product.parent.benchmarks = benchmarks.filter(
-    //           (b) => b.productId === parentId,
-    //         );
-    //       }
-    //     })(),
-    //   );
-    // }
-    // if (includeRanks) {
-    //   queries1.push(
-    //     (async () => {
-    //       const ranks: ProductRankEntity[] = await db.productRank.findMany({
-    //         where: { productId: { in: productIds } },
-    //       });
-    //       product.ranks = ranks.filter((r) => r.productId === productId)[0];
-    //       if (hasParent) {
-    //         product.parent.ranks = ranks.filter(
-    //           (r) => r.productId === parentId,
-    //         )[0];
-    //       }
-    //     })(),
-    //   );
-    // }
-
-    // await Promise.all(queries1);
-
-    // const queries2 = [];
-    // if (includeRelated) {
-    //   const relatedProducts: RelatedProductEntity[] =
-    //     await db.relatedProduct.findMany({
-    //       select: {
-    //         productId: true,
-    //         relatedProductKey: true,
-    //         relatedProductId: true,
-    //         relatedProduct: true,
-    //       },
-    //       where: { productId: { in: productIds } },
-    //     });
-    //   const relatedProductIds = relatedProducts.map(
-    //     (rp) => rp.relatedProductId,
-    //   );
-
-    //   if (options.includeRelatedBenchmarks) {
-    //     queries2.push(
-    //       (async () => {
-    //         const benchmarks = await db.productBenchmark.findMany({
-    //           where: { productId: { in: relatedProductIds } },
-    //         });
-
-    //         for (const relatedProduct of relatedProducts) {
-    //           relatedProduct.relatedProduct.benchmarks = benchmarks.filter(
-    //             (b) => b.productId === relatedProduct.relatedProductId,
-    //           );
-    //         }
-    //       })(),
-    //     );
-    //   }
-    //   if (options.includeRelatedRanks) {
-    //     queries2.push(
-    //       (async () => {
-    //         const ranks = await db.productRank.findMany({
-    //           where: { productId: { in: relatedProductIds } },
-    //         });
-    //         for (const relatedProduct of relatedProducts) {
-    //           relatedProduct.relatedProduct.ranks = ranks.filter(
-    //             (r) => r.productId === relatedProduct.relatedProductId,
-    //           )[0];
-    //         }
-    //       })(),
-    //     );
-    //   }
-
-    //   product.relatedProducts = relatedProducts.filter(
-    //     (rp) => rp.productId === productId,
-    //   );
-    //   if (hasParent) {
-    //     product.parent.relatedProducts = relatedProducts.filter(
-    //       (rp) => rp.productId === parentId,
-    //     );
-    //   }
-    // }
-
-    // await Promise.all(queries2);
-
-    // return product;
-
-    // return await db.product.findUnique({
-    //   where: { productType_slug: { productType, slug } },
-    //   include: this.generateProductInclude(options),
-    // });
   }
 
   async count(options: CountOptions, config?: RepositoryConfig) {
@@ -527,9 +172,7 @@ export class ProductRepository {
         where: {
           AND: [
             { benchmarkKey: benchmarkToSort },
-            {
-              product: { ...this.generateWhere(productType, options.filter) },
-            },
+            { product: { ...this.generateWhere(productType, options.filter) } },
           ],
         },
       });
@@ -602,15 +245,7 @@ export class ProductRepository {
         },
       });
       const ids = results.map((result) => result.productId);
-      // const products = await db.product.findMany({
-      //   where: { id: { in: ids } },
-      //   select: this.generateProductSelect(options),
-      // });
-      const products = await this.findByIds({
-        ...options,
-        ids,
-      });
-      return sortByIds(ids, products, (p) => p.id);
+      return await this.findByIds({ ...options, ids });
     } else {
       const productIdsResult = await db.product.findMany({
         select: { id: true },
@@ -621,24 +256,7 @@ export class ProductRepository {
       });
       const productIds = productIdsResult.map((p) => p.id);
 
-      const products = await this.findByIds(
-        { ...options, ids: productIds },
-        config,
-      );
-
-      return sortByIds(productIds, products, (p) => p.id);
-
-      // We are not sorting by benchmark, so we can fetch the products
-      // directly.
-      // return await db.product.findMany({
-      //   where: {
-      //     ...this.generateWhere(productType, options.filter),
-      //   },
-      //   orderBy: this.generateOrderBy(productType, options.orderBy),
-      //   skip: options.pagination?.offset,
-      //   take: options.pagination?.limit,
-      //   select: this.generateProductSelect(options),
-      // });
+      return await this.findByIds({ ...options, ids: productIds }, config);
     }
   }
 
@@ -1007,343 +625,275 @@ export class ProductRepository {
     return { id: 'desc' };
   }
 
-  private generateProductInclude(
-    options: IncludeRelationsOptions & { productType?: ProductType },
-  ): Prisma.ProductInclude {
-    const productType = options.productType;
-    const includeFields = options.includeFields ?? true;
-    const includeBenchmarks = options.includeBenchmarks ?? false;
-    const includeRanks = options.includeRanks ?? false;
-    const includeSources = options.includeBenchmarks ?? false;
-    const includeParent = options.includeParent ?? false;
-    const includeChildren = options.includeChildren ?? false;
-    const includeImages = options.includeImages ?? false;
-    const includeRelated = options.includeRelated ?? false;
-    const includeRelatedFields = options.includeRelatedFields ?? false;
-    const includeRelatedBenchmarks = options.includeRelatedBenchmarks ?? false;
-    const includeRelatedRanks = options.includeRelatedRanks ?? false;
+  private async populateParents(
+    products: ProductEntity[],
+    options: IncludeRelationsOptions,
+    config?: RepositoryConfig,
+  ) {
+    if (!options.includeParent) {
+      return [];
+    }
 
-    const includeCpuFields =
-      includeFields && (productType === ProductType.Cpu || productType == null);
-    const includeGpuFields =
-      includeFields && (productType === ProductType.Gpu || productType == null);
-    const includeRelatedCpuFields =
-      includeRelatedFields &&
-      (productType === ProductType.Cpu || productType == null);
-    const includeRelatedGpuFields =
-      includeRelatedFields &&
-      (productType === ProductType.Gpu || productType == null);
+    const db = config?.trx ?? this.db;
 
-    return {
-      cpuFields: includeCpuFields,
-      gpuFields: includeGpuFields,
-      benchmarks: includeBenchmarks,
-      ranks: includeRanks,
-      sources: includeSources,
-      relatedProducts: includeRelated
-        ? {
-            include: {
-              relatedProduct: {
-                include: {
-                  cpuFields: includeRelatedCpuFields,
-                  gpuFields: includeRelatedGpuFields,
-                  benchmarks: includeRelatedBenchmarks,
-                  ranks: includeRelatedRanks,
-                },
-              },
-            },
-          }
-        : false,
-      parent: includeParent
-        ? {
-            include: {
-              cpuFields: includeCpuFields,
-              gpuFields: includeGpuFields,
-              ranks: includeRanks,
-              benchmarks: includeBenchmarks,
-              relatedProducts: includeRelated
-                ? {
-                    include: {
-                      relatedProduct: {
-                        include: {
-                          cpuFields: includeRelatedCpuFields,
-                          gpuFields: includeRelatedGpuFields,
-                          benchmarks: includeRelatedBenchmarks,
-                          ranks: includeRelatedRanks,
-                        },
-                      },
-                    },
-                  }
-                : false,
-            },
-          }
-        : false,
-      children: includeChildren,
-      images: includeImages ? { include: { image: true } } : false,
-    };
+    const parentIds = products
+      .filter((p) => p.parentId)
+      .map((p) => Number(p.parentId));
+
+    const parents = await db.product.findMany({
+      where: { id: { in: parentIds } },
+    });
+    const parentsMap = parents.reduce((acc, parent) => {
+      acc[parent.id] = parent;
+      return acc;
+    }, {} as Record<number, ProductEntity>);
+
+    for (const product of products) {
+      if (product.parentId) {
+        product.parent = parentsMap[product.parentId] ?? null;
+      }
+    }
+
+    return parents;
   }
 
-  private generateProductSelect(
-    options: IncludeRelationsOptions & { productType?: ProductType },
-  ): Prisma.ProductSelect {
-    const productType = options.productType;
-    const includeFields = options.includeFields ?? true;
-    const includeBenchmarks = options.includeBenchmarks ?? false;
-    const includeRanks = options.includeRanks ?? false;
-    const includeSources = options.includeBenchmarks ?? false;
-    const includeParent = options.includeParent ?? false;
-    const includeChildren = options.includeChildren ?? false;
-    const includeImages = options.includeImages ?? false;
-    const includeRelated = options.includeRelated ?? false;
-    const includeRelatedFields = options.includeRelatedFields ?? false;
-    const includeRelatedBenchmarks = options.includeRelatedBenchmarks ?? false;
-    const includeRelatedRanks = options.includeRelatedRanks ?? false;
-
-    const includeCpuFields =
-      includeFields && (productType === ProductType.Cpu || productType == null);
-    const includeGpuFields =
-      includeFields && (productType === ProductType.Gpu || productType == null);
-    const includeRelatedCpuFields =
-      includeRelatedFields &&
-      (productType === ProductType.Cpu || productType == null);
-    const includeRelatedGpuFields =
-      includeRelatedFields &&
-      (productType === ProductType.Gpu || productType == null);
-
-    let selectCpuFields = undefined;
-    if (includeCpuFields && Array.isArray(includeFields)) {
-      selectCpuFields = {
-        select: includeFields.reduce((acc, fieldKey) => {
-          acc[fieldKey + 'Value'] = true;
-          acc[fieldKey + 'Meta'] = true;
-          return acc;
-        }, {} as Record<string, boolean>),
-      };
-    } else if (includeCpuFields) {
-      selectCpuFields = true;
+  private async populateRelated(
+    products: ProductEntity[],
+    parents: ProductEntity[],
+    options: IncludeRelationsOptions,
+    config?: RepositoryConfig,
+  ) {
+    if (!options.includeRelated) {
+      return [];
     }
 
-    let selectGpuFields = undefined;
-    if (includeGpuFields && Array.isArray(includeFields)) {
-      selectGpuFields = {
-        select: includeFields.reduce((acc, fieldKey) => {
-          acc[fieldKey + 'Value'] = true;
-          acc[fieldKey + 'Meta'] = true;
-          return acc;
-        }, {} as Record<string, boolean>),
-      };
-    } else if (includeGpuFields) {
-      selectGpuFields = true;
+    const db = config?.trx ?? this.db;
+
+    const ids = [...products, ...parents].map((p) => p.id);
+    const relatedProducts: RelatedProductEntity[] =
+      await db.relatedProduct.findMany({
+        select: {
+          productId: true,
+          relatedProductKey: true,
+          relatedProductId: true,
+          relatedProduct: true,
+        },
+        where: { productId: { in: ids } },
+      });
+
+    const relatedProductsMap = relatedProducts.reduce((acc, rp) => {
+      acc[rp.productId] = acc[rp.productId] || [];
+      acc[rp.productId].push(rp);
+      return acc;
+    }, {} as Record<number, RelatedProductEntity[]>);
+
+    for (const product of [...products, ...parents]) {
+      product.relatedProducts = relatedProductsMap[product.id];
     }
 
-    return {
-      id: true,
-      productType: true,
-      parentId: true,
-      name: true,
-      slug: true,
-      summary: true,
-      searchText: true,
-      otherNames: true,
-      company: true,
-      affiliateUrl: true,
-      metadata: true,
+    return relatedProducts;
+  }
 
-      benchmarks: includeBenchmarks
-        ? {
-            select: {
-              productId: true,
-              benchmarkKey: true,
-              value: true,
-              valuePerMsrp: true,
-              metadata: true,
-            },
-          }
-        : undefined,
-      ranks: includeRanks
-        ? {
-            select: {
-              productId: true,
-              ranks: true,
-            },
-          }
-        : undefined,
-      sources: includeSources
-        ? {
-            select: {
-              productId: true,
-              sourceKey: true,
-              sourceUrl: true,
-              metadata: true,
-            },
-          }
-        : undefined,
-      images: includeImages
-        ? {
-            select: {
-              image: {
-                select: {
-                  id: true,
-                  path: true,
-                  name: true,
-                  sourceName: true,
-                  sourceUrl: true,
-                  fileSize: true,
-                  height: true,
-                  width: true,
-                },
-              },
-            },
-          }
-        : undefined,
-      cpuFields: selectCpuFields,
-      gpuFields: selectGpuFields,
+  private async populateRanks(
+    products: ProductEntity[],
+    parents: ProductEntity[],
+    related: ProductEntity[],
+    options: IncludeRelationsOptions,
+    config?: RepositoryConfig,
+  ) {
+    const ids: number[] = [];
+    if (options.includeRanks) {
+      const productIds = products.map((p) => p.id);
+      const parentIds = parents.map((p) => p.id);
+      ids.push(...productIds, ...parentIds);
+    }
 
-      parent: includeParent
-        ? {
-            select: {
-              name: true,
-              productType: true,
-              slug: true,
-              company: true,
-              benchmarks: includeBenchmarks
-                ? {
-                    select: {
-                      productId: true,
-                      benchmarkKey: true,
-                      value: true,
-                      valuePerMsrp: true,
-                    },
-                  }
-                : undefined,
-              gpuFields: selectGpuFields,
-              ranks: includeRanks
-                ? {
-                    select: {
-                      productId: true,
-                      ranks: true,
-                    },
-                  }
-                : undefined,
-              relatedProducts: includeRelated
-                ? {
-                    select: {
-                      relatedProduct: {
-                        select: {
-                          name: true,
-                          productType: true,
-                          slug: true,
-                          company: true,
-                          benchmarks: includeRelatedBenchmarks
-                            ? {
-                                select: {
-                                  productId: true,
-                                  benchmarkKey: true,
-                                  value: true,
-                                  valuePerMsrp: true,
-                                },
-                              }
-                            : undefined,
-                          cpuFields: false,
-                          gpuFields: false,
-                          ranks: includeRelatedRanks
-                            ? {
-                                select: {
-                                  productId: true,
-                                  ranks: true,
-                                },
-                              }
-                            : undefined,
-                        },
-                      },
-                    },
-                  }
-                : undefined,
-            },
-          }
-        : undefined,
-      children: false,
+    if (options.includeRelatedRanks) {
+      const relatedIds = related.map((p) => p.id);
+      ids.push(...relatedIds);
+    }
 
-      relatedProducts: includeRelated
-        ? {
-            select: {
-              relatedProduct: {
-                select: {
-                  name: true,
-                  productType: true,
-                  slug: true,
-                  company: true,
-                  benchmarks: includeRelatedBenchmarks
-                    ? {
-                        select: {
-                          productId: true,
-                          benchmarkKey: true,
-                          value: true,
-                          valuePerMsrp: true,
-                        },
-                      }
-                    : undefined,
-                  cpuFields: false,
-                  gpuFields: false,
-                  ranks: includeRelatedRanks
-                    ? {
-                        select: {
-                          productId: true,
-                          ranks: true,
-                        },
-                      }
-                    : undefined,
-                },
-              },
-            },
-          }
-        : undefined,
+    const db = config?.trx ?? this.db;
 
-      // cpuFields: includeCpuFields,
-      // gpuFields: includeGpuFields,
-      // benchmarks: includeBenchmarks,
-      // ranks: includeRanks,
-      // sources: includeSources,
-      // relatedProducts: includeRelated
-      //   ? {
-      //       include: {
-      //         relatedProduct: {
-      //           include: {
-      //             cpuFields: includeRelatedCpuFields,
-      //             gpuFields: includeRelatedGpuFields,
-      //             benchmarks: includeRelatedBenchmarks,
-      //             ranks: includeRelatedRanks,
-      //           },
-      //         },
-      //       },
-      //     }
-      //   : false,
-      // parent: includeParent
-      //   ? {
-      //       include: {
-      //         cpuFields: includeCpuFields,
-      //         gpuFields: includeGpuFields,
-      //         ranks: includeRanks,
-      //         benchmarks: includeBenchmarks,
-      //         relatedProducts: includeRelated
-      //           ? {
-      //               include: {
-      //                 relatedProduct: {
-      //                   include: {
-      //                     cpuFields: includeRelatedCpuFields,
-      //                     gpuFields: includeRelatedGpuFields,
-      //                     benchmarks: includeRelatedBenchmarks,
-      //                     ranks: includeRelatedRanks,
-      //                   },
-      //                 },
-      //               },
-      //             }
-      //           : false,
-      //       },
-      //     }
-      //   : false,
-      // children: includeChildren,
-      // images: includeImages ? { include: { image: true } } : false,
-    };
+    const ranks = await db.productRank.findMany({
+      where: { productId: { in: ids } },
+    });
+    const ranksMap = ranks.reduce((acc, r) => {
+      acc[r.productId] = r;
+      return acc;
+    }, {} as Record<number, ProductRankEntity>);
+
+    for (const product of [...products, ...parents, ...related]) {
+      product.ranks = ranksMap[product.id];
+    }
+  }
+
+  private async populateBenchmarks(
+    products: ProductEntity[],
+    parents: ProductEntity[],
+    related: ProductEntity[],
+    options: IncludeRelationsOptions,
+    config?: RepositoryConfig,
+  ) {
+    const ids: number[] = [];
+    if (options.includeBenchmarks) {
+      const productIds = products.map((p) => p.id);
+      const parentIds = parents.map((p) => p.id);
+      ids.push(...productIds, ...parentIds);
+    }
+
+    if (options.includeRelatedBenchmarks) {
+      const relatedIds = related.map((p) => p.id);
+      ids.push(...relatedIds);
+    }
+
+    const db = config?.trx ?? this.db;
+    const benchmarks: ProductBenchmarkEntity[] =
+      await db.productBenchmark.findMany({
+        where: { productId: { in: ids } },
+      });
+    const benchmarksMap = benchmarks.reduce((acc, b) => {
+      acc[b.productId] = acc[b.productId] || [];
+      acc[b.productId].push(b);
+      return acc;
+    }, {} as Record<number, ProductBenchmarkEntity[]>);
+
+    for (const product of [...products, ...parents, ...related]) {
+      product.benchmarks = benchmarksMap[product.id];
+    }
+  }
+
+  private async populateFields(
+    products: ProductEntity[],
+    parents: ProductEntity[],
+    related: ProductEntity[],
+    options: IncludeRelationsOptions,
+    config?: RepositoryConfig,
+  ) {
+    if (!options.includeFields) {
+      return;
+    }
+
+    const productType = products[0]?.productType;
+    if (!productType) {
+      return;
+    }
+
+    const db = config?.trx ?? this.db;
+
+    // Products
+    if (options.includeFields) {
+      const ids = products.map((p) => p.id);
+      const selectFields = this.buildFieldsSelect(options.includeFields);
+      let fields: CpuFieldsEntity[] | GpuFieldsEntity[];
+      let fieldsMap:
+        | Record<number, CpuFieldsEntity>
+        | Record<number, GpuFieldsEntity>;
+      if (productType === ProductType.Cpu) {
+        fields = (await db.cpuFields.findMany({
+          where: { productId: { in: ids } },
+          select: selectFields,
+        })) as any;
+        fieldsMap = this.buildFieldsMap(fields as CpuFieldsEntity[]);
+      } else if (productType === ProductType.Gpu) {
+        fields = (await db.gpuFields.findMany({
+          where: { productId: { in: ids } },
+          select: selectFields,
+        })) as any;
+        fieldsMap = this.buildFieldsMap(fields as GpuFieldsEntity[]);
+      }
+
+      for (const product of products) {
+        if (productType === ProductType.Cpu) {
+          product.cpuFields = fieldsMap[product.id] as CpuFieldsEntity;
+        } else if (productType === ProductType.Gpu) {
+          product.gpuFields = fieldsMap[product.id] as GpuFieldsEntity;
+        }
+      }
+    }
+
+    // Parents
+    if (options.includeParentFields) {
+      const ids = parents.map((p) => p.id);
+      const selectFields = this.buildFieldsSelect(options.includeParentFields);
+      let fields: CpuFieldsEntity[] | GpuFieldsEntity[];
+      let fieldsMap:
+        | Record<number, CpuFieldsEntity>
+        | Record<number, GpuFieldsEntity>;
+      if (productType === ProductType.Cpu) {
+        fields = (await db.cpuFields.findMany({
+          where: { productId: { in: ids } },
+          select: selectFields,
+        })) as any;
+        fieldsMap = this.buildFieldsMap(fields as CpuFieldsEntity[]);
+      } else if (productType === ProductType.Gpu) {
+        fields = (await db.gpuFields.findMany({
+          where: { productId: { in: ids } },
+          select: selectFields,
+        })) as any;
+        fieldsMap = this.buildFieldsMap(fields as GpuFieldsEntity[]);
+      }
+
+      for (const product of parents) {
+        if (productType === ProductType.Cpu) {
+          product.cpuFields = fieldsMap[product.id] as CpuFieldsEntity;
+        } else if (productType === ProductType.Gpu) {
+          product.gpuFields = fieldsMap[product.id] as GpuFieldsEntity;
+        }
+      }
+    }
+
+    // Related
+    if (options.includeRelatedFields) {
+      const ids = related.map((p) => p.id);
+      const selectFields = this.buildFieldsSelect(options.includeRelatedFields);
+      let fields: CpuFieldsEntity[] | GpuFieldsEntity[];
+      let fieldsMap:
+        | Record<number, CpuFieldsEntity>
+        | Record<number, GpuFieldsEntity>;
+      if (productType === ProductType.Cpu) {
+        fields = (await db.cpuFields.findMany({
+          where: { productId: { in: ids } },
+          select: selectFields,
+        })) as any;
+        fieldsMap = this.buildFieldsMap(fields as CpuFieldsEntity[]);
+      } else if (productType === ProductType.Gpu) {
+        fields = (await db.gpuFields.findMany({
+          where: { productId: { in: ids } },
+          select: selectFields,
+        })) as any;
+        fieldsMap = this.buildFieldsMap(fields as GpuFieldsEntity[]);
+      }
+
+      for (const product of related) {
+        if (productType === ProductType.Cpu) {
+          product.cpuFields = fieldsMap[product.id] as CpuFieldsEntity;
+        } else if (productType === ProductType.Gpu) {
+          product.gpuFields = fieldsMap[product.id] as GpuFieldsEntity;
+        }
+      }
+    }
+  }
+
+  private buildFieldsSelect(fields: boolean | ProductFieldKey[]) {
+    return Array.isArray(fields)
+      ? fields.reduce(
+          (acc, fieldKey) => {
+            acc[fieldKey + 'Value'] = true;
+            acc[fieldKey + 'Meta'] = true;
+            return acc;
+          },
+          { productId: true } as Record<string, boolean>,
+        )
+      : undefined;
+  }
+
+  private buildFieldsMap<T extends CpuFieldsEntity | GpuFieldsEntity>(
+    fields: T[],
+  ) {
+    return fields.reduce((acc, value) => {
+      acc[value.productId] = value;
+      return acc;
+    }, {} as Record<number, T>);
   }
 }
