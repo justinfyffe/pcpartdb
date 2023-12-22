@@ -41,35 +41,28 @@ export class ListGpusViewModelService {
       query,
     );
 
-    const response = await this.db.transaction(
-      () =>
-        this.productService.list(
-          {
-            productType: ProductType.Gpu,
-            query: chipsetsQuery,
-          },
-          {
-            fields: [
-              'releaseDate',
-              'gpuCoreBaseClock',
-              'gpuCoreBoostClock',
-              'length',
-              'slotWidth',
-              'width',
-              'height',
-              'tdp',
-              'marketSegment',
-              'msrp',
-            ],
-            includeAdditionalData: true,
-            includeBenchmarks: [
-              getPreferredBenchmark(ctx.config?.userSettings, ProductType.Gpu),
-            ],
-            includeRanks: true,
-          },
-          ctx,
-        ),
-      { ctx, isolationLevel: 'ReadCommitted' },
+    const response = await this.productService.list(
+      { productType: ProductType.Gpu, query: chipsetsQuery },
+      {
+        fields: [
+          'releaseDate',
+          'gpuCoreBaseClock',
+          'gpuCoreBoostClock',
+          'length',
+          'slotWidth',
+          'width',
+          'height',
+          'tdp',
+          'marketSegment',
+          'msrp',
+        ],
+        includeAdditionalData: true,
+        includeBenchmarks: [
+          getPreferredBenchmark(ctx.config?.userSettings, ProductType.Gpu),
+        ],
+        includeRanks: true,
+      },
+      ctx,
     );
     console.timeEnd(timer);
 

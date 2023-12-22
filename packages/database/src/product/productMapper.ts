@@ -110,7 +110,7 @@ export async function mapToProductDto(
   let relatedProducts: RelatedProducts = undefined;
   if (includeRelated) {
     relatedProducts = {};
-    for (const rp of entity.relatedProducts) {
+    for (const rp of entity?.relatedProducts ?? []) {
       const key = rp.relatedProductKey;
       relatedProducts[key] = relatedProducts[key] || [];
 

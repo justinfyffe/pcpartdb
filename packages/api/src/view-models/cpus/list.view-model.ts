@@ -41,23 +41,19 @@ export class ListCpusViewModelService {
       query,
     );
 
-    const response = await this.db.transaction(
-      () =>
-        this.productService.list(
-          {
-            productType: ProductType.Cpu,
-            query: cpusQuery,
-          },
-          {
-            fields: ['marketSegment', 'releaseDate', 'msrp'],
-            includeBenchmarks: [
-              getPreferredBenchmark(ctx.config?.userSettings, ProductType.Cpu),
-            ],
-            includeRanks: true,
-          },
-          ctx,
-        ),
-      { ctx, isolationLevel: 'ReadCommitted' },
+    const response = await this.productService.list(
+      {
+        productType: ProductType.Cpu,
+        query: cpusQuery,
+      },
+      {
+        fields: ['marketSegment', 'releaseDate', 'msrp'],
+        includeBenchmarks: [
+          getPreferredBenchmark(ctx.config?.userSettings, ProductType.Cpu),
+        ],
+        includeRanks: true,
+      },
+      ctx,
     );
     console.timeEnd(timer);
 

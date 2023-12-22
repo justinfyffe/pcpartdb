@@ -97,34 +97,30 @@ export class ViewGpuViewModelService {
   }
 
   private async getGpu(slug: string, ctx: Context) {
-    const gpu = await this.db.transaction(
-      () =>
-        this.productService.getBySlug(
-          {
-            productType: ProductType.Gpu,
-            slug,
+    const gpu = await this.productService.getBySlug(
+      {
+        productType: ProductType.Gpu,
+        slug,
 
-            includeParent: true,
-            includeChildren: false,
-            includeAutomation: false,
-            includeBenchmarks: true,
-            includeImages: true,
-            includeSources: false,
-            includeUpdates: false,
+        includeParent: true,
+        includeChildren: false,
+        includeAutomation: false,
+        includeBenchmarks: true,
+        includeImages: true,
+        includeSources: false,
+        includeUpdates: false,
 
-            includeRanks: true,
+        includeRanks: true,
 
-            parentFields: ['msrp'] as ProductFieldKey[],
+        parentFields: ['msrp'] as ProductFieldKey[],
 
-            includeRelated: true,
-            includeRelatedBenchmarks: [
-              getPreferredBenchmark(ctx.config?.userSettings, ProductType.Gpu),
-            ],
-            includeRelatedRanks: true,
-          },
-          ctx,
-        ),
-      { ctx, isolationLevel: 'ReadCommitted' },
+        includeRelated: true,
+        includeRelatedBenchmarks: [
+          getPreferredBenchmark(ctx.config?.userSettings, ProductType.Gpu),
+        ],
+        includeRelatedRanks: true,
+      },
+      ctx,
     );
     return gpu as GpuProduct;
   }
@@ -262,88 +258,76 @@ export class ViewGpuViewModelService {
   private async getRetailModels(gpu: GpuProduct, ctx: Context) {
     const chipset = getGpuChipset(gpu);
 
-    const response = await this.db.transaction(
-      () =>
-        this.productService.list(
-          {
-            productType: ProductType.Gpu,
-            query: {
-              filter: { chipsetId: [chipset.id] },
-              orderBy: { sort: ListSort.Name },
-            },
-          },
-          {
-            fields: [
-              'gpuCoreBaseClock',
-              'gpuCoreBoostClock',
-              'length',
-              'slotWidth',
-              'width',
-              'height',
-              'tdp',
-            ] as ProductFieldKey[],
-            skipCount: true,
-          },
-          ctx,
-        ),
-      { ctx, isolationLevel: 'ReadCommitted' },
+    const response = await this.productService.list(
+      {
+        productType: ProductType.Gpu,
+        query: {
+          filter: { chipsetId: [chipset.id] },
+          orderBy: { sort: ListSort.Name },
+        },
+      },
+      {
+        fields: [
+          'gpuCoreBaseClock',
+          'gpuCoreBoostClock',
+          'length',
+          'slotWidth',
+          'width',
+          'height',
+          'tdp',
+        ] as ProductFieldKey[],
+        skipCount: true,
+      },
+      ctx,
     );
     return response.results;
   }
 
   private async getBestPerformanceGpu(ctx: Context) {
-    return await this.db.transaction(
-      async () => {
-        const response = await this.productService.list(
-          {
-            productType: ProductType.Gpu,
-            query: {
-              filter: { isChipset: true },
-              orderBy: {
-                sort: ListSort.PerformanceRating,
-                order: ListOrder.Desc,
-              },
-              pagination: { limit: 1 },
-            },
+    const response = await this.productService.list(
+      {
+        productType: ProductType.Gpu,
+        query: {
+          filter: { isChipset: true },
+          orderBy: {
+            sort: ListSort.PerformanceRating,
+            order: ListOrder.Desc,
           },
-          {
-            includeBenchmarks: [
-              getPreferredBenchmark(ctx.config?.userSettings, ProductType.Gpu),
-            ],
-          },
-          ctx,
-        );
-        return (response.results?.[0] || null) as GpuProduct;
+          pagination: { limit: 1 },
+        },
       },
-      { ctx, isolationLevel: 'ReadCommitted' },
+      {
+        skipCount: true,
+        includeBenchmarks: [
+          getPreferredBenchmark(ctx.config?.userSettings, ProductType.Gpu),
+        ],
+      },
+      ctx,
     );
+    return (response.results?.[0] || null) as GpuProduct;
   }
 
   private async getBestValueGpu(ctx: Context) {
-    return await this.db.transaction(
-      async () => {
-        const response = await this.productService.list(
-          {
-            productType: ProductType.Gpu,
-            query: {
-              filter: { isChipset: true },
-              orderBy: {
-                sort: ListSort.PerformancePerMsrp,
-                order: ListOrder.Desc,
-              },
-              pagination: { limit: 1 },
-            },
+    const response = await this.productService.list(
+      {
+        productType: ProductType.Gpu,
+        query: {
+          filter: { isChipset: true },
+          orderBy: {
+            sort: ListSort.PerformancePerMsrp,
+            order: ListOrder.Desc,
           },
-          {
-            includeBenchmarks: [
-              getPreferredBenchmark(ctx.config?.userSettings, ProductType.Gpu),
-            ],
-          },
-          ctx,
-        );
-        return (response.results?.[0] || null) as GpuProduct;
+          pagination: { limit: 1 },
+        },
       },
-      { ctx, isolationLevel: 'ReadCommitted' },
+      {
+        skipCount: true,
+        includeBenchmarks: [
+          getPreferredBenchmark(ctx.config?.userSettings, ProductType.Gpu),
+        ],
+      },
+      ctx,
     );
+    return (response.results?.[0] || null) as GpuProduct;
   }
 }

@@ -32,24 +32,18 @@ export class ProductController {
   @Get()
   async list(@Query('req') reqJson: string, @Ctx() ctx: Context) {
     const req: ListProductsRequest = JSON.parse(reqJson);
-    const ret = await this.db.transaction(
-      async () => {
-        return await this.service.list(
-          req,
-          {
-            fields: this.getListFields(req.productType),
-            includeAdditionalData: true,
-            includeBenchmarks: [
-              getPreferredBenchmark(ctx.config?.userSettings, req.productType),
-            ],
-            includeRanks: true,
-          },
-          ctx,
-        );
+    return await this.service.list(
+      req,
+      {
+        fields: this.getListFields(req.productType),
+        includeAdditionalData: true,
+        includeBenchmarks: [
+          getPreferredBenchmark(ctx.config?.userSettings, req.productType),
+        ],
+        includeRanks: true,
       },
-      { ctx },
+      ctx,
     );
-    return ret;
   }
 
   @Get('autocomplete')
@@ -66,21 +60,15 @@ export class ProductController {
   @UseGuards(StaffGuard)
   async listAll(@Query('req') reqJson: string, @Ctx() ctx: Context) {
     const req: ListProductsRequest = JSON.parse(reqJson);
-    const ret = await this.db.transaction(
-      async () => {
-        return await this.service.list(
-          req,
-          {
-            fields: ['marketSegment', 'msrp'],
-            includeBenchmarks: true,
-            skipCount: true,
-          },
-          ctx,
-        );
+    return await this.service.list(
+      req,
+      {
+        fields: ['marketSegment', 'msrp'],
+        includeBenchmarks: true,
+        skipCount: true,
       },
-      { ctx, timeout: 60_000 },
+      ctx,
     );
-    return ret;
   }
 
   @Post('scrape')
@@ -98,13 +86,8 @@ export class ProductController {
   ) {
     const id = Number(idStr);
     const req: GetProductRequest = JSON.parse(reqJson);
-    return await this.db.transaction(
-      async () => {
-        const product = await this.service.getById({ ...req, id }, ctx);
-        return product;
-      },
-      { ctx },
-    );
+    const product = await this.service.getById({ ...req, id }, ctx);
+    return product;
   }
 
   @Post()

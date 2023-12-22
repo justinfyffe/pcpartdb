@@ -102,32 +102,28 @@ export class CompareCpusViewModelService {
   }
 
   private async getComparison(slug: string, ctx: Context) {
-    const comparison = await this.db.transaction(
-      () =>
-        this.productService.getComparison(
-          {
-            productType: ProductType.Cpu,
-            slug,
+    const comparison = await this.productService.getComparison(
+      {
+        productType: ProductType.Cpu,
+        slug,
 
-            includeParent: false,
-            includeChildren: false,
-            includeAutomation: false,
-            includeBenchmarks: true,
-            includeImages: true,
-            includeSources: false,
-            includeUpdates: false,
+        includeParent: false,
+        includeChildren: false,
+        includeAutomation: false,
+        includeBenchmarks: true,
+        includeImages: true,
+        includeSources: false,
+        includeUpdates: false,
 
-            includeRanks: true,
+        includeRanks: true,
 
-            includeRelated: true,
-            includeRelatedBenchmarks: [
-              getPreferredBenchmark(ctx.config?.userSettings, ProductType.Cpu),
-            ],
-            includeRelatedRanks: true,
-          },
-          ctx,
-        ),
-      { ctx, isolationLevel: 'ReadCommitted' },
+        includeRelated: true,
+        includeRelatedBenchmarks: [
+          getPreferredBenchmark(ctx.config?.userSettings, ProductType.Cpu),
+        ],
+        includeRelatedRanks: true,
+      },
+      ctx,
     );
     return comparison as CpuProductComparison;
   }
@@ -404,58 +400,50 @@ export class CompareCpusViewModelService {
   }
 
   private async getBestPerformanceCpu(ctx: Context) {
-    return await this.db.transaction(
-      async () => {
-        const response = await this.productService.list(
-          {
-            productType: ProductType.Cpu,
-            query: {
-              filter: {},
-              orderBy: {
-                sort: ListSort.PerformanceRating,
-                order: ListOrder.Desc,
-              },
-              pagination: { limit: 1 },
-            },
+    const response = await this.productService.list(
+      {
+        productType: ProductType.Cpu,
+        query: {
+          filter: {},
+          orderBy: {
+            sort: ListSort.PerformanceRating,
+            order: ListOrder.Desc,
           },
-          {
-            includeBenchmarks: [
-              getPreferredBenchmark(ctx.config?.userSettings, ProductType.Cpu),
-            ],
-          },
-          ctx,
-        );
-        return (response.results?.[0] || null) as CpuProduct;
+          pagination: { limit: 1 },
+        },
       },
-      { ctx, isolationLevel: 'ReadCommitted' },
+      {
+        skipCount: true,
+        includeBenchmarks: [
+          getPreferredBenchmark(ctx.config?.userSettings, ProductType.Cpu),
+        ],
+      },
+      ctx,
     );
+    return (response.results?.[0] || null) as CpuProduct;
   }
 
   private async getBestValueCpu(ctx: Context) {
-    return await this.db.transaction(
-      async () => {
-        const response = await this.productService.list(
-          {
-            productType: ProductType.Cpu,
-            query: {
-              filter: {},
-              orderBy: {
-                sort: ListSort.PerformancePerMsrp,
-                order: ListOrder.Desc,
-              },
-              pagination: { limit: 1 },
-            },
+    const response = await this.productService.list(
+      {
+        productType: ProductType.Cpu,
+        query: {
+          filter: {},
+          orderBy: {
+            sort: ListSort.PerformancePerMsrp,
+            order: ListOrder.Desc,
           },
-          {
-            includeBenchmarks: [
-              getPreferredBenchmark(ctx.config?.userSettings, ProductType.Cpu),
-            ],
-          },
-          ctx,
-        );
-        return (response.results?.[0] || null) as CpuProduct;
+          pagination: { limit: 1 },
+        },
       },
-      { ctx, isolationLevel: 'ReadCommitted' },
+      {
+        skipCount: true,
+        includeBenchmarks: [
+          getPreferredBenchmark(ctx.config?.userSettings, ProductType.Cpu),
+        ],
+      },
+      ctx,
     );
+    return (response.results?.[0] || null) as CpuProduct;
   }
 }
