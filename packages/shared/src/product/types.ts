@@ -49,7 +49,7 @@ export interface Product {
   sources?: ProductSource[];
   updates?: ProductUpdate[];
   images?: ProductImage[];
-  relatedAutomationSources?: AutomationSource[];
+  relatedAutomationSources?: AutomationSource[]; // TODO: is this needed?
   parent?: Product;
 
   ranks?: ProductRanks;

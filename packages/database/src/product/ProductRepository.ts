@@ -22,6 +22,7 @@ import { GpuFieldsEntity } from './GpuFieldsEntity';
 import { ProductBenchmarkEntity } from './ProductBenchmarkEntity';
 import { ProductEntity } from './ProductEntity';
 import { ProductRankEntity } from './ProductRankEntity';
+import { ProductSourceEntity } from './ProductSourceEntity';
 import { RelatedProductEntity } from './RelatedProductEntity';
 
 interface FindByIdOptions extends IncludeRelationsOptions {
@@ -56,10 +57,10 @@ interface ListOptions extends IncludeRelationsOptions {
 
 interface IncludeRelationsOptions {
   includeFields?: boolean;
-  includeSources?: boolean;
   includeImages?: boolean;
   includeBenchmarks?: boolean;
   includeRanks?: boolean;
+  includeSources?: boolean;
 
   includeRelated?: boolean;
   includeRelatedFields?: boolean;
@@ -133,6 +134,7 @@ export class ProductRepository {
         config,
       ),
       this.populateRanks(products, parents, relatedProducts, options, config),
+      this.populateSources(products, options, config),
     ];
 
     await Promise.all(queries);
@@ -764,6 +766,31 @@ export class ProductRepository {
 
     for (const product of [...products, ...parents, ...related]) {
       product.benchmarks = benchmarksMap[product.id];
+    }
+  }
+
+  private async populateSources(
+    products: ProductEntity[],
+    options: IncludeRelationsOptions,
+    config?: RepositoryConfig,
+  ) {
+    if (!options.includeSources) {
+      return;
+    }
+    const ids: number[] = products.map((p) => p.id);
+
+    const db = config?.trx ?? this.db;
+    const sources = await db.productSource.findMany({
+      where: { productId: { in: ids } },
+    });
+    const sourcesMap = sources.reduce((acc, s) => {
+      acc[s.productId] = acc[s.productId] || [];
+      acc[s.productId].push(s);
+      return acc;
+    }, {} as Record<number, ProductSourceEntity[]>);
+
+    for (const product of products) {
+      product.sources = sourcesMap[product.id];
     }
   }
 
