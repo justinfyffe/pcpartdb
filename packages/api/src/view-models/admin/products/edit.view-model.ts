@@ -42,7 +42,6 @@ export class AdminEditProductViewModelService {
       {
         id,
         includeParent: true,
-        includeChildren: false,
         includeAutomation: true,
         includeBenchmarks: true,
         includeImages: true,
@@ -64,7 +63,6 @@ export class AdminEditProductViewModelService {
         slug,
 
         includeParent: true,
-        includeChildren: false,
         includeAutomation: true,
         includeBenchmarks: true,
         includeImages: true,

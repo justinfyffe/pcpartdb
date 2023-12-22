@@ -58,7 +58,6 @@ interface ListOptions extends IncludeRelationsOptions {
 interface IncludeRelationsOptions {
   includeFields?: boolean | ProductFieldKey[];
   includeParentFields?: boolean | ProductFieldKey[];
-  includeChildrenFields?: boolean | ProductFieldKey[];
   includeRelatedFields?: boolean | ProductFieldKey[];
 
   includeBenchmarks?: boolean;
@@ -98,6 +97,7 @@ export class ProductRepository {
 
     const ids = options.ids;
     const includeParent = options.includeParent;
+    const includeParentFields = options.includeParentFields;
     const includeFields = options.includeFields;
     const includeBenchmarks = options.includeBenchmarks;
     const includeRanks = options.includeRanks;
@@ -125,8 +125,10 @@ export class ProductRepository {
       .filter((p) => p.parentId)
       .map((p) => Number(p.parentId));
     const relatedProductIds: number[] = [];
+    let parents: ProductEntity[] = [];
+    let relatedProducts: ProductEntity[] = [];
 
-    let hasParent = false;
+    const hasParent = false;
     const allProducts: ProductEntity[] = [...products];
 
     // TODO: support children.
@@ -136,11 +138,10 @@ export class ProductRepository {
 
     // const queries1 = [];
     if (includeParent && parentIds.length > 0) {
-      const parents = await db.product.findMany({
+      parents = await db.product.findMany({
         where: { id: { in: parentIds } },
       });
 
-      hasParent = true;
       for (const product of products) {
         // TODO: use map
         product.parent = parents.filter((p) => p.id === product.parentId)[0];
@@ -150,27 +151,25 @@ export class ProductRepository {
 
     if (includeRelated) {
       const ids = [...productIds, ...parentIds];
-      const relatedProducts: RelatedProductEntity[] =
-        await db.relatedProduct.findMany({
-          select: {
-            productId: true,
-            relatedProductKey: true,
-            relatedProductId: true,
-            relatedProduct: true,
-          },
-          where: { productId: { in: ids } },
-        });
-      relatedProductIds.push(
-        ...relatedProducts.map((rp) => rp.relatedProductId),
-      );
+      const results: RelatedProductEntity[] = await db.relatedProduct.findMany({
+        select: {
+          productId: true,
+          relatedProductKey: true,
+          relatedProductId: true,
+          relatedProduct: true,
+        },
+        where: { productId: { in: ids } },
+      });
+      relatedProducts = results.map((rp) => rp.relatedProduct);
+      relatedProductIds.push(...results.map((rp) => rp.relatedProductId));
 
       for (const product of allProducts) {
         // TODO: use map
-        product.relatedProducts = relatedProducts.filter(
+        product.relatedProducts = results.filter(
           (rp) => rp.productId === product.id,
         );
       }
-      allProducts.push(...relatedProducts.map((rp) => rp.relatedProduct));
+      allProducts.push(...results.map((rp) => rp.relatedProduct));
     }
 
     // Second set of queries: Fetching related data to the base products.
@@ -214,12 +213,7 @@ export class ProductRepository {
     if (includeFields && productType === ProductType.Gpu) {
       queries.push(
         (async () => {
-          const ids = [...productIds, ...parentIds];
-          if (includeRelatedFields) {
-            ids.push(...relatedProductIds);
-          }
-
-          const selectFields = Array.isArray(includeFields)
+          const selectProductFields = Array.isArray(includeFields)
             ? includeFields.reduce(
                 (acc, fieldKey) => {
                   acc[fieldKey + 'Value'] = true;
@@ -230,18 +224,93 @@ export class ProductRepository {
               )
             : undefined;
 
-          // TODO: select explicit fields for related, parent,
-          const gpuFields: GpuFieldsEntity[] = (await db.gpuFields.findMany({
-            where: { productId: { in: ids } },
-            select: selectFields,
-          })) as any;
+          const productFields: GpuFieldsEntity[] = (await db.gpuFields.findMany(
+            {
+              where: { productId: { in: productIds } },
+              select: selectProductFields,
+            },
+          )) as any;
 
-          for (const product of allProducts) {
+          for (const product of products) {
             // TODO: use map
-            product.gpuFields = gpuFields.find(
+            product.gpuFields = productFields.find(
               (gf) => gf.productId === product.id,
             );
           }
+
+          if (includeParent) {
+            const selectParentFields = Array.isArray(includeParentFields)
+              ? includeParentFields.reduce(
+                  (acc, fieldKey) => {
+                    acc[fieldKey + 'Value'] = true;
+                    acc[fieldKey + 'Meta'] = true;
+                    return acc;
+                  },
+                  { productId: true } as Record<string, boolean>,
+                )
+              : undefined;
+            const parentFields: GpuFieldsEntity[] =
+              (await db.gpuFields.findMany({
+                where: { productId: { in: parentIds } },
+                select: selectParentFields,
+              })) as any;
+
+            for (const product of parents) {
+              // TODO: use map
+              product.gpuFields = parentFields.find(
+                (gf) => gf.productId === product.id,
+              );
+            }
+          }
+
+          if (includeRelated) {
+            const selectRelatedFields = Array.isArray(includeRelatedFields)
+              ? includeRelatedFields.reduce(
+                  (acc, fieldKey) => {
+                    acc[fieldKey + 'Value'] = true;
+                    acc[fieldKey + 'Meta'] = true;
+                    return acc;
+                  },
+                  { productId: true } as Record<string, boolean>,
+                )
+              : undefined;
+            const relatedFields: GpuFieldsEntity[] =
+              (await db.gpuFields.findMany({
+                where: { productId: { in: relatedProductIds } },
+                select: selectRelatedFields,
+              })) as any;
+
+            for (const product of relatedProducts) {
+              // TODO: use map
+              product.gpuFields = relatedFields.find(
+                (gf) => gf.productId === product.id,
+              );
+            }
+          }
+
+          // const selectFields = Array.isArray(includeFields)
+          //   ? includeFields.reduce(
+          //       (acc, fieldKey) => {
+          //         acc[fieldKey + 'Value'] = true;
+          //         acc[fieldKey + 'Meta'] = true;
+          //         return acc;
+          //       },
+          //       { productId: true } as Record<string, boolean>,
+          //     )
+          //   : undefined;
+
+          // TODO: select explicit fields for related, parent,
+          // const gpuFields: GpuFieldsEntity[] = (await db.gpuFields.findMany({
+          //   where: { productId: { in: ids } },
+          //   select: selectFields,
+          // })) as any;
+
+          // for (const product of allProducts) {
+          //   // TODO: use map
+          //   product.gpuFields = gpuFields.find(
+          //     (gf) => gf.productId === product.id,
+          //   );
+          // }
         })(),
       );
     }
@@ -297,190 +366,177 @@ export class ProductRepository {
     options: FindBySlugOptions,
     config?: RepositoryConfig,
   ): Promise<ProductEntity> {
-    const timer = `ProductRepository.findBySlug (${uuid.v4()})`;
-    console.time(timer);
+    const db = config?.trx ?? this.db;
 
-    try {
-      const db = config?.trx ?? this.db;
+    const productType = options.productType;
+    const slug = options.slug;
 
-      const productType = options.productType;
-      const slug = options.slug;
+    const product: ProductEntity = await db.product.findUnique({
+      where: { productType_slug: { productType, slug } },
+    });
 
-      const product: ProductEntity = await db.product.findUnique({
-        where: { productType_slug: { productType, slug } },
-      });
+    const products = await this.findByIds(
+      { ...options, ids: [product.id] },
+      config,
+    );
 
-      const products = await this.findByIds(
-        { ...options, ids: [product.id] },
-        config,
-      );
+    return products[0] || null;
 
-      return products[0] || null;
+    // const productId = product.id;
+    // const { parentId } = product;
+    // const productIds = [productId];
 
-      // const productId = product.id;
-      // const { parentId } = product;
-      // const productIds = [productId];
+    // let hasParent = false;
+    // if (includeParent && Number.isInteger(parentId)) {
+    //   const parent = await db.product.findUnique({
+    //     where: { id: parentId },
+    //   });
+    //   productIds.push(parent.id);
+    //   product.parent = parent;
+    //   hasParent = true;
+    // }
 
-      // let hasParent = false;
-      // if (includeParent && Number.isInteger(parentId)) {
-      //   const parent = await db.product.findUnique({
-      //     where: { id: parentId },
-      //   });
-      //   productIds.push(parent.id);
-      //   product.parent = parent;
-      //   hasParent = true;
-      // }
+    // const queries1 = [];
+    // if (includeFields && productType === ProductType.Gpu) {
+    //   queries1.push(
+    //     (async () => {
+    //       const [gpuFields, parentGpuFields] = await db.gpuFields.findMany({
+    //         where: { productId: { in: productIds } },
+    //       });
+    //       product.gpuFields = gpuFields;
+    //       if (hasParent) {
+    //         product.parent.gpuFields = parentGpuFields;
+    //       }
+    //     })(),
+    //   );
+    // }
+    // if (includeBenchmarks) {
+    //   queries1.push(
+    //     (async () => {
+    //       const benchmarks: ProductBenchmarkEntity[] =
+    //         await db.productBenchmark.findMany({
+    //           where: { productId: { in: productIds } },
+    //         });
+    //       product.benchmarks = benchmarks.filter(
+    //         (b) => b.productId === productId,
+    //       );
+    //       if (hasParent) {
+    //         product.parent.benchmarks = benchmarks.filter(
+    //           (b) => b.productId === parentId,
+    //         );
+    //       }
+    //     })(),
+    //   );
+    // }
+    // if (includeRanks) {
+    //   queries1.push(
+    //     (async () => {
+    //       const ranks: ProductRankEntity[] = await db.productRank.findMany({
+    //         where: { productId: { in: productIds } },
+    //       });
+    //       product.ranks = ranks.filter((r) => r.productId === productId)[0];
+    //       if (hasParent) {
+    //         product.parent.ranks = ranks.filter(
+    //           (r) => r.productId === parentId,
+    //         )[0];
+    //       }
+    //     })(),
+    //   );
+    // }
 
-      // const queries1 = [];
-      // if (includeFields && productType === ProductType.Gpu) {
-      //   queries1.push(
-      //     (async () => {
-      //       const [gpuFields, parentGpuFields] = await db.gpuFields.findMany({
-      //         where: { productId: { in: productIds } },
-      //       });
-      //       product.gpuFields = gpuFields;
-      //       if (hasParent) {
-      //         product.parent.gpuFields = parentGpuFields;
-      //       }
-      //     })(),
-      //   );
-      // }
-      // if (includeBenchmarks) {
-      //   queries1.push(
-      //     (async () => {
-      //       const benchmarks: ProductBenchmarkEntity[] =
-      //         await db.productBenchmark.findMany({
-      //           where: { productId: { in: productIds } },
-      //         });
-      //       product.benchmarks = benchmarks.filter(
-      //         (b) => b.productId === productId,
-      //       );
-      //       if (hasParent) {
-      //         product.parent.benchmarks = benchmarks.filter(
-      //           (b) => b.productId === parentId,
-      //         );
-      //       }
-      //     })(),
-      //   );
-      // }
-      // if (includeRanks) {
-      //   queries1.push(
-      //     (async () => {
-      //       const ranks: ProductRankEntity[] = await db.productRank.findMany({
-      //         where: { productId: { in: productIds } },
-      //       });
-      //       product.ranks = ranks.filter((r) => r.productId === productId)[0];
-      //       if (hasParent) {
-      //         product.parent.ranks = ranks.filter(
-      //           (r) => r.productId === parentId,
-      //         )[0];
-      //       }
-      //     })(),
-      //   );
-      // }
+    // await Promise.all(queries1);
 
-      // await Promise.all(queries1);
+    // const queries2 = [];
+    // if (includeRelated) {
+    //   const relatedProducts: RelatedProductEntity[] =
+    //     await db.relatedProduct.findMany({
+    //       select: {
+    //         productId: true,
+    //         relatedProductKey: true,
+    //         relatedProductId: true,
+    //         relatedProduct: true,
+    //       },
+    //       where: { productId: { in: productIds } },
+    //     });
+    //   const relatedProductIds = relatedProducts.map(
+    //     (rp) => rp.relatedProductId,
+    //   );
 
-      // const queries2 = [];
-      // if (includeRelated) {
-      //   const relatedProducts: RelatedProductEntity[] =
-      //     await db.relatedProduct.findMany({
-      //       select: {
-      //         productId: true,
-      //         relatedProductKey: true,
-      //         relatedProductId: true,
-      //         relatedProduct: true,
-      //       },
-      //       where: { productId: { in: productIds } },
-      //     });
-      //   const relatedProductIds = relatedProducts.map(
-      //     (rp) => rp.relatedProductId,
-      //   );
+    //   if (options.includeRelatedBenchmarks) {
+    //     queries2.push(
+    //       (async () => {
+    //         const benchmarks = await db.productBenchmark.findMany({
+    //           where: { productId: { in: relatedProductIds } },
+    //         });
 
-      //   if (options.includeRelatedBenchmarks) {
-      //     queries2.push(
-      //       (async () => {
-      //         const benchmarks = await db.productBenchmark.findMany({
-      //           where: { productId: { in: relatedProductIds } },
-      //         });
+    //         for (const relatedProduct of relatedProducts) {
+    //           relatedProduct.relatedProduct.benchmarks = benchmarks.filter(
+    //             (b) => b.productId === relatedProduct.relatedProductId,
+    //           );
+    //         }
+    //       })(),
+    //     );
+    //   }
+    //   if (options.includeRelatedRanks) {
+    //     queries2.push(
+    //       (async () => {
+    //         const ranks = await db.productRank.findMany({
+    //           where: { productId: { in: relatedProductIds } },
+    //         });
+    //         for (const relatedProduct of relatedProducts) {
+    //           relatedProduct.relatedProduct.ranks = ranks.filter(
+    //             (r) => r.productId === relatedProduct.relatedProductId,
+    //           )[0];
+    //         }
+    //       })(),
+    //     );
+    //   }
 
-      //         for (const relatedProduct of relatedProducts) {
-      //           relatedProduct.relatedProduct.benchmarks = benchmarks.filter(
-      //             (b) => b.productId === relatedProduct.relatedProductId,
-      //           );
-      //         }
-      //       })(),
-      //     );
-      //   }
-      //   if (options.includeRelatedRanks) {
-      //     queries2.push(
-      //       (async () => {
-      //         const ranks = await db.productRank.findMany({
-      //           where: { productId: { in: relatedProductIds } },
-      //         });
-      //         for (const relatedProduct of relatedProducts) {
-      //           relatedProduct.relatedProduct.ranks = ranks.filter(
-      //             (r) => r.productId === relatedProduct.relatedProductId,
-      //           )[0];
-      //         }
-      //       })(),
-      //     );
-      //   }
+    //   product.relatedProducts = relatedProducts.filter(
+    //     (rp) => rp.productId === productId,
+    //   );
+    //   if (hasParent) {
+    //     product.parent.relatedProducts = relatedProducts.filter(
+    //       (rp) => rp.productId === parentId,
+    //     );
+    //   }
+    // }
 
-      //   product.relatedProducts = relatedProducts.filter(
-      //     (rp) => rp.productId === productId,
-      //   );
-      //   if (hasParent) {
-      //     product.parent.relatedProducts = relatedProducts.filter(
-      //       (rp) => rp.productId === parentId,
-      //     );
-      //   }
-      // }
+    // await Promise.all(queries2);
 
-      // await Promise.all(queries2);
+    // return product;
 
-      // return product;
-
-      // return await db.product.findUnique({
-      //   where: { productType_slug: { productType, slug } },
-      //   include: this.generateProductInclude(options),
-      // });
-    } finally {
-      console.timeEnd(timer);
-    }
+    // return await db.product.findUnique({
+    //   where: { productType_slug: { productType, slug } },
+    //   include: this.generateProductInclude(options),
+    // });
   }
 
   async count(options: CountOptions, config?: RepositoryConfig) {
-    const timer = `ProductRepository.count (${uuid.v4()})`;
-    console.time(timer);
     const db = config?.trx ?? this.db;
     const { productType } = options;
 
-    try {
-      if (
-        options.orderBy?.sort === ListSort.PerformanceRating ||
-        options.orderBy?.sort === ListSort.PerformancePerMsrp
-      ) {
-        const benchmarkToSort =
-          options.orderBy.benchmark ?? getDefaultBenchmark(productType);
+    if (
+      options.orderBy?.sort === ListSort.PerformanceRating ||
+      options.orderBy?.sort === ListSort.PerformancePerMsrp
+    ) {
+      const benchmarkToSort =
+        options.orderBy.benchmark ?? getDefaultBenchmark(productType);
 
-        return await db.productBenchmark.count({
-          where: {
-            AND: [
-              { benchmarkKey: benchmarkToSort },
-              {
-                product: { ...this.generateWhere(productType, options.filter) },
-              },
-            ],
-          },
-        });
-      } else {
-        return await db.product.count({
-          where: { ...this.generateWhere(options.productType, options.filter) },
-        });
-      }
-    } finally {
-      console.timeEnd(timer);
+      return await db.productBenchmark.count({
+        where: {
+          AND: [
+            { benchmarkKey: benchmarkToSort },
+            {
+              product: { ...this.generateWhere(productType, options.filter) },
+            },
+          ],
+        },
+      });
+    } else {
+      return await db.product.count({
+        where: { ...this.generateWhere(options.productType, options.filter) },
+      });
     }
   }
 
@@ -488,113 +544,101 @@ export class ProductRepository {
     options: CountChildrenOptions,
     config?: RepositoryConfig,
   ) {
-    const timer = `ProductRepository.countChildren (${uuid.v4()})`;
-    console.time(timer);
     const { productIds } = options;
     const db = config?.trx ?? this.db;
-    try {
-      const results = await db.product.groupBy({
-        _count: true,
-        by: ['parentId'],
-        where: { parentId: { in: productIds } },
-      });
 
-      return results.reduce((acc, result) => {
-        acc[result.parentId] = result._count;
-        return acc;
-      }, {} as Record<number, number>);
-    } finally {
-      console.timeEnd(timer);
-    }
+    const results = await db.product.groupBy({
+      _count: true,
+      by: ['parentId'],
+      where: { parentId: { in: productIds } },
+    });
+
+    return results.reduce((acc, result) => {
+      acc[result.parentId] = result._count;
+      return acc;
+    }, {} as Record<number, number>);
   }
 
   async list(options: ListOptions, config?: RepositoryConfig) {
-    const timer = `ProductRepository.list (${uuid.v4()})`;
-    console.time(timer);
+    const db = config?.trx ?? this.db;
+    const productType = options.productType;
 
-    try {
-      const db = config?.trx ?? this.db;
-      const productType = options.productType;
+    if (
+      options.orderBy?.sort === ListSort.PerformanceRating ||
+      options.orderBy?.sort === ListSort.PerformancePerMsrp
+    ) {
+      // If we're sorting by perf or value, then we need to filter benchmarks
+      // first. We're not able to filter by benchmark key when querying
+      // products first.
+      const benchmarkToSort =
+        options.orderBy.benchmark ?? getDefaultBenchmark(productType);
 
-      if (
-        options.orderBy?.sort === ListSort.PerformanceRating ||
-        options.orderBy?.sort === ListSort.PerformancePerMsrp
-      ) {
-        // If we're sorting by perf or value, then we need to filter benchmarks
-        // first. We're not able to filter by benchmark key when querying
-        // products first.
-        const benchmarkToSort =
-          options.orderBy.benchmark ?? getDefaultBenchmark(productType);
-
-        let orderBy: Prisma.ProductBenchmarkOrderByWithRelationAndSearchRelevanceInput =
-          null;
-        if (options.orderBy.sort === ListSort.PerformanceRating) {
-          orderBy = {
-            value: {
-              sort: options.orderBy?.order ?? ListOrder.Desc,
-              nulls: 'last',
-            },
-          };
-        } else if (options.orderBy?.sort === ListSort.PerformancePerMsrp) {
-          orderBy = {
-            valuePerMsrp: {
-              sort: options.orderBy?.order ?? ListOrder.Desc,
-              nulls: 'last',
-            },
-          };
-        }
-
-        const results = await db.productBenchmark.findMany({
-          select: { productId: true },
-          skip: options.pagination?.offset,
-          take: options.pagination?.limit,
-          orderBy,
-          where: {
-            benchmarkKey: benchmarkToSort,
-            product: { ...this.generateWhere(productType, options.filter) },
+      let orderBy: Prisma.ProductBenchmarkOrderByWithRelationAndSearchRelevanceInput =
+        null;
+      if (options.orderBy.sort === ListSort.PerformanceRating) {
+        orderBy = {
+          value: {
+            sort: options.orderBy?.order ?? ListOrder.Desc,
+            nulls: 'last',
           },
-        });
-        const ids = results.map((result) => result.productId);
-        // const products = await db.product.findMany({
-        //   where: { id: { in: ids } },
-        //   select: this.generateProductSelect(options),
-        // });
-        const products = await this.findByIds({
-          ...options,
-          ids,
-        });
-        return sortByIds(ids, products, (p) => p.id);
-      } else {
-        const productIdsResult = await db.product.findMany({
-          select: { id: true },
-          where: { ...this.generateWhere(productType, options.filter) },
-          orderBy: this.generateOrderBy(productType, options.orderBy),
-          skip: options.pagination?.offset,
-          take: options.pagination?.limit,
-        });
-        const productIds = productIdsResult.map((p) => p.id);
-
-        const products = await this.findByIds(
-          { ...options, ids: productIds },
-          config,
-        );
-
-        return sortByIds(productIds, products, (p) => p.id);
-
-        // We are not sorting by benchmark, so we can fetch the products
-        // directly.
-        // return await db.product.findMany({
-        //   where: {
-        //     ...this.generateWhere(productType, options.filter),
-        //   },
-        //   orderBy: this.generateOrderBy(productType, options.orderBy),
-        //   skip: options.pagination?.offset,
-        //   take: options.pagination?.limit,
-        //   select: this.generateProductSelect(options),
-        // });
+        };
+      } else if (options.orderBy?.sort === ListSort.PerformancePerMsrp) {
+        orderBy = {
+          valuePerMsrp: {
+            sort: options.orderBy?.order ?? ListOrder.Desc,
+            nulls: 'last',
+          },
+        };
       }
-    } finally {
-      console.timeEnd(timer);
+
+      const results = await db.productBenchmark.findMany({
+        select: { productId: true },
+        skip: options.pagination?.offset,
+        take: options.pagination?.limit,
+        orderBy,
+        where: {
+          benchmarkKey: benchmarkToSort,
+          product: { ...this.generateWhere(productType, options.filter) },
+        },
+      });
+      const ids = results.map((result) => result.productId);
+      // const products = await db.product.findMany({
+      //   where: { id: { in: ids } },
+      //   select: this.generateProductSelect(options),
+      // });
+      const products = await this.findByIds({
+        ...options,
+        ids,
+      });
+      return sortByIds(ids, products, (p) => p.id);
+    } else {
+      const productIdsResult = await db.product.findMany({
+        select: { id: true },
+        where: { ...this.generateWhere(productType, options.filter) },
+        orderBy: this.generateOrderBy(productType, options.orderBy),
+        skip: options.pagination?.offset,
+        take: options.pagination?.limit,
+      });
+      const productIds = productIdsResult.map((p) => p.id);
+
+      const products = await this.findByIds(
+        { ...options, ids: productIds },
+        config,
+      );
+
+      return sortByIds(productIds, products, (p) => p.id);
+
+      // We are not sorting by benchmark, so we can fetch the products
+      // directly.
+      // return await db.product.findMany({
+      //   where: {
+      //     ...this.generateWhere(productType, options.filter),
+      //   },
+      //   orderBy: this.generateOrderBy(productType, options.orderBy),
+      //   skip: options.pagination?.offset,
+      //   take: options.pagination?.limit,
+      //   select: this.generateProductSelect(options),
+      // });
     }
   }
 

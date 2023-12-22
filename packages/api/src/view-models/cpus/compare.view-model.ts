@@ -49,25 +49,25 @@ export class CompareCpusViewModelService {
             this.getBestValueCpu(ctx),
           ]);
 
-        const relativePerformanceCpus = await this.getRelativePerformanceCpus(
+        const relativePerformanceCpus = this.getRelativePerformanceCpus(
           comparison[0],
           comparison[1],
           ctx,
         );
 
-        const relativeValueCpus = await this.getRelativeValueCpus(
+        const relativeValueCpus = this.getRelativeValueCpus(
           comparison[0],
           comparison[1],
           ctx,
         );
 
-        const relatedCpus = await this.getRelatedCpus(
+        const relatedCpus = this.getRelatedCpus(
           5,
           relativePerformanceCpus,
           relativeValueCpus,
           comparison,
         );
-        const relatedComparisons = await this.getRelatedComparisons(
+        const relatedComparisons = this.getRelatedComparisons(
           5,
           relativePerformanceCpus,
           relativeValueCpus,
@@ -108,7 +108,6 @@ export class CompareCpusViewModelService {
         slug,
 
         includeParent: false,
-        includeChildren: false,
         includeAutomation: false,
         includeBenchmarks: true,
         includeImages: true,
@@ -121,6 +120,7 @@ export class CompareCpusViewModelService {
         includeRelatedBenchmarks: [
           getPreferredBenchmark(ctx.config?.userSettings, ProductType.Cpu),
         ],
+        includeRelatedFields: false,
         includeRelatedRanks: true,
       },
       ctx,
@@ -128,7 +128,7 @@ export class CompareCpusViewModelService {
     return comparison as CpuProductComparison;
   }
 
-  private async getRelativePerformanceCpus(
+  private getRelativePerformanceCpus(
     seed1: CpuProduct,
     seed2: CpuProduct,
     ctx: Context,
@@ -200,7 +200,7 @@ export class CompareCpusViewModelService {
     }
   }
 
-  private async getRelativeValueCpus(
+  private getRelativeValueCpus(
     seed1: CpuProduct,
     seed2: CpuProduct,
     ctx: Context,
@@ -336,7 +336,7 @@ export class CompareCpusViewModelService {
     return getSurroundingValues(merged, pivot, TOTAL_COMPARED_CPUS);
   }
 
-  private async getRelatedCpus(
+  private getRelatedCpus(
     total: number,
     performanceCpus: Partial<CpuProduct>[],
     valueCpus: Partial<CpuProduct>[],
@@ -365,7 +365,7 @@ export class CompareCpusViewModelService {
     return related;
   }
 
-  private async getRelatedComparisons(
+  private getRelatedComparisons(
     total: number,
     performanceCpus: Partial<CpuProduct>[],
     valueCpus: Partial<CpuProduct>[],

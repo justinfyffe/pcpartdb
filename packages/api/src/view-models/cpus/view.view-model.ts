@@ -47,19 +47,19 @@ export class ViewCpuViewModelService {
           this.getBestValueCpu(ctx),
         ]);
 
-        const relativePerformanceCpus = await this.getRelativePerformanceCpus(
+        const relativePerformanceCpus = this.getRelativePerformanceCpus(
           cpu,
           ctx,
         );
-        const relativeValueCpus = await this.getRelativeValueCpus(cpu, ctx);
+        const relativeValueCpus = this.getRelativeValueCpus(cpu, ctx);
 
-        const relatedCpus = await this.getRelatedCpus(
+        const relatedCpus = this.getRelatedCpus(
           5,
           relativePerformanceCpus,
           relativeValueCpus,
           cpu,
         );
-        const relatedComparisons = await this.getRelatedComparisons(
+        const relatedComparisons = this.getRelatedComparisons(
           5,
           relativePerformanceCpus,
           relativeValueCpus,
@@ -100,7 +100,6 @@ export class ViewCpuViewModelService {
         slug,
 
         includeParent: false,
-        includeChildren: false,
         includeAutomation: false,
         includeBenchmarks: true,
         includeImages: true,
@@ -113,6 +112,7 @@ export class ViewCpuViewModelService {
         includeRelatedBenchmarks: [
           getPreferredBenchmark(ctx.config?.userSettings, ProductType.Cpu),
         ],
+        includeRelatedFields: false,
         includeRelatedRanks: true,
       },
       ctx,
@@ -120,7 +120,7 @@ export class ViewCpuViewModelService {
     return cpu as CpuProduct;
   }
 
-  private async getRelativePerformanceCpus(seed: CpuProduct, ctx: Context) {
+  private getRelativePerformanceCpus(seed: CpuProduct, ctx: Context) {
     const benchmark = getPreferredBenchmark(
       ctx.config?.userSettings,
       ProductType.Cpu,
@@ -155,7 +155,7 @@ export class ViewCpuViewModelService {
     );
   }
 
-  private async getRelativeValueCpus(seed: CpuProduct, ctx: Context) {
+  private getRelativeValueCpus(seed: CpuProduct, ctx: Context) {
     const benchmark = getPreferredBenchmark(
       ctx.config?.userSettings,
       ProductType.Cpu,
@@ -190,7 +190,7 @@ export class ViewCpuViewModelService {
     );
   }
 
-  private async getRelatedCpus(
+  private getRelatedCpus(
     total: number,
     performanceCpus: Partial<CpuProduct>[],
     valueCpus: Partial<CpuProduct>[],
@@ -219,7 +219,7 @@ export class ViewCpuViewModelService {
     return related;
   }
 
-  private async getRelatedComparisons(
+  private getRelatedComparisons(
     total: number,
     performanceCpus: Partial<CpuProduct>[],
     valueCpus: Partial<CpuProduct>[],

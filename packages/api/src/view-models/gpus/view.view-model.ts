@@ -102,22 +102,21 @@ export class ViewGpuViewModelService {
         productType: ProductType.Gpu,
         slug,
 
-        includeParent: true,
-        includeChildren: false,
         includeAutomation: false,
         includeBenchmarks: true,
         includeImages: true,
+        includeRanks: true,
         includeSources: false,
         includeUpdates: false,
 
-        includeRanks: true,
-
+        includeParent: true,
         parentFields: ['msrp'] as ProductFieldKey[],
 
         includeRelated: true,
         includeRelatedBenchmarks: [
           getPreferredBenchmark(ctx.config?.userSettings, ProductType.Gpu),
         ],
+        includeRelatedFields: false,
         includeRelatedRanks: true,
       },
       ctx,
@@ -267,7 +266,6 @@ export class ViewGpuViewModelService {
         },
       },
       {
-        // fields: [],
         fields: [
           'gpuCoreBaseClock',
           'gpuCoreBoostClock',

@@ -56,11 +56,9 @@ interface ListOptions {
 interface GetOptions {
   fields?: ProductFieldKey[];
   parentFields?: ProductFieldKey[];
-  childrenFields?: ProductFieldKey[];
   relatedFields?: ProductFieldKey[];
 
   includeParent?: boolean;
-  includeChildren?: boolean;
   includeUpdates?: boolean;
   includeAutomation?: boolean;
   includeSources?: boolean;
@@ -144,6 +142,7 @@ export class ProductService {
       (options.includeAutomation ?? false) && (ctx.user?.isStaff ?? false);
 
     const fields = options.fields != null ? new Set(options.fields) : null;
+
     const includeFields = fields == null || fields.size > 0;
 
     const skipCount = options.skipCount ?? false;
@@ -168,8 +167,8 @@ export class ProductService {
         ...query,
         ...options,
         productType,
-        includeFields: options.fields,
         includeBenchmarks,
+        includeFields: options.fields ?? includeFields,
         includeImages,
         includeSources,
         includeRanks,
@@ -221,7 +220,6 @@ export class ProductService {
     const id = options.id;
 
     const includeParent = options.includeParent ?? false;
-    const includeChildren = options.includeChildren ?? false;
     const includeRanks = options?.includeRanks ?? false;
     const includeImages = options.includeImages ?? false;
     const includeSources =
@@ -236,8 +234,6 @@ export class ProductService {
     const fields = options.fields != null ? new Set(options.fields) : null;
     const parentFields =
       options.parentFields != null ? new Set(options.parentFields) : null;
-    const childrenFields =
-      options.childrenFields != null ? new Set(options.childrenFields) : null;
     const relatedFields =
       options.relatedFields != null ? new Set(options.relatedFields) : null;
 
@@ -247,15 +243,15 @@ export class ProductService {
     const entity = await this.repository.findById(
       {
         id,
-        includeFields,
+        includeFields: options.fields ?? includeFields,
+        includeParentFields: options.parentFields ?? includeParent,
         includeParent,
-        includeChildren,
         includeImages,
         includeSources,
         includeBenchmarks,
         includeRanks,
         includeRelated,
-        includeRelatedFields,
+        includeRelatedFields: options.relatedFields ?? includeRelatedFields,
       },
       ctx,
     );
@@ -297,12 +293,10 @@ export class ProductService {
     const product = await mapToProductDto(entity, {
       fields,
       parentFields,
-      childrenFields,
       relatedFields,
       includeBenchmarks,
       includeRanks,
       includeParent,
-      includeChildren,
       includeSources,
       includeAutomation,
       includeUpdates,
@@ -322,7 +316,6 @@ export class ProductService {
     const slug = options.slug;
 
     const includeParent = options.includeParent ?? false;
-    const includeChildren = options.includeChildren ?? false;
     const includeRanks = options?.includeRanks ?? false;
     const includeImages = options.includeImages ?? false;
     const includeSources =
@@ -337,8 +330,6 @@ export class ProductService {
     const fields = options.fields != null ? new Set(options.fields) : null;
     const parentFields =
       options.parentFields != null ? new Set(options.parentFields) : null;
-    const childrenFields =
-      options.childrenFields != null ? new Set(options.childrenFields) : null;
     const relatedFields =
       options.relatedFields != null ? new Set(options.relatedFields) : null;
 
@@ -352,15 +343,15 @@ export class ProductService {
       {
         productType,
         slug,
-        includeFields,
+        includeFields: options.fields ?? includeFields,
+        includeParentFields: options.parentFields ?? includeParent,
         includeParent,
-        includeChildren,
         includeImages,
         includeSources,
         includeRanks,
         includeBenchmarks,
         includeRelated,
-        includeRelatedFields,
+        includeRelatedFields: options.relatedFields ?? includeRelatedFields,
         includeRelatedRanks,
         includeRelatedBenchmarks,
       },
@@ -404,11 +395,9 @@ export class ProductService {
     const product = await mapToProductDto(entity, {
       fields,
       parentFields,
-      childrenFields,
       relatedFields,
       includeBenchmarks,
       includeParent,
-      includeChildren,
       includeSources,
       includeAutomation,
       includeUpdates,

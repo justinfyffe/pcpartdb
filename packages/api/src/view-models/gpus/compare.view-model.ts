@@ -53,25 +53,25 @@ export class CompareGpusViewModelService {
         const chipset1 = getGpuChipset(comparison[0]);
         const chipset2 = getGpuChipset(comparison[1]);
 
-        const relativePerformanceGpus = await this.getRelativePerformanceGpus(
+        const relativePerformanceGpus = this.getRelativePerformanceGpus(
           chipset1,
           chipset2,
           ctx,
         );
 
-        const relativeValueGpus = await this.getRelativeValueGpus(
+        const relativeValueGpus = this.getRelativeValueGpus(
           chipset1,
           chipset2,
           ctx,
         );
 
-        const relatedGpus = await this.getRelatedGpus(
+        const relatedGpus = this.getRelatedGpus(
           5,
           relativePerformanceGpus,
           relativeValueGpus,
           comparison,
         );
-        const relatedComparisons = await this.getRelatedComparisons(
+        const relatedComparisons = this.getRelatedComparisons(
           5,
           relativePerformanceGpus,
           relativeValueGpus,
@@ -116,7 +116,6 @@ export class CompareGpusViewModelService {
         slug,
 
         includeParent: true,
-        includeChildren: false,
         includeAutomation: false,
         includeBenchmarks: true,
         includeImages: true,
@@ -129,6 +128,7 @@ export class CompareGpusViewModelService {
         includeRelatedBenchmarks: [
           getPreferredBenchmark(ctx.config?.userSettings, ProductType.Gpu),
         ],
+        includeRelatedFields: false,
         includeRelatedRanks: true,
       },
       ctx,
@@ -162,7 +162,7 @@ export class CompareGpusViewModelService {
     return response.results;
   }
 
-  private async getRelativePerformanceGpus(
+  private getRelativePerformanceGpus(
     seed1: GpuProduct,
     seed2: GpuProduct,
     ctx: Context,
@@ -234,7 +234,7 @@ export class CompareGpusViewModelService {
     }
   }
 
-  private async getRelativeValueGpus(
+  private getRelativeValueGpus(
     seed1: GpuProduct,
     seed2: GpuProduct,
     ctx: Context,
@@ -370,7 +370,7 @@ export class CompareGpusViewModelService {
     return getSurroundingValues(merged, pivot, TOTAL_COMPARED_GPUS);
   }
 
-  private async getRelatedGpus(
+  private getRelatedGpus(
     total: number,
     performanceGpus: Partial<GpuProduct>[],
     valueGpus: Partial<GpuProduct>[],
@@ -399,7 +399,7 @@ export class CompareGpusViewModelService {
     return related;
   }
 
-  private async getRelatedComparisons(
+  private getRelatedComparisons(
     total: number,
     performanceGpus: Partial<GpuProduct>[],
     valueGpus: Partial<GpuProduct>[],
