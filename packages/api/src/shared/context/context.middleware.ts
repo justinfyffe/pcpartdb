@@ -38,6 +38,7 @@ export class ContextMiddleware implements NestMiddleware {
       env: process.env.NODE_ENV ?? 'dev',
       enableGtm: process.env.ENABLE_GTM === 'true',
       gtmId: process.env.GTM_ID,
+      adsensePubId: process.env.ADSENSE_PUBLISHER_ID,
       isStaff: user?.isStaff ?? false,
       user,
       userSettings,

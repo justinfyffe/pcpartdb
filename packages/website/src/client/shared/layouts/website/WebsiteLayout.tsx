@@ -48,7 +48,7 @@ export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
       {disableConsent !== true && <CookieConsentScript />}
       {disableConsent !== true && <GoogleTagManagerScript />}
 
-      <div className="container bg-content p-container md:px-4 flex font-bold items-center text-5xl md:text-3xl text-dark-shades">
+      <div className="border-x-px container bg-content p-container md:px-4 flex font-bold items-center text-5xl md:text-3xl text-dark-shades">
         <Img
           src="/images/logo.svg"
           alt={`${WEBSITE_NAME} Logo`}
@@ -69,7 +69,7 @@ export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
       <div className="bg-html">
         <main
           className={classNames(
-            'bg-content container p-container md:px-4 text-base text-content w-full',
+            'border-x-px bg-content container p-container md:px-4 text-base text-content w-full',
             props.className,
           )}
         >

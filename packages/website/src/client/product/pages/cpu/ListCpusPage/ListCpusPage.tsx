@@ -9,6 +9,9 @@ import {
 } from '@pcpartdb/shared';
 import { useRouter } from 'next/router';
 import { useProductCache } from 'packages/website/src/client/shared/cache/ProductCache';
+import { DisplayAd } from 'packages/website/src/client/shared/components/Ad/DisplayAd';
+import { MultiplexAd } from 'packages/website/src/client/shared/components/Ad/MultiplexAd';
+import { AdUnit } from 'packages/website/src/client/shared/components/Ad/types';
 import { Breadcrumb } from 'packages/website/src/client/shared/components/Breadcrumbs/Breadcrumb';
 import { Breadcrumbs } from 'packages/website/src/client/shared/components/Breadcrumbs/Breadcrumbs';
 import { Seo } from 'packages/website/src/client/shared/components/Seo/Seo';
@@ -101,6 +104,8 @@ export const ListCpusPage = (props: ListCpusViewModel) => {
             />
           </section>
 
+          <DisplayAd unit={AdUnit.ListPagePreTitleDisplay} />
+
           <article className="flex-1 flex flex-col gap-4">
             <div className="flex items-center justify-between">
               <ListTitle />
@@ -115,12 +120,17 @@ export const ListCpusPage = (props: ListCpusViewModel) => {
               <div className="flex-1 flex flex-col gap-4 max-w-full">
                 <ListTable />
                 <ListPagination />
+
+                <MultiplexAd unit={AdUnit.ListPageTableSideMultiplex} />
               </div>
 
               <aside className="lg:hidden flex flex-col gap-4">
                 <div className="border-px">
                   <ListFilters />
                 </div>
+
+                <MultiplexAd unit={AdUnit.ListPageTableFooterMultiplex} />
+
                 <div className="border-px">
                   <ListPresets />
                 </div>

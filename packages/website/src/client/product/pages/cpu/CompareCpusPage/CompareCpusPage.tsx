@@ -10,6 +10,9 @@ import {
   ProductType,
 } from '@pcpartdb/shared';
 import { useProductCache } from 'packages/website/src/client/shared/cache/ProductCache';
+import { DisplayAd } from 'packages/website/src/client/shared/components/Ad/DisplayAd';
+import { MultiplexAd } from 'packages/website/src/client/shared/components/Ad/MultiplexAd';
+import { AdUnit } from 'packages/website/src/client/shared/components/Ad/types';
 import { Breadcrumb } from 'packages/website/src/client/shared/components/Breadcrumbs/Breadcrumb';
 import { Breadcrumbs } from 'packages/website/src/client/shared/components/Breadcrumbs/Breadcrumbs';
 import { Seo } from 'packages/website/src/client/shared/components/Seo/Seo';
@@ -115,7 +118,7 @@ export const CompareCpusPage = (
           <Breadcrumb>{shortPageTitle}</Breadcrumb>
         </Breadcrumbs>
 
-        <div className="flex flex-wrap gap-8 justify-center">
+        <div className="flex flex-col gap-8 justify-center">
           <section className="flex flex-wrap w-full">
             <h1 className="font-semibold">{pageTitle}</h1>
 
@@ -125,12 +128,17 @@ export const CompareCpusPage = (
             />
           </section>
 
+          <DisplayAd unit={AdUnit.ComparePagePreHighlightsDisplay} />
+
           <article className="flex-1 flex flex-col gap-8 max-w-full">
             <Highlights />
             <Overview />
+            <DisplayAd unit={AdUnit.ComparePagePostSummaryDisplay} />
             <GeneralInfo />
             <PerformanceAndValue />
+            <DisplayAd unit={AdUnit.ComparePagePostPerfValueDisplay} />
             <TechnicalSpecs />
+            <MultiplexAd unit={AdUnit.ComparePagePostTechSpecsMultiplex} />
             <RelatedComparisons />
             <RelatedCpus />
             <Disclaimer />

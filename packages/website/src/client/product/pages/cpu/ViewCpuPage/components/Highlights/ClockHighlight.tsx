@@ -26,7 +26,7 @@ export const ClockHighlight: FunctionComponent<ClockHighlightProps> = (
   return (
     <ProductHighlight
       icon={<ClockIcon />}
-      label="ClockIcon"
+      label="Clock"
       value={highlightClock}
       className={className}
     />

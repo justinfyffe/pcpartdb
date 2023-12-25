@@ -15,6 +15,11 @@ Scraping Improvements:
 JS ISSUE?
 - List page: VM482 cmp2.js:1 Uncaught TypeError: n is not a function
 
+ADS:
+- consider adjusting the side color for side auto ads
+- how to show anchor ads on bottom in mobile?
+- consider google cmp (last resort)
+
 When Bored:
 - Migrate to react-query instead of axios
 - Make autocomplete stricter, not looser when searching?

@@ -9,6 +9,9 @@ import {
   ViewCpuViewModel,
 } from '@pcpartdb/shared';
 import { useProductCache } from 'packages/website/src/client/shared/cache/ProductCache';
+import { DisplayAd } from 'packages/website/src/client/shared/components/Ad/DisplayAd';
+import { MultiplexAd } from 'packages/website/src/client/shared/components/Ad/MultiplexAd';
+import { AdUnit } from 'packages/website/src/client/shared/components/Ad/types';
 import { Breadcrumb } from 'packages/website/src/client/shared/components/Breadcrumbs/Breadcrumb';
 import { Breadcrumbs } from 'packages/website/src/client/shared/components/Breadcrumbs/Breadcrumbs';
 import { Seo } from 'packages/website/src/client/shared/components/Seo/Seo';
@@ -76,7 +79,7 @@ export const ViewCpuPage = (props: ViewCpuViewModel & { config: Config }) => {
           <Breadcrumb>{shortCpuName}</Breadcrumb>
         </Breadcrumbs>
 
-        <div className="flex flex-wrap justify-center gap-8">
+        <div className="flex flex-col justify-center gap-8">
           <section className="flex flex-col w-full">
             <h1 className="font-semibold">{pageTitle}</h1>
             <CompareProductsForm
@@ -85,12 +88,17 @@ export const ViewCpuPage = (props: ViewCpuViewModel & { config: Config }) => {
             />
           </section>
 
+          <DisplayAd unit={AdUnit.ViewPagePreHighlightsDisplay} />
+
           <article className="flex-1 flex flex-col gap-8 max-w-full">
             <Highlights />
             <Overview />
+            <DisplayAd unit={AdUnit.ViewPagePostSummaryDisplay} />
             <GeneralInfo />
             <PerformanceAndValue />
+            <DisplayAd unit={AdUnit.ViewPagePostPerfValueDisplay} />
             <TechnicalSpecs />
+            <MultiplexAd unit={AdUnit.ViewPagePostTechSpecsMultiplex} />
             <RelatedCpus />
             <RelatedComparisons />
             <Disclaimer />

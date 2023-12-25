@@ -55,9 +55,10 @@ export interface UpdateProductRequest {
 export interface GetProductRequest {
   includeAutomation?: boolean;
   includeBenchmarks?: boolean;
-  includeChildren?: boolean;
+  includeFields?: boolean;
   includeImages?: boolean;
   includeParent?: boolean;
+  includeRanks?: boolean;
   includeSources?: boolean;
   includeUpdates?: boolean;
 }

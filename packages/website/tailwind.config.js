@@ -97,6 +97,7 @@ module.exports = {
     lineHeight: sizing,
     extend: {
       backgroundColor: {
+        adtest: '#ddd',
         default: '#fff',
         neutral: '#999',
         primary: '#4c5c7c',
@@ -112,6 +113,7 @@ module.exports = {
         'dark-accent': '#828892',
         'dark-shades': '#282731',
         content: '#fff',
+        // html: '#eee',
         html: '#828892',
         amd: '#850101',
         intel: '#0071c5',

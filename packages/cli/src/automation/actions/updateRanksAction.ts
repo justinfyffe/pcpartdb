@@ -37,7 +37,7 @@ export async function updateRanksAction(
   await updateRanks(ProductType.Gpu, context);
 
   // Reset cache
-  await context.api.delete('website/cache');
+  // await context.api.delete('website/cache');
 
   // Update execution details
   context.metadata = {

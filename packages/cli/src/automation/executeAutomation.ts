@@ -19,7 +19,7 @@ import { saveAutomationContext } from './utils/context';
 const UPDATE_SITEMAPS_FREQUENCY = 1000 * 60 * 60 * 24; // Daily
 const UPDATE_CPU_SOURCES_FREQUENCY = 1000 * 60 * 60 * 24 * 7; // Weekly
 const UPDATE_GPU_CHIPSET_SOURCES_FREQUENCY = 1000 * 60 * 60 * 24 * 7; // Weekly
-const UPDATE_RANKS_FREQUENCY = 1000 * 60 * 30; // Every 30 minutes
+const UPDATE_RANKS_FREQUENCY = 1000 * 60 * 60; // Every 60 minutes
 const UPDATE_RELATED_PRODUCTS_FREQUENCY = 1000 * 60 * 60 * 24; // Daily
 
 export async function executeAutomation(context: AutomationContext) {
