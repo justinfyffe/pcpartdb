@@ -77,7 +77,7 @@ const PerformanceTableRow: FunctionComponent<PerformanceTableRowProps> = (
 
   const rating = useMemo(
     () =>
-      productBenchmarkValue(relativeCpu, preferredBenchmark).toLocaleString(),
+      productBenchmarkValue(relativeCpu, preferredBenchmark)?.toLocaleString(),
     [preferredBenchmark, relativeCpu],
   );
 
@@ -86,7 +86,7 @@ const PerformanceTableRow: FunctionComponent<PerformanceTableRowProps> = (
       getProductPerformanceRank(
         relativeCpu,
         preferredBenchmark,
-      ).toLocaleString(),
+      )?.toLocaleString(),
     [preferredBenchmark, relativeCpu],
   );
 
@@ -96,13 +96,17 @@ const PerformanceTableRow: FunctionComponent<PerformanceTableRowProps> = (
     [relativeCpu],
   );
 
+  if (rating == null) {
+    return <></>;
+  }
+
   return (
     <Tr
       className={classNames(
         baselineCpu.id === relativeCpu.id ? 'font-bold !bg-indigo-100' : '',
       )}
     >
-      <Td className="text-center">{rank}</Td>
+      <Td className="text-center">{rank ?? '--'}</Td>
       <Td className="text-left">
         <a href={href}>{cpuName}</a>
       </Td>

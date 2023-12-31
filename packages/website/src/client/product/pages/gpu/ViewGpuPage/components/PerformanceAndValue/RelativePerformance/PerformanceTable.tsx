@@ -78,7 +78,7 @@ const PerformanceTableRow: FunctionComponent<PerformanceTableRowProps> = (
 
   const rating = useMemo(
     () =>
-      productBenchmarkValue(relativeGpu, preferredBenchmark).toLocaleString(),
+      productBenchmarkValue(relativeGpu, preferredBenchmark)?.toLocaleString(),
     [preferredBenchmark, relativeGpu],
   );
 
@@ -87,7 +87,7 @@ const PerformanceTableRow: FunctionComponent<PerformanceTableRowProps> = (
       getProductPerformanceRank(
         relativeGpu,
         preferredBenchmark,
-      ).toLocaleString(),
+      )?.toLocaleString(),
     [preferredBenchmark, relativeGpu],
   );
 
@@ -97,13 +97,17 @@ const PerformanceTableRow: FunctionComponent<PerformanceTableRowProps> = (
     [relativeGpu],
   );
 
+  if (rating == null) {
+    return <></>;
+  }
+
   return (
     <Tr
       className={classNames(
         baselineGpu.id === relativeGpu.id ? 'font-bold !bg-indigo-100' : '',
       )}
     >
-      <Td className="text-center">{rank}</Td>
+      <Td className="text-center">{rank ?? '--'}</Td>
       <Td className="text-left">
         <a href={href}>{gpuName}</a>
       </Td>

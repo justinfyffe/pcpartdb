@@ -171,12 +171,13 @@ const ValueTableRow: FunctionComponent<ValueTableRowProps> = (props) => {
       productBenchmarkValuePerMsrp(
         relativeGpu,
         preferredBenchmark,
-      ).toLocaleString('en-US', { maximumFractionDigits: 2 }),
+      )?.toLocaleString('en-US', { maximumFractionDigits: 2 }),
     [relativeGpu, preferredBenchmark],
   );
 
   const rank = useMemo(
-    () => getProductValueRank(relativeGpu, preferredBenchmark).toLocaleString(),
+    () =>
+      getProductValueRank(relativeGpu, preferredBenchmark)?.toLocaleString(),
     [preferredBenchmark, relativeGpu],
   );
 
@@ -186,6 +187,10 @@ const ValueTableRow: FunctionComponent<ValueTableRowProps> = (props) => {
     [relativeGpu],
   );
 
+  if (rating == null) {
+    return <></>;
+  }
+
   return (
     <Tr
       className={classNames(
@@ -193,7 +198,7 @@ const ValueTableRow: FunctionComponent<ValueTableRowProps> = (props) => {
         secondaryGpu?.id === relativeGpu.id ? 'font-bold !bg-fuchsia-100' : '',
       )}
     >
-      <Td className="text-center">{rank}</Td>
+      <Td className="text-center">{rank ?? '--'}</Td>
       <Td className="text-left">
         <a href={href}>{gpuName}</a>
       </Td>

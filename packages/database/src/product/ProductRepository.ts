@@ -155,12 +155,15 @@ export class ProductRepository {
       where: { productType_slug: { productType, slug } },
     });
 
-    const products = await this.findByIds(
-      { ...options, ids: [product.id] },
-      config,
-    );
-
-    return products[0] || null;
+    if (product != null) {
+      const products = await this.findByIds(
+        { ...options, ids: [product.id] },
+        config,
+      );
+      return products[0] || null;
+    } else {
+      return null;
+    }
   }
 
   async count(options: CountOptions, config?: RepositoryConfig) {
