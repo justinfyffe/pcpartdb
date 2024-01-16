@@ -1,4 +1,4 @@
-import { joinUrlParts } from '@pcpartdb/shared';
+import { ApiError, joinUrlParts } from '@pcpartdb/shared';
 import { NextPageContext } from 'next';
 import { AdminEditImagePage } from 'packages/website/src/client/admin/pages/image/AdminEditImagePage/AdminEditImagePage';
 import { withStaffGuard } from 'packages/website/src/client/shared/guards/withStaffGuard';
@@ -9,9 +9,15 @@ export async function getServerSideProps(ctx: NextPageContext) {
   const imageId = Number(query.imageId);
 
   const endpoint = joinUrlParts('admin/images/edit', String(imageId));
-  return await viewModelsClient.get(endpoint, {
-    nextPageContext: ctx,
-  });
+  try {
+    const response = await viewModelsClient.get(endpoint, {
+      nextPageContext: ctx,
+    });
+    return { props: response };
+  } catch (error) {
+    ctx.res.statusCode = (error as ApiError)?.statusCode ?? 500;
+    return { props: { error } };
+  }
 }
 
 export default withStaffGuard(AdminEditImagePage);

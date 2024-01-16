@@ -3,7 +3,6 @@ import {
   Catch,
   ExceptionFilter,
   ForbiddenException,
-  HttpStatus,
 } from '@nestjs/common';
 import { ApiError, HttpErrorType } from '@pcpartdb/shared';
 import { getErrorStatusCode, ServerError } from './utils';
@@ -16,16 +15,15 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse();
 
-    const status = HttpStatus.INTERNAL_SERVER_ERROR;
     if (e instanceof ServerError) {
-      response.status(status).json({
+      response.status(getErrorStatusCode(e.type)).json({
         type: e?.type,
         statusCode: getErrorStatusCode(e.type),
         timestamp: new Date().toISOString(),
         data: e?.data,
       } as ApiError);
     } else if (e instanceof ForbiddenException) {
-      response.status(status).json({
+      response.status(getErrorStatusCode(HttpErrorType.ForbiddenError)).json({
         type: HttpErrorType.ForbiddenError,
         statusCode: getErrorStatusCode(HttpErrorType.ForbiddenError),
         timestamp: new Date().toISOString(),

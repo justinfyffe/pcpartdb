@@ -1,4 +1,4 @@
-import { joinUrlParts } from '@pcpartdb/shared';
+import { ApiError, joinUrlParts } from '@pcpartdb/shared';
 import { NextPageContext } from 'next';
 import { CompareGpusPage } from 'packages/website/src/client/product/pages/gpu/CompareGpusPage/CompareGpusPage';
 import { viewModelsClient } from '../../../client/shared/api/viewModelsClient';
@@ -8,11 +8,17 @@ export async function getServerSideProps(ctx: NextPageContext) {
   const benchmark = ctx.query.gpu_benchmark as string;
 
   const endpoint = joinUrlParts('gpus/compare', slug);
-  const response = await viewModelsClient.get(endpoint, {
-    nextPageContext: ctx,
-    preferredBenchmarks: { gpu: benchmark },
-  });
-  return response;
+
+  try {
+    const response = await viewModelsClient.get(endpoint, {
+      nextPageContext: ctx,
+      preferredBenchmarks: { gpu: benchmark },
+    });
+    return { props: response };
+  } catch (error) {
+    ctx.res.statusCode = (error as ApiError)?.statusCode ?? 500;
+    return { props: { error } };
+  }
 }
 
 export default CompareGpusPage;

@@ -1,4 +1,5 @@
 import {
+  ApiError,
   generateListGpusQueryFromSearchParams,
   ListGpusRequest,
 } from '@pcpartdb/shared';
@@ -10,16 +11,21 @@ export async function getServerSideProps(ctx: NextPageContext) {
   const query = generateListGpusQueryFromSearchParams({ query: ctx.query });
   const benchmark = ctx.query.gpu_benchmark as string;
 
-  const response = await viewModelsClient.get('gpus/list', {
-    params: {
-      req: JSON.stringify({
-        query,
-      } as ListGpusRequest),
-    },
-    nextPageContext: ctx,
-    preferredBenchmarks: { gpu: benchmark },
-  });
-  return response;
+  try {
+    const response = await viewModelsClient.get('gpus/list', {
+      params: {
+        req: JSON.stringify({
+          query,
+        } as ListGpusRequest),
+      },
+      nextPageContext: ctx,
+      preferredBenchmarks: { gpu: benchmark },
+    });
+    return { props: response };
+  } catch (error) {
+    ctx.res.statusCode = (error as ApiError)?.statusCode ?? 500;
+    return { props: { error } };
+  }
 }
 
 export default ListGpusPage;

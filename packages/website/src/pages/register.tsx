@@ -1,4 +1,5 @@
 import {
+  ApiError,
   HttpErrorType,
   NotFoundError,
   RegisterViewModel,
@@ -9,23 +10,26 @@ import { viewModelsClient } from '../client/shared/api/viewModelsClient';
 import { withGuestGuard } from '../client/shared/guards/withGuestGuard';
 
 export async function getServerSideProps(ctx: NextPageContext) {
-  const response = await viewModelsClient.get<RegisterViewModel>('register', {
-    nextPageContext: ctx,
-  });
-  if ('error' in response.props) {
-    return response;
-  }
+  try {
+    const response = await viewModelsClient.get<RegisterViewModel>('register', {
+      nextPageContext: ctx,
+    });
 
-  if ('totalUsers' in response.props && response.props.totalUsers > 0) {
-    const error: NotFoundError = {
-      type: HttpErrorType.NotFoundError,
-      statusCode: 404,
-      timestamp: new Date().toISOString(),
-    };
+    if (response.totalUsers && response.totalUsers > 0) {
+      const error: NotFoundError = {
+        type: HttpErrorType.NotFoundError,
+        statusCode: 404,
+        timestamp: new Date().toISOString(),
+      };
+      ctx.res.statusCode = 404;
+      return { props: { error } };
+    }
+
+    return { props: {} };
+  } catch (error) {
+    ctx.res.statusCode = (error as ApiError)?.statusCode ?? 500;
     return { props: { error } };
   }
-
-  return { props: {} };
 }
 
 export default withGuestGuard(RegisterPage);
