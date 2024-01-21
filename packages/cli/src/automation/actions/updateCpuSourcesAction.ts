@@ -28,8 +28,12 @@ const TECHPOWERUP_URLS = [
   {
     company: 'Intel',
     urls: [
+      'https://www.techpowerup.com/cpu-specs/?mfgr=Intel&released=2024&sort=name', // Intel, 2024
       'https://www.techpowerup.com/cpu-specs/?mfgr=Intel&released=2023&mobile=Yes&sort=name', // Intel, 2023, Mobile Yes
       'https://www.techpowerup.com/cpu-specs/?mfgr=Intel&released=2023&mobile=No&sort=name', // Intel, 2023, Mobile No
+      'https://www.techpowerup.com/cpu-specs/?mfgr=Intel&released=2023&mobile=No&server=No&sort=name', // Intel, 2023, Mobile No, Server No
+      'https://www.techpowerup.com/cpu-specs/?mfgr=Intel&released=2023&mobile=No&server=Yes&multiUnlocked=Yes&sort=name', // Intel, 2023, Mobile No, Server Yes, Multiplier Unlocked
+      'https://www.techpowerup.com/cpu-specs/?mfgr=Intel&released=2023&mobile=No&server=Yes&multiUnlocked=No&sort=name', // Intel, 2023, Mobile No, Server Yes, Multiplier Locked
       'https://www.techpowerup.com/cpu-specs/?mfgr=Intel&released=2022&sort=name', // Intel, 2022
       'https://www.techpowerup.com/cpu-specs/?mfgr=Intel&released=2021&server=Yes&sort=name', // Intel, 2021, Server Yes
       'https://www.techpowerup.com/cpu-specs/?mfgr=Intel&released=2021&server=No&sort=name', // Intel, 2021, Server No
@@ -66,7 +70,9 @@ const TECHPOWERUP_URLS = [
   {
     company: 'AMD',
     urls: [
-      'https://www.techpowerup.com/cpu-specs/?mfgr=AMD&released=2023&sort=name', // AMD 2023
+      'https://www.techpowerup.com/cpu-specs/?mfgr=AMD&released=2024&sort=name', // AMD 2024
+      'https://www.techpowerup.com/cpu-specs/?mfgr=AMD&released=2023&mobile=Yes&sort=name', // AMD 2023, Mobile Yes
+      'https://www.techpowerup.com/cpu-specs/?mfgr=AMD&released=2023&mobile=No&sort=name', // AMD 2023, Mobile No
       'https://www.techpowerup.com/cpu-specs/?mfgr=AMD&released=2022&sort=name', // AMD 2022
       'https://www.techpowerup.com/cpu-specs/?mfgr=AMD&released=2021&sort=name', // AMD 2021
       'https://www.techpowerup.com/cpu-specs/?mfgr=AMD&released=2020&sort=name', // AMD 2020
@@ -83,7 +89,8 @@ const TECHPOWERUP_URLS = [
       'https://www.techpowerup.com/cpu-specs/?mfgr=AMD&released=2009&sort=name', // AMD 2009
       'https://www.techpowerup.com/cpu-specs/?mfgr=AMD&released=2008&sort=name', // AMD 2008
       'https://www.techpowerup.com/cpu-specs/?mfgr=AMD&released=2007&sort=name', // AMD 2007
-      'https://www.techpowerup.com/cpu-specs/?mfgr=AMD&released=2006&sort=name', // AMD 2006
+      'https://www.techpowerup.com/cpu-specs/?mfgr=AMD&released=2006&server=Yes&sort=name', // AMD 2006, Server Yes
+      'https://www.techpowerup.com/cpu-specs/?mfgr=AMD&released=2006&server=No&sort=name', // AMD 2006, Server No
       'https://www.techpowerup.com/cpu-specs/?mfgr=AMD&released=2005&sort=name', // AMD 2005
       'https://www.techpowerup.com/cpu-specs/?mfgr=AMD&released=2004&sort=name', // AMD 2004
       'https://www.techpowerup.com/cpu-specs/?mfgr=AMD&released=2003&sort=name', // AMD 2003
