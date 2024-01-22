@@ -389,7 +389,7 @@ function getEfficientCoreTurboClock(
 
   const result = parseNumber({
     fieldKey: 'eCoreTurboClock',
-    value: values[0] || null,
+    value: values[1] || null,
     unitMapper: {
       KHz: ClockSpeedUnit.khz,
       MHz: ClockSpeedUnit.mhz,
