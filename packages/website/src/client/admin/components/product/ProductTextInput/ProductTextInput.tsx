@@ -8,7 +8,7 @@ import { TextInput } from 'packages/website/src/client/shared/components/Input/T
 import React, { forwardRef, useCallback, useMemo } from 'react';
 import { ProductFieldInput } from '../ProductFieldInput/ProductFieldInput';
 
-interface ProductTextInputProps {
+export interface ProductTextInputProps {
   fieldKey: ProductFieldKey;
 
   label?: string;

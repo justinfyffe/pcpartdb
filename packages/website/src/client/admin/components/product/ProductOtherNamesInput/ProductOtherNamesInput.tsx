@@ -4,7 +4,7 @@ import { ChipsInput } from 'packages/website/src/client/shared/components/Input/
 import React, { forwardRef, useCallback } from 'react';
 import { Control, useWatch } from 'react-hook-form';
 
-interface ProductOtherNamesInputProps {
+export interface ProductOtherNamesInputProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   control: Control<any, any>;
 

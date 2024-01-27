@@ -4,8 +4,8 @@ import {
   CreateGpuActionData,
   CreateProductUpdateRequest,
   formatProductName,
-  generateGpuSlug,
   generateProductOtherNames,
+  generateProductSlug,
   GetProductRequest,
   GpuProduct,
   parseProductName,
@@ -56,7 +56,9 @@ export async function createGpuAction(
   }
 
   // Generate slug, new GPU doesn't have one yet.
-  gpu.slug = payload?.preferredSlug || generateGpuSlug(gpu.name, gpu.company);
+  gpu.slug =
+    payload?.preferredSlug ||
+    generateProductSlug({ name: gpu.name, company: gpu.company });
 
   // Upload update
   await uploadProductUpdate(gpu, context);

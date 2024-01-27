@@ -32,13 +32,18 @@ export class ProductController {
   @Get()
   async list(@Query('req') reqJson: string, @Ctx() ctx: Context) {
     const req: ListProductsRequest = JSON.parse(reqJson);
+    const productType = req.query.filter?.productType;
+    if (productType == null) {
+      throw new Error('Missing product type for list products');
+    }
+
     return await this.service.list(
       req,
       {
-        fields: this.getListFields(req.productType),
+        fields: this.getListFields(productType),
         includeAdditionalData: true,
         includeBenchmarks: [
-          getPreferredBenchmark(ctx.config?.userSettings, req.productType),
+          getPreferredBenchmark(ctx.config?.userSettings, productType),
         ],
         includeRanks: true,
       },

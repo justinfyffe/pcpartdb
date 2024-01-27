@@ -8,7 +8,7 @@ export const Overview: FunctionComponent = () => {
 
   return (
     <section>
-      <h2>About the {formatProductName(cpu, { company: false })}</h2>
+      <h2>{formatProductName(cpu, { company: false })}</h2>
       <ProductSummary product={cpu} tags={contentTags} params={contentParams} />
     </section>
   );

@@ -82,7 +82,7 @@ export const ValueHighlight: FunctionComponent<ValueHighlightProps> = (
           className="text-content flex flex-col"
           onClick={showPreferredBenchmarkDialog}
         >
-          <span>Performance / $</span>
+          <span>Performance Per Dollar</span>
           <span className="text-link text-sm">
             {getProductBenchmarkName(preferredBenchmark)}
           </span>

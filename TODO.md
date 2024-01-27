@@ -1,7 +1,26 @@
+SEO Improvements:
+- Improve view and compare html titles
+- Improve home page title
+- Improve list page titles
+- Improve keyword usages on website.
+- Update summary content.
+- Keyword research
+- Reduce size of next_data
+  - lots of extra data being passed - null fields, autoUpdate, benchmarks, ranks, etc.
+- Improve auto-generated summary
+  - shorter?
+  - add more manual summaries
+- rename "Best Value" -> "Best Performance Per Dollar"
+
+Tech Debt:
+- product form from builds branch
+- better organization of code
+
 Primary Focus:
+- SEO
 - List UI Improvements
-- Articles
-- Ads
+- Game FPS
+- More products
 
 List UI Improvements:
 - Add more verticality to page.

@@ -28,13 +28,15 @@ export const Table: FunctionComponent<TableProps> = (props) => {
     <React.Fragment>
       <TableContext.Provider value={context}>
         {responsive && (
-          <div className="block overflow-x-auto w-full">
+          <div
+            className={classNames(
+              'block overflow-x-auto w-full',
+              props.className,
+            )}
+          >
             <table
               {...htmlProps}
-              className={classNames(
-                'border-collapse w-full max-w-full',
-                props.className,
-              )}
+              className={classNames('border-collapse w-full max-w-full')}
             >
               {children}
             </table>

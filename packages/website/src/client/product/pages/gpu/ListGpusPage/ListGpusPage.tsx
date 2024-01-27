@@ -3,6 +3,7 @@ import {
   getHomePath,
   getListGpusPath,
   GpuProduct,
+  ListGpusFilter,
   ListGpusQuery,
   ListGpusViewModel,
   ProductType,
@@ -43,7 +44,12 @@ export const ListGpusPage = (props: ListGpusViewModel) => {
   const [additionalData, setAdditionalData] = useState(props.additionalData);
 
   const fetchGpus = useCallback(async (query: ListGpusQuery) => {
-    const response = await productService.list(ProductType.Gpu, query);
+    const filter: ListGpusFilter = {
+      ...(query?.filter ?? {}),
+      productType: ProductType.Gpu,
+    };
+    const response = await productService.list({ ...query, filter });
+
     setGpus(response.results as GpuProduct[]);
     setTotal(response.total);
     setAdditionalData(response.additionalData);
@@ -52,7 +58,7 @@ export const ListGpusPage = (props: ListGpusViewModel) => {
 
   useEffect(() => {
     router.beforePopState((cb) => {
-      fetchGpus(generateListGpusQueryFromPath(cb.as));
+      fetchGpus(generateListGpusQueryFromPath({ path: cb.as }));
       return true;
     });
   }, [fetchGpus, router]);

@@ -1,11 +1,11 @@
 import {
   BenchmarkKey,
-  ClockSpeedUnit,
   CpuFieldKey,
   CpuFields,
   CpuProduct,
   formatProductField,
   FormatProductFieldOptions,
+  FrequencyUnit,
   getBaseUnitValue,
   MeasurementUnit,
   MemorySizeUnit,
@@ -97,9 +97,9 @@ const FIELDS: Partial<Record<CpuFieldKey, ProductFieldScraper>> = {
     labels: ['clockspeed:'],
     regexes: [/^(?<value>[.\d]+) (?<unit>KHz|MHz|GHz)/i],
     unitMapper: {
-      khz: ClockSpeedUnit.khz,
-      mhz: ClockSpeedUnit.mhz,
-      ghz: ClockSpeedUnit.ghz,
+      khz: FrequencyUnit.khz,
+      mhz: FrequencyUnit.mhz,
+      ghz: FrequencyUnit.ghz,
     },
     parseValue: ({ value, unit }) =>
       getBaseUnitValue(value, unit, { decimals: 2 }),
@@ -118,9 +118,9 @@ const FIELDS: Partial<Record<CpuFieldKey, ProductFieldScraper>> = {
     labels: ['efficient cores:'],
     regexes: [/(?<value>[.\d]+) (?<unit>KHz|MHz|GHz) Base/i],
     unitMapper: {
-      khz: ClockSpeedUnit.khz,
-      mhz: ClockSpeedUnit.mhz,
-      ghz: ClockSpeedUnit.ghz,
+      khz: FrequencyUnit.khz,
+      mhz: FrequencyUnit.mhz,
+      ghz: FrequencyUnit.ghz,
     },
     parseValue: ({ value, unit }) =>
       getBaseUnitValue(value, unit, { decimals: 2 }),
@@ -129,9 +129,9 @@ const FIELDS: Partial<Record<CpuFieldKey, ProductFieldScraper>> = {
     labels: ['efficient cores:'],
     regexes: [/(?<value>[.\d]+) (?<unit>KHz|MHz|GHz) Turbo/i],
     unitMapper: {
-      khz: ClockSpeedUnit.khz,
-      mhz: ClockSpeedUnit.mhz,
-      ghz: ClockSpeedUnit.ghz,
+      khz: FrequencyUnit.khz,
+      mhz: FrequencyUnit.mhz,
+      ghz: FrequencyUnit.ghz,
     },
     parseValue: ({ value, unit }) =>
       getBaseUnitValue(value, unit, { decimals: 2 }),
@@ -180,9 +180,9 @@ const FIELDS: Partial<Record<CpuFieldKey, ProductFieldScraper>> = {
     labels: ['performance cores:'],
     regexes: [/(?<value>[.\d]+) (?<unit>KHz|MHz|GHz) Base/i],
     unitMapper: {
-      khz: ClockSpeedUnit.khz,
-      mhz: ClockSpeedUnit.mhz,
-      ghz: ClockSpeedUnit.ghz,
+      khz: FrequencyUnit.khz,
+      mhz: FrequencyUnit.mhz,
+      ghz: FrequencyUnit.ghz,
     },
     parseValue: ({ value, unit }) =>
       getBaseUnitValue(value, unit, { decimals: 2 }),
@@ -191,9 +191,9 @@ const FIELDS: Partial<Record<CpuFieldKey, ProductFieldScraper>> = {
     labels: ['performance cores:'],
     regexes: [/(?<value>[.\d]+) (?<unit>KHz|MHz|GHz) Turbo/i],
     unitMapper: {
-      khz: ClockSpeedUnit.khz,
-      mhz: ClockSpeedUnit.mhz,
-      ghz: ClockSpeedUnit.ghz,
+      khz: FrequencyUnit.khz,
+      mhz: FrequencyUnit.mhz,
+      ghz: FrequencyUnit.ghz,
     },
     parseValue: ({ value, unit }) =>
       getBaseUnitValue(value, unit, { decimals: 2 }),
@@ -220,9 +220,9 @@ const FIELDS: Partial<Record<CpuFieldKey, ProductFieldScraper>> = {
     labels: ['turbo speed:'],
     regexes: [/^(?<value>[.\d]+) (?<unit>KHz|MHz|GHz)/i],
     unitMapper: {
-      khz: ClockSpeedUnit.khz,
-      mhz: ClockSpeedUnit.mhz,
-      ghz: ClockSpeedUnit.ghz,
+      khz: FrequencyUnit.khz,
+      mhz: FrequencyUnit.mhz,
+      ghz: FrequencyUnit.ghz,
     },
     parseValue: ({ value, unit }) =>
       getBaseUnitValue(value, unit, { decimals: 2 }),

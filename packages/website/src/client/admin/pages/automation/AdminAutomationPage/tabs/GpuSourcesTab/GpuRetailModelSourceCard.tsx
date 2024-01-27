@@ -13,7 +13,7 @@ import {
   CreateGpuActionData,
   formatAutomationSourceName,
   formatProductName,
-  generateGpuSlug,
+  generateProductSlug,
   getViewGpuPath,
   GpuAutomationSourceGroup,
   ProductSourceKey,
@@ -87,7 +87,7 @@ export const GpuRetailModelSourceCard = (
     return currentSources[key]?.sourceName;
   });
   const [preferredSlug, setPreferredSlug] = useState(() =>
-    generateGpuSlug(preferredName, null),
+    generateProductSlug({ name: preferredName, company: null }),
   );
   const [groupKey] = useState(() => {
     const key = SUPPORTED_KEYS.find((key) => currentSources[key] != null);
@@ -119,7 +119,9 @@ export const GpuRetailModelSourceCard = (
   );
 
   const handleGenerateSlug = useCallback(() => {
-    setPreferredSlug(generateGpuSlug(preferredName, null));
+    setPreferredSlug(
+      generateProductSlug({ name: preferredName, company: null }),
+    );
   }, [preferredName]);
 
   const handleSave = useCallback(async () => {

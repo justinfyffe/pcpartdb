@@ -2,9 +2,8 @@ import { Bars3Icon } from '@heroicons/react/24/outline';
 import {
   AutomationStatus,
   getAdminAutomationPath,
-  getAdminListCpusPath,
-  getAdminListGpusPath,
   getAdminListImagesPath,
+  getAdminListProductsPath,
   getAdminListUsersPath,
   getAdminOverviewPath,
   getHomePath,
@@ -121,8 +120,9 @@ export const AdminLayout: FunctionComponent<AdminLayoutProps> = (props) => {
           <MenuLinkItem href={getAdminAutomationPath()}>
             Automation{pendingUpdates > 0 && <> ({pendingUpdates})</>}
           </MenuLinkItem>
-          <MenuLinkItem href={getAdminListCpusPath()}>CPUs</MenuLinkItem>
-          <MenuLinkItem href={getAdminListGpusPath()}>GPUs</MenuLinkItem>
+          <MenuLinkItem href={getAdminListProductsPath()}>
+            Products
+          </MenuLinkItem>
           <MenuLinkItem href={getAdminListImagesPath()}>Images</MenuLinkItem>
           <MenuLinkItem href={getAdminListUsersPath()}>Users</MenuLinkItem>
         </Menu>
@@ -151,15 +151,9 @@ export const AdminLayout: FunctionComponent<AdminLayoutProps> = (props) => {
               </Button>
               <Button
                 variant={ButtonVariant.Generic}
-                href={getAdminListCpusPath()}
+                href={getAdminListProductsPath()}
               >
-                CPUs
-              </Button>
-              <Button
-                variant={ButtonVariant.Generic}
-                href={getAdminListGpusPath()}
-              >
-                GPUs
+                Products
               </Button>
               <Button
                 variant={ButtonVariant.Generic}

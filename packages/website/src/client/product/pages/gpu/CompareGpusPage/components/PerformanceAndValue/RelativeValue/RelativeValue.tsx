@@ -40,7 +40,7 @@ export const RelativeValue: FunctionComponent = () => {
   }
 
   return (
-    <section>
+    <section className="flex-1">
       <h3 className="mb-1 font-semibold">Relative Value</h3>
       <ValueIntro />
       <ValueTable />

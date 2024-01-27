@@ -1,6 +1,5 @@
 import {
-  CpuFields,
-  GpuFields,
+  BenchmarkKey,
   Product,
   ProductFieldKey,
   ProductFields,
@@ -9,10 +8,6 @@ import {
 } from '@pcpartdb/shared';
 import { mapToAutomationSourceDtos } from '../mappers';
 import {
-  mapToCpuFieldsDto,
-  mapToCpuFieldsEntity,
-  mapToGpuFieldsDto,
-  mapToGpuFieldsEntity,
   mapToProductBenchmarkDtos,
   mapToProductBenchmarkEntity,
   mapToProductImageDtos,
@@ -22,25 +17,35 @@ import {
   mapToProductUpdateDtos,
   ProductEntity,
 } from '.';
+import {
+  mapToProductFieldsDto,
+  mapToProductFieldsEntity,
+} from './productFieldsMapper';
+import { mapToProductRanksDto } from './productRankMapper';
 
 interface MapToDtoOptions {
   fields?: ProductFieldKey[];
   parentFields?: ProductFieldKey[];
   relatedFields?: ProductFieldKey[];
 
+  includeBenchmarks?: boolean | BenchmarkKey[];
+  includeParentBenchmarks?: boolean | BenchmarkKey[];
+  includeRelatedBenchmarks?: boolean | BenchmarkKey[];
+
+  includeRanks?: boolean | BenchmarkKey[];
+  includeRelatedRanks?: boolean | BenchmarkKey[];
+
   includeParent?: boolean;
 
   includeAutomation?: boolean;
-  includeBenchmarks?: boolean;
+
   includeImages?: boolean;
-  includeRanks?: boolean;
+
   includeSources?: boolean;
   includeSummary?: boolean;
   includeUpdates?: boolean;
 
   includeRelated?: boolean;
-  includeRelatedBenchmarks?: boolean;
-  includeRelatedRanks?: boolean;
 }
 
 export async function mapToProductDto(
@@ -51,41 +56,44 @@ export async function mapToProductDto(
     return null;
   }
 
+  const includeBenchmarks = options?.includeBenchmarks ?? false;
+  const includeParentBenchmarks = options?.includeParentBenchmarks ?? false;
+  const includeRelatedBenchmarks = options?.includeRelatedBenchmarks ?? false;
+
+  const includeRanks = options?.includeRanks ?? false;
+  const includeRelatedRanks = options?.includeRelatedRanks ?? false;
+
   const includeParent = options?.includeParent ?? false;
 
   const includeAutomation = options?.includeAutomation ?? false;
-  const includeBenchmarks = options?.includeBenchmarks ?? false;
   const includeImages = options?.includeImages ?? false;
   const includeSources = options?.includeSources ?? false;
-  const includeRanks = options?.includeRanks ?? false;
   const includeRelated = options?.includeRelated ?? false;
   const includeSummary = options?.includeSummary ?? false;
   const includeUpdates = options?.includeUpdates ?? false;
 
-  let fields: ProductFields;
-  switch (entity.productType) {
-    case ProductType.Cpu:
-      fields = mapToCpuFieldsDto(entity.cpuFields, options);
-      break;
-    case ProductType.Gpu:
-      fields = mapToGpuFieldsDto(entity.gpuFields, options);
-      break;
-  }
+  const fields: ProductFields = mapToProductFieldsDto(
+    entity.productType as ProductType,
+    entity.cpuFields ?? entity.gpuFields,
+    options,
+  );
 
   const parent = includeParent
     ? await mapToProductDto(entity.parent, {
         ...options,
         fields: options?.parentFields,
+        includeBenchmarks: includeParentBenchmarks,
       })
     : undefined;
-
   const benchmarks = includeBenchmarks
-    ? mapToProductBenchmarkDtos(entity.benchmarks ?? [])
+    ? mapToProductBenchmarkDtos(entity.benchmarks ?? [], options)
     : undefined;
   const images = includeImages
     ? mapToProductImageDtos(entity.images ?? [])
     : undefined;
-  const ranks = includeRanks ? entity.ranks?.ranks : undefined;
+  const ranks = includeRanks
+    ? mapToProductRanksDto(entity.ranks, options)
+    : undefined;
   const relatedAutomationSources = includeAutomation
     ? await mapToAutomationSourceDtos(entity.relatedAutomationSources ?? [])
     : undefined;
@@ -105,8 +113,8 @@ export async function mapToProductDto(
 
       const relatedProduct = await mapToProductDto(rp.relatedProduct, {
         fields: options?.relatedFields,
-        includeBenchmarks: options?.includeRelatedBenchmarks,
-        includeRanks: options?.includeRelatedRanks,
+        includeBenchmarks: includeRelatedBenchmarks,
+        includeRanks: includeRelatedRanks,
       });
       relatedProducts[key].push(relatedProduct);
     }
@@ -161,14 +169,7 @@ export function mapToProductEntity(dto: Product) {
     return null;
   }
 
-  const cpuFields =
-    dto.productType === ProductType.Cpu
-      ? mapToCpuFieldsEntity(dto.fields as CpuFields)
-      : undefined;
-  const gpuFields =
-    dto.productType === ProductType.Gpu
-      ? mapToGpuFieldsEntity(dto.fields as GpuFields)
-      : undefined;
+  const fields = mapToProductFieldsEntity(dto.productType, dto.fields);
   const benchmarks =
     dto.benchmarks?.map((benchmark) =>
       mapToProductBenchmarkEntity(benchmark),
@@ -196,8 +197,8 @@ export function mapToProductEntity(dto: Product) {
     automatedAt:
       dto.automatedAt != null ? new Date(dto.automatedAt) : undefined,
 
-    cpuFields,
-    gpuFields,
+    cpuFields: dto.productType === ProductType.Cpu ? fields : undefined,
+    gpuFields: dto.productType === ProductType.Gpu ? fields : undefined,
     benchmarks,
     sources,
     images,

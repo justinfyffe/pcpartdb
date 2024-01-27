@@ -1,5 +1,4 @@
 import {
-  CpuProduct,
   DEFAULT_LIST_CPUS_LIMIT,
   DEFAULT_LIST_CPUS_OFFSET,
   LIST_CPUS_PRESETS,
@@ -10,42 +9,6 @@ import {
   GetCompareProductsPathOptions,
   GetViewProductPathOptions,
 } from './product-route-utils';
-
-export function getAdminNewCpuPath() {
-  return '/admin/cpus/new/';
-}
-
-export function getAdminEditCpuPath(
-  cpuOrIdOrSlug: CpuProduct | number | string,
-) {
-  if (typeof cpuOrIdOrSlug === 'number') {
-    return joinUrlParts('/admin/cpus/', String(cpuOrIdOrSlug), '/');
-  } else if (typeof cpuOrIdOrSlug === 'string') {
-    return joinUrlParts('/admin/cpus/', cpuOrIdOrSlug, '/');
-  } else {
-    return joinUrlParts('/admin/cpus/', String(cpuOrIdOrSlug.id), '/');
-  }
-}
-
-export function getAdminListCpusPath(query?: ListCpusQuery) {
-  const path = '/admin/cpus/';
-
-  const paginationParams =
-    query != null
-      ? Object.fromEntries(generatePaginationParamsFromCpusQuery(query))
-      : {};
-  const searchParams =
-    query != null
-      ? Object.fromEntries(generateSearchParamsFromCpusQuery(query))
-      : {};
-
-  const combinedParams = new URLSearchParams({
-    ...paginationParams,
-    ...searchParams,
-  }).toString();
-
-  return joinUrlParts(path, combinedParams ? `?${combinedParams}` : '');
-}
 
 export function getListCpusPath(presetOrQuery?: ListCpusQuery | string) {
   const basePath = '/cpus/list/';

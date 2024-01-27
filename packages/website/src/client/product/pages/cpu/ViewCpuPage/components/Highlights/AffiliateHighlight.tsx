@@ -1,5 +1,5 @@
 import { ShoppingCartIcon } from '@heroicons/react/24/outline';
-import { getCpuAffiliateUrl } from '@pcpartdb/shared';
+import { getAffiliateUrl } from '@pcpartdb/shared';
 import { ProductHighlight } from 'packages/website/src/client/product/components/ProductHighlight/ProductHighlight';
 import { AffiliateDisclaimer } from 'packages/website/src/client/shared/components/AffiliateDisclaimer/AffiliateDisclaimer';
 import { AmazonButton } from 'packages/website/src/client/shared/components/Button/AmazonButton';
@@ -19,7 +19,7 @@ export const AffiliateHighlight: FunctionComponent<AffiliateHighlightProps> = (
   const context = useContext(ViewPageContext);
   const cpu = context.cpu;
 
-  const cpuAffiliateUrl = useMemo(() => getCpuAffiliateUrl(cpu), [cpu]);
+  const cpuAffiliateUrl = useMemo(() => getAffiliateUrl(cpu), [cpu]);
 
   if (!cpuAffiliateUrl) {
     return <></>;

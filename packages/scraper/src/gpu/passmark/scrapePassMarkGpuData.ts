@@ -1,6 +1,6 @@
 import {
   BenchmarkKey,
-  ClockSpeedUnit,
+  FrequencyUnit,
   formatProductField,
   FormatProductFieldOptions,
   getBaseUnitValue,
@@ -99,9 +99,9 @@ const FIELDS: Partial<Record<GpuFieldKey, ProductFieldScraper>> = {
     labels: ['core clock(s):'],
     regexes: [/^(?<value>[.\d]+) (?<unit>KHz|MHz|GHz)/i],
     unitMapper: {
-      khz: ClockSpeedUnit.khz,
-      mhz: ClockSpeedUnit.mhz,
-      ghz: ClockSpeedUnit.ghz,
+      khz: FrequencyUnit.khz,
+      mhz: FrequencyUnit.mhz,
+      ghz: FrequencyUnit.ghz,
     },
     parseValue: ({ value, unit }) =>
       getBaseUnitValue(value, unit, { decimals: 2 }),

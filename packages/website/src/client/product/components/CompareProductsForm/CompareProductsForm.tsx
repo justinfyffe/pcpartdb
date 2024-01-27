@@ -11,7 +11,7 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import { useProductCache } from '../../../shared/cache/ProductCache';
+import { ProductCache } from '../../../shared/cache/ProductCache';
 import { PrimaryButton } from '../../../shared/components/Button/PrimaryButton';
 import { Form } from '../../../shared/components/Form/Form';
 import { classNames } from '../../../shared/ui/classNames';
@@ -21,15 +21,15 @@ interface CompareProductsFormProps {
   productType: ProductType;
   values?: number[];
 
+  navigateOnChange?: boolean;
+
   className?: string;
 }
 
 export const CompareProductsForm: FunctionComponent<
   CompareProductsFormProps
 > = (props) => {
-  const { productType, className } = props;
-
-  const productCache = useProductCache();
+  const { productType, navigateOnChange, className } = props;
 
   const [values, setValues] = useState(props.values ?? [null, null]);
 
@@ -38,37 +38,27 @@ export const CompareProductsForm: FunctionComponent<
     [values],
   );
 
-  const onProductChange = useCallback(
-    (i: number, value: number) => {
-      const newValues = [...values];
-      newValues[i] = value;
-      setValues(newValues);
-    },
-    [values],
-  );
-
   const handleSubmit = useCallback(
     (e: FormEvent) => {
       e.preventDefault();
       e.stopPropagation();
 
-      const products = values
-        .filter((value) => value != null)
-        .map((value) => productCache.get(productType, value));
+      navigateToProductsPage(productType, values);
+    },
+    [productType, values],
+  );
 
-      if (products.length === 2 && products[0].id !== products[1].id) {
-        window.location.href = getCompareProductsPath({
-          comparison: products as ProductComparison,
-        });
-        return;
-      } else if (products.length === 1 || products[0].id === products[1].id) {
-        window.location.href = getViewProductPath({ product: products[0] });
-        return;
-      } else {
-        return;
+  const onProductChange = useCallback(
+    (i: number, value: number) => {
+      const newValues = [...values];
+      newValues[i] = value;
+      setValues(newValues);
+
+      if (navigateOnChange) {
+        navigateToProductsPage(productType, newValues);
       }
     },
-    [productCache, productType, values],
+    [navigateOnChange, productType, values],
   );
 
   return (
@@ -106,13 +96,36 @@ export const CompareProductsForm: FunctionComponent<
         />
       </div>
 
-      <PrimaryButton
-        type="submit"
-        disabled={filteredValues.length === 0}
-        className="min-w-25"
-      >
-        {filteredValues.length === 1 ? 'View' : 'Compare'}
-      </PrimaryButton>
+      {!navigateOnChange && (
+        <PrimaryButton
+          type="submit"
+          disabled={filteredValues.length === 0}
+          className="min-w-25"
+        >
+          {filteredValues.length === 1 ? 'View' : 'Compare'}
+        </PrimaryButton>
+      )}
     </Form>
   );
 };
+
+function navigateToProductsPage(
+  productType: ProductType,
+  productIds: number[],
+) {
+  const products = productIds
+    .filter((productId) => productId != null)
+    .map((productId) => ProductCache.get(productType, productId));
+
+  if (products.length === 2 && products[0].id !== products[1].id) {
+    window.location.href = getCompareProductsPath({
+      comparison: products as ProductComparison,
+    });
+    return;
+  } else if (products.length === 1 || products[0].id === products[1].id) {
+    window.location.href = getViewProductPath({ product: products[0] });
+    return;
+  } else {
+    return;
+  }
+}

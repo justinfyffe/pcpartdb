@@ -1,6 +1,5 @@
 import {
   BenchmarkKey,
-  ClockSpeedUnit,
   CpuFieldKey,
   CpuFields,
   CpuProduct,
@@ -9,6 +8,7 @@ import {
   formatMarketSegment,
   formatProductField,
   FormatProductFieldOptions,
+  FrequencyUnit,
   getBaseUnitValue,
   LengthUnit,
   MarketSegment,
@@ -144,9 +144,9 @@ const FIELDS: Partial<Record<CpuFieldKey, ProductFieldScraper>> = {
       /^(?<value>[.\d]+) (?<unit>KHz|MHz|GHz)/i,
     ],
     unitMapper: {
-      khz: ClockSpeedUnit.khz,
-      mhz: ClockSpeedUnit.mhz,
-      ghz: ClockSpeedUnit.ghz,
+      khz: FrequencyUnit.khz,
+      mhz: FrequencyUnit.mhz,
+      ghz: FrequencyUnit.ghz,
     },
     parseValue: ({ value, unit }) =>
       getBaseUnitValue(value, unit, { decimals: 2 }),
@@ -257,9 +257,9 @@ const FIELDS: Partial<Record<CpuFieldKey, ProductFieldScraper>> = {
     label: 'clock rate',
     regexes: [/^.* - (?<value>[.\d]+) (?<unit>KHz|MHz|GHz)/i],
     unitMapper: {
-      khz: ClockSpeedUnit.khz,
-      mhz: ClockSpeedUnit.mhz,
-      ghz: ClockSpeedUnit.ghz,
+      khz: FrequencyUnit.khz,
+      mhz: FrequencyUnit.mhz,
+      ghz: FrequencyUnit.ghz,
     },
     parseValue: ({ value, unit }) =>
       getBaseUnitValue(value, unit, { decimals: 2 }),

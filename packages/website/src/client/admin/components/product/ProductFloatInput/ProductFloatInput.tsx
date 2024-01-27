@@ -13,7 +13,7 @@ import { NumberInput } from 'packages/website/src/client/shared/components/Input
 import React, { forwardRef, useCallback, useMemo } from 'react';
 import { ProductFieldInput } from '../ProductFieldInput/ProductFieldInput';
 
-interface ProductFloatInputProps {
+export interface ProductFloatInputProps {
   productType: ProductType;
   fieldKey: ProductFieldKey;
 

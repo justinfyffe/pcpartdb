@@ -7,7 +7,7 @@ import { Checkbox } from 'packages/website/src/client/shared/components/Checkbox
 import { TextInput } from 'packages/website/src/client/shared/components/Input/TextInput';
 import React, { useCallback, useEffect, useState } from 'react';
 
-interface ProductFieldInputProps {
+export interface ProductFieldInputProps {
   fieldKey: ProductFieldKey;
 
   label?: string;
@@ -18,6 +18,7 @@ interface ProductFieldInputProps {
   children?: React.ReactNode;
 
   suggestedFormats?: string[];
+  excludeDisplayValue?: boolean;
 }
 
 export const ProductFieldInput = (props: ProductFieldInputProps) => {

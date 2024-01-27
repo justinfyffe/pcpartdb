@@ -8,7 +8,6 @@ import {
   getPreferredBenchmark,
   ListOrder,
   ListSort,
-  preferredBenchmarkOrDefault,
   productBenchmarkValue,
   productBenchmarkValuePerMsrp,
   ProductType,
@@ -35,10 +34,10 @@ export class CompareCpusViewModelService {
     const timer = `CompareCpusViewModelService (${uuid.v4()})`;
     console.time(timer);
 
-    const preferredBenchmark = preferredBenchmarkOrDefault(
+    const preferredBenchmark = getPreferredBenchmark(
+      ctx.config?.userSettings,
       ProductType.Cpu,
-      ctx.config?.userSettings?.preferredBenchmarks?.[ProductType.Cpu],
-    ).toLowerCase();
+    );
 
     const viewModel = await this.cacheService.cache(
       async () => {
@@ -102,25 +101,29 @@ export class CompareCpusViewModelService {
   }
 
   private async getComparison(slug: string, ctx: Context) {
+    const preferredBenchmark = getPreferredBenchmark(
+      ctx.config?.userSettings,
+      ProductType.Cpu,
+    );
     const comparison = await this.productService.getComparison(
       {
         productType: ProductType.Cpu,
         slug,
 
         includeAutomation: false,
-        includeBenchmarks: true,
+
         includeImages: true,
-        includeRanks: true,
         includeSources: false,
         includeUpdates: false,
 
         includeParent: false,
-
         includeRelated: true,
-        includeRelatedBenchmarks: [
-          getPreferredBenchmark(ctx.config?.userSettings, ProductType.Cpu),
-        ],
-        includeRelatedRanks: true,
+
+        includeBenchmarks: true,
+        includeRelatedBenchmarks: [preferredBenchmark],
+
+        includeRanks: [preferredBenchmark],
+        includeRelatedRanks: [preferredBenchmark],
 
         relatedFields: [],
       },
@@ -134,30 +137,30 @@ export class CompareCpusViewModelService {
     seed2: CpuProduct,
     ctx: Context,
   ) {
-    const benchmark = getPreferredBenchmark(
+    const preferredBenchmark = getPreferredBenchmark(
       ctx.config?.userSettings,
       ProductType.Cpu,
     );
 
     const relatedProductKey = buildRelatedProductKey({
       type: RelatedProductType.Performance,
-      benchmark,
+      benchmark: preferredBenchmark,
     });
     const relative1 =
       (seed1.relatedProducts?.[relatedProductKey]
-        ?.filter((p) => productBenchmarkValue(p, benchmark) != null)
+        ?.filter((p) => productBenchmarkValue(p, preferredBenchmark) != null)
         .sort(
           (p1, p2) =>
-            productBenchmarkValue(p2, benchmark) -
-            productBenchmarkValue(p1, benchmark),
+            productBenchmarkValue(p2, preferredBenchmark) -
+            productBenchmarkValue(p1, preferredBenchmark),
         ) as Partial<CpuProduct>[]) ?? [];
     const relative2 =
       (seed2.relatedProducts?.[relatedProductKey]
-        ?.filter((p) => productBenchmarkValue(p, benchmark) != null)
+        ?.filter((p) => productBenchmarkValue(p, preferredBenchmark) != null)
         .sort(
           (p1, p2) =>
-            productBenchmarkValue(p2, benchmark) -
-            productBenchmarkValue(p1, benchmark),
+            productBenchmarkValue(p2, preferredBenchmark) -
+            productBenchmarkValue(p1, preferredBenchmark),
         ) as Partial<CpuProduct>[]) ?? [];
 
     // At least one cpu has no neighbors (missing rank)
@@ -186,8 +189,8 @@ export class CompareCpusViewModelService {
         relative1,
         relative2,
         (p1, p2) =>
-          productBenchmarkValue(p2, benchmark) -
-          productBenchmarkValue(p1, benchmark),
+          productBenchmarkValue(p2, preferredBenchmark) -
+          productBenchmarkValue(p1, preferredBenchmark),
       );
     } else {
       return this.concatNeighbors(
@@ -195,8 +198,8 @@ export class CompareCpusViewModelService {
         relative1,
         relative2,
         (p1, p2) =>
-          productBenchmarkValue(p2, benchmark) -
-          productBenchmarkValue(p1, benchmark),
+          productBenchmarkValue(p2, preferredBenchmark) -
+          productBenchmarkValue(p1, preferredBenchmark),
       );
     }
   }
@@ -206,30 +209,34 @@ export class CompareCpusViewModelService {
     seed2: CpuProduct,
     ctx: Context,
   ) {
-    const benchmark = getPreferredBenchmark(
+    const preferredBenchmark = getPreferredBenchmark(
       ctx.config?.userSettings,
       ProductType.Cpu,
     );
 
     const relatedProductKey = buildRelatedProductKey({
       type: RelatedProductType.Value,
-      benchmark,
+      benchmark: preferredBenchmark,
     });
     const relative1 =
       (seed1.relatedProducts?.[relatedProductKey]
-        ?.filter((p) => productBenchmarkValuePerMsrp(p, benchmark) != null)
+        ?.filter(
+          (p) => productBenchmarkValuePerMsrp(p, preferredBenchmark) != null,
+        )
         .sort(
           (p1, p2) =>
-            productBenchmarkValuePerMsrp(p2, benchmark) -
-            productBenchmarkValuePerMsrp(p1, benchmark),
+            productBenchmarkValuePerMsrp(p2, preferredBenchmark) -
+            productBenchmarkValuePerMsrp(p1, preferredBenchmark),
         ) as Partial<CpuProduct>[]) ?? [];
     const relative2 =
       (seed2.relatedProducts?.[relatedProductKey]
-        ?.filter((p) => productBenchmarkValuePerMsrp(p, benchmark) != null)
+        ?.filter(
+          (p) => productBenchmarkValuePerMsrp(p, preferredBenchmark) != null,
+        )
         .sort(
           (p1, p2) =>
-            productBenchmarkValuePerMsrp(p2, benchmark) -
-            productBenchmarkValuePerMsrp(p1, benchmark),
+            productBenchmarkValuePerMsrp(p2, preferredBenchmark) -
+            productBenchmarkValuePerMsrp(p1, preferredBenchmark),
         ) as Partial<CpuProduct>[]) ?? [];
 
     // At least one cpu has no neighbors (missing rank)
@@ -258,8 +265,8 @@ export class CompareCpusViewModelService {
         relative1,
         relative2,
         (p1, p2) =>
-          productBenchmarkValuePerMsrp(p2, benchmark) -
-          productBenchmarkValuePerMsrp(p1, benchmark),
+          productBenchmarkValuePerMsrp(p2, preferredBenchmark) -
+          productBenchmarkValuePerMsrp(p1, preferredBenchmark),
       );
     } else {
       return this.concatNeighbors(
@@ -267,8 +274,8 @@ export class CompareCpusViewModelService {
         relative1,
         relative2,
         (p1, p2) =>
-          productBenchmarkValuePerMsrp(p2, benchmark) -
-          productBenchmarkValuePerMsrp(p1, benchmark),
+          productBenchmarkValuePerMsrp(p2, preferredBenchmark) -
+          productBenchmarkValuePerMsrp(p1, preferredBenchmark),
       );
     }
   }
@@ -401,19 +408,18 @@ export class CompareCpusViewModelService {
   }
 
   private async getBestPerformanceCpu(ctx: Context) {
-    const preferredBenchmark = preferredBenchmarkOrDefault(
+    const preferredBenchmark = getPreferredBenchmark(
+      ctx.config?.userSettings,
       ProductType.Cpu,
-      ctx.config?.userSettings?.preferredBenchmarks?.[ProductType.Cpu],
-    ).toLowerCase();
+    );
     const bestPerformanceCacheKey = `bestPerformanceCpu__${preferredBenchmark}`;
 
     const result = this.cacheService.cache(
       async () => {
         const response = await this.productService.list(
           {
-            productType: ProductType.Cpu,
             query: {
-              filter: {},
+              filter: { productType: ProductType.Cpu },
               orderBy: {
                 sort: ListSort.PerformanceRating,
                 order: ListOrder.Desc,
@@ -423,9 +429,7 @@ export class CompareCpusViewModelService {
           },
           {
             skipCount: true,
-            includeBenchmarks: [
-              getPreferredBenchmark(ctx.config?.userSettings, ProductType.Cpu),
-            ],
+            includeBenchmarks: [preferredBenchmark],
             fields: [],
           },
           ctx,
@@ -442,19 +446,18 @@ export class CompareCpusViewModelService {
   }
 
   private async getBestValueCpu(ctx: Context) {
-    const preferredBenchmark = preferredBenchmarkOrDefault(
+    const preferredBenchmark = getPreferredBenchmark(
+      ctx.config?.userSettings,
       ProductType.Cpu,
-      ctx.config?.userSettings?.preferredBenchmarks?.[ProductType.Cpu],
-    ).toLowerCase();
+    );
     const bestValueCacheKey = `bestValueCpu__${preferredBenchmark}`;
 
     const result = this.cacheService.cache(
       async () => {
         const response = await this.productService.list(
           {
-            productType: ProductType.Cpu,
             query: {
-              filter: {},
+              filter: { productType: ProductType.Cpu },
               orderBy: {
                 sort: ListSort.PerformancePerMsrp,
                 order: ListOrder.Desc,
@@ -464,9 +467,7 @@ export class CompareCpusViewModelService {
           },
           {
             skipCount: true,
-            includeBenchmarks: [
-              getPreferredBenchmark(ctx.config?.userSettings, ProductType.Cpu),
-            ],
+            includeBenchmarks: [preferredBenchmark],
             fields: [],
           },
           ctx,

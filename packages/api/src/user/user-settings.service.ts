@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import {
+  ListCpusFilter,
+  ListGpusFilter,
   ProductType,
   sortByIds,
   UpdateUserSettingsRequest,
@@ -39,11 +41,16 @@ export class UserSettingsService {
 
     // Fetch content data if requested
 
-    if (productType != null && productIds != null) {
-      let products = await this.productRepository.list(
-        { productType, filter: { ids: productIds } },
-        ctx,
-      );
+    if (
+      productType != null &&
+      productIds != null &&
+      (productType === ProductType.Cpu || productType === ProductType.Gpu)
+    ) {
+      const filter: ListCpusFilter | ListGpusFilter = {
+        productType,
+        ids: productIds,
+      };
+      let products = await this.productRepository.list({ filter }, ctx);
       products = sortByIds(productIds, products, (p) => p.id);
       const slugs = products.map((p) => p.slug);
 

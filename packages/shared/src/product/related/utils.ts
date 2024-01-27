@@ -1,5 +1,5 @@
 import { BenchmarkKey } from '../benchmarks';
-import { RelatedProductType } from './types';
+import { RelatedProductType } from './common';
 
 interface BuildRelatedProductKeyOptions {
   type: RelatedProductType;

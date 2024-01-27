@@ -29,8 +29,8 @@ const TOTAL_RELATIVE_PRODUCTS = 10;
  * Filters for fetching products we want to run computations on.
  */
 const LIST_FILTERS: Partial<Record<ProductType, ListProductsFilter>> = {
-  [ProductType.Cpu]: {},
-  [ProductType.Gpu]: { isChipset: true },
+  [ProductType.Cpu]: { productType: ProductType.Cpu },
+  [ProductType.Gpu]: { productType: ProductType.Gpu, isChipset: true },
 };
 
 export async function updateRelatedProductsAction(
@@ -75,7 +75,7 @@ async function fetchProducts(
   context: AutomationContext,
 ) {
   const filter = LIST_FILTERS[productType];
-  const request: ListProductsRequest = { productType, query: { filter } };
+  const request: ListProductsRequest = { query: { filter } };
   const response = await context.api.get<ListProductsResponse>(
     'products/all',
     {},
@@ -133,7 +133,9 @@ function populateRelatedProducts(
       const productId = product.id;
       relatedProducts[productId] = { ...(relatedProducts[productId] ?? {}) };
 
-      const segment = productFieldRawValue(product.fields?.marketSegment);
+      const segment = productFieldRawValue<MarketSegment>(
+        product.fields?.marketSegment,
+      );
       const hasSegment = segment != null;
       const hasMsrp = productBenchmarkValuePerMsrp(product, benchmark);
 

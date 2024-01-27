@@ -3,9 +3,9 @@ import {
   AutocompleteProductsResponse,
   CreateProductRequest,
   joinUrlParts,
+  ListProductsQuery,
   ListProductsRequest,
   ListProductsResponse,
-  ListQuery,
   Product,
   ProductType,
   ScrapeProductRequest,
@@ -13,6 +13,7 @@ import {
   UpdateProductRequest,
 } from '@pcpartdb/shared';
 import { ApiClient, apiClient } from '../../shared/api/apiClient';
+import { RequestConfig } from '../../shared/api/types';
 import { ProductCache } from '../../shared/cache/ProductCache';
 
 const PATH = 'products';
@@ -20,10 +21,16 @@ const PATH = 'products';
 export class ProductService {
   constructor(private api: ApiClient) {}
 
-  async list(productType: ProductType, query: ListQuery) {
+  async list(query: ListProductsQuery, config?: RequestConfig) {
+    const productType = query.filter?.productType;
+    if (productType == null) {
+      throw new Error('Missing product type for list');
+    }
+
     const response = await this.api.get<ListProductsResponse>(PATH, {
+      ...config,
       params: {
-        req: JSON.stringify({ productType, query } as ListProductsRequest),
+        req: JSON.stringify({ query } as ListProductsRequest),
       },
     });
     ProductCache.save(productType, response.results);

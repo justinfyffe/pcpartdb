@@ -4,7 +4,7 @@ import React, { forwardRef, useCallback } from 'react';
 import { Control, useWatch } from 'react-hook-form';
 import { Input } from '../../../../shared/components/Input/Input';
 
-interface ProductSearchTextInputProps {
+export interface ProductSearchTextInputProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   control: Control<any, any>;
 

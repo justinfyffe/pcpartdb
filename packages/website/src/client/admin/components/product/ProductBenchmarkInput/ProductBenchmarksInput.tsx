@@ -15,7 +15,7 @@ import React, {
 import { v4 as uuidv4 } from 'uuid';
 import { ProductBenchmarkInput } from './ProductBenchmarkInput';
 
-interface ProductBenchmarksInputProps {
+export interface ProductBenchmarksInputProps {
   productType: ProductType;
   name: string;
   value: ProductBenchmark[];

@@ -1,7 +1,7 @@
 import {
   formatCompanyName,
   formatProductName,
-  getCpuAffiliateUrl,
+  getAffiliateUrl,
   ProductType,
 } from '@pcpartdb/shared';
 import { ProductCustomRow } from 'packages/website/src/client/product/components/ProductCustomRow/ProductCustomRow';
@@ -34,8 +34,8 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
     ];
   }, [cpu1, cpu2]);
 
-  const cpuAffiliateUrl1 = useMemo(() => getCpuAffiliateUrl(cpu1), [cpu1]);
-  const cpuAffiliateUrl2 = useMemo(() => getCpuAffiliateUrl(cpu2), [cpu2]);
+  const cpuAffiliateUrl1 = useMemo(() => getAffiliateUrl(cpu1), [cpu1]);
+  const cpuAffiliateUrl2 = useMemo(() => getAffiliateUrl(cpu2), [cpu2]);
 
   return (
     <Table border responsive className={className}>

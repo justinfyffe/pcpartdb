@@ -6,7 +6,6 @@ import {
   getPreferredBenchmark,
   ListOrder,
   ListSort,
-  preferredBenchmarkOrDefault,
   productBenchmarkValue,
   productBenchmarkValuePerMsrp,
   ProductType,
@@ -32,10 +31,10 @@ export class ViewCpuViewModelService {
     const timer = `ViewCpuViewModelService (${uuid.v4()})`;
     console.time(timer);
 
-    const preferredBenchmark = preferredBenchmarkOrDefault(
+    const preferredBenchmark = getPreferredBenchmark(
+      ctx.config?.userSettings,
       ProductType.Cpu,
-      ctx.config?.userSettings?.preferredBenchmarks?.[ProductType.Cpu],
-    ).toLowerCase();
+    );
 
     const viewModel = await this.cacheService.cache(
       async () => {
@@ -92,25 +91,29 @@ export class ViewCpuViewModelService {
   }
 
   private async getCpu(slug: string, ctx: Context) {
+    const preferredBenchmark = getPreferredBenchmark(
+      ctx.config?.userSettings,
+      ProductType.Cpu,
+    );
     const cpu = await this.productService.getBySlug(
       {
         productType: ProductType.Cpu,
         slug,
 
         includeAutomation: false,
-        includeBenchmarks: true,
         includeImages: true,
-        includeRanks: true,
         includeSources: false,
         includeUpdates: false,
 
         includeParent: false,
 
         includeRelated: true,
-        includeRelatedBenchmarks: [
-          getPreferredBenchmark(ctx.config?.userSettings, ProductType.Cpu),
-        ],
-        includeRelatedRanks: true,
+
+        includeBenchmarks: true,
+        includeRelatedBenchmarks: [preferredBenchmark],
+
+        includeRanks: [preferredBenchmark],
+        includeRelatedRanks: [preferredBenchmark],
 
         relatedFields: [],
       },
@@ -249,19 +252,18 @@ export class ViewCpuViewModelService {
   }
 
   private async getBestPerformanceCpu(ctx: Context) {
-    const preferredBenchmark = preferredBenchmarkOrDefault(
+    const preferredBenchmark = getPreferredBenchmark(
+      ctx.config?.userSettings,
       ProductType.Cpu,
-      ctx.config?.userSettings?.preferredBenchmarks?.[ProductType.Cpu],
-    ).toLowerCase();
+    );
     const bestPerformanceCacheKey = `bestPerformanceCpu__${preferredBenchmark}`;
 
     const result = this.cacheService.cache(
       async () => {
         const response = await this.productService.list(
           {
-            productType: ProductType.Cpu,
             query: {
-              filter: {},
+              filter: { productType: ProductType.Cpu },
               orderBy: {
                 sort: ListSort.PerformanceRating,
                 order: ListOrder.Desc,
@@ -271,9 +273,7 @@ export class ViewCpuViewModelService {
           },
           {
             skipCount: true,
-            includeBenchmarks: [
-              getPreferredBenchmark(ctx.config?.userSettings, ProductType.Cpu),
-            ],
+            includeBenchmarks: [preferredBenchmark],
             fields: [],
           },
           ctx,
@@ -290,19 +290,18 @@ export class ViewCpuViewModelService {
   }
 
   private async getBestValueCpu(ctx: Context) {
-    const preferredBenchmark = preferredBenchmarkOrDefault(
+    const preferredBenchmark = getPreferredBenchmark(
+      ctx.config?.userSettings,
       ProductType.Cpu,
-      ctx.config?.userSettings?.preferredBenchmarks?.[ProductType.Cpu],
-    ).toLowerCase();
+    );
     const bestValueCacheKey = `bestValueCpu__${preferredBenchmark}`;
 
     const result = this.cacheService.cache(
       async () => {
         const response = await this.productService.list(
           {
-            productType: ProductType.Cpu,
             query: {
-              filter: {},
+              filter: { productType: ProductType.Cpu },
               orderBy: {
                 sort: ListSort.PerformancePerMsrp,
                 order: ListOrder.Desc,
@@ -312,9 +311,7 @@ export class ViewCpuViewModelService {
           },
           {
             skipCount: true,
-            includeBenchmarks: [
-              getPreferredBenchmark(ctx.config?.userSettings, ProductType.Cpu),
-            ],
+            includeBenchmarks: [preferredBenchmark],
             fields: [],
           },
           ctx,

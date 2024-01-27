@@ -2,12 +2,12 @@ import {
   BandwidthUnit,
   BenchmarkKey,
   BitUnit,
-  ClockSpeedUnit,
   FlopsUnit,
   formatCompanyName,
   formatMarketSegment,
   formatProductField,
   FormatProductFieldOptions,
+  FrequencyUnit,
   getBaseUnitValue,
   GpuFieldKey,
   GpuFields,
@@ -193,9 +193,9 @@ const FIELDS: Partial<Record<GpuFieldKey, ProductFieldScraper>> = {
       /^(?<value>[.\d]+) (?<unit>KHz|MHz|GHz)/i,
     ],
     unitMapper: {
-      khz: ClockSpeedUnit.khz,
-      mhz: ClockSpeedUnit.mhz,
-      ghz: ClockSpeedUnit.ghz,
+      khz: FrequencyUnit.khz,
+      mhz: FrequencyUnit.mhz,
+      ghz: FrequencyUnit.ghz,
     },
     parseValue: ({ value, unit }) =>
       getBaseUnitValue(value, unit, { decimals: 2 }),
@@ -204,9 +204,9 @@ const FIELDS: Partial<Record<GpuFieldKey, ProductFieldScraper>> = {
     label: 'core speed',
     regexes: [/(?<value>[.\d]+) \(boost\) (?<unit>KHz|MHz|GHz)/i],
     unitMapper: {
-      khz: ClockSpeedUnit.khz,
-      mhz: ClockSpeedUnit.mhz,
-      ghz: ClockSpeedUnit.ghz,
+      khz: FrequencyUnit.khz,
+      mhz: FrequencyUnit.mhz,
+      ghz: FrequencyUnit.ghz,
     },
     parseValue: ({ value, unit }) =>
       getBaseUnitValue(value, unit, { decimals: 2 }),
@@ -253,9 +253,9 @@ const FIELDS: Partial<Record<GpuFieldKey, ProductFieldScraper>> = {
     label: 'memory speed',
     regexes: [/(?<value>[.\d]+) (?<unit>KHz|MHz|GHz)$/i],
     unitMapper: {
-      khz: ClockSpeedUnit.khz,
-      mhz: ClockSpeedUnit.mhz,
-      ghz: ClockSpeedUnit.ghz,
+      khz: FrequencyUnit.khz,
+      mhz: FrequencyUnit.mhz,
+      ghz: FrequencyUnit.ghz,
     },
     parseValue: ({ value, unit }) =>
       getBaseUnitValue(value, unit, { decimals: 2 }),
@@ -264,9 +264,9 @@ const FIELDS: Partial<Record<GpuFieldKey, ProductFieldScraper>> = {
     label: 'memory speed',
     regexes: [/^(?<value>[.\d]+) effective .+ (?<unit>KHz|MHz|GHz)/i],
     unitMapper: {
-      khz: ClockSpeedUnit.khz,
-      mhz: ClockSpeedUnit.mhz,
-      ghz: ClockSpeedUnit.ghz,
+      khz: FrequencyUnit.khz,
+      mhz: FrequencyUnit.mhz,
+      ghz: FrequencyUnit.ghz,
     },
     parseValue: ({ value, unit }) =>
       getBaseUnitValue(value, unit, { decimals: 2 }),

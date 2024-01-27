@@ -43,11 +43,11 @@ export const HomePage = (props: HomeViewModel) => {
   ] = intelVsAmdCpus;
   const [bestPerformanceCpu, bestValueCpu, randomCpu] = popularCpus;
 
-  const pageTitle = 'PC hardware specifications, benchmarks, and comparisons';
+  const pageTitle = 'GPU and CPU benchmarks, specs, and comparisons';
   const seoTitle = `PC Part DB - ${pageTitle}`;
   const seoDescription =
-    'View and compare PC component specs and benchmarks. ' +
-    'Our database of PC Parts will help you choose the best parts for your computer.';
+    'View and compare PC component benchmarks and specs. ' +
+    'Our database of PC parts will help you choose the best parts for your computer.';
   const seoCanonical = useMemo(() => getHomePath(), []);
   const seoKeywords: string[] = [];
 
@@ -62,7 +62,7 @@ export const HomePage = (props: HomeViewModel) => {
       <section className="flex flex-col gap-8 justify-center">
         <section className={classNames('flex flex-col justify-center gap-4')}>
           <h1 className="md:text-2xl text-3xl mb-0">
-            View &amp; compare PC hardware specs and benchmarks
+            View &amp; compare PC component benchmarks and specs
           </h1>
 
           <Tabs>
@@ -119,7 +119,7 @@ export const HomePage = (props: HomeViewModel) => {
             <FeedLink
               href={getListGpusPath(ListGpusPresetSlug.BestValueNvidia)}
             >
-              Best value NVIDIA GPUs
+              Best performance per dollar NVIDIA GPUs
             </FeedLink>
             <FeedLink
               href={getListGpusPath(ListGpusPresetSlug.BestPerformanceAmd)}
@@ -127,7 +127,7 @@ export const HomePage = (props: HomeViewModel) => {
               Best performing AMD GPUs
             </FeedLink>
             <FeedLink href={getListGpusPath(ListGpusPresetSlug.BestValueAmd)}>
-              Best value AMD GPUs
+              Best performance per dollar AMD GPUs
             </FeedLink>
           </FeedLinks>
         </Feed>
@@ -158,7 +158,7 @@ export const HomePage = (props: HomeViewModel) => {
               Best performing GPUs
             </FeedLink>
             <FeedLink href={getListGpusPath(ListGpusPresetSlug.BestValue)}>
-              Best value GPUs
+              Best performance per dollar GPUs
             </FeedLink>
           </FeedLinks>
         </Feed>
@@ -191,7 +191,7 @@ export const HomePage = (props: HomeViewModel) => {
               Best performing Intel CPUs
             </FeedLink>
             <FeedLink href={getListCpusPath(ListCpusPresetSlug.BestValueIntel)}>
-              Best value Intel CPUs
+              Best performance per dollar Intel CPUs
             </FeedLink>
             <FeedLink
               href={getListCpusPath(ListCpusPresetSlug.BestPerformanceAmd)}
@@ -199,7 +199,7 @@ export const HomePage = (props: HomeViewModel) => {
               Best performing AMD CPUs
             </FeedLink>
             <FeedLink href={getListCpusPath(ListCpusPresetSlug.BestValueAmd)}>
-              Best value AMD CPUs
+              Best performance per dollar AMD CPUs
             </FeedLink>
           </FeedLinks>
         </Feed>
@@ -230,7 +230,7 @@ export const HomePage = (props: HomeViewModel) => {
               Best performing CPUs
             </FeedLink>
             <FeedLink href={getListCpusPath(ListCpusPresetSlug.BestValue)}>
-              Best value CPUs
+              Best performance per dollar CPUs
             </FeedLink>
           </FeedLinks>
         </Feed>

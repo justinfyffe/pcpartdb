@@ -7,14 +7,13 @@ import {
 import {
   AdminEditProductViewModel,
   AutomationActionType,
-  CpuProduct,
   formatProductName,
-  getAdminListCpusPath,
-  getAdminListGpusPath,
+  formatProductType,
+  getAdminListProductsPath,
   getViewProductPath,
-  GpuProduct,
+  isCpuProduct,
+  isGpuProduct,
   ProductType,
-  ProductUpdate,
   UpdateCpuActionData,
   UpdateGpuActionData,
 } from '@pcpartdb/shared';
@@ -29,13 +28,12 @@ import {
 } from 'packages/website/src/client/shared/components/Seo/Seo';
 import { AdminLayout } from 'packages/website/src/client/shared/layouts/admin/AdminLayout';
 import React, { useCallback, useMemo, useState } from 'react';
-import { CpuDiffDialog } from '../../../components/cpu/CpuDiffDialog/CpuDiffDialog';
-import { CpuForm } from '../../../components/cpu/CpuForm/CpuForm';
-import { GpuDiffDialog } from '../../../components/gpu/GpuDiffDialog/GpuDiffDialog';
-import { GpuForm } from '../../../components/gpu/GpuForm/GpuForm';
+import { ProductDiffDialog } from '../../../components/product/ProductDiffDialog/ProductDiffDialog';
+import { ProductForm } from '../../../components/product/ProductForm/ProductForm';
 
 export const AdminEditProductPage = (props: AdminEditProductViewModel) => {
-  const { productType, product } = props;
+  const { product } = props;
+  const productType = product?.productType ?? props.productType;
 
   // States
 
@@ -45,22 +43,13 @@ export const AdminEditProductPage = (props: AdminEditProductViewModel) => {
   // Memos
 
   const { viewHref, adminListHref, typeName } = useMemo(() => {
-    const viewHref = getViewProductPath(product);
-    if (productType === ProductType.Cpu) {
-      return {
-        viewHref,
-        adminListHref: getAdminListCpusPath(),
-        typeName: 'CPU',
-      };
-    } else if (productType === ProductType.Gpu) {
-      return {
-        viewHref,
-        adminListHref: getAdminListGpusPath(),
-        typeName: 'GPU',
-      };
-    } else {
-      throw new Error('Invalid product type');
-    }
+    const viewHref =
+      isCpuProduct(product) || isGpuProduct(product)
+        ? getViewProductPath(product)
+        : null;
+    const adminListHref = getAdminListProductsPath({ filter: { productType } });
+    const typeName = formatProductType(productType);
+    return { viewHref, adminListHref, typeName };
   }, [product, productType]);
 
   const pageTitle = `Edit ${typeName}`;
@@ -112,15 +101,9 @@ export const AdminEditProductPage = (props: AdminEditProductViewModel) => {
       return;
     }
 
-    if (productType === ProductType.Cpu) {
-      showDialog(
-        <CpuDiffDialog diff={(pendingUpdate as ProductUpdate).data} />,
-      );
-    } else if (productType === ProductType.Gpu) {
-      showDialog(
-        <GpuDiffDialog diff={(pendingUpdate as ProductUpdate).data} />,
-      );
-    }
+    showDialog(
+      <ProductDiffDialog productType={productType} diff={pendingUpdate.data} />,
+    );
   }, [pendingUpdate, productType]);
 
   return (
@@ -169,12 +152,7 @@ export const AdminEditProductPage = (props: AdminEditProductViewModel) => {
           </WarningAlert>
         )}
 
-        {productType === ProductType.Cpu && (
-          <CpuForm cpu={product as CpuProduct} />
-        )}
-        {productType === ProductType.Gpu && (
-          <GpuForm gpu={product as GpuProduct} />
-        )}
+        <ProductForm productType={productType} product={product} />
       </article>
     </AdminLayout>
   );

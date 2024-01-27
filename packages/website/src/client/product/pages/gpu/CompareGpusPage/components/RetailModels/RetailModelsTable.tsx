@@ -4,6 +4,7 @@ import {
   getViewGpuPath,
   GpuProduct,
 } from '@pcpartdb/shared';
+import { Card } from 'packages/website/src/client/shared/components/Card/Card';
 import {
   Table,
   TBody,
@@ -41,7 +42,7 @@ export const RetailModelsTable: FunctionComponent<RetailModelsTableProps> = (
   );
 
   return (
-    <div className="flex flex-row md:flex-col gap-8">
+    <div className="flex flex-row md:flex-col gap-6">
       {retailModels1 != null && retailModels1.length > 0 ? (
         <Table border responsive className={classNames('flex-1', className)}>
           <THead>
@@ -60,7 +61,11 @@ export const RetailModelsTable: FunctionComponent<RetailModelsTableProps> = (
           </TBody>
         </Table>
       ) : (
-        <></>
+        <div className="flex-1">
+          <Card className="items-center justify-center h-auto font-medium">
+            No retail cards for the {chipsetShortName1}
+          </Card>
+        </div>
       )}
 
       {retailModels2 != null && retailModels2.length > 0 ? (
@@ -81,7 +86,11 @@ export const RetailModelsTable: FunctionComponent<RetailModelsTableProps> = (
           </TBody>
         </Table>
       ) : (
-        <></>
+        <div className="flex-1">
+          <Card className="items-center justify-center h-auto font-medium">
+            No retail cards for the {chipsetShortName2}
+          </Card>
+        </div>
       )}
     </div>
   );

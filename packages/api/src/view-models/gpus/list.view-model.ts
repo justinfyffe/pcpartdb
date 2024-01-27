@@ -29,7 +29,7 @@ export class ListGpusViewModelService {
     const chipsetsQuery = deepmerge(
       {},
       {
-        filter: { isChipset: true },
+        filter: { productType: ProductType.Gpu, isChipset: true },
         pagination: {
           offset: DEFAULT_LIST_GPUS_OFFSET,
           limit: DEFAULT_LIST_GPUS_LIMIT,
@@ -41,8 +41,12 @@ export class ListGpusViewModelService {
       query,
     );
 
+    const preferredBenchmark = getPreferredBenchmark(
+      ctx.config?.userSettings,
+      ProductType.Gpu,
+    );
     const response = await this.productService.list(
-      { productType: ProductType.Gpu, query: chipsetsQuery },
+      { query: chipsetsQuery },
       {
         fields: [
           'releaseDate',
@@ -57,10 +61,8 @@ export class ListGpusViewModelService {
           'msrp',
         ],
         includeAdditionalData: true,
-        includeBenchmarks: [
-          getPreferredBenchmark(ctx.config?.userSettings, ProductType.Gpu),
-        ],
-        includeRanks: true,
+        includeBenchmarks: [preferredBenchmark],
+        includeRanks: [preferredBenchmark],
       },
       ctx,
     );

@@ -1,9 +1,4 @@
-import {
-  BenchmarkKey,
-  ProductFieldKey,
-  ProductSource,
-  ProductType,
-} from '@pcpartdb/shared';
+import { ProductSource, ProductType } from '@pcpartdb/shared';
 import { productService } from 'packages/website/src/client/product/services/productService';
 import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
 import { PrimaryButton } from 'packages/website/src/client/shared/components/Button/PrimaryButton';
@@ -22,6 +17,7 @@ import React, {
   useEffect,
   useState,
 } from 'react';
+import { BENCHMARKS_TO_SCRAPE, DATA_TO_SCRAPE } from './consts';
 import { ScrapedBenchmarkRow } from './ScrapedBenchmarkRow';
 import { ScrapedCompanyRow } from './ScrapedCompanyRow';
 import { ScrapedFieldRow } from './ScrapedFieldRow';
@@ -36,8 +32,6 @@ import { ScrapedProduct } from './types';
 
 interface ScrapeProductDialogProps {
   productType: ProductType;
-  fieldsToScrape?: ProductFieldKey[];
-  benchmarksToScrape?: BenchmarkKey[];
   sources: Partial<ProductSource>[];
   onImport: (data: ScrapedProduct) => void;
 }
@@ -45,8 +39,10 @@ interface ScrapeProductDialogProps {
 export const ScrapeProductDialog: FunctionComponent<
   ScrapeProductDialogProps
 > = (props) => {
-  const { productType, fieldsToScrape, benchmarksToScrape, sources, onImport } =
-    props;
+  const { productType, sources, onImport } = props;
+
+  const fieldsToScrape = DATA_TO_SCRAPE[productType];
+  const benchmarksToScrape = BENCHMARKS_TO_SCRAPE[productType];
 
   const [loading, setLoading] = useState<boolean>(true);
   const [context, setContext] = useState<ScrapedProduct>(null);

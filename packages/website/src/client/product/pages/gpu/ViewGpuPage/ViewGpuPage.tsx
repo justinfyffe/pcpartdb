@@ -1,7 +1,7 @@
 import {
   Config,
   formatProductName,
-  getAdminEditGpuPath,
+  getAdminEditProductPath,
   getGpuChipset,
   getHomePath,
   getListGpusPath,
@@ -53,12 +53,12 @@ export const ViewGpuPage = (props: ViewGpuViewModel & { config: Config }) => {
   );
 
   const pageTitle = useMemo(() => gpuName, [gpuName]);
-  const seoTitle = `${formatProductName(gpu)}: Specs, performance, and value`;
+  const seoTitle = `${formatProductName(gpu)} GPU Benchmarks and Specs`;
   const seoDescription = useMemo(() => {
     const fullGpuName = formatProductName(gpu);
 
     return (
-      `View the specs, benchmarks, and performance per dollar of the ${fullGpuName}. ` +
+      `Specs, benchmarks, and performance per dollar of the ${fullGpuName}. ` +
       'Our database of graphics cards will help you choose the best GPU for your computer.'
     );
   }, [gpu]);
@@ -70,7 +70,12 @@ export const ViewGpuPage = (props: ViewGpuViewModel & { config: Config }) => {
   const editThisPage = useMemo(
     () =>
       config.isStaff
-        ? [{ href: getAdminEditGpuPath(gpu), name: gpuShortName }]
+        ? [
+            {
+              href: getAdminEditProductPath({ product: gpu }),
+              name: gpuShortName,
+            },
+          ]
         : null,
     [config.isStaff, gpu, gpuShortName],
   );

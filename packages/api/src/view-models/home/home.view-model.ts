@@ -17,21 +17,25 @@ import { Context } from '../../shared/context';
 const RANDOMLY_CHOOSE_FROM_COMPARISON = 5;
 
 const NVIDIA_GPU_FILTER: ListGpusFilter = {
+  productType: ProductType.Gpu,
   company: ['nvidia'],
   segment: [MarketSegment.Desktop],
   isChipset: true,
 };
 const AMD_GPU_FILTER: ListGpusFilter = {
+  productType: ProductType.Gpu,
   company: ['amd'],
   segment: [MarketSegment.Desktop],
   isChipset: true,
 };
 
 const INTEL_CPU_FILTER: ListCpusFilter = {
+  productType: ProductType.Cpu,
   company: ['intel'],
   segment: [MarketSegment.Desktop],
 };
 const AMD_CPU_FILTER: ListCpusFilter = {
+  productType: ProductType.Cpu,
   company: ['amd'],
   segment: [MarketSegment.Desktop],
 };
@@ -125,17 +129,22 @@ export class HomeViewModelService {
   private async getPopularGpus(ctx: Context) {
     // TODO: try to parallelize these.
     const gpu1 = await this.getPerformanceGpu(
-      { segment: [MarketSegment.Desktop] },
+      { productType: ProductType.Gpu, segment: [MarketSegment.Desktop] },
       5,
       ctx,
     );
     const gpu2 = await this.getValueGpu(
-      { segment: [MarketSegment.Desktop], excludeIds: [gpu1.id] },
+      {
+        productType: ProductType.Gpu,
+        segment: [MarketSegment.Desktop],
+        excludeIds: [gpu1.id],
+      },
       5,
       ctx,
     );
     const gpu3 = await this.getPerformanceGpu(
       {
+        productType: ProductType.Gpu,
         segment: [MarketSegment.Desktop],
         excludeIds: [gpu1.id, gpu2.id],
       },
@@ -198,17 +207,22 @@ export class HomeViewModelService {
   private async getPopularCpus(ctx: Context) {
     // TODO: try to parallelize these.
     const cpu1 = await this.getPerformanceCpu(
-      { segment: [MarketSegment.Desktop] },
+      { productType: ProductType.Cpu, segment: [MarketSegment.Desktop] },
       5,
       ctx,
     );
     const cpu2 = await this.getValueCpu(
-      { segment: [MarketSegment.Desktop], excludeIds: [cpu1.id] },
+      {
+        productType: ProductType.Cpu,
+        segment: [MarketSegment.Desktop],
+        excludeIds: [cpu1.id],
+      },
       5,
       ctx,
     );
     const cpu3 = await this.getPerformanceCpu(
       {
+        productType: ProductType.Cpu,
         segment: [MarketSegment.Desktop],
         excludeIds: [cpu1.id, cpu2.id],
       },
@@ -226,7 +240,6 @@ export class HomeViewModelService {
   ) {
     const response = await this.productService.list(
       {
-        productType: ProductType.Gpu,
         query: {
           filter,
           orderBy: { sort: ListSort.PerformanceRating },
@@ -249,7 +262,6 @@ export class HomeViewModelService {
   ) {
     const response = await this.productService.list(
       {
-        productType: ProductType.Gpu,
         query: {
           filter,
           orderBy: { sort: ListSort.PerformancePerMsrp },
@@ -272,7 +284,6 @@ export class HomeViewModelService {
   ) {
     const response = await this.productService.list(
       {
-        productType: ProductType.Cpu,
         query: {
           filter,
           orderBy: { sort: ListSort.PerformanceRating },
@@ -295,7 +306,6 @@ export class HomeViewModelService {
   ) {
     const response = await this.productService.list(
       {
-        productType: ProductType.Cpu,
         query: {
           filter,
           orderBy: { sort: ListSort.PerformancePerMsrp },

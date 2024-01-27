@@ -1,5 +1,5 @@
 import { ShoppingCartIcon } from '@heroicons/react/24/outline';
-import { formatProductName, getCpuAffiliateUrl } from '@pcpartdb/shared';
+import { formatProductName, getAffiliateUrl } from '@pcpartdb/shared';
 import { AffiliateDisclaimer } from 'packages/website/src/client/shared/components/AffiliateDisclaimer/AffiliateDisclaimer';
 import { AmazonButton } from 'packages/website/src/client/shared/components/Button/AmazonButton';
 import React, { FunctionComponent, useContext, useMemo } from 'react';
@@ -24,8 +24,8 @@ export const AffiliateHighlight: FunctionComponent<AffiliateHighlightProps> = (
     [cpu2],
   );
 
-  const cpuAffiliateUrl1 = useMemo(() => getCpuAffiliateUrl(cpu1), [cpu1]);
-  const cpuAffiliateUrl2 = useMemo(() => getCpuAffiliateUrl(cpu2), [cpu2]);
+  const cpuAffiliateUrl1 = useMemo(() => getAffiliateUrl(cpu1), [cpu1]);
+  const cpuAffiliateUrl2 = useMemo(() => getAffiliateUrl(cpu2), [cpu2]);
 
   if (!cpuAffiliateUrl1 && !cpuAffiliateUrl2) {
     return <></>;
@@ -35,13 +35,13 @@ export const AffiliateHighlight: FunctionComponent<AffiliateHighlightProps> = (
     <>
       {cpuAffiliateUrl1 && (
         <div className="flex flex-col">
-          <div className="bg-light-shades flex flex-row flex-wrap px-4 py-2 rounded shadow gap-4">
+          <div className="bg-light-shades flex flex-row flex-wrap px-4 py-2 rounded shadow gap-4 items-center">
             <div className="flex-1 flex gap-2 items-center mr-auto">
               <div className="mr-1">
                 <ShoppingCartIcon className="w-5" />
               </div>
 
-              <div className="font-medium md:text-base text-xl whitespace-nowrap">
+              <div className="font-medium md:text-base text-xl">
                 Shop {name1}
               </div>
             </div>
@@ -62,13 +62,13 @@ export const AffiliateHighlight: FunctionComponent<AffiliateHighlightProps> = (
 
       {cpuAffiliateUrl2 && (
         <div className="flex flex-col">
-          <div className="bg-light-shades flex flex-row flex-wrap px-4 py-2 rounded shadow gap-4">
+          <div className="bg-light-shades flex flex-row flex-wrap px-4 py-2 rounded shadow gap-4 items-center">
             <div className="flex-1 flex gap-2 items-center mr-auto">
               <div className="mr-1">
                 <ShoppingCartIcon className="w-5" />
               </div>
 
-              <div className="font-medium md:text-base text-xl whitespace-nowrap">
+              <div className="font-medium md:text-base text-xl">
                 Shop {name2}
               </div>
             </div>

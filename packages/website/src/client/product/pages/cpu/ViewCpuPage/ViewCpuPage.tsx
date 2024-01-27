@@ -1,7 +1,7 @@
 import {
   Config,
   formatProductName,
-  getAdminEditCpuPath,
+  getAdminEditProductPath,
   getHomePath,
   getListCpusPath,
   getViewCpuPath,
@@ -43,10 +43,10 @@ export const ViewCpuPage = (props: ViewCpuViewModel & { config: Config }) => {
   );
 
   const pageTitle = useMemo(() => cpuName, [cpuName]);
-  const seoTitle = `${cpuName}: Specs, performance, and value`;
+  const seoTitle = `${cpuName} CPU Benchmarks and Specs`;
   const seoDescription = useMemo(() => {
     return (
-      `View the specs, benchmarks, and performance per dollar of the ${cpuName}. ` +
+      `Specs, benchmarks, and performance per dollar of the ${cpuName}. ` +
       'Our database of processors will help you choose the best CPU for your computer.'
     );
   }, [cpuName]);
@@ -58,7 +58,12 @@ export const ViewCpuPage = (props: ViewCpuViewModel & { config: Config }) => {
   const editThisPage = useMemo(
     () =>
       config.isStaff
-        ? [{ href: getAdminEditCpuPath(cpu), name: shortCpuName }]
+        ? [
+            {
+              href: getAdminEditProductPath({ product: cpu }),
+              name: shortCpuName,
+            },
+          ]
         : null,
     [config.isStaff, cpu, shortCpuName],
   );

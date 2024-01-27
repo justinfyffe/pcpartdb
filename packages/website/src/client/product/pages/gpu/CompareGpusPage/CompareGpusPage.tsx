@@ -3,7 +3,7 @@ import {
   Config,
   formatProductComparisonName,
   formatProductName,
-  getAdminEditGpuPath,
+  getAdminEditProductPath,
   getCompareGpusPath,
   getHomePath,
   getListGpusPath,
@@ -86,8 +86,14 @@ export const CompareGpusPage = (
     () =>
       config.isStaff
         ? [
-            { href: getAdminEditGpuPath(gpu1), name: shortGpuName1 },
-            { href: getAdminEditGpuPath(gpu2), name: shortGpuName2 },
+            {
+              href: getAdminEditProductPath({ product: gpu1 }),
+              name: shortGpuName1,
+            },
+            {
+              href: getAdminEditProductPath({ product: gpu2 }),
+              name: shortGpuName2,
+            },
           ]
         : null,
     [config.isStaff, gpu1, gpu2, shortGpuName1, shortGpuName2],
@@ -108,19 +114,20 @@ export const CompareGpusPage = (
           <Breadcrumb>{shortPageTitle}</Breadcrumb>
         </Breadcrumbs>
 
-        <div className="flex flex-col gap-8 justify-center">
+        <div className="flex flex-col gap-6 justify-center">
           <section className="flex flex-wrap w-full">
             <h1 className="font-semibold">{pageTitle}</h1>
 
             <CompareProductsForm
               productType={ProductType.Gpu}
               values={[gpu1?.id, gpu2?.id]}
+              navigateOnChange
             />
           </section>
 
           <DisplayAd unit={AdUnit.ComparePagePreHighlightsDisplay} />
 
-          <article className="flex-1 flex flex-col gap-8 max-w-full">
+          <article className="flex-1 flex flex-col gap-6 max-w-full">
             <Highlights />
             <Overview />
             <DisplayAd unit={AdUnit.ComparePagePostSummaryDisplay} />

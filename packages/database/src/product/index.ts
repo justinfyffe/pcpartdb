@@ -1,8 +1,6 @@
 export * from './CpuFieldsEntity';
-export * from './cpuFieldsMapper';
-
 export * from './GpuFieldsEntity';
-export * from './gpuFieldsMapper';
+export * from './productFieldsMapper';
 
 export * from './ProductBenchmarkEntity';
 export * from './productBenchmarkMapper';

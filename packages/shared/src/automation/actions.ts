@@ -1,4 +1,4 @@
-import { CpuAutomationSourceGroup, GpuAutomationSourceGroup } from '../product';
+import { CpuAutomationSourceGroup, GpuAutomationSourceGroup } from './types';
 
 export enum AutomationActionType {
   /**

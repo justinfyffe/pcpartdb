@@ -1,7 +1,7 @@
 import {
   formatCompanyName,
   formatProductName,
-  getGpuAffiliateUrl,
+  getAffiliateUrl,
   ProductType,
 } from '@pcpartdb/shared';
 import { ProductCustomRow } from 'packages/website/src/client/product/components/ProductCustomRow/ProductCustomRow';
@@ -28,10 +28,10 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
   const { parent } = gpu;
 
   const chipset = useMemo(() => {
-    return formatProductName(parent || gpu);
+    return formatProductName(parent || gpu, { company: false });
   }, [parent, gpu]);
 
-  const gpuAffiliateUrl = useMemo(() => getGpuAffiliateUrl(gpu), [gpu]);
+  const gpuAffiliateUrl = useMemo(() => getAffiliateUrl(gpu), [gpu]);
 
   return (
     <div className={className}>

@@ -15,7 +15,7 @@ import React, {
 import { v4 as uuidv4 } from 'uuid';
 import { ProductImageInput } from './ProductImageInput';
 
-interface ProductImagesInputProps {
+export interface ProductImagesInputProps {
   name: string;
   value: ProductImage[];
 

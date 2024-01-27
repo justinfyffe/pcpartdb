@@ -19,7 +19,7 @@ export const Highlights: FunctionComponent<HighlightsProps> = (props) => {
     <div>
       <div
         className={classNames(
-          'grid grid-cols-2 sm:flex flex-col md:gap-4 gap-4',
+          'grid grid-cols-2 sm:flex flex-col gap-x-6 gap-y-3',
           className,
         )}
       >

@@ -15,7 +15,7 @@ import React, {
 import { v4 as uuidv4 } from 'uuid';
 import { ProductSourceInput } from './ProductSourceInput';
 
-interface ProductSourcesInputProps {
+export interface ProductSourcesInputProps {
   productType: ProductType;
   name: string;
   value: ProductSource[];

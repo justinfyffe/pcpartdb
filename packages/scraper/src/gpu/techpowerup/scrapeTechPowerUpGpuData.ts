@@ -1,7 +1,6 @@
 import {
   BandwidthUnit,
   BitUnit,
-  ClockSpeedUnit,
   CurrencyUnit,
   DateFormat,
   FlopsUnit,
@@ -10,6 +9,7 @@ import {
   formatProductField,
   FormatProductFieldOptions,
   formatProductionStatus,
+  FrequencyUnit,
   getBaseUnitValue,
   GpuField,
   GpuFields,
@@ -211,9 +211,9 @@ function getGpuCoreBaseClock(
     fieldKey: 'gpuCoreBaseClock',
     value: values[0] || null,
     unitMapper: {
-      KHz: ClockSpeedUnit.khz,
-      MHz: ClockSpeedUnit.mhz,
-      GHz: ClockSpeedUnit.ghz,
+      KHz: FrequencyUnit.khz,
+      MHz: FrequencyUnit.mhz,
+      GHz: FrequencyUnit.ghz,
     },
   });
 
@@ -234,9 +234,9 @@ function getGpuCoreBoostClock(
     fieldKey: 'gpuCoreBoostClock',
     value: values[0] || null,
     unitMapper: {
-      KHz: ClockSpeedUnit.khz,
-      MHz: ClockSpeedUnit.mhz,
-      GHz: ClockSpeedUnit.ghz,
+      KHz: FrequencyUnit.khz,
+      MHz: FrequencyUnit.mhz,
+      GHz: FrequencyUnit.ghz,
     },
   });
 
@@ -502,9 +502,9 @@ function getMemoryClock(
     fieldKey: 'memoryClock',
     value: values[0] || null,
     unitMapper: {
-      KHz: ClockSpeedUnit.khz,
-      MHz: ClockSpeedUnit.mhz,
-      GHz: ClockSpeedUnit.ghz,
+      KHz: FrequencyUnit.khz,
+      MHz: FrequencyUnit.mhz,
+      GHz: FrequencyUnit.ghz,
     },
   });
 

@@ -1,5 +1,5 @@
 import { ShoppingCartIcon } from '@heroicons/react/24/outline';
-import { formatProductName, getGpuAffiliateUrl } from '@pcpartdb/shared';
+import { formatProductName, getAffiliateUrl } from '@pcpartdb/shared';
 import { AffiliateDisclaimer } from 'packages/website/src/client/shared/components/AffiliateDisclaimer/AffiliateDisclaimer';
 import { AmazonButton } from 'packages/website/src/client/shared/components/Button/AmazonButton';
 import React, { FunctionComponent, useContext, useMemo } from 'react';
@@ -24,8 +24,8 @@ export const ShopHighlightListItem: FunctionComponent<
     [gpu2],
   );
 
-  const gpuAffiliateUrl1 = useMemo(() => getGpuAffiliateUrl(gpu1), [gpu1]);
-  const gpuAffiliateUrl2 = useMemo(() => getGpuAffiliateUrl(gpu2), [gpu2]);
+  const gpuAffiliateUrl1 = useMemo(() => getAffiliateUrl(gpu1), [gpu1]);
+  const gpuAffiliateUrl2 = useMemo(() => getAffiliateUrl(gpu2), [gpu2]);
 
   if (!gpuAffiliateUrl1 && !gpuAffiliateUrl2) {
     return <></>;
@@ -35,13 +35,13 @@ export const ShopHighlightListItem: FunctionComponent<
     <>
       {gpuAffiliateUrl1 && (
         <div className="flex flex-col">
-          <div className="bg-light-shades flex flex-row flex-wrap px-4 py-2 rounded shadow gap-4">
+          <div className="bg-light-shades flex flex-row flex-wrap px-4 py-2 rounded shadow gap-4 items-center">
             <div className="flex-1 flex gap-2 items-center mr-auto">
               <div className="mr-1">
                 <ShoppingCartIcon className="w-5" />
               </div>
 
-              <div className="font-medium md:text-base text-xl whitespace-nowrap">
+              <div className="font-medium md:text-base text-xl">
                 Shop {name1}
               </div>
             </div>
@@ -62,13 +62,13 @@ export const ShopHighlightListItem: FunctionComponent<
 
       {gpuAffiliateUrl2 && (
         <div className="flex flex-col">
-          <div className="bg-light-shades flex flex-row flex-wrap px-4 py-2 rounded shadow gap-4">
+          <div className="bg-light-shades flex flex-row flex-wrap px-4 py-2 rounded shadow gap-4 items-center">
             <div className="flex-1 flex gap-2 items-center mr-auto">
               <div className="mr-1">
                 <ShoppingCartIcon className="w-5" />
               </div>
 
-              <div className="font-medium md:text-base text-xl whitespace-nowrap">
+              <div className="font-medium md:text-base text-xl">
                 Shop {name2}
               </div>
             </div>

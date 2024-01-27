@@ -9,12 +9,13 @@ import {
 } from '@heroicons/react/24/outline';
 import {
   formatProductName,
-  getAdminEditCpuPath,
+  getAdminEditProductPath,
   getViewCpuPath,
+  ProductType,
   ProductUpdate,
   ProductUpdateStatus,
 } from '@pcpartdb/shared';
-import { CpuDiffDialog } from 'packages/website/src/client/admin/components/cpu/CpuDiffDialog/CpuDiffDialog';
+import { ProductDiffDialog } from 'packages/website/src/client/admin/components/product/ProductDiffDialog/ProductDiffDialog';
 import { productUpdateService } from 'packages/website/src/client/product/services/productUpdateService';
 import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
 import {
@@ -57,7 +58,9 @@ export const CpuCard = (props: CpuCardTabProps) => {
   // Callbacks
 
   const viewDiff = useCallback(() => {
-    showDialog(<CpuDiffDialog diff={update.data} />);
+    showDialog(
+      <ProductDiffDialog productType={ProductType.Cpu} diff={update.data} />,
+    );
   }, [update.data]);
 
   const reject = useCallback(async () => {
@@ -76,7 +79,10 @@ export const CpuCard = (props: CpuCardTabProps) => {
 
   const approveAndEdit = useCallback(async () => {
     await approve();
-    window.open(getAdminEditCpuPath(slug), '_blank');
+    window.open(
+      getAdminEditProductPath({ productType: ProductType.Cpu, slug }),
+      '_blank',
+    );
   }, [approve, slug]);
 
   return (

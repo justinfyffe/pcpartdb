@@ -3,6 +3,7 @@ import {
   generateListCpusQueryFromPath,
   getHomePath,
   getListCpusPath,
+  ListCpusFilter,
   ListCpusQuery,
   ListCpusViewModel,
   ProductType,
@@ -43,7 +44,12 @@ export const ListCpusPage = (props: ListCpusViewModel) => {
   const [additionalData, setAdditionalData] = useState(props.additionalData);
 
   const fetchCpus = useCallback(async (query: ListCpusQuery) => {
-    const response = await productService.list(ProductType.Cpu, query);
+    const filter: ListCpusFilter = {
+      ...(query?.filter ?? {}),
+      productType: ProductType.Cpu,
+    };
+    const response = await productService.list({ ...query, filter });
+
     setCpus(response.results as CpuProduct[]);
     setTotal(response.total);
     setAdditionalData(response.additionalData);
@@ -52,7 +58,7 @@ export const ListCpusPage = (props: ListCpusViewModel) => {
 
   useEffect(() => {
     router.beforePopState((cb) => {
-      fetchCpus(generateListCpusQueryFromPath(cb.as));
+      fetchCpus(generateListCpusQueryFromPath({ path: cb.as }));
       return true;
     });
   }, [fetchCpus, router]);

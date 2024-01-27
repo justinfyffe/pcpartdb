@@ -46,7 +46,7 @@ interface ListOptions {
   includeAutomation?: boolean;
   includeBenchmarks?: boolean | BenchmarkKey[];
   includeImages?: boolean;
-  includeRanks?: boolean;
+  includeRanks?: boolean | BenchmarkKey[];
   includeSources?: boolean;
 
   skipCount?: boolean;
@@ -62,13 +62,14 @@ interface GetOptions {
   includeAutomation?: boolean;
   includeSources?: boolean;
   includeImages?: boolean;
-  includeRanks?: boolean;
 
   includeBenchmarks?: boolean | BenchmarkKey[];
+  includeRelatedBenchmarks?: boolean | BenchmarkKey[];
+
+  includeRanks?: boolean | BenchmarkKey[];
+  includeRelatedRanks?: boolean | BenchmarkKey[];
 
   includeRelated?: boolean;
-  includeRelatedBenchmarks?: boolean | BenchmarkKey[];
-  includeRelatedRanks?: boolean;
 }
 
 interface GetByIdOptions extends GetOptions {
@@ -114,7 +115,12 @@ export class ProductService {
   async count(request: ListProductsRequest, ctx: Context) {
     validate(request, listProductsRequestSchema);
 
-    const { productType, query } = request;
+    const { query } = request;
+    const productType = query?.filter?.productType;
+    if (productType == null) {
+      throw new Error('Invalid product type for list call');
+    }
+
     const count = await this.repository.count({ ...query, productType }, ctx);
 
     return count;
@@ -135,7 +141,7 @@ export class ProductService {
 
     const includeAutomation =
       (options.includeAutomation ?? false) && (ctx.user?.isStaff ?? false);
-    const includeBenchmarks = !!options?.includeBenchmarks ?? false;
+    const includeBenchmarks = options?.includeBenchmarks ?? false;
     const includeImages = options?.includeImages ?? false;
     const includeRanks = options?.includeRanks ?? false;
     const includeSources =
@@ -144,7 +150,11 @@ export class ProductService {
     const fields = options.fields;
     const includeFields = fields == null || fields.length > 0;
 
-    const { productType, query } = request;
+    const { query } = request;
+    const productType = query?.filter?.productType;
+    if (productType == null) {
+      throw new Error('Invalid product type for list call');
+    }
 
     // If list is sorted by perf or value, then we need to add the preferred
     // benchmark to order by it.
@@ -163,11 +173,10 @@ export class ProductService {
       {
         ...query,
         ...options,
-        productType,
-        includeBenchmarks,
+        includeBenchmarks: !!includeBenchmarks,
         includeFields,
         includeImages,
-        includeRanks,
+        includeRanks: !!includeRanks,
         includeSources,
         fields,
       },
@@ -177,20 +186,6 @@ export class ProductService {
     let count: number;
     if (!skipCount) {
       count = await this.count(request, ctx);
-    }
-
-    // Filter out benchmarks we don't need
-    if (
-      Array.isArray(options?.includeBenchmarks) &&
-      options.includeBenchmarks.length > 0
-    ) {
-      const benchmarks = options.includeBenchmarks;
-      for (const entity of productEntities) {
-        entity.benchmarks =
-          entity.benchmarks?.filter((b) =>
-            benchmarks.includes(b.benchmarkKey as BenchmarkKey),
-          ) ?? [];
-      }
     }
 
     const products: Product[] = await mapToProductDtos(productEntities, {
@@ -203,7 +198,6 @@ export class ProductService {
 
     const response: ListProductsResponse = {
       query,
-      productType,
       results: products,
       total: count,
     };
@@ -218,6 +212,9 @@ export class ProductService {
   async getById(options: GetByIdOptions, ctx: Context) {
     const id = options.id;
 
+    const includeBenchmarks = options?.includeBenchmarks ?? false;
+    const includeRelatedBenchmarks = options?.includeRelatedBenchmarks ?? false;
+
     const includeParent = options.includeParent ?? false;
     const includeRanks = options?.includeRanks ?? false;
     const includeImages = options.includeImages ?? false;
@@ -227,10 +224,8 @@ export class ProductService {
       (options.includeUpdates ?? false) && (ctx.user?.isStaff ?? false);
     const includeAutomation =
       (options.includeAutomation ?? false) && (ctx.user?.isStaff ?? false);
-    const includeBenchmarks = !!options?.includeBenchmarks ?? false;
+
     const includeRelated = options?.includeRelated ?? false;
-    const includeRelatedBenchmarks =
-      !!options?.includeRelatedBenchmarks ?? false;
     const includeRelatedRanks = options?.includeRelatedRanks ?? false;
 
     const fields = options.fields;
@@ -247,14 +242,14 @@ export class ProductService {
         id,
 
         includeParent,
-        includeBenchmarks,
+        includeBenchmarks: !!includeBenchmarks,
         includeImages,
-        includeRanks,
+        includeRanks: !!includeRanks,
         includeSources,
 
         includeRelated,
-        includeRelatedBenchmarks,
-        includeRelatedRanks,
+        includeRelatedBenchmarks: !!includeRelatedBenchmarks,
+        includeRelatedRanks: !!includeRelatedRanks,
 
         includeFields,
         includeParentFields,
@@ -266,41 +261,6 @@ export class ProductService {
       },
       ctx,
     );
-
-    // Filter out benchmarks we don't need
-    if (
-      Array.isArray(options?.includeBenchmarks) &&
-      options.includeBenchmarks.length > 0
-    ) {
-      const benchmarks = options.includeBenchmarks;
-      entity.benchmarks = entity.benchmarks.filter((b) =>
-        benchmarks.includes(b.benchmarkKey as BenchmarkKey),
-      );
-      if (entity.parent?.benchmarks) {
-        entity.parent.benchmarks = entity.parent.benchmarks.filter((b) =>
-          benchmarks.includes(b.benchmarkKey as BenchmarkKey),
-        );
-      }
-    }
-    if (
-      Array.isArray(options?.includeRelatedBenchmarks) &&
-      options.includeRelatedBenchmarks.length > 0
-    ) {
-      const relatedBenchmarks = options.includeRelatedBenchmarks;
-      entity.relatedProducts
-        ?.map((rp) => rp.relatedProduct)
-        .forEach((rp) => {
-          rp.benchmarks =
-            rp.benchmarks?.filter((b) =>
-              relatedBenchmarks.includes(b.benchmarkKey as BenchmarkKey),
-            ) ?? [];
-          if (rp.parent?.benchmarks) {
-            rp.parent.benchmarks = rp.parent.benchmarks.filter((b) =>
-              relatedBenchmarks.includes(b.benchmarkKey as BenchmarkKey),
-            );
-          }
-        });
-    }
 
     const product = await mapToProductDto(entity, {
       includeParent,
@@ -341,10 +301,9 @@ export class ProductService {
       (options.includeUpdates ?? false) && (ctx.user?.isStaff ?? false);
     const includeAutomation =
       (options.includeAutomation ?? false) && (ctx.user?.isStaff ?? false);
-    const includeBenchmarks = !!options?.includeBenchmarks ?? false;
+    const includeBenchmarks = options?.includeBenchmarks ?? false;
     const includeRelated = options?.includeRelated ?? false;
-    const includeRelatedBenchmarks =
-      !!options?.includeRelatedBenchmarks ?? false;
+    const includeRelatedBenchmarks = options?.includeRelatedBenchmarks ?? false;
     const includeRelatedRanks = options?.includeRelatedRanks ?? false;
 
     const fields = options.fields;
@@ -362,14 +321,14 @@ export class ProductService {
         slug,
 
         includeParent,
-        includeBenchmarks,
+        includeBenchmarks: !!includeBenchmarks,
         includeImages,
-        includeRanks,
+        includeRanks: !!includeRanks,
         includeSources,
 
         includeRelated,
-        includeRelatedBenchmarks,
-        includeRelatedRanks,
+        includeRelatedBenchmarks: !!includeRelatedBenchmarks,
+        includeRelatedRanks: !!includeRelatedBenchmarks,
 
         includeFields,
         includeParentFields,
@@ -381,42 +340,6 @@ export class ProductService {
       },
       ctx,
     );
-
-    // Filter out benchmarks we don't need
-    if (
-      Array.isArray(options?.includeBenchmarks) &&
-      options.includeBenchmarks.length > 0
-    ) {
-      const benchmarks = options.includeBenchmarks;
-      entity.benchmarks =
-        entity.benchmarks?.filter((b) =>
-          benchmarks.includes(b.benchmarkKey as BenchmarkKey),
-        ) ?? [];
-      if (entity.parent?.benchmarks) {
-        entity.parent.benchmarks = entity.parent.benchmarks.filter((b) =>
-          benchmarks.includes(b.benchmarkKey as BenchmarkKey),
-        );
-      }
-    }
-    if (
-      Array.isArray(options?.includeRelatedBenchmarks) &&
-      options.includeRelatedBenchmarks.length > 0
-    ) {
-      const relatedBenchmarks = options.includeRelatedBenchmarks;
-      entity.relatedProducts
-        ?.map((rp) => rp.relatedProduct)
-        .forEach((rp) => {
-          rp.benchmarks =
-            rp.benchmarks?.filter((b) =>
-              relatedBenchmarks.includes(b.benchmarkKey as BenchmarkKey),
-            ) ?? [];
-          if (rp.parent?.benchmarks) {
-            rp.parent.benchmarks = rp.parent.benchmarks.filter((b) =>
-              relatedBenchmarks.includes(b.benchmarkKey as BenchmarkKey),
-            );
-          }
-        });
-    }
 
     const product = await mapToProductDto(entity, {
       includeParent,
@@ -494,7 +417,7 @@ export class ProductService {
     }
 
     // Update benchmarks' value per msrp
-    const msrp = productFieldRawValue(product.fields?.msrp);
+    const msrp = productFieldRawValue<number>(product.fields?.msrp);
     for (const benchmark of product.benchmarks ?? []) {
       if (benchmark.value && msrp) {
         benchmark.valuePerMsrp = benchmark.value / msrp;
@@ -536,7 +459,7 @@ export class ProductService {
     }
 
     // Update benchmarks' value per msrp
-    const msrp = productFieldRawValue(product.fields?.msrp);
+    const msrp = productFieldRawValue<number>(product.fields?.msrp);
     for (const benchmark of product.benchmarks ?? []) {
       if (benchmark.value && msrp) {
         benchmark.valuePerMsrp = benchmark.value / msrp;
@@ -667,7 +590,8 @@ export class ProductService {
     response: ListProductsResponse,
     ctx: Context,
   ) {
-    if (response.productType === ProductType.Gpu) {
+    const productType = response.query?.filter?.productType;
+    if (productType === ProductType.Gpu) {
       const productIds = response.results.map((product) => product.id);
       const retailModelCounts = await this.countChildren({ productIds }, ctx);
       response.additionalData = { retailModelCounts };

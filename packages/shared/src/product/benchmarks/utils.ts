@@ -1,6 +1,5 @@
-import { ProductType } from '../types';
-import { BENCHMARK_LABELS } from './consts';
-import { BenchmarkKey } from './types';
+import { Product, ProductType } from '../common';
+import { BENCHMARK_LABELS, BenchmarkKey } from './common';
 
 export function getDefaultBenchmark(productType: ProductType) {
   if (productType === ProductType.Cpu) {
@@ -23,7 +22,6 @@ const CPU_PREFERENCE_BENCHMARKS: BenchmarkKey[] = [
   BenchmarkKey.PassMark_CpuMark_Multi_Thread,
   BenchmarkKey.PassMark_CpuMark_Single_Thread,
 ];
-
 const GPU_PREFERENCE_BENCHMARKS: BenchmarkKey[] = [
   BenchmarkKey._3dMark_11_Performance_Gpu,
   BenchmarkKey._3dMark_Fire_Strike_Standard_Graphics,
@@ -31,7 +29,6 @@ const GPU_PREFERENCE_BENCHMARKS: BenchmarkKey[] = [
   BenchmarkKey.PassMark_G3dMark,
   BenchmarkKey.PassMark_G2dMark,
 ];
-
 export function getPreferenceBenchmarks(productType: ProductType) {
   if (productType === ProductType.Cpu) {
     return CPU_PREFERENCE_BENCHMARKS;
@@ -89,4 +86,64 @@ export function getProductBenchmarkAbbrev(benchmark: BenchmarkKey) {
     BENCHMARK_LABELS[benchmark]?.abbrev ??
     getProductBenchmarkShortName(benchmark)
   );
+}
+
+export function hasProductBenchmark(
+  product: Partial<Product>,
+  benchmarkKey: BenchmarkKey,
+) {
+  return productBenchmarkValue(product, benchmarkKey) != null;
+}
+
+export function getProductBenchmark(
+  product: Partial<Product>,
+  benchmarkKey: BenchmarkKey,
+) {
+  return (
+    product?.benchmarks?.filter(
+      (benchmark) => benchmark.benchmarkKey === benchmarkKey,
+    )?.[0] || null
+  );
+}
+
+export function productBenchmarkValue(
+  product: Partial<Product>,
+  benchmarkKey: BenchmarkKey,
+) {
+  return getProductBenchmark(product, benchmarkKey)?.value;
+}
+
+export function productBenchmarkValuePerMsrp(
+  product: Partial<Product>,
+  benchmarkKey: BenchmarkKey,
+) {
+  return getProductBenchmark(product, benchmarkKey)?.valuePerMsrp;
+}
+
+export function setProductBenchmark(
+  product: Product,
+  benchmarkKey: BenchmarkKey,
+  value: number,
+  valuePerMsrp: number,
+) {
+  const hasBenchmark = hasProductBenchmark(product, benchmarkKey);
+  if (!hasBenchmark && value != null) {
+    // Add benchmark
+    product.benchmarks.push({ benchmarkKey, value });
+  }
+
+  if (hasBenchmark) {
+    const idx = product.benchmarks.findIndex(
+      (benchmark) => benchmark.benchmarkKey === benchmarkKey,
+    );
+
+    if (value == null) {
+      // Delete benchmark
+      product.benchmarks.splice(idx, 1);
+    } else {
+      // Overwrite benchmark
+      product.benchmarks[idx].value = value;
+      product.benchmarks[idx].valuePerMsrp = valuePerMsrp;
+    }
+  }
 }

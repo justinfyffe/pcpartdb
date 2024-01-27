@@ -3,7 +3,7 @@ import {
   Config,
   formatProductComparisonName,
   formatProductName,
-  getAdminEditCpuPath,
+  getAdminEditProductPath,
   getCompareCpusPath,
   getHomePath,
   getListCpusPath,
@@ -96,8 +96,14 @@ export const CompareCpusPage = (
     () =>
       config.isStaff
         ? [
-            { href: getAdminEditCpuPath(cpu1), name: shortCpuName1 },
-            { href: getAdminEditCpuPath(cpu2), name: shortCpuName2 },
+            {
+              href: getAdminEditProductPath({ product: cpu1 }),
+              name: shortCpuName1,
+            },
+            {
+              href: getAdminEditProductPath({ product: cpu2 }),
+              name: shortCpuName2,
+            },
           ]
         : null,
     [config.isStaff, cpu1, cpu2, shortCpuName1, shortCpuName2],

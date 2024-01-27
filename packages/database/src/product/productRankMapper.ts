@@ -1,23 +1,56 @@
-import { ProductRanks } from '@pcpartdb/shared';
-import { ProductRankEntity } from './ProductRankEntity';
+import {
+  BenchmarkKey,
+  buildProductRankKey,
+  ProductRank,
+  ProductRanks,
+  RankType,
+} from '@pcpartdb/shared';
+import { Prisma } from '@prisma/client';
+import { ProductRanksEntity } from './ProductRankEntity';
 
-export function mapToProductRankDto(entity: ProductRankEntity) {
-  if (entity == null) {
+interface MapToDtoOptions {
+  includeRanks?: boolean | BenchmarkKey[];
+}
+
+export function mapToProductRanksDto(
+  entity: ProductRanksEntity,
+  options?: MapToDtoOptions,
+) {
+  if (entity == null || !options?.includeRanks) {
     return null;
+  }
+
+  // If the `includeRanks` is an array, we should filter for just
+  // those ranks
+  if (Array.isArray(options.includeRanks)) {
+    if (options.includeRanks.length === 0) {
+      return null;
+    }
+
+    return options.includeRanks.reduce((acc, benchmark) => {
+      const perfRankKey = buildProductRankKey({
+        type: RankType.Performance,
+        benchmark,
+      });
+      const perfPerDollarRankKey = buildProductRankKey({
+        type: RankType.PerformancePerDollar,
+        benchmark,
+      });
+
+      acc[perfRankKey] = (entity.ranks as Prisma.JsonObject)?.[
+        perfRankKey
+      ] as ProductRank;
+      acc[perfPerDollarRankKey] = (entity.ranks as Prisma.JsonObject)?.[
+        perfPerDollarRankKey
+      ] as ProductRank;
+      return acc;
+    }, {} as ProductRanks);
   }
 
   return entity.ranks as ProductRanks;
 }
 
-export function mapToProductRankDtos(entities: ProductRankEntity[]) {
-  if (entities == null) {
-    return null;
-  }
-
-  return entities.map((entity) => mapToProductRankDto(entity));
-}
-
-export function mapToProductRankEntity(ranks: ProductRanks) {
+export function mapToProductRanksEntity(ranks: ProductRanks) {
   if (ranks == null) {
     return null;
   }
@@ -25,5 +58,5 @@ export function mapToProductRankEntity(ranks: ProductRanks) {
   return {
     productId: undefined,
     ranks,
-  } as ProductRankEntity;
+  } as ProductRanksEntity;
 }

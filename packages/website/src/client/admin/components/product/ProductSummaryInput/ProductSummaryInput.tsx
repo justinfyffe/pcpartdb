@@ -6,7 +6,7 @@ import { Textarea } from 'packages/website/src/client/shared/components/Textarea
 import React, { FunctionComponent, useCallback } from 'react';
 import { AiPrompt } from './AiPrompt/AiPrompt';
 
-interface ProductSummaryInputProps {
+export interface ProductSummaryInputProps {
   productType: ProductType;
   product?: Product;
 

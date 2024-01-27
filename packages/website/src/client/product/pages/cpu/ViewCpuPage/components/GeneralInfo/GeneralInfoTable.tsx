@@ -1,6 +1,6 @@
 import {
   formatCompanyName,
-  getCpuAffiliateUrl,
+  getAffiliateUrl,
   ProductType,
 } from '@pcpartdb/shared';
 import { ProductCustomRow } from 'packages/website/src/client/product/components/ProductCustomRow/ProductCustomRow';
@@ -25,7 +25,7 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
   const { className } = props;
   const { cpu } = useContext(ViewPageContext);
 
-  const cpuAffiliateUrl = useMemo(() => getCpuAffiliateUrl(cpu), [cpu]);
+  const cpuAffiliateUrl = useMemo(() => getAffiliateUrl(cpu), [cpu]);
 
   return (
     <Table border responsive className={className}>

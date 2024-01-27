@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import {
-  getAdminListCpusPath,
-  getAdminListGpusPath,
+  formatProductType,
+  getAdminListProductsPath,
   ProductType,
 } from '@pcpartdb/shared';
 import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
@@ -10,34 +10,25 @@ import {
   Seo,
 } from 'packages/website/src/client/shared/components/Seo/Seo';
 import { AdminLayout } from 'packages/website/src/client/shared/layouts/admin/AdminLayout';
-import React, { useMemo } from 'react';
-import { CpuForm } from '../../../components/cpu/CpuForm/CpuForm';
-import { GpuForm } from '../../../components/gpu/GpuForm/GpuForm';
+import React, { useMemo, useState } from 'react';
+import { ProductForm } from '../../../components/product/ProductForm/ProductForm';
+import { ProductTypeInput } from '../../../components/product/ProductTypeInput/ProductTypeInput';
 
-interface AdminNewProductPageProps {
-  productType: ProductType;
+export interface AdminNewProductPageProps {
+  productType?: ProductType;
 }
 
 export const AdminNewProductPage = (props: AdminNewProductPageProps) => {
-  const { productType } = props;
+  const [productType, setProductType] = useState(props.productType);
 
   const { adminListHref, typeName } = useMemo(() => {
-    if (productType === ProductType.Cpu) {
-      return {
-        adminListHref: getAdminListCpusPath(),
-        typeName: 'CPU',
-      };
-    } else if (productType === ProductType.Gpu) {
-      return {
-        adminListHref: getAdminListGpusPath(),
-        typeName: 'GPU',
-      };
-    } else {
-      throw new Error('Invalid product type');
-    }
+    const adminListHref = getAdminListProductsPath({ filter: { productType } });
+    const typeName =
+      productType != null ? formatProductType(productType) : 'Product';
+    return { adminListHref, typeName };
   }, [productType]);
 
-  const pageTitle = `Edit ${typeName}`;
+  const pageTitle = `Create ${typeName}`;
   const seoTitle = `${pageTitle} - Admin Panel`;
   const seoRobots = [MetaRobots.NOINDEX, MetaRobots.NOFOLLOW];
 
@@ -52,8 +43,12 @@ export const AdminNewProductPage = (props: AdminNewProductPageProps) => {
           <GenericButton href={adminListHref}>Back</GenericButton>
         </div>
 
-        {productType === ProductType.Cpu && <CpuForm />}
-        {productType === ProductType.Gpu && <GpuForm />}
+        <section className="mb-4 pb-4 border-b-px flex flex-col gap-1">
+          <label>Type of Product:</label>
+          <ProductTypeInput value={productType} onChange={setProductType} />
+        </section>
+
+        {productType != null && <ProductForm productType={productType} />}
       </article>
     </AdminLayout>
   );

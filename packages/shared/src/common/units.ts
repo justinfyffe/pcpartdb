@@ -12,15 +12,15 @@ export enum CurrencyUnit {
   USD = 'USD',
 }
 
-export enum ClockSpeedUnit {
-  khz = 'khz',
-  mhz = 'mhz',
-  ghz = 'ghz',
-}
-
 export enum FlopsUnit {
   gflops = 'gflops',
   tflops = 'tflops',
+}
+
+export enum FrequencyUnit {
+  khz = 'khz',
+  mhz = 'mhz',
+  ghz = 'ghz',
 }
 
 export enum LengthUnit {
@@ -88,7 +88,7 @@ export type MeasurementUnit =
   | BandwidthUnit
   | BitUnit
   | CurrencyUnit
-  | ClockSpeedUnit
+  | FrequencyUnit
   | FlopsUnit
   | LengthUnit
   | MemorySizeUnit
@@ -123,16 +123,16 @@ const BIT_UNIT_FORMATS: Record<BitUnit, string> = {
   [BitUnit.bit]: 'bit',
 };
 
-const CLOCK_SPEED_UNIT_MULTIPLIERS: Record<ClockSpeedUnit, number> = {
-  [ClockSpeedUnit.khz]: 1_000,
-  [ClockSpeedUnit.mhz]: 1_000_000,
-  [ClockSpeedUnit.ghz]: 1_000_000_000,
+const FREQUENCY_UNIT_MULTIPLIERS: Record<FrequencyUnit, number> = {
+  [FrequencyUnit.khz]: 1_000,
+  [FrequencyUnit.mhz]: 1_000_000,
+  [FrequencyUnit.ghz]: 1_000_000_000,
 };
 
-const CLOCK_SPEED_UNIT_FORMATS: Record<ClockSpeedUnit, string> = {
-  [ClockSpeedUnit.khz]: 'KHz',
-  [ClockSpeedUnit.mhz]: 'MHz',
-  [ClockSpeedUnit.ghz]: 'GHz',
+const FREQUENCY_UNIT_FORMATS: Record<FrequencyUnit, string> = {
+  [FrequencyUnit.khz]: 'KHz',
+  [FrequencyUnit.mhz]: 'MHz',
+  [FrequencyUnit.ghz]: 'GHz',
 };
 
 const CURRENCY_UNIT_FORMATS: Record<CurrencyUnit, string> = {
@@ -284,13 +284,13 @@ function getUnitMultiplier(unit: MeasurementUnit) {
       return BANDWIDTH_UNIT_MULTIPLIERS[unit];
     case BitUnit.bit:
       return BIT_UNIT_MULTIPLIERS[unit];
-    case ClockSpeedUnit.khz:
-    case ClockSpeedUnit.mhz:
-    case ClockSpeedUnit.ghz:
-      return CLOCK_SPEED_UNIT_MULTIPLIERS[unit];
     case FlopsUnit.gflops:
     case FlopsUnit.tflops:
       return FLOPS_UNIT_MULTIPLIERS[unit];
+    case FrequencyUnit.khz:
+    case FrequencyUnit.mhz:
+    case FrequencyUnit.ghz:
+      return FREQUENCY_UNIT_MULTIPLIERS[unit];
     case LengthUnit.nm:
     case LengthUnit.um:
     case LengthUnit.mm:
@@ -390,15 +390,15 @@ export function getUnitFormat(unit: MeasurementUnit) {
       return BANDWIDTH_UNIT_FORMATS[unit];
     case BitUnit.bit:
       return BIT_UNIT_FORMATS[unit];
-    case ClockSpeedUnit.khz:
-    case ClockSpeedUnit.mhz:
-    case ClockSpeedUnit.ghz:
-      return CLOCK_SPEED_UNIT_FORMATS[unit];
     case CurrencyUnit.USD:
       return CURRENCY_UNIT_FORMATS[unit];
     case FlopsUnit.gflops:
     case FlopsUnit.tflops:
       return FLOPS_UNIT_FORMATS[unit];
+    case FrequencyUnit.khz:
+    case FrequencyUnit.mhz:
+    case FrequencyUnit.ghz:
+      return FREQUENCY_UNIT_FORMATS[unit];
     case LengthUnit.nm:
     case LengthUnit.um:
     case LengthUnit.mm:

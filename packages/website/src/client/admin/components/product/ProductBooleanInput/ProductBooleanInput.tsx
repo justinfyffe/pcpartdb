@@ -14,7 +14,7 @@ import { SelectOption } from 'packages/website/src/client/shared/components/Sele
 import React, { forwardRef, useCallback, useMemo } from 'react';
 import { ProductFieldInput } from '../ProductFieldInput/ProductFieldInput';
 
-interface ProductBooleanInputProps {
+export interface ProductBooleanInputProps {
   productType: ProductType;
   fieldKey: ProductFieldKey;
 

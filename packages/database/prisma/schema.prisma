@@ -117,7 +117,7 @@ model Product {
   cpuFields CpuFields? @relation("cpuFieldsToProduct")
   gpuFields GpuFields? @relation("gpuFieldsToProduct")
   benchmarks ProductBenchmark[] @relation("productBenchmarkToProduct")
-  ranks ProductRank? @relation("productRankToProduct")
+  ranks ProductRanks? @relation("productRankToProduct")
   sources ProductSource[] @relation("productSourceToProduct")
   updates ProductUpdate[] @relation("productUpdateToProduct")
   images ProductImage[] @relation("productImageToProduct")
@@ -161,7 +161,7 @@ model ProductBenchmark {
   @@map("product_benchmarks")
 }
 
-model ProductRank {
+model ProductRanks {
   // Primary identifier
   productId Int @map("product_id")
 

@@ -9,24 +9,22 @@ export const throttle = <T extends (...args: any[]) => ReturnType<T>>(
   timeout: number,
 ): ((...args: Parameters<T>) => void) => {
   let timer: ReturnType<typeof setTimeout>;
-  let lastRunTime: number;
+  let lastRunTime: number = Date.now();
 
   return async (...args: Parameters<T>) => {
-    if (lastRunTime == null) {
-      await callback(...args);
-      lastRunTime = Date.now();
-    } else {
+    if (timer != null) {
       clearTimeout(timer);
-      const timeSinceLastRun = Date.now() - lastRunTime;
-      if (timeSinceLastRun >= timeout) {
-        await callback(...args);
+    }
+
+    const timeSinceLastRun = Date.now() - lastRunTime;
+    if (timeSinceLastRun >= timeout) {
+      lastRunTime = Date.now();
+      await callback(...args);
+    } else {
+      timer = setTimeout(async () => {
         lastRunTime = Date.now();
-      } else {
-        timer = setTimeout(async () => {
-          await callback(...args);
-          lastRunTime = Date.now();
-        }, Math.max(timeout - timeSinceLastRun, 0));
-      }
+        await callback(...args);
+      }, Math.max(timeout - timeSinceLastRun, 0));
     }
   };
 };

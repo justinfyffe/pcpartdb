@@ -217,6 +217,9 @@ export const productUpdateSchema = Joi.object({
 });
 
 export const listProductsFilterSchema = Joi.object({
+  productType: productTypeSchema,
+  search: Joi.string().allow('', null),
+
   chipsetId: Joi.array().items(Joi.number()).allow(null),
   company: Joi.array().items(Joi.string().allow('')).allow(null),
   ids: Joi.array().items(Joi.number()).allow(null),
@@ -235,7 +238,6 @@ export const listProductsFilterSchema = Joi.object({
 });
 
 export const listProductsRequestSchema = Joi.object({
-  productType: productTypeSchema.required(),
   query: listQuerySchema({
     filterSchema: listProductsFilterSchema,
     maxLimit: 100,
@@ -243,7 +245,6 @@ export const listProductsRequestSchema = Joi.object({
 }).options({ abortEarly: false });
 
 export const listAllProductsRequestSchema = Joi.object({
-  productType: productTypeSchema.required(),
   query: listQuerySchema({
     filterSchema: listProductsFilterSchema,
     maxLimit: Infinity,

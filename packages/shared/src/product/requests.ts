@@ -1,56 +1,46 @@
-import { ListQuery, ListRequest, ListResponse } from '../common';
-import { ProductRanks } from './ranks';
-import { RelatedProducts } from './related';
-import { ProductSource } from './sources';
+import { ListRequest, ListResponse } from '../common';
+import { CpuProduct, GpuProduct, Product, ProductType } from './common';
 import {
+  ListCpusAdditionalData,
+  ListCpusQuery,
+  ListGpusAdditionalData,
+  ListGpusQuery,
   ListProductsQuery,
-  Product,
-  ProductType,
-  ProductUpdate,
-  ProductUpdateStatus,
-  SubProductType,
-} from './types';
+} from './lists';
+import { ProductSource } from './sources';
 
-// Products
+//
+// List Products Request
+//
+
 export interface ListProductsRequest<
   TQuery extends ListProductsQuery = ListProductsQuery,
-> extends ListRequest<TQuery> {
-  productType: ProductType;
-}
+> extends ListRequest<TQuery> {}
 
 export interface ListProductsResponse<
   TQuery extends ListProductsQuery = ListProductsQuery,
   TResult extends Product = Product,
 > extends ListResponse<TQuery, TResult> {
-  productType: ProductType;
   additionalData?: unknown;
 }
 
-export interface AutocompleteProductsRequest {
-  productType: ProductType;
-  query?: string;
+export interface ListCpusRequest extends ListProductsRequest<ListCpusQuery> {}
+
+export interface ListCpusResponse
+  extends ListProductsResponse<ListCpusQuery, CpuProduct> {
+  additionalData?: ListCpusAdditionalData;
 }
 
-export interface AutocompleteProductsResponse {
-  results: Product[];
+export interface ListGpusRequest extends ListProductsRequest<ListGpusQuery> {}
+
+export interface ListGpusResponse
+  extends ListProductsResponse<ListGpusQuery, GpuProduct> {
+  additionalData: ListGpusAdditionalData;
 }
 
-export interface ScrapeProductRequest {
-  productType: ProductType;
-  sources: Partial<ProductSource>[];
-}
-
-export interface ScrapeProductResponse {
-  product?: Partial<Product>;
-}
-
-export interface CreateProductRequest {
-  product: Product;
-}
-
-export interface UpdateProductRequest {
-  product: Product;
-}
+//
+// Get Product Request
+//
 
 export interface GetProductRequest {
   includeAutomation?: boolean;
@@ -62,37 +52,46 @@ export interface GetProductRequest {
   includeSources?: boolean;
   includeUpdates?: boolean;
 }
+export type GetProductResponse = Product;
 
-// Product Updates
+//
+// Create Product Request
+//
 
-export interface ListProductUpdatesFilter {
-  productType: ProductType;
-  subProductType?: SubProductType;
-  status?: ProductUpdateStatus;
-  search?: string;
+export interface CreateProductRequest {
+  product: Product;
 }
 
-export interface ListProductUpdatesQuery
-  extends ListQuery<ListProductUpdatesFilter> {}
+//
+// Update Product Request
+//
 
-export interface ListProductUpdatesRequest
-  extends ListRequest<ListProductUpdatesQuery> {}
-
-export interface ListProductUpdatesResponse
-  extends ListResponse<ListProductUpdatesQuery, ProductUpdate> {}
-
-export interface ApproveProductUpdateRequest {
-  slug?: string;
+export interface UpdateProductRequest {
+  product: Product;
 }
 
-export interface RejectProductUpdateRequest {}
+//
+// Autocomplete Products Request
+//
 
-export interface UpdateProductRanksRequest {
+export interface AutocompleteProductsRequest {
   productType: ProductType;
-  ranks: Record<number, ProductRanks>;
+  query?: string;
 }
 
-export interface UpdateRelatedProductsRequest {
+export interface AutocompleteProductsResponse {
+  results: Product[];
+}
+
+//
+// Scrape Product Request
+//
+
+export interface ScrapeProductRequest {
   productType: ProductType;
-  relatedProducts: Record<number, RelatedProducts>;
+  sources: Partial<ProductSource>[];
+}
+
+export interface ScrapeProductResponse {
+  product?: Partial<Product>;
 }

@@ -13,7 +13,7 @@ import {
   CreateCpuActionData,
   formatAutomationSourceName,
   formatProductName,
-  generateCpuSlug,
+  generateProductSlug,
   getViewCpuPath,
   Product,
   ProductSourceKey,
@@ -92,7 +92,7 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
     return currentSources[key]?.sourceName ?? null;
   });
   const [preferredSlug, setPreferredSlug] = useState(() =>
-    generateCpuSlug(preferredName, null),
+    generateProductSlug({ name: preferredName, company: null }),
   );
   const [appliedCpu, setAppliedCpu] = useState<Product>(null);
   const [groupKey] = useState(() => {
@@ -111,7 +111,9 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
   );
 
   const handleGenerateSlug = useCallback(() => {
-    setPreferredSlug(generateCpuSlug(preferredName, null));
+    setPreferredSlug(
+      generateProductSlug({ name: preferredName, company: null }),
+    );
   }, [preferredName]);
 
   const handleSave = useCallback(async () => {

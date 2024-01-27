@@ -6,3 +6,4 @@ export * from './formatPrice';
 export * from './formatProductComparisonName';
 export * from './formatProductField';
 export * from './formatProductName';
+export * from './formatProductType';

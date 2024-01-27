@@ -1,9 +1,8 @@
 import {
   DEFAULT_LIST_GPUS_LIMIT,
   DEFAULT_LIST_GPUS_OFFSET,
-  GpuProduct,
   LIST_GPUS_PRESETS,
-  ListProductsQuery,
+  ListGpusQuery,
 } from '../product';
 import { joinUrlParts } from '../utils';
 import {
@@ -11,7 +10,7 @@ import {
   GetViewProductPathOptions,
 } from './product-route-utils';
 
-export function getListGpusPath(presetOrQuery?: ListProductsQuery | string) {
+export function getListGpusPath(presetOrQuery?: ListGpusQuery | string) {
   const basePath = '/gpus/list/';
 
   if (presetOrQuery == null) {
@@ -80,43 +79,7 @@ export function getCompareGpusPath(options: GetCompareProductsPathOptions) {
   return joinUrlParts('/gpus/compare/', `${slug1}--vs--${slug2}`, '/');
 }
 
-export function getAdminListGpusPath(query?: ListProductsQuery) {
-  const path = '/admin/gpus/';
-
-  const paginationParams =
-    query != null
-      ? Object.fromEntries(generatePaginationParamsFromGpusQuery(query))
-      : {};
-  const searchParams =
-    query != null
-      ? Object.fromEntries(generateSearchParamsFromGpusQuery(query))
-      : {};
-
-  const combinedParams = new URLSearchParams({
-    ...paginationParams,
-    ...searchParams,
-  }).toString();
-
-  return joinUrlParts(path, combinedParams ? `?${combinedParams}` : '');
-}
-
-export function getAdminNewGpuPath() {
-  return '/admin/gpus/new/';
-}
-
-export function getAdminEditGpuPath(
-  gpuOrIdOrSlug: GpuProduct | number | string,
-) {
-  if (typeof gpuOrIdOrSlug === 'number') {
-    return joinUrlParts('/admin/gpus/', String(gpuOrIdOrSlug), '/');
-  } else if (typeof gpuOrIdOrSlug === 'string') {
-    return joinUrlParts('/admin/gpus/', gpuOrIdOrSlug, '/');
-  } else {
-    return joinUrlParts('/admin/gpus/', String(gpuOrIdOrSlug.id), '/');
-  }
-}
-
-function generatePaginationParamsFromGpusQuery(query: ListProductsQuery) {
+function generatePaginationParamsFromGpusQuery(query: ListGpusQuery) {
   const params = new URLSearchParams();
 
   if (
@@ -136,7 +99,7 @@ function generatePaginationParamsFromGpusQuery(query: ListProductsQuery) {
   return params;
 }
 
-function generateSearchParamsFromGpusQuery(query: ListProductsQuery) {
+function generateSearchParamsFromGpusQuery(query: ListGpusQuery) {
   const params = new URLSearchParams();
 
   if (query.filter?.company?.length > 0) {
@@ -158,7 +121,7 @@ function generateSearchParamsFromGpusQuery(query: ListProductsQuery) {
   return params;
 }
 
-function getListGpusPresetEquivalent(query: ListProductsQuery) {
+function getListGpusPresetEquivalent(query: ListGpusQuery) {
   const presets = Object.entries(LIST_GPUS_PRESETS);
 
   for (const [key, preset] of presets) {
@@ -170,10 +133,7 @@ function getListGpusPresetEquivalent(query: ListProductsQuery) {
   return null;
 }
 
-function areGpuQueriesEqual(
-  query1: ListProductsQuery,
-  query2: ListProductsQuery,
-) {
+function areGpuQueriesEqual(query1: ListGpusQuery, query2: ListGpusQuery) {
   const sort1 = query1.orderBy?.sort;
   const sort2 = query2.orderBy?.sort;
   const order1 = query1.orderBy?.order;

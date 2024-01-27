@@ -5,8 +5,8 @@ import {
   CreateCpuActionData,
   CreateProductUpdateRequest,
   formatProductName,
-  generateCpuSlug,
   generateProductOtherNames,
+  generateProductSlug,
   parseProductName,
   ProductSource,
   ProductType,
@@ -49,7 +49,9 @@ export async function createCpuAction(
   }
 
   // Generate slug, new CPU didn't have it yet.
-  cpu.slug = payload?.preferredSlug || generateCpuSlug(cpu.name, cpu.company);
+  cpu.slug =
+    payload?.preferredSlug ||
+    generateProductSlug({ name: cpu.name, company: cpu.company });
 
   // Upload update
   await uploadProductUpdate(cpu, context);

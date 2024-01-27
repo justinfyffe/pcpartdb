@@ -1,11 +1,5 @@
 import { ListQuery, ListRequest, ListResponse } from '../common';
-import {
-  CpuAutomationSourceGroup,
-  GpuAutomationSourceGroup,
-  Product,
-  ProductSourceKey,
-  ProductType,
-} from '../product';
+import { Product, ProductSourceKey, ProductType } from '../product';
 
 /**
  * Data structure containing information regarding a single source for a
@@ -27,6 +21,16 @@ export interface AutomationSource {
   relatedProductId?: number;
   relatedProduct?: Product;
 }
+
+/**
+ * Group of CPU automation sources, usually grouped by source name.
+ */
+export type CpuAutomationSourceGroup = AutomationSource[];
+
+/**
+ * Group of GPU automation sources, usually grouped by source name.
+ */
+export type GpuAutomationSourceGroup = AutomationSource[];
 
 /**
  * Group of automation sources, usually grouped by source name.

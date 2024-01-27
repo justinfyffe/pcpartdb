@@ -16,9 +16,9 @@ export const Overview: FunctionComponent = () => {
   const [gpu1, gpu2] = comparison;
 
   return (
-    <section className="mb-0 flex flex-row gap-8 sm:flex-col sm:gap-4">
+    <section className="mb-0 flex flex-row gap-6 sm:flex-col sm:gap-6">
       <section className="flex-1">
-        <h2>About the {formatProductName(gpu1, { company: false })}</h2>
+        <h2>{formatProductName(gpu1)}</h2>
         <ProductSummary
           product={gpu1}
           tags={contentTags1}
@@ -32,7 +32,7 @@ export const Overview: FunctionComponent = () => {
       />
 
       <section className="flex-1">
-        <h2>About the {formatProductName(gpu2, { company: false })}</h2>
+        <h2>{formatProductName(gpu2)}</h2>
         <ProductSummary
           product={gpu2}
           tags={contentTags2}

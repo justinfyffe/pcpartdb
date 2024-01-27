@@ -25,8 +25,8 @@ import { productCalculationsPath } from '../utils/product-calculations';
  * Filters for fetching products we want to run computations on.
  */
 const LIST_FILTERS: Partial<Record<ProductType, ListProductsFilter>> = {
-  [ProductType.Cpu]: {},
-  [ProductType.Gpu]: { isChipset: true },
+  [ProductType.Cpu]: { productType: ProductType.Cpu },
+  [ProductType.Gpu]: { productType: ProductType.Gpu, isChipset: true },
 };
 
 export async function updateRanksAction(
@@ -71,7 +71,7 @@ async function fetchProducts(
   context: AutomationContext,
 ) {
   const filter = LIST_FILTERS[productType];
-  const request: ListProductsRequest = { productType, query: { filter } };
+  const request: ListProductsRequest = { query: { filter } };
   const response = await context.api.get<ListProductsResponse>(
     'products/all',
     {},
@@ -100,9 +100,9 @@ function populateRanks(productType: ProductType, products: Product[]) {
     const sortedByValue = filteredValueProducts.sort(
       (a, b) =>
         productBenchmarkValue(b, benchmark) /
-          productFieldRawValue(b.fields.msrp) -
+          productFieldRawValue<number>(b.fields.msrp) -
         productBenchmarkValue(a, benchmark) /
-          productFieldRawValue(a.fields.msrp),
+          productFieldRawValue<number>(a.fields.msrp),
     );
 
     for (const product of products) {
@@ -126,7 +126,7 @@ function populateRanks(productType: ProductType, products: Product[]) {
       }
       if (valueRank > 0) {
         const rankKey = buildProductRankKey({
-          type: RankType.Value,
+          type: RankType.PerformancePerDollar,
           benchmark,
         });
         ranks[productId][rankKey] = {

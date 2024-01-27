@@ -29,7 +29,7 @@ export class ListCpusViewModelService {
     const cpusQuery = deepmerge(
       {},
       {
-        filter: {},
+        filter: { productType: ProductType.Cpu },
         pagination: {
           offset: DEFAULT_LIST_CPUS_OFFSET,
           limit: DEFAULT_LIST_CPUS_LIMIT,
@@ -41,17 +41,16 @@ export class ListCpusViewModelService {
       query,
     );
 
+    const preferredBenchmark = getPreferredBenchmark(
+      ctx.config?.userSettings,
+      ProductType.Cpu,
+    );
     const response = await this.productService.list(
-      {
-        productType: ProductType.Cpu,
-        query: cpusQuery,
-      },
+      { query: cpusQuery },
       {
         fields: ['marketSegment', 'releaseDate', 'msrp'],
-        includeBenchmarks: [
-          getPreferredBenchmark(ctx.config?.userSettings, ProductType.Cpu),
-        ],
-        includeRanks: true,
+        includeBenchmarks: [preferredBenchmark],
+        includeRanks: [preferredBenchmark],
       },
       ctx,
     );

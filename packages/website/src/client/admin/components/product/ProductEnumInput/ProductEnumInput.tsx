@@ -17,7 +17,7 @@ export interface ProductEnumItem {
   value: string;
 }
 
-interface ProductEnumInputProps {
+export interface ProductEnumInputProps {
   fieldKey: ProductFieldKey;
   items?: ProductEnumItem[];
 

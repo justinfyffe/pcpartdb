@@ -21,15 +21,15 @@ export const ListPresets: FunctionComponent<ListPresetsProps> = (props) => {
     },
     {
       slug: ListCpusPresetSlug.BestValue,
-      label: 'Best value CPUs',
+      label: 'Best performance per dollar CPUs',
     },
     {
       slug: ListCpusPresetSlug.BestValueAmd,
-      label: 'Best value AMD CPUs',
+      label: 'Best performance per dollar AMD CPUs',
     },
     {
       slug: ListCpusPresetSlug.BestValueIntel,
-      label: 'Best value Intel CPUs',
+      label: 'Best performance per dollar Intel CPUs',
     },
   ];
 

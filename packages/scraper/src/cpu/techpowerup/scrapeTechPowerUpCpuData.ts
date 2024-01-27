@@ -1,6 +1,5 @@
 import {
   BooleanFormatter,
-  ClockSpeedUnit,
   convertToCpuMemoryChannelNumber,
   CpuFields,
   CpuProduct,
@@ -12,6 +11,7 @@ import {
   formatProductField,
   FormatProductFieldOptions,
   formatProductionStatus,
+  FrequencyUnit,
   getBaseUnitValue,
   hasProductFieldValue,
   LengthUnit,
@@ -153,9 +153,9 @@ function getBaseClock($: cheerio.CheerioAPI, ctx?: ScraperContext) {
     fieldKey: 'baseClock',
     value: values[0] || null,
     unitMapper: {
-      KHz: ClockSpeedUnit.khz,
-      MHz: ClockSpeedUnit.mhz,
-      GHz: ClockSpeedUnit.ghz,
+      KHz: FrequencyUnit.khz,
+      MHz: FrequencyUnit.mhz,
+      GHz: FrequencyUnit.ghz,
     },
   });
 
@@ -207,9 +207,9 @@ function getClock($: cheerio.CheerioAPI, ctx?: ScraperContext) {
     fieldKey: 'clock',
     value: values[0] || null,
     unitMapper: {
-      KHz: ClockSpeedUnit.khz,
-      MHz: ClockSpeedUnit.mhz,
-      GHz: ClockSpeedUnit.ghz,
+      KHz: FrequencyUnit.khz,
+      MHz: FrequencyUnit.mhz,
+      GHz: FrequencyUnit.ghz,
     },
   });
 
@@ -346,9 +346,9 @@ function getEfficientCoreClock($: cheerio.CheerioAPI, ctx?: ScraperContext) {
     fieldKey: 'eCoreClock',
     value: values[0] || null,
     unitMapper: {
-      KHz: ClockSpeedUnit.khz,
-      MHz: ClockSpeedUnit.mhz,
-      GHz: ClockSpeedUnit.ghz,
+      KHz: FrequencyUnit.khz,
+      MHz: FrequencyUnit.mhz,
+      GHz: FrequencyUnit.ghz,
     },
   });
 
@@ -391,9 +391,9 @@ function getEfficientCoreTurboClock(
     fieldKey: 'eCoreTurboClock',
     value: values[1] || null,
     unitMapper: {
-      KHz: ClockSpeedUnit.khz,
-      MHz: ClockSpeedUnit.mhz,
-      GHz: ClockSpeedUnit.ghz,
+      KHz: FrequencyUnit.khz,
+      MHz: FrequencyUnit.mhz,
+      GHz: FrequencyUnit.ghz,
     },
   });
 
@@ -1233,9 +1233,9 @@ function getTurboClock($: cheerio.CheerioAPI, ctx?: ScraperContext) {
     fieldKey: 'turboClock',
     value: values[0] || null,
     unitMapper: {
-      KHz: ClockSpeedUnit.khz,
-      MHz: ClockSpeedUnit.mhz,
-      GHz: ClockSpeedUnit.ghz,
+      KHz: FrequencyUnit.khz,
+      MHz: FrequencyUnit.mhz,
+      GHz: FrequencyUnit.ghz,
     },
   });
 

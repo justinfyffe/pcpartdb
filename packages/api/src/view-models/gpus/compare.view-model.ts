@@ -9,7 +9,6 @@ import {
   GpuProductComparison,
   ListOrder,
   ListSort,
-  preferredBenchmarkOrDefault,
   productBenchmarkValue,
   productBenchmarkValuePerMsrp,
   ProductFieldKey,
@@ -35,10 +34,10 @@ export class CompareGpusViewModelService {
     const timer = `CompareGpusViewModelService (${uuid.v4()})`;
     console.time(timer);
 
-    const preferredBenchmark = preferredBenchmarkOrDefault(
+    const preferredBenchmark = getPreferredBenchmark(
+      ctx.config?.userSettings,
       ProductType.Gpu,
-      ctx.config?.userSettings?.preferredBenchmarks?.[ProductType.Gpu],
-    ).toLowerCase();
+    );
 
     const viewModel = await this.cacheService.cache(
       async () => {
@@ -108,25 +107,29 @@ export class CompareGpusViewModelService {
   }
 
   private async getComparison(slug: string, ctx: Context) {
+    const preferredBenchmark = getPreferredBenchmark(
+      ctx.config?.userSettings,
+      ProductType.Gpu,
+    );
     const comparison = await this.productService.getComparison(
       {
         productType: ProductType.Gpu,
         slug,
 
         includeAutomation: false,
-        includeBenchmarks: true,
+
         includeImages: true,
-        includeRanks: true,
+
         includeSources: false,
         includeUpdates: false,
-
         includeParent: true,
-
         includeRelated: true,
-        includeRelatedBenchmarks: [
-          getPreferredBenchmark(ctx.config?.userSettings, ProductType.Gpu),
-        ],
-        includeRelatedRanks: true,
+
+        includeBenchmarks: true,
+        includeRelatedBenchmarks: [preferredBenchmark],
+
+        includeRanks: [preferredBenchmark],
+        includeRelatedRanks: [preferredBenchmark],
 
         relatedFields: [],
       },
@@ -141,9 +144,8 @@ export class CompareGpusViewModelService {
     const fn = async () => {
       const response = await this.productService.list(
         {
-          productType: ProductType.Gpu,
           query: {
-            filter: { chipsetId: [chipset.id] },
+            filter: { productType: ProductType.Gpu, chipsetId: [chipset.id] },
             orderBy: { sort: ListSort.Name },
           },
         },
@@ -180,30 +182,30 @@ export class CompareGpusViewModelService {
     seed2: GpuProduct,
     ctx: Context,
   ) {
-    const benchmark = getPreferredBenchmark(
+    const preferredBenchmark = getPreferredBenchmark(
       ctx.config?.userSettings,
       ProductType.Gpu,
     );
 
     const relatedProductKey = buildRelatedProductKey({
       type: RelatedProductType.Performance,
-      benchmark,
+      benchmark: preferredBenchmark,
     });
     const relative1 =
       (seed1.relatedProducts?.[relatedProductKey]
-        ?.filter((p) => productBenchmarkValue(p, benchmark) != null)
+        ?.filter((p) => productBenchmarkValue(p, preferredBenchmark) != null)
         .sort(
           (p1, p2) =>
-            productBenchmarkValue(p2, benchmark) -
-            productBenchmarkValue(p1, benchmark),
+            productBenchmarkValue(p2, preferredBenchmark) -
+            productBenchmarkValue(p1, preferredBenchmark),
         ) as Partial<GpuProduct>[]) ?? [];
     const relative2 =
       (seed2.relatedProducts?.[relatedProductKey]
-        ?.filter((p) => productBenchmarkValue(p, benchmark) != null)
+        ?.filter((p) => productBenchmarkValue(p, preferredBenchmark) != null)
         .sort(
           (p1, p2) =>
-            productBenchmarkValue(p2, benchmark) -
-            productBenchmarkValue(p1, benchmark),
+            productBenchmarkValue(p2, preferredBenchmark) -
+            productBenchmarkValue(p1, preferredBenchmark),
         ) as Partial<GpuProduct>[]) ?? [];
 
     // At least one GPU has no neighbors (missing rank)
@@ -232,8 +234,8 @@ export class CompareGpusViewModelService {
         relative1,
         relative2,
         (p1, p2) =>
-          productBenchmarkValue(p2, benchmark) -
-          productBenchmarkValue(p1, benchmark),
+          productBenchmarkValue(p2, preferredBenchmark) -
+          productBenchmarkValue(p1, preferredBenchmark),
       );
     } else {
       return this.concatNeighbors(
@@ -241,8 +243,8 @@ export class CompareGpusViewModelService {
         relative1,
         relative2,
         (p1, p2) =>
-          productBenchmarkValue(p2, benchmark) -
-          productBenchmarkValue(p1, benchmark),
+          productBenchmarkValue(p2, preferredBenchmark) -
+          productBenchmarkValue(p1, preferredBenchmark),
       );
     }
   }
@@ -252,30 +254,34 @@ export class CompareGpusViewModelService {
     seed2: GpuProduct,
     ctx: Context,
   ) {
-    const benchmark = getPreferredBenchmark(
+    const preferredBenchmark = getPreferredBenchmark(
       ctx.config?.userSettings,
       ProductType.Gpu,
     );
 
     const relatedProductKey = buildRelatedProductKey({
       type: RelatedProductType.Value,
-      benchmark,
+      benchmark: preferredBenchmark,
     });
     const relative1 =
       (seed1.relatedProducts?.[relatedProductKey]
-        ?.filter((p) => productBenchmarkValuePerMsrp(p, benchmark) != null)
+        ?.filter(
+          (p) => productBenchmarkValuePerMsrp(p, preferredBenchmark) != null,
+        )
         .sort(
           (p1, p2) =>
-            productBenchmarkValuePerMsrp(p2, benchmark) -
-            productBenchmarkValuePerMsrp(p1, benchmark),
+            productBenchmarkValuePerMsrp(p2, preferredBenchmark) -
+            productBenchmarkValuePerMsrp(p1, preferredBenchmark),
         ) as Partial<GpuProduct>[]) ?? [];
     const relative2 =
       (seed2.relatedProducts?.[relatedProductKey]
-        ?.filter((p) => productBenchmarkValuePerMsrp(p, benchmark) != null)
+        ?.filter(
+          (p) => productBenchmarkValuePerMsrp(p, preferredBenchmark) != null,
+        )
         .sort(
           (p1, p2) =>
-            productBenchmarkValuePerMsrp(p2, benchmark) -
-            productBenchmarkValuePerMsrp(p1, benchmark),
+            productBenchmarkValuePerMsrp(p2, preferredBenchmark) -
+            productBenchmarkValuePerMsrp(p1, preferredBenchmark),
         ) as Partial<GpuProduct>[]) ?? [];
 
     // At least one GPU has no neighbors (missing rank)
@@ -304,8 +310,8 @@ export class CompareGpusViewModelService {
         relative1,
         relative2,
         (p1, p2) =>
-          productBenchmarkValuePerMsrp(p2, benchmark) -
-          productBenchmarkValuePerMsrp(p1, benchmark),
+          productBenchmarkValuePerMsrp(p2, preferredBenchmark) -
+          productBenchmarkValuePerMsrp(p1, preferredBenchmark),
       );
     } else {
       return this.concatNeighbors(
@@ -313,8 +319,8 @@ export class CompareGpusViewModelService {
         relative1,
         relative2,
         (p1, p2) =>
-          productBenchmarkValuePerMsrp(p2, benchmark) -
-          productBenchmarkValuePerMsrp(p1, benchmark),
+          productBenchmarkValuePerMsrp(p2, preferredBenchmark) -
+          productBenchmarkValuePerMsrp(p1, preferredBenchmark),
       );
     }
   }
@@ -447,19 +453,18 @@ export class CompareGpusViewModelService {
   }
 
   private async getBestPerformanceGpu(ctx: Context) {
-    const preferredBenchmark = preferredBenchmarkOrDefault(
+    const preferredBenchmark = getPreferredBenchmark(
+      ctx.config?.userSettings,
       ProductType.Gpu,
-      ctx.config?.userSettings?.preferredBenchmarks?.[ProductType.Gpu],
-    ).toLowerCase();
+    );
     const bestPerformanceCacheKey = `bestPerformanceGpu__${preferredBenchmark}`;
 
     const result = this.cacheService.cache(
       async () => {
         const response = await this.productService.list(
           {
-            productType: ProductType.Gpu,
             query: {
-              filter: { isChipset: true },
+              filter: { productType: ProductType.Gpu, isChipset: true },
               orderBy: {
                 sort: ListSort.PerformanceRating,
                 order: ListOrder.Desc,
@@ -469,9 +474,7 @@ export class CompareGpusViewModelService {
           },
           {
             skipCount: true,
-            includeBenchmarks: [
-              getPreferredBenchmark(ctx.config?.userSettings, ProductType.Gpu),
-            ],
+            includeBenchmarks: [preferredBenchmark],
             fields: [],
           },
           ctx,
@@ -488,19 +491,18 @@ export class CompareGpusViewModelService {
   }
 
   private async getBestValueGpu(ctx: Context) {
-    const preferredBenchmark = preferredBenchmarkOrDefault(
+    const preferredBenchmark = getPreferredBenchmark(
+      ctx.config?.userSettings,
       ProductType.Gpu,
-      ctx.config?.userSettings?.preferredBenchmarks?.[ProductType.Gpu],
-    ).toLowerCase();
+    );
     const bestValueCacheKey = `bestValueGpu__${preferredBenchmark}`;
 
     const result = this.cacheService.cache(
       async () => {
         const response = await this.productService.list(
           {
-            productType: ProductType.Gpu,
             query: {
-              filter: { isChipset: true },
+              filter: { productType: ProductType.Gpu, isChipset: true },
               orderBy: {
                 sort: ListSort.PerformancePerMsrp,
                 order: ListOrder.Desc,
@@ -510,9 +512,7 @@ export class CompareGpusViewModelService {
           },
           {
             skipCount: true,
-            includeBenchmarks: [
-              getPreferredBenchmark(ctx.config?.userSettings, ProductType.Gpu),
-            ],
+            includeBenchmarks: [preferredBenchmark],
             fields: [],
           },
           ctx,

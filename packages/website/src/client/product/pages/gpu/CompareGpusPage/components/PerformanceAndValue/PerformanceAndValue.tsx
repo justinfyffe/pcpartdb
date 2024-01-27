@@ -9,9 +9,9 @@ export const PerformanceAndValue: FunctionComponent = () => {
     <section className="flex flex-col">
       <h2 className="font-semibold">Performance &amp; Value</h2>
 
-      <div className="flex flex-col gap-8">
+      <div className="flex flex-col gap-6">
         <PerformanceAndValueCharts />
-        <div className="flex gap-4 md:flex-col md:gap-8">
+        <div className="flex gap-6 md:flex-col md:gap-6">
           <RelativePerformance />
           <RelativeValue />
         </div>

@@ -8,7 +8,7 @@ import { DateInput } from 'packages/website/src/client/shared/components/Input/D
 import React, { forwardRef, useCallback, useMemo } from 'react';
 import { ProductFieldInput } from '../ProductFieldInput/ProductFieldInput';
 
-interface ProductDateInputProps {
+export interface ProductDateInputProps {
   fieldKey: ProductFieldKey;
 
   label?: string;

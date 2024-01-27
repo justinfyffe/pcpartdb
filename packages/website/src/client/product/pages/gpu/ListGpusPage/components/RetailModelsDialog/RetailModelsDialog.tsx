@@ -36,8 +36,11 @@ export const RetailModelsDialog: FunctionComponent<RetailModelsDialogProps> = (
   useEffect(() => {
     async function fetchRetailModels() {
       setLoading(true);
-      const { results } = await productService.list(ProductType.Gpu, {
-        filter: { chipsetId: [chipsetId] } as ListGpusFilter,
+      const { results } = await productService.list({
+        filter: {
+          productType: ProductType.Gpu,
+          chipsetId: [chipsetId],
+        } as ListGpusFilter,
       });
       setRetailModels(results as GpuProduct[]);
       setLoading(false);

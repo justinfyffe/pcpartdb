@@ -21,7 +21,8 @@ import { CpuFieldsEntity } from './CpuFieldsEntity';
 import { GpuFieldsEntity } from './GpuFieldsEntity';
 import { ProductBenchmarkEntity } from './ProductBenchmarkEntity';
 import { ProductEntity } from './ProductEntity';
-import { ProductRankEntity } from './ProductRankEntity';
+import { ProductImageEntity } from './ProductImageEntity';
+import { ProductRanksEntity } from './ProductRankEntity';
 import { ProductSourceEntity } from './ProductSourceEntity';
 import { RelatedProductEntity } from './RelatedProductEntity';
 
@@ -49,8 +50,7 @@ interface CountChildrenOptions {
 }
 
 interface ListOptions extends IncludeRelationsOptions {
-  productType: ProductType;
-  filter?: ListProductsFilter;
+  filter: ListProductsFilter;
   orderBy?: ListOrderBy;
   pagination?: ListPagination;
 }
@@ -100,7 +100,7 @@ export class ProductRepository {
       where: { id: { in: ids } },
     });
     if (products.length === 0) {
-      return null;
+      return [];
     }
 
     // First set of queries: Fetching relevant products like parent and related
@@ -134,6 +134,7 @@ export class ProductRepository {
         config,
       ),
       this.populateRanks(products, parents, relatedProducts, options, config),
+      this.populateImages(products, options, config),
       this.populateSources(products, options, config),
     ];
 
@@ -213,7 +214,7 @@ export class ProductRepository {
 
   async list(options: ListOptions, config?: RepositoryConfig) {
     const db = config?.trx ?? this.db;
-    const productType = options.productType;
+    const productType = options.filter.productType;
 
     if (
       options.orderBy?.sort === ListSort.PerformanceRating ||
@@ -397,11 +398,11 @@ export class ProductRepository {
   ) {
     const db = config?.trx ?? this.db;
 
-    const dataToInsert: ProductRankEntity[] = [];
+    const dataToInsert: ProductRanksEntity[] = [];
 
     // Clear out and create ranks
     const { productType } = updates;
-    await db.productRank.deleteMany({ where: { product: { productType } } });
+    await db.productRanks.deleteMany({ where: { product: { productType } } });
 
     for (const data of Object.entries(updates.ranks)) {
       const [id, ranks] = data;
@@ -411,7 +412,7 @@ export class ProductRepository {
       });
     }
 
-    await db.productRank.createMany({
+    await db.productRanks.createMany({
       data: dataToInsert,
       skipDuplicates: true,
     });
@@ -453,13 +454,12 @@ export class ProductRepository {
     productType: ProductType,
     filter?: ListProductsFilter,
   ): Prisma.ProductWhereInput {
-    switch (productType) {
-      case ProductType.Cpu:
-        return this.generateCpuWhere(productType, filter as ListCpusFilter);
-      case ProductType.Gpu:
-        return this.generateGpuWhere(productType, filter as ListGpusFilter);
-      default:
-        throw new Error('Invalid product type');
+    if (productType === ProductType.Cpu) {
+      return this.generateCpuWhere(productType, filter as ListCpusFilter);
+    } else if (productType === ProductType.Gpu) {
+      return this.generateGpuWhere(productType, filter as ListGpusFilter);
+    } else {
+      return this.generateGenericWhere(productType, filter);
     }
   }
 
@@ -501,6 +501,10 @@ export class ProductRepository {
       },
     }));
 
+    const searchTextWhere = filter?.search
+      ? { contains: filter.search, mode: 'insensitive' as Prisma.QueryMode }
+      : undefined;
+
     return {
       AND: [
         {
@@ -510,6 +514,7 @@ export class ProductRepository {
           cpuFields: {
             marketSegmentValue: segmentsWhere,
           },
+          searchText: searchTextWhere,
         },
         { OR: yearWhere },
       ],
@@ -575,6 +580,10 @@ export class ProductRepository {
       hasReleaseDateWhere = hasReleaseDate ? { not: null } : { equals: null };
     }
 
+    const searchTextWhere = filter?.search
+      ? { contains: filter.search, mode: 'insensitive' as Prisma.QueryMode }
+      : undefined;
+
     return {
       AND: [
         {
@@ -586,9 +595,23 @@ export class ProductRepository {
             marketSegmentValue: segmentWhere,
             releaseDateValue: hasReleaseDateWhere,
           },
+          searchText: searchTextWhere,
         },
         { OR: yearWhere },
       ],
+    };
+  }
+
+  private generateGenericWhere(
+    productType: ProductType,
+    filter?: ListProductsFilter,
+  ): Prisma.ProductWhereInput {
+    const searchTextWhere = filter?.search
+      ? { contains: filter.search, mode: 'insensitive' as Prisma.QueryMode }
+      : undefined;
+
+    return {
+      AND: [{ productType, searchText: searchTextWhere }],
     };
   }
 
@@ -724,13 +747,13 @@ export class ProductRepository {
 
     const db = config?.trx ?? this.db;
 
-    const ranks = await db.productRank.findMany({
+    const ranks = await db.productRanks.findMany({
       where: { productId: { in: ids } },
     });
     const ranksMap = ranks.reduce((acc, r) => {
       acc[r.productId] = r;
       return acc;
-    }, {} as Record<number, ProductRankEntity>);
+    }, {} as Record<number, ProductRanksEntity>);
 
     for (const product of [...products, ...parents, ...related]) {
       product.ranks = ranksMap[product.id];
@@ -772,6 +795,32 @@ export class ProductRepository {
     }
   }
 
+  private async populateImages(
+    products: ProductEntity[],
+    options: IncludeRelationsOptions,
+    config?: RepositoryConfig,
+  ) {
+    if (!options.includeImages) {
+      return;
+    }
+    const ids: number[] = products.map((p) => p.id);
+
+    const db = config?.trx ?? this.db;
+    const images = await db.productImage.findMany({
+      include: { image: true },
+      where: { productId: { in: ids } },
+    });
+    const imagesMap = images.reduce((acc, image) => {
+      acc[image.productId] = acc[image.productId] || [];
+      acc[image.productId].push(image);
+      return acc;
+    }, {} as Record<number, ProductImageEntity[]>);
+
+    for (const product of products) {
+      product.images = imagesMap[product.id];
+    }
+  }
+
   private async populateSources(
     products: ProductEntity[],
     options: IncludeRelationsOptions,
@@ -797,6 +846,8 @@ export class ProductRepository {
     }
   }
 
+  // TODO: clean up this massive function.
+  // A lot of duplicate code for handling parents and related.
   private async populateFields(
     products: ProductEntity[],
     parents: ProductEntity[],

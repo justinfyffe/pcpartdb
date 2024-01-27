@@ -7,7 +7,6 @@ import {
   GpuProduct,
   ListOrder,
   ListSort,
-  preferredBenchmarkOrDefault,
   productBenchmarkValue,
   productBenchmarkValuePerMsrp,
   ProductFieldKey,
@@ -34,10 +33,10 @@ export class ViewGpuViewModelService {
     const timer = `ViewGpuViewModelService (${uuid.v4()})`;
     console.time(timer);
 
-    const preferredBenchmark = preferredBenchmarkOrDefault(
+    const preferredBenchmark = getPreferredBenchmark(
+      ctx.config?.userSettings,
       ProductType.Gpu,
-      ctx.config?.userSettings?.preferredBenchmarks?.[ProductType.Gpu],
-    ).toLowerCase();
+    );
 
     const viewModel = await this.cacheService.cache(
       async () => {
@@ -94,25 +93,29 @@ export class ViewGpuViewModelService {
   }
 
   private async getGpu(slug: string, ctx: Context) {
+    const preferredBenchmark = getPreferredBenchmark(
+      ctx.config?.userSettings,
+      ProductType.Gpu,
+    );
     const gpu = await this.productService.getBySlug(
       {
         productType: ProductType.Gpu,
         slug,
 
         includeAutomation: false,
-        includeBenchmarks: true,
         includeImages: true,
-        includeRanks: true,
+
         includeSources: false,
         includeUpdates: false,
 
         includeParent: true,
-
         includeRelated: true,
-        includeRelatedBenchmarks: [
-          getPreferredBenchmark(ctx.config?.userSettings, ProductType.Gpu),
-        ],
-        includeRelatedRanks: true,
+
+        includeBenchmarks: true,
+        includeRelatedBenchmarks: [preferredBenchmark],
+
+        includeRanks: [preferredBenchmark],
+        includeRelatedRanks: [preferredBenchmark],
 
         parentFields: ['msrp'] as ProductFieldKey[],
         relatedFields: [],
@@ -260,9 +263,8 @@ export class ViewGpuViewModelService {
     const fn = async () => {
       const response = await this.productService.list(
         {
-          productType: ProductType.Gpu,
           query: {
-            filter: { chipsetId: [chipset.id] },
+            filter: { productType: ProductType.Gpu, chipsetId: [chipset.id] },
             orderBy: { sort: ListSort.Name },
           },
         },
@@ -295,19 +297,18 @@ export class ViewGpuViewModelService {
   }
 
   private async getBestPerformanceGpu(ctx: Context) {
-    const preferredBenchmark = preferredBenchmarkOrDefault(
+    const preferredBenchmark = getPreferredBenchmark(
+      ctx.config?.userSettings,
       ProductType.Gpu,
-      ctx.config?.userSettings?.preferredBenchmarks?.[ProductType.Gpu],
-    ).toLowerCase();
-    const bestPerformanceCacheKey = `bestPerformanceGpu__${preferredBenchmark}`;
+    );
+    const bestPerformanceCacheKey = `bestPerformanceGpu__${preferredBenchmark.toLowerCase()}`;
 
     const result = this.cacheService.cache(
       async () => {
         const response = await this.productService.list(
           {
-            productType: ProductType.Gpu,
             query: {
-              filter: { isChipset: true },
+              filter: { productType: ProductType.Gpu, isChipset: true },
               orderBy: {
                 sort: ListSort.PerformanceRating,
                 order: ListOrder.Desc,
@@ -317,9 +318,7 @@ export class ViewGpuViewModelService {
           },
           {
             skipCount: true,
-            includeBenchmarks: [
-              getPreferredBenchmark(ctx.config?.userSettings, ProductType.Gpu),
-            ],
+            includeBenchmarks: [preferredBenchmark],
             fields: [],
           },
           ctx,
@@ -336,19 +335,18 @@ export class ViewGpuViewModelService {
   }
 
   private async getBestValueGpu(ctx: Context) {
-    const preferredBenchmark = preferredBenchmarkOrDefault(
+    const preferredBenchmark = getPreferredBenchmark(
+      ctx.config?.userSettings,
       ProductType.Gpu,
-      ctx.config?.userSettings?.preferredBenchmarks?.[ProductType.Gpu],
-    ).toLowerCase();
-    const bestValueCacheKey = `bestValueGpu__${preferredBenchmark}`;
+    );
+    const bestValueCacheKey = `bestValueGpu__${preferredBenchmark.toLowerCase()}`;
 
     const result = this.cacheService.cache(
       async () => {
         const response = await this.productService.list(
           {
-            productType: ProductType.Gpu,
             query: {
-              filter: { isChipset: true },
+              filter: { productType: ProductType.Gpu, isChipset: true },
               orderBy: {
                 sort: ListSort.PerformancePerMsrp,
                 order: ListOrder.Desc,
@@ -358,9 +356,7 @@ export class ViewGpuViewModelService {
           },
           {
             skipCount: true,
-            includeBenchmarks: [
-              getPreferredBenchmark(ctx.config?.userSettings, ProductType.Gpu),
-            ],
+            includeBenchmarks: [preferredBenchmark],
             fields: [],
           },
           ctx,

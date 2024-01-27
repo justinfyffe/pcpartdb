@@ -20,7 +20,7 @@ export const GpuRetailModelSummary: FunctionComponent<
   const { tags, params } = props;
 
   return (
-    <section className="mb-0">
+    <section className="-mb-4">
       <IntroBlurb tags={tags} params={params} />
       <PerformanceBlurb tags={tags} params={params} />
       <MemoryBlurb tags={tags} params={params} />

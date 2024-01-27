@@ -12,7 +12,7 @@ import {
   CreateGpuActionData,
   formatAutomationSourceName,
   formatProductName,
-  generateGpuSlug,
+  generateProductSlug,
   getViewGpuPath,
   GpuAutomationSourceGroup,
   Product,
@@ -91,7 +91,7 @@ export const GpuChipsetSourceCard = (props: GpuChipsetSourceCardProps) => {
     return currentSources[key]?.sourceName;
   });
   const [preferredSlug, setPreferredSlug] = useState(() =>
-    generateGpuSlug(preferredName, null),
+    generateProductSlug({ name: preferredName, company: null }),
   );
   const [appliedGpu, setAppliedGpu] = useState<Product>(null);
   const [groupKey] = useState(() => {
@@ -110,7 +110,9 @@ export const GpuChipsetSourceCard = (props: GpuChipsetSourceCardProps) => {
   );
 
   const handleGenerateSlug = useCallback(() => {
-    setPreferredSlug(generateGpuSlug(preferredName, null));
+    setPreferredSlug(
+      generateProductSlug({ name: preferredName, company: null }),
+    );
   }, [preferredName]);
 
   const handleSave = useCallback(async () => {

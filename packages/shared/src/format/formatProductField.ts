@@ -219,10 +219,10 @@ export function formatGpuDimensions(
   gpu: Partial<GpuProduct>,
   options?: FormatGpuDimensionsOptions,
 ) {
-  const length = productFieldFormattedValue(gpu.fields?.length);
-  const height = productFieldFormattedValue(gpu.fields?.height);
-  const width = productFieldFormattedValue(gpu.fields?.width);
-  const slots = productFieldFormattedValue(gpu.fields?.slotWidth);
+  const length = productFieldFormattedValue(gpu?.fields?.length);
+  const height = productFieldFormattedValue(gpu?.fields?.height);
+  const width = productFieldFormattedValue(gpu?.fields?.width);
+  const slots = productFieldFormattedValue(gpu?.fields?.slotWidth);
 
   const dimensions: string[] = [];
   dimensions.push(length != null ? `${length} (L)` : null);

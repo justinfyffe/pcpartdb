@@ -17,13 +17,13 @@ export const ListFilterSort: FunctionComponent<ListFilterSortProps> = (
         sort={ListSort.PerformanceRating}
         defaultOrder={ListOrder.Desc}
       >
-        Best Performance
+        Performance
       </ListFilterSortItem>
       <ListFilterSortItem
         sort={ListSort.PerformancePerMsrp}
         defaultOrder={ListOrder.Desc}
       >
-        Best Value
+        Performance Per Dollar
       </ListFilterSortItem>
       <ListFilterSortItem
         sort={ListSort.ReleaseDate}

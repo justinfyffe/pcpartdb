@@ -1,7 +1,7 @@
 import {
   formatCompanyName,
   formatProductName,
-  getGpuAffiliateUrl,
+  getAffiliateUrl,
   ProductType,
 } from '@pcpartdb/shared';
 import { ProductCustomRow } from 'packages/website/src/client/product/components/ProductCustomRow/ProductCustomRow';
@@ -43,8 +43,8 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
     ];
   }, [gpu1, gpu2, parent1, parent2]);
 
-  const gpuAffiliateUrl1 = useMemo(() => getGpuAffiliateUrl(gpu1), [gpu1]);
-  const gpuAffiliateUrl2 = useMemo(() => getGpuAffiliateUrl(gpu2), [gpu2]);
+  const gpuAffiliateUrl1 = useMemo(() => getAffiliateUrl(gpu1), [gpu1]);
+  const gpuAffiliateUrl2 = useMemo(() => getAffiliateUrl(gpu2), [gpu2]);
 
   return (
     <Table border responsive className={className}>
