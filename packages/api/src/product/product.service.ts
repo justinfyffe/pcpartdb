@@ -12,12 +12,12 @@ import {
   BenchmarkKey,
   CreateProductRequest,
   createProductRequestSchema,
+  getPreferredBenchmark,
   listAllProductsRequestSchema,
   ListProductsRequest,
   listProductsRequestSchema,
   ListProductsResponse,
   ListSort,
-  preferredBenchmarkOrDefault,
   Product,
   ProductComparison,
   ProductDiff,
@@ -64,9 +64,11 @@ interface GetOptions {
   includeImages?: boolean;
 
   includeBenchmarks?: boolean | BenchmarkKey[];
+  includeParentBenchmarks?: boolean | BenchmarkKey[];
   includeRelatedBenchmarks?: boolean | BenchmarkKey[];
 
   includeRanks?: boolean | BenchmarkKey[];
+  includeParentRanks?: boolean | BenchmarkKey[];
   includeRelatedRanks?: boolean | BenchmarkKey[];
 
   includeRelated?: boolean;
@@ -162,9 +164,9 @@ export class ProductService {
       query?.orderBy?.sort === ListSort.PerformanceRating ||
       query?.orderBy?.sort === ListSort.PerformancePerMsrp
     ) {
-      const preferredBenchmark = preferredBenchmarkOrDefault(
+      const preferredBenchmark = getPreferredBenchmark(
+        ctx.config?.userSettings,
         productType,
-        ctx.config?.userSettings?.preferredBenchmarks?.[productType],
       );
       query.orderBy = { ...query.orderBy, benchmark: preferredBenchmark };
     }
@@ -213,10 +215,14 @@ export class ProductService {
     const id = options.id;
 
     const includeBenchmarks = options?.includeBenchmarks ?? false;
+    const includeParentBenchmarks = options?.includeParentBenchmarks ?? false;
     const includeRelatedBenchmarks = options?.includeRelatedBenchmarks ?? false;
 
-    const includeParent = options.includeParent ?? false;
     const includeRanks = options?.includeRanks ?? false;
+    const includeParentRanks = options?.includeParentRanks ?? false;
+    const includeRelatedRanks = options?.includeRelatedRanks ?? false;
+
+    const includeParent = options.includeParent ?? false;
     const includeImages = options.includeImages ?? false;
     const includeSources =
       (options.includeSources ?? false) && (ctx.user?.isStaff ?? false);
@@ -224,9 +230,7 @@ export class ProductService {
       (options.includeUpdates ?? false) && (ctx.user?.isStaff ?? false);
     const includeAutomation =
       (options.includeAutomation ?? false) && (ctx.user?.isStaff ?? false);
-
     const includeRelated = options?.includeRelated ?? false;
-    const includeRelatedRanks = options?.includeRelatedRanks ?? false;
 
     const fields = options.fields;
     const parentFields = options.parentFields;
@@ -241,15 +245,18 @@ export class ProductService {
       {
         id,
 
-        includeParent,
         includeBenchmarks: !!includeBenchmarks,
-        includeImages,
-        includeRanks: !!includeRanks,
-        includeSources,
-
-        includeRelated,
+        includeParentBenchmarks: !!includeParentBenchmarks,
         includeRelatedBenchmarks: !!includeRelatedBenchmarks,
+
+        includeRanks: !!includeRanks,
+        includeParentRanks: !!includeParentRanks,
         includeRelatedRanks: !!includeRelatedRanks,
+
+        includeParent,
+        includeImages,
+        includeSources,
+        includeRelated,
 
         includeFields,
         includeParentFields,
@@ -266,15 +273,19 @@ export class ProductService {
       includeParent,
 
       includeAutomation,
-      includeBenchmarks,
       includeImages,
-      includeRanks,
       includeSources,
       includeUpdates,
       includeRelated,
-      includeRelatedBenchmarks,
-      includeRelatedRanks,
       includeSummary: true,
+
+      includeBenchmarks,
+      includeParentBenchmarks,
+      includeRelatedBenchmarks,
+
+      includeRanks,
+      includeParentRanks,
+      includeRelatedRanks,
 
       fields,
       parentFields,
@@ -292,8 +303,15 @@ export class ProductService {
     const productType = options.productType;
     const slug = options.slug;
 
-    const includeParent = options.includeParent ?? false;
+    const includeBenchmarks = options?.includeBenchmarks ?? false;
+    const includeParentBenchmarks = options?.includeParentBenchmarks ?? false;
+    const includeRelatedBenchmarks = options?.includeRelatedBenchmarks ?? false;
+
     const includeRanks = options?.includeRanks ?? false;
+    const includeParentRanks = options?.includeParentRanks ?? false;
+    const includeRelatedRanks = options?.includeRelatedRanks ?? false;
+
+    const includeParent = options.includeParent ?? false;
     const includeImages = options.includeImages ?? false;
     const includeSources =
       (options.includeSources ?? false) && (ctx.user?.isStaff ?? false);
@@ -301,10 +319,7 @@ export class ProductService {
       (options.includeUpdates ?? false) && (ctx.user?.isStaff ?? false);
     const includeAutomation =
       (options.includeAutomation ?? false) && (ctx.user?.isStaff ?? false);
-    const includeBenchmarks = options?.includeBenchmarks ?? false;
     const includeRelated = options?.includeRelated ?? false;
-    const includeRelatedBenchmarks = options?.includeRelatedBenchmarks ?? false;
-    const includeRelatedRanks = options?.includeRelatedRanks ?? false;
 
     const fields = options.fields;
     const parentFields = options.parentFields;
@@ -320,15 +335,18 @@ export class ProductService {
         productType,
         slug,
 
-        includeParent,
         includeBenchmarks: !!includeBenchmarks,
-        includeImages,
-        includeRanks: !!includeRanks,
-        includeSources,
-
-        includeRelated,
+        includeParentBenchmarks: !!includeParentBenchmarks,
         includeRelatedBenchmarks: !!includeRelatedBenchmarks,
-        includeRelatedRanks: !!includeRelatedBenchmarks,
+
+        includeRanks: !!includeRanks,
+        includeParentRanks: !!includeParentRanks,
+        includeRelatedRanks: !!includeRelatedRanks,
+
+        includeParent,
+        includeImages,
+        includeSources,
+        includeRelated,
 
         includeFields,
         includeParentFields,
@@ -345,15 +363,19 @@ export class ProductService {
       includeParent,
 
       includeAutomation,
-      includeBenchmarks,
       includeImages,
-      includeRanks,
       includeSources,
       includeUpdates,
       includeRelated,
-      includeRelatedBenchmarks,
-      includeRelatedRanks,
       includeSummary: true,
+
+      includeBenchmarks,
+      includeParentBenchmarks,
+      includeRelatedBenchmarks,
+
+      includeRanks,
+      includeParentRanks,
+      includeRelatedRanks,
 
       fields,
       parentFields,

@@ -117,7 +117,9 @@ export const HomePage = (props: HomeViewModel) => {
               Best performing NVIDIA GPUs
             </FeedLink>
             <FeedLink
-              href={getListGpusPath(ListGpusPresetSlug.BestValueNvidia)}
+              href={getListGpusPath(
+                ListGpusPresetSlug.BestPerformancePerDollarNvidia,
+              )}
             >
               Best performance per dollar NVIDIA GPUs
             </FeedLink>
@@ -126,7 +128,11 @@ export const HomePage = (props: HomeViewModel) => {
             >
               Best performing AMD GPUs
             </FeedLink>
-            <FeedLink href={getListGpusPath(ListGpusPresetSlug.BestValueAmd)}>
+            <FeedLink
+              href={getListGpusPath(
+                ListGpusPresetSlug.BestPerformancePerDollarAmd,
+              )}
+            >
               Best performance per dollar AMD GPUs
             </FeedLink>
           </FeedLinks>
@@ -157,7 +163,11 @@ export const HomePage = (props: HomeViewModel) => {
             >
               Best performing GPUs
             </FeedLink>
-            <FeedLink href={getListGpusPath(ListGpusPresetSlug.BestValue)}>
+            <FeedLink
+              href={getListGpusPath(
+                ListGpusPresetSlug.BestPerformancePerDollar,
+              )}
+            >
               Best performance per dollar GPUs
             </FeedLink>
           </FeedLinks>
@@ -190,7 +200,11 @@ export const HomePage = (props: HomeViewModel) => {
             >
               Best performing Intel CPUs
             </FeedLink>
-            <FeedLink href={getListCpusPath(ListCpusPresetSlug.BestValueIntel)}>
+            <FeedLink
+              href={getListCpusPath(
+                ListCpusPresetSlug.BestPerformancePerDollarIntel,
+              )}
+            >
               Best performance per dollar Intel CPUs
             </FeedLink>
             <FeedLink
@@ -198,7 +212,11 @@ export const HomePage = (props: HomeViewModel) => {
             >
               Best performing AMD CPUs
             </FeedLink>
-            <FeedLink href={getListCpusPath(ListCpusPresetSlug.BestValueAmd)}>
+            <FeedLink
+              href={getListCpusPath(
+                ListCpusPresetSlug.BestPerformancePerDollarAmd,
+              )}
+            >
               Best performance per dollar AMD CPUs
             </FeedLink>
           </FeedLinks>
@@ -229,7 +247,11 @@ export const HomePage = (props: HomeViewModel) => {
             >
               Best performing CPUs
             </FeedLink>
-            <FeedLink href={getListCpusPath(ListCpusPresetSlug.BestValue)}>
+            <FeedLink
+              href={getListCpusPath(
+                ListCpusPresetSlug.BestPerformancePerDollar,
+              )}
+            >
               Best performance per dollar CPUs
             </FeedLink>
           </FeedLinks>

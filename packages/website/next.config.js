@@ -6,7 +6,40 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 
 module.exports = withBundleAnalyzer({
   redirects: () => [
+    { source: '/cpus', destination: '/cpus/list', permanent: false },
     { source: '/gpus', destination: '/gpus/list', permanent: false },
+
+    // Deprecated paths
+    {
+      source: '/cpus/list/best-value',
+      destination: '/cpus/list/best-performance-per-dollar',
+      permanent: true,
+    },
+    {
+      source: '/cpus/list/best-value-amd',
+      destination: '/cpus/list/best-performance-per-dollar-amd',
+      permanent: true,
+    },
+    {
+      source: '/cpus/list/best-value-intel',
+      destination: '/cpus/list/best-performance-per-dollar-intel',
+      permanent: true,
+    },
+    {
+      source: '/gpus/list/best-value',
+      destination: '/gpus/list/best-performance-per-dollar',
+      permanent: true,
+    },
+    {
+      source: '/gpus/list/best-value-amd',
+      destination: '/gpus/list/best-performance-per-dollar-amd',
+      permanent: true,
+    },
+    {
+      source: '/gpus/list/best-value-nvidia',
+      destination: '/gpus/list/best-performance-per-dollar-nvidia',
+      permanent: true,
+    },
   ],
   eslint: {
     dirs: ['.'],

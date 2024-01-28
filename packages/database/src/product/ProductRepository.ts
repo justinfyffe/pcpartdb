@@ -58,13 +58,17 @@ interface ListOptions extends IncludeRelationsOptions {
 interface IncludeRelationsOptions {
   includeFields?: boolean;
   includeImages?: boolean;
-  includeBenchmarks?: boolean;
-  includeRanks?: boolean;
   includeSources?: boolean;
 
   includeRelated?: boolean;
   includeRelatedFields?: boolean;
+
+  includeBenchmarks?: boolean;
+  includeParentBenchmarks?: boolean;
   includeRelatedBenchmarks?: boolean;
+
+  includeRanks?: boolean;
+  includeParentRanks?: boolean;
   includeRelatedRanks?: boolean;
 
   includeParent?: boolean;
@@ -736,8 +740,12 @@ export class ProductRepository {
     const ids: number[] = [];
     if (options.includeRanks) {
       const productIds = products.map((p) => p.id);
+      ids.push(...productIds);
+    }
+
+    if (options.includeParentRanks) {
       const parentIds = parents.map((p) => p.id);
-      ids.push(...productIds, ...parentIds);
+      ids.push(...parentIds);
     }
 
     if (options.includeRelatedRanks) {
@@ -770,8 +778,12 @@ export class ProductRepository {
     const ids: number[] = [];
     if (options.includeBenchmarks) {
       const productIds = products.map((p) => p.id);
+      ids.push(...productIds);
+    }
+
+    if (options.includeParentBenchmarks) {
       const parentIds = parents.map((p) => p.id);
-      ids.push(...productIds, ...parentIds);
+      ids.push(...parentIds);
     }
 
     if (options.includeRelatedBenchmarks) {

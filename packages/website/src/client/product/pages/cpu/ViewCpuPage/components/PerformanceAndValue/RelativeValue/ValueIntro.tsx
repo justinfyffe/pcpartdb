@@ -8,8 +8,8 @@ const ValueIntroParagraph = compileContentComponent({
   component: (props) => (
     <>
       Compare {props.nameWithNoCompany}&apos;s value with similar{' '}
-      {props.marketSegment} CPUs. Relative value provides insight into which
-      CPUs gives the best bang for your buck. This data is based on{' '}
+      {props.marketSegment} CPUs. This provides insight into which CPUs gives
+      the best bang for your buck. This data is based on{' '}
       {props.preferredBenchmarkName} performance and MSRP.
     </>
   ),

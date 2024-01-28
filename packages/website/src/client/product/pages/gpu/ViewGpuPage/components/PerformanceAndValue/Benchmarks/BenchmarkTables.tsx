@@ -1,5 +1,6 @@
 import {
   BenchmarkKey,
+  getGpuChipset,
   getProductBenchmark,
   hasProductBenchmark,
 } from '@pcpartdb/shared';
@@ -161,12 +162,15 @@ interface BenchmarkTablesProps {
 
 export const BenchmarkTables: FunctionComponent<BenchmarkTablesProps> = () => {
   const { gpu } = useContext(ViewPageContext);
+  const chipset = getGpuChipset(gpu);
 
   const filteredBenchmarks = useMemo(() => {
     return BENCHMARKS.filter((group) =>
-      group.benchmarks.some((benchmark) => hasProductBenchmark(gpu, benchmark)),
+      group.benchmarks.some((benchmark) =>
+        hasProductBenchmark(chipset, benchmark),
+      ),
     );
-  }, [gpu]);
+  }, [chipset]);
 
   return (
     <Tabs tabClassName="p-1">
@@ -192,10 +196,11 @@ interface BenchmarkTabProps {
 const BenchmarkTab: FunctionComponent<BenchmarkTabProps> = (props) => {
   const { name, benchmarks, className } = props;
   const { gpu } = useContext(ViewPageContext);
+  const chipset = getGpuChipset(gpu);
 
   const hasValues = useMemo(
-    () => benchmarks.some((key) => hasProductBenchmark(gpu, key)),
-    [benchmarks, gpu],
+    () => benchmarks.some((key) => hasProductBenchmark(chipset, key)),
+    [benchmarks, chipset],
   );
 
   if (!hasValues) {
@@ -215,7 +220,7 @@ const BenchmarkTab: FunctionComponent<BenchmarkTabProps> = (props) => {
           {benchmarks.map((benchmark) => (
             <ProductBenchmarkRow
               key={benchmark}
-              benchmarks={[getProductBenchmark(gpu, benchmark)]}
+              benchmarks={[getProductBenchmark(chipset, benchmark)]}
             />
           ))}
         </TBody>

@@ -19,7 +19,7 @@ export const RelatedGpus: FunctionComponent = () => {
     <section>
       <h2>Related GPUs</h2>
 
-      <div className="flex flex-row flex-wrap gap-x-6 gap-y-3 font-semibold">
+      <div className="flex flex-row flex-wrap gap-4 font-semibold">
         {relatedGpus.map((product, i) => (
           <Button
             key={i}

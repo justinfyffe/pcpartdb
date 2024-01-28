@@ -84,7 +84,7 @@ export const ViewCpuPage = (props: ViewCpuViewModel & { config: Config }) => {
           <Breadcrumb>{shortCpuName}</Breadcrumb>
         </Breadcrumbs>
 
-        <div className="flex flex-col justify-center gap-8">
+        <div className="flex flex-col justify-center gap-6">
           <section className="flex flex-col w-full">
             <h1 className="font-semibold">{pageTitle}</h1>
             <CompareProductsForm
@@ -95,7 +95,7 @@ export const ViewCpuPage = (props: ViewCpuViewModel & { config: Config }) => {
 
           <DisplayAd unit={AdUnit.ViewPagePreHighlightsDisplay} />
 
-          <article className="flex-1 flex flex-col gap-8 max-w-full">
+          <article className="flex-1 flex flex-col gap-6 max-w-full">
             <Highlights />
             <Overview />
             <DisplayAd unit={AdUnit.ViewPagePostSummaryDisplay} />

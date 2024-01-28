@@ -99,9 +99,9 @@ export enum ListCpusPresetSlug {
   BestPerformance = 'best-performance',
   BestPerformanceAmd = 'best-performance-amd',
   BestPerformanceIntel = 'best-performance-intel',
-  BestValue = 'best-value',
-  BestValueAmd = 'best-value-amd',
-  BestValueIntel = 'best-value-intel',
+  BestPerformancePerDollar = 'best-performance-per-dollar',
+  BestPerformancePerDollarAmd = 'best-performance-per-dollar-amd',
+  BestPerformancePerDollarIntel = 'best-performance-per-dollar-intel',
   Newest = 'newest',
   Oldest = 'oldest',
 }
@@ -128,18 +128,19 @@ export const LIST_CPUS_PRESETS: Record<ListCpusPresetSlug, ListCpusQuery> = {
       order: ListOrder.Desc,
     },
   },
-  [ListCpusPresetSlug.BestValue]: {
+  [ListCpusPresetSlug.BestPerformancePerDollar]: {
     filter: { productType: ProductType.Cpu },
     orderBy: { sort: ListSort.PerformancePerMsrp, order: ListOrder.Desc },
   },
-  [ListCpusPresetSlug.BestValueAmd]: {
+  [ListCpusPresetSlug.BestPerformancePerDollarAmd]: {
     filter: { productType: ProductType.Cpu, company: ['amd'] },
     orderBy: { sort: ListSort.PerformancePerMsrp, order: ListOrder.Desc },
   },
-  [ListCpusPresetSlug.BestValueIntel]: {
+  [ListCpusPresetSlug.BestPerformancePerDollarIntel]: {
     filter: { productType: ProductType.Cpu, company: ['intel'] },
     orderBy: { sort: ListSort.PerformancePerMsrp, order: ListOrder.Desc },
   },
+
   [ListCpusPresetSlug.Newest]: {
     filter: { productType: ProductType.Cpu },
     orderBy: { sort: ListSort.ReleaseDate, order: ListOrder.Desc },
@@ -247,9 +248,9 @@ export enum ListGpusPresetSlug {
   BestPerformance = 'best-performance',
   BestPerformanceAmd = 'best-performance-amd',
   BestPerformanceNvidia = 'best-performance-nvidia',
-  BestValue = 'best-value',
-  BestValueAmd = 'best-value-amd',
-  BestValueNvidia = 'best-value-nvidia',
+  BestPerformancePerDollar = 'best-performance-per-dollar',
+  BestPerformancePerDollarAmd = 'best-performance-per-dollar-amd',
+  BestPerformancePerDollarNvidia = 'best-performance-per-dollar-nvidia',
   Newest = 'newest',
   Oldest = 'oldest',
 }
@@ -276,15 +277,15 @@ export const LIST_GPUS_PRESETS: Record<ListGpusPresetSlug, ListGpusQuery> = {
       order: ListOrder.Desc,
     },
   },
-  [ListGpusPresetSlug.BestValue]: {
+  [ListGpusPresetSlug.BestPerformancePerDollar]: {
     filter: { productType: ProductType.Gpu },
     orderBy: { sort: ListSort.PerformancePerMsrp, order: ListOrder.Desc },
   },
-  [ListGpusPresetSlug.BestValueAmd]: {
+  [ListGpusPresetSlug.BestPerformancePerDollarAmd]: {
     filter: { productType: ProductType.Gpu, company: ['amd'] },
     orderBy: { sort: ListSort.PerformancePerMsrp, order: ListOrder.Desc },
   },
-  [ListGpusPresetSlug.BestValueNvidia]: {
+  [ListGpusPresetSlug.BestPerformancePerDollarNvidia]: {
     filter: { productType: ProductType.Gpu, company: ['nvidia'] },
     orderBy: { sort: ListSort.PerformancePerMsrp, order: ListOrder.Desc },
   },

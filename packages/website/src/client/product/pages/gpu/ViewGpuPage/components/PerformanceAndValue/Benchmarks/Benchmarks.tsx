@@ -1,3 +1,4 @@
+import { getGpuChipset } from '@pcpartdb/shared';
 import React, { FunctionComponent, useContext } from 'react';
 import { ViewPageContext } from '../../../context/ViewPageContextProvider';
 import { BenchmarksIntro } from './BenchmarksIntro';
@@ -5,8 +6,9 @@ import { BenchmarkTables } from './BenchmarkTables';
 
 export const Benchmarks: FunctionComponent = () => {
   const { gpu } = useContext(ViewPageContext);
+  const chipset = getGpuChipset(gpu);
 
-  if (!gpu.benchmarks?.length) {
+  if (!chipset.benchmarks?.length) {
     return <></>;
   }
 

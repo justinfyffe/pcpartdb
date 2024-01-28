@@ -14,8 +14,8 @@ export const ValueIntroSentence1 = compileContentComponent({
   component: (props) => (
     <>
       Compare {props.chipsetName1} and {props.chipsetName2}&apos;s performance
-      per dollar with similar GPUs. Relative value provides insight into which
-      GPUs give the better bang for your buck. This data is based on{' '}
+      per dollar with similar GPUs. This provides insight into which GPUs give
+      the better bang for your buck. This data is based on{' '}
       {props.preferredBenchmarkName} benchmark performance and MSRP.
     </>
   ),

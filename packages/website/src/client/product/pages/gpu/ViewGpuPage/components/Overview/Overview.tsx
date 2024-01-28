@@ -8,7 +8,7 @@ export const Overview: FunctionComponent = () => {
 
   return (
     <section>
-      <h2>{formatProductName(gpu)}</h2>
+      <h2>{formatProductName(gpu)} GPU</h2>
       <ProductSummary product={gpu} tags={contentTags} params={contentParams} />
     </section>
   );

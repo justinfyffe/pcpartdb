@@ -124,7 +124,7 @@ export const CompareCpusPage = (
           <Breadcrumb>{shortPageTitle}</Breadcrumb>
         </Breadcrumbs>
 
-        <div className="flex flex-col gap-8 justify-center">
+        <div className="flex flex-col gap-6 justify-center">
           <section className="flex flex-wrap w-full">
             <h1 className="font-semibold">{pageTitle}</h1>
 
@@ -136,7 +136,7 @@ export const CompareCpusPage = (
 
           <DisplayAd unit={AdUnit.ComparePagePreHighlightsDisplay} />
 
-          <article className="flex-1 flex flex-col gap-8 max-w-full">
+          <article className="flex-1 flex flex-col gap-6 max-w-full">
             <Highlights />
             <Overview />
             <DisplayAd unit={AdUnit.ComparePagePostSummaryDisplay} />

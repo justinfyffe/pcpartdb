@@ -5,6 +5,7 @@ import {
   getProductPerformanceRank,
   getProductValueRank,
   LIST_GPUS_PRESETS,
+  ListGpusPresetSlug,
   productBenchmarkValue,
   productBenchmarkValuePerMsrp,
   ProductType,
@@ -32,11 +33,15 @@ export const PerformanceAndValueCharts: FunctionComponent<
   const { bestPerformanceGpu, bestValueGpu } = contentData;
 
   const performanceRankHref = useMemo(
-    () => getListGpusPath(LIST_GPUS_PRESETS['best-performance']),
+    () =>
+      getListGpusPath(LIST_GPUS_PRESETS[ListGpusPresetSlug.BestPerformance]),
     [],
   );
   const valueRankHref = useMemo(
-    () => getListGpusPath(LIST_GPUS_PRESETS['best-value']),
+    () =>
+      getListGpusPath(
+        LIST_GPUS_PRESETS[ListGpusPresetSlug.BestPerformancePerDollar],
+      ),
     [],
   );
 

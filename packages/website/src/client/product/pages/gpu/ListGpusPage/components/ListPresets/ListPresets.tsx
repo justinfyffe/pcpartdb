@@ -20,15 +20,15 @@ export const ListPresets: FunctionComponent<ListPresetsProps> = (props) => {
       label: 'Best performance NVIDIA GPUs',
     },
     {
-      slug: ListGpusPresetSlug.BestValue,
+      slug: ListGpusPresetSlug.BestPerformancePerDollar,
       label: 'Best performance per dollar GPUs',
     },
     {
-      slug: ListGpusPresetSlug.BestValueAmd,
+      slug: ListGpusPresetSlug.BestPerformancePerDollarAmd,
       label: 'Best performance per dollar AMD GPUs',
     },
     {
-      slug: ListGpusPresetSlug.BestValueNvidia,
+      slug: ListGpusPresetSlug.BestPerformancePerDollarNvidia,
       label: 'Best performance per dollar NVIDIA GPUs',
     },
   ];

@@ -35,8 +35,9 @@ export const PerformanceTable: FunctionComponent<PerformanceTableProps> = (
         <Tr>
           <Th className="text-center">Rank</Th>
           <Th>CPU</Th>
-          <Th className="text-right">Performance</Th>
-          <Th className="text-right">Relative Performance</Th>
+          <Th colSpan={2} className="text-right">
+            Benchmark Performance
+          </Th>
         </Tr>
       </THead>
       <TBody>

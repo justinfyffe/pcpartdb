@@ -23,7 +23,7 @@ export const RelatedComparisons: FunctionComponent = () => {
     <section>
       <h2>Related Comparisons</h2>
 
-      <div className="flex flex-row flex-wrap gap-x-6 gap-y-3 font-semibold">
+      <div className="flex flex-row flex-wrap gap-4 font-semibold">
         {relatedComparisons.map((comparison, i) => (
           <Button
             key={i}

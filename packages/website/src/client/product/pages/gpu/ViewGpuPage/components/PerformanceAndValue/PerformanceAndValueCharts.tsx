@@ -7,6 +7,7 @@ import {
   hasBenchmarkPerformanceRank,
   hasBenchmarkValueRank,
   LIST_GPUS_PRESETS,
+  ListGpusPresetSlug,
   productBenchmarkValue,
   productBenchmarkValuePerMsrp,
   ProductType,
@@ -37,20 +38,24 @@ export const PerformanceAndValueCharts: FunctionComponent<
 
   const performanceRankHref = useMemo(() => {
     if (hasBenchmarkPerformanceRank(chipset, preferredBenchmark)) {
-      return getListGpusPath(LIST_GPUS_PRESETS['best-performance']);
+      return getListGpusPath(
+        LIST_GPUS_PRESETS[ListGpusPresetSlug.BestPerformance],
+      );
     }
     return undefined;
   }, [chipset, preferredBenchmark]);
 
   const valueRankHref = useMemo(() => {
     if (hasBenchmarkValueRank(chipset, preferredBenchmark)) {
-      return getListGpusPath(LIST_GPUS_PRESETS['best-value']);
+      return getListGpusPath(
+        LIST_GPUS_PRESETS[ListGpusPresetSlug.BestPerformancePerDollar],
+      );
     }
     return undefined;
   }, [chipset, preferredBenchmark]);
 
   return (
-    <div className={classNames('flex flex-row md:flex-col gap-4', className)}>
+    <div className={classNames('flex flex-row md:flex-col gap-6', className)}>
       <ViewProductRatingCard
         productType={ProductType.Gpu}
         productId={gpu.id}

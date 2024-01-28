@@ -20,7 +20,7 @@ export const RelativeValue: FunctionComponent = () => {
   const [cpu1, cpu2] = comparison;
 
   const listHref = useMemo(
-    () => getListCpusPath(ListCpusPresetSlug.BestValue),
+    () => getListCpusPath(ListCpusPresetSlug.BestPerformancePerDollar),
     [],
   );
 
@@ -37,7 +37,7 @@ export const RelativeValue: FunctionComponent = () => {
 
   return (
     <section className="flex-1">
-      <h3 className="mb-1 font-semibold">Relative Value</h3>
+      <h3 className="mb-1 font-semibold">Relative Value For Money</h3>
       <ValueIntro />
       <ValueTable />
       <div className="text-right mt-2">

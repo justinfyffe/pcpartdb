@@ -14,7 +14,6 @@ import {
   FooterSection,
   FooterSectionTitle,
 } from '../../components/Footer/Footer';
-import { Img } from '../../components/Img/Img';
 import { List, ListItem } from '../../components/List/List';
 import { Toolbar } from '../../components/Toolbar/Toolbar';
 import { CookieConsentScript } from '../../scripts/CookieConsentScript';
@@ -49,11 +48,6 @@ export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
       {disableConsent !== true && <GoogleTagManagerScript />}
 
       <div className="border-x-px container bg-content p-container md:px-4 flex font-bold items-center text-5xl md:text-3xl text-dark-shades">
-        <Img
-          src="/images/logo.svg"
-          alt={`${WEBSITE_NAME} Logo`}
-          className="w-10 mt-1 mr-4 md:w-8"
-        />{' '}
         {WEBSITE_NAME}
       </div>
 

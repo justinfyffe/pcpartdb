@@ -62,7 +62,7 @@ export const RetailModelsTable: FunctionComponent<RetailModelsTableProps> = (
         </Table>
       ) : (
         <div className="flex-1">
-          <Card className="items-center justify-center h-auto font-medium">
+          <Card className="items-center justify-center h-auto font-medium text-content">
             No retail cards for the {chipsetShortName1}
           </Card>
         </div>
@@ -87,7 +87,7 @@ export const RetailModelsTable: FunctionComponent<RetailModelsTableProps> = (
         </Table>
       ) : (
         <div className="flex-1">
-          <Card className="items-center justify-center h-auto font-medium">
+          <Card className="items-center justify-center h-auto font-medium text-content">
             No retail cards for the {chipsetShortName2}
           </Card>
         </div>

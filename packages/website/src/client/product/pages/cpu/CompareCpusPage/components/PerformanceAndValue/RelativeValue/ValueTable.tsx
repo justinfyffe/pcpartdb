@@ -113,8 +113,9 @@ export const ValueTable: FunctionComponent<ValueTableProps> = (props) => {
           <Tr>
             <Th className="text-center">Rank</Th>
             <Th>CPU</Th>
-            <Th className="text-right">Performance Per Dollar</Th>
-            <Th className="text-right">Relative Value</Th>
+            <Th colSpan={2} className="text-right">
+              Performance Per Dollar
+            </Th>
           </Tr>
         </THead>
         <TBody>

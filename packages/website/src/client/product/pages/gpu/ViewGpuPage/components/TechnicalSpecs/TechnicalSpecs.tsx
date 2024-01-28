@@ -10,7 +10,7 @@ export const TechnicalSpecs: FunctionComponent = () => {
     <section className="flex flex-col">
       <h2 className="font-semibold">Technical Specs</h2>
 
-      <div className="flex flex-col gap-8">
+      <div className="flex flex-col gap-6">
         <ProcessorSpecs />
         <CompatibilitySpecs />
         <MemorySpecs />

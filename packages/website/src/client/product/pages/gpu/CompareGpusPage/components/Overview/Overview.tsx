@@ -18,7 +18,7 @@ export const Overview: FunctionComponent = () => {
   return (
     <section className="mb-0 flex flex-row gap-6 sm:flex-col sm:gap-6">
       <section className="flex-1">
-        <h2>{formatProductName(gpu1)}</h2>
+        <h2>{formatProductName(gpu1)} GPU</h2>
         <ProductSummary
           product={gpu1}
           tags={contentTags1}
@@ -32,7 +32,7 @@ export const Overview: FunctionComponent = () => {
       />
 
       <section className="flex-1">
-        <h2>{formatProductName(gpu2)}</h2>
+        <h2>{formatProductName(gpu2)} GPU</h2>
         <ProductSummary
           product={gpu2}
           tags={contentTags2}

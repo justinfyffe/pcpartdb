@@ -196,10 +196,6 @@ export const CompareProductRatingCard: FunctionComponent<
                 ) : (
                   <></>
                 )}
-
-                {/* {ratingDiff1 && (
-                <div className="font-medium">+{ratingDiff1}%</div>
-              )} */}
               </div>
             </div>
 
@@ -223,10 +219,6 @@ export const CompareProductRatingCard: FunctionComponent<
                 ) : (
                   <></>
                 )}
-
-                {/* {ratingDiff2 && (
-                <div className="font-medium">+{ratingDiff2}%</div>
-              )} */}
               </div>
             </div>
 

@@ -12,10 +12,10 @@ import { ComparePageContext } from '../../../context/ComparePageContextProvider'
 const ValueIntroParagraph = compileContentComponent({
   component: (props) => (
     <>
-      Compare {props.name1} and {props.name2}&apos;s value with similar CPUs.
-      Relative value provides insight into which CPUs gives the best bang for
-      your buck. This data is based on {props.preferredBenchmarkName} benchmark
-      performance and MSRP.
+      Compare {props.name1} and {props.name2}&apos;s performance per dollar with
+      similar CPUs. This provides insight into which CPUs gives the best bang
+      for your buck. This data is based on {props.preferredBenchmarkName}{' '}
+      benchmark performance and MSRP.
     </>
   ),
 });

@@ -121,7 +121,6 @@ export const CompareGpusPage = (
             <CompareProductsForm
               productType={ProductType.Gpu}
               values={[gpu1?.id, gpu2?.id]}
-              navigateOnChange
             />
           </section>
 

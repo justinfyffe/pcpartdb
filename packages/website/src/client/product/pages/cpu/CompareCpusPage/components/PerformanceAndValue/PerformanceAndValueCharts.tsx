@@ -4,6 +4,7 @@ import {
   getProductPerformanceRank,
   getProductValueRank,
   LIST_CPUS_PRESETS,
+  ListCpusPresetSlug,
   productBenchmarkValue,
   productBenchmarkValuePerMsrp,
   ProductType,
@@ -31,11 +32,15 @@ export const PerformanceAndValueCharts: FunctionComponent<
   const { bestPerformanceCpu, bestValueCpu } = contentData;
 
   const performanceRankHref = useMemo(
-    () => getListCpusPath(LIST_CPUS_PRESETS['best-performance']),
+    () =>
+      getListCpusPath(LIST_CPUS_PRESETS[ListCpusPresetSlug.BestPerformance]),
     [],
   );
   const valueRankHref = useMemo(
-    () => getListCpusPath(LIST_CPUS_PRESETS['best-value']),
+    () =>
+      getListCpusPath(
+        LIST_CPUS_PRESETS[ListCpusPresetSlug.BestPerformancePerDollar],
+      ),
     [],
   );
 
@@ -47,7 +52,7 @@ export const PerformanceAndValueCharts: FunctionComponent<
   }, [cpu1, cpu2]);
 
   return (
-    <div className={classNames('flex flex-row md:flex-col gap-4', className)}>
+    <div className={classNames('flex flex-row md:flex-col gap-6', className)}>
       <CompareProductRatingCard
         productType={ProductType.Cpu}
         productIds={[cpu1.id, cpu2.id]}

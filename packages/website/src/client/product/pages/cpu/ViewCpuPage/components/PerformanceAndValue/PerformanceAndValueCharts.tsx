@@ -6,6 +6,7 @@ import {
   hasBenchmarkPerformanceRank,
   hasBenchmarkValueRank,
   LIST_CPUS_PRESETS,
+  ListCpusPresetSlug,
   productBenchmarkValue,
   productBenchmarkValuePerMsrp,
   ProductType,
@@ -35,20 +36,24 @@ export const PerformanceAndValueCharts: FunctionComponent<
 
   const performanceRankHref = useMemo(() => {
     if (hasBenchmarkPerformanceRank(cpu, preferredBenchmark)) {
-      return getListCpusPath(LIST_CPUS_PRESETS['best-performance']);
+      return getListCpusPath(
+        LIST_CPUS_PRESETS[ListCpusPresetSlug.BestPerformance],
+      );
     }
     return undefined;
   }, [cpu, preferredBenchmark]);
 
   const valueRankHref = useMemo(() => {
     if (hasBenchmarkValueRank(cpu, preferredBenchmark)) {
-      return getListCpusPath(LIST_CPUS_PRESETS['best-value']);
+      return getListCpusPath(
+        LIST_CPUS_PRESETS[ListCpusPresetSlug.BestPerformancePerDollar],
+      );
     }
     return undefined;
   }, [cpu, preferredBenchmark]);
 
   return (
-    <div className={classNames('flex flex-row md:flex-col gap-4', className)}>
+    <div className={classNames('flex flex-row md:flex-col gap-6', className)}>
       <ViewProductRatingCard
         productType={ProductType.Cpu}
         productId={cpu.id}

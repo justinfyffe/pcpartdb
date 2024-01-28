@@ -14,9 +14,9 @@ export const PerformanceIntroSentence1 = compileContentComponent({
   component: (props) => (
     <>
       Compare {props.chipsetName1} and {props.chipsetName2}&apos;s performance
-      with similar GPUs. Relative performance provides insight into how their
-      benchmarks compare to their peers. This data is based on{' '}
-      {props.preferredBenchmarkName} performance.
+      with similar GPUs. This provides insight into how their benchmarks compare
+      to their peers. This data is based on {props.preferredBenchmarkName}{' '}
+      performance.
     </>
   ),
 });

@@ -33,14 +33,12 @@ interface MapToDtoOptions {
   includeRelatedBenchmarks?: boolean | BenchmarkKey[];
 
   includeRanks?: boolean | BenchmarkKey[];
+  includeParentRanks?: boolean | BenchmarkKey[];
   includeRelatedRanks?: boolean | BenchmarkKey[];
 
   includeParent?: boolean;
-
   includeAutomation?: boolean;
-
   includeImages?: boolean;
-
   includeSources?: boolean;
   includeSummary?: boolean;
   includeUpdates?: boolean;
@@ -61,6 +59,7 @@ export async function mapToProductDto(
   const includeRelatedBenchmarks = options?.includeRelatedBenchmarks ?? false;
 
   const includeRanks = options?.includeRanks ?? false;
+  const includeParentRanks = options?.includeParentRanks ?? false;
   const includeRelatedRanks = options?.includeRelatedRanks ?? false;
 
   const includeParent = options?.includeParent ?? false;
@@ -83,6 +82,7 @@ export async function mapToProductDto(
         ...options,
         fields: options?.parentFields,
         includeBenchmarks: includeParentBenchmarks,
+        includeRanks: includeParentRanks,
       })
     : undefined;
   const benchmarks = includeBenchmarks

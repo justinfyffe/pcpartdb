@@ -24,7 +24,7 @@ export const RelativeValue: FunctionComponent = () => {
   const chipset2 = useMemo(() => getGpuChipset(gpu2), [gpu2]);
 
   const listHref = useMemo(
-    () => getListGpusPath(ListGpusPresetSlug.BestValue),
+    () => getListGpusPath(ListGpusPresetSlug.BestPerformancePerDollar),
     [],
   );
 
@@ -41,7 +41,7 @@ export const RelativeValue: FunctionComponent = () => {
 
   return (
     <section className="flex-1">
-      <h3 className="mb-1 font-semibold">Relative Value</h3>
+      <h3 className="mb-1 font-semibold">Relative Value For Money</h3>
       <ValueIntro />
       <ValueTable />
       <div className="text-right mt-2">

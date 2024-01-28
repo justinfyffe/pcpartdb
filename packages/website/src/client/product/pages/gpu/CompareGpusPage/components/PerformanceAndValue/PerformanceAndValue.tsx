@@ -7,7 +7,7 @@ import { RelativeValue } from './RelativeValue';
 export const PerformanceAndValue: FunctionComponent = () => {
   return (
     <section className="flex flex-col">
-      <h2 className="font-semibold">Performance &amp; Value</h2>
+      <h2 className="font-semibold">Performance &amp; Value For Money</h2>
 
       <div className="flex flex-col gap-6">
         <PerformanceAndValueCharts />

@@ -41,6 +41,7 @@ export const ViewGpuPage = (props: ViewGpuViewModel & { config: Config }) => {
   const isRetailModel = gpu.parent != null;
 
   const chipset = useMemo(() => getGpuChipset(gpu), [gpu]);
+  const chipsetName = useMemo(() => formatProductName(chipset), [chipset]);
   const chipsetShortName = useMemo(
     () => formatProductName(chipset, { company: false }),
     [chipset],
@@ -99,9 +100,16 @@ export const ViewGpuPage = (props: ViewGpuViewModel & { config: Config }) => {
           <Breadcrumb>{gpuShortName}</Breadcrumb>
         </Breadcrumbs>
 
-        <div className="flex flex-col justify-center gap-8">
+        <div className="flex flex-col justify-center gap-6">
           <section className="flex flex-col w-full">
-            <h1 className="font-semibold">{pageTitle}</h1>
+            <div className="mb-4">
+              <h1 className="font-semibold mb-0">{pageTitle}</h1>
+              {isRetailModel && (
+                <span className="text-sm">
+                  Retail card for the <a href={chipsetHref}>{chipsetName}</a>
+                </span>
+              )}
+            </div>
 
             <CompareProductsForm
               productType={ProductType.Gpu}
@@ -111,7 +119,7 @@ export const ViewGpuPage = (props: ViewGpuViewModel & { config: Config }) => {
 
           <DisplayAd unit={AdUnit.ViewPagePreHighlightsDisplay} />
 
-          <article className="flex-1 flex flex-col gap-8 max-w-full">
+          <article className="flex-1 flex flex-col gap-6 max-w-full">
             <Highlights />
             <Overview />
             <DisplayAd unit={AdUnit.ViewPagePostSummaryDisplay} />

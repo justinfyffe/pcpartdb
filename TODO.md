@@ -12,6 +12,9 @@ SEO Improvements:
   - add more manual summaries
 - rename "Best Value" -> "Best Performance Per Dollar"
 
+Home Page Improvements
+- Show Top 5 Performance & Performance per dollar
+
 Tech Debt:
 - product form from builds branch
 - better organization of code

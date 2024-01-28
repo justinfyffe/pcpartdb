@@ -112,9 +112,11 @@ export class ViewGpuViewModelService {
         includeRelated: true,
 
         includeBenchmarks: true,
+        includeParentBenchmarks: true,
         includeRelatedBenchmarks: [preferredBenchmark],
 
         includeRanks: [preferredBenchmark],
+        includeParentRanks: [preferredBenchmark],
         includeRelatedRanks: [preferredBenchmark],
 
         parentFields: ['msrp'] as ProductFieldKey[],

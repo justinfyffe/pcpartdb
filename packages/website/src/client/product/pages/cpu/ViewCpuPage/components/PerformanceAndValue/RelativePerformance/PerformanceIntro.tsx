@@ -8,8 +8,8 @@ export const PerformanceIntroParagraph = compileContentComponent({
   component: (props) => (
     <>
       Compare {props.nameWithNoCompany}&apos;s performance with similar{' '}
-      {props.marketSegment} CPUs. Relative performance provides insight into how
-      its benchmark compares to its peers. This data is based on its{' '}
+      {props.marketSegment} CPUs. This provides insight into how its benchmark
+      compares to its peers. This data is based on its{' '}
       {props.preferredBenchmarkName} performance.
     </>
   ),

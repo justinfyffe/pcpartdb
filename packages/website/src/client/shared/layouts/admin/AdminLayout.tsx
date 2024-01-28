@@ -20,7 +20,6 @@ import React, {
 import { authService } from '../../../auth/authService';
 import { automationService } from '../../../automation/services/automationService';
 import { Button, ButtonVariant } from '../../components/Button/Button';
-import { Img } from '../../components/Img/Img';
 import { Menu } from '../../components/Menu/Menu';
 import { MenuLinkItem } from '../../components/Menu/MenuLinkItem';
 import { MetaReferrer, Seo } from '../../components/Seo/Seo';
@@ -93,11 +92,6 @@ export const AdminLayout: FunctionComponent<AdminLayoutProps> = (props) => {
     >
       <Seo referrer={MetaReferrer.NoReferrer} />
       <div className="container bg-content p-container flex font-bold items-center text-5xl md:text-3xl text-content">
-        <Img
-          src="/images/logo.svg"
-          alt={`${WEBSITE_NAME} Logo`}
-          className="w-10 mt-1 mr-4 md:w-8"
-        />{' '}
         {WEBSITE_NAME}
       </div>
 
