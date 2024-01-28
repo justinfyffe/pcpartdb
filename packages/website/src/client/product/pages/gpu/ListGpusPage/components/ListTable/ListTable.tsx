@@ -129,7 +129,7 @@ export const ListTable: FunctionComponent = () => {
           <Th className="text-center px-4 py-2 whitespace-nowrap md:hidden sm:px-2 md:px-3">
             Retail
             <br />
-            Models
+            Cards
           </Th>
         </Tr>
       </THead>
@@ -260,8 +260,8 @@ const ListTableRow: FunctionComponent<ListTableRowProps> = (props) => {
             onClick={openProductsDialog}
             className="cursor-pointer p-0"
           >
-            {retailModelsCount === 1 && <>1 product</>}
-            {retailModelsCount > 1 && <>{retailModelsCount} products</>}
+            {retailModelsCount === 1 && <>1 card</>}
+            {retailModelsCount > 1 && <>{retailModelsCount} cards</>}
           </Button>
         )}
         {retailModelsCount === 0 && <>--</>}
