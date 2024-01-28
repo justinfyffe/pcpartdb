@@ -38,8 +38,8 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
 
   const chipsetValues = useMemo(() => {
     return [
-      formatProductName(parent1 || gpu1),
-      formatProductName(parent2 || gpu2),
+      formatProductName(parent1 || gpu1, { company: false }),
+      formatProductName(parent2 || gpu2, { company: false }),
     ];
   }, [gpu1, gpu2, parent1, parent2]);
 

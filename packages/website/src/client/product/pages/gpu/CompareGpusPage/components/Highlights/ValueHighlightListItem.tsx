@@ -103,8 +103,9 @@ export const ValueHighlightListItem: FunctionComponent<
           onClick={showPreferredBenchmarkDialog}
         >
           <span>Performance Per Dollar</span>
-          <span className="text-link text-sm">
+          <span className="text-link text-sm flex gap-2 items-baseline">
             {getProductBenchmarkName(preferredBenchmark)}
+            <span className="text-xs">(change)</span>
           </span>
         </Button>
       }

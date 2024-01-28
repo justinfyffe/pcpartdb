@@ -108,7 +108,7 @@ export const ViewProductRatingCard: FunctionComponent<
               <span className="text-base text-content">
                 {getProductBenchmarkName(preferredBenchmark)}
               </span>
-              <span className="text-link text-2xs">(change benchmark)</span>
+              <span className="text-link text-xs">(change benchmark)</span>
             </Button>
           </div>
 
