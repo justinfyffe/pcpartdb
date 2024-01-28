@@ -30,6 +30,7 @@ export interface InputProps {
 
   onPrefixClick?: () => void;
   onSuffixClick?: () => void;
+  onSuffixMouseDown?: () => void;
   onClick?: (e?: MouseEvent) => void;
   onClearing?: (clearing: boolean) => void;
   onKeyDown?: (e?: KeyboardEvent) => void;
@@ -48,6 +49,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
   const {
     onPrefixClick,
     onSuffixClick,
+    onSuffixMouseDown,
     onClearing,
     onKeyDown,
     onClick,
@@ -77,6 +79,14 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
       onSuffixClick?.();
     },
     [onSuffixClick],
+  );
+
+  const handleSuffixMouseDown = useCallback(
+    (e: MouseEvent) => {
+      e.preventDefault();
+      onSuffixMouseDown?.();
+    },
+    [onSuffixMouseDown],
   );
 
   const handleClear = useCallback(
@@ -187,10 +197,11 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
         {props.suffix && (
           <div
             className={classNames(
-              'flex items-center px-4',
+              'flex items-center p-4',
               handleSuffixClick ? 'cursor-pointer' : '',
             )}
             onClick={handleSuffixClick}
+            onMouseDown={handleSuffixMouseDown}
           >
             {suffix}
           </div>

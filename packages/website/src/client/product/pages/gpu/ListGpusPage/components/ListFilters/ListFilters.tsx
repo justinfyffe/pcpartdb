@@ -11,7 +11,7 @@ interface ListFiltersProps {
 
 export const ListFilters: FunctionComponent<ListFiltersProps> = (props) => {
   return (
-    <div className={classNames('flex flex-col min-w-62', props.className)}>
+    <div className={classNames('flex flex-col', props.className)}>
       <ListFilterSort />
       <ListFilterComnpany />
       <ListFilterMarketSegment />

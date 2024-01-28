@@ -13,11 +13,13 @@ import {
   productFieldFormattedValue,
   ProductType,
 } from '@pcpartdb/shared';
+import { getCompanyLogoAutocompletePath } from 'packages/website/src/client/image/utils';
 import {
   Button,
   ButtonVariant,
 } from 'packages/website/src/client/shared/components/Button/Button';
 import { showDialog } from 'packages/website/src/client/shared/components/Dialog/dialog';
+import { Img } from 'packages/website/src/client/shared/components/Img/Img';
 import {
   Table,
   TBody,
@@ -66,7 +68,7 @@ export const ListTable: FunctionComponent = () => {
             <></>
           )}
 
-          <Th className="px-4 py-2 md:p-2">GPU</Th>
+          <Th className="px-4 py-2 md:p-2">Graphics Card</Th>
 
           <Th
             className={classNames(
@@ -183,6 +185,11 @@ const ListTableRow: FunctionComponent<ListTableRowProps> = (props) => {
     [gpu.fields.releaseDate],
   );
 
+  const companyImage = useMemo(
+    () => getCompanyLogoAutocompletePath(gpu),
+    [gpu],
+  );
+
   const openProductsDialog = useCallback(() => {
     showDialog(<RetailModelsDialog chipset={gpu} />);
   }, [gpu]);
@@ -199,13 +206,20 @@ const ListTableRow: FunctionComponent<ListTableRowProps> = (props) => {
         <></>
       )}
 
-      <Td className="px-4 py-2 sm:px-2 md:px-3">
-        <div>
-          <a href={href} className="font-semibold text-base">
-            {name}
-          </a>
-        </div>
-        <div className="text-dimmed text-sm">{segment}</div>
+      <Td className="p-0 px-0 py-0">
+        <a
+          href={href}
+          className="flex items-center gap-4 px-4 py-2 sm:px-2 md:px-3"
+        >
+          <div className="min-w-8 max-w-10 sm:hidden">
+            <Img src={companyImage} />
+          </div>
+
+          <div>
+            <span className="font-semibold">{name}</span>
+            <div className="text-dimmed text-sm">{segment}</div>
+          </div>
+        </a>
       </Td>
 
       <Td

@@ -130,7 +130,7 @@ export const ListCpusPage = (props: ListCpusViewModel) => {
                 <MultiplexAd unit={AdUnit.ListPageTableSideMultiplex} />
               </div>
 
-              <aside className="lg:hidden flex flex-col gap-4">
+              <aside className="lg:hidden flex flex-col gap-4 max-w-62">
                 <div className="border-px">
                   <ListFilters />
                 </div>

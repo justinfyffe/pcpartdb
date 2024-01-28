@@ -83,6 +83,8 @@ async function getGpu(gpuId: number, context: AutomationContext) {
     {
       params: {
         req: JSON.stringify({
+          includeAutomation: true,
+          includeFields: true,
           includeBenchmarks: true,
           includeImages: true,
           includeSources: true,

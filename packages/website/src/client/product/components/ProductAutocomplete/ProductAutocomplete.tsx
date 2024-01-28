@@ -139,10 +139,6 @@ export const ProductAutocomplete = forwardRef<
     [onChange, onChangeProduct, productCache, productType],
   );
 
-  const handleSuffixClick = useCallback(() => {
-    inputRef.current.focus();
-  }, [inputRef]);
-
   return (
     <Autocomplete
       prefix={
@@ -154,7 +150,6 @@ export const ProductAutocomplete = forwardRef<
       value={value != null && value !== 0 ? `${value}` : ''}
       onQuery={handleQuery}
       onChange={handleChange}
-      onSuffixClick={handleSuffixClick}
       className={classNames('flex flex-1 items-center', className)}
       suffix={value == null ? <ChevronDownIcon className="w-4" /> : null}
       placeholder={placeHolder}

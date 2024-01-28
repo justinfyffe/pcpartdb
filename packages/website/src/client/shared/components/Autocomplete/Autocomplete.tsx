@@ -1,3 +1,4 @@
+import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
 import React, {
   Children,
   forwardRef,
@@ -28,6 +29,8 @@ export interface AutocompleteProps extends Omit<TextInputProps, 'value'> {
   onQuery: (query: string) => boolean | Promise<boolean>;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onChange?: (value: any) => void;
+  onOpen?: () => void;
+  onClose?: () => void;
 
   label?: string;
   prefix?: string | React.ReactElement;
@@ -46,13 +49,13 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
       label: propsLabel,
       value: propsValue,
       prefix,
-      suffix,
       placeholder,
       throttleTimeout,
       freeSolo,
       onChange,
       onQuery,
-      onSuffixClick,
+      onOpen,
+      onClose,
       children,
     } = props;
 
@@ -67,6 +70,23 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
 
     useEffect(() => setQuery(propsLabel), [propsLabel]);
     useEffect(() => setValue(propsValue), [propsValue]);
+
+    const openResults = useCallback(() => {
+      if (isOpen) {
+        return;
+      }
+
+      setOpen(true);
+      onOpen?.();
+    }, [isOpen, onOpen]);
+    const closeResults = useCallback(() => {
+      if (!isOpen) {
+        return;
+      }
+
+      setOpen(false);
+      onClose?.();
+    }, [isOpen, onClose]);
 
     const handleQuery = useCallback(
       async (query: string) => {
@@ -85,9 +105,14 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
         setHoveredIndex(-1);
         const hasResults = await onQuery(query);
         setLoading(false);
-        setOpen(hasResults);
+
+        if (hasResults) {
+          openResults();
+        } else {
+          closeResults();
+        }
       },
-      [freeSolo, onChange, onQuery],
+      [closeResults, freeSolo, onChange, onQuery, openResults],
     );
     const throttledOnChange = useThrottle(
       handleQuery,
@@ -111,10 +136,17 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
           setValue(value);
           setQuery(label);
           onChange?.(value);
-          setOpen(false);
+          closeResults();
         }
       },
-      [onChange, isOpen, hoveredResult, hoveredIndex, totalChildren],
+      [
+        isOpen,
+        hoveredIndex,
+        totalChildren,
+        hoveredResult,
+        onChange,
+        closeResults,
+      ],
     );
 
     const handleChildrenMouseDown = useCallback((e: MouseEvent) => {
@@ -127,13 +159,13 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
         setValue(result.value);
         setQuery(result.label);
         onChange?.(result.value);
-        setOpen(false);
+        closeResults();
       },
-      [onChange],
+      [closeResults, onChange],
     );
 
     const handleBlur = useCallback(() => {
-      setOpen(false);
+      closeResults();
 
       if (freeSolo) {
         return;
@@ -146,15 +178,29 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
       } else {
         setQuery(propsLabel);
       }
-    }, [freeSolo, propsLabel, query, onChange]);
+    }, [closeResults, freeSolo, query, onChange, propsLabel]);
 
     const handleFocus = useCallback(async () => {
       setLoading(true);
       setHoveredIndex(-1);
       const hasResults = await onQuery(query);
       setLoading(false);
-      setOpen(hasResults);
-    }, [query, onQuery]);
+
+      if (hasResults) {
+        openResults();
+      } else {
+        closeResults();
+      }
+    }, [onQuery, query, openResults, closeResults]);
+
+    const handleSuffixMouseDown = useCallback(() => {
+      if (isOpen) {
+        closeResults();
+      } else {
+        handleFocus();
+        (ref as any)?.current?.focus();
+      }
+    }, [closeResults, handleFocus, isOpen, ref]);
 
     return (
       <AutocompleteContext.Provider
@@ -168,14 +214,22 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
           <TextInput
             disabled={disabled}
             prefix={prefix}
-            suffix={isLoading ? <Spinner /> : suffix}
+            suffix={
+              isLoading ? (
+                <Spinner />
+              ) : isOpen ? (
+                <ChevronUpIcon className="w-4" />
+              ) : (
+                <ChevronDownIcon className="w-4" />
+              )
+            }
             placeholder={placeholder}
             value={query || ''}
             onChange={throttledOnChange}
             onKeyDown={handleKeyDown}
             onBlur={handleBlur}
             onFocus={handleFocus}
-            onSuffixClick={onSuffixClick}
+            onSuffixMouseDown={handleSuffixMouseDown}
             className="w-full"
             ref={ref}
             clearable={!disabled && !!value}
