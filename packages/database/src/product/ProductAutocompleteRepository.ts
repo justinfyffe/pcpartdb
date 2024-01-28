@@ -3,7 +3,7 @@ import { DatabaseClient } from '../DatabaseClient';
 import { RepositoryConfig } from '../RepositoryConfig';
 import { ProductEntity } from './ProductEntity';
 
-const AUTOCOMPLETE_LIMIT = 6;
+const AUTOCOMPLETE_LIMIT = 25;
 
 export class ProductAutocompleteRepository {
   constructor(protected db: DatabaseClient) {}
@@ -38,13 +38,15 @@ export class ProductAutocompleteRepository {
         cpuFields: productType === ProductType.Cpu,
         gpuFields: productType === ProductType.Gpu,
       },
-      orderBy: {
-        _relevance: {
-          fields: ['searchText'],
-          search: tokens.join(' | '),
-          sort: 'desc',
+      orderBy: [
+        {
+          _relevance: {
+            fields: ['searchText'],
+            search: tokens.join(' & '),
+            sort: 'desc',
+          },
         },
-      },
+      ],
       take: AUTOCOMPLETE_LIMIT,
     });
 

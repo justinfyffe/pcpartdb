@@ -184,7 +184,7 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
           <div
             onMouseDown={handleChildrenMouseDown}
             className={classNames(
-              'absolute bg-white border-[1px_solid_#ccc] shadow-md left-0 right-0 z-30 mt-px',
+              'absolute bg-white border-[1px_solid_#ccc] shadow-md left-0 right-0 z-30 mt-px max-h-110 overflow-y-auto',
               direction === 'top' ? 'bottom-full' : 'top-full',
               isOpen ? 'block' : 'hidden',
             )}
