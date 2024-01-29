@@ -1,3 +1,12 @@
+NEXT:
+- Sitemaps:
+  - sitemap modication date
+    - add lastmod to sitemapindex
+  - fixed sitemap files (shouldn't change just because we have more pages?)
+    - shard based on first 3 results of base36 of url
+- Fix pages not returning as 404:
+  - e.g. https://pcpartdb.com/gpus/compare/amd-radeon-e8860--vs--amd-radeon-r9-m485x/
+
 SEO Improvements:
 - Improve view and compare html titles
 - Improve home page title

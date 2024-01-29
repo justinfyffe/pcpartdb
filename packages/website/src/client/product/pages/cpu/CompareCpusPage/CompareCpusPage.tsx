@@ -88,7 +88,7 @@ export const CompareCpusPage = (
       'Our database of processors will help you choose the best CPU for your computer.'
     );
   }, [cpu1, cpu2]);
-  const seoCanonical = getCompareCpusPath({ comparison, ordered: true });
+  const seoCanonical = getCompareCpusPath({ comparison });
 
   const homeHref = useMemo(() => getHomePath(), []);
   const listHref = useMemo(() => getListCpusPath(), []);
