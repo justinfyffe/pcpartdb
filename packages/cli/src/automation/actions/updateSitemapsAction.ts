@@ -21,14 +21,14 @@ import {
 import FormData from 'form-data';
 import * as fs from 'fs';
 import * as fsPromises from 'fs/promises';
+import * as uuid from 'uuid';
 import xml from 'xml';
 import * as zlib from 'zlib';
 import { AutomationContext } from '../types';
 import { sitemapPath, sitemapUrl, websiteUrl } from '../utils/sitemap';
 
-const COMPARISONS_PER_SITEMAP = 49_000;
-const PRODUCTS_PER_SITEMAP = 49_000;
 const DELAY_BETWEEN_UPLOAD = 4_000;
+const FILES_PER_UPLOAD = 10;
 
 const INDEX_FILENAME = 'sitemap-index.xml';
 const GENERAL_FILENAME = 'sitemap-general.xml';
@@ -39,6 +39,11 @@ const GPU_LISTS_FILENAME = 'sitemap-gpu-lists.xml';
 const GPU_CHIPSETS_FILENAME = 'sitemap-gpu-chipsets-{i}.xml';
 const GPU_RETAIL_MODELS_FILENAME = 'sitemap-gpu-retail-models-{i}.xml';
 const GPU_COMPARISONS_FILENAME = 'sitemap-gpu-comparisons-{i}.xml';
+
+interface SitemapIndexEntry {
+  url: string;
+  lastModification?: Date;
+}
 
 interface SitemapEntry {
   url: string;
@@ -68,8 +73,8 @@ export async function updateSitemapsAction(
   );
 
   // Construct sitemaps
-  await removeExistingSitemaps();
-  const sitemapUrls = [
+  // await removeExistingSitemaps();
+  const sitemapIndexEntries = [
     await writeGeneralSitemap(),
     await writeCpuListsSitemap(),
     await writeGpuListsSitemap(),
@@ -79,7 +84,7 @@ export async function updateSitemapsAction(
     ...(await writeGpuRetailModelsSitemap(gpuRetailModelSlugs)),
     ...(await writeGpuComparisonsSitemap(gpuChipsetSlugs)),
   ];
-  await writeSitemapIndex(sitemapUrls);
+  await writeSitemapIndex(sitemapIndexEntries);
 
   // Upload sitemap files
   await uploadSitemaps(context);
@@ -105,7 +110,7 @@ async function writeGeneralSitemap() {
   await writeSitemap(sitemapPath(GENERAL_FILENAME), entries);
   console.log(`Generated ${GENERAL_FILENAME} with ${entries.length} entries`);
 
-  return sitemapUrl(GENERAL_FILENAME, { compressed: true });
+  return { url: sitemapUrl(GENERAL_FILENAME, { compressed: true }) };
 }
 
 // CPU Sitemaps
@@ -122,16 +127,16 @@ async function writeCpuListsSitemap() {
   await writeSitemap(sitemapPath(CPU_LISTS_FILENAME), entries);
   console.log(`Generated ${CPU_LISTS_FILENAME} with ${entries.length} entries`);
 
-  return sitemapUrl(CPU_LISTS_FILENAME, { compressed: true });
+  return { url: sitemapUrl(CPU_LISTS_FILENAME, { compressed: true }) };
 }
 
 async function writeCpusSitemap(cpuSlugs: SitemapProductSlug[]) {
   console.log('Generating CPUs sitemap');
 
-  let fileCounter = 0;
-  let entries: SitemapEntry[] = [];
   let totalEntries = 0;
-  const sitemapUrls: string[] = [];
+  const sitemapIndexEntries: SitemapIndexEntry[] = [];
+  const entries: Record<string, SitemapEntry[]> = {};
+  const lastModifications: Record<string, number> = {};
 
   for (let i = 0; i < cpuSlugs.length - 1; ++i) {
     const cpuSlug = cpuSlugs[i];
@@ -141,39 +146,40 @@ async function writeCpusSitemap(cpuSlugs: SitemapProductSlug[]) {
     const lastModification =
       lastModTimestamp != 0 ? new Date(lastModTimestamp) : undefined;
 
-    entries.push({ url, lastModification });
-    ++totalEntries;
-
-    if (entries.length >= PRODUCTS_PER_SITEMAP) {
-      const filename = CPU_PRODUCTS_FILENAME.replace('{i}', `${fileCounter}`);
-      await writeSitemap(sitemapPath(filename), entries);
-      sitemapUrls.push(sitemapUrl(filename, { compressed: true }));
-      console.log(`Generated  ${filename} with ${entries.length} entries`);
-
-      entries = [];
-      fileCounter++;
+    const name = getSitemapName(url, 0);
+    if (!entries[name]) {
+      entries[name] = [];
+      lastModifications[name] = 0;
     }
+
+    entries[name].push({ url, lastModification });
+    ++totalEntries;
   }
 
-  if (entries.length > 0) {
-    const filename = CPU_PRODUCTS_FILENAME.replace('{i}', `${fileCounter}`);
-    await writeSitemap(sitemapPath(filename), entries);
-    sitemapUrls.push(sitemapUrl(filename, { compressed: true }));
-    console.log(`Generated ${filename} with ${entries.length} entries`);
+  const sitemapNames = Object.keys(entries);
+  for (const name of sitemapNames) {
+    const filename = CPU_PRODUCTS_FILENAME.replace('{i}', `${name}`);
+    await writeSitemap(sitemapPath(filename), entries[name]);
+    const url = sitemapUrl(filename, { compressed: true });
+    sitemapIndexEntries.push({
+      url,
+      lastModification: new Date(lastModifications[name]),
+    });
+    console.log(`Generated ${filename} with ${entries[name].length} entries`);
   }
 
   console.log(`${totalEntries} total entries for CPUs sitemaps`);
 
-  return sitemapUrls;
+  return sitemapIndexEntries;
 }
 
 async function writeCpuComparisonsSitemap(cpuSlugs: SitemapProductSlug[]) {
   console.log('Generating CPU Comparison sitemap');
 
-  let fileCounter = 0;
-  let entries: SitemapEntry[] = [];
   let totalEntries = 0;
-  const sitemapUrls: string[] = [];
+  const sitemapIndexEntries: SitemapIndexEntry[] = [];
+  const entries: Record<string, SitemapEntry[]> = {};
+  const lastModifications: Record<string, number> = {};
 
   for (let i = 0; i < cpuSlugs.length - 1; ++i) {
     for (let j = i + 1; j < cpuSlugs.length; ++j) {
@@ -205,35 +211,47 @@ async function writeCpuComparisonsSitemap(cpuSlugs: SitemapProductSlug[]) {
       const lastModification =
         lastModTimestamp != 0 ? new Date(lastModTimestamp) : undefined;
 
-      entries.push({ url: url1, lastModification });
-      entries.push({ url: url2, lastModification });
-      totalEntries += 2;
+      const name1 = getSitemapName(url1, 3);
+      const name2 = getSitemapName(url2, 3);
 
-      if (entries.length >= COMPARISONS_PER_SITEMAP) {
-        const filename = CPU_COMPARISONS_FILENAME.replace(
-          '{i}',
-          `${fileCounter}`,
-        );
-        await writeSitemap(sitemapPath(filename), entries);
-        sitemapUrls.push(sitemapUrl(filename, { compressed: true }));
-        console.log(`Generated  ${filename} with ${entries.length} entries`);
-
-        entries = [];
-        fileCounter++;
+      if (!entries[name1]) {
+        entries[name1] = [];
+        lastModifications[name1] = 0;
       }
+      if (!entries[name2]) {
+        entries[name2] = [];
+        lastModifications[name2] = 0;
+      }
+
+      entries[name1].push({ url: url1, lastModification });
+      entries[name2].push({ url: url2, lastModification });
+      lastModifications[name1] = Math.max(
+        lastModifications[name1],
+        lastModTimestamp,
+      );
+      lastModifications[name2] = Math.max(
+        lastModifications[name2],
+        lastModTimestamp,
+      );
+      totalEntries += 2;
     }
   }
 
-  if (entries.length > 0) {
-    const filename = CPU_COMPARISONS_FILENAME.replace('{i}', `${fileCounter}`);
-    await writeSitemap(sitemapPath(filename), entries);
-    sitemapUrls.push(sitemapUrl(filename, { compressed: true }));
-    console.log(`Generated ${filename} with ${entries.length} entries`);
+  const sitemapNames = Object.keys(entries);
+  for (const name of sitemapNames) {
+    const filename = CPU_COMPARISONS_FILENAME.replace('{i}', `${name}`);
+    await writeSitemap(sitemapPath(filename), entries[name]);
+    const url = sitemapUrl(filename, { compressed: true });
+    sitemapIndexEntries.push({
+      url,
+      lastModification: new Date(lastModifications[name]),
+    });
+    console.log(`Generated ${filename} with ${entries[name].length} entries`);
   }
 
   console.log(`${totalEntries} total entries for CPU Comparison sitemaps`);
 
-  return sitemapUrls;
+  return sitemapIndexEntries;
 }
 
 // GPU Sitemaps
@@ -250,16 +268,16 @@ async function writeGpuListsSitemap() {
   await writeSitemap(sitemapPath(GPU_LISTS_FILENAME), entries);
   console.log(`Generated ${GPU_LISTS_FILENAME} with ${entries.length} entries`);
 
-  return sitemapUrl(GPU_LISTS_FILENAME, { compressed: true });
+  return { url: sitemapUrl(GPU_LISTS_FILENAME, { compressed: true }) };
 }
 
 async function writeGpuChipsetsSitemap(gpuSlugs: SitemapProductSlug[]) {
   console.log('Generating GPU Chipsets sitemap');
 
-  let fileCounter = 0;
-  let entries: SitemapEntry[] = [];
   let totalEntries = 0;
-  const sitemapUrls: string[] = [];
+  const sitemapIndexEntries: SitemapIndexEntry[] = [];
+  const entries: Record<string, SitemapEntry[]> = {};
+  const lastModifications: Record<string, number> = {};
 
   for (let i = 0; i < gpuSlugs.length - 1; ++i) {
     const gpuSlug = gpuSlugs[i];
@@ -269,39 +287,40 @@ async function writeGpuChipsetsSitemap(gpuSlugs: SitemapProductSlug[]) {
     const lastModification =
       lastModTimestamp != 0 ? new Date(lastModTimestamp) : undefined;
 
-    entries.push({ url, lastModification });
-    ++totalEntries;
-
-    if (entries.length >= PRODUCTS_PER_SITEMAP) {
-      const filename = GPU_CHIPSETS_FILENAME.replace('{i}', `${fileCounter}`);
-      await writeSitemap(sitemapPath(filename), entries);
-      sitemapUrls.push(sitemapUrl(filename, { compressed: true }));
-      console.log(`Generated  ${filename} with ${entries.length} entries`);
-
-      entries = [];
-      fileCounter++;
+    const name = getSitemapName(url, 0);
+    if (!entries[name]) {
+      entries[name] = [];
+      lastModifications[name] = 0;
     }
+
+    entries[name].push({ url, lastModification });
+    ++totalEntries;
   }
 
-  if (entries.length > 0) {
-    const filename = GPU_CHIPSETS_FILENAME.replace('{i}', `${fileCounter}`);
-    await writeSitemap(sitemapPath(filename), entries);
-    sitemapUrls.push(sitemapUrl(filename, { compressed: true }));
-    console.log(`Generated ${filename} with ${entries.length} entries`);
+  const sitemapNames = Object.keys(entries);
+  for (const name of sitemapNames) {
+    const filename = GPU_CHIPSETS_FILENAME.replace('{i}', `${name}`);
+    await writeSitemap(sitemapPath(filename), entries[name]);
+    const url = sitemapUrl(filename, { compressed: true });
+    sitemapIndexEntries.push({
+      url,
+      lastModification: new Date(lastModifications[name]),
+    });
+    console.log(`Generated ${filename} with ${entries[name].length} entries`);
   }
 
   console.log(`${totalEntries} total entries for GPU chipsets sitemaps`);
 
-  return sitemapUrls;
+  return sitemapIndexEntries;
 }
 
 async function writeGpuRetailModelsSitemap(gpuSlugs: SitemapProductSlug[]) {
   console.log('Generating GPU Retail Models sitemap');
 
-  let fileCounter = 0;
-  let entries: SitemapEntry[] = [];
   let totalEntries = 0;
-  const sitemapUrls: string[] = [];
+  const sitemapIndexEntries: SitemapIndexEntry[] = [];
+  const entries: Record<string, SitemapEntry[]> = {};
+  const lastModifications: Record<string, number> = {};
 
   for (let i = 0; i < gpuSlugs.length - 1; ++i) {
     const gpuSlug = gpuSlugs[i];
@@ -311,45 +330,40 @@ async function writeGpuRetailModelsSitemap(gpuSlugs: SitemapProductSlug[]) {
     const lastModification =
       lastModTimestamp != 0 ? new Date(lastModTimestamp) : undefined;
 
-    entries.push({ url, lastModification });
-    ++totalEntries;
-
-    if (entries.length >= PRODUCTS_PER_SITEMAP) {
-      const filename = GPU_RETAIL_MODELS_FILENAME.replace(
-        '{i}',
-        `${fileCounter}`,
-      );
-      await writeSitemap(sitemapPath(filename), entries);
-      sitemapUrls.push(sitemapUrl(filename, { compressed: true }));
-      console.log(`Generated  ${filename} with ${entries.length} entries`);
-
-      entries = [];
-      fileCounter++;
+    const name = getSitemapName(url, 1);
+    if (!entries[name]) {
+      entries[name] = [];
+      lastModifications[name] = 0;
     }
+
+    entries[name].push({ url, lastModification });
+    ++totalEntries;
   }
 
-  if (entries.length > 0) {
-    const filename = GPU_RETAIL_MODELS_FILENAME.replace(
-      '{i}',
-      `${fileCounter}`,
-    );
-    await writeSitemap(sitemapPath(filename), entries);
-    sitemapUrls.push(sitemapUrl(filename, { compressed: true }));
-    console.log(`Generated ${filename} with ${entries.length} entries`);
+  const sitemapNames = Object.keys(entries);
+  for (const name of sitemapNames) {
+    const filename = GPU_RETAIL_MODELS_FILENAME.replace('{i}', `${name}`);
+    await writeSitemap(sitemapPath(filename), entries[name]);
+    const url = sitemapUrl(filename, { compressed: true });
+    sitemapIndexEntries.push({
+      url,
+      lastModification: new Date(lastModifications[name]),
+    });
+    console.log(`Generated ${filename} with ${entries[name].length} entries`);
   }
 
   console.log(`${totalEntries} total entries for GPU Retail Models sitemaps`);
 
-  return sitemapUrls;
+  return sitemapIndexEntries;
 }
 
 async function writeGpuComparisonsSitemap(gpuSlugs: SitemapProductSlug[]) {
   console.log('Generating GPU Comparison sitemap');
 
-  let fileCounter = 0;
-  let entries: SitemapEntry[] = [];
   let totalEntries = 0;
-  const sitemapUrls: string[] = [];
+  const sitemapIndexEntries: SitemapIndexEntry[] = [];
+  const entries: Record<string, SitemapEntry[]> = {};
+  const lastModifications: Record<string, number> = {};
 
   for (let i = 0; i < gpuSlugs.length - 1; ++i) {
     for (let j = i + 1; j < gpuSlugs.length; ++j) {
@@ -381,41 +395,55 @@ async function writeGpuComparisonsSitemap(gpuSlugs: SitemapProductSlug[]) {
       const lastModification =
         lastModTimestamp != 0 ? new Date(lastModTimestamp) : undefined;
 
-      entries.push({ url: url1, lastModification });
-      entries.push({ url: url2, lastModification });
-      totalEntries += 2;
+      const name1 = getSitemapName(url1, 3);
+      const name2 = getSitemapName(url2, 3);
 
-      if (entries.length >= COMPARISONS_PER_SITEMAP) {
-        const filename = GPU_COMPARISONS_FILENAME.replace(
-          '{i}',
-          `${fileCounter}`,
-        );
-        await writeSitemap(sitemapPath(filename), entries);
-        sitemapUrls.push(sitemapUrl(filename, { compressed: true }));
-        console.log(`Generated  ${filename} with ${entries.length} entries`);
-
-        entries = [];
-        fileCounter++;
+      if (!entries[name1]) {
+        entries[name1] = [];
+        lastModifications[name1] = 0;
       }
+      if (!entries[name2]) {
+        entries[name2] = [];
+        lastModifications[name2] = 0;
+      }
+
+      entries[name1].push({ url: url1, lastModification });
+      entries[name2].push({ url: url2, lastModification });
+      lastModifications[name1] = Math.max(
+        lastModifications[name1],
+        lastModTimestamp,
+      );
+      lastModifications[name2] = Math.max(
+        lastModifications[name2],
+        lastModTimestamp,
+      );
+      totalEntries += 2;
     }
   }
 
-  if (entries.length > 0) {
-    const filename = GPU_COMPARISONS_FILENAME.replace('{i}', `${fileCounter}`);
-    await writeSitemap(sitemapPath(filename), entries);
-    sitemapUrls.push(sitemapUrl(filename, { compressed: true }));
-    console.log(`Generated ${filename} with ${entries.length} entries`);
+  const sitemapNames = Object.keys(entries);
+  for (const name of sitemapNames) {
+    const filename = GPU_COMPARISONS_FILENAME.replace('{i}', `${name}`);
+    await writeSitemap(sitemapPath(filename), entries[name]);
+    const url = sitemapUrl(filename, { compressed: true });
+    sitemapIndexEntries.push({
+      url,
+      lastModification: new Date(lastModifications[name]),
+    });
+    console.log(`Generated ${filename} with ${entries[name].length} entries`);
   }
 
   console.log(`${totalEntries} total entries for GPU Comparison sitemaps`);
 
-  return sitemapUrls;
+  return sitemapIndexEntries;
 }
 
 // Sitemap Utils
 
-async function writeSitemapIndex(sitemapUrls: string[]) {
-  const items = sitemapUrls.map((loc) => ({ sitemap: [{ loc }] }));
+async function writeSitemapIndex(sitemapIndexEntries: SitemapIndexEntry[]) {
+  const items = sitemapIndexEntries.map((entry) =>
+    generateSitemapIndexEntryObject(entry),
+  );
 
   const indexObject = {
     sitemapindex: [
@@ -462,6 +490,19 @@ async function removeExistingSitemaps() {
   }
 }
 
+function generateSitemapIndexEntryObject(entry: SitemapIndexEntry) {
+  if (entry.lastModification != null) {
+    return {
+      sitemap: [
+        { loc: entry.url },
+        { lastmod: entry.lastModification.toISOString().split('T')[0] },
+      ],
+    };
+  }
+
+  return { sitemap: [{ loc: entry.url }] };
+}
+
 function generateSitemapUrlObject(entry: SitemapEntry) {
   if (entry.lastModification != null) {
     return {
@@ -505,24 +546,38 @@ async function uploadSitemaps(context: AutomationContext) {
     promises.push(() => uploadSitemap(sitemapPath(file), context));
   }
   await concurrent(promises, {
-    limit: 5,
+    limit: FILES_PER_UPLOAD,
     delayBetweenChunksMs: DELAY_BETWEEN_UPLOAD,
   });
 }
 
 async function uploadSitemap(path: string, context: AutomationContext) {
-  const data = new FormData();
-  data.append('file', fs.createReadStream(path));
-  console.log(`Uploading sitemap: ${path}`);
-  await context.api.post(
-    'website/sitemap',
-    data,
-    {},
-    {
-      headers: { 'content-type': 'multipart/form-data' },
-      maxBodyLength: Infinity,
-      maxContentLength: Infinity,
-    },
-  );
-  console.log(`Uploaded ${path}`);
+  try {
+    const data = new FormData();
+    data.append('file', fs.createReadStream(path));
+    console.log(`Uploading sitemap: ${path}`);
+    await context.api.post(
+      'website/sitemap',
+      data,
+      {},
+      {
+        headers: { 'content-type': 'multipart/form-data' },
+        maxBodyLength: Infinity,
+        maxContentLength: Infinity,
+      },
+    );
+    console.log(`Uploaded ${path}`);
+  } catch (err) {
+    console.error(`Could not upload: ${path}`);
+    console.error(err);
+  }
+}
+
+function generateUuid(value: string) {
+  return uuid.v3(value, '00000000-0000-0000-0000-000000000000');
+}
+
+function getSitemapName(url: string, size: number) {
+  const uuid = generateUuid(url);
+  return uuid.substring(0, size) || '0';
 }
