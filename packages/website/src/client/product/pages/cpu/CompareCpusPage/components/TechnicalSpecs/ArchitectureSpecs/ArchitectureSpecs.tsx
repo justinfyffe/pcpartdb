@@ -29,9 +29,7 @@ export const ArchitectureSpecs: FunctionComponent<ArchitectureSpecsProps> = (
     !hasProductFieldFormattedValue(cpu1.fields?.eccMemory) &&
     !hasProductFieldFormattedValue(cpu2.fields?.eccMemory) &&
     !hasProductFieldFormattedValue(cpu1.fields?.pciExpress) &&
-    !hasProductFieldFormattedValue(cpu2.fields?.pciExpress) &&
-    !hasProductFieldFormattedValue(cpu1.fields?.chipsets) &&
-    !hasProductFieldFormattedValue(cpu2.fields?.chipsets)
+    !hasProductFieldFormattedValue(cpu2.fields?.pciExpress)
   ) {
     return <></>;
   }

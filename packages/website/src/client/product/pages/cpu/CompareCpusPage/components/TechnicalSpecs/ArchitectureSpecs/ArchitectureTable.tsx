@@ -67,10 +67,6 @@ export const ArchitectureTable: FunctionComponent<ArchitectureTableProps> = (
           type={ProductType.Cpu}
           fields={[cpu1.fields?.pciExpress, cpu2.fields?.pciExpress]}
         />
-        <ProductFieldRow
-          type={ProductType.Cpu}
-          fields={[cpu1.fields?.chipsets, cpu2.fields?.chipsets]}
-        />
       </TBody>
     </Table>
   );

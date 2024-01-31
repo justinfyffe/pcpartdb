@@ -9,7 +9,7 @@ export const ArchitectureIntroParagraph = compileContentComponent({
   component: (props) => (
     <p className="text-dimmed">
       {props.name1} and {props.name2}&apos;s architecture specs like its
-      codename, memory support, PCI Express, and chipsets.
+      codename, memory support, and PCI Express.
     </p>
   ),
 });
