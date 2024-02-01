@@ -11,6 +11,8 @@ export const GeneralInfo: FunctionComponent = () => {
   if (
     !gpu1.company &&
     !gpu2.company &&
+    !hasProductFieldFormattedValue(gpu1.fields?.architecture) &&
+    !hasProductFieldFormattedValue(gpu2.fields?.architecture) &&
     !hasProductFieldFormattedValue(gpu1.fields?.marketSegment) &&
     !hasProductFieldFormattedValue(gpu2.fields?.marketSegment) &&
     !hasProductFieldFormattedValue(gpu1.fields?.releaseDate) &&

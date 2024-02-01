@@ -89,6 +89,10 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
         />
         <ProductFieldRow
           type={ProductType.Cpu}
+          fields={[cpu1.fields?.generation, cpu2.fields?.generation]}
+        />
+        <ProductFieldRow
+          type={ProductType.Cpu}
           fields={[cpu1.fields?.marketSegment, cpu2.fields?.marketSegment]}
         />
         <ProductFieldRow

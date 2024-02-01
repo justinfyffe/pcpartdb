@@ -11,6 +11,7 @@ export const GeneralInfo: FunctionComponent = () => {
     !gpu.company &&
     !hasProductFieldFormattedValue(gpu.fields?.architecture) &&
     !hasProductFieldFormattedValue(gpu.fields?.marketSegment) &&
+    !hasProductFieldFormattedValue(gpu.fields?.releaseDate) &&
     !hasProductFieldFormattedValue(gpu.fields?.msrp) &&
     !hasProductFieldFormattedValue(gpu.fields?.productionStatus)
   ) {

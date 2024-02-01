@@ -28,7 +28,7 @@ import { AutomationContext } from '../types';
 import { sitemapPath, sitemapUrl, websiteUrl } from '../utils/sitemap';
 
 const DELAY_BETWEEN_UPLOAD = 4_000;
-const FILES_PER_UPLOAD = 10;
+const FILES_PER_UPLOAD = 15;
 
 const INDEX_FILENAME = 'sitemap-index.xml';
 const GENERAL_FILENAME = 'sitemap-general.xml';
@@ -186,22 +186,14 @@ async function writeCpuComparisonsSitemap(cpuSlugs: SitemapProductSlug[]) {
       const cpuSlug1 = cpuSlugs[i];
       const cpuSlug2 = cpuSlugs[j];
 
-      const url1 = websiteUrl(
+      const url = websiteUrl(
         getCompareCpusPath({
           productType: ProductType.Cpu,
           comparison: [
             { id: cpuSlug1.productId, slug: cpuSlug1.slug },
             { id: cpuSlug2.productId, slug: cpuSlug2.slug },
           ],
-        }),
-      );
-      const url2 = websiteUrl(
-        getCompareCpusPath({
-          productType: ProductType.Cpu,
-          comparison: [
-            { id: cpuSlug2.productId, slug: cpuSlug2.slug },
-            { id: cpuSlug1.productId, slug: cpuSlug1.slug },
-          ],
+          ordered: true,
         }),
       );
       const lastModTimestamp = Math.max(
@@ -211,29 +203,19 @@ async function writeCpuComparisonsSitemap(cpuSlugs: SitemapProductSlug[]) {
       const lastModification =
         lastModTimestamp != 0 ? new Date(lastModTimestamp) : undefined;
 
-      const name1 = getSitemapName(url1, 3);
-      const name2 = getSitemapName(url2, 3);
+      const name = getSitemapName(url, 3);
 
-      if (!entries[name1]) {
-        entries[name1] = [];
-        lastModifications[name1] = 0;
-      }
-      if (!entries[name2]) {
-        entries[name2] = [];
-        lastModifications[name2] = 0;
+      if (!entries[name]) {
+        entries[name] = [];
+        lastModifications[name] = 0;
       }
 
-      entries[name1].push({ url: url1, lastModification });
-      entries[name2].push({ url: url2, lastModification });
-      lastModifications[name1] = Math.max(
-        lastModifications[name1],
+      entries[name].push({ url, lastModification });
+      lastModifications[name] = Math.max(
+        lastModifications[name],
         lastModTimestamp,
       );
-      lastModifications[name2] = Math.max(
-        lastModifications[name2],
-        lastModTimestamp,
-      );
-      totalEntries += 2;
+      totalEntries += 1;
     }
   }
 
@@ -370,22 +352,14 @@ async function writeGpuComparisonsSitemap(gpuSlugs: SitemapProductSlug[]) {
       const gpuSlug1 = gpuSlugs[i];
       const gpuSlug2 = gpuSlugs[j];
 
-      const url1 = websiteUrl(
+      const url = websiteUrl(
         getCompareGpusPath({
           productType: ProductType.Gpu,
           comparison: [
             { id: gpuSlug1.productId, slug: gpuSlug1.slug },
             { id: gpuSlug2.productId, slug: gpuSlug2.slug },
           ],
-        }),
-      );
-      const url2 = websiteUrl(
-        getCompareGpusPath({
-          productType: ProductType.Gpu,
-          comparison: [
-            { id: gpuSlug2.productId, slug: gpuSlug2.slug },
-            { id: gpuSlug1.productId, slug: gpuSlug1.slug },
-          ],
+          ordered: true,
         }),
       );
       const lastModTimestamp = Math.max(
@@ -395,29 +369,19 @@ async function writeGpuComparisonsSitemap(gpuSlugs: SitemapProductSlug[]) {
       const lastModification =
         lastModTimestamp != 0 ? new Date(lastModTimestamp) : undefined;
 
-      const name1 = getSitemapName(url1, 3);
-      const name2 = getSitemapName(url2, 3);
+      const sitemapName = getSitemapName(url, 3);
 
-      if (!entries[name1]) {
-        entries[name1] = [];
-        lastModifications[name1] = 0;
-      }
-      if (!entries[name2]) {
-        entries[name2] = [];
-        lastModifications[name2] = 0;
+      if (!entries[sitemapName]) {
+        entries[sitemapName] = [];
+        lastModifications[sitemapName] = 0;
       }
 
-      entries[name1].push({ url: url1, lastModification });
-      entries[name2].push({ url: url2, lastModification });
-      lastModifications[name1] = Math.max(
-        lastModifications[name1],
+      entries[sitemapName].push({ url, lastModification });
+      lastModifications[sitemapName] = Math.max(
+        lastModifications[sitemapName],
         lastModTimestamp,
       );
-      lastModifications[name2] = Math.max(
-        lastModifications[name2],
-        lastModTimestamp,
-      );
-      totalEntries += 2;
+      totalEntries += 1;
     }
   }
 

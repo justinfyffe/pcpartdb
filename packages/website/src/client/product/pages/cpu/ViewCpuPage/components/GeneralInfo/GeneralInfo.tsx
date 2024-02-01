@@ -11,6 +11,8 @@ export const GeneralInfo: FunctionComponent = () => {
     !cpu.company &&
     !hasProductFieldFormattedValue(cpu.fields?.marketSegment) &&
     !hasProductFieldFormattedValue(cpu.fields?.msrp) &&
+    !hasProductFieldFormattedValue(cpu.fields?.generation) &&
+    !hasProductFieldFormattedValue(cpu.fields?.releaseDate) &&
     !hasProductFieldFormattedValue(cpu.fields?.productionStatus)
   ) {
     return <></>;

@@ -57,11 +57,11 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
               }
             />
           )}
-          <ProductCustomRow label="Chipset" values={[chipset]} />
           <ProductCustomRow
             label="Company"
             values={[formatCompanyName(gpu.company) ?? '--']}
           />
+          <ProductCustomRow label="Chipset" values={[chipset]} />
           <ProductFieldRow
             type={ProductType.Gpu}
             fields={[gpu.fields?.architecture]}
