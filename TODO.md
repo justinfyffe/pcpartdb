@@ -1,8 +1,14 @@
 NEXT:
+- FPS Feature
+  - Above table showing fps: 1080p, 1440p, 4k toggles that update the table values
+    - table contains all games
+  - relative performance and value tables - select game to compare
+- Fix installation of inmobi choice and tag manager
+  - inmobi and tag manager must be at top of head
+  - Tag maanger noscript must be directly after body
+  - place in _document.tsx
 - Sitemaps:
   - upload sitemaps in a zip file, and unzip
-- Fix pages not returning as 404:
-  - e.g. https://pcpartdb.com/gpus/compare/amd-radeon-e8860--vs--amd-radeon-r9-m485x/
 
 SEO Improvements:
 - Improve view and compare html titles

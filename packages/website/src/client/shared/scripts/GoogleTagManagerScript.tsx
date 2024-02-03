@@ -44,14 +44,6 @@ export const GoogleTagManagerScript: FunctionComponent<
           `,
         }}
       />
-      <noscript>
-        <iframe
-          src={`https://www.googletagmanager.com/ns.html?id=${config.gtmId}`}
-          height="0"
-          width="0"
-          className="hidden invisible"
-        ></iframe>
-      </noscript>
     </>
   );
 };

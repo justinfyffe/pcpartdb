@@ -14,6 +14,9 @@ class MyDocument extends Document {
   }
 
   render() {
+    const enableGtm = process.env.ENABLE_GTM === 'true';
+    const gtmId = process.env.GTM_ID;
+
     return (
       <Html lang="en" className="bg-html">
         <Head>
@@ -53,6 +56,16 @@ class MyDocument extends Document {
           />
         </Head>
         <body>
+          {enableGtm && gtmId && (
+            <noscript>
+              <iframe
+                src={`https://www.googletagmanager.com/ns.html?id=${gtmId}`}
+                height="0"
+                width="0"
+                className="hidden invisible"
+              ></iframe>
+            </noscript>
+          )}
           <Main />
           <NextScript />
         </body>
