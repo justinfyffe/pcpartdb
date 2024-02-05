@@ -6,23 +6,19 @@ NEXT:
 - Sitemaps:
   - upload sitemaps in a zip file, and unzip
 - Tech Debt
+  - @next/third-parties for loading GTM
+    - Or add "id" to Script tag
   - Migrate from axios to fetch
   - Migrate to nextjs app router
     - Partial hydration
-
-SEO Improvements:
-- Improve view and compare html titles
-- Improve home page title
-- Improve list page titles
-- Improve keyword usages on website.
-- Update summary content.
-- Keyword research
-- Reduce size of next_data
-  - lots of extra data being passed - null fields, autoUpdate, benchmarks, ranks, etc.
-- Improve auto-generated summary
-  - shorter?
-  - add more manual summaries
-- rename "Best Value" -> "Best Performance Per Dollar"
+- SEO Improvements
+  - Improve titles
+  - Improve keyword usages
+  - Improve auto-generated summary
+- List Pages Improvements
+  - More sorts
+  - More filters
+  - Improved UI
 
 Home Page Improvements
 - Show Top 5 Performance & Performance per dollar
