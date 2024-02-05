@@ -3,12 +3,12 @@ NEXT:
   - Above table showing fps: 1080p, 1440p, 4k toggles that update the table values
     - table contains all games
   - relative performance and value tables - select game to compare
-- Fix installation of inmobi choice and tag manager
-  - inmobi and tag manager must be at top of head
-  - Tag maanger noscript must be directly after body
-  - place in _document.tsx
 - Sitemaps:
   - upload sitemaps in a zip file, and unzip
+- Tech Debt
+  - Migrate from axios to fetch
+  - Migrate to nextjs app router
+    - Partial hydration
 
 SEO Improvements:
 - Improve view and compare html titles
