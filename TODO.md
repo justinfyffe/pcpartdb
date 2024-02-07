@@ -6,8 +6,6 @@ NEXT:
 - Sitemaps:
   - upload sitemaps in a zip file, and unzip
 - Tech Debt
-  - @next/third-parties for loading GTM
-    - Or add "id" to Script tag
   - Migrate from axios to fetch
   - Migrate to nextjs app router
     - Partial hydration

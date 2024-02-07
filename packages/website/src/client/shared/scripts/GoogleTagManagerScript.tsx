@@ -1,3 +1,4 @@
+import { GoogleTagManager } from '@next/third-parties/google';
 import Script from 'next/script';
 import React, { FunctionComponent } from 'react';
 import { useConfig } from '../config/config-context';
@@ -16,7 +17,8 @@ export const GoogleTagManagerScript: FunctionComponent<
   return (
     <>
       <Script
-        strategy="afterInteractive"
+        id="gtm-datalayer"
+        strategy="beforeInteractive"
         dangerouslySetInnerHTML={{
           __html: `
             window.dataLayer = window.dataLayer || [];
@@ -32,7 +34,8 @@ export const GoogleTagManagerScript: FunctionComponent<
           `,
         }}
       />
-      <Script
+      <GoogleTagManager gtmId={config.gtmId} />;
+      {/* <Script
         strategy="afterInteractive"
         dangerouslySetInnerHTML={{
           __html: `
@@ -43,7 +46,7 @@ export const GoogleTagManagerScript: FunctionComponent<
             })(window,document,'script','dataLayer','${config.gtmId}');
           `,
         }}
-      />
+      /> */}
     </>
   );
 };
