@@ -34,7 +34,7 @@ export const GoogleTagManagerScript: FunctionComponent<
           `,
         }}
       />
-      <GoogleTagManager gtmId={config.gtmId} />;
+      <GoogleTagManager gtmId={config.gtmId} />
       {/* <Script
         strategy="afterInteractive"
         dangerouslySetInnerHTML={{
