@@ -5,14 +5,23 @@
     "rootDir": "src",
     "noEmit": true,
     "module": "esnext",
-    "isolatedModules": true
+    "isolatedModules": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "strictNullChecks": false
   },
   "include": [
     "./**/*.ts",
     "./**/*.tsx",
-    "./next-env.d.ts"
+    "./next-env.d.ts",
+    ".next/types/**/*.ts"
   ],
   "references": [
-    { "path": "../shared" }
+    {
+      "path": "../shared"
+    }
   ]
 }
