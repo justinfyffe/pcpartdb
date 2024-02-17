@@ -73,7 +73,7 @@ export async function updateSitemapsAction(
   );
 
   // Construct sitemaps
-  // await removeExistingSitemaps();
+  await removeExistingSitemaps();
   const sitemapIndexEntries = [
     await writeGeneralSitemap(),
     await writeCpuListsSitemap(),
@@ -87,7 +87,7 @@ export async function updateSitemapsAction(
   await writeSitemapIndex(sitemapIndexEntries);
 
   // Upload sitemap files
-  await uploadSitemaps(context);
+  // await uploadSitemaps(context);
 
   // Update execution details
   context.metadata = {
@@ -153,6 +153,10 @@ async function writeCpusSitemap(cpuSlugs: SitemapProductSlug[]) {
     }
 
     entries[name].push({ url, lastModification });
+    lastModifications[name] = Math.max(
+      lastModifications[name],
+      lastModTimestamp,
+    );
     ++totalEntries;
   }
 
@@ -276,6 +280,10 @@ async function writeGpuChipsetsSitemap(gpuSlugs: SitemapProductSlug[]) {
     }
 
     entries[name].push({ url, lastModification });
+    lastModifications[name] = Math.max(
+      lastModifications[name],
+      lastModTimestamp,
+    );
     ++totalEntries;
   }
 
@@ -319,6 +327,10 @@ async function writeGpuRetailModelsSitemap(gpuSlugs: SitemapProductSlug[]) {
     }
 
     entries[name].push({ url, lastModification });
+    lastModifications[name] = Math.max(
+      lastModifications[name],
+      lastModTimestamp,
+    );
     ++totalEntries;
   }
 
