@@ -87,7 +87,7 @@ export async function updateSitemapsAction(
   await writeSitemapIndex(sitemapIndexEntries);
 
   // Upload sitemap files
-  // await uploadSitemaps(context);
+  await uploadSitemaps(context);
 
   // Update execution details
   context.metadata = {
