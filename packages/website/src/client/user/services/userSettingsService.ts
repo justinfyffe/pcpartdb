@@ -1,4 +1,10 @@
-import { UpdateUserSettingsRequest, ViewGpuViewModel } from '@pcpartdb/shared';
+import {
+  CompareCpusViewModel,
+  CompareGpusViewModel,
+  UpdateUserSettingsRequest,
+  ViewCpuViewModel,
+  ViewGpuViewModel,
+} from '@pcpartdb/shared';
 import { ApiClient, apiClient } from '../../shared/api/apiClient';
 
 const PATH = 'user-settings';
@@ -6,8 +12,14 @@ const PATH = 'user-settings';
 export class UserSettingsService {
   constructor(private api: ApiClient) {}
 
-  async update(settings: UpdateUserSettingsRequest) {
-    return await this.api.post<ViewGpuViewModel | null>(PATH, settings);
+  async update(data: UpdateUserSettingsRequest) {
+    return await this.api.put<
+      | ViewCpuViewModel
+      | ViewGpuViewModel
+      | CompareCpusViewModel
+      | CompareGpusViewModel
+      | null
+    >(PATH, data);
   }
 }
 

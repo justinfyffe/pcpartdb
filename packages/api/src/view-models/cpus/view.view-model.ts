@@ -31,8 +31,9 @@ export class ViewCpuViewModelService {
     const timer = `ViewCpuViewModelService (${uuid.v4()})`;
     console.time(timer);
 
+    const userSettings = ctx.config?.userSettings;
     const preferredBenchmark = getPreferredBenchmark(
-      ctx.config?.userSettings,
+      userSettings,
       ProductType.Cpu,
     );
 

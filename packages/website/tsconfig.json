@@ -2,7 +2,7 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "outDir": ".next",
-    "rootDir": "src",
+    "rootDir": ".",
     "noEmit": true,
     "module": "esnext",
     "isolatedModules": true,

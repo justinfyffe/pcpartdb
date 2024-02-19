@@ -18,6 +18,14 @@ NEXT:
   - More filters
   - Improved UI
 
+App Router:
+- Add "Edit Page"
+
+AI Prompt
+- Simplify sentences like
+  - The NVIDIA GeForce RTX 4090 has a clock speed of 1,000 MHz.
+  - Rewrite these sentenes into an article.
+
 Home Page Improvements
 - Show Top 5 Performance & Performance per dollar
 

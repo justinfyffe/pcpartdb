@@ -65,7 +65,7 @@ const sizing = {
 };
 
 module.exports = {
-  content: ['./src/pages/**/*.{js,ts,jsx,tsx}', './src/client/**/*.{jsx,tsx}'],
+  content: ['./src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     screens: {
       '2xl': { max: '1535px' },

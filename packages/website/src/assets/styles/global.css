@@ -92,14 +92,6 @@ p {
   z-index: 1000;
 }
 
-@layer base {
-  input[type="number"]::-webkit-inner-spin-button,
-  input[type="number"]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
-}
-
 input[type="number"]::-webkit-outer-spin-button, 
 input[type="number"]::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -128,4 +120,25 @@ tr:nth-child(even) {
 
 ::placeholder {
   color: '#a9a9a9';
+}
+
+@layer base {
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
+@layer components {
+  .bordered-table {
+    td,th {
+      @apply border-y-px;
+    }
+    td:first-child, th:first-child {
+      @apply border-l-px;
+    }
+    td:last-child, th:last-child {
+      @apply border-r-px;
+    }
+  }
 }

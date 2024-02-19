@@ -1,0 +1,31 @@
+import { CpuProductComparison } from '@pcpartdb/shared';
+import React from 'react';
+import { ArchitectureSpecs } from './ArchitectureSpecs/ArchitectureSpecs';
+import { CacheSpecs } from './CacheSpecs/CacheSpecs';
+import { CoresSpecs } from './CoresSpecs/CoresSpecs';
+import { FeatureSpecs } from './FeatureSpecs/FeatureSpecs';
+import { PhysicalSpecs } from './PhysicalSpecs/PhysicalSpecs';
+import { PowerSpecs } from './PowerSpecs/PowerSpecs';
+
+interface TechnicalSpecsProps {
+  comparison: CpuProductComparison;
+}
+
+export function TechnicalSpecs(props: TechnicalSpecsProps) {
+  const { comparison } = props;
+
+  return (
+    <section className="flex flex-col">
+      <h2 className="font-semibold">Technical Specs</h2>
+
+      <div className="flex flex-col gap-6">
+        <PhysicalSpecs comparison={comparison} />
+        <ArchitectureSpecs comparison={comparison} />
+        <CoresSpecs comparison={comparison} />
+        <CacheSpecs comparison={comparison} />
+        <PowerSpecs comparison={comparison} />
+        <FeatureSpecs comparison={comparison} />
+      </div>
+    </section>
+  );
+}

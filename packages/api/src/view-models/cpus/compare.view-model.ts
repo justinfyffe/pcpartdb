@@ -34,8 +34,9 @@ export class CompareCpusViewModelService {
     const timer = `CompareCpusViewModelService (${uuid.v4()})`;
     console.time(timer);
 
+    const userSettings = ctx.config?.userSettings;
     const preferredBenchmark = getPreferredBenchmark(
-      ctx.config?.userSettings,
+      userSettings,
       ProductType.Cpu,
     );
 

@@ -8,7 +8,7 @@ import {
   WEBSITE_NAME,
 } from '@pcpartdb/shared';
 import React, { FunctionComponent, useCallback } from 'react';
-import { Button, ButtonVariant } from '../../components/Button/Button';
+import { Button } from '../../components/Button/Button';
 import {
   Footer,
   FooterSection,
@@ -52,12 +52,8 @@ export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
       </div>
 
       <Toolbar>
-        <Button href={getListGpusPath()} variant={ButtonVariant.None}>
-          Graphics Cards
-        </Button>
-        <Button href={getListCpusPath()} variant={ButtonVariant.None}>
-          Processors
-        </Button>
+        <Button href={getListGpusPath()}>Graphics Cards</Button>
+        <Button href={getListCpusPath()}>Processors</Button>
       </Toolbar>
 
       <div className="bg-html">

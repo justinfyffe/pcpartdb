@@ -1,0 +1,22 @@
+import React, { FunctionComponent } from 'react';
+import { Benchmarks } from './Benchmarks/Benchmarks';
+import { PerformanceAndValueCharts } from './PerformanceAndValueCharts';
+import { RelativePerformance } from './RelativePerformance/RelativePerformance';
+import { RelativeValue } from './RelativeValue/RelativeValue';
+
+export const PerformanceAndValue: FunctionComponent = () => {
+  return (
+    <section className="flex flex-col">
+      <h2 className="font-semibold">Performance &amp; Value For Money</h2>
+
+      <div className="flex flex-col gap-6">
+        <PerformanceAndValueCharts />
+        <div className="flex gap-6 md:flex-col md:gap-6">
+          <RelativePerformance />
+          <RelativeValue />
+        </div>
+        <Benchmarks />
+      </div>
+    </section>
+  );
+};

@@ -51,7 +51,7 @@ export function hasProductFieldRawValue(field: ProductField) {
   return true;
 }
 
-export function hasProductFieldFormattedValue(field: ProductField) {
+export function hasProductFieldFormattedValue(field?: ProductField) {
   if (field == null) {
     return false;
   }
@@ -67,11 +67,11 @@ export function hasProductFieldFormattedValue(field: ProductField) {
   return true;
 }
 
-export function hasProductFieldValue(field: ProductField) {
+export function hasProductFieldValue(field?: ProductField) {
   return hasProductFieldRawValue(field) || hasProductFieldFormattedValue(field);
 }
 
-export function productFieldRawValue<T = unknown>(field: ProductField<T>) {
+export function productFieldRawValue<T = unknown>(field?: ProductField<T>) {
   if (!hasProductFieldRawValue(field)) {
     return null;
   }
@@ -79,7 +79,7 @@ export function productFieldRawValue<T = unknown>(field: ProductField<T>) {
   return field.value as T;
 }
 
-export function productFieldFormattedValue(field: ProductField) {
+export function productFieldFormattedValue(field?: ProductField) {
   if (!hasProductFieldFormattedValue(field)) {
     return null;
   }

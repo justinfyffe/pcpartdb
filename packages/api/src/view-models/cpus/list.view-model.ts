@@ -41,8 +41,9 @@ export class ListCpusViewModelService {
       query,
     );
 
+    const userSettings = ctx.config?.userSettings;
     const preferredBenchmark = getPreferredBenchmark(
-      ctx.config?.userSettings,
+      userSettings,
       ProductType.Cpu,
     );
     const response = await this.productService.list(

@@ -1,4 +1,5 @@
 import { GpuProduct, GpuProductComparison, ListGpusResponse } from '../product';
+import { UserSettings } from '../user';
 
 export interface CompareGpusViewModel {
   comparison: GpuProductComparison;

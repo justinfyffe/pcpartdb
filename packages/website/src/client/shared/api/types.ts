@@ -3,7 +3,7 @@ import { AxiosRequestConfig } from 'axios';
 import { NextPageContext } from 'next';
 
 export interface RequestConfig extends AxiosRequestConfig {
-  nextPageContext?: NextPageContext;
+  nextPageContext?: Partial<NextPageContext>;
   preferredBenchmarks?: {
     cpu?: BenchmarkKey | string;
     gpu?: BenchmarkKey | string;

@@ -1,0 +1,65 @@
+import { getAboutPath, getHomePath, WEBSITE_NAME } from '@pcpartdb/shared';
+import { Metadata } from 'next';
+import React from 'react';
+import { Breadcrumb } from '../../_common/components/Breadcrumbs/Breadcrumb';
+import { Breadcrumbs } from '../../_common/components/Breadcrumbs/Breadcrumbs';
+
+const TITLE = 'About Us';
+
+export const metadata: Metadata = {
+  title: `${TITLE} - ${WEBSITE_NAME}`,
+  description: 'Mission statement and contact details for PC Part DB.',
+  alternates: {
+    canonical: getAboutPath(),
+  },
+};
+
+export default function AboutPage() {
+  return (
+    <>
+      <Breadcrumbs className="mb-4">
+        <Breadcrumb href={getHomePath()}>Home</Breadcrumb>
+        <Breadcrumb>{TITLE}</Breadcrumb>
+      </Breadcrumbs>
+
+      <article>
+        <h1 className="font-semibold mb-4">{TITLE}</h1>
+
+        <section>
+          <p>
+            {WEBSITE_NAME} was created to provide a better experience for anyone
+            researching PC hardware. Our website&apos;s tools and comprehensive
+            database of parts will help you make an informed choice of which
+            part you should add to your PC build.
+          </p>
+
+          <p>
+            We have an exciting roadmap with plans for more content and tools
+            that will further help the PC community. If you have any feedback,
+            questions, or requests, then please reach out to our emails listed
+            below. We thank you for your support.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="font-semibold">For advertising inquiries</h2>
+          <p>advertise@pcpartdb.com</p>
+        </section>
+
+        <section>
+          <h2 className="font-semibold">For other inquiries</h2>
+          <p>hello@pcpartdb.com</p>
+        </section>
+
+        <section>
+          <h2 className="font-semibold">Affilliate Disclaimer</h2>
+          <p>
+            {WEBSITE_NAME} is a participant in the Amazon Services LLC
+            Associates Program, an affiliate advertising program. We earn from
+            qualifying purchases made through Amazon.com.
+          </p>
+        </section>
+      </article>
+    </>
+  );
+}

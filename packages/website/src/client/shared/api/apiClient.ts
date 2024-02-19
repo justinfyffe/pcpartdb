@@ -29,6 +29,40 @@ export class ApiClient {
     return await this.request<T>('DELETE', path, data, config);
   }
 
+  async fetchGet<T = unknown>(path: string, config?: RequestInit) {
+    return await this.requestFetch<T>('GET', path, undefined, config);
+  }
+
+  private async requestFetch<T = unknown>(
+    method: Method,
+    path: string,
+    data?: unknown | FormData,
+    config?: RequestInit,
+  ) {
+    try {
+      const url = joinUrlParts(this.baseUrl, 'api', path);
+      let body;
+      if (body != null) {
+        if (data instanceof FormData) {
+          body = data;
+        } else {
+          body = JSON.stringify(data);
+        }
+      }
+
+      const response = await fetch(url, {
+        ...config,
+        method,
+        body,
+        credentials: 'include',
+      });
+      return (await response.json()) as T;
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  }
+
   private async request<T = unknown>(
     method: Method,
     path: string,
