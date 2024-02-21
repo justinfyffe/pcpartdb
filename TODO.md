@@ -7,19 +7,37 @@ NEXT:
   - upload sitemaps in a zip file, and unzip
 - Tech Debt
   - Migrate from axios to fetch
-  - Migrate to nextjs app router
-    - Partial hydration
 - SEO Improvements
   - Improve titles
+    - Name1 - Benchmarks, Specs, and Game Performance
+    - Name1 vs Name2 - Benchmarks, Specs, and Game Performance
   - Improve keyword usages
   - Improve auto-generated summary
+    - Better AI prompt
 - List Pages Improvements
   - More sorts
   - More filters
   - Improved UI
 
-App Router:
-- Add "Edit Page"
+UI Improvements
+- Related Comparisons
+  - Show vertically:
+    Name1
+     vs
+    Name2
+
+Bug Fixes:
+- Compare Products Form
+  - Jankiness when typing. Setting query after fetching?
+
+Finish Migrating App Router:
+- Admin panel
+- 404 pages
+- login
+- register
+- forgot password
+- reset password
+- catchAll
 
 AI Prompt
 - Simplify sentences like
