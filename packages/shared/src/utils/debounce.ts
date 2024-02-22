@@ -10,8 +10,8 @@ export const debounce = <T extends (...args: any[]) => ReturnType<T>>(
 
   return (...args: Parameters<T>) => {
     clearTimeout(timer);
-    timer = setTimeout(() => {
-      callback(...args);
+    timer = setTimeout(async () => {
+      await callback(...args);
     }, timeout);
   };
 };

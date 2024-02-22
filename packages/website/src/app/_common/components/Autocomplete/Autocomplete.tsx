@@ -10,7 +10,7 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import { useThrottle } from '../../hooks/useThrottle';
+import { useDebounce } from '../../hooks/useDebounce';
 import { classNames } from '../../utils/classNames';
 import { TextInput, TextInputProps } from '../Input/TextInput';
 import { Spinner } from '../Spinner/Spinner';
@@ -18,7 +18,7 @@ import { AutocompleteContext } from './AutocompleteContext';
 import { AutocompleteOptionProps } from './AutocompleteOption';
 import { AutocompleteResult } from './types';
 
-const DEFAULT_THROTTLE_MS = 500;
+const DEFAULT_THROTTLE_MS = 300;
 
 export interface AutocompleteProps extends Omit<TextInputProps, 'value'> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -90,35 +90,40 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
       onClose?.();
     }, [isOpen, onClose]);
 
-    const handleQuery = useCallback(
-      async (query: string) => {
-        if (freeSolo) {
-          onChange?.(query != null ? query : null);
-        } else if (query == null) {
-          onChange?.(null);
-        }
+    const handleQueryChange = useDebounce(
+      useCallback(
+        async (query: string) => {
+          if (freeSolo) {
+            onChange?.(query != null ? query : null);
+          } else if (query == null) {
+            onChange?.(null);
+          }
 
-        if (query == null) {
-          return;
-        }
+          if (query == null) {
+            return;
+          }
 
-        setQuery(query);
-        setLoading(true);
-        setHoveredIndex(-1);
-        const hasResults = await onQuery(query);
-        setLoading(false);
+          setLoading(true);
+          setHoveredIndex(-1);
+          const hasResults = await onQuery(query);
+          setLoading(false);
 
-        if (hasResults) {
-          openResults();
-        } else {
-          closeResults();
-        }
-      },
-      [closeResults, freeSolo, onChange, onQuery, openResults],
-    );
-    const throttledOnChange = useThrottle(
-      handleQuery,
+          if (hasResults) {
+            openResults();
+          } else {
+            closeResults();
+          }
+        },
+        [closeResults, freeSolo, onChange, onQuery, openResults],
+      ),
       throttleTimeout ?? DEFAULT_THROTTLE_MS,
+    );
+    const handleOnChange = useCallback(
+      (query: string) => {
+        setQuery(query);
+        handleQueryChange(query);
+      },
+      [handleQueryChange],
     );
 
     const handleKeyDown = useCallback(
@@ -229,7 +234,7 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
             }
             placeholder={placeholder}
             value={query || ''}
-            onChange={throttledOnChange}
+            onChange={handleOnChange}
             onKeyDown={handleKeyDown}
             onBlur={handleBlur}
             onFocus={handleFocus}
