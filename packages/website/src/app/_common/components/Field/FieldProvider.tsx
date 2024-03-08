@@ -16,7 +16,7 @@ export interface FieldProviderProps {
 }
 
 export function FieldProvider(props: FieldProviderProps) {
-  const fieldId = `field-id-${Math.floor(Math.random() * 99_999)}`;
+  const fieldId = props.fieldId;
 
   return (
     <FieldContext.Provider value={{ fieldId }}>

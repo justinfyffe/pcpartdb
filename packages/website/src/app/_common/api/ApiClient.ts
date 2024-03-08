@@ -1,4 +1,4 @@
-import { joinUrlParts } from '@pcpartdb/shared';
+import { isApiError, joinUrlParts } from '@pcpartdb/shared';
 
 export class ApiClient {
   constructor(private baseUrl: string) {}
@@ -15,7 +15,11 @@ export class ApiClient {
     return await this.request<T>('PUT', path, data, config);
   }
 
-  async delete<T = unknown>(path: string, data: unknown, config?: RequestInit) {
+  async delete<T = unknown>(
+    path: string,
+    data?: unknown,
+    config?: RequestInit,
+  ) {
     return await this.request<T>('DELETE', path, data, config);
   }
 
@@ -55,8 +59,15 @@ export class ApiClient {
         body,
         credentials: 'include',
       });
+
       const text = await response.text();
-      return text.length > 0 ? (JSON.parse(text) as T) : null;
+      const responseValue = text.length > 0 ? (JSON.parse(text) as T) : null;
+
+      if (!response.ok) {
+        throw responseValue;
+      }
+
+      return responseValue;
     } catch (err) {
       console.error(err);
       throw err;

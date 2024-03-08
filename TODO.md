@@ -1,4 +1,5 @@
 NEXT:
+- Verify inmobi choice
 - FPS Feature
   - Above table showing fps: 1080p, 1440p, 4k toggles that update the table values
     - table contains all games
@@ -14,12 +15,14 @@ NEXT:
   - Improve keyword usages
   - Improve auto-generated summary
     - Better AI prompt
+  - Redirect sitemap-index.xml to sitemap-index.xml.gz
 - List Pages Improvements
   - More sorts
   - More filters
   - Improved UI
 
 UI Improvements
+- Increase font size of comparison percentages
 - Related Comparisons
   - Show vertically:
     Name1
@@ -27,17 +30,13 @@ UI Improvements
     Name2
 
 Bug Fixes:
-- Compare Products Form
-  - Jankiness when typing. Setting query after fetching?
 
-Finish Migrating App Router:
+Migrating to App Router:
+- API endpoint
+  - Cannot do yet: https://github.com/chimurai/http-proxy-middleware/issues/932
+- 404
+  - Just need to migrate admin panel
 - Admin panel
-- 404 pages
-- login
-- register
-- forgot password
-- reset password
-- catchAll
 
 AI Prompt
 - Simplify sentences like

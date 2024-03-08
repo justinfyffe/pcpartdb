@@ -13,8 +13,8 @@ export interface ValidationPropertyError {
 
 export interface ApiError<T = unknown> {
   type: HttpErrorType;
-  statusCode: number;
-  timestamp: string;
+  statusCode?: number;
+  timestamp?: string;
   data?: T;
 }
 

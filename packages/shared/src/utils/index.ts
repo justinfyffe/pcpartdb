@@ -1,3 +1,5 @@
+export * from './base64Decode';
+export * from './base64Encode';
 export * from './binarySearch';
 export * from './camelize';
 export * from './cleanUrl';

@@ -1,6 +1,10 @@
 import '../../assets/styles/global.css';
 import {
+  ApiError,
+  base64Decode,
   Config,
+  CONFIG_HEADER,
+  ERROR_HEADER,
   getAboutPath,
   getHomePath,
   getListCpusPath,
@@ -8,15 +12,16 @@ import {
   getPrivacyPath,
   WEBSITE_NAME,
 } from '@pcpartdb/shared';
-import { cookies } from 'next/headers';
+import { Metadata } from 'next';
+import { headers } from 'next/headers';
 import React from 'react';
-import { apiClient } from '../_common/api/ApiClient';
 import { Button } from '../_common/components/Button/Button';
 import { ButtonVariant } from '../_common/components/Button/types';
 import { List, ListItem } from '../_common/components/List/List';
 import { Toolbar } from '../_common/components/Toolbar/Toolbar';
 import { ConfigProvider } from '../_common/contexts/ConfigProvider';
 import { UserSettingsProvider } from '../_common/contexts/UserSettingsProvider';
+import { ErrorPage } from '../_common/errors/ErrorPage/ErrorPage';
 import { CookieConsentScript } from '../_common/third-party/CookieConsentScript';
 import { GoogleTagManagerScript } from '../_common/third-party/GoogleTagManagerScript';
 import { ManageCookiesLink } from '../_common/third-party/ManageCookiesLink';
@@ -25,10 +30,15 @@ interface RootLayoutProps {
   children: React.ReactNode;
 }
 
+export async function generateMetadata(): Promise<Metadata> {
+  const error = base64Decode<ApiError | null>(headers().get(ERROR_HEADER));
+
+  return { robots: error != null ? 'noindex' : undefined };
+}
+
 export default async function RootWebsiteLayout(props: RootLayoutProps) {
-  const config = await apiClient.get<Config>('config', {
-    headers: { Cookie: cookies().toString() },
-  });
+  const config = base64Decode<Config>(headers().get(CONFIG_HEADER));
+  const error = base64Decode<ApiError | null>(headers().get(ERROR_HEADER));
 
   const enableGtm = process.env.ENABLE_GTM === 'true';
   const gtmId = process.env.GTM_ID;
@@ -101,7 +111,8 @@ export default async function RootWebsiteLayout(props: RootLayoutProps) {
 
             <div className="bg-html">
               <main className="border-x-px bg-content container p-container md:px-4 text-base text-content w-full">
-                {props.children}
+                {error == null && <>{props.children}</>}
+                {error != null && <ErrorPage error={error} />}
               </main>
             </div>
 

@@ -1,5 +1,5 @@
-import NotFoundPage from 'packages/website/src/pages/404';
 import React from 'react';
+import { NotFoundPage } from '../../errors/pages/NotFoundPage/NotFoundPage';
 
 export const withUserGuard = (WrappedComponent: React.ComponentType<any>) => {
   const displayName =
