@@ -74,7 +74,7 @@ export const ProductBenchmarkRow: FunctionComponent<
         >
           <div className={classNames('flex gap-2 items-center')}>
             <span>{value?.toLocaleString() ?? '--'}</span>
-            <span className="text-xs">{diffs[i] && <>(+{diffs[i]}%)</>}</span>
+            <span className="text-sm">{diffs[i] && <>(+{diffs[i]}%)</>}</span>
           </div>
         </Td>
       ))}

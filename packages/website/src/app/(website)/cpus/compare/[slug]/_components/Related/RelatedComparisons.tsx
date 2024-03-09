@@ -1,6 +1,6 @@
 import {
   CpuProductComparison,
-  formatProductComparisonName,
+  formatProductName,
   getCompareCpusPath,
 } from '@pcpartdb/shared';
 import { Button } from 'packages/website/src/app/_common/components/Button/Button';
@@ -29,15 +29,33 @@ export const RelatedComparisons: FunctionComponent<RelatedComparisonsProps> = (
 
       <div className="flex flex-row flex-wrap gap-4 font-semibold">
         {relatedComparisons.map((comparison, i) => (
-          <Button
-            key={i}
-            variant={ButtonVariant.Card}
-            href={getCompareCpusPath({ comparison })}
-          >
-            {formatProductComparisonName(comparison)}
-          </Button>
+          <ComparisonCard key={i} comparison={comparison} />
         ))}
       </div>
     </section>
   );
 };
+
+interface ComparisonCardProps {
+  comparison: CpuProductComparison;
+}
+
+function ComparisonCard(props: ComparisonCardProps) {
+  const { comparison } = props;
+
+  const name1 = formatProductName(comparison[0]);
+  const name2 = formatProductName(comparison[1]);
+
+  return (
+    <Button
+      variant={ButtonVariant.Card}
+      href={getCompareCpusPath({ comparison })}
+    >
+      {name1}
+      <br />
+      vs
+      <br />
+      {name2}
+    </Button>
+  );
+}

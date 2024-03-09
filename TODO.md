@@ -21,13 +21,7 @@ NEXT:
   - More filters
   - Improved UI
 
-UI Improvements
-- Increase font size of comparison percentages
-- Related Comparisons
-  - Show vertically:
-    Name1
-     vs
-    Name2
+UI Improvements:
 
 Bug Fixes:
 
