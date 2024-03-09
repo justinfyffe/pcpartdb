@@ -59,16 +59,12 @@ Scraping Improvements:
 - Support GPU Clock from TechPowerUp:
   - https://www.techpowerup.com/gpu-specs/geforce-gtx-460-v2.c356
 
-JS ISSUE?
-- List page: VM482 cmp2.js:1 Uncaught TypeError: n is not a function
-
 ADS:
 - consider adjusting the side color for side auto ads
 - how to show anchor ads on bottom in mobile?
 - consider google cmp (last resort)
 
 When Bored:
-- Migrate to react-query instead of axios
 - Make autocomplete stricter, not looser when searching?
 - Improve db performance using queryRaw, but only in places where it'll help 
 
@@ -88,7 +84,6 @@ Analytics:
 
 Automation:
 - Add more scrapers as they're needed
-  - Notebook Check
   - Intel Website?
   - AMD Website?
 - Improve automation autocomplete
@@ -100,8 +95,6 @@ Automation:
   - Add ability to requeue
 
 Content:
-- Synthetic performance score. Compute a score based on available data.
-  - Can predict data based on gpus with similar scores in other benchmarks
 - Use consistent naming like "(OEM)" and "(Mobile)"
 - Fill in any missing release date quarters
 - Add articles
@@ -130,7 +123,6 @@ Content:
 
 Monetization:
 - Join amazon affiliate for other major countries
-- Sign up for Adsense
 - Expand content for more ads
   - View page, Compare page, list page
 - Integrate with Amazon API (when qualified)
