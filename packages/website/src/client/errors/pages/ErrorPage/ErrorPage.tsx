@@ -11,6 +11,8 @@ export interface ErrorPageProps {
 export const ErrorPage = (props: ErrorPageProps) => {
   const { error } = props;
 
+  console.error(error);
+
   if (error.type === HttpErrorType.NotFoundError) {
     return <NotFoundPage />;
   } else {

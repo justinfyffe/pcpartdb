@@ -9,6 +9,8 @@ interface ErrorPageProps {
 export function ErrorPage(props: ErrorPageProps) {
   const { error } = props;
 
+  console.error(error);
+
   if (error?.type === HttpErrorType.ForbiddenError) {
     return <ForbiddenErrorPage error={error} />;
   }

@@ -14,7 +14,6 @@ NEXT:
     - Name1 vs Name2 - Benchmarks, Specs, and Game Performance
   - Improve keyword usages
   - Improve auto-generated summary
-    - Better AI prompt
   - Redirect sitemap-index.xml to sitemap-index.xml.gz
 - List Pages Improvements
   - More sorts
@@ -22,11 +21,11 @@ NEXT:
   - Improved UI
 
 Improve AI Summary
-- Use simple sentences for ai prompt.
-- show date it was written
-- add fields for missing data on products list that need summaries written?
+- [X] Use simple sentences for ai prompt.
+- [] show date it was written
+- [] add fields for missing data on products list that need summaries written?
   - maybe can check for various fields too (marketSegment, releaseDate, msrp, productionStatus, company)
-- unknowns:
+- [] unknowns:
   - How to remember to update them when production status (or other critical values) changes?
     - Maybe reset summary when these change:
       - productionStatus
@@ -45,6 +44,7 @@ Improve AI Summary
       - memoryBandwidth?
     - Maybe add warning to automation update when the above changes?
       - add an enum field on product for summary warning
+  - How to improve efficiency
 
 Admin Improvements:
 - Chipset sources - apply should exclude non-retail-models
@@ -52,7 +52,6 @@ Admin Improvements:
 UI Improvements:
 
 Bug Fixes:
-- Saving production throws error (but still saves)
 
 Migrating to App Router:
 - API endpoint

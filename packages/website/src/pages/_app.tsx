@@ -55,7 +55,9 @@ MyApp.getInitialProps = async (appContext: AppContext) => {
   try {
     appProps = await App.getInitialProps(appContext);
     appProps.pageProps = { ...appProps.pageProps, config };
-    appContext.ctx.res.statusCode = appProps.pageProps?.statusCode ?? 200;
+    if (appContext?.ctx?.res?.statusCode) {
+      appContext.ctx.res.statusCode = appProps.pageProps?.statusCode ?? 200;
+    }
   } catch (error) {
     appProps = { pageProps: { error, config } };
   }

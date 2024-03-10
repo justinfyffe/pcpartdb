@@ -28,7 +28,6 @@ export const AdminListProductsPage = () => {
   const seoRobots = [MetaRobots.NOINDEX, MetaRobots.NOFOLLOW];
 
   const context = useAdminListProductsContextBuilder();
-  console.log(context);
 
   return (
     <AdminLayout>
