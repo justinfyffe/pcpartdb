@@ -1,22 +1,25 @@
+import { GpuProduct } from '@pcpartdb/shared';
 import React, { FunctionComponent } from 'react';
 import { CompatibilityBlurb } from './CompatibilityBlurb';
 import { IntroBlurb } from './IntroBlurb';
 import { MemoryBlurb } from './MemoryBlurb';
 import { PerformanceBlurb } from './PerformanceBlurb';
-import { PowerSupplyBlurb } from './PowerSupplyBlurb';
 
-interface GpuRetailModelSummaryProps {}
+interface GpuRetailModelSummaryProps {
+  product: GpuProduct;
+}
 
 export const GpuRetailModelSummary: FunctionComponent<
   GpuRetailModelSummaryProps
-> = (_props) => {
+> = (props) => {
+  const { product } = props;
+
   return (
     <section className="-mb-4">
       <IntroBlurb />
-      <PerformanceBlurb />
       <MemoryBlurb />
       <CompatibilityBlurb />
-      <PowerSupplyBlurb />
+      {product.enablePerformanceSummary ? <PerformanceBlurb /> : <></>}
     </section>
   );
 };

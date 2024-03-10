@@ -20,6 +20,10 @@ NEXT:
   - More filters
   - Improved UI
 
+Improve summary:
+- Improve auto summary after moving performance summary to bottom
+- Test auto performance summary
+
 Admin Improvements:
 - Chipset sources - apply should exclude non-retail-models
 

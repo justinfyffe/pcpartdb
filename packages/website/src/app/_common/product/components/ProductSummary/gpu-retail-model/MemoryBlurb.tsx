@@ -12,7 +12,7 @@ const MemorySize = compileContentComponent({
   component: (props) => {
     return (
       <>
-        The {props.name} has {props.memorySize} of {props.memoryType} VRAM.
+        This GPU has {props.memorySize} of {props.memoryType} VRAM.
       </>
     );
   },

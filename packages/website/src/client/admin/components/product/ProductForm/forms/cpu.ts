@@ -44,6 +44,7 @@ export interface CpuFormData {
   affiliateUrl?: string;
   summary?: string;
   summaryStale?: boolean;
+  enablePerformanceSummary?: boolean;
 
   // General Info
   partNumber?: CpuField<string>;
@@ -131,6 +132,7 @@ const cpuFormSchema = Joi.object({
 
   summary: Joi.string().allow(null),
   summaryStale: Joi.boolean().allow(null),
+  enablePerformanceSummary: Joi.boolean().allow(null),
 
   // General Info
   partNumber: productFieldSchema.allow(null),
@@ -228,6 +230,7 @@ export function cpuFormOptions(product?: Product): UseFormProps<CpuFormData> {
 
       summary: product?.summary ?? null,
       summaryStale: product?.summaryStale ?? null,
+      enablePerformanceSummary: product?.enablePerformanceSummary ?? null,
 
       // Data Sources
       sources,
@@ -322,6 +325,7 @@ export function formDataToCpuRequest(
 
       summary: formData.summary,
       summaryStale: formData.summaryStale,
+      enablePerformanceSummary: formData.enablePerformanceSummary,
 
       // Product Fields
       fields: {
@@ -471,6 +475,11 @@ export function buildCpuFormInputs(product?: Product): ProductFormInputGroups {
           name: 'summary',
           inputType: ProductFormInputType.Summary,
           placeholder: 'Add product summary',
+        },
+        {
+          name: 'enablePerformanceSummary',
+          label: 'Generate Performance Summary?',
+          inputType: ProductFormInputType.Boolean,
         },
         {
           name: 'summaryStale',

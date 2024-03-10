@@ -11,8 +11,8 @@ const ClockSentence = compileContentComponent(
     tags: [SpecsTag.Clock, SpecsTag.BoostClock],
     component: (props) => (
       <>
-        The {props.name} operates at a {props.clock} clock frequency, and can
-        boost to {props.boostClock}.
+        The {props.nameWithNoCompany} operates at a {props.clock} clock
+        frequency, and can boost to {props.boostClock}.
       </>
     ),
   },
@@ -20,7 +20,8 @@ const ClockSentence = compileContentComponent(
     tags: [SpecsTag.Clock],
     component: (props) => (
       <>
-        The {props.name} operates at a {props.clock} clock frequency.
+        The {props.nameWithNoCompany} operates at a {props.clock} clock
+        frequency.
       </>
     ),
   },
@@ -72,25 +73,22 @@ const MemorySupportSentence = compileContentComponent(
     tags: [SpecsTag.MemorySupport, SpecsTag.MemoryChannels],
     component: (props) => (
       <>
-        The {props.nameWithNoCompany} supports {props.memorySupport} memory with
-        a {props.memoryChannels} interface.
+        This processor supports {props.memorySupport} memory with a{' '}
+        {props.memoryChannels} interface.
       </>
     ),
   },
   {
     tags: [SpecsTag.MemorySupport],
     component: (props) => (
-      <>
-        The {props.nameWithNoCompany} supports {props.memorySupport} memory.
-      </>
+      <>This processor supports {props.memorySupport} memory.</>
     ),
   },
   {
     tags: [SpecsTag.MemoryChannels],
     component: (props) => (
       <>
-        The {props.nameWithNoCompany} supports a {props.memoryChannels}{' '}
-        interface for memory.
+        This processor supports a {props.memoryChannels} interface for memory.
       </>
     ),
   },

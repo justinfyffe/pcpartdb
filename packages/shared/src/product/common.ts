@@ -61,6 +61,7 @@ export interface Product {
   summary?: string;
   summaryPublishedAt?: number;
   summaryStale?: boolean;
+  enablePerformanceSummary?: boolean;
 
   latestPrice?: number;
   priceAsOf?: number;

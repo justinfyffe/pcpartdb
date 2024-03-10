@@ -20,11 +20,11 @@ export const ProductSummary = (props: ProductSummaryProps) => {
   if (product?.summary) {
     return <CustomSummary product={product} />;
   } else if (isGpuChipset(product)) {
-    return <GpuChipsetSummary />;
+    return <GpuChipsetSummary product={product} />;
   } else if (isGpuRetailModel(product)) {
-    return <GpuRetailModelSummary />;
+    return <GpuRetailModelSummary product={product} />;
   } else if (isCpuProduct(product)) {
-    return <CpuSummary />;
+    return <CpuSummary product={product} />;
   }
 
   return <></>;

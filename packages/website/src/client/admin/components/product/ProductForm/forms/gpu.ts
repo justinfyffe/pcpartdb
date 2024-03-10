@@ -57,6 +57,7 @@ export interface GpuFormData {
   affiliateUrl?: string;
   summary?: string;
   summaryStale?: boolean;
+  enablePerformanceSummary?: boolean;
 
   // General
   partNumber?: GpuField<string>;
@@ -139,6 +140,7 @@ const gpuFormSchema = Joi.object({
   affiliateUrl: Joi.string().allow(null),
   summary: Joi.string().allow(null),
   summaryStale: Joi.boolean().allow(null),
+  enablePerformanceSummary: Joi.boolean().allow(null),
 
   // Sources
   sources: Joi.array().items(productSourceSchema),
@@ -229,6 +231,7 @@ export function gpuFormOptions(product?: Product): UseFormProps<GpuFormData> {
 
       summary: product?.summary ?? null,
       summaryStale: product?.summaryStale ?? null,
+      enablePerformanceSummary: product?.enablePerformanceSummary ?? null,
 
       parentId: product?.parentId ?? null,
 
@@ -321,6 +324,7 @@ export function formDataToGpuRequest(
 
       summary: formData.summary,
       summaryStale: formData.summaryStale,
+      enablePerformanceSummary: formData.enablePerformanceSummary,
 
       // Product Fields
       fields: {
@@ -469,6 +473,11 @@ export function buildGpuFormInputs(product?: Product): ProductFormInputGroups {
           name: 'summary',
           inputType: ProductFormInputType.Summary,
           placeholder: 'Add product summary',
+        },
+        {
+          name: 'enablePerformanceSummary',
+          label: 'Generate Performance Summary?',
+          inputType: ProductFormInputType.Boolean,
         },
         {
           name: 'summaryStale',

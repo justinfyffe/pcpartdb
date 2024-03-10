@@ -5,6 +5,7 @@ import Markdown from 'markdown-to-jsx';
 import React, { useMemo } from 'react';
 import { ContentParams } from '../../../content/types';
 import { useProductContent } from '../../content/useProductContent';
+import { PerformanceSummarySection } from './PerformanceSummarySection';
 
 interface CustomSummaryProps {
   product: Product;
@@ -23,7 +24,14 @@ export const CustomSummary = (props: CustomSummaryProps) => {
     [contentParams, rawSummary],
   );
 
-  return <Markdown>{summary}</Markdown>;
+  return (
+    <>
+      <div className="mb-4">
+        <Markdown>{summary}</Markdown>
+      </div>
+      {<PerformanceSummarySection product={product} />}
+    </>
+  );
 };
 
 function populateSummaryVariables(rawOverview: string, params: ContentParams) {

@@ -182,6 +182,7 @@ export const productSchema = Joi.object({
   summary: Joi.string().allow('', null),
   summaryPublishedAt: Joi.number().allow(null),
   summaryStale: Joi.boolean().allow(null),
+  enablePerformanceSummary: Joi.boolean().allow(null),
 
   metadata: Joi.any().allow(null),
 

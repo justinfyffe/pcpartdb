@@ -136,6 +136,9 @@ export async function mapToProductDto(
       ? entity.summaryPublishedAt?.getTime()
       : undefined,
     summaryStale: includeSummary ? entity.summaryStale : undefined,
+    enablePerformanceSummary: includeSummary
+      ? entity.enablePerformanceSummary
+      : undefined,
 
     metadata: entity.metadata,
 
@@ -201,6 +204,7 @@ export function mapToProductEntity(dto: Product) {
         ? new Date(dto.summaryPublishedAt)
         : undefined,
     summaryStale: dto.summaryStale,
+    enablePerformanceSummary: dto.enablePerformanceSummary,
 
     metadata: dto.metadata,
 
