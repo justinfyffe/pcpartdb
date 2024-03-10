@@ -169,8 +169,34 @@ function mergeGpus(originalGpu: GpuProduct, scrapedGpu: GpuProduct) {
   result.searchText = originalGpu.searchText;
   result.searchText = originalGpu.searchText;
   result.affiliateUrl = originalGpu.affiliateUrl;
+  result.summary = originalGpu.summary;
+  result.summaryPublishedAt = originalGpu.summaryPublishedAt;
+  result.summaryStale = originalGpu.summaryStale;
+
+  if (hasSummaryImpactingChanges(originalGpu, scrapedGpu)) {
+    result.summaryStale = true;
+  }
 
   return result;
+}
+
+function hasSummaryImpactingChanges(before: GpuProduct, after: GpuProduct) {
+  return (
+    before.fields?.productionStatus !== after.fields?.productionStatus ||
+    before.fields?.marketSegment !== after.fields?.marketSegment ||
+    before.fields?.releaseDate !== after.fields?.releaseDate ||
+    before.fields?.msrp !== after.fields?.msrp ||
+    before.fields?.tdp !== after.fields?.tdp ||
+    before.fields?.memorySize !== after.fields?.memorySize ||
+    before.fields?.memoryType !== after.fields?.memoryType ||
+    before.fields?.suggestedPsu !== after.fields?.suggestedPsu ||
+    before.fields?.codename !== after.fields?.codename ||
+    before.fields?.architecture !== after.fields?.architecture ||
+    before.fields?.slotWidth !== after.fields?.slotWidth ||
+    before.fields?.memoryInterface !== after.fields?.memoryInterface ||
+    before.fields?.memoryClock !== after.fields?.memoryClock ||
+    before.fields?.memoryBandwidth !== after.fields?.memoryBandwidth
+  );
 }
 
 function hasUpdates(before: GpuProduct, after: GpuProduct) {

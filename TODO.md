@@ -20,32 +20,6 @@ NEXT:
   - More filters
   - Improved UI
 
-Improve AI Summary
-- [X] Use simple sentences for ai prompt.
-- [] show date it was written
-- [] add fields for missing data on products list that need summaries written?
-  - maybe can check for various fields too (marketSegment, releaseDate, msrp, productionStatus, company)
-- [] unknowns:
-  - How to remember to update them when production status (or other critical values) changes?
-    - Maybe reset summary when these change:
-      - productionStatus
-      - marketSegment
-      - releaseDate
-      - msrp
-      - tdp?
-      - memorySize?
-      - memoryType?
-      - suggestedPsu?
-      - codename?
-      - architecture?
-      - slotWidth?
-      - memoryInterface?
-      - memoryClock?
-      - memoryBandwidth?
-    - Maybe add warning to automation update when the above changes?
-      - add an enum field on product for summary warning
-  - How to improve efficiency
-
 Admin Improvements:
 - Chipset sources - apply should exclude non-retail-models
 
@@ -59,11 +33,6 @@ Migrating to App Router:
 - 404
   - Just need to migrate admin panel
 - Admin panel
-
-AI Prompt
-- Simplify sentences like
-  - The NVIDIA GeForce RTX 4090 has a clock speed of 1,000 MHz.
-  - Rewrite these sentenes into an article.
 
 Home Page Improvements
 - Show Top 5 Performance & Performance per dollar

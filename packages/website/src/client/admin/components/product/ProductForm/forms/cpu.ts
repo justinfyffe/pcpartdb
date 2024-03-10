@@ -43,6 +43,7 @@ export interface CpuFormData {
   searchText?: string;
   affiliateUrl?: string;
   summary?: string;
+  summaryStale?: boolean;
 
   // General Info
   partNumber?: CpuField<string>;
@@ -127,7 +128,9 @@ const cpuFormSchema = Joi.object({
   otherNames: Joi.array().items(Joi.string()).allow(null),
   searchText: Joi.string().allow(null),
   affiliateUrl: Joi.string().allow(null),
+
   summary: Joi.string().allow(null),
+  summaryStale: Joi.boolean().allow(null),
 
   // General Info
   partNumber: productFieldSchema.allow(null),
@@ -222,7 +225,9 @@ export function cpuFormOptions(product?: Product): UseFormProps<CpuFormData> {
       otherNames: product?.otherNames || [],
       searchText: product?.searchText ?? null,
       affiliateUrl: product?.affiliateUrl ?? null,
+
       summary: product?.summary ?? null,
+      summaryStale: product?.summaryStale ?? null,
 
       // Data Sources
       sources,
@@ -314,7 +319,9 @@ export function formDataToCpuRequest(
       otherNames: formData.otherNames,
       searchText: formData.searchText,
       affiliateUrl: formData.affiliateUrl,
+
       summary: formData.summary,
+      summaryStale: formData.summaryStale,
 
       // Product Fields
       fields: {
@@ -464,6 +471,11 @@ export function buildCpuFormInputs(product?: Product): ProductFormInputGroups {
           name: 'summary',
           inputType: ProductFormInputType.Summary,
           placeholder: 'Add product summary',
+        },
+        {
+          name: 'summaryStale',
+          label: 'Is Summary Possibly Stale?',
+          inputType: ProductFormInputType.Boolean,
         },
       ],
     },

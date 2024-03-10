@@ -147,8 +147,44 @@ function mergeCpus(originalCpu: CpuProduct, scrapedCpu: CpuProduct) {
   result.searchText = originalCpu.searchText;
   result.searchText = originalCpu.searchText;
   result.affiliateUrl = originalCpu.affiliateUrl;
+  result.summary = originalCpu.summary;
+  result.summaryPublishedAt = originalCpu.summaryPublishedAt;
+  result.summaryStale = originalCpu.summaryStale;
+
+  if (hasSummaryImpactingChanges(originalCpu, scrapedCpu)) {
+    result.summaryStale = true;
+  }
 
   return result;
+}
+
+function hasSummaryImpactingChanges(before: CpuProduct, after: CpuProduct) {
+  return (
+    before.fields?.productionStatus !== after.fields?.productionStatus ||
+    before.fields?.marketSegment !== after.fields?.marketSegment ||
+    before.fields?.releaseDate !== after.fields?.releaseDate ||
+    before.fields?.msrp !== after.fields?.msrp ||
+    before.fields?.tdp !== after.fields?.tdp ||
+    before.fields?.processSize !== after.fields?.processSize ||
+    before.fields?.socket !== after.fields?.socket ||
+    before.fields?.cores !== after.fields?.cores ||
+    before.fields?.pCores !== after.fields?.pCores ||
+    before.fields?.eCores !== after.fields?.eCores ||
+    before.fields?.threads !== after.fields?.threads ||
+    before.fields?.codename !== after.fields?.codename ||
+    before.fields?.architecture !== after.fields?.architecture ||
+    before.fields?.clock !== after.fields?.clock ||
+    before.fields?.turboClock !== after.fields?.turboClock ||
+    before.fields?.multiplierUnlocked !== after.fields?.multiplierUnlocked ||
+    before.fields?.l1Cache !== after.fields?.l1Cache ||
+    before.fields?.l2Cache !== after.fields?.l2Cache ||
+    before.fields?.l3Cache !== after.fields?.l3Cache ||
+    before.fields?.memorySupport !== after.fields?.memorySupport ||
+    before.fields?.memoryChannels !== after.fields?.memoryChannels ||
+    before.fields?.pciExpress !== after.fields?.pciExpress ||
+    before.fields?.integratedGraphics !== after.fields?.integratedGraphics ||
+    before.fields?.bundledCooler !== after.fields?.bundledCooler
+  );
 }
 
 function hasUpdates(before: CpuProduct, after: CpuProduct) {

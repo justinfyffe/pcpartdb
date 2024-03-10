@@ -56,6 +56,7 @@ export interface GpuFormData {
   searchText?: string;
   affiliateUrl?: string;
   summary?: string;
+  summaryStale?: boolean;
 
   // General
   partNumber?: GpuField<string>;
@@ -137,6 +138,7 @@ const gpuFormSchema = Joi.object({
   searchText: Joi.string().allow(null),
   affiliateUrl: Joi.string().allow(null),
   summary: Joi.string().allow(null),
+  summaryStale: Joi.boolean().allow(null),
 
   // Sources
   sources: Joi.array().items(productSourceSchema),
@@ -224,7 +226,9 @@ export function gpuFormOptions(product?: Product): UseFormProps<GpuFormData> {
       otherNames: product?.otherNames || [],
       searchText: product?.searchText ?? null,
       affiliateUrl: product?.affiliateUrl ?? null,
+
       summary: product?.summary ?? null,
+      summaryStale: product?.summaryStale ?? null,
 
       parentId: product?.parentId ?? null,
 
@@ -314,7 +318,9 @@ export function formDataToGpuRequest(
       otherNames: formData.otherNames,
       searchText: formData.searchText,
       affiliateUrl: formData.affiliateUrl,
+
       summary: formData.summary,
+      summaryStale: formData.summaryStale,
 
       // Product Fields
       fields: {
@@ -463,6 +469,11 @@ export function buildGpuFormInputs(product?: Product): ProductFormInputGroups {
           name: 'summary',
           inputType: ProductFormInputType.Summary,
           placeholder: 'Add product summary',
+        },
+        {
+          name: 'summaryStale',
+          label: 'Is Summary Possibly Stale?',
+          inputType: ProductFormInputType.Boolean,
         },
       ],
     },

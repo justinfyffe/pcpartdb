@@ -1,3 +1,5 @@
+import { CheckboxProps } from 'packages/website/src/client/shared/components/Checkbox/Checkbox';
+import { TextInputProps } from 'packages/website/src/client/shared/components/Input/TextInput';
 import { ProductBenchmarksInputProps } from '../ProductBenchmarkInput/ProductBenchmarksInput';
 import { ProductBooleanInputProps } from '../ProductBooleanInput/ProductBooleanInput';
 import { ProductChipsInputProps } from '../ProductChipsInput/ProductChipsInput';
@@ -16,6 +18,7 @@ import { ProductFormContextState } from './ProductFormContext';
 
 export enum ProductFormInputType {
   Benchmarks = 'BENCHMARKS',
+  Boolean = 'BOOLEAN',
   BooleanField = 'BOOLEAN_FIELD',
   ChipsField = 'CHIPS_FIELD',
   DateField = 'DATE_FIELD',
@@ -46,7 +49,9 @@ type InputProps =
   | Partial<ProductSlugInputProps>
   | Partial<ProductSourcesInputProps>
   | Partial<ProductSummaryInputProps>
-  | Partial<ProductTextInputProps>;
+  | Partial<ProductTextInputProps>
+  | Partial<CheckboxProps>
+  | Partial<TextInputProps>;
 
 export type ProductFormInputConfig = InputProps & {
   name: string;

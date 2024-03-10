@@ -1,7 +1,7 @@
 import React, { forwardRef, HTMLProps, useCallback } from 'react';
 import { classNames } from '../../ui/classNames';
 
-interface CheckboxProps
+export interface CheckboxProps
   extends Omit<HTMLProps<HTMLInputElement>, 'onChange' | 'value'> {
   onChange?: (value: boolean) => void;
   value?: boolean;

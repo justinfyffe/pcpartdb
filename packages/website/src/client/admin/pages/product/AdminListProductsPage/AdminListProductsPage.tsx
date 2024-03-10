@@ -61,6 +61,9 @@ export const AdminListProductsPage = () => {
             <ListFilters />
             {context.totalProducts > 0 ? (
               <>
+                <div className="text-right">
+                  Total Results: {context.totalProducts}
+                </div>
                 <ListTable />
                 <ListPagination />
               </>

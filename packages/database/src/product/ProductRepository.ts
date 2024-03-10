@@ -474,6 +474,10 @@ export class ProductRepository {
     const companies = filter?.company?.filter((value) => value != null) ?? [];
     const years = filter?.year?.filter((value) => value != null) ?? [];
     const segments = filter?.segment?.filter((value) => value != null) ?? [];
+    const isMissingMarketSegment = filter?.missingMarketSegment;
+    const isMissingProductionStatus = filter?.missingProductionStatus;
+    const isMissingSummary = filter?.missingSummary;
+    const isStaleSummary = filter?.staleSummary;
     const includeIds = filter?.ids?.filter((value) => value != null) ?? [];
     const excludeIds =
       filter?.excludeIds?.filter((value) => value != null) ?? [];
@@ -492,8 +496,24 @@ export class ProductRepository {
       companies.length > 0 ? { in: companies, mode: 'insensitive' } : undefined;
 
     // Segment
-    const segmentsWhere: Prisma.StringNullableFilter =
-      segments.length > 0 ? { in: segments, mode: 'insensitive' } : undefined;
+    const segmentsWhere: Prisma.ProductWhereInput[] = [];
+    if (segments.length > 0) {
+      segmentsWhere.push({
+        cpuFields: {
+          marketSegmentValue:
+            segments.length > 0
+              ? { in: segments, mode: 'insensitive' }
+              : undefined,
+        },
+      });
+    }
+    if (isMissingMarketSegment === true) {
+      segmentsWhere.push({ cpuFields: { marketSegmentValue: null } });
+      segmentsWhere.push({ cpuFields: { marketSegmentValue: '' } });
+    } else if (isMissingMarketSegment === false) {
+      segmentsWhere.push({ cpuFields: { marketSegmentValue: { not: null } } });
+      segmentsWhere.push({ cpuFields: { marketSegmentValue: { not: '' } } });
+    }
 
     // Year
     const yearWhere: Prisma.ProductWhereInput[] = years.map((year) => ({
@@ -505,6 +525,35 @@ export class ProductRepository {
       },
     }));
 
+    // Production Status
+    const productionStatusWhere: Prisma.ProductWhereInput[] = [];
+    if (isMissingProductionStatus === true) {
+      productionStatusWhere.push({
+        cpuFields: { productionStatusValue: null },
+      });
+      productionStatusWhere.push({ cpuFields: { productionStatusValue: '' } });
+    } else if (isMissingProductionStatus === false) {
+      productionStatusWhere.push({
+        cpuFields: { productionStatusValue: { not: null } },
+      });
+      productionStatusWhere.push({
+        cpuFields: { productionStatusValue: { not: '' } },
+      });
+    }
+
+    // Summary
+    const summaryWhere: Prisma.ProductWhereInput[] = [];
+    if (isMissingSummary === true) {
+      summaryWhere.push({ summary: null });
+      summaryWhere.push({ summary: '' });
+    } else if (isMissingSummary === false) {
+      summaryWhere.push({ summary: { not: null } });
+      summaryWhere.push({ summary: { not: '' } });
+    }
+    if (isStaleSummary != null) {
+      summaryWhere.push({ summaryStale: isStaleSummary });
+    }
+
     const searchTextWhere = filter?.search
       ? { contains: filter.search, mode: 'insensitive' as Prisma.QueryMode }
       : undefined;
@@ -515,11 +564,11 @@ export class ProductRepository {
           productType,
           id: idWhere,
           company: companyWhere,
-          cpuFields: {
-            marketSegmentValue: segmentsWhere,
-          },
           searchText: searchTextWhere,
         },
+        { OR: summaryWhere },
+        { OR: segmentsWhere },
+        { OR: productionStatusWhere },
         { OR: yearWhere },
       ],
     };
@@ -535,6 +584,10 @@ export class ProductRepository {
     const companies = filter?.company?.filter((value) => value != null) ?? [];
     const years = filter?.year?.filter((value) => value != null) ?? [];
     const segments = filter?.segment?.filter((value) => value != null) ?? [];
+    const isMissingMarketSegment = filter?.missingMarketSegment;
+    const isMissingProductionStatus = filter?.missingProductionStatus;
+    const isMissingSummary = filter?.missingSummary;
+    const isStaleSummary = filter?.staleSummary;
     const includeIds = filter?.ids?.filter((value) => value != null) ?? [];
     const excludeIds =
       filter?.excludeIds?.filter((value) => value != null) ?? [];
@@ -565,8 +618,24 @@ export class ProductRepository {
       companies.length > 0 ? { in: companies, mode: 'insensitive' } : undefined;
 
     // Segment
-    const segmentWhere: Prisma.StringNullableFilter =
-      segments.length > 0 ? { in: segments, mode: 'insensitive' } : undefined;
+    const segmentsWhere: Prisma.ProductWhereInput[] = [];
+    if (segments.length > 0) {
+      segmentsWhere.push({
+        gpuFields: {
+          marketSegmentValue:
+            segments.length > 0
+              ? { in: segments, mode: 'insensitive' }
+              : undefined,
+        },
+      });
+    }
+    if (isMissingMarketSegment === true) {
+      segmentsWhere.push({ gpuFields: { marketSegmentValue: null } });
+      segmentsWhere.push({ gpuFields: { marketSegmentValue: '' } });
+    } else if (isMissingMarketSegment === false) {
+      segmentsWhere.push({ gpuFields: { marketSegmentValue: { not: null } } });
+      segmentsWhere.push({ gpuFields: { marketSegmentValue: { not: '' } } });
+    }
 
     // Year
     const yearWhere: Prisma.ProductWhereInput[] = years.map((year) => ({
@@ -577,6 +646,35 @@ export class ProductRepository {
         },
       },
     }));
+
+    // Production Status
+    const productionStatusWhere: Prisma.ProductWhereInput[] = [];
+    if (isMissingProductionStatus === true) {
+      productionStatusWhere.push({
+        gpuFields: { productionStatusValue: null },
+      });
+      productionStatusWhere.push({ gpuFields: { productionStatusValue: '' } });
+    } else if (isMissingProductionStatus === false) {
+      productionStatusWhere.push({
+        gpuFields: { productionStatusValue: { not: null } },
+      });
+      productionStatusWhere.push({
+        gpuFields: { productionStatusValue: { not: '' } },
+      });
+    }
+
+    // Summary
+    const summaryWhere: Prisma.ProductWhereInput[] = [];
+    if (isMissingSummary === true) {
+      summaryWhere.push({ summary: null });
+      summaryWhere.push({ summary: '' });
+    } else if (isMissingSummary === false) {
+      summaryWhere.push({ summary: { not: null } });
+      summaryWhere.push({ summary: { not: '' } });
+    }
+    if (isStaleSummary != null) {
+      summaryWhere.push({ summaryStale: isStaleSummary });
+    }
 
     // Has Release Date
     let hasReleaseDateWhere: Prisma.StringNullableFilter = undefined;
@@ -596,11 +694,13 @@ export class ProductRepository {
           parentId: parentWhere,
           company: companyWhere,
           gpuFields: {
-            marketSegmentValue: segmentWhere,
             releaseDateValue: hasReleaseDateWhere,
           },
           searchText: searchTextWhere,
         },
+        { OR: segmentsWhere },
+        { OR: productionStatusWhere },
+        { OR: summaryWhere },
         { OR: yearWhere },
       ],
     };

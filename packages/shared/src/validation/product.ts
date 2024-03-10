@@ -178,7 +178,10 @@ export const productSchema = Joi.object({
   company: Joi.string().allow(null),
   searchText: Joi.string().allow('').required(),
   affiliateUrl: Joi.string().allow('', null),
+
   summary: Joi.string().allow('', null),
+  summaryPublishedAt: Joi.number().allow(null),
+  summaryStale: Joi.boolean().allow(null),
 
   metadata: Joi.any().allow(null),
 
@@ -235,6 +238,10 @@ export const listProductsFilterSchema = Joi.object({
   valueRated: Joi.boolean().allow(null),
   year: Joi.array().items(Joi.number()).allow(null),
   hasReleaseDate: Joi.boolean().allow(null),
+  missingMarketSegment: Joi.boolean().allow(null),
+  missingProductionStatus: Joi.boolean().allow(null),
+  missingSummary: Joi.boolean().allow(null),
+  staleSummary: Joi.boolean().allow(null),
 });
 
 export const listProductsRequestSchema = Joi.object({
@@ -287,9 +294,7 @@ export const listProductUpdatesRequestSchema = Joi.object({
     }),
     maxLimit: 100,
   }),
-}).options({
-  abortEarly: false,
-});
+}).options({ abortEarly: false });
 
 export const createProductUpdateRequestSchema = productUpdateSchema.options({
   abortEarly: false,
@@ -297,9 +302,7 @@ export const createProductUpdateRequestSchema = productUpdateSchema.options({
 
 export const approveProductUpdateRequestSchema = Joi.object({
   slug: Joi.string().allow(null),
-}).options({
-  abortEarly: false,
-});
+}).options({ abortEarly: false });
 
 export const rejectProductUpdateRequestSchema = Joi.object({}).options({
   abortEarly: false,

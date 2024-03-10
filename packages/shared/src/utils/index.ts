@@ -12,3 +12,4 @@ export * from './snakeCaseToCamelCase';
 export * from './sortByIds';
 export * from './surroundingValues';
 export * from './throttle';
+export * from './yyyyMmDd';

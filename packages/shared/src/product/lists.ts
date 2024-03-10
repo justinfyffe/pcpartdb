@@ -158,6 +158,12 @@ export interface ListCpusFilter extends BaseListProductsFilter {
   year?: number[];
   segment?: MarketSegment[];
   hasReleaseDate?: boolean;
+
+  missingMarketSegment?: boolean;
+  missingProductionStatus?: boolean;
+  missingSummary?: boolean;
+  staleSummary?: boolean;
+
   ids?: number[];
   excludeIds?: number[];
 }
@@ -318,6 +324,11 @@ export interface ListGpusFilter extends BaseListProductsFilter {
   chipsetId?: number[];
   isChipset?: boolean;
   isRetailModel?: boolean;
+
+  missingMarketSegment?: boolean;
+  missingProductionStatus?: boolean;
+  missingSummary?: boolean;
+  staleSummary?: boolean;
 
   ids?: number[];
   excludeIds?: number[];

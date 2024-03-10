@@ -57,7 +57,10 @@ export interface Product {
   company?: string;
   searchText: string;
   affiliateUrl?: string;
+
   summary?: string;
+  summaryPublishedAt?: number;
+  summaryStale?: boolean;
 
   latestPrice?: number;
   priceAsOf?: number;

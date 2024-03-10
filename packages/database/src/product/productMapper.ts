@@ -132,6 +132,10 @@ export async function mapToProductDto(
     searchText: entity.searchText,
     affiliateUrl: entity.affiliateUrl,
     summary: includeSummary ? entity.summary : undefined,
+    summaryPublishedAt: includeSummary
+      ? entity.summaryPublishedAt?.getTime()
+      : undefined,
+    summaryStale: includeSummary ? entity.summaryStale : undefined,
 
     metadata: entity.metadata,
 
@@ -190,7 +194,13 @@ export function mapToProductEntity(dto: Product) {
     company: dto.company,
     searchText: dto.searchText,
     affiliateUrl: dto.affiliateUrl,
+
     summary: dto.summary,
+    summaryPublishedAt:
+      dto.summaryPublishedAt != null
+        ? new Date(dto.summaryPublishedAt)
+        : undefined,
+    summaryStale: dto.summaryStale,
 
     metadata: dto.metadata,
 

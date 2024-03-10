@@ -1,5 +1,6 @@
 import { ListGpusFilter, ProductType, SubProductType } from '@pcpartdb/shared';
 import { ProductTypeInput } from 'packages/website/src/client/admin/components/product/ProductTypeInput/ProductTypeInput';
+import { Checkbox } from 'packages/website/src/client/shared/components/Checkbox/Checkbox';
 import { TextInput } from 'packages/website/src/client/shared/components/Input/TextInput';
 import {
   Select,
@@ -84,42 +85,131 @@ export const ListFilters: FunctionComponent<ListFiltersProps> = () => {
     [query, updateQuery],
   );
 
+  const handleMissingMarketSegmentChange = useCallback(
+    (value: boolean) => {
+      const newFilter = { ...query.filter } as ListGpusFilter;
+      if (value) {
+        newFilter.missingMarketSegment = true;
+      } else {
+        delete newFilter.missingMarketSegment;
+      }
+
+      updateQuery({ ...query, filter: newFilter });
+    },
+    [query, updateQuery],
+  );
+  const handleMissingProductionStatusChange = useCallback(
+    (value: boolean) => {
+      const newFilter = { ...query.filter } as ListGpusFilter;
+      if (value) {
+        newFilter.missingProductionStatus = true;
+      } else {
+        delete newFilter.missingProductionStatus;
+      }
+
+      updateQuery({ ...query, filter: newFilter });
+    },
+    [query, updateQuery],
+  );
+  const handleMissingSummaryChange = useCallback(
+    (value: boolean) => {
+      const newFilter = { ...query.filter } as ListGpusFilter;
+      if (value) {
+        newFilter.missingSummary = true;
+      } else {
+        delete newFilter.missingSummary;
+      }
+
+      updateQuery({ ...query, filter: newFilter });
+    },
+    [query, updateQuery],
+  );
+  const handleStaleSummaryChange = useCallback(
+    (value: boolean) => {
+      const newFilter = { ...query.filter } as ListGpusFilter;
+      if (value) {
+        newFilter.staleSummary = true;
+      } else {
+        delete newFilter.staleSummary;
+      }
+
+      updateQuery({ ...query, filter: newFilter });
+    },
+    [query, updateQuery],
+  );
+
   return (
-    <div className="flex gap-4 mb-4 flex-wrap">
-      <div className="flex flex-col flex-auto">
-        <span className="font-medium">Product Type</span>
-        <ProductTypeInput
-          value={query.filter.productType}
-          onChange={handleTypeChange}
-        />
-      </div>
+    <div className="flex flex-col mb-4 gap-4 flex-wrap">
+      <div className="flex gap-4 flex-wrap">
+        <div className="flex flex-col flex-auto">
+          <span className="font-medium">Product Type</span>
+          <ProductTypeInput
+            value={query.filter.productType}
+            onChange={handleTypeChange}
+          />
+        </div>
 
-      <div className="flex flex-col flex-auto">
-        <span className="font-medium">Sub Product Type</span>
-        <Select
-          disabled={productType !== ProductType.Gpu}
-          value={subProductType}
-          onChange={handleSubTypeChange}
-        >
-          <SelectOption label="Chipset" value={SubProductType.GpuChipset}>
-            Chipset
-          </SelectOption>
-          <SelectOption
-            label="Retail Model"
-            value={SubProductType.GpuRetailModel}
+        <div className="flex flex-col flex-auto">
+          <span className="font-medium">Sub Product Type</span>
+          <Select
+            disabled={productType !== ProductType.Gpu}
+            value={subProductType}
+            onChange={handleSubTypeChange}
           >
-            Retail Model
-          </SelectOption>
-        </Select>
+            <SelectOption label="Chipset" value={SubProductType.GpuChipset}>
+              Chipset
+            </SelectOption>
+            <SelectOption
+              label="Retail Model"
+              value={SubProductType.GpuRetailModel}
+            >
+              Retail Model
+            </SelectOption>
+          </Select>
+        </div>
+
+        <div className="flex flex-col flex-auto">
+          <span className="font-medium">Search Products</span>
+          <TextInput
+            value={initialSearch}
+            placeholder="Name of product"
+            onChange={handleSearchChange}
+          />
+        </div>
       </div>
 
-      <div className="flex flex-col flex-auto">
-        <span className="font-medium">Filter Products</span>
-        <TextInput
-          value={initialSearch}
-          placeholder="Search products"
-          onChange={handleSearchChange}
-        />
+      <div className="flex gap-4 mb-4 justify-between flex-wrap">
+        <div className="flex gap-4 flex-wrap">
+          <span>Missing:</span>
+          <Checkbox
+            value={(query.filter as ListGpusFilter).missingMarketSegment}
+            onChange={handleMissingMarketSegmentChange}
+          >
+            Market Segment?
+          </Checkbox>
+          <Checkbox
+            value={(query.filter as ListGpusFilter).missingProductionStatus}
+            onChange={handleMissingProductionStatusChange}
+          >
+            Production Status?
+          </Checkbox>
+          <Checkbox
+            value={(query.filter as ListGpusFilter).missingSummary}
+            onChange={handleMissingSummaryChange}
+          >
+            Summary?
+          </Checkbox>
+        </div>
+
+        <div className="flex gap-4 flex-wrap">
+          <span>Stale:</span>
+          <Checkbox
+            value={(query.filter as ListGpusFilter).staleSummary}
+            onChange={handleStaleSummaryChange}
+          >
+            Summary?
+          </Checkbox>
+        </div>
       </div>
     </div>
   );

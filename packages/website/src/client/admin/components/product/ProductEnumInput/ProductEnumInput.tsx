@@ -64,20 +64,16 @@ export const ProductEnumInput = forwardRef<
 
   const handleValueChange = useCallback(
     (value: SelectValue) => {
-      if (value != null) {
-        if (typeof value === 'string') {
-          onChange?.({
-            value: value as string,
-            meta: { ...meta, fieldKey },
-          });
-        } else {
-          onChange?.({
-            value: value as string[],
-            meta: { ...meta, fieldKey },
-          });
-        }
+      if (typeof value === 'string') {
+        onChange?.({
+          value: value as string,
+          meta: { ...meta, fieldKey },
+        });
       } else {
-        onChange?.(null);
+        onChange?.({
+          value: value as string[],
+          meta: { ...meta, fieldKey },
+        });
       }
     },
     [fieldKey, meta, onChange],

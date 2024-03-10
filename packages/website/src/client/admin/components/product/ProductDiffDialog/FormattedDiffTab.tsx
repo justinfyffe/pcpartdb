@@ -34,6 +34,8 @@ export const FormattedDiffTab: FunctionComponent<FormattedDiffTabProps> = (
   const hasNameChange = diff.original?.name !== diff.updated?.name;
   const hasSlugChange = diff.original?.slug !== diff.updated?.slug;
   const hasCompanyChange = diff.original?.company !== diff.updated?.company;
+  const hasSummaryStaleChange =
+    diff.original?.summaryStale !== diff.updated?.summaryStale;
   const sources = diff.updated?.sources;
 
   return (
@@ -94,6 +96,32 @@ export const FormattedDiffTab: FunctionComponent<FormattedDiffTabProps> = (
             </Td>
             <Td className={hasSlugChange ? 'bg-yellow-100' : ''} colSpan={2}>
               {diff.updated?.slug ?? '--'}
+            </Td>
+          </Tr>
+
+          <Tr>
+            <Td
+              className={classNames(
+                'border-r-px',
+                hasCompanyChange ? 'bg-yellow-100' : '',
+              )}
+            >
+              Summary Staleness
+            </Td>
+            <Td
+              className={classNames(
+                'border-r-px',
+                hasSummaryStaleChange ? 'bg-yellow-100' : '',
+              )}
+              colSpan={2}
+            >
+              {diff.original?.summaryStale ? 'STALE' : 'NOT STALE'}
+            </Td>
+            <Td
+              className={hasSummaryStaleChange ? 'bg-yellow-100' : ''}
+              colSpan={2}
+            >
+              {diff.updated?.summaryStale ? 'STALE' : 'NOT STALE'}
             </Td>
           </Tr>
 

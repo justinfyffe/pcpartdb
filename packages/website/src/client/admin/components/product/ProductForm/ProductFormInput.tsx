@@ -1,5 +1,9 @@
 import { ProductType } from '@pcpartdb/shared';
 import {
+  Checkbox,
+  CheckboxProps,
+} from 'packages/website/src/client/shared/components/Checkbox/Checkbox';
+import {
   TextInput,
   TextInputProps,
 } from 'packages/website/src/client/shared/components/Input/TextInput';
@@ -94,6 +98,17 @@ export const ProductFormInput: FunctionComponent<ProductFormInputProps> = (
         {...restOfProps}
         {...overrides}
       />
+    );
+  } else if (inputType === ProductFormInputType.Boolean) {
+    return (
+      <Checkbox
+        {...(config as CheckboxProps)}
+        {...restOfProps}
+        {...overrides}
+        ref={null}
+      >
+        {(config as CheckboxProps).label}
+      </Checkbox>
     );
   } else if (inputType === ProductFormInputType.BooleanField) {
     return (
