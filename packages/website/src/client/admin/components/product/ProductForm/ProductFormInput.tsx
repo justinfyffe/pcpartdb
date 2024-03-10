@@ -189,6 +189,7 @@ export const ProductFormInput: FunctionComponent<ProductFormInputProps> = (
         {...(config as ProductSummaryInputProps)}
         {...restOfProps}
         {...overrides}
+        {...context}
       />
     );
   } else if (inputType === ProductFormInputType.Text) {

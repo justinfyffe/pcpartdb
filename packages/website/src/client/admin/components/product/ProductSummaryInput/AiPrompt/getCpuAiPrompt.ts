@@ -1,200 +1,130 @@
 import {
-  BenchmarkKey,
   CpuProduct,
   formatProductName,
-  getProductPerformanceRank,
-  productBenchmarkValue,
-  productBenchmarkValuePerMsrp,
   productFieldFormattedValue,
 } from '@pcpartdb/shared';
 
-// TODO: use user preferred benchmark
-const PREFERRED_BENCHMARK = BenchmarkKey.PassMark_CpuMark_Multi_Thread;
-
-const introData = (cpu: CpuProduct) => {
-  return [
-    { description: 'cpu name', value: formatProductName(cpu) },
-    { description: 'company', value: cpu?.company },
-    {
-      description: 'market segment',
-      value: productFieldFormattedValue(cpu?.fields?.marketSegment),
-    },
-    {
-      description: 'release date',
-      value: productFieldFormattedValue(cpu?.fields?.releaseDate),
-    },
-    {
-      description: 'msrp',
-      value: productFieldFormattedValue(cpu?.fields?.msrp),
-    },
-    {
-      description: 'production status',
-      value: productFieldFormattedValue(cpu?.fields?.productionStatus),
-    },
-    {
-      description: 'architecture',
-      value: productFieldFormattedValue(cpu?.fields?.architecture),
-    },
-    {
-      description: 'generation',
-      value: productFieldFormattedValue(cpu?.fields?.generation),
-    },
-  ] as { description: string; value: string }[];
+const summaryData = (cpu: CpuProduct) => {
+  return {
+    architecture: productFieldFormattedValue(cpu?.fields?.architecture),
+    bundledCooler: productFieldFormattedValue(cpu?.fields?.bundledCooler),
+    clock: productFieldFormattedValue(cpu?.fields?.clock),
+    company: cpu?.company,
+    cores: productFieldFormattedValue(cpu?.fields?.cores),
+    cpuName: formatProductName(cpu),
+    eCores: productFieldFormattedValue(cpu?.fields?.eCores),
+    generation: productFieldFormattedValue(cpu?.fields?.generation),
+    integratedGraphics: productFieldFormattedValue(
+      cpu?.fields?.integratedGraphics,
+    ),
+    l1Cache: productFieldFormattedValue(cpu?.fields?.l1Cache),
+    l2Cache: productFieldFormattedValue(cpu?.fields?.l2Cache),
+    l3Cache: productFieldFormattedValue(cpu?.fields?.l3Cache),
+    marketSegment: productFieldFormattedValue(cpu?.fields?.marketSegment),
+    memoryChannels: productFieldFormattedValue(cpu?.fields?.memoryChannels),
+    memorySupport: productFieldFormattedValue(cpu?.fields?.memorySupport),
+    msrp: productFieldFormattedValue(cpu?.fields?.msrp),
+    multiplierUnlocked: productFieldFormattedValue(
+      cpu?.fields?.multiplierUnlocked,
+    ),
+    pciExpress: productFieldFormattedValue(cpu?.fields?.pciExpress),
+    pCores: productFieldFormattedValue(cpu?.fields?.pCores),
+    processSize: productFieldFormattedValue(cpu?.fields?.processSize),
+    productionStatus: productFieldFormattedValue(cpu?.fields?.productionStatus),
+    releaseDate: productFieldFormattedValue(cpu?.fields?.releaseDate),
+    socket: productFieldFormattedValue(cpu?.fields?.socket),
+    tdp: productFieldFormattedValue(cpu?.fields?.tdp),
+    threads: productFieldFormattedValue(cpu?.fields?.threads),
+    turboClock: productFieldFormattedValue(cpu?.fields?.turboClock),
+  };
 };
 
-const specsData = (cpu: CpuProduct) => {
-  return [
-    {
-      description: 'cores',
-      value: productFieldFormattedValue(cpu?.fields?.cores),
-    },
-    {
-      description: 'performance cores',
-      value: productFieldFormattedValue(cpu?.fields?.pCores),
-    },
-    {
-      description: 'efficient cores',
-      value: productFieldFormattedValue(cpu?.fields?.eCores),
-    },
-    {
-      description: 'threads',
-      value: productFieldFormattedValue(cpu?.fields?.threads),
-    },
-    {
-      description: 'generation',
-      value: productFieldFormattedValue(cpu?.fields?.generation),
-    },
-    {
-      description: 'architecture',
-      value: productFieldFormattedValue(cpu?.fields?.architecture),
-    },
-    {
-      description: 'process size',
-      value: productFieldFormattedValue(cpu?.fields?.processSize),
-    },
-    {
-      description: 'socket',
-      value: productFieldFormattedValue(cpu?.fields?.generation),
-    },
-    {
-      description: 'integrated graphics',
-      value: productFieldFormattedValue(cpu?.fields?.integratedGraphics),
-    },
-    {
-      description: 'bundled cooler',
-      value: productFieldFormattedValue(cpu?.fields?.integratedGraphics),
-    },
-    {
-      description: 'clock',
-      value: productFieldFormattedValue(cpu?.fields?.clock),
-    },
-    {
-      description: 'turbo clock',
-      value: productFieldFormattedValue(cpu?.fields?.turboClock),
-    },
-    {
-      description: 'unlocked multiplier',
-      value: productFieldFormattedValue(cpu?.fields?.multiplierUnlocked),
-    },
-    {
-      description: 'l1 cache',
-      value: productFieldFormattedValue(cpu?.fields?.l1Cache),
-    },
-    {
-      description: 'l2 cache',
-      value: productFieldFormattedValue(cpu?.fields?.l2Cache),
-    },
-    {
-      description: 'l3 cache',
-      value: productFieldFormattedValue(cpu?.fields?.l3Cache),
-    },
-    {
-      description: 'memory support',
-      value: productFieldFormattedValue(cpu?.fields?.memorySupport),
-    },
-    {
-      description: 'memory channels',
-      value: productFieldFormattedValue(cpu?.fields?.memoryChannels),
-    },
-    {
-      description: 'pci express',
-      value: productFieldFormattedValue(cpu?.fields?.pciExpress),
-    },
-    {
-      description: 'tdp',
-      value: productFieldFormattedValue(cpu?.fields?.tdp),
-    },
-  ] as { description: string; value: string }[];
-};
-
-const performanceData = (cpu: CpuProduct, preferredBenchmark: BenchmarkKey) => {
-  return [
-    {
-      description: 'performance rank',
-      value: getProductPerformanceRank(cpu, PREFERRED_BENCHMARK),
-    },
-    {
-      description: 'performance rating',
-      value: productBenchmarkValue(cpu, preferredBenchmark),
-    },
-    {
-      description: 'value rating',
-      value: productBenchmarkValuePerMsrp(cpu, preferredBenchmark),
-    },
-    {
-      description: 'best performing cpu name',
-      value: 'BEST CPU PLACEHOLDER',
-    },
-  ] as { description: string; value: string }[];
-};
-
-const aiPromptTemplate = (
-  cpu: CpuProduct,
-  preferredBenchmark: BenchmarkKey,
-) => {
-  const intro = introData(cpu)
-    .filter((v) => v.value)
-    .map((v) => `${v.description},"${v.value}"`);
-  const specs = specsData(cpu)
-    .filter((v) => v.value)
-    .map((v) => `${v.description},"${v.value}"`);
-  const performance = performanceData(cpu, preferredBenchmark)
-    .filter((v) => v.value)
-    .map((v) => `${v.description},"${v.value}"`);
+const aiPromptTemplate = (cpu: CpuProduct) => {
+  const summary = summaryData(cpu);
 
   return `
-***** START INTRO CSV DATA *****
-description,value
-${intro.join('\n')}
-***** END INTRO CSV DATA *****
-***** START SPECS CSV DATA *****
-description,value
-${specs.join('\n')}
-***** END SPECS CSV DATA *****
-***** START PERFORMANCE CSV DATA *****
-description,value
-${performance.join('\n')}
-***** END PERFORMANCE CSV DATA *****
-***** START PERFOMRANCE DETAILS TO INCLUDE *****
-1. Performance rating is our estimate of how it performs compares to the best performing CPU in our database.
-2. Value rating is based on the performance per dollar compared to other CPUs in the database.
-***** END PERFOMRANCE DETAILS TO INCLUDE *****
-***** START SUMMARY INSTRUCTIONS *****
-1. Write an unbiased summary about the CPU using only the provided CSV data and details to include above. Do not include other data.
-2. Do not write a review.
-3. Do not write bullet points or lists. Do not write headings. Only write paragraphs.
-4. THe summary should be approximately 400 words long.
-5. The summary target 4-5 paragraphs if possible.
-6. There should be an intro, 2-3 paragraphs about specs, and a performance paragraph.
-7. Each paragraph should be brief, only a few sentences based on the data above.
-8. Include additional descriptors that apply. For example, "small", "large", "high-end", "low-end".
-***** END SUMMARY INSTRUCTIONS *****
+You are a writer with an expertise in SEO and computer hardware.
+Rewrite the following summary about a CPU using the following rules.
+
+*** START RULES ***
+The summary should be unbiased and technical.
+Include additional descriptors that apply. For example, "small", "large", "high-end", "low-end".
+Do not write bullet points or lists. Do not write headings between paragraphs. Only write paragraphs.
+Avoid including additional data from other sources.
+The summary should be approximately 300 to 400 words long.
+The summary target 4-5 paragraphs.
+There should be an intro, and 2-3 paragraphs about its specs . If you do not have enough data, then skip the paragraph.
+*** END RULES ***
+
+*** START SUMMARY ***
+The CPU is ${summary.cpuName}.
+${
+  summary.marketSegment
+    ? `It is designed for the ${summary.marketSegment} market.`
+    : ''
+}
+${summary.company ? `It is a CPU made by ${summary.company}.` : ''}
+${
+  summary.productionStatus
+    ? `It has a production status of ${summary.productionStatus}.`
+    : ''
+}
+${summary.msrp ? `It has a msrp of ${summary.msrp}.` : ''}
+${summary.releaseDate ? `Its release date is ${summary.releaseDate}.` : ''}
+${summary.architecture ? `Its architecture is ${summary.architecture}.` : ''}
+${summary.generation ? `Its generation is ${summary.generation}.` : ''}
+${
+  summary.processSize
+    ? `It was manufactured on a process size of ${summary.processSize}.`
+    : ''
+}
+${summary.socket ? `Its socket is the ${summary.socket}.` : ''}
+
+${summary.cores ? `The CPU has ${summary.cores} total cores.` : ''}
+${summary.pCores ? `It has ${summary.pCores} performance cores.` : ''}
+${summary.eCores ? `It has ${summary.eCores} efficient cores.` : ''}
+${summary.threads ? `It has ${summary.threads} threads.` : ''}
+${summary.clock ? `It has a clock speed of ${summary.clock}.` : ''}
+${
+  summary.turboClock
+    ? `It has a turbo clock speed of ${summary.turboClock}.`
+    : ''
+}
+${cpu?.fields?.multiplierUnlocked?.value ? 'Its multiplier is unlocked.' : ''}
+${
+  cpu?.fields?.multiplierUnlocked?.value === false
+    ? 'Its multiplier is locked.'
+    : ''
+}
+${summary.l1Cache ? `It has a L1 cache of ${summary.l1Cache}.` : ''}
+${summary.l2Cache ? `It has a L2 cache of ${summary.l2Cache}.` : ''}
+${summary.l3Cache ? `It has a L3 cache of ${summary.l3Cache}.` : ''}
+${
+  summary.memorySupport ? `Its memory support is ${summary.memorySupport}.` : ''
+}
+${
+  summary.memoryChannels
+    ? `Its memory channel is ${summary.memoryChannels}.`
+    : ''
+}
+${summary.pciExpress ? `Its PCI Express is ${summary.pciExpress}.` : ''}
+${summary.tdp ? `Its TDP is ${summary.tdp}.` : ''}
+
+${
+  summary.integratedGraphics
+    ? `Its integrated graphics solution is the ${summary.integratedGraphics}.`
+    : ''
+}
+${
+  summary.bundledCooler
+    ? `Its bundled with the ${summary.bundledCooler} cooler.`
+    : ''
+}
+
+*** END SUMMARY ***
 `.trim();
 };
 
-export function getCpuAiPrompt(
-  cpu: CpuProduct,
-  preferredBenchmark: BenchmarkKey,
-) {
-  return aiPromptTemplate(cpu, preferredBenchmark);
+export function getCpuAiPrompt(cpu: CpuProduct) {
+  return aiPromptTemplate(cpu);
 }

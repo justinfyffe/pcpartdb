@@ -21,9 +21,38 @@ NEXT:
   - More filters
   - Improved UI
 
+Improve AI Summary
+- Use simple sentences for ai prompt.
+- show date it was written
+- add fields for missing data on products list that need summaries written?
+  - maybe can check for various fields too (marketSegment, releaseDate, msrp, productionStatus, company)
+- unknowns:
+  - How to remember to update them when production status (or other critical values) changes?
+    - Maybe reset summary when these change:
+      - productionStatus
+      - marketSegment
+      - releaseDate
+      - msrp
+      - tdp?
+      - memorySize?
+      - memoryType?
+      - suggestedPsu?
+      - codename?
+      - architecture?
+      - slotWidth?
+      - memoryInterface?
+      - memoryClock?
+      - memoryBandwidth?
+    - Maybe add warning to automation update when the above changes?
+      - add an enum field on product for summary warning
+
+Admin Improvements:
+- Chipset sources - apply should exclude non-retail-models
+
 UI Improvements:
 
 Bug Fixes:
+- Saving production throws error (but still saves)
 
 Migrating to App Router:
 - API endpoint
