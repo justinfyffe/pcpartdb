@@ -53,7 +53,7 @@ Do not write bullet points or lists. Do not write headings between paragraphs. O
 Avoid including additional data from other sources.
 The summary should be approximately 300 to 400 words long.
 The summary target 4-5 paragraphs.
-There should be an intro, a memory paragraph, a cores/clock paragraph, a compability paragraph. If you do not have enough data, then skip the paragraph.
+There should be an intro, a memory paragraph, a cores/clock paragraph, a compatibility paragraph. If you do not have enough data, then skip the paragraph.
 *** END RULES ***
 
 *** START SUMMARY ***
