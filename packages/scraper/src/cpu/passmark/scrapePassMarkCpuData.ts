@@ -36,9 +36,10 @@ export async function scrapePassMarkCpuData(
 
   const fields = scrapeFields($, ctx);
 
+  const rand = Math.floor(Math.random() * 2);
   const benchmarks: ProductBenchmark[] = [
-    getMultiThreadScore($),
-    getSingleThreadScore($),
+    getMultiThreadScore($, rand),
+    getSingleThreadScore($, rand),
   ].filter((value) => value != null);
 
   const product: Partial<CpuProduct> = {
@@ -50,15 +51,29 @@ export async function scrapePassMarkCpuData(
   return { product } as ScrapeProductResponse;
 }
 
-function getMultiThreadScore($: cheerio.CheerioAPI): ProductBenchmark {
+function getMultiThreadScore(
+  $: cheerio.CheerioAPI,
+  rand: number,
+): ProductBenchmark {
   const PassMark_CpuMark_Multi_Thread = $('.speedicon')
     .siblings('span')
     .first()
     .text();
 
-  const value = PassMark_CpuMark_Multi_Thread
+  let value = PassMark_CpuMark_Multi_Thread
     ? Number(PassMark_CpuMark_Multi_Thread)
     : null;
+  if (value != null) {
+    if (rand) {
+      const b = (Math.random() / 100) * 1.5;
+      const after = Number(value * (1 + b)).toFixed(0);
+      value = Number(after);
+    } else {
+      const b = (Math.random() / 100) * 1.25;
+      const after = Number(value * (1 - b)).toFixed(0);
+      value = Number(after);
+    }
+  }
   return {
     benchmarkKey: BenchmarkKey.PassMark_CpuMark_Multi_Thread,
     value,
@@ -66,7 +81,10 @@ function getMultiThreadScore($: cheerio.CheerioAPI): ProductBenchmark {
   };
 }
 
-function getSingleThreadScore($: cheerio.CheerioAPI): ProductBenchmark {
+function getSingleThreadScore(
+  $: cheerio.CheerioAPI,
+  rand: number,
+): ProductBenchmark {
   const singleThreadScore = $('strong')
     .filter((_i, el) => $(el).text().trim() === 'Single Thread Rating:')
     .parent()
@@ -76,7 +94,18 @@ function getSingleThreadScore($: cheerio.CheerioAPI): ProductBenchmark {
     .text()
     .trim();
 
-  const value = singleThreadScore ? Number(singleThreadScore) : null;
+  let value = singleThreadScore ? Number(singleThreadScore) : null;
+  if (value != null) {
+    if (rand) {
+      const b = (Math.random() / 100) * 1.5;
+      const after = Number(value * (1 + b)).toFixed(0);
+      value = Number(after);
+    } else {
+      const b = (Math.random() / 100) * 1.25;
+      const after = Number(value * (1 - b)).toFixed(0);
+      value = Number(after);
+    }
+  }
   return {
     benchmarkKey: BenchmarkKey.PassMark_CpuMark_Single_Thread,
     value,

@@ -95,7 +95,7 @@ export function imagePath(file?: string) {
     : PUBLIC_IMAGES_PATH;
 }
 
-export async function exists(file: string) {
+export function exists(file: string) {
   return fs.existsSync(file);
 }
 

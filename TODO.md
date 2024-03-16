@@ -1,9 +1,5 @@
 NEXT:
 - Verify inmobi choice
-- FPS Feature
-  - Above table showing fps: 1080p, 1440p, 4k toggles that update the table values
-    - table contains all games
-  - relative performance and value tables - select game to compare
 - Sitemaps:
   - upload sitemaps in a zip file, and unzip
 - Tech Debt
@@ -15,14 +11,25 @@ NEXT:
   - Improve keyword usages
   - Improve auto-generated summary
   - Redirect sitemap-index.xml to sitemap-index.xml.gz
+
+Games / FPS:
+- Milestone 1 (May 2024):
+  - Games Admin Panel
+  - FPS Tables on View/Compare Page
+    - Table showing fps: 1080p, 1440p, 4k toggles that update the table values
+      - Table contains all games
+    - Relative performance and value tables - select game to compare
+  - Scraping fps
+- Milestone 2 (July 2024):
+  - Game Page
+  - System Requirements
+- Milestone 3 (September 2024):
+  - Can I run it?
+
 - List Pages Improvements
   - More sorts
   - More filters
   - Improved UI
-
-Improve summary:
-- Improve auto summary after moving performance summary to bottom
-- Test auto performance summary
 
 Admin Improvements:
 - Chipset sources - apply should exclude non-retail-models

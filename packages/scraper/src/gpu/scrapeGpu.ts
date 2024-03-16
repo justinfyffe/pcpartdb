@@ -34,7 +34,7 @@ export async function scrapeGpu(options: ScrapeGpuOptions) {
   let hasRetailModels = false;
 
   if (chipset != null) {
-    const response = await scrapeChipset({ sourceProduct: chipset }, ctx);
+    const response = await scrapeChipset(chipset, ctx);
     scrapedProduct = deepmerge(
       { arrayMerge: ArrayMerge.Combine },
       scrapedProduct,
@@ -45,7 +45,7 @@ export async function scrapeGpu(options: ScrapeGpuOptions) {
   for (const sourceKey of SOURCE_ORDER) {
     const source = sources.filter((s) => s.sourceKey === sourceKey)[0] || null;
     if (source != null) {
-      const response = await scrapeSource(source, ctx);
+      const response = await scrapeSource(source, chipset, ctx);
       hasRetailModels = response?.hasRetailModels ?? hasRetailModels;
       scrapedProduct = updateScrapedProduct(scrapedProduct, response);
     }
@@ -79,42 +79,43 @@ function updateScrapedProduct(
 
 async function scrapeSource(
   source: Partial<ProductSource>,
+  chipset: GpuProduct | null,
   ctx: ScraperContext,
 ): Promise<ScrapeProductResponse & { hasRetailModels?: boolean }> {
-  if (source?.sourceProduct != null) {
-    return await scrapeChipset(source, ctx);
-  } else if (source?.sourceKey === ProductSourceKey.NotebookCheck) {
-    return await scrapeNotebookCheck(source, ctx);
+  if (source?.sourceKey === ProductSourceKey.NotebookCheck) {
+    return await scrapeNotebookCheck(source, chipset, ctx);
   } else if (source?.sourceKey === ProductSourceKey.PassMark) {
     return await scrapePassMark(source, ctx);
   } else if (source?.sourceKey === ProductSourceKey.TechPowerUp) {
-    return await scrapeTechPowerUp(source, ctx);
+    return await scrapeTechPowerUp(source, chipset, ctx);
   }
 
   throw new Error('Unsupported product source to scrape');
 }
 
-async function scrapeChipset(
-  source: Partial<ProductSource>,
-  ctx: ScraperContext,
-) {
-  if (source?.sourceProduct == null) {
+async function scrapeChipset(chipset: GpuProduct, ctx: ScraperContext) {
+  if (chipset == null) {
     return null;
   }
   return await scrapeFromChipsetGpu({
-    chipset: source.sourceProduct as GpuProduct,
+    chipset,
     ctx,
   });
 }
 
 async function scrapeNotebookCheck(
   source: Partial<ProductSource>,
+  chipset: GpuProduct | null,
   ctx: ScraperContext,
 ) {
   if (source?.sourceUrl == null) {
     return null;
   }
-  return await scrapeNotebookCheckGpuData({ url: source.sourceUrl, ctx });
+  return await scrapeNotebookCheckGpuData({
+    url: source.sourceUrl,
+    chipset,
+    ctx,
+  });
 }
 
 async function scrapePassMark(
@@ -135,13 +136,18 @@ async function scrapePassMark(
 
 async function scrapeTechPowerUp(
   source: Partial<ProductSource>,
+  chipset: GpuProduct | null,
   ctx: ScraperContext,
 ) {
   if (source?.sourceUrl == null) {
     return null;
   }
   try {
-    return await scrapeTechPowerUpGpuData({ url: source.sourceUrl, ctx });
+    return await scrapeTechPowerUpGpuData({
+      url: source.sourceUrl,
+      chipset,
+      ctx,
+    });
   } catch (e) {
     console.error('Fetching GPU data from TechPowerUp failed. Ignoring it.');
     return null;

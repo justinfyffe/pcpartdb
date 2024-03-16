@@ -84,8 +84,12 @@ export const DATA_TO_SCRAPE: Partial<Record<ProductType, ProductFieldKey[]>> = {
     'powerConnectors',
     'outputs',
 
-    'gpuCores',
+    'streamProcessors',
+    'shadingUnits',
+    'cudaCores',
     'computeUnits',
+    'executionUnits',
+    'streamMultiprocessors',
     'tmus',
     'rops',
     'rtCores',
@@ -165,6 +169,12 @@ export const BENCHMARKS_TO_SCRAPE: Partial<
     BenchmarkKey._3dMark_05_Standard,
     BenchmarkKey._3dMark_03_Standard,
     BenchmarkKey._3dMark_2001SE_Standard,
+
+    // Blender
+    BenchmarkKey.Blender_3_3_Classroom_Cuda,
+    BenchmarkKey.Blender_3_3_Classroom_Hip,
+    BenchmarkKey.Blender_3_3_Classroom_Metal,
+    BenchmarkKey.Blender_3_3_Classroom_Optix,
 
     // Cinebench
     BenchmarkKey.Cinebench_R15_OpenGl_64_Bit,

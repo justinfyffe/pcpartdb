@@ -215,7 +215,15 @@ function buildGpuContentParams(
     brand: false,
   });
   params['computeUnits'] = getFormattedValue(product?.fields?.computeUnits);
-  params['gpuCores'] = getFormattedValue(product?.fields?.gpuCores);
+  params['executionUnits'] = getFormattedValue(product?.fields?.executionUnits);
+  params['streamMultiprocessors'] = getFormattedValue(
+    product?.fields?.streamMultiprocessors,
+  );
+  params['streamProcessors'] = getFormattedValue(
+    product?.fields?.streamProcessors,
+  );
+  params['shadingUnits'] = getFormattedValue(product?.fields?.shadingUnits);
+  params['cudaCores'] = getFormattedValue(product?.fields?.cudaCores);
   params['coreClock'] = getFormattedValue(product?.fields?.gpuCoreBaseClock);
   params['coreBoostClock'] = getFormattedValue(
     product?.fields?.gpuCoreBoostClock,

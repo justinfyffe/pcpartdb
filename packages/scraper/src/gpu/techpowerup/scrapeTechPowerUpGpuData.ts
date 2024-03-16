@@ -48,13 +48,14 @@ const NULL_VALUES = ['n/a', 'none', 'unknown'];
 
 export interface ScrapeTechPowerGpuDataOptions extends CommonScraperOptions {
   url: string;
+  chipset?: GpuProduct;
 }
 
 // Example: https://www.techpowerup.com/gpu-specs/geforce-rtx-3090.c3622
 export async function scrapeTechPowerUpGpuData(
   options: ScrapeTechPowerGpuDataOptions,
 ) {
-  const { url, noProxy, ctx } = options;
+  const { url, chipset, noProxy, ctx } = options;
 
   const response = await scraper.scrapeGet(url, { retries: 1, noProxy });
   const $ = cheerio.load(response.data);
@@ -68,7 +69,9 @@ export async function scrapeTechPowerUpGpuData(
     architecture: getArchitecture($, ctx),
     busInterface: getBusInterface($, ctx),
     codename: getCodename($, ctx),
-    computeUnits: getComputeUnits($, ctx),
+    cudaCores: getCudaCores($, company, chipset, ctx),
+    computeUnits: getComputeUnits($, company, chipset, ctx),
+    executionUnits: getExecutionUnits($, company, chipset, ctx),
     gpuCoreBaseClock: getGpuCoreBaseClock($, ctx),
     gpuCoreBoostClock: getGpuCoreBoostClock($, ctx),
     directxVersion: getDirectxVersion($, ctx),
@@ -95,8 +98,10 @@ export async function scrapeTechPowerUpGpuData(
     rtCores: getRayTracingCores($, ctx),
     rops: getRops($, ctx),
     shaderModelVersion: getShaderModelVersion($, ctx),
-    gpuCores: getGpuCores($, ctx),
+    shadingUnits: getShadingUnits($, company, chipset, ctx),
     slotWidth: getSlotWidth($, ctx),
+    streamMultiprocessors: getStreamMultiprocessors($, company, chipset, ctx),
+    streamProcessors: getStreamProcessors($, company, chipset, ctx),
     suggestedPsu: getSuggestedPsu($, ctx),
     tensorCores: getTensorCores($, ctx),
     textureRate: getTextureRate($, ctx),
@@ -184,8 +189,15 @@ function getCompany($: cheerio.CheerioAPI): string {
 
 function getComputeUnits(
   $: cheerio.CheerioAPI,
+  company: string | null,
+  chipset: GpuProduct | null,
   ctx?: ScraperContext,
 ): GpuField<number> {
+  const lcCompany = (chipset?.company || company)?.toLowerCase();
+  if (lcCompany !== 'amd' && lcCompany != 'ati') {
+    return null;
+  }
+
   const values1 = tokenizeSpecValues($, 'Compute Units');
   const values2 = tokenizeSpecValues($, 'SM Count');
 
@@ -196,6 +208,58 @@ function getComputeUnits(
 
   return createGpuField({
     field: 'computeUnits',
+    raw: result?.rawValue ?? null,
+    formatted: result?.formattedValue ?? null,
+    ctx,
+  });
+}
+
+function getCudaCores(
+  $: cheerio.CheerioAPI,
+  company: string | null,
+  chipset: GpuProduct | null,
+  ctx?: ScraperContext,
+): GpuField<number> {
+  const lcCompany = (chipset?.company || company)?.toLowerCase();
+  if (lcCompany !== 'nvidia') {
+    return null;
+  }
+
+  const values = tokenizeSpecValues($, 'Shading Units');
+  const result = parseNumberValue({
+    fieldKey: 'cudaCores',
+    value: values[0] || null,
+  });
+
+  return createGpuField({
+    field: 'cudaCores',
+    raw: result?.rawValue ?? null,
+    formatted: result?.formattedValue ?? null,
+    ctx,
+  });
+}
+
+function getExecutionUnits(
+  $: cheerio.CheerioAPI,
+  company: string | null,
+  chipset: GpuProduct | null,
+  ctx?: ScraperContext,
+): GpuField<number> {
+  const lcCompany = (chipset?.company || company)?.toLowerCase();
+  if (lcCompany !== 'intel') {
+    return null;
+  }
+
+  const values1 = tokenizeSpecValues($, 'Compute Units');
+  const values2 = tokenizeSpecValues($, 'SM Count');
+
+  const result = parseNumberValue({
+    fieldKey: 'executionUnits',
+    value: values1[0] || values2[0] || null,
+  });
+
+  return createGpuField({
+    field: 'executionUnits',
     raw: result?.rawValue ?? null,
     formatted: result?.formattedValue ?? null,
     ctx,
@@ -817,18 +881,25 @@ function getShaderModelVersion(
   });
 }
 
-function getGpuCores(
+function getShadingUnits(
   $: cheerio.CheerioAPI,
+  company: string | null,
+  chipset: GpuProduct | null,
   ctx?: ScraperContext,
 ): GpuField<number> {
+  const lcCompany = (chipset?.company || company)?.toLowerCase();
+  if (lcCompany !== 'intel' && lcCompany != 'ati') {
+    return null;
+  }
+
   const values = tokenizeSpecValues($, 'Shading Units');
   const result = parseNumberValue({
-    fieldKey: 'gpuCores',
+    fieldKey: 'shadingUnits',
     value: values[0] || null,
   });
 
   return createGpuField({
-    field: 'gpuCores',
+    field: 'shadingUnits',
     raw: result?.rawValue ?? null,
     formatted: result?.formattedValue ?? null,
     ctx,
@@ -855,6 +926,58 @@ function getSlotWidth(
   const formatted = formatProductField(ProductType.Gpu, 'slotWidth', raw);
 
   return createGpuField({ field: 'slotWidth', raw, formatted, ctx });
+}
+
+function getStreamMultiprocessors(
+  $: cheerio.CheerioAPI,
+  company: string | null,
+  chipset: GpuProduct | null,
+  ctx?: ScraperContext,
+): GpuField<number> {
+  const lcCompany = (chipset?.company || company)?.toLowerCase();
+  if (lcCompany !== 'nvidia') {
+    return null;
+  }
+
+  const values1 = tokenizeSpecValues($, 'Compute Units');
+  const values2 = tokenizeSpecValues($, 'SM Count');
+
+  const result = parseNumberValue({
+    fieldKey: 'streamMultiprocessors',
+    value: values1[0] || values2[0] || null,
+  });
+
+  return createGpuField({
+    field: 'streamMultiprocessors',
+    raw: result?.rawValue ?? null,
+    formatted: result?.formattedValue ?? null,
+    ctx,
+  });
+}
+
+function getStreamProcessors(
+  $: cheerio.CheerioAPI,
+  company: string | null,
+  chipset: GpuProduct | null,
+  ctx?: ScraperContext,
+): GpuField<number> {
+  const lcCompany = (chipset?.company || company)?.toLowerCase();
+  if (lcCompany !== 'amd') {
+    return null;
+  }
+
+  const values = tokenizeSpecValues($, 'Shading Units');
+  const result = parseNumberValue({
+    fieldKey: 'streamProcessors',
+    value: values[0] || null,
+  });
+
+  return createGpuField({
+    field: 'streamProcessors',
+    raw: result?.rawValue ?? null,
+    formatted: result?.formattedValue ?? null,
+    ctx,
+  });
 }
 
 function getSuggestedPsu(

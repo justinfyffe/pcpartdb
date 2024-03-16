@@ -16,10 +16,18 @@ export const CoresSpecs: FunctionComponent<CoresSpecsProps> = (props) => {
   const [gpu1, gpu2] = comparison;
 
   if (
-    !hasProductFieldFormattedValue(gpu1.fields?.gpuCores) &&
-    !hasProductFieldFormattedValue(gpu2.fields?.gpuCores) &&
+    !hasProductFieldFormattedValue(gpu1.fields?.streamProcessors) &&
+    !hasProductFieldFormattedValue(gpu2.fields?.streamProcessors) &&
+    !hasProductFieldFormattedValue(gpu1.fields?.shadingUnits) &&
+    !hasProductFieldFormattedValue(gpu2.fields?.shadingUnits) &&
+    !hasProductFieldFormattedValue(gpu1.fields?.cudaCores) &&
+    !hasProductFieldFormattedValue(gpu2.fields?.cudaCores) &&
     !hasProductFieldFormattedValue(gpu1.fields?.computeUnits) &&
     !hasProductFieldFormattedValue(gpu2.fields?.computeUnits) &&
+    !hasProductFieldFormattedValue(gpu1.fields?.executionUnits) &&
+    !hasProductFieldFormattedValue(gpu2.fields?.executionUnits) &&
+    !hasProductFieldFormattedValue(gpu1.fields?.streamMultiprocessors) &&
+    !hasProductFieldFormattedValue(gpu2.fields?.streamMultiprocessors) &&
     !hasProductFieldFormattedValue(gpu1.fields?.tmus) &&
     !hasProductFieldFormattedValue(gpu2.fields?.tmus) &&
     !hasProductFieldFormattedValue(gpu1.fields?.rops) &&

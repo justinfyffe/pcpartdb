@@ -185,6 +185,7 @@ async function writeCpuComparisonsSitemap(cpuSlugs: SitemapProductSlug[]) {
   const entries: Record<string, SitemapEntry[]> = {};
   const lastModifications: Record<string, number> = {};
 
+  const hashSize = getComparisonHashSize(cpuSlugs.length);
   for (let i = 0; i < cpuSlugs.length - 1; ++i) {
     for (let j = i + 1; j < cpuSlugs.length; ++j) {
       const cpuSlug1 = cpuSlugs[i];
@@ -207,7 +208,7 @@ async function writeCpuComparisonsSitemap(cpuSlugs: SitemapProductSlug[]) {
       const lastModification =
         lastModTimestamp != 0 ? new Date(lastModTimestamp) : undefined;
 
-      const name = getSitemapName(url, 3);
+      const name = getSitemapName(url, hashSize);
 
       if (!entries[name]) {
         entries[name] = [];
@@ -359,6 +360,7 @@ async function writeGpuComparisonsSitemap(gpuSlugs: SitemapProductSlug[]) {
   const entries: Record<string, SitemapEntry[]> = {};
   const lastModifications: Record<string, number> = {};
 
+  const hashSize = getComparisonHashSize(gpuSlugs.length);
   for (let i = 0; i < gpuSlugs.length - 1; ++i) {
     for (let j = i + 1; j < gpuSlugs.length; ++j) {
       const gpuSlug1 = gpuSlugs[i];
@@ -381,7 +383,7 @@ async function writeGpuComparisonsSitemap(gpuSlugs: SitemapProductSlug[]) {
       const lastModification =
         lastModTimestamp != 0 ? new Date(lastModTimestamp) : undefined;
 
-      const sitemapName = getSitemapName(url, 3);
+      const sitemapName = getSitemapName(url, hashSize);
 
       if (!entries[sitemapName]) {
         entries[sitemapName] = [];
@@ -471,7 +473,7 @@ function generateSitemapIndexEntryObject(entry: SitemapIndexEntry) {
     return {
       sitemap: [
         { loc: entry.url },
-        { lastmod: entry.lastModification.toISOString().split('T')[0] },
+        // { lastmod: entry.lastModification.toISOString().split('T')[0] },
       ],
     };
   }
@@ -484,7 +486,7 @@ function generateSitemapUrlObject(entry: SitemapEntry) {
     return {
       url: [
         { loc: entry.url },
-        { lastmod: entry.lastModification.toISOString().split('T')[0] },
+        // { lastmod: entry.lastModification.toISOString().split('T')[0] },
       ],
     };
   }
@@ -556,4 +558,14 @@ function generateUuid(value: string) {
 function getSitemapName(url: string, size: number) {
   const uuid = generateUuid(url);
   return uuid.substring(0, size) || '0';
+}
+
+function getComparisonHashSize(products: number) {
+  if (products > 6500) {
+    return 3;
+  } else if (products > 1600) {
+    return 2;
+  } else {
+    return 1;
+  }
 }

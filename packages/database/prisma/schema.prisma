@@ -548,8 +548,13 @@ model GpuFields {
   codenameValue String? @map("codename_value")
   codenameMeta Json? @map("codename_meta")
 
-  computeUnitsValue Float? @map("compute_units_value") // aka Stream Multiprocessor (SM), 
+  // Compute Units (CU) for Intel, Stream Multiprocessor (SM) for NVIDIA, Execution Unit (EU) for Intel
+  computeUnitsValue Float? @map("compute_units_value")
   computeUnitsMeta Json? @map("compute_units_meta")
+
+  // CUDA Cores for nvidia, Stream Processors (SP) for AMD, shading unit for intel, shader units
+  cudaCoresValue Float? @map("cuda_cores_value")
+  cudaCoresMeta Json? @map("cuda_cores_meta")
 
   cudaVersionValue String? @map("cuda_version_value")
   cudaVersionMeta Json? @map("cuda_version_meta")
@@ -562,6 +567,10 @@ model GpuFields {
 
   directxVersionValue String? @map("directx_version_value")
   directxVersionMeta Json? @map("directx_version_meta")
+
+  // Compute Units (CU) for Intel, Stream Multiprocessor (SM) for NVIDIA, Execution Unit (EU) for Intel
+  executionUnitsValue Float? @map("execution_units_value")
+  executionUnitsMeta Json? @map("execution_units_meta")
 
   foundryValue String? @map("foundry_value")
   foundryMeta Json? @map("foundry_meta")
@@ -577,9 +586,6 @@ model GpuFields {
 
   generationValue String? @map("generation_value")
   generationMeta Json? @map("generation_meta")
-
-  gpuCoresValue Float? @map("gpu_cores_value") // aka CUDA Cores, Stream Processors
-  gpuCoresMeta Json? @map("gpu_cores_meta")
 
   gpuCoreBaseClockValue Float? @map("gpu_core_base_clock_value")
   gpuCoreBaseClockMeta Json? @map("gpu_core_base_clock_meta")
@@ -668,8 +674,20 @@ model GpuFields {
   shaderModelVersionValue String? @map("shader_model_version_value")
   shaderModelVersionMeta Json? @map("shader_model_version_meta")
 
+  // CUDA Cores for nvidia, Stream Processors (SP) for AMD, shading unit for intel, shader units in general
+  shadingUnitsValue Float? @map("shading_units_value")
+  shadingUnitsMeta Json? @map("shading_units_meta")
+
   slotWidthValue Float? @map("slot_width_value")
   slotWidthMeta Json? @map("slot_width_meta")
+
+  // Compute Units (CU) for AMD, Stream Multiprocessors (SM) for NVIDIA, Execution Unit (EU) for Intel
+  streamMultiprocessorsValue Float? @map("stream_multiprocessors_value")
+  streamMultiprocessorsMeta Json? @map("stream_multiprocessors_meta")
+
+  // CUDA Cores for nvidia, Stream Processors (SP) for AMD, shading unit for intel, shader units
+  streamProcessorsValue Float? @map("stream_processors_value")
+  streamProcessorsMeta Json? @map("stream_processors_meta")
 
   successorGenerationValue String? @map("successor_generation_value")
   successorGenerationMeta Json? @map("successor_generation_meta")

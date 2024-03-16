@@ -12,8 +12,12 @@ export const CoresSpecs: FunctionComponent<CoresSpecsProps> = (props) => {
   const { gpu, className } = props;
 
   if (
-    !hasProductFieldFormattedValue(gpu.fields?.gpuCores) &&
+    !hasProductFieldFormattedValue(gpu.fields?.streamProcessors) &&
+    !hasProductFieldFormattedValue(gpu.fields?.shadingUnits) &&
+    !hasProductFieldFormattedValue(gpu.fields?.cudaCores) &&
     !hasProductFieldFormattedValue(gpu.fields?.computeUnits) &&
+    !hasProductFieldFormattedValue(gpu.fields?.executionUnits) &&
+    !hasProductFieldFormattedValue(gpu.fields?.streamMultiprocessors) &&
     !hasProductFieldFormattedValue(gpu.fields?.tmus) &&
     !hasProductFieldFormattedValue(gpu.fields?.rops) &&
     !hasProductFieldFormattedValue(gpu.fields?.tensorCores) &&

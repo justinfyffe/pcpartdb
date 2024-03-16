@@ -1,8 +1,8 @@
 import {
   BenchmarkKey,
-  FrequencyUnit,
   formatProductField,
   FormatProductFieldOptions,
+  FrequencyUnit,
   getBaseUnitValue,
   GpuFieldKey,
   GpuFields,
@@ -37,9 +37,11 @@ export async function scrapePassMarkGpuData(
 
   const fields = scrapeFields($, ctx);
 
-  const benchmarks: ProductBenchmark[] = [getG3dMark($), getG2dMark($)].filter(
-    (value) => value != null,
-  );
+  const rand = Math.floor(Math.random() * 2);
+  const benchmarks: ProductBenchmark[] = [
+    getG3dMark($, rand),
+    getG2dMark($, rand),
+  ].filter((value) => value != null);
 
   const product: Partial<GpuProduct> = {
     productType: ProductType.Gpu,
@@ -50,9 +52,20 @@ export async function scrapePassMarkGpuData(
   return { product } as ScrapeProductResponse;
 }
 
-function getG3dMark($: cheerio.CheerioAPI): ProductBenchmark {
+function getG3dMark($: cheerio.CheerioAPI, rand: number): ProductBenchmark {
   const g3dMark = $('.speedicon').siblings('span').first().text();
-  const value = g3dMark ? Number(g3dMark) : null;
+  let value = g3dMark ? Number(g3dMark) : null;
+  if (value != null) {
+    if (rand) {
+      const b = (Math.random() / 100) * 1.5;
+      const after = Number(value * (1 + b)).toFixed(0);
+      value = Number(after);
+    } else {
+      const b = (Math.random() / 100) * 1.25;
+      const after = Number(value * (1 - b)).toFixed(0);
+      value = Number(after);
+    }
+  }
   return {
     benchmarkKey: BenchmarkKey.PassMark_G3dMark,
     value,
@@ -60,7 +73,7 @@ function getG3dMark($: cheerio.CheerioAPI): ProductBenchmark {
   } as ProductBenchmark;
 }
 
-function getG2dMark($: cheerio.CheerioAPI): ProductBenchmark {
+function getG2dMark($: cheerio.CheerioAPI, rand: number): ProductBenchmark {
   const g2dMark = $('strong')
     .filter((_i, el) => $(el).text().trim() === 'Average G2D Mark:')
     .parent()
@@ -70,7 +83,18 @@ function getG2dMark($: cheerio.CheerioAPI): ProductBenchmark {
     .text()
     .trim();
 
-  const value = g2dMark ? Number(g2dMark) : null;
+  let value = g2dMark ? Number(g2dMark) : null;
+  if (value != null) {
+    if (rand) {
+      const b = (Math.random() / 100) * 1.5;
+      const after = Number(value * (1 + b)).toFixed(0);
+      value = Number(after);
+    } else {
+      const b = (Math.random() / 100) * 1.25;
+      const after = Number(value * (1 - b)).toFixed(0);
+      value = Number(after);
+    }
+  }
   return {
     benchmarkKey: BenchmarkKey.PassMark_G2dMark,
     value,

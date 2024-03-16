@@ -85,8 +85,14 @@ export interface GpuFormData {
   outputs?: GpuField<string>;
 
   // Cores & Clock Speeds
-  gpuCores?: GpuField<number>;
+  streamProcessors?: GpuField<number>;
+  shadingUnits?: GpuField<number>;
+  cudaCores?: GpuField<number>;
+  //
   computeUnits?: GpuField<number>;
+  executionUnits?: GpuField<number>;
+  streamMultiprocessors?: GpuField<number>;
+  //
   tmus?: GpuField<number>;
   rops?: GpuField<number>;
   tensorCores?: GpuField<number>;
@@ -171,8 +177,14 @@ const gpuFormSchema = Joi.object({
   outputs: productFieldSchema.allow(null),
 
   // Cores & Clock Speed
-  gpuCores: productFieldSchema.allow(null),
+  streamProcessors: productFieldSchema.allow(null),
+  shadingUnits: productFieldSchema.allow(null),
+  cudaCores: productFieldSchema.allow(null),
+  //
   computeUnits: productFieldSchema.allow(null),
+  executionUnits: productFieldSchema.allow(null),
+  streamMultiprocessors: productFieldSchema.allow(null),
+  //
   tmus: productFieldSchema.allow(null),
   rops: productFieldSchema.allow(null),
   tensorCores: productFieldSchema.allow(null),
@@ -265,8 +277,12 @@ export function gpuFormOptions(product?: Product): UseFormProps<GpuFormData> {
       outputs: product?.fields?.outputs ?? null,
 
       // Cores & Clock Speeds
-      gpuCores: product?.fields?.gpuCores ?? null,
+      streamProcessors: product?.fields?.streamProcessors ?? null,
+      shadingUnits: product?.fields?.shadingUnits ?? null,
+      cudaCores: product?.fields?.cudaCores ?? null,
       computeUnits: product?.fields?.computeUnits ?? null,
+      executionUnits: product?.fields?.executionUnits ?? null,
+      streamMultiprocessors: product?.fields?.streamMultiprocessors ?? null,
       tmus: product?.fields?.tmus ?? null,
       rops: product?.fields?.rops ?? null,
       tensorCores: product?.fields?.tensorCores ?? null,
@@ -354,8 +370,12 @@ export function formDataToGpuRequest(
         outputs: formData.outputs ?? null,
 
         // Cores & Clock Speeds
-        gpuCores: formData.gpuCores ?? null,
+        streamProcessors: formData.streamProcessors ?? null,
+        shadingUnits: formData.shadingUnits ?? null,
+        cudaCores: formData.cudaCores ?? null,
         computeUnits: formData.computeUnits ?? null,
+        executionUnits: formData.executionUnits ?? null,
+        streamMultiprocessors: formData.streamMultiprocessors ?? null,
         tmus: formData.tmus ?? null,
         rops: formData.rops ?? null,
         tensorCores: formData.tensorCores ?? null,
@@ -799,25 +819,71 @@ export function buildGpuFormInputs(product?: Product): ProductFormInputGroups {
     {
       label: 'Cores & Clock Speeds',
       inputs: [
+        // Stream Processors (AMD), Shading Units (Intel), CUDA Cores (AMD), Shaders: Equivalent
         {
-          name: 'gpuCores',
+          name: 'streamProcessors',
           inputType: ProductFormInputType.FloatField,
-          label: 'GPU Cores (Shader Units / CUDA Cores)',
-          fieldKey: 'gpuCores',
+          label: 'Stream Processors (AMD)',
+          fieldKey: 'streamProcessors',
           overrides: (ctx) => ({
             placeholder: productFieldFormattedValue(
-              ctx.parentProduct?.fields?.gpuCores ?? undefined,
+              ctx.parentProduct?.fields?.streamProcessors ?? undefined,
             ),
           }),
         },
         {
+          name: 'shadingUnits',
+          inputType: ProductFormInputType.FloatField,
+          label: 'Shading Units (Intel)',
+          fieldKey: 'shadingUnits',
+          overrides: (ctx) => ({
+            placeholder: productFieldFormattedValue(
+              ctx.parentProduct?.fields?.shadingUnits ?? undefined,
+            ),
+          }),
+        },
+        {
+          name: 'cudaCores',
+          inputType: ProductFormInputType.FloatField,
+          label: 'CUDA Cores (NVIDIA)',
+          fieldKey: 'cudaCores',
+          overrides: (ctx) => ({
+            placeholder: productFieldFormattedValue(
+              ctx.parentProduct?.fields?.cudaCores ?? undefined,
+            ),
+          }),
+        },
+        // Compute Units (AMD), Execution Units (Intel), Stream Multiprocessors (NVIDIA): Equivalent
+        {
           name: 'computeUnits',
           inputType: ProductFormInputType.FloatField,
-          label: 'Compute Units / SM Count',
+          label: 'Compute Units (AMD)',
           fieldKey: 'computeUnits',
           overrides: (ctx) => ({
             placeholder: productFieldFormattedValue(
               ctx.parentProduct?.fields?.computeUnits ?? undefined,
+            ),
+          }),
+        },
+        {
+          name: 'executionUnits',
+          inputType: ProductFormInputType.FloatField,
+          label: 'Execution Units (Intel)',
+          fieldKey: 'executionUnits',
+          overrides: (ctx) => ({
+            placeholder: productFieldFormattedValue(
+              ctx.parentProduct?.fields?.executionUnits ?? undefined,
+            ),
+          }),
+        },
+        {
+          name: 'streamMultiprocessors',
+          inputType: ProductFormInputType.FloatField,
+          label: 'Stream Multiprocessors (NVIDIA)',
+          fieldKey: 'streamMultiprocessors',
+          overrides: (ctx) => ({
+            placeholder: productFieldFormattedValue(
+              ctx.parentProduct?.fields?.streamMultiprocessors ?? undefined,
             ),
           }),
         },

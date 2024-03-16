@@ -27,11 +27,13 @@ export interface GpuFields {
   architecture?: GpuField<string>;
   busInterface?: GpuField<string>;
   codename?: GpuField<string>;
-  computeUnits?: GpuField<number>; // aka Stream Multiprocessor (SM),
+  computeUnits?: GpuField<number>; // Stream Multiprocessor (SM) for NVIDIA, and Compute Units for AMD, and Execution Units for Intel
+  cudaCores?: GpuField<number>; // GPU Cores, CUDA Cores for NVIDIA, Shading Units for Intel, Stream Processors for AMD, Shader Units in general
   cudaVersion?: GpuField<string>;
   density?: GpuField<number>;
   dieSize?: GpuField<number>;
   directxVersion?: GpuField<string>;
+  executionUnits?: GpuField<number>; // Stream Multiprocessor (SM) for NVIDIA, and Compute Units for AMD, and Execution Units for Intel
   foundry?: GpuField<string>;
   fp16?: GpuField<number>;
   fp32?: GpuField<number>;
@@ -39,7 +41,6 @@ export interface GpuFields {
   generation?: GpuField<string>;
   gpuCoreBaseClock?: GpuField<number>;
   gpuCoreBoostClock?: GpuField<number>;
-  gpuCores?: GpuField<number>; // aka CUDA Cores, Stream Processors
   height?: GpuField<number>;
   l1Cache?: GpuField<number>;
   l2Cache?: GpuField<number>;
@@ -67,7 +68,10 @@ export interface GpuFields {
   rtCores?: GpuField<number>; // aka Ray Tracing Cores
   shaderClock?: GpuField<number>;
   shaderModelVersion?: GpuField<string>;
+  shadingUnits?: GpuField<number>; // GPU Cores, CUDA Cores for NVIDIA, Shading Units for Intel, Stream Processors for AMD, Shader Units in general
   slotWidth?: GpuField<number>;
+  streamProcessors?: GpuField<number>; // GPU Cores, CUDA Cores for NVIDIA, Shading Units for Intel, Stream Processors for AMD, Shader Units in general
+  streamMultiprocessors?: GpuField<number>; // Stream Multiprocessor (SM) for NVIDIA, and Compute Units for AMD, and Execution Units for Intel
   successorGeneration?: GpuField<string>;
   suggestedPsu?: GpuField<number>;
   tdp?: GpuField<number>; // aka Thermal Design Power
@@ -106,6 +110,7 @@ export const GPU_FIELD_LABELS: Record<string, string> = {
   memorySize: 'Memory Size',
   memoryType: 'Memory Type',
   memoryClock: 'Memory Clock',
+  memoryClockEffective: 'Memory Clock (Effective)',
   memoryInterface: 'Memory Interface',
   memoryBandwidth: 'Memory Bandwidth',
 
@@ -123,10 +128,16 @@ export const GPU_FIELD_LABELS: Record<string, string> = {
   outputs: 'Outputs',
 
   // Cores & Clock Speeds
-  gpuCores: 'GPU Cores',
-  computeUnits: 'Compute Units',
-  tmus: 'Texture Mapping Units (TMUs)',
-  rops: 'Render Output Units (ROPs)',
+  streamProcessors: 'Stream Processors (SP)',
+  shadingUnits: 'Shading Units',
+  cudaCores: 'CUDA Cores',
+  //
+  computeUnits: 'Compute Units (CU)',
+  executionUnits: 'Execution Units (EU)',
+  streamMultiprocessors: 'Stream Multiprocessors (SM)',
+  //
+  tmus: 'Texture Mapping Units (TMU)',
+  rops: 'Render Output Units (ROP)',
   tensorCores: 'Tensor Cores',
   rtCores: 'Ray Tracing Cores',
   gpuCoreBaseClock: 'Clock Speed (Base)',

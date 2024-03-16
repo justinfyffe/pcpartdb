@@ -173,7 +173,7 @@ function mergeGpus(originalGpu: GpuProduct, scrapedGpu: GpuProduct) {
   result.summaryPublishedAt = originalGpu.summaryPublishedAt;
   result.summaryStale = originalGpu.summaryStale;
 
-  if (hasSummaryImpactingChanges(originalGpu, scrapedGpu)) {
+  if (hasSummaryImpactingChanges(originalGpu, result)) {
     result.summaryStale = true;
   }
 
@@ -181,21 +181,29 @@ function mergeGpus(originalGpu: GpuProduct, scrapedGpu: GpuProduct) {
 }
 
 function hasSummaryImpactingChanges(before: GpuProduct, after: GpuProduct) {
+  if (!after.summary) {
+    return false;
+  }
+
   return (
-    before.fields?.productionStatus !== after.fields?.productionStatus ||
-    before.fields?.marketSegment !== after.fields?.marketSegment ||
-    before.fields?.releaseDate !== after.fields?.releaseDate ||
-    before.fields?.msrp !== after.fields?.msrp ||
-    before.fields?.tdp !== after.fields?.tdp ||
-    before.fields?.memorySize !== after.fields?.memorySize ||
-    before.fields?.memoryType !== after.fields?.memoryType ||
-    before.fields?.suggestedPsu !== after.fields?.suggestedPsu ||
-    before.fields?.codename !== after.fields?.codename ||
-    before.fields?.architecture !== after.fields?.architecture ||
-    before.fields?.slotWidth !== after.fields?.slotWidth ||
-    before.fields?.memoryInterface !== after.fields?.memoryInterface ||
-    before.fields?.memoryClock !== after.fields?.memoryClock ||
-    before.fields?.memoryBandwidth !== after.fields?.memoryBandwidth
+    before.fields?.productionStatus?.value !==
+      after.fields?.productionStatus?.value ||
+    before.fields?.marketSegment?.value !==
+      after.fields?.marketSegment?.value ||
+    before.fields?.releaseDate?.value !== after.fields?.releaseDate?.value ||
+    before.fields?.msrp?.value !== after.fields?.msrp?.value ||
+    before.fields?.tdp?.value !== after.fields?.tdp?.value ||
+    before.fields?.memorySize?.value !== after.fields?.memorySize?.value ||
+    before.fields?.memoryType?.value !== after.fields?.memoryType?.value ||
+    before.fields?.suggestedPsu?.value !== after.fields?.suggestedPsu?.value ||
+    before.fields?.codename?.value !== after.fields?.codename?.value ||
+    before.fields?.architecture?.value !== after.fields?.architecture?.value ||
+    before.fields?.slotWidth?.value !== after.fields?.slotWidth?.value ||
+    before.fields?.memoryInterface?.value !==
+      after.fields?.memoryInterface?.value ||
+    before.fields?.memoryClock?.value !== after.fields?.memoryClock?.value ||
+    before.fields?.memoryBandwidth?.value !==
+      after.fields?.memoryBandwidth?.value
   );
 }
 

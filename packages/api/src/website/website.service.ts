@@ -18,7 +18,9 @@ export class WebsiteService {
     const originalPath = fileUtils.uploadsPath(request.tempPath);
     const sitemapPath = fileUtils.sitemapsPath(request.originalFileName);
 
-    await fileUtils.remove(sitemapPath);
+    if (fileUtils.exists(sitemapPath)) {
+      await fileUtils.remove(sitemapPath);
+    }
     await fileUtils.move(originalPath, sitemapPath);
   }
 

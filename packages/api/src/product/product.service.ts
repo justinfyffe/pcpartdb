@@ -13,6 +13,7 @@ import {
   CreateProductRequest,
   createProductRequestSchema,
   getPreferredBenchmark,
+  GpuProduct,
   listAllProductsRequestSchema,
   ListProductsRequest,
   listProductsRequestSchema,
@@ -526,18 +527,19 @@ export class ProductService {
     if (productType === ProductType.Cpu) {
       return await scrapeCpu({ sources });
     } else if (productType === ProductType.Gpu) {
+      let chipset: GpuProduct = null;
       for (let i = 0; i < sources.length; ++i) {
         const source = sources[i];
         if (source.sourceProductId != null) {
-          const sourceProduct = await this.getById(
+          const product = await this.getById(
             { id: source.sourceProductId },
             ctx,
           );
-          source.sourceProduct = sourceProduct;
+          chipset = product as GpuProduct;
         }
       }
 
-      return await scrapeGpu({ sources });
+      return await scrapeGpu({ chipset, sources });
     }
 
     throw badRequestError({

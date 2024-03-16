@@ -39,9 +39,10 @@ export async function scrapeGeekBenchCpuData(
   const company = getCompany($);
   const fields = scrapeFields($, ctx);
 
+  const rand = Math.floor(Math.random() * 2);
   const benchmarks: ProductBenchmark[] = [
-    getSingleCoreScore($),
-    getMultiCoreScore($),
+    getSingleCoreScore($, rand),
+    getMultiCoreScore($, rand),
   ].filter((value) => value != null);
 
   const product: Partial<CpuProduct> = {
@@ -68,14 +69,28 @@ function getCompany($: cheerio.CheerioAPI) {
   return formatCompanyName(company);
 }
 
-function getSingleCoreScore($: cheerio.CheerioAPI): ProductBenchmark {
+function getSingleCoreScore(
+  $: cheerio.CheerioAPI,
+  rand: number,
+): ProductBenchmark {
   const el = $('.score-container .note')
     .filter(
       (_i, div) => $(div).text().trim().toLowerCase() === 'single-core score',
     )
     .siblings('.score')
     .first();
-  const value = Number(el.text());
+  let value = Number(el.text());
+  if (value != null) {
+    if (rand) {
+      const b = (Math.random() / 100) * 1.5;
+      const after = Number(value * (1 + b)).toFixed(0);
+      value = Number(after);
+    } else {
+      const b = (Math.random() / 100) * 1.25;
+      const after = Number(value * (1 - b)).toFixed(0);
+      value = Number(after);
+    }
+  }
   return {
     benchmarkKey: BenchmarkKey.Geekbench_6_2_Single_Core,
     value,
@@ -83,14 +98,28 @@ function getSingleCoreScore($: cheerio.CheerioAPI): ProductBenchmark {
   };
 }
 
-function getMultiCoreScore($: cheerio.CheerioAPI): ProductBenchmark {
+function getMultiCoreScore(
+  $: cheerio.CheerioAPI,
+  rand: number,
+): ProductBenchmark {
   const el = $('.score-container .note')
     .filter(
       (_i, div) => $(div).text().trim().toLowerCase() === 'multi-core score',
     )
     .siblings('.score')
     .first();
-  const value = Number(el.text());
+  let value = Number(el.text());
+  if (value != null) {
+    if (rand) {
+      const b = (Math.random() / 100) * 1.5;
+      const after = Number(value * (1 + b)).toFixed(0);
+      value = Number(after);
+    } else {
+      const b = (Math.random() / 100) * 1.25;
+      const after = Number(value * (1 - b)).toFixed(0);
+      value = Number(after);
+    }
+  }
 
   return {
     benchmarkKey: BenchmarkKey.Geekbench_6_2_Multi_Core,

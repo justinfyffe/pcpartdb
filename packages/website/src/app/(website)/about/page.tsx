@@ -27,10 +27,10 @@ export default function AboutPage() {
 
         <section>
           <p>
-            {WEBSITE_NAME} was created to provide a better experience for anyone
-            researching PC hardware. Our website&apos;s tools and comprehensive
-            database of parts will help you make an informed choice of which
-            part you should add to your PC build.
+            {WEBSITE_NAME} was created to provide a better experience for
+            researching and comparing PC hardware. Our goal is to provide a
+            comprehensive database of PC parts that will help you make an
+            informed choice of which part you should add to your PC build.
           </p>
 
           <p>

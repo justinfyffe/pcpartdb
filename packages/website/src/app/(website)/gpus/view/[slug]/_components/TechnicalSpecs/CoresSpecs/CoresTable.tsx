@@ -24,14 +24,33 @@ export const CoresTable: FunctionComponent<CoresTableProps> = (props) => {
         </Tr>
       </THead>
       <TBody>
+        {/*  */}
         <ProductFieldRow
           type={ProductType.Gpu}
-          fields={[gpu.fields?.gpuCores]}
+          fields={[gpu.fields?.streamProcessors]}
         />
+        <ProductFieldRow
+          type={ProductType.Gpu}
+          fields={[gpu.fields?.shadingUnits]}
+        />
+        <ProductFieldRow
+          type={ProductType.Gpu}
+          fields={[gpu.fields?.cudaCores]}
+        />
+        {/*  */}
         <ProductFieldRow
           type={ProductType.Gpu}
           fields={[gpu.fields?.computeUnits]}
         />
+        <ProductFieldRow
+          type={ProductType.Gpu}
+          fields={[gpu.fields?.executionUnits]}
+        />
+        <ProductFieldRow
+          type={ProductType.Gpu}
+          fields={[gpu.fields?.streamMultiprocessors]}
+        />
+        {/*  */}
         <ProductFieldRow type={ProductType.Gpu} fields={[gpu.fields?.tmus]} />
         <ProductFieldRow type={ProductType.Gpu} fields={[gpu.fields?.rops]} />
         <ProductFieldRow

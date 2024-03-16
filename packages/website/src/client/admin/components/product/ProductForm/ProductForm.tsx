@@ -124,6 +124,10 @@ export const ProductForm: FunctionComponent<ProductFormProps> = (props) => {
     control,
     name: ['sources'],
   });
+  const parentIdSource = useWatch({
+    control,
+    name: ['parentId'],
+  });
 
   const handleScrape = useCallback(
     (scraped: ScrapedProduct) => {
@@ -174,6 +178,9 @@ export const ProductForm: FunctionComponent<ProductFormProps> = (props) => {
 
   const handleScrapeClick = useCallback(() => {
     const sources: Partial<ProductSource>[] = importSources?.[0] || [];
+    if (parentIdSource?.[0]) {
+      sources.push({ sourceProductId: parentIdSource[0] });
+    }
     showDialog(
       <ScrapeProductDialog
         productType={productType}
@@ -182,7 +189,7 @@ export const ProductForm: FunctionComponent<ProductFormProps> = (props) => {
       />,
       { disableClose: true },
     );
-  }, [importSources, productType, handleScrape]);
+  }, [importSources, parentIdSource, productType, handleScrape]);
 
   return (
     <ProductFormContext.Provider value={context}>

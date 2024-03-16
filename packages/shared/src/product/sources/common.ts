@@ -1,5 +1,3 @@
-import { Product } from '../common';
-
 // Enums
 
 export enum ProductSourceKey {
@@ -25,5 +23,4 @@ export interface ProductSource {
 
   // Not in database
   sourceProductId?: number;
-  sourceProduct?: Product;
 }

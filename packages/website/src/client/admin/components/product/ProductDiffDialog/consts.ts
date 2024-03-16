@@ -87,8 +87,12 @@ export const DATA_TO_PREVIEW: Partial<Record<ProductType, ProductFieldKey[]>> =
       'powerConnectors',
       'outputs',
 
-      'gpuCores',
+      'streamProcessors',
+      'shadingUnits',
+      'cudaCores',
       'computeUnits',
+      'executionUnits',
+      'streamMultiprocessors',
       'tmus',
       'rops',
       'rtCores',
