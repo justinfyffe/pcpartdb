@@ -383,11 +383,11 @@ function scrapeBenchmarks($: cheerio.CheerioAPI) {
         if (a) {
           const b = (Math.random() / 100) * 1.5;
           const after = Number(benchmark * (1 + b)).toFixed(0);
-          benchmark = after;
+          benchmark = Number(after);
         } else {
           const b = (Math.random() / 100) * 1.25;
           const after = Number(benchmark * (1 - b)).toFixed(0);
-          benchmark = after;
+          benchmark = Number(after);
         }
 
         break;
