@@ -36,13 +36,13 @@ export default function AboutPage() {
 
           <p>
             We aim to provide accurate technical specs, benchmark scores, and
-            FPS measurements. To ensure comprehensiveness, we may supplement the
+            FPS metrics. To ensure comprehensiveness, we may supplement the
             content with data from:
           </p>
           <ul className="list-disc ml-8 -mt-3 mb-4">
             <li>Technical specs from the manufacturer.</li>
             <li>
-              Benchmarks and FPS measurements from authoritative sources like{' '}
+              Benchmarks and FPS from authoritative sources like{' '}
               <a href="https://www.notebookcheck.net/">Notebookcheck</a>.
             </li>
             <li>
