@@ -13,6 +13,7 @@ import React from 'react';
 import { viewModelClient } from '../../_common/api/ViewModelClient';
 import { Tab } from '../../_common/components/Tabs/Tab';
 import { Tabs } from '../../_common/components/Tabs/Tabs';
+import { TabsVariant } from '../../_common/components/Tabs/types';
 import { CompareProductsForm } from '../../_common/product/components/CompareProductsForm/CompareProductsForm';
 import { classNames } from '../../_common/utils/classNames';
 import { Feed } from './_components/Feed/Feed';
@@ -64,7 +65,7 @@ export default async function HomePage() {
             View &amp; compare PC component benchmarks and specs
           </h1>
 
-          <Tabs>
+          <Tabs variant={TabsVariant.Horizontal}>
             <Tab label="Graphics cards" className="py-4">
               <p>
                 Select 1 or 2 graphics cards to get a comparison of their

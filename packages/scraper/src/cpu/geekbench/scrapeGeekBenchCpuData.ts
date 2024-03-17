@@ -79,18 +79,17 @@ function getSingleCoreScore(
     )
     .siblings('.score')
     .first();
-  let value = Number(el.text());
-  if (value != null) {
-    if (rand) {
-      const b = (Math.random() / 100) * 1.5;
-      const after = Number(value * (1 + b)).toFixed(0);
-      value = Number(after);
-    } else {
-      const b = (Math.random() / 100) * 1.25;
-      const after = Number(value * (1 - b)).toFixed(0);
-      value = Number(after);
-    }
-  }
+  const value = Number(el.text());
+  // const factor = 1.5;
+  // if (rand) {
+  //   const b = (Math.random() / 100) * factor;
+  //   const after = Number(value * (1 + b)).toFixed(0);
+  //   value = Number(after);
+  // } else {
+  //   const b = (Math.random() / 100) * factor;
+  //   const after = Number(value * (1 - b)).toFixed(0);
+  //   value = Number(after);
+  // }
   return {
     benchmarkKey: BenchmarkKey.Geekbench_6_2_Single_Core,
     value,
@@ -108,18 +107,17 @@ function getMultiCoreScore(
     )
     .siblings('.score')
     .first();
-  let value = Number(el.text());
-  if (value != null) {
-    if (rand) {
-      const b = (Math.random() / 100) * 1.5;
-      const after = Number(value * (1 + b)).toFixed(0);
-      value = Number(after);
-    } else {
-      const b = (Math.random() / 100) * 1.25;
-      const after = Number(value * (1 - b)).toFixed(0);
-      value = Number(after);
-    }
-  }
+  const value = Number(el.text());
+  // const factor = 1.5;
+  // if (rand) {
+  //   const b = (Math.random() / 100) * factor;
+  //   const after = Number(value * (1 + b)).toFixed(0);
+  //   value = Number(after);
+  // } else {
+  //   const b = (Math.random() / 100) * factor;
+  //   const after = Number(value * (1 - b)).toFixed(0);
+  //   value = Number(after);
+  // }
 
   return {
     benchmarkKey: BenchmarkKey.Geekbench_6_2_Multi_Core,

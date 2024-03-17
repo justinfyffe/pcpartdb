@@ -27,11 +27,34 @@ export default function AboutPage() {
 
         <section>
           <p>
-            {WEBSITE_NAME} was created to provide a better experience for
+            {WEBSITE_NAME} was created to deliver a better experience for
             researching and comparing PC hardware. Our goal is to provide a
-            comprehensive database of PC parts that will help you make an
-            informed choice of which part you should add to your PC build.
+            easy-to-use, comprehensive database of PC parts that will help you
+            make an informed choice of which part you should add to your PC
+            build.
           </p>
+
+          <p>
+            We aim to provide accurate technical specs, benchmark scores, and
+            FPS measurements. To ensure comprehensiveness, we may supplement the
+            content with data from:
+          </p>
+          <ul className="list-disc ml-8 -mt-3 mb-4">
+            <li>Technical specs from the manufacturer.</li>
+            <li>
+              Benchmarks and FPS measurements from authoritative sources like{' '}
+              <a href="https://www.notebookcheck.net/">Notebookcheck</a>.
+            </li>
+            <li>
+              Benchmarks generated from software like Cinebench, Geekbench, and
+              PassMark.
+            </li>
+            <li>
+              User-submitted benchmark and FPS measurements. Please{' '}
+              <a href="mailto:hello@pcpartdb.com">contact us</a> if you want to
+              submit your measurements.
+            </li>
+          </ul>
 
           <p>
             We have an exciting roadmap with plans for more content and tools

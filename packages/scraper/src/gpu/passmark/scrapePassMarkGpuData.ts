@@ -54,18 +54,19 @@ export async function scrapePassMarkGpuData(
 
 function getG3dMark($: cheerio.CheerioAPI, rand: number): ProductBenchmark {
   const g3dMark = $('.speedicon').siblings('span').first().text();
-  let value = g3dMark ? Number(g3dMark) : null;
-  if (value != null) {
-    if (rand) {
-      const b = (Math.random() / 100) * 1.5;
-      const after = Number(value * (1 + b)).toFixed(0);
-      value = Number(after);
-    } else {
-      const b = (Math.random() / 100) * 1.25;
-      const after = Number(value * (1 - b)).toFixed(0);
-      value = Number(after);
-    }
-  }
+  const value = g3dMark ? Number(g3dMark) : null;
+  // if (value != null) {
+  //   const factor = 1.5;
+  //   if (rand) {
+  //     const b = (Math.random() / 100) * factor;
+  //     const after = Number(value * (1 + b)).toFixed(0);
+  //     value = Number(after);
+  //   } else {
+  //     const b = (Math.random() / 100) * factor;
+  //     const after = Number(value * (1 - b)).toFixed(0);
+  //     value = Number(after);
+  //   }
+  // }
   return {
     benchmarkKey: BenchmarkKey.PassMark_G3dMark,
     value,
@@ -85,12 +86,13 @@ function getG2dMark($: cheerio.CheerioAPI, rand: number): ProductBenchmark {
 
   let value = g2dMark ? Number(g2dMark) : null;
   if (value != null) {
+    const factor = 1.5;
     if (rand) {
-      const b = (Math.random() / 100) * 1.5;
+      const b = (Math.random() / 100) * factor;
       const after = Number(value * (1 + b)).toFixed(0);
       value = Number(after);
     } else {
-      const b = (Math.random() / 100) * 1.25;
+      const b = (Math.random() / 100) * factor;
       const after = Number(value * (1 - b)).toFixed(0);
       value = Number(after);
     }

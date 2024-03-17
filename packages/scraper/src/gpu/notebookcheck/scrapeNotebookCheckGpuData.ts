@@ -575,16 +575,17 @@ function scrapeBenchmarks($: cheerio.CheerioAPI) {
       benchmark = benchmark ?? value;
 
       // Get first benchmark value.
-      if (benchmark) {
-        if (rand) {
-          const b = (Math.random() / 100) * 1.5;
-          const after = Number(benchmark * (1 + b)).toFixed(0);
-          benchmark = Number(after);
-        } else {
-          const b = (Math.random() / 100) * 1.25;
-          const after = Number(benchmark * (1 - b)).toFixed(0);
-          benchmark = Number(after);
-        }
+      if (benchmark != null) {
+        // const factor = 1.5;
+        // if (rand) {
+        //   const b = (Math.random() / 100) * factor;
+        //   const after = Number(benchmark * (1 + b)).toFixed(0);
+        //   benchmark = Number(after);
+        // } else {
+        //   const b = (Math.random() / 100) * factor;
+        //   const after = Number(benchmark * (1 - b)).toFixed(0);
+        //   benchmark = Number(after);
+        // }
 
         break;
       }

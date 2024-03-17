@@ -60,20 +60,21 @@ function getMultiThreadScore(
     .first()
     .text();
 
-  let value = PassMark_CpuMark_Multi_Thread
+  const value = PassMark_CpuMark_Multi_Thread
     ? Number(PassMark_CpuMark_Multi_Thread)
     : null;
-  if (value != null) {
-    if (rand) {
-      const b = (Math.random() / 100) * 1.5;
-      const after = Number(value * (1 + b)).toFixed(0);
-      value = Number(after);
-    } else {
-      const b = (Math.random() / 100) * 1.25;
-      const after = Number(value * (1 - b)).toFixed(0);
-      value = Number(after);
-    }
-  }
+  // if (value != null) {
+  //   const factor = 1.5;
+  //   if (rand) {
+  //     const b = (Math.random() / 100) * factor;
+  //     const after = Number(value * (1 + b)).toFixed(0);
+  //     value = Number(after);
+  //   } else {
+  //     const b = (Math.random() / 100) * factor;
+  //     const after = Number(value * (1 - b)).toFixed(0);
+  //     value = Number(after);
+  //   }
+  // }
   return {
     benchmarkKey: BenchmarkKey.PassMark_CpuMark_Multi_Thread,
     value,
@@ -94,18 +95,19 @@ function getSingleThreadScore(
     .text()
     .trim();
 
-  let value = singleThreadScore ? Number(singleThreadScore) : null;
-  if (value != null) {
-    if (rand) {
-      const b = (Math.random() / 100) * 1.5;
-      const after = Number(value * (1 + b)).toFixed(0);
-      value = Number(after);
-    } else {
-      const b = (Math.random() / 100) * 1.25;
-      const after = Number(value * (1 - b)).toFixed(0);
-      value = Number(after);
-    }
-  }
+  const value = singleThreadScore ? Number(singleThreadScore) : null;
+  // if (value != null) {
+  //   const factor = 1.5;
+  //   if (rand) {
+  //     const b = (Math.random() / 100) * factor;
+  //     const after = Number(value * (1 + b)).toFixed(0);
+  //     value = Number(after);
+  //   } else {
+  //     const b = (Math.random() / 100) * factor;
+  //     const after = Number(value * (1 - b)).toFixed(0);
+  //     value = Number(after);
+  //   }
+  // }
   return {
     benchmarkKey: BenchmarkKey.PassMark_CpuMark_Single_Thread,
     value,

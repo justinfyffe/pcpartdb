@@ -41,7 +41,10 @@ export function Tabs(props: TabsProps) {
   }, []);
 
   const labels = useMemo(
-    () => Children.map(children, ({ props: { label } }) => label),
+    () =>
+      Children.map(children, ({ props: { label } }) => {
+        return label;
+      }),
     [children],
   );
 

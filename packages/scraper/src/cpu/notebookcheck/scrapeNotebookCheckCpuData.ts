@@ -365,7 +365,7 @@ const BENCHMARKS = {
 };
 const BENCHMARK_REGEXES = [/median:\s+([.\d]+)/i, /^([.\d]+)/i];
 function scrapeBenchmarks($: cheerio.CheerioAPI) {
-  const a = Math.floor(Math.random() * 2);
+  const rand = Math.floor(Math.random() * 2);
   const benchmarks = Object.entries(BENCHMARKS).map(([key, textToSearch]) => {
     // Scrape benchmark
     const benchmarkValues = scrapeBenchmark($, textToSearch);
@@ -379,16 +379,17 @@ function scrapeBenchmarks($: cheerio.CheerioAPI) {
       benchmark = benchmark ?? value;
 
       // Get first benchmark value.
-      if (benchmark) {
-        if (a) {
-          const b = (Math.random() / 100) * 1.5;
-          const after = Number(benchmark * (1 + b)).toFixed(0);
-          benchmark = Number(after);
-        } else {
-          const b = (Math.random() / 100) * 1.25;
-          const after = Number(benchmark * (1 - b)).toFixed(0);
-          benchmark = Number(after);
-        }
+      if (benchmark != null) {
+        // const factor = 1.5;
+        // if (rand) {
+        //   const b = (Math.random() / 100) * factor;
+        //   const after = Number(benchmark * (1 + b)).toFixed(0);
+        //   benchmark = Number(after);
+        // } else {
+        //   const b = (Math.random() / 100) * factor;
+        //   const after = Number(benchmark * (1 - b)).toFixed(0);
+        //   benchmark = Number(after);
+        // }
 
         break;
       }
