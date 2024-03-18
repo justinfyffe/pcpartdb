@@ -194,17 +194,17 @@ function getComputeUnits(
   ctx?: ScraperContext,
 ): GpuField<number> {
   const lcCompany = (chipset?.company || company)?.toLowerCase();
-  if (lcCompany !== 'amd' && lcCompany != 'ati') {
-    return null;
+
+  let result: ParseNumberResult = null;
+  if (lcCompany === 'amd' || lcCompany === 'ati') {
+    const values1 = tokenizeSpecValues($, 'Compute Units');
+    const values2 = tokenizeSpecValues($, 'SM Count');
+
+    result = parseNumberValue({
+      fieldKey: 'computeUnits',
+      value: values1[0] || values2[0] || null,
+    });
   }
-
-  const values1 = tokenizeSpecValues($, 'Compute Units');
-  const values2 = tokenizeSpecValues($, 'SM Count');
-
-  const result = parseNumberValue({
-    fieldKey: 'computeUnits',
-    value: values1[0] || values2[0] || null,
-  });
 
   return createGpuField({
     field: 'computeUnits',
@@ -221,15 +221,15 @@ function getCudaCores(
   ctx?: ScraperContext,
 ): GpuField<number> {
   const lcCompany = (chipset?.company || company)?.toLowerCase();
-  if (lcCompany !== 'nvidia') {
-    return null;
-  }
 
-  const values = tokenizeSpecValues($, 'Shading Units');
-  const result = parseNumberValue({
-    fieldKey: 'cudaCores',
-    value: values[0] || null,
-  });
+  let result: ParseNumberResult = null;
+  if (lcCompany === 'nvidia') {
+    const values = tokenizeSpecValues($, 'Shading Units');
+    result = parseNumberValue({
+      fieldKey: 'cudaCores',
+      value: values[0] || null,
+    });
+  }
 
   return createGpuField({
     field: 'cudaCores',
@@ -246,17 +246,17 @@ function getExecutionUnits(
   ctx?: ScraperContext,
 ): GpuField<number> {
   const lcCompany = (chipset?.company || company)?.toLowerCase();
-  if (lcCompany !== 'intel') {
-    return null;
+
+  let result: ParseNumberResult = null;
+  if (lcCompany === 'intel') {
+    const values1 = tokenizeSpecValues($, 'Compute Units');
+    const values2 = tokenizeSpecValues($, 'SM Count');
+
+    result = parseNumberValue({
+      fieldKey: 'executionUnits',
+      value: values1[0] || values2[0] || null,
+    });
   }
-
-  const values1 = tokenizeSpecValues($, 'Compute Units');
-  const values2 = tokenizeSpecValues($, 'SM Count');
-
-  const result = parseNumberValue({
-    fieldKey: 'executionUnits',
-    value: values1[0] || values2[0] || null,
-  });
 
   return createGpuField({
     field: 'executionUnits',
@@ -888,15 +888,15 @@ function getShadingUnits(
   ctx?: ScraperContext,
 ): GpuField<number> {
   const lcCompany = (chipset?.company || company)?.toLowerCase();
-  if (lcCompany !== 'intel' && lcCompany != 'ati') {
-    return null;
-  }
 
-  const values = tokenizeSpecValues($, 'Shading Units');
-  const result = parseNumberValue({
-    fieldKey: 'shadingUnits',
-    value: values[0] || null,
-  });
+  let result: ParseNumberResult = null;
+  if (lcCompany === 'intel' || lcCompany === 'ati') {
+    const values = tokenizeSpecValues($, 'Shading Units');
+    result = parseNumberValue({
+      fieldKey: 'shadingUnits',
+      value: values[0] || null,
+    });
+  }
 
   return createGpuField({
     field: 'shadingUnits',
@@ -935,17 +935,17 @@ function getStreamMultiprocessors(
   ctx?: ScraperContext,
 ): GpuField<number> {
   const lcCompany = (chipset?.company || company)?.toLowerCase();
-  if (lcCompany !== 'nvidia') {
-    return null;
+
+  let result: ParseNumberResult = null;
+  if (lcCompany === 'nvidia') {
+    const values1 = tokenizeSpecValues($, 'Compute Units');
+    const values2 = tokenizeSpecValues($, 'SM Count');
+
+    result = parseNumberValue({
+      fieldKey: 'streamMultiprocessors',
+      value: values1[0] || values2[0] || null,
+    });
   }
-
-  const values1 = tokenizeSpecValues($, 'Compute Units');
-  const values2 = tokenizeSpecValues($, 'SM Count');
-
-  const result = parseNumberValue({
-    fieldKey: 'streamMultiprocessors',
-    value: values1[0] || values2[0] || null,
-  });
 
   return createGpuField({
     field: 'streamMultiprocessors',
@@ -962,15 +962,15 @@ function getStreamProcessors(
   ctx?: ScraperContext,
 ): GpuField<number> {
   const lcCompany = (chipset?.company || company)?.toLowerCase();
-  if (lcCompany !== 'amd') {
-    return null;
-  }
 
-  const values = tokenizeSpecValues($, 'Shading Units');
-  const result = parseNumberValue({
-    fieldKey: 'streamProcessors',
-    value: values[0] || null,
-  });
+  let result: ParseNumberResult = null;
+  if (lcCompany === 'amd') {
+    const values = tokenizeSpecValues($, 'Shading Units');
+    result = parseNumberValue({
+      fieldKey: 'streamProcessors',
+      value: values[0] || null,
+    });
+  }
 
   return createGpuField({
     field: 'streamProcessors',
