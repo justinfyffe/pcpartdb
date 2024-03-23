@@ -24,8 +24,11 @@ export async function GET(request: Request) {
     });
   }
 
-  const url404 = `${url.protocol}//${url.host}/404`;
-  const response404 = await fetch(url404);
+  const url404 = `${process.env.WEBSITE_URL}/404`;
+  const response404 = await fetch(url404, {
+    method: 'GET',
+    credentials: 'include',
+  });
   return new Response(response404.body, {
     status: 404,
     headers: {
