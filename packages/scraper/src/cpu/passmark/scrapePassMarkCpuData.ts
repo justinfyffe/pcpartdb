@@ -174,6 +174,7 @@ const FIELDS: Partial<Record<CpuFieldKey, ProductFieldScraper>> = {
       kb: MemorySizeUnit.kb,
       mb: MemorySizeUnit.mb,
       gb: MemorySizeUnit.gb,
+      tb: MemorySizeUnit.tb,
     },
     parseValue: ({ value, unit }) =>
       getBaseUnitValue(value, unit, { decimals: 2 }),
@@ -185,6 +186,7 @@ const FIELDS: Partial<Record<CpuFieldKey, ProductFieldScraper>> = {
       kb: MemorySizeUnit.kb,
       mb: MemorySizeUnit.mb,
       gb: MemorySizeUnit.gb,
+      tb: MemorySizeUnit.tb,
     },
     parseValue: ({ value, unit }) =>
       getBaseUnitValue(value, unit, { decimals: 2 }),
@@ -196,6 +198,7 @@ const FIELDS: Partial<Record<CpuFieldKey, ProductFieldScraper>> = {
       kb: MemorySizeUnit.kb,
       mb: MemorySizeUnit.mb,
       gb: MemorySizeUnit.gb,
+      tb: MemorySizeUnit.tb,
     },
     parseValue: ({ value, unit }) => {
       const result = getBaseUnitValue(value, unit, { decimals: 2 });

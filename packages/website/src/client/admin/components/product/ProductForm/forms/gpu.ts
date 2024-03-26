@@ -693,7 +693,7 @@ export function buildGpuFormInputs(product?: Product): ProductFormInputGroups {
           inputType: ProductFormInputType.FloatField,
           label: 'Memory Bandwidth',
           fieldKey: 'memoryBandwidth',
-          units: [BandwidthUnit.gbps, BandwidthUnit.mbps],
+          units: [BandwidthUnit.tbps, BandwidthUnit.gbps, BandwidthUnit.mbps],
           overrides: (ctx) => ({
             placeholder: productFieldFormattedValue(
               ctx.parentProduct?.fields?.memoryBandwidth ?? undefined,
@@ -960,7 +960,12 @@ export function buildGpuFormInputs(product?: Product): ProductFormInputGroups {
           inputType: ProductFormInputType.FloatField,
           label: 'L1 Cache',
           fieldKey: 'l1Cache',
-          units: [MemorySizeUnit.kb, MemorySizeUnit.mb],
+          units: [
+            MemorySizeUnit.kb,
+            MemorySizeUnit.mb,
+            MemorySizeUnit.gb,
+            MemorySizeUnit.tb,
+          ],
           overrides: (ctx) => ({
             placeholder: productFieldFormattedValue(
               ctx.parentProduct?.fields?.l1Cache ?? undefined,
@@ -972,7 +977,12 @@ export function buildGpuFormInputs(product?: Product): ProductFormInputGroups {
           inputType: ProductFormInputType.FloatField,
           label: 'L2 Cache',
           fieldKey: 'l2Cache',
-          units: [MemorySizeUnit.kb, MemorySizeUnit.mb],
+          units: [
+            MemorySizeUnit.kb,
+            MemorySizeUnit.mb,
+            MemorySizeUnit.gb,
+            MemorySizeUnit.tb,
+          ],
           overrides: (ctx) => ({
             placeholder: productFieldFormattedValue(
               ctx.parentProduct?.fields?.l2Cache ?? undefined,

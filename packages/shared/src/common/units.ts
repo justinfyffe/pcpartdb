@@ -2,6 +2,7 @@ export enum BandwidthUnit {
   kbps = 'kbps',
   mbps = 'mbps',
   gbps = 'gbps',
+  tbps = 'tbps',
 }
 
 export enum BitUnit {
@@ -33,6 +34,7 @@ export enum MemorySizeUnit {
   kb = 'kb',
   mb = 'mb',
   gb = 'gb',
+  tb = 'tb',
 }
 
 export enum MemorySpeedUnit {
@@ -107,12 +109,14 @@ const BANDWIDTH_UNIT_MULTIPLIERS: Record<BandwidthUnit, number> = {
   [BandwidthUnit.kbps]: 1_000,
   [BandwidthUnit.mbps]: 1_000_000,
   [BandwidthUnit.gbps]: 1_000_000_000,
+  [BandwidthUnit.tbps]: 1_000_000_000_000,
 };
 
 const BANDWIDTH_UNIT_FORMATS: Record<BandwidthUnit, string> = {
   [BandwidthUnit.kbps]: 'Kb/s',
   [BandwidthUnit.mbps]: 'Mb/s',
   [BandwidthUnit.gbps]: 'Gb/s',
+  [BandwidthUnit.tbps]: 'Tb/s',
 };
 
 const BIT_UNIT_MULTIPLIERS: Record<BitUnit, number> = {
@@ -165,12 +169,14 @@ const MEMORY_SIZE_UNIT_MULTIPLIERS: Record<MemorySizeUnit, number> = {
   [MemorySizeUnit.kb]: 1_000,
   [MemorySizeUnit.mb]: 1_000_000,
   [MemorySizeUnit.gb]: 1_000_000_000,
+  [MemorySizeUnit.tb]: 1_000_000_000_000,
 };
 
 const MEMORY_SIZE_UNIT_FORMATS: Record<MemorySizeUnit, string> = {
   [MemorySizeUnit.kb]: 'KB',
   [MemorySizeUnit.mb]: 'MB',
   [MemorySizeUnit.gb]: 'GB',
+  [MemorySizeUnit.tb]: 'TB',
 };
 
 const MEMORY_SPEED_UNIT_MULTIPLIERS: Record<MemorySpeedUnit, number> = {
@@ -281,6 +287,7 @@ function getUnitMultiplier(unit: MeasurementUnit) {
     case BandwidthUnit.kbps:
     case BandwidthUnit.mbps:
     case BandwidthUnit.gbps:
+    case BandwidthUnit.tbps:
       return BANDWIDTH_UNIT_MULTIPLIERS[unit];
     case BitUnit.bit:
       return BIT_UNIT_MULTIPLIERS[unit];
@@ -298,6 +305,7 @@ function getUnitMultiplier(unit: MeasurementUnit) {
     case MemorySizeUnit.kb:
     case MemorySizeUnit.mb:
     case MemorySizeUnit.gb:
+    case MemorySizeUnit.tb:
       return MEMORY_SIZE_UNIT_MULTIPLIERS[unit];
     case MemorySpeedUnit.mtps:
       return MEMORY_SPEED_UNIT_MULTIPLIERS[unit];
@@ -387,6 +395,7 @@ export function getUnitFormat(unit: MeasurementUnit) {
     case BandwidthUnit.kbps:
     case BandwidthUnit.mbps:
     case BandwidthUnit.gbps:
+    case BandwidthUnit.tbps:
       return BANDWIDTH_UNIT_FORMATS[unit];
     case BitUnit.bit:
       return BIT_UNIT_FORMATS[unit];
@@ -406,6 +415,7 @@ export function getUnitFormat(unit: MeasurementUnit) {
     case MemorySizeUnit.kb:
     case MemorySizeUnit.mb:
     case MemorySizeUnit.gb:
+    case MemorySizeUnit.tb:
       return MEMORY_SIZE_UNIT_FORMATS[unit];
     case MemorySpeedUnit.mtps:
       return MEMORY_SPEED_UNIT_FORMATS[unit];

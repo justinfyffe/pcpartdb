@@ -281,9 +281,11 @@ function getEfficientCoreL1Cache($: cheerio.CheerioAPI, ctx?: ScraperContext) {
       KB: MemorySizeUnit.kb,
       MB: MemorySizeUnit.mb,
       GB: MemorySizeUnit.gb,
+      TB: MemorySizeUnit.tb,
       K: MemorySizeUnit.kb,
       M: MemorySizeUnit.mb,
       G: MemorySizeUnit.gb,
+      T: MemorySizeUnit.tb,
     },
   });
 
@@ -304,9 +306,11 @@ function getEfficientCoreL2Cache($: cheerio.CheerioAPI, ctx?: ScraperContext) {
       KB: MemorySizeUnit.kb,
       MB: MemorySizeUnit.mb,
       GB: MemorySizeUnit.gb,
+      TB: MemorySizeUnit.tb,
       K: MemorySizeUnit.kb,
       M: MemorySizeUnit.mb,
       G: MemorySizeUnit.gb,
+      T: MemorySizeUnit.tb,
     },
   });
 
@@ -501,9 +505,11 @@ function getL1Cache($: cheerio.CheerioAPI, ctx?: ScraperContext) {
       KB: MemorySizeUnit.kb,
       MB: MemorySizeUnit.mb,
       GB: MemorySizeUnit.gb,
+      TB: MemorySizeUnit.tb,
       K: MemorySizeUnit.kb,
       M: MemorySizeUnit.mb,
       G: MemorySizeUnit.gb,
+      T: MemorySizeUnit.tb,
     },
   });
 
@@ -524,9 +530,11 @@ function getL2Cache($: cheerio.CheerioAPI, ctx?: ScraperContext) {
       KB: MemorySizeUnit.kb,
       MB: MemorySizeUnit.mb,
       GB: MemorySizeUnit.gb,
+      TB: MemorySizeUnit.tb,
       K: MemorySizeUnit.kb,
       M: MemorySizeUnit.mb,
       G: MemorySizeUnit.gb,
+      T: MemorySizeUnit.tb,
     },
   });
 
@@ -547,9 +555,11 @@ function getL3Cache($: cheerio.CheerioAPI, ctx?: ScraperContext) {
       KB: MemorySizeUnit.kb,
       MB: MemorySizeUnit.mb,
       GB: MemorySizeUnit.gb,
+      TB: MemorySizeUnit.tb,
       K: MemorySizeUnit.kb,
       M: MemorySizeUnit.mb,
       G: MemorySizeUnit.gb,
+      T: MemorySizeUnit.tb,
     },
   });
 

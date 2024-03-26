@@ -139,6 +139,7 @@ const FIELDS: Partial<Record<GpuFieldKey, ProductFieldScraper>> = {
       kb: MemorySizeUnit.kb,
       mb: MemorySizeUnit.mb,
       gb: MemorySizeUnit.gb,
+      tb: MemorySizeUnit.tb,
     },
     parseValue: ({ value, unit }) =>
       getBaseUnitValue(value, unit, { decimals: 2 }),

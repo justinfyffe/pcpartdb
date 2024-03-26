@@ -419,9 +419,11 @@ function getL1Cache(
       KB: MemorySizeUnit.kb,
       MB: MemorySizeUnit.mb,
       GB: MemorySizeUnit.gb,
+      TB: MemorySizeUnit.tb,
       K: MemorySizeUnit.kb,
       M: MemorySizeUnit.mb,
       G: MemorySizeUnit.gb,
+      T: MemorySizeUnit.tb,
     },
   });
 
@@ -445,9 +447,11 @@ function getL2Cache(
       KB: MemorySizeUnit.kb,
       MB: MemorySizeUnit.mb,
       GB: MemorySizeUnit.gb,
+      TB: MemorySizeUnit.tb,
       K: MemorySizeUnit.kb,
       M: MemorySizeUnit.mb,
       G: MemorySizeUnit.gb,
+      T: MemorySizeUnit.tb,
     },
   });
 
@@ -546,6 +550,7 @@ function getMemoryBandwidth(
       'KB/s': BandwidthUnit.kbps,
       'MB/s': BandwidthUnit.mbps,
       'GB/s': BandwidthUnit.gbps,
+      'TB/s': BandwidthUnit.tbps,
     },
   });
 
@@ -613,9 +618,11 @@ function getMemorySize(
       KB: MemorySizeUnit.kb,
       MB: MemorySizeUnit.mb,
       GB: MemorySizeUnit.gb,
+      TB: MemorySizeUnit.tb,
       K: MemorySizeUnit.kb,
       M: MemorySizeUnit.mb,
       G: MemorySizeUnit.gb,
+      T: MemorySizeUnit.tb,
     },
   });
 
