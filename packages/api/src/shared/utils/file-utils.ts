@@ -18,6 +18,9 @@ const PUBLIC_IMAGES_PATH = path.join(WEBSITE_PATH, 'public/u/images');
 const SITEMAPS_PATH = path.resolve(
   path.join(CWD_PATH, '../..', 'data', 'sitemaps'),
 );
+const PRIORITY_SITEMAPS_PATH = path.resolve(
+  path.join(CWD_PATH, '../..', 'data', 'priority-sitemaps'),
+);
 
 if (!fs.existsSync(DATA_PATH)) {
   fs.mkdirSync(DATA_PATH, { recursive: true });
@@ -42,6 +45,9 @@ if (!fs.existsSync(PUBLIC_IMAGES_PATH)) {
 }
 if (!fs.existsSync(SITEMAPS_PATH)) {
   fs.mkdirSync(SITEMAPS_PATH, { recursive: true });
+}
+if (!fs.existsSync(PRIORITY_SITEMAPS_PATH)) {
+  fs.mkdirSync(PRIORITY_SITEMAPS_PATH, { recursive: true });
 }
 
 export const MULTER_OPTIONS: multer.Options = {
@@ -87,6 +93,12 @@ export function exportsPath(file?: string) {
 
 export function sitemapsPath(file?: string) {
   return file != null ? path.join(SITEMAPS_PATH, file) : SITEMAPS_PATH;
+}
+
+export function prioritySitemapsPath(file?: string) {
+  return file != null
+    ? path.join(PRIORITY_SITEMAPS_PATH, file)
+    : PRIORITY_SITEMAPS_PATH;
 }
 
 export function imagePath(file?: string) {

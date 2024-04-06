@@ -35,6 +35,16 @@ export class WebsiteController {
     return await this.service.uploadSitemap(body, ctx);
   }
 
+  @Post('priority-sitemap')
+  @UseGuards(StaffGuard)
+  @UseInterceptors(FileInterceptor('file', MULTER_OPTIONS))
+  async uploadPrioritySitemap(
+    @Body() body: UploadSitemapRequest,
+    @Ctx() ctx: Context,
+  ) {
+    return await this.service.uploadPrioritySitemap(body, ctx);
+  }
+
   @Get('sitemap/product-slugs')
   @UseGuards(StaffGuard)
   async getSitemapProductSlugs(@Query('req') req: string, @Ctx() ctx: Context) {

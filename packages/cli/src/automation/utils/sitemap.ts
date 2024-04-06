@@ -3,10 +3,20 @@ import * as fs from 'fs';
 import path from 'path';
 import { automationDataPath } from './file';
 
+const PRIORITY_SITEMAPS_PATH = automationDataPath('priority-sitemaps');
 const SITEMAPS_PATH = automationDataPath('sitemaps');
 
+if (!fs.existsSync(PRIORITY_SITEMAPS_PATH)) {
+  fs.mkdirSync(PRIORITY_SITEMAPS_PATH, { recursive: true });
+}
 if (!fs.existsSync(SITEMAPS_PATH)) {
   fs.mkdirSync(SITEMAPS_PATH, { recursive: true });
+}
+
+export function prioritySitemapPath(file?: string) {
+  return file != null
+    ? path.join(PRIORITY_SITEMAPS_PATH, file)
+    : PRIORITY_SITEMAPS_PATH;
 }
 
 export function sitemapPath(file?: string) {

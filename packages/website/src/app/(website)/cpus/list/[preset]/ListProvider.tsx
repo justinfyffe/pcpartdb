@@ -9,6 +9,7 @@ import {
   ListCpusViewModel,
   ProductType,
 } from '@pcpartdb/shared';
+import { useRouter } from 'next/navigation';
 import { listProducts } from 'packages/website/src/app/_common/product/api';
 import React, { createContext, useCallback, useContext, useState } from 'react';
 
@@ -39,6 +40,7 @@ export interface ListProviderProps {
 
 export function ListProvider(props: ListProviderProps) {
   const { viewModel } = props;
+  const router = useRouter();
 
   const [cpus, setCpus] = useState(viewModel.results);
   const [total, setTotal] = useState(viewModel.total);
@@ -64,9 +66,10 @@ export function ListProvider(props: ListProviderProps) {
     async (q: ListCpusQuery) => {
       await fetchCpus(q);
       const url = getListCpusPath(q);
-      window.history.pushState({}, '', url);
+      router.push(url, { scroll: false });
+      // window.history.pushState({}, '', url);
     },
-    [fetchCpus],
+    [fetchCpus, router],
   );
 
   return (

@@ -1,8 +1,11 @@
 import { CalendarDaysIcon } from '@heroicons/react/24/outline';
 import {
   CpuProductComparison,
+  DateFormat,
+  formatDate,
   formatProductName,
   productFieldFormattedValue,
+  productFieldRawValue,
 } from '@pcpartdb/shared';
 import { ProductHighlightComparison } from 'packages/website/src/app/_common/product/components/ProductHighlightComparison/ProductHighlightComparison';
 import React, { FunctionComponent } from 'react';
@@ -24,8 +27,15 @@ export const ReleaseDateHighlight: FunctionComponent<
   const value1 = productFieldFormattedValue(cpu1.fields?.releaseDate) ?? '--';
   const value2 = productFieldFormattedValue(cpu2.fields?.releaseDate) ?? '--';
 
-  const releaseDate1 = productFieldFormattedValue(cpu1.fields?.releaseDate);
-  const releaseDate2 = productFieldFormattedValue(cpu2.fields?.releaseDate);
+  const releaseDate1 = formatDate(
+    productFieldRawValue(cpu1.fields?.releaseDate),
+    { format: DateFormat.YearQuarter },
+  );
+  const releaseDate2 = formatDate(
+    productFieldRawValue(cpu2.fields?.releaseDate),
+    { format: DateFormat.YearQuarter },
+  );
+
   const bold1 = releaseDate1 > releaseDate2;
   const bold2 = releaseDate1 < releaseDate2;
 

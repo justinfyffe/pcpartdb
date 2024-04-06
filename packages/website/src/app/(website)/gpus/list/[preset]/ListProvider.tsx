@@ -1,6 +1,7 @@
 'use client';
 
 import {
+  generateListProductsQueryFromPath,
   getListGpusPath,
   GpuProduct,
   ListGpusAdditionalData,
@@ -9,8 +10,16 @@ import {
   ListGpusViewModel,
   ProductType,
 } from '@pcpartdb/shared';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useCancelable } from 'packages/website/src/app/_common/hooks/useCancelable';
 import { listProducts } from 'packages/website/src/app/_common/product/api';
-import React, { createContext, useCallback, useContext, useState } from 'react';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 
 export interface ListContextState {
   query?: ListGpusQuery;
@@ -39,6 +48,7 @@ export interface ListProviderProps {
 
 export function ListProvider(props: ListProviderProps) {
   const { viewModel } = props;
+  const router = useRouter();
 
   const [gpus, setGpus] = useState(viewModel.results);
   const [total, setTotal] = useState(viewModel.total);
@@ -47,7 +57,7 @@ export function ListProvider(props: ListProviderProps) {
     viewModel.additionalData,
   );
 
-  const fetchGpus = useCallback(async (query: ListGpusQuery) => {
+  const fetchGpusImpl = useCallback(async (query: ListGpusQuery) => {
     const filter: ListGpusFilter = {
       ...(query?.filter ?? {}),
       productType: ProductType.Gpu,
@@ -59,15 +69,40 @@ export function ListProvider(props: ListProviderProps) {
     setAdditionalData(response.additionalData);
     setQuery(query);
   }, []);
+  const { func: fetchGpus, abort: abortFetchGpus } =
+    useCancelable(fetchGpusImpl);
 
+  // TODO: make this work with back/forward button.
   const updateQuery = useCallback(
     async (q: ListGpusQuery) => {
+      abortFetchGpus?.();
       await fetchGpus(q);
       const url = getListGpusPath(q);
-      window.history.pushState({}, '', url);
+      router.push(url, { scroll: false });
+      // window.history.pushState({}, '', url);
     },
-    [fetchGpus],
+    [abortFetchGpus, fetchGpus, router],
   );
+
+  // TODO: this sort of allows back, but causes a lot of random issues
+  // const pathname = usePathname();
+  // const searchParams = useSearchParams();
+  // useEffect(() => {
+  //   const url = `${pathname}?${searchParams}`;
+  //   abortFetchGpus?.();
+  //   fetchGpus(
+  //     generateListProductsQueryFromPath({
+  //       productType: query.filter.productType,
+  //       path: url,
+  //       defaults: {
+  //         sort: searchParams.get('sort'),
+  //         order: searchParams.get('order'),
+  //       },
+  //     }) as ListGpusQuery,
+  //   );
+  //   // Only run this hook when the url changes.
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [pathname, searchParams]);
 
   return (
     <ListContext.Provider

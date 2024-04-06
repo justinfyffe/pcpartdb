@@ -10,12 +10,14 @@ import { updateCpuSourcesAction } from './actions/updateCpuSourcesAction';
 import { updateGpuAction } from './actions/updateGpuAction';
 import { updateGpuChipsetSourcesAction } from './actions/updateGpuChipsetSourcesAction';
 import { updateGpuRetailModelSourcesAction } from './actions/updateGpuRetailModelSourcesAction';
+import { updatePrioritySitemapsAction } from './actions/updatePrioritySitemapsAction';
 import { updateRanksAction } from './actions/updateRanksAction';
 import { updateRelatedProductsAction } from './actions/updateRelatedProductsAction';
 import { updateSitemapsAction } from './actions/updateSitemapsAction';
 import { AutomationContext } from './types';
 import { saveAutomationContext } from './utils/context';
 
+const UPDATE_PRIORITY_SITEMAPS_FREQUENCY = 1000 * 60 * 60 * 24 * 7; // Weekly
 const UPDATE_SITEMAPS_FREQUENCY = 1000 * 60 * 60 * 24 * 7; // Weekly
 const UPDATE_CPU_SOURCES_FREQUENCY = 1000 * 60 * 60 * 24 * 7; // Weekly
 const UPDATE_GPU_CHIPSET_SOURCES_FREQUENCY = 1000 * 60 * 60 * 24 * 7; // Weekly
@@ -33,7 +35,9 @@ export async function executeAutomation(context: AutomationContext) {
 
   await markAsProcessing(action, context);
 
-  if (type === AutomationActionType.UpdateSitemaps) {
+  if (type === AutomationActionType.UpdatePrioritySitemaps) {
+    await updatePrioritySitemapsAction(action, context);
+  } else if (type === AutomationActionType.UpdateSitemaps) {
     await updateSitemapsAction(action, context);
   } else if (type === AutomationActionType.UpdateCpuSources) {
     await updateCpuSourcesAction(action, context);
@@ -139,6 +143,18 @@ async function getActionFromStalenessCheck(
     return {
       status: AutomationActionStatus.Pending,
       type: AutomationActionType.UpdateRelatedProducts,
+    };
+  }
+
+  if (
+    isStale(
+      metadata?.updatePrioritySitemapsDate,
+      UPDATE_PRIORITY_SITEMAPS_FREQUENCY,
+    )
+  ) {
+    return {
+      status: AutomationActionStatus.Pending,
+      type: AutomationActionType.UpdatePrioritySitemaps,
     };
   }
 

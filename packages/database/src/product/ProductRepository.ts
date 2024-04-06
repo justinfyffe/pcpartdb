@@ -388,6 +388,16 @@ export class ProductRepository {
         id: true,
         slug: true,
         updatedAt: true,
+        cpuFields: {
+          select: { releaseDateValue: true, marketSegmentValue: true },
+        },
+        gpuFields: {
+          select: { releaseDateValue: true, marketSegmentValue: true },
+        },
+        benchmarks: {
+          select: { productId: true },
+          where: { value: { not: null } },
+        },
       },
       where: {
         productType,

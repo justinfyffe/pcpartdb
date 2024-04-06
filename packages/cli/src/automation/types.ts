@@ -1,6 +1,7 @@
 import { ApiClient } from '../shared/ApiClient';
 
 export interface AutomationMetadata {
+  updatePrioritySitemapsDate?: number;
   updateSitemapsDate?: number;
   updateCpuSourcesDate?: number;
   updateGpuChipsetSourcesDate?: number;

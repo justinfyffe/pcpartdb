@@ -8,6 +8,12 @@ export enum AutomationActionType {
   UpdateSitemaps = 'UPDATE_SITEMAPS',
 
   /**
+   * Updates sitemaps that have priority URLs. These are a limited set
+   * of URLs that we have determined are more important for indexing.
+   */
+  UpdatePrioritySitemaps = 'UPDATE_PRIORITY_SITEMAPS',
+
+  /**
    * Downloads and parses CPU sources that later gets used for to fetch
    * CPU data. Sources require approval after being fetched.
    */

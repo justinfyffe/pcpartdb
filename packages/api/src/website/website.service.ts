@@ -24,6 +24,18 @@ export class WebsiteService {
     await fileUtils.move(originalPath, sitemapPath);
   }
 
+  async uploadPrioritySitemap(request: UploadSitemapRequest, _ctx: Context) {
+    const originalPath = fileUtils.uploadsPath(request.tempPath);
+    const sitemapPath = fileUtils.prioritySitemapsPath(
+      request.originalFileName,
+    );
+
+    if (fileUtils.exists(sitemapPath)) {
+      await fileUtils.remove(sitemapPath);
+    }
+    await fileUtils.move(originalPath, sitemapPath);
+  }
+
   async getSitemapProductSlugs(
     request: GetSitemapProductSlugsRequest,
     ctx: Context,
@@ -41,6 +53,15 @@ export class WebsiteService {
         productId: value.id,
         slug: value.slug,
         lastModification: value.updatedAt.getTime(),
+        releaseDate:
+          value.cpuFields?.releaseDateValue ||
+          value.gpuFields?.releaseDateValue ||
+          null,
+        marketSegment:
+          value.cpuFields?.marketSegmentValue ||
+          value.gpuFields?.marketSegmentValue ||
+          null,
+        hasBenchmarks: !!value.benchmarks?.length,
       })),
     } as GetSitemapProductSlugsResponse;
   }
