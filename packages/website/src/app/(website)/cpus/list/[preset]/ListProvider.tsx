@@ -2,6 +2,7 @@
 
 import {
   CpuProduct,
+  generateListProductsQueryFromPath,
   getListCpusPath,
   ListCpusAdditionalData,
   ListCpusFilter,
@@ -9,9 +10,15 @@ import {
   ListCpusViewModel,
   ProductType,
 } from '@pcpartdb/shared';
-import { useRouter } from 'next/navigation';
+import { useCancelable } from 'packages/website/src/app/_common/hooks/useCancelable';
 import { listProducts } from 'packages/website/src/app/_common/product/api';
-import React, { createContext, useCallback, useContext, useState } from 'react';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 
 export interface ListContextState {
   query?: ListCpusQuery;
@@ -40,7 +47,6 @@ export interface ListProviderProps {
 
 export function ListProvider(props: ListProviderProps) {
   const { viewModel } = props;
-  const router = useRouter();
 
   const [cpus, setCpus] = useState(viewModel.results);
   const [total, setTotal] = useState(viewModel.total);
@@ -49,7 +55,7 @@ export function ListProvider(props: ListProviderProps) {
     viewModel.additionalData,
   );
 
-  const fetchCpus = useCallback(async (query: ListCpusQuery) => {
+  const fetchCpusImpl = useCallback(async (query: ListCpusQuery) => {
     const filter: ListCpusFilter = {
       ...(query?.filter ?? {}),
       productType: ProductType.Cpu,
@@ -61,16 +67,42 @@ export function ListProvider(props: ListProviderProps) {
     setAdditionalData(response.additionalData);
     setQuery(query);
   }, []);
+  const { func: fetchCpus, abort: abortFetchCpus } =
+    useCancelable(fetchCpusImpl);
 
   const updateQuery = useCallback(
     async (q: ListCpusQuery) => {
-      await fetchCpus(q);
       const url = getListCpusPath(q);
-      router.push(url, { scroll: false });
-      // window.history.pushState({}, '', url);
+      window.history.pushState({}, '', url);
+      abortFetchCpus?.();
+      await fetchCpus(q);
     },
-    [fetchCpus, router],
+    [abortFetchCpus, fetchCpus],
   );
+
+  const handlePopState = useCallback(async () => {
+    const url = new URL(window.location.href);
+    const pathname = url.pathname;
+    const searchParams = url.searchParams.toString();
+    const path = `${pathname}${searchParams ? `?${searchParams}` : ''}`;
+
+    abortFetchCpus?.();
+    await fetchCpus(
+      generateListProductsQueryFromPath({
+        productType: ProductType.Cpu,
+        path: path,
+      }) as ListCpusQuery,
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener('popstate', handlePopState);
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <ListContext.Provider

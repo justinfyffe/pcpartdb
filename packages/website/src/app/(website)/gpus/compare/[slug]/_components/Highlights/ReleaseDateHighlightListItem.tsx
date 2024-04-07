@@ -27,14 +27,16 @@ export const ReleaseDateHighlightListItem: FunctionComponent<
   const value1 = productFieldFormattedValue(gpu1.fields?.releaseDate) ?? '--';
   const value2 = productFieldFormattedValue(gpu2.fields?.releaseDate) ?? '--';
 
-  const releaseDate1 = formatDate(
-    productFieldRawValue(gpu1.fields?.releaseDate),
-    { format: DateFormat.YearQuarter },
-  );
-  const releaseDate2 = formatDate(
-    productFieldRawValue(gpu2.fields?.releaseDate),
-    { format: DateFormat.YearQuarter },
-  );
+  const releaseDate1 = gpu1.fields?.releaseDate
+    ? formatDate(productFieldRawValue(gpu1.fields?.releaseDate), {
+        format: DateFormat.YearQuarter,
+      })
+    : 0;
+  const releaseDate2 = gpu2.fields?.releaseDate
+    ? formatDate(productFieldRawValue(gpu2.fields?.releaseDate), {
+        format: DateFormat.YearQuarter,
+      })
+    : 0;
 
   const bold1 = releaseDate1 > releaseDate2;
   const bold2 = releaseDate1 < releaseDate2;

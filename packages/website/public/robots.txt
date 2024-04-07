@@ -1,3 +1,4 @@
+Sitemap: https://pcpartdb.com/priority-sitemap-index.xml.gz
 Sitemap: https://pcpartdb.com/sitemap-index.xml.gz
 
 User-agent: AhrefsBot

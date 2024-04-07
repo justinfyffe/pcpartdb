@@ -10,7 +10,6 @@ import {
   ListGpusViewModel,
   ProductType,
 } from '@pcpartdb/shared';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useCancelable } from 'packages/website/src/app/_common/hooks/useCancelable';
 import { listProducts } from 'packages/website/src/app/_common/product/api';
 import React, {
@@ -48,7 +47,6 @@ export interface ListProviderProps {
 
 export function ListProvider(props: ListProviderProps) {
   const { viewModel } = props;
-  const router = useRouter();
 
   const [gpus, setGpus] = useState(viewModel.results);
   const [total, setTotal] = useState(viewModel.total);
@@ -72,37 +70,39 @@ export function ListProvider(props: ListProviderProps) {
   const { func: fetchGpus, abort: abortFetchGpus } =
     useCancelable(fetchGpusImpl);
 
-  // TODO: make this work with back/forward button.
   const updateQuery = useCallback(
     async (q: ListGpusQuery) => {
+      const url = getListGpusPath(q);
+      window.history.pushState({}, '', url);
       abortFetchGpus?.();
       await fetchGpus(q);
-      const url = getListGpusPath(q);
-      router.push(url, { scroll: false });
-      // window.history.pushState({}, '', url);
     },
-    [abortFetchGpus, fetchGpus, router],
+    [abortFetchGpus, fetchGpus],
   );
 
-  // TODO: this sort of allows back, but causes a lot of random issues
-  // const pathname = usePathname();
-  // const searchParams = useSearchParams();
-  // useEffect(() => {
-  //   const url = `${pathname}?${searchParams}`;
-  //   abortFetchGpus?.();
-  //   fetchGpus(
-  //     generateListProductsQueryFromPath({
-  //       productType: query.filter.productType,
-  //       path: url,
-  //       defaults: {
-  //         sort: searchParams.get('sort'),
-  //         order: searchParams.get('order'),
-  //       },
-  //     }) as ListGpusQuery,
-  //   );
-  //   // Only run this hook when the url changes.
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [pathname, searchParams]);
+  const handlePopState = useCallback(async () => {
+    const url = new URL(window.location.href);
+    const pathname = url.pathname;
+    const searchParams = url.searchParams.toString();
+    const path = `${pathname}${searchParams ? `?${searchParams}` : ''}`;
+
+    abortFetchGpus?.();
+    await fetchGpus(
+      generateListProductsQueryFromPath({
+        productType: ProductType.Gpu,
+        path: path,
+      }) as ListGpusQuery,
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener('popstate', handlePopState);
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <ListContext.Provider

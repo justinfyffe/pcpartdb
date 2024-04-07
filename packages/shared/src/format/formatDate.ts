@@ -11,7 +11,17 @@ interface FormatDateOptions {
 }
 
 export function formatDate(value: string, options?: FormatDateOptions) {
-  const formatter = options?.format ?? DateFormat.QuarterYear;
-  const date = parse(value, 'yyyy-MM-dd', new Date());
-  return format(date, formatter);
+  if (!value) {
+    return null;
+  }
+
+  try {
+    const formatter = options?.format ?? DateFormat.QuarterYear;
+    const date = parse(value, 'yyyy-MM-dd', new Date());
+    return format(date, formatter);
+  } catch (e) {
+    console.error('Error calling formatDate');
+    console.error(e);
+    return null;
+  }
 }
