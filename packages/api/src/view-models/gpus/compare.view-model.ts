@@ -10,7 +10,6 @@ import {
   removeEmptyValues,
 } from '@pcpartdb/shared';
 import { normalize } from 'normalizr';
-import * as uuid from 'uuid';
 import { ProductService } from '../../product/product.service';
 import { RelativeDataProductsService } from '../../product/relative-data-products.service';
 import { Context } from '../../shared/context';
@@ -25,9 +24,6 @@ export class CompareGpusViewModelService {
   ) {}
 
   async viewModel(slug: string, ctx: Context) {
-    const timer = `CompareGpusViewModelService (${uuid.v4()})`;
-    console.time(timer);
-
     const buildViewModel = async () => {
       const comparison = await this.getComparison(slug, ctx);
 
@@ -61,7 +57,6 @@ export class CompareGpusViewModelService {
     };
 
     const viewModel = await buildViewModel();
-    console.timeEnd(timer);
     return viewModel;
   }
 

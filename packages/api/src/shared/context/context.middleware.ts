@@ -12,6 +12,7 @@ import {
   UserSettings,
 } from '@pcpartdb/shared';
 import { NextFunction } from 'express';
+import * as uuid from 'uuid';
 import { AccessTokenRepository } from '../../auth/access-token.repository';
 import { ApiKeyRepository } from '../../auth/api-key.repository';
 import { CookieService } from '../cookie/cookie.service';

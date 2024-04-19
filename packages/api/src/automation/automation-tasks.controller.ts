@@ -13,6 +13,7 @@ import {
 import * as uuid from 'uuid';
 import { StaffGuard } from '../auth/staff.guard';
 import { Context, Ctx } from '../shared/context';
+import { TimerInterceptor } from '../shared/timer/timer.interceptor';
 import { MULTER_OPTIONS } from '../shared/utils';
 import { AutomationTasksService } from './automation-tasks.service';
 
@@ -22,27 +23,21 @@ export class AutomationTasksController {
 
   @Post('product-ranks')
   @UseGuards(StaffGuard)
-  @UseInterceptors(FileInterceptor('file', MULTER_OPTIONS))
+  @UseInterceptors(FileInterceptor('file', MULTER_OPTIONS), TimerInterceptor)
   async uploadProductRanks(
     @Body() body: UploadProductRanksRequest,
     @Ctx() ctx: Context,
   ) {
-    const timer = `AutomationTasksController.uploadProductRanks (${uuid.v4()})`;
-    console.time(timer);
     await this.service.uploadProductRanks(body, ctx);
-    console.timeEnd(timer);
   }
 
   @Post('related-products')
   @UseGuards(StaffGuard)
-  @UseInterceptors(FileInterceptor('file', MULTER_OPTIONS))
+  @UseInterceptors(FileInterceptor('file', MULTER_OPTIONS), TimerInterceptor)
   async uploadRelatedProducts(
     @Body() body: UploadRelatedProductsRequest,
     @Ctx() ctx: Context,
   ) {
-    const timer = `AutomationTasksController.uploadRelatedProducts (${uuid.v4()})`;
-    console.time(timer);
     await this.service.uploadRelatedProducts(body, ctx);
-    console.timeEnd(timer);
   }
 }

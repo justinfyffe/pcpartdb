@@ -10,7 +10,6 @@ import {
   ListSort,
   ProductType,
 } from '@pcpartdb/shared';
-import * as uuid from 'uuid';
 import { ProductService } from '../../product/product.service';
 import { Context } from '../../shared/context';
 import { validate } from '../../shared/validation/validate';
@@ -20,8 +19,6 @@ export class ListGpusViewModelService {
   constructor(private productService: ProductService) {}
 
   async viewModel(request: ListGpusRequest, ctx: Context) {
-    const timer = `ListGpusViewModelService (${uuid.v4()})`;
-    console.time(timer);
     validate(request, listProductsRequestSchema);
     const query = request.query;
 
@@ -66,7 +63,6 @@ export class ListGpusViewModelService {
       },
       ctx,
     );
-    console.timeEnd(timer);
 
     return response;
   }

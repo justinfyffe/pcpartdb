@@ -10,7 +10,6 @@ import {
   ListSort,
   ProductType,
 } from '@pcpartdb/shared';
-import * as uuid from 'uuid';
 import { Database } from '../../database';
 import { ProductService } from '../../product/product.service';
 import { Context } from '../../shared/context';
@@ -21,8 +20,6 @@ export class ListCpusViewModelService {
   constructor(private db: Database, private productService: ProductService) {}
 
   async viewModel(request: ListCpusRequest, ctx: Context) {
-    const timer = `ListCpusViewModelService (${uuid.v4()})`;
-    console.time(timer);
     validate(request, listProductsRequestSchema);
     const query = request.query;
 
@@ -55,7 +52,6 @@ export class ListCpusViewModelService {
       },
       ctx,
     );
-    console.timeEnd(timer);
 
     return response;
   }

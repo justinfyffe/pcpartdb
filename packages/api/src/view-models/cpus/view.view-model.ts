@@ -9,7 +9,6 @@ import {
   viewCpuViewModelNormalizr,
 } from '@pcpartdb/shared';
 import { normalize } from 'normalizr';
-import * as uuid from 'uuid';
 import { ProductService } from '../../product/product.service';
 import { RelativeDataProductsService } from '../../product/relative-data-products.service';
 import { Context } from '../../shared/context';
@@ -24,9 +23,6 @@ export class ViewCpuViewModelService {
   ) {}
 
   async viewModel(slug: string, ctx: Context) {
-    const timer = `ViewCpuViewModelService (${uuid.v4()})`;
-    console.time(timer);
-
     const buildViewModel = async () => {
       const cpu = await this.getCpu(slug, ctx);
       const relativeDataProducts = await this.getRelativeDataProducts(cpu, ctx);
@@ -50,7 +46,6 @@ export class ViewCpuViewModelService {
     };
 
     const viewModel = await buildViewModel();
-    console.timeEnd(timer);
     return viewModel;
   }
 

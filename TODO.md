@@ -17,11 +17,8 @@ NEXT:
 
 Games / FPS:
 - Fixes:
-  - Show request path in pm2 logs
-    - Easier to identify which pages have issues
   - Improve performance
     - view and compare gpus are slow
-  - Delay in showing the secondary related product
 - POST MVP
   - [] List GPUs
     - [] Sort

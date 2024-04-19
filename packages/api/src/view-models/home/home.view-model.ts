@@ -49,9 +49,6 @@ export class HomeViewModelService {
   ) {}
 
   async viewModel(ctx: Context) {
-    const timer = `HomeViewModelService (${uuid.v4()})`;
-    console.time(timer);
-
     const result = await this.cacheService.cache(
       async () => {
         const [nvidiaVsAmdGpus, popularGpus, intelVsAmdCpus, popularCpus] =
@@ -71,7 +68,6 @@ export class HomeViewModelService {
       },
       { type: CacheType.Home, key: {}, excludeFromMaxItems: true },
     );
-    console.timeEnd(timer);
     return result;
   }
 

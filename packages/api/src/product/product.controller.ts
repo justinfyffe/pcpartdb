@@ -10,6 +10,7 @@ import {
   Put,
   Query,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import {
   AutocompleteProductsRequest,
@@ -29,6 +30,7 @@ import * as uuid from 'uuid';
 import { StaffGuard } from '../auth/staff.guard';
 import { Database } from '../database';
 import { Context, Ctx } from '../shared/context';
+import { TimerInterceptor } from '../shared/timer/timer.interceptor';
 import { ProductService } from './product.service';
 import { RelativeDataProductsService } from './relative-data-products.service';
 
@@ -41,10 +43,8 @@ export class ProductController {
   ) {}
 
   @Get()
+  @UseInterceptors(TimerInterceptor)
   async list(@Query('req') reqJson: string, @Ctx() ctx: Context) {
-    const timer = `ProductController.list (${uuid.v4()})`;
-    console.time(timer);
-
     const req: ListProductsRequest = JSON.parse(reqJson);
     const productType = req.query.filter?.productType;
     if (productType == null) {
@@ -63,7 +63,6 @@ export class ProductController {
       },
       ctx,
     );
-    console.timeEnd(timer);
     return response;
   }
 
