@@ -8,10 +8,7 @@ import {
   ProductComparison,
   ProductType,
 } from '@pcpartdb/shared';
-import * as uuid from 'uuid';
-import { Database } from '../../database';
 import { ProductService } from '../../product/product.service';
-import { CacheService, CacheType } from '../../shared/cache/cache.service';
 import { Context } from '../../shared/context';
 
 const RANDOMLY_CHOOSE_FROM_COMPARISON = 5;
@@ -42,33 +39,23 @@ const AMD_CPU_FILTER: ListCpusFilter = {
 
 @Injectable()
 export class HomeViewModelService {
-  constructor(
-    private db: Database,
-    private productService: ProductService,
-    private cacheService: CacheService,
-  ) {}
+  constructor(private productService: ProductService) {}
 
   async viewModel(ctx: Context) {
-    const result = await this.cacheService.cache(
-      async () => {
-        const [nvidiaVsAmdGpus, popularGpus, intelVsAmdCpus, popularCpus] =
-          await Promise.all([
-            this.getNvidiaVsAmdGpus(ctx),
-            this.getPopularGpus(ctx),
-            this.getIntelVsAmdCpus(ctx),
-            this.getPopularCpus(ctx),
-          ]);
+    const [nvidiaVsAmdGpus, popularGpus, intelVsAmdCpus, popularCpus] =
+      await Promise.all([
+        this.getNvidiaVsAmdGpus(ctx),
+        this.getPopularGpus(ctx),
+        this.getIntelVsAmdCpus(ctx),
+        this.getPopularCpus(ctx),
+      ]);
 
-        return {
-          nvidiaVsAmdGpus,
-          popularGpus,
-          intelVsAmdCpus,
-          popularCpus,
-        } as HomeViewModel;
-      },
-      { type: CacheType.Home, key: {}, excludeFromMaxItems: true },
-    );
-    return result;
+    return {
+      nvidiaVsAmdGpus,
+      popularGpus,
+      intelVsAmdCpus,
+      popularCpus,
+    } as HomeViewModel;
   }
 
   private async getNvidiaVsAmdGpus(ctx: Context) {

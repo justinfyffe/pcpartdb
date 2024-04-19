@@ -7,6 +7,9 @@ import deterministicStringify from 'json-stringify-deterministic';
 export enum CacheType {
   Home = 'home',
 
+  // Pages
+  Page = 'page',
+
   // Entity caches
   BaseProduct = 'base_product',
   ProductFields = 'product_fields',
@@ -30,7 +33,7 @@ const _SIX_HOURS = ONE_HOUR * 6;
 const ONE_DAY = ONE_HOUR * 24;
 
 export const CACHE_EXPIRE_TTLS: Partial<Record<CacheType, number>> = {
-  [CacheType.Home]: ONE_HOUR,
+  [CacheType.Page]: FIFTEEN_MINUTES,
 
   // Entity Caches
   [CacheType.BaseProduct]: ONE_DAY,

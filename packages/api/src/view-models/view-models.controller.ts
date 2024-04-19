@@ -13,6 +13,7 @@ import {
 } from '@pcpartdb/shared';
 import { StaffGuard } from '../auth/staff.guard';
 import { Database } from '../database';
+import { CacheInterceptor } from '../shared/cache/cache.interceptor';
 import { Context, Ctx } from '../shared/context';
 import { TimerInterceptor } from '../shared/timer/timer.interceptor';
 import { AdminAutomationViewModelService } from './admin/automation/automation.view-model';
@@ -148,11 +149,13 @@ export class ViewModelsController {
   }
 
   @Get('cpus/compare/:slug')
+  @UseInterceptors(CacheInterceptor)
   async compareCpus(@Param('slug') slug: string, @Ctx() ctx: Context) {
     return await this.compareCpusViewModelService.viewModel(slug, ctx);
   }
 
   @Get('cpus/view/:slug')
+  @UseInterceptors(CacheInterceptor)
   async viewCpu(@Param('slug') slug: string, @Ctx() ctx: Context) {
     return await this.viewCpuViewModelService.viewModel(slug, ctx);
   }
@@ -164,11 +167,13 @@ export class ViewModelsController {
   }
 
   @Get('gpus/compare/:slug')
+  @UseInterceptors(CacheInterceptor)
   async compareGpus(@Param('slug') slug: string, @Ctx() ctx: Context) {
     return await this.compareGpusViewModelService.viewModel(slug, ctx);
   }
 
   @Get('gpus/view/:slug')
+  @UseInterceptors(CacheInterceptor)
   async viewGpu(@Param('slug') slug: string, @Ctx() ctx: Context) {
     return await this.viewGpuViewModelService.viewModel(slug, ctx);
   }
@@ -182,6 +187,7 @@ export class ViewModelsController {
   }
 
   @Get('home')
+  @UseInterceptors(CacheInterceptor)
   async home(@Ctx() ctx: Context) {
     return await this.homeViewModelService.viewModel(ctx);
   }

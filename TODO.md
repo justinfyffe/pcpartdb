@@ -21,7 +21,7 @@ Games / FPS:
     - [] Replace duct tape window.history?.replaceState
   - Improve performance
     - Most important:
-      - [] Cache In interceptor
+      - [~] Cache In interceptor
         - Highest impact
         - Cache individual pages.
         - Might use a lot of memory

@@ -11,6 +11,7 @@ import {
   User,
   UserSettings,
 } from '@pcpartdb/shared';
+import { randomUUID } from 'crypto';
 import { NextFunction } from 'express';
 import { AccessTokenRepository } from '../../auth/access-token.repository';
 import { ApiKeyRepository } from '../../auth/api-key.repository';
@@ -54,6 +55,7 @@ export class ContextMiddleware implements NestMiddleware {
       user,
       token,
       config,
+      uuid: randomUUID(),
     };
     req.context = context;
 
