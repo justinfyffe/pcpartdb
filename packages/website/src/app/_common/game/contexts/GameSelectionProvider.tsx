@@ -42,7 +42,7 @@ export function GameSelectionProvider(props: GameSelectionProviderProps) {
       url.searchParams.delete('game');
     }
 
-    window.history.replaceState({}, '', url);
+    window.history?.replaceState({}, '', url);
     // Only update when game changes
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedGame]);

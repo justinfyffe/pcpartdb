@@ -73,7 +73,7 @@ export function ListProvider(props: ListProviderProps) {
   const updateQuery = useCallback(
     async (q: ListGpusQuery) => {
       const url = getListGpusPath(q);
-      window.history.pushState({}, '', url);
+      window.history?.pushState({}, '', url);
       abortFetchGpus?.();
       await fetchGpus(q);
     },

@@ -50,7 +50,7 @@ export const usePreferredBenchmarkDialog = (
       if (hardReload) {
         window.location.href = url;
       } else if (softReload) {
-        window.history.replaceState({}, '', url);
+        window.history?.replaceState({}, '', url);
         setUserSettings(newSettings);
         onChange?.();
         closeDialog();

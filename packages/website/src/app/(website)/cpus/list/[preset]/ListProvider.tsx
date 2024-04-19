@@ -73,7 +73,7 @@ export function ListProvider(props: ListProviderProps) {
   const updateQuery = useCallback(
     async (q: ListCpusQuery) => {
       const url = getListCpusPath(q);
-      window.history.pushState({}, '', url);
+      window.history?.pushState({}, '', url);
       abortFetchCpus?.();
       await fetchCpus(q);
     },
