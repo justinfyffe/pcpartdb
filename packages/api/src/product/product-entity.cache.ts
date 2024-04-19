@@ -8,7 +8,8 @@ import {
   ProductImageEntity,
   ProductSourceEntity,
 } from '@pcpartdb/database';
-import { ProductType } from '@pcpartdb/shared';
+import { concurrent, ProductType } from '@pcpartdb/shared';
+import { randomUUID } from 'crypto';
 import { ProductGameFpsEntity } from 'packages/database/src/product/ProductGameFpsEntity';
 import { ProductRanksEntity } from 'packages/database/src/product/ProductRankEntity';
 import { RelatedProductEntity } from 'packages/database/src/product/RelatedProductEntity';
@@ -193,19 +194,23 @@ export class ProductEntityCache {
     ]);
 
     // Do the rest simultaneously
-    await Promise.all([
-      this.populateFields({ ...options, products }, ctx),
-      this.populateBenchmarks({ ...options, products }, ctx),
-      this.populateGameFps({ ...options, products }, ctx),
-      this.populateRanks({ ...options, products }, ctx),
-      this.populateImages({ ...options, products }, ctx),
-      this.populateSources({ ...options, products }, ctx),
-    ]);
+    await concurrent(
+      [
+        () => this.populateFields({ ...options, products }, ctx),
+        () => this.populateRanks({ ...options, products }, ctx),
+        () => this.populateBenchmarks({ ...options, products }, ctx),
+        () => this.populateGameFps({ ...options, products }, ctx),
+        () => this.populateImages({ ...options, products }, ctx),
+        () => this.populateSources({ ...options, products }, ctx),
+      ],
+      { limit: 3 },
+    );
 
     return products;
   }
 
   async getProductBySlug(options: GetProductBySlugOptions, ctx: Context) {
+    // TODO: cache slug -> id?
     const product = await this.productRepository.findBySlug2(
       { productType: options.productType, slug: options.slug },
       ctx,
@@ -215,7 +220,11 @@ export class ProductEntityCache {
       return null;
     }
 
-    return this.getProductById({ ...options, id: product.id }, ctx);
+    const result = await this.getProductById(
+      { ...options, id: product.id },
+      ctx,
+    );
+    return result;
   }
 
   async invalidate(options: InvalidateOptions) {
@@ -528,12 +537,10 @@ export class ProductEntityCache {
 
       // Populate benchmarks on the products and cache them.
       for (const id of idsToFetch) {
-        const benchmarks = entityGroups[id];
-        if (!benchmarks || !productMap[id]) {
-          continue;
+        const benchmarks = entityGroups[id] || [];
+        if (productMap[id]) {
+          productMap[id].benchmarks = benchmarks;
         }
-
-        productMap[id].benchmarks = benchmarks;
 
         await this.cacheService.setCached(benchmarks, {
           type: CacheType.ProductBenchmarks,
@@ -594,12 +601,11 @@ export class ProductEntityCache {
 
       // Populate game fps on the products and cache them.
       for (const id of idsToFetch) {
-        const gameFps = entityGroups[id];
-        if (!gameFps || !productMap[id]) {
-          continue;
+        const gameFps = entityGroups[id] || [];
+        if (productMap[id]) {
+          productMap[id].gameFps = gameFps;
         }
 
-        productMap[id].gameFps = gameFps;
         for (const value of gameFps) {
           gameIdsSet.add(value.gameId);
         }
@@ -671,11 +677,9 @@ export class ProductEntityCache {
       // Populate ranks on the products, and then cache.
       for (const entity of entities) {
         const productId = entity.productId;
-        if (!productMap[productId]) {
-          continue;
+        if (productMap[productId]) {
+          productMap[productId].ranks = entity;
         }
-
-        productMap[productId].ranks = entity;
 
         await this.cacheService.setCached(entity, {
           type: CacheType.ProductRanks,
@@ -731,12 +735,10 @@ export class ProductEntityCache {
 
       // Populate benchmarks on the products and cache them.
       for (const id of idsToFetch) {
-        const images = entityGroups[id];
-        if (!images || !productMap[id]) {
-          continue;
+        const images = entityGroups[id] || [];
+        if (productMap[id]) {
+          productMap[id].images = images;
         }
-
-        productMap[id].images = images;
 
         await this.cacheService.setCached(images, {
           type: CacheType.ProductImages,
@@ -792,12 +794,10 @@ export class ProductEntityCache {
 
       // Populate sources on the products and cache them.
       for (const id of idsToFetch) {
-        const sources = entityGroups[id];
-        if (!sources || !productMap[id]) {
-          continue;
+        const sources = entityGroups[id] || [];
+        if (productMap[id]) {
+          productMap[id].sources = sources;
         }
-
-        productMap[id].sources = sources;
 
         await this.cacheService.setCached(sources, {
           type: CacheType.ProductSources,

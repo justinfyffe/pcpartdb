@@ -9,4 +9,5 @@ export interface Context {
   user?: User;
   token?: string;
   config?: Config;
+  randomUuid?: string;
 }

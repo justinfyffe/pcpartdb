@@ -1,5 +1,6 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { GameEntity, ProductEntity } from '@pcpartdb/database';
+import { randomUUID } from 'crypto';
 import { ProductEntityCache } from '../product/product-entity.cache';
 import { CacheService, CacheType } from '../shared/cache/cache.service';
 import { Context } from '../shared/context';
@@ -32,7 +33,7 @@ interface PopulateOptions extends RelationOptions {
   games: GameEntity[];
 }
 
-interface GetProductIdsToFetchOptions<TData = unknown> {
+interface GetGameIdsToFetchOptions<TData = unknown> {
   ids: number[];
 
   cacheType: CacheType;
@@ -77,7 +78,7 @@ export class GameEntityCache {
       gamesMap.set(id, null);
     }
 
-    const idsToFetch = await this.getProductIdsToFetch<GameEntity>({
+    const idsToFetch = await this.getGameIdsToFetch<GameEntity>({
       ids: options.ids,
       cacheType: CacheType.Game,
       onCacheHit: (id, game) => {
@@ -170,8 +171,8 @@ export class GameEntityCache {
     }
   }
 
-  private async getProductIdsToFetch<TData = unknown>(
-    options: GetProductIdsToFetchOptions<TData>,
+  private async getGameIdsToFetch<TData = unknown>(
+    options: GetGameIdsToFetchOptions<TData>,
   ) {
     const cacheType = options.cacheType;
     const bypassCache = options.bypassCache;

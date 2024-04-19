@@ -11,6 +11,7 @@ import {
   viewGpuViewModelNormalizr,
 } from '@pcpartdb/shared';
 import { normalize } from 'normalizr';
+import * as uuid from 'uuid';
 import { ProductService } from '../../product/product.service';
 import { RelativeDataProductsService } from '../../product/relative-data-products.service';
 import { Context } from '../../shared/context';
@@ -26,15 +27,20 @@ export class ViewGpuViewModelService {
 
   async viewModel(slug: string, ctx: Context) {
     const buildViewModel = async () => {
+      const timer = uuid.v4();
+      console.time(timer + ' getGpu');
       const gpu = await this.getGpu(slug, ctx);
+      console.timeEnd(timer + ' getGpu');
       const chipset = getGpuChipset(gpu);
 
       const gameSlug = ctx.req?.query?.game as string;
+      // console.time(timer + ' getRelativeDataProducts');
       const relativeDataProducts = await this.getRelativeDataProducts(
         chipset,
         gameSlug,
         ctx,
       );
+      // console.timeEnd(timer + ' getRelativeDataProducts');
 
       const relatedGpus = this.getRelatedGpus(5, relativeDataProducts, gpu);
       const relatedGpuComparisons = this.getRelatedComparisons(
@@ -50,8 +56,13 @@ export class ViewGpuViewModelService {
         relatedGpuComparisons,
       } as ViewGpuViewModel;
 
-      const response = normalize(result, viewGpuViewModelNormalizr);
-      return removeEmptyValues(response);
+      // console.time(timer + ' normalize');
+      let response = normalize(result, viewGpuViewModelNormalizr);
+      // console.timeEnd(timer + ' normalize');
+      // console.time(timer + ' removeEmptyValues');
+      response = removeEmptyValues(response);
+      // console.timeEnd(timer + ' removeEmptyValues');
+      return response;
     };
 
     const viewModel = await buildViewModel();

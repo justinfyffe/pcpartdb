@@ -19,6 +19,10 @@ Games / FPS:
 - Fixes:
   - Improve performance
     - view and compare gpus are slow
+  - Cache
+    - Cache slug -> id?
+    - Get rid of no max items cache?
+    - Cache in interceptor?
 - POST MVP
   - [] List GPUs
     - [] Sort
