@@ -17,11 +17,11 @@ NEXT:
 
 Games / FPS:
 - Fixes:
-  - Fix 500 error
-    - https://pcpartdb.com/gpus/compare/intel-uhd-graphics-770--vs--ati-radeon-x1950-pro/
+  - [] Scroll to section using js instead of using anchor in Contents
+    - [] Replace duct tape window.history?.replaceState
   - Improve performance
     - reduce data in client components
-    - dont return all games
+    - [X] dont return all games
     - view and compare gpus are slow
       - Slow: https://pcpartdb.com/gpus/view/nvidia-geforce-rtx-4090/
       - Fast: https://pcpartdb.com/gpus/view/intel-uhd-graphics-770/
