@@ -88,8 +88,8 @@ export const RelativeGameCpfTable: FunctionComponent<
     const productGame1 = getProductGame(chipset1, selectedGame?.id);
     const productGame2 = getProductGame(chipset2, selectedGame?.id);
     if (
-      !getProductGameCpfValue(productGame1, settingsPreset) != null ||
-      !getProductGameCpfValue(productGame2, settingsPreset) != null
+      getProductGameCpfValue(productGame1, settingsPreset) == null ||
+      getProductGameCpfValue(productGame2, settingsPreset) == null
     ) {
       return null;
     } else {

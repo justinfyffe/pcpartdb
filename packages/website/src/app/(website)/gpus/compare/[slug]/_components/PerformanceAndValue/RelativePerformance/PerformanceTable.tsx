@@ -53,8 +53,8 @@ export const PerformanceTable: FunctionComponent<PerformanceTableProps> = (
   });
   const [secondaryChipset, setSecondaryChipset] = useState(() => {
     if (
-      !productBenchmarkValue(chipset1, preferredBenchmark) != null ||
-      !productBenchmarkValue(chipset2, preferredBenchmark) != null
+      productBenchmarkValue(chipset1, preferredBenchmark) == null ||
+      productBenchmarkValue(chipset2, preferredBenchmark) == null
     ) {
       return null;
     } else {

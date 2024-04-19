@@ -49,8 +49,8 @@ export const PerformanceTable: FunctionComponent<PerformanceTableProps> = (
   });
   const [secondaryCpu, setSecondaryCpu] = useState(() => {
     if (
-      !productBenchmarkValue(cpu1, preferredBenchmark) != null ||
-      !productBenchmarkValue(cpu2, preferredBenchmark) != null
+      productBenchmarkValue(cpu1, preferredBenchmark) == null ||
+      productBenchmarkValue(cpu2, preferredBenchmark) == null
     ) {
       return null;
     } else {

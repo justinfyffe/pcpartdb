@@ -52,8 +52,8 @@ export const ValueTable: FunctionComponent<ValueTableProps> = (props) => {
   const [secondaryChipset, setSecondaryChipset] = useState(() => {
     if (
       chipset1.id === chipset2.id ||
-      !productBenchmarkValuePerMsrp(chipset1, preferredBenchmark) != null ||
-      !productBenchmarkValuePerMsrp(chipset2, preferredBenchmark) != null
+      productBenchmarkValuePerMsrp(chipset1, preferredBenchmark) == null ||
+      productBenchmarkValuePerMsrp(chipset2, preferredBenchmark) == null
     ) {
       return null;
     } else {

@@ -49,8 +49,8 @@ export const ValueTable: FunctionComponent<ValueTableProps> = (props) => {
   });
   const [secondaryCpu, setSecondaryCpu] = useState(() => {
     if (
-      !productBenchmarkValuePerMsrp(cpu1, preferredBenchmark) != null ||
-      !productBenchmarkValuePerMsrp(cpu2, preferredBenchmark) != null
+      productBenchmarkValuePerMsrp(cpu1, preferredBenchmark) == null ||
+      productBenchmarkValuePerMsrp(cpu2, preferredBenchmark) == null
     ) {
       return null;
     } else {

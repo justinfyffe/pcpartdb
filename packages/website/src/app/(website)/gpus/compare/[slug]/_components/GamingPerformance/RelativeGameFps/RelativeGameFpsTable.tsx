@@ -87,8 +87,8 @@ export const RelativeGameFpsTable: FunctionComponent<
     const productGame1 = getProductGame(chipset1, selectedGame?.id);
     const productGame2 = getProductGame(chipset2, selectedGame?.id);
     if (
-      !getProductGameFpsValue(productGame1, settingsPreset) != null ||
-      !getProductGameFpsValue(productGame2, settingsPreset) != null
+      getProductGameFpsValue(productGame1, settingsPreset) == null ||
+      getProductGameFpsValue(productGame2, settingsPreset) == null
     ) {
       return null;
     } else {

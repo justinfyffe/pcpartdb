@@ -484,12 +484,12 @@ export class RelativeDataProductsService {
     const surrounding1 = getSurroundingValues(
       neighbors1,
       neighbors1.findIndex((product) => product.id === gpu1.id),
-      total / 2,
+      total,
     );
     const surrounding2 = getSurroundingValues(
       neighbors2,
       neighbors2.findIndex((product) => product.id === gpu2.id),
-      total / 2,
+      total,
     );
 
     // Combine the nearest neighbors. Factor in that they may overlap.
