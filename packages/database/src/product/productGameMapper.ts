@@ -54,9 +54,13 @@ export async function mapToProductGameDtos(
     }
   }
 
-  return [...map.values()].sort((pg1, pg2) =>
-    (pg2?.game?.releaseDate ?? '').localeCompare(pg1?.game?.releaseDate ?? ''),
-  );
+  return [...map.values()]
+    .filter((pg1) => pg1 != null)
+    .sort((pg1, pg2) =>
+      (pg2?.game?.releaseDate ?? '').localeCompare(
+        pg1?.game?.releaseDate ?? '',
+      ),
+    );
 }
 
 function mapToProductGameFpsDto(

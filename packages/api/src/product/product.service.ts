@@ -3,6 +3,7 @@ import {
   mapToProductDto,
   mapToProductDtos,
   mapToProductEntity,
+  ProductEntity,
 } from '@pcpartdb/database';
 import { scrapeCpu, scrapeGpu } from '@pcpartdb/scraper';
 import {
@@ -76,9 +77,9 @@ interface RelationOptions {
   includeRelatedBenchmarks?: boolean | BenchmarkKey[];
 
   // All/No Games, Game IDs, or Game Slugs
-  includeGames?: boolean | (number | string)[];
-  includeParentGames?: boolean | (number | string)[];
-  includeRelatedGames?: boolean | (number | string)[];
+  includeGames?: boolean | (number | string)[] | 'latest';
+  includeParentGames?: boolean | (number | string)[] | 'latest';
+  includeRelatedGames?: boolean | (number | string)[] | 'latest';
 
   includeRanks?: boolean | BenchmarkKey[];
   includeParentRanks?: boolean | BenchmarkKey[];
@@ -199,7 +200,11 @@ export class ProductService {
 
     const products: Product[] = await mapToProductDtos(
       productEntities,
-      this.buildMapperOptions({ ...options, includeSummary: true }, ctx),
+      this.buildMapperOptions(
+        productEntities,
+        { ...options, includeSummary: true },
+        ctx,
+      ) as any,
     );
 
     const response: ListProductsResponse = {
@@ -225,7 +230,11 @@ export class ProductService {
 
     const product = await mapToProductDto(
       entity,
-      this.buildMapperOptions({ ...options, includeSummary: true }, ctx),
+      this.buildMapperOptions(
+        [entity],
+        { ...options, includeSummary: true },
+        ctx,
+      ) as any,
     );
 
     if (product == null) {
@@ -245,7 +254,11 @@ export class ProductService {
     );
     const product = await mapToProductDto(
       entity,
-      this.buildMapperOptions({ ...options, includeSummary: true }, ctx),
+      this.buildMapperOptions(
+        [entity],
+        { ...options, includeSummary: true },
+        ctx,
+      ) as any,
     );
 
     if (product == null) {
@@ -601,6 +614,7 @@ export class ProductService {
   }
 
   private buildMapperOptions(
+    entities: ProductEntity[],
     options: RelationOptions & { includeSummary?: boolean },
     ctx: Context,
   ) {
@@ -608,9 +622,28 @@ export class ProductService {
     const includeParentBenchmarks = options?.includeParentBenchmarks ?? false;
     const includeRelatedBenchmarks = options?.includeRelatedBenchmarks ?? false;
 
-    const includeGames = options?.includeGames ?? false;
-    const includeParentGames = options?.includeParentGames ?? false;
-    const includeRelatedGames = options?.includeRelatedGames ?? false;
+    const allGames = entities.flatMap(
+      (entity) => entity.gameFps?.map((fps) => fps.game) ?? [],
+    );
+    allGames.sort((game1, game2) =>
+      (game2?.releaseDate ?? '').localeCompare(game1?.releaseDate ?? ''),
+    );
+    const latestGameId = allGames?.[0]?.id;
+
+    let includeGames = options?.includeGames ?? false;
+    if (options?.includeGames === 'latest') {
+      includeGames = latestGameId != null ? [latestGameId] : false;
+    }
+
+    let includeParentGames = options?.includeParentGames ?? false;
+    if (options.includeParentGames === 'latest') {
+      includeParentGames = latestGameId != null ? [latestGameId] : false;
+    }
+
+    let includeRelatedGames = options?.includeRelatedGames ?? false;
+    if (options.includeRelatedGames === 'latest') {
+      includeRelatedGames = latestGameId != null ? [latestGameId] : false;
+    }
 
     const includeRanks = options?.includeRanks ?? false;
     const includeParentRanks = options?.includeParentRanks ?? false;

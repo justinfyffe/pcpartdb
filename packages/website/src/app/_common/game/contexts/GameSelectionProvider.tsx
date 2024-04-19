@@ -35,7 +35,12 @@ export function GameSelectionProvider(props: GameSelectionProviderProps) {
       return;
     }
 
-    const url = new URL(window.location.href);
+    const href = window.location.href;
+    if (href.includes('#')) {
+      return;
+    }
+
+    const url = new URL(href);
     if (selectedGame?.slug != null) {
       url.searchParams.set('game', selectedGame?.slug);
     } else {

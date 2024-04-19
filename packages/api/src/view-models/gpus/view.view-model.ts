@@ -27,13 +27,14 @@ export class ViewGpuViewModelService {
 
   async viewModel(slug: string, ctx: Context) {
     const buildViewModel = async () => {
+      const gameSlug = ctx.req?.query?.game as string;
+
       const timer = uuid.v4();
       console.time(timer + ' getGpu');
-      const gpu = await this.getGpu(slug, ctx);
+      const gpu = await this.getGpu(slug, gameSlug, ctx);
       console.timeEnd(timer + ' getGpu');
       const chipset = getGpuChipset(gpu);
 
-      const gameSlug = ctx.req?.query?.game as string;
       // console.time(timer + ' getRelativeDataProducts');
       const relativeDataProducts = await this.getRelativeDataProducts(
         chipset,
@@ -56,11 +57,12 @@ export class ViewGpuViewModelService {
         relatedGpuComparisons,
       } as ViewGpuViewModel;
 
-      // console.time(timer + ' normalize');
-      let response = normalize(result, viewGpuViewModelNormalizr);
-      // console.timeEnd(timer + ' normalize');
+      console.time(timer + ' normalize');
+      const sanitized = removeEmptyValues(result);
+      const response = normalize(sanitized, viewGpuViewModelNormalizr);
+      console.timeEnd(timer + ' normalize');
       // console.time(timer + ' removeEmptyValues');
-      response = removeEmptyValues(response);
+      // response = removeEmptyValues(response);
       // console.timeEnd(timer + ' removeEmptyValues');
       return response;
     };
@@ -69,7 +71,7 @@ export class ViewGpuViewModelService {
     return viewModel;
   }
 
-  private async getGpu(slug: string, ctx: Context) {
+  private async getGpu(slug: string, gameSlug: string, ctx: Context) {
     const preferredBenchmark = getPreferredBenchmark(
       ctx.config?.userSettings,
       ProductType.Gpu,
@@ -95,7 +97,8 @@ export class ViewGpuViewModelService {
 
         includeGames: true,
         includeParentGames: true,
-        includeRelatedGames: true,
+        includeRelatedGames:
+          gameSlug && gameSlug !== 'undefined' ? [gameSlug] : 'latest',
 
         includeRanks: true,
         includeParentRanks: true,
@@ -129,7 +132,7 @@ export class ViewGpuViewModelService {
     );
 
     let game = seed.games?.[0]?.game?.slug;
-    if (seed.games?.find((pg) => pg.game?.slug === gameSlug)) {
+    if (seed.games?.find((pg) => pg?.game?.slug === gameSlug)) {
       game = gameSlug;
     }
 

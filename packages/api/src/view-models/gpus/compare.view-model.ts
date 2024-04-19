@@ -25,9 +25,9 @@ export class CompareGpusViewModelService {
 
   async viewModel(slug: string, ctx: Context) {
     const buildViewModel = async () => {
-      const comparison = await this.getComparison(slug, ctx);
-
       const gameSlug = ctx.req?.query?.game as string;
+
+      const comparison = await this.getComparison(slug, gameSlug, ctx);
       const relativeDataProducts = await this.getRelativeDataProducts(
         comparison,
         gameSlug,
@@ -60,7 +60,7 @@ export class CompareGpusViewModelService {
     return viewModel;
   }
 
-  private async getComparison(slug: string, ctx: Context) {
+  private async getComparison(slug: string, gameSlug: string, ctx: Context) {
     const preferredBenchmark = getPreferredBenchmark(
       ctx.config?.userSettings,
       ProductType.Gpu,
@@ -86,7 +86,8 @@ export class CompareGpusViewModelService {
 
         includeGames: true,
         includeParentGames: true,
-        includeRelatedGames: true,
+        includeRelatedGames: 
+        gameSlug && gameSlug !== 'undefined' ? [gameSlug] : 'latest', 'latest',
 
         includeRanks: true,
         includeParentRanks: true,
@@ -127,8 +128,8 @@ export class CompareGpusViewModelService {
     );
     let game = games?.[0]?.slug;
     if (
-      seed1.games?.find((pg) => pg.game?.slug === gameSlug) ||
-      seed2.games?.find((pg) => pg.game?.slug === gameSlug)
+      seed1.games?.find((pg) => pg?.game?.slug === gameSlug) ||
+      seed2.games?.find((pg) => pg?.game?.slug === gameSlug)
     ) {
       game = gameSlug;
     }
