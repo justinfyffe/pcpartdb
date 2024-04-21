@@ -270,10 +270,11 @@ function getGpuCoreBaseClock(
   $: cheerio.CheerioAPI,
   ctx?: ScraperContext,
 ): GpuField<number> {
-  const values = tokenizeSpecValues($, 'Base Clock');
+  const values1 = tokenizeSpecValues($, 'Base Clock');
+  const values2 = tokenizeSpecValues($, 'GPU Clock');
   const result = parseNumberValue({
     fieldKey: 'gpuCoreBaseClock',
-    value: values[0] || null,
+    value: values1[0] || values2[0] || null,
     unitMapper: {
       KHz: FrequencyUnit.khz,
       MHz: FrequencyUnit.mhz,

@@ -1,19 +1,17 @@
-import { GpuProduct, GpuProductComparison, ListGpusResponse } from '../product';
-import { UserSettings } from '../user';
+import {
+  GpuProduct,
+  GpuProductComparison,
+  ListGpusResponse,
+  RelativeDataProducts,
+} from '../product';
 
 export interface CompareGpusViewModel {
   comparison: GpuProductComparison;
 
   relatedGpus: Partial<GpuProduct>[];
-  relatedComparisons: GpuProductComparison[];
+  relatedGpuComparisons: GpuProductComparison[];
 
-  relativePerformanceGpus: Partial<GpuProduct>[];
-  relativeValueGpus: Partial<GpuProduct>[];
-
-  retailModels1?: Partial<GpuProduct>[];
-  retailModels2?: Partial<GpuProduct>[];
-
-  contentData: GpuContentData;
+  relativeDataProducts: RelativeDataProducts;
 }
 
 export interface ListGpusViewModel extends ListGpusResponse {}
@@ -24,12 +22,7 @@ export interface ViewGpuViewModel {
   relatedGpus: Partial<GpuProduct>[];
   relatedGpuComparisons: GpuProductComparison[];
 
-  relativePerformanceGpus: Partial<GpuProduct>[];
-  relativeValueGpus: Partial<GpuProduct>[];
-
-  retailModels?: Partial<GpuProduct>[];
-
-  contentData: GpuContentData;
+  relativeDataProducts: RelativeDataProducts;
 }
 
 export interface GpuContentData {

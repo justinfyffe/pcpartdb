@@ -1,4 +1,10 @@
 import {
+  DEFAULT_LIST_GAMES_LIMIT,
+  DEFAULT_LIST_GAMES_OFFSET,
+  Game,
+  ListGamesQuery,
+} from '../game';
+import {
   DEFAULT_LIST_PRODUCTS_LIMIT,
   DEFAULT_LIST_PRODUCTS_OFFSET,
   ListProductsQuery,
@@ -118,6 +124,92 @@ export function getAdminEditProductPath(
   }
 }
 
-export function getAdminListBuildsPath() {
-  return '/admin/builds/';
+interface GetAdminScrapeGamesPath {}
+
+export function getAdminScrapeGamesPath(_options?: GetAdminScrapeGamesPath) {
+  return '/admin/games/scrape/';
+}
+
+interface GetAdminNewGamePath {}
+
+export function getAdminNewGamePath(_options?: GetAdminNewGamePath) {
+  return '/admin/games/new/';
+}
+
+export interface GetAdminEditGamePathOptions {
+  game?: Game;
+  id?: number;
+  slug?: string;
+}
+
+export function getAdminEditGamePath(options: GetAdminEditGamePathOptions) {
+  if (options.id != null) {
+    return joinUrlParts('/admin/games/', String(options.id), '/');
+  } else if (options.slug != null) {
+    return joinUrlParts('/admin/games/', options.slug, '/');
+  } else if (options.game != null) {
+    return joinUrlParts('/admin/games/', String(options.game.id), '/');
+  } else {
+    throw new Error(
+      `Invalid options for getAdminEditGamePath: ${JSON.stringify(options)}`,
+    );
+  }
+}
+
+export function getAdminListGamesPath(query?: ListGamesQuery) {
+  const path = '/admin/games/';
+
+  const paginationParams =
+    query != null
+      ? Object.fromEntries(generatePaginationParamsFromGamesQuery(query))
+      : {};
+  const searchParams =
+    query != null
+      ? Object.fromEntries(generateSearchParamsFromGamesQuery(query))
+      : {};
+
+  const combinedParams = new URLSearchParams({
+    ...paginationParams,
+    ...searchParams,
+  }).toString();
+
+  return joinUrlParts(path, combinedParams ? `?${combinedParams}` : '');
+}
+
+function generatePaginationParamsFromGamesQuery(query: ListGamesQuery) {
+  const params = new URLSearchParams();
+
+  if (
+    query?.pagination?.limit != null &&
+    query.pagination.limit !== DEFAULT_LIST_GAMES_LIMIT
+  ) {
+    params.append('limit', `${query.pagination.limit}`);
+  }
+
+  if (
+    query?.pagination?.offset != null &&
+    query.pagination.offset !== DEFAULT_LIST_GAMES_OFFSET
+  ) {
+    params.append('offset', `${query.pagination.offset}`);
+  }
+
+  return params;
+}
+
+function generateSearchParamsFromGamesQuery(query: ListGamesQuery) {
+  const params = new URLSearchParams();
+
+  if (query.filter?.search) {
+    params.append('search', query.filter.search);
+  }
+
+  if (query.orderBy?.sort) {
+    params.append('sort', query.orderBy.sort);
+  }
+
+  if (query.orderBy?.order) {
+    params.append('order', query.orderBy.order);
+  }
+
+  return params;
 }

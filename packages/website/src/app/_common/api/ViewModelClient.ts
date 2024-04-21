@@ -1,11 +1,14 @@
 import {
   BenchmarkKey,
   joinUrlParts,
+  NormalizedData,
   PREFERRED_CPU_BENCHMARK_HTTP_HEADER,
   PREFERRED_GPU_BENCHMARK_HTTP_HEADER,
 } from '@pcpartdb/shared';
+import { denormalize, schema } from 'normalizr';
 
 type RequestConfig = RequestInit & {
+  normalizr?: schema.Object;
   preferredBenchmarks?: {
     cpu?: BenchmarkKey | string;
     gpu?: BenchmarkKey | string;
@@ -44,7 +47,13 @@ export class ViewModelClient {
         body,
         credentials: 'include',
       });
-      return (await response.json()) as T;
+
+      if (config?.normalizr) {
+        const json = (await response.json()) as NormalizedData;
+        return denormalize(json.result, config.normalizr, json.entities) as T;
+      } else {
+        return (await response.json()) as T;
+      }
     } catch (err) {
       console.error('Error calling view model', err);
       throw err;

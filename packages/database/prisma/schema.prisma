@@ -48,6 +48,7 @@ model Image {
   updatedAt  DateTime  @default(now()) @map("updated_at") @ignore @db.Timestamptz(6)
 
   productImages ProductImage[] @relation("productImageToImage")
+  gameListingImage Game[] @relation("gameListingImageToImage")
 
   @@map("images")
 }
@@ -120,6 +121,7 @@ model Product {
   cpuFields CpuFields? @relation("cpuFieldsToProduct")
   gpuFields GpuFields? @relation("gpuFieldsToProduct")
   benchmarks ProductBenchmark[] @relation("productBenchmarkToProduct")
+  gameFps ProductGameFps[] @relation("productGameFpsToProduct")
   ranks ProductRanks? @relation("productRankToProduct")
   sources ProductSource[] @relation("productSourceToProduct")
   updates ProductUpdate[] @relation("productUpdateToProduct")
@@ -127,12 +129,17 @@ model Product {
   relatedAutomationSources AutomationSource[] @relation("automationSourceToRelatedProduct")
   relatedProducts RelatedProduct[] @relation("relatedProductToProductA")
   asRelatedProducts RelatedProduct[] @relation("relatedProductToProductB")
+  minimumGpuForGames Game[] @relation("gameToMinimumGpu")
+  recommendedGpuForGames Game[] @relation("gameToRecommendedGpu")
+  minimumCpuForGames Game[] @relation("gameToMinimumCpu")
+  recommendedCpuForGames Game[] @relation("gameToRecommendedCpu")
   
   parent Product? @relation("productToProduct", fields: [parentId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "products_parent_foreign")
   children Product[] @relation("productToProduct")
 
   // Indexes
   @@unique([productType, slug], map: "products_productType_slug_unique")
+  @@index([parentId], map: "products_parentId_index")
 
   @@map("products")
 }
@@ -279,7 +286,6 @@ model RelatedProduct {
   // IDs identifying the product and its relative product
   productId Int @map("product_id")
   relatedProductId Int @map("related_product_id")
-  relatedProductKey String @map("related_product_key")
 
   createdAt DateTime  @default(now()) @map("created_at") @ignore @db.Timestamptz(6)
   updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @ignore @db.Timestamptz(6)
@@ -287,9 +293,82 @@ model RelatedProduct {
   product Product @relation("relatedProductToProductA", fields: [productId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "relatedProducts_product_foreign")
   relatedProduct Product @relation("relatedProductToProductB", fields: [relatedProductId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "relatedProducts_relatedProduct_foreign")
 
-  @@id([productId, relatedProductId, relatedProductKey])
+  @@id([productId, relatedProductId])
 
   @@map("related_products")
+}
+
+//
+// Games Tables
+//
+
+model Game {
+  id Int @id @default(autoincrement())
+
+  name String
+  slug String
+
+  nameShort String? @map("name_short")
+  description String?
+  publisher String?
+  developer String?
+  releaseDate String? @map("release_date") // YYYY-MM-DD
+  affiliateUrl String? @map("affiliate_url")
+
+  gameSettings Json? @map("game_settings")
+  scraperOptions Json? @map("scraper_options")
+
+  minimumRequirements Json? @map("minimum_requirements")
+  recommendedRequirements Json? @map("recommended_requirements")
+
+  minimumGpuId Int? @map("minimum_gpu_id")
+  recommendedGpuId Int? @map("recommended_gpu_id")
+  minimumCpuId Int? @map("minimum_cpu_id")
+  recommendedCpuId Int? @map("recommended_cpu_id")
+
+  listingImageId Int? @map("listing_image_id")
+
+  metadata Json?
+
+  createdAt DateTime  @default(now()) @map("created_at") @ignore @db.Timestamptz(6)
+  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @ignore @db.Timestamptz(6)
+
+  // Relations
+  minimumGpu Product? @relation("gameToMinimumGpu", fields: [minimumGpuId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "game_minimumGpu_foreign")
+  recommendedGpu Product? @relation("gameToRecommendedGpu", fields: [recommendedGpuId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "game_recommendedGpu_foreign")
+  minimumCpu Product? @relation("gameToMinimumCpu", fields: [minimumCpuId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "game_minimumCpu_foreign")
+  recommendedCpu Product? @relation("gameToRecommendedCpu", fields: [recommendedCpuId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "game_recommendedCpu_foreign")
+  listingImage Image? @relation("gameListingImageToImage", fields: [listingImageId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "game_listingImage_foreign")
+  fps ProductGameFps[] @relation("productGameFpsToGame")
+  
+  // Indexes
+  @@unique([slug], map: "games_slug_unique")
+
+  @@map("games")
+}
+
+model ProductGameFps {
+  productId Int @map("product_id")
+  gameId Int @map("game_id")
+  settingsPresetKey String @map("settings_preset_key")
+
+  fps Float?
+  fpsPerDollar Float? @map("fps_per_dollar")
+  dollarsPerFrame Float? @map("dollars_per_frame")
+
+  metadata Json?
+
+  createdAt DateTime  @default(now()) @map("created_at") @ignore @db.Timestamptz(6)
+  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @ignore @db.Timestamptz(6)
+
+  // Relations
+  product Product @relation("productGameFpsToProduct", fields: [productId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "gameFps_product_foreign")
+  game Game @relation("productGameFpsToGame", fields: [gameId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "gameFps_game_foreign")
+  
+  // Indexes
+  @@id([productId, gameId, settingsPresetKey])
+
+  @@map("product_game_fps")
 }
 
 //

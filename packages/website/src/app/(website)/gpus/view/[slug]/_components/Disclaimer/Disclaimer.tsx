@@ -1,13 +1,15 @@
 'use client';
 
-import { ProductType } from '@pcpartdb/shared';
+import { ProductType, ViewGpuViewModel } from '@pcpartdb/shared';
 import { Button } from 'packages/website/src/app/_common/components/Button/Button';
 import { ButtonVariant } from 'packages/website/src/app/_common/components/Button/types';
 import { ContentProvider } from 'packages/website/src/app/_common/content/ContentProvider';
 import { compileContentComponent } from 'packages/website/src/app/_common/content/utils/compileContentComponent';
+import { useViewModelContext } from 'packages/website/src/app/_common/contexts/ViewModelProvider';
+import { useGameSelection } from 'packages/website/src/app/_common/game/contexts/GameSelectionProvider';
 import { useProductContent } from 'packages/website/src/app/_common/product/content/useProductContent';
-import { usePreferredBenchmarkDialog } from 'packages/website/src/app/_common/user/usePreferredBenchmarkDialog';
-import React from 'react';
+import { usePreferredBenchmarkDialog } from 'packages/website/src/app/_common/product/hooks/usePreferredBenchmarkDialog';
+import React, { useCallback } from 'react';
 
 const RatingDisclaimer = compileContentComponent({
   tags: [],
@@ -21,9 +23,19 @@ const RatingDisclaimer = compileContentComponent({
 });
 
 export const Disclaimer = () => {
+  const { selectedGame } = useGameSelection();
+  const { viewModel } = useViewModelContext<ViewGpuViewModel>();
+
+  const handleBenchmarkChange = useCallback(async () => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const showPreferredBenchmarkDialog = usePreferredBenchmarkDialog({
     productType: ProductType.Gpu,
-    hardReload: true,
+    softReload: true,
+    productIds: [viewModel.gpu.id],
+    gameSlug: selectedGame?.slug,
+    onChange: handleBenchmarkChange,
   });
 
   const { contentTags, contentParams } = useProductContent();

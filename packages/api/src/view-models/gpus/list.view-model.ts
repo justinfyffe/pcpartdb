@@ -11,14 +11,13 @@ import {
   ProductType,
 } from '@pcpartdb/shared';
 import * as uuid from 'uuid';
-import { Database } from '../../database';
 import { ProductService } from '../../product/product.service';
 import { Context } from '../../shared/context';
 import { validate } from '../../shared/validation/validate';
 
 @Injectable()
 export class ListGpusViewModelService {
-  constructor(private db: Database, private productService: ProductService) {}
+  constructor(private productService: ProductService) {}
 
   async viewModel(request: ListGpusRequest, ctx: Context) {
     const timer = `ListGpusViewModelService (${uuid.v4()})`;

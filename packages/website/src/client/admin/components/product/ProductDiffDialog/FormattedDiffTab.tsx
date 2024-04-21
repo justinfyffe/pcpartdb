@@ -18,6 +18,7 @@ import { classNames } from 'packages/website/src/client/shared/ui/classNames';
 import React, { FunctionComponent } from 'react';
 import { BenchmarkDiffRow } from './BenchmarkDiffRow';
 import { FieldDiffRow } from './FieldDiffRow';
+import { ProductGameDiffRow } from './ProductGameDiffRow';
 
 interface FormattedDiffTabProps {
   productType: ProductType;
@@ -37,6 +38,15 @@ export const FormattedDiffTab: FunctionComponent<FormattedDiffTabProps> = (
   const hasSummaryStaleChange =
     diff.original?.summaryStale !== diff.updated?.summaryStale;
   const sources = diff.updated?.sources;
+
+  const productGames = [
+    ...(diff.original?.games ?? []),
+    ...(diff.updated?.games ?? []),
+  ].sort((pg1, pg2) =>
+    (pg2?.game?.releaseDate ?? '').localeCompare(pg1?.game?.releaseDate ?? ''),
+  );
+  const gameIdsSet = new Set<number>(productGames.map((pg) => pg.gameId));
+  const gameIds = [...gameIdsSet.values()];
 
   return (
     <div className="bg-white flex flex-col overflow-auto">
@@ -209,6 +219,10 @@ export const FormattedDiffTab: FunctionComponent<FormattedDiffTabProps> = (
               diffBenchmarkKey={benchmarkKey}
               diff={diff}
             />
+          ))}
+
+          {gameIds.map((gameId) => (
+            <ProductGameDiffRow key={gameId} diff={diff} diffGameId={gameId} />
           ))}
 
           {sources.map((source) => (

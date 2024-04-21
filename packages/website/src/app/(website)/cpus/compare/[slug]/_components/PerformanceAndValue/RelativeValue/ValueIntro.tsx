@@ -9,7 +9,7 @@ import {
 import { ContentProvider } from 'packages/website/src/app/_common/content/ContentProvider';
 import { compileContentComponent } from 'packages/website/src/app/_common/content/utils/compileContentComponent';
 import { useViewModel } from 'packages/website/src/app/_common/contexts/ViewModelProvider';
-import { usePreferredBenchmark } from 'packages/website/src/app/_common/user/usePreferredBenchmark';
+import { usePreferredBenchmark } from 'packages/website/src/app/_common/product/hooks/usePreferredBenchmark';
 import React from 'react';
 
 const ValueIntroParagraph = compileContentComponent({

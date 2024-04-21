@@ -1,6 +1,6 @@
 import { Product, ProductType, ProductUpdate } from '../product';
-import { CpuContentData, ViewCpuViewModel } from './cpus';
-import { GpuContentData, ViewGpuViewModel } from './gpus';
+import { ViewCpuViewModel } from './cpus';
+import { ViewGpuViewModel } from './gpus';
 
 export interface AdminEditProductViewModel {
   productType: ProductType;
@@ -9,5 +9,3 @@ export interface AdminEditProductViewModel {
 }
 
 export type ViewProductViewModel = ViewCpuViewModel | ViewGpuViewModel;
-
-export type ProductContentData = CpuContentData | GpuContentData;

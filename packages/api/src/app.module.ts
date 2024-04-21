@@ -4,6 +4,7 @@ import { AuthModule } from './auth/auth.module';
 import { AutomationModule } from './automation/automation.module';
 import { ConfigModule } from './config/config.module';
 import { DatabaseModule } from './database';
+import { GameModule } from './game/game.module';
 import { ImageModule } from './image/image.module';
 import { ProductModule } from './product/product.module';
 import { CacheModule } from './shared/cache/cache.module';
@@ -24,6 +25,7 @@ import { WebsiteModule } from './website/website.module';
     AutomationModule,
     ConfigModule,
     DatabaseModule,
+    GameModule,
     ImageModule,
     ProductModule,
     CookieModule,

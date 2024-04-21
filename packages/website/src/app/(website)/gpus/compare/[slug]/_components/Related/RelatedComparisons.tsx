@@ -5,7 +5,9 @@ import {
 } from '@pcpartdb/shared';
 import { Button } from 'packages/website/src/app/_common/components/Button/Button';
 import { ButtonVariant } from 'packages/website/src/app/_common/components/Button/types';
+import { SectionHeader } from 'packages/website/src/app/_common/components/SectionHeader/SectionHeader';
 import React from 'react';
+import { Contents } from '../Contents/Contents';
 
 interface RelatedComparisonsProps {
   relatedGpuComparisons: GpuProductComparison[];
@@ -22,8 +24,10 @@ export function RelatedComparisons(props: RelatedComparisonsProps) {
   }
 
   return (
-    <section>
-      <h2>Related Comparisons</h2>
+    <section className="flex flex-col gap-4">
+      <SectionHeader linkId="related-comparisons" menu={<Contents />}>
+        Related Comparisons
+      </SectionHeader>
 
       <div className="flex flex-row flex-wrap gap-4 font-semibold">
         {relatedGpuComparisons.map((comparison, i) => (

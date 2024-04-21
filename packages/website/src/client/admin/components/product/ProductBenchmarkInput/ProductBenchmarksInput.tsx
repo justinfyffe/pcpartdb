@@ -94,11 +94,11 @@ export const ProductBenchmarksInput: FunctionComponent<
 
   return (
     <div className="flex flex-col w-full mb-6">
-      {value?.map((image, i) => (
+      {value?.map((benchmark, i) => (
         <div key={rowKeys[i]} className="flex items-stretch mb-6">
           <ProductBenchmarkInput
             productType={productType}
-            value={image}
+            value={benchmark}
             onChange={(value) => handleBenchmarkInput(i, value)}
             className="flex-1 mb-0"
           />

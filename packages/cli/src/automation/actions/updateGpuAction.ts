@@ -6,16 +6,20 @@ import {
   CreateProductUpdateRequest,
   formatCompanyName,
   formatProductName,
+  Game,
+  getProductGame,
+  getProductGameFpsValue,
   GetProductRequest,
   GPU_BENCHMARKS,
   GpuProduct,
   mergeProducts,
   productBenchmarkValue,
-  productFieldRawValue,
   ProductType,
   ProductUpdate,
   ProductUpdateStatus,
   setProductBenchmark,
+  setProductGameFps,
+  SETTINGS_PRESETS_ORDER,
   SubProductType,
   UpdateGpuActionData,
   UpdateGpuRetailModelSourcesActionData,
@@ -44,10 +48,14 @@ export async function updateGpuAction(
     chipset = await getGpu(originalGpu?.parentId, context);
   }
 
+  // Get games for scraper options to fetch FPS.
+  const games = await fetchGameScraperOptions(context);
+
   // Scrape the GPU data from our sources.
-  const { product: scrapedGpu, hasRetailModels } = await fetchGpuData({
+  const { product: scrapedGpu, hasRetailModels } = await scrapeGpuData({
     chipset,
     sources,
+    games,
   });
 
   // Merge and update benchmarks for existing GPU. These do not require approval.
@@ -86,8 +94,10 @@ async function getGpu(gpuId: number, context: AutomationContext) {
           includeAutomation: true,
           includeFields: true,
           includeBenchmarks: true,
+          includeGames: true,
           includeImages: true,
           includeSources: true,
+          bypassCache: true,
         } as GetProductRequest),
       },
     },
@@ -97,19 +107,35 @@ async function getGpu(gpuId: number, context: AutomationContext) {
   }
   console.info(`Fetched GPU: ${gpu.name}`);
 
+  // Reduce necessary game data for automatic updates.
+  // Just really need name and release date.
+  reduceGameDataOnGpu(gpu);
   return gpu;
 }
 
-async function fetchGpuData(options: ScrapeGpuOptions) {
+async function scrapeGpuData(options: ScrapeGpuOptions) {
   console.info('Fetching GPU data', options.sources);
 
   // Scrape the CPU data from our sources.
   const result = await scrapeGpu(options);
   const product = result.product as GpuProduct;
   const hasRetailModels = result.hasRetailModels;
+  reduceGameDataOnGpu(product);
 
   console.log('Finished fetching data.');
   return { product, hasRetailModels };
+}
+
+async function fetchGameScraperOptions(context: AutomationContext) {
+  console.info('Fetching Game Scraper Options');
+
+  const result = await context.api.get<Partial<Game>[]>(
+    '/games/scraper-options',
+    { retries: 2 },
+  );
+
+  console.info('Finished Game Scraper Options');
+  return result;
 }
 
 async function updateBenchmarks(
@@ -120,30 +146,61 @@ async function updateBenchmarks(
   console.info('Checking for updated benchmarks');
   let updated = false;
 
-  // We go for original first as msrp wouldn't have been approved yet.
-  // It'll get recalculated when approved.
-  const msrp =
-    productFieldRawValue(originalGpu.fields?.msrp) ??
-    productFieldRawValue(scrapedGpu.fields?.msrp) ??
-    null;
-
+  // Combine benchmarks on both so we aren't removing benchmarks automatically.
   for (const benchmarkKey of GPU_BENCHMARKS) {
     const originalValue = productBenchmarkValue(originalGpu, benchmarkKey);
     const scrapedValue = productBenchmarkValue(scrapedGpu, benchmarkKey);
 
-    if (scrapedValue != null && scrapedValue > 0) {
-      const scrapedValuePerMsrp =
-        msrp != null && msrp > 0 ? scrapedValue / msrp : null;
-
-      setProductBenchmark(
-        originalGpu,
-        benchmarkKey,
-        scrapedValue || originalValue,
-        scrapedValuePerMsrp,
-      );
+    if (
+      scrapedValue != null &&
+      scrapedValue > 0 &&
+      originalValue !== scrapedValue
+    ) {
+      // Scraped has new benchmark value - update original
+      setProductBenchmark(originalGpu, benchmarkKey, scrapedValue);
       updated = true;
+    } else if (
+      originalValue != null &&
+      originalValue > 0 &&
+      originalValue !== scrapedValue
+    ) {
+      // Scraped is missing existing benchmark value - update scraped
+      setProductBenchmark(scrapedGpu, benchmarkKey, originalValue);
     }
   }
+  originalGpu.benchmarks = scrapedGpu.benchmarks;
+
+  // Combine product games on both so we aren't removing FPS data automatically
+  const allProductGames = [
+    ...(originalGpu?.games ?? []),
+    ...(scrapedGpu?.games ?? []),
+  ].sort((pg1, pg2) =>
+    (pg2?.game?.releaseDate ?? '').localeCompare(pg1?.game?.releaseDate ?? ''),
+  );
+  const gameIdsSet = new Set<number>(allProductGames.map((pg) => pg.gameId));
+  const gameIds = [...gameIdsSet.values()];
+  for (const gameId of gameIds) {
+    const originalPg = getProductGame(originalGpu, gameId);
+    const scrapedPg = getProductGame(scrapedGpu, gameId);
+    for (const preset of SETTINGS_PRESETS_ORDER) {
+      const originalFps = getProductGameFpsValue(originalPg, preset);
+      const scrapedFps = getProductGameFpsValue(scrapedPg, preset);
+
+      if (scrapedFps != null && scrapedFps > 0 && originalFps !== scrapedFps) {
+        // Scraped has new FPS value - update original
+        setProductGameFps(originalGpu, scrapedPg, preset);
+        updated = true;
+      } else if (
+        originalFps != null &&
+        originalFps > 0 &&
+        originalFps !== scrapedFps
+      ) {
+        // Scraped is missing existing FPS value - update scraped
+        setProductGameFps(scrapedGpu, originalPg, preset);
+      }
+    }
+  }
+  originalGpu.games = scrapedGpu.games;
 
   if (updated) {
     console.info('Update GPU with updated benchmarks');
@@ -259,4 +316,22 @@ async function createUpdateRetailModelSourcesAction(
     } as CreateAutomationActionRequest,
     { retries: 2 },
   );
+}
+
+function reduceGameDataOnGpu(gpu: GpuProduct) {
+  for (const product of [gpu, gpu.parent]) {
+    product?.games?.forEach((pg) => {
+      pg.game = reduceGameData(pg.game);
+    });
+  }
+}
+
+function reduceGameData(game: Partial<Game>) {
+  return game != null
+    ? {
+        name: game.name,
+        releaseDate: game.releaseDate,
+        slug: game.slug,
+      }
+    : null;
 }

@@ -1,26 +1,28 @@
 import { PhotoIcon } from '@heroicons/react/24/outline';
-import { Image } from '@pcpartdb/shared';
+import { Image, ImageManipulationPreset } from '@pcpartdb/shared';
 import { GenericButton } from 'packages/website/src/client/shared/components/Button/GenericButton';
 import { showDialog } from 'packages/website/src/client/shared/components/Dialog/dialog';
 import { Img } from 'packages/website/src/client/shared/components/Img/Img';
 import { classNames } from 'packages/website/src/client/shared/ui/classNames';
-import React, { FunctionComponent, useCallback, useState } from 'react';
+import React, { FunctionComponent, Ref, useCallback, useState } from 'react';
 import { formatFileSize, formatImageDimensions } from '../../../../image/utils';
 import { ImageDialog } from '../ImageDialog/ImageDialog';
 
 interface ImageInputProps {
   recommendedHeight?: number;
   recommendedWidth?: number;
+  manipulation?: ImageManipulationPreset;
 
-  value?: Image;
-  onChange?: (image: Image) => void;
+  value?: Partial<Image>;
+  onChange?: (image: Partial<Image>) => void;
 
   className?: string;
+  ref?: Ref<unknown>;
 }
 
 export const ImageInput: FunctionComponent<ImageInputProps> = (props) => {
   const { onChange, className, ...restOfProps } = props;
-  const [value, setValue] = useState<Image>(props.value);
+  const [value, setValue] = useState<Partial<Image>>(props.value);
 
   const handleSelect = useCallback(
     (image: Image) => {
@@ -87,8 +89,10 @@ const EmptyImageInput = (
   const { recommendedHeight, recommendedWidth, onSelect } = props;
 
   const handleClick = useCallback(() => {
-    showDialog(<ImageDialog onSelect={onSelect} />);
-  }, [onSelect]);
+    showDialog(
+      <ImageDialog manipulation={props.manipulation} onSelect={onSelect} />,
+    );
+  }, [onSelect, props.manipulation]);
 
   return (
     <div

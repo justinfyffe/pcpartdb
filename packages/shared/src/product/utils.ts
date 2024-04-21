@@ -1,22 +1,24 @@
 import { formatProductName } from '../format';
 import { CpuProduct, GpuProduct, Product, ProductType } from './common';
 
-export function isCpuProduct(product: Product): product is CpuProduct {
+export function isCpuProduct(product: Partial<Product>): product is CpuProduct {
   return product?.productType === ProductType.Cpu;
 }
 
-export function isGpuProduct(product: Product): product is GpuProduct {
+export function isGpuProduct(product: Partial<Product>): product is GpuProduct {
   return product?.productType === ProductType.Gpu;
 }
-export function isGpuChipset(product: Product): product is GpuProduct {
+export function isGpuChipset(product: Partial<Product>): product is GpuProduct {
   return isGpuProduct(product) && product.parentId == null;
 }
 
-export function isGpuRetailModel(product: Product): product is GpuProduct {
+export function isGpuRetailModel(
+  product: Partial<Product>,
+): product is GpuProduct {
   return isGpuProduct(product) && product.parentId != null;
 }
 
-export function getGpuChipset(gpu: GpuProduct) {
+export function getGpuChipset(gpu: Partial<GpuProduct>) {
   return (gpu?.parent || gpu) as GpuProduct;
 }
 
@@ -32,6 +34,8 @@ export function generateProductSlug(options: GenerateProductSlugOptions) {
   if (company != null) {
     const companyParts = company
       .replaceAll('+', ' plus ')
+      .replaceAll('&', ' and ')
+      .replaceAll(/[^\s\w-]+/g, '')
       .replaceAll(/[^a-zA-Z0-9-_]+/g, ' ')
       .split(' ')
       .map((value) => value.toLowerCase().trim())
@@ -41,6 +45,8 @@ export function generateProductSlug(options: GenerateProductSlugOptions) {
   if (name != null) {
     const nameParts = name
       .replaceAll('+', ' plus ')
+      .replaceAll('&', ' and ')
+      .replaceAll(/[^\s\w-]+/g, '')
       .replaceAll(/[^a-zA-Z0-9-_]+/g, ' ')
       .split(' ')
       .map((value) => value.toLowerCase().trim())

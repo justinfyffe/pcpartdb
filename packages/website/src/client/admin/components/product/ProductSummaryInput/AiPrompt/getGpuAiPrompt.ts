@@ -50,7 +50,7 @@ const aiPromptTemplate = (gpu: GpuProduct) => {
 
   const summaryPart1 = [
     `The GPU is ${summary.gpuName}.`,
-    gpu.parent
+    gpu?.parent
       ? `The GPU is based off of the ${formatProductName(gpu.parent)} chipset.`
       : '',
     summary.marketSegment

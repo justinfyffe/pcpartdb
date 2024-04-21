@@ -13,7 +13,6 @@ async function bootstrap() {
 
   app.use(cookieParser());
   app.use(compression());
-
   app.use(bodyParser.json({ limit: '1mb' }));
 
   app.enableShutdownHooks();

@@ -16,7 +16,7 @@ import {
 import { useViewModelContext } from 'packages/website/src/app/_common/contexts/ViewModelProvider';
 import { CompareProductRatingCard } from 'packages/website/src/app/_common/product/components/ProductRatingCard/CompareProductRatingCard';
 import { ProductRatingType } from 'packages/website/src/app/_common/product/components/ProductRatingCard/types';
-import { usePreferredBenchmark } from 'packages/website/src/app/_common/user/usePreferredBenchmark';
+import { usePreferredBenchmark } from 'packages/website/src/app/_common/product/hooks/usePreferredBenchmark';
 import { classNames } from 'packages/website/src/app/_common/utils/classNames';
 import React, { FunctionComponent, useMemo } from 'react';
 
@@ -30,12 +30,14 @@ export const PerformanceAndValueCharts: FunctionComponent<
   const { className } = props;
   const preferredBenchmark = usePreferredBenchmark(ProductType.Gpu);
 
-  const { viewModel, updateViewModel } =
-    useViewModelContext<CompareGpusViewModel>();
-  const { comparison, contentData } = viewModel;
+  const { viewModel } = useViewModelContext<CompareGpusViewModel>();
+  const { comparison } = viewModel;
   const chipset1 = getGpuChipset(comparison[0]);
   const chipset2 = getGpuChipset(comparison[1]);
-  const { bestPerformanceGpu, bestValueGpu } = contentData;
+  const bestPerformanceGpu =
+    viewModel.relativeDataProducts?.bestBenchmarkPerformance;
+  const bestValueGpu =
+    viewModel.relativeDataProducts?.bestBenchmarkPerformancePerDollar;
 
   const performanceRankHref = useMemo(
     () =>
@@ -78,7 +80,6 @@ export const PerformanceAndValueCharts: FunctionComponent<
         ]}
         rankHrefs={[performanceRankHref, performanceRankHref]}
         className="flex-1"
-        onBenchmarkChange={updateViewModel}
       />
 
       <CompareProductRatingCard
@@ -100,7 +101,6 @@ export const PerformanceAndValueCharts: FunctionComponent<
         ]}
         rankHrefs={[valueRankHref, valueRankHref]}
         className="flex-1"
-        onBenchmarkChange={updateViewModel}
       />
     </div>
   );

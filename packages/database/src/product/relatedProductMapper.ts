@@ -18,7 +18,6 @@ export async function mapToRelatedProductDto(
   return {
     productId: entity.productId,
     relatedProductId: entity.relatedProductId,
-    relatedProductKey: entity.relatedProductKey,
 
     relatedProduct: await mapToProductDto(entity.relatedProduct, {
       fields: options?.fields,
@@ -50,7 +49,6 @@ export function mapToRelatedProductEntity(dto: RelatedProduct) {
   return {
     productId: undefined,
     relatedProductId: dto.relatedProductId,
-    relatedProductKey: dto.relatedProductKey,
   } as RelatedProductEntity;
 }
 

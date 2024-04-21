@@ -18,7 +18,7 @@ export const ProductImageInput: FunctionComponent<ProductImageInputProps> = (
   const imageCache = useImageCache();
 
   const handleChange = useCallback(
-    (image: Image) => {
+    (image: Partial<Image>) => {
       onChange?.(image != null ? { imageId: image.id } : null);
     },
     [onChange],

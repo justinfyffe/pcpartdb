@@ -2,16 +2,21 @@ import {
   AutocompleteProductsRequest,
   AutocompleteProductsResponse,
   CreateProductRequest,
+  GetRelativeDataProductsRequest,
   joinUrlParts,
   ListProductsQuery,
   ListProductsRequest,
   ListProductsResponse,
+  NormalizedData,
   Product,
   ProductType,
+  RelativeDataProducts,
+  relativeDataProductsNormalizr,
   ScrapeProductRequest,
   ScrapeProductResponse,
   UpdateProductRequest,
 } from '@pcpartdb/shared';
+import { denormalize } from 'normalizr';
 import { ApiClient, apiClient } from '../../shared/api/apiClient';
 import { RequestConfig } from '../../shared/api/types';
 import { ProductCache } from '../../shared/cache/ProductCache';
@@ -83,6 +88,25 @@ export class ProductService {
   async scrape(request: ScrapeProductRequest) {
     const path = joinUrlParts(PATH, 'scrape');
     return await this.api.post<ScrapeProductResponse>(path, request);
+  }
+
+  async getRelativeDataProducts(request: GetRelativeDataProductsRequest) {
+    const path = joinUrlParts(PATH, 'relative');
+    const response = await this.api.post<NormalizedData>(path, request);
+    const denormalized: RelativeDataProducts = denormalize(
+      response.result,
+      relativeDataProductsNormalizr,
+      response.entities,
+    );
+
+    Object.values(denormalized).forEach((productList) => {
+      if (Array.isArray(productList) && productList.length > 0) {
+        const products = productList as Partial<Product>[];
+        ProductCache.save(products[0].productType, products);
+      }
+    });
+
+    return denormalized;
   }
 }
 

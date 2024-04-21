@@ -7,7 +7,7 @@ import {
 } from '@pcpartdb/shared';
 import { ContentProvider } from 'packages/website/src/app/_common/content/ContentProvider';
 import { compileContentComponent } from 'packages/website/src/app/_common/content/utils/compileContentComponent';
-import { usePreferredBenchmark } from 'packages/website/src/app/_common/user/usePreferredBenchmark';
+import { usePreferredBenchmark } from 'packages/website/src/app/_common/product/hooks/usePreferredBenchmark';
 import React, { FunctionComponent, useMemo } from 'react';
 import { buildListContentParams } from '../../_content/buildListContentParams';
 import {

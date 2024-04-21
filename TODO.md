@@ -1,30 +1,42 @@
 NEXT:
+- v2.0
+  - Migrate to a headless cms (e.g. PayloadCMS)
 - Verify inmobi choice
 - Sitemaps:
   - upload sitemaps in a zip file, and unzip
 - Tech Debt
   - Migrate from axios to fetch
+  - Seamless deployment.
+    - do we even need to stop the service to build?
 - SEO Improvements
   - Improve titles
     - Name1 - Benchmarks, Specs, and Game Performance
     - Name1 vs Name2 - Benchmarks, Specs, and Game Performance
   - Improve keyword usages
   - Improve auto-generated summary
-  - Redirect sitemap-index.xml to sitemap-index.xml.gz
 
 Games / FPS:
-- Milestone 1 (May 2024):
-  - Games Admin Panel
-  - FPS Tables on View/Compare Page
-    - Table showing fps: 1080p, 1440p, 4k toggles that update the table values
-      - Table contains all games
-    - Relative performance and value tables - select game to compare
-  - Scraping fps
-- Milestone 2 (July 2024):
+- Gaming Performance Ad
+- POST MVP
+  - [] List GPUs
+    - [] Sort
+    - [] Select Game + Preset Dialog
+  - Add fps tables for all games in settings preset tabs
+  
+- Milestone 1 (April 2024):
+- Milestone 2 (?):
   - Game Page
-  - System Requirements
-- Milestone 3 (September 2024):
-  - Can I run it?
+    - Features
+      - Game Info
+        - System Requirements
+        - Publisher
+        - Developer
+        - Release Date
+        - Metacritic
+        - Description  
+      - FPS for best performance
+      - FPS for best value
+      - Can I run it?
 
 - List Pages Improvements
   - More sorts
@@ -64,8 +76,6 @@ List UI Improvements:
   - [] Stuff below the table?
 
 Scraping Improvements:
-- Support GPU Clock from TechPowerUp:
-  - https://www.techpowerup.com/gpu-specs/geforce-gtx-460-v2.c356
 
 ADS:
 - consider adjusting the side color for side auto ads

@@ -46,6 +46,14 @@ export function createScrapeContext(
       benchmarks[benchmark.benchmarkKey] = { value, enabled };
     });
 
+  const games: Record<string, ScrapedData> = {};
+  product?.games?.forEach((game) => {
+    const value = game;
+    const enabled = !!game.fps?.length;
+    const gameId = `${game.gameId}`;
+    games[gameId] = { value, enabled };
+  });
+
   return {
     productType,
     data: {
@@ -61,6 +69,7 @@ export function createScrapeContext(
       company: { value: product?.company, enabled: !!product?.company },
       fields,
       benchmarks,
+      games,
     },
   } as ScrapedProduct;
 }

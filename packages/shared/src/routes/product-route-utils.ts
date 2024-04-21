@@ -6,7 +6,7 @@ export interface GetViewProductPathOptions {
   productType?: ProductType;
   slug?: string;
 
-  product?: Product;
+  product?: Partial<Product>;
 }
 
 export function getViewProductPath(options: GetViewProductPathOptions) {
@@ -27,7 +27,9 @@ export function getViewProductPath(options: GetViewProductPathOptions) {
 
 export interface GetCompareProductsPathOptions {
   productType?: ProductType;
-  comparison?: (Pick<Product, 'id' | 'slug'> & { productType?: ProductType })[];
+  comparison?: (Pick<Partial<Product>, 'id' | 'slug'> & {
+    productType?: ProductType;
+  })[];
   ordered?: boolean;
 }
 

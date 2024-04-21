@@ -8,7 +8,7 @@ import { AiPrompt } from './AiPrompt/AiPrompt';
 
 export interface ProductSummaryInputProps {
   productType: ProductType;
-  product?: Product;
+  product?: Partial<Product>;
 
   value?: string;
   onChange?: (value: string) => void;

@@ -1,6 +1,6 @@
-import { CanMergeAutoUpdateStrategy, deepmerge } from '../../utils';
+import { deepmerge } from '../../utils';
 import { Product } from '../common';
-import { ProductField } from '../fields';
+import { isProductField, ProductField } from '../fields';
 
 export function canAutoUpdateProductField(field: ProductField) {
   return field?.meta?.autoUpdate ?? true;
@@ -28,4 +28,26 @@ export function mergeProducts(original: Product, updated: Product): Product {
   };
 
   return deepmerge({ canMergeStrategy }, original, updated);
+}
+
+export function CanMergeAutoUpdateStrategy(
+  _key: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  source: any,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  obj: any,
+) {
+  if (obj === undefined) {
+    return false;
+  }
+
+  if (
+    isProductField(source) &&
+    source?.meta?.autoUpdate != null &&
+    source.meta.autoUpdate === false
+  ) {
+    return false;
+  }
+
+  return true;
 }

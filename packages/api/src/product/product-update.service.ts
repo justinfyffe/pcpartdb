@@ -21,7 +21,7 @@ import { Context } from '../shared/context';
 import { badRequestError, notFoundError } from '../shared/error';
 import { validate } from '../shared/validation/validate';
 import { ProductService } from './product.service';
-import { ProductUpdateRepository } from './product-update.repository';
+import { ProductUpdateRepository } from './repositories';
 
 interface FindByProductIdOptions {
   productId: number;

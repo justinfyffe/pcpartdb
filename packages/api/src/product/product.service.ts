@@ -12,6 +12,7 @@ import {
   BenchmarkKey,
   CreateProductRequest,
   createProductRequestSchema,
+  Game,
   getPreferredBenchmark,
   GpuProduct,
   listAllProductsRequestSchema,
@@ -33,12 +34,14 @@ import {
   updateProductRequestSchema,
   ValidationErrorType,
 } from '@pcpartdb/shared';
+import { GameService } from '../game/game.service';
 import { Context } from '../shared/context';
 import { badRequestError, notFoundError } from '../shared/error';
 import { validate } from '../shared/validation/validate';
-import { ProductRepository } from './product.repository';
 import { ProductAutocompleteService } from './product-autocomplete.service';
+import { ProductEntityCache } from './product-entity.cache';
 import { ProductUpdateService } from './product-update.service';
+import { ProductRepository } from './repositories';
 
 interface ListOptions {
   fields?: ProductFieldKey[];
@@ -51,14 +54,17 @@ interface ListOptions {
   includeSources?: boolean;
 
   skipCount?: boolean;
+  bypassCache?: boolean;
 }
 
-interface GetOptions {
+interface RelationOptions {
   fields?: ProductFieldKey[];
   parentFields?: ProductFieldKey[];
+  childrenFields?: ProductFieldKey[];
   relatedFields?: ProductFieldKey[];
 
   includeParent?: boolean;
+  includeChildren?: boolean;
   includeUpdates?: boolean;
   includeAutomation?: boolean;
   includeSources?: boolean;
@@ -68,6 +74,11 @@ interface GetOptions {
   includeParentBenchmarks?: boolean | BenchmarkKey[];
   includeRelatedBenchmarks?: boolean | BenchmarkKey[];
 
+  // All/No Games, Game IDs, or Game Slugs
+  includeGames?: boolean | (number | string)[];
+  includeParentGames?: boolean | (number | string)[];
+  includeRelatedGames?: boolean | (number | string)[];
+
   includeRanks?: boolean | BenchmarkKey[];
   includeParentRanks?: boolean | BenchmarkKey[];
   includeRelatedRanks?: boolean | BenchmarkKey[];
@@ -75,16 +86,18 @@ interface GetOptions {
   includeRelated?: boolean;
 }
 
-interface GetByIdOptions extends GetOptions {
+interface GetByIdOptions extends RelationOptions {
   id: number;
+  bypassCache?: boolean;
 }
 
-interface GetBySlugOptions extends GetOptions {
+interface GetBySlugOptions extends RelationOptions {
   productType: ProductType;
   slug: string;
+  bypassCache?: boolean;
 }
 
-interface GetComparisonOptions extends GetOptions {
+interface GetComparisonOptions extends RelationOptions {
   productType: ProductType;
   slug: string;
 }
@@ -110,9 +123,11 @@ interface CountChildrenOptions {
 export class ProductService {
   constructor(
     private repository: ProductRepository,
+    private productEntityCache: ProductEntityCache,
     private autocompleteService: ProductAutocompleteService,
     @Inject(forwardRef(() => ProductUpdateService))
     private updateService: ProductUpdateService,
+    private gameService: GameService,
   ) {}
 
   async count(request: ListProductsRequest, ctx: Context) {
@@ -142,17 +157,6 @@ export class ProductService {
 
     const skipCount = options.skipCount ?? false;
 
-    const includeAutomation =
-      (options.includeAutomation ?? false) && (ctx.user?.isStaff ?? false);
-    const includeBenchmarks = options?.includeBenchmarks ?? false;
-    const includeImages = options?.includeImages ?? false;
-    const includeRanks = options?.includeRanks ?? false;
-    const includeSources =
-      (options?.includeSources ?? false) && (ctx.user?.isStaff ?? false);
-
-    const fields = options.fields;
-    const includeFields = fields == null || fields.length > 0;
-
     const { query } = request;
     const productType = query?.filter?.productType;
     if (productType == null) {
@@ -172,16 +176,17 @@ export class ProductService {
       query.orderBy = { ...query.orderBy, benchmark: preferredBenchmark };
     }
 
-    const productEntities = await this.repository.list(
+    const productIds = await this.repository.list2(
+      { ...query, ...(options as any) },
+      ctx,
+    );
+    const productEntities = await this.productEntityCache.getProductsByIds(
       {
-        ...query,
-        ...options,
-        includeBenchmarks: !!includeBenchmarks,
-        includeFields,
-        includeImages,
-        includeRanks: !!includeRanks,
-        includeSources,
-        fields,
+        ids: productIds,
+        ...this.buildCacheFetchOptions(
+          { ...options, bypassCache: request.bypassCache },
+          ctx,
+        ),
       },
       ctx,
     );
@@ -191,13 +196,10 @@ export class ProductService {
       count = await this.count(request, ctx);
     }
 
-    const products: Product[] = await mapToProductDtos(productEntities, {
-      fields,
-      includeBenchmarks,
-      includeSources,
-      includeAutomation,
-      includeRanks,
-    });
+    const products: Product[] = await mapToProductDtos(
+      productEntities,
+      this.buildMapperOptions({ ...options, includeSummary: true }, ctx),
+    );
 
     const response: ListProductsResponse = {
       query,
@@ -215,83 +217,15 @@ export class ProductService {
   async getById(options: GetByIdOptions, ctx: Context) {
     const id = options.id;
 
-    const includeBenchmarks = options?.includeBenchmarks ?? false;
-    const includeParentBenchmarks = options?.includeParentBenchmarks ?? false;
-    const includeRelatedBenchmarks = options?.includeRelatedBenchmarks ?? false;
-
-    const includeRanks = options?.includeRanks ?? false;
-    const includeParentRanks = options?.includeParentRanks ?? false;
-    const includeRelatedRanks = options?.includeRelatedRanks ?? false;
-
-    const includeParent = options.includeParent ?? false;
-    const includeImages = options.includeImages ?? false;
-    const includeSources =
-      (options.includeSources ?? false) && (ctx.user?.isStaff ?? false);
-    const includeUpdates =
-      (options.includeUpdates ?? false) && (ctx.user?.isStaff ?? false);
-    const includeAutomation =
-      (options.includeAutomation ?? false) && (ctx.user?.isStaff ?? false);
-    const includeRelated = options?.includeRelated ?? false;
-
-    const fields = options.fields;
-    const parentFields = options.parentFields;
-    const relatedFields = options.relatedFields;
-
-    const includeFields = fields == null || fields.length > 0;
-    const includeParentFields = parentFields == null || parentFields.length > 0;
-    const includeRelatedFields =
-      relatedFields == null || relatedFields.length > 0;
-
-    const entity = await this.repository.findById(
-      {
-        id,
-
-        includeBenchmarks: !!includeBenchmarks,
-        includeParentBenchmarks: !!includeParentBenchmarks,
-        includeRelatedBenchmarks: !!includeRelatedBenchmarks,
-
-        includeRanks: !!includeRanks,
-        includeParentRanks: !!includeParentRanks,
-        includeRelatedRanks: !!includeRelatedRanks,
-
-        includeParent,
-        includeImages,
-        includeSources,
-        includeRelated,
-
-        includeFields,
-        includeParentFields,
-        includeRelatedFields,
-
-        fields,
-        parentFields,
-        relatedFields,
-      },
+    const entity = await this.productEntityCache.getProductById(
+      { id, ...this.buildCacheFetchOptions(options, ctx) },
       ctx,
     );
 
-    const product = await mapToProductDto(entity, {
-      includeParent,
-
-      includeAutomation,
-      includeImages,
-      includeSources,
-      includeUpdates,
-      includeRelated,
-      includeSummary: true,
-
-      includeBenchmarks,
-      includeParentBenchmarks,
-      includeRelatedBenchmarks,
-
-      includeRanks,
-      includeParentRanks,
-      includeRelatedRanks,
-
-      fields,
-      parentFields,
-      relatedFields,
-    });
+    const product = await mapToProductDto(
+      entity,
+      this.buildMapperOptions({ ...options, includeSummary: true }, ctx),
+    );
 
     if (product == null) {
       throw notFoundError({ product: id });
@@ -304,84 +238,14 @@ export class ProductService {
     const productType = options.productType;
     const slug = options.slug;
 
-    const includeBenchmarks = options?.includeBenchmarks ?? false;
-    const includeParentBenchmarks = options?.includeParentBenchmarks ?? false;
-    const includeRelatedBenchmarks = options?.includeRelatedBenchmarks ?? false;
-
-    const includeRanks = options?.includeRanks ?? false;
-    const includeParentRanks = options?.includeParentRanks ?? false;
-    const includeRelatedRanks = options?.includeRelatedRanks ?? false;
-
-    const includeParent = options.includeParent ?? false;
-    const includeImages = options.includeImages ?? false;
-    const includeSources =
-      (options.includeSources ?? false) && (ctx.user?.isStaff ?? false);
-    const includeUpdates =
-      (options.includeUpdates ?? false) && (ctx.user?.isStaff ?? false);
-    const includeAutomation =
-      (options.includeAutomation ?? false) && (ctx.user?.isStaff ?? false);
-    const includeRelated = options?.includeRelated ?? false;
-
-    const fields = options.fields;
-    const parentFields = options.parentFields;
-    const relatedFields = options.relatedFields;
-
-    const includeFields = fields == null || fields.length > 0;
-    const includeParentFields = parentFields == null || parentFields.length > 0;
-    const includeRelatedFields =
-      relatedFields == null || relatedFields.length > 0;
-
-    const entity = await this.repository.findBySlug(
-      {
-        productType,
-        slug,
-
-        includeBenchmarks: !!includeBenchmarks,
-        includeParentBenchmarks: !!includeParentBenchmarks,
-        includeRelatedBenchmarks: !!includeRelatedBenchmarks,
-
-        includeRanks: !!includeRanks,
-        includeParentRanks: !!includeParentRanks,
-        includeRelatedRanks: !!includeRelatedRanks,
-
-        includeParent,
-        includeImages,
-        includeSources,
-        includeRelated,
-
-        includeFields,
-        includeParentFields,
-        includeRelatedFields,
-
-        fields,
-        parentFields,
-        relatedFields,
-      },
+    const entity = await this.productEntityCache.getProductBySlug(
+      { productType, slug, ...this.buildCacheFetchOptions(options, ctx) },
       ctx,
     );
-
-    const product = await mapToProductDto(entity, {
-      includeParent,
-
-      includeAutomation,
-      includeImages,
-      includeSources,
-      includeUpdates,
-      includeRelated,
-      includeSummary: true,
-
-      includeBenchmarks,
-      includeParentBenchmarks,
-      includeRelatedBenchmarks,
-
-      includeRanks,
-      includeParentRanks,
-      includeRelatedRanks,
-
-      fields,
-      parentFields,
-      relatedFields,
-    });
+    const product = await mapToProductDto(
+      entity,
+      this.buildMapperOptions({ ...options, includeSummary: true }, ctx),
+    );
 
     if (product == null) {
       throw notFoundError({ product: slug });
@@ -402,11 +266,7 @@ export class ProductService {
 
     const fetchPromises = slugs.map((slug) =>
       this.getBySlug(
-        {
-          ...options,
-          productType: options.productType,
-          slug,
-        },
+        { ...options, productType: options.productType, slug },
         ctx,
       ),
     );
@@ -427,8 +287,12 @@ export class ProductService {
     const product = request.product;
 
     // Check if another product exists at the slug
-    const existingProduct = await this.repository.findBySlug(
-      { productType: product.productType, slug: product.slug },
+    const existingProduct = await this.productEntityCache.getProductBySlug(
+      {
+        productType: product.productType,
+        slug: product.slug,
+        bypassCache: true,
+      },
       ctx,
     );
 
@@ -449,6 +313,19 @@ export class ProductService {
       }
     }
 
+    // Update Game FPS cost-related metrics
+    for (const game of product.games ?? []) {
+      for (const gameFps of game.fps ?? []) {
+        if (gameFps.fps && msrp) {
+          gameFps.fpsPerDollar = gameFps.fps / msrp;
+          gameFps.dollarsPerFrame = msrp / gameFps.fps;
+        } else {
+          gameFps.fpsPerDollar = null;
+          gameFps.dollarsPerFrame = null;
+        }
+      }
+    }
+
     const entity = mapToProductEntity({ id: undefined, ...product });
     const result = await this.repository.create(entity, ctx);
     return mapToProductDto(result);
@@ -460,8 +337,12 @@ export class ProductService {
     const product = request.product;
 
     // Check if another product exists at the slug
-    const existingProduct = await this.repository.findBySlug(
-      { productType: product.productType, slug: product.slug },
+    const existingProduct = await this.productEntityCache.getProductBySlug(
+      {
+        productType: product.productType,
+        slug: product.slug,
+        bypassCache: true,
+      },
       ctx,
     );
     if (existingProduct != null && existingProduct.id !== id) {
@@ -491,18 +372,36 @@ export class ProductService {
       }
     }
 
+    // Update Game FPS cost-related metrics
+    for (const game of product.games ?? []) {
+      for (const gameFps of game.fps ?? []) {
+        if (gameFps.fps && msrp) {
+          gameFps.fpsPerDollar = gameFps.fps / msrp;
+          gameFps.dollarsPerFrame = msrp / gameFps.fps;
+        } else {
+          gameFps.fpsPerDollar = null;
+          gameFps.dollarsPerFrame = null;
+        }
+      }
+    }
+
     const entity = mapToProductEntity({ id: undefined, ...product });
     const result = await this.repository.update(id, entity, ctx);
+    await this.productEntityCache.invalidate({ id });
     return mapToProductDto(result);
   }
 
   async delete(id: number, ctx: Context) {
-    const product = await this.repository.findById({ id }, ctx);
+    const product = await await this.productEntityCache.getProductById(
+      { id, bypassCache: true },
+      ctx,
+    );
     if (product == null) {
-      throw notFoundError({ gpu: id });
+      throw notFoundError({ product: id });
     }
 
     await this.repository.delete(id, ctx);
+    await this.productEntityCache.invalidate({ id });
     return id;
   }
 
@@ -532,14 +431,18 @@ export class ProductService {
         const source = sources[i];
         if (source.sourceProductId != null) {
           const product = await this.getById(
-            { id: source.sourceProductId },
+            { id: source.sourceProductId, bypassCache: true },
             ctx,
           );
           chipset = product as GpuProduct;
         }
       }
 
-      return await scrapeGpu({ chipset, sources });
+      const games = (await this.gameService.getScraperOptions(
+        ctx,
+      )) as Partial<Game>[];
+
+      return await scrapeGpu({ chipset, sources, games });
     }
 
     throw badRequestError({
@@ -554,7 +457,12 @@ export class ProductService {
   ) {
     const { productId, sources } = options;
     const product = await this.getById(
-      { id: productId, includeSources: true, includeAutomation: true },
+      {
+        id: productId,
+        includeSources: true,
+        includeAutomation: true,
+        bypassCache: true,
+      },
       ctx,
     );
 
@@ -620,5 +528,137 @@ export class ProductService {
       const retailModelCounts = await this.countChildren({ productIds }, ctx);
       response.additionalData = { retailModelCounts };
     }
+  }
+
+  private buildCacheFetchOptions(
+    options: RelationOptions & { bypassCache?: boolean },
+    ctx: Context,
+  ) {
+    const includeBenchmarks = options?.includeBenchmarks ?? false;
+    const includeParentBenchmarks = options?.includeParentBenchmarks ?? false;
+    const includeRelatedBenchmarks = options?.includeRelatedBenchmarks ?? false;
+
+    const includeGames = options?.includeGames ?? false;
+    const includeParentGames = options?.includeParentGames ?? false;
+    const includeRelatedGames = options?.includeRelatedGames ?? false;
+
+    const includeRanks = options?.includeRanks ?? false;
+    const includeParentRanks = options?.includeParentRanks ?? false;
+    const includeRelatedRanks = options?.includeRelatedRanks ?? false;
+
+    const includeParent = options.includeParent ?? false;
+    const includeChildren = options.includeChildren ?? false;
+    const includeImages = options.includeImages ?? false;
+    const includeSources =
+      (options.includeSources ?? false) && (ctx.user?.isStaff ?? false);
+    const includeRelated = options?.includeRelated ?? false;
+
+    const fields = options.fields;
+    const parentFields = options.parentFields;
+    const childrenFields = options.childrenFields;
+    const relatedFields = options.relatedFields;
+
+    const includeFields = fields == null || fields.length > 0;
+    const includeParentFields = parentFields == null || parentFields.length > 0;
+    const includeChildrenFields =
+      childrenFields == null || childrenFields.length > 0;
+    const includeRelatedFields =
+      relatedFields == null || relatedFields.length > 0;
+
+    return {
+      includeParents: includeParent,
+      includeChildren: includeChildren,
+      includeRelated: includeRelated,
+
+      includeBaseFields: !!includeFields,
+      includeParentFields: !!includeParentFields,
+      includeChildrenFields: !!includeChildrenFields,
+      includeRelatedFields: !!includeRelatedFields,
+
+      includeBaseBenchmarks: !!includeBenchmarks,
+      includeParentBenchmarks: !!includeParentBenchmarks,
+      includeRelatedBenchmarks: !!includeRelatedBenchmarks,
+
+      includeBaseGameFps: !!includeGames,
+      includeParentGameFps: !!includeParentGames,
+      includeRelatedGameFps: !!includeRelatedGames,
+
+      includeBaseRanks: !!includeRanks,
+      includeParentRanks: !!includeParentRanks,
+      includeRelatedRanks: !!includeRelatedRanks,
+
+      includeBaseImages: !!includeImages,
+      includeParentImages: !!includeImages,
+      includeRelatedImages: !!includeImages,
+
+      includeBaseSources: !!includeSources,
+      includeParentSources: !!includeSources,
+      includeRelatedSources: !!includeSources,
+
+      bypassCache: ctx?.user?.isStaff ? !!options.bypassCache : false,
+    };
+  }
+
+  private buildMapperOptions(
+    options: RelationOptions & { includeSummary?: boolean },
+    ctx: Context,
+  ) {
+    const includeBenchmarks = options?.includeBenchmarks ?? false;
+    const includeParentBenchmarks = options?.includeParentBenchmarks ?? false;
+    const includeRelatedBenchmarks = options?.includeRelatedBenchmarks ?? false;
+
+    const includeGames = options?.includeGames ?? false;
+    const includeParentGames = options?.includeParentGames ?? false;
+    const includeRelatedGames = options?.includeRelatedGames ?? false;
+
+    const includeRanks = options?.includeRanks ?? false;
+    const includeParentRanks = options?.includeParentRanks ?? false;
+    const includeRelatedRanks = options?.includeRelatedRanks ?? false;
+
+    const includeParent = options.includeParent ?? false;
+    const includeChildren = options.includeChildren ?? false;
+    const includeImages = options.includeImages ?? false;
+    const includeSources =
+      (options.includeSources ?? false) && (ctx.user?.isStaff ?? false);
+    const includeUpdates =
+      (options.includeUpdates ?? false) && (ctx.user?.isStaff ?? false);
+    const includeAutomation =
+      (options.includeAutomation ?? false) && (ctx.user?.isStaff ?? false);
+    const includeRelated = options?.includeRelated ?? false;
+
+    const fields = options.fields;
+    const parentFields = options.parentFields;
+    const childrenFields = options.childrenFields;
+    const relatedFields = options.relatedFields;
+    const includeSummary = options.includeSummary ?? false;
+
+    return {
+      includeParent,
+      includeChildren,
+
+      includeAutomation,
+      includeImages,
+      includeSources,
+      includeUpdates,
+      includeRelated,
+      includeSummary,
+
+      includeBenchmarks,
+      includeParentBenchmarks,
+      includeRelatedBenchmarks,
+
+      includeGames,
+      includeParentGames,
+      includeRelatedGames,
+
+      includeRanks,
+      includeParentRanks,
+      includeRelatedRanks,
+
+      fields,
+      parentFields,
+      childrenFields,
+      relatedFields,
+    };
   }
 }

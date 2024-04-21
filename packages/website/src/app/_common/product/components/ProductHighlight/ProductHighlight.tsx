@@ -15,7 +15,7 @@ export const ProductHighlight = (props: ProductHighlightProps) => {
   return (
     <div
       className={classNames(
-        'bg-light-shades flex flex-wrap px-4 py-2 rounded shadow items-center',
+        'bg-light-shades flex flex-wrap px-4 py-2 rounded shadow items-center gap-2',
       )}
     >
       <div className={classNames('flex-auto flex gap-2 items-center')}>

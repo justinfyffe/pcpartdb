@@ -9,7 +9,7 @@ export interface User {
   registeredAt: number;
 }
 
-import { PreferredBenchmarks, ProductType } from '../product';
+import { PreferredBenchmarks } from '../product';
 
 export interface UserSettings {
   preferredBenchmarks?: PreferredBenchmarks;
@@ -38,8 +38,4 @@ export interface ResetPasswordRequest {
 
 export interface UpdateUserSettingsRequest {
   settings: UserSettings;
-
-  // Data to help fetch updated content for website.
-  productType?: ProductType;
-  productIds?: number[]; // 1 for view, multiple for compare
 }

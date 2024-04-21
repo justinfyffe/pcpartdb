@@ -18,7 +18,7 @@ import {
   UpdateGpuActionData,
 } from '@pcpartdb/shared';
 import { Database } from '../database';
-import { ProductRepository } from '../product/product.repository';
+import { ProductRepository } from '../product/repositories';
 import { Context } from '../shared/context';
 import { internalServerError, notFoundError } from '../shared/error';
 import { validate } from '../shared/validation/validate';

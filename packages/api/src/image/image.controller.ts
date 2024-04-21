@@ -6,11 +6,16 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { CreateImageRequest, UpdateImageRequest } from '@pcpartdb/shared';
+import {
+  CreateImageRequest,
+  ListImagesRequest,
+  UpdateImageRequest,
+} from '@pcpartdb/shared';
 import { StaffGuard } from '../auth/staff.guard';
 import { Database } from '../database';
 import { Context, Ctx } from '../shared/context';
@@ -35,10 +40,12 @@ export class ImageController {
 
   @Get()
   @UseGuards(StaffGuard)
-  async list(@Ctx() ctx: Context) {
+  async list(@Query('req') reqJson: string, @Ctx() ctx: Context) {
+    const req: ListImagesRequest = JSON.parse(reqJson);
+
     return await this.db.transaction(
       async () => {
-        return await this.imageService.list(ctx);
+        return await this.imageService.list(req, {}, ctx);
       },
       { ctx },
     );

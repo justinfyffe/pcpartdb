@@ -31,7 +31,7 @@ export interface ListQuery<TFilter = unknown> {
 }
 
 export interface ListRequest<TQuery = ListQuery> {
-  query: TQuery;
+  query?: TQuery;
 }
 
 export interface ListResponse<

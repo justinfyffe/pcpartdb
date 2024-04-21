@@ -11,8 +11,8 @@ import { ButtonVariant } from 'packages/website/src/app/_common/components/Butto
 import { ContentProvider } from 'packages/website/src/app/_common/content/ContentProvider';
 import { compileContentComponent } from 'packages/website/src/app/_common/content/utils/compileContentComponent';
 import { useViewModel } from 'packages/website/src/app/_common/contexts/ViewModelProvider';
-import { usePreferredBenchmark } from 'packages/website/src/app/_common/user/usePreferredBenchmark';
-import { usePreferredBenchmarkDialog } from 'packages/website/src/app/_common/user/usePreferredBenchmarkDialog';
+import { usePreferredBenchmark } from 'packages/website/src/app/_common/product/hooks/usePreferredBenchmark';
+import { usePreferredBenchmarkDialog } from 'packages/website/src/app/_common/product/hooks/usePreferredBenchmarkDialog';
 import React, { useMemo } from 'react';
 
 const RatingDisclaimer = compileContentComponent({

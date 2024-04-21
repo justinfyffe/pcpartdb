@@ -3,6 +3,7 @@ import { AutomationSourceEntity } from '../automation';
 import { CpuFieldsEntity } from './CpuFieldsEntity';
 import { GpuFieldsEntity } from './GpuFieldsEntity';
 import { ProductBenchmarkEntity } from './ProductBenchmarkEntity';
+import { ProductGameFpsEntity } from './ProductGameFpsEntity';
 import { ProductImageEntity } from './ProductImageEntity';
 import { ProductRanksEntity } from './ProductRankEntity';
 import { ProductSourceEntity } from './ProductSourceEntity';
@@ -13,6 +14,7 @@ export type ProductEntity = db.Product & {
   cpuFields?: CpuFieldsEntity;
   gpuFields?: GpuFieldsEntity;
   benchmarks?: ProductBenchmarkEntity[];
+  gameFps?: ProductGameFpsEntity[];
   ranks?: ProductRanksEntity;
   sources?: ProductSourceEntity[];
   updates?: ProductUpdateEntity[];

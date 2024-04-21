@@ -1,4 +1,4 @@
-import { Image } from '@pcpartdb/shared';
+import { Image, ImageManipulationPreset } from '@pcpartdb/shared';
 import {
   Button,
   ButtonVariant,
@@ -6,6 +6,7 @@ import {
 import { closeDialog } from 'packages/website/src/client/shared/components/Dialog/dialog';
 import React, { FunctionComponent, useCallback, useState } from 'react';
 import { ImageForm } from '../ImageForm/ImageForm';
+import { ImagesList } from '../ImagesList/ImagesList';
 import { ImageList } from './ImageList';
 
 enum Tabs {
@@ -14,6 +15,7 @@ enum Tabs {
 }
 
 interface ImageDialogProps {
+  manipulation?: ImageManipulationPreset;
   onSelect: (image: Image) => void;
 }
 
@@ -67,9 +69,14 @@ export const ImageDialog: FunctionComponent<ImageDialogProps> = (props) => {
         </Button>
       </div>
 
-      <div className="mt-4 overflow-x-hidden overflow-y-auto">
-        {tab === Tabs.List && <ImageList onSelect={handleSelect} />}
-        {tab === Tabs.Upload && <ImageForm onSuccess={handleUpload} />}
+      <div className="mt-4 overflow-x-hidden overflow-y-auto h-full">
+        {tab === Tabs.List && <ImagesList onSelect={handleSelect} isDialog />}
+        {tab === Tabs.Upload && (
+          <ImageForm
+            defaultManipulation={props.manipulation}
+            onSuccess={handleUpload}
+          />
+        )}
       </div>
     </div>
   );

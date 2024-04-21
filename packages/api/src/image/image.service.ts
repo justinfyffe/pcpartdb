@@ -3,6 +3,10 @@ import { Injectable } from '@nestjs/common';
 import { mapToImageDto, mapToImageEntity } from '@pcpartdb/database';
 import {
   CreateImageRequest,
+  Image,
+  ListImagesRequest,
+  listImagesRequestSchema,
+  ListImagesResponse,
   UpdateImageRequest,
   ValidationErrorType,
 } from '@pcpartdb/shared';
@@ -11,26 +15,61 @@ import { badRequestError, notFoundError } from '../shared/error';
 import * as fileUtils from '../shared/utils';
 import { validate } from '../shared/validation/validate';
 import { ImageRepository } from './image.repository';
+import { ImageManipulationService } from './image-manipulation.service';
+import { ImageStatService } from './image-stat.service';
 
 const imageValidator = Joi.object({
   name: Joi.string().required(),
   path: Joi.string().required(),
-  fileSize: Joi.number(),
-  height: Joi.number(),
-  width: Joi.number(),
   sourceName: Joi.string().allow('', null),
   sourceUrl: Joi.string().allow('', null),
+  manipulation: Joi.string().allow('', null),
   file: Joi.any().required(),
   tempPath: Joi.string().allow('', null),
 }).options({ abortEarly: false });
 
+interface ListOptions {
+  skipCount?: boolean;
+}
+
 @Injectable()
 export class ImageService {
-  constructor(private imageRepository: ImageRepository) {}
+  constructor(
+    private imageRepository: ImageRepository,
+    private imageStatService: ImageStatService,
+    private imageManipulationService: ImageManipulationService,
+  ) {}
 
-  async list(ctx: Context) {
-    const rows = await this.imageRepository.list(ctx);
-    return rows.map((row) => mapToImageDto(row));
+  async count(request: ListImagesRequest, ctx: Context) {
+    validate(request, listImagesRequestSchema);
+
+    const { query } = request;
+    const count = await this.imageRepository.count({ ...query }, ctx);
+
+    return count;
+  }
+
+  async list(request: ListImagesRequest, options: ListOptions, ctx: Context) {
+    validate(request, listImagesRequestSchema);
+
+    const skipCount = options.skipCount ?? false;
+    const { query } = request;
+
+    const entities = await this.imageRepository.list({ ...query }, ctx);
+    let count: number;
+    if (!skipCount) {
+      count = await this.count(request, ctx);
+    }
+
+    const images: Image[] = entities.map((entity) => mapToImageDto(entity));
+
+    const response: ListImagesResponse = {
+      query,
+      results: images,
+      total: count,
+    };
+
+    return response;
   }
 
   async get(id: number, ctx: Context) {
@@ -54,16 +93,34 @@ export class ImageService {
       });
     }
 
-    await fileUtils.move(
-      fileUtils.uploadsPath(data.tempPath),
+    if (data.manipulation) {
+      // Manipulation preset is set, therefore manipulate the image
+      // and delete the original.
+      await this.imageManipulationService.manipulate({
+        preset: data.manipulation,
+        imagePath: fileUtils.uploadsPath(data.tempPath),
+        outputPath: fileUtils.imagePath(data.path),
+      });
+      await fileUtils.remove(fileUtils.uploadsPath(data.tempPath));
+    } else {
+      // Manipulation preset is not set, therefore just move the image.
+      await fileUtils.move(
+        fileUtils.uploadsPath(data.tempPath),
+        fileUtils.imagePath(data.path),
+      );
+    }
+
+    const imageStats = await this.imageStatService.stat(
       fileUtils.imagePath(data.path),
     );
-
-    const stats = await fileUtils.stats(fileUtils.imagePath(data.path));
+    const fileStats = await fileUtils.stats(fileUtils.imagePath(data.path));
 
     const entity = mapToImageEntity({
       ...data,
-      uploadedAt: stats.mtime.getTime(),
+      fileSize: imageStats.fileSize,
+      width: imageStats.width,
+      height: imageStats.height,
+      uploadedAt: fileStats.mtime.getTime(),
     });
     const row = await this.imageRepository.create(entity, ctx);
 
@@ -110,17 +167,33 @@ export class ImageService {
 
     // Check if we uploaded a new image, move it if we did
     if (data.file) {
+      // Manipulation preset is set, therefore manipulate the image
+      // and delete the original.
+      await this.imageManipulationService.manipulate({
+        preset: data.manipulation,
+        imagePath: fileUtils.uploadsPath(data.tempPath),
+        outputPath: fileUtils.imagePath(data.path),
+      });
+      await fileUtils.remove(fileUtils.uploadsPath(data.tempPath));
+    } else {
+      // Manipulation preset is not set, therefore just move the image.
       await fileUtils.move(
         fileUtils.uploadsPath(data.tempPath),
         fileUtils.imagePath(data.path),
       );
     }
 
-    const stats = await fileUtils.stats(fileUtils.imagePath(data.path));
+    const imageStats = await this.imageStatService.stat(
+      fileUtils.imagePath(data.path),
+    );
+    const fileStats = await fileUtils.stats(fileUtils.imagePath(data.path));
 
     const entity = mapToImageEntity({
       ...data,
-      uploadedAt: stats.mtime.getTime(),
+      fileSize: imageStats.fileSize,
+      width: imageStats.width,
+      height: imageStats.height,
+      uploadedAt: fileStats.mtime.getTime(),
     });
     const row = await this.imageRepository.update(id, entity, ctx);
 

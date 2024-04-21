@@ -1,16 +1,41 @@
+import {
+  ListImagesFilter,
+  ListImagesQuery,
+  ListOrder,
+  ListOrderBy,
+  ListSort,
+} from '@pcpartdb/shared';
+import { Prisma } from '@prisma/client';
 import { DatabaseClient } from '../DatabaseClient';
 import { RepositoryConfig } from '../RepositoryConfig';
 import { ImageEntity } from './ImageEntity';
 
+interface CountOptions extends ListImagesQuery {}
+
+interface ListOptions extends ListImagesQuery {}
+
 export class ImageRepository {
   constructor(protected db: DatabaseClient) {}
 
-  async list(config?: RepositoryConfig) {
+  async count(options: CountOptions, config?: RepositoryConfig) {
+    const db = config?.trx ?? this.db;
+
+    const where = this.generateWhere(options.filter);
+    return await db.image.count({
+      where,
+    });
+  }
+
+  async list(options: ListOptions, config?: RepositoryConfig) {
     const trx = config?.trx ?? this.db;
+
+    const where = this.generateWhere(options.filter);
+    const orderBy = this.generateOrderBy(options.orderBy);
     return await trx.image.findMany({
-      orderBy: {
-        id: 'desc',
-      },
+      where,
+      orderBy,
+      skip: options.pagination?.offset,
+      take: options.pagination?.limit,
     });
   }
 
@@ -62,5 +87,38 @@ export class ImageRepository {
     await trx.image.delete({
       where: { id },
     });
+  }
+
+  private generateWhere(filter: ListImagesFilter): Prisma.ImageWhereInput {
+    const searchTextWhere = filter?.search
+      ? { contains: filter.search, mode: 'insensitive' as Prisma.QueryMode }
+      : undefined;
+
+    return {
+      OR: searchTextWhere != null ? [{ name: searchTextWhere }] : undefined,
+    };
+  }
+
+  private generateOrderBy(
+    orderBy: ListOrderBy,
+  ):
+    | Prisma.ImageOrderByWithRelationAndSearchRelevanceInput
+    | Prisma.ImageOrderByWithRelationAndSearchRelevanceInput[] {
+    if (orderBy == null) {
+      return { id: ListOrder.Desc };
+    }
+
+    const { sort } = orderBy;
+    if (sort === ListSort.Id) {
+      // Default ASC
+      const order = orderBy?.order ?? ListOrder.Desc;
+      return { id: order };
+    } else if (sort === ListSort.Name) {
+      // Default ASC
+      const order = orderBy?.order ?? ListOrder.Asc;
+      return { name: order };
+    }
+
+    return { id: ListOrder.Desc };
   }
 }

@@ -4,7 +4,7 @@ import { Image } from '@pcpartdb/shared';
 import { useContext } from 'react';
 import { CacheContext } from './CacheProvider';
 
-export type ImageCacheState = Record<number, Image>;
+export type ImageCacheState = Record<number, Partial<Image>>;
 
 class ImageCacheImpl {
   private cache: ImageCacheState = {};
@@ -13,7 +13,7 @@ class ImageCacheImpl {
     return this.cache[id] ?? null;
   }
 
-  save(...imagesToSave: (Image | Image[])[]) {
+  save(...imagesToSave: (Partial<Image> | Partial<Image>[])[]) {
     imagesToSave.forEach((images) => {
       if (Array.isArray(images)) {
         images.forEach((image) => {
@@ -41,7 +41,9 @@ class ImageCacheImpl {
 
 export const ImageCache = new ImageCacheImpl();
 
-export function useImageCache(...images: (Image | Image[])[]) {
+export function useImageCache(
+  ...images: (Partial<Image> | Partial<Image>[])[]
+) {
   const imageCache = useContext(CacheContext).getImageCache();
   if (images.length > 0) {
     imageCache.save(...images);

@@ -27,7 +27,7 @@ export const AdminNewImagePage = (_props: AdminNewImagePageProps) => {
           <GenericButton href={getAdminListImagesPath()}>Back</GenericButton>
         </div>
 
-        <ImageForm />
+        <ImageForm redirectOnSuccess />
       </article>
     </AdminLayout>
   );

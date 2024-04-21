@@ -1,5 +1,5 @@
 import { Product, ProductType } from '../common';
-import { BENCHMARK_LABELS, BenchmarkKey } from './common';
+import { BENCHMARK_LABELS, BenchmarkKey, ProductBenchmark } from './common';
 
 export function getDefaultBenchmark(productType: ProductType) {
   if (productType === ProductType.Cpu) {
@@ -124,7 +124,6 @@ export function setProductBenchmark(
   product: Product,
   benchmarkKey: BenchmarkKey,
   value: number,
-  valuePerMsrp: number,
 ) {
   const hasBenchmark = hasProductBenchmark(product, benchmarkKey);
   if (!hasBenchmark && value != null) {
@@ -143,7 +142,6 @@ export function setProductBenchmark(
     } else {
       // Overwrite benchmark
       product.benchmarks[idx].value = value;
-      product.benchmarks[idx].valuePerMsrp = valuePerMsrp;
     }
   }
 }

@@ -21,22 +21,32 @@ import {
   mapToProductFieldsDto,
   mapToProductFieldsEntity,
 } from './productFieldsMapper';
+import {
+  mapToProductGameDtos,
+  mapToProductGameFpsEntities,
+} from './productGameMapper';
 import { mapToProductRanksDto } from './productRankMapper';
 
 interface MapToDtoOptions {
   fields?: ProductFieldKey[];
   parentFields?: ProductFieldKey[];
+  childrenFields?: ProductFieldKey[];
   relatedFields?: ProductFieldKey[];
 
   includeBenchmarks?: boolean | BenchmarkKey[];
   includeParentBenchmarks?: boolean | BenchmarkKey[];
   includeRelatedBenchmarks?: boolean | BenchmarkKey[];
 
+  includeGames?: boolean | (number | string)[]; // All/No Games or Game IDs or Game Slugs
+  includeParentGames?: boolean | (number | string)[]; // All/No Games or Game IDs or Game Slugs
+  includeRelatedGames?: boolean | (number | string)[]; // All/No Games or Game IDs or Game Slugs
+
   includeRanks?: boolean | BenchmarkKey[];
   includeParentRanks?: boolean | BenchmarkKey[];
   includeRelatedRanks?: boolean | BenchmarkKey[];
 
   includeParent?: boolean;
+  includeChildren?: boolean;
   includeAutomation?: boolean;
   includeImages?: boolean;
   includeSources?: boolean;
@@ -58,11 +68,16 @@ export async function mapToProductDto(
   const includeParentBenchmarks = options?.includeParentBenchmarks ?? false;
   const includeRelatedBenchmarks = options?.includeRelatedBenchmarks ?? false;
 
+  const includeGames = options?.includeGames ?? false;
+  const includeParentGames = options?.includeParentGames ?? false;
+  const includeRelatedGames = options?.includeRelatedGames ?? false;
+
   const includeRanks = options?.includeRanks ?? false;
   const includeParentRanks = options?.includeParentRanks ?? false;
   const includeRelatedRanks = options?.includeRelatedRanks ?? false;
 
   const includeParent = options?.includeParent ?? false;
+  const includeChildren = options?.includeChildren ?? false;
 
   const includeAutomation = options?.includeAutomation ?? false;
   const includeImages = options?.includeImages ?? false;
@@ -82,11 +97,24 @@ export async function mapToProductDto(
         ...options,
         fields: options?.parentFields,
         includeBenchmarks: includeParentBenchmarks,
+        includeGames: includeParentGames,
         includeRanks: includeParentRanks,
+        includeRelated: includeRelated,
+        includeRelatedBenchmarks: includeRelatedBenchmarks,
+        includeRelatedGames: includeRelatedGames,
+        includeRelatedRanks: includeRelatedRanks,
+      })
+    : undefined;
+  const children = includeChildren
+    ? await mapToProductDtos(entity.children, {
+        fields: options?.childrenFields,
       })
     : undefined;
   const benchmarks = includeBenchmarks
     ? mapToProductBenchmarkDtos(entity.benchmarks ?? [], options)
+    : undefined;
+  const games = includeGames
+    ? await mapToProductGameDtos(entity.gameFps ?? [], { includeGames })
     : undefined;
   const images = includeImages
     ? mapToProductImageDtos(entity.images ?? [])
@@ -104,19 +132,20 @@ export async function mapToProductDto(
     ? await mapToProductUpdateDtos(entity.updates ?? [])
     : undefined;
 
-  let relatedProducts: RelatedProducts = undefined;
+  const relatedProducts: RelatedProducts = [];
+  const checkedIds = new Set<number>();
   if (includeRelated) {
-    relatedProducts = {};
     for (const rp of entity?.relatedProducts ?? []) {
-      const key = rp.relatedProductKey;
-      relatedProducts[key] = relatedProducts[key] || [];
-
-      const relatedProduct = await mapToProductDto(rp.relatedProduct, {
-        fields: options?.relatedFields,
-        includeBenchmarks: includeRelatedBenchmarks,
-        includeRanks: includeRelatedRanks,
-      });
-      relatedProducts[key].push(relatedProduct);
+      if (!checkedIds.has(rp.relatedProductId)) {
+        const relatedProduct = await mapToProductDto(rp.relatedProduct, {
+          fields: options?.relatedFields,
+          includeBenchmarks: includeRelatedBenchmarks,
+          includeGames: includeRelatedGames,
+          includeRanks: includeRelatedRanks,
+        });
+        relatedProducts.push(relatedProduct);
+        checkedIds.add(rp.relatedProductId);
+      }
     }
   }
 
@@ -146,6 +175,7 @@ export async function mapToProductDto(
 
     fields,
     benchmarks,
+    games,
     ranks,
     sources,
     updates,
@@ -153,6 +183,7 @@ export async function mapToProductDto(
     relatedAutomationSources,
     relatedProducts,
     parent,
+    children,
   } as Product;
 }
 
@@ -181,6 +212,7 @@ export function mapToProductEntity(dto: Product) {
     dto.benchmarks?.map((benchmark) =>
       mapToProductBenchmarkEntity(benchmark),
     ) || [];
+  const gameFps = mapToProductGameFpsEntities(dto.games);
   const sources =
     dto.sources?.map((source) => mapToProductSourceEntity(source)) || [];
   const images =
@@ -214,6 +246,7 @@ export function mapToProductEntity(dto: Product) {
     cpuFields: dto.productType === ProductType.Cpu ? fields : undefined,
     gpuFields: dto.productType === ProductType.Gpu ? fields : undefined,
     benchmarks,
+    gameFps,
     sources,
     images,
   } as ProductEntity;

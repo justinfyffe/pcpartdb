@@ -1,6 +1,9 @@
+import { schema } from 'normalizr';
 import { AutomationSource } from '../automation';
+import { deepmerge } from '../utils';
 import { ProductBenchmark } from './benchmarks';
 import { CpuFields, GpuFields, ProductFields } from './fields';
+import { ProductGame, ProductGameFps } from './game';
 import { ProductImage } from './images';
 import { ProductRanks } from './ranks';
 import { RelatedProducts } from './related';
@@ -72,13 +75,14 @@ export interface Product {
   automatedAt?: number;
 
   fields?: ProductFields;
-
   benchmarks?: ProductBenchmark[];
+  games?: ProductGame[];
   sources?: ProductSource[];
   updates?: ProductUpdate[];
   images?: ProductImage[];
   relatedAutomationSources?: AutomationSource[]; // TODO: is this needed?
   parent?: Product;
+  children?: Product[];
 
   ranks?: ProductRanks;
   relatedProducts?: RelatedProducts;
@@ -98,6 +102,6 @@ export interface GpuProduct extends Product {
 
 // Product Comparisons
 
-export type ProductComparison = [Product, Product];
+export type ProductComparison = [Partial<Product>, Partial<Product>];
 export type CpuProductComparison = [CpuProduct, CpuProduct];
 export type GpuProductComparison = [GpuProduct, GpuProduct];

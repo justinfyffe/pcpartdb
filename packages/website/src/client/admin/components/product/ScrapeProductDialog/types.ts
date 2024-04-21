@@ -2,6 +2,7 @@ import {
   ProductBenchmark,
   ProductField,
   ProductFieldKey,
+  ProductGame,
   ProductType,
 } from '@pcpartdb/shared';
 
@@ -12,7 +13,8 @@ export type ScrapedDataType =
   | string
   | string[]
   | ProductField
-  | ProductBenchmark;
+  | ProductBenchmark
+  | ProductGame;
 
 export interface ScrapedData {
   enabled: boolean;
@@ -28,5 +30,6 @@ export interface ScrapedProduct {
     company: ScrapedData;
     fields: Record<string, ScrapedData>;
     benchmarks: Record<string, ScrapedData>;
+    games: Record<string, ScrapedData>;
   };
 }

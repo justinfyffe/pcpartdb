@@ -11,9 +11,11 @@ import {
 import { Button } from 'packages/website/src/app/_common/components/Button/Button';
 import { ButtonVariant } from 'packages/website/src/app/_common/components/Button/types';
 import { useViewModelContext } from 'packages/website/src/app/_common/contexts/ViewModelProvider';
+import { useGameSelection } from 'packages/website/src/app/_common/game/contexts/GameSelectionProvider';
 import { ProductHighlight } from 'packages/website/src/app/_common/product/components/ProductHighlight/ProductHighlight';
-import { usePreferredBenchmark } from 'packages/website/src/app/_common/user/usePreferredBenchmark';
-import { usePreferredBenchmarkDialog } from 'packages/website/src/app/_common/user/usePreferredBenchmarkDialog';
+import { useRelativeDataProducts } from 'packages/website/src/app/_common/product/contexts/RelativeDataProductsProvider';
+import { usePreferredBenchmark } from 'packages/website/src/app/_common/product/hooks/usePreferredBenchmark';
+import { usePreferredBenchmarkDialog } from 'packages/website/src/app/_common/product/hooks/usePreferredBenchmarkDialog';
 import React, { useMemo } from 'react';
 
 interface PerformanceHighlightProps {
@@ -23,18 +25,19 @@ interface PerformanceHighlightProps {
 export function PerformanceHighlight(props: PerformanceHighlightProps) {
   const { className } = props;
 
-  const { viewModel, updateViewModel } =
-    useViewModelContext<ViewGpuViewModel>();
+  const { viewModel } = useViewModelContext<ViewGpuViewModel>();
   const gpu = viewModel.gpu;
   const parent = getGpuChipset(gpu);
-  const bestPerfGpu = viewModel.contentData?.bestPerformanceGpu;
+  const bestPerfGpu = viewModel.relativeDataProducts?.bestBenchmarkPerformance;
+  const { loading } = useRelativeDataProducts();
 
   const preferredBenchmark = usePreferredBenchmark(ProductType.Gpu);
+  const { selectedGame } = useGameSelection();
   const showPreferredBenchmarkDialog = usePreferredBenchmarkDialog({
     productType: ProductType.Gpu,
     softReload: true,
     productIds: [gpu.id],
-    onChange: updateViewModel,
+    gameSlug: selectedGame?.slug,
   });
 
   const score = useMemo(
@@ -56,8 +59,11 @@ export function PerformanceHighlight(props: PerformanceHighlightProps) {
     if (score == null || bestPerfGpu == null) {
       return null;
     }
+
     const bestScore = productBenchmarkValue(bestPerfGpu, preferredBenchmark);
-    if (bestScore === score) {
+    if (bestScore == null) {
+      return '--';
+    } else if (bestScore === score) {
       return 'Best Performance';
     }
 
@@ -77,16 +83,26 @@ export function PerformanceHighlight(props: PerformanceHighlightProps) {
           <span>Performance</span>
           <span className="text-link text-sm flex gap-2 items-baseline">
             {getProductBenchmarkName(preferredBenchmark)}
-            <span className="text-xs">(change)</span>
+            <span className="text-xs lg:hidden">(change)</span>
           </span>
         </Button>
       }
       value={
         <div className="flex flex-col gap-1 items-end">
-          <div className="flex flex-col gap-1 items-center">
-            <span>{valueText}</span>
-            <span className="text-sm">{diffText}</span>
-          </div>
+          {!loading && (
+            <div className="flex flex-col gap-1 items-center">
+              <span>{valueText}</span>
+              <span className="text-sm">{diffText}</span>
+            </div>
+          )}
+
+          {/* {loading && <Spinner className="w-8 h-8" />} */}
+          {loading && (
+            <div className="animate-pulse flex flex-col gap-3 h-[49px] justify-center">
+              <div className="w-20 h-3 bg-loading rounded" />
+              <div className="w-20 h-3 bg-loading rounded" />
+            </div>
+          )}
         </div>
       }
       className={className}

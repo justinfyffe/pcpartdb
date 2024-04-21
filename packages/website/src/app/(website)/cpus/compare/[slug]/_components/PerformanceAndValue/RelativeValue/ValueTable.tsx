@@ -6,6 +6,7 @@ import {
   formatProductName,
   getProductValueRank,
   getViewCpuPath,
+  percentDifference,
   productBenchmarkValuePerMsrp,
   ProductType,
 } from '@pcpartdb/shared';
@@ -18,7 +19,8 @@ import { Th } from 'packages/website/src/app/_common/components/Table/Th';
 import { THead } from 'packages/website/src/app/_common/components/Table/THead';
 import { Tr } from 'packages/website/src/app/_common/components/Table/Tr';
 import { useViewModel } from 'packages/website/src/app/_common/contexts/ViewModelProvider';
-import { usePreferredBenchmark } from 'packages/website/src/app/_common/user/usePreferredBenchmark';
+import { useRelativeDataProducts } from 'packages/website/src/app/_common/product/contexts/RelativeDataProductsProvider';
+import { usePreferredBenchmark } from 'packages/website/src/app/_common/product/hooks/usePreferredBenchmark';
 import { classNames } from 'packages/website/src/app/_common/utils/classNames';
 import React, {
   FunctionComponent,
@@ -35,9 +37,10 @@ interface ValueTableProps {
 export const ValueTable: FunctionComponent<ValueTableProps> = (props) => {
   const { className } = props;
   const viewModel = useViewModel<CompareCpusViewModel>();
-  const { comparison, relativeValueCpus } = viewModel;
+  const { comparison } = viewModel;
   const preferredBenchmark = usePreferredBenchmark(ProductType.Cpu);
   const [cpu1, cpu2] = comparison;
+  const { loading } = useRelativeDataProducts();
 
   const [baselineCpu, setBaselineCpu] = useState(() => {
     return productBenchmarkValuePerMsrp(cpu1, preferredBenchmark) != null
@@ -55,7 +58,10 @@ export const ValueTable: FunctionComponent<ValueTableProps> = (props) => {
     }
   });
 
-  const cpus = relativeValueCpus;
+  const cpus = viewModel.relativeDataProducts
+    ?.benchmarkPerformancePerDollar as Partial<CpuProduct>[];
+
+  const hasRelativeValueCpus = cpus != null && cpus.length > 1;
 
   useEffect(() => {
     setBaselineCpu(
@@ -118,22 +124,51 @@ export const ValueTable: FunctionComponent<ValueTableProps> = (props) => {
           </Tr>
         </THead>
         <TBody>
-          {cpus.map((relativeCpu, i) =>
-            relativeCpu != null ? (
-              <ValueTableRow
-                key={relativeCpu.id}
-                baselineCpu={baselineCpu}
-                secondaryCpu={secondaryCpu}
-                relativeCpu={relativeCpu}
-              />
-            ) : (
-              <Tr key={`idx-${i}`}>
-                <Td colSpan={3} className="text-center">
-                  &#8230;
+          {!loading &&
+            hasRelativeValueCpus &&
+            cpus.map((relativeCpu, i) =>
+              relativeCpu != null ? (
+                <ValueTableRow
+                  key={relativeCpu.id}
+                  baselineCpu={baselineCpu}
+                  secondaryCpu={secondaryCpu}
+                  relativeCpu={relativeCpu}
+                />
+              ) : (
+                <Tr key={`idx-${i}`}>
+                  <Td colSpan={4} className="text-center">
+                    &#8230;
+                  </Td>
+                </Tr>
+              ),
+            )}
+
+          {!loading && !hasRelativeValueCpus && (
+            <Tr>
+              <Td colSpan={4} className="text-center p-8">
+                Our database does not have enough data to compare the benchmark
+                performance per dollar with other CPUs.
+              </Td>
+            </Tr>
+          )}
+
+          {loading &&
+            [...new Array(3)].map((_, i) => (
+              <Tr key={i} className="animate-pulse">
+                <Td className="py-4">
+                  <div className="bg-loading w-8 h-3 rounded" />
+                </Td>
+                <Td className="py-4">
+                  <div className="bg-loading w-35 h-3 rounded" />
+                </Td>
+                <Td className="py-4">
+                  <div className="bg-loading w-12 h-3 rounded ml-auto" />
+                </Td>
+                <Td className="py-4">
+                  <div className="bg-loading w-12 h-3 rounded ml-auto" />
                 </Td>
               </Tr>
-            ),
-          )}
+            ))}
         </TBody>
       </Table>
     </>
@@ -141,9 +176,9 @@ export const ValueTable: FunctionComponent<ValueTableProps> = (props) => {
 };
 
 interface ValueTableRowProps {
-  relativeCpu: CpuProduct;
-  baselineCpu: CpuProduct;
-  secondaryCpu?: CpuProduct;
+  relativeCpu: Partial<CpuProduct>;
+  baselineCpu: Partial<CpuProduct>;
+  secondaryCpu?: Partial<CpuProduct>;
 }
 
 const ValueTableRow: FunctionComponent<ValueTableRowProps> = (props) => {
@@ -160,9 +195,13 @@ const ValueTableRow: FunctionComponent<ValueTableRowProps> = (props) => {
       preferredBenchmark,
     );
 
-    return Number(
-      ((relatedValue / baseline) * 100).toFixed(0),
+    let pct = Number(
+      (percentDifference(baseline, relatedValue) * 100).toFixed(0),
     ).toLocaleString();
+    if (relatedValue > baseline) {
+      pct = `+${pct}`;
+    }
+    return pct;
   }, [baselineCpu, preferredBenchmark, relativeCpu]);
 
   const rating = useMemo(
@@ -202,7 +241,9 @@ const ValueTableRow: FunctionComponent<ValueTableRowProps> = (props) => {
         <a href={href}>{cpuName}</a>
       </Td>
       <Td className="text-right">{rating}</Td>
-      <Td className="text-right">{relativeValuePct}%</Td>
+      <Td className="text-right">
+        {baselineCpu.id === relativeCpu.id ? '' : `${relativeValuePct}%`}
+      </Td>
     </Tr>
   );
 };

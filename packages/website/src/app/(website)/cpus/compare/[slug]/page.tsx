@@ -1,6 +1,7 @@
 import {
   ApiError,
   CompareCpusViewModel,
+  compareCpusViewModelNormalizr,
   formatProductComparisonName,
   formatProductName,
   getCompareCpusPath,
@@ -26,6 +27,7 @@ import { Breadcrumbs } from '../../../../_common/components/Breadcrumbs/Breadcru
 import { ViewModelType } from '../../../../_common/contexts/types';
 import { ViewModelProvider } from '../../../../_common/contexts/ViewModelProvider';
 import { CompareProductsForm } from '../../../../_common/product/components/CompareProductsForm/CompareProductsForm';
+import { Contents } from './_components/Contents/Contents';
 import { Disclaimer } from './_components/Disclaimer/Disclaimer';
 import { GeneralInfo } from './_components/GeneralInfo';
 import { Highlights } from './_components/Highlights/Highlights';
@@ -34,6 +36,7 @@ import { PerformanceAndValue } from './_components/PerformanceAndValue/Performan
 import { RelatedComparisons } from './_components/Related/RelatedComparisons';
 import { RelatedCpus } from './_components/Related/RelatedCpus';
 import { TechnicalSpecs } from './_components/TechnicalSpecs/TechnicalSpecs';
+import { PageProvider } from './PageProvider';
 
 type CompareCpusPageProps = {
   params: { slug: string };
@@ -52,6 +55,7 @@ export async function generateMetadata(
   const viewModel = await viewModelClient.get<CompareCpusViewModel | ApiError>(
     endpoint,
     {
+      normalizr: compareCpusViewModelNormalizr,
       preferredBenchmarks: { gpu: benchmark },
       headers: { Cookie: cookies().toString() },
     },
@@ -94,20 +98,21 @@ export default async function CompareCpusPage(props: CompareCpusPageProps) {
   const benchmark = props.searchParams.cpu_benchmark as string;
   const endpoint = joinUrlParts('cpus/compare', slug);
 
-  const response = await viewModelClient.get<CompareCpusViewModel | ApiError>(
+  const viewModel = await viewModelClient.get<CompareCpusViewModel | ApiError>(
     endpoint,
     {
+      normalizr: compareCpusViewModelNormalizr,
       preferredBenchmarks: { gpu: benchmark },
       headers: { Cookie: cookies().toString() },
     },
   );
-  if (isNotFoundError(response)) {
+  if (isNotFoundError(viewModel)) {
     throw notFound();
-  } else if (isApiError(response)) {
-    throw response;
+  } else if (isApiError(viewModel)) {
+    throw viewModel;
   }
 
-  const { comparison, relatedCpuComparisons, relatedCpus } = response;
+  const { comparison, relatedCpuComparisons, relatedCpus } = viewModel;
   const [cpu1, cpu2] = comparison;
 
   const pageTitle = formatProductComparisonName(comparison);
@@ -116,44 +121,40 @@ export default async function CompareCpusPage(props: CompareCpusPageProps) {
   });
 
   return (
-    <CacheProvider products={[cpu1, cpu2]}>
-      <ViewModelProvider
-        type={ViewModelType.CompareCpusViewModel}
-        viewModel={response}
-      >
-        <Breadcrumbs className="mb-4">
-          <Breadcrumb href={getHomePath()}>Home</Breadcrumb>
-          <Breadcrumb href={getListCpusPath()}>Processors</Breadcrumb>
-          <Breadcrumb>{shortPageTitle}</Breadcrumb>
-        </Breadcrumbs>
+    <PageProvider viewModel={viewModel}>
+      <Breadcrumbs className="mb-4">
+        <Breadcrumb href={getHomePath()}>Home</Breadcrumb>
+        <Breadcrumb href={getListCpusPath()}>Processors</Breadcrumb>
+        <Breadcrumb>{shortPageTitle}</Breadcrumb>
+      </Breadcrumbs>
 
-        <div className="flex flex-col gap-6 justify-center">
-          <section className="flex flex-wrap w-full">
-            <h1 className="font-semibold">{pageTitle}</h1>
+      <div className="flex flex-col gap-6 justify-center">
+        <section className="flex flex-wrap w-full">
+          <h1 className="font-semibold">{pageTitle}</h1>
 
-            <CompareProductsForm
-              productType={ProductType.Cpu}
-              values={[cpu1?.id, cpu2?.id]}
-            />
-          </section>
+          <CompareProductsForm
+            productType={ProductType.Cpu}
+            values={[cpu1?.id, cpu2?.id]}
+          />
+        </section>
 
-          <DisplayAd unit={AdUnit.ComparePagePreHighlightsDisplay} />
+        <DisplayAd unit={AdUnit.ComparePagePreHighlightsDisplay} />
 
-          <article className="flex-1 flex flex-col gap-6 max-w-full">
-            <Highlights comparison={comparison} />
-            <Overview comparison={comparison} />
-            <DisplayAd unit={AdUnit.ComparePagePostSummaryDisplay} />
-            <GeneralInfo comparison={comparison} />
-            <PerformanceAndValue />
-            <DisplayAd unit={AdUnit.ComparePagePostPerfValueDisplay} />
-            <TechnicalSpecs comparison={comparison} />
-            <MultiplexAd unit={AdUnit.ComparePagePostTechSpecsMultiplex} />
-            <RelatedComparisons relatedComparisons={relatedCpuComparisons} />
-            <RelatedCpus relatedCpus={relatedCpus} />
-            <Disclaimer />
-          </article>
-        </div>
-      </ViewModelProvider>
-    </CacheProvider>
+        <article className="flex-1 flex flex-col gap-6 max-w-full">
+          <Contents />
+          <Highlights comparison={comparison} />
+          <Overview comparison={comparison} />
+          <DisplayAd unit={AdUnit.ComparePagePostSummaryDisplay} />
+          <GeneralInfo comparison={comparison} />
+          <PerformanceAndValue comparison={comparison} />
+          <DisplayAd unit={AdUnit.ComparePagePostBenchmarkPerfValueDisplay} />
+          <TechnicalSpecs comparison={comparison} />
+          <MultiplexAd unit={AdUnit.ComparePagePostTechSpecsMultiplex} />
+          <RelatedComparisons relatedComparisons={relatedCpuComparisons} />
+          <RelatedCpus relatedCpus={relatedCpus} />
+          <Disclaimer />
+        </article>
+      </div>
+    </PageProvider>
   );
 }

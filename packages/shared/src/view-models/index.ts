@@ -1,6 +1,7 @@
 export * from './auth';
 export * from './automation';
 export * from './cpus';
+export * from './games';
 export * from './gpus';
 export * from './home';
 export * from './images';

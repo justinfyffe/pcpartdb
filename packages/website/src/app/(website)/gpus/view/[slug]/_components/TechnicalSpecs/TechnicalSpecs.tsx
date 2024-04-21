@@ -1,5 +1,7 @@
 import { GpuProduct } from '@pcpartdb/shared';
+import { SectionHeader } from 'packages/website/src/app/_common/components/SectionHeader/SectionHeader';
 import React from 'react';
+import { Contents } from '../Contents/Contents';
 import { ApiSpecs } from './ApiSpecs';
 import { CompatibilitySpecs } from './CompatibilitySpecs';
 import { CoresSpecs } from './CoresSpecs';
@@ -14,8 +16,10 @@ export function TechnicalSpecs(props: TechnicalSpecsProps) {
   const { gpu } = props;
 
   return (
-    <section className="flex flex-col">
-      <h2 className="font-semibold">Technical Specs</h2>
+    <section className="flex flex-col gap-4">
+      <SectionHeader linkId="tech-specs" menu={<Contents />}>
+        Technical Specs
+      </SectionHeader>
 
       <div className="flex flex-col gap-6">
         <ProcessorSpecs gpu={gpu} />

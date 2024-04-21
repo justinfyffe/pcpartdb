@@ -71,7 +71,7 @@ async function fetchProducts(
   context: AutomationContext,
 ) {
   const filter = LIST_FILTERS[productType];
-  const request: ListProductsRequest = { query: { filter } };
+  const request: ListProductsRequest = { query: { filter }, bypassCache: true };
   const response = await context.api.get<ListProductsResponse>(
     'products/all',
     {},

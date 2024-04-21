@@ -3,6 +3,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   Post,
   Put,
@@ -14,30 +16,42 @@ import {
   CreateProductRequest,
   getPreferredBenchmark,
   GetProductRequest,
+  GetRelativeDataProductsRequest,
   ListProductsRequest,
   ProductFieldKey,
   ProductType,
+  relativeDataProductsNormalizr,
   ScrapeProductRequest,
   UpdateProductRequest,
 } from '@pcpartdb/shared';
+import { normalize } from 'normalizr';
+import * as uuid from 'uuid';
 import { StaffGuard } from '../auth/staff.guard';
 import { Database } from '../database';
 import { Context, Ctx } from '../shared/context';
 import { ProductService } from './product.service';
+import { RelativeDataProductsService } from './relative-data-products.service';
 
 @Controller('products')
 export class ProductController {
-  constructor(private db: Database, private service: ProductService) {}
+  constructor(
+    private db: Database,
+    private service: ProductService,
+    private relativeDataProductsService: RelativeDataProductsService,
+  ) {}
 
   @Get()
   async list(@Query('req') reqJson: string, @Ctx() ctx: Context) {
+    const timer = `ProductController.list (${uuid.v4()})`;
+    console.time(timer);
+
     const req: ListProductsRequest = JSON.parse(reqJson);
     const productType = req.query.filter?.productType;
     if (productType == null) {
       throw new Error('Missing product type for list products');
     }
 
-    return await this.service.list(
+    const response = await this.service.list(
       req,
       {
         fields: this.getListFields(productType),
@@ -49,6 +63,8 @@ export class ProductController {
       },
       ctx,
     );
+    console.timeEnd(timer);
+    return response;
   }
 
   @Get('autocomplete')
@@ -93,6 +109,20 @@ export class ProductController {
     const req: GetProductRequest = JSON.parse(reqJson);
     const product = await this.service.getById({ ...req, id }, ctx);
     return product;
+  }
+
+  @Post('relative')
+  @HttpCode(HttpStatus.OK)
+  async getRelativeProducts(
+    @Body() request: GetRelativeDataProductsRequest,
+    @Ctx() ctx: Context,
+  ) {
+    const response =
+      await this.relativeDataProductsService.getRelativeDataProducts(
+        request,
+        ctx,
+      );
+    return normalize(response, relativeDataProductsNormalizr);
   }
 
   @Post()

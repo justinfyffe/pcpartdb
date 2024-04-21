@@ -22,6 +22,9 @@ import {
   productBenchmarkSchema,
   productFieldFormattedValue,
   productFieldSchema,
+  ProductGame,
+  ProductGameFps,
+  productGameSchema,
   ProductImage,
   productImageSchema,
   ProductionStatus,
@@ -112,6 +115,7 @@ export interface GpuFormData {
   memorySize?: GpuField<number>;
   memoryType?: GpuField<string>;
   memoryClock?: GpuField<number>;
+  memoryClockEffective?: GpuField<number>;
   memoryInterface?: GpuField<number>;
   memoryBandwidth?: GpuField<number>;
 
@@ -129,6 +133,9 @@ export interface GpuFormData {
 
   // Images
   images?: ProductImage[];
+
+  // Games
+  games?: ProductGame[];
 }
 
 //
@@ -204,6 +211,7 @@ const gpuFormSchema = Joi.object({
   memorySize: productFieldSchema.allow(null),
   memoryType: productFieldSchema.allow(null),
   memoryClock: productFieldSchema.allow(null),
+  memoryClockEffective: productFieldSchema.allow(null),
   memoryInterface: productFieldSchema.allow(null),
   memoryBandwidth: productFieldSchema.allow(null),
 
@@ -215,6 +223,9 @@ const gpuFormSchema = Joi.object({
 
   // Benchmarks
   benchmarks: Joi.array().items(productBenchmarkSchema),
+
+  // Game
+  games: Joi.array().items(productGameSchema),
 
   // Images
   images: Joi.array().items(productImageSchema),
@@ -228,6 +239,7 @@ export function gpuFormOptions(product?: Product): UseFormProps<GpuFormData> {
   }
 
   const benchmarks = product?.benchmarks || [];
+  const games = product?.games || [];
   const sources = product?.sources || [];
   const images = product?.images || [];
 
@@ -302,6 +314,7 @@ export function gpuFormOptions(product?: Product): UseFormProps<GpuFormData> {
       memorySize: product?.fields?.memorySize ?? null,
       memoryType: product?.fields?.memoryType ?? null,
       memoryClock: product?.fields?.memoryClock ?? null,
+      memoryClockEffective: product?.fields?.memoryClockEffective ?? null,
       memoryInterface: product?.fields?.memoryInterface ?? null,
       memoryBandwidth: product?.fields?.memoryBandwidth ?? null,
 
@@ -316,6 +329,9 @@ export function gpuFormOptions(product?: Product): UseFormProps<GpuFormData> {
 
       // Images
       images,
+
+      // Games
+      games,
     },
   };
 }
@@ -327,6 +343,27 @@ export function gpuFormOptions(product?: Product): UseFormProps<GpuFormData> {
 export function formDataToGpuRequest(
   formData: GpuFormData,
 ): CreateProductRequest | UpdateProductRequest {
+  // Clean up game data by removing empty FPS values.
+  const games = formData.games?.reduce((acc, game) => {
+    if (game == null) {
+      return acc;
+    }
+
+    const sanitized = { ...game, fps: [] as ProductGameFps[] };
+    for (const fpsItem of game.fps) {
+      if (
+        fpsItem != null &&
+        fpsItem.fps != null &&
+        !Number.isNaN(fpsItem.fps)
+      ) {
+        sanitized.fps.push(fpsItem);
+      }
+    }
+
+    acc.push(sanitized);
+    return acc;
+  }, [] as ProductGame[]);
+
   return {
     product: {
       productType: ProductType.Gpu,
@@ -395,6 +432,7 @@ export function formDataToGpuRequest(
         memorySize: formData.memorySize ?? null,
         memoryType: formData.memoryType ?? null,
         memoryClock: formData.memoryClock ?? null,
+        memoryClockEffective: formData.memoryClockEffective ?? null,
         memoryInterface: formData.memoryInterface ?? null,
         memoryBandwidth: formData.memoryBandwidth ?? null,
 
@@ -411,6 +449,8 @@ export function formDataToGpuRequest(
       benchmarks: formData.benchmarks?.filter(
         (benchmark) => benchmark != null && benchmark.value != null,
       ),
+
+      games,
 
       images:
         formData.images
@@ -669,10 +709,22 @@ export function buildGpuFormInputs(product?: Product): ProductFormInputGroups {
           inputType: ProductFormInputType.FloatField,
           label: 'Memory Clock',
           fieldKey: 'memoryClock',
-          units: [FrequencyUnit.mhz],
+          units: [FrequencyUnit.mhz, FrequencyUnit.ghz],
           overrides: (ctx) => ({
             placeholder: productFieldFormattedValue(
               ctx.parentProduct?.fields?.memoryClock ?? undefined,
+            ),
+          }),
+        },
+        {
+          name: 'memoryClockEffective',
+          inputType: ProductFormInputType.FloatField,
+          label: 'Memory Clock (Effective)',
+          fieldKey: 'memoryClockEffective',
+          units: [FrequencyUnit.mhz, FrequencyUnit.ghz],
+          overrides: (ctx) => ({
+            placeholder: productFieldFormattedValue(
+              ctx.parentProduct?.fields?.memoryClockEffective ?? undefined,
             ),
           }),
         },
@@ -1105,6 +1157,17 @@ export function buildGpuFormInputs(product?: Product): ProductFormInputGroups {
         {
           name: 'benchmarks',
           inputType: ProductFormInputType.Benchmarks,
+        },
+      ],
+    },
+
+    // Games
+    {
+      label: 'Games',
+      inputs: [
+        {
+          name: 'games',
+          inputType: ProductFormInputType.Games,
         },
       ],
     },

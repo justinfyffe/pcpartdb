@@ -4,6 +4,7 @@ import {
   formatOrdinalNumber,
   getProductBenchmarkName,
   getProductBenchmarkShortName,
+  percentDifference,
   ProductType,
 } from '@pcpartdb/shared';
 import React, { FunctionComponent, useMemo } from 'react';
@@ -15,9 +16,11 @@ import { CardTitle } from '../../../components/Card/CardTitle';
 import { DonutChart } from '../../../components/charts/DonutChart';
 import { ContentProvider } from '../../../content/ContentProvider';
 import { compileContentComponent } from '../../../content/utils/compileContentComponent';
-import { usePreferredBenchmark } from '../../../user/usePreferredBenchmark';
-import { usePreferredBenchmarkDialog } from '../../../user/usePreferredBenchmarkDialog';
+import { useGameSelection } from '../../../game/contexts/GameSelectionProvider';
 import { classNames } from '../../../utils/classNames';
+import { useRelativeDataProducts } from '../../contexts/RelativeDataProductsProvider';
+import { usePreferredBenchmark } from '../../hooks/usePreferredBenchmark';
+import { usePreferredBenchmarkDialog } from '../../hooks/usePreferredBenchmarkDialog';
 import { ProductRatingType } from './types';
 
 export interface CompareProductRatingCardProps {
@@ -34,8 +37,6 @@ export interface CompareProductRatingCardProps {
   rankHrefs?: [string, string];
 
   className?: string;
-
-  onBenchmarkChange?: (viewModel: any) => void;
 }
 
 export const CompareProductRatingCard: FunctionComponent<
@@ -51,14 +52,17 @@ export const CompareProductRatingCard: FunctionComponent<
     rankHrefs,
     maxRating,
     className,
-    onBenchmarkChange,
   } = props;
+
   const preferredBenchmark = usePreferredBenchmark(productType);
+  const { selectedGame } = useGameSelection();
+  const { loading } = useRelativeDataProducts();
+
   const showPreferredBenchmarkDialog = usePreferredBenchmarkDialog({
     productType,
     softReload: true,
     productIds,
-    onChange: onBenchmarkChange,
+    gameSlug: selectedGame?.slug,
   });
 
   const [name1, name2] = names;
@@ -100,8 +104,10 @@ export const CompareProductRatingCard: FunctionComponent<
     betterName = rating1 > rating2 ? name1 : name2;
     worseName = rating1 > rating2 ? name2 : name1;
     percentDiff = (
-      (Math.max(rating1, rating2) / Math.min(rating1, rating2) - 1) *
-      100
+      percentDifference(
+        Math.min(rating1, rating2),
+        Math.max(rating1, rating2),
+      ) * 100
     ).toLocaleString('en-US', { maximumFractionDigits: 2 });
   }
 
@@ -159,99 +165,119 @@ export const CompareProductRatingCard: FunctionComponent<
         </CardTitle>
 
         <CardContent className="grow basis-0 flex flex-row">
-          <div className="flex-1 grid items-stretch justify-items-center justify-evenly gap-x-8 gap-y-2">
-            <div className="col-start-1 col-end-2 text-base font-medium flex-1 flex items-center text-center">
-              {name1}
-            </div>
-            <div className="col-start-2 col-end-3 text-base font-medium flex-1 flex items-center text-center">
-              {name2}
-            </div>
+          {!loading && (
+            <>
+              <div className="flex-1 grid items-stretch justify-items-center justify-evenly gap-x-8 gap-y-2">
+                <div className="col-start-1 col-end-2 text-base font-medium flex-1 flex items-center text-center">
+                  {name1}
+                </div>
+                <div className="col-start-2 col-end-3 text-base font-medium flex-1 flex items-center text-center">
+                  {name2}
+                </div>
 
-            <div className="col-start-1 col-end-2 flex flex-1 flex-col gap-1 items-center">
-              <div className="flex flex-col gap-1 items-center">
-                <DonutChart
-                  totalValue={maxRating}
-                  centerLabel={donutCenterLabel1}
-                  chartClass="w-25 h-25 rounded-full ring-1 ring-white"
-                  holeClass="w-[75%] h-[75%] bg-light-shades rounded-full ring-1 ring-white text-lg"
-                  data={[{ value: rating1 || 0, color: '#4c5c7c' }]}
-                ></DonutChart>
+                <div className="col-start-1 col-end-2 flex flex-1 flex-col gap-1 items-center">
+                  <div className="flex flex-col gap-1 items-center">
+                    <DonutChart
+                      totalValue={maxRating}
+                      centerLabel={donutCenterLabel1}
+                      chartClass="w-25 h-25 rounded-full ring-1 ring-white"
+                      holeClass="w-[75%] h-[75%] bg-light-shades rounded-full ring-1 ring-white text-lg"
+                      data={[{ value: rating1 || 0, color: '#4c5c7c' }]}
+                    ></DonutChart>
 
-                {pctDiff1 ? (
-                  <div className="font-medium whitespace-nowrap">
-                    {pctDiff1} of{' '}
-                    {maxRating?.toLocaleString('en-US', {
-                      maximumFractionDigits: 2,
-                    })}
+                    {pctDiff1 ? (
+                      <div className="font-medium whitespace-nowrap">
+                        {pctDiff1} of{' '}
+                        {maxRating?.toLocaleString('en-US', {
+                          maximumFractionDigits: 2,
+                        })}
+                      </div>
+                    ) : (
+                      <></>
+                    )}
                   </div>
-                ) : (
-                  <></>
-                )}
+                </div>
+
+                <div className="col-start-2 col-end-3 flex flex-1 flex-col gap-1 items-center">
+                  <div className="flex flex-col gap-1 items-center">
+                    <DonutChart
+                      totalValue={maxRating}
+                      centerLabel={donutCenterLabel2}
+                      chartClass="w-25 h-25 rounded-full ring-1 ring-white"
+                      holeClass="w-[75%] h-[75%] bg-light-shades rounded-full ring-1 ring-white text-lg"
+                      data={[{ value: rating2 || 0, color: '#4c5c7c' }]}
+                    ></DonutChart>
+
+                    {pctDiff2 ? (
+                      <div className="font-medium whitespace-nowrap">
+                        {pctDiff2} of{' '}
+                        {maxRating?.toLocaleString('en-US', {
+                          maximumFractionDigits: 2,
+                        })}
+                      </div>
+                    ) : (
+                      <></>
+                    )}
+                  </div>
+                </div>
+
+                <div className="col-start-1 col-end-2 flex flex-1 flex-col items-center">
+                  {rank1 && (
+                    <div
+                      className={classNames(
+                        'text-base font-medium whitespace-nowrap',
+                      )}
+                    >
+                      <Ranking
+                        tags={[productType]}
+                        params={{
+                          rank: rankFormatted1,
+                          rankHref: rankHref1,
+                          className: 'text-primary underline',
+                        }}
+                      />
+                    </div>
+                  )}
+                </div>
+                <div className="col-start-2 col-end-3 flex flex-1 flex-col items-center">
+                  {rank2 && (
+                    <div
+                      className={classNames(
+                        'text-base font-medium whitespace-nowrap',
+                      )}
+                    >
+                      <Ranking
+                        tags={[productType]}
+                        params={{
+                          rank: rankFormatted2,
+                          rankHref: rankHref2,
+                          className: 'text-primary underline',
+                        }}
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+            </>
+          )}
+
+          {loading && (
+            <div className="flex-1 animate-pulse flex flex-row justify-evenly gap-x-8 gap-y-2">
+              <div className="flex flex-col gap-4">
+                <div className="w-25 h-3 bg-loading rounded-full"></div>
+                <div className="w-25 h-25 bg-loading rounded-full"></div>
+                <div className="w-25 h-3 bg-loading rounded-full"></div>
+                <div className="w-25 h-3 bg-loading rounded-full"></div>
+              </div>
+
+              <div className="flex flex-col gap-4">
+                <div className="w-25 h-3 bg-loading rounded-full"></div>
+                <div className="w-25 h-25 bg-loading rounded-full"></div>
+                <div className="w-25 h-3 bg-loading rounded-full"></div>
+                <div className="w-25 h-3 bg-loading rounded-full"></div>
               </div>
             </div>
-
-            <div className="col-start-2 col-end-3 flex flex-1 flex-col gap-1 items-center">
-              <div className="flex flex-col gap-1 items-center">
-                <DonutChart
-                  totalValue={maxRating}
-                  centerLabel={donutCenterLabel2}
-                  chartClass="w-25 h-25 rounded-full ring-1 ring-white"
-                  holeClass="w-[75%] h-[75%] bg-light-shades rounded-full ring-1 ring-white text-lg"
-                  data={[{ value: rating2 || 0, color: '#4c5c7c' }]}
-                ></DonutChart>
-
-                {pctDiff2 ? (
-                  <div className="font-medium whitespace-nowrap">
-                    {pctDiff2} of{' '}
-                    {maxRating?.toLocaleString('en-US', {
-                      maximumFractionDigits: 2,
-                    })}
-                  </div>
-                ) : (
-                  <></>
-                )}
-              </div>
-            </div>
-
-            <div className="col-start-1 col-end-2 flex flex-1 flex-col items-center">
-              {rank1 && (
-                <div
-                  className={classNames(
-                    'text-base font-medium whitespace-nowrap',
-                    rankHref1 ? 'underline' : '',
-                  )}
-                >
-                  <Ranking
-                    tags={[productType]}
-                    params={{
-                      rank: rankFormatted1,
-                      rankHref: rankHref1,
-                      className: 'text-primary',
-                    }}
-                  />
-                </div>
-              )}
-            </div>
-            <div className="col-start-2 col-end-3 flex flex-1 flex-col items-center">
-              {rank2 && (
-                <div
-                  className={classNames(
-                    'text-base font-medium whitespace-nowrap',
-                    rankHref1 ? 'underline' : '',
-                  )}
-                >
-                  <Ranking
-                    tags={[productType]}
-                    params={{
-                      rank: rankFormatted2,
-                      rankHref: rankHref2,
-                      className: 'text-primary',
-                    }}
-                  />
-                </div>
-              )}
-            </div>
-          </div>
+          )}
         </CardContent>
       </Card>
     </ContentProvider>

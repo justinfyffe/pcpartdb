@@ -1,6 +1,5 @@
 import {
   AutomationAction,
-  buildRelatedProductKey,
   getPreferenceBenchmarks,
   hasProductBenchmark,
   ListProductsFilter,
@@ -13,7 +12,6 @@ import {
   productFieldRawValue,
   ProductType,
   RelatedProducts,
-  RelatedProductType,
   surroundingValues,
   UpdateRelatedProductsRequest,
 } from '@pcpartdb/shared';
@@ -23,7 +21,7 @@ import * as fsPromises from 'fs/promises';
 import { AutomationContext } from '../types';
 import { productCalculationsPath } from '../utils/product-calculations';
 
-const TOTAL_RELATIVE_PRODUCTS = 10;
+const TOTAL_RELATIVE_PRODUCTS = 30;
 
 /**
  * Filters for fetching products we want to run computations on.
@@ -75,7 +73,7 @@ async function fetchProducts(
   context: AutomationContext,
 ) {
   const filter = LIST_FILTERS[productType];
-  const request: ListProductsRequest = { query: { filter } };
+  const request: ListProductsRequest = { query: { filter }, bypassCache: true };
   const response = await context.api.get<ListProductsResponse>(
     'products/all',
     {},
@@ -88,7 +86,7 @@ function populateRelatedProducts(
   productType: ProductType,
   products: Product[],
 ) {
-  const relatedProducts: Record<number, RelatedProducts> = {};
+  const relatedProductIds: Record<number, Set<number>> = {};
 
   const rankableBenchmarks = getPreferenceBenchmarks(productType);
   for (const benchmark of rankableBenchmarks) {
@@ -131,7 +129,8 @@ function populateRelatedProducts(
 
     for (const product of products) {
       const productId = product.id;
-      relatedProducts[productId] = { ...(relatedProducts[productId] ?? {}) };
+      relatedProductIds[productId] =
+        relatedProductIds[productId] || new Set<number>();
 
       const segment = productFieldRawValue<MarketSegment>(
         product.fields?.marketSegment,
@@ -151,21 +150,24 @@ function populateRelatedProducts(
         relative = performanceSorted;
       }
 
-      const surrounded = getSurroundingProducts(product.id, relative).map(
-        (p) => p.id,
-      );
+      const surrounded = getSurroundingProducts(product.id, relative)
+        .map((p) => p.id)
+        .filter((relatedId) => relatedId !== productId);
 
-      if (surrounded.length > 0) {
-        const key = buildRelatedProductKey({
-          type: RelatedProductType.Performance,
-          benchmark,
-        });
-        relatedProducts[productId][key] = surrounded.map((s) => ({ id: s }));
+      for (const relatedId of surrounded) {
+        relatedProductIds[productId].add(relatedId);
       }
     }
   }
 
-  return relatedProducts;
+  const ret: Record<number, RelatedProducts> = {};
+  Object.keys(relatedProductIds).forEach((productIdStr) => {
+    const productId = Number(productIdStr);
+    ret[productId] = [...relatedProductIds[productId].values()].map((id) => ({
+      id,
+    }));
+  });
+  return ret;
 }
 
 function getSurroundingProducts(productId: number, products: Product[]) {

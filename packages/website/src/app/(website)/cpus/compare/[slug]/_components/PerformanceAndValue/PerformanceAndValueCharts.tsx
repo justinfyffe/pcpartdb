@@ -15,7 +15,7 @@ import {
 import { useViewModelContext } from 'packages/website/src/app/_common/contexts/ViewModelProvider';
 import { CompareProductRatingCard } from 'packages/website/src/app/_common/product/components/ProductRatingCard/CompareProductRatingCard';
 import { ProductRatingType } from 'packages/website/src/app/_common/product/components/ProductRatingCard/types';
-import { usePreferredBenchmark } from 'packages/website/src/app/_common/user/usePreferredBenchmark';
+import { usePreferredBenchmark } from 'packages/website/src/app/_common/product/hooks/usePreferredBenchmark';
 import { classNames } from 'packages/website/src/app/_common/utils/classNames';
 import React, { FunctionComponent, useMemo } from 'react';
 
@@ -28,12 +28,12 @@ export const PerformanceAndValueCharts: FunctionComponent<
 > = (props) => {
   const { className } = props;
   const preferredBenchmark = usePreferredBenchmark(ProductType.Cpu);
-  const { viewModel, updateViewModel } =
-    useViewModelContext<CompareCpusViewModel>();
-  const { comparison, contentData } = viewModel;
+  const { viewModel } = useViewModelContext<CompareCpusViewModel>();
+  const { comparison, relativeDataProducts } = viewModel;
   const cpu1 = comparison[0];
   const cpu2 = comparison[1];
-  const { bestPerformanceCpu, bestValueCpu } = contentData;
+  const bestPerformanceCpu = relativeDataProducts?.bestBenchmarkPerformance;
+  const bestValueCpu = relativeDataProducts?.bestBenchmarkPerformancePerDollar;
 
   const performanceRankHref = useMemo(
     () =>
@@ -76,7 +76,6 @@ export const PerformanceAndValueCharts: FunctionComponent<
         ]}
         rankHrefs={[performanceRankHref, performanceRankHref]}
         className="flex-1"
-        onBenchmarkChange={updateViewModel}
       />
 
       <CompareProductRatingCard
@@ -98,7 +97,6 @@ export const PerformanceAndValueCharts: FunctionComponent<
         ]}
         rankHrefs={[valueRankHref, valueRankHref]}
         className="flex-1"
-        onBenchmarkChange={updateViewModel}
       />
     </div>
   );

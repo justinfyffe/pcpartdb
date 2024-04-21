@@ -7,7 +7,11 @@ import React from 'react';
 
 const RetailModelsIntroSentence1 = compileContentComponent({
   component: (props) => (
-    <>Retail models based on the {props.chipsetNameWithNoCompany} chipset.</>
+    <>
+      The following cards are retail models based on the{' '}
+      {props.chipsetNameWithNoCompany} chipset. Retail models may have different
+      performance and specs.
+    </>
   ),
 });
 export const RetailModelsIntro = () => {
@@ -15,7 +19,7 @@ export const RetailModelsIntro = () => {
 
   return (
     <ContentProvider tags={contentTags} params={contentParams}>
-      <p className="text-dimmed">
+      <p className="mb-0">
         <RetailModelsIntroSentence1 />
       </p>
     </ContentProvider>

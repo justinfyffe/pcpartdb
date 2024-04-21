@@ -17,7 +17,7 @@ export const ProductParentInput: FunctionComponent<ProductParentInputProps> = (
   const context = useContext(ProductFormContext);
 
   const handleParentChange = useCallback(
-    (product: Product) => {
+    (product: Partial<Product>) => {
       context.updateContext({ ...context, parentProduct: product });
     },
     [context],

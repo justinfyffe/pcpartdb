@@ -19,7 +19,10 @@ export const ImageList: FunctionComponent<ImageListProps> = (props) => {
 
   const fetchImages = useCallback(async () => {
     setLoading(true);
-    setImages(await imageService.list());
+    const response = await imageService.list({
+      filter: {},
+    });
+    setImages(response.results);
     setLoading(false);
   }, []);
 

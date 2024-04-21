@@ -150,6 +150,26 @@ export const productBenchmarkSchema = Joi.object({
   metadata: Joi.any().allow(null),
 });
 
+export const productGameFpsSchema = Joi.object({
+  productId: Joi.number().allow(null),
+  gameId: Joi.number().allow(null),
+  settingsPresetKey: Joi.string().allow(null),
+
+  fps: Joi.number(),
+  fpsPerDollar: Joi.number().allow(null),
+  dollarsPerFrame: Joi.number().allow(null),
+
+  metadata: Joi.any().allow(null),
+});
+
+export const productGameSchema = Joi.object({
+  productId: Joi.number().allow(null),
+  gameId: Joi.number().allow(null),
+
+  game: Joi.any().allow(null), // TODO
+  fps: Joi.array().items(productGameFpsSchema).allow(null),
+});
+
 export const productSourceSchema = Joi.object({
   id: Joi.number().allow(null),
   productId: Joi.number().allow(null),
@@ -194,6 +214,7 @@ export const productSchema = Joi.object({
 
   fields: productFieldsSchema.allow(null),
   benchmarks: Joi.array().items(productBenchmarkSchema).allow(null),
+  games: Joi.array().items(productGameSchema).allow(null),
   sources: Joi.array().items(productSourceSchema).allow(null),
   images: Joi.array().items(productImageSchema).allow(null),
 
@@ -254,6 +275,7 @@ export const listProductsRequestSchema = Joi.object({
     filterSchema: listProductsFilterSchema,
     maxLimit: 100,
   }),
+  bypassCache: Joi.boolean().allow(null),
 }).options({ abortEarly: false });
 
 export const listAllProductsRequestSchema = Joi.object({
@@ -261,28 +283,23 @@ export const listAllProductsRequestSchema = Joi.object({
     filterSchema: listProductsFilterSchema,
     maxLimit: Infinity,
   }),
+  bypassCache: Joi.boolean().allow(null),
 }).options({ abortEarly: false });
 
 export const createProductRequestSchema = Joi.object({
   product: productSchema,
-}).options({
-  abortEarly: false,
-});
+}).options({ abortEarly: false });
 
 export const updateProductRequestSchema = Joi.object({
   product: productSchema,
-}).options({
-  abortEarly: false,
-});
+}).options({ abortEarly: false });
 
 export const productAutocompleteQuerySchema = Joi.string().max(100);
 
 export const autocompleteProductsRequestSchema = Joi.object({
   productType: productTypeSchema.required(),
   query: productAutocompleteQuerySchema.allow('', null),
-}).options({
-  abortEarly: false,
-});
+}).options({ abortEarly: false });
 
 export const scrapeProductRequestSchema = Joi.object({
   productType: productTypeSchema.required(),

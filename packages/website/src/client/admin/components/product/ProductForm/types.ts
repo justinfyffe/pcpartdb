@@ -6,6 +6,7 @@ import { ProductChipsInputProps } from '../ProductChipsInput/ProductChipsInput';
 import { ProductDateInputProps } from '../ProductDateInput/ProductDateInput';
 import { ProductEnumInputProps } from '../ProductEnumInput/ProductEnumInput';
 import { ProductFloatInputProps } from '../ProductFloatInput/ProductFloatInput';
+import { ProductGamesInputProps } from '../ProductGamesInput/ProductGamesInput';
 import { ProductImagesInputProps } from '../ProductImageInput/ProductImagesInput';
 import { ProductOtherNamesInputProps } from '../ProductOtherNamesInput/ProductOtherNamesInput';
 import { ProductParentInputProps } from '../ProductParentInput/ProductParentInput';
@@ -24,6 +25,7 @@ export enum ProductFormInputType {
   DateField = 'DATE_FIELD',
   EnumField = 'ENUM_FIELD',
   FloatField = 'FLOAT_FIELD',
+  Games = 'GAMES',
   Images = 'IMAGES',
   OtherNames = 'OTHER_NAMES',
   Parent = 'PARENT',
@@ -42,6 +44,7 @@ type InputProps =
   | Partial<ProductDateInputProps>
   | Partial<ProductEnumInputProps>
   | Partial<ProductFloatInputProps>
+  | Partial<ProductGamesInputProps>
   | Partial<ProductImagesInputProps>
   | Partial<ProductOtherNamesInputProps>
   | Partial<ProductParentInputProps>

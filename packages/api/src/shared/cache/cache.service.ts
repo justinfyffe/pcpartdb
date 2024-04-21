@@ -7,36 +7,50 @@ import deterministicStringify from 'json-stringify-deterministic';
 export enum CacheType {
   Home = 'home',
 
-  CpuProduct = 'cpu_product',
-  CpuComparison = 'cpu_comparison',
-  BestCpuProduct = 'best_cpu_product',
+  // Entity caches
+  BaseProduct = 'base_product',
+  ProductFields = 'product_fields',
+  ProductBenchmarks = 'product_benchmarks',
+  ProductGameFps = 'product_game_fps',
+  ProductRanks = 'product_ranks',
+  ProductImages = 'product_images',
+  ProductSources = 'product_sources',
+  RelatedProducts = 'related_products',
+  ChildrenProductIds = 'children_products',
+  Game = 'games',
 
-  GpuProduct = 'gpu_product',
-  GpuComparison = 'gpu_comparison',
-  GpuRetailModels = 'gpu_retail_models',
-  BestGpuProduct = 'best_gpu_product',
+  BestProduct = 'best_product',
 }
 
-const _FIVE_MINUTES = 1_000 * 60 * 5;
-const FIFTEEN_MINUTES = 1_000 * 60 * 15;
-const SIXTY_MINUTES = 1_000 * 60 * 60;
+const ONE_MINUTE = 1_000 * 60;
+const _FIVE_MINUTES = ONE_MINUTE * 5;
+const FIFTEEN_MINUTES = ONE_MINUTE * 15;
+const ONE_HOUR = ONE_MINUTE * 60;
+const _SIX_HOURS = ONE_HOUR * 6;
+const ONE_DAY = ONE_HOUR * 24;
 
 export const CACHE_EXPIRE_TTLS: Partial<Record<CacheType, number>> = {
-  [CacheType.Home]: SIXTY_MINUTES,
+  [CacheType.Home]: ONE_HOUR,
 
-  [CacheType.CpuProduct]: SIXTY_MINUTES,
-  [CacheType.CpuComparison]: SIXTY_MINUTES,
-  [CacheType.BestGpuProduct]: FIFTEEN_MINUTES,
+  // Entity Caches
+  [CacheType.BaseProduct]: ONE_DAY,
+  [CacheType.ProductFields]: ONE_DAY,
+  [CacheType.ProductBenchmarks]: FIFTEEN_MINUTES,
+  [CacheType.ProductGameFps]: FIFTEEN_MINUTES,
+  [CacheType.ProductRanks]: FIFTEEN_MINUTES,
+  [CacheType.ProductImages]: ONE_DAY,
+  [CacheType.ProductSources]: FIFTEEN_MINUTES,
+  [CacheType.RelatedProducts]: ONE_DAY,
+  [CacheType.ChildrenProductIds]: ONE_DAY,
+  [CacheType.Game]: ONE_DAY,
 
-  [CacheType.GpuProduct]: SIXTY_MINUTES,
-  [CacheType.GpuComparison]: SIXTY_MINUTES,
-  [CacheType.GpuRetailModels]: SIXTY_MINUTES,
-  [CacheType.BestCpuProduct]: FIFTEEN_MINUTES,
+  [CacheType.BestProduct]: ONE_HOUR,
 };
 
 interface NoMaxItemsCacheItem {
   item: unknown;
   expires?: number;
+  clone?: boolean;
 }
 
 interface CacheOptions<TKey = unknown> {
@@ -44,6 +58,33 @@ interface CacheOptions<TKey = unknown> {
   key: TKey;
   ttl?: number;
   excludeFromMaxItems?: boolean;
+  clone?: boolean;
+  bypass?: boolean;
+}
+
+interface IsCachedOptions<TKey = unknown> {
+  type: CacheType;
+  key: TKey;
+  bypass?: boolean;
+}
+
+interface GetCachedOptions<TKey = unknown> {
+  type: CacheType;
+  key: TKey;
+  clone?: boolean;
+  bypass?: boolean;
+}
+
+interface SetCachedOptions<TKey = unknown> {
+  type: CacheType;
+  key: TKey;
+  ttl?: number;
+  bypass?: boolean;
+}
+
+interface InvalidateOptions<TKey = unknown> {
+  type: CacheType;
+  key: TKey;
 }
 
 @Injectable()
@@ -59,8 +100,8 @@ export class CacheService {
   async cache<TResult = unknown>(
     fn: () => Promise<TResult>,
     options: CacheOptions,
-  ) {
-    if (process.env.ENABLE_CACHE === 'false') {
+  ): Promise<TResult> {
+    if (process.env.ENABLE_CACHE === 'false' || options.bypass) {
       // Bypass cache
       return await fn();
     }
@@ -72,7 +113,49 @@ export class CacheService {
     // Cache using cache manager (max items)
     const ttl = options.ttl ?? CACHE_EXPIRE_TTLS[options.type];
     const key = this.cacheKey(options.type, options.key);
-    return await this.cacheManager.wrap(key, () => fn(), ttl);
+    const result = await this.cacheManager.wrap(key, () => fn(), ttl);
+    return options.clone ? structuredClone(result) : result;
+  }
+
+  async isCached(options: IsCachedOptions) {
+    if (process.env.ENABLE_CACHE === 'false' || options.bypass) {
+      // Bypass cache
+      return false;
+    }
+
+    const key = this.cacheKey(options.type, options.key);
+    return (await this.cacheManager.get(key)) != null;
+  }
+
+  async getCached<TValue = unknown>(options: GetCachedOptions) {
+    if (process.env.ENABLE_CACHE === 'false' || options.bypass) {
+      // Bypass cache
+      return null;
+    }
+
+    const key = this.cacheKey(options.type, options.key);
+    const result = (await this.cacheManager.get(key)) as TValue;
+    return options.clone ? structuredClone(result) : result;
+  }
+
+  async setCached<TValue = unknown>(value: TValue, options: SetCachedOptions) {
+    if (process.env.ENABLE_CACHE === 'false' || options.bypass) {
+      // Bypass cache
+      return;
+    }
+
+    const key = this.cacheKey(options.type, options.key);
+    await this.cacheManager.set(
+      key,
+      value,
+      options.ttl ?? CACHE_EXPIRE_TTLS[options.type],
+    );
+  }
+
+  async invalidate(options: InvalidateOptions) {
+    const key = this.cacheKey(options.type, options.key);
+    delete this.noMaxItemsCache[key];
+    await this.cacheManager.del(key);
   }
 
   async invalidateAll() {
@@ -95,7 +178,7 @@ export class CacheService {
   private async wrapNoMaxItemsCache<TResult = unknown>(
     fn: () => Promise<TResult>,
     options: CacheOptions,
-  ) {
+  ): Promise<TResult> {
     const ttl = options.ttl ?? CACHE_EXPIRE_TTLS[options.type];
     const key = this.cacheKey(options.type, options.key);
 
@@ -107,7 +190,7 @@ export class CacheService {
       existingItem != null &&
       (existingItem.expires == null || existingItem.expires > currentTime)
     ) {
-      return existingItem.item;
+      return existingItem.item as TResult;
     }
 
     // Existing item expired or doesn't exist. Cache it.
@@ -116,6 +199,6 @@ export class CacheService {
       item,
       expires: ttl != null ? currentTime + ttl : null,
     };
-    return item;
+    return options.clone ? structuredClone(item) : item;
   }
 }

@@ -3,11 +3,16 @@ import {
   getAdminListProductsPath,
   Product,
   ProductBenchmark,
+  ProductGame,
   ProductSource,
   ProductType,
 } from '@pcpartdb/shared';
 import { useRouter } from 'next/router';
 import { productService } from 'packages/website/src/client/product/services/productService';
+import {
+  GameCache,
+  useGameCache,
+} from 'packages/website/src/client/shared/cache/GameCache';
 import { useProductCache } from 'packages/website/src/client/shared/cache/ProductCache';
 import { ErrorAlert } from 'packages/website/src/client/shared/components/Alert/ErrorAlert';
 import { DangerButton } from 'packages/website/src/client/shared/components/Button/DangerButton';
@@ -54,6 +59,7 @@ export const ProductForm: FunctionComponent<ProductFormProps> = (props) => {
 
   const isUpdate = product != null;
   useProductCache(productType, product);
+  useGameCache({ productGames: product?.games });
 
   const formInputs = FORM_INPUTS[productType];
   const formOptions = FORM_OPTIONS[productType];
@@ -172,6 +178,14 @@ export const ProductForm: FunctionComponent<ProductFormProps> = (props) => {
         .filter((benchmark) => benchmarks[benchmark].enabled)
         .map((benchmark) => benchmarks[benchmark].value as ProductBenchmark);
       setValue('benchmarks', scrapedBenchmarks);
+
+      // Games
+      const games = data.games;
+      const scrapedGames = Object.keys(games || {})
+        .filter((gameId) => games[gameId].enabled)
+        .map((gameId) => games[gameId].value as ProductGame);
+      GameCache.save({ productGames: scrapedGames });
+      setValue('games', scrapedGames);
     },
     [setValue],
   );

@@ -2,6 +2,7 @@ import { Bars3Icon } from '@heroicons/react/24/outline';
 import {
   AutomationStatus,
   getAdminAutomationPath,
+  getAdminListGamesPath,
   getAdminListImagesPath,
   getAdminListProductsPath,
   getAdminListUsersPath,
@@ -117,6 +118,7 @@ export const AdminLayout: FunctionComponent<AdminLayoutProps> = (props) => {
           <MenuLinkItem href={getAdminListProductsPath()}>
             Products
           </MenuLinkItem>
+          <MenuLinkItem href={getAdminListGamesPath()}>Games</MenuLinkItem>
           <MenuLinkItem href={getAdminListImagesPath()}>Images</MenuLinkItem>
           <MenuLinkItem href={getAdminListUsersPath()}>Users</MenuLinkItem>
         </Menu>
@@ -148,6 +150,12 @@ export const AdminLayout: FunctionComponent<AdminLayoutProps> = (props) => {
                 href={getAdminListProductsPath()}
               >
                 Products
+              </Button>
+              <Button
+                variant={ButtonVariant.Generic}
+                href={getAdminListGamesPath()}
+              >
+                Games
               </Button>
               <Button
                 variant={ButtonVariant.Generic}

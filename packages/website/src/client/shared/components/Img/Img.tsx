@@ -5,7 +5,7 @@ import { classNames } from '../../ui/classNames';
 
 export interface ImgProps
   extends Omit<HTMLProps<HTMLImageElement>, 'src' | 'crossOrigin'> {
-  src: string | Image;
+  src: string | Partial<Image>;
   crossOrigin?: '' | 'anonymous' | 'use-credentials';
 }
 

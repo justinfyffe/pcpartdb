@@ -7,6 +7,7 @@ import {
   getProductValueRank,
   getViewGpuPath,
   GpuProduct,
+  percentDifference,
   productBenchmarkValuePerMsrp,
   ProductType,
 } from '@pcpartdb/shared';
@@ -19,7 +20,8 @@ import { Th } from 'packages/website/src/app/_common/components/Table/Th';
 import { THead } from 'packages/website/src/app/_common/components/Table/THead';
 import { Tr } from 'packages/website/src/app/_common/components/Table/Tr';
 import { useViewModel } from 'packages/website/src/app/_common/contexts/ViewModelProvider';
-import { usePreferredBenchmark } from 'packages/website/src/app/_common/user/usePreferredBenchmark';
+import { useRelativeDataProducts } from 'packages/website/src/app/_common/product/contexts/RelativeDataProductsProvider';
+import { usePreferredBenchmark } from 'packages/website/src/app/_common/product/hooks/usePreferredBenchmark';
 import { classNames } from 'packages/website/src/app/_common/utils/classNames';
 import React, {
   FunctionComponent,
@@ -37,9 +39,10 @@ export const ValueTable: FunctionComponent<ValueTableProps> = (props) => {
   const { className } = props;
   const viewModel = useViewModel<CompareGpusViewModel>();
   const preferredBenchmark = usePreferredBenchmark(ProductType.Gpu);
-  const { comparison, relativeValueGpus } = viewModel;
+  const { comparison } = viewModel;
   const chipset1 = getGpuChipset(comparison[0]);
   const chipset2 = getGpuChipset(comparison[1]);
+  const { loading } = useRelativeDataProducts();
 
   const [baselineChipset, setBaselineChipset] = useState(() => {
     return productBenchmarkValuePerMsrp(chipset1, preferredBenchmark) != null
@@ -58,7 +61,9 @@ export const ValueTable: FunctionComponent<ValueTableProps> = (props) => {
     }
   });
 
-  const chipsets = relativeValueGpus;
+  const chipsets = viewModel.relativeDataProducts
+    ?.benchmarkPerformancePerDollar as Partial<GpuProduct>[];
+  const hasRelativeValueGpus = chipsets != null && chipsets.length > 1;
 
   useEffect(() => {
     setBaselineChipset(
@@ -118,22 +123,50 @@ export const ValueTable: FunctionComponent<ValueTableProps> = (props) => {
           </Tr>
         </THead>
         <TBody>
-          {chipsets.map((relativeChipset, i) =>
-            relativeChipset != null ? (
-              <ValueTableRow
-                key={relativeChipset.id}
-                baselineGpu={baselineChipset}
-                secondaryGpu={secondaryChipset}
-                relativeGpu={relativeChipset}
-              />
-            ) : (
-              <Tr key={`idx-${i}`}>
-                <Td colSpan={3} className="text-center">
-                  &#8230;
+          {!loading &&
+            hasRelativeValueGpus &&
+            chipsets.map((relativeChipset, i) =>
+              relativeChipset != null ? (
+                <ValueTableRow
+                  key={relativeChipset.id}
+                  baselineGpu={baselineChipset}
+                  secondaryGpu={secondaryChipset}
+                  relativeGpu={relativeChipset}
+                />
+              ) : (
+                <Tr key={`idx-${i}`}>
+                  <Td colSpan={4} className="text-center">
+                    &#8230;
+                  </Td>
+                </Tr>
+              ),
+            )}
+          {!loading && !hasRelativeValueGpus && (
+            <Tr>
+              <Td colSpan={4} className="text-center p-8">
+                Our database does not have enough data to compare the benchmark
+                performance per dollar with other GPUs.
+              </Td>
+            </Tr>
+          )}
+
+          {loading &&
+            [...new Array(3)].map((_, i) => (
+              <Tr key={i} className="animate-pulse">
+                <Td className="py-4">
+                  <div className="bg-loading w-8 h-3 rounded" />
+                </Td>
+                <Td className="py-4">
+                  <div className="bg-loading w-35 h-3 rounded" />
+                </Td>
+                <Td className="py-4">
+                  <div className="bg-loading w-12 h-3 rounded ml-auto" />
+                </Td>
+                <Td className="py-4">
+                  <div className="bg-loading w-12 h-3 rounded ml-auto" />
                 </Td>
               </Tr>
-            ),
-          )}
+            ))}
         </TBody>
       </Table>
     </>
@@ -160,9 +193,13 @@ const ValueTableRow: FunctionComponent<ValueTableRowProps> = (props) => {
       preferredBenchmark,
     );
 
-    return Number(
-      ((relatedValue / baseline) * 100).toFixed(0),
+    let pct = Number(
+      (percentDifference(baseline, relatedValue) * 100).toFixed(0),
     ).toLocaleString();
+    if (relatedValue > baseline) {
+      pct = `+${pct}`;
+    }
+    return pct;
   }, [baselineGpu, preferredBenchmark, relativeGpu]);
 
   const rating = useMemo(
@@ -202,7 +239,9 @@ const ValueTableRow: FunctionComponent<ValueTableRowProps> = (props) => {
         <a href={href}>{gpuName}</a>
       </Td>
       <Td className="text-right">{rating}</Td>
-      <Td className="text-right">{relativeValuePct}%</Td>
+      <Td className="text-right">
+        {baselineGpu.id === relativeGpu.id ? '' : `${relativeValuePct}%`}
+      </Td>
     </Tr>
   );
 };

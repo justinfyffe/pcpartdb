@@ -1,8 +1,7 @@
-import { isProductField } from '../product';
-
 export enum ArrayMerge {
   UseTarget,
   Combine,
+  UseLarger,
 }
 
 export interface DeepmergeOptions {
@@ -92,6 +91,12 @@ function mergeArray(source: any, obj: any, options: DeepmergeOptions) {
     return [...source, ...structuredClone(obj)];
   } else if (arrayMerge === ArrayMerge.UseTarget) {
     return [...structuredClone(obj)];
+  } else if (arrayMerge === ArrayMerge.UseLarger) {
+    if (source.length >= obj.length) {
+      return [...source];
+    } else {
+      return [...structuredClone(obj)];
+    }
   }
 
   throw new Error('Invalid array merge strategy');
@@ -106,22 +111,8 @@ export function CanMergeDefaultStrategy(_key: string, _source: any, obj: any) {
   return true;
 }
 
-export function CanMergeAutoUpdateStrategy(
-  _key: string,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  source: any,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  obj: any,
-) {
-  if (obj === undefined) {
-    return false;
-  }
-
-  if (
-    isProductField(source) &&
-    source?.meta?.autoUpdate != null &&
-    source.meta.autoUpdate === false
-  ) {
+export function CanMergeNoEmptyStrategy(_key: string, _source: any, obj: any) {
+  if (obj == null || obj === '') {
     return false;
   }
 

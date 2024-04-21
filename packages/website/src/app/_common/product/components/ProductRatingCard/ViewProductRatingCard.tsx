@@ -15,9 +15,11 @@ import { CardTitle } from '../../../components/Card/CardTitle';
 import { DonutChart } from '../../../components/charts/DonutChart';
 import { ContentProvider } from '../../../content/ContentProvider';
 import { compileContentComponent } from '../../../content/utils/compileContentComponent';
-import { usePreferredBenchmark } from '../../../user/usePreferredBenchmark';
-import { usePreferredBenchmarkDialog } from '../../../user/usePreferredBenchmarkDialog';
+import { useGameSelection } from '../../../game/contexts/GameSelectionProvider';
 import { classNames } from '../../../utils/classNames';
+import { useRelativeDataProducts } from '../../contexts/RelativeDataProductsProvider';
+import { usePreferredBenchmark } from '../../hooks/usePreferredBenchmark';
+import { usePreferredBenchmarkDialog } from '../../hooks/usePreferredBenchmarkDialog';
 import { ProductRatingType } from './types';
 
 export interface ViewProductRatingCardProps {
@@ -34,8 +36,6 @@ export interface ViewProductRatingCardProps {
   rankHref?: string;
 
   className?: string;
-
-  onBenchmarkChange?: (viewModel: any) => void;
 }
 
 export const ViewProductRatingCard: FunctionComponent<
@@ -51,14 +51,16 @@ export const ViewProductRatingCard: FunctionComponent<
     rank,
     rankHref,
     className,
-    onBenchmarkChange,
   } = props;
   const preferredBenchmark = usePreferredBenchmark(productType);
+  const { selectedGame } = useGameSelection();
+  const { loading } = useRelativeDataProducts();
+
   const showPreferredBenchmarkDialog = usePreferredBenchmarkDialog({
     productType,
     softReload: true,
     productIds: [productId],
-    onChange: onBenchmarkChange,
+    gameSlug: selectedGame?.slug,
   });
 
   const notRated = rating == null;
@@ -116,43 +118,55 @@ export const ViewProductRatingCard: FunctionComponent<
           </div>
         </CardTitle>
 
-        <CardContent className="justify-evenly items-center h-full gap-2">
-          <div className="flex flex-col gap-1 items-center">
-            <DonutChart
-              totalValue={maxRating}
-              centerLabel={donutCenterLabel}
-              chartClass="w-25 h-25 rounded-full ring-1 ring-white"
-              holeClass="w-[75%] h-[75%] bg-light-shades rounded-full ring-1 ring-white text-lg"
-              data={[{ value: rating || 0, color: '#4c5c7c' }]}
-            ></DonutChart>
+        <CardContent className="justify-evenly items-center h-full gap-2 m-auto">
+          {!loading && (
+            <>
+              <div className="flex flex-col gap-1 items-center">
+                <DonutChart
+                  totalValue={maxRating}
+                  centerLabel={donutCenterLabel}
+                  chartClass="w-25 h-25 rounded-full ring-1 ring-white"
+                  holeClass="w-[75%] h-[75%] bg-light-shades rounded-full ring-1 ring-white text-lg"
+                  data={[{ value: rating || 0, color: '#4c5c7c' }]}
+                ></DonutChart>
 
-            {pctDiff ? (
-              <div className="font-medium whitespace-nowrap">
-                {pctDiff} of{' '}
-                {maxRating?.toLocaleString('en-US', {
-                  maximumFractionDigits: 2,
-                })}
+                {pctDiff ? (
+                  <div className="font-medium whitespace-nowrap">
+                    {pctDiff} of{' '}
+                    {maxRating?.toLocaleString('en-US', {
+                      maximumFractionDigits: 2,
+                    })}
+                  </div>
+                ) : (
+                  <></>
+                )}
               </div>
-            ) : (
-              <></>
-            )}
-          </div>
 
-          {rank && (
-            <div
-              className={classNames(
-                'text-sm font-medium whitespace-nowrap',
-                rankHref ? 'underline' : '',
+              {rank && (
+                <div
+                  className={classNames(
+                    'text-sm font-medium whitespace-nowrap',
+                    rankHref ? 'underline' : '',
+                  )}
+                >
+                  <Ranking
+                    tags={[productType]}
+                    params={{
+                      rank: rankFormatted,
+                      rankHref: rankHref,
+                      className: 'text-primary hover:underline',
+                    }}
+                  />
+                </div>
               )}
-            >
-              <Ranking
-                tags={[productType]}
-                params={{
-                  rank: rankFormatted,
-                  rankHref: rankHref,
-                  className: 'text-primary',
-                }}
-              />
+            </>
+          )}
+
+          {loading && (
+            <div className="animate-pulse flex flex-col gap-4">
+              <div className="w-25 h-25 bg-loading rounded-full"></div>
+              <div className="w-25 h-3 bg-loading rounded-full"></div>
+              <div className="w-25 h-3 bg-loading rounded-full"></div>
             </div>
           )}
         </CardContent>

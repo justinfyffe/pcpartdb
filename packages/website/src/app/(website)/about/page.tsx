@@ -28,10 +28,9 @@ export default function AboutPage() {
         <section>
           <p>
             {WEBSITE_NAME} was created to deliver a better experience for
-            researching and comparing PC hardware. Our goal is to provide a
-            easy-to-use, comprehensive database of PC parts that will help you
-            make an informed choice of which part you should add to your PC
-            build.
+            researching and comparing PC hardware. Our comprehensive database of
+            PC parts allows you to explore components, compare their specs and
+            performance, and discover the right part for your build.
           </p>
 
           <p>
@@ -46,8 +45,8 @@ export default function AboutPage() {
               <a href="https://www.notebookcheck.net/">Notebookcheck</a>.
             </li>
             <li>
-              Benchmarks generated from software like Cinebench, Geekbench, and
-              PassMark.
+              Benchmarks generated from software like 3DMark, Cinebench,
+              Geekbench, and PassMark.
             </li>
             <li>
               User-submitted benchmark and FPS measurements. Please{' '}

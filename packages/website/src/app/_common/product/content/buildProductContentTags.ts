@@ -235,7 +235,7 @@ function buildGpuContentTags(product: GpuProduct) {
     hasOutputs = false;
   } else if (outputs === 'no outputs') {
     hasOutputs = false;
-  } else if (outputs.includes('dependent')) {
+  } else if (outputs?.includes('dependent')) {
     hasOutputs = false;
   }
 

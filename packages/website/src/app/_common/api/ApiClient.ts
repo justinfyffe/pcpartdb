@@ -1,24 +1,40 @@
-import { isApiError, joinUrlParts } from '@pcpartdb/shared';
+import {
+  BenchmarkKey,
+  isApiError,
+  joinUrlParts,
+  NormalizedData,
+  PREFERRED_CPU_BENCHMARK_HTTP_HEADER,
+  PREFERRED_GPU_BENCHMARK_HTTP_HEADER,
+} from '@pcpartdb/shared';
+import { denormalize, schema } from 'normalizr';
+
+type RequestConfig = RequestInit & {
+  normalizr?: schema.Object;
+  preferredBenchmarks?: {
+    cpu?: BenchmarkKey | string;
+    gpu?: BenchmarkKey | string;
+  };
+};
 
 export class ApiClient {
   constructor(private baseUrl: string) {}
 
-  async get<T = unknown>(path: string, config?: RequestInit) {
+  async get<T = unknown>(path: string, config?: RequestConfig) {
     return await this.request<T>('GET', path, undefined, config);
   }
 
-  async post<T = unknown>(path: string, data: unknown, config?: RequestInit) {
+  async post<T = unknown>(path: string, data: unknown, config?: RequestConfig) {
     return await this.request<T>('POST', path, data, config);
   }
 
-  async put<T = unknown>(path: string, data: unknown, config?: RequestInit) {
+  async put<T = unknown>(path: string, data: unknown, config?: RequestConfig) {
     return await this.request<T>('PUT', path, data, config);
   }
 
   async delete<T = unknown>(
     path: string,
     data?: unknown,
-    config?: RequestInit,
+    config?: RequestConfig,
   ) {
     return await this.request<T>('DELETE', path, data, config);
   }
@@ -27,11 +43,12 @@ export class ApiClient {
     method: string,
     path: string,
     data?: unknown | FormData,
-    config?: RequestInit,
+    config?: RequestConfig,
   ) {
     try {
-      const url = joinUrlParts(this.baseUrl, 'api', path);
+      this.addCommonHeaders(config);
 
+      const url = joinUrlParts(this.baseUrl, 'api', path);
       let body;
       let contentType;
       if (data != null) {
@@ -67,10 +84,33 @@ export class ApiClient {
         throw responseValue;
       }
 
-      return responseValue;
+      if (config?.normalizr) {
+        const json = responseValue as NormalizedData;
+        return denormalize(json.result, config.normalizr, json.entities) as T;
+      } else {
+        return responseValue as T;
+      }
     } catch (err) {
       console.error(err);
       throw err;
+    }
+  }
+
+  private addCommonHeaders(config?: RequestConfig) {
+    if (config == null) {
+      return;
+    }
+
+    config.headers = config.headers ?? {};
+
+    // Add preferred benchmarks custom headers.
+    if (config?.preferredBenchmarks?.cpu) {
+      (config.headers as any)[PREFERRED_CPU_BENCHMARK_HTTP_HEADER] =
+        config.preferredBenchmarks.cpu;
+    }
+    if (config?.preferredBenchmarks?.gpu) {
+      (config.headers as any)[PREFERRED_GPU_BENCHMARK_HTTP_HEADER] =
+        config.preferredBenchmarks.gpu;
     }
   }
 }

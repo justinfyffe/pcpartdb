@@ -1,8 +1,29 @@
-import { Image } from '../image';
+import { Image, ListImagesQuery } from '../image';
 import { joinUrlParts } from '../utils';
 
-export function getAdminListImagesPath() {
-  return '/admin/images/';
+export function getAdminListImagesPath(query?: ListImagesQuery) {
+  const path = '/admin/images/';
+
+  const searchParams =
+    query != null
+      ? Object.fromEntries(generateSearchParamsFromImagesQuery(query))
+      : {};
+
+  const combinedParams = new URLSearchParams({
+    ...searchParams,
+  }).toString();
+
+  return joinUrlParts(path, combinedParams ? `?${combinedParams}` : '');
+}
+
+function generateSearchParamsFromImagesQuery(query: ListImagesQuery) {
+  const params = new URLSearchParams();
+
+  if (query.filter?.search) {
+    params.append('search', query.filter.search);
+  }
+
+  return params;
 }
 
 export function getAdminNewImagePath() {

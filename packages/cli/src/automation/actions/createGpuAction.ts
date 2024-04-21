@@ -4,6 +4,7 @@ import {
   CreateGpuActionData,
   CreateProductUpdateRequest,
   formatProductName,
+  Game,
   generateProductOtherNames,
   generateProductSlug,
   GetProductRequest,
@@ -34,10 +35,14 @@ export async function createGpuAction(
   // Get chipset source (if applicable)
   const chipset = await getChipset(payload.relatedProductId, context);
 
+  // Get games for scraper options to fetch FPS.
+  const games = await fetchGameScraperOptions(context);
+
   // Scrape the GPU data from our sources.
-  const gpu = await fetchGpuData({
+  const gpu = await scrapeGpuData({
     chipset,
     sources,
+    games,
   });
   gpu.sources = sources;
 
@@ -83,6 +88,7 @@ async function getChipset(chipsetId: number, context: AutomationContext) {
           includeBenchmarks: true,
           includeImages: true,
           includeSources: true,
+          bypassCache: true,
         } as GetProductRequest),
       },
     },
@@ -94,15 +100,28 @@ async function getChipset(chipsetId: number, context: AutomationContext) {
   return chipset;
 }
 
-async function fetchGpuData(options: ScrapeGpuOptions) {
+async function scrapeGpuData(options: ScrapeGpuOptions) {
   console.info('Fetching GPU data', options.sources);
 
   // Scrape the GPU data from our sources.
   const result = await scrapeGpu(options);
   const product = result.product as GpuProduct;
+  reduceGameDataOnGpu(product);
 
   console.log('Finished fetching data.');
   return product;
+}
+
+async function fetchGameScraperOptions(context: AutomationContext) {
+  console.info('Fetching Game Scraper Options');
+
+  const result = await context.api.get<Partial<Game>[]>(
+    '/games/scraper-options',
+    { retries: 2 },
+  );
+
+  console.info('Finished Game Scraper Options');
+  return result;
 }
 
 async function uploadProductUpdate(
@@ -130,4 +149,22 @@ async function uploadProductUpdate(
     { retries: 2 },
   );
   console.info('Finshed uploading pending creation for GPU');
+}
+
+function reduceGameDataOnGpu(gpu: GpuProduct) {
+  for (const product of [gpu, gpu.parent]) {
+    product?.games?.forEach((pg) => {
+      pg.game = reduceGameData(pg.game);
+    });
+  }
+}
+
+function reduceGameData(game: Partial<Game>) {
+  return game != null
+    ? {
+        name: game.name,
+        releaseDate: game.releaseDate,
+        slug: game.slug,
+      }
+    : null;
 }

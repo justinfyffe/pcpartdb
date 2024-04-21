@@ -13,7 +13,7 @@ export const AffiliateDisclaimer: FunctionComponent<
   return (
     <div
       className={classNames(
-        'flex items-center p-1 justify-end text-xs text-dark-shades',
+        'flex items-center p-1 justify-end text-sm text-dark-shades',
         className,
       )}
     >

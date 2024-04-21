@@ -12,11 +12,11 @@ import React from 'react';
 
 const RetailModelsIntroSentence1 = compileContentComponent({
   tags: [],
-  deps: ['chipsetShortName1', 'chipsetShortName2'],
+  deps: ['chipsetName1', 'chipsetName2'],
   component: (props) => (
     <>
       Retail models based on the {props.chipsetName1} and {props.chipsetName2}{' '}
-      chipsets.
+      chipsets. Retail models may have different performance and specs.
     </>
   ),
 });
@@ -30,7 +30,7 @@ export const RetailModelsIntro = () => {
 
   return (
     <ContentProvider params={{ chipsetName1, chipsetName2 }}>
-      <p className="text-dimmed">
+      <p className="mb-0">
         <RetailModelsIntroSentence1 />
       </p>
     </ContentProvider>

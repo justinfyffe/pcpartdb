@@ -7,12 +7,12 @@ import {
 } from '@pcpartdb/shared';
 import * as fs from 'fs';
 import * as fsPromises from 'fs/promises';
-import { AutomationSourceRepository } from './automation-source.repository';
-import { ProductUpdateRepository } from '../product/product-update.repository';
+import { ProductUpdateRepository } from '../product/repositories';
 import { Context } from '../shared/context';
 import { badRequestError } from '../shared/error';
 import { dataPath } from '../shared/utils';
 import { validate } from '../shared/validation/validate';
+import { AutomationSourceRepository } from './automation-source.repository';
 
 const CONFIG_FILE = 'automation.json';
 

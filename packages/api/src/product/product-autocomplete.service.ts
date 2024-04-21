@@ -11,7 +11,7 @@ import {
 } from '@pcpartdb/shared';
 import { Context } from '../shared/context';
 import { validate } from '../shared/validation/validate';
-import { ProductAutocompleteRepository } from './product-autocomplete.repository';
+import { ProductAutocompleteRepository } from './repositories';
 
 interface AutocompleteProductsOptions {
   productType: ProductType;

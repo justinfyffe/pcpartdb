@@ -93,7 +93,7 @@ export const GpuChipsetSourceCard = (props: GpuChipsetSourceCardProps) => {
   const [preferredSlug, setPreferredSlug] = useState(() =>
     generateProductSlug({ name: preferredName, company: null }),
   );
-  const [appliedGpu, setAppliedGpu] = useState<Product>(null);
+  const [appliedGpu, setAppliedGpu] = useState<Partial<Product>>(null);
   const [groupKey] = useState(() => {
     const key = SUPPORTED_KEYS.find((key) => currentSources[key] != null);
     return currentSources[key]?.groupKey;

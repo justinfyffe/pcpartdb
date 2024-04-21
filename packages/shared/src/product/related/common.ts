@@ -2,9 +2,12 @@ import { Product, ProductComparison } from '../common';
 
 // Enums
 
-export enum RelatedProductType {
-  Performance = 'performance',
-  Value = 'value',
+export enum RelativeDataType {
+  BenchmarkPerformance = 'BENCHMARK_PERFORMANCE',
+  BenchmarkPerformancePerDollar = 'BENCHMARK_PERFORMANCE_PER_DOLLAR',
+  GameFps = 'GAME_FPS',
+  GameCpf = 'GAME_CPF',
+  GameFpsPerDollar = 'GAME_FPS_PER_DOLLAR',
 }
 
 // Types
@@ -12,13 +15,23 @@ export enum RelatedProductType {
 export interface RelatedProduct {
   productId?: number;
   relatedProductId: number;
-  relatedProductKey: string;
 
   relatedProduct?: Partial<Product>;
 }
 
-export type RelatedProducts = Partial<Record<string, Partial<Product>[]>>;
+export type RelatedProducts = Partial<Product>[];
 
 export interface RelatedProductComparisons {
   comparisons: ProductComparison[];
+}
+
+export interface RelativeDataProducts {
+  benchmarkPerformance?: Partial<Product>[];
+  benchmarkPerformancePerDollar?: Partial<Product>[];
+  gameFps?: Partial<Product>[];
+  gameCpf?: Partial<Product>[];
+  gameFpsPerDollar?: Partial<Product>[];
+
+  bestBenchmarkPerformance?: Partial<Product>;
+  bestBenchmarkPerformancePerDollar?: Partial<Product>;
 }

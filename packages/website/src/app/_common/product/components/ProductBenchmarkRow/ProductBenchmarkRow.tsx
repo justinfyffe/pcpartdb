@@ -1,4 +1,8 @@
-import { getProductBenchmarkName, ProductBenchmark } from '@pcpartdb/shared';
+import {
+  getProductBenchmarkName,
+  percentDifference,
+  ProductBenchmark,
+} from '@pcpartdb/shared';
 import React, { FunctionComponent } from 'react';
 import { Td } from '../../../components/Table/Td';
 import { Tr } from '../../../components/Table/Tr';
@@ -33,7 +37,7 @@ export const ProductBenchmarkRow: FunctionComponent<
 
   if (score1 > score2) {
     diffs = [
-      ((score1 / score2 - 1) * 100).toLocaleString('en-US', {
+      (percentDifference(score2, score1) * 100).toLocaleString('en-US', {
         maximumFractionDigits: 2,
       }),
       null,
@@ -41,7 +45,7 @@ export const ProductBenchmarkRow: FunctionComponent<
   } else if (score2 > score1) {
     diffs = [
       null,
-      ((score2 / score1 - 1) * 100).toLocaleString('en-US', {
+      (percentDifference(score1, score2) * 100).toLocaleString('en-US', {
         maximumFractionDigits: 2,
       }),
     ];

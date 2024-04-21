@@ -1,15 +1,30 @@
 import {
+  Game,
   Image as ImageDto,
   ImageMeta,
   joinUrlParts,
   Product,
 } from '@pcpartdb/shared';
 
-export function getImagePath(image: ImageDto) {
+export function getImagePath(image: Partial<ImageDto>) {
   return joinUrlParts('/u/images', image.path);
 }
 
-export function getCompanyLogoAutocompletePath(product: Product): string {
+export function getPlaceholderGameImage() {
+  return '/images/games/placeholder.svg';
+}
+
+export function getGameListingImage(game: Partial<Game>) {
+  if (game?.listingImage != null) {
+    return getImagePath(game.listingImage);
+  }
+
+  return getPlaceholderGameImage();
+}
+
+export function getCompanyLogoAutocompletePath(
+  product: Partial<Product>,
+): string {
   if (product == null) {
     return null;
   }

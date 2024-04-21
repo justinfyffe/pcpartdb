@@ -1,6 +1,6 @@
 import { Product } from '@pcpartdb/shared';
 
-export function companyLogoFeedPath(product: Product): string {
+export function companyLogoFeedPath(product: Partial<Product>): string {
   if (product == null) {
     return null;
   }

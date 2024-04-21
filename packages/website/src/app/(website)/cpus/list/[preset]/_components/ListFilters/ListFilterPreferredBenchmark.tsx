@@ -1,8 +1,8 @@
 'use client';
 
 import { getProductBenchmarkName, ProductType } from '@pcpartdb/shared';
-import { usePreferredBenchmark } from 'packages/website/src/app/_common/user/usePreferredBenchmark';
-import { usePreferredBenchmarkDialog } from 'packages/website/src/app/_common/user/usePreferredBenchmarkDialog';
+import { usePreferredBenchmark } from 'packages/website/src/app/_common/product/hooks/usePreferredBenchmark';
+import { usePreferredBenchmarkDialog } from 'packages/website/src/app/_common/product/hooks/usePreferredBenchmarkDialog';
 import { classNames } from 'packages/website/src/app/_common/utils/classNames';
 import React, { FunctionComponent } from 'react';
 

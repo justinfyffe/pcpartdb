@@ -6,7 +6,7 @@ import { CpuAutocompleteOption } from './CpuAutocompleteOption';
 import { GpuAutocompleteOption } from './GpuAutocompleteOption';
 
 interface ProductAutocompleteOptionProps {
-  product: Product;
+  product: Partial<Product>;
   index: number;
 }
 

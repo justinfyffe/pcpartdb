@@ -1,6 +1,6 @@
 import { Product } from '@pcpartdb/shared';
 
-export function companyLogoAutocompletePath(product: Product): string {
+export function companyLogoAutocompletePath(product: Partial<Product>): string {
   if (product == null) {
     return null;
   }

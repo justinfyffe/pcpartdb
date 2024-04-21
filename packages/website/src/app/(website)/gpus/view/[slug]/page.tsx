@@ -5,36 +5,38 @@ import {
   getHomePath,
   getListGpusPath,
   getViewGpuPath,
+  GpuProduct,
   isApiError,
   isNotFoundError,
   joinUrlParts,
   ProductType,
   ViewGpuViewModel,
+  viewGpuViewModelNormalizr,
   WEBSITE_NAME,
 } from '@pcpartdb/shared';
 import { Metadata, ResolvingMetadata } from 'next';
 import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { viewModelClient } from 'packages/website/src/app/_common/api/ViewModelClient';
-import { CacheProvider } from 'packages/website/src/app/_common/cache/CacheProvider';
 import { DisplayAd } from 'packages/website/src/app/_common/components/Ad/DisplayAd';
 import { MultiplexAd } from 'packages/website/src/app/_common/components/Ad/MultiplexAd';
 import { AdUnit } from 'packages/website/src/app/_common/components/Ad/types';
 import { Breadcrumb } from 'packages/website/src/app/_common/components/Breadcrumbs/Breadcrumb';
 import { Breadcrumbs } from 'packages/website/src/app/_common/components/Breadcrumbs/Breadcrumbs';
-import { ViewModelType } from 'packages/website/src/app/_common/contexts/types';
-import { ViewModelProvider } from 'packages/website/src/app/_common/contexts/ViewModelProvider';
 import { CompareProductsForm } from 'packages/website/src/app/_common/product/components/CompareProductsForm/CompareProductsForm';
 import React from 'react';
+import { BenchmarkPerformanceAndValue } from './_components/BenchmarkPerformanceAndValue/BenchmarkPerformanceAndValue';
+import { Contents } from './_components/Contents/Contents';
 import { Disclaimer } from './_components/Disclaimer/Disclaimer';
+import { GamingPerformance } from './_components/GamingPerformance/GamingPerformance';
 import { GeneralInfo } from './_components/GeneralInfo/GeneralInfo';
 import { Highlights } from './_components/Highlights/Highlights';
 import { Overview } from './_components/Overview/Overview';
-import { PerformanceAndValue } from './_components/PerformanceAndValue/PerformanceAndValue';
 import { RelatedComparisons } from './_components/Related/RelatedComparisons';
 import { RelatedGpus } from './_components/Related/RelatedGpus';
 import { RetailModels } from './_components/RetailModels/RetailModels';
 import { TechnicalSpecs } from './_components/TechnicalSpecs';
+import { PageProvider } from './PageProvider';
 
 type ViewGpuPageProps = {
   params: { slug: string };
@@ -43,16 +45,21 @@ type ViewGpuPageProps = {
 
 export async function generateMetadata(
   props: ViewGpuPageProps,
-  parent: ResolvingMetadata,
+  metadata: ResolvingMetadata,
 ): Promise<Metadata> {
   const slug = props.params.slug;
 
   const benchmark = props.searchParams.gpu_benchmark as string;
-  const endpoint = joinUrlParts('gpus/view', slug);
+  const endpoint = joinUrlParts(
+    'gpus/view',
+    slug,
+    `?game=${props.searchParams.game as string}`,
+  );
 
   const viewModel = await viewModelClient.get<ViewGpuViewModel | ApiError>(
     endpoint,
     {
+      normalizr: viewGpuViewModelNormalizr,
       preferredBenchmarks: { gpu: benchmark },
       headers: { Cookie: cookies().toString() },
     },
@@ -81,22 +88,27 @@ export default async function ViewGpuPage(props: ViewGpuPageProps) {
   const slug = props.params.slug;
 
   const benchmark = props.searchParams.gpu_benchmark as string;
-  const endpoint = joinUrlParts('gpus/view', slug);
+  const endpoint = joinUrlParts(
+    'gpus/view',
+    slug,
+    `?game=${props.searchParams.game as string}`,
+  );
 
-  const response = await viewModelClient.get<ViewGpuViewModel | ApiError>(
+  const viewModel = await viewModelClient.get<ViewGpuViewModel | ApiError>(
     endpoint,
     {
+      normalizr: viewGpuViewModelNormalizr,
       preferredBenchmarks: { gpu: benchmark },
       headers: { Cookie: cookies().toString() },
     },
   );
-  if (isNotFoundError(response)) {
+  if (isNotFoundError(viewModel)) {
     throw notFound();
-  } else if (isApiError(response)) {
-    throw response;
+  } else if (isApiError(viewModel)) {
+    throw viewModel;
   }
 
-  const { gpu, retailModels, relatedGpus, relatedGpuComparisons } = response;
+  const { gpu, relatedGpus, relatedGpuComparisons } = viewModel;
   const chipset = getGpuChipset(gpu);
 
   const isRetailModel = gpu.parent != null;
@@ -107,59 +119,66 @@ export default async function ViewGpuPage(props: ViewGpuPageProps) {
   const gpuFullName = formatProductName(gpu);
 
   return (
-    <CacheProvider products={[gpu, chipset]}>
-      <ViewModelProvider
-        type={ViewModelType.ViewGpuViewModel}
-        viewModel={response}
-      >
-        <Breadcrumbs className="mb-4">
-          <Breadcrumb href={getHomePath()}>Home</Breadcrumb>
-          <Breadcrumb href={getListGpusPath()}>Graphics Cards</Breadcrumb>
-          {isRetailModel && (
-            <Breadcrumb href={getViewGpuPath(chipset)}>
-              {chipsetShortName}
-            </Breadcrumb>
-          )}
-          <Breadcrumb>{gpuShortName}</Breadcrumb>
-        </Breadcrumbs>
+    <PageProvider viewModel={viewModel}>
+      <Breadcrumbs className="mb-4">
+        <Breadcrumb href={getHomePath()}>Home</Breadcrumb>
+        <Breadcrumb href={getListGpusPath()}>Graphics Cards</Breadcrumb>
+        {isRetailModel && (
+          <Breadcrumb href={getViewGpuPath(chipset)}>
+            {chipsetShortName}
+          </Breadcrumb>
+        )}
+        <Breadcrumb>{gpuShortName}</Breadcrumb>
+      </Breadcrumbs>
 
-        <div className="flex flex-col justify-center gap-6">
-          <section className="flex flex-col w-full">
-            <div className="mb-4">
-              <h1 className="font-semibold mb-0">{gpuFullName}</h1>
-              {isRetailModel && (
-                <span className="text-sm">
-                  Retail card for the{' '}
-                  <a href={getViewGpuPath(chipset)}>{chipsetFullName}</a>
-                </span>
-              )}
-            </div>
+      <div className="flex flex-col justify-center gap-6">
+        <section className="flex flex-col w-full">
+          <div className="mb-4">
+            <h1 className="font-semibold mb-0">{gpuFullName}</h1>
+            {isRetailModel && (
+              <span className="text-sm">
+                Retail card for the{' '}
+                <a href={getViewGpuPath(chipset)}>{chipsetFullName}</a>
+              </span>
+            )}
+          </div>
 
-            <CompareProductsForm
-              productType={ProductType.Gpu}
-              values={[chipset?.id]}
-            />
-          </section>
+          <CompareProductsForm
+            productType={ProductType.Gpu}
+            values={[chipset?.id]}
+          />
+        </section>
 
-          <DisplayAd unit={AdUnit.ViewPagePreHighlightsDisplay} />
+        <DisplayAd unit={AdUnit.ViewPagePreHighlightsDisplay} />
 
-          <article className="flex-1 flex flex-col gap-6 max-w-full">
-            <Highlights gpu={gpu} />
-            <Overview gpu={gpu} />
-            <DisplayAd unit={AdUnit.ViewPagePostSummaryDisplay} />
-            <GeneralInfo gpu={gpu} />
-            <PerformanceAndValue />
-            <DisplayAd unit={AdUnit.ViewPagePostPerfValueDisplay} />
-            <TechnicalSpecs gpu={gpu} />
-            <RetailModels gpu={gpu} retailModels={retailModels} />
-            <MultiplexAd unit={AdUnit.ViewPagePostTechSpecsMultiplex} />
-            <RelatedGpus relatedGpus={relatedGpus} />
-            <RelatedComparisons relatedGpuComparisons={relatedGpuComparisons} />
-            <Disclaimer />
-          </article>
-        </div>
-      </ViewModelProvider>
-    </CacheProvider>
+        <article
+          id="contents"
+          className="flex-1 flex flex-col gap-6 max-w-full"
+        >
+          <Contents />
+          <Highlights gpu={gpu} />
+          <Overview gpu={gpu} />
+          <DisplayAd unit={AdUnit.ViewPagePostSummaryDisplay} />
+          <GeneralInfo gpu={gpu} />
+          <GamingPerformance gpu={gpu} />
+          <DisplayAd unit={AdUnit.ViewPagePostGamingPerfValueDisplay} />
+          <BenchmarkPerformanceAndValue gpu={gpu} />
+          <DisplayAd unit={AdUnit.ViewPagePostBenchmarkPerfValueDisplay} />
+          <TechnicalSpecs gpu={gpu} />
+          <RetailModels
+            gpu={gpu}
+            retailModels={gpu?.children as GpuProduct[]}
+          />
+          <MultiplexAd unit={AdUnit.ViewPagePostTechSpecsMultiplex} />
+          <RelatedGpus gpu={gpu} relatedGpus={relatedGpus} />
+          <RelatedComparisons
+            gpu={gpu}
+            relatedGpuComparisons={relatedGpuComparisons}
+          />
+          <Disclaimer />
+        </article>
+      </div>
+    </PageProvider>
   );
 }
 

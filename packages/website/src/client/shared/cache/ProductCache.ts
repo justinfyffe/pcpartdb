@@ -3,7 +3,10 @@ import { useContext } from 'react';
 import { CacheContext } from './CacheContext';
 import { ImageCache } from './ImageCache';
 
-export type ProductCacheState = Record<string, Record<number, Product>>;
+export type ProductCacheState = Record<
+  string,
+  Record<number, Partial<Product>>
+>;
 
 class ProductCacheImpl {
   private caches: ProductCacheState = {
@@ -16,7 +19,10 @@ class ProductCacheImpl {
     return cache[id] ?? null;
   }
 
-  save(productType: ProductType, ...productsToSave: (Product | Product[])[]) {
+  save(
+    productType: ProductType,
+    ...productsToSave: (Partial<Product> | Partial<Product>[])[]
+  ) {
     const cache = this.getCache(productType);
 
     productsToSave
@@ -60,7 +66,7 @@ class ProductCacheImpl {
     return this.caches;
   }
 
-  private saveImages(product: Product) {
+  private saveImages(product: Partial<Product>) {
     if ('images' in product && product.images.length > 0) {
       const images = product.images
         .map((image) => image.image)
@@ -78,7 +84,7 @@ export const ProductCache = new ProductCacheImpl();
 
 export function useProductCache(
   productType?: ProductType,
-  ...products: (Product | Product[])[]
+  ...products: (Partial<Product> | Partial<Product>[])[]
 ) {
   const productCache = useContext(CacheContext).getProductCache();
   if (productType == null) {

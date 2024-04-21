@@ -5,6 +5,7 @@ export * from './utils';
 
 export * from './benchmarks';
 export * from './fields';
+export * from './game';
 export * from './images';
 export * from './ranks';
 export * from './related';

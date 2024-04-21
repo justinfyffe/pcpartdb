@@ -1,13 +1,18 @@
 import {
   AutocompleteProductsRequest,
   AutocompleteProductsResponse,
+  GetRelativeDataProductsRequest,
   joinUrlParts,
   ListProductsQuery,
   ListProductsRequest,
   ListProductsResponse,
+  NormalizedData,
   Product,
   ProductType,
+  RelativeDataProducts,
+  relativeDataProductsNormalizr,
 } from '@pcpartdb/shared';
+import { denormalize } from 'normalizr';
 import { apiClient } from '../api/ApiClient';
 import { ProductCache } from '../cache/ProductCache';
 
@@ -54,4 +59,25 @@ export async function listProducts(
   });
   ProductCache.save(response.results);
   return response;
+}
+
+export async function fetchRelativeDataProducts(
+  request: GetRelativeDataProductsRequest,
+) {
+  const path = joinUrlParts(PATH, 'relative');
+  const response = await apiClient.post<NormalizedData>(path, request);
+  const denormalized: RelativeDataProducts = denormalize(
+    response.result,
+    relativeDataProductsNormalizr,
+    response.entities,
+  );
+
+  Object.values(denormalized).forEach((productList) => {
+    if (Array.isArray(productList) && productList.length > 0) {
+      const products = productList as Partial<Product>[];
+      ProductCache.save(products);
+    }
+  });
+
+  return denormalized;
 }

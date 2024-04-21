@@ -139,7 +139,7 @@ export function ProductComparisonFeedItem(
 }
 
 interface BannerProps {
-  product: Product;
+  product: Partial<Product>;
   className?: string;
 }
 

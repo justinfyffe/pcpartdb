@@ -26,7 +26,7 @@ interface ProductAutocompleteProps {
   productType: ProductType;
   value?: number;
   onChange?: (value: number) => void;
-  onChangeProduct?: (value: Product) => void;
+  onChangeProduct?: (value: Partial<Product>) => void;
 
   excludeProductId?: number;
 
@@ -54,7 +54,7 @@ export const ProductAutocomplete = forwardRef<
 
   const productCache = useProductCache();
 
-  const [results, setResults] = useState<Product[]>([]);
+  const [results, setResults] = useState<Partial<Product>[]>([]);
   const [product, setProduct] = useState(() => {
     if (value == null) {
       return null;

@@ -1,5 +1,7 @@
 import { CpuProductComparison } from '@pcpartdb/shared';
+import { SectionHeader } from 'packages/website/src/app/_common/components/SectionHeader/SectionHeader';
 import React from 'react';
+import { Contents } from '../Contents/Contents';
 import { ArchitectureSpecs } from './ArchitectureSpecs/ArchitectureSpecs';
 import { CacheSpecs } from './CacheSpecs/CacheSpecs';
 import { CoresSpecs } from './CoresSpecs/CoresSpecs';
@@ -15,8 +17,10 @@ export function TechnicalSpecs(props: TechnicalSpecsProps) {
   const { comparison } = props;
 
   return (
-    <section className="flex flex-col">
-      <h2 className="font-semibold">Technical Specs</h2>
+    <section className="flex flex-col gap-4">
+      <SectionHeader linkId="tech-specs" menu={<Contents />}>
+        Technical Specs
+      </SectionHeader>
 
       <div className="flex flex-col gap-6">
         <PhysicalSpecs comparison={comparison} />

@@ -3,8 +3,8 @@ import { createContext, useMemo, useState } from 'react';
 
 export interface ProductFormContextState {
   productType: ProductType;
-  product?: Product;
-  parentProduct?: Product;
+  product?: Partial<Product>;
+  parentProduct?: Partial<Product>;
   updateContext?: (ctx: ProductFormContextState) => void;
 }
 

@@ -2,9 +2,13 @@ import {
   CreateImageRequest,
   Image,
   joinUrlParts,
+  ListImagesQuery,
+  ListImagesRequest,
+  ListImagesResponse,
   UpdateImageRequest,
 } from '@pcpartdb/shared';
 import { ApiClient, apiClient } from '../shared/api/apiClient';
+import { RequestConfig } from '../shared/api/types';
 import { ImageCache } from '../shared/cache/ImageCache';
 
 const PATH = 'images';
@@ -12,10 +16,15 @@ const PATH = 'images';
 export class ImageService {
   constructor(private api: ApiClient) {}
 
-  async list() {
-    const images = await this.api.get<Image[]>(PATH);
-    ImageCache.save(images);
-    return images;
+  async list(query: ListImagesQuery, config?: RequestConfig) {
+    const response = await this.api.get<ListImagesResponse>(PATH, {
+      ...config,
+      params: {
+        req: JSON.stringify({ query } as ListImagesRequest),
+      },
+    });
+    ImageCache.save(response.results);
+    return response;
   }
 
   async create(formData: CreateImageRequest) {

@@ -15,12 +15,14 @@ import React, {
   FunctionComponent,
   useCallback,
   useEffect,
+  useMemo,
   useState,
 } from 'react';
 import { BENCHMARKS_TO_SCRAPE, DATA_TO_SCRAPE } from './consts';
 import { ScrapedBenchmarkRow } from './ScrapedBenchmarkRow';
 import { ScrapedCompanyRow } from './ScrapedCompanyRow';
 import { ScrapedFieldRow } from './ScrapedFieldRow';
+import { ScrapedGameRow } from './ScrapedGameRow';
 import { ScrapedNameRow } from './ScrapedNameRow';
 import { ScrapedOtherNamesRow } from './ScrapedOtherNamesRow';
 import { ScrapedSearchTextRow } from './ScrapedSearchTextRow';
@@ -114,6 +116,9 @@ export const ScrapeProductDialog: FunctionComponent<
                     key={benchmarkKey}
                     benchmarkKey={benchmarkKey}
                   />
+                ))}
+                {Object.keys(context?.data?.games ?? {}).map((gameId) => (
+                  <ScrapedGameRow key={gameId} gameId={gameId} />
                 ))}
               </TBody>
             </Table>

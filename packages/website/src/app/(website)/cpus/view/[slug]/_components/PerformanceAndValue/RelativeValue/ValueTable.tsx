@@ -16,7 +16,8 @@ import { Th } from 'packages/website/src/app/_common/components/Table/Th';
 import { THead } from 'packages/website/src/app/_common/components/Table/THead';
 import { Tr } from 'packages/website/src/app/_common/components/Table/Tr';
 import { useViewModel } from 'packages/website/src/app/_common/contexts/ViewModelProvider';
-import { usePreferredBenchmark } from 'packages/website/src/app/_common/user/usePreferredBenchmark';
+import { useRelativeDataProducts } from 'packages/website/src/app/_common/product/contexts/RelativeDataProductsProvider';
+import { usePreferredBenchmark } from 'packages/website/src/app/_common/product/hooks/usePreferredBenchmark';
 import { classNames } from 'packages/website/src/app/_common/utils/classNames';
 import React, { FunctionComponent, useMemo } from 'react';
 
@@ -28,7 +29,12 @@ export const ValueTable: FunctionComponent<ValueTableProps> = (props) => {
   const { className } = props;
   const viewModel = useViewModel<ViewCpuViewModel>();
   const cpu = viewModel.cpu;
-  const relativeValueCpus = viewModel.relativeValueCpus;
+  const relativeValueCpus = viewModel.relativeDataProducts
+    ?.benchmarkPerformancePerDollar as Partial<CpuProduct>[];
+  const { loading } = useRelativeDataProducts();
+
+  const hasRelativeValueCpus =
+    relativeValueCpus != null && relativeValueCpus.length > 1;
 
   return (
     <Table border responsive className={className}>
@@ -42,13 +48,42 @@ export const ValueTable: FunctionComponent<ValueTableProps> = (props) => {
         </Tr>
       </THead>
       <TBody>
-        {relativeValueCpus.map((relativeCpu) => (
-          <ValueTableRow
-            key={relativeCpu.id}
-            baselineCpu={cpu}
-            relativeCpu={relativeCpu}
-          />
-        ))}
+        {!loading &&
+          hasRelativeValueCpus &&
+          relativeValueCpus.map((relativeCpu) => (
+            <ValueTableRow
+              key={relativeCpu.id}
+              baselineCpu={cpu}
+              relativeCpu={relativeCpu}
+            />
+          ))}
+
+        {!loading && !hasRelativeValueCpus && (
+          <Tr>
+            <Td colSpan={4} className="text-center p-8">
+              Our database does not have enough data to compare the benchmark
+              performance per dollar with other CPUs.
+            </Td>
+          </Tr>
+        )}
+
+        {loading &&
+          [...new Array(3)].map((_, i) => (
+            <Tr key={i} className="animate-pulse">
+              <Td className="py-4">
+                <div className="bg-loading w-8 h-3 rounded" />
+              </Td>
+              <Td className="py-4">
+                <div className="bg-loading w-35 h-3 rounded" />
+              </Td>
+              <Td className="py-4">
+                <div className="bg-loading w-12 h-3 rounded ml-auto" />
+              </Td>
+              <Td className="py-4">
+                <div className="bg-loading w-12 h-3 rounded ml-auto" />
+              </Td>
+            </Tr>
+          ))}
       </TBody>
     </Table>
   );
@@ -61,7 +96,6 @@ interface ValueTableRowProps {
 
 const ValueTableRow: FunctionComponent<ValueTableRowProps> = (props) => {
   const { baselineCpu, relativeCpu } = props;
-
   const preferredBenchmark = usePreferredBenchmark(ProductType.Cpu);
 
   const relativeValuePct = useMemo(() => {
@@ -74,9 +108,13 @@ const ValueTableRow: FunctionComponent<ValueTableRowProps> = (props) => {
       preferredBenchmark,
     );
 
-    return Number(
-      ((relatedValue / baseline) * 100).toFixed(0),
+    let pct = Number(
+      ((relatedValue / baseline) * 100 - 100).toFixed(0),
     ).toLocaleString();
+    if (relatedValue > baseline) {
+      pct = `+${pct}`;
+    }
+    return pct;
   }, [baselineCpu, preferredBenchmark, relativeCpu]);
 
   const rating = useMemo(
@@ -115,7 +153,9 @@ const ValueTableRow: FunctionComponent<ValueTableRowProps> = (props) => {
         <a href={href}>{cpuName}</a>
       </Td>
       <Td className="text-right">{rating}</Td>
-      <Td className="text-right">{relativeValuePct}%</Td>
+      <Td className="text-right">
+        {baselineCpu.id === relativeCpu.id ? '' : `${relativeValuePct}%`}
+      </Td>
     </Tr>
   );
 };

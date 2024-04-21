@@ -1,4 +1,5 @@
 import {
+  BenchmarkKey,
   getDefaultBenchmark,
   ListCpusFilter,
   ListGpusFilter,
@@ -16,15 +17,34 @@ import {
 } from '@pcpartdb/shared';
 import { Prisma } from '@prisma/client';
 import { DatabaseClient } from '../DatabaseClient';
+import { GameEntity } from '../game';
 import { RepositoryConfig } from '../RepositoryConfig';
 import { CpuFieldsEntity } from './CpuFieldsEntity';
 import { GpuFieldsEntity } from './GpuFieldsEntity';
 import { ProductBenchmarkEntity } from './ProductBenchmarkEntity';
 import { ProductEntity } from './ProductEntity';
+import { ProductGameFpsEntity } from './ProductGameFpsEntity';
 import { ProductImageEntity } from './ProductImageEntity';
 import { ProductRanksEntity } from './ProductRankEntity';
 import { ProductSourceEntity } from './ProductSourceEntity';
 import { RelatedProductEntity } from './RelatedProductEntity';
+
+interface FindById2Options {
+  id: number;
+}
+
+interface FindByIds2Options {
+  ids: number[];
+}
+
+interface FindChildrenIdsOptions {
+  ids: number[];
+}
+
+interface FindBestProductOptions {
+  benchmark: BenchmarkKey;
+  sort: ListSort;
+}
 
 interface FindByIdOptions extends IncludeRelationsOptions {
   id: number;
@@ -32,6 +52,11 @@ interface FindByIdOptions extends IncludeRelationsOptions {
 
 interface FindByIdsOptions extends IncludeRelationsOptions {
   ids: number[];
+}
+
+interface FindBySlug2Options {
+  productType: ProductType;
+  slug: string;
 }
 
 interface FindBySlugOptions extends IncludeRelationsOptions {
@@ -67,6 +92,10 @@ interface IncludeRelationsOptions {
   includeParentBenchmarks?: boolean;
   includeRelatedBenchmarks?: boolean;
 
+  includeGames?: boolean;
+  includeParentGames?: boolean;
+  includeRelatedGames?: boolean;
+
   includeRanks?: boolean;
   includeParentRanks?: boolean;
   includeRelatedRanks?: boolean;
@@ -82,6 +111,53 @@ interface IncludeRelationsOptions {
 export class ProductRepository {
   constructor(protected db: DatabaseClient) {}
 
+  async findById2(options: FindById2Options, config?: RepositoryConfig) {
+    const db = config?.trx ?? this.db;
+
+    const result: ProductEntity = await db.product.findUnique({
+      where: { id: options.id },
+    });
+    return result;
+  }
+
+  async findChildrenIds(
+    options: FindChildrenIdsOptions,
+    config?: RepositoryConfig,
+  ) {
+    const db = config?.trx ?? this.db;
+
+    const result: { id: number; parentId: number }[] =
+      await db.product.findMany({
+        select: { id: true, parentId: true },
+        where: { parentId: { in: options.ids } },
+      });
+    return result;
+  }
+
+  async findBestProductId(
+    options: FindBestProductOptions,
+    config?: RepositoryConfig,
+  ) {
+    const db = config?.trx ?? this.db;
+
+    let orderBy: Prisma.ProductBenchmarkOrderByWithRelationAndSearchRelevanceInput =
+      undefined;
+    if (options.sort === ListSort.PerformanceRating) {
+      orderBy = { value: { sort: ListOrder.Desc, nulls: 'last' } };
+    } else if (options.sort === ListSort.PerformancePerMsrp) {
+      orderBy = { valuePerMsrp: { sort: ListOrder.Desc, nulls: 'last' } };
+    }
+
+    const { productId } = await db.productBenchmark.findFirst({
+      select: { productId: true },
+      where: { benchmarkKey: options.benchmark },
+      orderBy,
+      take: 1,
+    });
+
+    return productId;
+  }
+
   async findById(
     options: FindByIdOptions,
     config?: RepositoryConfig,
@@ -90,6 +166,15 @@ export class ProductRepository {
 
     const products = await this.findByIds({ ...options, ids: [id] }, config);
     return products[0] || null;
+  }
+
+  async findByIds2(options: FindByIds2Options, config?: RepositoryConfig) {
+    const db = config?.trx ?? this.db;
+
+    const result: ProductEntity[] = await db.product.findMany({
+      where: { id: { in: options.ids } },
+    });
+    return result;
   }
 
   async findByIds(
@@ -137,6 +222,7 @@ export class ProductRepository {
         options,
         config,
       ),
+      this.populateGames(products, parents, relatedProducts, options, config),
       this.populateRanks(products, parents, relatedProducts, options, config),
       this.populateImages(products, options, config),
       this.populateSources(products, options, config),
@@ -145,6 +231,18 @@ export class ProductRepository {
     await Promise.all(queries);
 
     return sortByIds(ids, products, (p) => p.id);
+  }
+
+  async findBySlug2(options: FindBySlug2Options, config?: RepositoryConfig) {
+    const db = config?.trx ?? this.db;
+
+    const productType = options.productType;
+    const slug = options.slug;
+
+    const result: ProductEntity = await db.product.findUnique({
+      where: { productType_slug: { productType, slug } },
+    });
+    return result;
   }
 
   async findBySlug(
@@ -214,6 +312,63 @@ export class ProductRepository {
       acc[result.parentId] = result._count;
       return acc;
     }, {} as Record<number, number>);
+  }
+
+  async list2(options: ListOptions, config?: RepositoryConfig) {
+    const db = config?.trx ?? this.db;
+    const productType = options.filter.productType;
+
+    if (
+      options.orderBy?.sort === ListSort.PerformanceRating ||
+      options.orderBy?.sort === ListSort.PerformancePerMsrp
+    ) {
+      // If we're sorting by perf or value, then we need to filter benchmarks
+      // first. We're not able to filter by benchmark key when querying
+      // products first.
+      const benchmarkToSort =
+        options.orderBy.benchmark ?? getDefaultBenchmark(productType);
+
+      let orderBy: Prisma.ProductBenchmarkOrderByWithRelationAndSearchRelevanceInput =
+        null;
+      if (options.orderBy.sort === ListSort.PerformanceRating) {
+        orderBy = {
+          value: {
+            sort: options.orderBy?.order ?? ListOrder.Desc,
+            nulls: 'last',
+          },
+        };
+      } else if (options.orderBy?.sort === ListSort.PerformancePerMsrp) {
+        orderBy = {
+          valuePerMsrp: {
+            sort: options.orderBy?.order ?? ListOrder.Desc,
+            nulls: 'last',
+          },
+        };
+      }
+
+      const results = await db.productBenchmark.findMany({
+        select: { productId: true },
+        skip: options.pagination?.offset,
+        take: options.pagination?.limit,
+        orderBy,
+        where: {
+          benchmarkKey: benchmarkToSort,
+          product: { ...this.generateWhere(productType, options.filter) },
+        },
+      });
+      const ids = results.map((result) => result.productId);
+      return ids;
+    } else {
+      const productIdsResult = await db.product.findMany({
+        select: { id: true },
+        where: { ...this.generateWhere(productType, options.filter) },
+        orderBy: this.generateOrderBy(productType, options.orderBy),
+        skip: options.pagination?.offset,
+        take: options.pagination?.limit,
+      });
+      const productIds = productIdsResult.map((p) => p.id);
+      return productIds;
+    }
   }
 
   async list(options: ListOptions, config?: RepositoryConfig) {
@@ -303,6 +458,7 @@ export class ProductRepository {
       parent: _parent,
       children: _children,
       relatedAutomationSources: _related,
+      gameFps: gameFps,
       images,
       ...productData
     } = data;
@@ -317,6 +473,7 @@ export class ProductRepository {
         gpuFields: gpuFields != null ? { create: gpuFields } : undefined,
         images: { createMany: { data: imagesData, skipDuplicates: true } },
         benchmarks: { createMany: { data: benchmarks, skipDuplicates: true } },
+        gameFps: { createMany: { data: gameFps, skipDuplicates: true } },
         sources: { createMany: { data: sources, skipDuplicates: true } },
       },
     });
@@ -339,6 +496,7 @@ export class ProductRepository {
 
     await db.productImage.deleteMany({ where: { productId: id } });
     await db.productBenchmark.deleteMany({ where: { productId: id } });
+    await db.productGameFps.deleteMany({ where: { productId: id } });
     await db.productSource.deleteMany({ where: { productId: id } });
 
     // Update Product
@@ -354,6 +512,7 @@ export class ProductRepository {
       parent: _parent,
       children: _children,
       relatedAutomationSources: _related,
+      gameFps: gameFps,
       images,
       ...productData
     } = data;
@@ -367,6 +526,7 @@ export class ProductRepository {
         gpuFields: gpuFields != null ? { update: gpuFields } : undefined,
         images: { createMany: { data: images, skipDuplicates: true } },
         benchmarks: { createMany: { data: benchmarks, skipDuplicates: true } },
+        gameFps: { createMany: { data: gameFps, skipDuplicates: true } },
         sources: { createMany: { data: sources, skipDuplicates: true } },
       },
     });
@@ -447,14 +607,11 @@ export class ProductRepository {
       updates.relatedProducts,
     )) {
       const productId = Number(productIdStr);
-      for (const [key, relatedList] of Object.entries(relatedProducts)) {
-        for (const relatedItem of relatedList) {
-          dataToInsert.push({
-            productId,
-            relatedProductId: relatedItem.id,
-            relatedProductKey: key,
-          });
-        }
+      for (const [key, relatedItem] of Object.entries(relatedProducts)) {
+        dataToInsert.push({
+          productId,
+          relatedProductId: relatedItem.id,
+        });
       }
     }
 
@@ -820,7 +977,6 @@ export class ProductRepository {
       await db.relatedProduct.findMany({
         select: {
           productId: true,
-          relatedProductKey: true,
           relatedProductId: true,
           relatedProduct: true,
         },
@@ -914,6 +1070,55 @@ export class ProductRepository {
 
     for (const product of [...products, ...parents, ...related]) {
       product.benchmarks = benchmarksMap[product.id];
+    }
+  }
+
+  private async populateGames(
+    products: ProductEntity[],
+    parents: ProductEntity[],
+    related: ProductEntity[],
+    options: IncludeRelationsOptions,
+    config?: RepositoryConfig,
+  ) {
+    const ids: number[] = [];
+    if (options.includeGames) {
+      const productIds = products.map((p) => p.id);
+      ids.push(...productIds);
+    }
+
+    if (options.includeParentGames) {
+      const parentIds = parents.map((p) => p.id);
+      ids.push(...parentIds);
+    }
+
+    if (options.includeRelatedGames) {
+      const relatedIds = related.map((p) => p.id);
+      ids.push(...relatedIds);
+    }
+
+    const db = config?.trx ?? this.db;
+    const gameFps: ProductGameFpsEntity[] = await db.productGameFps.findMany({
+      where: { productId: { in: ids } },
+    });
+    const gameIdsSet = new Set<number>(gameFps.map((pgf) => pgf.gameId));
+    const gameIds = [...gameIdsSet.values()];
+    const games: GameEntity[] = await db.game.findMany({
+      where: { id: { in: gameIds } },
+      include: { listingImage: true },
+    });
+    const gameMap = games.reduce((acc, game) => {
+      acc[game.id] = game;
+      return acc;
+    }, {} as Record<number, GameEntity>);
+    const gameFpsMap = gameFps.reduce((acc, fps) => {
+      fps.game = gameMap[fps.gameId];
+      acc[fps.productId] = acc[fps.productId] || [];
+      acc[fps.productId].push(fps);
+      return acc;
+    }, {} as Record<number, ProductGameFpsEntity[]>);
+
+    for (const product of [...products, ...parents, ...related]) {
+      product.gameFps = gameFpsMap[product.id];
     }
   }
 

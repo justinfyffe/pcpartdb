@@ -1,10 +1,8 @@
 import {
   BenchmarkKey,
-  compareProductFields,
   getProductBenchmark,
   getProductBenchmarkName,
   ProductDiff,
-  ProductField,
 } from '@pcpartdb/shared';
 import {
   Td,
@@ -34,17 +32,7 @@ export const BenchmarkDiffRow: FunctionComponent<BenchmarkDiffRowProps> = (
       return before !== after;
     }
 
-    if (typeof before === 'number' && typeof after === 'number') {
-      return before !== after;
-    }
-
-    if (typeof before === 'string' && typeof after === 'string') {
-      return before !== after;
-    }
-
-    return (
-      compareProductFields(before as ProductField, after as ProductField) !== 0
-    );
+    return before.value !== after.value;
   }, [after, before]);
 
   const label = useMemo(() => {
@@ -56,19 +44,12 @@ export const BenchmarkDiffRow: FunctionComponent<BenchmarkDiffRowProps> = (
       return '--';
     }
 
-    if (typeof before === 'number' || typeof before === 'string') {
-      return `${before}`;
-    }
     return before?.value?.toLocaleString() ?? '--';
   }, [before]);
 
   const afterText = useMemo(() => {
     if (after == null) {
       return '--';
-    }
-
-    if (typeof after === 'number' || typeof after === 'string') {
-      return `${after}`;
     }
 
     return after?.value?.toLocaleString() ?? '--';

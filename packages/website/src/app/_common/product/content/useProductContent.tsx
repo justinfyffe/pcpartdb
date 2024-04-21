@@ -12,7 +12,7 @@ import {
 import { useMemo } from 'react';
 import { ViewModelType } from '../../contexts/types';
 import { useViewModelContext } from '../../contexts/ViewModelProvider';
-import { usePreferredBenchmark } from '../../user/usePreferredBenchmark';
+import { usePreferredBenchmark } from '../hooks/usePreferredBenchmark';
 import { buildProductContentParams } from './buildProductContentParams';
 import { buildProductContentTags } from './buildProductContentTags';
 
@@ -26,9 +26,9 @@ export function useProductContent(productIndex?: number) {
     return buildProductContentParams({
       product,
       preferredBenchmark,
-      contentData: viewModel.contentData,
+      relativeProducts: viewModel.relativeDataProducts,
     });
-  }, [preferredBenchmark, product, viewModel.contentData]);
+  }, [preferredBenchmark, product, viewModel.relativeDataProducts]);
 
   const contentTags = useMemo(() => {
     return buildProductContentTags({

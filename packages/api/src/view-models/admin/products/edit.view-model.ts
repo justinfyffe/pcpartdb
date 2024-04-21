@@ -44,9 +44,11 @@ export class AdminEditProductViewModelService {
         includeParent: true,
         includeAutomation: true,
         includeBenchmarks: true,
+        includeGames: true,
         includeImages: true,
         includeSources: true,
         includeUpdates: true,
+        bypassCache: true,
       },
       ctx,
     );
@@ -65,9 +67,11 @@ export class AdminEditProductViewModelService {
         includeParent: true,
         includeAutomation: true,
         includeBenchmarks: true,
+        includeGames: true,
         includeImages: true,
         includeSources: true,
         includeUpdates: true,
+        bypassCache: true,
       },
       ctx,
     );

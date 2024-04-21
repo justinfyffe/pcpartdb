@@ -1,6 +1,7 @@
 export enum AdUnit {
   ComparePageMidSummaryInArticle = 'COMPARE_PAGE_MID_SUMMARY_IN_ARTICLE',
-  ComparePagePostPerfValueDisplay = 'COMPARE_PAGE_POST_PERF_VALUE_DISPLAY',
+  ComparePagePostBenchmarkPerfValueDisplay = 'COMPARE_PAGE_POST_BENCHMARK_PERF_VALUE_DISPLAY',
+  ComparePagePostGamingPerfValueDisplay = 'COMPARE_PAGE_POST_GAMING_PERF_VALUE_DISPLAY',
   ComparePagePostSummaryDisplay = 'COMPARE_PAGE_POST_SUMMARY_DISPLAY',
   ComparePagePostSummaryMultiplex = 'COMPARE_PAGE_POST_SUMMARY_MULTIPLEX',
   ComparePagePostTechSpecsMultiplex = 'COMPARE_PAGE_POST_TECH_SPECS_MULTIPLEX',
@@ -10,7 +11,8 @@ export enum AdUnit {
   ListPageTableFooterMultiplex = 'LIST_PAGE_TABLE_FOOTER_MULTIPLEX',
   ListPageTableSideMultiplex = 'LIST_PAGE_TABLE_SIDE_MULTIPLEX',
 
-  ViewPagePostPerfValueDisplay = 'VIEW_PAGE_POST_PERF_VALUE_DISPLAY',
+  ViewPagePostBenchmarkPerfValueDisplay = 'VIEW_PAGE_POST_BENCHMARK_PERF_VALUE_DISPLAY',
+  ViewPagePostGamingPerfValueDisplay = 'VIEW_PAGE_POST_GAMING_PERF_VALUE_DISPLAY',
   ViewPagePostSummaryDisplay = 'VIEW_PAGE_POST_SUMMARY_DISPLAY',
   ViewPagePostSummaryMultiplex = 'VIEW_PAGE_POST_SUMMARY_MULTIPLEX',
   ViewPagePostTechSpecsMultiplex = 'VIEW_PAGE_POST_TECH_SPECS_MULTIPLEX',
@@ -33,8 +35,12 @@ export const AD_UNITS: Record<AdUnit, AdUnitConfig> = {
     slotId: '3396984218',
     enabled: true,
   },
-  [AdUnit.ComparePagePostPerfValueDisplay]: {
+  [AdUnit.ComparePagePostBenchmarkPerfValueDisplay]: {
     slotId: '9988127509',
+    enabled: true,
+  },
+  [AdUnit.ComparePagePostGamingPerfValueDisplay]: {
+    slotId: '9664382156',
     enabled: true,
   },
   [AdUnit.ComparePagePostSummaryDisplay]: {
@@ -75,8 +81,12 @@ export const AD_UNITS: Record<AdUnit, AdUnitConfig> = {
   // View Page Ads
   //
 
-  [AdUnit.ViewPagePostPerfValueDisplay]: {
+  [AdUnit.ViewPagePostBenchmarkPerfValueDisplay]: {
     slotId: '1887681172',
+    enabled: true,
+  },
+  [AdUnit.ViewPagePostGamingPerfValueDisplay]: {
+    slotId: '3034227338',
     enabled: true,
   },
   [AdUnit.ViewPagePostSummaryDisplay]: {

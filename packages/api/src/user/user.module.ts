@@ -1,7 +1,6 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { AuthModule } from '../auth/auth.module';
 import { DatabaseModule } from '../database';
-import { ProductModule } from '../product/product.module';
 import { CookieModule } from '../shared/cookie/cookie.module';
 import { ViewModelsModule } from '../view-models/view-models.module';
 import { UserController } from './user.controller';
@@ -15,7 +14,6 @@ import { UserSettingsService } from './user-settings.service';
     DatabaseModule,
     forwardRef(() => AuthModule),
     CookieModule,
-    ProductModule,
     forwardRef(() => ViewModelsModule),
   ],
   controllers: [UserController, UserSettingsController],

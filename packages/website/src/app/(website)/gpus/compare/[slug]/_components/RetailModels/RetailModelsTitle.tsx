@@ -5,10 +5,12 @@ import {
   formatProductName,
   getGpuChipset,
 } from '@pcpartdb/shared';
+import { SectionHeader } from 'packages/website/src/app/_common/components/SectionHeader/SectionHeader';
 import { ContentProvider } from 'packages/website/src/app/_common/content/ContentProvider';
 import { compileContentComponent } from 'packages/website/src/app/_common/content/utils/compileContentComponent';
 import { useViewModel } from 'packages/website/src/app/_common/contexts/ViewModelProvider';
 import React from 'react';
+import { Contents } from '../Contents/Contents';
 
 const Title = compileContentComponent({
   tags: [],
@@ -29,9 +31,9 @@ export const RetailModelsTitle = () => {
 
   return (
     <ContentProvider params={{ chipsetName1, chipsetName2 }}>
-      <h2 className="mb-1 font-semibold">
+      <SectionHeader linkId="retail-models" menu={<Contents />}>
         <Title />
-      </h2>
+      </SectionHeader>
     </ContentProvider>
   );
 };

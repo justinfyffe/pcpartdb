@@ -1,4 +1,9 @@
-import { CpuProduct, CpuProductComparison, ListCpusResponse } from '../product';
+import {
+  CpuProduct,
+  CpuProductComparison,
+  ListCpusResponse,
+  RelativeDataProducts,
+} from '../product';
 
 export interface AdminEditCpuViewModel {
   cpu: CpuProduct;
@@ -7,13 +12,10 @@ export interface AdminEditCpuViewModel {
 export interface CompareCpusViewModel {
   comparison: CpuProductComparison;
 
-  relativePerformanceCpus: CpuProduct[];
-  relativeValueCpus: CpuProduct[];
-
   relatedCpus: Partial<CpuProduct>[];
   relatedCpuComparisons: CpuProductComparison[];
 
-  contentData: CpuContentData;
+  relativeDataProducts: RelativeDataProducts;
 }
 
 export interface ListCpusViewModel extends ListCpusResponse {}
@@ -21,16 +23,8 @@ export interface ListCpusViewModel extends ListCpusResponse {}
 export interface ViewCpuViewModel {
   cpu: CpuProduct;
 
-  relativePerformanceCpus: Partial<CpuProduct>[];
-  relativeValueCpus: Partial<CpuProduct>[];
-
   relatedCpus: Partial<CpuProduct>[];
   relatedCpuComparisons: CpuProductComparison[];
 
-  contentData: CpuContentData;
-}
-
-export interface CpuContentData {
-  bestPerformanceCpu?: Partial<CpuProduct>;
-  bestValueCpu?: Partial<CpuProduct>;
+  relativeDataProducts: RelativeDataProducts;
 }

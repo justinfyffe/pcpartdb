@@ -94,7 +94,7 @@ export const CpuSourceCard = (props: CpuSourceCardProps) => {
   const [preferredSlug, setPreferredSlug] = useState(() =>
     generateProductSlug({ name: preferredName, company: null }),
   );
-  const [appliedCpu, setAppliedCpu] = useState<Product>(null);
+  const [appliedCpu, setAppliedCpu] = useState<Partial<Product>>(null);
   const [groupKey] = useState(() => {
     const key = SUPPORTED_KEYS.find((key) => currentSources[key] != null);
     return currentSources[key]?.groupKey ?? null;

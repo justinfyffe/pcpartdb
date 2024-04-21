@@ -6,7 +6,7 @@ import { getGpuAiPrompt } from './getGpuAiPrompt';
 
 interface AiPromptProps {
   productType: ProductType;
-  product: Product;
+  product: Partial<Product>;
 }
 
 export const AiPrompt: FunctionComponent<AiPromptProps> = (props) => {

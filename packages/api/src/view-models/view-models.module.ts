@@ -2,13 +2,14 @@ import { forwardRef, Module } from '@nestjs/common';
 import { AuthModule } from '../auth/auth.module';
 import { AutomationModule } from '../automation/automation.module';
 import { DatabaseModule } from '../database';
+import { GameModule } from '../game/game.module';
 import { ImageModule } from '../image/image.module';
 import { ProductModule } from '../product/product.module';
 import { CacheModule } from '../shared/cache/cache.module';
 import { UserModule } from '../user/user.module';
 import { AdminAutomationViewModelService } from './admin/automation/automation.view-model';
+import { AdminEditGameViewModelService } from './admin/games/edit.view-model';
 import { AdminEditImageViewModelService } from './admin/images/edit.view-model';
-import { AdminListImagesViewModelService } from './admin/images/list.view-model';
 import { AdminOverviewViewModelService } from './admin/overview/overview.view-model';
 import { AdminEditProductViewModelService } from './admin/products/edit.view-model';
 import { AdminEditUserViewModelService } from './admin/users/edit.view-model';
@@ -29,6 +30,7 @@ import { ViewModelsController } from './view-models.controller';
     DatabaseModule,
     forwardRef(() => AuthModule),
     AutomationModule,
+    GameModule,
     ProductModule,
     ImageModule,
     forwardRef(() => UserModule),
@@ -39,12 +41,12 @@ import { ViewModelsController } from './view-models.controller';
     AdminAutomationViewModelService,
 
     // Admin Edit Pages
+    AdminEditGameViewModelService,
     AdminEditProductViewModelService,
     AdminEditImageViewModelService,
     AdminEditUserViewModelService,
 
     // Admin List Pages
-    AdminListImagesViewModelService,
     AdminListUsersViewModelService,
 
     // Admin Other Pages

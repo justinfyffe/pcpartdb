@@ -30,7 +30,7 @@ export const AdminEditImagePage = (props: AdminEditImageViewModel) => {
           <GenericButton href={getAdminListImagesPath()}>Back</GenericButton>
         </div>
 
-        <ImageForm image={image} />
+        <ImageForm image={image} redirectOnSuccess />
       </article>
     </AdminLayout>
   );

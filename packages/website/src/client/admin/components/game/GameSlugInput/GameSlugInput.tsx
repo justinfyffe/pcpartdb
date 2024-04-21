@@ -1,0 +1,39 @@
+import { generateProductSlug } from '@pcpartdb/shared';
+import { Button } from 'packages/website/src/client/shared/components/Button/Button';
+import React, { forwardRef, useCallback } from 'react';
+import { Control, useWatch } from 'react-hook-form';
+import { Input } from '../../../../shared/components/Input/Input';
+
+export interface GameSlugInputProps {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  control: Control<any, any>;
+
+  value?: string;
+  onChange?: (value: string) => void;
+}
+
+export const GameSlugInput = forwardRef<HTMLInputElement, GameSlugInputProps>(
+  (props, ref) => {
+    const { control, onChange, value } = props;
+
+    const name: string = useWatch({ control, name: 'name' });
+
+    const handleGenerate = useCallback(() => {
+      const slug = generateProductSlug({
+        name,
+      });
+      onChange?.(slug);
+    }, [onChange, name]);
+
+    return (
+      <Input
+        type="string"
+        value={value || ''}
+        onChange={onChange}
+        ref={ref}
+        suffix={<Button onClick={handleGenerate}>Generate</Button>}
+      />
+    );
+  },
+);
+GameSlugInput.displayName = 'GameSlugInput';

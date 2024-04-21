@@ -1,11 +1,13 @@
 import {
   ApiError,
   CompareGpusViewModel,
+  compareGpusViewModelNormalizr,
   formatProductComparisonName,
   formatProductName,
   getCompareGpusPath,
   getHomePath,
   getListGpusPath,
+  GpuProduct,
   isApiError,
   isNotFoundError,
   joinUrlParts,
@@ -26,7 +28,9 @@ import { ViewModelType } from 'packages/website/src/app/_common/contexts/types';
 import { ViewModelProvider } from 'packages/website/src/app/_common/contexts/ViewModelProvider';
 import { CompareProductsForm } from 'packages/website/src/app/_common/product/components/CompareProductsForm/CompareProductsForm';
 import React from 'react';
+import { Contents } from './_components/Contents/Contents';
 import { Disclaimer } from './_components/Disclaimer/Disclaimer';
+import { GamingPerformance } from './_components/GamingPerformance/GamingPerformance';
 import { GeneralInfo } from './_components/GeneralInfo/GeneralInfo';
 import { Highlights } from './_components/Highlights/Highlights';
 import { Overview } from './_components/Overview/Overview';
@@ -35,6 +39,7 @@ import { RelatedComparisons } from './_components/Related/RelatedComparisons';
 import { RelatedGpus } from './_components/Related/RelatedGpus';
 import { RetailModels } from './_components/RetailModels/RetailModels';
 import { TechnicalSpecs } from './_components/TechnicalSpecs/TechnicalSpecs';
+import { PageProvider } from './PageProvider';
 
 type CompareGpusPageProps = {
   params: { slug: string };
@@ -48,11 +53,16 @@ export async function generateMetadata(
   const slug = props.params.slug;
 
   const benchmark = props.searchParams.gpu_benchmark as string;
-  const endpoint = joinUrlParts('gpus/compare', slug);
+  const endpoint = joinUrlParts(
+    'gpus/compare',
+    slug,
+    `?game=${props.searchParams.game as string}`,
+  );
 
   const viewModel = await viewModelClient.get<CompareGpusViewModel | ApiError>(
     endpoint,
     {
+      normalizr: compareGpusViewModelNormalizr,
       preferredBenchmarks: { gpu: benchmark },
       headers: { Cookie: cookies().toString() },
     },
@@ -93,28 +103,27 @@ export async function generateMetadata(
 export default async function CompareGpusPage(props: CompareGpusPageProps) {
   const slug = props.params.slug;
   const benchmark = props.searchParams.gpu_benchmark as string;
-  const endpoint = joinUrlParts('gpus/compare', slug);
+  const endpoint = joinUrlParts(
+    'gpus/compare',
+    slug,
+    `?game=${props.searchParams.game as string}`,
+  );
 
-  const response = await viewModelClient.get<CompareGpusViewModel | ApiError>(
+  const viewModel = await viewModelClient.get<CompareGpusViewModel | ApiError>(
     endpoint,
     {
+      normalizr: compareGpusViewModelNormalizr,
       preferredBenchmarks: { gpu: benchmark },
       headers: { Cookie: cookies().toString() },
     },
   );
-  if (isNotFoundError(response)) {
+  if (isNotFoundError(viewModel)) {
     throw notFound();
-  } else if (isApiError(response)) {
-    throw response;
+  } else if (isApiError(viewModel)) {
+    throw viewModel;
   }
 
-  const {
-    comparison,
-    retailModels1,
-    retailModels2,
-    relatedComparisons,
-    relatedGpus,
-  } = response;
+  const { comparison, relatedGpuComparisons, relatedGpus } = viewModel;
   const [gpu1, gpu2] = comparison;
 
   const pageTitle = formatProductComparisonName(comparison);
@@ -123,49 +132,43 @@ export default async function CompareGpusPage(props: CompareGpusPageProps) {
   });
 
   return (
-    <CacheProvider products={[gpu1, gpu2]}>
-      <ViewModelProvider
-        type={ViewModelType.CompareGpusViewModel}
-        viewModel={response}
-      >
-        <Breadcrumbs className="mb-4">
-          <Breadcrumb href={getHomePath()}>Home</Breadcrumb>
-          <Breadcrumb href={getListGpusPath()}>Graphics Cards</Breadcrumb>
-          <Breadcrumb>{shortPageTitle}</Breadcrumb>
-        </Breadcrumbs>
+    <PageProvider viewModel={viewModel}>
+      <Breadcrumbs className="mb-4">
+        <Breadcrumb href={getHomePath()}>Home</Breadcrumb>
+        <Breadcrumb href={getListGpusPath()}>Graphics Cards</Breadcrumb>
+        <Breadcrumb>{shortPageTitle}</Breadcrumb>
+      </Breadcrumbs>
 
-        <div className="flex flex-col gap-6 justify-center">
-          <section className="flex flex-wrap w-full">
-            <h1 className="font-semibold">{pageTitle}</h1>
+      <div className="flex flex-col gap-6 justify-center">
+        <section className="flex flex-wrap w-full">
+          <h1 className="font-semibold">{pageTitle}</h1>
 
-            <CompareProductsForm
-              productType={ProductType.Gpu}
-              values={[gpu1?.id, gpu2?.id]}
-            />
-          </section>
+          <CompareProductsForm
+            productType={ProductType.Gpu}
+            values={[gpu1?.id, gpu2?.id]}
+          />
+        </section>
 
-          <DisplayAd unit={AdUnit.ComparePagePreHighlightsDisplay} />
+        <DisplayAd unit={AdUnit.ComparePagePreHighlightsDisplay} />
 
-          <article className="flex-1 flex flex-col gap-6 max-w-full">
-            <Highlights comparison={comparison} />
-            <Overview comparison={comparison} />
-            <DisplayAd unit={AdUnit.ComparePagePostSummaryDisplay} />
-            <GeneralInfo comparison={comparison} />
-            <PerformanceAndValue />
-            <DisplayAd unit={AdUnit.ComparePagePostPerfValueDisplay} />
-            <TechnicalSpecs comparison={comparison} />
-            <RetailModels
-              comparison={comparison}
-              retailModels1={retailModels1}
-              retailModels2={retailModels2}
-            />
-            <MultiplexAd unit={AdUnit.ComparePagePostTechSpecsMultiplex} />
-            <RelatedComparisons relatedGpuComparisons={relatedComparisons} />
-            <RelatedGpus relatedGpus={relatedGpus} />
-            <Disclaimer />
-          </article>
-        </div>
-      </ViewModelProvider>
-    </CacheProvider>
+        <article className="flex-1 flex flex-col gap-6 max-w-full">
+          <Contents />
+          <Highlights comparison={comparison} />
+          <Overview comparison={comparison} />
+          <DisplayAd unit={AdUnit.ComparePagePostSummaryDisplay} />
+          <GeneralInfo comparison={comparison} />
+          <GamingPerformance comparison={comparison} />
+          <DisplayAd unit={AdUnit.ComparePagePostGamingPerfValueDisplay} />
+          <PerformanceAndValue comparison={comparison} />
+          <DisplayAd unit={AdUnit.ComparePagePostBenchmarkPerfValueDisplay} />
+          <TechnicalSpecs comparison={comparison} />
+          <RetailModels comparison={comparison} />
+          <MultiplexAd unit={AdUnit.ComparePagePostTechSpecsMultiplex} />
+          <RelatedComparisons relatedGpuComparisons={relatedGpuComparisons} />
+          <RelatedGpus relatedGpus={relatedGpus} />
+          <Disclaimer />
+        </article>
+      </div>
+    </PageProvider>
   );
 }

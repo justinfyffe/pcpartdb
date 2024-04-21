@@ -8,8 +8,8 @@ import { StaffGuard } from '../auth/staff.guard';
 import { Database } from '../database';
 import { Context, Ctx } from '../shared/context';
 import { AdminAutomationViewModelService } from './admin/automation/automation.view-model';
+import { AdminEditGameViewModelService } from './admin/games/edit.view-model';
 import { AdminEditImageViewModelService } from './admin/images/edit.view-model';
-import { AdminListImagesViewModelService } from './admin/images/list.view-model';
 import { AdminOverviewViewModelService } from './admin/overview/overview.view-model';
 import { AdminEditProductViewModelService } from './admin/products/edit.view-model';
 import { AdminEditUserViewModelService } from './admin/users/edit.view-model';
@@ -30,8 +30,8 @@ export class ViewModelsController {
     private adminOverviewViewModelService: AdminOverviewViewModelService,
     private adminAutomationViewModelService: AdminAutomationViewModelService,
     private adminEditProductViewModelService: AdminEditProductViewModelService,
+    private adminEditGameViewModelService: AdminEditGameViewModelService,
     private adminEditImageViewModelService: AdminEditImageViewModelService,
-    private adminListImagesViewModelService: AdminListImagesViewModelService,
     private adminEditUserViewModelService: AdminEditUserViewModelService,
     private adminListUsersViewModelService: AdminListUsersViewModelService,
     private compareCpusViewModelService: CompareCpusViewModelService,
@@ -66,6 +66,20 @@ export class ViewModelsController {
     );
   }
 
+  @Get('admin/games/:idOrSlug')
+  @UseGuards(StaffGuard)
+  async adminEditGame(
+    @Param('idOrSlug') idOrSlug: string,
+    @Ctx() ctx: Context,
+  ) {
+    return await this.db.transaction(
+      () => {
+        return this.adminEditGameViewModelService.viewModel(idOrSlug, ctx);
+      },
+      { ctx },
+    );
+  }
+
   @Get('admin/products/:idOrSlug')
   @UseGuards(StaffGuard)
   async adminEditProduct(
@@ -93,15 +107,6 @@ export class ViewModelsController {
         const id = Number(idStr);
         return this.adminEditImageViewModelService.viewModel(id, ctx);
       },
-      { ctx },
-    );
-  }
-
-  @Get('admin/images/list')
-  @UseGuards(StaffGuard)
-  async adminListImages(@Ctx() ctx: Context) {
-    return await this.db.transaction(
-      () => this.adminListImagesViewModelService.viewModel(ctx),
       { ctx },
     );
   }

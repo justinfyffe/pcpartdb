@@ -18,7 +18,7 @@ export const Benchmarks: FunctionComponent = () => {
     <section>
       <h3 className="mb-1 font-semibold">Benchmarks</h3>
       <BenchmarksIntro />
-      <BenchmarkTables />
+      <BenchmarkTables credit />
     </section>
   );
 };

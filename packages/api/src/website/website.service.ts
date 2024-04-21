@@ -5,7 +5,7 @@ import {
   getSitemapProductSlugsSchema,
   UploadSitemapRequest,
 } from '@pcpartdb/shared';
-import { ProductRepository } from '../product/product.repository';
+import { ProductRepository } from '../product/repositories';
 import { Context } from '../shared/context';
 import * as fileUtils from '../shared/utils';
 import { validate } from '../shared/validation/validate';

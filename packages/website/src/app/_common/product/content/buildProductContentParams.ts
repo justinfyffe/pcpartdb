@@ -2,7 +2,6 @@
 
 import {
   BenchmarkKey,
-  CpuContentData,
   CpuProduct,
   formatGpuDimensions,
   formatOrdinalNumber,
@@ -14,7 +13,6 @@ import {
   getProductPerformanceRank,
   getProductPerformanceTotalRanked,
   getProductValueRank,
-  GpuContentData,
   GpuProduct,
   hasLaunched,
   hasProductFieldFormattedValue,
@@ -25,21 +23,21 @@ import {
   Product,
   productBenchmarkValue,
   productBenchmarkValuePerMsrp,
-  ProductContentData,
   ProductField,
   productFieldFormattedValue,
   productFieldRawValue,
+  RelativeDataProducts,
 } from '@pcpartdb/shared';
 import { ContentParams } from '../../content/types';
 
 interface BuildContentParamsOptions {
   preferredBenchmark: BenchmarkKey;
   product: Product;
-  contentData: ProductContentData;
+  relativeProducts: RelativeDataProducts;
 }
 
 export function buildProductContentParams(options: BuildContentParamsOptions) {
-  const { product, contentData, preferredBenchmark } = options;
+  const { product, relativeProducts, preferredBenchmark } = options;
   const params: ContentParams = {};
 
   params['architecture'] = getFormattedValue(product?.fields?.architecture);
@@ -103,12 +101,12 @@ export function buildProductContentParams(options: BuildContentParamsOptions) {
     ...buildCpuContentParams(
       preferredBenchmark,
       product as CpuProduct,
-      contentData as CpuContentData,
+      relativeProducts,
     ),
     ...buildGpuContentParams(
       preferredBenchmark,
       product as GpuProduct,
-      contentData as GpuContentData,
+      relativeProducts,
     ),
   };
 }
@@ -116,7 +114,7 @@ export function buildProductContentParams(options: BuildContentParamsOptions) {
 function buildCpuContentParams(
   preferredBenchmark: BenchmarkKey,
   product: CpuProduct,
-  additionalData: CpuContentData,
+  relativeProducts: RelativeDataProducts,
 ) {
   const params: ContentParams = {};
   if (!isCpuProduct(product)) {
@@ -126,14 +124,14 @@ function buildCpuContentParams(
   const bestPerformanceDifferencePct =
     productBenchmarkValue(product, preferredBenchmark) != null &&
     productBenchmarkValue(
-      additionalData?.bestPerformanceCpu,
+      relativeProducts?.bestBenchmarkPerformance,
       preferredBenchmark,
     ) != null
       ? (
           100 *
           (productBenchmarkValue(product, preferredBenchmark) /
             productBenchmarkValue(
-              additionalData?.bestPerformanceCpu,
+              relativeProducts?.bestBenchmarkPerformance,
               preferredBenchmark,
             ))
         ).toFixed(2)
@@ -141,7 +139,7 @@ function buildCpuContentParams(
 
   params['bestPerformanceDifferencePct'] = bestPerformanceDifferencePct;
   params['bestPerformanceName'] = formatProductName(
-    additionalData?.bestPerformanceCpu,
+    relativeProducts?.bestBenchmarkPerformance,
   );
 
   params['boostClock'] = getFormattedValue(product?.fields?.turboClock);
@@ -178,7 +176,7 @@ function buildCpuContentParams(
 function buildGpuContentParams(
   preferredBenchmark: BenchmarkKey,
   product: GpuProduct,
-  additionalData: GpuContentData,
+  relativeProducts: RelativeDataProducts,
 ) {
   const params: ContentParams = {};
   if (!isGpuProduct(product)) {
@@ -189,14 +187,14 @@ function buildGpuContentParams(
   const bestPerformanceDifferencePct =
     productBenchmarkValue(chipset, preferredBenchmark) != null &&
     productBenchmarkValue(
-      additionalData?.bestPerformanceGpu,
+      relativeProducts?.bestBenchmarkPerformance,
       preferredBenchmark,
     ) != null
       ? (
           100 *
           (productBenchmarkValue(chipset, preferredBenchmark) /
             productBenchmarkValue(
-              additionalData?.bestPerformanceGpu,
+              relativeProducts?.bestBenchmarkPerformance,
               preferredBenchmark,
             ))
         ).toFixed(2)
@@ -204,7 +202,7 @@ function buildGpuContentParams(
 
   params['bestPerformanceDifferencePct'] = bestPerformanceDifferencePct;
   params['bestPerformanceName'] = formatProductName(
-    additionalData?.bestPerformanceGpu,
+    relativeProducts?.bestBenchmarkPerformance,
   );
 
   params['busInterface'] = getFormattedValue(product?.fields?.busInterface);

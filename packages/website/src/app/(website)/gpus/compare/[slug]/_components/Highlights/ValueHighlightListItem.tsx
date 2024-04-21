@@ -6,6 +6,7 @@ import {
   formatProductName,
   getGpuChipset,
   getProductBenchmarkName,
+  percentDifference,
   productBenchmarkValuePerMsrp,
   ProductType,
 } from '@pcpartdb/shared';
@@ -13,8 +14,9 @@ import { Button } from 'packages/website/src/app/_common/components/Button/Butto
 import { ButtonVariant } from 'packages/website/src/app/_common/components/Button/types';
 import { useViewModelContext } from 'packages/website/src/app/_common/contexts/ViewModelProvider';
 import { ProductHighlightComparison } from 'packages/website/src/app/_common/product/components/ProductHighlightComparison/ProductHighlightComparison';
-import { usePreferredBenchmark } from 'packages/website/src/app/_common/user/usePreferredBenchmark';
-import { usePreferredBenchmarkDialog } from 'packages/website/src/app/_common/user/usePreferredBenchmarkDialog';
+import { useRelativeDataProducts } from 'packages/website/src/app/_common/product/contexts/RelativeDataProductsProvider';
+import { usePreferredBenchmark } from 'packages/website/src/app/_common/product/hooks/usePreferredBenchmark';
+import { usePreferredBenchmarkDialog } from 'packages/website/src/app/_common/product/hooks/usePreferredBenchmarkDialog';
 import React, { FunctionComponent, useMemo } from 'react';
 
 interface ValueHighlightListItemProps {
@@ -26,18 +28,17 @@ export const ValueHighlightListItem: FunctionComponent<
 > = (props) => {
   const { className } = props;
 
-  const { viewModel, updateViewModel } =
-    useViewModelContext<CompareGpusViewModel>();
+  const { viewModel } = useViewModelContext<CompareGpusViewModel>();
   const [gpu1, gpu2] = viewModel.comparison;
   const chipset1 = getGpuChipset(gpu1);
   const chipset2 = getGpuChipset(gpu2);
+  const { loading } = useRelativeDataProducts();
 
   const preferredBenchmark = usePreferredBenchmark(ProductType.Gpu);
   const showPreferredBenchmarkDialog = usePreferredBenchmarkDialog({
     productType: ProductType.Gpu,
     softReload: true,
     productIds: [gpu1.id, gpu2.id],
-    onChange: updateViewModel,
   });
 
   const values = useMemo(() => {
@@ -74,16 +75,14 @@ export const ValueHighlightListItem: FunctionComponent<
     let diff2: string = null;
     if (rawValue1 && rawValue2) {
       if (rawValue1 > rawValue2) {
-        const pct = ((rawValue1 / rawValue2 - 1) * 100).toLocaleString(
-          'en-US',
-          { maximumFractionDigits: 2 },
-        );
+        const pct = (
+          percentDifference(rawValue2, rawValue1) * 100
+        ).toLocaleString('en-US', { maximumFractionDigits: 2 });
         diff1 = `(+${pct}%)`;
       } else if (rawValue2 > rawValue1) {
-        const pct = ((rawValue2 / rawValue1 - 1) * 100).toLocaleString(
-          'en-US',
-          { maximumFractionDigits: 2 },
-        );
+        const pct = (
+          percentDifference(rawValue1, rawValue2) * 100
+        ).toLocaleString('en-US', { maximumFractionDigits: 2 });
         diff2 = `(+${pct}%)`;
       }
     }
@@ -112,6 +111,7 @@ export const ValueHighlightListItem: FunctionComponent<
       }
       values={values}
       className={className}
+      loading={loading}
     ></ProductHighlightComparison>
   );
 };

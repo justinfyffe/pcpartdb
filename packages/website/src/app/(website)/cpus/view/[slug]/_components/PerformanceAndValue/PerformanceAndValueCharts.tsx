@@ -17,7 +17,7 @@ import {
 import { useViewModelContext } from 'packages/website/src/app/_common/contexts/ViewModelProvider';
 import { ProductRatingType } from 'packages/website/src/app/_common/product/components/ProductRatingCard/types';
 import { ViewProductRatingCard } from 'packages/website/src/app/_common/product/components/ProductRatingCard/ViewProductRatingCard';
-import { usePreferredBenchmark } from 'packages/website/src/app/_common/user/usePreferredBenchmark';
+import { usePreferredBenchmark } from 'packages/website/src/app/_common/product/hooks/usePreferredBenchmark';
 import { classNames } from 'packages/website/src/app/_common/utils/classNames';
 import React, { FunctionComponent, useMemo } from 'react';
 
@@ -31,10 +31,12 @@ export const PerformanceAndValueCharts: FunctionComponent<
   const { className } = props;
   const preferredBenchmark = usePreferredBenchmark(ProductType.Cpu);
 
-  const { viewModel, updateViewModel } =
-    useViewModelContext<ViewCpuViewModel>();
+  const { viewModel } = useViewModelContext<ViewCpuViewModel>();
   const cpu = viewModel.cpu;
-  const { bestPerformanceCpu, bestValueCpu } = viewModel.contentData;
+  const bestPerformanceCpu =
+    viewModel.relativeDataProducts?.bestBenchmarkPerformance;
+  const bestValueCpu =
+    viewModel.relativeDataProducts?.bestBenchmarkPerformancePerDollar;
 
   const name = useMemo(() => {
     return formatProductName(cpu, { company: false, brand: false });
@@ -73,7 +75,6 @@ export const PerformanceAndValueCharts: FunctionComponent<
         rank={getProductPerformanceRank(cpu, preferredBenchmark)}
         rankHref={performanceRankHref}
         className="flex-1"
-        onBenchmarkChange={updateViewModel}
       />
 
       <ViewProductRatingCard
@@ -91,7 +92,6 @@ export const PerformanceAndValueCharts: FunctionComponent<
         rank={getProductValueRank(cpu, preferredBenchmark)}
         rankHref={valueRankHref}
         className="flex-1"
-        onBenchmarkChange={updateViewModel}
       />
     </div>
   );

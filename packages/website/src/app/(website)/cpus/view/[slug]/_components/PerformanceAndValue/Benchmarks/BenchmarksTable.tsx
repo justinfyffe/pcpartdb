@@ -14,6 +14,7 @@ import { Tr } from 'packages/website/src/app/_common/components/Table/Tr';
 import { Tab } from 'packages/website/src/app/_common/components/Tabs/Tab';
 import { Tabs } from 'packages/website/src/app/_common/components/Tabs/Tabs';
 import { useViewModel } from 'packages/website/src/app/_common/contexts/ViewModelProvider';
+import { BenchmarksCredit } from 'packages/website/src/app/_common/product/components/BenchmarksCredit/BenchmarksCredit';
 import { ProductBenchmarkRow } from 'packages/website/src/app/_common/product/components/ProductBenchmarkRow/ProductBenchmarkRow';
 import { classNames } from 'packages/website/src/app/_common/utils/classNames';
 import React, { FunctionComponent, useMemo } from 'react';
@@ -92,10 +93,13 @@ const BENCHMARKS = [
 ];
 
 interface BenchmarkTablesProps {
+  credit?: boolean;
   className?: string;
 }
 
-export const BenchmarkTables: FunctionComponent<BenchmarkTablesProps> = () => {
+export const BenchmarkTables: FunctionComponent<BenchmarkTablesProps> = (
+  props,
+) => {
   const viewModel = useViewModel<ViewCpuViewModel>();
   const cpu = viewModel.cpu;
 
@@ -106,16 +110,24 @@ export const BenchmarkTables: FunctionComponent<BenchmarkTablesProps> = () => {
   }, [cpu]);
 
   return (
-    <Tabs tabClassName="p-1">
-      {filteredBenchmarks.map((group, i) => (
-        <BenchmarkTab
-          key={i}
-          label={group.name}
-          name={group.name}
-          benchmarks={group.benchmarks}
+    <div className="flex flex-col">
+      <Tabs tabClassName="p-1">
+        {filteredBenchmarks.map((group, i) => (
+          <BenchmarkTab
+            key={i}
+            label={group.name}
+            name={group.name}
+            benchmarks={group.benchmarks}
+          />
+        ))}
+      </Tabs>
+      {!!props.credit && (
+        <BenchmarksCredit
+          sourceName="Notebookcheck"
+          sourceUrl="https://notebookcheck.net"
         />
-      ))}
-    </Tabs>
+      )}
+    </div>
   );
 };
 

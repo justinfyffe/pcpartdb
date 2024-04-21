@@ -1,13 +1,14 @@
 'use client';
 
-import { ProductType } from '@pcpartdb/shared';
+import { ProductType, ViewCpuViewModel } from '@pcpartdb/shared';
 import { Button } from 'packages/website/src/app/_common/components/Button/Button';
 import { ButtonVariant } from 'packages/website/src/app/_common/components/Button/types';
 import { ContentProvider } from 'packages/website/src/app/_common/content/ContentProvider';
 import { compileContentComponent } from 'packages/website/src/app/_common/content/utils/compileContentComponent';
+import { useViewModelContext } from 'packages/website/src/app/_common/contexts/ViewModelProvider';
 import { useProductContent } from 'packages/website/src/app/_common/product/content/useProductContent';
-import { usePreferredBenchmarkDialog } from 'packages/website/src/app/_common/user/usePreferredBenchmarkDialog';
-import React from 'react';
+import { usePreferredBenchmarkDialog } from 'packages/website/src/app/_common/product/hooks/usePreferredBenchmarkDialog';
+import React, { useCallback } from 'react';
 
 const RatingDisclaimer = compileContentComponent({
   component: (props) => (
@@ -20,9 +21,16 @@ const RatingDisclaimer = compileContentComponent({
 });
 
 export const Disclaimer = () => {
+  const { viewModel } = useViewModelContext<ViewCpuViewModel>();
+
+  const handleBenchmarkChange = useCallback(async () => {
+    window.scrollTo(0, 0);
+  }, []);
   const showPreferredBenchmarkDialog = usePreferredBenchmarkDialog({
     productType: ProductType.Cpu,
-    hardReload: true,
+    softReload: true,
+    productIds: [viewModel.cpu.id],
+    onChange: handleBenchmarkChange,
   });
 
   const { contentTags, contentParams } = useProductContent();

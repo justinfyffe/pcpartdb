@@ -13,13 +13,14 @@ interface ProductHighlightComparisonProps {
   label: React.ReactElement | string;
   values?: Value[];
 
+  loading?: boolean;
   className?: string;
 }
 
 export const ProductHighlightComparison = (
   props: ProductHighlightComparisonProps,
 ) => {
-  const { icon, label, values, className } = props;
+  const { icon, label, values, className, loading } = props;
 
   return (
     <div
@@ -37,23 +38,42 @@ export const ProductHighlightComparison = (
       </div>
 
       <div className="w-full flex flex-wrap justify-evenly gap-4">
-        {values?.map(({ name, value, bold, extra }, i) => (
-          <React.Fragment key={`idx-${i}`}>
-            <div
-              className={classNames(
-                'flex flex-col items-center justify-between gap-0.5',
-                bold ? 'font-bold' : '',
-                className,
-              )}
-            >
-              <span className="text-base">{name}</span>
-              <div className="text-base flex gap-2 justify-center items-center">
-                {value}
-                {extra != null && <span className="text-xs">{extra}</span>}
+        {!loading &&
+          values?.map(({ name, value, bold, extra }, i) => (
+            <React.Fragment key={`idx-${i}`}>
+              <div
+                className={classNames(
+                  'flex flex-col items-center justify-between gap-0.5',
+                  bold ? 'font-bold' : '',
+                  className,
+                )}
+              >
+                <span className="text-base">{name}</span>
+                <div className="text-base flex gap-2 justify-center items-center">
+                  {value}
+                  {extra != null && <span className="text-xs">{extra}</span>}
+                </div>
+              </div>
+            </React.Fragment>
+          ))}
+
+        {loading && (
+          <>
+            <div className="flex flex-col items-center justify-between gap-0.5">
+              <div className="animate-pulse flex flex-col gap-3 h-[49px] justify-center">
+                <div className="w-20 h-3 bg-loading rounded" />
+                <div className="w-20 h-3 bg-loading rounded" />
               </div>
             </div>
-          </React.Fragment>
-        ))}
+
+            <div className="flex flex-col items-center justify-between gap-0.5">
+              <div className="animate-pulse flex flex-col gap-3 h-[49px] justify-center">
+                <div className="w-20 h-3 bg-loading rounded" />
+                <div className="w-20 h-3 bg-loading rounded" />
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

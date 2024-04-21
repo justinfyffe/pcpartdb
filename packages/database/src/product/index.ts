@@ -19,3 +19,11 @@ export * from './productSourceMapper';
 export * from './ProductUpdateEntity';
 export * from './productUpdateMapper';
 export * from './ProductUpdateRepository';
+
+export * from './ProductFieldsRepository';
+export * from './ProductBenchmarkRepository';
+export * from './ProductGameFpsRepository';
+export * from './ProductRanksRepository';
+export * from './ProductImageRepository';
+export * from './ProductSourceRepository';
+export * from './RelatedProductRepository';

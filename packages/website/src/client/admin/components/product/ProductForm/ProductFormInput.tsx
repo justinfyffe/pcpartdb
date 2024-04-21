@@ -34,6 +34,10 @@ import {
   ProductFloatInputProps,
 } from '../ProductFloatInput/ProductFloatInput';
 import {
+  ProductGamesInput,
+  ProductGamesInputProps,
+} from '../ProductGamesInput/ProductGamesInput';
+import {
   ProductImagesInput,
   ProductImagesInputProps,
 } from '../ProductImageInput/ProductImagesInput';
@@ -146,6 +150,14 @@ export const ProductFormInput: FunctionComponent<ProductFormInputProps> = (
     return (
       <ProductFloatInput
         {...(config as ProductFloatInputProps)}
+        {...restOfProps}
+        {...overrides}
+      />
+    );
+  } else if (inputType === ProductFormInputType.Games) {
+    return (
+      <ProductGamesInput
+        {...(config as ProductGamesInputProps)}
         {...restOfProps}
         {...overrides}
       />

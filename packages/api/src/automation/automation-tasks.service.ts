@@ -7,7 +7,7 @@ import {
 } from '@pcpartdb/shared';
 import * as fsPromises from 'fs/promises';
 import { Database } from '../database';
-import { ProductRepository } from '../product/product.repository';
+import { ProductRepository } from '../product/repositories';
 import { Context } from '../shared/context';
 import * as fileUtils from '../shared/utils';
 

@@ -4,6 +4,7 @@ import {
   ApiError,
   CreateImageRequest,
   Image,
+  ImageManipulationPreset,
   ImageMeta,
   ValidationErrorType,
 } from '@pcpartdb/shared';
@@ -24,6 +25,8 @@ import {
   FormActions,
 } from 'packages/website/src/client/shared/components/Form/Form';
 import { TextInput } from 'packages/website/src/client/shared/components/Input/TextInput';
+import { Select } from 'packages/website/src/client/shared/components/Select/Select';
+import { SelectOption } from 'packages/website/src/client/shared/components/Select/SelectOption';
 import { Spinner } from 'packages/website/src/client/shared/components/Spinner/Spinner';
 import React, {
   FunctionComponent,
@@ -37,6 +40,7 @@ import {
   FieldError as FormFieldError,
   useForm,
   UseFormProps,
+  useWatch,
 } from 'react-hook-form';
 import {
   formatFileSize,
@@ -55,6 +59,7 @@ interface ImageFormData {
   sourceName?: string;
   sourceUrl?: string;
 
+  manipulation?: ImageManipulationPreset;
   file?: File;
 }
 
@@ -63,16 +68,21 @@ const imageValidator = Joi.object({
   path: Joi.string().required(),
   sourceName: Joi.string().allow('', null),
   sourceUrl: Joi.string().allow('', null),
+  manipulation: Joi.string().allow('', null),
   file: Joi.any(),
 }).options({ abortEarly: false });
 
 interface ImageFormProps {
   image?: Image;
   redirectOnSuccess?: boolean;
+  defaultManipulation?: ImageManipulationPreset;
   onSuccess?: (image: Image) => void;
 }
 
-const formOptions = (image?: Image): UseFormProps<ImageFormData> => ({
+const formOptions = (
+  image?: Image,
+  defaultManipulation?: ImageManipulationPreset,
+): UseFormProps<ImageFormData> => ({
   resolver: joiResolver(imageValidator),
   mode: 'onBlur',
   defaultValues: {
@@ -80,11 +90,12 @@ const formOptions = (image?: Image): UseFormProps<ImageFormData> => ({
     name: image?.name ?? '',
     sourceName: image?.sourceName ?? '',
     sourceUrl: image?.sourceUrl ?? '',
+    manipulation: defaultManipulation ?? null,
   },
 });
 
 export const ImageForm: FunctionComponent<ImageFormProps> = (props) => {
-  const { image, redirectOnSuccess = true, onSuccess } = props;
+  const { image, redirectOnSuccess, onSuccess } = props;
   const isUpdate = image != null;
 
   const router = Router;
@@ -93,7 +104,10 @@ export const ImageForm: FunctionComponent<ImageFormProps> = (props) => {
   const [deleting, setDeleting] = useState(false);
   const [requestError, setRequestError] = useState<ApiError>(null);
 
-  const form = useMemo(() => formOptions(image), [image]);
+  const form = useMemo(
+    () => formOptions(image, props.defaultManipulation),
+    [image, props.defaultManipulation],
+  );
 
   const {
     register,
@@ -109,14 +123,16 @@ export const ImageForm: FunctionComponent<ImageFormProps> = (props) => {
     register('file');
   }, [register]);
 
+  const fileValue = useWatch({
+    control,
+    name: 'file',
+  });
+
   const handleSave = useCallback(
     async (formData: ImageFormData) => {
       setSaving(true);
 
-      const fileSize = imageMeta?.fileSize ?? image?.fileSize;
-      const width = imageMeta?.width ?? image?.width;
-      const height = imageMeta?.height ?? image?.height;
-      const data: CreateImageRequest = { ...formData, fileSize, width, height };
+      const data: CreateImageRequest = { ...formData };
 
       try {
         const savedImage = isUpdate
@@ -135,15 +151,7 @@ export const ImageForm: FunctionComponent<ImageFormProps> = (props) => {
         setSaving(false);
       }
     },
-    [
-      image,
-      imageMeta,
-      isUpdate,
-      redirectOnSuccess,
-      router,
-      setError,
-      onSuccess,
-    ],
+    [image, isUpdate, redirectOnSuccess, router, setError, onSuccess],
   );
 
   const handleDelete = useCallback(async () => {
@@ -224,6 +232,32 @@ export const ImageForm: FunctionComponent<ImageFormProps> = (props) => {
           )}
         </Field>
       </div>
+
+      <Field>
+        Image Manipulator
+        <Controller
+          name="manipulation"
+          control={control}
+          render={({ field }) => (
+            <Select
+              name="manipulation"
+              {...field}
+              ref={null}
+              disabled={!fileValue}
+            >
+              <SelectOption label="None" value={null}>
+                None
+              </SelectOption>
+              <SelectOption
+                label="Game Thumbnail"
+                value={ImageManipulationPreset.GameThumbnail}
+              >
+                Game Thumbnail
+              </SelectOption>
+            </Select>
+          )}
+        />
+      </Field>
 
       <Field>
         Name

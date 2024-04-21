@@ -16,7 +16,8 @@ import { Th } from 'packages/website/src/app/_common/components/Table/Th';
 import { THead } from 'packages/website/src/app/_common/components/Table/THead';
 import { Tr } from 'packages/website/src/app/_common/components/Table/Tr';
 import { useViewModel } from 'packages/website/src/app/_common/contexts/ViewModelProvider';
-import { usePreferredBenchmark } from 'packages/website/src/app/_common/user/usePreferredBenchmark';
+import { useRelativeDataProducts } from 'packages/website/src/app/_common/product/contexts/RelativeDataProductsProvider';
+import { usePreferredBenchmark } from 'packages/website/src/app/_common/product/hooks/usePreferredBenchmark';
 import { classNames } from 'packages/website/src/app/_common/utils/classNames';
 import React, { FunctionComponent, useMemo } from 'react';
 
@@ -30,7 +31,12 @@ export const PerformanceTable: FunctionComponent<PerformanceTableProps> = (
   const { className } = props;
   const viewModel = useViewModel<ViewCpuViewModel>();
   const cpu = viewModel.cpu;
-  const relativePerformanceCpus = viewModel.relativePerformanceCpus;
+  const relativePerformanceCpus = viewModel.relativeDataProducts
+    ?.benchmarkPerformance as Partial<CpuProduct>[];
+  const { loading } = useRelativeDataProducts();
+
+  const hasRelativePerformanceCpus =
+    relativePerformanceCpus != null && relativePerformanceCpus.length > 1;
 
   return (
     <Table border responsive className={className}>
@@ -44,13 +50,42 @@ export const PerformanceTable: FunctionComponent<PerformanceTableProps> = (
         </Tr>
       </THead>
       <TBody>
-        {relativePerformanceCpus.map((relativeCpu) => (
-          <PerformanceTableRow
-            key={relativeCpu.id}
-            baselineCpu={cpu}
-            relativeCpu={relativeCpu}
-          />
-        ))}
+        {!loading &&
+          hasRelativePerformanceCpus &&
+          relativePerformanceCpus.map((relativeCpu) => (
+            <PerformanceTableRow
+              key={relativeCpu.id}
+              baselineCpu={cpu}
+              relativeCpu={relativeCpu}
+            />
+          ))}
+
+        {!loading && !hasRelativePerformanceCpus && (
+          <Tr>
+            <Td colSpan={4} className="text-center p-8">
+              Our database does not have enough data to compare the benchmark
+              performance with other CPUs.
+            </Td>
+          </Tr>
+        )}
+
+        {loading &&
+          [...new Array(3)].map((_, i) => (
+            <Tr key={i} className="animate-pulse">
+              <Td className="py-4">
+                <div className="bg-loading w-8 h-3 rounded" />
+              </Td>
+              <Td className="py-4">
+                <div className="bg-loading w-35 h-3 rounded" />
+              </Td>
+              <Td className="py-4">
+                <div className="bg-loading w-12 h-3 rounded ml-auto" />
+              </Td>
+              <Td className="py-4">
+                <div className="bg-loading w-12 h-3 rounded ml-auto" />
+              </Td>
+            </Tr>
+          ))}
       </TBody>
     </Table>
   );
@@ -74,9 +109,13 @@ const PerformanceTableRow: FunctionComponent<PerformanceTableRowProps> = (
       preferredBenchmark,
     );
 
-    return Number(
-      ((relatedPerformance / baseline) * 100).toFixed(0),
+    let pct = Number(
+      ((relatedPerformance / baseline) * 100 - 100).toFixed(0),
     ).toLocaleString();
+    if (relatedPerformance > baseline) {
+      pct = `+${pct}`;
+    }
+    return pct;
   }, [baselineCpu, preferredBenchmark, relativeCpu]);
 
   const rating = useMemo(
@@ -115,7 +154,9 @@ const PerformanceTableRow: FunctionComponent<PerformanceTableRowProps> = (
         <a href={href}>{cpuName}</a>
       </Td>
       <Td className="text-right">{rating}</Td>
-      <Td className="text-right">{relativePerformancePct}%</Td>
+      <Td className="text-right">
+        {baselineCpu.id === relativeCpu.id ? '' : `${relativePerformancePct}%`}
+      </Td>
     </Tr>
   );
 };

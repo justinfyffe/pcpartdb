@@ -8,6 +8,7 @@ import {
   formatProductField,
   FormatProductFieldOptions,
   FrequencyUnit,
+  Game,
   getBaseUnitValue,
   GpuFieldKey,
   GpuFields,
@@ -19,8 +20,11 @@ import {
   NumericUnit,
   parseProductName,
   ProductBenchmark,
+  ProductGame,
+  ProductGameFps,
   ProductType,
   ScrapeProductResponse,
+  SettingsPresetKey,
   SquareUnit,
   WattageUnit,
 } from '@pcpartdb/shared';
@@ -36,12 +40,13 @@ export interface ScrapeNotebookCheckGpuDataOptions
   extends CommonScraperOptions {
   url: string;
   chipset?: GpuProduct;
+  games?: Partial<Game>[];
 }
 
 export async function scrapeNotebookCheckGpuData(
   options: ScrapeNotebookCheckGpuDataOptions,
 ) {
-  const { url, chipset, noProxy, ctx } = options;
+  const { url, chipset, games, noProxy, ctx } = options;
 
   const response = await scraper.scrapeGet(url, { retries: 1, noProxy });
   const $ = cheerio.load(response.data);
@@ -54,11 +59,13 @@ export async function scrapeNotebookCheckGpuData(
   };
 
   const benchmarks = scrapeBenchmarks($);
+  const productGames = scrapeGames($, games);
 
   const product: Partial<GpuProduct> = {
     productType: ProductType.Gpu,
     fields,
     benchmarks,
+    games: productGames,
     company,
     name,
   };
@@ -608,9 +615,18 @@ function scrapeBenchmarks($: cheerio.CheerioAPI) {
     });
 }
 
-async function scrapeFpsTables($: cheerio.CheerioAPI) {
-  scrapeFpsTable($, 'Atlas Fallen');
-  scrapeFpsTable($, 'Immortals of Aveum');
+function scrapeGames($: cheerio.CheerioAPI, games: Partial<Game>[]) {
+  const productGames: ProductGame[] = [];
+  for (const game of games) {
+    const productGame = scrapeGameFps($, game);
+    if (productGame) {
+      productGames.push(productGame);
+    }
+  }
+  productGames.sort((pg1, pg2) =>
+    (pg2?.game?.releaseDate ?? '').localeCompare(pg1?.game?.releaseDate ?? ''),
+  );
+  return productGames;
 }
 
 function scrapeSpecRow($: cheerio.CheerioAPI, label: string) {
@@ -660,9 +676,20 @@ function scrapeBenchmark($: cheerio.CheerioAPI, label: string) {
   return values;
 }
 
-function scrapeFpsTable($: cheerio.CheerioAPI, label: string) {
+function scrapeGameFps($: cheerio.CheerioAPI, game: Partial<Game>) {
+  const presetsOrder = [
+    SettingsPresetKey.Low,
+    SettingsPresetKey.Medium,
+    SettingsPresetKey.High,
+    SettingsPresetKey.Ultra,
+    SettingsPresetKey.QHD,
+    SettingsPresetKey._4K_UHD,
+  ];
+
+  const scraperName = game.scraperOptions?.notebookCheckName;
   const el = $('.contenttable.fpstable th').filter(
-    (_i, th) => $(th).text().trim().toLowerCase() === label.toLowerCase(),
+    (_i, th) =>
+      $(th).text().trim()?.toLowerCase() === scraperName?.toLowerCase(),
   );
 
   const cells = el
@@ -670,7 +697,23 @@ function scrapeFpsTable($: cheerio.CheerioAPI, label: string) {
     .map((_i, td) => $(td).text() || '')
     .toArray();
 
-  console.log(cells);
+  if (!cells.length) {
+    return null;
+  }
+
+  const gameId = game.id;
+  const productGame: ProductGame = { gameId, game, fps: [] };
+  for (let i = 0; i < cells.length; ++i) {
+    const cell = cells[i];
+    const fps = Number(cell);
+    if (Number.isNaN(fps) || !fps) {
+      continue;
+    }
+
+    productGame.fps.push({ gameId, settingsPresetKey: presetsOrder[i], fps });
+  }
+
+  return productGame;
 }
 
 function isCompany(

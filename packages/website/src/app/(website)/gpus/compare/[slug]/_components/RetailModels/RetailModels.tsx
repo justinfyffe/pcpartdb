@@ -6,12 +6,12 @@ import { RetailModelsTitle } from './RetailModelsTitle';
 
 interface RetailModelsProps {
   comparison: GpuProductComparison;
-  retailModels1: Partial<GpuProduct>[];
-  retailModels2: Partial<GpuProduct>[];
 }
 
 export function RetailModels(props: RetailModelsProps) {
-  const { comparison, retailModels1, retailModels2 } = props;
+  const { comparison } = props;
+  const retailModels1 = comparison[0].children as GpuProduct[];
+  const retailModels2 = comparison[1].children as GpuProduct[];
 
   if (
     (retailModels1 == null || retailModels1.length === 0) &&
@@ -21,7 +21,7 @@ export function RetailModels(props: RetailModelsProps) {
   }
 
   return (
-    <section>
+    <section className="flex flex-col gap-4">
       <RetailModelsTitle />
       <RetailModelsIntro />
       <RetailModelsTable
