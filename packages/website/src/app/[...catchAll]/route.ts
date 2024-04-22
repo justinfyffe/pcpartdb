@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import * as fsPromises from 'fs/promises';
+import mime from 'mime';
 import path from 'path';
 
 export const dynamic = 'force-dynamic';
@@ -12,6 +13,7 @@ const PRIORITY_SITEMAPS_PATH = path.join(
   'priority-sitemaps',
 );
 const SITEMAPS_PATH = path.join(CWD_PATH, '../..', 'data', 'sitemaps');
+const UPLOADED_FILES_PATH = path.join(CWD_PATH, '../..', 'data', 'uploads');
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
@@ -41,6 +43,22 @@ export async function GET(request: Request) {
       status: 200,
       headers: {
         'Content-Type': 'application/gzip',
+        'Content-Length': `${stat.size}`,
+      },
+    });
+  }
+
+  const uploadedFilesPath = path.resolve(
+    path.join(UPLOADED_FILES_PATH, pathname),
+  );
+  if (pathname.startsWith('/u/') && fs.existsSync(uploadedFilesPath)) {
+    const stat = await fsPromises.stat(uploadedFilesPath);
+    const image = await fsPromises.readFile(uploadedFilesPath);
+    const contentType = mime.getType(uploadedFilesPath);
+    return new Response(image, {
+      status: 200,
+      headers: {
+        'Content-Type': contentType,
         'Content-Length': `${stat.size}`,
       },
     });

@@ -21,6 +21,9 @@ const SITEMAPS_PATH = path.resolve(
 const PRIORITY_SITEMAPS_PATH = path.resolve(
   path.join(CWD_PATH, '../..', 'data', 'priority-sitemaps'),
 );
+const UPLOADED_IMAGES_PATH = path.resolve(
+  path.join(CWD_PATH, '../..', 'data', 'uploads', 'u', 'images'),
+);
 
 if (!fs.existsSync(DATA_PATH)) {
   fs.mkdirSync(DATA_PATH, { recursive: true });
@@ -36,6 +39,9 @@ if (!fs.existsSync(TMP_PATH)) {
 }
 if (!fs.existsSync(UPLOADS_PATH)) {
   fs.mkdirSync(UPLOADS_PATH, { recursive: true });
+}
+if (!fs.existsSync(UPLOADED_IMAGES_PATH)) {
+  fs.mkdirSync(UPLOADED_IMAGES_PATH, { recursive: true });
 }
 if (!fs.existsSync(EXPORTS_PATH)) {
   fs.mkdirSync(EXPORTS_PATH, { recursive: true });
@@ -101,10 +107,10 @@ export function prioritySitemapsPath(file?: string) {
     : PRIORITY_SITEMAPS_PATH;
 }
 
-export function imagePath(file?: string) {
+export function uploadedImagesPath(file?: string) {
   return file != null
-    ? path.join(PUBLIC_IMAGES_PATH, file)
-    : PUBLIC_IMAGES_PATH;
+    ? path.join(UPLOADED_IMAGES_PATH, file)
+    : UPLOADED_IMAGES_PATH;
 }
 
 export function exists(file: string) {

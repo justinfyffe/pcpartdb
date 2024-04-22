@@ -99,21 +99,23 @@ export class ImageService {
       await this.imageManipulationService.manipulate({
         preset: data.manipulation,
         imagePath: fileUtils.uploadsPath(data.tempPath),
-        outputPath: fileUtils.imagePath(data.path),
+        outputPath: fileUtils.uploadedImagesPath(data.path),
       });
       await fileUtils.remove(fileUtils.uploadsPath(data.tempPath));
     } else {
       // Manipulation preset is not set, therefore just move the image.
       await fileUtils.move(
         fileUtils.uploadsPath(data.tempPath),
-        fileUtils.imagePath(data.path),
+        fileUtils.uploadedImagesPath(data.path),
       );
     }
 
     const imageStats = await this.imageStatService.stat(
-      fileUtils.imagePath(data.path),
+      fileUtils.uploadedImagesPath(data.path),
     );
-    const fileStats = await fileUtils.stats(fileUtils.imagePath(data.path));
+    const fileStats = await fileUtils.stats(
+      fileUtils.uploadedImagesPath(data.path),
+    );
 
     const entity = mapToImageEntity({
       ...data,
@@ -148,7 +150,7 @@ export class ImageService {
 
     // Check if the path has changed. If it did, we should move the image
     if (previousPath !== data.path) {
-      if (await fileUtils.exists(fileUtils.imagePath(data.path))) {
+      if (await fileUtils.exists(fileUtils.uploadedImagesPath(data.path))) {
         // A different image exists at this path. Abort
         throw badRequestError({
           property: 'path',
@@ -157,10 +159,10 @@ export class ImageService {
       }
 
       // All good to move
-      if (await fileUtils.exists(fileUtils.imagePath(previousPath))) {
+      if (await fileUtils.exists(fileUtils.uploadedImagesPath(previousPath))) {
         await fileUtils.move(
-          fileUtils.imagePath(previousPath),
-          fileUtils.imagePath(data.path),
+          fileUtils.uploadedImagesPath(previousPath),
+          fileUtils.uploadedImagesPath(data.path),
         );
       }
     }
@@ -172,21 +174,23 @@ export class ImageService {
       await this.imageManipulationService.manipulate({
         preset: data.manipulation,
         imagePath: fileUtils.uploadsPath(data.tempPath),
-        outputPath: fileUtils.imagePath(data.path),
+        outputPath: fileUtils.uploadedImagesPath(data.path),
       });
       await fileUtils.remove(fileUtils.uploadsPath(data.tempPath));
     } else {
       // Manipulation preset is not set, therefore just move the image.
       await fileUtils.move(
         fileUtils.uploadsPath(data.tempPath),
-        fileUtils.imagePath(data.path),
+        fileUtils.uploadedImagesPath(data.path),
       );
     }
 
     const imageStats = await this.imageStatService.stat(
-      fileUtils.imagePath(data.path),
+      fileUtils.uploadedImagesPath(data.path),
     );
-    const fileStats = await fileUtils.stats(fileUtils.imagePath(data.path));
+    const fileStats = await fileUtils.stats(
+      fileUtils.uploadedImagesPath(data.path),
+    );
 
     const entity = mapToImageEntity({
       ...data,
@@ -207,7 +211,7 @@ export class ImageService {
     }
 
     await this.imageRepository.delete(id, ctx);
-    await fileUtils.remove(fileUtils.imagePath(image.path));
+    await fileUtils.remove(fileUtils.uploadedImagesPath(image.path));
     return id;
   }
 }
