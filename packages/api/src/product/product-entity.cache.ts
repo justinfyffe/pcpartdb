@@ -461,7 +461,11 @@ export class ProductEntityCache {
       // Populate fields on the products, and then cache.
       for (const entity of entities) {
         const productId = entity.productId;
-        const productType = productMap[productId].productType;
+        if (!productMap[productId]) {
+          continue;
+        }
+
+        const productType = productMap[productId]?.productType;
         if (productType === ProductType.Cpu) {
           productMap[productId].cpuFields = entity as CpuFieldsEntity;
         } else if (productType === ProductType.Gpu) {
@@ -525,7 +529,7 @@ export class ProductEntityCache {
       // Populate benchmarks on the products and cache them.
       for (const id of idsToFetch) {
         const benchmarks = entityGroups[id];
-        if (!benchmarks) {
+        if (!benchmarks || !productMap[id]) {
           continue;
         }
 
@@ -591,7 +595,7 @@ export class ProductEntityCache {
       // Populate game fps on the products and cache them.
       for (const id of idsToFetch) {
         const gameFps = entityGroups[id];
-        if (!gameFps) {
+        if (!gameFps || !productMap[id]) {
           continue;
         }
 
@@ -667,6 +671,10 @@ export class ProductEntityCache {
       // Populate ranks on the products, and then cache.
       for (const entity of entities) {
         const productId = entity.productId;
+        if (!productMap[productId]) {
+          continue;
+        }
+
         productMap[productId].ranks = entity;
 
         await this.cacheService.setCached(entity, {
@@ -724,7 +732,7 @@ export class ProductEntityCache {
       // Populate benchmarks on the products and cache them.
       for (const id of idsToFetch) {
         const images = entityGroups[id];
-        if (!images) {
+        if (!images || !productMap[id]) {
           continue;
         }
 
@@ -785,7 +793,7 @@ export class ProductEntityCache {
       // Populate sources on the products and cache them.
       for (const id of idsToFetch) {
         const sources = entityGroups[id];
-        if (!sources) {
+        if (!sources || !productMap[id]) {
           continue;
         }
 
