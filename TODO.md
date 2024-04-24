@@ -16,7 +16,14 @@ NEXT:
   - Improve auto-generated summary
 
 Games / FPS:
-- Gaming Performance Ad
+- Fixes:
+  - Show request path in pm2 logs
+    - Easier to identify which pages have issues
+  - Improve performance
+    - view and compare gpus are slow
+  - Relative list isn't always filled:
+    - https://pcpartdb.com/gpus/compare/nvidia-geforce-rtx-4080-super--vs--nvidia-geforce-rtx-4080/
+  - Delay in showing the secondary related product
 - POST MVP
   - [] List GPUs
     - [] Sort
