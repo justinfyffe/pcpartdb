@@ -57,18 +57,26 @@ export const CompareSelectedGameFpsTabs: FunctionComponent<
     [products, selectedGame?.id],
   );
 
+  if (!hasFps && !hasCpf) {
+    return <></>;
+  }
+
   return (
     <div className="flex flex-col">
       <Tabs tabClassName="p-1">
-        {hasFps && (
+        {hasFps ? (
           <Tab label="Frames Per Second">
             <SelectedGameFpsTable products={products} games={games} />
           </Tab>
+        ) : (
+          <></>
         )}
-        {hasCpf && (
+        {hasCpf ? (
           <Tab label="Cost Per Frame">
             <SelectedGameCpfTable products={products} games={games} />
           </Tab>
+        ) : (
+          <></>
         )}
       </Tabs>
       {!!props.credit && (

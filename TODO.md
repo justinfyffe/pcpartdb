@@ -17,8 +17,16 @@ NEXT:
 
 Games / FPS:
 - Fixes:
+  - Fix 500 error
+    - https://pcpartdb.com/gpus/compare/intel-uhd-graphics-770--vs--ati-radeon-x1950-pro/
   - Improve performance
     - view and compare gpus are slow
+      - Slow: https://pcpartdb.com/gpus/view/nvidia-geforce-rtx-4090/
+      - Fast: https://pcpartdb.com/gpus/view/intel-uhd-graphics-770/
+    - view and compare cpus are still pretty fast
+    - Measure slowest part of view model
+      - normalize?
+        - maybe make it async, using a promise.
   - Cache
     - Cache slug -> id?
     - Get rid of no max items cache?

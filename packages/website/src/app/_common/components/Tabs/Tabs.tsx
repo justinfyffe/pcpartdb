@@ -40,13 +40,11 @@ export function Tabs(props: TabsProps) {
     setActiveTab(i);
   }, []);
 
-  const labels = useMemo(
-    () =>
-      Children.map(children, ({ props: { label } }) => {
-        return label;
-      }),
-    [children],
-  );
+  const labels = useMemo(() => {
+    return Children.map(children, (args) => {
+      return args?.props?.label;
+    });
+  }, [children]);
 
   return (
     <Element className={classNames('flex flex-col', props.className)}>

@@ -109,6 +109,10 @@ export const BenchmarkTables: FunctionComponent<BenchmarkTablesProps> = (
     );
   }, [cpu]);
 
+  if (filteredBenchmarks.length === 0) {
+    return <></>;
+  }
+
   return (
     <div className="flex flex-col">
       <Tabs tabClassName="p-1">

@@ -179,6 +179,10 @@ export const BenchmarkTables: FunctionComponent<BenchmarkTablesProps> = (
     );
   }, [chipset]);
 
+  if (filteredBenchmarks.length === 0) {
+    return <></>;
+  }
+
   return (
     <div className="flex flex-col">
       <Tabs tabClassName="p-1" variant={TabsVariant.Horizontal}>
