@@ -86,8 +86,8 @@ export class CompareGpusViewModelService {
 
         includeGames: true,
         includeParentGames: true,
-        includeRelatedGames: 
-        gameSlug && gameSlug !== 'undefined' ? [gameSlug] : 'latest', 'latest',
+        includeRelatedGames:
+          gameSlug && gameSlug !== 'undefined' ? [gameSlug] : 'latest',
 
         includeRanks: true,
         includeParentRanks: true,
