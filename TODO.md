@@ -20,17 +20,28 @@ Games / FPS:
   - [] Scroll to section using js instead of using anchor in Contents
     - [] Replace duct tape window.history?.replaceState
   - Improve performance
-    - reduce data in client components
-    - [X] dont return all games
+    - Most important:
+      - [] Cache In interceptor
+        - Highest impact
+        - Cache individual pages.
+        - Might use a lot of memory
+      - [] Improve performance with Normalizr
+        - Impactful as it can take up to 100ms with lots of games
+        - maybe issues with deepmerge for product merge strategy
+        - Flatten data structures?
+        - Don't include all game data
+      - [] Exclude unused data
+        - Possibly impactful for reducing data on some gpus
+        - Search text, other names
+      - [] Cache slug -> id?
+        - Might improve performance with looking up product ids. up to 20ms
+      - [] Reduce data in client components
+        - Unknown impact
+        - Might reduce data needed to front-end
     - view and compare gpus are slow
       - Slow: https://pcpartdb.com/gpus/view/nvidia-geforce-rtx-4090/
       - Fast: https://pcpartdb.com/gpus/view/intel-uhd-graphics-770/
     - view and compare cpus are still pretty fast
-    - Measure slowest part of view model
-  - Cache
-    - Cache slug -> id?
-    - Get rid of no max items cache?
-    - Cache in interceptor?
 - POST MVP
   - [] List GPUs
     - [] Sort

@@ -21,11 +21,7 @@ export const gameNormalizr = new schema.Entity('games');
 
 productNormalizr.define({
   parent: productNormalizr,
-  games: [
-    {
-      game: gameNormalizr,
-    },
-  ],
+  games: [{ game: gameNormalizr }],
   relatedProducts: [productNormalizr],
 });
 
