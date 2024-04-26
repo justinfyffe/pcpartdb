@@ -17,8 +17,8 @@ import { scrapeFromChipsetGpu } from './scrapeFromChipsetGpu';
 import { scrapeTechPowerUpGpuData } from './techpowerup';
 
 const SOURCE_ORDER = [
-  ProductSourceKey.TechPowerUp,
   ProductSourceKey.NotebookCheck,
+  ProductSourceKey.TechPowerUp,
   ProductSourceKey.PassMark,
 ];
 
