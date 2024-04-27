@@ -27,9 +27,9 @@ export const ValueHighlight: FunctionComponent<ValueHighlightProps> = (
 
   const { viewModel } = useViewModelContext<ViewCpuViewModel>();
   const cpu = viewModel.cpu;
-  const bestValueCpu =
-    viewModel.relativeDataProducts?.bestBenchmarkPerformancePerDollar;
-  const { loading } = useRelativeDataProducts();
+
+  const { relativeDataProducts, loading } = useRelativeDataProducts();
+  const bestValueCpu = relativeDataProducts?.bestBenchmarkPerformancePerDollar;
 
   const preferredBenchmark = usePreferredBenchmark(ProductType.Cpu);
   const showPreferredBenchmarkDialog = usePreferredBenchmarkDialog({

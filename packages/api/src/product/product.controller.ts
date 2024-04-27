@@ -27,7 +27,6 @@ import {
   UpdateProductRequest,
 } from '@pcpartdb/shared';
 import { normalize } from 'normalizr';
-import * as uuid from 'uuid';
 import { StaffGuard } from '../auth/staff.guard';
 import { Database } from '../database';
 import { Context, Ctx } from '../shared/context';

@@ -14,7 +14,7 @@ import { ProductHighlight } from 'packages/website/src/app/_common/product/compo
 import { useRelativeDataProducts } from 'packages/website/src/app/_common/product/contexts/RelativeDataProductsProvider';
 import { usePreferredBenchmark } from 'packages/website/src/app/_common/product/hooks/usePreferredBenchmark';
 import { usePreferredBenchmarkDialog } from 'packages/website/src/app/_common/product/hooks/usePreferredBenchmarkDialog';
-import React, { FunctionComponent, useCallback, useMemo } from 'react';
+import React, { FunctionComponent, useMemo } from 'react';
 
 interface PerformanceHighlightProps {
   className?: string;
@@ -25,11 +25,11 @@ export const PerformanceHighlight: FunctionComponent<
 > = (props) => {
   const { className } = props;
 
-  const { viewModel, updateViewModel } =
-    useViewModelContext<ViewCpuViewModel>();
+  const { viewModel } = useViewModelContext<ViewCpuViewModel>();
   const cpu = viewModel.cpu;
-  const bestPerfCpu = viewModel.relativeDataProducts?.bestBenchmarkPerformance;
-  const { loading } = useRelativeDataProducts();
+
+  const { relativeDataProducts, loading } = useRelativeDataProducts();
+  const bestPerfCpu = relativeDataProducts?.bestBenchmarkPerformance;
 
   const preferredBenchmark = usePreferredBenchmark(ProductType.Cpu);
   const showPreferredBenchmarkDialog = usePreferredBenchmarkDialog({

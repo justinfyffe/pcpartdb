@@ -27,8 +27,8 @@ export function PerformanceHighlight(props: PerformanceHighlightProps) {
   const { viewModel } = usePageContext();
   const gpu = viewModel.gpu;
   const parent = getGpuChipset(gpu);
-  const bestPerfGpu = viewModel.relativeDataProducts?.bestBenchmarkPerformance;
-  const { loading } = useRelativeDataProducts();
+  const { relativeDataProducts, loading } = useRelativeDataProducts();
+  const bestPerfGpu = relativeDataProducts?.bestBenchmarkPerformance;
 
   const preferredBenchmark = usePreferredBenchmark(ProductType.Gpu);
   const { selectedGame } = useGameSelection();

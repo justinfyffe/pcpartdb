@@ -27,9 +27,9 @@ export function ValueHighlight(props: ValueHighlightProps) {
   const { viewModel } = usePageContext();
   const gpu = viewModel.gpu;
   const parent = getGpuChipset(gpu);
-  const bestValueGpu =
-    viewModel.relativeDataProducts?.bestBenchmarkPerformancePerDollar;
-  const { loading } = useRelativeDataProducts();
+  viewModel.relativeDataProducts?.bestBenchmarkPerformancePerDollar;
+  const { relativeDataProducts, loading } = useRelativeDataProducts();
+  const bestValueGpu = relativeDataProducts?.bestBenchmarkPerformancePerDollar;
 
   const preferredBenchmark = usePreferredBenchmark(ProductType.Gpu);
   const { selectedGame } = useGameSelection();

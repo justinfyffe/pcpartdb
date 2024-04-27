@@ -1,4 +1,4 @@
-NEXT:
+NEXT (long-term):
 - v2.0
   - Migrate to a headless cms (e.g. PayloadCMS)
 - Verify inmobi choice
@@ -9,11 +9,39 @@ NEXT:
   - Seamless deployment.
     - do we even need to stop the service to build?
 - SEO Improvements
+
+
+NEXT (short-term)
+- [] Retail Model Cleanup
+  - [] Permanent redirect retail model page to chipset gpu
+  - [] Don't show retail models on list page
+  - [] Don't show retail models on view page
+  - [] Don't show retail models on compare page
+  - [] Remove dimensions from gpu page. Just use slot-width
+  - [] Remove "1x" from outputs. Just list out the possible outputs like "HDMI 2.1, DisplayPort"
+  - [] Remove retail models from admin panel
+  - [] Remove retail models from scraping
+  - [] Build a redirect list in memory/code
+    - [] Product Type + Slug -> chipset slug. Can be one giant file
+  - [] Remove parentId and children
+  - [] Remove from database
+  - [] Remove from sitemap generation
+- [] Add more games
+- [] SEO
+  - Off-site
+  - On-site
   - Improve titles
     - Name1 - Benchmarks, Specs, and Game Performance
     - Name1 vs Name2 - Benchmarks, Specs, and Game Performance
   - Improve keyword usages
   - Improve auto-generated summary
+- [] Games Post-MVP
+  - [] Scroll to section using js instead of using anchor
+    - [] Replace duct tape window.history?.replaceState
+  - [] Add Games to List GPUs page
+    - [] Sort
+    - [] Select Game + Preset
+  - [] Add FPS by preset, listing all games
 
 Automation Improvements:
 - Audit
@@ -26,26 +54,18 @@ Automation Improvements:
     - https://www.techpowerup.com/gpu-specs/firepro-w5170m.c2705
   - Support "Shader Clock" field
     - https://www.techpowerup.com/gpu-specs/radeon-rx-7900-xtx.c3941
+  - Add Predecessor
+  - Add Successor
 - Error Handling
   - Add ability to restart a failed job
   - Store failed tasks to look at later
 
 Games / FPS:
-  - [] Check if notebookcheck or techpowerup should be scraped first
 - Fixes:
   - [] Scroll to section using js instead of using anchor in Contents
     - [] Replace duct tape window.history?.replaceState
   - Improve performance
     - Most important:
-      - [X] Cache In interceptor
-        - Highest impact
-        - Cache individual pages.
-        - Might use a lot of memory
-      - [X] Improve performance with Normalizr
-        - Impactful as it can take up to 100ms with lots of games
-        - maybe issues with deepmerge for product merge strategy
-        - Flatten data structures?
-        - Don't include all game data
       - [] Exclude unused data
         - Possibly impactful for reducing data on some gpus
         - Search text, other names

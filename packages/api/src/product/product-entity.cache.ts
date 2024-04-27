@@ -299,6 +299,10 @@ export class ProductEntityCache {
       parents: true,
       cacheType: CacheType.ChildrenProductIds,
       onCacheHit: (id, data) => {
+        if (childrenToPopulate[id] == null) {
+          return;
+        }
+
         childrenToPopulate[id] = data;
       },
       bypassCache: options.bypassCache,
@@ -361,6 +365,10 @@ export class ProductEntityCache {
       parents: true,
       cacheType: CacheType.RelatedProducts,
       onCacheHit: (id, data) => {
+        if (productMap[id] == null) {
+          return;
+        }
+
         productMap[id].relatedProducts = data;
         for (const entity of data) {
           relatedProductIdsSet.add(entity.relatedProductId);
@@ -449,6 +457,10 @@ export class ProductEntityCache {
       related: options.includeRelatedFields,
       cacheType: CacheType.ProductFields,
       onCacheHit: (id: number, data) => {
+        if (productMap[id] == null) {
+          return;
+        }
+
         const productType = productMap[id].productType;
         if (productType === ProductType.Cpu) {
           productMap[id].cpuFields = data as CpuFieldsEntity;
@@ -517,6 +529,10 @@ export class ProductEntityCache {
       related: options.includeRelatedBenchmarks,
       cacheType: CacheType.ProductBenchmarks,
       onCacheHit: (id: number, data) => {
+        if (productMap[id] == null) {
+          return;
+        }
+
         productMap[id].benchmarks = data;
       },
       bypassCache: options.bypassCache,
@@ -578,6 +594,10 @@ export class ProductEntityCache {
       related: options.includeRelatedGameFps,
       cacheType: CacheType.ProductGameFps,
       onCacheHit: (id: number, data) => {
+        if (productMap[id] == null) {
+          return;
+        }
+
         productMap[id].gameFps = data;
         for (const entity of data) {
           gameIdsSet.add(entity.gameId);
@@ -661,6 +681,10 @@ export class ProductEntityCache {
       related: options.includeRelatedRanks,
       cacheType: CacheType.ProductRanks,
       onCacheHit: (id: number, data) => {
+        if (productMap[id] == null) {
+          return;
+        }
+
         productMap[id].ranks = data;
       },
       bypassCache: options.bypassCache,
@@ -715,6 +739,10 @@ export class ProductEntityCache {
       related: options.includeRelatedImages,
       cacheType: CacheType.ProductImages,
       onCacheHit: (id: number, data) => {
+        if (productMap[id] == null) {
+          return;
+        }
+
         productMap[id].images = data;
       },
       bypassCache: options.bypassCache,
@@ -774,6 +802,10 @@ export class ProductEntityCache {
       related: options.includeRelatedSources,
       cacheType: CacheType.ProductSources,
       onCacheHit: (id: number, data) => {
+        if (productMap[id] == null) {
+          return;
+        }
+
         productMap[id].sources = data;
       },
       bypassCache: options.bypassCache,
