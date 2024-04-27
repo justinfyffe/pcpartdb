@@ -22,8 +22,10 @@ Automation Improvements:
     - Show (per core) and (shared), or specify 4x256kb
     - https://www.techpowerup.com/cpu-specs/core-i5-2500k.c725
 - GPU
-  - Handle Memory Clock (effective)
+  - Support "Memory Clock (effective)" field
     - https://www.techpowerup.com/gpu-specs/firepro-w5170m.c2705
+  - Support "Shader Clock" field
+    - https://www.techpowerup.com/gpu-specs/radeon-rx-7900-xtx.c3941
 - Error Handling
   - Add ability to restart a failed job
   - Store failed tasks to look at later
