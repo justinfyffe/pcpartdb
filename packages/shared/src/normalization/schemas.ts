@@ -1,9 +1,14 @@
 import { schema } from 'normalizr';
+import sizeofObject from 'object-sizeof';
 
 export const productNormalizr = new schema.Entity(
   'products',
   {},
-  { mergeStrategy: (a, _b) => a },
+  {
+    mergeStrategy: (a, b) => {
+      return sizeofObject(a) >= sizeofObject(b) ? a : b;
+    },
+  },
 );
 export const gameNormalizr = new schema.Entity('games');
 
