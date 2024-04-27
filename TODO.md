@@ -46,9 +46,6 @@ Games / FPS:
         - maybe issues with deepmerge for product merge strategy
         - Flatten data structures?
         - Don't include all game data
-      - [] Prime cache
-        - Home page
-        - Slug -> ID cache?
       - [] Exclude unused data
         - Possibly impactful for reducing data on some gpus
         - Search text, other names

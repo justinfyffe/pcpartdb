@@ -6,17 +6,16 @@ import {
   getProductBenchmarkName,
   productBenchmarkValuePerMsrp,
   ProductType,
-  ViewGpuViewModel,
 } from '@pcpartdb/shared';
 import { Button } from 'packages/website/src/app/_common/components/Button/Button';
 import { ButtonVariant } from 'packages/website/src/app/_common/components/Button/types';
-import { useViewModelContext } from 'packages/website/src/app/_common/contexts/ViewModelProvider';
 import { useGameSelection } from 'packages/website/src/app/_common/game/contexts/GameSelectionProvider';
 import { ProductHighlight } from 'packages/website/src/app/_common/product/components/ProductHighlight/ProductHighlight';
 import { useRelativeDataProducts } from 'packages/website/src/app/_common/product/contexts/RelativeDataProductsProvider';
 import { usePreferredBenchmark } from 'packages/website/src/app/_common/product/hooks/usePreferredBenchmark';
 import { usePreferredBenchmarkDialog } from 'packages/website/src/app/_common/product/hooks/usePreferredBenchmarkDialog';
 import React, { useMemo } from 'react';
+import { usePageContext } from '../../PageProvider';
 
 interface ValueHighlightProps {
   className?: string;
@@ -25,7 +24,7 @@ interface ValueHighlightProps {
 export function ValueHighlight(props: ValueHighlightProps) {
   const { className } = props;
 
-  const { viewModel } = useViewModelContext<ViewGpuViewModel>();
+  const { viewModel } = usePageContext();
   const gpu = viewModel.gpu;
   const parent = getGpuChipset(gpu);
   const bestValueGpu =

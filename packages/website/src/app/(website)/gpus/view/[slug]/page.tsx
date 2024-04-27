@@ -45,7 +45,7 @@ type ViewGpuPageProps = {
 
 export async function generateMetadata(
   props: ViewGpuPageProps,
-  metadata: ResolvingMetadata,
+  _metadata: ResolvingMetadata,
 ): Promise<Metadata> {
   const slug = props.params.slug;
 
