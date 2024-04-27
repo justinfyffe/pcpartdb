@@ -243,7 +243,7 @@ export class ProductRepository {
       select: { id: true },
       where: { productType_slug: { productType, slug } },
     });
-    return result.id || null;
+    return result?.id || null;
   }
 
   async findBySlug(
