@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import {
+  compactObject,
   CompareGpusViewModel,
   compareGpusViewModelNormalizr,
   getPreferredBenchmark,
@@ -7,7 +8,6 @@ import {
   ProductFieldKey,
   ProductType,
   RelativeDataProducts,
-  removeEmptyValues,
 } from '@pcpartdb/shared';
 import { normalize } from 'normalizr';
 import { ProductService } from '../../product/product.service';
@@ -52,8 +52,9 @@ export class CompareGpusViewModelService {
         relatedGpuComparisons,
       } as CompareGpusViewModel;
 
-      const response = normalize(result, compareGpusViewModelNormalizr);
-      return removeEmptyValues(response);
+      const compact = compactObject(result);
+      const response = normalize(compact, compareGpusViewModelNormalizr);
+      return response;
     };
 
     const viewModel = await buildViewModel();

@@ -14,6 +14,7 @@ import {
 } from '@nestjs/common';
 import {
   AutocompleteProductsRequest,
+  compactObject,
   CreateProductRequest,
   getPreferredBenchmark,
   GetProductRequest,
@@ -121,7 +122,8 @@ export class ProductController {
         request,
         ctx,
       );
-    return normalize(response, relativeDataProductsNormalizr);
+    const compact = compactObject(response);
+    return normalize(compact, relativeDataProductsNormalizr);
   }
 
   @Post()

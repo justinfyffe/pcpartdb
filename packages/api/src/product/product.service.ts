@@ -35,7 +35,6 @@ import {
   updateProductRequestSchema,
   ValidationErrorType,
 } from '@pcpartdb/shared';
-import { randomUUID } from 'crypto';
 import { GameService } from '../game/game.service';
 import { Context } from '../shared/context';
 import { badRequestError, notFoundError } from '../shared/error';

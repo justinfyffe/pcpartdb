@@ -156,7 +156,7 @@ export async function mapToProductDto(
     productType: entity.productType,
     slug: entity.slug,
     name: entity.name,
-    otherNames: entity.otherNames ?? [],
+    // otherNames: entity.otherNames ?? [],
     company: entity.company,
     searchText: entity.searchText,
     affiliateUrl: entity.affiliateUrl,

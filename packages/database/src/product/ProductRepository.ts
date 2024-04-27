@@ -54,7 +54,7 @@ interface FindByIdsOptions extends IncludeRelationsOptions {
   ids: number[];
 }
 
-interface FindBySlug2Options {
+interface FindIdBySlugOptions {
   productType: ProductType;
   slug: string;
 }
@@ -233,16 +233,17 @@ export class ProductRepository {
     return sortByIds(ids, products, (p) => p.id);
   }
 
-  async findBySlug2(options: FindBySlug2Options, config?: RepositoryConfig) {
+  async findIdBySlug(options: FindIdBySlugOptions, config?: RepositoryConfig) {
     const db = config?.trx ?? this.db;
 
     const productType = options.productType;
     const slug = options.slug;
 
-    const result: ProductEntity = await db.product.findUnique({
+    const result = await db.product.findUnique({
+      select: { id: true },
       where: { productType_slug: { productType, slug } },
     });
-    return result;
+    return result.id || null;
   }
 
   async findBySlug(

@@ -58,6 +58,7 @@ Games / FPS:
       - Slow: https://pcpartdb.com/gpus/view/nvidia-geforce-rtx-4090/
       - Fast: https://pcpartdb.com/gpus/view/intel-uhd-graphics-770/
     - view and compare cpus are still pretty fast
+    - deepmerge is slow. Look at other libraries.
 - POST MVP
   - [] List GPUs
     - [] Sort

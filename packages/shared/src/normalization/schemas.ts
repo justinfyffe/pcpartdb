@@ -1,21 +1,9 @@
 import { schema } from 'normalizr';
-import { ArrayMerge, CanMergeNoEmptyStrategy, deepmerge } from '../utils';
 
 export const productNormalizr = new schema.Entity(
   'products',
   {},
-  {
-    mergeStrategy: (a, b) => {
-      return deepmerge(
-        {
-          arrayMerge: ArrayMerge.UseLarger,
-          canMergeStrategy: CanMergeNoEmptyStrategy,
-        },
-        a,
-        b,
-      );
-    },
-  },
+  { mergeStrategy: (a, _b) => a },
 );
 export const gameNormalizr = new schema.Entity('games');
 

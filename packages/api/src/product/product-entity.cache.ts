@@ -211,17 +211,17 @@ export class ProductEntityCache {
 
   async getProductBySlug(options: GetProductBySlugOptions, ctx: Context) {
     // TODO: cache slug -> id?
-    const product = await this.productRepository.findBySlug2(
+    const productId = await this.productRepository.findIdBySlug(
       { productType: options.productType, slug: options.slug },
       ctx,
     );
 
-    if (product == null) {
+    if (productId == null) {
       return null;
     }
 
     const result = await this.getProductById(
-      { ...options, id: product.id },
+      { ...options, id: productId },
       ctx,
     );
     return result;

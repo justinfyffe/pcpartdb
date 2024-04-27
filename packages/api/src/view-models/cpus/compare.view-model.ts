@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import {
+  compactObject,
   CompareCpusViewModel,
   compareCpusViewModelNormalizr,
   CpuProductComparison,
   getPreferredBenchmark,
   ProductType,
   RelativeDataProducts,
-  removeEmptyValues,
 } from '@pcpartdb/shared';
 import { normalize } from 'normalizr';
 import { ProductService } from '../../product/product.service';
@@ -48,8 +48,9 @@ export class CompareCpusViewModelService {
         relatedCpuComparisons,
       } as CompareCpusViewModel;
 
-      const response = normalize(result, compareCpusViewModelNormalizr);
-      return removeEmptyValues(response);
+      const compact = compactObject(result);
+      const response = normalize(compact, compareCpusViewModelNormalizr);
+      return response;
     };
 
     const viewModel = await buildViewModel();
