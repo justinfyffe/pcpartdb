@@ -37,15 +37,18 @@ Games / FPS:
     - [] Replace duct tape window.history?.replaceState
   - Improve performance
     - Most important:
-      - [~] Cache In interceptor
+      - [X] Cache In interceptor
         - Highest impact
         - Cache individual pages.
         - Might use a lot of memory
-      - [] Improve performance with Normalizr
+      - [X] Improve performance with Normalizr
         - Impactful as it can take up to 100ms with lots of games
         - maybe issues with deepmerge for product merge strategy
         - Flatten data structures?
         - Don't include all game data
+      - [] Prime cache
+        - Home page
+        - Slug -> ID cache?
       - [] Exclude unused data
         - Possibly impactful for reducing data on some gpus
         - Search text, other names
