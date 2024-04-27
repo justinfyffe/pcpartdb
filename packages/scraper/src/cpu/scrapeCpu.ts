@@ -15,8 +15,8 @@ import { scrapePassMarkCpuData } from './passmark';
 import { scrapeTechPowerUpCpuData } from './techpowerup';
 
 const SOURCE_ORDER = [
-  ProductSourceKey.NotebookCheck,
   ProductSourceKey.TechPowerUp,
+  ProductSourceKey.NotebookCheck,
   ProductSourceKey.GeekBench,
   ProductSourceKey.PassMark,
 ];

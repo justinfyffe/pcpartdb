@@ -15,7 +15,21 @@ NEXT:
   - Improve keyword usages
   - Improve auto-generated summary
 
+Automation Improvements:
+- Audit
+- CPU
+  - Handle "(per core)" and "(shared)" for CPUs
+    - Show (per core) and (shared), or specify 4x256kb
+    - https://www.techpowerup.com/cpu-specs/core-i5-2500k.c725
+- GPU
+  - Handle Memory Clock (effective)
+    - https://www.techpowerup.com/gpu-specs/firepro-w5170m.c2705
+- Error Handling
+  - Add ability to restart a failed job
+  - Store failed tasks to look at later
+
 Games / FPS:
+  - [] Check if notebookcheck or techpowerup should be scraped first
 - Fixes:
   - [] Scroll to section using js instead of using anchor in Contents
     - [] Replace duct tape window.history?.replaceState
