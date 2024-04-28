@@ -74,10 +74,6 @@ export const DATA_TO_SCRAPE: Partial<Record<ProductType, ProductFieldKey[]>> = {
     'memoryBandwidth',
 
     'slotWidth',
-    'length',
-    'width',
-    'height',
-    'weight',
     'tdp',
     'suggestedPsu',
     'busInterface',

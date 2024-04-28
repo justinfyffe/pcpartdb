@@ -76,10 +76,8 @@ const FIELDS_TO_MAP: Record<ProductType, ProductFieldKey[]> = {
     'generation',
     'gpuCoreBaseClock',
     'gpuCoreBoostClock',
-    'height',
     'l1Cache',
     'l2Cache',
-    'length',
     'marketSegment',
     'memoryBandwidth',
     'memoryClock',
@@ -117,8 +115,6 @@ const FIELDS_TO_MAP: Record<ProductType, ProductFieldKey[]> = {
     'vertexRate',
     'vertexShaders',
     'vulkanVersion',
-    'weight',
-    'width',
   ],
 };
 

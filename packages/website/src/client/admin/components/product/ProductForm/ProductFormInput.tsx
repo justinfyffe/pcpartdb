@@ -46,10 +46,6 @@ import {
   ProductOtherNamesInputProps,
 } from '../ProductOtherNamesInput/ProductOtherNamesInput';
 import {
-  ProductParentInput,
-  ProductParentInputProps,
-} from '../ProductParentInput/ProductParentInput';
-import {
   ProductSearchTextInput,
   ProductSearchTextInputProps,
 } from '../ProductSearchTextInput/ProductSearchTextInput';
@@ -174,14 +170,6 @@ export const ProductFormInput: FunctionComponent<ProductFormInputProps> = (
     return (
       <ProductOtherNamesInput
         {...(config as ProductOtherNamesInputProps)}
-        {...restOfProps}
-        {...overrides}
-      />
-    );
-  } else if (inputType === ProductFormInputType.Parent) {
-    return (
-      <ProductParentInput
-        {...(config as ProductParentInputProps)}
         {...restOfProps}
         {...overrides}
       />

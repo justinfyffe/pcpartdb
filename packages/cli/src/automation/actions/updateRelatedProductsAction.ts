@@ -28,7 +28,7 @@ const TOTAL_RELATIVE_PRODUCTS = 30;
  */
 const LIST_FILTERS: Partial<Record<ProductType, ListProductsFilter>> = {
   [ProductType.Cpu]: { productType: ProductType.Cpu },
-  [ProductType.Gpu]: { productType: ProductType.Gpu, isChipset: true },
+  [ProductType.Gpu]: { productType: ProductType.Gpu },
 };
 
 export async function updateRelatedProductsAction(

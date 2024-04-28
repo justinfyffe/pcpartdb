@@ -1,11 +1,9 @@
 import {
   ApiError,
   formatProductName,
-  getGpuChipset,
   getHomePath,
   getListGpusPath,
   getViewGpuPath,
-  GpuProduct,
   isApiError,
   isNotFoundError,
   joinUrlParts,
@@ -16,7 +14,7 @@ import {
 } from '@pcpartdb/shared';
 import { Metadata, ResolvingMetadata } from 'next';
 import { cookies } from 'next/headers';
-import { notFound } from 'next/navigation';
+import { notFound, permanentRedirect, RedirectType } from 'next/navigation';
 import { viewModelClient } from 'packages/website/src/app/_common/api/ViewModelClient';
 import { DisplayAd } from 'packages/website/src/app/_common/components/Ad/DisplayAd';
 import { MultiplexAd } from 'packages/website/src/app/_common/components/Ad/MultiplexAd';
@@ -34,9 +32,9 @@ import { Highlights } from './_components/Highlights/Highlights';
 import { Overview } from './_components/Overview/Overview';
 import { RelatedComparisons } from './_components/Related/RelatedComparisons';
 import { RelatedGpus } from './_components/Related/RelatedGpus';
-import { RetailModels } from './_components/RetailModels/RetailModels';
 import { TechnicalSpecs } from './_components/TechnicalSpecs';
 import { PageProvider } from './PageProvider';
+import { VIEW_GPU_REDIRECTS } from './redirects';
 
 type ViewGpuPageProps = {
   params: { slug: string };
@@ -86,6 +84,15 @@ export async function generateMetadata(
 
 export default async function ViewGpuPage(props: ViewGpuPageProps) {
   const slug = props.params.slug;
+  if (VIEW_GPU_REDIRECTS[slug] != null) {
+    permanentRedirect(
+      getViewGpuPath({
+        productType: ProductType.Gpu,
+        slug: VIEW_GPU_REDIRECTS[slug],
+      }),
+      RedirectType.replace,
+    );
+  }
 
   const benchmark = props.searchParams.gpu_benchmark as string;
   const endpoint = joinUrlParts(
@@ -109,12 +116,7 @@ export default async function ViewGpuPage(props: ViewGpuPageProps) {
   }
 
   const { gpu, relatedGpus, relatedGpuComparisons } = viewModel;
-  const chipset = getGpuChipset(gpu);
 
-  const isRetailModel = gpu.parent != null;
-
-  const chipsetShortName = formatProductName(chipset, { company: false });
-  const chipsetFullName = formatProductName(chipset);
   const gpuShortName = formatProductName(gpu, { company: false });
   const gpuFullName = formatProductName(gpu);
 
@@ -123,11 +125,6 @@ export default async function ViewGpuPage(props: ViewGpuPageProps) {
       <Breadcrumbs className="mb-4">
         <Breadcrumb href={getHomePath()}>Home</Breadcrumb>
         <Breadcrumb href={getListGpusPath()}>Graphics Cards</Breadcrumb>
-        {isRetailModel && (
-          <Breadcrumb href={getViewGpuPath(chipset)}>
-            {chipsetShortName}
-          </Breadcrumb>
-        )}
         <Breadcrumb>{gpuShortName}</Breadcrumb>
       </Breadcrumbs>
 
@@ -135,17 +132,11 @@ export default async function ViewGpuPage(props: ViewGpuPageProps) {
         <section className="flex flex-col w-full">
           <div className="mb-4">
             <h1 className="font-semibold mb-0">{gpuFullName}</h1>
-            {isRetailModel && (
-              <span className="text-sm">
-                Retail card for the{' '}
-                <a href={getViewGpuPath(chipset)}>{chipsetFullName}</a>
-              </span>
-            )}
           </div>
 
           <CompareProductsForm
             productType={ProductType.Gpu}
-            values={[chipset?.id]}
+            values={[gpu?.id]}
           />
         </section>
 
@@ -165,10 +156,6 @@ export default async function ViewGpuPage(props: ViewGpuPageProps) {
           <BenchmarkPerformanceAndValue gpu={gpu} />
           <DisplayAd unit={AdUnit.ViewPagePostBenchmarkPerfValueDisplay} />
           <TechnicalSpecs gpu={gpu} />
-          <RetailModels
-            gpu={gpu}
-            retailModels={gpu?.children as GpuProduct[]}
-          />
           <MultiplexAd unit={AdUnit.ViewPagePostTechSpecsMultiplex} />
           <RelatedGpus gpu={gpu} relatedGpus={relatedGpus} />
           <RelatedComparisons

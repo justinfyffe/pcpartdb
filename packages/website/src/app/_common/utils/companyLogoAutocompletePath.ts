@@ -52,9 +52,6 @@ export function companyLogoAutocompletePath(product: Partial<Product>): string {
     case 'zotac':
       return '/images/autocomplete/zotac.png';
     default:
-      // No logo found, try the chipset
-      return companyLogoAutocompletePath(
-        'parent' in product ? product.parent : null,
-      );
+      return null;
   }
 }

@@ -44,22 +44,6 @@ export const CompatibilityTable: FunctionComponent<CompatibilityTableProps> = (
         />
         <ProductFieldRow
           type={ProductType.Gpu}
-          fields={[gpu1.fields?.length, gpu2.fields?.length]}
-        />
-        <ProductFieldRow
-          type={ProductType.Gpu}
-          fields={[gpu1.fields?.width, gpu2.fields?.width]}
-        />
-        <ProductFieldRow
-          type={ProductType.Gpu}
-          fields={[gpu1.fields?.height, gpu2.fields?.height]}
-        />
-        <ProductFieldRow
-          type={ProductType.Gpu}
-          fields={[gpu1.fields?.weight, gpu2.fields?.weight]}
-        />
-        <ProductFieldRow
-          type={ProductType.Gpu}
           fields={[gpu1.fields?.busInterface, gpu2.fields?.busInterface]}
         />
         <ProductFieldRow

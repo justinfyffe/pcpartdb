@@ -9,7 +9,6 @@ import { updateCpuAction } from './actions/updateCpuAction';
 import { updateCpuSourcesAction } from './actions/updateCpuSourcesAction';
 import { updateGpuAction } from './actions/updateGpuAction';
 import { updateGpuChipsetSourcesAction } from './actions/updateGpuChipsetSourcesAction';
-import { updateGpuRetailModelSourcesAction } from './actions/updateGpuRetailModelSourcesAction';
 import { updatePrioritySitemapsAction } from './actions/updatePrioritySitemapsAction';
 import { updateRanksAction } from './actions/updateRanksAction';
 import { updateRelatedProductsAction } from './actions/updateRelatedProductsAction';
@@ -51,8 +50,6 @@ export async function executeAutomation(context: AutomationContext) {
     await updateGpuAction(action, context);
   } else if (type === AutomationActionType.UpdateGpuChipsetSources) {
     await updateGpuChipsetSourcesAction(action, context);
-  } else if (type === AutomationActionType.UpdateGpuRetailModelSources) {
-    await updateGpuRetailModelSourcesAction(action, context);
   } else if (type === AutomationActionType.UpdateRanks) {
     await updateRanksAction(action, context);
   } else if (type === AutomationActionType.UpdateRelatedProducts) {

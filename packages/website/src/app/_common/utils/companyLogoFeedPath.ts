@@ -5,13 +5,7 @@ export function companyLogoFeedPath(product: Partial<Product>): string {
     return null;
   }
 
-  let company: string = null;
-  if (product.parent != null) {
-    company = product.parent.company;
-  } else {
-    company = product.company;
-  }
-
+  const company: string = product.company;
   if (company == null) {
     return null;
   }

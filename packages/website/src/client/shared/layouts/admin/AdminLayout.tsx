@@ -46,19 +46,15 @@ export const AdminLayout: FunctionComponent<AdminLayoutProps> = (props) => {
   const pendingUpdates = useMemo(() => {
     return (
       (automationStatus?.pendingCpuSources ?? 0) +
-      (automationStatus?.pendingGpuChipsetSources ?? 0) +
-      (automationStatus?.pendingGpuRetailModelSources ?? 0) +
+      (automationStatus?.pendingGpuSources ?? 0) +
       (automationStatus?.pendingCpuUpdates ?? 0) +
-      (automationStatus?.pendingGpuChipsetUpdates ?? 0) +
-      (automationStatus?.pendingGpuRetailModelUpdates ?? 0)
+      (automationStatus?.pendingGpuUpdates ?? 0)
     );
   }, [
     automationStatus?.pendingCpuSources,
     automationStatus?.pendingCpuUpdates,
-    automationStatus?.pendingGpuChipsetSources,
-    automationStatus?.pendingGpuChipsetUpdates,
-    automationStatus?.pendingGpuRetailModelSources,
-    automationStatus?.pendingGpuRetailModelUpdates,
+    automationStatus?.pendingGpuSources,
+    automationStatus?.pendingGpuUpdates,
   ]);
 
   // Callbacks

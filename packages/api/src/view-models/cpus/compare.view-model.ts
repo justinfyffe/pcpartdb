@@ -73,19 +73,14 @@ export class CompareCpusViewModelService {
         includeSources: false,
         includeUpdates: false,
 
-        includeParent: false,
-        includeChildren: false,
         includeRelated: true,
 
         includeBenchmarks: true,
         includeRelatedBenchmarks: [preferredBenchmark],
 
         includeRanks: true,
-        includeParentRanks: false,
         includeRelatedRanks: [preferredBenchmark],
 
-        parentFields: [],
-        childrenFields: [],
         relatedFields: [],
       },
       ctx,

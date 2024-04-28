@@ -9,7 +9,6 @@ import { ProductFloatInputProps } from '../ProductFloatInput/ProductFloatInput';
 import { ProductGamesInputProps } from '../ProductGamesInput/ProductGamesInput';
 import { ProductImagesInputProps } from '../ProductImageInput/ProductImagesInput';
 import { ProductOtherNamesInputProps } from '../ProductOtherNamesInput/ProductOtherNamesInput';
-import { ProductParentInputProps } from '../ProductParentInput/ProductParentInput';
 import { ProductSearchTextInputProps } from '../ProductSearchTextInput/ProductSearchTextInput';
 import { ProductSlugInputProps } from '../ProductSlugInput/ProductSlugInput';
 import { ProductSourcesInputProps } from '../ProductSourceInput/ProductSourcesInput';
@@ -28,7 +27,6 @@ export enum ProductFormInputType {
   Games = 'GAMES',
   Images = 'IMAGES',
   OtherNames = 'OTHER_NAMES',
-  Parent = 'PARENT',
   SearchText = 'SEARCH_TEXT',
   Slug = 'SLUG',
   Sources = 'SOURCES',
@@ -47,7 +45,6 @@ type InputProps =
   | Partial<ProductGamesInputProps>
   | Partial<ProductImagesInputProps>
   | Partial<ProductOtherNamesInputProps>
-  | Partial<ProductParentInputProps>
   | Partial<ProductSearchTextInputProps>
   | Partial<ProductSlugInputProps>
   | Partial<ProductSourcesInputProps>

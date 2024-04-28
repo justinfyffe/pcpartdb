@@ -3,7 +3,6 @@
 import {
   BenchmarkKey,
   CpuProduct,
-  formatGpuDimensions,
   formatOrdinalNumber,
   formatProductName,
   getGpuChipset,
@@ -62,11 +61,11 @@ export function buildProductContentParams(options: BuildContentParamsOptions) {
     brand: false,
   });
   params['performanceRank'] = getProductPerformanceRank(
-    product?.parent || product,
+    product,
     preferredBenchmark,
   );
   params['performanceRankOrdinal'] = formatOrdinalNumber(
-    getProductPerformanceRank(product?.parent || product, preferredBenchmark),
+    getProductPerformanceRank(product, preferredBenchmark),
   );
   params['preferredBenchmark'] = preferredBenchmark;
   params['preferredBenchmarkName'] =
@@ -77,22 +76,19 @@ export function buildProductContentParams(options: BuildContentParamsOptions) {
     getProductBenchmarkAbbrev(preferredBenchmark);
 
   params['preferredBenchmarkPerformance'] = productBenchmarkValue(
-    product?.parent || product,
+    product,
     preferredBenchmark,
   )?.toLocaleString('en-US', { maximumFractionDigits: 2 });
   params['processSize'] = getFormattedValue(product?.fields?.processSize);
   params['releaseDate'] = getFormattedValue(product?.fields?.releaseDate);
   params['tdp'] = getFormattedValue(product?.fields?.tdp);
   params['transistors'] = getFormattedValue(product?.fields?.transistors);
-  params['valueRank'] = getProductValueRank(
-    product?.parent || product,
-    preferredBenchmark,
-  );
+  params['valueRank'] = getProductValueRank(product, preferredBenchmark);
   params['valueRankOrdinal'] = formatOrdinalNumber(
-    getProductValueRank(product?.parent || product, preferredBenchmark),
+    getProductValueRank(product, preferredBenchmark),
   );
   params['preferredBenchmarkValuePerMsrp'] = productBenchmarkValuePerMsrp(
-    product?.parent || product,
+    product,
     preferredBenchmark,
   )?.toLocaleString('en-US', { maximumFractionDigits: 2 });
 
@@ -232,7 +228,6 @@ function buildGpuContentParams(
   params['coreBoostClock'] = getFormattedValue(
     product?.fields?.gpuCoreBoostClock,
   );
-  params['dimensions'] = formatGpuDimensions(product);
   params['foundry'] = getFormattedValue(product?.fields?.foundry);
   params['fp16'] = getFormattedValue(product?.fields?.fp16);
   params['fp32'] = getFormattedValue(product?.fields?.fp32);

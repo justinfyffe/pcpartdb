@@ -1,12 +1,7 @@
-import { ListGpusFilter, ProductType, SubProductType } from '@pcpartdb/shared';
+import { ListGpusFilter, ProductType } from '@pcpartdb/shared';
 import { ProductTypeInput } from 'packages/website/src/client/admin/components/product/ProductTypeInput/ProductTypeInput';
 import { Checkbox } from 'packages/website/src/client/shared/components/Checkbox/Checkbox';
 import { TextInput } from 'packages/website/src/client/shared/components/Input/TextInput';
-import {
-  Select,
-  SelectValue,
-} from 'packages/website/src/client/shared/components/Select/Select';
-import { SelectOption } from 'packages/website/src/client/shared/components/Select/SelectOption';
 import React, {
   FunctionComponent,
   useCallback,
@@ -23,48 +18,14 @@ export const ListFilters: FunctionComponent<ListFiltersProps> = () => {
   const context = useContext(AdminListProductsContext);
   const { query, updateQuery } = context;
 
-  const productType = query.filter.productType;
-  let subProductType: SubProductType = null;
-  if (productType === ProductType.Gpu) {
-    const filter = query.filter as ListGpusFilter;
-    if (filter.isChipset) {
-      subProductType = SubProductType.GpuChipset;
-    } else if (filter.isRetailModel) {
-      subProductType = SubProductType.GpuRetailModel;
-    }
-  }
-
   const [initialSearch] = useState(query.filter.search ?? '');
 
   const handleTypeChange = useCallback(
     async (type: ProductType) => {
       const newFilter = { ...query.filter, productType: type };
-      if (type === ProductType.Gpu) {
-        delete (newFilter as ListGpusFilter).isChipset;
-        delete (newFilter as ListGpusFilter).isRetailModel;
-      }
       await updateQuery({ ...query, filter: newFilter });
     },
     [query, updateQuery],
-  );
-
-  const handleSubTypeChange = useCallback(
-    async (selectValue: SelectValue) => {
-      const newFilter = { ...query.filter } as ListGpusFilter;
-      delete newFilter.isChipset;
-      delete newFilter.isRetailModel;
-
-      if (productType === ProductType.Gpu) {
-        if (selectValue === SubProductType.GpuChipset) {
-          newFilter.isChipset = true;
-        } else if (selectValue === SubProductType.GpuRetailModel) {
-          newFilter.isRetailModel = true;
-        }
-      }
-
-      updateQuery({ ...query, filter: newFilter });
-    },
-    [productType, query, updateQuery],
   );
 
   const handleSearchChange = useCallback(
@@ -147,25 +108,6 @@ export const ListFilters: FunctionComponent<ListFiltersProps> = () => {
             value={query.filter.productType}
             onChange={handleTypeChange}
           />
-        </div>
-
-        <div className="flex flex-col flex-auto">
-          <span className="font-medium">Sub Product Type</span>
-          <Select
-            disabled={productType !== ProductType.Gpu}
-            value={subProductType}
-            onChange={handleSubTypeChange}
-          >
-            <SelectOption label="Chipset" value={SubProductType.GpuChipset}>
-              Chipset
-            </SelectOption>
-            <SelectOption
-              label="Retail Model"
-              value={SubProductType.GpuRetailModel}
-            >
-              Retail Model
-            </SelectOption>
-          </Select>
         </div>
 
         <div className="flex flex-col flex-auto">

@@ -51,7 +51,6 @@ export interface GetProductRequest {
   includeFields?: boolean;
   includeGames?: boolean;
   includeImages?: boolean;
-  includeParent?: boolean;
   includeRanks?: boolean;
   includeSources?: boolean;
   includeUpdates?: boolean;

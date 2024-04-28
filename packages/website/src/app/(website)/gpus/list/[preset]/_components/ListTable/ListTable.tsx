@@ -17,7 +17,6 @@ import {
 } from '@pcpartdb/shared';
 import { Button } from 'packages/website/src/app/_common/components/Button/Button';
 import { ButtonVariant } from 'packages/website/src/app/_common/components/Button/types';
-import { showDialog } from 'packages/website/src/app/_common/components/Dialog/dialog';
 import { Img } from 'packages/website/src/app/_common/components/Img/Img';
 import { Table } from 'packages/website/src/app/_common/components/Table/Table';
 import { TBody } from 'packages/website/src/app/_common/components/Table/TBody';
@@ -29,9 +28,8 @@ import { usePreferredBenchmark } from 'packages/website/src/app/_common/product/
 import { usePreferredBenchmarkDialog } from 'packages/website/src/app/_common/product/hooks/usePreferredBenchmarkDialog';
 import { classNames } from 'packages/website/src/app/_common/utils/classNames';
 import { companyLogoAutocompletePath } from 'packages/website/src/app/_common/utils/companyLogoAutocompletePath';
-import React, { FunctionComponent, useCallback, useMemo } from 'react';
+import React, { FunctionComponent, useMemo } from 'react';
 import { useListContext } from '../../ListProvider';
-import { RetailModelsDialog } from '../RetailModelsDialog/RetailModelsDialog';
 
 export const ListTable: FunctionComponent = () => {
   const { gpus, query } = useListContext();
@@ -118,12 +116,6 @@ export const ListTable: FunctionComponent = () => {
               Date
             </span>
           </Th>
-
-          <Th className="text-center px-4 py-2 whitespace-nowrap md:hidden sm:px-2 md:px-3">
-            Retail
-            <br />
-            Cards
-          </Th>
         </Tr>
       </THead>
 
@@ -143,11 +135,9 @@ interface ListTableRowProps {
 
 const ListTableRow: FunctionComponent<ListTableRowProps> = (props) => {
   const { gpu } = props;
-  const { additionalData, query } = useListContext();
+  const { query } = useListContext();
   const sort = query?.orderBy?.sort ?? ListSort.PerformanceRating;
   const preferredBenchmark = usePreferredBenchmark(ProductType.Gpu);
-
-  const retailModelsCount = additionalData?.retailModelCounts?.[gpu.id] ?? 0;
 
   const href = useMemo(() => getViewGpuPath(gpu), [gpu]);
   const name = useMemo(() => formatProductName(gpu), [gpu]);
@@ -179,10 +169,6 @@ const ListTableRow: FunctionComponent<ListTableRowProps> = (props) => {
   );
 
   const companyImage = useMemo(() => companyLogoAutocompletePath(gpu), [gpu]);
-
-  const openProductsDialog = useCallback(() => {
-    showDialog(<RetailModelsDialog chipset={gpu} />);
-  }, [gpu]);
 
   return (
     <Tr>
@@ -241,20 +227,6 @@ const ListTableRow: FunctionComponent<ListTableRowProps> = (props) => {
         )}
       >
         {releaseDate}
-      </Td>
-
-      <Td className="text-center md:hidden px-4 py-2 sm:px-2 md:px-3">
-        {retailModelsCount > 0 && (
-          <Button
-            variant={ButtonVariant.Link}
-            onClick={openProductsDialog}
-            className="cursor-pointer p-0"
-          >
-            {retailModelsCount === 1 && <>1 card</>}
-            {retailModelsCount > 1 && <>{retailModelsCount} cards</>}
-          </Button>
-        )}
-        {retailModelsCount === 0 && <>--</>}
       </Td>
     </Tr>
   );

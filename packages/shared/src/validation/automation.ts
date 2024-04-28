@@ -56,10 +56,6 @@ export const listAutomationSourcesRequestSchema = Joi.object({
       productType: productTypeSchema.required(),
       includeArchived: Joi.boolean().allow(null),
       search: Joi.string().allow('', null),
-
-      relatedProductId: Joi.number().allow(null),
-      isParent: Joi.boolean().allow(null),
-      isChild: Joi.boolean().allow(null),
     }),
     maxLimit: 100,
   }),

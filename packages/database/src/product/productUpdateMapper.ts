@@ -3,7 +3,6 @@ import {
   ProductUpdate,
   ProductUpdateMeta,
   ProductUpdateStatus,
-  SubProductType,
 } from '@pcpartdb/shared';
 import { gzipData, unzipData } from '../mappers/utils';
 import { ProductUpdateEntity } from '.';
@@ -31,7 +30,6 @@ export async function mapToProductUpdateDto<TUpdateData = unknown>(
     id: entity.id,
 
     productType: entity.productType as ProductType,
-    subProductType: entity.subProductType as SubProductType,
     productName: entity.productName,
 
     description: entity.description,
@@ -75,7 +73,6 @@ export async function mapToProductUpdateEntity(dto: ProductUpdate) {
     id: undefined,
 
     productType: dto.productType,
-    subProductType: dto.subProductType,
     productName: dto.productName,
 
     description: dto.description,

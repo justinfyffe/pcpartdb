@@ -20,7 +20,6 @@ import {
   Product,
   ProductBenchmark,
   productBenchmarkSchema,
-  productFieldFormattedValue,
   productFieldSchema,
   ProductGame,
   ProductGameFps,
@@ -34,7 +33,6 @@ import {
   TextureFillRateUnit,
   UpdateProductRequest,
   WattageUnit,
-  WeightUnit,
 } from '@pcpartdb/shared';
 import {
   ProductFormInputGroups,
@@ -48,9 +46,6 @@ import { UseFormProps } from 'react-hook-form';
 //
 
 export interface GpuFormData {
-  // GPU Parent / Chipset ID
-  parentId?: number;
-
   name: string;
   slug: string;
 
@@ -77,10 +72,6 @@ export interface GpuFormData {
 
   // Board Compatibility & Dimensions
   slotWidth?: GpuField<number>;
-  length?: GpuField<number>;
-  width?: GpuField<number>;
-  height?: GpuField<number>;
-  weight?: GpuField<number>;
   busInterface?: GpuField<string>;
   tdp?: GpuField<number>;
   suggestedPsu?: GpuField<number>;
@@ -143,8 +134,6 @@ export interface GpuFormData {
 //
 
 const gpuFormSchema = Joi.object({
-  parentId: Joi.number().allow(null),
-
   name: Joi.string().required(),
   slug: Joi.string().required(),
   company: Joi.string(),
@@ -173,10 +162,6 @@ const gpuFormSchema = Joi.object({
 
   // Board Compatibility & Dimensions
   slotWidth: productFieldSchema.allow(null),
-  length: productFieldSchema.allow(null),
-  width: productFieldSchema.allow(null),
-  height: productFieldSchema.allow(null),
-  weight: productFieldSchema.allow(null),
   busInterface: productFieldSchema.allow(null),
   tdp: productFieldSchema.allow(null),
   suggestedPsu: productFieldSchema.allow(null),
@@ -257,8 +242,6 @@ export function gpuFormOptions(product?: Product): UseFormProps<GpuFormData> {
       summaryStale: product?.summaryStale ?? null,
       enablePerformanceSummary: product?.enablePerformanceSummary ?? null,
 
-      parentId: product?.parentId ?? null,
-
       // Data Sources
       sources,
 
@@ -278,10 +261,6 @@ export function gpuFormOptions(product?: Product): UseFormProps<GpuFormData> {
 
       // Board Compatibility & Dimensions
       slotWidth: product?.fields?.slotWidth ?? null,
-      length: product?.fields?.length ?? null,
-      width: product?.fields?.width ?? null,
-      height: product?.fields?.height ?? null,
-      weight: product?.fields?.weight ?? null,
       busInterface: product?.fields?.busInterface ?? null,
       tdp: product?.fields?.tdp ?? null,
       suggestedPsu: product?.fields?.suggestedPsu ?? null,
@@ -367,7 +346,6 @@ export function formDataToGpuRequest(
   return {
     product: {
       productType: ProductType.Gpu,
-      parentId: formData.parentId,
       slug: formData.slug,
       name: formData.name,
       company: formData.company,
@@ -396,10 +374,6 @@ export function formDataToGpuRequest(
 
         // Board Compatibility & Dimensions
         slotWidth: formData.slotWidth ?? null,
-        length: formData.length ?? null,
-        width: formData.width ?? null,
-        height: formData.height ?? null,
-        weight: formData.weight ?? null,
         busInterface: formData.busInterface ?? null,
         tdp: formData.tdp ?? null,
         suggestedPsu: formData.suggestedPsu ?? null,
@@ -487,11 +461,6 @@ export function buildGpuFormInputs(product?: Product): ProductFormInputGroups {
     {
       label: 'Product Info',
       inputs: [
-        {
-          name: 'parentId',
-          fieldLabel: 'Chipset',
-          inputType: ProductFormInputType.Parent,
-        },
         {
           name: 'name',
           fieldLabel: 'Name',
@@ -634,22 +603,12 @@ export function buildGpuFormInputs(product?: Product): ProductFormInputGroups {
           inputType: ProductFormInputType.TextField,
           label: 'GPU Codename',
           fieldKey: 'codename',
-          overrides: (ctx) => ({
-            placeholder: productFieldFormattedValue(
-              ctx.parentProduct?.fields?.codename ?? undefined,
-            ),
-          }),
         },
         {
           name: 'architecture',
           inputType: ProductFormInputType.TextField,
           label: 'Architecture',
           fieldKey: 'architecture',
-          overrides: (ctx) => ({
-            placeholder: productFieldFormattedValue(
-              ctx.parentProduct?.fields?.architecture ?? undefined,
-            ),
-          }),
         },
         {
           name: 'processSize',
@@ -657,11 +616,6 @@ export function buildGpuFormInputs(product?: Product): ProductFormInputGroups {
           label: 'Process Size',
           fieldKey: 'processSize',
           units: [LengthUnit.nm, LengthUnit.um],
-          overrides: (ctx) => ({
-            placeholder: productFieldFormattedValue(
-              ctx.parentProduct?.fields?.processSize ?? undefined,
-            ),
-          }),
         },
         {
           name: 'transistors',
@@ -669,11 +623,6 @@ export function buildGpuFormInputs(product?: Product): ProductFormInputGroups {
           label: 'Transistors',
           fieldKey: 'transistors',
           units: [NumericUnit.million],
-          overrides: (ctx) => ({
-            placeholder: productFieldFormattedValue(
-              ctx.parentProduct?.fields?.transistors ?? undefined,
-            ),
-          }),
         },
       ],
     },
@@ -687,22 +636,12 @@ export function buildGpuFormInputs(product?: Product): ProductFormInputGroups {
           inputType: ProductFormInputType.FloatField,
           label: 'Memory Size',
           fieldKey: 'memorySize',
-          overrides: (ctx) => ({
-            placeholder: productFieldFormattedValue(
-              ctx.parentProduct?.fields?.memorySize ?? undefined,
-            ),
-          }),
         },
         {
           name: 'memoryType',
           inputType: ProductFormInputType.TextField,
           label: 'Memory Type',
           fieldKey: 'memoryType',
-          overrides: (ctx) => ({
-            placeholder: productFieldFormattedValue(
-              ctx.parentProduct?.fields?.memoryType ?? undefined,
-            ),
-          }),
         },
         {
           name: 'memoryClock',
@@ -710,11 +649,6 @@ export function buildGpuFormInputs(product?: Product): ProductFormInputGroups {
           label: 'Memory Clock',
           fieldKey: 'memoryClock',
           units: [FrequencyUnit.mhz, FrequencyUnit.ghz],
-          overrides: (ctx) => ({
-            placeholder: productFieldFormattedValue(
-              ctx.parentProduct?.fields?.memoryClock ?? undefined,
-            ),
-          }),
         },
         {
           name: 'memoryClockEffective',
@@ -722,11 +656,6 @@ export function buildGpuFormInputs(product?: Product): ProductFormInputGroups {
           label: 'Memory Clock (Effective)',
           fieldKey: 'memoryClockEffective',
           units: [FrequencyUnit.mhz, FrequencyUnit.ghz],
-          overrides: (ctx) => ({
-            placeholder: productFieldFormattedValue(
-              ctx.parentProduct?.fields?.memoryClockEffective ?? undefined,
-            ),
-          }),
         },
         {
           name: 'memoryInterface',
@@ -734,11 +663,6 @@ export function buildGpuFormInputs(product?: Product): ProductFormInputGroups {
           label: 'Memory Interface',
           fieldKey: 'memoryInterface',
           units: [BitUnit.bit],
-          overrides: (ctx) => ({
-            placeholder: productFieldFormattedValue(
-              ctx.parentProduct?.fields?.memoryInterface ?? undefined,
-            ),
-          }),
         },
         {
           name: 'memoryBandwidth',
@@ -746,11 +670,6 @@ export function buildGpuFormInputs(product?: Product): ProductFormInputGroups {
           label: 'Memory Bandwidth',
           fieldKey: 'memoryBandwidth',
           units: [BandwidthUnit.tbps, BandwidthUnit.gbps, BandwidthUnit.mbps],
-          overrides: (ctx) => ({
-            placeholder: productFieldFormattedValue(
-              ctx.parentProduct?.fields?.memoryBandwidth ?? undefined,
-            ),
-          }),
         },
       ],
     },
@@ -764,70 +683,12 @@ export function buildGpuFormInputs(product?: Product): ProductFormInputGroups {
           inputType: ProductFormInputType.FloatField,
           label: 'Slots',
           fieldKey: 'slotWidth',
-          overrides: (ctx) => ({
-            placeholder: productFieldFormattedValue(
-              ctx.parentProduct?.fields?.slotWidth ?? undefined,
-            ),
-          }),
-        },
-        {
-          name: 'length',
-          inputType: ProductFormInputType.FloatField,
-          label: 'Length',
-          fieldKey: 'length',
-          units: [LengthUnit.mm],
-          overrides: (ctx) => ({
-            placeholder: productFieldFormattedValue(
-              ctx.parentProduct?.fields?.length ?? undefined,
-            ),
-          }),
-        },
-        {
-          name: 'width',
-          inputType: ProductFormInputType.FloatField,
-          label: 'Width',
-          fieldKey: 'width',
-          units: [LengthUnit.mm],
-          overrides: (ctx) => ({
-            placeholder: productFieldFormattedValue(
-              ctx.parentProduct?.fields?.width ?? undefined,
-            ),
-          }),
-        },
-        {
-          name: 'height',
-          inputType: ProductFormInputType.FloatField,
-          label: 'Height',
-          fieldKey: 'height',
-          units: [LengthUnit.mm],
-          overrides: (ctx) => ({
-            placeholder: productFieldFormattedValue(
-              ctx.parentProduct?.fields?.height ?? undefined,
-            ),
-          }),
-        },
-        {
-          name: 'weight',
-          inputType: ProductFormInputType.FloatField,
-          label: 'Weight',
-          fieldKey: 'weight',
-          units: [WeightUnit.kg],
-          overrides: (ctx) => ({
-            placeholder: productFieldFormattedValue(
-              ctx.parentProduct?.fields?.weight ?? undefined,
-            ),
-          }),
         },
         {
           name: 'busInterface',
           inputType: ProductFormInputType.TextField,
           label: 'Bus Interface',
           fieldKey: 'busInterface',
-          overrides: (ctx) => ({
-            placeholder: productFieldFormattedValue(
-              ctx.parentProduct?.fields?.busInterface ?? undefined,
-            ),
-          }),
         },
         {
           name: 'tdp',
@@ -835,11 +696,6 @@ export function buildGpuFormInputs(product?: Product): ProductFormInputGroups {
           label: 'Thermal Design Power (TDP)',
           fieldKey: 'tdp',
           units: [WattageUnit.w],
-          overrides: (ctx) => ({
-            placeholder: productFieldFormattedValue(
-              ctx.parentProduct?.fields?.tdp ?? undefined,
-            ),
-          }),
         },
         {
           name: 'suggestedPsu',
@@ -847,22 +703,12 @@ export function buildGpuFormInputs(product?: Product): ProductFormInputGroups {
           label: 'Suggested PSU',
           fieldKey: 'suggestedPsu',
           units: [WattageUnit.w],
-          overrides: (ctx) => ({
-            placeholder: productFieldFormattedValue(
-              ctx.parentProduct?.fields?.suggestedPsu ?? undefined,
-            ),
-          }),
         },
         {
           name: 'outputs',
           inputType: ProductFormInputType.TextField,
           label: 'Outputs',
           fieldKey: 'outputs',
-          overrides: (ctx) => ({
-            placeholder: productFieldFormattedValue(
-              ctx.parentProduct?.fields?.outputs ?? undefined,
-            ),
-          }),
         },
       ],
     },
@@ -877,33 +723,18 @@ export function buildGpuFormInputs(product?: Product): ProductFormInputGroups {
           inputType: ProductFormInputType.FloatField,
           label: 'Stream Processors (AMD)',
           fieldKey: 'streamProcessors',
-          overrides: (ctx) => ({
-            placeholder: productFieldFormattedValue(
-              ctx.parentProduct?.fields?.streamProcessors ?? undefined,
-            ),
-          }),
         },
         {
           name: 'shadingUnits',
           inputType: ProductFormInputType.FloatField,
           label: 'Shading Units (Intel)',
           fieldKey: 'shadingUnits',
-          overrides: (ctx) => ({
-            placeholder: productFieldFormattedValue(
-              ctx.parentProduct?.fields?.shadingUnits ?? undefined,
-            ),
-          }),
         },
         {
           name: 'cudaCores',
           inputType: ProductFormInputType.FloatField,
           label: 'CUDA Cores (NVIDIA)',
           fieldKey: 'cudaCores',
-          overrides: (ctx) => ({
-            placeholder: productFieldFormattedValue(
-              ctx.parentProduct?.fields?.cudaCores ?? undefined,
-            ),
-          }),
         },
         // Compute Units (AMD), Execution Units (Intel), Stream Multiprocessors (NVIDIA): Equivalent
         {
@@ -911,77 +742,42 @@ export function buildGpuFormInputs(product?: Product): ProductFormInputGroups {
           inputType: ProductFormInputType.FloatField,
           label: 'Compute Units (AMD)',
           fieldKey: 'computeUnits',
-          overrides: (ctx) => ({
-            placeholder: productFieldFormattedValue(
-              ctx.parentProduct?.fields?.computeUnits ?? undefined,
-            ),
-          }),
         },
         {
           name: 'executionUnits',
           inputType: ProductFormInputType.FloatField,
           label: 'Execution Units (Intel)',
           fieldKey: 'executionUnits',
-          overrides: (ctx) => ({
-            placeholder: productFieldFormattedValue(
-              ctx.parentProduct?.fields?.executionUnits ?? undefined,
-            ),
-          }),
         },
         {
           name: 'streamMultiprocessors',
           inputType: ProductFormInputType.FloatField,
           label: 'Stream Multiprocessors (NVIDIA)',
           fieldKey: 'streamMultiprocessors',
-          overrides: (ctx) => ({
-            placeholder: productFieldFormattedValue(
-              ctx.parentProduct?.fields?.streamMultiprocessors ?? undefined,
-            ),
-          }),
         },
         {
           name: 'tmus',
           inputType: ProductFormInputType.FloatField,
           label: 'Texture Mapping Units (TMUs)',
           fieldKey: 'tmus',
-          overrides: (ctx) => ({
-            placeholder: productFieldFormattedValue(
-              ctx.parentProduct?.fields?.tmus ?? undefined,
-            ),
-          }),
         },
         {
           name: 'rops',
           inputType: ProductFormInputType.FloatField,
           label: 'Render Output Units (ROPs)',
           fieldKey: 'rops',
-          overrides: (ctx) => ({
-            placeholder: productFieldFormattedValue(
-              ctx.parentProduct?.fields?.rops ?? undefined,
-            ),
-          }),
         },
         {
           name: 'tensorCores',
           inputType: ProductFormInputType.FloatField,
           label: 'Tensor Cores',
           fieldKey: 'tensorCores',
-          overrides: (ctx) => ({
-            placeholder: productFieldFormattedValue(
-              ctx.parentProduct?.fields?.tensorCores ?? undefined,
-            ),
-          }),
         },
         {
           name: 'rtCores',
           inputType: ProductFormInputType.FloatField,
           label: 'Ray Tracing Cores (RT Cores)',
           fieldKey: 'rtCores',
-          overrides: (ctx) => ({
-            placeholder: productFieldFormattedValue(
-              ctx.parentProduct?.fields?.rtCores ?? undefined,
-            ),
-          }),
         },
         {
           name: 'gpuCoreBaseClock',
@@ -989,11 +785,6 @@ export function buildGpuFormInputs(product?: Product): ProductFormInputGroups {
           label: 'Clock Speed (Base)',
           fieldKey: 'gpuCoreBaseClock',
           units: [FrequencyUnit.mhz, FrequencyUnit.ghz],
-          overrides: (ctx) => ({
-            placeholder: productFieldFormattedValue(
-              ctx.parentProduct?.fields?.gpuCoreBaseClock ?? undefined,
-            ),
-          }),
         },
         {
           name: 'gpuCoreBoostClock',
@@ -1001,11 +792,6 @@ export function buildGpuFormInputs(product?: Product): ProductFormInputGroups {
           label: 'Clock Speed (Boost)',
           fieldKey: 'gpuCoreBoostClock',
           units: [FrequencyUnit.mhz, FrequencyUnit.ghz],
-          overrides: (ctx) => ({
-            placeholder: productFieldFormattedValue(
-              ctx.parentProduct?.fields?.gpuCoreBoostClock ?? undefined,
-            ),
-          }),
         },
         {
           name: 'l1Cache',
@@ -1018,11 +804,6 @@ export function buildGpuFormInputs(product?: Product): ProductFormInputGroups {
             MemorySizeUnit.gb,
             MemorySizeUnit.tb,
           ],
-          overrides: (ctx) => ({
-            placeholder: productFieldFormattedValue(
-              ctx.parentProduct?.fields?.l1Cache ?? undefined,
-            ),
-          }),
         },
         {
           name: 'l2Cache',
@@ -1035,11 +816,6 @@ export function buildGpuFormInputs(product?: Product): ProductFormInputGroups {
             MemorySizeUnit.gb,
             MemorySizeUnit.tb,
           ],
-          overrides: (ctx) => ({
-            placeholder: productFieldFormattedValue(
-              ctx.parentProduct?.fields?.l2Cache ?? undefined,
-            ),
-          }),
         },
       ],
     },
@@ -1054,11 +830,6 @@ export function buildGpuFormInputs(product?: Product): ProductFormInputGroups {
           label: 'Pixel Fill Rate',
           fieldKey: 'pixelRate',
           units: [PixelFillRateUnit.gpixelps],
-          overrides: (ctx) => ({
-            placeholder: productFieldFormattedValue(
-              ctx.parentProduct?.fields?.pixelRate ?? undefined,
-            ),
-          }),
         },
         {
           name: 'textureRate',
@@ -1066,11 +837,6 @@ export function buildGpuFormInputs(product?: Product): ProductFormInputGroups {
           label: 'Texture Fill Rate',
           fieldKey: 'textureRate',
           units: [TextureFillRateUnit.gtexelps],
-          overrides: (ctx) => ({
-            placeholder: productFieldFormattedValue(
-              ctx.parentProduct?.fields?.textureRate ?? undefined,
-            ),
-          }),
         },
         {
           name: 'fp32',
@@ -1078,11 +844,6 @@ export function buildGpuFormInputs(product?: Product): ProductFormInputGroups {
           label: 'FP32 Performance',
           fieldKey: 'fp32',
           units: [FlopsUnit.tflops, FlopsUnit.gflops],
-          overrides: (ctx) => ({
-            placeholder: productFieldFormattedValue(
-              ctx.parentProduct?.fields?.fp32 ?? undefined,
-            ),
-          }),
         },
         {
           name: 'fp64',
@@ -1090,11 +851,6 @@ export function buildGpuFormInputs(product?: Product): ProductFormInputGroups {
           label: 'FP64 Performance',
           fieldKey: 'fp64',
           units: [FlopsUnit.gflops, FlopsUnit.tflops],
-          overrides: (ctx) => ({
-            placeholder: productFieldFormattedValue(
-              ctx.parentProduct?.fields?.fp64 ?? undefined,
-            ),
-          }),
         },
       ],
     },
@@ -1108,44 +864,24 @@ export function buildGpuFormInputs(product?: Product): ProductFormInputGroups {
           inputType: ProductFormInputType.TextField,
           label: 'DirectX Version',
           fieldKey: 'directxVersion',
-          overrides: (ctx) => ({
-            placeholder: productFieldFormattedValue(
-              ctx.parentProduct?.fields?.directxVersion ?? undefined,
-            ),
-          }),
         },
         {
           name: 'openClVersion',
           inputType: ProductFormInputType.TextField,
           label: 'Open CL Version',
           fieldKey: 'openClVersion',
-          overrides: (ctx) => ({
-            placeholder: productFieldFormattedValue(
-              ctx.parentProduct?.fields?.openClVersion ?? undefined,
-            ),
-          }),
         },
         {
           name: 'openGlVersion',
           inputType: ProductFormInputType.TextField,
           label: 'Open GL Version',
           fieldKey: 'openGlVersion',
-          overrides: (ctx) => ({
-            placeholder: productFieldFormattedValue(
-              ctx.parentProduct?.fields?.openGlVersion ?? undefined,
-            ),
-          }),
         },
         {
           name: 'shaderModelVersion',
           inputType: ProductFormInputType.TextField,
           label: 'Shader Model Version',
           fieldKey: 'shaderModelVersion',
-          overrides: (ctx) => ({
-            placeholder: productFieldFormattedValue(
-              ctx.parentProduct?.fields?.shaderModelVersion ?? undefined,
-            ),
-          }),
         },
       ],
     },

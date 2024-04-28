@@ -62,7 +62,6 @@ export async function middleware(request: NextRequest) {
   // Reset Password Middleware
   if (request.nextUrl.pathname.startsWith('/reset-password/')) {
     // Only guests can reset password.
-
     response = resetPasswordMiddleware(request, config);
   }
 

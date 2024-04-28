@@ -43,7 +43,7 @@ export class AutomationSourceRepository {
     config?: RepositoryConfig,
   ) {
     const trx = config?.trx ?? this.db;
-    const { relatedProduct: _relatedProduct, ...entity } = data;
+    const { ...entity } = data;
 
     return await trx.automationSource.create({ data: entity });
   }
@@ -54,7 +54,7 @@ export class AutomationSourceRepository {
     config?: RepositoryConfig,
   ) {
     const trx = config?.trx ?? this.db;
-    const { relatedProduct: _relatedProduct, ...entity } = data;
+    const { ...entity } = data;
 
     return await trx.automationSource.update({
       where: { id },
@@ -67,7 +67,7 @@ export class AutomationSourceRepository {
     config?: RepositoryConfig,
   ) {
     const trx = config?.trx ?? this.db;
-    const { relatedProduct: _relatedProduct, ...entity } = data;
+    const { ...entity } = data;
 
     return await trx.automationSource.upsert({
       where: {
@@ -134,9 +134,6 @@ export class AutomationSourceRepository {
         productType: filter?.productType,
         groupKey: { in: groupKeys, mode: 'insensitive' },
       },
-      include: {
-        relatedProduct: true,
-      },
     });
     for (const source of sources) {
       const key = source.groupKey;
@@ -191,7 +188,7 @@ export class AutomationSourceRepository {
     const priorityResults = await trx.automationSource.findMany({
       where: {
         AND: [
-          { productType, sourceKey, relatedProductId: { equals: null } },
+          { productType, sourceKey },
           {
             OR: [
               {
@@ -289,19 +286,9 @@ export class AutomationSourceRepository {
       ? { contains: search, mode: 'insensitive' }
       : undefined;
 
-    let relatedProductIdwhere: Prisma.IntNullableFilter;
-    if (filter?.isParent) {
-      relatedProductIdwhere = { equals: null };
-    } else if (filter?.isChild && filter?.relatedProductId == null) {
-      relatedProductIdwhere = { not: null };
-    } else if (filter?.relatedProductId != null) {
-      relatedProductIdwhere = { equals: filter.relatedProductId };
-    }
-
     return {
       productType: productTypeWhere,
       archived: archivedWhere,
-      relatedProductId: relatedProductIdwhere,
       sourceName: sourceNameWhere,
     };
   }

@@ -2,10 +2,8 @@ export interface AutomationStatus {
   enabled: boolean;
 
   pendingCpuSources?: number;
-  pendingGpuChipsetSources?: number;
-  pendingGpuRetailModelSources?: number;
+  pendingGpuSources?: number;
 
   pendingCpuUpdates?: number;
-  pendingGpuChipsetUpdates?: number;
-  pendingGpuRetailModelUpdates?: number;
+  pendingGpuUpdates?: number;
 }

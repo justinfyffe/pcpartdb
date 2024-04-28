@@ -37,7 +37,6 @@ const CPU_PRODUCTS_FILENAME = 'sitemap-cpu-products-{i}.xml';
 const CPU_COMPARISONS_FILENAME = 'sitemap-cpu-comparisons-{i}.xml';
 const GPU_LISTS_FILENAME = 'sitemap-gpu-lists.xml';
 const GPU_CHIPSETS_FILENAME = 'sitemap-gpu-chipsets-{i}.xml';
-const GPU_RETAIL_MODELS_FILENAME = 'sitemap-gpu-retail-models-{i}.xml';
 const GPU_COMPARISONS_FILENAME = 'sitemap-gpu-comparisons-{i}.xml';
 
 interface SitemapIndexEntry {
@@ -62,13 +61,7 @@ export async function updateSitemapsAction(
 
   // Fetch gpu chipset slugs
   const gpuChipsetSlugs = await fetchProductSlugs(
-    { productType: ProductType.Gpu, hasParent: false },
-    context,
-  );
-
-  // Fetch gpu retail model slugs
-  const gpuRetailModelSlugs = await fetchProductSlugs(
-    { productType: ProductType.Gpu, hasParent: true },
+    { productType: ProductType.Gpu },
     context,
   );
 
@@ -81,7 +74,6 @@ export async function updateSitemapsAction(
     ...(await writeCpusSitemap(cpuSlugs)),
     ...(await writeCpuComparisonsSitemap(cpuSlugs)),
     ...(await writeGpuChipsetsSitemap(gpuChipsetSlugs)),
-    ...(await writeGpuRetailModelsSitemap(gpuRetailModelSlugs)),
     ...(await writeGpuComparisonsSitemap(gpuChipsetSlugs)),
   ];
   await writeSitemapIndex(sitemapIndexEntries);
@@ -301,53 +293,6 @@ async function writeGpuChipsetsSitemap(gpuSlugs: SitemapProductSlug[]) {
   }
 
   console.log(`${totalEntries} total entries for GPU chipsets sitemaps`);
-
-  return sitemapIndexEntries;
-}
-
-async function writeGpuRetailModelsSitemap(gpuSlugs: SitemapProductSlug[]) {
-  console.log('Generating GPU Retail Models sitemap');
-
-  let totalEntries = 0;
-  const sitemapIndexEntries: SitemapIndexEntry[] = [];
-  const entries: Record<string, SitemapEntry[]> = {};
-  const lastModifications: Record<string, number> = {};
-
-  for (let i = 0; i < gpuSlugs.length - 1; ++i) {
-    const gpuSlug = gpuSlugs[i];
-
-    const url = websiteUrl(getViewGpuPath({ slug: gpuSlug.slug }));
-    const lastModTimestamp = Math.max(gpuSlug.lastModification ?? 0, 0);
-    const lastModification =
-      lastModTimestamp != 0 ? new Date(lastModTimestamp) : undefined;
-
-    const name = getSitemapName(url, 1);
-    if (!entries[name]) {
-      entries[name] = [];
-      lastModifications[name] = 0;
-    }
-
-    entries[name].push({ url, lastModification });
-    lastModifications[name] = Math.max(
-      lastModifications[name],
-      lastModTimestamp,
-    );
-    ++totalEntries;
-  }
-
-  const sitemapNames = Object.keys(entries);
-  for (const name of sitemapNames) {
-    const filename = GPU_RETAIL_MODELS_FILENAME.replace('{i}', `${name}`);
-    await writeSitemap(sitemapPath(filename), entries[name]);
-    const url = sitemapUrl(filename, { compressed: true });
-    sitemapIndexEntries.push({
-      url,
-      lastModification: new Date(lastModifications[name]),
-    });
-    console.log(`Generated ${filename} with ${entries[name].length} entries`);
-  }
-
-  console.log(`${totalEntries} total entries for GPU Retail Models sitemaps`);
 
   return sitemapIndexEntries;
 }

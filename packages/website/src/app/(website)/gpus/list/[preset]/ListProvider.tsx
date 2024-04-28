@@ -4,7 +4,6 @@ import {
   generateListProductsQueryFromPath,
   getListGpusPath,
   GpuProduct,
-  ListGpusAdditionalData,
   ListGpusFilter,
   ListGpusQuery,
   ListGpusViewModel,
@@ -25,7 +24,6 @@ export interface ListContextState {
   updateQuery: (query: ListGpusQuery) => void;
   gpus: GpuProduct[];
   totalGpus: number;
-  additionalData: ListGpusAdditionalData;
 }
 
 export const ListContext = createContext<ListContextState>({
@@ -33,7 +31,6 @@ export const ListContext = createContext<ListContextState>({
   updateQuery: null,
   gpus: null,
   totalGpus: null,
-  additionalData: null,
 });
 
 export function useListContext() {
@@ -51,9 +48,6 @@ export function ListProvider(props: ListProviderProps) {
   const [gpus, setGpus] = useState(viewModel.results);
   const [total, setTotal] = useState(viewModel.total);
   const [query, setQuery] = useState(viewModel.query);
-  const [additionalData, setAdditionalData] = useState(
-    viewModel.additionalData,
-  );
 
   const fetchGpusImpl = useCallback(async (query: ListGpusQuery) => {
     const filter: ListGpusFilter = {
@@ -64,7 +58,6 @@ export function ListProvider(props: ListProviderProps) {
 
     setGpus(response.results as GpuProduct[]);
     setTotal(response.total);
-    setAdditionalData(response.additionalData);
     setQuery(query);
   }, []);
   const { func: fetchGpus, abort: abortFetchGpus } =
@@ -106,7 +99,7 @@ export function ListProvider(props: ListProviderProps) {
 
   return (
     <ListContext.Provider
-      value={{ query, updateQuery, gpus, totalGpus: total, additionalData }}
+      value={{ query, updateQuery, gpus, totalGpus: total }}
     >
       {props.children}
     </ListContext.Provider>

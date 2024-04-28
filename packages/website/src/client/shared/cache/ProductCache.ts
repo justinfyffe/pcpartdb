@@ -34,20 +34,10 @@ class ProductCacheImpl {
             .forEach((product) => {
               cache[product.id] = product;
               this.saveImages(product);
-
-              if (product.parent != null) {
-                cache[product.parent.id] = product.parent;
-                this.saveImages(product.parent);
-              }
             });
         } else {
           cache[products.id] = products;
           this.saveImages(products);
-
-          if (products.parent != null) {
-            cache[products.parent.id] = products.parent;
-            this.saveImages(products.parent);
-          }
         }
       });
   }

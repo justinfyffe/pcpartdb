@@ -10,10 +10,10 @@ export const CompatibilityIntroSentence1 = compileContentComponent({
   deps: [],
   component: (props) => (
     <>
-      {props.name1} and {props.name2}&apos;s dimensions, bus interface, power
+      {props.name1} and {props.name2}&apos;s slots, bus interface, power
       consumption, and output ports. These specs are useful for verifying that
-      these GPUs fit within your case and is compatible with your motherboard,
-      power supply, and monitor.
+      these GPUs are compatible with your motherboard, power supply, and
+      monitor.
     </>
   ),
 });

@@ -35,16 +35,10 @@ const CompatibilitySlotWidth = compileContentComponent({
   },
 });
 
-const CompatibilityDimensions = compileContentComponent({
-  // It has dimensions of 100 mm (L) x 100 mm (H).
-  deps: [SpecsTag.Dimensions],
-  component: (props) => <>It has dimensions of {props.dimensions}.</>,
-});
-
 const CompatibilityOutputs = compileContentComponent({
   // Example: This desktop card has 1x HDMI 2.1, 3x DisplayPort 1.4a output ports.
   tags: [SpecsTag.Outputs],
-  component: (props) => <>It has output ports of {props.outputs}.</>,
+  component: (props) => <>It supports {props.outputs} display ports.</>,
 });
 
 const PowerSupplyTdp = compileContentComponent({
@@ -72,8 +66,8 @@ const CompatibilityParagraph = compileContentComponent({
   deps: [],
   component: () => (
     <p>
-      <CompatibilitySlotWidth /> <CompatibilityDimensions />{' '}
-      <CompatibilityOutputs /> <PowerSupplyTdp /> <PowerSupplySuggestedPsu />
+      <CompatibilitySlotWidth /> <CompatibilityOutputs /> <PowerSupplyTdp />{' '}
+      <PowerSupplySuggestedPsu />
     </p>
   ),
 });

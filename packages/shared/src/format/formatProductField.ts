@@ -211,35 +211,6 @@ export function formatSpecialGpuField<T = unknown>(
   return null;
 }
 
-interface FormatGpuDimensionsOptions {
-  allowMissingDimensions?: boolean;
-}
-
-export function formatGpuDimensions(
-  gpu: Partial<GpuProduct>,
-  options?: FormatGpuDimensionsOptions,
-) {
-  const length = productFieldFormattedValue(gpu?.fields?.length);
-  const height = productFieldFormattedValue(gpu?.fields?.height);
-  const width = productFieldFormattedValue(gpu?.fields?.width);
-  const slots = productFieldFormattedValue(gpu?.fields?.slotWidth);
-
-  const dimensions: string[] = [];
-  dimensions.push(length != null ? `${length} (L)` : null);
-  dimensions.push(width != null ? `${width} (W)` : null);
-  if (height != null) {
-    dimensions.push(`${height} (H)`);
-  } else if (slots != null) {
-    dimensions.push(`${slots} (H)`);
-  }
-
-  if (options?.allowMissingDimensions === false && dimensions.includes(null)) {
-    return null;
-  }
-
-  return dimensions.filter((value) => value != null).join(' x ') || null;
-}
-
 export function formatCompanyName(company: string) {
   if (company == null || company.length === 0) {
     return null;

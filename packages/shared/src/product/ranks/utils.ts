@@ -30,9 +30,8 @@ export function getProductRankObject(
   rankType: RankType,
   benchmark: BenchmarkKey,
 ) {
-  const parent = product?.parent ?? product;
   const key = buildProductRankKey({ type: rankType, benchmark });
-  return parent?.ranks?.[key] ?? null;
+  return product?.ranks?.[key] ?? null;
 }
 
 export function getProductPerformanceRank(

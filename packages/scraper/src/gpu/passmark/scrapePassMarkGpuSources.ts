@@ -1,4 +1,4 @@
-import { cleanUrl, parseProductName, SubProductType } from '@pcpartdb/shared';
+import { cleanUrl, parseProductName } from '@pcpartdb/shared';
 import * as cheerio from 'cheerio';
 import { scraper } from '../../scraper';
 import { PassMarkGpuSource } from '../types';
@@ -34,7 +34,6 @@ export async function scrapePassMarkGpuSources(
     const company = parsedCompany || guessCompanyName(name);
     if (externalKey && company) {
       const groupKey = generateGpuGroupKey({
-        gpuType: SubProductType.GpuChipset,
         name,
         company,
       });

@@ -9,7 +9,6 @@ import {
   ProductSourceEntity,
 } from '@pcpartdb/database';
 import { concurrent, ProductType } from '@pcpartdb/shared';
-import { randomUUID } from 'crypto';
 import { ProductGameFpsEntity } from 'packages/database/src/product/ProductGameFpsEntity';
 import { ProductRanksEntity } from 'packages/database/src/product/ProductRankEntity';
 import { RelatedProductEntity } from 'packages/database/src/product/RelatedProductEntity';
@@ -48,33 +47,24 @@ interface InvalidateOptions {
 }
 
 interface RelationOptions {
-  includeParents?: boolean;
-  includeChildren?: boolean;
   includeRelated?: boolean;
 
   includeBaseFields?: boolean;
-  includeParentFields?: boolean;
-  includeChildrenFields?: boolean;
   includeRelatedFields?: boolean;
 
   includeBaseBenchmarks?: boolean;
-  includeParentBenchmarks?: boolean;
   includeRelatedBenchmarks?: boolean;
 
   includeBaseGameFps?: boolean;
-  includeParentGameFps?: boolean;
   includeRelatedGameFps?: boolean;
 
   includeBaseRanks?: boolean;
-  includeParentRanks?: boolean;
   includeRelatedRanks?: boolean;
 
   includeBaseImages?: boolean;
-  includeParentImages?: boolean;
   includeRelatedImages?: boolean;
 
   includeBaseSources?: boolean;
-  includeParentSources?: boolean;
   includeRelatedSources?: boolean;
 }
 
@@ -86,16 +76,12 @@ interface PopulateOptions extends RelationOptions {
 interface GetProductIdsOptions {
   products: ProductEntity[];
   base?: boolean;
-  parents?: boolean;
-  children?: boolean;
   related?: boolean;
 }
 
 interface GetProductMapOptions {
   products: ProductEntity[];
   base?: boolean;
-  parents?: boolean;
-  children?: boolean;
   related?: boolean;
 }
 
@@ -105,8 +91,6 @@ interface GetProductIdsToFetchOptions<TData = unknown> {
   products?: ProductEntity[];
 
   base?: boolean;
-  parents?: boolean;
-  children?: boolean;
   related?: boolean;
 
   cacheType: CacheType;
@@ -184,14 +168,8 @@ export class ProductEntityCache {
       return [];
     }
 
-    // Populate Parents
-    await this.populateParents({ ...options, products }, ctx);
-
-    // Populate Children and Related
-    await Promise.all([
-      this.populateChildren({ ...options, products }, ctx),
-      this.populateRelated({ ...options, products }, ctx),
-    ]);
+    // Populate Related
+    await this.populateRelated({ ...options, products }, ctx);
 
     // Do the rest simultaneously
     await concurrent(
@@ -240,108 +218,9 @@ export class ProductEntityCache {
     await this.cacheService.invalidate({ type: CacheType.ProductImages, key });
     await this.cacheService.invalidate({ type: CacheType.ProductSources, key });
     await this.cacheService.invalidate({
-      type: CacheType.ChildrenProductIds,
-      key,
-    });
-    await this.cacheService.invalidate({
       type: CacheType.RelatedProducts,
       key,
     });
-  }
-
-  private async populateParents(options: PopulateOptions, ctx: Context) {
-    if (!options.includeParents) {
-      return;
-    }
-
-    const products = options.products;
-    const parentIds = this.getProductIds({ products, parents: true });
-    const parents = await this.getProductsByIds({ ids: parentIds }, ctx);
-
-    const parentMap = parents.reduce((acc, parent) => {
-      acc[parent.id] = parent;
-      return acc;
-    }, {} as Record<number, ProductEntity>);
-
-    for (const product of products) {
-      if (product.parentId != null) {
-        product.parent = parentMap[product.parentId];
-      }
-    }
-  }
-
-  private async populateChildren(options: PopulateOptions, ctx: Context) {
-    if (!options.includeChildren) {
-      return;
-    }
-
-    const products = options.products;
-
-    // We don't want children for related.
-    const productMap = this.getProductMap({
-      products,
-      base: true,
-      parents: true,
-    });
-
-    const childrenToPopulate = Object.values(productMap).reduce(
-      (acc, product) => {
-        acc[product.id] = [];
-        return acc;
-      },
-      {} as Record<number, number[]>,
-    );
-
-    // IDs of products that that don't have cached related products.
-    const idsToFetch = await this.getProductIdsToFetch<number[]>({
-      products,
-      base: true,
-      parents: true,
-      cacheType: CacheType.ChildrenProductIds,
-      onCacheHit: (id, data) => {
-        if (childrenToPopulate[id] == null) {
-          return;
-        }
-
-        childrenToPopulate[id] = data;
-      },
-      bypassCache: options.bypassCache,
-    });
-
-    // Fetch children ids not in cache from the database. Add them to cache.
-    if (idsToFetch.length > 0) {
-      const results = await this.productRepository.findChildrenIds(
-        { ids: idsToFetch },
-        ctx,
-      );
-      const resultsMap = results.reduce((acc, result) => {
-        acc[result.parentId] = acc[result.parentId] || [];
-        acc[result.parentId].push(result.id);
-        return acc;
-      }, {} as Record<number, number[]>);
-      for (const id of idsToFetch) {
-        childrenToPopulate[id] = resultsMap[id] ?? [];
-        await this.cacheService.setCached(childrenToPopulate[id], {
-          type: CacheType.ChildrenProductIds,
-          key: `${id}`,
-          bypass: options.bypassCache,
-        });
-      }
-    }
-
-    // Populate product entities for children
-    for (const product of Object.values(productMap)) {
-      const childrenIds = childrenToPopulate[product.id];
-      if (!childrenIds) {
-        continue;
-      }
-
-      const children = await this.getProductsByIds(
-        { ids: childrenIds, bypassCache: options.bypassCache },
-        ctx,
-      );
-      product.children = children;
-    }
   }
 
   private async populateRelated(options: PopulateOptions, ctx: Context) {
@@ -353,7 +232,6 @@ export class ProductEntityCache {
     const productMap = this.getProductMap({
       products,
       base: true,
-      parents: true,
     });
 
     const relatedProductIdsSet = new Set<number>();
@@ -362,7 +240,6 @@ export class ProductEntityCache {
     const idsToFetch = await this.getProductIdsToFetch<RelatedProductEntity[]>({
       products,
       base: true,
-      parents: true,
       cacheType: CacheType.RelatedProducts,
       onCacheHit: (id, data) => {
         if (productMap[id] == null) {
@@ -428,12 +305,7 @@ export class ProductEntityCache {
   }
 
   private async populateFields(options: PopulateOptions, ctx: Context) {
-    if (
-      !options.includeBaseFields &&
-      !options.includeParentFields &&
-      !options.includeChildrenFields &&
-      !options.includeRelatedFields
-    ) {
+    if (!options.includeBaseFields && !options.includeRelatedFields) {
       return;
     }
 
@@ -442,8 +314,6 @@ export class ProductEntityCache {
     const productMap = this.getProductMap({
       products,
       base: options.includeBaseFields,
-      parents: options.includeParentFields,
-      children: options.includeChildrenFields,
       related: options.includeRelatedFields,
     });
 
@@ -452,8 +322,6 @@ export class ProductEntityCache {
     >({
       products,
       base: options.includeBaseFields,
-      parents: options.includeParentFields,
-      children: options.includeChildrenFields,
       related: options.includeRelatedFields,
       cacheType: CacheType.ProductFields,
       onCacheHit: (id: number, data) => {
@@ -503,11 +371,7 @@ export class ProductEntityCache {
   }
 
   private async populateBenchmarks(options: PopulateOptions, ctx: Context) {
-    if (
-      !options.includeBaseBenchmarks &&
-      !options.includeParentBenchmarks &&
-      !options.includeRelatedBenchmarks
-    ) {
+    if (!options.includeBaseBenchmarks && !options.includeRelatedBenchmarks) {
       return;
     }
 
@@ -516,7 +380,6 @@ export class ProductEntityCache {
     const productMap = this.getProductMap({
       products,
       base: options.includeBaseBenchmarks,
-      parents: options.includeParentBenchmarks,
       related: options.includeRelatedBenchmarks,
     });
 
@@ -525,7 +388,6 @@ export class ProductEntityCache {
     >({
       products,
       base: options.includeBaseBenchmarks,
-      parents: options.includeParentBenchmarks,
       related: options.includeRelatedBenchmarks,
       cacheType: CacheType.ProductBenchmarks,
       onCacheHit: (id: number, data) => {
@@ -568,11 +430,7 @@ export class ProductEntityCache {
   }
 
   private async populateGameFps(options: PopulateOptions, ctx: Context) {
-    if (
-      !options.includeBaseGameFps &&
-      !options.includeParentGameFps &&
-      !options.includeRelatedGameFps
-    ) {
+    if (!options.includeBaseGameFps && !options.includeRelatedGameFps) {
       return;
     }
 
@@ -581,7 +439,6 @@ export class ProductEntityCache {
     const productMap = this.getProductMap({
       products,
       base: options.includeBaseGameFps,
-      parents: options.includeParentGameFps,
       related: options.includeRelatedGameFps,
     });
 
@@ -590,7 +447,6 @@ export class ProductEntityCache {
     const idsToFetch = await this.getProductIdsToFetch<ProductGameFpsEntity[]>({
       products,
       base: options.includeBaseGameFps,
-      parents: options.includeParentGameFps,
       related: options.includeRelatedGameFps,
       cacheType: CacheType.ProductGameFps,
       onCacheHit: (id: number, data) => {
@@ -657,11 +513,7 @@ export class ProductEntityCache {
   }
 
   private async populateRanks(options: PopulateOptions, ctx: Context) {
-    if (
-      !options.includeBaseRanks &&
-      !options.includeParentRanks &&
-      !options.includeRelatedRanks
-    ) {
+    if (!options.includeBaseRanks && !options.includeRelatedRanks) {
       return;
     }
 
@@ -670,14 +522,12 @@ export class ProductEntityCache {
     const productMap = this.getProductMap({
       products,
       base: options.includeBaseRanks,
-      parents: options.includeParentRanks,
       related: options.includeRelatedRanks,
     });
 
     const idsToFetch = await this.getProductIdsToFetch<ProductRanksEntity>({
       products,
       base: options.includeBaseRanks,
-      parents: options.includeParentRanks,
       related: options.includeRelatedRanks,
       cacheType: CacheType.ProductRanks,
       onCacheHit: (id: number, data) => {
@@ -715,11 +565,7 @@ export class ProductEntityCache {
   }
 
   private async populateImages(options: PopulateOptions, ctx: Context) {
-    if (
-      !options.includeBaseImages &&
-      !options.includeParentImages &&
-      !options.includeRelatedImages
-    ) {
+    if (!options.includeBaseImages && !options.includeRelatedImages) {
       return;
     }
 
@@ -728,14 +574,12 @@ export class ProductEntityCache {
     const productMap = this.getProductMap({
       products,
       base: options.includeBaseImages,
-      parents: options.includeParentImages,
       related: options.includeRelatedImages,
     });
 
     const idsToFetch = await this.getProductIdsToFetch<ProductImageEntity[]>({
       products,
       base: options.includeBaseImages,
-      parents: options.includeParentImages,
       related: options.includeRelatedImages,
       cacheType: CacheType.ProductImages,
       onCacheHit: (id: number, data) => {
@@ -778,11 +622,7 @@ export class ProductEntityCache {
   }
 
   private async populateSources(options: PopulateOptions, ctx: Context) {
-    if (
-      !options.includeBaseSources &&
-      !options.includeParentSources &&
-      !options.includeRelatedSources
-    ) {
+    if (!options.includeBaseSources && !options.includeRelatedSources) {
       return;
     }
 
@@ -791,14 +631,12 @@ export class ProductEntityCache {
     const productMap = this.getProductMap({
       products,
       base: options.includeBaseSources,
-      parents: options.includeParentSources,
       related: options.includeRelatedSources,
     });
 
     const idsToFetch = await this.getProductIdsToFetch<ProductSourceEntity[]>({
       products,
       base: options.includeBaseSources,
-      parents: options.includeParentSources,
       related: options.includeRelatedSources,
       cacheType: CacheType.ProductSources,
       onCacheHit: (id: number, data) => {
@@ -850,8 +688,6 @@ export class ProductEntityCache {
     const { products } = options;
 
     const includeBase = options.base ?? false;
-    const includeParents = options.parents ?? false;
-    const includeChildren = options.children ?? false;
     const includeRelated = options.related ?? false;
 
     const productIdsSet = new Set<number>();
@@ -859,21 +695,8 @@ export class ProductEntityCache {
       if (includeBase) {
         productIdsSet.add(product.id);
       }
-      if (includeParents && product.parentId) {
-        productIdsSet.add(product.parentId);
-      }
-      if (includeChildren && product.children) {
-        for (const child of product.children) {
-          productIdsSet.add(child.id);
-        }
-      }
       if (includeRelated && product.relatedProducts) {
         for (const related of product.relatedProducts) {
-          productIdsSet.add(related.relatedProductId);
-        }
-      }
-      if (includeParents && includeRelated && product.parent?.relatedProducts) {
-        for (const related of product.parent.relatedProducts) {
           productIdsSet.add(related.relatedProductId);
         }
       }
@@ -886,8 +709,6 @@ export class ProductEntityCache {
     const { products } = options;
 
     const includeBase = options.base ?? false;
-    const includeParents = options.parents ?? false;
-    const includeChildren = options.children ?? false;
     const includeRelated = options.related ?? false;
 
     const map: Record<number, ProductEntity> = {};
@@ -895,21 +716,9 @@ export class ProductEntityCache {
       if (includeBase) {
         map[product.id] = product;
       }
-      if (includeParents && product.parent != null) {
-        map[product.parentId] = product.parent;
-      }
-      if (includeChildren && product.children) {
-        for (const child of product.children) {
-          map[child.id] = child;
-        }
-      }
+
       if (includeRelated && product.relatedProducts) {
         for (const related of product.relatedProducts) {
-          map[related.relatedProductId] = related.relatedProduct;
-        }
-      }
-      if (includeParents && includeRelated && product.parent?.relatedProducts) {
-        for (const related of product.parent.relatedProducts) {
           map[related.relatedProductId] = related.relatedProduct;
         }
       }
@@ -930,8 +739,6 @@ export class ProductEntityCache {
       productIds = this.getProductIds({
         products,
         base: options.base,
-        parents: options.parents,
-        children: options.children,
         related: options.related,
       });
     } else if (options.ids != null) {

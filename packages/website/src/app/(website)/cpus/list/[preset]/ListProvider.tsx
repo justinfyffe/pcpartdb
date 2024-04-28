@@ -4,7 +4,6 @@ import {
   CpuProduct,
   generateListProductsQueryFromPath,
   getListCpusPath,
-  ListCpusAdditionalData,
   ListCpusFilter,
   ListCpusQuery,
   ListCpusViewModel,
@@ -25,7 +24,6 @@ export interface ListContextState {
   updateQuery: (query: ListCpusQuery) => void;
   cpus: CpuProduct[];
   totalCpus: number;
-  additionalData: ListCpusAdditionalData;
 }
 
 export const ListContext = createContext<ListContextState>({
@@ -33,7 +31,6 @@ export const ListContext = createContext<ListContextState>({
   updateQuery: null,
   cpus: null,
   totalCpus: null,
-  additionalData: null,
 });
 
 export function useListContext() {
@@ -51,9 +48,6 @@ export function ListProvider(props: ListProviderProps) {
   const [cpus, setCpus] = useState(viewModel.results);
   const [total, setTotal] = useState(viewModel.total);
   const [query, setQuery] = useState(viewModel.query);
-  const [additionalData, setAdditionalData] = useState(
-    viewModel.additionalData,
-  );
 
   const fetchCpusImpl = useCallback(async (query: ListCpusQuery) => {
     const filter: ListCpusFilter = {
@@ -64,7 +58,6 @@ export function ListProvider(props: ListProviderProps) {
 
     setCpus(response.results as CpuProduct[]);
     setTotal(response.total);
-    setAdditionalData(response.additionalData);
     setQuery(query);
   }, []);
   const { func: fetchCpus, abort: abortFetchCpus } =
@@ -106,7 +99,7 @@ export function ListProvider(props: ListProviderProps) {
 
   return (
     <ListContext.Provider
-      value={{ query, updateQuery, cpus, totalCpus: total, additionalData }}
+      value={{ query, updateQuery, cpus, totalCpus: total }}
     >
       {props.children}
     </ListContext.Provider>

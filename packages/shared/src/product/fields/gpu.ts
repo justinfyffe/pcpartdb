@@ -41,10 +41,8 @@ export interface GpuFields {
   generation?: GpuField<string>;
   gpuCoreBaseClock?: GpuField<number>;
   gpuCoreBoostClock?: GpuField<number>;
-  height?: GpuField<number>;
   l1Cache?: GpuField<number>;
   l2Cache?: GpuField<number>;
-  length?: GpuField<number>;
   marketSegment?: GpuField<MarketSegment>;
   memoryBandwidth?: GpuField<number>;
   memoryClock?: GpuField<number>;
@@ -82,8 +80,6 @@ export interface GpuFields {
   vertexRate?: GpuField<number>;
   vertexShaders?: GpuField<number>;
   vulkanVersion?: GpuField<string>;
-  weight?: GpuField<number>;
-  width?: GpuField<number>;
 
   metadata?: GpuFieldsMeta;
 }
@@ -116,10 +112,6 @@ export const GPU_FIELD_LABELS: Record<string, string> = {
 
   // Board Design
   slotWidth: 'Slots',
-  length: 'Length',
-  width: 'Width',
-  height: 'Height',
-  weight: 'Weight',
   tdp: 'Thermal Design Power (TDP)',
 
   suggestedPsu: 'Suggested PSU',

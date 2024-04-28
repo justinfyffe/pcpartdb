@@ -65,7 +65,7 @@ function updateScrapedProduct(
 async function scrapeSource(
   source: Partial<ProductSource>,
   ctx: ScraperContext,
-): Promise<ScrapeProductResponse & { hasRetailModels?: boolean }> {
+): Promise<ScrapeProductResponse> {
   if (source?.sourceKey === ProductSourceKey.GeekBench) {
     return await scrapeGeekBench(source, ctx);
   } else if (source?.sourceKey === ProductSourceKey.NotebookCheck) {

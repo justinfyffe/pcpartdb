@@ -77,10 +77,6 @@ export const DATA_TO_PREVIEW: Partial<Record<ProductType, ProductFieldKey[]>> =
       'memoryBandwidth',
 
       'slotWidth',
-      'length',
-      'width',
-      'height',
-      'weight',
       'tdp',
       'suggestedPsu',
       'busInterface',

@@ -1,10 +1,7 @@
 import { scrapeGpu, ScrapeGpuOptions } from '@pcpartdb/scraper';
 import {
   AutomationAction,
-  AutomationActionType,
-  CreateAutomationActionRequest,
   CreateProductUpdateRequest,
-  formatCompanyName,
   formatProductName,
   Game,
   getProductGame,
@@ -20,9 +17,7 @@ import {
   setProductBenchmark,
   setProductGameFps,
   SETTINGS_PRESETS_ORDER,
-  SubProductType,
   UpdateGpuActionData,
-  UpdateGpuRetailModelSourcesActionData,
   UpdateProductRequest,
 } from '@pcpartdb/shared';
 import { compare as generateJsonPatch } from 'fast-json-patch';
@@ -42,18 +37,11 @@ export async function updateGpuAction(
   // Get sources from gpu
   const sources = originalGpu.sources;
 
-  // Get chipset source (if applicable)
-  let chipset: GpuProduct;
-  if (originalGpu?.parentId != null) {
-    chipset = await getGpu(originalGpu?.parentId, context);
-  }
-
   // Get games for scraper options to fetch FPS.
   const games = await fetchGameScraperOptions(context);
 
   // Scrape the GPU data from our sources.
-  const { product: scrapedGpu, hasRetailModels } = await scrapeGpuData({
-    chipset,
+  const { product: scrapedGpu } = await scrapeGpuData({
     sources,
     games,
   });
@@ -69,13 +57,6 @@ export async function updateGpuAction(
     await uploadProductUpdate(originalGpu, updatedGpu, context);
   } else {
     console.info('GPU does not have any pending updates. Not uploading.');
-  }
-
-  // If the updated gpu is a chipset and has retail models, then we should
-  // request to update its retail model sources.
-  if (hasRetailModels && updatedGpu.parentId == null) {
-    console.info('GPU has retail models. Request updating its sources');
-    await createUpdateRetailModelSourcesAction(updatedGpu, context);
   }
 }
 
@@ -119,11 +100,10 @@ async function scrapeGpuData(options: ScrapeGpuOptions) {
   // Scrape the CPU data from our sources.
   const result = await scrapeGpu(options);
   const product = result.product as GpuProduct;
-  const hasRetailModels = result.hasRetailModels;
   reduceGameDataOnGpu(product);
 
   console.log('Finished fetching data.');
-  return { product, hasRetailModels };
+  return { product };
 }
 
 async function fetchGameScraperOptions(context: AutomationContext) {
@@ -277,10 +257,6 @@ async function uploadProductUpdate(
   const productName = formatProductName(updatedGpu);
   const update: ProductUpdate = {
     productType: ProductType.Gpu,
-    subProductType:
-      updatedGpu.parentId == null
-        ? SubProductType.GpuChipset
-        : SubProductType.GpuRetailModel,
     productId: originalGpu.id,
     productName,
     description: `Update GPU for ${productName}`,
@@ -298,32 +274,10 @@ async function uploadProductUpdate(
   console.info('Finshed uploading pending update for GPU');
 }
 
-async function createUpdateRetailModelSourcesAction(
-  chipset: GpuProduct,
-  context: AutomationContext,
-) {
-  const name = `${formatCompanyName(chipset.company) || ''} ${
-    chipset.name
-  }`.trim();
-  await context.api.post(
-    '/automation/actions',
-    {
-      type: AutomationActionType.UpdateGpuRetailModelSources,
-      description: `Update GPU Retail Model Sources for ${name}`,
-      data: {
-        relatedProductId: chipset.id,
-      } as UpdateGpuRetailModelSourcesActionData,
-    } as CreateAutomationActionRequest,
-    { retries: 2 },
-  );
-}
-
 function reduceGameDataOnGpu(gpu: GpuProduct) {
-  for (const product of [gpu, gpu.parent]) {
-    product?.games?.forEach((pg) => {
-      pg.game = reduceGameData(pg.game);
-    });
-  }
+  gpu?.games?.forEach((pg) => {
+    pg.game = reduceGameData(pg.game);
+  });
 }
 
 function reduceGameData(game: Partial<Game>) {

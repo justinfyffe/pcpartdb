@@ -24,8 +24,6 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
 ) => {
   const { comparison, className } = props;
   const [gpu1, gpu2] = comparison;
-  const { parent: parent1 } = gpu1;
-  const { parent: parent2 } = gpu2;
 
   const [name1, name2] = [
     formatProductName(gpu1, { company: false }),
@@ -33,8 +31,8 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
   ];
 
   const chipsetValues = [
-    formatProductName(parent1 || gpu1, { company: false }),
-    formatProductName(parent2 || gpu2, { company: false }),
+    formatProductName(gpu1, { company: false }),
+    formatProductName(gpu2, { company: false }),
   ];
 
   const gpuAffiliateUrl1 = getAffiliateUrl(gpu1);

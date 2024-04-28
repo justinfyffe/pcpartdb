@@ -75,7 +75,6 @@ export const ProductForm: FunctionComponent<ProductFormProps> = (props) => {
   const context = useProductFormContextBuilder(() => ({
     productType,
     product,
-    parentProduct: product?.parent,
   }));
 
   const {
@@ -129,10 +128,6 @@ export const ProductForm: FunctionComponent<ProductFormProps> = (props) => {
   const importSources = useWatch({
     control,
     name: ['sources'],
-  });
-  const parentIdSource = useWatch({
-    control,
-    name: ['parentId'],
   });
 
   const handleScrape = useCallback(
@@ -192,9 +187,6 @@ export const ProductForm: FunctionComponent<ProductFormProps> = (props) => {
 
   const handleScrapeClick = useCallback(() => {
     const sources: Partial<ProductSource>[] = importSources?.[0] || [];
-    if (parentIdSource?.[0]) {
-      sources.push({ sourceProductId: parentIdSource[0] });
-    }
     showDialog(
       <ScrapeProductDialog
         productType={productType}
@@ -203,7 +195,7 @@ export const ProductForm: FunctionComponent<ProductFormProps> = (props) => {
       />,
       { disableClose: true },
     );
-  }, [importSources, parentIdSource, productType, handleScrape]);
+  }, [importSources, productType, handleScrape]);
 
   return (
     <ProductFormContext.Provider value={context}>

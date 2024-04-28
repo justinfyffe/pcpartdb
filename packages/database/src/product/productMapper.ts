@@ -6,7 +6,6 @@ import {
   ProductType,
   RelatedProducts,
 } from '@pcpartdb/shared';
-import { mapToAutomationSourceDtos } from '../mappers';
 import {
   mapToProductBenchmarkDtos,
   mapToProductBenchmarkEntity,
@@ -29,24 +28,17 @@ import { mapToProductRanksDto } from './productRankMapper';
 
 interface MapToDtoOptions {
   fields?: ProductFieldKey[];
-  parentFields?: ProductFieldKey[];
-  childrenFields?: ProductFieldKey[];
   relatedFields?: ProductFieldKey[];
 
   includeBenchmarks?: boolean | BenchmarkKey[];
-  includeParentBenchmarks?: boolean | BenchmarkKey[];
   includeRelatedBenchmarks?: boolean | BenchmarkKey[];
 
   includeGames?: boolean | (number | string)[]; // All/No Games or Game IDs or Game Slugs
-  includeParentGames?: boolean | (number | string)[]; // All/No Games or Game IDs or Game Slugs
   includeRelatedGames?: boolean | (number | string)[]; // All/No Games or Game IDs or Game Slugs
 
   includeRanks?: boolean | BenchmarkKey[];
-  includeParentRanks?: boolean | BenchmarkKey[];
   includeRelatedRanks?: boolean | BenchmarkKey[];
 
-  includeParent?: boolean;
-  includeChildren?: boolean;
   includeAutomation?: boolean;
   includeImages?: boolean;
   includeSources?: boolean;
@@ -65,19 +57,13 @@ export async function mapToProductDto(
   }
 
   const includeBenchmarks = options?.includeBenchmarks ?? false;
-  const includeParentBenchmarks = options?.includeParentBenchmarks ?? false;
   const includeRelatedBenchmarks = options?.includeRelatedBenchmarks ?? false;
 
   const includeGames = options?.includeGames ?? false;
-  const includeParentGames = options?.includeParentGames ?? false;
   const includeRelatedGames = options?.includeRelatedGames ?? false;
 
   const includeRanks = options?.includeRanks ?? false;
-  const includeParentRanks = options?.includeParentRanks ?? false;
   const includeRelatedRanks = options?.includeRelatedRanks ?? false;
-
-  const includeParent = options?.includeParent ?? false;
-  const includeChildren = options?.includeChildren ?? false;
 
   const includeAutomation = options?.includeAutomation ?? false;
   const includeImages = options?.includeImages ?? false;
@@ -92,24 +78,6 @@ export async function mapToProductDto(
     options,
   );
 
-  const parent = includeParent
-    ? await mapToProductDto(entity.parent, {
-        ...options,
-        fields: options?.parentFields,
-        includeBenchmarks: includeParentBenchmarks,
-        includeGames: includeParentGames,
-        includeRanks: includeParentRanks,
-        includeRelated: includeRelated,
-        includeRelatedBenchmarks: includeRelatedBenchmarks,
-        includeRelatedGames: includeRelatedGames,
-        includeRelatedRanks: includeRelatedRanks,
-      })
-    : undefined;
-  const children = includeChildren
-    ? await mapToProductDtos(entity.children, {
-        fields: options?.childrenFields,
-      })
-    : undefined;
   const benchmarks = includeBenchmarks
     ? mapToProductBenchmarkDtos(entity.benchmarks ?? [], options)
     : undefined;
@@ -121,9 +89,6 @@ export async function mapToProductDto(
     : undefined;
   const ranks = includeRanks
     ? mapToProductRanksDto(entity.ranks, options)
-    : undefined;
-  const relatedAutomationSources = includeAutomation
-    ? await mapToAutomationSourceDtos(entity.relatedAutomationSources ?? [])
     : undefined;
   const sources = includeSources
     ? mapToProductSourceDtos(entity.sources ?? [])
@@ -151,7 +116,6 @@ export async function mapToProductDto(
 
   return {
     id: entity.id,
-    parentId: entity.parentId,
 
     productType: entity.productType,
     slug: entity.slug,
@@ -180,10 +144,7 @@ export async function mapToProductDto(
     sources,
     updates,
     images,
-    relatedAutomationSources,
     relatedProducts,
-    parent,
-    children,
   } as Product;
 }
 
@@ -220,7 +181,6 @@ export function mapToProductEntity(dto: Product) {
 
   return {
     id: undefined,
-    parentId: dto.parentId,
 
     productType: dto.productType,
     slug: dto.slug,

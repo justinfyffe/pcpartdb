@@ -35,7 +35,6 @@ export const GpuChipsetSourcesTab = (_props: GpuChipsetSourcesTabProps) => {
     filter: {
       productType: ProductType.Gpu,
       includeArchived: showArchived,
-      isParent: true,
     },
     pagination: { offset: 0, limit: LIMIT },
   });

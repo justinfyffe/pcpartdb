@@ -7,9 +7,6 @@ interface ContentsProps {}
 
 export function Contents(_props: ContentsProps) {
   const { viewModel } = usePageContext();
-  const hasChildren =
-    viewModel.comparison[0]?.children?.length ||
-    viewModel.comparison[1]?.children?.length;
 
   return (
     <div className="flex gap-x-6 gap-y-2 justify-between flex-wrap xs:justify-center">
@@ -19,7 +16,6 @@ export function Contents(_props: ContentsProps) {
       <a href="#gaming-performance">Gaming Performance</a>
       <a href="#benchmark-performance">Benchmark Performance</a>
       <a href="#tech-specs">Technical Specs</a>
-      {hasChildren && <a href="#retail-models">Retail Models</a>}
       {!!viewModel?.relatedGpus?.length && (
         <a href="#related-gpus">Related GPUs</a>
       )}

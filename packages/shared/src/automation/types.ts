@@ -17,9 +17,6 @@ export interface AutomationSource {
   sourceUrl: string;
 
   archived?: boolean;
-
-  relatedProductId?: number;
-  relatedProduct?: Product;
 }
 
 /**
@@ -58,10 +55,6 @@ export interface ListAutomationSourcesFilter {
   productType?: ProductType;
   includeArchived?: boolean;
   search?: string;
-
-  relatedProductId?: number;
-  isParent?: boolean;
-  isChild?: boolean;
 }
 
 export interface ListAutomationSourcesQuery

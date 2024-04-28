@@ -1,20 +1,10 @@
 import Joi from '@hapi/joi';
-import {
-  MarketSegment,
-  ProductType,
-  ProductUpdateStatus,
-  SubProductType,
-} from '../product';
+import { MarketSegment, ProductType, ProductUpdateStatus } from '../product';
 import { listQuerySchema } from './common';
 
 export const productTypeSchema = Joi.string().valid(
   ProductType.Cpu,
   ProductType.Gpu,
-);
-
-export const subProductTypeSchema = Joi.string().valid(
-  SubProductType.GpuChipset,
-  SubProductType.GpuRetailModel,
 );
 
 export const marketSegmentSchema = Joi.string().valid(
@@ -73,12 +63,10 @@ export const productFieldsSchema = Joi.object({
   generation: productFieldSchema.allow(null),
   gpuCoreBaseClock: productFieldSchema.allow(null),
   gpuCoreBoostClock: productFieldSchema.allow(null),
-  height: productFieldSchema.allow(null),
   integratedGraphics: productFieldSchema.allow(null),
   l1Cache: productFieldSchema.allow(null),
   l2Cache: productFieldSchema.allow(null),
   l3Cache: productFieldSchema.allow(null),
-  length: productFieldSchema.allow(null),
   marketSegment: productFieldSchema.allow(null),
   memoryBandwidth: productFieldSchema.allow(null),
   memoryChannels: productFieldSchema.allow(null),
@@ -133,8 +121,6 @@ export const productFieldsSchema = Joi.object({
   vertexRate: productFieldSchema.allow(null),
   vertexShaders: productFieldSchema.allow(null),
   vulkanVersion: productFieldSchema.allow(null),
-  weight: productFieldSchema.allow(null),
-  width: productFieldSchema.allow(null),
 
   metadata: Joi.any().allow(null),
 });
@@ -193,7 +179,6 @@ export const productImageSchema = Joi.object({
 
 export const productSchema = Joi.object({
   id: Joi.number().allow(null),
-  parentId: Joi.number().allow(null),
 
   productType: productTypeSchema.required().allow(null),
   slug: Joi.string().required(),
@@ -221,9 +206,6 @@ export const productSchema = Joi.object({
   // TODO
   ranks: Joi.any().allow(null),
   relatedProducts: Joi.any().allow(null),
-  relatedAutomationSources: Joi.any().allow(null),
-  parent: Joi.any().allow(null),
-  children: Joi.any().allow(null),
   updates: Joi.any().allow(null),
 });
 
@@ -231,7 +213,6 @@ export const productUpdateSchema = Joi.object({
   id: Joi.number().allow(null),
 
   productType: productTypeSchema.required(),
-  subProductType: subProductTypeSchema.allow(null),
   productName: Joi.string().required(),
 
   status: productUpdateStatusSchema.required(),
@@ -253,8 +234,6 @@ export const listProductsFilterSchema = Joi.object({
   company: Joi.array().items(Joi.string().allow('')).allow(null),
   ids: Joi.array().items(Joi.number()).allow(null),
   excludeIds: Joi.array().items(Joi.number()).allow(null),
-  isChipset: Joi.boolean().allow(null),
-  isRetailModel: Joi.boolean().allow(null),
   maxPerformanceScore: Joi.number().allow(null), // TODO: delete
   maxValueScore: Joi.number().allow(null), // TODO: delete
   minPerformanceScore: Joi.number().allow(null), // TODO: delete
@@ -310,7 +289,6 @@ export const listProductUpdatesRequestSchema = Joi.object({
   query: listQuerySchema({
     filterSchema: Joi.object({
       productType: productTypeSchema.required(),
-      subProductType: subProductTypeSchema.allow(null),
       status: productUpdateStatusSchema.allow(null),
       search: Joi.string().allow('', null),
     }),

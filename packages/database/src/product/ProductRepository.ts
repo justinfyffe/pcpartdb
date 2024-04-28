@@ -11,22 +11,14 @@ import {
   ProductFieldKey,
   ProductType,
   ProductUpdateStatus,
-  sortByIds,
   UpdateProductRanksRequest,
   UpdateRelatedProductsRequest,
 } from '@pcpartdb/shared';
 import { Prisma } from '@prisma/client';
 import { DatabaseClient } from '../DatabaseClient';
-import { GameEntity } from '../game';
 import { RepositoryConfig } from '../RepositoryConfig';
-import { CpuFieldsEntity } from './CpuFieldsEntity';
-import { GpuFieldsEntity } from './GpuFieldsEntity';
-import { ProductBenchmarkEntity } from './ProductBenchmarkEntity';
 import { ProductEntity } from './ProductEntity';
-import { ProductGameFpsEntity } from './ProductGameFpsEntity';
-import { ProductImageEntity } from './ProductImageEntity';
 import { ProductRanksEntity } from './ProductRankEntity';
-import { ProductSourceEntity } from './ProductSourceEntity';
 import { RelatedProductEntity } from './RelatedProductEntity';
 
 interface FindById2Options {
@@ -37,29 +29,12 @@ interface FindByIds2Options {
   ids: number[];
 }
 
-interface FindChildrenIdsOptions {
-  ids: number[];
-}
-
 interface FindBestProductOptions {
   benchmark: BenchmarkKey;
   sort: ListSort;
 }
 
-interface FindByIdOptions extends IncludeRelationsOptions {
-  id: number;
-}
-
-interface FindByIdsOptions extends IncludeRelationsOptions {
-  ids: number[];
-}
-
 interface FindIdBySlugOptions {
-  productType: ProductType;
-  slug: string;
-}
-
-interface FindBySlugOptions extends IncludeRelationsOptions {
   productType: ProductType;
   slug: string;
 }
@@ -68,10 +43,6 @@ interface CountOptions {
   productType: ProductType;
   filter?: ListProductsFilter;
   orderBy?: ListOrderBy;
-}
-
-interface CountChildrenOptions {
-  productIds: number[];
 }
 
 interface ListOptions extends IncludeRelationsOptions {
@@ -89,22 +60,15 @@ interface IncludeRelationsOptions {
   includeRelatedFields?: boolean;
 
   includeBenchmarks?: boolean;
-  includeParentBenchmarks?: boolean;
   includeRelatedBenchmarks?: boolean;
 
   includeGames?: boolean;
-  includeParentGames?: boolean;
   includeRelatedGames?: boolean;
 
   includeRanks?: boolean;
-  includeParentRanks?: boolean;
   includeRelatedRanks?: boolean;
 
-  includeParent?: boolean;
-  includeParentFields?: boolean;
-
   fields?: ProductFieldKey[];
-  parentFields?: ProductFieldKey[];
   relatedFields?: ProductFieldKey[];
 }
 
@@ -117,20 +81,6 @@ export class ProductRepository {
     const result: ProductEntity = await db.product.findUnique({
       where: { id: options.id },
     });
-    return result;
-  }
-
-  async findChildrenIds(
-    options: FindChildrenIdsOptions,
-    config?: RepositoryConfig,
-  ) {
-    const db = config?.trx ?? this.db;
-
-    const result: { id: number; parentId: number }[] =
-      await db.product.findMany({
-        select: { id: true, parentId: true },
-        where: { parentId: { in: options.ids } },
-      });
     return result;
   }
 
@@ -158,16 +108,6 @@ export class ProductRepository {
     return productId;
   }
 
-  async findById(
-    options: FindByIdOptions,
-    config?: RepositoryConfig,
-  ): Promise<ProductEntity> {
-    const id = options.id;
-
-    const products = await this.findByIds({ ...options, ids: [id] }, config);
-    return products[0] || null;
-  }
-
   async findByIds2(options: FindByIds2Options, config?: RepositoryConfig) {
     const db = config?.trx ?? this.db;
 
@@ -175,62 +115,6 @@ export class ProductRepository {
       where: { id: { in: options.ids } },
     });
     return result;
-  }
-
-  async findByIds(
-    options: FindByIdsOptions,
-    config?: RepositoryConfig,
-  ): Promise<ProductEntity[]> {
-    const db = config?.trx ?? this.db;
-    const ids = options.ids;
-
-    // Fetch base product entities for the ids
-    const products: ProductEntity[] = await db.product.findMany({
-      where: { id: { in: ids } },
-    });
-    if (products.length === 0) {
-      return [];
-    }
-
-    // First set of queries: Fetching relevant products like parent and related
-    // products. These will be needed to fetch the data for each relevant
-    // product.
-
-    // Fetch parents
-    const parents = await this.populateParents(products, options, config);
-
-    // Fetch related products
-    const relatedProductEntities = await this.populateRelated(
-      products,
-      parents,
-      options,
-      config,
-    );
-    const relatedProducts = relatedProductEntities.map(
-      (rpe) => rpe.relatedProduct,
-    );
-
-    // Second set of queries: Fetching related data to the products fetched
-    // earlier. For example: ranks, benchmarks, fields.
-
-    const queries = [
-      this.populateFields(products, parents, relatedProducts, options, config),
-      this.populateBenchmarks(
-        products,
-        parents,
-        relatedProducts,
-        options,
-        config,
-      ),
-      this.populateGames(products, parents, relatedProducts, options, config),
-      this.populateRanks(products, parents, relatedProducts, options, config),
-      this.populateImages(products, options, config),
-      this.populateSources(products, options, config),
-    ];
-
-    await Promise.all(queries);
-
-    return sortByIds(ids, products, (p) => p.id);
   }
 
   async findIdBySlug(options: FindIdBySlugOptions, config?: RepositoryConfig) {
@@ -244,30 +128,6 @@ export class ProductRepository {
       where: { productType_slug: { productType, slug } },
     });
     return result?.id || null;
-  }
-
-  async findBySlug(
-    options: FindBySlugOptions,
-    config?: RepositoryConfig,
-  ): Promise<ProductEntity> {
-    const db = config?.trx ?? this.db;
-
-    const productType = options.productType;
-    const slug = options.slug;
-
-    const product: ProductEntity = await db.product.findUnique({
-      where: { productType_slug: { productType, slug } },
-    });
-
-    if (product != null) {
-      const products = await this.findByIds(
-        { ...options, ids: [product.id] },
-        config,
-      );
-      return products[0] || null;
-    } else {
-      return null;
-    }
   }
 
   async count(options: CountOptions, config?: RepositoryConfig) {
@@ -294,25 +154,6 @@ export class ProductRepository {
         where: { ...this.generateWhere(options.productType, options.filter) },
       });
     }
-  }
-
-  async countChildren(
-    options: CountChildrenOptions,
-    config?: RepositoryConfig,
-  ) {
-    const { productIds } = options;
-    const db = config?.trx ?? this.db;
-
-    const results = await db.product.groupBy({
-      _count: true,
-      by: ['parentId'],
-      where: { parentId: { in: productIds } },
-    });
-
-    return results.reduce((acc, result) => {
-      acc[result.parentId] = result._count;
-      return acc;
-    }, {} as Record<number, number>);
   }
 
   async list2(options: ListOptions, config?: RepositoryConfig) {
@@ -372,64 +213,6 @@ export class ProductRepository {
     }
   }
 
-  async list(options: ListOptions, config?: RepositoryConfig) {
-    const db = config?.trx ?? this.db;
-    const productType = options.filter.productType;
-
-    if (
-      options.orderBy?.sort === ListSort.PerformanceRating ||
-      options.orderBy?.sort === ListSort.PerformancePerMsrp
-    ) {
-      // If we're sorting by perf or value, then we need to filter benchmarks
-      // first. We're not able to filter by benchmark key when querying
-      // products first.
-      const benchmarkToSort =
-        options.orderBy.benchmark ?? getDefaultBenchmark(productType);
-
-      let orderBy: Prisma.ProductBenchmarkOrderByWithRelationAndSearchRelevanceInput =
-        null;
-      if (options.orderBy.sort === ListSort.PerformanceRating) {
-        orderBy = {
-          value: {
-            sort: options.orderBy?.order ?? ListOrder.Desc,
-            nulls: 'last',
-          },
-        };
-      } else if (options.orderBy?.sort === ListSort.PerformancePerMsrp) {
-        orderBy = {
-          valuePerMsrp: {
-            sort: options.orderBy?.order ?? ListOrder.Desc,
-            nulls: 'last',
-          },
-        };
-      }
-
-      const results = await db.productBenchmark.findMany({
-        select: { productId: true },
-        skip: options.pagination?.offset,
-        take: options.pagination?.limit,
-        orderBy,
-        where: {
-          benchmarkKey: benchmarkToSort,
-          product: { ...this.generateWhere(productType, options.filter) },
-        },
-      });
-      const ids = results.map((result) => result.productId);
-      return await this.findByIds({ ...options, ids });
-    } else {
-      const productIdsResult = await db.product.findMany({
-        select: { id: true },
-        where: { ...this.generateWhere(productType, options.filter) },
-        orderBy: this.generateOrderBy(productType, options.orderBy),
-        skip: options.pagination?.offset,
-        take: options.pagination?.limit,
-      });
-      const productIds = productIdsResult.map((p) => p.id);
-
-      return await this.findByIds({ ...options, ids: productIds }, config);
-    }
-  }
-
   async popNextIdToBeUpdated(config?: RepositoryConfig) {
     const db = config?.trx ?? this.db;
     const { id, productType } = await db.product.findFirst({
@@ -456,9 +239,6 @@ export class ProductRepository {
       sources: sources,
       updates: _updates,
       relatedProducts: _relatedProducts,
-      parent: _parent,
-      children: _children,
-      relatedAutomationSources: _related,
       gameFps: gameFps,
       images,
       ...productData
@@ -510,9 +290,6 @@ export class ProductRepository {
       id: _id,
       updates: _updates,
       relatedProducts: _relatedProducts,
-      parent: _parent,
-      children: _children,
-      relatedAutomationSources: _related,
       gameFps: gameFps,
       images,
       ...productData
@@ -540,7 +317,6 @@ export class ProductRepository {
 
   async listSitemapProductSlugs(
     productType: ProductType,
-    hasParent: boolean,
     config?: RepositoryConfig,
   ) {
     const db = config?.trx ?? this.db;
@@ -560,10 +336,7 @@ export class ProductRepository {
           where: { value: { not: null } },
         },
       },
-      where: {
-        productType,
-        parentId: hasParent ? { not: null } : { equals: null },
-      },
+      where: { productType },
     });
   }
 
@@ -608,7 +381,7 @@ export class ProductRepository {
       updates.relatedProducts,
     )) {
       const productId = Number(productIdStr);
-      for (const [key, relatedItem] of Object.entries(relatedProducts)) {
+      for (const [_key, relatedItem] of Object.entries(relatedProducts)) {
         dataToInsert.push({
           productId,
           relatedProductId: relatedItem.id,
@@ -746,9 +519,6 @@ export class ProductRepository {
     productType: ProductType,
     filter?: ListGpusFilter,
   ): Prisma.ProductWhereInput {
-    const chipsetIds = filter?.chipsetId ?? [];
-    const isChipset = filter?.isChipset ?? false;
-    const isRetailModel = filter?.isRetailModel ?? false;
     const companies = filter?.company?.filter((value) => value != null) ?? [];
     const years = filter?.year?.filter((value) => value != null) ?? [];
     const segments = filter?.segment?.filter((value) => value != null) ?? [];
@@ -768,17 +538,6 @@ export class ProductRepository {
     }
     if (excludeIds && excludeIds.length > 0) {
       idWhere = { ...idWhere, notIn: excludeIds };
-    }
-
-    // Parent
-    let parentWhere: Prisma.IntNullableFilter = {};
-    if (isChipset && !isRetailModel) {
-      parentWhere = null;
-    } else if (!isChipset && isRetailModel) {
-      parentWhere = { not: null };
-    }
-    if (chipsetIds != null && chipsetIds.length > 0) {
-      parentWhere = { ...parentWhere, in: chipsetIds };
     }
 
     // Company
@@ -859,7 +618,6 @@ export class ProductRepository {
         {
           productType,
           id: idWhere,
-          parentId: parentWhere,
           company: companyWhere,
           gpuFields: {
             releaseDateValue: hasReleaseDateWhere,
@@ -927,388 +685,5 @@ export class ProductRepository {
     }
 
     return { id: 'desc' };
-  }
-
-  private async populateParents(
-    products: ProductEntity[],
-    options: IncludeRelationsOptions,
-    config?: RepositoryConfig,
-  ) {
-    if (!options.includeParent) {
-      return [];
-    }
-
-    const db = config?.trx ?? this.db;
-
-    const parentIds = products
-      .filter((p) => p.parentId)
-      .map((p) => Number(p.parentId));
-
-    const parents = await db.product.findMany({
-      where: { id: { in: parentIds } },
-    });
-    const parentsMap = parents.reduce((acc, parent) => {
-      acc[parent.id] = parent;
-      return acc;
-    }, {} as Record<number, ProductEntity>);
-
-    for (const product of products) {
-      if (product.parentId) {
-        product.parent = parentsMap[product.parentId] ?? null;
-      }
-    }
-
-    return parents;
-  }
-
-  private async populateRelated(
-    products: ProductEntity[],
-    parents: ProductEntity[],
-    options: IncludeRelationsOptions,
-    config?: RepositoryConfig,
-  ) {
-    if (!options.includeRelated) {
-      return [];
-    }
-
-    const db = config?.trx ?? this.db;
-
-    const ids = [...products, ...parents].map((p) => p.id);
-    const relatedProducts: RelatedProductEntity[] =
-      await db.relatedProduct.findMany({
-        select: {
-          productId: true,
-          relatedProductId: true,
-          relatedProduct: true,
-        },
-        where: { productId: { in: ids } },
-      });
-
-    const relatedProductsMap = relatedProducts.reduce((acc, rp) => {
-      acc[rp.productId] = acc[rp.productId] || [];
-      acc[rp.productId].push(rp);
-      return acc;
-    }, {} as Record<number, RelatedProductEntity[]>);
-
-    for (const product of [...products, ...parents]) {
-      product.relatedProducts = relatedProductsMap[product.id];
-    }
-
-    return relatedProducts;
-  }
-
-  private async populateRanks(
-    products: ProductEntity[],
-    parents: ProductEntity[],
-    related: ProductEntity[],
-    options: IncludeRelationsOptions,
-    config?: RepositoryConfig,
-  ) {
-    const ids: number[] = [];
-    if (options.includeRanks) {
-      const productIds = products.map((p) => p.id);
-      ids.push(...productIds);
-    }
-
-    if (options.includeParentRanks) {
-      const parentIds = parents.map((p) => p.id);
-      ids.push(...parentIds);
-    }
-
-    if (options.includeRelatedRanks) {
-      const relatedIds = related.map((p) => p.id);
-      ids.push(...relatedIds);
-    }
-
-    const db = config?.trx ?? this.db;
-
-    const ranks = await db.productRanks.findMany({
-      where: { productId: { in: ids } },
-    });
-    const ranksMap = ranks.reduce((acc, r) => {
-      acc[r.productId] = r;
-      return acc;
-    }, {} as Record<number, ProductRanksEntity>);
-
-    for (const product of [...products, ...parents, ...related]) {
-      product.ranks = ranksMap[product.id];
-    }
-  }
-
-  private async populateBenchmarks(
-    products: ProductEntity[],
-    parents: ProductEntity[],
-    related: ProductEntity[],
-    options: IncludeRelationsOptions,
-    config?: RepositoryConfig,
-  ) {
-    const ids: number[] = [];
-    if (options.includeBenchmarks) {
-      const productIds = products.map((p) => p.id);
-      ids.push(...productIds);
-    }
-
-    if (options.includeParentBenchmarks) {
-      const parentIds = parents.map((p) => p.id);
-      ids.push(...parentIds);
-    }
-
-    if (options.includeRelatedBenchmarks) {
-      const relatedIds = related.map((p) => p.id);
-      ids.push(...relatedIds);
-    }
-
-    const db = config?.trx ?? this.db;
-    const benchmarks: ProductBenchmarkEntity[] =
-      await db.productBenchmark.findMany({
-        where: { productId: { in: ids } },
-      });
-    const benchmarksMap = benchmarks.reduce((acc, b) => {
-      acc[b.productId] = acc[b.productId] || [];
-      acc[b.productId].push(b);
-      return acc;
-    }, {} as Record<number, ProductBenchmarkEntity[]>);
-
-    for (const product of [...products, ...parents, ...related]) {
-      product.benchmarks = benchmarksMap[product.id];
-    }
-  }
-
-  private async populateGames(
-    products: ProductEntity[],
-    parents: ProductEntity[],
-    related: ProductEntity[],
-    options: IncludeRelationsOptions,
-    config?: RepositoryConfig,
-  ) {
-    const ids: number[] = [];
-    if (options.includeGames) {
-      const productIds = products.map((p) => p.id);
-      ids.push(...productIds);
-    }
-
-    if (options.includeParentGames) {
-      const parentIds = parents.map((p) => p.id);
-      ids.push(...parentIds);
-    }
-
-    if (options.includeRelatedGames) {
-      const relatedIds = related.map((p) => p.id);
-      ids.push(...relatedIds);
-    }
-
-    const db = config?.trx ?? this.db;
-    const gameFps: ProductGameFpsEntity[] = await db.productGameFps.findMany({
-      where: { productId: { in: ids } },
-    });
-    const gameIdsSet = new Set<number>(gameFps.map((pgf) => pgf.gameId));
-    const gameIds = [...gameIdsSet.values()];
-    const games: GameEntity[] = await db.game.findMany({
-      where: { id: { in: gameIds } },
-      include: { listingImage: true },
-    });
-    const gameMap = games.reduce((acc, game) => {
-      acc[game.id] = game;
-      return acc;
-    }, {} as Record<number, GameEntity>);
-    const gameFpsMap = gameFps.reduce((acc, fps) => {
-      fps.game = gameMap[fps.gameId];
-      acc[fps.productId] = acc[fps.productId] || [];
-      acc[fps.productId].push(fps);
-      return acc;
-    }, {} as Record<number, ProductGameFpsEntity[]>);
-
-    for (const product of [...products, ...parents, ...related]) {
-      product.gameFps = gameFpsMap[product.id];
-    }
-  }
-
-  private async populateImages(
-    products: ProductEntity[],
-    options: IncludeRelationsOptions,
-    config?: RepositoryConfig,
-  ) {
-    if (!options.includeImages) {
-      return;
-    }
-    const ids: number[] = products.map((p) => p.id);
-
-    const db = config?.trx ?? this.db;
-    const images = await db.productImage.findMany({
-      include: { image: true },
-      where: { productId: { in: ids } },
-    });
-    const imagesMap = images.reduce((acc, image) => {
-      acc[image.productId] = acc[image.productId] || [];
-      acc[image.productId].push(image);
-      return acc;
-    }, {} as Record<number, ProductImageEntity[]>);
-
-    for (const product of products) {
-      product.images = imagesMap[product.id];
-    }
-  }
-
-  private async populateSources(
-    products: ProductEntity[],
-    options: IncludeRelationsOptions,
-    config?: RepositoryConfig,
-  ) {
-    if (!options.includeSources) {
-      return;
-    }
-    const ids: number[] = products.map((p) => p.id);
-
-    const db = config?.trx ?? this.db;
-    const sources = await db.productSource.findMany({
-      where: { productId: { in: ids } },
-    });
-    const sourcesMap = sources.reduce((acc, s) => {
-      acc[s.productId] = acc[s.productId] || [];
-      acc[s.productId].push(s);
-      return acc;
-    }, {} as Record<number, ProductSourceEntity[]>);
-
-    for (const product of products) {
-      product.sources = sourcesMap[product.id];
-    }
-  }
-
-  // TODO: clean up this massive function.
-  // A lot of duplicate code for handling parents and related.
-  private async populateFields(
-    products: ProductEntity[],
-    parents: ProductEntity[],
-    related: ProductEntity[],
-    options: IncludeRelationsOptions,
-    config?: RepositoryConfig,
-  ) {
-    if (!options.includeFields) {
-      return;
-    }
-
-    const productType = products[0]?.productType;
-    if (!productType) {
-      return;
-    }
-
-    const db = config?.trx ?? this.db;
-
-    // Products
-    if (options.includeFields) {
-      const ids = products.map((p) => p.id);
-      const selectFields = this.buildFieldsSelect(options.fields);
-      let fields: CpuFieldsEntity[] | GpuFieldsEntity[];
-      let fieldsMap:
-        | Record<number, CpuFieldsEntity>
-        | Record<number, GpuFieldsEntity>;
-      if (productType === ProductType.Cpu) {
-        fields = (await db.cpuFields.findMany({
-          where: { productId: { in: ids } },
-          select: selectFields,
-        })) as any;
-        fieldsMap = this.buildFieldsMap(fields as CpuFieldsEntity[]);
-      } else if (productType === ProductType.Gpu) {
-        fields = (await db.gpuFields.findMany({
-          where: { productId: { in: ids } },
-          select: selectFields,
-        })) as any;
-        fieldsMap = this.buildFieldsMap(fields as GpuFieldsEntity[]);
-      }
-
-      for (const product of products) {
-        if (productType === ProductType.Cpu) {
-          product.cpuFields = fieldsMap[product.id] as CpuFieldsEntity;
-        } else if (productType === ProductType.Gpu) {
-          product.gpuFields = fieldsMap[product.id] as GpuFieldsEntity;
-        }
-      }
-    }
-
-    // Parents
-    if (options.includeParentFields) {
-      const ids = parents.map((p) => p.id);
-      const selectFields = this.buildFieldsSelect(options.parentFields);
-      let fields: CpuFieldsEntity[] | GpuFieldsEntity[];
-      let fieldsMap:
-        | Record<number, CpuFieldsEntity>
-        | Record<number, GpuFieldsEntity>;
-      if (productType === ProductType.Cpu) {
-        fields = (await db.cpuFields.findMany({
-          where: { productId: { in: ids } },
-          select: selectFields,
-        })) as any;
-        fieldsMap = this.buildFieldsMap(fields as CpuFieldsEntity[]);
-      } else if (productType === ProductType.Gpu) {
-        fields = (await db.gpuFields.findMany({
-          where: { productId: { in: ids } },
-          select: selectFields,
-        })) as any;
-        fieldsMap = this.buildFieldsMap(fields as GpuFieldsEntity[]);
-      }
-
-      for (const product of parents) {
-        if (productType === ProductType.Cpu) {
-          product.cpuFields = fieldsMap[product.id] as CpuFieldsEntity;
-        } else if (productType === ProductType.Gpu) {
-          product.gpuFields = fieldsMap[product.id] as GpuFieldsEntity;
-        }
-      }
-    }
-
-    // Related
-    if (options.includeRelatedFields) {
-      const ids = related.map((p) => p.id);
-      const selectFields = this.buildFieldsSelect(options.relatedFields);
-      let fields: CpuFieldsEntity[] | GpuFieldsEntity[];
-      let fieldsMap:
-        | Record<number, CpuFieldsEntity>
-        | Record<number, GpuFieldsEntity>;
-      if (productType === ProductType.Cpu) {
-        fields = (await db.cpuFields.findMany({
-          where: { productId: { in: ids } },
-          select: selectFields,
-        })) as any;
-        fieldsMap = this.buildFieldsMap(fields as CpuFieldsEntity[]);
-      } else if (productType === ProductType.Gpu) {
-        fields = (await db.gpuFields.findMany({
-          where: { productId: { in: ids } },
-          select: selectFields,
-        })) as any;
-        fieldsMap = this.buildFieldsMap(fields as GpuFieldsEntity[]);
-      }
-
-      for (const product of related) {
-        if (productType === ProductType.Cpu) {
-          product.cpuFields = fieldsMap[product.id] as CpuFieldsEntity;
-        } else if (productType === ProductType.Gpu) {
-          product.gpuFields = fieldsMap[product.id] as GpuFieldsEntity;
-        }
-      }
-    }
-  }
-
-  private buildFieldsSelect(fields: ProductFieldKey[]) {
-    if (fields == null) {
-      return undefined;
-    }
-
-    return fields.reduce(
-      (acc, fieldKey) => {
-        acc[fieldKey + 'Value'] = true;
-        acc[fieldKey + 'Meta'] = true;
-        return acc;
-      },
-      { productId: true } as Record<string, boolean>,
-    );
-  }
-
-  private buildFieldsMap<T extends CpuFieldsEntity | GpuFieldsEntity>(
-    fields: T[],
-  ) {
-    return fields.reduce((acc, value) => {
-      acc[value.productId] = value;
-      return acc;
-    }, {} as Record<number, T>);
   }
 }

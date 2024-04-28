@@ -76,10 +76,7 @@ export function getCompanyLogoAutocompletePath(
     case 'zotac':
       return '/images/autocomplete/zotac.png';
     default:
-      // No logo found, try the chipset
-      return getCompanyLogoAutocompletePath(
-        'parent' in product ? product.parent : null,
-      );
+      return null;
   }
 }
 
@@ -88,13 +85,7 @@ export function getCompanyLogoFeedPath(product: Product): string {
     return null;
   }
 
-  let company: string = null;
-  if (product.parent != null) {
-    company = product.parent.company;
-  } else {
-    company = product.company;
-  }
-
+  const company: string = product.company;
   if (company == null) {
     return null;
   }

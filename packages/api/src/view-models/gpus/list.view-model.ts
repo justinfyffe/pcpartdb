@@ -25,7 +25,7 @@ export class ListGpusViewModelService {
     const chipsetsQuery = deepmerge(
       {},
       {
-        filter: { productType: ProductType.Gpu, isChipset: true },
+        filter: { productType: ProductType.Gpu },
         pagination: {
           offset: DEFAULT_LIST_GPUS_OFFSET,
           limit: DEFAULT_LIST_GPUS_LIMIT,
@@ -45,19 +45,7 @@ export class ListGpusViewModelService {
     const response = await this.productService.list(
       { query: chipsetsQuery },
       {
-        fields: [
-          'releaseDate',
-          'gpuCoreBaseClock',
-          'gpuCoreBoostClock',
-          'length',
-          'slotWidth',
-          'width',
-          'height',
-          'tdp',
-          'marketSegment',
-          'msrp',
-        ],
-        includeAdditionalData: true,
+        fields: ['releaseDate', 'marketSegment', 'msrp'],
         includeBenchmarks: [preferredBenchmark],
         includeRanks: [preferredBenchmark],
       },

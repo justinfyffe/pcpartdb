@@ -7,14 +7,12 @@ import {
   Game,
   generateProductOtherNames,
   generateProductSlug,
-  GetProductRequest,
   GpuProduct,
   parseProductName,
   ProductSource,
   ProductType,
   ProductUpdate,
   ProductUpdateStatus,
-  SubProductType,
 } from '@pcpartdb/shared';
 import { AutomationContext } from '../types';
 
@@ -32,15 +30,11 @@ export async function createGpuAction(
     sourceUrl: source.sourceUrl,
   }));
 
-  // Get chipset source (if applicable)
-  const chipset = await getChipset(payload.relatedProductId, context);
-
   // Get games for scraper options to fetch FPS.
   const games = await fetchGameScraperOptions(context);
 
   // Scrape the GPU data from our sources.
   const gpu = await scrapeGpuData({
-    chipset,
     sources,
     games,
   });
@@ -67,37 +61,6 @@ export async function createGpuAction(
 
   // Upload update
   await uploadProductUpdate(gpu, context);
-}
-
-async function getChipset(chipsetId: number, context: AutomationContext) {
-  if (chipsetId == null) {
-    return null;
-  }
-
-  console.info('Getting Chipset GPU');
-  const chipset = await context.api.get<GpuProduct>(
-    `/products/${chipsetId}`,
-    {
-      retries: 2,
-    },
-    {
-      params: {
-        req: JSON.stringify({
-          includeAutomation: true,
-          includeFields: true,
-          includeBenchmarks: true,
-          includeImages: true,
-          includeSources: true,
-          bypassCache: true,
-        } as GetProductRequest),
-      },
-    },
-  );
-  if (chipset == null) {
-    throw new Error('Could not get chipset');
-  }
-  console.log(`Finished getting chipset GPU: ${chipset.name}`);
-  return chipset;
 }
 
 async function scrapeGpuData(options: ScrapeGpuOptions) {
@@ -131,10 +94,6 @@ async function uploadProductUpdate(
   const productName = formatProductName(gpu);
   const update: ProductUpdate = {
     productType: ProductType.Gpu,
-    subProductType:
-      gpu.parentId == null
-        ? SubProductType.GpuChipset
-        : SubProductType.GpuRetailModel,
     productName,
     description: `Create GPU for ${productName}`,
     status: ProductUpdateStatus.Pending,
@@ -152,11 +111,9 @@ async function uploadProductUpdate(
 }
 
 function reduceGameDataOnGpu(gpu: GpuProduct) {
-  for (const product of [gpu, gpu.parent]) {
-    product?.games?.forEach((pg) => {
-      pg.game = reduceGameData(pg.game);
-    });
-  }
+  gpu?.games?.forEach((pg) => {
+    pg.game = reduceGameData(pg.game);
+  });
 }
 
 function reduceGameData(game: Partial<Game>) {

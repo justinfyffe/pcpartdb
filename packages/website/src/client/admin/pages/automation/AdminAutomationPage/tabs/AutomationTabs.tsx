@@ -27,16 +27,14 @@ export const AutomationTabs = (_props: AutomationTabsProps) => {
   }, [automationStatus]);
 
   const gpuSourcesLabel = useMemo(() => {
-    const pending1 = automationStatus?.pendingGpuChipsetSources || 0;
-    const pending2 = automationStatus?.pendingGpuRetailModelSources || 0;
-    const pending = pending1 + pending2;
+    const pending1 = automationStatus?.pendingGpuSources || 0;
+    const pending = pending1;
     return ['GPU Sources', pending ? `(${pending})` : ''].join(' ').trim();
   }, [automationStatus]);
 
   const gpusLabel = useMemo(() => {
-    const pending1 = automationStatus?.pendingGpuChipsetUpdates || 0;
-    const pending2 = automationStatus?.pendingGpuRetailModelUpdates || 0;
-    const pending = pending1 + pending2;
+    const pending1 = automationStatus?.pendingGpuUpdates || 0;
+    const pending = pending1;
     return ['GPUs', pending ? `(${pending})` : ''].join(' ').trim();
   }, [automationStatus]);
 

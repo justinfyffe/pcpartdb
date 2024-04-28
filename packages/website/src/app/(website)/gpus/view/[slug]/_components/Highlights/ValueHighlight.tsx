@@ -2,7 +2,6 @@
 
 import { CurrencyDollarIcon } from '@heroicons/react/24/outline';
 import {
-  getGpuChipset,
   getProductBenchmarkName,
   productBenchmarkValuePerMsrp,
   ProductType,
@@ -26,7 +25,6 @@ export function ValueHighlight(props: ValueHighlightProps) {
 
   const { viewModel } = usePageContext();
   const gpu = viewModel.gpu;
-  const parent = getGpuChipset(gpu);
   viewModel.relativeDataProducts?.bestBenchmarkPerformancePerDollar;
   const { relativeDataProducts, loading } = useRelativeDataProducts();
   const bestValueGpu = relativeDataProducts?.bestBenchmarkPerformancePerDollar;
@@ -41,10 +39,8 @@ export function ValueHighlight(props: ValueHighlightProps) {
   });
 
   const valueScore = useMemo(
-    () =>
-      productBenchmarkValuePerMsrp(gpu, preferredBenchmark) ||
-      productBenchmarkValuePerMsrp(parent, preferredBenchmark),
-    [gpu, parent, preferredBenchmark],
+    () => productBenchmarkValuePerMsrp(gpu, preferredBenchmark),
+    [gpu, preferredBenchmark],
   );
 
   const highlightValue = useMemo(() => {

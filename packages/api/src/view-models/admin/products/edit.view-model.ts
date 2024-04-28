@@ -41,7 +41,6 @@ export class AdminEditProductViewModelService {
     return await this.productService.getById(
       {
         id,
-        includeParent: true,
         includeAutomation: true,
         includeBenchmarks: true,
         includeGames: true,
@@ -64,7 +63,6 @@ export class AdminEditProductViewModelService {
         productType,
         slug,
 
-        includeParent: true,
         includeAutomation: true,
         includeBenchmarks: true,
         includeGames: true,

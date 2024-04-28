@@ -321,10 +321,6 @@ export interface ListGpusFilter extends BaseListProductsFilter {
   performanceRated?: boolean;
   valueRated?: boolean;
 
-  chipsetId?: number[];
-  isChipset?: boolean;
-  isRetailModel?: boolean;
-
   missingMarketSegment?: boolean;
   missingProductionStatus?: boolean;
   missingSummary?: boolean;
@@ -338,7 +334,7 @@ export interface ListGpusQuery extends ListQuery<ListGpusFilter> {
 }
 
 export interface ListGpusAdditionalData {
-  retailModelCounts?: Record<number, number>;
+  //
 }
 
 export interface GenerateListGpusQueryFromPathOptions {

@@ -5,7 +5,6 @@ import {
   compareGpusViewModelNormalizr,
   getPreferredBenchmark,
   GpuProductComparison,
-  ProductFieldKey,
   ProductType,
   RelativeDataProducts,
 } from '@pcpartdb/shared';
@@ -77,33 +76,18 @@ export class CompareGpusViewModelService {
         includeSources: false,
         includeUpdates: false,
 
-        includeParent: true,
-        includeChildren: true,
         includeRelated: true,
 
         includeBenchmarks: true,
-        includeParentBenchmarks: true,
         includeRelatedBenchmarks: [preferredBenchmark],
 
         includeGames: true,
-        includeParentGames: true,
         includeRelatedGames:
           gameSlug && gameSlug !== 'undefined' ? [gameSlug] : 'latest',
 
         includeRanks: true,
-        includeParentRanks: true,
         includeRelatedRanks: [preferredBenchmark],
 
-        parentFields: ['msrp'] as ProductFieldKey[],
-        childrenFields: [
-          'gpuCoreBaseClock',
-          'gpuCoreBoostClock',
-          'length',
-          'slotWidth',
-          'width',
-          'height',
-          'tdp',
-        ] as ProductFieldKey[],
         relatedFields: [],
       },
       ctx,

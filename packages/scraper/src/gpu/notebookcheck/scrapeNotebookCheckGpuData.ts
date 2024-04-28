@@ -39,14 +39,13 @@ const NULL_VALUES = ['n/a', 'none', 'unknown'];
 export interface ScrapeNotebookCheckGpuDataOptions
   extends CommonScraperOptions {
   url: string;
-  chipset?: GpuProduct;
   games?: Partial<Game>[];
 }
 
 export async function scrapeNotebookCheckGpuData(
   options: ScrapeNotebookCheckGpuDataOptions,
 ) {
-  const { url, chipset, games, noProxy, ctx } = options;
+  const { url, games, noProxy, ctx } = options;
 
   const response = await scraper.scrapeGet(url, { retries: 1, noProxy });
   const $ = cheerio.load(response.data);
@@ -54,7 +53,7 @@ export async function scrapeNotebookCheckGpuData(
   const { company, name } = scrapeNameAndCompany($);
 
   const fields = {
-    ...scrapeFields($, company, chipset, ctx),
+    ...scrapeFields($, company, ctx),
     marketSegment: getMarketSegment($, ctx),
   };
 
@@ -149,7 +148,6 @@ interface ProductFieldScraper {
     value: string;
     unit?: MeasurementUnit;
     company?: string;
-    chipset?: GpuProduct;
   }) => unknown;
 }
 const FIELDS: Partial<Record<GpuFieldKey, ProductFieldScraper>> = {
@@ -160,10 +158,8 @@ const FIELDS: Partial<Record<GpuFieldKey, ProductFieldScraper>> = {
   cudaCores: {
     label: 'pipelines',
     regexes: [/(?<value>[.\d]+) - unified/i],
-    parseValue: ({ value, company, chipset }) =>
-      value != null && isCompany('nvidia', company, chipset)
-        ? Number(value)
-        : null,
+    parseValue: ({ value, company }) =>
+      value != null && isCompany('nvidia', company) ? Number(value) : null,
   },
   dieSize: {
     label: 'die size',
@@ -180,10 +176,8 @@ const FIELDS: Partial<Record<GpuFieldKey, ProductFieldScraper>> = {
   executionUnits: {
     label: 'pipelines',
     regexes: [/(?<value>[.\d]+) - unified/i],
-    parseValue: ({ value, company, chipset }) =>
-      value != null && isCompany('intel', company, chipset)
-        ? Number(value)
-        : null,
+    parseValue: ({ value, company }) =>
+      value != null && isCompany('intel', company) ? Number(value) : null,
   },
   fp16: {
     label: 'theoretical performance',
@@ -357,18 +351,14 @@ const FIELDS: Partial<Record<GpuFieldKey, ProductFieldScraper>> = {
   streamProcessors: {
     label: 'pipelines',
     regexes: [/(?<value>[.\d]+) - unified/i],
-    parseValue: ({ value, company, chipset }) =>
-      value != null && isCompany('amd', company, chipset)
-        ? Number(value)
-        : null,
+    parseValue: ({ value, company }) =>
+      value != null && isCompany('amd', company) ? Number(value) : null,
   },
   shadingUnits: {
     label: 'pipelines',
     regexes: [/(?<value>[.\d]+) - unified/i],
-    parseValue: ({ value, company, chipset }) =>
-      value != null && isCompany('ati', company, chipset)
-        ? Number(value)
-        : null,
+    parseValue: ({ value, company }) =>
+      value != null && isCompany('ati', company) ? Number(value) : null,
   },
   tdp: {
     label: 'power consumption',
@@ -407,7 +397,6 @@ const FIELDS: Partial<Record<GpuFieldKey, ProductFieldScraper>> = {
 function scrapeFields(
   $: cheerio.CheerioAPI,
   company: string | null,
-  chipset: GpuProduct | null,
   ctx: ScraperContext,
 ) {
   const fields = Object.entries(FIELDS).map(([fieldKey, scraper]) => {
@@ -427,7 +416,7 @@ function scrapeFields(
     const unit = scraper.unitMapper?.[scrapedUnit] ?? null;
 
     const raw = scraper.parseValue
-      ? scraper.parseValue({ value: scrapedValue, unit, chipset, company })
+      ? scraper.parseValue({ value: scrapedValue, unit, company })
       : scrapedValue;
     const formatted = formatProductField(
       ProductType.Gpu,
@@ -716,12 +705,8 @@ function scrapeGameFps($: cheerio.CheerioAPI, game: Partial<Game>) {
   return productGame;
 }
 
-function isCompany(
-  companyToCheck: string,
-  company: string,
-  chipset: GpuProduct | null,
-) {
-  const lcCompany = (chipset?.company || company)?.toLowerCase();
+function isCompany(companyToCheck: string, company: string) {
+  const lcCompany = company?.toLowerCase();
   const lcCompanyToCheck = companyToCheck.toLowerCase();
   return lcCompany === lcCompanyToCheck;
 }

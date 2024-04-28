@@ -4,19 +4,16 @@ import {
   GpuFieldMeta,
   hasProductFieldValue,
   ProductType,
-  SubProductType,
 } from '@pcpartdb/shared';
 import { ScraperContext } from '../types';
 
 interface GenerateGpuGroupKeyOptions {
-  gpuType: SubProductType;
   company: string;
   name: string;
 }
 
 export function generateGpuGroupKey(options: GenerateGpuGroupKeyOptions) {
   const type = ProductType.Gpu;
-  const gpuType = options.gpuType;
   const company = options.company.toUpperCase();
   let name = options.name.toUpperCase();
 
@@ -65,7 +62,7 @@ export function generateGpuGroupKey(options: GenerateGpuGroupKeyOptions) {
     .filter((word) => word.trim().length > 0)
     .join('_');
 
-  return `${type}__${gpuType}__${company}__${name}`;
+  return `${type}__GPU_CHIPSET__${company}__${name}`;
 }
 
 interface CreateGpuFieldOptions<T = unknown> {

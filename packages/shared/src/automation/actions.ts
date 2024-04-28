@@ -26,12 +26,6 @@ export enum AutomationActionType {
   UpdateGpuChipsetSources = 'UPDATE_GPU_CHIPSET_SOURCES',
 
   /**
-   * Downloads and parses GPU retail model sources that later gets
-   * used for to fetch GPU data. Sources require approval after being fetched.
-   */
-  UpdateGpuRetailModelSources = 'UPDATE_GPU_RETAIL_MODEL_SOURCES',
-
-  /**
    * Downloads and parses CPU data from the provided sources. Creates a
    * CPU_DATA approval entry for newly found data.
    */
@@ -127,8 +121,4 @@ export interface CreateGpuActionData {
 export interface UpdateGpuActionData {
   // For fetching data based on an existing GPU.
   gpuId?: number;
-}
-
-export interface UpdateGpuRetailModelSourcesActionData {
-  relatedProductId?: number;
 }

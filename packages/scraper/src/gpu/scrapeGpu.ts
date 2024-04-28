@@ -4,7 +4,6 @@ import {
   Game,
   generateProductOtherNames,
   generateProductSearchableText,
-  GpuProduct,
   Product,
   ProductSource,
   ProductSourceKey,
@@ -13,7 +12,6 @@ import {
 import { ScraperContext } from '../types';
 import { scrapeNotebookCheckGpuData } from './notebookcheck';
 import { scrapePassMarkGpuData } from './passmark';
-import { scrapeFromChipsetGpu } from './scrapeFromChipsetGpu';
 import { scrapeTechPowerUpGpuData } from './techpowerup';
 
 const SOURCE_ORDER = [
@@ -24,31 +22,19 @@ const SOURCE_ORDER = [
 
 export interface ScrapeGpuOptions {
   sources?: Partial<ProductSource>[];
-  chipset?: GpuProduct;
   games?: Partial<Game>[];
 }
 
 export async function scrapeGpu(options: ScrapeGpuOptions) {
-  const { chipset, sources, games } = options;
+  const { sources, games } = options;
 
   const ctx: ScraperContext = { memoizedFields: {} };
   let scrapedProduct: Partial<Product> = {};
-  let hasRetailModels = false;
-
-  if (chipset != null) {
-    const response = await scrapeChipset(chipset, ctx);
-    scrapedProduct = deepmerge(
-      { arrayMerge: ArrayMerge.Combine },
-      scrapedProduct,
-      response.product,
-    );
-  }
 
   for (const sourceKey of SOURCE_ORDER) {
     const source = sources.filter((s) => s.sourceKey === sourceKey)[0] || null;
     if (source != null) {
-      const response = await scrapeSource(source, chipset, games, ctx);
-      hasRetailModels = response?.hasRetailModels ?? hasRetailModels;
+      const response = await scrapeSource(source, games, ctx);
       scrapedProduct = updateScrapedProduct(scrapedProduct, response);
     }
   }
@@ -64,8 +50,7 @@ export async function scrapeGpu(options: ScrapeGpuOptions) {
 
   return {
     product: scrapedProduct,
-    hasRetailModels,
-  } as ScrapeProductResponse & { hasRetailModels: boolean };
+  } as ScrapeProductResponse;
 }
 
 function updateScrapedProduct(
@@ -81,34 +66,22 @@ function updateScrapedProduct(
 
 async function scrapeSource(
   source: Partial<ProductSource>,
-  chipset: GpuProduct | null,
   games: Partial<Game>[] | null,
   ctx: ScraperContext,
-): Promise<ScrapeProductResponse & { hasRetailModels?: boolean }> {
+): Promise<ScrapeProductResponse> {
   if (source?.sourceKey === ProductSourceKey.NotebookCheck) {
-    return await scrapeNotebookCheck(source, chipset, games, ctx);
+    return await scrapeNotebookCheck(source, games, ctx);
   } else if (source?.sourceKey === ProductSourceKey.PassMark) {
     return await scrapePassMark(source, ctx);
   } else if (source?.sourceKey === ProductSourceKey.TechPowerUp) {
-    return await scrapeTechPowerUp(source, chipset, ctx);
+    return await scrapeTechPowerUp(source, ctx);
   }
 
   throw new Error('Unsupported product source to scrape');
 }
 
-async function scrapeChipset(chipset: GpuProduct, ctx: ScraperContext) {
-  if (chipset == null) {
-    return null;
-  }
-  return await scrapeFromChipsetGpu({
-    chipset,
-    ctx,
-  });
-}
-
 async function scrapeNotebookCheck(
   source: Partial<ProductSource>,
-  chipset: GpuProduct | null,
   games: Partial<Game>[] | null,
   ctx: ScraperContext,
 ) {
@@ -117,7 +90,6 @@ async function scrapeNotebookCheck(
   }
   return await scrapeNotebookCheckGpuData({
     url: source.sourceUrl,
-    chipset,
     games,
     ctx,
   });
@@ -141,7 +113,6 @@ async function scrapePassMark(
 
 async function scrapeTechPowerUp(
   source: Partial<ProductSource>,
-  chipset: GpuProduct | null,
   ctx: ScraperContext,
 ) {
   if (source?.sourceUrl == null) {
@@ -149,7 +120,6 @@ async function scrapeTechPowerUp(
   }
   return await scrapeTechPowerUpGpuData({
     url: source.sourceUrl,
-    chipset,
     ctx,
   });
 }

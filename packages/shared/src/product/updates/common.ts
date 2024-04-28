@@ -1,4 +1,4 @@
-import { Product, ProductType, SubProductType } from '../common';
+import { Product, ProductType } from '../common';
 
 // Enums
 
@@ -23,7 +23,6 @@ export interface ProductUpdate<T = ProductDiff> {
   id?: number;
 
   productType: ProductType;
-  subProductType?: SubProductType;
   productName: string;
 
   status: ProductUpdateStatus;

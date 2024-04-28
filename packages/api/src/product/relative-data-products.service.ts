@@ -127,19 +127,15 @@ export class RelativeDataProductsService {
           {
             id: productId,
 
-            includeParent: true,
             includeRelated: true,
 
             includeBenchmarks: true,
-            includeParentBenchmarks: true,
             includeRelatedBenchmarks: benchmark ? [benchmark] : false,
 
             includeGames: true,
-            includeParentGames: true,
             includeRelatedGames: game ? [game] : false,
 
             includeRanks: true,
-            includeParentRanks: benchmark ? [benchmark] : false,
             includeRelatedRanks: benchmark ? [benchmark] : false,
 
             bypassCache,
@@ -534,6 +530,7 @@ export class RelativeDataProductsService {
       {
         id: bestProductId,
         includeBenchmarks: [benchmark],
+        includeRanks: [benchmark],
         bypassCache: options.bypassCache,
       },
       ctx,
@@ -570,6 +567,7 @@ export class RelativeDataProductsService {
       {
         id: bestProductId,
         includeBenchmarks: [benchmark],
+        includeRanks: [benchmark],
         bypassCache: options.bypassCache,
       },
       ctx,

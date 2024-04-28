@@ -3,7 +3,6 @@ import {
   ListProductUpdatesQuery,
   ProductType,
   ProductUpdateStatus,
-  SubProductType,
 } from '@pcpartdb/shared';
 import { Prisma } from '@prisma/client';
 import { DatabaseClient } from '../DatabaseClient';
@@ -20,7 +19,6 @@ export interface FindPendingByProductIdOptions {
 
 export interface CountPendingOptions {
   productType: ProductType;
-  subProductType?: SubProductType;
 }
 
 export class ProductUpdateRepository {
@@ -64,13 +62,12 @@ export class ProductUpdateRepository {
   }
 
   async countPending(options: CountPendingOptions, config?: RepositoryConfig) {
-    const { productType, subProductType } = options;
+    const { productType } = options;
 
     const trx = config?.trx ?? this.db;
     return await trx.productUpdate.count({
       where: {
         productType,
-        subProductType,
         status: ProductUpdateStatus.Pending,
       },
     });
@@ -124,19 +121,8 @@ export class ProductUpdateRepository {
       ? { contains: search, mode: 'insensitive' }
       : undefined;
 
-    // Handle GPU-specific filters
-    let subProductTypeWhere: Prisma.StringNullableFilter;
-    if (productType === ProductType.Gpu) {
-      const subProductType = filter?.subProductType;
-      if (subProductType == null) {
-        throw new Error('Missing sub product type');
-      }
-      subProductTypeWhere = { equals: subProductType };
-    }
-
     return {
       productType: productTypeWhere,
-      subProductType: subProductTypeWhere,
       status: statusWhere,
       productName: productNameWhere,
     };

@@ -1,5 +1,5 @@
 import { ListQuery, ListRequest, ListResponse } from '../../common';
-import { ProductType, SubProductType } from '../common';
+import { ProductType } from '../common';
 import { ProductUpdate, ProductUpdateStatus } from './common';
 
 //
@@ -8,7 +8,6 @@ import { ProductUpdate, ProductUpdateStatus } from './common';
 
 export interface ListProductUpdatesFilter {
   productType: ProductType;
-  subProductType?: SubProductType;
   status?: ProductUpdateStatus;
   search?: string;
 }

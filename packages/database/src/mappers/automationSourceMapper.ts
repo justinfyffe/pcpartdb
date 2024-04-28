@@ -4,7 +4,6 @@ import {
   ProductType,
 } from '@pcpartdb/shared';
 import { AutomationSourceEntity } from '../automation';
-import { mapToProductDto } from '../product';
 
 export async function mapToAutomationSourceDto(
   row: AutomationSourceEntity,
@@ -22,8 +21,6 @@ export async function mapToAutomationSourceDto(
     sourceName: row.sourceName,
     sourceUrl: row.sourceUrl,
     archived: row.archived,
-    relatedProductId: row.relatedProductId,
-    relatedProduct: await mapToProductDto(row.relatedProduct),
   };
 
   return dto as AutomationSource;
@@ -59,8 +56,6 @@ export function mapToAutomationSourceEntity(
     sourceName: automationSource.sourceName,
     sourceUrl: automationSource.sourceUrl,
     archived: automationSource.archived,
-
-    relatedProductId: automationSource.relatedProductId,
 
     createdAt: undefined,
     updatedAt: undefined,

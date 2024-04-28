@@ -44,7 +44,6 @@ export class WebsiteService {
 
     const results = await this.productRepository.listSitemapProductSlugs(
       request.productType,
-      request.hasParent ?? false,
       ctx,
     );
 

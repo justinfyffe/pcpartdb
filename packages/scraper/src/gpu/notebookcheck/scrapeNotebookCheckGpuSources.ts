@@ -1,4 +1,4 @@
-import { cleanUrl, parseProductName, SubProductType } from '@pcpartdb/shared';
+import { cleanUrl, parseProductName } from '@pcpartdb/shared';
 import * as cheerio from 'cheerio';
 import { scraper } from '../../scraper';
 import { CommonScraperOptions } from '../../types';
@@ -56,7 +56,6 @@ export async function scrapeNotebookCheckGpuSources(
     const externalKey = getExternalKey(url);
     if (company) {
       const groupKey = generateGpuGroupKey({
-        gpuType: SubProductType.GpuChipset,
         name,
         company,
       });

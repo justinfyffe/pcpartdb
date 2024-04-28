@@ -13,19 +13,28 @@ NEXT (long-term):
 
 NEXT (short-term)
 - [] Retail Model Cleanup
-  - [] Permanent redirect retail model page to chipset gpu
-  - [] Don't show retail models on list page
-  - [] Don't show retail models on view page
-  - [] Don't show retail models on compare page
-  - [] Remove dimensions from gpu page. Just use slot-width
-  - [] Remove "1x" from outputs. Just list out the possible outputs like "HDMI 2.1, DisplayPort"
-  - [] Remove retail models from admin panel
-  - [] Remove retail models from scraping
-  - [] Build a redirect list in memory/code
-    - [] Product Type + Slug -> chipset slug. Can be one giant file
-  - [] Remove parentId and children
-  - [] Remove from database
-  - [] Remove from sitemap generation
+  - [X] Permanent redirect retail model page to chipset gpu
+    - [X] Product Type + Slug -> chipset slug. Can be one giant file
+  - [X] Don't show retail models on list page
+  - [X] Don't show retail models on view page
+  - [X] Don't show retail models on compare page
+  - [X] Remove dimensions from gpu page. Just use slot-width
+  - [X] Remove "1x" from outputs. Just list out the possible outputs like "HDMI 2.1, DisplayPort"
+  - [X] Remove retail models from admin panel
+  - [X] Remove from automation source data
+  - [X] Remove dimensions from summary
+  - [X] Remove retail models from scraping
+  - [X] Build a redirect list in memory/code
+  - [X] Remove children structure
+  - [X] Remove from database
+    - [X] Build redirect mapping
+    - [X] Remove from automation sources in database
+    - [X] Remove data with parentId
+    - [X] Remove parentId from database
+    - [X] Remove length, width, height, weight fields from gpu
+  - [X] Remove from sitemap generation
+  - [X] Code cleanup
+    - Remove instances of "chipset" or "retail model"
 - [] Add more games
 - [] SEO
   - Off-site
@@ -56,6 +65,8 @@ Automation Improvements:
     - https://www.techpowerup.com/gpu-specs/radeon-rx-7900-xtx.c3941
   - Add Predecessor
   - Add Successor
+  - "handle (per sm) for l1 cache":
+    - https://www.techpowerup.com/gpu-specs/geforce-rtx-4090.c3889
 - Error Handling
   - Add ability to restart a failed job
   - Store failed tasks to look at later

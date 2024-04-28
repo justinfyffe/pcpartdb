@@ -17,13 +17,11 @@ const NVIDIA_GPU_FILTER: ListGpusFilter = {
   productType: ProductType.Gpu,
   company: ['nvidia'],
   segment: [MarketSegment.Desktop],
-  isChipset: true,
 };
 const AMD_GPU_FILTER: ListGpusFilter = {
   productType: ProductType.Gpu,
   company: ['amd'],
   segment: [MarketSegment.Desktop],
-  isChipset: true,
 };
 
 const INTEL_CPU_FILTER: ListCpusFilter = {

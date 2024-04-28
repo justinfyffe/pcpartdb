@@ -2,10 +2,10 @@ import { GpuProduct } from '@pcpartdb/shared';
 import { classNames } from 'packages/website/src/app/_common/utils/classNames';
 import React, { FunctionComponent } from 'react';
 import { AffiliateHighlight } from './AffiliateHighlight';
-import { DimensionsHighlight } from './DimensionsHighlight';
 import { MemoryHighlight } from './MemoryHighlight';
 import { PerformanceHighlight } from './PerformanceHighlight';
 import { ReleaseDateHighlight } from './ReleaseDateHighlight';
+import { SlotsHighlight } from './SlotsHighlight';
 import { TdpHighlight } from './TdpHighlight';
 import { ValueHighlight } from './ValueHighlight';
 
@@ -27,7 +27,7 @@ export const Highlights: FunctionComponent<HighlightsProps> = (props) => {
       <PerformanceHighlight />
       <ValueHighlight />
       <MemoryHighlight gpu={gpu} />
-      <DimensionsHighlight gpu={gpu} />
+      <SlotsHighlight gpu={gpu} />
       <TdpHighlight gpu={gpu} />
       <ReleaseDateHighlight gpu={gpu} />
       <AffiliateHighlight gpu={gpu} />

@@ -55,7 +55,6 @@ export class ProductController {
       req,
       {
         fields: this.getListFields(productType),
-        includeAdditionalData: true,
         includeBenchmarks: [
           getPreferredBenchmark(ctx.config?.userSettings, productType),
         ],
@@ -169,18 +168,7 @@ export class ProductController {
       case ProductType.Cpu:
         return ['releaseDate', 'marketSegment', 'msrp'];
       case ProductType.Gpu:
-        return [
-          'releaseDate',
-          'gpuCoreBaseClock',
-          'gpuCoreBoostClock',
-          'length',
-          'slotWidth',
-          'width',
-          'height',
-          'tdp',
-          'marketSegment',
-          'msrp',
-        ];
+        return ['releaseDate', 'marketSegment', 'msrp'];
       default:
         throw new Error(
           `Invalid product type for getting list fields: ${productType}`,

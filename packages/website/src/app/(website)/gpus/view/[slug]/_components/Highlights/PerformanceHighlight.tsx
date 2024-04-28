@@ -2,7 +2,6 @@
 
 import { StarIcon } from '@heroicons/react/24/outline';
 import {
-  getGpuChipset,
   getProductBenchmarkName,
   productBenchmarkValue,
   ProductType,
@@ -26,7 +25,6 @@ export function PerformanceHighlight(props: PerformanceHighlightProps) {
 
   const { viewModel } = usePageContext();
   const gpu = viewModel.gpu;
-  const parent = getGpuChipset(gpu);
   const { relativeDataProducts, loading } = useRelativeDataProducts();
   const bestPerfGpu = relativeDataProducts?.bestBenchmarkPerformance;
 
@@ -40,10 +38,8 @@ export function PerformanceHighlight(props: PerformanceHighlightProps) {
   });
 
   const score = useMemo(
-    () =>
-      productBenchmarkValue(gpu, preferredBenchmark) ||
-      productBenchmarkValue(parent, preferredBenchmark),
-    [gpu, parent, preferredBenchmark],
+    () => productBenchmarkValue(gpu, preferredBenchmark),
+    [gpu, preferredBenchmark],
   );
 
   const valueText = useMemo(() => {

@@ -75,9 +75,6 @@ model User {
 model Product {
   id Int @id @default(autoincrement())
 
-  // ID of parent product (if it exists, e.g. gpu chipset)
-  parentId Int? @map("parent_id")
-
   // URL slug to identify the product.
   slug String
 
@@ -126,20 +123,15 @@ model Product {
   sources ProductSource[] @relation("productSourceToProduct")
   updates ProductUpdate[] @relation("productUpdateToProduct")
   images ProductImage[] @relation("productImageToProduct")
-  relatedAutomationSources AutomationSource[] @relation("automationSourceToRelatedProduct")
   relatedProducts RelatedProduct[] @relation("relatedProductToProductA")
   asRelatedProducts RelatedProduct[] @relation("relatedProductToProductB")
   minimumGpuForGames Game[] @relation("gameToMinimumGpu")
   recommendedGpuForGames Game[] @relation("gameToRecommendedGpu")
   minimumCpuForGames Game[] @relation("gameToMinimumCpu")
   recommendedCpuForGames Game[] @relation("gameToRecommendedCpu")
-  
-  parent Product? @relation("productToProduct", fields: [parentId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "products_parent_foreign")
-  children Product[] @relation("productToProduct")
 
   // Indexes
   @@unique([productType, slug], map: "products_productType_slug_unique")
-  @@index([parentId], map: "products_parentId_index")
 
   @@map("products")
 }
@@ -224,9 +216,6 @@ model ProductUpdate {
   // Enum value to identify which type of product this ProductUpdate represents.
   productType String @map("product_type")
 
-  // Enum value to identify which subtype of product this ProductUpdate represents.
-  // Useful for retail models
-  subProductType String? @map("sub_product_type")
 
   // Name of the product that is being created/updated.
   // Useful when there is no product id
@@ -260,7 +249,7 @@ model ProductUpdate {
 
   product Product? @relation("productUpdateToProduct", fields: [productId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "productUpdates_product_foreign")
   
-  @@index([productType, subProductType, status, createdAt], name: "product_updates_type_subProductType_status_createdAt_index") 
+  @@index([productType, status, createdAt], name: "product_updates_type_status_createdAt_index") 
 
   @@map("product_updates")
 }
@@ -423,18 +412,12 @@ model AutomationSource {
   // Flag to indicate we've already handled this source.
   archived Boolean @default(false)
 
-  // Identifies which GPU chipset this source is related to.
-  // Only for GPU retail model sources.
-  relatedProductId Int? @map("related_product_id")
-
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
 
   // Relations
 
-  relatedProduct Product? @relation("automationSourceToRelatedProduct", fields: [relatedProductId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "automationSources_relatedProduct_foreign")
-
-  @@index([productType, archived, relatedProductId], map: "automationSources_productType_archived_relatedProductId_index")
+  @@index([productType, archived], map: "automationSources_productType_archived_index")
   @@unique([productType, sourceKey, externalKey], map: "automationSources_productType_sourceKey_externalKey_unique")
 
   @@map("automation_sources")
@@ -672,17 +655,11 @@ model GpuFields {
   gpuCoreBoostClockValue Float? @map("gpu_core_boost_clock_value")
   gpuCoreBoostClockMeta Json? @map("gpu_core_boost_clock_meta")
 
-  heightValue Float? @map("height_value")
-  heightMeta Json? @map("height_meta")
-
   l1CacheValue Float? @map("l1_cache_value")
   l1CacheMeta Json? @map("l1_cache_meta")
 
   l2CacheValue Float? @map("l2_cache_value")
   l2CacheMeta Json? @map("l2_cache_meta")
-
-  lengthValue Float? @map("length_value")
-  lengthMeta Json? @map("length_meta")
 
   marketSegmentValue String? @map("market_segment_value")
   marketSegmentMeta Json? @map("market_segment_meta")
@@ -797,12 +774,6 @@ model GpuFields {
 
   vulkanVersionValue String? @map("vulkan_version_value")
   vulkanVersionMeta Json? @map("vulkan_version_meta")
-
-  weightValue Float? @map("weight_value")
-  weightMeta Json? @map("weight_meta")
-
-  widthValue Float? @map("width_value")
-  widthMeta Json? @map("width_meta")
 
   // Misc. data for the fields. This data should not be filtered on.
   metadata Json?

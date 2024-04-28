@@ -21,9 +21,8 @@ interface GeneralInfoTableProps {
 
 export function GeneralInfoTable(props: GeneralInfoTableProps) {
   const { gpu, className } = props;
-  const { parent } = gpu;
 
-  const chipsetName = formatProductName(parent || gpu, { company: false });
+  const chipsetName = formatProductName(gpu, { company: false });
   const gpuAffiliateUrl = getAffiliateUrl(gpu);
 
   return (

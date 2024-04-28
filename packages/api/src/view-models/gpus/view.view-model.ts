@@ -4,7 +4,6 @@ import {
   getGpuChipset,
   getPreferredBenchmark,
   GpuProduct,
-  ProductFieldKey,
   ProductType,
   RelativeDataProducts,
   ViewGpuViewModel,
@@ -77,33 +76,18 @@ export class ViewGpuViewModelService {
         includeSources: false,
         includeUpdates: false,
 
-        includeParent: true,
-        includeChildren: true,
         includeRelated: true,
 
         includeBenchmarks: true,
-        includeParentBenchmarks: true,
         includeRelatedBenchmarks: [preferredBenchmark],
 
         includeGames: true,
-        includeParentGames: true,
         includeRelatedGames:
           gameSlug && gameSlug !== 'undefined' ? [gameSlug] : 'latest',
 
         includeRanks: true,
-        includeParentRanks: true,
         includeRelatedRanks: [preferredBenchmark],
 
-        parentFields: ['msrp'] as ProductFieldKey[],
-        childrenFields: [
-          'gpuCoreBaseClock',
-          'gpuCoreBoostClock',
-          'length',
-          'slotWidth',
-          'width',
-          'height',
-          'tdp',
-        ] as ProductFieldKey[],
         relatedFields: [],
       },
       ctx,
@@ -154,7 +138,7 @@ export class ViewGpuViewModelService {
     relativeGpus: RelativeDataProducts,
     pageGpu: Partial<GpuProduct>,
   ) {
-    const pageChipset = pageGpu.parent || pageGpu;
+    const pageChipset = pageGpu;
     return this.relativeDataProductsService.buildRelatedComparisons({
       total,
       relativeDataProducts: relativeGpus,

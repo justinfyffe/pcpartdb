@@ -1,5 +1,4 @@
 import {
-  formatGpuDimensions,
   formatProductName,
   GpuProduct,
   productFieldFormattedValue,
@@ -14,7 +13,6 @@ const summaryData = (gpu: GpuProduct) => {
     coreClock: productFieldFormattedValue(gpu?.fields?.gpuCoreBaseClock),
     coreBoostClock: productFieldFormattedValue(gpu?.fields?.gpuCoreBoostClock),
     cudaCores: productFieldFormattedValue(gpu?.fields?.cudaCores),
-    dimensions: formatGpuDimensions(gpu),
     executionUnits: productFieldFormattedValue(gpu?.fields?.executionUnits),
     gpuName: formatProductName(gpu),
     marketSegment: productFieldFormattedValue(gpu?.fields?.marketSegment),
@@ -50,9 +48,6 @@ const aiPromptTemplate = (gpu: GpuProduct) => {
 
   const summaryPart1 = [
     `The GPU is ${summary.gpuName}.`,
-    gpu?.parent
-      ? `The GPU is based off of the ${formatProductName(gpu.parent)} chipset.`
-      : '',
     summary.marketSegment
       ? `It is designed for the ${summary.marketSegment} market.`
       : '',
@@ -111,7 +106,6 @@ const aiPromptTemplate = (gpu: GpuProduct) => {
     summary.suggestedPsu ? `Its suggested PSU is ${summary.suggestedPsu}.` : '',
     summary.tdp ? `It has a TDP of ${summary.tdp}.` : '',
     summary.slotWidth ? `It has a slot width of ${summary.slotWidth}.` : '',
-    summary.dimensions ? `Its dimensions are ${summary.dimensions}.` : '',
   ].filter((value) => value);
 
   return `

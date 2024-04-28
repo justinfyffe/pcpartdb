@@ -31,7 +31,6 @@ export class ProductAutocompleteRepository {
     const priorityProducts = await db.product.findMany({
       where: {
         productType,
-        parentId: null,
         searchText: { search: tokens.join(' & '), mode: 'insensitive' },
       },
       include: {
@@ -60,7 +59,7 @@ export class ProductAutocompleteRepository {
       `;
     } else {
       fillerProducts = await db.product.findMany({
-        where: { productType, parentId: null },
+        where: { productType },
         take: AUTOCOMPLETE_LIMIT,
       });
     }

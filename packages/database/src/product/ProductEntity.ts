@@ -1,5 +1,4 @@
 import * as db from '@prisma/client';
-import { AutomationSourceEntity } from '../automation';
 import { CpuFieldsEntity } from './CpuFieldsEntity';
 import { GpuFieldsEntity } from './GpuFieldsEntity';
 import { ProductBenchmarkEntity } from './ProductBenchmarkEntity';
@@ -19,9 +18,5 @@ export type ProductEntity = db.Product & {
   sources?: ProductSourceEntity[];
   updates?: ProductUpdateEntity[];
   images?: ProductImageEntity[];
-  relatedAutomationSources?: AutomationSourceEntity[];
   relatedProducts?: RelatedProductEntity[];
-
-  parent?: ProductEntity;
-  children?: ProductEntity[];
 };

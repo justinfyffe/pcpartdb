@@ -19,7 +19,6 @@ export enum CacheType {
   ProductImages = 'product_images',
   ProductSources = 'product_sources',
   RelatedProducts = 'related_products',
-  ChildrenProductIds = 'children_products',
   Game = 'games',
 
   BestProduct = 'best_product',
@@ -44,7 +43,6 @@ export const CACHE_EXPIRE_TTLS: Partial<Record<CacheType, number>> = {
   [CacheType.ProductImages]: ONE_DAY,
   [CacheType.ProductSources]: FIFTEEN_MINUTES,
   [CacheType.RelatedProducts]: ONE_DAY,
-  [CacheType.ChildrenProductIds]: ONE_DAY,
   [CacheType.Game]: ONE_DAY,
 
   [CacheType.BestProduct]: ONE_HOUR,

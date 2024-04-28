@@ -8,18 +8,9 @@ export function isCpuProduct(product: Partial<Product>): product is CpuProduct {
 export function isGpuProduct(product: Partial<Product>): product is GpuProduct {
   return product?.productType === ProductType.Gpu;
 }
-export function isGpuChipset(product: Partial<Product>): product is GpuProduct {
-  return isGpuProduct(product) && product.parentId == null;
-}
-
-export function isGpuRetailModel(
-  product: Partial<Product>,
-): product is GpuProduct {
-  return isGpuProduct(product) && product.parentId != null;
-}
 
 export function getGpuChipset(gpu: Partial<GpuProduct>) {
-  return (gpu?.parent || gpu) as GpuProduct;
+  return gpu as GpuProduct;
 }
 
 export interface GenerateProductSlugOptions {

@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import {
   AutomationStatus,
   ProductType,
-  SubProductType,
   updateAutomationStatusSchema,
 } from '@pcpartdb/shared';
 import * as fs from 'fs';
@@ -66,22 +65,7 @@ export class AutomationService {
       await this.automationSourceRepository.countPendingGroups(
         {
           query: {
-            filter: {
-              productType: ProductType.Gpu,
-              isParent: true,
-            },
-          },
-        },
-        ctx,
-      );
-    const pendingGpuRetailModelSources =
-      await this.automationSourceRepository.countPendingGroups(
-        {
-          query: {
-            filter: {
-              productType: ProductType.Gpu,
-              isChild: true,
-            },
+            filter: { productType: ProductType.Gpu },
           },
         },
         ctx,
@@ -89,8 +73,7 @@ export class AutomationService {
 
     return {
       pendingCpuSources,
-      pendingGpuChipsetSources,
-      pendingGpuRetailModelSources,
+      pendingGpuSources: pendingGpuChipsetSources,
     } as Partial<AutomationStatus>;
   }
 
@@ -99,27 +82,14 @@ export class AutomationService {
       { productType: ProductType.Cpu },
       ctx,
     );
-    const pendingGpuChipsetUpdates =
-      await this.productUpdateRepository.countPending(
-        {
-          productType: ProductType.Gpu,
-          subProductType: SubProductType.GpuChipset,
-        },
-        ctx,
-      );
-    const pendingGpuRetailModelUpdates =
-      await this.productUpdateRepository.countPending(
-        {
-          productType: ProductType.Gpu,
-          subProductType: SubProductType.GpuRetailModel,
-        },
-        ctx,
-      );
+    const pendingGpuUpdates = await this.productUpdateRepository.countPending(
+      { productType: ProductType.Gpu },
+      ctx,
+    );
 
     return {
       pendingCpuUpdates,
-      pendingGpuChipsetUpdates,
-      pendingGpuRetailModelUpdates,
+      pendingGpuUpdates: pendingGpuUpdates,
     } as Partial<AutomationStatus>;
   }
 }

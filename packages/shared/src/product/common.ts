@@ -1,9 +1,7 @@
-import { schema } from 'normalizr';
 import { AutomationSource } from '../automation';
-import { deepmerge } from '../utils';
 import { ProductBenchmark } from './benchmarks';
 import { CpuFields, GpuFields, ProductFields } from './fields';
-import { ProductGame, ProductGameFps } from './game';
+import { ProductGame } from './game';
 import { ProductImage } from './images';
 import { ProductRanks } from './ranks';
 import { RelatedProducts } from './related';
@@ -15,11 +13,6 @@ import { ProductUpdate } from './updates';
 export enum ProductType {
   Cpu = 'CPU',
   Gpu = 'GPU',
-}
-
-export enum SubProductType {
-  GpuChipset = 'GPU_CHIPSET',
-  GpuRetailModel = 'GPU_RETAIL_MODEL',
 }
 
 // Consts
@@ -51,7 +44,6 @@ export const SUPPORTED_GPU_COMPANIES = [
 
 export interface Product {
   id?: number;
-  parentId?: number;
 
   productType: ProductType;
   slug: string;
@@ -81,8 +73,6 @@ export interface Product {
   updates?: ProductUpdate[];
   images?: ProductImage[];
   relatedAutomationSources?: AutomationSource[]; // TODO: is this needed?
-  parent?: Product;
-  children?: Product[];
 
   ranks?: ProductRanks;
   relatedProducts?: RelatedProducts;
@@ -97,7 +87,6 @@ export interface CpuProduct extends Product {
 export interface GpuProduct extends Product {
   productType: ProductType.Gpu;
   fields?: GpuFields;
-  parent?: GpuProduct;
 }
 
 // Product Comparisons

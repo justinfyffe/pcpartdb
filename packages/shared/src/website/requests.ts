@@ -15,7 +15,6 @@ export interface UploadSitemapRequest {
  */
 export interface GetSitemapProductSlugsRequest {
   productType: ProductType;
-  hasParent?: boolean;
 }
 
 /**

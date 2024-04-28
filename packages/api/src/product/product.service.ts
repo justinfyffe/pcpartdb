@@ -15,7 +15,6 @@ import {
   createProductRequestSchema,
   Game,
   getPreferredBenchmark,
-  GpuProduct,
   listAllProductsRequestSchema,
   ListProductsRequest,
   listProductsRequestSchema,
@@ -47,7 +46,6 @@ import { ProductRepository } from './repositories';
 interface ListOptions {
   fields?: ProductFieldKey[];
 
-  includeAdditionalData?: boolean;
   includeAutomation?: boolean;
   includeBenchmarks?: boolean | BenchmarkKey[];
   includeImages?: boolean;
@@ -60,28 +58,21 @@ interface ListOptions {
 
 interface RelationOptions {
   fields?: ProductFieldKey[];
-  parentFields?: ProductFieldKey[];
-  childrenFields?: ProductFieldKey[];
   relatedFields?: ProductFieldKey[];
 
-  includeParent?: boolean;
-  includeChildren?: boolean;
   includeUpdates?: boolean;
   includeAutomation?: boolean;
   includeSources?: boolean;
   includeImages?: boolean;
 
   includeBenchmarks?: boolean | BenchmarkKey[];
-  includeParentBenchmarks?: boolean | BenchmarkKey[];
   includeRelatedBenchmarks?: boolean | BenchmarkKey[];
 
   // All/No Games, Game IDs, or Game Slugs
   includeGames?: boolean | (number | string)[] | 'latest';
-  includeParentGames?: boolean | (number | string)[] | 'latest';
   includeRelatedGames?: boolean | (number | string)[] | 'latest';
 
   includeRanks?: boolean | BenchmarkKey[];
-  includeParentRanks?: boolean | BenchmarkKey[];
   includeRelatedRanks?: boolean | BenchmarkKey[];
 
   includeRelated?: boolean;
@@ -114,10 +105,6 @@ interface ApplyAutomationSourcesOptions {
 
 interface ApplyProductUpdateOptions {
   slug?: string;
-}
-
-interface CountChildrenOptions {
-  productIds: number[];
 }
 
 @Injectable()
@@ -212,10 +199,6 @@ export class ProductService {
       total: count,
     };
 
-    if (options.includeAdditionalData) {
-      await this.populateAdditionalListData(response, ctx);
-    }
-
     return response;
   }
 
@@ -284,12 +267,6 @@ export class ProductService {
       ),
     );
     const products = await Promise.all(fetchPromises);
-
-    const [product1, product2] = products;
-    if (product1.parentId != null || product2.parentId != null) {
-      // Cannot compare GPU retail models
-      throw notFoundError(null);
-    }
 
     return products as ProductComparison;
   }
@@ -439,23 +416,11 @@ export class ProductService {
     if (productType === ProductType.Cpu) {
       return await scrapeCpu({ sources });
     } else if (productType === ProductType.Gpu) {
-      let chipset: GpuProduct = null;
-      for (let i = 0; i < sources.length; ++i) {
-        const source = sources[i];
-        if (source.sourceProductId != null) {
-          const product = await this.getById(
-            { id: source.sourceProductId, bypassCache: true },
-            ctx,
-          );
-          chipset = product as GpuProduct;
-        }
-      }
-
       const games = (await this.gameService.getScraperOptions(
         ctx,
       )) as Partial<Game>[];
 
-      return await scrapeGpu({ chipset, sources, games });
+      return await scrapeGpu({ sources, games });
     }
 
     throw badRequestError({
@@ -481,13 +446,6 @@ export class ProductService {
 
     if (product == null) {
       throw notFoundError({ productId });
-    }
-
-    const sourceProductId = sources
-      .filter((source) => source.relatedProductId)
-      .map((source) => source.relatedProductId)[0];
-    if (sourceProductId != null) {
-      product.parentId = sourceProductId;
     }
 
     const existingSources = product.sources || [];
@@ -527,85 +485,50 @@ export class ProductService {
     }
   }
 
-  async countChildren(options: CountChildrenOptions, ctx: Context) {
-    return await this.repository.countChildren(options, ctx);
-  }
-
-  private async populateAdditionalListData(
-    response: ListProductsResponse,
-    ctx: Context,
-  ) {
-    const productType = response.query?.filter?.productType;
-    if (productType === ProductType.Gpu) {
-      const productIds = response.results.map((product) => product.id);
-      const retailModelCounts = await this.countChildren({ productIds }, ctx);
-      response.additionalData = { retailModelCounts };
-    }
-  }
-
   private buildCacheFetchOptions(
     options: RelationOptions & { bypassCache?: boolean },
     ctx: Context,
   ) {
     const includeBenchmarks = options?.includeBenchmarks ?? false;
-    const includeParentBenchmarks = options?.includeParentBenchmarks ?? false;
     const includeRelatedBenchmarks = options?.includeRelatedBenchmarks ?? false;
 
     const includeGames = options?.includeGames ?? false;
-    const includeParentGames = options?.includeParentGames ?? false;
     const includeRelatedGames = options?.includeRelatedGames ?? false;
 
     const includeRanks = options?.includeRanks ?? false;
-    const includeParentRanks = options?.includeParentRanks ?? false;
     const includeRelatedRanks = options?.includeRelatedRanks ?? false;
 
-    const includeParent = options.includeParent ?? false;
-    const includeChildren = options.includeChildren ?? false;
     const includeImages = options.includeImages ?? false;
     const includeSources =
       (options.includeSources ?? false) && (ctx.user?.isStaff ?? false);
     const includeRelated = options?.includeRelated ?? false;
 
     const fields = options.fields;
-    const parentFields = options.parentFields;
-    const childrenFields = options.childrenFields;
     const relatedFields = options.relatedFields;
 
     const includeFields = fields == null || fields.length > 0;
-    const includeParentFields = parentFields == null || parentFields.length > 0;
-    const includeChildrenFields =
-      childrenFields == null || childrenFields.length > 0;
     const includeRelatedFields =
       relatedFields == null || relatedFields.length > 0;
 
     return {
-      includeParents: includeParent,
-      includeChildren: includeChildren,
       includeRelated: includeRelated,
 
       includeBaseFields: !!includeFields,
-      includeParentFields: !!includeParentFields,
-      includeChildrenFields: !!includeChildrenFields,
       includeRelatedFields: !!includeRelatedFields,
 
       includeBaseBenchmarks: !!includeBenchmarks,
-      includeParentBenchmarks: !!includeParentBenchmarks,
       includeRelatedBenchmarks: !!includeRelatedBenchmarks,
 
       includeBaseGameFps: !!includeGames,
-      includeParentGameFps: !!includeParentGames,
       includeRelatedGameFps: !!includeRelatedGames,
 
       includeBaseRanks: !!includeRanks,
-      includeParentRanks: !!includeParentRanks,
       includeRelatedRanks: !!includeRelatedRanks,
 
       includeBaseImages: !!includeImages,
-      includeParentImages: !!includeImages,
       includeRelatedImages: !!includeImages,
 
       includeBaseSources: !!includeSources,
-      includeParentSources: !!includeSources,
       includeRelatedSources: !!includeSources,
 
       bypassCache: ctx?.user?.isStaff ? !!options.bypassCache : false,
@@ -618,7 +541,6 @@ export class ProductService {
     ctx: Context,
   ) {
     const includeBenchmarks = options?.includeBenchmarks ?? false;
-    const includeParentBenchmarks = options?.includeParentBenchmarks ?? false;
     const includeRelatedBenchmarks = options?.includeRelatedBenchmarks ?? false;
 
     const allGames = entities.flatMap(
@@ -634,22 +556,14 @@ export class ProductService {
       includeGames = latestGameId != null ? [latestGameId] : false;
     }
 
-    let includeParentGames = options?.includeParentGames ?? false;
-    if (options.includeParentGames === 'latest') {
-      includeParentGames = latestGameId != null ? [latestGameId] : false;
-    }
-
     let includeRelatedGames = options?.includeRelatedGames ?? false;
     if (options.includeRelatedGames === 'latest') {
       includeRelatedGames = latestGameId != null ? [latestGameId] : false;
     }
 
     const includeRanks = options?.includeRanks ?? false;
-    const includeParentRanks = options?.includeParentRanks ?? false;
     const includeRelatedRanks = options?.includeRelatedRanks ?? false;
 
-    const includeParent = options.includeParent ?? false;
-    const includeChildren = options.includeChildren ?? false;
     const includeImages = options.includeImages ?? false;
     const includeSources =
       (options.includeSources ?? false) && (ctx.user?.isStaff ?? false);
@@ -660,15 +574,10 @@ export class ProductService {
     const includeRelated = options?.includeRelated ?? false;
 
     const fields = options.fields;
-    const parentFields = options.parentFields;
-    const childrenFields = options.childrenFields;
     const relatedFields = options.relatedFields;
     const includeSummary = options.includeSummary ?? false;
 
     return {
-      includeParent,
-      includeChildren,
-
       includeAutomation,
       includeImages,
       includeSources,
@@ -677,20 +586,15 @@ export class ProductService {
       includeSummary,
 
       includeBenchmarks,
-      includeParentBenchmarks,
       includeRelatedBenchmarks,
 
       includeGames,
-      includeParentGames,
       includeRelatedGames,
 
       includeRanks,
-      includeParentRanks,
       includeRelatedRanks,
 
       fields,
-      parentFields,
-      childrenFields,
       relatedFields,
     };
   }

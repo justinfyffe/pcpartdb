@@ -7,7 +7,6 @@ import {
   getCompareGpusPath,
   getHomePath,
   getListGpusPath,
-  GpuProduct,
   isApiError,
   isNotFoundError,
   joinUrlParts,
@@ -18,14 +17,11 @@ import { Metadata, ResolvingMetadata } from 'next';
 import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { viewModelClient } from 'packages/website/src/app/_common/api/ViewModelClient';
-import { CacheProvider } from 'packages/website/src/app/_common/cache/CacheProvider';
 import { DisplayAd } from 'packages/website/src/app/_common/components/Ad/DisplayAd';
 import { MultiplexAd } from 'packages/website/src/app/_common/components/Ad/MultiplexAd';
 import { AdUnit } from 'packages/website/src/app/_common/components/Ad/types';
 import { Breadcrumb } from 'packages/website/src/app/_common/components/Breadcrumbs/Breadcrumb';
 import { Breadcrumbs } from 'packages/website/src/app/_common/components/Breadcrumbs/Breadcrumbs';
-import { ViewModelType } from 'packages/website/src/app/_common/contexts/types';
-import { ViewModelProvider } from 'packages/website/src/app/_common/contexts/ViewModelProvider';
 import { CompareProductsForm } from 'packages/website/src/app/_common/product/components/CompareProductsForm/CompareProductsForm';
 import React from 'react';
 import { Contents } from './_components/Contents/Contents';
@@ -37,7 +33,6 @@ import { Overview } from './_components/Overview/Overview';
 import { PerformanceAndValue } from './_components/PerformanceAndValue/PerformanceAndValue';
 import { RelatedComparisons } from './_components/Related/RelatedComparisons';
 import { RelatedGpus } from './_components/Related/RelatedGpus';
-import { RetailModels } from './_components/RetailModels/RetailModels';
 import { TechnicalSpecs } from './_components/TechnicalSpecs/TechnicalSpecs';
 import { PageProvider } from './PageProvider';
 
@@ -48,7 +43,7 @@ type CompareGpusPageProps = {
 
 export async function generateMetadata(
   props: CompareGpusPageProps,
-  parent: ResolvingMetadata,
+  _parent: ResolvingMetadata,
 ): Promise<Metadata> {
   const slug = props.params.slug;
 
@@ -162,7 +157,6 @@ export default async function CompareGpusPage(props: CompareGpusPageProps) {
           <PerformanceAndValue comparison={comparison} />
           <DisplayAd unit={AdUnit.ComparePagePostBenchmarkPerfValueDisplay} />
           <TechnicalSpecs comparison={comparison} />
-          <RetailModels comparison={comparison} />
           <MultiplexAd unit={AdUnit.ComparePagePostTechSpecsMultiplex} />
           <RelatedComparisons relatedGpuComparisons={relatedGpuComparisons} />
           <RelatedGpus relatedGpus={relatedGpus} />

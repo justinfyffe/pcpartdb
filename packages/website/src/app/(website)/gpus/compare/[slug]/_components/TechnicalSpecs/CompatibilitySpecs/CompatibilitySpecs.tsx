@@ -20,14 +20,6 @@ export const CompatibilitySpecs: FunctionComponent<CompatibilitySpecsProps> = (
   if (
     !hasProductFieldFormattedValue(gpu1.fields?.slotWidth) &&
     !hasProductFieldFormattedValue(gpu2.fields?.slotWidth) &&
-    !hasProductFieldFormattedValue(gpu1.fields?.length) &&
-    !hasProductFieldFormattedValue(gpu2.fields?.length) &&
-    !hasProductFieldFormattedValue(gpu1.fields?.width) &&
-    !hasProductFieldFormattedValue(gpu2.fields?.width) &&
-    !hasProductFieldFormattedValue(gpu1.fields?.height) &&
-    !hasProductFieldFormattedValue(gpu2.fields?.height) &&
-    !hasProductFieldFormattedValue(gpu1.fields?.weight) &&
-    !hasProductFieldFormattedValue(gpu2.fields?.weight) &&
     !hasProductFieldFormattedValue(gpu1.fields?.busInterface) &&
     !hasProductFieldFormattedValue(gpu2.fields?.busInterface) &&
     !hasProductFieldFormattedValue(gpu1.fields?.tdp) &&
@@ -44,7 +36,7 @@ export const CompatibilitySpecs: FunctionComponent<CompatibilitySpecsProps> = (
 
   return (
     <section className={className}>
-      <h3 className="mb-1">Board Compatibility &amp; Dimensions</h3>
+      <h3 className="mb-1">Board Compatibility</h3>
       <CompatibilityIntro />
       <CompatibilityTable comparison={comparison} />
     </section>

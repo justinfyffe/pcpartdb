@@ -6,7 +6,6 @@ import {
   ProductType,
   ProductUpdate,
   ProductUpdateStatus,
-  SubProductType,
 } from '@pcpartdb/shared';
 import { productUpdateService } from 'packages/website/src/client/product/services/productUpdateService';
 import { InfoAlert } from 'packages/website/src/client/shared/components/Alert/InfoAlert';
@@ -35,7 +34,6 @@ export const GpuChipsetsTab = (_props: GpuChipsetsTabProps) => {
     filter: {
       productType: ProductType.Gpu,
       status: ProductUpdateStatus.Pending,
-      subProductType: SubProductType.GpuChipset,
     },
     pagination: { offset: 0, limit: LIMIT },
   });

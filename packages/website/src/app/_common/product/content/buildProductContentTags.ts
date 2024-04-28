@@ -3,16 +3,13 @@
 import {
   BenchmarkKey,
   CpuProduct,
-  formatGpuDimensions,
   getProductPerformanceRank,
   GpuProduct,
   hasBenchmarkPerformanceRank,
   hasBenchmarkValueRank,
   hasProductFieldRawValue,
   isCpuProduct,
-  isGpuChipset,
   isGpuProduct,
-  isGpuRetailModel,
   MarketSegment,
   Product,
   productFieldFormattedValue,
@@ -55,7 +52,6 @@ export enum SpecsTag {
   Clock = 'SPECS__CLOCK',
   Codename = 'SPECS__CODENAME',
   Cores = 'SPECS__CORES',
-  Dimensions = 'SPECS__DIMENSIONS',
   Foundry = 'SPECS__FOUNDRY',
   Generation = 'SPECS__GENERATION',
   IntegratedGraphics = 'SPECS__INTEGRATED_GRAPHICS',
@@ -81,11 +77,6 @@ export enum SpecsTag {
   Tdp = 'SPECS__TDP',
   Threads = 'SPECS__THREADS',
   UnlockedMultiplier = 'SPECS__UNLOCKED_MULTIPLIER',
-}
-
-export enum SubProductTypeTag {
-  GpuChipset = 'SUB_PRODUCT_TYPE__GPU_CHIPSET',
-  GpuRetailModel = 'SUB_PRODUCT_TYPE__GPU_RETAIL_MODEL',
 }
 
 export interface BuildContentTagsOptions {
@@ -134,18 +125,12 @@ export function buildProductContentTags(options: BuildContentTagsOptions) {
 
   // Ranks
   tags[RankTag.BestPerformance] =
-    getProductPerformanceRank(
-      product?.parent || product,
-      preferredBenchmark,
-    ) === 1;
+    getProductPerformanceRank(product, preferredBenchmark) === 1;
   tags[RankTag.Performance] = hasBenchmarkPerformanceRank(
-    product?.parent || product,
+    product,
     preferredBenchmark,
   );
-  tags[RankTag.Value] = hasBenchmarkValueRank(
-    product?.parent || product,
-    preferredBenchmark,
-  );
+  tags[RankTag.Value] = hasBenchmarkValueRank(product, preferredBenchmark);
 
   // Specs
   tags[SpecsTag.Architecture] = hasProductFieldRawValue(
@@ -163,10 +148,6 @@ export function buildProductContentTags(options: BuildContentTagsOptions) {
     product?.fields?.releaseDate,
   );
   tags[SpecsTag.Tdp] = hasProductFieldRawValue(product?.fields?.tdp);
-
-  // Sub Product Type
-  tags[SubProductTypeTag.GpuChipset] = isGpuChipset(product);
-  tags[SubProductTypeTag.GpuRetailModel] = isGpuRetailModel(product);
 
   return {
     ...tags,
@@ -239,12 +220,6 @@ function buildGpuContentTags(product: GpuProduct) {
     hasOutputs = false;
   }
 
-  const hasDimensions =
-    formatGpuDimensions(product) != null &&
-    (marketSegment === MarketSegment.Desktop ||
-      marketSegment === MarketSegment.Workstation);
-
-  tags[SpecsTag.Dimensions] = hasDimensions;
   tags[SpecsTag.MemoryBandwidth] = hasProductFieldRawValue(
     product?.fields?.memoryBandwidth,
   );
