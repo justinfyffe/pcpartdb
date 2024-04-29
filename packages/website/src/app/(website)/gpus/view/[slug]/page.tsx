@@ -46,6 +46,15 @@ export async function generateMetadata(
   _metadata: ResolvingMetadata,
 ): Promise<Metadata> {
   const slug = props.params.slug;
+  if (VIEW_GPU_REDIRECTS[slug] != null) {
+    permanentRedirect(
+      getViewGpuPath({
+        productType: ProductType.Gpu,
+        slug: VIEW_GPU_REDIRECTS[slug],
+      }),
+      RedirectType.replace,
+    );
+  }
 
   const benchmark = props.searchParams.gpu_benchmark as string;
   const endpoint = joinUrlParts(

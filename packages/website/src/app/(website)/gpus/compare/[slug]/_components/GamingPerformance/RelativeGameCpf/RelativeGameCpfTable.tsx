@@ -40,11 +40,10 @@ export const RelativeGameCpfTable: FunctionComponent<
   RelativeGameCpfTableProps
 > = (props) => {
   const { className } = props;
-  const viewModel = useViewModel<CompareGpusViewModel>();
-  const { comparison } = viewModel;
+  const { comparison } = useViewModel<CompareGpusViewModel>();
   const chipset1 = getGpuChipset(comparison[0]);
   const chipset2 = getGpuChipset(comparison[1]);
-  const { loading } = useRelativeDataProducts();
+  const { relativeDataProducts, loading } = useRelativeDataProducts();
 
   const { selectedGame } = useGameSelection();
   const { settingsPreset, nextSettingsPreset } = useSettingsPresetSelection();
@@ -55,8 +54,7 @@ export const RelativeGameCpfTable: FunctionComponent<
   );
 
   const relativeValueGpus = useMemo(() => {
-    let gpus =
-      (viewModel.relativeDataProducts?.gameCpf as Partial<GpuProduct>[]) ?? [];
+    let gpus = (relativeDataProducts?.gameCpf as Partial<GpuProduct>[]) ?? [];
     gpus = gpus.filter((gpu) =>
       getProductGameCpfValue(
         getProductGame(gpu, selectedGame?.id),
@@ -72,11 +70,7 @@ export const RelativeGameCpfTable: FunctionComponent<
       );
     });
     return gpus;
-  }, [
-    selectedGame?.id,
-    settingsPreset,
-    viewModel.relativeDataProducts?.gameCpf,
-  ]);
+  }, [selectedGame?.id, settingsPreset, relativeDataProducts?.gameCpf]);
 
   const [baselineChipset, setBaselineChipset] = useState(() => {
     const productGame = getProductGame(chipset1, selectedGame?.id);

@@ -54,7 +54,7 @@ export class ProductAutocompleteRepository {
     if (regexTokens !== '.*') {
       fillerProducts = await db.$queryRaw`
         SELECT id FROM products
-        WHERE product_type = ${productType} AND parent_id IS NULL AND search_text ~* (${regexTokens})
+        WHERE product_type = ${productType} AND search_text ~* (${regexTokens})
         LIMIT ${AUTOCOMPLETE_LIMIT}
       `;
     } else {

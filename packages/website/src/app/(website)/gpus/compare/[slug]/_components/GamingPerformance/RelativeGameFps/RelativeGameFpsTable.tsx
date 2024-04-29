@@ -40,11 +40,10 @@ export const RelativeGameFpsTable: FunctionComponent<
   RelativePerformanceTableProps
 > = (props) => {
   const { className } = props;
-  const viewModel = useViewModel<CompareGpusViewModel>();
-  const { comparison } = viewModel;
+  const { comparison } = useViewModel<CompareGpusViewModel>();
   const chipset1 = getGpuChipset(comparison[0]);
   const chipset2 = getGpuChipset(comparison[1]);
-  const { loading } = useRelativeDataProducts();
+  const { loading, relativeDataProducts } = useRelativeDataProducts();
 
   const { selectedGame } = useGameSelection();
   const { settingsPreset, nextSettingsPreset } = useSettingsPresetSelection();
@@ -54,8 +53,7 @@ export const RelativeGameFpsTable: FunctionComponent<
     settingsPreset,
   );
   const relativePerformanceGpus = useMemo(() => {
-    let gpus =
-      (viewModel.relativeDataProducts?.gameFps as Partial<GpuProduct>[]) ?? [];
+    let gpus = (relativeDataProducts?.gameFps as Partial<GpuProduct>[]) ?? [];
     gpus = gpus.filter((gpu) =>
       getProductGameFpsValue(
         getProductGame(gpu, selectedGame?.id),
@@ -71,11 +69,7 @@ export const RelativeGameFpsTable: FunctionComponent<
       );
     });
     return gpus as Partial<GpuProduct>[];
-  }, [
-    selectedGame?.id,
-    settingsPreset,
-    viewModel.relativeDataProducts?.gameFps,
-  ]);
+  }, [selectedGame?.id, settingsPreset, relativeDataProducts?.gameFps]);
 
   const [baselineChipset, setBaselineChipset] = useState(() => {
     const productGame = getProductGame(chipset1, selectedGame?.id);

@@ -399,20 +399,23 @@ export class RelativeDataProductsService {
     }
 
     const relative1 =
-      ([seed1, ...seed1.relatedProducts]
-        ?.filter((p) => valueFunc(p) != null)
-        .sort(sortFunc) as Partial<Product>[]) ?? [];
-    const relative2 =
-      ([seed2, ...seed2.relatedProducts]
-        ?.filter((p) => valueFunc(p) != null)
-        .sort(sortFunc) as Partial<Product>[]) ?? [];
+      valueFunc(seed1) != null
+        ? ([seed1, ...seed1.relatedProducts]
+            .filter((p) => valueFunc(p) != null)
+            .sort(sortFunc) as Partial<Product>[])
+        : [];
+    const relative2 = valueFunc(seed2)
+      ? ([seed2, ...seed2.relatedProducts]
+          .filter((p) => valueFunc(p) != null)
+          .sort(sortFunc) as Partial<Product>[])
+      : [];
 
     if (relative1.length === 0 && relative2.length === 0) {
       return [];
     }
 
     if (relative1.length === 0 || relative2.length === 0) {
-      const neighbors = [...relative1, ...relative2];
+      const neighbors = [...relative1, ...relative2].sort(sortFunc);
       return getSurroundingValues(
         neighbors,
         neighbors.findIndex(
@@ -422,24 +425,34 @@ export class RelativeDataProductsService {
       );
     }
 
-    // Both GPUS have neighbors
-    const hasNoGap =
-      relative1.find((p) => p.id === seed2.id) ||
-      relative2.find((p) => p.id === seed1.id);
+    // Check if they should merge.
+    const neighbors1 = getSurroundingValues(
+      relative1,
+      relative1.findIndex((product) => product.id === seed1.id),
+      options.total ?? DEFAULT_TOTAL,
+    );
+    const neighbors2 = getSurroundingValues(
+      relative2,
+      relative2.findIndex((product) => product.id === seed2.id),
+      options.total ?? DEFAULT_TOTAL,
+    );
+    const shouldMerge =
+      neighbors1.find((p) => p.id === seed2.id) ||
+      neighbors2.find((p) => p.id === seed1.id);
 
-    if (hasNoGap) {
+    if (shouldMerge) {
       return this.mergeProductNeighbors({
         comparison: [seed1, seed2],
-        neighbors1: relative1,
-        neighbors2: relative2,
+        neighbors1,
+        neighbors2,
         compareFn: sortFunc,
         total: options.total,
       });
     } else {
       return this.concatProductNeighbors({
         comparison: [seed1, seed2],
-        neighbors1: relative1,
-        neighbors2: relative2,
+        neighbors1,
+        neighbors2,
         compareFn: sortFunc,
         total: options.total,
       });

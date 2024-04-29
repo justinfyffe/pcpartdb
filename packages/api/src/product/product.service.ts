@@ -251,6 +251,7 @@ export class ProductService {
   }
 
   async getComparison(options: GetComparisonOptions, ctx: Context) {
+    const productType = options.productType;
     const comparisonSlug = options.slug;
     const slugs = comparisonSlug.split('--vs--');
 
@@ -261,12 +262,20 @@ export class ProductService {
     }
 
     const fetchPromises = slugs.map((slug) =>
-      this.getBySlug(
-        { ...options, productType: options.productType, slug },
+      this.productEntityCache.getProductBySlug(
+        { productType, slug, ...this.buildCacheFetchOptions(options, ctx) },
         ctx,
       ),
     );
-    const products = await Promise.all(fetchPromises);
+    const entities = await Promise.all(fetchPromises);
+    const products = await mapToProductDtos(
+      entities,
+      this.buildMapperOptions(
+        entities,
+        { ...options, includeSummary: true },
+        ctx,
+      ) as any,
+    );
 
     return products as ProductComparison;
   }
@@ -544,7 +553,7 @@ export class ProductService {
     const includeRelatedBenchmarks = options?.includeRelatedBenchmarks ?? false;
 
     const allGames = entities.flatMap(
-      (entity) => entity.gameFps?.map((fps) => fps.game) ?? [],
+      (entity) => entity?.gameFps?.map((fps) => fps.game) ?? [],
     );
     allGames.sort((game1, game2) =>
       (game2?.releaseDate ?? '').localeCompare(game1?.releaseDate ?? ''),
