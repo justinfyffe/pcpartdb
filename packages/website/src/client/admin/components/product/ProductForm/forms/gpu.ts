@@ -782,14 +782,14 @@ export function buildGpuFormInputs(product?: Product): ProductFormInputGroups {
         {
           name: 'gpuCoreBaseClock',
           inputType: ProductFormInputType.FloatField,
-          label: 'Clock Speed (Base)',
+          label: 'Core Clock Speed',
           fieldKey: 'gpuCoreBaseClock',
           units: [FrequencyUnit.mhz, FrequencyUnit.ghz],
         },
         {
           name: 'gpuCoreBoostClock',
           inputType: ProductFormInputType.FloatField,
-          label: 'Clock Speed (Boost)',
+          label: 'Core Clock Speed (Boost)',
           fieldKey: 'gpuCoreBoostClock',
           units: [FrequencyUnit.mhz, FrequencyUnit.ghz],
         },

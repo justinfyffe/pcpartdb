@@ -2,29 +2,6 @@
 DIRECTORY=$(cd `dirname $0` && pwd)
 cd $DIRECTORY/../../
 
-# Backup files
-./bin/prod/backup
-
-# Stop the services due to memory/cpu constraints
-./bin/prod/stop
-
-# Cleanup old files
-./bin/prod/clean
-
-# Extract files
-tar xf ../releases/pcpartdb/pcpartdb.tar.gz .
-
-# Setup Symlinks
-cd packages/api
-ln -s ../../.env .env
-cd ../cli
-ln -s ../../.env .env
-cd ../database
-ln -s ../../.env .env
-cd ../website
-ln -s ../../.env .env
-cd ../..
-
 # Migrate the database
 ./bin/prod/migrate
 

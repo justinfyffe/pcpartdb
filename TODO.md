@@ -12,29 +12,13 @@ NEXT (long-term):
 
 
 NEXT (short-term)
-- [] Retail Model Cleanup
-  - [X] Permanent redirect retail model page to chipset gpu
-    - [X] Product Type + Slug -> chipset slug. Can be one giant file
-  - [X] Don't show retail models on list page
-  - [X] Don't show retail models on view page
-  - [X] Don't show retail models on compare page
-  - [X] Remove dimensions from gpu page. Just use slot-width
-  - [X] Remove "1x" from outputs. Just list out the possible outputs like "HDMI 2.1, DisplayPort"
-  - [X] Remove retail models from admin panel
-  - [X] Remove from automation source data
-  - [X] Remove dimensions from summary
-  - [X] Remove retail models from scraping
-  - [X] Build a redirect list in memory/code
-  - [X] Remove children structure
-  - [X] Remove from database
-    - [X] Build redirect mapping
-    - [X] Remove from automation sources in database
-    - [X] Remove data with parentId
-    - [X] Remove parentId from database
-    - [X] Remove length, width, height, weight fields from gpu
-  - [X] Remove from sitemap generation
-  - [X] Code cleanup
-    - Remove instances of "chipset" or "retail model"
+- [] Bug fix - part number having commas
+  - https://www.techpowerup.com/cpu-specs/ryzen-5-pro-8640hs.c3575
+- [] Bug Fix
+  - Admin games list not showing all games
+  - might impact view/compare dialog
+- [] Automation
+  - [] Add accept/reject button to dialog
 - [] Add more games
 - [] SEO
   - Off-site

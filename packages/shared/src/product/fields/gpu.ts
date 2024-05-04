@@ -132,8 +132,8 @@ export const GPU_FIELD_LABELS: Record<string, string> = {
   rops: 'Render Output Units (ROP)',
   tensorCores: 'Tensor Cores',
   rtCores: 'Ray Tracing Cores',
-  gpuCoreBaseClock: 'Clock Speed (Base)',
-  gpuCoreBoostClock: 'Clock Speed (Boost)',
+  gpuCoreBaseClock: 'Core Clock Speed',
+  gpuCoreBoostClock: 'Core Clock Speed (Boost)',
   l1Cache: 'L1 Cache',
   l2Cache: 'L2 Cache',
 

@@ -1,0 +1,9 @@
+#!/bin/bash
+DIRECTORY=$(cd `dirname $0` && pwd)
+cd $DIRECTORY/../../
+
+# Clean
+./bin/prod/clean
+
+# Extract files
+tar xf ../releases/pcpartdb/pcpartdb.tar.gz .
