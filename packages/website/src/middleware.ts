@@ -4,6 +4,7 @@ import {
   CONFIG_HEADER,
   ERROR_HEADER,
   HttpErrorType,
+  isApiError,
 } from '@pcpartdb/shared';
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
@@ -42,6 +43,9 @@ export async function middleware(request: NextRequest) {
     headers: { Cookie: cookies().toString() },
     preferredBenchmarks: { gpu: gpuBenchmark, cpu: cpuBenchmark },
   });
+  if (isApiError(config)) {
+    throw config;
+  }
 
   let response: NextResponse;
   // Forgot Password Middleware

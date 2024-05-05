@@ -4,6 +4,7 @@ import {
   generateListProductsQueryFromPath,
   getListGpusPath,
   GpuProduct,
+  isApiError,
   ListGpusFilter,
   ListGpusQuery,
   ListGpusViewModel,
@@ -55,6 +56,9 @@ export function ListProvider(props: ListProviderProps) {
       productType: ProductType.Gpu,
     };
     const response = await listProducts({ ...query, filter });
+    if (isApiError(response)) {
+      throw response;
+    }
 
     setGpus(response.results as GpuProduct[]);
     setTotal(response.total);

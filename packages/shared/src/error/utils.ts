@@ -8,7 +8,7 @@ import {
 } from './error-types';
 
 export function isApiError(error: any): error is ApiError {
-  return 'type' in error && 'statusCode' in error;
+  return error != null && 'type' in error && 'statusCode' in error;
 }
 
 export function isBadRequestError(error: any): error is BadRequestError {

@@ -4,6 +4,7 @@ import {
   CpuProduct,
   generateListProductsQueryFromPath,
   getListCpusPath,
+  isApiError,
   ListCpusFilter,
   ListCpusQuery,
   ListCpusViewModel,
@@ -55,6 +56,9 @@ export function ListProvider(props: ListProviderProps) {
       productType: ProductType.Cpu,
     };
     const response = await listProducts({ ...query, filter });
+    if (isApiError(response)) {
+      throw response;
+    }
 
     setCpus(response.results as CpuProduct[]);
     setTotal(response.total);

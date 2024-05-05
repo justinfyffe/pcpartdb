@@ -1,6 +1,7 @@
 import {
   getHomePath,
   getRegisterPath,
+  isApiError,
   RegisterViewModel,
   WEBSITE_NAME,
 } from '@pcpartdb/shared';
@@ -24,6 +25,9 @@ export const metadata: Metadata = {
 
 export default async function RegisterPage() {
   const response = await viewModelClient.get<RegisterViewModel>('register');
+  if (isApiError(response)) {
+    throw response;
+  }
 
   if (response.totalUsers && response.totalUsers > 0) {
     throw notFound();

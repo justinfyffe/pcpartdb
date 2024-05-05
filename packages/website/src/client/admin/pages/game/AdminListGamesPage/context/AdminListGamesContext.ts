@@ -7,7 +7,6 @@ import {
   ListGamesQuery,
   ListOrder,
   ListSort,
-  Product,
 } from '@pcpartdb/shared';
 import { useRouter } from 'next/router';
 import { gameService } from 'packages/website/src/client/game/services/gameService';

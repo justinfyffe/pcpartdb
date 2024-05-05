@@ -2,6 +2,7 @@ import {
   AutocompleteProductsRequest,
   AutocompleteProductsResponse,
   GetRelativeDataProductsRequest,
+  isApiError,
   joinUrlParts,
   ListProductsQuery,
   ListProductsRequest,
@@ -33,6 +34,9 @@ export async function autocompleteProducts(
     })}`,
   );
   const response = await apiClient.get<AutocompleteProductsResponse>(path);
+  if (isApiError(response)) {
+    throw response;
+  }
 
   const products = response.results;
   ProductCache.save(products);
@@ -57,6 +61,9 @@ export async function listProducts(
   const response = await apiClient.get<ListProductsResponse>(path, {
     ...config,
   });
+  if (isApiError(response)) {
+    throw response;
+  }
   ProductCache.save(response.results);
   return response;
 }

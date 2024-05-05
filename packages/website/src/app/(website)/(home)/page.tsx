@@ -1,14 +1,18 @@
 import {
+  ApiError,
   getHomePath,
   getListCpusPath,
   getListGpusPath,
   HomeViewModel,
+  isApiError,
+  isNotFoundError,
   ListCpusPresetSlug,
   ListGpusPresetSlug,
   ProductType,
   WEBSITE_NAME,
 } from '@pcpartdb/shared';
 import { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 import React from 'react';
 import { viewModelClient } from '../../_common/api/ViewModelClient';
 import { Tab } from '../../_common/components/Tabs/Tab';
@@ -39,7 +43,13 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const viewModel = await viewModelClient.get<HomeViewModel>('home');
+  const viewModel = await viewModelClient.get<HomeViewModel | ApiError>('home');
+  if (isNotFoundError(viewModel)) {
+    throw notFound();
+  } else if (isApiError(viewModel)) {
+    throw viewModel;
+  }
+
   const { nvidiaVsAmdGpus, popularGpus, intelVsAmdCpus, popularCpus } =
     viewModel;
 

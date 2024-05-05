@@ -1,5 +1,6 @@
 import {
   BenchmarkKey,
+  isApiError,
   joinUrlParts,
   NormalizedData,
   PREFERRED_CPU_BENCHMARK_HTTP_HEADER,
@@ -50,6 +51,10 @@ export class ViewModelClient {
 
       if (config?.normalizr) {
         const json = (await response.json()) as NormalizedData;
+        if (isApiError(json)) {
+          return json;
+        }
+
         return denormalize(json.result, config.normalizr, json.entities) as T;
       } else {
         return (await response.json()) as T;

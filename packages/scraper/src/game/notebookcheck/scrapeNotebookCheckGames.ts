@@ -80,10 +80,14 @@ function generateSettingsPreset(scrapedName: string) {
   let resolution: string;
   if (scrapedName.includes('1920x1080')) {
     resolution = '1080p';
+  } else if (scrapedName.includes('1366x768')) {
+    resolution = '768p';
   } else if (scrapedName.includes('2560x1440')) {
     resolution = '1440p';
   } else if (scrapedName.includes('3840x2160')) {
     resolution = '2160p';
+  } else if (scrapedName.includes('1280x720')) {
+    resolution = '720p';
   }
 
   let key: SettingsPresetKey;

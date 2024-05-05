@@ -86,6 +86,10 @@ export class ApiClient {
 
       if (config?.normalizr) {
         const json = responseValue as NormalizedData;
+        if (isApiError(json)) {
+          return json;
+        }
+
         return denormalize(json.result, config.normalizr, json.entities) as T;
       } else {
         return responseValue as T;
