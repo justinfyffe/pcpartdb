@@ -14,7 +14,6 @@ NEXT (long-term):
 NEXT (short-term)
 - [] Slogan under site name
   - Specs, Benchmarks, Gaming
-- [] Apply logo to favicon
 - [] Automation
   - [] Add accept/reject button to dialog
 - [] Revamp home page
