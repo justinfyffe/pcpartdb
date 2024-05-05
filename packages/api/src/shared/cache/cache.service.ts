@@ -26,7 +26,7 @@ export enum CacheType {
 
 const ONE_MINUTE = 1_000 * 60;
 const _FIVE_MINUTES = ONE_MINUTE * 5;
-const FIFTEEN_MINUTES = ONE_MINUTE * 15;
+const _FIFTEEN_MINUTES = ONE_MINUTE * 15;
 const ONE_HOUR = ONE_MINUTE * 60;
 const _SIX_HOURS = ONE_HOUR * 6;
 const ONE_DAY = ONE_HOUR * 24;
@@ -37,11 +37,11 @@ export const CACHE_EXPIRE_TTLS: Partial<Record<CacheType, number>> = {
   // Entity Caches
   [CacheType.BaseProduct]: ONE_DAY,
   [CacheType.ProductFields]: ONE_DAY,
-  [CacheType.ProductBenchmarks]: FIFTEEN_MINUTES,
-  [CacheType.ProductGameFps]: FIFTEEN_MINUTES,
-  [CacheType.ProductRanks]: FIFTEEN_MINUTES,
+  [CacheType.ProductBenchmarks]: ONE_HOUR,
+  [CacheType.ProductGameFps]: ONE_HOUR,
+  [CacheType.ProductRanks]: ONE_HOUR,
   [CacheType.ProductImages]: ONE_DAY,
-  [CacheType.ProductSources]: FIFTEEN_MINUTES,
+  [CacheType.ProductSources]: ONE_HOUR,
   [CacheType.RelatedProducts]: ONE_DAY,
   [CacheType.Game]: ONE_DAY,
 

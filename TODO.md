@@ -14,8 +14,7 @@ NEXT (long-term):
 NEXT (short-term)
 - [] Slogan under site name
   - Specs, Benchmarks, Gaming
-- [] Bug fix - part number having commas
-  - https://www.techpowerup.com/cpu-specs/ryzen-5-pro-8640hs.c3575
+- [] Apply logo to favicon
 - [] Automation
   - [] Add accept/reject button to dialog
 - [] Revamp home page

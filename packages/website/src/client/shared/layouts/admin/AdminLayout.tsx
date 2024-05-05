@@ -88,8 +88,9 @@ export const AdminLayout: FunctionComponent<AdminLayoutProps> = (props) => {
       }}
     >
       <Seo referrer={MetaReferrer.NoReferrer} />
-      <div className="container bg-content p-container flex font-bold items-center text-5xl md:text-3xl text-content">
-        {WEBSITE_NAME}
+      <div className="flex gap-4 border-x-px container bg-content p-container md:px-4 font-bold items-center text-6xl md:text-4xl text-main-brand">
+        <img src="/images/logo-transparent.png" className="h-13 md:h-10" />
+        <span className="font-sans">{WEBSITE_NAME.toUpperCase()}</span>
       </div>
 
       <Toolbar className="justify-between">
