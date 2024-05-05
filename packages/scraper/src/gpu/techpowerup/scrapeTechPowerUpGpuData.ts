@@ -189,10 +189,11 @@ function getComputeUnits(
   if (lcCompany === 'amd' || lcCompany === 'ati') {
     const values1 = tokenizeSpecValues($, 'Compute Units');
     const values2 = tokenizeSpecValues($, 'SM Count');
+    const values3 = tokenizeSpecValues($, 'SMX Count');
 
     result = parseNumberValue({
       fieldKey: 'computeUnits',
-      value: values1[0] || values2[0] || null,
+      value: values1[0] || values2[0] || values3[0] || null,
     });
   }
 
@@ -239,10 +240,11 @@ function getExecutionUnits(
   if (lcCompany === 'intel') {
     const values1 = tokenizeSpecValues($, 'Compute Units');
     const values2 = tokenizeSpecValues($, 'SM Count');
+    const values3 = tokenizeSpecValues($, 'SMX Count');
 
     result = parseNumberValue({
       fieldKey: 'executionUnits',
-      value: values1[0] || values2[0] || null,
+      value: values1[0] || values2[0] || values3[0] || null,
     });
   }
 
@@ -890,10 +892,11 @@ function getStreamMultiprocessors(
   if (lcCompany === 'nvidia') {
     const values1 = tokenizeSpecValues($, 'Compute Units');
     const values2 = tokenizeSpecValues($, 'SM Count');
+    const values3 = tokenizeSpecValues($, 'SMX Count');
 
     result = parseNumberValue({
       fieldKey: 'streamMultiprocessors',
-      value: values1[0] || values2[0] || null,
+      value: values1[0] || values2[0] || values3[0] || null,
     });
   }
 

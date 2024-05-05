@@ -32,7 +32,7 @@ const _SIX_HOURS = ONE_HOUR * 6;
 const ONE_DAY = ONE_HOUR * 24;
 
 export const CACHE_EXPIRE_TTLS: Partial<Record<CacheType, number>> = {
-  [CacheType.Page]: FIFTEEN_MINUTES,
+  [CacheType.Page]: ONE_HOUR,
 
   // Entity Caches
   [CacheType.BaseProduct]: ONE_DAY,

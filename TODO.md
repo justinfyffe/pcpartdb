@@ -12,29 +12,29 @@ NEXT (long-term):
 
 
 NEXT (short-term)
-- [] Handle error when it should be 404:
-  - https://pcpartdb.com/gpus/compare/nvidia-geforce-rtx-2070--vs--nvidia-geforce-gt-335mt/
-  - https://pcpartdb.com/gpus/view/nvidia-geforce-gt-335mt/
-  - https://pcpartdb.com/cpus/compare/intel-core-i9-13900ks--vs--amd-ryzen-threadripper-7980xt/
-  - https://pcpartdb.com/cpus/view/amd-ryzen-threadripper-7980xt/
-- [] Generate logo
-  - BrandCrowd might be good
+- [] Slogan under site name
+  - Specs, Benchmarks, Gaming
 - [] Bug fix - part number having commas
   - https://www.techpowerup.com/cpu-specs/ryzen-5-pro-8640hs.c3575
-- [] Bug Fix
-  - Admin games list not showing all games
-  - might impact view/compare dialog
 - [] Automation
   - [] Add accept/reject button to dialog
+- [] Revamp home page
+  - Remove article widgets.
+  - Maybe use popular products and popular comparisons
 - [] Add more games
 - [] SEO
   - Off-site
   - On-site
-  - Improve titles
-    - Name1 - Benchmarks, Specs, and Game Performance
-    - Name1 vs Name2 - Benchmarks, Specs, and Game Performance
-  - Improve keyword usages
-  - Improve auto-generated summary
+    - Add text content on various pages
+      - list page
+    - Improve titles
+      - Name1 - Benchmarks, Specs, and Game Performance
+      - Name1 vs Name2 - Benchmarks, Specs, and Game Performance
+    - Improve keyword usages
+    - Improve auto-generated summary
+- [] Bug Fix
+  - Admin games list not showing all games
+  - not impacting impact view/compare dialog
 - [] Games Post-MVP
   - [] Scroll to section using js instead of using anchor
     - [] Replace duct tape window.history?.replaceState

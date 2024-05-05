@@ -868,7 +868,9 @@ function getName($: cheerio.CheerioAPI) {
 }
 
 function getPartNumber($: cheerio.CheerioAPI, ctx?: ScraperContext) {
-  const values = tokenizeMultiLine($, 'Part#');
+  const values = tokenizeMultiLine($, 'Part#').filter(
+    (val) => val.trim() !== ',' && !val.startsWith('(') && !val.endsWith(')'),
+  );
   const value = values.join(', ') || null;
   const result = parseStringValue({ value, fieldKey: 'partNumber' });
 
