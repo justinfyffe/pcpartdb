@@ -12,12 +12,17 @@ NEXT (long-term):
 
 
 NEXT (short-term)
-- [] Slogan under site name
+- [] Use term "Reference card" instead of chipset
+- [] Lazy load game images
+- [] Slogan under site name?
   - Specs, Benchmarks, Gaming
 - [] Automation
   - [] Add accept/reject button to dialog
+- [] UI Revamp?
+  - Look at pc-builds.com
 - [] Revamp home page
   - Remove article widgets.
+  - SEO
   - Maybe use popular products and popular comparisons
 - [] Add more games
 - [] SEO
