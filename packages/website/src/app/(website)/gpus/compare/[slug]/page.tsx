@@ -62,8 +62,10 @@ export async function generateMetadata(
       headers: { Cookie: cookies().toString() },
     },
   );
-  if (isApiError(viewModel)) {
-    return {};
+  if (isNotFoundError(viewModel)) {
+    throw notFound();
+  } else if (isApiError(viewModel)) {
+    throw viewModel;
   }
 
   const { comparison } = viewModel;
