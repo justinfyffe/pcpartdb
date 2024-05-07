@@ -268,6 +268,10 @@ export class ProductService {
       ),
     );
     const entities = await Promise.all(fetchPromises);
+    if (entities.some((entity) => entity == null)) {
+      throw notFoundError({ comparison: comparisonSlug });
+    }
+
     const products = await mapToProductDtos(
       entities,
       this.buildMapperOptions(
