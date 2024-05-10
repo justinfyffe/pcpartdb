@@ -98,9 +98,7 @@ export default async function RootWebsiteLayout(props: RootLayoutProps) {
           <UserSettingsProvider userSettings={config.userSettings}>
             <div className="flex gap-4 border-x-px container bg-content p-container md:px-4 font-bold items-center text-5xl text-main-brand leading-none">
               <img src="/images/logo-transparent.png" className="h-12" />
-              <span className="font-san -mt-1">
-                {WEBSITE_NAME.toUpperCase()}
-              </span>
+              <span className="font-san">{WEBSITE_NAME.toUpperCase()}</span>
             </div>
 
             <Toolbar>
