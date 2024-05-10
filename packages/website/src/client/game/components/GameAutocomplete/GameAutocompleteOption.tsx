@@ -23,7 +23,11 @@ export const GameAutocompleteOption: FunctionComponent<
     <AutocompleteOption index={index} label={name} value={`${id}`}>
       <div className="flex flex-1 items-center gap-4">
         <div className="w-8 xs:hidden">
-          {image != null ? <Img src={image} alt={name} /> : <></>}
+          {image != null ? (
+            <Img loading="lazy" src={image} alt={name} />
+          ) : (
+            <></>
+          )}
         </div>
 
         <div className="flex flex-1 flex-col gap-1 items-start">

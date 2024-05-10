@@ -77,7 +77,7 @@ export const ImagesList: FunctionComponent<ImagesListProps> = (props) => {
                     onClick={() => onSelect(image)}
                   >
                     <Td className="max-w-50">
-                      <Img src={image} alt={image.name} />
+                      <Img loading="lazy" src={image} alt={image.name} />
                     </Td>
                     <Td className="text-center">{image.id}</Td>
                     <Td>{image.name}</Td>

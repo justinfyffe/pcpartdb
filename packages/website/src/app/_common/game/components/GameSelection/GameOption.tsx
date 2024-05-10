@@ -36,6 +36,7 @@ export function GameOption(props: GameOptionProps) {
       onClick={handleOptionClick}
     >
       <img
+        loading="lazy"
         src={gameListingImagePath(game)}
         className={classNames(
           'aspect-video max-h-35.25',

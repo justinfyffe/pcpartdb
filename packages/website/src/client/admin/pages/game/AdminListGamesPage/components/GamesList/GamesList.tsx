@@ -41,6 +41,7 @@ export function GameItem(props: GameItemProps) {
       className="flex flex-col gap-1 items-center p-1 cursor-pointer"
     >
       <img
+        loading="lazy"
         src={hasImage ? getImagePath(listingImage) : placeholderImage}
         className="h-35.25"
       />

@@ -145,7 +145,12 @@ export const ProductAutocomplete = forwardRef<
     <Autocomplete
       prefix={
         prefixImage ? (
-          <Img src={prefixImage} alt={company || undefined} className="h-5" />
+          <Img
+            loading="lazy"
+            src={prefixImage}
+            alt={company || undefined}
+            className="h-5"
+          />
         ) : undefined
       }
       label={label || ''}

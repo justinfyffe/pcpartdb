@@ -6,6 +6,7 @@ import { imagePath } from '../../utils/imagePath';
 export interface ImgProps
   extends Omit<HTMLProps<HTMLImageElement>, 'src' | 'crossOrigin'> {
   src: string | Image;
+  loading?: 'eager' | 'lazy';
   crossOrigin?: '' | 'anonymous' | 'use-credentials';
 }
 

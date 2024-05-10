@@ -129,6 +129,7 @@ export const SelectedGameFpsTable: FunctionComponent<
           <Th>
             <div className="flex flex-row gap-4">
               <img
+                loading="lazy"
                 src={gameListingImagePath(selectedGame)}
                 className="h-12 sm:hidden"
               />

@@ -46,7 +46,7 @@ export function CpuAutocompleteOption(props: CpuAutocompleteOptionProps) {
       <div className="flex flex-1 items-center gap-4">
         <div className="w-8 xs:hidden">
           {image != null ? (
-            <Img src={image} alt={company || undefined} />
+            <Img loading="lazy" src={image} alt={company || undefined} />
           ) : (
             <></>
           )}

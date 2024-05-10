@@ -38,6 +38,7 @@ export function MoreGamesOption(props: MoreGamesOptionProps) {
       onClick={handleClick}
     >
       <img
+        loading="lazy"
         src={getGameListingImage(null)}
         className="aspect-video w-full h-full max-h-35.25 opacity-50 hover:opacity-100 transition-opacity"
       />

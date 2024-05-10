@@ -25,6 +25,7 @@ export const ImageListCard: FunctionComponent<ImageListCardProps> = (props) => {
     <div className="h-full" onClick={() => handleClick(image)}>
       <Card className="h-full gap-2 justify-end">
         <Img
+          loading="lazy"
           src={image}
           alt={image.name}
           className="self-center max-h-64 max-w-[calc(100%_+_32px)]"

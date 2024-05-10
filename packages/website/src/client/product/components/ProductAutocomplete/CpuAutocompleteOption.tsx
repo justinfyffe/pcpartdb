@@ -45,7 +45,11 @@ export const CpuAutocompleteOption: FunctionComponent<
     <AutocompleteOption index={index} label={shortName} value={`${id}`}>
       <div className="flex flex-1 items-center gap-4">
         <div className="w-8 xs:hidden">
-          {image != null ? <Img src={image} alt={company} /> : <></>}
+          {image != null ? (
+            <Img loading="lazy" src={image} alt={company} />
+          ) : (
+            <></>
+          )}
         </div>
 
         <div className="flex flex-1 flex-col gap-1 items-start">

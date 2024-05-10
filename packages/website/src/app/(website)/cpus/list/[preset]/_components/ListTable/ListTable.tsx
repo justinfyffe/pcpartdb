@@ -184,7 +184,7 @@ const ListTableRow: FunctionComponent<ListTableRowProps> = (props) => {
           className="flex items-center gap-4 px-4 py-2 sm:px-2 md:px-3"
         >
           <div className="min-w-8 max-w-10 sm:hidden">
-            <Img src={companyImage} />
+            <Img loading="lazy" src={companyImage} />
           </div>
 
           <div>
