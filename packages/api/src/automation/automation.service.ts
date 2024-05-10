@@ -61,7 +61,7 @@ export class AutomationService {
         { query: { filter: { productType: ProductType.Cpu } } },
         ctx,
       );
-    const pendingGpuChipsetSources =
+    const pendingGpuSources =
       await this.automationSourceRepository.countPendingGroups(
         {
           query: {
@@ -73,7 +73,7 @@ export class AutomationService {
 
     return {
       pendingCpuSources,
-      pendingGpuSources: pendingGpuChipsetSources,
+      pendingGpuSources,
     } as Partial<AutomationStatus>;
   }
 

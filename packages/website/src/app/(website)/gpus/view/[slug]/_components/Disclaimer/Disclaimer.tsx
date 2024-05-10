@@ -15,8 +15,8 @@ const RatingDisclaimer = compileContentComponent({
   tags: [],
   component: (props) => (
     <>
-      *The {props.chipsetName}&apos;s performance score, performance per dollar,
-      and rankings are based on the {props.preferredBenchmarkName} benchmark and
+      *The {props.name}&apos;s performance score, performance per dollar, and
+      rankings are based on the {props.preferredBenchmarkName} benchmark and
       MSRP.
     </>
   ),

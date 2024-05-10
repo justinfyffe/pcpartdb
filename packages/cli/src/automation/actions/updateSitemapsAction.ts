@@ -60,7 +60,7 @@ export async function updateSitemapsAction(
   );
 
   // Fetch gpu chipset slugs
-  const gpuChipsetSlugs = await fetchProductSlugs(
+  const gpuSlugs = await fetchProductSlugs(
     { productType: ProductType.Gpu },
     context,
   );
@@ -73,8 +73,8 @@ export async function updateSitemapsAction(
     await writeGpuListsSitemap(),
     ...(await writeCpusSitemap(cpuSlugs)),
     ...(await writeCpuComparisonsSitemap(cpuSlugs)),
-    ...(await writeGpuChipsetsSitemap(gpuChipsetSlugs)),
-    ...(await writeGpuComparisonsSitemap(gpuChipsetSlugs)),
+    ...(await writeGpuChipsetsSitemap(gpuSlugs)),
+    ...(await writeGpuComparisonsSitemap(gpuSlugs)),
   ];
   await writeSitemapIndex(sitemapIndexEntries);
 

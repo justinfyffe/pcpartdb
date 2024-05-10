@@ -230,7 +230,6 @@ export const listProductsFilterSchema = Joi.object({
   productType: productTypeSchema,
   search: Joi.string().allow('', null),
 
-  chipsetId: Joi.array().items(Joi.number()).allow(null),
   company: Joi.array().items(Joi.string().allow('')).allow(null),
   ids: Joi.array().items(Joi.number()).allow(null),
   excludeIds: Joi.array().items(Joi.number()).allow(null),

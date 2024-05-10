@@ -3,7 +3,6 @@
 import {
   CompareGpusViewModel,
   formatProductName,
-  getGpuChipset,
   getProductBenchmarkName,
   ProductType,
 } from '@pcpartdb/shared';
@@ -20,8 +19,8 @@ const RatingDisclaimer = compileContentComponent({
   tags: [],
   component: (props) => (
     <>
-      *The {props.chipsetName1} and {props.chipsetName2}&apos;s performance
-      score, performance per dollar, and rankings are based on the{' '}
+      *The {props.gpuName1} and {props.gpuName2}&apos;s performance score,
+      performance per dollar, and rankings are based on the{' '}
       {props.preferredBenchmarkName} benchmark and MSRP.
     </>
   ),
@@ -36,17 +35,16 @@ export const Disclaimer = () => {
 
   const { comparison } = useViewModel<CompareGpusViewModel>();
   const [gpu1, gpu2] = comparison;
-  const [chipset1, chipset2] = [getGpuChipset(gpu1), getGpuChipset(gpu2)];
 
-  const chipsetName1 = formatProductName(chipset1);
-  const chipsetName2 = formatProductName(chipset2);
+  const gpuName1 = formatProductName(gpu1);
+  const gpuName2 = formatProductName(gpu2);
   const preferredBenchmarkName = getProductBenchmarkName(preferredBenchmark);
 
   return (
     <ContentProvider
       params={{
-        chipsetName1,
-        chipsetName2,
+        gpuName1,
+        gpuName2,
         preferredBenchmarkName,
       }}
     >

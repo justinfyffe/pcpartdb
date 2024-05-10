@@ -5,13 +5,11 @@ import { IntroBlurb } from './IntroBlurb';
 import { MemoryBlurb } from './MemoryBlurb';
 import { PerformanceBlurb } from './PerformanceBlurb';
 
-interface GpuChipsetSummaryProps {
+interface GpuSummaryProps {
   product: GpuProduct;
 }
 
-export const GpuChipsetSummary: FunctionComponent<GpuChipsetSummaryProps> = (
-  props,
-) => {
+export const GpuSummary: FunctionComponent<GpuSummaryProps> = (props) => {
   const { product } = props;
 
   return (

@@ -9,10 +9,6 @@ export function isGpuProduct(product: Partial<Product>): product is GpuProduct {
   return product?.productType === ProductType.Gpu;
 }
 
-export function getGpuChipset(gpu: Partial<GpuProduct>) {
-  return gpu as GpuProduct;
-}
-
 export interface GenerateProductSlugOptions {
   company?: string;
   name?: string;

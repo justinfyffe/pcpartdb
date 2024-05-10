@@ -3,7 +3,6 @@
 import {
   CompareGpusViewModel,
   formatProductName,
-  getGpuChipset,
   getProductValueRank,
   getViewGpuPath,
   GpuProduct,
@@ -40,56 +39,56 @@ export const ValueTable: FunctionComponent<ValueTableProps> = (props) => {
   const viewModel = useViewModel<CompareGpusViewModel>();
   const preferredBenchmark = usePreferredBenchmark(ProductType.Gpu);
   const { comparison } = viewModel;
-  const chipset1 = getGpuChipset(comparison[0]);
-  const chipset2 = getGpuChipset(comparison[1]);
+  const gpu1 = comparison[0];
+  const gpu2 = comparison[1];
   const { loading } = useRelativeDataProducts();
 
-  const [baselineChipset, setBaselineChipset] = useState(() => {
-    return productBenchmarkValuePerMsrp(chipset1, preferredBenchmark) != null
-      ? chipset1
-      : chipset2;
+  const [baselineGpu, setBaselineGpu] = useState(() => {
+    return productBenchmarkValuePerMsrp(gpu1, preferredBenchmark) != null
+      ? gpu1
+      : gpu2;
   });
-  const [secondaryChipset, setSecondaryChipset] = useState(() => {
+  const [secondaryGpu, setSecondaryGpu] = useState(() => {
     if (
-      chipset1.id === chipset2.id ||
-      productBenchmarkValuePerMsrp(chipset1, preferredBenchmark) == null ||
-      productBenchmarkValuePerMsrp(chipset2, preferredBenchmark) == null
+      gpu1.id === gpu2.id ||
+      productBenchmarkValuePerMsrp(gpu1, preferredBenchmark) == null ||
+      productBenchmarkValuePerMsrp(gpu2, preferredBenchmark) == null
     ) {
       return null;
     } else {
-      return chipset2;
+      return gpu2;
     }
   });
 
-  const chipsets = viewModel.relativeDataProducts
+  const relativeGpus = viewModel.relativeDataProducts
     ?.benchmarkPerformancePerDollar as Partial<GpuProduct>[];
-  const hasRelativeValueGpus = chipsets != null && chipsets.length > 1;
+  const hasRelativeValueGpus = relativeGpus != null && relativeGpus.length > 1;
 
   useEffect(() => {
-    setBaselineChipset(
-      productBenchmarkValuePerMsrp(chipset1, preferredBenchmark) != null
-        ? chipset1
-        : chipset2,
+    setBaselineGpu(
+      productBenchmarkValuePerMsrp(gpu1, preferredBenchmark) != null
+        ? gpu1
+        : gpu2,
     );
 
     if (
-      chipset1.id === chipset2.id ||
-      productBenchmarkValuePerMsrp(chipset1, preferredBenchmark) == null ||
-      productBenchmarkValuePerMsrp(chipset2, preferredBenchmark) == null
+      gpu1.id === gpu2.id ||
+      productBenchmarkValuePerMsrp(gpu1, preferredBenchmark) == null ||
+      productBenchmarkValuePerMsrp(gpu2, preferredBenchmark) == null
     ) {
-      // Same chipset, or one performance is missing.
-      setSecondaryChipset(null);
+      // Same gpu, or one performance is missing.
+      setSecondaryGpu(null);
     } else {
-      setSecondaryChipset(chipset2);
+      setSecondaryGpu(gpu2);
     }
-  }, [chipset1, chipset2, preferredBenchmark]);
+  }, [gpu1, gpu2, preferredBenchmark]);
 
-  const toggleBaselineChipset = useCallback(
-    (chipset: GpuProduct) => {
-      setSecondaryChipset(baselineChipset);
-      setBaselineChipset(chipset);
+  const toggleBaselineGpu = useCallback(
+    (gpu: GpuProduct) => {
+      setSecondaryGpu(baselineGpu);
+      setBaselineGpu(gpu);
     },
-    [baselineChipset],
+    [baselineGpu],
   );
 
   return (
@@ -97,17 +96,17 @@ export const ValueTable: FunctionComponent<ValueTableProps> = (props) => {
       <div className="mb-1 text-right">
         Baseline:{' '}
         <BaselineToggle
-          chipset={chipset1}
-          active={baselineChipset?.id === chipset1.id}
-          onClick={() => toggleBaselineChipset(chipset1)}
+          gpu={gpu1}
+          active={baselineGpu?.id === gpu1.id}
+          onClick={() => toggleBaselineGpu(gpu1)}
         />{' '}
-        {chipset1.id !== chipset2.id && (
+        {gpu1.id !== gpu2.id && (
           <>
             or{' '}
             <BaselineToggle
-              chipset={chipset2}
-              active={baselineChipset?.id === chipset2.id}
-              onClick={() => toggleBaselineChipset(chipset2)}
+              gpu={gpu2}
+              active={baselineGpu?.id === gpu2.id}
+              onClick={() => toggleBaselineGpu(gpu2)}
             />
           </>
         )}
@@ -125,13 +124,13 @@ export const ValueTable: FunctionComponent<ValueTableProps> = (props) => {
         <TBody>
           {!loading &&
             hasRelativeValueGpus &&
-            chipsets.map((relativeChipset, i) =>
-              relativeChipset != null ? (
+            relativeGpus.map((relativeGpu, i) =>
+              relativeGpu != null ? (
                 <ValueTableRow
-                  key={relativeChipset.id}
-                  baselineGpu={baselineChipset}
-                  secondaryGpu={secondaryChipset}
-                  relativeGpu={relativeChipset}
+                  key={relativeGpu.id}
+                  baselineGpu={baselineGpu}
+                  secondaryGpu={secondaryGpu}
+                  relativeGpu={relativeGpu}
                 />
               ) : (
                 <Tr key={`idx-${i}`}>
@@ -247,7 +246,7 @@ const ValueTableRow: FunctionComponent<ValueTableRowProps> = (props) => {
 };
 
 interface BaselineToggleProps {
-  chipset: GpuProduct;
+  gpu: GpuProduct;
   active: boolean;
   onClick: () => void;
 }
@@ -255,22 +254,20 @@ interface BaselineToggleProps {
 export const BaselineToggle: FunctionComponent<BaselineToggleProps> = (
   props,
 ) => {
-  const { chipset, active, onClick } = props;
+  const { gpu, active, onClick } = props;
   const preferredBenchmark = usePreferredBenchmark(ProductType.Gpu);
 
-  const chipsetName = useMemo(
-    () => formatProductName(chipset, { company: false }),
-    [chipset],
+  const gpuName = useMemo(
+    () => formatProductName(gpu, { company: false }),
+    [gpu],
   );
 
-  if (productBenchmarkValuePerMsrp(chipset, preferredBenchmark) == null) {
-    return (
-      <span className="text-dimmed cursor-not-allowed">{chipsetName}</span>
-    );
+  if (productBenchmarkValuePerMsrp(gpu, preferredBenchmark) == null) {
+    return <span className="text-dimmed cursor-not-allowed">{gpuName}</span>;
   }
 
   if (active) {
-    return <span className="font-bold">{chipsetName}</span>;
+    return <span className="font-bold">{gpuName}</span>;
   } else {
     return (
       <Button
@@ -278,7 +275,7 @@ export const BaselineToggle: FunctionComponent<BaselineToggleProps> = (
         className="cursor-pointer"
         onClick={onClick}
       >
-        {chipsetName}
+        {gpuName}
       </Button>
     );
   }

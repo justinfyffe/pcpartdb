@@ -6,7 +6,7 @@ import React from 'react';
 const PerformanceIntroSentence1 = compileContentComponent({
   component: (props) => (
     <>
-      Compare {props.chipsetNameWithNoCompany}&apos;s performance with similar{' '}
+      Compare {props.nameWithNoCompany}&apos;s performance with similar{' '}
       {props.marketSegment} GPUs. This provides insight into how its benchmark
       compares to its peers. This data is based on{' '}
       {props.preferredBenchmarkName} performance.

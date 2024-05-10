@@ -30,11 +30,6 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
     formatProductName(gpu2, { company: false }),
   ];
 
-  const chipsetValues = [
-    formatProductName(gpu1, { company: false }),
-    formatProductName(gpu2, { company: false }),
-  ];
-
   const gpuAffiliateUrl1 = getAffiliateUrl(gpu1);
   const gpuAffiliateUrl2 = getAffiliateUrl(gpu2);
 
@@ -88,7 +83,6 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
             formatCompanyName(gpu2.company) ?? '--',
           ]}
         />
-        <ProductCustomRow label="Chipset" values={chipsetValues} />
         <ProductFieldRow
           type={ProductType.Gpu}
           fields={[gpu1.fields?.architecture, gpu2.fields?.architecture]}

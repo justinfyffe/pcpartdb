@@ -2,7 +2,6 @@
 
 import {
   formatProductName,
-  getGpuChipset,
   getListGpusPath,
   getProductPerformanceRank,
   getProductValueRank,
@@ -34,34 +33,32 @@ export const BenchmarkPerformanceAndValueCharts: FunctionComponent<
 
   const { viewModel } = useViewModelContext<ViewGpuViewModel>();
   const gpu = viewModel.gpu;
-  const chipset = getGpuChipset(gpu);
   const bestPerformanceGpu =
     viewModel.relativeDataProducts?.bestBenchmarkPerformance;
   const bestValueGpu =
     viewModel.relativeDataProducts?.bestBenchmarkPerformancePerDollar;
 
-
   const name = useMemo(() => {
-    return formatProductName(chipset, { company: false, brand: false });
-  }, [chipset]);
+    return formatProductName(gpu, { company: false, brand: false });
+  }, [gpu]);
 
   const performanceRankHref = useMemo(() => {
-    if (hasBenchmarkPerformanceRank(chipset, preferredBenchmark)) {
+    if (hasBenchmarkPerformanceRank(gpu, preferredBenchmark)) {
       return getListGpusPath(
         LIST_GPUS_PRESETS[ListGpusPresetSlug.BestPerformance],
       );
     }
     return undefined;
-  }, [chipset, preferredBenchmark]);
+  }, [gpu, preferredBenchmark]);
 
   const valueRankHref = useMemo(() => {
-    if (hasBenchmarkValueRank(chipset, preferredBenchmark)) {
+    if (hasBenchmarkValueRank(gpu, preferredBenchmark)) {
       return getListGpusPath(
         LIST_GPUS_PRESETS[ListGpusPresetSlug.BestPerformancePerDollar],
       );
     }
     return undefined;
-  }, [chipset, preferredBenchmark]);
+  }, [gpu, preferredBenchmark]);
 
   return (
     <div className={classNames('flex flex-row md:flex-col gap-6', className)}>
@@ -74,8 +71,8 @@ export const BenchmarkPerformanceAndValueCharts: FunctionComponent<
           bestPerformanceGpu,
           preferredBenchmark,
         )}
-        rating={productBenchmarkValue(chipset, preferredBenchmark)}
-        rank={getProductPerformanceRank(chipset, preferredBenchmark)}
+        rating={productBenchmarkValue(gpu, preferredBenchmark)}
+        rank={getProductPerformanceRank(gpu, preferredBenchmark)}
         rankHref={performanceRankHref}
         className="flex-1"
       />
@@ -90,9 +87,9 @@ export const BenchmarkPerformanceAndValueCharts: FunctionComponent<
           preferredBenchmark,
         )}
         rating={Number(
-          productBenchmarkValuePerMsrp(chipset, preferredBenchmark)?.toFixed(2),
+          productBenchmarkValuePerMsrp(gpu, preferredBenchmark)?.toFixed(2),
         )}
-        rank={getProductValueRank(chipset, preferredBenchmark)}
+        rank={getProductValueRank(gpu, preferredBenchmark)}
         rankHref={valueRankHref}
         className="flex-1"
       />

@@ -1,4 +1,4 @@
-import { formatProductName, getGpuChipset, GpuProduct } from '@pcpartdb/shared';
+import { formatProductName, GpuProduct } from '@pcpartdb/shared';
 import { SectionHeader } from 'packages/website/src/app/_common/components/SectionHeader/SectionHeader';
 import { GameSelectionCarousel } from 'packages/website/src/app/_common/game/components/GameSelection/GameSelectionCarousel';
 import React from 'react';
@@ -13,12 +13,10 @@ interface GamingPerformanceProps {
 
 export function GamingPerformance(props: GamingPerformanceProps) {
   const { gpu } = props;
-  const chipset = getGpuChipset(gpu);
 
-  const gpuName = formatProductName(chipset);
-  const hasGamingPerformance =
-    chipset.games != null && chipset.games.length > 0;
-  const games = chipset.games?.map((game) => game?.game);
+  const gpuName = formatProductName(gpu);
+  const hasGamingPerformance = gpu.games != null && gpu.games.length > 0;
+  const games = gpu.games?.map((game) => game?.game);
 
   return (
     <section className="flex flex-col gap-4">
@@ -35,7 +33,7 @@ export function GamingPerformance(props: GamingPerformanceProps) {
             <GameSelectionCarousel games={games} />
           </div>
 
-          <GameFps product={chipset} games={games} />
+          <GameFps product={gpu} games={games} />
           <div className="flex gap-6 md:flex-col md:gap-6">
             <RelativeGameFps />
             <RelativeGameCpf />

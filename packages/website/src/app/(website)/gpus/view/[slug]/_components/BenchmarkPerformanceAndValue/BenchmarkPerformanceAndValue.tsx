@@ -1,4 +1,4 @@
-import { formatProductName, getGpuChipset, GpuProduct } from '@pcpartdb/shared';
+import { formatProductName, GpuProduct } from '@pcpartdb/shared';
 import { SectionHeader } from 'packages/website/src/app/_common/components/SectionHeader/SectionHeader';
 import React from 'react';
 import { Contents } from '../Contents/Contents';
@@ -15,11 +15,9 @@ export function BenchmarkPerformanceAndValue(
   props: BenchmarkPerformanceAndValueProps,
 ) {
   const { gpu } = props;
-  const chipset = getGpuChipset(gpu);
 
-  const gpuName = formatProductName(chipset);
-  const hasBenchmarks =
-    chipset?.benchmarks != null && chipset.benchmarks.length > 0;
+  const gpuName = formatProductName(gpu);
+  const hasBenchmarks = gpu?.benchmarks != null && gpu.benchmarks.length > 0;
 
   return (
     <section className="flex flex-col gap-4">

@@ -12,7 +12,7 @@ NEXT (long-term):
 
 
 NEXT (short-term)
-- [] Use term "Reference card" instead of chipset
+- [] Show skeleton loader when querying lists
 - [] Lazy load game images
 - [] Slogan under site name?
   - Specs, Benchmarks, Gaming

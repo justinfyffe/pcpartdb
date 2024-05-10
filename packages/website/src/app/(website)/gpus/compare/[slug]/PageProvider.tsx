@@ -1,10 +1,6 @@
 'use client';
 
-import {
-  CompareGpusViewModel,
-  getGpuChipset,
-  ProductType,
-} from '@pcpartdb/shared';
+import { CompareGpusViewModel, ProductType } from '@pcpartdb/shared';
 import { useSearchParams } from 'next/navigation';
 import { CacheProvider } from 'packages/website/src/app/_common/cache/CacheProvider';
 import { ViewModelType } from 'packages/website/src/app/_common/contexts/types';
@@ -35,12 +31,11 @@ export function PageProvider(props: PageProviderProps) {
   const searchParams = useSearchParams();
 
   const [gpu1, gpu2] = viewModel.comparison;
-  const [chipset1, chipset2] = [getGpuChipset(gpu1), getGpuChipset(gpu2)];
 
   const initialGame = useMemo(() => {
     const gameSlug = searchParams.get('game');
     if (!gameSlug) {
-      return [chipset1?.games?.[0] ?? null, chipset2?.games?.[0] ?? null].sort(
+      return [gpu1?.games?.[0] ?? null, gpu2?.games?.[0] ?? null].sort(
         (g1, g2) =>
           (g2?.game?.releaseDate ?? '').localeCompare(
             g1?.game?.releaseDate ?? '',
@@ -49,8 +44,8 @@ export function PageProvider(props: PageProviderProps) {
     }
 
     return (
-      chipset1?.games?.find((pg) => pg.game?.slug === gameSlug) ??
-      chipset2?.games?.find((pg) => pg.game?.slug === gameSlug)
+      gpu1?.games?.find((pg) => pg.game?.slug === gameSlug) ??
+      gpu2?.games?.find((pg) => pg.game?.slug === gameSlug)
     );
     // Only want this to run on the first pass-through.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -64,12 +59,12 @@ export function PageProvider(props: PageProviderProps) {
           viewModel={viewModel}
         >
           <GameSelectionProvider
-            products={[chipset1, chipset2]}
+            products={[gpu1, gpu2]}
             game={initialGame?.game}
           >
             <RelativeDataProductsProvider
               productType={ProductType.Gpu}
-              productIds={[chipset1.id, chipset2.id]}
+              productIds={[gpu1.id, gpu2.id]}
               relativeDataProducts={viewModel.relativeDataProducts}
             >
               {props.children}

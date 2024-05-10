@@ -5,7 +5,6 @@ import {
   CpuProduct,
   formatOrdinalNumber,
   formatProductName,
-  getGpuChipset,
   getProductBenchmarkAbbrev,
   getProductBenchmarkName,
   getProductBenchmarkShortName,
@@ -179,16 +178,16 @@ function buildGpuContentParams(
     return {};
   }
 
-  const chipset = getGpuChipset(product);
+  const gpu = product;
   const bestPerformanceDifferencePct =
-    productBenchmarkValue(chipset, preferredBenchmark) != null &&
+    productBenchmarkValue(gpu, preferredBenchmark) != null &&
     productBenchmarkValue(
       relativeProducts?.bestBenchmarkPerformance,
       preferredBenchmark,
     ) != null
       ? (
           100 *
-          (productBenchmarkValue(chipset, preferredBenchmark) /
+          (productBenchmarkValue(gpu, preferredBenchmark) /
             productBenchmarkValue(
               relativeProducts?.bestBenchmarkPerformance,
               preferredBenchmark,
@@ -202,14 +201,6 @@ function buildGpuContentParams(
   );
 
   params['busInterface'] = getFormattedValue(product?.fields?.busInterface);
-  params['chipsetName'] = formatProductName(chipset);
-  params['chipsetNameWithNoCompany'] = formatProductName(chipset, {
-    company: false,
-  });
-  params['chipsetNameWithNoCompanyNoBrand'] = formatProductName(chipset, {
-    company: false,
-    brand: false,
-  });
   params['computeUnits'] = getFormattedValue(product?.fields?.computeUnits);
   params['executionUnits'] = getFormattedValue(product?.fields?.executionUnits);
   params['streamMultiprocessors'] = getFormattedValue(

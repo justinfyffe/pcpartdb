@@ -4,7 +4,6 @@ import {
   formatGameName,
   formatProductName,
   getGamesFromProducts,
-  getGpuChipset,
 } from '@pcpartdb/shared';
 import { Button } from 'packages/website/src/app/_common/components/Button/Button';
 import { ButtonVariant } from 'packages/website/src/app/_common/components/Button/types';
@@ -23,10 +22,9 @@ import { usePageContext } from '../../../PageProvider';
 const FpsIntroSentence1 = compileContentComponent({
   component: (props) => (
     <>
-      Compare {props.chipsetName1} and {props.chipsetName2}&apos;s FPS
-      performance with similar {props.marketSegment} GPUs. This provides insight
-      into how its benchmark compares to its peers. This data is based on the
-      FPS for{' '}
+      Compare {props.gpuName1} and {props.gpuName2}&apos;s FPS performance with
+      similar {props.marketSegment} GPUs. This provides insight into how its
+      benchmark compares to its peers. This data is based on the FPS for{' '}
       <Button variant={ButtonVariant.Link} onClick={props.handleGameClick}>
         {props.selectedGameName}
       </Button>
@@ -42,7 +40,6 @@ export const RelativeGameFpsIntro = () => {
 
   const { comparison } = viewModel;
   const [gpu1, gpu2] = comparison;
-  const [chipset1, chipset2] = [getGpuChipset(gpu1), getGpuChipset(gpu2)];
 
   const games = useMemo(() => getGamesFromProducts(comparison), [comparison]);
   const gameName = formatGameName(selectedGame);
@@ -59,8 +56,8 @@ export const RelativeGameFpsIntro = () => {
     );
   }, [games, setSelectedGame]);
 
-  const chipsetName1 = formatProductName(chipset1, { company: false });
-  const chipsetName2 = formatProductName(chipset2, { company: false });
+  const gpuName1 = formatProductName(gpu1, { company: false });
+  const gpuName2 = formatProductName(gpu2, { company: false });
 
   return (
     <ContentProvider
@@ -68,8 +65,8 @@ export const RelativeGameFpsIntro = () => {
       params={{
         ...contentParams,
         selectedGameName: gameName,
-        chipsetName1,
-        chipsetName2,
+        gpuName1,
+        gpuName2,
         handleGameClick,
       }}
     >

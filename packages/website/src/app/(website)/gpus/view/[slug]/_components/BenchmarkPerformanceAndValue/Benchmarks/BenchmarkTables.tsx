@@ -2,7 +2,6 @@
 
 import {
   BenchmarkKey,
-  getGpuChipset,
   getProductBenchmark,
   hasProductBenchmark,
   ViewGpuViewModel,
@@ -169,15 +168,12 @@ export const BenchmarkTables: FunctionComponent<BenchmarkTablesProps> = (
 ) => {
   const viewModel = useViewModel<ViewGpuViewModel>();
   const gpu = viewModel.gpu;
-  const chipset = getGpuChipset(gpu);
 
   const filteredBenchmarks = useMemo(() => {
     return BENCHMARKS.filter((group) =>
-      group.benchmarks.some((benchmark) =>
-        hasProductBenchmark(chipset, benchmark),
-      ),
+      group.benchmarks.some((benchmark) => hasProductBenchmark(gpu, benchmark)),
     );
-  }, [chipset]);
+  }, [gpu]);
 
   if (filteredBenchmarks.length === 0) {
     return <></>;
@@ -216,11 +212,10 @@ const BenchmarkTab: FunctionComponent<BenchmarkTabProps> = (props) => {
   const { name, benchmarks, className } = props;
   const viewModel = useViewModel<ViewGpuViewModel>();
   const gpu = viewModel.gpu;
-  const chipset = getGpuChipset(gpu);
 
   const hasValues = useMemo(
-    () => benchmarks.some((key) => hasProductBenchmark(chipset, key)),
-    [benchmarks, chipset],
+    () => benchmarks.some((key) => hasProductBenchmark(gpu, key)),
+    [benchmarks, gpu],
   );
 
   if (!hasValues) {
@@ -240,7 +235,7 @@ const BenchmarkTab: FunctionComponent<BenchmarkTabProps> = (props) => {
           {benchmarks.map((benchmark) => (
             <ProductBenchmarkRow
               key={benchmark}
-              benchmarks={[getProductBenchmark(chipset, benchmark)]}
+              benchmarks={[getProductBenchmark(gpu, benchmark)]}
             />
           ))}
         </TBody>

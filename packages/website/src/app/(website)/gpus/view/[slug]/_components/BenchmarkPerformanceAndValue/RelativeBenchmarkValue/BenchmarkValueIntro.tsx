@@ -8,7 +8,7 @@ import React from 'react';
 const ValueIntroSentence1 = compileContentComponent({
   component: (props) => (
     <>
-      Compare {props.chipsetNameWithNoCompany}&apos;s value with similar{' '}
+      Compare {props.nameWithNoCompany}&apos;s value with similar{' '}
       {props.marketSegment} GPUs. This provides insight into which GPU gives the
       best bang for your buck. This data is based on its{' '}
       {props.preferredBenchmarkName} performance and MSRP.

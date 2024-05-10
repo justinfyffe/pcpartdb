@@ -5,8 +5,6 @@ import * as crypto from 'crypto';
 import deterministicStringify from 'json-stringify-deterministic';
 
 export enum CacheType {
-  Home = 'home',
-
   // Pages
   Page = 'page',
 

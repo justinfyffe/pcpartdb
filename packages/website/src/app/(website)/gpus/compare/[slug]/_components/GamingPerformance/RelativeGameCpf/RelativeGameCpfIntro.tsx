@@ -4,7 +4,6 @@ import {
   formatGameName,
   formatProductName,
   getGamesFromProducts,
-  getGpuChipset,
 } from '@pcpartdb/shared';
 import { Button } from 'packages/website/src/app/_common/components/Button/Button';
 import { ButtonVariant } from 'packages/website/src/app/_common/components/Button/types';
@@ -23,10 +22,10 @@ import { usePageContext } from '../../../PageProvider';
 const ValueIntroSentence1 = compileContentComponent({
   component: (props) => (
     <>
-      Compare {props.chipsetName1} and {props.chipsetName2}&apos;s cost per
-      frame with similar {props.marketSegment} GPUs. This provides insight into
-      which GPU gives the best bang for your buck. This data is based on the
-      MSRP and FPS for{' '}
+      Compare {props.gpuName1} and {props.gpuName2}&apos;s cost per frame with
+      similar {props.marketSegment} GPUs. This provides insight into which GPU
+      gives the best bang for your buck. This data is based on the MSRP and FPS
+      for{' '}
       <Button variant={ButtonVariant.Link} onClick={props.handleGameClick}>
         {props.selectedGameName}
       </Button>
@@ -42,7 +41,6 @@ export const RelativeGameCpfIntro = () => {
   const { selectedGame, setSelectedGame } = useGameSelection();
   const { comparison } = viewModel;
   const [gpu1, gpu2] = comparison;
-  const [chipset1, chipset2] = [getGpuChipset(gpu1), getGpuChipset(gpu2)];
 
   const games = useMemo(() => getGamesFromProducts(comparison), [comparison]);
   const gameName = formatGameName(selectedGame);
@@ -59,8 +57,8 @@ export const RelativeGameCpfIntro = () => {
     );
   }, [games, setSelectedGame]);
 
-  const chipsetName1 = formatProductName(chipset1, { company: false });
-  const chipsetName2 = formatProductName(chipset2, { company: false });
+  const gpuName1 = formatProductName(gpu1, { company: false });
+  const gpuName2 = formatProductName(gpu2, { company: false });
 
   return (
     <ContentProvider
@@ -68,8 +66,8 @@ export const RelativeGameCpfIntro = () => {
       params={{
         ...contentParams,
         selectedGameName: gameName,
-        chipsetName1,
-        chipsetName2,
+        gpuName1,
+        gpuName2,
         handleGameClick,
       }}
     >

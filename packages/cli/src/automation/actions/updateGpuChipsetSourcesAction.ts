@@ -171,7 +171,7 @@ export async function updateGpuChipsetSourcesAction(
 }
 
 async function getNotebookCheckSources(_context: AutomationContext) {
-  console.log('Scraping GPU chipset sources from NotebookCheck');
+  console.log('Scraping GPU sources from NotebookCheck');
 
   const map: Record<string, NotebookCheckGpuSource> = {};
 
@@ -260,7 +260,7 @@ async function scrapePassMark(
 }
 
 async function getTechPowerUpSources(context: AutomationContext) {
-  console.log('Scraping GPU chipset sources from TechPowerUp');
+  console.log('Scraping GPU sources from TechPowerUp');
 
   const map: Record<string, TechPowerUpGpuSource> = {};
 

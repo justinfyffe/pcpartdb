@@ -2,7 +2,6 @@
 
 import {
   formatProductName,
-  getGpuChipset,
   getProductPerformanceRank,
   getViewGpuPath,
   GpuProduct,
@@ -10,7 +9,6 @@ import {
   ProductType,
   ViewGpuViewModel,
 } from '@pcpartdb/shared';
-import { Spinner } from 'packages/website/src/app/_common/components/Spinner/Spinner';
 import { Table } from 'packages/website/src/app/_common/components/Table/Table';
 import { TBody } from 'packages/website/src/app/_common/components/Table/TBody';
 import { Td } from 'packages/website/src/app/_common/components/Table/Td';
@@ -57,7 +55,7 @@ export const BenchmarkPerformanceTable: FunctionComponent<
           relativePerformanceGpus.map((relativeGpu) => (
             <PerformanceTableRow
               key={relativeGpu.id}
-              baselineGpu={getGpuChipset(gpu)}
+              baselineGpu={gpu}
               relativeGpu={relativeGpu}
             />
           ))}

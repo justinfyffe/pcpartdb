@@ -93,16 +93,6 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
     const handleQueryChange = useDebounce(
       useCallback(
         async (query: string) => {
-          if (freeSolo) {
-            onChange?.(query != null ? query : null);
-          } else if (query == null) {
-            onChange?.(null);
-          }
-
-          if (query == null) {
-            return;
-          }
-
           setLoading(true);
           setHoveredIndex(-1);
           const hasResults = await onQuery(query);
@@ -114,16 +104,27 @@ export const Autocomplete = forwardRef<HTMLInputElement, AutocompleteProps>(
             closeResults();
           }
         },
-        [closeResults, freeSolo, onChange, onQuery, openResults],
+        [closeResults, onQuery, openResults],
       ),
       throttleTimeout ?? DEFAULT_THROTTLE_MS,
     );
     const handleOnChange = useCallback(
       (query: string) => {
         setQuery(query);
+
+        if (freeSolo) {
+          onChange?.(query != null ? query : null);
+        } else if (query == null) {
+          onChange?.(null);
+        }
+
+        if (query == null) {
+          return;
+        }
+
         handleQueryChange(query);
       },
-      [handleQueryChange],
+      [freeSolo, handleQueryChange, onChange],
     );
 
     const handleKeyDown = useCallback(

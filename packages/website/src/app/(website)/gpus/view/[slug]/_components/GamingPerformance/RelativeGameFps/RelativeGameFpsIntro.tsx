@@ -1,6 +1,6 @@
 'use client';
 
-import { formatGameName, getGpuChipset } from '@pcpartdb/shared';
+import { formatGameName } from '@pcpartdb/shared';
 import { Button } from 'packages/website/src/app/_common/components/Button/Button';
 import { ButtonVariant } from 'packages/website/src/app/_common/components/Button/types';
 import {
@@ -18,9 +18,9 @@ import { usePageContext } from '../../../PageProvider';
 const FpsIntroSentence1 = compileContentComponent({
   component: (props) => (
     <>
-      Compare {props.chipsetNameWithNoCompany}&apos;s FPS performance with
-      similar {props.marketSegment} GPUs. This provides insight into how its
-      benchmark compares to its peers. This data is based on the FPS for{' '}
+      Compare {props.nameWithNoCompany}&apos;s FPS performance with similar{' '}
+      {props.marketSegment} GPUs. This provides insight into how its benchmark
+      compares to its peers. This data is based on the FPS for{' '}
       <Button variant={ButtonVariant.Link} onClick={props.handleGameClick}>
         {props.selectedGameName}
       </Button>
@@ -32,13 +32,10 @@ const FpsIntroSentence1 = compileContentComponent({
 export const RelativeGameFpsIntro = () => {
   const { contentTags, contentParams } = useProductContent();
   const { viewModel } = usePageContext();
-  const chipset = getGpuChipset(viewModel.gpu);
+  const gpu = viewModel.gpu;
   const { selectedGame, setSelectedGame } = useGameSelection();
 
-  const games = useMemo(
-    () => chipset?.games?.map((pg) => pg.game),
-    [chipset?.games],
-  );
+  const games = useMemo(() => gpu?.games?.map((pg) => pg.game), [gpu?.games]);
   const gameName = formatGameName(selectedGame);
 
   const handleGameClick = useCallback(() => {

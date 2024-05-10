@@ -20,9 +20,8 @@ export class ListGpusViewModelService {
 
   async viewModel(request: ListGpusRequest, ctx: Context) {
     validate(request, listProductsRequestSchema);
-    const query = request.query;
 
-    const chipsetsQuery = deepmerge(
+    const query = deepmerge(
       {},
       {
         filter: { productType: ProductType.Gpu },
@@ -34,7 +33,7 @@ export class ListGpusViewModelService {
           sort: ListSort.PerformanceRating,
         },
       } as ListGpusQuery,
-      query,
+      request.query,
     );
 
     const userSettings = ctx.config?.userSettings;
@@ -43,7 +42,7 @@ export class ListGpusViewModelService {
       ProductType.Gpu,
     );
     const response = await this.productService.list(
-      { query: chipsetsQuery },
+      { query },
       {
         fields: ['releaseDate', 'marketSegment', 'msrp'],
         includeBenchmarks: [preferredBenchmark],

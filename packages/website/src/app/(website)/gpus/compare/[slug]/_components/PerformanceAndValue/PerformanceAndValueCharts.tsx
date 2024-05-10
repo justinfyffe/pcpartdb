@@ -3,7 +3,6 @@
 import {
   CompareGpusViewModel,
   formatProductName,
-  getGpuChipset,
   getListGpusPath,
   getProductPerformanceRank,
   getProductValueRank,
@@ -32,8 +31,8 @@ export const PerformanceAndValueCharts: FunctionComponent<
 
   const { viewModel } = useViewModelContext<CompareGpusViewModel>();
   const { comparison } = viewModel;
-  const chipset1 = getGpuChipset(comparison[0]);
-  const chipset2 = getGpuChipset(comparison[1]);
+  const gpu1 = comparison[0];
+  const gpu2 = comparison[1];
   const bestPerformanceGpu =
     viewModel.relativeDataProducts?.bestBenchmarkPerformance;
   const bestValueGpu =
@@ -54,16 +53,16 @@ export const PerformanceAndValueCharts: FunctionComponent<
 
   const [name1, name2] = useMemo(() => {
     return [
-      formatProductName(chipset1, { company: false, brand: false }),
-      formatProductName(chipset2, { company: false, brand: false }),
+      formatProductName(gpu1, { company: false, brand: false }),
+      formatProductName(gpu2, { company: false, brand: false }),
     ];
-  }, [chipset1, chipset2]);
+  }, [gpu1, gpu2]);
 
   return (
     <div className={classNames('flex flex-row md:flex-col gap-6', className)}>
       <CompareProductRatingCard
         productType={ProductType.Gpu}
-        productIds={[chipset1.id, chipset2.id]}
+        productIds={[gpu1.id, gpu2.id]}
         ratingType={ProductRatingType.PerformanceRating}
         names={[name1, name2]}
         maxRating={productBenchmarkValue(
@@ -71,12 +70,12 @@ export const PerformanceAndValueCharts: FunctionComponent<
           preferredBenchmark,
         )}
         ratings={[
-          productBenchmarkValue(chipset1, preferredBenchmark),
-          productBenchmarkValue(chipset2, preferredBenchmark),
+          productBenchmarkValue(gpu1, preferredBenchmark),
+          productBenchmarkValue(gpu2, preferredBenchmark),
         ]}
         ranks={[
-          getProductPerformanceRank(chipset1, preferredBenchmark),
-          getProductPerformanceRank(chipset2, preferredBenchmark),
+          getProductPerformanceRank(gpu1, preferredBenchmark),
+          getProductPerformanceRank(gpu2, preferredBenchmark),
         ]}
         rankHrefs={[performanceRankHref, performanceRankHref]}
         className="flex-1"
@@ -84,7 +83,7 @@ export const PerformanceAndValueCharts: FunctionComponent<
 
       <CompareProductRatingCard
         productType={ProductType.Gpu}
-        productIds={[chipset1.id, chipset2.id]}
+        productIds={[gpu1.id, gpu2.id]}
         ratingType={ProductRatingType.ValueRating}
         names={[name1, name2]}
         maxRating={productBenchmarkValuePerMsrp(
@@ -92,12 +91,12 @@ export const PerformanceAndValueCharts: FunctionComponent<
           preferredBenchmark,
         )}
         ratings={[
-          productBenchmarkValuePerMsrp(chipset1, preferredBenchmark),
-          productBenchmarkValuePerMsrp(chipset2, preferredBenchmark),
+          productBenchmarkValuePerMsrp(gpu1, preferredBenchmark),
+          productBenchmarkValuePerMsrp(gpu2, preferredBenchmark),
         ]}
         ranks={[
-          getProductValueRank(chipset1, preferredBenchmark),
-          getProductValueRank(chipset2, preferredBenchmark),
+          getProductValueRank(gpu1, preferredBenchmark),
+          getProductValueRank(gpu2, preferredBenchmark),
         ]}
         rankHrefs={[valueRankHref, valueRankHref]}
         className="flex-1"

@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import {
   compactObject,
-  getGpuChipset,
   getPreferredBenchmark,
   GpuProduct,
   ProductType,
@@ -26,12 +25,10 @@ export class ViewGpuViewModelService {
   async viewModel(slug: string, ctx: Context) {
     const buildViewModel = async () => {
       const gameSlug = ctx.req?.query?.game as string;
-
       const gpu = await this.getGpu(slug, gameSlug, ctx);
-      const chipset = getGpuChipset(gpu);
 
       const relativeDataProducts = await this.getRelativeDataProducts(
-        chipset,
+        gpu,
         gameSlug,
         ctx,
       );
@@ -138,11 +135,10 @@ export class ViewGpuViewModelService {
     relativeGpus: RelativeDataProducts,
     pageGpu: Partial<GpuProduct>,
   ) {
-    const pageChipset = pageGpu;
     return this.relativeDataProductsService.buildRelatedComparisons({
       total,
       relativeDataProducts: relativeGpus,
-      excludeIds: [pageChipset.id],
+      excludeIds: [pageGpu.id],
     });
   }
 }

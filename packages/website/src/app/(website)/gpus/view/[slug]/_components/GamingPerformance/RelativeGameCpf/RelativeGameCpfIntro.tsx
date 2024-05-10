@@ -1,6 +1,6 @@
 'use client';
 
-import { formatGameName, getGpuChipset } from '@pcpartdb/shared';
+import { formatGameName } from '@pcpartdb/shared';
 import { Button } from 'packages/website/src/app/_common/components/Button/Button';
 import { ButtonVariant } from 'packages/website/src/app/_common/components/Button/types';
 import {
@@ -18,10 +18,9 @@ import { usePageContext } from '../../../PageProvider';
 const ValueIntroSentence1 = compileContentComponent({
   component: (props) => (
     <>
-      Compare {props.chipsetNameWithNoCompany}&apos;s cost per frame with
-      similar {props.marketSegment} GPUs. This provides insight into which GPU
-      gives the best bang for your buck. This data is based on the MSRP and FPS
-      for{' '}
+      Compare {props.nameWithNoCompany}&apos;s cost per frame with similar{' '}
+      {props.marketSegment} GPUs. This provides insight into which GPU gives the
+      best bang for your buck. This data is based on the MSRP and FPS for{' '}
       <Button variant={ButtonVariant.Link} onClick={props.handleGameClick}>
         {props.selectedGameName}
       </Button>
@@ -34,12 +33,12 @@ export const RelativeGameCpfIntro = () => {
   const { contentTags, contentParams } = useProductContent();
 
   const { viewModel } = usePageContext();
-  const chipset = getGpuChipset(viewModel.gpu);
+  const gpu = viewModel.gpu;
   const { selectedGame, setSelectedGame } = useGameSelection();
 
   const games = useMemo(() => {
-    return chipset?.games?.map((pg) => pg.game);
-  }, [chipset]);
+    return gpu?.games?.map((pg) => pg.game);
+  }, [gpu]);
   const gameName = formatGameName(selectedGame);
 
   const handleGameClick = useCallback(() => {

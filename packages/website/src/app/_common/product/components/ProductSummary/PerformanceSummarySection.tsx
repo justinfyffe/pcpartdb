@@ -3,7 +3,7 @@
 import { Product, ProductType } from '@pcpartdb/shared';
 import React from 'react';
 import { PerformanceBlurb as CpuPerformanceBlurb } from './cpu/PerformanceBlurb';
-import { PerformanceBlurb as GpuChipsetPerformanceBlurb } from './gpu-chipset/PerformanceBlurb';
+import { PerformanceBlurb as GpuPerformanceBlurb } from './gpu/PerformanceBlurb';
 
 interface PerformanceSummarySectionProps {
   product: Product;
@@ -23,7 +23,7 @@ export const PerformanceSummarySection = (
   }
 
   if (product.productType === ProductType.Gpu) {
-    return <GpuChipsetPerformanceBlurb />;
+    return <GpuPerformanceBlurb />;
   }
 
   return <></>;

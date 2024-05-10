@@ -8,10 +8,9 @@ import React from 'react';
 const GameFpsIntroSentence1 = compileContentComponent({
   component: (props) => (
     <>
-      Gaming FPS benchmarks for the {props.chipsetNameWithNoCompany}. For
-      gamers, these are usually the best indicator for determing a GPUs
-      performance and value. This data is based on its FPS performance across
-      different games.
+      Gaming FPS benchmarks for the {props.nameWithNoCompany}. For gamers, these
+      are usually the best indicator for determing a GPUs performance and value.
+      This data is based on its FPS performance across different games.
     </>
   ),
 });

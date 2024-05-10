@@ -3,7 +3,6 @@
 import {
   formatProductName,
   getGameSettingsPreset,
-  getGpuChipset,
   getProductGame,
   getProductGameFpsValue,
   getViewGpuPath,
@@ -100,7 +99,7 @@ export const RelativeGameFpsTable: FunctionComponent<
           relativePerformanceGpus.map((relativeGpu) => (
             <GameFpsTableRow
               key={relativeGpu.id}
-              baselineGpu={getGpuChipset(gpu)}
+              baselineGpu={gpu}
               relativeGpu={relativeGpu}
             />
           ))}

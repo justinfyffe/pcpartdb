@@ -8,9 +8,8 @@ import React from 'react';
 const BenchmarksIntroSentence1 = compileContentComponent({
   component: (props) => (
     <>
-      Performance and benchmark metrics for the {props.chipsetNameWithNoCompany}
-      . These are usually the best indicator for determing a GPUs performance.
-      This data is based on its chipset.
+      Performance and benchmark metrics for the {props.nameWithNoCompany}. These
+      are usually the best indicator for determing a GPUs performance.
     </>
   ),
 });

@@ -22,7 +22,6 @@ interface GeneralInfoTableProps {
 export function GeneralInfoTable(props: GeneralInfoTableProps) {
   const { gpu, className } = props;
 
-  const chipsetName = formatProductName(gpu, { company: false });
   const gpuAffiliateUrl = getAffiliateUrl(gpu);
 
   return (
@@ -53,7 +52,6 @@ export function GeneralInfoTable(props: GeneralInfoTableProps) {
             label="Company"
             values={[formatCompanyName(gpu.company) ?? '--']}
           />
-          <ProductCustomRow label="Chipset" values={[chipsetName]} />
           <ProductFieldRow
             type={ProductType.Gpu}
             fields={[gpu.fields?.architecture]}

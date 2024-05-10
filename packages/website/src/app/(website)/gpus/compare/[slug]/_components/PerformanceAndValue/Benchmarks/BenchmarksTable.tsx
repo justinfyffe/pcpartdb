@@ -4,7 +4,6 @@ import {
   BenchmarkKey,
   CompareGpusViewModel,
   formatProductName,
-  getGpuChipset,
   getProductBenchmark,
   hasProductBenchmark,
 } from '@pcpartdb/shared';
@@ -221,8 +220,8 @@ const BenchmarkTab: FunctionComponent<BenchmarkTabProps> = (props) => {
 
   const [name1, name2] = useMemo(() => {
     return [
-      formatProductName(getGpuChipset(gpu1), { company: false }),
-      formatProductName(getGpuChipset(gpu2), { company: false }),
+      formatProductName(gpu1, { company: false }),
+      formatProductName(gpu2, { company: false }),
     ];
   }, [gpu1, gpu2]);
 

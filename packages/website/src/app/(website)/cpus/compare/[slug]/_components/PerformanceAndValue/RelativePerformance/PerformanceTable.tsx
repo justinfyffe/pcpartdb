@@ -73,7 +73,7 @@ export const PerformanceTable: FunctionComponent<PerformanceTableProps> = (
       productBenchmarkValue(cpu1, preferredBenchmark) == null ||
       productBenchmarkValue(cpu2, preferredBenchmark) == null
     ) {
-      // Same chipset, or one performance is missing.
+      // Same gpu, or one performance is missing.
       setSecondaryCpu(null);
     } else {
       setSecondaryCpu(cpu2);
