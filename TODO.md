@@ -13,9 +13,6 @@ NEXT (long-term):
 
 NEXT (short-term)
 - [] Show skeleton loader when querying lists
-- [] Lazy load game images
-- [] Slogan under site name?
-  - Specs, Benchmarks, Gaming
 - [] Automation
   - [] Add accept/reject button to dialog
 - [] UI Revamp?
