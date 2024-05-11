@@ -12,6 +12,10 @@ NEXT (long-term):
 
 
 NEXT (short-term)
+- [] Performance improvements
+  - audit usages of await
+  - [] avoid using await in loops
+    - If doing this, use the concurrent method or Promise.all
 - [] Show skeleton loader when querying lists
 - [] Automation
   - [] Add accept/reject button to dialog

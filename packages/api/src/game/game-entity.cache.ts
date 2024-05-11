@@ -1,6 +1,5 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { GameEntity, ProductEntity } from '@pcpartdb/database';
-import { randomUUID } from 'crypto';
 import { ProductEntityCache } from '../product/product-entity.cache';
 import { CacheService, CacheType } from '../shared/cache/cache.service';
 import { Context } from '../shared/context';
@@ -68,7 +67,7 @@ export class GameEntityCache {
       return null;
     }
 
-    return this.getGameById({ ...options, id: game.id }, ctx);
+    return await this.getGameById({ ...options, id: game.id }, ctx);
   }
 
   async getGamesByIds(options: GetGamesByIdsOptions, ctx: Context) {

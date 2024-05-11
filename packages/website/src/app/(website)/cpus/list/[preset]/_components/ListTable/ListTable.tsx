@@ -2,13 +2,12 @@
 
 import { HashtagIcon } from '@heroicons/react/24/outline';
 import {
-  BenchmarkKey,
   CpuProduct,
   formatProductName,
   getProductBenchmarkShortName,
-  getProductPerformanceRank,
-  getProductValueRank,
   getViewCpuPath,
+  ListOrder,
+  ListPagination,
   ListSort,
   productBenchmarkValue,
   productBenchmarkValuePerMsrp,
@@ -50,7 +49,7 @@ export const ListTable: FunctionComponent = () => {
         <Tr sticky>
           {showRanks ? (
             <Th className="text-center px-4 py-2 sm:px-2 md:px-3">
-              <span className="sm:hidden">Rank</span>
+              <span className="sm:hidden">#</span>
               <span className="hidden sm:block">
                 <HashtagIcon className="w-4 mx-auto" />
               </span>
@@ -116,8 +115,8 @@ export const ListTable: FunctionComponent = () => {
       </THead>
 
       <TBody>
-        {cpus.map((cpu) => (
-          <ListTableRow key={cpu.id} cpu={cpu} sort={sort} />
+        {cpus.map((cpu, i) => (
+          <ListTableRow key={cpu.id} cpu={cpu} index={i} />
         ))}
       </TBody>
     </Table>
@@ -126,21 +125,22 @@ export const ListTable: FunctionComponent = () => {
 
 interface ListTableRowProps {
   cpu: CpuProduct;
-  sort: ListSort;
+  index: number;
 }
 
 const ListTableRow: FunctionComponent<ListTableRowProps> = (props) => {
-  const { cpu } = props;
-  const { query } = useListContext();
+  const { cpu, index } = props;
+  const { query, totalCpus } = useListContext();
   const sort = query?.orderBy?.sort ?? ListSort.PerformanceRating;
+  const order = query?.orderBy?.order;
+  const pagination = query?.pagination;
   const preferredBenchmark = usePreferredBenchmark(ProductType.Cpu);
 
   const href = useMemo(() => getViewCpuPath(cpu), [cpu]);
   const name = useMemo(() => formatProductName(cpu), [cpu]);
   const rank = useMemo(
-    () =>
-      hasRank(sort) ? getRank(cpu, preferredBenchmark, sort) ?? '--' : null,
-    [cpu, preferredBenchmark, sort],
+    () => getRank(sort, order, pagination, index, totalCpus),
+    [index, order, pagination, sort, totalCpus],
   );
   const segment = useMemo(
     () => productFieldFormattedValue(cpu.fields?.marketSegment),
@@ -234,12 +234,20 @@ function hasRank(sort: ListSort) {
   );
 }
 
-function getRank(product: CpuProduct, benchmark: BenchmarkKey, sort: ListSort) {
-  if (sort == null || sort === ListSort.PerformanceRating) {
-    return getProductPerformanceRank(product, benchmark);
-  } else if (sort === ListSort.PerformancePerMsrp) {
-    return getProductValueRank(product, benchmark);
+function getRank(
+  sort: ListSort,
+  order: ListOrder,
+  pagination: ListPagination,
+  rawIndex: number,
+  totalCpus: number,
+) {
+  if (!hasRank(sort)) {
+    return null;
   }
 
-  return null;
+  if (order === ListOrder.Asc) {
+    return totalCpus - pagination.offset - rawIndex;
+  } else {
+    return pagination.offset + 1 + rawIndex;
+  }
 }

@@ -72,7 +72,6 @@ export class ViewCpuViewModelService {
         includeRelatedBenchmarks: [preferredBenchmark],
 
         includeRanks: true,
-        includeRelatedRanks: [preferredBenchmark],
 
         relatedFields: [],
       },

@@ -132,9 +132,13 @@ export function mapToProductFieldsDto(
     return null;
   }
 
+  const fieldsSet = new Set(options?.fields ?? []);
   const mappedFields: Partial<Record<ProductFieldKey, ProductField>> = {};
   for (const fieldKey of FIELDS_TO_MAP[productType]) {
-    mappedFields[fieldKey] = mapProductFieldToDto(entity, fieldKey, options);
+    mappedFields[fieldKey] = mapProductFieldToDto(entity, fieldKey, {
+      ...options,
+      fieldsSet,
+    });
   }
 
   return {
@@ -148,14 +152,13 @@ export function mapToProductFieldsDto(
 function mapProductFieldToDto(
   entity: ProductFieldsEntity,
   key: ProductFieldKey,
-  options?: MapToDtoOptions,
+  options?: MapToDtoOptions & { fieldsSet: Set<string> },
 ) {
   if (entity == null) {
     return undefined;
   }
 
-  const fieldsSet = new Set(options?.fields ?? []);
-  if (options?.fields != null && !fieldsSet.has(key)) {
+  if (options?.fields != null && !options?.fieldsSet.has(key)) {
     // Excluded from fields param, ignore this value.
     return undefined;
   }
@@ -166,10 +169,11 @@ function mapProductFieldToDto(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const value = (entity as any)[entityValueKey] ?? null;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const meta: ProductFieldMeta = (entity as any)[entityMetaKey] ?? null;
+  let meta: ProductFieldMeta = (entity as any)[entityMetaKey] ?? null;
 
-  if (options?.includeAutomation !== true) {
-    delete meta?.autoUpdate;
+  if (options?.includeAutomation !== true && meta != null) {
+    const { autoUpdate: _autoUpdate, ...remaining } = meta;
+    meta = remaining;
   }
 
   return { value, meta } as ProductField;

@@ -160,6 +160,9 @@ model ProductBenchmark {
   // Indexes
   @@id([productId, benchmarkKey])
 
+  @@index([benchmarkKey, value], name: "product_benchmarks_benchmarkKey_value_index")
+  @@index([benchmarkKey, valuePerMsrp], name: "product_benchmarks_benchmarkKey_valuePerMsrp_index")
+
   @@map("product_benchmarks")
 }
 

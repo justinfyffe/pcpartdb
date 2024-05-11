@@ -2,6 +2,7 @@ import {
   AutomationAction,
   buildProductRankKey,
   getPreferenceBenchmarks,
+  getProductBenchmark,
   hasProductBenchmark,
   hasProductFieldRawValue,
   ListProductsFilter,
@@ -92,27 +93,40 @@ function populateRanks(productType: ProductType, products: Product[]) {
       hasProductFieldRawValue(p.fields?.msrp),
     );
 
-    const sortedByPerformance = filteredPerformanceProducts.sort(
-      (a, b) =>
-        productBenchmarkValue(b, benchmark) -
-        productBenchmarkValue(a, benchmark),
-    );
-    const sortedByValue = filteredValueProducts.sort(
-      (a, b) =>
-        productBenchmarkValue(b, benchmark) /
-          productFieldRawValue<number>(b.fields.msrp) -
-        productBenchmarkValue(a, benchmark) /
-          productFieldRawValue<number>(a.fields.msrp),
-    );
+    // const sortedByPerformance = filteredPerformanceProducts.sort(
+    //   (a, b) =>
+    //     productBenchmarkValue(b, benchmark) -
+    //     productBenchmarkValue(a, benchmark),
+    // );
+    // const sortedByValue = filteredValueProducts.sort(
+    //   (a, b) =>
+    //     productBenchmarkValue(b, benchmark) /
+    //       productFieldRawValue<number>(b.fields.msrp) -
+    //     productBenchmarkValue(a, benchmark) /
+    //       productFieldRawValue<number>(a.fields.msrp),
+    // );
 
     for (const product of products) {
       const productId = product.id;
       ranks[productId] = { ...(ranks[productId] ?? {}) };
 
       // Unranked will be "0"
-      const performanceRank =
-        sortedByPerformance.findIndex((p) => p.id === product.id) + 1;
-      const valueRank = sortedByValue.findIndex((p) => p.id === product.id) + 1;
+      const performanceRank = filteredPerformanceProducts.some(
+        (p) => p.id === product.id,
+      )
+        ? filteredPerformanceProducts.filter(
+            (p) =>
+              getProductBenchmark(p, benchmark).value >
+              getProductBenchmark(product, benchmark).value,
+          ).length + 1
+        : 0;
+      const valueRank = filteredValueProducts.some((p) => p.id === product.id)
+        ? filteredValueProducts.filter(
+            (p) =>
+              getProductBenchmark(p, benchmark).valuePerMsrp >
+              getProductBenchmark(product, benchmark).valuePerMsrp,
+          ).length + 1
+        : 0;
 
       if (performanceRank > 0) {
         const rankKey = buildProductRankKey({
@@ -121,7 +135,7 @@ function populateRanks(productType: ProductType, products: Product[]) {
         });
         ranks[productId][rankKey] = {
           rank: performanceRank,
-          total: sortedByPerformance.length,
+          total: filteredPerformanceProducts.length,
         };
       }
       if (valueRank > 0) {
@@ -131,7 +145,7 @@ function populateRanks(productType: ProductType, products: Product[]) {
         });
         ranks[productId][rankKey] = {
           rank: valueRank,
-          total: sortedByValue.length,
+          total: filteredValueProducts.length,
         };
       }
     }

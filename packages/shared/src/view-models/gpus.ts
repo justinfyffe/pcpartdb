@@ -24,8 +24,3 @@ export interface ViewGpuViewModel {
 
   relativeDataProducts: RelativeDataProducts;
 }
-
-export interface GpuContentData {
-  bestPerformanceGpu?: Partial<GpuProduct>;
-  bestValueGpu?: Partial<GpuProduct>;
-}

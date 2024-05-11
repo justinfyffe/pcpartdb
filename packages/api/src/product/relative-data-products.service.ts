@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import {
   BenchmarkKey,
+  concurrent,
   getHighestAvailableSettingsPreset,
   getProductGame,
   getProductGameCpfValue,
@@ -136,7 +137,6 @@ export class RelativeDataProductsService {
             includeRelatedGames: game ? [game] : false,
 
             includeRanks: true,
-            includeRelatedRanks: benchmark ? [benchmark] : false,
 
             bypassCache,
           },
@@ -174,25 +174,34 @@ export class RelativeDataProductsService {
         benchmark: options.benchmark,
       });
 
-      relative.bestBenchmarkPerformance =
-        await this.getBestBenchmarkPerformance(
-          {
-            productType: options.products[0].productType,
-            benchmark: options.benchmark,
-            bypassCache: options.bypassCache,
-          },
-          ctx,
+      const [bestBenchmarkPerformance, bestBenchmarkPerformancePerDollar] =
+        await concurrent(
+          [
+            () =>
+              this.getBestBenchmarkPerformance(
+                {
+                  productType: options.products[0].productType,
+                  benchmark: options.benchmark,
+                  bypassCache: options.bypassCache,
+                },
+                ctx,
+              ),
+            () =>
+              this.getBestBenchmarkPerformancePerDollar(
+                {
+                  productType: options.products[0].productType,
+                  benchmark: options.benchmark,
+                  bypassCache: options.bypassCache,
+                },
+                ctx,
+              ),
+          ],
+          { limit: 2 },
         );
 
+      relative.bestBenchmarkPerformance = bestBenchmarkPerformance;
       relative.bestBenchmarkPerformancePerDollar =
-        await this.getBestBenchmarkPerformancePerDollar(
-          {
-            productType: options.products[0].productType,
-            benchmark: options.benchmark,
-            bypassCache: options.bypassCache,
-          },
-          ctx,
-        );
+        bestBenchmarkPerformancePerDollar;
     }
 
     if (options.game) {

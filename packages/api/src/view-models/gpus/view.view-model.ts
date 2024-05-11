@@ -81,9 +81,7 @@ export class ViewGpuViewModelService {
         includeGames: true,
         includeRelatedGames:
           gameSlug && gameSlug !== 'undefined' ? [gameSlug] : 'latest',
-
         includeRanks: true,
-        includeRelatedRanks: [preferredBenchmark],
 
         relatedFields: [],
       },

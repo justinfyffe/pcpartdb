@@ -3,7 +3,6 @@
 import {
   CompareGpusViewModel,
   formatProductName,
-  getProductValueRank,
   getViewGpuPath,
   GpuProduct,
   percentDifference,
@@ -114,7 +113,6 @@ export const ValueTable: FunctionComponent<ValueTableProps> = (props) => {
       <Table border responsive className={className}>
         <THead>
           <Tr>
-            <Th className="text-center">Rank</Th>
             <Th>GPU</Th>
             <Th colSpan={2} className="text-right">
               Performance Per Dollar
@@ -152,9 +150,6 @@ export const ValueTable: FunctionComponent<ValueTableProps> = (props) => {
           {loading &&
             [...new Array(3)].map((_, i) => (
               <Tr key={i} className="animate-pulse">
-                <Td className="py-4">
-                  <div className="bg-loading w-8 h-3 rounded" />
-                </Td>
                 <Td className="py-4">
                   <div className="bg-loading w-35 h-3 rounded" />
                 </Td>
@@ -210,12 +205,6 @@ const ValueTableRow: FunctionComponent<ValueTableRowProps> = (props) => {
     [relativeGpu, preferredBenchmark],
   );
 
-  const rank = useMemo(
-    () =>
-      getProductValueRank(relativeGpu, preferredBenchmark)?.toLocaleString(),
-    [preferredBenchmark, relativeGpu],
-  );
-
   const href = useMemo(() => getViewGpuPath(relativeGpu), [relativeGpu]);
   const gpuName = useMemo(
     () => formatProductName(relativeGpu, { company: false }),
@@ -233,7 +222,6 @@ const ValueTableRow: FunctionComponent<ValueTableRowProps> = (props) => {
         secondaryGpu?.id === relativeGpu.id ? 'font-bold !bg-fuchsia-100' : '',
       )}
     >
-      <Td className="text-center">{rank ?? '--'}</Td>
       <Td className="text-left">
         <a href={href}>{gpuName}</a>
       </Td>

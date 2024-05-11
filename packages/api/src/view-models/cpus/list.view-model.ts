@@ -48,7 +48,6 @@ export class ListCpusViewModelService {
       {
         fields: ['marketSegment', 'releaseDate', 'msrp'],
         includeBenchmarks: [preferredBenchmark],
-        includeRanks: [preferredBenchmark],
       },
       ctx,
     );

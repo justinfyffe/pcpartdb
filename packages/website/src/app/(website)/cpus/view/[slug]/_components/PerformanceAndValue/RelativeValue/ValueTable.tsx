@@ -3,7 +3,6 @@
 import {
   CpuProduct,
   formatProductName,
-  getProductValueRank,
   getViewCpuPath,
   productBenchmarkValuePerMsrp,
   ProductType,
@@ -40,7 +39,6 @@ export const ValueTable: FunctionComponent<ValueTableProps> = (props) => {
     <Table border responsive className={className}>
       <THead>
         <Tr>
-          <Th className="text-center">Rank</Th>
           <Th>CPU</Th>
           <Th colSpan={2} className="text-right">
             Performance Per Dollar
@@ -70,9 +68,6 @@ export const ValueTable: FunctionComponent<ValueTableProps> = (props) => {
         {loading &&
           [...new Array(3)].map((_, i) => (
             <Tr key={i} className="animate-pulse">
-              <Td className="py-4">
-                <div className="bg-loading w-8 h-3 rounded" />
-              </Td>
               <Td className="py-4">
                 <div className="bg-loading w-35 h-3 rounded" />
               </Td>
@@ -126,12 +121,6 @@ const ValueTableRow: FunctionComponent<ValueTableRowProps> = (props) => {
     [preferredBenchmark, relativeCpu],
   );
 
-  const rank = useMemo(
-    () =>
-      getProductValueRank(relativeCpu, preferredBenchmark)?.toLocaleString(),
-    [preferredBenchmark, relativeCpu],
-  );
-
   const href = useMemo(() => getViewCpuPath(relativeCpu), [relativeCpu]);
   const cpuName = useMemo(
     () => formatProductName(relativeCpu, { company: false }),
@@ -148,7 +137,6 @@ const ValueTableRow: FunctionComponent<ValueTableRowProps> = (props) => {
         baselineCpu.id === relativeCpu.id ? 'font-bold !bg-indigo-100' : '',
       )}
     >
-      <Td className="text-center">{rank ?? '--'}</Td>
       <Td className="text-left">
         <a href={href}>{cpuName}</a>
       </Td>

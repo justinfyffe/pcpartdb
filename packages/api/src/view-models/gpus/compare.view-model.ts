@@ -86,7 +86,6 @@ export class CompareGpusViewModelService {
           gameSlug && gameSlug !== 'undefined' ? [gameSlug] : 'latest',
 
         includeRanks: true,
-        includeRelatedRanks: [preferredBenchmark],
 
         relatedFields: [],
       },

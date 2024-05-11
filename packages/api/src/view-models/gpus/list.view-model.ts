@@ -46,7 +46,6 @@ export class ListGpusViewModelService {
       {
         fields: ['releaseDate', 'marketSegment', 'msrp'],
         includeBenchmarks: [preferredBenchmark],
-        includeRanks: [preferredBenchmark],
       },
       ctx,
     );

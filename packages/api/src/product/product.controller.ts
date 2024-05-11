@@ -58,7 +58,6 @@ export class ProductController {
         includeBenchmarks: [
           getPreferredBenchmark(ctx.config?.userSettings, productType),
         ],
-        includeRanks: true,
       },
       ctx,
     );

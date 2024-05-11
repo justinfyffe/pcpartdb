@@ -230,10 +230,13 @@ export class ProductService {
     const productType = options.productType;
     const slug = options.slug;
 
+    console.time(ctx.uuid + options.slug + ' getProductBySlug');
     const entity = await this.productEntityCache.getProductBySlug(
       { productType, slug, ...this.buildCacheFetchOptions(options, ctx) },
       ctx,
     );
+    console.timeEnd(ctx.uuid + options.slug + ' getProductBySlug');
+    console.time(ctx.uuid + options.slug + ' mapToProductDto');
     const product = await mapToProductDto(
       entity,
       this.buildMapperOptions(
@@ -242,6 +245,7 @@ export class ProductService {
         ctx,
       ) as any,
     );
+    console.timeEnd(ctx.uuid + options.slug + ' mapToProductDto');
 
     if (product == null) {
       throw notFoundError({ product: slug });

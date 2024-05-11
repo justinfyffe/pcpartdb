@@ -79,7 +79,6 @@ export class CompareCpusViewModelService {
         includeRelatedBenchmarks: [preferredBenchmark],
 
         includeRanks: true,
-        includeRelatedRanks: [preferredBenchmark],
 
         relatedFields: [],
       },

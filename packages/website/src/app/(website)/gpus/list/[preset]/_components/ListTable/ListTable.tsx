@@ -2,13 +2,12 @@
 
 import { HashtagIcon } from '@heroicons/react/24/outline';
 import {
-  BenchmarkKey,
   formatProductName,
   getProductBenchmarkShortName,
-  getProductPerformanceRank,
-  getProductValueRank,
   getViewGpuPath,
   GpuProduct,
+  ListOrder,
+  ListPagination,
   ListSort,
   productBenchmarkValue,
   productBenchmarkValuePerMsrp,
@@ -50,7 +49,7 @@ export const ListTable: FunctionComponent = () => {
         <Tr sticky>
           {showRanks ? (
             <Th className="text-center px-4 py-2 sm:px-2 md:px-3">
-              <span className="sm:hidden">Rank</span>
+              <span className="sm:hidden">#</span>
               <span className="hidden sm:block">
                 <HashtagIcon className="w-4 mx-auto" />
               </span>
@@ -120,8 +119,8 @@ export const ListTable: FunctionComponent = () => {
       </THead>
 
       <TBody>
-        {gpus.map((gpu) => (
-          <ListTableRow key={gpu.id} gpu={gpu} sort={sort} />
+        {gpus.map((gpu, i) => (
+          <ListTableRow key={gpu.id} gpu={gpu} index={i} />
         ))}
       </TBody>
     </Table>
@@ -130,21 +129,22 @@ export const ListTable: FunctionComponent = () => {
 
 interface ListTableRowProps {
   gpu: GpuProduct;
-  sort: ListSort;
+  index: number;
 }
 
 const ListTableRow: FunctionComponent<ListTableRowProps> = (props) => {
-  const { gpu } = props;
-  const { query } = useListContext();
+  const { gpu, index } = props;
+  const { query, totalGpus } = useListContext();
   const sort = query?.orderBy?.sort ?? ListSort.PerformanceRating;
+  const order = query?.orderBy?.order;
+  const pagination = query?.pagination;
   const preferredBenchmark = usePreferredBenchmark(ProductType.Gpu);
 
   const href = useMemo(() => getViewGpuPath(gpu), [gpu]);
   const name = useMemo(() => formatProductName(gpu), [gpu]);
   const rank = useMemo(
-    () =>
-      hasRank(sort) ? getRank(gpu, preferredBenchmark, sort) ?? '--' : null,
-    [gpu, preferredBenchmark, sort],
+    () => getRank(sort, order, pagination, index, totalGpus),
+    [index, order, pagination, sort, totalGpus],
   );
   const segment = useMemo(
     () => productFieldFormattedValue(gpu.fields?.marketSegment),
@@ -238,12 +238,20 @@ function hasRank(sort: ListSort) {
   );
 }
 
-function getRank(product: GpuProduct, benchmark: BenchmarkKey, sort: ListSort) {
-  if (sort == null || sort === ListSort.PerformanceRating) {
-    return getProductPerformanceRank(product, benchmark);
-  } else if (sort === ListSort.PerformancePerMsrp) {
-    return getProductValueRank(product, benchmark);
+function getRank(
+  sort: ListSort,
+  order: ListOrder,
+  pagination: ListPagination,
+  rawIndex: number,
+  totalGpus: number,
+) {
+  if (!hasRank(sort)) {
+    return null;
   }
 
-  return null;
+  if (order === ListOrder.Asc) {
+    return totalGpus - pagination.offset - rawIndex;
+  } else {
+    return pagination.offset + 1 + rawIndex;
+  }
 }
