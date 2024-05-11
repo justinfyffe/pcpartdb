@@ -31,7 +31,7 @@ import React, { FunctionComponent, useMemo } from 'react';
 import { useListContext } from '../../ListProvider';
 
 export const ListTable: FunctionComponent = () => {
-  const { gpus, query } = useListContext();
+  const { gpus, query, loading } = useListContext();
   const sort = query?.orderBy?.sort ?? ListSort.PerformanceRating;
   const showRanks = hasRank(sort);
 
@@ -48,7 +48,7 @@ export const ListTable: FunctionComponent = () => {
       <THead>
         <Tr sticky>
           {showRanks ? (
-            <Th className="text-center px-4 py-2 sm:px-2 md:px-3">
+            <Th className="text-center px-4 py-2 sm:px-2 md:px-3 min-w-18 md:min-w-0">
               <span className="sm:hidden">#</span>
               <span className="hidden sm:block">
                 <HashtagIcon className="w-4 mx-auto" />
@@ -58,14 +58,16 @@ export const ListTable: FunctionComponent = () => {
             <></>
           )}
 
-          <Th className="px-4 py-2 md:p-2">Graphics Card</Th>
+          <Th className="px-4 py-2 md:p-2 min-w-64 md:min-w-12">
+            Graphics Card
+          </Th>
 
           <Th
             className={classNames(
-              'text-center px-4 py-2 whitespace-nowrap sm:px-2 md:px-3',
+              'text-center px-4 py-2 whitespace-nowrap sm:px-2 md:px-3 min-w-18 md:min-w-0',
               sort !== ListSort.PerformanceRating
-                ? '2xs:hidden'
-                : '2xs:border-r-px',
+                ? 'xs:hidden'
+                : 'xs:border-r-px',
             )}
           >
             <Button
@@ -83,10 +85,10 @@ export const ListTable: FunctionComponent = () => {
 
           <Th
             className={classNames(
-              'text-center px-4 py-2 whitespace-nowrap sm:px-2 md:px-3',
+              'text-center px-4 py-2 whitespace-nowrap sm:px-2 md:px-3 min-w-18 md:min-w-0',
               sort !== ListSort.PerformancePerMsrp
-                ? '2xs:hidden'
-                : '2xs:border-r-px',
+                ? 'xs:hidden'
+                : 'xs:border-r-px',
             )}
           >
             <Button
@@ -104,8 +106,8 @@ export const ListTable: FunctionComponent = () => {
 
           <Th
             className={classNames(
-              'text-center px-4 py-2 whitespace-nowrap sm:px-2 md:px-3 md:border-r-px',
-              sort !== ListSort.ReleaseDate ? '2xs:hidden' : '2xs:border-r-px',
+              'text-center px-4 py-2 whitespace-nowrap sm:px-2 md:px-3 md:border-r-px min-w-18 md:min-w-0',
+              sort !== ListSort.ReleaseDate ? 'xs:hidden' : 'xs:border-r-px',
             )}
           >
             <span className="hidden sm:block">Date</span>
@@ -119,9 +121,34 @@ export const ListTable: FunctionComponent = () => {
       </THead>
 
       <TBody>
-        {gpus.map((gpu, i) => (
-          <ListTableRow key={gpu.id} gpu={gpu} index={i} />
-        ))}
+        {loading &&
+          [...new Array(50)].map((_, i) => (
+            <Tr key={i} className="animate-pulse">
+              {showRanks ? (
+                <Td className="py-4">
+                  <div className="bg-loading w-12 xs:w-8 h-2 rounded-full mx-auto" />
+                </Td>
+              ) : (
+                <></>
+              )}
+              <Td className="py-4">
+                <div className="bg-loading w-64 md:w-32 xs:w-12 h-3 rounded-full" />
+              </Td>
+              <Td className="py-4">
+                <div className="bg-loading w-12 xs:w-8 h-3 rounded-full mx-auto" />
+              </Td>
+              <Td className="py-4 xs:hidden">
+                <div className="bg-loading w-12 xs:w-8 h-3 rounded-full mx-auto" />
+              </Td>
+              <Td className="py-4 xs:hidden">
+                <div className="bg-loading w-12 xs:w-8 h-3 rounded-full mx-auto" />
+              </Td>
+            </Tr>
+          ))}
+        {!loading &&
+          gpus.map((gpu, i) => (
+            <ListTableRow key={gpu.id} gpu={gpu} index={i} />
+          ))}
       </TBody>
     </Table>
   );
@@ -201,9 +228,7 @@ const ListTableRow: FunctionComponent<ListTableRowProps> = (props) => {
       <Td
         className={classNames(
           'text-center text-base px-4 py-2 sm:px-2 md:px-3',
-          sort !== ListSort.PerformanceRating
-            ? '2xs:hidden'
-            : '2xs:border-r-px',
+          sort !== ListSort.PerformanceRating ? 'xs:hidden' : 'xs:border-r-px',
         )}
       >
         {performance}
@@ -212,9 +237,7 @@ const ListTableRow: FunctionComponent<ListTableRowProps> = (props) => {
       <Td
         className={classNames(
           'text-center text-base px-4 py-2 sm:px-2 md:px-3',
-          sort !== ListSort.PerformancePerMsrp
-            ? '2xs:hidden'
-            : '2xs:border-r-px',
+          sort !== ListSort.PerformancePerMsrp ? 'xs:hidden' : 'xs:border-r-px',
         )}
       >
         {performancePerDollar}
@@ -223,7 +246,7 @@ const ListTableRow: FunctionComponent<ListTableRowProps> = (props) => {
       <Td
         className={classNames(
           'text-center text-base px-4 py-2 sm:px-2 md:px-3 md:border-r-px',
-          sort !== ListSort.ReleaseDate ? '2xs:hidden' : '2xs:border-r-px',
+          sort !== ListSort.ReleaseDate ? 'xs:hidden' : 'xs:border-r-px',
         )}
       >
         {releaseDate}
