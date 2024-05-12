@@ -9,7 +9,7 @@ export const AmazonButton = forwardRef<HTMLButtonElement, AmazonButtonProps>(
 
     return (
       <Button
-        className="bg-[#FF9900] text-black font-medium"
+        className="bg-[#FF9900] hover:bg-[#ef9900] text-black font-medium shadow-md"
         ref={ref}
         {...remainingProps}
       >

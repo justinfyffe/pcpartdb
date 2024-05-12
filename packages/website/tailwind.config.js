@@ -111,6 +111,8 @@ module.exports = {
         default: '#fff',
         neutral: '#999',
         primary: '#4c5c7c',
+        'primary-action': '#008dd1',
+        'primary-action--hover': '#0086c7',
         info: '#282731',
         success: '#4c965d',
         warning: '#c98625',

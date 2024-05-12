@@ -17,7 +17,7 @@ NEXT (short-term)
 - [] Improve SEO
 - [] Home Page Revamp
   - [] More text for seo
-  - [] Change compare form button color
+  - [X] Change compare form button color
   - [] Section: Compare GPUs
     - Featured comparison?
     - Under form, show popular GPUs

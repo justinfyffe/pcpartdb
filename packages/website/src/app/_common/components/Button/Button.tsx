@@ -17,7 +17,8 @@ export interface ButtonProps
 const BUTTON_VARIANTS = {
   [ButtonVariant.None]: 'bg-transparent text-inherit shadow-none',
   [ButtonVariant.Generic]: 'bg-default border-px text-content',
-  [ButtonVariant.Primary]: 'bg-primary text-default',
+  [ButtonVariant.Primary]:
+    'bg-primary-action hover:bg-primary-action--hover text-default',
   [ButtonVariant.Info]: 'bg-info text-default',
   [ButtonVariant.Success]: 'bg-success text-default',
   [ButtonVariant.Warning]: 'bg-warning text-default',
@@ -86,7 +87,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         type={isButton ? type ?? 'button' : undefined}
         href={url}
         className={classNames(
-          'relative font-medium no-underline text-center cursor-pointer inline-block px-4 py-2 rounded shadow',
+          'relative font-medium no-underline text-center cursor-pointer inline-block px-4 py-2 rounded shadow-md',
           url != null ? 'flex items-center justify-center' : '',
           BUTTON_VARIANTS[variant ?? ButtonVariant.None],
           props.disabled || disabledAfterClick
