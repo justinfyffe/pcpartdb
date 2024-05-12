@@ -12,21 +12,24 @@ NEXT (long-term):
 
 
 NEXT (short-term)
-- [] Performance improvements
-  - performance issue is due to structuredClone on large objects
-  - add connection limit to prod
-  - View:
-    - getProductBySlug: ~70ms
-    - mapToProductDto: ~20ms
-    - Games are likely slowing down performances
+- [] code cleanup
+  - Skeleton component
+  - Simplify react components
+- [] Improve SEO
+- [] Home Page Revamp
+  - [] More text for seo
+  - [] Change compare form button color
+  - [] Section: Compare GPUs
+    - Featured comparison?
+    - Under form, show popular GPUs
+  - [] Section: Compare CPUs
+    - Featured comparison?
+    - Under form, show popular cPUs
+  - [] Remove article widgets
 - [] Automation
   - [] Add accept/reject button to dialog
 - [] UI Revamp?
   - Look at pc-builds.com
-- [] Revamp home page
-  - Remove article widgets.
-  - SEO
-  - Maybe use popular products and popular comparisons
 - [] Add more games
 - [] SEO
   - Off-site
