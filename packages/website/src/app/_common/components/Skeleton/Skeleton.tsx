@@ -10,7 +10,7 @@ interface SkeletonProps {
   right?: boolean;
 }
 
-export function Spinner(props: SkeletonProps) {
+export function Skeleton(props: SkeletonProps) {
   const Element = props.as || 'div';
 
   return (

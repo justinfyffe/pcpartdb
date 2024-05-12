@@ -91,7 +91,6 @@ export const PerformanceHighlight: FunctionComponent<
             </div>
           )}
 
-          {/* {loading && <Spinner className="w-8 h-8" />} */}
           {loading && (
             <div className="animate-pulse flex flex-col gap-3 h-[49px] justify-center">
               <div className="w-20 h-3 bg-loading rounded" />

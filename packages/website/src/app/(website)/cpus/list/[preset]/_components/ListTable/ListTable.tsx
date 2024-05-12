@@ -17,6 +17,7 @@ import {
 import { Button } from 'packages/website/src/app/_common/components/Button/Button';
 import { ButtonVariant } from 'packages/website/src/app/_common/components/Button/types';
 import { Img } from 'packages/website/src/app/_common/components/Img/Img';
+import { Skeleton } from 'packages/website/src/app/_common/components/Skeleton/Skeleton';
 import { Table } from 'packages/website/src/app/_common/components/Table/Table';
 import { TBody } from 'packages/website/src/app/_common/components/Table/TBody';
 import { Td } from 'packages/website/src/app/_common/components/Table/Td';
@@ -117,25 +118,25 @@ export const ListTable: FunctionComponent = () => {
       <TBody>
         {loading &&
           [...new Array(50)].map((_, i) => (
-            <Tr key={i} className="animate-pulse">
+            <Tr key={i}>
               {showRanks ? (
                 <Td className="py-4">
-                  <div className="bg-loading w-12 xs:w-8 h-2 rounded-full mx-auto" />
+                  <Skeleton className="w-12 xs:w-8 h-3" pulse center />
                 </Td>
               ) : (
                 <></>
               )}
               <Td className="py-4">
-                <div className="bg-loading w-64 md:w-32 xs:w-12 h-3 rounded-full" />
+                <Skeleton className="w-64 md:w-32 xs:w-12 h-3" pulse />
               </Td>
               <Td className="py-4">
-                <div className="bg-loading w-12 xs:w-8 h-3 rounded-full mx-auto" />
+                <Skeleton className="w-12 xs:w-8 h-3" pulse center />
               </Td>
               <Td className="py-4 xs:hidden">
-                <div className="bg-loading w-12 xs:w-8 h-3 rounded-full mx-auto" />
+                <Skeleton className="w-12 xs:w-8 h-3" pulse center />
               </Td>
               <Td className="py-4 xs:hidden">
-                <div className="bg-loading w-12 xs:w-8 h-3 rounded-full mx-auto" />
+                <Skeleton className="w-12 xs:w-8 h-3" pulse center />
               </Td>
             </Tr>
           ))}
