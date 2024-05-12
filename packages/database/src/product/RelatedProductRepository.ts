@@ -15,6 +15,7 @@ export class RelatedProductRepository {
   ) {
     const db = config?.trx ?? this.db;
 
+    config?.queryCounter();
     const result: RelatedProductEntity[] = await db.relatedProduct.findMany({
       where: { productId: { in: options.productIds } },
     });

@@ -55,11 +55,10 @@ export async function mapToProductUpdateDtos<TUpdateData = unknown>(
     return null;
   }
 
-  const ret: ProductUpdate[] = [];
-  for (let i = 0; i < entities.length; ++i) {
-    ret.push(await mapToProductUpdateDto<TUpdateData>(entities[i], options));
-  }
-  return ret;
+  const promises = entities.map((entity) =>
+    mapToProductUpdateDto<TUpdateData>(entity, options),
+  );
+  return await Promise.all(promises);
 }
 
 export async function mapToProductUpdateEntity(dto: ProductUpdate) {

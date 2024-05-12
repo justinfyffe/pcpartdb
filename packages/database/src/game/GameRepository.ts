@@ -41,6 +41,7 @@ export class GameRepository {
 
   async findByIds(options: FindByIdsOptions, config?: RepositoryConfig) {
     const db = config?.trx ?? this.db;
+    config?.queryCounter();
     const results = await db.game.findMany({
       where: { id: { in: options.ids } },
       include: {
@@ -58,6 +59,7 @@ export class GameRepository {
 
     const id = options.id;
 
+    config?.queryCounter();
     const result: GameEntity = await db.game.findUnique({
       where: { id },
       include: { listingImage: true },
@@ -74,6 +76,7 @@ export class GameRepository {
     const id = options.id;
     const includeRequirements = options?.includeRequirements ?? false;
 
+    config?.queryCounter();
     const game: GameEntity = await db.game.findUnique({
       where: { id },
       include: {
@@ -96,6 +99,7 @@ export class GameRepository {
 
     const slug = options.slug;
 
+    config?.queryCounter();
     const result: GameEntity = await db.game.findUnique({
       where: { slug },
       include: { listingImage: true },
@@ -112,6 +116,7 @@ export class GameRepository {
     const slug = options.slug;
     const includeRequirements = options?.includeRequirements ?? false;
 
+    config?.queryCounter();
     const game: GameEntity = await db.game.findUnique({
       where: { slug: slug },
       include: {
@@ -138,6 +143,7 @@ export class GameRepository {
   async listAll(config?: RepositoryConfig) {
     const db = config?.trx ?? this.db;
 
+    config?.queryCounter();
     const results = await db.game.findMany();
     return results;
   }
@@ -147,6 +153,7 @@ export class GameRepository {
 
     const where = this.generateWhere(options.filter);
     const orderBy = this.generateOrderBy(options.orderBy);
+    config?.queryCounter();
     const results = await db.game.findMany({
       select: { id: true },
       where,
@@ -164,6 +171,7 @@ export class GameRepository {
 
     const where = this.generateWhere(options.filter);
     const orderBy = this.generateOrderBy(options.orderBy);
+    config?.queryCounter();
     const results = await db.game.findMany({
       include: {
         listingImage: true,
@@ -192,6 +200,7 @@ export class GameRepository {
     } = game;
 
     const trx = config?.trx ?? this.db;
+    config?.queryCounter();
     return await trx.game.create({
       data: {
         ...gameData,
@@ -215,6 +224,7 @@ export class GameRepository {
     } = game;
 
     const trx = config?.trx ?? this.db;
+    config?.queryCounter();
     return await trx.game.update({
       where: { id },
       data: { ...gameData },
@@ -223,11 +233,13 @@ export class GameRepository {
 
   async delete(id: number, config?: RepositoryConfig) {
     const trx = config?.trx ?? this.db;
+    config?.queryCounter();
     await trx.game.delete({ where: { id } });
   }
 
   async getScraperOptions(config?: RepositoryConfig) {
     const trx = config?.trx ?? this.db;
+    config?.queryCounter();
     return await trx.game.findMany({
       select: {
         id: true,
@@ -260,6 +272,7 @@ export class GameRepository {
     regexTokens = `${regexTokens}.*`;
 
     const trx = config?.trx ?? this.db;
+    config?.queryCounter();
     const priorityGames = await trx.game.findMany({
       where: {
         OR: [
@@ -279,18 +292,21 @@ export class GameRepository {
     // Get results based on regex.
     let fillerGames: { id: number }[] = [];
     if (regexTokens !== '.*') {
+      config?.queryCounter();
       fillerGames = await trx.$queryRaw`
         SELECT id FROM games
         WHERE name ~* (${regexTokens}) OR name_short ~* (${regexTokens})
         LIMIT ${AUTOCOMPLETE_LIMIT}
       `;
     } else {
+      config?.queryCounter();
       fillerGames = await trx.game.findMany({
         take: AUTOCOMPLETE_LIMIT,
       });
     }
     const fillerResultIds = [...fillerGames].slice(0, AUTOCOMPLETE_LIMIT);
 
+    config?.queryCounter();
     const fillerResults = await trx.game.findMany({
       where: { id: { in: fillerResultIds.map((json) => json.id) } },
       include: {

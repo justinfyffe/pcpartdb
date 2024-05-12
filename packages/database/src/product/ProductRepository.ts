@@ -78,6 +78,7 @@ export class ProductRepository {
   async findById2(options: FindById2Options, config?: RepositoryConfig) {
     const db = config?.trx ?? this.db;
 
+    config?.queryCounter();
     const result: ProductEntity = await db.product.findUnique({
       where: { id: options.id },
     });
@@ -98,6 +99,7 @@ export class ProductRepository {
       orderBy = { valuePerMsrp: { sort: ListOrder.Desc, nulls: 'last' } };
     }
 
+    config?.queryCounter();
     const { productId } = await db.productBenchmark.findFirst({
       select: { productId: true },
       where: { benchmarkKey: options.benchmark },
@@ -111,6 +113,7 @@ export class ProductRepository {
   async findByIds2(options: FindByIds2Options, config?: RepositoryConfig) {
     const db = config?.trx ?? this.db;
 
+    config?.queryCounter();
     const result: ProductEntity[] = await db.product.findMany({
       where: { id: { in: options.ids } },
     });
@@ -123,6 +126,7 @@ export class ProductRepository {
     const productType = options.productType;
     const slug = options.slug;
 
+    config?.queryCounter();
     const result = await db.product.findUnique({
       select: { id: true },
       where: { productType_slug: { productType, slug } },
@@ -141,6 +145,7 @@ export class ProductRepository {
       const benchmarkToSort =
         options.orderBy.benchmark ?? getDefaultBenchmark(productType);
 
+      config?.queryCounter();
       return await db.productBenchmark.count({
         where: {
           AND: [
@@ -150,6 +155,7 @@ export class ProductRepository {
         },
       });
     } else {
+      config?.queryCounter();
       return await db.product.count({
         where: { ...this.generateWhere(options.productType, options.filter) },
       });
@@ -188,6 +194,7 @@ export class ProductRepository {
         };
       }
 
+      config?.queryCounter();
       const results = await db.productBenchmark.findMany({
         select: { productId: true },
         skip: options.pagination?.offset,
@@ -201,6 +208,7 @@ export class ProductRepository {
       const ids = results.map((result) => result.productId);
       return ids;
     } else {
+      config?.queryCounter();
       const productIdsResult = await db.product.findMany({
         select: { id: true },
         where: { ...this.generateWhere(productType, options.filter) },
@@ -215,11 +223,13 @@ export class ProductRepository {
 
   async popNextIdToBeUpdated(config?: RepositoryConfig) {
     const db = config?.trx ?? this.db;
+    config?.queryCounter();
     const { id, productType } = await db.product.findFirst({
       select: { id: true, productType: true },
       orderBy: { automatedAt: 'asc' },
     });
 
+    config?.queryCounter();
     await db.product.update({
       where: { id },
       data: { automatedAt: new Date() },
@@ -247,6 +257,7 @@ export class ProductRepository {
     const imagesData =
       images?.map((image) => ({ imageId: image.imageId })) ?? [];
 
+    config?.queryCounter();
     return await db.product.create({
       data: {
         ...productData,
@@ -268,6 +279,7 @@ export class ProductRepository {
     const db = config?.trx ?? this.db;
 
     // Reject any pending updates.
+    config?.queryCounter();
     await db.productUpdate.updateMany({
       where: { productId: id, status: ProductUpdateStatus.Pending },
       data: {
@@ -275,9 +287,13 @@ export class ProductRepository {
       },
     });
 
+    config?.queryCounter();
     await db.productImage.deleteMany({ where: { productId: id } });
+    config?.queryCounter();
     await db.productBenchmark.deleteMany({ where: { productId: id } });
+    config?.queryCounter();
     await db.productGameFps.deleteMany({ where: { productId: id } });
+    config?.queryCounter();
     await db.productSource.deleteMany({ where: { productId: id } });
 
     // Update Product
@@ -296,6 +312,7 @@ export class ProductRepository {
     } = data;
 
     // Update product
+    config?.queryCounter();
     return await db.product.update({
       where: { id },
       data: {
@@ -312,6 +329,7 @@ export class ProductRepository {
 
   async delete(id: number, config?: RepositoryConfig) {
     const db = config?.trx ?? this.db;
+    config?.queryCounter();
     await db.product.delete({ where: { id } });
   }
 
@@ -320,6 +338,7 @@ export class ProductRepository {
     config?: RepositoryConfig,
   ) {
     const db = config?.trx ?? this.db;
+    config?.queryCounter();
     return await db.product.findMany({
       select: {
         id: true,
@@ -350,6 +369,7 @@ export class ProductRepository {
 
     // Clear out and create ranks
     const { productType } = updates;
+    config?.queryCounter();
     await db.productRanks.deleteMany({ where: { product: { productType } } });
 
     for (const data of Object.entries(updates.ranks)) {
@@ -360,6 +380,7 @@ export class ProductRepository {
       });
     }
 
+    config?.queryCounter();
     await db.productRanks.createMany({
       data: dataToInsert,
       skipDuplicates: true,
@@ -374,6 +395,7 @@ export class ProductRepository {
 
     // Clear out product ids that will be updated.
     const { productType } = updates;
+    config?.queryCounter();
     await db.relatedProduct.deleteMany({ where: { product: { productType } } });
 
     const dataToInsert: RelatedProductEntity[] = [];
@@ -389,6 +411,7 @@ export class ProductRepository {
       }
     }
 
+    config?.queryCounter();
     await db.relatedProduct.createMany({
       data: dataToInsert,
       skipDuplicates: true,

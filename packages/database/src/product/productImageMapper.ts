@@ -15,11 +15,7 @@ export function mapToProductImageDto(entity: ProductImageEntity) {
 }
 
 export function mapToProductImageDtos(entities: ProductImageEntity[]) {
-  const ret = [];
-  for (let i = 0; i < entities.length; ++i) {
-    ret.push(mapToProductImageDto(entities[i]));
-  }
-  return ret;
+  return entities.map((entity) => mapToProductImageDto(entity));
 }
 
 export function mapToProductImageEntity(dto: ProductImage) {

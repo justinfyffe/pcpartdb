@@ -7,6 +7,7 @@ export class UserRepository {
 
   async list(config?: RepositoryConfig) {
     const trx = config?.trx ?? this.db;
+    config?.queryCounter();
     return await trx.user.findMany({
       orderBy: {
         id: 'desc',
@@ -16,21 +17,25 @@ export class UserRepository {
 
   async findById(id: number, config?: RepositoryConfig) {
     const trx = config?.trx ?? this.db;
+    config?.queryCounter();
     return await trx.user.findUnique({ where: { id } });
   }
 
   async findByEmail(email: string, config?: RepositoryConfig) {
     const trx = config?.trx ?? this.db;
+    config?.queryCounter();
     return await trx.user.findUnique({ where: { email } });
   }
 
   async count(config?: RepositoryConfig) {
     const trx = config?.trx ?? this.db;
+    config?.queryCounter();
     return await trx.user.count();
   }
 
   async countStaff(config?: RepositoryConfig) {
     const trx = config?.trx ?? this.db;
+    config?.queryCounter();
     return await trx.user.count({ where: { isStaff: true } });
   }
 
@@ -39,6 +44,7 @@ export class UserRepository {
     config?: RepositoryConfig,
   ) {
     const trx = config?.trx ?? this.db;
+    config?.queryCounter();
     return await trx.user.create({ data: user });
   }
 
@@ -48,11 +54,13 @@ export class UserRepository {
     config?: RepositoryConfig,
   ) {
     const trx = config?.trx ?? this.db;
+    config?.queryCounter();
     return await trx.user.update({ where: { id }, data: user });
   }
 
   async delete(id: number, config?: RepositoryConfig) {
     const trx = config?.trx ?? this.db;
+    config?.queryCounter();
     await trx.user.delete({ where: { id } });
   }
 }

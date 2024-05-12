@@ -172,17 +172,25 @@ export class ProductEntityCache {
     await this.populateRelated({ ...options, products }, ctx);
 
     // Do the rest simultaneously
-    await concurrent(
-      [
-        () => this.populateFields({ ...options, products }, ctx),
-        () => this.populateRanks({ ...options, products }, ctx),
-        () => this.populateBenchmarks({ ...options, products }, ctx),
-        () => this.populateGameFps({ ...options, products }, ctx),
-        () => this.populateImages({ ...options, products }, ctx),
-        () => this.populateSources({ ...options, products }, ctx),
-      ],
-      { limit: 3 },
-    );
+    await Promise.all([
+      this.populateFields({ ...options, products }, ctx),
+      this.populateRanks({ ...options, products }, ctx),
+      this.populateBenchmarks({ ...options, products }, ctx),
+      this.populateGameFps({ ...options, products }, ctx),
+      this.populateImages({ ...options, products }, ctx),
+      this.populateSources({ ...options, products }, ctx),
+    ]);
+    // await concurrent(
+    //   [
+    //     () => this.populateFields({ ...options, products }, ctx),
+    //     () => this.populateRanks({ ...options, products }, ctx),
+    //     () => this.populateBenchmarks({ ...options, products }, ctx),
+    //     () => this.populateGameFps({ ...options, products }, ctx),
+    //     () => this.populateImages({ ...options, products }, ctx),
+    //     () => this.populateSources({ ...options, products }, ctx),
+    //   ],
+    //   { limit: 3 },
+    // );
 
     return products;
   }
@@ -753,7 +761,7 @@ export class ProductEntityCache {
       const value = await this.cacheService.getCached({
         type: cacheType,
         key: cacheKey,
-        clone: true,
+        shallowClone: true,
         bypass: bypassCache,
       });
 

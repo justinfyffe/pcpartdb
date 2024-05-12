@@ -23,6 +23,7 @@ export class AccessTokenRepository {
 
   async findByTokenHash(tokenHash: string, config?: RepositoryConfig) {
     const trx = config?.trx ?? this.db;
+    config?.queryCounter();
     return await trx.accessToken.findUnique({
       where: { tokenHash },
       include: { user: true },
@@ -31,6 +32,7 @@ export class AccessTokenRepository {
 
   async delete(id: number, config?: RepositoryConfig) {
     const trx = config?.trx ?? this.db;
+    config?.queryCounter();
     await trx.accessToken.delete({
       where: { id },
     });

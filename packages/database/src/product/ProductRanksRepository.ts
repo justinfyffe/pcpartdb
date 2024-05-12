@@ -25,6 +25,7 @@ export class ProductRanksRepository {
   ) {
     const db = config?.trx ?? this.db;
 
+    config?.queryCounter();
     const results: ProductRanksEntity[] = await db.productRanks.findMany({
       where: { productId: { in: options.productIds } },
     });
@@ -38,6 +39,7 @@ export class ProductRanksRepository {
   ) {
     const db = config?.trx ?? this.db;
 
+    config?.queryCounter();
     const result = await await db.productBenchmark.aggregate({
       _count: { productId: true },
       where: {
@@ -56,6 +58,7 @@ export class ProductRanksRepository {
   ) {
     const db = config?.trx ?? this.db;
 
+    config?.queryCounter();
     const result = await await db.productBenchmark.aggregate({
       _count: { productId: true },
       where: { benchmarkKey: options.benchmark },
@@ -70,6 +73,7 @@ export class ProductRanksRepository {
   ) {
     const db = config?.trx ?? this.db;
 
+    config?.queryCounter();
     const result = await await db.productBenchmark.aggregate({
       _count: { productId: true },
       where: {

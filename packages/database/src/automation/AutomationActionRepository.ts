@@ -24,6 +24,7 @@ export class AutomationActionRepository {
   async findNextPending(config?: RepositoryConfig) {
     const trx = config?.trx ?? this.db;
 
+    config?.queryCounter();
     return await trx.automationAction.findFirst({
       where: { status: AutomationActionStatus.Pending },
       orderBy: [{ priority: 'desc' }, { timestamp: 'asc' }],
@@ -34,6 +35,7 @@ export class AutomationActionRepository {
     const trx = config?.trx ?? this.db;
     const { pagination } = options.query ?? {};
 
+    config?.queryCounter();
     const results = await trx.automationAction.findMany({
       where: { status: AutomationActionStatus.Pending },
       orderBy: [{ priority: 'desc' }, { timestamp: 'asc' }],
@@ -41,6 +43,7 @@ export class AutomationActionRepository {
       take: pagination?.limit ?? 50,
     });
 
+    config?.queryCounter();
     const total = await trx.automationAction.count({
       where: { status: AutomationActionStatus.Pending },
     });
@@ -55,6 +58,7 @@ export class AutomationActionRepository {
     const trx = config?.trx ?? this.db;
     const { ...entity } = data;
 
+    config?.queryCounter();
     return await trx.automationAction.create({ data: entity });
   }
 
@@ -66,6 +70,7 @@ export class AutomationActionRepository {
     const trx = config?.trx ?? this.db;
     const { ...entity } = data;
 
+    config?.queryCounter();
     return await trx.automationAction.update({
       where: { id },
       data: entity,

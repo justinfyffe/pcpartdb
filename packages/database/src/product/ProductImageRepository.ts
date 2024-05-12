@@ -15,6 +15,7 @@ export class ProductImageRepository {
   ) {
     const db = config?.trx ?? this.db;
 
+    config?.queryCounter();
     const results: ProductImageEntity[] = await db.productImage.findMany({
       where: { productId: { in: options.productIds } },
       include: { image: true },

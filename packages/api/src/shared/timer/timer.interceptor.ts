@@ -20,7 +20,11 @@ export class TimerInterceptor implements NestInterceptor {
       tap(() => {
         const endTime = performance.now();
         const ms = endTime - startTime;
-        console.log(`[ ${ctx.uuid} ][ ${ms.toFixed(2)}ms ][ ${urlPath} ]`);
+        console.log(
+          `[ ${ctx.uuid} ][ ${ms.toFixed(2)}ms ][ ${ctx.queryCounter(
+            false,
+          )} queries ][ ${urlPath} ]`,
+        );
       }),
     );
   }

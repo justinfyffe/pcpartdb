@@ -78,11 +78,15 @@ export async function mapToProductDto(
     options,
   );
 
+  const [games, updates] = await Promise.all([
+    includeGames
+      ? mapToProductGameDtos(entity.gameFps ?? [], { includeGames })
+      : undefined,
+    includeUpdates ? mapToProductUpdateDtos(entity.updates ?? []) : undefined,
+  ]);
+
   const benchmarks = includeBenchmarks
     ? mapToProductBenchmarkDtos(entity.benchmarks ?? [], options)
-    : undefined;
-  const games = includeGames
-    ? await mapToProductGameDtos(entity.gameFps ?? [], { includeGames })
     : undefined;
   const images = includeImages
     ? mapToProductImageDtos(entity.images ?? [])
@@ -93,25 +97,25 @@ export async function mapToProductDto(
   const sources = includeSources
     ? mapToProductSourceDtos(entity.sources ?? [])
     : undefined;
-  const updates = includeUpdates
-    ? await mapToProductUpdateDtos(entity.updates ?? [])
-    : undefined;
 
-  const relatedProducts: RelatedProducts = [];
-  const checkedIds = new Set<number>();
+  let relatedProducts: RelatedProducts = [];
   if (includeRelated) {
+    const promises: Promise<Product>[] = [];
+    const alreadyMapped = new Set<number>();
     for (const rp of entity?.relatedProducts ?? []) {
-      if (!checkedIds.has(rp.relatedProductId)) {
-        const relatedProduct = await mapToProductDto(rp.relatedProduct, {
-          fields: options?.relatedFields,
-          includeBenchmarks: includeRelatedBenchmarks,
-          includeGames: includeRelatedGames,
-          includeRanks: includeRelatedRanks,
-        });
-        relatedProducts.push(relatedProduct);
-        checkedIds.add(rp.relatedProductId);
+      if (!alreadyMapped.has(rp.relatedProductId)) {
+        alreadyMapped.add(rp.relatedProductId);
+        promises.push(
+          mapToProductDto(rp.relatedProduct, {
+            fields: options?.relatedFields,
+            includeBenchmarks: includeRelatedBenchmarks,
+            includeGames: includeRelatedGames,
+            includeRanks: includeRelatedRanks,
+          }),
+        );
       }
     }
+    relatedProducts = await Promise.all(promises);
   }
 
   return {
@@ -156,11 +160,8 @@ export async function mapToProductDtos(
     return null;
   }
 
-  const ret = [];
-  for (let i = 0; i < entities.length; ++i) {
-    ret.push(await mapToProductDto(entities[i], options));
-  }
-  return ret;
+  const promises = entities.map((entity) => mapToProductDto(entity, options));
+  return await Promise.all(promises);
 }
 
 export function mapToProductEntity(dto: Product) {

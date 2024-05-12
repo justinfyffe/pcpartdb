@@ -1,5 +1,6 @@
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Inject, Injectable } from '@nestjs/common';
+import { shallowClone } from '@pcpartdb/shared';
 import { Cache } from 'cache-manager';
 import * as crypto from 'crypto';
 import deterministicStringify from 'json-stringify-deterministic';
@@ -57,7 +58,8 @@ interface CacheOptions<TKey = unknown> {
   key: TKey;
   ttl?: number;
   excludeFromMaxItems?: boolean;
-  clone?: boolean;
+  shallowClone?: boolean;
+  deepClone?: boolean;
   bypass?: boolean;
 }
 
@@ -70,7 +72,8 @@ interface IsCachedOptions<TKey = unknown> {
 interface GetCachedOptions<TKey = unknown> {
   type: CacheType;
   key: TKey;
-  clone?: boolean;
+  shallowClone?: boolean;
+  deepClone?: boolean;
   bypass?: boolean;
 }
 
@@ -113,7 +116,7 @@ export class CacheService {
     const ttl = options.ttl ?? CACHE_EXPIRE_TTLS[options.type];
     const key = this.cacheKey(options.type, options.key);
     const result = await this.cacheManager.wrap(key, () => fn(), ttl);
-    return options.clone ? structuredClone(result) : result;
+    return options.shallowClone ? structuredClone(result) : result;
   }
 
   async isCached(options: IsCachedOptions) {
@@ -134,7 +137,13 @@ export class CacheService {
 
     const key = this.cacheKey(options.type, options.key);
     const result = (await this.cacheManager.get(key)) as TValue;
-    return options.clone ? structuredClone(result) : result;
+    if (options.deepClone) {
+      return structuredClone(result) as TValue;
+    } else if (options.shallowClone) {
+      return shallowClone(result) as TValue;
+    } else {
+      return result;
+    }
   }
 
   async setCached<TValue = unknown>(value: TValue, options: SetCachedOptions) {
@@ -198,6 +207,12 @@ export class CacheService {
       item,
       expires: ttl != null ? currentTime + ttl : null,
     };
-    return options.clone ? structuredClone(item) : item;
+    if (options.deepClone) {
+      return structuredClone(item) as TResult;
+    } else if (options.shallowClone) {
+      return shallowClone(item) as TResult;
+    } else {
+      return item;
+    }
   }
 }

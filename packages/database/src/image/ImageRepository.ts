@@ -21,6 +21,7 @@ export class ImageRepository {
     const db = config?.trx ?? this.db;
 
     const where = this.generateWhere(options.filter);
+    config?.queryCounter();
     return await db.image.count({
       where,
     });
@@ -31,6 +32,7 @@ export class ImageRepository {
 
     const where = this.generateWhere(options.filter);
     const orderBy = this.generateOrderBy(options.orderBy);
+    config?.queryCounter();
     return await trx.image.findMany({
       where,
       orderBy,
@@ -41,11 +43,13 @@ export class ImageRepository {
 
   async findById(id: number, config?: RepositoryConfig) {
     const trx = config?.trx ?? this.db;
+    config?.queryCounter();
     return await trx.image.findUnique({ where: { id } });
   }
 
   async findByIds(ids: number[], config?: RepositoryConfig) {
     const trx = config?.trx ?? this.db;
+    config?.queryCounter();
     return await trx.image.findMany({
       where: { id: { in: ids } },
     });
@@ -53,11 +57,13 @@ export class ImageRepository {
 
   async findByPath(path: string, config?: RepositoryConfig) {
     const trx = config?.trx ?? this.db;
+    config?.queryCounter();
     return await trx.image.findUnique({ where: { path } });
   }
 
   async findByPaths(paths: string[], config?: RepositoryConfig) {
     const trx = config?.trx ?? this.db;
+    config?.queryCounter();
     return await trx.image.findMany({
       where: { path: { in: paths } },
     });
@@ -65,6 +71,7 @@ export class ImageRepository {
 
   async create(image: Omit<ImageEntity, 'id'>, config?: RepositoryConfig) {
     const trx = config?.trx ?? this.db;
+    config?.queryCounter();
     return await trx.image.create({
       data: image,
     });
@@ -76,6 +83,7 @@ export class ImageRepository {
     config?: RepositoryConfig,
   ) {
     const trx = config?.trx ?? this.db;
+    config?.queryCounter();
     return await trx.image.update({
       where: { id },
       data: image,
@@ -84,6 +92,7 @@ export class ImageRepository {
 
   async delete(id: number, config?: RepositoryConfig) {
     const trx = config?.trx ?? this.db;
+    config?.queryCounter();
     await trx.image.delete({
       where: { id },
     });

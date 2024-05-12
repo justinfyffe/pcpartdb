@@ -1,6 +1,5 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
-import { GameEntity, ProductEntity } from '@pcpartdb/database';
-import { ProductEntityCache } from '../product/product-entity.cache';
+import { Injectable } from '@nestjs/common';
+import { GameEntity } from '@pcpartdb/database';
 import { CacheService, CacheType } from '../shared/cache/cache.service';
 import { Context } from '../shared/context';
 import { GameRepository } from './game.repository';
@@ -28,10 +27,6 @@ interface RelationOptions {
   includeRequirements?: boolean;
 }
 
-interface PopulateOptions extends RelationOptions {
-  games: GameEntity[];
-}
-
 interface GetGameIdsToFetchOptions<TData = unknown> {
   ids: number[];
 
@@ -44,8 +39,6 @@ interface GetGameIdsToFetchOptions<TData = unknown> {
 export class GameEntityCache {
   constructor(
     private cacheService: CacheService,
-    @Inject(forwardRef(() => ProductEntityCache))
-    private productCacheService: ProductEntityCache,
     private gameRepository: GameRepository,
   ) {}
 
@@ -112,62 +105,12 @@ export class GameEntityCache {
       return [];
     }
 
-    // Populate Requirements
-    await this.populateRequirements({ ...options, games }, ctx);
-
     return games;
   }
 
   async invalidate(options: InvalidateOptions) {
     const key = `${options.id}`;
     await this.cacheService.invalidate({ type: CacheType.Game, key });
-  }
-
-  private async populateRequirements(options: PopulateOptions, ctx: Context) {
-    if (!options.includeRequirements) {
-      return;
-    }
-
-    const productIdsSet = new Set<number>();
-    for (const game of options.games) {
-      if (game.minimumCpuId) {
-        productIdsSet.add(game.minimumCpuId);
-      }
-      if (game.recommendedCpuId) {
-        productIdsSet.add(game.recommendedCpuId);
-      }
-      if (game.minimumGpuId) {
-        productIdsSet.add(game.minimumGpuId);
-      }
-      if (game.recommendedGpuId) {
-        productIdsSet.add(game.recommendedGpuId);
-      }
-    }
-    const productIds = [...productIdsSet.values()];
-
-    const products = await this.productCacheService.getProductsByIds(
-      { ids: productIds },
-      ctx,
-    );
-    const productsMap = products.reduce((acc, product) => {
-      acc[product.id] = product;
-      return acc;
-    }, {} as Record<number, ProductEntity>);
-
-    for (const game of options.games) {
-      if (game.minimumCpuId) {
-        game.minimumCpu = productsMap[game.minimumCpuId];
-      }
-      if (game.minimumGpuId) {
-        game.minimumGpu = productsMap[game.minimumGpuId];
-      }
-      if (game.recommendedCpuId) {
-        game.recommendedCpu = productsMap[game.recommendedCpuId];
-      }
-      if (game.recommendedGpuId) {
-        game.recommendedGpu = productsMap[game.recommendedGpuId];
-      }
-    }
   }
 
   private async getGameIdsToFetch<TData = unknown>(
@@ -185,7 +128,7 @@ export class GameEntityCache {
       const value = await this.cacheService.getCached({
         type: cacheType,
         key: cacheKey,
-        clone: true,
+        shallowClone: true,
         bypass: bypassCache,
       });
 

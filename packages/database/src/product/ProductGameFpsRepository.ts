@@ -15,6 +15,7 @@ export class ProductGameFpsRepository {
   ) {
     const db = config?.trx ?? this.db;
 
+    config?.queryCounter();
     const results: ProductGameFpsEntity[] = await db.productGameFps.findMany({
       where: { productId: { in: options.productIds } },
     });

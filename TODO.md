@@ -13,6 +13,8 @@ NEXT (long-term):
 
 NEXT (short-term)
 - [] Performance improvements
+  - performance issue is due to structuredClone on large objects
+  - add connection limit to prod
   - View:
     - getProductBySlug: ~70ms
     - mapToProductDto: ~20ms

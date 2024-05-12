@@ -29,6 +29,7 @@ export class ProductUpdateRepository {
 
     const { filter, pagination } = options.query ?? {};
 
+    config?.queryCounter();
     const results = await trx.productUpdate.findMany({
       where: this.generateWhere(filter),
       orderBy: { createdAt: 'asc' },
@@ -36,6 +37,7 @@ export class ProductUpdateRepository {
       take: pagination?.limit ?? 10,
     });
 
+    config?.queryCounter();
     const total = await trx.productUpdate.count({
       where: this.generateWhere(filter),
     });
@@ -50,6 +52,7 @@ export class ProductUpdateRepository {
     const { productId } = options;
 
     const trx = config?.trx ?? this.db;
+    config?.queryCounter();
     return await trx.productUpdate.findMany({
       where: { productId, status: ProductUpdateStatus.Pending },
     });
@@ -58,6 +61,7 @@ export class ProductUpdateRepository {
   async findById(id: number, config?: RepositoryConfig) {
     const trx = config?.trx ?? this.db;
 
+    config?.queryCounter();
     return await trx.productUpdate.findUnique({ where: { id } });
   }
 
@@ -65,6 +69,7 @@ export class ProductUpdateRepository {
     const { productType } = options;
 
     const trx = config?.trx ?? this.db;
+    config?.queryCounter();
     return await trx.productUpdate.count({
       where: {
         productType,
@@ -80,6 +85,7 @@ export class ProductUpdateRepository {
     const trx = config?.trx ?? this.db;
     const { ...entity } = data;
 
+    config?.queryCounter();
     return await trx.productUpdate.create({ data: entity });
   }
 
@@ -91,11 +97,13 @@ export class ProductUpdateRepository {
     const trx = config?.trx ?? this.db;
     const { ...entity } = data;
 
+    config?.queryCounter();
     return await trx.productUpdate.update({ where: { id }, data: entity });
   }
 
   async delete(id: number, config?: RepositoryConfig) {
     const trx = config?.trx ?? this.db;
+    config?.queryCounter();
     await trx.productUpdate.delete({ where: { id } });
   }
 

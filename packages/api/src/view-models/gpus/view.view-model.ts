@@ -47,10 +47,11 @@ export class ViewGpuViewModelService {
         relatedGpuComparisons,
       } as ViewGpuViewModel;
 
-      const response = normalize(result, viewGpuViewModelNormalizr);
-      const sanitized = compactObject(response);
+      // Normalize first, then compact since compact is effectively a deep clone.
+      const normalizd = normalize(result, viewGpuViewModelNormalizr);
+      const compacted = compactObject(normalizd);
 
-      return sanitized;
+      return compacted;
     };
 
     const viewModel = await buildViewModel();

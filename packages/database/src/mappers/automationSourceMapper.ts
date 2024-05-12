@@ -33,11 +33,8 @@ export async function mapToAutomationSourceDtos(
     return null;
   }
 
-  const ret: AutomationSource[] = [];
-  for (let i = 0; i < entities.length; ++i) {
-    ret.push(await mapToAutomationSourceDto(entities[i]));
-  }
-  return ret;
+  const promises = entities.map((entity) => mapToAutomationSourceDto(entity));
+  return await Promise.all(promises);
 }
 
 export function mapToAutomationSourceEntity(

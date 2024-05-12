@@ -15,6 +15,7 @@ export class ProductBenchmarkRepository {
   ) {
     const db = config?.trx ?? this.db;
 
+    config?.queryCounter();
     const results: ProductBenchmarkEntity[] =
       await db.productBenchmark.findMany({
         where: { productId: { in: options.productIds } },

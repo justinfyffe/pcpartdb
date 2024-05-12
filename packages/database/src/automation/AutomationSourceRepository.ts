@@ -33,6 +33,7 @@ export class AutomationSourceRepository {
   async findByIds(ids: number[], config?: RepositoryConfig) {
     const trx = config?.trx ?? this.db;
 
+    config?.queryCounter();
     return await trx.automationSource.findMany({
       where: { id: { in: ids } },
     });
@@ -45,6 +46,7 @@ export class AutomationSourceRepository {
     const trx = config?.trx ?? this.db;
     const { ...entity } = data;
 
+    config?.queryCounter();
     return await trx.automationSource.create({ data: entity });
   }
 
@@ -56,6 +58,7 @@ export class AutomationSourceRepository {
     const trx = config?.trx ?? this.db;
     const { ...entity } = data;
 
+    config?.queryCounter();
     return await trx.automationSource.update({
       where: { id },
       data: entity,
@@ -69,6 +72,7 @@ export class AutomationSourceRepository {
     const trx = config?.trx ?? this.db;
     const { ...entity } = data;
 
+    config?.queryCounter();
     return await trx.automationSource.upsert({
       where: {
         productType_sourceKey_externalKey: {
@@ -84,6 +88,7 @@ export class AutomationSourceRepository {
 
   async delete(id: number, config?: RepositoryConfig) {
     const trx = config?.trx ?? this.db;
+    config?.queryCounter();
     await trx.automationSource.delete({ where: { id } });
   }
 
@@ -92,6 +97,7 @@ export class AutomationSourceRepository {
 
     const { filter } = options.query ?? {};
 
+    config?.queryCounter();
     return await trx.automationSource.findMany({
       where: { ...this.generateWhere(filter) },
     });
@@ -107,6 +113,7 @@ export class AutomationSourceRepository {
     const { filter, pagination } = options.query ?? {};
 
     // Get group keys that match the filter
+    config?.queryCounter();
     const rawGroupKeys = await trx.automationSource.groupBy({
       by: ['groupKey'],
       _count: {
@@ -129,6 +136,7 @@ export class AutomationSourceRepository {
     }
 
     // Get results based on the source names.
+    config?.queryCounter();
     const sources = await trx.automationSource.findMany({
       where: {
         productType: filter?.productType,
@@ -141,6 +149,7 @@ export class AutomationSourceRepository {
     }
 
     // Count total groups
+    config?.queryCounter();
     const total = (
       await trx.automationSource.findMany({
         distinct: ['groupKey'],
@@ -159,6 +168,7 @@ export class AutomationSourceRepository {
     const { filter } = options.query ?? {};
 
     const trx = config?.trx ?? this.db;
+    config?.queryCounter();
     const total = (
       await trx.automationSource.findMany({
         distinct: ['groupKey'],
@@ -185,6 +195,7 @@ export class AutomationSourceRepository {
     regexTokens = `${regexTokens}.*`;
 
     // Get results based on relevancy
+    config?.queryCounter();
     const priorityResults = await trx.automationSource.findMany({
       where: {
         AND: [
@@ -220,6 +231,7 @@ export class AutomationSourceRepository {
     // Get results based on regex
     let fillerResultIds: { id: number }[] = [];
     if (regexTokens !== '.*') {
+      config?.queryCounter();
       fillerResultIds = await trx.$queryRaw`
         SELECT id FROM automation_sources
         WHERE
@@ -230,6 +242,7 @@ export class AutomationSourceRepository {
         LIMIT 6
       `;
     } else {
+      config?.queryCounter();
       fillerResultIds = await trx.$queryRaw`
         SELECT id FROM automation_sources
         WHERE
@@ -239,6 +252,7 @@ export class AutomationSourceRepository {
         LIMIT 6
       `;
     }
+    config?.queryCounter();
     const fillerResults = await trx.automationSource.findMany({
       where: { id: { in: fillerResultIds.map((json) => json.id) } },
       orderBy: { sourceName: 'desc' },
@@ -258,6 +272,7 @@ export class AutomationSourceRepository {
     config?: RepositoryConfig,
   ) {
     const db = config?.trx ?? this.db;
+    config?.queryCounter();
     return (
       (await db.productSource.count({
         where: { sourceKey: key, sourceUrl: url },

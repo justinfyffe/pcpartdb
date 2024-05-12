@@ -28,6 +28,7 @@ export class ProductAutocompleteRepository {
     regexTokens = `${regexTokens}.*`;
 
     // Get results based on search relevancy.
+    config?.queryCounter();
     const priorityProducts = await db.product.findMany({
       where: {
         productType,
@@ -52,12 +53,14 @@ export class ProductAutocompleteRepository {
     // Get results based on regex.
     let fillerProducts: { id: number }[] = [];
     if (regexTokens !== '.*') {
+      config?.queryCounter();
       fillerProducts = await db.$queryRaw`
         SELECT id FROM products
         WHERE product_type = ${productType} AND search_text ~* (${regexTokens})
         LIMIT ${AUTOCOMPLETE_LIMIT}
       `;
     } else {
+      config?.queryCounter();
       fillerProducts = await db.product.findMany({
         where: { productType },
         take: AUTOCOMPLETE_LIMIT,
@@ -65,6 +68,7 @@ export class ProductAutocompleteRepository {
     }
     const fillerResultIds = [...fillerProducts].slice(0, AUTOCOMPLETE_LIMIT);
 
+    config?.queryCounter();
     const fillerResults = await db.product.findMany({
       where: { id: { in: fillerResultIds.map((json) => json.id) } },
       include: { cpuFields: true, gpuFields: true },

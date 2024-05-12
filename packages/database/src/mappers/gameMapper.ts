@@ -25,18 +25,17 @@ export async function mapToGameDto(
     ? (entity.scraperOptions as GameScraperOptions)
     : undefined;
 
-  const minimumCpu = includeRequirements
-    ? await mapToProductDto(entity.minimumCpu, {})
-    : undefined;
-  const minimumGpu = includeRequirements
-    ? await mapToProductDto(entity.minimumGpu, {})
-    : undefined;
-  const recommendedCpu = includeRequirements
-    ? await mapToProductDto(entity.recommendedCpu, {})
-    : undefined;
-  const recommendedGpu = includeRequirements
-    ? await mapToProductDto(entity.recommendedGpu, {})
-    : undefined;
+  const [minimumCpu, minimumGpu, recommendedCpu, recommendedGpu] =
+    await Promise.all([
+      includeRequirements ? mapToProductDto(entity.minimumCpu, {}) : undefined,
+      includeRequirements ? mapToProductDto(entity.minimumGpu, {}) : undefined,
+      includeRequirements
+        ? mapToProductDto(entity.recommendedCpu, {})
+        : undefined,
+      includeRequirements
+        ? mapToProductDto(entity.recommendedGpu, {})
+        : undefined,
+    ]);
 
   return {
     id: entity.id,
@@ -85,11 +84,8 @@ export async function mapToGameDtos(
     return null;
   }
 
-  const ret = [];
-  for (let i = 0; i < entities.length; ++i) {
-    ret.push(await mapToGameDto(entities[i], options));
-  }
-  return ret;
+  const promises = entities.map((entity) => mapToGameDto(entity, options));
+  return await Promise.all(promises);
 }
 
 export function mapToGameEntity(dto: Game): GameEntity {

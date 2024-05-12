@@ -15,6 +15,7 @@ export class ProductSourceRepository {
   ) {
     const db = config?.trx ?? this.db;
 
+    config?.queryCounter();
     const results: ProductSourceEntity[] = await db.productSource.findMany({
       where: { productId: { in: options.productIds } },
     });

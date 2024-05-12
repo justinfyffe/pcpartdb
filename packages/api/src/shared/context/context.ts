@@ -1,4 +1,4 @@
-import { Config, User } from '@pcpartdb/shared';
+import { Config, Semaphore, User } from '@pcpartdb/shared';
 import { Prisma } from '@prisma/client';
 import { Request, Response } from 'express';
 
@@ -10,4 +10,6 @@ export interface Context {
   token?: string;
   config?: Config;
   uuid?: string;
+  queryLock?: Semaphore; // Unused
+  queryCounter: (increment?: boolean) => number;
 }

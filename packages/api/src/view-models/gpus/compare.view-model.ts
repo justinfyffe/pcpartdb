@@ -51,9 +51,10 @@ export class CompareGpusViewModelService {
         relatedGpuComparisons,
       } as CompareGpusViewModel;
 
-      const compact = compactObject(result);
-      const response = normalize(compact, compareGpusViewModelNormalizr);
-      return response;
+      // Normalize first, then compact since compact is effectively a deep clone.
+      const normalized = normalize(result, compareGpusViewModelNormalizr);
+      const compacted = compactObject(normalized);
+      return compacted;
     };
 
     const viewModel = await buildViewModel();

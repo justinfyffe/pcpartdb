@@ -48,9 +48,10 @@ export class CompareCpusViewModelService {
         relatedCpuComparisons,
       } as CompareCpusViewModel;
 
-      const compact = compactObject(result);
-      const response = normalize(compact, compareCpusViewModelNormalizr);
-      return response;
+      // Normalize first, then compact since compact is effectively a deep clone.
+      const normalized = normalize(result, compareCpusViewModelNormalizr);
+      const compacted = compactObject(normalized);
+      return compacted;
     };
 
     const viewModel = await buildViewModel();

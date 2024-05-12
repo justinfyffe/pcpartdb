@@ -48,13 +48,8 @@ export class WebsiteController {
   @Get('sitemap/product-slugs')
   @UseGuards(StaffGuard)
   async getSitemapProductSlugs(@Query('req') req: string, @Ctx() ctx: Context) {
-    return await this.db.transaction(
-      async () => {
-        const body = JSON.parse(req) as GetSitemapProductSlugsRequest;
-        return await this.service.getSitemapProductSlugs(body, ctx);
-      },
-      { ctx },
-    );
+    const body = JSON.parse(req) as GetSitemapProductSlugsRequest;
+    return await this.service.getSitemapProductSlugs(body, ctx);
   }
 
   @Delete('cache')

@@ -175,29 +175,24 @@ export class RelativeDataProductsService {
       });
 
       const [bestBenchmarkPerformance, bestBenchmarkPerformancePerDollar] =
-        await concurrent(
-          [
-            () =>
-              this.getBestBenchmarkPerformance(
-                {
-                  productType: options.products[0].productType,
-                  benchmark: options.benchmark,
-                  bypassCache: options.bypassCache,
-                },
-                ctx,
-              ),
-            () =>
-              this.getBestBenchmarkPerformancePerDollar(
-                {
-                  productType: options.products[0].productType,
-                  benchmark: options.benchmark,
-                  bypassCache: options.bypassCache,
-                },
-                ctx,
-              ),
-          ],
-          { limit: 2 },
-        );
+        await Promise.all([
+          this.getBestBenchmarkPerformance(
+            {
+              productType: options.products[0].productType,
+              benchmark: options.benchmark,
+              bypassCache: options.bypassCache,
+            },
+            ctx,
+          ),
+          this.getBestBenchmarkPerformancePerDollar(
+            {
+              productType: options.products[0].productType,
+              benchmark: options.benchmark,
+              bypassCache: options.bypassCache,
+            },
+            ctx,
+          ),
+        ]);
 
       relative.bestBenchmarkPerformance = bestBenchmarkPerformance;
       relative.bestBenchmarkPerformancePerDollar =

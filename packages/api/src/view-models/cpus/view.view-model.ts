@@ -41,9 +41,10 @@ export class ViewCpuViewModelService {
         relatedCpuComparisons,
       } as ViewCpuViewModel;
 
-      const compact = compactObject(result);
-      const response = normalize(compact, viewCpuViewModelNormalizr);
-      return response;
+      // Normalize first, then compact since compact is effectively a deep clone.
+      const normalized = normalize(result, viewCpuViewModelNormalizr);
+      const compacted = compactObject(normalized);
+      return compacted;
     };
 
     const viewModel = await buildViewModel();

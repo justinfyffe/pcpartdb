@@ -15,11 +15,13 @@ export class ApiKeyRepository {
     if ((await this.findByUserId(userId, config)) != null) {
       await this.deleteByUserId(userId, config);
     }
+    config?.queryCounter();
     return await trx.apiKey.create({ data: apiKey });
   }
 
   async findByUserId(userId: number, config?: RepositoryConfig) {
     const trx = config?.trx ?? this.db;
+    config?.queryCounter();
     return await trx.apiKey.findUnique({
       where: { userId },
       include: { user: true },
@@ -28,6 +30,7 @@ export class ApiKeyRepository {
 
   async findByKey(key: string, config?: RepositoryConfig) {
     const trx = config?.trx ?? this.db;
+    config?.queryCounter();
     return await trx.apiKey.findUnique({
       where: { apiKey: key },
       include: { user: true },
@@ -36,6 +39,7 @@ export class ApiKeyRepository {
 
   async deleteByUserId(userId: number, config?: RepositoryConfig) {
     const trx = config?.trx ?? this.db;
+    config?.queryCounter();
     await trx.apiKey.delete({ where: { userId } });
   }
 }

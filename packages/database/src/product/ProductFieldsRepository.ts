@@ -16,9 +16,11 @@ export class ProductFieldsRepository {
   ) {
     const db = config?.trx ?? this.db;
 
+    config?.queryCounter();
     const cpuFieldResults: CpuFieldsEntity[] = await db.cpuFields.findMany({
       where: { productId: { in: options.productIds } },
     });
+    config?.queryCounter();
     const gpuFieldResults: GpuFieldsEntity[] = await db.gpuFields.findMany({
       where: { productId: { in: options.productIds } },
     });

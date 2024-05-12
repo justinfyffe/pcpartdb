@@ -2,12 +2,12 @@ import { Injectable, NestMiddleware } from '@nestjs/common';
 import { mapToUserDto } from '@pcpartdb/database';
 import {
   BenchmarkKey,
-  Config,
   PREFERRED_CPU_BENCHMARK_HTTP_HEADER,
   PREFERRED_GPU_BENCHMARK_HTTP_HEADER,
   preferredBenchmarkOrDefault,
   PreferredBenchmarks,
   ProductType,
+  Semaphore,
   User,
   UserSettings,
 } from '@pcpartdb/shared';
@@ -30,12 +30,29 @@ export class ContextMiddleware implements NestMiddleware {
   ) {}
 
   async use(req: ApiRequest, res: ApiResponse, next: NextFunction) {
+    let queryCounter = 0;
+    const ctx: Context = {
+      req,
+      res,
+      uuid: randomUUID(),
+      queryCounter: (increment = true) => {
+        if (increment) {
+          queryCounter++;
+        }
+        return queryCounter;
+      },
+      queryLock: new Semaphore(20),
+    };
+    req.context = ctx;
+
     // TODO: move to separate middleware
-    const { user, token } = await this.getUser(req);
+    const { user, token } = await this.getUser(req, ctx);
+    ctx.user = user;
+    ctx.token = token;
     // TODO: move to separate middleware
     const userSettings = await this.getUserSettings(req);
 
-    const config: Config = {
+    ctx.config = {
       env: process.env.NODE_ENV ?? 'dev',
       enableGtm: process.env.ENABLE_GTM === 'true',
       gtmId: process.env.GTM_ID,
@@ -46,29 +63,19 @@ export class ContextMiddleware implements NestMiddleware {
     };
 
     if (process.env.DISABLE_ADS === 'true' || user?.isStaff) {
-      config.disableAds = true;
+      ctx.config.disableAds = true;
     }
-
-    const context: Context = {
-      req,
-      res,
-      user,
-      token,
-      config,
-      uuid: randomUUID(),
-    };
-    req.context = context;
 
     next();
   }
 
-  private async getUser(request: ApiRequest) {
-    const cookieUser = await this.getUserFromCookie(request);
+  private async getUser(request: ApiRequest, ctx: Context) {
+    const cookieUser = await this.getUserFromCookie(request, ctx);
     if (cookieUser.user != null) {
       return cookieUser;
     }
 
-    const apiUser = await this.getUserFromApiKey(request);
+    const apiUser = await this.getUserFromApiKey(request, ctx);
     if (apiUser.user != null) {
       return apiUser;
     }
@@ -78,6 +85,7 @@ export class ContextMiddleware implements NestMiddleware {
 
   private async getUserFromCookie(
     request: ApiRequest,
+    ctx: Context,
   ): Promise<{ user: User; token: string }> {
     const token = this.cookies.get(request, SESSION_COOKIE);
     if (token == null) {
@@ -86,6 +94,7 @@ export class ContextMiddleware implements NestMiddleware {
 
     const accessToken = await this.accessTokenRepository.findByTokenHash(
       hashToken(token),
+      ctx,
     );
 
     return {
@@ -96,6 +105,7 @@ export class ContextMiddleware implements NestMiddleware {
 
   private async getUserFromApiKey(
     request: ApiRequest,
+    ctx: Context,
   ): Promise<{ user: User; token: string }> {
     const authHeader = request.header('authorization');
     if (!authHeader) {
@@ -107,7 +117,7 @@ export class ContextMiddleware implements NestMiddleware {
       return { user: null, token: null };
     }
 
-    const apiKey = await this.apiKeyRepository.findByKey(key);
+    const apiKey = await this.apiKeyRepository.findByKey(key, ctx);
     if (apiKey == null) {
       return { user: null, token: null };
     }
