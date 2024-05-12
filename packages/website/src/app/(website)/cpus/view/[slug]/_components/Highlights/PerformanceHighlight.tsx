@@ -9,6 +9,7 @@ import {
 } from '@pcpartdb/shared';
 import { Button } from 'packages/website/src/app/_common/components/Button/Button';
 import { ButtonVariant } from 'packages/website/src/app/_common/components/Button/types';
+import { Skeleton } from 'packages/website/src/app/_common/components/Skeleton/Skeleton';
 import { useViewModelContext } from 'packages/website/src/app/_common/contexts/ViewModelProvider';
 import { ProductHighlight } from 'packages/website/src/app/_common/product/components/ProductHighlight/ProductHighlight';
 import { useRelativeDataProducts } from 'packages/website/src/app/_common/product/contexts/RelativeDataProductsProvider';
@@ -92,9 +93,9 @@ export const PerformanceHighlight: FunctionComponent<
           )}
 
           {loading && (
-            <div className="animate-pulse flex flex-col gap-3 h-[49px] justify-center">
-              <div className="w-20 h-3 bg-loading rounded" />
-              <div className="w-20 h-3 bg-loading rounded" />
+            <div className="flex flex-col gap-3 h-[49px] justify-center">
+              <Skeleton className="w-20 h-3" pulse />
+              <Skeleton className="w-20 h-3" pulse />
             </div>
           )}
         </div>

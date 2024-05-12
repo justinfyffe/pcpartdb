@@ -14,6 +14,7 @@ import { Card } from '../../../components/Card/Card';
 import { CardContent } from '../../../components/Card/CardContent';
 import { CardTitle } from '../../../components/Card/CardTitle';
 import { DonutChart } from '../../../components/charts/DonutChart';
+import { Skeleton } from '../../../components/Skeleton/Skeleton';
 import { ContentProvider } from '../../../content/ContentProvider';
 import { compileContentComponent } from '../../../content/utils/compileContentComponent';
 import { useGameSelection } from '../../../game/contexts/GameSelectionProvider';
@@ -262,19 +263,19 @@ export const CompareProductRatingCard: FunctionComponent<
           )}
 
           {loading && (
-            <div className="flex-1 animate-pulse flex flex-row justify-evenly gap-x-8 gap-y-2">
+            <div className="flex-1 flex flex-row justify-evenly gap-x-8 gap-y-2">
               <div className="flex flex-col gap-4">
-                <div className="w-25 h-3 bg-loading rounded-full"></div>
-                <div className="w-25 h-25 bg-loading rounded-full"></div>
-                <div className="w-25 h-3 bg-loading rounded-full"></div>
-                <div className="w-25 h-3 bg-loading rounded-full"></div>
+                <Skeleton className="w-25 h-3" pulse />
+                <Skeleton className="w-25 h-25" pulse />
+                <Skeleton className="w-25 h-3" pulse />
+                <Skeleton className="w-25 h-3" pulse />
               </div>
 
               <div className="flex flex-col gap-4">
-                <div className="w-25 h-3 bg-loading rounded-full"></div>
-                <div className="w-25 h-25 bg-loading rounded-full"></div>
-                <div className="w-25 h-3 bg-loading rounded-full"></div>
-                <div className="w-25 h-3 bg-loading rounded-full"></div>
+                <Skeleton className="w-25 h-3" pulse />
+                <Skeleton className="w-25 h-25" pulse />
+                <Skeleton className="w-25 h-3" pulse />
+                <Skeleton className="w-25 h-3" pulse />
               </div>
             </div>
           )}

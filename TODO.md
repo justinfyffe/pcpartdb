@@ -13,7 +13,6 @@ NEXT (long-term):
 
 NEXT (short-term)
 - [] code cleanup
-  - Skeleton component
   - Simplify react components
 - [] Improve SEO
 - [] Home Page Revamp

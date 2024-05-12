@@ -16,7 +16,7 @@ export function Skeleton(props: SkeletonProps) {
   return (
     <Element
       className={classNames(
-        'bg-loading h-3 rounded-full',
+        'bg-loading w-12 h-3 rounded-full',
         props.pulse ? 'animate-pulse' : '',
         props.left ? 'mr-auto' : '',
         props.center ? 'mx-auto' : '',

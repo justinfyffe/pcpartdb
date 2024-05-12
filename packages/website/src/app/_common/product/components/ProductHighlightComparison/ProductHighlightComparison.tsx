@@ -1,4 +1,5 @@
 import React, { cloneElement } from 'react';
+import { Skeleton } from '../../../components/Skeleton/Skeleton';
 import { classNames } from '../../../utils/classNames';
 
 type Value = {
@@ -60,16 +61,16 @@ export const ProductHighlightComparison = (
         {loading && (
           <>
             <div className="flex flex-col items-center justify-between gap-0.5">
-              <div className="animate-pulse flex flex-col gap-3 h-[49px] justify-center">
-                <div className="w-20 h-3 bg-loading rounded" />
-                <div className="w-20 h-3 bg-loading rounded" />
+              <div className="flex flex-col gap-3 h-[49px] justify-center">
+                <Skeleton className="w-20 h-3" pulse />
+                <Skeleton className="w-20 h-3" pulse />
               </div>
             </div>
 
             <div className="flex flex-col items-center justify-between gap-0.5">
-              <div className="animate-pulse flex flex-col gap-3 h-[49px] justify-center">
-                <div className="w-20 h-3 bg-loading rounded" />
-                <div className="w-20 h-3 bg-loading rounded" />
+              <div className="flex flex-col gap-3 h-[49px] justify-center">
+                <Skeleton className="w-20 h-3" pulse />
+                <Skeleton className="w-20 h-3" pulse />
               </div>
             </div>
           </>

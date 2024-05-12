@@ -13,6 +13,7 @@ import { Card } from '../../../components/Card/Card';
 import { CardContent } from '../../../components/Card/CardContent';
 import { CardTitle } from '../../../components/Card/CardTitle';
 import { DonutChart } from '../../../components/charts/DonutChart';
+import { Skeleton } from '../../../components/Skeleton/Skeleton';
 import { ContentProvider } from '../../../content/ContentProvider';
 import { compileContentComponent } from '../../../content/utils/compileContentComponent';
 import { useGameSelection } from '../../../game/contexts/GameSelectionProvider';
@@ -163,10 +164,10 @@ export const ViewProductRatingCard: FunctionComponent<
           )}
 
           {loading && (
-            <div className="animate-pulse flex flex-col gap-4">
-              <div className="w-25 h-25 bg-loading rounded-full"></div>
-              <div className="w-25 h-3 bg-loading rounded-full"></div>
-              <div className="w-25 h-3 bg-loading rounded-full"></div>
+            <div className="flex flex-col gap-4">
+              <Skeleton className="w-25 h-25" pulse />
+              <Skeleton className="w-25 h-3" pulse />
+              <Skeleton className="w-25 h-3" pulse />
             </div>
           )}
         </CardContent>

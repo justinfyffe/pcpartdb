@@ -8,6 +8,7 @@ import {
   ProductType,
   ViewGpuViewModel,
 } from '@pcpartdb/shared';
+import { Skeleton } from 'packages/website/src/app/_common/components/Skeleton/Skeleton';
 import { Table } from 'packages/website/src/app/_common/components/Table/Table';
 import { TBody } from 'packages/website/src/app/_common/components/Table/TBody';
 import { Td } from 'packages/website/src/app/_common/components/Table/Td';
@@ -69,15 +70,15 @@ export const BenchmarkPerformanceTable: FunctionComponent<
 
         {loading &&
           [...new Array(3)].map((_, i) => (
-            <Tr key={i} className="animate-pulse">
+            <Tr key={i}>
               <Td className="py-4">
-                <div className="bg-loading w-35 h-3 rounded" />
+                <Skeleton className="w-35 h-3" pulse />
               </Td>
               <Td className="py-4">
-                <div className="bg-loading w-12 h-3 rounded ml-auto" />
+                <Skeleton className="w-12 h-3" pulse right />
               </Td>
               <Td className="py-4">
-                <div className="bg-loading w-12 h-3 rounded ml-auto" />
+                <Skeleton className="w-12 h-3" pulse right />
               </Td>
             </Tr>
           ))}
