@@ -144,6 +144,6 @@ tr:nth-child(even) {
   }
 }
 
-.shadowed-text:enabled {
+.shadowed-text:not(:disabled) {
   text-shadow: 1px 1px 1px rgb(0 0 0 / 40%);
 }
