@@ -115,7 +115,7 @@ export const RelativeGameFpsTable: FunctionComponent<
         )}
 
         {loading &&
-          [...new Array(3)].map((_, i) => (
+          [...new Array(10)].map((_, i) => (
             <Tr key={i}>
               <Td className="py-4">
                 <Skeleton className="w-35 h-3" pulse />
