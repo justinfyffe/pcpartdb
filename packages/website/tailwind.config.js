@@ -109,6 +109,7 @@ module.exports = {
         adtest: '#ddd',
         loading: '#ccc',
         default: '#fff',
+        'default--hover': '#f8f8f8',
         neutral: '#999',
         primary: '#4c5c7c',
         'primary-action': '#008dd1',

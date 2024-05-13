@@ -64,7 +64,7 @@ export const ViewSelectedGameFpsTable: FunctionComponent<
                 <div className="flex flex-col gap-0.5">
                   <Button
                     variant={ButtonVariant.Link}
-                    className="hidden sm:block font-medium"
+                    className="hidden sm:block font-medium text-left"
                     onClick={showGamesDialog}
                   >
                     {selectedGame?.nameShort || selectedGame?.name}
@@ -77,7 +77,7 @@ export const ViewSelectedGameFpsTable: FunctionComponent<
                     className="text-link text-xs sm:hidden text-left"
                     onClick={showGamesDialog}
                   >
-                    (change game)
+                    change game
                   </Button>
                 </div>
               </div>

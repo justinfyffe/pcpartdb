@@ -35,7 +35,7 @@ const TITLE = 'GPU and CPU benchmarks, specs, and comparisons';
 export const metadata: Metadata = {
   title: `${TITLE} - ${WEBSITE_NAME}`,
   description:
-    'View and compare PC component benchmarks and specs. ' +
+    'View and compare PC part benchmarks and specs. ' +
     'Our database of PC parts will help you choose the best parts for your computer.',
   alternates: {
     canonical: getHomePath(),
@@ -72,7 +72,7 @@ export default async function HomePage() {
         {' '}
         <section className={classNames('flex flex-col justify-center gap-4')}>
           <h1 className="md:text-2xl text-3xl mb-0">
-            View &amp; compare PC component benchmarks and specs
+            View &amp; compare PC part benchmarks and specs
           </h1>
 
           <Tabs variant={TabsVariant.Horizontal}>

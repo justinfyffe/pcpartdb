@@ -53,6 +53,7 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
                     href={cpuAffiliateUrl1}
                     target="_blank"
                     rel="noopener nofollow"
+                    className="underline"
                   >
                     Check Price
                   </a>
@@ -66,6 +67,7 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
                     href={cpuAffiliateUrl2}
                     target="_blank"
                     rel="noopener nofollow"
+                    className="underline"
                   >
                     Check Price
                   </a>

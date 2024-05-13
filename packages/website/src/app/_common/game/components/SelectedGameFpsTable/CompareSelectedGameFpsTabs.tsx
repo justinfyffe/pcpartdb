@@ -137,7 +137,7 @@ export const SelectedGameFpsTable: FunctionComponent<
               <div className="flex flex-col gap-0.5">
                 <Button
                   variant={ButtonVariant.Link}
-                  className="hidden sm:block font-medium"
+                  className="hidden sm:block font-medium text-left"
                   onClick={showGamesDialog}
                 >
                   {selectedGame?.nameShort || selectedGame?.name}
@@ -150,7 +150,7 @@ export const SelectedGameFpsTable: FunctionComponent<
                   className="text-link text-xs sm:hidden text-left"
                   onClick={showGamesDialog}
                 >
-                  (change game)
+                  change game
                 </Button>
               </div>
             </div>
@@ -292,7 +292,7 @@ export const SelectedGameCpfTable: FunctionComponent<
               <div className="flex flex-col gap-0.5">
                 <Button
                   variant={ButtonVariant.Link}
-                  className="hidden sm:block font-medium"
+                  className="hidden sm:block font-medium text-left"
                   onClick={showGamesDialog}
                 >
                   {selectedGame?.nameShort || selectedGame?.name}
@@ -305,7 +305,7 @@ export const SelectedGameCpfTable: FunctionComponent<
                   className="text-link text-xs sm:hidden text-left"
                   onClick={showGamesDialog}
                 >
-                  (change game)
+                  change game
                 </Button>
               </div>
             </div>

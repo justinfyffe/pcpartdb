@@ -24,7 +24,9 @@ export const Dialog: FunctionComponent<DialogProps> = (props) => {
     >
       {(title != null || showClose) && (
         <div className="flex justify-between gap-4 items-center mb-4">
-          {title != null && <h3 className="mb-0">{title}</h3>}
+          {title != null && (
+            <h3 className="text-xl md:text-lg mb-0">{title}</h3>
+          )}
           {showClose && (
             <Button onClick={() => closeDialog()} className="p-0">
               <XMarkIcon className="w-8" />

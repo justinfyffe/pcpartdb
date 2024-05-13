@@ -116,7 +116,14 @@ export class CacheService {
     const ttl = options.ttl ?? CACHE_EXPIRE_TTLS[options.type];
     const key = this.cacheKey(options.type, options.key);
     const result = await this.cacheManager.wrap(key, () => fn(), ttl);
-    return options.shallowClone ? structuredClone(result) : result;
+
+    if (options.deepClone) {
+      return structuredClone(result) as TResult;
+    } else if (options.shallowClone) {
+      return shallowClone(result) as TResult;
+    } else {
+      return result;
+    }
   }
 
   async isCached(options: IsCachedOptions) {

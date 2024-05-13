@@ -42,6 +42,7 @@ export function GeneralInfoTable(props: GeneralInfoTableProps) {
                   href={gpuAffiliateUrl}
                   target="_blank"
                   rel="noopener nofollow"
+                  className="underline"
                 >
                   Check Price
                 </a>

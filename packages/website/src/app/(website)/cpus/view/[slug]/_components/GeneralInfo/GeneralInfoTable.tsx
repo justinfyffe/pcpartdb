@@ -38,7 +38,12 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
           <ProductCustomRow
             label="Shop"
             value={
-              <a href={cpuAffiliateUrl} target="_blank" rel="noopener nofollow">
+              <a
+                href={cpuAffiliateUrl}
+                target="_blank"
+                rel="noopener nofollow"
+                className="underline"
+              >
                 Check Price
               </a>
             }

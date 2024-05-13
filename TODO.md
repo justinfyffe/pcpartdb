@@ -12,7 +12,10 @@ NEXT (long-term):
 
 
 NEXT (short-term)
+- [] UI improvements
+  - add underlines to links on hover
 - [] code cleanup
+  - more prefabs
   - Simplify react components
 - [] Improve SEO
 - [] Home Page Revamp

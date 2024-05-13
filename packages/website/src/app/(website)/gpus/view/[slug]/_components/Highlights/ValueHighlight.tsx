@@ -86,7 +86,6 @@ export function ValueHighlight(props: ValueHighlightProps) {
           <span>Performance Per Dollar</span>
           <span className="text-link text-sm flex gap-2 items-baseline">
             {getProductBenchmarkName(preferredBenchmark)}
-            <span className="text-xs lg:hidden">(change)</span>
           </span>
         </Button>
       }

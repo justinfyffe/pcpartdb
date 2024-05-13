@@ -16,9 +16,10 @@ export interface ButtonProps
 
 const BUTTON_VARIANTS = {
   [ButtonVariant.None]: 'bg-transparent text-inherit shadow-none',
-  [ButtonVariant.Generic]: 'bg-default border-px text-content',
+  [ButtonVariant.Generic]:
+    'bg-default hover:bg-default--hover border-px text-content',
   [ButtonVariant.Primary]:
-    'bg-primary-action hover:bg-primary-action--hover text-default',
+    'bg-primary-action hover:bg-primary-action--hover text-default shadowed-text',
   [ButtonVariant.Info]: 'bg-info text-default',
   [ButtonVariant.Success]: 'bg-success text-default',
   [ButtonVariant.Warning]: 'bg-warning text-default',

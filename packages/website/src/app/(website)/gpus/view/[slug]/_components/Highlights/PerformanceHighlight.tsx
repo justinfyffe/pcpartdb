@@ -79,7 +79,6 @@ export function PerformanceHighlight(props: PerformanceHighlightProps) {
           <span>Performance</span>
           <span className="text-link text-sm flex gap-2 items-baseline">
             {getProductBenchmarkName(preferredBenchmark)}
-            <span className="text-xs lg:hidden">(change)</span>
           </span>
         </Button>
       }

@@ -29,7 +29,7 @@ export function GameOption(props: GameOptionProps) {
   return (
     <div
       className={classNames(
-        'flex flex-col gap-1 items-center p-1 cursor-pointer',
+        'flex flex-col gap-1 items-center p-1 cursor-pointer hover:outline-dotted hover:outline-1',
         selectedGame?.id === game?.id ? 'outline-dotted outline-1' : '',
         props.className,
       )}

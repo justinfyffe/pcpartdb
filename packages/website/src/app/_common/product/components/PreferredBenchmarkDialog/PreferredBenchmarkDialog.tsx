@@ -7,7 +7,6 @@ import {
 import { Dialog } from 'packages/website/src/client/shared/components/Dialog/Dialog';
 import React, { FunctionComponent, useCallback, useState } from 'react';
 import { GenericButton } from '../../../components/Button/GenericButton';
-import { Spinner } from '../../../components/Spinner/Spinner';
 import { classNames } from '../../../utils/classNames';
 
 interface PreferredBenchmarkDialogProps {

@@ -96,7 +96,7 @@ export const ViewProductRatingCard: FunctionComponent<
           className,
         )}
       >
-        <CardTitle as="div" className="flex flex-col  gap-2 h-full">
+        <CardTitle as="div" className="flex flex-col gap-1 h-full">
           <span>
             <Title />
           </span>
@@ -107,10 +107,9 @@ export const ViewProductRatingCard: FunctionComponent<
               className="mr-auto flex flex-col"
               onClick={showPreferredBenchmarkDialog}
             >
-              <span className="text-base text-content">
+              <span className="text-base text-link">
                 {getProductBenchmarkName(preferredBenchmark)}
               </span>
-              <span className="text-link text-xs">(change benchmark)</span>
             </Button>
           </div>
 
