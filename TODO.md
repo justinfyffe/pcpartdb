@@ -13,7 +13,18 @@ NEXT (long-term):
 
 NEXT (short-term)
 - [] UI improvements
-  - add underlines to links on hover
+  - [] If missing "Per MSRP", don't render the tables or view rating card
+  - [] add underlines to links on hover
+- [] SEO
+  - Off-site
+  - On-site
+    - Add text content on various pages
+      - list page
+    - Improve titles
+      - Name1 - Benchmarks, Specs, and Game Performance
+      - Name1 vs Name2 - Benchmarks, Specs, and Game Performance
+    - Improve keyword usages
+    - Improve auto-generated summary
 - [] code cleanup
   - more prefabs
   - Simplify react components
@@ -33,16 +44,7 @@ NEXT (short-term)
 - [] UI Revamp?
   - Look at pc-builds.com
 - [] Add more games
-- [] SEO
-  - Off-site
-  - On-site
-    - Add text content on various pages
-      - list page
-    - Improve titles
-      - Name1 - Benchmarks, Specs, and Game Performance
-      - Name1 vs Name2 - Benchmarks, Specs, and Game Performance
-    - Improve keyword usages
-    - Improve auto-generated summary
+
 - [] Bug Fix
   - Admin games list not showing all games
   - not impacting impact view/compare dialog
