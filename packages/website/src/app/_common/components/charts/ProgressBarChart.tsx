@@ -68,7 +68,7 @@ const ProgressBarBackground = (props: ProgressBarBackgroundProps) => {
   return (
     <div
       className={classNames(
-        'absolute top-0 bottom-0 left-0 right-0 bg-neutral rounded',
+        'absolute top-0 bottom-0 left-0 right-0 bg-neutral-light rounded',
         props.className,
       )}
     >

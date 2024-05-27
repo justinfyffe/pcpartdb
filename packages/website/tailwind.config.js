@@ -111,6 +111,7 @@ module.exports = {
         default: '#fff',
         'default--hover': '#f8f8f8',
         neutral: '#999',
+        'neutral-light': '#c3c3c3',
         primary: '#4c5c7c',
         'primary-action': '#008dd1',
         'primary-action--hover': '#0086c7',

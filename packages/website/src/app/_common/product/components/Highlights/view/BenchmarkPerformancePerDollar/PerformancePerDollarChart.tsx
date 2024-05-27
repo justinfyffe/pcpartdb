@@ -48,12 +48,11 @@ export const PerformancePerDollarChart = (
 
   return (
     <div className={classNames('flex flex-col gap-1')}>
-      <ProgressBarChart percent={percentOfBest} loading={loading}>
-        <div className="flex flex-1 justify-between gap-4">
-          <span>{scoreLabel}</span>
-          {!loading && <span>{percentOfBestLabel}</span>}
-        </div>
-      </ProgressBarChart>
+      <ProgressBarChart percent={percentOfBest} loading={loading} />
+      <div className="flex flex-1 justify-between gap-4">
+        <span>{scoreLabel}</span>
+        {!loading && <span>{percentOfBestLabel}</span>}
+      </div>
     </div>
   );
 };

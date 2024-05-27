@@ -62,16 +62,16 @@ export const PerformanceChart = (props: PerformanceChartProps) => {
           {productName}
         </span>
         {percentHigherLabel && (
-          <span className="whitespace-nowrap">{percentHigherLabel} higher</span>
+          <span className="whitespace-nowrap">{percentHigherLabel} better</span>
         )}
       </div>
 
-      <ProgressBarChart percent={percentOfBest} loading={loading}>
-        <div className="flex flex-1 justify-between gap-4">
-          <span>{scoreLabel}</span>
-          {!loading && <span>{percentOfBestLabel}</span>}
-        </div>
-      </ProgressBarChart>
+      <ProgressBarChart percent={percentOfBest} loading={loading} />
+
+      <div className="flex flex-1 justify-between gap-4">
+        <span>{scoreLabel}</span>
+        {!loading && <span>{percentOfBestLabel}</span>}
+      </div>
     </div>
   );
 };

@@ -131,7 +131,9 @@ export function ProductFeedItem(props: ProductFeedItemProps) {
           </div>
         </div>
 
-        <div className={classNames('flex flex-col gap-2 text-base')}>
+        <div
+          className={classNames('flex flex-col gap-2 text-base text-content')}
+        >
           <h3 className="font-semibold text-lg text-link">
             {formatProductName(product)}
           </h3>

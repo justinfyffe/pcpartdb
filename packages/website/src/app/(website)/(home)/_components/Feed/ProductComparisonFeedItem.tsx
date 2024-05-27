@@ -127,7 +127,7 @@ export function ProductComparisonFeedItem(
           </div>
         </div>
 
-        <div className="flex flex-col text-base">
+        <div className="flex flex-col text-base text-content">
           <h3 className="font-medium text-lg text-link">
             {name1} vs {name2}
           </h3>
