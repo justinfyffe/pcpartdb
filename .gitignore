@@ -46,4 +46,4 @@ yarn.lock
 **/public/u
 
 # CLI and Auto-updater data
-data
+/data

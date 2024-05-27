@@ -6,10 +6,10 @@ import { useProductContent } from 'packages/website/src/app/_common/product/cont
 import React from 'react';
 
 const GeneralInfoParagraph = compileContentComponent({
-  component: (props) => (
-    <p className="text-dimmed">
-      General information about the {props.nameWithNoCompany} like its
-      manufacturer, release date, launch price, and production status.
+  Component: (props) => (
+    <p>
+      General overview of the CPU, including details like its manufacturer,
+      release date, launch price, and current production status.
     </p>
   ),
 });

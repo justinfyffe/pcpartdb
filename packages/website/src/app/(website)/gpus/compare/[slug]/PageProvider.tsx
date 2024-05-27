@@ -3,6 +3,8 @@
 import { CompareGpusViewModel, ProductType } from '@pcpartdb/shared';
 import { useSearchParams } from 'next/navigation';
 import { CacheProvider } from 'packages/website/src/app/_common/cache/CacheProvider';
+import { SectionHeaderProvider } from 'packages/website/src/app/_common/components/SectionHeader/SectionHeaderProvider';
+import { TableOfContentsLink } from 'packages/website/src/app/_common/components/TableOfContents/TableOfContents';
 import { ViewModelType } from 'packages/website/src/app/_common/contexts/types';
 import { ViewModelProvider } from 'packages/website/src/app/_common/contexts/ViewModelProvider';
 import { GameSelectionProvider } from 'packages/website/src/app/_common/game/contexts/GameSelectionProvider';
@@ -23,11 +25,12 @@ export function usePageContext() {
 
 export interface PageProviderProps {
   viewModel: CompareGpusViewModel;
+  tableOfContents: TableOfContentsLink[];
   children: React.ReactNode;
 }
 
 export function PageProvider(props: PageProviderProps) {
-  const { viewModel } = props;
+  const { viewModel, tableOfContents } = props;
   const searchParams = useSearchParams();
 
   const [gpu1, gpu2] = viewModel.comparison;
@@ -53,25 +56,27 @@ export function PageProvider(props: PageProviderProps) {
 
   return (
     <PageContext.Provider value={{ viewModel: viewModel }}>
-      <CacheProvider products={viewModel.comparison}>
-        <ViewModelProvider
-          type={ViewModelType.CompareGpusViewModel}
-          viewModel={viewModel}
-        >
-          <GameSelectionProvider
-            products={[gpu1, gpu2]}
-            game={initialGame?.game}
+      <SectionHeaderProvider links={tableOfContents}>
+        <CacheProvider products={viewModel.comparison}>
+          <ViewModelProvider
+            type={ViewModelType.CompareGpusViewModel}
+            viewModel={viewModel}
           >
-            <RelativeDataProductsProvider
-              productType={ProductType.Gpu}
-              productIds={[gpu1.id, gpu2.id]}
-              relativeDataProducts={viewModel.relativeDataProducts}
+            <GameSelectionProvider
+              products={[gpu1, gpu2]}
+              game={initialGame?.game}
             >
-              {props.children}
-            </RelativeDataProductsProvider>
-          </GameSelectionProvider>
-        </ViewModelProvider>
-      </CacheProvider>
+              <RelativeDataProductsProvider
+                productType={ProductType.Gpu}
+                productIds={[gpu1.id, gpu2.id]}
+                relativeDataProducts={viewModel.relativeDataProducts}
+              >
+                {props.children}
+              </RelativeDataProductsProvider>
+            </GameSelectionProvider>
+          </ViewModelProvider>
+        </CacheProvider>
+      </SectionHeaderProvider>
     </PageContext.Provider>
   );
 }

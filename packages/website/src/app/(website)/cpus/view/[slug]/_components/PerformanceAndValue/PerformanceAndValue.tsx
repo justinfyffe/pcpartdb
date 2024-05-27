@@ -1,7 +1,6 @@
 import { CpuProduct, formatProductName } from '@pcpartdb/shared';
 import { SectionHeader } from 'packages/website/src/app/_common/components/SectionHeader/SectionHeader';
 import React from 'react';
-import { Contents } from '../Contents/Contents';
 import { Benchmarks } from './Benchmarks/Benchmarks';
 import { PerformanceAndValueCharts } from './PerformanceAndValueCharts';
 import { RelativePerformance } from './RelativePerformance/RelativePerformance';
@@ -19,13 +18,13 @@ export function PerformanceAndValue(props: PerformanceAndValueProps) {
 
   return (
     <section className="flex flex-col gap-4">
-      <SectionHeader linkId="benchmark-performance" menu={<Contents />}>
+      <SectionHeader linkId="benchmark-performance">
         Benchmark Performance
       </SectionHeader>
 
       {hasBenchmarks && (
         <div className="flex flex-col gap-6">
-          <PerformanceAndValueCharts />
+          <PerformanceAndValueCharts cpu={cpu} />
           <div className="flex gap-6 md:flex-col md:gap-6">
             <RelativePerformance />
             <RelativeValue />

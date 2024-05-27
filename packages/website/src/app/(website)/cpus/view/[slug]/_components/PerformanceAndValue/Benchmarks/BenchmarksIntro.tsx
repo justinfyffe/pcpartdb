@@ -7,10 +7,11 @@ import React from 'react';
 
 const BenchmarksParagraph = compileContentComponent({
   deps: [],
-  component: (props) => (
-    <p className="text-dimmed">
-      Performance and benchmark metrics for the {props.nameWithNoCompany}. These
-      are usually the best indicator for determing a CPUs performance.
+  Component: (props) => (
+    <p>
+      Performance metrics across industry-standard CPU benchmark tests. These
+      scores provide a valuable insight into overall performance. Powerful CPUs
+      tend to have higher scores.
     </p>
   ),
 });

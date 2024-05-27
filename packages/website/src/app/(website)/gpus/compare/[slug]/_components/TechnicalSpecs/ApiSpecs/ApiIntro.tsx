@@ -8,10 +8,11 @@ import React from 'react';
 
 export const ApiIntroSentence1 = compileContentComponent({
   deps: [],
-  component: (props) => (
+  Component: (props) => (
     <>
-      API versions that the {props.name1} and {props.name2} supports. Older GPUs
-      may not support recent versions.
+      Graphics API versions supported by these graphics cards. APIs evolve over
+      time, introducing new features and functionalities. Older GPUs may not
+      support recent versions.
     </>
   ),
 });
@@ -25,7 +26,7 @@ export const ApiIntro = () => {
 
   return (
     <ContentProvider params={{ name1, name2 }}>
-      <p className="text-dimmed">
+      <p>
         <ApiIntroSentence1 />
       </p>
     </ContentProvider>

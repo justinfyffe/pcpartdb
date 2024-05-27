@@ -20,7 +20,7 @@ const TitleSentence = compileContentComponent(
   {
     tags: [ListGpusContentTag.SortedBestPerformance],
     deps: [],
-    component: (props) => (
+    Component: (props) => (
       <>
         {props.bestOrWorstTitle} {props.marketSegment} {props.company} GPUs by
         performance
@@ -30,7 +30,7 @@ const TitleSentence = compileContentComponent(
   {
     tags: [ListGpusContentTag.SortedBestValue],
     deps: [],
-    component: (props) => (
+    Component: (props) => (
       <>
         {props.bestOrWorstTitle} {props.marketSegment} {props.company} GPUs by
         performance per dollar
@@ -39,7 +39,7 @@ const TitleSentence = compileContentComponent(
   },
   {
     tags: [ListGpusContentTag.SortedReleaseDate],
-    component: (props) => (
+    Component: (props) => (
       <>
         {props.newestOrOldestTitle} {props.marketSegment} {props.company} GPUs
         by release date
@@ -51,13 +51,13 @@ const TitleSentence = compileContentComponent(
 const SortedSentence = compileContentComponent(
   {
     tags: [ListGpusContentTag.SortedBestPerformance],
-    component: (props) => (
+    Component: (props) => (
       <>Sorted by {props.preferredBenchmarkName} performance.</>
     ),
   },
   {
     tags: [ListGpusContentTag.SortedBestValue],
-    component: (props) => (
+    Component: (props) => (
       <>
         Sorted by {props.preferredBenchmarkName} performance per dollar (MSRP).
       </>
@@ -65,14 +65,14 @@ const SortedSentence = compileContentComponent(
   },
   {
     tags: [ListGpusContentTag.SortedReleaseDate],
-    component: () => <>Sorted by release date.</>,
+    Component: () => <>Sorted by release date.</>,
   },
 );
 
 const FilteredSentence = compileContentComponent({
   tags: [],
   deps: ['filtersList'],
-  component: (props) => <>Filtered to {props.filtersList} graphics cards.</>,
+  Component: (props) => <>Filtered to {props.filtersList} graphics cards.</>,
 });
 
 export const ListTitle: FunctionComponent = () => {
@@ -96,7 +96,7 @@ export const ListTitle: FunctionComponent = () => {
           <TitleSentence />
         </h1>
 
-        <p className="text-dimmed mb-0">
+        <p className="mb-0">
           <SortedSentence /> <FilteredSentence />
         </p>
       </div>

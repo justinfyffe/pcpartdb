@@ -7,10 +7,10 @@ import React from 'react';
 
 export const PhysicalIntroParagraph = compileContentComponent({
   deps: [],
-  component: (props) => (
-    <p className="text-dimmed">
-      {props.nameWithNoCompany}&apos;s physical and architecture specs like its
-      codename, generation, PCI Express versions, and chipsets.
+  Component: (props) => (
+    <p>
+      Information about its manufacturing like its foundry, process size, and
+      transistor count.
     </p>
   ),
 });

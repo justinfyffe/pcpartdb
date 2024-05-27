@@ -16,6 +16,10 @@ export const PowerSpecs: FunctionComponent<PowerSpecsProps> = (props) => {
   const [cpu1, cpu2] = comparison;
 
   if (
+    !hasProductFieldFormattedValue(cpu1.fields?.socket) &&
+    !hasProductFieldFormattedValue(cpu2.fields?.socket) &&
+    !hasProductFieldFormattedValue(cpu1.fields?.pciExpress) &&
+    !hasProductFieldFormattedValue(cpu2.fields?.pciExpress) &&
     !hasProductFieldFormattedValue(cpu1.fields?.tdp) &&
     !hasProductFieldFormattedValue(cpu2.fields?.tdp) &&
     !hasProductFieldFormattedValue(cpu1.fields?.pl1) &&
@@ -23,14 +27,18 @@ export const PowerSpecs: FunctionComponent<PowerSpecsProps> = (props) => {
     !hasProductFieldFormattedValue(cpu1.fields?.pl2) &&
     !hasProductFieldFormattedValue(cpu2.fields?.pl2) &&
     !hasProductFieldFormattedValue(cpu1.fields?.ppt) &&
-    !hasProductFieldFormattedValue(cpu2.fields?.ppt)
+    !hasProductFieldFormattedValue(cpu2.fields?.ppt) &&
+    !hasProductFieldFormattedValue(cpu1.fields?.tCaseMax) &&
+    !hasProductFieldFormattedValue(cpu2.fields?.tCaseMax) &&
+    !hasProductFieldFormattedValue(cpu1.fields?.tjMax) &&
+    !hasProductFieldFormattedValue(cpu2.fields?.tjMax)
   ) {
     return <></>;
   }
 
   return (
     <section className={className}>
-      <h3 className="mb-1">Power Consumption</h3>
+      <h3 className="mb-1">Compatibility &amp; Power Consumption</h3>
       <PowerIntro />
       <PowerTable comparison={comparison} />
     </section>

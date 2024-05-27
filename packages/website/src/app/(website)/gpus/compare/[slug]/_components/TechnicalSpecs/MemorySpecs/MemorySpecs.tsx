@@ -25,14 +25,18 @@ export const MemorySpecs: FunctionComponent<MemorySpecsProps> = (props) => {
     !hasProductFieldFormattedValue(gpu1.fields?.memoryClock) &&
     !hasProductFieldFormattedValue(gpu2.fields?.memoryClock) &&
     !hasProductFieldFormattedValue(gpu1.fields?.memoryInterface) &&
-    !hasProductFieldFormattedValue(gpu2.fields?.memoryInterface)
+    !hasProductFieldFormattedValue(gpu2.fields?.memoryInterface) &&
+    !hasProductFieldFormattedValue(gpu1.fields?.l1Cache) &&
+    !hasProductFieldFormattedValue(gpu2.fields?.l1Cache) &&
+    !hasProductFieldFormattedValue(gpu1.fields?.l2Cache) &&
+    !hasProductFieldFormattedValue(gpu2.fields?.l2Cache)
   ) {
     return <></>;
   }
 
   return (
     <section className={className}>
-      <h3 className="mb-1">Memory</h3>
+      <h3 className="mb-1">Memory Details</h3>
       <MemoryIntro />
       <MemoryTable comparison={comparison} />
     </section>

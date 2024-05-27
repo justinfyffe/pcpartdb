@@ -9,7 +9,7 @@ import { useProductContent } from '../../../content/useProductContent';
 
 const PerformanceRankPlacement = compileContentComponent({
   tags: [RankTag.Performance],
-  component: (props) => {
+  Component: (props) => {
     return (
       <>
         The {props.nameWithNoCompany} has the{' '}
@@ -29,11 +29,11 @@ const PerformanceBestDiff = compileContentComponent(
     // Example:
     tags: [RankTag.BestPerformance],
     deps: [],
-    component: (_props) => <></>,
+    Component: (_props) => <></>,
   },
   {
     tags: [RankTag.Performance],
-    component: (props) => (
+    Component: (props) => (
       <>
         It achieves {props.bestPerformanceDifferencePct}% of the performance of
         the best benchmarked CPU, the {props.bestPerformanceName}.
@@ -44,7 +44,7 @@ const PerformanceBestDiff = compileContentComponent(
 
 const PerformanceValue = compileContentComponent({
   tags: [RankTag.Performance, RankTag.Value],
-  component: (props) => (
+  Component: (props) => (
     <>
       Its {props.preferredBenchmarkPerformance} score and {props.msrp} launch
       price (MSRP) gives it a performance per dollar of{' '}
@@ -57,19 +57,21 @@ const PerformanceValue = compileContentComponent({
 
 const PerformanceParagraph = compileContentComponent({
   tags: [],
-  component: () => (
+  Component: () => (
     <p>
       <PerformanceRankPlacement /> <PerformanceBestDiff /> <PerformanceValue />
     </p>
   ),
 });
 
-interface PerformanceBlurbProps {}
+interface PerformanceBlurbProps {
+  index?: number;
+}
 
 export const PerformanceBlurb: FunctionComponent<PerformanceBlurbProps> = (
-  _props,
+  props,
 ) => {
-  const { contentTags, contentParams } = useProductContent();
+  const { contentTags, contentParams } = useProductContent(props.index);
 
   return (
     <ContentProvider tags={contentTags} params={contentParams}>

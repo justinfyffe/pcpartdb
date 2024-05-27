@@ -24,6 +24,7 @@ import { CompareProductsForm } from 'packages/website/src/app/_common/product/co
 import { classNames } from 'packages/website/src/app/_common/utils/classNames';
 import React from 'react';
 import { DocumentTitle } from './_components/DocumentTitle/DocumentTitle';
+import { ListDescription } from './_components/ListDescription/ListDescription';
 import { ListFilters } from './_components/ListFilters/ListFilters';
 import { ListMenu } from './_components/ListMenu/ListMenu';
 import { ListPagination } from './_components/ListPagination/ListPagination';
@@ -114,13 +115,9 @@ export default async function ListCpusPage(props: ListCpusPageProps) {
       <ListProvider viewModel={response}>
         <DocumentTitle />
 
-        <Breadcrumbs className="mb-4">
-          <Breadcrumb href={getHomePath()}>Home</Breadcrumb>
-          <Breadcrumb>Processors</Breadcrumb>
-        </Breadcrumbs>
-
         <section className="flex flex-col gap-8 justify-center mb-4">
           <section className={classNames('flex flex-col justify-center gap-4')}>
+            <h2 className="mb-0">Search CPUs</h2>
             <CompareProductsForm
               productType={ProductType.Cpu}
               values={[null, null]}
@@ -130,6 +127,8 @@ export default async function ListCpusPage(props: ListCpusPageProps) {
           <DisplayAd unit={AdUnit.ListPagePreTitleDisplay} />
 
           <article className="flex-1 flex flex-col gap-4">
+            <ListDescription />
+
             <div className="flex items-center justify-between">
               <ListTitle />
               <ListMenu

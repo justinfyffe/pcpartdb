@@ -5,8 +5,6 @@ import {
   formatProductComparisonName,
   formatProductName,
   getCompareGpusPath,
-  getHomePath,
-  getListGpusPath,
   isApiError,
   isNotFoundError,
   joinUrlParts,
@@ -20,11 +18,12 @@ import { viewModelClient } from 'packages/website/src/app/_common/api/ViewModelC
 import { DisplayAd } from 'packages/website/src/app/_common/components/Ad/DisplayAd';
 import { MultiplexAd } from 'packages/website/src/app/_common/components/Ad/MultiplexAd';
 import { AdUnit } from 'packages/website/src/app/_common/components/Ad/types';
-import { Breadcrumb } from 'packages/website/src/app/_common/components/Breadcrumbs/Breadcrumb';
-import { Breadcrumbs } from 'packages/website/src/app/_common/components/Breadcrumbs/Breadcrumbs';
+import {
+  TableOfContents,
+  TableOfContentsLink,
+} from 'packages/website/src/app/_common/components/TableOfContents/TableOfContents';
 import { CompareProductsForm } from 'packages/website/src/app/_common/product/components/CompareProductsForm/CompareProductsForm';
 import React from 'react';
-import { Contents } from './_components/Contents/Contents';
 import { Disclaimer } from './_components/Disclaimer/Disclaimer';
 import { GamingPerformance } from './_components/GamingPerformance/GamingPerformance';
 import { GeneralInfo } from './_components/GeneralInfo/GeneralInfo';
@@ -128,17 +127,25 @@ export default async function CompareGpusPage(props: CompareGpusPageProps) {
     company: false,
   });
 
-  return (
-    <PageProvider viewModel={viewModel}>
-      <Breadcrumbs className="mb-4">
-        <Breadcrumb href={getHomePath()}>Home</Breadcrumb>
-        <Breadcrumb href={getListGpusPath()}>Graphics Cards</Breadcrumb>
-        <Breadcrumb>{shortPageTitle}</Breadcrumb>
-      </Breadcrumbs>
+  const tableOfContents: TableOfContentsLink[] = [
+    { label: 'Highlights', href: '#contents' },
+    { label: 'Summary', href: '#summary' },
+    { label: 'Gaming Performance', href: '#gaming-performance' },
+    { label: 'Benchmark Performance', href: '#benchmark-performance' },
+    { label: 'Technical Specs', href: '#tech-specs' },
+    viewModel?.relatedGpuComparisons?.length
+      ? { label: 'Related Comparisons', href: '#related-comparisons' }
+      : null,
+    viewModel?.relatedGpus?.length
+      ? { label: 'Related GPUs', href: '#related-gpus' }
+      : null,
+  ].filter((value) => !!value);
 
+  return (
+    <PageProvider viewModel={viewModel} tableOfContents={tableOfContents}>
       <div className="flex flex-col gap-6 justify-center">
         <section className="flex flex-wrap w-full">
-          <h1 className="font-semibold">{pageTitle}</h1>
+          <h1 className="font-semibold mb-6">{pageTitle}</h1>
 
           <CompareProductsForm
             productType={ProductType.Gpu}
@@ -148,8 +155,11 @@ export default async function CompareGpusPage(props: CompareGpusPageProps) {
 
         <DisplayAd unit={AdUnit.ComparePagePreHighlightsDisplay} />
 
-        <article className="flex-1 flex flex-col gap-6 max-w-full">
-          <Contents />
+        <article
+          id="contents"
+          className="flex-1 flex flex-col gap-6 max-w-full"
+        >
+          <TableOfContents links={tableOfContents} />
           <Highlights comparison={comparison} />
           <Overview comparison={comparison} />
           <DisplayAd unit={AdUnit.ComparePagePostSummaryDisplay} />

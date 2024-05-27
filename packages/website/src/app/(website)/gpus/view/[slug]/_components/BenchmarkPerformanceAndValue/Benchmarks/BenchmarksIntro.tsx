@@ -6,19 +6,18 @@ import { useProductContent } from 'packages/website/src/app/_common/product/cont
 import React from 'react';
 
 const BenchmarksIntroSentence1 = compileContentComponent({
-  component: (props) => (
+  Component: (props) => (
     <>
-      Performance and benchmark metrics for the {props.nameWithNoCompany}. These
-      are usually the best indicator for determing a GPUs performance.
+      Performance metrics across industry-standard GPU benchmark tests. These
+      scores provide a valuable insight into overall performance. Powerful GPUs
+      tend to have higher scores.
     </>
   ),
 });
 export const BenchmarksIntro = () => {
-  const { contentTags, contentParams } = useProductContent();
-
   return (
-    <ContentProvider tags={contentTags} params={contentParams}>
-      <p className="text-dimmed">
+    <ContentProvider>
+      <p>
         <BenchmarksIntroSentence1 />
       </p>
     </ContentProvider>

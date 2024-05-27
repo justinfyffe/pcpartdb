@@ -11,7 +11,7 @@ export function compileContentComponent(...content: RawContentComponent[]) {
   const variants: CompiledContentComponentVariants = [];
 
   for (let i = 0; i < content.length; ++i) {
-    const { tags, deps, component } = content[i];
+    const { tags, deps, Component: component } = content[i];
 
     variants.push({
       tags: tags || [],

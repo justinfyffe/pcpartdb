@@ -1,8 +1,6 @@
 import {
   ApiError,
   formatProductName,
-  getHomePath,
-  getListCpusPath,
   getViewCpuPath,
   isApiError,
   isNotFoundError,
@@ -19,11 +17,12 @@ import { viewModelClient } from 'packages/website/src/app/_common/api/ViewModelC
 import { DisplayAd } from 'packages/website/src/app/_common/components/Ad/DisplayAd';
 import { MultiplexAd } from 'packages/website/src/app/_common/components/Ad/MultiplexAd';
 import { AdUnit } from 'packages/website/src/app/_common/components/Ad/types';
-import { Breadcrumb } from 'packages/website/src/app/_common/components/Breadcrumbs/Breadcrumb';
-import { Breadcrumbs } from 'packages/website/src/app/_common/components/Breadcrumbs/Breadcrumbs';
+import {
+  TableOfContents,
+  TableOfContentsLink,
+} from 'packages/website/src/app/_common/components/TableOfContents/TableOfContents';
 import { CompareProductsForm } from 'packages/website/src/app/_common/product/components/CompareProductsForm/CompareProductsForm';
 import React from 'react';
-import { Contents } from './_components/Contents/Contents';
 import { Disclaimer } from './_components/Disclaimer/Disclaimer';
 import { GeneralInfo } from './_components/GeneralInfo/GeneralInfo';
 import { Highlights } from './_components/Highlights/Highlights';
@@ -41,7 +40,7 @@ type ViewCpuPageProps = {
 
 export async function generateMetadata(
   props: ViewCpuPageProps,
-  metadata: ResolvingMetadata,
+  _metadata: ResolvingMetadata,
 ): Promise<Metadata> {
   const slug = props.params.slug;
 
@@ -103,17 +102,24 @@ export default async function ViewCpuPage(props: ViewCpuPageProps) {
   const cpuName = formatProductName(cpu);
   const cpuShortName = formatProductName(cpu, { company: false });
 
-  return (
-    <PageProvider viewModel={viewModel}>
-      <Breadcrumbs className="mb-4">
-        <Breadcrumb href={getHomePath()}>Home</Breadcrumb>
-        <Breadcrumb href={getListCpusPath()}>Processors</Breadcrumb>
-        <Breadcrumb>{cpuShortName}</Breadcrumb>
-      </Breadcrumbs>
+  const tableOfContents: TableOfContentsLink[] = [
+    { label: 'Highlights', href: '#contents' },
+    { label: 'Summary', href: '#summary' },
+    { label: 'Benchmark Performance', href: '#benchmark-performance' },
+    { label: 'Technical Specs', href: '#tech-specs' },
+    viewModel?.relatedCpus?.length
+      ? { label: 'Related CPUs', href: '#related-cpus' }
+      : null,
+    viewModel?.relatedCpuComparisons?.length
+      ? { label: 'Related Comparisons', href: '#related-comparisons' }
+      : null,
+  ].filter((value) => !!value);
 
+  return (
+    <PageProvider viewModel={viewModel} tableOfContents={tableOfContents}>
       <div className="flex flex-col justify-center gap-6">
         <section className="flex flex-col w-full">
-          <h1 className="font-semibold">{cpuName}</h1>
+          <h1 className="font-semibold mb-6">{cpuName}</h1>
           <CompareProductsForm
             productType={ProductType.Cpu}
             values={[cpu?.id]}
@@ -122,8 +128,11 @@ export default async function ViewCpuPage(props: ViewCpuPageProps) {
 
         <DisplayAd unit={AdUnit.ViewPagePreHighlightsDisplay} />
 
-        <article className="flex-1 flex flex-col gap-6 max-w-full">
-          <Contents />
+        <article
+          id="contents"
+          className="flex-1 flex flex-col gap-6 max-w-full"
+        >
+          <TableOfContents links={tableOfContents} />
           <Highlights cpu={cpu} />
           <Overview cpu={cpu} />
           <DisplayAd unit={AdUnit.ViewPagePostSummaryDisplay} />
@@ -132,7 +141,7 @@ export default async function ViewCpuPage(props: ViewCpuPageProps) {
           <DisplayAd unit={AdUnit.ViewPagePostBenchmarkPerfValueDisplay} />
           <TechnicalSpecs cpu={cpu} />
           <MultiplexAd unit={AdUnit.ViewPagePostTechSpecsMultiplex} />
-          <RelatedCpus relatedCpus={relatedCpus} />
+          <RelatedCpus cpu={cpu} relatedCpus={relatedCpus} />
           <RelatedComparisons relatedComparisons={relatedCpuComparisons} />
           <Disclaimer />
         </article>

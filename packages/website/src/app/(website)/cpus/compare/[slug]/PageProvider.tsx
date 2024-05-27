@@ -2,6 +2,8 @@
 
 import { CompareCpusViewModel, ProductType } from '@pcpartdb/shared';
 import { CacheProvider } from 'packages/website/src/app/_common/cache/CacheProvider';
+import { SectionHeaderProvider } from 'packages/website/src/app/_common/components/SectionHeader/SectionHeaderProvider';
+import { TableOfContentsLink } from 'packages/website/src/app/_common/components/TableOfContents/TableOfContents';
 import { ViewModelType } from 'packages/website/src/app/_common/contexts/types';
 import { ViewModelProvider } from 'packages/website/src/app/_common/contexts/ViewModelProvider';
 import { RelativeDataProductsProvider } from 'packages/website/src/app/_common/product/contexts/RelativeDataProductsProvider';
@@ -21,30 +23,33 @@ export function usePageContext() {
 
 export interface PageProviderProps {
   viewModel: CompareCpusViewModel;
+  tableOfContents: TableOfContentsLink[];
   children: React.ReactNode;
 }
 
 export function PageProvider(props: PageProviderProps) {
-  const { viewModel } = props;
+  const { viewModel, tableOfContents } = props;
 
   const [cpu1, cpu2] = viewModel.comparison;
 
   return (
     <PageContext.Provider value={{ viewModel: viewModel }}>
-      <CacheProvider products={viewModel.comparison}>
-        <ViewModelProvider
-          type={ViewModelType.CompareCpusViewModel}
-          viewModel={viewModel}
-        >
-          <RelativeDataProductsProvider
-            productType={ProductType.Cpu}
-            productIds={[cpu1.id, cpu2.id]}
-            relativeDataProducts={viewModel.relativeDataProducts}
+      <SectionHeaderProvider links={tableOfContents}>
+        <CacheProvider products={viewModel.comparison}>
+          <ViewModelProvider
+            type={ViewModelType.CompareCpusViewModel}
+            viewModel={viewModel}
           >
-            {props.children}
-          </RelativeDataProductsProvider>
-        </ViewModelProvider>
-      </CacheProvider>
+            <RelativeDataProductsProvider
+              productType={ProductType.Cpu}
+              productIds={[cpu1.id, cpu2.id]}
+              relativeDataProducts={viewModel.relativeDataProducts}
+            >
+              {props.children}
+            </RelativeDataProductsProvider>
+          </ViewModelProvider>
+        </CacheProvider>
+      </SectionHeaderProvider>
     </PageContext.Provider>
   );
 }

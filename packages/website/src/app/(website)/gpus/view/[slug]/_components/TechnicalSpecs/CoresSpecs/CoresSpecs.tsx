@@ -23,13 +23,7 @@ export const CoresSpecs: FunctionComponent<CoresSpecsProps> = (props) => {
     !hasProductFieldFormattedValue(gpu.fields?.tensorCores) &&
     !hasProductFieldFormattedValue(gpu.fields?.rtCores) &&
     !hasProductFieldFormattedValue(gpu.fields?.gpuCoreBaseClock) &&
-    !hasProductFieldFormattedValue(gpu.fields?.gpuCoreBoostClock) &&
-    !hasProductFieldFormattedValue(gpu.fields?.l1Cache) &&
-    !hasProductFieldFormattedValue(gpu.fields?.l2Cache) &&
-    !hasProductFieldFormattedValue(gpu.fields?.pixelRate) &&
-    !hasProductFieldFormattedValue(gpu.fields?.textureRate) &&
-    !hasProductFieldFormattedValue(gpu.fields?.fp32) &&
-    !hasProductFieldFormattedValue(gpu.fields?.fp64)
+    !hasProductFieldFormattedValue(gpu.fields?.gpuCoreBoostClock)
   ) {
     return <></>;
   }

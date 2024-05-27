@@ -10,7 +10,7 @@ import {
   ListGpusViewModel,
   ProductType,
 } from '@pcpartdb/shared';
-import { useCancelable } from 'packages/website/src/app/_common/hooks/useCancelable';
+import { useCancelable } from 'packages/website/src/app/_common/hooks/utils/useCancelable';
 import { listProducts } from 'packages/website/src/app/_common/product/api';
 import React, {
   createContext,

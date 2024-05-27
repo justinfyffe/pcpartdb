@@ -7,12 +7,11 @@ import React from 'react';
 
 export const CompatibilityIntroSentence1 = compileContentComponent({
   deps: [],
-  component: (props) => (
+  Component: (props) => (
     <>
-      {props.nameWithNoCompany}&apos;s slots, bus interface, power consumption,
-      and output ports. These specs are useful for verifying that the{' '}
-      {props.nameWithNoCompanyNoBrand} is compatible with your motherboard,
-      power supply, and monitor.
+      Compatibility information like its slot size, bus interface, power
+      consumption, and display support. These specs are useful for verifying
+      compatibility with your motherboard, power supply, and monitor.
     </>
   ),
 });
@@ -22,7 +21,7 @@ export const CompatibilityIntro = () => {
 
   return (
     <ContentProvider tags={contentTags} params={contentParams}>
-      <p className="text-dimmed">
+      <p>
         <CompatibilityIntroSentence1 />
       </p>
     </ContentProvider>

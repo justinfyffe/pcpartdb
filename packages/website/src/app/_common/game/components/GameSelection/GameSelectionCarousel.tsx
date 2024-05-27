@@ -1,11 +1,13 @@
 'use client';
 
 import { Game } from '@pcpartdb/shared';
-import React, { useMemo } from 'react';
-import useWindowDimensions from '../../../hooks/useWindowDimensions';
+import React, { useEffect, useMemo, useState } from 'react';
+import useWindowDimensions from '../../../hooks/browser/useWindowDimensions';
 import { useGameSelection } from '../../contexts/GameSelectionProvider';
 import { GameOption } from './GameOption';
 import { MoreGamesOption } from './MoreGamesOption';
+
+const DEFAULT_LIMIT = 7;
 
 export interface GameSelectionCarouselProps {
   games?: Partial<Game>[];
@@ -14,36 +16,44 @@ export interface GameSelectionCarouselProps {
 export function GameSelectionCarousel(props: GameSelectionCarouselProps) {
   const { games } = props;
   const { selectedGame } = useGameSelection();
+  const [limit, setLimit] = useState(DEFAULT_LIMIT);
+  const [lastGame, setLastGame] = useState(() => {
+    if (games.findIndex((game) => game?.id === selectedGame?.id) >= limit - 1) {
+      return selectedGame;
+    } else {
+      return games[limit - 1] || null;
+    }
+  });
 
   const windowDimensions = useWindowDimensions();
-  const limit = useMemo(() => {
-    const defaultLimit = 7;
-    if (!windowDimensions.width || !windowDimensions.height) {
-      return defaultLimit;
-    }
-
+  useEffect(() => {
+    // Must be done in an effect so it's only on the client.
+    // For hydration consistency purposes.
     if (windowDimensions.width < 768) {
-      return 3;
+      setLimit(3);
+    } else if (windowDimensions.width < 1024) {
+      setLimit(5);
+    } else {
+      setLimit(DEFAULT_LIMIT);
     }
-
-    if (windowDimensions.width < 1024) {
-      return 5;
-    }
-
-    return defaultLimit;
-  }, [windowDimensions.height, windowDimensions.width]);
+  }, [windowDimensions.width]);
 
   // Construct priority list:
   // Ordered by release date.
   // If a game is selected that is not in the <limit>. Then the last one
   // is removed, and the selected is pushed on.
   const priority = useMemo(() => {
-    const list = games.slice(0, limit);
-    if (games.findIndex((game) => game?.id === selectedGame?.id) >= limit) {
-      list.pop();
-      list.push(selectedGame);
+    const list = games.slice(0, limit - 1);
+    if (lastGame != null) {
+      list.push(lastGame);
     }
     return list;
+  }, [games, lastGame, limit]);
+
+  useEffect(() => {
+    if (games.findIndex((game) => game?.id === selectedGame?.id) >= limit - 1) {
+      setLastGame(selectedGame);
+    }
   }, [games, limit, selectedGame]);
 
   if (!games) {

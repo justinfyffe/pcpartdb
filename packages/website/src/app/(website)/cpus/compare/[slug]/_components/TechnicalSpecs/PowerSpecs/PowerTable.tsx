@@ -37,6 +37,14 @@ export const PowerTable: FunctionComponent<PowerTableProps> = (props) => {
       <TBody>
         <ProductFieldRow
           type={ProductType.Cpu}
+          fields={[cpu1.fields?.socket, cpu2.fields?.socket]}
+        />
+        <ProductFieldRow
+          type={ProductType.Cpu}
+          fields={[cpu1.fields?.pciExpress, cpu2.fields?.pciExpress]}
+        />
+        <ProductFieldRow
+          type={ProductType.Cpu}
           fields={[cpu1.fields?.tdp, cpu2.fields?.tdp]}
         />
         <ProductFieldRow
@@ -50,6 +58,14 @@ export const PowerTable: FunctionComponent<PowerTableProps> = (props) => {
         <ProductFieldRow
           type={ProductType.Cpu}
           fields={[cpu1.fields?.ppt, cpu2.fields?.ppt]}
+        />
+        <ProductFieldRow
+          type={ProductType.Cpu}
+          fields={[cpu1.fields?.tCaseMax, cpu2.fields?.tCaseMax]}
+        />
+        <ProductFieldRow
+          type={ProductType.Cpu}
+          fields={[cpu1.fields?.tjMax, cpu2.fields?.tjMax]}
         />
       </TBody>
     </Table>

@@ -16,14 +16,16 @@ export const MemorySpecs: FunctionComponent<MemorySpecsProps> = (props) => {
     !hasProductFieldFormattedValue(gpu.fields?.memoryType) &&
     !hasProductFieldFormattedValue(gpu.fields?.memoryBandwidth) &&
     !hasProductFieldFormattedValue(gpu.fields?.memoryClock) &&
-    !hasProductFieldFormattedValue(gpu.fields?.memoryInterface)
+    !hasProductFieldFormattedValue(gpu.fields?.memoryInterface) &&
+    !hasProductFieldFormattedValue(gpu.fields?.l1Cache) &&
+    !hasProductFieldFormattedValue(gpu.fields?.l2Cache)
   ) {
     return <></>;
   }
 
   return (
     <section className={className}>
-      <h3 className="mb-1">Memory</h3>
+      <h3 className="mb-1">Memory Details</h3>
       <MemoryIntro />
       <MemoryTable gpu={gpu} />
     </section>

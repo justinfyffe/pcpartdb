@@ -155,8 +155,8 @@ export const SelectedGameFpsTable: FunctionComponent<
               </div>
             </div>
           </Th>
-          <Th className="text-left">{productName1}</Th>
-          <Th className="text-left">{productName2}</Th>
+          <Th className="text-left sm:text-center">{productName1}</Th>
+          <Th className="text-left sm:text-center">{productName2}</Th>
         </Tr>
       </THead>
       <TBody>
@@ -235,7 +235,12 @@ export const SelectedGameFpsTableRow: FunctionComponent<
       <Td className="whitespace-nowrap w-[33%]">{label}</Td>
       {gameFps.map((gf, i) => (
         <Td key={i} className="whitespace-nowrap text-left w-[33%]">
-          <div className={classNames('flex gap-2 items-center')}>
+          <div
+            className={classNames(
+              'flex sm:flex-col gap-4 sm:gap-0 items-center',
+              diffs[i] ? 'font-semibold' : '',
+            )}
+          >
             <span>{formatGameFps(gf, { fps: true }) || '--'}</span>
             <span className="text-sm">{diffs[i] && <>(+{diffs[i]}%)</>}</span>
           </div>
@@ -310,8 +315,8 @@ export const SelectedGameCpfTable: FunctionComponent<
               </div>
             </div>
           </Th>
-          <Th className="text-left">{productName1}</Th>
-          <Th className="text-left">{productName2}</Th>
+          <Th className="text-left sm:text-center">{productName1}</Th>
+          <Th className="text-left sm:text-center">{productName2}</Th>
         </Tr>
       </THead>
       <TBody>
@@ -390,7 +395,12 @@ export const SelectedGameCpfTableRow: FunctionComponent<
       <Td className="whitespace-nowrap w-[33%]">{label}</Td>
       {gameFps.map((gf, i) => (
         <Td key={i} className="whitespace-nowrap text-left w-[33%]">
-          <div className={classNames('flex gap-2 items-center')}>
+          <div
+            className={classNames(
+              'flex sm:flex-col gap-4 sm:gap-0 items-center',
+              diffs[i] ? 'font-semibold' : '',
+            )}
+          >
             <span>{formatGameFps(gf, { cpf: true }) || '--'}</span>
             <span className="text-sm">{diffs[i] && <>(-{diffs[i]}%)</>}</span>
           </div>

@@ -12,15 +12,14 @@ import { usePageContext } from '../../../PageProvider';
 
 const ValueIntroParagraph = compileContentComponent({
   deps: [],
-  component: (props) => (
+  Component: (props) => (
     <>
-      Compare {props.nameWithNoCompany}&apos;s value with similar{' '}
-      {props.marketSegment} CPUs. This provides insight into which CPUs gives
-      the best bang for your buck. This data is based on its{' '}
+      Compare the{' '}
       <Button variant={ButtonVariant.Link} onClick={props.handleBenchmarkClick}>
         {props.preferredBenchmarkName}
       </Button>{' '}
-      performance and MSRP.
+      performance per dollar with similar CPUs. A higher score implies a better
+      value for your money.
     </>
   ),
 });
@@ -40,7 +39,7 @@ export const ValueIntro = () => {
       tags={contentTags}
       params={{ ...contentParams, handleBenchmarkClick }}
     >
-      <p className="text-dimmed">
+      <p>
         <ValueIntroParagraph />
       </p>
     </ContentProvider>

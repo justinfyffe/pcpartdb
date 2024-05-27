@@ -17,11 +17,10 @@ import React from 'react';
 
 const RatingDisclaimer = compileContentComponent({
   tags: [],
-  component: (props) => (
+  Component: (props) => (
     <>
-      *The {props.gpuName1} and {props.gpuName2}&apos;s performance score,
-      performance per dollar, and rankings are based on the{' '}
-      {props.preferredBenchmarkName} benchmark and MSRP.
+      * Performance rating, performance per dollar, and rankings are based on
+      the {props.preferredBenchmarkName} benchmark and MSRP.
     </>
   ),
 });
@@ -48,11 +47,12 @@ export const Disclaimer = () => {
         preferredBenchmarkName,
       }}
     >
-      <p className="text-dimmed">
+      <p>
         <RatingDisclaimer />{' '}
         <Button
           variant={ButtonVariant.Link}
           onClick={showPreferredBenchmarkDialog}
+          className="text-left"
         >
           Click here to change your preferred benchmark.
         </Button>

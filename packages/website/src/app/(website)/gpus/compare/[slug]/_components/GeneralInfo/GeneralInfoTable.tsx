@@ -43,6 +43,36 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
         </Tr>
       </THead>
       <TBody>
+        <ProductCustomRow
+          label="Manufacturer"
+          values={[
+            formatCompanyName(gpu1.company) ?? '--',
+            formatCompanyName(gpu2.company) ?? '--',
+          ]}
+        />
+        <ProductFieldRow
+          type={ProductType.Gpu}
+          fields={[gpu1.fields?.architecture, gpu2.fields?.architecture]}
+        />
+        <ProductFieldRow
+          type={ProductType.Gpu}
+          fields={[gpu1.fields?.marketSegment, gpu2.fields?.marketSegment]}
+        />
+        <ProductFieldRow
+          type={ProductType.Gpu}
+          fields={[gpu1.fields?.releaseDate, gpu2.fields?.releaseDate]}
+        />
+        <ProductFieldRow
+          type={ProductType.Gpu}
+          fields={[gpu1.fields?.msrp, gpu2.fields?.msrp]}
+        />
+        <ProductFieldRow
+          type={ProductType.Gpu}
+          fields={[
+            gpu1.fields?.productionStatus,
+            gpu2.fields?.productionStatus,
+          ]}
+        />
         {(gpuAffiliateUrl1 || gpuAffiliateUrl2) && (
           <ProductCustomRow
             label="Shop"
@@ -78,36 +108,6 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
             ]}
           />
         )}
-        <ProductCustomRow
-          label="Company"
-          values={[
-            formatCompanyName(gpu1.company) ?? '--',
-            formatCompanyName(gpu2.company) ?? '--',
-          ]}
-        />
-        <ProductFieldRow
-          type={ProductType.Gpu}
-          fields={[gpu1.fields?.architecture, gpu2.fields?.architecture]}
-        />
-        <ProductFieldRow
-          type={ProductType.Gpu}
-          fields={[gpu1.fields?.marketSegment, gpu2.fields?.marketSegment]}
-        />
-        <ProductFieldRow
-          type={ProductType.Gpu}
-          fields={[gpu1.fields?.releaseDate, gpu2.fields?.releaseDate]}
-        />
-        <ProductFieldRow
-          type={ProductType.Gpu}
-          fields={[gpu1.fields?.msrp, gpu2.fields?.msrp]}
-        />
-        <ProductFieldRow
-          type={ProductType.Gpu}
-          fields={[
-            gpu1.fields?.productionStatus,
-            gpu2.fields?.productionStatus,
-          ]}
-        />
       </TBody>
     </Table>
   );

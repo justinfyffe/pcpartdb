@@ -1,7 +1,6 @@
 import { formatProductName, GpuProduct } from '@pcpartdb/shared';
 import { SectionHeader } from 'packages/website/src/app/_common/components/SectionHeader/SectionHeader';
 import React from 'react';
-import { Contents } from '../Contents/Contents';
 import { BenchmarkPerformanceAndValueCharts } from './BenchmarkPerformanceAndValueCharts';
 import { Benchmarks } from './Benchmarks/Benchmarks';
 import { RelativeBenchmarkPerformance } from './RelativeBenchmarkPerformance/RelativeBenchmarkPerformance';
@@ -21,13 +20,13 @@ export function BenchmarkPerformanceAndValue(
 
   return (
     <section className="flex flex-col gap-4">
-      <SectionHeader linkId="benchmark-performance" menu={<Contents />}>
+      <SectionHeader linkId="benchmark-performance">
         Benchmark Performance
       </SectionHeader>
 
       {hasBenchmarks && (
         <div className="flex flex-col gap-6">
-          <BenchmarkPerformanceAndValueCharts />
+          <BenchmarkPerformanceAndValueCharts gpu={gpu} />
           <div className="flex gap-6 md:flex-col md:gap-6">
             <RelativeBenchmarkPerformance />
             <RelativeBenchmarkValue />

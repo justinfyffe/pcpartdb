@@ -12,15 +12,14 @@ import React from 'react';
 import { usePageContext } from '../../../PageProvider';
 
 const ValueIntroSentence1 = compileContentComponent({
-  component: (props) => (
+  Component: (props) => (
     <>
-      Compare {props.nameWithNoCompany}&apos;s value with similar{' '}
-      {props.marketSegment} GPUs. This provides insight into which GPU gives the
-      best bang for your buck. This data is based on its{' '}
+      Compare the{' '}
       <Button variant={ButtonVariant.Link} onClick={props.handleBenchmarkClick}>
         {props.preferredBenchmarkName}
       </Button>{' '}
-      performance and MSRP.
+      performance per dollar with similar GPUs. A higher score implies a better
+      value for your money.
     </>
   ),
 });
@@ -42,7 +41,7 @@ export const BenchmarkValueIntro = () => {
       tags={contentTags}
       params={{ ...contentParams, handleBenchmarkClick }}
     >
-      <p className="text-dimmed">
+      <p>
         <ValueIntroSentence1 />
       </p>
     </ContentProvider>

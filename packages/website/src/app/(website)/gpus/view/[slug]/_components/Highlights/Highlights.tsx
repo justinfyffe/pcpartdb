@@ -1,13 +1,11 @@
 import { GpuProduct } from '@pcpartdb/shared';
-import { classNames } from 'packages/website/src/app/_common/utils/classNames';
+import { AffiliateDisclaimer } from 'packages/website/src/app/_common/components/AffiliateDisclaimer/AffiliateDisclaimer';
+import { BenchmarkPerformanceHighlight } from 'packages/website/src/app/_common/product/components/Highlights/view/BenchmarkPerformance/BenchmarkPerformanceHighlight';
+import { BenchmarkPerformancePerDollarHighlight } from 'packages/website/src/app/_common/product/components/Highlights/view/BenchmarkPerformancePerDollar/BenchmarkPerformancePerDollarHighlight';
+import { HighlightsGrid } from 'packages/website/src/app/_common/product/components/Highlights/view/HighlightsGrid';
+import { ShopHighlight } from 'packages/website/src/app/_common/product/components/Highlights/view/ShopHighlight';
+import { SpecsHighlight } from 'packages/website/src/app/_common/product/components/Highlights/view/SpecsHighlight';
 import React, { FunctionComponent } from 'react';
-import { AffiliateHighlight } from './AffiliateHighlight';
-import { MemoryHighlight } from './MemoryHighlight';
-import { PerformanceHighlight } from './PerformanceHighlight';
-import { ReleaseDateHighlight } from './ReleaseDateHighlight';
-import { SlotsHighlight } from './SlotsHighlight';
-import { TdpHighlight } from './TdpHighlight';
-import { ValueHighlight } from './ValueHighlight';
 
 interface HighlightsProps {
   gpu: GpuProduct;
@@ -18,19 +16,17 @@ export const Highlights: FunctionComponent<HighlightsProps> = (props) => {
   const { gpu, className } = props;
 
   return (
-    <div
-      className={classNames(
-        'grid grid-cols-2 sm:flex flex-col gap-y-4 gap-x-6',
-        className,
-      )}
-    >
-      <PerformanceHighlight />
-      <ValueHighlight />
-      <MemoryHighlight gpu={gpu} />
-      <SlotsHighlight gpu={gpu} />
-      <TdpHighlight gpu={gpu} />
-      <ReleaseDateHighlight gpu={gpu} />
-      <AffiliateHighlight gpu={gpu} />
+    <div className="flex flex-col">
+      <HighlightsGrid className={className}>
+        <BenchmarkPerformanceHighlight product={gpu} shortDescription />
+        <BenchmarkPerformancePerDollarHighlight
+          product={gpu}
+          shortDescription
+        />
+        <SpecsHighlight product={gpu} />
+        <ShopHighlight product={gpu} />
+      </HighlightsGrid>
+      <AffiliateDisclaimer className="text-xs" />
     </div>
   );
 };

@@ -8,12 +8,11 @@ import React from 'react';
 
 export const CompatibilityIntroSentence1 = compileContentComponent({
   deps: [],
-  component: (props) => (
+  Component: (props) => (
     <>
-      {props.name1} and {props.name2}&apos;s slots, bus interface, power
-      consumption, and output ports. These specs are useful for verifying that
-      these GPUs are compatible with your motherboard, power supply, and
-      monitor.
+      Compatibility information like their slot size, bus interface, power
+      consumption, and display support. These specs are useful for verifying
+      compatibility with your motherboard, power supply, and monitor.
     </>
   ),
 });
@@ -27,7 +26,7 @@ export const CompatibilityIntro = () => {
 
   return (
     <ContentProvider params={{ name1, name2 }}>
-      <p className="text-dimmed">
+      <p>
         <CompatibilityIntroSentence1 />
       </p>
     </ContentProvider>

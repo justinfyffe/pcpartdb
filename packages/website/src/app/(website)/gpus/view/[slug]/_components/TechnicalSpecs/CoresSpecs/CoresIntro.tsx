@@ -7,12 +7,11 @@ import React from 'react';
 
 export const CoresIntroSentence1 = compileContentComponent({
   deps: [],
-  component: (props) => (
+  Component: (props) => (
     <>
-      {props.nameWithNoCompany}&apos;s cores, clock speed, and cache. These
-      specs have an impact on how fast the {props.nameWithNoCompanyNoBrand} can
-      process graphics. Each type of core serves a specific computational
-      purpose.
+      Processing power information like its cores and clock speed. These specs
+      impact how fast they can process graphics. Each type of core or component
+      serves a specific computational purpose.
     </>
   ),
 });
@@ -22,7 +21,7 @@ export const CoresIntro = () => {
 
   return (
     <ContentProvider tags={contentTags} params={contentParams}>
-      <p className="text-dimmed">
+      <p>
         <CoresIntroSentence1 />
       </p>
     </ContentProvider>

@@ -10,7 +10,7 @@ import React, { useCallback } from 'react';
 import { closeDialog, showDialog } from '../../components/Dialog/dialog';
 import { useUserSettings } from '../../contexts/UserSettingsProvider';
 import { updateUserSettings } from '../../user/api';
-import { PreferredBenchmarkDialog } from '../components/PreferredBenchmarkDialog/PreferredBenchmarkDialog';
+import { PreferredBenchmarkDialog } from '../components/PreferredBenchmark/PreferredBenchmarkDialog';
 
 interface UsePreferredBenchmarkDialogOptions {
   productType: ProductType;

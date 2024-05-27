@@ -92,23 +92,21 @@ export const ValueTable: FunctionComponent<ValueTableProps> = (props) => {
 
   return (
     <>
-      <div className="flex flex-wrap gap-2 justify-end">
-        <div className="mb-1">
-          Baseline:{' '}
+      <div className="flex flex-wrap gap-2">
+        <div className="w-full mb-1 flex sm:flex-col justify-between gap-3 sm:gap-1 items-center sm:items-start">
+          <span className="sm:underline">Choose Baseline CPU:</span>
           <BaselineToggle
             cpu={cpu1}
             active={baselineCpu?.id === cpu1.id}
             onClick={() => toggleBaselineCpu(cpu1)}
           />{' '}
+          <span className="sm:hidden">or</span>
           {cpu1.id !== cpu2.id && (
-            <>
-              or{' '}
-              <BaselineToggle
-                cpu={cpu2}
-                active={baselineCpu?.id === cpu2.id}
-                onClick={() => toggleBaselineCpu(cpu2)}
-              />
-            </>
+            <BaselineToggle
+              cpu={cpu2}
+              active={baselineCpu?.id === cpu2.id}
+              onClick={() => toggleBaselineCpu(cpu2)}
+            />
           )}
         </div>
       </div>
@@ -241,6 +239,7 @@ interface BaselineToggleProps {
   cpu: CpuProduct;
   active: boolean;
   onClick: () => void;
+  className?: string;
 }
 
 export const BaselineToggle: FunctionComponent<BaselineToggleProps> = (
@@ -255,16 +254,34 @@ export const BaselineToggle: FunctionComponent<BaselineToggleProps> = (
   );
 
   if (productBenchmarkValuePerMsrp(cpu, preferredBenchmark) == null) {
-    return <span className="text-dimmed cursor-not-allowed">{cpuName}</span>;
+    return (
+      <span
+        className={classNames(
+          'text-dimmed cursor-not-allowed line-through text-center font-normal',
+          props.className,
+        )}
+      >
+        {cpuName}
+      </span>
+    );
   }
 
   if (active) {
-    return <span className="font-bold">{cpuName}</span>;
+    return (
+      <span
+        className={classNames('font-semibold text-center', props.className)}
+      >
+        {cpuName}
+      </span>
+    );
   } else {
     return (
       <Button
         variant={ButtonVariant.Link}
-        className="cursor-pointer"
+        className={classNames(
+          'cursor-pointer text-center font-normal',
+          props.className,
+        )}
         onClick={onClick}
       >
         {cpuName}

@@ -7,7 +7,6 @@ import { Button } from 'packages/website/src/app/_common/components/Button/Butto
 import { ButtonVariant } from 'packages/website/src/app/_common/components/Button/types';
 import { SectionHeader } from 'packages/website/src/app/_common/components/SectionHeader/SectionHeader';
 import React from 'react';
-import { Contents } from '../Contents/Contents';
 
 interface RelatedGpusProps {
   relatedGpus: Partial<GpuProduct>[];
@@ -24,9 +23,10 @@ export function RelatedGpus(props: RelatedGpusProps) {
 
   return (
     <section className="flex flex-col gap-4">
-      <SectionHeader linkId="related-gpus" menu={<Contents />}>
-        Related GPUs
-      </SectionHeader>
+      <SectionHeader linkId="related-gpus">Related GPUs</SectionHeader>
+      <p className="mb-0">
+        Looking for alternatives? Check out these similar GPUs:
+      </p>
 
       <div className="flex flex-row flex-wrap gap-4 font-semibold">
         {relatedGpus.map((product, i) => (

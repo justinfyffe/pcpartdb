@@ -9,11 +9,12 @@ import { PerformanceSummarySection } from './PerformanceSummarySection';
 
 interface CustomSummaryProps {
   product: Product;
+  index?: number;
 }
 
 export const CustomSummary = (props: CustomSummaryProps) => {
   const { product } = props;
-  const { contentParams } = useProductContent();
+  const { contentParams } = useProductContent(props.index);
 
   const rawSummary = product?.summary;
 
@@ -26,10 +27,10 @@ export const CustomSummary = (props: CustomSummaryProps) => {
 
   return (
     <>
-      <div className="mb-4">
+      <div>
         <Markdown>{summary}</Markdown>
       </div>
-      {<PerformanceSummarySection product={product} />}
+      {<PerformanceSummarySection product={product} index={props.index} />}
     </>
   );
 };

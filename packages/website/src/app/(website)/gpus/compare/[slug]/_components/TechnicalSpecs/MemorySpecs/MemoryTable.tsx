@@ -56,6 +56,14 @@ export const MemoryTable: FunctionComponent<MemoryTableProps> = (props) => {
           type={ProductType.Gpu}
           fields={[gpu1.fields?.memoryInterface, gpu2.fields?.memoryInterface]}
         />
+        <ProductFieldRow
+          type={ProductType.Gpu}
+          fields={[gpu1.fields?.l1Cache, gpu2.fields?.l1Cache]}
+        />
+        <ProductFieldRow
+          type={ProductType.Gpu}
+          fields={[gpu1.fields?.l2Cache, gpu2.fields?.l2Cache]}
+        />
       </TBody>
     </Table>
   );

@@ -7,6 +7,7 @@ import { PerformanceBlurb as GpuPerformanceBlurb } from './gpu/PerformanceBlurb'
 
 interface PerformanceSummarySectionProps {
   product: Product;
+  index?: number;
 }
 
 export const PerformanceSummarySection = (
@@ -19,11 +20,11 @@ export const PerformanceSummarySection = (
   }
 
   if (product.productType === ProductType.Cpu) {
-    return <CpuPerformanceBlurb />;
+    return <CpuPerformanceBlurb index={props.index} />;
   }
 
   if (product.productType === ProductType.Gpu) {
-    return <GpuPerformanceBlurb />;
+    return <GpuPerformanceBlurb index={props.index} />;
   }
 
   return <></>;

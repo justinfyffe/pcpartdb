@@ -32,7 +32,7 @@ export const ProcessorSpecs: FunctionComponent<ProcessorSpecsProps> = (
 
   return (
     <section className={className}>
-      <h3 className="mb-1">Processor</h3>
+      <h3 className="mb-1">Graphics Processor</h3>
       <ProcessorIntro />
       <ProcessorTable comparison={comparison} />
     </section>

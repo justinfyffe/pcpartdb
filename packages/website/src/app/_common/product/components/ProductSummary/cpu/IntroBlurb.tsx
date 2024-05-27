@@ -12,7 +12,7 @@ import { useProductContent } from '../../../content/useProductContent';
 const IntroMarketSegment = compileContentComponent(
   {
     tags: [ProductionStatusTag.Unreleased, SpecsTag.Cores, SpecsTag.Threads],
-    component: (props) => (
+    Component: (props) => (
       <>
         The {props.name} is an unreleased {props.cores}-core ({props.threads}
         -thread) processor built for the {props.marketSegment} CPU market.
@@ -21,7 +21,7 @@ const IntroMarketSegment = compileContentComponent(
   },
   {
     tags: [ProductionStatusTag.Unreleased, SpecsTag.Cores],
-    component: (props) => (
+    Component: (props) => (
       <>
         The {props.name} is an unreleased {props.cores}-core processor built for
         the {props.marketSegment} CPU market.
@@ -30,7 +30,7 @@ const IntroMarketSegment = compileContentComponent(
   },
   {
     tags: [ProductionStatusTag.EndOfLife, SpecsTag.Cores, SpecsTag.Threads],
-    component: (props) => (
+    Component: (props) => (
       <>
         The {props.name} is an end-of-life {props.cores}-core ({props.threads}
         -thread) processor built for the {props.marketSegment} CPU market.
@@ -39,7 +39,7 @@ const IntroMarketSegment = compileContentComponent(
   },
   {
     tags: [ProductionStatusTag.EndOfLife, SpecsTag.Cores],
-    component: (props) => (
+    Component: (props) => (
       <>
         The {props.name} is an end-of-life {props.cores}-core processor built
         for the {props.marketSegment} CPU market.
@@ -48,7 +48,7 @@ const IntroMarketSegment = compileContentComponent(
   },
   {
     tags: [SpecsTag.Cores, SpecsTag.Threads],
-    component: (props) => (
+    Component: (props) => (
       <>
         The {props.name} is a {props.cores}-core ({props.threads}
         -thread) processor built for the {props.marketSegment} CPU market.
@@ -57,7 +57,7 @@ const IntroMarketSegment = compileContentComponent(
   },
   {
     tags: [SpecsTag.Cores],
-    component: (props) => (
+    Component: (props) => (
       <>
         The {props.name} is a {props.cores}-core processor built for the{' '}
         {props.marketSegment} CPU market.
@@ -66,7 +66,7 @@ const IntroMarketSegment = compileContentComponent(
   },
   {
     tags: [],
-    component: (props) => (
+    Component: (props) => (
       <>
         The {props.nameWithNoCompany} is an {props.company} processor built for
         the {props.marketSegment} CPU market.
@@ -78,7 +78,7 @@ const IntroMarketSegment = compileContentComponent(
 const IntroReleaseDateAndMsrp = compileContentComponent(
   {
     tags: [SpecsTag.Msrp, SpecsTag.ReleaseDate],
-    component: (props) => {
+    Component: (props) => {
       let launches = 'is expected to launch';
       if (props.hasLaunched) {
         launches = 'launched';
@@ -96,13 +96,13 @@ const IntroReleaseDateAndMsrp = compileContentComponent(
   },
   {
     tags: [SpecsTag.Msrp],
-    component: (props) => {
+    Component: (props) => {
       return <>It has a suggested retail price of {props.msrp}.</>;
     },
   },
   {
     tags: [SpecsTag.ReleaseDate],
-    component: (props) => {
+    Component: (props) => {
       let launches = 'is expected to launch';
       if (props.hasLaunched) {
         launches = 'launched';
@@ -122,7 +122,7 @@ const IntroReleaseDateAndMsrp = compileContentComponent(
 const IntroArchitecture = compileContentComponent(
   {
     tags: [SpecsTag.Architecture, SpecsTag.Generation],
-    component: (props) => (
+    Component: (props) => (
       <>
         It is part of {props.company}&apos;s {props.generation} lineup, which is
         based on the {props.architecture} microarchitecture.
@@ -131,13 +131,13 @@ const IntroArchitecture = compileContentComponent(
   },
   {
     tags: [SpecsTag.Architecture],
-    component: (props) => (
+    Component: (props) => (
       <>It is based on the {props.architecture} microarchitecture.</>
     ),
   },
   {
     tags: [SpecsTag.Generation],
-    component: (props) => (
+    Component: (props) => (
       <>
         It is part of {props.company}&apos;s {props.generation} lineup.
       </>
@@ -148,7 +148,7 @@ const IntroArchitecture = compileContentComponent(
 const IntroSocketAndFabrication = compileContentComponent(
   {
     tags: [SpecsTag.Socket, SpecsTag.Foundry, SpecsTag.ProcessSize],
-    component: (props) => (
+    Component: (props) => (
       <>
         The {props.nameWithNoCompany} is compatible with {props.socket}{' '}
         motherboards and is fabricated on {props.foundry}&apos;s{' '}
@@ -158,7 +158,7 @@ const IntroSocketAndFabrication = compileContentComponent(
   },
   {
     tags: [SpecsTag.Socket, SpecsTag.ProcessSize],
-    component: (props) => (
+    Component: (props) => (
       <>
         The {props.nameWithNoCompany} is compatible with {props.socket}{' '}
         motherboards and is fabricated on a {props.processSize} manufacturing
@@ -168,7 +168,7 @@ const IntroSocketAndFabrication = compileContentComponent(
   },
   {
     tags: [SpecsTag.Foundry, SpecsTag.ProcessSize],
-    component: (props) => (
+    Component: (props) => (
       <>
         The {props.nameWithNoCompany} is fabricated on {props.foundry}&apos;s{' '}
         {props.processSize} manufacturing process.
@@ -177,7 +177,7 @@ const IntroSocketAndFabrication = compileContentComponent(
   },
   {
     tags: [SpecsTag.Socket],
-    component: (props) => (
+    Component: (props) => (
       <>
         The {props.nameWithNoCompany} is compatible with {props.socket}{' '}
         motherboards.
@@ -186,7 +186,7 @@ const IntroSocketAndFabrication = compileContentComponent(
   },
   {
     tags: [SpecsTag.ProcessSize],
-    component: (props) => (
+    Component: (props) => (
       <>
         The {props.nameWithNoCompany} is fabricated on a {props.processSize}{' '}
         manufacturing process.
@@ -198,7 +198,7 @@ const IntroSocketAndFabrication = compileContentComponent(
 const IntroFeatures = compileContentComponent(
   {
     tags: [SpecsTag.IntegratedGraphics, SpecsTag.BundledCooler],
-    component: (props) => (
+    Component: (props) => (
       <>
         It features the {props.integratedGraphics} integrated graphics solution
         and is bundled with a {props.bundledCooler} cooler.
@@ -207,7 +207,7 @@ const IntroFeatures = compileContentComponent(
   },
   {
     tags: [SpecsTag.IntegratedGraphics],
-    component: (props) => (
+    Component: (props) => (
       <>
         It features the {props.integratedGraphics} integrated graphics solution.
       </>
@@ -215,14 +215,14 @@ const IntroFeatures = compileContentComponent(
   },
   {
     tags: [SpecsTag.BundledCooler],
-    component: (props) => <>It is bundled a {props.bundledCooler} cooler.</>,
+    Component: (props) => <>It is bundled a {props.bundledCooler} cooler.</>,
   },
 );
 
 const IntroParagraph = compileContentComponent({
   tags: [],
   deps: [],
-  component: () => (
+  Component: () => (
     <p>
       <IntroMarketSegment /> <IntroReleaseDateAndMsrp /> <IntroArchitecture />{' '}
       <IntroSocketAndFabrication /> <IntroFeatures />
@@ -230,10 +230,12 @@ const IntroParagraph = compileContentComponent({
   ),
 });
 
-interface IntroBlurbProps {}
+interface IntroBlurbProps {
+  index?: number;
+}
 
-export const IntroBlurb: FunctionComponent<IntroBlurbProps> = (_props) => {
-  const { contentTags, contentParams } = useProductContent();
+export const IntroBlurb: FunctionComponent<IntroBlurbProps> = (props) => {
+  const { contentTags, contentParams } = useProductContent(props.index);
 
   return (
     <ContentProvider tags={contentTags} params={contentParams}>

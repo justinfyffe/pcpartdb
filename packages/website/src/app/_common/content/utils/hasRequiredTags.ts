@@ -1,6 +1,7 @@
 import {
   CompiledContentComponentVariant,
   CompiledContentFunctionVariant,
+  ContentTag,
   ContentTags,
 } from '../types';
 
@@ -16,7 +17,7 @@ export function hasRequiredTags(
     return false;
   }
 
-  let tagsToCheck: Set<string>;
+  let tagsToCheck: Set<ContentTag>;
   if (Array.isArray(tags)) {
     tagsToCheck = new Set(tags || []);
   } else {

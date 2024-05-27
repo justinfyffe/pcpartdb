@@ -96,28 +96,39 @@ export default async function RootWebsiteLayout(props: RootLayoutProps) {
         )}
         <ConfigProvider config={config}>
           <UserSettingsProvider userSettings={config.userSettings}>
-            <div className="flex gap-4 border-x-px container bg-content p-container md:px-4 font-bold items-center text-5xl text-main-brand leading-none">
+            <a
+              href={getHomePath()}
+              className="flex gap-4 border-x-px container bg-content p-container md:p-4 font-bold items-center text-5xl text-main-brand leading-none"
+            >
               <img src="/images/logo-transparent.png" className="h-12" />
               <span className="font-san">{WEBSITE_NAME.toUpperCase()}</span>
-            </div>
+            </a>
 
             <Toolbar>
-              <Button href={getListGpusPath()} variant={ButtonVariant.None}>
+              <Button
+                href={getListGpusPath()}
+                variant={ButtonVariant.None}
+                className="hover:underline"
+              >
                 Graphics Cards
               </Button>
-              <Button href={getListCpusPath()} variant={ButtonVariant.None}>
+              <Button
+                href={getListCpusPath()}
+                variant={ButtonVariant.None}
+                className="hover:underline"
+              >
                 Processors
               </Button>
             </Toolbar>
 
             <div className="bg-html">
-              <main className="border-x-px bg-content container p-container md:px-4 text-base text-content w-full">
+              <main className="border-x-px bg-content container p-container md:p-4 text-base text-content w-full">
                 {error == null && <>{props.children}</>}
                 {error != null && <ErrorPage error={error} />}
               </main>
             </div>
 
-            <footer className="bg-main-brand text-default container p-container md:px-4 flex flex-wrap gap-8">
+            <footer className="bg-main-brand text-default container p-container md:p-4 flex flex-wrap gap-8">
               <nav className="flex-1 min-w-50 text-sm">
                 <header className="border-b-px mb-3 text-base">Pages</header>
                 <List direction="vertical">

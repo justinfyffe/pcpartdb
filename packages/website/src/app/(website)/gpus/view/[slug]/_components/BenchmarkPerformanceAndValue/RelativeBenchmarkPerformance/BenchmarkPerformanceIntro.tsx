@@ -10,15 +10,14 @@ import React from 'react';
 import { usePageContext } from '../../../PageProvider';
 
 const PerformanceIntroSentence1 = compileContentComponent({
-  component: (props) => (
+  Component: (props) => (
     <>
-      Compare {props.nameWithNoCompany}&apos;s performance with similar{' '}
-      {props.marketSegment} GPUs. This provides insight into how its benchmark
-      compares to its peers. This data is based on{' '}
+      Compare the average{' '}
       <Button variant={ButtonVariant.Link} onClick={props.handleBenchmarkClick}>
         {props.preferredBenchmarkName}
       </Button>{' '}
-      performance.
+      benchmark score with similar GPUs. Powerful GPUs tend to have higher
+      scores.
     </>
   ),
 });
@@ -40,7 +39,7 @@ export const BenchmarkPerformanceIntro = () => {
       tags={contentTags}
       params={{ ...contentParams, handleBenchmarkClick }}
     >
-      <p className="text-dimmed">
+      <p>
         <PerformanceIntroSentence1 />
       </p>
     </ContentProvider>

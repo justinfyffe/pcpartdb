@@ -34,23 +34,8 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
         </Tr>
       </THead>
       <TBody>
-        {cpuAffiliateUrl && (
-          <ProductCustomRow
-            label="Shop"
-            value={
-              <a
-                href={cpuAffiliateUrl}
-                target="_blank"
-                rel="noopener nofollow"
-                className="underline"
-              >
-                Check Price
-              </a>
-            }
-          />
-        )}
         <ProductCustomRow
-          label="Company"
+          label="Manufacturer"
           values={[formatCompanyName(cpu.company) ?? '--']}
         />
         <ProductFieldRow
@@ -70,6 +55,21 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
           type={ProductType.Cpu}
           fields={[cpu.fields?.productionStatus]}
         />
+        {cpuAffiliateUrl && (
+          <ProductCustomRow
+            label="Shop"
+            value={
+              <a
+                href={cpuAffiliateUrl}
+                target="_blank"
+                rel="noopener nofollow"
+                className="underline"
+              >
+                Check Price
+              </a>
+            }
+          />
+        )}
       </TBody>
     </Table>
   );

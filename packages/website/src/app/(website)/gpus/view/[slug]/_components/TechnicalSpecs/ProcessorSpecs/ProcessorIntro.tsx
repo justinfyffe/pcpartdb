@@ -7,17 +7,20 @@ import React from 'react';
 
 export const ProcessorIntroSentence1 = compileContentComponent({
   deps: [],
-  component: (props) => (
-    <>General information about {props.nameWithNoCompany}&apos;s processor.</>
+  Component: (props) => (
+    <>
+      General information about the graphics processing unit like its
+      architecture, manufacturing process size, and transistor count. Newer GPU
+      architectures generally bring efficiency improvements and may introduce
+      technologies that enhance graphical capabilities.
+    </>
   ),
 });
 
 export const ProcessorIntro = () => {
-  const { contentTags, contentParams } = useProductContent();
-
   return (
-    <ContentProvider tags={contentTags} params={contentParams}>
-      <p className="text-dimmed">
+    <ContentProvider>
+      <p>
         <ProcessorIntroSentence1 />
       </p>
     </ContentProvider>

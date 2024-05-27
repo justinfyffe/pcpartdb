@@ -7,7 +7,6 @@ import { Button } from 'packages/website/src/app/_common/components/Button/Butto
 import { ButtonVariant } from 'packages/website/src/app/_common/components/Button/types';
 import { SectionHeader } from 'packages/website/src/app/_common/components/SectionHeader/SectionHeader';
 import React, { FunctionComponent } from 'react';
-import { Contents } from '../Contents/Contents';
 
 interface RelatedComparisonsProps {
   relatedComparisons: CpuProductComparison[];
@@ -27,9 +26,10 @@ export const RelatedComparisons: FunctionComponent<RelatedComparisonsProps> = (
 
   return (
     <section className="flex flex-col gap-4">
-      <SectionHeader linkId="related-comparisons" menu={<Contents />}>
+      <SectionHeader linkId="related-comparisons">
         Related Comparisons
       </SectionHeader>
+      <p className="mb-0">Check out these comparisons for similar CPUs:</p>
 
       <div className="flex flex-row flex-wrap gap-4 font-semibold">
         {relatedComparisons.map((comparison, i) => (

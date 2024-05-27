@@ -10,7 +10,7 @@ const CompatibilitySlotWidth = compileContentComponent({
   // Example: The Geforce RTX 3070 is a large desktop graphics card,
   //          taking up 3 PCIe slots.
   tags: [SpecsTag.SlotWidth],
-  component: (props) => {
+  Component: (props) => {
     const slots = Number(props.slotWidth);
     let thickness = '';
     if (slots > 3) {
@@ -38,12 +38,12 @@ const CompatibilitySlotWidth = compileContentComponent({
 const CompatibilityOutputs = compileContentComponent({
   // Example: This desktop card has 1x HDMI 2.1, 3x DisplayPort 1.4a output ports.
   tags: [SpecsTag.Outputs],
-  component: (props) => <>It supports {props.outputs} display ports.</>,
+  Component: (props) => <>It supports {props.outputs} display ports.</>,
 });
 
 const PowerSupplyTdp = compileContentComponent({
   tags: [SpecsTag.Tdp],
-  component: (props) => (
+  Component: (props) => (
     <>
       This {props.marketSegment} card has a TDP of {props.tdp}.
     </>
@@ -52,7 +52,7 @@ const PowerSupplyTdp = compileContentComponent({
 
 const PowerSupplySuggestedPsu = compileContentComponent({
   tags: [SpecsTag.SuggestedPsu],
-  component: (props) => (
+  Component: (props) => (
     <>
       {props.company} recommends using a power supply of at least{' '}
       {props.suggestedPsu} with this card. A power supply lower than this might
@@ -64,7 +64,7 @@ const PowerSupplySuggestedPsu = compileContentComponent({
 const CompatibilityParagraph = compileContentComponent({
   tags: [],
   deps: [],
-  component: () => (
+  Component: () => (
     <p>
       <CompatibilitySlotWidth /> <CompatibilityOutputs /> <PowerSupplyTdp />{' '}
       <PowerSupplySuggestedPsu />
@@ -72,12 +72,14 @@ const CompatibilityParagraph = compileContentComponent({
   ),
 });
 
-interface CompatibilityBlurbProps {}
+interface CompatibilityBlurbProps {
+  index: number;
+}
 
 export const CompatibilityBlurb: FunctionComponent<CompatibilityBlurbProps> = (
-  _props,
+  props,
 ) => {
-  const { contentTags, contentParams } = useProductContent();
+  const { contentTags, contentParams } = useProductContent(props.index);
 
   return (
     <ContentProvider tags={contentTags} params={contentParams}>

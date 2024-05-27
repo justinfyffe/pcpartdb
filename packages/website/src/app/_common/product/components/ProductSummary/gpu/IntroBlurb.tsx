@@ -14,7 +14,7 @@ const IntroAudience = compileContentComponent(
   {
     // Example: The Geforce RTX 3070 is an unreleased desktop graphics card by NVIDIA.
     tags: [ProductionStatusTag.Unreleased],
-    component: (props) => {
+    Component: (props) => {
       return (
         <>
           The {props.nameWithNoCompany} is an unreleased {props.marketSegment}{' '}
@@ -26,7 +26,7 @@ const IntroAudience = compileContentComponent(
   {
     // Example: The Geforce RTX 3070 is an end-of-life desktop graphics card by NVIDIA.
     tags: [ProductionStatusTag.EndOfLife],
-    component: (props) => {
+    Component: (props) => {
       return (
         <>
           The {props.nameWithNoCompany} is an end-of-life {props.marketSegment}{' '}
@@ -38,7 +38,7 @@ const IntroAudience = compileContentComponent(
   {
     // Example: The Geforce RTX 3070 is an integrated graphics card by NVIDIA.
     tags: [MarketSegmentTag.Integrated],
-    component: (props) => {
+    Component: (props) => {
       return (
         <>
           The {props.nameWithNoCompany} is an integrated graphics card by{' '}
@@ -50,7 +50,7 @@ const IntroAudience = compileContentComponent(
   {
     // Example: The Geforce RTX 3070 is a desktop graphics card by NVIDIA.
     tags: [],
-    component: (props) => {
+    Component: (props) => {
       return (
         <>
           The {props.nameWithNoCompany} is a {props.marketSegment} graphics card
@@ -65,7 +65,7 @@ const IntroReleaseDateAndMsrp = compileContentComponent(
   {
     // Example: It is expected to launch in Q4 2099 with a price of $999 (MSRP).
     tags: [SpecsTag.Msrp, SpecsTag.ReleaseDate],
-    component: (props) => {
+    Component: (props) => {
       let launches = 'is expected to launch';
       if (props.hasLaunched) {
         launches = 'launched';
@@ -84,14 +84,14 @@ const IntroReleaseDateAndMsrp = compileContentComponent(
   {
     // Example: It has a launch price of $999 (MSRP).
     tags: [SpecsTag.Msrp],
-    component: (props) => {
+    Component: (props) => {
       return <>It has a suggested retail price of {props.msrp}.</>;
     },
   },
   {
     // Example: It was planned to launch in Q2 1999.
     tags: [SpecsTag.ReleaseDate],
-    component: (props) => {
+    Component: (props) => {
       let launches = 'is expected to launch';
       if (props.hasLaunched) {
         launches = 'launched';
@@ -113,7 +113,7 @@ const IntroArchitecture = compileContentComponent(
     // Example: The AD199 chip that powers the GPU uses the Ada Lovelace architecture,
     //          and is built on the 5 nm process.
     tags: [SpecsTag.Architecture, SpecsTag.Codename, SpecsTag.ProcessSize],
-    component: (props) => {
+    Component: (props) => {
       return (
         <>
           Its {props.codename} chip that powers the GPU uses the{' '}
@@ -126,7 +126,7 @@ const IntroArchitecture = compileContentComponent(
   {
     // Example: The AD199 chip that powers the GPU uses the Ada Lovelace architecture.
     tags: [SpecsTag.Architecture, SpecsTag.Codename],
-    component: (props) => {
+    Component: (props) => {
       return (
         <>
           Its {props.codename} chip that powers the GPU uses the{' '}
@@ -139,7 +139,7 @@ const IntroArchitecture = compileContentComponent(
     // Example: The chip that powers the GPU uses the Ada Lovelace architecture,
     //          and is built on the 5 nm process.
     tags: [SpecsTag.Architecture, SpecsTag.ProcessSize],
-    component: (props) => {
+    Component: (props) => {
       return (
         <>
           Its chip that powers the GPU uses the {props.architecture}{' '}
@@ -151,7 +151,7 @@ const IntroArchitecture = compileContentComponent(
   {
     // Example: The AD199 chip that powers the GPU is built on the 5 nm process.
     tags: [SpecsTag.Codename, SpecsTag.ProcessSize],
-    component: (props) => {
+    Component: (props) => {
       return (
         <>
           Its {props.codename} chip that powers the GPU is fabricated on the{' '}
@@ -163,7 +163,7 @@ const IntroArchitecture = compileContentComponent(
   {
     // Example: The chip that powers the GPU uses the Ada Lovelace architecture.
     tags: [SpecsTag.Architecture],
-    component: (props) => {
+    Component: (props) => {
       return (
         <>
           Its chip that powers the GPU uses the {props.architecture}{' '}
@@ -175,14 +175,14 @@ const IntroArchitecture = compileContentComponent(
   {
     // Example: It uses the AD199 chip to power the GPU.
     tags: [SpecsTag.Codename],
-    component: (props) => {
+    Component: (props) => {
       return <>It uses the {props.codename} chip to power the GPU.</>;
     },
   },
   {
     // Example: The chip that powers the GPU is built on the 5 nm process.
     tags: [SpecsTag.ProcessSize],
-    component: (props) => {
+    Component: (props) => {
       return (
         <>
           Its chip that powers the GPU is fabricated on the {props.processSize}{' '}
@@ -196,17 +196,19 @@ const IntroArchitecture = compileContentComponent(
 const IntroParagraph = compileContentComponent({
   tags: [],
   deps: [],
-  component: () => (
+  Component: () => (
     <p>
       <IntroAudience /> <IntroReleaseDateAndMsrp /> <IntroArchitecture />
     </p>
   ),
 });
 
-interface IntroBlurbProps {}
+interface IntroBlurbProps {
+  index?: number;
+}
 
-export const IntroBlurb: FunctionComponent<IntroBlurbProps> = (_props) => {
-  const { contentTags, contentParams } = useProductContent();
+export const IntroBlurb: FunctionComponent<IntroBlurbProps> = (props) => {
+  const { contentTags, contentParams } = useProductContent(props.index);
 
   return (
     <ContentProvider tags={contentTags} params={contentParams}>

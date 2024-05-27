@@ -7,10 +7,10 @@ import React from 'react';
 
 export const FeatureIntroParagraph = compileContentComponent({
   deps: [],
-  component: (props) => (
-    <p className="text-dimmed">
-      {props.nameWithNoCompany}&apos;s features like bundled cooler, integrated
-      graphics, and extensions/technologies.
+  Component: (props) => (
+    <p>
+      Additional CPU features like its bundled cooler, integrated graphics, and
+      extensions/technologies.
     </p>
   ),
 });

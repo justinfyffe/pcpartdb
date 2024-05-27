@@ -16,15 +16,14 @@ import React, { useCallback, useMemo } from 'react';
 import { usePageContext } from '../../../PageProvider';
 
 const ValueIntroSentence1 = compileContentComponent({
-  component: (props) => (
+  Component: (props) => (
     <>
-      Compare {props.nameWithNoCompany}&apos;s cost per frame with similar{' '}
-      {props.marketSegment} GPUs. This provides insight into which GPU gives the
-      best bang for your buck. This data is based on the MSRP and FPS for{' '}
+      Compare the average cost per frame in{' '}
       <Button variant={ButtonVariant.Link} onClick={props.handleGameClick}>
         {props.selectedGameName}
-      </Button>
-      . Lower is better.
+      </Button>{' '}
+      with similar GPUs. A lower cost per frame translates to more performance
+      for your money.
     </>
   ),
 });
@@ -62,7 +61,7 @@ export const RelativeGameCpfIntro = () => {
         handleGameClick,
       }}
     >
-      <p className="text-dimmed">
+      <p>
         <ValueIntroSentence1 />
       </p>
     </ContentProvider>

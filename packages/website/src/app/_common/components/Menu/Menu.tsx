@@ -49,21 +49,23 @@ export const Menu: FunctionComponent<MenuProps> = (props) => {
   }, [isOpen]);
 
   return (
-    <div className={classNames('block relative', className)}>
-      <Button aria-label={ariaLabel} ref={buttonRef} onClick={toggleButton}>
-        {label}
-      </Button>
+    <>
+      <div className={classNames('block relative', className)}>
+        <Button aria-label={ariaLabel} ref={buttonRef} onClick={toggleButton}>
+          {label}
+        </Button>
 
-      <div
-        ref={overlayRef}
-        className={classNames(
-          'absolute bg-white border-px shadow-md z-20 mt-px right-0 top-full w-62 max-w-62',
-          isOpen ? 'block' : 'hidden',
-          overlayClassName,
-        )}
-      >
-        {children}
+        <div
+          ref={overlayRef}
+          className={classNames(
+            'absolute bg-white border-px shadow-md z-50 mt-px right-0 w-62 max-w-62',
+            isOpen ? 'block' : 'hidden',
+            overlayClassName,
+          )}
+        >
+          {children}
+        </div>
       </div>
-    </div>
+    </>
   );
 };

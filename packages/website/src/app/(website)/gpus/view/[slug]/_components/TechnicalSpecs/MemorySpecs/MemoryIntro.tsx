@@ -7,12 +7,12 @@ import React from 'react';
 
 export const MemoryIntroSentence1 = compileContentComponent({
   deps: [],
-  component: (props) => (
+  Component: (props) => (
     <>
-      The memory size, bandwidth, and clock speeds for the{' '}
-      {props.nameWithNoCompany}. GPU memory stores graphics data like frames,
-      textures, and shadows which helps display rendered images. These specs are
-      critical for graphics-intense applications like gaming and 3D modeling.
+      Memory specifications like its capacity, bandwidth, and clock speeds. GPU
+      memory stores graphics data like frames, textures, and shadows which helps
+      display rendered images. These specs are crucial for graphics-intense
+      applications like gaming and 3D modeling.
     </>
   ),
 });
@@ -21,8 +21,8 @@ export const MemoryIntro = () => {
   const { contentTags, contentParams } = useProductContent();
 
   return (
-    <ContentProvider tags={contentTags} params={contentParams}>
-      <p className="text-dimmed">
+    <ContentProvider>
+      <p>
         <MemoryIntroSentence1 />
       </p>
     </ContentProvider>

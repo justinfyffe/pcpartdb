@@ -17,17 +17,17 @@ import { Metadata, ResolvingMetadata } from 'next';
 import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { viewModelClient } from 'packages/website/src/app/_common/api/ViewModelClient';
+import {
+  TableOfContents,
+  TableOfContentsLink,
+} from 'packages/website/src/app/_common/components/TableOfContents/TableOfContents';
 import React from 'react';
-import { CacheProvider } from '../../../../_common/cache/CacheProvider';
 import { DisplayAd } from '../../../../_common/components/Ad/DisplayAd';
 import { MultiplexAd } from '../../../../_common/components/Ad/MultiplexAd';
 import { AdUnit } from '../../../../_common/components/Ad/types';
 import { Breadcrumb } from '../../../../_common/components/Breadcrumbs/Breadcrumb';
 import { Breadcrumbs } from '../../../../_common/components/Breadcrumbs/Breadcrumbs';
-import { ViewModelType } from '../../../../_common/contexts/types';
-import { ViewModelProvider } from '../../../../_common/contexts/ViewModelProvider';
 import { CompareProductsForm } from '../../../../_common/product/components/CompareProductsForm/CompareProductsForm';
-import { Contents } from './_components/Contents/Contents';
 import { Disclaimer } from './_components/Disclaimer/Disclaimer';
 import { GeneralInfo } from './_components/GeneralInfo';
 import { Highlights } from './_components/Highlights/Highlights';
@@ -45,7 +45,7 @@ type CompareCpusPageProps = {
 
 export async function generateMetadata(
   props: CompareCpusPageProps,
-  parent: ResolvingMetadata,
+  _parent: ResolvingMetadata,
 ): Promise<Metadata> {
   const slug = props.params.slug;
 
@@ -122,17 +122,24 @@ export default async function CompareCpusPage(props: CompareCpusPageProps) {
     company: false,
   });
 
-  return (
-    <PageProvider viewModel={viewModel}>
-      <Breadcrumbs className="mb-4">
-        <Breadcrumb href={getHomePath()}>Home</Breadcrumb>
-        <Breadcrumb href={getListCpusPath()}>Processors</Breadcrumb>
-        <Breadcrumb>{shortPageTitle}</Breadcrumb>
-      </Breadcrumbs>
+  const tableOfContents: TableOfContentsLink[] = [
+    { label: 'Highlights', href: '#contents' },
+    { label: 'Summary', href: '#summary' },
+    { label: 'Benchmark Performance', href: '#benchmark-performance' },
+    { label: 'Technical Specs', href: '#tech-specs' },
+    viewModel?.relatedCpuComparisons?.length
+      ? { label: 'Related Comparisons', href: '#related-comparisons' }
+      : null,
+    viewModel?.relatedCpus?.length
+      ? { label: 'Related CPUs', href: '#related-cpus' }
+      : null,
+  ].filter((value) => !!value);
 
+  return (
+    <PageProvider viewModel={viewModel} tableOfContents={tableOfContents}>
       <div className="flex flex-col gap-6 justify-center">
         <section className="flex flex-wrap w-full">
-          <h1 className="font-semibold">{pageTitle}</h1>
+          <h1 className="font-semibold mb-6">{pageTitle}</h1>
 
           <CompareProductsForm
             productType={ProductType.Cpu}
@@ -142,8 +149,11 @@ export default async function CompareCpusPage(props: CompareCpusPageProps) {
 
         <DisplayAd unit={AdUnit.ComparePagePreHighlightsDisplay} />
 
-        <article className="flex-1 flex flex-col gap-6 max-w-full">
-          <Contents />
+        <article
+          id="contents"
+          className="flex-1 flex flex-col gap-6 max-w-full"
+        >
+          <TableOfContents links={tableOfContents} />
           <Highlights comparison={comparison} />
           <Overview comparison={comparison} />
           <DisplayAd unit={AdUnit.ComparePagePostSummaryDisplay} />

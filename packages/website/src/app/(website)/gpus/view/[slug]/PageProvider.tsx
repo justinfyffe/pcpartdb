@@ -3,6 +3,8 @@
 import { ProductType, ViewGpuViewModel } from '@pcpartdb/shared';
 import { useSearchParams } from 'next/navigation';
 import { CacheProvider } from 'packages/website/src/app/_common/cache/CacheProvider';
+import { SectionHeaderProvider } from 'packages/website/src/app/_common/components/SectionHeader/SectionHeaderProvider';
+import { TableOfContentsLink } from 'packages/website/src/app/_common/components/TableOfContents/TableOfContents';
 import { ViewModelType } from 'packages/website/src/app/_common/contexts/types';
 import { ViewModelProvider } from 'packages/website/src/app/_common/contexts/ViewModelProvider';
 import { GameSelectionProvider } from 'packages/website/src/app/_common/game/contexts/GameSelectionProvider';
@@ -23,11 +25,12 @@ export function usePageContext() {
 
 export interface PageProviderProps {
   viewModel: ViewGpuViewModel;
+  tableOfContents: TableOfContentsLink[];
   children: React.ReactNode;
 }
 
 export function PageProvider(props: PageProviderProps) {
-  const { viewModel } = props;
+  const { viewModel, tableOfContents } = props;
   const searchParams = useSearchParams();
 
   const { gpu } = viewModel;
@@ -45,25 +48,27 @@ export function PageProvider(props: PageProviderProps) {
 
   return (
     <PageContext.Provider value={{ viewModel: viewModel }}>
-      <CacheProvider
-        products={[gpu, gpu]}
-        productGames={[...(gpu?.games ?? [])]}
-      >
-        <ViewModelProvider
-          type={ViewModelType.ViewGpuViewModel}
-          viewModel={viewModel}
+      <SectionHeaderProvider links={tableOfContents}>
+        <CacheProvider
+          products={[gpu, gpu]}
+          productGames={[...(gpu?.games ?? [])]}
         >
-          <GameSelectionProvider products={[gpu]} game={initialGame?.game}>
-            <RelativeDataProductsProvider
-              productType={ProductType.Gpu}
-              productIds={[gpu.id]}
-              relativeDataProducts={viewModel.relativeDataProducts}
-            >
-              {props.children}
-            </RelativeDataProductsProvider>
-          </GameSelectionProvider>
-        </ViewModelProvider>
-      </CacheProvider>
+          <ViewModelProvider
+            type={ViewModelType.ViewGpuViewModel}
+            viewModel={viewModel}
+          >
+            <GameSelectionProvider products={[gpu]} game={initialGame?.game}>
+              <RelativeDataProductsProvider
+                productType={ProductType.Gpu}
+                productIds={[gpu.id]}
+                relativeDataProducts={viewModel.relativeDataProducts}
+              >
+                {props.children}
+              </RelativeDataProductsProvider>
+            </GameSelectionProvider>
+          </ViewModelProvider>
+        </CacheProvider>
+      </SectionHeaderProvider>
     </PageContext.Provider>
   );
 }

@@ -8,26 +8,20 @@ import React from 'react';
 
 export const MemoryIntroSentence1 = compileContentComponent({
   deps: [],
-  component: (props) => (
+  Component: (props) => (
     <>
-      The memory size, bandwidth, and clock speeds for the {props.name1} and{' '}
-      {props.name2}. GPU memory stores graphics data like frames, textures, and
-      shadows which helps display rendered images. These specs are critical for
+      Memory specifications like their capacity, bandwidth, and clock speeds.
+      GPU memory stores graphics data like frames, textures, and shadows which
+      helps display rendered images. These specs are crucial for
       graphics-intense applications like gaming and 3D modeling.
     </>
   ),
 });
 
 export const MemoryIntro = () => {
-  const { comparison } = useViewModel<CompareGpusViewModel>();
-  const [gpu1, gpu2] = comparison;
-
-  const name1 = formatProductName(gpu1, { company: false });
-  const name2 = formatProductName(gpu2, { company: false });
-
   return (
-    <ContentProvider params={{ name1, name2 }}>
-      <p className="text-dimmed">
+    <ContentProvider>
+      <p>
         <MemoryIntroSentence1 />
       </p>
     </ContentProvider>

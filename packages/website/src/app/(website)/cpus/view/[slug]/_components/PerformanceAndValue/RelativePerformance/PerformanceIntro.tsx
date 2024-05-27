@@ -12,15 +12,14 @@ import { usePageContext } from '../../../PageProvider';
 
 export const PerformanceIntroParagraph = compileContentComponent({
   deps: [],
-  component: (props) => (
+  Component: (props) => (
     <>
-      Compare {props.nameWithNoCompany}&apos;s performance with similar{' '}
-      {props.marketSegment} CPUs. This provides insight into how its benchmark
-      compares to its peers. This data is based on its{' '}
+      Compare the average{' '}
       <Button variant={ButtonVariant.Link} onClick={props.handleBenchmarkClick}>
         {props.preferredBenchmarkName}
       </Button>{' '}
-      performance.
+      benchmark score with similar CPUs. Powerful CPUs tend to have higher
+      scores.
     </>
   ),
 });
@@ -40,7 +39,7 @@ export const PerformanceIntro = () => {
       tags={contentTags}
       params={{ ...contentParams, handleBenchmarkClick }}
     >
-      <p className="text-dimmed">
+      <p>
         <PerformanceIntroParagraph />
       </p>
     </ContentProvider>

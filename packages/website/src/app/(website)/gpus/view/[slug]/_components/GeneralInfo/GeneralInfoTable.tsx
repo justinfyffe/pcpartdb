@@ -34,23 +34,8 @@ export function GeneralInfoTable(props: GeneralInfoTableProps) {
           </Tr>
         </THead>
         <TBody>
-          {gpuAffiliateUrl && (
-            <ProductCustomRow
-              label="Shop"
-              value={
-                <a
-                  href={gpuAffiliateUrl}
-                  target="_blank"
-                  rel="noopener nofollow"
-                  className="underline"
-                >
-                  Check Price
-                </a>
-              }
-            />
-          )}
           <ProductCustomRow
-            label="Company"
+            label="Manufacturer"
             values={[formatCompanyName(gpu.company) ?? '--']}
           />
           <ProductFieldRow
@@ -70,6 +55,21 @@ export function GeneralInfoTable(props: GeneralInfoTableProps) {
             type={ProductType.Gpu}
             fields={[gpu.fields?.productionStatus]}
           />
+          {gpuAffiliateUrl && (
+            <ProductCustomRow
+              label="Shop"
+              value={
+                <a
+                  href={gpuAffiliateUrl}
+                  target="_blank"
+                  rel="noopener nofollow"
+                  className="underline"
+                >
+                  Check Price
+                </a>
+              }
+            />
+          )}
         </TBody>
       </Table>
     </div>

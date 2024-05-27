@@ -1,13 +1,10 @@
 import { CpuProductComparison } from '@pcpartdb/shared';
-import { classNames } from 'packages/website/src/client/shared/ui/classNames';
+import { AffiliateDisclaimer } from 'packages/website/src/app/_common/components/AffiliateDisclaimer/AffiliateDisclaimer';
+import { BenchmarkPerformanceHighlight } from 'packages/website/src/app/_common/product/components/Highlights/compare/BenchmarkPerformance/BenchmarkPerformanceHighlight';
+import { BenchmarkPerformancePerDollarHighlight } from 'packages/website/src/app/_common/product/components/Highlights/compare/BenchmarkPerformancePerDollar/BenchmarkPerformancePerDollarHighlight';
+import { HighlightsGrid } from 'packages/website/src/app/_common/product/components/Highlights/compare/HighlightsGrid';
+import { ShopHighlight } from 'packages/website/src/app/_common/product/components/Highlights/compare/ShopHighlight';
 import React, { FunctionComponent } from 'react';
-import { AffiliateHighlight } from './AffiliateHighlight';
-import { ClockHighlight } from './ClockHighlight';
-import { CoresHighlight } from './CoresHighlight';
-import { MemoryHighlight } from './MemoryHighlight';
-import { PerformanceHighlight } from './PerformanceHighlight';
-import { ReleaseDateHighlight } from './ReleaseDateHighlight';
-import { ValueHighlight } from './ValueHighlight';
 
 interface HighlightsProps {
   comparison: CpuProductComparison;
@@ -18,21 +15,20 @@ export const Highlights: FunctionComponent<HighlightsProps> = (props) => {
   const { comparison, className } = props;
 
   return (
-    <div>
-      <div
-        className={classNames(
-          'grid grid-cols-2 sm:flex flex-col gap-y-4 gap-x-6',
-          className,
-        )}
-      >
-        <PerformanceHighlight />
-        <ValueHighlight />
-        <CoresHighlight comparison={comparison} />
-        <MemoryHighlight comparison={comparison} />
-        <ClockHighlight comparison={comparison} />
-        <ReleaseDateHighlight comparison={comparison} />
-        <AffiliateHighlight comparison={comparison} />
-      </div>
+    <div className="flex flex-col">
+      <HighlightsGrid className={className}>
+        <BenchmarkPerformanceHighlight
+          comparison={comparison}
+          shortDescription
+        />
+        <BenchmarkPerformancePerDollarHighlight
+          comparison={comparison}
+          shortDescription
+        />
+        <ShopHighlight product={comparison[0]} />
+        <ShopHighlight product={comparison[1]} />
+      </HighlightsGrid>
+      <AffiliateDisclaimer className="text-xs" />
     </div>
   );
 };

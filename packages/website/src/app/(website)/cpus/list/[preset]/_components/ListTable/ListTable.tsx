@@ -59,7 +59,9 @@ export const ListTable: FunctionComponent = () => {
             <></>
           )}
 
-          <Th className="px-4 py-2 md:p-2 min-w-64 md:min-w-12">Processor</Th>
+          <Th className="px-4 py-2 md:p-2 min-w-64 md:min-w-12">
+            Processor Detaills
+          </Th>
 
           <Th
             className={classNames(

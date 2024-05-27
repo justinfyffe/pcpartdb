@@ -123,6 +123,12 @@ tr:nth-child(even) {
   color: '#a9a9a9';
 }
 
+@media screen(md) {
+  h1 {
+    font-size: 24px;
+  }
+}
+
 @layer base {
   input[type="number"]::-webkit-inner-spin-button,
   input[type="number"]::-webkit-outer-spin-button {
@@ -146,4 +152,8 @@ tr:nth-child(even) {
 
 .shadowed-text:not(:disabled) {
   text-shadow: 1px 1px 1px rgb(0 0 0 / 40%);
+}
+
+.shadowed-text-white:not(:disabled) {
+  text-shadow: 1px 1px 1px rgb(255 255 255 / 60%);
 }

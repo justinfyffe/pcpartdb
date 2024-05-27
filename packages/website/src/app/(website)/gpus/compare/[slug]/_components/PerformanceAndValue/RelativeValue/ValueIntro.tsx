@@ -3,7 +3,7 @@
 import {
   CompareGpusViewModel,
   formatProductName,
-  getProductBenchmarkShortName,
+  getProductBenchmarkName,
   ProductType,
 } from '@pcpartdb/shared';
 import { Button } from 'packages/website/src/app/_common/components/Button/Button';
@@ -17,15 +17,14 @@ import { usePreferredBenchmarkDialog } from 'packages/website/src/app/_common/pr
 import React from 'react';
 
 export const ValueIntroSentence1 = compileContentComponent({
-  component: (props) => (
+  Component: (props) => (
     <>
-      Compare {props.gpuName1} and {props.gpuName2}&apos;s performance per
-      dollar with similar GPUs. This provides insight into which GPUs give the
-      better bang for your buck. This data is based on its{' '}
+      Compare the{' '}
       <Button variant={ButtonVariant.Link} onClick={props.handleBenchmarkClick}>
         {props.preferredBenchmarkName}
       </Button>{' '}
-      performance and MSRP.
+      performance per dollar with similar GPUs. A higher score implies a better
+      value for your money.
     </>
   ),
 });
@@ -39,8 +38,7 @@ export const ValueIntro = () => {
   const gpuName1 = formatProductName(gpu1, { company: false });
   const gpuName2 = formatProductName(gpu2, { company: false });
 
-  const preferredBenchmarkName =
-    getProductBenchmarkShortName(preferredBenchmark);
+  const preferredBenchmarkName = getProductBenchmarkName(preferredBenchmark);
 
   const handleBenchmarkClick = usePreferredBenchmarkDialog({
     productType: ProductType.Gpu,
@@ -58,7 +56,7 @@ export const ValueIntro = () => {
         handleBenchmarkClick,
       }}
     >
-      <p className="text-dimmed">
+      <p>
         <ValueIntroSentence1 />
       </p>
     </ContentProvider>

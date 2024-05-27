@@ -2,24 +2,21 @@
 
 import { ContentProvider } from 'packages/website/src/app/_common/content/ContentProvider';
 import { compileContentComponent } from 'packages/website/src/app/_common/content/utils/compileContentComponent';
-import { useProductContent } from 'packages/website/src/app/_common/product/content/useProductContent';
 import React from 'react';
 
 const GameFpsIntroSentence1 = compileContentComponent({
-  component: (props) => (
+  Component: (_props) => (
     <>
-      Gaming FPS benchmarks for the {props.nameWithNoCompany}. For gamers, these
-      are usually the best indicator for determing a GPUs performance and value.
-      This data is based on its FPS performance across different games.
+      Gaming performance benchmarks based its average frame rate (FPS) in
+      popular games. These provide a strong indicator of a GPU&apos;s ability to
+      handle demanding titles and help assess its value for the money.
     </>
   ),
 });
 export const GameFpsIntro = () => {
-  const { contentTags, contentParams } = useProductContent();
-
   return (
-    <ContentProvider tags={contentTags} params={contentParams}>
-      <p className="text-dimmed">
+    <ContentProvider>
+      <p>
         <GameFpsIntroSentence1 />
       </p>
     </ContentProvider>

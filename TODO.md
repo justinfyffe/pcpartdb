@@ -12,8 +12,37 @@ NEXT (long-term):
 
 
 NEXT (short-term)
+- [] Bug fixes
+  - [] Upload related products times out
 - [] UI improvements
-  - [] If missing "Per MSRP", don't render the tables or view rating card
+  - [] HIGHLIGHTS
+    - [] Change UI for the "Benchmark Performance" section.
+      - Use highlight, but a larger description to include more data
+      - Can do cleanup with hooks that calculate common stats
+  - [] Home Page Revamp
+  - [] List - Use overlay for mobile filters
+    - Dim the outer part of the overlay?
+    - make it easy to close
+    - maybe expand it fully, no scroll?
+  - [] Add larger section descriptions?
+    - [] Gaming Performance
+    - [] Benchmark Performance
+  - [] Update section descriptions for CPUs
+  - [] Add Performance to General Info
+    - [] View CPU
+    - [] View GPU
+    - [] Compare CPUs
+    - [] Compare GPUs
+  - [] Add Performance Per Dollar to General Info
+    - [] View CPU
+    - [] View GPU
+    - [] Compare CPUs
+    - [] Compare GPUs
+  - [] Add Gaming Performance to highlights
+    - [] View GPU
+    - [] Compare GPUs
+  - [] Clean up highlights
+    - [] Remove less important data
   - [] add underlines to links on hover
 - [] SEO
   - Off-site

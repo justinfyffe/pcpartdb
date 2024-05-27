@@ -243,8 +243,8 @@ const BenchmarkTab: FunctionComponent<BenchmarkTabProps> = (props) => {
         <THead>
           <Tr>
             <Th>Benchmark</Th>
-            <Th>{name1}</Th>
-            <Th>{name2}</Th>
+            <Th className="sm:text-center">{name1}</Th>
+            <Th className="sm:text-center">{name2}</Th>
           </Tr>
         </THead>
         <TBody>

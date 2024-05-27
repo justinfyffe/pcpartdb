@@ -9,7 +9,7 @@ import { useProductContent } from '../../../content/useProductContent';
 const MemorySize = compileContentComponent({
   // Example: The NVIDIA GeForce RTX 3070 has 12 GB of GDDR6X VRAM.
   tags: [SpecsTag.MemorySize],
-  component: (props) => {
+  Component: (props) => {
     return (
       <>
         This GPU is paired with {props.memorySize} of {props.memoryType} VRAM.
@@ -27,7 +27,7 @@ const MemoryBandwidth = compileContentComponent(
       SpecsTag.MemoryInterface,
       SpecsTag.MemoryBandwidth,
     ],
-    component: (props) => (
+    Component: (props) => (
       <>
         Its {props.memoryClock} memory clock and {props.memoryInterface}{' '}
         interface gives it a bandwidth of {props.memoryBandwidth}.
@@ -37,7 +37,7 @@ const MemoryBandwidth = compileContentComponent(
   {
     // Example: Its 1,313 MHz memory clock gives it a bandwidth of 504.2 Gb/s.
     tags: [SpecsTag.MemoryClock, SpecsTag.MemoryBandwidth],
-    component: (props) => (
+    Component: (props) => (
       <>
         Its {props.memoryClock} memory clock gives it a bandwidth of{' '}
         {props.memoryBandwidth}.
@@ -47,12 +47,12 @@ const MemoryBandwidth = compileContentComponent(
   {
     // Example: It has a memory clock of 1,313 MHz.
     tags: [SpecsTag.MemoryClock],
-    component: (props) => <>Its has a memory clock of {props.memoryClock}.</>,
+    Component: (props) => <>Its has a memory clock of {props.memoryClock}.</>,
   },
   {
     // Example: It has a memory bandwidth of 504.2 Gb/s.
     tags: [SpecsTag.MemoryBandwidth],
-    component: (props) => <>Its has a bandwidth of {props.memoryBandwidth}.</>,
+    Component: (props) => <>Its has a bandwidth of {props.memoryBandwidth}.</>,
   },
 );
 
@@ -61,7 +61,7 @@ const MemoryConclusion = compileContentComponent(
     // Example: This impacts how much data it can store, and how fast it transfers
     //          the data to and from memory.
     tags: [SpecsTag.MemorySize, SpecsTag.MemoryBandwidth],
-    component: () => (
+    Component: () => (
       <>
         This impacts how much data it can store, and how fast it transfers the
         data to and from memory.
@@ -71,7 +71,7 @@ const MemoryConclusion = compileContentComponent(
   {
     // Example: This impacts how much data the graphics card can store.
     tags: [SpecsTag.MemorySize],
-    component: () => (
+    Component: () => (
       <>This impacts how much data the graphics card can store.</>
     ),
   },
@@ -79,7 +79,7 @@ const MemoryConclusion = compileContentComponent(
     // Example: This impacts how fast the graphics card transfers
     //          its data to and from memory.
     tags: [SpecsTag.MemoryBandwidth],
-    component: () => (
+    Component: () => (
       <>
         This impacts how fast the graphics card transfers its data to and from
         memory.
@@ -91,17 +91,19 @@ const MemoryConclusion = compileContentComponent(
 const MemoryParagraph = compileContentComponent({
   tags: [],
   deps: [],
-  component: () => (
+  Component: () => (
     <p>
       <MemorySize /> <MemoryBandwidth /> <MemoryConclusion />
     </p>
   ),
 });
 
-interface MemoryBlurbProps {}
+interface MemoryBlurbProps {
+  index?: number;
+}
 
-export const MemoryBlurb: FunctionComponent<MemoryBlurbProps> = (_props) => {
-  const { contentTags, contentParams } = useProductContent();
+export const MemoryBlurb: FunctionComponent<MemoryBlurbProps> = (props) => {
+  const { contentTags, contentParams } = useProductContent(props.index);
 
   return (
     <ContentProvider tags={contentTags} params={contentParams}>

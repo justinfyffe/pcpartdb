@@ -2,7 +2,6 @@ import { formatProductName, GpuProduct } from '@pcpartdb/shared';
 import { SectionHeader } from 'packages/website/src/app/_common/components/SectionHeader/SectionHeader';
 import { GameSelectionCarousel } from 'packages/website/src/app/_common/game/components/GameSelection/GameSelectionCarousel';
 import React from 'react';
-import { Contents } from '../Contents/Contents';
 import { GameFps } from './GameFps/GameFps';
 import { RelativeGameCpf } from './RelativeGameCpf/RelativeGameCpf';
 import { RelativeGameFps } from './RelativeGameFps/RelativeGameFps';
@@ -20,7 +19,7 @@ export function GamingPerformance(props: GamingPerformanceProps) {
 
   return (
     <section className="flex flex-col gap-4">
-      <SectionHeader linkId="gaming-performance" menu={<Contents />}>
+      <SectionHeader linkId="gaming-performance">
         Gaming Performance
       </SectionHeader>
 
@@ -28,7 +27,7 @@ export function GamingPerformance(props: GamingPerformanceProps) {
         <div className="flex flex-col gap-6">
           <div className="flex flex-col gap-0">
             <h3 className="mb-4 font-semibold">
-              Select a game to view and compare FPS metrics
+              Select a game to compare FPS metrics
             </h3>
             <GameSelectionCarousel games={games} />
           </div>

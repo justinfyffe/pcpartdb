@@ -16,15 +16,14 @@ import { usePreferredBenchmarkDialog } from 'packages/website/src/app/_common/pr
 import React from 'react';
 
 export const PerformanceIntroParagraph = compileContentComponent({
-  component: (props) => (
+  Component: (props) => (
     <>
-      Compare {props.name1} and {props.name2}&apos;s performance with similar
-      CPUs. This provides insight into how their benchmarks compare to their
-      peers. This data is based on its{' '}
+      Compare the average{' '}
       <Button variant={ButtonVariant.Link} onClick={props.handleBenchmarkClick}>
         {props.preferredBenchmarkName}
       </Button>{' '}
-      performance.
+      benchmark score with similar CPUs. Powerful CPUs tend to have higher
+      scores.
     </>
   ),
 });
@@ -49,7 +48,7 @@ export const PerformanceIntro = () => {
     <ContentProvider
       params={{ name1, name2, preferredBenchmarkName, handleBenchmarkClick }}
     >
-      <p className="text-dimmed">
+      <p>
         <PerformanceIntroParagraph />
       </p>
     </ContentProvider>

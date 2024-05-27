@@ -7,10 +7,11 @@ import React from 'react';
 
 export const PowerIntroParagraph = compileContentComponent({
   deps: [],
-  component: (props) => (
-    <p className="text-dimmed">
-      {props.nameWithNoCompany}&apos;s power consumption specs like its thermal
-      design power and power limits.
+  Component: (props) => (
+    <p>
+      Compatibility and power consumption information like its socket type,
+      thermal design power, power limits. These can help verify the CPU&apos;s
+      compatibility with other PC components.
     </p>
   ),
 });

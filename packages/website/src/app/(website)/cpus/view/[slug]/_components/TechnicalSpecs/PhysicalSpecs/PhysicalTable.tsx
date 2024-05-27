@@ -1,9 +1,10 @@
-import { CpuProduct, ProductType } from '@pcpartdb/shared';
+import { CpuProduct, formatCompanyName, ProductType } from '@pcpartdb/shared';
 import { Table } from 'packages/website/src/app/_common/components/Table/Table';
 import { TBody } from 'packages/website/src/app/_common/components/Table/TBody';
 import { Th } from 'packages/website/src/app/_common/components/Table/Th';
 import { THead } from 'packages/website/src/app/_common/components/Table/THead';
 import { Tr } from 'packages/website/src/app/_common/components/Table/Tr';
+import { ProductCustomRow } from 'packages/website/src/app/_common/product/components/ProductCustomRow/ProductCustomRow';
 import { ProductFieldRow } from 'packages/website/src/app/_common/product/components/ProductFieldRow/ProductFieldRow';
 import React, { FunctionComponent } from 'react';
 
@@ -24,7 +25,10 @@ export const PhysicalTable: FunctionComponent<PhysicalTableProps> = (props) => {
         </Tr>
       </THead>
       <TBody>
-        <ProductFieldRow type={ProductType.Cpu} fields={[cpu.fields?.socket]} />
+        <ProductCustomRow
+          label="Manufacturer"
+          values={[formatCompanyName(cpu.company) ?? '--']}
+        />
         <ProductFieldRow
           type={ProductType.Cpu}
           fields={[cpu.fields?.foundry]}
@@ -37,11 +41,6 @@ export const PhysicalTable: FunctionComponent<PhysicalTableProps> = (props) => {
           type={ProductType.Cpu}
           fields={[cpu.fields?.transistors]}
         />
-        <ProductFieldRow
-          type={ProductType.Cpu}
-          fields={[cpu.fields?.tCaseMax]}
-        />
-        <ProductFieldRow type={ProductType.Cpu} fields={[cpu.fields?.tjMax]} />
       </TBody>
     </Table>
   );

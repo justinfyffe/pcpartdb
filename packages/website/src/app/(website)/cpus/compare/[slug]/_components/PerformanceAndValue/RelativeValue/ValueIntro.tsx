@@ -16,15 +16,14 @@ import { usePreferredBenchmarkDialog } from 'packages/website/src/app/_common/pr
 import React from 'react';
 
 const ValueIntroParagraph = compileContentComponent({
-  component: (props) => (
+  Component: (props) => (
     <>
-      Compare {props.name1} and {props.name2}&apos;s performance per dollar with
-      similar CPUs. This provides insight into which CPUs gives the best bang
-      for your buck. This data is based on its{' '}
+      Compare the{' '}
       <Button variant={ButtonVariant.Link} onClick={props.handleBenchmarkClick}>
         {props.preferredBenchmarkName}
       </Button>{' '}
-      performance and MSRP.
+      performance per dollar with similar CPUs. A higher score implies a better
+      value for your money.
     </>
   ),
 });
@@ -49,7 +48,7 @@ export const ValueIntro = () => {
     <ContentProvider
       params={{ name1, name2, preferredBenchmarkName, handleBenchmarkClick }}
     >
-      <p className="text-dimmed">
+      <p>
         <ValueIntroParagraph />
       </p>
     </ContentProvider>

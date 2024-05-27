@@ -14,7 +14,10 @@ export const Card: FunctionComponent<CardProps> = (props) => {
   return (
     <Element
       className={classNames(
-        'bg-light-shades flex flex-col gap-4 items-stretch justify-start p-4 rounded shadow text-slate-700',
+        'flex flex-col gap-4 items-stretch justify-start',
+        'p-4',
+        'bg-light-shades',
+        'rounded shadow',
         props.className,
       )}
     >

@@ -16,25 +16,21 @@ export const PhysicalSpecs: FunctionComponent<PhysicalSpecsProps> = (props) => {
   const [cpu1, cpu2] = comparison;
 
   if (
-    !hasProductFieldFormattedValue(cpu1.fields?.socket) &&
-    !hasProductFieldFormattedValue(cpu2.fields?.socket) &&
+    !cpu1.company &&
+    !cpu2.company &&
     !hasProductFieldFormattedValue(cpu1.fields?.foundry) &&
     !hasProductFieldFormattedValue(cpu2.fields?.foundry) &&
     !hasProductFieldFormattedValue(cpu1.fields?.processSize) &&
     !hasProductFieldFormattedValue(cpu2.fields?.processSize) &&
     !hasProductFieldFormattedValue(cpu1.fields?.transistors) &&
-    !hasProductFieldFormattedValue(cpu2.fields?.transistors) &&
-    !hasProductFieldFormattedValue(cpu1.fields?.tCaseMax) &&
-    !hasProductFieldFormattedValue(cpu2.fields?.tCaseMax) &&
-    !hasProductFieldFormattedValue(cpu1.fields?.tjMax) &&
-    !hasProductFieldFormattedValue(cpu2.fields?.tjMax)
+    !hasProductFieldFormattedValue(cpu2.fields?.transistors)
   ) {
     return <></>;
   }
 
   return (
     <section className={className}>
-      <h3 className="mb-1">Physical</h3>
+      <h3 className="mb-1">Manufacturing Details</h3>
       <PhysicalIntro />
       <PhysicalTable comparison={comparison} />
     </section>

@@ -43,6 +43,36 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
         </Tr>
       </THead>
       <TBody>
+        <ProductCustomRow
+          label="Manufacturer"
+          values={[
+            formatCompanyName(cpu1.company) ?? '--',
+            formatCompanyName(cpu2.company) ?? '--',
+          ]}
+        />
+        <ProductFieldRow
+          type={ProductType.Cpu}
+          fields={[cpu1.fields?.generation, cpu2.fields?.generation]}
+        />
+        <ProductFieldRow
+          type={ProductType.Cpu}
+          fields={[cpu1.fields?.marketSegment, cpu2.fields?.marketSegment]}
+        />
+        <ProductFieldRow
+          type={ProductType.Cpu}
+          fields={[cpu1.fields?.releaseDate, cpu2.fields?.releaseDate]}
+        />
+        <ProductFieldRow
+          type={ProductType.Cpu}
+          fields={[cpu1.fields?.msrp, cpu2.fields?.msrp]}
+        />
+        <ProductFieldRow
+          type={ProductType.Cpu}
+          fields={[
+            cpu1.fields?.productionStatus,
+            cpu2.fields?.productionStatus,
+          ]}
+        />
         {(cpuAffiliateUrl1 || cpuAffiliateUrl2) && (
           <ProductCustomRow
             label="Shop"
@@ -78,36 +108,6 @@ export const GeneralInfoTable: FunctionComponent<GeneralInfoTableProps> = (
             ]}
           />
         )}
-        <ProductCustomRow
-          label="Company"
-          values={[
-            formatCompanyName(cpu1.company) ?? '--',
-            formatCompanyName(cpu2.company) ?? '--',
-          ]}
-        />
-        <ProductFieldRow
-          type={ProductType.Cpu}
-          fields={[cpu1.fields?.generation, cpu2.fields?.generation]}
-        />
-        <ProductFieldRow
-          type={ProductType.Cpu}
-          fields={[cpu1.fields?.marketSegment, cpu2.fields?.marketSegment]}
-        />
-        <ProductFieldRow
-          type={ProductType.Cpu}
-          fields={[cpu1.fields?.releaseDate, cpu2.fields?.releaseDate]}
-        />
-        <ProductFieldRow
-          type={ProductType.Cpu}
-          fields={[cpu1.fields?.msrp, cpu2.fields?.msrp]}
-        />
-        <ProductFieldRow
-          type={ProductType.Cpu}
-          fields={[
-            cpu1.fields?.productionStatus,
-            cpu2.fields?.productionStatus,
-          ]}
-        />
       </TBody>
     </Table>
   );

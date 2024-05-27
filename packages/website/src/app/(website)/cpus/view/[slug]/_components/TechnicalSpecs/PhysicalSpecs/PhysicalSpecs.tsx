@@ -12,19 +12,17 @@ export const PhysicalSpecs: FunctionComponent<PhysicalSpecsProps> = (props) => {
   const { cpu, className } = props;
 
   if (
-    !hasProductFieldFormattedValue(cpu.fields?.socket) &&
+    !cpu.company &&
     !hasProductFieldFormattedValue(cpu.fields?.foundry) &&
     !hasProductFieldFormattedValue(cpu.fields?.processSize) &&
-    !hasProductFieldFormattedValue(cpu.fields?.transistors) &&
-    !hasProductFieldFormattedValue(cpu.fields?.tCaseMax) &&
-    !hasProductFieldFormattedValue(cpu.fields?.tjMax)
+    !hasProductFieldFormattedValue(cpu.fields?.transistors)
   ) {
     return <></>;
   }
 
   return (
     <section className={className}>
-      <h3 className="mb-1">Physical</h3>
+      <h3 className="mb-1">Manufacturing Details</h3>
       <PhysicalIntro />
       <PhysicalTable cpu={cpu} />
     </section>

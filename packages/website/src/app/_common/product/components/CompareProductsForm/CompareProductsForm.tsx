@@ -59,14 +59,12 @@ export function CompareProductsForm(props: CompareProductsFormProps) {
     <Form
       onSubmit={handleSubmit}
       className={classNames(
-        'flex flex-row gap-4 w-full',
-        'md:flex-col',
+        'flex flex-row gap-x-4 w-full',
+        'md:flex-col gap-y-4',
         className,
       )}
     >
-      <div
-        className={classNames('flex flex-1 gap-4 md:grid grid-cols-[1fr_auto]')}
-      >
+      <div className={classNames('flex flex-1 gap-4 md:flex-col md:gap-1')}>
         <ProductAutocomplete
           productType={productType}
           className={classNames('flex-1 min-w-38')}

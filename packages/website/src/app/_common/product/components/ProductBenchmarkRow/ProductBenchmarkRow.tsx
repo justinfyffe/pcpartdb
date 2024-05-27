@@ -71,14 +71,21 @@ export const ProductBenchmarkRow: FunctionComponent<
         <Td
           key={i}
           className={classNames(
-            'text-left',
+            'whitespace-nowrap sm:text-center',
             benchmarks.length === 1 ? 'w-[50%]' : '',
             benchmarks.length === 2 ? 'w-[33%]' : '',
           )}
         >
-          <div className={classNames('flex gap-2 items-center')}>
-            <span>{value?.toLocaleString() ?? '--'}</span>
-            <span className="text-sm">{diffs[i] && <>(+{diffs[i]}%)</>}</span>
+          <div
+            className={classNames(
+              'flex sm:flex-col gap-4 sm:gap-0',
+              diffs[i] ? 'font-semibold' : '',
+            )}
+          >
+            <div>{value?.toLocaleString() ?? '--'}</div>
+            {hasValues && (
+              <div className="text-sm">{diffs[i] && <>(+{diffs[i]}%)</>}</div>
+            )}
           </div>
         </Td>
       ))}

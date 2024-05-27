@@ -11,26 +11,22 @@ import { ContentProvider } from 'packages/website/src/app/_common/content/Conten
 import { compileContentComponent } from 'packages/website/src/app/_common/content/utils/compileContentComponent';
 import { GameSelectionDialog } from 'packages/website/src/app/_common/game/components/GameSelection/GameSelectionDialog';
 import { useGameSelection } from 'packages/website/src/app/_common/game/contexts/GameSelectionProvider';
-import { useProductContent } from 'packages/website/src/app/_common/product/content/useProductContent';
 import React, { useCallback, useMemo } from 'react';
 import { usePageContext } from '../../../PageProvider';
 
 const FpsIntroSentence1 = compileContentComponent({
-  component: (props) => (
+  Component: (props) => (
     <>
-      Compare {props.nameWithNoCompany}&apos;s FPS performance with similar{' '}
-      {props.marketSegment} GPUs. This provides insight into how its benchmark
-      compares to its peers. This data is based on the FPS for{' '}
+      Compare the average frame rate (FPS) in{' '}
       <Button variant={ButtonVariant.Link} onClick={props.handleGameClick}>
         {props.selectedGameName}
-      </Button>
-      . Higher is better.
+      </Button>{' '}
+      with similar GPUs. Higher FPS leads to smoother gaming experience.
     </>
   ),
 });
 
 export const RelativeGameFpsIntro = () => {
-  const { contentTags, contentParams } = useProductContent();
   const { viewModel } = usePageContext();
   const gpu = viewModel.gpu;
   const { selectedGame, setSelectedGame } = useGameSelection();
@@ -52,14 +48,12 @@ export const RelativeGameFpsIntro = () => {
 
   return (
     <ContentProvider
-      tags={contentTags}
       params={{
-        ...contentParams,
         selectedGameName: gameName,
         handleGameClick,
       }}
     >
-      <p className="text-dimmed">
+      <p>
         <FpsIntroSentence1 />
       </p>
     </ContentProvider>

@@ -2,6 +2,7 @@ export * from './base64Decode';
 export * from './base64Encode';
 export * from './binarySearch';
 export * from './camelize';
+export * from './chunkify';
 export * from './cleanUrl';
 export * from './compactArray';
 export * from './compactObject';

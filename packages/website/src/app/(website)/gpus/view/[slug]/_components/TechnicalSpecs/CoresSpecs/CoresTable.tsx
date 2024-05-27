@@ -69,24 +69,6 @@ export const CoresTable: FunctionComponent<CoresTableProps> = (props) => {
           type={ProductType.Gpu}
           fields={[gpu.fields?.gpuCoreBoostClock]}
         />
-        <ProductFieldRow
-          type={ProductType.Gpu}
-          fields={[gpu.fields?.l1Cache]}
-        />
-        <ProductFieldRow
-          type={ProductType.Gpu}
-          fields={[gpu.fields?.l2Cache]}
-        />
-        <ProductFieldRow
-          type={ProductType.Gpu}
-          fields={[gpu.fields?.pixelRate]}
-        />
-        <ProductFieldRow
-          type={ProductType.Gpu}
-          fields={[gpu.fields?.textureRate]}
-        />
-        <ProductFieldRow type={ProductType.Gpu} fields={[gpu.fields?.fp32]} />
-        <ProductFieldRow type={ProductType.Gpu} fields={[gpu.fields?.fp64]} />
       </TBody>
     </Table>
   );

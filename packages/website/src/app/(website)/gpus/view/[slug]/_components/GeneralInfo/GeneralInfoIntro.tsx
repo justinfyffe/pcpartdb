@@ -6,20 +6,18 @@ import { useProductContent } from 'packages/website/src/app/_common/product/cont
 import React from 'react';
 
 const GeneralInfoIntro1 = compileContentComponent({
-  component: (props: any) => (
+  Component: (props: any) => (
     <>
-      General information about the {props.nameWithNoCompany} like its
-      manufacturer, release date, launch price, and production status.
+      General overview of the GPU, including details like its manufacturer,
+      release date, launch price, and current production status.
     </>
   ),
 });
 
 export function GeneralInfoIntro() {
-  const { contentTags, contentParams } = useProductContent();
-
   return (
-    <ContentProvider tags={contentTags} params={contentParams}>
-      <p className="text-dimmed">
+    <ContentProvider>
+      <p>
         <GeneralInfoIntro1 />
       </p>
     </ContentProvider>

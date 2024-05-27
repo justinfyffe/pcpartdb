@@ -8,25 +8,19 @@ import React from 'react';
 
 export const BenchmarksIntroSentence1 = compileContentComponent({
   deps: [],
-  component: (props) => (
+  Component: (props) => (
     <>
-      Performance and benchmark metrics for the {props.gpuName1} and{' '}
-      {props.gpuName2}. These are usually the best indicator for determing a
-      GPUs performance.
+      Performance metrics across industry-standard GPU benchmark tests. These
+      scores provide a valuable insight into overall performance. Powerful GPUs
+      tend to have higher scores.
     </>
   ),
 });
 
 export const BenchmarksIntro = () => {
-  const { comparison } = useViewModel<CompareGpusViewModel>();
-  const [gpu1, gpu2] = comparison;
-
-  const gpuName1 = formatProductName(gpu1, { company: false });
-  const gpuName2 = formatProductName(gpu2, { company: false });
-
   return (
-    <ContentProvider params={{ gpuName1, gpuName2 }}>
-      <p className="text-dimmed">
+    <ContentProvider>
+      <p>
         <BenchmarksIntroSentence1 />
       </p>
     </ContentProvider>

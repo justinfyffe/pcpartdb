@@ -7,10 +7,10 @@ import React from 'react';
 
 export const CacheIntroParagraph = compileContentComponent({
   deps: [],
-  component: (props) => (
-    <p className="text-dimmed">
-      {props.nameWithNoCompany}&apos;s cache specs like its L1 cache and L2
-      cache.
+  Component: (props) => (
+    <p>
+      CPU cache specs, providing the CPU with a small, but super-fast memory
+      access. A larger cache can improve a CPU&apos;s performance.
     </p>
   ),
 });

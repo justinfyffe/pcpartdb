@@ -10,7 +10,7 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import { useDebounce } from '../../hooks/useDebounce';
+import { useDebounce } from '../../hooks/utils/useDebounce';
 import { classNames } from '../../utils/classNames';
 import { TextInput, TextInputProps } from '../Input/TextInput';
 import { Spinner } from '../Spinner/Spinner';

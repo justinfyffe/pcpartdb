@@ -114,6 +114,7 @@ module.exports = {
         primary: '#4c5c7c',
         'primary-action': '#008dd1',
         'primary-action--hover': '#0086c7',
+        'primary-chart': '#b2d4ff',
         info: '#282731',
         success: '#4c965d',
         warning: '#c98625',

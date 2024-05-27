@@ -71,15 +71,15 @@ export default async function HomePage() {
       <section className="flex flex-col gap-8 justify-center">
         {' '}
         <section className={classNames('flex flex-col justify-center gap-4')}>
-          <h1 className="md:text-2xl text-3xl mb-0">
-            View &amp; compare PC part benchmarks and specs
+          <h1 className="md:text-2xl text-2xl mb-0">
+            Build Smarter: Compare PC part benchmarks &amp; specs
           </h1>
 
           <Tabs variant={TabsVariant.Horizontal}>
             <Tab label="Graphics cards" className="py-4">
               <p>
-                Select 1 or 2 graphics cards to get a comparison of their
-                technical specs and benchmarks.
+                Select 1 or 2 graphics cards to get a comparison of their gaming
+                performance, benchmarks, and technical specs.
               </p>
               <CompareProductsForm
                 productType={ProductType.Gpu}
@@ -88,8 +88,8 @@ export default async function HomePage() {
             </Tab>
             <Tab label="Processors" className="py-4">
               <p>
-                Select 1 or 2 processors to get a comparison of their technical
-                specs and benchmarks.
+                Select 1 or 2 processors to get a comparison of their benchmark
+                performance and technical specs.
               </p>
               <CompareProductsForm
                 productType={ProductType.Cpu}

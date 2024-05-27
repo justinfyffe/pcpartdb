@@ -6,17 +6,18 @@ import { GpuSummary } from './gpu/GpuSummary';
 
 interface ProductSummaryProps {
   product: Product;
+  index?: number;
 }
 
 export const ProductSummary = (props: ProductSummaryProps) => {
-  const { product } = props;
+  const { product, index } = props;
 
   if (product?.summary) {
-    return <CustomSummary product={product} />;
+    return <CustomSummary product={product} index={index} />;
   } else if (isGpuProduct(product)) {
-    return <GpuSummary product={product} />;
+    return <GpuSummary product={product} index={index} />;
   } else if (isCpuProduct(product)) {
-    return <CpuSummary product={product} />;
+    return <CpuSummary product={product} index={index} />;
   }
 
   return <></>;

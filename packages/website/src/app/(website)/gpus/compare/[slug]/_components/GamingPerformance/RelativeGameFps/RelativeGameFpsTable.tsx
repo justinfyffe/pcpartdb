@@ -126,23 +126,21 @@ export const RelativeGameFpsTable: FunctionComponent<
 
   return (
     <>
-      <div className="flex flex-wrap gap-2 justify-end">
-        <div className="mb-1">
-          Baseline:{' '}
+      <div className="flex flex-wrap gap-2">
+        <div className="w-full mb-1 flex sm:flex-col justify-between gap-3 sm:gap-1 items-center sm:items-start">
+          <span className="sm:underline">Choose Baseline GPU:</span>
           <BaselineToggle
             gpu={gpu1}
             active={baselineGpu?.id === gpu1.id}
             onClick={() => toggleBaselineGpu(gpu1)}
           />{' '}
+          <span className="sm:hidden">or</span>
           {gpu1.id !== gpu2.id && (
-            <>
-              or{' '}
-              <BaselineToggle
-                gpu={gpu2}
-                active={baselineGpu?.id === gpu2.id}
-                onClick={() => toggleBaselineGpu(gpu2)}
-              />
-            </>
+            <BaselineToggle
+              gpu={gpu2}
+              active={baselineGpu?.id === gpu2.id}
+              onClick={() => toggleBaselineGpu(gpu2)}
+            />
           )}
         </div>
       </div>
@@ -277,6 +275,7 @@ interface BaselineToggleProps {
   gpu: GpuProduct;
   active: boolean;
   onClick: () => void;
+  className?: string;
 }
 
 export const BaselineToggle: FunctionComponent<BaselineToggleProps> = (
@@ -293,16 +292,34 @@ export const BaselineToggle: FunctionComponent<BaselineToggleProps> = (
 
   const productGame = getProductGame(gpu, selectedGame?.id);
   if (getProductGameFpsValue(productGame, settingsPreset) == null) {
-    return <span className="text-dimmed cursor-not-allowed">{gpuName}</span>;
+    return (
+      <span
+        className={classNames(
+          'text-dimmed cursor-not-allowed line-through text-center font-normal',
+          props.className,
+        )}
+      >
+        {gpuName}
+      </span>
+    );
   }
 
   if (active) {
-    return <span className="font-bold">{gpuName}</span>;
+    return (
+      <span
+        className={classNames('font-semibold text-center', props.className)}
+      >
+        {gpuName}
+      </span>
+    );
   } else {
     return (
       <Button
         variant={ButtonVariant.Link}
-        className="cursor-pointer"
+        className={classNames(
+          'cursor-pointer text-center font-normal',
+          props.className,
+        )}
         onClick={onClick}
       >
         {gpuName}

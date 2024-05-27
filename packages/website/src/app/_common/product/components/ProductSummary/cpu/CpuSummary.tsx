@@ -6,15 +6,20 @@ import { SpecsBlurb } from './SpecsBlurb';
 
 interface CpuSummaryProps {
   product: CpuProduct;
+  index?: number;
 }
 
 export const CpuSummary: FunctionComponent<CpuSummaryProps> = (props) => {
   const { product } = props;
   return (
-    <section className="-mb-4">
-      <IntroBlurb />
-      <SpecsBlurb />
-      {product.enablePerformanceSummary ? <PerformanceBlurb /> : <></>}
+    <section>
+      <IntroBlurb index={props.index} />
+      <SpecsBlurb index={props.index} />
+      {product.enablePerformanceSummary ? (
+        <PerformanceBlurb index={props.index} />
+      ) : (
+        <></>
+      )}
     </section>
   );
 };

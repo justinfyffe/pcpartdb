@@ -8,10 +8,11 @@ import React from 'react';
 
 export const CoresIntroParagraph = compileContentComponent({
   deps: [],
-  component: (props) => (
-    <p className="text-dimmed">
-      {props.name1} and {props.name2}&apos;s core and clock speed specs like its
-      core count, thread count, clock frequency, and turbo clock.
+  Component: (props) => (
+    <p>
+      Processing power information like their cores and clock speed. These specs
+      impact how fast they can handle instructions and tasks. These have a
+      strong impact on the CPU&apos;s performance.
     </p>
   ),
 });

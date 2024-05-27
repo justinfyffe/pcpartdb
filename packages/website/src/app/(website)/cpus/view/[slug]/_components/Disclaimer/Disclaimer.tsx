@@ -11,11 +11,10 @@ import { usePreferredBenchmarkDialog } from 'packages/website/src/app/_common/pr
 import React, { useCallback } from 'react';
 
 const RatingDisclaimer = compileContentComponent({
-  component: (props) => (
+  Component: (props) => (
     <>
-      *The {props.cpuName}&apos;s benchmark score, performance per dollar, and
-      rankings are based on the {props.preferredBenchmarkName} benchmark and
-      MSRP.
+      * Performance rating, performance per dollar, and rankings are based on
+      the {props.preferredBenchmarkName} benchmark and MSRP.
     </>
   ),
 });
@@ -37,11 +36,12 @@ export const Disclaimer = () => {
 
   return (
     <ContentProvider tags={contentTags} params={contentParams}>
-      <p className="text-dimmed">
+      <p>
         <RatingDisclaimer />{' '}
         <Button
           variant={ButtonVariant.Link}
           onClick={showPreferredBenchmarkDialog}
+          className="text-left"
         >
           Click here to change your preferred benchmark.
         </Button>

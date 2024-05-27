@@ -24,10 +24,20 @@ export const PowerTable: FunctionComponent<PowerTableProps> = (props) => {
         </Tr>
       </THead>
       <TBody>
+        <ProductFieldRow type={ProductType.Cpu} fields={[cpu.fields?.socket]} />
+        <ProductFieldRow
+          type={ProductType.Cpu}
+          fields={[cpu.fields?.pciExpress]}
+        />
         <ProductFieldRow type={ProductType.Cpu} fields={[cpu.fields?.tdp]} />
         <ProductFieldRow type={ProductType.Cpu} fields={[cpu.fields?.pl1]} />
         <ProductFieldRow type={ProductType.Cpu} fields={[cpu.fields?.pl2]} />
         <ProductFieldRow type={ProductType.Cpu} fields={[cpu.fields?.ppt]} />
+        <ProductFieldRow
+          type={ProductType.Cpu}
+          fields={[cpu.fields?.tCaseMax]}
+        />
+        <ProductFieldRow type={ProductType.Cpu} fields={[cpu.fields?.tjMax]} />
       </TBody>
     </Table>
   );

@@ -2,18 +2,19 @@
 
 import { Bars3Icon } from '@heroicons/react/24/outline';
 import React, { useCallback, useState } from 'react';
+import { TableOfContents } from '../TableOfContents/TableOfContents';
+import { useSectionHeaderContext } from './SectionHeaderProvider';
 
 interface SectionHeaderProps {
   linkId?: string;
   children: React.ReactNode;
-  menu?: React.ReactNode;
 }
 
 export function SectionHeader(props: SectionHeaderProps) {
-  const { linkId, children, menu } = props;
+  const { linkId, children } = props;
+  const { links, linksVisible, setLinksVisible } = useSectionHeaderContext();
 
   const [urlCopied, setUrlCopied] = useState(false);
-  const [menuVisible, setMenuVisible] = useState(false);
 
   const handleCopyLinkClick = useCallback(() => {
     window.location.hash = linkId;
@@ -47,10 +48,10 @@ export function SectionHeader(props: SectionHeaderProps) {
             <></>
           )}
 
-          {menu != null ? (
+          {links && links.length > 0 ? (
             <Bars3Icon
               className="w-6 cursor-pointer"
-              onClick={() => setMenuVisible(!menuVisible)}
+              onClick={() => setLinksVisible(!linksVisible)}
             />
           ) : (
             <></>
@@ -58,7 +59,9 @@ export function SectionHeader(props: SectionHeaderProps) {
         </div>
       </div>
 
-      {menu != null && menuVisible ? <div>{menu}</div> : <></>}
+      {links && links.length > 0 && linksVisible && (
+        <TableOfContents links={links} />
+      )}
     </div>
   );
 }

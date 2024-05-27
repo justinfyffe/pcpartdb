@@ -26,7 +26,7 @@ export const ProductHighlightComparison = (
   return (
     <div
       className={classNames(
-        'bg-light-shades flex flex-col px-4 py-2 rounded shadow items-center gap-2',
+        'bg-light-shades flex flex-col px-4 py-2 rounded shadow items-center gap-4',
         className,
       )}
     >
@@ -35,43 +35,69 @@ export const ProductHighlightComparison = (
           <div className="mr-1">{cloneElement(icon, { className: 'w-5' })}</div>
         )}
 
-        <div className="font-medium md:text-base text-lg">{label}</div>
+        <div className="font-medium text-lg">{label}</div>
       </div>
 
-      <div className="w-full flex flex-wrap justify-evenly gap-4">
+      <div className="w-full grid grid-cols-2 gap-x-4 gap-y-2">
         {!loading &&
-          values?.map(({ name, value, bold, extra }, i) => (
+          values?.map(({ name, bold }, i) => (
             <React.Fragment key={`idx-${i}`}>
               <div
                 className={classNames(
-                  'flex flex-col items-center justify-between gap-0.5',
-                  bold ? 'font-bold' : '',
-                  className,
+                  'text-base text-center border-b-px border-b-primary pb-2 border-dotted',
+                  bold ? 'font-semibold' : '',
                 )}
               >
-                <span className="text-base">{name}</span>
-                <div className="text-base flex gap-2 justify-center items-center">
-                  {value}
-                  {extra != null && <span className="text-xs">{extra}</span>}
-                </div>
+                {name}
+              </div>
+            </React.Fragment>
+          ))}
+        {!loading &&
+          values?.map(({ value, bold, extra }, i) => (
+            <React.Fragment key={`idx-${i}`}>
+              <div
+                className={classNames(
+                  'w-full h-full text-base flex flex-col justify-start items-center gap-0.5',
+                  bold ? 'font-semibold' : '',
+                )}
+              >
+                <span className="text-base">{value}</span>
+                <span className="text-sm">{extra != null && <>{extra}</>}</span>
               </div>
             </React.Fragment>
           ))}
 
         {loading && (
           <>
-            <div className="flex flex-col items-center justify-between gap-0.5">
-              <div className="flex flex-col gap-3 h-[49px] justify-center">
-                <Skeleton className="w-20 h-3" pulse />
-                <Skeleton className="w-20 h-3" pulse />
-              </div>
+            <div
+              className={classNames(
+                'text-base text-center border-b-px border-b-primary pb-2 border-dotted',
+              )}
+            >
+              <Skeleton className="w-28 h-3" pulse center />
             </div>
-
-            <div className="flex flex-col items-center justify-between gap-0.5">
-              <div className="flex flex-col gap-3 h-[49px] justify-center">
-                <Skeleton className="w-20 h-3" pulse />
-                <Skeleton className="w-20 h-3" pulse />
-              </div>
+            <div
+              className={classNames(
+                'text-base text-center border-b-px border-b-primary pb-2 border-dotted',
+              )}
+            >
+              <Skeleton className="w-28 h-3" pulse center />
+            </div>
+            <div
+              className={classNames(
+                'w-full h-full text-base flex flex-col justify-start items-center gap-2',
+              )}
+            >
+              <Skeleton className="w-16 h-3" pulse center />
+              <Skeleton className="w-16 h-3" pulse center />
+            </div>
+            <div
+              className={classNames(
+                'w-full h-full text-base flex flex-col justify-start items-center gap-2',
+              )}
+            >
+              <Skeleton className="w-16 h-3" pulse center />
+              <Skeleton className="w-16 h-3" pulse center />
             </div>
           </>
         )}

@@ -23,7 +23,7 @@ export const ProductHighlight = (props: ProductHighlightProps) => {
           <div className="mr-1">{cloneElement(icon, { className: 'w-5' })}</div>
         )}
 
-        <div className="font-medium md:text-base text-lg">{label}</div>
+        <div className="font-medium text-lg">{label}</div>
       </div>
 
       <div

@@ -82,7 +82,7 @@ export const ViewSelectedGameFpsTable: FunctionComponent<
                 </div>
               </div>
             </Th>
-            <Th className="text-left">
+            <Th className="text-left sm:text-center">
               <div className="flex flex-col">
                 <span>Frames Per Second</span>
                 <span className="text-sm font-normal sm:hidden">
@@ -90,7 +90,7 @@ export const ViewSelectedGameFpsTable: FunctionComponent<
                 </span>
               </div>
             </Th>
-            <Th className="text-left">
+            <Th className="text-left sm:text-center">
               <div className="flex flex-col">
                 <span>Cost Per Frame</span>
                 <span className="text-sm font-normal sm:hidden">
@@ -155,10 +155,10 @@ export const ViewSelectedGameFpsRow: FunctionComponent<
   return (
     <Tr>
       <Td className="whitespace-nowrap w-[33%]">{label}</Td>
-      <Td className="whitespace-nowrap text-left w-[33%]">
+      <Td className="whitespace-nowrap text-left sm:text-center w-[33%]">
         {formatGameFps(gameFps, { fps: true }) || '--'}
       </Td>
-      <Td className="whitespace-nowrap text-left w-[33%]">
+      <Td className="whitespace-nowrap text-left sm:text-center w-[33%]">
         {formatGameFps(gameFps, { cpf: true }) || '--'}
       </Td>
     </Tr>
