@@ -34,7 +34,7 @@ export function PreferredBenchmarkButton(props: PreferredBenchmarkButtonProps) {
   return (
     <Button
       variant={ButtonVariant.Link}
-      className="inline-block hover:underline"
+      className="inline-block"
       onClick={showPreferredBenchmarkDialog}
     >
       {getProductBenchmarkName(preferredBenchmark)}
