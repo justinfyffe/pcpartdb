@@ -35,10 +35,7 @@ export const DescriptionContent = compileContentComponent(
         The {props.productName} has {props.percentOfBestLabel} of the
         performance per dollar compared to the leader for the{' '}
         {props.benchmarkName} benchmark:{' '}
-        <a href={props.bestProductUrl} target="_blank">
-          {props.bestProductName}
-        </a>
-        .
+        <a href={props.bestProductUrl}>{props.bestProductName}</a>.
       </p>
     ),
   },
