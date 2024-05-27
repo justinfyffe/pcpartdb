@@ -31,7 +31,7 @@ export const ProgressBarChart: FunctionComponent<ProgressBarChartProps> = (
   return (
     <div
       className={classNames(
-        'relative h-10 w-full rounded shadow-md shadowed-text text-white',
+        'relative h-7 w-full rounded shadow-md shadowed-text text-white',
         'ring-1 ring-[#999]',
         props.className,
       )}
