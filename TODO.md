@@ -1,4 +1,5 @@
 NEXT (long-term):
+- Migrate to a ui framework
 - v2.0
   - Migrate to a headless cms (e.g. PayloadCMS)
 - Verify inmobi choice

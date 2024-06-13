@@ -1,4 +1,2 @@
 #!/bin/bash
-pm2 restart pcpartdb-api
-pm2 restart pcpartdb-website
-# pm2 restart pcpartdb
+pm2 restart ecosystem.config.js
