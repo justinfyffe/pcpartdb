@@ -545,12 +545,8 @@ export function buildGpuFormInputs(product?: Product): ProductFormInputGroups {
               value: MarketSegment.Workstation,
             },
             {
-              label: formatMarketSegment(MarketSegment.Server),
-              value: MarketSegment.Server,
-            },
-            {
-              label: formatMarketSegment(MarketSegment.Embedded),
-              value: MarketSegment.Embedded,
+              label: formatMarketSegment(MarketSegment.Integrated),
+              value: MarketSegment.Integrated,
             },
           ],
           formatter: (value: SelectValue) =>
