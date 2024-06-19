@@ -40,6 +40,7 @@ export function MoreGamesOption(props: MoreGamesOptionProps) {
       <img
         loading="lazy"
         src={getGameListingImage(null)}
+        alt="More games to choose from"
         className="aspect-video w-full h-full max-h-35.25 opacity-50 hover:opacity-100 transition-opacity"
       />
       <div className="flex flex-col items-center text-center justify-center">

@@ -2,6 +2,7 @@ import {
   ApiError,
   formatProductName,
   getViewCpuPath,
+  getViewCpuUrl,
   isApiError,
   isNotFoundError,
   joinUrlParts,
@@ -72,7 +73,7 @@ export async function generateMetadata(
     title: `${title} - ${WEBSITE_NAME}`,
     description,
     alternates: {
-      canonical: getViewCpuPath(cpu),
+      canonical: getViewCpuUrl(cpu),
     },
   };
 }

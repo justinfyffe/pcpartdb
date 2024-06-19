@@ -1,5 +1,6 @@
 import {
   getForgotPasswordPath,
+  getForgotPasswordUrl,
   getHomePath,
   WEBSITE_NAME,
 } from '@pcpartdb/shared';
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
   title: `${TITLE} - ${WEBSITE_NAME}`,
   robots: 'noindex',
   alternates: {
-    canonical: getForgotPasswordPath(),
+    canonical: getForgotPasswordUrl(),
   },
 };
 

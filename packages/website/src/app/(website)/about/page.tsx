@@ -1,4 +1,4 @@
-import { getAboutPath, getHomePath, WEBSITE_NAME } from '@pcpartdb/shared';
+import { getAboutUrl, getHomePath, WEBSITE_NAME } from '@pcpartdb/shared';
 import { Metadata } from 'next';
 import React from 'react';
 import { Breadcrumb } from '../../_common/components/Breadcrumbs/Breadcrumb';
@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   title: `${TITLE} - ${WEBSITE_NAME}`,
   description: 'Mission statement and contact details for PC Part DB.',
   alternates: {
-    canonical: getAboutPath(),
+    canonical: getAboutUrl(),
   },
 };
 

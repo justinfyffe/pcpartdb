@@ -13,6 +13,7 @@ export function ManageCookiesLink(_props: ManageCookiesLinkProps) {
     <a
       onClick={handleClick}
       className="text-light-shades underline cursor-pointer"
+      rel="nofollow"
     >
       Manage Cookies
     </a>

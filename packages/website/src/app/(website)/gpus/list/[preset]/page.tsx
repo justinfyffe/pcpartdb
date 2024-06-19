@@ -1,8 +1,7 @@
 import {
   ApiError,
   generateListGpusQueryFromSearchParams,
-  getHomePath,
-  getListGpusPath,
+  getListGpusUrl,
   isApiError,
   isNotFoundError,
   joinUrlParts,
@@ -18,8 +17,6 @@ import { CacheProvider } from 'packages/website/src/app/_common/cache/CacheProvi
 import { DisplayAd } from 'packages/website/src/app/_common/components/Ad/DisplayAd';
 import { MultiplexAd } from 'packages/website/src/app/_common/components/Ad/MultiplexAd';
 import { AdUnit } from 'packages/website/src/app/_common/components/Ad/types';
-import { Breadcrumb } from 'packages/website/src/app/_common/components/Breadcrumbs/Breadcrumb';
-import { Breadcrumbs } from 'packages/website/src/app/_common/components/Breadcrumbs/Breadcrumbs';
 import { CompareProductsForm } from 'packages/website/src/app/_common/product/components/CompareProductsForm/CompareProductsForm';
 import { classNames } from 'packages/website/src/app/_common/utils/classNames';
 import React from 'react';
@@ -42,7 +39,7 @@ type ListGpusPageProps = {
 
 export async function generateMetadata(
   props: ListGpusPageProps,
-  parent: ResolvingMetadata,
+  _parent: ResolvingMetadata,
 ): Promise<Metadata> {
   const query = generateListGpusQueryFromSearchParams({
     query: { ...props.params, ...props.searchParams },
@@ -71,7 +68,7 @@ export async function generateMetadata(
 
   const title = buildDocumentTitle(query);
   const description = buildPageDescription(query);
-  const canonical = getListGpusPath(query);
+  const canonical = getListGpusUrl(query);
 
   return {
     title,

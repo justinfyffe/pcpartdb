@@ -4,7 +4,7 @@ import {
   compareGpusViewModelNormalizr,
   formatProductComparisonName,
   formatProductName,
-  getCompareGpusPath,
+  getCompareGpusUrl,
   isApiError,
   isNotFoundError,
   joinUrlParts,
@@ -91,7 +91,7 @@ export async function generateMetadata(
     title: `${title} - ${WEBSITE_NAME}`,
     description,
     alternates: {
-      canonical: getCompareGpusPath({ comparison }),
+      canonical: getCompareGpusUrl({ comparison }),
     },
   };
 }

@@ -1,6 +1,6 @@
 import {
   getHomePath,
-  getRegisterPath,
+  getRegisterUrl,
   isApiError,
   RegisterViewModel,
   WEBSITE_NAME,
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   title: `${TITLE} - ${WEBSITE_NAME}`,
   robots: 'noindex',
   alternates: {
-    canonical: getRegisterPath(),
+    canonical: getRegisterUrl(),
   },
 };
 

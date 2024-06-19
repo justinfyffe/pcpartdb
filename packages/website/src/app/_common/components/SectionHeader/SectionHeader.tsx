@@ -41,6 +41,7 @@ export function SectionHeader(props: SectionHeaderProps) {
             <a
               className="text-2xl text-dimmed hover:underline cursor-pointer"
               onClick={handleCopyLinkClick}
+              rel="nofollow"
             >
               #
             </a>

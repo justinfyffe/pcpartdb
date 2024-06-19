@@ -5,6 +5,7 @@ import {
   ListCpusQuery,
 } from '../product';
 import { joinUrlParts } from '../utils';
+import { WEBSITE_NAME } from '../website';
 import {
   GetCompareProductsPathOptions,
   GetViewProductPathOptions,
@@ -47,6 +48,11 @@ export function getListCpusPath(presetOrQuery?: ListCpusQuery | string) {
   return joinUrlParts(basePath, combinedParams ? `?${combinedParams}` : '');
 }
 
+export function getListCpusUrl(presetOrQuery?: ListCpusQuery | string) {
+  const path = getListCpusPath(presetOrQuery);
+  return `${WEBSITE_NAME}${path}`;
+}
+
 export function getViewCpuPath(options: GetViewProductPathOptions) {
   let slug: string;
   if (options.product != null) {
@@ -58,6 +64,11 @@ export function getViewCpuPath(options: GetViewProductPathOptions) {
   }
 
   return joinUrlParts('/cpus/view/', slug, '/');
+}
+
+export function getViewCpuUrl(options: GetViewProductPathOptions) {
+  const path = getViewCpuPath(options);
+  return `${WEBSITE_NAME}${path}`;
 }
 
 export function getCompareCpusPath(options: GetCompareProductsPathOptions) {
@@ -77,6 +88,11 @@ export function getCompareCpusPath(options: GetCompareProductsPathOptions) {
   const slug2 = parts[1].slug;
 
   return joinUrlParts('/cpus/compare/', `${slug1}--vs--${slug2}`, '/');
+}
+
+export function getCompareCpusUrl(options: GetCompareProductsPathOptions) {
+  const path = getCompareCpusPath(options);
+  return `${WEBSITE_NAME}${path}`;
 }
 
 function generatePaginationParamsFromCpusQuery(query: ListCpusQuery) {

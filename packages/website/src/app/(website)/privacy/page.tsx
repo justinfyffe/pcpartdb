@@ -1,4 +1,9 @@
-import { getHomePath, getPrivacyPath, WEBSITE_NAME } from '@pcpartdb/shared';
+import {
+  getHomePath,
+  getPrivacyPath,
+  getPrivacyUrl,
+  WEBSITE_NAME,
+} from '@pcpartdb/shared';
 import { Metadata } from 'next';
 import React from 'react';
 import { Breadcrumb } from '../../_common/components/Breadcrumbs/Breadcrumb';
@@ -10,7 +15,7 @@ export const metadata: Metadata = {
   title: `${TITLE} - ${WEBSITE_NAME}`,
   description: 'Privacy Policy for PC Part DB.',
   alternates: {
-    canonical: getPrivacyPath(),
+    canonical: getPrivacyUrl(),
   },
 };
 

@@ -96,6 +96,7 @@ export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
                 <a
                   onClick={handleManageCookies}
                   className="text-light-shades underline cursor-pointer"
+                  rel="nofollow"
                 >
                   Manage Cookies
                 </a>

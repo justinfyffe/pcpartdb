@@ -1,4 +1,9 @@
-import { getHomePath, getLoginPath, WEBSITE_NAME } from '@pcpartdb/shared';
+import {
+  getHomePath,
+  getLoginPath,
+  getLoginUrl,
+  WEBSITE_NAME,
+} from '@pcpartdb/shared';
 import { Metadata } from 'next';
 import React from 'react';
 import { Breadcrumb } from '../../_common/components/Breadcrumbs/Breadcrumb';
@@ -11,7 +16,7 @@ export const metadata: Metadata = {
   title: `${TITLE} - ${WEBSITE_NAME}`,
   robots: 'noindex',
   alternates: {
-    canonical: getLoginPath(),
+    canonical: getLoginUrl(),
   },
 };
 

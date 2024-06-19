@@ -3,6 +3,7 @@ import {
   generateListCpusQueryFromSearchParams,
   getHomePath,
   getListCpusPath,
+  getListCpusUrl,
   isApiError,
   isNotFoundError,
   joinUrlParts,
@@ -18,8 +19,6 @@ import { CacheProvider } from 'packages/website/src/app/_common/cache/CacheProvi
 import { DisplayAd } from 'packages/website/src/app/_common/components/Ad/DisplayAd';
 import { MultiplexAd } from 'packages/website/src/app/_common/components/Ad/MultiplexAd';
 import { AdUnit } from 'packages/website/src/app/_common/components/Ad/types';
-import { Breadcrumb } from 'packages/website/src/app/_common/components/Breadcrumbs/Breadcrumb';
-import { Breadcrumbs } from 'packages/website/src/app/_common/components/Breadcrumbs/Breadcrumbs';
 import { CompareProductsForm } from 'packages/website/src/app/_common/product/components/CompareProductsForm/CompareProductsForm';
 import { classNames } from 'packages/website/src/app/_common/utils/classNames';
 import React from 'react';
@@ -71,7 +70,7 @@ export async function generateMetadata(
 
   const title = buildDocumentTitle(query);
   const description = buildPageDescription(query);
-  const canonical = getListCpusPath(query);
+  const canonical = getListCpusUrl(query);
 
   return {
     title,

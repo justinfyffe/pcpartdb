@@ -1,9 +1,8 @@
 import {
   ApiError,
   formatProductName,
-  getHomePath,
-  getListGpusPath,
   getViewGpuPath,
+  getViewGpuUrl,
   isApiError,
   isNotFoundError,
   joinUrlParts,
@@ -19,8 +18,6 @@ import { viewModelClient } from 'packages/website/src/app/_common/api/ViewModelC
 import { DisplayAd } from 'packages/website/src/app/_common/components/Ad/DisplayAd';
 import { MultiplexAd } from 'packages/website/src/app/_common/components/Ad/MultiplexAd';
 import { AdUnit } from 'packages/website/src/app/_common/components/Ad/types';
-import { Breadcrumb } from 'packages/website/src/app/_common/components/Breadcrumbs/Breadcrumb';
-import { Breadcrumbs } from 'packages/website/src/app/_common/components/Breadcrumbs/Breadcrumbs';
 import {
   TableOfContents,
   TableOfContentsLink,
@@ -51,7 +48,7 @@ export async function generateMetadata(
   const slug = props.params.slug;
   if (VIEW_GPU_REDIRECTS[slug] != null) {
     permanentRedirect(
-      getViewGpuPath({
+      getViewGpuUrl({
         productType: ProductType.Gpu,
         slug: VIEW_GPU_REDIRECTS[slug],
       }),
@@ -91,7 +88,7 @@ export async function generateMetadata(
     title: `${title} - ${WEBSITE_NAME}`,
     description,
     alternates: {
-      canonical: getViewGpuPath(gpu),
+      canonical: getViewGpuUrl(gpu),
     },
   };
 }

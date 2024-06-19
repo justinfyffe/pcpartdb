@@ -37,6 +37,7 @@ export function GameOption(props: GameOptionProps) {
     >
       <img
         loading="lazy"
+        alt={`Display FPS for ${game?.name}`}
         src={gameListingImagePath(game)}
         className={classNames(
           'aspect-video max-h-35.25',

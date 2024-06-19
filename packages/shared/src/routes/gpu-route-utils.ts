@@ -5,6 +5,7 @@ import {
   ListGpusQuery,
 } from '../product';
 import { joinUrlParts } from '../utils';
+import { WEBSITE_NAME, WEBSITE_URL } from '../website';
 import {
   GetCompareProductsPathOptions,
   GetViewProductPathOptions,
@@ -47,6 +48,11 @@ export function getListGpusPath(presetOrQuery?: ListGpusQuery | string) {
   return joinUrlParts(basePath, combinedParams ? `?${combinedParams}` : '');
 }
 
+export function getListGpusUrl(presetOrQuery?: ListGpusQuery | string) {
+  const path = getListGpusPath(presetOrQuery);
+  return `${WEBSITE_URL}${path}`;
+}
+
 export function getViewGpuPath(options: GetViewProductPathOptions) {
   let slug: string;
   if (options.product != null) {
@@ -58,6 +64,11 @@ export function getViewGpuPath(options: GetViewProductPathOptions) {
   }
 
   return joinUrlParts('/gpus/view/', slug, '/');
+}
+
+export function getViewGpuUrl(options: GetViewProductPathOptions) {
+  const path = getViewGpuPath(options);
+  return `${WEBSITE_NAME}${path}`;
 }
 
 export function getCompareGpusPath(options: GetCompareProductsPathOptions) {
@@ -77,6 +88,11 @@ export function getCompareGpusPath(options: GetCompareProductsPathOptions) {
   const slug2 = parts[1].slug;
 
   return joinUrlParts('/gpus/compare/', `${slug1}--vs--${slug2}`, '/');
+}
+
+export function getCompareGpusUrl(options: GetCompareProductsPathOptions) {
+  const path = getCompareGpusPath(options);
+  return `${WEBSITE_NAME}${path}`;
 }
 
 function generatePaginationParamsFromGpusQuery(query: ListGpusQuery) {

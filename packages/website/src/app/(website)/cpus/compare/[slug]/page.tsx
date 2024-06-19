@@ -5,6 +5,7 @@ import {
   formatProductComparisonName,
   formatProductName,
   getCompareCpusPath,
+  getCompareCpusUrl,
   getHomePath,
   getListCpusPath,
   isApiError,
@@ -25,8 +26,6 @@ import React from 'react';
 import { DisplayAd } from '../../../../_common/components/Ad/DisplayAd';
 import { MultiplexAd } from '../../../../_common/components/Ad/MultiplexAd';
 import { AdUnit } from '../../../../_common/components/Ad/types';
-import { Breadcrumb } from '../../../../_common/components/Breadcrumbs/Breadcrumb';
-import { Breadcrumbs } from '../../../../_common/components/Breadcrumbs/Breadcrumbs';
 import { CompareProductsForm } from '../../../../_common/product/components/CompareProductsForm/CompareProductsForm';
 import { Disclaimer } from './_components/Disclaimer/Disclaimer';
 import { GeneralInfo } from './_components/GeneralInfo';
@@ -90,7 +89,7 @@ export async function generateMetadata(
     title: `${title} - ${WEBSITE_NAME}`,
     description,
     alternates: {
-      canonical: getCompareCpusPath({ comparison }),
+      canonical: getCompareCpusUrl({ comparison }),
     },
   };
 }

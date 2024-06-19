@@ -1,6 +1,7 @@
 import {
   ApiError,
   getHomePath,
+  getHomeUrl,
   getListCpusPath,
   getListGpusPath,
   HomeViewModel,
@@ -38,7 +39,7 @@ export const metadata: Metadata = {
     'View and compare PC part benchmarks and specs. ' +
     'Our database of PC parts will help you choose the best parts for your computer.',
   alternates: {
-    canonical: getHomePath(),
+    canonical: getHomeUrl(),
   },
 };
 
