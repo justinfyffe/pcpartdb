@@ -11,7 +11,7 @@ export function CookieConsentScript(_props: CookieConsentScriptProps) {
       </Script>
 
       {/* InMobi Choice. Consent Manager Tag v3.0 (for TCF 2.2) */}
-      <Script strategy="afterInteractive">
+      {/* <Script strategy="afterInteractive">
         {`
           (function() {
             var host = window.location.hostname;
@@ -172,7 +172,7 @@ export function CookieConsentScript(_props: CookieConsentScriptProps) {
             }
           })();
         `}
-      </Script>
+      </Script> */}
       {/* End InMobi Choice. Consent Manager Tag v3.0 (for TCF 2.2) */}
     </>
   );

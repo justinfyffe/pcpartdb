@@ -93,12 +93,12 @@ export const WebsiteLayout: FunctionComponent<WebsiteLayoutProps> = (props) => {
 
             {disableConsent !== true && (
               <ListItem>
-                <span
+                <div
                   onClick={handleManageCookies}
                   className="text-light-shades underline cursor-pointer"
                 >
                   Manage Cookies
-                </span>
+                </div>
               </ListItem>
             )}
           </List>

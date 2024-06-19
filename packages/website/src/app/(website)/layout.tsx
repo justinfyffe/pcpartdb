@@ -24,7 +24,6 @@ import { UserSettingsProvider } from '../_common/contexts/UserSettingsProvider';
 import { ErrorPage } from '../_common/errors/ErrorPage/ErrorPage';
 import { CookieConsentScript } from '../_common/third-party/CookieConsentScript';
 import { GoogleTagManagerScript } from '../_common/third-party/GoogleTagManagerScript';
-import { ManageCookiesLink } from '../_common/third-party/ManageCookiesLink';
 
 interface RootLayoutProps {
   children: React.ReactNode;
@@ -159,9 +158,6 @@ export default async function RootWebsiteLayout(props: RootLayoutProps) {
                     >
                       Privacy Policy
                     </a>
-                  </ListItem>
-                  <ListItem>
-                    <ManageCookiesLink />
                   </ListItem>
                 </List>
               </nav>
