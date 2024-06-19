@@ -30,7 +30,7 @@ export const config = {
 };
 
 export async function middleware(request: NextRequest) {
-  // PAss through preferred benchmarks from url to the config.
+  // Pass through preferred benchmarks from url to the config.
   // Needed for UserSettingsProvider in layout
   const gpuBenchmark = request.nextUrl.searchParams.get(
     'gpu_benchmark',
