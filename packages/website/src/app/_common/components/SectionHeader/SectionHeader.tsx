@@ -38,13 +38,12 @@ export function SectionHeader(props: SectionHeaderProps) {
           {urlCopied ? <span className="text-sm">URL copied!</span> : <></>}
 
           {linkId != null ? (
-            <a
+            <span
               className="text-2xl text-dimmed hover:underline cursor-pointer"
               onClick={handleCopyLinkClick}
-              rel="nofollow"
             >
               #
-            </a>
+            </span>
           ) : (
             <></>
           )}

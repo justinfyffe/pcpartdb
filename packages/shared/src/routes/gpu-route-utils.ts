@@ -5,7 +5,7 @@ import {
   ListGpusQuery,
 } from '../product';
 import { joinUrlParts } from '../utils';
-import { WEBSITE_NAME, WEBSITE_URL } from '../website';
+import { WEBSITE_URL } from '../website';
 import {
   GetCompareProductsPathOptions,
   GetViewProductPathOptions,
@@ -68,7 +68,7 @@ export function getViewGpuPath(options: GetViewProductPathOptions) {
 
 export function getViewGpuUrl(options: GetViewProductPathOptions) {
   const path = getViewGpuPath(options);
-  return `${WEBSITE_NAME}${path}`;
+  return `${WEBSITE_URL}${path}`;
 }
 
 export function getCompareGpusPath(options: GetCompareProductsPathOptions) {
@@ -92,7 +92,7 @@ export function getCompareGpusPath(options: GetCompareProductsPathOptions) {
 
 export function getCompareGpusUrl(options: GetCompareProductsPathOptions) {
   const path = getCompareGpusPath(options);
-  return `${WEBSITE_NAME}${path}`;
+  return `${WEBSITE_URL}${path}`;
 }
 
 function generatePaginationParamsFromGpusQuery(query: ListGpusQuery) {

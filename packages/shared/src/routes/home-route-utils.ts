@@ -1,4 +1,4 @@
-import { WEBSITE_NAME } from '../website';
+import { WEBSITE_URL } from '../website';
 
 export function getHomePath() {
   return '/';
@@ -6,5 +6,5 @@ export function getHomePath() {
 
 export function getHomeUrl() {
   const path = getHomePath();
-  return `${WEBSITE_NAME}${path}`;
+  return `${WEBSITE_URL}${path}`;
 }

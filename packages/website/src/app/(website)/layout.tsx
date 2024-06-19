@@ -100,7 +100,11 @@ export default async function RootWebsiteLayout(props: RootLayoutProps) {
               href={getHomePath()}
               className="flex gap-4 border-x-px container bg-content p-container md:p-4 font-bold items-center text-5xl text-main-brand leading-none"
             >
-              <img src="/images/logo-transparent.png" className="h-12" />
+              <img
+                src="/images/logo-transparent.png"
+                alt="PC Part DB: Build Smarter: Compare PC part benchmarks & specs"
+                className="h-12"
+              />
               <span className="font-san">{WEBSITE_NAME.toUpperCase()}</span>
             </a>
 

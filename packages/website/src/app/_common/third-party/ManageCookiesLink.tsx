@@ -10,12 +10,11 @@ export function ManageCookiesLink(_props: ManageCookiesLinkProps) {
   }, []);
 
   return (
-    <a
+    <span
       onClick={handleClick}
       className="text-light-shades underline cursor-pointer"
-      rel="nofollow"
     >
       Manage Cookies
-    </a>
+    </span>
   );
 }

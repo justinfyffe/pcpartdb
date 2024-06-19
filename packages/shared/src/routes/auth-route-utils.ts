@@ -1,11 +1,11 @@
-import { WEBSITE_NAME } from '../website';
+import { WEBSITE_URL } from '../website';
 
 export function getForgotPasswordPath() {
   return '/forgot-password/';
 }
 
 export function getForgotPasswordUrl() {
-  return `${WEBSITE_NAME}${getForgotPasswordPath()}`;
+  return `${WEBSITE_URL}${getForgotPasswordPath()}`;
 }
 
 export function getLoginPath() {
@@ -13,7 +13,7 @@ export function getLoginPath() {
 }
 
 export function getLoginUrl() {
-  return `${WEBSITE_NAME}${getLoginPath()}`;
+  return `${WEBSITE_URL}${getLoginPath()}`;
 }
 
 export function getRegisterPath() {
@@ -21,5 +21,5 @@ export function getRegisterPath() {
 }
 
 export function getRegisterUrl() {
-  return `${WEBSITE_NAME}${getRegisterPath()}`;
+  return `${WEBSITE_URL}${getRegisterPath()}`;
 }

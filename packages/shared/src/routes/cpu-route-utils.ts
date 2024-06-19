@@ -5,7 +5,7 @@ import {
   ListCpusQuery,
 } from '../product';
 import { joinUrlParts } from '../utils';
-import { WEBSITE_NAME } from '../website';
+import { WEBSITE_URL } from '../website';
 import {
   GetCompareProductsPathOptions,
   GetViewProductPathOptions,
@@ -50,7 +50,7 @@ export function getListCpusPath(presetOrQuery?: ListCpusQuery | string) {
 
 export function getListCpusUrl(presetOrQuery?: ListCpusQuery | string) {
   const path = getListCpusPath(presetOrQuery);
-  return `${WEBSITE_NAME}${path}`;
+  return `${WEBSITE_URL}${path}`;
 }
 
 export function getViewCpuPath(options: GetViewProductPathOptions) {
@@ -68,7 +68,7 @@ export function getViewCpuPath(options: GetViewProductPathOptions) {
 
 export function getViewCpuUrl(options: GetViewProductPathOptions) {
   const path = getViewCpuPath(options);
-  return `${WEBSITE_NAME}${path}`;
+  return `${WEBSITE_URL}${path}`;
 }
 
 export function getCompareCpusPath(options: GetCompareProductsPathOptions) {
@@ -92,7 +92,7 @@ export function getCompareCpusPath(options: GetCompareProductsPathOptions) {
 
 export function getCompareCpusUrl(options: GetCompareProductsPathOptions) {
   const path = getCompareCpusPath(options);
-  return `${WEBSITE_NAME}${path}`;
+  return `${WEBSITE_URL}${path}`;
 }
 
 function generatePaginationParamsFromCpusQuery(query: ListCpusQuery) {

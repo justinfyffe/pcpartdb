@@ -1,4 +1,4 @@
-import { WEBSITE_NAME } from '../website';
+import { WEBSITE_URL } from '../website';
 
 export function getAboutPath() {
   return '/about/';
@@ -6,7 +6,7 @@ export function getAboutPath() {
 
 export function getAboutUrl() {
   const path = getAboutPath();
-  return `${WEBSITE_NAME}${path}`;
+  return `${WEBSITE_URL}${path}`;
 }
 
 export function getPrivacyPath() {
@@ -15,5 +15,5 @@ export function getPrivacyPath() {
 
 export function getPrivacyUrl() {
   const path = getPrivacyPath();
-  return `${WEBSITE_NAME}${path}`;
+  return `${WEBSITE_URL}${path}`;
 }

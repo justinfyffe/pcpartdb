@@ -131,6 +131,7 @@ export const SelectedGameFpsTable: FunctionComponent<
               <img
                 loading="lazy"
                 src={gameListingImagePath(selectedGame)}
+                alt={`FPS data for ${selectedGame?.name}`}
                 className="h-12 sm:hidden"
               />
 
