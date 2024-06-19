@@ -30,7 +30,7 @@ export default function PrivacyPage() {
       <article>
         <h1 className="font-semibold mb-4">{TITLE}</h1>
 
-        <p className="italic">Last modified: November 25, 2023</p>
+        <p className="italic">Last modified: June 15, 2024</p>
 
         <section>
           <p>
@@ -86,7 +86,8 @@ export default function PrivacyPage() {
             We may share your information with third-party vendors, such as
             Google Analytics and advertising networks. These third-party vendors
             are responsible for protecting your information, and using it only
-            for the purposes we have authorized. The following
+            for the purposes we have authorized. We work with the following
+            third-party services:
           </p>
           <ul className="flex flex-col gap-2 list-disc list-outside mx-4 mb-4">
             <li className="mx-4">
@@ -147,12 +148,6 @@ export default function PrivacyPage() {
                     tags
                   </a>
                   )
-                </li>
-                <li className="mx-4">
-                  <a href="https://choice.inmobi.com" rel="nofollow">
-                    InMobi Choice
-                  </a>{' '}
-                  (Consent Management Platform)
                 </li>
               </ul>
             </li>
