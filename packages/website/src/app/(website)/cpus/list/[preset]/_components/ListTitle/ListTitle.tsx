@@ -77,7 +77,7 @@ const FilteredSentence = compileContentComponent({
 
 export const ListTitle: FunctionComponent = () => {
   const { query } = useListContext();
-  const preferredBenchmark = usePreferredBenchmark(ProductType.Gpu);
+  const preferredBenchmark = usePreferredBenchmark(ProductType.Cpu);
 
   const contentTags = useMemo(() => buildListContentTags(query), [query]);
   const contentParams = useMemo(() => {
