@@ -49,6 +49,7 @@ const DescriptionSentence = compileContentComponent(
         <Button
           variant={ButtonVariant.Link}
           onClick={props.showPreferredBenchmarkDialog}
+          className="underline decoration-dotted decoration-1"
         >
           {props.preferredBenchmarkName}
         </Button>{' '}
