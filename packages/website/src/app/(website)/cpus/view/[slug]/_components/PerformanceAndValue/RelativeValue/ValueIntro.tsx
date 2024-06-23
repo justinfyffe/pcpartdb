@@ -15,7 +15,11 @@ const ValueIntroParagraph = compileContentComponent({
   Component: (props) => (
     <>
       Compare the{' '}
-      <Button variant={ButtonVariant.Link} onClick={props.handleBenchmarkClick}>
+      <Button
+        variant={ButtonVariant.Link}
+        onClick={props.handleBenchmarkClick}
+        className="underline decoration-dotted decoration-1"
+      >
         {props.preferredBenchmarkName}
       </Button>{' '}
       performance per dollar with similar CPUs. A higher score implies a better

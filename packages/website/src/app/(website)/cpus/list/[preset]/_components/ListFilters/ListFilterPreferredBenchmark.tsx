@@ -25,7 +25,7 @@ export const ListFilterPreferredBenchmark: FunctionComponent<
       <button
         onClick={showPreferredBenchmarkDialog}
         className={classNames(
-          'cursor-pointer p-2 hover:bg-mouse-hover text-link text-left whitespace-nowrap',
+          'cursor-pointer p-2 hover:bg-mouse-hover text-link text-left whitespace-nowrap underline decoration-dotted decoration-1',
         )}
       >
         {getProductBenchmarkName(preferredBenchmark)}

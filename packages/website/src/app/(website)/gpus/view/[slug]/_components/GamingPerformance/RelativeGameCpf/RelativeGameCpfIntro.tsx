@@ -19,7 +19,11 @@ const ValueIntroSentence1 = compileContentComponent({
   Component: (props) => (
     <>
       Compare the average cost per frame in{' '}
-      <Button variant={ButtonVariant.Link} onClick={props.handleGameClick}>
+      <Button
+        variant={ButtonVariant.Link}
+        onClick={props.handleGameClick}
+        className="underline decoration-dotted decoration-1"
+      >
         {props.selectedGameName}
       </Button>{' '}
       with similar GPUs. A lower cost per frame translates to more performance

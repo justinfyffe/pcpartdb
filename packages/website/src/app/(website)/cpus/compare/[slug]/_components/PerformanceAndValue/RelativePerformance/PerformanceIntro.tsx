@@ -19,7 +19,11 @@ export const PerformanceIntroParagraph = compileContentComponent({
   Component: (props) => (
     <>
       Compare the average{' '}
-      <Button variant={ButtonVariant.Link} onClick={props.handleBenchmarkClick}>
+      <Button
+        variant={ButtonVariant.Link}
+        onClick={props.handleBenchmarkClick}
+        className="underline decoration-dotted decoration-1"
+      >
         {props.preferredBenchmarkName}
       </Button>{' '}
       benchmark score with similar CPUs. Powerful CPUs tend to have higher

@@ -179,9 +179,9 @@ function useDescriptionParams(args: UseDescriptionParamsArgs) {
   const rankLabel = formatOrdinalNumber(rank);
   let listUrl: string = null; // TODO: make into hook
   if (productType === ProductType.Cpu) {
-    listUrl = getListCpusPath(ListCpusPresetSlug.BestPerformance);
+    listUrl = getListCpusPath(ListCpusPresetSlug.BestPerformancePerDollar);
   } else if (productType === ProductType.Gpu) {
-    listUrl = getListGpusPath(ListGpusPresetSlug.BestPerformance);
+    listUrl = getListGpusPath(ListGpusPresetSlug.BestPerformancePerDollar);
   }
 
   return {
