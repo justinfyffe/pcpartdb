@@ -1,6 +1,11 @@
 'use client';
 
-import { getProductBenchmarkName, Product } from '@pcpartdb/shared';
+import {
+  BenchmarkKey,
+  getProductBenchmarkName,
+  Product,
+  ProductType,
+} from '@pcpartdb/shared';
 import React, { useMemo } from 'react';
 import { Button } from '../../../components/Button/Button';
 import { ButtonVariant } from '../../../components/Button/types';
@@ -9,32 +14,39 @@ import { usePreferredBenchmark } from '../../hooks/usePreferredBenchmark';
 import { usePreferredBenchmarkDialog } from '../../hooks/usePreferredBenchmarkDialog';
 
 interface PreferredBenchmarkButtonProps {
-  products: Partial<Product>[];
+  productType?: ProductType;
+  products?: Partial<Product>[];
+
+  hardReload?: boolean;
   softReload?: boolean;
+
+  onChange?: (benchmark: BenchmarkKey) => void;
 }
 
 export function PreferredBenchmarkButton(props: PreferredBenchmarkButtonProps) {
-  const { products } = props;
+  const { products, onChange } = props;
   const productType = useMemo(
-    () => products.find((p) => p.productType)?.productType,
-    [products],
+    () => props.productType ?? products.find((p) => p.productType)?.productType,
+    [props.productType, products],
   );
-  const productIds = useMemo(() => products.map((p) => p.id), [products]);
+  const productIds = useMemo(() => products?.map((p) => p.id), [products]);
 
   const preferredBenchmark = usePreferredBenchmark(productType);
   const { selectedGame } = useGameSelection();
 
   const showPreferredBenchmarkDialog = usePreferredBenchmarkDialog({
     productType,
+    hardReload: props.hardReload,
     softReload: props.softReload,
     productIds,
     gameSlug: selectedGame?.slug,
+    onChange,
   });
 
   return (
     <Button
       variant={ButtonVariant.Link}
-      className="inline-block"
+      className="inline-block underline decoration-dotted decoration-1"
       onClick={showPreferredBenchmarkDialog}
     >
       {getProductBenchmarkName(preferredBenchmark)}

@@ -187,7 +187,7 @@ export class ViewModelsController {
   }
 
   @Get('home')
-  @UseInterceptors(CacheInterceptor)
+  // @UseInterceptors(CacheInterceptor)
   async home(@Ctx() ctx: Context) {
     return await this.homeViewModelService.viewModel(ctx);
   }

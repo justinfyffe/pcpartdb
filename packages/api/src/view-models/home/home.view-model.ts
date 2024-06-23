@@ -1,304 +1,370 @@
 import { Injectable } from '@nestjs/common';
 import {
+  BenchmarkKey,
+  getPreferredBenchmark,
+  HomeCpuData,
+  HomeGpuData,
   HomeViewModel,
-  ListCpusFilter,
-  ListGpusFilter,
+  ListProductsFilter,
   ListSort,
   MarketSegment,
-  ProductComparison,
   ProductType,
 } from '@pcpartdb/shared';
 import { ProductService } from '../../product/product.service';
+import { ProductRepository } from '../../product/repositories';
+import { CacheService, CacheType } from '../../shared/cache/cache.service';
 import { Context } from '../../shared/context';
-
-const RANDOMLY_CHOOSE_FROM_COMPARISON = 5;
-
-const NVIDIA_GPU_FILTER: ListGpusFilter = {
-  productType: ProductType.Gpu,
-  company: ['nvidia'],
-  segment: [MarketSegment.Desktop],
-};
-const AMD_GPU_FILTER: ListGpusFilter = {
-  productType: ProductType.Gpu,
-  company: ['amd'],
-  segment: [MarketSegment.Desktop],
-};
-
-const INTEL_CPU_FILTER: ListCpusFilter = {
-  productType: ProductType.Cpu,
-  company: ['intel'],
-  segment: [MarketSegment.Desktop],
-};
-const AMD_CPU_FILTER: ListCpusFilter = {
-  productType: ProductType.Cpu,
-  company: ['amd'],
-  segment: [MarketSegment.Desktop],
-};
 
 @Injectable()
 export class HomeViewModelService {
-  constructor(private productService: ProductService) {}
+  constructor(
+    private productService: ProductService,
+    private productRepository: ProductRepository,
+    private cacheService: CacheService,
+  ) {}
 
   async viewModel(ctx: Context) {
-    const [nvidiaVsAmdGpus, popularGpus, intelVsAmdCpus, popularCpus] =
+    const [gpuData, cpuData] = await Promise.all([
+      this.getGpuData({}, ctx),
+      this.getCpuData({}, ctx),
+    ]);
+
+    return {
+      gpuData,
+      cpuData,
+    } as HomeViewModel;
+
+    // TODO: normalize
+  }
+
+  private async getGpuData(options: { bypassCache?: boolean }, ctx: Context) {
+    const { bypassCache } = options;
+    const benchmark = getPreferredBenchmark(
+      ctx.config?.userSettings,
+      ProductType.Gpu,
+    );
+
+    const [performanceList, valueList, performanceComparison, valueComparison] =
       await Promise.all([
-        this.getNvidiaVsAmdGpus(ctx),
-        this.getPopularGpus(ctx),
-        this.getIntelVsAmdCpus(ctx),
-        this.getPopularCpus(ctx),
+        this.getGpuPerformanceList({ benchmark, bypassCache }, ctx),
+        this.getGpuValueList({ benchmark, bypassCache }, ctx),
+        this.getGpuPerformanceComparison({ benchmark, bypassCache }, ctx),
+        this.getGpuValueComparison({ benchmark, bypassCache }, ctx),
       ]);
 
     return {
-      nvidiaVsAmdGpus,
-      popularGpus,
-      intelVsAmdCpus,
-      popularCpus,
-    } as HomeViewModel;
+      performanceList,
+      valueList,
+      performanceComparison,
+      valueComparison,
+    } as HomeGpuData;
   }
 
-  private async getNvidiaVsAmdGpus(ctx: Context) {
-    // TODO: determine if using promise.all helps here.
-    const performanceNvidia = await this.getPerformanceGpu(
-      NVIDIA_GPU_FILTER,
-      RANDOMLY_CHOOSE_FROM_COMPARISON,
-      ctx,
-    );
-    const performanceAmd = await this.getPerformanceGpu(
-      AMD_GPU_FILTER,
-      RANDOMLY_CHOOSE_FROM_COMPARISON,
-      ctx,
-    );
-    const valueNvidia = await this.getValueGpu(
-      NVIDIA_GPU_FILTER,
-      RANDOMLY_CHOOSE_FROM_COMPARISON,
-      ctx,
-    );
-    const valueAmd = await this.getValueGpu(
-      AMD_GPU_FILTER,
-      RANDOMLY_CHOOSE_FROM_COMPARISON,
-      ctx,
-    );
-
-    const performanceComp: ProductComparison = [
-      performanceNvidia,
-      performanceAmd,
-    ];
-    const valueComp: ProductComparison = [valueNvidia, valueAmd];
-
-    const randomNvidia = await this.getPerformanceGpu(
-      {
-        ...NVIDIA_GPU_FILTER,
-        excludeIds: [performanceNvidia.id, valueNvidia.id],
-      },
-      RANDOMLY_CHOOSE_FROM_COMPARISON,
-      ctx,
-    );
-
-    const randomAmd = await this.getPerformanceGpu(
-      { ...AMD_GPU_FILTER, excludeIds: [performanceAmd.id, valueAmd.id] },
-      RANDOMLY_CHOOSE_FROM_COMPARISON,
-      ctx,
-    );
-
-    const randomComp: ProductComparison = [randomNvidia, randomAmd];
-
-    return [performanceComp, valueComp, randomComp].filter(
-      ([gpu1, gpu2]) => gpu1 != null && gpu2 != null,
-    );
-  }
-
-  private async getPopularGpus(ctx: Context) {
-    // TODO: try to parallelize these.
-    const gpu1 = await this.getPerformanceGpu(
-      { productType: ProductType.Gpu, segment: [MarketSegment.Desktop] },
-      5,
-      ctx,
-    );
-    const gpu2 = await this.getValueGpu(
+  private async getGpuPerformanceList(
+    options: {
+      benchmark: BenchmarkKey;
+      bypassCache?: boolean;
+    },
+    ctx: Context,
+  ) {
+    const { benchmark, bypassCache } = options;
+    return await this.getBestProducts(
       {
         productType: ProductType.Gpu,
-        segment: [MarketSegment.Desktop],
-        excludeIds: [gpu1.id],
+        benchmark,
+        sort: ListSort.PerformanceRating,
+        limit: 5,
+        bypassCache,
       },
-      5,
       ctx,
     );
-    const gpu3 = await this.getPerformanceGpu(
+  }
+
+  private async getGpuValueList(
+    options: {
+      benchmark: BenchmarkKey;
+      bypassCache?: boolean;
+    },
+    ctx: Context,
+  ) {
+    const { benchmark, bypassCache } = options;
+    return await this.getBestProducts(
       {
         productType: ProductType.Gpu,
-        segment: [MarketSegment.Desktop],
-        excludeIds: [gpu1.id, gpu2.id],
+        benchmark,
+        sort: ListSort.PerformancePerMsrp,
+        limit: 5,
+        bypassCache,
       },
-      5,
       ctx,
-    );
-
-    return [gpu1, gpu2, gpu3].filter((gpu) => gpu != null);
-  }
-
-  private async getIntelVsAmdCpus(ctx: Context): Promise<ProductComparison[]> {
-    const performanceIntel = await this.getPerformanceCpu(
-      INTEL_CPU_FILTER,
-      RANDOMLY_CHOOSE_FROM_COMPARISON,
-      ctx,
-    );
-    const performanceAmd = await this.getPerformanceCpu(
-      AMD_CPU_FILTER,
-      RANDOMLY_CHOOSE_FROM_COMPARISON,
-      ctx,
-    );
-    const valueIntel = await this.getValueCpu(
-      INTEL_CPU_FILTER,
-      RANDOMLY_CHOOSE_FROM_COMPARISON,
-      ctx,
-    );
-    const valueAmd = await this.getValueCpu(
-      AMD_CPU_FILTER,
-      RANDOMLY_CHOOSE_FROM_COMPARISON,
-      ctx,
-    );
-
-    const performanceComp: ProductComparison = [
-      performanceIntel,
-      performanceAmd,
-    ];
-    const valueComp: ProductComparison = [valueIntel, valueAmd];
-
-    const randomIntel = await this.getPerformanceCpu(
-      {
-        ...INTEL_CPU_FILTER,
-        excludeIds: [performanceIntel.id, valueIntel.id],
-      },
-      RANDOMLY_CHOOSE_FROM_COMPARISON,
-      ctx,
-    );
-    const randomAmd = await this.getPerformanceCpu(
-      { ...AMD_CPU_FILTER, excludeIds: [performanceAmd.id, valueAmd.id] },
-      RANDOMLY_CHOOSE_FROM_COMPARISON,
-      ctx,
-    );
-
-    const randomComp: ProductComparison = [randomIntel, randomAmd];
-
-    return [performanceComp, valueComp, randomComp].filter(
-      ([cpu1, cpu2]) => cpu1 != null && cpu2 != null,
     );
   }
 
-  private async getPopularCpus(ctx: Context) {
-    // TODO: try to parallelize these.
-    const cpu1 = await this.getPerformanceCpu(
-      { productType: ProductType.Cpu, segment: [MarketSegment.Desktop] },
-      5,
-      ctx,
+  private async getGpuPerformanceComparison(
+    options: {
+      benchmark: BenchmarkKey;
+      bypassCache?: boolean;
+    },
+    ctx: Context,
+  ) {
+    const { benchmark, bypassCache } = options;
+    const [bestNvidia, bestAmd] = await Promise.all([
+      this.getBestProduct(
+        {
+          productType: ProductType.Gpu,
+          benchmark,
+          company: 'nvidia',
+          sort: ListSort.PerformanceRating,
+          bypassCache,
+        },
+        ctx,
+      ),
+      this.getBestProduct(
+        {
+          productType: ProductType.Gpu,
+          benchmark,
+          company: 'amd',
+          sort: ListSort.PerformanceRating,
+          bypassCache,
+        },
+        ctx,
+      ),
+    ]);
+    return [bestNvidia, bestAmd];
+  }
+
+  private async getGpuValueComparison(
+    options: {
+      benchmark: BenchmarkKey;
+      bypassCache?: boolean;
+    },
+    ctx: Context,
+  ) {
+    const { benchmark, bypassCache } = options;
+    const [bestNvidia, bestAmd] = await Promise.all([
+      this.getBestProduct(
+        {
+          productType: ProductType.Gpu,
+          benchmark,
+          company: 'nvidia',
+          sort: ListSort.PerformancePerMsrp,
+          bypassCache,
+        },
+        ctx,
+      ),
+      this.getBestProduct(
+        {
+          productType: ProductType.Gpu,
+          benchmark,
+          company: 'amd',
+          sort: ListSort.PerformancePerMsrp,
+          bypassCache,
+        },
+        ctx,
+      ),
+    ]);
+    return [bestNvidia, bestAmd];
+  }
+
+  private async getCpuData(options: { bypassCache?: boolean }, ctx: Context) {
+    const { bypassCache } = options;
+    const benchmark = getPreferredBenchmark(
+      ctx.config?.userSettings,
+      ProductType.Cpu,
     );
-    const cpu2 = await this.getValueCpu(
+
+    const [performanceList, valueList, performanceComparison, valueComparison] =
+      await Promise.all([
+        this.getCpuPerformanceList({ benchmark, bypassCache }, ctx),
+        this.getCpuValueList({ benchmark, bypassCache }, ctx),
+        this.getCpuPerformanceComparison({ benchmark, bypassCache }, ctx),
+        this.getCpuValueComparison({ benchmark, bypassCache }, ctx),
+      ]);
+
+    return {
+      performanceList,
+      valueList,
+      performanceComparison,
+      valueComparison,
+    } as HomeCpuData;
+  }
+
+  private async getCpuPerformanceList(
+    options: {
+      benchmark: BenchmarkKey;
+      bypassCache?: boolean;
+    },
+    ctx: Context,
+  ) {
+    const { benchmark, bypassCache } = options;
+    return await this.getBestProducts(
       {
         productType: ProductType.Cpu,
-        segment: [MarketSegment.Desktop],
-        excludeIds: [cpu1.id],
+        benchmark,
+        sort: ListSort.PerformanceRating,
+        limit: 5,
+        bypassCache,
       },
-      5,
       ctx,
     );
-    const cpu3 = await this.getPerformanceCpu(
+  }
+
+  private async getCpuValueList(
+    options: {
+      benchmark: BenchmarkKey;
+      bypassCache?: boolean;
+    },
+    ctx: Context,
+  ) {
+    const { benchmark, bypassCache } = options;
+    return await this.getBestProducts(
       {
         productType: ProductType.Cpu,
-        segment: [MarketSegment.Desktop],
-        excludeIds: [cpu1.id, cpu2.id],
+        benchmark,
+        sort: ListSort.PerformancePerMsrp,
+        limit: 5,
+        bypassCache,
       },
-      5,
       ctx,
     );
-
-    return [cpu1, cpu2, cpu3].filter((cpu) => cpu != null);
   }
 
-  private async getPerformanceGpu(
-    filter: ListGpusFilter,
-    chooseFrom: number,
+  private async getCpuPerformanceComparison(
+    options: {
+      benchmark: BenchmarkKey;
+      bypassCache?: boolean;
+    },
     ctx: Context,
   ) {
-    const response = await this.productService.list(
-      {
-        query: {
-          filter,
-          orderBy: { sort: ListSort.PerformanceRating },
-          pagination: { limit: chooseFrom },
+    const { benchmark, bypassCache } = options;
+    const [bestAmd, bestIntel] = await Promise.all([
+      this.getBestProduct(
+        {
+          productType: ProductType.Cpu,
+          benchmark,
+          company: 'intel',
+          sort: ListSort.PerformanceRating,
+          bypassCache,
         },
-      },
-      {},
-      ctx,
-    );
-    const results = response.results;
-
-    const idx = Math.floor(Math.random() * results.length);
-    return results[idx];
+        ctx,
+      ),
+      this.getBestProduct(
+        {
+          productType: ProductType.Cpu,
+          benchmark,
+          company: 'amd',
+          sort: ListSort.PerformanceRating,
+          bypassCache,
+        },
+        ctx,
+      ),
+    ]);
+    return [bestAmd, bestIntel];
   }
 
-  private async getValueGpu(
-    filter: ListGpusFilter,
-    chooseFrom: number,
+  private async getCpuValueComparison(
+    options: {
+      benchmark: BenchmarkKey;
+      bypassCache?: boolean;
+    },
     ctx: Context,
   ) {
-    const response = await this.productService.list(
-      {
-        query: {
-          filter,
-          orderBy: { sort: ListSort.PerformancePerMsrp },
-          pagination: { limit: chooseFrom },
+    const { benchmark, bypassCache } = options;
+    const [bestAmd, bestIntel] = await Promise.all([
+      this.getBestProduct(
+        {
+          productType: ProductType.Cpu,
+          benchmark,
+          company: 'intel',
+          sort: ListSort.PerformancePerMsrp,
+          bypassCache,
         },
-      },
-      {},
-      ctx,
-    );
-    const results = response.results;
-
-    const idx = Math.floor(Math.random() * results.length);
-    return results[idx];
+        ctx,
+      ),
+      this.getBestProduct(
+        {
+          productType: ProductType.Cpu,
+          benchmark,
+          company: 'amd',
+          sort: ListSort.PerformancePerMsrp,
+          bypassCache,
+        },
+        ctx,
+      ),
+    ]);
+    return [bestAmd, bestIntel];
   }
 
-  private async getPerformanceCpu(
-    filter: ListCpusFilter,
-    chooseFrom: number,
+  private async getBestProduct(
+    options: {
+      productType: ProductType;
+      benchmark: BenchmarkKey;
+      company?: string;
+      sort: ListSort;
+      bypassCache?: boolean;
+    },
     ctx: Context,
   ) {
-    const response = await this.productService.list(
-      {
-        query: {
-          filter,
-          orderBy: { sort: ListSort.PerformanceRating },
-          pagination: { limit: chooseFrom },
-        },
-      },
-      {},
-      ctx,
-    );
-    const results = response.results;
-
-    const idx = Math.floor(Math.random() * results.length);
-    return results[idx];
+    const products = await this.getBestProducts({ ...options, limit: 1 }, ctx);
+    return products[0];
   }
 
-  private async getValueCpu(
-    filter: ListCpusFilter,
-    chooseFrom: number,
+  private async getBestProducts(
+    options: {
+      productType: ProductType;
+      benchmark: BenchmarkKey;
+      company?: string;
+      sort: ListSort;
+      limit?: number;
+      bypassCache?: boolean;
+    },
     ctx: Context,
   ) {
-    const response = await this.productService.list(
-      {
-        query: {
-          filter,
-          orderBy: { sort: ListSort.PerformancePerMsrp },
-          pagination: { limit: chooseFrom },
-        },
+    const { productType, benchmark, company, sort, limit } = options;
+    const cacheKey = [
+      sort,
+      productType,
+      company,
+      MarketSegment.Desktop,
+      benchmark,
+      limit,
+    ]
+      .map((key) => `${key}`.toLowerCase())
+      .join('__');
+
+    const bestProductIds = await this.cacheService.cache(
+      async () => {
+        const bestProductIds = await this.productRepository.findBestProductIds(
+          {
+            productType,
+            benchmark,
+            sort,
+            filter: {
+              productType,
+              segment: [MarketSegment.Desktop],
+              company: company ? [company] : undefined,
+            } as ListProductsFilter,
+            limit,
+          },
+          ctx,
+        );
+        return bestProductIds;
       },
-      {},
+      {
+        type: CacheType.BestProduct,
+        key: cacheKey,
+        excludeFromMaxItems: false,
+      },
+    );
+
+    const products = await this.productService.getByIds(
+      {
+        ids: bestProductIds,
+        bypassCache: options.bypassCache,
+        includeBenchmarks: [benchmark],
+      },
       ctx,
     );
-    const results = response.results;
-
-    const idx = Math.floor(Math.random() * results.length);
-    return results[idx];
+    return products;
   }
 }

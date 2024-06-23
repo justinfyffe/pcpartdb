@@ -17,7 +17,12 @@ import { buildProductContentParams } from './buildProductContentParams';
 import { buildProductContentTags } from './buildProductContentTags';
 
 export function useProductContent(productIndex?: number) {
-  const { type, viewModel } = useViewModelContext();
+  const { type, viewModel } = useViewModelContext<
+    | CompareCpusViewModel
+    | CompareGpusViewModel
+    | ViewCpuViewModel
+    | ViewGpuViewModel
+  >();
   const productType = getProductTypeFromViewModelType(type);
   const product = getProductFromViewModel(type, viewModel, productIndex);
   const preferredBenchmark = usePreferredBenchmark(productType);

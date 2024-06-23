@@ -30,8 +30,11 @@ interface FindByIds2Options {
 }
 
 interface FindBestProductOptions {
+  productType: ProductType;
   benchmark: BenchmarkKey;
   sort: ListSort;
+  limit?: number;
+  filter?: ListProductsFilter;
 }
 
 interface FindIdBySlugOptions {
@@ -85,7 +88,7 @@ export class ProductRepository {
     return result;
   }
 
-  async findBestProductId(
+  async findBestProductIds(
     options: FindBestProductOptions,
     config?: RepositoryConfig,
   ) {
@@ -100,14 +103,19 @@ export class ProductRepository {
     }
 
     config?.queryCounter();
-    const { productId } = await db.productBenchmark.findFirst({
+    const productIds = await db.productBenchmark.findMany({
       select: { productId: true },
-      where: { benchmarkKey: options.benchmark },
+      where: {
+        benchmarkKey: options.benchmark,
+        product: options.filter
+          ? { ...this.generateWhere(options.productType, options.filter) }
+          : undefined,
+      },
       orderBy,
-      take: 1,
+      take: options?.limit ?? 1,
     });
 
-    return productId;
+    return productIds.map((value) => value.productId);
   }
 
   async findByIds2(options: FindByIds2Options, config?: RepositoryConfig) {

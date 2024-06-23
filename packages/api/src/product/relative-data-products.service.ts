@@ -530,8 +530,8 @@ export class RelativeDataProductsService {
 
     const bestProductId = await this.cacheService.cache(
       async () => {
-        const bestProductId = await this.productRepository.findBestProductId(
-          { benchmark, sort: ListSort.PerformanceRating },
+        const [bestProductId] = await this.productRepository.findBestProductIds(
+          { productType, benchmark, sort: ListSort.PerformanceRating },
           ctx,
         );
         return bestProductId;
@@ -564,8 +564,9 @@ export class RelativeDataProductsService {
 
     const bestProductId = await this.cacheService.cache(
       async () => {
-        const bestProductId = await this.productRepository.findBestProductId(
+        const [bestProductId] = await this.productRepository.findBestProductIds(
           {
+            productType,
             benchmark,
             sort: ListSort.PerformancePerMsrp,
           },

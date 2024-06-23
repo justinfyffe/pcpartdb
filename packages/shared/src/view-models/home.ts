@@ -1,14 +1,27 @@
 import {
+  CpuProduct,
+  CpuProductComparison,
   GpuProduct,
   GpuProductComparison,
-  Product,
-  ProductComparison,
 } from '../product';
 
 export interface HomeViewModel {
-  nvidiaVsAmdGpus: GpuProductComparison[];
-  popularGpus: GpuProduct[];
+  gpuData: HomeGpuData;
+  cpuData: HomeCpuData;
+}
 
-  intelVsAmdCpus: ProductComparison[];
-  popularCpus: Product[];
+export interface HomeGpuData {
+  performanceList: GpuProduct[];
+  valueList: GpuProduct[];
+
+  performanceComparison: GpuProductComparison;
+  valueComparison: GpuProductComparison;
+}
+
+export interface HomeCpuData {
+  performanceList: CpuProduct[];
+  valueList: CpuProduct[];
+
+  performanceComparison: CpuProductComparison;
+  valueComparison: CpuProductComparison;
 }

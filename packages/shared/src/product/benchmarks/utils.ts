@@ -1,11 +1,11 @@
 import { Product, ProductType } from '../common';
-import { BENCHMARK_LABELS, BenchmarkKey, ProductBenchmark } from './common';
+import { BENCHMARK_LABELS, BenchmarkKey } from './common';
 
 export function getDefaultBenchmark(productType: ProductType) {
   if (productType === ProductType.Cpu) {
-    return BenchmarkKey.PassMark_CpuMark_Multi_Thread;
+    return BenchmarkKey._3dMark_11_Performance_Physics;
   } else if (productType === ProductType.Gpu) {
-    return BenchmarkKey.PassMark_G3dMark;
+    return BenchmarkKey._3dMark_11_Performance_Gpu;
   } else {
     throw new Error(
       `Invalid product type for getDefaultBenchmark: ${productType}`,

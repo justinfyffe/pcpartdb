@@ -21,7 +21,7 @@ interface UsePreferredBenchmarkDialogOptions {
   productIds?: number[];
   gameSlug?: string;
 
-  onChange?: () => void;
+  onChange?: (benchmark: BenchmarkKey) => void;
 }
 
 export const usePreferredBenchmarkDialog = (
@@ -55,10 +55,12 @@ export const usePreferredBenchmarkDialog = (
         }
 
         setUserSettings(newSettings);
-        onChange?.();
+        onChange?.(benchmark);
         closeDialog();
       } else {
-        throw new Error('Missing handler for preferred benchmarks dialog');
+        throw new Error(
+          'Missing hardReload or softReload for preferred benchmarks dialog',
+        );
       }
     },
     [

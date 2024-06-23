@@ -21,6 +21,10 @@ NEXT (short-term)
       - Use highlight, but a larger description to include more data
       - Can do cleanup with hooks that calculate common stats
   - [] Home Page Revamp
+    - [X] Add index
+    - [X] Change default benchmark
+    - [X] Loading skeleton when changing benchmark
+    - [] Test
   - [] List - Use overlay for mobile filters
     - Dim the outer part of the overlay?
     - make it easy to close

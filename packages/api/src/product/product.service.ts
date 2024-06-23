@@ -83,6 +83,11 @@ interface GetByIdOptions extends RelationOptions {
   bypassCache?: boolean;
 }
 
+interface GetByIdsOptions extends RelationOptions {
+  ids: number[];
+  bypassCache?: boolean;
+}
+
 interface GetBySlugOptions extends RelationOptions {
   productType: ProductType;
   slug: string;
@@ -224,6 +229,30 @@ export class ProductService {
     }
 
     return product;
+  }
+
+  async getByIds(options: GetByIdsOptions, ctx: Context) {
+    const ids = options.ids;
+
+    const entities = await this.productEntityCache.getProductsByIds(
+      { ids, ...this.buildCacheFetchOptions(options, ctx) },
+      ctx,
+    );
+
+    const products = await mapToProductDtos(
+      entities,
+      this.buildMapperOptions(
+        entities,
+        { ...options, includeSummary: true },
+        ctx,
+      ) as any,
+    );
+
+    if (products.every((value) => value == null)) {
+      throw notFoundError({ products: ids });
+    }
+
+    return products;
   }
 
   async getBySlug(options: GetBySlugOptions, ctx: Context) {

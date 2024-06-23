@@ -157,3 +157,7 @@ tr:nth-child(even) {
 .shadowed-text-white:not(:disabled) {
   text-shadow: 1px 1px 1px rgb(255 255 255 / 60%);
 }
+
+/* * {
+  border: 1px solid red;
+} */

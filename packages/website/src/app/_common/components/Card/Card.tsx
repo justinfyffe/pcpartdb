@@ -17,7 +17,7 @@ export const Card: FunctionComponent<CardProps> = (props) => {
         'flex flex-col gap-4 items-stretch justify-start',
         'p-4',
         'bg-light-shades',
-        'rounded shadow',
+        'rounded shadow border-px',
         props.className,
       )}
     >
