@@ -13,18 +13,43 @@ NEXT (long-term):
 
 
 NEXT (short-term)
+- [] Builds
+  - [] List Page
+    - Filter by Tags, Can it Run?
+    - Vertical widget
+  - [] View Build Page
+  - [] Admin
+  - [] DB
+    - Build
+      - Name
+      - Summary
+      - Article
+      - ImageId?
+      - BuildPart[]
+    - BuildBuildPart
+      - BuildId
+      - BuildPartId
+    - BuildPart
+      - Name
+      - ProductId?
+      - ImageId?
+      - Affiliate Link
+      - Initial Price
+      - Initial Price Date
+      - As Of Price
+      - As Of Date
+    - BuildTag
+  - [] Other
+    - Update prices from newegg and amazon
+      - Amazon API
+      - Newegg API
+- [] Games Page
+  - [] List Games Page
+  - [] View Game Page
+    - List GPUs by frame rate
 - [] Bug fixes
   - [] Upload related products times out
 - [] UI improvements
-  - [] HIGHLIGHTS
-    - [] Change UI for the "Benchmark Performance" section.
-      - Use highlight, but a larger description to include more data
-      - Can do cleanup with hooks that calculate common stats
-  - [] Home Page Revamp
-    - [X] Add index
-    - [X] Change default benchmark
-    - [X] Loading skeleton when changing benchmark
-    - [] Test
   - [] List - Use overlay for mobile filters
     - Dim the outer part of the overlay?
     - make it easy to close

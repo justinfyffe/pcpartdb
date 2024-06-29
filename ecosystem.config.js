@@ -7,7 +7,7 @@ module.exports = {
       args: 'start',
       env: {
         NODE_ENV: 'production',
-        NODE_OPTIONS: '--max-old-space-size=768',
+        NODE_OPTIONS: '--max-old-space-size=1024',
       },
     },
     {
@@ -17,7 +17,7 @@ module.exports = {
       args: 'start',
       env: {
         NODE_ENV: 'production',
-        NODE_OPTIONS: '--max-old-space-size=768',
+        NODE_OPTIONS: '--max-old-space-size=512',
       },
     },
   ],
