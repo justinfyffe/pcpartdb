@@ -114,9 +114,6 @@ export default async function CompareCpusPage(props: CompareCpusPageProps) {
   const [cpu1, cpu2] = comparison;
 
   const pageTitle = formatProductComparisonName(comparison);
-  const shortPageTitle = formatProductComparisonName(comparison, {
-    company: false,
-  });
 
   const tableOfContents: TableOfContentsLink[] = [
     { label: 'Highlights', href: '#contents' },

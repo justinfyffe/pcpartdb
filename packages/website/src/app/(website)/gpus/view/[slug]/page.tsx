@@ -127,8 +127,6 @@ export default async function ViewGpuPage(props: ViewGpuPageProps) {
   }
 
   const { gpu, relatedGpus, relatedGpuComparisons } = viewModel;
-
-  const gpuShortName = formatProductName(gpu, { company: false });
   const gpuFullName = formatProductName(gpu);
 
   const tableOfContents: TableOfContentsLink[] = [

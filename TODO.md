@@ -13,6 +13,25 @@ NEXT (long-term):
 
 
 NEXT (short-term)
+- SEO improvements
+  - Summaries?
+  - Add social media accounts to page
+  - Fix typos?
+- List Page
+  - More Filters
+    - Year
+  - More sorts:
+    - Frames per second
+    - Cost per frame
+  - UI
+    - Sort by tapping on table header?
+    - Improve selecting filters for mobile
+      - sticky footer
+    - Move benchmark toggle to top of filters
+- [] Games Page
+  - [] List Games Page
+  - [] View Game Page
+    - List GPUs by frame rate
 - [] Builds
   - [] List Page
     - Filter by Tags, Can it Run?
@@ -43,10 +62,7 @@ NEXT (short-term)
     - Update prices from newegg and amazon
       - Amazon API
       - Newegg API
-- [] Games Page
-  - [] List Games Page
-  - [] View Game Page
-    - List GPUs by frame rate
+    - Short link for ig
 - [] Bug fixes
   - [] Upload related products times out
 - [] UI improvements
