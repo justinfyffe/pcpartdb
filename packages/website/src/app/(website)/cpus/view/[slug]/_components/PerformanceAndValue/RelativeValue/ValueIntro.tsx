@@ -14,7 +14,7 @@ const ValueIntroParagraph = compileContentComponent({
   deps: [],
   Component: (props) => (
     <>
-      Compare the{' '}
+      {props.nameWithNoCompany}&apos;s average performance per dollar for the{' '}
       <Button
         variant={ButtonVariant.Link}
         onClick={props.handleBenchmarkClick}
@@ -22,8 +22,8 @@ const ValueIntroParagraph = compileContentComponent({
       >
         {props.preferredBenchmarkName}
       </Button>{' '}
-      performance per dollar with similar CPUs. A higher score implies a better
-      value for your money.
+      benchmark can be compared to similar CPUs to assess relative value. A
+      higher score generally implies better value for your moeny.
     </>
   ),
 });

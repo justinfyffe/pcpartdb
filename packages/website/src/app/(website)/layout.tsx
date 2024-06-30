@@ -17,6 +17,7 @@ import { headers } from 'next/headers';
 import React from 'react';
 import { Button } from '../_common/components/Button/Button';
 import { ButtonVariant } from '../_common/components/Button/types';
+import { Img } from '../_common/components/Img/Img';
 import { List, ListItem } from '../_common/components/List/List';
 import { Toolbar } from '../_common/components/Toolbar/Toolbar';
 import { ConfigProvider } from '../_common/contexts/ConfigProvider';
@@ -132,35 +133,97 @@ export default async function RootWebsiteLayout(props: RootLayoutProps) {
             </div>
 
             <footer className="bg-main-brand text-default container p-container md:p-4 flex flex-wrap gap-8">
-              <nav className="flex-1 min-w-50 text-sm">
-                <header className="border-b-px mb-3 text-base">Pages</header>
-                <List direction="vertical">
-                  <ListItem>
-                    <a
-                      href={getHomePath()}
-                      className="text-light-shades underline"
-                    >
-                      Home
-                    </a>
-                  </ListItem>
-                  <ListItem>
-                    <a
-                      href={getAboutPath()}
-                      className="text-light-shades underline"
-                    >
-                      About Us
-                    </a>
-                  </ListItem>
-                  <ListItem>
-                    <a
-                      href={getPrivacyPath()}
-                      className="text-light-shades underline"
-                    >
-                      Privacy Policy
-                    </a>
-                  </ListItem>
-                </List>
-              </nav>
+              <div className="flex-1 min-w-50 flex flex-col gap-8">
+                <nav className="text-sm">
+                  <header className="border-b-px mb-3 text-base">Pages</header>
+                  <List direction="vertical">
+                    <ListItem>
+                      <a
+                        href={getHomePath()}
+                        className="text-light-shades underline"
+                      >
+                        Home
+                      </a>
+                    </ListItem>
+                    <ListItem>
+                      <a
+                        href={getAboutPath()}
+                        className="text-light-shades underline"
+                      >
+                        About Us
+                      </a>
+                    </ListItem>
+                    <ListItem>
+                      <a
+                        href={getPrivacyPath()}
+                        className="text-light-shades underline"
+                      >
+                        Privacy Policy
+                      </a>
+                    </ListItem>
+                  </List>
+                </nav>
+
+                <nav>
+                  <header className="border-b-px mb-3 text-base">
+                    Follow Us
+                  </header>
+                  <List direction="horizontal" className="gap-4">
+                    <ListItem>
+                      <a
+                        href="https://www.instagram.com/pcpartdb/"
+                        className="text-light-shades underline"
+                        target="_blank"
+                      >
+                        <Img
+                          src="/images/follow/instagram.svg"
+                          className="h-6"
+                          alt="Follow us on Instagram!"
+                        />
+                      </a>
+                    </ListItem>
+                    <ListItem>
+                      <a
+                        href="https://www.facebook.com/pcpartdb"
+                        className="text-light-shades underline"
+                        target="_blank"
+                      >
+                        <Img
+                          src="/images/follow/facebook.svg"
+                          className="h-6"
+                          alt="Follow us on Facebook!"
+                        />
+                      </a>
+                    </ListItem>
+                    <ListItem>
+                      <a
+                        href="https://x.com/pcpartdb"
+                        target="_blank"
+                        className="text-light-shades underline"
+                      >
+                        <Img
+                          src="/images/follow/twitter.svg"
+                          className="h-6"
+                          alt="Follow us on Twitter!"
+                        />
+                      </a>
+                    </ListItem>
+                    <ListItem>
+                      <a
+                        href="https://www.youtube.com/@pcpartdb"
+                        className="text-light-shades underline"
+                        target="_blank"
+                      >
+                        <Img
+                          src="/images/follow/youtube.svg"
+                          className="h-6"
+                          alt="Follow us on YouTube!"
+                        />
+                      </a>
+                    </ListItem>
+                  </List>
+                </nav>
+              </div>
 
               <section className="flex-1 min-w-50 text-sm">
                 <header className="border-b-px mb-3 text-base">

@@ -12,7 +12,7 @@ import { usePageContext } from '../../../PageProvider';
 const PerformanceIntroSentence1 = compileContentComponent({
   Component: (props) => (
     <>
-      Compare the average{' '}
+      {props.nameWithNoCompany}&apos;s average score for the{' '}
       <Button
         variant={ButtonVariant.Link}
         onClick={props.handleBenchmarkClick}
@@ -20,8 +20,8 @@ const PerformanceIntroSentence1 = compileContentComponent({
       >
         {props.preferredBenchmarkName}
       </Button>{' '}
-      benchmark score with similar GPUs. Powerful GPUs tend to have higher
-      scores.
+      benchmark can be compared to similar GPUs to assess relative performance.
+      Generally, more powerful GPUs tend to have higher scores.
     </>
   ),
 });

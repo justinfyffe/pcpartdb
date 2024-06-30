@@ -8,15 +8,18 @@ import React from 'react';
 const BenchmarksIntroSentence1 = compileContentComponent({
   Component: (props) => (
     <>
-      Performance metrics across industry-standard GPU benchmark tests. These
+      This table showcases the {props.nameWithNoCompany}&apos;s average
+      performance scores across industry-standard GPU benchmark tests. These
       scores provide a valuable insight into overall performance. Powerful GPUs
       tend to have higher scores.
     </>
   ),
 });
 export const BenchmarksIntro = () => {
+  const { contentParams } = useProductContent();
+
   return (
-    <ContentProvider>
+    <ContentProvider params={contentParams}>
       <p>
         <BenchmarksIntroSentence1 />
       </p>

@@ -9,7 +9,8 @@ const BenchmarksParagraph = compileContentComponent({
   deps: [],
   Component: (props) => (
     <p>
-      Performance metrics across industry-standard CPU benchmark tests. These
+      This table showcases the {props.nameWithNoCompany}&apos;s average
+      performance scores across industry-standard CPU benchmark tests. These
       scores provide a valuable insight into overall performance. Powerful CPUs
       tend to have higher scores.
     </p>

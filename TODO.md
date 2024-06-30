@@ -17,7 +17,24 @@ NEXT (short-term)
   - Write Summaries?
   - Add social media accounts to page
     - just footer for now
-  - Fix typos?
+  - Fix typos and section descriptions?
+    - [X] Gaming
+    - [] Benchmarks
+      - [] GPU
+        - [X] View
+        - [] Compare
+      - [] CPU
+        - [X] View
+        - [] Compare
+    - [] Tech Specs
+      - [] GPU
+      - [] CPU
+    - [] Related Comparisons
+      - [] GPU
+      - [] CPU
+    - [] Related GPUs/CPUs
+      - [] GPU
+      - [] CPU
 - List Page
   - More Filters
     - Year

@@ -14,7 +14,7 @@ import { usePageContext } from '../../../PageProvider';
 const ValueIntroSentence1 = compileContentComponent({
   Component: (props) => (
     <>
-      Compare the{' '}
+      {props.nameWithNoCompany}&apos;s average performance per dollar for the{' '}
       <Button
         variant={ButtonVariant.Link}
         onClick={props.handleBenchmarkClick}
@@ -22,8 +22,8 @@ const ValueIntroSentence1 = compileContentComponent({
       >
         {props.preferredBenchmarkName}
       </Button>{' '}
-      performance per dollar with similar GPUs. A higher score implies a better
-      value for your money.
+      benchmark can be compared to similar GPUs to assess relative value. A
+      higher score generally implies better value for your money.
     </>
   ),
 });
