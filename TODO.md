@@ -14,24 +14,37 @@ NEXT (long-term):
 
 NEXT (short-term)
 - SEO improvements
-  - Summaries?
+  - Write Summaries?
   - Add social media accounts to page
+    - just footer for now
   - Fix typos?
 - List Page
   - More Filters
     - Year
+    - Game for FPS
   - More sorts:
     - Frames per second
     - Cost per frame
   - UI
     - Sort by tapping on table header?
+      - Maybe not yet
     - Improve selecting filters for mobile
       - sticky footer
+      - Dialog for filters (mobile only)
     - Move benchmark toggle to top of filters
 - [] Games Page
   - [] List Games Page
+    - Mention how many gpus have FPS for it
   - [] View Game Page
-    - List GPUs by frame rate
+    - Data:
+      - Game Image
+      - Game Name
+      - Publisher
+      - Developer
+      - System requirements
+      - Summary
+      - Metacritic score
+    - List GPUs by frame rate and cost per frame
 - [] Builds
   - [] List Page
     - Filter by Tags, Can it Run?

@@ -31,7 +31,7 @@ export const ProductSummaryInput: FunctionComponent<
   );
 
   return (
-    <Tabs className="h-120">
+    <Tabs className="h-120" tabClassName="overflow-hidden">
       <Tab label="Edit">
         <Textarea
           placeholder={placeholder}
@@ -40,7 +40,7 @@ export const ProductSummaryInput: FunctionComponent<
           className="h-full"
         />
       </Tab>
-      <Tab label="Preview">
+      <Tab label="Preview" className="overflow-auto">
         <Markdown>{value ?? ''}</Markdown>
       </Tab>
       <Tab label="AI Prompt">

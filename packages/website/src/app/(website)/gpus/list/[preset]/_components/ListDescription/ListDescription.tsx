@@ -25,7 +25,7 @@ const DescriptionSentence = compileContentComponent(
     deps: [],
     Component: (props) => (
       <>
-        We&apos;ve ranked the GPUs in our database based on their average
+        We have ranked the GPUs in our database based on their average
         performance scores for the{' '}
         <Button
           variant={ButtonVariant.Link}
@@ -44,8 +44,8 @@ const DescriptionSentence = compileContentComponent(
     deps: [],
     Component: (props) => (
       <>
-        We&apos;ve ranked the GPUs in our database based on their performance
-        per dollar for the{' '}
+        We have ranked the GPUs in our database based on their performance per
+        dollar for the{' '}
         <Button
           variant={ButtonVariant.Link}
           onClick={props.showPreferredBenchmarkDialog}
@@ -60,11 +60,11 @@ const DescriptionSentence = compileContentComponent(
   },
   {
     tags: [ListGpusContentTag.SortedReleaseDate],
-    Component: (props) => (
+    Component: () => (
       <>
-        We&apos;ve listed the GPUs in our database by their release date.
-        Graphics cards without a release date are excluded from this list. Use
-        the filters to further narrow your search.
+        We have sorted the GPUs in our database by their release date. Graphics
+        cards without a release date are excluded from this list. Use the
+        filters to further narrow your search.
       </>
     ),
   },

@@ -1,6 +1,6 @@
 'use client';
 
-import { formatGameName } from '@pcpartdb/shared';
+import { formatGameName, formatProductName } from '@pcpartdb/shared';
 import { Button } from 'packages/website/src/app/_common/components/Button/Button';
 import { ButtonVariant } from 'packages/website/src/app/_common/components/Button/types';
 import {
@@ -18,16 +18,16 @@ import { usePageContext } from '../../../PageProvider';
 const ValueIntroSentence1 = compileContentComponent({
   Component: (props) => (
     <>
-      Compare the average cost per frame in{' '}
+      The {props.name}&apos;s average cost per frame for the game,{' '}
       <Button
         variant={ButtonVariant.Link}
         onClick={props.handleGameClick}
         className="underline decoration-dotted decoration-1"
       >
         {props.selectedGameName}
-      </Button>{' '}
-      with similar GPUs. A lower cost per frame translates to more performance
-      for your money.
+      </Button>
+      , can be compared to similar GPUs to assess relative value. Generally, a
+      lower cost per frame implies better value for your money.
     </>
   ),
 });
@@ -39,6 +39,7 @@ export const RelativeGameCpfIntro = () => {
   const gpu = viewModel.gpu;
   const { selectedGame, setSelectedGame } = useGameSelection();
 
+  const name = useMemo(() => formatProductName(gpu, { company: false }), [gpu]);
   const games = useMemo(() => {
     return gpu?.games?.map((pg) => pg.game);
   }, [gpu]);
@@ -61,6 +62,7 @@ export const RelativeGameCpfIntro = () => {
       tags={contentTags}
       params={{
         ...contentParams,
+        name,
         selectedGameName: gameName,
         handleGameClick,
       }}

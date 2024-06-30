@@ -17,16 +17,16 @@ import { usePageContext } from '../../../PageProvider';
 const ValueIntroSentence1 = compileContentComponent({
   Component: (props) => (
     <>
-      Compare the average cost per frame in{' '}
+      The average cost per frame in the game,{' '}
       <Button
         variant={ButtonVariant.Link}
         onClick={props.handleGameClick}
         className="underline decoration-dotted decoration-1"
       >
         {props.selectedGameName}
-      </Button>{' '}
-      with similar GPUs. A lower cost per frame translates to more performance
-      for your money.
+      </Button>
+      , can be compared to similar GPUs to assess relative value. Generally, a
+      lower cost per frame implies better value for your money.
     </>
   ),
 });

@@ -1,6 +1,6 @@
 'use client';
 
-import { formatGameName } from '@pcpartdb/shared';
+import { formatGameName, formatProductName } from '@pcpartdb/shared';
 import { Button } from 'packages/website/src/app/_common/components/Button/Button';
 import { ButtonVariant } from 'packages/website/src/app/_common/components/Button/types';
 import {
@@ -17,15 +17,16 @@ import { usePageContext } from '../../../PageProvider';
 const FpsIntroSentence1 = compileContentComponent({
   Component: (props) => (
     <>
-      Compare the average frame rate (FPS) in{' '}
+      The {props.name}&apos;s average frame rate (FPS) for the game,{' '}
       <Button
         variant={ButtonVariant.Link}
         onClick={props.handleGameClick}
         className="underline decoration-dotted decoration-1"
       >
         {props.selectedGameName}
-      </Button>{' '}
-      with similar GPUs. Higher FPS leads to smoother gaming experience.
+      </Button>
+      , can be compared to similar GPUs to assess relative performance.
+      Generally, higher FPS results in a smoother gameplay experience.
     </>
   ),
 });
@@ -35,6 +36,7 @@ export const RelativeGameFpsIntro = () => {
   const gpu = viewModel.gpu;
   const { selectedGame, setSelectedGame } = useGameSelection();
 
+  const name = useMemo(() => formatProductName(gpu, { company: false }), [gpu]);
   const games = useMemo(() => gpu?.games?.map((pg) => pg.game), [gpu?.games]);
   const gameName = formatGameName(selectedGame);
 
@@ -53,6 +55,7 @@ export const RelativeGameFpsIntro = () => {
   return (
     <ContentProvider
       params={{
+        name,
         selectedGameName: gameName,
         handleGameClick,
       }}
