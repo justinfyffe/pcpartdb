@@ -22,7 +22,7 @@ export function Overview(props: OverviewProps) {
       <section className="mb-0 flex flex-row gap-6 sm:flex-col">
         <section className="flex-1">
           <h2>
-            {formatProductName(cpu1)} CPU{' '}
+            About the {formatProductName(cpu1)} CPU{' '}
             <EditProductLink product={cpu1}>(Edit)</EditProductLink>
           </h2>
 

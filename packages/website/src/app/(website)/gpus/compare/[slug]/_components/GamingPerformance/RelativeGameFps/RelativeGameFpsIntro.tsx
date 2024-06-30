@@ -17,16 +17,16 @@ import { usePageContext } from '../../../PageProvider';
 const FpsIntroSentence1 = compileContentComponent({
   Component: (props) => (
     <>
-      The average frame rate (FPS) in the game,{' '}
+      The average frame rate (FPS) in{' '}
       <Button
         variant={ButtonVariant.Link}
         onClick={props.handleGameClick}
         className="underline decoration-dotted decoration-1"
       >
         {props.selectedGameName}
-      </Button>
-      , can be compared to similar GPUs to assess relative performance.
-      Generally, higher FPS results in a smoother gameplay experience.
+      </Button>{' '}
+      can be compared to similar GPUs to assess relative performance. Generally,
+      higher FPS results in a smoother gameplay experience.
     </>
   ),
 });

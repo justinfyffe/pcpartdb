@@ -10,7 +10,7 @@ export const CoresIntroSentence1 = compileContentComponent({
   deps: [],
   Component: (props) => (
     <>
-      Processing power information like their cores and clock speed. These specs
+      Processing power information like its cores and clock speed. These specs
       impact how fast they can process graphics. Each type of core or component
       serves a specific computational purpose.
     </>

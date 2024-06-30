@@ -17,7 +17,7 @@ import { usePageContext } from '../../../PageProvider';
 const FpsIntroSentence1 = compileContentComponent({
   Component: (props) => (
     <>
-      {props.name}&apos;s average frame rate (FPS) for{' '}
+      {props.name}&apos;s average frame rate (FPS) in{' '}
       <Button
         variant={ButtonVariant.Link}
         onClick={props.handleGameClick}

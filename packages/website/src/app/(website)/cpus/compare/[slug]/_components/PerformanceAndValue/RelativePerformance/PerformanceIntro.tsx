@@ -18,7 +18,7 @@ import React from 'react';
 export const PerformanceIntroParagraph = compileContentComponent({
   Component: (props) => (
     <>
-      Compare the average{' '}
+      The average score in the{' '}
       <Button
         variant={ButtonVariant.Link}
         onClick={props.handleBenchmarkClick}
@@ -26,8 +26,8 @@ export const PerformanceIntroParagraph = compileContentComponent({
       >
         {props.preferredBenchmarkName}
       </Button>{' '}
-      benchmark score with similar CPUs. Powerful CPUs tend to have higher
-      scores.
+      benchmark test can be compared to similar CPUs to assess relative
+      performance. Generally, powerful CPUs tend to have higher scores.
     </>
   ),
 });

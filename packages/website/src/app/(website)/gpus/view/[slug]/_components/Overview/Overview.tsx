@@ -20,7 +20,7 @@ export const Overview: FunctionComponent<OverviewProps> = (
 
       <div className="flex flex-col gap-0">
         <h2>
-          {formatProductName(gpu)} GPU{' '}
+          About the {formatProductName(gpu)} GPU{' '}
           <EditProductLink product={gpu}>(Edit)</EditProductLink>
         </h2>
 

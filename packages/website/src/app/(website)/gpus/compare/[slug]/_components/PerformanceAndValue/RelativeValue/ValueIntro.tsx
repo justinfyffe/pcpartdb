@@ -19,7 +19,7 @@ import React from 'react';
 export const ValueIntroSentence1 = compileContentComponent({
   Component: (props) => (
     <>
-      Compare the{' '}
+      The average performance per dollar in the{' '}
       <Button
         variant={ButtonVariant.Link}
         onClick={props.handleBenchmarkClick}
@@ -27,8 +27,8 @@ export const ValueIntroSentence1 = compileContentComponent({
       >
         {props.preferredBenchmarkName}
       </Button>{' '}
-      performance per dollar with similar GPUs. A higher score implies a better
-      value for your money.
+      benchmark test can be compared to similar GPUs to assess relative value. A
+      higher score implies a better value for your money.
     </>
   ),
 });

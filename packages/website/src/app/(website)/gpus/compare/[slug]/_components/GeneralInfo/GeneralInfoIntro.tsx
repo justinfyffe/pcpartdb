@@ -9,7 +9,7 @@ export const GeneralInfoIntroSentence1 = compileContentComponent({
   deps: [],
   Component: (props) => (
     <>
-      General overview of the GPUs, including details like its manufacturer,
+      General overview of the GPU, including details like its manufacturer,
       release date, launch price, and current production status.
     </>
   ),

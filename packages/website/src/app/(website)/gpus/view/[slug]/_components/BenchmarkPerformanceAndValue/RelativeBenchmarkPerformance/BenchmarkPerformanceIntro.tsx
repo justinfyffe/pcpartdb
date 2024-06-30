@@ -12,7 +12,7 @@ import { usePageContext } from '../../../PageProvider';
 const PerformanceIntroSentence1 = compileContentComponent({
   Component: (props) => (
     <>
-      {props.nameWithNoCompany}&apos;s average score for the{' '}
+      {props.nameWithNoCompany}&apos;s average score in the{' '}
       <Button
         variant={ButtonVariant.Link}
         onClick={props.handleBenchmarkClick}

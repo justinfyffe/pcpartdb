@@ -22,7 +22,7 @@ export function Overview(props: OverviewProps) {
       <section className="mb-0 flex flex-row gap-6 sm:flex-col">
         <section className="flex-1">
           <h2>
-            {formatProductName(gpu1)} GPU{' '}
+            About the {formatProductName(gpu1)} GPU{' '}
             <EditProductLink product={gpu1}>(Edit)</EditProductLink>
           </h2>
 
@@ -38,7 +38,7 @@ export function Overview(props: OverviewProps) {
 
         <section className="flex-1">
           <h2>
-            {formatProductName(gpu2)} GPU{' '}
+            About the {formatProductName(gpu2)} GPU{' '}
             <EditProductLink product={gpu2}>(Edit)</EditProductLink>
           </h2>
 

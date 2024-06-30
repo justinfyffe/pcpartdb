@@ -19,7 +19,7 @@ import React from 'react';
 export const PerformanceIntroSentence1 = compileContentComponent({
   Component: (props) => (
     <>
-      Compare the average{' '}
+      The average score in the{' '}
       <Button
         variant={ButtonVariant.Link}
         onClick={props.handleBenchmarkClick}
@@ -27,8 +27,8 @@ export const PerformanceIntroSentence1 = compileContentComponent({
       >
         {props.preferredBenchmarkName}
       </Button>{' '}
-      benchmark score with similar GPUs. Powerful GPUs tend to have higher
-      scores.
+      benchmark test can be compared to similar GPUs to assess relative
+      performance. Generally, powerful GPUs tend to have higher scores.
     </>
   ),
 });

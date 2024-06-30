@@ -9,7 +9,7 @@ const GeneralInfoParagraph = compileContentComponent({
   deps: [],
   Component: (props) => (
     <p>
-      General overview of the CPUs, including details like its manufacturer,
+      General overview of the CPU, including details like its manufacturer,
       release date, launch price, and current production status.
     </p>
   ),

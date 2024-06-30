@@ -10,8 +10,8 @@ export const FeatureIntroParagraph = compileContentComponent({
   deps: [],
   Component: (props) => (
     <p>
-      Additional CPU features like their bundled coolers, integrated graphics,
-      and extensions/technologies.
+      Additional CPU features like its bundled coolers, integrated graphics, and
+      extensions/technologies.
     </p>
   ),
 });

@@ -10,8 +10,9 @@ export const CacheIntroParagraph = compileContentComponent({
   deps: [],
   Component: (props) => (
     <p>
-      CPU cache specs, providing the CPU with a small, but super-fast memory
-      access. A larger cache can improve a CPU&apos;s performance.
+      CPU cache specs like its L1 &amp; L2 cache. These provide the CPU with a
+      small, but super-fast memory access. A larger cache can improve a
+      CPU&apos;s performance.
     </p>
   ),
 });

@@ -9,8 +9,8 @@ export const PhysicalIntroParagraph = compileContentComponent({
   deps: [],
   Component: (props) => (
     <p>
-      Information about its manufacturing like its foundry, process size, and
-      transistor count.
+      Information about the CPU&apos;s manufacturing like its foundry, process
+      size, and transistor count.
     </p>
   ),
 });

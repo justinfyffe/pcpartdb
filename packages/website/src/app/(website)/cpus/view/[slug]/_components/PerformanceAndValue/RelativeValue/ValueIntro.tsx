@@ -14,7 +14,7 @@ const ValueIntroParagraph = compileContentComponent({
   deps: [],
   Component: (props) => (
     <>
-      {props.nameWithNoCompany}&apos;s average performance per dollar for the{' '}
+      {props.nameWithNoCompany}&apos;s average performance per dollar in the{' '}
       <Button
         variant={ButtonVariant.Link}
         onClick={props.handleBenchmarkClick}

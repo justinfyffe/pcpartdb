@@ -18,7 +18,7 @@ import { usePageContext } from '../../../PageProvider';
 const ValueIntroSentence1 = compileContentComponent({
   Component: (props) => (
     <>
-      {props.name}&apos;s average cost per frame for{' '}
+      {props.name}&apos;s average cost per frame in{' '}
       <Button
         variant={ButtonVariant.Link}
         onClick={props.handleGameClick}

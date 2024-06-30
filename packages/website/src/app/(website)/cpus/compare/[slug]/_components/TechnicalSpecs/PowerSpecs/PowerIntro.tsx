@@ -10,7 +10,7 @@ export const PowerIntroParagraph = compileContentComponent({
   deps: [],
   Component: (props) => (
     <p>
-      Compatibility and power consumption information like their socket type,
+      Compatibility and power consumption information like its socket type,
       thermal design power, power limits. These can help verify the CPU&apos;s
       compatibility with other PC components.
     </p>

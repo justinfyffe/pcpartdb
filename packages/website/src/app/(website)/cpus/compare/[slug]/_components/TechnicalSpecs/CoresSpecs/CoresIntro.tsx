@@ -10,7 +10,7 @@ export const CoresIntroParagraph = compileContentComponent({
   deps: [],
   Component: (props) => (
     <p>
-      Processing power information like their cores and clock speed. These specs
+      Processing power information like its cores and clock speed. These specs
       impact how fast they can handle instructions and tasks. These have a
       strong impact on the CPU&apos;s performance.
     </p>

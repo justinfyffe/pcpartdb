@@ -14,7 +14,7 @@ import { usePageContext } from '../../../PageProvider';
 const ValueIntroSentence1 = compileContentComponent({
   Component: (props) => (
     <>
-      {props.nameWithNoCompany}&apos;s average performance per dollar for the{' '}
+      {props.nameWithNoCompany}&apos;s average performance per dollar in the{' '}
       <Button
         variant={ButtonVariant.Link}
         onClick={props.handleBenchmarkClick}

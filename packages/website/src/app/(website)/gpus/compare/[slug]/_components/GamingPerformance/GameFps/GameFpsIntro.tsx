@@ -17,8 +17,7 @@ import { usePageContext } from '../../../PageProvider';
 const GameFpsIntroSentence1 = compileContentComponent({
   Component: (props) => (
     <>
-      This table showcases the average frame rate (FPS) achieved by these GPUs
-      in{' '}
+      This table showcases the average frame rate (FPS) achieved both GPUs in{' '}
       <Button
         variant={ButtonVariant.Link}
         onClick={props.handleGameClick}
