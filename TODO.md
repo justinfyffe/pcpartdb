@@ -23,11 +23,12 @@ NEXT (short-term)
     - Frames per second
     - Cost per frame
   - UI
-    - Sort by tapping on table header?
-      - Maybe not yet
     - Improve selecting filters for mobile
-      - sticky footer
+      - second header line
+        - top line is name of table + filters button
+        - second line are the column names
       - Dialog for filters (mobile only)
+        - back goes to previous filters dialog
     - Move benchmark toggle to top of filters
 - [] Games Page
   - [] List Games Page
