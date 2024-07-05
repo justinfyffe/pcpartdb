@@ -1,8 +1,13 @@
+'use client';
+
 import { CurrencyDollarIcon } from '@heroicons/react/24/outline';
-import { Product } from '@pcpartdb/shared';
+import { getProductBenchmarkName, Product } from '@pcpartdb/shared';
+import { ButtonVariant } from 'packages/website/src/app/_common/components/Button/types';
 import { HighlightCard } from 'packages/website/src/app/_common/components/Card/HighlightCard';
+import { useGameSelection } from 'packages/website/src/app/_common/game/contexts/GameSelectionProvider';
 import React from 'react';
-import { PreferredBenchmarkButton } from '../../../PreferredBenchmark/PreferredBenchmarkButton';
+import { usePreferredBenchmark } from '../../../../hooks/usePreferredBenchmark';
+import { PreferredBenchmarkDialogTrigger } from '../../../PreferredBenchmarkDialog/PreferredBenchmarkDialog';
 import { LongDescription } from './LongDescription';
 import { PerformancePerDollarChart } from './PerformancePerDollarChart';
 import { ShortDescription } from './ShortDescription';
@@ -19,12 +24,26 @@ export function BenchmarkPerformancePerDollarHighlight(
   props: BenchmarkPerformancePerDollarHighlightProps,
 ) {
   const { product, className, shortDescription, longDescription } = props;
+  const productType = product.productType;
+
+  const { selectedGame } = useGameSelection();
+  const preferredBenchmark = usePreferredBenchmark(productType);
 
   return (
     <HighlightCard
       icon={<CurrencyDollarIcon />}
       leftTitle="Performance per dollar"
-      rightTitle={<PreferredBenchmarkButton softReload products={[product]} />}
+      rightTitle={
+        <PreferredBenchmarkDialogTrigger
+          buttonVariant={ButtonVariant.LinkDialog}
+          productType={productType}
+          productIds={[product.id]}
+          gameSlug={selectedGame?.slug}
+          softReload
+        >
+          {getProductBenchmarkName(preferredBenchmark)}
+        </PreferredBenchmarkDialogTrigger>
+      }
       className={className}
       contentClassName="justify-between"
     >

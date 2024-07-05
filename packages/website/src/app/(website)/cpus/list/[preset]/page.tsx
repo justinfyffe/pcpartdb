@@ -25,7 +25,7 @@ import React from 'react';
 import { DocumentTitle } from './_components/DocumentTitle/DocumentTitle';
 import { ListDescription } from './_components/ListDescription/ListDescription';
 import { ListFilters } from './_components/ListFilters/ListFilters';
-import { ListMenu } from './_components/ListMenu/ListMenu';
+import { ListFiltersDialogTrigger } from './_components/ListFilters/ListFiltersDialogTrigger';
 import { ListPagination } from './_components/ListPagination/ListPagination';
 import { ListPresets } from './_components/ListPresets/ListPresets';
 import { ListTable } from './_components/ListTable/ListTable';
@@ -130,11 +130,7 @@ export default async function ListCpusPage(props: ListCpusPageProps) {
 
             <div className="flex items-center justify-between">
               <ListTitle />
-              <ListMenu
-                includeFilters
-                includePresets
-                className="hidden lg:block"
-              />
+              <ListFiltersDialogTrigger className="hidden lg:block" />
             </div>
 
             <section className="flex gap-4 items-start">

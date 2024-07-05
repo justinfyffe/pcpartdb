@@ -6,14 +6,13 @@ import {
   getProductBenchmarkName,
   ProductType,
 } from '@pcpartdb/shared';
-import { Button } from 'packages/website/src/app/_common/components/Button/Button';
 import { ButtonVariant } from 'packages/website/src/app/_common/components/Button/types';
 import { ContentProvider } from 'packages/website/src/app/_common/content/ContentProvider';
 import { compileContentComponent } from 'packages/website/src/app/_common/content/utils/compileContentComponent';
 import { useViewModel } from 'packages/website/src/app/_common/contexts/ViewModelProvider';
+import { PreferredBenchmarkDialogTrigger } from 'packages/website/src/app/_common/product/components/PreferredBenchmarkDialog/PreferredBenchmarkDialog';
 import { usePreferredBenchmark } from 'packages/website/src/app/_common/product/hooks/usePreferredBenchmark';
-import { usePreferredBenchmarkDialog } from 'packages/website/src/app/_common/product/hooks/usePreferredBenchmarkDialog';
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 
 const RatingDisclaimer = compileContentComponent({
   tags: [],
@@ -28,10 +27,10 @@ const RatingDisclaimer = compileContentComponent({
 
 export const Disclaimer = () => {
   const preferredBenchmark = usePreferredBenchmark(ProductType.Cpu);
-  const showPreferredBenchmarkDialog = usePreferredBenchmarkDialog({
-    productType: ProductType.Cpu,
-    hardReload: true,
-  });
+
+  const handleBenchmarkChange = useCallback(async () => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const { comparison } = useViewModel<CompareCpusViewModel>();
   const [cpu1, cpu2] = comparison;
@@ -50,13 +49,16 @@ export const Disclaimer = () => {
     >
       <p>
         <RatingDisclaimer />{' '}
-        <Button
-          variant={ButtonVariant.Link}
-          onClick={showPreferredBenchmarkDialog}
+        <PreferredBenchmarkDialogTrigger
+          buttonVariant={ButtonVariant.LinkDialog}
+          productType={ProductType.Cpu}
+          softReload
+          productIds={[cpu1.id, cpu2.id]}
+          onChange={handleBenchmarkChange}
           className="text-left"
         >
           Click here to change your preferred benchmark.
-        </Button>
+        </PreferredBenchmarkDialogTrigger>
       </p>
     </ContentProvider>
   );

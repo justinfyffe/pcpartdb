@@ -6,14 +6,14 @@ import {
   getProductBenchmarkName,
   ProductType,
 } from '@pcpartdb/shared';
-import { Button } from 'packages/website/src/app/_common/components/Button/Button';
 import { ButtonVariant } from 'packages/website/src/app/_common/components/Button/types';
 import { ContentProvider } from 'packages/website/src/app/_common/content/ContentProvider';
 import { compileContentComponent } from 'packages/website/src/app/_common/content/utils/compileContentComponent';
 import { useViewModel } from 'packages/website/src/app/_common/contexts/ViewModelProvider';
+import { useGameSelection } from 'packages/website/src/app/_common/game/contexts/GameSelectionProvider';
+import { PreferredBenchmarkDialogTrigger } from 'packages/website/src/app/_common/product/components/PreferredBenchmarkDialog/PreferredBenchmarkDialog';
 import { usePreferredBenchmark } from 'packages/website/src/app/_common/product/hooks/usePreferredBenchmark';
-import { usePreferredBenchmarkDialog } from 'packages/website/src/app/_common/product/hooks/usePreferredBenchmarkDialog';
-import React from 'react';
+import React, { useCallback } from 'react';
 
 const RatingDisclaimer = compileContentComponent({
   tags: [],
@@ -26,11 +26,12 @@ const RatingDisclaimer = compileContentComponent({
 });
 
 export const Disclaimer = () => {
+  const { selectedGame } = useGameSelection();
   const preferredBenchmark = usePreferredBenchmark(ProductType.Gpu);
-  const showPreferredBenchmarkDialog = usePreferredBenchmarkDialog({
-    productType: ProductType.Gpu,
-    hardReload: true,
-  });
+
+  const handleBenchmarkChange = useCallback(async () => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const { comparison } = useViewModel<CompareGpusViewModel>();
   const [gpu1, gpu2] = comparison;
@@ -49,13 +50,17 @@ export const Disclaimer = () => {
     >
       <p>
         <RatingDisclaimer />{' '}
-        <Button
-          variant={ButtonVariant.Link}
-          onClick={showPreferredBenchmarkDialog}
+        <PreferredBenchmarkDialogTrigger
+          buttonVariant={ButtonVariant.LinkDialog}
+          productType={ProductType.Gpu}
+          softReload
+          productIds={[gpu1.id, gpu2.id]}
+          gameSlug={selectedGame?.slug}
+          onChange={handleBenchmarkChange}
           className="text-left"
         >
           Click here to change your preferred benchmark.
-        </Button>
+        </PreferredBenchmarkDialogTrigger>
       </p>
     </ContentProvider>
   );

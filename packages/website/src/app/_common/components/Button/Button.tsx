@@ -26,6 +26,8 @@ const BUTTON_VARIANTS = {
   [ButtonVariant.Danger]: 'bg-danger text-default',
   [ButtonVariant.Link]:
     'bg-transparent text-content shadow-none p-0 text-link inline',
+  [ButtonVariant.LinkDialog]:
+    'bg-transparent text-content shadow-none p-0 text-link inline underline decoration-dotted decoration-1',
   [ButtonVariant.Card]: 'bg-light-shades text-content py-4 px-6',
 };
 

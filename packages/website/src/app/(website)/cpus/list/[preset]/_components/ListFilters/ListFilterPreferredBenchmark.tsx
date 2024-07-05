@@ -1,8 +1,9 @@
 'use client';
 
 import { getProductBenchmarkName, ProductType } from '@pcpartdb/shared';
+import { ButtonVariant } from 'packages/website/src/app/_common/components/Button/types';
+import { PreferredBenchmarkDialogTrigger } from 'packages/website/src/app/_common/product/components/PreferredBenchmarkDialog/PreferredBenchmarkDialog';
 import { usePreferredBenchmark } from 'packages/website/src/app/_common/product/hooks/usePreferredBenchmark';
-import { usePreferredBenchmarkDialog } from 'packages/website/src/app/_common/product/hooks/usePreferredBenchmarkDialog';
 import { classNames } from 'packages/website/src/app/_common/utils/classNames';
 import React, { FunctionComponent } from 'react';
 
@@ -14,22 +15,18 @@ export const ListFilterPreferredBenchmark: FunctionComponent<
   ListFilterPreferredBenchmarkProps
 > = (props) => {
   const preferredBenchmark = usePreferredBenchmark(ProductType.Cpu);
-  const showPreferredBenchmarkDialog = usePreferredBenchmarkDialog({
-    productType: ProductType.Cpu,
-    hardReload: true,
-  });
 
   return (
     <div className={classNames('flex flex-col', props.className)}>
       <div className="font-bold m-2">Performance Benchmark:</div>
-      <button
-        onClick={showPreferredBenchmarkDialog}
-        className={classNames(
-          'cursor-pointer p-2 hover:bg-mouse-hover text-link text-left whitespace-nowrap underline decoration-dotted decoration-1',
-        )}
+      <PreferredBenchmarkDialogTrigger
+        buttonVariant={ButtonVariant.LinkDialog}
+        productType={ProductType.Cpu}
+        hardReload
+        className="p-2 hover:bg-mouse-hover text-link text-left whitespace-nowrap"
       >
         {getProductBenchmarkName(preferredBenchmark)}
-      </button>
+      </PreferredBenchmarkDialogTrigger>
     </div>
   );
 };

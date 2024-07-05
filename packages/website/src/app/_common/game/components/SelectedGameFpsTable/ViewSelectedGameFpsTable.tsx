@@ -15,13 +15,11 @@ import { Th } from 'packages/website/src/app/_common/components/Table/Th';
 import { THead } from 'packages/website/src/app/_common/components/Table/THead';
 import { Tr } from 'packages/website/src/app/_common/components/Table/Tr';
 import { GameFpsCredit } from 'packages/website/src/app/_common/product/components/GameFpsCredit/GameFpsCredit';
-import React, { FunctionComponent, useCallback, useMemo } from 'react';
-import { Button } from '../../../components/Button/Button';
+import React, { FunctionComponent, useMemo } from 'react';
 import { ButtonVariant } from '../../../components/Button/types';
-import { closeDialog, showDialog } from '../../../components/Dialog/dialog';
 import { gameListingImagePath } from '../../../utils/gameListingImagePath';
 import { useGameSelection } from '../../contexts/GameSelectionProvider';
-import { GameSelectionDialog } from '../GameSelection/GameSelectionDialog';
+import { GameSelectionDialogTrigger } from '../GameSelectionDialog/GameSelectionDialog';
 
 interface ViewSelectedGameFpsTableProps {
   product: Partial<Product>;
@@ -34,19 +32,7 @@ export const ViewSelectedGameFpsTable: FunctionComponent<
   ViewSelectedGameFpsTableProps
 > = (props) => {
   const { product, games } = props;
-  const { selectedGame, setSelectedGame } = useGameSelection();
-
-  const showGamesDialog = useCallback(() => {
-    showDialog(
-      <GameSelectionDialog
-        games={games}
-        onSelection={(game) => {
-          setSelectedGame(game);
-          closeDialog();
-        }}
-      />,
-    );
-  }, [setSelectedGame, games]);
+  const { selectedGame } = useGameSelection();
 
   return (
     <div className="flex flex-col">
@@ -63,23 +49,23 @@ export const ViewSelectedGameFpsTable: FunctionComponent<
                 />
 
                 <div className="flex flex-col gap-0.5">
-                  <Button
-                    variant={ButtonVariant.Link}
+                  <GameSelectionDialogTrigger
+                    games={games}
+                    buttonVariant={ButtonVariant.Link}
                     className="hidden sm:block font-medium text-left"
-                    onClick={showGamesDialog}
                   >
                     {selectedGame?.nameShort || selectedGame?.name}
-                  </Button>
+                  </GameSelectionDialogTrigger>
                   <span className="sm:hidden font-medium">
                     {selectedGame?.nameShort || selectedGame?.name}
                   </span>
-                  <Button
-                    variant={ButtonVariant.Link}
+                  <GameSelectionDialogTrigger
+                    games={games}
+                    buttonVariant={ButtonVariant.Link}
                     className="text-link text-xs sm:hidden text-left"
-                    onClick={showGamesDialog}
                   >
                     change game
-                  </Button>
+                  </GameSelectionDialogTrigger>
                 </div>
               </div>
             </Th>

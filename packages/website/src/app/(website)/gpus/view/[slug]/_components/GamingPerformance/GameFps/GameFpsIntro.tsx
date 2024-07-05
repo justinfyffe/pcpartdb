@@ -1,17 +1,13 @@
 'use client';
 
-import { formatGameName, formatProductName } from '@pcpartdb/shared';
-import { Button } from 'packages/website/src/app/_common/components/Button/Button';
 import { ButtonVariant } from 'packages/website/src/app/_common/components/Button/types';
-import {
-  closeDialog,
-  showDialog,
-} from 'packages/website/src/app/_common/components/Dialog/dialog';
 import { ContentProvider } from 'packages/website/src/app/_common/content/ContentProvider';
 import { compileContentComponent } from 'packages/website/src/app/_common/content/utils/compileContentComponent';
-import { GameSelectionDialog } from 'packages/website/src/app/_common/game/components/GameSelection/GameSelectionDialog';
-import { useGameSelection } from 'packages/website/src/app/_common/game/contexts/GameSelectionProvider';
-import React, { useCallback, useMemo } from 'react';
+import { GameSelectionDialogTrigger } from 'packages/website/src/app/_common/game/components/GameSelectionDialog/GameSelectionDialog';
+import { useGamesFromProduct } from 'packages/website/src/app/_common/game/hooks/useGamesFromProduct';
+import { useSelectedGameName } from 'packages/website/src/app/_common/game/hooks/useSelectedGameName';
+import { useProductName } from 'packages/website/src/app/_common/product/hooks/useProductName';
+import React from 'react';
 import { usePageContext } from '../../../PageProvider';
 
 const GameFpsIntroSentence1 = compileContentComponent({
@@ -19,13 +15,12 @@ const GameFpsIntroSentence1 = compileContentComponent({
     <>
       This table showcases the average frame rate (FPS) achieved by the{' '}
       {props.name} in{' '}
-      <Button
-        variant={ButtonVariant.Link}
-        onClick={props.handleGameClick}
-        className="underline decoration-dotted decoration-1"
+      <GameSelectionDialogTrigger
+        games={props.games}
+        buttonVariant={ButtonVariant.LinkDialog}
       >
         {props.selectedGameName}
-      </Button>{' '}
+      </GameSelectionDialogTrigger>{' '}
       at various resolutions. Frame rate is a crucial indicator of how smoothly
       the GPU can run the game. A higher FPS generally translates to a smoother
       gameplay experience.
@@ -34,31 +29,16 @@ const GameFpsIntroSentence1 = compileContentComponent({
 });
 export const GameFpsIntro = () => {
   const { viewModel } = usePageContext();
-  const gpu = viewModel.gpu;
-  const { selectedGame, setSelectedGame } = useGameSelection();
-
-  const name = useMemo(() => formatProductName(gpu, { company: false }), [gpu]);
-  const games = useMemo(() => gpu?.games?.map((pg) => pg.game), [gpu?.games]);
-  const gameName = formatGameName(selectedGame);
-
-  const handleGameClick = useCallback(() => {
-    showDialog(
-      <GameSelectionDialog
-        games={games}
-        onSelection={(game) => {
-          setSelectedGame(game);
-          closeDialog();
-        }}
-      />,
-    );
-  }, [games, setSelectedGame]);
+  const games = useGamesFromProduct(viewModel.gpu);
+  const selectedGameName = useSelectedGameName();
+  const name = useProductName(viewModel.gpu, { company: false });
 
   return (
     <ContentProvider
       params={{
+        games,
         name,
-        selectedGameName: gameName,
-        handleGameClick,
+        selectedGameName,
       }}
     >
       <p>

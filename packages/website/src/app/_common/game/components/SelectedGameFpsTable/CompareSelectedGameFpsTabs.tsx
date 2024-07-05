@@ -16,16 +16,14 @@ import { Th } from 'packages/website/src/app/_common/components/Table/Th';
 import { THead } from 'packages/website/src/app/_common/components/Table/THead';
 import { Tr } from 'packages/website/src/app/_common/components/Table/Tr';
 import { GameFpsCredit } from 'packages/website/src/app/_common/product/components/GameFpsCredit/GameFpsCredit';
-import React, { FunctionComponent, useCallback, useMemo } from 'react';
-import { Button } from '../../../components/Button/Button';
+import React, { FunctionComponent, useMemo } from 'react';
 import { ButtonVariant } from '../../../components/Button/types';
-import { closeDialog, showDialog } from '../../../components/Dialog/dialog';
 import { Tab } from '../../../components/Tabs/Tab';
 import { Tabs } from '../../../components/Tabs/Tabs';
 import { classNames } from '../../../utils/classNames';
 import { gameListingImagePath } from '../../../utils/gameListingImagePath';
 import { useGameSelection } from '../../contexts/GameSelectionProvider';
-import { GameSelectionDialog } from '../GameSelection/GameSelectionDialog';
+import { GameSelectionDialogTrigger } from '../GameSelectionDialog/GameSelectionDialog';
 
 interface CompareSelectedGameFpsTabsProps {
   products: Partial<Product>[];
@@ -99,7 +97,7 @@ export const SelectedGameFpsTable: FunctionComponent<
   SelectedGameFpsTableProps
 > = (props) => {
   const { products, games } = props;
-  const { selectedGame, setSelectedGame } = useGameSelection();
+  const { selectedGame } = useGameSelection();
 
   const productName1 = useMemo(
     () => formatProductName(products[0], { company: false }),
@@ -109,18 +107,6 @@ export const SelectedGameFpsTable: FunctionComponent<
     () => formatProductName(products[1], { company: false }),
     [products],
   );
-
-  const showGamesDialog = useCallback(() => {
-    showDialog(
-      <GameSelectionDialog
-        games={games}
-        onSelection={(game) => {
-          setSelectedGame(game);
-          closeDialog();
-        }}
-      />,
-    );
-  }, [setSelectedGame, games]);
 
   return (
     <Table border responsive className="flex-1">
@@ -136,23 +122,23 @@ export const SelectedGameFpsTable: FunctionComponent<
               />
 
               <div className="flex flex-col gap-0.5">
-                <Button
-                  variant={ButtonVariant.Link}
+                <GameSelectionDialogTrigger
+                  games={games}
+                  buttonVariant={ButtonVariant.Link}
                   className="hidden sm:block font-medium text-left"
-                  onClick={showGamesDialog}
                 >
                   {selectedGame?.nameShort || selectedGame?.name}
-                </Button>
+                </GameSelectionDialogTrigger>
                 <span className="sm:hidden font-medium">
                   {selectedGame?.nameShort || selectedGame?.name}
                 </span>
-                <Button
-                  variant={ButtonVariant.Link}
+                <GameSelectionDialogTrigger
+                  games={games}
+                  buttonVariant={ButtonVariant.Link}
                   className="text-link text-xs sm:hidden text-left"
-                  onClick={showGamesDialog}
                 >
                   change game
-                </Button>
+                </GameSelectionDialogTrigger>
               </div>
             </div>
           </Th>
@@ -261,7 +247,7 @@ export const SelectedGameCpfTable: FunctionComponent<
   SelectedGameCpfTableProps
 > = (props) => {
   const { products, games } = props;
-  const { selectedGame, setSelectedGame } = useGameSelection();
+  const { selectedGame } = useGameSelection();
 
   const productName1 = useMemo(
     () => formatProductName(products[0], { company: false }),
@@ -271,18 +257,6 @@ export const SelectedGameCpfTable: FunctionComponent<
     () => formatProductName(products[1], { company: false }),
     [products],
   );
-
-  const showGamesDialog = useCallback(() => {
-    showDialog(
-      <GameSelectionDialog
-        games={games}
-        onSelection={(game) => {
-          setSelectedGame(game);
-          closeDialog();
-        }}
-      />,
-    );
-  }, [setSelectedGame, games]);
 
   return (
     <Table border responsive className="flex-1">
@@ -296,23 +270,23 @@ export const SelectedGameCpfTable: FunctionComponent<
               />
 
               <div className="flex flex-col gap-0.5">
-                <Button
-                  variant={ButtonVariant.Link}
+                <GameSelectionDialogTrigger
+                  games={games}
+                  buttonVariant={ButtonVariant.Link}
                   className="hidden sm:block font-medium text-left"
-                  onClick={showGamesDialog}
                 >
                   {selectedGame?.nameShort || selectedGame?.name}
-                </Button>
+                </GameSelectionDialogTrigger>
                 <span className="sm:hidden font-medium">
                   {selectedGame?.nameShort || selectedGame?.name}
                 </span>
-                <Button
-                  variant={ButtonVariant.Link}
-                  className="text-link text-xs sm:hidden text-left"
-                  onClick={showGamesDialog}
+                <GameSelectionDialogTrigger
+                  games={games}
+                  buttonVariant={ButtonVariant.Link}
+                  className="text-xs sm:hidden text-left"
                 >
                   change game
-                </Button>
+                </GameSelectionDialogTrigger>
               </div>
             </div>
           </Th>

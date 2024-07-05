@@ -5,12 +5,11 @@ import {
   getProductBenchmarkShortName,
   ProductType,
 } from '@pcpartdb/shared';
-import { Button } from 'packages/website/src/app/_common/components/Button/Button';
 import { ButtonVariant } from 'packages/website/src/app/_common/components/Button/types';
 import { ContentProvider } from 'packages/website/src/app/_common/content/ContentProvider';
 import { compileContentComponent } from 'packages/website/src/app/_common/content/utils/compileContentComponent';
+import { PreferredBenchmarkDialogTrigger } from 'packages/website/src/app/_common/product/components/PreferredBenchmarkDialog/PreferredBenchmarkDialog';
 import { usePreferredBenchmark } from 'packages/website/src/app/_common/product/hooks/usePreferredBenchmark';
-import { usePreferredBenchmarkDialog } from 'packages/website/src/app/_common/product/hooks/usePreferredBenchmarkDialog';
 import React, { FunctionComponent, useMemo } from 'react';
 import { buildListContentParams } from '../../_content/buildListContentParams';
 import {
@@ -27,13 +26,13 @@ const DescriptionSentence = compileContentComponent(
       <>
         We have ranked the CPUs in our database based on their average
         performance scores for the{' '}
-        <Button
-          variant={ButtonVariant.Link}
-          onClick={props.showPreferredBenchmarkDialog}
-          className="underline decoration-dotted decoration-1"
+        <PreferredBenchmarkDialogTrigger
+          buttonVariant={ButtonVariant.LinkDialog}
+          productType={ProductType.Cpu}
+          hardReload
         >
           {props.preferredBenchmarkName}
-        </Button>{' '}
+        </PreferredBenchmarkDialogTrigger>{' '}
         benchmark test. Processors without a benchmark are excluded from this
         list. Use the filters to further narrow your search.
       </>
@@ -46,13 +45,13 @@ const DescriptionSentence = compileContentComponent(
       <>
         We have ranked the CPUs in our database based on their performance per
         dollar for the{' '}
-        <Button
-          variant={ButtonVariant.Link}
-          onClick={props.showPreferredBenchmarkDialog}
-          className="underline decoration-dotted decoration-1"
+        <PreferredBenchmarkDialogTrigger
+          buttonVariant={ButtonVariant.LinkDialog}
+          productType={ProductType.Cpu}
+          hardReload
         >
           {props.preferredBenchmarkName}
-        </Button>{' '}
+        </PreferredBenchmarkDialogTrigger>{' '}
         benchmark test. Processors without a benchmark or MSRP are excluded from
         this list. Use the filters to further narrow your search.
       </>
@@ -74,11 +73,6 @@ export const ListDescription: FunctionComponent = () => {
   const { query } = useListContext();
   const preferredBenchmark = usePreferredBenchmark(ProductType.Cpu);
 
-  const showPreferredBenchmarkDialog = usePreferredBenchmarkDialog({
-    productType: ProductType.Cpu,
-    hardReload: true,
-  });
-
   const contentTags = useMemo(() => buildListContentTags(query), [query]);
   const contentParams = useMemo(() => {
     return {
@@ -86,9 +80,8 @@ export const ListDescription: FunctionComponent = () => {
       preferredBenchmarkName: getProductBenchmarkName(preferredBenchmark),
       preferredBenchmarkShortName:
         getProductBenchmarkShortName(preferredBenchmark),
-      showPreferredBenchmarkDialog,
     };
-  }, [preferredBenchmark, query, showPreferredBenchmarkDialog]);
+  }, [preferredBenchmark, query]);
 
   return (
     <ContentProvider tags={contentTags} params={contentParams}>

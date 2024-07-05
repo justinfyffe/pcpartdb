@@ -14,7 +14,6 @@ import {
   productFieldFormattedValue,
   ProductType,
 } from '@pcpartdb/shared';
-import { Button } from 'packages/website/src/app/_common/components/Button/Button';
 import { ButtonVariant } from 'packages/website/src/app/_common/components/Button/types';
 import { Img } from 'packages/website/src/app/_common/components/Img/Img';
 import { Skeleton } from 'packages/website/src/app/_common/components/Skeleton/Skeleton';
@@ -24,8 +23,8 @@ import { Td } from 'packages/website/src/app/_common/components/Table/Td';
 import { Th } from 'packages/website/src/app/_common/components/Table/Th';
 import { THead } from 'packages/website/src/app/_common/components/Table/THead';
 import { Tr } from 'packages/website/src/app/_common/components/Table/Tr';
+import { PreferredBenchmarkDialogTrigger } from 'packages/website/src/app/_common/product/components/PreferredBenchmarkDialog/PreferredBenchmarkDialog';
 import { usePreferredBenchmark } from 'packages/website/src/app/_common/product/hooks/usePreferredBenchmark';
-import { usePreferredBenchmarkDialog } from 'packages/website/src/app/_common/product/hooks/usePreferredBenchmarkDialog';
 import { classNames } from 'packages/website/src/app/_common/utils/classNames';
 import { companyLogoAutocompletePath } from 'packages/website/src/app/_common/utils/companyLogoAutocompletePath';
 import React, { FunctionComponent, useMemo } from 'react';
@@ -35,11 +34,6 @@ export const ListTable: FunctionComponent = () => {
   const { gpus, query, loading } = useListContext();
   const sort = query?.orderBy?.sort ?? ListSort.PerformanceRating;
   const showRanks = hasRank(sort);
-
-  const showPreferredBenchmarkDialog = usePreferredBenchmarkDialog({
-    productType: ProductType.Gpu,
-    hardReload: true,
-  });
 
   const preferredBenchmark = usePreferredBenchmark(ProductType.Gpu);
   const benchmarkLabel = getProductBenchmarkShortName(preferredBenchmark);
@@ -71,9 +65,10 @@ export const ListTable: FunctionComponent = () => {
                 : 'xs:border-r-px',
             )}
           >
-            <Button
-              variant={ButtonVariant.Link}
-              onClick={showPreferredBenchmarkDialog}
+            <PreferredBenchmarkDialogTrigger
+              buttonVariant={ButtonVariant.LinkDialog}
+              productType={ProductType.Gpu}
+              hardReload
             >
               <span className="hidden sm:block">Perf.</span>
               <span className="sm:hidden">
@@ -81,7 +76,7 @@ export const ListTable: FunctionComponent = () => {
                 <br />
                 {benchmarkLabel}
               </span>
-            </Button>
+            </PreferredBenchmarkDialogTrigger>
           </Th>
 
           <Th
@@ -92,9 +87,10 @@ export const ListTable: FunctionComponent = () => {
                 : 'xs:border-r-px',
             )}
           >
-            <Button
-              variant={ButtonVariant.Link}
-              onClick={showPreferredBenchmarkDialog}
+            <PreferredBenchmarkDialogTrigger
+              buttonVariant={ButtonVariant.LinkDialog}
+              productType={ProductType.Gpu}
+              hardReload
             >
               <span className="hidden sm:block">Perf. / $</span>
               <span className="sm:hidden">
@@ -102,7 +98,7 @@ export const ListTable: FunctionComponent = () => {
                 <br />
                 per dollar
               </span>
-            </Button>
+            </PreferredBenchmarkDialogTrigger>
           </Th>
 
           <Th

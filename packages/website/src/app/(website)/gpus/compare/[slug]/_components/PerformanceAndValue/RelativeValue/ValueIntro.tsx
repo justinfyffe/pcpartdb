@@ -6,27 +6,28 @@ import {
   getProductBenchmarkName,
   ProductType,
 } from '@pcpartdb/shared';
-import { Button } from 'packages/website/src/app/_common/components/Button/Button';
 import { ButtonVariant } from 'packages/website/src/app/_common/components/Button/types';
 import { ContentProvider } from 'packages/website/src/app/_common/content/ContentProvider';
 import { compileContentComponent } from 'packages/website/src/app/_common/content/utils/compileContentComponent';
 import { useViewModel } from 'packages/website/src/app/_common/contexts/ViewModelProvider';
 import { useGameSelection } from 'packages/website/src/app/_common/game/contexts/GameSelectionProvider';
+import { PreferredBenchmarkDialogTrigger } from 'packages/website/src/app/_common/product/components/PreferredBenchmarkDialog/PreferredBenchmarkDialog';
 import { usePreferredBenchmark } from 'packages/website/src/app/_common/product/hooks/usePreferredBenchmark';
-import { usePreferredBenchmarkDialog } from 'packages/website/src/app/_common/product/hooks/usePreferredBenchmarkDialog';
 import React from 'react';
 
 export const ValueIntroSentence1 = compileContentComponent({
   Component: (props) => (
     <>
       The average performance per dollar in the{' '}
-      <Button
-        variant={ButtonVariant.Link}
-        onClick={props.handleBenchmarkClick}
-        className="underline decoration-dotted decoration-1"
+      <PreferredBenchmarkDialogTrigger
+        buttonVariant={ButtonVariant.LinkDialog}
+        productType={ProductType.Gpu}
+        softReload
+        productIds={props.productIds}
+        gameSlug={props.gameSlug}
       >
         {props.preferredBenchmarkName}
-      </Button>{' '}
+      </PreferredBenchmarkDialogTrigger>{' '}
       benchmark test can be compared to similar GPUs to assess relative value. A
       higher score implies a better value for your money.
     </>
@@ -44,20 +45,14 @@ export const ValueIntro = () => {
 
   const preferredBenchmarkName = getProductBenchmarkName(preferredBenchmark);
 
-  const handleBenchmarkClick = usePreferredBenchmarkDialog({
-    productType: ProductType.Gpu,
-    softReload: true,
-    productIds: [gpu1.id, gpu2.id],
-    gameSlug: selectedGame?.slug,
-  });
-
   return (
     <ContentProvider
       params={{
         gpuName1,
         gpuName2,
         preferredBenchmarkName,
-        handleBenchmarkClick,
+        productIds: [gpu1.id, gpu2.id],
+        gameSlug: selectedGame?.slug,
       }}
     >
       <p>
