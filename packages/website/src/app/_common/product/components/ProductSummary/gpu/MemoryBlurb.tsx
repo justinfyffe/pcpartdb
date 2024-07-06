@@ -6,6 +6,25 @@ import React, { FunctionComponent } from 'react';
 import { SpecsTag } from '../../../content/buildProductContentTags';
 import { useProductContent } from '../../../content/useProductContent';
 
+const MemoryTitle = compileContentComponent(
+  {
+    tags: [SpecsTag.MemorySize],
+    Component: (props) => <>Memory</>,
+  },
+  {
+    tags: [SpecsTag.MemoryClock],
+    Component: (props) => <>Memory</>,
+  },
+  {
+    tags: [SpecsTag.MemoryInterface],
+    Component: (props) => <>Memory</>,
+  },
+  {
+    tags: [SpecsTag.MemoryBandwidth],
+    Component: (props) => <>Memory</>,
+  },
+);
+
 const MemorySize = compileContentComponent({
   // Example: The NVIDIA GeForce RTX 3070 has 12 GB of GDDR6X VRAM.
   tags: [SpecsTag.MemorySize],
@@ -107,6 +126,9 @@ export const MemoryBlurb: FunctionComponent<MemoryBlurbProps> = (props) => {
 
   return (
     <ContentProvider tags={contentTags} params={contentParams}>
+      <h3>
+        <MemoryTitle />
+      </h3>
       <MemoryParagraph />
     </ContentProvider>
   );

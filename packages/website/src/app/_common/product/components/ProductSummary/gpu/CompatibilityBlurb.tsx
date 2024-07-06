@@ -6,6 +6,25 @@ import React, { FunctionComponent } from 'react';
 import { SpecsTag } from '../../../content/buildProductContentTags';
 import { useProductContent } from '../../../content/useProductContent';
 
+const CompatibilityTitle = compileContentComponent(
+  {
+    tags: [SpecsTag.SlotWidth],
+    Component: (props) => <>Compatibility</>,
+  },
+  {
+    tags: [SpecsTag.Outputs],
+    Component: (props) => <>Compatibility</>,
+  },
+  {
+    tags: [SpecsTag.Tdp],
+    Component: (props) => <>Compatibility</>,
+  },
+  {
+    tags: [SpecsTag.SuggestedPsu],
+    Component: (props) => <>Compatibility</>,
+  },
+);
+
 const CompatibilitySlotWidth = compileContentComponent({
   // Example: The Geforce RTX 3070 is a large desktop graphics card,
   //          taking up 3 PCIe slots.
@@ -83,6 +102,9 @@ export const CompatibilityBlurb: FunctionComponent<CompatibilityBlurbProps> = (
 
   return (
     <ContentProvider tags={contentTags} params={contentParams}>
+      <h3>
+        <CompatibilityTitle />
+      </h3>
       <CompatibilityParagraph />
     </ContentProvider>
   );

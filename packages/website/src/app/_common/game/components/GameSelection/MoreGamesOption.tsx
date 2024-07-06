@@ -3,6 +3,7 @@
 import { Game } from '@pcpartdb/shared';
 import { getGameListingImage } from 'packages/website/src/client/image/utils';
 import React from 'react';
+import { ButtonVariant } from '../../../components/Button/types';
 import { classNames } from '../../../utils/classNames';
 import { GameSelectionDialogTrigger } from '../GameSelectionDialog/GameSelectionDialog';
 
@@ -15,11 +16,14 @@ export function MoreGamesOption(props: MoreGamesOptionProps) {
   const { games } = props;
 
   return (
-    <GameSelectionDialogTrigger games={games}>
+    <GameSelectionDialogTrigger
+      games={games}
+      buttonVariant={ButtonVariant.None}
+      className={classNames('px-0 py-0', props.className)}
+    >
       <div
         className={classNames(
           'flex flex-col gap-1 items-center p-1 cursor-pointer',
-          props.className,
         )}
       >
         <img

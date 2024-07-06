@@ -7,6 +7,17 @@ import React, { FunctionComponent } from 'react';
 import { RankTag } from '../../../content/buildProductContentTags';
 import { useProductContent } from '../../../content/useProductContent';
 
+const PerformanceTitle = compileContentComponent(
+  {
+    tags: [RankTag.Performance, RankTag.Value],
+    Component: (props) => <>Benchmark Performance &amp; Value</>,
+  },
+  {
+    tags: [RankTag.Performance],
+    Component: (props) => <>Benchmark Performance</>,
+  },
+);
+
 const PerformanceRankPlacement = compileContentComponent({
   tags: [RankTag.Performance],
   Component: (props) => {
@@ -75,6 +86,9 @@ export const PerformanceBlurb: FunctionComponent<PerformanceBlurbProps> = (
 
   return (
     <ContentProvider tags={contentTags} params={contentParams}>
+      <h3>
+        <PerformanceTitle />
+      </h3>
       <PerformanceParagraph />
     </ContentProvider>
   );

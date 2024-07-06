@@ -6,6 +6,49 @@ import React, { FunctionComponent } from 'react';
 import { SpecsTag } from '../../../content/buildProductContentTags';
 import { useProductContent } from '../../../content/useProductContent';
 
+const SpecsTitle = compileContentComponent(
+  {
+    tags: [SpecsTag.Clock],
+    Component: (props) => <>Technical Specs</>,
+  },
+  {
+    tags: [SpecsTag.BoostClock],
+    Component: (props) => <>Technical Specs</>,
+  },
+  {
+    tags: [SpecsTag.UnlockedMultiplier],
+    Component: (props) => <>Technical Specs</>,
+  },
+  {
+    tags: [SpecsTag.LockedMultiplier],
+    Component: (props) => <>Technical Specs</>,
+  },
+  {
+    tags: [SpecsTag.L1Cache],
+    Component: (props) => <>Technical Specs</>,
+  },
+  {
+    tags: [SpecsTag.L2Cache],
+    Component: (props) => <>Technical Specs</>,
+  },
+  {
+    tags: [SpecsTag.L3Cache],
+    Component: (props) => <>Technical Specs</>,
+  },
+  {
+    tags: [SpecsTag.MemorySupport],
+    Component: (props) => <>Technical Specs</>,
+  },
+  {
+    tags: [SpecsTag.MemoryChannels],
+    Component: (props) => <>Technical Specs</>,
+  },
+  {
+    tags: [SpecsTag.PciExpress],
+    Component: (props) => <>Technical Specs</>,
+  },
+);
+
 const ClockSentence = compileContentComponent(
   {
     tags: [SpecsTag.Clock, SpecsTag.BoostClock],
@@ -123,6 +166,9 @@ export const SpecsBlurb: FunctionComponent<SpecsBlurbProps> = (props) => {
 
   return (
     <ContentProvider tags={contentTags} params={contentParams}>
+      <h3>
+        <SpecsTitle />
+      </h3>
       <SpecsParagraph />
     </ContentProvider>
   );
