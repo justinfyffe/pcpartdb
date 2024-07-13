@@ -16,8 +16,9 @@ NEXT (short-term)
 - SEO improvements
   - [] Write Summaries?
 - List Page
+  - Soft reload when changing benchmarks
   - More Filters
-    - Year
+    - Release Date (Year)
     - Game for FPS
   - More sorts:
     - Frames per second
@@ -35,6 +36,8 @@ NEXT (short-term)
       - Summary
       - Metacritic score
     - List GPUs by frame rate and cost per frame
+- [] View & Compare Page
+  - [] FAQ section (custom questions and generated questions)
 - [] Builds
   - [] List Page
     - Filter by Tags, Can it Run?
