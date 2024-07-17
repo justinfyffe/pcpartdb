@@ -13,6 +13,8 @@ NEXT (long-term):
 
 
 NEXT (short-term)
+- [] RT Cores = NVIDIA
+- [] Ray Accelerators = AMD
 - SEO improvements
   - [] Write Summaries?
 - List Page
