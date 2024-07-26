@@ -96,8 +96,8 @@ const aiPromptTemplate = (gpu: GpuProduct) => {
     summary.coreBoostClock
       ? `It has a ${summary.coreBoostClock} boost core clock.`
       : '',
-    summary.tmus ? `It has ${summary.tmus} TMUs.` : '',
-    summary.rops ? `It has ${summary.rops} ROPs.` : '',
+    summary.tmus ? `It has ${summary.tmus} TMUs (texture mapping units).` : '',
+    summary.rops ? `It has ${summary.rops} ROPs (render output units).` : '',
     summary.tensorCores ? `It has ${summary.tensorCores} tensor cores.` : '',
     summary.rtCores ? `It has ${summary.rtCores} RT cores.` : '',
   ].filter((value) => value);
@@ -109,19 +109,23 @@ const aiPromptTemplate = (gpu: GpuProduct) => {
   ].filter((value) => value);
 
   return `
-You are a writer with an expertise in SEO and computer hardware.
+You are a writer with an expertise in SEO and computer hardware, specs, and parts.
 Rewrite the following summary about a GPU using the following rules.
 
 *** START RULES ***
 The summary should be unbiased, impartial, and technical.
 The summary should have a neutral tone. Avoid praising or criticizing the GPU or its manufacturer.
 Include additional descriptors that apply. For example, "small", "large", "high-end", "low-end".
-Do not write bullet points or lists. Do not write headings between paragraphs. Only write paragraphs.
+Do not write bullet points or lists. Only write paragraphs.
+Headings are okay. Example headings are "Cores", "Compatibility", "Memory".
+Paragraphs shouldn't be too long. At most, 3-4 sentences per paragraph.
+Try to have two or more paragraphs per heading. One is okay if there is not enough information.
+Heading sections can have one or multiple paragraphs.
 Avoid including additional data from other sources.
-The summary should be approximately 300 to 400 words long.
-The summary target 4-5 paragraphs.
+The summary should be approximately 350-500 words long..
 There should be an intro, a memory paragraph, a cores/clock paragraph, a compatibility paragraph. If you do not have enough data, then skip the paragraph.
 The summary should be evergreen, as in it should not use words that could get outdated like current, active, or latest.
+The summary should reference the release date if there is one.
 *** END RULES ***
 
 *** START SUMMARY ***

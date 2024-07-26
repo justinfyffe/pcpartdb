@@ -106,11 +106,13 @@ Rewrite the following summary about a CPU using the following rules.
 The summary should be unbiased, impartial, and technical.
 The summary should have a neutral tone. Avoid praising or criticizing the CPU or its manufacturer.
 Include additional descriptors that apply. For example, "small", "large", "high-end", "low-end".
-Do not write bullet points or lists. Do not write headings between paragraphs. Only write paragraphs.
+Do not write bullet points or lists. Only write paragraphs.
+Headings are okay. Example headings are "Cores", "Compatibility", "Memory".
+Paragraphs shouldn't be too long. At most, 3-4 sentences per paragraph. Two sentence paragraphs are okay.
+Try to have two or more paragraphs per heading. One is okay if there is not enough information.
 Avoid including additional data from other sources.
-The summary should be approximately 300 to 400 words long.
-The summary target 4-5 paragraphs.
-There should be an intro, and 2-3 paragraphs about its specs . If you do not have enough data, then skip the paragraph.
+The summary should be approximately 350-500 words long..
+There should at least be an intro, a memory paragraph, a cores/clock paragraph, a compatibility paragraph, a cache paragraph. If you do not have enough data, then skip the paragraph.
 The summary should be evergreen, as in it should not use words that could get outdated like current, active, or latest.
 The summary should reference the release date if there is one.
 *** END RULES ***
