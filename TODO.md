@@ -16,12 +16,8 @@ NEXT (short-term)
 - [] RT Cores = NVIDIA
 - [] Ray Accelerators = AMD
 - SEO improvements
-  - [] Improve instructions
-    - [] Add headings
-    - [] write out abbreviations
-      - [] RT cores = ray tracing cores or ray accelerators
-      - [] ROPS = render output units
-  - [] Write Summaries?
+  - [] Improve generated summaries
+    - Use AI to help come up with variations.
 - List Page
   - Soft reload when changing benchmarks
   - More Filters

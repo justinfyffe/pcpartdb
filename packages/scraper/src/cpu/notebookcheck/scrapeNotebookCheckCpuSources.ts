@@ -16,7 +16,12 @@ export async function scrapeNotebookCheckCpuSources(
 ) {
   const { noProxy } = options;
 
-  const response = await scraper.scrapeGet(URL, { retries: 1, noProxy });
+  const response = await scraper.scrapeGet(URL, {
+    retries: 1,
+    noProxy,
+    browser: true,
+    returnPageSource: true,
+  });
   const $ = cheerio.load(response.data);
 
   const sources: NotebookCheckCpuSource[] = [];

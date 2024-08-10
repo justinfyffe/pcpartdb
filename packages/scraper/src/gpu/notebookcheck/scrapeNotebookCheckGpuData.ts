@@ -47,7 +47,12 @@ export async function scrapeNotebookCheckGpuData(
 ) {
   const { url, games, noProxy, ctx } = options;
 
-  const response = await scraper.scrapeGet(url, { retries: 1, noProxy });
+  const response = await scraper.scrapeGet(url, {
+    retries: 1,
+    noProxy,
+    browser: true,
+    returnPageSource: true,
+  });
   const $ = cheerio.load(response.data);
 
   const { company, name } = scrapeNameAndCompany($);

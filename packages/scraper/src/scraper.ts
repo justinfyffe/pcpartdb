@@ -15,6 +15,9 @@ interface ScraperOptions {
 interface ScrapeOptions {
   retries?: number;
   noProxy?: boolean;
+
+  browser?: boolean;
+  returnPageSource?: boolean;
 }
 
 export class Scraper {
@@ -28,26 +31,32 @@ export class Scraper {
     this.scrapingFishApiKey = options?.scrapingFishApiKey;
   }
 
-  getScrapingUrl(url: string) {
+  getScrapingUrl(url: string, options?: ScrapeOptions) {
     if (this.type === ScraperType.ScrapingAnt) {
-      return this.getScrapingAntUrl(url);
+      return this.getScrapingAntUrl(url, options);
     } else if (this.type === ScraperType.ScrapingFish) {
-      return this.getScrapingFishUrl(url);
+      return this.getScrapingFishUrl(url, options);
     }
     return null;
   }
 
-  getScrapingAntUrl(url: string) {
+  getScrapingAntUrl(url: string, options?: ScrapeOptions) {
     const params = new URLSearchParams();
     params.set('url', url);
-    params.set('browser', 'false');
+    params.set('browser', options?.browser ? 'true' : 'false');
     params.set('proxy_country', 'US');
     params.set('x-api-key', this.scrapingAntApiKey);
+    if (options?.returnPageSource) {
+      params.set(
+        'return_page_source',
+        options?.returnPageSource ? 'true' : 'false',
+      );
+    }
 
     return `https://api.scrapingant.com/v2/general?${params.toString()}`;
   }
 
-  getScrapingFishUrl(url: string) {
+  getScrapingFishUrl(url: string, options?: ScrapeOptions) {
     const params = new URLSearchParams();
     params.set('url', url);
     params.set('api_key', this.scrapingFishApiKey);
@@ -57,7 +66,7 @@ export class Scraper {
 
   async scrapeGet<T = any>(url: string, options?: ScrapeOptions) {
     const proxiedUrl =
-      options?.noProxy === true ? url : this.getScrapingUrl(url);
+      options?.noProxy === true ? url : this.getScrapingUrl(url, options);
 
     console.log(`SCRAPE GET: ${proxiedUrl}`);
 
