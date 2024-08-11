@@ -7,7 +7,7 @@ import {
 } from '@pcpartdb/shared';
 import { CpuFieldsEntity, GpuFieldsEntity } from '.';
 
-type ProductFieldsEntity = CpuFieldsEntity | GpuFieldsEntity;
+export type ProductFieldsEntity = CpuFieldsEntity | GpuFieldsEntity;
 
 const FIELDS_TO_MAP: Record<ProductType, ProductFieldKey[]> = {
   [ProductType.Cpu]: [
@@ -59,6 +59,7 @@ const FIELDS_TO_MAP: Record<ProductType, ProductFieldKey[]> = {
     'turboClock',
   ],
   [ProductType.Gpu]: [
+    'aiAccelerators',
     'architecture',
     'busInterface',
     'codename',
@@ -76,6 +77,7 @@ const FIELDS_TO_MAP: Record<ProductType, ProductFieldKey[]> = {
     'generation',
     'gpuCoreBaseClock',
     'gpuCoreBoostClock',
+    'gpuCoreGameClock',
     'l1Cache',
     'l2Cache',
     'marketSegment',
@@ -96,6 +98,7 @@ const FIELDS_TO_MAP: Record<ProductType, ProductFieldKey[]> = {
     'predecessorGeneration',
     'processSize',
     'productionStatus',
+    'rayAccelerators',
     'releaseDate',
     'rops',
     'rtCores',
@@ -220,11 +223,13 @@ function mapProductFieldToEntity(
     const key = keyOrKeys[i];
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const value = (dto as any)[key] as ProductField;
-    if (value == null) {
+    if (value === undefined) {
       continue;
     }
-
-    return { [entityValueKey]: value?.value, [entityMetaKey]: value?.meta };
+    return {
+      [entityValueKey]: value?.value ?? null,
+      [entityMetaKey]: value?.meta ?? null,
+    };
   }
 
   return {};

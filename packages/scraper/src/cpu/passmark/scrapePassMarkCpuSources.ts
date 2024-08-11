@@ -56,8 +56,12 @@ async function fetchListPage(
 ) {
   const { noProxy } = options;
 
-  const response = await scraper.scrapeGet(url, { retries: 1, noProxy });
-  return response.data;
+  const response = await scraper.scrapeGet(url, {
+    retries: 1,
+    noProxy,
+    jsonExtended: true,
+  });
+  return response.data.html;
 }
 
 function getExternalKey(url: string) {

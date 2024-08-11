@@ -18,6 +18,7 @@ interface ScrapeOptions {
 
   browser?: boolean;
   returnPageSource?: boolean;
+  jsonExtended?: boolean;
 }
 
 export class Scraper {
@@ -53,7 +54,9 @@ export class Scraper {
       );
     }
 
-    return `https://api.scrapingant.com/v2/general?${params.toString()}`;
+    return options?.jsonExtended
+      ? `https://api.scrapingant.com/v2/extended?${params.toString()}`
+      : `https://api.scrapingant.com/v2/general?${params.toString()}`;
   }
 
   getScrapingFishUrl(url: string, options?: ScrapeOptions) {

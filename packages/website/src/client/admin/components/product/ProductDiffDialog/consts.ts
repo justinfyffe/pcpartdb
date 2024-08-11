@@ -91,9 +91,13 @@ export const DATA_TO_PREVIEW: Partial<Record<ProductType, ProductFieldKey[]>> =
       'streamMultiprocessors',
       'tmus',
       'rops',
+      'aiAccelerators',
+      'tensorCores',
+      'rayAccelerators',
       'rtCores',
       'gpuCoreBaseClock',
       'gpuCoreBoostClock',
+      'gpuCoreGameClock',
       'l1Cache',
       'l2Cache',
 

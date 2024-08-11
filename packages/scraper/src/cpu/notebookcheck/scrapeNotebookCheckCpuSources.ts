@@ -21,8 +21,9 @@ export async function scrapeNotebookCheckCpuSources(
     noProxy,
     browser: true,
     returnPageSource: true,
+    jsonExtended: true,
   });
-  const $ = cheerio.load(response.data);
+  const $ = cheerio.load(response.data.html);
 
   const sources: NotebookCheckCpuSource[] = [];
 

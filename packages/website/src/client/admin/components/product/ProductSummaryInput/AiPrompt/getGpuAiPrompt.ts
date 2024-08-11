@@ -12,6 +12,7 @@ const summaryData = (gpu: GpuProduct) => {
     computeUnits: productFieldFormattedValue(gpu?.fields?.computeUnits),
     coreClock: productFieldFormattedValue(gpu?.fields?.gpuCoreBaseClock),
     coreBoostClock: productFieldFormattedValue(gpu?.fields?.gpuCoreBoostClock),
+    coreGameClock: productFieldFormattedValue(gpu?.fields?.gpuCoreGameClock),
     cudaCores: productFieldFormattedValue(gpu?.fields?.cudaCores),
     executionUnits: productFieldFormattedValue(gpu?.fields?.executionUnits),
     gpuName: formatProductName(gpu),
@@ -29,6 +30,7 @@ const summaryData = (gpu: GpuProduct) => {
     productionStatus: productFieldFormattedValue(gpu?.fields?.productionStatus),
     releaseDate: productFieldFormattedValue(gpu?.fields?.releaseDate),
     rops: productFieldFormattedValue(gpu?.fields?.rops),
+    rayAccelerators: productFieldFormattedValue(gpu?.fields?.rayAccelerators),
     rtCores: productFieldFormattedValue(gpu?.fields?.rtCores),
     shadingUnits: productFieldFormattedValue(gpu?.fields?.shadingUnits),
     slotWidth: productFieldFormattedValue(gpu?.fields?.slotWidth),
@@ -38,6 +40,7 @@ const summaryData = (gpu: GpuProduct) => {
     streamProcessors: productFieldFormattedValue(gpu?.fields?.streamProcessors),
     suggestedPsu: productFieldFormattedValue(gpu?.fields?.suggestedPsu),
     tdp: productFieldFormattedValue(gpu?.fields?.tdp),
+    aiAccelerators: productFieldFormattedValue(gpu?.fields?.aiAccelerators),
     tensorCores: productFieldFormattedValue(gpu?.fields?.tensorCores),
     tmus: productFieldFormattedValue(gpu?.fields?.tmus),
   };
@@ -96,9 +99,18 @@ const aiPromptTemplate = (gpu: GpuProduct) => {
     summary.coreBoostClock
       ? `It has a ${summary.coreBoostClock} boost core clock.`
       : '',
+    summary.coreGameClock
+      ? `It has a ${summary.coreGameClock} core clock for typical gaming.`
+      : '',
     summary.tmus ? `It has ${summary.tmus} TMUs (texture mapping units).` : '',
     summary.rops ? `It has ${summary.rops} ROPs (render output units).` : '',
+    summary.aiAccelerators
+      ? `It has ${summary.aiAccelerators} AI Accelerators.`
+      : '',
     summary.tensorCores ? `It has ${summary.tensorCores} tensor cores.` : '',
+    summary.rayAccelerators
+      ? `It has ${summary.rayAccelerators} Ray Accelerators.`
+      : '',
     summary.rtCores ? `It has ${summary.rtCores} RT cores.` : '',
   ].filter((value) => value);
 

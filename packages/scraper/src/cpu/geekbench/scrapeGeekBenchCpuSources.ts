@@ -86,8 +86,12 @@ function parseMultiCoreTable($: cheerio.CheerioAPI) {
 async function fetchListPage(options: ScrapeGeekBenchCpuSourcesOptions) {
   const { noProxy } = options;
 
-  const response = await scraper.scrapeGet(URL, { retries: 1, noProxy });
-  return response.data;
+  const response = await scraper.scrapeGet(URL, {
+    retries: 1,
+    noProxy,
+    jsonExtended: true,
+  });
+  return response.data.html;
 }
 
 function getExternalKey(url: string) {

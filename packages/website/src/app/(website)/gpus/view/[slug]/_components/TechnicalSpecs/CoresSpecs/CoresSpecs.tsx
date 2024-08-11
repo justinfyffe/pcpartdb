@@ -20,10 +20,13 @@ export const CoresSpecs: FunctionComponent<CoresSpecsProps> = (props) => {
     !hasProductFieldFormattedValue(gpu.fields?.streamMultiprocessors) &&
     !hasProductFieldFormattedValue(gpu.fields?.tmus) &&
     !hasProductFieldFormattedValue(gpu.fields?.rops) &&
+    !hasProductFieldFormattedValue(gpu.fields?.aiAccelerators) &&
     !hasProductFieldFormattedValue(gpu.fields?.tensorCores) &&
+    !hasProductFieldFormattedValue(gpu.fields?.rayAccelerators) &&
     !hasProductFieldFormattedValue(gpu.fields?.rtCores) &&
     !hasProductFieldFormattedValue(gpu.fields?.gpuCoreBaseClock) &&
-    !hasProductFieldFormattedValue(gpu.fields?.gpuCoreBoostClock)
+    !hasProductFieldFormattedValue(gpu.fields?.gpuCoreBoostClock) &&
+    !hasProductFieldFormattedValue(gpu.fields?.gpuCoreGameClock)
   ) {
     return <></>;
   }

@@ -57,8 +57,14 @@ export async function scrapeTechPowerUpCpuData(
 ) {
   const { url, noProxy, ctx } = options;
 
-  const response = await scraper.scrapeGet(url, { retries: 1, noProxy });
-  const $ = cheerio.load(response.data);
+  const response = await scraper.scrapeGet(url, {
+    retries: 1,
+    noProxy,
+    browser: true,
+    returnPageSource: true,
+    jsonExtended: true,
+  });
+  const $ = cheerio.load(response.data.html);
 
   const name = getName($);
   const company = getCompany($);
@@ -237,7 +243,7 @@ function getCodename($: cheerio.CheerioAPI, ctx?: ScraperContext) {
 function getCompany($: cheerio.CheerioAPI) {
   const fullName = $('.cpuname').text();
   const { company } = parseProductName(fullName);
-  return formatCompanyName(company);
+  return formatCompanyName(company) || undefined;
 }
 
 function getCoresCount($: cheerio.CheerioAPI, ctx?: ScraperContext) {
@@ -864,7 +870,7 @@ function getName($: cheerio.CheerioAPI) {
   const fullName = $('.cpuname').text();
   const { company } = parseProductName(fullName);
 
-  return fullName.substring(company?.length || 0).trim();
+  return fullName.substring(company?.length || 0).trim() || undefined;
 }
 
 function getPartNumber($: cheerio.CheerioAPI, ctx?: ScraperContext) {

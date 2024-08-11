@@ -42,8 +42,14 @@ export async function scrapeTechPowerUpCpuSources(
 async function fetchSearchPage(options: ScrapeTechPowerUpCpuSourcesOptions) {
   const { url, noProxy } = options;
 
-  const response = await scraper.scrapeGet(url, { retries: 1, noProxy });
-  return response.data;
+  const response = await scraper.scrapeGet(url, {
+    retries: 1,
+    noProxy,
+    browser: true,
+    returnPageSource: true,
+    jsonExtended: true,
+  });
+  return response.data.html;
 }
 
 function getExternalKey(url: string) {

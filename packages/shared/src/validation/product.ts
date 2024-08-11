@@ -33,6 +33,7 @@ export const productFieldsSchema = Joi.object({
   id: Joi.number().allow(null),
   productId: Joi.number().allow(null),
 
+  aiAccelerators: productFieldSchema.allow(null),
   architecture: productFieldSchema.allow(null),
   baseClock: productFieldSchema.allow(null),
   bundledCooler: productFieldSchema.allow(null),
@@ -63,6 +64,7 @@ export const productFieldsSchema = Joi.object({
   generation: productFieldSchema.allow(null),
   gpuCoreBaseClock: productFieldSchema.allow(null),
   gpuCoreBoostClock: productFieldSchema.allow(null),
+  gpuCoreGameClock: productFieldSchema.allow(null),
   integratedGraphics: productFieldSchema.allow(null),
   l1Cache: productFieldSchema.allow(null),
   l2Cache: productFieldSchema.allow(null),
@@ -96,6 +98,7 @@ export const productFieldsSchema = Joi.object({
   predecessorGeneration: productFieldSchema.allow(null),
   processSize: productFieldSchema.allow(null),
   productionStatus: productFieldSchema.allow(null),
+  rayAccelerators: productFieldSchema.allow(null),
   releaseDate: productFieldSchema.allow(null),
   rops: productFieldSchema.allow(null),
   rtCores: productFieldSchema.allow(null),

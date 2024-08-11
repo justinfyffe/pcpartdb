@@ -32,14 +32,20 @@ export const CoresSpecs: FunctionComponent<CoresSpecsProps> = (props) => {
     !hasProductFieldFormattedValue(gpu2.fields?.tmus) &&
     !hasProductFieldFormattedValue(gpu1.fields?.rops) &&
     !hasProductFieldFormattedValue(gpu2.fields?.rops) &&
+    !hasProductFieldFormattedValue(gpu1.fields?.aiAccelerators) &&
+    !hasProductFieldFormattedValue(gpu2.fields?.aiAccelerators) &&
     !hasProductFieldFormattedValue(gpu1.fields?.tensorCores) &&
     !hasProductFieldFormattedValue(gpu2.fields?.tensorCores) &&
+    !hasProductFieldFormattedValue(gpu1.fields?.rayAccelerators) &&
+    !hasProductFieldFormattedValue(gpu2.fields?.rayAccelerators) &&
     !hasProductFieldFormattedValue(gpu1.fields?.rtCores) &&
     !hasProductFieldFormattedValue(gpu2.fields?.rtCores) &&
     !hasProductFieldFormattedValue(gpu1.fields?.gpuCoreBaseClock) &&
     !hasProductFieldFormattedValue(gpu2.fields?.gpuCoreBaseClock) &&
     !hasProductFieldFormattedValue(gpu1.fields?.gpuCoreBoostClock) &&
-    !hasProductFieldFormattedValue(gpu2.fields?.gpuCoreBoostClock)
+    !hasProductFieldFormattedValue(gpu2.fields?.gpuCoreBoostClock) &&
+    !hasProductFieldFormattedValue(gpu1.fields?.gpuCoreGameClock) &&
+    !hasProductFieldFormattedValue(gpu2.fields?.gpuCoreGameClock)
   ) {
     return <></>;
   }

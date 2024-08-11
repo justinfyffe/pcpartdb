@@ -24,6 +24,7 @@ export interface GpuFields {
   productId?: number;
 
   // General Info
+  aiAccelerators?: GpuField<number>; // AI Accelerators for AMD, Tensor Cores for NVIDIA
   architecture?: GpuField<string>;
   busInterface?: GpuField<string>;
   codename?: GpuField<string>;
@@ -41,6 +42,7 @@ export interface GpuFields {
   generation?: GpuField<string>;
   gpuCoreBaseClock?: GpuField<number>;
   gpuCoreBoostClock?: GpuField<number>;
+  gpuCoreGameClock?: GpuField<number>;
   l1Cache?: GpuField<number>;
   l2Cache?: GpuField<number>;
   marketSegment?: GpuField<MarketSegment>;
@@ -61,6 +63,7 @@ export interface GpuFields {
   predecessorGeneration?: GpuField<string>;
   processSize?: GpuField<number>;
   productionStatus?: GpuField<ProductionStatus>;
+  rayAccelerators?: GpuField<number>; // Ray Accelerators for AMD, RT Cores for NVIDIA
   releaseDate?: GpuField<string>;
   rops?: GpuField<number>; // aka Render Output Units
   rtCores?: GpuField<number>; // aka Ray Tracing Cores
@@ -130,10 +133,13 @@ export const GPU_FIELD_LABELS: Record<string, string> = {
   //
   tmus: 'Texture Mapping Units (TMU)',
   rops: 'Render Output Units (ROP)',
+  aiAccelerators: 'AI Accelerators',
   tensorCores: 'Tensor Cores',
+  rayAccelerators: 'Ray Accelerators',
   rtCores: 'Ray Tracing Cores',
   gpuCoreBaseClock: 'Core Clock Speed',
   gpuCoreBoostClock: 'Core Clock Speed (Boost)',
+  gpuCoreGameClock: 'Core Clock Speed (Game)',
   l1Cache: 'L1 Cache',
   l2Cache: 'L2 Cache',
 

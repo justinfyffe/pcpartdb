@@ -604,6 +604,9 @@ model GpuFields {
   // Value = Raw value that can be compared and sorted.
   // Meta = Metadata about the field. E.g. formatted value to display, autoUpdate
 
+  aiAcceleratorsValue Float? @map("ai_accelerators_value")
+  aiAcceleratorsMeta Json? @map("ai_accelerators_meta")
+
   architectureValue String? @map("architecture_value")
   architectureMeta Json? @map("architecture_meta")
 
@@ -657,6 +660,9 @@ model GpuFields {
 
   gpuCoreBoostClockValue Float? @map("gpu_core_boost_clock_value")
   gpuCoreBoostClockMeta Json? @map("gpu_core_boost_clock_meta")
+
+  gpuCoreGameClockValue Float? @map("gpu_core_game_clock_value")
+  gpuCoreGameClockMeta Json? @map("gpu_core_game_clock_meta")
 
   l1CacheValue Float? @map("l1_cache_value")
   l1CacheMeta Json? @map("l1_cache_meta")
@@ -717,6 +723,9 @@ model GpuFields {
 
   productionStatusValue String? @map("production_status_value")
   productionStatusMeta Json? @map("production_status_meta")
+
+  rayAcceleratorsValue Float? @map("ray_accelerators_value")
+  rayAcceleratorsMeta Json? @map("ray_accelerators_meta")
 
   releaseDateValue String? @map("release_date_value")
   releaseDateMeta Json? @map("release_date_meta")

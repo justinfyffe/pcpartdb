@@ -32,8 +32,12 @@ export async function scrapeGeekBenchCpuData(
 ) {
   const { url, noProxy, ctx } = options;
 
-  const response = await scraper.scrapeGet(url, { retries: 1, noProxy });
-  const $ = cheerio.load(response.data);
+  const response = await scraper.scrapeGet(url, {
+    retries: 1,
+    noProxy,
+    jsonExtended: true,
+  });
+  const $ = cheerio.load(response.data.html);
 
   const name = getName($);
   const company = getCompany($);
@@ -60,13 +64,13 @@ function getName($: cheerio.CheerioAPI): string {
   const fullName = scrapeSpecRow($, 'processor')[0];
   const { company } = parseProductName(fullName);
 
-  return fullName.substring(company?.length || 0).trim();
+  return fullName.substring(company?.length || 0).trim() || undefined;
 }
 
 function getCompany($: cheerio.CheerioAPI) {
   const fullName = scrapeSpecRow($, 'processor')[0];
   const { company } = parseProductName(fullName);
-  return formatCompanyName(company);
+  return formatCompanyName(company) || undefined;
 }
 
 function getSingleCoreScore(

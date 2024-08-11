@@ -55,7 +55,15 @@ export const CoresTable: FunctionComponent<CoresTableProps> = (props) => {
         <ProductFieldRow type={ProductType.Gpu} fields={[gpu.fields?.rops]} />
         <ProductFieldRow
           type={ProductType.Gpu}
+          fields={[gpu.fields?.aiAccelerators]}
+        />
+        <ProductFieldRow
+          type={ProductType.Gpu}
           fields={[gpu.fields?.tensorCores]}
+        />
+        <ProductFieldRow
+          type={ProductType.Gpu}
+          fields={[gpu.fields?.rayAccelerators]}
         />
         <ProductFieldRow
           type={ProductType.Gpu}
@@ -68,6 +76,10 @@ export const CoresTable: FunctionComponent<CoresTableProps> = (props) => {
         <ProductFieldRow
           type={ProductType.Gpu}
           fields={[gpu.fields?.gpuCoreBoostClock]}
+        />
+        <ProductFieldRow
+          type={ProductType.Gpu}
+          fields={[gpu.fields?.gpuCoreGameClock]}
         />
       </TBody>
     </Table>

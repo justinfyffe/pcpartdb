@@ -45,8 +45,9 @@ export async function scrapeNotebookCheckCpuData(
     noProxy,
     browser: true,
     returnPageSource: true,
+    jsonExtended: true,
   });
-  const $ = cheerio.load(response.data);
+  const $ = cheerio.load(response.data.html);
 
   const fields: CpuFields = {
     ...scrapeFields($, ctx),
@@ -72,8 +73,8 @@ function scrapeNameAndCompany($: cheerio.CheerioAPI) {
   const fullName = $('#content h1').text().trim();
   const { company, name } = parseProductName(fullName);
   return {
-    company: formatCompanyName(company),
-    name: name.trim(),
+    company: formatCompanyName(company) || undefined,
+    name: name.trim() || undefined,
   };
 }
 

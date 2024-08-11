@@ -89,10 +89,13 @@ export interface GpuFormData {
   //
   tmus?: GpuField<number>;
   rops?: GpuField<number>;
+  aiAccelerators?: GpuField<number>;
   tensorCores?: GpuField<number>;
+  rayAccelerators?: GpuField<number>;
   rtCores?: GpuField<number>;
   gpuCoreBaseClock?: GpuField<number>;
   gpuCoreBoostClock?: GpuField<number>;
+  gpuCoreGameClock?: GpuField<number>;
   l1Cache?: GpuField<number>;
   l2Cache?: GpuField<number>;
 
@@ -179,10 +182,13 @@ const gpuFormSchema = Joi.object({
   //
   tmus: productFieldSchema.allow(null),
   rops: productFieldSchema.allow(null),
+  aiAccelerators: productFieldSchema.allow(null),
   tensorCores: productFieldSchema.allow(null),
+  rayAccelerators: productFieldSchema.allow(null),
   rtCores: productFieldSchema.allow(null),
   gpuCoreBaseClock: productFieldSchema.allow(null),
   gpuCoreBoostClock: productFieldSchema.allow(null),
+  gpuCoreGameClock: productFieldSchema.allow(null),
   l1Cache: productFieldSchema.allow(null),
   l2Cache: productFieldSchema.allow(null),
 
@@ -276,10 +282,13 @@ export function gpuFormOptions(product?: Product): UseFormProps<GpuFormData> {
       streamMultiprocessors: product?.fields?.streamMultiprocessors ?? null,
       tmus: product?.fields?.tmus ?? null,
       rops: product?.fields?.rops ?? null,
+      aiAccelerators: product?.fields?.aiAccelerators ?? null,
       tensorCores: product?.fields?.tensorCores ?? null,
+      rayAccelerators: product?.fields?.rayAccelerators ?? null,
       rtCores: product?.fields?.rtCores ?? null,
       gpuCoreBaseClock: product?.fields?.gpuCoreBaseClock ?? null,
       gpuCoreBoostClock: product?.fields?.gpuCoreBoostClock ?? null,
+      gpuCoreGameClock: product?.fields?.gpuCoreGameClock ?? null,
       l1Cache: product?.fields?.l1Cache ?? null,
       l2Cache: product?.fields?.l2Cache ?? null,
 
@@ -389,10 +398,13 @@ export function formDataToGpuRequest(
         streamMultiprocessors: formData.streamMultiprocessors ?? null,
         tmus: formData.tmus ?? null,
         rops: formData.rops ?? null,
+        aiAccelerators: formData.aiAccelerators ?? null,
         tensorCores: formData.tensorCores ?? null,
+        rayAccelerators: formData.rayAccelerators ?? null,
         rtCores: formData.rtCores ?? null,
         gpuCoreBaseClock: formData.gpuCoreBaseClock ?? null,
         gpuCoreBoostClock: formData.gpuCoreBoostClock ?? null,
+        gpuCoreGameClock: formData.gpuCoreGameClock ?? null,
         l1Cache: formData.l1Cache ?? null,
         l2Cache: formData.l2Cache ?? null,
 
@@ -764,15 +776,27 @@ export function buildGpuFormInputs(product?: Product): ProductFormInputGroups {
           fieldKey: 'rops',
         },
         {
+          name: 'aiAccelerators',
+          inputType: ProductFormInputType.FloatField,
+          label: 'AI Accelerators (AMD)',
+          fieldKey: 'aiAccelerators',
+        },
+        {
           name: 'tensorCores',
           inputType: ProductFormInputType.FloatField,
-          label: 'Tensor Cores',
+          label: 'Tensor Cores (NVIDIA)',
           fieldKey: 'tensorCores',
+        },
+        {
+          name: 'rayAccelerators',
+          inputType: ProductFormInputType.FloatField,
+          label: 'Ray Accelerators (AMD)',
+          fieldKey: 'rayAccelerators',
         },
         {
           name: 'rtCores',
           inputType: ProductFormInputType.FloatField,
-          label: 'Ray Tracing Cores (RT Cores)',
+          label: 'Ray Tracing Cores (RT Cores, NVIDIA)',
           fieldKey: 'rtCores',
         },
         {
@@ -787,6 +811,13 @@ export function buildGpuFormInputs(product?: Product): ProductFormInputGroups {
           inputType: ProductFormInputType.FloatField,
           label: 'Core Clock Speed (Boost)',
           fieldKey: 'gpuCoreBoostClock',
+          units: [FrequencyUnit.mhz, FrequencyUnit.ghz],
+        },
+        {
+          name: 'gpuCoreGameClock',
+          inputType: ProductFormInputType.FloatField,
+          label: 'Core Clock Speed (Game)',
+          fieldKey: 'gpuCoreGameClock',
           units: [FrequencyUnit.mhz, FrequencyUnit.ghz],
         },
         {

@@ -52,8 +52,9 @@ export async function scrapeNotebookCheckGpuData(
     noProxy,
     browser: true,
     returnPageSource: true,
+    jsonExtended: true,
   });
-  const $ = cheerio.load(response.data);
+  const $ = cheerio.load(response.data.html);
 
   const { company, name } = scrapeNameAndCompany($);
 
@@ -81,8 +82,8 @@ function scrapeNameAndCompany($: cheerio.CheerioAPI) {
   const fullName = $('#content h1').text();
   const { company, name } = parseProductName(fullName);
   return {
-    company: formatCompanyName(company),
-    name: name.trim(),
+    company: formatCompanyName(company) || undefined,
+    name: name.trim() || undefined,
   };
 }
 
@@ -156,6 +157,12 @@ interface ProductFieldScraper {
   }) => unknown;
 }
 const FIELDS: Partial<Record<GpuFieldKey, ProductFieldScraper>> = {
+  aiAccelerators: {
+    label: 'tensor / ai cores',
+    regexes: [/(?<value>[.\d]+)/i],
+    parseValue: ({ value, company }) =>
+      value != null && isCompany('amd', company) ? Number(value) : null,
+  },
   architecture: {
     label: 'architecture',
     regexes: [/(?<value>.+)/i],
@@ -339,6 +346,12 @@ const FIELDS: Partial<Record<GpuFieldKey, ProductFieldScraper>> = {
     parseValue: ({ value, unit }) =>
       getBaseUnitValue(value, unit, { decimals: 2 }),
   },
+  rayAccelerators: {
+    label: 'raytracing cores',
+    regexes: [/(?<value>[.\d]+)/i],
+    parseValue: ({ value, company }) =>
+      value != null && isCompany('amd', company) ? Number(value) : null,
+  },
   rops: {
     label: 'rops',
     regexes: [/(?<value>[.\d]+)/i],
@@ -347,7 +360,8 @@ const FIELDS: Partial<Record<GpuFieldKey, ProductFieldScraper>> = {
   rtCores: {
     label: 'raytracing cores',
     regexes: [/(?<value>[.\d]+)/i],
-    parseValue: ({ value }) => (value != null ? Number(value) : null),
+    parseValue: ({ value, company }) =>
+      value != null && isCompany('nvidia', company) ? Number(value) : null,
   },
   shaderModelVersion: {
     label: 'api',
@@ -377,7 +391,8 @@ const FIELDS: Partial<Record<GpuFieldKey, ProductFieldScraper>> = {
   tensorCores: {
     label: 'tensor / ai cores',
     regexes: [/(?<value>[.\d]+)/i],
-    parseValue: ({ value }) => (value != null ? Number(value) : null),
+    parseValue: ({ value, company }) =>
+      value != null && isCompany('nvidia', company) ? Number(value) : null,
   },
   tmus: {
     label: 'tmus',

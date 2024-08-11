@@ -56,8 +56,14 @@ export async function scrapeTechPowerUpGpuData(
 ) {
   const { url, noProxy, ctx } = options;
 
-  const response = await scraper.scrapeGet(url, { retries: 1, noProxy });
-  const $ = cheerio.load(response.data);
+  const response = await scraper.scrapeGet(url, {
+    retries: 1,
+    noProxy,
+    browser: true,
+    returnPageSource: true,
+    jsonExtended: true,
+  });
+  const $ = cheerio.load(response.data.html);
 
   const name = getName($);
   const company = getCompany($);
@@ -65,6 +71,7 @@ export async function scrapeTechPowerUpGpuData(
   const fields: GpuFields = {
     msrp: getMsrp($, ctx),
     releaseDate: getReleaseDate($, ctx),
+    aiAccelerators: getAiAccelerators($, company, ctx),
     architecture: getArchitecture($, ctx),
     busInterface: getBusInterface($, ctx),
     codename: getCodename($, ctx),
@@ -73,6 +80,7 @@ export async function scrapeTechPowerUpGpuData(
     executionUnits: getExecutionUnits($, company, ctx),
     gpuCoreBaseClock: getGpuCoreBaseClock($, ctx),
     gpuCoreBoostClock: getGpuCoreBoostClock($, ctx),
+    gpuCoreGameClock: getGpuCoreGameClock($, ctx),
     directxVersion: getDirectxVersion($, ctx),
     fp32: getFp32($, ctx),
     fp64: getFp64($, ctx),
@@ -92,7 +100,8 @@ export async function scrapeTechPowerUpGpuData(
     powerConnectors: getPowerConnectors($, ctx),
     processSize: getProcessSize($, ctx),
     productionStatus: getProductionStatus($, ctx),
-    rtCores: getRayTracingCores($, ctx),
+    rayAccelerators: getRayAccelerators($, company, ctx),
+    rtCores: getRayTracingCores($, company, ctx),
     rops: getRops($, ctx),
     shaderModelVersion: getShaderModelVersion($, ctx),
     shadingUnits: getShadingUnits($, company, ctx),
@@ -100,7 +109,7 @@ export async function scrapeTechPowerUpGpuData(
     streamMultiprocessors: getStreamMultiprocessors($, company, ctx),
     streamProcessors: getStreamProcessors($, company, ctx),
     suggestedPsu: getSuggestedPsu($, ctx),
-    tensorCores: getTensorCores($, ctx),
+    tensorCores: getTensorCores($, company, ctx),
     textureRate: getTextureRate($, ctx),
     tmus: getTmus($, ctx),
     tdp: getTdp($, ctx),
@@ -121,7 +130,32 @@ function getName($: cheerio.CheerioAPI) {
   const fullName = $('.gpudb-name').text();
   const { company } = parseProductName(fullName);
 
-  return fullName.substring(company?.length || 0).trim();
+  return fullName.substring(company?.length || 0).trim() || undefined;
+}
+
+function getAiAccelerators(
+  $: cheerio.CheerioAPI,
+  company: string | null,
+  ctx?: ScraperContext,
+): GpuField<number> {
+  const lcCompany = company?.toLowerCase();
+
+  let result: ParseNumberResult = null;
+  if (lcCompany === 'amd') {
+    const values = tokenizeSpecValues($, 'Tensor Cores');
+
+    result = parseNumberValue({
+      fieldKey: 'aiAccelerators',
+      value: values[0] || null,
+    });
+  }
+
+  return createGpuField({
+    field: 'aiAccelerators',
+    raw: result?.rawValue ?? null,
+    formatted: result?.formattedValue ?? null,
+    ctx,
+  });
 }
 
 function getArchitecture(
@@ -175,7 +209,7 @@ function getCodename(
 function getCompany($: cheerio.CheerioAPI): string {
   const fullName = $('.gpudb-name').text();
   const { company: raw } = parseProductName(fullName);
-  return formatCompanyName(raw);
+  return formatCompanyName(raw) || undefined;
 }
 
 function getComputeUnits(
@@ -297,6 +331,29 @@ function getGpuCoreBoostClock(
 
   return createGpuField({
     field: 'gpuCoreBoostClock',
+    raw: result?.rawValue ?? null,
+    formatted: result?.formattedValue ?? null,
+    ctx,
+  });
+}
+
+function getGpuCoreGameClock(
+  $: cheerio.CheerioAPI,
+  ctx?: ScraperContext,
+): GpuField<number> {
+  const values = tokenizeSpecValues($, 'Game Clock');
+  const result = parseNumberValue({
+    fieldKey: 'gpuCoreGameClock',
+    value: values[0] || null,
+    unitMapper: {
+      KHz: FrequencyUnit.khz,
+      MHz: FrequencyUnit.mhz,
+      GHz: FrequencyUnit.ghz,
+    },
+  });
+
+  return createGpuField({
+    field: 'gpuCoreGameClock',
     raw: result?.rawValue ?? null,
     formatted: result?.formattedValue ?? null,
     ctx,
@@ -730,15 +787,46 @@ function getProductionStatus(
   return createGpuField({ field: 'productionStatus', raw, formatted, ctx });
 }
 
-function getRayTracingCores(
+function getRayAccelerators(
   $: cheerio.CheerioAPI,
+  company: string | null,
   ctx?: ScraperContext,
 ): GpuField<number> {
-  const values = tokenizeSpecValues($, 'RT Cores');
-  const result = parseNumberValue({
-    fieldKey: 'rtCores',
-    value: values[0] || null,
+  const lcCompany = company?.toLowerCase();
+
+  let result: ParseNumberResult = null;
+  if (lcCompany === 'amd') {
+    const values = tokenizeSpecValues($, 'RT Cores');
+
+    result = parseNumberValue({
+      fieldKey: 'rayAccelerators',
+      value: values[0] || null,
+    });
+  }
+
+  return createGpuField({
+    field: 'rayAccelerators',
+    raw: result?.rawValue ?? null,
+    formatted: result?.formattedValue ?? null,
+    ctx,
   });
+}
+
+function getRayTracingCores(
+  $: cheerio.CheerioAPI,
+  company: string | null,
+  ctx?: ScraperContext,
+): GpuField<number> {
+  const lcCompany = company?.toLowerCase();
+
+  let result: ParseNumberResult = null;
+  if (lcCompany === 'nvidia') {
+    const values = tokenizeSpecValues($, 'RT Cores');
+    result = parseNumberValue({
+      fieldKey: 'rtCores',
+      value: values[0] || null,
+    });
+  }
 
   return createGpuField({
     field: 'rtCores',
@@ -955,13 +1043,19 @@ function getSuggestedPsu(
 
 function getTensorCores(
   $: cheerio.CheerioAPI,
+  company: string | null,
   ctx?: ScraperContext,
 ): GpuField<number> {
-  const values = tokenizeSpecValues($, 'Tensor Cores');
-  const result = parseNumberValue({
-    fieldKey: 'tensorCores',
-    value: values[0] || null,
-  });
+  const lcCompany = company?.toLowerCase();
+
+  let result: ParseNumberResult = null;
+  if (lcCompany === 'nvidia') {
+    const values = tokenizeSpecValues($, 'Tensor Cores');
+    result = parseNumberValue({
+      fieldKey: 'tensorCores',
+      value: values[0] || null,
+    });
+  }
 
   return createGpuField({
     field: 'tensorCores',
