@@ -76,6 +76,12 @@ export async function generateMetadata(
     alternates: {
       canonical,
     },
+    openGraph: {
+      title,
+      description,
+      locale: 'en_US',
+      url: canonical,
+    },
   };
 }
 

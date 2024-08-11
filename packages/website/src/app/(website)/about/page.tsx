@@ -4,13 +4,21 @@ import React from 'react';
 import { Breadcrumb } from '../../_common/components/Breadcrumbs/Breadcrumb';
 import { Breadcrumbs } from '../../_common/components/Breadcrumbs/Breadcrumbs';
 
-const TITLE = 'About Us';
+const TITLE = `About Us - ${WEBSITE_NAME}`;
+const DESCRIPTION = 'Mission statement and contact details for PC Part DB.';
+const URL = getAboutUrl();
 
 export const metadata: Metadata = {
-  title: `${TITLE} - ${WEBSITE_NAME}`,
-  description: 'Mission statement and contact details for PC Part DB.',
+  title: TITLE,
+  description: DESCRIPTION,
   alternates: {
-    canonical: getAboutUrl(),
+    canonical: URL,
+  },
+  openGraph: {
+    title: TITLE,
+    description: DESCRIPTION,
+    locale: 'en_US',
+    url: URL,
   },
 };
 

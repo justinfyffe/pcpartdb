@@ -70,7 +70,7 @@ export async function generateMetadata(
   const { comparison } = viewModel;
   const [gpu1, gpu2] = comparison;
 
-  const title = `${formatProductComparisonName(comparison, {
+  const pageTitle = `${formatProductComparisonName(comparison, {
     company: false,
   })}: Compare specs, performance, and value`;
 
@@ -83,15 +83,23 @@ export async function generateMetadata(
     brand: false,
   });
 
+  const title = `${pageTitle} - ${WEBSITE_NAME}`;
   const description =
     `Compare the specs, benchmarks, and performance per dollar of the ${shortestGpuName1} and ${shortestGpuName2}. ` +
     'Our database of graphics cards will help you choose the best GPU for your computer.';
+  const canonical = getCompareGpusUrl({ comparison });
 
   return {
-    title: `${title} - ${WEBSITE_NAME}`,
+    title,
     description,
     alternates: {
-      canonical: getCompareGpusUrl({ comparison }),
+      canonical,
+    },
+    openGraph: {
+      title,
+      description,
+      locale: 'en_US',
+      url: canonical,
     },
   };
 }

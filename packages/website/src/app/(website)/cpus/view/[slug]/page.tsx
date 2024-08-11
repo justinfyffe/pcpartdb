@@ -64,16 +64,25 @@ export async function generateMetadata(
 
   const { cpu } = viewModel;
   const fullCpuName = formatProductName(cpu);
-  const title = `${fullCpuName} CPU Benchmarks and Specs`;
+  const pageTitle = `${fullCpuName} CPU Benchmarks and Specs`;
+
+  const title = `${pageTitle} - ${WEBSITE_NAME}`;
   const description =
     `Specs, benchmarks, and performance per dollar of the ${fullCpuName}. ` +
     'Our database of processors will help you choose the best CPU for your computer.';
+  const canonical = getViewCpuUrl(cpu);
 
   return {
-    title: `${title} - ${WEBSITE_NAME}`,
+    title,
     description,
     alternates: {
-      canonical: getViewCpuUrl(cpu),
+      canonical,
+    },
+    openGraph: {
+      title,
+      description,
+      locale: 'en_US',
+      url: canonical,
     },
   };
 }

@@ -16,15 +16,23 @@ import { ProductComparisonsSection } from './_components/ProductComparisonsSecti
 import { ProductListSection } from './_components/ProductListSection/ProductListSection';
 import { PageProvider } from './PageProvider';
 
-const TITLE = 'GPU and CPU benchmarks, specs, and comparisons';
+const TITLE = `GPU and CPU benchmarks, specs, and comparisons - ${WEBSITE_NAME}`;
+const DESCRIPTION =
+  'View and compare PC part benchmarks and specs. ' +
+  'Our database of PC parts will help you choose the best parts for your computer.';
+const URL = getHomeUrl();
 
 export const metadata: Metadata = {
-  title: `${TITLE} - ${WEBSITE_NAME}`,
-  description:
-    'View and compare PC part benchmarks and specs. ' +
-    'Our database of PC parts will help you choose the best parts for your computer.',
+  title: TITLE,
+  description: DESCRIPTION,
   alternates: {
-    canonical: getHomeUrl(),
+    canonical: URL,
+  },
+  openGraph: {
+    title: TITLE,
+    description: DESCRIPTION,
+    locale: 'en_US',
+    url: URL,
   },
 };
 

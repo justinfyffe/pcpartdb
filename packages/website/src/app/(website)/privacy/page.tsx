@@ -1,21 +1,24 @@
-import {
-  getHomePath,
-  getPrivacyPath,
-  getPrivacyUrl,
-  WEBSITE_NAME,
-} from '@pcpartdb/shared';
+import { getHomePath, getPrivacyUrl, WEBSITE_NAME } from '@pcpartdb/shared';
 import { Metadata } from 'next';
 import React from 'react';
 import { Breadcrumb } from '../../_common/components/Breadcrumbs/Breadcrumb';
 import { Breadcrumbs } from '../../_common/components/Breadcrumbs/Breadcrumbs';
 
-const TITLE = 'Privacy Policy';
+const TITLE = `Privacy Policy - ${WEBSITE_NAME}`;
+const DESCRIPTION = 'Privacy Policy for PC Part DB.';
+const URL = getPrivacyUrl();
 
 export const metadata: Metadata = {
-  title: `${TITLE} - ${WEBSITE_NAME}`,
-  description: 'Privacy Policy for PC Part DB.',
+  title: TITLE,
+  description: DESCRIPTION,
   alternates: {
-    canonical: getPrivacyUrl(),
+    canonical: URL,
+  },
+  openGraph: {
+    title: TITLE,
+    description: DESCRIPTION,
+    locale: 'en_US',
+    url: URL,
   },
 };
 

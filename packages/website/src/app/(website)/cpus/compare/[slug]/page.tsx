@@ -65,7 +65,7 @@ export async function generateMetadata(
   const { comparison } = viewModel;
   const [cpu1, cpu2] = comparison;
 
-  const title = `${formatProductComparisonName(comparison, {
+  const pageTitle = `${formatProductComparisonName(comparison, {
     company: false,
   })}: Compare specs, performance, and value`;
 
@@ -78,15 +78,23 @@ export async function generateMetadata(
     brand: false,
   });
 
+  const title = `${pageTitle} - ${WEBSITE_NAME}`;
   const description =
     `Compare the specs, benchmarks, and performance per dollar of the ${shortestGpuName1} and ${shortestGpuName2}. ` +
     'Our database of processors will help you choose the best CPU for your computer.';
+  const canonical = getCompareCpusUrl({ comparison });
 
   return {
-    title: `${title} - ${WEBSITE_NAME}`,
+    title,
     description,
     alternates: {
-      canonical: getCompareCpusUrl({ comparison }),
+      canonical,
+    },
+    openGraph: {
+      title,
+      description,
+      locale: 'en_US',
+      url: canonical,
     },
   };
 }

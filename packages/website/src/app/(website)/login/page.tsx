@@ -1,9 +1,4 @@
-import {
-  getHomePath,
-  getLoginPath,
-  getLoginUrl,
-  WEBSITE_NAME,
-} from '@pcpartdb/shared';
+import { getHomePath, getLoginUrl } from '@pcpartdb/shared';
 import { Metadata } from 'next';
 import React from 'react';
 import { Breadcrumb } from '../../_common/components/Breadcrumbs/Breadcrumb';
@@ -11,12 +6,18 @@ import { Breadcrumbs } from '../../_common/components/Breadcrumbs/Breadcrumbs';
 import { LoginForm } from './_components/LoginForm/LoginForm';
 
 const TITLE = 'Sign in to your Account';
+const URL = getLoginUrl();
 
 export const metadata: Metadata = {
-  title: `${TITLE} - ${WEBSITE_NAME}`,
+  title: TITLE,
   robots: 'noindex',
   alternates: {
-    canonical: getLoginUrl(),
+    canonical: URL,
+  },
+  openGraph: {
+    title: TITLE,
+    locale: 'en_US',
+    url: URL,
   },
 };
 

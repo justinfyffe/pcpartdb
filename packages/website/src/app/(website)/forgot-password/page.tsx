@@ -1,9 +1,4 @@
-import {
-  getForgotPasswordPath,
-  getForgotPasswordUrl,
-  getHomePath,
-  WEBSITE_NAME,
-} from '@pcpartdb/shared';
+import { getForgotPasswordUrl, getHomePath } from '@pcpartdb/shared';
 import { Metadata } from 'next';
 import React from 'react';
 import { Breadcrumb } from '../../_common/components/Breadcrumbs/Breadcrumb';
@@ -11,12 +6,21 @@ import { Breadcrumbs } from '../../_common/components/Breadcrumbs/Breadcrumbs';
 import { ForgotPasswordForm } from './_components/ForgotPasswordForm';
 
 const TITLE = 'Forgot your Password?';
+const DESCRIPTION = 'Mission statement and contact details for PC Part DB.';
+const URL = getForgotPasswordUrl();
 
 export const metadata: Metadata = {
-  title: `${TITLE} - ${WEBSITE_NAME}`,
+  title: TITLE,
+  description: DESCRIPTION,
   robots: 'noindex',
   alternates: {
-    canonical: getForgotPasswordUrl(),
+    canonical: URL,
+  },
+  openGraph: {
+    title: TITLE,
+    description: DESCRIPTION,
+    locale: 'en_US',
+    url: URL,
   },
 };
 

@@ -79,16 +79,25 @@ export async function generateMetadata(
 
   const { gpu } = viewModel;
   const fullGpuName = formatProductName(gpu);
-  const title = `${fullGpuName} GPU Benchmarks and Specs`;
+  const pageTitle = `${fullGpuName} GPU Benchmarks and Specs`;
+
+  const title = `${pageTitle} - ${WEBSITE_NAME}`;
   const description =
     `Specs, benchmarks, and performance per dollar of the ${fullGpuName}. ` +
     'Our database of graphics cards will help you choose the best GPU for your computer.';
+  const canonical = getViewGpuUrl(gpu);
 
   return {
-    title: `${title} - ${WEBSITE_NAME}`,
+    title,
     description,
     alternates: {
-      canonical: getViewGpuUrl(gpu),
+      canonical,
+    },
+    openGraph: {
+      title,
+      description,
+      locale: 'en_US',
+      url: canonical,
     },
   };
 }
