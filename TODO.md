@@ -13,6 +13,12 @@ NEXT (long-term):
 
 
 NEXT (short-term)
+- [] GPU Fields
+  - Ray Tracing Units (RTUs) - Intel (in place of RT cores)
+    - rayTracingUnits
+  - X Matrix Extensions (XMX) - Intel (in place of Tensor cores)
+    - xMatrixExtensions
+- [] CPU Fields
 - SEO improvements
   - [] Improve generated summaries
     - Use AI to help come up with variations.

@@ -17,7 +17,7 @@ export async function scratchPad() {
   const gpuIds = await productRepository.list2({
     filter: {
       productType: ProductType.Gpu,
-      company: ['AMD'],
+      company: ['Intel'],
     },
   });
 
@@ -30,17 +30,17 @@ export async function scratchPad() {
       includeAutomation: true,
     });
 
-    // Tensor Cores -> AI Accelerators
-    dto.aiAccelerators = dto.tensorCores;
-    if (dto.aiAccelerators && dto.aiAccelerators.meta) {
-      dto.aiAccelerators.meta.fieldKey = 'aiAccelerators';
+    // Tensor Cores -> Xe Matrix Extensions
+    dto.xeMatrixExtensions = dto.tensorCores;
+    if (dto.xeMatrixExtensions && dto.xeMatrixExtensions.meta) {
+      dto.xeMatrixExtensions.meta.fieldKey = 'xeMatrixExtensions';
     }
     dto.tensorCores = null;
 
-    // RT Cores -> Ray Accelerators
-    dto.rayAccelerators = dto.rtCores;
-    if (dto.rayAccelerators && dto.rayAccelerators.meta) {
-      dto.rayAccelerators.meta.fieldKey = 'rayAccelerators';
+    // RT Cores -> Ray Tracing Units
+    dto.rayTracingUnits = dto.rtCores;
+    if (dto.rayTracingUnits && dto.rayTracingUnits.meta) {
+      dto.rayTracingUnits.meta.fieldKey = 'rayTracingUnits';
     }
     dto.rtCores = null;
 

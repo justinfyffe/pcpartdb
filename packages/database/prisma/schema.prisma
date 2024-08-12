@@ -604,6 +604,7 @@ model GpuFields {
   // Value = Raw value that can be compared and sorted.
   // Meta = Metadata about the field. E.g. formatted value to display, autoUpdate
 
+  // Similar to tensor cores, but for AMD
   aiAcceleratorsValue Float? @map("ai_accelerators_value")
   aiAcceleratorsMeta Json? @map("ai_accelerators_meta")
 
@@ -724,8 +725,13 @@ model GpuFields {
   productionStatusValue String? @map("production_status_value")
   productionStatusMeta Json? @map("production_status_meta")
 
+  // Similar to RT Cores (NVIDIA) and Ray Tracing Units (Intel), but for Intel
   rayAcceleratorsValue Float? @map("ray_accelerators_value")
   rayAcceleratorsMeta Json? @map("ray_accelerators_meta")
+
+  // Similar to RT Cores (NVIDIA) and Ray Accelerators (AMD), but for Intel
+  rayTracingUnitsValue Float? @map("ray_tracing_units_value")
+  rayTracingUnitsMeta Json? @map("ray_tracing_units_meta")
 
   releaseDateValue String? @map("release_date_value")
   releaseDateMeta Json? @map("release_date_meta")
@@ -786,6 +792,10 @@ model GpuFields {
 
   vulkanVersionValue String? @map("vulkan_version_value")
   vulkanVersionMeta Json? @map("vulkan_version_meta")
+
+  // Similar to tensor cores, but for Intel
+  xeMatrixExtensionsValue Float? @map("xe_matrix_extensions_value")
+  xeMatrixExtensionsMeta Json? @map("xe_matrix_extensions_meta")
 
   // Misc. data for the fields. This data should not be filtered on.
   metadata Json?

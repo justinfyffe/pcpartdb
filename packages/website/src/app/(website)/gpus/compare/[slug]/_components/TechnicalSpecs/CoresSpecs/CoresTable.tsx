@@ -87,11 +87,22 @@ export const CoresTable: FunctionComponent<CoresTableProps> = (props) => {
         />
         <ProductFieldRow
           type={ProductType.Gpu}
+          fields={[
+            gpu1.fields?.xeMatrixExtensions,
+            gpu2.fields?.xeMatrixExtensions,
+          ]}
+        />
+        <ProductFieldRow
+          type={ProductType.Gpu}
           fields={[gpu1.fields?.rayAccelerators, gpu2.fields?.rayAccelerators]}
         />
         <ProductFieldRow
           type={ProductType.Gpu}
           fields={[gpu1.fields?.rtCores, gpu2.fields?.rtCores]}
+        />
+        <ProductFieldRow
+          type={ProductType.Gpu}
+          fields={[gpu1.fields?.rayTracingUnits, gpu2.fields?.rayTracingUnits]}
         />
         <ProductFieldRow
           type={ProductType.Gpu}

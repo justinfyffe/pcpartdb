@@ -101,6 +101,7 @@ export async function scrapeTechPowerUpGpuData(
     processSize: getProcessSize($, ctx),
     productionStatus: getProductionStatus($, ctx),
     rayAccelerators: getRayAccelerators($, company, ctx),
+    rayTracingUnits: getRayTracingUnits($, company, ctx),
     rtCores: getRayTracingCores($, company, ctx),
     rops: getRops($, ctx),
     shaderModelVersion: getShaderModelVersion($, ctx),
@@ -114,6 +115,7 @@ export async function scrapeTechPowerUpGpuData(
     tmus: getTmus($, ctx),
     tdp: getTdp($, ctx),
     transistors: getTransistors($, ctx),
+    xeMatrixExtensions: getXeMatrixExtensions($, company, ctx),
   };
 
   const product: Partial<GpuProduct> = {
@@ -836,6 +838,31 @@ function getRayTracingCores(
   });
 }
 
+function getRayTracingUnits(
+  $: cheerio.CheerioAPI,
+  company: string | null,
+  ctx?: ScraperContext,
+): GpuField<number> {
+  const lcCompany = company?.toLowerCase();
+
+  let result: ParseNumberResult = null;
+  if (lcCompany === 'intel') {
+    const values = tokenizeSpecValues($, 'RT Cores');
+
+    result = parseNumberValue({
+      fieldKey: 'rayTracingUnits',
+      value: values[0] || null,
+    });
+  }
+
+  return createGpuField({
+    field: 'rayTracingUnits',
+    raw: result?.rawValue ?? null,
+    formatted: result?.formattedValue ?? null,
+    ctx,
+  });
+}
+
 function getReleaseDate(
   $: cheerio.CheerioAPI,
   ctx?: ScraperContext,
@@ -1138,6 +1165,30 @@ function getTransistors(
 
   return createGpuField({
     field: 'transistors',
+    raw: result?.rawValue ?? null,
+    formatted: result?.formattedValue ?? null,
+    ctx,
+  });
+}
+
+function getXeMatrixExtensions(
+  $: cheerio.CheerioAPI,
+  company: string | null,
+  ctx?: ScraperContext,
+): GpuField<number> {
+  const lcCompany = company?.toLowerCase();
+
+  let result: ParseNumberResult = null;
+  if (lcCompany === 'intel') {
+    const values = tokenizeSpecValues($, 'Tensor Cores');
+    result = parseNumberValue({
+      fieldKey: 'xeMatrixExtensions',
+      value: values[0] || null,
+    });
+  }
+
+  return createGpuField({
+    field: 'xeMatrixExtensions',
     raw: result?.rawValue ?? null,
     formatted: result?.formattedValue ?? null,
     ctx,

@@ -36,8 +36,12 @@ export const CoresSpecs: FunctionComponent<CoresSpecsProps> = (props) => {
     !hasProductFieldFormattedValue(gpu2.fields?.aiAccelerators) &&
     !hasProductFieldFormattedValue(gpu1.fields?.tensorCores) &&
     !hasProductFieldFormattedValue(gpu2.fields?.tensorCores) &&
+    !hasProductFieldFormattedValue(gpu1.fields?.xeMatrixExtensions) &&
+    !hasProductFieldFormattedValue(gpu2.fields?.xeMatrixExtensions) &&
     !hasProductFieldFormattedValue(gpu1.fields?.rayAccelerators) &&
     !hasProductFieldFormattedValue(gpu2.fields?.rayAccelerators) &&
+    !hasProductFieldFormattedValue(gpu1.fields?.rayTracingUnits) &&
+    !hasProductFieldFormattedValue(gpu2.fields?.rayTracingUnits) &&
     !hasProductFieldFormattedValue(gpu1.fields?.rtCores) &&
     !hasProductFieldFormattedValue(gpu2.fields?.rtCores) &&
     !hasProductFieldFormattedValue(gpu1.fields?.gpuCoreBaseClock) &&

@@ -352,6 +352,12 @@ const FIELDS: Partial<Record<GpuFieldKey, ProductFieldScraper>> = {
     parseValue: ({ value, company }) =>
       value != null && isCompany('amd', company) ? Number(value) : null,
   },
+  rayTracingUnits: {
+    label: 'raytracing cores',
+    regexes: [/(?<value>[.\d]+)/i],
+    parseValue: ({ value, company }) =>
+      value != null && isCompany('intel', company) ? Number(value) : null,
+  },
   rops: {
     label: 'rops',
     regexes: [/(?<value>[.\d]+)/i],
@@ -412,6 +418,12 @@ const FIELDS: Partial<Record<GpuFieldKey, ProductFieldScraper>> = {
   vulkanVersion: {
     label: 'api',
     regexes: [/Vulkan (?<value>[.\d]+)/i],
+  },
+  xeMatrixExtensions: {
+    label: 'tensor / ai cores',
+    regexes: [/(?<value>[.\d]+)/i],
+    parseValue: ({ value, company }) =>
+      value != null && isCompany('intel', company) ? Number(value) : null,
   },
 };
 function scrapeFields(

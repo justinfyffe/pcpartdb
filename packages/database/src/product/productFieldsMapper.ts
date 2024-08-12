@@ -99,6 +99,7 @@ const FIELDS_TO_MAP: Record<ProductType, ProductFieldKey[]> = {
     'processSize',
     'productionStatus',
     'rayAccelerators',
+    'rayTracingUnits',
     'releaseDate',
     'rops',
     'rtCores',
@@ -118,6 +119,7 @@ const FIELDS_TO_MAP: Record<ProductType, ProductFieldKey[]> = {
     'vertexRate',
     'vertexShaders',
     'vulkanVersion',
+    'xeMatrixExtensions',
   ],
 };
 

@@ -91,7 +91,9 @@ export interface GpuFormData {
   rops?: GpuField<number>;
   aiAccelerators?: GpuField<number>;
   tensorCores?: GpuField<number>;
+  xeMatrixExtensions?: GpuField<number>;
   rayAccelerators?: GpuField<number>;
+  rayTracingUnits?: GpuField<number>;
   rtCores?: GpuField<number>;
   gpuCoreBaseClock?: GpuField<number>;
   gpuCoreBoostClock?: GpuField<number>;
@@ -184,7 +186,9 @@ const gpuFormSchema = Joi.object({
   rops: productFieldSchema.allow(null),
   aiAccelerators: productFieldSchema.allow(null),
   tensorCores: productFieldSchema.allow(null),
+  xeMatrixExtensions: productFieldSchema.allow(null),
   rayAccelerators: productFieldSchema.allow(null),
+  rayTracingUnits: productFieldSchema.allow(null),
   rtCores: productFieldSchema.allow(null),
   gpuCoreBaseClock: productFieldSchema.allow(null),
   gpuCoreBoostClock: productFieldSchema.allow(null),
@@ -284,7 +288,9 @@ export function gpuFormOptions(product?: Product): UseFormProps<GpuFormData> {
       rops: product?.fields?.rops ?? null,
       aiAccelerators: product?.fields?.aiAccelerators ?? null,
       tensorCores: product?.fields?.tensorCores ?? null,
+      xeMatrixExtensions: product?.fields?.xeMatrixExtensions ?? null,
       rayAccelerators: product?.fields?.rayAccelerators ?? null,
+      rayTracingUnits: product?.fields?.rayTracingUnits ?? null,
       rtCores: product?.fields?.rtCores ?? null,
       gpuCoreBaseClock: product?.fields?.gpuCoreBaseClock ?? null,
       gpuCoreBoostClock: product?.fields?.gpuCoreBoostClock ?? null,
@@ -400,7 +406,9 @@ export function formDataToGpuRequest(
         rops: formData.rops ?? null,
         aiAccelerators: formData.aiAccelerators ?? null,
         tensorCores: formData.tensorCores ?? null,
+        xeMatrixExtensions: formData.xeMatrixExtensions ?? null,
         rayAccelerators: formData.rayAccelerators ?? null,
+        rayTracingUnits: formData.rayTracingUnits ?? null,
         rtCores: formData.rtCores ?? null,
         gpuCoreBaseClock: formData.gpuCoreBaseClock ?? null,
         gpuCoreBoostClock: formData.gpuCoreBoostClock ?? null,
@@ -788,10 +796,22 @@ export function buildGpuFormInputs(product?: Product): ProductFormInputGroups {
           fieldKey: 'tensorCores',
         },
         {
+          name: 'xeMatrixExtensions',
+          inputType: ProductFormInputType.FloatField,
+          label: 'Xe Matrix Extensions (XMX, Intel)',
+          fieldKey: 'xeMatrixExtensions',
+        },
+        {
           name: 'rayAccelerators',
           inputType: ProductFormInputType.FloatField,
           label: 'Ray Accelerators (AMD)',
           fieldKey: 'rayAccelerators',
+        },
+        {
+          name: 'rayTracingUnits',
+          inputType: ProductFormInputType.FloatField,
+          label: 'Ray Tracing Units (Intel)',
+          fieldKey: 'rayTracingUnits',
         },
         {
           name: 'rtCores',

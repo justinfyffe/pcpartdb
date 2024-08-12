@@ -63,10 +63,11 @@ export interface GpuFields {
   predecessorGeneration?: GpuField<string>;
   processSize?: GpuField<number>;
   productionStatus?: GpuField<ProductionStatus>;
-  rayAccelerators?: GpuField<number>; // Ray Accelerators for AMD, RT Cores for NVIDIA
+  rayAccelerators?: GpuField<number>; // Ray Accelerators for AMD, RT Cores for NVIDIA, Ray Tracing Units for Intel
+  rayTracingUnits?: GpuField<number>; // Ray Accelerators for AMD, RT Cores for NVIDIA, Ray Tracing Units for Intel
   releaseDate?: GpuField<string>;
   rops?: GpuField<number>; // aka Render Output Units
-  rtCores?: GpuField<number>; // aka Ray Tracing Cores
+  rtCores?: GpuField<number>; // Ray Accelerators for AMD, RT Cores for NVIDIA, Ray Tracing Units for Intel
   shaderClock?: GpuField<number>;
   shaderModelVersion?: GpuField<string>;
   shadingUnits?: GpuField<number>; // GPU Cores, CUDA Cores for NVIDIA, Shading Units for Intel, Stream Processors for AMD, Shader Units in general
@@ -83,6 +84,7 @@ export interface GpuFields {
   vertexRate?: GpuField<number>;
   vertexShaders?: GpuField<number>;
   vulkanVersion?: GpuField<string>;
+  xeMatrixExtensions?: GpuField<number>;
 
   metadata?: GpuFieldsMeta;
 }
@@ -135,7 +137,9 @@ export const GPU_FIELD_LABELS: Record<string, string> = {
   rops: 'Render Output Units (ROP)',
   aiAccelerators: 'AI Accelerators',
   tensorCores: 'Tensor Cores',
+  xeMatrixExtensions: 'Xe Matrix Extensions (XMX)',
   rayAccelerators: 'Ray Accelerators',
+  rayTracingUnits: 'Ray Tracing Units (RTU)',
   rtCores: 'Ray Tracing Cores',
   gpuCoreBaseClock: 'Core Clock Speed',
   gpuCoreBoostClock: 'Core Clock Speed (Boost)',

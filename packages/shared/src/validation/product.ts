@@ -99,6 +99,7 @@ export const productFieldsSchema = Joi.object({
   processSize: productFieldSchema.allow(null),
   productionStatus: productFieldSchema.allow(null),
   rayAccelerators: productFieldSchema.allow(null),
+  rayTracingUnits: productFieldSchema.allow(null),
   releaseDate: productFieldSchema.allow(null),
   rops: productFieldSchema.allow(null),
   rtCores: productFieldSchema.allow(null),
@@ -124,6 +125,7 @@ export const productFieldsSchema = Joi.object({
   vertexRate: productFieldSchema.allow(null),
   vertexShaders: productFieldSchema.allow(null),
   vulkanVersion: productFieldSchema.allow(null),
+  xeMatrixExtensions: productFieldSchema.allow(null),
 
   metadata: Joi.any().allow(null),
 });

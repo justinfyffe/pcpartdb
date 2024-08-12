@@ -32,6 +32,7 @@ const summaryData = (gpu: GpuProduct) => {
     rops: productFieldFormattedValue(gpu?.fields?.rops),
     rayAccelerators: productFieldFormattedValue(gpu?.fields?.rayAccelerators),
     rtCores: productFieldFormattedValue(gpu?.fields?.rtCores),
+    rayTracingUnits: productFieldFormattedValue(gpu?.fields?.rayTracingUnits),
     shadingUnits: productFieldFormattedValue(gpu?.fields?.shadingUnits),
     slotWidth: productFieldFormattedValue(gpu?.fields?.slotWidth),
     streamMultiprocessors: productFieldFormattedValue(
@@ -42,6 +43,9 @@ const summaryData = (gpu: GpuProduct) => {
     tdp: productFieldFormattedValue(gpu?.fields?.tdp),
     aiAccelerators: productFieldFormattedValue(gpu?.fields?.aiAccelerators),
     tensorCores: productFieldFormattedValue(gpu?.fields?.tensorCores),
+    xeMatrixExtensions: productFieldFormattedValue(
+      gpu?.fields?.xeMatrixExtensions,
+    ),
     tmus: productFieldFormattedValue(gpu?.fields?.tmus),
   };
 };
@@ -108,10 +112,16 @@ const aiPromptTemplate = (gpu: GpuProduct) => {
       ? `It has ${summary.aiAccelerators} AI Accelerators.`
       : '',
     summary.tensorCores ? `It has ${summary.tensorCores} tensor cores.` : '',
+    summary.xeMatrixExtensions
+      ? `It has ${summary.xeMatrixExtensions} XMX (Xe Matrix Extensions).`
+      : '',
     summary.rayAccelerators
       ? `It has ${summary.rayAccelerators} Ray Accelerators.`
       : '',
     summary.rtCores ? `It has ${summary.rtCores} RT cores.` : '',
+    summary.rayTracingUnits
+      ? `It has ${summary.rayTracingUnits} RTUs (Ray tracing Units).`
+      : '',
   ].filter((value) => value);
 
   const summaryPart4 = [
