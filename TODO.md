@@ -13,15 +13,15 @@ NEXT (long-term):
 
 
 NEXT (short-term)
-- [] GPU Fields
-  - Ray Tracing Units (RTUs) - Intel (in place of RT cores)
-    - rayTracingUnits
-  - X Matrix Extensions (XMX) - Intel (in place of Tensor cores)
-    - xMatrixExtensions
-- [] CPU Fields
+- [] Populate empty field meta
+  - Maybe a "createEmptyProduct()" function?
+  - Create script to populate
 - SEO improvements
   - [] Improve generated summaries
     - Use AI to help come up with variations.
+- Tech debt
+  - [] Improve deep merging code
+    - Setting up empty product
 - List Page
   - Soft reload when changing benchmarks
   - More Filters

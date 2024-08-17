@@ -1,5 +1,6 @@
 import {
   ArrayMerge,
+  createEmptyGpuProduct,
   deepmerge,
   Game,
   generateProductOtherNames,
@@ -29,7 +30,7 @@ export async function scrapeGpu(options: ScrapeGpuOptions) {
   const { sources, games } = options;
 
   const ctx: ScraperContext = { memoizedFields: {} };
-  let scrapedProduct: Partial<Product> = {};
+  let scrapedProduct: Partial<Product> = createEmptyGpuProduct();
 
   for (const sourceKey of SOURCE_ORDER) {
     const source = sources.filter((s) => s.sourceKey === sourceKey)[0] || null;

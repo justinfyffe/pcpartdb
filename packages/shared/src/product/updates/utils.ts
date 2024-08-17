@@ -7,15 +7,26 @@ export function canAutoUpdateProductField(field: ProductField) {
 }
 
 const KEYS_TO_SKIP = [
-  'root.affiliateUrl',
-  'root.company',
   'root.name',
+  'root.slug',
+  'root.company',
   'root.otherNames',
   'root.searchText',
-  'root.slug',
+  'root.affiliateUrl',
+
   'root.summary',
+  'root.summaryPublishedAt',
+  'root.summaryStale',
+
+  'root.viewable',
+
+  'root.metadata',
+  'root.automatedAt',
 
   'root.benchmarks',
+  'root.games',
+  'root.images',
+  'root.sources',
 ];
 export function mergeProducts(original: Product, updated: Product): Product {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

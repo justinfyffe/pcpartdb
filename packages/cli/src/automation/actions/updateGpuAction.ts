@@ -204,8 +204,8 @@ function mergeGpus(originalGpu: GpuProduct, scrapedGpu: GpuProduct) {
   result.company = originalGpu.company;
   result.otherNames = originalGpu.otherNames;
   result.searchText = originalGpu.searchText;
-  result.searchText = originalGpu.searchText;
   result.affiliateUrl = originalGpu.affiliateUrl;
+
   result.summary = originalGpu.summary;
   result.summaryPublishedAt = originalGpu.summaryPublishedAt;
   result.summaryStale = originalGpu.summaryStale;

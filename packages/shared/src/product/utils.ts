@@ -1,5 +1,6 @@
 import { formatProductName } from '../format';
 import { CpuProduct, GpuProduct, Product, ProductType } from './common';
+import { createEmptyCpuFields, createEmptyGpuFields } from './fields';
 
 export function isCpuProduct(product: Partial<Product>): product is CpuProduct {
   return product?.productType === ProductType.Cpu;
@@ -96,4 +97,30 @@ export function generateProductOtherNames(
   return [fullName, nameWithoutCompany, nameWithoutCompanyAndBrand].filter(
     (value) => value,
   );
+}
+
+export function createEmptyProduct(productType: ProductType) {
+  if (productType === ProductType.Cpu) {
+    return createEmptyCpuProduct();
+  } else if (productType === ProductType.Gpu) {
+    return createEmptyGpuProduct();
+  } else {
+    throw new Error(
+      'Invalid product type for creating empty product: ' + productType,
+    );
+  }
+}
+
+export function createEmptyCpuProduct() {
+  return {
+    productType: ProductType.Cpu,
+    fields: createEmptyCpuFields(),
+  } as CpuProduct;
+}
+
+export function createEmptyGpuProduct() {
+  return {
+    productType: ProductType.Gpu,
+    fields: createEmptyGpuFields(),
+  } as GpuProduct;
 }

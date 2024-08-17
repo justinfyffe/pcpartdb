@@ -1,6 +1,6 @@
 import { ProductType } from '../common';
-import { CPU_FIELD_LABELS, CpuFieldKey, CpuFields } from './cpu';
-import { GPU_FIELD_LABELS, GpuFieldKey, GpuFields } from './gpu';
+import { CPU_FIELD_LABELS, CpuFieldKey } from './cpu';
+import { GPU_FIELD_LABELS, GpuFieldKey } from './gpu';
 
 // Enums
 

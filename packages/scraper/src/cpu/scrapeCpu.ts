@@ -1,5 +1,6 @@
 import {
   ArrayMerge,
+  createEmptyCpuProduct,
   deepmerge,
   generateProductOtherNames,
   generateProductSearchableText,
@@ -30,7 +31,7 @@ export async function scrapeCpu(options: ScrapeCpuOptions) {
 
   const ctx: ScraperContext = { memoizedFields: {} };
 
-  let scrapedProduct: Partial<Product> = {};
+  let scrapedProduct: Partial<Product> = createEmptyCpuProduct();
   for (const sourceKey of SOURCE_ORDER) {
     const source = sources.filter((s) => s.sourceKey === sourceKey)[0] || null;
     if (source != null) {

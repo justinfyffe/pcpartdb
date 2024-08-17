@@ -159,3 +159,5 @@ export const GPU_FIELD_LABELS: Record<string, string> = {
   openGlVersion: 'OpenGL',
   shaderModelVersion: 'Shader Model',
 };
+
+// Utils

@@ -140,8 +140,8 @@ function mergeCpus(originalCpu: CpuProduct, scrapedCpu: CpuProduct) {
   result.company = originalCpu.company;
   result.otherNames = originalCpu.otherNames;
   result.searchText = originalCpu.searchText;
-  result.searchText = originalCpu.searchText;
   result.affiliateUrl = originalCpu.affiliateUrl;
+
   result.summary = originalCpu.summary;
   result.summaryPublishedAt = originalCpu.summaryPublishedAt;
   result.summaryStale = originalCpu.summaryStale;

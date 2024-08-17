@@ -151,6 +151,7 @@ export function mapToProductFieldsDto(
 
     id: entity.id,
     productId: entity.productId,
+    metadata: entity.metadata,
   } as ProductFields;
 }
 
