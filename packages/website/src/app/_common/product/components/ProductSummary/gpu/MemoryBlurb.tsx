@@ -31,7 +31,8 @@ const MemorySize = compileContentComponent({
   Component: (props) => {
     return (
       <>
-        This GPU is paired with {props.memorySize} of {props.memoryType} VRAM.
+        The {props.nameWithNoCompanyNoBrandNoTags} is paired with{' '}
+        {props.memorySize} of {props.memoryType} VRAM.
       </>
     );
   },

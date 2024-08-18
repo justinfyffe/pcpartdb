@@ -54,8 +54,8 @@ const ClockSentence = compileContentComponent(
     tags: [SpecsTag.Clock, SpecsTag.BoostClock],
     Component: (props) => (
       <>
-        The {props.nameWithNoCompany} operates at a {props.clock} clock
-        frequency, and can boost to {props.boostClock}.
+        The {props.nameWithNoCompanyNoBrandNoTags} operates at a {props.clock}{' '}
+        clock frequency, and can boost to {props.boostClock}.
       </>
     ),
   },

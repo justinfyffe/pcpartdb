@@ -150,8 +150,8 @@ const IntroSocketAndFabrication = compileContentComponent(
     tags: [SpecsTag.Socket, SpecsTag.Foundry, SpecsTag.ProcessSize],
     Component: (props) => (
       <>
-        The {props.nameWithNoCompany} is compatible with {props.socket}{' '}
-        motherboards and is fabricated on {props.foundry}&apos;s{' '}
+        The {props.nameWithNoCompanyNoBrandNoTags} is compatible with{' '}
+        {props.socket} motherboards and is fabricated on {props.foundry}&apos;s{' '}
         {props.processSize} manufacturing process.
       </>
     ),
@@ -160,9 +160,9 @@ const IntroSocketAndFabrication = compileContentComponent(
     tags: [SpecsTag.Socket, SpecsTag.ProcessSize],
     Component: (props) => (
       <>
-        The {props.nameWithNoCompany} is compatible with {props.socket}{' '}
-        motherboards and is fabricated on a {props.processSize} manufacturing
-        process.
+        The {props.nameWithNoCompanyNoBrandNoTags} is compatible with{' '}
+        {props.socket} motherboards and is fabricated on a {props.processSize}{' '}
+        manufacturing process.
       </>
     ),
   },
@@ -170,8 +170,8 @@ const IntroSocketAndFabrication = compileContentComponent(
     tags: [SpecsTag.Foundry, SpecsTag.ProcessSize],
     Component: (props) => (
       <>
-        The {props.nameWithNoCompany} is fabricated on {props.foundry}&apos;s{' '}
-        {props.processSize} manufacturing process.
+        The {props.nameWithNoCompanyNoTags} is fabricated on {props.foundry}
+        &apos;s {props.processSize} manufacturing process.
       </>
     ),
   },
@@ -179,7 +179,7 @@ const IntroSocketAndFabrication = compileContentComponent(
     tags: [SpecsTag.Socket],
     Component: (props) => (
       <>
-        The {props.nameWithNoCompany} is compatible with {props.socket}{' '}
+        The {props.nameWithNoCompanyNoTags} is compatible with {props.socket}{' '}
         motherboards.
       </>
     ),
@@ -188,8 +188,8 @@ const IntroSocketAndFabrication = compileContentComponent(
     tags: [SpecsTag.ProcessSize],
     Component: (props) => (
       <>
-        The {props.nameWithNoCompany} is fabricated on a {props.processSize}{' '}
-        manufacturing process.
+        The {props.nameWithNoCompanyNoTags} is fabricated on a{' '}
+        {props.processSize} manufacturing process.
       </>
     ),
   },

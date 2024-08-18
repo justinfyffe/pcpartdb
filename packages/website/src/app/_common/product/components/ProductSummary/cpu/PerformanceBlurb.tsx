@@ -23,11 +23,11 @@ const PerformanceRankPlacement = compileContentComponent({
   Component: (props) => {
     return (
       <>
-        The {props.nameWithNoCompany} has the{' '}
+        The {props.nameWithNoCompanyNoBrandNoTags} has the{' '}
         {props.performanceRank > 1
           ? formatOrdinalNumber(props.performanceRank as number)
           : ''}{' '}
-        highest {props.preferredBenchmarkName} score among the{' '}
+        best {props.preferredBenchmarkName} score among the{' '}
         {props.countPerformanceRanks.toLocaleString()} benchmarked CPUs in our
         database.
       </>

@@ -47,8 +47,8 @@ const CompatibilitySlotWidth = compileContentComponent({
     const slotOrSlots = slots === 1 ? 'slot' : 'slots';
     return (
       <>
-        The {props.nameWithNoCompanyNoBrand} is a {thickness} graphics card,
-        taking up {props.slotWidth} PCIe {slotOrSlots}.
+        The {props.nameWithNoCompanyNoBrandNoTags} is a {thickness} graphics
+        card, taking up {props.slotWidth} PCIe {slotOrSlots}.
       </>
     );
   },
