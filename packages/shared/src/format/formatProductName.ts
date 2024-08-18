@@ -24,6 +24,7 @@ const GPU_BRANDS = ['Radeon', 'GeForce', 'Quadro'];
 export interface FormatProductNameOptions {
   brand?: boolean;
   company?: boolean;
+  tags?: boolean;
 }
 
 export function formatProductName(
@@ -39,13 +40,16 @@ export function formatProductName(
   const company = includeCompany ? formatCompanyName(product.company) : null;
 
   const includeBrand = options?.brand ?? true;
-  const productName = includeBrand
+  let productName = includeBrand
     ? product.name
     : [...CPU_BRANDS, ...GPU_BRANDS]
         .reduce((acc, brand) => {
           return acc.replace(`${brand}`, '');
         }, product.name)
         .trim();
+
+  const includeTags = options?.tags ?? true;
+  productName = includeTags ? productName : productName.replace(/(.*)/gi, '');
 
   return company != null ? `${company} ${productName}` : productName;
 }

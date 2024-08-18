@@ -55,9 +55,19 @@ export function buildProductContentParams(options: BuildContentParamsOptions) {
   params['msrp'] = getFormattedValue(product?.fields?.msrp);
   params['name'] = formatProductName(product);
   params['nameWithNoCompany'] = formatProductName(product, { company: false });
+  params['nameWithNoTags'] = formatProductName(product, { tags: false });
   params['nameWithNoCompanyNoBrand'] = formatProductName(product, {
     company: false,
     brand: false,
+  });
+  params['nameWithNoCompanyNoTags'] = formatProductName(product, {
+    company: false,
+    tags: false,
+  });
+  params['nameWithNoCompanyNoBrandNoTags'] = formatProductName(product, {
+    company: false,
+    brand: false,
+    tags: false,
   });
   params['performanceRank'] = getProductPerformanceRank(
     product,
