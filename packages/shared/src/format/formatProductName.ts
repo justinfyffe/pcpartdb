@@ -49,7 +49,7 @@ export function formatProductName(
         .trim();
 
   const includeTags = options?.tags ?? true;
-  productName = includeTags ? productName : productName.replace(/(.*)/gi, '');
+  productName = includeTags ? productName : productName.replace(/\(.*\)/gi, '');
 
   return company != null ? `${company} ${productName}` : productName;
 }
