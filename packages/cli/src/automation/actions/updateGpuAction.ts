@@ -246,6 +246,7 @@ function hasSummaryImpactingChanges(before: GpuProduct, after: GpuProduct) {
 
 function hasUpdates(before: GpuProduct, after: GpuProduct) {
   const jsonPatch = generateJsonPatch(before, after);
+  console.log('Generated JSON Patch', jsonPatch);
   return jsonPatch.length > 0;
 }
 

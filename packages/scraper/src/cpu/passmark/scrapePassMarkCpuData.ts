@@ -19,7 +19,7 @@ import { scraper } from '../../scraper';
 import { CommonScraperOptions, ScraperContext } from '../../types';
 import { createCpuField } from '../utils';
 
-const NULL_VALUES = ['n/a', 'none', 'unknown'];
+const NULL_VALUES = ['', 'n/a', 'none', 'unknown'];
 
 export interface ScrapePassMarkCpuDataOptions extends CommonScraperOptions {
   url: string;

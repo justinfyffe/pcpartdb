@@ -195,6 +195,7 @@ function hasSummaryImpactingChanges(before: CpuProduct, after: CpuProduct) {
 
 function hasUpdates(before: CpuProduct, after: CpuProduct) {
   const jsonPatch = generateJsonPatch(before, after);
+  console.log('Generated JSON Patch', jsonPatch);
   return jsonPatch.length > 0;
 }
 

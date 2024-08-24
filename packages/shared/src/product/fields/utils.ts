@@ -286,6 +286,7 @@ export function createEmptyGpuFields() {
     rayAccelerators: createEmptyProductField('rayAccelerators'),
     rayTracingUnits: createEmptyProductField('rayTracingUnits'),
     releaseDate: createEmptyProductField('releaseDate'),
+    rtCores: createEmptyProductField('rtCores'),
     rops: createEmptyProductField('rops'),
     shaderClock: createEmptyProductField('shaderClock'),
     shaderModelVersion: createEmptyProductField('shaderModelVersion'),

@@ -46,7 +46,7 @@ const SPECIAL_VALUES: Record<string, string> = {
   'system shared': 'System Shared',
 };
 // No value at all when it's this.
-const NULL_VALUES = ['n/a', 'none', 'unknown'];
+const NULL_VALUES = ['', 'n/a', 'none', 'unknown'];
 
 export interface ScrapeTechPowerUpCpuDataOptions extends CommonScraperOptions {
   url: string;
@@ -196,7 +196,7 @@ function getChipsets($: cheerio.CheerioAPI, ctx?: ScraperContext) {
       ?.split(',')
       .map((value) => value.trim().replace('*', ''))
       .filter((value) => value.length > 0) || [];
-  const value = chipsets.join(', ');
+  const value = chipsets.join(', ') || null;
   const result = parseStringValue({ value, fieldKey: 'chipsets' });
 
   return createCpuField({
@@ -449,7 +449,7 @@ function getExtensionsTechnologies(
       .map((_i, li) => $(li).text().trim())
       .get()
       .filter((text) => text != null && text.length > 0) || [];
-  const value = items.join(', ');
+  const value = items.join(', ') || null;
   const result = parseStringValue({
     value,
     fieldKey: 'extensionsTechnologies',
@@ -815,7 +815,7 @@ function getMemorySupport($: cheerio.CheerioAPI, ctx?: ScraperContext) {
       }
     }
   }
-  const value = raw.join(', ');
+  const value = raw.join(', ') || null;
   const result = parseStringValue({ value, fieldKey: 'memorySupport' });
 
   return createCpuField({
@@ -915,7 +915,7 @@ function getPciExpress($: cheerio.CheerioAPI, ctx?: ScraperContext) {
     }
     raw.push(pciExpressValue);
   }
-  const value = raw.join(', ');
+  const value = raw.join(', ') || null;
   const result = parseStringValue({ value, fieldKey: 'pciExpress' });
 
   return createCpuField({

@@ -44,7 +44,7 @@ const SPECIAL_VALUES: Record<string, string> = {
   'system shared': 'System Shared',
 };
 // No value at all when it's this.
-const NULL_VALUES = ['n/a', 'none', 'unknown'];
+const NULL_VALUES = ['', 'n/a', 'none', 'unknown'];
 
 export interface ScrapeTechPowerGpuDataOptions extends CommonScraperOptions {
   url: string;
@@ -979,7 +979,7 @@ function getSlotWidth(
   ctx?: ScraperContext,
 ): GpuField<number> {
   const values = tokenizeSpecValues($, 'Slot Width');
-  const stringValue = values.join(', ');
+  const stringValue = values.join(', ') || null;
 
   let raw = null;
   if (stringValue === 'Quad-slot') {

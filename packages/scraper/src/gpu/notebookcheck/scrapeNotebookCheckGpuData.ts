@@ -34,7 +34,7 @@ import { CommonScraperOptions, ScraperContext } from '../../types';
 import { createGpuField } from '../utils';
 
 const SPECIAL_VALUES = [];
-const NULL_VALUES = ['n/a', 'none', 'unknown'];
+const NULL_VALUES = ['', 'n/a', 'none', 'unknown'];
 
 export interface ScrapeNotebookCheckGpuDataOptions
   extends CommonScraperOptions {
