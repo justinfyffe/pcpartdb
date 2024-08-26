@@ -9,8 +9,9 @@ import {
 } from '../../../content/buildProductContentTags';
 import { useProductContent } from '../../../content/useProductContent';
 
-const IntroMarketSegment = compileContentComponent(
+const IntroSentence1 = compileContentComponent(
   {
+    // Unreleased CPU with cores and threads
     tags: [ProductionStatusTag.Unreleased, SpecsTag.Cores, SpecsTag.Threads],
     Component: (props) => (
       <>
@@ -20,6 +21,7 @@ const IntroMarketSegment = compileContentComponent(
     ),
   },
   {
+    // Unreleased CPU with cores
     tags: [ProductionStatusTag.Unreleased, SpecsTag.Cores],
     Component: (props) => (
       <>
@@ -29,6 +31,7 @@ const IntroMarketSegment = compileContentComponent(
     ),
   },
   {
+    // End-of-life CPU with cores and threads
     tags: [ProductionStatusTag.EndOfLife, SpecsTag.Cores, SpecsTag.Threads],
     Component: (props) => (
       <>
@@ -38,6 +41,7 @@ const IntroMarketSegment = compileContentComponent(
     ),
   },
   {
+    // End-of-life CPU with cores
     tags: [ProductionStatusTag.EndOfLife, SpecsTag.Cores],
     Component: (props) => (
       <>
@@ -47,6 +51,7 @@ const IntroMarketSegment = compileContentComponent(
     ),
   },
   {
+    // CPU with cores and threads
     tags: [SpecsTag.Cores, SpecsTag.Threads],
     Component: (props) => (
       <>
@@ -56,6 +61,7 @@ const IntroMarketSegment = compileContentComponent(
     ),
   },
   {
+    // CPU with cores
     tags: [SpecsTag.Cores],
     Component: (props) => (
       <>
@@ -75,7 +81,7 @@ const IntroMarketSegment = compileContentComponent(
   },
 );
 
-const IntroReleaseDateAndMsrp = compileContentComponent(
+const IntroSentence2 = compileContentComponent(
   {
     tags: [SpecsTag.Msrp, SpecsTag.ReleaseDate],
     Component: (props) => {
@@ -119,7 +125,7 @@ const IntroReleaseDateAndMsrp = compileContentComponent(
   },
 );
 
-const IntroArchitecture = compileContentComponent(
+const IntroSentence3 = compileContentComponent(
   {
     tags: [SpecsTag.Architecture, SpecsTag.Generation],
     Component: (props) => (
@@ -145,7 +151,7 @@ const IntroArchitecture = compileContentComponent(
   },
 );
 
-const IntroSocketAndFabrication = compileContentComponent(
+const IntroSentence4 = compileContentComponent(
   {
     tags: [SpecsTag.Socket, SpecsTag.Foundry, SpecsTag.ProcessSize],
     Component: (props) => (
@@ -195,7 +201,7 @@ const IntroSocketAndFabrication = compileContentComponent(
   },
 );
 
-const IntroFeatures = compileContentComponent(
+const IntroSentence5 = compileContentComponent(
   {
     tags: [SpecsTag.IntegratedGraphics, SpecsTag.BundledCooler],
     Component: (props) => (
@@ -223,10 +229,12 @@ const IntroParagraph = compileContentComponent({
   tags: [],
   deps: [],
   Component: () => (
-    <p>
-      <IntroMarketSegment /> <IntroReleaseDateAndMsrp /> <IntroArchitecture />{' '}
-      <IntroSocketAndFabrication /> <IntroFeatures />
-    </p>
+    <>
+      <p>
+        <IntroSentence1 /> <IntroSentence2 /> <IntroSentence3 />{' '}
+        <IntroSentence4 /> <IntroSentence5 />
+      </p>
+    </>
   ),
 });
 

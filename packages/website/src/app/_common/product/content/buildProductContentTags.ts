@@ -46,12 +46,20 @@ export enum RankTag {
 }
 
 export enum SpecsTag {
+  AiAccelerators = 'SPECS__AI_ACCELERATORS',
   Architecture = 'SPECS__ARCHITECTURE',
   BoostClock = 'SPECS__BOOST_CLOCK',
   BundledCooler = 'SPECS__BUNDLED_COOLER',
+  BusInterface = 'SPECS__BUS_INTERFACE',
   Clock = 'SPECS__CLOCK',
   Codename = 'SPECS__CODENAME',
+  ComputeUnits = 'SPECS__COMPUTE_UNITS',
+  CoreClockBase = 'SPECS__CORE_CLOCK_BASE',
+  CoreClockBoost = 'SPECS__CORE_CLOCK_BOOST',
+  CoreClockGame = 'SPECS__CORE_CLOCK_GAME',
   Cores = 'SPECS__CORES',
+  CudaCores = 'SPECS__CUDA_CORES',
+  ExecutionUnits = 'SPECS__EXECUTION_UNITS',
   Foundry = 'SPECS__FOUNDRY',
   Generation = 'SPECS__GENERATION',
   IntegratedGraphics = 'SPECS__INTEGRATED_GRAPHICS',
@@ -66,17 +74,28 @@ export enum SpecsTag {
   MemoryInterface = 'SPECS__MEMORY_INTERFACE',
   MemorySize = 'SPECS__MEMORY_SIZE',
   MemorySupport = 'SPECS__MEMORY_SUPPORT',
+  MemoryType = 'SPECS__MEMORY_TYPE',
   Msrp = 'SPECS__MSRP',
   Outputs = 'SPECS__OUTPUTS',
   PciExpress = 'SPECS__PCI_EXPRESS',
   ProcessSize = 'SPECS__PROCESS_SIZE',
+  ShadingUnits = 'SPECS__SHADING_UNITS',
   Socket = 'SPECS__SOCKET',
+  StreamMultiprocessors = 'SPECS__STREAM_MULTIPROCESSORS',
+  StreamProcessors = 'SPECS__STREAM_PROCESSORS',
+  RayAccelerators = 'SPECS__RAY_ACCELERATORS',
+  RayTracingUnits = 'SPECS__RAY_TRACING_UNITS',
   ReleaseDate = 'SPECS__RELEASE_DATE',
+  Rops = 'SPECS__ROPS',
+  RtCores = 'SPECS__RT_CORES',
   SlotWidth = 'SPECS__SLOT_WIDTH',
   SuggestedPsu = 'SPECS__SUGGESTED_PSU',
   Tdp = 'SPECS__TDP',
+  TensorCores = 'SPECS__TENSOR_CORES',
   Threads = 'SPECS__THREADS',
+  Tmus = 'SPECS__TMUS',
   UnlockedMultiplier = 'SPECS__UNLOCKED_MULTIPLIER',
+  XeMatrixExtensions = 'SPECS__XE_MATRIX_EXTENSIONS',
 }
 
 export interface BuildContentTagsOptions {
@@ -220,6 +239,43 @@ function buildGpuContentTags(product: GpuProduct) {
     hasOutputs = false;
   }
 
+  tags[SpecsTag.CudaCores] = hasProductFieldRawValue(
+    product?.fields?.cudaCores,
+  );
+  tags[SpecsTag.ShadingUnits] = hasProductFieldRawValue(
+    product?.fields?.shadingUnits,
+  );
+  tags[SpecsTag.StreamProcessors] = hasProductFieldRawValue(
+    product?.fields?.streamProcessors,
+  );
+  tags[SpecsTag.StreamMultiprocessors] = hasProductFieldRawValue(
+    product?.fields?.streamMultiprocessors,
+  );
+  tags[SpecsTag.ExecutionUnits] = hasProductFieldRawValue(
+    product?.fields?.executionUnits,
+  );
+  tags[SpecsTag.ExecutionUnits] = hasProductFieldRawValue(
+    product?.fields?.executionUnits,
+  );
+  tags[SpecsTag.ComputeUnits] = hasProductFieldRawValue(
+    product?.fields?.computeUnits,
+  );
+
+  tags[SpecsTag.AiAccelerators] = hasProductFieldRawValue(
+    product?.fields?.aiAccelerators,
+  );
+  tags[SpecsTag.BusInterface] = hasProductFieldRawValue(
+    product?.fields?.busInterface,
+  );
+  tags[SpecsTag.CoreClockBase] = hasProductFieldRawValue(
+    product?.fields?.gpuCoreBaseClock,
+  );
+  tags[SpecsTag.CoreClockBoost] = hasProductFieldRawValue(
+    product?.fields?.gpuCoreBoostClock,
+  );
+  tags[SpecsTag.CoreClockGame] = hasProductFieldRawValue(
+    product?.fields?.gpuCoreGameClock,
+  );
   tags[SpecsTag.MemoryBandwidth] = hasProductFieldRawValue(
     product?.fields?.memoryBandwidth,
   );
@@ -232,12 +288,30 @@ function buildGpuContentTags(product: GpuProduct) {
   tags[SpecsTag.MemorySize] = hasProductFieldRawValue(
     product?.fields?.memorySize,
   );
+  tags[SpecsTag.MemoryType] = hasProductFieldRawValue(
+    product?.fields?.memoryType,
+  );
   tags[SpecsTag.Outputs] = hasOutputs;
+  tags[SpecsTag.Rops] = hasProductFieldRawValue(product?.fields?.rops);
+  tags[SpecsTag.RtCores] = hasProductFieldRawValue(product?.fields?.rtCores);
+  tags[SpecsTag.RayAccelerators] = hasProductFieldRawValue(
+    product?.fields?.rayAccelerators,
+  );
+  tags[SpecsTag.RayTracingUnits] = hasProductFieldRawValue(
+    product?.fields?.rayTracingUnits,
+  );
   tags[SpecsTag.SlotWidth] = hasProductFieldRawValue(
     product?.fields?.slotWidth,
   );
   tags[SpecsTag.SuggestedPsu] = hasProductFieldRawValue(
     product?.fields?.suggestedPsu,
+  );
+  tags[SpecsTag.TensorCores] = hasProductFieldRawValue(
+    product?.fields?.tensorCores,
+  );
+  tags[SpecsTag.Tmus] = hasProductFieldRawValue(product?.fields?.tmus);
+  tags[SpecsTag.XeMatrixExtensions] = hasProductFieldRawValue(
+    product?.fields?.xeMatrixExtensions,
   );
 
   return tags;

@@ -24,7 +24,7 @@ export interface GpuFields {
   productId?: number;
 
   // General Info
-  aiAccelerators?: GpuField<number>; // AI Accelerators for AMD, Tensor Cores for NVIDIA
+  aiAccelerators?: GpuField<number>; // AI Accelerators for AMD, Tensor Cores for NVIDIA, xeMatrixExtensions for Intel
   architecture?: GpuField<string>;
   busInterface?: GpuField<string>;
   codename?: GpuField<string>;
@@ -77,14 +77,14 @@ export interface GpuFields {
   successorGeneration?: GpuField<string>;
   suggestedPsu?: GpuField<number>;
   tdp?: GpuField<number>; // aka Thermal Design Power
-  tensorCores?: GpuField<number>;
+  tensorCores?: GpuField<number>; // AI Accelerators for AMD, Tensor Cores for NVIDIA, xeMatrixExtensions for Intel
   textureRate?: GpuField<number>;
   tmus?: GpuField<number>; // aka Texture Mapping Units
   transistors?: GpuField<number>;
   vertexRate?: GpuField<number>;
   vertexShaders?: GpuField<number>;
   vulkanVersion?: GpuField<string>;
-  xeMatrixExtensions?: GpuField<number>;
+  xeMatrixExtensions?: GpuField<number>; // AI Accelerators for AMD, Tensor Cores for NVIDIA, xeMatrixExtensions for Intel
 
   metadata?: GpuFieldsMeta;
 }

@@ -142,6 +142,13 @@ function buildCpuContentParams(
         ).toFixed(2)
       : null;
 
+  const cores = hasProductFieldRawValue(product?.fields?.cores)
+    ? Number(getRawValue(product?.fields?.cores))
+    : null;
+  const threads = hasProductFieldRawValue(product?.fields?.threads)
+    ? Number(getRawValue(product?.fields?.threads))
+    : null;
+
   params['bestPerformanceDifferencePct'] = bestPerformanceDifferencePct;
   params['bestPerformanceName'] = formatProductName(
     relativeProducts?.bestBenchmarkPerformance,
@@ -150,7 +157,7 @@ function buildCpuContentParams(
   params['boostClock'] = getFormattedValue(product?.fields?.turboClock);
   params['bundledCooler'] = getFormattedValue(product?.fields?.bundledCooler);
   params['clock'] = getFormattedValue(product?.fields?.clock);
-  params['cores'] = getRawValue(product?.fields?.cores);
+  params['cores'] = cores;
   params['eCores'] = getRawValue(product?.fields?.eCores);
   params['integratedGraphics'] = getFormattedValue(
     product?.fields?.integratedGraphics,
@@ -158,7 +165,12 @@ function buildCpuContentParams(
   params['l1Cache'] = getFormattedValue(product?.fields?.l1Cache);
   params['l2Cache'] = getFormattedValue(product?.fields?.l2Cache);
   params['l3Cache'] = getFormattedValue(product?.fields?.l3Cache);
-  params['memoryChannels'] = getFormattedValue(product?.fields?.memoryChannels);
+  params['memoryChannels'] = getFormattedValue(
+    product?.fields?.memoryChannels,
+  )?.toLowerCase();
+  params['memoryChannelsRaw'] = productFieldRawValue(
+    product?.fields?.memoryChannels,
+  );
   params['memorySupport'] = getFormattedValue(product?.fields?.memorySupport);
   params['multiplier'] = getFormattedValue(product?.fields?.multiplier);
   params['pciExpress'] = getFormattedValue(product?.fields?.pciExpress);
@@ -172,8 +184,13 @@ function buildCpuContentParams(
   params['smp'] = getFormattedValue(product?.fields?.smp);
   params['socket'] = getFormattedValue(product?.fields?.socket);
   params['tCaseMax'] = getFormattedValue(product?.fields?.tCaseMax);
-  params['threads'] = getRawValue(product?.fields?.threads);
+  params['threads'] = threads;
   params['tjMax'] = getFormattedValue(product?.fields?.tjMax);
+
+  params['isMultiCore'] = cores > 1 || null;
+  params['isMultiThread'] = threads > 1 || null;
+  params['isSingleCore'] = cores === 1 || null;
+  params['isSingleThread'] = threads === 1 || null;
 
   return params;
 }
@@ -205,11 +222,30 @@ function buildGpuContentParams(
         ).toFixed(2)
       : null;
 
+  const slotWidth = Number(productFieldRawValue(product?.fields?.slotWidth));
+  let isVeryLarge = null;
+  let isLarge = null;
+  let isDualSlot = null;
+  let isLowProfile = null;
+  let isCompactLowProfile = null;
+  if (slotWidth > 3) {
+    isVeryLarge = true;
+  } else if (slotWidth > 2.5) {
+    isLarge = true;
+  } else if (slotWidth >= 2) {
+    isDualSlot = true;
+  } else if (slotWidth >= 1.5) {
+    isLowProfile = true;
+  } else if (slotWidth < 1.5) {
+    isCompactLowProfile = true;
+  }
+
   params['bestPerformanceDifferencePct'] = bestPerformanceDifferencePct;
   params['bestPerformanceName'] = formatProductName(
     relativeProducts?.bestBenchmarkPerformance,
   );
 
+  params['aiAccelerators'] = getFormattedValue(product?.fields?.aiAccelerators);
   params['busInterface'] = getFormattedValue(product?.fields?.busInterface);
   params['computeUnits'] = getFormattedValue(product?.fields?.computeUnits);
   params['executionUnits'] = getFormattedValue(product?.fields?.executionUnits);
@@ -229,6 +265,9 @@ function buildGpuContentParams(
   params['coreBoostClock'] = getFormattedValue(
     product?.fields?.gpuCoreBoostClock,
   );
+  params['gpuCoreGameClock'] = getFormattedValue(
+    product?.fields?.gpuCoreGameClock,
+  );
   params['foundry'] = getFormattedValue(product?.fields?.foundry);
   params['fp16'] = getFormattedValue(product?.fields?.fp16);
   params['fp32'] = getFormattedValue(product?.fields?.fp32);
@@ -247,13 +286,25 @@ function buildGpuContentParams(
   params['memoryType'] = getFormattedValue(product?.fields?.memoryType);
   params['outputs'] = getFormattedValue(product?.fields?.outputs);
   params['rops'] = getFormattedValue(product?.fields?.rops);
-  params['rtCores'] = getFormattedValue(product?.fields?.rtCores);
-  params['slotWidth'] = Number(
-    productFieldRawValue(product?.fields?.slotWidth),
+  params['rayAccelerators'] = getFormattedValue(
+    product?.fields?.rayAccelerators,
   );
+  params['rayTracingUnits'] = getFormattedValue(
+    product?.fields?.rayTracingUnits,
+  );
+  params['rtCores'] = getFormattedValue(product?.fields?.rtCores);
+  params['slotWidth'] = slotWidth;
+  params['isVeryLarge'] = isVeryLarge;
+  params['isLarge'] = isLarge;
+  params['isDualSlot'] = isDualSlot;
+  params['isLowProfile'] = isLowProfile;
+  params['isCompactLowProfile'] = isCompactLowProfile;
   params['suggestedPsu'] = getFormattedValue(product?.fields?.suggestedPsu);
   params['tensorCores'] = getFormattedValue(product?.fields?.tensorCores);
   params['tmus'] = getFormattedValue(product?.fields?.tmus);
+  params['xeMatrixExtensions'] = getFormattedValue(
+    product?.fields?.xeMatrixExtensions,
+  );
 
   return params;
 }

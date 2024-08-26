@@ -10,11 +10,11 @@ import { useProductContent } from '../../../content/useProductContent';
 const PerformanceTitle = compileContentComponent(
   {
     tags: [RankTag.Performance, RankTag.Value],
-    Component: (props) => <>Benchmark Performance &amp; Value</>,
+    Component: (props) => <h3>Benchmark Performance &amp; Value</h3>,
   },
   {
     tags: [RankTag.Performance],
-    Component: (props) => <>Benchmark Performance</>,
+    Component: (props) => <h3>Benchmark Performance</h3>,
   },
 );
 
@@ -67,7 +67,7 @@ const PerformanceValue = compileContentComponent({
 });
 
 const PerformanceParagraph = compileContentComponent({
-  tags: [],
+  tags: [RankTag.Performance],
   deps: [],
   Component: () => (
     <p>
@@ -85,9 +85,7 @@ export const PerformanceBlurb = (props: PerformanceBlurbProps) => {
 
   return (
     <ContentProvider tags={contentTags} params={contentParams}>
-      <h3>
-        <PerformanceTitle />
-      </h3>
+      <PerformanceTitle />
       <PerformanceParagraph />
     </ContentProvider>
   );

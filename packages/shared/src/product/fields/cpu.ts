@@ -85,6 +85,7 @@ export const CPU_FIELD_LABELS: Partial<Record<CpuFieldKey, string>> = {
   foundry: 'Foundry',
   processSize: 'Process Size',
   transistors: 'Transistors',
+  dieSize: 'Die Size',
   tCaseMax: 'Tcase Max',
   tjMax: 'TJ Max',
 
@@ -98,6 +99,7 @@ export const CPU_FIELD_LABELS: Partial<Record<CpuFieldKey, string>> = {
   memoryChannels: 'Memory Channels',
   eccMemory: 'ECC Memory',
 
+  smp: 'SMP',
   cores: 'Cores',
   threads: 'Threads',
   pCores: 'Performance Cores (P-cores)',

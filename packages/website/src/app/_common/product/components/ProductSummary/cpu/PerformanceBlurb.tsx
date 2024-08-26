@@ -10,11 +10,11 @@ import { useProductContent } from '../../../content/useProductContent';
 const PerformanceTitle = compileContentComponent(
   {
     tags: [RankTag.Performance, RankTag.Value],
-    Component: (props) => <>Benchmark Performance &amp; Value</>,
+    Component: (props) => <h3>Benchmark Performance &amp; Value</h3>,
   },
   {
     tags: [RankTag.Performance],
-    Component: (props) => <>Benchmark Performance</>,
+    Component: (props) => <h3>Benchmark Performance</h3>,
   },
 );
 
@@ -23,7 +23,7 @@ const PerformanceRankPlacement = compileContentComponent({
   Component: (props) => {
     return (
       <>
-        The {props.nameWithNoCompanyNoBrandNoTags} has the{' '}
+        The {props.nameWithNoCompanyNoTags} has the{' '}
         {props.performanceRank > 1
           ? formatOrdinalNumber(props.performanceRank as number)
           : ''}{' '}
@@ -67,7 +67,7 @@ const PerformanceValue = compileContentComponent({
 });
 
 const PerformanceParagraph = compileContentComponent({
-  tags: [],
+  tags: [RankTag.Performance],
   Component: () => (
     <p>
       <PerformanceRankPlacement /> <PerformanceBestDiff /> <PerformanceValue />
@@ -86,9 +86,7 @@ export const PerformanceBlurb: FunctionComponent<PerformanceBlurbProps> = (
 
   return (
     <ContentProvider tags={contentTags} params={contentParams}>
-      <h3>
-        <PerformanceTitle />
-      </h3>
+      <PerformanceTitle />
       <PerformanceParagraph />
     </ContentProvider>
   );

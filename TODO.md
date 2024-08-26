@@ -13,15 +13,14 @@ NEXT (long-term):
 
 
 NEXT (short-term)
-- [] Scraping
-  - Uploading many updates for cpus
 - SEO improvements
   - [] Improve generated summaries
     - Use AI to help come up with variations.
     - delete overwritten summaries and fields
 - Tech debt?
-  - [] Improve deep merging code?
-    - Setting up empty product
+  - [] Improve Content code
+    - [] Combine tags / deps
+    - [] Add "and" and "or" options
 - List Page
   - Soft reload when changing benchmarks
   - More Filters
@@ -30,6 +29,7 @@ NEXT (short-term)
   - More sorts:
     - Frames per second
     - Cost per frame
+  - Use Mantine or another ui framework
 - [] Games Page
   - [] List Games Page
     - Mention how many gpus have FPS for it

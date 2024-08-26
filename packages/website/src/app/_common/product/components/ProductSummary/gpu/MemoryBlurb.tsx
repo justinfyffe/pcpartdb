@@ -9,114 +9,201 @@ import { useProductContent } from '../../../content/useProductContent';
 const MemoryTitle = compileContentComponent(
   {
     tags: [SpecsTag.MemorySize],
-    Component: (props) => <>Memory</>,
+    Component: (props) => <h3>Memory</h3>,
   },
   {
     tags: [SpecsTag.MemoryClock],
-    Component: (props) => <>Memory</>,
+    Component: (props) => <h3>Memory</h3>,
   },
   {
     tags: [SpecsTag.MemoryInterface],
-    Component: (props) => <>Memory</>,
+    Component: (props) => <h3>Memory</h3>,
   },
   {
     tags: [SpecsTag.MemoryBandwidth],
-    Component: (props) => <>Memory</>,
+    Component: (props) => <h3>Memory</h3>,
   },
 );
 
-const MemorySize = compileContentComponent({
-  // Example: The NVIDIA GeForce RTX 3070 has 12 GB of GDDR6X VRAM.
-  tags: [SpecsTag.MemorySize],
-  Component: (props) => {
-    return (
-      <>
-        The {props.nameWithNoCompanyNoBrandNoTags} is paired with{' '}
-        {props.memorySize} of {props.memoryType} VRAM.
-      </>
-    );
-  },
-});
-
-const MemoryBandwidth = compileContentComponent(
+const MemorySentence1 = compileContentComponent(
   {
-    // Example: Its 1,313 MHz memory clock and 192 bit interface
-    //          gives it a bandwidth of 504.2 Gb/s.
+    // GPU with a memory size, type, and interface.
+    tags: [
+      SpecsTag.MemorySize,
+      SpecsTag.MemoryType,
+      SpecsTag.MemoryClock,
+      SpecsTag.MemoryInterface,
+    ],
+    deps: ['memorySize', 'memoryType', 'memoryClock', 'memoryInterface'],
+    Component: (props) => {
+      return (
+        <>
+          The {props.nameWithNoCompanyNoBrandNoTags} has {props.memorySize} of{' '}
+          {props.memoryType} memory, with a {props.memoryClock} memory clock and
+          a {props.memoryInterface} interface.
+        </>
+      );
+    },
+  },
+  {
+    // GPU with a memory size, type, and interface.
+    tags: [SpecsTag.MemorySize, SpecsTag.MemoryType, SpecsTag.MemoryInterface],
+    deps: ['memorySize', 'memoryType', 'memoryInterface'],
+    Component: (props) => {
+      return (
+        <>
+          The {props.nameWithNoCompanyNoBrandNoTags} has {props.memorySize} of{' '}
+          {props.memoryType} memory, with a {props.memoryInterface} memory
+          interface.
+        </>
+      );
+    },
+  },
+  {
+    // GPU with a memory size, type, and clock.
+    tags: [SpecsTag.MemorySize, SpecsTag.MemoryType, SpecsTag.MemoryClock],
+    deps: ['memorySize', 'memoryType', 'memoryClock'],
+    Component: (props) => {
+      return (
+        <>
+          The {props.nameWithNoCompanyNoBrandNoTags} has {props.memorySize} of{' '}
+          {props.memoryType} memory, with a {props.memoryClock} memory clock.
+        </>
+      );
+    },
+  },
+  {
+    // GPU with a memory size, and type.
+    tags: [SpecsTag.MemorySize, SpecsTag.MemoryType],
+    deps: ['memorySize', 'memoryType'],
+    Component: (props) => {
+      return (
+        <>
+          The {props.nameWithNoCompanyNoBrandNoTags} has {props.memorySize} of{' '}
+          {props.memoryType} memory.
+        </>
+      );
+    },
+  },
+  {
+    // GPU with only a memory size
+    tags: [SpecsTag.MemorySize],
+    deps: ['memorySize'],
+    Component: (props) => {
+      return (
+        <>
+          The {props.nameWithNoCompanyNoBrandNoTags} has {props.memorySize} of
+          memory.
+        </>
+      );
+    },
+  },
+);
+
+const MemorySentence2 = compileContentComponent(
+  {
+    // Memory bandwidth calculated from clock and interface.
     tags: [
       SpecsTag.MemoryClock,
       SpecsTag.MemoryInterface,
       SpecsTag.MemoryBandwidth,
     ],
+    deps: ['memoryBandwidth'],
     Component: (props) => (
       <>
-        Its {props.memoryClock} memory clock and {props.memoryInterface}{' '}
-        interface gives it a bandwidth of {props.memoryBandwidth}.
+        This gives it a memory bandwidth of {props.memoryBandwidth}, which
+        affects how fast it can transfer data to and from memory.
       </>
     ),
   },
   {
-    // Example: Its 1,313 MHz memory clock gives it a bandwidth of 504.2 Gb/s.
-    tags: [SpecsTag.MemoryClock, SpecsTag.MemoryBandwidth],
-    Component: (props) => (
-      <>
-        Its {props.memoryClock} memory clock gives it a bandwidth of{' '}
-        {props.memoryBandwidth}.
-      </>
-    ),
-  },
-  {
-    // Example: It has a memory clock of 1,313 MHz.
-    tags: [SpecsTag.MemoryClock],
-    Component: (props) => <>Its has a memory clock of {props.memoryClock}.</>,
-  },
-  {
-    // Example: It has a memory bandwidth of 504.2 Gb/s.
+    // Memory bandwidth but we don't know the details.
     tags: [SpecsTag.MemoryBandwidth],
-    Component: (props) => <>Its has a bandwidth of {props.memoryBandwidth}.</>,
+    Component: (props) => (
+      <>
+        It has a memory bandwidth of {props.memoryBandwidth}, which affects how
+        fast it can transfer data to and from memory
+      </>
+    ),
   },
 );
 
-const MemoryConclusion = compileContentComponent(
+const MemorySentence3 = compileContentComponent(
   {
-    // Example: This impacts how much data it can store, and how fast it transfers
-    //          the data to and from memory.
-    tags: [SpecsTag.MemorySize, SpecsTag.MemoryBandwidth],
-    Component: () => (
-      <>
-        This impacts how much data it can store, and how fast it transfers the
-        data to and from memory.
-      </>
-    ),
-  },
-  {
-    // Example: This impacts how much data the graphics card can store.
     tags: [SpecsTag.MemorySize],
-    Component: () => (
-      <>This impacts how much data the graphics card can store.</>
-    ),
+    deps: [],
+    Component: (props) => {
+      return (
+        <>
+          GPU memory stores temporary data that helps the GPU with complex math
+          and graphics operations. More memory is generally better, as not
+          having enough can cause performance bottlenecks.
+        </>
+      );
+    },
   },
   {
-    // Example: This impacts how fast the graphics card transfers
-    //          its data to and from memory.
+    tags: [SpecsTag.MemoryClock],
+    deps: [],
+    Component: (props) => {
+      return (
+        <>
+          GPU memory stores temporary data that helps the GPU with complex math
+          and graphics operations. More memory is generally better, as not
+          having enough can cause performance bottlenecks.
+        </>
+      );
+    },
+  },
+  {
     tags: [SpecsTag.MemoryBandwidth],
-    Component: () => (
-      <>
-        This impacts how fast the graphics card transfers its data to and from
-        memory.
-      </>
-    ),
+    deps: [],
+    Component: (props) => {
+      return (
+        <>
+          GPU memory stores temporary data that helps the GPU with complex math
+          and graphics operations. More memory is generally better, as not
+          having enough can cause performance bottlenecks.
+        </>
+      );
+    },
   },
 );
 
-const MemoryParagraph = compileContentComponent({
-  tags: [],
-  deps: [],
-  Component: () => (
-    <p>
-      <MemorySize /> <MemoryBandwidth /> <MemoryConclusion />
-    </p>
-  ),
-});
+const MemoryParagraph = compileContentComponent(
+  {
+    tags: [SpecsTag.MemorySize],
+    Component: (props) => (
+      <p>
+        <MemorySentence1 /> <MemorySentence2 /> <MemorySentence3 />
+      </p>
+    ),
+  },
+  {
+    tags: [SpecsTag.MemoryClock],
+    Component: (props) => (
+      <p>
+        <MemorySentence1 /> <MemorySentence2 /> <MemorySentence3 />
+      </p>
+    ),
+  },
+  {
+    tags: [SpecsTag.MemoryInterface],
+    Component: (props) => (
+      <p>
+        <MemorySentence1 /> <MemorySentence2 /> <MemorySentence3 />
+      </p>
+    ),
+  },
+  {
+    tags: [SpecsTag.MemoryBandwidth],
+    Component: (props) => (
+      <p>
+        <MemorySentence1 /> <MemorySentence2 /> <MemorySentence3 />
+      </p>
+    ),
+  },
+);
 
 interface MemoryBlurbProps {
   index?: number;
@@ -127,9 +214,7 @@ export const MemoryBlurb: FunctionComponent<MemoryBlurbProps> = (props) => {
 
   return (
     <ContentProvider tags={contentTags} params={contentParams}>
-      <h3>
-        <MemoryTitle />
-      </h3>
+      <MemoryTitle />
       <MemoryParagraph />
     </ContentProvider>
   );

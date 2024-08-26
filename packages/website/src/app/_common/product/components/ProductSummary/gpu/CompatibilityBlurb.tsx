@@ -2,6 +2,7 @@
 
 import { ContentProvider } from 'packages/website/src/app/_common/content/ContentProvider';
 import { compileContentComponent } from 'packages/website/src/app/_common/content/utils/compileContentComponent';
+import pluralize from 'pluralize';
 import React, { FunctionComponent } from 'react';
 import { SpecsTag } from '../../../content/buildProductContentTags';
 import { useProductContent } from '../../../content/useProductContent';
@@ -9,87 +10,247 @@ import { useProductContent } from '../../../content/useProductContent';
 const CompatibilityTitle = compileContentComponent(
   {
     tags: [SpecsTag.SlotWidth],
-    Component: (props) => <>Compatibility</>,
-  },
-  {
-    tags: [SpecsTag.Outputs],
-    Component: (props) => <>Compatibility</>,
+    Component: (props) => <h3>Compatibility &amp; Power Consumption</h3>,
   },
   {
     tags: [SpecsTag.Tdp],
-    Component: (props) => <>Compatibility</>,
+    Component: (props) => <h3>Compatibility &amp; Power Consumption</h3>,
   },
   {
     tags: [SpecsTag.SuggestedPsu],
-    Component: (props) => <>Compatibility</>,
+    Component: (props) => <h3>Compatibility &amp; Power Consumption</h3>,
   },
 );
 
-const CompatibilitySlotWidth = compileContentComponent({
-  // Example: The Geforce RTX 3070 is a large desktop graphics card,
-  //          taking up 3 PCIe slots.
-  tags: [SpecsTag.SlotWidth],
-  Component: (props) => {
-    const slots = Number(props.slotWidth);
-    let thickness = '';
-    if (slots > 3) {
-      thickness = 'very large';
-    } else if (slots > 2.5) {
-      thickness = 'large';
-    } else if (slots >= 2) {
-      thickness = 'dual slot';
-    } else if (slots >= 1.5) {
-      thickness = 'low-profile';
-    } else if (slots < 1.5) {
-      thickness = 'compact, low-profile';
-    }
+const CompatibilitySentence1 = compileContentComponent(
+  {
+    // TODO: add or ability so we can limit to workstations and desktops
+    // TODO: combine tags and deps? Maybe a config property
+    // GPUs with a slot width and bus interface that is very large.
+    tags: [SpecsTag.SlotWidth, SpecsTag.BusInterface],
+    deps: ['isVeryLarge', 'slotWidth', 'busInterface'],
+    Component: (props) => {
+      const slots = Number(props.slotWidth);
+      const slotsText = pluralize('slot', slots);
+      return (
+        <>
+          The {props.nameWithNoCompanyNoBrandNoTags} is a massive graphics card,
+          occupying {slots} {props.busInterface} expansion {slotsText}.
+        </>
+      );
+    },
+  },
+  {
+    // GPUs with a slot width that is very large.
+    tags: [SpecsTag.SlotWidth],
+    deps: ['isVeryLarge', 'slotWidth'],
+    Component: (props) => {
+      const slots = Number(props.slotWidth);
+      const slotsText = pluralize('slot', slots);
+      return (
+        <>
+          The {props.nameWithNoCompanyNoBrandNoTags} is a massive graphics card,
+          occupying {slots} PCIe expansion {slotsText}.
+        </>
+      );
+    },
+  },
+  {
+    // GPUs with a slot width and bus interface that is large.
+    tags: [SpecsTag.SlotWidth, SpecsTag.BusInterface],
+    deps: ['isLarge', 'slotWidth', 'busInterface'],
+    Component: (props) => {
+      const slots = Number(props.slotWidth);
+      const slotsText = pluralize('slot', slots);
+      return (
+        <>
+          The {props.nameWithNoCompanyNoBrandNoTags} is a large graphics card,
+          occupying {slots} {props.busInterface} expansion {slotsText}.
+        </>
+      );
+    },
+  },
+  {
+    // GPUs with a slot width that is large.
+    tags: [SpecsTag.SlotWidth],
+    deps: ['isLarge', 'slotWidth'],
+    Component: (props) => {
+      const slots = Number(props.slotWidth);
+      const slotsText = pluralize('slot', slots);
+      return (
+        <>
+          The {props.nameWithNoCompanyNoBrandNoTags} is a large graphics card,
+          occupying {slots} PCIe expansion {slotsText}.
+        </>
+      );
+    },
+  },
+  {
+    // GPUs with a slot width that is large.
+    tags: [SpecsTag.SlotWidth],
+    deps: ['isDualSlot', 'slotWidth'],
+    Component: (props) => {
+      const slots = Number(props.slotWidth);
+      const slotsText = pluralize('slot', slots);
+      return (
+        <>
+          The {props.nameWithNoCompanyNoBrandNoTags} occupies {slots} PCIe
+          expansion {slotsText}.
+        </>
+      );
+    },
+  },
+  {
+    // GPUs with a slot width that is large.
+    tags: [SpecsTag.SlotWidth],
+    deps: ['isLowProfile', 'slotWidth'],
+    Component: (props) => {
+      const slots = Number(props.slotWidth);
+      const slotsText = pluralize('slot', slots);
+      return (
+        <>
+          The {props.nameWithNoCompanyNoBrandNoTags} is a low-profile graphics
+          card, occupying only {slots} PCIe expansion {slotsText}.
+        </>
+      );
+    },
+  },
+  {
+    // GPUs with a slot width that is large.
+    tags: [SpecsTag.SlotWidth],
+    deps: ['isCompactLowProfile', 'slotWidth'],
+    Component: (props) => {
+      const slots = Number(props.slotWidth);
+      const slotsText = pluralize('slot', slots);
+      return (
+        <>
+          The {props.nameWithNoCompanyNoBrandNoTags} is a compact, low-profile
+          graphics card that fits into {slots} PCIe expansion {slotsText}.
+        </>
+      );
+    },
+  },
+);
 
-    const slotOrSlots = slots === 1 ? 'slot' : 'slots';
-    return (
-      <>
-        The {props.nameWithNoCompanyNoBrandNoTags} is a {thickness} graphics
-        card, taking up {props.slotWidth} PCIe {slotOrSlots}.
-      </>
-    );
+const CompatibilitySentence2 = compileContentComponent({
+  // GPU with output ports
+  tags: [SpecsTag.Outputs],
+  deps: [],
+  Component: (props) => {
+    return <>It supports {props.outputs} display connections.</>;
   },
 });
 
-const CompatibilityOutputs = compileContentComponent({
-  // Example: This desktop card has 1x HDMI 2.1, 3x DisplayPort 1.4a output ports.
-  tags: [SpecsTag.Outputs],
-  Component: (props) => <>It supports {props.outputs} display ports.</>,
-});
+const CompatibilitySentence3 = compileContentComponent(
+  {
+    // TODO: support OR for tags/deps
+    // Very Large GPUs with a recommended psu and tdp
+    tags: [SpecsTag.SlotWidth, SpecsTag.Tdp, SpecsTag.SuggestedPsu],
+    deps: ['isVeryLarge', 'slotWidth', 'tdp', 'suggestedPsu'],
+    Component: (props) => {
+      return (
+        <>
+          With a thermal design power (TDP) of {props.tdp} and a massive{' '}
+          {props.slotWidth}
+          -slot size, it is recommended to use a power supply of{' '}
+          {props.suggestedPsu} and a case with sufficient space to accommodate
+          the card. Compare your model and case&apos;s dimensions to verify
+          compatibility.
+        </>
+      );
+    },
+  },
+  {
+    // Large GPUs with a recommended psu and tdp
+    tags: [SpecsTag.SlotWidth, SpecsTag.Tdp, SpecsTag.SuggestedPsu],
+    deps: ['isLarge', 'slotWidth', 'tdp', 'suggestedPsu'],
+    Component: (props) => {
+      return (
+        <>
+          With a thermal design power (TDP) of {props.tdp} and a large,{' '}
+          {props.slotWidth}
+          -slot size, it is recommended to use a power supply of{' '}
+          {props.suggestedPsu} and a case with sufficient space to accommodate
+          the card. Compare your card&apos;s model and your case&apos;s
+          dimensions to verify compatibility.
+        </>
+      );
+    },
+  },
+  {
+    // GPUs with a recommended psu and tdp
+    tags: [SpecsTag.Tdp, SpecsTag.SuggestedPsu],
+    deps: ['tdp', 'suggestedPsu'],
+    Component: (props) => {
+      return (
+        <>
+          {props.company} recommends a power supply of at least{' '}
+          {props.suggestedPsu} to handle the GPU&apos;s thermal design power
+          (TDP) of {props.tdp}.
+        </>
+      );
+    },
+  },
+  {
+    // GPUs with a TDP
+    tags: [SpecsTag.Tdp],
+    deps: ['tdp'],
+    Component: (props) => {
+      return (
+        <>
+          The GPU has a thermal design power (TDP) of {props.tdp}. A power
+          supply not strong enough to handle this might result in system crashes
+          and potentially damage your hardware.
+        </>
+      );
+    },
+  },
+  {
+    // GPUs with a recommended psu
+    tags: [SpecsTag.SuggestedPsu],
+    deps: ['suggestedPsu'],
+    Component: (props) => {
+      return (
+        <>
+          {props.company} recommends a power supply of at least{' '}
+          {props.suggestedPsu} to handle the GPU&apos;s power consumption. Using
+          a smaller power supply may result in system crashes and potentially
+          damage your hardware.
+        </>
+      );
+    },
+  },
+);
 
-const PowerSupplyTdp = compileContentComponent({
-  tags: [SpecsTag.Tdp],
-  Component: (props) => (
-    <>
-      This {props.marketSegment} card has a TDP of {props.tdp}.
-    </>
-  ),
-});
-
-const PowerSupplySuggestedPsu = compileContentComponent({
-  tags: [SpecsTag.SuggestedPsu],
-  Component: (props) => (
-    <>
-      {props.company} recommends using a power supply of at least{' '}
-      {props.suggestedPsu} with this card. A power supply lower than this might
-      result in system crashes and potentially damage your hardware.
-    </>
-  ),
-});
-
-const CompatibilityParagraph = compileContentComponent({
-  tags: [],
-  deps: [],
-  Component: () => (
-    <p>
-      <CompatibilitySlotWidth /> <CompatibilityOutputs /> <PowerSupplyTdp />{' '}
-      <PowerSupplySuggestedPsu />
-    </p>
-  ),
-});
+const CompatibilityParagraph = compileContentComponent(
+  {
+    tags: [SpecsTag.SlotWidth],
+    Component: (props) => (
+      <p>
+        <CompatibilitySentence1 /> <CompatibilitySentence2 />{' '}
+        <CompatibilitySentence3 />
+      </p>
+    ),
+  },
+  {
+    tags: [SpecsTag.Tdp],
+    Component: (props) => (
+      <p>
+        <CompatibilitySentence1 /> <CompatibilitySentence2 />{' '}
+        <CompatibilitySentence3 />
+      </p>
+    ),
+  },
+  {
+    tags: [SpecsTag.SuggestedPsu],
+    Component: (props) => (
+      <p>
+        <CompatibilitySentence1 /> <CompatibilitySentence2 />{' '}
+        <CompatibilitySentence3 />
+      </p>
+    ),
+  },
+);
 
 interface CompatibilityBlurbProps {
   index: number;
@@ -102,9 +263,7 @@ export const CompatibilityBlurb: FunctionComponent<CompatibilityBlurbProps> = (
 
   return (
     <ContentProvider tags={contentTags} params={contentParams}>
-      <h3>
-        <CompatibilityTitle />
-      </h3>
+      <CompatibilityTitle />
       <CompatibilityParagraph />
     </ContentProvider>
   );
