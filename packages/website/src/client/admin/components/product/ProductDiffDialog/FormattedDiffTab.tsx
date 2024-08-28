@@ -35,6 +35,10 @@ export const FormattedDiffTab: FunctionComponent<FormattedDiffTabProps> = (
   const hasNameChange = diff.original?.name !== diff.updated?.name;
   const hasSlugChange = diff.original?.slug !== diff.updated?.slug;
   const hasCompanyChange = diff.original?.company !== diff.updated?.company;
+  const hasSearchTextChange =
+    diff.original?.searchText !== diff.updated?.searchText;
+  const hasOtherNamesChange =
+    diff.original?.otherNames !== diff.updated?.otherNames;
   const sources = diff.updated?.sources;
 
   const productGames = [
@@ -142,13 +146,16 @@ export const FormattedDiffTab: FunctionComponent<FormattedDiffTabProps> = (
             <Td
               className={classNames(
                 'border-r-px',
-                hasCompanyChange ? 'bg-yellow-100' : '',
+                hasSearchTextChange ? 'bg-yellow-100' : '',
               )}
               colSpan={2}
             >
               {diff.original?.searchText ?? '--'}
             </Td>
-            <Td className={hasCompanyChange ? 'bg-yellow-100' : ''} colSpan={2}>
+            <Td
+              className={hasSearchTextChange ? 'bg-yellow-100' : ''}
+              colSpan={2}
+            >
               {diff.updated?.searchText ?? '--'}
             </Td>
           </Tr>
@@ -160,18 +167,21 @@ export const FormattedDiffTab: FunctionComponent<FormattedDiffTabProps> = (
                 hasCompanyChange ? 'bg-yellow-100' : '',
               )}
             >
-              Search Text
+              Other Names
             </Td>
             <Td
               className={classNames(
                 'border-r-px',
-                hasCompanyChange ? 'bg-yellow-100' : '',
+                hasOtherNamesChange ? 'bg-yellow-100' : '',
               )}
               colSpan={2}
             >
               {diff.original?.otherNames?.join(', ') ?? '--'}
             </Td>
-            <Td className={hasCompanyChange ? 'bg-yellow-100' : ''} colSpan={2}>
+            <Td
+              className={hasOtherNamesChange ? 'bg-yellow-100' : ''}
+              colSpan={2}
+            >
               {diff.updated?.otherNames?.join(', ') ?? '--'}
             </Td>
           </Tr>
