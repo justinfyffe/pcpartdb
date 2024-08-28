@@ -58,10 +58,6 @@ import {
   ProductSourcesInputProps,
 } from '../ProductSourceInput/ProductSourcesInput';
 import {
-  ProductSummaryInput,
-  ProductSummaryInputProps,
-} from '../ProductSummaryInput/ProductSummaryInput';
-import {
   ProductTextInput,
   ProductTextInputProps,
 } from '../ProductTextInput/ProductTextInput';
@@ -196,15 +192,6 @@ export const ProductFormInput: FunctionComponent<ProductFormInputProps> = (
         {...(config as ProductSourcesInputProps)}
         {...restOfProps}
         {...overrides}
-      />
-    );
-  } else if (inputType === ProductFormInputType.Summary) {
-    return (
-      <ProductSummaryInput
-        {...(config as ProductSummaryInputProps)}
-        {...restOfProps}
-        {...overrides}
-        {...context}
       />
     );
   } else if (inputType === ProductFormInputType.Text) {

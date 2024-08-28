@@ -72,32 +72,6 @@ export const ListFilters: FunctionComponent<ListFiltersProps> = () => {
     },
     [query, updateQuery],
   );
-  const handleMissingSummaryChange = useCallback(
-    (value: boolean) => {
-      const newFilter = { ...query.filter } as ListGpusFilter;
-      if (value) {
-        newFilter.missingSummary = true;
-      } else {
-        delete newFilter.missingSummary;
-      }
-
-      updateQuery({ ...query, filter: newFilter });
-    },
-    [query, updateQuery],
-  );
-  const handleStaleSummaryChange = useCallback(
-    (value: boolean) => {
-      const newFilter = { ...query.filter } as ListGpusFilter;
-      if (value) {
-        newFilter.staleSummary = true;
-      } else {
-        delete newFilter.staleSummary;
-      }
-
-      updateQuery({ ...query, filter: newFilter });
-    },
-    [query, updateQuery],
-  );
 
   return (
     <div className="flex flex-col mb-4 gap-4 flex-wrap">
@@ -134,22 +108,6 @@ export const ListFilters: FunctionComponent<ListFiltersProps> = () => {
             onChange={handleMissingProductionStatusChange}
           >
             Production Status?
-          </Checkbox>
-          <Checkbox
-            value={(query.filter as ListGpusFilter).missingSummary}
-            onChange={handleMissingSummaryChange}
-          >
-            Summary?
-          </Checkbox>
-        </div>
-
-        <div className="flex gap-4 flex-wrap">
-          <span>Stale:</span>
-          <Checkbox
-            value={(query.filter as ListGpusFilter).staleSummary}
-            onChange={handleStaleSummaryChange}
-          >
-            Summary?
           </Checkbox>
         </div>
       </div>

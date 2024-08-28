@@ -53,9 +53,6 @@ export interface GpuFormData {
   otherNames?: string[];
   searchText?: string;
   affiliateUrl?: string;
-  summary?: string;
-  summaryStale?: boolean;
-  enablePerformanceSummary?: boolean;
 
   // General
   partNumber?: GpuField<string>;
@@ -145,9 +142,6 @@ const gpuFormSchema = Joi.object({
   otherNames: Joi.array().items(Joi.string()).allow(null),
   searchText: Joi.string().allow(null),
   affiliateUrl: Joi.string().allow(null),
-  summary: Joi.string().allow(null),
-  summaryStale: Joi.boolean().allow(null),
-  enablePerformanceSummary: Joi.boolean().allow(null),
 
   // Sources
   sources: Joi.array().items(productSourceSchema),
@@ -247,10 +241,6 @@ export function gpuFormOptions(product?: Product): UseFormProps<GpuFormData> {
       otherNames: product?.otherNames || [],
       searchText: product?.searchText ?? null,
       affiliateUrl: product?.affiliateUrl ?? null,
-
-      summary: product?.summary ?? null,
-      summaryStale: product?.summaryStale ?? null,
-      enablePerformanceSummary: product?.enablePerformanceSummary ?? null,
 
       // Data Sources
       sources,
@@ -367,10 +357,6 @@ export function formDataToGpuRequest(
       otherNames: formData.otherNames,
       searchText: formData.searchText,
       affiliateUrl: formData.affiliateUrl,
-
-      summary: formData.summary,
-      summaryStale: formData.summaryStale,
-      enablePerformanceSummary: formData.enablePerformanceSummary,
 
       // Product Fields
       fields: {
@@ -510,28 +496,6 @@ export function buildGpuFormInputs(product?: Product): ProductFormInputGroups {
           name: 'affiliateUrl',
           fieldLabel: 'Amazon URL',
           inputType: ProductFormInputType.Text,
-        },
-      ],
-    },
-
-    // Summary
-    {
-      label: 'Summary',
-      inputs: [
-        {
-          name: 'summary',
-          inputType: ProductFormInputType.Summary,
-          placeholder: 'Add product summary',
-        },
-        {
-          name: 'enablePerformanceSummary',
-          label: 'Generate Performance Summary?',
-          inputType: ProductFormInputType.Boolean,
-        },
-        {
-          name: 'summaryStale',
-          label: 'Is Summary Possibly Stale?',
-          inputType: ProductFormInputType.Boolean,
         },
       ],
     },

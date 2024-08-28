@@ -98,12 +98,6 @@ model Product {
   // Affiliate URL
   affiliateUrl String? @map("affiliate_url")
 
-  // Summary Text
-  summary String? @db.Text
-  summaryPublishedAt DateTime? @map("summary_published_at") @db.Timestamptz(6)
-  summaryStale Boolean? @map("summary_stale") @default(false)
-  enablePerformanceSummary Boolean? @map("enable_performance_summary") @default(true)
-
   // Misc. additional data about the product. Not meant to be filtered on.
   metadata Json?
 

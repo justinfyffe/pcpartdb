@@ -191,11 +191,7 @@ export class ProductService {
 
     const products: Product[] = await mapToProductDtos(
       productEntities,
-      this.buildMapperOptions(
-        productEntities,
-        { ...options, includeSummary: true },
-        ctx,
-      ) as any,
+      this.buildMapperOptions(productEntities, options, ctx) as any,
     );
 
     const response: ListProductsResponse = {
@@ -217,11 +213,7 @@ export class ProductService {
 
     const product = await mapToProductDto(
       entity,
-      this.buildMapperOptions(
-        [entity],
-        { ...options, includeSummary: true },
-        ctx,
-      ) as any,
+      this.buildMapperOptions([entity], options, ctx) as any,
     );
 
     if (product == null) {
@@ -241,11 +233,7 @@ export class ProductService {
 
     const products = await mapToProductDtos(
       entities,
-      this.buildMapperOptions(
-        entities,
-        { ...options, includeSummary: true },
-        ctx,
-      ) as any,
+      this.buildMapperOptions(entities, options, ctx) as any,
     );
 
     if (products.every((value) => value == null)) {
@@ -265,11 +253,7 @@ export class ProductService {
     );
     const product = await mapToProductDto(
       entity,
-      this.buildMapperOptions(
-        [entity],
-        { ...options, includeSummary: true },
-        ctx,
-      ) as any,
+      this.buildMapperOptions([entity], options, ctx) as any,
     );
 
     if (product == null) {
@@ -303,11 +287,7 @@ export class ProductService {
 
     const products = await mapToProductDtos(
       entities,
-      this.buildMapperOptions(
-        entities,
-        { ...options, includeSummary: true },
-        ctx,
-      ) as any,
+      this.buildMapperOptions(entities, options, ctx) as any,
     );
 
     return products as ProductComparison;
@@ -579,7 +559,7 @@ export class ProductService {
 
   private buildMapperOptions(
     entities: ProductEntity[],
-    options: RelationOptions & { includeSummary?: boolean },
+    options: RelationOptions,
     ctx: Context,
   ) {
     const includeBenchmarks = options?.includeBenchmarks ?? false;
@@ -617,7 +597,6 @@ export class ProductService {
 
     const fields = options.fields;
     const relatedFields = options.relatedFields;
-    const includeSummary = options.includeSummary ?? false;
 
     return {
       includeAutomation,
@@ -625,7 +604,6 @@ export class ProductService {
       includeSources,
       includeUpdates,
       includeRelated,
-      includeSummary,
 
       includeBenchmarks,
       includeRelatedBenchmarks,

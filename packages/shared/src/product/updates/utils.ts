@@ -14,10 +14,6 @@ const KEYS_TO_SKIP = [
   'root.searchText',
   'root.affiliateUrl',
 
-  'root.summary',
-  'root.summaryPublishedAt',
-  'root.summaryStale',
-
   'root.viewable',
 
   'root.metadata',

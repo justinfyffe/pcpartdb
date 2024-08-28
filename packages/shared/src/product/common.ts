@@ -53,11 +53,6 @@ export interface Product {
   searchText: string;
   affiliateUrl?: string;
 
-  summary?: string;
-  summaryPublishedAt?: number;
-  summaryStale?: boolean;
-  enablePerformanceSummary?: boolean;
-
   latestPrice?: number;
   priceAsOf?: number;
   viewable?: boolean;

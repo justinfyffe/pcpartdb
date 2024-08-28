@@ -193,11 +193,6 @@ export const productSchema = Joi.object({
   searchText: Joi.string().allow('').required(),
   affiliateUrl: Joi.string().allow('', null),
 
-  summary: Joi.string().allow('', null),
-  summaryPublishedAt: Joi.number().allow(null),
-  summaryStale: Joi.boolean().allow(null),
-  enablePerformanceSummary: Joi.boolean().allow(null),
-
   metadata: Joi.any().allow(null),
 
   automatedAt: Joi.number().allow(null),
@@ -249,8 +244,6 @@ export const listProductsFilterSchema = Joi.object({
   hasReleaseDate: Joi.boolean().allow(null),
   missingMarketSegment: Joi.boolean().allow(null),
   missingProductionStatus: Joi.boolean().allow(null),
-  missingSummary: Joi.boolean().allow(null),
-  staleSummary: Joi.boolean().allow(null),
 });
 
 export const listProductsRequestSchema = Joi.object({

@@ -12,7 +12,6 @@ import { ProductOtherNamesInputProps } from '../ProductOtherNamesInput/ProductOt
 import { ProductSearchTextInputProps } from '../ProductSearchTextInput/ProductSearchTextInput';
 import { ProductSlugInputProps } from '../ProductSlugInput/ProductSlugInput';
 import { ProductSourcesInputProps } from '../ProductSourceInput/ProductSourcesInput';
-import { ProductSummaryInputProps } from '../ProductSummaryInput/ProductSummaryInput';
 import { ProductTextInputProps } from '../ProductTextInput/ProductTextInput';
 import { ProductFormContextState } from './ProductFormContext';
 
@@ -30,7 +29,6 @@ export enum ProductFormInputType {
   SearchText = 'SEARCH_TEXT',
   Slug = 'SLUG',
   Sources = 'SOURCES',
-  Summary = 'SUMMARY',
   Text = 'TEXT',
   TextField = 'TEXT_FIELD',
 }
@@ -48,7 +46,6 @@ type InputProps =
   | Partial<ProductSearchTextInputProps>
   | Partial<ProductSlugInputProps>
   | Partial<ProductSourcesInputProps>
-  | Partial<ProductSummaryInputProps>
   | Partial<ProductTextInputProps>
   | Partial<CheckboxProps>
   | Partial<TextInputProps>;

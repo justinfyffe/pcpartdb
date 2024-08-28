@@ -161,8 +161,6 @@ export interface ListCpusFilter extends BaseListProductsFilter {
 
   missingMarketSegment?: boolean;
   missingProductionStatus?: boolean;
-  missingSummary?: boolean;
-  staleSummary?: boolean;
 
   ids?: number[];
   excludeIds?: number[];
@@ -323,8 +321,6 @@ export interface ListGpusFilter extends BaseListProductsFilter {
 
   missingMarketSegment?: boolean;
   missingProductionStatus?: boolean;
-  missingSummary?: boolean;
-  staleSummary?: boolean;
 
   ids?: number[];
   excludeIds?: number[];

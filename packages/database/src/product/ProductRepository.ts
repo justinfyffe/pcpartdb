@@ -448,8 +448,6 @@ export class ProductRepository {
     const segments = filter?.segment?.filter((value) => value != null) ?? [];
     const isMissingMarketSegment = filter?.missingMarketSegment;
     const isMissingProductionStatus = filter?.missingProductionStatus;
-    const isMissingSummary = filter?.missingSummary;
-    const isStaleSummary = filter?.staleSummary;
     const includeIds = filter?.ids?.filter((value) => value != null) ?? [];
     const excludeIds =
       filter?.excludeIds?.filter((value) => value != null) ?? [];
@@ -513,19 +511,6 @@ export class ProductRepository {
       });
     }
 
-    // Summary
-    const summaryWhere: Prisma.ProductWhereInput[] = [];
-    if (isMissingSummary === true) {
-      summaryWhere.push({ summary: null });
-      summaryWhere.push({ summary: '' });
-    } else if (isMissingSummary === false) {
-      summaryWhere.push({ summary: { not: null } });
-      summaryWhere.push({ summary: { not: '' } });
-    }
-    if (isStaleSummary != null) {
-      summaryWhere.push({ summaryStale: isStaleSummary });
-    }
-
     const searchTextWhere = filter?.search
       ? { contains: filter.search, mode: 'insensitive' as Prisma.QueryMode }
       : undefined;
@@ -538,7 +523,6 @@ export class ProductRepository {
           company: companyWhere,
           searchText: searchTextWhere,
         },
-        { OR: summaryWhere },
         { OR: segmentsWhere },
         { OR: productionStatusWhere },
         { OR: yearWhere },
@@ -555,8 +539,6 @@ export class ProductRepository {
     const segments = filter?.segment?.filter((value) => value != null) ?? [];
     const isMissingMarketSegment = filter?.missingMarketSegment;
     const isMissingProductionStatus = filter?.missingProductionStatus;
-    const isMissingSummary = filter?.missingSummary;
-    const isStaleSummary = filter?.staleSummary;
     const includeIds = filter?.ids?.filter((value) => value != null) ?? [];
     const excludeIds =
       filter?.excludeIds?.filter((value) => value != null) ?? [];
@@ -621,19 +603,6 @@ export class ProductRepository {
       });
     }
 
-    // Summary
-    const summaryWhere: Prisma.ProductWhereInput[] = [];
-    if (isMissingSummary === true) {
-      summaryWhere.push({ summary: null });
-      summaryWhere.push({ summary: '' });
-    } else if (isMissingSummary === false) {
-      summaryWhere.push({ summary: { not: null } });
-      summaryWhere.push({ summary: { not: '' } });
-    }
-    if (isStaleSummary != null) {
-      summaryWhere.push({ summaryStale: isStaleSummary });
-    }
-
     // Has Release Date
     let hasReleaseDateWhere: Prisma.StringNullableFilter = undefined;
     if (hasReleaseDate != null) {
@@ -657,7 +626,6 @@ export class ProductRepository {
         },
         { OR: segmentsWhere },
         { OR: productionStatusWhere },
-        { OR: summaryWhere },
         { OR: yearWhere },
       ],
     };

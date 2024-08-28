@@ -206,42 +206,7 @@ function mergeGpus(originalGpu: GpuProduct, scrapedGpu: GpuProduct) {
   result.searchText = originalGpu.searchText;
   result.affiliateUrl = originalGpu.affiliateUrl;
 
-  result.summary = originalGpu.summary;
-  result.summaryPublishedAt = originalGpu.summaryPublishedAt;
-  result.summaryStale = originalGpu.summaryStale;
-
-  if (hasSummaryImpactingChanges(originalGpu, result)) {
-    result.summaryStale = true;
-  }
-
   return result;
-}
-
-function hasSummaryImpactingChanges(before: GpuProduct, after: GpuProduct) {
-  if (!after.summary) {
-    return false;
-  }
-
-  return (
-    before.fields?.productionStatus?.value !==
-      after.fields?.productionStatus?.value ||
-    before.fields?.marketSegment?.value !==
-      after.fields?.marketSegment?.value ||
-    before.fields?.releaseDate?.value !== after.fields?.releaseDate?.value ||
-    before.fields?.msrp?.value !== after.fields?.msrp?.value ||
-    before.fields?.tdp?.value !== after.fields?.tdp?.value ||
-    before.fields?.memorySize?.value !== after.fields?.memorySize?.value ||
-    before.fields?.memoryType?.value !== after.fields?.memoryType?.value ||
-    before.fields?.suggestedPsu?.value !== after.fields?.suggestedPsu?.value ||
-    before.fields?.codename?.value !== after.fields?.codename?.value ||
-    before.fields?.architecture?.value !== after.fields?.architecture?.value ||
-    before.fields?.slotWidth?.value !== after.fields?.slotWidth?.value ||
-    before.fields?.memoryInterface?.value !==
-      after.fields?.memoryInterface?.value ||
-    before.fields?.memoryClock?.value !== after.fields?.memoryClock?.value ||
-    before.fields?.memoryBandwidth?.value !==
-      after.fields?.memoryBandwidth?.value
-  );
 }
 
 function hasUpdates(before: GpuProduct, after: GpuProduct) {

@@ -142,55 +142,7 @@ function mergeCpus(originalCpu: CpuProduct, scrapedCpu: CpuProduct) {
   result.searchText = originalCpu.searchText;
   result.affiliateUrl = originalCpu.affiliateUrl;
 
-  result.summary = originalCpu.summary;
-  result.summaryPublishedAt = originalCpu.summaryPublishedAt;
-  result.summaryStale = originalCpu.summaryStale;
-
-  // TODO check if summary is blank, then its not stale
-  if (hasSummaryImpactingChanges(originalCpu, result)) {
-    result.summaryStale = true;
-  }
-
   return result;
-}
-
-function hasSummaryImpactingChanges(before: CpuProduct, after: CpuProduct) {
-  if (!after.summary) {
-    return false;
-  }
-
-  return (
-    before.fields?.productionStatus?.value !==
-      after.fields?.productionStatus?.value ||
-    before.fields?.marketSegment?.value !==
-      after.fields?.marketSegment?.value ||
-    before.fields?.releaseDate?.value !== after.fields?.releaseDate?.value ||
-    before.fields?.msrp?.value !== after.fields?.msrp?.value ||
-    before.fields?.tdp?.value !== after.fields?.tdp?.value ||
-    before.fields?.processSize?.value !== after.fields?.processSize?.value ||
-    before.fields?.socket?.value !== after.fields?.socket?.value ||
-    before.fields?.cores?.value !== after.fields?.cores?.value ||
-    before.fields?.pCores?.value !== after.fields?.pCores?.value ||
-    before.fields?.eCores?.value !== after.fields?.eCores?.value ||
-    before.fields?.threads?.value !== after.fields?.threads?.value ||
-    before.fields?.codename?.value !== after.fields?.codename?.value ||
-    before.fields?.architecture?.value !== after.fields?.architecture?.value ||
-    before.fields?.clock?.value !== after.fields?.clock?.value ||
-    before.fields?.turboClock?.value !== after.fields?.turboClock?.value ||
-    before.fields?.multiplierUnlocked?.value !==
-      after.fields?.multiplierUnlocked?.value ||
-    before.fields?.l1Cache?.value !== after.fields?.l1Cache?.value ||
-    before.fields?.l2Cache?.value !== after.fields?.l2Cache?.value ||
-    before.fields?.l3Cache?.value !== after.fields?.l3Cache?.value ||
-    before.fields?.memorySupport?.value !==
-      after.fields?.memorySupport?.value ||
-    before.fields?.memoryChannels?.value !==
-      after.fields?.memoryChannels?.value ||
-    before.fields?.pciExpress?.value !== after.fields?.pciExpress?.value ||
-    before.fields?.integratedGraphics?.value !==
-      after.fields?.integratedGraphics?.value ||
-    before.fields?.bundledCooler?.value !== after.fields?.bundledCooler?.value
-  );
 }
 
 function hasUpdates(before: CpuProduct, after: CpuProduct) {

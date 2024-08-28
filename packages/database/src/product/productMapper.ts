@@ -42,7 +42,6 @@ interface MapToDtoOptions {
   includeAutomation?: boolean;
   includeImages?: boolean;
   includeSources?: boolean;
-  includeSummary?: boolean;
   includeUpdates?: boolean;
 
   includeRelated?: boolean;
@@ -69,7 +68,6 @@ export async function mapToProductDto(
   const includeImages = options?.includeImages ?? false;
   const includeSources = options?.includeSources ?? false;
   const includeRelated = options?.includeRelated ?? false;
-  const includeSummary = options?.includeSummary ?? false;
   const includeUpdates = options?.includeUpdates ?? false;
 
   const fields: ProductFields = mapToProductFieldsDto(
@@ -128,14 +126,6 @@ export async function mapToProductDto(
     company: entity.company,
     searchText: entity.searchText,
     affiliateUrl: entity.affiliateUrl,
-    summary: includeSummary ? entity.summary : undefined,
-    summaryPublishedAt: includeSummary
-      ? entity.summaryPublishedAt?.getTime()
-      : undefined,
-    summaryStale: includeSummary ? entity.summaryStale : undefined,
-    enablePerformanceSummary: includeSummary
-      ? entity.enablePerformanceSummary
-      : undefined,
 
     metadata: entity.metadata,
 
@@ -190,14 +180,6 @@ export function mapToProductEntity(dto: Product) {
     company: dto.company,
     searchText: dto.searchText,
     affiliateUrl: dto.affiliateUrl,
-
-    summary: dto.summary,
-    summaryPublishedAt:
-      dto.summaryPublishedAt != null
-        ? new Date(dto.summaryPublishedAt)
-        : undefined,
-    summaryStale: dto.summaryStale,
-    enablePerformanceSummary: dto.enablePerformanceSummary,
 
     metadata: dto.metadata,
 

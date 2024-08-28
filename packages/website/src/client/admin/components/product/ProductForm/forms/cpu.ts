@@ -42,9 +42,6 @@ export interface CpuFormData {
   otherNames?: string[];
   searchText?: string;
   affiliateUrl?: string;
-  summary?: string;
-  summaryStale?: boolean;
-  enablePerformanceSummary?: boolean;
 
   // General Info
   partNumber?: CpuField<string>;
@@ -129,10 +126,6 @@ const cpuFormSchema = Joi.object({
   otherNames: Joi.array().items(Joi.string()).allow(null),
   searchText: Joi.string().allow(null),
   affiliateUrl: Joi.string().allow(null),
-
-  summary: Joi.string().allow(null),
-  summaryStale: Joi.boolean().allow(null),
-  enablePerformanceSummary: Joi.boolean().allow(null),
 
   // General Info
   partNumber: productFieldSchema.allow(null),
@@ -228,10 +221,6 @@ export function cpuFormOptions(product?: Product): UseFormProps<CpuFormData> {
       searchText: product?.searchText ?? null,
       affiliateUrl: product?.affiliateUrl ?? null,
 
-      summary: product?.summary ?? null,
-      summaryStale: product?.summaryStale ?? null,
-      enablePerformanceSummary: product?.enablePerformanceSummary ?? null,
-
       // Data Sources
       sources,
 
@@ -322,10 +311,6 @@ export function formDataToCpuRequest(
       otherNames: formData.otherNames,
       searchText: formData.searchText,
       affiliateUrl: formData.affiliateUrl,
-
-      summary: formData.summary,
-      summaryStale: formData.summaryStale,
-      enablePerformanceSummary: formData.enablePerformanceSummary,
 
       // Product Fields
       fields: {
@@ -463,28 +448,6 @@ export function buildCpuFormInputs(product?: Product): ProductFormInputGroups {
           name: 'affiliateUrl',
           fieldLabel: 'Amazon URL',
           inputType: ProductFormInputType.Text,
-        },
-      ],
-    },
-
-    // Summary
-    {
-      label: 'Summary',
-      inputs: [
-        {
-          name: 'summary',
-          inputType: ProductFormInputType.Summary,
-          placeholder: 'Add product summary',
-        },
-        {
-          name: 'enablePerformanceSummary',
-          label: 'Generate Performance Summary?',
-          inputType: ProductFormInputType.Boolean,
-        },
-        {
-          name: 'summaryStale',
-          label: 'Is Summary Possibly Stale?',
-          inputType: ProductFormInputType.Boolean,
         },
       ],
     },
