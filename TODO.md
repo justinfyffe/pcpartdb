@@ -13,11 +13,8 @@ NEXT (long-term):
 
 
 NEXT (short-term)
-- SEO improvements
-  - [] Improve generated summaries
-    - Use AI to help come up with variations.
-    - delete overwritten summaries and fields
 - Tech debt?
+  - [] Migrate to Mantine
   - [] Improve Content code
     - [] Combine tags / deps
     - [] Add "and" and "or" options
