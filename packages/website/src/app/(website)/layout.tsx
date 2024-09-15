@@ -147,6 +147,22 @@ export default async function RootWebsiteLayout(props: RootLayoutProps) {
                     </ListItem>
                     <ListItem>
                       <a
+                        href={getListGpusPath()}
+                        className="text-light-shades underline"
+                      >
+                        Graphics Cards
+                      </a>
+                    </ListItem>
+                    <ListItem>
+                      <a
+                        href={getListCpusPath()}
+                        className="text-light-shades underline"
+                      >
+                        Processors
+                      </a>
+                    </ListItem>
+                    <ListItem>
+                      <a
                         href={getAboutPath()}
                         className="text-light-shades underline"
                       >
@@ -159,66 +175,6 @@ export default async function RootWebsiteLayout(props: RootLayoutProps) {
                         className="text-light-shades underline"
                       >
                         Privacy Policy
-                      </a>
-                    </ListItem>
-                  </List>
-                </nav>
-
-                <nav>
-                  <header className="border-b-px mb-3 text-base">
-                    Follow Us
-                  </header>
-                  <List direction="horizontal" className="gap-4">
-                    <ListItem>
-                      <a
-                        href="https://www.instagram.com/pcpartdb/"
-                        className="text-light-shades underline"
-                        target="_blank"
-                      >
-                        <Img
-                          src="/images/follow/instagram.svg"
-                          className="h-6"
-                          alt="Follow us on Instagram!"
-                        />
-                      </a>
-                    </ListItem>
-                    <ListItem>
-                      <a
-                        href="https://www.facebook.com/pcpartdb"
-                        className="text-light-shades underline"
-                        target="_blank"
-                      >
-                        <Img
-                          src="/images/follow/facebook.svg"
-                          className="h-6"
-                          alt="Follow us on Facebook!"
-                        />
-                      </a>
-                    </ListItem>
-                    <ListItem>
-                      <a
-                        href="https://x.com/pcpartdb"
-                        target="_blank"
-                        className="text-light-shades underline"
-                      >
-                        <Img
-                          src="/images/follow/twitter.svg"
-                          className="h-6"
-                          alt="Follow us on Twitter!"
-                        />
-                      </a>
-                    </ListItem>
-                    <ListItem>
-                      <a
-                        href="https://www.youtube.com/@pcpartdb"
-                        className="text-light-shades underline"
-                        target="_blank"
-                      >
-                        <Img
-                          src="/images/follow/youtube.svg"
-                          className="h-6"
-                          alt="Follow us on YouTube!"
-                        />
                       </a>
                     </ListItem>
                   </List>
