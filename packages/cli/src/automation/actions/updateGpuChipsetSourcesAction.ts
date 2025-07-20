@@ -27,6 +27,7 @@ const TECHPOWERUP_URLS = [
   {
     company: 'Intel',
     urls: [
+      'https://www.techpowerup.com/gpu-specs/?mfgr=Intel&released=2025&sort=name', // Intel, 2025
       'https://www.techpowerup.com/gpu-specs/?mfgr=Intel&released=2024&sort=name', // Intel, 2024
       'https://www.techpowerup.com/gpu-specs/?mfgr=Intel&released=2023&sort=name', // Intel, 2023
       'https://www.techpowerup.com/gpu-specs/?mfgr=Intel&released=2022&sort=name', // Intel, 2022
@@ -56,6 +57,7 @@ const TECHPOWERUP_URLS = [
   {
     company: 'AMD',
     urls: [
+      'https://www.techpowerup.com/gpu-specs/?mfgr=AMD&released=2025&sort=name', // AMD, 2025
       'https://www.techpowerup.com/gpu-specs/?mfgr=AMD&released=2024&sort=name', // AMD, 2024
       'https://www.techpowerup.com/gpu-specs/?mfgr=AMD&released=2023&sort=name', // AMD, 2023
       'https://www.techpowerup.com/gpu-specs/?mfgr=AMD&released=2022&sort=name', // AMD, 2022
@@ -80,6 +82,7 @@ const TECHPOWERUP_URLS = [
   {
     company: 'NVIDIA',
     urls: [
+      'https://www.techpowerup.com/gpu-specs/?mfgr=NVIDIA&released=2025&sort=name', // NVIDIA, 2025
       'https://www.techpowerup.com/gpu-specs/?mfgr=NVIDIA&released=2024&sort=name', // NVIDIA, 2024
       'https://www.techpowerup.com/gpu-specs/?mfgr=NVIDIA&released=2023&sort=name', // NVIDIA, 2023
       'https://www.techpowerup.com/gpu-specs/?mfgr=NVIDIA&released=2022&sort=name', // NVIDIA, 2022

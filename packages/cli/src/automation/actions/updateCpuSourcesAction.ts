@@ -28,75 +28,88 @@ const TECHPOWERUP_URLS = [
   {
     company: 'Intel',
     urls: [
-      'https://www.techpowerup.com/cpu-specs/?mfgr=Intel&released=2024&sort=name', // Intel, 2024
-      'https://www.techpowerup.com/cpu-specs/?mfgr=Intel&released=2023&mobile=Yes&sort=name', // Intel, 2023, Mobile Yes
-      'https://www.techpowerup.com/cpu-specs/?mfgr=Intel&released=2023&mobile=No&sort=name', // Intel, 2023, Mobile No
-      'https://www.techpowerup.com/cpu-specs/?mfgr=Intel&released=2023&mobile=No&server=No&sort=name', // Intel, 2023, Mobile No, Server No
-      'https://www.techpowerup.com/cpu-specs/?mfgr=Intel&released=2023&mobile=No&server=Yes&multiUnlocked=Yes&sort=name', // Intel, 2023, Mobile No, Server Yes, Multiplier Unlocked
-      'https://www.techpowerup.com/cpu-specs/?mfgr=Intel&released=2023&mobile=No&server=Yes&multiUnlocked=No&sort=name', // Intel, 2023, Mobile No, Server Yes, Multiplier Locked
-      'https://www.techpowerup.com/cpu-specs/?mfgr=Intel&released=2022&sort=name', // Intel, 2022
-      'https://www.techpowerup.com/cpu-specs/?mfgr=Intel&released=2021&server=Yes&sort=name', // Intel, 2021, Server Yes
-      'https://www.techpowerup.com/cpu-specs/?mfgr=Intel&released=2021&server=No&sort=name', // Intel, 2021, Server No
-      'https://www.techpowerup.com/cpu-specs/?mfgr=Intel&released=2020&sort=name', // Intel, 2020
-      'https://www.techpowerup.com/cpu-specs/?mfgr=Intel&released=2019&sort=name', // Intel, 2019
-      'https://www.techpowerup.com/cpu-specs/?mfgr=Intel&released=2018&sort=name', // Intel, 2018
-      'https://www.techpowerup.com/cpu-specs/?mfgr=Intel&released=2017&sort=name', // Intel, 2017
-      'https://www.techpowerup.com/cpu-specs/?mfgr=Intel&released=2016&sort=name', // Intel, 2016
-      'https://www.techpowerup.com/cpu-specs/?mfgr=Intel&released=2015&mobile=Yes&sort=name', // Intel, 2015, Mobile Yes
-      'https://www.techpowerup.com/cpu-specs/?mfgr=Intel&released=2015&mobile=No&sort=name', // Intel, 2015, Mobile No
-      'https://www.techpowerup.com/cpu-specs/?mfgr=Intel&released=2014&mobile=Yes&sort=name', // Intel, 2014, Mobile Yes
-      'https://www.techpowerup.com/cpu-specs/?mfgr=Intel&released=2014&mobile=No&sort=name', // Intel, 2014, Mobile No
-      'https://www.techpowerup.com/cpu-specs/?mfgr=Intel&released=2013&mobile=Yes&sort=name', // Intel, 2013, Mobile Yes
-      'https://www.techpowerup.com/cpu-specs/?mfgr=Intel&released=2013&mobile=No&sort=name', // Intel, 2013, Mobile No
-      'https://www.techpowerup.com/cpu-specs/?mfgr=Intel&released=2012&mobile=Yes&sort=name', // Intel, 2012, Mobile Yes
-      'https://www.techpowerup.com/cpu-specs/?mfgr=Intel&released=2012&mobile=No&server=Yes&sort=name', // Intel, 2012, Mobile No, Server Yes
-      'https://www.techpowerup.com/cpu-specs/?mfgr=Intel&released=2012&mobile=No&server=No&sort=name', // Intel, 2012, Mobile No, Server No
-      'https://www.techpowerup.com/cpu-specs/?mfgr=Intel&released=2011&mobile=Yes&sort=name', // Intel, 2011, Mobile Yes
-      'https://www.techpowerup.com/cpu-specs/?mfgr=Intel&released=2011&mobile=No&sort=name', // Intel, 2011, Mobile No
-      'https://www.techpowerup.com/cpu-specs/?mfgr=Intel&released=2010&mobile=Yes&sort=name', // Intel, 2010, Mobile Yes
-      'https://www.techpowerup.com/cpu-specs/?mfgr=Intel&released=2010&mobile=No&sort=name', // Intel, 2010, Mobile No
-      'https://www.techpowerup.com/cpu-specs/?mfgr=Intel&released=2009&sort=name', // Intel, 2009
-      'https://www.techpowerup.com/cpu-specs/?mfgr=Intel&released=2008&sort=name', // Intel, 2008
-      'https://www.techpowerup.com/cpu-specs/?mfgr=Intel&released=2007&sort=name', // Intel, 2007
-      'https://www.techpowerup.com/cpu-specs/?mfgr=Intel&released=2006&sort=name', // Intel, 2006
-      'https://www.techpowerup.com/cpu-specs/?mfgr=Intel&released=2005&sort=name', // Intel, 2005
-      'https://www.techpowerup.com/cpu-specs/?mfgr=Intel&released=2004&sort=name', // Intel, 2004
-      'https://www.techpowerup.com/cpu-specs/?mfgr=Intel&released=2003&sort=name', // Intel, 2003
-      'https://www.techpowerup.com/cpu-specs/?mfgr=Intel&released=2002&sort=name', // Intel, 2002
-      'https://www.techpowerup.com/cpu-specs/?mfgr=Intel&released=2001&sort=name', // Intel, 2001
-      'https://www.techpowerup.com/cpu-specs/?mfgr=Intel&released=2000&sort=name', // Intel, 2000
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_Intel~year_2025', // Intel, 2025
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_Intel~year_2024~market_Mobile', // Intel, 2024, Mobile
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_Intel~year_2024~market_Desktop', // Intel, 2024, Desktop
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_Intel~year_2024~market_Server%2fWorkstation', // Intel, 2024, Server
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_Intel~year_2023~market_Mobile', // Intel, 2023, Mobile
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_Intel~year_2023~market_Desktop', // Intel, 2023, Desktop
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_Intel~year_2023~market_Server%2fWorkstation~memchannels_Dual+Channel', // Intel, 2023, Server, Dual Channel
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_Intel~year_2023~market_Server%2fWorkstation~memchannels_Quad-Channel', // Intel, 2023, Server, Quad-Channel
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_Intel~year_2023~market_Server%2fWorkstation~memchannels_Eight-Channel', // Intel, 2023, Server,
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_Intel~year_2022', // Intel, 2022
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_Intel~year_2021~market_Mobile', // Intel, 2021, Mobile
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_Intel~year_2021~market_Desktop', // Intel, 2021 Desktop
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_Intel~year_2021~market_Server%2fWorkstation', // Intel, 2021, Server
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_Intel~year_2021~market_Mobile+Workstation', // Intel, 2021, Mobile Server
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_Intel~year_2020', // Intel, 2020
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_Intel~year_2019', // Intel, 2019
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_Intel~year_2018', // Intel, 2018
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_Intel~year_2017', // Intel, 2017
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_Intel~year_2016', // Intel, 2016
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_Intel~year_2015~market_Mobile', // Intel, 2015, Mobile
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_Intel~year_2015~market_Desktop', // Intel, 2015 Desktop
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_Intel~year_2015~market_Server%2fWorkstation', // Intel, 2015, Server
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_Intel~year_2014~market_Mobile', // Intel, 2014, Mobile
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_Intel~year_2014~market_Desktop', // Intel, 2014 Desktop
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_Intel~year_2014~market_Server%2fWorkstation', // Intel, 2014, Server
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_Intel~year_2013~market_Mobile', // Intel, 2013, Mobile
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_Intel~year_2013~market_Desktop', // Intel, 2013 Desktop
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_Intel~year_2013~market_Server%2fWorkstation', // Intel, 2013, Server
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_Intel~year_2012~market_Mobile', // Intel, 2012, Mobile
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_Intel~year_2012~market_Desktop', // Intel, 2012 Desktop
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_Intel~year_2012~market_Server%2fWorkstation', // Intel, 2012, Server
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_Intel~year_2011~market_Mobile', // Intel, 2011, Mobile
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_Intel~year_2011~market_Desktop', // Intel, 2011 Desktop
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_Intel~year_2011~market_Server%2fWorkstation', // Intel, 2011, Server
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_Intel~year_2010~market_Mobile', // Intel, 2010, Mobile
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_Intel~year_2010~market_Desktop', // Intel, 2010 Desktop
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_Intel~year_2010~market_Server%2fWorkstation', // Intel, 2010, Server
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_Intel~year_2009', // Intel, 2009
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_Intel~year_2008', // Intel, 2008
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_Intel~year_2007', // Intel, 2007
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_Intel~year_2006', // Intel, 2006
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_Intel~year_2005', // Intel, 2005
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_Intel~year_2004', // Intel, 2004
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_Intel~year_2003', // Intel, 2003
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_Intel~year_2002', // Intel, 2002
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_Intel~year_2001', // Intel, 2001
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_Intel~year_2000', // Intel, 2000
     ],
   },
   {
     company: 'AMD',
     urls: [
-      'https://www.techpowerup.com/cpu-specs/?mfgr=AMD&released=2024&sort=name', // AMD 2024
-      'https://www.techpowerup.com/cpu-specs/?mfgr=AMD&released=2023&mobile=Yes&sort=name', // AMD 2023, Mobile Yes
-      'https://www.techpowerup.com/cpu-specs/?mfgr=AMD&released=2023&mobile=No&sort=name', // AMD 2023, Mobile No
-      'https://www.techpowerup.com/cpu-specs/?mfgr=AMD&released=2022&sort=name', // AMD 2022
-      'https://www.techpowerup.com/cpu-specs/?mfgr=AMD&released=2021&sort=name', // AMD 2021
-      'https://www.techpowerup.com/cpu-specs/?mfgr=AMD&released=2020&sort=name', // AMD 2020
-      'https://www.techpowerup.com/cpu-specs/?mfgr=AMD&released=2019&sort=name', // AMD 2019
-      'https://www.techpowerup.com/cpu-specs/?mfgr=AMD&released=2018&sort=name', // AMD 2018
-      'https://www.techpowerup.com/cpu-specs/?mfgr=AMD&released=2017&sort=name', // AMD 2017
-      'https://www.techpowerup.com/cpu-specs/?mfgr=AMD&released=2016&sort=name', // AMD 2016
-      'https://www.techpowerup.com/cpu-specs/?mfgr=AMD&released=2015&sort=name', // AMD 2015
-      'https://www.techpowerup.com/cpu-specs/?mfgr=AMD&released=2014&sort=name', // AMD 2014
-      'https://www.techpowerup.com/cpu-specs/?mfgr=AMD&released=2013&sort=name', // AMD 2013
-      'https://www.techpowerup.com/cpu-specs/?mfgr=AMD&released=2012&sort=name', // AMD 2012
-      'https://www.techpowerup.com/cpu-specs/?mfgr=AMD&released=2011&sort=name', // AMD 2011
-      'https://www.techpowerup.com/cpu-specs/?mfgr=AMD&released=2010&sort=name', // AMD 2010
-      'https://www.techpowerup.com/cpu-specs/?mfgr=AMD&released=2009&sort=name', // AMD 2009
-      'https://www.techpowerup.com/cpu-specs/?mfgr=AMD&released=2008&sort=name', // AMD 2008
-      'https://www.techpowerup.com/cpu-specs/?mfgr=AMD&released=2007&sort=name', // AMD 2007
-      'https://www.techpowerup.com/cpu-specs/?mfgr=AMD&released=2006&server=Yes&sort=name', // AMD 2006, Server Yes
-      'https://www.techpowerup.com/cpu-specs/?mfgr=AMD&released=2006&server=No&sort=name', // AMD 2006, Server No
-      'https://www.techpowerup.com/cpu-specs/?mfgr=AMD&released=2005&sort=name', // AMD 2005
-      'https://www.techpowerup.com/cpu-specs/?mfgr=AMD&released=2004&sort=name', // AMD 2004
-      'https://www.techpowerup.com/cpu-specs/?mfgr=AMD&released=2003&sort=name', // AMD 2003
-      'https://www.techpowerup.com/cpu-specs/?mfgr=AMD&released=2002&sort=name', // AMD 2002
-      'https://www.techpowerup.com/cpu-specs/?mfgr=AMD&released=2001&sort=name', // AMD 2001
-      'https://www.techpowerup.com/cpu-specs/?mfgr=AMD&released=2000&sort=name', // AMD 2000
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_AMD~year_2025', // AMD 2025
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_AMD~year_2024', // AMD 2024
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_AMD~year_2023~market_Mobile', // AMD 2023, Mobile
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_AMD~year_2023~market_Desktop', // AMD 2023, Desktop
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_AMD~year_2023~market_Server%2fWorkstation', // AMD 2023, Server
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_AMD~year_2022', // AMD 2022
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_AMD~year_2021', // AMD 2021
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_AMD~year_2020', // AMD 2020
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_AMD~year_2019', // AMD 2019
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_AMD~year_2018', // AMD 2018
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_AMD~year_2017', // AMD 2017
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_AMD~year_2016', // AMD 2016
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_AMD~year_2015', // AMD 2015
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_AMD~year_2014', // AMD 2014
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_AMD~year_2013', // AMD 2013
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_AMD~year_2012', // AMD 2012
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_AMD~year_2011', // AMD 2011
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_AMD~year_2010', // AMD 2010
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_AMD~year_2009', // AMD 2009
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_AMD~year_2008', // AMD 2008
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_AMD~year_2007', // AMD 2007
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_AMD~year_2006', // AMD 2006
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_AMD~year_2005~market_Mobile', // AMD 2005, Mobile
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_AMD~year_2005~market_Desktop', // AMD 2005, Desktop
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_AMD~year_2005~market_Server%2fWorkstation', // AMD 2005, Server
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_AMD~year_2004', // AMD 2004
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_AMD~year_2003', // AMD 2003
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_AMD~year_2002', // AMD 2002
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_AMD~year_2001', // AMD 2001
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_AMD~year_2000', // AMD 2000
     ],
   },
 ];
