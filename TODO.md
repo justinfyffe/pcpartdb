@@ -13,6 +13,8 @@ NEXT (long-term):
 
 
 NEXT (short-term)
+- Use docker on production server
+  - SSH Push the docker image when deploying
 - Tech debt?
   - [] Migrate to Mantine
   - [] Improve Content code

@@ -23,11 +23,13 @@ import { AutomationContext } from '../types';
 const BATCH_SIZE = 20;
 const DELAY_BETWEEN_UPLOAD = 5_000;
 const CONCURRENCY_CHUNK_SIZE = 5;
+const MAX_ATTEMPTS_PER_PAGE = 5;
 
 const TECHPOWERUP_URLS = [
   {
     company: 'Intel',
     urls: [
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_Intel~year_2026', // Intel, 2026
       'https://www.techpowerup.com/cpu-specs/?f=mfgr_Intel~year_2025', // Intel, 2025
       'https://www.techpowerup.com/cpu-specs/?f=mfgr_Intel~year_2024~market_Mobile', // Intel, 2024, Mobile
       'https://www.techpowerup.com/cpu-specs/?f=mfgr_Intel~year_2024~market_Desktop', // Intel, 2024, Desktop
@@ -80,6 +82,7 @@ const TECHPOWERUP_URLS = [
   {
     company: 'AMD',
     urls: [
+      'https://www.techpowerup.com/cpu-specs/?f=mfgr_AMD~year_2026', // AMD 2026
       'https://www.techpowerup.com/cpu-specs/?f=mfgr_AMD~year_2025', // AMD 2025
       'https://www.techpowerup.com/cpu-specs/?f=mfgr_AMD~year_2024', // AMD 2024
       'https://www.techpowerup.com/cpu-specs/?f=mfgr_AMD~year_2023~market_Mobile', // AMD 2023, Mobile
@@ -141,7 +144,7 @@ export async function updateCpuSourcesAction(
       () => getGeekBenchSources(context),
     ],
     {
-      limit: context.concurrency ? 3 : 1,
+      limit: context.concurrency ? 4 : 1,
       delayBetweenChunksMs: context.requestChunkDelay,
     },
   );
@@ -186,7 +189,12 @@ async function scrapeNotebookCheck(
 ) {
   console.log('Scraping sources from NotebookCheck');
   try {
-    const sources = await scrapeNotebookCheckCpuSources({});
+    let sources = [];
+    let attempt = 0;
+    do {
+      sources = await scrapeNotebookCheckCpuSources({});
+    } while (sources.length == 0 && attempt++ < MAX_ATTEMPTS_PER_PAGE);
+
     console.log(`Scraped ${sources.length} sources from NotebookCheck`);
     sources.forEach((cpu) => {
       map[cpu.name] = cpu;
@@ -239,8 +247,14 @@ async function scrapeTechPowerUp(
   map: Record<string, TechPowerUpCpuSource>,
 ) {
   console.log(`Scraping sources for url: ${url}`);
+
   try {
-    const sources = await scrapeTechPowerUpCpuSources({ url, company });
+    let sources = [];
+    let attempt = 0;
+    do {
+      sources = await scrapeTechPowerUpCpuSources({ url, company });
+    } while (sources.length == 0 && attempt++ < MAX_ATTEMPTS_PER_PAGE);
+
     console.log(`Scraped ${sources.length} sources from ${url}`);
     sources.forEach((cpu) => {
       map[cpu.name] = cpu;
@@ -291,7 +305,12 @@ async function scrapePassMark(
   console.log(`Scraping sources for URL: ${url}`);
 
   try {
-    const sources = await scrapePassMarkCpuSources({ url });
+    let sources = [];
+    let attempt = 0;
+    do {
+      sources = await scrapePassMarkCpuSources({ url });
+    } while (sources.length == 0 && attempt++ < MAX_ATTEMPTS_PER_PAGE);
+
     console.log(`Scraped ${sources.length} sources from ${url}`);
     sources.forEach((cpu) => {
       map[cpu.name] = cpu;
@@ -305,7 +324,11 @@ async function scrapePassMark(
 async function getGeekBenchSources(_context: AutomationContext) {
   console.log('Scraping CPU Sources from GeekBench');
 
-  const geekBenchSources = await scrapeGeekBenchCpuSources({});
+  let geekBenchSources = [];
+  let attempt = 0;
+  do {
+    geekBenchSources = await scrapeGeekBenchCpuSources({});
+  } while (geekBenchSources.length == 0 && attempt++ < MAX_ATTEMPTS_PER_PAGE);
 
   // Convert to source object
   const sources: AutomationSource[] = Object.values(geekBenchSources).map(

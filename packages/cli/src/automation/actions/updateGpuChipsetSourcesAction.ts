@@ -22,111 +22,115 @@ import { AutomationContext } from '../types';
 const BATCH_SIZE = 20;
 const DELAY_BETWEEN_UPLOAD = 5_000;
 const CONCURRENCY_CHUNK_SIZE = 5;
+const MAX_ATTEMPTS_PER_PAGE = 5;
 
 const TECHPOWERUP_URLS = [
   {
     company: 'Intel',
     urls: [
-      'https://www.techpowerup.com/gpu-specs/?mfgr=Intel&released=2025&sort=name', // Intel, 2025
-      'https://www.techpowerup.com/gpu-specs/?mfgr=Intel&released=2024&sort=name', // Intel, 2024
-      'https://www.techpowerup.com/gpu-specs/?mfgr=Intel&released=2023&sort=name', // Intel, 2023
-      'https://www.techpowerup.com/gpu-specs/?mfgr=Intel&released=2022&sort=name', // Intel, 2022
-      'https://www.techpowerup.com/gpu-specs/?mfgr=Intel&released=2021&sort=name', // Intel, 2021
-      'https://www.techpowerup.com/gpu-specs/?mfgr=Intel&released=2020&sort=name', // Intel, 2020
-      'https://www.techpowerup.com/gpu-specs/?mfgr=Intel&released=2019&sort=name', // Intel, 2019
-      'https://www.techpowerup.com/gpu-specs/?mfgr=Intel&released=2018&sort=name', // Intel, 2018
-      'https://www.techpowerup.com/gpu-specs/?mfgr=Intel&released=2017&sort=name', // Intel, 2017
-      'https://www.techpowerup.com/gpu-specs/?mfgr=Intel&released=2016&sort=name', // Intel, 2016
-      'https://www.techpowerup.com/gpu-specs/?mfgr=Intel&released=2015&sort=name', // Intel, 2015
-      'https://www.techpowerup.com/gpu-specs/?mfgr=Intel&released=2014&sort=name', // Intel, 2014
-      'https://www.techpowerup.com/gpu-specs/?mfgr=Intel&released=2013&sort=name', // Intel, 2013
-      'https://www.techpowerup.com/gpu-specs/?mfgr=Intel&released=2012&sort=name', // Intel, 2012
-      'https://www.techpowerup.com/gpu-specs/?mfgr=Intel&released=2011&sort=name', // Intel, 2011
-      'https://www.techpowerup.com/gpu-specs/?mfgr=Intel&released=2010&sort=name', // Intel, 2010
-      'https://www.techpowerup.com/gpu-specs/?mfgr=Intel&released=2008&sort=name', // Intel, 2008
-      'https://www.techpowerup.com/gpu-specs/?mfgr=Intel&released=2007&sort=name', // Intel, 2007
-      'https://www.techpowerup.com/gpu-specs/?mfgr=Intel&released=2006&sort=name', // Intel, 2006
-      'https://www.techpowerup.com/gpu-specs/?mfgr=Intel&released=2005&sort=name', // Intel, 2005
-      'https://www.techpowerup.com/gpu-specs/?mfgr=Intel&released=2004&sort=name', // Intel, 2004
-      'https://www.techpowerup.com/gpu-specs/?mfgr=Intel&released=2003&sort=name', // Intel, 2003
-      'https://www.techpowerup.com/gpu-specs/?mfgr=Intel&released=2002&sort=name', // Intel, 2002
-      'https://www.techpowerup.com/gpu-specs/?mfgr=Intel&released=2001&sort=name', // Intel, 2001
-      'https://www.techpowerup.com/gpu-specs/?mfgr=Intel&released=2000&sort=name', // Intel, 2000
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_Intel~year_2026', // Intel, 2026
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_Intel~year_2025', // Intel, 2025
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_Intel~year_2024', // Intel, 2024
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_Intel~year_2023', // Intel, 2023
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_Intel~year_2022', // Intel, 2022
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_Intel~year_2021', // Intel, 2021
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_Intel~year_2020', // Intel, 2020
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_Intel~year_2019', // Intel, 2019
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_Intel~year_2018', // Intel, 2018
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_Intel~year_2017', // Intel, 2017
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_Intel~year_2016', // Intel, 2016
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_Intel~year_2015', // Intel, 2015
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_Intel~year_2014', // Intel, 2014
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_Intel~year_2013', // Intel, 2013
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_Intel~year_2012', // Intel, 2012
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_Intel~year_2011', // Intel, 2011
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_Intel~year_2010', // Intel, 2010
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_Intel~year_2008', // Intel, 2008
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_Intel~year_2007', // Intel, 2007
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_Intel~year_2006', // Intel, 2006
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_Intel~year_2005', // Intel, 2005
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_Intel~year_2004', // Intel, 2004
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_Intel~year_2003', // Intel, 2003
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_Intel~year_2002', // Intel, 2002
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_Intel~year_2001', // Intel, 2001
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_Intel~year_2000', // Intel, 2000
     ],
   },
   {
     company: 'AMD',
     urls: [
-      'https://www.techpowerup.com/gpu-specs/?mfgr=AMD&released=2025&sort=name', // AMD, 2025
-      'https://www.techpowerup.com/gpu-specs/?mfgr=AMD&released=2024&sort=name', // AMD, 2024
-      'https://www.techpowerup.com/gpu-specs/?mfgr=AMD&released=2023&sort=name', // AMD, 2023
-      'https://www.techpowerup.com/gpu-specs/?mfgr=AMD&released=2022&sort=name', // AMD, 2022
-      'https://www.techpowerup.com/gpu-specs/?mfgr=AMD&released=2021&sort=name', // AMD, 2021
-      'https://www.techpowerup.com/gpu-specs/?mfgr=AMD&released=2020&sort=name', // AMD, 2020
-      'https://www.techpowerup.com/gpu-specs/?mfgr=AMD&released=2019&sort=name', // AMD, 2019
-      'https://www.techpowerup.com/gpu-specs/?mfgr=AMD&released=2018&sort=name', // AMD, 2018
-      'https://www.techpowerup.com/gpu-specs/?mfgr=AMD&released=2017&sort=name', // AMD, 2017
-      'https://www.techpowerup.com/gpu-specs/?mfgr=AMD&released=2016&sort=name', // AMD, 2016
-      'https://www.techpowerup.com/gpu-specs/?mfgr=AMD&released=2015&sort=name', // AMD, 2015
-      'https://www.techpowerup.com/gpu-specs/?mfgr=AMD&released=2014&sort=name', // AMD, 2014
-      'https://www.techpowerup.com/gpu-specs/?mfgr=AMD&released=2013&mobile=Yes&sort=name', // AMD, 2013, Mobile Yes
-      'https://www.techpowerup.com/gpu-specs/?mfgr=AMD&released=2013&mobile=No&sort=name', // AMD, 2013, Mobile No
-      'https://www.techpowerup.com/gpu-specs/?mfgr=AMD&released=2012&sort=name', // AMD, 2012
-      'https://www.techpowerup.com/gpu-specs/?mfgr=AMD&released=2011&sort=name', // AMD, 2011
-      'https://www.techpowerup.com/gpu-specs/?mfgr=AMD&released=2010&sort=name', // AMD, 2010
-      'https://www.techpowerup.com/gpu-specs/?mfgr=AMD&released=2009&sort=name', // AMD, 2009
-      'https://www.techpowerup.com/gpu-specs/?mfgr=AMD&released=2008&sort=name', // AMD, 2008
-      'https://www.techpowerup.com/gpu-specs/?mfgr=AMD&released=2007&sort=name', // AMD, 2007
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_AMD~year_2026', // AMD, 2026
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_AMD~year_2025', // AMD, 2025
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_AMD~year_2024', // AMD, 2024
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_AMD~year_2023', // AMD, 2023
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_AMD~year_2022', // AMD, 2022
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_AMD~year_2021', // AMD, 2021
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_AMD~year_2020', // AMD, 2020
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_AMD~year_2019', // AMD, 2019
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_AMD~year_2018', // AMD, 2018
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_AMD~year_2017', // AMD, 2017
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_AMD~year_2016', // AMD, 2016
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_AMD~year_2015', // AMD, 2015
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_AMD~year_2014', // AMD, 2014
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_AMD~year_2013&mobile=Yes', // AMD, 2013, Mobile Yes
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_AMD~year_2013&mobile=No', // AMD, 2013, Mobile No
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_AMD~year_2012', // AMD, 2012
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_AMD~year_2011', // AMD, 2011
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_AMD~year_2010', // AMD, 2010
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_AMD~year_2009', // AMD, 2009
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_AMD~year_2008', // AMD, 2008
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_AMD~year_2007', // AMD, 2007
     ],
   },
   {
     company: 'NVIDIA',
     urls: [
-      'https://www.techpowerup.com/gpu-specs/?mfgr=NVIDIA&released=2025&sort=name', // NVIDIA, 2025
-      'https://www.techpowerup.com/gpu-specs/?mfgr=NVIDIA&released=2024&sort=name', // NVIDIA, 2024
-      'https://www.techpowerup.com/gpu-specs/?mfgr=NVIDIA&released=2023&sort=name', // NVIDIA, 2023
-      'https://www.techpowerup.com/gpu-specs/?mfgr=NVIDIA&released=2022&sort=name', // NVIDIA, 2022
-      'https://www.techpowerup.com/gpu-specs/?mfgr=NVIDIA&released=2021&sort=name', // NVIDIA, 2021
-      'https://www.techpowerup.com/gpu-specs/?mfgr=NVIDIA&released=2020&sort=name', // NVIDIA, 2020
-      'https://www.techpowerup.com/gpu-specs/?mfgr=NVIDIA&released=2019&sort=name', // NVIDIA, 2019
-      'https://www.techpowerup.com/gpu-specs/?mfgr=NVIDIA&released=2018&sort=name', // NVIDIA, 2018
-      'https://www.techpowerup.com/gpu-specs/?mfgr=NVIDIA&released=2017&sort=name', // NVIDIA, 2017
-      'https://www.techpowerup.com/gpu-specs/?mfgr=NVIDIA&released=2016&sort=name', // NVIDIA, 2016
-      'https://www.techpowerup.com/gpu-specs/?mfgr=NVIDIA&released=2015&sort=name', // NVIDIA, 2015
-      'https://www.techpowerup.com/gpu-specs/?mfgr=NVIDIA&released=2014&sort=name', // NVIDIA, 2014
-      'https://www.techpowerup.com/gpu-specs/?mfgr=NVIDIA&released=2013&sort=name', // NVIDIA, 2013
-      'https://www.techpowerup.com/gpu-specs/?mfgr=NVIDIA&released=2012&sort=name', // NVIDIA, 2012
-      'https://www.techpowerup.com/gpu-specs/?mfgr=NVIDIA&released=2011&sort=name', // NVIDIA, 2011
-      'https://www.techpowerup.com/gpu-specs/?mfgr=NVIDIA&released=2010&sort=name', // NVIDIA, 2010
-      'https://www.techpowerup.com/gpu-specs/?mfgr=NVIDIA&released=2009&sort=name', // NVIDIA, 2009
-      'https://www.techpowerup.com/gpu-specs/?mfgr=NVIDIA&released=2008&mobile=Yes&sort=name', // NVIDIA, 2008 Mobile Yes
-      'https://www.techpowerup.com/gpu-specs/?mfgr=NVIDIA&released=2008&mobile=No&sort=name', // NVIDIA, 2008 Mobile No
-      'https://www.techpowerup.com/gpu-specs/?mfgr=NVIDIA&released=2007&sort=name', // NVIDIA, 2007
-      'https://www.techpowerup.com/gpu-specs/?mfgr=NVIDIA&released=2006&sort=name', // NVIDIA, 2006
-      'https://www.techpowerup.com/gpu-specs/?mfgr=NVIDIA&released=2005&sort=name', // NVIDIA, 2005
-      'https://www.techpowerup.com/gpu-specs/?mfgr=NVIDIA&released=2004&sort=name', // NVIDIA, 2004
-      'https://www.techpowerup.com/gpu-specs/?mfgr=NVIDIA&released=2003&sort=name', // NVIDIA, 2003
-      'https://www.techpowerup.com/gpu-specs/?mfgr=NVIDIA&released=2002&sort=name', // NVIDIA, 2002
-      'https://www.techpowerup.com/gpu-specs/?mfgr=NVIDIA&released=2001&sort=name', // NVIDIA, 2001
-      'https://www.techpowerup.com/gpu-specs/?mfgr=NVIDIA&released=2000&sort=name', // NVIDIA, 2000
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_NVIDIA~year_2026', // NVIDIA, 2026
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_NVIDIA~year_2025', // NVIDIA, 2025
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_NVIDIA~year_2024', // NVIDIA, 2024
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_NVIDIA~year_2023', // NVIDIA, 2023
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_NVIDIA~year_2022', // NVIDIA, 2022
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_NVIDIA~year_2021', // NVIDIA, 2021
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_NVIDIA~year_2020', // NVIDIA, 2020
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_NVIDIA~year_2019', // NVIDIA, 2019
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_NVIDIA~year_2018', // NVIDIA, 2018
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_NVIDIA~year_2017', // NVIDIA, 2017
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_NVIDIA~year_2016', // NVIDIA, 2016
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_NVIDIA~year_2015', // NVIDIA, 2015
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_NVIDIA~year_2014', // NVIDIA, 2014
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_NVIDIA~year_2013', // NVIDIA, 2013
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_NVIDIA~year_2012', // NVIDIA, 2012
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_NVIDIA~year_2011', // NVIDIA, 2011
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_NVIDIA~year_2010', // NVIDIA, 2010
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_NVIDIA~year_2009', // NVIDIA, 2009
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_NVIDIA~year_2008&mobile=Yes', // NVIDIA, 2008 Mobile Yes
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_NVIDIA~year_2008&mobile=No', // NVIDIA, 2008 Mobile No
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_NVIDIA~year_2007', // NVIDIA, 2007
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_NVIDIA~year_2006', // NVIDIA, 2006
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_NVIDIA~year_2005', // NVIDIA, 2005
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_NVIDIA~year_2004', // NVIDIA, 2004
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_NVIDIA~year_2003', // NVIDIA, 2003
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_NVIDIA~year_2002', // NVIDIA, 2002
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_NVIDIA~year_2001', // NVIDIA, 2001
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_NVIDIA~year_2000', // NVIDIA, 2000
     ],
   },
   {
     company: 'ATI',
     urls: [
-      'https://www.techpowerup.com/gpu-specs/?mfgr=ATI&released=2012&sort=name', // ATI, 2012
-      'https://www.techpowerup.com/gpu-specs/?mfgr=ATI&released=2011&sort=name', // ATI, 2011
-      'https://www.techpowerup.com/gpu-specs/?mfgr=ATI&released=2010&sort=name', // ATI, 2010
-      'https://www.techpowerup.com/gpu-specs/?mfgr=ATI&released=2009&sort=name', // ATI, 2009
-      'https://www.techpowerup.com/gpu-specs/?mfgr=ATI&released=2008&sort=name', // ATI, 2008
-      'https://www.techpowerup.com/gpu-specs/?mfgr=ATI&released=2007&sort=name', // ATI, 2007
-      'https://www.techpowerup.com/gpu-specs/?mfgr=ATI&released=2006&sort=name', // ATI, 2006
-      'https://www.techpowerup.com/gpu-specs/?mfgr=ATI&released=2005&sort=name', // ATI, 2005
-      'https://www.techpowerup.com/gpu-specs/?mfgr=ATI&released=2004&sort=name', // ATI, 2004
-      'https://www.techpowerup.com/gpu-specs/?mfgr=ATI&released=2003&sort=name', // ATI, 2003
-      'https://www.techpowerup.com/gpu-specs/?mfgr=ATI&released=2002&sort=name', // ATI, 2002
-      'https://www.techpowerup.com/gpu-specs/?mfgr=ATI&released=2001&sort=name', // ATI, 2001
-      'https://www.techpowerup.com/gpu-specs/?mfgr=ATI&released=2000&sort=name', // ATI, 2000
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_ATI~year_2012', // ATI, 2012
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_ATI~year_2011', // ATI, 2011
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_ATI~year_2010', // ATI, 2010
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_ATI~year_2009', // ATI, 2009
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_ATI~year_2008', // ATI, 2008
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_ATI~year_2007', // ATI, 2007
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_ATI~year_2006', // ATI, 2006
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_ATI~year_2005', // ATI, 2005
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_ATI~year_2004', // ATI, 2004
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_ATI~year_2003', // ATI, 2003
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_ATI~year_2002', // ATI, 2002
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_ATI~year_2001', // ATI, 2001
+      'https://www.techpowerup.com/gpu-specs/?f=mfgr_ATI~year_2000', // ATI, 2000
     ],
   },
 ];
@@ -148,8 +152,8 @@ export async function updateGpuChipsetSourcesAction(
   const [notebookCheck, techPowerUp, passMark] = await concurrent(
     [
       () => getNotebookCheckSources(context),
-      () => getPassMarkSources(context),
       () => getTechPowerUpSources(context),
+      () => getPassMarkSources(context),
     ],
     {
       limit: context.concurrency ? 3 : 1,
@@ -160,7 +164,7 @@ export async function updateGpuChipsetSourcesAction(
   const { sources: techPowerUpSources } = techPowerUp;
   const { sources: passMarkSources } = passMark;
 
-  // Upload CPU Sources
+  // Upload GPU Sources
 
   await uploadGpuSources(notebookCheckSources, context);
   await uploadGpuSources(passMarkSources, context);
@@ -200,7 +204,12 @@ async function scrapeNotebookCheck(
 ) {
   console.log('Scraping sources from NotebookCheck');
   try {
-    const sources = await scrapeNotebookCheckGpuSources({});
+    let sources = [];
+    let attempt = 0;
+    do {
+      sources = await scrapeNotebookCheckGpuSources({});
+    } while (sources.length == 0 && attempt++ < MAX_ATTEMPTS_PER_PAGE);
+
     console.log(`Scraped ${sources.length} sources from NotebookCheck`);
     sources.forEach((gpu) => {
       map[gpu.name] = gpu;
@@ -251,7 +260,12 @@ async function scrapePassMark(
   console.log(`Scraping sources for URL: ${url}`);
 
   try {
-    const sources = await scrapePassMarkGpuSources({ url });
+    let sources = [];
+    let attempt = 0;
+    do {
+      sources = await scrapePassMarkGpuSources({ url });
+    } while (sources.length == 0 && attempt++ < MAX_ATTEMPTS_PER_PAGE);
+
     console.log(`Scraped ${sources.length} sources from ${url}`);
     sources.forEach((gpu) => {
       map[gpu.name] = gpu;
@@ -303,8 +317,14 @@ async function scrapeTechPowerUp(
   map: Record<string, TechPowerUpGpuSource>,
 ) {
   console.log(`Scraping sources for url: ${url}`);
+
   try {
-    const sources = await scrapeTechPowerUpGpuSources({ url, company });
+    let sources = [];
+    let attempt = 0;
+    do {
+      sources = await scrapeTechPowerUpGpuSources({ url, company });
+    } while (sources.length == 0 && attempt++ < MAX_ATTEMPTS_PER_PAGE);
+
     console.log(`Scraped ${sources.length} sources from ${url}`);
     sources.forEach((gpu) => {
       map[gpu.name] = gpu;

@@ -59,8 +59,10 @@ export async function scrapeTechPowerUpGpuData(
   const response = await scraper.scrapeGet(url, {
     retries: 1,
     noProxy,
-    browser: true,
-    returnPageSource: true,
+    // browser: true,
+    browser: false,
+    // returnPageSource: true,
+    returnPageSource: false,
     jsonExtended: true,
   });
   const $ = cheerio.load(response.data.html);

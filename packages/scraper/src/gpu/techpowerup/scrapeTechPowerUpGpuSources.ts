@@ -28,8 +28,9 @@ async function scrapeSearchData(options: ScrapeTechPowerUpGpuUrlsOptions) {
     const $td = $(td);
 
     const url = cleanUrl(BASE_URL + $td.find('a').attr('href').trim());
+    const $name = $td.find('a').first();
     const { company: companyFromName, name } = parseProductName(
-      $td.text().trim(),
+      $name.text().trim(),
     );
 
     const company = companyFromName || options.company;
@@ -52,8 +53,10 @@ async function fetchSearchPage(options: ScrapeTechPowerUpGpuUrlsOptions) {
   const response = await scraper.scrapeGet(url, {
     retries: 1,
     noProxy,
-    browser: true,
-    returnPageSource: true,
+    // browser: true,
+    browser: false,
+    // returnPageSource: true,
+    returnPageSource: false,
     jsonExtended: true,
   });
   return response.data.html;
