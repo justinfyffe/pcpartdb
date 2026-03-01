@@ -1,3 +1,4 @@
+import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 import { ApiKey } from '@pcpartdb/shared';
 import { PrimaryButton } from 'packages/website/src/client/shared/components/Button/PrimaryButton';
 import {
@@ -7,7 +8,7 @@ import {
 } from 'packages/website/src/client/shared/components/Card/Card';
 import { ConfirmDialog } from 'packages/website/src/client/shared/components/Dialog/ConfirmDialog';
 import { showDialog } from 'packages/website/src/client/shared/components/Dialog/dialog';
-import { TextInput } from 'packages/website/src/client/shared/components/Input/TextInput';
+import { Input } from 'packages/website/src/client/shared/components/Input/Input';
 import { userService } from 'packages/website/src/client/user/services/userService';
 import React, { useCallback, useState } from 'react';
 
@@ -17,6 +18,7 @@ export interface ApiKeyWidgetProps {
 
 export const ApiKeyWidget = (props: ApiKeyWidgetProps) => {
   const [apiKey, setApiKey] = useState(props.apiKey);
+  const [showKey, setShowKey] = useState(false);
 
   const handleRefresh = useCallback(() => {
     const confirm = async () => {
@@ -39,10 +41,19 @@ export const ApiKeyWidget = (props: ApiKeyWidgetProps) => {
       <CardContent>
         Your API Key:
         <div className="flex gap-4">
-          <TextInput
+          <Input
             className="min-w-32"
+            type={showKey ? 'text' : 'password'}
             value={apiKey?.apiKey || ''}
-            disabled
+            readOnly
+            suffix={
+              showKey ? (
+                <EyeSlashIcon className="w-4" />
+              ) : (
+                <EyeIcon className="w-4" />
+              )
+            }
+            onSuffixClick={() => setShowKey((s) => !s)}
           />
           <PrimaryButton type="button" onClick={handleRefresh}>
             Refresh

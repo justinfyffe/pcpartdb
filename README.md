@@ -2,7 +2,7 @@
 
 ## Requirements
 
-Node v20
+Node v24
 global install of PM2 on server
 At least 2 vCPUs and 2GB RAM
 

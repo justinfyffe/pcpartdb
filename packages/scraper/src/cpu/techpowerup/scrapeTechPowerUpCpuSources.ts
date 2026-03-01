@@ -45,8 +45,10 @@ async function fetchSearchPage(options: ScrapeTechPowerUpCpuSourcesOptions) {
   const response = await scraper.scrapeGet(url, {
     retries: 1,
     noProxy,
-    browser: true,
-    returnPageSource: true,
+    // browser: true,
+    browser: false,
+    // returnPageSource: true,
+    returnPageSource: false,
     jsonExtended: true,
   });
   return response.data.html;
