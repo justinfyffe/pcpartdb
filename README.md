@@ -21,6 +21,4 @@ At least 2 vCPUs and 2GB RAM
 ## Deployment
 
 The deployment script requires `DEPLOY_HOST` and `DEPLOY_USER` in the local
-environment. Backups are stored as plaintext with owner-only permissions and
-exclude `.env` files. Review the backup strategy before using this workflow for
-a live deployment containing sensitive data.
+environment.
