@@ -97,6 +97,7 @@ export class ApiClient {
     }
 
     config.headers = config.headers ?? {};
+    (config.headers as any)['User-Agent'] = 'pcpartdb-client';
 
     // Add cookie being passed through nextjs.
     if (

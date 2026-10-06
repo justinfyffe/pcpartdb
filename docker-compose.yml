@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   db:
-    image: postgres:14.4
+    image: postgres:16-alpine
     container_name: pcpartdb-db
     ports:
       - "5432:5432"

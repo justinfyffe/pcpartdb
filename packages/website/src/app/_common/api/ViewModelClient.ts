@@ -71,6 +71,7 @@ export class ViewModelClient {
     }
 
     config.headers = config.headers ?? {};
+    (config.headers as any)['User-Agent'] = 'pcpartdb-client';
 
     // Add preferred benchmarks custom headers.
     if (config?.preferredBenchmarks?.cpu) {
