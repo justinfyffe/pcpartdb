@@ -17,3 +17,10 @@ At least 2 vCPUs and 2GB RAM
 - set swappiness = 10
 - set vfs cache pressure = 50
 - followed https://www.digitalocean.com/community/tutorials/how-to-add-swap-space-on-ubuntu-22-04
+
+## Deployment
+
+The deployment script requires `DEPLOY_HOST` and `DEPLOY_USER` in the local
+environment. Backups are stored as plaintext with owner-only permissions and
+exclude `.env` files. Review the backup strategy before using this workflow for
+a live deployment containing sensitive data.
